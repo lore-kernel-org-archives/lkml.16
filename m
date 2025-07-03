@@ -1,99 +1,169 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691A24A078
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CFB296153
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751581310; cv=none; b=tha5JKWBA83T8FPlRhGx+fRhLdjfsgLHXLPJ7+nQtlYH7ekVdS4J6LyGOrEpSsFyJ2lSgq+Y/91b+LZ/ZGs1+PcUDx4MHAy1179t7RhnHYGbTDfP2Ej0qw7eGAUf186pdDunNvjlrJY0Gmg60NMRmgpt+nTQnTFgQwFcGISweoU=
+	t=1751581347; cv=none; b=r1bkDWV8G4qiZuciV6sqMzzHx5uvyHpJsqptxRBfI2jPB32+w7MAf+iUQqDzk1gcbrxPrngUg8F6nfvwNHuml2Ba5nwMzKdXKMvyZwDXC+FbKnlrXGc6LQWYUftIAat0CYGvDsgi91C56ucDGwtWGZVrbgpLavYycrvudJkT6Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751581310; c=relaxed/simple;
-	bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D0MuM1IFKSn3VBdwncL2E6xFxmNU8wJu3btKE1K82JEcjN73OCbVUIgkI74qjfDSi9j8uDkvfvtAY5+bbJE58z5HEXu32CuPUFlZqlyDmuLYlz7WI3hfyVMwwmpNWOjzpESzMWVY3Vw7gZV3psDOS5j39xlSnPKnYiGUlJi0Pl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s06L0ePE; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751581347; c=relaxed/simple;
+	bh=D/PppK0hDftWiCKNXNsgHrcA+jFHhAFOCWiRLOQNwOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bm8raFmzxk+nIxCfmV3gwMkJZEBcD5kA5ddsh5vujBscAJqyYPvQjfAYDDpg7IXLVlGOGrGRGDyr4lJ+IE2sby5Hbu5aPJaZ7Fxdg7xSPIb0RVBLdtG9TDr6z4yg3uOkuhuxXOuUv8di8HQ1rsY81pIBSLaj09wdaNnvnJUtbnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=BQXnpr9j; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s06L0ePE"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55516abe02cso413861e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751581305; x=1752186105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
-        b=s06L0ePEV+Ik/W++lG6RnHh2ha8t1mhR9yAbOmBc/IokvzgsMjUYG2PGa5hCfZfyYu
-         7suCgB0NhgU8mGTFAZE3l5VeQRtkAR48nM0X9mIan6GXsHMLV/MI5JL1h2WkOgLa4vjv
-         mKgIldSipKXKAg695Z58qM0JMF0JDcv3nj5MGoG297pVRjK+Sy0CIWOFM6YUBdGn38sF
-         zZEVUROaG/Eggrt/Cemq4QpG/jU1RWDVhm0a0f8iUbxp47Lyn+MmfB3hoKwSXdHwyqtd
-         uJJ2z1pJcgrWs+5Dt1m91CZj1ftxAJMLJkPpw0MVns+3YRo2A5+0nuuD9WohhQN2sQBo
-         87JQ==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="BQXnpr9j"
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id AC8953F91C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751581342;
+	bh=47Hy/CVM+m+STHABdIjCLud+sfTnWYA0RBiwXCk0B4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=BQXnpr9jReXUVe8WKSeqxwV7Y+J8VaVdNlI31ORekAmStChoIwYHwbKpEdrCxfNOL
+	 y5xAGIhPXbuKhbcZR63ZznOfxTGQBmQIVVSogpbr0dECXSdslKELVdiVP9JGkyl7EX
+	 HlNCugjw+CH+3YVCRONgNuuVkgxV+jLjOhINmPnkYOg5uq/614EwxenB1V4/axFDJl
+	 x82Zrcxou2rDI4C62RuPs+zPmhhIpkgSSMGBVCO0A0ci58lMs6voRc2OClvhTOPSfP
+	 +fBh7Mws6hgyAEVobjxlhr0yIIcF/jF7e63FtmvTgTHUD64/nAWkrBjBTUkzYvsKNO
+	 tdMmQuMxE8NQw==
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-607206f0d57so253257a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:22:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751581305; x=1752186105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
-        b=UA1+DWsPEXX+n9Gr0yaAAW/tO8eVGxHSdKhu+3POd25bBnThmmHNAfSJeH5mohpbTz
-         AWr7py6Fss/kjx4K2Dnp67s5hfENTGUY9GIjvIscyg5l5xb1YAsDWg20RXcOgk14WKcu
-         K+ZDPNe3vnUxLnXgTmH0wmnegoEcdSkAqIHJUziLJa6FDtRrhFg7tJiHoCSEHvRHLVsw
-         uXnZ4uBAcStYoyrGCTNKPypTy63tSXrM0D2QT16yynXIrHNAi7+++gycvhC8XxINXUxF
-         3YpHaB9RM57Eq3pj2o0H05/nblszBv2hTsyp2wTbDnV4mcHmfcplRtQGyF2iAJOYjES4
-         +fqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlfYQZgZVM4/n81YNK3u+08Yjk0mx+9HB5Dr0/mI1dUtF+ruyW2FOADyA2xryLPBDPdOWzeTqUl3W1oSg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsnCtaFUFsY4GYoje2jJWqYt6V2DfMFOWDxvRDEHsI/DTe8v3m
-	O+c8Fk6B7ZMgwyxQR5V2HbQSH+7ADfAMLvSEB+aNZfRMiJVUxK+33HWVwPK63XwDgOQKrXt0mno
-	r9IaplipN+2l+NvhLq82qXYKbAlh66llDTBOuiL5slH5W3Wsa51wc6jpc9w==
-X-Gm-Gg: ASbGncsh8gFsKsstkin+Lh3AzZjT+L01eu+h2U1SOTJ7DPum6xPuuID1Mw6z3RaWawM
-	madf/yaRWpYtqOsuOybdhZ3Vr+opJpiddmHjnsLXRWw/8eqMOjnPJ9INvI1uErJEsKI6A3iYL9L
-	EDLqTK4vg6vBY8p3msEbIFYBnyQ8KRT08oiqtiB+zAG8M=
-X-Google-Smtp-Source: AGHT+IEdCJvHXhlmBq1702X71zoM5ng69d7Mh6npUYCQ1PTXuNgk3bG87vuighjDtFReOyDckV1OsZwH3mt/qEZLkiU=
-X-Received: by 2002:a05:6512:3f0c:b0:553:2969:1d6d with SMTP id
- 2adb3069b0e04-5565baa76a4mr164653e87.13.1751581305466; Thu, 03 Jul 2025
- 15:21:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751581338; x=1752186138;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=47Hy/CVM+m+STHABdIjCLud+sfTnWYA0RBiwXCk0B4w=;
+        b=kbxoKBAA/Kflpdx3xrz6PBTrfdXEhRFJ9FOY0QPpowxH9TdKy8+F4eAXjomvLN5WQm
+         llQMT/NSSoy5nkvyW38PonSO1kps0NYNhBKr5bUVIye2UHHeXXRyR/VunDmXgTuJL4Lj
+         bRjUvVbb+3c8vgD8QYlXkA/09xbypjDRroySHes5fKYVm1mqN7tAcbezRj+y8tr2CaQO
+         p/rukPqNOVP1U2/NoGaJwS3eBV6b1JnLygy22ZK0cBRWuaI2rTxHWmPAcXlsIb5D7nW6
+         GC4JdM7X0unPSmdV8XQGKx5qFyJ+CgeRDLWdo1JvtCav7DfBgPe4AWG2n08e2vfA7fl9
+         GYkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX31KGs+2WKq+Y03A5smQlP/Uq1EAV/TnH5JjOuCNA9mXFSx5W2X/+asnpzbgKlhzTFvygYK5BWg1KiV8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza3bfdn2cEKcXNsGYTZoi6rE9jpDUPpnNtsYcZ/7bU+TF6bJLb
+	cHrzJ7CAunPVYP3oJftn5CxTULZgxquB2LbpBLBJr/1BzGS6MwWxwWGllkA3mV29rVYORDPR9hX
+	nLMhLah/ehRzJW48OnD+l8EppYabsuASstunTBvMVafjTI7peFFvu3U21Cg7Ac6zWZV5STTfrlS
+	vkYO2O+A==
+X-Gm-Gg: ASbGncu21W+Fs04lI6+/Xh8Kmfc9a0fPXtZzTOAEsyn84jqt5qs0fDaubwrXWtwJjC7
+	oXueYNN25vYCYUKUxErmgLVf56NMPX5ntPjCbfcq91sovWH7mASgBfQ4HXRQEOPzthNz6m1mgzr
+	d3yu6oRgjhcZ0AZ8Ms8bvUkb+wUX+9vvpdzlZqtpAkfw56lerOhpKCfgBdOn7R86MQXSPUA0rlk
+	1ZiG6TYvTR9/VzfWg5aeF2XrXUhSgFGQ7mcF6VCs4FVJBzU523vkfq9bBjBCWgubn/i8jeyJ8G7
+	pXHuXQVwzYaXSJieEuSw3ah69+JSbofm6QLswxhocJdR/1EW+w==
+X-Received: by 2002:a05:6402:51ce:b0:608:66ce:14d1 with SMTP id 4fb4d7f45d1cf-60fd2f85538mr235494a12.6.1751581337636;
+        Thu, 03 Jul 2025 15:22:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhQ34cQJM1kgpxELeCyd/hjVgdKzujKM6mLeKa4YjV8RfISmMTTZ4biTzP94cqtbiU+M/JVg==
+X-Received: by 2002:a05:6402:51ce:b0:608:66ce:14d1 with SMTP id 4fb4d7f45d1cf-60fd2f85538mr235469a12.6.1751581337198;
+        Thu, 03 Jul 2025 15:22:17 -0700 (PDT)
+Received: from amikhalitsyn.lan ([178.24.219.243])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fcb2f3122sm352189a12.57.2025.07.03.15.22.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 15:22:16 -0700 (PDT)
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: kuniyu@google.com
+Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	Luca Boccassi <bluca@debian.org>,
+	David Rheinsberg <david@readahead.eu>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v3 0/7] allow reaped pidfds receive in SCM_PIDFD
+Date: Fri,  4 Jul 2025 00:22:00 +0200
+Message-ID: <20250703222209.309633-1-aleksandr.mikhalitsyn@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153711.194208-1-brgl@bgdev.pl> <d92e7c52-eab5-4759-af3f-16b24254bff6@oss.qualcomm.com>
- <CAMRc=Md=ABd+aSc7DE-2dsR5rMnpnvbetuexw8vmrf7_zzT31Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Md=ABd+aSc7DE-2dsR5rMnpnvbetuexw8vmrf7_zzT31Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 4 Jul 2025 00:21:34 +0200
-X-Gm-Features: Ac12FXyNl8F_EhX9xgzHWQ-gwTL-nTjQtlFOhsSbHuo_tnMvAihEfroUUjENXQE
-Message-ID: <CACRpkdZTXzyROqb3mGoQrsO5X_Y9-yDSU2ESUxivpb=N1WsP-g@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT] pinctrl: qcom: make the pinmuxing strict
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 10:26=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+This is a logical continuation of a story from [1], where Christian
+extented SO_PEERPIDFD to allow getting pidfds for a reaped tasks.
 
-> Yeah, I would be surprised if nothing broke.It's probably worth
-> looking into the implementation of the strict flag as it makes every
-> muxed pin unavailable as GPIO even if - like in this case - the
-> function *is* "gpio". Of course the "gpio" string has no real meaning
-> to the pinctrl core, it's just a name but it would be awesome if we
-> could say for a given function that this means GPIO and as such should
-> be available to the GPIOLIB API.
+Git tree (based on vfs/vfs-6.17.pidfs):
+v3: https://github.com/mihalicyn/linux/commits/scm_pidfd_stale.v3
+current: https://github.com/mihalicyn/linux/commits/scm_pidfd_stale
 
-Can't we just add a special callback to the pinmux_ops for that?
-like
+Changelog for version 3:
+ - rename __scm_replace_pid() to scm_replace_pid() [ as Kuniyuki suggested ]
+ - ("af_unix/scm: fix whitespace errors") commit introduced [ as Kuniyuki suggested ]
+ - don't stash pidfs dentry for netlink case [ as Kuniyuki suggested ]
+ - splited whitespace changes [ as Kuniyuki suggested ]
+ - removed unix_set_pid_to_skb() to simplify changes [ as Kuniyuki suggested ]
 
-int (*is_gpio_mode) (struct pinctrl_dev *pctldev, unsigned int pin);
+Changelog for version 2:
+ - renamed __skb_set_pid() -> unix_set_pid_to_skb() [ as Kuniyuki suggested ]
+ - get rid of extra helper (__scm_set_cred()) I've introduced before [ as Kuniyuki suggested ]
+ - s/__inline__/inline/ for functions I touched [ as Kuniyuki suggested ]
+ - get rid of chunk in unix_destruct_scm() with NULLifying UNIXCB(skb).pid [ as Kuniyuki suggested ]
+ - added proper error handling in scm_send() for scm_set_cred() return value [ found by me during rework ]
+ - don't do get_pid() in __scm_replace_pid() [ as Kuniyuki suggested ]
+ - move __scm_replace_pid() from scm.h to scm.c [ as Kuniyuki suggested ]
+ - fixed kdoc for unix_maybe_add_creds() [ thanks to Kuniyuki's review ]
+ - added RWB tags from Christian and Kuniyuki
 
-That the core code can call to ask the driver if a pin is in GPIO
-mode already? A simple strcmp("gpio", ...) is one way for the
-Qualcomm driver to implement that.
+Links to previous versions:
+v2: https://lore.kernel.org/netdev/20250701083922.97928-1-aleksandr.mikhalitsyn@canonical.com
+tree: https://github.com/mihalicyn/linux/commits/scm_pidfd_stale.v2
+v1: https://lore.kernel.org/netdev/20250629214449.14462-1-aleksandr.mikhalitsyn@canonical.com
+tree: https://github.com/mihalicyn/linux/commits/scm_pidfd_stale.v1
 
-Yours,
-Linus Walleij
+/!\ Notice
+Series based on https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs-6.17.pidfs
+It does not use pidfs_get_pid()/pidfs_put_pid() API as these were removed in a scope of [2].
+I've checked that net-next branch currently (still) has these obsolete functions, but it
+will eventually include changes from [2], so it's not a big problem.
+
+Link: https://lore.kernel.org/all/20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org/ [1]
+Link: https://lore.kernel.org/all/20250618-work-pidfs-persistent-v2-0-98f3456fd552@kernel.org/ [2]
+
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Luca Boccassi <bluca@debian.org>
+Cc: David Rheinsberg <david@readahead.eu>
+
+Alexander Mikhalitsyn (7):
+  af_unix: rework unix_maybe_add_creds() to allow sleep
+  af_unix: introduce unix_skb_to_scm helper
+  af_unix: introduce and use scm_replace_pid() helper
+  af_unix/scm: fix whitespace errors
+  af_unix: stash pidfs dentry when needed
+  af_unix: enable handing out pidfds for reaped tasks in SCM_PIDFD
+  selftests: net: extend SCM_PIDFD test to cover stale pidfds
+
+ include/net/scm.h                             |   4 +-
+ net/core/scm.c                                |  32 ++-
+ net/unix/af_unix.c                            |  57 +++--
+ .../testing/selftests/net/af_unix/scm_pidfd.c | 217 ++++++++++++++----
+ 4 files changed, 247 insertions(+), 63 deletions(-)
+
+-- 
+2.43.0
+
