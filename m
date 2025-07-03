@@ -1,66 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392C62EA14C;
-	Thu,  3 Jul 2025 14:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E572EACE9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552910; cv=none; b=IBZo9+4xzMt//uZnv3d87IG8xOeqKTaO2/mKyBm5F6ooht39147zfEbfNx7j5fCMeuKaTq9OmGVWVwL0Y6dNdMF7mz+KT84tjmZIZq+mZgs2uXuwgBcgXXW6aiiiHtwgH0EpWerlP9JceKWl9Fs9K2NM8kHHZijQNTp3VVRwzbw=
+	t=1751552914; cv=none; b=tI7DW6ljJus5jinLXsgoa0k3vkwqk0u0GxqeaHB0Pu3EvCawj1RuviKH9rcm9mb6gszY8FCUrKF9ZggS8sr2Sl5BGVYIBkIGSoglD4Y25nn61qY5ROYwwXLin63K585b930h0jRMxopfUdLRLklxuDrP/zZvaf87uhc2mOPLC/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552910; c=relaxed/simple;
-	bh=wdOiIKGzccCM8RErNFNe99zd9fwOK9DCthug8lO8Z6o=;
+	s=arc-20240116; t=1751552914; c=relaxed/simple;
+	bh=+swf/j3ikOTyTYQIR/Go7dMRoqwFsS1apHTuzUWKLJI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PSYYYx8j+kb1XUz9aPHa5eI2guR9PbnbtNxJBAxC+owXzliYxbI6d6ThFeo+CtLzzmd1Zg+G4BV1WjJAZZF+B5A7lTbc3YCZHhxokfM/xwFz1GwNcvhZBfxp8FWkYU0dX2reYonc1BXu5tznvbMa9rR+PP532y0yvX+jFYgKctU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TomuczjE; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzXFyJ3XeCdCgmkAnbwletxrFp/PZg15mw97Wo2fof3qBqlBFFUlEsiDWbqqfvrQSFtIePvfe6CJBNoJwujbk7wGW8KDtX61qhBL4jg5UwcK/CVnLRIgq1PQqclDW4WS7OWb+C9qwC4J4HBMFF/E2yneSW4WePxWqEqB8y+SJS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UCX+Pa5e; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TomuczjE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751552909; x=1783088909;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wdOiIKGzccCM8RErNFNe99zd9fwOK9DCthug8lO8Z6o=;
-  b=TomuczjE6N06gzFUz1Y5q8ArK6BMvfrTcP784+m9ytevkIKyxVKTCnuK
-   oI+Dav46utCdE6xBiNyc7pTRzEg8kHfY9zUBf4ozy7nQOzpHYaNBRjNlv
-   SftK4RLevUOTqf9Dt8sbqSNfwxBQffvG9zPphNplJ1CZWQpPlguezsG8m
-   +fywwKNYR0yGFLqsS964ybDAPnYYYsJdwVQsMJa/7IOsyyjkT0TSsLSE+
-   eFaIotJB+5HGCSoGoJcKbY0ph+DDBmxjwHi6OeUMC5nD2BeY3zLy0IPjd
-   M/qiC7ZN6QYu1XEzquzZ3ow//AYyo4wIDrRS0U4SsIh+YpgXDJ5Z8LZKD
-   Q==;
-X-CSE-ConnectionGUID: hzCs5FeJTfSWd6po6A5Q4g==
-X-CSE-MsgGUID: exA6mEo1SOiLSfoLSjL78Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76428399"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="76428399"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:28:29 -0700
-X-CSE-ConnectionGUID: CYkZp2T+SbuWhmncdTXPFw==
-X-CSE-MsgGUID: WO/ooU8XSsS2eIyewNFEWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154750352"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:28:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uXKvG-0000000CE9C-0huU;
-	Thu, 03 Jul 2025 17:28:22 +0300
-Date: Thu, 3 Jul 2025 17:28:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 4/6] iio: adc: mt6359: Move reference voltage to
- platform data
-Message-ID: <aGaThTSAriz46D7T@smile.fi.intel.com>
-References: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
- <20250703141146.171431-5-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCX+Pa5e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=W1Tq/L6ZAbocFgEmsUnCZvw0L6N9KDtQzADck8JeSDg=; b=UCX+Pa5eicmX2gXGXrzeTPpqJ4
+	33TmXxTL2Abo8OGhmCQ8Xj4xu9ygu9fKREIhq9pHNbhGFDHDt8UB8YhfdfH3n2DLMOW48FRH/gpX6
+	wstvY/0WV9nUuU5dbIkx9PkljRGmcy1byyCeEk7M7tETgyZ3scd3/9KUDWYJ1DRYo4AQ42kMc1R0Y
+	RsmQXRHodgeaXh3Xi+DZ7oecgz6caa5lMHsI9CuU3k0gfTJzUaxPRG7gLs9LATUCZ3jedCRdszpQD
+	beDIcdsDODbgyj6RtFYNIv0P7mDA78fNfqeiXL0E445RkTTJrySTEkVtvzj6i/9NYxnkuGikjXrC9
+	p/DqQ8dA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXKvH-0000000DM6m-1vam;
+	Thu, 03 Jul 2025 14:28:23 +0000
+Date: Thu, 3 Jul 2025 15:28:23 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Michal Hocko <mhocko@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
+Subject: Re: [PATCH 6/6] mm: Drain LRUs upon resume to userspace on nohz_full
+ CPUs
+Message-ID: <aGaTh2esRWr3L6IC@casper.infradead.org>
+References: <20250703140717.25703-1-frederic@kernel.org>
+ <20250703140717.25703-7-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,21 +54,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703141146.171431-5-angelogioacchino.delregno@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250703140717.25703-7-frederic@kernel.org>
 
-On Thu, Jul 03, 2025 at 04:11:44PM +0200, AngeloGioacchino Del Regno wrote:
-> In preparation to add support for new PMICs, add a `vref_mv`
+On Thu, Jul 03, 2025 at 04:07:17PM +0200, Frederic Weisbecker wrote:
+> +unsigned int folio_batch_add(struct folio_batch *fbatch,
+> +			     struct folio *folio)
+> +{
+> +	unsigned int ret;
+> +
+> +	fbatch->folios[fbatch->nr++] = folio;
+> +	ret = folio_batch_space(fbatch);
+> +	isolated_task_work_queue();
 
-I still think that the vref_mV is a better naming.
-
-> the AUXADC_VOLT_FULL definition.
-> 
-> As a consequence, the definition was also removed.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Umm.  LRUs use folio_batches, but they are definitely not the only user
+of folio_batches.  Maybe you want to add a new lru_batch_add()
+abstraction, because this call is definitely being done at the wrong
+level.
 
