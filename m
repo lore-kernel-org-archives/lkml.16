@@ -1,168 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776252E2EFA;
-	Thu,  3 Jul 2025 10:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611572E3AEA;
+	Thu,  3 Jul 2025 10:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538330; cv=none; b=C8y25ur5+/PJDs0/eObRYk+q1krLwJYZmR0UEvI7iri2tO9d8Ke7o7NKWMIKNWdhJu24dOf+kL+CeXvAjJpP1t+4ooGhl0W7PSzNdxSctr+KwAV5aiWJd7PnQKkK7ukW9NbTC4wC0GB2yRQRegM6xIfbN9A4DTnkgu6cOon1BK4=
+	t=1751538332; cv=none; b=WwgjYBemLENA0sj3X7prylJLY8uYo2dkJyqVu7UERuQ2wub+GpFEj/iy9pBodpWIismqxjuxfi6/VAwKLCHCwO4qck/GEwzsrZOHf3iWL1VL4nTv0uaRdtFav45vRLDdtgVXSv7e9A1q4yFRfLlhS+9UfRX2a4bt38B8sb/JcYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538330; c=relaxed/simple;
-	bh=SKwQSXmDop1+W5LuEcccPJhwjPfPQmCGH4HXtC2wDGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=me7lVKijn6D2dxYCnrhZt5zDjAvkxIep0sNnMeO+BQgTPDZJ2098IoQYe1gEMTRTflo+dMmyw+/fTPrJP358GDalsl+RblPxV9ByzodSF+I8Ymqe0tFV6m/tNmPxz0C00WF3Mye5oH8l9W2sFw1jkdYtjpT18AB9FeqyLwsx7lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVJnBC4Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751538332; c=relaxed/simple;
+	bh=QHuNI1J0mocagzipGR5aQ4IGSr0R96zNPV5QRZknJuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZlJelYwS1uQSTvXtJxfbBbhTya4kkGsGVW0TeORhRtwsJIIO/VFOWcF1gTiUlKG3mtDtY6XScsxI9blOQuSu8PmU3TPnnMo9JJbXZnTyfdWOkByp0oe3697Y8JGrwcrKQiujckaEBS6crRxQt8zW2Tz9C6KJYfs/E0Ap4ZAnJv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ArY5ktzf; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVJnBC4Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7948C4CEE3;
-	Thu,  3 Jul 2025 10:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538330;
-	bh=SKwQSXmDop1+W5LuEcccPJhwjPfPQmCGH4HXtC2wDGE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bVJnBC4Z24MWUObHgZI3t5dYYra2r4DCTLuB1whT8ohRvrN7V/Uao2veMzaDOQRZB
-	 d9mqSPG8Voj+kmZVdsr6HoJA3N3VzS70KO4TVweGFACAtNie9ZRuMXVvsJORhDT3nh
-	 98Y18ET7L9BR94FNymoK/Kwv1OMW/e9ys60Oe0V47x2h/m3qyk6yxHqB/KDNck989i
-	 NxBN8NMMkre8S6IoUXTn+vvV6qA34iHnYt1YqEh4LfB1L4oY7yRyXA7PUFmYy5fLNM
-	 bC4pVSCkp3ogQQIVROwRievNWnfTUceSXYLzIxihQK6ZrwLrjwlNy6oHQplLfgd169
-	 eKLbTzVnKqAuQ==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:24:53 +0200
-Subject: [PATCH v7 03/31] arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArY5ktzf"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-747e41d5469so6036388b3a.3;
+        Thu, 03 Jul 2025 03:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751538330; x=1752143130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dXUjD7MfImAQZU8+JU7QOVIdG7kZgmgU1R+Tfu+SNUU=;
+        b=ArY5ktzfYKV1Nr6ZYoRfWjCeaZm+nsrrPiIIziTzGEnyAM3ZwfUhbeG4HNoda248vJ
+         iusC1U0sDNBO2BSymbKLS8wEfZX2uYtSGWfQmIxYoJrsdb0eMNR4hb/e4Qjc69FNxlFG
+         J5vatpZkba5DOSP05NBs2fFH26gR6hR1BcVvP7/rEzEMaNiiYsV1NykBsVnQcVhPeNVf
+         ph92VK9HwhM/T1KHPPHCslGZCPQmqi6JSAIe7uHviQpxuWDvdZqxY3tBn542uNof03TL
+         mFvWRTn6CUWs1s1qv2gflfffQCtD9JoUdMavtwFjVNlLryrBsDOaEVW+k/NlvQ8LypxR
+         88pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751538330; x=1752143130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXUjD7MfImAQZU8+JU7QOVIdG7kZgmgU1R+Tfu+SNUU=;
+        b=olGkSmWLzSEilumvMuXClGxjQm9Zv9zd96WrJeY+kDK6IcZ5bEDeOp79c1p8WdDrmP
+         NMfNTdFPTSTPSYQF7KpFHWnGmLZBv/PsZxhmt5PSxo9HhyGvfjV9pTFCMIvNZesmLlq6
+         Tju7tVp8kFR4dthFakIcPQnOrZ3f1190hWRq+wxLNmUnYPMR2+M52Tob6zg4QlWkV11F
+         06hQMhE+GoBcATPnhtrdueVwHXcjTACm4qwHo4jiQN/I8N0Qzfhh/Cod00qRYaUenbfk
+         0wZ5JsKcPCkiPQIvl2omrSji2J9uYtMOVKILh6nKufb1vadfPvyIGLB8mrW5MK/h4KHa
+         +aGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKZrE1y5kg18XsOWviL4AhtknOykQIrJLwnxs/s7gJPRaBU2y6iXzcm3d8PYXbHp2p4hUuAYfiBr/y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyApuvdKgy8wh/WFQg+1y7FmENQLBkvTnUnq4g6TmigvRFxzqIz
+	hgQJY7F8eovnuqNml9VaBhL8xa11Ok16XUNn5fWEabIufpow85jES1cg
+X-Gm-Gg: ASbGncsqNxIaBBeIocW7e3bt/VDvRg8uC3ltyqWjBpsx6H8iqMcRTTcS9/xa5wC7iXb
+	X1IGZ0cPdqm9nju2zLZScUqp+PM5Nz5Y0WT9MgMs9BDgvzWefEkbxWhOcqahR0trVW5TseGHjux
+	IkLyYDHZSYskirYgjA58cXX+YMHlc1EmHCM2KX+biK+ukO9RQ0MufUQpCrxfLgaXqCc2Y2usUpP
+	8nMWzx4PCil14rfnjuz8NOAjs9lBypIrZyQXLLBqfIm5sQl8BGewZkDAcNQoS889GUJHI6I4gXu
+	/FodkvsGsK8qb8hbIRSJmDPoG5kQL4WOiem6YMSziYIxlalqinWMMfjQlWkVNU70HEL9RJf9
+X-Google-Smtp-Source: AGHT+IHzz3RRYRWu26js5qfVZF7wwD2MorMUcc2Nqsg/oVzDHjgNVbsweN57uB23YZEzDzkG8THccA==
+X-Received: by 2002:a05:6a00:3c89:b0:740:aa33:c6f8 with SMTP id d2e1a72fcca58-74b5131899cmr8373208b3a.7.1751538330427;
+        Thu, 03 Jul 2025 03:25:30 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af558914dsm17503280b3a.78.2025.07.03.03.25.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 03:25:30 -0700 (PDT)
+Date: Thu, 3 Jul 2025 18:25:27 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Junhui Liu <junhui.liu@pigmoral.tech>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Yuntao Dai <d1581209858@live.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: Question for CV1800 mailbox users series SoC
+Message-ID: <pfe2tzvujcfogxnj6uvnjaicktl5ifcj3rhw6d5nyq77cyhzlc@uonejrloi66h>
+References: <iq36z2mqetrdhxe24w455quvqixcy25ovuxjz3rgelpgln4j3f@kjxn5z7yb6bz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-3-12e71f1b3528@kernel.org>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
-In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
- Sascha Bischoff <sascha.bischoff@arm.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Peter Maydell <peter.maydell@linaro.org>, 
- Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.15-dev-6f78e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <iq36z2mqetrdhxe24w455quvqixcy25ovuxjz3rgelpgln4j3f@kjxn5z7yb6bz>
 
-Add ICC_PPI_PRIORITY<n>_EL1 sysreg description.
+On Thu, Jul 03, 2025 at 06:21:38PM +0800, Inochi Amaoto wrote:
+> As I have seen you take the mailbox driver for CV1800, I wonder
+> if you have developed the driver for the 8051 core on the CV1800
+> system? 
+> 
+> Regards,
+> Inochi
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- arch/arm64/tools/sysreg | 83 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+Please ignore this, I have forgot to remove peoples when replying.
 
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index fb5bddc700b3..fc17e19a738d 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -3024,6 +3024,89 @@ Sysreg	PMIAR_EL1	3	0	9	14	7
- Field	63:0	ADDRESS
- EndSysreg
- 
-+SysregFields	ICC_PPI_PRIORITYRx_EL1
-+Res0	63:61
-+Field	60:56	Priority7
-+Res0	55:53
-+Field	52:48	Priority6
-+Res0	47:45
-+Field	44:40	Priority5
-+Res0	39:37
-+Field	36:32	Priority4
-+Res0	31:29
-+Field	28:24	Priority3
-+Res0	23:21
-+Field	20:16	Priority2
-+Res0	15:13
-+Field	12:8	Priority1
-+Res0	7:5
-+Field	4:0	Priority0
-+EndSysregFields
-+
-+Sysreg	ICC_PPI_PRIORITYR0_EL1	3	0	12	14	0
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR1_EL1	3	0	12	14	1
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR2_EL1	3	0	12	14	2
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR3_EL1	3	0	12	14	3
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR4_EL1	3	0	12	14	4
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR5_EL1	3	0	12	14	5
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR6_EL1	3	0	12	14	6
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR7_EL1	3	0	12	14	7
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR8_EL1	3	0	12	15	0
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR9_EL1	3	0	12	15	1
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR10_EL1	3	0	12	15	2
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR11_EL1	3	0	12	15	3
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR12_EL1	3	0	12	15	4
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR13_EL1	3	0	12	15	5
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR14_EL1	3	0	12	15	6
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_PRIORITYR15_EL1	3	0	12	15	7
-+Fields	ICC_PPI_PRIORITYRx_EL1
-+EndSysreg
-+
- Sysreg	PMSELR_EL0	3	3	9	12	5
- Res0	63:5
- Field	4:0	SEL
-
--- 
-2.48.0
-
+Regards,
+Inochi
