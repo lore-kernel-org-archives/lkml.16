@@ -1,122 +1,244 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BF91AA1D5;
-	Thu,  3 Jul 2025 02:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F861C6FE9;
+	Thu,  3 Jul 2025 02:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511137; cv=none; b=tDiS53KxEu76/CUHI7TR2KhcIX92Y3FJRbOSrKXpa46C1nhw1GIuISYmwBQUtJCdnrECidb/bQORuodbRBanTdMGGbSdDAnd7L/CeSsWac35fIaw5XCFCG9AkLEXLNrkjMA+gwN27VW5vf9PVNVjPA89vss+rzisSvs+vJ6Niz4=
+	t=1751511137; cv=none; b=LNCenoRXhjhCahd0xi+ci0IB+CpImT4sXEWoeur8xyiKr3QLqANyJFtNCK9ITITJ0rlKAjNBfQipNItIS4+BKWFmJ+Jwid03L8yCoAY1MdNSdMPmI3ai7rIm526c98FbSfOoZpUwx39jPG2P+MC801zts2GowoJqSNHDIeyLqJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751511137; c=relaxed/simple;
-	bh=zPpCHqeNq9ubsyD+eSPF34L63IwETpH3TV/cdq7hzvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mFngVDDVP4ZNCELXjKDm72Kai/3ryO9QgHG3A0TFCQGRIzghZLsQxg/0Fo8aW7+8zNUsTPz61PgUjSvxhW2I8qOQlR1w0y08us1afHnJQc3BymCz9yCeBLPQs1NlVQCxEKtGcIMNoHPWJ1HcjOq/CiZHHPfcbb6dRMeUzVcCD9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NL6WS4PQ; arc=none smtp.client-ip=209.85.217.50
+	bh=tGikjumrTmudqXSLn2oIbcGO+dakZooSKitvvlYxbFE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m7KB59EuVhq8dymFHW3EG5AqOSG/gRGJvmWNYEHE+cvXBwQD1olHRGleHVPtp55wfHJvOgv04hsstf5uT12sU0InwfnxjbhcV7bK3yb2kCEl7dgVCRr9NuVgIwRSGekx395OhsBN6jZmhu4HkarlQjsZgHPqoW8y/RK1FXcgHco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDfahOcW; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NL6WS4PQ"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e9a7b4a412so3316352137.0;
-        Wed, 02 Jul 2025 19:52:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDfahOcW"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af6a315b491so4859376a12.1;
+        Wed, 02 Jul 2025 19:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751511133; x=1752115933; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751511135; x=1752115935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9hqOgLvM5cpEDE69yGTdJg3JqR+5f/IljRV3pU1cFz8=;
-        b=NL6WS4PQGsuo40hJUZyzgEkER5vY/Iw2p58fbskBxWJp0sCaiRhL2grETV8++JV545
-         ZUhdhygP0fjqP1Rm3Xxn9F3bA9I6BwY2W8haDsYQQJLVdrK1QFnRhKl7TXMDQs2UTP6f
-         eBokFAv9f+X0UTH5vN3b50ZCn/qtp+xUKLB9t4jTB/B94JLZ9qfiSaQsjRaj9xmkiPEI
-         qBjnCdLvNA810wVzLpEegJNM/0mdh4ROVeNxlVaVwu+iKpgeFYuHskvt4V9NFEMdIjPU
-         6c9q+gv4pSlY+OkwCNoCzQjoL+bb4h3D6QljdgBvEx4alCXwJGIAHXHgj0qxO0AeHfB6
-         j9Kg==
+        bh=lo9px2O8dxCxStsMAy6k8t9n1UAlivRa8eyuw8Vbn2g=;
+        b=ZDfahOcWijFbxN6BIH7ar9kviGwme1x6rKqwNa0fuScpGYtObCPPddP8GgfFveXMsJ
+         H6eUn9f9H37Wdc7SueoJSvsNQs3/r5sEWGXYr73/QXVjcrb+FfiW8WY31akeXW0NQKcX
+         JOZmpk48jku/z1RdWk32tLbpvJQVw1jKB8r/ABqcshlIMF3pFG9/bFwCof5lJ/4+TDOe
+         jOMbECz0710cpOxv6vP5gPAixpcD0Gm5jj/OpjX2nZd2Q3HgswDt+QYNwyBi5YNmmDHW
+         X4rT7zlhtEkG6EZWdSBbj6rdWFD2w/NJ6L5VrP6iS+ILuSYatMEKLtG3KqAkxLRWki6y
+         24PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751511133; x=1752115933;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751511135; x=1752115935;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9hqOgLvM5cpEDE69yGTdJg3JqR+5f/IljRV3pU1cFz8=;
-        b=nStAZkizKVM0jfu34EUyYFz6mR61lIEDa1tRcqQhj7X9iw6retb4zbNMmBTL2LC0OE
-         8TFuct68uVY9n2EnBLx+vi9qZPM5NJn4jAS0OL7EAdP/axMJnHbC9wgjFMcAbMw8OHbZ
-         UbNCb/X98L/dQxrNFvjkG2STFgg/Qs+kP7uxMIDWS5ewfLNp5SoLVlthFq/L+prlmP5r
-         6ivXbcznwToPiDPNX0s1Lf68VL24a8qPJlay+IzrmZ1CYIQeK5a/tqkX5IlFc2b960+i
-         nWUhtUU8E0VNW9cxb1EeEAiUSkInSB9CwPmI7SuGmbc+FD2MQZ2n0G7Az0V6BvQzQ+5i
-         TkXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcTI+hr0bnO6Qy4jbyAHsfeKOxPl3P8vFdiOwjT/37YI/V1OjH5Fm0h4Ix2gUAOrB+RD7IUPurw/I=@vger.kernel.org, AJvYcCXrmaDN1zEJsxvx6Mtqs1S8/I/n6i+gIBdk6HU+8kkLJX9My0VdJmNUlyQY7INYM+eKnBRppiuK2ubw+GDa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+g8+mJXNJWEML+8tBDa5HjgM96vyxeOrNHQ1mhT33VQJHu+Mh
-	udkTl4Sv8FjDFuM4eJJgPGmEBY1x0ZYnABWUIPnqDKmYvuwm25vF+0japz3CMwc6xU225fbONJo
-	xP9JXEUcdmbvTDzcVqM5UGBwYfW0wUY2G0qTq
-X-Gm-Gg: ASbGnctFpqUyuU+De3H1dnpmY5+Av1w845mRqdhPG/w+II+LMJqdyJPXmBwZQs/fLII
-	AWGMJFPLfV3fYfYau0V26ZRjPsNAfh6CHLBNG1FZw8HMjH/tULt4tF5UvT+xxAQZ/Qhemvj/g7s
-	TWTEj0ZHlTdYAYvrUb2UnPpSaJ566zYz0enXCvDLKfIhc=
-X-Google-Smtp-Source: AGHT+IEvTsjj7sQvdIbP0qIKAQgKS6fd3xFJQp8JC0qxGchbr8oAX86ZgI6lLm3yfWdMsHZPB5VOT4/PSnFTOkWy4tI=
-X-Received: by 2002:a05:6102:f98:b0:4e6:d7af:a7b1 with SMTP id
- ada2fe7eead31-4f16110d4b3mr3774274137.10.1751511133247; Wed, 02 Jul 2025
- 19:52:13 -0700 (PDT)
+        bh=lo9px2O8dxCxStsMAy6k8t9n1UAlivRa8eyuw8Vbn2g=;
+        b=WeYCsf8u1u7i5TqLrbSgX3aw0QAF/IP50eNNBfa9qXf/CL3zGGq/9PiqVkbxgSc10v
+         x2mOjKFKXTA01CC4wWje5+1JNY4u854VYKNtIawszGxPI1ZAIvmpfm8G38vx7T2snvwZ
+         RhltdwKg3k4E2KQJhdYkrOa1YVpSh0mplUi5HUbbF72TkOjdqLORw4EVA7LBlt24x0gK
+         eOSnIquHnnB9cRNe/R3aBxPHzsqWPgi5mdPkCADohuwvV8WshaZP67sRe6x0DYzudbuY
+         icsM8Q+XYbpcpl4NHik2xLor84Ix5p1rrmPGgZojrovYOAcUD7Nc971/hiUl+o17vK1K
+         Ycvw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Jdcz/1blcCg2MpYDY9tbstI3VB6eLYot4nNQApvhubWlBcTIB1F1doWAiFd+wvkGZ4rDHgXqCHOe9ww4@vger.kernel.org, AJvYcCUc1iB2UqKHjLyYJXJGOj3FUd47vv4YGf7az8Jt98Sht/aoganB488xrbxMhal/TLckZTOCebkV@vger.kernel.org, AJvYcCXGAbiWj/vuYGmw/oN7lQr+yzESS3SdZD54NQVCXg3U674vAnDMiKJ0OBC2ZK41NXXIIgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTqTvvMoAmaQMJ2E8v6satLoqiyGGyjQRA3WJP/D9l9Uw6jkTH
+	3ntVJVFn77cGwc8tvNjhtLGM5okhCQlvXsRNRdJcRHKKnGP+anwBF1PK
+X-Gm-Gg: ASbGnct5oE4/IHWqeYPs9G8YkdKZ5h50vHxrvihoREC0xlMZiNWZxbRFLm16CNNSkM+
+	X4fSeToOyOrOsWjP63rlF+n/0RwTMRKltJ41Upe1sNrsLp8sc2pmkWkvbKsD+81hg5ZBL4Dl55M
+	ujtIEWxArd0ZkkODbXBKMEvlDrBFeR4LK0jh5ux/qEy1pXbKC0KzcqiewsTZ7UGu5G4R5ng9KRS
+	ZK3+1cKYXYhR217Y+boAfig/eOJ6LEl1t3CM+etcFOpU/CG65AT7Wklv6XooLenacvdaYwZqbss
+	orRbgQT2+yiNnFfoI0zTHkz6o8Tem54p5yAFcw96Nv5h/HpsehfyqxkvTaxWzTE5nX/ae4+P2Lf
+	YgoXSRzMt
+X-Google-Smtp-Source: AGHT+IGzteSmePiYOjnty3CvF79a8fsJyFKLo1CJyDiGjPDyKnKRc/syqMP+iX0JDQKDqfuzEdxWrA==
+X-Received: by 2002:a17:90b:28cb:b0:313:f83a:e473 with SMTP id 98e67ed59e1d1-31a9d5ebad2mr2484943a91.15.1751511134907;
+        Wed, 02 Jul 2025 19:52:14 -0700 (PDT)
+Received: from devant.antgroup-inc.local ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc8ffb5sm949110a91.46.2025.07.02.19.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 19:52:14 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: sgarzare@redhat.com
+Cc: davem@davemloft.net,
+	decui@microsoft.com,
+	fupan.lfp@antgroup.com,
+	jasowang@redhat.com,
+	kvm@vger.kernel.org,
+	leonardi@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mst@redhat.com,
+	netdev@vger.kernel.org,
+	niuxuewei.nxw@antgroup.com,
+	niuxuewei97@gmail.com,
+	pabeni@redhat.com,
+	stefanha@redhat.com,
+	virtualization@lists.linux.dev,
+	xuanzhuo@linux.alibaba.com
+Subject: Re: [RESEND PATCH net-next v4 4/4] test/vsock: Add ioctl SIOCINQ tests
+Date: Thu,  3 Jul 2025 10:51:56 +0800
+Message-Id: <20250703025156.844532-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <qe45fgoj32f4lyfpqvor2iyse6rdzhhkji7g5snnyqw4wuxa7s@mu4eghcet6sn>
+References: <qe45fgoj32f4lyfpqvor2iyse6rdzhhkji7g5snnyqw4wuxa7s@mu4eghcet6sn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1c1e39cb-5fe0-46b3-898e-c65bbb3beb30@gmail.com>
- <aGUh7uXenHc7NYB2@smile.fi.intel.com> <20250702164022.000027e8@huawei.com>
-In-Reply-To: <20250702164022.000027e8@huawei.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Wed, 2 Jul 2025 23:52:02 -0300
-X-Gm-Features: Ac12FXzNWmTAl2CMlR5pzag85NttUzDlX_AoFhXd7yX8Qi_WW5G-3OHix-4EVCo
-Message-ID: <CANZih_Rc3aht-ZTuuEytad8A1d5eC8Z_Dq2GQD8K2QiyFjcBZQ@mail.gmail.com>
-Subject: Re: iio: accel: sca3000: dead code issue
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	"Colin King (gmail)" <colin.i.king@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, nuno.sa@analog.com, 
-	Andy Shevchenko <andy@kernel.org>, Gustavo Bastos <gustavobastos@usp.br>, 
-	Julien Stephan <jstephan@baylibre.com>, linux-iio@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 12:40=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 2 Jul 2025 15:11:26 +0300
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
->
-> > On Wed, Jul 02, 2025 at 10:00:55AM +0100, Colin King (gmail) wrote:
-> >
-> > >                 ret =3D spi_w8r8(st->us,
-> > > SCA3000_READ_REG(SCA3000_REG_BUF_COUNT_ADDR));
-> > >
-> > > >>>  the call to spi_w8r8 returns 0 on success or -ve on an error
-> >
-> > Where did you get this from, please?  Any link to elixir or Git repo?
-> >
->
-> Hmm.  Just for reference the docs of spi_w8r8 are:
->
-> * Return: the (unsigned) eight bit number returned by the
-> * device, or else a negative error code.
->
-> Not 0 on success (well not unless it is zero.
->
-> So the check indeed looks wrong as should be if (ret < 0)
->
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=
-=3Dtesting&id=3Dca66d8208762492df8442a503db568d9aab65f2f
-> It's in my tree.
->
-> I'll drop the patch when I'm on the right machine.  Andrew, could
-> you do a new version fixing this up?  If not can make the changes
-> but will be at least the weekend before I get a chance.
->
+Resend: forgot to reply all...
 
-Hey, guys! Thanks for pointing this out, I totally missed this problem
-before. I'll try to fix this tomorrow.
+> On Mon, Jun 30, 2025 at 03:57:27PM +0800, Xuewei Niu wrote:
+> >Add SIOCINQ ioctl tests for both SOCK_STREAM and SOCK_SEQPACKET.
+> >
+> >The client waits for the server to send data, and checks if the SIOCINQ
+> >ioctl value matches the data size. After consuming the data, the client
+> >checks if the SIOCINQ value is 0.
+> >
+> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+> >---
+> > tools/testing/vsock/vsock_test.c | 80 ++++++++++++++++++++++++++++++++
+> > 1 file changed, 80 insertions(+)
+> >
+> >diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+> >index f669baaa0dca..1f525a7e0098 100644
+> >--- a/tools/testing/vsock/vsock_test.c
+> >+++ b/tools/testing/vsock/vsock_test.c
+> >@@ -1305,6 +1305,56 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
+> > 	close(fd);
+> > }
+> >
+> >+static void test_unread_bytes_server(const struct test_opts *opts, int type)
+> >+{
+> >+	unsigned char buf[MSG_BUF_IOCTL_LEN];
+> >+	int client_fd;
+> >+
+> >+	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
+> >+	if (client_fd < 0) {
+> >+		perror("accept");
+> >+		exit(EXIT_FAILURE);
+> >+	}
+> >+
+> >+	for (int i = 0; i < sizeof(buf); i++)
+> >+		buf[i] = rand() & 0xFF;
+> >+
+> >+	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
+> >+	control_writeln("SENT");
+> >+
+> >+	close(client_fd);
+> >+}
+> >+
+> >+static void test_unread_bytes_client(const struct test_opts *opts, int type)
+> >+{
+> >+	unsigned char buf[MSG_BUF_IOCTL_LEN];
+> >+	int fd;
+> >+	int sock_bytes_unread;
+> >+
+> >+	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
+> >+	if (fd < 0) {
+> >+		perror("connect");
+> >+		exit(EXIT_FAILURE);
+> >+	}
+> >+
+> >+	control_expectln("SENT");
+> >+	/* The data has arrived but has not been read. The expected is
+> >+	 * MSG_BUF_IOCTL_LEN.
+> >+	 */
+> >+	if (!vsock_ioctl_int(fd, TIOCINQ, &sock_bytes_unread,
+> 
+> I know that TIOCINQ is the same of SIOCINQ, but IMO is confusing, why 
+> not using SIOCINQ ?
 
-In this case, should I send a new version of the patchset fixing the
-problem or a single patch following this commit with the fix?
+I tried to use `SIOCINQ` but got:
+
+```
+vsock_test.c: In function 'test_unread_bytes_client':
+vsock_test.c:1344:34: error: 'SIOCINQ' undeclared (first use in this function); did you mean 'TIOCINQ'?
+ 1344 |         if (!vsock_ioctl_int(fd, SIOCINQ, &sock_bytes_unread,
+      |                                  ^~~~~~~
+      |                                  TIOCINQ
+vsock_test.c:1344:34: note: each undeclared identifier is reported only once for each function it appears in
+```
+
+I just followed the compiler suggestion, and replaced it with `TIOCINQ`.
+Following your comments, I found that `SIOCINQ` is defined in `linux/sockios.h`, as documented in [1].
+The documentation suggests that we can use `FIONREAD` alternatively.
+In order to avoid confusion, I'd like to choose `SIOCINQ`.
+
+1: https://man7.org/linux/man-pages/man7/unix.7.html
 
 Thanks,
-Andrew
+Xuewei
+ 
+> The rest LGTM.
+> 
+> Thanks,
+> Stefano
+> 
+> >+			     MSG_BUF_IOCTL_LEN)) {
+> >+		fprintf(stderr, "Test skipped, TIOCINQ not supported.\n");
+> >+		goto out;
+> >+	}
+> >+
+> >+	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
+> >+	/* All data has been consumed, so the expected is 0. */
+> >+	vsock_ioctl_int(fd, TIOCINQ, &sock_bytes_unread, 0);
+> >+
+> >+out:
+> >+	close(fd);
+> >+}
+> >+
+> > static void test_stream_unsent_bytes_client(const struct test_opts *opts)
+> > {
+> > 	test_unsent_bytes_client(opts, SOCK_STREAM);
+> >@@ -1325,6 +1375,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
+> > 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
+> > }
+> >
+> >+static void test_stream_unread_bytes_client(const struct test_opts *opts)
+> >+{
+> >+	test_unread_bytes_client(opts, SOCK_STREAM);
+> >+}
+> >+
+> >+static void test_stream_unread_bytes_server(const struct test_opts *opts)
+> >+{
+> >+	test_unread_bytes_server(opts, SOCK_STREAM);
+> >+}
+> >+
+> >+static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
+> >+{
+> >+	test_unread_bytes_client(opts, SOCK_SEQPACKET);
+> >+}
+> >+
+> >+static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
+> >+{
+> >+	test_unread_bytes_server(opts, SOCK_SEQPACKET);
+> >+}
+> >+
+> > #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
+> > /* This define is the same as in 'include/linux/virtio_vsock.h':
+> >  * it is used to decide when to send credit update message during
+> >@@ -2051,6 +2121,16 @@ static struct test_case test_cases[] = {
+> > 		.run_client = test_stream_nolinger_client,
+> > 		.run_server = test_stream_nolinger_server,
+> > 	},
+> >+	{
+> >+		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
+> >+		.run_client = test_stream_unread_bytes_client,
+> >+		.run_server = test_stream_unread_bytes_server,
+> >+	},
+> >+	{
+> >+		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
+> >+		.run_client = test_seqpacket_unread_bytes_client,
+> >+		.run_server = test_seqpacket_unread_bytes_server,
+> >+	},
+> > 	{},
+> > };
+> >
+> >-- 
+> >2.34.1
+> >
