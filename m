@@ -1,149 +1,178 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F8D2E03FD;
-	Thu,  3 Jul 2025 09:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B752E03E5;
+	Thu,  3 Jul 2025 09:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536586; cv=none; b=nzw39TkD/LIUqqbF6e/3x3v1/tC/o+A4fHbFGNpm2tZOAG77JFstiqH3ltFobVnUmDcfixz2JrsM/4aL67G9MDr3Zq7K7UdrB/vkXGVajvor/aWySXtF1wG1rtbRqfAQEIkPFW45NQfHst0tlIjT6UNdaho1EY15S4Q3dZvXN2U=
+	t=1751536609; cv=none; b=p5gCAI2EXAkLsoFffb7fGipKdXyEThJEgm+hQjfYsVAbVGrML5UCMFL9ojnNo9UYKE4XhSFxwmh5PfZZwbMUa98zY1FzJEJbQiI38Zkd4b+CSOVTLf7FF3O37RLEtc4rhJCRbbmC2AgF2iWiY/s4wpCOFrOuk7QaNTavN3e7Wqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536586; c=relaxed/simple;
-	bh=qDLm4CgNLZPOYtYXEq9zAF6zy52XqGAELNE6mJ8vijg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UVHG8aVp80LTNpHE8UreNByt1IenADjJso0ZQ72ngPb4neIZGVSRUfYRikpKTU2NLPeu4OR5bn/z7kMrTYP19aGM46Kp+FLj6hMq631pGRqYPGEPcUACk/WmE/ditqs3KYoYvDcpokQBbYuwo+mmTs+CktJ0TSdwjtBkOCiQx9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p86i/b8J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iqDGoKzl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751536609; c=relaxed/simple;
+	bh=XK9k3Mh6uQMbWe9PXpjQuuqE3KxexxUEdn6IH4a+Wug=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JHK4BOjPnw0oqMpyBvy/lTj+49WnPVglNIcTtc6shQSheT6Hhk+cDAU7ZXRqIuAHd63Qxiq6G4i4dGLJG4viZ5f5QF38+LIP81uytyQfKLiE9Yia/ko6Efy15377hfia/FfuCCkrpSLD19mPNw2/EIWilYdfbLXVzZTgefFilE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m6uaYoDE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p86i/b8J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iqDGoKzl"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751536582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=McVtbViVAKjtJayVZUeulSTCPeoSBRL44rxBPUG2jB8=;
-	b=p86i/b8JUVbnwgdjsNfwmENRt/T+VGmjJhmhkljdHJXvR0sTYvxvMUtIMAWhk0HqR86opU
-	V/7mrMfVSKi+JhOBdfZ2F8zsrtAIk+Uxq2cVtG8P+sHhJ4+n1lhS6Uvg9RHrvrTALii+eP
-	bdgAfjxEORipzy76Ti3r0MEGqP2Y1jn7vviPr4jzWUAbzSM6PYf45eClIhLCz0fSvKbIrF
-	ZXOJotGfsfFpE4xFufPgNzAdqSwuFlU6lY8f6d3DzRMf4kWJDDXauBN9dQCH/QKJAypuOQ
-	rBa1aS8NfJRA67EENXnp3qZth6OlKkQkLZs18ngojlFLbcU06FjtwU5PSeIORw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751536582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=McVtbViVAKjtJayVZUeulSTCPeoSBRL44rxBPUG2jB8=;
-	b=iqDGoKzloeHZz6Nnx+UChibR0z94U5nMP8x6gDXEyVt2mfQvdrnoGSxCmyNAVRA+Gsx1MC
-	4xnIBfXwsZgA9AAw==
-To: =?utf-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
-Cc: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.cn>,
- linux-kernel@vger.kernel.org, syzkaller@googlegroups.com,
- kvm@vger.kernel.org, Paolo Bonzini <bonzini@redhat.com>
-Subject: Re: BUG: spinlock bad magic in lock_timer_base
-In-Reply-To: <8d6bd3e.1228f.197cf7e7892.Coremail.baishuoran@hrbeu.edu.cn>
-References: <8d6bd3e.1228f.197cf7e7892.Coremail.baishuoran@hrbeu.edu.cn>
-Date: Thu, 03 Jul 2025 11:56:21 +0200
-Message-ID: <87jz4pwqbe.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m6uaYoDE"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5636XxaE022911;
+	Thu, 3 Jul 2025 09:56:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=sq85Q/vJxoA
+	eidtGD92wyNYWRLccThyg6rGim2z8SQw=; b=m6uaYoDElUbSkLwgqCDbOQ4uH+n
+	qyuDKN/mMwOJfFMaHdnyM/z+MnEx+g+AsHVYvtiqT33vsT2FSqYSVkkA93qNNYx9
+	ckafopZCtxVXqG7qW8LhAC55kyAocRCrcCTcm9FR1FHvTYAyRkDAs3Z0tOv6qjOc
+	YSOgwwYNL7LWyxyjYRpclQ3CiuGjhYO43ERmo8j5lVlRYG3Mc6zCrrGGnYoxx8qp
+	T7UD3Ko1naW/hz/aeJ5YmDE8NgeTIRYz7sRKxbS5GputD+pl7hVeZuRdC+ac3TRs
+	8aR+WpZ9j+Q2RWDPYE208430I0ThYeq6PhG/yND9JM2DC/PBtjSF4cAP/dw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn6kak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 09:56:37 +0000 (GMT)
+Received: from pps.filterd (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5639tBho016579;
+	Thu, 3 Jul 2025 09:56:36 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 47nesbvtkn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 09:56:36 +0000
+Received: from NALASPPMTA02.qualcomm.com (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5639r4Ht013611;
+	Thu, 3 Jul 2025 09:56:35 GMT
+Received: from hu-devc-lv-u22-a.qualcomm.com (hu-ziyuzhan-lv.qualcomm.com [10.81.25.41])
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 5639uZQ1018799
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 09:56:35 +0000
+Received: by hu-devc-lv-u22-a.qualcomm.com (Postfix, from userid 4438065)
+	id 8D43C5AA; Thu,  3 Jul 2025 02:56:35 -0700 (PDT)
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Subject: [PATCH v8 3/3] arm64: dts: qcom: qcs615-ride: Enable PCIe interface
+Date: Thu,  3 Jul 2025 02:56:30 -0700
+Message-Id: <20250703095630.669044-4-ziyue.zhang@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250703095630.669044-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250703095630.669044-1-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA4MSBTYWx0ZWRfX9a9IBzlRrgY0
+ sFHNek2HyHhivGDERDdrMwO79nwjcmmEevPPSmyxZ6DOc7/pRZZLS+GgBX3xHcRLZPQ4TdayqNn
+ vi7IqoBtKkFAIjvL6YaFjJR7SohAnz1q4ac7y/sNUBP53aNuBEPFlLCOY2M1mlb1NRHQN/Mtk85
+ rHYIAlfRuI5sQS/ypZhWEHtdrrTC+7Dcd+EaQnvfrY2TLsE/c9g3MeS+0oTna6GyDKhAuXv45hI
+ d464RsMsEJEyVTxXkbEamlwkYlkFje/q10g0QKAyOgcPQkW7YIeamE6B5j4vJATl8LvKASpJrzy
+ eFObVCr/dyfUc3m4fbcWnqkNDEcCwQelGbyYExIo5etNqdJ5V4Cg3W7THDuAgpvXKb+tXR1kDvC
+ ksi8hvMoJCV3YoveFDXbiXU2dM1+kn80KM3ZrKlTQwEI229nYmS0usaiomLisz+qKbGxUkxP
+X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=686653d5 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=3zbVK_edIv7hY8gRkFcA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: EA_R8Qrk8PB_dNvKX-a0pOaE6HKl8kP2
+X-Proofpoint-GUID: EA_R8Qrk8PB_dNvKX-a0pOaE6HKl8kP2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030081
 
-On Thu, Jul 03 2025 at 16:54, =E7=99=BD=E7=83=81=E5=86=89 wrote:
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-> Dear Maintainers,
+Add platform configurations in devicetree for PCIe, board related
+gpios, PMIC regulators, etc.
 
-The timer maintainers are hardly the right group to ask. The timer code
-is just the messenger :)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/qcs615-ride.dts | 42 ++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-I've Cc'ed the KVM folks, as you correctly identified KVM already as the
-probable source of the problem.
+diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+index a6652e4817d1..011f8ae077c2 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
++++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+@@ -217,6 +217,23 @@ &gcc {
+ 		 <&sleep_clk>;
+ };
+ 
++&pcie {
++	perst-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 100 GPIO_ACTIVE_HIGH>;
++
++	pinctrl-0 = <&pcie_default_state>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
++
++&pcie_phy {
++	vdda-phy-supply = <&vreg_l5a>;
++	vdda-pll-supply = <&vreg_l12a>;
++
++	status = "okay";
++};
++
+ &pm8150_gpios {
+ 	usb2_en: usb2-en-state {
+ 		pins = "gpio10";
+@@ -256,6 +273,31 @@ &rpmhcc {
+ 	clocks = <&xo_board_clk>;
+ };
+ 
++&tlmm {
++	pcie_default_state: pcie-default-state {
++		clkreq-pins {
++			pins = "gpio90";
++			function = "pcie_clk_req";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++
++		perst-pins {
++			pins = "gpio101";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++
++		wake-pins {
++			pins = "gpio100";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++};
++
+ &sdhc_1 {
+ 	pinctrl-0 = <&sdc1_state_on>;
+ 	pinctrl-1 = <&sdc1_state_off>;
+-- 
+2.34.1
 
-> When using our customized Syzkaller to fuzz the latest Linux kernel, the =
-following crash (110th)was triggered.
-
-6.14 is not really the latest kernel.
-
-> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-> git tree: upstream
-> Output:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG%3A%20=
-spinlock%20bad%20magic%20in%20lock_timer_base/report110.txt=20
-> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/co=
-nfig.txt
-> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG=
-%3A%20spinlock%20bad%20magic%20in%20lock_timer_base/110repro.c Syzlang=20
-> reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG%3=
-A%20spinlock%20bad%20magic%20in%20lock_timer_base/110repro.txt Our reproduc=
-er uses mounts a constructed filesystem image.
->=20=20
-> The error occurs in the lock_timer_base (timer.c lines 1770-1790 or
-> so). It happens cleanup_srcu_struct during the KVM VM shutdown
-> process, and it is likely that the memory pointed to by the timer
-> object has been freed. The timer_base pointer returned by the
-> get_timer_base (tf) points to an invalid memory area
-> (__init_begin+0x2a500)
-
-If you enable DEBUG_OBJECTS_TIMERS and DEBUG_OBJECTS_FREE the kernel
-should survive and provide some useful output.
-
-> We have reproduced this issue several times on 6.14 again.
-
-Does the probkem still exist on the latest upstream kernel release
-candidate, i.e. v6.16-rc4?
-
-Leaving the report context intact for kvm folks.
-
-Thanks,
-
-        tglx
-=20=20=20=20
-
-> If you fix this issue, please add the following tag to the commit:
-> Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.ed=
-u.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>
->
->
->
->
-> BUG: spinlock bad magic on CPU#2, syz.6.399/18129
->  lock: __init_begin+0x2a500/0x41000, .magic: 00000000, .owner: <none>/-1,=
- .owner_cpu: 0
-> CPU: 2 UID: 0 PID: 18129 Comm: syz.6.399 Not tainted 6.14.0 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubunt=
-u1.1 04/01/2014
-> Call Trace:
->  <TASK>
->  dump_stack_lvl+0x116/0x1b0
->  do_raw_spin_lock+0x22c/0x2e0
->  _raw_spin_lock_irqsave+0x45/0x60
->  lock_timer_base+0x125/0x1c0
->  __try_to_del_timer_sync+0x7f/0x160
->  __timer_delete_sync+0x120/0x1c0
->  cleanup_srcu_struct+0x122/0x5a0
->  kvm_put_kvm+0x7c9/0xa10
->  kvm_vcpu_release+0x4b/0x70
->  __fput+0x417/0xb60
->  __fput_sync+0xa6/0xc0
->  __x64_sys_close+0x8b/0x120
->  do_syscall_64+0xcf/0x250
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7fafdad1ebdb
-> Code: 03 00 00 00 0f 05 48 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0=
-c e8 63 fc ff ff 8b 7c 24 0c 41 89 c0 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff=
- ff 77 2f 44 89 c7 89 44 24 0c e8 a1 fc ff ff 8b 44
-> RSP: 002b:00007ffde8c95b20 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-> RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 00007fafdad1ebdb
-> RDX: ffffffffffffffff RSI: 0000000000000000 RDI: 0000000000000005
-> RBP: 00007ffde8c95bf8 R08: 0000000000000000 R09: 00007fafda8015a6
-> R10: 0000000000000001 R11: 0000000000000293 R12: 00007fafdafa5fa0
-> R13: 000000000002f3ea R14: ffffffffffffffff R15: 00007fafdafa5fa0
->  </TASK>
