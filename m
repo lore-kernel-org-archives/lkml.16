@@ -1,161 +1,161 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E9229550F;
-	Thu,  3 Jul 2025 06:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85608263F22
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751522887; cv=none; b=PE5Q3DOdC8UJTyrWM0jokVIIUTbCu2rFaZ1JhmQuGpY58CvX05JD9TNzddZWZ+6rkTAQsMhRKSxfia+qTCdeQEGxy1aQ73BDlwkHRDVUgw28ZT0lhEgpZFvoCrhZwaNlali/YMDZFUQPGXjVsj7hqlzrBS01IKchq2PtcwpcOgs=
+	t=1751522973; cv=none; b=QsKALqoML6cDA3gALa2xw0LBg6oRLrYChngpSr7hicgWGhlsT1jA3FtLNIkIGx54mmtiVvTOUDNBOHDxxFor1Q/mJfIdJQgZNh0iwlkTscNiSQMDMk3LxPCsC3p3Wh4+8gVOCB2Q1et72fpT8SrfyqohXGnXVWFUht6JJRhdKOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751522887; c=relaxed/simple;
-	bh=H6ceUGAWatlNiIAcR00D1RWx4pfgZMWMJZZOEv7RQb8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hbFcg9pS4BHAji65ZmzSzaiFCLkbVridhVPX6W5pCNSuPkZHjOrzDIQhFAf1FVkZhl7QVlrtqGrRnkzMzqAVeRqKphq6lA3wIzGZTCGNGKgVjd90vAJQR+vIgp86R7LZN4R8BjJSoemD/B2bY+r8o2aqtUTJ009SZA6PrAQ/X80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UlAYR+qE; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751522973; c=relaxed/simple;
+	bh=ZpaUmFPSRJFhK6DgF8GWZernQpN7SC+FSGETckXYpsY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZWHghHutPdHS1xG1Pp6wtgt7yZO8JFAAPfBr3sxC/4X+3nAKNfD5HK2BltHyPQ9xJxOADWeD7/Ns1Pb+D6i86a8le0QoSxxNGH1Xe/X16qkeLHDJMOrKiTwKTC5H6ylt4pyGcCM8gNqt2mdg/IpvZNooGBkxdo+RGp692fVlgG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7XaQkHr; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UlAYR+qE"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562J9O65007121;
-	Thu, 3 Jul 2025 06:07:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=tiY/AII9izsAEKLm3
-	vI3qnsQ7jY6+9euqbVmCviXXq4=; b=UlAYR+qE1G1x5YI+fviQq8h4nmYqxwlm5
-	QxuORB29TJ+HjDldA88P2vkvqm5C7Z1cq7/6lPXpbL4HDBPwyrf7OdGsef9Hvo/O
-	t+o7gJYwWWzzEl+noMpNIO3ecRi0hKltqqQKp1jhh0hNO7WoBXqCyPyOiI3YNTHa
-	NnHdJWr7mgyUcKLStdNadapmEohj0oof9Ygj4s3NP8MJoSlUvduxed07gaohF/OB
-	JLahmjYNDRnvOwfg8plIdjUePh16l7wzOr+KHFp0WtZM10H+vqKtBeoF35whgddw
-	mtCHo2OdKm6zPM0VdTLJpiGQztZbIhC+sWsTckXq9Fuv2eOJSYbxQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g19kp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 06:07:52 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56363WWs022299;
-	Thu, 3 Jul 2025 06:07:51 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g19kj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 06:07:51 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5632p92R012027;
-	Thu, 3 Jul 2025 06:07:51 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n3812-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 06:07:51 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56367lij46530968
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Jul 2025 06:07:47 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E9CE52004B;
-	Thu,  3 Jul 2025 06:07:46 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 998A620040;
-	Thu,  3 Jul 2025 06:07:41 +0000 (GMT)
-Received: from aboo.ibm.com.com (unknown [9.39.26.205])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Jul 2025 06:07:41 +0000 (GMT)
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
-        lorenzo.stoakes@oracle.com, shuah@kernel.org, pfalcato@suse.de,
-        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-        npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
-        baohua@kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, donettom@linux.ibm.com,
-        ritesh.list@gmail.com, aboorvad@linux.ibm.com
-Subject: [PATCH v2 7/7] selftests/mm: Skip hugepage-mremap test if userfaultfd unavailable
-Date: Thu,  3 Jul 2025 11:36:56 +0530
-Message-ID: <20250703060656.54345-8-aboorvad@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250703060656.54345-1-aboorvad@linux.ibm.com>
-References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7XaQkHr"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b271f3ae786so6733262a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751522971; x=1752127771; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zuuZADxXuyOUxUlWSv3SmGbccP/kTl0lSgA2T0+Pw48=;
+        b=L7XaQkHrGIFvSJX/jh+FMXesuXypOlH4QRGuCcGHJI2ocAvuLFx0A3mRRgUb4g5p01
+         OXq9OQacyTWMVYkpVTWC0TRHxSqsyXA0kHEtZb4FWPpySUPY/lRnLj/+iR8LUQktCSsE
+         gweswhSGvEU+wEAzei6PZNsBZIGwTPjp95jMQEywECt4QU3ENKM+d/K0BTPmU88ybP5b
+         Bl3njxJPPjUPFsqwS81H809Gzi4U0Yqvjnp3RyNOkasLPXLkMpjT2E1x2DIfeDCgS7VD
+         el/MgDrKvWagQays7ykAPtg2TsmEcqw66wzlatTrukjIU8DECSU1zRhh610qj09ATynO
+         71zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751522971; x=1752127771;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zuuZADxXuyOUxUlWSv3SmGbccP/kTl0lSgA2T0+Pw48=;
+        b=dYzIjQRTxGxOlyc2ZDscQmzFWzoZ42Vj5slmYvyA4n1xgJn1yBr1P3a640aLiMmOxw
+         SyuymaTFNnPcIUkvsfFnkPrJ1+hBF21ttzTLzg8k1P3PqLHKtkVsZdyX+O62EcdfrOLq
+         aOkJCe1MTTYQ0xOvdEaB8iholkecH3z1XfVOr7K4Awx0wROB5UF7qXC9vyjIxq2Pstrc
+         tqVyMC8zTF+IqudBoS9Rh9mgVZcDds6vy8ieTrFmTLZMhJCrGFhW2cDxx2a+1InE0uCO
+         L3ekEUETtQ/6EPnJ3yEGYQwYrsozEhGDqFsnOzp0Efo7Q4p3X9HMJsrEShoCkImZBfcb
+         GRSw==
+X-Forwarded-Encrypted: i=1; AJvYcCX53t9HpXSyF/M/dVm6wwQ5YQ2kkCdSpGsQeoNHmcFwiTexgxJ37aU8yQc5g6syZRAT4p72m5tfMh9Qxeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEVhpnKBf+HRcsF2OPDypZvEti7nzXj3Ct9f9OoV8Zdyg1ENv4
+	WiOUZ45uMIzjKnnPTvviEWLbPva4qU9UVMn/OEAYlwU9oe7519dGhUmj4uaPf8TO5m1xXA+gMca
+	lWFntSyaYRueBP4zosYAR0nBmBY/llrY=
+X-Gm-Gg: ASbGncssaBmeL8zy4n/vY3LNMK9K71Sd4+cE3CuEkHCZ8sXWeU0vE9ANp4ETajRX63L
+	AjEBEpoW01GF9IN9QbNia8MoD+c9gyv2ui+KQyf1KIlZtgg1wmjvWdXfvRKPP/lqVv9oB8wz0Q2
+	+N6SujNcutuPuGVaFQ3rqYqunB5WdDC7uVaBYFmucOPu0=
+X-Google-Smtp-Source: AGHT+IFdl3iRPzC7io67vAWkuxbZGAjAeotegr/GTnPvHCevmw+ZMUKzoFm2ry4bWDIj4n9zdG9D0vPBAWoO6bqqNps=
+X-Received: by 2002:a17:90a:e7d1:b0:313:bdbf:36c0 with SMTP id
+ 98e67ed59e1d1-31a9dc97f5bmr2941518a91.0.1751522971452; Wed, 02 Jul 2025
+ 23:09:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5Ls_1_7HOXzI2zmpYqNqX88roOpK-jGu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA0NCBTYWx0ZWRfX/zEbeLNpLbEg wjxGKn9BUIGWtjzKwUCg4EPH5oYZvBjP/865ePo0sQrTRwBb7bq1h9bfi631xlQN8WH2959YS8v QDoWr8DzSkT4eFTFGLdkOG+WikXrVlSuw6XdcI/RPsjz0S8e9Dta8Cv3/GePUjwbCQGu+Il2Hl/
- AofQUjCAVfOvuXwKO5b2mFF1TMgnz5dPh9MupMqbrVooxSL662uMFLH1/Yl1kNcw3E+DFzxl0CC q+eSWvjNvSWqJjLWLWotnmnmq4Y/j4YFdKnMwPBCqiw0iTPy+45gdDDS2PZb2noJtTyTYAUZW9X dzzTqFmYf94koByC3gymCZt4593uN0eE0Us5Y0FlkdiYWs8zK0stx3AnRx8ZJ5V35C3vKr5lzsw
- UWN4V2grn5g3hzdqbhLyVr9RxRQcaOmnfaHUFpwn/TqHolOdRItRw5ipdVbTjjs0B2ZC6q1B
-X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=68661e38 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=I-yzSHZ7cBtOcMPljFIA:9
-X-Proofpoint-GUID: HUff6wG2QLV5FWq9UjfQSvPCV-lAD2g1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_01,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030044
+References: <20250702082749.141616-1-aha310510@gmail.com> <7b7d353f-f38b-3205-8fd4-1072dbf69cb6@gentwo.org>
+ <CAO9qdTEidRnO4O_D7Z1jKZTyJadFyEyWBnfitTz8t1CdBaM1nw@mail.gmail.com> <aGYaXcB1CaA3BKEa@snowbird>
+In-Reply-To: <aGYaXcB1CaA3BKEa@snowbird>
+From: Jeongjun Park <aha310510@gmail.com>
+Date: Thu, 3 Jul 2025 15:09:20 +0900
+X-Gm-Features: Ac12FXx880e4AsSL41ULv1Xim55w3pwBvzjTZak8X2qGavfUgyTsdCqFhCh29HE
+Message-ID: <CAO9qdTEwPVqKMOJxoGqgWjHsqEZU+xy7afwZdg=wDi4h+jF63w@mail.gmail.com>
+Subject: Re: [PATCH] mm/percpu: prevent concurrency problem for
+ pcpu_nr_populated read with spin lock
+To: Dennis Zhou <dennis@kernel.org>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, tj@kernel.org, akpm@linux-foundation.org, vbabka@suse.cz, 
+	rientjes@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Gracefully skip test if userfaultfd is not supported (ENOSYS) or not
-permitted (EPERM), instead of failing. This avoids misleading failures
-with clear skip messages.
---------------
-Before Patch
---------------
-~ running ./hugepage-mremap
-...
-~ Bail out! userfaultfd: Function not implemented
-~ Planned tests != run tests (1 != 0)
-~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-~ [FAIL]
-not ok 4 hugepage-mremap # exit=1
+Hello,
 
---------------
-After Patch
---------------
-~ running ./hugepage-mremap
-...
-~ ok 2 # SKIP userfaultfd is not supported/not enabled.
-~ 1 skipped test(s) detected.
-~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:1 error:0
-~ [SKIP]
-ok 4 hugepage-mremap # SKIP
+Dennis Zhou <dennis@kernel.org> wrote:
+>
+> Hello,
+>
+> On Thu, Jul 03, 2025 at 01:45:36PM +0900, Jeongjun Park wrote:
+> > Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
+> > >
+> > > On Wed, 2 Jul 2025, Jeongjun Park wrote:
+> > >
+> > > > diff --git a/mm/percpu.c b/mm/percpu.c
+> > > > index b35494c8ede2..0f98b857fb36 100644
+> > > > --- a/mm/percpu.c
+> > > > +++ b/mm/percpu.c
+> > > > @@ -3355,7 +3355,13 @@ void __init setup_per_cpu_areas(void)
+> > > >   */
+> > > >  unsigned long pcpu_nr_pages(void)
+> > > >  {
+> > > > -     return pcpu_nr_populated * pcpu_nr_units;
+> > > > +     unsigned long flags, ret;
+> > > > +
+> > > > +     spin_lock_irqsave(&pcpu_lock, flags);
+> > > > +     ret = pcpu_nr_populated * pcpu_nr_units;
+> > > > +     spin_unlock_irqrestore(&pcpu_lock, flags);
+> > >
+> > >
+> > > Ummm.. What? You are protecting a single read with a spinlock? There needs
+> > > to be some updating of data somewhere for this to make sense.
+> > >
+> > >
+> > > Unless a different critical section protected by the lock sets the value
+> > > intermittendly to something you are not allowed to see before a final
+> > > store of a valid value. But that would be unusual.
+> > >
+> > > This is an academic exercise or did you really see a problem?
+> > >
+> > > What is racing?
+> > >
+> > >
+> >
+> > This patch is by no means an academic exercise.
+> >
+> > As written in the reported tag, This race has actually been reported
+> > in syzbot [1].
+> >
+> > [1]: https://syzkaller.appspot.com/bug?extid=e5bd32b79413e86f389e
+> >
+>
+> A report by syzbot doesn't mean it is a real problem. A production
+> problem or broken test case is much more urgent.
+>
+> > pcpu_nr_populated is currently being write in pcpu_chunk_populated()
+> > and pcpu_chunk_depopulated(), and since this two functions perform
+> > pcpu_nr_populated write under the protection of pcpu_lock, there is no
+> > race for write/write.
+> >
+> > However, since pcpu_nr_pages(), which performs a read operation on
+> > pcpu_nr_populated, is not protected by pcpu_lock, races between read/write
+> > can easily occur.
+> >
+> > Therefore, I think it is appropriate to protect it through pcpu_lock
+> > according to the comment written in the definition of pcpu_nr_populated.
+> >
+>
+> You're right that this is a race condition, but this was an intention
+> choice done because the value read here is only being used to pass
+> information to userspace for /proc/meminfo. As Christoph mentioned, the
+> caller of pcpu_nr_pages() will never see an invalid value nor does it
+> really matter either.
+>
+> The pcpu_lock is core to the percpu allocator and isn't something we
+> would want to blindly expose either.
+>
+> The appropriate solution here is what Shakeel proposed to just mark the
+> access as a data_race().
+>
+> Thanks,
+> Dennis
 
-Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
----
- tools/testing/selftests/mm/hugepage-mremap.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+If this data race was intentional, it makes sense why it was written
+this way. I'll send v2 patch with the fix Shakeel proposed.
+--
+Regards,
 
-diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
-index c463d1c09c9b..1a0e6dd87578 100644
---- a/tools/testing/selftests/mm/hugepage-mremap.c
-+++ b/tools/testing/selftests/mm/hugepage-mremap.c
-@@ -65,10 +65,20 @@ static void register_region_with_uffd(char *addr, size_t len)
- 	struct uffdio_api uffdio_api;
- 
- 	/* Create and enable userfaultfd object. */
--
- 	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
--	if (uffd == -1)
--		ksft_exit_fail_msg("userfaultfd: %s\n", strerror(errno));
-+	if (uffd == -1) {
-+		switch (errno) {
-+		case EPERM:
-+			ksft_exit_skip("No userfaultfd permissions, try running as root.\n");
-+			break;
-+		case ENOSYS:
-+			ksft_exit_skip("userfaultfd is not supported/not enabled.\n");
-+			break;
-+		default:
-+			ksft_exit_fail_msg("userfaultfd failed with %s\n", strerror(errno));
-+			break;
-+		}
-+	}
- 
- 	uffdio_api.api = UFFD_API;
- 	uffdio_api.features = 0;
--- 
-2.43.5
-
+Jeongjun Park
