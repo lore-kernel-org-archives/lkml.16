@@ -1,128 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F77253938
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B082E3AFF;
+	Thu,  3 Jul 2025 11:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541822; cv=none; b=ZEB8VbqG7dL063ngsEM9GxYAiMf5k+8ARcWD+WsMODSg9DwIL6qwUM8IcmS7OvGUbRK3hDB7RK5Gr3wcXcVWVlwKZQKo1goL8wqoqBeolHwCDP9StQHitlXjhGhRAD+4yHNDS8hLMHng0a/4+WlBoFHvoWbqOU8IinpeIHaRA9U=
+	t=1751541826; cv=none; b=NzjX2yy/VJrWdgzL9/ZApDFFkUl/IAVcrue9sQRKL0arxOGnva85my+fCJakiOYyn42Taz0xNHtnZZacLaWWmD/KfWYkok/qrFDgPR5Yimfw+e0eTAKL9vB+DbhH7jejKRdYbTVcFO9C8/mTUSP9GY1GymZwZuEXqqn93JsEVPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541822; c=relaxed/simple;
-	bh=qCJ/Od0uSXuN2KvuQPi0q2CGVCbCbEn3umxbnY7hirA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+p1euRxrgjljkY8cSF8+g6vdfFMUXP9pIyPMtgLNAE0TIsDvWI4VmZiakx2pBghR8Q53g/DTYgvQLXx0KhLulkUnS8Vt7uXPCkyPmmg4FY0tuaqjF9w84Hq1hCkr81QDJOcG+7vfo+YBtwdLhQtwmyBzP+qvucn4VMopkzGC5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FfNKxKN0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751541826; c=relaxed/simple;
+	bh=oLOZlkz4/kMnU9rgSW96ifr6RqN12imGk9bUzWGFcuU=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=NpcKrbmo5Er+pgAUsRmkihASYAJxy5YfQYBQCMmbhRx4u/IvOjp3QiQ8bZI94kzVIY+xuiaEOo5IzXcA2ZzvqvCGEgYRqXJwNPerMijvcKOZwVOvrTCKtic1ndIS2seMpA9h2cilJprtgzKDtoFWoAStk4D0pdUQ+H+c/JLCvsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FLua1SpB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FfNKxKN0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751541819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PIJzNJK0FfXDsC5luatCe5NaXC4y6NbBybHk8bPHUtM=;
-	b=FfNKxKN0ef0t7CIT/obMjXUsQOOSgPHTG08+ziCn38mE6i4QBvvUlFsbqqmvnaRW/GSlft
-	K7f8KBVYQzbmag6JsZXgegzZCdSMReDnyaWCdT/K6WFF5sCcTFpyMKYgylRsem8ehIZMPL
-	HwEJDy8991CWb5tAXW5Z75CaGWTtgvU=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-91-VnS2Pm3SOA-jEG5FJS0KVA-1; Thu, 03 Jul 2025 07:23:38 -0400
-X-MC-Unique: VnS2Pm3SOA-jEG5FJS0KVA-1
-X-Mimecast-MFC-AGG-ID: VnS2Pm3SOA-jEG5FJS0KVA_1751541818
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c7c30d8986so2301780885a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:23:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751541818; x=1752146618;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PIJzNJK0FfXDsC5luatCe5NaXC4y6NbBybHk8bPHUtM=;
-        b=r3QenrzPtQKAsHkKZG9T4Eqs1VWllNnsvOTRWtwJuaG8BQkIXMG+XIswOTq64EXT9m
-         0lDOclOkp7HxQDSoJFJEa1BMnWlAsL3o8vcbpxCe3gRtf2p0CC22xUZ2uWCCpSCVb4OH
-         oz6zkDxJEpucmWI3Hi5FXfk/SQF+N36+2wNjc28cSYjiIupLVTf01bqht16h+cUkAC+T
-         5WW5JTnYwDECUdBGzRci1sqIU7ldMDj+hWvNtUj0L4drvZ2HJSYFDXwz+zxFopdIOe3P
-         t2/9QkZuycLAzCwb+bF/CegGHMfhF8lDS8V5cA62giXD4dXssC88yGQIFYaJ6GnShT1a
-         653w==
-X-Gm-Message-State: AOJu0YygmuECbCSmij55C7FCne8PvygM8hNgbpJ7JhJrKD5NOU/2YaHv
-	Gwdh8lHJHMF+w09oiwLMrN/skpN2pjW2kfbcJfOHVX3xpzA9kiOAyyaKI49X3JXltnZXX5bwbYW
-	XMjE/lfOGIRyynLwLo6agVgFb5O6JeB1NLD4lzxpUyyKI40YPUZlQHarLhEwI1BzVqoNHATNx2Q
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FLua1SpB"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56307CLS009905;
+	Thu, 3 Jul 2025 11:23:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=4emJw4
+	ErehVOKAjtCy8M8j74Pv47NHFVJ+00dCO9c8g=; b=FLua1SpBxBfqAYVTSreT6f
+	SVKfMdpkHUd1jIeU0LcbAKHhzNRLOcVsJQBsmb5LRdrAMu++uvjdI2HXrbbJs1Ix
+	0C5TjBsV7FMJmdDfRvYbSfhtXA0RfkpXPNIe+mtk4TglE0gZC567BGj5b8ahrqEv
+	pzmn4iggUrr79ycaSBCXCOTo2cVggXGCvuhYBA3GKPJj5JjKjovIf9DuOJQ5nwuN
+	oF3ZSRlpl/QV3YzdOBb5jmsl0qT6hpICkUyaejrij0spaBSpezkgZiAx7rYVJ/k8
+	3/nh8FNcF3zr7saIjPiK+rAniGmYYvozsznSZgTkWhvXvt/k5OOjNnv+W/vD3Y2g
 	==
-X-Gm-Gg: ASbGncvQb/Bc3GpKch8CZFkOdUQhycoRje6OhtZwDaeCiSKJby3l4jDkiZeS3Rfg6R8
-	wQthBHD9ELjDQlhorNUROkp5ADiIDvRhFN15pKiMm0sg7jOmUb0kXs39UQeb4zSFMzqdE09JJgf
-	iY/E1MCjTeUZBsGHuDHkAptlVmN0PzsXuLk0Vczv5sB5WeMDOQLQDQaLvYvauldAHeu992KOZsp
-	SIX3YSlll8Xx9ok6bpZk5UT8F3ovVWOLFkvymifAWKRqRDTM1/BC7phSxkh5MbZWdnIasxlIGpW
-	iztPegegQoXn2j/Pn78HKfDoO04/pw==
-X-Received: by 2002:a05:620a:8389:b0:7d4:3ac2:4c4 with SMTP id af79cd13be357-7d5d14909e9mr501464485a.50.1751541817650;
-        Thu, 03 Jul 2025 04:23:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIhjpqSJkjkr7yySi+zSYYPuX82fx+PYQJJ7PyIEcTrA1s0zbfEWG0IS+SDm5LkMQyKv6eIg==
-X-Received: by 2002:a05:620a:8389:b0:7d4:3ac2:4c4 with SMTP id af79cd13be357-7d5d14909e9mr501460785a.50.1751541817217;
-        Thu, 03 Jul 2025 04:23:37 -0700 (PDT)
-Received: from stex1.redhat.com ([193.207.161.238])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44313925dsm1088725885a.24.2025.07.03.04.23.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:23:36 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Bobby Eshleman <bobby.eshleman@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	virtualization@lists.linux.dev,
-	bpf@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>
-Subject: [PATCH net] vsock: fix `vsock_proto` declaration
-Date: Thu,  3 Jul 2025 13:23:29 +0200
-Message-ID: <20250703112329.28365-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.50.0
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttk553-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:23:26 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563BHdQd025413;
+	Thu, 3 Jul 2025 11:23:26 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttk551-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:23:26 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563AmEmC011873;
+	Thu, 3 Jul 2025 11:23:25 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n4ex4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:23:25 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563BNOQS28115516
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 11:23:24 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6FB2558043;
+	Thu,  3 Jul 2025 11:23:24 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 18DA858061;
+	Thu,  3 Jul 2025 11:23:23 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.102.16])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 11:23:22 +0000 (GMT)
+Message-ID: <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
+Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when
+ secure boot be disabled"
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+        Roberto Sassu	
+ <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn"	 <serge@hallyn.com>, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Lee,
+ Chun-Yi" <joeyli.kernel@gmail.com>
+In-Reply-To: <aGYurikYK1ManAp3@gardel-login>
+References: <Z9wDxeRQPhTi1EIS@gardel-login>
+	 <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
+	 <aGYurikYK1ManAp3@gardel-login>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Jul 2025 07:23:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HZ8B1dRlKfYZ0lNGt2l8fRKVvedpbDAT
+X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6866682e cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=JnBA2F1U-474F7nXX6wA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: d21f4K65zcBRJYncthFVJkaJrlCK98v8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA5MyBTYWx0ZWRfXz9kgAsO/VuU/ QlEYHcaC7527+wF/Gjc7B7bcEuYcXOswmwfVT/uppKPb3b9CFXOyBic0T9k07+xPC3VMZ+mc6sz YDiJVF/V4nrlQRssFQZprr1L5WGCaDgMedCc7MyR1l7owP+TGZkaw38zqzL/aLReMzF/NWXDKtT
+ BZCiS1RVZj5Lsg+/Azk+y0LJXI/tc8rih+GlkV2K3wyzJgXwNa5lkyFH9BgTFlQXSfIeUgWOOGz jdRK36T9AYAtec1FdZKbw/3QBfGeyunzx8FYz1ko7UOl/DTxXMEJNmGnwDszNxAYibooEZiQn6Y 2FVyjGsN8PFDC9sSKkO/5ihyZeGPE8+sAvVP3SWkNz/SgBs6Ph8sCujQmXUOtsE4ts5o4v4b7DJ
+ lMcqHSSOGnqaxDHPTdU9O9Sc93eC9dAq/jPnS+tmAgsUHny+EqwT/K3K6EtP8jRCggNRvxTA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030093
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On Thu, 2025-07-03 at 09:18 +0200, Lennart Poettering wrote:
+> On Mi, 02.07.25 21:40, Mimi Zohar (zohar@linux.ibm.com) wrote:
+>=20
+> > On Thu, 2025-03-20 at 13:02 +0100, Lennart Poettering wrote:
+> > > This reverts commit 92ad19559ea9a8ec6f158480934ae26ebfe2c14f.
+> > >=20
+> > > This original commit this reverts creates a strange situation: it
+> > > ensures more restrictive behaviour if SecureBoot is off then when it
+> > > is on, which is the opposite of what one would expect.
+> > >=20
+> > > Typically, one would expect that if SB is off the validation of
+> > > resources during the pre-kernel and kernel initialization is less
+> > > restrictive, not more restrictive. But this check turned the world on
+> > > its head.
+> >=20
+> > Hi Lennart,
+> >=20
+> > I'm really sorry for the long delay ...
+> >=20
+> > > From an IMA perspective, the default is to only trust keys built into=
+ the kernel
+> > or certificates signed by the builtin keys and loaded onto the
+> > .secondary_trusted_keys keyring.
+> >=20
+> > The ability of loading MOK keys onto the .machine keyring and linked to=
+ the
+> > .secondary_trusted_keys keyring is an exception based on the assumption=
+ that
+> > that there is a secure boot chain of trust.  Allowing untrusted keys on=
+to or
+> > linked to the .secondary_trusted_keys keyring, would potentially allow =
+loading
+> > code signing keys onto the IMA keyring signed by untrusted MOK keys.
+> >=20
+> > I was really hesitant to allow this exception of loading MOK keys onto =
+the
+> > .machine keyring in the first place.  I'm now even more concerned.
+> >=20
+> > This is not just an issue of being more or less restrictive, but of add=
+ing a new
+> > integrity gap when one didn't exist previously.
+>=20
+> But we are talking of the case here where SecureBoot is *off*,
 
-From commit 634f1a7110b4 ("vsock: support sockmap"), `struct proto
-vsock_proto`, defined in af_vsock.c, is not static anymore, since it's
-used by vsock_bpf.c.
+Exactly, so there is no trust in any keys other than those built into the
+kernel. True that is of course dependent on trusting the kernel.  In the ca=
+se of
+MOK, trusting additional keys requires at minimum a "safe" secure boot
+environment and other things to prevent its abuse.
 
-If CONFIG_BPF_SYSCALL is not defined, `make C=2` will print a warning:
-    $ make O=build C=2 W=1 net/vmw_vsock/
-      ...
-      CC [M]  net/vmw_vsock/af_vsock.o
-      CHECK   ../net/vmw_vsock/af_vsock.c
-    ../net/vmw_vsock/af_vsock.c:123:14: warning: symbol 'vsock_proto' was not declared. Should it be static?
+> i.e. there is a concious decision in place that there is no trust
+> chain, and that the firmware *happily* *already* accepts unsigned boot
+> loaders/kernels and just runs with them. If SecureBoot is already off,
+> then an attacker can patch around in the kernel invoked at boot
+> completely freely anyway, there is *no* authentication done. Hence
+> it's really weird to then insist that the path into the kernel keyring
+> via mok keys is off in *only* this case, because an attacker can get
+> into that anyway in this case, it's just a lot more cumbersome.
+>=20
+> It's really strange that currently when people ask for tight security
+> (i.e. SB on) the linux kernel is super relaxed and allows any keys to
+> be inserted, but if people ask for security checks to be off (i.e. SB
+> off) the kernel starts being super strict and doesn't allow any keys
+> to propagate into mok. That's really confusing and contradictory, no?
 
-Declare `vsock_proto` regardless of CONFIG_BPF_SYSCALL, since it's defined
-in af_vsock.c, which is built regardless of CONFIG_BPF_SYSCALL.
+That all may be true, but you're ignoring what I said about only "trusting"=
+ MOK
+in certain situations.  If you have another safer, better mechanism for
+establishing a new root of trust for keys (e.g. TPM), then by all means sha=
+re it
+and we can make additional exceptions.
 
-Fixes: 634f1a7110b4 ("vsock: support sockmap")
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- include/net/af_vsock.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-index d56e6e135158..d40e978126e3 100644
---- a/include/net/af_vsock.h
-+++ b/include/net/af_vsock.h
-@@ -243,8 +243,8 @@ int __vsock_dgram_recvmsg(struct socket *sock, struct msghdr *msg,
- int vsock_dgram_recvmsg(struct socket *sock, struct msghdr *msg,
- 			size_t len, int flags);
- 
--#ifdef CONFIG_BPF_SYSCALL
- extern struct proto vsock_proto;
-+#ifdef CONFIG_BPF_SYSCALL
- int vsock_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool restore);
- void __init vsock_bpf_build_proto(void);
- #else
--- 
-2.50.0
-
+Mimi
