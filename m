@@ -1,82 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412302F29;
-	Thu,  3 Jul 2025 12:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5932F29;
+	Thu,  3 Jul 2025 12:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546922; cv=none; b=bxr8dnw3RBkzGQYT9l+VsstGyYmIvXXaopGNzuVLrEvfrJKMjWFTwYC5u2eNb2m0Fdskoewq26PGNUfV91clXMH7+Q7sgz8ysDpZG7IqWqovGHm7c+hCbkjpiksWxplH4j8f+k+jZbp3OmT3FJVtbOW4fKP/mv7lQsJxHyCUGXU=
+	t=1751546931; cv=none; b=oEEkW1ruwhY4yVlz5vECEklXhUCMIVXX4AlSChknVsj49ls0kRpj8CybRoWiHCBmORs9wf+EiG0HZfkTM3BlGut8otUBVS0oVLmXQyDjW5OzBPD21qe0T+B/7A8m3Z1t5Ed3zzVtKnsoFv/4qKr5K4v+H/URry50FAOEc+Qzrbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546922; c=relaxed/simple;
-	bh=Y1DqRawhBq29ZVz3sU79OAmlDRQXWLGIEbRJABK9Y3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pHKrfx4bundoMREvfQvSNe4FZLkQS+iawVavGuh72co/UbKbWPDgHHHhFVt1sTdtajR/kDJxjkcRMNE+VFUyFg0K/nIlAJLPz9wyYdBp5lubjxB2kUD25u93kwePAO+tsDR62Cy5+OpO0StX4h8B8180y9P6qq51FBfVYnSgYpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CarC+4mP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751546931; c=relaxed/simple;
+	bh=OUHvmnZpJKhe5oLTPLz2vd8ZBDivUxZPS2UpsRddvW0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GApcRXdrCFsCbKbroneKINQztuP5dfVPPrz9WgkTFKlJwPuTr75g5IObeybmDbSQ6BMzCj/jNnsRu84cvyDvVlCeVuesyNpjEAOu75DcysXr6qQ/uuVcziOp5lF9M8FwB9EPb/ergzT54ZSPQVc/VPvBrExfJy5yd6Npd/KHp3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nzOPRlPV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rktf6H7n; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CarC+4mP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A18C4CEE3;
-	Thu,  3 Jul 2025 12:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751546921;
-	bh=Y1DqRawhBq29ZVz3sU79OAmlDRQXWLGIEbRJABK9Y3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CarC+4mPf4sC/yG9N5GybD+SMbh2fMT+bby42KGcc/ntfzXXW/gkxEx2N4Hs63h2S
-	 HeRDG0EpGV2pfmjrQbQRY8JKE/0bVpDDm8Mss5iNGAKc7OT1N+1K/VPaOXUbUQV6xm
-	 IlnDcLTaPyhK83oN1IAMoxkXvozWiSKyeMctZftpmqyIop4BhBxSkhc8cJl7f8vpna
-	 wyqoY8WyTv6F39qCQ90JpeK8W4ZEMIjBvDrhVbEu0/LHd1+sFVaWM4fvEhqmhbs6yW
-	 4cIl//VGMeqQD+jX0v8VhelTaC+fhIg+4mZuZgrzFgEGA1+EbOPvRnmewg01us/Hmj
-	 OxC1E6lpOkgdA==
-Date: Thu, 3 Jul 2025 18:18:29 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: =?utf-8?B?5ou05L2V?= <heshuan@bytedance.com>
-Cc: Sunil V L <sunilvl@ventanamicro.com>, bhelgaas@google.com, 
-	cuiyunhui@bytedance.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [RFC 0/1] PCI: Fix pci devices double register
- WARNING in the kernel starting process
-Message-ID: <r7fgb5xrn6ocstq6ctq4q7r4o2esgh4rqr44c3u234kcep6thk@bge2vzl33ptb>
-References: <20250702155112.40124-1-heshuan@bytedance.com>
- <aGYkx4a4eJUJorYp@sunil-laptop>
- <CAKmKDKksSTrT=wMBpnqGupe4WRnHosYZLunw0FdVbhW_dyym+A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nzOPRlPV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rktf6H7n"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751546928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qtoy6yPzx+lwD2CNFlvJO5ejGFbqqUUABUK8za/Wazw=;
+	b=nzOPRlPVFD3f968p46y/sUsHDNHnoo2WpsoHInNEhLveQ6UykPO8kS5Gy56OR5pd9S/Mb+
+	iFNMPqNkZbptV9DxBKA35yj+6F9acqefr1YCEhmoP3S1WyhHQKkG/7ooVySRBmSU978R8U
+	rbbRFFYlW7BOFv+0shrwQHbBsGkDNQSKlrDidrU4KacD8MTu3s2HBVHWUiNIenNAhvVVRK
+	e/JVNDHHAci5b8gWBpClbWUrfgGbFVfghXNCVAC7ecT8YqG1A4BIdrN9RbsDJYBfvtvtBr
+	feac738+flaa6ciFnpO45ShHHRPMtlS/oDYP3IGFpkhe4jy+jC9G1JOgxpt09w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751546928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qtoy6yPzx+lwD2CNFlvJO5ejGFbqqUUABUK8za/Wazw=;
+	b=rktf6H7nFtixj5gWOogKnF/7IDfcUwWG1P2WDjT3GzRfJ2TOYkIiRFWQ4SaKkeAMS5vqxc
+	XHm8BImCEEtZCnDQ==
+To: Paolo Abeni <pabeni@redhat.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+ Christopher Hall <christopher.s.hall@intel.com>, John Stultz
+ <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar
+ <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, David
+ Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, Thomas
+ =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt
+ Kanzenbach
+ <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, Antoine Tenart
+ <atenart@kernel.org>
+Subject: Re: [patch V2 0/3] ptp: Provide support for auxiliary clocks for
+ PTP_SYS_OFFSET_EXTENDED
+In-Reply-To: <faca1b8e-bd39-4501-a380-24246a8234d6@redhat.com>
+References: <20250701130923.579834908@linutronix.de>
+ <faca1b8e-bd39-4501-a380-24246a8234d6@redhat.com>
+Date: Thu, 03 Jul 2025 14:48:47 +0200
+Message-ID: <87ecuxwic0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKmKDKksSTrT=wMBpnqGupe4WRnHosYZLunw0FdVbhW_dyym+A@mail.gmail.com>
+Content-Type: text/plain
 
-On Thu, Jul 03, 2025 at 07:31:10PM GMT, 拴何 wrote:
-> Hi Sunil,
-> Thanks for your reply! (really appricate it).
-> This WARNING truly occurred. Through the added debug info, I found
-> that the device was registered to proc via pci_proc_init and
-> acpi_pci_root_add paths respectively, which ultimately triggered
-> the warning message.
-> Let me try to reproduce it on qemu first. I'll keep you updated.
-> Thanks again.
-> 
+Paolo!
 
-I think you have uncovered a valid bug. There is nothing preventing (except the
-blessings of the initcall order) the occurence of the race between
-pci_proc_init() and pci_bus_add_device(). I think it went mostly unnoticed
-because, pci_proc_init() gets called very early before any PCI devices were
-registered. So for_each_pci_dev() loop never gets executed.
+On Thu, Jul 03 2025 at 12:27, Paolo Abeni wrote:
+> On 7/1/25 3:26 PM, Thomas Gleixner wrote:
+>> Merge logistics if agreed on:
+>> 
+>>     1) Patch #1 is applied to the tip tree on top of plain v6.16-rc1 and
+>>        tagged
+>> 
+>>     2) That tag is merged into tip:timers/ptp and the temporary CLOCK_AUX
+>>        define is removed in a subsequent commit
+>> 
+>>     3) Network folks merge the tag and apply patches #2 + #3
+>> 
+>> So the only fallout from this are the extra merges in both trees and the
+>> cleanup commit in the tip tree. But that way there are no dependencies and
+>> no duplicate commits with different SHAs.
+>> 
+>> Thoughts?
+>
+> I'm sorry for the latency here; the plan works for me! I'll wait for the
+> tag reference.
 
-But in your case, looks like the PCI device is available somehow before
-pci_proc_init() gets executed. Now, it is not very clear to me how the device
-becomes available at this point. It might be due to some other issue. But in
-anycase, I think we need to get rid of calling pci_proc_attach_device() from
-pci_proc_init() as I don't see a reason to call this function from two
-different places. pci_bus_add_device() should be the one calling this function
-as it is the one adding the PCI device.
+No problem. Rome wasn't built in a day either :)
 
-Ironically, I do see a similar pattern for sysfs also. Maybe there is (or was) a
-reason to create these files from two different places?
+> Could you please drop a notice here when such tag will be available?
 
-- Mani
+Here you go:
 
--- 
-மணிவண்ணன் சதாசிவம்
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ktime-get-clock-ts64-for-ptp
+
+I merged it locally into net-next, applied the PTP patches on top and
+verified that the combination with the tip timers/ptp branch, which has
+the tag integrated and the workaround removed, creates the expected
+working result.
+
+Thanks,
+
+        tglx
