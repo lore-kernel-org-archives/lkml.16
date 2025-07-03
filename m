@@ -1,193 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A82B17A319;
-	Thu,  3 Jul 2025 17:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7D11FDA94
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751562299; cv=none; b=l3owlYSHO2q/u3tv0LVq+OAfYpJcGFD6N8apgNqpNVqTwRHUUaMxm3+dvL54MExLtaVHA7FT2BL2AHhGX299akX0A6QPlhudKq8UqZASUMio2jolajPKxB5ROxmj+ebOA+NJCVTI6P3ddaihESHtNSRbwMTP8IO5GzDmx6tTJvw=
+	t=1751562411; cv=none; b=oDLVXv8kqxDU4S/8tOzv1d/lmOaCH1fhy4lUvq5ZjErTIdJAqSOxrPoI/T5t6XmHafmBYSp1adJcWPNgU9Xnf8304WBFPlw7KDdOpo3dXKA7X3ZHehFtqXCACkJAk48C4dqKT+iaLuh3aYCYYzI0uDPoPZur4f5CFvCwYUdchI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751562299; c=relaxed/simple;
-	bh=QsC4CqDA0Dxv8zb6CyeYGANC/Ef8RVUzUXmP4D/HMSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaeZQTz9XSBRxxGseKGEQ2C2ei0FKgTnYKGyqpxYRT5QyshXNT4WvZqG5LTFD4EnKnEEp44lo7YPhIx/9zBRXXZ0JyCSMGUpwS7Wdg4iSj7Oxd25NlMvPnJ5FBc99s2nwcnRtbypnpWyNRmElw+/SdqdcPpCr1fH0pM1sTU6zao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GQMznmMm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751562411; c=relaxed/simple;
+	bh=XFNc6xwG91kOZJ6aXSGb8CW72Hy9fPOUos38JJjfZ2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r5n6PkJQraadau24DLRHBCCM1XJgnMvYiHI7t6T+VpXPadPsxCz+4KfjvRIx4qtyhD0QRNo3rFpiSf+GPTpyebwWsGqiVD/QjzhOxDzTpZ6ifuDvifAHr3E6HVRy0K6S4WjtVOEw7sbsQ2XXyO5DHEafuTrwKpnRa2v0NJrQd5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OY1d3Aj0; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GQMznmMm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751562296; x=1783098296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QsC4CqDA0Dxv8zb6CyeYGANC/Ef8RVUzUXmP4D/HMSM=;
-  b=GQMznmMmocKUBFBTnOu2G43QI8WKQjn5vrKPKk3vY69d0O7lv6zb90RZ
-   mO23uIWbTqEOd5II0YF4iFs/ezX7OG/c+gG1+PXIvlZXBPDa8o0bhHOPW
-   lGx7J0GwQV6NLXdBiOOw6dwdtJrCrfziKcxJl0ZZLedjbty1RW5nN1M2Z
-   jBh2rMqeqsL27aDpVsexkacWotJZw+KXLoKEXgIYJfE1ZLzDqHtjzMOkc
-   qoRIrRCjg1BYbWWuX9GXnZUwgynSmHOlURsOvJxJwYJnbNeCE5Y7rW53g
-   cMFH4Squ70RFCiig1xfjl2nTEtm5dk+v2C9loJU9xPy73DGmCuzYL3hFr
-   g==;
-X-CSE-ConnectionGUID: xpkPe0hCTyS6eoJfpcdEYg==
-X-CSE-MsgGUID: VKrIbyniSvW2+oOQZGiKsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53868202"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="53868202"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 10:04:56 -0700
-X-CSE-ConnectionGUID: cM4NzYspRFWldVkEozDfmA==
-X-CSE-MsgGUID: DXOA958VQjupwLGla7Z+3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154062938"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 03 Jul 2025 10:04:52 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXNMf-0002op-2A;
-	Thu, 03 Jul 2025 17:04:49 +0000
-Date: Fri, 4 Jul 2025 01:04:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nick Hu <nick.hu@sifive.com>, conor+dt@kernel.org, krzk+dt@kernel.org,
-	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Nick Hu <nick.hu@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v3 2/3] cpuidle: riscv-sbi: Work with the external
- pmdomain driver
-Message-ID: <202507040001.Jm6FQyH6-lkp@intel.com>
-References: <20250702091236.5281-3-nick.hu@sifive.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OY1d3Aj0"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-237f270513bso181255ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 10:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751562409; x=1752167209; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eSF4ELCBcv/ejvNBGx8gge/whzb89lSTMsKN5499Igg=;
+        b=OY1d3Aj0iw5mbQ740COCI8giWXRoFvZfX+og0zTyUWIE1/m86YQrk0z45uQHGAQ58W
+         N12EUnnhJpAUKrX3GI3wxSe5xVgvDEUdqC/3Cfa0e+zF6RIdGQLJV6w0te69okbWWA3O
+         b+px58PehJNqUTMpg5zK32DwhNwD5aGCo0awqzeDLIxA1HOijYd0/4GAPbCFHTpBVS6z
+         P4/UxhIskytLXfavh2fdPEvrWEa3JhWaE76OVryl0/MFBNVIt5Kl/HB+ZVnD3h8NDNea
+         Zr9O5WSBASCaXte7Z/Sa69dcyKKhXF4CjJ4DuNqT/Q0cKKcDxRqxzEoMHcrot+TACERV
+         hjqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751562409; x=1752167209;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eSF4ELCBcv/ejvNBGx8gge/whzb89lSTMsKN5499Igg=;
+        b=ISj31tOlhjSjYKSWUmgBVEXlVgHelBLvMq4YoZ1Ac+4BKzOGOC5ebx/FW8477WEagM
+         LRXWvDZT0QPCZpfaqoq5GnWZvftfAwVhkrJl4LwcXuM9yWOjfy3crF2DSYzKnMM+S0LB
+         f4jHmbtI1G+67kXIM0ETgOweU9aMcweHc0HSt0vz/h/pFrqPirrpkeadrEW4y5KQViPN
+         xK8Fk9i6MfPJkAWYyYXud2Vbbl9zrlf2va0x/5NfAQ5xbn0EFz2ItzORNt1J87sOKTR6
+         rY7F1VfXSG5pMgKlqt8oKBjk9ioF4jdZxRTWCPVx9QMMGG5eAadvb5LvbhesDSw66iVJ
+         vGwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdFoUv8aatutfh5KjUum7OvqHIHeP2TpgvETAREt8hQtfnGFS0IXOJ4fPqCdmepAfrgYfPEHMYJJzdpmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcoFbH7LTfRZSKUB6UTv+JhixXfPnEq3OhOCsWRko5WiLoWQR6
+	+Ie4THadb/VvEUiCYXPDw+fHheHNMbI+tfGc31faLJNDS9OiMYWc7SjMrT/lc8kwXC48MKO3SXA
+	B3TUQIZZYOujOA8v6+rC/Zqrn4Fddn+f7cKkkczO/
+X-Gm-Gg: ASbGncvW8D8Tpc2xTgGkHQTMQXlgSGo0HtRkVmGp6Fa5gcqgFyDcMhA0WxwwuLvTLGO
+	OlKOmx3qci1tODdq4o24yGE7Nbq2qVMufvpETy3Gtaz/9BexRb8VCmMlHT+P7D6EK1zyDshcLMv
+	/4puO9zMNpBViS8qkLSMA5qVvNpW3aVOb12kuBfQdvnDl2VhWs7j2iBg5YjNOwE9mirMXhnmAWY
+	LX4
+X-Google-Smtp-Source: AGHT+IHnnWGdf8QmGd8Hr11wufvvjdMxb9FgDXbu5zs80+5lo9XttQnuQtD5i4SFQ9YHInr7O8nelhdPZGUB0tytAnU=
+X-Received: by 2002:a17:903:204b:b0:237:edb8:21c0 with SMTP id
+ d9443c01a7336-23c7abfdd72mr1670955ad.11.1751562408792; Thu, 03 Jul 2025
+ 10:06:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702091236.5281-3-nick.hu@sifive.com>
+References: <20250703153712.155600-1-adrian.hunter@intel.com> <20250703153712.155600-3-adrian.hunter@intel.com>
+In-Reply-To: <20250703153712.155600-3-adrian.hunter@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 3 Jul 2025 10:06:36 -0700
+X-Gm-Features: Ac12FXzZsjzgSZaYmWaV1ygqhrAm5h_0gcwl11dKry4BPYHYYH2L_GTimadldqw
+Message-ID: <CAGtprH8boLi3PjXqU=bXA8th0s7=XE4gtFL+6wmmGaRqWQvAMw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] x86/tdx: Skip clearing reclaimed pages unless
+ X86_BUG_TDX_PW_MCE is present
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com, seanjc@google.com, 
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, H Peter Anvin <hpa@zytor.com>, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
+	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
+	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nick,
+On Thu, Jul 3, 2025 at 8:37=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
+om> wrote:
+>
+> Avoid clearing reclaimed TDX private pages unless the platform is affecte=
+d
+> by the X86_BUG_TDX_PW_MCE erratum. This significantly reduces VM shutdown
+> time on unaffected systems.
+>
+> Background
+>
+> KVM currently clears reclaimed TDX private pages using MOVDIR64B, which:
+>
+>    - Clears the TD Owner bit (which identifies TDX private memory) and
+>      integrity metadata without triggering integrity violations.
+>    - Clears poison from cache lines without consuming it, avoiding MCEs o=
+n
+>      access (refer TDX Module Base spec. 16.5. Handling Machine Check
+>      Events during Guest TD Operation).
+>
+> The TDX module also uses MOVDIR64B to initialize private pages before use=
+.
+> If cache flushing is needed, it sets TDX_FEATURES.CLFLUSH_BEFORE_ALLOC.
+> However, KVM currently flushes unconditionally, refer commit 94c477a751c7=
+b
+> ("x86/virt/tdx: Add SEAMCALL wrappers to add TD private pages")
+>
+> In contrast, when private pages are reclaimed, the TDX Module handles
+> flushing via the TDH.PHYMEM.CACHE.WB SEAMCALL.
+>
+> Problem
+>
+> Clearing all private pages during VM shutdown is costly. For guests
+> with a large amount of memory it can take minutes.
+>
+> Solution
+>
+> TDX Module Base Architecture spec. documents that private pages reclaimed
+> from a TD should be initialized using MOVDIR64B, in order to avoid
+> integrity violation or TD bit mismatch detection when later being read
+> using a shared HKID, refer April 2025 spec. "Page Initialization" in
+> section "8.6.2. Platforms not Using ACT: Required Cache Flush and
+> Initialization by the Host VMM"
+>
+> That is an overstatement and will be clarified in coming versions of the
+> spec. In fact, as outlined in "Table 16.2: Non-ACT Platforms Checks on
+> Memory" and "Table 16.3: Non-ACT Platforms Checks on Memory Reads in Li
+> Mode" in the same spec, there is no issue accessing such reclaimed pages
+> using a shared key that does not have integrity enabled. Linux always use=
+s
+> KeyID 0 which never has integrity enabled. KeyID 0 is also the TME KeyID
+> which disallows integrity, refer "TME Policy/Encryption Algorithm" bit
+> description in "Intel Architecture Memory Encryption Technologies" spec
+> version 1.6 April 2025. So there is no need to clear pages to avoid
+> integrity violations.
+>
+> There remains a risk of poison consumption. However, in the context of
+> TDX, it is expected that there would be a machine check associated with t=
+he
+> original poisoning. On some platforms that results in a panic. However
+> platforms may support "SEAM_NR" Machine Check capability, in which case
+> Linux machine check handler marks the page as poisoned, which prevents it
+> from being allocated anymore, refer commit 7911f145de5fe ("x86/mce:
+> Implement recovery for errors in TDX/SEAM non-root mode")
+>
+> Improvement
+>
+> By skipping the clearing step on unaffected platforms, shutdown time
+> can improve by up to 40%.
 
-kernel test robot noticed the following build warnings:
+This patch looks good to me.
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge robh/for-next linus/master v6.16-rc4 next-20250703]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I would like to raise a related topic, is there any requirement for
+zeroing pages on conversion from private to shared before
+userspace/guest faults in the gpa ranges as shared?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Hu/cpuidle-riscv-sbi-Work-with-the-external-pmdomain-driver/20250702-181250
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20250702091236.5281-3-nick.hu%40sifive.com
-patch subject: [PATCH v3 2/3] cpuidle: riscv-sbi: Work with the external pmdomain driver
-config: riscv-randconfig-001-20250703 (https://download.01.org/0day-ci/archive/20250704/202507040001.Jm6FQyH6-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507040001.Jm6FQyH6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507040001.Jm6FQyH6-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/cpuidle/cpuidle-riscv-sbi.c: In function 'sbi_cpuidle_probe':
->> drivers/cpuidle/cpuidle-riscv-sbi.c:569:1: warning: label 'out' defined but not used [-Wunused-label]
-     569 | out:
-         | ^~~
-
-
-vim +/out +569 drivers/cpuidle/cpuidle-riscv-sbi.c
-
-   493	
-   494	static int sbi_cpuidle_probe(struct platform_device *pdev)
-   495	{
-   496		int cpu, ret;
-   497		struct cpuidle_driver *drv;
-   498		struct cpuidle_device *dev;
-   499		struct device_node *pds_node;
-   500	
-   501		/* Detect OSI support based on CPU DT nodes */
-   502		sbi_cpuidle_use_osi = true;
-   503		for_each_possible_cpu(cpu) {
-   504			struct device_node *np __free(device_node) = of_cpu_device_node_get(cpu);
-   505			if (np &&
-   506			    of_property_present(np, "power-domains") &&
-   507			    of_property_present(np, "power-domain-names")) {
-   508				continue;
-   509			} else {
-   510				sbi_cpuidle_use_osi = false;
-   511				break;
-   512			}
-   513		}
-   514	
-   515		/* Populate generic power domains from DT nodes */
-   516		pds_node = of_find_node_by_path("/cpus/power-domains");
-   517		if (pds_node) {
-   518			ret = sbi_genpd_probe(pds_node);
-   519			of_node_put(pds_node);
-   520			if (ret)
-   521				return ret;
-   522		}
-   523	
-   524		/* Attaching the cpu to the corresponding power domain */
-   525		if (sbi_cpuidle_use_osi) {
-   526			for_each_present_cpu(cpu) {
-   527				struct sbi_cpuidle_data *data = per_cpu_ptr(&sbi_cpuidle_data, cpu);
-   528	
-   529				data->dev = dt_idle_attach_cpu(cpu, "sbi");
-   530				if (IS_ERR_OR_NULL(data->dev)) {
-   531					ret = PTR_ERR_OR_ZERO(data->dev);
-   532					if (ret != -EPROBE_DEFER)
-   533						pr_debug("Hart%ld: fail to attach the power domain\n",
-   534							 cpuid_to_hartid_map(cpu));
-   535	
-   536					while (--cpu >= 0)
-   537						dt_idle_detach_cpu(data->dev);
-   538					return ret;
-   539				}
-   540			}
-   541			/* Setup CPU hotplut notifiers */
-   542			sbi_idle_init_cpuhp();
-   543		}
-   544	
-   545		/* Initialize CPU idle driver for each present CPU */
-   546		for_each_present_cpu(cpu) {
-   547			ret = sbi_cpuidle_init_cpu(&pdev->dev, cpu);
-   548			if (ret) {
-   549				pr_debug("HART%ld: idle driver init failed\n",
-   550					 cpuid_to_hartid_map(cpu));
-   551				goto out_fail;
-   552			}
-   553		}
-   554	
-   555		if (cpuidle_disabled())
-   556			pr_info("cpuidle is disabled\n");
-   557		else
-   558			pr_info("idle driver registered for all CPUs\n");
-   559	
-   560		return 0;
-   561	
-   562	out_fail:
-   563		while (--cpu >= 0) {
-   564			dev = per_cpu(cpuidle_devices, cpu);
-   565			drv = cpuidle_get_cpu_driver(dev);
-   566			cpuidle_unregister(drv);
-   567			sbi_cpuidle_deinit_cpu(cpu);
-   568		}
- > 569	out:
-   570		return ret;
-   571	}
-   572	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the answer is no for all CoCo architectures then guest_memfd can
+simply just zero pages on allocation for all it's users and not worry
+about zeroing later.
