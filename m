@@ -1,174 +1,216 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41982356CB;
-	Thu,  3 Jul 2025 03:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D8423BD1F;
+	Thu,  3 Jul 2025 03:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751513751; cv=none; b=M2qq9J+n25bWLP31FcMT74Xgk1wkSDTCoPPMBnRzcT4NzgE3fF/sVzZqUFiKr43DrkONV2PLyTnO7ahyX3JSIbbMvmDo2r37r27mLYdkPhGydq4aHuE7s8s+NQtDjq3rC/FNiNgMgEMmpxO8bGx2cBwuhVSKX3n17ERWb+QlkTw=
+	t=1751513754; cv=none; b=lZEU7xkx8gOl4Dfsl1J5j7oZyJ8yROODBvQU6xuraQI81YAB+T4/T6h8i4cWCkqfOHBRMHV+HaETMd/0M7xLUhsKyVebjrhoQqHu91UpPI8PT5uZOoK4Wgo6Kmqo2O6yLVgmMnWJteO5z7uQ5bLa5YJfIoGNK4ZMOKirjpg4FLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751513751; c=relaxed/simple;
-	bh=aAiZg72MzhU/nwICqHjkhrX5X7yDG6hB2keLduoAXfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rP3x7ENl+MzP7CcMHIkTRJ05oHHO+/d2u0mKLGU/jI/rPcRDAuDGTd+NDD83wYMB4uA2xi8gDQMwo8UxHYDrgvZ3/WX5pwh8Z6h3lo34dzyNhgSrDA0xMf3wECCgey5hRr+zirRdxo4uXTzaQ4ctji5ystQmuFaiy5/f9M4r9cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXj8g3pglzKHMbj;
-	Thu,  3 Jul 2025 11:35:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id E416B1A1101;
-	Thu,  3 Jul 2025 11:35:45 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgBHpySN+mVo3w_yAQ--.57305S3;
-	Thu, 03 Jul 2025 11:35:43 +0800 (CST)
-Message-ID: <99010bfd-c968-49c7-b62b-c72b38722c1b@huaweicloud.com>
-Date: Thu, 3 Jul 2025 11:35:41 +0800
+	s=arc-20240116; t=1751513754; c=relaxed/simple;
+	bh=/X73Wz/E8K7wkYSxARj+5BY4/U4OmymPE1FMHO+dvhU=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=BNdyrhFHwMoLxxqeFQ4+iJLh5dzeoJByBYVqhxSBU2tGr5iuloEwVk7xQayadCh6mc1v2/CGM4t3Q1JOlWl2/mKmPJp8cBll+URMd84yoG5TzsHQAIrrGntuHx+tE855fRTYG1XOWhqExiwhLzcqMb9vjMWHBDemVpFwV+EPE40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nRwWUeHU; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nRwWUeHU"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5632R50O030860;
+	Thu, 3 Jul 2025 03:35:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=m6nkcE
+	kUbQHeAdbCtT6Q18paXgpW7x/cYkeaZ4o5fBc=; b=nRwWUeHUMRpvrncYHlBV9h
+	ywE4H87JsR3kceJu+/lvmF/XRgJM29vaeHewpSokDgrl7EMkr7OQpzBePSUFBnrv
+	zhn+TQllU67IApuEITa64H4hzL9CDo0C/XESxmFMk3hAUg8JNP94jDCU/CttRafH
+	RQM8nOD9woHzn91Jjc2fw7VvNihlcQ7I8Dg2uKakulaN/bcV0cqPUhc1FbwvCRYX
+	Nk6VrNZwSqoZqx03M1C35j9bXo1dIbEuSkFrCKDuov3XtxIagUzZAWzN4JwO68aj
+	goa+dGmuVIMCSEcvnS8S8S1KJPl4dISPF5LYs86lUFt+n+kznwEsCM0XAUVDLLTA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u20y1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 03:35:24 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5633ZOVr014843;
+	Thu, 3 Jul 2025 03:35:24 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u20y16-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 03:35:24 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5632609X006950;
+	Thu, 3 Jul 2025 03:35:23 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jvxmjnfr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 03:35:23 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5633ZMWB29098524
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 03:35:22 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 21ABC58060;
+	Thu,  3 Jul 2025 03:35:22 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CC92558056;
+	Thu,  3 Jul 2025 03:35:20 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.102.8])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 03:35:20 +0000 (GMT)
+Message-ID: <15ae451cf47f45a7b540200107ef1f5d1d1543f9.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] integrity: Extract secure boot enquiry function out
+ of IMA
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: GONG Ruiqi <gongruiqi1@huawei.com>,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Madhavan Srinivasan	
+ <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko
+ Carstens	 <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev	 <agordeev@linux.ibm.com>
+Cc: Eric Snowberg <eric.snowberg@oracle.com>,
+        Christophe Leroy	
+ <christophe.leroy@csgroup.eu>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>, "Lee, Chun-Yi" <jlee@suse.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, Lu Jialin <lujialin4@huawei.com>,
+        Nayna Jain	
+ <nayna@linux.ibm.com>
+In-Reply-To: <4c59f417-86cc-4dec-ae45-8fcf8c7eb16a@huawei.com>
+References: <20250628063251.321370-1-gongruiqi1@huawei.com>
+	 <eb91dcf034db28e457a4482faa397dd7632f00fd.camel@linux.ibm.com>
+	 <4c59f417-86cc-4dec-ae45-8fcf8c7eb16a@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Jul 2025 23:35:20 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] fallocate: introduce FALLOC_FL_WRITE_ZEROES flag
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de,
- tytso@mit.edu, djwong@kernel.org, john.g.garry@oracle.com,
- bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
- martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-scsi@vger.kernel.org
-References: <20250619111806.3546162-1-yi.zhang@huaweicloud.com>
- <20250623-woanders-allabendlich-f87ae2d9c704@brauner>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250623-woanders-allabendlich-f87ae2d9c704@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgBHpySN+mVo3w_yAQ--.57305S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF45tr1Duw4ftrWrZw1kZrb_yoWrtw15pa
-	yUJFZ8KF4DJr17J397uF109F15Zws3Ar15Ka1rKw1kZrWYqrnagFWIga4UXasrCr93Ww1x
-	ZFsFya4q9ay7AFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 66tcBrmaIPJxL-a4EC_4D4tMRJ7g8dvd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDAyNCBTYWx0ZWRfXwa7SUWdVahw/ cI6Xwl7cmB26jWHsRkM66kh9EeOde/acFw2JMdlaozyvu15i7EmuA4spUEnDZyZ8oknrMlxv5e5 bZQI5QjrxsAqViGyoj7LBhfjJ8/wHJfeNo/1h7WeWPnhVEiSvzUeVjZM549tBmUzLIIMSciaXuX
+ 1GGqr/rNcm5+/P5wh8br7p8XQyJC8zcteqJouLHSWU+PLmTYsJ2MPEZv4JaNvVs7JFoy1rGx+Yp hZBbn0pR8z1+phOG6Y/oEUyJepDpYw/WyEzRoOtLDkaGopTewI1ijinR85on0eRslZxhGNC7ZuB fA4MjD7Hp24Aaldyo/hNkBcifMp48huQ57Udbkw6AaqOJptd7hhB2V5muL0YOUXie45kwlGef8w
+ mqNG3kcXS1CeihQGr2/vioYVdZPN5oQmIHzOmcr+RQ74KHd4kVrehXKe0geO/ID+Z3j/ZpTA
+X-Proofpoint-GUID: 8JwVH7MxVq-tLCvp1O0zKL_XLBrv5BUM
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6865fa7c cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=i0EeH86SAAAA:8 a=HGTOStO9Rt0DlFUCaRkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_01,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030024
 
-On 2025/6/23 18:46, Christian Brauner wrote:
-> On Thu, 19 Jun 2025 19:17:57 +0800, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> Changes since v1:
->>  - Rebase codes on 6.16-rc2.
->>  - Use max_{hw|user}_wzeroes_unmap_sectors queue limits instead of
->>    BLK_FEAT_WRITE_ZEROES_UNMAP feature to represent the status of the
->>    unmap write zeroes operation as Christoph and Darrick suggested. This
->>    redoes the first 5 patches, so remove all the reviewed-by tags,
->>    please review them again.
->>  - Simplify the description of FALLOC_FL_WRITE_ZEROES in patch 06 as
->>    Darrick suggested.
->>  - Revise the check order of FALLOC_FL_WRITE_ZEROES in patch 08 as
->>    Christoph suggested.
->> Changes since RFC v4:
->>  - Rebase codes on 6.16-rc1.
->>  - Add a new queue_limit flag, and change the write_zeroes_unmap sysfs
->>    interface to RW mode. User can disable the unmap write zeroes
->>    operation by writing '0' to it when the operation is slow.
->>  - Modify the documentation of write_zeroes_unmap sysfs interface as
->>    Martin suggested.
->>  - Remove the statx interface.
->>  - Make the bdev and ext4 don't allow to submit FALLOC_FL_WRITE_ZEROES
->>    if the block device does not enable the unmap write zeroes operation,
->>    it should return -EOPNOTSUPP.
->> Changes sicne RFC v3:
->>  - Rebase codes on 6.15-rc2.
->>  - Add a note in patch 1 to indicate that the unmap write zeros command
->>    is not always guaranteed as Christoph suggested.
->>  - Rename bdev_unmap_write_zeroes() helper and move it to patch 1 as
->>    Christoph suggested.
->>  - Introduce a new statx attribute flag STATX_ATTR_WRITE_ZEROES_UNMAP as
->>    Christoph and Christian suggested.
->>  - Exchange the order of the two patches that modified
->>    blkdev_fallocate() as Christoph suggested.
->> Changes since RFC v2:
->>  - Rebase codes on next-20250314.
->>  - Add support for nvme multipath.
->>  - Add support for NVMeT with block device backing.
->>  - Clear FALLOC_FL_WRITE_ZEROES if dm clear
->>    limits->max_write_zeroes_sectors.
->>  - Complement the counterpart userspace tools(util-linux and xfs_io)
->>    and tests(blktests and xfstests), please see below for details.
->> Changes since RFC v1:
->>  - Switch to add a new write zeroes operation, FALLOC_FL_WRITE_ZEROES,
->>    in fallocate, instead of just adding a supported flag to
->>    FALLOC_FL_ZERO_RANGE.
->>  - Introduce a new flag BLK_FEAT_WRITE_ZEROES_UNMAP to the block
->>    device's queue limit features, and implement it on SCSI sd driver,
->>    NVMe SSD driver and dm driver.
->>  - Implement FALLOC_FL_WRITE_ZEROES on both the ext4 filesystem and
->>    block device (bdev).
->>
->> [...]
-> 
-> If needed, the branch can be declared stable and thus be used as base
-> for other work.
-> 
-> ---
-> 
-> Applied to the vfs-6.17.fallocate branch of the vfs/vfs.git tree.
-> Patches in the vfs-6.17.fallocate branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs-6.17.fallocate
+On Thu, 2025-07-03 at 10:07 +0800, GONG Ruiqi wrote:
+> Hi Mimi,
+>=20
+> On 7/3/2025 9:38 AM, Mimi Zohar wrote:
+> > [CC: Nayna Jain]
+> >=20
+> > On Sat, 2025-06-28 at 14:32 +0800, GONG Ruiqi wrote:
+> > > ...
+> >=20
+> > The original reason for querying the secure boot status of the system w=
+as in
+> > order to differentiate IMA policies.  Subsequently, the secure boot che=
+ck was
+> > also added to safely allow loading of the certificates stored in MOK. S=
+o loading
+> > IMA policies and the MOK certificates ARE dependent on the secure boot =
+mode.
+> >                                                                        =
+        =20
+> > What is your real motivation for moving the secure boot checking out of=
+ IMA?   =20
+> >                                                                        =
+        =20
+>=20
+> Sorry for not stating that clearly in this patch. I think the cover
+> letter of V3 I just sent few minutes ago can answer your question, and I
+> quote:
+>=20
+> "We encountered a boot failure issue in an in-house testing, where the
+> kernel refused to load its modules since it couldn't verify their
+> signature. The root cause turned out to be the early return of
+> load_uefi_certs(), where arch_ima_get_secureboot() returned false
+> unconditionally due to CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT=3Dn, even
+> though the secure boot was enabled.
+>=20
+> This patch set attempts to remove this implicit dependency by shifting
+> the functionality of efi secure boot enquiry from IMA to the integrity
+> subsystem, so that both certificate loading and IMA can make use of it
+> independently."
+>=20
+> Here's the link of V3, and please take a look:
+> https://lore.kernel.org/all/20250703014353.3366268-1-gongruiqi1@huawei.co=
+m/T/#mef6d5ea47a4ee19745c5292ab8948eba9e16628d
+>=20
+> > FYI, there are a number of problems with the patch itself.  From a very=
+ high
+> > level: =20
+> >                                                                        =
+        =20
+> > - The EFI secure boot check is co-located with loading the architecture=
+ specific
+> > policies.  By co-locating the secure boot check with loading the archit=
+ecture
+> > specific IMA policies, there aren't any ifdef's in C code.  Please refe=
+r to the
+> > "conditional compilation" section in the kernel coding-style documentat=
+ion on
+> > avoiding ifdef's in C code.
+> >                                                                        =
+        =20
+> > - Each architecture has it's own method of detecting secure boot. Origi=
+nally the
+> > x86 code was in arch/x86, but to prevent code duplication it was moved =
+to IMA.=20
+> > The new file should at least be named efi_secureboot.c. =20
+>=20
+> You're right. I didn't realize it's arch-specific in the first place,
+> and moving and renaming arch_ima_get_secureboot() turned out to be a
+> real mess ...
+>=20
+> So the V3 keeps the prototype of arch_ima_get_secureboot(), and only
+> moves out its body, which I think can also better represent the
+> intention of the patch.
 
-Hi Christian,
+It's definitely much better.  To summarize, arch_ima_get_secureboot() becom=
+es a
+wrapper for integrity_get_efi_secureboot().  Before loading the MOK/MOKx ke=
+ys,
+load_uefi_certs() calls integrity_get_efi_secureboot() directly.
 
-I noticed that this patch series doesn't appear to be merged into this
-branch. Just wondering if it might have been missed?
+With load_uefi_certs() calling integrity_get_efi_secureboot() directly, ple=
+ase
+check to see whether an integrity_get_efi_secureboot() stub function needs =
+to be
+defined.
 
-Best regards,
-Yi.
+Mimi
 
-> 
-> [1/9] block: introduce max_{hw|user}_wzeroes_unmap_sectors to queue limits
->       https://git.kernel.org/vfs/vfs/c/2695a9b086fd
-> [2/9] nvme: set max_hw_wzeroes_unmap_sectors if device supports DEAC bit
->       https://git.kernel.org/vfs/vfs/c/bf07c1180194
-> [3/9] nvmet: set WZDS and DRB if device enables unmap write zeroes operation
->       https://git.kernel.org/vfs/vfs/c/a6c7ab5adcba
-> [4/9] scsi: sd: set max_hw_wzeroes_unmap_sectors if device supports SD_ZERO_*_UNMAP
->       https://git.kernel.org/vfs/vfs/c/92372ed1cc88
-> [5/9] dm: clear unmap write zeroes limits when disabling write zeroes
->       https://git.kernel.org/vfs/vfs/c/e383d550e716
-> [6/9] fs: introduce FALLOC_FL_WRITE_ZEROES to fallocate
->       https://git.kernel.org/vfs/vfs/c/1ed1b5df86ec
-> [7/9] block: factor out common part in blkdev_fallocate()
->       https://git.kernel.org/vfs/vfs/c/96433508c8c0
-> [8/9] block: add FALLOC_FL_WRITE_ZEROES support
->       https://git.kernel.org/vfs/vfs/c/2b4e5f9b3eb9
-> [9/9] ext4: add FALLOC_FL_WRITE_ZEROES support
->       https://git.kernel.org/vfs/vfs/c/51954e469396
+>=20
+> As of the name of the new file, as V3 has been sent earlier and still
+> uses secureboot.c, I can't change it there. I can do it in V4.
+>=20
+> -Ruiqi
 
