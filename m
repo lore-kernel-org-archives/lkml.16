@@ -1,67 +1,50 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F6E2EE978;
-	Thu,  3 Jul 2025 14:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6902E7BD6;
+	Thu,  3 Jul 2025 14:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751554368; cv=none; b=O/cM2Vj+p6EgV4Tk+QUo6u/jsWZ1GTnK5xtSNDcEgfErtRwKKVKklBYlzjmSc7+xPxl+22G2zgXRqZMSgAgJFznHm77n+1BDpm9DESktZXRgoX0hzcgTcy/WSrvJ+NTYE11D/bPmWf5nl01oHmyTD5G/1+omEjDWLjT3Lyc3msc=
+	t=1751554389; cv=none; b=BTgC3h9jaDW3V/mu1+3ZlDG6Z3e+Voy+W9ph3bNirOJ6zlKUvQEntr0ngh9JimrUVVqh4oqgxdryowHHdm6xb62tJ+qulB10Bl4Tt/3zi+zNZTOyNBHf9Ng61NnL/2MVUIqGIvTGCWqk/0tZM0fLNErCDsYuAaiEUvnN4ukquBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751554368; c=relaxed/simple;
-	bh=4uiQOKq9+dOU2EcBfhGx9y6ZSanJJ4mEnzeEmB9WfUI=;
+	s=arc-20240116; t=1751554389; c=relaxed/simple;
+	bh=MoOscBUcTWSUce3lf14fWxvqgiNwEkxjRYeXVNrPO/k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MbtNx3pG7tx3NxH7vgXyi0vyuLXg8xv0dYrRs7U05l12DsNNgNYE9fuI0UI3iOqM5LtpDfVAf7gMojSqoXp9LS1/oRHoYaHl2FzAVvUbGO3CIHDbn7+hUYyPf3KGgHfD/8AQef+QE20KkxQ6HvohksWDvMTXV+GCgOpo5kopaNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E6euIqWd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=L1i4QNo3Ae7x/1uOIVNyy1IdTAryuN+/wEIxS6OTmu0xNIk0TBVeGe5OQa3XGBhmtzSuGhBgYlmc/hK/qwvZliaMazLLr/Mcd21fHl8VP2f5ueHJ4kBfu9mJtZ4dvFkkeloEure2nPBwGxnABkgxVnb0p1QZug2ceeyi6JBhGb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZ52Mkvu; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E6euIqWd"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563CP5oV024412;
-	Thu, 3 Jul 2025 14:52:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mY6ftB
-	pphXMErXOxTNW++Rpsp6EmBFPcZptcpuH9lvw=; b=E6euIqWdMY08dmWJoF5HaJ
-	3m7B0anHbdKsqL9tlZvrAP7nXEvYL18V502kjwqHE9C7vckTDj6yJHIVv0uoC0nV
-	9RCy6DSo16yO8776TtDdf3XLes+/UCz1kNdjCj7tfH4TplKmDx5RsH5PJt/9ce9A
-	1I5VCfBg5o4NYLrr8ZagT7vWIp4ls0l6VzRkE4s6kgQv3WIHBzWdWg5Vp/z84rUn
-	CuGvM/CLbxsdL/6ajXqHJm3797r+wiVbfZjpRPmybTfY2deATmCy91DjC/Zh+SB3
-	KPiklGXZT3qesVBaWBmLSa47MyYMc9P4L/QTNFWql6lzPLK/4hWeJgy0a8elowYQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g41gy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 14:52:33 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563Edv0S029184;
-	Thu, 3 Jul 2025 14:52:32 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g41gt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 14:52:32 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563D6pGe021109;
-	Thu, 3 Jul 2025 14:52:32 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqunm17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 14:52:31 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563EqV2a57409824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Jul 2025 14:52:31 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC4BD5805D;
-	Thu,  3 Jul 2025 14:52:30 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB7CC5805E;
-	Thu,  3 Jul 2025 14:52:25 +0000 (GMT)
-Received: from [9.109.245.113] (unknown [9.109.245.113])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Jul 2025 14:52:25 +0000 (GMT)
-Message-ID: <5bc95d56-0b2e-404a-9740-cd68facf7f55@linux.ibm.com>
-Date: Thu, 3 Jul 2025 20:22:24 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZ52Mkvu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751554388; x=1783090388;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MoOscBUcTWSUce3lf14fWxvqgiNwEkxjRYeXVNrPO/k=;
+  b=WZ52MkvuNA3ckRN3qvrJ01WuD97gs8nG5hsblvxDMpj3vMAVpzuDx/KP
+   inq3f/69ElozVpcIBidNpnRbjruNOa3Mj57d39HtGxbovIDXngFExnBFA
+   IzNYPqE5lS2PKEhq6OlUkgwqwJ6+pb4CrOas7oBCZ8KoHSZyxp8pKUn7E
+   FzhaWzCBNsTu5tIBqcS+K3Z/PGBytusG0F/VT5gDq7+yDkLH6LC1vL29d
+   7uWYPi2suLIP8Xbnp6uYgRBtVZb9rbGU9I9mz8D61g5T4Blo9tJS9rlis
+   SR/rEDbZPb3v/CbARF2EM5EbGb008TkqDoB0vtu03zhBuwsCkVbI0EwPT
+   w==;
+X-CSE-ConnectionGUID: /HyiE0POTGmMtB2+Ktp9NQ==
+X-CSE-MsgGUID: uwsty7wxRfyYGb4dOUCF3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="71451568"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="71451568"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:53:07 -0700
+X-CSE-ConnectionGUID: 80pnrYJTTJaDEQWrq33XSQ==
+X-CSE-MsgGUID: 3oAhf3MAT3Kev07eGXjSmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="160087019"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.13]) ([10.125.110.13])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:53:07 -0700
+Message-ID: <ce8923c7-a3df-470e-acb1-d12f6c47dea5@intel.com>
+Date: Thu, 3 Jul 2025 07:53:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,145 +52,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] mm/selftests: Fix split_huge_page_test failure on
- systems with 64KB page size
-To: Zi Yan <ziy@nvidia.com>, Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
-        lorenzo.stoakes@oracle.com, shuah@kernel.org, pfalcato@suse.de,
-        david@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com,
-        ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
-References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
- <20250703060656.54345-5-aboorvad@linux.ibm.com>
- <9440CBF1-AE4E-4C9F-ABC6-EBCB74316CF8@nvidia.com>
+Subject: Re: [PATCH 1/2] x86/tdx: Eliminate duplicate code in tdx_clear_page()
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com,
+ seanjc@google.com, vannapurve@google.com
+Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ x86@kernel.org, H Peter Anvin <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
+ kirill.shutemov@linux.intel.com, kai.huang@intel.com,
+ reinette.chatre@intel.com, xiaoyao.li@intel.com,
+ tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+References: <20250703114038.99270-1-adrian.hunter@intel.com>
+ <20250703114038.99270-2-adrian.hunter@intel.com>
+ <a0d5b60d-ea40-4f99-aed7-003102517248@intel.com>
+ <09770a46-3d66-4256-a4b1-39d468daca65@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <9440CBF1-AE4E-4C9F-ABC6-EBCB74316CF8@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <09770a46-3d66-4256-a4b1-39d468daca65@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: d0MVYya5BfnavZQNhVrX68n-pB7xF2_V
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEyNSBTYWx0ZWRfX2KpBx84o+vm3 o7HdbLkpVFllA85JI4orbVlwW+5vNaZA2Tc0KRFiA1K/PmHJyvfQ0/vgitNLDBjvK0w+FkWNxTp 1lPNqU7kOczbJZnvT6OsqQ+z0pA5ZtrEkWRK72PIAy42X4SlmFTy2EQ7JuoGJkXcfv5jqr5OZ8f
- yAt9YiRuryQbFm8ItvRyF75KeTxzhjZqhFGzQpcb03+BGCw7n67du2grUgMLYRXH1q49y1X/f1a vhzJOf7TP8g/KLpOFauWICjqyMUTdVNynAyDIujG87ZGWyObkBvFGJf4RQgEVwr7Ix/fXaoirDV 8GTLO9ugq2gA9gV/KgZ5u5kOrzKGdADx8cY9JYe7sL/+iBpXK7+CYDwrMq6Z7radsxZJgiGm22v
- eawR+gztivcwiVyaBdKKFJ4Xx0ykUHrRGmFfP8vGTt4BXqjCyPDYtHW+cr/3rtO0/eR9xBFg
-X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=68669931 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=Ikd4Dj_1AAAA:8 a=g9tEA885WHVDQ8z4Vf4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: d_E1IoYl_87F0af97llEgVPfKcNbJ4DN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030125
 
+On 7/3/25 07:39, Adrian Hunter wrote:
+> On 03/07/2025 17:14, Dave Hansen wrote:
+>> On 7/3/25 04:40, Adrian Hunter wrote:
+>>> tdx_clear_page() and reset_tdx_pages() duplicate the TDX page clearing
+>>> logic.  Keep the tdx_clear_page() prototype but call reset_tdx_pages() for
+>>> the implementation.
+>> Why keep the old prototype?
+> What prototype would you prefer?
 
-On 7/3/25 8:00 PM, Zi Yan wrote:
-> On 3 Jul 2025, at 2:06, Aboorva Devarajan wrote:
->
->> From: Donet Tom <donettom@linux.ibm.com>
->>
->> The split_huge_page_test fails on systems with a 64KB base page size.
->> This is because the order of a 2MB huge page is different:
->>
->> On 64KB systems, the order is 5.
->>
->> On 4KB systems, it's 9.
->>
->> The test currently assumes a maximum huge page order of 9, which is only
->> valid for 4KB base page systems. On systems with 64KB pages, attempting
->> to split huge pages beyond their actual order (5) causes the test to fail.
->>
->> In this patch, we calculate the huge page order based on the system's base
->> page size. With this change, the tests now run successfully on both 64KB
->> and 4KB page size systems.
->>
->> Fixes: fa6c02315f745 ("mm: huge_memory: a new debugfs interface for splitting THP tests")
->> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
->> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
->> ---
->>   .../selftests/mm/split_huge_page_test.c       | 23 ++++++++++++++-----
->>   1 file changed, 17 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/testing/selftests/mm/split_huge_page_test.c b/tools/testing/selftests/mm/split_huge_page_test.c
->> index aa7400ed0e99..38296a758330 100644
->> --- a/tools/testing/selftests/mm/split_huge_page_test.c
->> +++ b/tools/testing/selftests/mm/split_huge_page_test.c
->> @@ -514,6 +514,15 @@ void split_thp_in_pagecache_to_order_at(size_t fd_size, const char *fs_loc,
->>   	}
->>   }
->>
->> +static unsigned int get_order(unsigned int pages)
->> +{
->> +	unsigned int order = 0;
->> +
->> +	while ((1U << order) < pages)
->> +		order++;
->> +	return order;
->> +}
->> +
->>   int main(int argc, char **argv)
->>   {
->>   	int i;
->> @@ -523,6 +532,7 @@ int main(int argc, char **argv)
->>   	const char *fs_loc;
->>   	bool created_tmp;
->>   	int offset;
->> +	unsigned int max_order;
->>
->>   	ksft_print_header();
->>
->> @@ -534,32 +544,33 @@ int main(int argc, char **argv)
->>   	if (argc > 1)
->>   		optional_xfs_path = argv[1];
->>
->> -	ksft_set_plan(1+8+1+9+9+8*4+2);
->> -
->>   	pagesize = getpagesize();
->>   	pageshift = ffs(pagesize) - 1;
->>   	pmd_pagesize = read_pmd_pagesize();
->>   	if (!pmd_pagesize)
->>   		ksft_exit_fail_msg("Reading PMD pagesize failed\n");
->>
->> +	max_order = get_order(pmd_pagesize/pagesize);
-> pmd_pagesize/pagesize is reused below, a tmp variable would be good.
+My first reaction is that there should be _one_ function that does the
+erratum-related clearing. I'd rather have the KVM sites use the slightly
+cumbersome paddr/size arguments than have two functions.
 
+Worst, case, have two functions that have similar names to make it clear
+that they are doing the same thing.
 
-Thank you. I will add it in next version.
+It is *NOT* clear that:
 
+	tdx_clear_page()
+and
+	reset_tdx_pages()
 
->
->> +	ksft_set_plan(1+(max_order-1)+1+max_order+max_order+(max_order-1)*4+2);
->> +
->>   	fd_size = 2 * pmd_pagesize;
->>
->>   	split_pmd_zero_pages();
->>
->> -	for (i = 0; i < 9; i++)
->> +	for (i = 0; i < max_order; i++)
->>   		if (i != 1)
->>   			split_pmd_thp_to_order(i);
->>
->>   	split_pte_mapped_thp();
->> -	for (i = 0; i < 9; i++)
->> +	for (i = 0; i < max_order; i++)
->>   		split_file_backed_thp(i);
->>
->>   	created_tmp = prepare_thp_fs(optional_xfs_path, fs_loc_template,
->>   			&fs_loc);
->> -	for (i = 8; i >= 0; i--)
->> +	for (i = (max_order-1); i >= 0; i--)
->>   		split_thp_in_pagecache_to_order_at(fd_size, fs_loc, i, -1);
->>
->> -	for (i = 0; i < 9; i++)
->> +	for (i = 0; i < max_order; i++)
->>   		for (offset = 0;
->>   		     offset < pmd_pagesize / pagesize;
->>   		     offset += MAX(pmd_pagesize / pagesize / 4, 1 << i))
-> With the change to get_order() proposed by David and ksft_set_plan()
-> simplification, Reviewed-by: Zi Yan <ziy@nvidia.com>
->
-> Best Regards,
-> Yan, Zi
+are doing the exact same thing.
+
+I think I'd probably rename reset_tdx_pages() to tdx_reset_paddr() and
+then use it in KVM like this:
+
+	tdx_quirk_reset_paddr(page_to_phys(page), PAGE_SIZE);
+
+The alternative would be to retain a function that keeps the 'struct
+page' as an argument. Something like:
+
+	tdx_quirk_reset_paddr(unsigned long base, unsigned long size)
+and
+	tdx_quirk_reset_page(struct page *page)
+
+But the way proposed in this patch is very much a half measure.
