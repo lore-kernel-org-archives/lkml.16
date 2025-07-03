@@ -1,196 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6602EA160
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CDC2EA146
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551667; cv=none; b=S1Y38o6xQ4TtNpwQo+USTm92r9E+SwnDoXAAUHyACcG5pCFRh4JPPgo3ncDzczgmEj6LSgBi7d2a944xa5f+ZAo+UOzmrftyIlXfvz4MTQDj8y0odadHKPP+TwEi83R42/3oRG8PReXMYBOZ5H+6WB1B9Rv++62mOirnOH5k7gs=
+	t=1751551668; cv=none; b=lXnPzfmKHnAIBDgl8RSmN8onhTxye1p050trH5EYafcXkwNZNufdqOKa97EjnG65Ehj/tUVoZzN8iYrYozk3+Muvu4sMaKRnW4oLkmUtrObqMQKD4m3BzOi8mNDJSm9YwOaWNCaormllWjnTO8gPnh4U3Vt/w8DSopdpRCCHCWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551667; c=relaxed/simple;
-	bh=QY9AUh/9sbWRVey2XWEDIQEEsAK1y6vLLNwig1fqR50=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sRdfuQO3SBcn5idNz5kl2Ba2uJ+U8OnN8q7Y4n8W8tXvaM+XP/HB1QvKWPbg/UDbdV28Qw/gtdlr39NFQ+Ij/11APcfpHPbsS3el3y1sTaJu8ncnKI5VLoBCzqq16aho1EIt27Rx1wSP2LfEJ3WmbRyUEEH3UJ00DaC56nLm7Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qi3cX/BG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751551668; c=relaxed/simple;
+	bh=tZiZ92ztTcdwSFwaDSEjuylr6E2oMfBwx3JEMzcXyII=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MRqOtzAnrDtxdLanbVcJFXGe5x/rpMvJuX1fbR0YCrJt57bxsYEv2a8ccgudUNC3e4aXXrFw9y6tePO1Mdki0D2yVSHokOZcn2hs9n0MwWcS9Z2DJ9jEHU0Lc5mdrN6XYqUYsCxgs6MJ0eU9Jcf2HQ17Vuy8cS0JxA0+ztW6WXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xui94Qb+; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qi3cX/BG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5D3C4CEF2;
-	Thu,  3 Jul 2025 14:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751551667;
-	bh=QY9AUh/9sbWRVey2XWEDIQEEsAK1y6vLLNwig1fqR50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qi3cX/BGE6MvsXYCQZ5ZQSZr8cjrtR/u1fbQ5/6Uzb1d+1jbRRRddwO6gE8p1IJ5w
-	 k0+cNXhZzgRopQQswSx4Cu1beVVx8XuP5SsKgITRnJ2aPFToP6HHn/y6usKsnTH6V1
-	 HnpNaSU0vweHwSuH6tGpfU2AiWCRvUEGNg4GNEX8kjhZx0I6alY4+5cE3KJXvcvnrm
-	 /PS6DciVI5u+rzJOZG8AEZ9xuWCMLW6HgR6yHTh5Kp1u4wFvREZ2p3miWDEe4oWVz/
-	 jQP2f3bHnvJtvTpOrMPg2zaiOIJUGJvhq1pwm6MPtQ4a9eAotNAwxTmiu+ll4OeuRH
-	 kk0o63TmWOmyA==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	linux-mm@kvack.org
-Subject: [PATCH 5/6] sched/isolation: Introduce isolated task work
-Date: Thu,  3 Jul 2025 16:07:16 +0200
-Message-ID: <20250703140717.25703-6-frederic@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250703140717.25703-1-frederic@kernel.org>
-References: <20250703140717.25703-1-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xui94Qb+"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453066fad06so55946265e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 07:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751551665; x=1752156465; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ycI4WYThtdNsX6KYwyJiENU7SdlsJACu2s2/RAZVc/g=;
+        b=xui94Qb+fQn9ZjakukbMGl2DdqpOFHJY6ZLSYwcBLgPjkKL6hZaoUV3Hr/YzjFvNzb
+         zCeQHiKRA/QiTBKY8padANOeys4SBeNSk0GvYFiRXkf7VhoNrAuyJ3sxgOpGTD6G77lG
+         jHz2R3Kx+lVrZ+h0/B1telDK8avjKvA3ZsFZPhGTbhPdlpZbZyLPVoHw2acnDkGHOAgM
+         mDlp5FknINVQuvhLZb+XMQokPXRmO/BaDCSyBnnbWWADfnz35b1TKWfVoOXf4e/943Fi
+         wT2lKZXh9Lxpt9iCXqa1yN3dyRUaMJHzntWAvEJMgIA8/bJYVOKsSsT5S6/2niWaqbdp
+         fydw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751551665; x=1752156465;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ycI4WYThtdNsX6KYwyJiENU7SdlsJACu2s2/RAZVc/g=;
+        b=qaI8eARlfU48Uba3+uWGOGESVO6FA1O0A4TaSpxgA/bp061xTdtpcFNEC5SAH2sSiB
+         wDm+HTzL31VKjJsFwOUTPUpwLk9JwcS1PTlVUhMkeoeeCuwRhNZ8yOe2Jy8E2e0GA1eA
+         NeHFParkOjJi4nmWDbrsbd/ynONL24Z3Z9jUvLOTGlSCaNyifxBN4ALLNQj4xz2rNSQr
+         yENjIdvGwdGNIIueZX+P64rdNqekixU2DbOWikTK9PzDeQGHsHH+KHYB9AP4lIVijWPq
+         G2FG8O7BMrfdrQB8O/HVqEeKXQ2VoQEsXYWxkUqqgPDplIMZy1RlQY14imB7chRufeFm
+         biDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWt/gyMAaveWsiXgTLCvRC6td+/0LuhxidmBQieW52CmZbjRQCXMGJrOG9x2nRgEB3OmhmGIEf4TmYumtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqLuNTubVmqKBQO5pkOsQV3e3i1Zj0HhHwUNVU5tGwiI1FiTMz
+	PNE6auHQsYGDIqiKt41SMs34bMANAyVmkxKw27WyXSuBItGXNCVn3Mqg6GfnAg+JYR8=
+X-Gm-Gg: ASbGncuLI6q4YxIM5phJxHk/yBKoL3bVb1qRbClKJOV4oEQNi1OTz8WNCMBY8WP9pA9
+	GHAReMrNTHNBaeUJp2ywKh6ULgy7krQfbk+1BGF0NW5wnjHX1pjvvUx/wG6pXxdmwZonaz/lmoe
+	BjnF5BDXSGn4Fi0PSQ9ArXCd930/BM8GZaTavO907VfLub2GSBHuhp2Q+BsanxWdALhjCwnlKF2
+	VscHrl5Oy3v1TNeIu/yMhgM7FMU0Vaim0BypJickKI95RQdc1HP0CWLy75BD0CtC4hEKCksPck6
+	E+cb4x2NM6TixpWlbDSwGKy/MhxZkmlniJ5NxOCtW8ii4hRpDbTsmW4dcNyF4BsJNMylhTQE+Q+
+	2wsDwqdT7o8xt0A34
+X-Google-Smtp-Source: AGHT+IENaq88sCKdSam+I4emffuT1q9K5iTEZO5saslNhRejQ3SetZS7xkYpcNjBldQAnYj+qmKUfA==
+X-Received: by 2002:a05:6000:480c:b0:3a8:310a:b1dc with SMTP id ffacd0b85a97d-3b32fffbbc4mr2523114f8f.56.1751551664251;
+        Thu, 03 Jul 2025 07:07:44 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([145.224.66.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5966csm18926220f8f.72.2025.07.03.07.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 07:07:43 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Thu, 03 Jul 2025 15:07:40 +0100
+Subject: [PATCH] scsi: ufs: exynos: call phy_notify_pmstate() from hibern8
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250703-ufs-exynos-phy_notify_pmstate-v1-1-49446d7852d1@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAKuOZmgC/0XNQQ6DIBCF4auYWXcSSgOtXqUxBnGoLIoW0EiMd
+ y8pabv83+J7OwTylgI01Q6eVhvs5HKcTxXoUbkHoR1yA2dcsCu74GIC0pbcFHAeU+emaE3q5me
+ IKhJqRvXQ10JpKSEbsydjt49/b0t7ei35Jpbx/9JUv48MY4HxCxvGeyXEjRspmpVDexxvUT6tU
+ rwAAAA=
+X-Change-ID: 20250703-ufs-exynos-phy_notify_pmstate-c0e9db95ac66
+To: Alim Akhtar <alim.akhtar@samsung.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-scsi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Peter Griffin <peter.griffin@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1720;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=tZiZ92ztTcdwSFwaDSEjuylr6E2oMfBwx3JEMzcXyII=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoZo6u+V3Q026xLVWd3U0WTHK0GIijnylbPkNaZ
+ Nk9sNbretSJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaGaOrgAKCRDO6LjWAjRy
+ up9jD/wMpHZvlBCnREgmHLSrg0lxxe2ntcr9OETQ+7+AiDjL5pkH9OAGBPU+NCBY/bCqDjguH9v
+ EVtws4IY/0/0VViKPOiH2Y9zJuNyaYNzadlQStEJyHJdDFH5YXfJcRGTtbR+mRehJu+6XK6vXDU
+ AK6pemUfcwJ8g03tqVMjURIuJYdRns34AUP/BHPlTV92w7MqEXqjifiNfuDqyhADk5Qeq2Gc5Qc
+ Cf5CpXIQmWjOKyU0STy1zlQmUnXjipvGTmmjmzNdRcDqK3eQQzMUL2xbnrc7oqzlXimVgkaDLme
+ xOSDaZzsw0YiIsM7zHIv9hrWjjrQckT5JOkcZ8LMMvzvxDHTUcZrTasdvCGElrDcnNs2965dw7N
+ 7zldXitX3acPMpUtmvyf2DwuITA1Y9oPcE2x7CZxBA7k7YGAUEUUc9f++sG4TmNBgE43Ygokkz3
+ OEgP5NJNLUZUiz4rZ4WxT7E5RFO6Aur6uf/EEVRqn+PNHWEYbbTmt6NqZZ7MGy5wGI96/Ku1a2i
+ TMLTscMTHr/lOTuYwBcfwhQu/n2ue4ARLjIi0flCIp76E4mQ0dh6up3U2ip1m/E2Y/GBvqx4yEF
+ BlWaeijNzs9rAJPCuDdxXxNEqoziojgXHxtp3tj20cOHs2ONAeHknZNQb3+BtzXN/kKcsqcrlqc
+ xRXHSsU+e3Jg7fA==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-Some asynchronous kernel work may be pending upon resume to userspace
-and execute later on. On isolated workload this becomes problematic once
-the process is done with preparatory work involving syscalls and wants
-to run in userspace without being interrupted.
+Notify the ufs phy of the hibern8 link state so that it can program the
+appropriate values.
 
-Provide an infrastructure to queue a work to be executed from the current
-isolated task context right before resuming to userspace. This goes with
-the assumption that isolated tasks are pinned to a single nohz_full CPU.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- include/linux/sched.h           |  4 ++++
- include/linux/sched/isolation.h | 17 +++++++++++++++++
- kernel/sched/core.c             |  1 +
- kernel/sched/isolation.c        | 23 +++++++++++++++++++++++
- kernel/sched/sched.h            |  1 +
- kernel/time/Kconfig             | 12 ++++++++++++
- 6 files changed, 58 insertions(+)
+Note this patch has a dependency on the new API proposed in [1]
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 117aa20b8fb6..931065b5744f 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1448,6 +1448,10 @@ struct task_struct {
- 	atomic_t			tick_dep_mask;
- #endif
+[1] https://lore.kernel.org/lkml/20250703-phy-notify-pmstate-v2-0-fc1690439117@linaro.org/ 
+---
+ drivers/ufs/host/ufs-exynos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/ufs/host/ufs-exynos.c b/drivers/ufs/host/ufs-exynos.c
+index 3e545af536e53e06b66c624ed0dc6dc7de13549f..e9fac23dc15abd685aba4c169c82e211040dec8b 100644
+--- a/drivers/ufs/host/ufs-exynos.c
++++ b/drivers/ufs/host/ufs-exynos.c
+@@ -1574,6 +1574,8 @@ static void exynos_ufs_pre_hibern8(struct ufs_hba *hba, enum uic_cmd_dme cmd)
+ 			exynos_ufs_disable_auto_ctrl_hcc(ufs);
+ 		exynos_ufs_ungate_clks(ufs);
  
-+#ifdef CONFIG_NO_HZ_FULL_WORK
-+	struct callback_head		nohz_full_work;
-+#endif
++		phy_notify_pmstate(ufs->phy, PHY_UFS_HIBERN8_EXIT);
 +
- #ifdef CONFIG_FAULT_INJECTION
- 	int				make_it_fail;
- 	unsigned int			fail_nth;
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index d8501f4709b5..9481b7d152c9 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -77,4 +77,21 @@ static inline bool cpu_is_isolated(int cpu)
- 	       cpuset_cpu_is_isolated(cpu);
+ 		if (ufs->opts & EXYNOS_UFS_OPT_USE_SW_HIBERN8_TIMER) {
+ 			static const unsigned int granularity_tbl[] = {
+ 				1, 4, 8, 16, 32, 100
+@@ -1606,6 +1608,8 @@ static void exynos_ufs_post_hibern8(struct ufs_hba *hba, enum uic_cmd_dme cmd)
+ 		exynos_ufs_gate_clks(ufs);
+ 		if (ufs->opts & EXYNOS_UFS_OPT_BROKEN_AUTO_CLK_CTRL)
+ 			exynos_ufs_enable_auto_ctrl_hcc(ufs);
++
++		phy_notify_pmstate(ufs->phy, PHY_UFS_HIBERN8_ENTER);
+ 	}
  }
  
-+#if defined(CONFIG_NO_HZ_FULL_WORK)
-+extern int __isolated_task_work_queue(void);
-+
-+static inline int isolated_task_work_queue(void)
-+{
-+	if (!housekeeping_cpu(raw_smp_processor_id(), HK_TYPE_KERNEL_NOISE))
-+		return -ENOTSUPP;
-+
-+	return __isolated_task_work_queue();
-+}
-+
-+extern void isolated_task_work_init(struct task_struct *tsk);
-+#else
-+static inline int isolated_task_work_queue(void) { return -ENOTSUPP; }
-+static inline void isolated_task_work_init(struct task_struct *tsk) { }
-+#endif /* CONFIG_NO_HZ_FULL_WORK */
-+
- #endif /* _LINUX_SCHED_ISOLATION_H */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 35783a486c28..eca8242bd81d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4538,6 +4538,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	p->migration_pending = NULL;
- #endif
- 	init_sched_mm_cid(p);
-+	isolated_task_work_init(p);
- }
- 
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 93b038d48900..d74c4ef91ce2 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -249,3 +249,26 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 	return housekeeping_setup(str, flags);
- }
- __setup("isolcpus=", housekeeping_isolcpus_setup);
-+
-+#ifdef CONFIG_NO_HZ_FULL_WORK
-+static void isolated_task_work(struct callback_head *head)
-+{
-+}
-+
-+int __isolated_task_work_queue(void)
-+{
-+	if (current->flags & (PF_KTHREAD | PF_USER_WORKER | PF_IO_WORKER))
-+		return -EINVAL;
-+
-+	guard(irqsave)();
-+	if (task_work_queued(&current->nohz_full_work))
-+		return 0;
-+
-+	return task_work_add(current, &current->nohz_full_work, TWA_RESUME);
-+}
-+
-+void isolated_task_work_init(struct task_struct *tsk)
-+{
-+	init_task_work(&tsk->nohz_full_work, isolated_task_work);
-+}
-+#endif /* CONFIG_NO_HZ_FULL_WORK */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 475bb5998295..50e0cada1e1b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -60,6 +60,7 @@
- #include <linux/stop_machine.h>
- #include <linux/syscalls_api.h>
- #include <linux/syscalls.h>
-+#include <linux/task_work.h>
- #include <linux/tick.h>
- #include <linux/topology.h>
- #include <linux/types.h>
-diff --git a/kernel/time/Kconfig b/kernel/time/Kconfig
-index b0b97a60aaa6..34591fc50ab1 100644
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -146,6 +146,18 @@ config NO_HZ_FULL
- 
- endchoice
- 
-+config NO_HZ_FULL_WORK
-+	bool "Full dynticks work flush on kernel exit"
-+	depends on NO_HZ_FULL
-+	help
-+	 Selectively flush pending asynchronous kernel work upon user exit.
-+	 Assuming userspace is not performing any critical isolated work while
-+	 issuing syscalls, some per-CPU kernel works are flushed before resuming
-+	 to userspace so that they don't get remotely queued later when the CPU
-+	 doesn't want to be disturbed.
-+
-+	 If in doubt say N.
-+
- config CONTEXT_TRACKING_USER
- 	bool
- 	depends on HAVE_CONTEXT_TRACKING_USER
+
+---
+base-commit: 4611e0cba12ff5bb64b469cfac129f40f41b5caf
+change-id: 20250703-ufs-exynos-phy_notify_pmstate-c0e9db95ac66
+prerequisite-change-id: 20250703-phy-notify-pmstate-f02ba5582f65:v2
+prerequisite-patch-id: 99070bdd3132b74f7b8932d3d8bef685815a5edd
+prerequisite-patch-id: 02cd952ede323864a87816a20e3f6e06b885eab3
+
+Best regards,
 -- 
-2.48.1
+Peter Griffin <peter.griffin@linaro.org>
 
