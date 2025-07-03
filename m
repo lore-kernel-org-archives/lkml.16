@@ -1,173 +1,210 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A932E7620
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E842E7F07;
+	Thu,  3 Jul 2025 14:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553975; cv=none; b=UkNGbj8YfsJSja+9rkQ7+abSPiXqLAwBsvgeM/xVb/USu3rKAbf1a+vwchJUoS0E1IGwxxUKJSHuYXSwSucgNz5OWRHdlDKca4X7lYGeAKRuxOlWBxXatuNMadhj9Lsl7zkqDKWcEY0+wPrxNlocdNzMhIm77N22qQ33FeFnVDY=
+	t=1751554017; cv=none; b=tzJnpolx4kr8dYXLJxv9vVE0XB82bT2A+2xKulOOZD84Fre0P27CwVhZoqzppQeN8XsYyjSYk95pvYHBylBQqp5EVF+SfC7Pwc8aodWwrYww7XNvuFotM/hjY9XYEJVaFGbArmW7XVT0QGFyqZwiDi/kgp5gl+nFKNjH9HQzniQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553975; c=relaxed/simple;
-	bh=072pcCvBMR7vtDKQsCrYBJuqlkcEW2Q3tlczFa12bes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNe6AF7AMbaoS7VsQ+iSk/ER8HAPkBO/wdwk04Xw7u5T20fwi8aSc3Pm7Qleb5M+ewd3EbLPke85Ykj96oyyVf5X9FBAW6UqOGOlQOAzzqIaf74tfvwyFjrhJhNaj4XfniBZwggucF2adQGa4m2N522T0a/7MdXRGVd65v9xjAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pe97KF09; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751554017; c=relaxed/simple;
+	bh=lN5s32Jbcs7WNkSmhy7bYvtYTmkxdABMhyRkzs0DgUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iEslgP8/YgAO2ux7DxmnWa8i6f+XD4XKHySAsR6vTU/Mcj0OhqQeRo98dCkBpxIxDAdGtj2Pac7Mr5N6/fqkDJEQMovV7W/2hxuUw4vk/nIYgkASNNiWpDu/XyyOAHMqGvfcGEMlzyFPsit0zMnrEyc8IMAAiu8axzkiVDTxCiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+sUUeut; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pe97KF09"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-237f18108d2so205845ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 07:46:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+sUUeut"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60789b450ceso10743965a12.2;
+        Thu, 03 Jul 2025 07:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751553973; x=1752158773; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZyBqVSoupq82KbFVVt6LJyI9rbtpg1wvjlbr52oP/Zs=;
-        b=pe97KF09BgQKKDcXvBjTyD5thKMVPjlLEj9vsiy1SF+kOVZMI3hdrThiA4DKsmB+aB
-         bxc2ukmwbFh9WgG5e5C8vF3LzlA5SpGsdReusVbSUyROmZ8/dJf1JzO0EQlPtkGxk1Er
-         6UETb8vAWwUpKdRX1fN3IwMHF+TYbT0e8fADzoNz/17MJZu4fyGv08RJ4Pcxl5/VaLm3
-         1x9F3uwSalFW/P+twGFyDIkYdqcNDws+mUKRnQMH9qLodyjTeVeXlFcZFcnzXyVuKMsw
-         sNgj0j7QsL06Ry0de97205tHproHHVw0HT+mo74BTVH7pxTLaTFVRUigJHBZbgfIgJb8
-         wgNQ==
+        d=gmail.com; s=20230601; t=1751554013; x=1752158813; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1vG5loofJoHI/2oT8MQ0obd1zMTsI6DHFF+BLI2gKVY=;
+        b=a+sUUeutEhHjW6FY/Ru5O6nVJf87XPWxn6aTyH5qdgE91zLdVdhV3OtVKlZbounLvW
+         w1LnTtpDBBPrGVOH5sg7CEQYqrSxbv5B+hJJkeaD15etdL15IYD9dM/dgIvrgvxw7pYn
+         XVKgXS7MsWikh1GKaEMxSVG6dE4Kb/wYJoIDVyLirW0ig6nxMSFJ6xVkBq1Fci/BU7wq
+         MMHb5TL5FgeRFNZGVVqrkhsV0NoPRMENUnwFxK0gggaBPRw1ncXl53jz4a5oYZqFMOt4
+         2yKfS4lWU62ZEPj5UpGkCqy2NxvyJg7P9jPS5wPROXe8gdqoHk7NeQvTUg6Lolsjv8Ah
+         fEcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751553973; x=1752158773;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZyBqVSoupq82KbFVVt6LJyI9rbtpg1wvjlbr52oP/Zs=;
-        b=mf3tWI0SpIlxmFjdDg6cuJU9hoP/YCMDwnFuRW/kcGMUhfTM/cSq+VsO6Mmbba61VJ
-         +WI0EAr4nOfbvMa1eL4JD4VVuD/cRdfvOLtRBKjatGOfnKzBd36tDK2T5CCIGPuwq5QF
-         mYxXUb54bw4BVLqTZrM0dYsqcncMDL6LGTId3E3wMYFHZjAXhSNwYKC1r4fBoWZQeiKh
-         +1a71+300jAMy1oZ3apMXaiu3s7VvQQev7C6H+RxrW1EstZDxjhoIPctCZy3oQ7TrWLZ
-         TOcz5NW0vuS9j55kXpIuu60B8B8X9TFDLOvprh3s7DspYohWae1g3zDH2UD8GGnsgbXb
-         gSJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqDD72FQxoSA9e9wLYzMdqhOBayZIqiV73iYD7XQfJ3CxoOKKeoLCjk1DVWmCyjcclNv1CsTubqBveVKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwodRcwnLsHVBXSAEkIRY/iL6f+OJWj1qsI8sGthODKZBjPO9VZ
-	vcBEXjkOM+lPlhXvw9apE/gP+pbb10dMR6kopqQlDD5isF4hojoFTM2vMki0iJQrxA==
-X-Gm-Gg: ASbGncuM9aYHtblHjvlPtGuWSE4sHiH5XWzrUkpWdzk+2w4+lk9zw+YVJxpXpf1icL4
-	kVIGOXP+LXo5CUWX9LgjYSIC0hGYFzyvWxhV6CdOdI66W0Wto0pPisHkp52ow/SvMqZMWTz7WZM
-	FEk5yl44jmWPwHke9vnnNg7gtgqLQbMPdvSktEYgZffEQXqiX0dgYrUDeRUMGkRTxlQaGl6XBHI
-	Iaj+LBrXU1sHCRa/0JdGP0HRe+skLnhbeYhVFXFHS5q8qV1obwur/kZj4f5bbrMO94jBnCs0Twf
-	hy9uwRr0ChvIgro4c579n4CDrbs7tw7OFvKXDHT1pEgZWEOiuAGtIfpJSantBoYKRNrabBC2eAt
-	tIstl+bUg+xjxpZnvlkTS8DtciEB7B0k=
-X-Google-Smtp-Source: AGHT+IE+IjimVm/cNBTQKKRIynsqnkmviMOQfy4mliRYK2mww3VHnjujL8mKkHcoqxy9cwNV6ZMlng==
-X-Received: by 2002:a17:902:c941:b0:22c:3cda:df11 with SMTP id d9443c01a7336-23c79b3ab97mr3276285ad.10.1751553972827;
-        Thu, 03 Jul 2025 07:46:12 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e39d4sm158508935ad.18.2025.07.03.07.46.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 07:46:12 -0700 (PDT)
-Date: Thu, 3 Jul 2025 14:46:03 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
-	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
-	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
-	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
-	yi.l.liu@intel.com, mshavit@google.com, zhangzekun11@huawei.com,
-	iommu@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
-	vasant.hegde@amd.com, dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aGaXqwzfLwsgCH6n@google.com>
-References: <aGQ_F7Qx3scbbA-J@google.com>
- <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
- <aGRIctg4T6cQECx4@google.com>
- <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
- <aGRmaOORg-YDfncY@google.com>
- <aGRozoIDIlgl9H9x@Asurada-Nvidia>
- <aGR55PUBnwb8qT8U@google.com>
- <aGSBTpY0nkdp2TTL@Asurada-Nvidia>
- <aGSNmf5Q82xEbDpX@google.com>
- <20250702180541.GD1139770@nvidia.com>
+        d=1e100.net; s=20230601; t=1751554013; x=1752158813;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1vG5loofJoHI/2oT8MQ0obd1zMTsI6DHFF+BLI2gKVY=;
+        b=igFP119sQH1nhz4xlA6XtYmZZKBytwMx1CJlaz58dfcgGWdqdRBRRSt92T8jID07Bu
+         ISeai9+Rkxg8CBNXmftJm0tbGDTPzIw1Uw4oI4WqVREACHlZPjlm8apyNUtoGtrshgbU
+         2nFr/p7oVMthbtjVIs/H5Fyu8DZGqCPRtTyusN+PwdrUcn3Ay7T7Sc4fgceMMBBZx3AY
+         M6lleHdQrEwMNqA7guhs6xrLE4Mat09P9aZVECrF6aiihAb1o82S1KeTyO++rcmCWUir
+         3z3e6FtXCM8HYLwO5fb+rJdqP9SxX4h1RJWG5Fvr7ewu0sxMcr9NOyNrT31iw5rbJX1j
+         z6JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1jG86jY5gx73KTX60qlFq0L9Oe5KoLJdI2rRvXclcYL0nZutAkkA4YOGaPuto+/50ssOPzp3AnoNy@vger.kernel.org, AJvYcCWZKPG3OWEpCKXsX98HnYz3HwGQxjEmg7Z7ZkNdGYoadcNHi42N2LoLIXh65D6sfTYKmGv/HZzhq95h26VD@vger.kernel.org, AJvYcCXn2cqoi6OcolgW2qmlzgzKaq3pPq9nsCErnzxgBCDaqeOEHe5l3T+j2DpTD2Fg2qVr9bJ0ktWuvEKEVg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze+9Bl2AfYCkL4mxgvqRNe6/sW55Y++IS4gydYENKhXLUeaTq8
+	k1o0W/fYfOfA0o5UzNLTIheU7u9sB/xINelIqNMnqUQM3gFrUsvkHztj
+X-Gm-Gg: ASbGnct+2Sxepa85v9ih4cjvy/ftPdOMjQ+5CncKV9ugDopIk3F1OvVhu/7wOw92D6o
+	79nTbEyCR0l24+FQ+hI+0GlsWHtSgPveB0GsWpHtMysiTSuz+NEGd2lXyyAbJxP84o1DHJ4kP6i
+	S6NOGGxmpzPPj/PO1rpiTcW1nMGA2pwbCWB+Unn7YOnHIQm763wybp6VP7eUCtDcHhpdeZrFT52
+	QuwkbakZY81fOguio/98mksj90Xmgf5ra3Aisxj5/4d5uPEHvTL+iqgdBk0YX1VMERScWMbWz87
+	3+3LDB2Pl2NzVQkrt1h8p31IAhELd2pKTrXeZkFNKLz8RSEjXseMteUC2iWcXqrPEdteMLytt7z
+	d9sg=
+X-Google-Smtp-Source: AGHT+IG3d3NfRg9+cPD1+4PBfyGx8gRVD7/AozdqjiToYMztJLCFly4TfxgJoNGqYews3daJwQLNLg==
+X-Received: by 2002:a05:6402:35d3:b0:608:155c:bf81 with SMTP id 4fb4d7f45d1cf-60e6ce24caemr3706836a12.31.1751554012933;
+        Thu, 03 Jul 2025 07:46:52 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bb5b2sm10745485a12.4.2025.07.03.07.46.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 07:46:52 -0700 (PDT)
+Message-ID: <cbf8d7bd-24a4-4dc1-8d9f-bbc4bee45d8d@gmail.com>
+Date: Thu, 3 Jul 2025 17:46:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702180541.GD1139770@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 00/24] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+To: Julien Massot <julien.massot@collabora.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+ <5e1b26637706f6eac92acbbb3d5a7dafa0c2c232.camel@collabora.com>
+ <d4052ab3-9cd1-45e8-81b0-b6512822e646@gmail.com>
+ <c661e7f3faec269f73d6240fbe7b84e3bc97157a.camel@collabora.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
+Content-Language: en-US
+In-Reply-To: <c661e7f3faec269f73d6240fbe7b84e3bc97157a.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 03:05:41PM -0300, Jason Gunthorpe wrote:
-> On Wed, Jul 02, 2025 at 01:38:33AM +0000, Pranjal Shrivastava wrote:
-> > On Tue, Jul 01, 2025 at 05:46:06PM -0700, Nicolin Chen wrote:
-> > > On Wed, Jul 02, 2025 at 12:14:28AM +0000, Pranjal Shrivastava wrote:
-> > > > Thus, coming back to the two initial points:
-> > > > 
-> > > > 1) Issuing "non-invalidation" commands through .cache_invalidate could
-> > > >    be confusing, I'm not asking to change the op name here, but if we
-> > > >    plan to label it, let's label them as "Trapped commands" OR
-> > > >    "non-accelerated" commands as you suggested.
-> > > 
-> > > VCMDQ only accelerates limited invalidation commands, not all of
-> > > them: STE cache invalidation and CD cache invalidation commands
-> > > still go down to that op.
-> > > 
-> > 
-> > Right, I'm just saying the "other" non-accelerated commands that are
-> > NOT invalidations also go down that op. So, if we add a comment, let's 
-> > not call them "non-invalidation" commands.
-> 
-> There are no non-invalidation commands:
-> 
-> static int arm_vsmmu_convert_user_cmd(struct arm_vsmmu *vsmmu,
-> 				      struct arm_vsmmu_invalidation_cmd *cmd)
-> {
-> 	switch (cmd->cmd[0] & CMDQ_0_OP) {
-> 	case CMDQ_OP_TLBI_NSNH_ALL:
-> 	case CMDQ_OP_TLBI_NH_VA:
-> 	case CMDQ_OP_TLBI_NH_VAA:
-> 	case CMDQ_OP_TLBI_NH_ALL:
-> 	case CMDQ_OP_TLBI_NH_ASID:
-> 	case CMDQ_OP_ATC_INV:
-> 	case CMDQ_OP_CFGI_CD:
-> 	case CMDQ_OP_CFGI_CD_ALL:
-> 
-> Those are only invalidations.
-> 
-> CD invalidation can't go through the vCMDQ path.
-> 
 
-Right.. I was however hoping we'd also trap commands like CMD_PRI_RESP
-and CMD_RESUME...I'm not sure if they should be accelerated via CMDQV..
-I guess I'll need to look and understand a little more if they are..
 
-> > > > 2) The "FIXME" confusion: The comment in arm_vsmmu_cache_invalidate
-> > > >    mentions we'd like to "fix" the issuing of commands through the main
-> > > >    cmdq and instead like to group by "type", if that "type" is the queue
-> > > >    type (which I assume it is because IOMMU_TYPE has to be arm-smmu-v3),
-> > > 
-> > > I recall that FIXME is noted by Jason at that time. And it should
-> > > be interpreted as "group by opcode", IIUIC.
-> > 
-> > I see.. I misunderstood that..
+On 7/3/25 4:54 PM, Julien Massot wrote:
+> On Thu, 2025-07-03 at 15:17 +0300, Cosmin Tanislav wrote:
+>>
+>>
+>> On 7/3/25 3:07 PM, Julien Massot wrote:
+>>> Hi Cosmin,
+>>>
+>>> On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+>>>> This series adds new drivers for multiple Maxim GMSL2 and GMSL3 devices,
+>>>> replacing the few GMSL2 drivers already in upstream, and introducing a
+>>>> common framework that can be used to implement such GMSL chips, which
+>>>> avoids code duplication while also adding support for previously
+>>>> unsupported features.
+>>>>
+>>>> While the normally acceptable and polite way would be to extend the
+>>>> current mainline drivers, the choice was made here to add a totally new
+>>>> set of drivers. The current drivers support only a small subset of the
+>>>> possible features, and only a few devices, so the end result after
+>>>> extending them would in any case be essentially fully rewritten, new
+>>>> drivers.
+>>>>
+>>> Thanks for your work,
+>>> The common framework will help a lot to drive new GMSL chips, and most of the
+>>> features are covered.
+>>>
+>>>> This series depends on support for internal pads, for which a patch has
+>>>> been added.
+>>>>
+>>>> The previous version is at:
+>>>> https://lore.kernel.org/lkml/20250618095858.2145209-1-demonsingur@gmail.com
+>>>>
+>>>> The following deserializers are supported:
+>>>>    * MAX96712 (already exists in staging)
+>>>>    * MAX96714 (already exists)
+>>>>    * MAX96714F (already exists)
+>>>>    * MAX96714R (GMSL2)
+>>>>    * MAX96716 (GMSL2)
+>>>>    * MAX96724 (already exists as part of existing MAX96712 driver)
+>>>>    * MAX96724F (GMSL2)
+>>>>    * MAX96724R (GMSL2)
+>>>>    * MAX9296A (GMSL2)
+>>>>    * MAX96792A (GMSL3)
+>>>>
+>>>> The following serializers are supported:
+>>>>    * MAX96717 (already exists)
+>>>>    * MAX9295A (GMSL2)
+>>>>    * MAX96793 (GMSL3)
+>>>>
+>>>> Known backward compatibility breakages:
+>>>>    * No default routing. Default routing has been intentionally ommitted
+>>>>      as the devices support quite complex routing and it would be
+>>>>      unfeasible to provide sane defaults for multi-link deserialziers.
+>>>>      It is expected that userspace programs would set appropritate
+>>>>      routing.
+>>>>
+>>> This part is the most annoying one: at the moment, there is no way to set the routing except by
+>>> manually enabling a boolean within the kernel source.
+>>> You can't guess what routing the user really wants, but please at least provide a default
+>>> routing
+>>> table that allows using your drivers — for example, the device's default routing.
+>>>
+>>
+>> It's a very delicate issue... I'll try to see if I can do that.
+>> It would be great if we could enable the streams API globally since it's
+>> been merged since Jan 15 2023. It's been over two years.
+>>
+>>
+>> Thanks,
+>>
+>>>
+>>>
+>>>> The following list enumerates new features that are supported by the
+>>>> common framework and their respective chip-specific drivers:
+>>>>    * Full Streams API support. Most deserializers have support for more
+>>>>      than one link, and more than one PHY. Streams support allows
+>>>>      configuration of routing between these links and PHYs.
+>>>>
+>>>>    * .get_frame_desc() support. Both the serializers and deserializers
+>>>>      implement this to query and provide frame descriptor data. This is
+>>>>      used in features explained in-depth below.
+>>>
+>>> So are almost all the sensor drivers incompatible?
+>>>
+>>
+>> Yes, sensor drivers need to have .get_frame_desc() implemented... It's
+>> not a huge feat and it's the only way this type of bridge could work
+>> properly.
+>>
+>> Alternatively, we could add a fallback that bases its decision on the
+>> stream format, but I'd prefer if we didn't and we would just implement
+>> .get_frame_desc(). After this series is merged I can submit my patches
+>> for imx219.
+> There is already one pending on the mailing list
+> "media: i2c: imx219: Report streams using frame descriptors"
+> I guess it's fine if we require the sensor to implement this function.
 > 
-> Yes, we could use the vCMDQ in the SMMU driver for invalidations which
-> would give some minor locking advantage. But it is not really
-> important to anyone.
+> But I had to do it for vgxy61.
 > 
-
-Alright, I see. Makes sense. Thanks for the clarification.
-
-> > > The thing is that for a host kernel that enabled in-kernel VCMDQs,
-> > > those trapped user commands can be just issued to the smmu->cmdq
-> > > or a vcmdq (picked via the get_secondary_cmdq impl_op).
-> > 
-> > Ohh.. so maybe some sort of a load balancing thing?
+> Btw I tested:
+> TI AM62x + max96716 + 1 x max96717f + stvg5661 (tunnel mode)
+> With special lanes mapping and polarities.
 > 
-> The goal of the SMMU driver when it detects CMDQV support is to route
-> all supported invalidations to CMDQV queues and then balance those
-> queues across CPUs to reduce lock contention.
+> And I had to:
 > 
+> - Apply pending patches for j721e to support the enable_stream API instead of s_stream
+> - Enable the experimental v4l2_subdev_enable_streams_api
+> - Add get_frame_desc to the sensor driver
 
-I see.. that makes sense.. so it's a relatively small gain (but a nice
-one). Thanks for clarifying!
+Did it work without issues with those changes?
 
-> Jason
+If that's the case then I think all I can do to make it is easier is to
+add default routing. I'm not a fan of each driver having its own
+get_frame_desc() fallback, especially when it's a very small change to
+do to the sensor drivers.
 
-Praan
