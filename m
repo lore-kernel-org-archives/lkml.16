@@ -1,196 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FBD19CC02;
-	Thu,  3 Jul 2025 14:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425BE2E7F28;
+	Thu,  3 Jul 2025 14:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551208; cv=none; b=m0YLs5pNUViLszfF5B9aJkH1bb1Ftn0MYQ4Dm8dTtE446ITpFwTdjRoOVan+TnPHH9eakmfetGTW6VBof91EMEochmsgWNVCPro1BbMHDOAiiNk31R7PGD7XjyvG3RrGhLWfQl5KIToSmbHeqSaHbvLTVuXVp1KbD0kzsrIdxcI=
+	t=1751551213; cv=none; b=AhlVFY/z01afS1jQfyTGezw+slFJRju6e4/B9PJQoaPrDeCDcE+ayzPez6vVtxqEJiExniikq3MGHE6dZ0y+BckGJAAlnTlpvefxmToXQb3KlY6N139nGo574kzWs9zvY0aqqQiF1/nqVVAJaYMfidPKrd7XQIltHnSzMxxw5CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551208; c=relaxed/simple;
-	bh=z0l6M7k+mVMvCnBAZwqXfugO18tiGOdTLo/OevwD0aY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aIOWTa2mxoGFiIH1nww90IBN3EtMzdhhvj1CryrIGwPG+TbzYzlcTFEXxr95mpKJoPMvKtnJFCeB3gEuA7GBsdjboAfbPrRcKk7Vtbak5VKu6Z6gqiePAnmfxaPvSTWNIslKrGgpxunSGt0221X1VyyeU9qWx2x91oNCSrTxuz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDbJ1y5q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751551213; c=relaxed/simple;
+	bh=bS8ewtSLSyODzJSFSvjxtjK2e7VlFfrt/F7Wayo4+Wg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X+84A6ZZAUIEQavhBF/lwDkMy97TSTHAQz2NVDruOiOOlZn8MQLSg42goWOmYWm7NZMt2SmPDQsPd5UMKb77677rmSn4hhYWEBpEBZQGR5N9bcDRASeH94F0KSH4vb+KM1HLLHTFViY6YyBlFPJAvU2EWbzdr2I8XiKkZm3e/iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJqeh6zS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDbJ1y5q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DDFC4CEE3;
-	Thu,  3 Jul 2025 14:00:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJqeh6zS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC6EC4CEE3;
+	Thu,  3 Jul 2025 14:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751551208;
-	bh=z0l6M7k+mVMvCnBAZwqXfugO18tiGOdTLo/OevwD0aY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MDbJ1y5qEUPALM1ov6+fuGqISP3tniHLUWs4yzprIqTIEPcmSyg80c/xMDBiKErMR
-	 HHFm8ZwyCfqn5TGHBURkg70oRWVkc5aET/3/Iac5W1mEYPk7nvyD2Z/ZvlHeEpGG7p
-	 jm1XbzoYrskrAtNpy1p4HPvN93vOw1eBEb4nWw/egIYpeQtNsFK/b+efKRmdjNdsAd
-	 R4ngawcmv1LRSklqjYMFZjR9c0EK2i3fRmVN3NdWSeELzmXyECbS6jxNZ353FWbKtp
-	 sOCCkyTZrH5tsKBz/4Midmkd939lmldw1HVhPCHXgoUADypGvxlZdQcTPZI2tzeJzA
-	 2fIFigYi+7K5A==
-Date: Thu, 3 Jul 2025 16:00:01 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
- for File
-Message-ID: <aGaM4YflAJF-PXuH@pollux>
-References: <2025070131-icon-quarters-0c16@gregkh>
- <aGPtCBB6nWTNJuwK@pollux>
- <2025070137-tartar-juncture-fcd2@gregkh>
- <aGP6d2-jJy5rtjMK@pollux>
- <aGZVUqangIR-c4aW@google.com>
- <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org>
- <CAH5fLgjaNzOHNxa+XY1c2V5A1H2RhWP9gHAAmHx=9LN9CbHq=Q@mail.gmail.com>
- <2025070349-tricky-arguable-5362@gregkh>
- <aGZ3q0PEmZ7lV4I-@pollux>
- <2025070353-algebra-exhume-1f21@gregkh>
+	s=k20201202; t=1751551212;
+	bh=bS8ewtSLSyODzJSFSvjxtjK2e7VlFfrt/F7Wayo4+Wg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eJqeh6zSkg9WFRZTeXgRmRYQx9rjA8JoMnuq8pV/Q60PMjseLIniIlXRNG3OKzIDW
+	 3g0qwEOI6tMrCNOdF+PyzMVOEBs+7w/QpybibLsVqVc49lAaaM95Rf0NRa3uBmEdsB
+	 6WQ9lSaBxyY8O0vq5yqYa7vFQiKX3WRKAPsr2c2322cVZEygOwKHwfEbRasXiQqsrT
+	 L1QsHSZOmOsX3UUC6behsQ7pbxMi+hHZ/Md3m9uXvt1/AaTx9snzg8+YU0ZJdcgERh
+	 SSY462IAwpK4TvxHo1JPUGOOyNY8zJ51SuZtFXAEwX0ApwhmT4VOtYfDiSzyLzzLEi
+	 yruf2ZMIHj6xw==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6119b103132so705727eaf.1;
+        Thu, 03 Jul 2025 07:00:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCULcoHaK8UkUNgh+IvZ5rXgER2bkgY3zF76xBw3KzrpOSBYVSX7l+OhQ0sFeFnPdvvoehasqP/3H7c=@vger.kernel.org, AJvYcCXStXsZV63SDdjtYIJZH2W6QPBx183pbD4mOO72qS80J5o49AESJQRrJtFY/tm//MPg9XQ82NcWwWhn3Dk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw01jjn8mjtMzuqY3vCCmQAX0/rCiE85Lo3VP/gdDhn/xSCgUKS
+	QF72IFMPCdheR/ax+pSJXh/w9/cyR0ZuYCoVc7jcfgb47T63sltjaB9O49I1nimJUMWHs9Tq+ZF
+	M+qnR9MVldFs1PAIe5VaXnWUMlwu6LZk=
+X-Google-Smtp-Source: AGHT+IEtqzweRxuSZIv1vHCBO2l1eix9Pt0bsXN1JqFbQsdofN6fWnEOoAVOr0sNGnHWKREKgkJf01NZTDJ2RI8Tz94=
+X-Received: by 2002:a05:6820:c096:b0:611:5a9e:51c4 with SMTP id
+ 006d021491bc7-6138332f22amr921860eaf.4.1751551211388; Thu, 03 Jul 2025
+ 07:00:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025070353-algebra-exhume-1f21@gregkh>
+References: <20250526010854.7834-1-tuhaowen@uniontech.com> <20250603010157.19121-1-tuhaowen@uniontech.com>
+In-Reply-To: <20250603010157.19121-1-tuhaowen@uniontech.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Jul 2025 16:00:00 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ie4gTuX4DQy874OoMiK7ujXYYvHKSL2QsrP=+c1bNfTA@mail.gmail.com>
+X-Gm-Features: Ac12FXzqdxY8uhqMCORQa7HbwE7yhCv5u_s87DSJVt0o0yojaEfnq2cj3c8HaEw
+Message-ID: <CAJZ5v0ie4gTuX4DQy874OoMiK7ujXYYvHKSL2QsrP=+c1bNfTA@mail.gmail.com>
+Subject: Re: [PATCH v4] PM/console: Fix the black screen issue
+To: tuhaowen <tuhaowen@uniontech.com>
+Cc: rafael@kernel.org, huangbibo@uniontech.com, len.brown@intel.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, pavel@kernel.org, 
+	wangyuli@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 02:50:48PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Jul 03, 2025 at 02:29:31PM +0200, Danilo Krummrich wrote:
-> > On Thu, Jul 03, 2025 at 01:41:53PM +0200, Greg Kroah-Hartman wrote:
-> > > Yes, we need to be able to have a debugfs file callback handle a mutable
-> > > structure in order to lock things correctly.  We also need to have it be
-> > > mutable so that it can MODIFY the value (everyone seems to forget that
-> > > debugfs allows that...)
-> > 
-> > Well, that's possible with both approaches. Data behind a lock becomes mutable
-> > once you grabbed the lock. That's the same in both cases.
-> > 
-> > The difference is that with the pin-init approach I propose you can't have what
-> > Alice sketched up. And I think it's even desirable that you can't do it.
-> > 
-> > Let's me explain the difference on a simplified example, based on Alice'
-> > example.
-> > 
-> > ForeignOwnable API
-> > ------------------
-> > 
-> > 	#[pin_data]
-> > 	struct Process {
-> > 	    task: ARef<Task>,
-> > 	    #[pin]
-> > 	    inner: SpinLock<ProcessInner>,
-> > 	}
-> > 	
-> > 	pub(crate) struct ProcessInner {
-> > 	    threads: RBTree<i32, Arc<Thread>>,
-> > 	    max_threads: u32,
-> > 	}
-> > 
-> > Here we have to create an Arc<Process> (let's call it process) and create files
-> > from it.
-> > 
-> > 	let file_threads = dir.create_file("threads", process);
-> > 	let file_max_threads = dir.create_file("max_threads", process);
-> > 
-> > In the file system callback of both of these, we now have an Arc<Process>, hence
-> > we can access:
-> > 
-> > 	let guard = process.inner.lock();
-> > 
-> > 	read_or_write(guard.max_threads);
-> > 
-> > and in the other file:
-> > 
-> > 	let guard = process.inner.lock();
-> > 
-> > 	read_or_write(guard.max_threads);
-> > 
-> > Pin-Init API
-> > ------------
-> > 
-> > 	#[pin_data]
-> > 	struct Process {
-> > 	    task: ARef<Task>,
-> > 	    #[pin]
-> > 	    inner: File<SpinLock<ProcessInner>>,
-> > 	}
-> > 	
-> > 	pub(crate) struct ProcessInner {
-> > 	    threads: RBTree<i32, Arc<Thread>>,
-> > 	    max_threads: u32,
-> > 	}
-> > 
-> > Here Process does not need to be within an Arc and no separate file instances
-> > need to be kept around, that happens already within the constructor of Process:
-> > 
-> > 	pin_init!(Process {
-> > 	   inner <- dir.create_file("process_inner", ...),
-> > 	   [...]
-> > 	})
-> > 
-> > The file itself has a reference to SpinLock<ProcessInner>, hence we can access:
-> > 
-> > 	let guard = inner.lock();
-> > 
-> > 	read_or_write(guard.threads)
-> > 	read_or_write(guard.max_threads)
-> > 
-> > The difference is that with the ForeignOwnable API it was possible to have
-> > separate files for threads and max_threads.
-> > 
-> > While with the pin-init one we either have to have a single file exposing
-> > ProcessInner (which is what I did above) or protect threads and max_threads
-> > with separate locks (of course max_threads could also just be an atomic).
-> > 
-> > (If you like I can sketch up this case as well.)
-> > 
-> > At a first glance this seems like an undesirable limitation, but I argue that
-> > this is a good thing.
-> > 
-> > The reason I think so is what I also explained in [1], but let me adjust it a
-> > bit for this reply:
-> > 
-> > threads and max_threads being protected by the same lock means that they are in
-> > a certain relationship to each other. Meaning that they only really make sense
-> > looking at them atomically.
-> > 
-> > So I argue it does not make sense to expose those values to userspace through
-> > separate files.
-> > 
-> > For instance:
-> > 
-> > 	$ cat max_threads && cat threads
-> > 	$ 5
-> > 	$ 10
-> > 
-> > This way you may read 5 max_threads, but 10 actual threads, because things may
-> > have changed in between the two cat commands.
-> > 
-> > However, if instead, they are exposed through a single file, we get an atomic
-> > view of them, such that the semantic relationship between them is preserved.
-> > 
-> > For instance:
-> > 
-> > 	$ cat process_info
-> > 	$ threads: 2
-> > 	$ max_threads: 10
-> 
-> I think you mean to write:
->  	$ cat process_info
->  	threads: 2
->  	max_threads: 10
-> 
-> right?
+On Tue, Jun 3, 2025 at 3:02=E2=80=AFAM tuhaowen <tuhaowen@uniontech.com> wr=
+ote:
+>
+> When the computer enters sleep status without a monitor
+> connected, the system switches the console to the virtual
+> terminal tty63(SUSPEND_CONSOLE).
+>
+> If a monitor is subsequently connected before waking up,
+> the system skips the required VT restoration process
+> during wake-up, leaving the console on tty63 instead of
+> switching back to tty1.
+>
+> To fix this issue, a global flag vt_switch_done is introduced
+> to record whether the system has successfully switched to
+> the suspend console via vt_move_to_console() during suspend.
+>
+> If the switch was completed, vt_switch_done is set to 1.
+> Later during resume, this flag is checked to ensure that
+> the original console is restored properly by calling
+> vt_move_to_console(orig_fgconsole, 0).
+>
+> This prevents scenarios where the resume logic skips console
+> restoration due to incorrect detection of the console state,
+> especially when a monitor is reconnected before waking up.
+>
+> Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+> ---
+> Changes in v4:
+> - Moved `vt_switch_done =3D false;` below the `if (orig_fgconsole >=3D 0)=
+`
+>   block to ensure it is only reset after a console switch has occurred.
+> - Link to v3: https://lore.kernel.org/all/20250526010854.7834-1-tuhaowen@=
+uniontech.com
+> - Link to v2: https://lore.kernel.org/all/20250516084011.29309-1-tuhaowen=
+@uniontech.com
+> - Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen=
+@uniontech.com
+> ---
+>  kernel/power/console.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/power/console.c b/kernel/power/console.c
+> index fcdf0e14a47d..19c48aa5355d 100644
+> --- a/kernel/power/console.c
+> +++ b/kernel/power/console.c
+> @@ -16,6 +16,7 @@
+>  #define SUSPEND_CONSOLE        (MAX_NR_CONSOLES-1)
+>
+>  static int orig_fgconsole, orig_kmsg;
+> +static bool vt_switch_done;
+>
+>  static DEFINE_MUTEX(vt_switch_mutex);
+>
+> @@ -136,17 +137,21 @@ void pm_prepare_console(void)
+>         if (orig_fgconsole < 0)
+>                 return;
+>
+> +       vt_switch_done =3D true;
+> +
+>         orig_kmsg =3D vt_kmsg_redirect(SUSPEND_CONSOLE);
+>         return;
+>  }
+>
+>  void pm_restore_console(void)
+>  {
+> -       if (!pm_vt_switch())
+> +       if (!pm_vt_switch() && !vt_switch_done)
+>                 return;
+>
+>         if (orig_fgconsole >=3D 0) {
+>                 vt_move_to_console(orig_fgconsole, 0);
+>                 vt_kmsg_redirect(orig_kmsg);
+>         }
+> +
+> +       vt_switch_done =3D false;
+>  }
+> --
 
-Yes, indeed. :)
+Applied as 6.17 material, thanks!
