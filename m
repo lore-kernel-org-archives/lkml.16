@@ -1,71 +1,90 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0906C255F2B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AE2230D14
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560048; cv=none; b=ulh6XEEr4G1SxU2DqKHZ9yNafFfpWhbBtMhWHJl8lVvPfLnv6kkKiJf515+9ClA7TOmKIMGATehxAkDKQo7Fkuh1rDZV+JMrvU+WGBqBiBKpQ0OpomzY8BhRcuyqMKvw6o4lkmmogJiQ/CT5pJBZDwhwGlmqv5ntCnFZLNXuDMo=
+	t=1751560050; cv=none; b=GbPuD3/BD/NNDooJC2J8axlQIwZoCpoFfQuMUNRv5gbd3r5IEz9lcyyefMB1VMpyq7UKdN8Ano+DavdJYZMAJEeIXDFMdQ15U9Xi3caWCijtyM+TzlrrryPOlH8aylx13pIljmhil0f2k//NsfcXUS1Eo1eDIRw1eugFQhxGnS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560048; c=relaxed/simple;
-	bh=+t/wAOncNpuxr9FEwXK71z09xEBZNujuFzMPJXnnvlM=;
+	s=arc-20240116; t=1751560050; c=relaxed/simple;
+	bh=+YEmb/aAuUbKEa+H7axk+n5A0WbJP7KHeWZJ7YEfRH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NS9twWwkS85SKiNUCQYV7lzmIsWLhGNYvygUrh6qgPZgJ6mOGpG0He/DgZAwoWiA7Grk44QlrXujWga+G/VOG7lVRT8WRr6jtE0Avc7vcwfviTTuCW4yv4xVUBlklxghXyPHhUifsvjqXzXguhZkJZ98Ini784sIcBSZgvl4hF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=buhNXt6G; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpicSIgoV6TU8I5z9IuId3Aa+2lp8K0U1zWuk7qdiFmSRMvVv6odRausoSRUd20xDx3IVh/iicliym8/nmwDoG5o6BhiqsZv9zkNX40utuZZw56mSdntlBVYHqWbHVGFU7sqFu/8RUzB4T5M56E7XIAEekZmeSU8h8UBU/+elFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AadFsHcS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=S3IjBH4v; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AadFsHcS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=S3IjBH4v; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="buhNXt6G"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-747e41d5469so182040b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751560045; x=1752164845; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9DG4rBv1FPLSozhVTa/r0rwIxRT4k59IacJ14rLRAE4=;
-        b=buhNXt6GbucFvP7mQAB7AzKQh4OJRTWfg5Glk6lw49HKyTspW8jhAP0pgTUKwd54ot
-         zAYluvw6dJ1n6q2ivOIgWnmY0Gu1sSzatfkYtXu/mpdKqpLfMZyn/TTX9D/kvdCGmhR3
-         LkZYNP0KqxPrxCxBzmTG8QCw8ljJVpWimue48zkXKjk547xW3Ux+72uasli5yJQBxhuD
-         OL17871tpwfuezg7zzRCPS0VcRq8cqCvmlRuEurCHuPhCaYWCpfB6URT95bjTdWpcVFL
-         s6YZGiBSCglv0lflA8sc/GkVMy6CUxZx6J3Z7c3/r5F39mU2QRkUtjiz9ZKgLxLHv7QG
-         ZUdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751560045; x=1752164845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DG4rBv1FPLSozhVTa/r0rwIxRT4k59IacJ14rLRAE4=;
-        b=ozuJ3Ahn3L03CGoKZMj/WwR6uKf9U26zZoEG8y9wbaGP08Fb88UnjpM/FWN3XP7Ec6
-         zBBvJs2RCzX8Y7Viml5dE3RdAJldtBPPbgHaMXHcnkGXWlvop1oxX9Q2Uq8ErnEN0hP7
-         xjKfzsESz4xiM4BwemG0SNuYyr5b3W5H/0sAUBKOMDcrq1E24DRJGqIjWu0X/H8QaZ6i
-         bEyFJc3GtH23mfe0D6CTeuy7fNt3liUzueMXwsn6K2sjOTY14pYiDgfFJNyhzWJsZNff
-         tf0AOHC0wXW244echmtNlet2SHu86iWux7bHJR7Znh7c5hSUklvAtVYZrYERsozV3j11
-         5j3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUjc2FxpqJjZ9MW6Wtvaocu5LBINq/E5gB7ZnWzO8H6Ef/ranPsBhvO+d0pAbGBu+Rl82OVMpiDJWM5//U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5aFLJsLB1tno0O/ZyIBHi52+VVa5mQ8GmN59lPGAHVy0Wvisb
-	NjGwPjNcgg74RUtMCiZ9u5NjKupzqpfk8KDh4pPu48HNOIHTSpsIP4UurTlrwMt+fT0=
-X-Gm-Gg: ASbGnctXq3VSkltz1JDu50RroIeffCZWU+DG1+1C9KGN4kp7yUKGJdz6vkPhrLC+T4T
-	BhrjZWrVLzO2P+GytbrekS6TkOiecslM2GIn7aydJ5vtRrhbI2UQG9gf0ORkPEyav3Gh4uHEXyq
-	vkAs6X1N5vzaLfktSCsqEPoTSd/MwlEG+c+CbG7wXLo06bqRldQVgiAITctAw5yxSOpy1UvOrwr
-	CIg2nGEWL8EQF1ldIKKgE3s+BlOFLKY6PNEDtEwlCiCqcYAE/elzjQciyq+2ZF8h9eLbtRYaup4
-	FW44z0A/MD7C/W0pqVPIebBkPgB6xc4PNwor1WpJ1jZrGOnvIp8p7spL2gXeHusH
-X-Google-Smtp-Source: AGHT+IHv3gQqi2KGrLMmY+muHOUSeUdjpAlchGCrijYrOZyC7xkIM5MxnnZbED2gjCBOAf36PHITfg==
-X-Received: by 2002:a05:6a00:3cce:b0:748:f365:bedd with SMTP id d2e1a72fcca58-74b514c3e92mr8739518b3a.17.1751560045389;
-        Thu, 03 Jul 2025 09:27:25 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:5ee3:4bef:2dc:d1f7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce4183509sm12029b3a.99.2025.07.03.09.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 09:27:24 -0700 (PDT)
-Date: Thu, 3 Jul 2025 10:27:22 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, afd@ti.com,
-	hnagalla@ti.com, b-padhi@ti.com
-Cc: Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH v4] remoteproc: k3-dsp: Fix an error handling path in
- k3_dsp_rproc_probe()
-Message-ID: <aGavap5k0qir9x0f@p14s>
-References: <f96befca61e7a819c0e955e4ebe40dc8a481619d.1751060507.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AadFsHcS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="S3IjBH4v";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AadFsHcS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="S3IjBH4v"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C0ECA1F387;
+	Thu,  3 Jul 2025 16:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751560046; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O3bdd++N6TfAFi91n85bZ1CQ92T+rDnQ3Zr/2gbtk2s=;
+	b=AadFsHcSnAbH7g5k9OntraPjT4LtB7Loz/AD8NsEL2hN7/KTVHdAAnN7HyVJBFELdt95RR
+	2p6pOS9c0DJpFEO+Gpa4k6RNAPtyBD7D2l0+LLgh3R8V5NzREunwc02g+r3fzs6Lgiv/4j
+	h9Gt/wGcvlnE83SKP/KFPgTHNW5Jjqk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751560046;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O3bdd++N6TfAFi91n85bZ1CQ92T+rDnQ3Zr/2gbtk2s=;
+	b=S3IjBH4vMMUBRvrCdcn9b80+ok9XO5ZqSFQGyRsM6NcBBcW1fc3mOqo0KtqpoVmhvZDat+
+	Z8+OgbKzAwX+2vBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751560046; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O3bdd++N6TfAFi91n85bZ1CQ92T+rDnQ3Zr/2gbtk2s=;
+	b=AadFsHcSnAbH7g5k9OntraPjT4LtB7Loz/AD8NsEL2hN7/KTVHdAAnN7HyVJBFELdt95RR
+	2p6pOS9c0DJpFEO+Gpa4k6RNAPtyBD7D2l0+LLgh3R8V5NzREunwc02g+r3fzs6Lgiv/4j
+	h9Gt/wGcvlnE83SKP/KFPgTHNW5Jjqk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751560046;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O3bdd++N6TfAFi91n85bZ1CQ92T+rDnQ3Zr/2gbtk2s=;
+	b=S3IjBH4vMMUBRvrCdcn9b80+ok9XO5ZqSFQGyRsM6NcBBcW1fc3mOqo0KtqpoVmhvZDat+
+	Z8+OgbKzAwX+2vBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B232F1368E;
+	Thu,  3 Jul 2025 16:27:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 73J3K26vZmiHCwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 03 Jul 2025 16:27:26 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 4E81FA0A48; Thu,  3 Jul 2025 18:27:26 +0200 (CEST)
+Date: Thu, 3 Jul 2025 18:27:26 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, 
+	libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v3 05/10] ext4: restart handle if credits are
+ insufficient during allocating blocks
+Message-ID: <zqrcmug26tnhhjombztjjqwcorbnk4elqg2dqayhtfo2gkx3e3@wvzykthigny6>
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-6-yi.zhang@huaweicloud.com>
+ <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
+ <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,107 +93,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f96befca61e7a819c0e955e4ebe40dc8a481619d.1751060507.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-Andrew, Hari and Beleswar - please test this on your side and get back to me
-with the results.
+On Thu 03-07-25 10:13:07, Zhang Yi wrote:
+> On 2025/7/2 22:18, Jan Kara wrote:
+> > On Tue 01-07-25 21:06:30, Zhang Yi wrote:
+> >> From: Zhang Yi <yi.zhang@huawei.com>
+> >>
+> >> After large folios are supported on ext4, writing back a sufficiently
+> >> large and discontinuous folio may consume a significant number of
+> >> journal credits, placing considerable strain on the journal. For
+> >> example, in a 20GB filesystem with 1K block size and 1MB journal size,
+> >> writing back a 2MB folio could require thousands of credits in the
+> >> worst-case scenario (when each block is discontinuous and distributed
+> >> across different block groups), potentially exceeding the journal size.
+> >> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
+> >> when delalloc is not enabled.
+> >>
+> >> Fix this by ensuring that there are sufficient journal credits before
+> >> allocating an extent in mpage_map_one_extent() and
+> >> ext4_block_write_begin(). If there are not enough credits, return
+> >> -EAGAIN, exit the current mapping loop, restart a new handle and a new
+> >> transaction, and allocating blocks on this folio again in the next
+> >> iteration.
+> >>
+> >> Suggested-by: Jan Kara <jack@suse.cz>
+> >> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> > 
+> > Very nice. Feel free to add:
+> > 
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > 
+> > One small comment below:
+> > 
+> >> +/*
+> >> + * Make sure that the current journal transaction has enough credits to map
+> >> + * one extent. Return -EAGAIN if it cannot extend the current running
+> >> + * transaction.
+> >> + */
+> >> +static inline int ext4_journal_ensure_extent_credits(handle_t *handle,
+> >> +						     struct inode *inode)
+> >> +{
+> >> +	int credits;
+> >> +	int ret;
+> >> +
+> >> +	if (!handle)
+> > 
+> > Shouldn't this rather be ext4_handle_valid(handle) to catch nojournal mode
+> > properly?
+> > 
+> __ext4_journal_ensure_credits() already calls ext4_handle_valid() to handle
+> nojournal mode, and the '!handle' check here is to handle the case where
+> ext4_block_write_begin() passes in a NULL 'handle'.
 
-Thanks,
-Mathieu
+Ah, right. But then you don't need the test at all, do you? Anyway,
+whatever you decide to do with this (or nothing) is fine by me.
 
-On Fri, Jun 27, 2025 at 11:42:33PM +0200, Christophe JAILLET wrote:
-> IF an error occurs after a successful k3_rproc_request_mbox() call,
-> mbox_free_channel() should be called to avoid a leak.
-> 
-> Such a call is missing in the error handing path of k3_dsp_rproc_probe().
-> It is also missing both in the error handling path of k3_m4_rproc_probe()
-> and in (in-existent) corresponding remove function.
-> 
-> Switch to managed resources to avoid these leaks and simplify the code.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Compile tested only.
-> 
-> This is an update of [1].
-> The code has been heavily refactored recently with things moved to
-> ti_k3_common.c
-> 
-> This new version also fixes a leak in k3_m4_rproc_probe(). In this file,
-> mbox_free_channel() was missing.
-> 
-> Being very different from the v3, I've removed the previous review tags.
-> 
-> [1]: https://lore.kernel.org/all/591e219df99da6f02c9d402f7854bc3ab23e76f9.1726328417.git.christophe.jaillet@wanadoo.fr/
-> ---
->  drivers/remoteproc/ti_k3_common.c         | 12 +++++++++++-
->  drivers/remoteproc/ti_k3_dsp_remoteproc.c |  2 --
->  drivers/remoteproc/ti_k3_r5_remoteproc.c  |  2 --
->  3 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
-> index d4f20900f33b..7a9c3fb80fec 100644
-> --- a/drivers/remoteproc/ti_k3_common.c
-> +++ b/drivers/remoteproc/ti_k3_common.c
-> @@ -155,6 +155,13 @@ int k3_rproc_release(struct k3_rproc *kproc)
->  }
->  EXPORT_SYMBOL_GPL(k3_rproc_release);
->  
-> +static void k3_rproc_free_channel(void *data)
-> +{
-> +	struct k3_rproc *kproc = data;
-> +
-> +	mbox_free_channel(kproc->mbox);
-> +}
-> +
->  int k3_rproc_request_mbox(struct rproc *rproc)
->  {
->  	struct k3_rproc *kproc = rproc->priv;
-> @@ -173,6 +180,10 @@ int k3_rproc_request_mbox(struct rproc *rproc)
->  		return dev_err_probe(dev, PTR_ERR(kproc->mbox),
->  				     "mbox_request_channel failed\n");
->  
-> +	ret = devm_add_action_or_reset(dev, k3_rproc_free_channel, kproc);
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * Ping the remote processor, this is only for sanity-sake for now;
->  	 * there is no functional effect whatsoever.
-> @@ -183,7 +194,6 @@ int k3_rproc_request_mbox(struct rproc *rproc)
->  	ret = mbox_send_message(kproc->mbox, (void *)RP_MBOX_ECHO_REQUEST);
->  	if (ret < 0) {
->  		dev_err(dev, "mbox_send_message failed (%pe)\n", ERR_PTR(ret));
-> -		mbox_free_channel(kproc->mbox);
->  		return ret;
->  	}
->  
-> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> index 7a72933bd403..d6ceea6dc920 100644
-> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> @@ -175,8 +175,6 @@ static void k3_dsp_rproc_remove(struct platform_device *pdev)
->  		if (ret)
->  			dev_err(dev, "failed to detach proc (%pe)\n", ERR_PTR(ret));
->  	}
-> -
-> -	mbox_free_channel(kproc->mbox);
->  }
->  
->  static const struct k3_rproc_mem_data c66_mems[] = {
-> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> index ca5ff280d2dc..04f23295ffc1 100644
-> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> @@ -1206,8 +1206,6 @@ static void k3_r5_cluster_rproc_exit(void *data)
->  				return;
->  			}
->  		}
-> -
-> -		mbox_free_channel(kproc->mbox);
->  	}
->  }
->  
-> -- 
-> 2.50.0
-> 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
