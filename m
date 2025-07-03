@@ -1,93 +1,150 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E0652AEFE;
-	Thu,  3 Jul 2025 09:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF592AEFE;
+	Thu,  3 Jul 2025 09:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534953; cv=none; b=VqfWXMBOkZu0f2HYrOt2glD9W3yBAFGhcndbuAN+gH2DTaDy6QS3Nq/m2eP5t1NAJ9i5AShZXbfsc1KTCtbgj5TvS3/q1ftjb+mAkutGvV8qD5lq5S1KbnIPyl59wFtVZCcWlXqQywyEYww9yZUA3vP+8leCvzm0/0LruCW2c9A=
+	t=1751534969; cv=none; b=ZfqgIo0v+jA07Q5/BfaIjIFHrwkdmHUyS4hbmon7DcIEgFGi7Bsm36LcQ/hVfBCtlffJ7sq28low3xGv+DUU8mkw+a6VgSFi9tXGHhUF6KWOQG5sGxQyvc84z6oqMI9AmoCmhAPJvkTw4xC5rFgOUFtks/MCrjPiKergmTDWBqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534953; c=relaxed/simple;
-	bh=sSsdxWedyMHYMHmezgH2iiuFS2k6wOwmTzvWLPYO6hA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XSYPw0XYUA5XszmZabdYJI0CoUhOwMzHE/e3Xl9J49kAb9dQ9zqM1QCNrGLcqWGvD9U5wUee8FjOef9BmXdthxJpihGkhf1k/hnz4rpuEpVwV0kRAIeev1uMvyX56k9zwAUei5+d9P4VY+JkMortYry17Zyb0sSn/Hda0MJtaHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=f75RPnYM; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="f75RPnYM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=+g
-	tBkV5sxWzTmS5t97Hf7Y/6Sg1riYapDeZfBHBup0Y=; b=f75RPnYMSwlRbPD9re
-	yKj+tWmMMGAjPm27+UYtnZbF8y2zMEmGfZDa342nm8aqUmKM33kWmgfdkqNh7twA
-	ycW2Tqbc/MY+QR/mdqGVdL0RpN5rc/qyga5+X6gvH3woqj4BNL/RiVLwOHI0dvgy
-	SES2W6YheEYVGDYTSqOvD8siI=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wCnLF41TWZoBEn+CA--.4429S4;
-	Thu, 03 Jul 2025 17:28:22 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	sam@ravnborg.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] drm: Fix potential null pointer dereference issues in drm_managed.c
-Date: Thu,  3 Jul 2025 17:28:19 +0800
-Message-Id: <20250703092819.2535786-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1751534969; c=relaxed/simple;
+	bh=IkMlE040LUQcsX0QjWWAw+3qdRDLQ2DX/AwnoQdxHP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QuEpu21BTkBHCXu1JsPedSD3oQw1Gy/zrqmIJ/yL3/AsFC1nnXenNdiJDKWLcDReeQs2RtnMfhCj+sxj0qVGE4DUQKtfRYgvjQxfMxM/qY6L0FmpYNpwC320mUYGpZYcIue/9ZBiFNhoP+XAfr+7Kdt04KBb5IsyLxdiBfL+bsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2E0E1655;
+	Thu,  3 Jul 2025 02:29:11 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C3FE3F58B;
+	Thu,  3 Jul 2025 02:29:22 -0700 (PDT)
+Date: Thu, 3 Jul 2025 11:29:12 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Prashant Malani <pmalani@google.com>
+Cc: Jie Zhan <zhanjie9@hisilicon.com>,
+	Ionela Voinescu <ionela.voinescu@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	z00813676 <zhenglifeng1@huawei.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: CPPC: Dont read counters for idle CPUs
+Message-ID: <aGZNVui_8xa2rHXQ@arm.com>
+References: <20250619000925.415528-1-pmalani@google.com>
+ <20250619000925.415528-3-pmalani@google.com>
+ <ff65b997-eb14-798f-1d2f-c375bf763e71@hisilicon.com>
+ <CAFivqm+hjfDwPJCiHavnZSg2D+OaP5xbQnidmwxQ3HD32ic6EA@mail.gmail.com>
+ <ef3f933a-742c-9e8e-9da4-762b33f2de94@hisilicon.com>
+ <CAFivqmLCW2waDnJ0nGbjBd5gs+w+DeszPKe0be3VRLVu06-Ytg@mail.gmail.com>
+ <CAFivqm+D9mbGku-nZKSUEMcQV5XK_ayarxL9gpV5JyfmhirsPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCnLF41TWZoBEn+CA--.4429S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZFyrKrW5ur18KFWUWF1fCrg_yoWDtrg_Ca
-	18Xrn3Wr4kCF95GF4qyw13ZryIka1DCF4vvF47tasayry5Jrn2q34UZr45JryDWF1xuF9r
-	u3WDAryfArsrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRN2-eUUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkAR-bmhmTAAm7wAAsO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFivqm+D9mbGku-nZKSUEMcQV5XK_ayarxL9gpV5JyfmhirsPw@mail.gmail.com>
 
-Add check for the return value of kstrdup_const() in drm_managed.c
-to prevent potential null pointer dereference.
+Hi Prashant,
+On Wed, Jul 02, 2025 at 11:38:11AM -0700, Prashant Malani wrote:
+> Hi All,
+> 
+> Ionela, Beata, could you kindly review ?
+> 
+I've totally missed that - apologies for that. Will try to have a look within
+next day or two.
 
-Fixes: c6603c740e0e ("drm: add managed resources tied to drm_device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 ---
- drivers/gpu/drm/drm_managed.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_managed.c b/drivers/gpu/drm/drm_managed.c
-index cc4c463daae7..368763d4c24e 100644
---- a/drivers/gpu/drm/drm_managed.c
-+++ b/drivers/gpu/drm/drm_managed.c
-@@ -151,6 +151,11 @@ int __drmm_add_action(struct drm_device *dev,
- 	}
- 
- 	dr->node.name = kstrdup_const(name, GFP_KERNEL);
-+	if (!dr->node.name) {
-+		kfree(dr);
-+		return -ENOMEM;
-+	}
-+
- 	if (data) {
- 		void_ptr = (void **)&dr->data;
- 		*void_ptr = data;
-@@ -236,6 +241,10 @@ void *drmm_kmalloc(struct drm_device *dev, size_t size, gfp_t gfp)
- 		return NULL;
- 	}
- 	dr->node.name = kstrdup_const("kmalloc", gfp);
-+	if (dr->node.name) {
-+		kfree(dr);
-+		return NULL;
-+	}
- 
- 	add_dr(dev, dr);
- 
--- 
-2.25.1
-
+BR
+Beata
+> On Fri, 27 Jun 2025 at 10:07, Prashant Malani <pmalani@google.com> wrote:
+> >
+> > Hi Jie,
+> >
+> > On Fri, 27 Jun 2025 at 00:55, Jie Zhan <zhanjie9@hisilicon.com> wrote:
+> > >
+> > >
+> > > Hi Prashant,
+> > >
+> > > Sorry for a late reply as I'm busy on other stuff and this doesn't seem to
+> > > be an easy issue to solve.
+> > >
+> >
+> > No worries, the ping was in general to all the people in the thread :)
+> >
+> > > For the latest kernel, [1] provides a new 'cpuinfo_avg_freq' sysfs file to
+> > > reflect the frequency base on AMUs, which is supposed to be more stable.
+> > > Though it usually shows 'Resource temporarily unavailable' on my platform
+> > > at the moment and looks a bit buggy.
+> > >
+> > > Most of the related discussions can be found in the reference links in [1].
+> > > [1] https://lore.kernel.org/linux-pm/20250131162439.3843071-1-beata.michalska@arm.com/
+> > >
+> > > As reported, the current frequency sampling method may show an large error
+> > > on 1) 100% load, 2) high memory access pressure, 3) idle cpus in your case.
+> > >
+> > > AFAICS, they may all come from the unstable latency accessing remote AMUs
+> > > for 4 times but delaying a fixed 2us sampling window.
+> >
+> > I tried applying [1] which consolidates the ref and del register reads
+> > into 1 IPI, but that did not make a difference. The values still
+> > fluctuate wildly.
+> >
+> > >
+> > > Increase the sampling windows seems to help but also increase the time
+> > > overhead, so that's not favoured by people.
+> > >
+> >
+> > This experiment did not appear to help in our case. It's a point in
+> > the direction that this method is inherently inaccurate during idle
+> > situations.
+> >
+> > > On 20/06/2025 13:07, Prashant Malani wrote:
+> > > > Hi Jie,
+> > > > On Thu, 19 Jun 2025 at 20:53, Jie Zhan <zhanjie9@hisilicon.com> wrote:
+> > > >> On 19/06/2025 08:09, Prashant Malani wrote:
+> > > >>> t0: ref=899127636, del=3012458473
+> > > >>> t1: ref=899129626, del=3012466509
+> > > >>> perf=40
+> > > >>
+> > > >> In this case, the target cpu is mostly idle but not fully idle during the
+> > > >> sampling window since the counter grows a little bit.
+> > > >> Perhaps some interrupts happen to run on the cpu shortly.
+> > >
+> > > Check back here again, I don't think it 'mostly idle'.
+> > > Diff of ref counters is around 2000, and I guess the ref counter freq is
+> > > 1GHz on your platform?  That's exactly 2us, so the target cpu is mostly
+> > > busy.
+> 
+> I think it is pertinent to note: the actual act of reading the CPPC counters
+> will (at least for ACPI_ADR_SPACE_FIXED_HARDWARE counters)
+> wake the CPU up, so even if a CPU *was* idle, the reading of the counters
+> calls cpc_read_ffh() [1] which does an IPI on the target CPU [2] thus waking
+> it up from WFI.
+> 
+> And that brings us back to the original assertion made in this patch:
+> the counter values are quite unreliable when the CPU is in this
+> idle (or rather I should correct that to, waking from WFI) state.
+> 
+> This work around probably hits more types of implementations, but
+> I can't see another way to limit it to only ARM FFH. Open to suggestions!
+> 
+> [1] https://elixir.bootlin.com/linux/v6.15.4/source/arch/arm64/kernel/topology.c#L482
+> [2] https://elixir.bootlin.com/linux/v6.15.4/source/arch/arm64/kernel/topology.c#L453
+> 
+> Best regards,
+> 
+> -Prashant
+> 
+> 
+> -- 
+> -Prashant
