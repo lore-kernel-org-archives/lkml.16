@@ -1,102 +1,123 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F304A2F2C57;
-	Thu,  3 Jul 2025 18:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE402FA627;
+	Thu,  3 Jul 2025 18:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751566896; cv=none; b=P7g8KvJVBuxsDyGvpS4pUx9xVJhftEafe8tTzO05kN0ahZ/YqlNaFZZ1yCA+Tu7l5gS4eCRcJxVjBWnfIKapuGqYGsVYCPC7iNgt9TLjXQWyQ1pQySzRtjc7aIvf/Q/Zygj+HrCPaf2PWKUaOIuTEqJvcDDLYyOqhPW900R9t6A=
+	t=1751566897; cv=none; b=s/Fj1OtMTBun+V/mT0yxdxtcF4jDORVFTh9QrMOjcmEh2hq/caBi31L3VHJfrNmTdI8aUGFt/4NXrnXzuV0BgwTAVYEdMmF7u3q1f5EaWJVE6qScq1EIkWz0WZE3MG7TyFwv8kYGCIilsYO5P0C7w0nXM/+HUZeofe5H/Ha1ep8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751566896; c=relaxed/simple;
-	bh=06IeWF9g6Lb/SjkAAwsA/jpMDxmYsB7Fb6EiMaWIDz8=;
-	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AeoQ4Bd6qO4kGa/Ncut4bIapim49idZUO8g/vZF6aJuqJbIFKbj7V3XJr5zJpkEIsbLkdMykYUcjsCiOaQMfKsRetAhxy5IncIjmUcmiUceoupBmaFq3HuYf8dEw5a37QF6cna7808zC4zEBMuu6YjqNO8TX1LnWleKnmIdigr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=QW5qVGwH; arc=none smtp.client-ip=139.28.40.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
+	s=arc-20240116; t=1751566897; c=relaxed/simple;
+	bh=comsglRO8MoeAgt/YG6y2jZ5FywI+W3zZGLs2qsqv44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfDOl7WkHdHgId0Qd6iaMXVFAi0Z8wXm/I9k8KNGC4Buix8CzjvjZqZmr0k2YRaya4ZG6N9UeyEd98xhjkSuEzaUaYAzrcLV0TEf1eToO8pay17kcIV8/nipP4h9+9J0SF+It1irjE6GYftaG4x7Uua9ULZvsXy/aUh5t7HPBoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwlBNp+d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="QW5qVGwH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202505; t=1751566893;
-	bh=06IeWF9g6Lb/SjkAAwsA/jpMDxmYsB7Fb6EiMaWIDz8=;
-	h=Date:From:Cc:Subject:From;
-	b=QW5qVGwHCDUGU4UUj6IZGMufAeyWhcUAQSjuHPUXDZcURwGz2dSgu6Mr+qkjS2nVT
-	 s+uUcyFoKFsQvnK9P3+Og6o852nJpDKUjMknmlLON4qW+FKRuasxn1G+DVaNVy80qF
-	 HxjuTOxsFBJ03ydPX5h+oxEKBBJWXmgF6NkTB9LWUNejLE0CbPdLCKaC9Hw4VKkLzG
-	 4F2SJzWs+NctD+Vgar5aSqPMXlRzxOcxfN28+x54CEGXmbaNzjtM+dUQgKRK+yvGEC
-	 zwvCTZuwCzWiLx6gqPQN3XdjDQGYzxSe9Ul3bLUm7uwyoVfbOYiNgKs36ucGefqFrJ
-	 6CvjWRebfxxtA==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 3455494E;
-	Thu,  3 Jul 2025 20:21:33 +0200 (CEST)
-Date: Thu, 3 Jul 2025 20:21:33 +0200
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] selftests/powerpc: fix "for a while" typo
-Message-ID: <mt5r57q2pgllk3gy4ayasoymkdeqocqbdlkm3mw3mb3u7h34ms@tarta.nabijaczleweli.xyz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwlBNp+d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06BCC4CEE3;
+	Thu,  3 Jul 2025 18:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751566897;
+	bh=comsglRO8MoeAgt/YG6y2jZ5FywI+W3zZGLs2qsqv44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GwlBNp+dX0hCAI2HTyVDK3m5Od/dtveV7FsJ+ijhFLEUt9x/JdKV/HA8g9ZDkdn6w
+	 z+qd4xdd9dj+8V/Gld5AqYA13L+rZrW4826MXAEiLa+Sml5NqsdJ5IuN70s1eE9tC8
+	 05p5y8Fl5Siemdh2OFRfGRMfZH85Vcme0FEsD4WLaC5PCDdvHJxBZ0U6+ZnsgXRQ8d
+	 2V/b1hE1wHu41sbrchSa0Fy9JAh2ot4mElNkwZTB/os1UreFjchoajviXctzIIhNRz
+	 thPG3M2RDsnZDlEbaoKWU2fsRJrWlVcVHg/HOwBb55/gsc5wRWND3uKzaB407LWK+u
+	 +4LWsZi92a5zA==
+Date: Thu, 3 Jul 2025 11:21:34 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf header: Fix pipe mode header dumping
+Message-ID: <aGbKLj6ZQxlVrXAA@google.com>
+References: <20250703042000.2740640-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7kbtponqicmp274g"
-Content-Disposition: inline
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
-
-
---7kbtponqicmp274g
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250703042000.2740640-1-irogers@google.com>
 
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
-v1: https://lore.kernel.org/lkml/h2ieddqja5jfrnuh3mvlxt6njrvp352t5rfzp2cvnr=
-ufop6tch@tarta.nabijaczleweli.xyz/t/#u
+On Wed, Jul 02, 2025 at 09:20:00PM -0700, Ian Rogers wrote:
+> The pipe mode header dumping was accidentally removed when tracing of
+> header feature events in pipe mode was added.
+> 
+> Minor spelling tweak to header test failure message.
+> 
+> Fixes: 61051f9a8452 ("perf header: In pipe mode dump features without --header/-I")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
- tools/testing/selftests/powerpc/tm/tm-tmspr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yep, this makes the header test succeed.
 
-diff --git a/tools/testing/selftests/powerpc/tm/tm-tmspr.c b/tools/testing/=
-selftests/powerpc/tm/tm-tmspr.c
-index dd5ddffa28b7..0d64988ffb40 100644
---- a/tools/testing/selftests/powerpc/tm/tm-tmspr.c
-+++ b/tools/testing/selftests/powerpc/tm/tm-tmspr.c
-@@ -14,7 +14,7 @@
-  * (1) create more threads than cpus
-  * (2) in each thread:
-  * 	(a) set TFIAR and TFHAR a unique value
-- * 	(b) loop for awhile, continually checking to see if
-+ * 	(b) loop for a while, continually checking to see if
-  * 	either register has been corrupted.
-  *
-  * (3) Loop:
---=20
-2.39.5
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
---7kbtponqicmp274g
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Namhyung
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmhmyiwACgkQvP0LAY0m
-WPH+fhAApqheEM4jQWQXOKaysF1B5Qibd8R0hWrB88uMXBRia/CSYfa4ZePI1+0D
-mB7pe+lSIRuu6uQ1ZfHtrZoIKEVe0a+bTPU1BN7vdOjaLb6xn9dtgLhPZMzP0Atw
-apXhRayZTOeUmFSwzCj9xrpExIRQiAnfN9wiXxcYgnRnkOQ45z7aOib8yDiq4IRA
-qWcPOm6l7ONolQleJ+aQsL2ETGSNRyy2qmgOFLbvN6jEJH+rcioGZurKo7f1wULw
-bqxIK7KuL8pVCaDQIf3xnl6et9aY76CNiXAWtlzfhtDSkgfKIosjA6PhlSe6okkj
-gMHM3ooWtp5RTfZ91Dlfu9udxVvmwA8leX+22FbBoCCO4h467fyLXD+VsuYFPtl3
-DRndFOA18ryQitJuaws8lLIhxIrVwq6p+hApAcHAI/pWG/agoPdYwh0TK1m6MOVS
-Tbxg9Bejvw8Jzw7QldxM42xyKDX3FGZ2+Kiu1WHvu745RDFaqRsynJqh1BMtQ0GI
-cLMME8tGUs3lmQEG225oyZkmIZ38jzE+wL0pu5QACEeWB+qXReYxzLIwKEpJgG2I
-MX1sLLB6YMEkbNRYu225jZuOGvfgV+wQ28Xrbx+H+RizWVQXhnIWijs/YTiEaRpf
-VPMW2MdOoVnIZ946db7bE7uEdkGl7gz+jELAMILMnSkclKTWze8=
-=pdeB
------END PGP SIGNATURE-----
-
---7kbtponqicmp274g--
+> ---
+>  tools/perf/tests/shell/header.sh |  2 +-
+>  tools/perf/util/header.c         | 15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
+> index 412263de6ed7..e1628ac0a614 100755
+> --- a/tools/perf/tests/shell/header.sh
+> +++ b/tools/perf/tests/shell/header.sh
+> @@ -42,7 +42,7 @@ check_header_output() {
+>    do
+>      if ! grep -q -E "$i" "${script_output}"
+>      then
+> -      echo "Failed to find expect $i in output"
+> +      echo "Failed to find expected $i in output"
+>        err=1
+>      fi
+>    done
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 487f663ed2de..53d54fbda10d 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -4343,6 +4343,7 @@ int perf_event__process_feature(struct perf_session *session,
+>  	int type = fe->header.type;
+>  	u64 feat = fe->feat_id;
+>  	int ret = 0;
+> +	bool print = dump_trace;
+>  
+>  	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+>  		pr_warning("invalid record type %d in pipe-mode\n", type);
+> @@ -4362,8 +4363,20 @@ int perf_event__process_feature(struct perf_session *session,
+>  		goto out;
+>  	}
+>  
+> -	if (dump_trace) {
+> +	if (session->tool->show_feat_hdr) {
+> +		if (!feat_ops[feat].full_only ||
+> +		    session->tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
+> +			print = true;
+> +		} else {
+> +			fprintf(stdout, "# %s info available, use -I to display\n",
+> +				feat_ops[feat].name);
+> +		}
+> +	}
+> +
+> +	if (dump_trace)
+>  		printf(", ");
+> +
+> +	if (print) {
+>  		if (feat_ops[feat].print)
+>  			feat_ops[feat].print(&ff, stdout);
+>  		else
+> -- 
+> 2.50.0.727.gbf7dc18ff4-goog
+> 
