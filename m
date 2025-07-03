@@ -1,67 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E5D1C07F6;
-	Thu,  3 Jul 2025 07:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66161C07F6;
+	Thu,  3 Jul 2025 07:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751528884; cv=none; b=oGWydLgyr9+T+h7qahbLCpxXfQodAVZePge00kkygqHZW5HNC4j7qeXRf8JGCFIXPVNaNH17JjOd9AEHOEA76ffW3CGA1pAz3i+YWXkwM9x0dtUeVRCtX0LnSjHs07WEGETaIWI8j6iq3K6IntDY+uS3eEBt/2tk7bd6oWV35ec=
+	t=1751528894; cv=none; b=XTXyvuQKcphBjDhMFJwjkMjATIESLPgjcWJEArE29F5+/fTIsU49PwQ4u++6yhS+ux3BXpBFd/CaY5mpVUxlle3An0BVkvUaoTMdZOD4jTi9XchUGwS1lhAnM5eZ2GKUBkMA+22Ky9QuQxpIGPgEgRceINvB1ejkzfCgQ0HjIt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751528884; c=relaxed/simple;
-	bh=s9ykGtfs0LX3ujSHVCs3mx6zSWxs7c6uLiOZIRxMw1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvcwJMVqFOLAtD0YPDhPXhuGgR8Yf2kG73CZHVilJMwOJD2ysO2sBxER8JpXa760ZeNTgvJ/IWjdrJ0/r0linnUhrE2c0RZ4BmTS9UbWrQN4VL0FADuFasBY7hjTcm6hSZxUfUZz2+Zv3R5LQzKfabHCqliWE5rBxj2U2C/45/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUuM5KPM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751528894; c=relaxed/simple;
+	bh=R1JZXLhzsP6GKBgRmVdhQ1yr4uSjM3A3hQpAb2vJpb8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YXSjhUriGIrJG+MW5JuaEwL9hSqHz+WH09JZ3qZkhINfh6pSuenE/4c2XKL/E0xqySSLCU4TdxTcRvxqWkUCbZzikP0UXjU6553DLrPGntHmIzJb2fKgB2eZ8lnKe7EfB0u7MGdiF8TI5oJnJIhcy0QHcAs6Hsf3pYBZH3xqfQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsJah6se; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUuM5KPM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3CDC4CEE3;
-	Thu,  3 Jul 2025 07:48:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsJah6se"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48C9C4CEE3;
+	Thu,  3 Jul 2025 07:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751528884;
-	bh=s9ykGtfs0LX3ujSHVCs3mx6zSWxs7c6uLiOZIRxMw1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aUuM5KPMjzdteL2YobZ83lISj54WI3hx/7p6Y9OFk/b9TRhVpFerjnep5fby8I/n+
-	 bbuIpReZ9qRj6L/6xRZGU8T3hMd4ldO0jaMEcRBNZdvdDycyVFZ30R6fe+vv0ZlaWq
-	 doXZpPbxKiHhZEp93N6OAHQOa0ow8WbhVAdpNNyC/FRsc/DDOC7dHZPZwxJryewY+D
-	 zcAEItZBbSGG298kslLneC3FlmokV24ffsP/DdsIPmLOZ++8L+0jY3ys03ly8PfUoI
-	 c8xV9RFcUhhQxOCjmZxLYwJmAd7cMTqhMlF/vT+VaQf56K+xEDma7JTcHaJ5rydBgP
-	 4V/DEDhyQ6A5w==
-Date: Thu, 3 Jul 2025 09:48:01 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Aleksander Jan Bajkowski <olek2@wp.pl>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
-	zhiyong.tao@mediatek.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: Add support for MT7981
-Message-ID: <20250703-impossible-determined-hamster-88da20@krzk-bin>
-References: <20250702214830.255898-1-olek2@wp.pl>
- <20250702214830.255898-2-olek2@wp.pl>
+	s=k20201202; t=1751528894;
+	bh=R1JZXLhzsP6GKBgRmVdhQ1yr4uSjM3A3hQpAb2vJpb8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=WsJah6se5ilQMs3YtWzOTr3q+vhJVzzWlySN6om95oUNMzaKkTrP9MFQmcjFTo2tC
+	 6jcgKfyZ7KrOh3Jq73LLYxWAbE53ir7rrhCoe7rXCwLHsskl5MkmrxANW7xrkT5NOx
+	 7ydbVu+0xEJgGiga3x//wBHLksaACXpklGMcLBVc6qeBnIWdtYmgmcBljKSBC+iVrq
+	 VDnqHEIDWnojq69CxxRFKVPc2iaJMWHnSc3W0bd5Uyu5KBUGFjDshgT1cP6Mqhl7Ts
+	 Hb3Dcp4LXH9XWstvqA27vIHu1o9vFLgYE6jxPooTeHcb65jplqZz9ABGU91/glv7Bk
+	 FQQpOfexOcvAg==
+Date: Thu, 3 Jul 2025 09:48:11 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] HID: playstation: Add support for audio jack
+ handling on DualSense
+In-Reply-To: <20250625-dualsense-hid-jack-v2-0-596c0db14128@collabora.com>
+Message-ID: <s4596421-sr43-893r-o90r-86nr588sp32q@xreary.bet>
+References: <20250625-dualsense-hid-jack-v2-0-596c0db14128@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250702214830.255898-2-olek2@wp.pl>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jul 02, 2025 at 11:48:29PM +0200, Aleksander Jan Bajkowski wrote:
-> The temperature sensor in the MT7981 is same as in the MT7986.
+On Wed, 25 Jun 2025, Cristian Ciocaltea wrote:
 
-This is not what your binding is saying. Binding is saying it is
-completely different.
-
-> Add compatible string for mt7981.
+> The Sony DualSense wireless controller (PS5) provides an internal mono
+> speaker, in addition to the 3.5mm jack socket for headphone output and
+> headset microphone input.  However, the default audio output path is set
+> to headphones, regardless of whether they are actually inserted or not.
 > 
-> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> This patch series aims to improve the audio support when operating in
+> USB mode, by implementing the following changes:
+> 
+> * Detect when the plugged state of the audio jack changes and toggle
+>   audio output between headphones and internal speaker, as required.
+>   The latter is achieved by essentially routing the right channel of the
+>   audio source to the mono speaker.
+> 
+> * Adjust the speaker volume since its default level is too low and,
+>   therefore, cannot generate any audible sound.
+> 
+> * Register a dedicated input device for the audio jack and use it to
+>   report all headphone and headset mic insert events.
+> 
+> It's worth noting the latter is necessary since the controller complies
+> with v1.0 of the USB Audio Class spec (UAC1) and, therefore, cannot
+> advertise any jack detection capability.
+> 
+> However, this feature can be implemented in the generic USB audio driver
+> via quirks, i.e. by configuring an input handler to receive hotplug
+> events from the HID driver.  That's exactly what has been accomplished
+> via the "ALSA: usb-audio: Support jack detection on Sony DualSense"
+> patchset [1], which has been already merged and should be available in
+> v6.17.
+> 
+> Unrelated to the above, also provide a few driver cleanup patches, e.g.
+> make use of bitfields macros, simplify locking, fix coding style.
+> 
+> [1] https://lore.kernel.org/all/20250526-dualsense-alsa-jack-v1-0-1a821463b632@collabora.com/
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+> Changes in v2:
+> - Updated cover letter including a reference to the usb-audio patch series
+> - Updated 'HID: playstation: Make use of bitfield macros' patch to drop
+>   DS_STATUS_CHARGING_SHIFT and use FIELD_GET() for battery status ops
+> - Replaced 'HID: playstation: Rename DualSense input report status
+>   field' with 'HID: playstation: Redefine DualSense input report status
+>   field' changing data type to a 3-byte array instead of renaming the
+>   struct member (Roderick)
+> - Updated 'HID: playstation: Support DualSense audio jack hotplug
+>   detection' according to Roderick's feedback:
+>  * Used DS_STATUS1_ prefixes for the plugged status register and rename
+>    its bits to match the datasheet
+>  * Defined MIC_VOLUME_ENABLE bit of DS_OUTPUT_VALID_FLAG0 register
+>  * Renamed the newly introduced audio controls members in struct
+>    dualsense_output_report_common: headphone_volume, speaker_volume,
+>    mic_volume, audio_control, audio_control2
+> - Restricted audio jack hotplug detection and event reporting to USB
+>   operation mode only, since Bluetooth audio is currently not supported
+>   and it might have a negative impact on the battery life (Roderick)
+> - Rebased series onto next-20250624
+> - Link to v1: https://lore.kernel.org/r/20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com
 
-Please drop and request a re-review.
+Just for the record -- I like the v2, and am inclined to merge it, but 
+would prefer doing that with Roderick's Ack, so I am waiting for a bit 
+here.
 
-Best regards,
-Krzysztof
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
