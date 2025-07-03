@@ -1,249 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E4D29C33E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC5A29B789
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751539930; cv=none; b=Xji3D54pX63B/uJ1+1npoXW+S4/Eio24kCwcRcc/HlcoEHqyfTcOVfTwKVG2G6TmTVfRpAySXDJvax6j74Dj0b7RljcojxOjkqpGwspSvUCzrJLOfcd0lPucBA0uX4dQ2OSk4UJ/V4TJxG3rVEK/LOTCUvczFKYefeV7a5GnaTo=
+	t=1751540056; cv=none; b=nq5EqTP5KW5xlpEktHHrHZBWHguAy/0H30iVhe0EzVvuRQb3r8pVNqJ5/1JtkNJhfxbOBq4QynR8/MToVT3S1YevUZkQeEC2r0EfPLrZ5I/vZSAkrg/t8pxAn89dWaFjJ/ptk7ngFVqp0e6+8pkyV+yq7A48D6bvmgmfzs7uqUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751539930; c=relaxed/simple;
-	bh=rmNSYOw+HEy63n/h92TyS7aMyLFXLaBLj2X6TT6vDAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tMIYdUMqUzadwG2fQIsWKsbtqlieFpFUe8blCo0zyEZAbq7o4OMJk7pCmkhT3yVkbRqm1jPbO4TgupS4pyjHFvJs9i6xb3TrfhTy/p1hkG3zpd1Ryn1TgBLku7Ij+QvPfoIF9OWei8xhgZ47sieHnSobcJLfayVlF7AsRfPR2Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PzJehx1J; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751540056; c=relaxed/simple;
+	bh=yhqf778x7evxWkPy2PResuLXFNoLXkJKA+P6kr0dXgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nw1tVh6jElYkBZnJYl4jpeU+ntQnUS23+ZPPJP5eBIyC4zPVtb22YpxStzYIFnrDD8dBHKa+LG+BthfOAxLSl0VPSQrbCIHw5gmSmo9hvzfqGZS+4HMZdNsq2gDxJqcPLPWO7aIg+FDBSfmZ24uwT4+hL9s7RHCVHmQHNP+3qpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o+m9Buwr; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PzJehx1J"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5634Ce4K024441
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 10:52:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YWZCms/xP7PO1LNBdrvjW70mXAYc+B54BtYn47HqjmU=; b=PzJehx1JbtWXCDmp
-	WqLy0bSwXfYyTiF7FiqrE+Xs/XxJcKExopBipIE4CujfQmDJraRThd2iwJwRyqz1
-	K/SBJXxZP9fzsEouNN/sEJwwpvScbGEXC9m/cc8BVxQUpQ0qrJLzht9z8+8tXXGM
-	HBPaPJ18q3xY6d8xCjZLEzQ0dKDXlq8r8W8Hf3BQCF1G87BZ0w0veN2thAGC3V4J
-	An1VuGy6OV6fba2t2DDFnTJchcTvcOH5m4rPrZXP2v7yf+W+eG/jxhhLw8iglxd9
-	ubDQpFj+nsggw3LEe9ST3CrZAuYaeSrR1BGmVapj8Weqma1tzlI+X4IiEJ4wLb5X
-	glvdIg==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bw07y7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 10:52:07 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-313c3915345so11762611a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:52:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751539927; x=1752144727;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWZCms/xP7PO1LNBdrvjW70mXAYc+B54BtYn47HqjmU=;
-        b=F6EFzRfu/CEWLDTGcjziFLAJtR9Q4vqeecMHwMWd7CkL03dfJcEE96WDmWYna7d8p0
-         rbZKsPv1xxv2Gjh1c1d6pCoEgJm4rc2FMlXUaekSX1KN/V/k95e2TQQmVhA8nOwI5I5K
-         1lQ1o4HbByMxpTZY5O3bAZo5DCoUs99xGnkgF8ec+8ZN00H86Re6yW1vhW9zb4v8E3bk
-         sL6vJGq6TrRuToo8gaR1FukDt1OMz/xQQ7QvSLVtcnN/VQKEvPfDzCJ5XKVDqBvCEe2a
-         fccwvecNWTFmG9PFJ+aZsPr0u2zWtDu4kXiv/Hqv/oy3LcT2HQzpxQWjd3ndxFajPnnp
-         8CbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbmbCHVX1xD3JcrCeaQ4ffyFkHcCr3LAt/dy/tjzZ93WQL6f2HWi4RKeCvxP2wP2ABmRY1bsWYUK+VCGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpQMo0oNwK7lK7Cb3ZVIsxhyjnM2rdEtotLlqnQ5TuX60bCRoC
-	mKrGQUP2tVQxmhyuRsPtYJzrSXd18CljbuWGEzhePLtjXWiIRuEUEgwHC2UIU285/E9i99Y/z1L
-	nhHyBMxL2kkPM6iaLdND7i/BTAZfkWaIZDyptitfanAbWvTvhQitPLcOueLkFvcn9dGY=
-X-Gm-Gg: ASbGncs9f91gRHRBqKtpiC8MowCG4IBosDDaqY2FUYg5K6zojhewUo83FWGBqORVlvJ
-	sB6spsbhI7ge8OUsmuYttkAIStHKK8xDc0Y5omHfwCb4X7QotvOi7SzHA3CUU+DPeFFPwHI4+ph
-	PVwWZ2aM+NSNZj+xuCg84mECzYLFhk69OHwXhTdvJDKKzEwEHM+i3zMLiTSJiWCC9iKdsXHlCTj
-	7KOhkiW61NARUQkFZ3skCbr87RQvccoS0Vo7DrZiMiskp5CnOyyuqDdUGhHflKbHUfO55OG+47A
-	d0GgB9WQfAMaCftbuAO645vprUE28fEN64p7bne+HYZYv6GyE6RO
-X-Received: by 2002:a17:90b:58c4:b0:311:b5ac:6f63 with SMTP id 98e67ed59e1d1-31a90bc9845mr8300497a91.21.1751539926604;
-        Thu, 03 Jul 2025 03:52:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGU2ttb8arRAA533CuSXsGogWAaWWt4oh1TJBQPDAc1tI7amiUizM28F44lNiZLDBYSJCJ3TQ==
-X-Received: by 2002:a17:90b:58c4:b0:311:b5ac:6f63 with SMTP id 98e67ed59e1d1-31a90bc9845mr8300464a91.21.1751539926013;
-        Thu, 03 Jul 2025 03:52:06 -0700 (PDT)
-Received: from [10.218.37.122] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc7edffsm2123326a91.35.2025.07.03.03.52.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 03:52:05 -0700 (PDT)
-Message-ID: <9ede83ab-f494-4975-b896-da14958f727d@oss.qualcomm.com>
-Date: Thu, 3 Jul 2025 16:21:59 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o+m9Buwr"
+Date: Thu, 3 Jul 2025 12:53:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751540042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn3SDbZKLdlpO1kUg+yPtTSXi0UwiOsun42rGES+Wtw=;
+	b=o+m9BuwrLFxFAS7r3WLX4Q07bsmcGsRgcsEsLz+64Wj7hS7vGCq1MdqeiKNz1XZNeB1yAX
+	fwxWp7NYC1PSemezw14FG4snkIUHxgdRSyYA4db1syYyV2qDFeTztuQT/md0TGYvxvl2QU
+	V7aRbczXsRrW14zILaa6sr8NPCl8uwk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc: masahiroy@kernel.org, nathan@kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Building Debian from source spit out some warnings...please shed
+ some light
+Message-ID: <20250703-offbeat-hound-of-tenacity-ceb047@l-nschier-aarch64>
+References: <aF8f_3xbnXy4Vibi@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Tony Lindgren <tony@atomide.com>,
-        JeffyChen <jeffy.chen@rock-chips.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com, Sherry Sun <sherry.sun@nxp.com>
-References: <20250610164154.GA812762@bhelgaas>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250610164154.GA812762@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: GTSPL5qnrKXCVEaVD70SM7-hha9n9InQ
-X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=686660d7 cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=s8YR1HE3AAAA:8
- a=i8TGq4d7xC6VReilZ34A:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
- a=jGH_LyMDp9YhSvY-UuyI:22
-X-Proofpoint-ORIG-GUID: GTSPL5qnrKXCVEaVD70SM7-hha9n9InQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA4OSBTYWx0ZWRfX0X4v4otLXV9+
- j48iVXOX7rZlfTDhfTpelwKWvQBUP9jqiIFMstMm5BjUIEZ6N6VSsORvno8QWnFuCvKonOz2B4/
- z4TZFCB06VwTYLUe4eqY07MbDVL2IELhoOlZRc2JQlUTj47GdYUmkqWa5JETI+VmT/7szMaaNw4
- Ui+D/PopEt8z8QQeHJKGbMgO2uQa1RFVpCP21cGlxMZE4lCwOe81mvQwiSxJMRyjMmrVO5A+/XE
- CchFPm1xDaLJCr1/g7n4/v91y+C7INDBA7s4qxCsIUuiRfRAYBN0ilMEGwER0X3qVtPW3gR47P1
- ROCth6n/Uc8i6Jcr5Z+Y5h99N4QgSz+h9KPoCWs8qTdXXLc5a2Lxr23EbAxmKnUrCfCwbKUKHQp
- jkFyo7vAcX4K//reHFJET2ykrcXMkFzBZqhn35vuhGJ1Tf7fc9uxhKEm+XPtOWBuQCMAzecW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030089
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HzGfVSfzp6TgoaAt"
+Content-Disposition: inline
+In-Reply-To: <aF8f_3xbnXy4Vibi@debian>
+Organization: AVM GmbH
+X-Migadu-Flow: FLOW_OUT
 
 
+--HzGfVSfzp6TgoaAt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/2025 10:11 PM, Bjorn Helgaas wrote:
-> On Tue, Jun 10, 2025 at 10:00:20AM +0530, Krishna Chaitanya Chundru wrote:
->> On 6/10/2025 4:04 AM, Bjorn Helgaas wrote:
->>> On Mon, Jun 09, 2025 at 05:29:49PM +0530, Manivannan Sadhasivam wrote:
->>>> + Brian, Rafael, Tony, Jeffy (who were part of the previous attempt to add WAKE#
->>>> GPIO/interrupt support:
->>>> https://lore.kernel.org/linux-pci/20171225114742.18920-1-jeffy.chen@rock-chips.com
->>>>
->>>> On Mon, Jun 09, 2025 at 11:27:49AM +0530, Krishna Chaitanya Chundru wrote:
->>>>> On 6/6/2025 1:56 AM, Bjorn Helgaas wrote:
->>>>>> On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>> PCIe wake interrupt is needed for bringing back PCIe device state
->>>>>>> from D3cold to D0.
->>>>>>
->>>>>> Does this refer to the WAKE# signal or Beacon or both?  I guess the
->>>>>> comments in the patch suggest WAKE#.  Is there any spec section we can
->>>>>> cite here?
->>>>>>
->>>>> we are referring only WAKE# signal, I will add the PCIe spec r6.0, sec
->>>>> 5.3.3.2 in next patch version.
->>>>>>> Implement new functions, of_pci_setup_wake_irq() and
->>>>>>> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
->>>>>>> using the Device Tree.
->>>>>>>
->>>>>>>    From the port bus driver call these functions to enable wake support
->>>>>>> for bridges.
->>>>>>
->>>>>> What is the connection to bridges and portdrv?  WAKE# is described in
->>>>>> PCIe r6.0, sec 5.3.3.2, and PCIe CEM r6.0, sec 2.3, but AFAICS neither
->>>>>> restricts it to bridges.
->>>>
->>>> You are right. WAKE# is really a PCIe slot/Endpoint property and
->>>> doesn't necessarily belong to a Root Port/Bridge. But the problem is
->>>> with handling the Wake interrupt in the host. For instance, below is
->>>> the DT representation of the PCIe hierarchy:
->>>>
->>>> 	PCIe Host Bridge
->>>> 		|
->>>> 		v
->>>> 	PCIe Root Port/Bridge
->>>> 		|
->>>> 		|
->>>> 		v
->>>> PCIe Slot <-------------> PCIe Endpoint
->>>>
->>>> DTs usually define both the WAKE# and PERST# GPIOs
->>>> ({wake/reset}-gpios property) in the PCIe Host Bridge node. But we
->>>> have decided to move atleast the PERST# to the Root Port node since
->>>> the PERST# lines are per slot and not per host bridge.
->>>>
->>>> Similar interpretation applies to WAKE# as well, but the major
->>>> difference is that it is controlled by the endpoints, not by the
->>>> host (RC/Host Bridge/Root Port). The host only cares about the
->>>> interrupt that rises from the WAKE# GPIO.  The PCIe spec, r6.0,
->>>> Figure 5-4, tells us that the WAKE# is routed to the PM controller
->>>> on the host. In most of the systems that tends to be true as the
->>>> WAKE# is not tied to the PCIe IP itself, but to a GPIO controller in
->>>> the host.
->>>
->>> If WAKE# is supported at all, it's a sideband signal independent of
->>> the link topology.  PCIe CEM r6.0, sec 2.3, says WAKE# from multiple
->>> connectors can be wire-ORed together, or can have individual
->>> connections to the PM controller.
->>
->> I believe they are referring to multi root port where WAKE# can
->> routed to individual root port where each root port can go D3cold
->> individually.
-> 
-> AFAICT there's no requirement that WAKE# be routed to a Root Port or a
-> Switch Port.  The routing is completely implementation specific.
-> 
->>  From endpoint perspective they will have single WAKE# signal, the
->> WAKE# from endpoint will be routed to its DSP's i.e root port in
->> direct attach and in case of switch they will routed to the USP from
->> their again they will be connected to the root port only as there is
->> noway that individual DSP's in the switch can go to D3cold from
->> linux point of view as linux will not have control over switch
->> firmware to control D3cold to D0 sequence.
->>
->> But still if the firmware in the DSP of a switch can allow device to
->> go in to D3cold after moving host moving link to D3hot, the DSP in
->> the switch needs to receive the WAKE# signal first to supply power
->> and refclk then DSP will propagate WAKE# to host to change device
->> state to D0. In this case if there is separate WAKE# signal routed
->> to the host, we can define WAKE# in the device-tree assigned to the
->> DSP of the switch. As the DSP's are also tied with the portdrv, the
->> same existing patch will work since this patch is looking for
->> wake-gpios property assigned to that particular port in the DT.
-> 
-> WAKE# is only defined for certain form factors, and Root Ports and
-> Switch Ports have no WAKE#-related behavior defined by the PCIe specs.
-> 
-> I don't want to make assumptions about how WAKE# is routed, whether
-> Switches have implementation-specific WAKE# handling, or how D3cold
-> transitions happen.  Those things are all implementation specific.
-> 
-> My main objections are:
-> 
->    - Setting up a wake IRQ should be done on an endpoint, but this
->      patch assumes doing it on a Root Port or Switch Port is enough.
-> 
->      We can start a DT search for a wake IRQ at the endpoint and
->      traverse up the hierarchy if necessary, of course.
-> 
->    - The code should not be in portdrv.c.  Putting it in portdrv means
->      it won't work unless CONFIG_PCIEPORTBUS is enabled, and WAKE# has
->      nothing to do with the rest of portdrv.
-I went through the SPEC again and you are right the spec hasn't
-mentioned about wake# routing properly.
+On Sat, Jun 28, 2025 at 04:19:35AM +0530, Bhaskar Chowdhury wrote:
+>=20
+> Alright, I was doing customary kernel building via upstream source and co=
+me
+> across these warnings .....
+>=20
+> dpkg-genbuildinfo --build=3Dfull -O../linux-upstream_6.15.4-00002-g484450=
+2d6635-1_amd64.buildinfo
+>  dpkg-genchanges --build=3Dfull -O../linux-upstream_6.15.4-00002-g4844502=
+d6635-1_amd64.changes
+> using Dpkg::Control::Fields::field_transfer_single() with an an implicit =
+field argument is deprecated at /usr/bin/dpkg-genchanges line 245.
+> using Dpkg::Control::Fields::field_transfer_single() with an an implicit =
+field argument is deprecated at /usr/bin/dpkg-genchanges line 245.
+[...]
 
-I will move the code from portdrv to pci core framework and for your
-1st objection, you are suggesting to search for wake IRQ in the endpoint
-DT and then traverse up. I believe you are suggesting this because we
-may more than one wake# routed to root port from multiple endpoints.
-if this is the case then we need to register for more than one wake
-IRQ. For this case I feel better to check for wake# gpio in the DT
-when ever there is a new device is detected in the pci core and create
-the wake IRQ with the dev associated with the pci_dev.
+I cannot reproduce the output you forwarded.  I tried it with this:
 
-Please correct me if I was wrong.
+     sudo apt install build-essential git flex bison lsb-release debhelper =
+bc \
+        cpio kmod libdw-dev libelf-dev libssl-dev python3 rsync &&
+     make defconfig deb-pkg -j28 -l28
 
-- Krishna Chaitanya.
-> 
-> Bjorn
+and I am getting this:
+
+    [...]
+      HOSTCC  debian/linux-headers-6.15.4/usr/src/linux-headers-6.15.4/scri=
+pts/mod/symsearch.o
+      HOSTCC  debian/linux-headers-6.15.4/usr/src/linux-headers-6.15.4/scri=
+pts/basic/fixdep
+      HOSTCC  debian/linux-headers-6.15.4/usr/src/linux-headers-6.15.4/scri=
+pts/selinux/mdp/mdp
+      HOSTLD  debian/linux-headers-6.15.4/usr/src/linux-headers-6.15.4/scri=
+pts/mod/modpost
+    dpkg-deb: building package 'linux-headers-6.15.4' in '../linux-headers-=
+6.15.4_6.15.4-2_amd64.deb'.
+     dpkg-genbuildinfo --build=3Dfull -O../linux-upstream_6.15.4-2_amd64.bu=
+ildinfo
+     dpkg-genchanges --build=3Dfull -O../linux-upstream_6.15.4-2_amd64.chan=
+ges
+    dpkg-genchanges: info: including full source code in upload
+     dpkg-source --compression=3Dgzip --after-build .
+    dpkg-source: info: using options from src.bookworm/debian/source/local-=
+options: --diff-ignore --extend-dif
+    f-ignore=3D.*
+    dpkg-buildpackage: info: full upload (original source is included)
+
+Thus, for me, everything works as expected.
+
+Tested with v6.13+, v6.15.4 and v6.16-rc4 on an up-to-date and minimal Debi=
+an
+bookworm and Debian unstable.
+
+Which version of dpkg-dev do you have installed on your system?
+
+Kind regards,
+Nicolas
+
+--HzGfVSfzp6TgoaAt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmhmYT4ACgkQiMa8nIia
+bbhCew/+KUZpXJT930so4kTMrz8/j9W2XdxBcLYPcFH1Q4DU4gMIK2myfTYylORX
+AJ7i8Vmz99EFltbNnCQ+IMNE2qOozlkdiWb1GJYcmgU90wMb8LSRTdE9lw5IIZW8
+Isrxg9NwVrXJgZaUJm1/JD/DfuBtC5m/eUsDxRiVGACjGJxZb5wDmBcOMK4sA33T
+RW0EDFluvwe5EqoAGAkmsPAchMU9iSqMKv7ycD3K+1hsLu4GMA4OSHqLPv8028er
+HShEjvFQ/OlIebTbsXp6EYfydGwx/eStMiHX4WxF9KpcfvV/bl9SSUqV5o3Nd6Ti
+aecKP0/3Zc8BiYSTxerQF7VzviF4cUUyZwbl6g7AjzVv6eixHllGkbiWaUiSATS6
+KzwKv0e//HYngabdvS5ISwxHKSy1BUrLnc2HLy43QT3XFx1Ht9tH7RWbevCAESy2
+nbi3htpW4cb1zQj6nQROhTin1GCqDAmYtS5B+stws7V+p+GYD5PA3hHrt4A0tpzS
+f7Btr+hAqG2KIF8C3LbNrAQQyf0nn2wHxCvgTwLcfbWe26sjHIPTB+hGVv6nMbn7
+D+JErfRisdEGgjRFYvJJLFqODpzzBfPf/jTFZjzK9SM9p2T1zCOZG/OnSoud5PX7
+Ruvqy7KKnnkk8Kwati1LfkRfyHyOLpsyxpYkpub2DJflvIpIEEA=
+=62kA
+-----END PGP SIGNATURE-----
+
+--HzGfVSfzp6TgoaAt--
