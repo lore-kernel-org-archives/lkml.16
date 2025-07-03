@@ -1,105 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDE9239E6B;
-	Thu,  3 Jul 2025 22:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66709239E6B;
+	Thu,  3 Jul 2025 22:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751581975; cv=none; b=Lqk/+60X9uS+e0m4ovgBAN9OsSjNwpEzvhGKTDAUhyIX3im2VCXDS6iz94xxZHZST34o8FdkUZei2MGYzLFqZ+36A9JlzVHjGW3m5B3MjQrlM1HpytKqNH4T3lrfXATKgeaMLw2hyjwMiJzRAx3zWnKtAEzl1JUF+HbqJs9bu1s=
+	t=1751582150; cv=none; b=otcSxaGVtAQZj+Mfl7zjNLsIqmVBn416EUXTQmlee7EgoTsNvsZfHR96L/zfwBguHq8Yx85SASgF5obdbxs4poTkNGbG7ypfw6zBAfLvktlJyXKLlhhQMfckf3pRvz7Mut4PSTIs8TVwI4WApGyxC1JG/BRdp1iCAQoCt9orj8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751581975; c=relaxed/simple;
-	bh=+1wx07gN5OfooWmYzorC7Slu3Z/5IsovZI2Woew1vkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E3R2Hna0bDF2XZNgPF6Ko+5EkN4omXRz9cqGQOSkl65fgTddfd3aYlNzjP5poQ3pJYUBA44T3DdZrM4tRN6F2Tz0km268KFbqPnbJBesHB5dzs3n9ir7j2LST3zN1EKsYecPSYS6MrIcd5sRgDWrpbCuw7KXIsSe/Ury9G3u8lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEZHQm7N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751582150; c=relaxed/simple;
+	bh=AlJk2xQunl62/+VSHOBeCHmjXQob70EjT8VDdy6SYyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U4aWMsPsuGkDfCwYF3CJHE+O0bbnpyiXRnY0IgKPLP2qfeIcx4vcvD2JtiPnYrFHrzbhew2sdOIVqyu8PGq96PU55U9vmkt7/wPLWVAE3vQKL11cmEMc+J7PqxJshxo9VP4DnUgeLPJjKSHODyY684B+XwJCD+Ye4Q2zhmNmz/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeaLb3kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEZHQm7N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81BEC4CEE3;
-	Thu,  3 Jul 2025 22:32:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeaLb3kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D785C4CEE3;
+	Thu,  3 Jul 2025 22:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751581974;
-	bh=+1wx07gN5OfooWmYzorC7Slu3Z/5IsovZI2Woew1vkU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QEZHQm7NNnv/EfQSW33a9YTMrY4F3sVQy7pZd1djbmcKAoFzzyJrKGxYJKA10bzpV
-	 dvfQ8O/85NKa7RpFpqcnRHET0R7GMiozUTWOPM2D/2oMBbTYCMS/qvqyLlykj8lts7
-	 7GQba1i99epEivV1EdtgzpLSRgRtZKqmriOsCzbR8+tf1zQze/5aF3zY8ZX6q3zoAz
-	 oG664uTTYMm+MmJErD/wLrLO8T+su1kdo42U2P6xbskl9sUoXqllPHLwjzNfHm3PeH
-	 IIjybcS8tzNEjAhTEMBl1Z4nfDnF0f5sbSxXLQ0wI7n0ZnVqLb8jkQUmzvOFOqNdlU
-	 NTavsBxJSmW4w==
-Date: Fri, 4 Jul 2025 00:32:50 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
- <akiyks@gmail.com>
-Subject: Re: [PATCH v2 2/7] docs: kdoc: micro-optimize KernRe
-Message-ID: <20250704003251.1858ce60@foz.lan>
-In-Reply-To: <20250704003146.118f5799@foz.lan>
-References: <20250703184403.274408-1-corbet@lwn.net>
-	<20250703184403.274408-3-corbet@lwn.net>
-	<20250704003146.118f5799@foz.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1751582150;
+	bh=AlJk2xQunl62/+VSHOBeCHmjXQob70EjT8VDdy6SYyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oeaLb3kn+WHfZRnrdLxOLSD/6uJyDJUkSuZRSJF7uUrUz5MYOOBey3B4sAhmUx8YU
+	 FvNvLp8hpODDXoDg2TbNgdW95pg+nerBvKl3JujNgWn/sE4k8xXAjBmLvPeMmEX6cL
+	 /vNlU4yKBhkzzsCroEDOH0poaKFGjVDlBSIz36866iQ5UEN/d+Ojgd52WBsgP6EJR0
+	 v8/KhooaC1xWsWo1rooyhDokq5+Y4VbZSlZWdpS9lrWnquXLElQp1W9RAhNP5zY7qn
+	 wR3sOHGJ8eEfH5yoPRC8YZSUN/rg8LZSSGJ19zLhfASR5X/r7+6ZDR12gzUZcgj4pR
+	 XDERRPCfKGoBA==
+Date: Thu, 3 Jul 2025 15:35:49 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+	Andrey Albershteyn <aalbersh@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250703223549.GA2672029@frogsfrogsfrogs>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
+ <20250701184317.GQ10009@frogsfrogsfrogs>
+ <20250702-stagnation-dackel-294bb4cd9f3d@brauner>
+ <CAOQ4uximwjYabeO=-ktMtnzMsx6KXBs=pUsgNno=_qgpQnpHCA@mail.gmail.com>
+ <20250702183750.GW10009@frogsfrogsfrogs>
+ <20250703-restlaufzeit-baurecht-9ed44552b481@brauner>
+ <CAOQ4uxjouOA+RkiVQ8H11nNVcsi24qOujruqKgfajOCKP1SMpQ@mail.gmail.com>
+ <20250703-haufen-problemlos-c2569d208bd8@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250703-haufen-problemlos-c2569d208bd8@brauner>
 
-Em Fri, 4 Jul 2025 00:31:46 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
-
-> Em Thu,  3 Jul 2025 12:43:58 -0600
-> Jonathan Corbet <corbet@lwn.net> escreveu:
-> 
-> > Rework _add_regex() to avoid doing the lookup twice for the (hopefully
-> > common) cache-hit case.
+On Thu, Jul 03, 2025 at 10:46:30AM +0200, Christian Brauner wrote:
+> On Thu, Jul 03, 2025 at 10:42:27AM +0200, Amir Goldstein wrote:
+> > On Thu, Jul 3, 2025 at 10:28 AM Christian Brauner <brauner@kernel.org> wrote:
+> > >
+> > > On Wed, Jul 02, 2025 at 11:37:50AM -0700, Darrick J. Wong wrote:
+> > > > On Wed, Jul 02, 2025 at 03:43:28PM +0200, Amir Goldstein wrote:
+> > > > > On Wed, Jul 2, 2025 at 2:40 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > > > >
+> > > > > > > Er... "fsx_fileattr" is the struct that the system call uses?
+> > > > > > >
+> > > > > > > That's a little confusing considering that xfs already has a
+> > > > > > > xfs_fill_fsxattr function that actually fills a struct fileattr.
+> > > > > > > That could be renamed xfs_fill_fileattr.
+> > > > > > >
+> > > > > > > I dunno.  There's a part of me that would really rather that the
+> > > > > > > file_getattr and file_setattr syscalls operate on a struct file_attr.
+> > > > > >
+> > > > > > Agreed, I'm pretty sure I suggested this during an earlier review. Fits
+> > > > > > in line with struct mount_attr and others. Fwiw, struct fileattr (the
+> > > > > > kernel internal thing) should've really been struct file_kattr or struct
+> > > > > > kernel_file_attr. This is a common pattern now:
+> > > > > >
+> > > > > > struct mount_attr vs struct mount_kattr
+> > > > > >
+> > > > > > struct clone_args vs struct kernel_clone_kargs
+> > > > > >
+> > > > > > etc.
+> > > > > >file_attr
+> > > > >
+> > > > > I can see the allure, but we have a long history here with fsxattr,
+> > > > > so I think it serves the users better to reference this history with
+> > > > > fsxattr64.
+> > > >
+> > > > <shrug> XFS has a long history with 'struct fsxattr' (the structure you
+> > > > passed to XFS_IOC_FSGETXATTR) but the rest of the kernel needn't be so
+> > > > fixated upon the historical name.  ext4/f2fs/overlay afaict are just
+> > > > going along for the ride.
+> > > >
+> > > > IOWs I like brauner's struct file_attr and struct file_kattr
+> > > > suggestions.
+> > > >
+> > > > > That, and also, avoid the churn of s/fileattr/file_kattr/
+> > > > > If you want to do this renaming, please do it in the same PR
+> > > > > because I don't like the idea of having both file_attr and fileattr
+> > > > > in the tree for an unknown period.
+> > > >
+> > > > But yeah, that ought to be a treewide change done at the same time.
+> > >
+> > > Why do you all hate me? ;)
+> > > See the appended patch.
 > > 
-> > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> > ---
-> >  scripts/lib/kdoc/kdoc_re.py | 7 ++-----
-> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
-> > index e81695b273bf..612223e1e723 100644
-> > --- a/scripts/lib/kdoc/kdoc_re.py
-> > +++ b/scripts/lib/kdoc/kdoc_re.py
-> > @@ -29,12 +29,9 @@ class KernRe:
-> >          """
-> >          Adds a new regex or re-use it from the cache.
-> >          """
-> > -
-> > -        if string in re_cache:
-> > -            self.regex = re_cache[string]
-> > -        else:
-> > +        self.regex = re_cache.get(string, None)
+> > This looks obviously fine, but I wonder how much conflicts that would
+> > cause in linux-next?
+> > It may just be small enough to get by.
 > 
-> With get, None is default...
-> 
-> > +        if not self.regex:
-> >              self.regex = re.compile(string, flags=flags)
-> 
-> ... yet, as you're using get, better to code it as:
-> 
-> 	self.regex = re_cache.get(string, re.compile(string, flags=flags))
+> With such changes that's always a possibility but really I'll just
+> provide a branch with the resolutions for Linus to pull.
 
-For got to mention: with or without that:
+<nod> That looks good to me. :)
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+At worst you can always ask Linus "Hey I want to do a treewide name
+change of $X to $Y, can I stuff that in at the very end of the merge
+window?" and IME he'll let you do that.  Even better if someone keeps
+him supplied with fresh change patches.
 
-> 
-> > -
-> >              if self.cache:
-> >                  re_cache[string] = self.regex
-> >  
-> 
-> 
-> 
-> Thanks,
-> Mauro
-
-
-
-Thanks,
-Mauro
+--D
