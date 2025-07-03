@@ -1,123 +1,166 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7206A2D8788;
-	Thu,  3 Jul 2025 09:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328E42D5C69;
+	Thu,  3 Jul 2025 09:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535927; cv=none; b=FGrnEfFxI5SjzAM3rhBYORrlwfWhM7vpnmPhIQ9NKXq9P0r/v/btSUmrU0Z+BlpSD04UzmFSjNVH/wPwyj9B7e4FWtVVhE/V5PCz9XuUVRy8zkGeX8yzkecZvP1TF9dqQ4ADMoFzANKTFz3Q0RK0Y7CBZTg5W2Qri1skPTxObgs=
+	t=1751535961; cv=none; b=sxch1iiEUzN1YBojRtptX0mrkC6Y8ANrNjvwq95GslSxNbSUlDZtpHP5b4kvq2trJcN/1IOgW9ihZJaq3/Ke3GhrGiwumZfYh8dfWuoTzrdzKcxgKTf+7/Qql+LzlHFK/rqpLktvwg0Jzs1OS0e804A5JCaCe83IafAVNk8iIX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535927; c=relaxed/simple;
-	bh=BjLch1TME7EoCkxnFvc0UAaUcRXEs7j0nXMZrtFHXfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ecobz0BCN0mJaT3qj8Mz7u/2+lIDRsd4/+UbUtqE4Nu+gv6XikfYcs6rJ2Bi0fzdLFPO3VXiFH6VhwCFFOieGTOSxCFMbUBxSiVvsS+9LCxUhg5ko18fB9Ma/6OU7RrvNs3Xwvtm9/G5lXa+bbsSIeWSYY2kLBNvQ3OEiPn7V9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jfVfS0jo; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jfVfS0jo"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5637PFTn010432;
-	Thu, 3 Jul 2025 09:45:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	n47CyqKNxOWPyS5Sz4WkEF1d+Hlx5v6ijEkoOPsKz4k=; b=jfVfS0joPHh2xseQ
-	74Kd6PAWMt0881gAW2KEGUSP8FWdh/+HQW+Of7F0GIWDsNIb+m2WfVkwSeAENl63
-	PIchZLvg6MWtrao6crFbYpUPYOrhhgNuKTELqO4K5fzP4Hpi3iKSg6DyvM8pyP2h
-	xLmcDUXScSAkLRfrfyvQKMiSdNCnrjJswq/XUnB86AZmIwFycKjdi+hEo9z217cf
-	6Vwcj/zHmf35qPgDR3bNwWKOCehatHyurijNd3AJRRmu1GsVnCP2/mzWxZcWEoCD
-	IwkUCCXgkwnuZ1lnndATKWKW5O3NKBRMb0B5IcrN+aS2kFIm4emGU86DnGltTVAt
-	nV2ziQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw30cypr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 09:45:21 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5639jKVb032163
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 09:45:20 GMT
-Received: from [10.216.58.113] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
- 2025 02:45:17 -0700
-Message-ID: <0bd5e108-9c98-4bcd-9652-05cf514d0e22@quicinc.com>
-Date: Thu, 3 Jul 2025 15:15:14 +0530
+	s=arc-20240116; t=1751535961; c=relaxed/simple;
+	bh=8+99WZhB2XAT3145ZR5edaUt2NhsspSftiUtjBs/P/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZMZCKL+Qs1Cl4D3YIoI4wb+miptdNX2RWGP3oJJ9sAaCT64HOlhEcomnklL+0LcIxoQtS5KHm5TTs61HfjZ+/kGWrpqgMf4sBcQexJ11g2rz4CP++FMGlcAS0Hwd8xq/Czo+nRGZp3Vb3WFMdylDvo7f2h+jfNw3wTzMF3fA42w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5315972826dso535300e0c.1;
+        Thu, 03 Jul 2025 02:45:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751535957; x=1752140757;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gr1T1NsM4mbKj05LLAEjbw1p0jrjWQGqngqTAr50Bdw=;
+        b=ECA121MBvMmLTw4+qxxhmW1z+axKm1indRDI8Y0Tdpxr0JNSdDAO/501rY8jhHnMbC
+         bfVR/bc/adPHr75DbnNn3zALQ/0FWpytRrsgyBEnLnKL1AMg1pr6mZI/q7eMHyR/BqtC
+         D77CnE7bMaCUQv9VvvxybHvaFt4vfreroGm6VkORE6Oi1C9vtgufgt2yNEW8gSQ2lEzg
+         ZldbXc7CSF4scsrYXr4lG0a3fPORRjW0J8aGjR3jrXfa904xJoGTvrcwzXK3aXaPGAKW
+         hX1MDf/xQK9lmTX928jd6nePvhIX7pXEbeFyO5TAikroALmEnB6pBSwN1xYHNIQVnlQF
+         oX8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUiUZsHdVl6qLdp6vzvEjo/mKwNEe7gauP729+jABRNQdhlL9foCzw9/R3UOddJHrPuuF0iDNSGz2M8PkH6KSN8fvI=@vger.kernel.org, AJvYcCWMCJgb+UP9uPCZXv9UtfpuTOw9J5RAYs7I5TjGY+zs+K0vnlZuFXv4MLIA6vz02iO0T+KTLFmVI/+33/Gq@vger.kernel.org, AJvYcCXJaisc1oXVSgcj54FcciDhglqnRKv+NDkBv87cV67/WT0ehVYNNT+TBq8q9/WJfGyYaiGHRfewGTys@vger.kernel.org
+X-Gm-Message-State: AOJu0YwztGQiNlgDJ3LYayvpkL7CJ3H9dNHVWQJG32xwvJLI8HwVjZOC
+	GqvtcuvCguTvz+oJ+S4IRH7WFSmIkWygnl/gMeotPBvAyJQ3yLNDlmovQVeDjG9u
+X-Gm-Gg: ASbGncuSGgIKaicEBFNfOBSqquVO57CzzVKpLswp39s1ly6G5DTBgKHcCFbfgK5hVie
+	/D4Rz8BCbC+36Ft9Lax0hvKCxYE15Rin27Oq1/IVglJT8091kWaqZi4gykBu6xAnJjqbnNH5jwE
+	ZUClTfni4Ot7pPG4DSEZjDjJQeV1+2brLv1CLTFFVwjUahkoclF+C8WnITnnBOaW+0pMcsiEN+6
+	VrWeECJXu0ntWcPooD6ExFEzNfWW9X+W9G5W7dsQ/MwTZ00z5entPQwbQmOJCAPcaDvl7ROfqWY
+	OCHsqEZbwPMzxgDJqQG/axITtmVDwxGPHP/oEF6MCKl32N2Bxeos41YlJMjjV5GQNJ12WbS2xNn
+	EH61WnEA8coTMBkQGk7FW9Qt3FPX7Wnb0GKK6d3M=
+X-Google-Smtp-Source: AGHT+IGmVlg7nw6GSCIl/O6qKUwGtTz0k2qz3Xte6wtkUc2bLybgkZ3xGkIqYISeP7bnkFqvJbIENw==
+X-Received: by 2002:a05:6122:6d06:b0:534:5cd0:19fd with SMTP id 71dfb90a1353d-5346beb37e3mr460754e0c.4.1751535957442;
+        Thu, 03 Jul 2025 02:45:57 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5345ae35c6esm530073e0c.37.2025.07.03.02.45.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 02:45:56 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-53185535ed9so524733e0c.0;
+        Thu, 03 Jul 2025 02:45:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVHwZzY7Sfu9aPBXmmfL1qHrCcyjOT0kqeeyq4FphUeFb4MaVs5+uboxUvyzUaNjOfrGJMxgwyN6zNqgRgY@vger.kernel.org, AJvYcCWKerVUAEoUT4ymj3PnPFL0BworOTkyq8Of2Ef3YDZ5sfBmNRX1Dudv/t8Bi3kSu1fAZ9e1zYi+5YiG@vger.kernel.org, AJvYcCX1SXatfLICE3tg0gewcFatqTz1exhoXYOC29JGr8UOqbmv8Z2T+F/c9iG3q3Pw49nbXzfVki1II7ZIcuTxPgvHlJA=@vger.kernel.org
+X-Received: by 2002:a05:6122:8f0a:b0:531:8a64:78bd with SMTP id
+ 71dfb90a1353d-5346bd64c3bmr642383e0c.1.1751535955720; Thu, 03 Jul 2025
+ 02:45:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sc7280: Add support for two additional
- DDR frequencies
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250701074334.1782967-1-quic_pussin@quicinc.com>
- <ea5058cd-29da-4939-990d-697396197ed9@kernel.org>
-Content-Language: en-US
-From: Pushpendra Singh <quic_pussin@quicinc.com>
-In-Reply-To: <ea5058cd-29da-4939-990d-697396197ed9@kernel.org>
+References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625153042.159690-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250625153042.159690-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 3 Jul 2025 11:45:44 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVDjdgKDPA3ARPby=Os=WnrXRZQSTc_54oPJpbJ9GV8-g@mail.gmail.com>
+X-Gm-Features: Ac12FXxkx4fDa1whRiAsv_xaSVh2mIgGRqTPcNNeFvo5G9Qz61n8Jgjl7_56Kjc
+Message-ID: <CAMuHMdVDjdgKDPA3ARPby=Os=WnrXRZQSTc_54oPJpbJ9GV8-g@mail.gmail.com>
+Subject: Re: [PATCH 1/6] arm64: dts: renesas: r9a09g077: Add I2C controller nodes
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=68665131 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=no11nyTW01Y9JOyM0NgA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: b1BHHuZTh1mE9GdsfMlIi8agTBbIYtgl
-X-Proofpoint-GUID: b1BHHuZTh1mE9GdsfMlIi8agTBbIYtgl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA4MCBTYWx0ZWRfX41YtHsZfYJnk
- EkDvEjRZ4lLQkgFrgTbPQYQ/jjKrmwZvlwndpU0lWm8lF4hTo4S15KMYexDzUWGeBjgeAx8ysIZ
- wZHuJjtSDB1com4oyXE8Y+n0iLxg0uxIitMDb7/48w1+JhQtDbfK5N0gO9FvR4g5tyZemmkI03a
- 467eegTDZ67Gn8a+b7rVIlFQ8kUZj7dUZTPxKaJ9VxXRXTPQSci9WtSt6/ZD6mUsq1HnxCNghYz
- RRkyLz0xrF1ZMO9JJ55y5S7JCiJ+1t3LPmbwSUpGfTFyvrhJjSRd7UNnOHWFV3VcYK75953gDyv
- 8ZUkQU0LeJnXSUJMheeDZuJx6GdQUOLrwJSUj8ZygDnkUNjsMLRQ0zCemRxwko5pYAIH0kGA1Xr
- T9SDUeKUI7KFxmzLYZhhCJ9d+VUYaPESs4p+3QHAjnhmlAA3eDjfuZ1FkgHyjizO5qSbzSwK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=965 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507030080
 
-On 7/1/2025 1:26 PM, Krzysztof Kozlowski wrote:
-> On 01/07/2025 09:43, Pushpendra Singh wrote:
->> Cc: kernel@quicinc.com, kernel@oss.qualcomm.com
->>
->> The SC7280 SoC now supports two additional frequencies. This patch
->> add those frequencies to the BWMON OPP table and updates the frequency
->> mapping table accordingly.
->>
->> These changes do not impact existing platforms, as the updated mapping
->> only affects the highest OPP. On any given platform, this will continue
->> to vote for the maximum available OPP.
->>
->> Change-Id: Id3a91e065c49848d9af18e5c3edee0836cb693e5
->> Signed-off-by: Pushpendra Singh <quic_pussin@quicinc.com>
-> 
-> Doesn't your internal guideline tell you to run checkpatch before sending?
-> 
-> Also it mentions many other things, so read entire guideline prior to
-> posting.
-> 
+Hi Prabhakar,
 
-You're absolutely right, I should have run checkpatch before submitting. I appreciate you pointing that out. I've reviewed the internal guidelines more thoroughly now and will make sure to follow them closely in future submissions. Also, the issues are addressed in v2.
+On Wed, 25 Jun 2025 at 17:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The Renesas RZ/T2H ("R9A09G077") SoC includes three I2C (RIIC) channels.
+> Adds the device tree nodes for all three I2C controllers to RZ/T2H
+> SoC DTSI.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks,
-Pushpendra 
+Thanks for your patch!
 
-> Best regards,
-> Krzysztof
+> --- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
+> @@ -90,6 +90,51 @@ sci0: serial@80005000 {
+>                         status = "disabled";
+>                 };
+>
+> +               i2c0: i2c@80088000 {
+> +                       compatible = "renesas,riic-r9a09g077";
+> +                       reg = <0 0x80088000 0 0x400>;
+> +                       interrupts = <GIC_SPI 614 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 615 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 616 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 617 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "eei", "rxi", "txi", "tei";
+> +                       clocks = <&cpg CPG_MOD 100>;
+> +                       power-domains = <&cpg>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c1: i2c@80088004 {
 
+80088400
+
+Aha, the related warning was demoted to W=1:
+
+    Warning (simple_bus_reg): /soc/i2c@80088004: simple-bus unit
+address format error, expected "80088400"
+
+> +                       compatible = "renesas,riic-r9a09g077";
+> +                       reg = <0 0x80088400 0 0x400>;
+> +                       interrupts = <GIC_SPI 618 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 619 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 620 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 621 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "eei", "rxi", "txi", "tei";
+> +                       clocks = <&cpg CPG_MOD 101>;
+> +                       power-domains = <&cpg>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c2: i2c@81008000 {
+> +                       compatible = "renesas,riic-r9a09g077";
+> +                       reg = <0 0x81008000 0 0x400>;
+> +                       interrupts = <GIC_SPI 622 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 623 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 624 IRQ_TYPE_EDGE_RISING>,
+> +                                    <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "eei", "rxi", "txi", "tei";
+> +                       clocks = <&cpg CPG_MOD 501>;
+
+601
+
+> +                       power-domains = <&cpg>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 cpg: clock-controller@80280000 {
+>                         compatible = "renesas,r9a09g077-cpg-mssr";
+>                         reg = <0 0x80280000 0 0x1000>,
+
+The rest LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
