@@ -1,79 +1,83 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2432874E1;
-	Thu,  3 Jul 2025 11:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41172D542E;
+	Thu,  3 Jul 2025 11:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542702; cv=none; b=ECb+hdWkmSt8WI6Ulh7R4rclPc8DhWgfNf1hBghMFIx9GnTgMAOnMthXOUige49felBC7mRGPeUrb/f1gWus49oFrXwf3dNyyQLMTnoYTxPjVj+TPek7dubdYV4uD2FoRFmkOY/HK2SxrIHswxJ/kkDjFi+vuXmScLBA6n2XwNw=
+	t=1751542704; cv=none; b=klzbUn4YhKBKUyLGqCpNcdqD+WPkiQMA0zNujOXKs7IfbsT7MO090q8PU8GYCLer7AFLD5YhdYEyukpEBSSMqQ52Nt3kQkwSZQuwoTI0U1fKew4btVqBxcgYqjkGf3N2RWmiYrK70LW+Veo/k1gEpHQ0Ph01A9OUAMGekiJNOjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542702; c=relaxed/simple;
-	bh=5R6ckhkY2hESttOY9KT338PgWgQIq75EHvFlZEgFiuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mhXIyaHrX5A0fG/atiW3IZhWD1pU8jOB/woy9TYM0T0nYRbMSPLv2bPYdfAuwYNeXEBlhrVdw5TuNTWQLl4t0ExisriyEjSnDlCU2OqvPnqk0RNZGEsFSIq8ejUjglA7MhT/rMM+gxz+46HI3XEHmQ//zzRKGB+dE3VAeBURYao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ii9ZITgk; arc=none smtp.client-ip=209.85.166.54
+	s=arc-20240116; t=1751542704; c=relaxed/simple;
+	bh=T6S0lf+0PH+os9muTW99xmvjZ3xavuJO7UFZrVMAQj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hi+f66VEGcrUZoGyyYlzCamg1stODtExER8GiycOz3AIm2mpiDVQJtlsTH0hkyPoqj1eafmjyTMyDH4utJW2wIzWo3eFjhjjzijmXcVqa8AZC6fYwrSv9yzGeF/3s/wIPbCCLpDousXD2tzdDNmyfPv4TWt3jbw5lYprX97Dqwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lEI++hX1; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii9ZITgk"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86a052d7897so689571839f.0;
-        Thu, 03 Jul 2025 04:38:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEI++hX1"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df30d542caso25982605ab.1;
+        Thu, 03 Jul 2025 04:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751542700; x=1752147500; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OCtxfijaVm+CdySvz4wp4lXx6NKzCfTR5tSHGOmQuhM=;
-        b=ii9ZITgk/jRJK6O+w8Q89wGZCAMNjwWsBA1fRuY8hdYxmPY1bMBMlobbypCSofOtf4
-         vqSt8NNI99ateUqeH4vTChYHwtESCL+58PDthqAxVeq7xP5C+H+qyMRXA/H5cOHPYkQk
-         THXzaLDb947yDGBiYpRa1WXBhDi0+HDOYpzTVenhAdjeMZVjNvEqYJyhQgKITfUtFT+c
-         2ByYMRkvmK97u02bFCYsK7F40hAgXkuR4GbGAz+dbS/FZ8Z8ttINbJYg6VikopBhWjnT
-         WyEorUVFTrf/rJwXMOLyGFYLtIlrqZCUbcdVsF2nYXtKNbvGNz2tTM7D/4dnPA5xGLc7
-         Hbtg==
+        d=gmail.com; s=20230601; t=1751542702; x=1752147502; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MCs3K1Nocgfdm5hTUWEMb6rRK3ZRN34oOYMrfS5yndQ=;
+        b=lEI++hX1dvOHA1+AJga1EsiVqa/R6MyKrvM2L+cPVWG7PldANEY4XcwMkVi2yhWr3Y
+         IxIZmGqrN3jWYAsKWJ7ongvqVp0I/FnkszNrxtuQJRIOPEl1WWhYnS6FKuszwmIiR++g
+         AbzchD0T6dkeMJKdLMVZFTf3AKk5BO+kDYZXe5Bcc4N/hiMoghE/jQcFaT58QVoDPo2N
+         +cw3qI1VW81+nRZ5NUchsqgBLCxtii/Ypw5XQvFyTC9p5beOBVDXdf9wrOQcAaFSwq6N
+         ElX2iQyUMue6ip6MXiF68Mbx4Q3ZDkbDePV8avzKyuc8PvqeKj7M+wnSLqtYSYSMnFgB
+         boOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542700; x=1752147500;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OCtxfijaVm+CdySvz4wp4lXx6NKzCfTR5tSHGOmQuhM=;
-        b=sL36LOUuGtdTxt6aeOTX4VN0sGwfC8CI5MfY/aqTO/NkiW0ctCuB4ngQdWgGh4sUUA
-         /OBFubm/60A45kIOSC29bZBvylvU1zaE4wlGfQ5FdmLibbOFUKSI2Y8XcgCgKCLU2mhq
-         QSARzWTwjg547oTLpdCEr67ul3mo9wA/uGfcZ6Xao3pC0anq6962DXLtVQ/UHZF6lYXA
-         pXwseJXDa0HmJdQR/JnlIT9Nn+EJ0zDavpenjjQsfHqEPNOT9AqyRZ/tMcX/myDminms
-         xAL/MFYIWWye4XR0vDOf/h2bXmrw/0Zk0+AB2CSlsETrmvhiVnPwQ+/+eOP++y9jZNN3
-         qfiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkLZJoRt0nzEH+6Tkkk/d9xRa9YjdycrCXyXPAlaFBK4qCBRWQI9PumYlFrFzRYCoehrhqSOw3LWGe@vger.kernel.org, AJvYcCXDndjQiTese81+sH9CRt679jxDpvKav6XKNnQXCshYopaTBJBtdTMrnbQ7MjBH3bHnTFDn4qnLzIf0dQgY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznz+v/0gCJxXvXkGe5tEzd6Ygv6BA1yYR9lbiwir64eCj8RiOM
-	z/PAVj4WGaQ05fBqcTyhSMUqX2LxhdSocLeiHRYuYEnoxc26rD4KKxa98fJ2Lw==
-X-Gm-Gg: ASbGncuurD6vvC+TF0bqkGkKW4oEZRCZe1t7s9mBnjmCW+mt16Mf8rUeq52RIMxUiqI
-	u631mjOeHj4pRVdpd3iZaeCKJSco4fu5w4HntJZa9ADSbiD/O7Lrnohg2fXZznz9VhoZEkdTL13
-	Ve8XFb70wFRD4fhcCtg5y8v4g8Apg5hEzBm69VXmrsLI9gOc7HhiIpPBMSlvE4LPsq0q1YucE/d
-	o+0ZOfiS0P3Y53sYFhuRIKGigxghyr9eXPriz9H0lI0zck+g1o/EIkJcegbl32ep19idubleK7W
-	HEz3J4MTjf74H2pQ98osbN3cglPWkrfBgF5ASOTFbAA+njwqMJ2lphk80xUmK472BZGVZcs2cHL
-	wT+pPI4uV7KvzxpprUTiUxQUUl73f5mlwaJcbThjdGUsdpxI=
-X-Google-Smtp-Source: AGHT+IHog5B1MQo5B5fqSCOuRreuMqfrr3E0s/Y/+iP0IZARhEP16EmHsjUPLaXR/JQcDkES5v7T1w==
-X-Received: by 2002:a05:6602:6003:b0:876:5527:fe2a with SMTP id ca18e2360f4ac-876c6a6fd54mr836261839f.11.1751542700238;
-        Thu, 03 Jul 2025 04:38:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751542702; x=1752147502;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MCs3K1Nocgfdm5hTUWEMb6rRK3ZRN34oOYMrfS5yndQ=;
+        b=RvE71OAauF1fOTj7XbzWpjWRST5rDHZ/KhrTMtZ+KCSQNzaMZboVTV2FQGgiGoj+kg
+         IjgBfOHDJumGSIbCq7sjqL/i3OwPJs4b4HAgtfXaWqfSmvpFmcAtzKWV6R8DA9wbg85y
+         zVKSiPqHoCVPvDCgEIVf9coP68vb5LC/v2b9cgc0VZ9+Mfo68j8RCXL5N6oP80v7OOIc
+         9SeL+eyQUkgJmh2xcODzRjSPM4kmiHIeNx9Xm2jDK+0kG7fS31P10opTD5KTzNJV6fPs
+         cWa0smaWDYBCCQS0utcfybPWDCW5MjB+MFstVlUQtuhx4A9zbHGoTwot+4BRUbZHK9GA
+         Gbdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUI/96gPR/Qj7yCWcm/nDODI7b3aw3O/K2ir9cmErrz2hC2zhoUJjxvPRzduuiTWdaedSqKGiCfLZrwuE0w@vger.kernel.org, AJvYcCURNL9cnPKHsmmyT2VbodkB3xMMuqQQlm/43mw6gQNPW9f9QwnwE4IzI+1FXIAW4SbMSIJPeV9uQy2t@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpx50uNAFR1adKcOLka6LJqrdHgy6K+9HGv1sCaHzwTURpOXTS
+	m9PllMQbOPiI7xd01kAqZEjBKISP/gRY+4nGq1z2uda0yJXGmCct7kJV
+X-Gm-Gg: ASbGncsRE01m+mAt3l3E3dOwQAjkYwYnY/EglXMqzvuJpt9lN0o2JGmgfmzbbV5IuTe
+	ifBWqLXUSKnwwG2Orz5hVLl71L4Q1iT3rC6pJtlAB2GTfWD9GaOzuK4QwRpzKK+iHFiMic/EkGL
+	VJ38kqYf17lRZKEia7p2qRuHgmXVA9bKyjhszAdG134LrlbS3sIrU1wtrSnDuuIx2bvy6t1XbFF
+	cXC4uKsNN091Dec6sYQmyKMtDPbpx6MhbnSJn6ovGpCEUu9NMvb5KhT4i8HwkTOixdpjp6O0RVG
+	RbO6VYiS5w8d4QFGCrJ8vd6kaLACkU4J9utDj6yVJImkbmRl1gpew+9XKegZzWe8iOCcOLMpSX/
+	Mx0UbQt6keuUCqWRp3XdPw213uFrDtHcMvVCO
+X-Google-Smtp-Source: AGHT+IEAElfMxhOjH9lhImsexhBa4mz6jk1CGA5i/+dNtcBikMrBN+qolLPRqJUUtETlB6pD742Ssg==
+X-Received: by 2002:a05:6e02:17c7:b0:3dd:f4d5:1c1a with SMTP id e9e14a558f8ab-3e0549f29d8mr72031885ab.17.1751542701597;
+        Thu, 03 Jul 2025 04:38:21 -0700 (PDT)
 Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a57456sm3483544173.72.2025.07.03.04.38.19
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a57456sm3483544173.72.2025.07.03.04.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:38:19 -0700 (PDT)
+        Thu, 03 Jul 2025 04:38:21 -0700 (PDT)
 From: Adam Ford <aford173@gmail.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: aford@beaconembedded.com,
 	Adam Ford <aford173@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/2] arm64: dts: imx8mm: Configure DMA on UART2
-Date: Thu,  3 Jul 2025 06:38:09 -0500
-Message-ID: <20250703113810.73023-1-aford173@gmail.com>
+Subject: [PATCH V2 2/2] arm64: dts: imx8mn: Configure DMA on UART2
+Date: Thu,  3 Jul 2025 06:38:10 -0500
+Message-ID: <20250703113810.73023-2-aford173@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250703113810.73023-1-aford173@gmail.com>
+References: <20250703113810.73023-1-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,17 +93,16 @@ the console when determining if it should initialize DMA, it
 should be safe to enable DMA on UART2 for all users.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
 V2:  Fix spelling errors in commit message
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index cfebaa01217e..ded89b046970 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -915,6 +915,8 @@ uart2: serial@30890000 {
- 					clocks = <&clk IMX8MM_CLK_UART2_ROOT>,
- 						 <&clk IMX8MM_CLK_UART2_ROOT>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index 848ba5e46ee6..b98b3d0ddf25 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -860,6 +860,8 @@ uart2: serial@30890000 {
+ 					clocks = <&clk IMX8MN_CLK_UART2_ROOT>,
+ 						 <&clk IMX8MN_CLK_UART2_ROOT>;
  					clock-names = "ipg", "per";
 +					dmas = <&sdma1 24 4 0>, <&sdma1 25 4 0>;
 +					dma-names = "rx", "tx";
