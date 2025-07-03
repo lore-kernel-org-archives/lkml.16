@@ -1,31 +1,35 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257B42D46D4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8882D3EE0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533538; cv=none; b=rwviw741kO6XrzsuStLR9VIHhKMI+MnzF+SpRHiBIwXK1XQgw+wMQjRwNV7wmGYOyxe4G4bc53RHNJO6O2zHypxpOTJngLXNbDCRTI9Vc9as2gPyZUeDcME2PHlg3HLju1VBEa+LlbXHRPu6rdE6QtNLxazW0pLvaPQuQz6jds4=
+	t=1751533561; cv=none; b=NxMdkiJtxuIiZQ2X/spMZxv/3FIJcqoPdb+XBtyALh/8XbIy3SHuNtS3Ch7I4c1D2beiMiTjQJmkzpAxajZI9Nw+UjwYl5D4iUZzeIf886c0hn3sGETT51IMdGC9JvQR50KvezQ2kJx/oejPPZAfvR+GmeQRnsvZQ+50GCQ4eWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533538; c=relaxed/simple;
-	bh=HuytBR7IEm92dQjuXJV/TWEqT5tjLSMXEKEM7+C3Aik=;
+	s=arc-20240116; t=1751533561; c=relaxed/simple;
+	bh=FeJ9o3pAbPhVrTcYe7UddUwgRdaPYR5sm7vooA+Rii4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u2IfE9LnOebY5lOfOLKMETxUIja42X+22PDnJInmPng7FaIusyLRXBjLQEQwekzeW6GlqiMoxfKPnxQcuNsMaz0cJvam6iQaqr/bLa9L78s9Z8Yn5JNhJ0CS2oR3XCg/0BZfHPbW5A1Ll06f6hwnbN4oGFgSJgskvha8IgeSfeU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKC/WKyOMtZknuLpYbpPEUYhBzq5AMDXgME8ilYynEOspATQUisLao6FLXyKxsswUzQ6JpJoymcMyfbHPdfaFlp25rAaQhmQ/ZiWoLNsJMFZZ7VIMAUEKOfPe0nT5xT20DJ3X4nEzaWQib7I98eYMXOhF4Qaa72naqUEGpNW2t8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 93B8468C4E; Thu,  3 Jul 2025 11:05:33 +0200 (CEST)
-Date: Thu, 3 Jul 2025 11:05:33 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Kamaljit Singh <kamaljit.singh1@wdc.com>
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	cassel@kernel.org, dlemoal@kernel.org
-Subject: Re: [PATCH v2 2/3] nvme: prevent admin controller from smart log
- fetch (LID 2)
-Message-ID: <20250703090533.GC4757@lst.de>
-References: <20250702005830.889217-1-kamaljit.singh1@wdc.com> <20250702005830.889217-3-kamaljit.singh1@wdc.com>
+	id 374F268B05; Thu,  3 Jul 2025 11:05:55 +0200 (CEST)
+Date: Thu, 3 Jul 2025 11:05:54 +0200
+From: hch <hch@lst.de>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
+	"kbusch@kernel.org" <kbusch@kernel.org>,
+	"axboe@kernel.dk" <axboe@kernel.dk>, hch <hch@lst.de>,
+	"sagi@grimberg.me" <sagi@grimberg.me>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>
+Subject: Re: [PATCH v2 3/3] nvme: prevent ioq creation for discovery
+ controllers
+Message-ID: <20250703090554.GD4757@lst.de>
+References: <20250702005830.889217-1-kamaljit.singh1@wdc.com> <20250702005830.889217-4-kamaljit.singh1@wdc.com> <c168acff-66ff-4692-b21e-093c0aa592a1@kernel.org> <MN2PR04MB68626BDAC087B4CC8CC1A1A9BC40A@MN2PR04MB6862.namprd04.prod.outlook.com> <63310a08-e01f-464d-9f46-54bb817f2121@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,17 +38,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702005830.889217-3-kamaljit.singh1@wdc.com>
+In-Reply-To: <63310a08-e01f-464d-9f46-54bb817f2121@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jul 01, 2025 at 05:58:28PM -0700, Kamaljit Singh wrote:
-> Similar to a discovery ctrl, prevent an admin-ctrl from getting a smart
-> log. LID 2 is optional for admin controllers to support.
-> 
-> In the future when support for the newly added LID=0 (supported log
-> pages) is added, GLP accesses can be made smarter by basing such calls
-> on response from LID=0 reads.
+On Thu, Jul 03, 2025 at 08:59:47AM +0900, Damien Le Moal wrote:
+> Why would the controller vendor or its fabric matter ?
+> If the controller type is admin or discovery, you want queue_count set to 1. So
+> I do not think there is any problem.
 
-Let's leave this in.  Failing a get_log page is fine.  The difference
-for discovery controllers is that implementing it is prohibited.
+Exactly.
 
