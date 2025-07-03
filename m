@@ -1,173 +1,86 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D573E2D4B51
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526FD2D3A64;
+	Thu,  3 Jul 2025 09:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533945; cv=none; b=svDiCZzOIbjd9H2Me9QfrZR57CKpXmGc/aZTzGZ7KXAJaX8MNS1J/egmqnfPwEFV9Kk6lSqS71yKlTx92AZA1IxSHbokUgdV92AWAL/UqIxpmi3iYZOaJiGVm8yDLbFFbA4BvK0uD6SCSVetlV1yKudSX1GXPshnSEpuHK+jdHc=
+	t=1751533953; cv=none; b=UhUz6k8VdQ1H2shSfWHEDo40RTr7+s1jVxcmO5iR09JsudKh+Hw0UcxYTjNBPU4l72OejudloF7G2COgigCVZOSVL31oiCaOy/cBKwdwDB3r8zUYnUMN4Lwle6zHyDV67Gw5skyiczJZCrCuegkkTOPEzrtDMVZZp8lbPKbAT28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533945; c=relaxed/simple;
-	bh=0d0j/aPrtDHplYNwXN5+Gn+gApjNgnGCEpTHr8M50Vs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D2bI/9TIigAjBRF/0J2Vpim6OvCXsiSTaX5IVmJa/lOK0U7rudIUtn5s47pH12Jp35xEfYp5iZ5ztzPDlK5x4zRH7zGpUBu6PZjVC/MfItS30I23vjgYNnEnBSVS5Bqfkx3DekZftvgJGll/vaZLKMgC99nAY3uRAw5Z9Ci4zfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r/08NPFe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kl4gT8t3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751533953; c=relaxed/simple;
+	bh=siD3cphAg8DVM9vLhcOfYMLHxebr51kxPzZ7rQCJGfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HE2eJdsoExjgTkS1B7DKlOhIp8d+j3nSputSkAZgnjnU76VKykmjEnUJBapLYMviyvLlQQphy3t7hYooplYFM1bplmjNipmtjqlxUHs2iP6VOZIRL+VTP+uGvBPCNBqITNUAeEh5GnrWje0nK20uCbqa34VDDruY8UOPx3lwHbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=nW4ZO1C9; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r/08NPFe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kl4gT8t3"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751533942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BH+n0wxS5+7k1dboDiEY2RlATCZyUxvY3iUONP6tN6o=;
-	b=r/08NPFepkh3tyxBDmCH/MsvcVF4miWtXz1vE8lvqonKp88riYAlOnfMTxXs/nc8zE5ElP
-	UEMXioarcY4/U5m/rBcsG9MCKyVJnAxYrRfTiF3AKMHGomUqCIR/XaUVJkfIHtLUlfnDjD
-	a2o3woTLEbj9Fgk7GDMQwPI6TQnsWxVFPWo5h+u6CaNvN7eAt7E0Sb30Chw7sFOmHpZU4p
-	HS3ABz2qr7gD0S0Fkh37O9naNOzuE9SKGq+VbzaYaryW12EOF9YnCR9ZrfvmB6XSdjC3fY
-	FJfmRI4c4HqI1NCpGlV9jlEDTcDnayMxf9Os6MHtNA4BVFYbo74Scc+tYUNqxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751533942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BH+n0wxS5+7k1dboDiEY2RlATCZyUxvY3iUONP6tN6o=;
-	b=kl4gT8t3qU7My7xa4oHcC7hMACpqzS6+0MLztS0vZq2/ZxidHQZIrglA4Ya/6ks3GGmtwi
-	O9L8+1U+1X4E3mBA==
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Christoph Lameter via B4 Relay <devnull+cl.gentwo.org@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, sh@gentwo.org, Darren
- Hart <dvhart@infradead.org>, Arjan van de Ven <arjan@infradead.org>
-Subject: Re: [PATCH] Skew tick for systems with a large number of processors
-In-Reply-To: <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org>
-References: <87sejew87r.ffs@tglx>
- <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org>
-Date: Thu, 03 Jul 2025 11:12:21 +0200
-Message-ID: <87ms9lwscq.ffs@tglx>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="nW4ZO1C9"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A3E5AA00F5;
+	Thu,  3 Jul 2025 11:12:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=zm6mpexl8UNvAjXlAw9B
+	3yDJMgzV4getqht/eJlGdTU=; b=nW4ZO1C9dH+SbeS8/4Gjs/GLK94t2Kd0hSk7
+	NDetXaEeXgHogmX1TJ7MxvPr9WuDZxN0RXJ4kSrLHwGSUwTDaSXrlw0yl6Iz9exK
+	RyXID1x9yeeX9gt6XN1e4Iqp3zCDF26QfL81CSs3LWrN+u+t2Xx2HJNNgcLzV3Ea
+	HlJ/FM3ytcwSclbWhajwxzb52++jQGwG7Qi2gvBhckV0+WbGrJY+qu6ioW3gH1V5
+	s9PdIUij4Ykl79HaK9/cuiOPPOyB487cvUzFKt4xKr02FF9m21U3kxH4rHzOircl
+	t9PXh/Bhv45WghYc1LTw3jS5fcaCTzIJav3V1pQrWsF2Csg2FfFdiG0xiuZiQtP/
+	o3X7aYvBJTnAtu8PhRrxe+ztWDfAF2hPXp+ApyeuIIxCaHMqipowPr5Ix9C2Wvl4
+	ZFTZG4CeB3SQkQ97b1solAzknwey/f667c3KVBtn62xfVy+ouyR82O7HGnAjH+Xg
+	2NcFq70guUC5705CEOSrLAF96evFjQsdiGVclubWHsMtNi0BdgiPt4YiztIPpDYA
+	eDE0sLQd6AMZN1usHfTvrvyrhWdVTKZ363vdvTImIeiQvx0OhAUt3hydn8sYXatJ
+	svYcbRlQ2Ut2TU7KGYMuqH9kEbz0sAOAh7l843ISreMOVUYLs5WCbtKlFtCTdx/G
+	LW998iU=
+Message-ID: <828b473b-c5a5-4c5f-9f7c-200f307cd629@prolan.hu>
+Date: Thu, 3 Jul 2025 11:12:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm: DT: imx6-sr-som: Replace license text comment with
+ SPDX identifier
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	<devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250702-sr-som-dts-lic-v1-1-2e8584e6c837@prolan.hu>
+ <aGWqIzNvSVw4olz5@shell.armlinux.org.uk>
+ <2f628251-5b67-47e0-8038-6c1aeee1ef91@prolan.hu>
+ <aGY5bx1Qpx_7Dqea@shell.armlinux.org.uk>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <aGY5bx1Qpx_7Dqea@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A296767155D6C726A
 
-On Wed, Jul 02 2025 at 17:25, Christoph Lameter wrote:
-> On Thu, 3 Jul 2025, Thomas Gleixner wrote:
->
->> The above aside. As you completely failed to provide at least the
->> minimal historical background in the change log, let me fill in the
->> blanks.
+Hi,
+
+On 2025. 07. 03. 10:03, Russell King (Oracle) wrote:
+>>> As Florian has already mentioned, the preferred format for the summary
+>>> for arch/arm is "ARM: ... " and by extension for arch/arm/boot/dts,
+>>> it's "ARM: dts: ...", not "arm: DT: ..."
 >>
->> commit 3704540b4829 ("tick management: spread timer interrupt") added the
->> skew unconditionally in 2007 to avoid lock contention on xtime lock.
->
-> Right but that was only one reason why the timer interrupts where
-> staggered.
+>> Ohh, I misread it, I thought it was just about `imx6: board:` ->
+>> `imx6-board:`... Ok, I will re-format it for v2.
+> 
+> Note that it applies to _all_ patches to arch/arm/boot/dts.
 
-It was the main reason because all CPUs contended on xtime lock and
-other global locks. The subsequent issues you describe were not
-observable back then to the extent they are today for bloody obvious
-reasons.
+Naturally. I will do that for all the v2s I will submit from now on. I 
+hope the current format I've been using today is correct now.
 
->> commit af5ab277ded0 ("clockevents: Remove the per cpu tick skew")
->> removed it in 2010 because the xtime lock contention was gone and the
->> skew affected the power consumption of slightly loaded _large_ servers.
->
-> But then the tick also executes other code that can cause contention. Why
-> merge such an obvious problematic patch without considering the reasons
-> for the 2007 patch?
+Bence
 
-As I said above, the main reason was contention on xtime lock and some
-other global locks. These contention issues had been resolved over time,
-so the initial reason to have the skew was gone.
-
-The power consumption issue was a valid reason to remove it and the
-testing back then did not show any negative side effects.
-
-The subsequently discovered issues, were not observable and some of them
-got introduced by later code changes.
-
-Obviously the patch is problematic in hindsight, but hindsight is always
-20/20.
-
->> commit 5307c9556bc1 ("tick: Add tick skew boot option") brought it back
->> with a command line option to address contention and jitter issues on
->> larger systems.
->
-> And then issues resulted because the scaling issues where not
-> considered when merging the 2010 patch.
-
-What are you trying to do here? Playing a blame game is not helping to
-find a solution.
-
->> So while you preserved the behaviour of the command line option in the
->> most obscure way, you did not even make an attempt to explain why this
->> change does not bring back the issues which caused the removal in commit
->> af5ab277ded0 or why they are irrelevant today.
->
-> As pointed out in the patch description: The synchronized tick (aside from
-> the jitter) also causes power spikes on large core systems which can cause
-> system instabilities.
-
-That's a _NEW_ problem and has nothing to do with the power saving
-concerns which led to af5ab277ded0. 
-
->> "Scratches my itch" does not work and you know that. This needs to be
->> consolidated both on the implementation side and also on the user
->> side.
->
-> We can get to that but I at least need some direction on how to approach
-> this and figure out the concerns that exist. Frankly my initial idea was
-> just to remove the buggy patches since this caused a regression in
-> performance and system stability but I guess there were power savings
-> concerns.
-
-Guessing is not a valid engineering approach, as you might know already.
-
-It's not rocket science to validate whether these power saving concerns
-still apply and to reach out to people who have been involved in this
-and ask them to revalidate. I just Cc'ed Arjan for you.
-
-> How can we address this issue in a better way then?
-
-By analysing the consequences of flipping the default for skew_tick to
-default on, which can be evaluated upfront trivially without a single
-line of code change by adding 'skew_tick=1' to the kernel command line
-and running tests and asking others to help evaluating.
-
-There is only a limited range of scenarios, which need to be looked at:
-
-      - Big servers and the power saving issues on lightly loaded
-        machines
-
-      - Battery operated devices
-
-      - Virtualization (guests)
-
-That might not cover 100% of the use cases, but should be a good enough
-coverage to base an informed decision on.
-
-> The kernel should not come up all wobbly and causing power spikes
-> every tick.
-
-The kernel should not do a lot of things, but does them due to
-historical decisions, which turn out to be suboptimal when technology
-advances. The power spike problem simply did not exist 18 years ago at
-least not to the extent that it mattered or caused concerns.
-
-If we could have predicted the future and the consequences of ad hoc
-decisions, we wouldn't have had a BKL, which took only 20 years of
-effort to get rid of (except for the well hidden leftovers in tty).
-
-But what we learned from the past is to avoid hacky ad hoc workarounds,
-which are guaranteed to just make the situation worse.
-
-Thanks,
-
-        tglx
