@@ -1,89 +1,47 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE0F2F0C40;
-	Thu,  3 Jul 2025 15:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A5D84414
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555683; cv=none; b=Wy6w+87/J6h1dNL1y87M/opIZtXRylg5QmIK0qQ1HlH/5HFDNLEILWDGSHNNMlU8avYs9coaUStXIaOXbfoPso3FvMFBCeDuQ/JvhfP8lJtxsbowQMrKqmN9RTfG64/C9MS88glGj1vMzD9VSAuCCoi+1i2hkuKQgP5aiDg2k5E=
+	t=1751555699; cv=none; b=h+FOGp2TpZf6EaEiRI06i8TWk/v/yfKlhE0265s8In7UZRAERxXiW2ewTs2EawqFzxBKN1PaUETwkB4dkEFx5yYtP6iHma/CMSTYmBs9mIBF6vKQTY/K5Fr7dP+Rom3sZdxBveZrt5/vdP9aA3ik7sZw+ydxvdCMya9J5fEawXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555683; c=relaxed/simple;
-	bh=fhcxMBCx5MTr6SihPiwsz61YzqiTUdchgCWmq3QXsfM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rb7lA/pNqfhUZkYCIPQ4/DuI/aVoN1EtaA9LWxKwmtyvPN61u+kxAa26KBU+vXtPJdfw9ckiHopB6v1kOCSr43xLvpHsA+ohk1aY1yKLb/141IIIDH9k9UERd6Lwi4w5BeMJWrwSK9Ldc8EavYCOPyUSCkiakb2jZY3kpUMbZjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIetxW8L; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIetxW8L"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5550dca1241so43857e87.0;
-        Thu, 03 Jul 2025 08:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751555679; x=1752160479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Etd5OO5QwEViSvNlV1qDwHk/jnF5rm8WMn4WLxwMFUs=;
-        b=jIetxW8LmfdYFwMbzcHnbiSxUb3ejASN5rRJHmKo7e4iZEAhAKvmFCgeEpZ+8ULsn/
-         X271r7mdml22BOMjO3C11+J8hzATeEAk0QHFN8k/G18XTqJyoyWHW5OOtjGEJtdVxVOx
-         OLboHxrXp8ernsBPvneeVL1++AF1Ox06vHN4KmTa6Z/r0umS1zHRYfyq6r6CPIbs3wOi
-         3gDJ4hqBiOTFa4qQ5H4f6fzGkfL2EGs6ZygjUOeN/NDIrBHaKLO93lrOaVCLrEaF8mxw
-         O/eaijMvSoP1/DbFZAg575MRvzW6By9GC6cOZ3il9JgjpeVBw8cN9kfTQcO/MkHi5+D6
-         sZ7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751555679; x=1752160479;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Etd5OO5QwEViSvNlV1qDwHk/jnF5rm8WMn4WLxwMFUs=;
-        b=TzssYlYEG7hAYs5MaLQcLBnueli9zYbZiiDhnvLnVwKE4KcFDmZf2AlPFZFL2kTRPY
-         dbwnNepSVtlST9yhZsXMi1+ylvRGWzxhKAucNM1Sn3h7+D5IdADIlSzz1RSMBXYi/0vw
-         p0AmFCM5jjcsgEukSTfE7wEFLDgIy5Xp86DAMIltGPa5Lp99w0Gy/aHY4+0kDL2yczFL
-         w+3iGq8P1/kbMXwHJCE7Wkftb4ilyzOqkRxASv6UAcmqBIyJLyVGnzbLUUjI4LI+j1Jn
-         BGwYziexg//cpL8lc1gf565DJdGmVl3KdFgxpJT20V6aHm3MrqOBISRghlI0sdms3m4f
-         0a9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUIVopV/HkFM6XhDWnPZ+7s8Ec7u9zm+eyRu03WOldEELj9nrvuXuUmycgpfE5D3sgZuWaxSNK6CxHCwWgR@vger.kernel.org, AJvYcCUl87DrfHf+1HvyJ74dE6mJHLMkvrmAun44xeEkUij2wc3WE6CI/Ly7LzsuZtFddPL4ggCMLEbwDjA=@vger.kernel.org, AJvYcCUvVO9SzLJHrCVe/6pQzcfNUosoPZyXXfgJQAMl2ulbrpD/ZLeKMKqbT+FuIDStzOybCnuHaVtz+ddS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD+y/95uYjMlSDMVI35NeQKomMt9P1yYMH9hP6j5UUpXR7M+si
-	uEmNkkwnfS1YB2JEYg57qZ6fstCgVzWDTn2QL0OvTqbXWBpcv3HqBV9u
-X-Gm-Gg: ASbGncuOZdAEcZWSzZIihJtuj0PZmtR985pcgjQ2fky7Wa1/jlNmCd9xZTls/097/yk
-	6HqstbkXn7tIWGKQk89cZmFE6/P7PSvBtvydKcePdZBa1Alw+3ksjKt7C8a1rsUOP1b5fNOHr3Y
-	+dEWkR1Q1zM+VpzqhwG0hD1fvXRlIoH/ojiEA7ndN/9Bptmkt3/7/qvpbrtdPlNBjfRQgwzcMbx
-	uIS3yPsRAH4viQ7HYtWPy7BeipllJwkbff727kxLhJS+54f+NRImfGM+BOuIliciUwtvnaAS3BD
-	3LcrI/OCp+7EW16hGu+iPfSwI1Zops/z2Gs44+kTC1uy4/6HubTkVgy6eKrGes22F8GA7Ak=
-X-Google-Smtp-Source: AGHT+IGqnSEbj2pT+ZjtFNv4wrIx8GjJh5Qeal1y0PD2vdZ9VqbHrLg+OvYQhguC06zFZbvQAjK7cw==
-X-Received: by 2002:a05:6512:1041:b0:553:35ca:5922 with SMTP id 2adb3069b0e04-5562ef79572mr1349079e87.56.1751555679179;
-        Thu, 03 Jul 2025 08:14:39 -0700 (PDT)
-Received: from localhost.localdomain ([212.192.12.80])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384ae15esm725e87.178.2025.07.03.08.14.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:14:38 -0700 (PDT)
-From: iuncuim <iuncuim@gmail.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+	s=arc-20240116; t=1751555699; c=relaxed/simple;
+	bh=NDm2AvN+r0F7fNo4DFe18pO/1fnLPQM34yLbGLvff8A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OK8Mjtx0ND1PvkKL3NoD9VI7DriYfYHdEz6E5QJRiGMFCDcmqky8SGRr9mIRoEIyKiFVW9EC+Ged65ztOEhI4n9Hl+WrfsZ91WkXLJx+kI4tG+aiRISsPsEqMDHiHQwITM4EEMu+w0B7dKUE1mr/0nRDvC+FmbtevmkEtGJCugs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 041D3152B;
+	Thu,  3 Jul 2025 08:14:40 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.163.88.191])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 528BE3F66E;
+	Thu,  3 Jul 2025 08:14:48 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 8/8] arm64: dts: allwinner: A523: Add thermal sensors and zones
-Date: Thu,  3 Jul 2025 23:11:32 +0800
-Message-ID: <20250703151132.2642378-9-iuncuim@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250703151132.2642378-1-iuncuim@gmail.com>
-References: <20250703151132.2642378-1-iuncuim@gmail.com>
+	suzuki.poulose@arm.com,
+	steven.price@arm.com,
+	gshan@redhat.com,
+	linux-arm-kernel@lists.infradead.org,
+	yang@os.amperecomputing.com,
+	ryan.roberts@arm.com,
+	anshuman.khandual@arm.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH v4] arm64: Enable permission change on arm64 kernel block mappings
+Date: Thu,  3 Jul 2025 20:44:41 +0530
+Message-Id: <20250703151441.60325-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,264 +50,377 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
+This patch paves the path to enable huge mappings in vmalloc space and
+linear map space by default on arm64. For this we must ensure that we can
+handle any permission games on the kernel (init_mm) pagetable. Currently,
+__change_memory_common() uses apply_to_page_range() which does not support
+changing permissions for block mappings. We attempt to move away from this
+by using the pagewalk API, similar to what riscv does right now; however,
+it is the responsibility of the caller to ensure that we do not pass a
+range overlapping a partial block mapping or cont mapping; in such a case,
+the system must be able to support range splitting.
 
-The A523 processor has two temperature controllers, THS0 and THS1.
-THS0 has only one temperature sensor, which is located in the DRAM.
+This patch is tied with Yang Shi's attempt [1] at using huge mappings
+in the linear mapping in case the system supports BBML2, in which case
+we will be able to split the linear mapping if needed without
+break-before-make. Thus, Yang's series, IIUC, will be one such user of my
+patch; suppose we are changing permissions on a range of the linear map
+backed by PMD-hugepages, then the sequence of operations should look
+like the following:
 
-THS1 does have 3 sensors:
-ths1_0 - "big" cores
-ths1_1 - "little" cores
-ths1_2 - gpu
+split_range(start)
+split_range(end);
+__change_memory_common(start, end);
 
-Add the thermal sensor configuration and the thermal zones.
-Trips temperature, polling-delay and sustainable-power parameters are derived
-from the manufacturer's BSP.
+However, this patch can be used independently of Yang's; since currently
+permission games are being played only on pte mappings (due to
+apply_to_page_range not supporting otherwise), this patch provides the
+mechanism for enabling huge mappings for various kernel mappings
+like linear map and vmalloc.
 
-Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+---------------------
+Implementation
+---------------------
+
+arm64 currently changes permissions on vmalloc objects locklessly, via
+apply_to_page_range, whose limitation is to deny changing permissions for
+block mappings. Therefore, we move away to use the generic pagewalk API,
+thus paving the path for enabling huge mappings by default on kernel space
+mappings, thus leading to more efficient TLB usage. However, the API
+currently enforces the init_mm.mmap_lock to be held. To avoid the
+unnecessary bottleneck of the mmap_lock for our usecase, this patch
+extends this generic API to be used locklessly, so as to retain the
+existing behaviour for changing permissions. Apart from this reason, it is
+noted at [2] that KFENCE can manipulate kernel pgtable entries during
+softirqs. It does this by calling set_memory_valid() -> __change_memory_common().
+This being a non-sleepable context, we cannot take the init_mm mmap lock.
+
+Add comments to highlight the conditions under which we can use the
+lockless variant - no underlying VMA, and the user having exclusive control
+over the range, thus guaranteeing no concurrent access.
+
+We require that the start and end of a given range do not partially overlap
+block mappings, or cont mappings. Return -EINVAL in case a partial block
+mapping is detected in any of the PGD/P4D/PUD/PMD levels; add a
+corresponding comment in update_range_prot() to warn that eliminating
+such a condition is the responsibility of the caller.
+
+Note that, the pte level callback may change permissions for a whole
+contpte block, and that will be done one pte at a time, as opposed to
+an atomic operation for the block mappings. This is fine as any access
+will decode either the old or the new permission until the TLBI.
+
+apply_to_page_range() currently performs all pte level callbacks while in
+lazy mmu mode. Since arm64 can optimize performance by batching barriers
+when modifying kernel pgtables in lazy mmu mode, we would like to continue
+to benefit from this optimisation. Unfortunately walk_kernel_page_table_range()
+does not use lazy mmu mode. However, since the pagewalk framework is not
+allocating any memory, we can safely bracket the whole operation inside
+lazy mmu mode ourselves. Therefore, wrap the call to
+walk_kernel_page_table_range() with the lazy MMU helpers.
+
+[1] https://lore.kernel.org/all/20250304222018.615808-1-yang@os.amperecomputing.com/
+[2] https://lore.kernel.org/linux-arm-kernel/89d0ad18-4772-4d8f-ae8a-7c48d26a927e@arm.com/
+
+Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 154 ++++++++++++++++++
- 1 file changed, 154 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-index 295292d67..a1304c55c 100644
---- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/clock/sun55i-a523-r-ccu.h>
- #include <dt-bindings/reset/sun55i-a523-ccu.h>
- #include <dt-bindings/reset/sun55i-a523-r-ccu.h>
-+#include <dt-bindings/thermal/thermal.h>
+v3->v4:
+ - Drop patch 2, will add it back when we actually enable vmalloc block
+   mappings by default (Ryan)
+ - Rename ___change_memory_common -> update_range_prot (Mike Rapoport)
+ - Explain why changing live kernel mappings mapped with PTE_CONT
+   pte-by-pte is safe
+
+v2->v3:
+ - Drop adding PGWALK_NOLOCK, instead have a new lockless helper
+ - Merge patch 1 and 2 from v2
+ - Add a patch *actually* enabling vmalloc-huge permission change
+
+v1->v2:
+ - Squash patch 2 and 3
+ - Add comment describing the responsibility of the caller to ensure no
+   partial overlap with block mapping
+ - Add comments and return -EINVAL at relevant places to document the usage
+   of PGWALK_NOLOCK (Lorenzo)
+ - Nest walk_kernel_page_table_range() with lazy_mmu calls, instead of
+   doing so only per PTE level, fix bug in the PTE callback, introduce
+   callbacks for all pagetable levels, use ptdesc_t instead of unsigned
+   long, introduce ___change_memory_common and use them for direct map
+   permission change functions (Ryan)
+
+v1:
+https://lore.kernel.org/all/20250530090407.19237-1-dev.jain@arm.com/
+
+ arch/arm64/mm/pageattr.c | 155 +++++++++++++++++++++++++++++++--------
+ include/linux/pagewalk.h |   3 +
+ mm/pagewalk.c            |  24 ++++++
+ 3 files changed, 150 insertions(+), 32 deletions(-)
+
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 04d4a8f676db..c6a85000fa0e 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -8,6 +8,7 @@
+ #include <linux/mem_encrypt.h>
+ #include <linux/sched.h>
+ #include <linux/vmalloc.h>
++#include <linux/pagewalk.h>
  
- / {
- 	interrupt-parent = <&gic>;
-@@ -22,6 +23,7 @@ cpu0: cpu@0 {
- 			device_type = "cpu";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@100 {
-@@ -29,6 +31,7 @@ cpu1: cpu@100 {
- 			device_type = "cpu";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@200 {
-@@ -36,6 +39,7 @@ cpu2: cpu@200 {
- 			device_type = "cpu";
- 			reg = <0x200>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@300 {
-@@ -43,6 +47,7 @@ cpu3: cpu@300 {
- 			device_type = "cpu";
- 			reg = <0x300>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu4: cpu@400 {
-@@ -50,6 +55,7 @@ cpu4: cpu@400 {
- 			device_type = "cpu";
- 			reg = <0x400>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu5: cpu@500 {
-@@ -57,6 +63,7 @@ cpu5: cpu@500 {
- 			device_type = "cpu";
- 			reg = <0x500>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu6: cpu@600 {
-@@ -64,6 +71,7 @@ cpu6: cpu@600 {
- 			device_type = "cpu";
- 			reg = <0x600>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu7: cpu@700 {
-@@ -71,6 +79,7 @@ cpu7: cpu@700 {
- 			device_type = "cpu";
- 			reg = <0x700>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-@@ -181,12 +190,46 @@ ccu: clock-controller@2001000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		ths1: thermal-sensor@2009400 {
-+			compatible = "allwinner,sun55i-a523-ths1";
-+			reg = <0x02009400 0x400>;
-+			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_GPADC1>;
-+			clock-names = "bus", "gpadc";
-+			resets = <&ccu RST_BUS_THS>;
-+			nvmem-cells = <&ths_calibration0>, <&ths_calibration1>;
-+			nvmem-cell-names = "calibration",
-+				     "calibration-second-part";
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		ths0: thermal-sensor@200a000 {
-+			compatible = "allwinner,sun55i-a523-ths0";
-+			reg = <0x0200a000 0x400>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_GPADC0>;
-+			clock-names = "bus", "gpadc";
-+			resets = <&ccu RST_BUS_THS>;
-+			nvmem-cells = <&ths_calibration0>, <&ths_calibration1>;
-+			nvmem-cell-names = "calibration",
-+				     "calibration-second-part";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
- 		sid: efuse@3006000 {
- 			compatible = "allwinner,sun55i-a523-sid",
- 				     "allwinner,sun50i-a64-sid";
- 			reg = <0x03006000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+
-+			ths_calibration0: ths-calibration0@38 {
-+				reg = <0x38 0x8>;
-+			};
-+
-+			ths_calibration1: ths-calibration1@44 {
-+				reg = <0x44 0x8>;
-+			};
- 		};
- 
- 		mmc0: mmc@4020000 {
-@@ -644,4 +687,115 @@ rtc: rtc@7090000 {
- 			#clock-cells = <1>;
- 		};
- 	};
-+
-+	thermal-zones {
-+		cpu0_thermal: cpu0-thermal {
-+			polling-delay-passive = <100>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&ths1 1>;
-+			sustainable-power = <1200>;
-+
-+			trips {
-+				cpu0_threshold: cpu-trip-0 {
-+					temperature = <70000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				cpu0_target: cpu-trip-1 {
-+					temperature = <90000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				cpu0_critical: cpu-trip-2 {
-+					temperature = <110000>;
-+					type = "critical";
-+					hysteresis = <0>;
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu0_target>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cpu4_thermal: cpu4-thermal {
-+			polling-delay-passive = <100>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&ths1 0>;
-+			sustainable-power = <1600>;
-+
-+			trips {
-+				cpu4_threshold: cpu-trip-0 {
-+					temperature = <70000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				cpu4_target: cpu-trip-1 {
-+					temperature = <90000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				cpu4_critical: cpu-trip-2 {
-+					temperature = <110000>;
-+					type = "critical";
-+					hysteresis = <0>;
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu4_target>;
-+					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		gpu-thermal {
-+			polling-delay-passive = <100>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&ths1 2>;
-+			sustainable-power = <2400>;
-+
-+			gpu-trips {
-+				gpu_temp_threshold: gpu-trip-0 {
-+					temperature = <60000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				gpu_temp_target: gpu-trip-1 {
-+					temperature = <90000>;
-+					type = "passive";
-+					hysteresis = <0>;
-+				};
-+				gpu_temp_critical: gpu-trip-2 {
-+					temperature = <110000>;
-+					type = "critical";
-+					hysteresis = <0>;
-+				};
-+			};
-+		};
-+
-+		ddr-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths0>;
-+
-+			trips {
-+				ddr_temp_critical: ddr-trip-0 {
-+					temperature = <110000>;
-+					type = "critical";
-+					hysteresis = <0>;
-+				};
-+			};
-+		};
-+	};
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable-prot.h>
+@@ -20,6 +21,99 @@ struct page_change_data {
+ 	pgprot_t clear_mask;
  };
+ 
++static ptdesc_t set_pageattr_masks(ptdesc_t val, struct mm_walk *walk)
++{
++	struct page_change_data *masks = walk->private;
++
++	val &= ~(pgprot_val(masks->clear_mask));
++	val |= (pgprot_val(masks->set_mask));
++
++	return val;
++}
++
++static int pageattr_pgd_entry(pgd_t *pgd, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pgd_t val = pgdp_get(pgd);
++
++	if (pgd_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != PGDIR_SIZE))
++			return -EINVAL;
++		val = __pgd(set_pageattr_masks(pgd_val(val), walk));
++		set_pgd(pgd, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_p4d_entry(p4d_t *p4d, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	p4d_t val = p4dp_get(p4d);
++
++	if (p4d_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != P4D_SIZE))
++			return -EINVAL;
++		val = __p4d(set_pageattr_masks(p4d_val(val), walk));
++		set_p4d(p4d, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_pud_entry(pud_t *pud, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pud_t val = pudp_get(pud);
++
++	if (pud_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != PUD_SIZE))
++			return -EINVAL;
++		val = __pud(set_pageattr_masks(pud_val(val), walk));
++		set_pud(pud, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_pmd_entry(pmd_t *pmd, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pmd_t val = pmdp_get(pmd);
++
++	if (pmd_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != PMD_SIZE))
++			return -EINVAL;
++		val = __pmd(set_pageattr_masks(pmd_val(val), walk));
++		set_pmd(pmd, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_pte_entry(pte_t *pte, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pte_t val = __ptep_get(pte);
++
++	val = __pte(set_pageattr_masks(pte_val(val), walk));
++	__set_pte(pte, val);
++
++	return 0;
++}
++
++static const struct mm_walk_ops pageattr_ops = {
++	.pgd_entry	= pageattr_pgd_entry,
++	.p4d_entry	= pageattr_p4d_entry,
++	.pud_entry	= pageattr_pud_entry,
++	.pmd_entry	= pageattr_pmd_entry,
++	.pte_entry	= pageattr_pte_entry,
++};
++
+ bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
+ 
+ bool can_set_direct_map(void)
+@@ -37,33 +131,35 @@ bool can_set_direct_map(void)
+ 		arm64_kfence_can_set_direct_map() || is_realm_world();
+ }
+ 
+-static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
++static int update_range_prot(unsigned long start, unsigned long size,
++			     pgprot_t set_mask, pgprot_t clear_mask)
+ {
+-	struct page_change_data *cdata = data;
+-	pte_t pte = __ptep_get(ptep);
++	struct page_change_data data;
++	int ret;
+ 
+-	pte = clear_pte_bit(pte, cdata->clear_mask);
+-	pte = set_pte_bit(pte, cdata->set_mask);
++	data.set_mask = set_mask;
++	data.clear_mask = clear_mask;
+ 
+-	__set_pte(ptep, pte);
+-	return 0;
++	arch_enter_lazy_mmu_mode();
++
++	/*
++	 * The caller must ensure that the range we are operating on does not
++	 * partially overlap a block mapping, or a cont mapping. Any such case
++	 * must be eliminated by splitting the mapping.
++	 */
++	ret = walk_kernel_page_table_range_lockless(start, start + size,
++						    &pageattr_ops, &data);
++	arch_leave_lazy_mmu_mode();
++
++	return ret;
+ }
+ 
+-/*
+- * This function assumes that the range is mapped with PAGE_SIZE pages.
+- */
+ static int __change_memory_common(unsigned long start, unsigned long size,
+-				pgprot_t set_mask, pgprot_t clear_mask)
++				  pgprot_t set_mask, pgprot_t clear_mask)
+ {
+-	struct page_change_data data;
+ 	int ret;
+ 
+-	data.set_mask = set_mask;
+-	data.clear_mask = clear_mask;
+-
+-	ret = apply_to_page_range(&init_mm, start, size, change_page_range,
+-					&data);
+-
++	ret = update_range_prot(start, size, set_mask, clear_mask);
+ 	/*
+ 	 * If the memory is being made valid without changing any other bits
+ 	 * then a TLBI isn't required as a non-valid entry cannot be cached in
+@@ -71,6 +167,7 @@ static int __change_memory_common(unsigned long start, unsigned long size,
+ 	 */
+ 	if (pgprot_val(set_mask) != PTE_VALID || pgprot_val(clear_mask))
+ 		flush_tlb_kernel_range(start, start + size);
++
+ 	return ret;
+ }
+ 
+@@ -174,32 +271,26 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+ 
+ int set_direct_map_invalid_noflush(struct page *page)
+ {
+-	struct page_change_data data = {
+-		.set_mask = __pgprot(0),
+-		.clear_mask = __pgprot(PTE_VALID),
+-	};
++	pgprot_t clear_mask = __pgprot(PTE_VALID);
++	pgprot_t set_mask = __pgprot(0);
+ 
+ 	if (!can_set_direct_map())
+ 		return 0;
+ 
+-	return apply_to_page_range(&init_mm,
+-				   (unsigned long)page_address(page),
+-				   PAGE_SIZE, change_page_range, &data);
++	return update_range_prot((unsigned long)page_address(page),
++				 PAGE_SIZE, set_mask, clear_mask);
+ }
+ 
+ int set_direct_map_default_noflush(struct page *page)
+ {
+-	struct page_change_data data = {
+-		.set_mask = __pgprot(PTE_VALID | PTE_WRITE),
+-		.clear_mask = __pgprot(PTE_RDONLY),
+-	};
++	pgprot_t set_mask = __pgprot(PTE_VALID | PTE_WRITE);
++	pgprot_t clear_mask = __pgprot(PTE_RDONLY);
+ 
+ 	if (!can_set_direct_map())
+ 		return 0;
+ 
+-	return apply_to_page_range(&init_mm,
+-				   (unsigned long)page_address(page),
+-				   PAGE_SIZE, change_page_range, &data);
++	return update_range_prot((unsigned long)page_address(page),
++				 PAGE_SIZE, set_mask, clear_mask);
+ }
+ 
+ static int __set_memory_enc_dec(unsigned long addr,
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index 682472c15495..8212e8f2d2d5 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -134,6 +134,9 @@ int walk_page_range(struct mm_struct *mm, unsigned long start,
+ int walk_kernel_page_table_range(unsigned long start,
+ 		unsigned long end, const struct mm_walk_ops *ops,
+ 		pgd_t *pgd, void *private);
++int walk_kernel_page_table_range_lockless(unsigned long start,
++		unsigned long end, const struct mm_walk_ops *ops,
++		void *private);
+ int walk_page_range_vma(struct vm_area_struct *vma, unsigned long start,
+ 			unsigned long end, const struct mm_walk_ops *ops,
+ 			void *private);
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index 648038247a8d..18a675ab87cf 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -633,6 +633,30 @@ int walk_kernel_page_table_range(unsigned long start, unsigned long end,
+ 	return walk_pgd_range(start, end, &walk);
+ }
+ 
++/*
++ * Use this function to walk the kernel page tables locklessly. It should be
++ * guaranteed that the caller has exclusive access over the range they are
++ * operating on - that there should be no concurrent access, for example,
++ * changing permissions for vmalloc objects.
++ */
++int walk_kernel_page_table_range_lockless(unsigned long start, unsigned long end,
++		const struct mm_walk_ops *ops, void *private)
++{
++	struct mm_walk walk = {
++		.ops		= ops,
++		.mm		= &init_mm,
++		.private	= private,
++		.no_vma		= true
++	};
++
++	if (start >= end)
++		return -EINVAL;
++	if (!check_ops_valid(ops))
++		return -EINVAL;
++
++	return walk_pgd_range(start, end, &walk);
++}
++
+ /**
+  * walk_page_range_debug - walk a range of pagetables not backed by a vma
+  * @mm:		mm_struct representing the target process of page table walk
 -- 
-2.49.0
+2.30.2
 
