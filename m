@@ -1,39 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152C5221FC7;
-	Thu,  3 Jul 2025 15:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F2320EB;
+	Thu,  3 Jul 2025 15:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558158; cv=none; b=rdpuypU46LpRpBJT6lK1eCsgEOtISq2hcCt9IJ5Yhh3d5GRliAH0Zh01GqPxKb/woN+2obA7ADHArOu/PJaelMdLg9XbxN8PzfiGS5YMB6wbjNKD/tVkZyfZGO9opvjRju+I8mZrKazrVOfvdVfmr6bog9STVk31x9PExapxDKo=
+	t=1751558231; cv=none; b=sr8xRmOVCg4s85uy14Ni3XCpKOtG+BImFjN/ymUOvBrJBplFvluINy6JxsvPg29Bm8m8QwrDpzUyiLmZIRcUvGWmfljlTazduPvACaRu9Kri05MBk6JdYz7QFlVxUiEKxg5PFGkElkX0BQXDHIdiN3YRXXuEpj7LtHzC6Zr+Jcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558158; c=relaxed/simple;
-	bh=sXaoVv9tyLyV0Zz/v2ZIPCrRYVLC/rpt0zYBDKlcr/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l0Qo9KujRem/cKTUFAThkt6fcfLrHNtIgYbum6tIGbkYSVWmh3rh5N5Sxi6C4xSJ/x/HsRZCQS2hF116NcbOZXuxGd5mfFi09yYD38INQQh6zm18ZXeqDAof5CdjZBwFXaaLCZ6efQ/R3uA/x/42hqODtC2jGa8b4/DrNZPGahc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVJveQnV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751558231; c=relaxed/simple;
+	bh=/5x31bYLbnmAB83D37kcWKmGopV4qwGGMcLgHfFnwYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+XRXib5p6BOhiZcla4Mpo6AhNMf8A8gNuFvenAyVghqi84mH+CHR5zXTbVZk6U2cO1lkto68r6XFvD9bXoR161iCWQ5cgnTPk757gX33izfsYJnvQQhZHQIxIimSesmmTwLgTZyT+2dzwI8DzBCkpePpQiunxT7mOt1WqbpcZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=gr9PokIw; arc=none smtp.client-ip=93.188.205.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVJveQnV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97339C4CEE3;
-	Thu,  3 Jul 2025 15:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751558157;
-	bh=sXaoVv9tyLyV0Zz/v2ZIPCrRYVLC/rpt0zYBDKlcr/Q=;
+	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="gr9PokIw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
+	s=mail; t=1751558223;
+	bh=/5x31bYLbnmAB83D37kcWKmGopV4qwGGMcLgHfFnwYY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=bVJveQnVx0aOCN8v/QYWCmM4RdPh6Rdu0s5Mh0PE/NL+MMWM68miHF9YVdAj6qXRj
-	 H8RUcX11/kh1H6iX8jkUXj5wG8mXtn/1mUit+wxLzxBH6d7IuEPv+yaZ7rmq4mMNUc
-	 PkLHv4XIUNKjjQ4q9YJCAe6tj+YaRfDt967FNn0fWteBpfuq3bBHeQhTCrHk0BWCSg
-	 OxfGctP+dbDfrdcyVH1Mfj56454cmdWWZVVf27Cd9Ip5ieUKJJmT4v57CrrirqtD70
-	 b+AYCYc3aK6KvOl3zete1oO+P6Z+9DU81WIoQo5UcwtlwbmurU8/cJ41WJrng0zah7
-	 TJQi/nxGBcMoA==
-From: Georgi Djakov <djakov@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-pm@vger.kernel.org,
+	b=gr9PokIw4mIydopjmsjlW9V00fNc/aOuSYdYpsM6iLdWO/JXrAyvB97mwUZP+1Uoq
+	 +a6gELptkbQ4K0U3gYkSJaYHnNc2KGpf4CIrhTDoDPiBSfMhl6kTMgrJI2OO6h98vr
+	 xB58gK0sZSTYYH+obolVodBju+V5feyUlj2AJz0ZcAuJttgTt9d6ofYSeAT1WU3YdD
+	 6dFX4DHqYhwVMNBz9KC8BNoQZlQR/1ieoMyyPmjNfdV6lNZlbUHduV1pmrzvQczTjd
+	 62C8sdytROg9EIuwQxsYteCbrFNDydAmjDWh2JUBKs4GseXbYjfNuruQ/fcp5Z4eY5
+	 pHkPfc0EyM1Ug==
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 5C9D21FA52;
+	Thu,  3 Jul 2025 18:57:03 +0300 (MSK)
+Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Thu,  3 Jul 2025 18:57:02 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.198.59.101])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bY1bv6HP3z16Hnq;
+	Thu,  3 Jul 2025 18:56:59 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	djakov@kernel.org
-Subject: [GIT PULL] interconnect fixes for 6.16-rc
-Date: Thu,  3 Jul 2025 18:55:14 +0300
-Message-Id: <20250703155514.3841629-1-djakov@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	lvc-project@linuxtesting.org,
+	Yake Yang <yake.yang@mediatek.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10] Bluetooth: btmtksdio: fix use-after-free at btmtksdio_recv_event
+Date: Thu,  3 Jul 2025 18:56:56 +0300
+Message-ID: <20250703155657.32865-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,60 +63,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2;new-mail.astralinux.ru:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 194547 [Jul 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 14:34:00 #27614855
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-Hello Greg,
+From: Sean Wang <sean.wang@mediatek.com>
 
-This pull request contains fixes for the current cycle. The details are
-in the signed tag as usual. The patches have been in linux-next for a few
-days. Please pull into char-misc-linus when possible.
+[ Upstream commit 0fab6361c4ba17d1b43a991bef4238a3c1754d35 ]
 
-Thanks,
-Georgi
+We should not access skb buffer data anymore after hci_recv_frame was
+called.
 
+[   39.634809] BUG: KASAN: use-after-free in btmtksdio_recv_event+0x1b0
+[   39.634855] Read of size 1 at addr ffffff80cf28a60d by task kworker
+[   39.634962] Call trace:
+[   39.634974]  dump_backtrace+0x0/0x3b8
+[   39.634999]  show_stack+0x20/0x2c
+[   39.635016]  dump_stack_lvl+0x60/0x78
+[   39.635040]  print_address_description+0x70/0x2f0
+[   39.635062]  kasan_report+0x154/0x194
+[   39.635079]  __asan_report_load1_noabort+0x44/0x50
+[   39.635099]  btmtksdio_recv_event+0x1b0/0x1c4
+[   39.635129]  btmtksdio_txrx_work+0x6cc/0xac4
+[   39.635157]  process_one_work+0x560/0xc5c
+[   39.635177]  worker_thread+0x7ec/0xcc0
+[   39.635195]  kthread+0x2d0/0x3d0
+[   39.635215]  ret_from_fork+0x10/0x20
+[   39.635247] Allocated by task 0:
+[   39.635260] (stack is not available)
+[   39.635281] Freed by task 2392:
+[   39.635295]  kasan_save_stack+0x38/0x68
+[   39.635319]  kasan_set_track+0x28/0x3c
+[   39.635338]  kasan_set_free_info+0x28/0x4c
+[   39.635357]  ____kasan_slab_free+0x104/0x150
+[   39.635374]  __kasan_slab_free+0x18/0x28
+[   39.635391]  slab_free_freelist_hook+0x114/0x248
+[   39.635410]  kfree+0xf8/0x2b4
+[   39.635427]  skb_free_head+0x58/0x98
+[   39.635447]  skb_release_data+0x2f4/0x410
+[   39.635464]  skb_release_all+0x50/0x60
+[   39.635481]  kfree_skb+0xc8/0x25c
+[   39.635498]  hci_event_packet+0x894/0xca4 [bluetooth]
+[   39.635721]  hci_rx_work+0x1c8/0x68c [bluetooth]
+[   39.635925]  process_one_work+0x560/0xc5c
+[   39.635951]  worker_thread+0x7ec/0xcc0
+[   39.635970]  kthread+0x2d0/0x3d0
+[   39.635990]  ret_from_fork+0x10/0x20
+[   39.636021] The buggy address belongs to the object at ffffff80cf28a600
+                which belongs to the cache kmalloc-512 of size 512
+[   39.636039] The buggy address is located 13 bytes inside of
+                512-byte region [ffffff80cf28a600, ffffff80cf28a800)
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+Fixes: 9aebfd4a2200 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
+Co-developed-by: Yake Yang <yake.yang@mediatek.com>
+Signed-off-by: Yake Yang <yake.yang@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+---
+Backport fix for CVE-2022-49470
+ drivers/bluetooth/btmtksdio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index c41560be39fb..6b31ee1a1dd9 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -331,6 +331,7 @@ static int btmtksdio_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct btmtksdio_dev *bdev = hci_get_drvdata(hdev);
+ 	struct hci_event_hdr *hdr = (void *)skb->data;
++	u8 evt = hdr->evt;
+ 	int err;
+ 
+ 	/* Fix up the vendor event id with 0xff for vendor specific instead
+@@ -355,7 +356,7 @@ static int btmtksdio_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
+ 	if (err < 0)
+ 		goto err_free_skb;
+ 
+-	if (hdr->evt == HCI_EV_VENDOR) {
++	if (evt == HCI_EV_VENDOR) {
+ 		if (test_and_clear_bit(BTMTKSDIO_TX_WAIT_VND_EVT,
+ 				       &bdev->tx_state)) {
+ 			/* Barrier to sync with other CPUs */
+-- 
+2.43.0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git tags/icc-6.16-rc5
-
-for you to fetch changes up to c5b60592886f97b01503c1bb553f88d6a7df42ea:
-
-  interconnect: avoid memory allocation when 'icc_bw_lock' is held (2025-06-27 21:43:40 +0300)
-
-----------------------------------------------------------------
-interconnect fixes for v6.16-rc
-
-This contains a few framework core fixes (related to the new dynamic node
-id feature), as well as some misc Qualcomm and Samsung driver fixes.
-
-- interconnect: qcom: sc7280: Add missing num_links to xm_pcie3_1 node
-- interconnect: exynos: handle node name allocation failure
-- interconnect: increase ICC_DYN_ID_START
-- interconnect: icc-clk: destroy nodes in case of memory allocation failures
-- interconnect: avoid memory allocation when 'icc_bw_lock' is held
-
-Signed-off-by: Georgi Djakov <djakov@kernel.org>
-
-----------------------------------------------------------------
-Gabor Juhos (3):
-      interconnect: increase ICC_DYN_ID_START
-      interconnect: icc-clk: destroy nodes in case of memory allocation failures
-      interconnect: avoid memory allocation when 'icc_bw_lock' is held
-
-Johan Hovold (1):
-      interconnect: exynos: handle node name allocation failure
-
-Xilin Wu (1):
-      interconnect: qcom: sc7280: Add missing num_links to xm_pcie3_1 node
-
- drivers/interconnect/core.c           | 34 ++++++--
- drivers/interconnect/icc-clk.c        |  2 +
- drivers/interconnect/qcom/icc-rpmh.c  |  7 +-
- drivers/interconnect/qcom/osm-l3.c    |  7 +-
- drivers/interconnect/qcom/sc7280.c    |  1 +
- drivers/interconnect/samsung/exynos.c |  5 ++
- include/linux/interconnect-provider.h |  7 ++
- 7 files changed, 56 insertions(+), 7 deletions(-)
