@@ -1,174 +1,163 @@
-Received: from CAN01-YT3-obe.outbound.protection.outlook.com (mail-yt3can01on2110.outbound.protection.outlook.com [40.107.115.110])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACE92367DA;
-	Thu,  3 Jul 2025 18:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.115.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751568717; cv=fail; b=Hwd8XgwfnAQa493Ka8CXpgXzGerzDW1gOksPxf5NwygWZ+/b21tV0lKNHI47JqdNf372ug4J+1y5Il72llEb6jnlFEcZmnjl3MmP6/oS/aOJH18habDO5VYL32vw+7w5Yv26mSesZafT073kp5jDoWew54zjILt0RApEW4byzWY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751568717; c=relaxed/simple;
-	bh=IeRgXYgqjos19HKpI4X5CsPDpYzFd2JR7xcITSlp0lk=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fnTo3i3Qv5BhcnxmYB4avUdy9tHgOGAhnQ9XJIvgPnRxvKAA4oNNYquT6O/TxrCj5QyATqigx85fukBPWClv58PIJUIlXCRo8wE6EbbTWqXcFMg8ZcoikuzyGxL63cH6hZ5hTTzPgSFStC7h+z73zRYZfJdOHwrKoBLVTZyBAHA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ndigital.com; spf=pass smtp.mailfrom=ndigital.com; dkim=pass (2048-bit key) header.d=ndigital.com header.i=@ndigital.com header.b=OUUydzgI; arc=fail smtp.client-ip=40.107.115.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ndigital.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndigital.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A802FD892
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 18:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751568786; cv=none; b=CcCoycduIRp1cAFfGPbUUIdjOJe2FDDY6lu/bdNIxmjFfh/LwQZWkVpmSnj8zhBnaaSNumIoF36dKWWh6fwO2JVfN6LI9ojj4TJN5ElzZ3aoI5S43NO+8EJXsDOmRWxBhEgOVzO31O1isA2oRKEf59f1iSHyN4XRrEC1m/+KQUs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751568786; c=relaxed/simple;
+	bh=G15DQy/BDtdKSwUfl45yI21xNFN+y/NBnJ/0ZJZoalw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TZWbbKJtvOO8vLH7WYZ3gjrR9yNKGs0SxDyCNWGb1hG6mo41pwcPBWHTTWu5ClG2fOsjmR3SXCG7NA40kXPH2bFs+TaRTJTRyt9HzpPEP/R+W/fUfyqt1opsY5TDLKopAo+YU9Gk/mtxldFge4m/NhdCIiF4zeZrYAw6gyt1uc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/MPn4ZB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndigital.com header.i=@ndigital.com header.b="OUUydzgI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uAK2168/SPT26Eu384xKbByloh0pS3aTpEq3PHd/YYzZfUFdMJUrAG/46usBu/8RHlt/tGyq9u54rp5KvWPoc2eGGJxxNsqrPUFxxF7QU3NzVGj1ZRKbxFSsynr1wDtLYFd5Tus/KyHM/JQFPIKKfmh0rPpYesgTLDxGDljmoZOtr1kU6wI40cO3uUAsDLjI+1sOXgVFr8KiegKH6OSoZDYbmHqNWyqB2dwmOVFA5onwMhlUitLWQBpELRAbZXXd1+O2pBRiMOX5cQ6caQwUZHhOjw5lpeNJYIxivpT2V6dlt+ClW6cllS9d6BqtyJTZC2p2BF/RwmT37q9o6SrNsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IeRgXYgqjos19HKpI4X5CsPDpYzFd2JR7xcITSlp0lk=;
- b=Rci4p/Ek9lO6uXGl4h4TQ7z6sNdm+Fd2BYluIHboxdBCVapBSg4D57nDrfRHzzFxoav70b9RBHRoab82JYMGuQ3+HRQ+8XE+PiJ02qEZ1nG7NfpcGxwekOiXTyLvS+m7KDU1bP5xHqMb0HIsjtQBPETjcp6XRtMjq+Pmuekr8+xtLm0Kr88mfef0wvo5h4+9hc8GX7JA+bZFvtUUFXVBshxOmV1whgD93iRrxUDF04J565kzct3oo01lBPT+2+fQnKC9TGihg5HAZZwE9tzzNnr+RKwmWPPiCZWurx5m/pzfpSEssqTT6kAktVpryxjDxco80nFJtsK0V/v/5R1BuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ndigital.com; dmarc=pass action=none header.from=ndigital.com;
- dkim=pass header.d=ndigital.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ndigital.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IeRgXYgqjos19HKpI4X5CsPDpYzFd2JR7xcITSlp0lk=;
- b=OUUydzgIyem8F6rHe7KQbC9TqOU7bLPA++zRe0uqYmb4wlnT0vIWEIBw0Tv079svB/cBwIIA3aSwzzz72xs+JXfWdpjS1ewWcUQQtE/+pN6U1Ug1fqyWGHuPJOm/VifrErGI2o3Y60C/Pe8ieHFF1+WTR9cA0rzDlH8VkkNemhyW8HNJN4zmF3eCPuaJ+5X/+umgnbKTHiXtgwqzK49sUvYxb0GB3p0YGRlTpAXkVZHzAGeHu20OzbR9X1JPdAacXa5F/lmYHIV6LZXR4DZ5NuI0huRtIGlkBudOo/e9QNVUK5FpvIwzOBu6f9cpqYk/vEp8RucPSq+/uCbCSLH18w==
-Received: from YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:27::5)
- by YT2PR01MB10636.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:f0::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Thu, 3 Jul
- 2025 18:51:50 +0000
-Received: from YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::206e:a5af:7f5f:76a3]) by YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::206e:a5af:7f5f:76a3%3]) with mapi id 15.20.8901.021; Thu, 3 Jul 2025
- 18:51:50 +0000
-From: Ryan Mann <rmann@ndigital.com>
-To: "johan@kernel.org" <johan@kernel.org>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>
-CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] NDI FTDI USB driver support
-Thread-Topic: [PATCH] NDI FTDI USB driver support
-Thread-Index: AdvsS1xa9R1d7OPFRyOyt2z1uvaDLA==
-Date: Thu, 3 Jul 2025 18:51:50 +0000
-Message-ID:
- <YQXPR01MB4987C8EA75554A89700D853DDF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ndigital.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: YQXPR01MB4987:EE_|YT2PR01MB10636:EE_
-x-ms-office365-filtering-correlation-id: 18c7b18c-b7a1-4dbc-e8f4-08ddba62aba4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?7vRAzsP6GDiptbkHr9Z4zKb+HJ+xWrSkSdDaEnDy69dw6vX8h7HTEGxm2cyZ?=
- =?us-ascii?Q?B9S96kgPMzkUvB+6T23BUEfW/mqVbKxvb3wYfVzHYjWl1Q/RoBpjP3gH+rml?=
- =?us-ascii?Q?TdMF6g+NINSMVO+jZimqupAFRysRg8bXSYH/xjOSbRXuQdvxTu2yTuft8Lqp?=
- =?us-ascii?Q?GmLdTrvIavxmMaf5ZgCbRYBjNir4i+kAae+AcOHyN6298FmIXkh5Ws/YxMH1?=
- =?us-ascii?Q?9sk3gGRn4J1y2+mO3rXIhJZp4blDXFFqYZSJHxuEqoMgVl6bUOwSI9wV6kaW?=
- =?us-ascii?Q?Pe4kVBtEpGKQcSZ+EhyljX9C9cmd/1+tINZ5Q8L2y6u5jYaQ1PrQm+jLCizs?=
- =?us-ascii?Q?oZ9YdxJ+uxqxINOnLNVkwpIWljuHkvV+bIfqqlHGnFljCOdRxPhXxBJk/39v?=
- =?us-ascii?Q?YUBcC2T7dkpz14GIyqOGRa1PZ2aaPsrRhPnSLLTPQXzxV7d2+kAqmmhbaZzz?=
- =?us-ascii?Q?5akfOJ0PWAMpdEG6PVB4/xDksxQOWEFxsQ749ibZzltANa+iTCOo88AxSpAl?=
- =?us-ascii?Q?egqpC/iJlY8WZGDRs4fi67XMviaPp3g18RGgTWADERZfebNt7pLacJ8twvwc?=
- =?us-ascii?Q?3o9MF1W+BqmLkZhxMajqtvdk0Q7VFMR+w6bEUs8B2T3FaIWpOgT1euyWoN62?=
- =?us-ascii?Q?2EocQJ+OGmMqiu8MmrQ6ZLoy0hceipZuBi9QleWKmsocJ/F1Ec48rdXxy+po?=
- =?us-ascii?Q?HfP+HQ27NK204E5wtffok4PajW/5soGjzVDoCbWtiamHul0iVx47lfzEiQAn?=
- =?us-ascii?Q?1W9xtPV7zmZMeLD4qLH54NupnEWxRvTIHGyEzAF/NKNVzZWt/Hlh+jMENxuT?=
- =?us-ascii?Q?kRlVUqBbFz4im3QLndDLbAEe28HEdq/cGuqSGDcdhbsqphgikEpi23potO7H?=
- =?us-ascii?Q?DvKlX/HUq3YMkahvJqL5SqmTpRaa7HF0DTo+HWJR+tTmzYSVDpHQa4mFs9b5?=
- =?us-ascii?Q?JfDn+gDxJxsZWPRnKqsBLEEsPHmJWc9L7FIqJehBo0Z8/PIbhDWOHE/uLDaC?=
- =?us-ascii?Q?YZVjKqae72znAXYUdP2+gl32u2YhUwbiQ3OMuPlF2cc/riR4Gc5W12N9rXiS?=
- =?us-ascii?Q?dcpAO/R2mAh9u6kULGTpXz+WlHaYiar5PEsYXy9d+YWJZtjvWC9LwEC41Ydp?=
- =?us-ascii?Q?3pZUoy0UtSf0laEkzQB6yS8mOor3ixUVrVcM8N4Q0MbCrSV5byhzeqYNWnQC?=
- =?us-ascii?Q?G6RGdJTlmQLohhx4//LJZGab7jpwG22HVGXZvpiV3pF63y2POjl06K2I8yHP?=
- =?us-ascii?Q?yOH0r+uWJIfK7krwua44elNVpihJpxfyfWsrI9dNfGGgN+iU9JA65DeyFiQw?=
- =?us-ascii?Q?pH9DfDpkJiYc+wNU/ciHI0iD6fDANE3A2KHPTXXPBITVdo/DntafPE/f90dJ?=
- =?us-ascii?Q?aLbEkVoLDC/G9TMpd1twNdQg4YJlZ+/lGPMR7MCUhcnHqwIjj0DafKTUxsqR?=
- =?us-ascii?Q?TZY64tlVXTk=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?iXmyfGnFjUCpgUX1MsMLWRGNq+uwyYc6HU/mkarvrcIxE5mzDlxEWFYtFENH?=
- =?us-ascii?Q?2Q/f876/izZJlC/BgLpgf940dpSLueswCNQTU6pD3xKIGjIZySuGz6MBeIvJ?=
- =?us-ascii?Q?tQIZXNnSRnob9UCZGkY9TET/5Uaq1EDJrqoOVgSUZ1O3V4c430Uul0rTgRTL?=
- =?us-ascii?Q?Csz2qoVZjD98xOC7TUw/Q7Taz4t3eV6t7Fn9B50MkJye4t07NqC7V0+epwcE?=
- =?us-ascii?Q?sVqumlNERRV/BE9gsGc2sg5MVKRR95owfU64f0Y8n/peSWVCwtEe2ygCgTJu?=
- =?us-ascii?Q?o2M2Ux15g7ZK113EWMkJP8hBB3eg9SUnjLTirqNg945s3yIlauqzN1jh38Q2?=
- =?us-ascii?Q?hYB+0Ur+oMm6DNr5ssGxB4Yufic7s9MAMpr8dd+ZXHDuiESIfA47w3GDJOtM?=
- =?us-ascii?Q?5/jlMAnX3XN4/smZtfLjeDlO1PCugjil+ND4L9kEvSsZqf/+tecxCYylW+e6?=
- =?us-ascii?Q?hBUvlG6HHTBQnq9kRnzKQgpHw50AIfdh1Hhc/siUwNug7RDfCi4geolAzkBz?=
- =?us-ascii?Q?ABXIdxQMfEfgaLEzO6gNbiU6VFTI7aFLY1TOgpwf6hya2rTp+A13fQeLDeqo?=
- =?us-ascii?Q?W5HBr8TMgT+D+EMPPQNkrSEPu8/5G8+Kh+DRhuFnNBTn7DokF8O3bOp06EAl?=
- =?us-ascii?Q?cJJVSDRAZ2YJ/v7qX2hJ6TDPNE45+tBwCNOMDfZB/HdoyD1Y7vcGmySiV0ME?=
- =?us-ascii?Q?IOPJMwqxjDHm8Qed7iITEkUUNItcEFPjw9AEZB3wrFm9BFDAJMZSWxmfuPhL?=
- =?us-ascii?Q?R5ZYiwxRp2jZK8cDc++OW8LnXVjQbNC5BTVNglHNepEQ4rI7D+XESgEWUAL1?=
- =?us-ascii?Q?bstyvHKdZyCh9EPhbDTFYHDFhK3rYoARinroBJVYH8WWnsNSAna/6pZuoaq/?=
- =?us-ascii?Q?YXfQfS+/pQVdE0GZfOLoLXuHS/aJXFAZX3KGdM66+OH4jNE5ALpcXnnUh667?=
- =?us-ascii?Q?dKQdlDd0nbLeAfIozjKU/8fy7TMQtH8qqHA8caljNuQhdF3hJjDgzmoo7XQT?=
- =?us-ascii?Q?kXhuREdrGdSIsG5g1+z2PFfmnIaB2ueRNFpiglDK5uXgkzGSXjopfoHzrclE?=
- =?us-ascii?Q?DAA0FHW5SI4u3FwCDYEfjQyKD+dSnnV3l/Xp/ibX7s/Z8sqAbDYPJSkOfR85?=
- =?us-ascii?Q?f0i4bXqSbPFXEFKI/yy6IRQD0ai0hTOHKDU6VpJsniv0PEIMQX9/XO1IDAPM?=
- =?us-ascii?Q?+3RawBdkthMla1rYNgmOjSJ5oVLy2dFR7PaPrjXwtKMeKJxeqXdHfCbg7Csw?=
- =?us-ascii?Q?apVlm0sFuWXw86GRke5DVLK+njX7Rjk7rpfxVCa4ynUV+mfNrOVInm3elaze?=
- =?us-ascii?Q?Po7R7EIX5B5JqhWXJs/CXEZy5BP90E38F+Xn83o4OK4OnyTgdSa8bWsDfI3Y?=
- =?us-ascii?Q?A3/mvcZ23nI8cqx7v6uWOpIeuu5ejm6fIEtctpBYGD7ek97UUeQmmJHjSPHe?=
- =?us-ascii?Q?5+3YWqRhVYN7DQdFDV2IBTDo6YmZLzSw2ynbQDQaUFx8xzcJIbgCO71dvzQL?=
- =?us-ascii?Q?5m2JftNUAnGVY0tRY/nuWW5gvpuOrKEKoKvNGaFKCsnnb6Yk4fMOxQVmiCAI?=
- =?us-ascii?Q?lEEhgbSzk2+xNPZaLDuJnLfkO3n2l3upjfC5XMC2?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/MPn4ZB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751568783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UQFG5MIaFwRZAWTQLa6aA71YVsgcQ46O+CEYjW8Cdj0=;
+	b=Q/MPn4ZB0tJfrVF/6fOqAd9lYdBS1IHdUsm06zogweEEgMYR9oSnqebKVvRLivPemDfryF
+	XkP1HgqYHo+d/f6cwUScagJuis8dg6LdarzC/MdUgJ47v6Cdb3twMjscFNJWo2RiIvqCmI
+	a2o0D+SlOcLr/X2FL3Vjs5rrQ71kQ2g=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-186-6ViX_0SAPpauG-S9NodsYQ-1; Thu, 03 Jul 2025 14:53:02 -0400
+X-MC-Unique: 6ViX_0SAPpauG-S9NodsYQ-1
+X-Mimecast-MFC-AGG-ID: 6ViX_0SAPpauG-S9NodsYQ_1751568781
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a58939191eso46219f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 11:53:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751568781; x=1752173581;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UQFG5MIaFwRZAWTQLa6aA71YVsgcQ46O+CEYjW8Cdj0=;
+        b=YofTLPtnPO4c/RX2+ySzzdfjq8PxnAZ3a0cjL4OJmZpt/hhwnOMAkR8H5u8pISJE4k
+         JQd0FHDQuyLi0MWE26ucXsmm4jFc5KUMlZYZTzzM1UC1ZHN+85wvMZ2O88mIhW7IjvkK
+         HemKkQ295Vffv+bVORsiXKYBg19Elx/AAav5981xmSd2IZ3Khg1PAyfWi6yUkaNaCc80
+         NbHtha4AFAOnHEiaMhSDv6dPUHt5rFusGxIOgpIUQ+PUXCvqPsHLo7/k6TPc3YVN8k4y
+         hXNxNKK66dBhaomBnZ3Gfu+/xFwihreeUbpulA8Ueq+KmJPRKRXtg28St+JK9E+YxIrX
+         6PaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC69plRbgGUlvCPqm/1Rzmui7wiAJKoxUuYK0Au0ZT/7neCX3zH+jil6a6TYunN+LEz4YHwSCS+femLKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7kUfO6+QjbKtpqQWD7bizPxQTBAnMUL5ZelJ+Kgqg8xVRBc/a
+	Rtg2ztCr4FOgE9cXEt1shVY+Vz7o6Jt3Je5PzM4aK1OqigKIsE3cv5mtl2eBFx2OBie0m40zIVI
+	MPz8umoEov3HMK3fDwcq+DQLGdWiaOdb20PD2io9gL1rTdGMrfhvg0nKdRs82WA/rrSHC6WqMMw
+	==
+X-Gm-Gg: ASbGncu8EbfECv/sfx09IyuO2eFJSUlMQG+QLuHYINrGpvKPGz/Og+7S3AaovjV+s/n
+	2oMtgW+701Y2F8kEllinNuideyF61X7rjN15POujgPC6pPEmqlXfAQyAEvC6HxtrzDxZBFjEG0I
+	/UE57xmBvP98iYiCinqHMPie9m0oTQ5c0R0ieq8cqxDtQbh4Zu63S9ts5OdNR6Lgy3u93EewBQ5
+	tGLOmH2eq270FFve7QzMG/I2akdG/G4n6aQTxepJHTdNcajl5v0jfNg+a52zE13iC8Xn1KA1VGh
+	3a3chJgZ/5ThOwOFNDgqjOCxtVMO9A1V3sV+RR59qdslOfIZnOEmkJmUTdjnW8kEf+j2ktayeCn
+	8IvhfQt13Q1aFqQ3hYoQxBf6N11LVUfC5rLCx3YI7iWAMnAkBGw==
+X-Received: by 2002:a05:6000:440c:b0:3a5:3b56:974e with SMTP id ffacd0b85a97d-3b32bae0ab0mr2281807f8f.6.1751568780855;
+        Thu, 03 Jul 2025 11:53:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGC4kuZoJnTTQ8GzNjW4/Ni/tUzuIYJ3R5heK52xsq/73GJotrEymQXLDWyMbFRJetWfQMZLQ==
+X-Received: by 2002:a05:6000:440c:b0:3a5:3b56:974e with SMTP id ffacd0b85a97d-3b32bae0ab0mr2281800f8f.6.1751568780440;
+        Thu, 03 Jul 2025 11:53:00 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1b:e700:2bf6:1031:382d:5a85? (p200300d82f1be7002bf61031382d5a85.dip0.t-ipconnect.de. [2003:d8:2f1b:e700:2bf6:1031:382d:5a85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030bd42sm473211f8f.5.2025.07.03.11.52.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 11:53:00 -0700 (PDT)
+Message-ID: <cfc1c95f-3e3c-4856-b831-bffaa6457c03@redhat.com>
+Date: Thu, 3 Jul 2025 20:52:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ndigital.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18c7b18c-b7a1-4dbc-e8f4-08ddba62aba4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2025 18:51:50.5518
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd6f7980-6d04-4a6f-86bf-8f6d0297dd2f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qnDSFsIx5ba8HUe8LtYz7WM32DnSDFRIpjOVw2GyhSw1FxDVxWI0Z8g3tl0g4iyv03V9zYmisaEXthonWXdo5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB10636
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] cma: move memory allocation to a helper function
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Oscar Salvador <osalvador@suse.de>, Pratyush Yadav <ptyadav@amazon.de>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250703184711.3485940-1-rppt@kernel.org>
+ <20250703184711.3485940-4-rppt@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250703184711.3485940-4-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi John and Greg,
-Tag: ndi-usb-serial-ftdi-6.16-rc4
-Public branch: https://github.com/rmann-ndi/linux-kernel/tree/ndi_usb_seria=
-l_ftdi
-This represents changes to the FTDI USB serial device drivers to support a =
-new NDI (Northern Digital Inc.) product called the EMGUIDE GEMINI. The EMGU=
-IDE GEMINI will support 1.2Mbaud the same as other NDI FTDI virtual COM por=
-t devices. It was noticed in making this change that the NDI Aurora was inc=
-luded in this "quirk", but it does not support rates as high as 1.2Mbaud, s=
-o it was replaced by the EMGUIDE.
-Previous FTDI devices produced by NDI all used the FTDI VID (0x0403) and a =
-very limited set of PIDs that Future Technology Devices allowed NDI to use =
-(0xda70 to 0xda74). Since then, NDI has reserved its own VID (0x23f2), and =
-used two of the PIDs for two experimental, non-production products that did=
-n't use the FTDI chip for USB connection.
-This patch adds the new VID as "FTDI_NDI_VID" in the ftdi_sio_ids.h header =
-file. It also reserves PID 0x0003 for the EMGUIDE GEMINI, as well as stubbi=
-ng out PIDs 0x0004 through 0x0009 for "future" NDI devices. In the unlikely=
- event that the NDI hardware team chooses to implement the USB functionalit=
-y using something other than FTDI chips, those "future device" lines may ne=
-ed to get removed.
-As the EMGUIDE GEMINI product development has not been completed and the st=
-ep to write over the default VID and PID has not been completed, these code=
- changes have not been tested with an EMGUIDE GEMINI. However, the code cha=
-nges were compiled successfully using Ubuntu 24.04 locally and tested as a =
-module using an NDI Aurora system.
-Thanks,
--------------------------------------
-Ryan Mann
-Software Development Lead
-103 Randall Drive
-Waterloo, ON, Canada N2V 1C5
-www.ndigital.com
+On 03.07.25 20:47, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> __cma_declare_contiguous_nid() tries to allocate memory in several ways:
+> * on systems with 64 bit physical address and enough memory it first
+>    attempts to allocate memory just above 4GiB
+> * if that fails, on systems with HIGHMEM the next attempt is from high
+>    memory
+> * and at last, if none of the previous attempts succeeded, or was even
+>    tried because of incompatible configuration, the memory is allocated
+>    anywhere within specified limits.
+> 
+> Move all the allocation logic to a helper function to make these steps more
+> obvious.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+
+LGTM, thanks!
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
