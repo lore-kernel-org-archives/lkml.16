@@ -1,52 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C492E4242;
-	Thu,  3 Jul 2025 11:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0152E426A;
+	Thu,  3 Jul 2025 11:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542349; cv=none; b=DrA53yEfHN7cxHQvR0F81NeKEhcEKm0pYVDEjMnfv42CEf1Ai62nHKBBqQ6An1/PCuNWP4pPc2CqgkCK9aGqVEKQTTb/XPJQQzam+ZcJK6MrWN0Kq56EtSt9/kW/qG9YyVWTNHpzn133OfaJ5XbuONIr9yNJ+S9aO7oAxwvJ4wc=
+	t=1751542390; cv=none; b=t3d01PSMqkDHr+gU4fWqGi6k5qLEMeD/xhy+6duKvpFcmEpwsZb4icROyAaE8zXo2y6eNnLxQozn1LcHb45EN5NIZ4tlMolhhDkkDMkQ9VBRiQUPw6qPrzxI33aHa79V3E7gJ82IYloCTJt7ytidJW8HeRs4C9f1bh5+xCFGXaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542349; c=relaxed/simple;
-	bh=3KImKcixsymPQbWmcMwg6wTAMzEv4bSW9MSSSpiBfvU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TWJahP6h25L9u1sSchNIUv7IST9WbmHYKvFp/79RZwmxpeIThhtsOQLe1wTPjYA4+wrDNp9mI4PpUcROsAajBcRvy/2EcprsJ9UVJaPQr7WLMaJjJvqBABqo/ETwOPE9+gD+ot8vGfuB3Th0g8YvVx5q6IqmRpK80Psv+pJ353U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZ2J6VF1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751542390; c=relaxed/simple;
+	bh=CyQhUnN9yDUDBFRVhw4ghu3ibqesztbBUa/txXVxbe4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gKcZxuSL8FILhGNERsm8pZ5l/200iBcekF8HW6RhJMXoWHfseIN4vjWjdtMQorDMf2mi1bDSXYL61+mQXxoN7tLjpVoOMdQ6EOnnlAHl4keQuW4ruGiGwTjDhVe6rJnVeUm2QHuJf+kWo0G/wZ6oRF7bpN89d6xXSD5tw9x/D7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=vRMO+IMi; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZ2J6VF1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27914C4CEED;
-	Thu,  3 Jul 2025 11:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751542348;
-	bh=3KImKcixsymPQbWmcMwg6wTAMzEv4bSW9MSSSpiBfvU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iZ2J6VF1Fhuzs0vcSA/IkbtEitA0bPewCNAriCsgNzSYiQk+1Rr/81nsNukXLPADv
-	 Hs323Yc1ZLu7W8yUIYbRBiXCBGCztzvFmkqbh8D0AaGwxEZpy1ofNh/kNPK2k2M1Aw
-	 yabRp7oqoGBYi5dGS2/mZhJ91vfDzMaY+tO2nQWgxHi41ND7Hn6lfVv/iyHuXHgWv/
-	 T9/MHCX6qvfZqvUS8T6hnTEWeItLMaV5/rr5iljxk7yzcVekoy5aUT4eX+xHr+UmHs
-	 VQGOGEOiqz6za2jB36Rbyva8pAn7fYNMEH5aUblexZgMKZqTr8F2PjNqXtNHcMy4Zf
-	 gyQDSunOLnrvg==
-From: Michael Walle <mwalle@kernel.org>
-To: Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Julien Panis <jpanis@baylibre.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH v3 8/8] regulator: tps6594-regulator: Add TI TPS652G1 PMIC regulators
-Date: Thu,  3 Jul 2025 13:31:53 +0200
-Message-Id: <20250703113153.2447110-9-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250703113153.2447110-1-mwalle@kernel.org>
-References: <20250703113153.2447110-1-mwalle@kernel.org>
+	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="vRMO+IMi"
+DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
+	t=1751542376; h=from:subject:to:date:message-id;
+	bh=CyQhUnN9yDUDBFRVhw4ghu3ibqesztbBUa/txXVxbe4=;
+	b=vRMO+IMi3XxKo7NY4fxaOR+3ZJOosaJy8ibaMkoyuHLol/Rk3cByQ014tIZ8nBqpgbbOToQKqDs
+	rKrUV4tVMfmBG46XmuM15ABi/F5IHuREwdI1od0yDpM1C5qaCWA39tXh2cvIrudnRMolo5uuQMU/X
+	pbXTHtO0nvSvqL8dnxIb1ocveOTJuwN0Y/aKFyAcRjGrvSbJQL0//qw2DSchc0uICWfgzQ/DQWz4f
+	BSuTGiKWisAPZkeSINEOLG9yWPK+EbDLBDkWiH+dY751Hd4q2FeuRTp//+TPy/4fGhiB2A61v5EQ2
+	Baz8zdnooeWM36KOxfEWctAh8gk/cFFpVK3g==
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Song Liu <song@kernel.org>, "Vishal
+ Verma" <vverma@digitalocean.com>, Jens Axboe <axboe@kernel.dk>,
+	<linux-raid@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Xiao Ni <xni@redhat.com>, Coly Li
+	<colyli@kernel.org>, Yu Kuai <yukuai3@huawei.com>
+Subject: [PATCH 5.15/6.1/6.6/6.12] md/raid10: wait barrier before returning discard request with REQ_NOWAIT
+Date: Thu, 3 Jul 2025 14:32:33 +0300
+Message-ID: <20250703113233.51484-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,76 +41,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-02.aladdin.ru (192.168.1.102) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-The TI TPS652G1 is a stripped down version of the TPS65224 PMIC. It
-doesn't feature the multiphase buck converter nor any voltage
-monitoring. Due to the latter there are no interrupts serviced. In case
-of the TPS652G1 any interrupt related setup is just skipped.
+From: Xiao Ni <xni@redhat.com>
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
-Acked-by: Mark Brown <broonie@kernel.org>
+commit 3db4404435397a345431b45f57876a3df133f3b4 upstream.
+
+raid10_handle_discard should wait barrier before returning a discard bio
+which has REQ_NOWAIT. And there is no need to print warning calltrace
+if a discard bio has REQ_NOWAIT flag. Quality engineer usually checks
+dmesg and reports error if dmesg has warning/error calltrace.
+
+Fixes: c9aa889b035f ("md: raid10 add nowait support")
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Acked-by: Coly Li <colyli@kernel.org>
+Link: https://lore.kernel.org/linux-raid/20250306094938.48952-1-xni@redhat.com
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
 ---
- drivers/regulator/tps6594-regulator.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Backport fix for CVE-2025-40325.
 
-diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
-index 39adb2db6de8..ab882daec7c5 100644
---- a/drivers/regulator/tps6594-regulator.c
-+++ b/drivers/regulator/tps6594-regulator.c
-@@ -577,6 +577,13 @@ static const struct tps6594_regulator_desc tps65224_reg_desc = {
- 	.num_ext_irqs = ARRAY_SIZE(tps65224_ext_regulator_irq_types),
- };
+ drivers/md/raid10.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index cc194f6ec18d..a02c02684237 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1585,11 +1585,10 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+ 	if (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery))
+ 		return -EAGAIN;
  
-+static const struct tps6594_regulator_desc tps652g1_reg_desc = {
-+	.ldo_regs = tps65224_ldo_regs,
-+	.num_ldo_regs = ARRAY_SIZE(tps65224_ldo_regs),
-+	.buck_regs = tps65224_buck_regs,
-+	.num_buck_regs = ARRAY_SIZE(tps65224_buck_regs),
-+};
-+
- static const struct tps6594_regulator_desc tps6594_reg_desc = {
- 	.multi_phase_regs = tps6594_multi_regs,
- 	.num_multi_phase_regs = ARRAY_SIZE(tps6594_multi_regs),
-@@ -627,6 +634,9 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 	case TPS65224:
- 		desc = &tps65224_reg_desc;
- 		break;
-+	case TPS652G1:
-+		desc = &tps652g1_reg_desc;
-+		break;
- 	case TPS6594:
- 	case TPS6593:
- 		desc = &tps6594_reg_desc;
-@@ -716,6 +726,9 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 					     "failed to register %s regulator\n",
- 					     pdev->name);
+-	if (WARN_ON_ONCE(bio->bi_opf & REQ_NOWAIT)) {
++	if (!wait_barrier(conf, bio->bi_opf & REQ_NOWAIT)) {
+ 		bio_wouldblock_error(bio);
+ 		return 0;
+ 	}
+-	wait_barrier(conf, false);
  
-+		if (!desc->num_irq_types)
-+			continue;
-+
- 		/* config multiphase buck12+buck34 */
- 		if (i == MULTI_BUCK12_34)
- 			buck_idx = 2;
-@@ -759,6 +772,9 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
- 					     "failed to register %s regulator\n", pdev->name);
- 
-+		if (!desc->num_irq_types)
-+			continue;
-+
- 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
- 						 desc->bucks_irq_types[i],
- 						 desc->num_irq_types, &irq_idx);
-@@ -773,6 +789,9 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 					     "failed to register %s regulator\n",
- 					     pdev->name);
- 
-+		if (!desc->num_irq_types)
-+			continue;
-+
- 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
- 						 desc->ldos_irq_types[i],
- 						 desc->num_irq_types, &irq_idx);
+ 	/*
+ 	 * Check reshape again to avoid reshape happens after checking
 -- 
-2.39.5
+2.34.1
 
