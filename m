@@ -1,70 +1,71 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022075.outbound.protection.outlook.com [40.107.75.75])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011027.outbound.protection.outlook.com [52.101.65.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BA31B95B;
-	Thu,  3 Jul 2025 10:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83691B95B;
+	Thu,  3 Jul 2025 10:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.27
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538920; cv=fail; b=O1Zrj+RmczkHxYzkGxqyeMVI57/mA2xPSWKVOBbVdOGeQy9n0REEuKfjyf/RkRgTnysEY+6ybGxZv32VE2qmPvcBTiI65Vb7669YZjpUZ33TBEhlqqc1w8YWroLImjd6aJ/ehwk/ZyGSxBmfqS44s9fLgU0e5PgTHg5VcNw4cwo=
+	t=1751538945; cv=fail; b=HjNhvh7ca1COw0+FqJEYOs/qaXa9FLyjfpKeIZbqkY/N2rXG1QFbl+AnPKE2Mij+XxZPffktBRYSC8Dvsa5CS4IY4DwgVX5Ud4C0v4vYK9zybASXVqM/lZJVKMxXYWLhyNibo77d19Lo1nvhLnT886xAr6C0IbLDmqPsVB26L2Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538920; c=relaxed/simple;
-	bh=dt9lLE6WTbdn7QfSyGIfacCkAZiOeNBhuQhcgY8t9lY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GWKU2yOgRtf75Fz+/MqU6SjSH1NNWAgdr32+uEPXr1lWun/y7XK5dr9WWaqPp7gb0mcaBkKDkamjMwWNVf5HGyh6eSWZ9GtYrgJI98qskejWSeAd/hRLq++5nL/1bosRYsqC1gTVxov9cNilf3o2ihlRSOYvCLSz6yF5XbKSpp8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=W/wxJ3vH; arc=fail smtp.client-ip=40.107.75.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	s=arc-20240116; t=1751538945; c=relaxed/simple;
+	bh=lYF3WUZFH5RO05e/y2sND3Ohr4TBZLENWgaNMSFcTVk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=S/CgQBjtaCTAIVLSiluAZXItu4OVu8+3nAPmwCxt0fPZpfbemCDtyJVloBPTOwfE6D/68ZQFxiKBm28qercVnhxOlY9LEOafIW03kYNYK2SKtsTJNXrMhl7fVIngmjGke9rG+Ez2c5PxauuIKLY6mbHDBXNgu+UxojLhkNxiuiE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ww3b3Vf4; arc=fail smtp.client-ip=52.101.65.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="W/wxJ3vH"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ww3b3Vf4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M6UDrNpvUDfNu07EZIeApXQgE8B4flyZEbVlxryOCyHCQKGJxm5fLDofqjxE/WvXkQZOxN1BgBQF09FZ+zZoJlcXDBfdwREM4OfIR3b1MSmo4JynkQsE8yRIhhLG9Bnuh1uDP4IiF6dq4nv/Yx1Q+4d+tBbJlvunD1/T4kFRapt9ae7b/y3wpQ/0k74I/UBYs48FbfrUjev3xMgkL4WLvAgy2De+YN7QppUMC4QAuBXfVQ02JxpRxz+uGuLJHMwfhuGT2OA5OdLDh6kApN/FOMGcI7yknB918q1JpP2MhoEWPlHnz8F6RunXWCXuU2s/cU6NfHZCxnQlmW+gtns0Hg==
+ b=VZmYrk4aIwG51hfs4T/vXc+83WBNAmkfLVrr5v0ptfPeC+0KV4mxk0Mq0B/E+PXVPNJ89lNAOJDSV4TM95HpBH5jIo1r/NutePbCn0GYuZbKgKbH54d56iaIdcsf67447W//wASf57gMBEW58ZlrMI3pAaLJCWQZKPYz7DFGfFKzcFPD5fn4lq++Ln4nvybJfg6oKhFt7xvypkyf/3ugTpcu2Jc9d9vVwbA7Voc82G2zFBWHRTBnfc2LXB028LBf+ZSY3TkrL2u1xa5eLoKEwPAxB8hQ3cBQXOUGENOW7u3OIFOy6BR8CMIXa9TrUvBfs6JqpaSK9ncPUiiFXqVXeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lnoEw5PsYN4XEFbcJ8nsfl/2XCgjP/YhwdqzVBkGpM4=;
- b=Dhxa1ER6oZPNol2AYx0Q1lkLT41ryR5ldHoWVOmiwK6nl/+lVhMsf7nnbDvQ+F8cQxGfh5VlHpc0iw7+g8AI8ECGG8eLs6eV5l0wmtgcD149yykhBcojBZmsUd1uDdArwKLJKR9PrVV9FCaX0UUlEElwL1kKz3WknLKNcp/i2OUH7cei9Hy8v+air/z6qs1SCKeJcyEkAs9aXelTx0q8Ru+M+ms/M/WHQhhJhc2HlmuzcVpgm8Jw1PRIzuPW0HDtz1nOx65/jCnnDI7SXLHz280uJ/Ejsh2JaB//Jbqpumwne244Ouey/0C/D+6IjjmyDwS+Q2n4LDiYaH/DyHD4hw==
+ bh=GpwR/d/rFAKgl1qato5iMAyoUqvgHGOTxvDlcz4P/+A=;
+ b=RYM78aNJ50fzvdJyl9YMz27kQ36dznZwQR9qh9a0n3UPGpgE2lUJ3ftQkLcP6qoRwslEYlfJxNZcdbaNroSmOw1+58okRwk5CT1Pi9rWAoNCHLBPsUrjfZvHz6rpfZFS4RRqB2pOtGXZ3FDAld5CY3Re+KNS5she8giPVAIGaUPLU3wlI0eNsdKgP1+4rVc9aVrrTZ9LNIgxGG14Y8n3/Og1Ux4hmUcvLguE9c2PyqSEvIROTVTf4NuClteChYrDKuLxq7vhVIvDpqPDKFdW441Jma192SwRmp8q6H83L6v0+l8vbg7E2d+hih0v+l9Gz9pH5sxzAt/Ezq/hqDB86g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lnoEw5PsYN4XEFbcJ8nsfl/2XCgjP/YhwdqzVBkGpM4=;
- b=W/wxJ3vHEwrcm5qcOaq8soM99yKDOkV6hEJ/JpcwDoO+b4wvf24Ke1ekAvM9h6WRMckvBvbweg/+JUoW6AbCOhYZjprE1l1z9CsrV9T8WH5RjwHt3XBr1Ahe/m/zgCotH9dmCm6Z6BmJmqqTZrG3wtCAs/3eACosaMwsLdZ9ZCN6n3eAce3k9iX92L2DVreKr+yH2aTT97a+jym0ZWUYbJvDmykXMDqsRF2QqIN78gDL0R7SRfyIBFcQqr6sfmgD69jhYeoorcD457j6S1CHw9Cb2kIPcua7baVw1N0RInj4mx0Z6amo69orprWqnRaeirdvBPBBF8rjv94Jt6lYxQ==
+ bh=GpwR/d/rFAKgl1qato5iMAyoUqvgHGOTxvDlcz4P/+A=;
+ b=Ww3b3Vf4oDbs0R9BjlMoGhOiKop8xHgk9TAegQtPaLBjL+gL13kNRG++CGZPDK7oJ5JdxL4+rNl9VNFA+ZpZKRQOa8n183HIIslKLO3o2ss/z2ZhiQm2kbex8QBqsF5vUJ8iuVQkt3TGvXx9bXMAC8QkNdscUAr/Kwpbc5sAJMPYcvdvSmFLPLw5MdqAlx3B0UM8LqSiED0XrufoPE8PsnWlkJ+qkG+BQAulvTUzuYsrqc4les6O3OkUak36AN7ln2Vz9dI8q6rwkQ1TEXEzsr7EGQSZRmn205Qy6f8dYPhmy7rzjQqNIy9GOgzjLUX8Nqydc+ZFzSO+HKw7V+f3+g==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from JH0PR03MB7468.apcprd03.prod.outlook.com (2603:1096:990:16::12)
- by TYZPR03MB7081.apcprd03.prod.outlook.com (2603:1096:400:33b::14) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by VI0PR04MB10928.eurprd04.prod.outlook.com (2603:10a6:800:261::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Thu, 3 Jul
- 2025 10:35:13 +0000
-Received: from JH0PR03MB7468.apcprd03.prod.outlook.com
- ([fe80::4128:9446:1a0f:11fd]) by JH0PR03MB7468.apcprd03.prod.outlook.com
- ([fe80::4128:9446:1a0f:11fd%7]) with mapi id 15.20.8880.021; Thu, 3 Jul 2025
- 10:35:11 +0000
-Message-ID: <7ea17a93-284d-4e9b-8130-cc46b16a9524@amlogic.com>
-Date: Thu, 3 Jul 2025 18:34:46 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: ISO: Support SOCK_RCVTSTAMP via CMSG for
- ISO sockets
-To: Pauli Virtanen <pav@iki.fi>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-iso_ts-v2-1-723d199c8068@amlogic.com>
- <d6906cfb7fae090b9fe0c1c5b8708182eb939b42.camel@iki.fi>
-Content-Language: en-US
-From: Yang Li <yang.li@amlogic.com>
-In-Reply-To: <d6906cfb7fae090b9fe0c1c5b8708182eb939b42.camel@iki.fi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ 2025 10:35:38 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7%6]) with mapi id 15.20.8901.021; Thu, 3 Jul 2025
+ 10:35:38 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: ezequiel@vanguardiasur.com.ar,
+	mchehab@kernel.org,
+	laurent.pinchart@ideasonboard.com,
+	hdegoede@redhat.com,
+	gregkh@linuxfoundation.org,
+	xu.yang_2@nxp.com,
+	mingo@kernel.org,
+	tglx@linutronix.de,
+	andriy.shevchenko@linux.intel.com,
+	viro@zeniv.linux.org.uk,
+	thomas.weissschuh@linutronix.de
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	imx@lists.linux.dev,
+	jun.li@nxp.com
+Subject: [PATCH v4 0/3] add dma noncoherent API
+Date: Thu,  3 Jul 2025 18:38:08 +0800
+Message-Id: <20250703103811.4048542-1-xu.yang_2@nxp.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR06CA0003.apcprd06.prod.outlook.com
- (2603:1096:4:186::14) To JH0PR03MB7468.apcprd03.prod.outlook.com
- (2603:1096:990:16::12)
+Content-Type: text/plain
+X-ClientProxiedBy: MA0PR01CA0050.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ac::7) To DU2PR04MB8822.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,189 +73,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: JH0PR03MB7468:EE_|TYZPR03MB7081:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ca675a7-f475-426e-a8e6-08ddba1d4a28
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|VI0PR04MB10928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42c97dbf-b5ba-4130-9c78-08ddba1d59a8
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|19092799006|376014|52116014|7416014|366016|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OXhnNkIrS2UzZGUwUndpUXZJd3F6U0ttb3l0Wm1GbW9hQVJWSzllK01BTnNF?=
- =?utf-8?B?MVp1Rnc1dHFicGtJRDNUamh0dTRhVFlGTmpVbmtYVGF2YVJlMjBhSkl1VlRV?=
- =?utf-8?B?eHVBTUR1MGtwS1FpTVRid3JrMTVrRU13SVE0aHVyMEJxVnRtb0xJOFlzcjJQ?=
- =?utf-8?B?U2J3L3p1U2UrUlhCSGdHT0puNFd6Tk8rMVoraHFhR1pLVWVNQVZhS1VpMWF4?=
- =?utf-8?B?eWtuOVAzU0FsRmcwY2krb0x5UG1MUmpKMlVlYU5WZjRzVWptQnBQditVWW95?=
- =?utf-8?B?bXlCbTJVUTN2ZzYxblFLSWl2MXc4WXk2WVBBdXRBdERtS0Z2ZXdBT3pFUkR6?=
- =?utf-8?B?TzNHZE54a3pMSzZVZGdYUzJhS0ppYXRicmxLWXA1alJ1M3lXNmNVLzV2aWpr?=
- =?utf-8?B?Tk90VTVYTlpHT0dtSUZKdFRncmd1WVlwcW02dS9jNjJrb2hiRWthT2s5YmxC?=
- =?utf-8?B?SG5tSytPYzBtZmRtbXI5VW01OWZWTks1RmRLN090L1JOalJhZjAzYmFwOStJ?=
- =?utf-8?B?Y2dYWkVYcVhyTlZ2emVRYWp4VHJDRXh2anlnOXF0cVlNaEJUdEhqUFE0SzAy?=
- =?utf-8?B?U21uYjhUR3lWUVdyd1V4OVhHWVBCZWVuUkJyYjlTdWp4S1hYT0g5QlpvdFFP?=
- =?utf-8?B?RXNTNWI4eG83aFowemRod3poMjVIQkVXQXZhYWRBVkYyVXJhNHFXSGlDYVVo?=
- =?utf-8?B?bEFkTHR2bW0yaGNNRy9Oak1zVjhQQ3dydUNpU3JTeFNVZnJiZ2ZnY1FaT1VW?=
- =?utf-8?B?Q0FtM1hIQURvcm9NQlN5SVl1NE5ubkhjUlFHRlcwV0ZRNi80WnFlemNqSkx3?=
- =?utf-8?B?V0VBdUovWWNDOWV4eDFYZEM1am1kaVIwUjZQV0Vack9wdFVKV3dab1l4WXd1?=
- =?utf-8?B?bmczb2txU2Q3R0dRRUQyU3F6MWtrOUlUdXdRTkUvTitUQjJ3UkgvQ3JqUUxY?=
- =?utf-8?B?YkNoOTZzSE1qQ3JWTExUdk4xc25SdVFwQUJpcGs2bHZjeEM1TTVFTmJkODMx?=
- =?utf-8?B?YkE3bFJtY3FUUjQxK1c1Y1RLSkJ6MHFtZk5rbGM1RHpiWjM4MFROTFQyTTRw?=
- =?utf-8?B?b0s0MXJjWVJHSGxzSHVYSUZEUG4yazVmWllnaklEbXV4emxHbWhNSVVHbHJU?=
- =?utf-8?B?eE5JSlNHSkYwUUdobVJzcktDUG44c3JZYXExL01oSmp1MWE1M1FDMXFrZ3E1?=
- =?utf-8?B?U2g5Sk8zK2hpZVVGcUdkT0dzMTEzVTdrUVgxWEF4WVlVa25sNmhEd3lvMGtl?=
- =?utf-8?B?disxcW5vL29GRUlnY2FPK3hLT05XZ0xtRHNWdlFWancvZlFqbmcyekVQWllL?=
- =?utf-8?B?Q0tQMU0rR3BqWXZmSmxRSVJsejhPUS9GL0l5N1FxeHJsQ1hmMm1BbHJKZUdW?=
- =?utf-8?B?bkhIN3dNdW52dHBDMWVKK0w4b254SUswc0R0endNYzNCa3RNenhibFRack8w?=
- =?utf-8?B?a0lFQm9qVVJ2eThyQ3hURTJzSDZja3pEM1lpdmtIczF1MTRQYmZEZUtudkJ4?=
- =?utf-8?B?Y1paSkJiRlRxdkVRSEVrcGtyL0JZdUtIclZmMWlQZ1A3VmxmS2tDNWQvYmdn?=
- =?utf-8?B?RjUxdVpibTU4SHFaK1hvSFFuaEtibjlDdHBtOGVQVFV6NDdYcHBabjBsUjE5?=
- =?utf-8?B?KzYyb3JWK3YvaHpiQVorNzJLeXpzWk5xeFBZUHZQbzZkaUpmeWw1VEwvQ0Rq?=
- =?utf-8?B?Y1lFbjRqcnplUTVpQURGZ3VrTUl1cTJJMHFCa2NoK0V5VjU4ZUVRdWxEVERX?=
- =?utf-8?B?K2U0UnJFcHRjTmhGRnVFSVYwYjlxMEdmMlhWYmQraGMvNDVEbmFmYlZmbkx5?=
- =?utf-8?B?N0pycnFaSWh3Z1FXekZtL24yMXZPT09CU3IrWEtrQTZnNUdtZzVxdnMzdGR1?=
- =?utf-8?B?WGo3QUlkOTBSM3FPcU1xbTNiVTFnQitnRy9XV3ZENmxtZjlhSUgra3cxLzZG?=
- =?utf-8?Q?UlnPwaiCa0Q=3D?=
+ =?us-ascii?Q?fXCQ+slKnK35NMgUciriEHXDW1k9Q8La2zNDxdPSyuTWLM9HiDsScVuFJncc?=
+ =?us-ascii?Q?FHc5ftMCLr0pXlVBMwOIHm5jPLUhcIl0Wnxbr41TVwgIS6rwDTeG0t06WzVC?=
+ =?us-ascii?Q?bqQskjc0zGd55/KMeMVycXSnRIX6Ef2NTlGDLEqwdnFCh9Ep8zCRdoT7v1QZ?=
+ =?us-ascii?Q?NoVKRWyEq1/5Qj3GjhAUsYAvn0nHL0dNWbtOhO+ppWhQC/itoH/eSTAUK5zg?=
+ =?us-ascii?Q?AHlGrnRhXSm28mYr3RYvZG6sKNf065MUWFHloUwbzLP2BZRl5FVOrEfI+DQM?=
+ =?us-ascii?Q?pVVMQkZG5uYtBrmPo0/uWe5FCpgmp/XDJmCE4dm1e5QyzMmclsgCeklwGmOh?=
+ =?us-ascii?Q?teH6Z08olinh9pAn8pa9byuifvJAtH7bL9/ym0GteQ84Tkr7L/Tc+6hntVyR?=
+ =?us-ascii?Q?XMh7EkCNM5+REIOqB/DztBuw6aCM/5FwqyfI13T+ub2yqIWXgdbOzOWcZral?=
+ =?us-ascii?Q?QPXFYfeCyofHoSgOVXS1pZ6Ikfv3usPZ9N1byECZBnbZOxRXXe+1BXkUJEVg?=
+ =?us-ascii?Q?FXarehdnXwAq1u/Ku4sXUL/FshleiXRxc+WWDHv3xDpHC/l4T1AlRyRaLQZ+?=
+ =?us-ascii?Q?nx2EDS+JbEadP9RaJeHUST4TyHGQ2ggMLThh0h1np0EQQDeIQ4+3J4O92zBq?=
+ =?us-ascii?Q?zXtEc+traJ3fKW8k9qXZ8DBP+ghNHAALdU+kej3YyaNf5coR9NZ0jhcow1ii?=
+ =?us-ascii?Q?BtaPXvliGbG7OLelkEPlpAY3ADfrv/U0CmPCqugZFxu5WA4pjCtem28cJ1vR?=
+ =?us-ascii?Q?kVd8TmNEOdzfsurPO5c9Wy2q5B1SgQ7Gj5ikBW5qWEBw/skWsCot2GIVJHO1?=
+ =?us-ascii?Q?Y/8/PMDBOF8+jbfodqlb18weQVlqn0G5acokyvTPPIr7XvxD9Mc0RzocOXp/?=
+ =?us-ascii?Q?q+1+bNBV7HTAMORDnZgrZMdcyITUpi4zWgLY0HIW1vmMV+cwLYXKsDfDxoJF?=
+ =?us-ascii?Q?j4SibxY/+PNWx9QYrc2Uj208W41Et+HX5uzDuV/pjukSUaf57YXX2m+8/fXd?=
+ =?us-ascii?Q?xUoVMjE5NZyjJZHb8dlyGcWZT05lq/36vlyZoaf53D++vT5vm1wgsTDiFp1U?=
+ =?us-ascii?Q?hyI186+E5Hq8zmQINi/iBIddPXoRgFEliPKqNXJb2IUBuaKRwr+RKOjTTAWy?=
+ =?us-ascii?Q?rLPAn9aXbzinFszKY9Hkvw6lyHQQyX7W6h6+KKsDTkZXpaBRtUbEZWHstPfY?=
+ =?us-ascii?Q?1jM5adUMv9OkFH5u6m65g478tZ+7fRdXdq/WFf75nprxJNWfizOqX2AVBGYp?=
+ =?us-ascii?Q?mZj8naYHeqVzeSrhSuyWyvmOwXpxtp77YbQZWENLn34040ZAmy0T7fo4jFqT?=
+ =?us-ascii?Q?5Vnm0grQ4F1f67rRNTDXf+EH9+wrkcmZ/pHCGrAeT8BtanXH5f6zvYjbDT+k?=
+ =?us-ascii?Q?LyvJ8q3OpJJJNXG2KoMk8lBQxf76I0mKwmQ5XYovDeXPIxi9+ItD+RFklpZu?=
+ =?us-ascii?Q?bKAABN5SgYHA2qeL9tzOerjHomy/nIfuJ4fYzmJA4FCp//fMQ+pWjLFQ3oVa?=
+ =?us-ascii?Q?6P8gcOUL3cDcRD+nep1h2YUiNOPmUH5JTC5f?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR03MB7468.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(376014)(52116014)(7416014)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WTRNaXQ0K0xwcUtTYzdidTU1Z1ZWUU9MUnR4TGZFWExrekhFOFNqeXdJUFVM?=
- =?utf-8?B?dDFicnJ5bUw3WnNjK3lCa1IrQXpCcE05UlE4c3dFc1lsVmVWV3N0VVVTV2lI?=
- =?utf-8?B?dUIxSmpONDFKaHE1NFFqK0lBc3AwdHoxb1EvVFAxYTVCMGxSK0pGanIweTlW?=
- =?utf-8?B?Wk5LSWFBdnZpZEcyY0NmajdmVE02RDdnRERIREhBOG5rOTZQSzN6NzhEQ0FD?=
- =?utf-8?B?bTB2T0kyeFl2YjRQbTEzaUt4SnNpdlhhZXNKV3VtcWV6SjBRVFBPaFJZdGZ6?=
- =?utf-8?B?TWYvVmJhMWtOZzgvN0RLeGJzTWVGejMyVzl2dmxsYWhsSmlmM3NuTmNTM3JB?=
- =?utf-8?B?bkxjV2xzencvN2VQcjdhNHlmTCtRTExxQXBidnBvTnZ3eUx6bU5aNkJFZkZk?=
- =?utf-8?B?bFVTZnpyS1lrZWJIY3NLYXJ0cWduVTM1MVBKU0RyRmJ4aHFoRG1YWVRrZlRw?=
- =?utf-8?B?b0xuMjUyVTYzNUFZN0JvVlZPbGpvMTFhZUdXb2g4WS8wL2VaSXl6eTRLdTJY?=
- =?utf-8?B?eGkxRkVLMXd4Q1BFSDhhV2JzdFloZG4ydCtwNU5PUEliSHVMSU1ucFRLZFZ5?=
- =?utf-8?B?cmtpNldiT3MwZm1JSUo0N0hiVnc1Zkt0ZG9wWFdDakJiMGVEUVZISTFJd25r?=
- =?utf-8?B?MVBmRGdLSXYxWHE5YnIyellZcTZtcG1GNks1R0ZRRVlmL0h5NlN5YU5tYjB5?=
- =?utf-8?B?TTRsQXNvOUgrdUpHNlBrNFFBUy9sVERwVG5XblBNTmJkWk12bmxqYVlBRlU1?=
- =?utf-8?B?a3JuTW9jSzdIV084UlBtc3g4d1ErMWFHWU81ZFRXdVNHL3JROHl1VkwrTHJK?=
- =?utf-8?B?ZmRIc2Z1VWVXeTdtM0JtTDdISDRScWJ6alRjVmN2Q0JWZmtkUTc0bmVldHM4?=
- =?utf-8?B?cnNMY1dGSDNaUzRNMGpQa0hLV2RuOVFXaWllTlNFRlZIM2RoMEZNTlpkV0N6?=
- =?utf-8?B?UkNEc3oxYmtFaWN5eDY4S25GNGp5MGpFc3JkTE9yRTVUQXJnbUdxVVcyQ1g4?=
- =?utf-8?B?MU5HZW9sVkhPdy96dXNOeEJXWE9vNk5oRk1GcWRvWG96VG8zbldvcXdUOE1U?=
- =?utf-8?B?U2tSZ25INTZLZ0NqUTY2b1BQOWFDcEx2bEErMS9FdWJ5STg3eVlxN2R6YXU5?=
- =?utf-8?B?eC84TDZYQ0s1QjZ4WUtFZ1YzcDVrck5VYk1IK2Zsdi91TjhTVmMvb29tbUx0?=
- =?utf-8?B?TnF4NndZRVlkcExmbTJHOFNHRUdvQWRZeE5hKy9pbWlENmtCYTZ4NmdtVk43?=
- =?utf-8?B?WnZyejU1L0RCR004aXI5RkRBZzgyNWVzRERodTYzSnNRNXlRWkFxdzRYNEZB?=
- =?utf-8?B?b294c2NJcTNhWk5QWEtzL3hwVXhkcExHKzhINi9WWkhTUm92NVZSak16WXdK?=
- =?utf-8?B?enN4a0JGeElYVzVnK0NlaTBGblkzNk9jdS9hazdnQnJlSGZLdG9wUDhnOUQy?=
- =?utf-8?B?YnRIb2kyRU03NUpkMTVlUkQveHk4MTJ3TWFLWllFd1ZzZ2kxWFRIMXo5N1Zm?=
- =?utf-8?B?eFR1cEpZYnlSNXA4TVJhR2h0MUFqa0xqSDZkbjl1QW4xTCtxMjYxNXFVeGxr?=
- =?utf-8?B?NFdQUTJqT0J1WUtNcTNlVW5DR2JEcTVXQjhvWDZaWG9RbmM2Tm5QS053SDlt?=
- =?utf-8?B?MzdBYmx2bXRkQTg3SEdyWXcwVGl2SzYyZy9zcDVCRHdIQzAvTTQ3bkRkakpz?=
- =?utf-8?B?VHJrZXJtc3dXczNGalFueWpjYmo0anBmcnBFcDdaeDl6dzdvWVJUc1BFdWtR?=
- =?utf-8?B?WTQvYUZ3YlFGWXBTaDdYUGNpWCt3cVhJYU5NakwwdnpYdGxyRklRMmVOMS81?=
- =?utf-8?B?NkFRMytGR0ExbGZqT3NWeG0wOGV3TFFHWC9WanlEMDZQamM5Y3BSNlo3NUFx?=
- =?utf-8?B?R0dZK0wyMUtjclVOM25RNmpGdEQ1NVlSYmY2YkVPdm5ZUDR4QUVkS0VHNW1Z?=
- =?utf-8?B?eklla3VGWUpSNENBajhUeWY3b2NQTDYzNDU3ZjdhN0wzc1VxQVc3dFZUNy9x?=
- =?utf-8?B?dmhXZFc1WkNCY1VuU3B4UHAvK0dWYk5COSsyb0V6dkFRSzAvc3FMU2NIMVl5?=
- =?utf-8?B?cnJqMFNZTzJYMDh3SWRUV2lxSlY4MkZDS3YyaUlsSUdUY3hIcjRlS1ZtUlZy?=
- =?utf-8?Q?cqMx2Ij0jvfxwTlb7G636hjax?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ca675a7-f475-426e-a8e6-08ddba1d4a28
-X-MS-Exchange-CrossTenant-AuthSource: JH0PR03MB7468.apcprd03.prod.outlook.com
+ =?us-ascii?Q?SsiKbEvt/Nhm2fKj0+gnIAS3G44O22kV3dmOtYZjFFE3WnxN+sKnYEvhNegN?=
+ =?us-ascii?Q?TrkciPEaQEc8jXKJcT4wNzznVLpscO8FwHqzpI2/ZzRKKtnObWVgShXyt+JQ?=
+ =?us-ascii?Q?dBonyYf/elEBp2FkNqBkLd1UOjuBNWjnZwWbX5z1Zqc+JMj1AHPQcgS03fi4?=
+ =?us-ascii?Q?+p/fbV47G6DrLTv/shq1k7nVgcaUI0P6luJouc0iZ9f8sjvs6C/O48bS9kix?=
+ =?us-ascii?Q?MLS0Ttx+ZBcw76HOEA5CylerRiqur2tQMJ8aT5xg2YkqMq4WMEDIDjvO8Ecg?=
+ =?us-ascii?Q?vv5a6s3Phkj0nb7YcK04lAL1gAfxngLlbR+dv771SNt4QNNOthWYTNvHH09Z?=
+ =?us-ascii?Q?L8FMHFZz4jRzdge+wj/eCEMP6zVrzY+kzl/X/0XtXjbt9BmVShSQVpDkRemL?=
+ =?us-ascii?Q?fN74fubVjOp8ci1vofP1nz40qb0r4puE7slopZTIlLDgMJpql9At1+luKG9F?=
+ =?us-ascii?Q?p3wIxbUM1Ry9hoQ01mBBVjNY8/iRaRWPqcJpZP2L5jg26pwXwyHXUJ+MOyDK?=
+ =?us-ascii?Q?h1dIoD7Ge1Mi3gTHPX26I4lEtGZoDmdnhzxnxEApKQun2eVT61jDR0hI0dfa?=
+ =?us-ascii?Q?TSrrNGtemyt5ZSwBpJxviIuV4a7EXuLpZ5UkR/cysGn2yrFJU977ecKvnm9o?=
+ =?us-ascii?Q?OxhuMTE5Q+qQex7gGFuB2Tn7i1hgDuVl+rBO2eUcTsgS2LRNfsaqb3bLXRf5?=
+ =?us-ascii?Q?W09NK89b4WT1N7s1SozgVlFfYfbJxsMwpH9wcKWTfQGg8H1sEBocg279pfYd?=
+ =?us-ascii?Q?naWaEly3RdMAOxC+CJ1VEnOWm40lvwpTDYhVcpnI4+AvZ+UQ9csyUEXc3nx0?=
+ =?us-ascii?Q?TlqSseoyxgLbKogEVcLLwAUptI/pOUYrDD9pKsqnsth6JXWdu0qIOZjukFjS?=
+ =?us-ascii?Q?Sxq3dxpKPQWY7SIr+Oi3oTiP9+OhUJr1HDkVvse756JApM4lgmIm4NkTMtC2?=
+ =?us-ascii?Q?/DtqXEeapS40VfjoVEHtRBuvgiPYnGBMPN56+OmYYpnnVGzu1yFrlM1XC6Cy?=
+ =?us-ascii?Q?ktTQoxsfsshpbuOXfvkAGvXBc9g4xkTsneDtDuyNXEo+4/DFyrGTSOvmc2K/?=
+ =?us-ascii?Q?6ny9WsePRE61OjaD+ujNhTD0d7dXfM41iQvIOKukdaFHO3CVRNKB9dh7c3Hm?=
+ =?us-ascii?Q?hb601R98TEEKCffJ1EzbSpOA7CHfXKKNxHsDRdrSDP2vAlEd/IJUvh71Wv8m?=
+ =?us-ascii?Q?tJ2FKFmhLr2lSK8MIOyPrxJNuXMDqEgIPdPFKHf6WtLl6n2AKIiPAhmRVAxh?=
+ =?us-ascii?Q?FEKzi4gLndWblIGQUoCYr5NP2RDxEp+qhay2UJ1neKYPPaz5CF1LHj7/uliC?=
+ =?us-ascii?Q?w6EuACddDwZyzPDf4R/mp0Rzk4PNI6VhnVM37kQ6LxJou1ffhkbAxY6FNp6I?=
+ =?us-ascii?Q?Ebr25caxxoZp1qKT9UAnjBmjBCTRAKHht/B4WRduwXmReFENvsS958frlsDj?=
+ =?us-ascii?Q?wgE41v0ejRJRfNPvF6CBmao9LwAYaIRV3iGpH8DMuq5OJz3bUOfSko/XahVi?=
+ =?us-ascii?Q?A0oLjam/In9ZcX6t6McR0pEjYK4l+4tLecsiVjgnh3xyjL+pqgPmN+kiUkR4?=
+ =?us-ascii?Q?m6yuwUxwvB68g9s3XHFVZBSPf4GAg5NGV9FMj2ik?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42c97dbf-b5ba-4130-9c78-08ddba1d59a8
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 10:35:11.8776
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 10:35:37.9870
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tKqZRK3jl0CjVvPe1qHd3StpMTW/K50q44j5SnfK6MBjciOBPejdqFFKn31XwEHkydEXiRiq/78KwJpKjZzYdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB7081
+X-MS-Exchange-CrossTenant-UserPrincipalName: SQEyLDTOKLKECoWxAVC3X9VJebMtosm9oZxVEa5hr0JkbykAnLZoB8s56R1qadP3MqIbJQyK+lAFBlYQHikhyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10928
 
-Hi,
-> [ EXTERNAL EMAIL ]
->
-> Hi,
->
-> ke, 2025-07-02 kello 19:35 +0800, Yang Li via B4 Relay kirjoitti:
->> From: Yang Li <yang.li@amlogic.com>
->>
->> User-space applications (e.g., PipeWire) depend on
->> ISO-formatted timestamps for precise audio sync.
->>
->> Signed-off-by: Yang Li <yang.li@amlogic.com>
->> ---
->> Changes in v2:
->> - Support SOCK_RCVTSTAMPNS via CMSG for ISO sockets
->> - Link to v1: https://lore.kernel.org/r/20250429-iso_ts-v1-1-e586f30de6cb@amlogic.com
->> ---
->>   net/bluetooth/iso.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
->> index fc22782cbeeb..6927c593a1d6 100644
->> --- a/net/bluetooth/iso.c
->> +++ b/net/bluetooth/iso.c
->> @@ -2308,6 +2308,9 @@ void iso_recv(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
->>                                goto drop;
->>                        }
->>
->> +                     /* Record the timestamp to skb*/
->> +                     skb->skb_mstamp_ns = le32_to_cpu(hdr->ts);
-> Hardware timestamps are supposed to go in
->
->          skb_hwtstamps(skb)->hwtstamp
->
-> See Documentation/networking/timestamping.rst
-> "3.1 Hardware Timestamping Implementation: Device Drivers" and how it
-> is done in drivers/net/
->
-> This documentation also explains how user applications can obtain the
-> hardware timestamps.
->
-> AFAIK, skb->tstamp (skb->skb_mstamp_ns is union for it) must be in
-> system clock. The hdr->ts is in some unsynchronized controller clock,
-> so they should go to HW timestamps.
+On architectures where there is no coherent caching such as ARM it's
+proved that using dma_alloc_noncontiguous API and handling manually
+the cache flushing will significantly improve performance.
 
+Refer to:
+commit 20e1dbf2bbe2 ("media: uvcvideo: Use dma_alloc_noncontiguous API")
+commit 68d0c3311ec1 ("media: stk1160: use dma_alloc_noncontiguous API")
 
-Following your suggestion, I switched to hwtstamp but kept 
-SO_TIMESTAMPNS on the PipeWire side.
+However, it's obvious that there is significant code duplication between
+these two commits. Besides, a potential user USB Monitor may read outdated
+data before the driver do DMA sync for CPU which will make the data
+unreliable.
 
-+                       struct skb_shared_hwtstamps *hwts = 
-skb_hwtstamps(skb);
-+                       if (hwts)
-+                               hwts->hwtstamp = 
-us_to_ktime(le32_to_cpu(hdr->ts));
-+
+To reduce code duplication and avoid USB Monitor result unreliable, this
+series will introduce DMA noncoherent API to USB core. And the USB core
+layer will manage synchronization itself.
 
-The value I get is unexpectedly large and not the same as the timestamp 
-in the ISO data.
+Then the last 2 patches have used the API.
 
-read_data: received timestamp: 880608.479272966
-read_data: received timestamp: 880608.479438633
-read_data: received timestamp: 880608.489259466
-read_data: received timestamp: 880608.489434550
-read_data: received timestamp: 880608.499289258
-read_data: received timestamp: 880608.499464550
-read_data: received timestamp: 880608.509278008
-read_data: received timestamp: 880608.509451425
-read_data: received timestamp: 880608.519261175
-read_data: received timestamp: 880608.519438633
-read_data: received timestamp: 880608.529385008
-read_data: received timestamp: 880608.529462133
-read_data: received timestamp: 880608.539273758
-read_data: received timestamp: 880608.539452758
-read_data: received timestamp: 880608.549271258
-read_data: received timestamp: 880608.549450008
-read_data: received timestamp: 880608.559263466
-read_data: received timestamp: 880608.559443216
-read_data: received timestamp: 880608.569257466
+I have tested uvcvideo driver. But I haven't tested stk1160 driver as I
+don't have such boards. @Ezequiel Garcia, @Dafna Hirschfeld do you have
+time to test it? Your support on this would be greatly appreciated.
 
+Changes in v4:
+ - improve if-else logic
+ - remove uvc_stream_to_dmadev()
 
-Is there any special processing in the application code?
+Changes in v3:
+ - https://lore.kernel.org/all/20250702110222.3926355-1-xu.yang_2@nxp.com/
+ - put Return section at the end of description
+ - correct some abbreviations
+ - remove usb_dma_noncoherent_sync_for_cpu() and
+   usb_dma_noncoherent_sync_for_device()
+ - do DMA sync in usb_hcd_map_urb_for_dma() and
+   usb_hcd_unmap_urb_for_dma()
+ - call flush_kernel_vmap_range() for OUT transfers
+   and invalidate_kernel_vmap_range() for IN transfers 
 
->
->> +
->>                        len = __le16_to_cpu(hdr->slen);
->>                } else {
->>                        struct hci_iso_data_hdr *hdr;
->>
->> ---
->> base-commit: 3bc46213b81278f3a9df0324768e152de71eb9fe
->> change-id: 20250421-iso_ts-c82a300ae784
->>
->> Best regards,
-> --
-> Pauli Virtanen
+Changes in v2:
+ - https://lore.kernel.org/all/20250627101939.3649295-1-xu.yang_2@nxp.com/
+ - handle it in USB core
+
+v1:
+ - https://lore.kernel.org/linux-usb/20250614132446.251218-1-xu.yang_2@nxp.com/
+
+Xu Yang (3):
+  usb: core: add dma-noncoherent buffer alloc and free API
+  media: uvcvideo: use usb_alloc_noncoherent/usb_free_noncoherent()
+  media: stk1160: use usb_alloc_noncoherent/usb_free_noncoherent()
+
+ drivers/media/usb/stk1160/stk1160-v4l.c   |  4 --
+ drivers/media/usb/stk1160/stk1160-video.c | 43 ++++--------
+ drivers/media/usb/stk1160/stk1160.h       |  7 --
+ drivers/media/usb/uvc/uvc_video.c         | 61 ++++-------------
+ drivers/usb/core/hcd.c                    | 33 +++++++---
+ drivers/usb/core/usb.c                    | 80 +++++++++++++++++++++++
+ include/linux/usb.h                       | 11 ++++
+ 7 files changed, 141 insertions(+), 98 deletions(-)
+
+-- 
+2.34.1
+
