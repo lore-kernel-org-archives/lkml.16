@@ -1,176 +1,159 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0965B176ADE;
-	Thu,  3 Jul 2025 13:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0A92222B4;
+	Thu,  3 Jul 2025 13:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751550119; cv=none; b=n4qzu/MlGXg6kfxcK8UvUAnrWG8SmZYDssiCdn4i3pPRmJQ2YaTJ1fjNtNLh0zsBOHzoTFf0CNEBM6ZhOMa/wfERlq9fYka4/FiRE5tZDPpp279sRgQR74Ov+Aq5mFg2nRFuazOyMKNEvaVf4km2ZLZZ83P2KDdn+fAvGW4jryw=
+	t=1751550161; cv=none; b=d0dTJzINGbEl6or8AbmRs3wN3TgjscAad10wW/XWyNlERB83ocPrTogx+yNqBv3TFN0mtmPqS9QFuPz1f1/YIOAiWacx+mHey06TaaY2xGnoq0IdjtR/CwAfqd912lDMDTiWyr9EukTBBDk8XZ16G0XVlMMdEAivGfgKNRkUWiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751550119; c=relaxed/simple;
-	bh=WnKxo7Pr2dAqCibzDh87R5uqN2naOh2unTSRmdwdDOw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DTgrgj7sr2rY2EjnmvFbeRxNlAesXUFkHOxc0isUJZKFrVUEY0a3mrMIEhBJKmg6sR1fot3sY6z09XhguZOzwdNSQb2uZLM0E8QVhiYZGpCR8tq9yqzGuv5q/gOUXL7kw9Vv3EQSlwtCj3ZNVbhdcEedViPDlxjCw9VUfj+YClc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DYwxko1P; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=NptWg52a reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1751550161; c=relaxed/simple;
+	bh=tavQcEGaObxidlIkQzXjJ++BUyUCiEeX6N3ES4TeMI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OFchWEMClkTVod/TmGQbYfAg3UDQlpRxLndw5G00XY1vaJDMCxY/bHrfUBUktAj/4sVW2ty/xgtTZqhtRm0BX4FX1Jj7lmTAOXb6rgF+UF7TBNroQvTLzoYyVI50afGoyO/0TAe6vpwtNLyAFxkZ07CrmRNoCu6M5LP2okSueyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6lmP4xQ; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DYwxko1P";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="NptWg52a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6lmP4xQ"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32b553e33e6so48826361fa.2;
+        Thu, 03 Jul 2025 06:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751550115; x=1783086115;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=04qYGKXctFAZ3e5+Qm8FZ6hK/vJxUFD2rK/A5VS3svY=;
-  b=DYwxko1PAz3Acj5M3xuWRSo1YrUKTliiTSFa8WbxpQasfwXdj5N/6H74
-   iI/fL1i2NbOru7jOnOeFIkb2CnwFgrRJfjCDTQvkxj2O1kTCeGkFJn94n
-   pRelywAV4fh0ZGHqzncSwIs/C39dL/DQNqO/yk+wifyRXVaRIJAbzJ6Jy
-   ZDKwsFB85z51nGdqfJUES+6aNyl1YVZcoFhL+I7xpBOJvFrNgINGcioe7
-   Bk/VR4PkIrLL90KNZz1QmvY38uh6B66Q5mvjLItfsr6fm4Flwg+M0cRGl
-   kSgdi6PC6QxM7oI05n1Q+Fb2E0ssKWWV1aCZ4vTBGdioLIOfXeEvzAehm
-   A==;
-X-CSE-ConnectionGUID: QoxKM4g1RseAF++DkGCgAA==
-X-CSE-MsgGUID: 8fICYet0SzWZ3FWt/bzHeA==
-X-IronPort-AV: E=Sophos;i="6.16,284,1744063200"; 
-   d="scan'208";a="45010991"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 03 Jul 2025 15:41:46 +0200
-X-CheckPoint: {6866889A-12-4FC15ADB-CD71293B}
-X-MAIL-CPID: 7E9CD1FEF2A5839123F58A657BCB8A76_0
-X-Control-Analysis: str=0001.0A006399.686688BF.0033,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 03A1A161869;
-	Thu,  3 Jul 2025 15:41:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751550102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=04qYGKXctFAZ3e5+Qm8FZ6hK/vJxUFD2rK/A5VS3svY=;
-	b=NptWg52abfzeSToTSQmYoKJAZLV7kwBaXq3ncy0XzG1W8xulY2lg+0zDoqDA8i+oLRGleu
-	pRYCZXRM5vHbg7v8eY6wvQtbspgfaGErcrMRFh+Z/ip2Hk6iQUjPocf9EDIaYyY0xIbpEO
-	IphiGndW4kAJARGsCNLzkh5hQiAvi80Pnm77KXkZmGLy484EKfy1oTrE7/KuC3ovBfq1HY
-	PNnDimssMw3skITQynyc7QIqtjt5B+TkSl1K2ceeifjgAfrGTYcyFimopMV4YCIlSUX86z
-	LJNC7d4RILfaegRXAnida3ad7CASpi9e+YQU8tdATIqHgNgXr0UgyLLrde6L6g==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Steffen =?ISO-8859-1?Q?B=E4tz?= <steffen@innosonix.de>,
- stable@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Steffen =?ISO-8859-1?Q?B=E4tz?= <steffen@innosonix.de>
-Subject: Re: [PATCH v3] nvmem: imx-ocotp: fix MAC address byte length
-Date: Thu, 03 Jul 2025 15:41:40 +0200
-Message-ID: <2665065.Lt9SDvczpP@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250623171003.1875027-1-steffen@innosonix.de>
-References: <20250623171003.1875027-1-steffen@innosonix.de>
+        d=gmail.com; s=20230601; t=1751550158; x=1752154958; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFNqw5vvbvpKQuxgS3RLj0oHSG6zw8ZBvyqT3A0POSI=;
+        b=A6lmP4xQ/aTs5EFT/hOOPjMgwYh2GZmdDeL/3YfgTyTY+Vvw1CV/jgoWF8aWdZAgvW
+         BroDq21ROcZw6uHxrjyTnmIff/u1sURMI4QzS1u71CcdSgKsyYyykpvPBEh2AYVKonWX
+         vxVBYNLWi028IEefl/OcoM1W3viF9Xo19um8eUS5W38W9Rt9RLPwRJz8WFNgNVMGftmx
+         rxSbBO7HWMWrKhE2tWKvm4h4S74ZHNCSgeoKwx6EAuBxA7B3Oo54yyXodmZaCANxfHV1
+         FBuR67O4bcdDopXAYn67yz7UeVhHUi2DXl9PX24Vi2fT3J6tjjQ64DOUEBb/thlbbkIU
+         /GBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751550158; x=1752154958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jFNqw5vvbvpKQuxgS3RLj0oHSG6zw8ZBvyqT3A0POSI=;
+        b=RQ1OuBgDMas5dOXHBkINo9ndUqZKOI1nSdFzquYFZ6XFGfd6JpZhJqY/XmIJ7Vgxpe
+         X32x6b5A5KaOfBE3ogSh4DCvqvwORZAAAA6DmM/a1H4bEKKXeDMYg+LfLFLIfh01LMoP
+         7VAzOrCnRjLeNtge6IwmThYw9kgi0Cnvy9SXyn+CroPYfHLBYvG+ywSKG+yI2M7LEV6q
+         FiNhwa3oxjM5cRCNpteIIcySDKuWpaCqhByYcnckAtNz8Rw79W/zFX5Fk7QM0nMH4Hpn
+         2wsSOYlywUnx36Xzv2DUc4YlugnDlMUANMeYgDhVyz/sRu8LNizJeMrJtmSBnHm5q5nt
+         xZvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVP57BGMN5QJ9jNn0RIvSjZkZf1H16Q1CWCRQHHQpMNcy12DA574dh15F746tpu2tDqCaD5ll13RDtYQWNMjNI=@vger.kernel.org, AJvYcCWRuiEjvI73Jog1/dia8Ah+z+ayuElq1antPI75LG9SRUnlkQMymzycrjeooPSLbHky9ZtsmB08@vger.kernel.org, AJvYcCWf658de3A2si8z75716UjCpV+0X+M9Qq78wxjjbH+7cT62uebf4kFt8FuEhfGVCOtQemYq41pKQZDTZy0q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOaZJD04efkxK0/7oDUD3eegFaTHmAz7vxKsLkMC2clNfevLQp
+	v2Zdj8zj/CrWd5WTNgrdzM1Jiq8u44KEmipuFK7faFDnT43/tstyjd82UBA7tbJ5blnOQJL+SkG
+	ruHeJvcVvuM4ITfDGHd/bLanEZ3eUK+A=
+X-Gm-Gg: ASbGncvGdzHmXpqJHkaGHlrhtL+R3XhceSq0zEVdEtt/a7lNc3/IXHyGwrgYxy/FO57
+	ibWWCzLMQiFQK9uMnmwjupQ+Hg1frk0RRBZzVFP39o3mgOpGeTWzf7hnPwL2DDckFbRjQQA5yZx
+	KQYh0JohGGvU3m4KG4lxqVyDDPewTBySZqNt1brzVDHQ==
+X-Google-Smtp-Source: AGHT+IEJwE1g4YnSLqje9oO3w/5JCMMzalfAYURIzR+idPnMXcOc8GmRto0P9wd9n73uBaY7LwalrXFGw49te1yx/Y4=
+X-Received: by 2002:a05:651c:4001:b0:32a:651c:9aea with SMTP id
+ 38308e7fff4ca-32e0009ad64mr19007641fa.34.1751550157391; Thu, 03 Jul 2025
+ 06:42:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250703125941.1659700-1-neeraj.sanjaykale@nxp.com>
+In-Reply-To: <20250703125941.1659700-1-neeraj.sanjaykale@nxp.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Thu, 3 Jul 2025 09:42:24 -0400
+X-Gm-Features: Ac12FXxaJZkUcMMuvEfhaCIQVNH4xMzK0iXdJhhq4GoOYF0l2cqU-Les31hBC0w
+Message-ID: <CABBYNZKN+mHcvJkMB=1vvOyExF8_Tg2BnD-CemX3b14PoA1vkg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] Bluetooth: coredump: Add hci_devcd_unregister()
+ for cleanup
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, amitkumar.karwar@nxp.com, sherry.sun@nxp.com, 
+	manjeet.gupta@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
 
-Am Montag, 23. Juni 2025, 19:09:55 CEST schrieb Steffen B=E4tz:
-> The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
-> extension of the "mac-address" cell from 6 to 8 bytes due to word_size
-> of 4 bytes.
->=20
-> Thus, the required byte swap for the mac-address of the full buffer lengt=
-h,
-> caused an trucation of the read mac-address.
-> From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
->=20
-> After swapping only the first 6 bytes, the mac-address is correctly passed
-> to the upper layers.
->=20
-> Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Steffen B=E4tz <steffen@innosonix.de>
+Hi Neeraj,
 
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-Thanks
-
+On Thu, Jul 3, 2025 at 9:17=E2=80=AFAM Neeraj Sanjay Kale
+<neeraj.sanjaykale@nxp.com> wrote:
+>
+> This adds hci_devcd_unregister() which can be called when driver is
+> removed, which will cleanup the devcoredump data and cancel delayed
+> dump_timeout work.
+>
+> With BTNXPUART driver, it is observed that after FW dump, if driver is
+> removed and re-loaded, it creates hci1 interface instead of hci0
+> interface.
+>
+> But after DEVCD_TIMEOUT (5 minutes) if driver is re-loaded, hci0 is
+> created. This is because after FW dump, hci0 is not unregistered
+> properly for DEVCD_TIMEOUT.
+>
+> With this patch, BTNXPUART is able to create hci0 after every FW dump
+> and driver reload.
+>
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 > ---
-> v3:
-> - replace magic number 6 with ETH_ALEN
-> - Fix misleading indentation and properly group 'mac-address' statements
-> v2:
-> - Add Cc: stable@vger.kernel.org as requested by Greg KH's patch bot
->  drivers/nvmem/imx-ocotp-ele.c | 6 +++++-
->  drivers/nvmem/imx-ocotp.c     | 6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
-> index ca6dd71d8a2e..9ef01c91dfa6 100644
-> --- a/drivers/nvmem/imx-ocotp-ele.c
-> +++ b/drivers/nvmem/imx-ocotp-ele.c
-> @@ -12,6 +12,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/if_ether.h>	/* ETH_ALEN */
-> =20
->  enum fuse_type {
->  	FUSE_FSB =3D BIT(0),
-> @@ -118,9 +119,12 @@ static int imx_ocotp_cell_pp(void *context, const ch=
-ar *id, int index,
->  	int i;
-> =20
->  	/* Deal with some post processing of nvmem cell data */
-> -	if (id && !strcmp(id, "mac-address"))
-> +	if (id && !strcmp(id, "mac-address")) {
-> +		if (bytes > ETH_ALEN)
-> +			bytes =3D ETH_ALEN;
->  		for (i =3D 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
-> +	}
-> =20
->  	return 0;
+>  include/net/bluetooth/coredump.h | 3 +++
+>  net/bluetooth/coredump.c         | 8 ++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/include/net/bluetooth/coredump.h b/include/net/bluetooth/cor=
+edump.h
+> index 72f51b587a04..bc8856e4bfe7 100644
+> --- a/include/net/bluetooth/coredump.h
+> +++ b/include/net/bluetooth/coredump.h
+> @@ -66,6 +66,7 @@ void hci_devcd_timeout(struct work_struct *work);
+>
+>  int hci_devcd_register(struct hci_dev *hdev, coredump_t coredump,
+>                        dmp_hdr_t dmp_hdr, notify_change_t notify_change);
+> +void hci_devcd_unregister(struct hci_dev *hdev);
+>  int hci_devcd_init(struct hci_dev *hdev, u32 dump_size);
+>  int hci_devcd_append(struct hci_dev *hdev, struct sk_buff *skb);
+>  int hci_devcd_append_pattern(struct hci_dev *hdev, u8 pattern, u32 len);
+> @@ -85,6 +86,8 @@ static inline int hci_devcd_register(struct hci_dev *hd=
+ev, coredump_t coredump,
+>         return -EOPNOTSUPP;
 >  }
-> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> index 79dd4fda0329..1343cafc37cc 100644
-> --- a/drivers/nvmem/imx-ocotp.c
-> +++ b/drivers/nvmem/imx-ocotp.c
-> @@ -23,6 +23,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/delay.h>
-> +#include <linux/if_ether.h>	/* ETH_ALEN */
-> =20
->  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
->  					       * OTP Bank0 Word0
-> @@ -227,9 +228,12 @@ static int imx_ocotp_cell_pp(void *context, const ch=
-ar *id, int index,
->  	int i;
-> =20
->  	/* Deal with some post processing of nvmem cell data */
-> -	if (id && !strcmp(id, "mac-address"))
-> +	if (id && !strcmp(id, "mac-address")) {
-> +		if (bytes > ETH_ALEN)
-> +			bytes =3D ETH_ALEN;
->  		for (i =3D 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
-> +	}
-> =20
->  	return 0;
+>
+> +static inline void hci_devcd_unregister(struct hci_dev *hdev) {}
+> +
+>  static inline int hci_devcd_init(struct hci_dev *hdev, u32 dump_size)
+>  {
+>         return -EOPNOTSUPP;
+> diff --git a/net/bluetooth/coredump.c b/net/bluetooth/coredump.c
+> index 819eacb38762..dd7bd40e3eba 100644
+> --- a/net/bluetooth/coredump.c
+> +++ b/net/bluetooth/coredump.c
+> @@ -442,6 +442,14 @@ int hci_devcd_register(struct hci_dev *hdev, coredum=
+p_t coredump,
 >  }
->=20
+>  EXPORT_SYMBOL(hci_devcd_register);
+>
+> +void hci_devcd_unregister(struct hci_dev *hdev)
+> +{
+> +       cancel_delayed_work(&hdev->dump.dump_timeout);
+> +       skb_queue_purge(&hdev->dump.dump_q);
+> +       dev_coredump_put(&hdev->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(hci_devcd_unregister);
+
+The fact that the dump lives inside hdev is sort of the source of
+these problems, specially if the dumps are not HCI traffic it might be
+better off having the driver control its lifetime and not use
+hdev->workqueue to schedule it.
+
+>  static inline bool hci_devcd_enabled(struct hci_dev *hdev)
+>  {
+>         return hdev->dump.supported;
+> --
+> 2.34.1
+>
 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+--=20
+Luiz Augusto von Dentz
