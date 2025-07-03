@@ -1,27 +1,27 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EBC1DE3A8;
-	Thu,  3 Jul 2025 01:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246E9219A9B;
+	Thu,  3 Jul 2025 01:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507476; cv=none; b=WJAChONdeRk5WByC9T2XBEHulw165IVIJ3YZUU4vcBI6zC3sHDlZXF3hg6xvir55F1uRFusRZZaRt6rafBk0VodH7t/AFh/AsoEGE2Wi3CJa+AG+diXsHxYYtqyob0KM8kwnfvB+b7s5YHbtlSzZuGbKCY6D+mVHExm/UFYKHr4=
+	t=1751507479; cv=none; b=RPxVSU1Pky6hMS+fZHzRCi+b3pFUKHa4qKsBXu12FO0oV9biO9ESOLsaTMrqv8hQ3O5j/KpgGmvzhU1RzJA757+Zcyso+WU8cLJz7fRrM/rygT7REt0T4VJgMIkSbEd5NI/HN/d5L56eqqsKAFtqIVLDoRpaj/aPDUvpuxlj90Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507476; c=relaxed/simple;
-	bh=GDBVF8MbBKihHLAEADIj6Yzy4W/NWhpQ/T+e33mdqj0=;
+	s=arc-20240116; t=1751507479; c=relaxed/simple;
+	bh=sNEQEnKuqE5ED2CNiceZlJzn+qdC9+MNHxfFb1fe/yQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TnyNf4sE+XnvS9+AYm151ipoX4yfErKFkfwK6bJSGpF26Yvgl8DYcOSKVphC2pM355WQgx3kCVjWw5iDN1zvByu7Tx/jiU/L7S4mDfVBUP2es887fKPIeY+vDm5xWdOFAUsnSOS3Lr/jl55ch3xWiCXi7RIqf4BPvBW8c/Kdwsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=18.194.254.142
+	 MIME-Version; b=pbKLr9Dpy+Ov9XV/sX2itlmK+axW3LP6ls3Tqo522x3pTKxL7Jy4pgEkA6AqmJZmRTRYxVEnVCm7OeuXhk4wUf6Htmh3VojYFcU9VSc/4b5j11mlLtvedqEjz/ZEgSlyIqEmjZGaMnaGYrSjehMIT7zBTpPEa+Mz8ikKjaj+sfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.243.244.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: zesmtpsz8t1751507364t9f52d5e6
-X-QQ-Originating-IP: 3WdHkXG3DVFWUdOPnJvBMmcdSR+BRgxfgU/F3IOkH2o=
+X-QQ-mid: zesmtpsz8t1751507392t1dde0829
+X-QQ-Originating-IP: UupTy+JW8obp2Fp4CFy/3t2/sY69ThsAUW9vldRuxBk=
 Received: from localhost.localdomain ( [203.174.112.180])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 03 Jul 2025 09:49:21 +0800 (CST)
+	id ; Thu, 03 Jul 2025 09:49:50 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 15554768658210106800
+X-BIZMAIL-ID: 3269869034678843262
 EX-QQ-RecipientCnt: 22
 From: Dong Yibo <dong100@mucse.com>
 To: davem@davemloft.net,
@@ -46,9 +46,9 @@ Cc: netdev@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dong100@mucse.com
-Subject: [PATCH 01/15] net: rnpgbe: Add build support for rnpgbe
-Date: Thu,  3 Jul 2025 09:48:45 +0800
-Message-Id: <20250703014859.210110-2-dong100@mucse.com>
+Subject: [PATCH 09/15] net: rnpgbe: Add netdev register and init tx/rx memory
+Date: Thu,  3 Jul 2025 09:48:53 +0800
+Message-Id: <20250703014859.210110-10-dong100@mucse.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250703014859.210110-1-dong100@mucse.com>
 References: <20250703014859.210110-1-dong100@mucse.com>
@@ -61,477 +61,742 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N76rkG23tQ5KZRRkwnBTeLkjOVm7NPdia357h369/D5SfMX8o6yAHcZr
-	TkF6qllkVUKh+wlwQPVS7al/1B81AtulHlWoiK88NgwMTwxn12rAdLv4G70SWdZQGT6Rm+2
-	CVUhQSZ6FDUFEdMPbQgEeUrjAf8Dsg3/aEaxGLq3FLTzMxAIq1fTGAfsHb4X35CsxE+55Xx
-	Pm+Fe6bX3DRLugIlmUJgPbEf6yoCud2ubs6uaAfbBrsNGcdFw3yp/5qo873C5uMnS3xcI/W
-	Xnb9pNugmtqiFa3z+Efi2/cuzED4jFy9ABvVDTj+3kQ6LQ7ihHfPAGLq/EDPq7UHRJMQAYt
-	xnSaMPB90ZeBSSqr9Wme0FAQCXUEa3ByXTLMl2h3e7EjJGT4lSQyY0C5NQ209xpoF21e7aW
-	Y6Lc9ZfTqvLl8ucyftO8/6sivUq25dVe0u/Czbf6H9qCJQmRN1nLgEa8lwszvaEL4qZuBn2
-	67zgATlVhrqfdbhlM9AB8fe9i8Y1jnq7s+OPhymgqAembjn9bx1Dd1t70w5dkclJgda38zT
-	Qhgj9tjkH3vlFIoYLrdj/5MkAxWH9QTKHzk/Xc+pzjym2FZscKMjxsOKx1grnSRRUl29MPh
-	O7eARIXsC9hqy8iAdEWJmwKSWwBHX7ZSJ01RT+uJBTVGPFBYdi50eTRsSW+RMK1IAUyM1Hd
-	/+55+Sjens7W8QnraxAenvYxh18pEUL+9gcKBkBxi1OfiXRrOB0hIGhcoTmVYV3lBXMqURX
-	GZ7PnivpCyPekIHZdFkpNW5pNRJ0NKDgZ8cYcYpwhS/3jR78lOn6tQ7+Zpi0lHTP+NKAPHm
-	j62ZNR9ckhVc5oIn1fdHDL+ISTigjQBBuJEtl1SO0/EosDkjtKUYPbTd/QeFP3eD7Ljugan
-	3qeBpmmbSEucFMLm/p84g+hXbW18prpv0uxNK+x3pfU92oZKC9Uiriy+uuHfZEm+hZSQKyj
-	9W201WJR5vPv7JEJPOoKSRxig3QUDldmkBxxSVl+Ol4hygu6KSsBhoo+syuzDde3BEDETqW
-	Q66q3Ii6v1+myIFzNZ/K+sGxr5k09BgoKBht+gyhiAOTGCn3jKZ/C0l1XIrP6I6+zbO7D9M
-	Z0jvnOL2+1O
+X-QQ-XMAILINFO: NWwUqlpH66YH7Ld0SX/SKKkbzkZlEZoNq4x2YGrGBaIOWru30/YAz2V8
+	eQT3MnEqBA0bEqZjVoN3wg5ks9jjaZf2+u67KLssZATZMYnr8lP6Lwb0eVRiUb3WkTda5rZ
+	vKqSPW569RO8iMYVQNFQU+rqWUat0jHy2vB6ScDwwcQz6Jcc2+3EowwcZrKMkzlJ99Waa1u
+	954oZiGR3RKSRGoaarPb4/nwiPYYOazXt7Q5+ymVFjM2+eGUrzwc106pM9T6hf7/IKjgfLd
+	Ks4bDCxzPfgTHYj+mEnQ8kGpnZlrPPO09IpJzR81OCnSJpqtlDGEpMcEBVOV8rXBvdgtxZ6
+	pOvZeCgIfTmWVNLflVIiy1oZ6RNsyJBwxnKIldC0rsNdLb/wuhHK97XUgVr/vimMb3pYh/m
+	kI5jmuVC2V2jdArQrzuWgBZeARVk+S4rHtqVKt+gN/SLT002KR70xnrkdjg8+ijkrBcALbi
+	Lh/YTPKJe7uOKtvb5MZJKLy+sVB6XMGrL0IOB2B7T1E1pX8wuhbblbIMH2t7s/DW7HxI0dO
+	0KVfVYUP/83hAEyo/V0fTauraNaeT8/ARJcxWOXa06Z6KfhqDNm6gh3UQmmYd7SnMwFCA6U
+	1UiCRZcqmlS+ziokmafSqFk3iOdUufrPPhBg+XhpAzl1UXE7uZMIujAVTpOOBdvYJNfW0Ci
+	17dOa9YVkdTsbQ3XwM3iM/itJCuzZzU3vCK9igZHMT2ofOqaO4gvFePyhZKeghzif2ru9E0
+	cRS3yiroqLq4LxjNDr0PeS07h7XMCzROZ05vgcOrt8gPjcCR4VNTKERKud15v5W7iaAmtQ3
+	r36ydNblG2lL25J+C0LqHxfdvYYiftIrrUUdiUyPZfcQr3/rDMH301CUePfL3oJfSf0n5kW
+	Vn3zmyJGnsdNjWsn6vXuwNs2Zff/ZmGZTrb9qr5oaNHNaEpkiwiM5q6tCeVqOfhbt6tUasw
+	zRVe4ji9KHWgmXtRKaCWcXfJuitOKpG9kD2wfNHc3IRW2t+z2dlwIUp/hB0tq1nNL6gV19z
+	c0dKsXLsVviJOq4MeR
 X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 X-QQ-RECHKSPAM: 0
 
-Add build options and doc for mucse.
-Initialize pci device access for MUCSE devices.
+Initialize tx/rx memory for tx/rx desc.
 
 Signed-off-by: Dong Yibo <dong100@mucse.com>
 ---
- .../device_drivers/ethernet/index.rst         |   1 +
- .../device_drivers/ethernet/mucse/rnpgbe.rst  |  21 ++
- MAINTAINERS                                   |  14 +-
- drivers/net/ethernet/Kconfig                  |   1 +
- drivers/net/ethernet/Makefile                 |   1 +
- drivers/net/ethernet/mucse/Kconfig            |  35 +++
- drivers/net/ethernet/mucse/Makefile           |   7 +
- drivers/net/ethernet/mucse/rnpgbe/Makefile    |   9 +
- drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |  35 +++
- .../net/ethernet/mucse/rnpgbe/rnpgbe_main.c   | 221 ++++++++++++++++++
- 10 files changed, 340 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst
- create mode 100644 drivers/net/ethernet/mucse/Kconfig
- create mode 100644 drivers/net/ethernet/mucse/Makefile
- create mode 100644 drivers/net/ethernet/mucse/rnpgbe/Makefile
- create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
- create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
+ drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    | 145 +++++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_lib.c    | 358 ++++++++++++++++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_lib.h    |   2 +
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_main.c   |  84 +++-
+ 4 files changed, 586 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/networking/device_drivers/ethernet/index.rst b/Documentation/networking/device_drivers/ethernet/index.rst
-index 139b4c75a191..f6db071210d9 100644
---- a/Documentation/networking/device_drivers/ethernet/index.rst
-+++ b/Documentation/networking/device_drivers/ethernet/index.rst
-@@ -59,6 +59,7 @@ Contents:
-    ti/icssg_prueth
-    wangxun/txgbe
-    wangxun/ngbe
-+   mucse/rnpgbe
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst b/Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst
-new file mode 100644
-index 000000000000..5f0f338dc3d4
---- /dev/null
-+++ b/Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst
-@@ -0,0 +1,21 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================================================
-+Linux Base Driver for MUCSE(R) Gigabit PCI Express Adapters
-+===========================================================
-+
-+MUCSE Gigabit Linux driver.
-+Copyright (c) 2020 - 2025 MUCSE Co.,Ltd.
-+
-+Identifying Your Adapter
-+========================
-+The driver is compatible with devices based on the following:
-+
-+ * MUCSE(R) Ethernet Controller N500 series
-+ * MUCSE(R) Ethernet Controller N210 series
-+
-+Support
-+=======
-+ If you have problems with the software or hardware, please contact our
-+ customer support team via email at marketing@mucse.com or check our website
-+ at https://www.mucse.com/en/
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb9df569a3ff..b43ca711cc5d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16001,11 +16001,7 @@ F:	tools/testing/vma/
- 
- MEMORY MAPPING - LOCKING
- M:	Andrew Morton <akpm@linux-foundation.org>
--M:	Suren Baghdasaryan <surenb@google.com>
--M:	Liam R. Howlett <Liam.Howlett@oracle.com>
--M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
--R:	Vlastimil Babka <vbabka@suse.cz>
--R:	Shakeel Butt <shakeel.butt@linux.dev>
-+M:	Suren Baghdasaryan <surenb@google.com> M:	Liam R. Howlett <Liam.Howlett@oracle.com> M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com> R:	Vlastimil Babka <vbabka@suse.cz> R:	Shakeel Butt <shakeel.butt@linux.dev>
- L:	linux-mm@kvack.org
- S:	Maintained
- W:	http://www.linux-mm.org
-@@ -16986,6 +16982,14 @@ T:	git git://linuxtv.org/media.git
- F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
- F:	drivers/media/i2c/mt9v111.c
- 
-+MUCSE ETHERNET DRIVER
-+M:	Yibo Dong <dong100@mucse.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+W:	https://www.mucse.com/en/
-+F:	Documentation/networking/device_drivers/ethernet/mucse/*
-+F:	drivers/net/ethernet/mucse/*
-+
- MULTIFUNCTION DEVICES (MFD)
- M:	Lee Jones <lee@kernel.org>
- S:	Maintained
-diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
-index f86d4557d8d7..77c55fa11942 100644
---- a/drivers/net/ethernet/Kconfig
-+++ b/drivers/net/ethernet/Kconfig
-@@ -202,5 +202,6 @@ source "drivers/net/ethernet/wangxun/Kconfig"
- source "drivers/net/ethernet/wiznet/Kconfig"
- source "drivers/net/ethernet/xilinx/Kconfig"
- source "drivers/net/ethernet/xircom/Kconfig"
-+source "drivers/net/ethernet/mucse/Kconfig"
- 
- endif # ETHERNET
-diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
-index 67182339469a..696825bd1211 100644
---- a/drivers/net/ethernet/Makefile
-+++ b/drivers/net/ethernet/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_NET_VENDOR_XIRCOM) += xircom/
- obj-$(CONFIG_NET_VENDOR_SYNOPSYS) += synopsys/
- obj-$(CONFIG_NET_VENDOR_PENSANDO) += pensando/
- obj-$(CONFIG_OA_TC6) += oa_tc6.o
-+obj-$(CONFIG_NET_VENDOR_MUCSE) += mucse/
-diff --git a/drivers/net/ethernet/mucse/Kconfig b/drivers/net/ethernet/mucse/Kconfig
-new file mode 100644
-index 000000000000..5825b37fcd50
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/Kconfig
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Mucse network device configuration
-+#
-+
-+config NET_VENDOR_MUCSE
-+        bool "Mucse devices"
-+        default y
-+        help
-+          If you have a network (Ethernet) card belonging to this class, say Y.
-+
-+          Note that the answer to this question doesn't directly affect the
-+          kernel: saying N will just cause the configurator to skip all
-+          the questions about Mucse cards. If you say Y, you will be asked for
-+          your specific card in the following questions.
-+
-+
-+if NET_VENDOR_MUCSE
-+
-+config MGBE
-+	tristate "Mucse(R) 1GbE PCI Express adapters support"
-+        depends on PCI
-+	select PAGE_POOL
-+        help
-+          This driver supports Mucse(R) 1GbE PCI Express family of
-+          adapters.
-+
-+	  More specific information on configuring the driver is in
-+	  <file:Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst>.
-+
-+          To compile this driver as a module, choose M here. The module
-+          will be called rnpgbe.
-+
-+endif # NET_VENDOR_MUCSE
-+
-diff --git a/drivers/net/ethernet/mucse/Makefile b/drivers/net/ethernet/mucse/Makefile
-new file mode 100644
-index 000000000000..f0bd79882488
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the Mucse(R) network device drivers.
-+#
-+
-+obj-$(CONFIG_MGBE) += rnpgbe/
-+
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/Makefile b/drivers/net/ethernet/mucse/rnpgbe/Makefile
-new file mode 100644
-index 000000000000..0942e27f5913
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/rnpgbe/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright(c) 2020 - 2025 MUCSE Corporation.
-+#
-+# Makefile for the MUCSE(R) 1GbE PCI Express ethernet driver
-+#
-+
-+obj-$(CONFIG_MGBE) += rnpgbe.o
-+
-+rnpgbe-objs := rnpgbe_main.o
 diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-new file mode 100644
-index 000000000000..a44e6b6255d8
---- /dev/null
+index 82df7f133f10..feb74048b9e0 100644
+--- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
 +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2020 - 2025 Mucse Corporation. */
+@@ -247,6 +247,7 @@ struct mucse_hw {
+ };
+ 
+ enum mucse_state_t {
++	__MMUCSE_TESTING,
+ 	__MUCSE_DOWN,
+ 	__MUCSE_SERVICE_SCHED,
+ 	__MUCSE_PTP_TX_IN_PROGRESS,
+@@ -306,6 +307,134 @@ struct mucse_rx_queue_stats {
+ 	u64 rx_clean_count;
+ };
+ 
++union rnpgbe_rx_desc {
++	struct {
++		union {
++			__le64 pkt_addr;
++			struct {
++				__le32 addr_lo;
++				__le32 addr_hi;
++			};
++		};
++		__le64 resv_cmd;
++#define M_RXD_FLAG_RS (0)
++	};
++	struct {
++		__le32 rss_hash;
++		__le16 mark;
++		__le16 rev1;
++#define M_RX_L3_TYPE_MASK BIT(15)
++#define VEB_VF_PKG BIT(1)
++#define VEB_VF_IGNORE_VLAN BIT(0)
++#define REV_OUTER_VLAN BIT(5)
++		__le16 len;
++		__le16 padding_len;
++		__le16 vlan;
++		__le16 cmd;
++#define M_RXD_STAT_VLAN_VALID BIT(15)
++#define M_RXD_STAT_STAG BIT(14)
++#define M_RXD_STAT_TUNNEL_NVGRE (0x02 << 13)
++#define M_RXD_STAT_TUNNEL_VXLAN (0x01 << 13)
++#define M_RXD_STAT_TUNNEL_MASK (0x03 << 13)
++#define M_RXD_STAT_ERR_MASK (0x1f << 8)
++#define M_RXD_STAT_SCTP_MASK (0x04 << 8)
++#define M_RXD_STAT_L4_MASK (0x02 << 8)
++#define M_RXD_STAT_L4_SCTP (0x02 << 6)
++#define M_RXD_STAT_L4_TCP (0x01 << 6)
++#define M_RXD_STAT_L4_UDP (0x03 << 6)
++#define M_RXD_STAT_IPV6 BIT(5)
++#define M_RXD_STAT_IPV4 (0 << 5)
++#define M_RXD_STAT_PTP BIT(4)
++#define M_RXD_STAT_DD BIT(1)
++#define M_RXD_STAT_EOP BIT(0)
++	} wb;
++} __packed;
 +
-+#ifndef _RNPGBE_H
-+#define _RNPGBE_H
-+
-+#define RNPGBE_MAX_QUEUES (8)
-+
-+enum rnpgbe_boards {
-+	board_n500,
-+	board_n210,
-+	board_n210L,
++struct rnpgbe_tx_desc {
++	union {
++		__le64 pkt_addr;
++		struct {
++			__le32 adr_lo;
++			__le32 adr_hi;
++		};
++	};
++	union {
++		__le64 vlan_cmd_bsz;
++		struct {
++			__le32 blen_mac_ip_len;
++			__le32 vlan_cmd;
++		};
++	};
++#define M_TXD_FLAGS_VLAN_PRIO_MASK 0xe000
++#define M_TX_FLAGS_VLAN_PRIO_SHIFT 13
++#define M_TX_FLAGS_VLAN_CFI_SHIFT 12
++#define M_TXD_VLAN_VALID (0x80000000)
++#define M_TXD_SVLAN_TYPE (0x02000000)
++#define M_TXD_VLAN_CTRL_NOP (0x00 << 13)
++#define M_TXD_VLAN_CTRL_RM_VLAN (0x20000000)
++#define M_TXD_VLAN_CTRL_INSERT_VLAN (0x40000000)
++#define M_TXD_L4_CSUM (0x10000000)
++#define M_TXD_IP_CSUM (0x8000000)
++#define M_TXD_TUNNEL_MASK (0x3000000)
++#define M_TXD_TUNNEL_VXLAN (0x1000000)
++#define M_TXD_TUNNEL_NVGRE (0x2000000)
++#define M_TXD_L4_TYPE_UDP (0xc00000)
++#define M_TXD_L4_TYPE_TCP (0x400000)
++#define M_TXD_L4_TYPE_SCTP (0x800000)
++#define M_TXD_FLAG_IPv4 (0)
++#define M_TXD_FLAG_IPv6 (0x200000)
++#define M_TXD_FLAG_TSO (0x100000)
++#define M_TXD_FLAG_PTP (0x4000000)
++#define M_TXD_CMD_RS (0x040000)
++#define M_TXD_CMD_INNER_VLAN (0x08000000)
++#define M_TXD_STAT_DD (0x020000)
++#define M_TXD_CMD_EOP (0x010000)
++#define M_TXD_PAD_CTRL (0x01000000)
 +};
 +
-+struct mucse {
-+	struct net_device *netdev;
-+	struct pci_dev *pdev;
-+	/* board number */
-+	u16 bd_number;
-+
-+	char name[60];
++struct mucse_tx_buffer {
++	struct rnpgbe_tx_desc *next_to_watch;
++	unsigned long time_stamp;
++	struct sk_buff *skb;
++	unsigned int bytecount;
++	unsigned short gso_segs;
++	bool gso_need_padding;
++	__be16 protocol;
++	__be16 priv_tags;
++	DEFINE_DMA_UNMAP_ADDR(dma);
++	DEFINE_DMA_UNMAP_LEN(len);
++	union {
++		u32 mss_len_vf_num;
++		struct {
++			__le16 mss_len;
++			u8 vf_num;
++			u8 l4_hdr_len;
++		};
++	};
++	union {
++		u32 inner_vlan_tunnel_len;
++		struct {
++			u8 tunnel_hdr_len;
++			u8 inner_vlan_l;
++			u8 inner_vlan_h;
++			u8 resv;
++		};
++	};
++	bool ctx_flag;
 +};
 +
-+/* Device IDs */
-+#ifndef PCI_VENDOR_ID_MUCSE
-+#define PCI_VENDOR_ID_MUCSE 0x8848
-+#endif /* PCI_VENDOR_ID_MUCSE */
-+
-+#define PCI_DEVICE_ID_N500_QUAD_PORT 0x8308
-+#define PCI_DEVICE_ID_N500_DUAL_PORT 0x8318
-+#define PCI_DEVICE_ID_N500_VF 0x8309
-+#define PCI_DEVICE_ID_N210 0x8208
-+#define PCI_DEVICE_ID_N210L 0x820a
-+
-+#endif /* _RNPGBE_H */
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
-new file mode 100644
-index 000000000000..b32b70c98b46
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2020 - 2025 Mucse Corporation. */
-+
-+#include <linux/types.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/netdevice.h>
-+#include <linux/string.h>
-+#include <linux/etherdevice.h>
-+
-+#include "rnpgbe.h"
-+
-+char rnpgbe_driver_name[] = "rnpgbe";
-+static const char rnpgbe_driver_string[] =
-+	"mucse 1 Gigabit PCI Express Network Driver";
-+#define DRV_VERSION "1.0.0"
-+const char rnpgbe_driver_version[] = DRV_VERSION;
-+static const char rnpgbe_copyright[] =
-+	"Copyright (c) 2020-2025 mucse Corporation.";
-+
-+/* rnpgbe_pci_tbl - PCI Device ID Table
-+ *
-+ * { PCI_DEVICE(Vendor ID, Device ID),
-+ *   driver_data (used for different hw chip) }
-+ */
-+static struct pci_device_id rnpgbe_pci_tbl[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N500_QUAD_PORT),
-+	  .driver_data = board_n500},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N500_DUAL_PORT),
-+	  .driver_data = board_n500},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N210),
-+	  .driver_data = board_n210},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N210L),
-+	  .driver_data = board_n210L},
-+	/* required last entry */
-+	{0, },
++struct mucse_rx_buffer {
++	struct sk_buff *skb;
++	dma_addr_t dma;
++	struct page *page;
++#if (BITS_PER_LONG > 32) || (PAGE_SIZE >= 65536)
++	__u32 page_offset;
++#else /* (BITS_PER_LONG > 32) || (PAGE_SIZE >= 65536) */
++	__u16 page_offset;
++#endif /* (BITS_PER_LONG > 32) || (PAGE_SIZE >= 65536) */
++	__u16 pagecnt_bias;
 +};
++
+ struct mucse_ring {
+ 	struct mucse_ring *next;
+ 	struct mucse_q_vector *q_vector;
+@@ -349,6 +478,7 @@ struct mucse_ring {
+ 	u16 next_to_use;
+ 	u16 next_to_clean;
+ 	u16 device_id;
++	u16 next_to_alloc;
+ 	struct mucse_queue_stats stats;
+ 	struct u64_stats_sync syncp;
+ 	union {
+@@ -434,6 +564,21 @@ struct rnpgbe_info {
+ 	void (*get_invariants)(struct mucse_hw *hw);
+ };
+ 
++static inline struct netdev_queue *txring_txq(const struct mucse_ring *ring)
++{
++	return netdev_get_tx_queue(ring->netdev, ring->queue_index);
++}
++
++#define M_RXBUFFER_1536 (1536)
++static inline unsigned int mucse_rx_bufsz(struct mucse_ring *ring)
++{
++	return (M_RXBUFFER_1536 - NET_IP_ALIGN);
++}
++
++#define M_TX_DESC(R, i) (&(((struct rnpgbe_tx_desc *)((R)->desc))[i]))
++#define M_RX_DESC(R, i) (&(((union rnpgbe_rx_desc *)((R)->desc))[i]))
++
++#define M_RX_DMA_ATTR (DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_WEAK_ORDERING)
+ /* Device IDs */
+ #ifndef PCI_VENDOR_ID_MUCSE
+ #define PCI_VENDOR_ID_MUCSE 0x8848
+diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.c
+index 95c913212182..0dbb942eb4c7 100644
+--- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.c
++++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright(c) 2020 - 2025 Mucse Corporation. */
+ 
++#include <linux/vmalloc.h>
++
+ #include "rnpgbe.h"
+ #include "rnpgbe_lib.h"
+ 
+@@ -460,3 +462,359 @@ void rnpgbe_clear_interrupt_scheme(struct mucse *mucse)
+ 	rnpgbe_free_q_vectors(mucse);
+ 	rnpgbe_reset_interrupt_capability(mucse);
+ }
 +
 +/**
-+ * rnpgbe_add_adpater - add netdev for this pci_dev
-+ * @pdev: PCI device information structure
-+ *
-+ * rnpgbe_add_adpater initializes a netdev for this pci_dev
-+ * structure. Initializes Bar map, private structure, and a
-+ * hardware reset occur.
-+ *
-+ * Returns 0 on success, negative on failure
++ * rnpgbe_clean_tx_ring - Free Tx Buffers
++ * @tx_ring: ring to be cleaned
 + **/
-+static int rnpgbe_add_adpater(struct pci_dev *pdev)
++static void rnpgbe_clean_tx_ring(struct mucse_ring *tx_ring)
 +{
-+	struct mucse *mucse = NULL;
-+	struct net_device *netdev;
-+	static int bd_number;
++	unsigned long size;
++	u16 i = tx_ring->next_to_clean;
++	struct mucse_tx_buffer *tx_buffer = &tx_ring->tx_buffer_info[i];
 +
-+	pr_info("====  add rnpgbe queues:%d ====", RNPGBE_MAX_QUEUES);
-+	netdev = alloc_etherdev_mq(sizeof(struct mucse), RNPGBE_MAX_QUEUES);
-+	if (!netdev)
-+		return -ENOMEM;
++	/* ring already cleared, nothing to do */
++	if (!tx_ring->tx_buffer_info)
++		return;
 +
-+	mucse = netdev_priv(netdev);
-+	memset((char *)mucse, 0x00, sizeof(struct mucse));
-+	mucse->netdev = netdev;
-+	mucse->pdev = pdev;
-+	mucse->bd_number = bd_number++;
-+	snprintf(mucse->name, sizeof(netdev->name), "%s%d",
-+		 rnpgbe_driver_name, mucse->bd_number);
-+	pci_set_drvdata(pdev, mucse);
++	while (i != tx_ring->next_to_use) {
++		struct rnpgbe_tx_desc *eop_desc, *tx_desc;
 +
-+	return 0;
++		dev_kfree_skb_any(tx_buffer->skb);
++		/* unmap skb header data */
++		dma_unmap_single(tx_ring->dev, dma_unmap_addr(tx_buffer, dma),
++				 dma_unmap_len(tx_buffer, len), DMA_TO_DEVICE);
++		eop_desc = tx_buffer->next_to_watch;
++		tx_desc = M_TX_DESC(tx_ring, i);
++		/* unmap remaining buffers */
++		while (tx_desc != eop_desc) {
++			tx_buffer++;
++			tx_desc++;
++			i++;
++			if (unlikely(i == tx_ring->count)) {
++				i = 0;
++				tx_buffer = tx_ring->tx_buffer_info;
++				tx_desc = M_TX_DESC(tx_ring, 0);
++			}
++
++			/* unmap any remaining paged data */
++			if (dma_unmap_len(tx_buffer, len))
++				dma_unmap_page(tx_ring->dev,
++					       dma_unmap_addr(tx_buffer, dma),
++					       dma_unmap_len(tx_buffer, len),
++					       DMA_TO_DEVICE);
++		}
++		/* move us one more past the eop_desc for start of next pkt */
++		tx_buffer++;
++		i++;
++		if (unlikely(i == tx_ring->count)) {
++			i = 0;
++			tx_buffer = tx_ring->tx_buffer_info;
++		}
++	}
++
++	netdev_tx_reset_queue(txring_txq(tx_ring));
++	size = sizeof(struct mucse_tx_buffer) * tx_ring->count;
++	memset(tx_ring->tx_buffer_info, 0, size);
++	/* Zero out the descriptor ring */
++	memset(tx_ring->desc, 0, tx_ring->size);
++	tx_ring->next_to_use = 0;
++	tx_ring->next_to_clean = 0;
 +}
 +
 +/**
-+ * rnpgbe_probe - Device Initialization Routine
-+ * @pdev: PCI device information struct
-+ * @id: entry in rnpgbe_pci_tbl
++ * rnpgbe_free_tx_resources - Free Tx Resources per Queue
++ * @tx_ring: tx descriptor ring for a specific queue
 + *
-+ * rnpgbe_probe initializes a PF adapter identified by a pci_dev
-+ * structure. The OS initialization, then call rnpgbe_add_adpater
-+ * to initializes netdev.
-+ *
-+ * Returns 0 on success, negative on failure
++ * Free all transmit software resources
 + **/
-+static int rnpgbe_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static void rnpgbe_free_tx_resources(struct mucse_ring *tx_ring)
 +{
-+	int err;
++	rnpgbe_clean_tx_ring(tx_ring);
++	vfree(tx_ring->tx_buffer_info);
++	tx_ring->tx_buffer_info = NULL;
++	/* if not set, then don't free */
++	if (!tx_ring->desc)
++		return;
 +
-+	err = pci_enable_device_mem(pdev);
-+	if (err)
-+		return err;
++	dma_free_coherent(tx_ring->dev, tx_ring->size, tx_ring->desc,
++			  tx_ring->dma);
++	tx_ring->desc = NULL;
++}
 +
-+	/* hw only support 56-bits dma mask */
-+	err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(56));
-+	if (err) {
-+		dev_err(&pdev->dev,
-+			"No usable DMA configuration, aborting\n");
-+		goto err_dma;
++/**
++ * rnpgbe_setup_tx_resources - allocate Tx resources (Descriptors)
++ * @tx_ring: tx descriptor ring (for a specific queue) to setup
++ * @mucse: pointer to private structure
++ *
++ * Return 0 on success, negative on failure
++ **/
++static int rnpgbe_setup_tx_resources(struct mucse_ring *tx_ring,
++				     struct mucse *mucse)
++{
++	struct device *dev = tx_ring->dev;
++	int orig_node = dev_to_node(dev);
++	int numa_node = NUMA_NO_NODE;
++	int size;
++
++	size = sizeof(struct mucse_tx_buffer) * tx_ring->count;
++
++	if (tx_ring->q_vector)
++		numa_node = tx_ring->q_vector->numa_node;
++	tx_ring->tx_buffer_info = vzalloc_node(size, numa_node);
++	if (!tx_ring->tx_buffer_info)
++		tx_ring->tx_buffer_info = vzalloc(size);
++	if (!tx_ring->tx_buffer_info)
++		goto err;
++	/* round up to nearest 4K */
++	tx_ring->size = tx_ring->count * sizeof(struct rnpgbe_tx_desc);
++	tx_ring->size = ALIGN(tx_ring->size, 4096);
++	set_dev_node(dev, numa_node);
++	tx_ring->desc = dma_alloc_coherent(dev, tx_ring->size, &tx_ring->dma,
++					   GFP_KERNEL);
++	set_dev_node(dev, orig_node);
++	if (!tx_ring->desc)
++		tx_ring->desc = dma_alloc_coherent(dev, tx_ring->size,
++						   &tx_ring->dma,
++						   GFP_KERNEL);
++	if (!tx_ring->desc)
++		goto err;
++
++	memset(tx_ring->desc, 0, tx_ring->size);
++	tx_ring->next_to_use = 0;
++	tx_ring->next_to_clean = 0;
++	return 0;
++
++err:
++	vfree(tx_ring->tx_buffer_info);
++	tx_ring->tx_buffer_info = NULL;
++	return -ENOMEM;
++}
++
++/**
++ * rnpgbe_setup_all_tx_resources - allocate all queues Tx resources
++ * @mucse: pointer to private structure
++ *
++ * Allocate memory for tx_ring.
++ * Return 0 on success, negative on failure
++ **/
++static int rnpgbe_setup_all_tx_resources(struct mucse *mucse)
++{
++	int i, err = 0;
++
++	for (i = 0; i < (mucse->num_tx_queues); i++) {
++		err = rnpgbe_setup_tx_resources(mucse->tx_ring[i], mucse);
++		if (!err)
++			continue;
++
++		goto err_setup_tx;
 +	}
-+
-+	err = pci_request_mem_regions(pdev, rnpgbe_driver_name);
-+	if (err) {
-+		dev_err(&pdev->dev,
-+			"pci_request_selected_regions failed 0x%x\n", err);
-+		goto err_pci_req;
-+	}
-+
-+	pci_set_master(pdev);
-+	pci_save_state(pdev);
-+	err = rnpgbe_add_adpater(pdev);
-+	if (err)
-+		goto err_regions;
 +
 +	return 0;
-+err_regions:
-+	pci_release_mem_regions(pdev);
-+err_dma:
-+err_pci_req:
-+	pci_disable_device(pdev);
++err_setup_tx:
++	while (i--)
++		rnpgbe_free_tx_resources(mucse->tx_ring[i]);
 +	return err;
 +}
 +
 +/**
-+ * rnpgbe_rm_adpater - remove netdev for this mucse structure
++ * rnpgbe_free_all_tx_resources - Free Tx Resources for All Queues
 + * @mucse: pointer to private structure
 + *
-+ * rnpgbe_rm_adpater remove a netdev for this mucse structure
++ * Free all transmit software resources
 + **/
-+static void rnpgbe_rm_adpater(struct mucse *mucse)
++static void rnpgbe_free_all_tx_resources(struct mucse *mucse)
 +{
-+	struct net_device *netdev;
++	int i;
 +
-+	netdev = mucse->netdev;
-+	pr_info("= remove rnpgbe:%s =\n", netdev->name);
-+	free_netdev(netdev);
-+	pr_info("remove complete\n");
++	for (i = 0; i < (mucse->num_tx_queues); i++)
++		rnpgbe_free_tx_resources(mucse->tx_ring[i]);
 +}
 +
 +/**
-+ * rnpgbe_remove - Device Removal Routine
-+ * @pdev: PCI device information struct
++ * rnpgbe_setup_rx_resources - allocate Rx resources (Descriptors)
++ * @rx_ring:    rx descriptor ring (for a specific queue) to setup
++ * @mucse: pointer to private structure
 + *
-+ * rnpgbe_remove is called by the PCI subsystem to alert the driver
-+ * that it should release a PCI device.  This could be caused by a
-+ * Hot-Plug event, or because the driver is going to be removed from
-+ * memory.
++ * Returns 0 on success, negative on failure
 + **/
-+static void rnpgbe_remove(struct pci_dev *pdev)
++static int rnpgbe_setup_rx_resources(struct mucse_ring *rx_ring,
++				     struct mucse *mucse)
 +{
-+	struct mucse *mucse = pci_get_drvdata(pdev);
++	struct device *dev = rx_ring->dev;
++	int orig_node = dev_to_node(dev);
++	int numa_node = NUMA_NO_NODE;
++	int size;
 +
-+	if (!mucse)
++	size = sizeof(struct mucse_rx_buffer) * rx_ring->count;
++	if (rx_ring->q_vector)
++		numa_node = rx_ring->q_vector->numa_node;
++
++	rx_ring->rx_buffer_info = vzalloc_node(size, numa_node);
++	if (!rx_ring->rx_buffer_info)
++		rx_ring->rx_buffer_info = vzalloc(size);
++
++	if (!rx_ring->rx_buffer_info)
++		goto err;
++	/* Round up to nearest 4K */
++	rx_ring->size = rx_ring->count * sizeof(union rnpgbe_rx_desc);
++	rx_ring->size = ALIGN(rx_ring->size, 4096);
++	set_dev_node(dev, numa_node);
++	rx_ring->desc = dma_alloc_coherent(dev, rx_ring->size,
++					   &rx_ring->dma,
++					   GFP_KERNEL);
++	set_dev_node(dev, orig_node);
++	if (!rx_ring->desc)
++		rx_ring->desc = dma_alloc_coherent(dev, rx_ring->size,
++						   &rx_ring->dma,
++						   GFP_KERNEL);
++	if (!rx_ring->desc)
++		goto err;
++	memset(rx_ring->desc, 0, rx_ring->size);
++	rx_ring->next_to_clean = 0;
++	rx_ring->next_to_use = 0;
++
++	return 0;
++err:
++	vfree(rx_ring->rx_buffer_info);
++	rx_ring->rx_buffer_info = NULL;
++	return -ENOMEM;
++}
++
++/**
++ * rnpgbe_clean_rx_ring - Free Rx Buffers per Queue
++ * @rx_ring: ring to free buffers from
++ **/
++static void rnpgbe_clean_rx_ring(struct mucse_ring *rx_ring)
++{
++	u16 i = rx_ring->next_to_clean;
++	struct mucse_rx_buffer *rx_buffer = &rx_ring->rx_buffer_info[i];
++
++	/* Free all the Rx ring sk_buffs */
++	while (i != rx_ring->next_to_alloc) {
++		if (rx_buffer->skb) {
++			struct sk_buff *skb = rx_buffer->skb;
++
++			dev_kfree_skb(skb);
++			rx_buffer->skb = NULL;
++		}
++		dma_sync_single_range_for_cpu(rx_ring->dev, rx_buffer->dma,
++					      rx_buffer->page_offset,
++					      mucse_rx_bufsz(rx_ring),
++					      DMA_FROM_DEVICE);
++		/* free resources associated with mapping */
++		dma_unmap_page_attrs(rx_ring->dev, rx_buffer->dma,
++				     PAGE_SIZE,
++				     DMA_FROM_DEVICE,
++				     M_RX_DMA_ATTR);
++		__page_frag_cache_drain(rx_buffer->page,
++					rx_buffer->pagecnt_bias);
++		rx_buffer->page = NULL;
++		i++;
++		rx_buffer++;
++		if (i == rx_ring->count) {
++			i = 0;
++			rx_buffer = rx_ring->rx_buffer_info;
++		}
++	}
++
++	rx_ring->next_to_alloc = 0;
++	rx_ring->next_to_clean = 0;
++	rx_ring->next_to_use = 0;
++}
++
++/**
++ * rnpgbe_free_rx_resources - Free Rx Resources
++ * @rx_ring: ring to clean the resources from
++ *
++ * Free all receive software resources
++ **/
++static void rnpgbe_free_rx_resources(struct mucse_ring *rx_ring)
++{
++	rnpgbe_clean_rx_ring(rx_ring);
++	vfree(rx_ring->rx_buffer_info);
++	rx_ring->rx_buffer_info = NULL;
++	/* if not set, then don't free */
++	if (!rx_ring->desc)
 +		return;
 +
-+	rnpgbe_rm_adpater(mucse);
-+	pci_release_mem_regions(pdev);
-+	pci_disable_device(pdev);
-+}
-+
-+static void __rnpgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
-+{
-+	struct mucse *mucse = pci_get_drvdata(pdev);
-+	struct net_device *netdev = mucse->netdev;
-+
-+	*enable_wake = false;
-+	netif_device_detach(netdev);
-+	pci_disable_device(pdev);
++	dma_free_coherent(rx_ring->dev, rx_ring->size, rx_ring->desc,
++			  rx_ring->dma);
++	rx_ring->desc = NULL;
 +}
 +
 +/**
-+ * rnpgbe_shutdown - Device Shutdown Routine
-+ * @pdev: PCI device information struct
++ * rnpgbe_setup_all_rx_resources - allocate all queues Rx resources
++ * @mucse: pointer to private structure
 + *
-+ * rnpgbe_shutdown is called by the PCI subsystem to alert the driver
-+ * that os shutdown. Device should setup wakeup state here.
++ * Return 0 on success, negative on failure
 + **/
-+static void rnpgbe_shutdown(struct pci_dev *pdev)
++static int rnpgbe_setup_all_rx_resources(struct mucse *mucse)
 +{
-+	bool wake = false;
++	int i, err = 0;
 +
-+	__rnpgbe_shutdown(pdev, &wake);
++	for (i = 0; i < mucse->num_rx_queues; i++) {
++		err = rnpgbe_setup_rx_resources(mucse->rx_ring[i], mucse);
++		if (!err)
++			continue;
 +
-+	if (system_state == SYSTEM_POWER_OFF) {
-+		pci_wake_from_d3(pdev, wake);
-+		pci_set_power_state(pdev, PCI_D3hot);
++		goto err_setup_rx;
++	}
++
++	return 0;
++err_setup_rx:
++	while (i--)
++		rnpgbe_free_rx_resources(mucse->rx_ring[i]);
++	return err;
++}
++
++/**
++ * rnpgbe_free_all_rx_resources - Free Rx Resources for All Queues
++ * @mucse: pointer to private structure
++ *
++ * Free all receive software resources
++ **/
++static void rnpgbe_free_all_rx_resources(struct mucse *mucse)
++{
++	int i;
++
++	for (i = 0; i < (mucse->num_rx_queues); i++) {
++		if (mucse->rx_ring[i]->desc)
++			rnpgbe_free_rx_resources(mucse->rx_ring[i]);
 +	}
 +}
 +
-+static struct pci_driver rnpgbe_driver = {
-+	.name = rnpgbe_driver_name,
-+	.id_table = rnpgbe_pci_tbl,
-+	.probe = rnpgbe_probe,
-+	.remove = rnpgbe_remove,
-+	.shutdown = rnpgbe_shutdown,
-+};
-+
-+static int __init rnpgbe_init_module(void)
++/**
++ * rnpgbe_setup_txrx - Allocate Tx/Rx Resources for All Queues
++ * @mucse: pointer to private structure
++ *
++ * Allocate all send/receive software resources
++ **/
++int rnpgbe_setup_txrx(struct mucse *mucse)
 +{
-+	int ret;
++	int err;
 +
-+	pr_info("%s - version %s\n", rnpgbe_driver_string,
-+		rnpgbe_driver_version);
-+	pr_info("%s\n", rnpgbe_copyright);
-+	ret = pci_register_driver(&rnpgbe_driver);
-+	if (ret)
-+		return ret;
++	err = rnpgbe_setup_all_tx_resources(mucse);
++	if (err)
++		return err;
++
++	err = rnpgbe_setup_all_rx_resources(mucse);
++	if (err)
++		goto err_setup_rx;
++	return 0;
++err_setup_rx:
++	rnpgbe_free_all_tx_resources(mucse);
++	return err;
++}
++
++/**
++ * rnpgbe_free_txrx - Clean Tx/Rx Resources for All Queues
++ * @mucse: pointer to private structure
++ *
++ * Free all send/receive software resources
++ **/
++void rnpgbe_free_txrx(struct mucse *mucse)
++{
++	rnpgbe_free_all_tx_resources(mucse);
++	rnpgbe_free_all_rx_resources(mucse);
++}
+diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.h b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.h
+index ab55c5ae1482..150d03f9ada9 100644
+--- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.h
++++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_lib.h
+@@ -22,5 +22,7 @@
+ 
+ int rnpgbe_init_interrupt_scheme(struct mucse *mucse);
+ void rnpgbe_clear_interrupt_scheme(struct mucse *mucse);
++int rnpgbe_setup_txrx(struct mucse *mucse);
++void rnpgbe_free_txrx(struct mucse *mucse);
+ 
+ #endif /* _RNPGBE_LIB_H */
+diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
+index bfe7b34be78e..95a68b6d08a5 100644
+--- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
++++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
+@@ -8,6 +8,7 @@
+ #include <linux/string.h>
+ #include <linux/etherdevice.h>
+ #include <linux/firmware.h>
++#include <linux/rtnetlink.h>
+ 
+ #include "rnpgbe.h"
+ #include "rnpgbe_mbx_fw.h"
+@@ -194,6 +195,67 @@ static int init_firmware_for_n210(struct mucse_hw *hw)
+ 	return err;
+ }
+ 
++/**
++ * rnpgbe_open - Called when a network interface is made active
++ * @netdev: network interface device structure
++ *
++ * Returns 0 on success, negative value on failure
++ *
++ * The open entry point is called when a network interface is made
++ * active by the system (IFF_UP).
++ **/
++static int rnpgbe_open(struct net_device *netdev)
++{
++	struct mucse *mucse = netdev_priv(netdev);
++	int err;
++
++	/* disallow open during test */
++	if (test_bit(__MMUCSE_TESTING, &mucse->state))
++		return -EBUSY;
++
++	netif_carrier_off(netdev);
++	err = rnpgbe_setup_txrx(mucse);
++
++	return err;
++}
++
++/**
++ * rnpgbe_close - Disables a network interface
++ * @netdev: network interface device structure
++ *
++ * Returns 0, this is not allowed to fail
++ *
++ * The close entry point is called when an interface is de-activated
++ * by the OS.
++ **/
++static int rnpgbe_close(struct net_device *netdev)
++{
++	struct mucse *mucse = netdev_priv(netdev);
++
++	rnpgbe_free_txrx(mucse);
 +
 +	return 0;
 +}
 +
-+module_init(rnpgbe_init_module);
-+
-+static void __exit rnpgbe_exit_module(void)
++static netdev_tx_t rnpgbe_xmit_frame(struct sk_buff *skb,
++				     struct net_device *netdev)
 +{
-+	pci_unregister_driver(&rnpgbe_driver);
++	dev_kfree_skb_any(skb);
++	return NETDEV_TX_OK;
 +}
 +
-+module_exit(rnpgbe_exit_module);
++const struct net_device_ops rnpgbe_netdev_ops = {
++	.ndo_open = rnpgbe_open,
++	.ndo_stop = rnpgbe_close,
++	.ndo_start_xmit = rnpgbe_xmit_frame,
++};
 +
-+MODULE_DEVICE_TABLE(pci, rnpgbe_pci_tbl);
-+MODULE_AUTHOR("Mucse Corporation, <mucse@mucse.com>");
-+MODULE_DESCRIPTION("Mucse(R) 1 Gigabit PCI Express Network Driver");
-+MODULE_LICENSE("GPL");
++static void rnpgbe_assign_netdev_ops(struct net_device *dev)
++{
++	dev->netdev_ops = &rnpgbe_netdev_ops;
++	dev->watchdog_timeo = 5 * HZ;
++}
++
+ static int rnpgbe_sw_init(struct mucse *mucse)
+ {
+ 	struct mucse_hw *hw = &mucse->hw;
+@@ -368,7 +430,7 @@ static int rnpgbe_add_adpater(struct pci_dev *pdev,
+ 		err = -EIO;
+ 		goto err_free_net;
+ 	}
+-
++	rnpgbe_assign_netdev_ops(netdev);
+ 	err = rnpgbe_sw_init(mucse);
+ 	if (err)
+ 		goto err_free_net;
+@@ -384,8 +446,8 @@ static int rnpgbe_add_adpater(struct pci_dev *pdev,
+ 	netdev->features |= NETIF_F_HIGHDMA;
+ 	netdev->priv_flags |= IFF_UNICAST_FLT;
+ 	netdev->priv_flags |= IFF_SUPP_NOFCS;
++	netdev->hw_features |= netdev->features;
+ 	eth_hw_addr_set(netdev, hw->perm_addr);
+-	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+ 	memcpy(netdev->perm_addr, hw->perm_addr, netdev->addr_len);
+ 	ether_addr_copy(hw->addr, hw->perm_addr);
+ 	timer_setup(&mucse->service_timer, rnpgbe_service_timer, 0);
+@@ -394,11 +456,17 @@ static int rnpgbe_add_adpater(struct pci_dev *pdev,
+ 	err = rnpgbe_init_interrupt_scheme(mucse);
+ 	if (err)
+ 		goto err_free_net;
++
+ 	err = register_mbx_irq(mucse);
+ 	if (err)
+ 		goto err_free_irq;
+-
++	strscpy(netdev->name, "eth%d", sizeof(netdev->name));
++	err = register_netdev(netdev);
++	if (err)
++		goto err_register;
+ 	return 0;
++err_register:
++	remove_mbx_irq(mucse);
+ err_free_irq:
+ 	rnpgbe_clear_interrupt_scheme(mucse);
+ err_free_net:
+@@ -468,9 +536,15 @@ static void rnpgbe_rm_adpater(struct mucse *mucse)
+ 	struct mucse_hw *hw = &mucse->hw;
+ 
+ 	netdev = mucse->netdev;
++	if (mucse->flags2 & M_FLAG2_NO_NET_REG) {
++		free_netdev(netdev);
++		return;
++	}
+ 	pr_info("= remove rnpgbe:%s =\n", netdev->name);
+ 	cancel_work_sync(&mucse->service_task);
+ 	timer_delete_sync(&mucse->service_timer);
++	if (netdev->reg_state == NETREG_REGISTERED)
++		unregister_netdev(netdev);
+ 	hw->ops.driver_status(hw, false, mucse_driver_insmod);
+ 	remove_mbx_irq(mucse);
+ 	rnpgbe_clear_interrupt_scheme(mucse);
+@@ -507,6 +581,10 @@ static void __rnpgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
+ 
+ 	*enable_wake = false;
+ 	netif_device_detach(netdev);
++	rtnl_lock();
++	if (netif_running(netdev))
++		rnpgbe_free_txrx(mucse);
++	rtnl_unlock();
+ 	remove_mbx_irq(mucse);
+ 	rnpgbe_clear_interrupt_scheme(mucse);
+ 	pci_disable_device(pdev);
 -- 
 2.25.1
 
