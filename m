@@ -1,142 +1,178 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4510433DF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B39E1A2545;
+	Thu,  3 Jul 2025 15:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556783; cv=none; b=uus1kvSEGwRE/ZCkunQC6QkDTN7MDZvBtm8oYRevnOU5YhMuGsmO9Mp3rZ5cOZ04czBF3vnxnXijpHFkpLS1sDlVP/hGRhnK3Bli3GnJKrV52AEtLq4y6du7adCbzvYWltaM0c7+q+0MMkSs0sQ9bQ6aaRySIwwVpfHq+X0YW5Y=
+	t=1751556934; cv=none; b=To+AxnU3XckSfgCCPEguJZbP4X7RCmso0bWjv50yOJmcVk3G7kiaDH1ZxhSa2MfqVoxKvLD07Xz1EDKHdpIS0wxuC6EupAGSTMd5WHyWo5acVLbCEbkO4z6MvwjCFIvXcWUCrdAcj18VOpDzQi9wAqCmCRIuHGh6chP7kfIrAiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556783; c=relaxed/simple;
-	bh=Y2wHdzMkoJpTGZjYvb1zaxVVxIgGPm4mgWwkVnd7HDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fVYVAZho87dZE+p4Mjx99x2E/kJknCA6BCOTBVGZOL2oca5e6/zr6tigIePgHy0nQ00Ny2NCqO8SyEI8oHgvm5fQqJq0GtsIcRmqaXzEP/ISnYwHcZA3HWiR2He38mogWGt5oGYtgxtPIRhKg0mFlwd91NUwhwO03jd7jczqHKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ERuujuKv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751556934; c=relaxed/simple;
+	bh=UtCa3jB4C4oSboU0agdlHowTc/IyYRcfGLghBrAu76A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xor6l3PpsfSiJkqvnPhUjcqV8/YMNIJbDJOjxL21VKAdFH7lzBzPNjyJJTYUnwxyl84aD6Aw9tEeKCCayLHThaTqF3UbefUCF6PrOw/jz5Fvv52tFZTqvLeAFHqAGG9GP7RHbErO+js5I/iA4Dg6kZ2jeh/nU7mz2n5nc82Pbh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DH4mTVxE; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ERuujuKv"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56385JOL032421
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 15:32:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wvvGW4Ha6hjLFZe9ISe2jC6fysqV1hVJbJSvtVGuzD8=; b=ERuujuKvjS/U9TZp
-	noGfeXXFZKevkHNhE0cHEflu3eTuvJOGmBT4x1bIOzJx9/ICh0XjqBybOetaEWUo
-	L6LuiMsiNS/dRpeM8FAdWGqMsHwCp8CKqRv5EMiuPXIyFFCb2LWDzx9WxdSWY+5k
-	pHr8Pb5QrzZBxPxpXohyNTt7QM9nKyUsWiR5iK7nIyXqhbZzzs2zXIBYtPDbXT7k
-	fH/q7UTj3sQQZrtHUiEY7V9BLSY8DPjNOVmDzCoX7IZP1pWW25DhffxSPqq1nUCV
-	KZX8GTuoxJFb0o6E1G09+gAHfK7uvc6K1+NVpc3ZM5OcFXRl3EKRz03J53/5qG+k
-	dpLqYw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kh7s8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:32:59 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d0976a24ceso254790885a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 08:32:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH4mTVxE"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55502821bd2so43420e87.2;
+        Thu, 03 Jul 2025 08:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751556927; x=1752161727; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=75uNOQCVeQVcxppeehQYWLee6QMQRVMuSxhhZo8FTjE=;
+        b=DH4mTVxE3J9aRpDeyPhfIsDr2fDVE4WAzWPvfi41j0pZCqHaH/+Nu0oLmvlIyp7txu
+         6XKjC3j/xmXQs8n4wLCg++BJaqPr9g29oyCGa2eKgnborb5yZRTEmCNfgowyQdwsIBIb
+         sekZEbuPtYudxOSJxuTknPDAvd51EwaSaudOepGju49fyCFi7rcVBo3a2o91smp2mGj5
+         1TmSAerEHwWO0F2uRbTvE7vsa8fNcceT4jbxFHUeBo3uy8evHlR3CfnPvNme5vVs9DnA
+         iiYtFOD84tM/VMi4HFeI9UU4PqzGINtazIE7m5/MFHM6U29lxS3/dMXOblV5CDrhQ4HI
+         /57A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751556778; x=1752161578;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvvGW4Ha6hjLFZe9ISe2jC6fysqV1hVJbJSvtVGuzD8=;
-        b=GtrjMltZ7tyfwByGtgHVyno4VOuQf2qsAopkkQcp0HhaeAffSbqZeA0vTECY/3gJZ9
-         2T37myYNeoxgqoW3hDfeqii+1+BcOuZeK863VSpDXSG6/XxQImm+bYSRL4Gnz3dCy1lt
-         JQa8BhsaUboB6jOZYjMDbZu3xJudxdSXboqymDjm3Dm1Isi/aJCEc7BoaZ5oUjNItAVj
-         JBd8NnjAgwiw0x1cgjrWdl1gNMEAyhx/amTkZ7SH3TIdDSGvcf0OK3eQnQVviw/7wgpN
-         S7UQM+zyB5g/ZbYl3dWYvxnIlrIV/wKnG6DB9vQVH174CEAcL2Oc7rpkrVwV6zFaX4ty
-         mN8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Egam3p3nvzsS9zeVeZSnoNrOw+LkhgneI+71cDhHcUyZ5CQZG17Ia0EHPIcvKh4RlHTRfl9ThzvrJ4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCu4t76zkyT44JdsI6yNh7KqKPRyWmBDX43p83nv2fHkmRneY4
-	+4am9j30TpkI7FrhmATv7RsNJaMw2eDxNw1kfIhdKo2Cca83TXpHXrUAXxZLzDH+1lVovvpoQO3
-	rlN1LArL6Pzr4wsqwjhpAcD0N9N88hBgENdF7IYQeh2jGt0Fx1rSk/JcTF9Aqv1VgExw=
-X-Gm-Gg: ASbGncu78fJsA7kB+B9zeqWTnxhYuNSTU/cJRbv1l+cadJibkA72NgeVbL7+9CvIOOn
-	A7NXOiNAvxZHNvpMz97G3lN2BGdYydpe9JiESfe/lEjt43ipLC5yOCyjeVMAWBkP7MMK1i7mZ7N
-	c1lleuqphj1c3tr45ApM6ukCMnc7aXFlxSLzXWyOiNlMHMTrLZSsLUHU5S8addefTQYs2CAPbyl
-	MbfJirFbZBr7/anVjHKC/UuhqHoXorhqllYTit+LZfYeS33nPA1AiM6ytLvKfkZYSnObU4aFFOk
-	2w+BYcS3M97VUCFOL4LDhYyauP/nhgl+x20BxoIsKOqc5jlxMxtgwTXablze7y7SS8iz+HICUJ+
-	5Z4va1g==
-X-Received: by 2002:a05:620a:2788:b0:7d0:a0bd:d7ae with SMTP id af79cd13be357-7d5d3f0201cmr128301385a.5.1751556778128;
-        Thu, 03 Jul 2025 08:32:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgKXuQm2xeDUpFVPOnRJFFPBfy1u3PKJPqnXeNMitcBiTnYYl0avZkvqAQKwR8Y08DzgmQqw==
-X-Received: by 2002:a05:620a:2788:b0:7d0:a0bd:d7ae with SMTP id af79cd13be357-7d5d3f0201cmr128299885a.5.1751556777554;
-        Thu, 03 Jul 2025 08:32:57 -0700 (PDT)
-Received: from [192.168.1.106] (83.9.29.45.neoplus.adsl.tpnet.pl. [83.9.29.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c01201sm1313575966b.97.2025.07.03.08.32.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 08:32:56 -0700 (PDT)
-Message-ID: <d1973316-d6d0-443c-b155-ad8890b8c971@oss.qualcomm.com>
-Date: Thu, 3 Jul 2025 17:32:55 +0200
+        d=1e100.net; s=20230601; t=1751556927; x=1752161727;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=75uNOQCVeQVcxppeehQYWLee6QMQRVMuSxhhZo8FTjE=;
+        b=UGvEFIcRgfzS6GaA8NrkOgQ3+cFEMEnkNumMwq9k+penkUD/1dpAwwnS1AD5cUeUOh
+         BSSIxTga7Nx6SNwIiL5toQKClaG1dIpxwKf5WVbyAGtv/ayD/odol8bbIHCrRY4NW2p8
+         PL6L5R4ch0T9MnCWX0AiPQoxfB8iQQBoIOOT3n8InxfQN0LNd9jkxmcI+56+adzY922T
+         wspvdtxR5O2r1pEmaO7aWixn4pYbULZRGNByByekFsWR5dZ2meIixEufBnnQzYR0CemL
+         nlh/cwWY5TUceLqMKTmgDZgkTTpwhJ8BGZIlAD00koodmpx3jZJ3/O5WViaBz1Q+asgJ
+         opww==
+X-Forwarded-Encrypted: i=1; AJvYcCW1iAo/OguT6HAH/vtTSUUjE1ZrVfSRy5s0qG8OrWkN7dZgOTJnkojDRrVxA7fFRQOLu7DA@vger.kernel.org, AJvYcCWnoNzWFbsvSll3+N3Fo2AE2bSVXRJR99DcHRBtM4U/Dc3/ksBYaM2LDzv3mUH0IioM1YuU2Ut5WWuCNAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxd/mRgz2y05rpBefP2GV429Y2qSf2ZhUThiqOk0LXxSYH0JtQ
+	8xYCyJZaURPlvvc+H+DhAMnETm3AwVdRxsMQcFRDaoU5k9NLD4pG3CEV
+X-Gm-Gg: ASbGnctzO5ocr3XRWu4Q6+VzCDXd4Ow03SxD7L170E28maayyNCN+ZB0iQoCpM1jD4u
+	mR2bmGUh5ATDGkHRRXtvim8CygGxwcpv/W1h23rbSsgSThi1bFB43pI0+BAhWHAPjkfbrTI6is8
+	aZu6uilmva8p1hXKH78ohzHrVQUk2nPWCQtZNZuk2elFklY91Lp61mvvHyXKq5jcFzRwTZJ/Mvo
+	YXRXa9TMK7YUdhAewij41JylUMvPdYZSQ9hIxirMzsp4/UaBBbXIqcb3FYdovrCKd1bZPhc5UDb
+	KN/NnFTHDSqf50YV5g0w8lQffXlPFjflnQWRc/uHwZ/OXjERFdCdzXetN3TWrjuJsjiNudNFP/E
+	Qy8pxDTDLSsk=
+X-Google-Smtp-Source: AGHT+IG6nHD8yFt/hQHs4Z3vKYeZAtUQPwlXLSYtpuy0z+JPsoIyqSB9z3kkZ0DqpD9Q8yCxLWqJ3w==
+X-Received: by 2002:a05:6512:4025:b0:553:297b:3d4e with SMTP id 2adb3069b0e04-5562efc934fmr1483048e87.52.1751556926979;
+        Thu, 03 Jul 2025 08:35:26 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384a7eeasm6228e87.143.2025.07.03.08.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 08:35:26 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 3 Jul 2025 17:35:23 +0200
+To: Neeraj upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: "Paul E . McKenney" <paulmck@kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Joel Fernandes <joel@joelfernandes.org>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>
+Subject: Re: [PATCH v3 1/2] rcu: Enable rcu_normal_wake_from_gp on small
+ systems
+Message-ID: <aGajO8rOu_GOnjrS@pc636>
+References: <20250702145938.66459-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] bus: mhi: host: pci_generic: Add SRIOV support for
- PCIe device
-To: Vivek.Pernamitta@quicinc.com, Manivannan Sadhasivam <mani@kernel.org>
-Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vivek Pernamitta <quic_vpernami@quicinc.com>
-References: <20250703-sriov_vdev_next-20250630-v1-0-87071d1047e3@quicinc.com>
- <20250703-sriov_vdev_next-20250630-v1-1-87071d1047e3@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250703-sriov_vdev_next-20250630-v1-1-87071d1047e3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=6866a2ab cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=qmfFy4ndMtQ753Zl/n/b/A==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=aC6bp7ebQdJ3EfGykbEA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEyOSBTYWx0ZWRfX6L3FfTdNcP/F
- s6Nv7AQtUapj5X9lBA0YzIWdq4sY5vh6YzAjaevSkSzLPwvFF6XbPiOH6kTAFdgMHYnaPqfTB7a
- cQPRk9HtAs6xFS88EtkbIlMlYTDMOFI+EIt7fImNU5i2dKdzaRAl2js5/ujrS0EJF8iydEuZy0k
- H2Fn1N0deflqIjlc8H4P+/thAxBV9nFfOaF66onJ8HOnfpmsfzkeZfIEIbMhuWChu5DEfAM4dfm
- 8oCIgEkx1MAdHYYduxK3SXdHGQM7iBDG3BLn4x4r36gEa4EdMcNWXaF4XnfQxLLmdvitFpLhf5B
- gYgDSx43BWBgfdOs/JGS7/B5L78RFJPMvQ1Vimt+jiBgaRKRcbOTMzvXPhYJ99tXiWH4AlZ03Db
- dGHOCWs4dSeqUBJJMDGOCKGClawY2vUmXufN7f5Umi2XoBopPeIV03jB1UQcSXF8owd2wWJj
-X-Proofpoint-ORIG-GUID: I8ULCo0dbhv196n4wVsPRr-NbXmYdZ4b
-X-Proofpoint-GUID: I8ULCo0dbhv196n4wVsPRr-NbXmYdZ4b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507030129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702145938.66459-1-urezki@gmail.com>
 
-
-
-On 03-Jul-25 17:09, Vivek.Pernamitta@quicinc.com wrote:
-> From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+On Wed, Jul 02, 2025 at 04:59:36PM +0200, Uladzislau Rezki (Sony) wrote:
+> Automatically enable the rcu_normal_wake_from_gp parameter on
+> systems with a small number of CPUs. The activation threshold
+> is set to 16 CPUs.
 > 
-> Add SRIOV support for PCIe devices.
+> This helps to reduce a latency of normal synchronize_rcu() API
+> by waking up GP-waiters earlier and decoupling synchronize_rcu()
+> callers from regular callback handling.
 > 
-> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
+> A benchmark running 64 parallel jobs(system with 64 CPUs) invoking
+> synchronize_rcu() demonstrates a notable latency reduction with the
+> setting enabled.
+> 
+> Latency distribution (microseconds):
+> 
+> <default>
+>  0      - 9999   : 1
+>  10000  - 19999  : 4
+>  20000  - 29999  : 399
+>  30000  - 39999  : 3197
+>  40000  - 49999  : 10428
+>  50000  - 59999  : 17363
+>  60000  - 69999  : 15529
+>  70000  - 79999  : 9287
+>  80000  - 89999  : 4249
+>  90000  - 99999  : 1915
+>  100000 - 109999 : 922
+>  110000 - 119999 : 390
+>  120000 - 129999 : 187
+>  ...
+> <default>
+> 
+> <rcu_normal_wake_from_gp>
+>  0      - 9999  : 1
+>  10000  - 19999 : 234
+>  20000  - 29999 : 6678
+>  30000  - 39999 : 33463
+>  40000  - 49999 : 20669
+>  50000  - 59999 : 2766
+>  60000  - 69999 : 183
+>  ...
+> <rcu_normal_wake_from_gp>
+> 
+> Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > ---
->  drivers/bus/mhi/host/pci_generic.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kernel/rcu/tree.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-> index 5c01c23d0bcfedd23f975e99845d5fa88940ccde..3e6e2d38935927cf3352c039266cae7cadb4c118 100644
-> --- a/drivers/bus/mhi/host/pci_generic.c
-> +++ b/drivers/bus/mhi/host/pci_generic.c
-> @@ -1607,7 +1607,8 @@ static struct pci_driver mhi_pci_driver = {
->  	.remove		= mhi_pci_remove,
->  	.shutdown	= mhi_pci_shutdown,
->  	.err_handler	= &mhi_pci_err_handler,
-> -	.driver.pm	= &mhi_pci_pm_ops
-> +	.driver.pm	= &mhi_pci_pm_ops,
-> +	.sriov_configure = pci_sriov_configure_simple
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index e8a4b720d7d2..b88ceb35cebd 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1625,8 +1625,10 @@ static void rcu_sr_put_wait_head(struct llist_node *node)
+>  	atomic_set_release(&sr_wn->inuse, 0);
+>  }
+>  
+> -/* Disabled by default. */
+> -static int rcu_normal_wake_from_gp;
+> +/* Enable rcu_normal_wake_from_gp automatically on small systems. */
+> +#define WAKE_FROM_GP_CPU_THRESHOLD 16
+> +
+> +static int rcu_normal_wake_from_gp = -1;
+>  module_param(rcu_normal_wake_from_gp, int, 0644);
+>  static struct workqueue_struct *sync_wq;
+>  
+> @@ -3239,7 +3241,7 @@ static void synchronize_rcu_normal(void)
+>  
+>  	trace_rcu_sr_normal(rcu_state.name, &rs.head, TPS("request"));
+>  
+> -	if (!READ_ONCE(rcu_normal_wake_from_gp)) {
+> +	if (READ_ONCE(rcu_normal_wake_from_gp) < 1) {
+>  		wait_rcu_gp(call_rcu_hurry);
+>  		goto trace_complete_out;
+>  	}
+> @@ -4843,6 +4845,12 @@ void __init rcu_init(void)
+>  	sync_wq = alloc_workqueue("sync_wq", WQ_MEM_RECLAIM, 0);
+>  	WARN_ON(!sync_wq);
+>  
+> +	/* Respect if explicitly disabled via a boot parameter. */
+> +	if (rcu_normal_wake_from_gp < 0) {
+> +		if (num_possible_cpus() <= WAKE_FROM_GP_CPU_THRESHOLD)
+> +			rcu_normal_wake_from_gp = 1;
+> +	}
+> +
+>  	/* Fill in default value for rcutree.qovld boot parameter. */
+>  	/* -After- the rcu_node ->lock fields are initialized! */
+>  	if (qovld < 0)
+> -- 
+> 2.39.5
+> 
+Neeraj, are you planning to take this for next merge window?
 
-If I read things correctly, patches 2-4 are strictly necessary
-for the device to work under SR-IOV, so this patch should come
-*after* all of these fixes
-
-Konrad
+--
+Uladzislau Rezlo
