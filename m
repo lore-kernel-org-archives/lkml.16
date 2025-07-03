@@ -1,71 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A0B2D6614
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4932D7816
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534754; cv=none; b=pHQ83gy3/DwOVSKBvi+ZrQEDFpUyDrvUpmxcPECx8Ymz7HA8aqfb+2K0WgdHGQ85WwiW2zWCfrSizsdT+6Sufup7zgyjigEvd6foBS9gan+ejKIS/bnJkwKH8/9sNBR6lmbdfJ24PEiSlNSGQJgAv4KFitpAzIq7TYU5lV9/bK4=
+	t=1751534760; cv=none; b=lK+tHSEz5OYNvjG88v+OwjZtmqWGSsXUf5Sjr6TzgL6NV8HmrA52eLVvFEbqJTO0wm0szjAINexSAWDFhbKng5v4QKDHZ14xdJY6FNp7v3dVNABUb7HvG60PMl59xruFige5Bi9GLWm+q9XkVASissYuhw9vPZxe2sMSD+BT5cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534754; c=relaxed/simple;
-	bh=STzWJep7C0ueCylwebeqomoBi53CDoyHXyyg3q6vros=;
+	s=arc-20240116; t=1751534760; c=relaxed/simple;
+	bh=1HlNgER/XeQXBjN56DjmSg6J8Ics8lRrooUZJ1Ctn1Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KNcaVXR83qbY2I8ozjH9rKvNAqFcNCIu9Tz8dwxgngZckeuE4kMG7U9SYR/xhBkykY2vKya1u8CN/4NMOnW8V/UKKkKe1qcKmWenhhhnu94fBgO3VnQ/Ba0+FGMInxMFC2PkF6IL/l7yEVwnK/DflWQfRcW6wViQ0NtGAfR/Gk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aIPgo60Y; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=n0rj7mLrqI+OoGd2rJf1QM3dGlJ7r9hkOmcSAlspJ6LEpNwOltImnaL2oAYRW3pZjvYZFt3Ok2yEXqq+Vhwsu4cRuN6GKeU/VwgX19N44ha2KhvsrlNATtSNFCcwAy1EEguvzKDyUJiEhi9eREBCI2IzbRAzUXHzxBeGf2Yc3X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SNRuaIpX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aIPgo60Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNRuaIpX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751534752;
+	s=mimecast20190719; t=1751534758;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NmUFP/5otJp7Yva7rirEL2lRiqI/PxhyfiBWQUHadCI=;
-	b=aIPgo60Yx1rUEP7wrBc57yg3ki75N3xHe+5dmEIYGa71+TANiHnUPsLEHt7NZaHd0mFs2I
-	86pJTwveZex9LQ06bSikcYQk1Ntz9QhNwccIW+nhnrGxqG2+p7NVbUbSRnvl1EtGQ+YZBk
-	FgpR9P1A78Er4D60dLYXf6sgOKgl6JU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s6q17pOTAS+Aiy8If5kHz5lqdvEtm3PVC1LWhYJmRb4=;
+	b=SNRuaIpXpczo6eFCBJX5XkVONXjUa1DoaHKbqIBv/hx6gjQLzHCDaahWxTogUGvSh88mNS
+	K4Q73tUl76PsZbaajh0mElNcB5ADxaXlGFDr+V2G1Qs+ticq1spyZOPDTBQhlD1Ly7s3F+
+	f0uFwywKE/C6Vv9jKV1XFUOxECGSGyc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-fw6LsnVBOvaf6pReASmZbg-1; Thu, 03 Jul 2025 05:25:50 -0400
-X-MC-Unique: fw6LsnVBOvaf6pReASmZbg-1
-X-Mimecast-MFC-AGG-ID: fw6LsnVBOvaf6pReASmZbg_1751534749
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451d30992bcso34618475e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:25:50 -0700 (PDT)
+ us-mta-422-tC-je5-TPDCwl_FWpB8PCA-1; Thu, 03 Jul 2025 05:25:55 -0400
+X-MC-Unique: tC-je5-TPDCwl_FWpB8PCA-1
+X-Mimecast-MFC-AGG-ID: tC-je5-TPDCwl_FWpB8PCA_1751534755
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ade57fec429so411822566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:25:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751534749; x=1752139549;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NmUFP/5otJp7Yva7rirEL2lRiqI/PxhyfiBWQUHadCI=;
-        b=bcfFpGLiajcVy8IQot9JoW4hI3sKjtqV9uHeUu4uSUiLGqzaU21C84t+21YHp/+bGj
-         7XfX4/lDR5KYFIhETdlOmMBbSwFv5wrq+3sMVXnEYA3xkcb259gMvL3wj8AF4aJIU7Wg
-         pvEb9OA4IURurPhGTJpfQmHZZHqU5PUe9jz79vMmdgtIY7QzHu+xRRt1Lz06pHk1nftM
-         KE+E32Un36DQO7QVbNz+ZyyDhJpSerTYSr8JIqvWpcptVtjYoFOAdJvoIrscQZluO50p
-         AeRJ6cObCh8LngmrMGwWcUxqmnQ5/ACwnb/acGuq6XgtFpkzOYB8nU3rQNiWucp50wat
-         f5lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTfLrwkJex8gWgVZUqD8ofLjdPdUMvyQImCogc7vihE4FXJM30o7snqG7BN5AP8ggvgpm8w4Whchq8tb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE+J8ytBu7cpToZ48glKzxxpfZZOyPOIrzpONE03StmhSw1SF6
-	T5cjzMlpahpgvL/Nj4HIuom7gwM9UcTfnqloWCs4Kxl4FFH/eTzowHGhQ8GaHfvMcvh1auQkW5S
-	ld6hyQdbXexhXgDfx/vPBJVCoHm+nAhdEGQRqJTsZoy7/DypNs03i9aGhdjQ1hDfcTw==
-X-Gm-Gg: ASbGncvKyUYMMCt9vhtLTcY1tg2xWF9uA8mq9iPBKEVBu148HchHx3gRJkBXBeErD8D
-	GmE9Pc/eaXa74pIDRF9xcfvBGvfngq8jYCpBsukKaZ6/XadnZqxr6S8TFky5gja2/SlQqQLZV1n
-	hEZqGHC0woU59V0eqt9oy773uBFPZN5ZTGnZdUR1QcKx5iUZGMIcdRYjlD+vhhmcuktAEH2+7fA
-	GdOnjzlKM/Jg+45Spr5pOr8QSSGyeGUCD9r6bL3RYxlGSlbbntGqnIMUp+NdYMiHT/4bDP8ylzL
-	OH1y7pcZzUfFC8uUcg4J7LccNyc3neSuz/tAJdy/8WDFrHEwyRIDMP7nJz/XSBYOEUM=
-X-Received: by 2002:a05:600c:608a:b0:453:8f6:6383 with SMTP id 5b1f17b1804b1-454a36e996cmr71174355e9.15.1751534749315;
-        Thu, 03 Jul 2025 02:25:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEihb3DB580vG3swYDdikiInjReCzKhZiPBvQTN0giVHizEK3OOIkuH4ihxHrIuTcVlib7I/A==
-X-Received: by 2002:a05:600c:608a:b0:453:8f6:6383 with SMTP id 5b1f17b1804b1-454a36e996cmr71173955e9.15.1751534748907;
-        Thu, 03 Jul 2025 02:25:48 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314? ([2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969058sm21577325e9.3.2025.07.03.02.25.47
+        d=1e100.net; s=20230601; t=1751534754; x=1752139554;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s6q17pOTAS+Aiy8If5kHz5lqdvEtm3PVC1LWhYJmRb4=;
+        b=ZKoGlqb4q/iOYJUalzJGHSbjjHLXTcUiwM9kt8CWb9FzXBwV7AZa1tEt5ofRbq4vL3
+         vv1GPDcJlt/EXkLcHKspNSNjbB3NPsYBgVA3idInr2z0nWG3fJEt59x2DH0fMHHi5MPH
+         mFFqi0Of66DFA8+MsMaxoxlXpvAYgkOxPEQsA6EW5m2faMPl8FaUFY2v157j1hOV+yqm
+         FK4ZM8N3j2lc/duJB9yP35KkYWgzFfr0yIdDsi+AvXtGnU+kiQfpgXzzQnjHzBo603/c
+         8RICs0FsmhTy6zJU/g9DfHXAdP5xmRmRhkzOnY8q6N7x20v3M7NAnytRKPB5pmmNNYrx
+         gniA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9sgbDl73+v0leecIHVWxGyKl6RxE0yhlib3BzicYyh1eheEMRPduSNYsAJHED5Qfa7XUaYTIH3a7eKkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx69uZdoWUnUR7rT2oukmavPw35hfitVmPsOXH2KtLZtb66ZGUV
+	oN4HFLOYijMamZTtwBn/ZI3Oh3jkykOyEKgbkRhoItHq8Ur9iMePNGsDQuBy/ElX0wi2VuEF32t
+	oG2ZdeztS0NejqBPmBNkiSbkQohJJEEK6yV5bJBcz2tHyPV9dqdRnPxmlD4yfLdgu9w==
+X-Gm-Gg: ASbGncuzAUetQsbEodYMMdYSSqqWxj8L6Z1Bpfyw7Ic+BOVeTRl/OJ1QJ+yeanVykyU
+	/GGsQkOmGOVO89jGBwE9oCyRmcCq8IIM+bljH7P7HrOYmDSZg79FS71o94QR04QV5lcsg6YLklB
+	me7f6SPfr45mQM6xjRxgZSDBV6F7YMu7ordGwMg+D9oWAT5LLQcaMZ137jEOaLgohJV9jrNdmci
+	U8iXiNuD+r0C2mdsaMANPE6RIa70ZF4eD/99Xcr0vhgv/nlEvAoIaofy5C0FT34MXaxiDdpEgjk
+	ri2DlXm+/UJ2+ogk8tqFq8INfWe+mYaQgYgUSW/HwcK2
+X-Received: by 2002:a17:907:96a8:b0:ae3:6390:6acc with SMTP id a640c23a62f3a-ae3c2c02390mr674330266b.27.1751534754444;
+        Thu, 03 Jul 2025 02:25:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtmPFeANToxNNWeQfF+J5Mvm+KGWp4JHbXAKl88BArudgSXqMBW2KfeHvr/5KiHrw8wQPaRA==
+X-Received: by 2002:a17:907:96a8:b0:ae3:6390:6acc with SMTP id a640c23a62f3a-ae3c2c02390mr674327466b.27.1751534753911;
+        Thu, 03 Jul 2025 02:25:53 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bea1sm1229554266b.146.2025.07.03.02.25.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 02:25:48 -0700 (PDT)
-Message-ID: <869be9b5-846a-478a-b90f-5e9068387601@redhat.com>
-Date: Thu, 3 Jul 2025 11:25:46 +0200
+        Thu, 03 Jul 2025 02:25:53 -0700 (PDT)
+Message-ID: <1d82c930-be52-4983-9fd7-099df487eb48@redhat.com>
+Date: Thu, 3 Jul 2025 11:25:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,43 +74,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 2/2] virtio-net: xsk: rx: move the xdp->data
- adjustment to buf_to_xdp()
-To: Jason Wang <jasowang@redhat.com>,
- Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250630151315.86722-1-minhquangbui99@gmail.com>
- <20250630151315.86722-3-minhquangbui99@gmail.com>
- <CACGkMEtv+v3JozrNLvOYapE6uyYuaxpDn88PeMH1X4LcuSQfjw@mail.gmail.com>
+Subject: Re: [PATCH v2] khugepaged: Reduce race probability between migration
+ and khugepaged
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250703054823.49149-1-dev.jain@arm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CACGkMEtv+v3JozrNLvOYapE6uyYuaxpDn88PeMH1X4LcuSQfjw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250703054823.49149-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 7/1/25 4:23 AM, Jason Wang wrote:
-> On Mon, Jun 30, 2025 at 11:13 PM Bui Quang Minh
-> <minhquangbui99@gmail.com> wrote:
->>
->> This commit does not do any functional changes. It moves xdp->data
->> adjustment for buffer other than first buffer to buf_to_xdp() helper so
->> that the xdp_buff adjustment does not scatter over different functions.
+On 03.07.25 07:48, Dev Jain wrote:
+> Suppose a folio is under migration, and khugepaged is also trying to
+> collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
+> page cache via filemap_lock_folio(), thus taking a reference on the folio
+> and sleeping on the folio lock, since the lock is held by the migration
+> path. Migration will then fail in
+> __folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
+> such a race happening (leading to migration failure) by bailing out
+> if we detect a PMD is marked with a migration entry.
 > 
-> So I think this should go for net-next not net.
+> This fixes the migration-shared-anon-thp testcase failure on Apple M3.
+> 
+> Note that, this is not a "fix" since it only reduces the chance of
+> interference of khugepaged with migration, wherein both the kernel
+> functionalities are deemed "best-effort".
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+> 
+> v1->v2:
+>   - Remove SCAN_PMD_MIGRATION, merge into SCAN_PMD_MAPPED (David, Anshuman)
+>   - Add a comment (Lorenzo)
+> 
+> v1:
+>   - https://lore.kernel.org/all/20250630044837.4675-1-dev.jain@arm.com/
+> 
+>   mm/khugepaged.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 1aa7ca67c756..3fdefc4f4984 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -941,6 +941,15 @@ static inline int check_pmd_state(pmd_t *pmd)
+>   
+>   	if (pmd_none(pmde))
+>   		return SCAN_PMD_NONE;
+> +
+> +	/*
+> +	 * The folio may be under migration when khugepaged is trying to
+> +	 * collapse it. Migration success or failure will eventually end
+> +	 * up with the PMD still pointing to a PMD-order folio, so return
+> +	 * SCAN_PMD_MAPPED.
 
-Please, re-submit this patch only for net-next after that the first one
-will land there.
+Nit: the last part (, so return ..) is obvious from the code.
 
-Thanks,
+I would have written
 
-Paolo
+/*
+  * The folio may be under migration when khugepaged is trying to
+  * collapse it. Migration success or failure will eventually end
+  * up with a present PMD entry again.
+  */
+
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
 
