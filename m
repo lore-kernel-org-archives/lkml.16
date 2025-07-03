@@ -1,69 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B3A2DE701;
-	Thu,  3 Jul 2025 21:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3962DE701
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579394; cv=none; b=Bz9ttb/DklReJzoYTGUpgdIOGR9SDJLCaqKTcllUhlgIjwppHpWOZYyrGzSSXQUr5FMjj47kthAbJpUFcyMxcixYW5bKVznSspUIvyNWmRtWauqPogrKZFpPF9BOCj3DWjhrL2ZxKTmJINP3cNyZKI8A8/zPBp1ZNeQNu86I2ak=
+	t=1751579503; cv=none; b=lsK5HaNWSBJcceBAAxU/e1eRaeQ4HxKerDya3cK13TE+bPoAILt3YXmoBWr304EVYvGBypOmvox+0TLm3ieFUi23qZNrtxMZcAXHThPh02TLaMRD4zdLoyOlVt1edLIqtd/jTc5YE27i4FoWfjfsbx9QKe7drQOFtlAUHDwa9zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579394; c=relaxed/simple;
-	bh=CGX2SPIZ9xHHR7xXxfAWC/JUQPZzoF0O31iWxNQOu/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5inA0DFogyCgufVEWnmvr6gJ3Ltk3QbXqJMcCBOh8xhwNy1i/76TdQimWqRTgRhqZi22mNb+qP5+XbB4et4X4gSXc7SrAWKHcILFLOiewevAyq2Xc9iUnA9pmFtK91zcUpJVWALN/ZGCdeswM5pzInSfXLPv9PC+RyW/RSXkcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgzTO+XL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751579503; c=relaxed/simple;
+	bh=3Q0iNSrxY/+0+4HWOT6KwZHJuWt0xV9uvF8SsizPuyk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rNenePS113fWH/9eHTZEYNV0vayIWS9kP3DpIEpAMgptL8co0MN9/6vw04Lxxf7MD1lKZuRrv1J5jyK9sDeegEy8ga3Tik9E79WuBG6o/uiltqE9b8fIPDZzclgc4wkanSRDK6ZmiFA4OrxQskJN4cXaecKdD0f8FZwUXDhl7qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ulaEXyvF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L5UMvyEY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgzTO+XL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F7CC4CEE3;
-	Thu,  3 Jul 2025 21:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751579394;
-	bh=CGX2SPIZ9xHHR7xXxfAWC/JUQPZzoF0O31iWxNQOu/w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kgzTO+XLqwCuSwNpaXZACKDE/QvJYSyRQyBOAaO0MinLorg3TvaZTL3j5t1aJP7NV
-	 kKEx/gHmpJz0UjUHuWO59zTx/ywLtJs4MAQ0N9Ul3KUsbKFuVTH7wetUAWIoM7mMc3
-	 2eXJD0D4kES0VX4M4ga0JPF2w7+5pVYfWqXdJErUr49QPtWrp2+0vTDUlVHO1K0j4d
-	 rbPvj0aKxhh/syUyXhZEihGdwIggAvrryynEkyt04ZrX+x6yZrPgXDJWX3qMbhkCF9
-	 ZuH8WDcFq3WK1US5Czl0dP6w8oUjMy3yiz09nbypB/iKGpG/wN/E0MGJiV77PwzQKo
-	 5lh0WWrDGieLA==
-Message-ID: <0e89892f-103e-4b92-a067-e192cb7b89a6@kernel.org>
-Date: Thu, 3 Jul 2025 23:49:47 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ulaEXyvF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L5UMvyEY"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751579500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AMctfDgk0d/ScRhzx0rzzgoIcZATCyOAgGRtgKIvgdA=;
+	b=ulaEXyvF8lkZ9O/fuPn0xyurtQIMi+IvaHirBUjvcFj9jXXhdY0hircZMBWVeQyFU42xfa
+	637SdcE7LpBN4PL+kb1nBLN5dw35Zf2diqJGxa1IgpRPHMHifhEsRGzCTw7xOyuyMNsIkv
+	W3LqcFeh6+u+im9jnkraNeaz4PNf+0dlrHYUVEhy0rDXhQ8PW8l+YW8EEGruHJGSM83DTq
+	C0z0dfl2D/x/RwnelM/3Yo5kcbtUjaMHOBHthp5ZRUO6tFDK43+Zof8cJeLedIXAgGRxmS
+	UJSPoRKwoLD3O6H2sGddTBjo8Wu8Z398VVpFYG48s+wqh8BjAUQXcvk/Lyj4OA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751579500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AMctfDgk0d/ScRhzx0rzzgoIcZATCyOAgGRtgKIvgdA=;
+	b=L5UMvyEY1jCDC1OXRz+eNorYsITvFtvyOecn2hidSoUYofsH8eQLzS8kcIzlOgGvEN4DBh
+	Lf/Rgj3QwzQA2lBg==
+To: Himanshu Madhani <himanshu.madhani@oracle.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: System hang with latest kernel v6.16.0-rc1 (rc2 & rc3)
+In-Reply-To: <85A10B5D-67E5-44F5-886F-CA9D5E7EBFAF@oracle.com>
+References: <ABB1DAF0-048A-4373-9007-988D20F359DD@oracle.com>
+ <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com> <87a55lt48k.ffs@tglx>
+ <85A10B5D-67E5-44F5-886F-CA9D5E7EBFAF@oracle.com>
+Date: Thu, 03 Jul 2025 23:51:39 +0200
+Message-ID: <87tt3trlhw.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 3/7] rust: introduce module_param module
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Trevor Gross <tmgross@umich.edu>, Adam Bratschi-Kaye <ark.email@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>,
- Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
- <20250702-module-params-v3-v14-3-5b1cc32311af@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250702-module-params-v3-v14-3-5b1cc32311af@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/2/25 3:18 PM, Andreas Hindborg wrote:
-> +    /// Get a shared reference to the parameter value.
-> +    // Note: When sysfs access to parameters are enabled, we have to pass in a
-> +    // held lock guard here.
-> +    pub fn get(&self) -> &T {
-> +        self.value.as_ref().unwrap_or(&self.default)
-> +    }
+On Thu, Jul 03 2025 at 20:34, Himanshu Madhani wrote:
+>> On Jul 3, 2025, at 13:21, Thomas Gleixner <tglx@linutronix.de> wrote:
+>> The problem is obvious and if you would have enabled
+>> CONFIG_PROVE_LOCKING then you would have got the reason presented on a
+>> silver tablet in dmesg. I encourage you to do so nevertheless.
+>>=20
+> Great tip on this. I=E2=80=99ll keep that in mind for future debugging ef=
+forts.=20
 
-I think you forgot to rename this.
+Actually the very first thing in testing of a new kernel should be to
+run it with a copious amount of debug options. That avoids all the
+headaches of chasing fallout caught by them, in painful ways later.
+
+I'm truly surprised that this is not done already and testing blindly
+assumes that rc1 has already been objected to such tests completely.
+
+It's bloody obvious that with a code base of the complexity of the
+kernel and the gazillion of drivers, the CI coverage is far from
+complete and only best effort based.
+
+Obviously the companies, who have access to and care about their
+specialized hardware, should run CI against linux-next to begin
+with. Then such problems would be caught way before they hit Linus tree.
+
+I know there is no budget for this kind of effort. Companies rather
+waste their budget on chasing problems, which could have been avoided
+upfront. That's a huge cost saving, which is proven by applying magic to
+the relevant Excel-sh*ts.
+
+Not your decision, I know.
+
+Shrug,
+
+        tglx
