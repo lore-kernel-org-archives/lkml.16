@@ -1,160 +1,96 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41144275845
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88F023A9BD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579611; cv=none; b=J7sxV3pmdnitCZ2QmrChX4LrzqKWemREfn6J2QUtJawizxQz107VJcFNrwNfFhy/yeUgBjA3DzloWW5IgPqmqWq16cJs+Ky+XKMw74SDcBlFDBXpW280BCnBsVh5tk2G0Y8/n7+7K8v9i6SZdcqC/shXYSIXJNKAFOn5ncchs3U=
+	t=1751579662; cv=none; b=RdDUp6cJM2GdkhrFFpx4Z+LEQVG2S5BrE+O0mDzxdB7wV4BKXR6OZNnq3VHLxUVPDTBe4jGCNsS2JmuLmjh4WorBNJxEwqK6r4Xc9QzSytL7iSnEns42D5bcyq+SHgOMVOY91nw8OSUwYN0sNrk9UY0PJ+RHV6CpnL4KDcbLQoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579611; c=relaxed/simple;
-	bh=gReumBugAMPkL+f0s/yNu2rliKIaTFJgDBbHJ0cCnSo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lDSGaV1UcqqH4y8v49TZHO1I32lzxm+iAvoe2RyZiQ6ix8L1NL6qVrmQKO3lljzGbfDKxHccKRr2Zm2z7CcbZH83hr4VRLq+lCCA+lQVEwL5sCuPJpYJCE4hxpH/zF6IStICbmjMhIJWQV5wpsYUtMxqhdV6aJaufDza/b3E784=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gt4BOjmB; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1751579662; c=relaxed/simple;
+	bh=LEo27SpxoT6z4tyv6TX/oS4QzkAl1cDA2pfjJ6uCnsA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TGlPjPW4dPCl7z7WdW8jKpo200bmjO9qB+NAnxVAeB3elajDrJZ8QEgQqEOLI8L0/8f53VmAWdH+2fznVECv9unc6O7I3Rg9GYL53dXb7RCPMDwXNEFqetPbO2WAgYvLMMXl5Jt1HbM1vbj0pksm13kbRHGzXePIRRzta8aw2xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LH/PsIz4; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gt4BOjmB"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235e1d710d8so5539245ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:53:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LH/PsIz4"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso434989e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751579609; x=1752184409; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1751579659; x=1752184459; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nxuuX3SmTe/KHiGqxZf5tezD/Xp394VdI3B/HTH6SAc=;
-        b=gt4BOjmB9j30Xk/N0Ky0uhOdLnXfGS0+HGtDmv65evo7hofyZRLS8N2LTVP0MyHCvQ
-         8G9E4aK/nFfffWHNSLvvyHC98nSLJLNSQ2DD14UHoipoGQe8+DQ+Xkn5aVE/vM9XlHwH
-         n7hI8zF94jukkut36XOlFytjL0gBGPsQwOnzY=
+        bh=LEo27SpxoT6z4tyv6TX/oS4QzkAl1cDA2pfjJ6uCnsA=;
+        b=LH/PsIz4Rdp3SZpO6iSO4RMi70OfPm1+90Unk2x8B5XbUjnIHXB7dpdjgq6tDRF+28
+         nkqoaNOm3WVyYFejAqUT+gzgV+eO5EVsTAjxso65fqWpNSZEWs1bWFDm911HaBDkIJxX
+         ZlnBwIR8Mg8d6qTxyA9v7yaLm2erhEbGpWbbO+ChWfUZ3V5QTtTqV5vr0vN3HlBA3ea6
+         hjb2AtcKXgcrANkiWxyB+kiLcknGBofa4bJ82rJk8Bqg6wHOoS9pX3LijxfgEJtonbrO
+         /Pbrmz9e+0+OpNtPdzLOTmXWDV6NYprGu1OKQVYcu4Fsj0iYooRzvTIQ3N35KPgtAeSh
+         JR+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751579609; x=1752184409;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751579659; x=1752184459;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nxuuX3SmTe/KHiGqxZf5tezD/Xp394VdI3B/HTH6SAc=;
-        b=rcMiz3TtKY0R5xV1SSqDnXulfHbV0nEouNVffUgsCClIU1mFNOHd9YD1mE5I9xuAT6
-         9rzqZkJLzIgJHAOsCkrjGXRNmr9ve7I82Iweck8BuAt/88TFkAnIorfeu0k+U/Ex74MW
-         Ied1kOdpBsHZdy+HUPhYYBnMTdVkp4F3/fAjyYVzK8OxqjO7owzIjzpP5s0YwfVOoyFe
-         95iRLupJ0UH+STwyJgW3OOfUgi6R0fBmpUKFI7ABVP11GaTYczlfBW+2xC3DfvhIc8uY
-         lUJI+mY1bK+ev5PuFTra8vPhZilO72RNiylYnZmFR1eWubyyN9rZ66gxGw+KK7oJx2up
-         +fRg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1CZmv3Rna7YiHFpLPrbLim+NV9GMnfEXWaE3O/Ebt5vgUG0AMW96oINAfMikdch7AwTBVxUiVtutaFlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx51tu12GCJRvYL1scu2f0FV9KAViCJuwYMpm5hkl28De4ui7ET
-	wj/MGSNbzw1MJjW6F+lu4bYm5/ApY/k2oyJbXW9/wu4Sm+dFZnRgH/KCWZvh/K0LNQ==
-X-Gm-Gg: ASbGncsWoA2U8N6cuDsmOdXdr3c6hn+GE5UuQJoWU+OT9dujElb9Lu5xiPKXH5Oa4wK
-	U2/wr4gZb7PquX1Y3ovNCtMoZLHzT8WgnhXf4hZfWWFTi0ivuThIpvtCcWI8AAkVQePAp8EM1od
-	c6BStDRVCGOm4TVvuOqwgX+zNd+5cndTtuDcJwfXEO2yVay/yV0ZvpvRyeHEyUWS9dQjnmvm/sE
-	SwhPmHpsrigXzNh3KGBifFR4+xkD+CBaU4acDKF0nhAxelZPrxXm3xPO11+HBB9u7MhoztfYQFy
-	JVpcd+JyUCBuZWGbHjAUBMDwVCrHFLTz7enU+onymBbYTdh3mqbFOxmWg9n2u10vMneiu7UHRuj
-	9BGMyAfiO9dITN+bb8c/iYWJWfV6aFm6u2s7Bx2M+/A==
-X-Google-Smtp-Source: AGHT+IFglctMK4Y0kmMgoX4O2sEYz7+usWw4Ox+ioQ0YNjPdTo5gPJOnupN4TRKyDCVpucZphxoS0w==
-X-Received: by 2002:a17:902:f684:b0:210:f706:dc4b with SMTP id d9443c01a7336-23c86064c7amr4212915ad.13.1751579609484;
-        Thu, 03 Jul 2025 14:53:29 -0700 (PDT)
-Received: from stband-bld-1.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8459b3a0sm4249645ad.219.2025.07.03.14.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 14:53:28 -0700 (PDT)
-From: Jim Quinlan <james.quinlan@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	bcm-kernel-feedback-list@broadcom.com,
-	jim2101024@gmail.com,
-	james.quinlan@broadcom.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] PCI: brcmstb: Add 74110a0 SoC configuration details
-Date: Thu,  3 Jul 2025 17:53:13 -0400
-Message-Id: <20250703215314.3971473-4-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250703215314.3971473-1-james.quinlan@broadcom.com>
-References: <20250703215314.3971473-1-james.quinlan@broadcom.com>
+        bh=LEo27SpxoT6z4tyv6TX/oS4QzkAl1cDA2pfjJ6uCnsA=;
+        b=JiRpBz14T3Y3KdGr9HVL6DuJ67aM6LXuGxj9CB/ect8P8WSrYw7XOXDuDhN+mgexFc
+         YNfh0KK+kXI8bPswEQrrnoINEePQf1M8o7WwV/ulYdvYR5VjvKlaMjyDBwB70ZGhUUtt
+         AB1zZMgqKZ6iml1HcGcypp5F0lxyg2LIrI7mvFPnAaJuFrjU3C7hgyVT+RkF1KyjSOgB
+         /6S/Ce9vpiHUPhAf4gy8QeROD7Joxx+W4WIwPDws7R2JT8iJv3RIdZg5d1FeqCqCLzCZ
+         i2qnmQqA1hNCwCA79vnAe80OZPDzzx8HNo1UdiYNKb7O3JMvxGwbgQJCBkDRCbFcfHJ8
+         w1yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEZAH69tp34EvOfF5y1mWBqCrgEhrkbhJx2CBVZRCQ2i7XRlRv73rbatbIUm1aE4nLVnNfZlzPzoU8McE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpVy+8dj8uNAeTxrAUXnclCQjk0joMoMnvm7krwXRLUt+l7SCm
+	gsIpo6+p4xSf5BWk9p5EqqYbp8feGwpYbbC3jh4vWGCdbSbTCwxTYLsmKcLbSBhQ9gE6PomO8IV
+	N3dEJ5hUBT5+sKhpQz5JSEt61ui5b1O+d9fRYfPRn6Q==
+X-Gm-Gg: ASbGncv40x7YNmfpiqZa84tpXoPxDPSZ+mH37UAeaW2WdiuPS4FbyaDA4D4i/C6LW+Y
+	FPYRmvbgjlKmjFvr4LwdAy9PBlFlz2XHGIfsfZvvYwFP5FVFQ9KiW+y/FDPDWXbr6nk/QW3Hzim
+	JGyOtGPS9k0FE/B1hNTR2tqH3rBqIjQrLwI0BYuICsJjw=
+X-Google-Smtp-Source: AGHT+IFckUZv1qDN34YL9xP78RpLLOjoYJYZ+wKY65GHTkc4fwzbahypUbKLt2uekYZ4NWpbxz8d+9N/6fdIiPphiOQ=
+X-Received: by 2002:a05:6512:252a:b0:553:d910:932b with SMTP id
+ 2adb3069b0e04-556de26ecdfmr19471e87.46.1751579658980; Thu, 03 Jul 2025
+ 14:54:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
+In-Reply-To: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 3 Jul 2025 23:54:08 +0200
+X-Gm-Features: Ac12FXz8bSnZw_fU0LoXZXBdvuWYVqNdvL-IUi3U2zwuKMo-p81WILsJ1A0gEfI
+Message-ID: <CACRpkdZ8oHJeHydLcMmtttJiKSGybX7vmhgPDEjD_4SDoxvCzg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add pinctrl driver for Milos (SM7635)
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable PCIe for 74110a0 SoC.  This chip uses a simple mechanism
-to map inbound memory regions.  Both the "ranges" and "dma-ranges"
-are identity-mapped to PCIe space.
+On Wed, Jul 2, 2025 at 5:56=E2=80=AFPM Luca Weiss <luca.weiss@fairphone.com=
+> wrote:
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+> Document and add the pinctrl driver for the Milos SoC.
+>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> Changes in v2:
+> - Rebrand SM7635 to Milos as requested: https://lore.kernel.org/linux-arm=
+-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+> - Link to v1: https://lore.kernel.org/r/20250625-sm7635-pinctrl-v1-0-ebfa=
+9e886594@fairphone.com
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 362ac083e112..bfedab15a162 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -276,6 +276,7 @@ enum pcie_soc_base {
- 	BCM7435,
- 	BCM7712,
- 	BCM33940,
-+	BCM74110,
- };
- 
- /*
-@@ -291,7 +292,7 @@ enum pcie_soc_base {
-  * power of two.  Such systems may or may not have an IOMMU between the RC
-  * and memory.
-  */
--#define IS_NG_PCI_SOC(t) (0)
-+#define IS_NG_PCI_SOC(t) ((t) == BCM74110)
- 
- struct inbound_win {
- 	u64 size;
-@@ -2046,6 +2047,14 @@ static const int pcie_offsets_bcm7712[] = {
- 	[PCIE_INTR2_CPU_BASE]	= 0x4400,
- };
- 
-+static const int pcie_offset_bcm74110[] = {
-+	[RGR1_SW_INIT_1] = 0xc010,
-+	[EXT_CFG_INDEX]  = 0x9000,
-+	[EXT_CFG_DATA]   = 0x8000,
-+	[PCIE_HARD_DEBUG] = 0x4204,
-+	[PCIE_INTR2_CPU_BASE] = 0x4300,
-+};
-+
- static const int pcie_offset_bcm33940[] = {
- 	[RGR1_SW_INIT_1] = 0x9210,
- 	[EXT_CFG_INDEX] = 0x9000,
-@@ -2162,6 +2171,15 @@ static const struct pcie_cfg_data bcm33940_cfg = {
- 	.num_inbound_wins = 10,
- };
- 
-+static const struct pcie_cfg_data bcm74110_cfg = {
-+	.offsets	= pcie_offset_bcm74110,
-+	.soc_base	= BCM74110,
-+	.perst_set	= brcm_pcie_perst_set_7278,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
-+	.has_phy	= true,
-+	.has_err_report	= true,
-+};
-+
- static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
- 	{ .compatible = "brcm,bcm2712-pcie", .data = &bcm2712_cfg },
-@@ -2177,6 +2195,7 @@ static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
- 	{ .compatible = "brcm,bcm7712-pcie", .data = &bcm7712_cfg },
- 	{ .compatible = "brcm,bcm33940-pcie", .data = &bcm33940_cfg },
-+	{ .compatible = "brcm,bcm74110-pcie", .data = &bcm74110_cfg },
- 	{},
- };
- 
--- 
-2.34.1
+The patches look entirely reasonable to me, as long as the DT
+people are on board with the compatibles I will apply the
+patches.
 
+Yours,
+Linus Walleij
