@@ -1,218 +1,115 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBCC2D63F1;
-	Thu,  3 Jul 2025 09:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A0B2D6614
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534722; cv=none; b=pigAitL8/Pp5hYX/58PQEkI+5bspuTbrK97rM6mmr2Tr00keMrLcd87EDwVuMBjVtdsY0wOJb0YShy0tzN1UUtIrkLVaC3nQn1LB5zbSBkonjrqukplEBze8Y6WVSREYwBUBUO95+3IRVspzpV0BBmOUd9aiYHF77E/jYu98De4=
+	t=1751534754; cv=none; b=pHQ83gy3/DwOVSKBvi+ZrQEDFpUyDrvUpmxcPECx8Ymz7HA8aqfb+2K0WgdHGQ85WwiW2zWCfrSizsdT+6Sufup7zgyjigEvd6foBS9gan+ejKIS/bnJkwKH8/9sNBR6lmbdfJ24PEiSlNSGQJgAv4KFitpAzIq7TYU5lV9/bK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534722; c=relaxed/simple;
-	bh=v4IoJlg76CmSJ2VtEhP56ipvSCV4NseNd45qWFEYnJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uq5HTKHsU/by26RorqIpb5sQB22O/9pY+ItCLy6ekuG+sl7mbCV0wQFcE2DSxIi4YZHcr0RwfK4yeoXXP26+K0hZlf/e1Sw43LcTUnkXJP2Dj8oLGtRbxWktR5ksLEMmBFK5kscxyJGUDB6P2S7esGnk6J4Rs7wmq1zNlqyIDII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJaPsRMT; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751534754; c=relaxed/simple;
+	bh=STzWJep7C0ueCylwebeqomoBi53CDoyHXyyg3q6vros=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KNcaVXR83qbY2I8ozjH9rKvNAqFcNCIu9Tz8dwxgngZckeuE4kMG7U9SYR/xhBkykY2vKya1u8CN/4NMOnW8V/UKKkKe1qcKmWenhhhnu94fBgO3VnQ/Ba0+FGMInxMFC2PkF6IL/l7yEVwnK/DflWQfRcW6wViQ0NtGAfR/Gk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aIPgo60Y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJaPsRMT"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3de18fde9cfso29868315ab.3;
-        Thu, 03 Jul 2025 02:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751534720; x=1752139520; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RQxlXjimiWOLNlkmt82ETYNH1B4xm8nZuHa4F1eDm+Q=;
-        b=eJaPsRMT0uTq8esNVgrKEFZZoE9PPYN4LsYcvdHEbxsY1UKC+zD6Gm27+16YGzJyRI
-         t51RLhbr4R8tlXcFg74o1FyABxgC8caIMir4hOF/IdqRmRRJi88TPkXctDUpMiteDp98
-         h1PFmRq6vWEMPyCZrqhwXLF9FhFHy98et+KuzNAbiQBKKcz+jWthKYgXv2Tat2tS5unp
-         MxSRhj4ascUGepXAWemmXr0nGAFo+CxN6/QszrWIFdHzDZJ0TU4JDByTBK+acO9QHmHc
-         5SU0n6KM576nIw+0dR/LLmNftOf4IjwHdwI7ZrmKYiFtek3b6Uvf1BxkQgK9rGZT9kKF
-         t3VQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aIPgo60Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751534752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NmUFP/5otJp7Yva7rirEL2lRiqI/PxhyfiBWQUHadCI=;
+	b=aIPgo60Yx1rUEP7wrBc57yg3ki75N3xHe+5dmEIYGa71+TANiHnUPsLEHt7NZaHd0mFs2I
+	86pJTwveZex9LQ06bSikcYQk1Ntz9QhNwccIW+nhnrGxqG2+p7NVbUbSRnvl1EtGQ+YZBk
+	FgpR9P1A78Er4D60dLYXf6sgOKgl6JU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-fw6LsnVBOvaf6pReASmZbg-1; Thu, 03 Jul 2025 05:25:50 -0400
+X-MC-Unique: fw6LsnVBOvaf6pReASmZbg-1
+X-Mimecast-MFC-AGG-ID: fw6LsnVBOvaf6pReASmZbg_1751534749
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451d30992bcso34618475e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:25:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751534720; x=1752139520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RQxlXjimiWOLNlkmt82ETYNH1B4xm8nZuHa4F1eDm+Q=;
-        b=QSJ4huXyTIs+gM5WTMJVM/LitVSao/BezJd4eagJlFQvF4ckqq5rHZtaXcecNEi5vF
-         y7YkzRYH7R/ybOJt2RY+uLRiZMShDJniSmGEeNzRdUUGwiiq88K3R7grMtFChfs3cZPL
-         u4wmuqkRY5khAhyDz9Pgxi3Rn2s38ucqXIpem7r1oeRxSdBAm1MSzKcRqv6FjGQn40kV
-         PYWrPjzddDQrnaaeej0MLFnDdvB52qdCFg1/6no5Ac3rbbFrEOmdA8WRXDs/xbElDYvj
-         05CzHZsGIRFTwesfS1cAJzyNyvfGR7vvKO+hMNgv+0iV7UU9TH3qvYmkmFHYJRKecCxw
-         xvfw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4VlaVQ7DpwuXUvgHIvGsZRa8ZP2O0CaHb5aI9jUKkXCAlyb5OBRvDh7k9eqrU412iS1+f+x3nMxGr+Z8LhKZseA==@vger.kernel.org, AJvYcCVuQM3p5jvTjYQze5Q/07sZzovVhllipdi2UIsIAAObR5BfzybzaQ7uCm9lcwovegdFRyhDFYxqYVwfDLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq5S0KxrcGlyKmURYqXgaVAkXnWqBDPuKj+6I1gAKvwNVYVR0n
-	dvtP6hjrLpLFrHSsUCkDtOSp2L3S36FnODhSI/J0z8kPuZDZ2Yuli7plW4rakUVnsQ3TDnH6IZ4
-	0AgXFQSBTvVVLoWmdJk8SLO2V2Y9Fmaz4GA==
-X-Gm-Gg: ASbGncvwMm+fjXr/OW3G5NNE2IvvTyIb7+13cDOTgDpw3wn14GF3XyK+s8cHSpv92XL
-	Auf++QPCyf9FKh8ZBG/ghYbLiUeimiOGpyqcPidDCbDd2yx1gXVi9HOJ0yMA4y53dH8r/emWqdY
-	8EWwDnw/kaeTzvB/p6DEuX9Q4y85BVEOzGwEhAs+FnGqM=
-X-Google-Smtp-Source: AGHT+IExz9aStPQQU5jTE1Po0AQPZakEiqsbSsJKe7wO8kX4S2jJmJUZEYtD2nu7s7tlGuCMRGGTZawMXfUO2V+vIVY=
-X-Received: by 2002:a05:6e02:2183:b0:3df:4024:9402 with SMTP id
- e9e14a558f8ab-3e05494a935mr73959465ab.8.1751534720124; Thu, 03 Jul 2025
- 02:25:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751534749; x=1752139549;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NmUFP/5otJp7Yva7rirEL2lRiqI/PxhyfiBWQUHadCI=;
+        b=bcfFpGLiajcVy8IQot9JoW4hI3sKjtqV9uHeUu4uSUiLGqzaU21C84t+21YHp/+bGj
+         7XfX4/lDR5KYFIhETdlOmMBbSwFv5wrq+3sMVXnEYA3xkcb259gMvL3wj8AF4aJIU7Wg
+         pvEb9OA4IURurPhGTJpfQmHZZHqU5PUe9jz79vMmdgtIY7QzHu+xRRt1Lz06pHk1nftM
+         KE+E32Un36DQO7QVbNz+ZyyDhJpSerTYSr8JIqvWpcptVtjYoFOAdJvoIrscQZluO50p
+         AeRJ6cObCh8LngmrMGwWcUxqmnQ5/ACwnb/acGuq6XgtFpkzOYB8nU3rQNiWucp50wat
+         f5lg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTfLrwkJex8gWgVZUqD8ofLjdPdUMvyQImCogc7vihE4FXJM30o7snqG7BN5AP8ggvgpm8w4Whchq8tb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE+J8ytBu7cpToZ48glKzxxpfZZOyPOIrzpONE03StmhSw1SF6
+	T5cjzMlpahpgvL/Nj4HIuom7gwM9UcTfnqloWCs4Kxl4FFH/eTzowHGhQ8GaHfvMcvh1auQkW5S
+	ld6hyQdbXexhXgDfx/vPBJVCoHm+nAhdEGQRqJTsZoy7/DypNs03i9aGhdjQ1hDfcTw==
+X-Gm-Gg: ASbGncvKyUYMMCt9vhtLTcY1tg2xWF9uA8mq9iPBKEVBu148HchHx3gRJkBXBeErD8D
+	GmE9Pc/eaXa74pIDRF9xcfvBGvfngq8jYCpBsukKaZ6/XadnZqxr6S8TFky5gja2/SlQqQLZV1n
+	hEZqGHC0woU59V0eqt9oy773uBFPZN5ZTGnZdUR1QcKx5iUZGMIcdRYjlD+vhhmcuktAEH2+7fA
+	GdOnjzlKM/Jg+45Spr5pOr8QSSGyeGUCD9r6bL3RYxlGSlbbntGqnIMUp+NdYMiHT/4bDP8ylzL
+	OH1y7pcZzUfFC8uUcg4J7LccNyc3neSuz/tAJdy/8WDFrHEwyRIDMP7nJz/XSBYOEUM=
+X-Received: by 2002:a05:600c:608a:b0:453:8f6:6383 with SMTP id 5b1f17b1804b1-454a36e996cmr71174355e9.15.1751534749315;
+        Thu, 03 Jul 2025 02:25:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEihb3DB580vG3swYDdikiInjReCzKhZiPBvQTN0giVHizEK3OOIkuH4ihxHrIuTcVlib7I/A==
+X-Received: by 2002:a05:600c:608a:b0:453:8f6:6383 with SMTP id 5b1f17b1804b1-454a36e996cmr71173955e9.15.1751534748907;
+        Thu, 03 Jul 2025 02:25:48 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314? ([2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969058sm21577325e9.3.2025.07.03.02.25.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 02:25:48 -0700 (PDT)
+Message-ID: <869be9b5-846a-478a-b90f-5e9068387601@redhat.com>
+Date: Thu, 3 Jul 2025 11:25:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
- <20250618062644.3895785-3-shengjiu.wang@nxp.com> <aGLBvXtSRlaKujqM@p14s>
- <CAA+D8AO4o7dqTyL4aZ+H5VnroTQUNAHM-io5rvJ2r_sasPYs9g@mail.gmail.com>
- <aGP-ZVuhBdd1GPLe@p14s> <CAA+D8ANtw1xTg7OQOFoDeQcdp05Eo9Uo1t=MKcGjtkSYfJqBVw@mail.gmail.com>
- <CAA+D8AP+RPJpY_=8WjSXoV_VB=9hP0NnFGjjUQHXcoDoz3fgfA@mail.gmail.com>
-In-Reply-To: <CAA+D8AP+RPJpY_=8WjSXoV_VB=9hP0NnFGjjUQHXcoDoz3fgfA@mail.gmail.com>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Thu, 3 Jul 2025 17:24:57 +0800
-X-Gm-Features: Ac12FXwGsyCT-FrKcuI-KzJt0SyzwBQ-E9tIqBn9TSAoTP3Lnf3fS8E6YzQ5JhE
-Message-ID: <CAA+D8ANdfOr=iyJQqE9_k+JUCRin2KXOVf9zL6BVxRrV0REvqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] remoteproc: imx_dsp_rproc: Add support of coredump
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	iuliana.prodan@nxp.com, daniel.baluta@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3 2/2] virtio-net: xsk: rx: move the xdp->data
+ adjustment to buf_to_xdp()
+To: Jason Wang <jasowang@redhat.com>,
+ Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250630151315.86722-1-minhquangbui99@gmail.com>
+ <20250630151315.86722-3-minhquangbui99@gmail.com>
+ <CACGkMEtv+v3JozrNLvOYapE6uyYuaxpDn88PeMH1X4LcuSQfjw@mail.gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <CACGkMEtv+v3JozrNLvOYapE6uyYuaxpDn88PeMH1X4LcuSQfjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 7:48=E2=80=AFPM Shengjiu Wang <shengjiu.wang@gmail.c=
-om> wrote:
->
-> On Wed, Jul 2, 2025 at 3:20=E2=80=AFPM Shengjiu Wang <shengjiu.wang@gmail=
-.com> wrote:
-> >
-> > On Tue, Jul 1, 2025 at 11:27=E2=80=AFPM Mathieu Poirier
-> > <mathieu.poirier@linaro.org> wrote:
-> > >
-> > > On Tue, Jul 01, 2025 at 10:28:33AM +0800, Shengjiu Wang wrote:
-> > > > On Tue, Jul 1, 2025 at 1:05=E2=80=AFAM Mathieu Poirier
-> > > > <mathieu.poirier@linaro.org> wrote:
-> > > > >
-> > > > > On Wed, Jun 18, 2025 at 02:26:44PM +0800, Shengjiu Wang wrote:
-> > > > > > Add call rproc_coredump_set_elf_info() to initialize the elf in=
-fo for
-> > > > > > coredump, otherwise coredump will report an error "ELF class is=
- not set".
-> > > > > >
-> > > > > > Remove the DSP IRAM and DRAM segment in coredump list, because =
-after
-> > > > > > stop, DSP power is disabled, the IRAM and DRAM can't be accesse=
-d.
-> > > > > >
-> > > > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > > > > ---
-> > > > > >  drivers/remoteproc/imx_dsp_rproc.c | 6 +++---
-> > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remot=
-eproc/imx_dsp_rproc.c
-> > > > > > index 9b9cddb224b0..9e7efb77b6e5 100644
-> > > > > > --- a/drivers/remoteproc/imx_dsp_rproc.c
-> > > > > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> > > > > > @@ -738,9 +738,7 @@ static int imx_dsp_rproc_add_carveout(struc=
-t imx_dsp_rproc *priv)
-> > > > > >               mem =3D rproc_mem_entry_init(dev, (void __force *=
-)cpu_addr, (dma_addr_t)att->sa,
-> > > > > >                                          att->size, da, NULL, N=
-ULL, "dsp_mem");
-> > > > > >
-> > > > > > -             if (mem)
-> > > > > > -                     rproc_coredump_add_segment(rproc, da, att=
-->size);
-> > > > > > -             else
-> > > > > > +             if (!mem)
-> > > > >
-> > > > > Flag rproc->recovery_disabled is never set to true, meaning that =
-since this
-> > > > > driver was introduced, some kind of recovery was available.
-> > > >
-> > > > Actually since this driver was introduced, the recovery can't work.
-> > > > We didn't test the recovery function before. sorry for the mistake.
-> > >
-> > > Let me see if I get this right:
-> > >
-> > > (1) Almost 5 years ago you sent me a driver with code you did not tes=
-t.
-> >
-> > Driver was tested but missed the recovery/coredump function.
-> >
-> > > (2) It took all this time to realize and fix the problem.
-> >
-> > I just realized that the recovery/coredump is one of the functions supp=
-orted
-> > by remoteproc.
-> >
-> > > (3) I should trust that, this time, you have tested your code.
-> >
-> > recovery/coredump has been tested.
->
-> I am not sure if we must power off dsp in .stop() and power on dsp in .st=
-art().
-> because I see such comments in remoteproc_core.c
->         /* power up the remote processor */
->         ret =3D rproc->ops->start(rproc);
->
->         /* power off the remote processor */
->         ret =3D rproc->ops->stop(rproc);
->
-> So I moved pm_runtime_get_sync() to .start() and pm_runtime_put_sync()
-> to .stop()
-> in this patchset.
->
-> previously we called pm_runtime_get_sync() in .prepare(),
-> pm_runtime_put_sync() in
-> .unprepare().
-> If we can keep the power on/off in .prepare()/.unprepare.  maybe we
-> can refine the
-> .load function which is to move .reset to .load(),  then we can reduce
-> the code change
-> and not need to change the coredump scope.
->
-> Before I test this idea I'd like to have your opinion about this.
-> Thanks.
+On 7/1/25 4:23 AM, Jason Wang wrote:
+> On Mon, Jun 30, 2025 at 11:13 PM Bui Quang Minh
+> <minhquangbui99@gmail.com> wrote:
+>>
+>> This commit does not do any functional changes. It moves xdp->data
+>> adjustment for buffer other than first buffer to buf_to_xdp() helper so
+>> that the xdp_buff adjustment does not scatter over different functions.
+> 
+> So I think this should go for net-next not net.
 
-Today I tested this method, it looks good, the code change is smaller.
-I will send v2 for reviewing.
-Thanks.
+Please, re-submit this patch only for net-next after that the first one
+will land there.
 
->
-> Best regards
-> Shengjiu Wang
-> >
-> > Best regards
-> > Shengjiu Wang
-> >
-> > >
-> > > Did I understand all that correctly?
-> > >
-> > > >
-> > > > >
-> > > > > I worry that your work will introduce regression for other users.=
-  Daniel and
-> > > > > Iuliana, once again have to ask you to look at this patchset.
-> > > > >
-> > > > > Thanks,
-> > > > > Mathieu
-> > > > >
-> > > > > >                       return -ENOMEM;
-> > > > > >
-> > > > > >               rproc_add_carveout(rproc, mem);
-> > > > > > @@ -1203,6 +1201,8 @@ static int imx_dsp_rproc_probe(struct pla=
-tform_device *pdev)
-> > > > > >               goto err_detach_domains;
-> > > > > >       }
-> > > > > >
-> > > > > > +     rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_XTENSA)=
-;
-> > > > > > +
-> > > > > >       pm_runtime_enable(dev);
-> > > > > >
-> > > > > >       return 0;
-> > > > > > --
-> > > > > > 2.34.1
-> > > > > >
-> > > > >
+Thanks,
+
+Paolo
+
