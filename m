@@ -1,72 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C0553365;
-	Thu,  3 Jul 2025 14:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDAD2ED166;
+	Thu,  3 Jul 2025 14:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553393; cv=none; b=MbChFXeFGfw74DBQ+VQ3xZncb0dfHtWgLLVjkwEo2jZq1UYbsXd9/WIRhlfnmKJVtTW/ZvxaUmNz4bQDhlyPeDxEwZL6T0bkifCPJXFVzRShrkBw7KvfAp9feijK1bxyKfkR6UiDFo8IKEy2p2ZIsReHupEFU8LD79cXg87dixo=
+	t=1751553410; cv=none; b=pXXqAp8PnWjT1VNntfv4Baqz4ppYOmUDqderw62JxvTNpZ7f8o4/29Md5N5OC0uwu8Fs4CAcq2Zxpv9AxGahooGf1C40MKqLLA3umhsIzJHTV0lGWEJ69N3nF6koX/K4fX5sVXGyYKSFDU15tHu0JX16x8uXPNjV+xv1tWBEktc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553393; c=relaxed/simple;
-	bh=nVETv5P+aZJXZMi/j9tZ4lMlgii5uB8/cLl650IqYz4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=b9eo2+no1bXGPD/aL6/S83fwhMpqGJGQW7YAe2KrUwk/7s1uHKfwxd2LhRzPsajCvMGQGaKyzRfYLFr3t0sbvoORBE5y6aTmXuxw8hp1SEwSFrRKF+HIYoPLF17qzd7oWXbdjXfABJahLVnCrSLM48YGT/wFnXGgvVeApnU9oy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX1gEZ2M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751553410; c=relaxed/simple;
+	bh=rTOn1AIaO8LZCWYp7rpafEsjm051YHLR63q+OfJU+5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yr8x4b6/wKOaHoOjz5H7U8hcaydpZJPBEjhP2aGubyNXqWMmRP/g4zGDqDE0Pw0/HDYPNn5qZE9XV0hJM3F4HiWsxLAneFv6wHKL2LeJwfzWyuQFKUjzJXKwsearYj+el96kSXGbXH8P/lsGYW3lmAPTeLj4iU3WNWr+1wv5cDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=im062G0a; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX1gEZ2M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4288FC4CEE3;
-	Thu,  3 Jul 2025 14:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751553392;
-	bh=nVETv5P+aZJXZMi/j9tZ4lMlgii5uB8/cLl650IqYz4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ZX1gEZ2MfK1BlIWOgyLEvlzdfuO2erIRE46NeqJirWqY6OZzikE6lonT111+8HmaT
-	 TCOwfMTmTOVW7Cjphh81nYEWjNn+hTkEYq93XWVE415vOdmboI1FpXLMoq6m3gfTU1
-	 IXsqCPmx6xPRGRd1TeV0CsP03HXcmjxmmkHMxCOVSXoAfYBnY3GzDHthoKnub60/Kd
-	 B6C+INru0iZXzK8g2SsLOsclpZeRr12Uw00vIgpT2UVIOIc8fPv2KFmxKYeN5D8p/T
-	 rSGCcy3dmsa9Pd9Q3tP0P2gwCW2fRz4AFJU6swTckApFni+/Dk6TyBBuyTnnKEe+M9
-	 5Yp+Kxet5QD/w==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,
-  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  linux-mtd@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  stable@vger.kernel.org,  Jean-Marc Ranger
- <jmranger@hotmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: Fix spi_nor_try_unlock_all()
-In-Reply-To: <20250701140426.2355182-1-mwalle@kernel.org>
-References: <20250701140426.2355182-1-mwalle@kernel.org>
-Date: Thu, 03 Jul 2025 16:36:30 +0200
-Message-ID: <mafs0sejd1gup.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="im062G0a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751553409; x=1783089409;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rTOn1AIaO8LZCWYp7rpafEsjm051YHLR63q+OfJU+5s=;
+  b=im062G0avjES6byx3cjUeeiRVHr6DreNJvWo1/PolpqhxXsASm/I/lUN
+   gLWYu57mOAWoB+TJ864xFeH7S/9r8Er2R1e57FVtgC3NY3Jsaez1QDeX6
+   0woNNhzHTb0CCJdLPx8AAoFu6ppMp4K71Bc2doiKRRyKwBPsXfUJrrBbs
+   5SsbUsX2WL5AEvfjLX2Q8/xZYsgpMnegvgNMPgKVRISSLa++4O0v3iNrp
+   tQE0OKfJZezpuCvOUZE/IZOhOdy6VQy5uxX+58C4frmLyXiBtuWfOwvg8
+   Dq7GluiUix9aYRckClqGbTH9MRVpjkahrRpPytj0nibwPFe0Lh1L6Ekfr
+   Q==;
+X-CSE-ConnectionGUID: I76hACkmRjqCgP5uj1ZX7Q==
+X-CSE-MsgGUID: iasp9O/BSMWqaz4LySW6KA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53977843"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="53977843"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:36:48 -0700
+X-CSE-ConnectionGUID: OdxT0FuBQIGz2pkz5H19WA==
+X-CSE-MsgGUID: 4LAmYQlyTBOI04Bzp/lYdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="185397552"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:36:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uXL3J-0000000CEFa-46sF;
+	Thu, 03 Jul 2025 17:36:41 +0300
+Date: Thu, 3 Jul 2025 17:36:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com,
+	lars@metafoo.de, Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/8] iio: accel: adxl313: add buffered FIFO watermark
+ with interrupt handling
+Message-ID: <aGaVeW4l6HkiMtql@smile.fi.intel.com>
+References: <20250702230819.19353-1-l.rubusch@gmail.com>
+ <20250702230819.19353-4-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702230819.19353-4-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jul 01 2025, Michael Walle wrote:
+On Wed, Jul 02, 2025 at 11:08:14PM +0000, Lothar Rubusch wrote:
+> Cover the following tasks:
+> - Add scan_mask and scan_index to the IIO channel configuration. The
+> scan_index sets up buffer usage. According to the datasheet, the ADXL313
+> uses a 13-bit wide data field in full-resolution mode. Set the
+> signedness, number of storage bits, and endianness accordingly.
+> 
+> - Parse the devicetree for an optional interrupt line and configure the
+> interrupt mapping based on its presence. If no interrupt line is
+> specified, keep the FIFO in bypass mode as currently implemented.
+> 
+> - Set up the interrupt handler. Add register access to detect and
+> evaluate interrupts. Implement functions to clear status registers and
+> reset the FIFO.
+> 
+> - Implement FIFO watermark configuration and handling. Allow the
+> watermark level to be set, evaluate the corresponding interrupt, read
+> the FIFO contents, and push the data to the IIO channel.
 
-> Commit ff67592cbdfc ("mtd: spi-nor: Introduce spi_nor_set_mtd_info()")
-> moved all initialization of the mtd fields at the end of spi_nor_scan().
-> Normally, the mtd info is only needed for the mtd ops on the device,
-> with one exception: spi_nor_try_unlock_all(), which will also make use
-> of the mtd->size parameter. With that commit, the size will always be
-> zero because it is not initialized. Fix that by not using the size of
-> the mtd_info struct, but use the size from struct spi_nor_flash_parameter.
+...
 
-I suppose some of this code would be cleaner if we declared a size
-variable instead of typing out nor->params->size every time, but I don't
-think it matters too much so this patch is fine too. Thanks for fixing
-this!
+> +err:
 
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+The rule of thumb for naming error labels is an answer to "what does code do
+when I goto $LABEL?". In other words name should encode what will be done when
+goto. In this case I would make it
 
-[...]
+err_fifo_reset:
+
+The rationale is that reading the code won't require to "goto" to understand
+what 'err' means.
+
+> +	adxl313_fifo_reset(data);
+> +
+> +	return IRQ_HANDLED;
 
 -- 
-Regards,
-Pratyush Yadav
+With Best Regards,
+Andy Shevchenko
+
+
