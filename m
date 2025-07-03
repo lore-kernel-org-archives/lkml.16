@@ -1,115 +1,218 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861832D94B5;
-	Thu,  3 Jul 2025 23:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322032DCBF8;
+	Thu,  3 Jul 2025 23:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751586956; cv=none; b=TrwgoYGItpH4S/oiAprkKuB4GGWItxfFF6jXeGkLj7LU5NTejmp6rppcc8OyniLQhrqxxfWQZ85lVPC0MwmNt4dRCTNQgAdL7OOuMfm/uYilJ8+7VwWlmaTMDv2QT9wJGMQ6Ec0Rxh79/TrDZiP9PHEh8XfyAeABB6O1qqmQofc=
+	t=1751587000; cv=none; b=kYZDXnsegVix8hZRuh5eP9WZ1MTv/5AzpuxXc5iaNwim8sv2g80/rMsq6pw9lkAIIc0dhOJaCc8RGHdSAn9gH3QJBDxarfibjLCj7n8Yh/xkAjHcqZgefTS3Nc3KehV/NL/ah13Tu6ff9q3jtpOr4C/yW4pRlvAUtvEqfOHAaZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751586956; c=relaxed/simple;
-	bh=u0ANpC16B14FJ0MBF9cnVDGrHEU/D3GBctgg8DSWQqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fDGBdEcOh24cWw7r0wVCNEwZtFGgtyJkl9kQxhO9CSWVUcqPbcv54BwwA8qXfabXPebkJ11iXbx6Wjk2nc8udykyzWAnvVoTJv89g8EVyOBJ024LQxg/0QAIsASkfUo5G9A0AzwDyzR5TrwhymiVr71x6AHuFGqr7uDQFW3RZ80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kz/ts2Bs; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751587000; c=relaxed/simple;
+	bh=ExZBHsDj04AwmsSdr9VXgToQgmgAQT02DqFV2+lqnLQ=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=rOJPqBVwCniAA+w1NNEuZkn6oBbL7iNsThOoGlAHDhCYCVDwJAdBgW1h0GuT5EhJfUAv6YUGYXAI3KkjCvLliSmdd8hWGA/HmAKschrWz0MweNLjLT5sK/x6d/sZ35tcblgbiv7YT+vadGzd2jEOH7c3Xytc/2h+ojzCY0LfdyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RWDC6zRN; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kz/ts2Bs"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso10668815e9.0;
-        Thu, 03 Jul 2025 16:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751586953; x=1752191753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+wqidWqIfOoA8OQeeV49xJDBAiz49nIOR1nc+UTiq1g=;
-        b=kz/ts2BsSVpno9yAvqF+la5igjH+zLzntuLgNNIpPPyNr6wwqc7/4CdhJatYUgJhi2
-         ICOtbmdSod/FKruUmwbtK9FsWYc2PfcRI0fWRkjd6yf+2hMrdbqdCbQVOLUZAE3qYVRE
-         rQ3e92fYYj2Qm5WovSRjBHmonOOo8RPnc1qe540wlJ9Sjz5mgR0GPdIuqlglKs0Px0Kw
-         E7/UVGNTzSQ6h4iq6ZvNK6m6iZX/aja12ohmX++WKQ9Kda1zSlTsSKBn1G43nYgZfehS
-         +u8I2VbKnnm3LolBjCYQuBaJK/XAwRA/N92p5sPLbsvcYhXCzgS9iTAxHDsInGm4KyNN
-         15lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751586953; x=1752191753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+wqidWqIfOoA8OQeeV49xJDBAiz49nIOR1nc+UTiq1g=;
-        b=FSlfqLPyBW3Tc+kQ3d5N4FpSSHgfdgRuJCSZI9TZavXH6rPHVaycuQw9LbNgfpjZgL
-         LJPS+ezMoPa2O7c572Wx8Z8lqJqG4/KgoFDnSk241UMvK1t8YlxrlLzyQLtsffrpyWcU
-         bFh0kMvHlD8GdrqcKdgbI6Nh6wkxisEY7Mdxd1ynYCVmA3tBdWTQGx5EOfKPZ/luVedb
-         2UmW9agZ2V4lqqhfoGhvcM6zasIvVzHt9KBJ0Ah7s+J5sjuKYk2vuFnZ69cAC7tJE3i5
-         6bQjmiNm1Y1NW/IWHnF0nfP/vLEHdg9noOtDN44GFCRIhooCahFV+MYY49u2pnWv86eK
-         ogRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSF+cwCiv4l8H+M3vHgVHxM+LpjQ3BIKPzbUuadfoDr1Zs732cP2XBFp1iJeRy81Jdp5VY4tgn7vG96cnJ@vger.kernel.org, AJvYcCXXqoMDhJR9o4+tYAiO+IBcO1C54HvQrOPu2wGZ6lzokZVqRq82WumJSZMv3HyYKZZfGJ5RU9GiVSiC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfN0SdkN5vYbNy7pR/xQKAmqICnzfbiuT2Jzbv+hlKOPD3birU
-	Y7HmUT1ki6OddQsoWaWaNccl4L7VgFZMi4lLgMiTcErkvdVMng7npZId
-X-Gm-Gg: ASbGnctk+r18gcIpzs/3wfIeumxRyVqlc0KZ2Pp6EGCzbRS4//tIwmxu1AE4qVgKxmx
-	qyO3ITMiLYIm3bbp0st8jtwPK6BuPj5MgtaFx5sVFgik4snbGpBL5BC1Xojd6CTQlUiRAknJUeO
-	C3Lcvj5ediGq2wdcTvZs101OavHCoqsYWoMJ510L/SB29rMqt5YTLNk5mY+XK5xW9GLln03sLza
-	DssrvE8ok4+iPcreO4XvA4REo7qImdc/8MpM3gThYEQIN3XnLXbndeJcggMon36zeX1/V8jhMnd
-	0fL7vRiDaFChoDLVskEXeizAwn6cPlV4cwhiWnSU+Yrapc4UeJEs/wJL15K0dTx9MLA8hZYl6My
-	vW+opvlzxH1s=
-X-Google-Smtp-Source: AGHT+IEhNhLFwtoERvqR4wwIzABw3n2OOlNv4OV5lL7WaKkPa5Z+UnEUJfje79VBNaD3WpA1dHlqtQ==
-X-Received: by 2002:a5d:6f02:0:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3b495b9446amr673335f8f.9.1751586952791;
-        Thu, 03 Jul 2025 16:55:52 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:5f46:9d65:6ef9:1650])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225b5cdsm932436f8f.85.2025.07.03.16.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 16:55:52 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Fix pinctrl node name for GBETH1
-Date: Fri,  4 Jul 2025 00:55:44 +0100
-Message-ID: <20250703235544.715433-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250703235544.715433-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250703235544.715433-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RWDC6zRN"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563LIG8r019404;
+	Thu, 3 Jul 2025 23:56:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rQyGx7
+	n5L4RTYW8g4N5PU7Ra1hUF34LDY778PdcxfJI=; b=RWDC6zRNBqZcZ+s0oTTnxo
+	34uYRvjVlRFEvlggk/IoVH/zPospErlW8vZy3P2dctW/9zkPGRF3BrWZ6S7yHHNC
+	sbuTIb7DIWp6ApPTp/NFTVjw4yaSOFLH7j30X8nMePAOtkdb660d7MTZ2InCF1RZ
+	rDo8IvRtNKvUZFWH2lHjL2npOnXTJvOeUuWraeJL8YIDTwGzFTGV7GBQI4lub0nm
+	+Oq/u6NgpwuvrC3bQcuCn7LlaIIMcojHpAEEqIPvIbfokVVZ2GpDdj4fNkELI26/
+	t624GDuLsX3PWh5OEmKh5pHD9RLlZcabnXzy6+Ir5H1p8VXggBr1wHznTkMUQh/w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttpmkr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 23:56:19 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563NuJNi016770;
+	Thu, 3 Jul 2025 23:56:19 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttpmkq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 23:56:18 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563LUt5k011873;
+	Thu, 3 Jul 2025 23:56:18 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n79qn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 23:56:18 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563NuHg031392466
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 23:56:17 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8EE505805A;
+	Thu,  3 Jul 2025 23:56:17 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA4F958051;
+	Thu,  3 Jul 2025 23:56:16 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.109.107])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 23:56:16 +0000 (GMT)
+Message-ID: <45b30f515efc3e364e1d248ab0ed7f12f8312f5d.camel@linux.ibm.com>
+Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when
+ secure boot be disabled"
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+        Roberto Sassu	
+ <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn"	 <serge@hallyn.com>, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Lee,
+ Chun-Yi" <joeyli.kernel@gmail.com>
+In-Reply-To: <aGZ_x8Ar6iwzt2zV@gardel-login>
+References: <Z9wDxeRQPhTi1EIS@gardel-login>
+	 <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
+	 <aGYurikYK1ManAp3@gardel-login>
+	 <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
+	 <aGZ_x8Ar6iwzt2zV@gardel-login>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Jul 2025 19:56:16 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ngv24GXPO1hQcMU7BUj9Fb_EXtXmvAc7
+X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=686718a3 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=OVBXMk3rAAAA:8 a=lb4k8tyOFZTsDB4Z8wgA:9 a=QEXdDO2ut3YA:10
+ a=FyXiZ670jEa15epue5As:22
+X-Proofpoint-ORIG-GUID: rsShTHBCxf8qs8jvCzd37yD3HlhGQRk8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDE5NSBTYWx0ZWRfXxoWODegZ4yWK mXb3e3oBisS+cy5Dy68F9qpsWRtJIMcw9H4efaW2DUY8JEx/Fctx+qNIG6xkrvHWSqumckTprKG nADeIycRH4NGLH6DdbBjPFgya2Ey5nC+aE+Ks7OJMzqGm5aLw8GAofQvyVAaYn5aJmGk+rsHkMk
+ L9z+GXuB56NqLkK7AG++bWdU8naMWKWmVpe5znuU7VIx34wJtfdb51GMESWQ6WBByKJEh61CNCc PSuMeL7VdFe2I/KcBlO6atji49j4trusozBPOviEPiiulD5zOGYgsUErvoT/p6fBxSQpUx5/0PS TUnhSVejFaBBHh4/7UMJK7RjmUUnYMC6GHrxNe+lm2IvSXS6n1Hw2Qo8Rk2qFzecsoGaDE5PSTd
+ E8mVY5INJyrgttNAlnjHKcR/gTbLFszExbQfsDUgW2ChEKnotdT7RnY/fyByZhpj1R2A5apq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_06,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030195
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, 2025-07-03 at 15:04 +0200, Lennart Poettering wrote:
+[ ... ]
+> The thing is that if SB is off, then all bets are off, it's really
+> pointless in assuming the kernel image had any trust left you'd need
+> to protect. That's just *not* the case. Where do you think that trust
+> should come from?
+>=20
+> If SB is off, then anything that got loaded early enough could just
+> patch arbitrary keys into the ELF image of the kernel before starting
+> it, and everything will look perfect later on, because the image is
+> not authenticated after all via SB. So there *already* is a way into
+> the kernel keyring with this =E2=80=93 it's just really messy to parse an=
+d
+> patch ELF at runtime like this from the bootloader. My hope with just
+> relaxing the rules on MOK keys when SB is off is to just make this
+> stuff cleaner and more elegant (and also to leave the ELF image intact
+> so that we get clean measurements, both of the kernel and of the keys
+> we add).
+>=20
+> > > i.e. there is a concious decision in place that there is no trust
+> > > chain, and that the firmware *happily* *already* accepts unsigned boo=
+t
+> > > loaders/kernels and just runs with them. If SecureBoot is already off=
+,
+> > > then an attacker can patch around in the kernel invoked at boot
+> > > completely freely anyway, there is *no* authentication done. Hence
+> > > it's really weird to then insist that the path into the kernel keyrin=
+g
+> > > via mok keys is off in *only* this case, because an attacker can get
+> > > into that anyway in this case, it's just a lot more cumbersome.
+> > >=20
+> > > It's really strange that currently when people ask for tight security
+> > > (i.e. SB on) the linux kernel is super relaxed and allows any keys to
+> > > be inserted, but if people ask for security checks to be off (i.e. SB
+> > > off) the kernel starts being super strict and doesn't allow any keys
+> > > to propagate into mok. That's really confusing and contradictory, no?
+> >=20
+> > That all may be true, but you're ignoring what I said about only "trust=
+ing" MOK
+> > in certain situations.  If you have another safer, better mechanism for
+> > establishing a new root of trust for keys (e.g. TPM), then by all means=
+ share it
+> > and we can make additional exceptions.
+>=20
+> Yes, we have that in systemd: there's local attestation in place
+> already in systemd via the "systemd-pcrlock" feature. i.e. the idea is
+> that the disk encryption keys are only released to the OS if the
+> measurements of the boot phase match some golden measurements. This is
+> in a way a reasonable alternative (or addition) to SecureBoot: instead of
+> prohibiting code to run if it doesn't carry a signature of some
+> trusted key, you let it all run, but then later on you refuse to give
+> it the disk encryptions keys =E2=80=93 the keys to the kingdom =E2=80=93 =
+unless the
+> measurements all along the way match what you expect them to be. This
+> protects the OS quite nicely, and makes SB to some level optional, as
+> we basically enforce security "a-posteriori" rather than "a-priori" =E2=
+=80=93 by
+> means of the TPM's key policies.
+>=20
+> Now you might wonder: if we have such local attestation policies, why
+> do we *also* want to get keys into the kernel keyring? That's because
+> the attestation policies are checked (primarily) when FDE is unlocked,
+> so that's our security boundary, our milestone where eveything
+> *before* is protected via attestation, but which cannot protect
+> anything *after*. In my model we then want to protect
+> any further resources via the kernel keyring then. hence it matters to
+> us to have a clean, elegant way, to insert keys *before* that
+> milestone that then can protect resources comeing *after* it.
+>=20
+> Why do I want to avoid SB at all for these setups? Mostly, because
+> it's a bureacractic effort to get your keys intot he Microsoft
+> keyring, and if you do get them there, then their security value is
+> kinda weak anyway, because the allowlist that the keyring is is such
+> an extremely wide net, it's at best a denylist of bad stuff rather
+> than an allowlist of good stuff at this point. It's kinda undemocratic
+> too. But anyway, the pros and cons of SB are another discussion. I am
+> primarily interested in making it optional, so that you can get
+> security with SB and without SB, because you always have someting to
+> protect the boot, and always something that protects the rest.
 
-Rename the GBETH1 pinctrl node from "eth0" to "eth1" to avoid duplicate
-node names in the DT and correctly reflect the label "eth1_pins".
+You're basically relying on trusted/verified boot and, in TPM 1.2 terminolo=
+gy,
+sealing a key to a TPM PCR value.  Only if the PCR matches an expected valu=
+e is
+the key released.  Instead of relying on MOK, the keys could be stored in t=
+he
+TPM NVRAM and loaded onto the existing .machine keyring or define a new key=
+ring
+linked to the .secondary_trusted_keys keyring[1].  Then you could really cl=
+aim
+the TPM as a new root of trust for both trusted and secure boot without any
+dependency on MOK.
+                                                                           =
+    =20
+That would be preferable to changing the existing expectations to loading t=
+he
+MOK keys when secure boot is not enabled.       =20
+                                                                           =
+    =20
+[1] A prior attempt to load keys from TPM NVRAM.                           =
+   =20
+https://lore.kernel.org/linux-integrity/20210225203229.363302-1-patrick@pui=
+terwijk.org/
 
-Fixes: f111192baa80 ("arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-index 8bce7398c2c4..910679dd1b23 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-@@ -327,7 +327,7 @@ eth0_pins: eth0 {
- 		output-enable;
- 	};
- 
--	eth1_pins: eth0 {
-+	eth1_pins: eth1 {
- 		pins = "ET1_TXC_TXCLK";
- 		output-enable;
- 	};
--- 
-2.49.0
+Mimi
 
