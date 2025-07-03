@@ -1,126 +1,120 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CFB2E6D06
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0A81F76A5;
+	Thu,  3 Jul 2025 13:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548226; cv=none; b=FwU7McbIVassnNsevK1Vr/aipuT+I0KO2PJBv25QrgxSzSiJK4/5dbJRSYgFqEefy9kkSRFqbqF1CMwjFirQrTC1eY3fJ1s61+Hw/Padyv9IfOg+qK4hHq2h6q3GZbRCGuoLW8/HwkNsHQIEoGG8jjKtTn8z8X96jVA7Bfci6/o=
+	t=1751548501; cv=none; b=qjoHPmU7FCGG7yvlVkwE4pp/cu761Itt0tlKB/TbAmtrYrE2iHXgSSjFnnVAGxi18gnr6PLK23qpt7EDhFxsNhZSR3mMyEeseMe9WT4lDcWecvSCUtFgFG9wAdQiqSgpDvGMcM84Rlu+nLuKH1sJ53yr/fXMB+H+pRFFRc1Z/vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548226; c=relaxed/simple;
-	bh=Gb1IkFXCIe7rVjXkOXMxbgXAPrqKvgtCMq1ITbov+90=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i948rFDLVE8jqf9aPOXI17bncjTWpshZeVyPuET+WNlBHEsGvAs/XW7lM7YKi1021kAeQ9tPntWn6aVtA3Vfkgz3GXZNSGddHX4AYnhQAHIN7qPxNXBIe4sHyNYkZRug/N2W65xZrPEQj2fIJBWgqL+10Kxl7kUUUz/+2CK3qrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fm3QByJS; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751548501; c=relaxed/simple;
+	bh=x6rhCvsaJ/VXQv2sLssQ3HLVw0d6XihLUY4zvLhajbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTS79cxD595cyIJCV4aiEif2dYrcQ7RpfYriLa38KDvKUuqkT9NynJ+UbdW629WWnEZ64eB7w4J3ILqSPYHmEFQeZEJLSbL226NKBOQT8GDGEIPjN/zf+aAPrRGzR4Yf1lmwI53IaNtkQvpqKu3IQ+vA6RkusYKAOOeDvRlMuW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=A5NsHkt/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fm3QByJS"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d98aa5981so8115987e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751548223; x=1752153023; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
-        b=Fm3QByJS1yrxbRmZp3fOZbS12FUsmKzC2qR7cr2S+7KhebkmQmRw3L+fqVH2FLiepS
-         NSw86W06C7Spe5LBxo6PM9Gk89o8eKYgwkgJX9TXS7fs+/yfDQWf03dQU2YhcaPM2mNx
-         x/r0xAx0ILvD0EXqW3YrUNh3MfagoLNiYc/LjA/hJazb4zn6YCW4DCfu3fZglztQKjjy
-         RF2UG1hPgCdwYlDaLGeW/1WSSEZbM0uGTxJSiZeZiOp5/RnNI2f2fHJ+FmRCHU+tbE8I
-         N20c55GoqW60+x+MWu5yMJ8wzYMLiA4gVc+RYZ4tEEfH/jxSCVbbaVBzN/dEf7ZSGio0
-         xKww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751548223; x=1752153023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
-        b=hh3+x0s8t+bmatMa/KQuuglditlgmLT++owosRtJL6Gm7YBduijtUzkOCNXsC14ja3
-         vp3ICkXDTbR3ERPvxq2K/imlwZsGqaIPIWBw5dH6VFVuHMviPCbxrPKk/p82ppb2gAWT
-         E4jOGNp9+Zv+SHPGARzasroHrN/JVEkTb+hc2GKeS9JZzN5eH8zgjU+A69WINT99pzro
-         d7OFPqOy2el4XCf/KKAesZc+Y3PQlSTcYE4Ev7MGUh+yhXk4NsZRBSI9AgN5ZgNyfZ+5
-         B7ak5fy0eR5cpxTkYT48EJp7qPNAsFuNDUp975gIjPs1dgdW3JPN8Oxebu7fGgSdUDBJ
-         sf0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXyY43RWk0eFzXRrXqSjVqR/NVMURWO7noTwYvmIvftumTbKg8lXSniiQ7hZYU8XnVJ0cDGLExyoZnhknA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAvc1MaLtERpiqzYJgCUpCRJS9lFbEiFsTi3pDyuTc6jYLFo3s
-	DAtyiURegx8TMbspYyy5OD6hPkZGLkigYi0OtCZ1JjJ0O/JL6+atKSOOh/Q5cWyGqyhE7rNqrtg
-	CtTun8S5ljFotRY7TPViMpDbrv51lRVMsAONNyGrNCw==
-X-Gm-Gg: ASbGnctryJndzJMFlraRrhne0o1lMsIGwmYfAHO/aIL1GEaGvhO2io0MfwjtVUmh9JZ
-	6Ze+AMAr5AOnbxgqlxq7nPp1i4kpMTcNrIk5FDVpmpqjKbaV/389/gAx+vDVstQ8tOQXjdtL2zx
-	qbWjjrcRgP1IgZBYsfucIeTe530bC8VJ609MRbOKVqrNaLIJkrkedFeW3Ka3w90TGfjahA4bGDl
-	A==
-X-Google-Smtp-Source: AGHT+IHxWXlh+Xi5UEoyYXBIiyt+vfXSa6QG+Av8aHQdIOn0y2uNTayumcpylHFwtGf6UVpFfTW0gACu+FLBVk2PB+I=
-X-Received: by 2002:a05:6512:12d1:b0:553:3178:2928 with SMTP id
- 2adb3069b0e04-556282c250bmr2816540e87.16.1751548223074; Thu, 03 Jul 2025
- 06:10:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A5NsHkt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FFEC4CEED;
+	Thu,  3 Jul 2025 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A5NsHkt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1751548496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xkiEb1x5aeo2U5t7p61ZjNQh1p++o+M4e3PN96IzcNk=;
+	b=A5NsHkt/twS0bSDj/dJyaVEYb0DcjCIKrsfieIG5usjSVyLy5UjwXc9Fmro5QFrNm4+oN4
+	zntJYgFFrWmxhGHjKr9bh3rpoCZZEUGfgjRACZntqAV8ad3nPAPoEq+xVC9ViWH+oGBfAo
+	fi7x52XGQtuUYW396Ey2rPe2bCT2vII=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 91f8f88e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 3 Jul 2025 13:14:56 +0000 (UTC)
+Date: Thu, 3 Jul 2025 15:14:52 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Gu Bowen <gubowen5@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>, keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Lu Jialin <lujialin4@huawei.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH RFC 0/4] Reintroduce the sm2 algorithm
+Message-ID: <aGaCTOJ30KNPOBIC@zx2c4.com>
+References: <20250630133934.766646-1-gubowen5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701161629.9782-1-mariagarcia7293@gmail.com> <20250701161629.9782-3-mariagarcia7293@gmail.com>
-In-Reply-To: <20250701161629.9782-3-mariagarcia7293@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Jul 2025 15:10:11 +0200
-X-Gm-Features: Ac12FXwrt5arm8lRyaVLiwyu4dMeVOLCnYVwDOO42VXwvsCRxSv67Szmz7sFT_Y
-Message-ID: <CAMRc=MdEr+bP1y9DHYa-qrXGJT3-zEvemWm7FzHvkqyfBZC2bw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpio: pca953x: Add support for TI TCA6418
-To: Maria Garcia <mariagarcia7293@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maria Garcia <mgarcia@qblox.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250630133934.766646-1-gubowen5@huawei.com>
 
-On Tue, Jul 1, 2025 at 6:16=E2=80=AFPM Maria Garcia <mariagarcia7293@gmail.=
-com> wrote:
->
-> The TI TCA6418 is a 18-channel I2C I/O expander. It is slightly
-> different to other models from the same family, such as TCA6416,
-> but has enough in common with them to make it work with just a
-> few tweaks, which are explained in the code's documentation.
->
-> Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
-> ---
->
-> +/* Helper function to get the correct bit mask for a given offset and ch=
-ip type.
-> + * The TCA6418's input, output, and direction banks have a peculiar bit =
-order:
-> + * the first byte uses reversed bit order, while the second byte uses st=
-andard order.
-> + */
+Hi,
 
-No networking-style comments in drivers/gpio/ please.
+On Mon, Jun 30, 2025 at 09:39:30PM +0800, Gu Bowen wrote:
+> To reintroduce the sm2 algorithm, the patch set did the following:
+>  - Reintroduce the mpi library based on libgcrypt.
+>  - Reintroduce ec implementation to MPI library.
+>  - Rework sm2 algorithm.
+>  - Support verification of X.509 certificates.
+> 
+> Gu Bowen (4):
+>   Revert "Revert "lib/mpi: Extend the MPI library""
+>   Revert "Revert "lib/mpi: Introduce ec implementation to MPI library""
+>   crypto/sm2: Rework sm2 alg with sig_alg backend
+>   crypto/sm2: support SM2-with-SM3 verification of X.509 certificates
 
-> +static inline u8 pca953x_get_bit_mask(struct pca953x_chip *chip, unsigne=
-d int offset)
-> +{
-> +       unsigned int bit_pos_in_bank =3D offset % BANK_SZ;
-> +       int msb =3D BANK_SZ - 1;
-> +
-> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE && offse=
-t <=3D msb)
-> +               return BIT(msb - bit_pos_in_bank);
+I am less than enthusiastic about this. Firstly, I'm kind of biased
+against the whole "national flag algorithms" thing. But I don't know how
+much weight that argument will have here. More importantly, however,
+implementing this atop MPI sounds very bad. The more MPI we can get rid
+of, the better.
 
-Since you're going to respin it anyway, please add newlines between
-one return here and elsewhere.
+Is MPI constant time? Usually the good way to implement EC algorithms
+like this is to very carefully work out constant time (and fast!) field
+arithmetic routines, verify their correctness, and then implement your
+ECC atop that. At this point, there's *lots* of work out there on doing
+fast verified ECC and a bunch of different frameworks for producing good
+implementations. There are also other implementations out there you
+could look at that people have presumably studied a lot. This is old
+news. (In 3 minutes of scrolling around, I noticed that
+count_leading_zeros() on a value is used as a loop index, for example.
+Maybe fine, maybe not, I dunno; this stuff requires analysis.)
 
->
-> +/* TCA6418 breaks the PCA953x register order rule */
-> +static bool tca6418_check_register(struct pca953x_chip *chip, unsigned i=
-nt reg,
-> +                                  u32 access_type_mask)
-> +{
-> +       /*  Valid Input Registers - BIT(0) for readable access */
-> +       if (reg >=3D TCA6418_INPUT && reg < (TCA6418_INPUT + NBANK(chip))=
-)
-> +               return (access_type_mask & BIT(0));
+On the other hand, maybe you don't care because you only implement
+verification, not signing, so all info is public? If so, the fact that
+you don't care about CT should probably be made pretty visible. But
+either way, you should still be concerned with having an actually good &
+correct implementation of which you feel strongly about the correctness.
 
-Same here, please sprinkle in some newlines when returning for better
-readability.
+Secondly, the MPI stuff you're proposing here adds a 25519 and 448
+implementation, and support for weierstrauss, montgomery, and edwards,
+and... surely you don't need all of this for SM-2. Why add all this
+unused code? Presumably because you don't really understand or "own" all
+of the code that you're proposing to add. And that gives me a lot of
+hesitation, because somebody is going to have to maintain this, and if
+the person sending patches with it isn't fully on top of it, we're not
+off to a good start.
 
-Bart
+Lastly, just to nip in the bud the argument, "but weierstrauss is all
+the same, so why not just have one library to do all possible
+weierstrauss curves?" -- the fact that this series reintroduces the
+removed "generic EC library" indicates there's actually not another user
+of it, even before we get into questions of whether it's a good idea.
+
+Jason
