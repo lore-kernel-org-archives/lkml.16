@@ -1,201 +1,236 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2047.outbound.protection.outlook.com [40.107.102.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A231CD1F;
-	Thu,  3 Jul 2025 07:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751527186; cv=fail; b=fHLOwvOKLTbqCG24FDkrgAYhBtXhoiIWYG5DhLUpQDIrNOuF9+8J3MAqH2YuEhwIB4coxlFBN+SVZx1FGre2znHgYG1klDngAuCC6iD7M0UM7l4A2rDZGbbPDOmLnyraLIXTCSUj4c5ZlFcwNH2KS4l4/x3fyIciQw0DQ3xKAUk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751527186; c=relaxed/simple;
-	bh=SSaRGcSJvupm0oIpD0q4jAk3S3urhzSPyG3tPifT5os=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ih6qVCMKLWVbNrdLStIIN6sKutkbutXnsJlRDm5ZlAvyOJzfQSCelf6mi2QQETnHb40eD8kazmp0DPB9Nefsc8QRRUPdgdfbQjv+TAjM7ZsPctVaplx4HBcDeaUbTviyYDOq9Hc2Zb5NSGdezRSoA2/DD6axSgZ1ttWRST3abmI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DncllQ5j; arc=fail smtp.client-ip=40.107.102.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E047E293B53;
+	Thu,  3 Jul 2025 07:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751527193; cv=none; b=Jkw96MxsyyY7fVjXuyh0hQ0B67hS3Cc4Ln3PK32uO2mQVLwbElvoLEhnwsWuHsKQvbZvKd6/fqJTcEcv6vW5ItBF5Rk8GovST2fKM1JfjlZP5eHeyEHeIRVRp2FtRnOcwLHz4RFFM70yhOhEXTuA0dArw36PFU2QPMDNbxvebFM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751527193; c=relaxed/simple;
+	bh=kiX0JFjP5NR+W9JpkBrRkkixeVI5ZwDMdiYzvWIemz8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=O+j7BYDrAiBCD7LfP9m1u0zub5YoWMz3v379cbZ5sAOyfrsxt5Y1dQxf84jtmJ7s2zaSt/aHdVMwnt5nrGUejn87Oy1xxoH1DcgR1PT4Y5NoHCHWQ4DCFIPuTNwRWdV+NYjEbYZQ+5VX4Msa3twXpIADH1XVZ/HIC4fmCsRFw5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UC2FNxeR; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DncllQ5j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=icbcQlZTH3wE9/fX43vi0HvDRD5Qb2FpHoWlVekFzJoqir0LhwvbEQU+XgUYiDBGn85tjAR79Z4V73M2AC6ZI1vgYAnMKf+JWsYZDb/Ac7l/6I7mZ4HxezVkeKAmhvRwDs0rvJkzdeucrTJdUGmc6/NmnTTDPzMyitjU3mTRZFCJ3+Iy3Q85IIieXeV/pbStPGWyUk5ieHtYW7ZbAmeHAg5gcO0F/x1bfbm88JQyNslXd8r0TptYKiATR7xwn+ab6j/zd8r0mFzAeHhQ3c9SoWkHzSHsvyrvfahPVuyDuWM1pRV7PyU7TZbRFzPi0h98i5IvTJxx0JZHAre6ZQOxuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/SwEY5xsumy38qhuAjX9zqN9bHdXu8AUbLIhH+Ty/fE=;
- b=QEDcvf1XChHGPeYGK24kB4kCNMpZeAg8YlcBWow/in951mg+xsIS/wjdN2lHzWHyaYf6OC8XfUda4YvxiT6bDP+Wbl4ecsA5Dl1jNQBWWGkAlneWdx6+1e0Vlm4/QNDArpQ36E6WuUdZuOK8CFX4pZOyZ7Kdim9UQ+zzjnP6GmERpPabE9b0Cz/UGn+CO1UejDS58l7+wvGXFzfpBQR0FnTuPORjNbXqC8dZum8AN0lmGAwyqDoF3cy07iSBVYgjrFb2OH5xs9kC05q8pZJ8qjcEw7wzQaQM9dgDbtVtMvJ2PTuH6GlhQimgD9ooBjdhkv6WpzoghO2WbqKa+mzE1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/SwEY5xsumy38qhuAjX9zqN9bHdXu8AUbLIhH+Ty/fE=;
- b=DncllQ5jqyzrtGQWejyQNsQ8plrbyVk74moNFN1iG/vofgOUsiSTEfZpNHII77YiJA1wRpoVcdquM2RqwfP4PtyQSNQPC58aqC/S9KL9eAkIpNBptdBXAFPw1MvO8y0DYLrzoNhsJDAdv3Y9jkEwcY88uQXgyfbVHxOKboviuQc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com (2603:10b6:208:3a8::19)
- by CH1PR12MB9622.namprd12.prod.outlook.com (2603:10b6:610:2b2::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.34; Thu, 3 Jul
- 2025 07:19:41 +0000
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3]) by IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3%6]) with mapi id 15.20.8901.018; Thu, 3 Jul 2025
- 07:19:41 +0000
-Message-ID: <bb0ac425-2f01-b8c7-2fd7-4ecf9e9ef8b1@amd.com>
-Date: Thu, 3 Jul 2025 12:49:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 10/14] RDMA/ionic: Register device ops for control path
-Content-Language: en-US
-To: Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
- andrew+netdev@lunn.ch, allen.hubbe@amd.com, nikhil.agarwal@amd.com,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Boyer <andrew.boyer@amd.com>
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250624121315.739049-11-abhijit.gangurde@amd.com>
- <20250701103844.GB118736@unreal> <20250702131803.GB904431@ziepe.ca>
- <20250702180007.GK6278@unreal>
-From: Abhijit Gangurde <abhijit.gangurde@amd.com>
-In-Reply-To: <20250702180007.GK6278@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0202.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e9::10) To IA1PR12MB9064.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UC2FNxeR"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234bfe37cccso93331245ad.0;
+        Thu, 03 Jul 2025 00:19:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751527191; x=1752131991; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2SCjNGmqDoY0Yur1BoE0juKB2ttl80ROWlsxDI9cYNk=;
+        b=UC2FNxeRg1aWlDsiRnTevRTeHRVsRMliuhtlrshsQA34fzInlDNcE/A5llQX1nF5E1
+         Vuw0tumc392hH4lX2p/Z2ARoNsSvuIDdoTTbLr9oy2K0HkV3nMFkWos1omxJDwktZMnE
+         n6CBzLiDwjTcxyh7mEtI+a8CFAt8lIXBJUeq2kjKOp8UZv5DOAizsadLPcnsW2wellpn
+         gY7vtU5apJtxq/1uWrYrVHfVSfveMzMhog7lW8n4+JAsGCeUteZCl/GeKQuSxC6CnWoK
+         Fl8hKEuBzD9DkDA8vXMA1hdr96hAcK/8sTfJVOgw2Q4ArvOycvzSUSD3LCVNpoosq3je
+         oXEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751527191; x=1752131991;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2SCjNGmqDoY0Yur1BoE0juKB2ttl80ROWlsxDI9cYNk=;
+        b=HOoFXuattUypG97BxXTClY2gUAupIBuFsRaBYI/diMqikur8QVKJkaB2APpmyIUW3F
+         4MCLsK7JRlF8KqXPGDFbMleCl/BFH46vBIZQ58WuGHu71zq8NdJjDmqmvXW2LbVJQxXS
+         Ngl6KwgsCeCA0vpM+QDMOqUQRWLvgx0yZG4FLogPJhFxQdoh4g270fhO1B8IWz1DvLv9
+         iuB3yWA/Rj4BLkMRdx29lZi8yokDfE+yDCIjLfS93dDtylARXYXJfcclIrF0H7iNe8ue
+         CdLwrto3ctAGTJQS/FKerI1kic8ErCCP12ZvHO6IzAZonqIcJBas4Ap1eKixLly0jBV2
+         2JzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWU5JYtJ+PBq5dSmw8gPTz/FMVL/TACtmla8I2l0au1bTMMv5IdFF20HJjorRH1nvtv9Npo/3mH3nCf1zR/A==@vger.kernel.org, AJvYcCXqliLHRD9QrD9eclx6Qmbez/ojYHKjVxknQgG9cnuSETIAq1EjE01NV/5MZaiuSOkkbN6+7t4vE74WfYhn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH3xKSr5i9evO3H1SGEtpmDoIeUcvu8l1C1bThLm0UW+JDzk2H
+	yOoJywaOCwrAMYTUzMp5WKce3n+TkU08R2TXPogqp5A6Uv5ZoFdVUb7L
+X-Gm-Gg: ASbGncuwD51YZHh6Kdz5/KYt1E3Y+2lVE+N224dtcWQcQYmsnKEbSD+quX+qTo7jyYB
+	LgXYshSVCUgQ9QzUS35bDP69Eu4GfrcJC0bDB1TRmiz7dephHbjC1UIgaoq/HfQKcZGT5SOjqGW
+	ClxjqH8b3QqPdBU84abNCUZz2q4i1bIUsIaRImO9Rwewrxk9h8kJPxmN31wL09iyieMX26gfSaV
+	+UMpymoveHvOz4VCj6M5ezH6C9gO7dWV8XTJKhEq+eqx9xI8QbM3YBeNuELMImZZzJxd0P6/ZKS
+	vhEvUT0GL3BfK2baw3r7FkYgGMtwP1IgDhDrv2rjLspGwA==
+X-Google-Smtp-Source: AGHT+IHQb50iWONDdZm3enefvc5V5CVLRdQt0jDWh1Lf8vZEnVr6n1UY3HGzTa0jM/DPgWOV0g5MWQ==
+X-Received: by 2002:a17:903:19e6:b0:234:d292:be84 with SMTP id d9443c01a7336-23c796a1922mr33902955ad.10.1751527191074;
+        Thu, 03 Jul 2025 00:19:51 -0700 (PDT)
+Received: from smtpclient.apple ([2402:d0c0:11:86::1])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e300c8c9sm13042924a12.5.2025.07.03.00.19.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Jul 2025 00:19:50 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9064:EE_|CH1PR12MB9622:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1810be37-9dba-4678-35ed-08ddba01f9fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Zno0RkNaSE4wMUFHeHlrVmhzUW1Kbi9hUTBWbGJwNi9GVDgxazFlZVZUTHdW?=
- =?utf-8?B?L3Z2RnpKSUUwc09PZXdjdjE5SFRzcDE1T1F4SVRGbjlCbXRlY2lsMDVnTmhC?=
- =?utf-8?B?Q0pGY05uSUhaclZBaTVYbm1PMWFFazZGODRJSHRMVjlJT2hTeWNObnAwS0cz?=
- =?utf-8?B?dEx0OEt5NG4waWVQSi95aHIyU1ViSnBpdCtiNHk5cVgvaHdYbjZDSWYrdHU3?=
- =?utf-8?B?dzJ1SHBCUWhVTFQ4OGxxSHgxd1RhU3c2NzVEZFRDTjVGZnBFM0RrczdpdkNo?=
- =?utf-8?B?eG5hSXhWVllCM1dvclpEOXp6SW9FRWM5NVJwSHJQMjFVWHE5VGtSYkJpOHJk?=
- =?utf-8?B?b2IrVDBlYTlYcmw4V3dxaVVwek85cDB2bEpmSDY4b3VSSTdmMFhRMEtSY01C?=
- =?utf-8?B?NDVPUXVJeCtWWHNjTjRyMys0UnRkc3ppdjNOMEVGNnY1R0FRWWl2L3Vac0pH?=
- =?utf-8?B?Qm1DNTkrOUpvTFl4bSt6OHpOK1QyVXNvREJ0YmRNZkZEbDg0UFBBWHo5S1NN?=
- =?utf-8?B?S0FqZy9mT2V4dzQ5Nk5YSWRJcFJPNlhXZDY1YnN1cjc2MUdVYUVrTGkrc2Zj?=
- =?utf-8?B?NHd0UEo5SU1uKytFTzNhZkhDSFZBODlRMVBXOGthdE1SOFBSWDZwSEUyNElV?=
- =?utf-8?B?RDVENGl1WHJaYlhLQVV2NWVkRW5CU1ZyMm54Zjgxc2FzaGJLL2tZdG9XSHJB?=
- =?utf-8?B?UUFkeGxnRFRQNW9DTGxpMDBCR29sWFgrU2J3ZURjT2JnRkFiQUNiTm5mZHU3?=
- =?utf-8?B?dXc0Y2hXQVE5ZjY1VXdDT2dSUXBsUFVQalJwQnpGdHA1UVZUSm5vaWNNZTR2?=
- =?utf-8?B?K0JqdThOR3RVS1BwQVMxSEFIMHhIczVUVUEvZmkxQTkrdTIwWXdMeXhUZW5I?=
- =?utf-8?B?ZnBBamtzSnJ0SHB4eGlxRzJOVUp2RU12UXpjMmppNVYyekl5Zm1EK0pZYVJ4?=
- =?utf-8?B?d1BQZmVybXBjTzZWb1pyZWM3UXZPUUpDa2JoNC8waWp4R3phWnVXMFZSMnQr?=
- =?utf-8?B?NTcwQW9ZNWRwODM3Z3JheTZ2UEdlN05EZTM4VnRjOTJ4N2RsKzU4Mkp0ekdk?=
- =?utf-8?B?dGo0WDhtai9IN1BjL2JUcGdiKzMvVTZIOWhoK2JyUi81eE5GbUZaUjlKcE0w?=
- =?utf-8?B?a2x1Vk8weW5Ob0pmWDRVNWdISUcxdWxJbXZoUWI1c295SXRxWmIyNDBnMTRi?=
- =?utf-8?B?RGtuOWF3OE9pdHJUQkZNamRzeWp6S1cycXpKTWQ0MlhiZkdSZVpDM1AzTGND?=
- =?utf-8?B?bWxLTGJpbjluMFg5b1hLb2d1KytOMzVCeituVVFZcG5pV1pFWkhTQkhmdEVS?=
- =?utf-8?B?RzNnS1BIRGw5Ym5FMDRadE5tQ3hBVWYwcVYyUHNpWjFydy9jNEtpazZlWjNI?=
- =?utf-8?B?RERsVFgwb3dzUUI1WUhyZlFsYUJhUkdzZUFTbGtQS3dHZmMvZlh3OHRtL0Fq?=
- =?utf-8?B?YndtMXl6ZEJSTmUrZHliMmFldS9lYU53RmZQRGNpWnJyVlkycDE1UGNpQlRm?=
- =?utf-8?B?NnA4S2Z5VnExcWZpTTVSaWx5OENBSHcwUHdyY2lDazlXeG01L1FqUE91QmRH?=
- =?utf-8?B?dHhEMUIrbGw3U0NhMzJWbm5kcTFuYVp2cnNuMThjMHFmZlpnY3owY1Bzdlg4?=
- =?utf-8?B?RThGclF5Wkt5RFkvZlB0eG05NUYyOVRVMzhaSGlCeFN5VFNST1BqdEZycSts?=
- =?utf-8?B?am5lb2VPRENNVGFHeXRPVkg0azVmZWdNUWdFSWFMTmtkUTYrdTZqYzZCY3FJ?=
- =?utf-8?B?SG1VcW9TY3MyemVpRHpDajY3NE5vUlJ2N2E3U2RXaWpOL3dXSUt2aHNzeHQ1?=
- =?utf-8?B?dHRQREhtNXFDZEJiVmk0TXRjZ0lPc2g4TmhnNE5pc1d3VVNZS084V1JnNW9t?=
- =?utf-8?B?MGdZSWV5bkRKZ1l4b1VkcVRybnorUHFWYlhkNmUrd01aZFRmR21mcVJkQVU0?=
- =?utf-8?Q?8lv3qbs0ItU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9064.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WVo5MVhCNHVzWWdObFJOOVRkY005SXNwVEF0enNDWk9rTDA4MkFFNzZjN3pv?=
- =?utf-8?B?bkhXcEFjZXZEYnFYSlNGS25jTFZ1dlpRK0R2N0R3eHIzU0NuclQ0UEFXOGdh?=
- =?utf-8?B?aUNnZjlab3dZWlU2OW9TQTVxc1BNQkNwZDJSd2k4T3N2a3BlLzVtWVpFRWlk?=
- =?utf-8?B?RHR6RUp2UzZVbFc1OGJ3UkFaRmNXQmVVR3hsTjcxc1FXTVkxc3k1U2NoNTNt?=
- =?utf-8?B?ekQ4ZUxOSkdRWk5aMzcxdkpJT3V2K1JhaFg4S0FRQXl1dStIaHl0b05HVmJ0?=
- =?utf-8?B?SWR6M294RkVYV0paTlN5cElGSm55dGFWaUVHbEhjcDFOY1dOVlRqZnNULzUw?=
- =?utf-8?B?QXBpQTEyV3l4MGdPNE1UbEYyVjIzaFhWVzJoRnhCV29sNmdlbFpWWUt1eDI4?=
- =?utf-8?B?d2NKR0VodC9HQWo3dVZRZmYvQ3lEelNLK2g3T21xcjFRVXUydWtObDBRZkhW?=
- =?utf-8?B?NFZFdXlQSWs0c2YvNWExVndsWkVJWi9rL1FJN2ZKRTJBbnV2ZU1OV1p6ZzB5?=
- =?utf-8?B?UGdIZ0Rkak9hTEdtTG96TXZxS3U4aWp3L1ZNc0NWWnVtbkNuNGZyQ01MZVVB?=
- =?utf-8?B?S0c3ckhFQlE0a29ZcndDSlBuNlJYYW10KzdGTkFoSWJpcDJSdEhWTnpnRENI?=
- =?utf-8?B?R25tS090RkRKUFpCaE9mb2pVQ05uaW40eExTZDZlZTRacDhDQVAydjB6VjQ0?=
- =?utf-8?B?SURGRzdWa01XbHk3TlNubUdMRkg0N280MC9IYnRhanBheVdLQXdaUUU0SkRp?=
- =?utf-8?B?RUloRkdlWHErYW92aDZ1UWQxZitxNlh1NGM3YTZLR0FpSmo1MEhZSUhLUHox?=
- =?utf-8?B?RGZkcmdTb29Kek1wR2JJQzJVcmcxZVUzTkdZeFp1UEp2R3cwRmNQYzFLeU5N?=
- =?utf-8?B?OVltNVFVZld6NWVleHRnNUl2VkJQMXBtMWVPcVBKcEpmNE1VV2VOeDg0bno2?=
- =?utf-8?B?WTRPeGZBSkFCWmEvamZ5elNYbzdzd0pHdzBUVGtNdkd5bE8xcmIwdjBMNUZY?=
- =?utf-8?B?ZnJEZ0FzR1hONUhuRUNTS3ZUQXpEZ05MdDJsMDFXL3JmY2NaM3YzS3J4UExB?=
- =?utf-8?B?VlpXV0lrb202cjBlNE11RUVDM01UQzVxWU9iRUMxMmJCcXR4dFI0ZzRlc3JI?=
- =?utf-8?B?cmVNMTkzZ1pla1lPcGs5d25XaFNkOUhLcjcwZStzTVM3NGxBdTdrNmUvQWJ0?=
- =?utf-8?B?em5mUDFTZjBuZlNHdjBXOGdQYUFVcjkwcWJyR3BTcktKaW5xbzRVS2JBU2hk?=
- =?utf-8?B?dWx0UkZlVm9MZ0ZsZ0tJaXhFNVp3WE1OUEwxd2xjRy8wUGpSSis0Um9BT3ZY?=
- =?utf-8?B?WEJ2RjJlNWgzN1NMRDZVL1lQNXJmeHNiODJNdFNOamJnVVhqcGMraWJMSm5j?=
- =?utf-8?B?R2kySVZMRGd5R21ROUJoNFlIOGZaQ3pmcGdJMVFQS09yNXFieEYwMlo3QitB?=
- =?utf-8?B?bnRPK0NhTk5ROEhnV3A1RWlZRi9hQUd2UVdOa0VqQUJUVlp5VU1PbFUvWmhm?=
- =?utf-8?B?TGJGckNSdWRYMWg4RHY3WWsyTU4yT3g0RlJkNm85amdrdjVTS3cvUWN5ZEdU?=
- =?utf-8?B?ZERwYWJaUnB0eEZZQ0RvVE9za2plc1p0YTdzL01aK1NqQk1PK0VOS1ZOSnFO?=
- =?utf-8?B?S3hLTndsanB4bUp0UlBNTTBETFdHcHpkdlg0dFB0WTNQc1BCRVpvY081RmFC?=
- =?utf-8?B?YkZuQmpQRjgxTC9ZZXpQTktFOXRmbk50a0JuZHdPbnJCekpXNzYvY1dTUWM2?=
- =?utf-8?B?aWhhVVl4djVadWUxR2VqSjZhdi9VM2ZXQUEzdldhQUQyekV0ZTB0Qk8za3ow?=
- =?utf-8?B?dlRxaG9PeTFJQTBKWVR0OUFMTHVIODQ3S1ZqZjg0TzJTZ3NUWlhvSWlrWTVy?=
- =?utf-8?B?SlhKTVBDbHZPRXY3U1pQVEdINlBUMkp1QU9nVHMwa0YvR3NXYUdiRThpeVN3?=
- =?utf-8?B?b3l3d0E3RjVrejhncDVkVmFXcmpIQ3lhOGU4QTIvTm5yb0pXNzY2TnFIRk12?=
- =?utf-8?B?WXNUTU5PUnlucDN2a0pybEpzdmZOaTVxN2xpWnhDTVczWGlnbWRwL0Yrb3R2?=
- =?utf-8?B?MHV4V3pFb1NuV2Nsc0pxK3ZaTWNCQkFmOW91UzRXUW1tZ3pnZTI2MDBnTDVE?=
- =?utf-8?Q?OjaaPIgUbFYwudm54rZN1vw+Y?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1810be37-9dba-4678-35ed-08ddba01f9fc
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9064.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 07:19:41.1318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uuIainXYjy6jrGCqefbPP8VazbEn3HQsSD+LGT9inGiT5s8+ENbk6fA265K10MJpqOo14wJ7p0nNsGbsIzbdhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9622
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [syzbot] [bcachefs?] kernel BUG in __btree_trans_update_by_path
+From: Alan Huang <mmpgouride@gmail.com>
+In-Reply-To: <686611ef.a70a0220.5d25f.0833.GAE@google.com>
+Date: Thu, 3 Jul 2025 15:19:35 +0800
+Cc: kent.overstreet@linux.dev,
+ linux-bcachefs@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4B44CAF4-89D2-415B-8D29-13FB7767A1D3@gmail.com>
+References: <686611ef.a70a0220.5d25f.0833.GAE@google.com>
+To: syzbot <syzbot+8deb6ff4415db67a9f18@syzkaller.appspotmail.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+
+On Jul 3, 2025, at 13:15, syzbot =
+<syzbot+8deb6ff4415db67a9f18@syzkaller.appspotmail.com> wrote:
+>=20
+> Hello,
+>=20
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    50c8770a42fa Add linux-next specific files for =
+20250702
+> git tree:       linux-next
+> console+strace: =
+https://syzkaller.appspot.com/x/log.txt?x=3D1191aebc580000
+> kernel config:  =
+https://syzkaller.appspot.com/x/.config?x=3Dd831c9dfe03f77ec
+> dashboard link: =
+https://syzkaller.appspot.com/bug?extid=3D8deb6ff4415db67a9f18
+> compiler:       Debian clang version 20.1.6 =
+(++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD =
+20.1.6
+> syz repro:      =
+https://syzkaller.appspot.com/x/repro.syz?x=3D1311d3d4580000
+> C reproducer:   =
+https://syzkaller.appspot.com/x/repro.c?x=3D1770f982580000
+>=20
+> Downloadable assets:
+> disk image: =
+https://storage.googleapis.com/syzbot-assets/eb40fda2e0ca/disk-50c8770a.ra=
+w.xz
+> vmlinux: =
+https://storage.googleapis.com/syzbot-assets/cba4d214940c/vmlinux-50c8770a=
+.xz
+> kernel image: =
+https://storage.googleapis.com/syzbot-assets/4b23ed647866/bzImage-50c8770a=
+.xz
+> mounted in repro: =
+https://storage.googleapis.com/syzbot-assets/cd313604f9e1/mount_0.gz
+>=20
+> IMPORTANT: if you fix the issue, please add the following tag to the =
+commit:
+> Reported-by: syzbot+8deb6ff4415db67a9f18@syzkaller.appspotmail.com
+>=20
+>  while marking u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq =
+1db8f60c84bb244c written 8 min_key POS_MIN durability: 1 ptr: 0:42:0 gen =
+0, fixing
+> done
+> bcachefs (loop0): going read-write
+> bcachefs (loop0): journal_replay...
+> ------------[ cut here ]------------
+> kernel BUG at fs/bcachefs/btree_update.c:339!
+
+Caused by commit b47a82ff4772ea9d7091b85ef5f34dc78c866a02 (=E2=80=9Cbcache=
+fs: Only run 'increase_depth' for keys from btree node csan=E2=80=9D)
+
+The commit add an additional condition: !k->allocated
 
 
-On 7/2/25 23:30, Leon Romanovsky wrote:
-> On Wed, Jul 02, 2025 at 10:18:03AM -0300, Jason Gunthorpe wrote:
->> On Tue, Jul 01, 2025 at 01:38:44PM +0300, Leon Romanovsky wrote:
->>>> +static void ionic_flush_qs(struct ionic_ibdev *dev)
->>>> +{
->>>> +	struct ionic_qp *qp, *qp_tmp;
->>>> +	struct ionic_cq *cq, *cq_tmp;
->>>> +	LIST_HEAD(flush_list);
->>>> +	unsigned long index;
->>>> +
->>>> +	/* Flush qp send and recv */
->>>> +	rcu_read_lock();
->>>> +	xa_for_each(&dev->qp_tbl, index, qp) {
->>>> +		kref_get(&qp->qp_kref);
->>>> +		list_add_tail(&qp->ibkill_flush_ent, &flush_list);
->>>> +	}
->>>> +	rcu_read_unlock();
->>> Same question as for CQ. What does RCU lock protect here?
->> It should protect the kref_get against free of qp. The qp memory must
->> be RCU freed.
-> I'm not sure that this was intension here. Let's wait for an answer from the author.
-
-As Jason mentioned, It was intended to protect the kref_get against free 
-of cq and qp
-in the destroy path.
-
->> But this pattern requires kref_get_unless_zero()
->>
->> Jason
-
-I will change it for kref_get_unless_zero().
-
-Thanks,
-Abhijit
+> Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+> CPU: 0 UID: 0 PID: 5842 Comm: syz-executor286 Not tainted =
+6.16.0-rc4-next-20250702-syzkaller #0 PREEMPT(full)=20
+> Hardware name: Google Google Compute Engine/Google Compute Engine, =
+BIOS Google 05/07/2025
+> RIP: 0010:__btree_trans_update_by_path+0x1fd3/0x2010 =
+fs/bcachefs/btree_update.c:339
+> Code: f6 ff ff 48 8b 7c 24 28 e8 ca dd f5 fd 48 ba 00 00 00 00 00 fc =
+ff df e9 3d f6 ff ff e8 a6 c9 91 fd 90 0f 0b e8 9e c9 91 fd 90 <0f> 0b =
+e8 96 c9 91 fd 90 0f 0b e8 8e c9 91 fd 90 0f 0b e8 86 c9 91
+> RSP: 0018:ffffc9000413ea18 EFLAGS: 00010293
+> RAX: ffffffff842e0b42 RBX: 0000000000008542 RCX: ffff88802ea71e00
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff888031194010 R08: ffffffff84518baa R09: 0000000000000002
+> R10: 0000000000000003 R11: 0000000000000000 R12: ffff888074e00000
+> R13: ffff888031194000 R14: 0000000000000088 R15: 1ffff11006232802
+> FS:  000055555e045380(0000) GS:ffff888125c1d000(0000) =
+knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055e03c677168 CR3: 0000000078920000 CR4: 00000000003526f0
+> Call Trace:
+> <TASK>
+> bch2_trans_update_by_path fs/bcachefs/btree_update.c:454 [inline]
+> bch2_trans_update_ip+0x8f6/0x1f00 fs/bcachefs/btree_update.c:546
+> bch2_trans_update fs/bcachefs/btree_update.h:123 [inline]
+> bch2_journal_replay_key+0x4c1/0xb50 fs/bcachefs/recovery.c:311
+> bch2_journal_replay+0x171d/0x2630 fs/bcachefs/recovery.c:396
+> bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:484 [inline]
+> __bch2_run_recovery_passes+0x392/0x1010 =
+fs/bcachefs/recovery_passes.c:539
+> bch2_run_recovery_passes+0x184/0x210 fs/bcachefs/recovery_passes.c:610
+> bch2_fs_recovery+0x2690/0x3a50 fs/bcachefs/recovery.c:1005
+> bch2_fs_start+0xaaf/0xda0 fs/bcachefs/super.c:1212
+> bch2_fs_get_tree+0xb39/0x1540 fs/bcachefs/fs.c:2488
+> vfs_get_tree+0x92/0x2b0 fs/super.c:1804
+> do_new_mount+0x24a/0xa40 fs/namespace.c:3902
+> do_mount fs/namespace.c:4239 [inline]
+> __do_sys_mount fs/namespace.c:4450 [inline]
+> __se_sys_mount+0x317/0x410 fs/namespace.c:4427
+> do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+> entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f878cb709ba
+> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f =
+1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d =
+01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffc9f662588 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00007ffc9f6625a0 RCX: 00007f878cb709ba
+> RDX: 00002000000000c0 RSI: 0000200000000080 RDI: 00007ffc9f6625a0
+> RBP: 0000200000000080 R08: 00007ffc9f6625e0 R09: 00000000000059b9
+> R10: 0000000000818001 R11: 0000000000000282 R12: 00002000000000c0
+> R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffc9f6625e0
+> </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__btree_trans_update_by_path+0x1fd3/0x2010 =
+fs/bcachefs/btree_update.c:339
+> Code: f6 ff ff 48 8b 7c 24 28 e8 ca dd f5 fd 48 ba 00 00 00 00 00 fc =
+ff df e9 3d f6 ff ff e8 a6 c9 91 fd 90 0f 0b e8 9e c9 91 fd 90 <0f> 0b =
+e8 96 c9 91 fd 90 0f 0b e8 8e c9 91 fd 90 0f 0b e8 86 c9 91
+> RSP: 0018:ffffc9000413ea18 EFLAGS: 00010293
+> RAX: ffffffff842e0b42 RBX: 0000000000008542 RCX: ffff88802ea71e00
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff888031194010 R08: ffffffff84518baa R09: 0000000000000002
+> R10: 0000000000000003 R11: 0000000000000000 R12: ffff888074e00000
+> R13: ffff888031194000 R14: 0000000000000088 R15: 1ffff11006232802
+> FS:  000055555e045380(0000) GS:ffff888125d1d000(0000) =
+knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f8f8b3a1796 CR3: 0000000078920000 CR4: 00000000003526f0
+>=20
+>=20
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>=20
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>=20
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before =
+testing.
+>=20
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>=20
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>=20
+> If you want to undo deduplication, reply with:
+> #syz undup
+>=20
 
