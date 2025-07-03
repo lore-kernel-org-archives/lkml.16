@@ -1,153 +1,63 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CCD19F43A;
-	Thu,  3 Jul 2025 21:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ABD19F43A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751576462; cv=none; b=X2pheJaBeR/lGnzopqXELZvuy5t3LMcAKmYRIMvoHzpiwlPPq8B3oUB5ZXAfuNkZ6UuXLcCqtA26ophgXwHEPY1iX9FJJrbhAk7wjNK5UayAD2sTz2zdiG+UnjEH01qqzuXH6r/PjPgMc6bongtH69/mb1dZ25KCQLW7zTRfvwg=
+	t=1751576579; cv=none; b=Xt0wYqQAqDgBKN3z0wg7VyrhjQhzzWYvzvYVfsrdnvIzkx9r8TZn3YGOkggZQ1JZIZCIKfxm580snXVtcJhmt7eC1njLkSkuHfDfQD+mZkwFaOGT6kmgO3jGsaCDkOMyu6vNsnE13Is2sOz40KZV4VOQ7HDUGS0MAZ0Vv0c1OUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751576462; c=relaxed/simple;
-	bh=LMkJSyY9cv/+8k8DnkC/yiglcrPiZ8K5h/C1h6vibYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MB1h95BEY+x5QixKa3VdozpVb8Z8h6mdP8KbYuEebRd0zJnV1+Qu7LAUEmMCKrlDVXnBT/azCm44kku6XSuHIChOm7Rqka+NhQFPKa3+ghstRGT7tDAH46MjpftCp6K61fNffjKL8tf5x+jw8K7NvT0MkMDQmaxyQMlvdItiuj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dTn5r753; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mcFlxZK5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751576579; c=relaxed/simple;
+	bh=7b7hqvr7EkwfaZqRMejuBUVtedc1L2nVgXoTo0R1Zzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WjkywdBUHoj3xRs4Yz2V3hmlkBHRYZ3ixUmZIU3AFVWAaXUYnzPO6mR5Abxyo76pDoiOznRC9e547ZPWHRzISTYf7sLM18Izejgo3+VtYyEJU2ldK3+3b2fmPmO662E64qbgRPONPmFzZeQo2N24b5+UXbYvv0kSLSQqeXc5cmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejdq2ZTO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dTn5r753";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mcFlxZK5"
-Date: Thu, 3 Jul 2025 23:00:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751576458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DTXvd5Uvp6Q4AKEPN0WQMwq/tMxtiUVrV4mMQxECWg4=;
-	b=dTn5r7531nUAApuRrJVEdSU1yHQgN8OqgV/tVp18i0lXAnb6BkUZgnHlf7StaSFIv0Jz9M
-	BNNct7Wcf3Poy9tY7EAT9Iv0/Znzi3/8d4/cCyrLJ+jswLaS3RHVFrD2HuVu8VHATIkPvO
-	XQTJ9RS88X/x7KoggIeL5yOlHBDZ3b+BN42a8aWclYymUVLxZ1arwKhzpODAoDqgufFswo
-	8UNzyNBkAaC/orKnvXhYvUMZGfJCQsiuDsvGprxUEc9UZHIGlhDHp19N2pX5+0YgB04iQw
-	uPk2PRvtk4WZCK2bI5q+tmxx3ytZUeE2DMLnQjzoCEl2sh5+gpYGBiLSlHMbNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751576458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DTXvd5Uvp6Q4AKEPN0WQMwq/tMxtiUVrV4mMQxECWg4=;
-	b=mcFlxZK5m7AaTULHDD29cnWKaEO4XCMTydboJXdrQ9VKl2m7LlecU8z5SM+r0xOGESw1hx
-	APh3s/XqB5ssTKAA==
-From: Nam Cao <namcao@linutronix.de>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
-Message-ID: <20250703210056.sDzAytHT@linutronix.de>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
- <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyaht595.ffs@tglx>
- <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejdq2ZTO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58AA4C4CEE3;
+	Thu,  3 Jul 2025 21:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751576579;
+	bh=7b7hqvr7EkwfaZqRMejuBUVtedc1L2nVgXoTo0R1Zzs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ejdq2ZTOFm5fL7nxl9fCsWQLRsYAt6UpXS4AUnX5W3AN3CK/NtF3aSnyov0qrlFvb
+	 HjG+91AOeJKLWszNYZW6MwxiIqHbayl0raNPV5mhm12DWtv2rERHr6v/rvJE40KN1t
+	 aWjfX0W31XD0bPSOPZuYtYOHKjLLEpRrHJvQCsui3r/HyU15+4vfdp2mdvenVIRymA
+	 yXtkpRv5BuODJw8/D3j+Bjlaly2/kfnSEiekJLEB11jpGtR6WgVkezMcHSkppTDa6p
+	 3TwbVR4NGxBre++XRhQlYACbf5Lmvt15ekENxB62a4Est2cHVwmt5G/JVZ9aFoyK5t
+	 hqdV7BkOJyw7A==
+Message-ID: <a2b6a13c-4f64-43b2-8299-df9b785ba023@kernel.org>
+Date: Thu, 3 Jul 2025 23:02:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/7] drm/panthor: support repeated mappings
+To: Caterina Shablia <caterina.shablia@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>
+References: <20250703205308.19419-1-caterina.shablia@collabora.com>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250703205308.19419-1-caterina.shablia@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 03, 2025 at 08:15:07PM +0000, Michael Kelley wrote:
-> From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, July 3, 2025 1:00 PM
-> > 
-> > On Thu, Jul 03 2025 at 17:41, Michael Kelley wrote:
-> > > From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:48 AM
-> > >>
-> > >> Move away from the legacy MSI domain setup, switch to use
-> > >> msi_create_parent_irq_domain().
-> > >
-> > > From a build standpoint, this patch does not apply cleanly to
-> > > linux-next20250630. See also an issue below where a needed irq
-> > > function isn't exported.
-> > 
-> > Does it conflict against the PCI tree?
-> 
-> There's no conflict in the "next" or "for-linus" tags in
-> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/.
-> 
-> The conflict is with Patch 2 of this series:
-> 
-> https://lore.kernel.org/linux-hyperv/1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com/
-> 
-> which is in netdev/net-next.
+On 7/3/25 10:52 PM, Caterina Shablia wrote:
+> This patch series adds OP_MAP_REPEAT flag, which lets the user map a BO
+> region over an address range repeatedly with just one map operation.
 
-I need some guidance here. If I make it apply cleanly to linux-next, it
-won't apply to pci tree.
-
-I saw this type of conflict being resolved during merging to Linus's tree.
-Shouldn't we do the same for this case?
-
-> Michael
-> 
-> > 
-> > > At runtime, I've done basic smoke testing on an x86 VM in the Azure
-> > > cloud that has a Mellanox NIC VF and two NVMe devices as PCI devices.
-> > > So far everything looks good. But I'm still doing additional testing, and
-> > > I want to also test on an ARM64 VM. Please give me another day or two
-> > > to be completely satisfied.
-
-Good to hear, thanks!
-
-> > Sure.
-> > >> +static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
-> > >> +{
-> > >> +	struct msi_domain_info *info = d->host_data;
-> > >> +
-> > >> +	for (int i = 0; i < nr_irqs; i++)
-> > >> +		hv_msi_free(d, info, virq + i);
-> > >> +
-> > >> +	irq_domain_free_irqs_top(d, virq, nr_irqs);
-> > >
-> > > This code can be built as a module, so irq_domain_free_irqs_top() needs to be
-> > > exported, which it currently is not.
-> > 
-> > Nam, can you please create a seperate patch, which exports this and take
-> > care of the conflict?
-
-Will do.
-
-Best regards,
-Nam
+Thanks for resending, will take a look soon!
