@@ -1,63 +1,63 @@
 Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C532E7186;
-	Thu,  3 Jul 2025 12:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0FD2EE97A;
+	Thu,  3 Jul 2025 12:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545090; cv=none; b=eQKwjIvWUhgBrc8AvpX+GSBNgY4fT2T4gVyAE/v6sFz/Dn+935BrUAjgq6obITFQHoOK6828Z6vQhQZa6CtUe8gwzLEdOM99WCT9WvtIshQ7aCKvXNkbGabvEIIL8bV/FnevAVCIYseyMyusw4rDLugHD0+srxHf2/fCY+YpBVE=
+	t=1751545099; cv=none; b=p7qY90zYH7bF/2QS1Kd0n9iys5nsJHcRdh0HzLZYluly64+r6f4XHjWdwngQsamRTVku3R6N5K2KXVLQYGo7Rcg1crc9gNK88sOU9zfXxwUCRehqLBjo7xKDAAc0gitEFeV8V69+tAlwsUMfBM6ejVvi/l0BLhGH2gZyuZ7j+7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545090; c=relaxed/simple;
-	bh=lXSKe+i325ew63X/w+OnlsG1H4TdiVDzqF3alSTf8tQ=;
+	s=arc-20240116; t=1751545099; c=relaxed/simple;
+	bh=A4maR+ym1UWBIiGpvABPayxYHENx7ob0ofT6FQcgEQk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DuNIdfdJ9l0HwtP/ZN3jvgVBklF8ceVc6ir6d3JGGh9s3WjM6HMLpJHrg11NGdgAb7U1RttxzhFowVvLFfGLW9qB/X+JKn+7s1Qp3WQGs4QeshPjJVlodBqz1q/3Ro6rIwEKhtE8NcNIBhGktoozEN8OdkJdpy8P3L1pwLLtTWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MP+HxpVz; arc=none smtp.client-ip=209.85.210.194
+	 MIME-Version; b=ruQXeNWCEFRu+Xie4/3aWjbG6nWjemCadaG1LJt3S1n6fbfvoeuOMisR0epDUoWwTHAoYyj7C2FumzxlSTTDa7Mp5euS13Jo4Y62Hb9Y8lkYw5LyErQ822r7EscnTvn1LP34iy8DvzM4ux2qWO7KEHi9BnQofeThjSwl50t9jmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmturfIB; arc=none smtp.client-ip=209.85.210.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MP+HxpVz"
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso5102494b3a.0;
-        Thu, 03 Jul 2025 05:18:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmturfIB"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-748fe69a7baso7422517b3a.3;
+        Thu, 03 Jul 2025 05:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545088; x=1752149888; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751545097; x=1752149897; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M1fhPP3SCpoWpscOG0d80WcLXXJcdcnXVq/IK4nq3qo=;
-        b=MP+HxpVz/Ak10ZwouNIZpSyqJEfWL5p3AphyR8jOOfoJLO2DE6tfrkhb5xxYoxrSsr
-         ge/rZwgpysFYEtaJy8o4nJu0Pmv8AhRZqxtx/GYLlWleZbpZ6zJqk1HLorL1j0ntaKTe
-         PGo6n/QhlpEBNWfHtzZDVbXfi96bq4rcE6NLDRBRtXtHEnoZuC9BxqdDuyCRjvXHBglF
-         RDxEPq0R1tlPDQF7iVpBSRE+BWkD9fhvZw0ugYhMtybNIIQMG18O9ZApPR3+V+frg7ma
-         JzQ7CtVp+MbDEunvePYRTFb6WWbEmKHs53uJz8yQ41xblZxMunxPNM4bqF0JVZxrjQRT
-         hWHA==
+        bh=B2Y/tNEM0ulgYJ7h98kqdHkd9WCaMgRog3nRAxQgWOI=;
+        b=LmturfIBIldPjnr17qN2KJlib+XYI6iFy0kAvOZWp6ItNbPatFm1+1UZ2G7AAkhQuW
+         DlCnS/cIT2K/6rMTWOgoyjLCTyxDDWon43O3iTElYgZmb7HhUE18kl96E1jNJnZliJzh
+         vaCP3Z79fRMJbj0lukfodPtSk+GSPimZqSyplZJohaQM8eFFhGFxEKB9O0Ao5gyYNnSw
+         QA69nrP7vAgYk1BJsBc/wWOFsXSxW0VdTc9WsHMfA754c99/jToi//MWbFUy/nLzeIhe
+         ZsnYcLnVpLd2jQniDVnPceoleSLlRIuCDXhOqIYw78urglBveJEaBBQ8KJJM7ZtTvJcY
+         gqfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545088; x=1752149888;
+        d=1e100.net; s=20230601; t=1751545097; x=1752149897;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M1fhPP3SCpoWpscOG0d80WcLXXJcdcnXVq/IK4nq3qo=;
-        b=pl9dCmENjNLqzLWy+ooxOUENFrAR4yKIKKKNJOBvTehpJN0+WlZmRBpQX4Pq96MOf1
-         ulvXwPtk3QmqbjRWPoLLlTBapx8RsPHTvw/Ta55BOPtZTLbqUsR0zNVGhmook1T9RJbX
-         piWoUFdNIF1DVsti1KMabwuKzi1uTzBK8jbU12C6JR4vf69MJqqLboIND7oeBhR82SlH
-         0zM5ouCt0KuQhXmxbWor64g07nT4H03isGfHIw/Be+BP9HX8FJiGoch41djgI2RkV8+W
-         2Fot5j+ab9s1bRwNoWiei+EZnHshBW+i/PCxnut/XzRrrrUP5/wIpW0UlAFBjg0Dyfhj
-         b/mA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/UAvrf1XP+X7OHrCPwT2447LedMvvXstyw04n0xDCD6475iGZqKBJVWGzBrkH3i74fL0x8DHJvXs7/8k=@vger.kernel.org, AJvYcCVMQpHZi2ytgM64Vg7/oCvgg8vL8xU9ajWbOIzdd9dHHGU9FFFG3atIshaOM5974HADTMM/S/K1LE4+aZYji+Kp@vger.kernel.org, AJvYcCWfwOEQyCWe5XhBDVHtPowCYFHhLVyeC2GJE8xvkRk20kybqJnl5fPc3C2dztDDaXjpRKRj6Q4i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8gtZIOQdajI0Y81VJgOxCX75JbiY64zd3RdW+xPe84yNxWat3
-	uHBcddHTyNItFQJLBgLbn652Mv5s6W89GX0byAJ10R6+BI8DcJMFWzTB
-X-Gm-Gg: ASbGncuraDNen9WM4UubDdBK/F5GeblfrsNYKiupcdXyhHRyrLlr5ZpYm7kwzadm5k8
-	auafjgaG9uIkgBt0E/dgbIFL59g74FtQP9G4MALZCi1rViRSRGgaijBE8wNfyXWp2foptiugENi
-	WMFKhykBUZ6oKftC6uFbEdv/Tewh+1fCDdT/dLA+X53VffxEtkI0He3FogDMkkN23sH0dazw2m3
-	JlxtIo6ygxNCZvwuQGYh8s5+7c/E0eI1NN+C4NXWBLZntUu/2GKzAcfO91XadFlhGuEZMYjqxy+
-	qxwHuM5YPP1Zjw5Yja46d15jhKXw7LPMal+tTA71sJI2h3mEd9kM5uNmR6thVsv9fOpJEbO4/r8
-	fxo4=
-X-Google-Smtp-Source: AGHT+IFoq933597yqrzzjO/9I2OqyknJuG2sjlhUH2kPS6ZdIm+TDvJxSlTTtcaA9We7oo8H3FBJ9A==
-X-Received: by 2002:a05:6a20:431b:b0:21a:d1fe:9e82 with SMTP id adf61e73a8af0-222d7ef8138mr13036914637.30.1751545088163;
-        Thu, 03 Jul 2025 05:18:08 -0700 (PDT)
+        bh=B2Y/tNEM0ulgYJ7h98kqdHkd9WCaMgRog3nRAxQgWOI=;
+        b=pnJ1CyjEu6Cc1feKq2t9aaXE3K6N4RuvOv83CUCzBl1RHX2un+5U6CHbdQm09kLozl
+         /Dc1TdTNQRZ/cVgHDixnxVYRjpN7IDIneK+wM/zqxIrJCe6fD0Js3Kb4ExP1CTZ9Bol5
+         V5XQPkhYm639wgM7qSoDOEG0EVHwvrs1iVgHJz4RuGeZzmnuiHZwKChqizAh/DPang9j
+         4vIWQdfTd1PF092B1Arn4LTlbdFa/vVReP8hOGEAmEMrSOtXP2ultV3QutSj79sFmGqY
+         1XVyS718Wl+Yz/ZryNCoirZRGyOYwGXzUyCu/nw4CN/p8NTTVRy7zkAHiMay/R/DIVSc
+         5wIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVV/PeqddflT0+9NezB0mxWu4IpQ9kB0YIWvoypvMxn6luK5gW+ueJw0ENLnTlwaMXHwLvW/ur4S/S8LZs8Bqcn@vger.kernel.org, AJvYcCWMk7szsqD3/e1PVWoRuFkaTZ4DvU9oCelkX8M48RUH0PCN69WGSgkEjhVyD/033OzwIbEjh2vRXGOgaF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDCROl2/WBXGOgpJ6QCsW8l+V6UO8052AwTJwo+7ewr2WfjR+5
+	mwr7r3nEYnPH4WKUTd2tVkUZ8Ji1kylHTLKv3DbeRfhvtzk6ocytTZDEgV2aXQXEMZPMNg==
+X-Gm-Gg: ASbGnctEe3I6+t+6QbO5/TO0TnJop5ltNBRiPurBY76wpiD83nhSGrj/QEPt+W8bSF7
+	MuEyh193FwUvKE9JDWqtBAC9SYSwyqSdUQMpgwQF4MQEhmsledrvU6mxUv+EjNpxHqoRKlXxenI
+	CLT5jrdsm4B/3dr4I2L+1ZkIbcCEM7B5cSkVzQlyvM4oMEWTFG2Yso/q9cDe9N1pRDlHRCtpsxV
+	E7eAANVlg2wYdR5o3fGK4llLHWgemkiZpXQDru5IE2fC+QzbjwQVjqqyedukh86PVsCo7Gx6pJh
+	Kad8FSV+M6/HE4zNxocytQGQnLw9/ZjnDkBoTC/ChXtft/kL0NjlBM7O8T4XGeDxrV0nwd4QVqG
+	Z1T0=
+X-Google-Smtp-Source: AGHT+IEJ/xANJXHVQ1ORXK8DAYjINsVZ3TBgS7WVSrfSzxWAZNAP+BDf5vO1EFMY3uxQr2+HmULR0A==
+X-Received: by 2002:a05:6a00:92a9:b0:748:f406:b09 with SMTP id d2e1a72fcca58-74b512c1b0amr8849811b3a.23.1751545096776;
+        Thu, 03 Jul 2025 05:18:16 -0700 (PDT)
 Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.18.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.18.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 05:18:07 -0700 (PDT)
+        Thu, 03 Jul 2025 05:18:16 -0700 (PDT)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: alexei.starovoitov@gmail.com,
@@ -74,16 +74,11 @@ Cc: bpf@vger.kernel.org,
 	KP Singh <kpsingh@kernel.org>,
 	Stanislav Fomichev <sdf@fomichev.me>,
 	Hao Luo <haoluo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
 	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH bpf-next v2 16/18] selftests/bpf: move get_ksyms and get_addrs to trace_helpers.c
-Date: Thu,  3 Jul 2025 20:15:19 +0800
-Message-Id: <20250703121521.1874196-17-dongml2@chinatelecom.cn>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2 18/18] selftests/bpf: add bench tests for tracing_multi
+Date: Thu,  3 Jul 2025 20:15:21 +0800
+Message-Id: <20250703121521.1874196-19-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
 References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
@@ -95,508 +90,215 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We need to get all the kernel function that can be traced sometimes, so we
-move the get_syms() and get_addrs() in kprobe_multi_test.c to
-trace_helpers.c and rename it to bpf_get_ksyms() and bpf_get_addrs().
+Add bench testcase for fentry_multi, fexit_multi and fmodret_multi in
+bench_trigger.c.
 
 Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
- .../bpf/prog_tests/kprobe_multi_test.c        | 220 +-----------------
- tools/testing/selftests/bpf/trace_helpers.c   | 214 +++++++++++++++++
- tools/testing/selftests/bpf/trace_helpers.h   |   3 +
- 3 files changed, 220 insertions(+), 217 deletions(-)
+v2:
+- use the existing bpf bench framework instead of introducing new one
+---
+ tools/testing/selftests/bpf/bench.c           |  8 +++
+ .../selftests/bpf/benchs/bench_trigger.c      | 72 +++++++++++++++++++
+ .../selftests/bpf/benchs/run_bench_trigger.sh |  1 +
+ .../selftests/bpf/progs/trigger_bench.c       | 22 ++++++
+ 4 files changed, 103 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-index e19ef509ebf8..171706e78da8 100644
---- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-@@ -422,220 +422,6 @@ static void test_unique_match(void)
- 	kprobe_multi__destroy(skel);
+diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
+index ddd73d06a1eb..32f1e2e936c0 100644
+--- a/tools/testing/selftests/bpf/bench.c
++++ b/tools/testing/selftests/bpf/bench.c
+@@ -510,8 +510,12 @@ extern const struct bench bench_trig_kretprobe;
+ extern const struct bench bench_trig_kprobe_multi;
+ extern const struct bench bench_trig_kretprobe_multi;
+ extern const struct bench bench_trig_fentry;
++extern const struct bench bench_trig_fentry_multi;
++extern const struct bench bench_trig_fentry_multi_all;
+ extern const struct bench bench_trig_fexit;
++extern const struct bench bench_trig_fexit_multi;
+ extern const struct bench bench_trig_fmodret;
++extern const struct bench bench_trig_fmodret_multi;
+ extern const struct bench bench_trig_tp;
+ extern const struct bench bench_trig_rawtp;
+ 
+@@ -578,8 +582,12 @@ static const struct bench *benchs[] = {
+ 	&bench_trig_kprobe_multi,
+ 	&bench_trig_kretprobe_multi,
+ 	&bench_trig_fentry,
++	&bench_trig_fentry_multi,
++	&bench_trig_fentry_multi_all,
+ 	&bench_trig_fexit,
++	&bench_trig_fexit_multi,
+ 	&bench_trig_fmodret,
++	&bench_trig_fmodret_multi,
+ 	&bench_trig_tp,
+ 	&bench_trig_rawtp,
+ 	/* uprobes */
+diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+index 82327657846e..a1844ee358f1 100644
+--- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
++++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+@@ -226,6 +226,54 @@ static void trigger_fentry_setup(void)
+ 	attach_bpf(ctx.skel->progs.bench_trigger_fentry);
  }
  
--static size_t symbol_hash(long key, void *ctx __maybe_unused)
--{
--	return str_hash((const char *) key);
--}
--
--static bool symbol_equal(long key1, long key2, void *ctx __maybe_unused)
--{
--	return strcmp((const char *) key1, (const char *) key2) == 0;
--}
--
--static bool is_invalid_entry(char *buf, bool kernel)
--{
--	if (kernel && strchr(buf, '['))
--		return true;
--	if (!kernel && !strchr(buf, '['))
--		return true;
--	return false;
--}
--
--static bool skip_entry(char *name)
--{
--	/*
--	 * We attach to almost all kernel functions and some of them
--	 * will cause 'suspicious RCU usage' when fprobe is attached
--	 * to them. Filter out the current culprits - arch_cpu_idle
--	 * default_idle and rcu_* functions.
--	 */
--	if (!strcmp(name, "arch_cpu_idle"))
--		return true;
--	if (!strcmp(name, "default_idle"))
--		return true;
--	if (!strncmp(name, "rcu_", 4))
--		return true;
--	if (!strcmp(name, "bpf_dispatcher_xdp_func"))
--		return true;
--	if (!strncmp(name, "__ftrace_invalid_address__",
--		     sizeof("__ftrace_invalid_address__") - 1))
--		return true;
--	return false;
--}
--
--/* Do comparision by ignoring '.llvm.<hash>' suffixes. */
--static int compare_name(const char *name1, const char *name2)
--{
--	const char *res1, *res2;
--	int len1, len2;
--
--	res1 = strstr(name1, ".llvm.");
--	res2 = strstr(name2, ".llvm.");
--	len1 = res1 ? res1 - name1 : strlen(name1);
--	len2 = res2 ? res2 - name2 : strlen(name2);
--
--	if (len1 == len2)
--		return strncmp(name1, name2, len1);
--	if (len1 < len2)
--		return strncmp(name1, name2, len1) <= 0 ? -1 : 1;
--	return strncmp(name1, name2, len2) >= 0 ? 1 : -1;
--}
--
--static int load_kallsyms_compare(const void *p1, const void *p2)
--{
--	return compare_name(((const struct ksym *)p1)->name, ((const struct ksym *)p2)->name);
--}
--
--static int search_kallsyms_compare(const void *p1, const struct ksym *p2)
--{
--	return compare_name(p1, p2->name);
--}
--
--static int get_syms(char ***symsp, size_t *cntp, bool kernel)
--{
--	size_t cap = 0, cnt = 0;
--	char *name = NULL, *ksym_name, **syms = NULL;
--	struct hashmap *map;
--	struct ksyms *ksyms;
--	struct ksym *ks;
--	char buf[256];
--	FILE *f;
--	int err = 0;
--
--	ksyms = load_kallsyms_custom_local(load_kallsyms_compare);
--	if (!ASSERT_OK_PTR(ksyms, "load_kallsyms_custom_local"))
--		return -EINVAL;
--
--	/*
--	 * The available_filter_functions contains many duplicates,
--	 * but other than that all symbols are usable in kprobe multi
--	 * interface.
--	 * Filtering out duplicates by using hashmap__add, which won't
--	 * add existing entry.
--	 */
--
--	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
--		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
--	else
--		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
--
--	if (!f)
--		return -EINVAL;
--
--	map = hashmap__new(symbol_hash, symbol_equal, NULL);
--	if (IS_ERR(map)) {
--		err = libbpf_get_error(map);
--		goto error;
--	}
--
--	while (fgets(buf, sizeof(buf), f)) {
--		if (is_invalid_entry(buf, kernel))
--			continue;
--
--		free(name);
--		if (sscanf(buf, "%ms$*[^\n]\n", &name) != 1)
--			continue;
--		if (skip_entry(name))
--			continue;
--
--		ks = search_kallsyms_custom_local(ksyms, name, search_kallsyms_compare);
--		if (!ks) {
--			err = -EINVAL;
--			goto error;
--		}
--
--		ksym_name = ks->name;
--		err = hashmap__add(map, ksym_name, 0);
--		if (err == -EEXIST) {
--			err = 0;
--			continue;
--		}
--		if (err)
--			goto error;
--
--		err = libbpf_ensure_mem((void **) &syms, &cap,
--					sizeof(*syms), cnt + 1);
--		if (err)
--			goto error;
--
--		syms[cnt++] = ksym_name;
--	}
--
--	*symsp = syms;
--	*cntp = cnt;
--
--error:
--	free(name);
--	fclose(f);
--	hashmap__free(map);
--	if (err)
--		free(syms);
--	return err;
--}
--
--static int get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel)
--{
--	unsigned long *addr, *addrs, *tmp_addrs;
--	int err = 0, max_cnt, inc_cnt;
--	char *name = NULL;
--	size_t cnt = 0;
--	char buf[256];
--	FILE *f;
--
--	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
--		f = fopen("/sys/kernel/tracing/available_filter_functions_addrs", "r");
--	else
--		f = fopen("/sys/kernel/debug/tracing/available_filter_functions_addrs", "r");
--
--	if (!f)
--		return -ENOENT;
--
--	/* In my local setup, the number of entries is 50k+ so Let us initially
--	 * allocate space to hold 64k entries. If 64k is not enough, incrementally
--	 * increase 1k each time.
--	 */
--	max_cnt = 65536;
--	inc_cnt = 1024;
--	addrs = malloc(max_cnt * sizeof(long));
--	if (addrs == NULL) {
--		err = -ENOMEM;
--		goto error;
--	}
--
--	while (fgets(buf, sizeof(buf), f)) {
--		if (is_invalid_entry(buf, kernel))
--			continue;
--
--		free(name);
--		if (sscanf(buf, "%p %ms$*[^\n]\n", &addr, &name) != 2)
--			continue;
--		if (skip_entry(name))
--			continue;
--
--		if (cnt == max_cnt) {
--			max_cnt += inc_cnt;
--			tmp_addrs = realloc(addrs, max_cnt);
--			if (!tmp_addrs) {
--				err = -ENOMEM;
--				goto error;
--			}
--			addrs = tmp_addrs;
--		}
--
--		addrs[cnt++] = (unsigned long)addr;
--	}
--
--	*addrsp = addrs;
--	*cntp = cnt;
--
--error:
--	free(name);
--	fclose(f);
--	if (err)
--		free(addrs);
--	return err;
--}
--
- static void do_bench_test(struct kprobe_multi_empty *skel, struct bpf_kprobe_multi_opts *opts)
- {
- 	long attach_start_ns, attach_end_ns;
-@@ -670,7 +456,7 @@ static void test_kprobe_multi_bench_attach(bool kernel)
- 	char **syms = NULL;
- 	size_t cnt = 0;
- 
--	if (!ASSERT_OK(get_syms(&syms, &cnt, kernel), "get_syms"))
-+	if (!ASSERT_OK(bpf_get_ksyms(&syms, &cnt, kernel), "bpf_get_ksyms"))
- 		return;
- 
- 	skel = kprobe_multi_empty__open_and_load();
-@@ -696,13 +482,13 @@ static void test_kprobe_multi_bench_attach_addr(bool kernel)
- 	size_t cnt = 0;
- 	int err;
- 
--	err = get_addrs(&addrs, &cnt, kernel);
-+	err = bpf_get_addrs(&addrs, &cnt, kernel);
- 	if (err == -ENOENT) {
- 		test__skip();
- 		return;
- 	}
- 
--	if (!ASSERT_OK(err, "get_addrs"))
-+	if (!ASSERT_OK(err, "bpf_get_addrs"))
- 		return;
- 
- 	skel = kprobe_multi_empty__open_and_load();
-diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-index 81943c6254e6..d24baf244d1f 100644
---- a/tools/testing/selftests/bpf/trace_helpers.c
-+++ b/tools/testing/selftests/bpf/trace_helpers.c
-@@ -17,6 +17,7 @@
- #include <linux/limits.h>
- #include <libelf.h>
- #include <gelf.h>
-+#include "bpf/hashmap.h"
- #include "bpf/libbpf_internal.h"
- 
- #define TRACEFS_PIPE	"/sys/kernel/tracing/trace_pipe"
-@@ -519,3 +520,216 @@ void read_trace_pipe(void)
- {
- 	read_trace_pipe_iter(trace_pipe_cb, NULL, 0);
- }
-+
-+static size_t symbol_hash(long key, void *ctx __maybe_unused)
++static void trigger_fentry_multi_setup(void)
 +{
-+	return str_hash((const char *) key);
++	setup_ctx();
++	bpf_program__set_autoload(ctx.skel->progs.bench_trigger_fentry_multi, true);
++	load_ctx();
++	attach_bpf(ctx.skel->progs.bench_trigger_fentry_multi);
 +}
 +
-+static bool symbol_equal(long key1, long key2, void *ctx __maybe_unused)
++static void trigger_fentry_multi_all_setup(void)
 +{
-+	return strcmp((const char *) key1, (const char *) key2) == 0;
-+}
-+
-+static bool is_invalid_entry(char *buf, bool kernel)
-+{
-+	if (kernel && strchr(buf, '['))
-+		return true;
-+	if (!kernel && !strchr(buf, '['))
-+		return true;
-+	return false;
-+}
-+
-+static bool skip_entry(char *name)
-+{
-+	/*
-+	 * We attach to almost all kernel functions and some of them
-+	 * will cause 'suspicious RCU usage' when fprobe is attached
-+	 * to them. Filter out the current culprits - arch_cpu_idle
-+	 * default_idle and rcu_* functions.
-+	 */
-+	if (!strcmp(name, "arch_cpu_idle"))
-+		return true;
-+	if (!strcmp(name, "default_idle"))
-+		return true;
-+	if (!strncmp(name, "rcu_", 4))
-+		return true;
-+	if (!strcmp(name, "bpf_dispatcher_xdp_func"))
-+		return true;
-+	if (!strncmp(name, "__ftrace_invalid_address__",
-+		     sizeof("__ftrace_invalid_address__") - 1))
-+		return true;
-+	return false;
-+}
-+
-+/* Do comparison by ignoring '.llvm.<hash>' suffixes. */
-+static int compare_name(const char *name1, const char *name2)
-+{
-+	const char *res1, *res2;
-+	int len1, len2;
-+
-+	res1 = strstr(name1, ".llvm.");
-+	res2 = strstr(name2, ".llvm.");
-+	len1 = res1 ? res1 - name1 : strlen(name1);
-+	len2 = res2 ? res2 - name2 : strlen(name2);
-+
-+	if (len1 == len2)
-+		return strncmp(name1, name2, len1);
-+	if (len1 < len2)
-+		return strncmp(name1, name2, len1) <= 0 ? -1 : 1;
-+	return strncmp(name1, name2, len2) >= 0 ? 1 : -1;
-+}
-+
-+static int load_kallsyms_compare(const void *p1, const void *p2)
-+{
-+	return compare_name(((const struct ksym *)p1)->name, ((const struct ksym *)p2)->name);
-+}
-+
-+static int search_kallsyms_compare(const void *p1, const struct ksym *p2)
-+{
-+	return compare_name(p1, p2->name);
-+}
-+
-+int bpf_get_ksyms(char ***symsp, size_t *cntp, bool kernel)
-+{
-+	size_t cap = 0, cnt = 0;
-+	char *name = NULL, *ksym_name, **syms = NULL;
-+	struct hashmap *map;
-+	struct ksyms *ksyms;
-+	struct ksym *ks;
-+	char buf[256];
-+	FILE *f;
-+	int err = 0;
-+
-+	ksyms = load_kallsyms_custom_local(load_kallsyms_compare);
-+	if (!ksyms)
-+		return -EINVAL;
-+
-+	/*
-+	 * The available_filter_functions contains many duplicates,
-+	 * but other than that all symbols are usable to trace.
-+	 * Filtering out duplicates by using hashmap__add, which won't
-+	 * add existing entry.
-+	 */
-+
-+	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-+		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
-+	else
-+		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
-+
-+	if (!f)
-+		return -EINVAL;
-+
-+	map = hashmap__new(symbol_hash, symbol_equal, NULL);
-+	if (IS_ERR(map)) {
-+		err = libbpf_get_error(map);
-+		goto error;
-+	}
-+
-+	while (fgets(buf, sizeof(buf), f)) {
-+		if (is_invalid_entry(buf, kernel))
-+			continue;
-+
-+		free(name);
-+		if (sscanf(buf, "%ms$*[^\n]\n", &name) != 1)
-+			continue;
-+		if (skip_entry(name))
-+			continue;
-+
-+		ks = search_kallsyms_custom_local(ksyms, name, search_kallsyms_compare);
-+		if (!ks) {
-+			err = -EINVAL;
-+			goto error;
-+		}
-+
-+		ksym_name = ks->name;
-+		err = hashmap__add(map, ksym_name, 0);
-+		if (err == -EEXIST) {
-+			err = 0;
-+			continue;
-+		}
-+		if (err)
-+			goto error;
-+
-+		err = libbpf_ensure_mem((void **) &syms, &cap,
-+					sizeof(*syms), cnt + 1);
-+		if (err)
-+			goto error;
-+
-+		syms[cnt++] = ksym_name;
-+	}
-+
-+	*symsp = syms;
-+	*cntp = cnt;
-+
-+error:
-+	free(name);
-+	fclose(f);
-+	hashmap__free(map);
-+	if (err)
-+		free(syms);
-+	return err;
-+}
-+
-+int bpf_get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel)
-+{
-+	unsigned long *addr, *addrs, *tmp_addrs;
-+	int err = 0, max_cnt, inc_cnt;
-+	char *name = NULL;
++	LIBBPF_OPTS(bpf_trace_multi_opts, opts);
++	struct bpf_program *prog;
++	struct bpf_link *link;
++	char **syms = NULL;
 +	size_t cnt = 0;
-+	char buf[256];
-+	FILE *f;
++	int i;
 +
-+	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-+		f = fopen("/sys/kernel/tracing/available_filter_functions_addrs", "r");
-+	else
-+		f = fopen("/sys/kernel/debug/tracing/available_filter_functions_addrs", "r");
++	setup_ctx();
++	prog = ctx.skel->progs.bench_trigger_fentry_multi;
++	bpf_program__set_autoload(prog, true);
++	load_ctx();
 +
-+	if (!f)
-+		return -ENOENT;
-+
-+	/* In my local setup, the number of entries is 50k+ so Let us initially
-+	 * allocate space to hold 64k entries. If 64k is not enough, incrementally
-+	 * increase 1k each time.
-+	 */
-+	max_cnt = 65536;
-+	inc_cnt = 1024;
-+	addrs = malloc(max_cnt * sizeof(long));
-+	if (addrs == NULL) {
-+		err = -ENOMEM;
-+		goto error;
++	if (bpf_get_ksyms(&syms, &cnt, true)) {
++		printf("failed to get ksyms\n");
++		exit(1);
 +	}
 +
-+	while (fgets(buf, sizeof(buf), f)) {
-+		if (is_invalid_entry(buf, kernel))
-+			continue;
-+
-+		free(name);
-+		if (sscanf(buf, "%p %ms$*[^\n]\n", &addr, &name) != 2)
-+			continue;
-+		if (skip_entry(name))
-+			continue;
-+
-+		if (cnt == max_cnt) {
-+			max_cnt += inc_cnt;
-+			tmp_addrs = realloc(addrs, max_cnt);
-+			if (!tmp_addrs) {
-+				err = -ENOMEM;
-+				goto error;
-+			}
-+			addrs = tmp_addrs;
-+		}
-+
-+		addrs[cnt++] = (unsigned long)addr;
++	for (i = 0; i < cnt; i++) {
++		if (strcmp(syms[i], "bpf_get_numa_node_id") == 0)
++			break;
++	}
++	if (i == cnt) {
++		printf("bpf_get_numa_node_id not found in ksyms\n");
++		exit(1);
 +	}
 +
-+	*addrsp = addrs;
-+	*cntp = cnt;
-+
-+error:
-+	free(name);
-+	fclose(f);
-+	if (err)
-+		free(addrs);
-+	return err;
++	printf("found %zu ksyms\n", cnt);
++	opts.syms = (const char **) syms;
++	opts.cnt = cnt;
++	opts.skip_invalid = true;
++	link = bpf_program__attach_trace_multi_opts(prog, &opts);
++	if (!link) {
++		printf("failed to attach bench_trigger_fentry_multi to all\n");
++		exit(1);
++	}
++	ctx.skel->links.bench_trigger_fentry_multi = link;
 +}
-diff --git a/tools/testing/selftests/bpf/trace_helpers.h b/tools/testing/selftests/bpf/trace_helpers.h
-index 2ce873c9f9aa..9437bdd4afa5 100644
---- a/tools/testing/selftests/bpf/trace_helpers.h
-+++ b/tools/testing/selftests/bpf/trace_helpers.h
-@@ -41,4 +41,7 @@ ssize_t get_rel_offset(uintptr_t addr);
- 
- int read_build_id(const char *path, char *build_id, size_t size);
- 
-+int bpf_get_ksyms(char ***symsp, size_t *cntp, bool kernel);
-+int bpf_get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel);
 +
- #endif
+ static void trigger_fexit_setup(void)
+ {
+ 	setup_ctx();
+@@ -234,6 +282,14 @@ static void trigger_fexit_setup(void)
+ 	attach_bpf(ctx.skel->progs.bench_trigger_fexit);
+ }
+ 
++static void trigger_fexit_multi_setup(void)
++{
++	setup_ctx();
++	bpf_program__set_autoload(ctx.skel->progs.bench_trigger_fexit_multi, true);
++	load_ctx();
++	attach_bpf(ctx.skel->progs.bench_trigger_fexit_multi);
++}
++
+ static void trigger_fmodret_setup(void)
+ {
+ 	setup_ctx();
+@@ -246,6 +302,18 @@ static void trigger_fmodret_setup(void)
+ 	attach_bpf(ctx.skel->progs.bench_trigger_fmodret);
+ }
+ 
++static void trigger_fmodret_multi_setup(void)
++{
++	setup_ctx();
++	bpf_program__set_autoload(ctx.skel->progs.trigger_driver, false);
++	bpf_program__set_autoload(ctx.skel->progs.trigger_driver_kfunc, true);
++	bpf_program__set_autoload(ctx.skel->progs.bench_trigger_fmodret_multi, true);
++	load_ctx();
++	/* override driver program */
++	ctx.driver_prog_fd = bpf_program__fd(ctx.skel->progs.trigger_driver_kfunc);
++	attach_bpf(ctx.skel->progs.bench_trigger_fmodret_multi);
++}
++
+ static void trigger_tp_setup(void)
+ {
+ 	setup_ctx();
+@@ -512,8 +580,12 @@ BENCH_TRIG_KERNEL(kretprobe, "kretprobe");
+ BENCH_TRIG_KERNEL(kprobe_multi, "kprobe-multi");
+ BENCH_TRIG_KERNEL(kretprobe_multi, "kretprobe-multi");
+ BENCH_TRIG_KERNEL(fentry, "fentry");
++BENCH_TRIG_KERNEL(fentry_multi, "fentry-multi");
++BENCH_TRIG_KERNEL(fentry_multi_all, "fentry-multi-all");
+ BENCH_TRIG_KERNEL(fexit, "fexit");
++BENCH_TRIG_KERNEL(fexit_multi, "fexit-multi");
+ BENCH_TRIG_KERNEL(fmodret, "fmodret");
++BENCH_TRIG_KERNEL(fmodret_multi, "fmodret-multi");
+ BENCH_TRIG_KERNEL(tp, "tp");
+ BENCH_TRIG_KERNEL(rawtp, "rawtp");
+ 
+diff --git a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
+index a690f5a68b6b..48a7f809d053 100755
+--- a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
++++ b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
+@@ -5,6 +5,7 @@ set -eufo pipefail
+ def_tests=( \
+ 	usermode-count kernel-count syscall-count \
+ 	fentry fexit fmodret \
++	fentry-multi fentry-multi-all fexit-multi fmodret-multi \
+ 	rawtp tp \
+ 	kprobe kprobe-multi \
+ 	kretprobe kretprobe-multi \
+diff --git a/tools/testing/selftests/bpf/progs/trigger_bench.c b/tools/testing/selftests/bpf/progs/trigger_bench.c
+index 044a6d78923e..2ff1a7568080 100644
+--- a/tools/testing/selftests/bpf/progs/trigger_bench.c
++++ b/tools/testing/selftests/bpf/progs/trigger_bench.c
+@@ -111,6 +111,13 @@ int bench_trigger_fentry(void *ctx)
+ 	return 0;
+ }
+ 
++SEC("?fentry.multi/bpf_get_numa_node_id")
++int bench_trigger_fentry_multi(void *ctx)
++{
++	inc_counter();
++	return 0;
++}
++
+ SEC("?fexit/bpf_get_numa_node_id")
+ int bench_trigger_fexit(void *ctx)
+ {
+@@ -118,6 +125,14 @@ int bench_trigger_fexit(void *ctx)
+ 	return 0;
+ }
+ 
++SEC("?fexit.multi/bpf_get_numa_node_id")
++int bench_trigger_fexit_multi(void *ctx)
++{
++	inc_counter();
++
++	return 0;
++}
++
+ SEC("?fmod_ret/bpf_modify_return_test_tp")
+ int bench_trigger_fmodret(void *ctx)
+ {
+@@ -125,6 +140,13 @@ int bench_trigger_fmodret(void *ctx)
+ 	return -22;
+ }
+ 
++SEC("?fmod_ret.multi/bpf_modify_return_test_tp")
++int bench_trigger_fmodret_multi(void *ctx)
++{
++	inc_counter();
++	return -22;
++}
++
+ SEC("?tp/bpf_test_run/bpf_trigger_tp")
+ int bench_trigger_tp(void *ctx)
+ {
 -- 
 2.39.5
 
