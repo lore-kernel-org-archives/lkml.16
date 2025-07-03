@@ -1,80 +1,157 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AAD24C068
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B383157E99;
+	Thu,  3 Jul 2025 16:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751559609; cv=none; b=EbNYctyFBa9wYzvXVrWfdEl82eWbCjpO7er5rm/syVzltvQGkrdlG9E4ZkSKQyHAr4FzGdURCMgDwFM2I2skPKGpeSnQQ6L6xmfZIkp0Paah2le8sMGpKZy/iY8CBao7uv4Cae0x+4DIchf8SkxTHs/VUa1AnKV9xrTUwgMFTjs=
+	t=1751559722; cv=none; b=MOgwN9AvWCQtJJmipMhPUK57HGeMlQCpwXFBE4sUanMWcpRqAbUUsbElFYVk5z0MVAdijW8TYRmFtOu5D8PBcnMkY1tqm048p0+t4k1Jn/AeG7X4/keSPlL2X1dLQcOPK07u3OlyPodr6BAmssY1qq7h8bVkXeKU030uEOvIGHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751559609; c=relaxed/simple;
-	bh=jUo0bz7/9VqLbmKnuHSilXj/iz4VcO9C7Bb8RNU6+Ao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FUpODrYf4PMnUMhTJrn5D324N91nr3gQtj7b2zsEqcLOIaTOG2DFdJ2kkCNZGMhCpZO97+MZ1kXdxiuwHgbq5u67Wbbj9l2DyYsOKhrMimPlcZcmCBvRJECsISqZaC4Chex45BGTiYRHc7/4ibaAVMo5yk07U0NhWdUknlJ5tXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b=nU7vv0+C; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
+	s=arc-20240116; t=1751559722; c=relaxed/simple;
+	bh=qsElSjws3oA4dpN+ZkpRfZW49vQ5t5xw1uuPlsuVDnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RxZSr1a06y2dTuv2EynDD75NOrEhb4f9k+WRpJQmxrS41QPEYARgHpuV8/uvL6+kzw0KZNLMVJDgPqStIIIt9DoAXCiqA7paXqrAuLDFFOVv+SA3h5jomVZfdOwZMXWrd2M/BTt+Vm3f9K8C+XzWE1ea9qolBkbjFlfkmUyo6lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nPjVjOhH; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b="nU7vv0+C"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e81cf6103a6so5800275276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20230601.gappssmtp.com; s=20230601; t=1751559607; x=1752164407; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=niF8wOn9GTKmhQIt/vu6p0p8Z3gSuCH+GiDxHVgqCEA=;
-        b=nU7vv0+CWvLUobYkII3uyc+kOF6Eg6O+W7Nllp7+pBahwq0xsliUy7giwMQMNvWgGe
-         tGJdpsRaiOH1RQjYSNw/J+Msr/NjEY7g7kpKzjOK0b6M0njwrccLWE3SoW2iKhNj8IBV
-         79Fd2mbZBiiVDDakxDSewKydg8DLzxVqp+1kKXm3HeJVU6KHCrjNwUDZrwieibSLAXu8
-         drb0XZ15pfrhqfqu6BazEDdxe4jtwNpAANE7lOw1T8BcGW4vLd0J/qTu3GyYfQKZPFkY
-         IeZCZmO8wlnqXXExLzOE0xRgoDt3v4AZCgSE4o6NyOG2FYU5XN9Pf3g733NLDLX3mzN4
-         Ijfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751559607; x=1752164407;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=niF8wOn9GTKmhQIt/vu6p0p8Z3gSuCH+GiDxHVgqCEA=;
-        b=qgCsMUyam4iFfMhgjP6DLGbOPpvnxlonp5Zbsp4KUd5tzPX91AKgjRB4+DGe+IYc5k
-         uRuEiuUwsxLqbMRuRItJc+6t+yDLdFA5cm6vm9kAqixtZg7VnEyk7RvbVdbcUM7Zcm6a
-         CeZYFm4oUGPTSKc+Pv3lujQBF9/h/eLcS4/EmTpqUg3fc+aCMBFMB/z+8TluXaKYbpaH
-         zZ88maBe1qZi7iwoozKlzf+zsPDxmqeYQ4odbzsz2ZD5R8wib755645WxGaQK38qN3F9
-         jGosZ74Vk1tie/HEUTSsurMwl/lhknyTuWM9Z8ZNkcWNft05ovA4viO0CVJMOQwIcq06
-         ET8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXSzuH7W3hxj1AiUsqhTRz++aV3qJF0Qbso4I25TVoZo1rcXjBzydBe6747wJRWlK663TzrEoCdcYCwW+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySI8C0cdSJpe0YUkAqc8G7zhRKYwbZYvKFWXgOWwPSY+KHWL/z
-	4pWPYdQMRHxQETkXX1GsA66LoiUCfmME6USZH2Izq34+Bho38x+GC104K3vCoVIMc2YJBhCxZa5
-	hr0qV35DyLtdQkZaoz/vhz9SXKKGgsuZ9mcVS00uznw==
-X-Gm-Gg: ASbGncvERKIKA2G3bzI81WWYBn9ER0FEEbAXFdHNofc8XmGDTIrNlRScVCHW5NjDEyM
-	u6vnod4fk18cMRSS5RG9L6zaTnUJ4eGFDThvjbuHWlpS6QM9NIYvYlHVgRwkuCdRw95fi6R1Bq0
-	jJzQH0oaGHJW50bBdDx0O+f2IPPyfGFYnP00B71qMZ+6I5pDruetnguhgdRzTkwT0PHNiM+BvDw
-	cpr2g==
-X-Google-Smtp-Source: AGHT+IG9wu0uUr476DbA/3qZswqv3IWybYnshmLMaeMC5NZB1lprrIjfyK4Q5zzWoXuqVSaEu2jCsm7XUNSyqiP3lMI=
-X-Received: by 2002:a05:690c:315:b0:70f:84c8:3105 with SMTP id
- 00721157ae682-71659128263mr59933107b3.37.1751559606842; Thu, 03 Jul 2025
- 09:20:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nPjVjOhH"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563BMSVt001883;
+	Thu, 3 Jul 2025 16:21:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=i8NkVe
+	LpEBDLuD6THW1Trv/bMVVo2C2v0DHjwQo3bG8=; b=nPjVjOhH5nq/W9IrKkYFwE
+	yFP0QDNtTxXvm0SbaV+ruC9KKFuXRmsUQjZgM3XIljJMTig51wjj9HGddeV9urDg
+	MvLcOHE/yQHBEvm7FGyeU3qu5YGtdd7FKC8cIGTim87eQsBRWI2pEnalw6h8pr8C
+	9lJuMhSO3KLP2Kia3b67Kq07PSpTcir+F9HlPkkQ0+VivUv7/OMX1xk/TRltepGm
+	C2nfj2kDzcDkHh/gE58CVD66eZPRmVyCp/QJxd3csmEOWqW1cnk7uqtvAraZEwln
+	C0pzjf1KtO+ZPrLncSFrgs1Y3KjEnqxw1qL6SbIxw211yeiTQyOPaBwZMidA19rQ
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dn1d9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 16:21:15 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563EQ8r2012027;
+	Thu, 3 Jul 2025 16:21:14 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n5qsu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 16:21:14 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563GLCAi34800222
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 16:21:12 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E9EB2004D;
+	Thu,  3 Jul 2025 16:21:12 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A78D72004B;
+	Thu,  3 Jul 2025 16:21:11 +0000 (GMT)
+Received: from [9.152.222.224] (unknown [9.152.222.224])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 16:21:11 +0000 (GMT)
+Message-ID: <d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
+Date: Thu, 3 Jul 2025 18:21:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-leds-is31fl3236a-v2-0-f6ef7495ce65@thegoodpenguin.co.uk>
- <20250627-leds-is31fl3236a-v2-1-f6ef7495ce65@thegoodpenguin.co.uk> <20250702162230.GY10134@google.com>
-In-Reply-To: <20250702162230.GY10134@google.com>
-From: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-Date: Thu, 3 Jul 2025 17:19:55 +0100
-X-Gm-Features: Ac12FXy_CDFzKjm4AokW8a0bG4a5ZEtQ-LJTabWie8Pk2p6JfFDWqEKdOo_LGZg
-Message-ID: <CAA6zWZ+KE+4bMVzacVB=EYMr0YrCbFWia6Y6LgCs8GZTTuMRHA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] leds/leds-is31fl32xx: add support for is31fl3236a
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+References: <20250701005321.942306427@goodmis.org>
+ <20250701005450.888492528@goodmis.org>
+ <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+ <20250630225603.72c84e67@gandalf.local.home>
+ <a6a460e6-8cff-4353-a9e1-2e071d28e993@linux.ibm.com>
+ <20250702195058.7ebb026d@gandalf.local.home>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250702195058.7ebb026d@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: vzwp24uTChfZOwCfiOSdmh2MJX-g-FDG
+X-Proofpoint-GUID: vzwp24uTChfZOwCfiOSdmh2MJX-g-FDG
+X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=6866adfb cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEzNCBTYWx0ZWRfX4i3gZy03aGTn +UyaW6pjuXxS9HBDjaXxdAFGU2vVeZTksbcysv33oK/sWDQiXVcfPLUmrHJ4m69D+GZQp/TQGAl L9+GhDLjrIf41Wf8l5R2ONu7t+KnAs+ozcDvq/JU5vtji49/+InHQdseR7XeJRxgVsVtNtFV++n
+ ZkeJMIg6Kv7Ay9NJUIoGxlQOVi9VHpJcEFSm5DmPKBN/b6RZHFUs58w/eva3KqFPaveo0JNcRfA zVNoWYABKaDb+7MSOPgCRSgzbWW15BkLouqf6ZGH5oyX67uUgWM9ib5vqlnuBXcumVgNPxbgTfv 8GUUHRsvaF4Ep1gxGTv5DLl3aPKwTSEWupRD4rVB3HRppt/dTgeZTcJ/FiWtZVgNSKVeZTbA6Xp
+ lidc9L96tzI29OyW8iKor/pKr2quVuuhpdWeU/V3Stzrl7VPzuoqvL1ubSs9uymwtbMgZZLP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030134
 
-> So close!
-:)
+On 03.07.2025 01:50, Steven Rostedt wrote:
+> On Tue, 1 Jul 2025 17:36:55 +0200
+> Jens Remus <jremus@linux.ibm.com> wrote:
+> 
+>> On s390 the prev_frame_sp may be equal to curr_frame_sp for the topmost
+>> frame, as long as the topmost function did not allocate any stack.  For
+>> instance when early in the prologue or when in a leaf function that does
+>> not require any stack space.  My s390 sframe support patches would
+>> therefore currently change above check to:
+>>
+>> 	/* stack going in wrong direction? */
+>> 	if (sp <= state->sp - topmost)
+>> 		goto done;
+> 
+> How do you calculate "topmost" then?
+> 
+> Is it another field you add to "state"?
 
->  This should line-up with the '(.
-Spacebar to the rescue it is then.
+Correct.  It is a boolean set to true in unwind_user_start() and set to
+false in unwind_user_next() when updating the state.
+
+I assume most architectures need above change, as their SP at function
+entry should be equal to the SP at call site (unlike x86-64 due to CALL).
+
+s390 also needs this information to allow restoring of FP/RA saved in
+other registers (instead of on the stack) only for the topmost frame.
+For any other frame arbitrary register contents would not be available,
+as user unwind only unwinds SP, FP, and RA.
+
+I would post my s390 sframe support patches as RFC once you have
+provided a merged sframe branch as discussed in:
+https://lore.kernel.org/all/20250702124737.565934b5@batman.local.home/
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
