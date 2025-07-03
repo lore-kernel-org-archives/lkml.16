@@ -1,136 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A392D238A;
-	Thu,  3 Jul 2025 08:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD85D298CC0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531775; cv=none; b=E3avbN7gSZp4B171DwltjctOFsb+PkG4kSkRrmuEMta09D/c5gX8ZXGvCATd1moQXowcQQLwt/H7wV27995KB0eNTuLxhXxTdKaocqXd8N/Y+tsimAHAxNZpBW4G0MxtoO8dnwCdze6iDyyCB8BTO8kfox6aC3wtreB9qVKqEto=
+	t=1751531784; cv=none; b=hS+SwVc+K07yToSAPfvTbbdMxXRq1VsWvTAybelm3e0QTecj4/HBj76RZ3QWb/3BPHeC6rML2qmt7GbSyC1Ft/hnqGwFuvhm8kjSPLNaYZH0eKVYAx+gMGHhc1u+9sGM4IAVTyrJIGtEnSIBL8yXOsXSGhXc1s8b8escHi2ge7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531775; c=relaxed/simple;
-	bh=JsW0YjUH/Jg+tw0MBFMQCkKuyl6YaJQd18iPLYGl+qo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=XHGcuq2ywHwgw6PPG6BjwmYZ3i4QHAGEqvsWASsoXxB3K+AAQVk0DCyxfuzGMIbzM2BjzaaxiWyYvlGfnh7tJw3F0x4YgfqA9RDVBEdQSinmq45bqxjdiKknW089Jkipv77LcMYLoBVqHXCxWYHTR9kjcrXX3ME1x8PGJtXaoME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z6O/Q2ZM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h2Duiw1M; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751531784; c=relaxed/simple;
+	bh=T6PpFeQ/ohri03+CGLWWlYLkV2rqEwutq9AcbGax4X8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mWYNYYfJbP3IWdyo0BMfU/ya3uNkoBFHTbuupPCYb68XuuRspoqf/geBGB0Sf9C2o/XD5m116SeFZWvAp7sWIfuEFgqEmqcxMxsgkwtBPOJmUVNUIW6y8Q5QRz66RJYJW/xlcU57j/g3B05vruyt+5vjmZh26pEShIA3pMDSKJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGajvd7g; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z6O/Q2ZM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h2Duiw1M"
-Date: Thu, 03 Jul 2025 08:36:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751531772;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGajvd7g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751531781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h7XTBkCT6PX4mD6QphuppEoUgoD9/CzZoxeu+23Cszc=;
-	b=z6O/Q2ZMz9LXdSgBSRAPRE/nx6LnJoyiz84zJORakTNA6zqtOj+JeFvkV/H77j7Fys6S3f
-	qbeStnXfBX2Flj4Z3n8C1UYG1MHC0p3vhzjAVt3cpqdp7tQma6nxcY8WM9xHbMibUQoerY
-	yLOLUYVOAqEh553wfTLSdwhfJKs41tBDs9/yw5aGsvbmjPjw7C4uQ2fO7y9zled9GLj38v
-	L5pnm16TbiQC0eZtqaJiGo24NKco2O+7qg+1ohTd1MPkytCP44eLV8HG/gjTsefF03AAi+
-	T/2parANIb2mJNki/6OS25uD8nTYu/jPT57gM3/bZ+OQR1rFMEo2A3YLPLXfvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751531772;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h7XTBkCT6PX4mD6QphuppEoUgoD9/CzZoxeu+23Cszc=;
-	b=h2Duiw1MAKKkzKqU/ivY52214F5a55lEBW5Pud2aBJOrRaNQAHZhHMrnHTV4/WwsR99Ou4
-	I9dee/xNrLKApWDw==
-From: "tip-bot2 for Kunwu Chan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] rust: sync: Mark CondVar::notify_*() inline
-Cc: Alice Ryhl <aliceryhl@google.com>, Grace Deng <Grace.Deng006@Gmail.com>,
- Kunwu Chan <kunwu.chan@hotmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Boqun Feng <boqun.feng@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250324061835.1693125-1-kunwu.chan@linux.dev>
-References: <20250324061835.1693125-1-kunwu.chan@linux.dev>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9gO/OHQvAP6w5kh7oQzia//h/ythwr2wIvD22NPjXXU=;
+	b=KGajvd7gRpxUOp+i07xqI/y9kpvxJ1UAU3KHQuphXQTY25yIp7ozJNs2XAn/SeDgwQMJx8
+	HwPX47FjaiLYPIDbbmVoyi2UaxZN5q4Rj/Gmi7tnTv/m5E/NBwmfYIdAp5xgsYytsWKy/9
+	gOP3fRdYxeyf4p9/HAGxv1BRNApafQU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-99-9NEM-pW0O_urqN2oCCA1jg-1; Thu, 03 Jul 2025 04:36:19 -0400
+X-MC-Unique: 9NEM-pW0O_urqN2oCCA1jg-1
+X-Mimecast-MFC-AGG-ID: 9NEM-pW0O_urqN2oCCA1jg_1751531778
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae3c5ed22dfso131229366b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:36:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751531778; x=1752136578;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9gO/OHQvAP6w5kh7oQzia//h/ythwr2wIvD22NPjXXU=;
+        b=lTjjoJwDPU4cxPQeEDuOV7JhxTSJ+LaC2zVC5gefftX3RruxRT8abwqNKpFqtQrALt
+         BdxKL8bG08d4RikqdE1+ECr4d7pJrdHFeqa62QorLhYArj41gwsnKOYr7elXdDbZy4eW
+         W/Di1KkkmzWc9mEIyrnEmc/m5Ac+w0wL9a+BPeULWOXET1TULbbtNJWCIOCwKtXKn+Wm
+         sBM+MvB88e2i2YKu+pGItSCPoPdUqF3fFBhsQvemU95YKE3zFziMEhIEbGULJxuzQSaB
+         byAo1zCIMviM7EbG3wZRRekjkZkapPvtvRAYbBgZn597XzNzXqpqrmDc6IGz9LYdRfmZ
+         deVg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9kU1uJZRdGuqXv9W7jakD9T/TUJ7hoYP/q0Pbo48WJmEnmqMIyrhkiftC4Q+fv/gm0rbSRXc8rYHRAY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkM4EPbxLaG718UM6edCGbddlKOFcqU3E7cUNP9vwVf8rQjKxl
+	eZT8UPFrNtGqdfqr1opaCVZw0yH7hOjSP8sOjcs1fcBK2WmLUU6K4EAb2ScB6eiI72RSoLBkb4r
+	qIbRtKa7mMc9iTG+iGbX2DPLQ0I7f9jHgB0Fio3TfpuyCHSGcud/K1NOADhb9cx3cyg==
+X-Gm-Gg: ASbGncuVUOiXN90ZQykpjeXkbm3PG/+BDZ4AXQZaCjMMmBe3Wklvle1CZBijZyYdg0o
+	/KvWsV4o9/SMSujR45ENixC7uvydTOmq/Kc6IFnACdefWIGiS+YsvYDcg5bfK14r4mIcgueuQXU
+	c8PJAZFeCcuEs6McktTdIGblze35h1Enig0SmvVQuuybUN5gr/bD3lHa6gL8e8aXSQfIobat0+l
+	OSyUWW1iluuqwMrabPCs3oL4JkS+LMbHzh0tMAWb9ctj7/z5WbHSmZiP3B6cXHIMsphHpLA/Nik
+	Ni3A/bkA59ewGiV0u9139cjTwo/B16c9GovIdU1Rp8Ld
+X-Received: by 2002:a17:907:9813:b0:ae0:d019:dac7 with SMTP id a640c23a62f3a-ae3d8a00e87mr207397266b.23.1751531778385;
+        Thu, 03 Jul 2025 01:36:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdZn7Xzvu2kuD04w0WXoNHvONDJk1+Shs/4Cy35t8g6LHSLZdzBllHtVL4w3wNSP1r10N5MQ==
+X-Received: by 2002:a17:907:9813:b0:ae0:d019:dac7 with SMTP id a640c23a62f3a-ae3d8a00e87mr207393866b.23.1751531777914;
+        Thu, 03 Jul 2025 01:36:17 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363a149sm1205694966b.9.2025.07.03.01.36.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 01:36:17 -0700 (PDT)
+Message-ID: <165faf55-4376-4fa8-9a9b-aefd00de6a66@redhat.com>
+Date: Thu, 3 Jul 2025 10:36:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175153177121.406.17192778606361617054.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/7] selftests/mm: Skip thuge-gen if shmmax is too
+ small or no 1G huge pages
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
+ pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
+References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+ <20250703060656.54345-7-aboorvad@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250703060656.54345-7-aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the sched/core branch of tip:
+On 03.07.25 08:06, Aboorva Devarajan wrote:
+> Make thuge-gen skip instead of fail when it can't run due to system
+> settings. If shmmax is too small or no 1G huge pages are available,
+> the test now prints a warning and is marked as skipped.
 
-Commit-ID:     3f9ebeba9878679bb43ee2db7d50a4691f55e3a5
-Gitweb:        https://git.kernel.org/tip/3f9ebeba9878679bb43ee2db7d50a4691f55e3a5
-Author:        Kunwu Chan <kunwu.chan@hotmail.com>
-AuthorDate:    Mon, 24 Mar 2025 14:18:34 +08:00
-Committer:     Boqun Feng <boqun.feng@gmail.com>
-CommitterDate: Tue, 24 Jun 2025 10:23:48 -07:00
+Maybe change the subject to
 
-rust: sync: Mark CondVar::notify_*() inline
+"selftests/mm: Skip thuge-gen test if system is not setup properly"
 
-When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-with ARCH=arm64, the following symbols are generated:
+> 
+> -------------------
+> Before Patch:
+> -------------------
+> ~ running ./thuge-gen
+> ~ Bail out! Please do echo 262144 > /proc/sys/kernel/shmmax
+> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
+> ~ [FAIL]
+> not ok 28 thuge-gen ~ exit=1
+> 
+> -------------------
+> After Patch:
+> -------------------
+> ~ running ./thuge-gen
+> ~ ~ WARNING: shmmax is too small to run this test.
+> ~ ~ Please run the following command to increase shmmax:
+> ~ ~ echo 262144 > /proc/sys/kernel/shmmax
+> ~ 1..0 ~ SKIP Test skipped due to insufficient shmmax value.
+> ~ [SKIP]
+> ok 29 thuge-gen ~ SKIP
+> 
 
-$nm vmlinux | grep ' _R'.*CondVar | rustfilt
-... T <kernel::sync::condvar::CondVar>::notify_all
-... T <kernel::sync::condvar::CondVar>::notify_one
-... T <kernel::sync::condvar::CondVar>::notify_sync
-...
+Acked-by: David Hildenbrand <david@redhat.com>
 
-These notify_*() symbols are trivial wrappers around the C functions
-__wake_up() and __wake_up_sync(). It doesn't make sense to go through
-a trivial wrapper for these functions, so mark them inline.
+-- 
+Cheers,
 
-[boqun: Reword the commit title for consistency and reformat the commit
-log.]
+David / dhildenb
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250324061835.1693125-1-kunwu.chan@linux.dev
----
- rust/kernel/sync/condvar.rs | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index caebf03..c6ec642 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -216,6 +216,7 @@ impl CondVar {
-     /// This method behaves like `notify_one`, except that it hints to the scheduler that the
-     /// current thread is about to go to sleep, so it should schedule the target thread on the same
-     /// CPU.
-+    #[inline]
-     pub fn notify_sync(&self) {
-         // SAFETY: `wait_queue_head` points to valid memory.
-         unsafe { bindings::__wake_up_sync(self.wait_queue_head.get(), TASK_NORMAL) };
-@@ -225,6 +226,7 @@ impl CondVar {
-     ///
-     /// This is not 'sticky' in the sense that if no thread is waiting, the notification is lost
-     /// completely (as opposed to automatically waking up the next waiter).
-+    #[inline]
-     pub fn notify_one(&self) {
-         self.notify(1);
-     }
-@@ -233,6 +235,7 @@ impl CondVar {
-     ///
-     /// This is not 'sticky' in the sense that if no thread is waiting, the notification is lost
-     /// completely (as opposed to automatically waking up the next waiter).
-+    #[inline]
-     pub fn notify_all(&self) {
-         self.notify(0);
-     }
