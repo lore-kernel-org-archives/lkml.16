@@ -1,59 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC092F0035;
-	Thu,  3 Jul 2025 15:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACCD236A70;
+	Thu,  3 Jul 2025 16:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558388; cv=none; b=Y6B/tNbIkuUtp4VVRlm9jVwS19zumf3sxYiTft0hW85J5gxRDms80ozFzRCJZQCas5lOwhEenO7nJ6hK66bzwkNGVJohJ5gzoK2KKUiuyyCLXoHLtA21GLh1JIByvoBuHS8hIQiQIRX3tzjPIboRn9dJp5v4nvnwIGIsJPntP9A=
+	t=1751558405; cv=none; b=DsnpmzbX/wSam+8MgUlwxlReGaRnqTLbkYu0N6HMDVCK+hyJlFs4BdHHSRUgfcct6ZMB+trxLxS2s1jmhmmg2V7oHA1k9enBlhUY+Htbx25ut3hT0yH/Xo54qKMolBxz1RjVOXnMsVJOiQ85zwn3ADZ6jxdyQqCMYjEGmz9T9CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558388; c=relaxed/simple;
-	bh=MwIcVeJuV9/wgIYS9RL1D1uLyXta5FsCYrKlXtGye5M=;
+	s=arc-20240116; t=1751558405; c=relaxed/simple;
+	bh=3Pj0427xdMZ4I26tk/jkLsUjXBeSTMEAHLv8oOJqYuA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4a++fbjlTPh27NZl+kpGavQpvMlqKInb/dy2w1WikOtEq3x52sItAtUyNHKZAIHMZIf+JGIX+pwbYFb5qBanykI6a5d5vzMXqANEuJ1NtXLxmA0skmr/Bi8sM30h30ZRlOAZScA1qljSZEYHzMppflQfFEocLoY8fTlzJp5/vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 536E6C4CEED;
-	Thu,  3 Jul 2025 15:59:44 +0000 (UTC)
-Date: Thu, 3 Jul 2025 16:59:42 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 09/31] arm64/sysreg: Add ICC_CR0_EL1
-Message-ID: <aGao7h-WfHU-nQ6u@arm.com>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-9-12e71f1b3528@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qKgl8vlhfxghCelZTp2jNnLrsYpqsT0Z4ZcIIPpyKccstlGVp1D/uDZMmAovHbrCfUVs2P5z4bS4Lxm+heq/My2VcHQXaty16gs8ZJxNx/80rnO5Ao9QfdbKbHVc7Th8D2dYoBO1zYo+4o8z1wodmVOalTXqupGjzVND6p/yyik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gNolMbEw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+PJjqBcy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gNolMbEw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+PJjqBcy"
+Date: Thu, 3 Jul 2025 17:59:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751558401;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zfHdGhts9p3gqu5lIIaqmscwxy1s8kWHcDGpikLQ3tA=;
+	b=gNolMbEwCOCl4yMfeC/iBYFgUXptyQPBLssa09PXqJz2RbbIcf/S6akhWNaqPgdhm1V6Ul
+	DX4ollftygERDLdRi0iunHcisvZi0sfLuc8mZoQ75Yx/SSqog2VTR7gMfkAQmhjtmS5JUH
+	uTjp3iOMwnk8f/y3S8jz9M85OEF7yMKJQOQuEKJmyFcuRcRsaQ/n5/buUuYnLW5kGUqwbO
+	/scb/zQT6O/4Ty8dIb98gWkUFqiKKKLNu9qLkufDN1Wg2LqLb8NuDkso2aOLFDzHpWQS0h
+	3qoyvFzruOC4bKi4VIy++09MULhWe3GlnAzKoTbqRlAeO/oyVuZExImtGIUCPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751558401;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zfHdGhts9p3gqu5lIIaqmscwxy1s8kWHcDGpikLQ3tA=;
+	b=+PJjqBcyqg/NfQCEreDNyHdRcqK4bgObWbiIPBry2m5lO9Y6u/e7h1bFDLZGgHc3b//iej
+	BKTJKyZ7ULEMq+Dw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Rae Moar <rmoar@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	workflows@vger.kernel.org
+Subject: Re: [PATCH v4 09/15] kunit: tool: Parse skipped tests from
+ kselftest.h
+Message-ID: <20250703175819-09e1d46a-ab23-40bf-a7cb-de191d81b154@linutronix.de>
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
+ <20250626-kunit-kselftests-v4-9-48760534fef5@linutronix.de>
+ <CA+GJov7HN_HTVOygyF6SW12DeghW6BYc4KxEz8Ktub=QBqv0oQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250703-gicv5-host-v7-9-12e71f1b3528@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+GJov7HN_HTVOygyF6SW12DeghW6BYc4KxEz8Ktub=QBqv0oQ@mail.gmail.com>
 
-On Thu, Jul 03, 2025 at 12:24:59PM +0200, Lorenzo Pieralisi wrote:
-> Add ICC_CR0_EL1 register description.
+On Tue, Jul 01, 2025 at 05:22:07PM -0400, Rae Moar wrote:
+> On Thu, Jun 26, 2025 at 2:10 AM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+
+<snip>
+
+> > -TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
+> > +TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?([^#]*)( # .*)?$')
+> >
+> > -TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
+> > +TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?(.*) # SKIP ?(.*)$')
 > 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+> My concern with this patch is that this makes the test number optional
+> ([0-9]+) -> ([0-9]+)? for both the test result regex matches. But if I
+> do pass in KTAP containing a line where the test number is missing, it
+> causes the parser to crash because other lines of the code rely on the
+> match with the test number.
+> 
+> I would prefer if we keep the test number as required. This is
+> integral to the KTAP specification and seems to be largely shared by
+> different frameworks test output.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+This part of the patch was actually unnecessary, so I dropped it.
+Good catch, thanks.
+
+<snip>
