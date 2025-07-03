@@ -1,60 +1,92 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E53121B9C5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFAD8836;
+	Thu,  3 Jul 2025 17:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751563060; cv=none; b=n7DgRXlTAeyqbxiMYbC2cNyf/otfmNfiwHmPbRtyx94czS2ixGjqssRlbLGHvoO+OgIy5bF4O8lgl4FEXAwepYtk3UF2JXwcvhhtkFWie9Vfd/KZpsCoNHCmgmpM7fpeef2Dzq0LwEABsxyC1xphneqQOOjtdRdKyiqlXm6KvCA=
+	t=1751563111; cv=none; b=s3G9yPpOj9ccoFJ7eTd/YmixinF3VkRpse35orhrGAL8hnVFheeFXmEoTHYTwCx7aymsPe7I/nk4lb6Db+nqYoQuXHtx/08vlySBr9KTMbu6xw+wKTU6SYNnf3yfPsPSy5choLT8tLyliWy3lwAJuJfLm4JLogKdCdKXgns9VZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751563060; c=relaxed/simple;
-	bh=OwtuOphI0AdCqeHbCtkpbBilen5h1wC8pG6O6yXGyoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UKfTh5jEhM/b4uhAUBl7xmlTJLVPk9QGehxJkS/asG7+ZAEX4+J90NDVKhQKdNgbpQitaVjSwv2V+AXfPo4HT+9FMBSIb54GQpAj/ptQrR1RTEuF5DtBs3na4iKTk76Gt1bm2JuptUx0hcCwn0RCfz0CPPc06cbrBIBsaPW7HZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wrtC2s2T; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wrtC2s2T"
-Message-ID: <a3735d04-94e2-477c-b4f0-e795bae0863a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751563043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwtuOphI0AdCqeHbCtkpbBilen5h1wC8pG6O6yXGyoQ=;
-	b=wrtC2s2Tws9JFMH+C5Z0z7u0UwrUwKijlRsKgZBYmPfqibfhIbVGcWONvhHOpkZz7Xrfev
-	d1iAkBkW5+EAyiFwDc0ZDj/lGAkc/pW7in5XPOCxr4pSqJ1RhXWBeApG4nuF1i2KXel0cQ
-	78LMTnmzibXTe/xmau/DkeLS5A6oWa4=
-Date: Thu, 3 Jul 2025 10:17:15 -0700
+	s=arc-20240116; t=1751563111; c=relaxed/simple;
+	bh=BE+WJb90yGrtRx+9Kh+Fn3cdFMRStjbkXXcyLxhcqXA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=INaHjpkAR0a/enTUpcJX6c5dqvRfoudF/r5orIdRnwBc/aViNAlahM7zFjzbWxil+nzIKcbXGHspjZKkhAP5lrZPpPIM1Hgx8gvEhpEZrRIRL92kLihu9KNw4Tpy5gA3OBEvYGsvWQUJ1HY/YCsyDD0KXU2xU1XcfsQwaZQQ3rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net; spf=pass smtp.mailfrom=hadess.net; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hadess.net
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 590FC41C7D;
+	Thu,  3 Jul 2025 17:18:24 +0000 (UTC)
+From: Bastien Nocera <hadess@hadess.net>
+To: trivial@kernel.org,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Sven Peter <sven@kernel.org>,
+	Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bastien Nocera <hadess@hadess.net>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Kees Cook <kees@kernel.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Chris Lu <chris.lu@mediatek.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	asahi@lists.linux.dev
+Subject: [PATCH v2 0/7] Bluetooth: Fix typos
+Date: Thu,  3 Jul 2025 19:16:54 +0200
+Message-ID: <20250703171815.1011001-1-hadess@hadess.net>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v2] bpf: Clean code with bpf_copy_to_user
-Content-Language: en-GB
-To: Tao Chen <chen.dylane@linux.dev>, ast@kernel.org, daniel@iogearbox.net,
- john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250703163700.677628-1-chen.dylane@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250703163700.677628-1-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdekiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeurghsthhivghnucfpohgtvghrrgcuoehhrgguvghssheshhgruggvshhsrdhnvghtqeenucggtffrrghtthgvrhhnpeffleeuffejvdeufeffvdejjedvheekgfeltdejhfeitdettefgjedvuedvhfejueenucfkphepvdgrtddumegvfeegmegvtgejfeemtghfvddtmeejudgurgemfegsugemvddtrgelmedufeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgejfeemtghfvddtmeejudgurgemfegsugemvddtrgelmedufeefpdhhvghlohepohhlihhmphhitgdpmhgrihhlfhhrohhmpehhrgguvghssheshhgruggvshhsrdhnvghtpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehtrhhivhhirghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrtggvlheshhholhhtmhgrnhhnrdhorhhgpdhrtghpthhtoheplhhuihiirdguvghnthiisehgmhgrihhlrdgtohhmpdhrtghpthhtohepshgvrghnrdifrghnghesmhgvughirghtvghkrdgtohhmpdhrtghpthhtohepmhgrthhthhhir
+ ghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnghgvlhhoghhiohgrtggthhhinhhordguvghlrhgvghhnohestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehsvhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhesjhgrnhhnrghurdhnvght
+X-GND-Sasl: hadess@hadess.net
 
+Found using codespell.
 
+Probably best taken in through the Bluetooth tree.
 
-On 7/3/25 9:37 AM, Tao Chen wrote:
-> No logic change, just use bpf_copy_to_user to clean code.
->
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+Changes since v1:
+- Added whether typos were in comments or log strings
+- Fix typo in typo fix ("btrtl: Fix typo")
 
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
+Bastien Nocera (7):
+  Bluetooth: btintel: Fix typo in comment
+  Bluetooth: btmtk: Fix typo in log string
+  Bluetooth: btrtl: Fix typo in comment
+  Bluetooth: hci_bcm4377: Fix typo in comment
+  Bluetooth: aosp: Fix typo in comment
+  Bluetooth: RFCOMM: Fix typos in comments
+  Bluetooth: Fix typos in comments
+
+ drivers/bluetooth/btintel.c     | 2 +-
+ drivers/bluetooth/btmtkuart.c   | 2 +-
+ drivers/bluetooth/btrtl.c       | 2 +-
+ drivers/bluetooth/hci_bcm4377.c | 2 +-
+ net/bluetooth/aosp.c            | 2 +-
+ net/bluetooth/hci_conn.c        | 2 +-
+ net/bluetooth/hci_event.c       | 4 ++--
+ net/bluetooth/hci_sync.c        | 2 +-
+ net/bluetooth/lib.c             | 2 +-
+ net/bluetooth/rfcomm/core.c     | 3 ++-
+ net/bluetooth/rfcomm/tty.c      | 2 +-
+ net/bluetooth/smp.c             | 2 +-
+ 12 files changed, 14 insertions(+), 13 deletions(-)
+
+-- 
+2.50.0
 
