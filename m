@@ -1,195 +1,183 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472D1F9F70;
-	Thu,  3 Jul 2025 03:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113F322173A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751512005; cv=none; b=BZdLhM6S5MKz2miPC+51+Q9GgiuGFunFz/rSrt4K4Tf+cqghFWvpAWk/lY0nHTwe6YrUUuH0zV4yTZzPNkxWanaSOG4UJpZnXH7xt2p96Fmw8c2z16SxvassjqOxExCxMqgTtJ53zjZcjjcZjfSTdhM0LuRqg5yOy5fZ7hEP3QQ=
+	t=1751512033; cv=none; b=htxICOk3WlK41N+2bCAV/NiTJbB8iWLa0DlgdjHvYUQ8UTqLMw+bNz05oRoPpFkzo8JNcDxG8jvUEF0o1p/taObmsl2dX3wo0KLPssFq8ejIg7ZtV3HlFD32aQot10HNGDeZh31EvAEIOS9/PLwWKsJiXc9EpBjEvPfGFvU0Nok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751512005; c=relaxed/simple;
-	bh=g0goUqpz0H5nqzeA/3fuXMeQmy/4V6hWpW6/CbP1VvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l5TFl84bpBDACE9sqF1cQ1Wl2i28AEFzKb+Gunskc/SxFXtvSGyIPJQapND/CSyzVifl0Fl1kg8H+2VNYzafeAAXybcHOuXuv2dBMCtpwVH08o5dJmXJUkuPGDyJw3CBDCypn7+2zf3UkssiPCoDPR7lK/zllqCrwHli4DEjjEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=futhr3sV; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751512033; c=relaxed/simple;
+	bh=+ZATG8MmQCBGSF5dYU4YlHtLm8hybc8Ex7jkOHX11X8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cGZ5txQnLMUVJi6PGJoA7mliYBYyk100vMHFRxeYDQAi4W4zonCKxoukruLTHwshl8oEL5XUehyHC/ZVj2Aa/lL/AfyH4QGn3mdC3yZ/6dG0a/bgihqgV1/gUnlCPlJ+APPX7ZGx5bBYfglJhy/ErbgGEVFx1ybLsUweDrknTIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xqw1a+zo; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="futhr3sV"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so435571b3a.1;
-        Wed, 02 Jul 2025 20:06:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xqw1a+zo"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so119175ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 20:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751512003; x=1752116803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751512031; x=1752116831; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NUDKiPyVRQeazWkY4m2jYwgTMEJufvXw/+pCwXThNj0=;
-        b=futhr3sVqvVbv5PeFK1/8Ra+MBVeYj2V8zlzgc04nQ8endPFnj7RW4svet9lZJAbKT
-         cEV31cLqDBFLmLsQm8Jf2skGo0hnsMqRKGabEQ0+URkjaSgtorhH/wAkLPhJtkaLxbHu
-         xRawBoNzzdEBBjOvcBAFqdIhYdzewB/jVEe+/9/bhTVpMcSfm0UCFAzY//iLgxD8b4qJ
-         kLEmggdEfn7meLgubbgeUxiA/2KSQf+ja531OjxqS93vfSikUQVAoeSS/fKcwyeU0rbd
-         XJ6Q05pJiPJGMYXwoUxonU9Y3JT/E/6ofoy1Dvff6NyQYk+NCkO4IWcq/M74ortV5BOJ
-         kbYQ==
+        bh=U7SUaReiNC2TQWYv6+yztoHLJpAPx6fpeRbEmg2kLDo=;
+        b=Xqw1a+zofxhipFRzgyC3FEoSx09zi/u7jRXIP5DdgPeYM1pYjkMUGkBYNAQilRa9F9
+         cDHsBFxwzcVg6UQvHZBsn5NQCVFuvvYAvHARN0cP94NKGTFwtooJ3KuLK+sx0XrJnxjM
+         zbMJk7WioYJA3MfptuE6ekY31yWQAG8CxBswMDTeCi0IF3HjnZy++rX250ysY5XObKq9
+         FfAwHCRVvnCvrmg1YTkdrpC41IkA9t0aOeUP8Uk1HDjf1fHhmOs9sow6C6pasqoa0FRj
+         5jC4BolMJMw2xr6SVZQog3Rg2FJoFi0zPymlDeYlecxfDHqf/iZnOWY/iVRZ3fxyNWF8
+         bkCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751512003; x=1752116803;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751512031; x=1752116831;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NUDKiPyVRQeazWkY4m2jYwgTMEJufvXw/+pCwXThNj0=;
-        b=s//J6L/Vqfb67EakcIr8mJTjchfNGz8YC0O6EZqIFanGX/JFQEYyyyTbwne7xqEjmR
-         FkpREPXIZcVOxyS0D1SDlhFx3YJXe0AxQ1G28EDDjblLynQg9s9pPi0n/7L/50ROkYno
-         yCTMwHS8rHEi03qUWb9Gb52SZerZyPvhCGb/P/DsxOM1jVwcq7Wolw9lXdLc9NbOswVZ
-         vWokrceVcdBHfCOjy6VghkZUsbfGN4COqjMT4p+FBTMgn2qFwfjLRWMQEXdzAB8+A1/J
-         Any/GvpWIG3/ghpx1XCI46Lykhi4yIfUgAgCp2uAScRT5FKINYhEMQ3cZ53vAKbdtjrk
-         McWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeWs739Os2K1UWjy0HwGDr+LHiy6FI/NfWysizNPhri8m3QRzlyZ+nhHSmq1Uz3Sdxxo0=@vger.kernel.org, AJvYcCWRiudUrqgxVZ+gickPFuFMQVD2ieUJox5uPsfQdS2z4mIdhAgQ4KXWwQwYnf8XFDq684SUUNn5d1VcxROS@vger.kernel.org, AJvYcCWoTqS8OahUvQLE/zhC2jTqr1P5A1DpF/lwfTbuKzZiJaOt3hGR+tV9mPlMKQkl58470PpgqVrf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt32Kx+S4dc+vKhofa7FdVj+vQ15w0Adx+yqCIwt3NRbuDs1O+
-	iZTSzficQ/svkybPbjP45vACNXlU22RyrR4iQ+G72E+dKndgOIJlvJPg
-X-Gm-Gg: ASbGnctMiu5CgI+KFQjPoCxvbPcJZS04RdoISpqM/XuHiOwPgaVe6XZOxVYTWo1+UTZ
-	nPC8VqIi8J7mrghw8L1S6hWvAI92zBHblXuKicf4GdO7irjbfp8OhV4tPtvZ/2dqK+ERjPbSG15
-	mX7ssyAPilzZui/zK45j1S0IAmZ8cBn55RwBwszT5FEVAuyTl/rKxaN8epkQ7Fv5JHUV420JuO/
-	5IpmT4y2SGurcNGS2+llaJKJGyatMAnbCapxG6Rwo+PIRIVZX1UQaX9/Oilh/ofu7ZqLiOJEGti
-	FfoUO3ry+X451X05mrmfb/PiqOwyueXfQkfKx+NdMpEj8zOmRaS5o8deYj7CJ9l3qWCKU5xblUI
-	qQ64F3rdd
-X-Google-Smtp-Source: AGHT+IFz7kt0Nb7vZz+tzUh5I+gOTwteT4lcjZk9zNPo6PfyuL6H+Px1Zb73lqI3Wo071I67AWpnGQ==
-X-Received: by 2002:a05:6a00:2d94:b0:736:9f2e:1357 with SMTP id d2e1a72fcca58-74cd5b575bdmr707117b3a.12.1751512002612;
-        Wed, 02 Jul 2025 20:06:42 -0700 (PDT)
-Received: from devant.antgroup-inc.local ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541d9a5sm16108617b3a.62.2025.07.02.20.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 20:06:42 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-To: sgarzare@redhat.com
-Cc: davem@davemloft.net,
-	decui@microsoft.com,
-	fupan.lfp@antgroup.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	leonardi@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	niuxuewei.nxw@antgroup.com,
-	niuxuewei97@gmail.com,
-	pabeni@redhat.com,
-	stefanha@redhat.com,
-	virtualization@lists.linux.dev,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [RESEND PATCH net-next v4 3/4] test/vsock: Add retry mechanism to ioctl wrapper
-Date: Thu,  3 Jul 2025 11:05:14 +0800
-Message-Id: <20250703030514.845623-1-niuxuewei.nxw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <2cpqw23kr4qiatpzcty6wve4qdyut5su7g7fr4kg52dx33ikdu@ljicf6mktu5z>
-References: <2cpqw23kr4qiatpzcty6wve4qdyut5su7g7fr4kg52dx33ikdu@ljicf6mktu5z>
+        bh=U7SUaReiNC2TQWYv6+yztoHLJpAPx6fpeRbEmg2kLDo=;
+        b=EbQH02h/CpEmsNwQ+EOHfHS8lp5KCTga59t+Yag4OyNoL9ZIcAmsSFSngTgj9XISHj
+         Nm4QAtaqu8vTox8vGRrwMqtc4yCw6JW7dLm6rF+1Bqk1OSSYUg65TWjZse6p+EdL97be
+         ypAS4YMLjKXqhhfb+rxUN8MFyDXHNiWmM5GZ+0pP8KhOsRjwzv1PKjUXFgQDk6uoJ2JX
+         /7AvrA1GzIFbzF+rqcoWWEXXsSIGlt95XByKT12m7wovZuKKgPi0bwzooMYkHnxR1wfR
+         3k77zY9w9qp+lsjXl8QtA0GcL2tGqNHvHvLt6xD/rqqDUW7kzdRikQm+GiP2IJEbkSDM
+         gE5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWjuFDNhJDWFDsgphVl+re4QFbhDpC1SDImLcB2RyHDLNYsWndscswI5DlzrmKfHxFAwqELBQGO2ATmylY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza+cvj6zzZ5PsGnVvk2ODnooRXOa9dotQIU9lQPvthQ38kfQWZ
+	CanBpGiB5W5VHq4z0hLBFsyqpdIZQIJ/wPrvLU8SQkT09wBK1elXv0WN1DYbDAdOzyO4kGBpHxU
+	TXzXWEMXd0+xIFWNvi/k3O/wSw6zaonf/mJ++BFeq
+X-Gm-Gg: ASbGncvLVSETfjApDAX4boyKDyw23YAWN1f6oQuRI+SVzOmnYC9LOt3BORMGoPLH/JC
+	aYo+iRt7XHN+txuPJuSD0xAE2xG5+02hVSMj5JKoIb1XQb+PUv1lmzWkza1R5q9TZ0SqkM9RIvX
+	kSneLtMWYc5x32HZl3tgb9R1QyOy6CtTdzKQr4XzEwM9nMsLhyjkhMAo0=
+X-Google-Smtp-Source: AGHT+IHzUdPHw0VsA8bstmhWA/+BW0/AQzs6DXm4FWh8WOjqWDH1jhE7cvSYnGM1zWdBm9BADozJE/aWx/AJCbkQ+F4=
+X-Received: by 2002:a05:6e02:1a8a:b0:3dd:d288:eead with SMTP id
+ e9e14a558f8ab-3e05c82b928mr2226965ab.18.1751512030923; Wed, 02 Jul 2025
+ 20:07:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703014942.1369397-1-namhyung@kernel.org> <20250703014942.1369397-4-namhyung@kernel.org>
+In-Reply-To: <20250703014942.1369397-4-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Jul 2025 20:06:59 -0700
+X-Gm-Features: Ac12FXyaUNMxABXTqEy9Dk0FLti18slQItx7W31uD8wKdN5fMeMEfGNGIaonqe8
+Message-ID: <CAP-5=fU3F4uhqzhvmpjB69O3zs-qz5_n8=riLz3JoCqKn4156g@mail.gmail.com>
+Subject: Re: [PATCH 3/8] perf sched: Fix memory leaks in 'perf sched map'
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Resend: the previous message was rejected due to HTML
-Resend: forgot to reply all...
+On Wed, Jul 2, 2025 at 6:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> It maintains per-cpu pointers for the current thread but it doesn't
+> release the refcounts.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-> On Mon, Jun 30, 2025 at 03:57:26PM +0800, Xuewei Niu wrote:
-> >Wrap the ioctl in `ioctl_int()`, which takes a pointer to the actual
-> >int value and an expected int value. The function will not return until
-> >either the ioctl returns the expected value or a timeout occurs, thus
-> >avoiding immediate failure.
-> >
-> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> >---
-> > tools/testing/vsock/util.c | 32 +++++++++++++++++++++++---------
-> > tools/testing/vsock/util.h |  1 +
-> > 2 files changed, 24 insertions(+), 9 deletions(-)
-> >
-> >diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-> >index 0c7e9cbcbc85..481c395227e4 100644
-> >--- a/tools/testing/vsock/util.c
-> >+++ b/tools/testing/vsock/util.c
-> >@@ -16,6 +16,7 @@
-> > #include <unistd.h>
-> > #include <assert.h>
-> > #include <sys/epoll.h>
-> >+#include <sys/ioctl.h>
-> > #include <sys/mman.h>
-> > #include <linux/sockios.h>
-> >
-> >@@ -97,28 +98,41 @@ void vsock_wait_remote_close(int fd)
-> > 	close(epollfd);
-> > }
-> >
-> >-/* Wait until transport reports no data left to be sent.
-> >- * Return false if transport does not implement the unsent_bytes() 
-> >callback.
-> >+/* Wait until ioctl gives an expected int value.
-> >+ * Return false if the op is not supported.
-> >  */
-> >-bool vsock_wait_sent(int fd)
-> >+bool vsock_ioctl_int(int fd, unsigned long op, int *actual, int expected)
-> 
-> Why we need the `actual` parameter?
-
-We can exit early `if (*actual == expected)`, and the `expected` can be any integer.
-I also make it to be a pointer, because the caller might need to have the actual value.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Xuewei
- 
-> > {
-> >-	int ret, sock_bytes_unsent;
-> >+	int ret;
-> >+	char name[32];
-> >+
-> >+	snprintf(name, sizeof(name), "ioctl(%lu)", op);
-> >
-> > 	timeout_begin(TIMEOUT);
-> > 	do {
-> >-		ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
-> >+		ret = ioctl(fd, op, actual);
-> > 		if (ret < 0) {
-> > 			if (errno == EOPNOTSUPP)
-> > 				break;
-> >
-> >-			perror("ioctl(SIOCOUTQ)");
-> >+			perror(name);
-> > 			exit(EXIT_FAILURE);
-> > 		}
-> >-		timeout_check("SIOCOUTQ");
-> >-	} while (sock_bytes_unsent != 0);
-> >+		timeout_check(name);
-> >+	} while (*actual != expected);
-> > 	timeout_end();
-> >
-> >-	return !ret;
-> >+	return ret >= 0;
-> >+}
-> >+
-> >+/* Wait until transport reports no data left to be sent.
-> >+ * Return false if transport does not implement the unsent_bytes() callback.
-> >+ */
-> >+bool vsock_wait_sent(int fd)
-> >+{
-> >+	int sock_bytes_unsent;
-> >+
-> >+	return vsock_ioctl_int(fd, SIOCOUTQ, &sock_bytes_unsent, 0);
-> > }
-> >
-> > /* Create socket <type>, bind to <cid, port> and return the file descriptor. */
-> >diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-> >index 5e2db67072d5..d59581f68d61 100644
-> >--- a/tools/testing/vsock/util.h
-> >+++ b/tools/testing/vsock/util.h
-> >@@ -54,6 +54,7 @@ int vsock_stream_listen(unsigned int cid, unsigned int port);
-> > int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
-> > 			   struct sockaddr_vm *clientaddrp);
-> > void vsock_wait_remote_close(int fd);
-> >+bool vsock_ioctl_int(int fd, unsigned long op, int *actual, int expected);
-> > bool vsock_wait_sent(int fd);
-> > void send_buf(int fd, const void *buf, size_t len, int flags,
-> > 	      ssize_t expected_ret);
-> >-- 
-> >2.34.1
-> >
+Ian
+
+> ---
+>  tools/perf/builtin-sched.c | 31 ++++++++++++++++++++-----------
+>  1 file changed, 20 insertions(+), 11 deletions(-)
+>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index fa4052e040201105..b73989fb6acef8d6 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1634,6 +1634,7 @@ static int map_switch_event(struct perf_sched *sche=
+d, struct evsel *evsel,
+>         const char *color =3D PERF_COLOR_NORMAL;
+>         char stimestamp[32];
+>         const char *str;
+> +       int ret =3D -1;
+>
+>         BUG_ON(this_cpu.cpu >=3D MAX_CPUS || this_cpu.cpu < 0);
+>
+> @@ -1664,17 +1665,20 @@ static int map_switch_event(struct perf_sched *sc=
+hed, struct evsel *evsel,
+>         sched_in =3D map__findnew_thread(sched, machine, -1, next_pid);
+>         sched_out =3D map__findnew_thread(sched, machine, -1, prev_pid);
+>         if (sched_in =3D=3D NULL || sched_out =3D=3D NULL)
+> -               return -1;
+> +               goto out;
+>
+>         tr =3D thread__get_runtime(sched_in);
+> -       if (tr =3D=3D NULL) {
+> -               thread__put(sched_in);
+> -               return -1;
+> -       }
+> +       if (tr =3D=3D NULL)
+> +               goto out;
+> +
+> +       thread__put(sched->curr_thread[this_cpu.cpu]);
+> +       thread__put(sched->curr_out_thread[this_cpu.cpu]);
+>
+>         sched->curr_thread[this_cpu.cpu] =3D thread__get(sched_in);
+>         sched->curr_out_thread[this_cpu.cpu] =3D thread__get(sched_out);
+>
+> +       ret =3D 0;
+> +
+>         str =3D thread__comm_str(sched_in);
+>         new_shortname =3D 0;
+>         if (!tr->shortname[0]) {
+> @@ -1769,12 +1773,10 @@ static int map_switch_event(struct perf_sched *sc=
+hed, struct evsel *evsel,
+>         color_fprintf(stdout, color, "\n");
+>
+>  out:
+> -       if (sched->map.task_name)
+> -               thread__put(sched_out);
+> -
+> +       thread__put(sched_out);
+>         thread__put(sched_in);
+>
+> -       return 0;
+> +       return ret;
+>  }
+>
+>  static int process_sched_switch_event(const struct perf_tool *tool,
+> @@ -3556,10 +3558,10 @@ static int perf_sched__map(struct perf_sched *sch=
+ed)
+>
+>         sched->curr_out_thread =3D calloc(MAX_CPUS, sizeof(*(sched->curr_=
+out_thread)));
+>         if (!sched->curr_out_thread)
+> -               return rc;
+> +               goto out_free_curr_thread;
+>
+>         if (setup_cpus_switch_event(sched))
+> -               goto out_free_curr_thread;
+> +               goto out_free_curr_out_thread;
+>
+>         if (setup_map_cpus(sched))
+>                 goto out_free_cpus_switch_event;
+> @@ -3590,7 +3592,14 @@ static int perf_sched__map(struct perf_sched *sche=
+d)
+>  out_free_cpus_switch_event:
+>         free_cpus_switch_event(sched);
+>
+> +out_free_curr_out_thread:
+> +       for (int i =3D 0; i < MAX_CPUS; i++)
+> +               thread__put(sched->curr_out_thread[i]);
+> +       zfree(&sched->curr_out_thread);
+> +
+>  out_free_curr_thread:
+> +       for (int i =3D 0; i < MAX_CPUS; i++)
+> +               thread__put(sched->curr_thread[i]);
+>         zfree(&sched->curr_thread);
+>         return rc;
+>  }
+> --
+> 2.50.0.727.gbf7dc18ff4-goog
+>
