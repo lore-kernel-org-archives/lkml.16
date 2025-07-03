@@ -1,92 +1,133 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1517D7;
-	Thu,  3 Jul 2025 03:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EE017D7;
+	Thu,  3 Jul 2025 03:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511669; cv=none; b=I6iPRoTAqnGQQr1YjgNV+9Op8KFLCz8kzCiKWvq1O+J6qj1CTtClKlWSqCTAjeUuoAOG+9geqPMacZFie6iv+mwi1dhZ2Y8KVg+M+GRW+sp2xHNuKlwdTb9hntFsC18DMLbvkO9N0CzU2Gi7jZdXyS13frZ6fntE+UnItFomIqU=
+	t=1751511773; cv=none; b=CPfapsgiiZjUl0waIhilzClHRgr1WQzperkjMGQCU8+rc+slA3knSjO2LVJX2ob5znaicXKfyzTk9JRIbBfWGI7WU2ZAH603u1u494ulN29YbD0roE0hueCvsO3Z958Zs+8b/lx1osgWAJfBNFbdBMJW+LyJXL29olvx2kAmp3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751511669; c=relaxed/simple;
-	bh=vUY7f0Djx0zEZn+AW+YZahB84Jscggn6xd3e4dSocY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rGUMneWcyaiCzGFQsz6OsvluqpmPy8mWVy/QaUbK3wt44Vv4QAZrTHviMOCJqQ+vlDQDjS0qeDfyIn1Xor06X9WuG/7wDUsSJIJJ9vRxn2Xl1xjZsTquDslSdOP1Yzp9Y1RHSpZ49GG2Bah0rlE6uhZIYEsovBpV9ewDZKkXFes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=KEj8cY9H; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KEj8cY9H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751511644;
-	bh=s+yk+uAqFV3gUgjqjAi/UjTCw86A3rGnDWfIHLwuDr4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KEj8cY9HQ9gu91hmJMqS7aCogt6uGlKtT9DNlBNAmu2dFoEF1NR8nR+He49Epv6Gp
-	 T/nV4XzyvyokxPuVQwnYe0slCMZkYvUam8Hld1BXJcgZLJiCn+MHirPUd/k01y/oGA
-	 /hn77fT41nwU+3lqb7ksMaSKkT2pnsgZhAVkwAI1BqsU69BDcDf4qxovfJHy9qZQ5B
-	 pc0M7W8HHPngVUa76eIVNbT0aN9btrCLjX5RuS5lfJR11sAai8ZIlVD92bnvUjaZGq
-	 Ny4H9uOeZEiN2Yv0C1tLTmAjAo/T8gMWqFvH9KuKvdq1qMqlSDcWS6TYlBxnEHud1w
-	 l8UYy6Sq04Xxg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXhND0LV7z4xQP;
-	Thu,  3 Jul 2025 13:00:44 +1000 (AEST)
-Date: Thu, 3 Jul 2025 13:01:04 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com>, Johannes
- Berg <johannes@sipsolutions.net>, David Miller <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the iwlwifi-next tree
-Message-ID: <20250703130104.4b187e13@canb.auug.org.au>
+	s=arc-20240116; t=1751511773; c=relaxed/simple;
+	bh=k8m3AqAlVUtVHY4lTl+sebWiccKErEjIqTjotdNZIlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ip4KN6vergj7jXmUDJDMi/x7gYl2qJfLTXhqJKKT8GW19xbAwlabDXVK9tniLHBWEWc1PZFOgKZ2hGGvdhg7aPdfpaleddgNSQngKWa/RwM4eWJ5W0myb1QQka/jFYb5cv7RkNSSCX4j0gY+HJnMoZl6aM5aAOjgQ+NJ2Du7ISA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXhQd4h1LzKHMg4;
+	Thu,  3 Jul 2025 11:02:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 13A891A06E2;
+	Thu,  3 Jul 2025 11:02:48 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP3 (Coremail) with SMTP id _Ch0CgB32SbW8mVoyJbvAQ--.245S3;
+	Thu, 03 Jul 2025 11:02:47 +0800 (CST)
+Message-ID: <66b2f540-228f-40e9-9ac5-529e3101e973@huaweicloud.com>
+Date: Thu, 3 Jul 2025 11:02:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CA+r1kYDXcYp56kIqnF5DPs";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cachefiles: Fix the incorrect return value in
+ __cachefiles_write()
+To: Zizhi Wo <wozizhi@huaweicloud.com>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org, brauner@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ libaokun1@huawei.com, yangerkun@huawei.com, houtao1@huawei.com,
+ yukuai3@huawei.com
+References: <20250703024418.2809353-1-wozizhi@huaweicloud.com>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <20250703024418.2809353-1-wozizhi@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgB32SbW8mVoyJbvAQ--.245S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrW8Gr1xKryrGF1UuF13XFb_yoW8KF1DpF
+	Waya4UKryxur48Crn7AFs5WFyrA3ykJFnFg345Ww1kZrnxXrsY9F4jqr1YqF18ArZrJr4x
+	tw4j9a47Jw1qyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
---Sig_/CA+r1kYDXcYp56kIqnF5DPs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-The following commit is also in the net-next tree as a different commit
-(but the same patch):
+在 2025/7/3 10:44, Zizhi Wo 写道:
+> From: Zizhi Wo <wozizhi@huawei.com>
+> 
+> In __cachefiles_write(), if the return value of the write operation > 0, it
+> is set to 0. This makes it impossible to distinguish scenarios where a
+> partial write has occurred, and will affect the outer calling functions:
+> 
+>   1) cachefiles_write_complete() will call "term_func" such as
+> netfs_write_subrequest_terminated(). When "ret" in __cachefiles_write()
+> is used as the "transferred_or_error" of this function, it can not
+> distinguish the amount of data written, makes the WARN meaningless.
+> 
 
-  fc80ea519981 ("wifi: iwlwifi: dvm: fix potential overflow in rs_fill_link=
-_cmd()")
+Sorry, I was negligent. The first error actually doesn't exist because
+ret=0 was set after cachefiles_write_complete(), but the second error
+still exists.
 
-This is commit
+Thanks,
+Zizhi Wo
 
-  e3ad987e9dc7 ("wifi: iwlwifi: dvm: fix potential overflow in rs_fill_link=
-_cmd()")
+>   2) cachefiles_ondemand_fd_write_iter() can only assume all writes were
+> successful by default when "ret" is 0, and unconditionally return the full
+> length specified by user space.
+> 
+> Fix it by modifying "ret" to reflect the actual number of bytes written.
+> Furthermore, returning a value greater than 0 from __cachefiles_write()
+> does not affect other call paths, such as cachefiles_issue_write() and
+> fscache_write().
+> 
+> Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
+> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> ---
+>   fs/cachefiles/io.c       | 2 --
+>   fs/cachefiles/ondemand.c | 4 +---
+>   2 files changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+> index c08e4a66ac07..3e0576d9db1d 100644
+> --- a/fs/cachefiles/io.c
+> +++ b/fs/cachefiles/io.c
+> @@ -347,8 +347,6 @@ int __cachefiles_write(struct cachefiles_object *object,
+>   	default:
+>   		ki->was_async = false;
+>   		cachefiles_write_complete(&ki->iocb, ret);
+> -		if (ret > 0)
+> -			ret = 0;
+>   		break;
+>   	}
+>   
+> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+> index d9bc67176128..a7ed86fa98bb 100644
+> --- a/fs/cachefiles/ondemand.c
+> +++ b/fs/cachefiles/ondemand.c
+> @@ -83,10 +83,8 @@ static ssize_t cachefiles_ondemand_fd_write_iter(struct kiocb *kiocb,
+>   
+>   	trace_cachefiles_ondemand_fd_write(object, file_inode(file), pos, len);
+>   	ret = __cachefiles_write(object, file, pos, iter, NULL, NULL);
+> -	if (!ret) {
+> -		ret = len;
+> +	if (ret > 0)
+>   		kiocb->ki_pos += ret;
+> -	}
+>   
+>   out:
+>   	fput(file);
 
-in the net-next tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CA+r1kYDXcYp56kIqnF5DPs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhl8nAACgkQAVBC80lX
-0Gy3+wf+NlLpJCrUkb5ydwDtthwHZZcdFrYJml4Kv8FG2GWXeVDNf+bYHB7HepaW
-Sl3PCy+3D7SMN1IB5R8T56klfOibVXQt3wGbh8gCje43a87spbr9hfbKUnbVzgBo
-NjGkPAz3BMLd0DF4qzz4qr+M9SMzpffUlA7PiYTawga7ZoLPevdDPHZmhwdlzi+1
-KSU3fKouAGgwLiMiablQTTZsOVNyrt2Qb+Sjt8TQnUpwfJf0dYvKdXaEzROOqMYF
-CpY8Yzr1mVuCfisexGlOj/apZGu05kbuJrEkKmKzOiyAL2xrxGsPwrO5SqyOzFAA
-BKt514FH02sTBBYoTdB34PSWsbJBSA==
-=HII7
------END PGP SIGNATURE-----
-
---Sig_/CA+r1kYDXcYp56kIqnF5DPs--
