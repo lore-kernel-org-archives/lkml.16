@@ -1,118 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277351AAA1C;
-	Thu,  3 Jul 2025 14:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01ED2E7F05;
+	Thu,  3 Jul 2025 14:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552123; cv=none; b=qg4bZaRkxUtlbDWecNqBHAgmP5DH9rLhUHhjDgA6+r1kxaIlm/IPcE/p4vBH/qiHKi3xyyxTCN1F/VSiaMnsZHb9FcGc4Fwirv2d0hFWytYfQ4ZMeEns3rBZnnKktyHAsQdE/1UvR27K8tF++GNWCwh85y0Mf1wqOSzmMrjd8nA=
+	t=1751552226; cv=none; b=sZOUsk6v/q8mzfWBl6vpqRMpxZ73B/XtpnjAGSe2kswto2dpzzgdAS/NXm/vv1UzVKyPCBZ5FMf7D6nUI7WAe6qyWhkacGDhWOqKhHc7sFoWwslUJQMirUR7BPpAFdQ117Eu50xs0/Lt/ztJ2gP2t6iusIIcTfGK2h4TeCXSsU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552123; c=relaxed/simple;
-	bh=E4bV3ZcGr1FqBIRiLtCzhIyS85m/9EVekMqGxdMWLck=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UC3oVh5m6Ftb/Ox743zXomu8IhqOjWJi1Bv//PjgmqemBSAqy6M+7Wdl2wQsw5Dpy5+fPbX+JBuZVKkbdqgjYJQnS6b3aDwHuFAHzTcJcnrijLYGUhsVEB1MmaEOa0jATpm3GtfSL/l+6VrXfSkzFBr38MaAbQDytN1+PGcglwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+f6Y0td; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+f6Y0td"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F045C4CEED;
-	Thu,  3 Jul 2025 14:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751552122;
-	bh=E4bV3ZcGr1FqBIRiLtCzhIyS85m/9EVekMqGxdMWLck=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=o+f6Y0tdf9Xf5//ZNxZVy0UHpOcIFXH2JB1HV86O0K2rDNfx6Zh0v44XLtHfpt6zP
-	 fS2OG39Z6+fVqMUccwZljrrN2kI6eSMjxvAYRzsN/AHB1qV3UlSvyVWcucg25WtQ79
-	 J4RzBZ59PkDPOd/uzXDg12NJF5Dt4C8lgN6ejayfvn+T1uM9/e2mYSDm5cyJN2ojr4
-	 433Mk6ThuasH2+an1GYCIhkoYYLk6pPaPSFxX0lkephbmDziYb5+c+bcU6pRFzdcvU
-	 YgyHLx34sTwHDGLPeYLlBZZFa2C/zlXqISLIQkGjZcpWbJ/xQfGBfqk304UuaZ6C0S
-	 jBtlPNvTboHRw==
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-4067106dd56so3383018b6e.3;
-        Thu, 03 Jul 2025 07:15:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUTiPxcQq0BXWM8e+ytLdVickH4xOUQZ8/MKElhpJn5gKqYDBvQ0fpeoi30MFQy7fwPQsDiaMK+88=@vger.kernel.org, AJvYcCW/CmeU17YpeVASVNABUc0C152QDkXhdSrh7PJze+VIuEkmIP9Wmk3lxWy/D7Dqzx4keQ6O7RX7PLw6spM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKR8R+jiN4Ic2l47ybuMlkyjSCi0B0sFVH3JcP9mStzD+YSBMA
-	0hbOPE6WRuWsytihHFZeUv6kHoliV9A+ag/qf4U7N3+2zEI+yVI/nXqcqdkuvGxV/5Jyx1b1D2y
-	vqXIxMDWZcub43D5NnGp8gO2wshZSeIg=
-X-Google-Smtp-Source: AGHT+IExmwqeDlyaQUlnPiLgwuZRtUxdGGqrR0IkUTOvwfBKsUqs1fKawWM6QdKVAEoyt4z84vHCGv3EnhxZxk43yak=
-X-Received: by 2002:a05:6808:4d0c:b0:40c:f644:87fe with SMTP id
- 5614622812f47-40cf64489c2mr1286295b6e.24.1751552121725; Thu, 03 Jul 2025
- 07:15:21 -0700 (PDT)
+	s=arc-20240116; t=1751552226; c=relaxed/simple;
+	bh=lCKLpqueK88GUgqdWwqfrXQ/O1O8CPEQNkMDi9HGhJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cP7PONr+ICWYoEc0XHbBMfmq7EUsmg1mJyWIiWDLMEAspeXmVk6b6miN1USONT0wNhNBuILruAZMGdB1d6OAWVjjA1f6PkwdzswcIT+oCHOC2qlm/3chX2tkolSBqI9d56oxQMAw5yLh1kCmdRZOvBE1wAqqcLHXozyK8fR9XdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bXzHt2SNqz1GCFw;
+	Thu,  3 Jul 2025 22:12:58 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id C708318006C;
+	Thu,  3 Jul 2025 22:16:59 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 3 Jul 2025 22:16:58 +0800
+Message-ID: <563d1da8-abd8-48e6-9aab-5a4f13859995@huawei.com>
+Date: Thu, 3 Jul 2025 22:16:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611101247.15522-1-zhangzihuan@kylinos.cn> <20250611101247.15522-2-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250611101247.15522-2-zhangzihuan@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:15:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
-X-Gm-Features: Ac12FXyn8rXc9CQKN6l2d_jC3Uv4Bp9Ji7lPrIOkovvGLlVsAJDJwzvxtujSF4Q
-Message-ID: <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>, Peter Zijlstra <peterz@infradead.org>
-Cc: rafael@kernel.org, pavel@kernel.org, len.brown@intel.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: CVE-2022-50031: scsi: iscsi: Fix HW conn removal use after free
+To: Greg Kroah-Hartman <gregkh@kernel.org>
+CC: <cve@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cve-announce@vger.kernel.org>, <lduncan@suse.com>,
+	<cleech@redhat.com>, Mike Christie <michael.christie@oracle.com>,
+	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+	<open-iscsi@googlegroups.com>, <linux-scsi@vger.kernel.org>, yangerkun
+	<yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao
+	<houtao1@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>,
+	"chengzhihao1@huawei.com" <chengzhihao1@huawei.com>
+References: <2025061839-CVE-2022-50031-f2bc@gregkh>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <2025061839-CVE-2022-50031-f2bc@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-The patch subject appears to be incomplete.
+Hi, Greg
 
-On Wed, Jun 11, 2025 at 12:13=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylinos.=
-cn> wrote:
+在 2025/6/18 19:01, Greg Kroah-Hartman 写道:
+> From: Greg Kroah-Hartman <gregkh@kernel.org>
 >
-> When freezing user space during suspend or hibernation, the freezer
-> iterates over all tasks and attempts to freeze them via
-> try_to_freeze_tasks().
+> Description
+> ===========
 >
-> However, zombie processes (i.e., tasks in EXIT_ZOMBIE state) are no
-> longer running and will never enter the refrigerator. Trying to freeze
-> them is meaningless and causes extra overhead, especially when there are
-> thousands of zombies created during stress conditions such as fork
-> storms.
+> In the Linux kernel, the following vulnerability has been resolved:
 >
-> This patch skips zombie processes during the freezing phase.
+> scsi: iscsi: Fix HW conn removal use after free
 >
-> In our testing with ~30,000 user processes (including many zombies), the
-> average freeze time during suspend (S3) dropped from ~43 ms to ~16 ms:
+> If qla4xxx doesn't remove the connection before the session, the iSCSI
+> class tries to remove the connection for it. We were doing a
+> iscsi_put_conn() in the iter function which is not needed and will result
+> in a use after free because iscsi_remove_conn() will free the connection.
 >
->     - Without the patch: ~43 ms average freeze latency
->     - With the patch:    ~16 ms average freeze latency
->     - Improvement:       ~62%
+> The Linux kernel CVE team has assigned CVE-2022-50031 to this issue.
+>
+>
+> Affected and fixed versions
+> ===========================
+>
+> 	Fixed in 5.19.4 with commit 0483ffc02ebb953124c592485a5c48ac4ffae5fe
+> 	Fixed in 6.0 with commit c577ab7ba5f3bf9062db8a58b6e89d4fe370447e
+>
+> Please see https://www.kernel.org for a full list of currently supported
+> kernel versions by the kernel community.
+>
+> Unaffected versions might change over time as fixes are backported to
+> older supported kernel versions.  The official CVE entry at
+> 	https://cve.org/CVERecord/?id=CVE-2022-50031
+> will be updated if fixes are backported, please check that for the most
+> up to date information about this issue.
+>
+>
+> Affected files
+> ==============
+>
+> The file(s) affected by this issue are:
+> 	drivers/scsi/scsi_transport_iscsi.c
+>
+>
+> Mitigation
+> ==========
+>
+> The Linux kernel CVE team recommends that you update to the latest
+> stable kernel version for this, and many other bugfixes.  Individual
+> changes are never tested alone, but rather are part of a larger kernel
+> release.  Cherry-picking individual commits is not recommended or
+> supported by the Linux kernel community at all.  If however, updating to
+> the latest release is impossible, the individual changes to resolve this
+> issue can be found at these commits:
+> 	https://git.kernel.org/stable/c/0483ffc02ebb953124c592485a5c48ac4ffae5fe
+> 	https://git.kernel.org/stable/c/c577ab7ba5f3bf9062db8a58b6e89d4fe370447e
+>
+Based on the details described in the linked discussion, I have concerns
+that this patch may not fully resolve the Use-After-Free vulnerability.
+Instead, it appears the changes could potentially introduce memory leak
+issues.
+Given these concerns, I'd recommend ​rejecting this CVE until we can
+thoroughly investigate and validate the complete solution.
 
-And what's the total suspend time on the system in question?
+Link: 
+https://lore.kernel.org/all/0b0a0bcf-b805-5041-9923-37ad391169c0@huaweicloud.com/
 
-> This confirms that skipping zombies significantly speeds up the freezing
-> process when the system is under heavy load with many short-lived tasks.
->
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
->
-> Changes in v3:
-> - Added performance test
->
-> Changes in v2:
-> - Simplified code, added judgment of dead processes
-> - Rewrite changelog
-> ---
->  kernel/power/process.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/power/process.c b/kernel/power/process.c
-> index a6f7ba2d283d..2bbe22610522 100644
-> --- a/kernel/power/process.c
-> +++ b/kernel/power/process.c
-> @@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
->                 todo =3D 0;
->                 read_lock(&tasklist_lock);
->                 for_each_process_thread(g, p) {
-> -                       if (p =3D=3D current || !freeze_task(p))
-> +                       if (p =3D=3D current || p->exit_state || !freeze_=
-task(p))
->                                 continue;
->
->                         todo++;
-> --
-
-This is basically fine by me, but I wonder what other people think.
-
-Peter?
+Thanks,
+Lingfeng
