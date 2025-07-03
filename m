@@ -1,137 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C022EA46B;
-	Thu,  3 Jul 2025 14:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90092EBBB7;
+	Thu,  3 Jul 2025 14:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552999; cv=none; b=npNgCoDP15zhF2pTy5ZJPez5SDQycnojO8GfDTYKwaP/2iSeJR06p9OfK1+a6dO+4QV5PnFYs+9WHNY8SeewsgCURExfQjJO5atYZ3LBc3q6psEEWeWxXVJ26fQOtS9WxnjyqCGYPog7V8BfpVcuY5Z/UFRbeKiLNOtv0vcOZgk=
+	t=1751553022; cv=none; b=i/gVkJzIZvZhp0VFsnupyEJum1R3CiNCsVvZPwbVZPQWN2dARZ/q0OG8gn6ZiPfkHE3TGIcsZ31JO2V80yCCuLrotRgvttlBIZxxx7uH4Z3XbT2pyxR0mX47lEGwuMMsZExDGsgPyTG9sOxaenvEyhucX1kCCjakCz80LH5rFaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552999; c=relaxed/simple;
-	bh=Fm3qk2Sxt9oTRrrfhvZcED03yYICrUHHIb3sCtzNWN4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f71O/7tWZaI3KhAj3P6qGjqXBrR+gFILRs7Zd72VSFGluHfTIYJPNX4Zo3BJTcURyIsc49NtI/wxQVw9mTgPmqxVnY7QgUwhIVxVRQC1PJm7rQOuq/4Y/XphfEMDkj95v+6bvDfVXO5b0ObwoU+nmWxjD06vMfasVoSz8piY8bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUtQUVaT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUtQUVaT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C47C4AF0B;
-	Thu,  3 Jul 2025 14:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751552998;
-	bh=Fm3qk2Sxt9oTRrrfhvZcED03yYICrUHHIb3sCtzNWN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EUtQUVaTKURBSPBDtNxwsZsLLGU/xuEHfm0PM0K5AWLaAr0lx8/+TnwYPfB+kyugp
-	 o5d1bOfi4bMzMx2v5TNIDepiHs+lhKKtjX3PEHUE1FABzscTZA81BEJuCo0M0+oFZE
-	 dOrF4zbUAof8uuDe+iZKSFilPr/iDnGR0fZS146Rn1y2CwpF2gGr8tGklAwmWHwLd/
-	 H8Hc4TXVr72JEd4ApQIUdwamFnhZZ9yo02YLAo86ZBHy6BnhWR2tguDc4rTB9wd0PV
-	 4ddhT8qjZhuaiqWLp/lCL2F70yOJqRDWT/21+N7ylRkXCOvzQfNM3ccrTj/VKiWXAz
-	 zCMqHWcqpGzCA==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-610d87553b6so3239901eaf.2;
-        Thu, 03 Jul 2025 07:29:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGLNMn8xDXP/CdB+o+Odk4XOQAOV46qm0PqJS1QbplrnnfPrmBgEFdzHHbCkTls49lLE0olSRye9qn@vger.kernel.org, AJvYcCUHqUnwnjQcTWDKxYupZMEjwptdst7KXenxVJ6/dnVFCxiucqEGkB0rRDbtbIVnzUqGR6Ziz5sgV0Ou@vger.kernel.org, AJvYcCVyNZTU15TfF5FdZZqqWPfPv5UgNrxCng4xnRgIqT3bAJ9ox9P2FzoOKSam10x6HjjcElPMSchQgI8=@vger.kernel.org, AJvYcCX7ZX3/1EVzejOdGOeUyBz176L8EvQqGV+Xkq2MPxsJSw+F2rWb8H121B5TpD5yM3KTwImtrahC1iEK6io=@vger.kernel.org, AJvYcCXpikidFen+InVaqwdbKQ03ZBrFROJFDXIPx6jola4LQQvUlUB7DjSWzWJibLG76uWLxbxnY0O084ZUqQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkVMhyJoCmyMy2tLcPji2GPZ/GtOf1FbXQGeXcf9gN7QNFu3Ud
-	F/Q6qhlWDjKWMhMdRLKF3YTeLaTQdbjSzK60eReGB+y3+IT2KOdgVbrR4KalAAcz6xjXSUKOjOY
-	QsUXW0yiZLNTGVQZjCAWxOsTEA0KFfFk=
-X-Google-Smtp-Source: AGHT+IGKqgRrtyx19Ohp3Z1EI2LoOc/W9BuT9DA7/iSo9WQpIWa8l502nswOSx3IuDHZQjfc+w2NIPaPXuTzX8u35dk=
-X-Received: by 2002:a05:6820:2713:b0:611:bbad:7b62 with SMTP id
- 006d021491bc7-6120112a218mr4957769eaf.3.1751552997991; Thu, 03 Jul 2025
- 07:29:57 -0700 (PDT)
+	s=arc-20240116; t=1751553022; c=relaxed/simple;
+	bh=iT5wdTPtTT05Zvme6nev472oJWo2SHintu4IzMCzQhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KkBYJZ7JUYbyv7+G8iWyRmFNIyDp0rZ6LBlkh49LOX/4qswLEEaf+1wTD/degZBq+ONDjth30dV+Zid9I+O1gOGBa/KihxPwHjjfbYIvWBx8L9SwEq/Vakh+sIcYfCOvaL/5vX9On7TETAYrWpokHrxBLiZFyrHzEYVLK8VKpG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1CF6A121B66;
+	Thu,  3 Jul 2025 14:30:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 3262A18;
+	Thu,  3 Jul 2025 14:30:10 +0000 (UTC)
+Date: Thu, 3 Jul 2025 10:30:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/2] tracing: Fixes for filter
+Message-ID: <20250703103008.0086bb77@batman.local.home>
+In-Reply-To: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+References: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616175019.3471583-1-superm1@kernel.org>
-In-Reply-To: <20250616175019.3471583-1-superm1@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:29:46 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
-X-Gm-Features: Ac12FXyr5oPvb2c3yNjkDygXC9l6Pt_56oLkJ04HxD0-cR-THCDtscKWWn70wDY
-Message-ID: <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Improvements to S5 power consumption
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 6c46ktuzxx17auoub1guzsao9kakiiwo
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 3262A18
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+QmiWMNgwVUBBGerzOCgRGrRzN3IHpN70=
+X-HE-Tag: 1751553010-501758
+X-HE-Meta: U2FsdGVkX1/xDOO7/4mkJB3tKQ+uaVxtBbIxutGlHsH3nxfG5E+vxFNv68ThwdXMiSiBSb8gnQGDh3AzNzawYZjzMCA0WEtMzu+0bx1//5aJ4qHVKM3ZGvbcBCWiVovGNx7UsNUG3DtuQbMjTqhkrxS01mef046kjNJLYM7sz/tR1Tghcxj8q4+YgjKuPltlap2R0Nl2uprb9kGcvDGS4YDAlrAr1tddl1J73PSBdy7tpyiGoWDRqM7kvxcg3MHjgd1T+ZvDA3deuj4H3xJcfs2b3ypHUBu0IHU5FtChm8nf9TUfyNJv2tmeyocODa7fyHDTFF+aJ6Uf2+6EJDlKh11tyQIk2hgZ
 
-On Mon, Jun 16, 2025 at 7:50=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
-rg> wrote:
->
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
->
-> There have been some localized changes[1] to PCI core to help these issue=
-s,
-> but they have had various downsides.
->
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating system=
-s
-> do as well.  If for some reason that fails or is not supported, unwind an=
-d
-> do the previous S5 flow that will wake all devices and run their shutdown=
-()
-> callbacks.
+On Thu,  3 Jul 2025 13:26:26 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-I actually like this approach, but I think that it is risky.
+> Hi,
+> 
+> Here is a patch series to fix some issues on the trace event
+> and function filters.
+> 
+> The first patch fixes an issue that the event filter can not
+> handle the string pointer with BTF attribute tag. This happens
+> with CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y.
+> 
+> The second patch fixes a selftest issue on the function glob
+> filter. Since mutex_trylock() can be an inline function, it
+> is not a good example for ftrace. This replaces it with
+> mutex_unlock().
+> 
+> Thank you,
+> 
+> ---
+> Masami Hiramatsu (Google) (2):
+>       tracing: Handle "(const) char __attribute() *" as string ptr type
 
-It also requires more work/review from other people.
+I can take the first patch.
 
-I'll be sending some comments on the individual patches going forward,
-but I think the earliest it can go in is after 6.17-rc1 (given it is
-reviewed properly till then).
+>       selftests: tracing: Use mutex_unlock for testing glob filter
 
-Thanks!
+This patch should go via Shuah's tree.
 
-> v3->v4:
->  * Fix LKP robot failure
->  * Rebase on v6.16-rc2
->
-> Previous submissions [1]:
-> Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcX=
-SYc5kkL=3D6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f49062=
-25d2
-> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@=
-kernel.org/
-> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limon=
-ciello@amd.com/ (v1)
-> Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@k=
-ernel.org/ (v2)
-> Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@ke=
-rnel.org/ (v3)
->
-> Mario Limonciello (5):
->   PM: Use hibernate flows for system power off
->   PCI: Put PCIe ports with downstream devices into D3 at hibernate
->   drm/amd: Avoid evicting resources at S5
->   scsi: Add PM_EVENT_POWEROFF into suspend callbacks
->   usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
->
->  drivers/base/power/main.c                  |  7 ++
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
->  drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
->  drivers/scsi/mesh.c                        |  1 +
->  drivers/scsi/stex.c                        |  1 +
->  drivers/usb/host/sl811-hcd.c               |  1 +
->  include/linux/pm.h                         |  3 +
->  include/trace/events/power.h               |  3 +-
->  kernel/reboot.c                            |  6 ++
->  9 files changed, 86 insertions(+), 34 deletions(-)
->
-> --
-> 2.43.0
->
+-- Steve
+
+> 
+>  kernel/trace/trace_events_filter.c                         | 5 +++++
+>  tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc | 2 +-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+
