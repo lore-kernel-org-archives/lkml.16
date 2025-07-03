@@ -1,83 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2D242D80
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5221B95B;
+	Thu,  3 Jul 2025 10:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538048; cv=none; b=jQc8cKRAdwnOGLeWPvrKY40/5woF5oD6f48K2p9ulXLZkZ1WEV3vl+vD70n5Um1ji/1dxKMXNSZAC61+k+lv2FyWmly6vbWRXIJlAL26dBbGAjtXM6BDd3nDfno/TxiqmVBY3Iz5FV2zsllDZ3jDlPGlXbuA/oKlGiWJixkq1zk=
+	t=1751538090; cv=none; b=nTnnDsl6XWv6pnuYG5YY9KLg5Cou3Bzs6xGAo95fyspMxAj6urvY9paO5PDlIlxSpXv0vLWmKLrQ92G2AtJPqHmtrjnmSgEkAPtRlHcWhm7M/LFCkTpJuU4uu4x9xZMrvd8r2k9Z+u9BlCs2aRfwzjaSx9h0EzYDGsgTQ6x+/ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538048; c=relaxed/simple;
-	bh=hWnj2JttZfQLVmU/kXS57bJGdhpWzPRLJtR52pCv/1A=;
+	s=arc-20240116; t=1751538090; c=relaxed/simple;
+	bh=37OE39yAqD+Z4rIt7ZPOz9DrBUeV7pwEDTCXEbnG5E0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tllKpySP254y8EaYUjqeJcm3IbJ4HZ48bpCRzdWH4AsGX4lk1fDB7PSA42PyFqqrHOI4RRrzDM6l1TmyyfeH7BBLs7D24N9uSYG9oTuVeExW6jgMDeFwuXq6vf67UgAOX8/khCsgzEq4V48Z63x1/pKNW0Hi+cO4NFt6/y9nkq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AQLk0DJ8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EkPMsdSmVe08m5lK+MHkKngNy+YxcVAOB7SNLOG9tiGgBKSh/RDtjkbvaHojgnzPNKwghZR4Hfdw2ZG6p5kztXvIkLwMJsSgczh7Aw44pfSMLj01qLQHnO9jxxZWzEwcNjBeblA3i0Ub2+GoAovg4pDgZ5u9lMwJjUJp4mDcUq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uN2/XOLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQLk0DJ8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751538045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xbJvbfJA285FAzgUHDoYgxUWhabHJqvbcxotjo66HGg=;
-	b=AQLk0DJ8wNnyxCR16XRJzL9Ufw8QcPP1c2wAnPGvlbbsKyfv5cYUspunyFfqJK3Qft2D9d
-	Uw7kDH0VXFoC0DY9zibOu52c9VrG5avDdQnEMjXwaxHy/rQa9SDwH7CAIYdETAcF2FkAAq
-	UT8hTVstd3Hp9PfYuvSczyWz6z4lBWA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-392-kooVYgfGOqarhWZa881ybQ-1; Thu, 03 Jul 2025 06:20:44 -0400
-X-MC-Unique: kooVYgfGOqarhWZa881ybQ-1
-X-Mimecast-MFC-AGG-ID: kooVYgfGOqarhWZa881ybQ_1751538043
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3b39cb4ca2eso254652f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:20:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751538043; x=1752142843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xbJvbfJA285FAzgUHDoYgxUWhabHJqvbcxotjo66HGg=;
-        b=uEXCIPFnJJ7gSvg043RFIImobj4oxofy1Bom0rMr9Vmg1E2Dr+Nqbk9Z/j0Aw1eErM
-         ieRHRgDIYZCynOy28BVddOz1tVeEGOfBEFeD+U2Z+qaG4GdiKyO54osEXZ9VqwOh9pTw
-         Uu7hJKyA6TARFvnc+Z7vOK5+J5bp+bi1ci2YnTn2E/zJNwbUfcYX0cqHgv93Try13CUK
-         04S2Y9DoiPH1VC25qhPpP/nGBz6dCEAP8S5qNxtmgyplmhlJAaRrzuXP4BVvxVgLHs9F
-         gjYFvERBuD8BNJJoTVjO2vcJqUmV51PmY7PWulpZtfeXwuVa/8moyO1x1V1j5Hve3nAc
-         I8Cw==
-X-Gm-Message-State: AOJu0YzWKM+JqQHRw3Yj9iWJZD92a0RbBk8g8XyNpVZQ+XLDqns6WWaX
-	CXeJUgFLLD0WQaEcXsPdr0XXoJrAlc1I0slwd1hqEUYAqRssDchoX05B76MYTyBm6orndkH/akR
-	jaqrMGe4fVoea/ed9P51Xy6+zyezNdeHETkmm30CTZVoZY8QD9aGXd6PjskfOtBpvxg==
-X-Gm-Gg: ASbGncuREEEYNg6p9dbyEB8Dx+CgmA6+cxEO8235/ed2hy2w4yxWCcBnuLRxfVN1mm/
-	UrE9LYmMMOZ0B9VQHwRlSH742VXDXrtUQoe5G10HXe0T9fHcF5qPo/hmpR9jDyprwmr5DDXNz+0
-	ZQ5xm/+z83H5438+uAOB+q3FPTI3DVcLN3fqvXSx8XZ0IeZySdDLdXFNmWWZB6Zuiev/VLjrr4A
-	zu6PQ/9nalkxCKD+Anp1phtV/dO99wxzFo2MOJD6le6o+DmkhPyb+7Q4gUAnNqRldmWKzctsjG/
-	kGVy3H5sptvC9H8B
-X-Received: by 2002:a05:6000:2485:b0:3b3:bd27:f2b0 with SMTP id ffacd0b85a97d-3b3bd27f7d4mr1023060f8f.43.1751538042622;
-        Thu, 03 Jul 2025 03:20:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF/ZKDudPPhVPxOALtVbYFsiYPTxCVhE4LkBmemxP9beQpBH2tiZarCm0SxJb/9KB6b2t9B6Q==
-X-Received: by 2002:a05:6000:2485:b0:3b3:bd27:f2b0 with SMTP id ffacd0b85a97d-3b3bd27f7d4mr1023042f8f.43.1751538042134;
-        Thu, 03 Jul 2025 03:20:42 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e61f48sm18527944f8f.93.2025.07.03.03.20.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:20:41 -0700 (PDT)
-Date: Thu, 3 Jul 2025 06:20:39 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Parav Pandit <parav@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"stefanha@redhat.com" <stefanha@redhat.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-Subject: Re: [PATCH RFC v3] pci: report surprise removal event
-Message-ID: <20250703061813-mutt-send-email-mst@kernel.org>
-References: <1eac13450ade12cc98b15c5864e5bcd57f9e9882.1751440755.git.mst@redhat.com>
- <20250702132314-mutt-send-email-mst@kernel.org>
- <CY8PR12MB719502AAF4847610CD9C7286DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
- <20250703022224-mutt-send-email-mst@kernel.org>
- <CY8PR12MB719536EDBEDCEA5866F37037DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uN2/XOLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050DAC4CEEB;
+	Thu,  3 Jul 2025 10:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751538090;
+	bh=37OE39yAqD+Z4rIt7ZPOz9DrBUeV7pwEDTCXEbnG5E0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uN2/XOLppmDWB0ta5U8ugs7ryEljX4GQWMbyyZy2rC926m98c6jmTizrAwQKkKeHf
+	 CU35ibuAdk0RDfvIxI8OI1NeEHc8xbyCfo7EvlSnfhXaXCsOQsGolkJ8VmXOygIFqX
+	 mIZ3p3jFMIoGfcB2lASpQjj+9SAwPfLRAq9QPP8Q=
+Date: Thu, 3 Jul 2025 12:21:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH RESEND] x86/pmem: Fix a null pointer dereference in
+ register_e820_pmem()
+Message-ID: <2025070300-purgatory-improvise-898b@gregkh>
+References: <20250703100809.2542430-1-haoxiang_li2024@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,214 +42,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CY8PR12MB719536EDBEDCEA5866F37037DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
+In-Reply-To: <20250703100809.2542430-1-haoxiang_li2024@163.com>
 
-On Thu, Jul 03, 2025 at 09:51:57AM +0000, Parav Pandit wrote:
+On Thu, Jul 03, 2025 at 06:08:09PM +0800, Haoxiang Li wrote:
+> Add check for the return value of platform_device_alloc()
+> to prevent null pointer dereference.
 > 
-> > From: Michael S. Tsirkin <mst@redhat.com>
-> > Sent: 03 July 2025 11:54 AM
-> > 
-> > On Thu, Jul 03, 2025 at 05:02:13AM +0000, Parav Pandit wrote:
-> > >
-> > > > From: Michael S. Tsirkin <mst@redhat.com>
-> > > > Sent: 02 July 2025 10:54 PM
-> > > >
-> > > > On Wed, Jul 02, 2025 at 03:20:52AM -0400, Michael S. Tsirkin wrote:
-> > > > > At the moment, in case of a surprise removal, the regular remove
-> > > > > callback is invoked, exclusively.  This works well, because
-> > > > > mostly, the cleanup would be the same.
-> > > > >
-> > > > > However, there's a race: imagine device removal was initiated by a
-> > > > > user action, such as driver unbind, and it in turn initiated some
-> > > > > cleanup and is now waiting for an interrupt from the device. If
-> > > > > the device is now surprise-removed, that never arrives and the
-> > > > > remove callback hangs forever.
-> > > > >
-> > > > > For example, this was reported for virtio-blk:
-> > > > >
-> > > > > 	1. the graceful removal is ongoing in the remove() callback, where
-> > disk
-> > > > > 	   deletion del_gendisk() is ongoing, which waits for the requests +to
-> > > > > 	   complete,
-> > > > >
-> > > > > 	2. Now few requests are yet to complete, and surprise removal
-> > started.
-> > > > >
-> > > > > 	At this point, virtio block driver will not get notified by the driver
-> > > > > 	core layer, because it is likely serializing remove() happening by
-> > > > > 	+user/driver unload and PCI hotplug driver-initiated device removal.
-> > > > So
-> > > > > 	vblk driver doesn't know that device is removed, block layer is waiting
-> > > > > 	for requests completions to arrive which it never gets.  So
-> > > > > 	del_gendisk() gets stuck.
-> > > > >
-> > > > > Drivers can artificially add timeouts to handle that, but it can
-> > > > > be flaky.
-> > > > >
-> > > > > Instead, let's add a way for the driver to be notified about the
-> > > > > disconnect. It can then do any necessary cleanup, knowing that the
-> > > > > device is inactive.
-> > > > >
-> > > > > Since cleanups can take a long time, this takes an approach of a
-> > > > > work struct that the driver initiates and enables on probe, and
-> > > > > tears down on remove.
-> > > > >
-> > > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > > ---
-> > > > >
-> > > >
-> > > > Parav what do you think of this patch?
-> > > The async notification part without holding the device lock is good part of
-> > this patch.
-> > >
-> > > However, large part of the systems and use cases does not involve pci hot
-> > plug removal.
-> > > An average system that I came across using has 150+ pci devices, and none
-> > of them uses hotplug.
-> > >
-> > > So increasing pci dev struct for rare hot unplug, that too for the race
-> > condition does not look the best option.
-> > >
-> > > I believe the intent of async notification without device lock can be achieved
-> > by adding a non-blocking async notifier callback.
-> > > This can go in the pci ops struct.
-> > >
-> > > Such callback scale far better being part of the ops struct instead of pci_dev
-> > struct.
-> > 
-> > Sorry, I don't see a way to achieve that, as the driver can go away while
-> > hotunplug happens.
-> > 
-> Well without device lock, driver can go away anyway.
-> In other words when schedule_work() is called by the core in this patch, what prevents driver to not get unloaded?
-> May be driver refcount can be taken conditionally before invoking the callback?
-
-The work is flushed on driver unload.
-Check out v4 for how it's used.
-
+> Fixes: 7a67832c7e44 ("libnvdimm, e820: make CONFIG_X86_PMEM_LEGACY a tristate option")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> ---
+>  arch/x86/kernel/pmem.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> > You would be welcome to try but you mentioned you have no plans to do so.
-> > 
-> As I explained you can see that the support is needed at multiple modules.
+> diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
+> index 23154d24b117..04fb221716ff 100644
+> --- a/arch/x86/kernel/pmem.c
+> +++ b/arch/x86/kernel/pmem.c
+> @@ -27,6 +27,8 @@ static __init int register_e820_pmem(void)
+>  	 * simply here to trigger the module to load on demand.
+>  	 */
+>  	pdev = platform_device_alloc("e820_pmem", -1);
+> +	if (!pdev)
+> +		return -ENOMEM;
 
-Right. Check out v4: I did all the core work: pci, virtio and
-virtio-pci, so what's left is just virtio blk.  For which I'm not the
-best person, I think you are more familiar with that.
+As this can only happen if you are out of memory, AND that really can't
+happen at early boot time, how have you tested this code to verify that
+this works?
 
+thanks,
 
-> Presently I couldn't spend cycles on this corner case race condition.
-> IMHO, if we want to fix, first fix should be for the most common case condition, for which the proposed fix exists.
-> 
-> Followed by that your second patch of device reset should also be done.
-> 
-> Next should be corner case fix that possibly nvme can benefit too. 
-> 
-> But if you have better ideas, should be fine too.
-> 
-> > 
-> > > > This you can try using this in virtio blk to address the hang you
-> > > > reported?
-> > > >
-> > > The hang I reported was not the race condition between remove() and
-> > hotunplug during remove.
-> > > It was the simple remove() as hot-unplug issue due to commit
-> > 43bb40c5b926.
-> > >
-> > > The race condition hang is hard to reproduce as_is.
-> > > I can try to reproduce by adding extra sleep() etc code in remove() with v4
-> > of this version with ops callback.
-> > >
-> > > However, that requires lot more code to be developed on top of current
-> > proposed fix [1].
-> > >
-> > > [1] https://lore.kernel.org/linux-block/20250624185622.GB5519@fedora/
-> > >
-> > > I need to re-arrange the hardware with hotplug resources. Will try to
-> > arrange on v4.
-> > >
-> > > > > Compile tested only.
-> > > > >
-> > > > > Note: this minimizes core code. I considered a more elaborate API
-> > > > > that would be easier to use, but decided to be conservative until
-> > > > > there are multiple users.
-> > > > >
-> > > > > changes from v2
-> > > > > 	v2 was corrupted, fat fingers :(
-> > > > >
-> > > > > changes from v1:
-> > > > >         switched to a WQ, with APIs to enable/disable
-> > > > >         added motivation
-> > > > >
-> > > > >
-> > > > >  drivers/pci/pci.h   |  6 ++++++
-> > > > >  include/linux/pci.h | 27 +++++++++++++++++++++++++++
-> > > > >  2 files changed, 33 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h index
-> > > > > b81e99cd4b62..208b4cab534b 100644
-> > > > > --- a/drivers/pci/pci.h
-> > > > > +++ b/drivers/pci/pci.h
-> > > > > @@ -549,6 +549,12 @@ static inline int
-> > > > > pci_dev_set_disconnected(struct
-> > > > pci_dev *dev, void *unused)
-> > > > >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
-> > > > >  	pci_doe_disconnected(dev);
-> > > > >
-> > > > > +	if (READ_ONCE(dev->disconnect_work_enable)) {
-> > > > > +		/* Make sure work is up to date. */
-> > > > > +		smp_rmb();
-> > > > > +		schedule_work(&dev->disconnect_work);
-> > > > > +	}
-> > > > > +
-> > > > >  	return 0;
-> > > > >  }
-> > > > >
-> > > > > diff --git a/include/linux/pci.h b/include/linux/pci.h index
-> > > > > 51e2bd6405cd..b2168c5d0679 100644
-> > > > > --- a/include/linux/pci.h
-> > > > > +++ b/include/linux/pci.h
-> > > > > @@ -550,6 +550,10 @@ struct pci_dev {
-> > > > >  	/* These methods index pci_reset_fn_methods[] */
-> > > > >  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order
-> > */
-> > > > >
-> > > > > +	/* Report disconnect events */
-> > > > > +	u8 disconnect_work_enable;
-> > > > > +	struct work_struct disconnect_work;
-> > > > > +
-> > >
-> > > > >  #ifdef CONFIG_PCIE_TPH
-> > > > >  	u16		tph_cap;	/* TPH capability offset */
-> > > > >  	u8		tph_mode;	/* TPH mode */
-> > > > > @@ -2657,6 +2661,29 @@ static inline bool
-> > > > > pci_is_dev_assigned(struct
-> > > > pci_dev *pdev)
-> > > > >  	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) ==
-> > > > > PCI_DEV_FLAGS_ASSIGNED;  }
-> > > > >
-> > > > > +/*
-> > > > > + * Caller must initialize @pdev->disconnect_work before invoking this.
-> > > > > + * Caller also must check pci_device_is_present afterwards, since
-> > > > > + * if device is already gone when this is called, work will not run.
-> > > > > + */
-> > > > > +static inline void pci_set_disconnect_work(struct pci_dev *pdev) {
-> > > > > +	/* Make sure WQ has been initialized already */
-> > > > > +	smp_wmb();
-> > > > > +
-> > > > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x1); }
-> > > > > +
-> > > > > +static inline void pci_clear_disconnect_work(struct pci_dev *pdev) {
-> > > > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
-> > > > > +
-> > > > > +	/* Make sure to stop using work from now on. */
-> > > > > +	smp_wmb();
-> > > > > +
-> > > > > +	cancel_work_sync(&pdev->disconnect_work);
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * pci_ari_enabled - query ARI forwarding status
-> > > > >   * @bus: the PCI bus
-> > > > > --
-> > > > > MST
-
+greg k-h
