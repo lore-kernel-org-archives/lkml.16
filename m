@@ -1,128 +1,140 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBBA2EA14C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EB22EA46D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545205; cv=none; b=ncWpuL9e9HF8Er8TCoJFbDwoSvxuFEPPJm+qPySFCZnZB3sN3stn9iV4KbEMIreN1crXSwgDYnEd3z1lM0NHscPdAXVPgalP4tFxbVBZTiuCSfyElw3OnPBIcq0ydGo0Z3RKeHztKZy1orBPv9HFG8BN84vtgoSP22nSq/l8lHI=
+	t=1751545209; cv=none; b=HNuFxrDNnDmM/ZBB2g8IOEJwR9/ICTbZQGlf0gNKWP2DZV/JKZIJm9iwbTv0IQAHtsXogEjwlrEIiobKnR1lTZ1gJypmBJkhEAzjjQ1Gl0lKq8gt9EeCMNnYGM1fngEkfJpaR6zXg0CxqcaVNEHgjs7jckoEg2SoSPJe0xHfz6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545205; c=relaxed/simple;
-	bh=yfakIDfW4JaD8n7YspMzq+XGk78JLy1DRAAuWtmLotM=;
+	s=arc-20240116; t=1751545209; c=relaxed/simple;
+	bh=DaaFv8arGlHGPm5oC87p+hTcAPvrGVmo/YtNa3ziKvA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CnQthZMIDn+R3AG8h6vSjp3eiE6+8G4JWmDG4iYgqJJARbRRCDPi/1sWlSA4a7DtO1l9XiCRmLMrqxak5MYE+9sNpNyCbPHkmqfJxtlKmucsOwGFqtxrBQUxumRFnWhhW6ycMyKaXPQJjXMFbA4vuyasu0hdNSUEPCjDUIZl/QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ef/8cPjT; arc=none smtp.client-ip=209.85.128.170
+	 To:Cc:Content-Type; b=uhanRdFpzO0F0LrepT/QL9NTYXXcVkJdCXW6u1cJjC1zkHnlycoz/xM/1D0UPTiojsr+lni7wbsmyHuTBhD0G4Vag+Xc22NjmVFyigiF8qFc0pCJjPOP7BAFWBPhIaVVFvOZdO+yH+QDVpZeug2eS9Zx7GQ8Bf8zSUwBzkWgLqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Un7AHl6e; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ef/8cPjT"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70e3e0415a7so9887047b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:20:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Un7AHl6e"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso5183352276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751545203; x=1752150003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w/xgkdQ256Gr+SWkG7Kp5pwf29/+EIB0KaUypu7ps1M=;
-        b=Ef/8cPjTtwC9xWc0C8A9jG7t2jd9BSfNxvR4+C9Kz/NgDT/URRT0hfuaNFvx4EJQ/3
-         wK8h/MyY0PbG155WlSYDLFJfZotu0Q5ljO/M/CGppIYRIj9pRJFfRXGiG7fL5VGkzh2D
-         4Dqj+FYDQsJLMNGRTxRjcg7Cse0e+07QagohJUj1np/CDWKlcHa8YWUbBXYe5k56PJtU
-         OonRMJvVS+Bk4Dt8dUVnqLR7cxq/AYJVzx/KLmAxNFUuBa7cD6zknKy3C+jR03pwD7lU
-         oDwUdZnXLLJMbjXgiyw926+fy3u0Q+d5H+EY0zd+tIlCW4g5zJpNr8n/O2qzcZ+YIfUg
-         uMhw==
+        d=linaro.org; s=google; t=1751545207; x=1752150007; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K9/FTLpn5NiRGQ3LTafRamigGNZeC4WBTSQgNEibO8s=;
+        b=Un7AHl6eqgCaUfwyW4/OVKUK9Ikbn6YrsFbYhgTP3OPtA+3SmTYaKvaDH8W8IwZMH9
+         mqiOit+vZXjb111CTMrr0PA13Z5NzrUfI/9mkRLUtrbmG9OwJTx7aD26pwpaR58hPh3a
+         6bKL7TITeEY0ndbuP4UpVkjdgv9g21oM8t3d6WkhPPrqJ2huXgKEUJ6orVQmf5jlT3N2
+         bQXr5QRcHnRSRuHoXlfbt2Zj5NbMoL615w0d7HjDFWmZYgRR9f/+gbJtb1zfTDZDK+cP
+         emotrxgPv2k0faywXq6tEK1oNYN/8TnxQ7RGG+UwCjtY3qgmNkg2wdDld07nCkr6H2l4
+         dSXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545203; x=1752150003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w/xgkdQ256Gr+SWkG7Kp5pwf29/+EIB0KaUypu7ps1M=;
-        b=TN/a1IQvgXrOHKu9LCH164xz8hTcgDll1h+znCvrEtO3MLNFqLoaQ6N4KaI7IoAuBB
-         HxeQ6XaU8EPyDj3/lJmMJvvvZK19IVfE2U8Oq2S0dpQDfVdSphRF8XNw0NlU7ZZV3jDp
-         0+AGLml/P47nFERpfSdrwR2iJFkqXSE17erg4O5+muUmPWflyCOQHA7qkWsCyluwdTFp
-         JqNNLqMBdRZppUiUZJKCDO/81J/U0nyszEqP1j/3690VU5QuBVqQzv7TOpHfnYnMas4h
-         NUsZOz2kA4OVL8bljszipF/ItWL5/tLQcKORcv4yC5/ELepY8WITtTvb5Uh1CLw/qEiK
-         JMYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXssBasocc0SCSCl+mj6DaI4xJkbu5ZhS4eAl3HZuzMEUMd7TunkfEwCXsiBXfidG5FxMF9yYmrlnbZl1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhjZKtnwUHUlgaVVluSj7alA++fTKLZy6iQM6uSAgREd0iFZuX
-	WL2EvsPfR4Nlxpb9cp9yDxmauv90tAkr4PYYUXmu+pTeGQdnGiO2iUpYN7X10FhEssup3X1BO2B
-	EmpT9j3+kGIv0Ens4PK+EToju8E1ZdM3FmDT/7C4j8Ms20wPzluRc
-X-Gm-Gg: ASbGnctKGOYohc3ktd13t31IiHP0qo5KwlXCBd/qCkJ+HpdDRJnbm3DJiiivMKNgv1m
-	sdjeOv6SwC4zZ4SaFgMjP3+UZPH9yUr7hKTq4qb6Nt8BLefb1cE7IXOwqFyHwvJFlIyHnA3BBU5
-	OIU4eA3muiUFgfvzfL9NI6uvte+CMygdOofGuEy58/aZcG
-X-Google-Smtp-Source: AGHT+IFc/Dp3srh5iqd7hq8Ngg5hON3p7e6BHwMds3WkJexDoH4IJZlEeKBa5tr6EgM89aB4l//e8QnBGEKWzYq/55s=
-X-Received: by 2002:a05:690c:4d09:b0:712:c295:d01f with SMTP id
- 00721157ae682-7165ca33154mr27601697b3.3.1751545203096; Thu, 03 Jul 2025
- 05:20:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751545207; x=1752150007;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K9/FTLpn5NiRGQ3LTafRamigGNZeC4WBTSQgNEibO8s=;
+        b=MkZPw1qLlAorUgmgQKDIEJeog5psPygUqWw3AJQoPuBKd6Mqbidj+MGP9NzhY6rx0I
+         PJIFXVfU3cR3TTTQNZG1EZqw2uKGAOTItk8JzhBYaXw+eJB8KuWknK2KcVOMJYYFyNga
+         R5Ms504t+XdfpuR/o4O02H+B2VGwDM9yZ3xTJqA9GBann8F5ZwqSlCV46a2Ae+YblKBP
+         KpFoMQF/pNWSdctuDzyegW8vzOLdkpdrbcz2Btom/+KGRFwqMWGpXYhOvP35QBnWP5rg
+         empbfK81EqCWzt3kYSLgTtvCUiPDNQ5NvypC3I3XCQEiC+PPZypwsI3uoxiB8EqDcJWM
+         xXSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAoo9WkGwj/SzQFSwXYXExmpI2p3eoO+ayBZf9PjDdxgKmfTHFye0h5zI18ES7WtaXvRZCWsO0+2HGb+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFL476WGK2PloHbIXURqUHrxUeI2eGUU0pyNyf1W/qutNLo5OO
+	GaY2OWIMmN/SzBTqN5ZH3q7nVa9ML29LAr0i1tNH46NpiA15GopD52I6eQYWGpEP6lxd5WziNsB
+	G7TAXzd92Y5AwfYJkH+oPv7LQRPggrixSUvGqi7ID4C31HAWyOkrc
+X-Gm-Gg: ASbGnctDukJYNileZgZMk46Kx+aqzMbiueijQUhMgD4wMrnDTQc95BNb1tTkQ84+DeK
+	htVWinAmOEaa4oh66i21ClMXiC7yfVVEnijFHNUJj3oVsl3kkwOcgmgxnMbgSy5WmbviQ1fhAL+
+	q4kMEEI0TofEC87faLKrc2WA3qmTPXmirMZyjpn9WXUT+R
+X-Google-Smtp-Source: AGHT+IF56qUTFIuC/dd5f/t6kaXb8O7+9gtfhTDmhN3Qt6B+PI0BaNXhbDG9tZDXH1SGEvegSmXerSSSuu5lHUdXJw4=
+X-Received: by 2002:a05:690c:61c1:b0:70e:7882:ea8e with SMTP id
+ 00721157ae682-7164d46bde5mr101768967b3.31.1751545206699; Thu, 03 Jul 2025
+ 05:20:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750943549.git.benoit.monin@bootlin.com> <e244c1377f7b2ad5d026c9d9368a08de3887129f.1750943549.git.benoit.monin@bootlin.com>
-In-Reply-To: <e244c1377f7b2ad5d026c9d9368a08de3887129f.1750943549.git.benoit.monin@bootlin.com>
+References: <20250626231452.3460987-1-jm@ti.com>
+In-Reply-To: <20250626231452.3460987-1-jm@ti.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 3 Jul 2025 14:19:27 +0200
-X-Gm-Features: Ac12FXzupRsyUUbucdgXsXSWaJncWw9XABSgjzl6JCKdNXeKvxiGKlgWFyEkj0s
-Message-ID: <CAPDyKFopr_xPEkxZdT5JALTM16SCYiaj1A=_n-805HNPooBQGA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci-cadence: use of_property_present
-To: =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	=?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date: Thu, 3 Jul 2025 14:19:31 +0200
+X-Gm-Features: Ac12FXzPltRJ63gnLQjiDWMDi7jPRlN5Dcc8lvlBEvIo0x3Wdbqeqg10YzXGJm8
+Message-ID: <CAPDyKFrbHEPJJzo9Ysc4NFKCHVJwBumZMo6+dSE4OvoBn-+fRQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci_am654: Workaround for Errata i2312
+To: Judith Mendez <jm@ti.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 26 Jun 2025 at 16:44, Beno=C3=AEt Monin <benoit.monin@bootlin.com> =
-wrote:
+On Fri, 27 Jun 2025 at 01:14, Judith Mendez <jm@ti.com> wrote:
 >
-> Instead of using of_property_read_bool to check the presence of the
-> cdns,phy-* properties in the device tree, use of_property_present in
-> function sdhci_cdns_phy_param_count.
+> Errata i2312 [0] for K3 silicon mentions the maximum obtainable
+> timeout through MMC host controller is 700ms. And for commands taking
+> longer than 700ms, hardware timeout should be disabled and software
+> timeout should be used.
 >
-> This silences the following warning messages since the cdns,phy-*
-> properties are all u32, not boolean.
+> The workaround for Errata i2312 can be achieved by adding
+> SDHCI_QUIRK2_DISABLE_HW_TIMEOUT quirk in sdhci_am654.
 >
-> OF: /soc/sdhci@d8010000: Read of boolean property 'cdns,phy-input-delay-l=
-egacy' with a value.
-> OF: /soc/sdhci@d8010000: Read of boolean property 'cdns,phy-input-delay-m=
-mc-highspeed' with a value.
-> OF: /soc/sdhci@d8010000: Read of boolean property 'cdns,phy-input-delay-m=
-mc-ddr' with a value.
-> OF: /soc/sdhci@d8010000: Read of boolean property 'cdns,phy-dll-delay-sdc=
-lk' with a value.
-> OF: /soc/sdhci@d8010000: Read of boolean property 'cdns,phy-dll-delay-sdc=
-lk-hsmmc' with a value.
+> [0] https://www.ti.com/lit/pdf/sprz487
 >
-> Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Applied for next, thanks!
+Applied for fixes and by adding a fixes and a stable tag, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci-cadence.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v1:
+> - Split series [v1] according to Vignesh's review comment in v1
+> - Add Adrian's tag
 >
-> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-ca=
-dence.c
-> index a94b297fcf2a..27bd2eb29948 100644
-> --- a/drivers/mmc/host/sdhci-cadence.c
-> +++ b/drivers/mmc/host/sdhci-cadence.c
-> @@ -144,7 +144,7 @@ static unsigned int sdhci_cdns_phy_param_count(struct=
- device_node *np)
->         int i;
+> v1: https://lore.kernel.org/linux-mmc/20250624221230.1952291-1-jm@ti.com/
+> ---
+>  drivers/mmc/host/sdhci_am654.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 >
->         for (i =3D 0; i < ARRAY_SIZE(sdhci_cdns_phy_cfgs); i++)
-> -               if (of_property_read_bool(np, sdhci_cdns_phy_cfgs[i].prop=
-erty))
-> +               if (of_property_present(np, sdhci_cdns_phy_cfgs[i].proper=
-ty))
->                         count++;
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index ea14d56558c4..86d87d8e0675 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -613,7 +613,8 @@ static const struct sdhci_ops sdhci_am654_ops = {
+>  static const struct sdhci_pltfm_data sdhci_am654_pdata = {
+>         .ops = &sdhci_am654_ops,
+>         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
 >
->         return count;
+>  static const struct sdhci_am654_driver_data sdhci_am654_sr1_drvdata = {
+> @@ -643,7 +644,8 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
+>  static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
+>         .ops = &sdhci_j721e_8bit_ops,
+>         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
+>
+>  static const struct sdhci_am654_driver_data sdhci_j721e_8bit_drvdata = {
+> @@ -667,7 +669,8 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
+>  static const struct sdhci_pltfm_data sdhci_j721e_4bit_pdata = {
+>         .ops = &sdhci_j721e_4bit_ops,
+>         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
+>
+>  static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
+> --
+> 2.49.0
+>
