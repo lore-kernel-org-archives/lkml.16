@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E742D8763
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02F52D8DB9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:26:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534797; cv=none; b=Er9o1S5Z1zsdFG23Qi6qngn3g2TajUUyb5Qp7a0OQMdd0G2KO8dci8MsdKyTVeuqIvo+8kju88D83IErw+OeJ+e2WaQ5cEoH3edT409PmYt8shcEJYC4aoiENH6NyxgPv0bIztlKB46v4auwzXwyAzWo9GKpfVr5niekSktdztM=
+	t=1751534800; cv=none; b=nF6wCD9xdV2rVDkNg79t7XLPElLfdjcOs4K3gjuyIp0XA8eeeFNAPNhmXHUOwlEEhk/WuPiAF7RzB2xtUSKb7EQmD3PbgcZ5u0lBW6NveMF8qEr7KwIGWHBPwwOaRN8wIPin1FWxFyCK/jHX7P0m8QWNwfCwv3TmdEGcCoFmlN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534797; c=relaxed/simple;
-	bh=fM0VFuiMREMNY+584mngGa0LdaJ7mBTcKY8yQT4Zb4I=;
+	s=arc-20240116; t=1751534800; c=relaxed/simple;
+	bh=PUGyVN4OJqSqheGuV7u25IOAaInhgOsYis9mxDJwLeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FeLMQ4Y9Tp4KeNZW7r4a6Qsi/KC/pBfWqBuUvUvovsZJgpMzCKcpJu3dzTwakD7XLOpTzDAF9HoOYaB2LKOu5BsiPkhaI+jwmCcFcXhi5g0UmlOjpYUEWkwyFNq3URm3PLph2t1ZDhEAOG1VqJ79q0hPsy1T2O4kH/2g/R2Nyks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EEmw5i1b; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=LzydfyKCEm5Wbhl4ST7Zx+JsqLe17ocuEV3cQ3H1hpNyX4zJKHfslR+d3mKDKcFSK5V7ocK35JFAZPioLt2CwRkujeOe7bke76kmjo9mRW7cnVKMC+exRwCfViQgBL/Qw7H77ZgjTcc4KqndgoH6nYBmD0oEQsS37ZSFzis6jAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KUHP7OWv; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEmw5i1b"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KUHP7OWv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751534795;
+	s=mimecast20190719; t=1751534797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zmW6YKzoCEgs1ffMR1uB9KKsFPVquRoas1pcF/ETX4A=;
-	b=EEmw5i1bf1yCVadQ7dLkgk/hU6VYwmGYePsG3SL5cx5B/UQR2dsYjVgqClqslMPixLwbJl
-	8nK6ZzocJWesWPHQO6/mHWPVbvgH5oSGDdf3MSOoXV3ukqh0H/jHvCU9lEIxIAr8+3ru0d
-	mBjcV3ngPIdFGX2SGrJkj9xOifQxMZc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Y/PjBes3xfnhRnjsZQuw1IljDm3PZO9lLi6jhdLLbvQ=;
+	b=KUHP7OWveXLHAwxHTvqQjbm/kKP72mEbrNBS/swNeR8vHOtK88KcSqhRNasJ4CVfgJaLY/
+	f2XEiFh5cdDXZqnsH6t2/INIxdQdIBHF+p6oYogb3+ysVBPM/5NGPPDTzUMBhvRBCGXToO
+	rJlX+avFiSZELyOhX/xvRnjStfanFMI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-497-y-SnSMwLPAWpHAddGjZ8iQ-1; Thu, 03 Jul 2025 05:26:34 -0400
-X-MC-Unique: y-SnSMwLPAWpHAddGjZ8iQ-1
-X-Mimecast-MFC-AGG-ID: y-SnSMwLPAWpHAddGjZ8iQ_1751534793
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4e9252ba0so3290597f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:26:33 -0700 (PDT)
+ us-mta-643-0aaJju2kNjCDYiZmR1iA3w-1; Thu, 03 Jul 2025 05:26:36 -0400
+X-MC-Unique: 0aaJju2kNjCDYiZmR1iA3w-1
+X-Mimecast-MFC-AGG-ID: 0aaJju2kNjCDYiZmR1iA3w_1751534795
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4e9252ba0so3290642f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:26:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751534792; x=1752139592;
+        d=1e100.net; s=20230601; t=1751534795; x=1752139595;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zmW6YKzoCEgs1ffMR1uB9KKsFPVquRoas1pcF/ETX4A=;
-        b=wizEUn7cw6j6RxeOW1j6VMHiC2+BE0YQl0HDkTOkTVPaX7Mr701b1A+6e6CI72gajU
-         UGGv8ZIy20N8c/eqxgscKovA85Mn625zKyccz27zFOIS32w+y4N69IJ7FcAHJXRaKa0g
-         DsWNvwbw0iBIlZurcGWfPnS785ipnGJeXv3/e5vVZaiI+jsVa/ROYbeangdGzu1W1o6C
-         DOeLhQcpr0DW/1xUxlg3gEizaYQF7LN5EIaagF1BVHKLqyJgDYNH1cKaoEz2UxqAHnYV
-         nqapG7BrWOyY+16iUjp0jBtsiF/9P2j/fppixbb/P0dAvS+iX/5VRPwEiHt1SCe7fSow
-         m1TA==
-X-Gm-Message-State: AOJu0Yxb8vfrn1iQUvQSLvZ4Z852fKzrtxHlHYTu3Z5Vxc8XH3+HPTwr
-	NMKYFtF2UiOUGAEUEkKf4ky7km4zJPmyQJeR/VrbeWlwo8u9vPXawZU7t+DItiBYW1FRKFg8Q8t
-	p1ylr5P/82PK2JxFtO6UUCXlWBbAeXgrvdYXaTuOEl8g0gMyQnHXx866/kUn1BppWupqSGXdgp7
-	e4BktQK2xtoWN3q4F8kzdK+kMiMFsGuxnsva8EtbCCADo=
-X-Gm-Gg: ASbGncs3Gz7wwe22nW65ZAzw7xzpyntx+d+awDhqIMD5BsO61GF5W/l2yMEEQ4eshNe
-	PS3TTngn+t90qUILY6fh23N3qW8RmYwdlUT0NRPGzA46gu99A6lc+yb1DvHQBxP4NpQnutOtgVt
-	57xcV6GLMUPTLaiG7o4/jECAvpjLu5GQ8JPZTQl2XJwuJGWkYsFrX1qeqZNt8UnknZCO4TSrrbH
-	c9POQa+iOxdKT+t31eqLUPM2/uGVVfmMxM3u5l6P40ulhiF1gWhp7E9g8nNLZOxtOJY9tZzTZc7
-	IoyAYKY10IwLLh07
-X-Received: by 2002:a05:6000:491a:b0:3a4:ef33:e60 with SMTP id ffacd0b85a97d-3b32da93488mr1960770f8f.40.1751534792425;
-        Thu, 03 Jul 2025 02:26:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8b1TQBfjA4pFNMI59PREmCgzTYZIOsLlPCQGGaGlAM2M5yrv0rTLLaT3Od8ohCZ61d5wRvQ==
-X-Received: by 2002:a05:6000:491a:b0:3a4:ef33:e60 with SMTP id ffacd0b85a97d-3b32da93488mr1960735f8f.40.1751534791959;
-        Thu, 03 Jul 2025 02:26:31 -0700 (PDT)
+        bh=Y/PjBes3xfnhRnjsZQuw1IljDm3PZO9lLi6jhdLLbvQ=;
+        b=PxLeMybtOMH2ux/N0C5VfdQ7gN6yEMRPA1CYBp1R49KHjfuhaGs+INqoH0LLbFy5FA
+         5g1aMzkov2GvU+29CusdqobOxotjmI5ZHPobY1t3q3TqQFtE7Uup6PyM78cnN970YgXC
+         HOijAKxCya0O9JlRSyozvKcG+2ieG4EmW7jNsId+CT688zvxZdoxa5bN/yx44gquNT3m
+         IzxVSQK7c4LpWWjaeMJyZnw8UHdDVlhoYiALe8HN0cNBphDwCVEprgkT912KozKa5L1b
+         b/88hcvaQOYaV3xt1crIUKXCUzkRlpycMtHLJTbpOVqqkjMWpXDE7jA76zFxGKnnM8/G
+         UsnQ==
+X-Gm-Message-State: AOJu0YwRxGpuhrht8ySjSq++e5gWQXDSnK/3L5SLErvayQslBXqnNxJH
+	vBsBbgECYLcwXGwhDnVa1a8xfsNiUhzprARKP36QvayxwitIAhe5JWMxnVo/UjajgJsFKAIR+1X
+	TWx48DxG5Xbun5JeF+gH0/n9+w3LnXto7/dYkkGfAE14C0+w2DeGSDT15Ph2YgPf0zwUe+SB0Y+
+	4k+WFVgf9RBJ41NXeN8NFRTQH5lL8C6MHI7TKPu84mWaE=
+X-Gm-Gg: ASbGncsOyO0uCVkmc1FJdWqlAHpaylueufwA4SH4LXPqWoTFE1uUnCLMTGFS2g73vZg
+	SRHdhJ931FjsVFXTp1eKdT/8XZIi5NhjmTYi19Mik4YY1dfxndHCmIG8KkWVw2AzrnQqO9350kp
+	285uw2UiAbP2imrSm9XPWbghP4Z2qUgBFkA/0GXj3qJmRwLmNtLd9VWU7hmccmJ22cMqBNdRy53
+	A2j5frotXNLNBSExlRScj7qWXlg439vl+hDYKl4CIkUJYsLFUZhjMq1zXBNO8ur3ZepsiqRcGMR
+	QqFdcDZXaikXgVeX
+X-Received: by 2002:a05:6000:22c5:b0:3a3:6e85:a529 with SMTP id ffacd0b85a97d-3b32e5209b1mr2046008f8f.51.1751534795063;
+        Thu, 03 Jul 2025 02:26:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGfswN2F1WSnecEwI4IFFwD4JVrRDEDFHdlQdrbIQbLQDH7ysTzQt9L3uJYclxAObpUi6v/jw==
+X-Received: by 2002:a05:6000:22c5:b0:3a3:6e85:a529 with SMTP id ffacd0b85a97d-3b32e5209b1mr2045960f8f.51.1751534794544;
+        Thu, 03 Jul 2025 02:26:34 -0700 (PDT)
 Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa8fasm18050453f8f.28.2025.07.03.02.26.30
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997af9esm21221155e9.14.2025.07.03.02.26.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:26:31 -0700 (PDT)
-Date: Thu, 3 Jul 2025 05:26:29 -0400
+        Thu, 03 Jul 2025 02:26:34 -0700 (PDT)
+Date: Thu, 3 Jul 2025 05:26:32 -0400
 From: "Michael S. Tsirkin" <mst@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
@@ -73,8 +73,8 @@ Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
 	Jason Wang <jasowang@redhat.com>,
 	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>
-Subject: [PATCH RFC v4 2/5] virtio: fix comments, readability
-Message-ID: <5cc87ae71e8a61f53e4534bab92f7ad19fc3524a.1751534711.git.mst@redhat.com>
+Subject: [PATCH RFC v4 3/5] virtio: pack config changed flags
+Message-ID: <ae1546541834abe3296c6341f6dd02a73a49f29a.1751534711.git.mst@redhat.com>
 References: <cover.1751534711.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,46 +88,30 @@ In-Reply-To: <cover.1751534711.git.mst@redhat.com>
 X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
 X-Mutt-Fcc: =sent
 
-Fix a couple of comments to match reality.
-Initialize config_driver_disabled to be consistent with
-other fields (note: the structure is already zero initialized,
-so this is not a bugfix as such).
+In anticipation of adding more, use bit-fields instead of bool.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/virtio/virtio.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/linux/virtio.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index 95d5d7993e5b..c441c8cc71ef 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -147,7 +147,7 @@ EXPORT_SYMBOL_GPL(virtio_config_changed);
- 
- /**
-  * virtio_config_driver_disable - disable config change reporting by drivers
-- * @dev: the device to reset
-+ * @dev: the device to disable
-  *
-  * This is only allowed to be called by a driver and disabling can't
-  * be nested.
-@@ -162,7 +162,7 @@ EXPORT_SYMBOL_GPL(virtio_config_driver_disable);
- 
- /**
-  * virtio_config_driver_enable - enable config change reporting by drivers
-- * @dev: the device to reset
-+ * @dev: the device to enable
-  *
-  * This is only allowed to be called by a driver and enabling can't
-  * be nested.
-@@ -530,6 +530,7 @@ int register_virtio_device(struct virtio_device *dev)
- 		goto out_ida_remove;
- 
- 	spin_lock_init(&dev->config_lock);
-+	dev->config_driver_disabled = false;
- 	dev->config_core_enabled = false;
- 	dev->config_change_pending = false;
- 
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index 64cb4b04be7a..be0beb16b487 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -149,9 +149,9 @@ struct virtio_admin_cmd {
+ struct virtio_device {
+ 	int index;
+ 	bool failed;
+-	bool config_core_enabled;
+-	bool config_driver_disabled;
+-	bool config_change_pending;
++	u8 config_core_enabled:1;
++	u8 config_driver_disabled:1;
++	u8 config_change_pending:1;
+ 	spinlock_t config_lock;
+ 	spinlock_t vqs_list_lock;
+ 	struct device dev;
 -- 
 MST
 
