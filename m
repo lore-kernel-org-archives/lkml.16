@@ -1,84 +1,62 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C2B253939
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DA8EEA9;
+	Thu,  3 Jul 2025 12:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544092; cv=none; b=C8GE3WjYf3D2DufwWI/Me7LnEqPXqqpMM+AkOqcXflhOKRsgJGghJ1iYa4b1aaeW+ODcs0XM7tp9ILExrYxZ5koRd99DH0owT4Nl4XhInQ83eBUxEKa610O9eVrAvG8X3/LlXS84OvoCP6DKA9FILm1If9PXGC4WPmfuJef/2DY=
+	t=1751544206; cv=none; b=bjteR2WjY6oSR7NcqeR209RPpOOUJwPLzu0n6x2roJFLiqtJmOJhWYmRK0AZvonvpgafHjWcfhg8usr0FbSdtTmN4SgwT1PPB3Eo8JddCKlFKxldDYXNZTNRGpr9l8HIG0T68i98mZOPd8JdW9pt3GcjLDDmM+TqdQIJFV9qhRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544092; c=relaxed/simple;
-	bh=z2VMVssNf2T1qI0QODTU/q2QBzCWr3raQvOE+FydPRU=;
+	s=arc-20240116; t=1751544206; c=relaxed/simple;
+	bh=13Mtr8tfOpo/bjU47Z0Ixv/RqoqZx+pkZNbvLw+MH6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9QfVlM/1JvLhwxjsUe0z3vN5lMcxBeuW+22jVMvxW70m6LqkByHyw2QM0DahoZVq8a2kMzVBczENOjdLCH65TM1UVdfCR5mz+AYDU+uDXwuY06+lmtOC+kjUNDvu6e28GdmLWK0mpiON7nYDG5MGwS5odbzAaZAyFWR21rY6vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=S0ctuNej; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+K554ORNE55rd86EsHyHfgxEPY5qvlt8lOVgh3swoi8byA345KlyMVSOpkAOTEItzWyOLaFk0xrIuAwKsi9M0eqKyANYl91ST3ePa0nppS4MYSM+oQEJQszyNCJFaN+QnM3NZQrDJqV2ADj0UqR7ny6Nyk82k9ia+8zngI/0ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ayEG+PtL; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="S0ctuNej"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453634d8609so56833735e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751544089; x=1752148889; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aopz9JcRK0iEgUc501SKKnowXTL3SIijDXQz+zmIWgU=;
-        b=S0ctuNejtpvrRh9jAsx0+Bj9uqA4Hd7hr7Q0tVsTUKcMCte7othb7lPezaKYI04aIw
-         Rvp3oH1F36N0hwS2gzAwCDvsl6cEH6SyxrtqljFALogmPICYZ1gqVm56QqF2M9R0FQVH
-         rucrz1eHJfvk1dletLgEdE+aSAqwQlattjJLUFL6nyiwBAmC2Mh2AT9Ma1HYJ0EwYGTk
-         G1D9tL/dJdKvRByDB5WXFMkChAqbC9DqvRklLSQc7fJDUgiCyDDDJyx4huFZzrGCpOo9
-         DYRY1UCOTmcXcN6+dC9ZCsQCVl5ZBjU2jXjRdOTezFULdp4vbVK6fkocFSERTWkUrKF6
-         o4pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751544089; x=1752148889;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Aopz9JcRK0iEgUc501SKKnowXTL3SIijDXQz+zmIWgU=;
-        b=sZm3EeCpX8GxmjlZs364rxhYnzu2F6aFHf+1rS+Je6VFHFsADX+8W5HO+d0q6zxRCC
-         qORdUxauIlvvQ9bJTnZ1RZ19ZX0Dl3PTsRuvq40srYOM6KL4cG+VdIBIDYTGfIIuhSE7
-         68zAtAKvML8jM7j4ZRIcwLh4Is2kuafDgGqT9Vqi57D8QComNUcw7oPuXQu4XZU06KrF
-         bcfGjo7YQGP0IpFBR0Zo8/ENzaaJ+p2QxuTybewv8Q2LuSfgfm9RKcp0jkwKOKyTikFB
-         DQboKBy+9pXQNNEImd7DyzrkMLDYiN8b/JLhCWtK7cxt75uWNs/8u8/cmZMDqcwkyoG3
-         cQKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVWYJ7h7d4FQugltp7T/0t4Ykr2HE2ORto5BDaQ6L1j7dRHc0qn87ffZeF1b68GzKUP3PtA/077btnbao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtmEb/Q7Ij+FBzV8bPCctSCIjFSwpyqSk4Q6gNllfTPuhMfpkT
-	xHnSli1ByhO/QCj7HPcX3M+zzXWPm0myYI8h+bpeH5lr7PCgkoaZAigjLeixB+8Wag8=
-X-Gm-Gg: ASbGncsXw/D45IcH14GAn2eINOfmkdgjGVlxcEWFtUOvofRFsR0Ir0KbBPy3eFcd9IS
-	imj34IDZdNlSk1cEMlPpbhScvqmm/El55douTdqavnKzrphajIOtAVABc6T1miaA/lcrgRgTIRV
-	+XOFi0w/9Uk1chOzV/icFT+vId3HdcotbqhJX4hye+w+Zb/HGceN1ad3du78v4Z3sTRcV4e+zrE
-	w5BNDU4GwJsOlP8rcN4PpDTnmKuKWZqR0oJSG3W9hApAsGfOqq7hDKYf3IlP4/8iIGDPtcQTben
-	fBiF4Eyn3UY5jya3PN7nnBUJ26GRD2L0lwhUiBb1r/e0rmqvMlbg6hCdkN/jV9gaUsRO6bg/d68
-	=
-X-Google-Smtp-Source: AGHT+IEKdej4rZRfQsA8lt2P2H7zqGUWgsuHW8FgSQ8FsnWOkSKG1hJ20TPEje3vH/3yFkiIG7JoUw==
-X-Received: by 2002:a05:600c:608c:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-454ab3a9274mr31654735e9.17.1751544088630;
-        Thu, 03 Jul 2025 05:01:28 -0700 (PDT)
-Received: from localhost (109-81-23-161.rct.o2.cz. [109.81.23.161])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a99729basm25002165e9.10.2025.07.03.05.01.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 05:01:28 -0700 (PDT)
-Date: Thu, 3 Jul 2025 14:01:25 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Chen Yu <yu.c.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
-	Jirka Hladky <jhladky@redhat.com>,
-	Srikanth Aithal <Srikanth.Aithal@amd.com>,
-	Suneeth D <Suneeth.D@amd.com>, Libo Chen <libo.chen@oracle.com>
-Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
- task swap
-Message-ID: <aGZxFRVxHouLaMPg@tiehlicka>
-References: <20250702163247.324439-1-yu.c.chen@intel.com>
- <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
- <aGZNTtJuCyHJE_25@tiehlicka>
- <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ayEG+PtL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0bLFCgSGsGWYqU1VUzp/98s4ncOYCMUP6PUrfSKkQ9I=; b=ayEG+PtL2NdfYFXcLmfnMMc+/o
+	REzK/c2hbPC5peR8ZFgtSTCGIwfArWZLcKgJZYlfV4CQSgckIAtgEpCBuc0U9ApE8zxEcdu84+/Vp
+	/8m8ibuEVYYA0mOJUFD3FeLs4FzBiiugflhOFF//Qlplz/DBrvsIu8Li98qAgzaldWJ08LShkNJMw
+	k678K+PC1fbvUgCwdIlPjRJGFyYe7M8RBdMckjrhpz9jEDTLsc53yiMyEQNgrFIdUmsxPZON/xTch
+	KRAGlD50wX7grhb9R40HOToRDopp9oo4HXTCggU+zZHztGDRVUjubbE2dbpddRVH+1FXWgZvCetN0
+	M2/p8Rbw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43908)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uXIeh-0000gv-0k;
+	Thu, 03 Jul 2025 13:03:07 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uXIeZ-00054e-1E;
+	Thu, 03 Jul 2025 13:02:59 +0100
+Date: Thu, 3 Jul 2025 13:02:59 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: weishangjuan@eswincomputing.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	yong.liang.choong@linux.intel.com, vladimir.oltean@nxp.com,
+	jszhang@kernel.org, jan.petrous@oss.nxp.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
+	boon.khai.ng@altera.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, lizhi2@eswincomputing.com
+Subject: Re: [PATCH v3 2/2] ethernet: eswin: Add eic7700 ethernet driver
+Message-ID: <aGZxc-9C0rPVMsGH@shell.armlinux.org.uk>
+References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
+ <20250703092015.1200-1-weishangjuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,34 +65,194 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250703092015.1200-1-weishangjuan@eswincomputing.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu 03-07-25 13:50:06, Peter Zijlstra wrote:
-> On Thu, Jul 03, 2025 at 11:28:46AM +0200, Michal Hocko wrote:
-> 
-> > But thinking about this some more, this would be racy same as the
-> > PF_EXITING check. This is not my area but is this performance sensitive
-> > path that couldn't live with the proper find_lock_task_mm?
-> 
-> find_lock_task_mm() seems eminently unsuitable for accounting --
-> iterating the task group is insane.
-> 
-> Looking at this, the mm_struct lifetimes suck.. task_struct reference
-> doesn't help, rcu doesn't help :-(
-> 
-> Also, whatever the solution it needs to be inside this count_memcg_*()
-> nonsense, because nobody wants this overhead, esp. not for something
-> daft like accounting.
-> 
-> My primary desire at this point is to just revert the patch that caused
-> this. Accounting just isn't worth it. Esp. not since there is already a
-> tracepoint in this path -- people that want to count crap can very well
-> get their numbers from that.
+On Thu, Jul 03, 2025 at 05:20:15PM +0800, weishangjuan@eswincomputing.com wrote:
+> +static void eic7700_qos_fix_speed(void *priv, int speed, u32 mode)
+> +{
+> +	struct eic7700_qos_priv *dwc_priv = priv;
+> +	int i;
+> +
+> +	switch (speed) {
+> +	case SPEED_1000:
+> +		for (i = 0; i < 3; i++)
+> +			regmap_write(dwc_priv->hsp_regmap,
+> +				     dwc_priv->dly_hsp_reg[i],
+> +				     dwc_priv->dly_param_1000m[i]);
+> +		break;
+> +	case SPEED_100:
+> +		for (i = 0; i < 3; i++) {
+> +			regmap_write(dwc_priv->hsp_regmap,
+> +				     dwc_priv->dly_hsp_reg[i],
+> +				     dwc_priv->dly_param_100m[i]);
+> +		}
 
-I would tend to agree with this. Doing the accounting race free on a
-remote task is nasty and if this is a rare event that could be avoided
-then it should be just dropped than racy and oops prone.
+The other two instances don't have the curley braces, why does this need
+it?
+
+> +		break;
+> +	case SPEED_10:
+> +		for (i = 0; i < 3; i++) {
+> +			regmap_write(dwc_priv->hsp_regmap,
+> +				     dwc_priv->dly_hsp_reg[i],
+> +				     dwc_priv->dly_param_10m[i]);
+> +		}
+> +		break;
+> +	default:
+> +		dev_err(dwc_priv->dev, "invalid speed %u\n", speed);
+> +		break;
+> +	}
+
+Overall, wouldn't:
+
+	const u32 *dly_param;
+
+	switch (speed) {
+	case SPEED_1000:
+		dly_param = dwc_priv->dly_param_1000m;
+		break;
+	... etc ...
+	default:
+		dly_param = NULL;
+		dev_err(dwc_priv->dev, "invalid speed %u\n", speed);
+		break;
+	}
+
+	if (dly_param)
+		for (i = 0; i < 3; i++)
+			regmap_write(dwc_priv->hsp_regmap,
+				     dwc_priv->dly_hsp_reg[i],
+				     dly_param[i]);
+
+be more concise and easier to read?
+
+> +}
+> +
+> +static int eic7700_dwmac_probe(struct platform_device *pdev)
+> +{
+> +	struct plat_stmmacenet_data *plat_dat;
+> +	struct stmmac_resources stmmac_res;
+> +	struct eic7700_qos_priv *dwc_priv;
+> +	u32 hsp_aclk_ctrl_offset;
+> +	u32 hsp_aclk_ctrl_regset;
+> +	u32 hsp_cfg_ctrl_offset;
+> +	u32 eth_axi_lp_ctrl_offset;
+> +	u32 eth_phy_ctrl_offset;
+> +	u32 eth_phy_ctrl_regset;
+> +	bool has_rx_dly = false;
+> +	bool has_tx_dly = false;
+> +	int ret;
+> +
+> +	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				"failed to get resources\n");
+> +
+> +	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
+> +	if (IS_ERR(plat_dat))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(plat_dat),
+> +				"dt configuration failed\n");
+> +
+> +	dwc_priv = devm_kzalloc(&pdev->dev, sizeof(*dwc_priv), GFP_KERNEL);
+> +	if (!dwc_priv)
+> +		return -ENOMEM;
+> +
+> +	dwc_priv->dev = &pdev->dev;
+> +	dwc_priv->dly_param_1000m[0] = EIC7700_DELAY_VALUE0;
+> +	dwc_priv->dly_param_1000m[1] = EIC7700_DELAY_VALUE1;
+> +	dwc_priv->dly_param_1000m[2] = EIC7700_DELAY_VALUE0;
+> +	dwc_priv->dly_param_100m[0] = EIC7700_DELAY_VALUE0;
+> +	dwc_priv->dly_param_100m[1] = EIC7700_DELAY_VALUE1;
+> +	dwc_priv->dly_param_100m[2] = EIC7700_DELAY_VALUE0;
+> +	dwc_priv->dly_param_10m[0] = 0x0;
+> +	dwc_priv->dly_param_10m[1] = 0x0;
+> +	dwc_priv->dly_param_10m[2] = 0x0;
+> +
+> +	ret = of_property_read_u32(pdev->dev.of_node, "rx-internal-delay-ps",
+> +				   &dwc_priv->rx_delay_ps);
+> +	if (ret)
+> +		dev_dbg(&pdev->dev, "can't get rx-internal-delay-ps, ret(%d).", ret);
+
+Consider using %pe and ERR_PTR(ret) so that error codes can be
+translated to human readable strings. Ditto elsewhere.
+
+> +	else
+> +		has_rx_dly = true;
+> +
+> +	ret = of_property_read_u32(pdev->dev.of_node, "tx-internal-delay-ps",
+> +				   &dwc_priv->tx_delay_ps);
+> +	if (ret)
+> +		dev_dbg(&pdev->dev, "can't get tx-internal-delay-ps, ret(%d).", ret);
+> +	else
+> +		has_tx_dly = true;
+> +	if (has_rx_dly && has_tx_dly) {
+> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
+> +				  &dwc_priv->dly_param_1000m[1]);
+> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
+> +				  &dwc_priv->dly_param_100m[1]);
+> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
+> +				  &dwc_priv->dly_param_10m[1]);
+> +	} else {
+> +		dev_dbg(&pdev->dev, " use default dly\n");
+> +	}
+> +
+> +	ret = of_property_read_variable_u32_array(pdev->dev.of_node, "eswin,dly_hsp_reg",
+> +						  &dwc_priv->dly_hsp_reg[0], 3, 0);
+> +	if (ret != 3) {
+> +		dev_err(&pdev->dev, "can't get delay hsp reg.ret(%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dwc_priv->crg_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +							       "eswin,syscrg_csr");
+> +	if (IS_ERR(dwc_priv->crg_regmap))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(dwc_priv->crg_regmap),
+> +				"Failed to get syscrg_csr regmap\n");
+> +
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 1,
+> +					 &hsp_aclk_ctrl_offset);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "can't get hsp_aclk_ctrl_offset\n");
+> +
+> +	regmap_read(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, &hsp_aclk_ctrl_regset);
+> +	hsp_aclk_ctrl_regset |= (EIC7700_HSP_ACLK_CLKEN | EIC7700_HSP_ACLK_DIVSOR);
+> +	regmap_write(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, hsp_aclk_ctrl_regset);
+> +
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 2,
+> +					 &hsp_cfg_ctrl_offset);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "can't get hsp_cfg_ctrl_offset\n");
+> +
+> +	regmap_write(dwc_priv->crg_regmap, hsp_cfg_ctrl_offset, EIC7700_HSP_CFG_CTRL_REGSET);
+> +
+> +	dwc_priv->hsp_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +							       "eswin,hsp_sp_csr");
+> +	if (IS_ERR(dwc_priv->hsp_regmap))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(dwc_priv->hsp_regmap),
+> +				"Failed to get hsp_sp_csr regmap\n");
+> +
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 2,
+> +					 &eth_phy_ctrl_offset);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "can't get eth_phy_ctrl_offset\n");
+> +
+> +	regmap_read(dwc_priv->hsp_regmap, eth_phy_ctrl_offset, &eth_phy_ctrl_regset);
+> +	eth_phy_ctrl_regset |= (EIC7700_ETH_TX_CLK_SEL | EIC7700_ETH_PHY_INTF_SELI);
+> +	regmap_write(dwc_priv->hsp_regmap, eth_phy_ctrl_offset, eth_phy_ctrl_regset);
+> +
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 3,
+> +					 &eth_axi_lp_ctrl_offset);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "can't get eth_axi_lp_ctrl_offset\n");
+> +
+> +	regmap_write(dwc_priv->hsp_regmap, eth_axi_lp_ctrl_offset, EIC7700_ETH_CSYSREQ_VAL);
+> +
+
+Consider more sensible wrapping of this (netdev frowns at >80
+characters per line, except for message strings that should remain
+greppable.)
 
 -- 
-Michal Hocko
-SUSE Labs
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
