@@ -1,151 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905F22EA146;
-	Thu,  3 Jul 2025 14:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AA82EA158
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552686; cv=none; b=NvlowkMCVSdOCl+7wIz1WHiJSFPvKpF4ERmjerfEU4WfhEqmbDUJj+qMUlkMgBCO+iNb6lzA/88LjI74PxT3FAKLnXG/fbLTA2F17psmJZCxFGEle9R6owpCi/NXl2zcJelbIoV1awtUolHy/W4g0VP59kJ1FuhPWyS8W3zs7iY=
+	t=1751552701; cv=none; b=ie4g1bz2fLbkjCCecvfpVtD5pFYwJlvX1MAejPBPPIMB8fHLiARsykV0sC4sgbPyocBzocdIstBsvaJ0DqE88uS6ZHCYdDRLPHaTRSZQV35xcNlaOxKLMzt+HbpfKIyqfguUfv1sks5SYDkMpM1mz0BZyNsn+21C0dXGsKcj+Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552686; c=relaxed/simple;
-	bh=yffRsJc1NP8ufrxOyID0lhAqiUfJnx3U+dSGYmPc99M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6yyz03uay+4lIE2dblloZOczZmmUFOJ6v7vstEv+lrv6k+emd8kQf0tgk3P2MXTBnfycQpUd8Rdq2s6dyTV5l3++Fwq3jnMn45D6iCJhyh1CxJjMX7kovpoZ34HudvcO/jzcq6SFpqcIPjSOHLhB8Hbq87HcfWWgSHR0Zem4PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cZnRlvEi; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751552701; c=relaxed/simple;
+	bh=IB3QhT6znI80F0swDwqnAhPwb1Be+kKxBOX5V40joG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bb/Tj2JE0GOVnZvBbW5Ibh4by7D2UaaSV1XXCeNYcQf3XR2k1lCma7hgn63w1NTJWT6CHPuyotzQAvfdCvYO6TwJ8g+4fZ/58h4K7e5L39wnEBPUPfsKeGFJaxfnIUcH7vcgbRJAgjmWGSUi3bhxFJh0fNz/Nlix5R73A6V6Iz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SlwaRSxF; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cZnRlvEi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751552685; x=1783088685;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yffRsJc1NP8ufrxOyID0lhAqiUfJnx3U+dSGYmPc99M=;
-  b=cZnRlvEiaVCsr0TAW37LpfD1WioeZlKyAFCwuoVOVmnSx3wy9kiBRV7v
-   LW7uUb3PrAAbLO7DX/zkMQZ4ujIEAZD35oDO8p1/Q2ziGHmB0kGGWe52q
-   fDRM1uTeL3Lsn/2wYx7mNAezBCtCgAXDdhZ+DDkkuppqOUXlYcrrZbusE
-   Dba+YIFwM7i4Ek2TXRGVpD4MgamTV6lZu34vPPRX3ytJL/Qf1pfi6WJ0G
-   cOsh4Yvp/fqeq3EZ+c+cEFJEwDYq1ommusqJiw9mLLbrDwfUDwRpBJ7qd
-   WblzbeuWgWT3IWJkwYTtif819PQ5NMM8GSm7J2TlpcX/OfL8hrYzEOJVH
-   w==;
-X-CSE-ConnectionGUID: R2JP4IUkRdOEZWpx0kzi9g==
-X-CSE-MsgGUID: qsjh7FexQbycbu6Y1kd/yQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="71319474"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="71319474"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:24:35 -0700
-X-CSE-ConnectionGUID: BLmQb38oR9mtgRqeofVSAg==
-X-CSE-MsgGUID: Ru4B9lFJR6u9+aUhkef4gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="158748497"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:24:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uXKrJ-0000000CE64-3nOA;
-	Thu, 03 Jul 2025 17:24:17 +0300
-Date: Thu, 3 Jul 2025 17:24:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v11 3/8] iio: accel: adxl345: add activity event feature
-Message-ID: <aGaSkQHQKCqfrVXF@smile.fi.intel.com>
-References: <20250702230315.19297-1-l.rubusch@gmail.com>
- <20250702230315.19297-4-l.rubusch@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SlwaRSxF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751552697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6eLE6S+rhxIPN+jrOj2f4vJ4zw6L3esP7/0wSDddCRk=;
+	b=SlwaRSxFkqrj8/p5s7Hz4d3LF5UWxu7QBnL8Rnktqv8WnBS4ad81vpMJX5/E5dyd69qNzy
+	48NYS+YSEFrIrXj0AnA0ZneJAdrQUNGyAp64JzFHSD90Qg1lk2LsZs//jiRs5fcak1v2TS
+	IF8Aw4QS/RnVIXlJhmucqy+N/LZfBRE=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: netdev@vger.kernel.org
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] tcp: Correct signedness in skb remaining spac calculation
+Date: Thu,  3 Jul 2025 22:24:42 +0800
+Message-ID: <20250703142443.13762-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702230315.19297-4-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jul 02, 2025 at 11:03:10PM +0000, Lothar Rubusch wrote:
-> Enable the sensor to detect activity and trigger interrupts accordingly.
-> Activity events are determined based on a threshold, which is initialized
-> to a sensible default during probe. This default value is adopted from the
-> legacy ADXL345 input driver to maintain consistent behavior.
-> 
-> The combination of activity detection, ODR configuration, and range
-> settings lays the groundwork for the activity/inactivity hysteresis
-> mechanism, which will be implemented in a subsequent patch. As such,
-> portions of this patch prepare switch-case structures to support those
-> upcoming changes.
+Syzkaller reported a bug [1] where sk->sk_forward_alloc can overflow.
 
->  #define ADXL345_REG_TAP_AXIS_MSK	GENMASK(2, 0)
->  #define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3)
->  #define ADXL345_REG_TAP_SUPPRESS	BIT(3)
-> +#define ADXL345_REG_ACT_AXIS_MSK	GENMASK(6, 4)
->  
->  #define ADXL345_TAP_Z_EN		BIT(0)
->  #define ADXL345_TAP_Y_EN		BIT(1)
->  #define ADXL345_TAP_X_EN		BIT(2)
->  
-> +#define ADXL345_ACT_Z_EN		BIT(4)
-> +#define ADXL345_ACT_Y_EN		BIT(5)
-> +#define ADXL345_ACT_X_EN		BIT(6)
-> +#define ADXL345_ACT_XYZ_EN		(ADXL345_ACT_Z_EN | ADXL345_ACT_Y_EN | ADXL345_ACT_X_EN)
+When we send data, if an skb exists at the tail of the write queue, the
+kernel will attempt to append the new data to that skb. However, the code
+that checks for available space in the skb is flawed:
+'''
+copy = size_goal - skb->len
+'''
 
-I'm trying to understand the logic behind the placement of the masks and bits.
-To me it sounds that the above should be rather
+The types of the variables involved are:
+'''
+copy: ssize_t (s64 on 64-bit systems)
+size_goal: int
+skb->len: unsigned int
+'''
 
-#define ADXL345_REG_TAP_AXIS_MSK	GENMASK(2, 0)
-#define ADXL345_TAP_Z_EN		BIT(0)
-#define ADXL345_TAP_Y_EN		BIT(1)
-#define ADXL345_TAP_X_EN		BIT(2)
-#define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3) // Do we need this at all?
-#define ADXL345_REG_TAP_SUPPRESS	BIT(3) // or actually this? One is enough, no?
-#define ADXL345_REG_ACT_AXIS_MSK	GENMASK(6, 4)
-#define ADXL345_ACT_Z_EN		BIT(4)
-#define ADXL345_ACT_Y_EN		BIT(5)
-#define ADXL345_ACT_X_EN		BIT(6)
-#define ADXL345_ACT_XYZ_EN		(ADXL345_ACT_Z_EN | ADXL345_ACT_Y_EN | ADXL345_ACT_X_EN)
+Due to C's type promotion rules, the signed size_goal is converted to an
+unsigned int to match skb->len before the subtraction. The result is an
+unsigned int.
 
-(Yes, I know that the mess is preexisted, but try to keep some order in the
- pieces you add here.)
+When this unsigned int result is then assigned to the s64 copy variable,
+it is zero-extended, preserving its non-negative value. Consequently, copy
+is always >= 0.
 
-...
+Assume we are sending 2GB of data and size_goal has been adjusted to a
+value smaller than skb->len. The subtraction will result in copy holding a
+very large positive integer. In the subsequent logic, this large value is
+used to update sk->sk_forward_alloc, which can easily cause it to overflow.
 
-> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
-> +			BIT(IIO_EV_INFO_VALUE),
+The syzkaller reproducer uses TCP_REPAIR to reliably create this
+condition. However, this can also occur in real-world scenarios. The
+tcp_bound_to_half_wnd() function can also reduce size_goal to a small
+value. This would cause the subsequent tcp_wmem_schedule() to set
+sk->sk_forward_alloc to a value close to INT_MAX. Further memory
+allocation requests would then cause sk_forward_alloc to wrap around and
+become negative.
 
-I would expect one of the below (indentation) styles
+[1] https://syzkaller.appspot.com/bug?extid=de6565462ab540f50e4
 
-		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
-				       BIT(IIO_EV_INFO_VALUE),
+Reported-by: syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com
+Fixes: 270a1c3de47e ("tcp: Support MSG_SPLICE_PAGES")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-		.mask_shared_by_type =
-			BIT(IIO_EV_INFO_ENABLE) |
-			BIT(IIO_EV_INFO_VALUE),
+---
+v1 -> v2: Added more commit message
+https://lore.kernel.org/netdev/20250702110039.15038-1-jiayuan.chen@linux.dev/
+---
+ net/ipv4/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...
-
->  static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
-> -			      enum iio_modifier tap_dir)
-> +			      enum iio_modifier tap_dir,
-> +			      enum iio_modifier act_dir)
-
-Hmm... Why not
-
-static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
-			      enum iio_modifier act_dir,
-			      enum iio_modifier tap_dir)
-
-?
-
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 8a3c99246d2e..803a419f4ea0 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1176,7 +1176,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 		goto do_error;
+ 
+ 	while (msg_data_left(msg)) {
+-		ssize_t copy = 0;
++		int copy = 0;
+ 
+ 		skb = tcp_write_queue_tail(sk);
+ 		if (skb)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.1
 
