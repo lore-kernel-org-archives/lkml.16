@@ -1,193 +1,129 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945518DB0D;
-	Thu,  3 Jul 2025 13:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FEB2E7BD9;
+	Thu,  3 Jul 2025 13:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751550865; cv=none; b=dKIYSO5bhkCmrdwPeu8KlLzILDQnm5nnhlTr6YYDm6CD/BfIlgYaTWRGaZuZultIqco0rBcY9eJwl0U0VSMXVZIedyVNi6vSglRuaye+z4n22SDAr8+XC/st5Bm2+vF1ZnSGphuQIQoQ9uqqmhsZK0oqf4d86LbKK9loR7KowJ4=
+	t=1751550869; cv=none; b=OKUMMuhBtyouErkGNfKlrPWCg4KteOzPxtPoYasV4wYyFFnjAA6KdJF3IUnmEV1ArS3dsWi0LAQaY/CAO0iUlBvd4JD2L8lqv4ql6J+S9m0tLWwP1MmT3wg+poq4bNqmJWZ+o5RzRlihpbygMmzqrq1r8H9d6lsPY+zP9CCUoAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751550865; c=relaxed/simple;
-	bh=y78VCoYM7VevEWRRosTle7tdkMGhmFsw5rVCtfwQPJE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cB0vRXQA+asG8iymECk3kzmfWchbYGxH8cKsxvQMTseM+vXaPxoxsf2AdDZtPWHU1yjbJQ43SFOlPEhnirLmOKqBEcwckEq0iLjkhagzY+n1ei09ka7IgTp491MCkcCYwHDPha6bg4mygnHf8laiPn8yp+ROq0AaXKs13jXs+L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Vn1T+Adm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751550869; c=relaxed/simple;
+	bh=hkynFXqBgMDhBIacDm9GkRDPLniP47vYUeHzZhSjqPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eddCL/2WAqbhIxeoZTgXOOl8fIXVfLrTyiudTVnbBsQD5HtjZ42vGxRcZ13DLMz02BPaLrbh4vVX1LoPWFfrgEh3KqK2SpsJdGCKUf0UgFSRKkxmhTGtAVH/WXorWJTK09jGVvWoQtVi6aMc+S/Z6WVIJk5GaEIAqbKJaqJbFrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iuo4jH+Y; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Vn1T+Adm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751550861;
-	bh=y78VCoYM7VevEWRRosTle7tdkMGhmFsw5rVCtfwQPJE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Vn1T+Adm7dAOD3R6Sydh5vATGD9TWJZ4xQXiRE2DGkOlDTfk8bXDfo1eKlk5S0p09
-	 Cs1wSRHanBGrFcD7QGpKHsDdMM6DPuPD5fq9rgNa+XNfdApZ+QCISKe+Ehdavsq38a
-	 3/U6GI2l5Fd+yxnDlYMfCO+flzBFFXnm8D4eKs771kVmY/bUWBqJVEA1pSJTc/Umkh
-	 Z0NjYxF51gOFpCuK07R3mhiGz1KP9VVVfkS0z6+nJACp5nzBw8zKn0b7lA50o6lNzI
-	 x4oH7h8fKJJgQtvZ34p/4pPJ0J8CqnjwaSl+xugSXkP65tazWhdrDHqH96Kj65JoGQ
-	 R6D9TUmYAR9FQ==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600c8F85cf092d4aF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id AA95C17E04C0;
-	Thu,  3 Jul 2025 15:54:20 +0200 (CEST)
-Message-ID: <c661e7f3faec269f73d6240fbe7b84e3bc97157a.camel@collabora.com>
-Subject: Re: [PATCH v5 00/24] media: i2c: add Maxim GMSL2/3 serializer and
- deserializer drivers
-From: Julien Massot <julien.massot@collabora.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
- <cosmin.tanislav@analog.com>, Tomi Valkeinen	
- <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
- =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
- <sakari.ailus@linux.intel.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Date: Thu, 03 Jul 2025 15:54:20 +0200
-In-Reply-To: <d4052ab3-9cd1-45e8-81b0-b6512822e646@gmail.com>
-References: <20250702132104.1537926-1-demonsingur@gmail.com>
-	 <5e1b26637706f6eac92acbbb3d5a7dafa0c2c232.camel@collabora.com>
-	 <d4052ab3-9cd1-45e8-81b0-b6512822e646@gmail.com>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iuo4jH+Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751550868; x=1783086868;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hkynFXqBgMDhBIacDm9GkRDPLniP47vYUeHzZhSjqPE=;
+  b=Iuo4jH+YLzq6DVWUeAq2jZK5USPTOhYisKgOROVHg/s55NC2xcZdIgf0
+   PzjpnFL2MftsrgmnEDMTFfbtf3muJR/QAxJ02GQrOaKkMuTRJsQQhovfV
+   v35Mv2WwQ6nAERKeS+eRBoBvmOegCfkEZF5gkJ9INxf2mNArOtNgYn7Cm
+   yTBH7KMdEVwPnDYSu4pVeupIQ49IRuUpSB8h9l64Nc9ClYc3zPLWrChwh
+   Y3DQbyt6jLzAgHCXfz6SQOaaJoqJyqCPZrG+n90AnPye/txXQsSBlzw1Y
+   KUglGPg+/BhwkjfKc7xbopkhawHf0uEC7nd0lq1aJPpIxy6mWCVowht+j
+   w==;
+X-CSE-ConnectionGUID: AAjKmMZ4TRutFgd4UTxzpQ==
+X-CSE-MsgGUID: B3OULOP1Qom2ex9Jj1K0Ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57686384"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="57686384"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 06:54:27 -0700
+X-CSE-ConnectionGUID: Sz8pfLTHRumN6SVidx2zkw==
+X-CSE-MsgGUID: LlSnEty4TaS4oZ+RxqLYkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="153790365"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 06:54:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uXKOG-0000000CDjq-1Yoc;
+	Thu, 03 Jul 2025 16:54:16 +0300
+Date: Thu, 3 Jul 2025 16:54:16 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 21/24] mailbox/riscv-sbi-mpxy: Add ACPI support
+Message-ID: <aGaLiK0eW8Mc1YC3@smile.fi.intel.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-22-apatel@ventanamicro.com>
+ <aGUl_S9irfhlHmy2@smile.fi.intel.com>
+ <aGZhWlxxQG0Z8awP@sunil-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGZhWlxxQG0Z8awP@sunil-laptop>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 2025-07-03 at 15:17 +0300, Cosmin Tanislav wrote:
->=20
->=20
-> On 7/3/25 3:07 PM, Julien Massot wrote:
-> > Hi Cosmin,
-> >=20
-> > On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
-> > > This series adds new drivers for multiple Maxim GMSL2 and GMSL3 devic=
-es,
-> > > replacing the few GMSL2 drivers already in upstream, and introducing =
-a
-> > > common framework that can be used to implement such GMSL chips, which
-> > > avoids code duplication while also adding support for previously
-> > > unsupported features.
-> > >=20
-> > > While the normally acceptable and polite way would be to extend the
-> > > current mainline drivers, the choice was made here to add a totally n=
-ew
-> > > set of drivers. The current drivers support only a small subset of th=
-e
-> > > possible features, and only a few devices, so the end result after
-> > > extending them would in any case be essentially fully rewritten, new
-> > > drivers.
-> > >=20
-> > Thanks for your work,
-> > The common framework will help a lot to drive new GMSL chips, and most =
-of the
-> > features are covered.
-> >=20
-> > > This series depends on support for internal pads, for which a patch h=
-as
-> > > been added.
-> > >=20
-> > > The previous version is at:
-> > > https://lore.kernel.org/lkml/20250618095858.2145209-1-demonsingur@gma=
-il.com
-> > >=20
-> > > The following deserializers are supported:
-> > > =C2=A0=C2=A0* MAX96712 (already exists in staging)
-> > > =C2=A0=C2=A0* MAX96714 (already exists)
-> > > =C2=A0=C2=A0* MAX96714F (already exists)
-> > > =C2=A0=C2=A0* MAX96714R (GMSL2)
-> > > =C2=A0=C2=A0* MAX96716 (GMSL2)
-> > > =C2=A0=C2=A0* MAX96724 (already exists as part of existing MAX96712 d=
-river)
-> > > =C2=A0=C2=A0* MAX96724F (GMSL2)
-> > > =C2=A0=C2=A0* MAX96724R (GMSL2)
-> > > =C2=A0=C2=A0* MAX9296A (GMSL2)
-> > > =C2=A0=C2=A0* MAX96792A (GMSL3)
-> > >=20
-> > > The following serializers are supported:
-> > > =C2=A0=C2=A0* MAX96717 (already exists)
-> > > =C2=A0=C2=A0* MAX9295A (GMSL2)
-> > > =C2=A0=C2=A0* MAX96793 (GMSL3)
-> > >=20
-> > > Known backward compatibility breakages:
-> > > =C2=A0=C2=A0* No default routing. Default routing has been intentiona=
-lly ommitted
-> > > =C2=A0=C2=A0=C2=A0 as the devices support quite complex routing and i=
-t would be
-> > > =C2=A0=C2=A0=C2=A0 unfeasible to provide sane defaults for multi-link=
- deserialziers.
-> > > =C2=A0=C2=A0=C2=A0 It is expected that userspace programs would set a=
-ppropritate
-> > > =C2=A0=C2=A0=C2=A0 routing.
-> > >=20
-> > This part is the most annoying one: at the moment, there is no way to s=
-et the routing except by
-> > manually enabling a boolean within the kernel source.
-> > You can't guess what routing the user really wants, but please at least=
- provide a default
-> > routing
-> > table that allows using your drivers =E2=80=94 for example, the device'=
-s default routing.
-> >=20
->=20
-> It's a very delicate issue... I'll try to see if I can do that.
-> It would be great if we could enable the streams API globally since it's
-> been merged since Jan 15 2023. It's been over two years.
->=20
->=20
-> Thanks,
->=20
-> >=20
-> >=20
-> > > The following list enumerates new features that are supported by the
-> > > common framework and their respective chip-specific drivers:
-> > > =C2=A0=C2=A0* Full Streams API support. Most deserializers have suppo=
-rt for more
-> > > =C2=A0=C2=A0=C2=A0 than one link, and more than one PHY. Streams supp=
-ort allows
-> > > =C2=A0=C2=A0=C2=A0 configuration of routing between these links and P=
-HYs.
-> > >=20
-> > > =C2=A0=C2=A0* .get_frame_desc() support. Both the serializers and des=
-erializers
-> > > =C2=A0=C2=A0=C2=A0 implement this to query and provide frame descript=
-or data. This is
-> > > =C2=A0=C2=A0=C2=A0 used in features explained in-depth below.
-> >=20
-> > So are almost all the sensor drivers incompatible?
-> >=20
->=20
-> Yes, sensor drivers need to have .get_frame_desc() implemented... It's
-> not a huge feat and it's the only way this type of bridge could work
-> properly.
->=20
-> Alternatively, we could add a fallback that bases its decision on the
-> stream format, but I'd prefer if we didn't and we would just implement
-> .get_frame_desc(). After this series is merged I can submit my patches
-> for imx219.
-There is already one pending on the mailing list
-"media: i2c: imx219: Report streams using frame descriptors"
-I guess it's fine if we require the sensor to implement this function.
+On Thu, Jul 03, 2025 at 04:24:18PM +0530, Sunil V L wrote:
+> On Wed, Jul 02, 2025 at 03:28:45PM +0300, Andy Shevchenko wrote:
+> > On Wed, Jul 02, 2025 at 10:43:42AM +0530, Anup Patel wrote:
 
-But I had to do it for vgxy61.
+...
 
-Btw I tested:
-TI AM62x + max96716 + 1 x max96717f + stvg5661 (tunnel mode)
-With special lanes mapping and polarities.
+> > > -		if (dev_of_node(dev))
+> > > +		if (is_of_node(fwnode)) {
+> > >  			of_msi_configure(dev, dev_of_node(dev));
+> > > +		} else if (is_acpi_device_node(fwnode)) {
+> > > +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
+> > > +							      DOMAIN_BUS_PLATFORM_MSI);
+> > > +			dev_set_msi_domain(dev, msi_domain);
+> > > +		}
+> > 
+> > Actually you don't need to have the if-else-if if I am not mistaken.
+> > The OF does almost the same as it's done in the second branch for ACPI case.
+> > How many MSI parents this may have?
+> > 
+> OF already has a well defined interface to configure the MSI domain. The
+> mechanisms existing today are different for DT vs ACPI to find out the
+> fwnode of the MSI controller. So, it is done differently.
 
-And I had to:
+I don't see how. The only difference I see is that OF iterates over all listed
+parents, if any, ACPI tries only one.
 
-- Apply pending patches for j721e to support the enable_stream API instead =
-of s_stream
-- Enable the experimental v4l2_subdev_enable_streams_api
-- Add get_frame_desc to the sensor driver
+So, perhaps it's a time to have a common API somewhere for this to be agnostic?
+Something like fwnode_msi_configure() in somewhere of IRQ MSI core?
+
+> In RISC-V case at least, there will be only one MSI parent.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
