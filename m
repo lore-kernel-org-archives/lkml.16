@@ -1,81 +1,63 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220B624DD00;
-	Thu,  3 Jul 2025 16:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FA5257422;
+	Thu,  3 Jul 2025 16:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560151; cv=none; b=h4Zns5grSEHogAitaJplkpNmDSZEKm6vzemSR8W6U6JDAIyrtzIWAuW/7IWurGZDUHlUwl3MjmFa4hSz/CWkBd1h83jj1nf15FHSiDCq5XeZDqqDpLGRDF0q91/ckpoBh9e+85iBfJxmNpAZlopMapFoPuXiPw6m380hMEM5NPg=
+	t=1751560240; cv=none; b=P2eBL1x0cUounVyFTQFyeJT+eZxTts4ixNM3DnBPctzbowiDtR0NODEI2ilQywHhyoQge31z5K9EuqiEj6Hi8PiE0UtZINorbuSp/3DI0cbD/UqeIJ1cHEV3UfbO0j/e5PMb2IBo8DcQS4tiHouwoi9koL5tr2nETSVLpvkPf3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560151; c=relaxed/simple;
-	bh=nToq4wwc4Uc7nbyaMfiALbolZIwWgKsAua7F5h9q2tQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UIuGoBOwiyFab5ytO3mnw/WvK5xpWjHw4lZ+G8LntOnV0H7h7q4ZIaDcdHelhpiseQEc7jOD/HLgiwbGtzg0ixcoSBrm4nDVJnSYZOIwdxFXv2JJiac8kx3JSGF2MuhJhekKUoJBtbVJ8W69FlpitZGvhj4C606XhuqJ/xTyhp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PBBXZF4k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/Uirmdc/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751560240; c=relaxed/simple;
+	bh=O279xNs8YrIaFUCyk/pQxFUpUexGzNu13mGsgpBqY/M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rvuVXXJp18JB0YEIV+ivuCj8gpTg7PydXBN6dZijKNtHD7JXJUDhPTvKxX6aaQfS7FYREVF5l5A/LrUNsHAwgTi5GDc9gBK731W+3wJo0vPf3oFaGWNp0aaAdygF0spAeE1X/WZdgG5e26g/UgfEh8jzO7uFYxWdxXTKIHNmALk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeFrJhOB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PBBXZF4k";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/Uirmdc/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751560147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aNRH1g12Ne3BwA8FmDNO10ARExu6uL6cJ1LMrZ27OI4=;
-	b=PBBXZF4kI/WbElBKU/Utuj8jjVt/2dVrbejvGTcXKIQRU2uYoTKAqpHmGsySadjRy0LdQM
-	ZZdkKSeeI9H/B4hejFC0zufMbUcLT6n6EzmboNb5TgH9LtltqIvv77ExiIQjU4+YTNRlPB
-	LDs7slQQ0aoI7BHwHRw89RbfHV4RI4PqFuSJLMGQA8PKk1aej5pZ/qIFh2a3BzGOklukU9
-	TDsBx3nmgSUaK6+/vtL2crKw+rhIgR+lZ6bwu3ns+AJkZosFZR7wACzljwIgp2xwLFz+ET
-	BwKxONiv/rg1ioO8PGKJ6NSRgSjbXvV2PT1jH93SiBabI1RRJ1iPXq9Oj328VA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751560147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aNRH1g12Ne3BwA8FmDNO10ARExu6uL6cJ1LMrZ27OI4=;
-	b=/Uirmdc/9olnKo8974l+b36bgV4+yNj/U1X0RSMH6B5yU9vJJBmZpDUYSoy2WLPu8k3+9e
-	sRyPNBcdYArNPACg==
-To: Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Toan Le <toan@os.amperecomputing.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 01/12] genirq: Teach handle_simple_irq() to resend an
- in-progress interrupt
-In-Reply-To: <20250628173005.445013-2-maz@kernel.org>
-References: <20250628173005.445013-1-maz@kernel.org>
- <20250628173005.445013-2-maz@kernel.org>
-Date: Thu, 03 Jul 2025 18:29:06 +0200
-Message-ID: <87y0t5tezx.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeFrJhOB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F25C4CEE3;
+	Thu,  3 Jul 2025 16:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751560240;
+	bh=O279xNs8YrIaFUCyk/pQxFUpUexGzNu13mGsgpBqY/M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=PeFrJhOBAC7whUVO4ha7XCIIcbPfR8uLS16/+VARK/c1Dl+jMva3R2QEKLIUB/wxl
+	 OUiIG182daYQSpWC+GAu5vIZZi5zGNPV2gLhqCVA01vlcRd5B1fZW5DwvmqcFpQym3
+	 i4lIru3DNQvxx0IUmrzUqebIFViPqnRPCaDyDyvkc9q2XBu9hMs45vqE/RA0Lg+7Tt
+	 lrbHUEN16XtrnRa/jWRTeGTxoHA6WT/W03Q+cu5/r8bwfwyx1iF9x6KHphUDBdSOOj
+	 NMiRFF2JDIKjTV8sFF9pCDNMzhkjmIRvJl0g7jT4T/gVmc/bZl4sVMLNgnVUMqVmIa
+	 QIXcgnyIoXVcA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE288383B274;
+	Thu,  3 Jul 2025 16:31:05 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.16-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250703132158.33888-1-pabeni@redhat.com>
+References: <20250703132158.33888-1-pabeni@redhat.com>
+X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250703132158.33888-1-pabeni@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.16-rc5
+X-PR-Tracked-Commit-Id: 223e2288f4b8c262a864e2c03964ffac91744cd5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 17bbde2e1716e2ee4b997d476b48ae85c5a47671
+Message-Id: <175156026439.1548768.2368770173056020475.pr-tracker-bot@kernel.org>
+Date: Thu, 03 Jul 2025 16:31:04 +0000
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Sat, Jun 28 2025 at 18:29, Marc Zyngier wrote:
+The pull request you sent on Thu,  3 Jul 2025 15:21:58 +0200:
 
-> It appears that the defect outlined in 9c15eeb5362c4 ("genirq: Allow
-> fasteoi handler to resend interrupts on concurrent handling") also
-> affects some other less stellar MSI controllers, this time using
-> the handle_simple_irq() flow.
->
-> Teach this flow about irqd_needs_resend_when_in_progress(). Given
-> the invasive nature of this workaround, only this flow is updated.
->
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.16-rc5
 
-As I have no conflicting changes pending in this area, this can go
-through the PCI tree along with the rest of this lot. Therefore:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/17bbde2e1716e2ee4b997d476b48ae85c5a47671
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Thank you!
 
-Thanks,
-
-        tglx
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
