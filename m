@@ -1,71 +1,173 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34C828DB4A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D573E2D4B51
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533865; cv=none; b=nuZ6ffgem6/l+NjUV9UiDJBvDkdYf/LHZK/+CYDkJqukG3VHiV336V7bSs+AfJ7iXJ9S0hb1bOcCJfHCLEyaqFpYf2bUCEt4sgjbmXhsfYoAgAJI95hW5uMc1710RMBcrMSj+Jz2uc8dvju60aetMfDFpm/qAZ/xiSAJakVa+as=
+	t=1751533945; cv=none; b=svDiCZzOIbjd9H2Me9QfrZR57CKpXmGc/aZTzGZ7KXAJaX8MNS1J/egmqnfPwEFV9Kk6lSqS71yKlTx92AZA1IxSHbokUgdV92AWAL/UqIxpmi3iYZOaJiGVm8yDLbFFbA4BvK0uD6SCSVetlV1yKudSX1GXPshnSEpuHK+jdHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533865; c=relaxed/simple;
-	bh=FSnWyhULt+8qNj/pQpL8m+1t/YkTEOioRkGgaHHVfg0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IMg5EVy9/WqWJbO49iwbsFLFneesajJTwTBYBkOLmf2Q2DkJAIjLrdrZJGvEK6afQ59q8F4utnmsYpmkL/ZP6ITi9ipIS7QOhlJfYBZaRxNnFCeFIX87MpJlBYkeLi1F3WdUkPUpdr6TYLffL9lz3lxm8fbjVzGA9szSFCTLs70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8760733a107so759851239f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:11:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751533863; x=1752138663;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Efdj3HghN61h5La1iiYSMoZDZpnzZ9XZixUD39oRCo=;
-        b=g9iKPkqJoCbZsj0PGlrK1D+IWMjgHRzC+DW5SJlpd4+nejhjn3H7tcRz1Jzc7cSMS9
-         B6ywTnvv16QtD0pviqPA+j+cWGFcgAFMxpfs4Not33n93bGOMpN5/QdfAD9o1l4Hsw8m
-         gcdnl9z9tajdtbUfNny5M8TSf3BWk4VJ+jYWk4Z2HkAhX/tY7wF0D75IrBsAKVp2F3pR
-         f3aMnB422o5qNezdT0tBeWeiaEpgT3aM6CFeh5j1QpbIrILLF+UDrkENvmavkTqREy1Z
-         a6XJzuuMaj+lVEFUeGk4aGvxhHzb8di+sfoZ9SJhe1wdsd+bmFfAmBfqty2rQqrgqxiI
-         Myhw==
-X-Gm-Message-State: AOJu0Yw6oYAUA2uZofBLDLO0ydWAEYNZAosOogqzUoFfJC8Wo+YrEr8F
-	Irny99iczp3RBTPdmjB/mHuSBfFAKnW7jvUN/fubsTTW5+PGLg4GH0V4dZbo/pdkOC8w75GgUFE
-	UwrzpCRDXK6bNZwMbqlnDCVVKxHWGFbI5g+XUDZMYqWO9is36TFz85x8Gozo=
-X-Google-Smtp-Source: AGHT+IF8L7KgUVlLdyNNFNxlBocn7RDmxwdr7FO2JdGzh7WBFHDh+QNUEQFU3HaQrFjnW6MGnROiNYri9EEEsJ/ye+zDBYKvknvQ
+	s=arc-20240116; t=1751533945; c=relaxed/simple;
+	bh=0d0j/aPrtDHplYNwXN5+Gn+gApjNgnGCEpTHr8M50Vs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D2bI/9TIigAjBRF/0J2Vpim6OvCXsiSTaX5IVmJa/lOK0U7rudIUtn5s47pH12Jp35xEfYp5iZ5ztzPDlK5x4zRH7zGpUBu6PZjVC/MfItS30I23vjgYNnEnBSVS5Bqfkx3DekZftvgJGll/vaZLKMgC99nAY3uRAw5Z9Ci4zfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r/08NPFe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kl4gT8t3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r/08NPFe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kl4gT8t3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751533942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BH+n0wxS5+7k1dboDiEY2RlATCZyUxvY3iUONP6tN6o=;
+	b=r/08NPFepkh3tyxBDmCH/MsvcVF4miWtXz1vE8lvqonKp88riYAlOnfMTxXs/nc8zE5ElP
+	UEMXioarcY4/U5m/rBcsG9MCKyVJnAxYrRfTiF3AKMHGomUqCIR/XaUVJkfIHtLUlfnDjD
+	a2o3woTLEbj9Fgk7GDMQwPI6TQnsWxVFPWo5h+u6CaNvN7eAt7E0Sb30Chw7sFOmHpZU4p
+	HS3ABz2qr7gD0S0Fkh37O9naNOzuE9SKGq+VbzaYaryW12EOF9YnCR9ZrfvmB6XSdjC3fY
+	FJfmRI4c4HqI1NCpGlV9jlEDTcDnayMxf9Os6MHtNA4BVFYbo74Scc+tYUNqxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751533942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BH+n0wxS5+7k1dboDiEY2RlATCZyUxvY3iUONP6tN6o=;
+	b=kl4gT8t3qU7My7xa4oHcC7hMACpqzS6+0MLztS0vZq2/ZxidHQZIrglA4Ya/6ks3GGmtwi
+	O9L8+1U+1X4E3mBA==
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Christoph Lameter via B4 Relay <devnull+cl.gentwo.org@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, sh@gentwo.org, Darren
+ Hart <dvhart@infradead.org>, Arjan van de Ven <arjan@infradead.org>
+Subject: Re: [PATCH] Skew tick for systems with a large number of processors
+In-Reply-To: <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org>
+References: <87sejew87r.ffs@tglx>
+ <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org>
+Date: Thu, 03 Jul 2025 11:12:21 +0200
+Message-ID: <87ms9lwscq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1501:b0:86c:f0d9:553 with SMTP id
- ca18e2360f4ac-876d1e9d88emr398862439f.5.1751533863092; Thu, 03 Jul 2025
- 02:11:03 -0700 (PDT)
-Date: Thu, 03 Jul 2025 02:11:03 -0700
-In-Reply-To: <20250703024751.1194841-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68664927.a70a0220.5d25f.0862.GAE@google.com>
-Subject: Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
-From: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hello,
+On Wed, Jul 02 2025 at 17:25, Christoph Lameter wrote:
+> On Thu, 3 Jul 2025, Thomas Gleixner wrote:
+>
+>> The above aside. As you completely failed to provide at least the
+>> minimal historical background in the change log, let me fill in the
+>> blanks.
+>>
+>> commit 3704540b4829 ("tick management: spread timer interrupt") added the
+>> skew unconditionally in 2007 to avoid lock contention on xtime lock.
+>
+> Right but that was only one reason why the timer interrupts where
+> staggered.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+It was the main reason because all CPUs contended on xtime lock and
+other global locks. The subsequent issues you describe were not
+observable back then to the extent they are today for bloody obvious
+reasons.
 
-Reported-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
-Tested-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
+>> commit af5ab277ded0 ("clockevents: Remove the per cpu tick skew")
+>> removed it in 2010 because the xtime lock contention was gone and the
+>> skew affected the power consumption of slightly loaded _large_ servers.
+>
+> But then the tick also executes other code that can cause contention. Why
+> merge such an obvious problematic patch without considering the reasons
+> for the 2007 patch?
 
-Tested on:
+As I said above, the main reason was contention on xtime lock and some
+other global locks. These contention issues had been resolved over time,
+so the initial reason to have the skew was gone.
 
-commit:         50c8770a Add linux-next specific files for 20250702
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16dff982580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=76d012e863976d4c
-dashboard link: https://syzkaller.appspot.com/bug?extid=169de184e9defe7fe709
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1336f982580000
+The power consumption issue was a valid reason to remove it and the
+testing back then did not show any negative side effects.
 
-Note: testing is done by a robot and is best-effort only.
+The subsequently discovered issues, were not observable and some of them
+got introduced by later code changes.
+
+Obviously the patch is problematic in hindsight, but hindsight is always
+20/20.
+
+>> commit 5307c9556bc1 ("tick: Add tick skew boot option") brought it back
+>> with a command line option to address contention and jitter issues on
+>> larger systems.
+>
+> And then issues resulted because the scaling issues where not
+> considered when merging the 2010 patch.
+
+What are you trying to do here? Playing a blame game is not helping to
+find a solution.
+
+>> So while you preserved the behaviour of the command line option in the
+>> most obscure way, you did not even make an attempt to explain why this
+>> change does not bring back the issues which caused the removal in commit
+>> af5ab277ded0 or why they are irrelevant today.
+>
+> As pointed out in the patch description: The synchronized tick (aside from
+> the jitter) also causes power spikes on large core systems which can cause
+> system instabilities.
+
+That's a _NEW_ problem and has nothing to do with the power saving
+concerns which led to af5ab277ded0. 
+
+>> "Scratches my itch" does not work and you know that. This needs to be
+>> consolidated both on the implementation side and also on the user
+>> side.
+>
+> We can get to that but I at least need some direction on how to approach
+> this and figure out the concerns that exist. Frankly my initial idea was
+> just to remove the buggy patches since this caused a regression in
+> performance and system stability but I guess there were power savings
+> concerns.
+
+Guessing is not a valid engineering approach, as you might know already.
+
+It's not rocket science to validate whether these power saving concerns
+still apply and to reach out to people who have been involved in this
+and ask them to revalidate. I just Cc'ed Arjan for you.
+
+> How can we address this issue in a better way then?
+
+By analysing the consequences of flipping the default for skew_tick to
+default on, which can be evaluated upfront trivially without a single
+line of code change by adding 'skew_tick=1' to the kernel command line
+and running tests and asking others to help evaluating.
+
+There is only a limited range of scenarios, which need to be looked at:
+
+      - Big servers and the power saving issues on lightly loaded
+        machines
+
+      - Battery operated devices
+
+      - Virtualization (guests)
+
+That might not cover 100% of the use cases, but should be a good enough
+coverage to base an informed decision on.
+
+> The kernel should not come up all wobbly and causing power spikes
+> every tick.
+
+The kernel should not do a lot of things, but does them due to
+historical decisions, which turn out to be suboptimal when technology
+advances. The power spike problem simply did not exist 18 years ago at
+least not to the extent that it mattered or caused concerns.
+
+If we could have predicted the future and the consequences of ad hoc
+decisions, we wouldn't have had a BKL, which took only 20 years of
+effort to get rid of (except for the well hidden leftovers in tty).
+
+But what we learned from the past is to avoid hacky ad hoc workarounds,
+which are guaranteed to just make the situation worse.
+
+Thanks,
+
+        tglx
