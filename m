@@ -1,142 +1,80 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDEE2D9EF4;
-	Thu,  3 Jul 2025 12:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAB121D3F8
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546067; cv=none; b=uzb4PWBdqjPl6TL8Ym/XWDx5PNVdtlzYPndvYDvB6WaQN/g5dbgwO6nJpJTPjXAmsLW9RBekaLYUg1tQtQ9bE20xj7yG4dibZ2kEkT8SfV5+I/5+7tuyx5ez+tWb5yRTk8YHSMOUNAW6DtOaSUTgB3IBr9U1CoZo+yCQkihydo8=
+	t=1751546208; cv=none; b=C0fAyNRJxXn3UZ6Iq7c557PAY4eQpMeenpKRJOaajUqiDNJkMcOtjAMvTL5nIfDMFFSB75PIzRlesRv/O5Fvn7UnyHhhk++X9lCb8HAKBHM+47PintdJc19F6TErKDy/yV042+Etco5SguykLfUDSWjT/HpWC/yQ+vxhxYL5RWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546067; c=relaxed/simple;
-	bh=Pj8Cdq0sivdNx0WCtdyO0zBAKWGSVYHVKqj2V5LSI/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Idg5yaWUX7dMXjTVbJ5LMZ2tLyqv5/75Q+yaA8hGUNj2ndTjqmjLJBzhmGGAU9Nx8W9wtHM5FES0oYEgJtXIWv4HcF1Ra47dMREfa6GV40OgvSVT9mgunbexOeYT8fa+b+0jUIV+bg0KYgDKIKQg8mwuZwUM/uSZa1KpwrGaOzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWOqURet; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751546208; c=relaxed/simple;
+	bh=HecbAPa3rncj39eTzk18tRqZ32VIPiiq0hhgnrl1Ywo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XF0TDX57WeLHPlQrZXshfHvP6U5fPy+BE06UxX4Vhj+CffxC9G8mL93F/dA4/kG5/7sDeZfvYtBQKn4zMwOALuJ0Yqya+DB18A/CWN34Jz+PRWkNL5vZK7vYxFR95gw+sLv7fQDV774JLhnRFUVBAmpEbKr8zzOXETRy5Z9wduw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VhIAhpDt; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWOqURet"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fa980d05a8so85429226d6.2;
-        Thu, 03 Jul 2025 05:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751546065; x=1752150865; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pj8Cdq0sivdNx0WCtdyO0zBAKWGSVYHVKqj2V5LSI/g=;
-        b=OWOqURettas7NzT9zS5TM+zJi+2MVeCvCcJQyBr2PJV+w7cW/u86yV01GevhX4HbD3
-         nx40pYmC5G36Rt5ra+Zjn5qAp+TyWfJ3S6DEKQbbeykOG7jmTtDpLwOzcoOr5MYSfZ9u
-         7LEqwhNRA7aFc8J5g9xqkR/XSJg8AhFBufRKc1vRV9GvcCseVCgVnxVsu8yEgd2dmUKa
-         8DoQGPfAsHT5hWbHDBZhnbIMG1KyonENU1tMh/B2s1d3Qm+EvTfVfyMrJphY7EY9nwjJ
-         un4NgXOEbiZmee7IY+Hf3rm3D/29zX4uOqCHSb/eNlOhjBR6kqmHAul3K+3WzyqAmdCR
-         zqOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751546065; x=1752150865;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pj8Cdq0sivdNx0WCtdyO0zBAKWGSVYHVKqj2V5LSI/g=;
-        b=Yksm+hkRXeqh9zvffqhP8pmI7J8/3Cq1zdL0meYYeEQ6t+KBeZ/kz45XrTz/3DsdJ7
-         vbwOum10ENqGRScayh9+aDzvSqOUObAAHHHz7LwgT2lu54LQ/bF49m7JeJYHDDpNiblU
-         C9dKZ1oOZVddezvOBHwZ6nNnKDa+FEPEtZC+jxU+yBW6qenWPe0fnvT+gAX7TULpZ8AP
-         DoxzFTCoB+dzaDTPgzw1maXpvRJHjJuDVdElFC6AmQWhLYsis6CNASgTNUb1pXizFRKe
-         9eDqJyhi3G5Ikk6oJz2GnwR5RlLDQ3RbQJ2wNLe9Q8UZx4yIFhwP3wsiDALdJ0HR0oRr
-         OZng==
-X-Forwarded-Encrypted: i=1; AJvYcCUJEtpwD5AAd9NF2zMLVqpESVrCVqnqtspMztxO2iInfuFRBBXeC5g/3gM75jGZaTfAlQEV9T1prj/lLtiv@vger.kernel.org, AJvYcCUQMEpa6YCQUawK1HQ2/B4Nyp1u5tQ7eTRjNcwmf8tWrEBPU4KKl2+vQF67v+5JexCJnykgqAaLM4xs1YlC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4Y34ARJwqwJcJm35Y8w7Zc83vz4pvy2g8PRa2p2JIxgr9/+jM
-	tGhnItAZ/5/grIhM9AgMHucDnDXk1q7BHC80zsAOe4Psp1sZNQmSR7w+Qv8klPWIqZg/BBQd26N
-	CZRPbgBjNmCNSGo8mGA3nLlgwz8UYp1w=
-X-Gm-Gg: ASbGncuky/Qd4HA8yzfpb0VJhxmkLdrSJpBK99djSUtAGggaZ9uB4GsGfv+E6dk57Cj
-	2N3fJcBX2fwmhKC+2HQSkdH//YQ9ogEUBpCcQcRoin6uGl3ehCNaFRc3T58YtA6ng4b6s9dIpsy
-	iwzJDmMC9QgAC80KlMHCoiPnev2vvoftzMtNZjtaupds6io4N1uXdgF3yQHg==
-X-Google-Smtp-Source: AGHT+IGbPYrN54dYrzHXjzvtPMziKIP2dK+ZFdrAB9bFhOzkRz3Vofn+4fvXYD/kf1p6asLy/7oo4AMZVhDjgjTRKGE=
-X-Received: by 2002:ad4:5cc9:0:b0:700:bc46:5355 with SMTP id
- 6a1803df08f44-702bcc507bdmr58755466d6.28.1751546065169; Thu, 03 Jul 2025
- 05:34:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VhIAhpDt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nYpNb66VmDnizjMo0fFecW51iy25oLQuiGDoq0i3Ea4=; b=VhIAhpDtnzEKp9Jb2MXfi6YdGf
+	bL4nk9c/1EEaffJ8Ru3GPMKoLPaV3d7jLB6dR4+sCt0VMVBd6aIDxbB666PAmTjAJ86uwUOeE1hG2
+	7KgSmyXdq899QCFt1luzjMgwjG5Q+ESHc6v+xQNNBqFuTBFJINU43UZUcyk5rN6BHi8Fmh/roOkO4
+	xKDBIcscjn7WPzHxBOaR0t2AtZYnW3ZPtSc9BIOgyqdSguAeBPJ7c4rIx1CjDwMipQIPVpRptricg
+	lmMyJKh4NF6gIcQfoyFmTSsP/fAyYtGUfvWjsiTELK+ktGu+BzeXSd7+apu+1UQmmh7/wJ1YaAb2R
+	i6H+MD0A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXJAx-00000007gqS-1oTa;
+	Thu, 03 Jul 2025 12:36:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4EA0A30017D; Thu, 03 Jul 2025 14:36:26 +0200 (CEST)
+Date: Thu, 3 Jul 2025 14:36:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Michal Hocko <mhocko@suse.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
+	Jirka Hladky <jhladky@redhat.com>,
+	Srikanth Aithal <Srikanth.Aithal@amd.com>,
+	Suneeth D <Suneeth.D@amd.com>
+Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
+ task swap
+Message-ID: <20250703123626.GW1613200@noisy.programming.kicks-ass.net>
+References: <20250702163247.324439-1-yu.c.chen@intel.com>
+ <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
+ <aGZNTtJuCyHJE_25@tiehlicka>
+ <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
+ <aGZxFRVxHouLaMPg@tiehlicka>
+ <b4891cca-4da3-4411-bc9c-669118bf825a@intel.com>
+ <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617154345.2494405-1-david@redhat.com> <20250617154345.2494405-2-david@redhat.com>
- <aFVZCvOpIpBGAf9w@localhost.localdomain> <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
-In-Reply-To: <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 3 Jul 2025 20:34:11 +0800
-X-Gm-Features: Ac12FXwlisPZPIPS0YTxEVYIGMNVB3un9rKexLCpMfXXShG5J5pRHWps4sQZYSw
-Message-ID: <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
- in vm_normal_page()
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Alistair Popple <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
 
-On Mon, Jun 23, 2025 at 10:04=E2=80=AFPM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> On 20.06.25 14:50, Oscar Salvador wrote:
-> > On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
-> >> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
-> >> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
-> >> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
-> >> readily available.
-> >>
-> >> Nowadays, this is the last remaining highest_memmap_pfn user, and this
-> >> sanity check is not really triggering ... frequently.
-> >>
-> >> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
-> >> simplify and get rid of highest_memmap_pfn. Checking for
-> >> pfn_to_online_page() might be even better, but it would not handle
-> >> ZONE_DEVICE properly.
-> >>
-> >> Do the same in vm_normal_page_pmd(), where we don't even report a
-> >> problem at all ...
-> >>
-> >> What might be better in the future is having a runtime option like
-> >> page-table-check to enable such checks dynamically on-demand. Somethin=
-g
-> >> for the future.
-> >>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >
->
-> Hi Oscar,
->
-> > I'm confused, I'm missing something here.
-> > Before this change we would return NULL if e.g: pfn > highest_memmap_pf=
-n, but
-> > now we just print the warning and call pfn_to_page() anyway.
-> > AFAIK, pfn_to_page() doesn't return NULL?
->
-> You're missing that vm_normal_page_pmd() was created as a copy from
-> vm_normal_page() [history of the sanity check above], but as we don't
-> have (and shouldn't have ...) print_bad_pmd(), we made the code look
-> like this would be something that can just happen.
->
-> "
-> Do the same in vm_normal_page_pmd(), where we don't even report a
-> problem at all ...
-> "
->
-> So we made something that should never happen a runtime sanity check
-> without ever reporting a problem ...
+On Thu, Jul 03, 2025 at 05:20:47AM -0700, Libo Chen wrote:
 
-IIUC, the reasoning is that because this case should never happen, we can
-change the behavior from returning NULL to a "warn and continue" model?
+> I agree. The other parts, schedstat and vmstat, are still quite helpful.
+> Also tracepoints are more expensive than counters once enabled, I think
+> that's too much for just counting numbers.
 
-Thanks,
-Lance
+I'm not generally a fan of eBPF, but supposedly it is really good for
+stuff like this. 
+
+Attaching to a tracepoint and distributing into cgroup buckets seems
+like it should be a trivial script.
