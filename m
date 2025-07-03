@@ -1,43 +1,43 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810332F2705;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071052F2706;
 	Thu,  3 Jul 2025 18:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751568257; cv=none; b=l0ywv6m4KxT66VWp+2QHm61ruE8UsQTJUgMsBzfAP0KwVeiv/xO4bCHtdM4OVcIN4nPCeOHHCG8OgqcMYHEe7jhy651IPgXJ5rCW3nnvy3byPXgT1uQOOBLhWKNbx+JSIr0NnFmb1jzmBLBWgR29TtIPyd26tlbmi0c9yVka8zA=
+	t=1751568258; cv=none; b=tQENx87rgFzR8WdvVjzv5KXNyTI1I9CsXJCH/DNw21YO+bNe6cWcVgHulPpz6oiC04HUkIaGJ8ZYpjEx3Plm2SkEz3M4nSwAkUcnJrrDR9zfeMGYrePn/5uxXlGDu64XPpJLk9ttm/tuUq1X6IqKL0/Gr3D35ZEtZEr6RfSrZgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751568257; c=relaxed/simple;
-	bh=0hR6ZhiubZ5Kyc6vmfw/sHaL3W5BBzzHhyzQChARWQk=;
+	s=arc-20240116; t=1751568258; c=relaxed/simple;
+	bh=8LpVR5vjfFVmOAAZmoulkR5XIUYLW27aeF/9waSxwdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oabJUyYAim6z4s7XgfTpTTkQ7buamf2XECrsOgvZR3bM2yr6J0Ld7Gb8jjfg4aeuRXKdrxoLyZOJrkPXmgQ9iN4wrTVmgkX78LPGC+Yf4GmohNe2Jhp30Gt5GIdXwkBEZYtlIY/obGqMjbrWvQ2vS3eez1dYcl69RUKxlQvbjYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=oCr03uAb; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version; b=diiEYXKU8ckYziirLnMo7BY5JYRxdJefm/lluDfpiIlCdQeQ2PeIx5t6Uf7Ra+CoqHq1/ZKbuNMCUpwSd+s8Zi92Zd6pppfsRy8d5aQr/nzR1TyMRruPwgkgPM/3D/+XAESPGBd19twTMW7T3YZSz7AuN9/W/t4yEvzJ2pZul54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=QNze9jn8; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="oCr03uAb"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8CDC340ACB
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="QNze9jn8"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2260D40ACD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751568255; bh=+7QrIo1J84pby1WL7DeMQCAy/1LzFtVjNscgsF5i0jQ=;
+	t=1751568256; bh=Boes/PYNn6MSOnmyVvyWWb85WBr7EHHbGNkvn9wn+Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oCr03uAbFKL4p/BPT7UvcaUbllWSwHwVPiLNAXv75T35XXTV0Ahic2EFcUC3zo+hR
-	 TX9399/p/Y/+pgJlJNPRaf+CDn+XgqON3RgJlaBZaxk6x01P86dlTYZ2jKkUjl7nEz
-	 s/qH2kWi2B3LSkcQtGN+a7d8O8G3wlcX5pcHOVcl4MCsA9O5AHL7evlGawF9F9Q7Jj
-	 oQohgSNNFADuObgGnUxIplZANSFMbNxVqP7M/Ih99QkFYBKsi3Z6XhFxPjMP6K4GqT
-	 Vl4ql8MzNbwRkVMaMmDEmFtCHtrai+3jLN4RVcNpoNXt/S44FAek1G0KR4GWBx120W
-	 CY7RfW4fjtKuQ==
+	b=QNze9jn8rGBt3zujbwDNW4UdhaCkJ+fuPpT7nVEi+Yr5JT9MPSttNCJBwtmiOhznB
+	 elHFLJYRIwvu79SwmzPCdEkxNT3o0MfAY8eBu23e7Dvq29Xz4LNz1bXFBP3ce+4Unm
+	 ImwnLb5XTxLPSmr9OXiHYCNvk+labhrrnv3IEuPd0wmdPITHsZiW59Jr20AMOHcNAC
+	 g/ErG5fzTr0jdDmSQgcz5EtoUwaq9F52VS0COeJjNBwkf6bHt9XIIjj+AELTahuXA+
+	 lZRx5RoPT8WXrTzLwQ7+vFr42HEU5csim1QMzaDE7qlHyrgEevY8vUPLp8XCqymtmm
+	 tqdHIYlB2aXqA==
 Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9::1fe])
-	by ms.lwn.net (Postfix) with ESMTPA id 8CDC340ACB;
-	Thu,  3 Jul 2025 18:44:15 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPA id 2260D40ACD;
+	Thu,  3 Jul 2025 18:44:16 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Akira Yokosawa <akiyks@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 2/7] docs: kdoc: micro-optimize KernRe
-Date: Thu,  3 Jul 2025 12:43:58 -0600
-Message-ID: <20250703184403.274408-3-corbet@lwn.net>
+Subject: [PATCH v2 3/7] docs: kdoc: remove the brcount floor in process_proto_type()
+Date: Thu,  3 Jul 2025 12:43:59 -0600
+Message-ID: <20250703184403.274408-4-corbet@lwn.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250703184403.274408-1-corbet@lwn.net>
 References: <20250703184403.274408-1-corbet@lwn.net>
@@ -49,33 +49,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rework _add_regex() to avoid doing the lookup twice for the (hopefully
-common) cache-hit case.
+Putting the floor under brcount does not change the output in any way, just
+remove it.
 
+Change the termination test from ==0 to <=0 to prevent infinite loops in
+case somebody does something truly wacko in the code.
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- scripts/lib/kdoc/kdoc_re.py | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ scripts/lib/kdoc/kdoc_parser.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
-index e81695b273bf..612223e1e723 100644
---- a/scripts/lib/kdoc/kdoc_re.py
-+++ b/scripts/lib/kdoc/kdoc_re.py
-@@ -29,12 +29,9 @@ class KernRe:
-         """
-         Adds a new regex or re-use it from the cache.
-         """
--
--        if string in re_cache:
--            self.regex = re_cache[string]
--        else:
-+        self.regex = re_cache.get(string, None)
-+        if not self.regex:
-             self.regex = re.compile(string, flags=flags)
--
-             if self.cache:
-                 re_cache[string] = self.regex
+diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
+index d9ff2d066160..935f2a3c4b47 100644
+--- a/scripts/lib/kdoc/kdoc_parser.py
++++ b/scripts/lib/kdoc/kdoc_parser.py
+@@ -1609,9 +1609,7 @@ class KernelDoc:
+                 self.entry.brcount += r.group(2).count('{')
+                 self.entry.brcount -= r.group(2).count('}')
  
+-                self.entry.brcount = max(self.entry.brcount, 0)
+-
+-                if r.group(2) == ';' and self.entry.brcount == 0:
++                if r.group(2) == ';' and self.entry.brcount <= 0:
+                     self.dump_declaration(ln, self.entry.prototype)
+                     self.reset_state(ln)
+                     break
 -- 
 2.49.0
 
