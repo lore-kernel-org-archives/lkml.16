@@ -1,80 +1,221 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAB121D3F8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B526D2D9EF4;
+	Thu,  3 Jul 2025 12:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546208; cv=none; b=C0fAyNRJxXn3UZ6Iq7c557PAY4eQpMeenpKRJOaajUqiDNJkMcOtjAMvTL5nIfDMFFSB75PIzRlesRv/O5Fvn7UnyHhhk++X9lCb8HAKBHM+47PintdJc19F6TErKDy/yV042+Etco5SguykLfUDSWjT/HpWC/yQ+vxhxYL5RWs=
+	t=1751546296; cv=none; b=WsdULkBbyNwzQa4ldPyVmqmlsvnwFBIHYIA2CnfHqmfq4Q/K+zPuZKe4/q06f95mZ0vNcDjstYkIEuVpJYhiVijv/uB1CZwcS3HItRSwOYM6IIbrxPBu20pD3Z7tQbmB5juaOfz8aSl9/n33Kg1zdbykeEYLRc3lgYE1vQyPs8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546208; c=relaxed/simple;
-	bh=HecbAPa3rncj39eTzk18tRqZ32VIPiiq0hhgnrl1Ywo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XF0TDX57WeLHPlQrZXshfHvP6U5fPy+BE06UxX4Vhj+CffxC9G8mL93F/dA4/kG5/7sDeZfvYtBQKn4zMwOALuJ0Yqya+DB18A/CWN34Jz+PRWkNL5vZK7vYxFR95gw+sLv7fQDV774JLhnRFUVBAmpEbKr8zzOXETRy5Z9wduw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VhIAhpDt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751546296; c=relaxed/simple;
+	bh=hWvVF87EVM3mwOjPFZe4ew5uoKrcihEE8r7VGd37jSU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t2ONiX3i9jZGZP2Zuv9G4aGt/R5xPFfz8PMNgWll4QVGzhDLfhNAjhEcDKcNRc3yrMGdsiSoqzZydCLAYydc55XHXFAXl5eenEt9YwSYHB+jDiwkJ5HuFlKRWjSpIaANU+BXBWb97vbwtQEBKjM+8x7vGO69rxlMWUbhCdg4MEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4fGec5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VhIAhpDt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nYpNb66VmDnizjMo0fFecW51iy25oLQuiGDoq0i3Ea4=; b=VhIAhpDtnzEKp9Jb2MXfi6YdGf
-	bL4nk9c/1EEaffJ8Ru3GPMKoLPaV3d7jLB6dR4+sCt0VMVBd6aIDxbB666PAmTjAJ86uwUOeE1hG2
-	7KgSmyXdq899QCFt1luzjMgwjG5Q+ESHc6v+xQNNBqFuTBFJINU43UZUcyk5rN6BHi8Fmh/roOkO4
-	xKDBIcscjn7WPzHxBOaR0t2AtZYnW3ZPtSc9BIOgyqdSguAeBPJ7c4rIx1CjDwMipQIPVpRptricg
-	lmMyJKh4NF6gIcQfoyFmTSsP/fAyYtGUfvWjsiTELK+ktGu+BzeXSd7+apu+1UQmmh7/wJ1YaAb2R
-	i6H+MD0A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXJAx-00000007gqS-1oTa;
-	Thu, 03 Jul 2025 12:36:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4EA0A30017D; Thu, 03 Jul 2025 14:36:26 +0200 (CEST)
-Date: Thu, 3 Jul 2025 14:36:26 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Libo Chen <libo.chen@oracle.com>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Michal Hocko <mhocko@suse.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
-	Jirka Hladky <jhladky@redhat.com>,
-	Srikanth Aithal <Srikanth.Aithal@amd.com>,
-	Suneeth D <Suneeth.D@amd.com>
-Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
- task swap
-Message-ID: <20250703123626.GW1613200@noisy.programming.kicks-ass.net>
-References: <20250702163247.324439-1-yu.c.chen@intel.com>
- <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
- <aGZNTtJuCyHJE_25@tiehlicka>
- <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
- <aGZxFRVxHouLaMPg@tiehlicka>
- <b4891cca-4da3-4411-bc9c-669118bf825a@intel.com>
- <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4fGec5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA61C4CEE3;
+	Thu,  3 Jul 2025 12:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751546295;
+	bh=hWvVF87EVM3mwOjPFZe4ew5uoKrcihEE8r7VGd37jSU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e4fGec5c+a5XsC3kgG1v/EdvTMJUV2gZBtLRlD9DGZLuyOij9qKsXlWe5wLzV4kYk
+	 7/kMUudklu19iKKFI6MbnQqZSYYoBS7qBGNYHsY/tfCRZd39OEHYsUdSD7oowWMAhd
+	 +6PE5W2ct1AlegAX6RQn+R8Qzlne6LKm4Qw8WAHLMBBk9IIUe2yA6IOBnYXQxIq2Ax
+	 OUBjV8Ws9cCncRJrNtt1YIYtMH19OwSqBi3QMC9mzzD050ap35SFtTts9OUear417j
+	 VWkykKtpqImYAZ3cfD+WzyFs3/02DcMarY3emCiEJq2dgTbhK89uBBRqGJG1+sLPMR
+	 foN3vbumvs9Zw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uXJCf-00CJgJ-5K;
+	Thu, 03 Jul 2025 13:38:13 +0100
+Date: Thu, 03 Jul 2025 13:38:12 +0100
+Message-ID: <8634bdbgaz.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: perlarsen@google.com
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ahomescu@google.com,
+	armellel@google.com,
+	arve@android.com,
+	ayrton@google.com,
+	qperret@google.com,
+	sebastianene@google.com,
+	qwandor@google.com
+Subject: Re: [PATCH v7 2/5] KVM: arm64: Use SMCCC 1.2 for FF-A initialization and in host handler
+In-Reply-To: <20250701-virtio-msg-ffa-v7-2-995afc3d385e@google.com>
+References: <20250701-virtio-msg-ffa-v7-0-995afc3d385e@google.com>
+	<20250701-virtio-msg-ffa-v7-2-995afc3d385e@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: perlarsen@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, ahomescu@google.com, armellel@google.com, arve@android.com, ayrton@google.com, qperret@google.com, sebastianene@google.com, qwandor@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jul 03, 2025 at 05:20:47AM -0700, Libo Chen wrote:
+On Tue, 01 Jul 2025 23:06:35 +0100,
+Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org> wrote:
+>=20
+> From: Per Larsen <perlarsen@google.com>
+>=20
+> SMCCC 1.1 and prior allows four registers to be sent back as a result
+> of an FF-A interface. SMCCC 1.2 increases the number of results that can
+> be sent back to 8 and 16 for 32-bit and 64-bit SMC/HVCs respectively.
+>=20
+> FF-A 1.0 references SMCCC 1.2 (reference [4] on page xi) and FF-A 1.2
+> explicitly requires SMCCC 1.2 so it should be safe to use this version
+> unconditionally. Moreover, it is simpler to implement FF-A features
+> without having to worry about compatibility with SMCCC 1.1 and older.
+>=20
+> Update the FF-A initialization and host handler code to use SMCCC 1.2.
+>=20
+> Signed-off-by: Per Larsen <perlarsen@google.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/Makefile |   1 +
+>  arch/arm64/kvm/hyp/nvhe/ffa.c    | 193 +++++++++++++++++++++++++--------=
+------
+>  2 files changed, 125 insertions(+), 69 deletions(-)
+>=20
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/M=
+akefile
+> index a76522d63c3e630795db5972a99abc3d24bc5e26..f859a8fb41a25effea1edd977=
+bef889423153399 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -27,6 +27,7 @@ hyp-obj-y :=3D timer-sr.o sysreg-sr.o debug-sr.o switch=
+.o tlb.o hyp-init.o host.o
+>  	 cache.o setup.o mm.o mem_protect.o sys_regs.o pkvm.o stacktrace.o ffa.o
+>  hyp-obj-y +=3D ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../=
+entry.o \
+>  	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
+> +hyp-obj-y +=3D ../../../kernel/smccc-call.o
+>  hyp-obj-$(CONFIG_LIST_HARDENED) +=3D list_debug.o
+>  hyp-obj-y +=3D $(lib-objs)
+> =20
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index 2c199d40811efb5bfae199c4a67d8ae3d9307357..65d241ba32403d014b43cc4ef=
+4d5bf9693813809 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -71,36 +71,68 @@ static u32 hyp_ffa_version;
+>  static bool has_version_negotiated;
+>  static hyp_spinlock_t version_lock;
+> =20
+> -static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
+> +static void ffa_to_smccc_error(struct arm_smccc_1_2_regs *res, u64 ffa_e=
+rrno)
+>  {
+> -	*res =3D (struct arm_smccc_res) {
+> +	*res =3D (struct arm_smccc_1_2_regs) {
+>  		.a0	=3D FFA_ERROR,
+>  		.a2	=3D ffa_errno,
+>  	};
+>  }
+> =20
+> -static void ffa_to_smccc_res_prop(struct arm_smccc_res *res, int ret, u6=
+4 prop)
+> +static void ffa_to_smccc_res_prop(struct arm_smccc_1_2_regs *res, int re=
+t, u64 prop)
+>  {
+>  	if (ret =3D=3D FFA_RET_SUCCESS) {
+> -		*res =3D (struct arm_smccc_res) { .a0 =3D FFA_SUCCESS,
+> -						.a2 =3D prop };
+> +		*res =3D (struct arm_smccc_1_2_regs) { .a0 =3D FFA_SUCCESS,
+> +						      .a2 =3D prop };
+>  	} else {
+>  		ffa_to_smccc_error(res, ret);
+>  	}
+>  }
+> =20
+> -static void ffa_to_smccc_res(struct arm_smccc_res *res, int ret)
+> +static void ffa_to_smccc_res(struct arm_smccc_1_2_regs *res, int ret)
+>  {
+>  	ffa_to_smccc_res_prop(res, ret, 0);
+>  }
+> =20
+>  static void ffa_set_retval(struct kvm_cpu_context *ctxt,
+> -			   struct arm_smccc_res *res)
+> +			   struct arm_smccc_1_2_regs *res)
+>  {
+> +	DECLARE_REG(u64, func_id, ctxt, 0);
+>  	cpu_reg(ctxt, 0) =3D res->a0;
+>  	cpu_reg(ctxt, 1) =3D res->a1;
+>  	cpu_reg(ctxt, 2) =3D res->a2;
+>  	cpu_reg(ctxt, 3) =3D res->a3;
+> +	cpu_reg(ctxt, 4) =3D res->a4;
+> +	cpu_reg(ctxt, 5) =3D res->a5;
+> +	cpu_reg(ctxt, 6) =3D res->a6;
+> +	cpu_reg(ctxt, 7) =3D res->a7;
 
-> I agree. The other parts, schedstat and vmstat, are still quite helpful.
-> Also tracepoints are more expensive than counters once enabled, I think
-> that's too much for just counting numbers.
+=46rom DEN0028G 2.6:
 
-I'm not generally a fan of eBPF, but supposedly it is really good for
-stuff like this. 
+<quote>
+Registers W4-W7 must be preserved unless they contain results, as
+specified in the function definition.
+</quote>
 
-Attaching to a tracepoint and distributing into cgroup buckets seems
-like it should be a trivial script.
+On what grounds can you blindly change these registers?
+
+> +
+> +	/*
+> +	 * DEN0028C 2.6: SMC32/HVC32 call from aarch64 must preserve x8-x30.
+> +	 *
+> +	 * The most straightforward approach is to look at the function ID
+> +	 * sent by the caller. However, the caller could send FFA_MSG_WAIT
+> +	 * which is a 32-bit interface but the reply could very well be 64-bit
+> +	 * such as FFA_FN64_MSG_SEND_DIRECT_REQ or FFA_MSG_SEND_DIRECT_REQ2.
+> +	 *
+> +	 * Instead, we could look at the function ID in the response (a0) but
+> +	 * that doesn't work either as FFA_VERSION responses put the version
+> +	 * number (or error code) in w0.
+> +	 *
+> +	 * Set x8-x17 iff response contains 64-bit function ID in a0.
+> +	 */
+> +	if (func_id !=3D FFA_VERSION && ARM_SMCCC_IS_64(res->a0)) {
+> +		cpu_reg(ctxt, 8) =3D res->a8;
+> +		cpu_reg(ctxt, 9) =3D res->a9;
+> +		cpu_reg(ctxt, 10) =3D res->a10;
+> +		cpu_reg(ctxt, 11) =3D res->a11;
+> +		cpu_reg(ctxt, 12) =3D res->a12;
+> +		cpu_reg(ctxt, 13) =3D res->a13;
+> +		cpu_reg(ctxt, 14) =3D res->a14;
+> +		cpu_reg(ctxt, 15) =3D res->a15;
+> +		cpu_reg(ctxt, 16) =3D res->a16;
+> +		cpu_reg(ctxt, 17) =3D res->a17;
+> +	}
+>  }
+
+I don't see how that can ever work.
+
+Irrespective of how FFA_MSG_WAIT actually works (and I couldn't find
+anything in the spec that supports the above), the requester will
+fully expect its registers to be preserved based on the initial
+function type, and that alone. No ifs, no buts.
+
+If what you describe can happen (please provide a convincing example),
+then the spec is doomed.
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
