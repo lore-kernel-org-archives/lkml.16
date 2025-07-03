@@ -1,76 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3B259CB9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D5C259CAF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560780; cv=none; b=Gi4hJ+5Kcxwiw9EQvzc4RCkOakBl1PcSyIYWlea99ppF0pPtYPDxJR2RgRRl3DbbNDksuxwIlBMWwalAO6uDx5JYUH/0JPEHa0AhRw3E8/Aq0G8qeGwNfgW377xKgm9/xmGIcu3X9akMOY8uVOWm/RcFTC2v9478TTsF8hxkWiI=
+	t=1751560781; cv=none; b=Oy7gHGt6IgM8O/JyoU/I/aW8Qs1eAJjwLSIe9PQ8MuwESg/d/rf04qftJ33x5v7ECmHw0InGJ4nKNut3flwNwuBlQaBugHyP8UMw9wDZWTYuazm6u80k5v6jdu3lo6Wl/aYHJOyBYhlTt16i2S23IN/JQLWbwLResFiT3tkiRrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560780; c=relaxed/simple;
-	bh=WdgPxngTX8VmRp7AvbeAk+y0bbhMCt+pYEZaff3TjUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MgI9roebIArwWYBxVbRay6NZDaO8aWBOCp/KtU8CQqF88BvRb/H/bQVzC2vg0VNH4XEWYbE7TBVBRAkwpYDWRqOoTl+TWAczSY6uRItEgszjHL+t8f0NcXbk6Fjrst6j9ou1bsf8NYy25tqWZMhES3dhbRfh10Haw0MjYJdBSf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0mYxwTW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751560781; c=relaxed/simple;
+	bh=AJBCLhZWdjOBgCD1smyX71MFhrqFmFPh/WG4+1amZyU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pxKtca/H0vY/e2izRzn+pmJJ852SXu2n5h2O+tXIQ2baDWUNoXGDrIqrdSo8BmvVnzMMJACLXDuCYGUQAwo2RXnhn+Ju7HoukMnp/O3hDUg4yq87X+T8zFay0OXC72tvafvot9mB5a5qtFZhjaCRmiIFVmKJEJA3sKMSRZxdniw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=Nli/qseQ; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0mYxwTW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ADE2C4CEED;
-	Thu,  3 Jul 2025 16:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751560778;
-	bh=WdgPxngTX8VmRp7AvbeAk+y0bbhMCt+pYEZaff3TjUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V0mYxwTWgqT/SaprqM4Hz6+4OMFs+JMUZzMUJ60f95xXTdHt51yfk6ZV5y6Wsoro0
-	 xKbmUKPPH8SNta23aMCBepvlF+5wcnHxa71GVF27dLN52/3dkFpIDddZGvS4+Qg9uf
-	 LCPifV0I7r/wDTcJsJxYhoJKdbQ89wkENODISw5LymzTgQvBrOio2pecjBs1fCJmWL
-	 Tl3QKoV7sjPJw8qhSF/87Ow5rfgkdM+yDX4HmIzH7P9KdMMDH2yKmaOs8LxnaDJq9l
-	 B7gxoPs/KGpSlCDmDd3P0ljdicWj1tG32DJ19q2M9j5+z76T38wwJNJRTY17wmLaro
-	 EzNXDdVlBZmqQ==
-Date: Thu, 3 Jul 2025 06:39:37 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Dennis Zhou <dennis@kernel.org>
-Cc: Jeongjun Park <aha310510@gmail.com>,
-	"Christoph Lameter (Ampere)" <cl@gentwo.org>,
-	akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
-Subject: Re: [PATCH] mm/percpu: prevent concurrency problem for
- pcpu_nr_populated read with spin lock
-Message-ID: <aGaySZ-CO4l9PrC_@slm.duckdns.org>
-References: <20250702082749.141616-1-aha310510@gmail.com>
- <7b7d353f-f38b-3205-8fd4-1072dbf69cb6@gentwo.org>
- <CAO9qdTEidRnO4O_D7Z1jKZTyJadFyEyWBnfitTz8t1CdBaM1nw@mail.gmail.com>
- <aGYaXcB1CaA3BKEa@snowbird>
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="Nli/qseQ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7426c44e014so224467b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:39:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1751560779; x=1752165579; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vFvcp/2SBfCsuhz1Gt3KZ5rIg4J2coSjWWNFBPpEbm4=;
+        b=Nli/qseQ5GGn4qMpDZpc15eds604ciZzWvClSfi15GJMo2XKSLI1HeML8uTdXaBnbU
+         Vh4Sp8q+kBl1lYDEJkzKtwolplK03Jmv7hqr29iC1/BaOPt4aRurqUAh2kMXdalf1JEk
+         1pPE7zBnBWPp5hyLLadOuvJTR7Oz/r7MiSAoNW9QKbOF3SOkWiNf9nU3Nsip6oh+3UEo
+         u85GUIx6BKONPpvlg0lpLdYOXMUHsm3RJbCv/HonCZWrRkX5opAduU5S8mUxpeQw1m+E
+         RUrZc93dB48FoufsuqoMRQSdzWesNMKxFAQ7qXsJnqqN4T3gScMV1c8asmvvcNFeDpid
+         tQYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751560779; x=1752165579;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vFvcp/2SBfCsuhz1Gt3KZ5rIg4J2coSjWWNFBPpEbm4=;
+        b=TrzyCpHSBfl/fP5AmMpsqggieXtXVssaJ7S0LbJJJVFT1CajwlEoniLOuA7Tvqice0
+         kJiSpLXmLAY//Ss/TtrVo42skg1+NWGBiF4i2xhCkLVnwgTE6L8Oc9sX3cPmxXcRvYuy
+         Si1wg74dRB98F+sWwaQVBKD6Oo0oSySRHZpos1vLwC4Ka4xrkAK+Wpxzlnw3fLDyiG7Q
+         gjo5y9Gdt3OQ5TH4oiez7pQeWUg6hi0uHX9dFmZtldv80vxRWNXbb+sM+2Xmt7mtkGL/
+         ZeFM5CTVeChqt5r/vqzA1lGwh+EcCHpVwWKBphDDPeLhE1pNxp0hA56IqLjRIHdc13vp
+         l+9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpyiMicp7XmR6eNm4rbIcWSxtPd3KQzdPmkw/DPG8mbw/ErfxZsnr2L/SxCCAydgPrM40VS/NLxNrcMpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynwTaXZULOPeAsXkQv9MxEJPeuHiT5S05AHfn3elgewzzw55gX
+	wJNjcJSRAw1Q+6Up0oVxBxkcWjvDEYSxkoA7gwLfxSKsHiUOgg6/JekavtrBKOMKmNHH++GRv2r
+	bSjYduMa1hcfyiHh4dzGHS4PFEVumaNJ2Ldtvpvuc1g2s+VPAWSI=
+X-Gm-Gg: ASbGncuO3oJWjNQiSVaQA5+F2qXk3H8gy0sovciGR7BsabeonbPfdugGgVzKshlHXQM
+	JnPfBrKI3tplIAHle9k9n9lif9f76PE0vlcG1zP2PMRzcUaac4I54yJYOS/Av23bJFQJh2lAkvh
+	wXvLKlP7j73aM8hXIZGGgcDqYkmt8j1f3Vi2HDxcj/RQ==
+X-Google-Smtp-Source: AGHT+IFz/tty/KbZCIqVMSBW/IY7VmKn+WafAd4UBuzZLL76rgE18vyMvHSfq4cziXjtk/ACaLQVoVekX+BYY7KEhzs=
+X-Received: by 2002:a05:6a00:1788:b0:748:edf5:95de with SMTP id
+ d2e1a72fcca58-74cd165c1a0mr4540738b3a.10.1751560778870; Thu, 03 Jul 2025
+ 09:39:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGYaXcB1CaA3BKEa@snowbird>
+References: <68663c93.a70a0220.5d25f.0857.GAE@google.com> <68666a48.a00a0220.c7b3.0003.GAE@google.com>
+ <CAM0EoM=JWBb-Ap8Wutic8-7k7_+5rrt-t65h5Bv-iyiJ+JtOCA@mail.gmail.com>
+In-Reply-To: <CAM0EoM=JWBb-Ap8Wutic8-7k7_+5rrt-t65h5Bv-iyiJ+JtOCA@mail.gmail.com>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Thu, 3 Jul 2025 12:39:27 -0400
+X-Gm-Features: Ac12FXyWQz0PUHIUtvscAG_GY56CKkqB8RuzS5xnkfPHcGQKJxY1PmvlH9ooA_w
+Message-ID: <CAM0EoM=TwzOF9Osb4qtHzxdBcHewKFq_nAYAqx64UTjOF_Z55w@mail.gmail.com>
+Subject: Re: Lion, can you take a look at his? WAS(Re: [syzbot] [net?] general
+ protection fault in htb_qlen_notify
+To: syzbot <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com>, 
+	Lion <nnamrec@gmail.com>
+Cc: David Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Simon Horman <horms@kernel.org>, Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux Kernel Network Developers <netdev@vger.kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 10:51:25PM -0700, Dennis Zhou wrote:
-> > However, since pcpu_nr_pages(), which performs a read operation on
-> > pcpu_nr_populated, is not protected by pcpu_lock, races between read/write
-> > can easily occur.
-> > 
-> > Therefore, I think it is appropriate to protect it through pcpu_lock
-> > according to the comment written in the definition of pcpu_nr_populated.
-> 
-> You're right that this is a race condition, but this was an intention
-> choice done because the value read here is only being used to pass
-> information to userspace for /proc/meminfo. As Christoph mentioned, the
-> caller of pcpu_nr_pages() will never see an invalid value nor does it
-> really matter either.
+On Thu, Jul 3, 2025 at 11:05=E2=80=AFAM Jamal Hadi Salim <jhs@mojatatu.com>=
+ wrote:
+>
+> On Thu, Jul 3, 2025 at 7:32=E2=80=AFAM syzbot
+> <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has found a reproducer for the following issue on:
+> >
+> > HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.=
+org..
+> > git tree:       net
 
-This isn't an actual race condition. The value can be read atomically and an
-unprotected read can't lead to a result which wouldn't be possible when
-reading under the lock. ie. Whether the lock is added or not, the end result
-doesn't change. It's just that syzbot can't tell the difference.
+[..]
+> It is triggered by your patch. On the first try, removing your patch
+> seems to fix it.
+> It may have nothing to do with your patch i.e your patch may have
+> opened it up to trigger an existing bug.
+> You removed that if n=3D0, len=3D0 check which earlier code was using to
+> terminate the processing.
+>
 
-Thanks.
+Ok, after some more digging - this is not a bug you caused but rather
+one you exposed.
+We are looking into it.
 
--- 
-tejun
+cheers,
+jamal
+> cheers,
+> jamal
