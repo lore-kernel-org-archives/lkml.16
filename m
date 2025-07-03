@@ -1,145 +1,134 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6870D228CB0;
-	Thu,  3 Jul 2025 06:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5B3228CB0;
+	Thu,  3 Jul 2025 06:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524684; cv=none; b=WYQqkfMWlGqUVdSnw4pVN0aYjX1GlGKEUOWLEXOYjnQrcdGF96BIre0iTkTvBS2atoPDT4+MKHRPn55g6L4iUE4kjr39XXJn5u+77rVuRr9oUEKNDJ3laGykS+0aTEUT13OZUBSWDg1piVMrtyrZaBFwMTOcZ/jRX7VxquKTDvY=
+	t=1751524713; cv=none; b=aJplWx4QY1ZTKRCKZqVqOSYejQICC2KfBbXGFBak1ERlpaBq6ZfWiiHq3yhBpa5YP50S3CpkH3NIqH2ZNi5+whN4p72srRf6GuHS2Pra18XQwNaVAEcn8TbOSFgSYESR4nSY95uOsyjVsfyLIEHdVipLQ6UaGQ8XId8+8Y839FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524684; c=relaxed/simple;
-	bh=ycFo1nLp5/0QWcqp2qZGxrXVZQq/5D3iTncGtW7GLO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hhRnV1CSMqGL+4N2Qcljk4uqYmyCDYjyUReeDAwIRn6oS2plNDuGYwL3KH/w6PvaBfEgxFLdeRR4xua4soCcJrDuX28/3o7obAT6EjXtsIJdY4/LsLvfLO0Qitsd1+ZNf/zMo+hC8Ktg/Lq5jwg+l81aSqcYM01ADDXVb6/L9RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PwapMf4A; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751524713; c=relaxed/simple;
+	bh=QOOHhETeEAo4etvksPWoApykOBHO+NOnZ65/35pnXwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=m9nvPWKjsypjGAWT7dP2zZpHFkjCFm+mqo3eFzZ2odtf6RIu6isTXufxkV/3tdd+YRD38YNAn8VAQs78eOynsp5XDgsfBIHCILkN4m7bjJ7NG7nvKiAqWS7+qls93vlqfji9IkxYCkOFg73HYGe3e2CGOmxPPgcpgXCwh0IUfek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qs3I512A; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PwapMf4A"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 598C041B5F;
-	Thu,  3 Jul 2025 06:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751524679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4+WaR4VhxZXal3ni8c5FuKUZQzKkcDX9MLohXTPfTgg=;
-	b=PwapMf4AOf1u09JZyAvuq3MEs5Q4wJkpokCf2i9YxktO3oxlAqxu3Kuva4qlUMVWrZe6Ch
-	VsiHnhZuSck3prB2PK5yzQ3fhCQSCMLnythuh+f1I7Xp/uqgW095xyV41I1sLuK+fb2Rt4
-	34LwUAwFXNTWwxNYB2VkvYdynIt2L6NXbtpqKiJNhf9VRJHwM5lSz6I4HCFqw9fpinlL/Q
-	6J9qijxfXxGDsGK9I7GWGydnMqWvaV6jJyPnc6KvT53yUQPq+TtCmIIR/doowMzDlFQfuL
-	lyDTf+GBFBaRwnczT067UcPIVZgQ9a5tk0e34+6QyDx5/zD9/kxezacCrcPHxA==
-Date: Thu, 3 Jul 2025 08:37:55 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn
- <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn
- Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
- <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
- Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
- Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, Heikki
- Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
- x86 when PCI device-tree node creation is enabled
-Message-ID: <20250703083755.2fee7e7c@bootlin.com>
-In-Reply-To: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-19-herve.codina@bootlin.com>
-	<20250627162245.GA3513535-robh@kernel.org>
-	<aF7H4-toeb7Ouz3d@smile.fi.intel.com>
-	<CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qs3I512A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751524685;
+	bh=k6205XzQTgMiuKs87O25RD/o8cRMgruWLjgUkFh9Ivs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qs3I512ANYupP+NdayK/k0HWvn1nCI+jbXAKeiYlpRxEiPsbXIexPPECiP+tMpVnK
+	 7JAQvzf2AUZPCPUYhaN3HH5YzjKnDCeeHh9QD3IEGn+hgYZOaCQxJaoQdNagt7AT5G
+	 Sa6rkh7bALIs2g4usT4bvVyGs3UNTAe25OfMnRnQpQTI68NJM528MPGSLejnaKRgm4
+	 4PuW20KefRdLaOT0ao83HQ+r9ChFTyJptQlZZ1Vlr3MT2JiiP2aInIU9wIusGnbaTn
+	 wSu9y2i/HlKxrpv7J9gW339MjOQRdK7PqqGKhUG9si8wb8LWq67FSbiDmBrfpTImeI
+	 eiP+eKhO8Hucg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXnC02lvDz4wbd;
+	Thu,  3 Jul 2025 16:38:03 +1000 (AEST)
+Date: Thu, 3 Jul 2025 16:38:24 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>, Mark Brown
+ <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Jonathan Santos
+ <Jonathan.Santos@analog.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the iio tree with the spi tree
+Message-ID: <20250703163824.2f08d866@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgth
- hdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; boundary="Sig_/vha8HjkkUu_y4NHykr5Er8d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Rob, Andy,
+--Sig_/vha8HjkkUu_y4NHykr5Er8d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 27 Jun 2025 12:49:36 -0500
-Rob Herring <robh@kernel.org> wrote:
+Hi all,
 
-> On Fri, Jun 27, 2025 at 11:33 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:  
-> > > On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:  
-> >
-> > ...
-> >  
-> > > > -   if (IS_ENABLED(CONFIG_X86))
-> > > > +   if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))  
-> > >
-> > > I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not
-> > > add more users.
-> > >
-> > > I think this should instead check for specific platforms not with
-> > > kconfig symbols but DT properties. For ce4100, you can just check the
-> > > root compatible string. For OLPC, there isn't a root compatible (in the
-> > > DT I have). You could check for /architecture == OLPC instead. There's
-> > > some virtualization guests using DT now too. I would think their DT's
-> > > are simple enough to avoid any fw_devlink issues.  
-> >
-> > I don't think this is good approach. The above check is more reliable in my
-> > opinion.  
-> 
-> I'm fine with any solution that doesn't add a
-> CONFIG_PCI_DYNAMIC_OF_NODES which we can't remove. Adding it was a
-> kick the can down the road to merge the support worry the mixed
-> usecase (on ACPI systems) later. It's now later.
-> 
-> > > Alternatively, we could perhaps make x86 fw_devlink default off  
-> >
-> > For my (little) knowledge I believe this is not feasible anymore.
-> > Some x86 code (drivers) relies on fw_devlink nowadays. But take
-> > this with grain of salt, I may be way mistaken.  
-> 
-> Doesn't the CONFIG_X86 check disable it?
-> 
-> Rob
+Today's linux-next merge of the iio tree got a conflict in:
 
-Filtering out by Kconfig seems a no-go:
-  - Check for CONFIG_OLPC of CONFIG_X86_INTEL_CE as proposed in v1
-    (https://lore.kernel.org/lkml/20250407145546.270683-12-herve.codina@bootlin.com/)
-    was a no-go from Andy
+  MAINTAINERS
 
-  - Check for CONFIG_PCI_DYNAMIC_OF_NODES as proposed here is a no-go from
-    Rob
+between commit:
 
-I will follow Rob's suggestion based on DT properties. With a DT property
-list, it would be easier to add more x86 fw_delink broken system in the list
-of the system to exclude.
+  e47a324d6f07 ("dt-bindings: trigger-source: add ADI Util Sigma-Delta SPI")
 
-Best regards,
-Hervé
+from the spi tree and commit:
+
+  0dd88eaa7126 ("dt-bindings: trigger-source: add generic GPIO trigger sour=
+ce")
+
+from the iio tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index dd764b947dab,d0809d62ff48..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -25333,19 -25201,15 +25341,20 @@@ TRADITIONAL CHINESE DOCUMENTATIO
+  M:	Hu Haowen <2023002089@link.tyut.edu.cn>
+  S:	Maintained
+  W:	https://github.com/srcres258/linux-doc
+ -T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
+ +T:	git https://github.com/srcres258/linux-doc.git doc-zh-tw
+  F:	Documentation/translations/zh_TW/
+ =20
++ TRIGGER SOURCE
++ M:	David Lechner <dlechner@baylibre.com>
++ S:	Maintained
++ F:	Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
++ F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
++=20
+ +TRIGGER SOURCE - ADI UTIL SIGMA DELTA SPI
+ +M:	David Lechner <dlechner@baylibre.com>
+ +S:	Maintained
+ +F:	Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-=
+spi.yaml
+ +
+- TRIGGER SOURCE - PWM
+- M:	David Lechner <dlechner@baylibre.com>
+- S:	Maintained
+- F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
+-=20
+  TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
+  M:	Dan Williams <dan.j.williams@intel.com>
+  L:	linux-coco@lists.linux.dev
+
+--Sig_/vha8HjkkUu_y4NHykr5Er8d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhmJWAACgkQAVBC80lX
+0Gx8agf/WdaDvgGOTyImz5WCyqZJSGLOOUNJLATPJMpSHPUPK2qgTDGYNpUR2Q7p
+kJxwHooiYKdz7FRiQh5oJ4YojthWN5B3A21jZPdNoTmU8o4OaZCuNSpGmwAc+Xlv
+laT6V05R+FzCPKzkrLF3BNpAEAieIqTgGQvv1H1q4QdzTJS2z4/yP5aUZPcFsdvr
+g5QfJNkxWTmpnq9p3wld7vqSgcuo8iiAL+IkMakkD1/eRS++TgSP5LIK0loOdYcS
+lYSA6KzJYX1C2uHv70wnrUu4TZcS47rcZTuFTRUFjEjoQvSFXIAQOA/AEo79o68z
+RA1GnAVlEsdyE5fqOjlDV2LB6cRYaw==
+=0RrO
+-----END PGP SIGNATURE-----
+
+--Sig_/vha8HjkkUu_y4NHykr5Er8d--
