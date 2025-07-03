@@ -1,102 +1,183 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EED728EA70
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02DA231A3B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751530678; cv=none; b=qR9/LFy3tT/sxa9qrZv/NoBT9to9M2Au1W519Dgi0+Uj5rLQqKmgekGg3mLsBdLwWyNIqKZdi9UqVTyQZ5hEFlWv3IJ6CJhtBZidZp0dfHDwguYnt84/WA5VYVJ/Zy7RxgJ4r0OaBgtU0forIn/eNshTHKBzyFr9sanvmaUjvTM=
+	t=1751530730; cv=none; b=V7+fr1WClqQsAwSzX+zjSj+YUoEPfL2mIRoWP91ovMOcnvN283I7z/CPT+BfCMQTDsKTOw+u8KTwuedIxpG8qkJMQ9N0USTCxpQ/2e9M/T/CMRb75ZSjsBEzyx1MGcVDypKF9RPKzN6SJQF3AnCJf/mzDRkADzBk2KDCiLfUjEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751530678; c=relaxed/simple;
-	bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cs76zuYADxrCV+1xt9uGbNt9ytGSuthSq1w4Y7gV+Q50DQ3asr3QH69QQL5dQcSEG5FsELNoGzyuOybKNwb/vHjVAjjr1UHz2Ho1b55hGeYgZO8B+BPTSJIyF3EzUQZ8L2e4fPBKS1ytQhPBX+ZstPkdKx4m1JLC0IpWgp51gP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gBSjjCtL; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751530730; c=relaxed/simple;
+	bh=hk+vmY3dwf/9cfvNIfPCcCovO3SGaMSrfEj5J+75b3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLPFQzr1VkAb4Xub8JIYbO2Sv41XSwTk92W99lHQN9NVEQw8QBhrPbAmHsGrq/MC1NcmQC6VPYB3RphVk5pE9kcHqVf3/VCNY1qWvOS1ijp1jOF8KXY+yJJUwKvyxn0sllC3Dyrwn0uhdZERv3H86dT5iQS7bBZ5DZlKU4AHGp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=US779b9v; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gBSjjCtL"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b82f3767so6059083e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751530675; x=1752135475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
-        b=gBSjjCtLZ0AfY+4WmtgAHnMn3xujCUz4LEzDs0ZKKHvCJKsTpY1KRfopnyRSluJGVT
-         qRbLfDMhDNJ1O5hIDNUqnQlEpBIiK4EIiA6mBmrB28aNo9bK1OTl77FipAWsVhS8J76Y
-         xHUFdCrjw8Dp4gZdrl4wMjAe/jnlNSKxMRz99ap/bPe8vqhkkCr/EKIq4F8CZcL3bNVi
-         1oD1/W0jsQNNW23C7YltUVLH9/4L//WQMrQ0C/S2T+Jkqu2jufUzbrWD9YH8d48pIPNz
-         g4PCBnW9M0z6YAK6Ufeow8d9zT81oxrPktHfAwxxVSbr01D3AN5boOE+dN35H49ZRk8K
-         Np1A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="US779b9v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751530727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g+LEYHxbEIy/Tv/yJgYAu7UXqbf4GKrC7aHzLDp5r0E=;
+	b=US779b9vLgGLX69yb/fqYyaEI7o5/FDbG1iJe6w420z0ZrKRAkUiZkYxVs2AJhsUlFoMaT
+	vT0lQCBGH56BZk/mGS2dsZumuObGeaSP+Az99IPVuEuImr2Ldvg+E71B5inSyPbu/168CE
+	FMNIn6RNnMQIrY9SjvfXQeEq+RLAmyQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-673-pmFZVx8eOiKA2EF1wCvSrw-1; Thu, 03 Jul 2025 04:18:46 -0400
+X-MC-Unique: pmFZVx8eOiKA2EF1wCvSrw-1
+X-Mimecast-MFC-AGG-ID: pmFZVx8eOiKA2EF1wCvSrw_1751530726
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so5085532f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:18:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751530675; x=1752135475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
-        b=xKt4ybWi45GWx7bJFpXEDd+HMRQHWgDIEr21XjZsu7yYCwGhCSyVon7Dmk4H7Uev/v
-         3ycz2Bru85l1Hpr5mdCVS9NG4hzu8IsPR3eLDazMgA4qzloCFS98Gij/Y1rlyHWwaOUX
-         ecqrZ8NOo5EdStG5lVwvSX/bCSlpbHga+JzEzzI4sk9OQn7dRtKt5rQroTbJ5ePfk7qa
-         AhS1SYsxpBgUcvc15UT7oPRyGAohzKzliZ8P1DaePgl1ksoBUfRWfc9KR8/nSYY0IX9r
-         4iT7uSTSMMZaW41zcfBkeCkW1xh1pTxJlzkIlXlzL9XtJE5WljefFLlhJDRka0qOtZlL
-         eQaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrvN48HY77vqDbeYPFcCVDa3t4UTCSZD6zIZdXqHMYAc9950sh8lzUJTVwcc35nF+D2yE841yx7KNs34U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxat5T2ncD3CpDap+MOxwPpjZbrXq1TZ7Mow7CAo6q8IY1Rf+Z0
-	myQ3rkhzRx/dNu6RB8ClzMcjWI+eLKNjV1dvw5SpkmoOKkqwH9ya/DlLsnYju3qkxEhXz3iMXjG
-	cmKdXMcFfar6HtqSv83L23t85YRcPNGpwtbGmZzHxNA==
-X-Gm-Gg: ASbGncvlr9aQp0ke/tyd+P+hOfWMHfaoluasang/1ubw8JLTWLfy43X5x6BGjauPpM1
-	C3GSIqFhe8Lyt7ZY91/64gPmBWPdHPIVyR87+4slhhuwTevyi8X2Eoj2y0rF5AxjJloiNjjpR5O
-	WnQqjgKuVmXgYOMqhxbka2BvzO2SLjEur5DA4noSkOChcVBSTiatWGkzPtP3SqyesCXoOe8fru5
-	w==
-X-Google-Smtp-Source: AGHT+IHE2Sj+rBPZdn50coXiNzm6TTMkLQjJMv8vYGqovDiSzp/PXFleV4dA1cphbYTssEL1h42v0mUc/icqE5r4NKc=
-X-Received: by 2002:ac2:51d1:0:b0:553:d910:9340 with SMTP id
- 2adb3069b0e04-5562837a5edmr2394201e87.46.1751530674493; Thu, 03 Jul 2025
- 01:17:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751530725; x=1752135525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g+LEYHxbEIy/Tv/yJgYAu7UXqbf4GKrC7aHzLDp5r0E=;
+        b=awuc4yJ/7QjI+MDQzvII9PPu+b/c9g2macPOT1TVjN9t9V1qZYStPmIGtqfz6TOQUt
+         DYcpkAXSwf69NFoFiOB23QgrSSUd5o6qhGhFYBMNmh9f+CZ7udaYKiHeDUeKCeoehM7F
+         F00P174KEETUBC0Txc+x3nfGaOr7E6rpQIkZxspqndmLIBLYtFOE4PTxDX7uyZel271L
+         Z2YtWSk0xswkQ6DcuLRsjOJrM5AGUgkO3GwK6Q/2y39q4oCkS1rJFQ5Q6GmYvvEVxpDU
+         QpVlz7KBVybfE0OQh47UP2wKMcAmW/ecVSytYMKpzSLLYUR55u2Fo3mAUfAyz7u1kekP
+         FKTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqe2Y35gEsq0H91VeEXxQKMYCyblQIP/DTTQPLa3+sJgZmOZFb0I2Ls58VK2h3pPcB3rMbeiZLwE+8hNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhg7IbZDIQ8Zf6wj8GEU6d6tbznOFcqFAFpL/20xpB1hqe+8au
+	RlnkCo1Qz45imwuxuQ85yznP9PijBqrBloEae886TNDndAASSpiL8/9lo0wTnISITRVGflj/ivQ
+	0uqzNYYkkPAbzxXvGRat2Rc8y/MPl1J92Bu8ic9cvVraahJ8ibHveZyQGTvacGaqGKA==
+X-Gm-Gg: ASbGncsqPVZ32G7RwJolcnezgs5T2oaNwVNKhNiTCQePkp4vFcdS96i0638TaomuC5y
+	KRJsV8v/Kw16XhZI/rQTXg/NZoCr9T1bs6fP6VOpaaHg1wBmbJmrjua2gEFpLoWMSlLeabOckup
+	LVcBPRwgs7HFUaA6X9/kFOqOrDOn9WLBhdvlevuP9qLNDsCsKMfqac5R3GZuWUXwjJ2v9G7mObG
+	vBTVy0z1WzDinLr4Gzxploy8BSe82kOZvlR8xOswRwzdeWBsTS5Y+0mDHj4CPyTGLknldUtBnPj
+	5sKteEk4nb/Qi2IJWVoXSldR9Zs=
+X-Received: by 2002:a05:6000:4406:b0:3a5:300d:5e17 with SMTP id ffacd0b85a97d-3b2001ac272mr2916168f8f.29.1751530725438;
+        Thu, 03 Jul 2025 01:18:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHW0kGfmmDWUEurUd2wl4ocsEjWEOjLs4QoNc2p+iimi1Wz7I4Ohva/pHwVEIrj+lRpCHqhCA==
+X-Received: by 2002:a05:6000:4406:b0:3a5:300d:5e17 with SMTP id ffacd0b85a97d-3b2001ac272mr2916144f8f.29.1751530724857;
+        Thu, 03 Jul 2025 01:18:44 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.200.84])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b516sm17574612f8f.41.2025.07.03.01.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 01:18:44 -0700 (PDT)
+Date: Thu, 3 Jul 2025 10:18:39 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v3 1/3] vsock: Fix transport_{g2h,h2g} TOCTOU
+Message-ID: <ed4jqbmfre4ggtza76lpzq77szhgxdfy5fgokqgfzdy3bdop42@wnp2s6mxejvj>
+References: <20250702-vsock-transports-toctou-v3-0-0a7e2e692987@rbox.co>
+ <20250702-vsock-transports-toctou-v3-1-0a7e2e692987@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
- <20250702-pinctrl-gpio-pinfuncs-v1-3-ed2bd0f9468d@linaro.org> <qwlhmbsd5gqrgjsfzvaqha43pztq34bxjswske72igg2z37euw@2rkx76ikaclq>
-In-Reply-To: <qwlhmbsd5gqrgjsfzvaqha43pztq34bxjswske72igg2z37euw@2rkx76ikaclq>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Jul 2025 10:17:43 +0200
-X-Gm-Features: Ac12FXxG3UqzMErB72B4Ppo-EF4j9trbecSa-j04jTmTWEzOnHV6-j5zLK5onj4
-Message-ID: <CAMRc=Mdk+fGiVOH_Zq0K_gRpo-c2Gyh=SakKL77bL2BscS_PKQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/5] pinctrl: qcom: sm8650: mark the `gpio` pin
- function as a non-strict function
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250702-vsock-transports-toctou-v3-1-0a7e2e692987@rbox.co>
 
-On Thu, Jul 3, 2025 at 12:50=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
+On Wed, Jul 02, 2025 at 03:38:43PM +0200, Michal Luczaj wrote:
+>vsock_find_cid() and vsock_dev_do_ioctl() may race with module unload.
+>transport_{g2h,h2g} may become NULL after the NULL check.
 >
-> On Wed, Jul 02, 2025 at 10:45:33AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Allow pins muxed to the "gpio" function to be requested as GPIOs even i=
-f
-> > pinmux_ops say the controller should be strict.
+>Introduce vsock_transport_local_cid() to protect from a potential
+>null-ptr-deref.
 >
-> This is a strange commit message, shouldn't "gpio" function behave
-> exactly like that - mark the pin as a GPIO?
+>KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+>RIP: 0010:vsock_find_cid+0x47/0x90
+>Call Trace:
+> __vsock_bind+0x4b2/0x720
+> vsock_bind+0x90/0xe0
+> __sys_bind+0x14d/0x1e0
+> __x64_sys_bind+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+>RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
+>Call Trace:
+> __x64_sys_ioctl+0x12d/0x190
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> net/vmw_vsock/af_vsock.c | 27 +++++++++++++++++++++------
+> 1 file changed, 21 insertions(+), 6 deletions(-)
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+Thanks!
+Stefano
+
+>
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 2e7a3034e965db30b6ee295370d866e6d8b1c341..39473b9e0829f240045262aef00cbae82a425dcc 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -531,9 +531,25 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+> }
+> EXPORT_SYMBOL_GPL(vsock_assign_transport);
+>
+>+/*
+>+ * Provide safe access to static transport_{h2g,g2h,dgram,local} callbacks.
+>+ * Otherwise we may race with module removal. Do not use on `vsk->transport`.
+>+ */
+>+static u32 vsock_registered_transport_cid(const struct vsock_transport **transport)
+>+{
+>+	u32 cid = VMADDR_CID_ANY;
+>+
+>+	mutex_lock(&vsock_register_mutex);
+>+	if (*transport)
+>+		cid = (*transport)->get_local_cid();
+>+	mutex_unlock(&vsock_register_mutex);
+>+
+>+	return cid;
+>+}
+>+
+> bool vsock_find_cid(unsigned int cid)
+> {
+>-	if (transport_g2h && cid == transport_g2h->get_local_cid())
+>+	if (cid == vsock_registered_transport_cid(&transport_g2h))
+> 		return true;
+>
+> 	if (transport_h2g && cid == VMADDR_CID_HOST)
+>@@ -2536,18 +2552,17 @@ static long vsock_dev_do_ioctl(struct file *filp,
+> 			       unsigned int cmd, void __user *ptr)
+> {
+> 	u32 __user *p = ptr;
+>-	u32 cid = VMADDR_CID_ANY;
+> 	int retval = 0;
+>+	u32 cid;
+>
+> 	switch (cmd) {
+> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
+> 		/* To be compatible with the VMCI behavior, we prioritize the
+> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+> 		 */
+>-		if (transport_g2h)
+>-			cid = transport_g2h->get_local_cid();
+>-		else if (transport_h2g)
+>-			cid = transport_h2g->get_local_cid();
+>+		cid = vsock_registered_transport_cid(&transport_g2h);
+>+		if (cid == VMADDR_CID_ANY)
+>+			cid = vsock_registered_transport_cid(&transport_h2g);
+>
+> 		if (put_user(cid, p) != 0)
+> 			retval = -EFAULT;
+>
+>-- 
+>2.49.0
 >
 
-They should but they don't. I should maybe rework the commit message
-to say: "muxed to the function called `gpio`...". The "gpio" here is
-just a name, it could as well be saying "dmitry" or "123456", the
-pinctrl core doesn't interpret it in any special way. What I'm doing
-here, is marking the associated struct pinfunction object as one that
-should allow pinmux core to export this pin as a GPIOLIB GPIO.
-
-Bart
