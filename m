@@ -1,52 +1,48 @@
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F072E03FF;
-	Thu,  3 Jul 2025 11:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CBDB676;
+	Thu,  3 Jul 2025 11:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541322; cv=none; b=ObOxbhq2l+AsFQStA0mlrUKChmGDInJ5LkX1mKPyECplranGuUS0QaQsLfuRed1ACKPvdoRyni2GX6RLo9YQaIhN2ft2sO9NA2VsXz2Qx9QM0JbVqpaO1KEP/mSiXfSBCiM556s96x1wNpC2LWiqY6IAVV3yM6bVP9DLI7RpFv4=
+	t=1751541541; cv=none; b=MIme2HImcLudRry7PjGJrbc0+L9wT91+vldkwCyxfEP5x6Dj+Mn1PkVsEzkcfOAT+RkBs30nKWn0qBzvKxJSXYp3lOnCxsg/Y7SDWWFi8mtZGa9z24JPDC+5gIFIocL+DjFElYGVP5XwPGAlcbk0JWIga6e/PUpucUeX+tmaS6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541322; c=relaxed/simple;
-	bh=a2P1NFsZ45zyW8Eyngw/Ef0J7dSYuVF2LnaGms9ElP0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RlthD2CFDKcZxW3UPArAevl2xYQFjAxkf/tjRQdrVyB2HBGmyyH+PqiLwQ+7TGeQ/NIIEme8nfImSJyd7yLV2Ai8yAePoedaYyOQ0vKjirR8rDTDaTAsSVzxsidhNyhkxVPzCvIQBqeRztBuJ1D6hIJu5vaXymv6GZQx/UZYLhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ae0de1c378fso780344266b.3;
-        Thu, 03 Jul 2025 04:15:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751541319; x=1752146119;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:cc:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uhBz/XDu78RFu53NUL9qTdd+x4xhCvqmnXMSLMSDWOk=;
-        b=P0Q1h6Aco0k6fznaLzrdRGsVa6ZCUYMMFqcrwh9L6jbxzXcOT5yrKsnt+SlSEJswpL
-         NSWUffv9OFGZHWLfk7fCnICWxLDXrJ3dpzJ5oGVwOCfcibmsb/nRr/zRSY4RoHaDXYjo
-         dVHndsnAw9aS7x4EUbh8Q8qoEKMZS8M5NTmv5oEq+cezlyt9TVEGUH0D9L8V+vlTOx8c
-         BB/1agr7+FuPZUCIlMhYDlq05ZNPPDliAIYQLLl69eF5XmQfqZT+NTHVWo3grFei7o3w
-         YEXkkK05eAF9oz/L0JR8Nv6UpGoecd+WjQACrxOr8AvEga7c1fs6Mxhzex6MHMPbYHCo
-         7XoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSOvOd4K/Mx76lzyXAYr8cJCi/qf4tMkt9Z6MIztDpmDj713pzNdza3AQ2PTHClmwlCXkDqCAz8r0Nptw=@vger.kernel.org, AJvYcCUW1S3RwbFmJOGEgX/4FOQ7aJDj6xE2yEYHHq0kmoZcv7hr0SsmpNE+9NeKv37J99qHcei1kGd+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCX86ReSilmnOWuHyp9c8tYLm+sl+xa6XEUbYdPK0gHm5nH2J6
-	26t/esiFM1f5DonRZXP0fuPWlNAyzv367AMsxYn0EWBKGZGQcqBGNtenLbPivxOP
-X-Gm-Gg: ASbGncvtGPECl/vnhDx2TzMgyjXBQLvTT2sa519luqCGLlVL28PS74HgHfO/tjGO68P
-	g/88y/w3OLATu6YcJ2NwdgsOUOiLWO03xZv/U3Vb6ODEOG3BkSHA4Me4WldQmExzRdF26fSwYT1
-	glVNRoh0FTZoy+5dSu12Na7iYbBWsMlqltyBUewTNIj0J6eYWQIhd0HHawDfGj263JBOo7yG7Wy
-	ICn2pJc/CYBIu2S1tCT5TnPCUPeHG9N0NWA53HwM1HD2yyew9MM6wVtF290GwaYcMprm6ZfTV/Q
-	NrG5ww7RGzNkz3TKOsSEbePlNHlrASZxcodffxk1XS+312hVkonhiCy8Ov5nHQWWxE/X0omhtqa
-	anmAIWjrJ8oqMjTg=
-X-Google-Smtp-Source: AGHT+IFlXYHb9El3cIR5LnonKhSlt50cBMiWyQZvmo825lM0WCri8eIymxPQ4JEi6g2vKJYHDVYEqw==
-X-Received: by 2002:a17:907:da5:b0:adb:45eb:7d0b with SMTP id a640c23a62f3a-ae3d8421867mr287991266b.15.1751541318619;
-        Thu, 03 Jul 2025 04:15:18 -0700 (PDT)
-Received: from [192.168.88.252] (89-24-56-28.nat.epc.tmcz.cz. [89.24.56.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a732sm1255553666b.65.2025.07.03.04.15.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 04:15:18 -0700 (PDT)
-Message-ID: <1039a336-5f4e-4197-a27d-f91c58aa5104@ovn.org>
-Date: Thu, 3 Jul 2025 13:15:17 +0200
+	s=arc-20240116; t=1751541541; c=relaxed/simple;
+	bh=z7X0q8jFoPphzjvlBjZKZs0EITjoJ8PXQd9MTFXxv4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qElBnNspFjuBHbibbyFiQcspiGvV7cWyRlgPBurN51LRVPMvnl7LYxswLsKoR8z5ACbDV+nbhbuUIeXM0Hmmw5czw5UkkaRoj5KZM+NdzCfc7RGhKpQwybOMJMXy9SBoj1IzTgP7FlVsRPF9Ck89Z4JjZNZCW43URUSl4Uw4K6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NAKY/Oky; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NAKY/Oky"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56394Xh9025165;
+	Thu, 3 Jul 2025 11:18:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3DxMRWTKB5ztrCPcZsMM+0VWqfS35v2k7VDB6YTq+Cc=; b=NAKY/Oky9Oda5Lds
+	PpWMX8Dcwz4KkK6sua9iyB7EmPZdf5Xt4ZLLBZI7VVeuiz2LAGxvZWyW/tZ5L6WA
+	dm3HFe31P2wJb9/I2ozn2su9mjQGBoAuVYwo2uikqYAzUrYelgGNKHjoNt8f6nXg
+	rkelGYuzzoLffmcY7Eh0s6NCRuLudU/EOcswCNyGuhNBW4KSFtFKZ3zJbuzsjgKG
+	Y7hNiTNV3IY1GapbgeCohzfXtsuavOpJlxgB5U9U0XmUDS3wDXPYReq1U1LV/tPc
+	RPmuw7eJgH1XLdwjGgbhMWFfmVGx3g1fJvTtuhGinVe7V6bp6X1Cr6GiSYeBxDv9
+	1kKPYg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64wapu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:18:55 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563BIsWM025319
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Jul 2025 11:18:54 GMT
+Received: from [10.219.49.219] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
+ 2025 04:18:49 -0700
+Message-ID: <8fa30d8f-8737-4bda-a5dd-d7deb8f0896c@quicinc.com>
+Date: Thu, 3 Jul 2025 16:48:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,102 +50,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, netdev@vger.kernel.org, dev@openvswitch.org,
- linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [ovs-dev] [PATCH net-next] net: openvswitch: allow providing
- upcall pid for the 'execute' command
-To: Flavio Leitner <fbl@sysclose.org>
-References: <20250627220219.1504221-1-i.maximets@ovn.org>
- <20250702105316.43017482@uranium>
- <00067667-0329-4d8c-9c9a-a6660806b137@ovn.org>
- <20250702200821.3119cb6c@uranium>
- <5c0e9359-6bdd-4d49-b427-8fd1e8802b7c@ovn.org>
- <20250703080411.21c45920@uranium>
+Subject: Re: [PATCH v5 3/9] ASoC: qcom: dt-bindings: qcom,lpass-va-macro:
+ Update bindings for clocks to support ADSP
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250625082927.31038-1-quic_pkumpatl@quicinc.com>
+ <20250625082927.31038-4-quic_pkumpatl@quicinc.com>
+ <14e0e012-0283-4a17-8cb1-fe96785b11ac@kernel.org>
 Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <20250703080411.21c45920@uranium>
-Content-Type: text/plain; charset=UTF-8
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <14e0e012-0283-4a17-8cb1-fe96785b11ac@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6866671f cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=vC_a7ZyuHw2JGkk7z40A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA5MyBTYWx0ZWRfX65gQ5Lcor+SJ
+ 8IWcGy2/u1n6deDqd6Tb33XtycKvxzwWxPMke3lDOEMdDR4MhKsvsxa54FzwSbmRBaODSvXwUIH
+ JqjyjzJAL6/aKPKlA7L6t/H6s+F9ueolWkV5Ym6oYpkDRlu7tJs5UvJzFn8eU9bOCDVTnxpJJYO
+ /p/px7VIxEslic92Qw7TRqvz6eT+Fqs4EmIM2AMscxIBO1htA1ZSwghH0pncYsY89iF6v+zw6j5
+ YLh+r4QLhoAIQAjpwWkghk5FRbTxu9atlgzjXeg6B/rr9lzmcf1w+whb4X5WZtoQ9Ezw6eJtly3
+ Gh1Dh80SJpm3QEwhGYKltqeaJNHHVOeKwuIsJe/zm1dy7T6//1jk4VftjDfn0Zcjmsd4JqWHpf/
+ Cl+KCmykyvzx2YyMBfAVrz/QJbVkkeEep6g5oOllyWOqXHHYAPr2tp6rNJbjoOen91BOU5w7
+X-Proofpoint-GUID: GpGKY_x1BwmzBKPSdc_7JmlpZSODAdZ8
+X-Proofpoint-ORIG-GUID: GpGKY_x1BwmzBKPSdc_7JmlpZSODAdZ8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030093
 
-On 7/3/25 1:04 PM, Flavio Leitner wrote:
-> On Thu, 3 Jul 2025 10:38:49 +0200
-> Ilya Maximets <i.maximets@ovn.org> wrote:
-> 
->> On 7/3/25 1:08 AM, Flavio Leitner wrote:
->>>>>> @@ -651,6 +654,10 @@ static int ovs_packet_cmd_execute(struct sk_buff
->>>>>> *skb, struct genl_info *info) !!(hash & OVS_PACKET_HASH_L4_BIT));
->>>>>>  	}
->>>>>>  
->>>>>> +	if (a[OVS_PACKET_ATTR_UPCALL_PID])
->>>>>> +		upcall_pid =
->>>>>> nla_get_u32(a[OVS_PACKET_ATTR_UPCALL_PID]);
->>>>>> +	OVS_CB(packet)->upcall_pid = upcall_pid;  
->>>
->>> Since this is coming from userspace, does it make sense to check if the
->>> upcall_pid is one of the pids in the dp->upcall_portids array?  
+
+
+On 6/25/2025 2:14 PM, Krzysztof Kozlowski wrote:
+> On 25/06/2025 10:29, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 >>
->> Not really.  IMO, this would be an unnecessary artificial restriction.
->> We're not concerned about security here since OVS_PACKET_CMD_EXECUTE
->> requires the same privileges as the OVS_DP_CMD_NEW or the
->> OVS_DP_CMD_SET.
+>> Manage clock settings for ADSP solution.
+>>
+>> On Existing ADSP bypass solutions, The macro and dcodec GDSCs are
 > 
-> What if the userspace is buggy or compromised?
-> It seems netlink API will return -ECONNREFUSED and the upcall is dropped.
-> Therefore, we would be okay either way, correct?
+> s/The/the/
 
-If the userspace is compromised, it can overwrite the upcall_portids
-and do many other things, since the userspace application here has a
-CAP_NET_ADMIN.  And if it's buggy, then the packet will be just dropped
-on validation or on the upcall, there isn't much difference.
+Ack.
 
-It's a responsibility of the userspace application to make sure these
-sockets exist before passing PIDs into the kernel.  From the kernel's
-perspective dropping the upcall is completely fine.  So, yes, we should
-be OK.
+> 
+> OK, this has to be expressed in schema - oneOf in top-level for presence
+> (required) power domains or clocks (contains for these names).
 
-Best regards, Ilya Maximets.
+Will check and update.
+
+> 
+> 
+>> enabled using power domains in lpass-va-macro which is not applicable
+>> for ADSP based platform.
+>>
+>> Reference:
+>>   - qcom,lpass-tx-macro.yaml
+>>   - qcom,lpass-rx-macro.yaml
+> 
+> I don't understand this reference.
+
+Please refer below link for more info. Which is similar kind of 
+properties used.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/tree/Documentation/devicetree/bindings/sound/qcom,lpass-rx-macro.yaml#n72
+
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/tree/Documentation/devicetree/bindings/sound/qcom,lpass-tx-macro.yaml#n77
+
+> 
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> ---
+>>   .../bindings/sound/qcom,lpass-va-macro.yaml        | 14 ++++++++++----
+>>   1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> index f41deaa6f4df..38679a4f21fa 100644
+>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> @@ -75,14 +75,20 @@ allOf:
+>>           compatible:
+>>             contains:
+>>               const: qcom,sc7280-lpass-va-macro
+>> +
+> 
+> Why? It's a different style now. Don't introduce random whitespace changes.
+
+Ack.
+
+Thanks,
+Prasad
+
+> 
+> 
+> Best regards,
+> Krzysztof
+
