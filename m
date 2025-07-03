@@ -1,86 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EB4B676;
-	Thu,  3 Jul 2025 11:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1CA253938
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541547; cv=none; b=F3OHijfE1m7Fx8ycY4XAmTJkmBgixZY4YpPiVSGD76ks6XwmNj7GMqUq7K2iUdyNMrWCFULxyWYJIQJNMYt0R4TIMz3OCtRObJR38FnDk1N/+aUQFnTDAt2owGNzHzowkXGu3vdp/ySJXSngQOzgYlnaXG5Yj2vOSDqpkR+iZ+w=
+	t=1751541605; cv=none; b=jHNUljuy1XWMU8V4lCkP5X0nVTNUT4zYheelesIuT49FtJqVpqgvgsQqamUsgI6FIGqmUBXVmpX5lqeSGXB0SkgZYtJZalzjGZxbpmtOdW5gqAgkjtEj6anv680QDTbBbwUIWumW4L5gXfxRaVfMTOB9vImwGubrRIQPMABcev8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541547; c=relaxed/simple;
-	bh=nyCHXu44AYG125jm9G4lxVXvhWsTPk95gOqRhQ+06NQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iqJFGoMRIn4dyjUHe+DJqM7V7zcmdMCCCainAoj0/MNVNnsVLTf2aSsvq4wce/gUpfG/rkEvSl4GmLRGwWZc5KUMLHYY47n6qh83KhfENL7f8UQxfqODB2l3qsEX4d9G1OzSQ6vXfsNYOUy8gZ7djiZSHxzwDyU+3iVNASHZxAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fe3QCXwD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fe3QCXwD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35068C4CEE3;
-	Thu,  3 Jul 2025 11:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751541546;
-	bh=nyCHXu44AYG125jm9G4lxVXvhWsTPk95gOqRhQ+06NQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fe3QCXwDlnP9CTt7wsSz3leRINY1NfRDcuUqgjhzQjbVEX2TU5IlTrFXp8DoZrtk0
-	 C70I6Hk7cBHS7fE/SvXIpvfMjRKAzsA/ildfa6+PCtSSHVkcgYiooXTGxZUzwvb94D
-	 7p/c5slT+/29VUHj4OMrMa7FE5xU8x4XUvYS68LdRZpUDLcRm+Bd3jMrPhA14T59UO
-	 At0u2pD4ESSRcZY4QNGxRxGUVaI81nSVO135BXF6tWXIJwVb1y9IMWt2qQHHIteDyy
-	 JuWqneQo59bdxnqVlWCz/MqC/NvJyKojZ+6/Lgdp2EezsfcePI2N0XF1XqO+nMWlmc
-	 XsMO8GZBY+ncw==
-Date: Thu, 3 Jul 2025 12:19:01 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Willy Tarreau <w@1wt.eu>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Christian Brauner <brauner@kernel.org>,
-	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] kselftest/arm64: Add a test for vfork() with GCS
-Message-ID: <6aa6e38a-c874-45ac-b2bd-c876cdd9c8a9@sirena.org.uk>
-References: <20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org>
- <20250610-arm64-gcs-vfork-exit-v2-3-929443dfcf82@kernel.org>
- <aGZd0vdu8PpLKfX1@arm.com>
+	s=arc-20240116; t=1751541605; c=relaxed/simple;
+	bh=r1Sm7z7Q7ECB93fsGyTijUODpIsynPWlOhdwqczjj5c=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Am5WIDv2Ro4IDS4186wJEEt4KQuqNku2WlqnZTgVDNPR59fJ7clowRdYziKqQNbNiLnYCHP13PnIYetKmoffws0rXi8WfwGlklk/uZum0A3Pm/PTJSi/wKSmYmG2YexEQFWtvZGnHGD2FVx24Qm52cgldxQDVwyLvUoLxGaZ6zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3de3b5b7703so35071715ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:20:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751541603; x=1752146403;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lpPnteTphuj7UH/WFOf1zVo4dnhbezFDnKD3sA2zXHg=;
+        b=TyQNOwEenTo3tpdcSbGfUayaBgpEVgoXsxAeSjUQCstELJJRb7VpUUl6dUi+RgRe7J
+         LFR+iaOW7IrwEGtjOkTJDXeGbvzRfmmrG/hG/vQeq7f+AONAkbmWG4poZSoZc2keWKb8
+         /QvYRJjM5Mi64E1yFYK8gOS6wbSqTKoVubjtHiqOpRYmiYFIKd13B2xMGYou4eE41sqw
+         D6u9eYwA5TVzncI06kKkuXNVA5y2HDUMR+ZKnqUxkKlZpHOc/uOIcCfl9WsEE249ybdP
+         WjkgUi9zPuEd+vkvoc29+6W/npoYNG3moim4UJNOS7Fw4imEApyrfNEjckZ4NvxspJcu
+         Is/A==
+X-Gm-Message-State: AOJu0YxPsvzKEuEBfpIzhRIhlAa2bgEM8KFX5HsNYMrtbkAM/XTQMhDt
+	kQqR/VhQCePlSR9a9MPFV0/Lgghq3MNVXZlgST8k+M9sOK8ofaa+YTi2QXxPJ7jQaOd/kImzGFQ
+	M9grfPc6iYoO0LhsF7ApYpKGvwTlCDwL5AcO7aa9mJFOnAuyRrFnLI+oYbUM=
+X-Google-Smtp-Source: AGHT+IFDxZ/9wU+SK9SAW9mxQGxvqXyW/jt2nzY6CvAJ0oiOckSaRsmv6+p5YClefubKjFX1X7z0/JoPcLi3JL0KVbtAZadV29m8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rGV4m2bsRAZx+JSb"
-Content-Disposition: inline
-In-Reply-To: <aGZd0vdu8PpLKfX1@arm.com>
-X-Cookie: Uh-oh!!  I'm having TOO MUCH FUN!!
+X-Received: by 2002:a05:6e02:3108:b0:3df:4fb6:2d78 with SMTP id
+ e9e14a558f8ab-3e0549c641bmr65847255ab.10.1751541602772; Thu, 03 Jul 2025
+ 04:20:02 -0700 (PDT)
+Date: Thu, 03 Jul 2025 04:20:02 -0700
+In-Reply-To: <20250703092239.1891519-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68666762.a00a0220.c7b3.0002.GAE@google.com>
+Subject: Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
+From: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---rGV4m2bsRAZx+JSb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Thu, Jul 03, 2025 at 11:39:14AM +0100, Catalin Marinas wrote:
-> On Tue, Jun 10, 2025 at 01:29:46PM +0100, Mark Brown wrote:
+Reported-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
+Tested-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
 
-> > +		exit(ret);
+Tested on:
 
-> Should this be _exit() instead? IIRC exit() does some clean-ups which
-> are not safe in the vfork'ed child.
+commit:         8d6c5833 Add linux-next specific files for 20250703
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=130e33d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=223eb69834aa2df6
+dashboard link: https://syzkaller.appspot.com/bug?extid=169de184e9defe7fe709
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14e9748c580000
 
-This test is written to nolibc so that we don't get any of that libc
-level stuff, but yeah it would be a bit more correct.
-
---rGV4m2bsRAZx+JSb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhmZyQACgkQJNaLcl1U
-h9C3sQf/Zjyv/4tU0gG1+behcSAImRmsr++fqj4ba2/X9B+mbKG26y3hkGkNQ6eT
-HhNBykYnmsG5nkBA8IEQ4sq8dhZrQ5HOs6k/Ez+n/ibeHm0GK024XG6qmUTEZ1ST
-5ibrqVltjCSb6x4wBVpLm/zdQAR06toxHvUdA2Dk7dvlUUNkP1A+fmXdPC/F7wTl
-MvSrq0LFIBJj6Ig0MC4BJorezR5en/omZKFJflypCmelM3CVsw1e6yGWpr1lm9cb
-QFPLB3b50mtHcnspolCOpcbqpY1Io3mopOGA/Lasjs9L9tJ30MAGgRKNlrLy4Yij
-5e6452XWIEVfUcKmLt79G8xYOi6K2Q==
-=nUf4
------END PGP SIGNATURE-----
-
---rGV4m2bsRAZx+JSb--
+Note: testing is done by a robot and is best-effort only.
