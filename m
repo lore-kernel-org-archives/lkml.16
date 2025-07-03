@@ -1,166 +1,134 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328E42D5C69;
-	Thu,  3 Jul 2025 09:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0982DCF4A;
+	Thu,  3 Jul 2025 09:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535961; cv=none; b=sxch1iiEUzN1YBojRtptX0mrkC6Y8ANrNjvwq95GslSxNbSUlDZtpHP5b4kvq2trJcN/1IOgW9ihZJaq3/Ke3GhrGiwumZfYh8dfWuoTzrdzKcxgKTf+7/Qql+LzlHFK/rqpLktvwg0Jzs1OS0e804A5JCaCe83IafAVNk8iIX0=
+	t=1751535965; cv=none; b=eaX5tcG9jO/3c9MU+5g47hVcls1UhSIplFgWlMgOBWy+wsrXjUd1FLOFOhiFm4xMii3dQ0HXWaoLO64AI7wnjAREAyJj/IU/kODnLYkRzhWgzZDF7aX3FRMxYkwAqIUebhWR7L00ML/+kHpR6WTZ29R1zYaXuSzJMBvn7+DxyTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535961; c=relaxed/simple;
-	bh=8+99WZhB2XAT3145ZR5edaUt2NhsspSftiUtjBs/P/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZMZCKL+Qs1Cl4D3YIoI4wb+miptdNX2RWGP3oJJ9sAaCT64HOlhEcomnklL+0LcIxoQtS5KHm5TTs61HfjZ+/kGWrpqgMf4sBcQexJ11g2rz4CP++FMGlcAS0Hwd8xq/Czo+nRGZp3Vb3WFMdylDvo7f2h+jfNw3wTzMF3fA42w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5315972826dso535300e0c.1;
-        Thu, 03 Jul 2025 02:45:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751535957; x=1752140757;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gr1T1NsM4mbKj05LLAEjbw1p0jrjWQGqngqTAr50Bdw=;
-        b=ECA121MBvMmLTw4+qxxhmW1z+axKm1indRDI8Y0Tdpxr0JNSdDAO/501rY8jhHnMbC
-         bfVR/bc/adPHr75DbnNn3zALQ/0FWpytRrsgyBEnLnKL1AMg1pr6mZI/q7eMHyR/BqtC
-         D77CnE7bMaCUQv9VvvxybHvaFt4vfreroGm6VkORE6Oi1C9vtgufgt2yNEW8gSQ2lEzg
-         ZldbXc7CSF4scsrYXr4lG0a3fPORRjW0J8aGjR3jrXfa904xJoGTvrcwzXK3aXaPGAKW
-         hX1MDf/xQK9lmTX928jd6nePvhIX7pXEbeFyO5TAikroALmEnB6pBSwN1xYHNIQVnlQF
-         oX8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUiUZsHdVl6qLdp6vzvEjo/mKwNEe7gauP729+jABRNQdhlL9foCzw9/R3UOddJHrPuuF0iDNSGz2M8PkH6KSN8fvI=@vger.kernel.org, AJvYcCWMCJgb+UP9uPCZXv9UtfpuTOw9J5RAYs7I5TjGY+zs+K0vnlZuFXv4MLIA6vz02iO0T+KTLFmVI/+33/Gq@vger.kernel.org, AJvYcCXJaisc1oXVSgcj54FcciDhglqnRKv+NDkBv87cV67/WT0ehVYNNT+TBq8q9/WJfGyYaiGHRfewGTys@vger.kernel.org
-X-Gm-Message-State: AOJu0YwztGQiNlgDJ3LYayvpkL7CJ3H9dNHVWQJG32xwvJLI8HwVjZOC
-	GqvtcuvCguTvz+oJ+S4IRH7WFSmIkWygnl/gMeotPBvAyJQ3yLNDlmovQVeDjG9u
-X-Gm-Gg: ASbGncuSGgIKaicEBFNfOBSqquVO57CzzVKpLswp39s1ly6G5DTBgKHcCFbfgK5hVie
-	/D4Rz8BCbC+36Ft9Lax0hvKCxYE15Rin27Oq1/IVglJT8091kWaqZi4gykBu6xAnJjqbnNH5jwE
-	ZUClTfni4Ot7pPG4DSEZjDjJQeV1+2brLv1CLTFFVwjUahkoclF+C8WnITnnBOaW+0pMcsiEN+6
-	VrWeECJXu0ntWcPooD6ExFEzNfWW9X+W9G5W7dsQ/MwTZ00z5entPQwbQmOJCAPcaDvl7ROfqWY
-	OCHsqEZbwPMzxgDJqQG/axITtmVDwxGPHP/oEF6MCKl32N2Bxeos41YlJMjjV5GQNJ12WbS2xNn
-	EH61WnEA8coTMBkQGk7FW9Qt3FPX7Wnb0GKK6d3M=
-X-Google-Smtp-Source: AGHT+IGmVlg7nw6GSCIl/O6qKUwGtTz0k2qz3Xte6wtkUc2bLybgkZ3xGkIqYISeP7bnkFqvJbIENw==
-X-Received: by 2002:a05:6122:6d06:b0:534:5cd0:19fd with SMTP id 71dfb90a1353d-5346beb37e3mr460754e0c.4.1751535957442;
-        Thu, 03 Jul 2025 02:45:57 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5345ae35c6esm530073e0c.37.2025.07.03.02.45.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 02:45:56 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-53185535ed9so524733e0c.0;
-        Thu, 03 Jul 2025 02:45:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVHwZzY7Sfu9aPBXmmfL1qHrCcyjOT0kqeeyq4FphUeFb4MaVs5+uboxUvyzUaNjOfrGJMxgwyN6zNqgRgY@vger.kernel.org, AJvYcCWKerVUAEoUT4ymj3PnPFL0BworOTkyq8Of2Ef3YDZ5sfBmNRX1Dudv/t8Bi3kSu1fAZ9e1zYi+5YiG@vger.kernel.org, AJvYcCX1SXatfLICE3tg0gewcFatqTz1exhoXYOC29JGr8UOqbmv8Z2T+F/c9iG3q3Pw49nbXzfVki1II7ZIcuTxPgvHlJA=@vger.kernel.org
-X-Received: by 2002:a05:6122:8f0a:b0:531:8a64:78bd with SMTP id
- 71dfb90a1353d-5346bd64c3bmr642383e0c.1.1751535955720; Thu, 03 Jul 2025
- 02:45:55 -0700 (PDT)
+	s=arc-20240116; t=1751535965; c=relaxed/simple;
+	bh=TqdILGUNLtHaa0kCIrn2n4mfoPZE8hzzx5z+kIeQFjE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mmAbtcisI6xBpyNxdVNJ+VYfkPTC1t1wJcoFk6RziEvQIfzkdQvsZoi7oT3ILCOqUcqoq+UYN0pmk9UhJgYLQgI9MgYnjCpzR2gITf52HKROf3E7jHwpguBJ3MnsTNdkp2e34q8xRVOnmLANKr218x+z9/VlL5eFMXdgxAcEEWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJMnHNxG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJMnHNxG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF723C4CEEB;
+	Thu,  3 Jul 2025 09:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751535964;
+	bh=TqdILGUNLtHaa0kCIrn2n4mfoPZE8hzzx5z+kIeQFjE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lJMnHNxGEsCc4AINdhA6QQ7tcG9NUVosc4hrtxWYkvPH0dQEH5A31Oz+dlQzZnrSF
+	 r/r06Q9f0oWYzkIgq9JUHw1dhm/rbnR1LA2dJaHKLKc2XzgkNRsPZgGjeaey0mAHQN
+	 qmhK+aoVeMKQYCQck8COGRberTNMRmMs9OVnof5sTrjjFXgYsPF+HM5sP3NtBZMRA/
+	 OzC7Zg10KWGcEolc5ibRqWlVviocNADbL7zSWx4iWDHT6c90c3nhXwdPTmuUJpQWL4
+	 BjCFhXLIwOF7EKjQ8GIvShR9s2XgUOnvw5bjx1sVV7q8OvTNJtMlq8wtgzsUCWqViM
+	 jIqiAVLxVTDPg==
+Message-ID: <6af504ef-55b8-4599-a379-40842edfcfa5@kernel.org>
+Date: Thu, 3 Jul 2025 11:45:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625153042.159690-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625153042.159690-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 3 Jul 2025 11:45:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVDjdgKDPA3ARPby=Os=WnrXRZQSTc_54oPJpbJ9GV8-g@mail.gmail.com>
-X-Gm-Features: Ac12FXxkx4fDa1whRiAsv_xaSVh2mIgGRqTPcNNeFvo5G9Qz61n8Jgjl7_56Kjc
-Message-ID: <CAMuHMdVDjdgKDPA3ARPby=Os=WnrXRZQSTc_54oPJpbJ9GV8-g@mail.gmail.com>
-Subject: Re: [PATCH 1/6] arm64: dts: renesas: r9a09g077: Add I2C controller nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+To: Maxime Ripard <mripard@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ Luca Weiss <luca.weiss@fairphone.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+ <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+ <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
+ <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
+ <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
+ <e534d496-6ce0-46c8-835d-94b3346446a7@redhat.com>
+ <6e4253dd-cd73-4302-b9df-44c8c311eb22@kernel.org>
+ <e2159868-f31d-4d35-b6b1-2cbd1a9d249b@suse.de>
+ <f5fe3fe1-903a-48ca-9249-b77bc07dbc77@redhat.com>
+ <20250703-light-baboon-of-experiment-179ca3@houat>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703-light-baboon-of-experiment-179ca3@houat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+On 03/07/2025 11:41, Maxime Ripard wrote:
+>>> But does that work with *any* device that requires interconnects? The next such simple-framebuffer device should work out of the box *without* the kernel knowing anything about it. That's one of the key features of the simple-framebuffer.  If we have to maintainer per-device feature sets, it breaks that assumption.
+>>
+>> The driver code for this can still be generic and since the driver
+>> will bind to the fallback plain "simple-framebuffer" compatible
+>> this should also work for new platforms.
+>>
+>> The e.g. "qcom.simple-framebuffer-sm8650-mdss" compatible would
+>> purely be something in the dt-bindings to document which simplefb
+>> implementations will have interconnects and which ones will not.
+>>
+>> The driver does not necessarily need to check these more
+>> precise compatibles, it can still just check for the generic
+>> presence of interconnects.
+> 
+> This ship has kind of sailed though. This binding has been used by
+> plenty of firmwares and bootloaders over the years, and has been
+> deployed on plenty of devices already.
+> 
+> Good luck fixing it in all of them, and then updating every device.
+No one suggested that... We speak about new devices, although maybe this
+one SM7635 new device runs plenty of firmwares and bootloaders?
 
-On Wed, 25 Jun 2025 at 17:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The Renesas RZ/T2H ("R9A09G077") SoC includes three I2C (RIIC) channels.
-> Adds the device tree nodes for all three I2C controllers to RZ/T2H
-> SoC DTSI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> @@ -90,6 +90,51 @@ sci0: serial@80005000 {
->                         status = "disabled";
->                 };
->
-> +               i2c0: i2c@80088000 {
-> +                       compatible = "renesas,riic-r9a09g077";
-> +                       reg = <0 0x80088000 0 0x400>;
-> +                       interrupts = <GIC_SPI 614 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 615 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 616 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 617 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 100>;
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c1: i2c@80088004 {
-
-80088400
-
-Aha, the related warning was demoted to W=1:
-
-    Warning (simple_bus_reg): /soc/i2c@80088004: simple-bus unit
-address format error, expected "80088400"
-
-> +                       compatible = "renesas,riic-r9a09g077";
-> +                       reg = <0 0x80088400 0 0x400>;
-> +                       interrupts = <GIC_SPI 618 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 619 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 620 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 621 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 101>;
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c2: i2c@81008000 {
-> +                       compatible = "renesas,riic-r9a09g077";
-> +                       reg = <0 0x81008000 0 0x400>;
-> +                       interrupts = <GIC_SPI 622 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 623 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 624 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 501>;
-
-601
-
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
->                 cpg: clock-controller@80280000 {
->                         compatible = "renesas,r9a09g077-cpg-mssr";
->                         reg = <0 0x80280000 0 0x1000>,
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
