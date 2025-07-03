@@ -1,258 +1,837 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC982E612B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545281; cv=fail; b=fBx7DnSDM0UWPvRMWd0jwtK/uPtDtAXhu0heEGTvzNVAmlm0UpCB5uWefBnDHVTmgdzMQ9yd9Jt/lf6utB71Fsl4NFCcGNSxE1HYr6808nMSF7zQZ9finDBx5s6UEgt6Jtkor0TJ+eYFgKYfXuL6Ku7uuNV9NMaxMn7cODEeZhc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545281; c=relaxed/simple;
-	bh=9HYrIihak/cqbUwvPFJznlgEO2lbgLWwaJrEhI4N0Vc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SIjjmmWfkfJ6Owt1rv0yU/bqwa9yOzJBpka2ULmsx/Ehc5q4HJ/j0OlIuHHXbEJHR2/SCsZJo5v5Ajik8CyaR4019QUQ0yCnrY5TJftEXM636w6Dm0sAVLjNxvQbFnmQrWAmkkozS12p3JhI7zCKnlYwzIZ5+IDdW9thTV3F4dM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Z17Es/mj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=S2YUzzbG; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FD72E6119;
+	Thu,  3 Jul 2025 12:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751545279; cv=none; b=llYaxWx9tvBl94J8OF3dChIUedl00tYmfAaSgcW282YgTwcoV5iTI8n6sq4DRND/hDU3y1yiIF5ySbbIwbb6fo1syFbC0fZbd/ZyIe4QGvM4pfp3rx93oad7HubxG5v1lScJbSettuV95I6TJPL+7h8pT4nL0hMT8KnmcjL1ytQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751545279; c=relaxed/simple;
+	bh=KO0u5GyJrYtDogMPX4859p8X9NvBxmNnp7p3WyvDQQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OP9Ugkattulzq/Oj8TGTliFLd4WtKF44xaCzwBNcfUcm5tJRlVJqd6Y/cyDGOZqiQLG8dwtdTps8gaKw1W0WgdCqELQGVd4LqkezZQor0akmjQ2qz/Pnddpj9FUxm+dDcEdoUQwK5G7BK+FNuPOCbs138pBv5VuRQdTXS6Ge5Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I7Adon/B; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z17Es/mj";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="S2YUzzbG"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5639Z1nH001710;
-	Thu, 3 Jul 2025 12:20:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=tjiJTTbwz53/XzkFbYuwqUz1cj59ud3fjGmRl+Iq/SY=; b=
-	Z17Es/mjc8Nc4iksJdCl+CeSPHXum1/HBr3Dl2m3kYIP21JhO4v+C0tNFgx177JZ
-	QLtezQnZEOjYE25dDjYrpNalwc2KPZYINjdX8QNfwbAHs+fy+LxtxkLc/SaFkdCY
-	oDI1nWtmMPMEHtq1+NR/OKYBrdnn33p2c3x4DaErT8rtjdmLF9cYbf9SEgP5ma4x
-	zM4/BSP0kQV26+DPKbnpAejx/kwtAOYR96qoLJqYqJWxdOfQakQcLb0XG5wOrvwl
-	G6ZFJiHXo0D0cqCHHYJrOhMWj7wxal9nsHVrBVOU9MEfj95XTxl49j9YdGii8STN
-	4AfQAR8974AxdEMx2zfdKg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j7af8vs8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 03 Jul 2025 12:20:54 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 563BG1W0027590;
-	Thu, 3 Jul 2025 12:20:53 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6uchm2h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 03 Jul 2025 12:20:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=r2DwN9gRBPH9fWAAciGxIiXLqfduWC/EM03zIdOBQUiOHJ45eCqkkmJyxGunXDpNZ37q9CztWYvxMzjII+zGp2cPGLa7WGIc/KmSorO4IAz3IzE3i9nuXKcqzy95VhZJswzllOG9CMhB5HISAWTTqMerBrVU23uIdI/WJt52fBzndSRew6ldhQ60hKRz1gtpzoNIy6Xmz87GZpVVLPveV/zLgjUfVHxIVD3dDoJgNTEW/uFXSXEB0+A0EecC6SpPQLrohRRqyQVAIgVREa9rCos5IfCE/alOwcAgh8SjiNXbjKlJaOQat8lGGEAUgv2nCPXkwJd566Dl7DBs9/iqQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tjiJTTbwz53/XzkFbYuwqUz1cj59ud3fjGmRl+Iq/SY=;
- b=ndyZaDUmYlSvYG37BJRg61Swsk9G3tPHTmVQVJPeBD5TLuzRf2BRyT/qUMO0+E9dx3jhJeXZoSSkG/mwb3YZJBUbcRASGy7g1enWfZezuLKU6iibJd7UqezCfOuVBUwxLtvO/TghjDvZU8kIGXadbroGe+nHXe9TtGe1N+TMKDB2J6hxNlHfohLypfxIVteXkbmYOzScYe2RCZS270Wkj/itqFvD0uQvmnZfZhsaalb8xda5HtZYco0dSFAE26ing6hGwEhZRPPlXd1nKs4tdLFlDpQBtysa0VxtDaa1j4Y/QXoPLfkwO/SbzvlC+x7/K29gRsN+HTOnfrpQYaAKRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7Adon/B"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ade76b8356cso1033685366b.2;
+        Thu, 03 Jul 2025 05:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tjiJTTbwz53/XzkFbYuwqUz1cj59ud3fjGmRl+Iq/SY=;
- b=S2YUzzbGPS6CqDUxJNlzvyggvYqSfV0a5SQPC8P19jyqq1GjQXXJwUr41ZXcYfweMsoQc1PzWGMMZDltJSHuChkG3WPs/TrTrlrhf/uIqc8TzGO4k6MwOr2i11xe/HhuH2ySegv5p8B+MOlR/IMkq6XziFLjSlOLUI62GBz35c0=
-Received: from DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
- (2603:10b6:f:fc00::d1f) by PH3PPF0A29BA37B.namprd10.prod.outlook.com
- (2603:10b6:518:1::787) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Thu, 3 Jul
- 2025 12:20:50 +0000
-Received: from DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
- ([fe80::2072:7ae5:a89:c52a]) by DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
- ([fe80::2072:7ae5:a89:c52a%6]) with mapi id 15.20.8901.021; Thu, 3 Jul 2025
- 12:20:50 +0000
-Message-ID: <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
-Date: Thu, 3 Jul 2025 05:20:47 -0700
-User-Agent: Betterbird (macOS/Intel)
-Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
- task swap
-To: "Chen, Yu C" <yu.c.chen@intel.com>, Michal Hocko <mhocko@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
-        Jirka Hladky <jhladky@redhat.com>,
-        Srikanth Aithal <Srikanth.Aithal@amd.com>,
-        Suneeth D <Suneeth.D@amd.com>
-References: <20250702163247.324439-1-yu.c.chen@intel.com>
- <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
- <aGZNTtJuCyHJE_25@tiehlicka>
- <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
- <aGZxFRVxHouLaMPg@tiehlicka> <b4891cca-4da3-4411-bc9c-669118bf825a@intel.com>
-Content-Language: en-US
-From: Libo Chen <libo.chen@oracle.com>
-In-Reply-To: <b4891cca-4da3-4411-bc9c-669118bf825a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0378.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::23) To DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
- (2603:10b6:f:fc00::d1f)
+        d=gmail.com; s=20230601; t=1751545274; x=1752150074; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3O9Nwb7NMBKcKy74nEtXI2uzLYmaeHZdPPYuYaDOGJs=;
+        b=I7Adon/B3ESXVt+M536V7oPnbfmq7/Cye/yEIuOiS950KYjxRAvmpGqSe/YzZauCeU
+         f50yj9/7WPOnvEVvTP/1ryeuMwGjpN3dY7Ct4lQX3PT/Y4T1zLu4OMpIfCB6EC48zQto
+         juEy40YubXy+4yl/CtB6DrWIVaeeQxNT3HXJHf2ljWk4NmyMj2TxlESAvBdDu4+cygWL
+         HjNF2XAAYCA9DKXrmjSySd5gq2wrI2kyaQk3CKKWZfLEQzIt3XiTzuel+2RFwh3JavRr
+         d1Km/h40GmIYIgbh2y9GZyN12T4vdQ2rKdBZ1iQFPC1QEh9WrCwOLnYtyF8laoKdrm3v
+         PKxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751545275; x=1752150075;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3O9Nwb7NMBKcKy74nEtXI2uzLYmaeHZdPPYuYaDOGJs=;
+        b=tKaPWY1KQYMphTdxjM8RLXDtlDG9Go6dtONXgabZtB+YH9lbGUMmLtxf7I0Gg5r5oP
+         CIg71L72r9c7dl03p47RfYIFHcrPqF4oX4w84RUMuGPybBbtuQyuVPtef9gOA5rwRXnR
+         gl/LtcaFB1yB/1tqR3KkU1BpM4MKePOfEnAvWsmnJrN7IQ2A5tYqdkdbMQeT8XkTjJm5
+         aBEgtChBtAbpWqhnucyea5HFyl8F/0orrhDiShz5hQUGNYyboFKF/qKEMiR+qf7jU7RC
+         061hnYZt5MVoX0XYfZUqMUvuJ/YKpkFfxsFz1J7GJBjfqAstz+vA4xUpWTX9eOUDZyj2
+         ADHg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ZXVKTCw6OdAF95Y4mx4VLrlb2Ntd1pAMxiEb50voqVV0UzH4G4wulFGXiLgKNh0YzXAGEEiMfoknyA==@vger.kernel.org, AJvYcCVv/n681LukKQ3MDxmNIJ5u6jjhhQiVrmDPcDA8GxQAMm8V8ubkPF5OtdKWR9+eoF359aoCywrxOXqmEdQj@vger.kernel.org, AJvYcCXeGmAG0wzDVlFQnr986p3iH3Mpy9nwjB4ZS+66KvPBv42t/x5irwSq2j39D9kTbVzOeli0BFmudBLA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/x+2pqey37O08vAH9dsCzqmvIYPf1Wr32u7kd9Iv6Z+vyHF26
+	mcRZjOWFgQW7PJf5g7FlfNFiDgyaGjXgwwC1rMwB+XySIgmFMk3idm7V
+X-Gm-Gg: ASbGncvWQd+WSjUbqNn9OnS9u66HZ6QTDCu7jQTYzR0g0aqqasRrrhXMFFp9iQUPZyh
+	QFh0YSZd8Bg405t792/1fgii/3mq9e0F4ZPw1zhbAwhnLHs/1ulxaxLAHa4gW8HHlYgIg74ZbuB
+	JoMAFIR+3ImS1vHVuVsn5Lnuh+BlQGojHgwogf9FSrFDEuLiIAPCsnnvXBDcAZxIaELqaXhhLyA
+	kqbUSI1VLggqUxUk5/gRkTmrcCLSOea2uh0MoiLyW5djY72l4xi31lHHuviavdw5GssuOe3JSAn
+	MK0frHMhXlbRvNO+Jah21qKUp+nhjjDLEPOMLpAbIslt+8Dzn0Ci+rPJAjZfU/oeGQbthiOfnbs
+	pgUM=
+X-Google-Smtp-Source: AGHT+IHLeJ01b5atzZIIJ/mg/y/UYcm4fOhY+JzfF8YHm6pUsLqtuITwp2L0NwJAOPIM60GJdK46xg==
+X-Received: by 2002:a17:907:9448:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-ae3d89dbffbmr298319166b.55.1751545273880;
+        Thu, 03 Jul 2025 05:21:13 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a0a8sm1259846166b.71.2025.07.03.05.21.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 05:21:13 -0700 (PDT)
+Message-ID: <716bf11b-b1fc-4706-965f-d3975c317c57@gmail.com>
+Date: Thu, 3 Jul 2025 15:21:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF5ADB4ADFC:EE_|PH3PPF0A29BA37B:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f24449f-a736-4649-8c4e-08ddba2c0be4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bVBzTEJvOXU5cWJpT3NhVlU2UW00NlpVc0M5M3lkSmh6SWlFdnRDS1Y2aFg5?=
- =?utf-8?B?dUFxeEZ4OHBvOE13NlAzNmdMRnF0UUkwWmsxOG8rU3NGcFdPeFU4NVc2MjFu?=
- =?utf-8?B?YzhVNzNkbU1Sc1pCWWtkK2F5RzY4QTUvZk81a1g2L20raUVjanYxQ241TXVF?=
- =?utf-8?B?dU14U0FOcUVTYmwxdTNHQ0pZK1ZGUWxQcW1QQmFrSElKMkUySHdhVnYxV1Fi?=
- =?utf-8?B?MWFTVm50ZVN4a2x0YTllbTZZOUNwOXhPeVl0TUF6YkpTcXpoK0Y1VEFCNS9x?=
- =?utf-8?B?TndBTEVrVUNucFIyMWVkQTdzNXF3ZVc3ZTExLzV0RjV3OEszR0U1VXJzSTZM?=
- =?utf-8?B?RFEvTnM5Y2gzVlpKUWdKaGdKK016RjBCRW5OOEI0L1hiQ1pTc3R1SkNTSEdF?=
- =?utf-8?B?YkkwV0tObGVIV0ROV1B6VE9JV3I4S2l6N1E2azJ2WlB0RDJ1TEFVcVcxWFda?=
- =?utf-8?B?aUF4QkxXSTZNRVJ6VG9KaXJkTGxwN1dNcW9QZHp4dk9lYkJOK0pScDUweGg2?=
- =?utf-8?B?a09BbEtzNVVJcDlYN0piTk0zTVErc1ArWERIQTZHVW9PaG5QYjJOMnI1UU5I?=
- =?utf-8?B?elBqM0haSE55ZHVtRXBzRWNGRDBkNmhYSnlSaTIyTm0yc3h2bm9QSGVJbmpm?=
- =?utf-8?B?dmEyVkdSR3FkMWtTR0RvY08zQ2xvNjJuemloaG5ReU1oTm5sTUJ1TFR2Zmw1?=
- =?utf-8?B?eHMvSS9veVk4T0tFVU8velltaUJsSmZuNzZFTXprR0QwWmxwWnV6UFlzbm9Z?=
- =?utf-8?B?OGtmQlZZZ2txZFFJMjZFR09iNnIyMHlCN21DdEhveXNmZlJibXdya1AycEVP?=
- =?utf-8?B?ZC80M3BLTGcreGdDVlFEcGcrcVVNMjZnMExBbFY1dmdLYlNUMjVTaWxwd2VF?=
- =?utf-8?B?aHliWXNFV1lIVXhNZUYrcEUxRGJYcGZ3eGtySjBWbWhsZ0hlYlhuT0NWZGMr?=
- =?utf-8?B?Q010SjNlK2hla01qNTBmdDFKQ0NOWG1GKzFJekpwNVU5d2tSRmVOeW5ScGpI?=
- =?utf-8?B?TzhhT2V6eHlBZUJ0UE5NRDEwYmVWSTNNS2tBYjJUVlZwbEdQY1A0eTE1UUtM?=
- =?utf-8?B?RmRyZTAvNFZycklyNStJSG0vSVFZd2huQnNOTW54M1dzSnp5TnNENmpMSWNN?=
- =?utf-8?B?TDRhSm11QXNOd2NNMll3UFZHT0JaVVVTaDBkZnl3S2ZpczV1aVhxYWd3Wi92?=
- =?utf-8?B?MU9TcTFQbllwWXNOa1dRaWJ3MlpVTmM5RFZBT1Z0Vi8xT0FPRCtBOHRoSnNv?=
- =?utf-8?B?dDFDSFdOa3Q3MktHSGJ6aVliWk1tMXBXNEUxdnlIcmNaSEEza2lXVlhabHVh?=
- =?utf-8?B?Q3FOUXRBU20rVnhnY3pDd2dEbXFmcXAzeFhoNDZyd2VUN01USjNDTmc0d1pK?=
- =?utf-8?B?TU5KeWhJc01aQlBHd0NNK2xpUUl2QU8yUmlHK0xaS2EyKy9lTFFiZEljVThX?=
- =?utf-8?B?bjVwS1IxMDZHcFVWUG10NnJ1SmVRS1lySHNWN2dMeG52WkJrSVNkbzR5anRY?=
- =?utf-8?B?ejFMZGQyd1JBd3pzdTBSb2h3dWgwck4yb3pnSGxxVHVoRi96WEU0V1FabHcr?=
- =?utf-8?B?ZE5NVnh3R3pUMEdIS2p1ZU92ck5wb3htekx2ajVDdmxHaVhRb3crNUNYeWla?=
- =?utf-8?B?LzBGMWlLTnJ4cHRmRVl6QlFuVGQ0RmJVZjhIcUtENW85T25qbGxpOXB2aGRD?=
- =?utf-8?B?T1A0TmpBM216RXUzbHJranNkMi9TR1ZoZ1BlUURndmMySW53TGNlb2srcVVv?=
- =?utf-8?B?UkFEeEp3WWlBWWZuUWF5Y1EvaFZZK2QwWm5qSVZ1TTdKSEp1QmhQdGtXZk1t?=
- =?utf-8?B?bFlDV2xYQ3VSV0dWNk1kY21yOVZ5MGMrcHZXTVd6OHN2TE5TclI1ME9GZTNi?=
- =?utf-8?B?ejdGQnltTHdkdG5xaExZMGN2K0w3OUNtaktkNWdZcEZ6QW54NkVhRGY3ZExt?=
- =?utf-8?Q?5g2UrGyvdx4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF5ADB4ADFC.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a29wdHFZbUdOVCtEOEhPR24zRi9VL3NDM3NzSFY3RlM4VXRiTnkxNTFlbDZz?=
- =?utf-8?B?dFhSZW11ZUZOenlMTitsTk5kOWdRcXVrMHQ0TW1hQ0VjdU43UFdVYUtja0ZQ?=
- =?utf-8?B?RFZ0NkZCbHAxbXdJTU5Xc3EyNkdLZWlHT0VIMlhtTkYyTElnVStvMUV1akU5?=
- =?utf-8?B?MDlDU3ZIWU95VURvbUZRb2EzTy94Z3FtUGhpcEFaSUVYbE1DZ3AvdCtpYjFx?=
- =?utf-8?B?Sk5QWWw4L3c4UkxuMVBFWDlhVmcvWjE4RlVSc3lSTHJpSm40OFFxTzM3RVRr?=
- =?utf-8?B?VGdvTE9SUGp0cGl6R3doMTNaTm5xNlAxYm55SDhLSWJrTzV4djFrTHc5dHdW?=
- =?utf-8?B?aUVPamJjYXVyL0RDQTdiVHlZY2VIeGNYUmw0cnVMUzZpaDFUN3JzNWxHTFpx?=
- =?utf-8?B?M3NzNzFXV2VjcGE0Rk5GZ2NJM0Vva0JMWW1NVDlqbmJ4UzBSYnl4bjZYZ0Ew?=
- =?utf-8?B?ekJ6MzMva09tQUxuR2MxVGwyeWJDdmYzcE1aaTdhM0U4aVN0OFFiWTQyMVdn?=
- =?utf-8?B?ZzFyZlE2cXpkekdrR1poZmpFOXRrSkdzWXdnMmFNdDRoMnVpN0NWRkFNY3BP?=
- =?utf-8?B?cmN4RlNZZkd2c3U3R08zN2Y3S0phUENQZWdRa2NYOG1kclVtbThKUWgyYzg5?=
- =?utf-8?B?S1N4Um5qVEIySmhvYjB6UGQ5RXRVOEtBZjNJeTVlcUZSaE1kNncxU1FCWFNW?=
- =?utf-8?B?OFNtYjMxMC9RWGNLZFl1STdhc2dnc2pUNE5jbXFKYnlUMXd3MDdqSmpwSnpH?=
- =?utf-8?B?TzU0d2xhYjJTMzFJR3FvNVFjM1A5QTIrS3g2emdUYkREN1c4dC9XMG5PREps?=
- =?utf-8?B?dTloWVRLT0hWcVBoYXVhYnE1WU40RXArdy8rMEc4ZnB1UGlOa1pjSjFMU1dK?=
- =?utf-8?B?U092MHRHWHNhQkhyc2NJWVV1RUJETWdFVFVqV2tLMVd5REFaNU80RjhMcG9J?=
- =?utf-8?B?QytqK3dYajBQN3JUblN4R29xU3oyd1Axd1FXdUM4VkxDUTVtckZibUNmbmJE?=
- =?utf-8?B?Q1N1S0RDT0JvSCt6SC9XS29BTzVjVFVwbHM2dzRKRGk0eGZzZzZDSWRIWlJI?=
- =?utf-8?B?Y0pDY3Y3K1BhSkg1SkJCUmZqYUl6RGxJVFozOFhIQ0VQVGFiSEhtam04dnpY?=
- =?utf-8?B?V1EyeHZveUZ2QWFuMFgwVHh4eUFPNXZkazQ3RndZb3hLOEV4RjlodCtiOXhM?=
- =?utf-8?B?Vm1IM01BNG1nbXl3ampkbUNQOEVYcHhwYWVUaEdyaFhRUzRpc2psOVZUeHZH?=
- =?utf-8?B?RzZjQXdqNmx4d3p0QSt4cm1TbVN6MmZ5bDc5M1Q3eVAvSE5rTDVwRnQzU01N?=
- =?utf-8?B?NDVaelVEUXhZYkVtVDdZTWVsZ1JtaEV2elhHckw3NVNWQk92NUVvQW1rcmx2?=
- =?utf-8?B?ODcyU0t1aUlNYjczRndORld3aWhtUU5ZYnRkSFl3N3ppWFliRWd3ays0aXFx?=
- =?utf-8?B?Q0tvSUNDcmV0OEdNeGt2cmZOamlFVUU1TEdtRXhLSWlnZHp6bUg4NzRBU0hB?=
- =?utf-8?B?Zm1EdFhpdjJDcm4zQXo0OFQ4cjBDdEtvaExGNDc1S2lnK2xtRWtGM0dmOXFL?=
- =?utf-8?B?eUxLTC9IblUyKzA3dEFZU2t2aExpK1p1eDhhVTVkNFQ5Z0RETXlJUU5zZTli?=
- =?utf-8?B?YzhrdGtMU1c0Y1BBaGNma2svTkNyOVVia040R1cvajNFcC8wd3hpRVR1WWxw?=
- =?utf-8?B?NW54cmZqcDZXUi9SUjJseEJwTHdBRlh0KzRBK3c3cXVBVzRiNUdWclRCMVN5?=
- =?utf-8?B?VnJkVkdROHpUQUN3QTZabDZVUWdYbW94WlQ5RnFxSW9LbjVheDdMVzFJbjlP?=
- =?utf-8?B?d0c0QS8wOG9vOU44NXVxQmhNbmZSYUtWalM5ekRuMVVkc3hPQXdTcGhQMFlo?=
- =?utf-8?B?ZmpjUUlZVmRXQUZEUFV4UUt1TCtrQnMvVkY2bmN1aERRKytIaFQwTnoyYlRQ?=
- =?utf-8?B?c2hLOUhINVdUVGRZZVB4YVc3bE1kaGJNWUZBbWRna08vNldDa2YvRjhLdWZz?=
- =?utf-8?B?djlQZ2lCZkk5RWNWVTg5cVNsVVU2TWt4bDlLK1Z1ekZ0M2k5VnplZDlBRU1V?=
- =?utf-8?B?ZEgrc0FFdU1RSHBQVU5NQWtnWjJLTSsrVHZDSzZzcUpzQ1krbkQwaVZPcnB2?=
- =?utf-8?Q?r22Lb28Hu2NbMJlIbo3wbABan?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	qQxDSmJrA1LcOVaCV3j8Xo16LZiSi3G5g9aCpHu6sfbUa82x3QFnB/33+cY9nhWlXFkPGkEqSPr1l4p0cAxly1PCpzN6adQPRTcQW9fCKKFjBLg01j3/AXLLZB+2ERMWv2KEyAOzNCsva53iNlBVWiuYKzaIN6AofeAnS7k4iGNWZpBKYYde1RVdUGU3qhZmzA+Q9V3rE7gKdh5CGFvbcRBmrz/Kb1oPHXiBzeipxZ8CiuRTAMoaWWZ9wOFsTyT4Wi+3/wPhxst/o4DMuTx62bgbqX1uXcFnkevnTFK8jlal7i6HWPkguX2V0PktTIZsOP/vCOQsGk/mB/b2j9bOAdo00uqx0ZX0kLBBC0RJladsoa5/16KwgDUfN1hoiqUYYdXBNRK7EFLp7e6pSHga+NiEcC/IIHYqygwQlSYGCyXVRf2CJ5DHp7Sqx09hmD21TOJdt0+fNVJl24aEZQDISrkMkPyUQQE5DuPAg7wO34L/g+AEIanNcZVcmU0UWgMeo8h4MxEtoXWUkCSSlE8tkJlFnbYkdB2uq9ZFTwYbyyXErk5Pql16DNMP1UblIsD24wBBUBiu5oUHv31Q5bY2BBjzOg04y7F9xQNpQ0uRX1U=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f24449f-a736-4649-8c4e-08ddba2c0be4
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 12:20:50.1337
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DzXNEAMKZYEmyokuOYeQ0XVlppfBmmI2zth6tes3TNNh6g0Llf27yP8cH9IGWT/lOzXROg5YHN1rPb0jaPuhLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF0A29BA37B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2507030102
-X-Proofpoint-ORIG-GUID: gM0um1rLwEQu2mqyWWWlll6iqc5OIdSB
-X-Proofpoint-GUID: gM0um1rLwEQu2mqyWWWlll6iqc5OIdSB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEwMiBTYWx0ZWRfXwK/NqS4fJ5M9 6+OwyRo+1XmdRLSk7y/33VItIlFToc6wBdUC1e6TxGDI2cMJvVEi8032fphxJnBU10eBS91iOgu 547Ar6dyzAxm7GdABqNkR1wAglzk1rON+vX+x4gwHqaj4AKaW81KbLRN7SGqaMHkKtL6MijbFz6
- gqtM79jCroCzRoa9G7c8wlNLXj00ZztRU7K1mxxoRiQXM90bfOFumSls5uj3JHurP8alN7SIn69 l+e68tH+MYG8zvWthKrQiR8T1q7N+pt5e+OwOMPCyz7RaMJScwiw2TD7X8P6q58jd3ICt2FB362 wtXIGysXrsbhJcWcJZ5XnHnP3dGhJUGDCLpYScP+lQLETNBs69C/+4yfmu/oOxn5XqMIiEL/AEr
- IExbUyVaLpFWr7EtQFrR4vOIqG3WUOjuFKXhYI2f7WIKccbdxkfi7xfKzkuht97UcI9ArRoy
-X-Authority-Analysis: v=2.4 cv=b5Cy4sGx c=1 sm=1 tr=0 ts=686675a6 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=BqM5uE05BchT_LHo8y4A:9 a=QEXdDO2ut3YA:10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 15/24] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer framework
+To: Julien Massot <julien.massot@collabora.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+ <20250702132104.1537926-16-demonsingur@gmail.com>
+ <cc449f4230ebf2cc854c456d60db4814bb1e1f8a.camel@collabora.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
+Content-Language: en-US
+In-Reply-To: <cc449f4230ebf2cc854c456d60db4814bb1e1f8a.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 7/3/25 05:04, Chen, Yu C wrote:
-> On 7/3/2025 8:01 PM, Michal Hocko wrote:
->> On Thu 03-07-25 13:50:06, Peter Zijlstra wrote:
->>> On Thu, Jul 03, 2025 at 11:28:46AM +0200, Michal Hocko wrote:
->>>
->>>> But thinking about this some more, this would be racy same as the
->>>> PF_EXITING check. This is not my area but is this performance sensitive
->>>> path that couldn't live with the proper find_lock_task_mm?
->>>
->>> find_lock_task_mm() seems eminently unsuitable for accounting --
->>> iterating the task group is insane.
->>>
->>> Looking at this, the mm_struct lifetimes suck.. task_struct reference
->>> doesn't help, rcu doesn't help :-(
->>>
->>> Also, whatever the solution it needs to be inside this count_memcg_*()
->>> nonsense, because nobody wants this overhead, esp. not for something
->>> daft like accounting.
->>>
->>> My primary desire at this point is to just revert the patch that caused
->>> this. Accounting just isn't worth it. Esp. not since there is already a
->>> tracepoint in this path -- people that want to count crap can very well
->>> get their numbers from that.
->>
->> I would tend to agree with this. Doing the accounting race free on a
->> remote task is nasty and if this is a rare event that could be avoided
->> then it should be just dropped than racy and oops prone.
->>
+On 7/3/25 3:08 PM, Julien Massot wrote:
+> Hi Cosmin,
 > 
-> OK, Michal and Peter,
-> how about keeping the per task schedstat and drop the memcg statistics?
-> The user can still get the per task information without having to filter
-> the ftrace log.
+> On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+>> These drivers are meant to be used as a common framework for Maxim
+>> GMSL2/3 serializers and deserializers.
+>>
+>> This framework enables support for the following new features across
+>> all the chips:
+>>   * Full Streams API support
+>>   * .get_frame_desc()
+>>   * .get_mbus_config()
+>>   * I2C ATR
+>>   * automatic GMSL link version negotiation
+>>   * automatic stream id selection
+>>   * automatic VC remapping
+>>   * automatic pixel mode / tunnel mode selection
+>>   * automatic double mode selection / data padding
+>>   * logging of internal state and chip status registers via .log_status()
+>>   * PHY modes
+>>   * serializer pinctrl
+>>   * TPG
+>>
+>> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+>> ---
+>>   MAINTAINERS                                 |   1 +
+>>   drivers/media/i2c/Kconfig                   |   2 +
+>>   drivers/media/i2c/Makefile                  |   1 +
+>>   drivers/media/i2c/maxim-serdes/Kconfig      |  16 +
+>>   drivers/media/i2c/maxim-serdes/Makefile     |   3 +
+>>   drivers/media/i2c/maxim-serdes/max_serdes.c | 413 ++++++++++++++++++++
+>>   drivers/media/i2c/maxim-serdes/max_serdes.h | 183 +++++++++
+>>   7 files changed, 619 insertions(+)
+>>   create mode 100644 drivers/media/i2c/maxim-serdes/Kconfig
+>>   create mode 100644 drivers/media/i2c/maxim-serdes/Makefile
+>>   create mode 100644 drivers/media/i2c/maxim-serdes/max_serdes.c
+>>   create mode 100644 drivers/media/i2c/maxim-serdes/max_serdes.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 334195989c00..8cd57b66afe3 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -14769,6 +14769,7 @@ M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+>>   L:	linux-media@vger.kernel.org
+>>   S:	Maintained
+>>   F:	Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+>> +F:	drivers/media/i2c/maxim-serdes/
+>>   
+>>   MAXIM MAX11205 DRIVER
+>>   M:	Ramona Bolboaca <ramona.bolboaca@analog.com>
+>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+>> index 4b4c199da6ea..f504016aadfd 100644
+>> --- a/drivers/media/i2c/Kconfig
+>> +++ b/drivers/media/i2c/Kconfig
+>> @@ -1700,6 +1700,8 @@ config VIDEO_MAX96717
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called max96717.
+>>   
+>> +source "drivers/media/i2c/maxim-serdes/Kconfig"
+>> +
+>>   endmenu
+>>   
+>>   endif # VIDEO_DEV
+>> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+>> index 5873d29433ee..25a0093d40ec 100644
+>> --- a/drivers/media/i2c/Makefile
+>> +++ b/drivers/media/i2c/Makefile
+>> @@ -70,6 +70,7 @@ obj-$(CONFIG_VIDEO_MAX9271_LIB) += max9271.o
+>>   obj-$(CONFIG_VIDEO_MAX9286) += max9286.o
+>>   obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
+>>   obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+>> +obj-$(CONFIG_VIDEO_MAXIM_SERDES) += maxim-serdes/
+>>   obj-$(CONFIG_VIDEO_ML86V7667) += ml86v7667.o
+>>   obj-$(CONFIG_VIDEO_MSP3400) += msp3400.o
+>>   obj-$(CONFIG_VIDEO_MT9M001) += mt9m001.o
+>> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
+>> new file mode 100644
+>> index 000000000000..cae1d5a1293e
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+>> @@ -0,0 +1,16 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +config VIDEO_MAXIM_SERDES
+>> +	tristate "Maxim GMSL2/3 Serializer and Deserializer support"
+>> +	depends on VIDEO_DEV
+>> +	select I2C_ATR
+>> +	select I2C_MUX
+>> +	select MEDIA_CONTROLLER
+>> +	select V4L2_FWNODE
+>> +	select VIDEO_V4L2_SUBDEV_API
+>> +	help
+>> +	  This driver supports the Maxim GMSL2/3 common Serializer and
+>> +	  Deserializer framework.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called max_serdes.
+>> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
+>> new file mode 100644
+>> index 000000000000..630fbb486bab
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/maxim-serdes/Makefile
+>> @@ -0,0 +1,3 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +max-serdes-objs := max_serdes.o
+>> +obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
+>> diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.c b/drivers/media/i2c/maxim-
+>> serdes/max_serdes.c
+>> new file mode 100644
+>> index 000000000000..73e018d1f0d2
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/maxim-serdes/max_serdes.c
+>> @@ -0,0 +1,413 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2025 Analog Devices Inc.
+>> + */
+>> +
+>> +#include <linux/export.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/stringify.h>
+>> +
+>> +#include <media/mipi-csi2.h>
+>> +
+>> +#include <video/videomode.h>
+>> +
+>> +#include <uapi/linux/media-bus-format.h>
+>> +
+>> +#include "max_serdes.h"
+>> +
+>> +const char * const max_serdes_tpg_patterns[] = {
+>> +	[MAX_SERDES_TPG_PATTERN_GRADIENT] = "Gradient",
+>> +	[MAX_SERDES_TPG_PATTERN_CHECKERBOARD] = "Checkerboard",
+>> +};
+>> +
+>> +static const char * const max_gmsl_versions[] = {
+>> +	[MAX_SERDES_GMSL_2_3GBPS] = "GMSL2 3Gbps",
+>> +	[MAX_SERDES_GMSL_2_6GBPS] = "GMSL2 6Gbps",
+>> +	[MAX_SERDES_GMSL_3] = "GMSL3",
+>> +};
+> GMSL3 12Gbps for consistency ?
 > 
 
-I agree. The other parts, schedstat and vmstat, are still quite helpful.
-Also tracepoints are more expensive than counters once enabled, I think
-that's too much for just counting numbers.
+Sure.
 
-Libo
+>>
+>> +
+>> +const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version)
+>> +{
+>> +	if (version > MAX_SERDES_GMSL_3)
+>> +		return NULL;
+>> +
+>> +	return max_gmsl_versions[version];
+>> +}
+>> +
+>> +static const char * const max_gmsl_mode[] = {
+>> +	[MAX_SERDES_GMSL_PIXEL_MODE] = "pixel",
+>> +	[MAX_SERDES_GMSL_TUNNEL_MODE] = "tunnel",
+>> +};
+>> +
+>> +const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode)
+>> +{
+>> +	if (mode > MAX_SERDES_GMSL_TUNNEL_MODE)
+>> +		return NULL;
+>> +
+>> +	return max_gmsl_mode[mode];
+>> +}
+>> +
+>> +static const struct max_serdes_mipi_format max_serdes_mipi_formats[] = {
+>> +	{ MIPI_CSI2_DT_EMBEDDED_8B, 8 },
+>> +	{ MIPI_CSI2_DT_YUV422_8B, 16 },
+>> +	{ MIPI_CSI2_DT_YUV422_10B, 20 },
+>> +	{ MIPI_CSI2_DT_RGB565, 16 },
+>> +	{ MIPI_CSI2_DT_RGB666, 18 },
+>> +	{ MIPI_CSI2_DT_RGB888, 24 },
+>> +	{ MIPI_CSI2_DT_RAW8, 8 },
+>> +	{ MIPI_CSI2_DT_RAW10, 10 },
+>> +	{ MIPI_CSI2_DT_RAW12, 12 },
+>> +	{ MIPI_CSI2_DT_RAW14, 14 },
+>> +	{ MIPI_CSI2_DT_RAW16, 16 },
+>> +};
+>> +
+>> +const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(max_serdes_mipi_formats); i++)
+>> +		if (max_serdes_mipi_formats[i].dt == dt)
+>> +			return &max_serdes_mipi_formats[i];
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
+>> +				   struct v4l2_mbus_frame_desc_entry *entry)
+>> +{
+>> +	struct v4l2_mbus_frame_desc fd;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	ret = v4l2_subdev_call(sd, pad, get_frame_desc, pad, &fd);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (fd.type != V4L2_MBUS_FRAME_DESC_TYPE_CSI2)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	for (i = 0; i < fd.num_entries; i++) {
+>> +		if (fd.entry[i].stream == stream) {
+>> +			*entry = fd.entry[i];
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +	return -ENOENT;
+>> +}
+>> +
+>> +int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
+>> +			  unsigned int *bpp)
+>> +{
+>> +	const struct max_serdes_mipi_format *format;
+>> +
+>> +	format = max_serdes_mipi_format_by_dt(entry->bus.csi2.dt);
+>> +	if (!format)
+>> +		return -ENOENT;
+>> +
+>> +	*bpp = format->bpp;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int max_serdes_process_bpps(struct device *dev, u32 bpps,
+>> +			    u32 allowed_double_bpps, unsigned int *doubled_bpp)
+>> +{
+>> +	unsigned int min_bpp;
+>> +	unsigned int max_bpp;
+>> +	bool doubled = false;
+>> +
+>> +	if (!bpps)
+>> +		return 0;
+>> +
+>> +	*doubled_bpp = 0;
+>> +
+>> +	/*
+>> +	 * Hardware can double bpps 8, 10, 12, and it can pad bpps < 16
+>> +	 * to another bpp <= 16:
+>> +	 * Hardware can only stream a single constant bpp up to 24.
+>> +	 *
+>> +	 * From these features and limitations, the following rules
+>> +	 * can be deduced:
+>> +	 *
+>> +	 * A bpp of 8 can always be doubled if present.
+>> +	 * A bpp of 10 can be doubled only if there are no other bpps or the
+>> +	 * only other bpp is 20.
+>> +	 * A bpp of 12 can be doubled only if there are no other bpps or the
+>> +	 * only other bpp is 24.
+>> +	 * Bpps <= 16 cannot coexist with bpps > 16.
+>> +	 * Bpps <= 16 need to be padded to the biggest bpp.
+>> +	 */
+>> +
+>> +	min_bpp = __ffs(bpps);
+>> +	max_bpp = __fls(bpps);
+>> +
+>> +	if (min_bpp == 8) {
+>> +		doubled = true;
+>> +	} else if (min_bpp == 10 || min_bpp == 12) {
+>> +		u32 bpp_or_double = BIT(min_bpp) | BIT(min_bpp * 2);
+>> +		u32 other_bpps = bpps & ~bpp_or_double;
+>> +
+>> +		if (!other_bpps)
+>> +			doubled = true;
+>> +	}
+>> +
+>> +	if (doubled && (allowed_double_bpps & BIT(min_bpp))) {
+>> +		*doubled_bpp = min_bpp;
+>> +		bpps &= ~BIT(min_bpp);
+>> +		bpps |= BIT(min_bpp * 2);
+>> +	}
+>> +
+>> +	min_bpp = __ffs(bpps);
+>> +	max_bpp = __fls(bpps);
+>> +
+>> +	if (max_bpp > 24) {
+>> +		dev_err(dev, "Cannot stream bpps > 24\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (min_bpp <= 16 && max_bpp > 16) {
+>> +		dev_err(dev, "Cannot stream bpps <= 16 with bpps > 16\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (max_bpp > 16 && min_bpp != max_bpp) {
+>> +		dev_err(dev, "Cannot stream multiple bpps when one is > 16\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
+>> +					    u32 source_sink_pad_offset,
+>> +					    const struct v4l2_subdev_state *state,
+>> +					    u32 pad, u64 updated_streams_mask,
+>> +					    u32 sink_pad_start, u32 num_sink_pads,
+>> +					    bool enable)
+>> +{
+>> +	u32 failed_sink_pad;
+>> +	int ret;
+>> +	u32 i;
+>> +
+>> +	for (i = sink_pad_start; i < sink_pad_start + num_sink_pads; i++) {
+>> +		u64 matched_streams_mask = updated_streams_mask;
+>> +		u64 updated_sink_streams_mask;
+>> +		struct max_serdes_source *source;
+>> +
+>> +		updated_sink_streams_mask =
+>> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+>> +							&matched_streams_mask);
+>> +		if (!updated_sink_streams_mask)
+>> +			continue;
+>> +
+>> +		source = &sources[i + source_sink_pad_offset];
+>> +		if (!source)
+>> +			continue;
+>> +
+>> +		if (enable)
+>> +			ret = v4l2_subdev_enable_streams(source->sd, source->pad,
+>> +							 updated_sink_streams_mask);
+>> +		else
+>> +			ret = v4l2_subdev_disable_streams(source->sd, source->pad,
+>> +							  updated_sink_streams_mask);
+>> +		if (ret) {
+>> +			failed_sink_pad = i;
+>> +			goto err;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	for (i = sink_pad_start; i < failed_sink_pad; i++) {
+>> +		u64 matched_streams_mask = updated_streams_mask;
+>> +		u64 updated_sink_streams_mask;
+>> +		struct max_serdes_source *source;
+>> +
+>> +		updated_sink_streams_mask =
+>> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+>> +							&matched_streams_mask);
+>> +		if (!updated_sink_streams_mask)
+>> +			continue;
+>> +
+>> +		source = &sources[i + source_sink_pad_offset];
+>> +		if (!source)
+>> +			continue;
+>> +
+>> +		if (!enable)
+>> +			v4l2_subdev_enable_streams(source->sd, source->pad,
+>> +						   updated_sink_streams_mask);
+>> +		else
+>> +			v4l2_subdev_disable_streams(source->sd, source->pad,
+>> +						    updated_sink_streams_mask);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +int max_serdes_get_streams_masks(struct device *dev,
+>> +				 const struct v4l2_subdev_state *state,
+>> +				 u32 pad, u64 updated_streams_mask,
+>> +				 u32 num_pads, u64 *old_streams_masks,
+>> +				 u64 **new_streams_masks, bool enable)
+>> +{
+>> +	u64 *streams_masks;
+>> +	unsigned int i;
+>> +
+>> +	streams_masks = devm_kcalloc(dev, num_pads, sizeof(*streams_masks), GFP_KERNEL);
+>> +	if (!streams_masks)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_pads; i++) {
+>> +		u64 matched_streams_mask = updated_streams_mask;
+>> +		u64 updated_sink_streams_mask;
+>> +
+>> +		updated_sink_streams_mask =
+>> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+>> +							&matched_streams_mask);
+>> +		if (!updated_sink_streams_mask)
+>> +			continue;
+>> +
+>> +		streams_masks[i] = old_streams_masks[i];
+>> +		if (enable)
+>> +			streams_masks[i] |= updated_sink_streams_mask;
+>> +		else
+>> +			streams_masks[i] &= ~updated_sink_streams_mask;
+>> +	}
+>> +
+>> +	if (enable)
+>> +		streams_masks[pad] |= updated_streams_mask;
+>> +	else
+>> +		streams_masks[pad] &= ~updated_streams_mask;
+>> +
+>> +	*new_streams_masks = streams_masks;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct videomode max_serdes_tpg_pixel_videomodes[] = {
+>> +	{
+>> +		.pixelclock = 25000000,
+>> +		.hactive = 640,
+>> +		.hfront_porch = 10,
+>> +		.hsync_len = 96,
+>> +		.hback_porch = 40,
+>> +		.vactive = 480,
+>> +		.vfront_porch = 2,
+>> +		.vsync_len = 24,
+>> +		.vback_porch = 24,
+>> +	},
+>> +	{
+>> +		.pixelclock = 75000000,
+>> +		.hactive = 1920,
+>> +		.hfront_porch = 88,
+>> +		.hsync_len = 44,
+>> +		.hback_porch = 148,
+>> +		.vactive = 1080,
+>> +		.vfront_porch = 4,
+>> +		.vsync_len = 16,
+>> +		.vback_porch = 36,
+>> +	},
+>> +	{
+>> +		.pixelclock = 150000000,
+>> +		.hactive = 1920,
+>> +		.hfront_porch = 88,
+>> +		.hsync_len = 44,
+>> +		.hback_porch = 148,
+>> +		.vactive = 1080,
+>> +		.vfront_porch = 4,
+>> +		.vsync_len = 16,
+>> +		.vback_porch = 36,
+>> +	},
+>> +};
+>> +
+>> +static void max_serdes_get_vm_timings(const struct videomode *vm,
+>> +				      struct max_serdes_tpg_timings *timings)
+>> +{
+>> +	u32 hact = vm->hactive;
+>> +	u32 hfp = vm->hfront_porch;
+>> +	u32 hsync = vm->hsync_len;
+>> +	u32 hbp = vm->hback_porch;
+>> +	u32 htot = hact + hfp + hbp + hsync;
+>> +
+>> +	u32 vact = vm->vactive;
+>> +	u32 vfp = vm->vfront_porch;
+>> +	u32 vsync = vm->vsync_len;
+>> +	u32 vbp = vm->vback_porch;
+>> +	u32 vtot = vact + vfp + vbp + vsync;
+>> +
+>> +	*timings = (struct max_serdes_tpg_timings) {
+>> +		.gen_vs = true,
+>> +		.gen_hs = true,
+>> +		.gen_de = true,
+>> +		.vs_inv = true,
+>> +		.vs_dly = 0,
+>> +		.vs_high = vsync * htot,
+>> +		.vs_low = (vact + vfp + vbp) * htot,
+>> +		.v2h = 0,
+>> +		.hs_high = hsync,
+>> +		.hs_low = hact + hfp + hbp,
+>> +		.hs_cnt = vact + vfp + vbp + vsync,
+>> +		.v2d = htot * (vsync + vbp) + (hsync + hbp),
+>> +		.de_high = hact,
+>> +		.de_low = hfp + hsync + hbp,
+>> +		.de_cnt = vact,
+>> +		.clock = vm->pixelclock,
+>> +		.fps = DIV_ROUND_CLOSEST(vm->pixelclock, vtot * htot),
+>> +	};
+>> +}
+>> +
+>> +int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
+>> +			       struct max_serdes_tpg_timings *timings)
+>> +{
+>> +	u32 fps;
+>> +
+>> +	if (!entry)
+>> +		return 0;
+>> +
+>> +	fps = DIV_ROUND_CLOSEST(1 * entry->interval.denominator,
+>> +				entry->interval.numerator);
+>> +
+>> +	for (unsigned int i = 0; i < ARRAY_SIZE(max_serdes_tpg_pixel_videomodes); i++) {
+>> +		struct max_serdes_tpg_timings vm_timings;
+>> +		const struct videomode *vm;
+>> +
+>> +		vm = &max_serdes_tpg_pixel_videomodes[i];
+>> +
+>> +		max_serdes_get_vm_timings(vm, &vm_timings);
+>> +
+>> +		if (vm->hactive == entry->width &&
+>> +		    vm->vactive == entry->height &&
+>> +		    vm_timings.fps == fps) {
+>> +			*timings = vm_timings;
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(max_serdes_get_tpg_timings);
+>> +
+>> +int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing)
+>> +{
+>> +	const struct v4l2_subdev_route *route;
+>> +
+>> +	if (routing->num_routes != 1)
+>> +		return -EINVAL;
+>> +
+>> +	route = &routing->routes[0];
+>> +
+>> +	if (!(route->flags & V4L2_SUBDEV_ROUTE_FL_ACTIVE))
+>> +		return -EINVAL;
+>> +
+>> +	if (route->sink_stream != MAX_SERDES_TPG_STREAM)
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +MODULE_DESCRIPTION("Maxim GMSL2 Serializer/Deserializer Driver");
+>> +MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.h b/drivers/media/i2c/maxim-
+>> serdes/max_serdes.h
+>> new file mode 100644
+>> index 000000000000..fdd761fcd8b2
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/maxim-serdes/max_serdes.h
+>> @@ -0,0 +1,183 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2025 Analog Devices Inc.
+>> + */
+>> +
+>> +#ifndef MAX_SERDES_H
+>> +#define MAX_SERDES_H
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +#include <media/mipi-csi2.h>
+>> +#include <media/v4l2-subdev.h>
+>> +
+>> +#define REG_SEQUENCE_2(reg, val) \
+>> +	{ (reg),     ((val) >> 8) & 0xff }, \
+>> +	{ (reg) + 1, ((val) >> 0) & 0xff }
+>> +
+>> +#define REG_SEQUENCE_3(reg, val) \
+>> +	{ (reg),     ((val) >> 16) & 0xff }, \
+>> +	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
+>> +	{ (reg) + 2, ((val) >> 0)  & 0xff }
+>> +
+>> +#define REG_SEQUENCE_3_LE(reg, val) \
+>> +	{ (reg),     ((val) >> 0) & 0xff }, \
+>> +	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
+>> +	{ (reg) + 2, ((val) >> 16)  & 0xff }
+>> +
+>>
+>> cci helper handle that nicely.
 
-> thanks,
-> Chenyu
+I don't really want to change to CCI helpers for a handful of registers
+when the rest have 8-bit values. And the LE ones would still need to
+have their bytes flipped.
+
+>>
+>> +#define field_get(mask, val) (((val) & (mask)) >> __ffs(mask))
+>> +#define field_prep(mask, val) (((val) << __ffs(mask)) & (mask))
+>> +
+> At some place you use FIELD_PREP some other field_prep, this is confusing
+> can you use only the FIELD_GET/PREP ?
+> 
+
+FIELD_GET/PREP require constant masks, sometimes we don't have that.
+These helpers are present in other files too.
+
+rg "#define field_get" -l | wc -l
+9
+
+> 
+>> +#define MAX_SERDES_PHYS_MAX		4
+>> +#define MAX_SERDES_STREAMS_NUM		4
+>> +#define MAX_SERDES_VC_ID_NUM		4
+>> +#define MAX_SERDES_TPG_STREAM		0
+>> +
+>> +#define MAX_SERDES_GRAD_INCR		4
+>> +#define MAX_SERDES_CHECKER_COLOR_A	0x00ccfe
+>> +#define MAX_SERDES_CHECKER_COLOR_B	0xa76a00
+>> +#define MAX_SERDES_CHECKER_SIZE		60
+>> +
+>> +extern const char * const max_serdes_tpg_patterns[];
+>> +
+>> +enum max_serdes_gmsl_version {
+>> +	MAX_SERDES_GMSL_MIN,
+>> +	MAX_SERDES_GMSL_2_3GBPS = MAX_SERDES_GMSL_MIN,
+>> +	MAX_SERDES_GMSL_2_6GBPS,
+>> +	MAX_SERDES_GMSL_3,
+>> +	MAX_SERDES_GMSL_MAX = MAX_SERDES_GMSL_3,
+>> +};
+>> +
+>> +enum max_serdes_gmsl_mode {
+>> +	MAX_SERDES_GMSL_PIXEL_MODE,
+>> +	MAX_SERDES_GMSL_TUNNEL_MODE,
+>> +};
+>> +
+>> +enum max_serdes_tpg_pattern {
+>> +	MAX_SERDES_TPG_PATTERN_MIN,
+>> +	MAX_SERDES_TPG_PATTERN_CHECKERBOARD = MAX_SERDES_TPG_PATTERN_MIN,
+>> +	MAX_SERDES_TPG_PATTERN_GRADIENT,
+>> +	MAX_SERDES_TPG_PATTERN_MAX = MAX_SERDES_TPG_PATTERN_GRADIENT,
+>> +};
+>> +
+>> +struct max_serdes_phys_config {
+>> +	unsigned int lanes[MAX_SERDES_PHYS_MAX];
+>> +	unsigned int clock_lane[MAX_SERDES_PHYS_MAX];
+>> +};
+>> +
+>> +struct max_serdes_phys_configs {
+>> +	const struct max_serdes_phys_config *configs;
+>> +	unsigned int num_configs;
+>> +};
+>> +
+>> +struct max_serdes_i2c_xlate {
+>> +	u8 src;
+>> +	u8 dst;
+>> +	bool en;
+>> +};
+>> +
+>> +struct max_serdes_mipi_format {
+>> +	u8 dt;
+>> +	u8 bpp;
+>> +};
+>> +
+>> +struct max_serdes_vc_remap {
+>> +	u8 src;
+>> +	u8 dst;
+>> +};
+>> +
+>> +struct max_serdes_source {
+>> +	struct v4l2_subdev *sd;
+>> +	u16 pad;
+>> +	struct fwnode_handle *ep_fwnode;
+>> +
+>> +	unsigned int index;
+>> +};
+>> +
+>> +struct max_serdes_asc {
+>> +	struct v4l2_async_connection base;
+>> +	struct max_serdes_source *source;
+>> +};
+>> +
+>> +struct max_serdes_tpg_entry {
+>> +	u32 width;
+>> +	u32 height;
+>> +	struct v4l2_fract interval;
+>> +	u32 code;
+>> +	u8 dt;
+>> +	u8 bpp;
+>> +};
+>> +
+>> +#define MAX_TPG_ENTRY_640X480P60_RGB888 \
+>> +	{ 640, 480, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+>> +
+>> +#define MAX_TPG_ENTRY_1920X1080P30_RGB888 \
+>> +	{ 1920, 1080, { 1, 30 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+>> +
+>> +#define MAX_TPG_ENTRY_1920X1080P60_RGB888 \
+>> +	{ 1920, 1080, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+>> +
+>> +struct max_serdes_tpg_entries {
+>> +	const struct max_serdes_tpg_entry *entries;
+>> +	unsigned int num_entries;
+>> +};
+>> +
+>> +struct max_serdes_tpg_timings {
+>> +	bool gen_vs;
+>> +	bool gen_hs;
+>> +	bool gen_de;
+>> +	bool vs_inv;
+>> +	bool hs_inv;
+>> +	bool de_inv;
+>> +	u32 vs_dly;
+>> +	u32 vs_high;
+>> +	u32 vs_low;
+>> +	u32 v2h;
+>> +	u32 hs_high;
+>> +	u32 hs_low;
+>> +	u32 hs_cnt;
+>> +	u32 v2d;
+>> +	u32 de_high;
+>> +	u32 de_low;
+>> +	u32 de_cnt;
+>> +	u32 clock;
+>> +	u32 fps;
+>> +};
+>> +
+>> +static inline struct max_serdes_asc *asc_to_max(struct v4l2_async_connection *asc)
+>> +{
+>> +	return container_of(asc, struct max_serdes_asc, base);
+>> +}
+>> +
+>> +const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version);
+>> +const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode);
+>> +
+>> +const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt);
+>> +
+>> +int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
+>> +				   struct v4l2_mbus_frame_desc_entry *entry);
+>> +
+>> +int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
+>> +			  unsigned int *bpp);
+>> +int max_serdes_process_bpps(struct device *dev, u32 bpps,
+>> +			    u32 allowed_double_bpps, unsigned int *doubled_bpp);
+>> +
+>> +int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
+>> +					    u32 source_sink_pad_offset,
+>> +					    const struct v4l2_subdev_state *state,
+>> +					    u32 pad, u64 updated_streams_mask,
+>> +					    u32 sink_pad_start, u32 num_sink_pads,
+>> +					    bool enable);
+>> +
+>> +int max_serdes_get_streams_masks(struct device *dev,
+>> +				 const struct v4l2_subdev_state *state,
+>> +				 u32 pad, u64 updated_streams_mask,
+>> +				 u32 num_pads, u64 *old_streams_masks,
+>> +				 u64 **new_streams_masks, bool enable);
+>> +
+>> +int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
+>> +			       struct max_serdes_tpg_timings *timings);
+>> +
+>> +int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing);
+>> +
+>> +#endif // MAX_SERDES_H
+> 
 
