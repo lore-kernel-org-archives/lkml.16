@@ -1,113 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74FC2F32;
-	Thu,  3 Jul 2025 07:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47FFC28FFEC
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 07:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751526194; cv=none; b=cJ4VpSWVsKfnfVypwBwGL6jgtCB64w2DJFzas77iual4Xz4/2wiN5mlkGMf/rwZWlbNutt8EnOb8/ExxzvFffrTpU2P8HPRYAdnGHgBZGYWLBCz8vtpO1pph5kqdpchEkAZPWeHpKliHFvIa42McYd9xxalXThDvDWdXlJDxFWE=
+	t=1751526244; cv=none; b=HJjMnUUbtjrU9PxX0ILVHDGzFcopHv128wWJkOrhPuADZqT5RAOzCU+7TgLY466dhFLGqCLOL2f1LQD8DB+lRdFHdOejQk/VZWXVkDVwnZ0U8HD6ZntdYe6LUf0kyTyszeWgfJKbP2iKFBgLvsXHlNLSs3BRyoFnMZ7KUy5ZyN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751526194; c=relaxed/simple;
-	bh=EabIagtTGNFQmo6c6cTS90x5NF0eiLauIS+ZJH5NhWw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lh6PihVSuZ+SfoSdJfxhMRqvW50zSPOrVZLWIIJbX7PluPNWThBgyXyv80ch7UT18JCAh23H2CVAm2c5pkKkFdFZSBEtgklPcbAP+Oo1COfRqvEn2l2/dq/J7jFfJFyroNDaLnVQOiOB/oxVcb1C9kOXYNW3yBCidGGYseqXYgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFP0Ic4w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFP0Ic4w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 617B2C4CEE3;
-	Thu,  3 Jul 2025 07:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751526193;
-	bh=EabIagtTGNFQmo6c6cTS90x5NF0eiLauIS+ZJH5NhWw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eFP0Ic4wzQD8iErp2QUmEzc6T5U7XkKXRxBwVbNExGm1MvN0Sh9FWvIz9b77fGJsb
-	 qsS3iIN7aIRPdhxjguKYdu+ifWvd4+L0o8d2M5Y+LXL0R4BTvzEOWvLLp9WZ4VySzF
-	 WysoHfO1SMlHqTi9v+oZh+99nMqkUwg/tuwxNKaw6sch4lZYiu4irtu8V9E/QaDhF+
-	 Iq5k6o0/qtk4lfW5orBu7jOLfi5CEkiE+jmgG7zwHvYI5On03GiTYtcgN8O0S8ZhJP
-	 3eFEvujkBeWHDv/urZVyuLjyhuKzX9Tw4KRaGlC/DC3vUvTP+ZgiPF7ORGwrLffJdU
-	 j6fxX1uD/0Dag==
-Message-ID: <369fc807-f05e-4837-b623-b718e47fd840@kernel.org>
-Date: Thu, 3 Jul 2025 09:03:07 +0200
+	s=arc-20240116; t=1751526244; c=relaxed/simple;
+	bh=DUdiaZ9whhqniFQVblr9wu/+lWFSE1XeD7IPimyEAR4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=IYCLLwWDTdyHnFnhV8601Vc+tqkRTRB52weJJmKSlybgBf5Njp5KWniJQnHZcDEfxi/bCs4+tZWO7FZS03HZpiTk+o+hxRMa2jHOE9/8zFqMMSLj1ob8rCHtXmpTrsfCOWfOliU35TwKTt705CaX7L4PGEhyDAH5im58cFuffpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=13.76.142.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [115.197.243.13])
+	by mtasvr (Coremail) with SMTP id _____wA3iLtTK2ZoWejaAw--.10708S3;
+	Thu, 03 Jul 2025 15:03:48 +0800 (CST)
+Received: from linma$zju.edu.cn ( [115.197.243.13] ) by
+ ajax-webmail-mail-app2 (Coremail) ; Thu, 3 Jul 2025 15:03:46 +0800
+ (GMT+08:00)
+Date: Thu, 3 Jul 2025 15:03:46 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Lin Ma" <linma@zju.edu.cn>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+Cc: wkang77@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v1 1/2] staging: gdm724x: fix type confusion in
+ gdm_lte_event_rcv()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
+ 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
+In-Reply-To: <2025070355-uncommon-handlebar-c6f3@gregkh>
+References: <20250703052723.14616-1-linma@zju.edu.cn>
+ <2025070343-halves-prison-c40f@gregkh>
+ <97e5af3.9183.197cefa02cc.Coremail.linma@zju.edu.cn>
+ <2025070355-uncommon-handlebar-c6f3@gregkh>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: x1-hp-x14: Commonalize HP
- Omnibook X14 device tree
-To: jens.glathe@oldschoolsolutions.biz, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250703-hp-x14-x1p-v3-0-affe103b4356@oldschoolsolutions.biz>
- <20250703-hp-x14-x1p-v3-2-affe103b4356@oldschoolsolutions.biz>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250703-hp-x14-x1p-v3-2-affe103b4356@oldschoolsolutions.biz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <7792df9a.9245.197cf193a6a.Coremail.linma@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:zC_KCgBnkIdSK2ZodB9aAA--.11595W
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwEQEmhlCw4MWwAAsf
+X-CM-DELIVERINFO: =?B?twbGxgXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHlVyJpD759Nt3m89ewvKkHSI4jG4s/k4p76Wwm7QDmPoNjFoGBgDV3xhOiUlmDEcOhGd
+	W0XeuqohAFAqSKl8EP1g9XiRQZ5m4zI7y8Q4UFTOOxy/CAt3qG6zaBeEcG0PLw==
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr43AF4DWFy7KF15uFykZwc_yoW8Wr4rpa
+	4DK3WFkrWDWr1xXa1Iq3ySyFyYvr4xA3yFgF1rAayY9rs8AFyfArWfX3yUCF15uFWDKF1F
+	ya4xtr9akaykArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUmEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxM4xvF2IEb7IF0Fy264kE64k0F24lFcxC0VAYjxAxZF0Ex2IqxwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMVCEFcxC0VAYjxAxZF
+	UvcSsGvfC2KfnxnUUI43ZEXa7IU8CJm5UUUUU==
 
-On 03/07/2025 08:59, Jens Glathe via B4 Relay wrote:
-> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> 
-> Commonalize the HP Omnibook X14 device tree for derivation of Hamoa (x1e*/x1p6*)
-> and Purwa (x1p4*/x1*) variants. Required because the device trees are not
-> compatible.
-> 
-> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> ---
->  arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi   | 1549 ++++++++++++++++++++
->  .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 1544 +------------------
+SGVsbG8gR3JlZywKCj4gPiBgYGAKPiA+IAo+ID4gLSBieSBgZGV2LT50eXBlYC4gU2VlIGF4MjVf
+ZGV2aWNlX2V2ZW50KCkKPiA+IGBgYAo+ID4gc3RhdGljIGludCBheDI1X2RldmljZV9ldmVudChz
+dHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKnRoaXMsIHVuc2lnbmVkIGxvbmcgZXZlbnQsCj4gPiAgICAg
+ICAgICAgICAgICAgIHZvaWQgKnB0cikKPiA+IHsKPiA+ICAgICBzdHJ1Y3QgbmV0X2RldmljZSAq
+ZGV2ID0gbmV0ZGV2X25vdGlmaWVyX2luZm9fdG9fZGV2KHB0cik7Cj4gPiAKPiA+ICAgICAuLi4u
+Li4KPiA+IAo+ID4gICAgIC8qIFJlamVjdCBub24gQVguMjUgZGV2aWNlcyAqLwo+ID4gICAgIGlm
+IChkZXYtPnR5cGUgIT0gQVJQSFJEX0FYMjUpCj4gPiAgICAgICAgIHJldHVybiBOT1RJRllfRE9O
+RTsKPiA+IGBgYAo+IAo+IAo+IFRob3NlIGFyZSBjb3JlIGZ1bmN0aW9ucyB0aGF0IGFsbCBkcml2
+ZXJzIGFyZSB1c2luZywgYW5kIHRoZSAidHlwZSIgb2YKPiBkZXZpY2UgaXMgYWxzbyBvayB0byBs
+b29rIGF0LiAgWW91IGFyZSB0cnlpbmcgdG8gY29tcGFyZSBhIHNwZWNpZmljCj4gY2FsbGJhY2sg
+aW4gdGhpcyBjaGFuZ2UsIHdoaWNoIGZlZWxzIHdyb25nIHRvIG1lLgoKR290IGl0LiBJIHdpbGwg
+dHJ5IHRvIHByZXBhcmUgYW5vdGhlciB2ZXJzaW9uLgoKPiAKPiBXYWl0LCB3aGF0IHRyZWUgYXJl
+IHlvdSBtYWtpbmcgdGhpcyBjaGFuZ2UgYWdhaW5zdD8gIEkgZG9uJ3QgZXZlbiBzZWUKPiB0aGUg
+ZmlsZSB5b3UgYXJlIHRyeWluZyB0byBwYXRjaCBpbiB0aGUgbGF0ZXN0IHRyZWUsIGFyZSB5b3Ug
+c3VyZSBpdCdzCj4gbm90IGp1c3QgZGVsZXRlZCBhbHJlYWR5Pwo+IAo+IC4uLgo+IAo+IEFnYWlu
+LCBtYWtlIHN1cmUgdGhpcyBmaWxlIGlzIHN0aWxsIHByZXNlbnQgaW4gdGhlIHRyZWUgYmVmb3Jl
+IGdvaW5nCj4gZnVydGhlciA6KQo+IAo+IHRoYW5rcywKPiAKPiBncmVnIGstaAoKWWVzLCB5b3Ug
+YXJlIHJpZ2h0LCBqdXN0IGxpa2UgaG93IEkgcG9pbnRlZCBvdXQgaW4gdGhlIHBhdGNoOgoKIiIi
+ClRoaXMgYnVnIHdhcyAiZml4ZWQiIGluIHVwc3RyZWFtIGtlcm5lbCBieSB0aGUgY29tbWl0IDFj
+MmQzNjRlN2Y3ZgooInN0YWdpbmc6IGdkbTcyNHg6IFJlbW92ZSB1bnVzZWQgZHJpdmVyIikuIEhv
+d2V2ZXIsIG90aGVyIHN0YWJsZQp2ZXJzaW9ucyBzdGlsbCBjb250YWluIGl0LiBGaXggdGhlIGNv
+bmZ1c2lvbiBidWcgYnkgYWRkaW5nIGNoZWNrcy4KIiIiCgpUaGF0IGlzLCB0b2dldGhlciB3aXRo
+IGFub3RoZXIgaWRlbnRpZmllZCBidWcsIGhhcyBhbHJlYWR5IGJlZW4gZGVsZXRlZCB0aGUKbGF0
+ZXN0IHVwc3RyZWFtIGtlcm5lbC4gKHNlZSBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIw
+MjUwNzAzMDUyODM3LjE1NDU4LTEtbGlubWFAemp1LmVkdS5jbi9ULyN1KQoKSSBzZW50IHRoaXMg
+cGF0Y2gganVzdCBiZWNhdXNlIHRoZSBzdGFibGUgdmVyc2lvbiwgbGlrZSA1LjE1LjE4Niwgc3Rp
+bGwKY29udGFpbnMgaXQuIFQuVAoKVGhlcmVmb3JlLCBzaGFsbCBJIHByb2NlZWQgd2l0aCB0aGUg
+cGF0Y2hlcz8gT3IgbWF5YmUgdGhlIHN0YWJsZSB0cmVlCmNvdWxkIGFsc28gZGVsZXRlIHRoYXQg
+dnVsbmVyYWJsZSBjb2RlPwoKClRoYW5rcyBmb3IgdGhlIHJlcGx5IQoKClNpbmNlcmVseQpMaW4=
 
-Use proper -M/-B/-C arguments for git format-patch (b4 cannot do it in
-the past), so this will be reviewable.
-
-Best regards,
-Krzysztof
