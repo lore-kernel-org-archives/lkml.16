@@ -1,86 +1,127 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801F525A2C4;
-	Thu,  3 Jul 2025 16:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1962C239099;
+	Thu,  3 Jul 2025 16:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561550; cv=none; b=O6faHJrGnGZ+5+d3qXFIzsEaozONmVX4H/S2syUjnEJc1o4Ta5ggjeXsmEWyvalGewNd3sYIFghTkM/4TVAgd/bu3PFipdDdArLkt2lXw7FtFlgfTv6cnYtL+kEv2wv4KUeOQQiRNGtsyeRyqq+CdOYSwfuCpCxmuPm77V0N34s=
+	t=1751561560; cv=none; b=pXo0+RP5a8TmznibNmQRXCHcKusU8NCw6RYVvbBi3fMzdjp3cY/otVRQFHV3fk9LMWQI2lKzeibomhFgnrTR7YUUzQ6xetJ5NC+lKEWKi36SRCZA8fIVrQnqRa+Z0xIFrEBzyKLqi54KxC9vPtm0M+A6mdnAaWQiAWTg8gMmrfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561550; c=relaxed/simple;
-	bh=LYNhsMbTFPjdJCNDr4z7z8KknIyhEZePgpf5rFEKV4I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=L1qoiFiYWJsJmmt6LWoaTe3RdheAw93l0uXAI2OOzOYPJ231YAkD6+qMdghQ3cvXrZzpH24BlA0TwwTXZ86hhw1X4P8YSOguoJcv9yTkZHldMMSLpIzG2g4uiOZSBx2pMmUJUm1wb3WJrkqBrbDP8AzBiKMty3sXoT1Aes3J5pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xJjpINlM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gb2Fsyrb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751561560; c=relaxed/simple;
+	bh=FXncib9IFgDGC6K+cesVYMgwW7vQ5WoISOE2fNWV3IY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Z4wPPrlBmjNSutCLawL50WuI3tr/Augwhz2jCpZ2XNsQu3tCEF+qLyniKiNnIPgU+GAbI+FxeoRHSkmPeACnqLKu4ZLYzXbsKLV4FvxxqIKlihCcHXeWchXaBVhFp305bIspTwTZOycaD2Xj/FesVjcChVbPk3Q2Z1QU/Edvme0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sbjkl3By; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xJjpINlM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gb2Fsyrb"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751561546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qu6yM52VHL1/dwassjBDy0LPjhTfFriEOOjhqhzzPlM=;
-	b=xJjpINlMBWfXUSHvm2m6dQDR1UMt3vDeElfNxVaji5eGdq4F65+Tj3oMey1+l/bToisXnH
-	8/9tfR1wewdvTbwhUHFnIlWaIBb4f277VuJ3J6HAL32+7FKJ0hp5FnxucRX3h6llo8yEUV
-	X+iuTV4e3a0qn6zuVa+/0gyj7OQMm3Rxz6n+38go6UVOBeqoPJcfC4lugXKk6+E8ih4I8w
-	GnBLeoX4GD+kt59HbPNUiCpPh6OHvlEHjZlbbXyR6bs6GtY4Ju2E7I6XkZ3yoaof6KkFG8
-	kB7a3JjQ/Lb5nvfCurz91CcVRvF8jimjB8Sa7JGyyV4uX4wXRhAQPFcDqbySPg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751561546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qu6yM52VHL1/dwassjBDy0LPjhTfFriEOOjhqhzzPlM=;
-	b=Gb2Fsyrb9bv/crq4Hd0et/hLtYIzJP9LdeuG94xo3bneW8GRsLT4EILcxf5hwB6hiy2tbp
-	CjlwN8RNJIhcR0Dg==
-To: Paolo Abeni <pabeni@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
- Christopher Hall <christopher.s.hall@intel.com>, John Stultz
- <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar
- <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, David
- Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, Thomas
- =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt
- Kanzenbach
- <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, Antoine Tenart
- <atenart@kernel.org>
-Subject: Re: [patch V2 0/3] ptp: Provide support for auxiliary clocks for
- PTP_SYS_OFFSET_EXTENDED
-In-Reply-To: <4cab9be0-3516-454f-883b-7a999994c447@redhat.com>
-References: <20250701130923.579834908@linutronix.de>
- <faca1b8e-bd39-4501-a380-24246a8234d6@redhat.com> <87ecuxwic0.ffs@tglx>
- <4cab9be0-3516-454f-883b-7a999994c447@redhat.com>
-Date: Thu, 03 Jul 2025 18:52:25 +0200
-Message-ID: <87ms9ltdx2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sbjkl3By"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD95C4CEE3;
+	Thu,  3 Jul 2025 16:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751561559;
+	bh=FXncib9IFgDGC6K+cesVYMgwW7vQ5WoISOE2fNWV3IY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Sbjkl3ByTogVRPsjQQTSV0b3uGmpTx9m3ntm9CmonxC6waeVZ5pTSvBUvbIXzmfVX
+	 YOQVuSqCrkPGSZb+uV4wDDUQ/1NZxGW4buP5zLyy9CY8ovX7QfgVbs9ud+XRK4bIxH
+	 KADW1gDQjW7syUY6MXnnLyMwLA5M0MRYOwcMVOxp7pbs+X69f57Y0fWLwZTgsscMra
+	 RL8eraCK0bKLPjZwm1TRHyOfNNfMv+trhhX7Kl6Gow7AC52HsdCJGFQzVSUOwSKdzw
+	 uA//VZ2g/vSUdbQZGYVOl2pG+vXhNGTnGhfkDjxie/5jU/UGQCY45Oxs4QCUrxjD27
+	 +qkraSVIRv4ag==
+From: SeongJae Park <sj@kernel.org>
+To: Yunjeong Mun <yunjeong.mun@sk.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com
+Subject: Re: [RFC PATCH v2] samples/damon: support automatic node address detection
+Date: Thu,  3 Jul 2025 09:52:37 -0700
+Message-Id: <20250703165237.43771-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250703074423.1771-1-yunjeong.mun@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03 2025 at 15:48, Paolo Abeni wrote:
-> On 7/3/25 2:48 PM, Thomas Gleixner wrote:
->> Here you go:
->> 
->>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ktime-get-clock-ts64-for-ptp
->> 
->> I merged it locally into net-next, applied the PTP patches on top and
->> verified that the combination with the tip timers/ptp branch, which has
->> the tag integrated and the workaround removed, creates the expected
->> working result.
->
-> I had to wrestle a bit with the script I use - since the whole thing was
-> a little different from my usual workflow - but it's in now, hoping I
-> did not mess badly with something.
+Hello Yunjeong,
 
-Looks perfect!
+On Thu,  3 Jul 2025 16:44:22 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
 
-Thank you for the extra mile!
+> This patch adds a new knob `detect_node_addresses`, which determines
+> whether the physical address range is set manually using the existing
+> knobs or automatically by the mtier module. When `detect_node_addresses`
+> set to 'Y', mtier automatically converts node0 and node1 to their
+> physical addresses. If set to 'N', it uses the existing
+> 'node#_start_addr' and 'node#_end_addr' to define regions as before.
 
-      tglx
+Thank you for this patch!
+
+> 
+> Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+
+Reviewed-by: SeongJae Park <sj@kernel.org>
+
+> ---
+
+From next time, please consider adding a summary of what changes have made from
+the previous version here, like suggested[1] on the documentation.
+
+>  samples/damon/mtier.c | 42 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 39 insertions(+), 3 deletions(-)
+> 
+> diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
+> index f3220d6e6739..3570ebe10fab 100644
+> --- a/samples/damon/mtier.c
+> +++ b/samples/damon/mtier.c
+> @@ -42,8 +42,34 @@ static bool enable __read_mostly;
+>  module_param_cb(enable, &enable_param_ops, &enable, 0600);
+>  MODULE_PARM_DESC(enable, "Enable of disable DAMON_SAMPLE_MTIER");
+>  
+> +static bool detect_node_addresses __read_mostly;
+> +module_param(detect_node_addresses, bool, 0600);
+> +
+>  static struct damon_ctx *ctxs[2];
+>  
+> +struct region_range {
+> +	phys_addr_t start;
+> +	phys_addr_t end;
+> +};
+> +
+> +static int nid_to_phys(int target_node, struct region_range *range)
+> +{
+> +
+> +	if (!node_online(target_node)) {
+> +		pr_err("NUMA node %d is not online\n", target_node);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* TODO: Do we need to support more accurate region range?  */
+
+I understand you are saying we might need to remove address ranges in the node
+that DAMON will anyway unable to check accesses, e.g., reserved memory.  Since
+those are uusally only a small portion and this is a sample code, I think we
+don't really need to do that, so I think you can drop this TODO comment from
+your next version, if you are gonna make it.
+
+> +	unsigned long start_pfn = node_start_pfn(target_node);
+> +	unsigned long end_pfn   = node_end_pfn(target_node);
+> +
+> +	range->start = PFN_PHYS(start_pfn);
+> +	range->end  = PFN_PHYS(end_pfn);
+> +
+> +	return 0;
+> +}
+[...]
+
+[1] https://docs.kernel.org/process/submitting-patches.html#commentary
+
+
+Thanks,
+SJ
