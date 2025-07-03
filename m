@@ -1,65 +1,24 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E699A239086
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AE721D3F8;
+	Thu,  3 Jul 2025 12:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545884; cv=none; b=cQug36m/L/enl9LLbwRTiYGO8+qB2mVPEwC4aQr+7FZboKj+K9DKk5eKHvBLfR7Rjs1vKjc2qOUdRMaSWfpWQR3ZSoqpgXcX9+R0CjMNy4ORCiPjo5ll8q0Et5wOBoNQtYNPcDhspq6qijx2BNuee88wyn8YsEgfrRdBQOfep4k=
+	t=1751545929; cv=none; b=SuSjA64oJxqRq+VaZsN40UtS8M0CpjbJJ7CMWW1e3yJ6zdmJjmqbVJPxuBBFgGW9lZ2aTH3T4UIvdZSuE6vNOBzYOtCLbBF6DnQ7nia1XTEI7qLZ8ZE0Y60Zj/hi4PSmh/+V05jI8xa89Zug80rimjFFp2YHSwFnXnez/qlIBNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545884; c=relaxed/simple;
-	bh=wHZMwGeMu6Gz0/oJi7Mjhcaw0i0kH9KL/sFnw9COLd4=;
+	s=arc-20240116; t=1751545929; c=relaxed/simple;
+	bh=oAFqXq1QyFv35ms999RYltPlUo10N7M57paHMCPoPSc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJKzIZcQF6sMeVRrDpvAPS8Q3TKJVHpKc1sh9KTsXXEQdnRXiygOi6vy2XsBDOfGOlNYKV4lJswK0AMqQ0hSYC6KBDtoet9t46swSDYIE4xSEJLcdj5zMvmUbdxVlHIVU1eMOFyBBoJzbzJ41PRes3fGEIy7m/wg4/xyRmMqx6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TbuuM7o8; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TbuuM7o8"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-73afbe1494fso3159093a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751545882; x=1752150682; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ipYIW9G7F5Zd0SdovUCWb1HtdZX8BUKUwoIo3O9WcdI=;
-        b=TbuuM7o8IjQqKXzzdjqcU1yCHyI0EC6AQ7/26SF5p6qOAqRp5v1irr86sMuRIxI84n
-         L+m8+5Xd385r/Wqvxl20eO3uJSxcs8CMXaFVRM/W8GZwRU3XA4V5Hffrkje5Px4UT1Lk
-         vcKJFyL4OSeVXbzGDOh5VB7Y1W/rqeLH/+wzRmCezijJ4NBGkBKT+eHjs9RPGkjgys75
-         m8pYi0EqqMZWFPyhLCJE0Alb/rtPL1JikauwpRg7NFjsSfFWw2rqdudXH9kBMdj4c3+d
-         lJtSq7IAuwQGkjHPSVqxDyXQs7K+1r+cUM3jW4RncIm/EEgBj/VDRph6EalawM9eEFoz
-         mRdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545882; x=1752150682;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ipYIW9G7F5Zd0SdovUCWb1HtdZX8BUKUwoIo3O9WcdI=;
-        b=oYaCUOckszz9Hm0n7k8er8vA4EPXsvO9NLko8WrExfORgHGxW6BG8/zvgw2CljtMeW
-         zX++AoE0aL4ZMclvdtBPGaegvhh9Ag6YFsunAaF6B2mgEwdJeqR+NRtYHv93Bt5zv/gq
-         W+zuuweWdn2csuCNZDIicj1A+ZmczFkbTSUKXYBQ2MSeMUjSEGoib3TQpCxkvJ1rV8RQ
-         MJevri2lssRqyhCiY1LwP37sY31zvsv/LYzaL293s2jvnebLeEosPDxYHi0F2mHYWoHH
-         kPMQhmZoZy6PTdy1ObgELHfMKKlJzlVwswfRowOQMg1JT9v4AIghHPlNkGrGm9Drie7+
-         a0WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXys6sb4NLYPqStO0D5DXGB9uAFj+zP/46X4fBwGfLWrkfPxktBvBknF7vsSJSqh/QBYxuCJlRbVbNwF2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyla/0tQuymHTsGdbjjvUXvog9TkCKnsTOsyp/iJqStwu5DQJmD
-	ekA8qMJrOcm0AdqVUEA6fUMIqBYC3ifoVhEjdX9D/5TvF1oJXlKmyWYJc1hw/9eTh0s=
-X-Gm-Gg: ASbGnctogSsZJPe5md60m8S8g9AQmArx2cdYR49wRsJmTRQznwC0PcyEDo5q34Bx2Rk
-	m1ttf19BwHx0GaHFNMOmMLWXV9rV0weQCXudUC63I+ElENUyT0YH3kG2SXqTd9vP0YqBvbC7khc
-	EYr5ZnLpAIP5A8UsnT6PXcFqThx8x6iMYazMHiPcplwmam6SXaDoF9wVG+gdY61ltSg2HUV45lZ
-	Q6Io6j05XrMwrAu8byEg1at818hPvuiSq7eNnN0UdR1HPbOzMznxrmTpSde4Y8m4nbAfQYFeuTS
-	p2KO7nEDO8caoNe4kc2YJVZpnilGc4Xo+dMEC/t6tARB8wHc553T0QIhn2mIuojeljUiWDq2FaR
-	yho+nHSnBQ1EOZOqkOYP+cT7QMc6L8VgIh8dKH3ou8LUll7PhyA==
-X-Google-Smtp-Source: AGHT+IGAV+iR0RWrusJP0JVuvfH1MLIdhFsUGmJ0+FB8CDbzG398OjLBHoNJniF6BAI2mKMnhGKgvA==
-X-Received: by 2002:a05:6808:4893:b0:40b:91f9:7d03 with SMTP id 5614622812f47-40b91f9950dmr3962528b6e.31.1751545882015;
-        Thu, 03 Jul 2025 05:31:22 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b32289870sm2947065b6e.8.2025.07.03.05.31.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 05:31:20 -0700 (PDT)
-Message-ID: <5a8d944d-a6db-4513-a282-e574d228f9c3@baylibre.com>
-Date: Thu, 3 Jul 2025 07:31:19 -0500
+	 In-Reply-To:Content-Type; b=mFHA4o6msEi59LLkayTEaeQf4h8IoLJLZuwAsOkgA4eibZjUhfNdMliViRPaDuFzkLxPq7AvHUSEoLRFD5Az/h6HW/mTmBDOiSF/A80eg9LGXWrxZZL1XAJc0z0NzzaK4zQ0tS52JbhX4s2vdEyqlVxGd2byglLWMm12k2PCDCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [192.168.0.105] (unknown [114.241.87.235])
+	by APP-05 (Coremail) with SMTP id zQCowAC3Dl8YeGZoHT+zAA--.45946S2;
+	Thu, 03 Jul 2025 20:31:20 +0800 (CST)
+Message-ID: <17733827-8038-4c85-9bb1-0148a50ca10f@iscas.ac.cn>
+Date: Thu, 3 Jul 2025 20:31:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,76 +26,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Andy Shevchenko <andriy.shevchenko@intel.com>,
- Akshay Bansod <akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-kernel-mentees@lists.linuxfoundation.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702135855.59955-1-akbansd@gmail.com>
- <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
- <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
- <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
- <20250702163342.00003c66@huawei.com>
- <3361875b-712e-423f-88ed-baf41af5ad22@baylibre.com>
- <aGZHyr5zSRLp1m2p@surfacebook.localdomain>
+Subject: Re: [PATCH net-next v4 1/2] dt-bindings: net: Add support for
+ SpacemiT K1
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>, Junhui Liu <junhui.liu@pigmoral.tech>,
+ Conor Dooley <conor.dooley@microchip.com>, netdev@vger.kernel.org,
+ Philipp Zabel <p.zabel@pengutronix.de>, Jakub Kicinski <kuba@kernel.org>,
+ linux-riscv@lists.infradead.org, Simon Horman <horms@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org,
+ Vivian Wang <uwu@dram.page>, Yixun Lan <dlan@gentoo.org>,
+ spacemit@lists.linux.dev, Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ Paolo Abeni <pabeni@redhat.com>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>
+References: <20250703-net-k1-emac-v4-0-686d09c4cfa8@iscas.ac.cn>
+ <20250703-net-k1-emac-v4-1-686d09c4cfa8@iscas.ac.cn>
+ <175153978342.612698.13197728053938266111.robh@kernel.org>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aGZHyr5zSRLp1m2p@surfacebook.localdomain>
-Content-Type: text/plain; charset=UTF-8
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+In-Reply-To: <175153978342.612698.13197728053938266111.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:zQCowAC3Dl8YeGZoHT+zAA--.45946S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cry3WF48Kr4UWryfuF13CFg_yoW8uF43pa
+	ySkwnIkrWjvFy7Jw43tr92v3WFgr4ftFyaqFy2gr17t3Z8XF4ftrWS9r48uF18CrWrJa4f
+	Zw17u3WxGry5AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
+	1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjxU3wIDUUUUU
+X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-On 7/3/25 4:05 AM, Andy Shevchenko wrote:
-> Wed, Jul 02, 2025 at 10:53:31AM -0500, David Lechner kirjoitti:
->> On 7/2/25 10:33 AM, Jonathan Cameron wrote:
->>> On Wed, 2 Jul 2025 10:04:23 -0500
->>> David Lechner <dlechner@baylibre.com> wrote:
->>>> On 7/2/25 9:55 AM, Andy Shevchenko wrote:
->>>>> On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:  
->>>>>> On 7/2/25 8:58 AM, Akshay Bansod wrote:  
-> 
-> ...
-> 
->>>>>>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
->>>>>>>  				 odr_table->odr_avl[i].milli_hz / 1000,
->>>>>>>  				 odr_table->odr_avl[i].milli_hz % 1000);  
->>>>>>
->>>>>> Let's keep checkpatch happy and change the indent of the wrapped lines to
->>>>>> line up with ( since the ( moved.  
->>>>>
->>>>> While I see the point, wouldn't be better to have 1000 replaced with MILLI
->>>>> at the same time?
->>>>
->>>> For anything with 3 zeros, I don't consider MILLI better (or worse).
->>>> Science shows that the average human can easily see 3 or 4 things
->>>> without having to count them [1]. So it is only when we start getting
->>>> more 0s than that is when I think we should be picky about using macros
->>>> instead.
->>>>
->>>> And in this particular case, we are converting milli to micro so `1000`
->>>> should be replaced by `(MICRO / MILLI)` if we are going to do that.
->>> No we aren't.
->>>
->>> This one is converting from milli_hz to hz + sticking to milli for the decimal
->>> part.
->>>
->>> Lots of other IIO cases where you would have been right, but I think not here.
+
+On 7/3/25 18:49, Rob Herring (Arm) wrote:
+> On Thu, 03 Jul 2025 17:42:02 +0800, Vivian Wang wrote:
+>> The Ethernet MACs on SpacemiT K1 appears to be a custom design. SpacemiT
+>> refers to them as "EMAC", so let's just call them "spacemit,k1-emac".
 >>
->> Oops. The %03d instead of %06d should have given it away!
-> 
-> I'm not sure I got your comment. The '3' vs. '6' will just define
-> the minimum amount of printed digits, it does *not* limit the upper
-> numbers anyhow (it's limited by the 'd', which is (INT_MIN .. INT_MAX).
+>> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>> ---
+>>   .../devicetree/bindings/net/spacemit,k1-emac.yaml  | 81 ++++++++++++++++++++++
+>>   1 file changed, 81 insertions(+)
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> Error: Documentation/devicetree/bindings/net/spacemit,k1-emac.example.dts:36.36-37 syntax error
+> FATAL ERROR: Unable to parse input tree
 
-It is after the decimal point in the printed string, so 3 digits
-after a decimal point is going to be MILLI units. And the % 1000
-ensures that we would never get more than 3 digits there.
+My bad. The example still depends on the reset bindings for the constant 
+RESET_EMAC0. I just tried with reset v12 [1] and that fixes it.
 
-> 
-> 
->>>> [1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
-> 
+[1]: https://lore.kernel.org/spacemit/20250702113709.291748-2-elder@riscstar.com/
+
+Vivian "dramforever" Wang
+
+> make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/net/spacemit,k1-emac.example.dtb] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
+> make: *** [Makefile:248: __sub-make] Error 2
+>
+> doc reference errors (make refcheckdocs):
+>
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250703-net-k1-emac-v4-1-686d09c4cfa8@iscas.ac.cn
+>
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>
+> pip3 install dtschema --upgrade
+>
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
 
