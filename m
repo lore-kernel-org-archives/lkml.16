@@ -1,246 +1,196 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261ED2FD893;
-	Thu,  3 Jul 2025 19:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751571080; cv=pass; b=sg55hIBBPIPvYRFLna5kSOMpsnXLhE15QULTG0wlGkJ6Td+U891+cJXSbDj4vynA1z9kNI+dcPGMMfh8bxFCycUWv3SdQ6HKJwdh4EMNMlceiWL6HFEvp10TJPG6qNjfBWUhG3CKLYPXCJNrO2eyi+elX6p16YHPCkPko0nP8iA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751571080; c=relaxed/simple;
-	bh=ZLDLUqsL9OVHvTzOI6upwErEbN1KGeykv+eKN7VI/Dc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kjvuaG9Kh2O6OqU71gS4DRHxL+yO74p8R6c7t5tSojkypvVUnSqgBvFQpuk4FGcosx6icHEkF3rX9UeFDaZ9rVtydT8G4NaGslfomB+mh8edEcbGw/6pUVJaDKS6I7F+HhrKPj+Mv22q5/Yackr3iSPm+FC0vf40UrR4nijwbbc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=IuVdeHPY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818C92FEE2C;
+	Thu,  3 Jul 2025 19:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751571083; cv=none; b=oSjUM3xBtxZ89d/vWFPGxoRLpSV8i1NilfhEOIRHO16vNTUEm7QDoJ3k5Chqsp0KOrJUbGBC3KQVbQlf95uMhCMBEvFUCuA6G3SttewZMO6aJMPoPQtvqjNtGLt2OYW6Lac6/XYaYN1Gwgy/VfF3+c1kx8frrIpAFpbwrSWr5oo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751571083; c=relaxed/simple;
+	bh=myhGY+wL/+nI6WirhjHbJl7w+o4iNkVILjdgWN6Ix4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lEU8r0TsV5F7Km1QqWzcB4v8JcqS4DkpuVnKxhuhV/Onf1A4NiqlDpat2FDsuYDL9Rb1DOT34KCF9jNAyWi0kFMBxpBXpoIEmP+NREM4RI5DXH6/JRrlOHzGd0SHGSYoCyicpxp2DYhgvzHG+m9I1vZUP8T0Yl6ExHSbPllD1+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hbg+t8G2; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="IuVdeHPY"
-ARC-Seal: i=1; a=rsa-sha256; t=1751571062; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=e+AZRwDOHIFeaOCKT6aPMwFCpTUF2yvll6ii+KdcvwAKKdvsmM725JBbm4qwPkW5uyzk2OZHIUayKhXrubKloYw+XZU7KmGFehb3tDBFsGYyLE1WA/AzX05q8qDL1mS0kgOIfddXVN/ZzQIRcCkKaus4fOM4glzIqjgkdiv18eM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751571062; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=sVrpre0c7L2TaP9WKeCKO5pMHXH39R9mkb4dxL3v/Eg=; 
-	b=KNMX8CUrrzDgGwBOYhDWTOLKm4rmPWO+3JDkgP0GRB1GYMGIyqyyRwrLOOJDl8uhyZhxAy/g4m6JbbCqeMBHbNMcqPZleI3y/FQ0wTyp5omLnWvOdO3LgpbX2eJ0cnCV1vDwoOmkq4zje+5x0g1arWMYh0UUNtM0DhjzxCjQnI8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751571062;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=sVrpre0c7L2TaP9WKeCKO5pMHXH39R9mkb4dxL3v/Eg=;
-	b=IuVdeHPYvvuVWlyfjLVqsdP2GONVOUv1RxQOIa8rcPdBmGwABCdKl0T1hAKXi4sr
-	/5OwmfLDzrr1fv/p9IIkTOmQjSl/x66ZxwjSww6/m3tKG2DbARtQUySn1VT5SfouKj/
-	hBTekPh61Y71hvLxkz4kEtijGdZv9yVf3j5MqElE=
-Received: by mx.zohomail.com with SMTPS id 17515710610641017.9677972502745;
-	Thu, 3 Jul 2025 12:31:01 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Thu, 03 Jul 2025 16:30:03 -0300
-Subject: [PATCH v6 5/6] rust: platform: add irq accessors
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hbg+t8G2"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 563JVBcC108295;
+	Thu, 3 Jul 2025 14:31:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751571071;
+	bh=EyAAmzRd4ACr//ZBtdwhdaSbEwuX2K9tOqctWHmBUDM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=hbg+t8G2c+PJbpP3mdlaPPXms6ITfVf8IMgdGLXzweIxJNLK29vYIKmNsixnYju4H
+	 PNrnUDr6Uz5/ZmpbjJ4l1VwJ9UhADPIZF0oFopbr2rvG89+3tK/3hEekjiFa0X50IB
+	 IfcZHU0ozK3rtBOEQhRgpcCAHSOe+gA84WDeIhwI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 563JVBMD2640475
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 3 Jul 2025 14:31:11 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 3
+ Jul 2025 14:31:10 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 3 Jul 2025 14:31:10 -0500
+Received: from [128.247.81.19] (uda0506412.dhcp.ti.com [128.247.81.19])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 563JVAZQ1364345;
+	Thu, 3 Jul 2025 14:31:10 -0500
+Message-ID: <049171d7-d4ee-4499-8414-4b66b2c6e5b2@ti.com>
+Date: Thu, 3 Jul 2025 14:31:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] pmdomain: ti_sci: Add LPM abort sequence to suspend
+ path
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <d-gole@ti.com>, <vishalm@ti.com>,
+        <sebin.francis@ti.com>, <msp@baylibre.com>, <khilman@baylibre.com>
+References: <20250627204821.1150459-1-k-willis@ti.com>
+ <20250627204821.1150459-3-k-willis@ti.com>
+ <CAPDyKForKeb=uTkOXWcJea-P9c+7wQ3ZRWFYpTXk=xLoQPsQaw@mail.gmail.com>
+Content-Language: en-US
+From: Kendall Willis <k-willis@ti.com>
+In-Reply-To: <CAPDyKForKeb=uTkOXWcJea-P9c+7wQ3ZRWFYpTXk=xLoQPsQaw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-topics-tyr-request_irq-v6-5-74103bdc7c52@collabora.com>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-These accessors can be used to retrieve a irq::Registration and
-irq::ThreadedRegistration from a platform device by
-index or name. Alternatively, drivers can retrieve an IrqRequest from a
-bound platform device for later use.
+On 7/2/25 07:06, Ulf Hansson wrote:
+> On Fri, 27 Jun 2025 at 22:49, Kendall Willis <k-willis@ti.com> wrote:
+>>
+>> Create ->suspend_late() and ->suspend_noirq() hooks to add abort sequence
+>> to any driver within the PM domain with either of those hooks. If a driver
+>> fails to suspend with those hooks, add a call to the DM to abort entering
+>> the LPM. The suspend hooks of the PM domains driver inserts itself into
+>> the suspend path of all devices connected to the TI SCI PM domain. So if
+>> any device in the PM domain with either a ->suspend_late() or
+>> ->suspend_noirq hook fails to suspend, the PM domain drivers suspend hook
+>> will send the abort call to the DM.
+>>
+>> Adding an abort call in the ->suspend() hook is not necessary. TI SCI
+>> suspend sends the message to the DM to prepare to enter a low power mode.
+>> TI SCI suspend ALWAYS occurs after the ->suspend() hook for all TI SCI
+>> devices has been called.
+>>
+>> Signed-off-by: Kendall Willis <k-willis@ti.com>
+>> ---
+>>   drivers/pmdomain/ti/ti_sci_pm_domains.c | 46 ++++++++++++++++++++++++-
+>>   1 file changed, 45 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pmdomain/ti/ti_sci_pm_domains.c b/drivers/pmdomain/ti/ti_sci_pm_domains.c
+>> index 82df7e44250bb..975defc16271d 100644
+>> --- a/drivers/pmdomain/ti/ti_sci_pm_domains.c
+>> +++ b/drivers/pmdomain/ti/ti_sci_pm_domains.c
+>> @@ -2,7 +2,7 @@
+>>   /*
+>>    * TI SCI Generic Power Domain Driver
+>>    *
+>> - * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
+>> + * Copyright (C) 2015-2025 Texas Instruments Incorporated - http://www.ti.com/
+>>    *     J Keerthy <j-keerthy@ti.com>
+>>    *     Dave Gerlach <d-gerlach@ti.com>
+>>    */
+>> @@ -149,8 +149,47 @@ static int ti_sci_pd_suspend(struct device *dev)
+>>
+>>          return 0;
+>>   }
+>> +
+>> +static int ti_sci_pd_suspend_late(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+>> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
+>> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
+>> +       int ret;
+>> +
+>> +       ret = pm_generic_suspend_late(dev);
+>> +       if (ret) {
+>> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
+>> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
+>> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int ti_sci_pd_suspend_noirq(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+>> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
+>> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
+>> +       int ret;
+>> +
+>> +       ret = pm_generic_suspend_noirq(dev);
+>> +       if (ret) {
+>> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
+>> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
+>> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>>   #else
+>>   #define ti_sci_pd_suspend              NULL
+>> +#define ti_sci_pd_suspend_late         NULL
+>> +#define ti_sci_pd_suspend_noirq                NULL
+>>   #endif
+>>
+>>   /*
+>> @@ -264,6 +303,11 @@ static int ti_sci_pm_domain_probe(struct platform_device *pdev)
+>>                                      pd_provider->ti_sci->ops.pm_ops.set_latency_constraint)
+>>                                          pd->pd.domain.ops.suspend = ti_sci_pd_suspend;
+>>
+>> +                               if (pd_provider->ti_sci->ops.pm_ops.lpm_abort) {
+>> +                                       pd->pd.domain.ops.suspend_late = ti_sci_pd_suspend_late;
+>> +                                       pd->pd.domain.ops.suspend_noirq = ti_sci_pd_suspend_noirq;
+> 
+> This doesn't work as pm_genpd_init() is assigning the
+> ->suspend_noirq() callback, hence overriding the callback.
+> 
+> Moreover I am not sure this is the correct thing to do, as having your
+> own ->suspend_noirq() callback would mean that you will be by-passing
+> genpd's internal reference counting to understand when it's fine to
+> power-off the PM domain, vi a the ->power_off() callback.
+> 
+> Can the LPM abort be handled from a ->complete() callback instead?
 
-These accessors ensure that only valid IRQ lines can ever be registered.
+Handling the abort from a ->complete() callback does look like a much 
+better solution than adding the ->suspend_late() and ->suspend_noirq() 
+callbacks. The only problem with it is that there doesn't seem to be a 
+way to tell if system suspend failed in order to call the abort sequence.
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/kernel/platform.rs | 143 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 142 insertions(+), 1 deletion(-)
+However, the abort sequence just clears the LPM selection in the DM 
+which the DM already does upon successful suspend/resume. Clearing it 
+multiple times shouldn't be an issue, but I will have to look into this 
+more.
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5b21fa517e55348582622ec10471918919502959..bfcb4962dda7ec420dc86dfa04311be0462ad9f2 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -5,8 +5,11 @@
- //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
- 
- use crate::{
--    bindings, container_of, device, driver,
-+    bindings, container_of,
-+    device::{self, Bound},
-+    driver,
-     error::{to_result, Result},
-+    irq::{self, request::IrqRequest},
-     of,
-     prelude::*,
-     str::CStr,
-@@ -190,6 +193,144 @@ fn as_raw(&self) -> *mut bindings::platform_device {
-     }
- }
- 
-+macro_rules! define_irq_accessor_by_index {
-+    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
-+        $(#[$meta])*
-+        pub fn $fn_name<T: irq::$handler_trait + 'static>(
-+            &self,
-+            flags: irq::flags::Flags,
-+            index: u32,
-+            name: &'static CStr,
-+            handler: T,
-+        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-+            let request = self.$request_fn(index)?;
-+
-+            Ok(irq::$reg_type::<T>::new(
-+                request,
-+                flags,
-+                name,
-+                handler,
-+            ))
-+        }
-+    };
-+}
-+
-+macro_rules! define_irq_accessor_by_name {
-+    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
-+        $(#[$meta])*
-+        pub fn $fn_name<T: irq::$handler_trait + 'static>(
-+            &self,
-+            flags: irq::flags::Flags,
-+            irq_name: &'static CStr,
-+            name: &'static CStr,
-+            handler: T,
-+        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-+            let request = self.$request_fn(irq_name)?;
-+
-+            Ok(irq::$reg_type::<T>::new(
-+                request,
-+                flags,
-+                name,
-+                handler,
-+            ))
-+        }
-+    };
-+}
-+
-+impl Device<Bound> {
-+    /// Returns an [`IrqRequest`] for the IRQ at the given index, if any.
-+    pub fn request_irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-+        let irq = unsafe { bindings::platform_get_irq(self.as_raw(), index) };
-+
-+        if irq < 0 {
-+            return Err(Error::from_errno(irq));
-+        }
-+
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    /// Returns an [`IrqRequest`] for the IRQ at the given index, but does not print an error if the IRQ cannot be obtained.
-+    pub fn request_optional_irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-+        let irq = unsafe { bindings::platform_get_irq_optional(self.as_raw(), index) };
-+
-+        if irq < 0 {
-+            return Err(Error::from_errno(irq));
-+        }
-+
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    /// Returns an [`IrqRequest`] for the IRQ with the given name, if any.
-+    pub fn request_irq_by_name(&self, name: &'static CStr) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-+        let irq = unsafe { bindings::platform_get_irq_byname(self.as_raw(), name.as_char_ptr()) };
-+
-+        if irq < 0 {
-+            return Err(Error::from_errno(irq));
-+        }
-+
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    /// Returns an [`IrqRequest`] for the IRQ with the given name, but does not print an error if the IRQ cannot be obtained.
-+    pub fn request_optional_irq_by_name(&self, name: &'static CStr) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-+        let irq = unsafe {
-+            bindings::platform_get_irq_byname_optional(self.as_raw(), name.as_char_ptr())
-+        };
-+
-+        if irq < 0 {
-+            return Err(Error::from_errno(irq));
-+        }
-+
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    define_irq_accessor_by_index!(
-+        /// Returns a [`irq::Registration`] for the IRQ at the given index.
-+        irq_by_index, request_irq_by_index, Registration, Handler
-+    );
-+    define_irq_accessor_by_name!(
-+        /// Returns a [`irq::Registration`] for the IRQ with the given name.
-+        irq_by_name, request_irq_by_name, Registration, Handler
-+    );
-+    define_irq_accessor_by_index!(
-+        /// Does the same as [`Self::irq_by_index`], except that it does not
-+        /// print an error message if the IRQ cannot be obtained.
-+        optional_irq_by_index, request_optional_irq_by_index, Registration, Handler
-+    );
-+    define_irq_accessor_by_name!(
-+        /// Does the same as [`Self::irq_by_name`], except that it does not
-+        /// print an error message if the IRQ cannot be obtained.
-+        optional_irq_by_name, request_optional_irq_by_name, Registration, Handler
-+    );
-+
-+    define_irq_accessor_by_index!(
-+        /// Returns a [`irq::ThreadedRegistration`] for the IRQ at the given index.
-+        threaded_irq_by_index, request_irq_by_index, ThreadedRegistration, ThreadedHandler
-+    );
-+    define_irq_accessor_by_name!(
-+        /// Returns a [`irq::ThreadedRegistration`] for the IRQ with the given name.
-+        threaded_irq_by_name, request_irq_by_name, ThreadedRegistration, ThreadedHandler
-+    );
-+    define_irq_accessor_by_index!(
-+        /// Does the same as [`Self::threaded_irq_by_index`], except that it
-+        /// does not print an error message if the IRQ cannot be obtained.
-+        optional_threaded_irq_by_index, request_optional_irq_by_index, ThreadedRegistration, ThreadedHandler
-+    );
-+    define_irq_accessor_by_name!(
-+        /// Does the same as [`Self::threaded_irq_by_name`], except that it
-+        /// does not print an error message if the IRQ cannot be obtained.
-+        optional_threaded_irq_by_name, request_optional_irq_by_name, ThreadedRegistration, ThreadedHandler
-+    );
-+}
-+
- // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
- // argument.
- kernel::impl_device_context_deref!(unsafe { Device });
+Thanks,
+Kendall
 
--- 
-2.50.0
+> 
+>> +                               }
+>> +
+>>                                  pm_genpd_init(&pd->pd, NULL, true);
+>>
+>>                                  list_add(&pd->node, &pd_provider->pd_list);
+>> --
+>> 2.34.1
+>>
+> 
+> Kind regards
+> Uffe
 
