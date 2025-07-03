@@ -1,175 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.94])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC82EACFC;
-	Thu,  3 Jul 2025 14:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1182DE6E2;
+	Thu,  3 Jul 2025 14:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551242; cv=none; b=mBzs2IW0d43jscQoayZ4LFTaMRYpwPxR04+AQ9MvvxXLuIHmqZqQVL/X1TYbhLiuLN94hpEOag4NjZOCLxbuN2/1cYJzLJmeYvhHOIVKneI2pUCFY2IzCQkdeVj9NVbjc0XhDOM5l58VRwZQpX3Pkm9pAQTbe5omhqIOeJLJldo=
+	t=1751551257; cv=none; b=ZuhIKbb5X32lgAy/k3UnGU396Yl0qq2kNnGkJ7z8m4lYa0VjRgIq/7pMDNGpJHfA1AY9XF7M1Wd+Iovw2fZlcKR0vKDN/EDCoCChrl//jErBvXDcuXdgtJKbgZihUIpFHQedpM8991qj4bNk3LjYhYfaYXJPglKefPC7Cdt3FZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551242; c=relaxed/simple;
-	bh=OplZu4ZwnCE4z0lehsp/N+A721CFb2fCEP9h6B9Fu1g=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VFycEAqiivpzHepgfqTvi3m71sx0Us3GkNs+GdTh/OmXLG9xYvDXL6tIPtg2Ht/CV+DY+SB76vwFvbmk7TDp5V5tfnI4HD8ZZE2PYVyqqao3gk0HbF3yXpQI6mKT45ean/y5nHaZwt+BxBIZSJtJlEqkPzVBmpjjle0Z8E7iNHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bxdWnwtp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y5kW1Nxd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bxdWnwtp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y5kW1Nxd"
-Date: Thu, 03 Jul 2025 14:00:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751551239;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VY/jNc1HaGyf4AMGumUFydlOdhdzpJ6mXIQOc/JW0Rg=;
-	b=bxdWnwtp9YD31COWCvELSDKQaCRa0U4riZrE3o0IdGB7L/gKzMtWSNgUYuDu+eJztkUemT
-	TzbWU0t3gJcXvX5tKzQM5hBGCRxtn/EhBjrlK2pnokt2oexmnc6u7S9ZzczYp5LZdaYPA3
-	4CynVMjVOgd0k1vIb8c+vkWjoviHX2W5FVkDV2/2lkujQ28kBiScMXCWgb5kjPL58RGYYx
-	Rpk6gxeI0AMH2avWRrJS+ffuhmYShubVWvqGnSnWkgMR0dwB9tCIZcmEUpdAccwSHJr3N2
-	WjN/PPPmFLIOBr53D5Lr1FoW2NNKRXcjaZ9zEki80KpUuUKSd3tkay/oyMQy5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751551239;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VY/jNc1HaGyf4AMGumUFydlOdhdzpJ6mXIQOc/JW0Rg=;
-	b=y5kW1Nxdz5/+Y0AP1teDkU87Ot+cCjdYt5I7M7iAHnXZUeq6M0sbj9qYGEEGtQChb8WRUi
-	OV7dJdo4Ybv6OuBA==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/drivers] irqdomain: Add device pointer to irq_domain_info
- and msi_domain_info
-Cc: Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C943e52403b20cf13c320d55bd4446b4562466aab=2E17508?=
- =?utf-8?q?60131=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C943e52403b20cf13c320d55bd4446b4562466aab=2E175086?=
- =?utf-8?q?0131=2Egit=2Enamcao=40linutronix=2Ede=3E?=
+	s=arc-20240116; t=1751551257; c=relaxed/simple;
+	bh=dGMStcDb+HCi7LyiWWt3T2QINJfkHQaMOZXNO7r2wgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWRbeIgzLQ06OxqdfGJDjr1GXqvxSZpu7O74AP3JuPFdNDel8QZ5kztrrmW0zenkdLNK3aBpkNusZsGCO1ZJd62LHYN3s4Xd+q+qJuYF/EgXWqVoPAytpTL7EM5HP9sFjNb6Sx0gShWJ4QqVbT+NbYK5CZorqZA+O9wDBu4coz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.53.4)
+	(envelope-from <n.schier@avm.de>)
+	id 68668d15-962e-7f0000032729-7f000001b8f8-1
+	for <multiple-recipients>; Thu, 03 Jul 2025 16:00:53 +0200
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu,  3 Jul 2025 16:00:53 +0200 (CEST)
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 575BD8075F;
+	Thu,  3 Jul 2025 16:00:53 +0200 (CEST)
+Received: from l-nschier-aarch64.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:6472::1])
+	by buildd.core.avm.de (Postfix) with ESMTPS id A4865180C1B;
+	Thu,  3 Jul 2025 16:00:52 +0200 (CEST)
+Date: Thu, 3 Jul 2025 16:00:51 +0200
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v4 04/15] init: re-add CONFIG_CC_CAN_LINK_STATIC
+Message-ID: <20250703-ruddy-lilac-badger-7be969@l-nschier-aarch64>
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
+ <20250626-kunit-kselftests-v4-4-48760534fef5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175155123817.406.15181012972055274091.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Vh/uHQVe278tGFn8"
+Content-Disposition: inline
+In-Reply-To: <20250626-kunit-kselftests-v4-4-48760534fef5@linutronix.de>
+Organization: AVM GmbH
+X-purgate-ID: 149429::1751551253-3E4DB861-1A94A2AE/0/0
+X-purgate-type: clean
+X-purgate-size: 1525
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-The following commit has been merged into the irq/drivers branch of tip:
 
-Commit-ID:     858e65af91351f8842bbe2c5ae6f100778783f42
-Gitweb:        https://git.kernel.org/tip/858e65af91351f8842bbe2c5ae6f100778783f42
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 26 Jun 2025 16:48:58 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 03 Jul 2025 15:49:24 +02:00
+--Vh/uHQVe278tGFn8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-irqdomain: Add device pointer to irq_domain_info and msi_domain_info
+On Thu, Jun 26, 2025 at 08:10:12AM +0200, Thomas Wei=C3=9Fschuh wrote:
+> For the kunit UAPI functionality this feature is needed.
+>=20
+> This reverts commit d1b99cdf22e0 ("init: remove unused CONFIG_CC_CAN_LINK=
+_STATIC")
+>=20
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  init/Kconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Add device pointer to irq_domain_info and msi_domain_info, so that the device
-can be specified at domain creation time.
+Reviewed-by: Nicolas Schier <n.schier@avm.de>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/943e52403b20cf13c320d55bd4446b4562466aab.1750860131.git.namcao@linutronix.de
+--Vh/uHQVe278tGFn8
+Content-Type: application/pgp-signature; name="signature.asc"
 
----
- include/linux/irqdomain.h | 2 ++
- include/linux/msi.h       | 2 ++
- kernel/irq/irqdomain.c    | 1 +
- kernel/irq/msi.c          | 3 ++-
- 4 files changed, 7 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 7387d18..266b5e5 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -279,6 +279,7 @@ struct irq_domain_chip_generic_info;
-  *			domains are added using same fwnode
-  * @ops:		Domain operation callbacks
-  * @host_data:		Controller private data pointer
-+ * @dev:		Device which creates the domain
-  * @dgc_info:		Geneneric chip information structure pointer used to
-  *			create generic chips for the domain if not NULL.
-  * @init:		Function called when the domain is created.
-@@ -298,6 +299,7 @@ struct irq_domain_info {
- 	const char				*name_suffix;
- 	const struct irq_domain_ops		*ops;
- 	void					*host_data;
-+	struct device				*dev;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- 	/**
- 	 * @parent: Pointer to the parent irq domain used in a hierarchy domain
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 6863540..77227d2 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -488,6 +488,7 @@ struct msi_domain_ops {
-  *			gets initialized to the maximum software index limit
-  *			by the domain creation code.
-  * @ops:		The callback data structure
-+ * @dev:		Device which creates the domain
-  * @chip:		Optional: associated interrupt chip
-  * @chip_data:		Optional: associated interrupt chip data
-  * @handler:		Optional: associated interrupt flow handler
-@@ -501,6 +502,7 @@ struct msi_domain_info {
- 	enum irq_domain_bus_token	bus_token;
- 	unsigned int			hwsize;
- 	struct msi_domain_ops		*ops;
-+	struct device			*dev;
- 	struct irq_chip			*chip;
- 	void				*chip_data;
- 	irq_flow_handler_t		handler;
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index c8b6de0..4afbd3a 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -317,6 +317,7 @@ static struct irq_domain *__irq_domain_instantiate(const struct irq_domain_info 
- 
- 	domain->flags |= info->domain_flags;
- 	domain->exit = info->exit;
-+	domain->dev = info->dev;
- 
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- 	if (info->parent) {
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 9febe79..9b09ad3 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -889,6 +889,7 @@ static struct irq_domain *__msi_create_irq_domain(struct fwnode_handle *fwnode,
- 
- 	if (domain) {
- 		irq_domain_update_bus_token(domain, info->bus_token);
-+		domain->dev = info->dev;
- 		if (info->flags & MSI_FLAG_PARENT_PM_DEV)
- 			domain->pm_dev = parent->pm_dev;
- 	}
-@@ -1051,6 +1052,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
- 	bundle->info.data = domain_data;
- 	bundle->info.chip_data = chip_data;
- 	bundle->info.alloc_data = &bundle->alloc_info;
-+	bundle->info.dev = dev;
- 
- 	pops = parent->msi_parent_ops;
- 	snprintf(bundle->name, sizeof(bundle->name), "%s%s-%s",
-@@ -1089,7 +1091,6 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
- 	if (!domain)
- 		return false;
- 
--	domain->dev = dev;
- 	dev->msi.data->__domains[domid].domain = domain;
- 
- 	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
+iQIzBAABCAAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmhmjQ8ACgkQiMa8nIia
+bbjCwA/9Fjczgz1yiV0YXQdQ/8mxZXWjo8Ld2ye1cnpXwpZ/WjS4SYyh2HbOeBFd
+TEb1PT/g5FmZVFkV4iarBC1FRYsYqPTsXTj8d7eJbgfKDGI0H4T7r/JmjiJ8/BlP
+bPFqOOAyyG3PrJjdR8kiN2OSQfSl4KGHtELJAlAP1DWb6+1PWwMfI0LjSRAKsyK7
+7y3m1x7j2k2is3E9Shv5STJXFZYERp2MMRIl7Wo7W9nlA0+z208SVBAjKVy2kNcG
+CipzYXDcWfrJzbJNkTAYOZ2X4dTjG4iM02XeRxvFhGVmcf5gnLkJXZF0NqJwo2Vz
+Kl3MXszl4AF2c1+TtGn3DeC5BsB041wLtY/mmMG6BxrCOqt6qdw3y5ZHq5G5k2Oa
+StvFmEzmBYXXTAg+aZ1bV6bGbYIn+QeYzhd7a4InQ3v/is3EzfVKnU3m2i+wjjfp
+hUmCy5nqSbGlaX+etTlz52dq073n2XVrAVf9zzK4OB7KpWjMbcpdB1FGH4OZnSCK
+BgS+rChXp3Mxle2Fy/GPGJgBmlchW0E0wi0UicO2YzXOrn6aR5McpaxWuf4Z8t8x
+AdRduLguyz76w0kydi0GZlAEyVgaz2aiL5BLFMLA9XtTc7Y30q0hQGJQE4l/RBeG
+Nd9rVGXMsvmu9zM5DaGEMFnHbCcevFZa8OunCssq76sF4hWBWHA=
+=+ai2
+-----END PGP SIGNATURE-----
+
+--Vh/uHQVe278tGFn8--
