@@ -1,278 +1,513 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21BE29B8D3
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 07:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B185B29B8D3;
+	Thu,  3 Jul 2025 07:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751529477; cv=none; b=Rlu1lQXIG2So8uP5NlYl6sOQUoAJau7u9lpz9O7rUTpZU0OcO2HK3SSVYWkj5gOG7cXvUdTieDVE3juPK0YI6aIVxQGxLm/+4qAom+RP+Z/N+XrDMs/Mcd39OETNDNcuT964DEoKP5418twSZpYSpMrr7KavX3Z8BED/kK/Teyo=
+	t=1751529510; cv=none; b=OVDxYaekLS/T6VevD6Egc/HXxCXDFTG6jq+vpZ6JZMCMhGNDfRt7DjBqC1QSFH821jahELgONN85B7NgdXRUc1LiFRaC6NpG2a/GbeLT2P0qsN6+TVJfuhyroVXkGDx4Fr1VyfD1fTkjGu8fYg31xrQQU1eXv/mZxeYLdn4DcpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751529477; c=relaxed/simple;
-	bh=RVDTGcNSLGEs/+ZQ2J3QxijRX4n46eY+WpvHkkY1kko=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=attZsCQkpvzY9CARPag9K+R6gbfBrwdG5EFPweLdAvzDDylcS3YGWgPVjMfj7ajGy2A6opE2QmtjndlzA9V1gQBPmteJl9LEwt78Irg3hj6DCaklej+/R1r38omde4+cjFeZ0pIBvWL2kk+YfOIqgY9yInq8bzcxYvWfRGkqczg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gtKLh8Q8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gtKLh8Q8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751529476; x=1783065476;
-  h=date:from:to:cc:subject:message-id;
-  bh=RVDTGcNSLGEs/+ZQ2J3QxijRX4n46eY+WpvHkkY1kko=;
-  b=gtKLh8Q81IQ9VZchn2Sm7uUwkIxHGIY3ri9Gy90J/FpQ0QNeT5Ufuq/N
-   NOPWFU+BcSPmFrCFmiUPFRU4PrVJ7B7Yy6Uw3mnw/vWRQtWoKO5GwZtl2
-   hPFXDEIpkFkTzh9yME8TG5sVyxvEsg6/s/9D2T3SxTUMFdYyPJhn3g7my
-   NJ2hK/6BGkGEMKMIJMOpLaPLcppQefeicl6kjI9uOLiuYmw0Yy3no3Jyh
-   I2GH/dSeqS0pgkqVv0sB/tQq1YGTiUjkbehB4ivKRsTSH9GcDWMFXATh7
-   TwdN2tMWrmjicW2RMdia4j+UvojkT9fYRW8b+WjkEaWTt9t2DOHB5e8W+
-   Q==;
-X-CSE-ConnectionGUID: 5lFO+wFNSs6qNZ89L2aJLw==
-X-CSE-MsgGUID: cGgR7GjzQRO5LPTkVIuUuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71279820"
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="71279820"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 00:57:55 -0700
-X-CSE-ConnectionGUID: uRpUupqGSn+Ka+sRSr3gvA==
-X-CSE-MsgGUID: cWAzwTzDQL+8HJ6dg3clog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="154441663"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 03 Jul 2025 00:57:53 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXEpL-0001b5-0R;
-	Thu, 03 Jul 2025 07:57:51 +0000
-Date: Thu, 03 Jul 2025 15:57:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:core/bugs] BUILD SUCCESS
- fad009b77942a680f1b7408f88a1baa03d220220
-Message-ID: <202507031553.s9WqChDf-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1751529510; c=relaxed/simple;
+	bh=xl9lrgJbw/eHsSEGyjSH+vpOnXH6veOcuAkE5UmNbKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QvQRnqz9fNPidHZWHFpExIXLQOfutRdwlDB5BAtDcBegyLSTKxzArm3bmSEuS6NavcOndFUb+RmD9C9ZUrQgLh3v2dwfqqT3msML4P+42dFvG7VFyzvrTyhBl7YZP0oReHZ0ZGyV9ItzB2FW0N6WcDaOpX0oI/EOXExDvG82QbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [192.168.33.13] (unknown [210.73.43.2])
+	by APP-01 (Coremail) with SMTP id qwCowABHc6cMOGZoYsmpAA--.34529S2;
+	Thu, 03 Jul 2025 15:58:04 +0800 (CST)
+Message-ID: <cdf502cd-1ed1-427c-9de0-743315568118@iscas.ac.cn>
+Date: Thu, 3 Jul 2025 15:58:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 2/5] net: spacemit: Add K1 Ethernet MAC
+To: Simon Horman <horms@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Vivian Wang <uwu@dram.page>,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250702-net-k1-emac-v3-0-882dc55404f3@iscas.ac.cn>
+ <20250702-net-k1-emac-v3-2-882dc55404f3@iscas.ac.cn>
+ <20250703071949.GJ41770@horms.kernel.org>
+Content-Language: en-US
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+In-Reply-To: <20250703071949.GJ41770@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qwCowABHc6cMOGZoYsmpAA--.34529S2
+X-Coremail-Antispam: 1UD129KBjvAXoWfGw1UWr4kCF4DKFWUXw13Jwb_yoW8JryfWo
+	Z3Jrs2gF1fJFy7Cr18K34rtr1Yvw1Uur1UAay5A3Z3Wa4ay3WUuF45Ww45Aan8GF43JFWU
+	WF9rJa4jyFs2yr15n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUY97k0a2IF6w4kM7kC6x804xWl14x267AKxVW5JVWrJwAFc2x0
+	x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj4
+	1l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0
+	I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
+	MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxV
+	CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+	6r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+	6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UYxBIdaVFxhVjvjDU0xZFpf9x07bVzVnUUUUU=
+X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/bugs
-branch HEAD: fad009b77942a680f1b7408f88a1baa03d220220  bugs/s390: Remove private WARN_ON() implementation
+Hi Simon,
 
-elapsed time: 814m
+Thanks for the suggestions.
 
-configs tested: 201
-configs skipped: 4
+On 7/3/25 15:19, Simon Horman wrote:
+> On Wed, Jul 02, 2025 at 02:01:41PM +0800, Vivian Wang wrote:
+>
+> ...
+>
+>> diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
+> ...
+>
+>> +static int emac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +	int nfrags = skb_shinfo(skb)->nr_frags;
+>> +	struct device *dev = &priv->pdev->dev;
+>> +
+>> +	if (unlikely(emac_tx_avail(priv) < nfrags + 1)) {
+>> +		if (!netif_queue_stopped(ndev)) {
+>> +			netif_stop_queue(ndev);
+>> +			dev_err_ratelimited(dev, "TX ring full, stop TX queue\n");
+>> +		}
+>> +		return NETDEV_TX_BUSY;
+>> +	}
+>> +
+>> +	emac_tx_mem_map(priv, skb);
+>> +
+>> +	ndev->stats.tx_packets++;
+>> +	ndev->stats.tx_bytes += skb->len;
+>> +
+>> +	/* Make sure there is space in the ring for the next TX. */
+>> +	if (unlikely(emac_tx_avail(priv) <= MAX_SKB_FRAGS + 2))
+>> +		netif_stop_queue(ndev);
+>> +
+>> +	return NETDEV_TX_OK;
+>> +}
+>> +
+>> +static u32 emac_tx_read_stat_cnt(struct emac_priv *priv, u8 cnt)
+>> +{
+>> +	u32 val, tmp;
+>> +	int ret;
+>> +
+>> +	val = 0x8000 | cnt;
+>> +	emac_wr(priv, MAC_TX_STATCTR_CONTROL, val);
+>> +	val = emac_rd(priv, MAC_TX_STATCTR_CONTROL);
+>> +
+>> +	ret = readl_poll_timeout_atomic(priv->iobase + MAC_TX_STATCTR_CONTROL,
+>> +					val, !(val & 0x8000), 100, 10000);
+>> +
+>> +	if (ret) {
+>> +		netdev_err(priv->ndev, "read TX stat timeout\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	tmp = emac_rd(priv, MAC_TX_STATCTR_DATA_HIGH);
+>> +	val = tmp << 16;
+>> +	tmp = emac_rd(priv, MAC_TX_STATCTR_DATA_LOW);
+>> +	val |= tmp;
+>> +
+>> +	return val;
+>> +}
+>> +
+>> +static u32 emac_rx_read_stat_cnt(struct emac_priv *priv, u8 cnt)
+>> +{
+>> +	u32 val, tmp;
+>> +	int ret;
+>> +
+>> +	val = 0x8000 | cnt;
+>> +	emac_wr(priv, MAC_RX_STATCTR_CONTROL, val);
+>> +	val = emac_rd(priv, MAC_RX_STATCTR_CONTROL);
+>> +
+>> +	ret = readl_poll_timeout_atomic(priv->iobase + MAC_RX_STATCTR_CONTROL,
+>> +					val, !(val & 0x8000), 100, 10000);
+>> +
+>> +	if (ret) {
+>> +		netdev_err(priv->ndev, "read RX stat timeout\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	tmp = emac_rd(priv, MAC_RX_STATCTR_DATA_HIGH);
+>> +	val = tmp << 16;
+>> +	tmp = emac_rd(priv, MAC_RX_STATCTR_DATA_LOW);
+>> +	val |= tmp;
+>> +
+>> +	return val;
+>> +}
+>> +
+>> +static int emac_set_mac_address(struct net_device *ndev, void *addr)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +	int ret = eth_mac_addr(ndev, addr);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* If running, set now; if not running it will be set in emac_up. */
+>> +	if (netif_running(ndev))
+>> +		emac_set_mac_addr(priv, ndev->dev_addr);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void emac_mac_multicast_filter_clear(struct emac_priv *priv)
+>> +{
+>> +	emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, 0x0);
+>> +	emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, 0x0);
+>> +	emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, 0x0);
+>> +	emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, 0x0);
+>> +}
+>> +
+>> +/* Configure Multicast and Promiscuous modes */
+>> +static void emac_rx_mode_set(struct net_device *ndev)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +	u32 crc32, bit, reg, hash, val;
+>> +	struct netdev_hw_addr *ha;
+>> +	u32 mc_filter[4] = { 0 };
+>> +
+>> +	val = emac_rd(priv, MAC_ADDRESS_CONTROL);
+>> +
+>> +	val &= ~MREGBIT_PROMISCUOUS_MODE;
+>> +
+>> +	if (ndev->flags & IFF_PROMISC) {
+>> +		/* Enable promisc mode */
+>> +		val |= MREGBIT_PROMISCUOUS_MODE;
+>> +	} else if ((ndev->flags & IFF_ALLMULTI) ||
+>> +		   (netdev_mc_count(ndev) > HASH_TABLE_SIZE)) {
+>> +		/* Accept all multicast frames by setting every bit */
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, 0xffff);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, 0xffff);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, 0xffff);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, 0xffff);
+>> +	} else if (!netdev_mc_empty(ndev)) {
+>> +		emac_mac_multicast_filter_clear(priv);
+>> +		netdev_for_each_mc_addr(ha, ndev) {
+>> +			/* Calculate the CRC of the MAC address */
+>> +			crc32 = ether_crc(ETH_ALEN, ha->addr);
+>> +
+>> +			/*
+>> +			 * The hash table is an array of 4 16-bit registers. It
+>> +			 * is treated like an array of 64 bits (bits[hash]). Use
+>> +			 * the upper 6 bits of the above CRC as the hash value.
+>> +			 */
+>> +			hash = (crc32 >> 26) & 0x3F;
+>> +			reg = hash / 16;
+>> +			bit = hash % 16;
+>> +			mc_filter[reg] |= BIT(bit);
+>> +		}
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, mc_filter[0]);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, mc_filter[1]);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, mc_filter[2]);
+>> +		emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, mc_filter[3]);
+>> +	}
+>> +
+>> +	emac_wr(priv, MAC_ADDRESS_CONTROL, val);
+>> +}
+>> +
+>> +static int emac_change_mtu(struct net_device *ndev, int mtu)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +	u32 frame_len;
+>> +
+>> +	if (netif_running(ndev)) {
+>> +		netdev_err(ndev, "must be stopped to change MTU\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	frame_len = mtu + ETH_HLEN + ETH_FCS_LEN;
+>> +
+>> +	if (frame_len <= EMAC_DEFAULT_BUFSIZE)
+>> +		priv->dma_buf_sz = EMAC_DEFAULT_BUFSIZE;
+>> +	else if (frame_len <= EMAC_RX_BUF_2K)
+>> +		priv->dma_buf_sz = EMAC_RX_BUF_2K;
+>> +	else
+>> +		priv->dma_buf_sz = EMAC_RX_BUF_4K;
+>> +
+>> +	ndev->mtu = mtu;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void emac_tx_timeout(struct net_device *ndev, unsigned int txqueue)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +
+>> +	schedule_work(&priv->tx_timeout_task);
+>> +}
+>> +
+>> +static int emac_mii_read(struct mii_bus *bus, int phy_addr, int regnum)
+>> +{
+>> +	struct emac_priv *priv = bus->priv;
+>> +	u32 cmd = 0, val;
+>> +	int ret;
+>> +
+>> +	cmd |= phy_addr & 0x1F;
+>> +	cmd |= (regnum & 0x1F) << 5;
+>> +	cmd |= MREGBIT_START_MDIO_TRANS | MREGBIT_MDIO_READ_WRITE;
+>> +
+>> +	emac_wr(priv, MAC_MDIO_DATA, 0x0);
+>> +	emac_wr(priv, MAC_MDIO_CONTROL, cmd);
+>> +
+>> +	ret = readl_poll_timeout(priv->iobase + MAC_MDIO_CONTROL, val,
+>> +				 !((val >> 15) & 0x1), 100, 10000);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	val = emac_rd(priv, MAC_MDIO_DATA);
+>> +	return val;
+>> +}
+>> +
+>> +static int emac_mii_write(struct mii_bus *bus, int phy_addr, int regnum,
+>> +			  u16 value)
+>> +{
+>> +	struct emac_priv *priv = bus->priv;
+>> +	u32 cmd = 0, val;
+>> +	int ret;
+>> +
+>> +	emac_wr(priv, MAC_MDIO_DATA, value);
+>> +
+>> +	cmd |= phy_addr & 0x1F;
+>> +	cmd |= (regnum & 0x1F) << 5;
+>> +	cmd |= MREGBIT_START_MDIO_TRANS;
+>> +
+>> +	emac_wr(priv, MAC_MDIO_CONTROL, cmd);
+>> +
+>> +	ret = readl_poll_timeout(priv->iobase + MAC_MDIO_CONTROL, val,
+>> +				 !((val >> 15) & 0x1), 100, 10000);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int emac_mdio_init(struct emac_priv *priv)
+>> +{
+>> +	struct device *dev = &priv->pdev->dev;
+>> +	struct device_node *mii_np;
+>> +	struct mii_bus *mii;
+>> +	int ret;
+>> +
+>> +	mii = devm_mdiobus_alloc(dev);
+>> +	if (!mii)
+>> +		return -ENOMEM;
+>> +
+>> +	mii->priv = priv;
+>> +	mii->name = "k1_emac_mii";
+>> +	mii->read = emac_mii_read;
+>> +	mii->write = emac_mii_write;
+>> +	mii->parent = dev;
+>> +	mii->phy_mask = 0xffffffff;
+>> +	snprintf(mii->id, MII_BUS_ID_SIZE, "%s", priv->pdev->name);
+>> +
+>> +	mii_np = of_get_available_child_by_name(dev->of_node, "mdio-bus");
+>> +
+>> +	ret = devm_of_mdiobus_register(dev, mii, mii_np);
+>> +	if (ret)
+>> +		dev_err_probe(dev, ret, "Failed to register mdio bus\n");
+>> +
+>> +	of_node_put(mii_np);
+>> +	return ret;
+>> +}
+>> +
+>> +static void emac_get_strings(struct net_device *dev, u32 stringset, u8 *data)
+>> +{
+>> +	int i;
+>> +
+>> +	switch (stringset) {
+>> +	case ETH_SS_STATS:
+>> +		for (i = 0; i < ARRAY_SIZE(emac_ethtool_stats); i++) {
+>> +			memcpy(data, emac_ethtool_stats[i].str,
+>> +			       ETH_GSTRING_LEN);
+>> +			data += ETH_GSTRING_LEN;
+>> +		}
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +static int emac_get_sset_count(struct net_device *dev, int sset)
+>> +{
+>> +	switch (sset) {
+>> +	case ETH_SS_STATS:
+>> +		return ARRAY_SIZE(emac_ethtool_stats);
+>> +	default:
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +}
+>> +
+>> +static void emac_stats_update(struct emac_priv *priv)
+>> +{
+>> +	struct emac_hw_stats *hwstats = priv->hw_stats;
+>> +	u32 *stats = (u32 *)hwstats;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < EMAC_TX_STATS_NUM; i++)
+>> +		stats[i] = emac_tx_read_stat_cnt(priv, i);
+>> +
+>> +	for (i = 0; i < EMAC_RX_STATS_NUM; i++)
+>> +		stats[i + EMAC_TX_STATS_NUM] = emac_rx_read_stat_cnt(priv, i);
+>> +}
+>> +
+>> +static void emac_get_ethtool_stats(struct net_device *dev,
+>> +				   struct ethtool_stats *stats, u64 *data)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(dev);
+>> +	struct emac_hw_stats *hwstats;
+>> +	unsigned long flags;
+>> +	u32 *data_src;
+>> +	u64 *data_dst;
+>> +	int i;
+>> +
+>> +	hwstats = priv->hw_stats;
+>> +
+>> +	if (netif_running(dev) && netif_device_present(dev)) {
+>> +		if (spin_trylock_irqsave(&priv->stats_lock, flags)) {
+>> +			emac_stats_update(priv);
+>> +			spin_unlock_irqrestore(&priv->stats_lock, flags);
+>> +		}
+>> +	}
+>> +
+>> +	data_dst = data;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(emac_ethtool_stats); i++) {
+>> +		data_src = (u32 *)hwstats + emac_ethtool_stats[i].offset;
+>> +		*data_dst++ = (u64)(*data_src);
+>> +	}
+>> +}
+>> +
+>> +static int emac_ethtool_get_regs_len(struct net_device *dev)
+>> +{
+>> +	return (EMAC_DMA_REG_CNT + EMAC_MAC_REG_CNT) * sizeof(u32);
+>> +}
+>> +
+>> +static void emac_ethtool_get_regs(struct net_device *dev,
+>> +				  struct ethtool_regs *regs, void *space)
+>> +{
+>> +	struct emac_priv *priv = netdev_priv(dev);
+>> +	u32 *reg_space = space;
+>> +	int i;
+>> +
+>> +	regs->version = 1;
+>> +
+>> +	for (i = 0; i < EMAC_DMA_REG_CNT; i++)
+>> +		reg_space[i] = emac_rd(priv, DMA_CONFIGURATION + i * 4);
+>> +
+>> +	for (i = 0; i < EMAC_MAC_REG_CNT; i++)
+>> +		reg_space[i + EMAC_DMA_REG_CNT] =
+>> +			emac_rd(priv, MAC_GLOBAL_CONTROL + i * 4);
+>> +}
+>> +
+>> +static void emac_get_drvinfo(struct net_device *dev,
+>> +			     struct ethtool_drvinfo *info)
+>> +{
+>> +	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
+>> +	info->n_stats = ARRAY_SIZE(emac_ethtool_stats);
+>> +}
+>> +
+>> +static void emac_tx_timeout_task(struct work_struct *work)
+>> +{
+>> +	struct net_device *ndev;
+>> +	struct emac_priv *priv;
+>> +
+>> +	priv = container_of(work, struct emac_priv, tx_timeout_task);
+>> +	ndev = priv->ndev;
+>> +
+>> +	rtnl_lock();
+>> +
+>> +	/* No need to reset if already down */
+>> +	if (!netif_running(ndev)) {
+>> +		rtnl_unlock();
+>> +		return;
+>> +	}
+>> +
+>> +	netdev_err(ndev, "MAC reset due to TX timeout\n");
+>> +
+>> +	netif_trans_update(ndev); /* prevent tx timeout */
+>> +	dev_close(ndev);
+>> +	dev_open(ndev, NULL);
+>> +
+>> +	rtnl_unlock();
+>> +}
+>> +
+>> +static void emac_sw_init(struct emac_priv *priv)
+>> +{
+>> +	priv->dma_buf_sz = EMAC_DEFAULT_BUFSIZE;
+>> +
+>> +	priv->tx_ring.total_cnt = DEFAULT_TX_RING_NUM;
+>> +	priv->rx_ring.total_cnt = DEFAULT_RX_RING_NUM;
+>> +
+>> +	spin_lock_init(&priv->stats_lock);
+>> +
+>> +	INIT_WORK(&priv->tx_timeout_task, emac_tx_timeout_task);
+>> +
+>> +	priv->tx_coal_frames = EMAC_TX_FRAMES;
+>> +	priv->tx_coal_timeout = EMAC_TX_COAL_TIMEOUT;
+>> +
+>> +	timer_setup(&priv->txtimer, emac_tx_coal_timer, 0);
+>> +}
+>> +
+> ...
+>
+>> +static irqreturn_t emac_interrupt_handler(int irq, void *dev_id)
+>> +{
+>> +	struct net_device *ndev = (struct net_device *)dev_id;
+>> +	struct emac_priv *priv = netdev_priv(ndev);
+>> +	bool should_schedule = false;
+>> +	u32 status;
+>> +	u32 clr = 0;
+> nit: Reverse xmas tree - longest line to shortest - for
+>      these local variable declarations please.
+>
+>      Edward Cree's tool can be helpful here:
+>      https://github.com/ecree-solarflare/xmastree/commits/master/
+>
+> ...
+>
+Thanks for the script. I was indeed doing reverse xmas tree manually.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I will fix next version.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                   randconfig-001-20250703    gcc-11.5.0
-arc                   randconfig-001-20250703    gcc-8.5.0
-arc                   randconfig-002-20250703    gcc-12.4.0
-arc                   randconfig-002-20250703    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                   randconfig-001-20250703    clang-21
-arm                   randconfig-001-20250703    gcc-8.5.0
-arm                   randconfig-002-20250703    gcc-8.5.0
-arm                   randconfig-003-20250703    clang-17
-arm                   randconfig-003-20250703    gcc-8.5.0
-arm                   randconfig-004-20250703    clang-21
-arm                   randconfig-004-20250703    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250703    clang-21
-arm64                 randconfig-001-20250703    gcc-8.5.0
-arm64                 randconfig-002-20250703    gcc-14.3.0
-arm64                 randconfig-002-20250703    gcc-8.5.0
-arm64                 randconfig-003-20250703    clang-21
-arm64                 randconfig-003-20250703    gcc-8.5.0
-arm64                 randconfig-004-20250703    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250703    gcc-14.3.0
-csky                  randconfig-001-20250703    gcc-8.5.0
-csky                  randconfig-002-20250703    gcc-12.4.0
-csky                  randconfig-002-20250703    gcc-8.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250703    clang-21
-hexagon               randconfig-001-20250703    gcc-8.5.0
-hexagon               randconfig-002-20250703    clang-21
-hexagon               randconfig-002-20250703    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250703    clang-20
-i386        buildonly-randconfig-001-20250703    gcc-12
-i386        buildonly-randconfig-002-20250703    gcc-12
-i386        buildonly-randconfig-003-20250703    gcc-12
-i386        buildonly-randconfig-004-20250703    clang-20
-i386        buildonly-randconfig-004-20250703    gcc-12
-i386        buildonly-randconfig-005-20250703    gcc-12
-i386        buildonly-randconfig-006-20250703    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-011-20250703    clang-20
-i386                  randconfig-012-20250703    clang-20
-i386                  randconfig-013-20250703    clang-20
-i386                  randconfig-014-20250703    clang-20
-i386                  randconfig-015-20250703    clang-20
-i386                  randconfig-016-20250703    clang-20
-i386                  randconfig-017-20250703    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250703    gcc-15.1.0
-loongarch             randconfig-001-20250703    gcc-8.5.0
-loongarch             randconfig-002-20250703    gcc-15.1.0
-loongarch             randconfig-002-20250703    gcc-8.5.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                           sun3_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                  cavium_octeon_defconfig    gcc-15.1.0
-mips                       rbtx49xx_defconfig    gcc-15.1.0
-nios2                            allmodconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                            allyesconfig    gcc-15.1.0
-nios2                 randconfig-001-20250703    gcc-8.5.0
-nios2                 randconfig-002-20250703    gcc-8.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250703    gcc-8.5.0
-parisc                randconfig-002-20250703    gcc-8.5.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc               randconfig-001-20250703    gcc-10.5.0
-powerpc               randconfig-001-20250703    gcc-8.5.0
-powerpc               randconfig-002-20250703    clang-21
-powerpc               randconfig-002-20250703    gcc-8.5.0
-powerpc               randconfig-003-20250703    gcc-8.5.0
-powerpc64             randconfig-001-20250703    clang-18
-powerpc64             randconfig-001-20250703    gcc-8.5.0
-powerpc64             randconfig-002-20250703    clang-21
-powerpc64             randconfig-002-20250703    gcc-8.5.0
-powerpc64             randconfig-003-20250703    gcc-14.3.0
-powerpc64             randconfig-003-20250703    gcc-8.5.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250703    gcc-12
-riscv                 randconfig-001-20250703    gcc-13.3.0
-riscv                 randconfig-002-20250703    gcc-12
-riscv                 randconfig-002-20250703    gcc-14.3.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250703    gcc-12
-s390                  randconfig-001-20250703    gcc-12.4.0
-s390                  randconfig-002-20250703    clang-21
-s390                  randconfig-002-20250703    gcc-12
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250703    gcc-12
-sh                    randconfig-001-20250703    gcc-9.3.0
-sh                    randconfig-002-20250703    gcc-12
-sh                    randconfig-002-20250703    gcc-15.1.0
-sh                           se7721_defconfig    gcc-15.1.0
-sh                           se7724_defconfig    gcc-15.1.0
-sparc                            alldefconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    gcc-15.1.0
-sparc                 randconfig-001-20250703    gcc-12
-sparc                 randconfig-001-20250703    gcc-8.5.0
-sparc                 randconfig-002-20250703    gcc-12
-sparc                 randconfig-002-20250703    gcc-13.3.0
-sparc64                          allmodconfig    gcc-15.1.0
-sparc64                          allyesconfig    gcc-15.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250703    gcc-12
-sparc64               randconfig-001-20250703    gcc-8.5.0
-sparc64               randconfig-002-20250703    gcc-12
-sparc64               randconfig-002-20250703    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250703    gcc-12
-um                    randconfig-002-20250703    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250703    gcc-11
-x86_64      buildonly-randconfig-001-20250703    gcc-12
-x86_64      buildonly-randconfig-002-20250703    gcc-12
-x86_64      buildonly-randconfig-003-20250703    clang-20
-x86_64      buildonly-randconfig-003-20250703    gcc-12
-x86_64      buildonly-randconfig-004-20250703    clang-20
-x86_64      buildonly-randconfig-004-20250703    gcc-12
-x86_64      buildonly-randconfig-005-20250703    gcc-12
-x86_64      buildonly-randconfig-006-20250703    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250703    clang-20
-x86_64                randconfig-002-20250703    clang-20
-x86_64                randconfig-003-20250703    clang-20
-x86_64                randconfig-004-20250703    clang-20
-x86_64                randconfig-005-20250703    clang-20
-x86_64                randconfig-006-20250703    clang-20
-x86_64                randconfig-007-20250703    clang-20
-x86_64                randconfig-008-20250703    clang-20
-x86_64                randconfig-071-20250703    gcc-12
-x86_64                randconfig-072-20250703    gcc-12
-x86_64                randconfig-073-20250703    gcc-12
-x86_64                randconfig-074-20250703    gcc-12
-x86_64                randconfig-075-20250703    gcc-12
-x86_64                randconfig-076-20250703    gcc-12
-x86_64                randconfig-077-20250703    gcc-12
-x86_64                randconfig-078-20250703    gcc-12
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    gcc-15.1.0
-xtensa                randconfig-001-20250703    gcc-12
-xtensa                randconfig-001-20250703    gcc-14.3.0
-xtensa                randconfig-002-20250703    gcc-12
-xtensa                randconfig-002-20250703    gcc-8.5.0
+>> +static const struct net_device_ops emac_netdev_ops = {
+>> +	.ndo_open               = emac_open,
+>> +	.ndo_stop               = emac_close,
+>> +	.ndo_start_xmit         = emac_start_xmit,
+> I think that of emac_start_xmit should return netdev_tx_t rather than int
+> to match the type of the .ndo_start_xmit member of this structure.
+>
+> Flagged by Clang 20.1.7 [-Wincompatible-function-pointer-types-strict]
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I will fix the type next version.
+
+Regards,
+Vivian "dramforever" Wang
+
+>> +	.ndo_set_mac_address    = emac_set_mac_address,
+>> +	.ndo_eth_ioctl          = phy_do_ioctl_running,
+>> +	.ndo_change_mtu         = emac_change_mtu,
+>> +	.ndo_tx_timeout         = emac_tx_timeout,
+>> +	.ndo_set_rx_mode        = emac_rx_mode_set,
+>> +};
+> ...
+
