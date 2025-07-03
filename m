@@ -1,68 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA36728DF50
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BCC76C61;
+	Thu,  3 Jul 2025 21:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751577095; cv=none; b=C4Rx75vCTcQ+hxTcuj8H3OpsbZ0Fmqo+JRvlWDixTqJvq3eWoIZ0xovjH/0FR/2VZwrgvOK7G8yfu8uX4NMEvFpX4/unP8dC9oUFQha/W1RBuMp5HSXE6HOWhbrDnmV0yzbwyGii+7kEwfXihUwHRamJjaNcVAFKxP68pMx3Tpk=
+	t=1751577130; cv=none; b=Geb96UBprV7kF2poC5oFIvoR0DmQzAg43MRzCVnaPwUkIshFpUxDeTezPFYj8/2Qk2G6nz83axuAP8JkD+4UpT0FPEYVWq+BBjeaMLMCAqVfjLA3OyRYFijOpuWcdmggp1dE29pc9Q5Bd3B6IHFaJeOCrI6wBLf4o4yHaTb/IfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751577095; c=relaxed/simple;
-	bh=mxRRqjnzcQtyf+2S6JOeUnFmAgOyfn/pD+s0VZ1xpeQ=;
+	s=arc-20240116; t=1751577130; c=relaxed/simple;
+	bh=BccBPphFegUfvo9vaJnC2YeCQIMSxr8COvMz3kKjdFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgiP0PPF+sklC4/3zfeOOS7H5eY2RnlM2vyP93400bUe4w7xjACQNBBKhjhpIqZ2eT3eZSiMi4Yalfhk9W/VDDJbYytoHcgiVyT7+154TF5Mja3b6hh6HPXdnfcVG5zP5M9Rg53s5N10MWmJFacNy8hf3s9PKc4p1WFIF9TspGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNP2qVGA; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDCkBee9PZNI2luuH+4t828tuyJdP2TMj3msA7DAoVsOxb7WA8TI7NV868vQpOUGJjgWOu/qqKPc+yw9T/jy4gyLn9E4yTwiY1LHNhbX9l2PI2d41Hp5oShoGog71yrb58AzOzfQshMI/lViayMpeRKVO+LDHUhwUNDj1sG/W54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MM2xOjYP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNP2qVGA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751577094; x=1783113094;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mxRRqjnzcQtyf+2S6JOeUnFmAgOyfn/pD+s0VZ1xpeQ=;
-  b=fNP2qVGANR408Ay53bOLQ+fg8Md3KvDhqxF+I9f7cXxiWmRwL6NLkWad
-   F+QvoELsn5+YiPwbls4QGYWx3aabyQ/TZv2ufdCBQ7wuuz/crVxmdwgfS
-   nbLlnV1wnCUzc5qiK3IKkqvmxGXDqc8AAWBj64swVab4Ax7VzF9oIOHFR
-   WpQCxQFJS2qu/gcVybSfWGRDwH0in8/RxMuVGsfNgxQHNSBaeHxr7quEk
-   YatgoCopiFfWJRAK7Ob8JwVJt+ji4cNSCWFvNV0qT4xIEwfsD+IuPcFvw
-   LzfQQSqYichUG74zXEfosrBKIppMjABfklYvlkOsUK0YDqIiFVl/Su+KJ
-   Q==;
-X-CSE-ConnectionGUID: h2dtUI/HTce54zMMkbfLOg==
-X-CSE-MsgGUID: Ht38P91wQcKm1LBbL2Jh/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76463939"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="76463939"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:11:33 -0700
-X-CSE-ConnectionGUID: 50Mth+NLTmCu0BdpfFa8pg==
-X-CSE-MsgGUID: RwB3cp7XT5StmIVn2LuacA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="153899546"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:11:33 -0700
-Date: Thu, 3 Jul 2025 14:11:31 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v6 17/30] x86/resctrl: Discover hardware telemetry events
-Message-ID: <aGbyA-TVAdG5uUBk@agluck-desk3>
-References: <20250626164941.106341-1-tony.luck@intel.com>
- <20250626164941.106341-18-tony.luck@intel.com>
- <aF7dt2iQpvuahZil@agluck-desk3>
- <eb6f7bc0-23ae-4100-9a34-fade6c650460@intel.com>
- <aGblc2VimjIiy_bY@agluck-desk3>
- <bb9b5ee5-3367-4193-9e07-747b1ab50637@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MM2xOjYP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A2B6C4CEEB;
+	Thu,  3 Jul 2025 21:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751577130;
+	bh=BccBPphFegUfvo9vaJnC2YeCQIMSxr8COvMz3kKjdFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MM2xOjYPR/IlHPzFnc4v2tVz/O2tS3X1RNb1e1zd37lyGL3SuN4QC2cD2rggrgojM
+	 YqnQMLcCzLbZYB97rUY8sid3KisERGoNEM89VfLjSqmgPU4GFfBsbGO/oMLjNDC6CB
+	 +bmZ5tUZ0Uj0Z5JJHvqMlBG5QZAUjDq9eCOGUaaLy9RA7rzjPaVijO25n2XibWN2/A
+	 s4rdeHqvUtmuJ1qG71Px/2qpMUJm45f1tAwV9dQb+oTmxlm5jzgEVWE8uOiGVSnZrW
+	 7OjzF+BqqRhVtSUZU8NXUsq095I++8WhR8gdQ5XmKnXnTj+i7ie+9J+OuR+w6ZyKfC
+	 FOk/GBTTD0aUw==
+Date: Thu, 3 Jul 2025 14:12:08 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 8/8] riscv: dts: thead: Add PWM fan and thermal control
+Message-ID: <aGbyKAYPc3Hqc+uY@x1>
+References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+ <CGME20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59@eucas1p1.samsung.com>
+ <20250702-rust-next-pwm-working-fan-for-sending-v7-8-67ef39ff1d29@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,96 +62,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb9b5ee5-3367-4193-9e07-747b1ab50637@intel.com>
+In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-8-67ef39ff1d29@samsung.com>
 
-On Thu, Jul 03, 2025 at 01:31:19PM -0700, Reinette Chatre wrote:
-> I do not think resctrl should enforce dependency on a driver that is not
-> valid for a platform.
+On Wed, Jul 02, 2025 at 03:45:36PM +0200, Michal Wilczynski wrote:
+> Add Device Tree nodes to enable a PWM controlled fan and it's associated
+> thermal management for the Lichee Pi 4A board.
+> 
+> This enables temperature-controlled active cooling for the Lichee Pi 4A
+> board based on SoC temperature.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
-Fewer stubs than I thought.  I can merge something along these
-lines back into the series for the next version.
+Reviewed-by: Drew Fustini <fustini@kernel.org>
 
-Suggestions welcome for the name of the config option. Do
-I need a "_CPU" in CONFIG_X86_RESCTRL_INTEL_AET? It's already
-very long.
+I'll apply this to the thead-dt-for-next branch once the PWM driver is
+accepted by Uwe.
 
-"help" text is a placeholder. I can change that up to add more
-details.
-
--Tony
-
----
-
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 11f25c225837..56615b1d3fc3 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -175,9 +175,19 @@ bool rdt_is_software_feature_enabled(char *option);
- 
- bool rdt_is_software_feature_force_enabled(char *name);
- 
-+#ifdef CONFIG_X86_RESCTRL_INTEL_AET
- bool intel_aet_get_events(void);
- void __exit intel_aet_exit(void);
- int intel_aet_read_event(int domid, int rmid, enum resctrl_event_id evtid,
- 			 void *arch_priv, u64 *val);
-+#else
-+static inline bool intel_aet_get_events(void) { return false; }
-+static inline void __exit intel_aet_exit(void) { }
-+static inline int intel_aet_read_event(int domid, int rmid, enum resctrl_event_id evtid,
-+				       void *arch_priv, u64 *val)
-+{
-+	return -EINVAL;
-+}
-+#endif
- 
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a6b6ecbd3877..ceb3eb371a3d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -512,9 +512,6 @@ config X86_CPU_RESCTRL
- 	select ARCH_HAS_CPU_RESCTRL
- 	select RESCTRL_FS
- 	select RESCTRL_FS_PSEUDO_LOCK
--	select X86_PLATFORM_DEVICES
--	select INTEL_VSEC
--	select INTEL_PMT_TELEMETRY
- 	help
- 	  Enable x86 CPU resource control support.
- 
-@@ -531,6 +528,18 @@ config X86_CPU_RESCTRL
- 
- 	  Say N if unsure.
- 
-+config X86_RESCTRL_INTEL_AET
-+	bool "Intel Application Energy Telemetry"
-+	depends on X86_CPU_RESCTRL && CPU_SUP_INTEL && INTEL_PMT_DISCOVERY
-+	help
-+	  Enable per-RMID telemetry events in resctrl
-+
-+	  Intel feature that collects per-RMID execution data
-+	  including core energy consumed by tasks. Data is aggregated
-+	  per package.
-+
-+	  Say N if unsure.
-+
- config X86_FRED
- 	bool "Flexible Return and Event Delivery"
- 	depends on X86_64
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index 97ceb4e44dfa..26fc957fb3dd 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
--obj-$(CONFIG_X86_CPU_RESCTRL)		+= intel_aet.o
-+obj-$(CONFIG_X86_RESCTRL_INTEL_AET)	+= intel_aet.o
- obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
- 
- # To allow define_trace.h's recursive include:
--- 
-2.50.0
-
+Thanks,
+Drew
