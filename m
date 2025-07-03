@@ -1,207 +1,123 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960B52EBB8D;
-	Thu,  3 Jul 2025 15:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20912EFD8B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555624; cv=none; b=oLEIlzhDs5A2ki5waFgjmtejetFCLhCsEaMpD+Z77IFzXMn4bhXzP/WWXRg7Q8XXMwEao4iS/SOzw8+2oQKLq3+eA8WIGRnJsK8E/49BGR6ZrFZMDoej5Ie0Uo1EFVEqHDs1x3IFk3OMFKsDAWn+ncESvaoMQc6fCRi/OSaZV/k=
+	t=1751555628; cv=none; b=C5U5dWBuCt1lbET7KNKWMMZhll/9OwW7ffQ4D0CdB45F7lZxJ8IQ2pMzLMW/ZrTLiu8AbJ/h9smTYbla5euxs7jedU5+nx4o8lteeH50mdcZOVHcB5KOzjCgnHfnO80k0KEfW1gOXtbB/hQxDQVbVguTvOsy67j/s/kt7Y/RKo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555624; c=relaxed/simple;
-	bh=tt5pibkTiOylBDZcb5XG/k6MGyyVGkm7PBa6bP2UNZM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SDpst8GgY7Es05zLlM0pErNFknNV2yk9xSqx4Q4MHQPRaZOGnvhc6lDhRtagFQmTbCWSjYHyuXyn0y5QorL0IM0OKxEJ8LrdvdJBLEhvAhbMCvSgpbg6WjiIp2MEm1jHXs/eFhYmcxmfjbjAGnzSGBXF9iKn2oynmPvNH/h5NLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQQAN55J; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751555628; c=relaxed/simple;
+	bh=qJgf1RF5GwyM1t3Atw/Q+kAszB7c4DDzNJhbDeMNAts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kdE50H4w+eJKOGXGLZEHAN/ncIAAqYQI7wlBNYwjBaWLoJPhWnQlM5DYNd6J4A5uZ86mguKIVOaKshrmWzOkkkrLDamhPs71sfqk1KErz/xCKrMZnNVbPZD8FHJU0i9f3ofDGveBdBftROwUznO7zi4v48F9Gh//88EMAdphCEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mfgFCklq; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQQAN55J"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55511c3e203so15837e87.3;
-        Thu, 03 Jul 2025 08:13:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfgFCklq"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so11396565a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 08:13:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751555621; x=1752160421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qTtCCKdSkgMTplzEICqTViHzDjQLzZrHGfmUBwRIypA=;
-        b=dQQAN55JADZ9RyD0jfYWKtp5zHyKVXY0JUk7j+oX31ZWvq2g4dpXZld/vMftrDX1Pb
-         YiQVPxs15Azt1O7UlhPxFFrzIc/W+om6K/6UBm+pcIpCOVfbFvSIvjjpyYpP7umGqHx6
-         1s+XoKmq+vUOtXqazLPlSpHHR9SPe+049/+96dQarAX5v6sXXD6ABrA5Uy6bPucNg1lj
-         CeGUH+eOzLv0uyRHfngrl6pOnrSNcX/OPeoWAYfo/4BlFZKV2TJ4jrL7oszGQttpqGEt
-         VoC/s24g2gL46fwApNikyqHYQU/0ip/K6H5Fv05MTbWW2JhcGvavlqWPrMs6kT2JVVl6
-         boHQ==
+        d=linaro.org; s=google; t=1751555623; x=1752160423; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+rhVhsVllegKUMnK5NOGl/rqgDtbDtwFSHzwLKRqIUk=;
+        b=mfgFCklqtoxCLPZy3t+4gjqsCrB5P567O9yGv2ICMwYWYF9p6akr2ozIQo9ulLf4tO
+         0PoL5YPOBvnRopNc286PS8bk/YmoBUOcxnbNraLGwo1JAdRZDUXSI5xySfRNPrkwBxBd
+         rAYoBG9IxVGiTLwP47thngj005FHJJmrWr3XQi5EnUgPSx64I//tDiSHwqhFceig2neX
+         vidUlXD9pV0cQ8Fyu/q6EvRw7p99gis1jmxGWvF2MrUMIZ/Mw1rNSWeK7p2I9HTd5d0I
+         pwOGrKytSCpojm6KyL8hDW0Sn3bXjYCePzrzkTq/CXBEkE8SxrXk9DpcrmqfFfM/MFU1
+         vF9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751555621; x=1752160421;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qTtCCKdSkgMTplzEICqTViHzDjQLzZrHGfmUBwRIypA=;
-        b=oxC44H7wIL58UlIbzqw84nnR5hdAAH54vVnVzSgtUvGbPynW3kN+6drUMBjewZM4cu
-         oKzOxYXvwK/DThQrQolYAhvoSbYGUrQaCVK/dqZkksLfxOkc7+NDJ23qwBzhnamjgX31
-         WXM8hVA3Q9PMpM7W9Uw+SFo03vWQoWBiAwsH4bo8Y5qH3gbpfQiuU1QpAdwIhPzpB/gb
-         4gHYUStsoqRYIxp8lH7KuBT3JPXSFx67PgkcK9qdT9oMnzNeFZpFyx3CWS9kgrgHNZ3o
-         oLRrYP62vfedkAmsfcbxh4wYVoy1JAMFE0pDJPAetY7xV9sH0iMUByd3ANs/P4A8OIzK
-         9mJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyzPJ2jiZs/bYaVW177yaD3ICOqAVQHbhV/XU95W4IZfOAhXG6lrpa9CuCMmpqfvIIyPqf5/TFKxsBEJQd@vger.kernel.org, AJvYcCWbo237Y2mRyCgglhpJALX6xeGPHhhUnc9QfkaY3Dof7gEE3Ht8X3HRSkP1pdiAAmQGnVw9rTBKc+E=@vger.kernel.org, AJvYcCXb8SUqn79jYFrtd5dLIwhdM5Z/Zit79/uzV33sxPAfpp1m0+oLkJefnyTJQjl9IPvywP9fg7OauthK@vger.kernel.org
-X-Gm-Message-State: AOJu0YweDmifv4IutRywZYIsDTxMXReyHMyai5JMpaZllQGu0JZKWz+H
-	LOxgz7YMWLxirmVXkdqZ05OpvqPsaBS6g6NJaDk6Ai9dzs93Fbtx5qm8h/Wl8rl6+8KSrg==
-X-Gm-Gg: ASbGncvkhfQDsVHSbypFhKxLRkrZcLqYiqZ7RcwU1Fxm0KvIkrxMOKfoVPDwVNkXwuS
-	6skpLM4sZToM+yD4ySDMX096LwXxmm0YziM00Ovwq2kM32FjQ981jjRdd3De8YjdpbAqHR1CRht
-	Q5flUTG79jdhYTcX0IojjC5lJVUiltNRxP5mxEeOhb9iX7Qcr4D7Ph1k4BhX8GXj5VSW9l3eX0T
-	wJ0e7L/iCQm/FttAP2hf9STA6hbN7ZsizF2a1EuffifzWxH4zqHEGZyuUYZ0yeaqy6WeViBg6ra
-	CctGJRA3uTX+hYe5+5nqdQcj3JGxUgXpcT6bqPJIbTXaTzjgUoy8edkhLDa1WKY1RQdjO60=
-X-Google-Smtp-Source: AGHT+IHEoQ3VBnGpUAKadTkkygNlVfx/f5KZwlHVuHvFboG/MKYSU/fiu0UHxdI8WmXTbNEBc9ufgw==
-X-Received: by 2002:a05:6512:b12:b0:553:50f6:ebcd with SMTP id 2adb3069b0e04-5562ee80659mr1189950e87.10.1751555620488;
-        Thu, 03 Jul 2025 08:13:40 -0700 (PDT)
-Received: from localhost.localdomain ([212.192.12.80])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384ae15esm725e87.178.2025.07.03.08.13.21
+        d=1e100.net; s=20230601; t=1751555623; x=1752160423;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+rhVhsVllegKUMnK5NOGl/rqgDtbDtwFSHzwLKRqIUk=;
+        b=ggBIEDkVEXv/ErBcSj1sr70f7CswgyboJuIH8GzA+mVq/AukSciq+dct4w5EJhALU0
+         LpvqA3pdW3QVjR6RvXJ0M9XIKay5HfF49g+yNUOV2JqySaLamxZbhRAZpriyG/Y4Bl2U
+         lVEb3yNoJ8/3nws5R8mr/h6ojvQQSsSXbgGlBgKwkTK3ALyeno2U6vVKfl2N1aOppowe
+         Dc2OzrJoCt+GBMP7iasNRHBPdYxhjln9s7dDUBXKqSp0+IC7Cvv8YrAZRlvkYJLkA7Ge
+         gNquePli4cPh1M4qvJsE3ZPZF9i8V8AxM8R3BWRdmGmjC3G4fd9wNErDeqZ973ELosOm
+         qy1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVN306EC1ebxLkZWakGwzskdsGa+L4bWZBg92BXAkwSs5H7a3BDo/QdEL8RjM5JelnZPamy16UFarV5+Ng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhKLovj5kALpIvbLe086wv+pC2ohX1G7gKoXYK7bYl5VrAzCep
+	HzUZki8uBjve/hodJ+ST1YLF7M05Aj48FefPyt/nsVjLTzV5qYiciC7iMS632GBA4as=
+X-Gm-Gg: ASbGncvbrVdF2AMuYd0yphz/DXN10clb0tpvalx8g1MqOxI6DMDzbMDSv21Nz+b9A2X
+	s6xc+xxqCpHSDNrE/sRGDLwXikUBFlX2D34gs4yJoo+zSNJEIBrRdUbRfocJSn8y1llwNj0QfJE
+	VM/NMwO2M4UfbueWfAOcdQFijyI9WFH3yGciliVKG+XUxaOY4XZwBWELlGWJCr+YOTpV6q7RvxM
+	3pRdQMkpn9t/xr7SSAhIS50fJPyKQninvcygcsffwkVng70g5351j4N1uu4TUwQmsu0/6ILX05a
+	JHMw/wLSIO9HoTi5Xd1o85e9Y6ML9iXfVsgTGlXKkYiXd+uMZZP5/ytTSJCyXYNJQ2sgpw==
+X-Google-Smtp-Source: AGHT+IHLbeEWvDtZyLpkZYq9v/9MjHWg44ua068Wk7HOmNac3d6CS9uj1wvGNiv38jkJSQ0CP6C9+w==
+X-Received: by 2002:a05:6402:22ca:b0:60c:39e4:93e6 with SMTP id 4fb4d7f45d1cf-60e52d1939cmr4886568a12.24.1751555623170;
+        Thu, 03 Jul 2025 08:13:43 -0700 (PDT)
+Received: from linaro.org ([82.79.186.23])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828e1845sm10903471a12.23.2025.07.03.08.13.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:13:40 -0700 (PDT)
-From: iuncuim <iuncuim@gmail.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+        Thu, 03 Jul 2025 08:13:42 -0700 (PDT)
+Date: Thu, 3 Jul 2025 18:13:40 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 5/8] thermal/drivers/sun8i: get calibration data from two nvmem cells
-Date: Thu,  3 Jul 2025 23:11:29 +0800
-Message-ID: <20250703151132.2642378-6-iuncuim@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250703151132.2642378-1-iuncuim@gmail.com>
-References: <20250703151132.2642378-1-iuncuim@gmail.com>
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
+	Frank Li <frank.li@nxp.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: clock: Add support for i.MX94
+ LVDS/DISPLAY CSR
+Message-ID: <aGaeJIjFMLcV8ly1@linaro.org>
+References: <20250703-imx95-blk-ctl-7-1-v2-0-b378ad796330@nxp.com>
+ <20250703-imx95-blk-ctl-7-1-v2-1-b378ad796330@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703-imx95-blk-ctl-7-1-v2-1-b378ad796330@nxp.com>
 
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
+On 25-07-03 11:40:20, Peng Fan wrote:
+> Add i.MX94 LVDS/DISPLAY CSR compatible string.
+> 
+> Add clock index for the two CSRs.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml        |  2 ++
+>  include/dt-bindings/clock/nxp,imx94-clock.h                 | 13 +++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml b/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> index d0291bfff23a27cb55683880fe3a1f8b3e2ada5a..27403b4c52d6219d31649d75539af93edae0f17d 100644
+> --- a/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> +++ b/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> @@ -13,6 +13,8 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> +          - nxp,imx94-display-csr
+> +          - nxp,imx94-lvds-csr
+>            - nxp,imx95-camera-csr
+>            - nxp,imx95-display-csr
+>            - nxp,imx95-hsio-blk-ctl
+> diff --git a/include/dt-bindings/clock/nxp,imx94-clock.h b/include/dt-bindings/clock/nxp,imx94-clock.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..b47f74f00f119ff1c1e6dad885b5b1e3b1f248a1
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/nxp,imx94-clock.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
 
-The A523 processor has calibration data in two nvmem cell. To be able to add
-support, the ability to add data from two cells into one array must be added.
+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 
-Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
----
- drivers/thermal/sun8i_thermal.c | 77 ++++++++++++++++++++++-----------
- 1 file changed, 52 insertions(+), 25 deletions(-)
+With that fixed:
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index bdd15ee45..3f57f1a6b 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -303,43 +303,70 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
- 
- static int sun8i_ths_calibrate(struct ths_device *tmdev)
- {
--	struct nvmem_cell *calcell;
-+	struct nvmem_cell *calcell = NULL;
- 	struct device *dev = tmdev->dev;
--	u16 *caldata;
--	size_t callen;
-+	struct device_node *np = dev_of_node(dev);
-+	struct property *prop;
-+	const char *cellname;
-+	u8 *caldata = NULL;
-+	size_t callen = 0;
- 	int ret = 0;
- 
--	calcell = nvmem_cell_get(dev, "calibration");
--	if (IS_ERR(calcell)) {
--		if (PTR_ERR(calcell) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--		/*
--		 * Even if the external calibration data stored in sid is
--		 * not accessible, the THS hardware can still work, although
--		 * the data won't be so accurate.
--		 *
--		 * The default value of calibration register is 0x800 for
--		 * every sensor, and the calibration value is usually 0x7xx
--		 * or 0x8xx, so they won't be away from the default value
--		 * for a lot.
--		 *
--		 * So here we do not return error if the calibration data is
--		 * not available, except the probe needs deferring.
--		 */
--		goto out;
-+	of_property_for_each_string(np, "nvmem-cell-names", prop, cellname) {
-+		size_t len;
-+		u8 *caldatapart;
-+
-+  		calcell = of_nvmem_cell_get(np, cellname);
-+  		if (IS_ERR(calcell)) {
-+			if (PTR_ERR(calcell) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			/*
-+			* Even if the external calibration data stored in sid is
-+			* not accessible, the THS hardware can still work, although
-+			* the data won't be so accurate.
-+			*
-+			* The default value of calibration register is 0x800 for
-+			* every sensor, and the calibration value is usually 0x7xx
-+			* or 0x8xx, so they won't be away from the default value
-+			* for a lot.
-+			*
-+			* So here we do not return error if the calibration data is
-+			* not available, except the probe needs deferring.
-+			*/
-+			goto out;
-+		}
-+
-+		caldatapart = nvmem_cell_read(calcell, &len);
-+		nvmem_cell_put(calcell);
-+		calcell = NULL;
-+		if (IS_ERR(caldatapart)) {
-+			ret = PTR_ERR(caldatapart);
-+			goto out;
-+		}
-+
-+		caldata = devm_krealloc(dev, caldata, callen + len, GFP_KERNEL);
-+		if (!caldata) {
-+			kfree(caldatapart);
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+
-+		memcpy(caldata + callen, caldatapart, len);
-+		callen += len;
-+		kfree(caldatapart);
- 	}
- 
--	caldata = nvmem_cell_read(calcell, &callen);
- 	if (IS_ERR(caldata)) {
- 		ret = PTR_ERR(caldata);
- 		goto out;
- 	}
- 
--	tmdev->chip->calibrate(tmdev, caldata, callen);
-+	tmdev->chip->calibrate(tmdev, (u16 *)caldata, callen);
- 
--	kfree(caldata);
-+	devm_kfree(dev, caldata);
-+	caldata = NULL;
- out:
--	if (!IS_ERR(calcell))
-+	if (calcell && !IS_ERR(calcell))
- 		nvmem_cell_put(calcell);
- 	return ret;
- }
--- 
-2.49.0
-
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
