@@ -1,90 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C9F2989B5;
-	Thu,  3 Jul 2025 07:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4843A298992;
+	Thu,  3 Jul 2025 07:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751527527; cv=none; b=nGXM+HYI3EdAnqN8rBvfq8X8yKUPHyL1f3rOM9mTWDh1UoSELxkJ9w4GRRR7Nq+aw+B/FO//0aMCqTXDI9wB2wHXX2Y3qivdHC+LDsSlO878tlxdLAd7BSvz5AaxQccIonMm55JX2W632DMT5mCEUcnH4Sh089HKUXVi4gauv6k=
+	t=1751527563; cv=none; b=jJ7hKwbxv02rk1ofssC18L77GhYj5wNmr1VaZDIy/ex0g7k/5uhHWFFdUXDBsAEZICn63uIey6fcEmpcSQknBcQhhhEFXSPdBj2kiNQYFxuE2NKPToZTNoizfGfDZ6BDBSvRhbACkqdl46sYuZ+uzhUyeK8U4qvWOvBf+xI1Vag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751527527; c=relaxed/simple;
-	bh=aDew+bu1IkMewjxnM3z0eY4e6uUPVQnfaQbO2Pgi9pk=;
+	s=arc-20240116; t=1751527563; c=relaxed/simple;
+	bh=qZiG4zQGXTT5x6dO83hm7UVqBecQ6/V8PRACW6DLJIg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0JMqoCoNkfdvtpMKYLnYo9k4zSsBTfyXIV+u3+M5lv4M+u9JOBAju07AiI2eXDiXTuv8TqcEvn6cVZ/Lk0EQVee+OmkRsyXJkzV531TQLpMa25aDWqexfrFZzOqpkdtb2aIWoXjUkyd9nbf6iaZPNynLBmO4Hc5RUiggHhIvtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOsaEp1U; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOsaEp1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA64C4CEE3;
-	Thu,  3 Jul 2025 07:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751527526;
-	bh=aDew+bu1IkMewjxnM3z0eY4e6uUPVQnfaQbO2Pgi9pk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kOsaEp1Ugm3qagB7TkwS5SRuDXoKrUfoXdMhIeZrJZ8RO4GQLg9yNGuuvkvhX0lV+
-	 Nhs3G7VMn1+K+0a6+TeXEQTYP5mY1NX9daRBdl/3a0JBharS0SOQAAHqpG2JKm2cgg
-	 wYvYpECWuQXl3FN0et3infAqw6gNkFPhOCPDJknZaczIZRhy2++TR9mXm/HHcKRQi9
-	 3C7kOVnXhN+NezU+n+OcFcX5txmph7cQRcXxijT0JUVc9pzCr7x5FdaONVznPsMrKb
-	 CoMOGS3zGp66TbBY7EPcCYYkVNzL8C9okrm+n8jQh3DAcoK9vzg8L4W+yobPyhZOrb
-	 ZygQJaDgQSl0A==
-Date: Thu, 3 Jul 2025 09:25:24 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
- compatible
-Message-ID: <20250703-robust-analytic-hummingbird-88eb3b@krzk-bin>
-References: <20250702-sc8180x-videocc-dt-v3-0-916d443d8a38@quicinc.com>
- <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
- <mzmer4g7df7xqhnstpfhyzcm2irpmsk4iwtx6esjksp34lpkk5@76lrsoyb5cp6>
+	 Content-Type:Content-Disposition:In-Reply-To; b=J7CrGCSJvHmTFUETaGYKn5UA12mAge7+FtXcapIEMmmavYlysV+WRMKBMwzWoGVxgs0CiEGuJx14Kzs4Q9GQLNj3p7JCzomly/zaXBsDsm+pRICgvKJYEOQASPLQEdH1QOJe1rGqaTLdky/i+Gx8xGdFx+zOPdTKvbL/pi/WUf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id 5374FE81788;
+	Thu,  3 Jul 2025 09:18:08 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 287DD16005E; Thu,  3 Jul 2025 09:18:06 +0200 (CEST)
+Date: Thu, 3 Jul 2025 09:18:06 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when secure
+ boot be disabled"
+Message-ID: <aGYurikYK1ManAp3@gardel-login>
+References: <Z9wDxeRQPhTi1EIS@gardel-login>
+ <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mzmer4g7df7xqhnstpfhyzcm2irpmsk4iwtx6esjksp34lpkk5@76lrsoyb5cp6>
+In-Reply-To: <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
 
-On Thu, Jul 03, 2025 at 01:29:06AM +0300, Dmitry Baryshkov wrote:
-> > -      - qcom,sc7180-videocc
-> > -      - qcom,sc7280-videocc
-> > -      - qcom,sdm845-videocc
-> > -      - qcom,sm6350-videocc
-> > -      - qcom,sm8150-videocc
-> > -      - qcom,sm8250-videocc
-> > +    oneOf:
-> > +      - enum:
-> > +          - qcom,sc7180-videocc
-> > +          - qcom,sc7280-videocc
-> > +          - qcom,sdm845-videocc
-> > +          - qcom,sm6350-videocc
-> > +          - qcom,sm8150-videocc
-> > +          - qcom,sm8250-videocc
-> > +      - items:
-> > +          - const: qcom,sc8180x-videocc
-> > +          - const: qcom,sm8150-videocc
-> >  
-> >    clocks:
-> >      minItems: 1
-> > @@ -111,6 +115,7 @@ allOf:
-> >        properties:
-> >          compatible:
-> >            enum:
-> > +            - qcom,sc8180x-videocc
-> 
-> Is there a need for this? Isn't it already covered by the SM8150 entry?
+On Mi, 02.07.25 21:40, Mimi Zohar (zohar@linux.ibm.com) wrote:
 
-Yes and no. Yes - some change here is needed as I explained. No - this
-exact change does not work, so it is obviously redundant.
+> On Thu, 2025-03-20 at 13:02 +0100, Lennart Poettering wrote:
+> > This reverts commit 92ad19559ea9a8ec6f158480934ae26ebfe2c14f.
+> >
+> > This original commit this reverts creates a strange situation: it
+> > ensures more restrictive behaviour if SecureBoot is off then when it
+> > is on, which is the opposite of what one would expect.
+> >
+> > Typically, one would expect that if SB is off the validation of
+> > resources during the pre-kernel and kernel initialization is less
+> > restrictive, not more restrictive. But this check turned the world on
+> > its head.
+>
+> Hi Lennart,
+>
+> I'm really sorry for the long delay ...
+>
+> >From an IMA perspective, the default is to only trust keys built into the kernel
+> or certificates signed by the builtin keys and loaded onto the
+> .secondary_trusted_keys keyring.
+>
+> The ability of loading MOK keys onto the .machine keyring and linked to the
+> .secondary_trusted_keys keyring is an exception based on the assumption that
+> that there is a secure boot chain of trust.  Allowing untrusted keys onto or
+> linked to the .secondary_trusted_keys keyring, would potentially allow loading
+> code signing keys onto the IMA keyring signed by untrusted MOK keys.
+>
+> I was really hesitant to allow this exception of loading MOK keys onto the
+> .machine keyring in the first place.  I'm now even more concerned.
+>
+> This is not just an issue of being more or less restrictive, but of adding a new
+> integrity gap when one didn't exist previously.
 
-Best regards,
-Krzysztof
+But we are talking of the case here where SecureBoot is *off*,
+i.e. there is a concious decision in place that there is no trust
+chain, and that the firmware *happily* *already* accepts unsigned boot
+loaders/kernels and just runs with them. If SecureBoot is already off,
+then an attacker can patch around in the kernel invoked at boot
+completely freely anyway, there is *no* authentication done. Hence
+it's really weird to then insist that the path into the kernel keyring
+via mok keys is off in *only* this case, because an attacker can get
+into that anyway in this case, it's just a lot more cumbersome.
 
+It's really strange that currently when people ask for tight security
+(i.e. SB on) the linux kernel is super relaxed and allows any keys to
+be inserted, but if people ask for security checks to be off (i.e. SB
+off) the kernel starts being super strict and doesn't allow any keys
+to propagate into mok. That's really confusing and contradictory, no?
+
+Lennart
+
+--
+Lennart Poettering, Berlin
