@@ -1,162 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2860225A658;
-	Thu,  3 Jul 2025 03:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42E28935C;
+	Thu,  3 Jul 2025 04:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751515139; cv=none; b=H5Y44vp3FkyNjBZ3L8/MSraNH1felPERcBNxcbj5cufmjKqigJkoQyXgTgNhp1mO3KrMNAqiqhsoMEot2OQixmhKKj+fG3BI1RW9JIFw3+1+D6V3uMYAOx6or94OpbKyL5loUCHI3Qj1jdHw3WQfLO3PIFQ1z/DY3Rls4VNIK00=
+	t=1751515281; cv=none; b=r9uGbmkhDRiGD9hC+QmWP+I0kzWe1+0UQ8iPVygXdCMwKKHV8h+2SMdxprbBfghywpmhL2uZKw9GY4fvtnoSnjFrrj0cadPQ7dDRK6OuIXZymZayxDWaVEzSaEZ0+OVc3SwFqTZBKpIF45PFKQYjuugHu/uhbypyxmL1x0aizoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751515139; c=relaxed/simple;
-	bh=JNjd8X5+WjdNLfqrHNlQS3B+hnOBqWfWIcU07jicB4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rJdJPG4dLdpNMa0It0RLCpk7KSaQpAOfl4RZjHLjjG8RgGu1ns/mjRb3vPzUJzhcIoIJKj4LGxyAQFugzW1vVB3KbjhsxEfyKhrecqlaGx9r5AgihSd85x4XP0iXK94H70ARL7M+eH9qcKK7KhS4ZIZbXdGDxhNlJ3gsLKSKzRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A84D71688;
-	Wed,  2 Jul 2025 20:58:42 -0700 (PDT)
-Received: from [10.122.56.71] (unknown [10.122.56.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C6EA3F6A8;
-	Wed,  2 Jul 2025 20:58:57 -0700 (PDT)
-Message-ID: <151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
-Date: Wed, 2 Jul 2025 22:58:56 -0500
+	s=arc-20240116; t=1751515281; c=relaxed/simple;
+	bh=JpoUSlhJB82auXvu10Mi5QN6NRGkCsUApGJnLQme5SY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YNbSR7p/YN3dbQXbl4dWEsBDjQSW2HC+afAu/odlVy/4L8/aS9VNjC/T1XqR4cfG/IzeXaayXDqbLj5WmeM7JdGNm6nworqwRVVyapcUrRoXKfYy3Ptffaej3u1wEsZnEI990RQRPRJGsX/BP6ULh4kHVWw1xL/i5u+UGv/O+TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from mop.sam.mop (unknown [82.8.138.118])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sam)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 4559E342138;
+	Thu, 03 Jul 2025 04:01:15 +0000 (UTC)
+From: Sam James <sam@gentoo.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,  fweimer@redhat.com,
+  akpm@linux-foundation.org,  andrii@kernel.org,  axboe@kernel.dk,
+  beaub@linux.microsoft.com,  bpf@vger.kernel.org,  indu.bhagat@oracle.com,
+  jemarch@gnu.org,  jolsa@kernel.org,  jpoimboe@kernel.org,
+  jremus@linux.ibm.com,  linux-kernel@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org,  mathieu.desnoyers@efficios.com,
+  mhiramat@kernel.org,  mingo@kernel.org,  peterz@infradead.org,
+  tglx@linutronix.de,  torvalds@linux-foundation.org,  x86@kernel.org
+Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+In-Reply-To: <aGVo9b1xiT1Moq-P@google.com>
+Organization: Gentoo
+References: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
+	<87wm8qlsuk.fsf@gentoo.org>
+	<20250702121502.6e9d6102@batman.local.home>
+	<aGVo9b1xiT1Moq-P@google.com>
+User-Agent: mu4e 1.12.11; emacs 31.0.50
+Date: Thu, 03 Jul 2025 05:01:12 +0100
+Message-ID: <87plehkjnb.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
- memset
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- Stuart Yoder <stuart.yoder@arm.com>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
- <20250626184521.1079507-3-prachotan.bathi@arm.com>
- <aGWvtzhs5ksKgaYo@kernel.org>
-Content-Language: en-US
-From: Prachotan Bathi <prachotan.bathi@arm.com>
-In-Reply-To: <aGWvtzhs5ksKgaYo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 7/2/25 5:16 PM, Jarkko Sakkinen wrote:
+Namhyung Kim <namhyung@kernel.org> writes:
 
-> On Thu, Jun 26, 2025 at 01:45:20PM -0500, Prachotan Bathi wrote:
->> Add a memzero macro to simplify and standardize zeroing
->> FF-A data args, replacing direct uses of memset for
->> improved readability and maintainability.
->>
->> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
->> ---
->>   drivers/char/tpm/tpm_crb_ffa.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
->> index 089d1e54bb46..397cc3b0a478 100644
->> --- a/drivers/char/tpm/tpm_crb_ffa.c
->> +++ b/drivers/char/tpm/tpm_crb_ffa.c
->> @@ -12,6 +12,8 @@
->>   #include <linux/arm_ffa.h>
->>   #include "tpm_crb_ffa.h"
->>   
->> +#define memzero(s, n) memset((s), 0, (n))
->> +
->>   /* TPM service function status codes */
->>   #define CRB_FFA_OK			0x05000001
->>   #define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
->> @@ -192,7 +194,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
->>   	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
->>   
->>   	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
->> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
->> +		memzero(&tpm_crb_ffa->direct_msg_data2,
->>   		       sizeof(struct ffa_send_direct_data2));
->>   
->>   		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
->> @@ -205,7 +207,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
->>   		if (!ret)
->>   			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
->>   	} else {
->> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
->> +		memzero(&tpm_crb_ffa->direct_msg_data,
->>   		       sizeof(struct ffa_send_direct_data));
->>   
->>   		tpm_crb_ffa->direct_msg_data.data1 = func_id;
->> -- 
->> 2.43.0
->>
-> It adds a ross-reference to the source code, meaning that you have to
-> jump back and forth in the source code just to see that there is a
-> function that wraps up a single memset() call.
+> On Wed, Jul 02, 2025 at 12:15:02PM -0400, Steven Rostedt wrote:
+>> On Wed, 02 Jul 2025 12:44:51 +0100
+>> Sam James <sam@gentoo.org> wrote:
+>> 
+>> > In one of the commit messages in the perf series, Steven also gave
+>> > `perf record -g -vv true` which was convenient for making sure it's
+>> > correctly discovered deferred unwinding support.
+>> 
+>> Although I posted the patch, the command "perf record -g -vv true" was
+>> Namhyung's idea. Just wanted to give credit where credit was due.
 >
-> How does that map to "readability"?
+> Yep, it's to check if perf tool ask the deferred callchain to the
+> kernel.  To check if the kernel returns the callchain properly is:
 >
-> BR, Jarkko
+>   $ perf report -D | grep -A5 CALLCHAIN_DEFERRED
 
-Hi Jarkko
+Thanks both. I'll update my notes and tinker more.
 
-I've implemented this change post your feedback on v4 of the initial patch
-series, maybe this should've been a question at that point, but what was the
-reasoning for recommending that I use memzero instead? I'll use the same
-reasoning to rephrase the commit message.
-
-Best
-Prachotan.
-Sorry for the spam, Thunderbird keeps defaulting to html emails.
-
-
-On 7/2/25 5:16 PM, Jarkko Sakkinen wrote:
-> On Thu, Jun 26, 2025 at 01:45:20PM -0500, Prachotan Bathi wrote:
->> Add a memzero macro to simplify and standardize zeroing
->> FF-A data args, replacing direct uses of memset for
->> improved readability and maintainability.
->>
->> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
->> ---
->>   drivers/char/tpm/tpm_crb_ffa.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
->> index 089d1e54bb46..397cc3b0a478 100644
->> --- a/drivers/char/tpm/tpm_crb_ffa.c
->> +++ b/drivers/char/tpm/tpm_crb_ffa.c
->> @@ -12,6 +12,8 @@
->>   #include <linux/arm_ffa.h>
->>   #include "tpm_crb_ffa.h"
->>   
->> +#define memzero(s, n) memset((s), 0, (n))
->> +
->>   /* TPM service function status codes */
->>   #define CRB_FFA_OK			0x05000001
->>   #define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
->> @@ -192,7 +194,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
->>   	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
->>   
->>   	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
->> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
->> +		memzero(&tpm_crb_ffa->direct_msg_data2,
->>   		       sizeof(struct ffa_send_direct_data2));
->>   
->>   		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
->> @@ -205,7 +207,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
->>   		if (!ret)
->>   			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
->>   	} else {
->> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
->> +		memzero(&tpm_crb_ffa->direct_msg_data,
->>   		       sizeof(struct ffa_send_direct_data));
->>   
->>   		tpm_crb_ffa->direct_msg_data.data1 = func_id;
->> -- 
->> 2.43.0
->>
-> It adds a ross-reference to the source code, meaning that you have to
-> jump back and forth in the source code just to see that there is a
-> function that wraps up a single memset() call.
 >
-> How does that map to "readability"?
->
-> BR, Jarkko
+> Thanks,
+> Namhyung
+
+sam
