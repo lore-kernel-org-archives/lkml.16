@@ -1,346 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518FA1C3C18;
-	Thu,  3 Jul 2025 14:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B71A2DE6F3;
+	Thu,  3 Jul 2025 14:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551325; cv=none; b=K918D20M4XAoNp7DutUjYUUiCOa5PfKIr+uIMu/17Ns9xL5vdyvgb1NrBRq1WPkY5hsn/Dj4V2jMxDoFtM7zPVRNYxXCcckMQIr1k0KlSTYo5rNtzyVh1Gp/dO2LpQqkEbylZEfoYEdUpbvViY7TYMgNMRQOCy0J0PjZ4urdRXg=
+	t=1751551419; cv=none; b=EVSR5jWZN9aW0SD+civsynrhKPjyq/q6tpws/YkQQdGB2xxgS8tYfjM95/gbbJtwS3cQUFhlcJdWp+ML4nO1ImqjFuAPr5qXWujhjOGAzLL5xPDwNzI1Dva1y3n1IULKGvdEtEeQvWuT6kWCom9mDDSpmc2t8PnMR/i+NtVWfYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551325; c=relaxed/simple;
-	bh=mCPgMlVKOVyG4kXhgTN7HonObN3VJQSIFT5T6Gsa6O0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KrOppjKJ862MX2wlsanJxDZWTRIRoDLBGADrgEGUoesguf9gisP+OogstShVHY4zNkQH6Jfros1qRupsPT4AvUIGDidMpLr1lLqh3s4BkJPoZTk7CgacIyFOLInf3BwWzxNLcaKTnyyztD/1OU5pkn0RRloK3p0jvIPlhNDDSZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvJ2WqkB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751551419; c=relaxed/simple;
+	bh=FpZLtZ9+kg2xfwMSODwaNlSk19qiCrhlb9UcLr8pDQM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W+L0jLkoxF17KLUUi8XSvZ9OPS20iNFfOJOceG2xFWQ33ulEtR+LhwAOuF7pIkrXBWZnWhoZKEXUkwB90yZqGJ6D0Wyse4W0XMCAWR+uA4ai/SHE1U7PN9oGTAbremMZ3JOHccwn4MpxJ+Oz73yXNEQWiKm2vu3B+/LwmdYvWuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EzFU7kBm; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvJ2WqkB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A758AC4CEF2;
-	Thu,  3 Jul 2025 14:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751551324;
-	bh=mCPgMlVKOVyG4kXhgTN7HonObN3VJQSIFT5T6Gsa6O0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dvJ2WqkBl65jd2oimJ/LiXpsfCZuzfgimz1bNsYntlUoovyFZ0HBsYgKB7w/65Elf
-	 nfMFAHCcsG3wcpIMcincE5NeFWwJlXmTG8mIZS2tL4uQiC85q0EDInK+zc4Isvedeo
-	 9cwsyOtyBZrVHbN7e909chwvG4mUWSyEy0oU4Mvr7ehZrB1rnqpNF/QRbsab47XutL
-	 fSLC6qxsfZ/yN6m6olaszXchXpsaM/xOfDLniqVUYkaMz8pijjP4syEGkkvJ6ALm2s
-	 4uaQ+/r4MC5G0VCZhr1RU6dxgBqs4AYq1AiKGNKt02vtb/ywEaHIWKSZJLShLLJaUU
-	 VkypCreYhE4VA==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6099d89a19cso10700834a12.2;
-        Thu, 03 Jul 2025 07:02:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVSDIKf4B44fL5HjjzQTBUvimdu/9jbGTOxHxtmOZGO3/5gFzSGKC3AwJ9EPofT6iQUk9zu49KYoCgl@vger.kernel.org, AJvYcCVUmAyu8rJMHjvdlHS/bQgQtmHdfJI+pwEa2KkuK87pZpW9lSqnIklMP8rDTp8c7o2NjmdfSsjXbwmogfvu@vger.kernel.org, AJvYcCWQokb1zkOkeQAYO7sU8u+/uVQ9k6zYUCT24jktg1VvSXNZYhAMYrdHJGpUmArFF5ZI5IZ76Y5dLVsc@vger.kernel.org, AJvYcCXWsQjucUV7g2Q2Lej7XnVtfD/6z4kDjCkvW6V7YI/6EebmNQg6hikMeWnGI9rWs7sh0CDkusMEtUntRhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy64mCBBrZWQCsumNCUSiAt0nBD3G+VM/V9ObiVb4lnoQ4CzwX/
-	DTDFzJ9FrRsmUcMwnlUd1KvClw1gz3m9nCk1qD38s7EPyUZRMGEOO+Gq2TVRkX9Hb5z7s0TXivS
-	8Zcl44axGvZ2sqxmVAPvvd4VYwoOArQ==
-X-Google-Smtp-Source: AGHT+IG7rHR9+lG+I7nKAIO/NxPfjF+V6YeNpGZbR7jsVYiHAb0Q6c/MrY9ZAlRlTyOHohEIwfddBMcKM+B/ifFEVKI=
-X-Received: by 2002:a17:907:d8a:b0:ae3:b94b:36f5 with SMTP id
- a640c23a62f3a-ae3c2c4bdcamr578245366b.34.1751551323014; Thu, 03 Jul 2025
- 07:02:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EzFU7kBm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751551415;
+	bh=FpZLtZ9+kg2xfwMSODwaNlSk19qiCrhlb9UcLr8pDQM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EzFU7kBmDoOu3fC4oMWsBxPdYyWqgM2KbTgQG5ezlvt34ZcMaIxUdwADSU93UtylT
+	 vmTj7RyC5Z6Q6C/BtYNM7WV9CB7tB/lCBrgbwrE940HxUmHT4UYhByragcmbx3W+gM
+	 gDIWgxFxMptnJ3Qo1aPQ/U5O+TrUIoxx/Hx9nxxQvF/e30pIhlv3/YNFk5oQIKztsW
+	 ROdncfWCRtWxmU5Kb7uwbTHrZCTVenLJ2xknl56dKA0XmXnu+DdYPQ8JHLRwshtJXe
+	 +cEBl0cirn3EAo3Nv62UgZGWLgR7DEiXVLgJlFc/eziU1FLHvkCV1cYEejkAiEDCg9
+	 gUQ0MXW7T6AwA==
+Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892F2d600c8f85cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8A2D517E04AA;
+	Thu,  3 Jul 2025 16:03:34 +0200 (CEST)
+Message-ID: <026ab4ca4a237e84ce53bfa491bf27268b745fa8.camel@collabora.com>
+Subject: Re: [PATCH v5 18/24] media: i2c: maxim-serdes: add MAX96717 driver
+From: Julien Massot <julien.massot@collabora.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
+ <cosmin.tanislav@analog.com>, Tomi Valkeinen	
+ <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
+ =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Date: Thu, 03 Jul 2025 16:03:34 +0200
+In-Reply-To: <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+	 <20250702132104.1537926-19-demonsingur@gmail.com>
+	 <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
+	 <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630232632.3700405-1-robh@kernel.org> <hphr525b57li2fe4xstxbpwihldv6fr5kslktpphlvku22buv7@w3n5ynczr27v>
-In-Reply-To: <hphr525b57li2fe4xstxbpwihldv6fr5kslktpphlvku22buv7@w3n5ynczr27v>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 3 Jul 2025 09:01:50 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK4g+O=sf-SBdcFRg0tL_PSUEhavXF6f04FB3+3zxaCvg@mail.gmail.com>
-X-Gm-Features: Ac12FXw7NlyQU3-HOWZG-2LMipHgBz8UDZfAQ4L2umMnNXmWgCPjP-69v-q3IoA
-Message-ID: <CAL_JsqK4g+O=sf-SBdcFRg0tL_PSUEhavXF6f04FB3+3zxaCvg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: clock: Convert nvidia,tegra124-dfll to DT schema
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, 
-	Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Thierry Reding <treding@nvidia.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2025 at 5:26=E2=80=AFAM Thierry Reding <thierry.reding@gmail=
-.com> wrote:
->
-> On Mon, Jun 30, 2025 at 06:26:30PM -0500, Rob Herring (Arm) wrote:
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  .../bindings/clock/nvidia,tegra124-dfll.txt   | 155 -------------
-> >  .../bindings/clock/nvidia,tegra124-dfll.yaml  | 219 ++++++++++++++++++
-> >  2 files changed, 219 insertions(+), 155 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegr=
-a124-dfll.txt
-> >  create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegr=
-a124-dfll.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-df=
-ll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > deleted file mode 100644
-> > index f7d347385b57..000000000000
-> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > +++ /dev/null
-> > @@ -1,155 +0,0 @@
-> > -NVIDIA Tegra124 DFLL FCPU clocksource
-> > -
-> > -This binding uses the common clock binding:
-> > -Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > -
-> > -The DFLL IP block on Tegra is a root clocksource designed for clocking
-> > -the fast CPU cluster. It consists of a free-running voltage controlled
-> > -oscillator connected to the CPU voltage rail (VDD_CPU), and a closed l=
-oop
-> > -control module that will automatically adjust the VDD_CPU voltage by
-> > -communicating with an off-chip PMIC either via an I2C bus or via PWM s=
-ignals.
-> > -
-> > -Required properties:
-> > -- compatible : should be one of:
-> > -  - "nvidia,tegra124-dfll": for Tegra124
-> > -  - "nvidia,tegra210-dfll": for Tegra210
-> > -- reg : Defines the following set of registers, in the order listed:
-> > -        - registers for the DFLL control logic.
-> > -        - registers for the I2C output logic.
-> > -        - registers for the integrated I2C master controller.
-> > -        - look-up table RAM for voltage register values.
-> > -- interrupts: Should contain the DFLL block interrupt.
-> > -- clocks: Must contain an entry for each entry in clock-names.
-> > -  See clock-bindings.txt for details.
-> > -- clock-names: Must include the following entries:
-> > -  - soc: Clock source for the DFLL control logic.
-> > -  - ref: The closed loop reference clock
-> > -  - i2c: Clock source for the integrated I2C master.
-> > -- resets: Must contain an entry for each entry in reset-names.
-> > -  See ../reset/reset.txt for details.
-> > -- reset-names: Must include the following entries:
-> > -  - dvco: Reset control for the DFLL DVCO.
-> > -- #clock-cells: Must be 0.
-> > -- clock-output-names: Name of the clock output.
-> > -- vdd-cpu-supply: Regulator for the CPU voltage rail that the DFLL
-> > -  hardware will start controlling. The regulator will be queried for
-> > -  the I2C register, control values and supported voltages.
-> > -
-> > -Required properties for the control loop parameters:
-> > -- nvidia,sample-rate: Sample rate of the DFLL control loop.
-> > -- nvidia,droop-ctrl: See the register CL_DVFS_DROOP_CTRL in the TRM.
-> > -- nvidia,force-mode: See the field DFLL_PARAMS_FORCE_MODE in the TRM.
-> > -- nvidia,cf: Numeric value, see the field DFLL_PARAMS_CF_PARAM in the =
-TRM.
-> > -- nvidia,ci: Numeric value, see the field DFLL_PARAMS_CI_PARAM in the =
-TRM.
-> > -- nvidia,cg: Numeric value, see the field DFLL_PARAMS_CG_PARAM in the =
-TRM.
-> > -
-> > -Optional properties for the control loop parameters:
-> > -- nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE i=
-n the TRM.
-> > -
-> > -Optional properties for mode selection:
-> > -- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> > -
-> > -Required properties for I2C mode:
-> > -- nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
-> > -
-> > -Required properties for PWM mode:
-> > -- nvidia,pwm-period-nanoseconds: period of PWM square wave in nanoseco=
-nds.
-> > -- nvidia,pwm-tristate-microvolts: Regulator voltage in micro volts whe=
-n PWM
-> > -  control is disabled and the PWM output is tristated. Note that this =
-voltage is
-> > -  configured in hardware, typically via a resistor divider.
-> > -- nvidia,pwm-min-microvolts: Regulator voltage in micro volts when PWM=
- control
-> > -  is enabled and PWM output is low. Hence, this is the minimum output =
-voltage
-> > -  that the regulator supports when PWM control is enabled.
-> > -- nvidia,pwm-voltage-step-microvolts: Voltage increase in micro volts
-> > -  corresponding to a 1/33th increase in duty cycle. Eg the voltage for=
- 2/33th
-> > -  duty cycle would be: nvidia,pwm-min-microvolts +
-> > -  nvidia,pwm-voltage-step-microvolts * 2.
-> > -- pinctrl-0: I/O pad configuration when PWM control is enabled.
-> > -- pinctrl-1: I/O pad configuration when PWM control is disabled.
-> > -- pinctrl-names: must include the following entries:
-> > -  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled=
-.
-> > -  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabl=
-ed.
-> > -
-> > -Example for I2C:
-> > -
-> > -clock@70110000 {
-> > -        compatible =3D "nvidia,tegra124-dfll";
-> > -        reg =3D <0 0x70110000 0 0x100>, /* DFLL control */
-> > -              <0 0x70110000 0 0x100>, /* I2C output control */
-> > -              <0 0x70110100 0 0x100>, /* Integrated I2C controller */
-> > -              <0 0x70110200 0 0x100>; /* Look-up table RAM */
-> > -        interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> > -        clocks =3D <&tegra_car TEGRA124_CLK_DFLL_SOC>,
-> > -                 <&tegra_car TEGRA124_CLK_DFLL_REF>,
-> > -                 <&tegra_car TEGRA124_CLK_I2C5>;
-> > -        clock-names =3D "soc", "ref", "i2c";
-> > -        resets =3D <&tegra_car TEGRA124_RST_DFLL_DVCO>;
-> > -        reset-names =3D "dvco";
-> > -        #clock-cells =3D <0>;
-> > -        clock-output-names =3D "dfllCPU_out";
-> > -        vdd-cpu-supply =3D <&vdd_cpu>;
-> > -
-> > -        nvidia,sample-rate =3D <12500>;
-> > -        nvidia,droop-ctrl =3D <0x00000f00>;
-> > -        nvidia,force-mode =3D <1>;
-> > -        nvidia,cf =3D <10>;
-> > -        nvidia,ci =3D <0>;
-> > -        nvidia,cg =3D <2>;
-> > -
-> > -        nvidia,i2c-fs-rate =3D <400000>;
-> > -};
-> > -
-> > -Example for PWM:
-> > -
-> > -clock@70110000 {
-> > -     compatible =3D "nvidia,tegra124-dfll";
-> > -     reg =3D <0 0x70110000 0 0x100>, /* DFLL control */
-> > -           <0 0x70110000 0 0x100>, /* I2C output control */
-> > -           <0 0x70110100 0 0x100>, /* Integrated I2C controller */
-> > -           <0 0x70110200 0 0x100>; /* Look-up table RAM */
-> > -     interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> > -     clocks =3D <&tegra_car TEGRA210_CLK_DFLL_SOC>,
-> > -              <&tegra_car TEGRA210_CLK_DFLL_REF>,
-> > -              <&tegra_car TEGRA124_CLK_I2C5>;;
-> > -     clock-names =3D "soc", "ref", "i2c";
-> > -     resets =3D <&tegra_car TEGRA124_RST_DFLL_DVCO>;
-> > -     reset-names =3D "dvco";
-> > -     #clock-cells =3D <0>;
-> > -     clock-output-names =3D "dfllCPU_out";
-> > -
-> > -     nvidia,sample-rate =3D <25000>;
-> > -     nvidia,droop-ctrl =3D <0x00000f00>;
-> > -     nvidia,force-mode =3D <1>;
-> > -     nvidia,cf =3D <6>;
-> > -     nvidia,ci =3D <0>;
-> > -     nvidia,cg =3D <2>;
-> > -
-> > -     nvidia,pwm-min-microvolts =3D <708000>; /* 708mV */
-> > -     nvidia,pwm-period-nanoseconds =3D <2500>; /* 2.5us */
-> > -     nvidia,pwm-to-pmic;
-> > -     nvidia,pwm-tristate-microvolts =3D <1000000>;
-> > -     nvidia,pwm-voltage-step-microvolts =3D <19200>; /* 19.2mV */
-> > -
-> > -     pinctrl-names =3D "dvfs_pwm_enable", "dvfs_pwm_disable";
-> > -     pinctrl-0 =3D <&dvfs_pwm_active_state>;
-> > -     pinctrl-1 =3D <&dvfs_pwm_inactive_state>;
-> > -};
-> > -
-> > -/* pinmux nodes added for completeness. Binding doc can be found in:
-> > - * Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.ya=
-ml
-> > - */
-> > -
-> > -pinmux: pinmux@700008d4 {
-> > -     dvfs_pwm_active_state: dvfs_pwm_active {
-> > -             dvfs_pwm_pbb1 {
-> > -                     nvidia,pins =3D "dvfs_pwm_pbb1";
-> > -                     nvidia,tristate =3D <TEGRA_PIN_DISABLE>;
-> > -             };
-> > -     };
-> > -     dvfs_pwm_inactive_state: dvfs_pwm_inactive {
-> > -             dvfs_pwm_pbb1 {
-> > -                     nvidia,pins =3D "dvfs_pwm_pbb1";
-> > -                     nvidia,tristate =3D <TEGRA_PIN_ENABLE>;
-> > -             };
-> > -     };
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-df=
-ll.yaml b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
-> > new file mode 100644
-> > index 000000000000..67d99fd89ea9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
-> > @@ -0,0 +1,219 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/clock/nvidia,tegra124-dfll.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NVIDIA Tegra124 DFLL FCPU clocksource
-> > +
-> > +maintainers:
-> > +  - Joseph Lo <josephl@nvidia.com>
-> > +  - Thierry Reding <treding@nvidia.com>
-> > +  - Tuomas Tynkkynen <ttynkkynen@nvidia.com>
->
-> Tuomas isn't at NVIDIA anymore, as far as I can tell.
->
-> > +
-> > +description:
-> > +  The DFLL IP block on Tegra is a root clocksource designed for clocki=
-ng the
-> > +  fast CPU cluster. It consists of a free-running voltage controlled o=
-scillator
-> > +  connected to the CPU voltage rail (VDD_CPU), and a closed loop contr=
-ol module
-> > +  that will automatically adjust the VDD_CPU voltage by communicating =
-with an
-> > +  off-chip PMIC either via an I2C bus or via PWM signals.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - nvidia,tegra124-dfll
-> > +      - nvidia,tegra210-dfll
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: DFLL control logic registers
-> > +      - description: I2C output logic registers
-> > +      - description: Integrated I2C master controller registers
-> > +      - description: Look-up table RAM for voltage register values
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  "#clock-cells":
-> > +    const: 0
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Clock source for the DFLL control logic
-> > +      - description: Closed loop reference clock
-> > +      - description: Clock source for the integrated I2C master
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: soc
-> > +      - const: ref
-> > +      - const: i2c
-> > +
-> > +  clock-output-names:
-> > +    description: Name of the DFLL CPU clock output
-> > +    items:
-> > +      - const: dfllCPU_out
-> > +
-> > +  resets:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +
-> > +  reset-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: dvco
-> > +      - const: dfll
-> > +
-> > +  vdd-cpu-supply: true
-> > +
-> > +  nvidia,sample-rate:
-> > +    description: Sample rate of the DFLL control loop
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->
-> I have a local patch for this and have a few additional restrictions for
-> some of these properties that I think would make sense to include.
-
-Can you send yours then. These are all just bulk conversions with AI
-help and minimal time by me to tweak.
-
-Rob
+On Thu, 2025-07-03 at 15:31 +0300, Cosmin Tanislav wrote:
+>=20
+>=20
+> On 7/3/25 3:16 PM, Julien Massot wrote:
+> > On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+> > > Add a new MAX96717 driver that also supports MAX9295A, MAX96717F and
+> > > MAX96793.
+> > >=20
+> > > Integrate it with the common serializer framework, while keeping
+> > > compatibility with existing usecases, avoiding code duplication, and
+> > > also enabling more features across all chips.
+> > >=20
+> > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> > > ---
+> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/Kconfig=C2=A0=C2=A0=C2=A0 =
+|=C2=A0=C2=A0 16 +
+> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/Makefile=C2=A0=C2=A0 |=C2=
+=A0=C2=A0=C2=A0 1 +
+> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/max96717.c | 1685 ++++++++=
++++++++++++++
+> > > =C2=A0=C2=A03 files changed, 1702 insertions(+)
+> > > =C2=A0=C2=A0create mode 100644 drivers/media/i2c/maxim-serdes/max9671=
+7.c
+> > >=20
+> > > diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i=
+2c/maxim-serdes/Kconfig
+> > > index cae1d5a1293e..648cb891eefe 100644
+> > > --- a/drivers/media/i2c/maxim-serdes/Kconfig
+> > > +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+> > > @@ -14,3 +14,19 @@ config VIDEO_MAXIM_SERDES
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0	=C2=A0 To compile this driver as a module, choose M here=
+: the module
+> > > =C2=A0=C2=A0	=C2=A0 will be called max_serdes.
+> > > +
+> > > +config VIDEO_MAX96717
+> > > +	tristate "Maxim MAX96717 Serializer support"
+> > > +	depends on COMMON_CLK
+> > > +	select VIDEO_MAXIM_SERDES
+> > > +	select GENERIC_PINCONF
+> > > +	select GENERIC_PINCTRL_GROUPS
+> > > +	select GENERIC_PINMUX_FUNCTIONS
+> > > +	select GPIOLIB
+> > > +	help
+> > > +	=C2=A0 This driver supports the Maxim MAX9295A, MAX96717, MAX96717F=
+,
+> > > +	=C2=A0 MAX96793 Serializers, which receive video on a MIPI CSI-2
+> > > +	=C2=A0 interface and output it on a GMSL2/3 link.
+> > > +
+> > > +	=C2=A0 To compile this driver as a module, choose M here: the modul=
+e
+> > > +	=C2=A0 will be called max96717.
+> > > diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/=
+i2c/maxim-serdes/Makefile
+> > > index b54326a5c81b..04abda6a5437 100644
+> > > --- a/drivers/media/i2c/maxim-serdes/Makefile
+> > > +++ b/drivers/media/i2c/maxim-serdes/Makefile
+> > > @@ -1,3 +1,4 @@
+> > > =C2=A0=C2=A0# SPDX-License-Identifier: GPL-2.0
+> > > =C2=A0=C2=A0max-serdes-objs :=3D max_serdes.o max_ser.o max_des.o
+> > > =C2=A0=C2=A0obj-$(CONFIG_VIDEO_MAXIM_SERDES) +=3D max-serdes.o
+> > > +obj-$(CONFIG_VIDEO_MAX96717) +=3D max96717.o
+> > > diff --git a/drivers/media/i2c/maxim-serdes/max96717.c b/drivers/medi=
+a/i2c/maxim-
+> > > serdes/max96717.c
+> > > new file mode 100644
+> > > index 000000000000..60b285e547b7
+> > > --- /dev/null
+> > > +++ b/drivers/media/i2c/maxim-serdes/max96717.c
+> > > @@ -0,0 +1,1685 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Maxim MAX96717 GMSL2 Serializer Driver
+> > > + *
+> > > + * Copyright (C) 2025 Analog Devices Inc.
+> > > + */
+> > > +
+> > > +#include <linux/clk.h>
+> > > +#include <linux/clk-provider.h>
+> > > +#include <linux/gpio/driver.h>
+> > > +#include <linux/pinctrl/pinctrl.h>
+> > > +#include <linux/pinctrl/pinmux.h>
+> > > +#include <linux/pinctrl/pinconf.h>
+> > > +#include <linux/pinctrl/pinconf-generic.h>
+> > > +#include <linux/regmap.h>
+> > > +
+> > > +#include "max_ser.h"
+> > > +
+> > > +#define MAX96717_REG0				0x0
+> > > +
+> > > +#define MAX96717_REG2				0x2
+> > > +#define MAX96717_REG2_VID_TX_EN_P(p)		BIT(4 + (p))
+> > > +
+> > > +#define MAX96717_REG3				0x3
+> > > +#define MAX96717_REG3_RCLKSEL			GENMASK(1, 0)
+> > > +#define MAX96717_REG3_RCLK_ALT			BIT(2)
+> > > +
+> > > +#define MAX96717_REG6				0x6
+> > > +#define MAX96717_REG6_RCLKEN			BIT(5)
+> > > +
+> > > +#define MAX96717_I2C_2(x)			(0x42 + (x) * 0x2)
+> > > +#define MAX96717_I2C_2_SRC			GENMASK(7, 1)
+> > > +
+> > > +#define MAX96717_I2C_3(x)			(0x43 + (x) * 0x2)
+> > > +#define MAX96717_I2C_3_DST			GENMASK(7, 1)
+> > > +
+> > > +#define MAX96717_TX3(p)				(0x53 + (p) * 0x4)
+> > > +#define MAX96717_TX3_TX_STR_SEL			GENMASK(1, 0)
+> > > +
+> > > +#define MAX96717_VIDEO_TX0(p)			(0x100 + (p) * 0x8)
+> > This is a bit confusing, looks like this register address is valid for =
+MAX9295a VIDEO_TX0
+> > but not for MAX96717, VIDEO_TX0 (Z) is at 0x110.
+> >=20
+>=20
+> See pipe_hw_ids field of max96717_chip_info.
+> MAX9295A has pipes 0, 1, 2, 3, MAX96717 has pipe 2 only.
+> Registers and strides are the same, just pipes are missing.
+You are right my brain is just not really good for math today :)
