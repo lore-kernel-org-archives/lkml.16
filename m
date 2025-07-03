@@ -1,131 +1,217 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EAC17D7;
-	Thu,  3 Jul 2025 15:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555712; cv=none; b=IwZgG7N+Q0oGjliE9q9L63MxsIEmXbz+S5Yu32sdubxHIG8f59AVOawb/YYRQzf8NeEgYQeo2pnlkIhvjA9reUYnROXwKo6sROizzs0O9MFQjhtmDn3FiTEy6a5orVikJ2TsF8iBLX3R7LLDjDsWzIvPqwLkryEnW2DbUYFjzYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555712; c=relaxed/simple;
-	bh=VMJ7FGSaOkPmjgdljgeMFkk60bz4jM+JhLrRpK2P1I8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lmQ3DGpzqn+aDRq2TaPwEC8jKZp4QqRhBOZUWr93t7Q2bxO6HzX2AXvqlEJ/SWE4iEKIP1suGGULY8O0T7eNvtdUzz4Hu+CY7KUmvpfmCdCJ3qgmBMweGm920N8/lhtV/3lgV14vpHXvxUzh3Nv+QEnyJV526P+7Ibg4AMxHgsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dAZPNi/C; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C28E2EF9B9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751555759; cv=fail; b=GKWmV5HTWgbxHj6GarTmI+7IR+D27dO5W9uomlqWNPF4NEX19B0i/43xG9dInwJaV2SIv2x3b3tSWAaLQLxnYj3XdC6NOWr0b2DcyH74qfdE4qnsAGotgJEd7Ld3W4GBEGNTtYMWR3U8PbrQ5hubTdgHz021aghVDMJDiLBfKOg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751555759; c=relaxed/simple;
+	bh=2HhRZYWQWbbaxLwavDFWJ8lvlKAOOO/xA942xTP5h+s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=O5v49MS1XneJzPEHjTo/dlhi6t4ynI7kK3x93ImCMH0efSFOqrT4Y8ImkXZYuyS4SAMbtjN6XJt2NxBrwpaWNQUxEDViXGXGog7MYsUmy0zDQ0a+ykJV3YS5bXwWWWX06QacpEX4r9plMCnMMJUvSuwIYVhe8x8AL0jrYTf+H4s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gER97n28; arc=fail smtp.client-ip=40.107.92.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dAZPNi/C"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563DLS0h021104;
-	Thu, 3 Jul 2025 15:14:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QgoSu0LOTK/GtsHJUW210NhYdTAe4MAlCgoVLLqhBBA=; b=dAZPNi/CHbjwbRzV
-	nYp0zE3oyKsNVgQHGjh2y5dQ4VoThqngOV/0P8999HkC9pUmQpWwDeQsYEdWBLL4
-	pYDW4+sySwD6AYZm4zRwjfI5Pg40MYonYf0ZXqNhlHp7AV8+PKDgtp9wypgsGaDP
-	SKSOsFju8PwzGbxN4+leEbaoT206MOpAFHzrJdI0ac1GguifAzwmLiVIeaHwW5lW
-	Xcl7nSMtBdrr5LTqdowAHiXJkBHCfJK410Rzd0xOam4U1T6+RbojdrJOWyjIthoE
-	yZlqYWI/Jc2CRoLPhrFs9JZoeSvyV7MgmDhyyvtxw73PREqyLn9SPkrXQmzajYqn
-	dIs9+Q==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn7kc2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 15:14:52 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563FEpOw015581
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 15:14:51 GMT
-Received: from [10.253.36.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
- 2025 08:14:47 -0700
-Message-ID: <ba80ac3c-2e42-411d-a2b1-b85ed154372d@quicinc.com>
-Date: Thu, 3 Jul 2025 23:14:44 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gER97n28"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LyA434uP03mZpouvJaPvZmmGy80DGkhzhkdxa0SWmp833NsjoHEoKQ4SFvu24byobz6mMWfoUDGnj+HO1+vAyPVyBBoPjezpdB5viLt+soFmqvyUG0lBFpUS4Ud0w4esSzmdJdjCw+ce6JTnDnktbFFNIn9Cj5ekuIBubKPL1eS0HAqSQqWgEhor/qBCAIknLmVTUwJxb+cQD144p82vBUsi5K7uOwMvjPNm42M0Dz9t5INmDzH/3LyNsIo8ognevPQ/LWDd0NNQwRbwLy0HK25jrSwf07l+toZ0/CvKq09FKSPwxw6tt8bF1AaudxdryWrt7s9hHMP8Q/vd06ncyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tybzE8D5wOXbMFgCIEQ77XSdjnMWdvgoESINzjpaB6c=;
+ b=oK9ALORR53g9KQcEHQr9OX2EdOZrrJgJmq00LebGrdby+6cqJbpeBq2W2daa0YvY/Edi9jJdDawc5VeHgaYk66nZmTyXsM+im555IHCH8w5EvPLf5L3ZpBsWP+bPqUhxK3XEPZATsXK6LtaNN/akYaGtVJMRyxuW54DwOMpwc2I3Sm5gfN7tb2VrHxM2XNygCH/WU4jcdhWbXhlia1nEeY6mV4x3HPAI/RfFI/FF5WDMgFnP5jpHemsafCvOV5iTeAa7TUmLVewRHk2fnIPC6wO9q1YgOl5wOMbNWsflYEipU+UEpGw82DMY8M5Gd23yhyUaMsFuRDhKxTOwPGlNuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tybzE8D5wOXbMFgCIEQ77XSdjnMWdvgoESINzjpaB6c=;
+ b=gER97n286EkFZ95j50az5Sn03wUSZbGjZpM5Bz6jgQv0yPbjwWJcDazznWJgRUluw9vKdRgHpBTLsfbYI6JYUkmU1oitPmO9TT7P1JZ5Jkd6K70VO6gy63MEjn/zODAZstFxtnUlMHcp3jeTi+2z5z91LEiA8y9pCam8nTx5N28=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13)
+ by BL3PR12MB6403.namprd12.prod.outlook.com (2603:10b6:208:3b3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Thu, 3 Jul
+ 2025 15:15:53 +0000
+Received: from CO6PR12MB5427.namprd12.prod.outlook.com
+ ([fe80::1c2f:5c82:2d9c:6062]) by CO6PR12MB5427.namprd12.prod.outlook.com
+ ([fe80::1c2f:5c82:2d9c:6062%7]) with mapi id 15.20.8880.027; Thu, 3 Jul 2025
+ 15:15:53 +0000
+Message-ID: <220f9fb4-45ad-4997-9572-564242737dd4@amd.com>
+Date: Thu, 3 Jul 2025 11:15:49 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amd/display:fix a Null pointer dereference
+ vulnerability
+To: jackysliu <1972843537@qq.com>
+Cc: sunpeng.li@amd.com, siqueira@igalia.com, alexander.deucher@amd.com,
+ christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch,
+ alvin.lee2@amd.com, aurabindo.pillai@amd.com, Dillon.Varone@amd.com,
+ Austin.Zheng@amd.com, Sung.Lee@amd.com, mario.limonciello@amd.com,
+ Wayne.Lin@amd.com, ryanseto@amd.com, linux@treblig.org,
+ joshua.aberback@amd.com, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jackysliu <Security@tencent.com>
+References: <tencent_4A53F3018A4E9A1EAECFAD853F6952D67B06@qq.com>
+Content-Language: en-US
+From: Harry Wentland <harry.wentland@amd.com>
+In-Reply-To: <tencent_4A53F3018A4E9A1EAECFAD853F6952D67B06@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0388.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:108::29) To CO6PR12MB5427.namprd12.prod.outlook.com
+ (2603:10b6:5:358::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 2/3] net: phy: qcom: qca808x: Fix WoL issue by
- utilizing at8031_set_wol()
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-CC: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Russell King (Oracle)"
-	<rmk+kernel@armlinux.org.uk>,
-        Viorel Suman <viorel.suman@nxp.com>, Li Yang
-	<leoyang.li@nxp.com>,
-        Wei Fang <wei.fang@nxp.com>, <netdev@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Luo Jie
-	<luoj@qti.qualcomm.com>
-References: <20250703-qcom_phy_wol_support-v1-0-83e9f985b30a@qti.qualcomm.com>
- <20250703-qcom_phy_wol_support-v1-2-83e9f985b30a@qti.qualcomm.com>
- <20250703162316.32a9d442@fedora.home>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <20250703162316.32a9d442@fedora.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEyNyBTYWx0ZWRfX82n6uz2UaW5g
- FcNxeKeJ41EYUysgWzhN0rlDP7UbDYiWhAor/FnRB2IJAIpIpFdZqQGQPigxGF7j6fg/i/Nf41+
- BBLrY1KlFH0T9AXovn9/1EGaEATJ+o7u2rQBfPtEKDhT9sK8Y+7Iy9DE9e2DWlRkwJxczw5aN28
- PAuF9GxNx+9DF/s9QWnuAB/6zeLj5XuuAxEJMnlqES+mJpbjnEFCoyt3Xh2MJdZjbvy73ScS7i2
- rkoygdQW6LFNXgqrdcFqWkEitoftiqtqsK0miqRNq/Fb4fejNXLHR6bowmhVcKTX8jfhRiTKbdr
- 2HmV60AXMFvp41ewAmlcCd8COj9vgLebwac/5Rz5lP0sWoSsmWT3bqpHTNC2uJmmlhwwnl+VM14
- OaIW4aXg08UyOh6zr7hHcZO878rckNI//bVGBTDAOqFIuV/6kZ8bdEmGefFzNGoaD6/975s5
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68669e6c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=JKpRZwQOhUIvib8X3ZwA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: oUqNE08Ork7EFKozgu4amYqrInp-VW4U
-X-Proofpoint-GUID: oUqNE08Ork7EFKozgu4amYqrInp-VW4U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=843 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1011 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030127
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5427:EE_|BL3PR12MB6403:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07c9192d-ce25-4820-a472-08ddba448065
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VGYya0pqY3NIVjkrRkhhSUZFeENSeEdlS2E1VFByRW9tSGFvcm1oVWc5WkRr?=
+ =?utf-8?B?eEtOVS82V2JUQkhadHkrR296RWYzd2N2UDVoYXp1aTVRcDZyQjMxcm1HZ25a?=
+ =?utf-8?B?ZDBqOGVpcWJ5MFVJRy94clNwZUdkQTJ0cEZtemg5clBtazRCZk16NVBDSXJw?=
+ =?utf-8?B?aTF3VWkrSkRnOVMzM05SNHZlaXc4Sm5tK0dJUzZTZGVGRXNCN1RJZHl1MWgv?=
+ =?utf-8?B?Ynk5ODdIQmxic2xRUmZ2TDNOUWpqQzVqdlFuSm1ZdkJqTW50ZTE4NkhKVFp5?=
+ =?utf-8?B?UHI0UEtpcUViQ3Buek1xVWhRQVF3OVZ0MlNuUEJoS0NRSVdXM245NW9NRW56?=
+ =?utf-8?B?NytwSXgyUGhON2pDMDdIeU5heUU1NmxmOEgrVHBna3c4THEwalhuQkFhTjNZ?=
+ =?utf-8?B?aU5PZDljTjhyczZ0TzRCenBYci8wUVQ2NSt0c2cwZmRMT1JjZmw3UUg3L1pv?=
+ =?utf-8?B?Sm9mUzV4c0plZmJaTmlDSTc1TktydlFmQjZaTFViUU5VOEhDRjdSWEdMK1JC?=
+ =?utf-8?B?OFFwbDltcjdSN0lHMFRzOGVBOG9pUEJHeisvT1A0OGREN0J4cVNRMmI5Y3NN?=
+ =?utf-8?B?ZW9LZXhsZ0Y2WTRVL3VZdlNFVHY1US9WR2Ezd0R0YkliWHdSRjY4TXlSYXM3?=
+ =?utf-8?B?WmZqVnVjNFEvRDNTemVtK043SDI5SFA2amh2RkZYV25mVEdUTlhNa3lGU3oy?=
+ =?utf-8?B?YzZHeGUxUVh6dFo0Y2tXMzdDR2YrYjhHRnRmVTVmR0piVDhlZ1R0UHovbjRi?=
+ =?utf-8?B?MDd2VzNDTVRwV1NQRXJaY0dZYVNJK0hTWU84WU5qK2hBYWhISUZUMjJROGF6?=
+ =?utf-8?B?WmR2SFJtRHJQblNnOEQvbGF3R1J2NmYydVJCL01NOTh2ZWRZaGI0czlxa0gx?=
+ =?utf-8?B?L2dEWmt6c0FnL1BsQXBWSTBWd3M3eFZ1VCt5dnF4QlJNU2Rpb3RtM3FFQ1E1?=
+ =?utf-8?B?SlVjbWJxeURQbnFlUmlQNVdHT3J3a3puUWlSU3Yxc3dXV1ZKRDVBUlB3c0tn?=
+ =?utf-8?B?K0pDL0wxMmZhcTNYaWZQNzZDZU82WVRDR2UrTVJFOEluU2cvOThpNGlwZjlG?=
+ =?utf-8?B?MzZhb2hOblMzM20yT2ZwNkNCVGhLRjBWVnJKczlYRlJ6MXF4djZTR1VFVlEx?=
+ =?utf-8?B?UnhXSm5rR1g4QjBVdUo3YVVibExkc3hiNHh6UXd6RHNPMEs1a29lZlU4eklt?=
+ =?utf-8?B?WTVXbFFwMTNTRUxWUWxJZFpwU0VRSEdaTFRQTWI1b0tQMTVrVURQbjVzNnpv?=
+ =?utf-8?B?a0pSLzhZVmxua2NTaklhMDhlSnd6bkhpUVV0UUREeUhGYnhOeWdidHpFaXkv?=
+ =?utf-8?B?ZklCSlFteW1pQnhZS1JBTkM3VU4wc3BXdDdWZk53WHZFbll6MXVQb2FKUzAw?=
+ =?utf-8?B?dHdRSXpRSDdCS0xseVdJRlhPREd0WjRCaDhDM1ljbFFscEExU2NzSXlaTERG?=
+ =?utf-8?B?UmNiNmFrOHlaME9YUnp6MU13NVBkZ1lsV0FVTmZvdU1LSXV0V0sxWURiS0tu?=
+ =?utf-8?B?dXpxUmNlenJ4THFITWxCbjFLVnhCTTd2cFRTRkxKQjFUREpscFpSeWovelQy?=
+ =?utf-8?B?b1JNcUZrajVabGd0UmxObjQwWGp4bVVZbFBTejFFdlkwUStLR1lzZHRwTHQ1?=
+ =?utf-8?B?ejNvWi9hYlNDMkUvQW1FM2s3UWpnVncyWksxeDRuS1haVFBRWGI0RzJLbHpi?=
+ =?utf-8?B?WHJXd05TWFhleUpSMEZSVGpnR0Q3RXJUL2dDTXozU2RhcWRzYk5mWWllNHNa?=
+ =?utf-8?B?djdSbGVGNURvd1RiMTdLSmU0ZFFGNVIvRWN0c0FORkhtZ2wvUXBFb3JpNkN6?=
+ =?utf-8?B?cnhCSWhpWGt4YkYwTTd2cTRubHU0Zm5XeG9nUFd5OFhGaXZVUC94c205clVH?=
+ =?utf-8?B?NENMcFV0NTN2Z2dCN1BFcThoQjJZbkk5LzNTdGk5T3BnenlGVzk3UFdwZkUz?=
+ =?utf-8?Q?GnivG64uhj8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5427.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ek0vNGhqU21NRXd6QXZmcDFaT2xIRTRwYlVpWUFjL0daWm1GMXFmMXFhRXpF?=
+ =?utf-8?B?U0NFQ1NpNVE5c0xNN0lpNkN0WHdLTktwNDl6VTlrREFvMm1uMXZhVmlwVkVB?=
+ =?utf-8?B?VjNGd0JLSHZrbnM5bHNsVEZzdlNITUwwVFM1TUlnUEZKOFMyVHAxMGUrS05M?=
+ =?utf-8?B?dDBTR1d3RmVxT3doMlYyOFQ1a09scTB1R2VPZlhudzU0R2hEQVRkOHU0SkZi?=
+ =?utf-8?B?bEVBb3BDL3pyVmRqVTFuWThPRngwZEJ2US93UmJ6OWIwRTM3aklkbnNKbnFL?=
+ =?utf-8?B?OGxpNWNxdjMyV1VZR3JaUkFwc09yM2cwcFNSM1oyclhOMVJLOG95aFl1ZGN0?=
+ =?utf-8?B?UVVzM2ZnVzV6TU5sMkM0c0RUV1phVDB5cmtFS3pFRFluL0NhSm9xbTA0aFlj?=
+ =?utf-8?B?Ni9naS80VnZVMmU5WTFtaHNpZDREcmV5dVlXSjVLSzdMcmhYcmsrbVJMQVBo?=
+ =?utf-8?B?bjRkRzdiM2pXQmM5QzUrc29QVVJ0TW5JVGUwWWFzQ0E0b3VJT1dXaU9rK1dR?=
+ =?utf-8?B?ZFVId1JtekxjSEV6N0hOUXFLdmg2MnJna3p3cmx6OE1ldkZWMkY5N3M5ZlAz?=
+ =?utf-8?B?WHJvWUl2bDEyY1ppRGdiNWNnZ05IR0VtKzQwT1BiR3UweFQ1T29lNWZKVmJO?=
+ =?utf-8?B?a2phS2JBb2NIZkdnak5YSjhMWmxveE9NVnY4NUszVTVrVUZ6OVAzYmNFOXQz?=
+ =?utf-8?B?N01nV2IveXNpSkJVL1hJc2d4YzN3M1FQSkJDemIxcll5UVQrM0UxWFErU00v?=
+ =?utf-8?B?bFhzYXlUTklwUldzZUFhZXBIYmNhSGdNOTg3ZUwrWFYyS2NHWHNwOTFYWFB1?=
+ =?utf-8?B?Q1hyZTVZRXB6ZllhNlJBUEorUEdVeDVyMlpsdkwyZTh2ZGlVd1lRUi9BZ21I?=
+ =?utf-8?B?MDFXc0ZqdlZsanB3QmozZWNwRUxxZHUwN0pUNC9xMzBkWU40NVhkcS9jTWpi?=
+ =?utf-8?B?WTJiNGlSbWwrUE9HMENKUlRaM3NycVZBVmYrWGNqSTVkSFlpOGJjcDB5a2l2?=
+ =?utf-8?B?ZU1KUWM3bXNyamd1TXNiZTRIL1NNa1hFK0xZekd6SmtGMXNLQjRSdzRZUDZv?=
+ =?utf-8?B?M3RBdXBkbHpTbFl1OWt6TlZvNlcxL1dDOUNBYlJISmxnOHVDcHdUQ2piYVp6?=
+ =?utf-8?B?MHRjMnlwTFNBQjZKb0VRWGlCZ0NIc2VPemxKV3J6Q0ZjaDR3cXNjVWpUcnAr?=
+ =?utf-8?B?RUltMURybk9PakZ5bm1BOEE2NHpLRzFhL2lPN1FRRHI3WDNjWkdNbHEwR3Rv?=
+ =?utf-8?B?NWtMemZMaHV1YUxtWDg4UDVxb1BYRGd6YVlESDB3OW01MEFzVFBaSkw3eTcw?=
+ =?utf-8?B?VHhkazlUdnVFczBtUEQ2RE8zS0ZHSERCNHRrS2NBMnV5Q2pJelRSd1puL216?=
+ =?utf-8?B?SmRldGZRNUNtR3FTQ2VTT3pUcVlTWVNobVhaNys5OERNbktuRXNlY1BZRzYx?=
+ =?utf-8?B?OEJqYWF0RWYvMFlKaTFSTDJKWDZIcFJpV1JGZ1hSMU5jd21ENTJjcFBKNmh3?=
+ =?utf-8?B?OXo1Zm04RlNsZkVsV0ZQUHdPd2RWaGg2S2pNeDlURVc4Zm9iYnN0R1YyaHlt?=
+ =?utf-8?B?SzRzQjlKOHRyVHQ0Z1A0cjBYM3Z6STIxSWRIamdPSWtZKy9yczQwYnR3Q0ZY?=
+ =?utf-8?B?U1REMXpoQ3M0aUlzaHJiQ3dFdi9qQXZBcHR2VDFTamFoWWU1ckRVQm5YVzh2?=
+ =?utf-8?B?b09JdUxHdU5wMy9GaUJRYjlwaUxMdmhNTlArRzYzRXdoOFUyaG9odU9xUE9X?=
+ =?utf-8?B?ZGFRYUJkNTQ1ZE5QNU9LK1pHS2NqQW5ZQ2NzRmdoYU5INkhnUDVLWG1tNjhz?=
+ =?utf-8?B?ZVBBdkp4V1p3TWJyMVVwaUwySC92MlYwN3d2Y2ZFM0QwOERNYVREaWRtTUl4?=
+ =?utf-8?B?MXRKalJOZ1RtVy9aS1lpUnlSb2xOcitvR2hrUUtTcXNYa0lYcnRjM0phK244?=
+ =?utf-8?B?RElDZ0Y2RGExR1BCRlBSSXpyM1JUZ1ZYZVdLQURRdWxHdXRGY1ZxcDZyUjM0?=
+ =?utf-8?B?czdGUkZsTk9hK2w2ZGUzTjRwUDBSMWZYMXQxTVR1YTl6NmVtdDhKVmZHaWxF?=
+ =?utf-8?B?ZlZRTXZwNXY1K3RUcE9FWjF4V1pUS0tSYVNXK3Nmcm9WUGU4QS9INmF5T3lB?=
+ =?utf-8?Q?dAPdxGhb3wRxS8ghusTLWkPNb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07c9192d-ce25-4820-a472-08ddba448065
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5427.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 15:15:53.6831
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +ANzmc8UY8Pp+r+mOite+u+Nsft5Erq5v2IRal7lXwbFjmcVJSeiEKZozeLPkm1l8enM1Wo6NNJBLjLwIyv8mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6403
 
+On 2025-07-02 23:39, jackysliu wrote:
+> A null pointer dereference vulnerability exists in the AMD display driver's
+>  (DC module) cleanup function dc_destruct().
+>  When display control context (dc->ctx) construction fails
+>  (due to memory allocation failure), this pointer remains NULL.
+> During subsequent error handling when dc_destruct() is called,
+> there's no NULL check before dereferencing the perf_trace member
+>  (dc->ctx->perf_trace),
+>  causing a kernel null pointer dereference crash
+> 
+> Signed-off-by: jackysliu <Security@tencent.com>
 
+Thanks for your patch.
 
-On 7/3/2025 10:23 PM, Maxime Chevallier wrote:
-> Hi,
-> 
-> On Thu, 3 Jul 2025 20:14:29 +0800
-> Luo Jie <quic_luoj@quicinc.com> wrote:
-> 
->> The previous commit unintentionally removed the code responsible for
->> enabling WoL via MMD3 register 0x8012 BIT5. As a result, Wake-on-LAN
->> (WoL) support for the QCA808X PHY is no longer functional.
->>
->> The WoL (Wake-on-LAN) feature for the QCA808X PHY is enabled via MMD3
->> register 0x8012, BIT5. This implementation is aligned with the approach
->> used in at8031_set_wol().
->>
->> Fixes: e58f30246c35 ("net: phy: at803x: fix the wol setting functions")
->> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> 
-> If this is a fix, you should target the -net tree instead -net-next :)
-> 
-> Maxime
+Please run and fix this checkpatch.pl warning:
 
-OK. I will resend the patch series targeting the -net tree instead.
-Thank you for the feedback.
+WARNING: From:/Signed-off-by: email address mismatch: 'From: jackysliu <1972843537@qq.com>' != 'Signed-off-by: jackysliu <Security@tencent.com>'
+
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> index 56d011a1323c..3bda0593f66f 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> @@ -934,6 +934,11 @@ static void dc_destruct(struct dc *dc)
+>  	if (dc->link_srv)
+>  		link_destroy_link_service(&dc->link_srv);
+>  
+> +	if (!dc->ctx) {
+> +		dm_error("%s: called with NULL ctx\n", __func__);
+> +		goto skip_ctx_cleanup;
+> +	}
+> +
+
+I would prefer to simply wrap the dc->ctx->logger and dc->ctx bits
+with if (!dc->ctx) and avoid the goto.
+
+Harry
+
+>  	if (dc->ctx->gpio_service)
+>  		dal_gpio_service_destroy(&dc->ctx->gpio_service);
+>  
+> @@ -946,6 +951,7 @@ static void dc_destruct(struct dc *dc)
+>  	kfree(dc->ctx);
+>  	dc->ctx = NULL;
+>  
+> +skip_ctx_cleanup:
+>  	kfree(dc->bw_vbios);
+>  	dc->bw_vbios = NULL;
+>  
 
