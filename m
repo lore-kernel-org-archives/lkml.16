@@ -1,95 +1,73 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842C0231853;
-	Thu,  3 Jul 2025 04:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568B5289E16;
+	Thu,  3 Jul 2025 04:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751516635; cv=none; b=ZHxQjVQesc8CYI2yEFGEFO/J3WnENBVBZMC/sZDowbv3eoJ2XWsFUoWa1h4Jew5p6nOQkBVg+hIa4oq/THXHoOCtr/f/n3C2gqRYbZ3YU/Yym1KnLIKPaJpoYHgB5BL3MOApwgNGd2D3IEjcJkvOoWh0oEtjatczpnK4/xENlXk=
+	t=1751516790; cv=none; b=Dh5ma6OkFjqePvCSgUGR5KpgGyXknYD6lWAh2vNa+LYxXnnVANe1DDV2u8vVnAD2J5Bs7Yq8CUWfiBxl0NcMqKmBOmwOlewC7gbtso/LSwVJaUsvwuMVxay5V/6h4spuGOKO2an6s1eRhZmj7Xbo3mAG7i11UHXgBJ8dViZM0S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751516635; c=relaxed/simple;
-	bh=h8ubHZfWMvO31OpGii6hCXa6S0IryvQNPFMME/gZVoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Qqvt9Np04eiIzS+jFOC+YXTV4LT3ANEtuUkyeWilGJ2al2yNIc8ZOtIcswGTP8VL0vJSjMdIIwvAb9BuGwgb4rB6OX2nhYHCOKAH65G7NUDRXvQ3yFEP3M/dxwFCpZmx/a7NhMGKJfpBumdFoXfr8OyHymoXiRsYNqDHIdHTmLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VEQ8k43X; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751516790; c=relaxed/simple;
+	bh=s2ZxLGzwoxGD/jOJK3uRfwiCV5DjvnjPAwkn2CNF2EY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q6qn6EhfeSkfpx+llIfqfXUAhDdHYFNSbIKAnbtvN3vz4CJN6BK+hXGelhR+8e8qmVRpfaOk2uQngKiTR1YgGTzyDhzZET5z8CkbNiEdwnm+OzTCT6oBPMimaIixjvaYnj9buOs8SV9oao2YYU0e2TXWIrLBLAfkJLEnx6ltm6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOZnA5jX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VEQ8k43X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751516608;
-	bh=OxnkQD9HSmdamZfPeenPLZbQhCDu5AVP47bdzZMRUX8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VEQ8k43Xi6oBb8D4bX62GNSaPazf3kIr/vdtYpiZJs4KJJV6N/X27BtdN8VfVjHES
-	 pUDE7xOKFBTxhWoga0+t+txkSBO4YVsrw+i6B+d3SJkJO1/DhdCuqWOx7k0/IrbW8Q
-	 xk9kYoFO8eW1VeQvfQdele6dU4goF19tm3PrOrVMUpwTPbaEPDplgbUPTQcmnz/v3f
-	 9keD2CUBfh9yUTfrSwEdANZO7ywM7fMObQh7rfVPxZMVi5iMJVDPSiV6VDMCqL34hS
-	 1OL9tn79lP4YozRwNB+6+xsNaTXEjvYqUoSbkgeY4elKpxQuPLOaY0PjrOrvgSkODW
-	 fM45J/EEznPqw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXkCh24Myz4wcZ;
-	Thu,  3 Jul 2025 14:23:28 +1000 (AEST)
-Date: Thu, 3 Jul 2025 14:23:48 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Lee Jones <lee@kernel.org>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the mfd tree
-Message-ID: <20250703142348.45bb8d28@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOZnA5jX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF35C4CEE3;
+	Thu,  3 Jul 2025 04:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751516789;
+	bh=s2ZxLGzwoxGD/jOJK3uRfwiCV5DjvnjPAwkn2CNF2EY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bOZnA5jX3uAlXlky23KBVcoGGUEesAK3/cERxdUWg0zXDcx6AAflqTHRkwPqqCQS+
+	 e0LXZ6k5Fn2af3sx/dxy9bMi8a//HE9NETu7/1vFsYD0lwQBJXBYtZlKB/loiz5GFa
+	 8BwuVVqP81tc8HewlJJtMz9WJx3rGzz+kwB1o7A3xMlIuDvZ3ysM4L2atWxttrYWO4
+	 2J9IU7o6z3Z60UDOdR2A5q1XOtSdePyl3FoPtaApu/hHhLkMlN8yvZpo87vehYw+jy
+	 zKcg6E1UZZNVbRByiaNuIkoSb3n4zgHJWulmzfPD5yHRLixUP0+xDW/KMdEgZgFgvU
+	 GkyoWvIGkf/5g==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/2] tracing: Fixes for filter
+Date: Thu,  3 Jul 2025 13:26:26 +0900
+Message-ID:  <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+Q3zSPK48qtskdh+tyk3YNk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
---Sig_/+Q3zSPK48qtskdh+tyk3YNk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Here is a patch series to fix some issues on the trace event
+and function filters.
 
-After merging the mfd tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+The first patch fixes an issue that the event filter can not
+handle the string pointer with BTF attribute tag. This happens
+with CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y.
 
-drivers/media/radio/radio-wl1273.c:12:10: fatal error: linux/mfd/wl1273-cor=
-e.h: No such file or directory
-   12 | #include <linux/mfd/wl1273-core.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~
-sound/soc/codecs/wl1273.c:10:10: fatal error: linux/mfd/wl1273-core.h: No s=
-uch file or directory
-   10 | #include <linux/mfd/wl1273-core.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~
+The second patch fixes a selftest issue on the function glob
+filter. Since mutex_trylock() can be an inline function, it
+is not a good example for ftrace. This replaces it with
+mutex_unlock().
 
-Caused by commit
+Thank you,
 
-  17f5c6fa85e5 ("mfd: wl1273-core: Remove the header")
+---
+Masami Hiramatsu (Google) (2):
+      tracing: Handle "(const) char __attribute() *" as string ptr type
+      selftests: tracing: Use mutex_unlock for testing glob filter
 
-I have used the mfd tree from next-20250702 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+Q3zSPK48qtskdh+tyk3YNk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhmBdQACgkQAVBC80lX
-0Gwuxwf+MGa23A7TD6GBelgTOIPtcjqi/Cj24KhzZS494z4NiA3A46JEu9TKsPEO
-4jiXjmzxtGBIGB8zcM2srUzTLSzo9UP4j5TSfQzeZ890FJizU7BchRemjdgzrmw6
-Z8IWXjGPAtlSgpSV7GbqW9kZDzJ7MPs4oLEt7AzBPJAVqN3Wvq/SXM7H+Es4jNvg
-oD1dGh6rIGa0tHvhI4Enb1DwbOBYHFUwRF2ZYeTPWprfiVD/jJ3RSDi+T/NNZB17
-N9tXhsLp8dQN9eIZHhaC1B6wJvwiWRpKw0Wjgzb33e32I6qoO4M/raylN7rgnyAL
-xj25r6qFpFVfcxrpth4raMBRUH7gMA==
-=1fMe
------END PGP SIGNATURE-----
-
---Sig_/+Q3zSPK48qtskdh+tyk3YNk--
+ kernel/trace/trace_events_filter.c                         | 5 +++++
+ tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
