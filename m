@@ -1,98 +1,146 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD052DE6FC;
-	Thu,  3 Jul 2025 06:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9A42DE6FC;
+	Thu,  3 Jul 2025 06:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751522811; cv=none; b=fs98lCUS29TMsMv1s75W24QyOjGVBY79iNxotU1G8Gb9x+aryTzwlsCVr6g58v5A6nRwLuBNiyB2VakICYGs/V1krl0sgeFv1A56VU7DTWL8nG3bY9sHgV77yNomPqtqeYQpn1iUHPenUB5i5mt6nOjRBcZCniBRBrkr/IIhUAI=
+	t=1751522848; cv=none; b=Vof/lxgk/NBOKTcY3RZjYYT024aQg6PCOPClKyhLDrggBbYayUomUh8qlUEc7nwLYegEleEvStwriB2cad1Uqt9rgHak4Yi8s1YRm6x8KhibFKSFaefGRrN3UK3zjBM1yam6ICdVGxLp+h3N5x1PILtviliiQM78+aS/8TOdvdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751522811; c=relaxed/simple;
-	bh=ZWevuLWSVkn7zLvbrsg0RjkiqNUHWiRxWj0YkUftYgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kn2IfkVnEdW00C55EYtLBZL39yjadBNfIU/B0wualLy2TRAUUVCYz4DbnRbiaYR0kaYakTfGEiZAYIq/cXYgp2/WgloXKQyZbDWBaSwlRsJ+Lin6tVZEGs+Pooc8KLbK8ROTOnsJVq84sOAvkuaWMjeEG6M+jqszqkRgfgfbE0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Caut9X/f; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751522848; c=relaxed/simple;
+	bh=XsgDTHcbSlmeQChwCzbs2AReVe7lCNdaxsr0q+t/2oU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f6w7de7JoiiIL2tAGYxNJTOAQtWRat6aMxceC5pAn9vdRSM9n6UwZ2iu9s2U+tywAwCcILrNEOFcETiRZrsq9oQ/UWmXOWedDrq7sufOrC58DW3CSDXXeV62qG/tsV/QI5v2LtKIzsGUFS6P+bTjcRhjfkWepomp3UAExgh7gUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mJ8tID+X; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Caut9X/f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Eq8Y+1V8pSfxkXgAiYTfXGDFT7NGn0VC8yVA5xBBUcg=; b=Caut9X/fhXkPrD5BaBbuS+nYa+
-	0+f1u6XTd2CVxemF2eYW6Cz3Eixh1qfUZSjbZwD2qs5XE9iM5k5NFzj2iPPEmLk0SIOoZk4qwrBaM
-	FDP43dda2nObGQOU7fr9HJq2GpuNs5Mig7xt7tk8M1T0aJc9FWudqTSKAjP9bA9bCxTBlpbT555ig
-	NQmP49ZHwX4CDsAxxoyvC15tKG91iLnf3CWkiHMPhJ4/351P6mQXm937SLOkVvIoyI2Mgn+ixIhmB
-	HpctLG+cHWmWSqecrmKBs/VnW+1ObDpffr9bLHd+2YBhLgrepmSLhPmUQByKV/5ANMQj6ZocZE1wb
-	NixVyA6g==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXD5p-00000007d5o-49rZ;
-	Thu, 03 Jul 2025 06:06:46 +0000
-Message-ID: <e4bea8cb-1367-45ab-aae8-e29efbdbd082@infradead.org>
-Date: Wed, 2 Jul 2025 23:06:42 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mJ8tID+X"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5630THLw017214;
+	Thu, 3 Jul 2025 06:07:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=/pMWTm8f8FZgAt9g8Eu/ILN53nm+DEE9jHHb93yqR
+	d0=; b=mJ8tID+XZD4xa35IcnEejVwLnPg1HxSVBWunwBFYQWNn/WqPOMeBJ0iGt
+	0k9YdPnoXsNNCjpYdMnedSM4gByhdLNr8OejiUGc9GvYFxOQT2ouFZX9c2pE2nbZ
+	HG5vTRiW9k+G9jXsj6DJhvYfAq07aDbhQ/98QAdEcyD2MyH/i0jmCXe8UtVOh2lL
+	Dqw8R/LwVf30G/gqpqwoD0+qU/n/2QC1wZZ+hJirm3JFBlFL8ZghcNUAJMcgqaRr
+	NxKdiu0bHoy96RSfQk+e/oMu6dSvzz4q+6eNUQetMeSlQe1fdmz5oG06TeYqlyQ0
+	SZxfPOCUiUxPuxkuWDddx8q5b5pGQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dhte4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 06:07:11 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56366fsn025629;
+	Thu, 3 Jul 2025 06:07:10 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dhte1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 06:07:10 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56366HOh021934;
+	Thu, 3 Jul 2025 06:07:09 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpuam8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 06:07:09 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563675Jo44106028
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 06:07:05 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6C1352004B;
+	Thu,  3 Jul 2025 06:07:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 206A720040;
+	Thu,  3 Jul 2025 06:06:59 +0000 (GMT)
+Received: from aboo.ibm.com.com (unknown [9.39.26.205])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 06:06:58 +0000 (GMT)
+From: Aboorva Devarajan <aboorvad@linux.ibm.com>
+To: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+        lorenzo.stoakes@oracle.com, shuah@kernel.org, pfalcato@suse.de,
+        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+        npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
+        baohua@kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, donettom@linux.ibm.com,
+        ritesh.list@gmail.com, aboorvad@linux.ibm.com
+Subject: [PATCH v2 0/7] selftests/mm: Fix false positives and skip unsupported tests
+Date: Thu,  3 Jul 2025 11:36:49 +0530
+Message-ID: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] docs: document linked lists
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: kernel@collabora.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
- <aGX30ATQaD2EjWwW@archie.me>
- <194f16f5-4e26-460f-ae4c-8a5f93088fae@infradead.org>
- <70ef2227-55ac-482b-9bcc-df1fd847abd9@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <70ef2227-55ac-482b-9bcc-df1fd847abd9@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8Hu9LyLRjwpLLDRkQebWrbLMsNEpGni9
+X-Proofpoint-GUID: U3JNq0F97USW9t6aRqiOWSDzw5Mxr1-t
+X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=68661e0f cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=c5YA-QwSPcc6PC69QzEA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA0NCBTYWx0ZWRfX0dDupjziPlRO 7wV7gvl88Fm9Gn9o5WD2NqTGjU3+zXQileHjlI4Jg3R7iyrEV9Su+W2s2RyMlC6upNBjjeTcHqO 3/inT8WffvSV8lMeJjdOqosU+la1Pst20p4Z35zWWmVGjgoAqG61K6qsCl+DglgAe2LlXaz7pe9
+ 4JsrVbu6BnRaFwF7dTjtAd8glk0km7IJdioskTxvyVYS1Yik8RfE97br4twCUBxODfF2oIrvIIg NJnGGtE6ToJDDFiFvqMvFCvvzgayttmk5MdP/K7knX88sntszEKA8mTKeWveJFTy30VvtH8LwCZ VRnZRBhr0hzip5sd4cu8Nr+cTLXM8R/yZ6+XPINRPcfdkYOghK36KzN1Uq2iJWj8eYyg0o8L/Nq
+ +nMEhUVTHVmS6FL1wXwd0tnrWm5yh8iTvKofPEETMWyYfqIajgI/kFNoRB4hD9VeE/NYskLY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_01,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030044
 
+Hi all,
 
+This patch series addresses false positives in the generic mm selftests
+and skips tests that cannot run correctly due to missing features or system
+limitations.
 
-On 7/2/25 10:48 PM, Bagas Sanjaya wrote:
-> On 7/3/25 11:16, Randy Dunlap wrote:
->>
->>
->> On 7/2/25 8:24 PM, Bagas Sanjaya wrote:
->>> On Wed, Jul 02, 2025 at 10:24:47PM +0200, Nicolas Frattaroli wrote:
->>>> diff --git a/Documentation/core-api/list.rst b/Documentation/core-api/list.rst
->>>> new file mode 100644
->>>> index 0000000000000000000000000000000000000000..b0586056abb04d2bcc4518f7238ff9a94d3dd774
->>>> --- /dev/null
->>>> +++ b/Documentation/core-api/list.rst
->>>> @@ -0,0 +1,847 @@
->>
->> [snip]
->>
->>>
->>> The text LGTM, thanks!
->>>
->>> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
->>>
->>
->> Please see https://people.kernel.org/tglx/notes-about-netiquette,
->> especially "Trim replies".
->>
-> 
-> I did quote the whole diff to provide review context...
-> 
+---
 
-If you had commented on any specific lines in the patch, then that would
-be necessary. Even if you were commenting on only a few lines of the patch,
-most of the patch lines could be snipped out.
+v1: https://lore.kernel.org/all/20250616160632.35250-1-aboorvad@linux.ibm.com/
 
-The Subject: gives us the review context. It's pointless & annoying to other readers
-to have to scroll down thru an 847-line patch to see any kind of Tagged-by: reply.
+Changes in v2:
 
-thanks.
+   - Rebased onto the mm-new branch, top commit of the base is 3b4a8ad89f7e ("mm: add zblock allocator").
+   - Split some patches for clarity.
+   - Updated virtual_address_range test to support testing 4PB VA on PPC64.
+   - Added proper Fixes: tags.
+   - Included a patch to skip a failing userfaultfd test when unsupported,
+     instead of reporting a failure.
+
+---
+
+Please let us know if you have any further comments.
+
+Thanks,
+Aboorva
+
+Aboorva Devarajan (3):
+  selftests/mm: Fix child process exit codes in ksm_functional_tests
+  selftests/mm: Skip thuge-gen if shmmax is too small or no 1G huge
+    pages
+  selftests/mm: Skip hugepage-mremap test if userfaultfd unavailable
+
+Donet Tom (4):
+  mm/selftests: Fix incorrect pointer being passed to mark_range()
+  selftests/mm: Add support to test 4PB VA on PPC64
+  selftest/mm: Fix ksm_funtional_test failures
+  mm/selftests: Fix split_huge_page_test failure on systems with 64KB
+    page size
+
+ tools/testing/selftests/mm/hugepage-mremap.c  | 16 ++++++++++---
+ .../selftests/mm/ksm_functional_tests.c       | 24 +++++++++++++------
+ .../selftests/mm/split_huge_page_test.c       | 23 +++++++++++++-----
+ tools/testing/selftests/mm/thuge-gen.c        | 11 +++++----
+ .../selftests/mm/virtual_address_range.c      |  8 ++++++-
+ 5 files changed, 61 insertions(+), 21 deletions(-)
+
 -- 
-~Randy
+2.43.5
 
