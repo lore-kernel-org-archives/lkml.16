@@ -1,63 +1,63 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8C72E3AFF;
-	Thu,  3 Jul 2025 12:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1D12E54BF;
+	Thu,  3 Jul 2025 12:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545041; cv=none; b=gyvjKQWxjH/PRV1sXYjPDBg6GR+z2JQLJhbTJpDg7kVRdliHddNmmoxrHadtyVkV7Ic6eMCeaupkeQIGGkQjl8sWmYH97hVi99GbAz+IQdiyVd7lU7Dz+owfgLNZz7X0Qw0S/G9ms/XJju3CL8/YzuKsxXyqFbM0dWLh0kkyLnk=
+	t=1751545046; cv=none; b=JVECiXkTKq2wXWVbX/BEytSl/oAK3i3no4w1E+KMdJrI3v/dnPLu031WuQ9rd9XoOrhfAL2OxRkuWLbvwGdlJNtwwWfHm/iIelnErhurELCNWaztg19yc8ULCZ/RRzUOmMbT645La7l8Iswuhqt2W/4z/e9tVIjuR7voZzpThYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545041; c=relaxed/simple;
-	bh=5/8PnfxeHN/Mmaku5UOh8UnVY98f3fyy4BvkmGsOquo=;
+	s=arc-20240116; t=1751545046; c=relaxed/simple;
+	bh=5oCXAqnGUnQLOPxG3F1XjOlkZaQdZfxbKDxj9Ga5C+0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B27PIGbP9rLgomspKR3af0sYme2gzvkyaLVAov+ocDMcbWLZia5QtjTkAUlauTJ2tyAMtKQuJsRaOEJEco+7Kn0LRK6PcJmbn4+flVL5cijwF0fj21zOIufvbcsWUuYoAc32tjrqqt5Eg7CTvhkB6dR5gp5owWq7hWII/myaJSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXe0la/V; arc=none smtp.client-ip=209.85.210.195
+	 MIME-Version; b=MGPDOpUd8J/m+lNv08FBlI3fuqkkVYB4h74PckLzhF69hX/onHZrD9UELzAEWlxz0Vh/0T0iSjG3dexmOpDJaOLR1rZZDmx03t2uAyhH3iaEfyPCQGI6AHc/vnaeZjYB4H4SnpdsvudduCwhpAGSyakXigkciwTmOefXgTwOXas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jj9E5/Ni; arc=none smtp.client-ip=209.85.210.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXe0la/V"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-748e81d37a7so5532309b3a.1;
-        Thu, 03 Jul 2025 05:17:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jj9E5/Ni"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-747c2cc3419so7285961b3a.2;
+        Thu, 03 Jul 2025 05:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545039; x=1752149839; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751545044; x=1752149844; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=28Fo6CyXq4yc2GWt9/Vp97XENzHrxY10ICTZm8f38CM=;
-        b=YXe0la/VqV21oPWxWwhmn40LadLFp3UA8nTceptbslLdF9HG+LTihwQAxFTyxKjCGT
-         UAzu1CHqXG9uaDc6yxQCJfojIR+QwP1gZTqEuVpbE/7iQp2rG3Sajy0KFgE4+cfAAecl
-         z5Nm15wOpCERLfaKW40R/m6qI9wQ0ZTzMMzQyLMujbDCnFr275EYXVhG0HSYUQKVlF07
-         /2BwcbHGj2Zffa/xMbPr+x6jIg22kNvkoEDUkeuDWBon1LBnvWQvqDHyVtr4Wt/TdgZ/
-         1ceE/Pzg+4raBGHxQzJ4rEmFF27TTgopIhJQN4EocoaL5yd4tUPx/5BXnRJ0ws2Uuakj
-         b2UA==
+        bh=niyqKP09k4jZALhCpCoq03PetO0aqU/sqgXLnPNk78o=;
+        b=jj9E5/NiYH4gpalKNX8TLs7pJPK4IE3YB5JTxvmZmzGY5/O0A9ddYjNUbMNcsnBtym
+         mXfZYtGLIBjXvmf0pA5JgFZ9pvKBGlYC53eJT13czebw+t7zyKDMuMHWP/nFKbz6EQI8
+         FUx3N750MICPMoSLsP0dk91ivme2zIywlQTw5y6+4WQfPwSkoehtRYXRejGFwI7Sitvw
+         kf8ry03ra71IcXMRsm6/Cc52mAVrYMtIumeVXW/F5PLkwL4SqCKhO4jmfajjNkDntaAI
+         vy9TfDTuOO81ao/cd9Hq+TMnTRKoqPGBOaee07MUj4y3EFwJ5kHO/GOg5YxLhXbVlK4q
+         PrHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545039; x=1752149839;
+        d=1e100.net; s=20230601; t=1751545044; x=1752149844;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=28Fo6CyXq4yc2GWt9/Vp97XENzHrxY10ICTZm8f38CM=;
-        b=W8Q60+P67JU6CbxChT3wolzDzEmhebTINVVOUyT0zfH7/WaV0YE4Cx0z76REkvWSs0
-         zSmduMXyWjZvLF63VK9JG/ve7v/bzH/xdzbRNJ8e2iIb6uNsyB1Rz7dB+Ryqi+qvalGh
-         ymOjOejjPcR1SBu42hS9a4TBk42lysrl4aej+1sEH676eSOkHEq2zAwkgIcFkuW4ozsS
-         wGFsuqLd5XnOVJbowwo59O+iwX71jI7RQehj+icaaYgYX3Oao5XOtXcYrBFLaup51PdA
-         04h6aSeAzyv7B04avE+h9Wl38WtG045zaJr62SG9M4C7hC7ncLNZQC4bOtcbYpu3yb9h
-         HqSw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1fOW12KFgCppd7ETAWwm9MpuFNIwmHSIqconpJrOUZGMYWQByV1t9HMGgOyKS7H91JPFiYkNq@vger.kernel.org, AJvYcCXccVEldhAgFZR6p6U8uhH0qmQ2ViBWlyiJQ6Gq0Cwz2Sg2RIuKGjk4eO2q8GzbIbLPFRmV/uxZjyAnYks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE4QBMH4kiQL0cG/gzd0jtLBk9Aq5s7p9erDGtGUpZabjHo7zb
-	pLSdnbDmnkoim2yLitZYPaIeev+tMkuiEhDumcghFC4M5L03pXJTkMMM
-X-Gm-Gg: ASbGncsn4AX7agpqWW61NkKv+fUC2+SxpnkUH8+msHjNYLd4MmOAnkwLARr7aGz1yqJ
-	GBxVUB+BgLW/FB9aVzOy4LybULRrgSGacHv4ockJQN20zKuXQ7dmFeeZjFT3U+rVigJdq3wpnpq
-	DeVg2rLdwIODbJm8qUOmvbnUucRLf+nEYLtAtUKln8+QP2S4rno3SlEoGvicNiGZh8q7vaLLyb6
-	elLEUnyPoJU3vA5O0mAusjihpl+QOI0ezc61pKZmOllvxa+5zNzy2ZY7Bfua+zJnyu0IkGFQ2gy
-	wXubbQgLOwoHTgQBmmgrkeXGgy9zkeHFxAq9cAiQO9ecYJplxS/BDAfYE6Yq3Yv/UzAZ7gRX/5/
-	/vTE=
-X-Google-Smtp-Source: AGHT+IEM5eV3fRj5yi8hIC5vT84TLtxQ3pa+WK0idFVGhsfh72X37ILc/+Pfo0jc6s2BRG6nQs2fjw==
-X-Received: by 2002:a05:6a00:1911:b0:736:3ea8:4805 with SMTP id d2e1a72fcca58-74c99821e39mr3892571b3a.7.1751545038589;
-        Thu, 03 Jul 2025 05:17:18 -0700 (PDT)
+        bh=niyqKP09k4jZALhCpCoq03PetO0aqU/sqgXLnPNk78o=;
+        b=U8jndX9RU+WnSjFIyfIkc1omBvRwsuKUWgHt8VT2ToOIlxppu1oj5M0Lp0/m/S54cT
+         TFsxuanAhK0WDQyxd7YZVrhjuDqnjnekAf9iNuq5TUFBKqgJbbTr9vmJMPA3D/1u/ZT9
+         jZ/q4dgpaKLHhZcTzHBbb8vDqPaMk+MRl9cdwsxXkzqt0r9xthkfBFZL6YlJ0H5xllzP
+         LC6EDQiMTzHUWtP7EHSYpebJR4YYgvXRXezoZb3IFIb9UKpVNBf2/RmfuMBHkjUur3mp
+         VTPwcvvVR012JhA/vWf2/hE4mU0DqqewJPAmANqu5Kw1YXvFO6nx0ytMGk0kEWWyOJXm
+         2sVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyP5d65h9lIXLi9zy+p+3cZ9W1JK8K3D8RU3+6DbA+HlT+pL2oPsJqATm4l+0Ve3WgrIH9d5MquBv94A0=@vger.kernel.org, AJvYcCXCVIkOjcBixyaPDL70+hVjy1FY8+a3za6luh8xQk9aRlgIinFXOrt4kk1vSnvFZx95ivuyLRqJsFTVmMK/gus5OeBe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG27tZchYJm+sMKATOKR6+kvR25WwCoOVDlSo/hFsjPcr3mYez
+	hUUAT+hCKbsbrKQHxVqK4OVwjya5PdZ6nnEfhHL4eLu9TSTfn5fWIz735e6wc7AEbztmEA==
+X-Gm-Gg: ASbGncuHS0a1oD9yznTC4mMzbpKX8N3onBAIyISoqIrNGkFEw4mglkwYL05QG82JXk3
+	s1tjGm+6mZMNw2/8+1qshA9WYNu8BkuZx8VhtpsdqKcOPySyGUAyLkP7vevMPsCbdPrEsrT6dkt
+	SHKlIciPhGZlpmc3xskTOPsZKrEfXNsbbLnnDvV/Uvo8O7XqbphYIzxBpjcuyhlLqOKMi4DOmux
+	BCVXtqbAekLppUkUFw0U5kPjf7WnXsgIa+jBK677g2N5J2a3QN0qZFkaqneadOUnYrAaBZgBmIv
+	4VHIvbbCTNG7mUlaaPNIlqAWdI+WKdJeNZV00KM8zczJxL3+2tD3ovH4wDNWOIFcXAKEmP8dFFl
+	kbW8=
+X-Google-Smtp-Source: AGHT+IEM7HNVGdaso9YQFp+Gv95PHeQAf0tTWJGRHPZl4vGWMvFxEvK/XZ7mPQp72+Jc1khasprRIQ==
+X-Received: by 2002:a05:6a20:6a1f:b0:1f5:8622:5ecb with SMTP id adf61e73a8af0-2240c6a1a38mr5632587637.34.1751545043827;
+        Thu, 03 Jul 2025 05:17:23 -0700 (PDT)
 Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.17.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.17.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 05:17:18 -0700 (PDT)
+        Thu, 03 Jul 2025 05:17:23 -0700 (PDT)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: alexei.starovoitov@gmail.com,
@@ -65,20 +65,13 @@ To: alexei.starovoitov@gmail.com,
 	jolsa@kernel.org
 Cc: bpf@vger.kernel.org,
 	Menglong Dong <dongml2@chinatelecom.cn>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH bpf-next v2 02/18] x86,bpf: add bpf_global_caller for global trampoline
-Date: Thu,  3 Jul 2025 20:15:05 +0800
-Message-Id: <20250703121521.1874196-3-dongml2@chinatelecom.cn>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2 04/18] ftrace: add reset_ftrace_direct_ips
+Date: Thu,  3 Jul 2025 20:15:07 +0800
+Message-Id: <20250703121521.1874196-5-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
 References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
@@ -90,495 +83,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement the bpf global trampoline "bpf_global_caller" for x86_64. Thanks
-to Alexei's advice, we implement most of the global trampoline with C
-instead of asm.
+For now, we can change the address of a direct ftrace_ops with
+modify_ftrace_direct(). However, we can't change the functions to filter
+for a direct ftrace_ops. Therefore, we introduce the function
+reset_ftrace_direct_ips() to do such things, and this function will reset
+the functions to filter for a direct ftrace_ops.
 
-We implement the entry of the trampoline with a "__naked" function, who
-will save the regs to an array on the stack and call
-bpf_global_caller_run(). The entry will pass the address of the array and
-the address of the rip to bpf_global_caller_run().
+This function do such thing in following steps:
 
-In bpf_global_caller_run(), we will find the metadata by the function ip.
-For origin call case, we call kfunc_md_enter() to protect the metadata,
-which is similar to __bpf_tramp_enter(). Then we will call all the BPF
-progs, just like what BPF trampoline do.
-
-Without origin call, the bpf_global_caller_run() will return 0, and the
-entry will restore the regs and return; In origin call case, it will
-return 1, and the entry will make the RSP skip the rip before return.
-
-In the FENTRY case, the performance of global trampoline is ~10% slower
-than BPF trampoline. The global trampoline is optimized by inline some
-function call, such as __bpf_prog_enter_recur and __bpf_prog_exit_recur.
-However, more condition, branch and memory read is used in the
-bpf_global_caller.
-
-In the FEXIT and MODIFY_RETURN cases, the performance of the global
-trampoline is the same(or even better) than BPF trampoline. It make sense,
-as we also make the function call to __bpf_tramp_enter and
-__bpf_tramp_exit inlined in the bpf_global_caller.
-
-In fact, we can do more optimization to the bpf_global_caller. For
-example, we can define more bpf_global_caller_xx_run() function and make
-the "if (prog->sleepable)" and "if (do_origin_call)" fixed. It can be done
-in a next series. After such optimization, I believe the performance of
-FENTRY_MULTI can be closer or the same to FENTRY. And for the
-FEXIT/MODIFY_RETURN cases, the performance can be better.
+1. filter out the new functions from ips that don't exist in the
+   ops->func_hash->filter_hash and add them to the new hash.
+2. add all the functions in the new ftrace_hash to direct_functions by
+   ftrace_direct_update().
+3. reset the functions to filter of the ftrace_ops to the ips with
+   ftrace_set_filter_ips().
+4. remove the functions that in the old ftrace_hash, but not in the new
+   ftrace_hash from direct_functions.
 
 Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
-v2:
-- rewrite the global trampoline with C instead of asm
----
- arch/x86/Kconfig            |   4 +
- arch/x86/net/bpf_jit_comp.c | 268 ++++++++++++++++++++++++++++++++++++
- include/linux/bpf_tramp.h   |  72 ++++++++++
- kernel/bpf/trampoline.c     |  23 +---
- 4 files changed, 346 insertions(+), 21 deletions(-)
- create mode 100644 include/linux/bpf_tramp.h
+ include/linux/ftrace.h |  7 ++++
+ kernel/trace/ftrace.c  | 75 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 71019b3b54ea..96962c61419a 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -155,6 +155,7 @@ config X86
- 	select ARCH_WANTS_THP_SWAP		if X86_64
- 	select ARCH_HAS_PARANOID_L1D_FLUSH
- 	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
-+	select ARCH_HAS_BPF_GLOBAL_CALLER	if X86_64
- 	select BUILDTIME_TABLE_SORT
- 	select CLKEVT_I8253
- 	select CLOCKSOURCE_WATCHDOG
-@@ -432,6 +433,9 @@ config PGTABLE_LEVELS
- 	default 3 if X86_PAE
- 	default 2
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index b672ca15f265..b7c60f5a4120 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -528,6 +528,8 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
  
-+config ARCH_HAS_BPF_GLOBAL_CALLER
-+	bool
-+
- menu "Processor type and features"
+ void ftrace_stub_direct_tramp(void);
  
- config SMP
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 15672cb926fc..8d2fc436a748 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -11,6 +11,8 @@
- #include <linux/bpf.h>
- #include <linux/memory.h>
- #include <linux/sort.h>
-+#include <linux/bpf_tramp.h>
-+#include <linux/kfunc_md.h>
- #include <asm/extable.h>
- #include <asm/ftrace.h>
- #include <asm/set_memory.h>
-@@ -3413,6 +3415,272 @@ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
- 	return ret;
++int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
++			    unsigned int cnt);
+ #else
+ struct ftrace_ops;
+ static inline unsigned long ftrace_find_rec_direct(unsigned long ip)
+@@ -551,6 +553,11 @@ static inline int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned l
+ {
+ 	return -ENODEV;
  }
- 
-+#define FUNC_ARGS_0		((2 - 1) * 8)
-+#define FUNC_ARGS_1		((2 + 0) * 8)
-+#define FUNC_ARGS_2		((2 + 1) * 8)
-+#define FUNC_ARGS_3		((2 + 2) * 8)
-+#define FUNC_ARGS_4		((2 + 3) * 8)
-+#define FUNC_ARGS_5		((2 + 4) * 8)
-+#define FUNC_ARGS_6		((2 + 5) * 8)
-+
-+#define SAVE_ARGS_0
-+#define SAVE_ARGS_1						\
-+	"movq %rdi, " __stringify(FUNC_ARGS_1) "(%rsp)\n"
-+#define SAVE_ARGS_2 SAVE_ARGS_1					\
-+	"movq %rsi, " __stringify(FUNC_ARGS_2) "(%rsp)\n"
-+#define SAVE_ARGS_3 SAVE_ARGS_2					\
-+	"movq %rdx, " __stringify(FUNC_ARGS_3) "(%rsp)\n"
-+#define SAVE_ARGS_4 SAVE_ARGS_3					\
-+	"movq %rcx, " __stringify(FUNC_ARGS_4) "(%rsp)\n"
-+#define SAVE_ARGS_5 SAVE_ARGS_4					\
-+	"movq %r8, " __stringify(FUNC_ARGS_5) "(%rsp)\n"
-+#define SAVE_ARGS_6 SAVE_ARGS_5					\
-+	"movq %r9, " __stringify(FUNC_ARGS_6) "(%rsp)\n"	\
-+
-+#define RESTORE_ARGS_0
-+#define RESTORE_ARGS_1						\
-+	"movq " __stringify(FUNC_ARGS_1) "(%rsp), %rdi\n"
-+#define RESTORE_ARGS_2 RESTORE_ARGS_1				\
-+	"movq " __stringify(FUNC_ARGS_2) "(%rsp), %rsi\n"
-+#define RESTORE_ARGS_3 RESTORE_ARGS_2				\
-+	"movq " __stringify(FUNC_ARGS_3) "(%rsp), %rdx\n"
-+#define RESTORE_ARGS_4 RESTORE_ARGS_3				\
-+	"movq " __stringify(FUNC_ARGS_4) "(%rsp), %rcx\n"
-+#define RESTORE_ARGS_5 RESTORE_ARGS_4				\
-+	"movq " __stringify(FUNC_ARGS_5) "(%rsp), %r8\n"
-+#define RESTORE_ARGS_6 RESTORE_ARGS_5				\
-+	"movq " __stringify(FUNC_ARGS_6) "(%rsp), %r9\n"
-+
-+#define RESTORE_ORIGIN_0
-+#define RESTORE_ORIGIN_1						\
-+	"movq " __stringify(FUNC_ARGS_1 - FUNC_ARGS_1) "(%[args]), %%rdi\n"
-+#define RESTORE_ORIGIN_2 RESTORE_ORIGIN_1				\
-+	"movq " __stringify(FUNC_ARGS_2 - FUNC_ARGS_1) "(%[args]), %%rsi\n"
-+#define RESTORE_ORIGIN_3 RESTORE_ORIGIN_2				\
-+	"movq " __stringify(FUNC_ARGS_3 - FUNC_ARGS_1) "(%[args]), %%rdx\n"
-+#define RESTORE_ORIGIN_4 RESTORE_ORIGIN_3				\
-+	"movq " __stringify(FUNC_ARGS_4 - FUNC_ARGS_1) "(%[args]), %%rcx\n"
-+#define RESTORE_ORIGIN_5 RESTORE_ORIGIN_4				\
-+	"movq " __stringify(FUNC_ARGS_5 - FUNC_ARGS_1) "(%[args]), %%r8\n"
-+#define RESTORE_ORIGIN_6 RESTORE_ORIGIN_5				\
-+	"movq " __stringify(FUNC_ARGS_6 - FUNC_ARGS_1) "(%[args]), %%r9\n"
-+
-+static __always_inline void
-+do_origin_call(unsigned long *args, unsigned long *ip, int nr_args)
++static inline int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
++					  unsigned int cnt)
 +{
-+	/* Following code will be optimized by the compiler, as nr_args
-+	 * is a const, and there will be no condition here.
++	return -ENODEV;
++}
+ 
+ /*
+  * This must be implemented by the architecture.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index f5f6d7bc26f0..db3aa61889d3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6224,6 +6224,81 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(modify_ftrace_direct);
++
++/* reset the ips for a direct ftrace (add or remove) */
++int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
++			    unsigned int cnt)
++{
++	struct ftrace_hash *hash, *free_hash;
++	struct ftrace_func_entry *entry, *del;
++	unsigned long ip;
++	int err, size;
++
++	if (check_direct_multi(ops))
++		return -EINVAL;
++	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
++		return -EINVAL;
++
++	mutex_lock(&direct_mutex);
++	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
++	if (!hash) {
++		err = -ENOMEM;
++		goto out_unlock;
++	}
++
++	/* find out the new functions from ips and add to hash */
++	for (int i = 0; i < cnt; i++) {
++		ip = ftrace_location(ips[i]);
++		if (!ip) {
++			err = -ENOENT;
++			goto out_unlock;
++		}
++		if (__ftrace_lookup_ip(ops->func_hash->filter_hash, ip))
++			continue;
++		err = __ftrace_match_addr(hash, ip, 0);
++		if (err)
++			goto out_unlock;
++	}
++
++	free_hash = direct_functions;
++	/* add the new ips to direct hash. */
++	err = ftrace_direct_update(hash, ops->direct_call);
++	if (err)
++		goto out_unlock;
++
++	if (free_hash && free_hash != EMPTY_HASH)
++		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
++
++	free_ftrace_hash(hash);
++	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS,
++					  ops->func_hash->filter_hash);
++	if (!hash) {
++		err = -ENOMEM;
++		goto out_unlock;
++	}
++	err = ftrace_set_filter_ips(ops, ips, cnt, 0, 1);
++
++	/* remove the entries that don't exist in our filter_hash anymore
++	 * from the direct_functions.
 +	 */
-+	if (nr_args == 0) {
-+		asm volatile(
-+			RESTORE_ORIGIN_0 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			:
-+		);
-+	} else if (nr_args == 1) {
-+		asm volatile(
-+			RESTORE_ORIGIN_1 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi"
-+		);
-+	} else if (nr_args == 2) {
-+		asm volatile(
-+			RESTORE_ORIGIN_2 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi", "rsi"
-+		);
-+	} else if (nr_args == 3) {
-+		asm volatile(
-+			RESTORE_ORIGIN_3 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi", "rsi", "rdx"
-+		);
-+	} else if (nr_args == 4) {
-+		asm volatile(
-+			RESTORE_ORIGIN_4 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi", "rsi", "rdx", "rcx"
-+		);
-+	} else if (nr_args == 5) {
-+		asm volatile(
-+			RESTORE_ORIGIN_5 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi", "rsi", "rdx", "rcx", "r8"
-+		);
-+	} else if (nr_args == 6) {
-+		asm volatile(
-+			RESTORE_ORIGIN_6 CALL_NOSPEC "\n"
-+			"movq %%rax, %0\n"
-+			: "=m"(args[nr_args]), ASM_CALL_CONSTRAINT
-+			: [args]"r"(args), [thunk_target]"r"(*ip)
-+			: "rdi", "rsi", "rdx", "rcx", "r8", "r9"
-+		);
-+	}
-+}
-+
-+static __always_inline notrace void
-+run_tramp_prog(struct kfunc_md_tramp_prog *tramp_prog,
-+	       struct bpf_tramp_run_ctx *run_ctx, unsigned long *args)
-+{
-+	struct bpf_prog *prog;
-+	u64 start_time;
-+
-+	while (tramp_prog) {
-+		prog = tramp_prog->prog;
-+		run_ctx->bpf_cookie = tramp_prog->cookie;
-+		start_time = bpf_gtramp_enter(prog, run_ctx);
-+
-+		if (likely(start_time)) {
-+			asm volatile(
-+				CALL_NOSPEC "\n"
-+				: : [thunk_target]"r"(prog->bpf_func), [args]"D"(args)
-+			);
++	size = 1 << hash->size_bits;
++	for (int i = 0; i < size; i++) {
++		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
++			if (__ftrace_lookup_ip(ops->func_hash->filter_hash, entry->ip))
++				continue;
++			del = __ftrace_lookup_ip(direct_functions, entry->ip);
++			if (del && del->direct == ops->direct_call) {
++				remove_hash_entry(direct_functions, del);
++				kfree(del);
++			}
 +		}
-+
-+		bpf_gtramp_exit(prog, start_time, run_ctx);
-+		tramp_prog = tramp_prog->next;
 +	}
++out_unlock:
++	mutex_unlock(&direct_mutex);
++	if (hash)
++		free_ftrace_hash(hash);
++	return err;
 +}
-+
-+static __always_inline notrace int
-+bpf_global_caller_run(unsigned long *args, unsigned long *ip, int nr_args)
-+{
-+	unsigned long origin_ip = (*ip) & 0xfffffffffffffff0; // Align to 16 bytes
-+	struct kfunc_md_tramp_prog *tramp_prog;
-+	struct bpf_tramp_run_ctx run_ctx;
-+	struct kfunc_md *md;
-+	bool do_orgin;
-+
-+	rcu_read_lock();
-+	md = kfunc_md_get_rcu(origin_ip);
-+	do_orgin = md->bpf_origin_call;
-+	if (do_orgin)
-+		kfunc_md_enter(md);
-+	rcu_read_unlock();
-+
-+	/* save the origin function ip for bpf_get_func_ip() */
-+	*(args - 2) = origin_ip;
-+	*(args - 1) = nr_args;
-+
-+	run_tramp_prog(md->bpf_progs[BPF_TRAMP_FENTRY], &run_ctx, args);
-+
-+	/* no fexit and modify_return, return directly */
-+	if (!do_orgin)
-+		return 0;
-+
-+	/* modify return case */
-+	tramp_prog = md->bpf_progs[BPF_TRAMP_MODIFY_RETURN];
-+	/* initialize return value */
-+	args[nr_args] = 0;
-+	while (tramp_prog) {
-+		struct bpf_prog *prog;
-+		u64 start_time, ret;
-+
-+		prog = tramp_prog->prog;
-+		run_ctx.bpf_cookie = tramp_prog->cookie;
-+		start_time = bpf_gtramp_enter(prog, &run_ctx);
-+
-+		if (likely(start_time)) {
-+			asm volatile(
-+				CALL_NOSPEC "\n"
-+				: "=a"(ret), ASM_CALL_CONSTRAINT
-+				: [thunk_target]"r"(prog->bpf_func),
-+				  [args]"D"(args)
-+			);
-+			args[nr_args] = ret;
-+		} else {
-+			ret = 0;
-+		}
-+
-+		bpf_gtramp_exit(prog, start_time, &run_ctx);
-+		if (ret)
-+			goto do_fexit;
-+		tramp_prog = tramp_prog->next;
-+	}
-+
-+	/* restore the function arguments and call the origin function */
-+	do_origin_call(args, ip, nr_args);
-+do_fexit:
-+	run_tramp_prog(md->bpf_progs[BPF_TRAMP_FEXIT], &run_ctx, args);
-+	kfunc_md_exit(md);
-+	return 1;
-+}
-+
-+/* Layout of the stack frame:
-+ *   rip		----> 8 bytes
-+ *   return value	----> 8 bytes
-+ *   args		----> 8 * 6 bytes
-+ *   arg count		----> 8 bytes
-+ *   origin ip		----> 8 bytes
-+ */
-+#define stack_size __stringify(8 + 8 + 6 * 8 + 8)
-+
-+#define CALLER_DEFINE(name, nr_args)					\
-+static __always_used __no_stack_protector notrace int			\
-+name##_run(unsigned long *args, unsigned long *ip)			\
-+{									\
-+	return bpf_global_caller_run(args, ip, nr_args);		\
-+}									\
-+static __naked void name(void)						\
-+{									\
-+	asm volatile(							\
-+		"subq $" stack_size ", %rsp\n"				\
-+		SAVE_ARGS_##nr_args					\
-+	);								\
-+									\
-+	asm volatile(							\
-+		"leaq " __stringify(FUNC_ARGS_1) "(%rsp), %rdi\n"	\
-+		"leaq " stack_size "(%rsp), %rsi\n"			\
-+		"call " #name "_run\n"					\
-+		"test %rax, %rax\n"					\
-+		"jne 1f\n"						\
-+	);								\
-+									\
-+	asm volatile(							\
-+		RESTORE_ARGS_##nr_args					\
-+		"addq $" stack_size ", %rsp\n"				\
-+		ASM_RET							\
-+	);								\
-+									\
-+	asm volatile(							\
-+		"1:\n"							\
-+		"movq " __stringify(FUNC_ARGS_##nr_args + 8)		\
-+		"(%rsp), %rax\n"					\
-+		"addq $(" stack_size " + 8), %rsp\n"			\
-+		ASM_RET);						\
-+}									\
-+STACK_FRAME_NON_STANDARD(name)
-+
-+CALLER_DEFINE(bpf_global_caller_0, 0);
-+CALLER_DEFINE(bpf_global_caller_1, 1);
-+CALLER_DEFINE(bpf_global_caller_2, 2);
-+CALLER_DEFINE(bpf_global_caller_3, 3);
-+CALLER_DEFINE(bpf_global_caller_4, 4);
-+CALLER_DEFINE(bpf_global_caller_5, 5);
-+CALLER_DEFINE(bpf_global_caller_6, 6);
-+
-+void *bpf_gloabl_caller_array[MAX_BPF_FUNC_ARGS + 1] = {
-+	bpf_global_caller_0,
-+	bpf_global_caller_1,
-+	bpf_global_caller_2,
-+	bpf_global_caller_3,
-+	bpf_global_caller_4,
-+	bpf_global_caller_5,
-+	bpf_global_caller_6,
-+};
-+
- static int emit_bpf_dispatcher(u8 **pprog, int a, int b, s64 *progs, u8 *image, u8 *buf)
- {
- 	u8 *jg_reloc, *prog = *pprog;
-diff --git a/include/linux/bpf_tramp.h b/include/linux/bpf_tramp.h
-new file mode 100644
-index 000000000000..32447fcfc017
---- /dev/null
-+++ b/include/linux/bpf_tramp.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __LINUX_BPF_TRAMP_H__
-+#define __LINUX_BPF_TRAMP_H__
-+#ifdef CONFIG_BPF_JIT
-+#include <linux/filter.h>
-+
-+#ifdef CONFIG_ARCH_HAS_BPF_GLOBAL_CALLER
-+extern void *bpf_gloabl_caller_array[MAX_BPF_FUNC_ARGS + 1];
-+#endif
-+
-+void notrace __update_prog_stats(struct bpf_prog *prog, u64 start);
-+
-+#define NO_START_TIME 1
-+static __always_inline u64 notrace bpf_prog_start_time(void)
-+{
-+	u64 start = NO_START_TIME;
-+
-+	if (static_branch_unlikely(&bpf_stats_enabled_key)) {
-+		start = sched_clock();
-+		if (unlikely(!start))
-+			start = NO_START_TIME;
-+	}
-+	return start;
-+}
-+
-+static __always_inline void notrace update_prog_stats(struct bpf_prog *prog,
-+						      u64 start)
-+{
-+	if (static_branch_unlikely(&bpf_stats_enabled_key))
-+		__update_prog_stats(prog, start);
-+}
-+
-+static __always_inline u64 notrace
-+bpf_gtramp_enter(struct bpf_prog *prog, struct bpf_tramp_run_ctx *run_ctx)
-+	__acquires(RCU)
-+{
-+	if (unlikely(prog->sleepable)) {
-+		rcu_read_lock_trace();
-+		might_fault();
-+	} else {
-+		rcu_read_lock();
-+	}
-+	migrate_disable();
-+
-+	run_ctx->saved_run_ctx = bpf_set_run_ctx(&run_ctx->run_ctx);
-+
-+	if (unlikely(this_cpu_inc_return(*(prog->active)) != 1)) {
-+		bpf_prog_inc_misses_counter(prog);
-+		if (prog->aux->recursion_detected)
-+			prog->aux->recursion_detected(prog);
-+		return 0;
-+	}
-+	return bpf_prog_start_time();
-+}
-+
-+static __always_inline void notrace
-+bpf_gtramp_exit(struct bpf_prog *prog, u64 start, struct bpf_tramp_run_ctx *run_ctx)
-+	__releases(RCU)
-+{
-+	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
-+
-+	update_prog_stats(prog, start);
-+	this_cpu_dec(*(prog->active));
-+	migrate_enable();
-+	if (unlikely(prog->sleepable))
-+		rcu_read_unlock_trace();
-+	else
-+		rcu_read_unlock();
-+}
-+
-+#endif
-+#endif
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index b1e358c16eeb..fa90c225c93b 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -13,6 +13,7 @@
- #include <linux/bpf_verifier.h>
- #include <linux/bpf_lsm.h>
- #include <linux/delay.h>
-+#include <linux/bpf_tramp.h>
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
  
- /* dummy _ops. The verifier will operate on target program's ops. */
- const struct bpf_verifier_ops bpf_extension_verifier_ops = {
-@@ -868,19 +869,6 @@ void bpf_trampoline_put(struct bpf_trampoline *tr)
- 	mutex_unlock(&trampoline_mutex);
- }
- 
--#define NO_START_TIME 1
--static __always_inline u64 notrace bpf_prog_start_time(void)
--{
--	u64 start = NO_START_TIME;
--
--	if (static_branch_unlikely(&bpf_stats_enabled_key)) {
--		start = sched_clock();
--		if (unlikely(!start))
--			start = NO_START_TIME;
--	}
--	return start;
--}
--
- /* The logic is similar to bpf_prog_run(), but with an explicit
-  * rcu_read_lock() and migrate_disable() which are required
-  * for the trampoline. The macro is split into
-@@ -911,7 +899,7 @@ static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struct bpf_tram
- 	return bpf_prog_start_time();
- }
- 
--static void notrace __update_prog_stats(struct bpf_prog *prog, u64 start)
-+void notrace __update_prog_stats(struct bpf_prog *prog, u64 start)
- {
- 	struct bpf_prog_stats *stats;
- 	unsigned long flags;
-@@ -932,13 +920,6 @@ static void notrace __update_prog_stats(struct bpf_prog *prog, u64 start)
- 	u64_stats_update_end_irqrestore(&stats->syncp, flags);
- }
- 
--static __always_inline void notrace update_prog_stats(struct bpf_prog *prog,
--						      u64 start)
--{
--	if (static_branch_unlikely(&bpf_stats_enabled_key))
--		__update_prog_stats(prog, start);
--}
--
- static void notrace __bpf_prog_exit_recur(struct bpf_prog *prog, u64 start,
- 					  struct bpf_tramp_run_ctx *run_ctx)
- 	__releases(RCU)
+ /**
 -- 
 2.39.5
 
