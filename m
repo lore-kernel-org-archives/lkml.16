@@ -1,81 +1,70 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC9018B47C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE062AE99
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524522; cv=none; b=Pe697MTJgeecztIMq6vr7v4jabP1XEiSiMk6hwlU37k2hMiOmfZebo7xuaFrHYGVEtooKU86CWPSBGlQ8J7w8G6fx2eAh5ZDy64zX/XI+D+yR/aN4Ie88T+/yF2DT/MtdsGMCecRffeMoWywbzxMh1kFAqhLSDTYo0rALehMWO8=
+	t=1751524562; cv=none; b=YnXGmAck/FDgjltXAqpR5sK2WPU+vD79zWmyXPrci/rDossjpd76Kdh3oBTNZS5rqM4LGKvC80yy5i5uL46aRKSDmYt3eCXKzR5Z54HSn4iH/dxUSLvTVb2oBYmkbWD2RDQBAaA/Ksqr0amkNyD9iuskCGXId+4sErXh6tLodEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524522; c=relaxed/simple;
-	bh=bm6yfuoIYWG1RX2AWHnuGqORetKiqeH8x2T0au6tuGY=;
+	s=arc-20240116; t=1751524562; c=relaxed/simple;
+	bh=YTVVnVJ6PdWC/AKl489gZ/2Sl6Au8Ca1tG/ODoK6oOA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tp+tNdqvKW3KwVMgAU3EvImFW5APINjcYjqBUJvJFAhGVsuqRqkNgCm5wlHnLsAUXdeaQlpZJRHWvAWMMS47Z74qHzVyQ06yoEgR+aP/v8jEnpwMvBqod58tZ3yfvWXJ/v3M5mttFIua4pFhmex+uDkp97L5KpFbA+jY3B8CT8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Ww5Pa/hg; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YHI/L48pPjZlz/bgX/TgYsDUupsQyhmMHOf+sbiZ+2Ba23Ti35D9H1xg2GALD4nw8icB0b/1CphBNe5KusqTeycND+DAcra0YtzWRfMPY+S63sBt/D8ldEh5QAb01DZXgsBSfS6Ig/8aBcIL6Mxgyyd3EyNUrOX+uAecNXq5hZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aaoehm5M; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ww5Pa/hg"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-315f6b20cf9so5530840a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:35:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aaoehm5M"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234d3261631so55380515ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751524519; x=1752129319; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1751524560; x=1752129360; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=keubylDshnXYrMMDFPWPP9xY4/RG98/KyvI4m1F+AUc=;
-        b=Ww5Pa/hg3N+ZCIe4gZnFKS5uF9/LgSvcJqQzVUv+/Jtb7aBawoL13GC8e5fUN8qj0W
-         fPBtNgSKMCBqxDncypdOxIBzLfrcbNCpVFQdzxBzOQlsgCOBm5mLLJVXKtX7Mk/6wauE
-         pppYywcI8Rmd6KNBIO05F9Jsus/gRge5SrY8vki+cQ4UzYk3xuhVztK4y0rtWcYJ3Apf
-         4j7wl88hpfvdB1+B5yFFH0Le+pYKhtxc/RiDzYZzJM7yx05iEr3C+lUbG6UiBmYSVRVq
-         9C73VVaMqGXFqp8rmvlXofJWY1UBxMy2n+xcG1mbhYkOiqaKQyRrVabciy+lOm11TU+k
-         ZPag==
+        bh=QIKd4XyqKz0WFU05jsmNNatyFr3GWpnfNcV6WEt42xQ=;
+        b=aaoehm5MJbBnlpjv9TaIa4TtSQnEdpiCcbI9jpOm/5BZQdWSofSDMXiURwceOFu3bl
+         SqcbOPXY55pqqA6akly7udwdEjsVf+o5oFKcxs7QWjNIxeEFl2wCFjiPg9F/b/gIA9BQ
+         5otTV4xzaUaNeCR6bqZntfnPn4Muxg7WgV2uGn0iS1JklOvSxmuYZqBpNSNLH5QmI7mX
+         itnq4R0nBW3TTv58Zh8uEgoCRg263PTXXGk2lIFDrRGCWZo7qsfVH74MwmeqXKNTyElU
+         0BnQiDXWVOLMpLAEHQrFJHAogCh2sAOvOX2kXl5/9esgUTpjEsEZm27vqodouyMVusVS
+         b8NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751524519; x=1752129319;
+        d=1e100.net; s=20230601; t=1751524560; x=1752129360;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=keubylDshnXYrMMDFPWPP9xY4/RG98/KyvI4m1F+AUc=;
-        b=oEV3LHWr6Vwm4ItPLZJ453U4z2/mZlt1QuLuKL/dQv4xph356dFIk8Cb+Ce2UAnmud
-         My8fFu/kKj1c/5O23gm0adB13h52do/bS5gVs+FW+22N3Z5tDTDsX8E603BtJ9tDq48t
-         CK8+WuAWVWQylX1nURt1uSzjgG2Rzl4mwU/yBXK8DsCPHJA8Mt11ra/+EhgjqztxFbY8
-         GPo7eaPbm2ckmXeFyQHdB+5dM41iCi9DV7lu7cIuG1yvNhkcpsuW66zuP5293bcmsvDG
-         hNpCdpOLRhYXlmduEgudMpu7cGcq9R/L1D+kRzBSaLH9m5DfPUCiGmOWFFUR1rsNkayF
-         R82g==
-X-Forwarded-Encrypted: i=1; AJvYcCXo5C4shJQq3DY70ZFYTLHuAIqlEM320eNknjJhzaK/fvvWtq0wUAJS0lJtbRgLb6iFkYbb/lIfZsEKTXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+kn1ROnZKOfMiEcL85ANYzYNGf3RLclhK6vsCSQqx0ICeSaC9
-	GjtOpNQVAty2Jf1chnUmjO9ChKWGSh4uLq75KAKq+mUlkHtxj7r0C6d6QQ9MSvB5MQ==
-X-Gm-Gg: ASbGncs8xULJR5k41qBfb9toR1D7/ptI3WEA7HrX5jJPLT2PD3Lc8CTxr7fILd2CeI3
-	Xo9AfKRoGvQBUFgBcqXTy57xN3w2gYONutIR817TNMnifHX+aAgGinCZR7WPYQbQiYujen3wtZg
-	fXChyH8ovjPOYbr6CfKYQWya8OueRggdMoL5PPKtioi4sO6crXrk3/ebs6O4lJD6RJ2Ky7XNxTJ
-	A9dV6Nfx+LOBWNqF6iz55GJdWAx7/bip8yBBMS96LSJ3pzZuoyvAdKXYaayItaW/5pLS9Cz87MV
-	FFSTFcq4oYVLKaCbZdODkl3sy7QCwxPwOLumo7qjODUEgCcpu+YX8hbLnzWBxVey0MmrRi5o
-X-Google-Smtp-Source: AGHT+IGn8E19Iyov8Z7ftrCbAYJPdztbbgrl3EO9CIP5R9ODQ6bX6a5cLjYd8Ucymy4DX+teHZIrpA==
-X-Received: by 2002:a17:90b:1d84:b0:312:eaea:afa1 with SMTP id 98e67ed59e1d1-31a90bed448mr7959912a91.29.1751524519481;
-        Wed, 02 Jul 2025 23:35:19 -0700 (PDT)
-Received: from bytedance ([115.190.40.15])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9ccf874fsm1487442a91.26.2025.07.02.23.35.14
+        bh=QIKd4XyqKz0WFU05jsmNNatyFr3GWpnfNcV6WEt42xQ=;
+        b=TwjP2Qnx6LBZrfDvKbKMYhckpBBOO8rKF9ph6V3iPa1phQ9VImf3a/rBrjeQXasWW0
+         /3+qHGkSt6qgZUnkZm8yTP2NF3KXjlzAu/pjQ7a8WoAGUj0v6deJTbIS7AIex7Lo1bK2
+         i2tC5q38t8QOrMT4C0CYiZePiLg7eJZaUmM9W8tALnHJ3T8FaBnBjZhvM0eSdd/ddHNq
+         xTZ39Wtva+fljfsVtYbHClxFdkeglOic5HWcUBe2JBNnC1bL3MD3ZuF40mAGVnne39Lq
+         CENZ6tQSxmJR4VfB3atem64R3I6efZO7uopBJRkP9gtFX6tgFSB4OuCZBIn6Ziz94WiT
+         MYgA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/hduiBN3DcHjUWDLh9wDX0b7MNTkwdq34x7je0EFItl6mmsEZt0tXkssEh12/enairx53rEgf7r8IF10=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysgXkhrcXystLWeW/GXz+CwgMTvJ+5mXsNiGwVTsihxUGbJ2mH
+	S5u5UHLjRu2bbtEvPpCjLfyZ0UoFli+tL/w4x7k996tb6DDoUh1/lwoFQl9QjYvYUxI=
+X-Gm-Gg: ASbGncu1MyoIBYc49W1uJt0PeHRy2rwrpWrIpem09pFRVdBTvl2U3p1lqzkrJ8OsNsk
+	xvK0BsQalS8lAVaeu/9KlwRH5MO31DllXhqx7tjOIaUDMpHlnfPpIV5TlKFp4v0QK1a8lF/PqWZ
+	Ewd3I81NyLsoR9jrXypqs+/bSHBzjHZ9gqaSWML+J1CjJOw/FkJZEDDTiixEAeUpJL+ixB4naTS
+	exwQdApQYq+XdZp9nYhx+7MGASiBcnfhmJMcxbNlJ+O6mcPX4iTVVlZJdt45+yoc0vTPezVY5ix
+	L8NNIq0RP+iyE8RmizSpx+RYH1j6tugag4p2du35OWeymaqukZlJ5fZCe5X37KPGgmPjfQ==
+X-Google-Smtp-Source: AGHT+IFVznHzewXkRwXl+jlpU+/jlWH9G3uXJOnEyYhJffoLUHYr+wecCaP0uvRb31laWEgyZwnmrw==
+X-Received: by 2002:a17:902:da91:b0:234:bfcb:5c21 with SMTP id d9443c01a7336-23c797b28efmr33182915ad.19.1751524559978;
+        Wed, 02 Jul 2025 23:35:59 -0700 (PDT)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ba5bdsm139341455ad.186.2025.07.02.23.35.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 23:35:18 -0700 (PDT)
-Date: Thu, 3 Jul 2025 14:34:56 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Benjamin Segall <bsegall@google.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH v2 0/5] Defer throttle when task exits to user
-Message-ID: <20250703063411.GA137889@bytedance>
-References: <20250618081940.621-1-ziqianlu@bytedance.com>
- <xm26qzyyb6cn.fsf@google.com>
+        Wed, 02 Jul 2025 23:35:59 -0700 (PDT)
+Date: Thu, 3 Jul 2025 12:05:51 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Shuan He <heshuan@bytedance.com>
+Cc: bhelgaas@google.com, cuiyunhui@bytedance.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/1] PCI: Fix pci devices double register WARNING in the
+ kernel starting process
+Message-ID: <aGYkx4a4eJUJorYp@sunil-laptop>
+References: <20250702155112.40124-1-heshuan@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,43 +73,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <xm26qzyyb6cn.fsf@google.com>
+In-Reply-To: <20250702155112.40124-1-heshuan@bytedance.com>
 
-Hi Benjamin,
-
-Thanks for taking a look.
-
-On Wed, Jul 02, 2025 at 03:00:56PM -0700, Benjamin Segall wrote:
-> Aaron Lu <ziqianlu@bytedance.com> writes:
+On Wed, Jul 02, 2025 at 11:51:11PM +0800, Shuan He wrote:
+> Hi All.
+> I encountered a WARNING printed out during the kernel starting process
+> on my developing environment.
+> (with RISC-V arch, 6.12 kernel, and Debian 13 OS).
 > 
-> > For pelt clock, I chose to keep the current behavior to freeze it on
-> > cfs_rq's throttle time. The assumption is that tasks running in kernel
-> > mode should not last too long, freezing the cfs_rq's pelt clock can keep
-> > its load and its corresponding sched_entity's weight. Hopefully, this can
-> > result in a stable situation for the remaining running tasks to quickly
-> > finish their jobs in kernel mode.
+> WARN Trace:
+> [    0.518993] proc_dir_entry '000c:00/00.0' already registered
+> [    0.519187] WARNING: CPU: 2 PID: 179 at fs/proc/generic.c:375 proc_register+0xf6/0x180
+> [    0.519214] [<ffffffff804055a6>] proc_register+0xf6/0x180
+> [    0.519217] [<ffffffff80405a9e>] proc_create_data+0x3e/0x60
+> [    0.519220] [<ffffffff80616e44>] pci_proc_attach_device+0x74/0x130
+> [    0.509991] [<ffffffff805f1af2>] pci_bus_add_device+0x42/0x100
+> [    0.509997] [<ffffffff805f1c76>] pci_bus_add_devices+0xc6/0x110
+> [    0.519230] [<ffffffff8066763c>] acpi_pci_root_add+0x54c/0x810
+> [    0.519233] [<ffffffff8065d206>] acpi_bus_attach+0x196/0x2f0
+> [    0.519234] [<ffffffff8065d390>] acpi_scan_clear_dep_fn+0x30/0x70
+> [    0.519236] [<ffffffff800468fa>] process_one_work+0x19a/0x390
+> [    0.519239] [<ffffffff80047a6e>] worker_thread+0x2be/0x420
+> [    0.519241] [<ffffffff80050dc4>] kthread+0xc4/0xf0
+> [    0.519243] [<ffffffff80ad6ad2>] ret_from_fork+0xe/0x1c
 > 
-> I suppose the way that this would go wrong would be CPU 1 using up all
-> of the quota, and then a task waking up on CPU 2 and trying to run in
-> the kernel for a while. I suspect pelt time needs to also keep running
-> until all the tasks are asleep (and that's what we have been running at
-> google with the version based on separate accounting, so we haven't
-> accidentally done a large scale test of letting it pause).
->
+This should not happen. I suspect some issue in ACPI namespace/_PRT. Can
+you reproduce this on qemu virt machine?
 
-Got it, I'll rework this part to keep pelt clock ticking and only stop
-it when all tasks of a throttled cfs_rq get either throttled or blocked.
-I will paste a diff on top of this series and if the diff looks OK, I'll
-fold it to patch3 in next version.
+Regards
+Sunil
 
-> Otherwise it does look ok, so long as we're ok with increasing distribute
-> time again.
-
-Good to know this!
-
-About not strictly limiting quota, I suppose that is a trade off and
-having a system that is operating properly is better than a system with
-task hung or even deadlock.
-
-Best regards,
-Aaron
