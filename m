@@ -1,159 +1,110 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78DF2ED148
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E50F17FAC2;
+	Thu,  3 Jul 2025 14:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553329; cv=none; b=ZpUKEvjIAA45jrvyx8skWNOOFJra9q5I9AyBygqatAPVzOTt7oJOgEx/WLB+SOrqfuFbECjvAB6wep0Q91iSqmow7uOGV59MMaWAdkr7HxIOuN3C3iifYlezJJZc+FY4FxBKbe3YIOUmZ0D4FxTUvgC1L45pLj7tnhJGclcVtqg=
+	t=1751553368; cv=none; b=EZ0WtOLFIU1KTuN82Mxqgbf3yMMuKL5zeIwEaS+nri1e8FYShtLcINI+zRj0nQ8T2Nx05xZVsZ5D6d5cZH7rogHFJTUXi8p7olmbapXqecGrpfcwdwsd0avvmvsVj2Jf5xCDlQbdNSEcMMleSM+q0rd5hvqYU1vVhv1snsnB4k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553329; c=relaxed/simple;
-	bh=Y+evtO57jDRO4cx5S0JrB8XOjRXeEqoQzMPAkDgXmEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HX9UVvDD5bH0TmqP2x933qjvYHSt1rAvYGo8ADJLDJJQdwrCwseu+n+gD19d/U9wFOGcqlY/Vj7LJWXqOmG0S7cVFWFUzGvxhLAeN3PL8wau0lT4ipOeOv3fFkNTm65STezmCSow9tkryCpcPIJI0v4aX7/Z4fI0qKHF9IZC4o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=pclih5rz; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1751553368; c=relaxed/simple;
+	bh=pvG7xe6BGbrfAKTfLgoDx+709pfuEK1E7qCKVSKlUn8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tRVDxLivlTU5ou3HA1IeW6xdg42dGg+uxhqWsXrzqwol1d7I/O1xBCUuEFzn5U0Z8yfWcPXWHsyu7khqtFw6XK+eCKZ03CWi15s3AQqY2FeDUhLFtU4sEiyw+hWO1f/iYgyHfSy3dZGQde7MpX0Ck00+MAmwsAc1XpUbdWfrznI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ccq7GgnF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="pclih5rz"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a52d82adcaso75089031cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 07:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1751553327; x=1752158127; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kgzlPHtDsUP2XFZstpiCKw99h73zAxNOOZoeiHHd4NQ=;
-        b=pclih5rzHDdfqMD/KrXoFwPkIBGUj9xUYM5F8R7j4cC3phkLt2ukipGvuyAHeUpsG8
-         c+uaWfNpsCrtWPF2gSuo9waMbS0NVPAjWp6Z1Mv+FtJi/lgfR0kZsWer3nPwgTGxNvUR
-         RUl2jc/E6W4lrtQ0JnT6FQyDI7frX2fcvtSJA9Z9AxeBnyeXx7M9LPszNL913yNURMVw
-         ZM69rZn4zOxX6cDDtSFlMMAq+1U89HB7UrSs0nQ7qSIQfxsa2au/vcZJva7Gb+7lEugM
-         Eg8Uug3rPhe87BQ2BUH8O0lYMn6dsQ/C9Bgh5/r+dQfDg4aww+wxgOgGrwzJMVqD1Kan
-         Lhsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751553327; x=1752158127;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kgzlPHtDsUP2XFZstpiCKw99h73zAxNOOZoeiHHd4NQ=;
-        b=fQFu/w5EaSPdlOcJ77x3Kgw0z36sfQHF+BlQSAqBMGMtE6NPQTqEDADat8NBOOIiXO
-         VhmVY0rRJRgJk2COlhJNF5lLpoN8RCM+NgIAjXASNvXLm1GnuB3gD1Z7jzl7BXV/jJ4w
-         0y0ohB4p+wcV28KYIgVd5SGbSWfRuZ1NlRezBxNzzifpplRnJ6PkvOlV/Namff4VoeJS
-         b4J8QvgmlEIooG6Fy1JujDibx8fcf1qL+svPif74VyObUaqrFKZf5nU/houe8fGDrWnH
-         160Cw1uHFGTCQz7GxDehExlImiTe88ydLvcEu5VFWfQYtL75vT/9JhSAjPp5zZSQ9rqm
-         lLlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVI8wuSHrw+XWM1rUaY5L0SPzFB7IuJkcMb0lpJNy1mQ0/Iirsv6xy2lQORoALVJd7ooc/2TrEPgb7lnPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwztsmM68F1qH4NkuyTy26IN/uwTdXRUMdK4tM5BmWTE/p1y0bT
-	UOTH/MldzagE2hBeE85vTwuRKyQ7ArngIst5yYLgMOoMHndOdWPR3VMXMy+/P9BUhw==
-X-Gm-Gg: ASbGncsHo/Y07j7DuQOGV3cDqbYOHtTAnBWHJ0f141dXAHPCdfY0q9gnO9UDm0ya1vF
-	DnncuYLuEWcBb7jVE8EUmf6jF7012FPEQoS5U1V1WDThUbbmpISJM+UMp6YyUs3yYr+zkvqkArB
-	wCjGiATHZ8gYkC/uK7JtJbOEjyfP3l6Gds+CN6F50l0OZ3CwVFniidO8kI6hHgvM37I+fdFXRDP
-	J8gfiHzMiiUConUIlh5zLqAxkbn8lssRhkHqMH/pAp4p31ZJ0T2TX7AN8EZ8xhV1m4v8XlrToot
-	XVDrkgymmPW8+ff5ixA3Ln1cdQG7NQcrrQaMjMTcemi5cRZCoIjb250BpSZ85xql8cXBRlEXVIO
-	vvisQ
-X-Google-Smtp-Source: AGHT+IGK8KAo4mpA+JVTB3ZTXwVBkpsgEauagc0TG5bpf3JShjIVuuf8H4Nd2foOv6ZumStKh0znCw==
-X-Received: by 2002:a05:622a:5143:b0:4a4:2f42:a668 with SMTP id d75a77b69052e-4a9769765b0mr144026911cf.31.1751553326431;
-        Thu, 03 Jul 2025 07:35:26 -0700 (PDT)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc55d92esm109947251cf.49.2025.07.03.07.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 07:35:25 -0700 (PDT)
-Date: Thu, 3 Jul 2025 10:35:23 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
-	thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v4 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <30f04c8e-5074-4262-bf5a-da022b89c276@rowland.harvard.edu>
-References: <20250703103811.4048542-1-xu.yang_2@nxp.com>
- <20250703103811.4048542-2-xu.yang_2@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ccq7GgnF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5564C4AF09;
+	Thu,  3 Jul 2025 14:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751553367;
+	bh=pvG7xe6BGbrfAKTfLgoDx+709pfuEK1E7qCKVSKlUn8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ccq7GgnF0NuNYeTP/kVe4NStb8lu5PFyyKieEqXXKWkXfKqcQwBWG58NtsVofqMfv
+	 zLjYaWXNfLN5XWLHffYl8NBoVmSRIIUHzRFN1EUqEBlJz8jtBvmVC+jn9FUSklDh6g
+	 ylcZKUBEuSQ73LNXPxJJI7eiLmUA7e1voaFv9xTBGK3W7muS7H+trpX4XoM+oCxT46
+	 K6GKyEQYa+nXfhsvSl2eIym2Kxp4YvBwAEoyJN5FL5xF49BfSP0h7O0K0TX+br96Hx
+	 a9DjCxUilIvhY79jm0ayAep+zIN87Vten0v7Oa8KM6v7X4oof0tVeBAMJjoEy4+sNi
+	 X1eE8iHclIDnQ==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60d63174f05so7286eaf.0;
+        Thu, 03 Jul 2025 07:36:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWw6Zh2spd1G0/LvlnbGOnZe20gbu4JjqNiTX8wnJXif4ODgs41rQt4YbABRZ9KwTQG7W3bdOEkQtWSiyk=@vger.kernel.org, AJvYcCXweO/+Ho+Op2GyWc/rySQwbbJSUQfVBcEo484DxpB3VUf8KBEfFQLx1rbqCQbVoruRbUZEAmO9ZBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYt7Asya+K2vFDpqzSg5hGu9oapu2ZIwcgCQx2E0/3psXMyA1O
+	6t3h+XEfpVIGUupImCqkBDwmjMyu7wE2Te1ZgfR6a/GKOQv/l4sDw1c1mbqvdgL1NQ2im1+KGjj
+	9WMVEgHi/QTrQUy+b/+36CZOdpqEbmOg=
+X-Google-Smtp-Source: AGHT+IEkhvn+8jNU8o3fMR9sAH17KtdXghaVznuEOh1N6nMSzEeABnDR+qkAPL7IcARL4Hda9+wwliIPwgpysrkaXUI=
+X-Received: by 2002:a05:6820:2913:b0:613:872a:7b0b with SMTP id
+ 006d021491bc7-613872a7e73mr1287331eaf.1.1751553366919; Thu, 03 Jul 2025
+ 07:36:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703103811.4048542-2-xu.yang_2@nxp.com>
+References: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
+In-Reply-To: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Jul 2025 16:35:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hbuQ8sRctAB7eC3JTr5TrDBnu5yjjG82HrSiJ23_99bQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwX-Q0wtKZ01ONvEW8u-19Nxyc4fwRb1remFu35TrXz9gluPQ6gcBRSo-w
+Message-ID: <CAJZ5v0hbuQ8sRctAB7eC3JTr5TrDBnu5yjjG82HrSiJ23_99bQ@mail.gmail.com>
+Subject: Re: [PATCH] PM: sleep: Drop superfluous might_sleep() calls
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	gregkh@linuxfoundation.org, dakr@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 06:38:09PM +0800, Xu Yang wrote:
-> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> functions to support alloc and free buffer in a dma-noncoherent way.
-> 
-> To explicit manage the memory ownership for the kernel and device,
-> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> and call it at proper time.  The management requires the user save
-> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
+On Tue, Jun 17, 2025 at 10:47=E2=80=AFAM Zhongqiu Han <quic_zhonhan@quicinc=
+.com> wrote:
+>
+> Drop superfluous might_sleep() calls from dpm_resume(), dpm_complete(),
+> and dpm_prepare(). These functions already invoke primitives that
+> implicitly check for sleep in atomic context:
+>
+> - dpm_resume() and dpm_complete() invoke mutex_lock(), which internally
+>   triggers might_sleep()
+> - dpm_prepare() calls wait_for_device_probe(), which internally uses
+>   flush_work(), and thus might_sleep()
+>
+> These annotations are unnecessary and can be dropped to reduce clutter.
+>
+> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
 > ---
-> Changes in v4:
->  - improve if-else logic
-> 
-> Changes in v3:
->  - put Return section at the end of description
->  - correct some abbreviations
->  - remove usb_dma_noncoherent_sync_for_cpu() and
->    usb_dma_noncoherent_sync_for_device()
->  - do DMA sync in usb_hcd_map_urb_for_dma() and
->    usb_hcd_unmap_urb_for_dma()
->  - call flush_kernel_vmap_range() for OUT transfers
->    and invalidate_kernel_vmap_range() for IN transfers
-> ---
->  drivers/usb/core/hcd.c | 33 ++++++++++++-----
->  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb.h    | 11 ++++++
->  3 files changed, 116 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index c22de97432a0..42d9d8db0968 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
+>  drivers/base/power/main.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index eebe699fdf4f..0f40c00c1401 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -1095,7 +1095,6 @@ void dpm_resume(pm_message_t state)
+>         ktime_t starttime =3D ktime_get();
+>
+>         trace_suspend_resume(TPS("dpm_resume"), state.event, true);
+> -       might_sleep();
+>
+>         pm_transition =3D state;
+>         async_error =3D 0;
+> @@ -1198,7 +1197,6 @@ void dpm_complete(pm_message_t state)
+>         struct list_head list;
+>
+>         trace_suspend_resume(TPS("dpm_complete"), state.event, true);
+> -       might_sleep();
+>
+>         INIT_LIST_HEAD(&list);
+>         mutex_lock(&dpm_list_mtx);
+> @@ -2109,7 +2107,6 @@ int dpm_prepare(pm_message_t state)
+>         int error =3D 0;
+>
+>         trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
+> -       might_sleep();
+>
+>         /*
+>          * Give a chance for the known devices to complete their probes, =
+before
+> --
 
-> @@ -1425,8 +1431,10 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
->  	}
->  
->  	dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
-> -	if (urb->transfer_buffer_length != 0
-> -	    && !(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP)) {
-> +	if (!(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP)) {
-> +		if (!urb->transfer_buffer_length)
-> +			return ret;
-> +
->  		if (hcd->localmem_pool) {
->  			ret = hcd_alloc_coherent(
->  					urb->dev->bus, mem_flags,
-> @@ -1491,7 +1499,16 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
->  		if (ret && (urb->transfer_flags & (URB_SETUP_MAP_SINGLE |
->  				URB_SETUP_MAP_LOCAL)))
->  			usb_hcd_unmap_urb_for_dma(hcd, urb);
-> +	} else {
-> +		if (!urb->sgt)
-> +			return ret;
-> +
-> +		if (dir == DMA_TO_DEVICE)
-> +			flush_kernel_vmap_range(urb->transfer_buffer,
-> +						urb->transfer_buffer_length);
-> +		dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
->  	}
-
-This could be done a little more cleanly.  It's always awkward to read
-an "else" clause for a negated test.
-
-Instead, change the "else" to:
-
-	if (urb->transfer_flags & URB_NO_TRANFER_DMA_MAP) {
-
-and move this whole section to the top of the big "if".  Then you can 
-change the test that's already there to:
-
-	} else if (urb->transfer_buffer_length != 0) {
-
-Alan Stern
+Applied as 6.17 material, thanks!
