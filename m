@@ -1,350 +1,156 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169642E4275
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B492E62C3;
+	Thu,  3 Jul 2025 12:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544229; cv=none; b=I/ucK9wdoIMdlx/8U2QObaKnbrkyyrBuk2TAYbBN0HzP1YZx82fqFjtoxC+7/s10/lxEclaHtrRlaEa8mQU82GzrwKJA6M4Mq2KwkftcXMzTAE/oxF2Ng6wasQcshOzFwjEnnmamR/Epx2M5MdYTddeOGIFS8vsPVs2zPAMK4Zo=
+	t=1751544233; cv=none; b=KOZRed3trAIZ/It3IdyDeMwM2NNp3Pvc/WV00fwKG0rtoeva3uMAkVA5hbbOu3gVleQ6zCWHhAcRNrtp1KM15rqlhPiPdyhpkCTW3IAGQp/ivBl3/mNsn0XsojWVYGSjI2O+9TTZRqRH4ipG6cgN07dsm2nqTWKpQgPPEHb1FPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544229; c=relaxed/simple;
-	bh=jerXSrRoqA1qUbkI8oky8jp1ImqFUxyU/bN43PKvfSM=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=QZbzg5zAgpUiESifm13sy6/6AxlTnw945Gw0mcMQ/U58POQlH96QE54VMVsXG/ERBKX6qUT11HJdtOCdJzbsR/8iGBBJmQHlgXVZax0hkP5Vlh8Gg9nplPKxsnUbkrwObWWq7iSrGCQX4s9FWyBuFz6Kp4qHajkDeV8xEpPvF+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dco+cCvD; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751544233; c=relaxed/simple;
+	bh=jsD9YH9kuJbOz2Nw8fyYrbyTDwny+3LMZ7c8TI4cvqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ngNsFy5tXcY3ufdO/OwjdiFktkmVFkeJCVQmvQib0NfdXGRCjAhHnyWYuU9X10W4eqPcoQ1Pcw9oao2VQQkkwNbO52N5ULFYPLQCnXd5PzHOJmRpTYmgtmgCn0urj0wg5BYrkIeGdHWObLE0BFz1zD2ktm8MESZ6AToH84C7Uus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T677CqwI; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dco+cCvD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T677CqwI"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so11012238a12.0;
+        Thu, 03 Jul 2025 05:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751544229; x=1752149029; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2bWYCB6WfPUI/fvWa8m+GGn4eYVfhW03+nxeFICCU4E=;
+        b=T677CqwIQBTTVG36ZVllrreSaZA5mGcG/wXNPZq6cFRZtlte5E2zrohaxGFTv64qoM
+         wHfqC40KninqcTxIO98mBXmbZCEl3U/wjliBSkTxQFpfbSOm78hdU04t+wj+iAOfWuT5
+         01LaLVMOzb80lS7OqXeKBavgmSUDoL3jUxMIycl0U9k/aL8xEGO8dvRdzHbDt5qkWGTP
+         X0334EAZUfn+KKLbM7vvT28Up9CMchX7b9PRzfWEc6yBImZe3ujKR0X28GeAgyo0ML9B
+         rEQ5kiQKMRw2aib66JZG3t0FjwlOuYu4BuRO9M3vGAPMrtdMkpGyRnuUE+ziIZcRgveC
+         nwBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751544229; x=1752149029;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2bWYCB6WfPUI/fvWa8m+GGn4eYVfhW03+nxeFICCU4E=;
+        b=V8MSEnOAbUWTamH+88jPoVTZ0VQ2dlkv0bKmahakNHT90Gz2By3TN2CDPKtttdCq1o
+         XH1uKAwsllW3QXGdII4DhmHp6cPj/zRrNYdwo6yFYIgfO+FYS/taozy89WQBomwWBgid
+         B8aNUfo/KwyriQg84rR5Bp+Uq/0vnr/AUjIrV1lxbATSMnyzB2fnePkOjY/A0Vne9CAB
+         DYNMLYeW21Pw7DXxpZ6DQzItX6xf5csvEZr9NEXq0Nhe2CZHF2DA6Vq5lbpcybmH2HcQ
+         PRM0y1evmjYBbOAD/vUAgcOcXrtkAUgOKFB28G7aFfSb1EQgPOA85EByAmmD4AILuJ3B
+         cHBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWF/Qb9ogV4aEa3ytQ64fi1getzUpkmE39VEM6CzIpb2kCWbB/UvnfHIdkFv7TzkJ42M5FWS4p74EvjKogW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxVdJjyDC7MKGNJu7rcKnS19Xx9HRCIXoqOv+ECNef0GQ4oned
+	Q8HaHMKo4gQhrB37jT/n9yozt4Rid8N0FtN1iFpxrNR/4uzXNe4Nc3/0xpOfJZIU
+X-Gm-Gg: ASbGncuMBKDIqeldCVJImIe9KlkiAHG1Jy3wjZyNoMJwF8xeyClCpSz2VgspST6+z9b
+	3k4JWJvC8R43+C/r8ELYOsl9wEADtgIWVLWL9RSh6umicupik59AWdEHvRMnuT0W9p0atPkW1E7
+	NLb5WQPc/Ns0p3yJHwnS72G+gXds4PAYHDqLSNkr8NABx5VEnHFzA72VYIft3Za41YF5PQ4hO+y
+	Or93bBZRM6HAPY46Ork+Ooxe4QeY+v6jgLpYDvaNbNTba/TGOg3CMo6PO0qVs938zVQYR/LiYS9
+	XQMqRJQS4m2a/xneoYLBDfWsL0IU8KVi9uHmp1Y21xZsAdWioCmUVF4EtFWjQRUVLMizSw8TGfn
+	PNsRqkeBe2BThmt0d2K2AvR82OaH9YveGbWYwObY=
+X-Google-Smtp-Source: AGHT+IEZYS9li2tfKun6TzOZdJNjRX1nV7xFW/O6jF6WWUakzeglVIQiROoz8XNYN3xnKYNHB5Y0vA==
+X-Received: by 2002:a50:d6cb:0:b0:60c:3c19:1e07 with SMTP id 4fb4d7f45d1cf-60e52cd3706mr4571413a12.15.1751544229356;
+        Thu, 03 Jul 2025 05:03:49 -0700 (PDT)
+Received: from Mac.lan (p5088513f.dip0.t-ipconnect.de. [80.136.81.63])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c83205eb0sm10563837a12.72.2025.07.03.05.03.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 03 Jul 2025 05:03:48 -0700 (PDT)
+From: Laura Brehm <laurajfbrehm@gmail.com>
+X-Google-Original-From: Laura Brehm <laurabrehm@hey.com>
+To: linux-kernel@vger.kernel.org
+Cc: Laura Brehm <laurabrehm@hey.com>,
+	brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 2/2] coredump: fix PIDFD_INFO_COREDUMP ioctl check
+Date: Thu,  3 Jul 2025 14:02:44 +0200
+Message-Id: <20250703120244.96908-3-laurabrehm@hey.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250703120244.96908-1-laurabrehm@hey.com>
+References: <20250703120244.96908-1-laurabrehm@hey.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751544214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e/8w/xeDaBVWRw9XzILJTV9gwuQG1T26Mai5piqvf6w=;
-	b=dco+cCvDXtd07E6MtJaUfPxKAou+XRstlbU4pNHpBHSOjS1EfCn/aTXbQ/AlYwzmwrbq8w
-	DbEawoGxejy3A5BRZzMeCXV8UrnPuayAvfIxanMZ+BHtqE0OYKNLwvmcH3MUTFhwVmPB0r
-	fNvqLGQJQ6dxDoAImE6C2OYiahyERFU=
-Date: Thu, 03 Jul 2025 12:03:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <6724e69057445ab66d70f0b28c115e2d8fb5543b@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net-next v1] tcp: Correct signedness in skb remaining
- space calculation
-To: "Eric Dumazet" <edumazet@google.com>
-Cc: netdev@vger.kernel.org, mrpre@163.com, "Neal Cardwell"
- <ncardwell@google.com>, "Kuniyuki Iwashima" <kuniyu@google.com>, "David
- S. Miller" <davem@davemloft.net>, "David Ahern" <dsahern@kernel.org>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "David Howells" <dhowells@redhat.com>,
- linux-kernel@vger.kernel.org
-In-Reply-To: <CANn89iL=GR5iHXUQ6Jor_rjkn91vuL5w8DCrxwJRQGSO7zmQ-w@mail.gmail.com>
-References: <20250702110039.15038-1-jiayuan.chen@linux.dev>
- <c9c5d36bc516e70171d1bb1974806e16020fbff1@linux.dev>
- <CANn89iJdGZq0HW3+uGLCMtekC7G5cPnHChCJFCUhvzuzPuhsrA@mail.gmail.com>
- <CANn89iJD6ZYCBBT_qsgm_HJ5Xrups1evzp9ej=UYGP5sv6oG_A@mail.gmail.com>
- <c910cfc4b58e9e2e1ceaca9d4dc7d68b679caa48@linux.dev>
- <CANn89iL=GR5iHXUQ6Jor_rjkn91vuL5w8DCrxwJRQGSO7zmQ-w@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-2025/7/2 23:34, "Eric Dumazet" <edumazet@google.com> =E5=86=99=E5=88=B0:
+In Commit 1d8db6fd698de1f73b1a7d72aea578fdd18d9a87 ("pidfs,
+coredump: add PIDFD_INFO_COREDUMP"), the following code was added:
 
+    if (mask & PIDFD_INFO_COREDUMP) {
+        kinfo.mask |= PIDFD_INFO_COREDUMP;
+        kinfo.coredump_mask = READ_ONCE(pidfs_i(inode)->__pei.coredump_mask);
+    }
+    [...]
+    if (!(kinfo.mask & PIDFD_INFO_COREDUMP)) {
+        task_lock(task);
+        if (task->mm)
+            kinfo.coredump_mask = pidfs_coredump_mask(task->mm->flags);
+        task_unlock(task);
+    }
 
+The second bit in particular looks off to me - the condition in essence
+checks whether PIDFD_INFO_COREDUMP was **not** requested, and if so
+fetches the coredump_mask in kinfo, since it's checking !(kinfo.mask &
+PIDFD_INFO_COREDUMP), which is unconditionally set in the earlier hunk.
 
->=20
->=20On Wed, Jul 2, 2025 at 8:28 AM Jiayuan Chen <jiayuan.chen@linux.dev> =
-wrote:
->=20
->=20>=20
->=20> July 2, 2025 at 22:02, "Eric Dumazet" <edumazet@google.com> wrote:
-> >=20
->=20>  On Wed, Jul 2, 2025 at 6:59 AM Eric Dumazet <edumazet@google.com> =
-wrote:
-> >=20
->=20>  >
-> >=20
->=20>  > On Wed, Jul 2, 2025 at 6:42 AM Jiayuan Chen <jiayuan.chen@linux.=
-dev> wrote:
-> >=20
->=20>  >
-> >=20
->=20>  > July 2, 2025 at 19:00, "Jiayuan Chen" <jiayuan.chen@linux.dev> w=
-rote:
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > The calculation for the remaining space, 'copy =3D size_goal -=
- skb->len',
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > was prone to an integer promotion bug that prevented copy from=
- ever being
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > negative.
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > The variable types involved are:
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > copy: ssize_t (long)
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > size_goal: int
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > skb->len: unsigned int
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > Due to C's type promotion rules, the signed size_goal is conve=
-rted to an
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > unsigned int to match skb->len before the subtraction. The res=
-ult is an
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > unsigned int.
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > When this unsigned int result is then assigned to the s64 copy=
- variable,
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > it is zero-extended, preserving its non-negative value. Conseq=
-uently,
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > > copy is always >=3D 0.
-> >=20
->=20>  >
-> >=20
->=20>  > >
-> >=20
->=20>  >
-> >=20
->=20>  > To better explain this problem, consider the following example:
-> >=20
->=20>  >
-> >=20
->=20>  > '''
-> >=20
->=20>  >
-> >=20
->=20>  > #include <sys/types.h>
-> >=20
->=20>  >
-> >=20
->=20>  > #include <stdio.h>
-> >=20
->=20>  >
-> >=20
->=20>  > int size_goal =3D 536;
-> >=20
->=20>  >
-> >=20
->=20>  > unsigned int skblen =3D 1131;
-> >=20
->=20>  >
-> >=20
->=20>  > void main() {
-> >=20
->=20>  >
-> >=20
->=20>  > ssize_t copy =3D 0;
-> >=20
->=20>  >
-> >=20
->=20>  > copy =3D size_goal - skblen;
-> >=20
->=20>  >
-> >=20
->=20>  > printf("wrong: %zd\n", copy);
-> >=20
->=20>  >
-> >=20
->=20>  > copy =3D size_goal - (ssize_t)skblen;
-> >=20
->=20>  >
-> >=20
->=20>  > printf("correct: %zd\n", copy);
-> >=20
->=20>  >
-> >=20
->=20>  > return;
-> >=20
->=20>  >
-> >=20
->=20>  > }
-> >=20
->=20>  >
-> >=20
->=20>  > '''
-> >=20
->=20>  >
-> >=20
->=20>  > Output:
-> >=20
->=20>  >
-> >=20
->=20>  > '''
-> >=20
->=20>  >
-> >=20
->=20>  > wrong: 4294966701
-> >=20
->=20>  >
-> >=20
->=20>  > correct: -595
-> >=20
->=20>  >
-> >=20
->=20>  > '''
-> >=20
->=20>  >
-> >=20
->=20>  > Can you explain how one skb could have more bytes (skb->len) tha=
-n size_goal ?
-> >=20
->=20>  >
-> >=20
->=20>  > If we are under this condition, we already have a prior bug ?
-> >=20
->=20>  >
-> >=20
->=20>  > Please describe how you caught this issue.
-> >=20
->=20>  >
-> >=20
->=20>  Also, not sure why copy variable had to be changed from "int" to "=
-ssize_t"
-> >=20
->=20>  A nicer patch (without a cast) would be to make it an "int" again/
-> >=20
->=20>  I encountered this issue because I had tcp_repair enabled, which u=
-ses
-> >=20
->=20>  tcp_init_tso_segs to reset the MSS.
-> >=20
->=20>  However, it seems that tcp_bound_to_half_wnd also dynamically adju=
-sts
-> >=20
->=20>  the value to be smaller than the current size_goal.
-> >=20
->=20
-> Okay, and what was the end result ?
->=20
->=20An skb has a limited amount of bytes that can be put into it
->=20
->=20(MAX_SKB_FRAGS * 32K) , and I can't see what are the effects of havin=
-g
->=20
+I'm tempted to assume the idea in the second hunk was to calculate the
+coredump mask if one was requested but fetched in the first hunk, in
+which case the check should be
+    if ((kinfo.mask & PIDFD_INFO_COREDUMP) && !(kinfo.coredump_mask))
+which might be more legibly written as
+    if ((mask & PIDFD_INFO_COREDUMP) && !(kinfo.coredump_mask))
 
-Hi=20Eric,
+This could also instead be achieved by changing the first hunk to be:
 
-I'm working with a reproducer generated by syzkaller [1], and its core
-logic is roughly as follows:
+    if (mask & PIDFD_INFO_COREDUMP) {
+	kinfo.coredump_mask = READ_ONCE(pidfs_i(inode)->__pei.coredump_mask);
+	if (kinfo.coredump_mask)
+	    kinfo.mask |= PIDFD_INFO_COREDUMP;
+    }
 
-'''
-setsockopt(fd, TCP_REPAIR, 1)
-connect(fd);
-setsockopt(fd, TCP_REPAIR, -1)
+and the second hunk to:
 
-send(fd, small);
-sendmmsg(fd, buffer_2G);
-'''
+    if ((mask & PIDFD_INFO_COREDUMP) && !(kinfo.mask & PIDFD_INFO_COREDUMP)) {
+	task_lock(task);
+        if (task->mm) {
+	    kinfo.coredump_mask = pidfs_coredump_mask(task->mm->flags);
+            kinfo.mask |= PIDFD_INFO_COREDUMP;
+        }
+        task_unlock(task);
+    }
 
-First, because TCP_REPAIR is enabled, the send() operation leaves the skb
-at the tail of the write_queue. Subsequently, sendmmsg is called to send
-2GB of data.
+However, when looking at this, the supposition that the second hunk
+means to cover cases where the coredump info was requested but the first
+hunk failed to get it starts getting doubtful, so apologies if I'm
+completely off-base.
 
-Due to TCP_REPAIR, the size_goal is reduced, which can cause the copy
-variable to become negative. However, because of integer promotion bug
-mentioned in the previous email, this negative value is misinterpreted as
-a large positive number. Ultimately, copy becomes a huge value, approachi=
-ng
-the int32 limit. This, in turn, causes sk->sk_forward_alloc to overflow,
-which is the exact issue reported by syzkaller.
+This patch addresses the issue by fixing the check in the second hunk.
 
-On a related note, even without using TCP_REPAIR, the tcp_bound_to_half_w=
-nd()
-function can also reduce size_goal on its own. Therefore, my understandin=
-g is
-that under extreme conditions, we might still encounter an overflow in
-sk->sk_forward_alloc.
+Signed-off-by: Laura Brehm <laurabrehm@hey.com>
+Cc: brauner@kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+---
+ fs/pidfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, I think we have good reason to change copy to an int.
+diff --git a/fs/pidfs.c b/fs/pidfs.c
+index 69919be1c9d8..4625e097e3a0 100644
+--- a/fs/pidfs.c
++++ b/fs/pidfs.c
+@@ -319,7 +319,7 @@ static long pidfd_info(struct file *file, unsigned int cmd, unsigned long arg)
+ 	if (!c)
+ 		return -ESRCH;
+ 
+-	if (!(kinfo.mask & PIDFD_INFO_COREDUMP)) {
++	if ((kinfo.mask & PIDFD_INFO_COREDUMP) && !(kinfo.coredump_mask)) {
+ 		task_lock(task);
+ 		if (task->mm)
+ 			kinfo.coredump_mask = pidfs_coredump_mask(task->mm->flags);
+-- 
+2.39.5 (Apple Git-154)
+
