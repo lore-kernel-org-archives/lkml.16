@@ -1,167 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15E42E425D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C2B253939
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544017; cv=none; b=Sva73TYnkbbRhO8hCqjvcNRT2PIAu57GZioxiYfRyg8jXy7DoxVTOyInDMUUHrHGkM5Eas/RjOUzBmPmkpfdo8bmZU1Q7lEWL8k1Y6Zj+LJzJjelfctj8rKv0vs/Rr+fxdmjafc8ffAsjbvwx0pNjNfmdNYaj1XFUKJrFv7JVtk=
+	t=1751544092; cv=none; b=C8GE3WjYf3D2DufwWI/Me7LnEqPXqqpMM+AkOqcXflhOKRsgJGghJ1iYa4b1aaeW+ODcs0XM7tp9ILExrYxZ5koRd99DH0owT4Nl4XhInQ83eBUxEKa610O9eVrAvG8X3/LlXS84OvoCP6DKA9FILm1If9PXGC4WPmfuJef/2DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544017; c=relaxed/simple;
-	bh=cWoqO8dP0CRW2IxKSMAX0+5QNvUesrrlUbCa6SMfYtk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=U44vdiu++zpwhBBA/deNA2I6MAIucKKU1rw5qOkwCC1CDoqXt9wxIvRA8+p32E+PkbAnmPEt+W3cedP5rt198zb+Kyax/I8zzun6cxGTNBnSUKt0g+RyI2XCi7GYcj774q/OpkSINMrTWlBSID2YuOXTeNRCa83NOqEgJ3iU6xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imuG8cRq; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751544092; c=relaxed/simple;
+	bh=z2VMVssNf2T1qI0QODTU/q2QBzCWr3raQvOE+FydPRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9QfVlM/1JvLhwxjsUe0z3vN5lMcxBeuW+22jVMvxW70m6LqkByHyw2QM0DahoZVq8a2kMzVBczENOjdLCH65TM1UVdfCR5mz+AYDU+uDXwuY06+lmtOC+kjUNDvu6e28GdmLWK0mpiON7nYDG5MGwS5odbzAaZAyFWR21rY6vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=S0ctuNej; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imuG8cRq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751544015; x=1783080015;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=cWoqO8dP0CRW2IxKSMAX0+5QNvUesrrlUbCa6SMfYtk=;
-  b=imuG8cRqfpZtTXYPt8PRHFYRnInm+Upt4GWUfdRa3wldjGwKaBb31ha/
-   dmkoS30lgxsSy+eZPJbo/BnG+yfUQyDkxYIoRWqLRFG1/zkfUcqBPSG8N
-   //Q7jtRwZtCL1/B/HuZD2FQLwPIS7rt1W2IIFx8nN5R0OT4jAKn+lpcpc
-   V1twpM+e9j9joGTnsJ2o6Ny1ySm8b5dMwDKPwOlL35kSq7gdamu9g0XnH
-   dSc4YBp7ktci/VHAVKGqcxng9Z+ZmzBeShAWEI8naOsOjCgrOfANJ3kxv
-   mhkMCA3ptYahHqhJvRvVvakpOOlYyRnQ+z3Ym07rcUMFWEgHR8nWP/6O2
-   w==;
-X-CSE-ConnectionGUID: vafVwYH8QkOXKq3trNp05w==
-X-CSE-MsgGUID: 7oDN1iNzQdaU+YWL9L0e1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71303813"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="71303813"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:00:15 -0700
-X-CSE-ConnectionGUID: 1lHp8tdaToiHdchfMpCdqg==
-X-CSE-MsgGUID: 5Ta0bi1TS2i3XTqW3ZI10g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154479910"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.73])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:00:10 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Ville Syrjala <ville.syrjala@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, Dibin Moolakadan
- Subrahmanian <dibin.moolakadan.subrahmanian@intel.com>, Imre Deak
- <imre.deak@intel.com>, David Laight <david.laight.linux@gmail.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Matt Wagantall
- <mattw@codeaurora.org>, Dejin Zheng <zhengdejin5@gmail.com>,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, Ville
- =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH 3/4] iopoll: Reorder the timeout handling in
- poll_timeout_us()
-In-Reply-To: <20250702223439.19752-3-ville.syrjala@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250702223439.19752-1-ville.syrjala@linux.intel.com>
- <20250702223439.19752-3-ville.syrjala@linux.intel.com>
-Date: Thu, 03 Jul 2025 15:00:07 +0300
-Message-ID: <00600fbcc113777ef43b47f41e9c5f46aa701a83@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="S0ctuNej"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453634d8609so56833735e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751544089; x=1752148889; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aopz9JcRK0iEgUc501SKKnowXTL3SIijDXQz+zmIWgU=;
+        b=S0ctuNejtpvrRh9jAsx0+Bj9uqA4Hd7hr7Q0tVsTUKcMCte7othb7lPezaKYI04aIw
+         Rvp3oH1F36N0hwS2gzAwCDvsl6cEH6SyxrtqljFALogmPICYZ1gqVm56QqF2M9R0FQVH
+         rucrz1eHJfvk1dletLgEdE+aSAqwQlattjJLUFL6nyiwBAmC2Mh2AT9Ma1HYJ0EwYGTk
+         G1D9tL/dJdKvRByDB5WXFMkChAqbC9DqvRklLSQc7fJDUgiCyDDDJyx4huFZzrGCpOo9
+         DYRY1UCOTmcXcN6+dC9ZCsQCVl5ZBjU2jXjRdOTezFULdp4vbVK6fkocFSERTWkUrKF6
+         o4pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751544089; x=1752148889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Aopz9JcRK0iEgUc501SKKnowXTL3SIijDXQz+zmIWgU=;
+        b=sZm3EeCpX8GxmjlZs364rxhYnzu2F6aFHf+1rS+Je6VFHFsADX+8W5HO+d0q6zxRCC
+         qORdUxauIlvvQ9bJTnZ1RZ19ZX0Dl3PTsRuvq40srYOM6KL4cG+VdIBIDYTGfIIuhSE7
+         68zAtAKvML8jM7j4ZRIcwLh4Is2kuafDgGqT9Vqi57D8QComNUcw7oPuXQu4XZU06KrF
+         bcfGjo7YQGP0IpFBR0Zo8/ENzaaJ+p2QxuTybewv8Q2LuSfgfm9RKcp0jkwKOKyTikFB
+         DQboKBy+9pXQNNEImd7DyzrkMLDYiN8b/JLhCWtK7cxt75uWNs/8u8/cmZMDqcwkyoG3
+         cQKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVWYJ7h7d4FQugltp7T/0t4Ykr2HE2ORto5BDaQ6L1j7dRHc0qn87ffZeF1b68GzKUP3PtA/077btnbao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtmEb/Q7Ij+FBzV8bPCctSCIjFSwpyqSk4Q6gNllfTPuhMfpkT
+	xHnSli1ByhO/QCj7HPcX3M+zzXWPm0myYI8h+bpeH5lr7PCgkoaZAigjLeixB+8Wag8=
+X-Gm-Gg: ASbGncsXw/D45IcH14GAn2eINOfmkdgjGVlxcEWFtUOvofRFsR0Ir0KbBPy3eFcd9IS
+	imj34IDZdNlSk1cEMlPpbhScvqmm/El55douTdqavnKzrphajIOtAVABc6T1miaA/lcrgRgTIRV
+	+XOFi0w/9Uk1chOzV/icFT+vId3HdcotbqhJX4hye+w+Zb/HGceN1ad3du78v4Z3sTRcV4e+zrE
+	w5BNDU4GwJsOlP8rcN4PpDTnmKuKWZqR0oJSG3W9hApAsGfOqq7hDKYf3IlP4/8iIGDPtcQTben
+	fBiF4Eyn3UY5jya3PN7nnBUJ26GRD2L0lwhUiBb1r/e0rmqvMlbg6hCdkN/jV9gaUsRO6bg/d68
+	=
+X-Google-Smtp-Source: AGHT+IEKdej4rZRfQsA8lt2P2H7zqGUWgsuHW8FgSQ8FsnWOkSKG1hJ20TPEje3vH/3yFkiIG7JoUw==
+X-Received: by 2002:a05:600c:608c:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-454ab3a9274mr31654735e9.17.1751544088630;
+        Thu, 03 Jul 2025 05:01:28 -0700 (PDT)
+Received: from localhost (109-81-23-161.rct.o2.cz. [109.81.23.161])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a99729basm25002165e9.10.2025.07.03.05.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 05:01:28 -0700 (PDT)
+Date: Thu, 3 Jul 2025 14:01:25 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chen Yu <yu.c.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
+	Jirka Hladky <jhladky@redhat.com>,
+	Srikanth Aithal <Srikanth.Aithal@amd.com>,
+	Suneeth D <Suneeth.D@amd.com>, Libo Chen <libo.chen@oracle.com>
+Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
+ task swap
+Message-ID: <aGZxFRVxHouLaMPg@tiehlicka>
+References: <20250702163247.324439-1-yu.c.chen@intel.com>
+ <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
+ <aGZNTtJuCyHJE_25@tiehlicka>
+ <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
 
-On Thu, 03 Jul 2025, Ville Syrjala <ville.syrjala@linux.intel.com> wrote:
-> From: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
->
-> Currently poll_timeout_us() evaluates 'op' and 'cond' twice
-> within the loop, once at the start, and a second time after
-> the timeout check. While it's probably not a big deal to do
-> it twice almost back to back, it does make the macro a bit messy.
->
-> Simplify the implementation to evaluate the timeout at the
-> very start, then follow up with 'op'/'cond', and finally
-> check if the timeout did in fact happen or not.
->
-> For good measure throw in a compiler barrier between the timeout
-> and 'op'/'cond' evaluations to make sure the compiler can't reoder
-> the operations (which could cause false positive timeouts).
-> The similar i915 __wait_for() macro already has the barrier, though
-> there it is between the 'op' and 'cond' evaluations, which seems
-> like it could still allow 'op' and the timeout evaluations to get
-> reordered incorrectly. I suppose the ktime_get() might itself act
-> as a sufficient barrier here, but better safe than sorry I guess.
->
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Dibin Moolakadan Subrahmanian <dibin.moolakadan.subrahmanian@intel.co=
-m>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: David Laight <david.laight.linux@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Matt Wagantall <mattw@codeaurora.org>
-> Cc: Dejin Zheng <zhengdejin5@gmail.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: intel-xe@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+On Thu 03-07-25 13:50:06, Peter Zijlstra wrote:
+> On Thu, Jul 03, 2025 at 11:28:46AM +0200, Michal Hocko wrote:
+> 
+> > But thinking about this some more, this would be racy same as the
+> > PF_EXITING check. This is not my area but is this performance sensitive
+> > path that couldn't live with the proper find_lock_task_mm?
+> 
+> find_lock_task_mm() seems eminently unsuitable for accounting --
+> iterating the task group is insane.
+> 
+> Looking at this, the mm_struct lifetimes suck.. task_struct reference
+> doesn't help, rcu doesn't help :-(
+> 
+> Also, whatever the solution it needs to be inside this count_memcg_*()
+> nonsense, because nobody wants this overhead, esp. not for something
+> daft like accounting.
+> 
+> My primary desire at this point is to just revert the patch that caused
+> this. Accounting just isn't worth it. Esp. not since there is already a
+> tracepoint in this path -- people that want to count crap can very well
+> get their numbers from that.
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+I would tend to agree with this. Doing the accounting race free on a
+remote task is nasty and if this is a rare event that could be avoided
+then it should be just dropped than racy and oops prone.
 
-> ---
->  include/linux/iopoll.h | 24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
->
-> diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
-> index 69296e6adbf3..0e0940a60fdb 100644
-> --- a/include/linux/iopoll.h
-> +++ b/include/linux/iopoll.h
-> @@ -41,18 +41,17 @@
->  	if ((sleep_before_op) && __sleep_us) \
->  		usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
->  	for (;;) { \
-> +		bool __expired =3D __timeout_us && \
-> +			ktime_compare(ktime_get(), __timeout) > 0; \
-> +		/* guarantee 'op' and 'cond' are evaluated after timeout expired */ \
-> +		barrier(); \
->  		op; \
->  		if (cond) { \
->  			___ret =3D 0; \
->  			break; \
->  		} \
-> -		if (__timeout_us && \
-> -		    ktime_compare(ktime_get(), __timeout) > 0) { \
-> -			op; \
-> -			if (cond) \
-> -				___ret =3D 0; \
-> -			else \
-> -				___ret =3D -ETIMEDOUT; \
-> +		if (__expired) { \
-> +			___ret =3D -ETIMEDOUT; \
->  			break; \
->  		} \
->  		if (__sleep_us) \
-> @@ -97,17 +96,16 @@
->  			__left_ns -=3D __delay_ns; \
->  	} \
->  	for (;;) { \
-> +		bool __expired =3D __timeout_us && __left_ns < 0; \
-> +		/* guarantee 'op' and 'cond' are evaluated after timeout expired */ \
-> +		barrier(); \
->  		op; \
->  		if (cond) { \
->  			___ret =3D 0; \
->  			break; \
->  		} \
-> -		if (__timeout_us && __left_ns < 0) { \
-> -			op; \
-> -			if (cond) \
-> -				___ret =3D 0; \
-> -			else \
-> -				___ret =3D -ETIMEDOUT; \
-> +		if (__expired) { \
-> +			___ret =3D -ETIMEDOUT; \
->  			break; \
->  		} \
->  		if (__delay_us) { \
-
---=20
-Jani Nikula, Intel
+-- 
+Michal Hocko
+SUSE Labs
