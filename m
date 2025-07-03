@@ -1,70 +1,245 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7181833DF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F89C1DF248
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561239; cv=none; b=gkm51SdcBOUnJob7969k2eRCs3OqOOAgso+u8nyzshv8vAldxdfWiI5xRsWjte+72Xu16PfiIOd7wCYtVMJIItBN5q9AX69oe862ILxdSEFowxVEGeab9vyLKCRXc6wX/DaoAfOhCuENX3dVmHB85NHsaGDpIbDRAkDrmFZaRq4=
+	t=1751561503; cv=none; b=OL7YIoMiHnl4V1pIKVBn1b8AtIwVrPGMB/+MUw5mZSTEaFIvioIMPOTV6aHcrBv2p6MgH0LbWZ0BCZeXr58r0lRD94OyGov1pyXTFILh+qhB5imqcty6MRufgDZ27iRqY9nDewrjK6Qg3wjU89A87qmT8DzqJulyFirKw1o1yYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561239; c=relaxed/simple;
-	bh=bPdmBJpr+0n4/dZVYvzLyG0nYYbdUEbX7joHkZqlf3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L/1ix4i5pxeyRAosK9OAqn4nlndD6MUbZCsfPJyRjLBX646wEhqs8BBSPlqHbLTQbr9JYRZduCbnM3pnWyKAnKRar/o3zq25vF0vD9pW4WDzfuRLJiEbRMOEEvXmjGMvvmfzGkRumSS7Gvsqbxis72gHeB6ooIUdR7aPeja8OYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rIWixzvj; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751561503; c=relaxed/simple;
+	bh=Bl4U2736cbdaIaL7r32DIiKWiFNjDYw4P426GZbKXHI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LtUMNNXEhofrj/bH7ObdmgrnNEB4GtAcU/8bg6wP8z4PoZ2Hy8+TIVAYnl7LSxZgvlj+fcMcPM57zfAEyIooB1OLCROpq4T6ccnu63wgC9VD2CLbTNGQymNfrvacFBZnit8la+YAxkSfB+5S3UteECaVU04GBaGrtjjSxy/ytzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcTlpW7j; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rIWixzvj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hA4hmvyAkI8aCMOwywVt/416zIzVxDyFKXBb3uab40o=; b=rIWixzvjY0exX9wBaZNHL8r81H
-	za0U5lS3nqfTmGz6UE8xGAr8UXGKLV5TIVU0go16efDrV+HmoPegC5LHeovuQdXYFMmDLFpmX02hu
-	T0IgvHzF0ZOjVQAjUQYGkGTtPMCyQHkzUzV/m9FPWl2b28anpBBhvcCrf4iggNy3Rk/4NNbtzepIG
-	dRSUhQhDEb3Zpe/5ZamFjd/2uqzG53K9A6uYm3PKzrTSm1h8CXnBZqFU2e9xweRPpnIv6drNi4ASh
-	qIT7l4LwcZG+5fs0zV6hp1B8GLH5FPbcpO/BoiSYQj2DYPscd/zWfL8aEZAs/kWUb+Fq+XzC/9PMT
-	y49w7c3A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXN5Z-0000000DjjU-27ja;
-	Thu, 03 Jul 2025 16:47:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 26A5A30017D; Thu, 03 Jul 2025 18:47:08 +0200 (CEST)
-Date: Thu, 3 Jul 2025 18:47:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Phil Auld <pauld@redhat.com>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/12] sched: Add ttwu_queue support for delayed tasks
-Message-ID: <20250703164708.GZ1613200@noisy.programming.kicks-ass.net>
-References: <20250702114924.091581796@infradead.org>
- <20250702121159.652969404@infradead.org>
- <20250703160027.GC245663@pauld.westford.csb>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcTlpW7j"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e389599fso231695ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751561501; x=1752166301; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K2Pypm8A2hrX0Dg/6qTKb5Bh6OJzo+0bDjJzK3OFgt4=;
+        b=jcTlpW7ju09gWPuru5zpZ/owkYwmZ4TSQJzNFOLE8PhejHe79jwF7zU77pp6Si9iru
+         WbSnwL0UZ6jH7M+mupTuWr1k2fF//WjsoJYjZFiKjmLyorvoE8Z/tgDdSmGoHS9Nkq28
+         o/vuDXdBIvPiaaBxpcrQc8FCfd24NH3jfrKzIIcUPmN9wwJEHS6+hFUT4v4sEhMtfTx9
+         int7G6hLG0h40S2D9dWzDYtc1jzxHtF9/iiAhIoTzD2WDaJxGuD7JjTdD4Xgernot0sY
+         fFVLb7h7J8p4FGRDaucvaOysHc/cCLZr2y2qCCBsGAFtqFoEZZCbO6TaVBSpM4e1h3HT
+         jO8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751561501; x=1752166301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K2Pypm8A2hrX0Dg/6qTKb5Bh6OJzo+0bDjJzK3OFgt4=;
+        b=l0se7UCtfxUt6wbHCuUG4vJ5F29Y3/Q4+z25p0gqY3DGRbTX7nhVmbTPaFbvRKQCw7
+         Fv2y09OLEQuNJLP6eWM9cKABIVO4vfMCveQReipRCO4kcaJ3bgcGUhZEhZBPiparFVCF
+         gLWsBbdm7ziifGwfT5CZ9hCeveN9An7oYxWCvffjwTVpGPm7gHH0aAWKI1wVsXDah60+
+         lQ4CP/3AQKp0aBE/K4bdafi12xWIk6uMj/xNGiWfiqIWstQ4E8tb1/7XZckrWQ4FJ7SB
+         KnuPqLR04LLmFqlYLQavHHeints4pkib6dY8xJ89Xpb7eJ/oJob8MUBh52Ax+oH4SS6/
+         sCDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaTGqFogHVi0B/2gXUmlEfeCfSqhcO22RbMrYbY1HkQTs3V+dWuO3Btzf6xjv28DcTUOG2sJOwlhLivks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNAX2xloON6ytuaqSHFDwIro1OmCuN3TBbzkN5HZkzgNLnca0b
+	/NGy6j2tK6g1LFN9oyPSqHt2T7+Sdm17/HU+YKBSQ7ePPylAIUg2WhEmDB5EwzZuN9j/x4Awbq1
+	mR5NAv8FrqtD+m9LPs2Y8QGS6nms7u/a84DDoUffh
+X-Gm-Gg: ASbGncskB3BeUX5Hr00OMw1ZjNPtE7U+fVYLzCIGNMS9Y8lHRRt4DTKvuztCFgNcVGn
+	eMRdEXPFrR4WHoz+TrPdAvQRTL4SNlgwX9flacyZmg0mL6QcoqBXBOFXHi6Be6CEEamtXqOEP8v
+	r6PUkeXz5QVdPLC3EiB2PmtYDKXTHDLZWvCf38zwC/R7lgy727gRjM0TuhEDFAu0aAmjD79pRvd
+	EA8j0BvlPRfKT0=
+X-Google-Smtp-Source: AGHT+IGXcFD7sYmA1iSdOQUEhyKPfILxX4bu/LO4qd9k2V427lZTYaQxOB0mfeyfOyKYZF5kwyRLF/xzM5IIEUmGxJg=
+X-Received: by 2002:a17:902:c942:b0:234:13ad:7f9f with SMTP id
+ d9443c01a7336-23c79c4f79bmr3137735ad.22.1751561500326; Thu, 03 Jul 2025
+ 09:51:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703160027.GC245663@pauld.westford.csb>
+References: <20250703062641.3247-1-yan.y.zhao@intel.com>
+In-Reply-To: <20250703062641.3247-1-yan.y.zhao@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 3 Jul 2025 09:51:28 -0700
+X-Gm-Features: Ac12FXxb-01x2wcZYGaOot8b0VKW1HfuaPXyOLk1ZcRUX_G1vyGSA7jaP9CX_w0
+Message-ID: <CAGtprH-Hb3B-sG_0ockS++bP==Zyn2f4dvWpwC73+ksVt7YqJg@mail.gmail.com>
+Subject: Re: [RFC PATCH] KVM: TDX: Decouple TDX init mem region from kvm_gmem_populate()
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rick.p.edgecombe@intel.com, kai.huang@intel.com, 
+	adrian.hunter@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@intel.com, binbin.wu@linux.intel.com, dmatlack@google.com, 
+	isaku.yamahata@intel.com, ira.weiny@intel.com, michael.roth@amd.com, 
+	david@redhat.com, ackerleytng@google.com, tabba@google.com, 
+	chao.p.peng@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 12:00:27PM -0400, Phil Auld wrote:
+On Wed, Jul 2, 2025 at 11:29=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
+te:
+>
+> Rather than invoking kvm_gmem_populate(), allow tdx_vcpu_init_mem_region(=
+)
+> to use open code to populate the initial memory region into the mirror pa=
+ge
+> table, and add the region to S-EPT.
+>
+> Background
+> =3D=3D=3D
+> Sean initially suggested TDX to populate initial memory region in a 4-ste=
+p
+> way [1]. Paolo refactored guest_memfd and introduced kvm_gmem_populate()
+> interface [2] to help TDX populate init memory region.
+>
+> tdx_vcpu_init_mem_region
+>     guard(mutex)(&kvm->slots_lock)
+>     kvm_gmem_populate
+>         filemap_invalidate_lock(file->f_mapping)
+>             __kvm_gmem_get_pfn      //1. get private PFN
+>             post_populate           //tdx_gmem_post_populate
+>                 get_user_pages_fast //2. get source page
+>                 kvm_tdp_map_page    //3. map private PFN to mirror root
+>                 tdh_mem_page_add    //4. add private PFN to S-EPT and cop=
+y
+>                                          source page to it.
+>
+> kvm_gmem_populate() helps TDX to "get private PFN" in step 1. Its file
+> invalidate lock also helps ensure the private PFN remains valid when
+> tdh_mem_page_add() is invoked in TDX's post_populate hook.
+>
+> Though TDX does not need the folio prepration code, kvm_gmem_populate()
+> helps on sharing common code between SEV-SNP and TDX.
+>
+> Problem
+> =3D=3D=3D
+> (1)
+> In Michael's series "KVM: gmem: 2MB THP support and preparedness tracking
+> changes" [4], kvm_gmem_get_pfn() was modified to rely on the filemap
+> invalidation lock for protecting its preparedness tracking. Similarly, th=
+e
+> in-place conversion version of guest_memfd series by Ackerly also require=
+s
+> kvm_gmem_get_pfn() to acquire filemap invalidation lock [5].
+>
+> kvm_gmem_get_pfn
+>     filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
+>
+> However, since kvm_gmem_get_pfn() is called by kvm_tdp_map_page(), which =
+is
+> in turn invoked within kvm_gmem_populate() in TDX, a deadlock occurs on t=
+he
+> filemap invalidation lock.
+>
+> (2)
+> Moreover, in step 2, get_user_pages_fast() may acquire mm->mmap_lock,
+> resulting in the following lock sequence in tdx_vcpu_init_mem_region():
+> - filemap invalidation lock --> mm->mmap_lock
+>
+> However, in future code, the shared filemap invalidation lock will be hel=
+d
+> in kvm_gmem_fault_shared() (see [6]), leading to the lock sequence:
+> - mm->mmap_lock --> filemap invalidation lock
+>
+> This creates an AB-BA deadlock issue.
+>
+> These two issues should still present in Michael Roth's code [7], [8].
+>
+> Proposal
+> =3D=3D=3D
+> To prevent deadlock and the AB-BA issue, this patch enables TDX to popula=
+te
+> the initial memory region independently of kvm_gmem_populate(). The revis=
+ed
+> sequence in tdx_vcpu_init_mem_region() is as follows:
+>
+> tdx_vcpu_init_mem_region
+>     guard(mutex)(&kvm->slots_lock)
+>     tdx_init_mem_populate
+>         get_user_pages_fast //1. get source page
+>         kvm_tdp_map_page    //2. map private PFN to mirror root
+>         read_lock(&kvm->mmu_lock);
+>         kvm_tdp_mmu_gpa_is_mapped // 3. check if the gpa is mapped in the
+>                                         mirror root and return the mapped
+>                                         private PFN.
+>         tdh_mem_page_add    //4. add private PFN to S-EPT and copy source
+>                                  page to it
+>         read_unlock(&kvm->mmu_lock);
+>
+> The original step 1 "get private PFN" is now integrated in the new step 3
+> "check if the gpa is mapped in the mirror root and return the mapped
+> private PFN".
+>
+> With the protection of slots_lock, the read mmu_lock ensures the private
+> PFN added by tdh_mem_page_add() is the same one mapped in the mirror page
+> table. Addiontionally, before the TD state becomes TD_STATE_RUNNABLE, the
+> only permitted map level is 4KB, preventing any potential merging or
+> splitting in the mirror root under the read mmu_lock.
+>
+> So, this approach should work for TDX. It still follows the spirit in
+> Sean's suggestion [1], where mapping the private PFN to mirror root and
+> adding it to the S-EPT with initial content from the source page are
+> executed in separate steps.
+>
+> Discussions
+> =3D=3D=3D
+> The introduction of kvm_gmem_populate() was intended to make it usable by
+> both TDX and SEV-SNP [3], which is why Paolo provided the vendor hook
+> post_populate for both.
+>
+> a) TDX keeps using kvm_gmem_populate().
+>    Pros: - keep the status quo
+>          - share common code between SEV-SNP and TDX, though TDX does not
+>            need to prepare folios.
+>    Cons: - we need to explore solutions to the locking issues, e.g. the
+>            proposal at [11].
+>          - PFN is faulted in twice for each GFN:
+>            one in __kvm_gmem_get_pfn(), another in kvm_gmem_get_pfn().
+>
+> b) Michael suggested introducing some variant of
+>    kvm_tdp_map_page()/kvm_mmu_do_page_fault() to avoid invoking
+>    kvm_gmem_get_pfn() in the kvm_gmem_populate() path. [10].
+>    Pro:  - TDX can still invoke kvm_gmem_populate().
+>            can share common code between SEV-SNP and TDX.
+>    Cons: - only TDX needs this variant.
+>          - can't fix the 2nd AB-BA lock issue.
+>
+> c) Change in this patch
+>    Pro: greater flexibility. Simplify the implementation for both SEV-SNP
+>         and TDX.
+>    Con: undermine the purpose of sharing common code.
+>         kvm_gmem_populate() may only be usable by SEV-SNP in future.
+>
+> Link: https://lore.kernel.org/kvm/Ze-TJh0BBOWm9spT@google.com [1]
+> Link: https://lore.kernel.org/lkml/20240404185034.3184582-10-pbonzini@red=
+hat.com [2]
+> Link: https://lore.kernel.org/lkml/20240404185034.3184582-1-pbonzini@redh=
+at.com [3]
+> Link: https://lore.kernel.org/lkml/20241212063635.712877-4-michael.roth@a=
+md.com [4]
+> Link: https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc5=
+1.1747264138.git.ackerleytng@google.com [5]
+> Link: https://lore.kernel.org/all/20250430165655.605595-9-tabba@google.co=
+m [6]
+> Link: https://github.com/mdroth/linux/commits/mmap-swprot-v10-snp0-wip2 [=
+7]
+> Link: https://lore.kernel.org/kvm/20250613005400.3694904-1-michael.roth@a=
+md.com [8]
+> Link: https://lore.kernel.org/lkml/20250613151939.z5ztzrtibr6xatql@amd.co=
+m [9]
+> Link: https://lore.kernel.org/lkml/20250613180418.bo4vqveigxsq2ouu@amd.co=
+m [10]
+> Link: https://lore.kernel.org/lkml/aErK25Oo5VJna40z@yzhao56-desk.sh.intel=
+.com [11]
+>
+> Suggested-by: Vishal Annapurve <vannapurve@google.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
 
-> > +	if (ttwu_do_migrate(rq, p, cpu))
-> > +
-> 
-> This doesn't compile because ttwu_do_migrate() doesn't take a *rq.
-> 
-> It's easy enough to fix up and I'll try to have our perf team try these
-> out. 
+Thanks Yan for revisiting the initial memory population for TDX VMs.
+This implementation seems much cleaner to me.
 
-I'm confused, isn't that what patch 7 does?
-
-Also, I updated the git tree today, fixing a silly mistake. But I don't
-remember build failures here.
+Acked-by: Vishal Annapurve <vannapurve@google.com>
+Tested-by: Vishal Annapurve <vannapurve@google.com>
