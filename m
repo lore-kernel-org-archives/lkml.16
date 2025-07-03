@@ -1,137 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC37813B2A4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9B528B516;
+	Thu,  3 Jul 2025 13:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751550498; cv=none; b=Mk6feiPzHWOQbWvskH4yxBpRGwVVdE3b/J5J4ZDYMeRuWyWTXzbIM0iehudJCUSXMm60Str4ikOGq0TEmH3qqyKDGeGtOYYR0DGdxZ9bIlVxdArzWB7KKzzc5c8Ze9tzb7zCYqHH1xtYZg3bB0BPWEb6wHWbBVN3sfxlO94EL3A=
+	t=1751550501; cv=none; b=tFWC7S7QbAAoEedqm+e9DgAdsWfES2Uf03a4657qlOGewLLqvAFZOFE34VtOT3aon5W8ZT656cNTdnTZ7xM+l515bdlBBrsLa1whkitMgkEecse/xHLRTeScnGQcdXW/UCwLjTJXOaHdSL3Qy5L+7lakh0GZm6aZMMQ0WMLYoHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751550498; c=relaxed/simple;
-	bh=EfnLWETl1J5M1bL6Y29tMN98S/aXdjr4ysoydW1po4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P8ZhcDQb/rTEig1vJSpCdCxVMf05MindYSqT3YHhN+P2lLE5S/ywNJsfr+OThhopvNVD3D6viz340bXpJWr/rWL7VIbhga6CM8xsMDc/wkRtQEPDBSUHqosI1WYt6VZEOPnrfOVp6pQo/z3FzhMGfnRwDiGoFmIDQKm3RfIAjfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OqJ4aGtr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqJ4aGtr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751550495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJrMtFaBP2BGL6npOuum/zHAyGQyeC3LXV3nbl5mRq8=;
-	b=OqJ4aGtrJpU+r3avD6ExMNRT1cMO0/T+YtkeXn8j1T+O8/0H4txcrOmrpWc7c9t7lPGuBF
-	I6iVfbngRYwH4BRFQWMv9sNAd3C3SEditp0DBIT0JXe0MCnnw4io/zMlwCZ0X3Z64gtBHE
-	NCa/PhnfA9GuDsLXuB185IvpWFU9KZM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-qe1Zl4-6NaGiN_CDCrzS_Q-1; Thu, 03 Jul 2025 09:48:14 -0400
-X-MC-Unique: qe1Zl4-6NaGiN_CDCrzS_Q-1
-X-Mimecast-MFC-AGG-ID: qe1Zl4-6NaGiN_CDCrzS_Q_1751550494
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a6df0c67a6so3708198f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:48:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751550493; x=1752155293;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XJrMtFaBP2BGL6npOuum/zHAyGQyeC3LXV3nbl5mRq8=;
-        b=SN46wA+LBufVYDTWBwnBbKuULlRoY3jvzePtfovqNESwpbVfe+8W/Kls4RnkVR+LDx
-         21yFwJqApDCsMSv4huPWCBEIBIFEdc+AVb8eKR3HmrrIxPQM7FsWOFI6vL8DUZo2ryY9
-         0/u3UW9p+HEX1U3QcK5plwPuB3GmiiKmqXW16LyTgWgVKy6FXC2e6NlOSyyShRsm8scf
-         oIBmwTGmXEEaIcfc0iOKNGyDrdfYXWfDhp9ZJ1guDrI9tMPyXCKcR/0whmhCujuW7nug
-         2iKcO48320y67E+ihq/aRo/CCxe4olklW3Ey5+wbOPVRcq5oSn8odFsZ04lGTsQChnZj
-         +uzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDpbUYqVuIs4Be7fU/XfddyQ7vZwDNhwTA/UlZCwP2OK3cWwCfqzxjEBVHw7M3LC3hQwNBSC4ZVxUnA3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbcygKepRQyfK8APBBcGlVpwPTt1Cxeb/6PtOWbSL1PldYEPbe
-	iBvcitUBtSsHc8DB+wvBpIavll+iIzFfqqbEz8TtkK9VBkBu9zMdCLQ/VW3pCw13kT3AjceX5ZP
-	vl5C9CCKOJv/zxlDUsdcoudYQZ21BsC54duwiXv+DPstrxkcN5QBFOD4KXv1VAb4V6g==
-X-Gm-Gg: ASbGncvREaJAgfsJiocWABvhGH8DoeymcemR6f87csl/QA6SH1uwD5BWaYR1FLg2ZUV
-	+DoI+8rCQgdsKhai2r53yIT2bqmiTI3g6F0ZqMoM+HKfWQ14B57Eh58OZfYoQfWGtO7+87g7lv7
-	KY/G/hJNKBSrmVcc16U6hUcVv01BUuEuAS5vptwFjZFWXCTf9c1E8D/zDgefYIsZZg+VaJR8YCg
-	ORfeVaqB+HBRAFlPep1rpE3B/4bPojMssm1LrxYlvkoLgfglJPxWY3LoI1ZHL2ssmVEqm3VdYx8
-	yGZcFUIPtDx8YmoXXunVFGWv8rQANpXIIHfoibQtiRIA5GWcz3v1Xp6SUFBqVAhPGzI=
-X-Received: by 2002:a05:6000:290d:b0:3a5:2848:2445 with SMTP id ffacd0b85a97d-3b1fe6b5ae9mr6007913f8f.16.1751550493333;
-        Thu, 03 Jul 2025 06:48:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFd2kcIWtwK91F48hm7gSXrDxg3r7yvE33vIqHRfIQfbCwGMDKd3QlGq6N3EMfPF5sDl04JmA==
-X-Received: by 2002:a05:6000:290d:b0:3a5:2848:2445 with SMTP id ffacd0b85a97d-3b1fe6b5ae9mr6007887f8f.16.1751550492828;
-        Thu, 03 Jul 2025 06:48:12 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314? ([2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7098sm18357751f8f.4.2025.07.03.06.48.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 06:48:12 -0700 (PDT)
-Message-ID: <4cab9be0-3516-454f-883b-7a999994c447@redhat.com>
-Date: Thu, 3 Jul 2025 15:48:10 +0200
+	s=arc-20240116; t=1751550501; c=relaxed/simple;
+	bh=8IvgdlogpP7JuvdzwJQsuveomKygW/XCJS9EI4AtOQQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CA7MJHTfoyeFykBApoURGAQJcbzl3hYw0aRDe+SJD8TgjUReuHRe2sOw5kZdvDLmV9MHTByRevbA5qAJLLEqFajBPjyYMu2lYoSgSyH2I+4qo5dgxI13TLxwoQLuWGUsoUkEdG8dK4V6GDHN1Dw7nVUE8LtRH9rewg5AnOhMPAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bXylN3bTtzYQtrF;
+	Thu,  3 Jul 2025 21:48:16 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 5C96B1A12D0;
+	Thu,  3 Jul 2025 21:48:15 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP3 (Coremail) with SMTP id _Ch0CgDXOCYJimZoV+8fAg--.35082S2;
+	Thu, 03 Jul 2025 21:48:15 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: peterz@infradead.org,
+	rafael@kernel.org,
+	pavel@kernel.org,
+	timvp@google.com,
+	tj@kernel.org,
+	mkoutny@suse.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lujialin4@huawei.com,
+	chenridong@huawei.com
+Subject: [PATCH next] sched,freezer: prevent tasks from escaping being frozen
+Date: Thu,  3 Jul 2025 13:34:27 +0000
+Message-Id: <20250703133427.3301899-1-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [patch V2 0/3] ptp: Provide support for auxiliary clocks for
- PTP_SYS_OFFSET_EXTENDED
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
- Christopher Hall <christopher.s.hall@intel.com>,
- John Stultz <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Miroslav Lichvar <mlichvar@redhat.com>,
- Werner Abt <werner.abt@meinberg-usa.com>,
- David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>,
- Antoine Tenart <atenart@kernel.org>
-References: <20250701130923.579834908@linutronix.de>
- <faca1b8e-bd39-4501-a380-24246a8234d6@redhat.com> <87ecuxwic0.ffs@tglx>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <87ecuxwic0.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDXOCYJimZoV+8fAg--.35082S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr15JrykWFyUJrWDKF1xXwb_yoW8uFyUp3
+	95Wa1UGw10qr42ywnxta1v9398K39rJr4UG34kCF18Xa1YqasxWr4xCry3Wr4jvr1I9r9x
+	JayYg34SyayUCa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+	xUF1v3UUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On 7/3/25 2:48 PM, Thomas Gleixner wrote:
-> On Thu, Jul 03 2025 at 12:27, Paolo Abeni wrote:
->> On 7/1/25 3:26 PM, Thomas Gleixner wrote:
->>> Merge logistics if agreed on:
->>>
->>>     1) Patch #1 is applied to the tip tree on top of plain v6.16-rc1 and
->>>        tagged
->>>
->>>     2) That tag is merged into tip:timers/ptp and the temporary CLOCK_AUX
->>>        define is removed in a subsequent commit
->>>
->>>     3) Network folks merge the tag and apply patches #2 + #3
->>>
->>> So the only fallout from this are the extra merges in both trees and the
->>> cleanup commit in the tip tree. But that way there are no dependencies and
->>> no duplicate commits with different SHAs.
->>>
->>> Thoughts?
->>
->> I'm sorry for the latency here; the plan works for me! I'll wait for the
->> tag reference.
-> 
-> No problem. Rome wasn't built in a day either :)
-> 
->> Could you please drop a notice here when such tag will be available?
-> 
-> Here you go:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ktime-get-clock-ts64-for-ptp
-> 
-> I merged it locally into net-next, applied the PTP patches on top and
-> verified that the combination with the tip timers/ptp branch, which has
-> the tag integrated and the workaround removed, creates the expected
-> working result.
+From: Chen Ridong <chenridong@huawei.com>
 
-I had to wrestle a bit with the script I use - since the whole thing was
-a little different from my usual workflow - but it's in now, hoping I
-did not mess badly with something.
+The commit cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not
+frozen") modified the cgroup_freezing() logic to also verify that the
+FROZEN flag is not set, which affects the return value of the freezing()
+function.
 
-/P
+In __refrigerator(), the FROZEN flag is set before checking whether the
+task should be frozen. This creates a race condition where:
+1. The task's FROZEN flag is set.
+2. The cgroup freezer state changes to FROZEN (Can be triggered by reading
+   freezer.state).
+3. freezing() is called and returns false.
+
+As a result, the task may escape being frozen when it should be.
+
+To fix this, move the setting of the FROZEN flag to occur just before
+schedule(). This ensures the flag is only set when we're certain the
+task must be switched out.
+
+Fixes: cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not frozen")
+Reported-by: Zhong Jiawei<zhongjiawei1@huawei.com>
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ kernel/freezer.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/freezer.c b/kernel/freezer.c
+index 8d530d0949ff..89edd7550d27 100644
+--- a/kernel/freezer.c
++++ b/kernel/freezer.c
+@@ -71,12 +71,6 @@ bool __refrigerator(bool check_kthr_stop)
+ 	for (;;) {
+ 		bool freeze;
+ 
+-		raw_spin_lock_irq(&current->pi_lock);
+-		WRITE_ONCE(current->__state, TASK_FROZEN);
+-		/* unstale saved_state so that __thaw_task() will wake us up */
+-		current->saved_state = TASK_RUNNING;
+-		raw_spin_unlock_irq(&current->pi_lock);
+-
+ 		spin_lock_irq(&freezer_lock);
+ 		freeze = freezing(current) && !(check_kthr_stop && kthread_should_stop());
+ 		spin_unlock_irq(&freezer_lock);
+@@ -84,6 +78,12 @@ bool __refrigerator(bool check_kthr_stop)
+ 		if (!freeze)
+ 			break;
+ 
++		raw_spin_lock_irq(&current->pi_lock);
++		WRITE_ONCE(current->__state, TASK_FROZEN);
++		/* unstale saved_state so that __thaw_task() will wake us up */
++		current->saved_state = TASK_RUNNING;
++		raw_spin_unlock_irq(&current->pi_lock);
++
+ 		was_frozen = true;
+ 		schedule();
+ 	}
+-- 
+2.34.1
 
