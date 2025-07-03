@@ -1,135 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB382222B4;
-	Thu,  3 Jul 2025 13:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751550115; cv=none; b=jLx52m/FEOTElbgGCTBzB1Ozy6zYYKyPy9G4EKFyLd0eGB4oypokQXVoFovOzP+mE/XT9kQJ9IcPZGev6le6xZzugLPr92u5SDGm50JhHv5maBrEhm8KEOhCfd8D5Ql8hrEXhIcs1YJQh828/44rmoH6RygLjLbx9Hgpjf8xY6o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751550115; c=relaxed/simple;
-	bh=AzCyOeLYvvkd8ESz+bYjZcDSyDUTK6UgemqQUMKPmC8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=qQBaU2bnCGLTjLEdsbgb98xZUs53nypw3fn1VVJ+QmND+epKxsjdZUu/PgvtVtK7y1ptVOwCcnSOFQjQkDx8BV4uSUi7O3lm+1w0TOOzyPiWK/SpvZ/ooZvrjy6GozGG81IVH0/kHWhmhWo4y0aLtKftkaSIB3dMJEEzC1vPGNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3EaC7pG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3EaC7pG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8872C4CEE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0965B176ADE;
 	Thu,  3 Jul 2025 13:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751550115;
-	bh=AzCyOeLYvvkd8ESz+bYjZcDSyDUTK6UgemqQUMKPmC8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=O3EaC7pG9AYMtZ1GnmxlMDAujjKd2jjjy8oV9NgoYzH33twFw/sto/xm7oA/kF4wm
-	 QKXDolNstpowlpxlrxtFoYSELRJCAvHsmAyB9bIO4x0OOcS3jLkwCJPhzS/Xh5rqgz
-	 hk1vVueopNKfKZwerZQwRC1wTfPrEKXOhzdgvICHl5lxnT3QGCcSpRVfZwU2Yvpf2P
-	 gwlN76MM4FZmH3RjfneQUsu52PA9EtUPDjDJyOSwwjbtj7GzYI4Hl0r3FlkazbeZzQ
-	 YrlMpFfSPcWldPwJK0mnkJCRlSXQFfqiCuJbJ6NKbsa+4YwMgk3ttTtcbZ6Kkg8s4G
-	 1KS1rB+xP+p8w==
-Date: Thu, 03 Jul 2025 08:41:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751550119; cv=none; b=n4qzu/MlGXg6kfxcK8UvUAnrWG8SmZYDssiCdn4i3pPRmJQ2YaTJ1fjNtNLh0zsBOHzoTFf0CNEBM6ZhOMa/wfERlq9fYka4/FiRE5tZDPpp279sRgQR74Ov+Aq5mFg2nRFuazOyMKNEvaVf4km2ZLZZ83P2KDdn+fAvGW4jryw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751550119; c=relaxed/simple;
+	bh=WnKxo7Pr2dAqCibzDh87R5uqN2naOh2unTSRmdwdDOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DTgrgj7sr2rY2EjnmvFbeRxNlAesXUFkHOxc0isUJZKFrVUEY0a3mrMIEhBJKmg6sR1fot3sY6z09XhguZOzwdNSQb2uZLM0E8QVhiYZGpCR8tq9yqzGuv5q/gOUXL7kw9Vv3EQSlwtCj3ZNVbhdcEedViPDlxjCw9VUfj+YClc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DYwxko1P; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=NptWg52a reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DYwxko1P";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="NptWg52a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1751550115; x=1783086115;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=04qYGKXctFAZ3e5+Qm8FZ6hK/vJxUFD2rK/A5VS3svY=;
+  b=DYwxko1PAz3Acj5M3xuWRSo1YrUKTliiTSFa8WbxpQasfwXdj5N/6H74
+   iI/fL1i2NbOru7jOnOeFIkb2CnwFgrRJfjCDTQvkxj2O1kTCeGkFJn94n
+   pRelywAV4fh0ZGHqzncSwIs/C39dL/DQNqO/yk+wifyRXVaRIJAbzJ6Jy
+   ZDKwsFB85z51nGdqfJUES+6aNyl1YVZcoFhL+I7xpBOJvFrNgINGcioe7
+   Bk/VR4PkIrLL90KNZz1QmvY38uh6B66Q5mvjLItfsr6fm4Flwg+M0cRGl
+   kSgdi6PC6QxM7oI05n1Q+Fb2E0ssKWWV1aCZ4vTBGdioLIOfXeEvzAehm
+   A==;
+X-CSE-ConnectionGUID: QoxKM4g1RseAF++DkGCgAA==
+X-CSE-MsgGUID: 8fICYet0SzWZ3FWt/bzHeA==
+X-IronPort-AV: E=Sophos;i="6.16,284,1744063200"; 
+   d="scan'208";a="45010991"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 03 Jul 2025 15:41:46 +0200
+X-CheckPoint: {6866889A-12-4FC15ADB-CD71293B}
+X-MAIL-CPID: 7E9CD1FEF2A5839123F58A657BCB8A76_0
+X-Control-Analysis: str=0001.0A006399.686688BF.0033,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 03A1A161869;
+	Thu,  3 Jul 2025 15:41:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1751550102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=04qYGKXctFAZ3e5+Qm8FZ6hK/vJxUFD2rK/A5VS3svY=;
+	b=NptWg52abfzeSToTSQmYoKJAZLV7kwBaXq3ncy0XzG1W8xulY2lg+0zDoqDA8i+oLRGleu
+	pRYCZXRM5vHbg7v8eY6wvQtbspgfaGErcrMRFh+Z/ip2Hk6iQUjPocf9EDIaYyY0xIbpEO
+	IphiGndW4kAJARGsCNLzkh5hQiAvi80Pnm77KXkZmGLy484EKfy1oTrE7/KuC3ovBfq1HY
+	PNnDimssMw3skITQynyc7QIqtjt5B+TkSl1K2ceeifjgAfrGTYcyFimopMV4YCIlSUX86z
+	LJNC7d4RILfaegRXAnida3ad7CASpi9e+YQU8tdATIqHgNgXr0UgyLLrde6L6g==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Steffen =?ISO-8859-1?Q?B=E4tz?= <steffen@innosonix.de>,
+ stable@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Steffen =?ISO-8859-1?Q?B=E4tz?= <steffen@innosonix.de>
+Subject: Re: [PATCH v3] nvmem: imx-ocotp: fix MAC address byte length
+Date: Thu, 03 Jul 2025 15:41:40 +0200
+Message-ID: <2665065.Lt9SDvczpP@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250623171003.1875027-1-steffen@innosonix.de>
+References: <20250623171003.1875027-1-steffen@innosonix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, nuno.sa@analog.com, conor+dt@kernel.org, 
- zhiyong.tao@mediatek.com, matthias.bgg@gmail.com, linux-iio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- krzk+dt@kernel.org, andy@kernel.org, 
- angelogioacchino.delregno@collabora.com, linux-mediatek@lists.infradead.org, 
- dlechner@baylibre.com, jic23@kernel.org
-To: Aleksander Jan Bajkowski <olek2@wp.pl>
-In-Reply-To: <20250702214830.255898-1-olek2@wp.pl>
-References: <20250702214830.255898-1-olek2@wp.pl>
-Message-Id: <175155007600.1164337.2694125057173487421.robh@kernel.org>
-Subject: Re: [PATCH v2 0/2] Add thermal sensors support for MT7981
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
+
+Am Montag, 23. Juni 2025, 19:09:55 CEST schrieb Steffen B=E4tz:
+> The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
+> extension of the "mac-address" cell from 6 to 8 bytes due to word_size
+> of 4 bytes.
+>=20
+> Thus, the required byte swap for the mac-address of the full buffer lengt=
+h,
+> caused an trucation of the read mac-address.
+> From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
+>=20
+> After swapping only the first 6 bytes, the mac-address is correctly passed
+> to the upper layers.
+>=20
+> Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Steffen B=E4tz <steffen@innosonix.de>
+
+Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+
+Thanks
+
+> ---
+> v3:
+> - replace magic number 6 with ETH_ALEN
+> - Fix misleading indentation and properly group 'mac-address' statements
+> v2:
+> - Add Cc: stable@vger.kernel.org as requested by Greg KH's patch bot
+>  drivers/nvmem/imx-ocotp-ele.c | 6 +++++-
+>  drivers/nvmem/imx-ocotp.c     | 6 +++++-
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
+> index ca6dd71d8a2e..9ef01c91dfa6 100644
+> --- a/drivers/nvmem/imx-ocotp-ele.c
+> +++ b/drivers/nvmem/imx-ocotp-ele.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +#include <linux/if_ether.h>	/* ETH_ALEN */
+> =20
+>  enum fuse_type {
+>  	FUSE_FSB =3D BIT(0),
+> @@ -118,9 +119,12 @@ static int imx_ocotp_cell_pp(void *context, const ch=
+ar *id, int index,
+>  	int i;
+> =20
+>  	/* Deal with some post processing of nvmem cell data */
+> -	if (id && !strcmp(id, "mac-address"))
+> +	if (id && !strcmp(id, "mac-address")) {
+> +		if (bytes > ETH_ALEN)
+> +			bytes =3D ETH_ALEN;
+>  		for (i =3D 0; i < bytes / 2; i++)
+>  			swap(buf[i], buf[bytes - i - 1]);
+> +	}
+> =20
+>  	return 0;
+>  }
+> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+> index 79dd4fda0329..1343cafc37cc 100644
+> --- a/drivers/nvmem/imx-ocotp.c
+> +++ b/drivers/nvmem/imx-ocotp.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> +#include <linux/if_ether.h>	/* ETH_ALEN */
+> =20
+>  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
+>  					       * OTP Bank0 Word0
+> @@ -227,9 +228,12 @@ static int imx_ocotp_cell_pp(void *context, const ch=
+ar *id, int index,
+>  	int i;
+> =20
+>  	/* Deal with some post processing of nvmem cell data */
+> -	if (id && !strcmp(id, "mac-address"))
+> +	if (id && !strcmp(id, "mac-address")) {
+> +		if (bytes > ETH_ALEN)
+> +			bytes =3D ETH_ALEN;
+>  		for (i =3D 0; i < bytes / 2; i++)
+>  			swap(buf[i], buf[bytes - i - 1]);
+> +	}
+> =20
+>  	return 0;
+>  }
+>=20
 
 
-On Wed, 02 Jul 2025 23:48:28 +0200, Aleksander Jan Bajkowski wrote:
-> This patch adds support for the temperature sensor in the MT7981 SoC.
-> This sensor is exactly the same as the one in the MT7986.
-> 
-> Changes in v2:
->  - added fallback to an existing compatible string
->  - removed second patch as obsolete
-> 
-> Aleksander Jan Bajkowski (2):
->   dt-bindings: iio: adc: Add support for MT7981
->   arm64: dts: mediatek: add thermal sensor support on mt7981
-> 
->  .../iio/adc/mediatek,mt2701-auxadc.yaml       |  1 +
->  arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 32 ++++++++++++++++++-
->  2 files changed, 32 insertions(+), 1 deletion(-)
-> 
-> --
-> 2.39.5
-> 
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250702 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250702214830.255898-1-olek2@wp.pl:
-
-arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dtb: thermal@1100c800 (mediatek,mt7981-thermal): compatible: ['mediatek,mt7981-thermal', 'mediatek,mt7986-thermal'] is too long
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dtb: thermal@1100c800 (mediatek,mt7981-thermal): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dtb: adc@1100d000 (mediatek,mt7981-auxadc): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7981-auxadc', 'mediatek,mt7986-auxadc', 'mediatek,mt7622-auxadc'] is too long
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt7623-auxadc']
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt6893-auxadc', 'mediatek,mt8183-auxadc', 'mediatek,mt8186-auxadc', 'mediatek,mt8188-auxadc', 'mediatek,mt8195-auxadc', 'mediatek,mt8516-auxadc']
-	'mediatek,mt2701-auxadc' was expected
-	'mediatek,mt8173-auxadc' was expected
-	from schema $id: http://devicetree.org/schemas/iio/adc/mediatek,mt2701-auxadc.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dtb: thermal@1100c800 (mediatek,mt7981-thermal): compatible: ['mediatek,mt7981-thermal', 'mediatek,mt7986-thermal'] is too long
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dtb: thermal@1100c800 (mediatek,mt7981-thermal): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dtb: adc@1100d000 (mediatek,mt7981-auxadc): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7981-auxadc', 'mediatek,mt7986-auxadc', 'mediatek,mt7622-auxadc'] is too long
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt7623-auxadc']
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt6893-auxadc', 'mediatek,mt8183-auxadc', 'mediatek,mt8186-auxadc', 'mediatek,mt8188-auxadc', 'mediatek,mt8195-auxadc', 'mediatek,mt8516-auxadc']
-	'mediatek,mt2701-auxadc' was expected
-	'mediatek,mt8173-auxadc' was expected
-	from schema $id: http://devicetree.org/schemas/iio/adc/mediatek,mt2701-auxadc.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dtb: thermal@1100c800 (mediatek,mt7981-thermal): compatible: ['mediatek,mt7981-thermal', 'mediatek,mt7986-thermal'] is too long
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dtb: thermal@1100c800 (mediatek,mt7981-thermal): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/thermal/mediatek,thermal.yaml#
-arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dtb: adc@1100d000 (mediatek,mt7981-auxadc): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7981-auxadc', 'mediatek,mt7986-auxadc', 'mediatek,mt7622-auxadc'] is too long
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt7623-auxadc']
-	'mediatek,mt7981-auxadc' is not one of ['mediatek,mt6893-auxadc', 'mediatek,mt8183-auxadc', 'mediatek,mt8186-auxadc', 'mediatek,mt8188-auxadc', 'mediatek,mt8195-auxadc', 'mediatek,mt8516-auxadc']
-	'mediatek,mt2701-auxadc' was expected
-	'mediatek,mt8173-auxadc' was expected
-	from schema $id: http://devicetree.org/schemas/iio/adc/mediatek,mt2701-auxadc.yaml#
-
-
-
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
 
