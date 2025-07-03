@@ -1,117 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE0D2EE274;
-	Thu,  3 Jul 2025 14:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774732EE5EC;
+	Thu,  3 Jul 2025 14:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553906; cv=none; b=Fxqbp6g/R6BCHG+SCv4HpLr9ELVH/Dn8J2tCGXkf2WTgDcLfDoYmtJwh7PSxmINsy8giGWqZ/nA7fgCANR0ZcKAaJOpDlWc2Hwv2EJ8mOXECa4digWIemeLrGXl2Uy2nnAcEKy9t6+8AxEUoJ3sShxZ1y69rXOAolnYC0mbHza8=
+	t=1751553909; cv=none; b=cGBz1IACMhU++RVGuaPs3TBi9sxtqPr0PYTq4Z7eCxImJ/nulNDLzatKWWYNFBs/ugZHyLgHwrCSce7Mwcj6up47u8rBLr+UrwNOBtGETKr9OdSUGL+ImsY2B7kDeH8wTtQ9HgsN7NQBKudw4o9Wa9Fwphde6Avti+zL49dxLfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553906; c=relaxed/simple;
-	bh=zTPoGsfvzf77TfbmCmPJCQTRAbMyUUIX1ms6SsgW3Wo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UQkRRZRVfhk8Q02LbH+vwM0ePcNusL6ut8GLpl3PfGO1dulIB2RO7Oj6WwNgfBtJou4TMDlFaNjxmGAvHDPaJKF/aN4Fqwe43lmbist6KPAeHj8jrSbvx0fdypWYfcbVUSFb517y3BUdT7uWFPOLQR203RPgNGI4+M80atGRvKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMfjkxpv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751553909; c=relaxed/simple;
+	bh=Ae1tTKSZCMTkOVIlkV7/uZhkeFMV1n32rMfpwg6PKm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r4bDz+wTt9Yf+NiN0XGaVIO23fE7LI8V3EBywqgA2id2Z7gnUVzuRZEho1/jjcrUipJEXOzR8/ljYxc+xd6aJA6GDHNR2VM08vLjpdWBk7BOjPoTvFEjHERlSlLLB4i/OGkiD3H+czuhsepdniG35+2JVnxIBLvxxFfvGEyOm8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xw0Nq/aB; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMfjkxpv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 645FFC4CEED;
-	Thu,  3 Jul 2025 14:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751553906;
-	bh=zTPoGsfvzf77TfbmCmPJCQTRAbMyUUIX1ms6SsgW3Wo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YMfjkxpvfjVipk2YpIGFgFmaoWAQAgjaH5rkIFO6OVbWjDr0Ivm9GbxCqb4h51Dc6
-	 aMCE8WAtkLhZqeUQuIhZ0xsF0Jv1JeytACasPAMj1oJXQzHf2N8oeYq9lE97Z+/X9H
-	 KuJ+rQ3JqemgJR/KvDkzdmetQ/FF/VHLl6ib7NNQZP9ywSFI2jp5W7jHPkfcQW0NaF
-	 xjhE/SHy5vNzocI0I8j6cFg4UxmNJE3bCX/aBb0s6e/Oa6/F9pIPuSzliBI4LQIgXj
-	 JREa9dgoh2l2aitnKMOXNa8HIzxAcoKouPqPWLhrKZKt4ItnmWrb7zcDQuN2VxKHun
-	 G7CSN5SCWj6Yg==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-40b859461easo19627b6e.1;
-        Thu, 03 Jul 2025 07:45:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDXurDmm5zCnQ2VZ3Fg9g7vHjAClAD2TxHyws0IS6WKMLV4m9asBXy1Q2vBIWD2+PzmGUoblXaCPk=@vger.kernel.org, AJvYcCXZzqUPgMn0KNOwZ+mnzlcFAkXRTzAs4ualQmPguVKtm+NqyglaWlppENva4Ta5gdngWL0+aazVZHqgZrk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxoce91EY9l/RtEdx+Bs6NKqNGtKhrIPmWXYYeP6pmMTUq2fUD0
-	jkWDTebk1sLbZzwmWrS4xZKbWlrSAIgu7xbSsngcgVRcAGnX/qeZgxhuAWIAtFfXEAmWDlgr41d
-	BAPbsfmW4JQ4r57kYLF42/Tg2Gp/m6fk=
-X-Google-Smtp-Source: AGHT+IEIAPlGdI/PFCTjqa0TNr4AIU7IYU6kC3w2j01PIL1EvX3xYE4BETV/clcNcidt96xuZtuj91/nm2/Qmvl+66Y=
-X-Received: by 2002:a05:6808:118c:b0:406:6f21:8161 with SMTP id
- 5614622812f47-40c07b26667mr2863697b6e.9.1751553905713; Thu, 03 Jul 2025
- 07:45:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xw0Nq/aB"
+Message-ID: <aa977869-f93f-4c2b-a189-f90e2d3bc7da@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751553894;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOIrRfIeyTH2apsnsGitpg+mindX/IyZqQlNCkKTr4I=;
+	b=xw0Nq/aBHVz2IZHt44g+yDNXMx0Jed8Ecs/I7Q8XpWowwI0KhrCtu7tM8hiuQMEO4xFxZq
+	Pucfwly1yrq2L5+Uh3Y/1m/oyNxJlaLfYA+rF+qU27u4jKqGLYBBXKLdsVmYvbjzI4qgdE
+	5jQ8Y1ofO5WJu7Xdc9pFpUFAAWtApgY=
+Date: Thu, 3 Jul 2025 22:44:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-temp-v3-1-6becc6aeb66c@chromium.org>
-In-Reply-To: <20250620-temp-v3-1-6becc6aeb66c@chromium.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:44:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gUzFGxbR+en2JUaFvGt5vGY8z3LAJOba9f8RHoPrTvWQ@mail.gmail.com>
-X-Gm-Features: Ac12FXx6YEKyQuiC50Rz1nN2CRFIwyEsx33fJZtZTzMgo2QWuLvfp-9xLrSClvg
-Message-ID: <CAJZ5v0gUzFGxbR+en2JUaFvGt5vGY8z3LAJOba9f8RHoPrTvWQ@mail.gmail.com>
-Subject: Re: [PATCH v3] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
-To: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
+ in vm_normal_page()
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Lance Yang <ioworker0@gmail.com>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-2-david@redhat.com>
+ <aFVZCvOpIpBGAf9w@localhost.localdomain>
+ <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
+ <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
+ <5e5e8d79-61b1-465d-ab5a-4fa82d401215@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <5e5e8d79-61b1-465d-ab5a-4fa82d401215@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 20, 2025 at 12:41=E2=80=AFPM Hsin-Te Yuan <yuanhsinte@chromium.=
-org> wrote:
->
-> According to POSIX spec, EAGAIN returned by read with O_NONBLOCK set
-> means the read would block. Hence, the common implementation in
-> nonblocking model will poll the file when the nonblocking read returns
-> EAGAIN. However, when the target file is thermal zone, this mechanism
-> will totally malfunction because thermal zone doesn't implement sysfs
-> notification and thus the poll will never return.
->
-> For example, the read in Golang implemnts such method and sometimes
-> hangs at reading some thermal zones via sysfs.
->
-> Change to throw ENODATA instead of EAGAIN to userspace.
->
-> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
-> ---
-> Changes in v3:
-> - Refine the control flow and optimize the success case.
-> - Link to v2: https://lore.kernel.org/r/20250512-temp-v2-1-048be58eaaa5@c=
-hromium.org
->
-> Changes in v2:
-> - Modify commit message to make it clear
-> - Link to v1: https://lore.kernel.org/r/20250409-temp-v1-1-9a391d8c60fd@c=
-hromium.org
-> ---
->  drivers/thermal/thermal_sysfs.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sy=
-sfs.c
-> index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..d80612506a334ab739e7545cd=
-fe984ab4dffab7c 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -40,10 +40,13 @@ temp_show(struct device *dev, struct device_attribute=
- *attr, char *buf)
->
->         ret =3D thermal_zone_get_temp(tz, &temperature);
->
-> -       if (ret)
-> -               return ret;
-> +       if (!ret)
-> +               return sprintf(buf, "%d\n", temperature);
->
-> -       return sprintf(buf, "%d\n", temperature);
-> +       if (ret =3D=3D -EAGAIN)
-> +               return -ENODATA;
-> +
-> +       return ret;
->  }
->
->  static ssize_t
->
-> ---
 
-Applied as 6.17 material, thanks!
+
+On 2025/7/3 20:39, David Hildenbrand wrote:
+> On 03.07.25 14:34, Lance Yang wrote:
+>> On Mon, Jun 23, 2025 at 10:04 PM David Hildenbrand <david@redhat.com> 
+>> wrote:
+>>>
+>>> On 20.06.25 14:50, Oscar Salvador wrote:
+>>>> On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
+>>>>> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
+>>>>> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
+>>>>> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
+>>>>> readily available.
+>>>>>
+>>>>> Nowadays, this is the last remaining highest_memmap_pfn user, and this
+>>>>> sanity check is not really triggering ... frequently.
+>>>>>
+>>>>> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
+>>>>> simplify and get rid of highest_memmap_pfn. Checking for
+>>>>> pfn_to_online_page() might be even better, but it would not handle
+>>>>> ZONE_DEVICE properly.
+>>>>>
+>>>>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>>>>> problem at all ...
+>>>>>
+>>>>> What might be better in the future is having a runtime option like
+>>>>> page-table-check to enable such checks dynamically on-demand. 
+>>>>> Something
+>>>>> for the future.
+>>>>>
+>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>
+>>>
+>>> Hi Oscar,
+>>>
+>>>> I'm confused, I'm missing something here.
+>>>> Before this change we would return NULL if e.g: pfn > 
+>>>> highest_memmap_pfn, but
+>>>> now we just print the warning and call pfn_to_page() anyway.
+>>>> AFAIK, pfn_to_page() doesn't return NULL?
+>>>
+>>> You're missing that vm_normal_page_pmd() was created as a copy from
+>>> vm_normal_page() [history of the sanity check above], but as we don't
+>>> have (and shouldn't have ...) print_bad_pmd(), we made the code look
+>>> like this would be something that can just happen.
+>>>
+>>> "
+>>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>>> problem at all ...
+>>> "
+>>>
+>>> So we made something that should never happen a runtime sanity check
+>>> without ever reporting a problem ...
+>>
+>> IIUC, the reasoning is that because this case should never happen, we can
+>> change the behavior from returning NULL to a "warn and continue" model?
+> 
+> Well, yes. Point is, that check should have never been copy-pasted that 
+> way, while dropping the actual warning :)
+
+Ah, I see your point now. Thanks for clarifying!
+
+> 
+> It's a sanity check for something that should never happen, turned into 
+> something that looks like it must be handled and would be valid to 
+> encounter.
+
+Yeah. Makes sense to me ;)
+
+
