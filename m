@@ -1,133 +1,109 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EE017D7;
-	Thu,  3 Jul 2025 03:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AE520E005
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511773; cv=none; b=CPfapsgiiZjUl0waIhilzClHRgr1WQzperkjMGQCU8+rc+slA3knSjO2LVJX2ob5znaicXKfyzTk9JRIbBfWGI7WU2ZAH603u1u494ulN29YbD0roE0hueCvsO3Z958Zs+8b/lx1osgWAJfBNFbdBMJW+LyJXL29olvx2kAmp3Y=
+	t=1751511803; cv=none; b=Dnng6GX1Sz0O9NWFIDJcJiy62i0duj2ie2NlVr6fonSLqyZuHAMDOjEnGi5BHeC2+C5Gq/hmG3rYKShDmyrC33Jl5e8CCb5BS3ojEqSd97vzHLRU2OJrvCYvaMSPO2u0m94j/owtOkfOnwxGiGMao44cN121TNV1gdAbKXletd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751511773; c=relaxed/simple;
-	bh=k8m3AqAlVUtVHY4lTl+sebWiccKErEjIqTjotdNZIlE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ip4KN6vergj7jXmUDJDMi/x7gYl2qJfLTXhqJKKT8GW19xbAwlabDXVK9tniLHBWEWc1PZFOgKZ2hGGvdhg7aPdfpaleddgNSQngKWa/RwM4eWJ5W0myb1QQka/jFYb5cv7RkNSSCX4j0gY+HJnMoZl6aM5aAOjgQ+NJ2Du7ISA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXhQd4h1LzKHMg4;
-	Thu,  3 Jul 2025 11:02:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 13A891A06E2;
-	Thu,  3 Jul 2025 11:02:48 +0800 (CST)
-Received: from [10.174.176.88] (unknown [10.174.176.88])
-	by APP3 (Coremail) with SMTP id _Ch0CgB32SbW8mVoyJbvAQ--.245S3;
-	Thu, 03 Jul 2025 11:02:47 +0800 (CST)
-Message-ID: <66b2f540-228f-40e9-9ac5-529e3101e973@huaweicloud.com>
-Date: Thu, 3 Jul 2025 11:02:46 +0800
+	s=arc-20240116; t=1751511803; c=relaxed/simple;
+	bh=siETa+2e1hOdMU82cx4KWvXM2JZUaIlZEqNGoM92INM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ODEaX2fMcGLD0rlNAGYyITZZYWpkg+mxcFuM5lYjcZP5BMHnr8kjfJstGM5uIPa3lf0iFWTOL2QiL9+OfeQ6hKxjBebJqGuMLCK1Y2HCA57qfiqNhK15Zm/+U+9OnWLzfwYVjvdh+8SVkHidBpPHGnKWColW/jSjCRKwhUVyplo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jU/A2UP7; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jU/A2UP7"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so118205ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 20:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751511801; x=1752116601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MN6BFe6om2nPVx4QJftK5Q9oWduRYdtLEf6yX06DzrQ=;
+        b=jU/A2UP73fegIvd8e5veGRm/tkhDYhKkn6uscl/EXNdSNL+VXJAq8y3WSACq6/PmDb
+         WfKMfP+sKuWhE/a9BlPpmsNmrSn6EjYOfk6k8VpTpJv7uY59bbpfN42WQxoKypFUogf+
+         3xKULgTANQ3OkHkNJGSqyl/EumewKXyCIljR1Atdli91JWVs8tq5hshO4YgEE+VL3RUC
+         OjcOxlN1kG4nS0PMY/rLyX5wy6AZVrSrTd0C6Gb1P/A4+KxZ72gLDmsEcpI10EiVld3J
+         ORY3N5PQmNP+dn7RnpSePCMTXUajDiP1iveRHcS1p6DdFC9svPgDVC2d8a65n9AUcCM0
+         ggnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751511801; x=1752116601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MN6BFe6om2nPVx4QJftK5Q9oWduRYdtLEf6yX06DzrQ=;
+        b=LcS+CIZCgrtp0ryMjZQJYbVO1gw6FUFeiDCVgQamfJUg6XBpMZe5Z2JbXkF4jqYTz4
+         bcFARKvTY32Hm4g9DpYqALPe0ROy6idIMXVIrQe29GzyDn2zPnPE81hLgmj65m/6bcn2
+         AW67bxC39uv1QcmXgbLKq5d40pXyxClHQ5BNlq/KdUh3kEw+/KcYecsceE/d2rcfKP3D
+         QbGeQ5k+Nvg5PdYCRRSQg3K3JOZhxlkEHewAdqujs3+XLY9OgSKqQblo8Nmdd6D6M4Nl
+         r0o4q9ZiwWDvQ+S2KaIVEtc2seMIjgaGHoGWB1IrEAeo31Z8Gb/j2mGXp4LHZaxZ5tAn
+         oD6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVEI0+GITVdZs/vUcUgt5CFOoEdFHG4kyfQtbOey8xSdFUeUFePcxGxEiKb8QYGoQcUjExBC/WYrDJKIgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDR05KNXEgXVgcSykRzXzDCdIyO41X6gKFj7F0ZlEapYyFTarg
+	Tl7eidsN6RojkwPs9rDA0Oe6NVPCGmKtDkiC2rbZ2caVDwdWBvpVmvo5CHKASLwt7RS7uNqpp8Y
+	fFR2cJpA5OPKW0BrDNdMvvi9d54ihTjxQmJOcD0y1
+X-Gm-Gg: ASbGncvosynGxYkvZsfBE8RZ4IAR6zob7QVaizAOsCURwgAginkGGgx/4qcQ3GQdh+y
+	Rin1ttrr8INrH3WZFPlp53VDFU0p10HyJAFzxyJDsYx+PAqZz34WFVLaPysEHCdVDKCGJ6Xf2Us
+	LS5DGdEODowJAPpLXhBAI38tfLPfXe6WRILMpBn/jdkFLc
+X-Google-Smtp-Source: AGHT+IFLzfwbbAe9TXepqAxi+5+4w7o4DGYkqu1IIC17NV3P1HcrgHSuWhS9kEzFIeDPvBnQn6Ua8ovkxxpAU5q+i7M=
+X-Received: by 2002:a05:6e02:339e:b0:3dd:a7a1:9ee8 with SMTP id
+ e9e14a558f8ab-3e05c82b91dmr2179905ab.24.1751511800459; Wed, 02 Jul 2025
+ 20:03:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cachefiles: Fix the incorrect return value in
- __cachefiles_write()
-To: Zizhi Wo <wozizhi@huaweicloud.com>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org, brauner@kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- libaokun1@huawei.com, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com
-References: <20250703024418.2809353-1-wozizhi@huaweicloud.com>
-From: Zizhi Wo <wozizhi@huaweicloud.com>
-In-Reply-To: <20250703024418.2809353-1-wozizhi@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgB32SbW8mVoyJbvAQ--.245S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrW8Gr1xKryrGF1UuF13XFb_yoW8KF1DpF
-	Waya4UKryxur48Crn7AFs5WFyrA3ykJFnFg345Ww1kZrnxXrsY9F4jqr1YqF18ArZrJr4x
-	tw4j9a47Jw1qyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-	evJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
+References: <20250624190326.2038704-1-irogers@google.com> <aGXo7Hp31qZOTx9S@google.com>
+In-Reply-To: <aGXo7Hp31qZOTx9S@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Jul 2025 20:03:08 -0700
+X-Gm-Features: Ac12FXyS3_6QZzQsAPBLsuDlhh9SuoLA_S6ft4g5FSEjzHuElk55okBYTQ77q6Y
+Message-ID: <CAP-5=fV4mSjxJBSScYu1XFqFMMT0vO+jJDwq57kUB+cEkxQqMQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] perf test: Sanity check file descriptors are
+ cleaned up
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jul 2, 2025 at 7:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Tue, Jun 24, 2025 at 12:03:20PM -0700, Ian Rogers wrote:
+> > Some recent patches showed we were leaking file descriptors:
+> > https://lore.kernel.org/lkml/20250617223356.2752099-2-irogers@google.co=
+m/
+> >
+> > When a test is forked the file descriptors >3 can be closed and then
+> > any file descriptors >3 left after the test are leaks. Add this
+> > checking to the forked test code. Prior to that clean up some file
+> > descriptor usage so we can assert that only file descriptors are
+> > cleaned up. Sometimes the file descriptor being held open is the
+> > result of a memory leak, so fix those.
+>
+> Interesting, I can see a few more tests are failing with this.  But we
+> can figure it out later.
 
-
-在 2025/7/3 10:44, Zizhi Wo 写道:
-> From: Zizhi Wo <wozizhi@huawei.com>
-> 
-> In __cachefiles_write(), if the return value of the write operation > 0, it
-> is set to 0. This makes it impossible to distinguish scenarios where a
-> partial write has occurred, and will affect the outer calling functions:
-> 
->   1) cachefiles_write_complete() will call "term_func" such as
-> netfs_write_subrequest_terminated(). When "ret" in __cachefiles_write()
-> is used as the "transferred_or_error" of this function, it can not
-> distinguish the amount of data written, makes the WARN meaningless.
-> 
-
-Sorry, I was negligent. The first error actually doesn't exist because
-ret=0 was set after cachefiles_write_complete(), but the second error
-still exists.
+That's cool. I was a little disappointed that just the dso kcore leak
+was found by this. I was also surprised that the dso kcore memory leak
+hadn't shown up with leak sanitizer and reference count checking. Let
+me know if there is anything more I need to do to the patch series.
 
 Thanks,
-Zizhi Wo
-
->   2) cachefiles_ondemand_fd_write_iter() can only assume all writes were
-> successful by default when "ret" is 0, and unconditionally return the full
-> length specified by user space.
-> 
-> Fix it by modifying "ret" to reflect the actual number of bytes written.
-> Furthermore, returning a value greater than 0 from __cachefiles_write()
-> does not affect other call paths, such as cachefiles_issue_write() and
-> fscache_write().
-> 
-> Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
-> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
-> ---
->   fs/cachefiles/io.c       | 2 --
->   fs/cachefiles/ondemand.c | 4 +---
->   2 files changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-> index c08e4a66ac07..3e0576d9db1d 100644
-> --- a/fs/cachefiles/io.c
-> +++ b/fs/cachefiles/io.c
-> @@ -347,8 +347,6 @@ int __cachefiles_write(struct cachefiles_object *object,
->   	default:
->   		ki->was_async = false;
->   		cachefiles_write_complete(&ki->iocb, ret);
-> -		if (ret > 0)
-> -			ret = 0;
->   		break;
->   	}
->   
-> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-> index d9bc67176128..a7ed86fa98bb 100644
-> --- a/fs/cachefiles/ondemand.c
-> +++ b/fs/cachefiles/ondemand.c
-> @@ -83,10 +83,8 @@ static ssize_t cachefiles_ondemand_fd_write_iter(struct kiocb *kiocb,
->   
->   	trace_cachefiles_ondemand_fd_write(object, file_inode(file), pos, len);
->   	ret = __cachefiles_write(object, file, pos, iter, NULL, NULL);
-> -	if (!ret) {
-> -		ret = len;
-> +	if (ret > 0)
->   		kiocb->ki_pos += ret;
-> -	}
->   
->   out:
->   	fput(file);
-
+Ian
