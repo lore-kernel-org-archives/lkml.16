@@ -1,172 +1,427 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012057.outbound.protection.outlook.com [52.101.66.57])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0023E295DA9;
-	Thu,  3 Jul 2025 13:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549701; cv=fail; b=mRzAzZa+Q8b9AGH7t8+nfvQWsma0P1JVOoZYvVzsCvHSFsfCqodPGdzlYvAu22X9qHGE0Stna+AD96SPZb9n7GlQ+UncvZvK7YNm0aEHcnQsQP2MGYcCAbhqtd60hBScvKqfxibfakiX/65k0ntzQX0rmnoGSyF6+I8UEBg3+e4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549701; c=relaxed/simple;
-	bh=haU5CHY14aE2xh3RsSkWXCWeP/Tf8tyLWpHWfUZW3IY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AU3/wqdiIB0OAV0L8rbWMD/wktXj6OKC6Qsp8ISnnCF9DfI4HIUgwxawLUqSwc+pOGHgXaQcCxEhEKWeusCGnv2eYtN1bOYOF59JXyKTqBJv8Ga7xFacHlmLiu1UE8uP3SKSsFqof5JFgvPzuC4a0WGlvbGIeescO+qyZ/zWrTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GkLk8fVp; arc=fail smtp.client-ip=52.101.66.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35C32222B4;
+	Thu,  3 Jul 2025 13:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751549736; cv=none; b=slsemgPlbxlGbzal8pn5HmhEQ5xF/Gm8nNHpEaKRdYNvIPiq9gua0Woumbc7yl/yaiK81X9U8YxrhqWF838Lq5zGWmeVavDjFoBvd32wdMmA5nyWb+B+FSthBkOR4ZcHAk75naT6LdRpQXCuKccnRc/LnPs1lT86NYRNI9Ee9NA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751549736; c=relaxed/simple;
+	bh=A4Di6dUWD6TvvTCe+Iy9uE2CpYC7JYSMz0SZDYgvzLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VSPoTb1YfcwIsAtjMYd+4WfzdLF0T3L/O7xk1A9PNPywdXQbitAEh7Gds8TyiN5Hld+qonPc3i2D5qh0f2yJsFTFABQZ30Yz2lRgcJ2nLib34HdXHrSZMuywyXZTcSqQEmCF7VUe2kyNOCKlj/NgpDyErVe0QVeYROfYTKWeG3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QBaeuqt5; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GkLk8fVp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YDYfaga8X3AQ5eLbjE6WbPMlrgA4BP9oq/3I0cOWkADQXw2A2EE217ySFT5IPt4FTDT0BcNl14ETJ4g/K9VKebYhUf4iZbHI6uZ+Bv8NBsRNhil02EITa1Ut4jiH8SNPYK3IDKqCirH0Z1ZaprlpfyL9cTYMHTdFRq/HHgedBQcwWklHos0yTsesZerU2HO1OiDCsTDp1e6rH3fiAveyPJr1Thp8qG63EN9YeZnbMxVtD4BbgiKGbj92n2qIWqKS6OmoJZlzkO5qEkTJQLtHTI/9nyIB+XBVr4+N+kMwomPlW/qHxtCkAvlIxFXZYADCk3flaQYZBH/dzXbI5O0B+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CoIQjxIPTPjyizk2YRmFaBAKkrTHVVibNIhNp7mhWd4=;
- b=xdxHO9SuUHGBey9/a5G/lAP2kh9+cErTAjSppvbQuaP8DX81+fhIH6/KQ8EaOUdemph+MdfWZZqC0uuCTeQZrQ+LoVnrwV1ty8WEF8kMQdAVqrESyp0lFcbT2FT4kLfupPoR9lipxIpGeE+eC10P9wTM3wmdxEGN4ucX8wxywitlevySr/QO33eSjnsOl29vvbp0MnYRT2Wnk4InKyUsgfPnutqqwSTTJmE11qHfH8/Yt6ZLuMWVv95ZzQb0v9B4ovUugZTjIdREj5HFs53NyBRhK2Ua/HVXWrCajWWbSOGx8O5oy0lqQ0lYLP48m7DylyNcMkLPyNyeZbgCu8VZYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CoIQjxIPTPjyizk2YRmFaBAKkrTHVVibNIhNp7mhWd4=;
- b=GkLk8fVp6NyUq+fSFChcLvgku9rWEt/U0lAnrFqt/k4YjDPYxYF4TWUHs1CNM1Vqv05EH2n5l79xSKxtU0tJz48XMKd9Pfywk2YlzkcVq0kZZA5r8xypYuaNcDYt81jygwYi2ILZdRT0scBwyu0Ch+vo9gOd8vjXKk61UUQ+c+BlNRAAPC9CufNWdjWDPt4tctjtN8cpC0kbQVbCvdIQvMWAU5PX/qOdQT68gBEgITlNIXbD9uDvLMIkHGHZ3bwd9qI8dJ06WsAi3nsC/pG/UAroAaSuG463eET6N6Q/PwrjvI0Gvykke9w+epnJD8aNE+jf0xNaWICT0eZmkC3gBA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by DU2PR04MB8600.eurprd04.prod.outlook.com (2603:10a6:10:2db::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Thu, 3 Jul
- 2025 13:34:56 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%7]) with mapi id 15.20.8901.018; Thu, 3 Jul 2025
- 13:34:56 +0000
-Date: Thu, 3 Jul 2025 16:34:50 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] ptp: remove unnecessary mutex lock in
- ptp_clock_unregister()
-Message-ID: <20250703133450.kaoncopz3i2ileug@skbuf>
-References: <20250703055340.55158-1-aha310510@gmail.com>
- <20250703055340.55158-1-aha310510@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703055340.55158-1-aha310510@gmail.com>
- <20250703055340.55158-1-aha310510@gmail.com>
-X-ClientProxiedBy: VI1PR09CA0138.eurprd09.prod.outlook.com
- (2603:10a6:803:12c::22) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QBaeuqt5"
+Date: Thu, 3 Jul 2025 21:35:24 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751549730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=spHmo1mC6rYR9iWzPq+I5J3vxcldtFh96+8qR+yLfE0=;
+	b=QBaeuqt5HQ/BIAOidzdE2BvLsZxxBlpTqrjEwu/NctfD3+k+1N2VbiJ4oTnYPT7bI0yADu
+	gbLfXjGoFmOPzXxEZfj/Rwa1r2TxeUh29wts9Z0hxZrQvDZDrvb2xlDEjaoyjB0Trx287B
+	hWQqGv4wUxJcgCKdxUwT3wLA/yrwpeU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dawei Li <dawei.li@linux.dev>
+To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	set_pte_at@outlook.com, dawei.li@linux.dev
+Subject: Re: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+Message-ID: <20250703133524.GA9099@wendao-VirtualBox>
+References: <20250609151531.22621-1-dawei.li@linux.dev>
+ <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
+ <20250619144301.GA9575@wendao-VirtualBox>
+ <db2d2296-3893-427d-85ec-f64e6c0e1d1d@foss.st.com>
+ <20250622041200.GA3703@wendao-VirtualBox>
+ <ce95f80b-4a36-457e-aedd-d59a325a711c@foss.st.com>
+ <20250701141607.GA5219@wendao-VirtualBox>
+ <685641cb-d5e0-4f28-87a1-98d2fd84e920@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DU2PR04MB8600:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38216377-a02b-4efc-cf22-08ddba36665d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|376014|366016|1800799024|19092799006;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1NHERNDsAMozpfC6F+lkrvdkv7GD40t5gIpR7ISCSddAWYrKN9iBgfNq8UuM?=
- =?us-ascii?Q?EMeddjNu7NY3YtpGs97Gqfp2I6XPCNQmXD4iwCPvpNW17cWw4WtLW2boOuia?=
- =?us-ascii?Q?dll6Un3y9EpiwMB6uy7BcoNiTAc8qj//MeHkYjniZVieWXPYCl4jksood/ZO?=
- =?us-ascii?Q?6u1vq0K4tWyxgSxxuypEzNcKNJahwY/KUfa1xTY8ISsvZ1od/s1ZWhd886VK?=
- =?us-ascii?Q?Ec1/ghj9f1t+5XXVPNsDPMlmh57cg3tzdIcAOil59D4/knM6tCogBwix/Wu9?=
- =?us-ascii?Q?1FexxTqZVGkJkZwpd3VLgDkFXs39edYkRwD4YfPXRJ8ejfONOmTkXpRGwAkp?=
- =?us-ascii?Q?DrQDr5u3mjC11NrmoIkgpKHaZpvI2s83d0n76k0OTgvspHLpnKErHLy8ZiFX?=
- =?us-ascii?Q?dVYpMUVklg5tFa1M8RMvrTWjRYbWyXW34Zo7BPACPoekHjjfTtMvIWdN19ZU?=
- =?us-ascii?Q?elC8kNhqn6SXTIro1Pil85iIMEDTa2nMkrR7zGaow9NM3CXH2hbsIPpIqxfY?=
- =?us-ascii?Q?NcmRY73SrtE3/mmA3yiBcyd3EuoEwpUWa1EwuyhTrqavBCkuX/QcMqVMbW/k?=
- =?us-ascii?Q?7ckH6copNgJm3ZCrP7cFMrZtfdCCGgq9HZGnTcZ9So0bRCIXm8sbgsMYh7j9?=
- =?us-ascii?Q?KguFyVZN0zkfU18OaV08IUH4WS+JsurDQ8aipfMuCaL+tHDLOmaJhr7/D//w?=
- =?us-ascii?Q?4AXHKaURo40/nl+fedsQ6WQg395vjqU4Qe7Eu4XRrH3gBQJDy/rgtSa2Gnzt?=
- =?us-ascii?Q?TQe9Yv+uZdvibNUS65UF8sMZg8s2reoVtIYSxyKJdJEoDDliX9g2o8IxCzzh?=
- =?us-ascii?Q?RCwPRBMJE0e7jdIoDx88N0K3S4JOHsyCvZa52CWSBs/6YqUxOCT3NY+t4nfj?=
- =?us-ascii?Q?IIRGwVDv75s3ndQhxzFI7ALx/xbSzp0i/pS1lEvgBRVK30Q6C4yk7JfCh4q5?=
- =?us-ascii?Q?zxtmKPjKyiwjDoQrLooS2j22ePik9ydvf1kP0YoapFFegZO4vnVBzAbrk1AW?=
- =?us-ascii?Q?CNg1tLm5ruyqy3oPqVfs3ADnmjaLnLr7opheH4t2fRH+Gng+7wHXwr80jJXx?=
- =?us-ascii?Q?+ZYuGCQ2ZBjPl/cv6/rfpirTBxyXtJ6fq8oH86L3yP1xiwMwQtxLxnGxyNmK?=
- =?us-ascii?Q?d7ox7Beerd0s1cnKYK9L/clf2ujeQ57fyvlXNUkE1hHpXCOCqfj7kBiXulra?=
- =?us-ascii?Q?pS8Jkos/yGQalfT256la8SipY5Tu4AS1GJYcVxV1i1w/Jbd14NYtKiVMEQm+?=
- =?us-ascii?Q?ZaUiAGNYDIo2VWec3mSkAOjoWzbvb1z7h7YCAmK2g1AVk9KhfMCqpeYEAwxA?=
- =?us-ascii?Q?zlpqX4SnJcL+GtY6DDT9LeOpgaGrHT3EFiKxptF322zuY6iD1AqgQbmRyUcs?=
- =?us-ascii?Q?vmhKwkwPph6Wf0AzQY/8OlUcOOqFKmDz97O2V4jwAldsTMKadQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(366016)(1800799024)(19092799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RiFrzf4Bx/lXSE1vbS7Devih96amdZ4PZVhUmuLksx4OTqC7q2/v2gguxXHm?=
- =?us-ascii?Q?xw52euVPbNcTAUmfsKSjjwS9FKa0oMhEk9XdwN2oSpFiIxD9qW5vi+igaz/u?=
- =?us-ascii?Q?m84Cq2NsoywBR0tWzGBKHnFUc1UM6ZkN3c2XsAsWpjiD3KcQXlDHhD9aS0hA?=
- =?us-ascii?Q?V2DfSpj1r1q32qqzB3RdOjACDuhyrtILlYFiaUyTQYQ5PKdrh0pzjCvTCgee?=
- =?us-ascii?Q?K+N5q8gjU1gj/tw0hO3mKblNYVe7aJH0IqQ6fNhpVJPjVE5SS01/luwIaM6P?=
- =?us-ascii?Q?MlEATZpj8KTkNJGLaBIXdzZF2oHq9voZhY2CYklqbTMwTH+jkhhSJvSmwVgI?=
- =?us-ascii?Q?4XoL4iuY1N8URX18LgcMLO7AeBnxzjB65mLLJJ2iWs9cfPM2ZylagkNmj/br?=
- =?us-ascii?Q?luP4F+LXNWhqtiU71s8DLlEknd6DYFxzkkn9CwfJakBDiHdGcWANoMhaCw87?=
- =?us-ascii?Q?raohNwHeeJrkR88GnXJ9ZahBqexY1gmwN/On10FAXbKsfiiD2cW6lQTMPu0K?=
- =?us-ascii?Q?cY1JeuKsMEEm1t1NGXA3Jmrw0mUM+61F3tUb4+6VnuA+WyyiEnqPIYG70Ez4?=
- =?us-ascii?Q?UmRFeLprcOeYQUyKG6m12gRDe90qYB2cbzXeJx7CDC68s1Me/iztcBlATptC?=
- =?us-ascii?Q?8NjzBJc55WfqZ8+HBlp6wBXj+qdxOsJiP6jkGriQitI5VvBwKc9wDKvoSvXz?=
- =?us-ascii?Q?VYXzMMprKJ/uNGYEPSNsGYwEhZ0sT6YjE4a8ZshHhKaq+riOFCgnWO/7sqeD?=
- =?us-ascii?Q?GifRQ7qxmKTjpIt/wdt/b45d8G0L75IG5jGIIgdM+Lo/RnlVgOKZ+e+X8JGe?=
- =?us-ascii?Q?ffrElJk8g9sXnWfzsWnOFR9zIy+eiBdETqsQ2yMXeEYkxbtwFlmzdFI57fx2?=
- =?us-ascii?Q?vMXwcK7v2gQaDT8PtDzgHoWq7r7DHrIu+OESfvIRgkwOiExM1vqiB7XNJVis?=
- =?us-ascii?Q?WkjHLysun0Asr4UkoQXbN8SczDH6+omT05qvbYx7L/dv93LfgZxqlNpc3tPH?=
- =?us-ascii?Q?JqhY4DC5ss642/LodIr38nSoYg0ik+z3XGDnClaUnDqFG+eRXnkbI+/pw/6Z?=
- =?us-ascii?Q?xxHr205ZGxpP0e07Ti+KpHURlvp/2mTTcW8mZvHRbcdzvQa61QCVIOzW/bXi?=
- =?us-ascii?Q?TBvbcbvPhG896NgFSnJFxhy0Oia3Fj6Xy9D2EPfFonTHSJr61bQ/IVbOKMMF?=
- =?us-ascii?Q?o4gZSnB580tI4ou6BS5vH/6cJ4+hJBExXtpRYBpZtaPtbz0ZeZcARL+xmIPC?=
- =?us-ascii?Q?W2Bi1JfxnGC5T+fq80rc7vuoLQfVvfAGyiuszP+fnuFLdgTXzNl9rlvm8wGy?=
- =?us-ascii?Q?VgHHw+Jx5tfelXF2C/z5qoWZYF4QOwltsN53jkmYkny5L6UAKZwDC+SXyNkC?=
- =?us-ascii?Q?5WGrxLQgSgLbwZPDefG9dZF+YzSo9BVgnwWke2bj1q3hqEVwUcd0VzQwyL/5?=
- =?us-ascii?Q?hvdRFRERaJShgbRpq/7vayPSAjIZLrGChdAqzCZwn77vi7dwpMYHIxQ+2kMn?=
- =?us-ascii?Q?OKYnlwbw9HKPyPoYEJe4B4P6jaAJ8VI/ISGo2og3+B2DhaFcDVXBE5JAZQ6z?=
- =?us-ascii?Q?u9jxnMCvVCl+QzNT3a1OMJFMzhkaZgQgx3JFBh7SaW/y2F9BU6D2LwzHbv1f?=
- =?us-ascii?Q?J55FhduNWSfc95/R6doVGNr70uctu2I1Y9FJFeJvZvGDyRMvqM6UJogByo4B?=
- =?us-ascii?Q?7kUErg=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38216377-a02b-4efc-cf22-08ddba36665d
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 13:34:56.6290
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0vJRyvsY5gzA/zjvzs5VbkKWF23vzzCFZpMG25M0QautDToDfaKuCXOkLfVqYO3ZHFyh/kxY7n1w10/acufn3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8600
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <685641cb-d5e0-4f28-87a1-98d2fd84e920@foss.st.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jul 03, 2025 at 02:53:40PM +0900, Jeongjun Park wrote:
-> ptp_clock_unregister() is called by ptp core and several drivers that
-> require ptp clock feature. And in this function, ptp_vclock_in_use()
-> is called to check if ptp virtual clock is in use, and
-> ptp->is_virtual_clock, ptp->n_vclocks are checked.
-> 
-> It is true that you should always check ptp->is_virtual_clock to see if
-> you are using ptp virtual clock, but you do not necessarily need to
-> check ptp->n_vclocks.
-> 
-> ptp->n_vclocks is a feature need by ptp sysfs or some ptp cores, so in
-> most cases, except for these callers, it is not necessary to check.
-> 
-> The problem is that ptp_clock_unregister() checks ptp->n_vclocks even
-> when called by a driver other than the ptp core, and acquires
-> ptp->n_vclocks_mux to avoid concurrency issues when checking.
-> 
-> I think this logic is inefficient,
+Hi Arnaud,
 
-Can you present a single metric by which you qualify this logic as
-inefficient?
+On Wed, Jul 02, 2025 at 09:48:59AM +0200, Arnaud POULIQUEN wrote:
+> hello Dawei
+> 
+> On 7/1/25 16:16, Dawei Li wrote:
+> > Hi Arnaud,
+> > 
+> > Thanks for the reply.
+> > 
+> > On Mon, Jun 30, 2025 at 09:54:40AM +0200, Arnaud POULIQUEN wrote:
+> >> Hello Dawei,
+> >>
+> >> Sorry for the late answer.
+> >>
+> >> On 6/22/25 06:12, Dawei Li wrote:
+> >>> Hi Arnaud,
+> >>>
+> >>> Thanks for the reply.
+> >>>
+> >>> On Fri, Jun 20, 2025 at 09:52:03AM +0200, Arnaud POULIQUEN wrote:
+> >>>>
+> >>>>
+> >>>> On 6/19/25 16:43, Dawei Li wrote:
+> >>>>> Hi Arnaud, 
+> >>>>> Thanks for review.
+> >>>>>
+> >>>>> On Wed, Jun 18, 2025 at 03:07:36PM +0200, Arnaud POULIQUEN wrote:
+> >>>>>> Hello Dawei,
+> >>>>>>
+> >>>>>>
+> >>>>>> Please find a few comments below. It is not clear to me which parts of your
+> >>>>>> implementation are mandatory and which are optional "nice-to-have" optimizations.
+> >>>>>
+> >>>>> It's more like an improvement.
+> >>>>>
+> >>>>>>
+> >>>>>> Based on (potentially erroneous) hypothesis, you will find a suggestion for an
+> >>>>>> alternative to the anonymous inode approach, which does not seem to be a common
+> >>>>>> interface.
+> >>>>>
+> >>>>> AFAIC, annoymous inode is a common interface and used extensivly in kernel development.
+> >>>>> Some examples below.
+> >>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> On 6/9/25 17:15, Dawei Li wrote:
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
+> >>>>>>> for rpmsg subsystem.
+> >>>>>>>
+> >>>>>>> Current uAPI implementation for rpmsg ctrl & char device manipulation is
+> >>>>>>> abstracted in procedures below:
+> >>>>>>> - fd = open("/dev/rpmsg_ctrlX")
+> >>>>>>> - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
+> >>>>>>>   generated.
+> >>>>>>> - fd_ep = open("/dev/rpmsgY", O_RDWR) 
+> >>>>>>> - operations on fd_ep(write, read, poll ioctl)
+> >>>>>>> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
+> >>>>>>> - close(fd_ep)
+> >>>>>>> - close(fd)
+> >>>>>>>
+> >>>>>>> This /dev/rpmsgY abstraction is less favorable for:
+> >>>>>>> - Performance issue: It's time consuming for some operations are
+> >>>>>>> invovled:
+> >>>>>>>   - Device node creation.
+> >>>>>>>     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
+> >>>>>>>     overhead is based on coordination between DEVTMPFS and userspace
+> >>>>>>>     tools such as udev and mdev.
+> >>>>>>>
+> >>>>>>>   - Extra kernel-space switch cost.
+> >>>>>>>
+> >>>>>>>   - Other major costs brought by heavy-weight logic like device_add().
+> >>>>>>
+> >>>>>> Is this a blocker of just optimization?
+> >>>>>
+> >>>>> Yep, performance is one of motivations of this change.
+> >>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>> - /dev/rpmsgY node can be opened only once. It doesn't make much sense
+> >>>>>>>     that a dynamically created device node can be opened only once.
+> >>>>>>
+> >>>>>>
+> >>>>>> I assume this is blocker with the fact that you need to open the /dev/rpmsg<x>
+> >>>>>> to create the endpoint.
+> >>>>>
+> >>>>> Yes. You have to open /dev/rpmsgX which is generated by legacy ioctl to
+> >>>>> instantiate a new endpoint.
+> >>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>> - For some container application such as docker, a client can't access
+> >>>>>>>   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
+> >>>>>>>   is generated dynamically and whose existence is unknown for clients in
+> >>>>>>>   advance, this uAPI based on device node doesn't fit well.
+> >>>>>>
+> >>>>>> does this could be solve in userspace parsing /sys/class/rpmsg/ directory to
+> >>>>>> retreive the device?
+> >>>>>
+> >>>>> Hardly, because client still can't access /dev/rpmsgX which is generated
+> >>>>> by host _after_ client is launched.
+> >>>>
+> >>>>
+> >>>> This part is not clear to me; could you provide more details?
+> >>>> I cannot figure out why a client can access /dev/rpmsg_ctrlX but not /dev/rpmsgX.
+> >>>
+> >>> Well, let's take docker as example:
+> >>
+> >>>
+> >>> For docker, when a client is launched and it wants to access host's
+> >>> device, it must make explicit request when it's launched:
+> >>>
+> >>> docker run --device=/dev/xxx
+> >>>
+> >>> Let's presume that xxx is /dev/rpmsgX generated dynamically by _host_.
+> >>> Docker command above knows nothing about these rpmsg nodes which are
+> >>> generated by host _after_ client is launched. And yes, parsing> /sys/class/rpmsg may acquire info about rpmsg devices, but client still
+> >>> can't access /dev/rpmsgX.
+> >>
+> >> One extra question:Are you using RPMsg over virtio?
+> >>
+> >> If yes, do you test the RPMsg name service (NS) announcement, that might also
+> >> address your needs.
+> >>
+> >> The principle is that the remote processor sends a name service announcement to
+> >> Linux, which probes the rpmsg character device and creates the /dev/rpmsgX
+> >> device in a predefined order known by the remote processor.
+> >> In such a case, the /dev/rpmsgX usage would be determined by the remote
+> >> processor itself.
+> >>
+> >> Another advantage is that the RPMsg channel creation is not driven by either the
+> >> host or the client. In such case host does no need to define/kwnow RPMSg
+> >> endpoint addresses.
+> >>
+> >> You still need to call the open() file system operation, but this should be done
+> >> one time during Docker client initialization.
+> > 
+> > NS is nice, but perhaps it's not the approach for some cases.
+> > 
+> > For offloading/accelerator scenarios, ACPU is responsible for making all
+> > the important decisions, including creations of endpoints. Because all
+> > the user-awared software stack is running on ACPU, and if you want to
+> > create a endpoint _dynamically_, it must be from user's command which is
+> > from ACPU.
+> > 
+> > And this series is more about how rpmsg_char and rpmsg_ctrl coordinate
+> > themselves about creating dynamic rpmsg endpoints in a more simple
+> > and efficient way.
+> > 
+> > And the whole point of series is "When you want to return a fd to
+> > userspace which represents an instance of data structure in kernel, you
+> > don't implement it as character device". Maybe some quotes from Christian[1]
+> > can describe it better[1]:
+> > 
+> > "I'm not sure why people are so in love with character device based apis.
+> > It's terrible. It glues everything to devtmpfs which isn't namespacable
+> > in any way. It's terrible to delegate and extremely restrictive in terms
+> > of extensiblity if you need additional device entries (aka the loop
+> > driver folly)."
+> > 
+> > [1] https://lkml.org/lkml/2025/6/24/639
+> 
+> Thank you for all your explanations! It is always very interesting to understand
+> the different ways to use RPMsg.
+> 
+> In the end, I don't see any problem with your series. The possibility of using
+> an anonymous inode seems valid to me.
 
-> so I think it would be appropriate to modify the caller function that
-> must check ptp->n_vclocks to check ptp->n_vclocks in advance before
-> calling ptp_clock_unregister().
+Thanks for the review!
 
-And which are the call sites of ptp_clock_unregister() which should
-check ptp->n_vclocks in advance, in your proposal?
+> 
+> I am just wondering whether this should be implemented in the rpmsg_char driver
+> or in a new driver, addressing this question to Mathieu and Bjorn.
+
+Well, I think we are kinda in a dilemma:
+
+- It's bit odd to add anonymous inode code in a file named rpmsg_char.c.
+
+- On the other hand, the new anonymous code path do share couples of
+  codes and abstractions of rpmsg_char.c, rpmsg_eptdev, all methods
+  excluding open() in fops... . If new code is built into a standalone
+  driver, how are we supposed to take care of these shared codes?
+
+Yep, leave it to the maintainers.
+
+Thanks,
+
+	Dawei
+
+> 
+> 
+> Regards,
+> Arnaud
+> 
+> > 
+> > Thanks,
+> > 
+> > 	Dawei
+> > 
+> >>
+> >> Regards
+> >> Arnaud
+> >>
+> >>
+> >>>
+> >>>>
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>> You could face same kind of random instantiation for serial peripherals ( UART;
+> >>>>>> USb, I2C,...) based on a device tree enumeration. I suppose that user space
+> >>>>>> use to solve this.
+> >>>>>>
+> >>>>>>>
+> >>>>>>> An anonymous inode based approach is introduced to address the issues above.
+> >>>>>>> Rather than generating device node and opening it, rpmsg code just creates
+> >>>>>>> an anonymous inode representing eptdev and return the fd to userspace.
+> >>>>>>
+> >>>>>> A drawback is that you need to share fb passed between processes.
+> >>>>>
+> >>>>> Fd is the abstraction of an unique endpoint device, it holds true for
+> >>>>> both legacy and new approach.
+> >>>>>
+> >>>>> So I guess what you mean is that /dev/rpmsgX is global to all so other process
+> >>>>> can access it?
+> >>>>>
+> >>>>> But /dev/rpmsgX is designed to be opened only once, it's implemented as
+> >>>>> singleton pattern.
+> >>>>>
+> >>>>> static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+> >>>>> {
+> >>>>> ...
+> >>>>>         if (eptdev->ept) {
+> >>>>>                 mutex_unlock(&eptdev->ept_lock);
+> >>>>>                 return -EBUSY;
+> >>>>>         }
+> >>>>> ...
+> >>>>>         eptdev->ept = ept;
+> >>>>> ...
+> >>>>> }
+> >>>>>
+> >>>>> [...]
+> >>>>>  
+> >>>>>>> 	printf("loop[%d]\n", loop);
+> >>>>>>>
+> >>>>>>> 	gettimeofday(&start, NULL);
+> >>>>>>>
+> >>>>>>> 	while (loop--) {
+> >>>>>>
+> >>>>>> Do you need to create /close Endpoint sevral times in your real use case with
+> >>>>>> high timing
+> >>>>>> constraint?
+> >>>>>
+> >>>>> No, it's just a silly benchmark demo, large sample reduces noise statistically.
+> >>>>>
+> >>>>>>
+> >>>>>>> 		fd_info.fd = -1;
+> >>>>>>> 		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
+> >>>>>>> 		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
+> >>>>>>> 		if (ret < 0 || fd_info.fd < 0) {
+> >>>>>>> 			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
+> >>>>>>> 		}
+> >>>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>>> 		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
+> >>>>>>> 		if (ret < 0) {
+> >>>>>>> 			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
+> >>>>>>> 		}
+> >>>>>>>
+> >>>>>>> 		close(fd_info.fd);
+> >>>>>>
+> >>>>>> It seems strange to me to use ioctl() for opening and close() for closing, from
+> >>>>>> a symmetry point of view.
+> >>>>>
+> >>>>> Sorry to hear that. But no, it's a pretty normal skill in kernel codebase
+> >>>>> , I had to copy some examples from reply to other reviewer[1].
+> >>>>
+> >>>> I missed this one, apologize for the duplication.
+> >>>>
+> >>>>>
+> >>>>> anon_inode_get_{fd,file} are used extensively in kernel for returning a new
+> >>>>> fd to userspace which is associated with an unique data structure in kernel
+> >>>>> space, in different ways:
+> >>>>>
+> >>>>> - via ioctl(), some examples are:
+> >>>>>
+> >>>>>  - KVM ioctl(s)
+> >>>>>    - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
+> >>>>>    - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
+> >>>>>    - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
+> >>>>>    - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm
+> >>>>>
+> >>>>>  - DMA buf/fence/sync ioctls
+> >>>>>    - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
+> >>>>>    - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
+> >>>>>    - Couples of driver implement DMA buf by using anon file _implicitly_:
+> >>>>>      - UDMABUF_CREATE -> udmabuf_ioctl_create
+> >>>>>      - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
+> >>>>>
+> >>>>>  - gpiolib ioctls:
+> >>>>>    - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
+> >>>>>    - GPIO_V2_GET_LINE_IOCTL
+> >>>>>
+> >>>>>  -  IOMMUFD ioctls:
+> >>>>>
+> >>>>>  -  VFIO Ioctls:
+> >>>>>
+> >>>>>  - ....
+> >>>>>
+> >>>>>
+> >>>>> - via other specific syscalls:
+> >>>>>  - epoll_create1
+> >>>>>  - bpf
+> >>>>>  - perf_event_open
+> >>>>>  - inotify_init
+> >>>>>  - ...
+> >>>>
+> >>>> If we put the optimization aspect aside, what seems strange to me is that the
+> >>>> purpose of rpmsg_char was to expose a FS character device to user space. If we
+> >>>> need tobypass the use of /dev/rpmsgX, does it make sense to support an anonymous
+> >>>> inode in this driver?  I am clearly not legitimate to answer this question...
+> >>>
+> >>> You have every right to do so, after all, it's purely a technical
+> >>> discussion :).
+> >>>
+> >>> I admit it's bit confusing to add annoymous inode logic to a file named
+> >>> rpmsg_char.c which implies 'character' device. That's why I rename API
+> >>> following Mathieu's comment:
+> >>>   - __rpmsg_chrdev_eptdev_alloc ->  rpmsg_eptdev_alloc
+> >>>   - __rpmsg_chrdev_eptdev_add ->  rpmsg_eptdev_add
+> >>>
+> >>> As to topic how these two uAPI(s) co-exist and affect each other. This
+> >>> change is based on rules:
+> >>>
+> >>> 1. Never break existing uAPI.
+> >>> 2. Try best to reuse existing codebase.
+> >>> 3. Userspace can choose whatever approach they want to.
+> >>>
+> >>> Thanks,
+> >>>
+> >>> 	Dawei
+> >>>>
+> >>>>
+> >>>> Thanks,
+> >>>> Arnaud
+> >>>>
+> >>>>>
+> >>>>> [1] https://lore.kernel.org/all/20250530125008.GA5355@wendao-VirtualBox/
+> >>>>>
+> >>>>>>
+> >>>>>> Regarding your implementation, I wonder if we could keep the /dev/rpmsg<x>
+> >>>>>> device with specific open() and close() file operations associated with your new
+> >>>>>> ioctl.
+> >>>>>>
+> >>>>>> - The ioctl would create the endpoint.
+> >>>>>> - The open() and close() operations would simply manage the file descriptor and
+> >>>>>> increment/decrement a counter to prevent premature endpoint destruction.
+> >>>>>>
+> >>>>>>
+> >>>>>> Regards,
+> >>>>>> Arnaud
+> >>>>>>
+> >>>>>
+> >>>>> [...]
+> >>>>>
+> >>>>> Thanks,
+> >>>>>
+> >>>>> 	Dawei
