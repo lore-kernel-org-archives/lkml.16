@@ -1,120 +1,109 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E647D259CB5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9431D5CE5;
+	Thu,  3 Jul 2025 19:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751569536; cv=none; b=n6CqAEscfE6dh1+AqKQ7OVwuYwJmAzkqQzctM86jBX0t6voxyHxDYdvHRY4Ruiz2VTkIxgbxpL+e92p/Yz066EwvqhPIzPHRRcLm/+X2DKkvPD4SvJDIcLPoRQT8trzo7CAyOI37sTsBjkD1gz/FZOMflianYQb5VgDmtJ6aWVs=
+	t=1751569692; cv=none; b=q/grgXdUtLn1xH2ldZzUFJPZ9Z9N+PmYP2CSlLjYtr/2cj5yn9e7WUYBsPNNGmeaVckGx5V78gTc3Id3JX3StMkNKye8AsPkHLR12jtwG0SYzwSjGJQF05KrpQVdmxiz0j1nz6rKqNFneG+0uBXaWQaP1MI4TWo1o66RDrrB42I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751569536; c=relaxed/simple;
-	bh=4+MJjeW2hiM44MuofBy9Llynx1Jvq8BS3Q7t4UwhJ+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OHJSHHscfDjoStxe1FLrsrzsoOCDQJOKw+9NQcAEcHGTtT5shQ9sYO8DQ+2Y7C+0HTOZJEVrB+bQAi7NIImQQgxzCWNCNKRuv0/N/7W/bordxTtQ8rl3FvpOMUFRO5KkjxFY4Cv5QZQhBbKOD3bN5gRZJrA5kPTVygDBCT5PTI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OH4XL/xY; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751569692; c=relaxed/simple;
+	bh=OOHxmdACIVQQer+dO9X0b+FWtWrJwbSjdxM4TjscUmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pT2YrW36FfrWLiD3ugdfw/nbY5TuzUc21PGH2FQAha6VWOcGnKMyNNz/sLpsOcVBV/wlfEKxwJvWMjJEh3nSUt8srK7pQmclY0pGW2R15zAz9qfEZrnqbnOHddp5cIPlSQ/uuliOUeZK1cUwuYRYkqyIBxFVr/LsQg4m5bHHYPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=znr3S6uW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OH4XL/xY"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so103753f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 12:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751569533; x=1752174333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eEes5oE48jiUB+IbTjNoonD0N5PundEhMgfAv/RRt5A=;
-        b=OH4XL/xYA0Rx1DLbJ5kyS2cbAiFTqQdrQh2OHakpOwP1jVVdWfcK1UNeKSKLENJAk9
-         QW9A+hdMJMAgGVTE5I8XQkzH+oIaQde5Pj+qRi1sXAb++ULiezV6bMXNJqXn0kiwIy/K
-         5PqO6wP+gWnMIVnVMlhkk0kZbNgruIXosyg+169J8u/Mm2YcMR+sIt1nypKZyoCOaxvJ
-         UmX3U2GOYlbky2sXFihWhYX7U0iHr2/c2HoU8UlAtD6k8EVJ5anSR79+ymFm0ZTW9fvQ
-         Bz37PYqwgf8UlCRXjpicQWzacP9TZ9A1imnM8K9HtZU0alHIOyQ5W5tsx5gSq8c3CVo0
-         6gKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751569533; x=1752174333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eEes5oE48jiUB+IbTjNoonD0N5PundEhMgfAv/RRt5A=;
-        b=cR3Fwz4Qn7S1YokGVK24RVHQZwaMVwmKEK6nDvFCmAaS4uH38FAbRIhCDEaaq/aJSj
-         w1vfe1XuKyL43Fl4BuTuPGUujc3gy94X6s3gfMfBJpwFWdQJ6PT+Zxr27n9BhU08b+de
-         ukr63ihf9R5VYuv7SHOqnPb5ty+fTetBuJGxYJwWcgUXpnLXR+ecWjjeC8lIOoZirs9x
-         VogZTCkdb9ATLNdk9Ue2qv6rmsm4dSNhyABbUfleJUoIz8P3NwCMFuXozE8OfYGfq2QB
-         bZsCLTVbilyF2E/OPff5tD6Y8vL4ax9GKJE3bgtszuY+fBzNdh5r4AemJPcxXPFPZe05
-         AauQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQODA/f4GjKbQTk6DOEcR2OOoYZCnmIn+xEZbUhzhPl2VIv7vISRzZ3Kw9Ic1+f9awJpAEISatzfLRhe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN6QNHj9d/AhMzg1md3UKznVR85tcdQklb+Zdj79Bc7teZQNAy
-	K8p4T5ztmIqNIWp7DwxC7FJ50h9qT8jyM6Ym7mx8ltrEwsAaWRnM8UDJKNPamvfr09md/duUgfr
-	ymbyCVBowye2KqkjAph+e4IwH0jEmpis=
-X-Gm-Gg: ASbGncuCGeKaLg/mwh/7zLDWOW7YPUo8Sh/uEMclpeEZAWJKaVpfnAw1H0pRehKnxCb
-	ssdkcQMZoadL/ncItwvo7dFdNSgOmUo/9631HbNcj3HyxgnMPflPc/uh9I9n92Rx7LEao7uyzgl
-	Ip8n9pwWRudq4wr1pciyiSTSejPAQh5KXOs9sGpWnf1iSDCA==
-X-Google-Smtp-Source: AGHT+IHm+VSOO90qj3mCUca2MtaNAmV7aZE1T8OrfB8NfoaCcGe/nTsW+Ix335J9Fw4FfhCKnToRFYqt56sVh1PC2zM=
-X-Received: by 2002:a05:6000:401e:b0:3a6:f2a7:d0bb with SMTP id
- ffacd0b85a97d-3b1fd74c660mr6335061f8f.12.1751569531635; Thu, 03 Jul 2025
- 12:05:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="znr3S6uW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1852C4CEE3;
+	Thu,  3 Jul 2025 19:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751569692;
+	bh=OOHxmdACIVQQer+dO9X0b+FWtWrJwbSjdxM4TjscUmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=znr3S6uWelYY4CwMnYAiyqbGe9vwf9zfTQXk8ghEajRiLvJow1IRZ+EmecTAbKUXW
+	 Bs5FmHRuGa9/93xIs0FLUlsS0OFZvYb5AHQNJA8M85zwd56A/UEV5HjGf1BA32e0Ni
+	 TgvQf6C2LUPVQeoJCA2/C3DGuFKGAfFjMJF74ZYM=
+Date: Thu, 3 Jul 2025 21:08:08 +0200
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Ryan Mann <rmann@ndigital.com>
+Cc: "johan@kernel.org" <johan@kernel.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] NDI FTDI USB driver support
+Message-ID: <2025070338-snorkel-monastery-994d@gregkh>
+References: <YQXPR01MB498723CF19D915DD09C8C0B5DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703181018.580833-1-yeoreum.yun@arm.com> <CA+fCnZeL4KQJYg=yozG7Tr9JA=d+pMFHag_dkPUT=06khjz4xA@mail.gmail.com>
- <aGbSCG2B6464Lfz7@e129823.arm.com>
-In-Reply-To: <aGbSCG2B6464Lfz7@e129823.arm.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 3 Jul 2025 21:05:20 +0200
-X-Gm-Features: Ac12FXyxUbHA_lo-Kj6ls_i2v0Skaq2nx5J2PN_n_cVaHRgGx5xPMKN_AxPcMMo
-Message-ID: <CA+fCnZfq570HfXpS1LLUVm0sHXW+rpkSOMLVzafZ2q_ogha47g@mail.gmail.com>
-Subject: Re: [PATCH v2] kasan: remove kasan_find_vm_area() to prevent possible deadlock
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com, 
-	akpm@linux-foundation.org, bigeasy@linutronix.de, clrkwllms@kernel.org, 
-	rostedt@goodmis.org, byungchul@sk.com, max.byungchul.park@gmail.com, 
-	ysk@kzalloc.com, kasan-dev@googlegroups.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YQXPR01MB498723CF19D915DD09C8C0B5DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
 
-On Thu, Jul 3, 2025 at 8:55=E2=80=AFPM Yeoreum Yun <yeoreum.yun@arm.com> wr=
-ote:
->
-> Hi Andrey,
->
-> > >
-> > > find_vm_area() couldn't be called in atomic_context.
-> > > If find_vm_area() is called to reports vm area information,
-> > > kasan can trigger deadlock like:
-> > >
-> > > CPU0                                CPU1
-> > > vmalloc();
-> > >  alloc_vmap_area();
-> > >   spin_lock(&vn->busy.lock)
-> > >                                     spin_lock_bh(&some_lock);
-> > >    <interrupt occurs>
-> > >    <in softirq>
-> > >    spin_lock(&some_lock);
-> > >                                     <access invalid address>
-> > >                                     kasan_report();
-> > >                                      print_report();
-> > >                                       print_address_description();
-> > >                                        kasan_find_vm_area();
-> > >                                         find_vm_area();
-> > >                                          spin_lock(&vn->busy.lock) //=
- deadlock!
-> > >
-> > > To prevent possible deadlock while kasan reports, remove kasan_find_v=
-m_area().
-> >
-> > Can we keep it for when we are in_task()?
->
-> We couldn't do. since when kasan_find_vm_area() is called,
-> the report_lock is grabbed with irq disabled.
->
-> Please check discuss with Andrey Ryabinin:
->   https://lore.kernel.org/all/4599f645-f79c-4cce-b686-494428bb9e2a@gmail.=
-com/
+On Thu, Jul 03, 2025 at 06:53:06PM +0000, Ryan Mann wrote:
+> Hi John and Greg,
+> Tag: ndi-usb-serial-ftdi-6.16-rc4
+> Public branch: https://github.com/rmann-ndi/linux-kernel/tree/ndi_usb_serial_ftdi
+> This represents changes to the FTDI USB serial device drivers to support a new NDI (Northern Digital Inc.) product called the EMGUIDE GEMINI. The EMGUIDE GEMINI will support 1.2Mbaud the same as other NDI FTDI virtual COM port devices. It was noticed in making this change that the NDI Aurora was included in this "quirk", but it does not support rates as high as 1.2Mbaud, so it was replaced by the EMGUIDE.
+> Previous FTDI devices produced by NDI all used the FTDI VID (0x0403) and a very limited set of PIDs that Future Technology Devices allowed NDI to use (0xda70 to 0xda74). Since then, NDI has reserved its own VID (0x23f2), and used two of the PIDs for two experimental, non-production products that didn't use the FTDI chip for USB connection.
+> This patch adds the new VID as "FTDI_NDI_VID" in the ftdi_sio_ids.h header file. It also reserves PID 0x0003 for the EMGUIDE GEMINI, as well as stubbing out PIDs 0x0004 through 0x0009 for "future" NDI devices. In the unlikely event that the NDI hardware team chooses to implement the USB functionality using something other than FTDI chips, those "future device" lines may need to get removed.
+> As the EMGUIDE GEMINI product development has not been completed and the step to write over the default VID and PID has not been completed, these code changes have not been tested with an EMGUIDE GEMINI. However, the code changes were compiled successfully using Ubuntu 24.04 locally and tested as a module using an NDI Aurora system.
+> Thanks,
+> -------------------------------------
+> Ryan Mann
+> Software Development Lead
+> 103 Randall Drive
+> Waterloo, ON, Canada N2V 1C5
+> www.ndigital.com
 
-That was about checking for !in_interrupt(), but I believe checking
-for in_task() is different? But I'm not an expert on these checks.
+
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch was attached, please place it inline so that it can be
+  applied directly from the email message itself.
+
+- Your patch does not have a Signed-off-by: line.  Please read the
+  kernel file, Documentation/process/submitting-patches.rst and resend
+  it after adding that line.  Note, the line needs to be in the body of
+  the email, before the patch, not at the bottom of the patch or in the
+  email signature.
+
+- You did not specify a description of why the patch is needed, or
+  possibly, any description at all, in the email body.  Please read the
+  section entitled "The canonical patch format" in the kernel file,
+  Documentation/process/submitting-patches.rst for what is needed in
+  order to properly describe the change.
+
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/process/submitting-patches.rst for what a proper
+  Subject: line should look like.
+
+- It looks like you did not use your "real" name for the patch on either
+  the Signed-off-by: line, or the From: line (both of which have to
+  match).  Please read the kernel file,
+  Documentation/process/submitting-patches.rst for how to do this
+  correctly.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
