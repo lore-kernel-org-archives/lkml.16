@@ -1,132 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47402E7185;
-	Thu,  3 Jul 2025 14:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C5813D8A4;
+	Thu,  3 Jul 2025 14:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552003; cv=none; b=mKMiiOU9rcXwmndj+Lsh6FdKtpfK+CRfAd5cGVOIGw6tp0Ynk1HFYaxjB6/yZDkGx64y1vn7k+SsFR4VwNNrCo+FGl/xmdJ6MztWbuvTmVresZUheG779AJePlCdUS8gvjTNo9+bLMpNDjPZZvFHpfI5wewb22UXCNedNouTNBA=
+	t=1751552020; cv=none; b=LHStHKc6MdngsciY5We1Kpa+ZroUm6HFiIFMwdVLmrnElXnUCmtJtf3KVIoBH9xbAXeNsWA1E8JVJGucSy9GukQ5Z8fsb+whUjqRHn1IY043HhmzoVL9EbERLrOi53yC4nlJloObJNcR7ummndFrzqQu+N4LSXrozwhscuUsV30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552003; c=relaxed/simple;
-	bh=kniA2y4sfnQQJjmDImSGwZ+VaTRUH/11XdXtDWuFZGo=;
+	s=arc-20240116; t=1751552020; c=relaxed/simple;
+	bh=Q2ylaOeBTtuJNcCw5v7aJ6VeP3eyBOiwu7/dJRAIPOo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AlnHddsf+TuVL9LNsvtP6zmSL8IQSbu2/s0Uz8SToHa7wB9139szOF4SsOQ8tbRWUThWevtdG6zs6HoLKGEBMohnkSl5rosunYGUMP1cB4i+5lQ/dbKzbzzv4OpMAIrkay+3K5mQY7AN4FnJmlATqd1yJ+eDN5lDCJxTyOOrODE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oIq5Jukm; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oIq5Jukm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751552002; x=1783088002;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kniA2y4sfnQQJjmDImSGwZ+VaTRUH/11XdXtDWuFZGo=;
-  b=oIq5Jukm1GB6/tfNCu6xIPQXDuhoG38nkZ7j2iUJYPN6Btx2N/NQh7+o
-   V7WzkdVcIcfgKWLAQ7ZWhtJEbKhL1ckoYHZU9Uwpnwm2Kh8jMQuFqmhcN
-   JI/2MM5jCGi7ouRc3DwH3ZtRjpIJLJ8jaUdbaSuFdI/LkIRt/MaeW0MDt
-   TCgQ9W9fTMtIhf13Jw3jezF2iTpa8Ca4nxeLzbiKj0XmVeNdaiIqN/CHc
-   Dk+teQ4/FbBPMVcuB3DjjgORU6r5ZdCw5serGlbdBRuMtAsiTAsoQCNmO
-   vaW8YNZjrhbUmxxdTibmI0OX8TvvC3h6Q5n10HuzGH4Q3D8Ze2DaNWRQx
-   A==;
-X-CSE-ConnectionGUID: TV1K1VmdSV2qg4XXK3nGWA==
-X-CSE-MsgGUID: o1dk5BMsT5GDdMejljUVBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65334240"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="65334240"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:13:22 -0700
-X-CSE-ConnectionGUID: lqSfQKoTSWO2KNjJam8cyw==
-X-CSE-MsgGUID: HBd5YVVnREKQ3M2sJmueEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="153792421"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:13:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uXKgb-0000000CDxx-0vDp;
-	Thu, 03 Jul 2025 17:13:13 +0300
-Date: Thu, 3 Jul 2025 17:13:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of ADCs
-Message-ID: <aGaP-HBbIbfEoKlo@smile.fi.intel.com>
-References: <cover.1751289747.git.marcelo.schmitt@analog.com>
- <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
- <aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
- <aGUi7r2dgnbqLOAH@smile.fi.intel.com>
- <aGWBgLLtOzVGwXek@debian-BULLSEYE-live-builder-AMD64>
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1Z8+7/7JavXgG49gkRTgKj3mt4TEAY1r4UqHRNZufRsaWTtDvG+XVMpfsqqKp+GsMhnpVY/QOnLcJj+hyDNup+b4HQQozydhnDWyfCzRF1PGcdMhjI6ZT4T6VilETueobLAkwKvt50k0zk0mUS/4RvZ+casgODtNbeSHhTgaD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so11271804a12.0;
+        Thu, 03 Jul 2025 07:13:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751552013; x=1752156813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z18oj+x92MNc/0S9Y8xHuEcemOWJBgJqXoJ/JKjM/Uo=;
+        b=dSTREdfd95NhutSreX3l0j4AHIiS6+Qi5FXVdQ9znXMWnSKBEYSfVfVdkvyRc9P1jv
+         M3tWBaUjp6oGV2flH+a+xbYuLaxa5aTRAwnWPkMKPICHH+C9BWZ4BW/ezizDnZzgtiOV
+         1oUiGvW2HPomg8Lgp6NXFJY/Xjbjmo4ruMYUcVQRGtTonVZPvMfSY0zrSltJ40gaBPDV
+         Gz4W9oDaRD1Ch9NlmKT+x9lulW8+JxRWjPrIblxLGOpbNMZk9nAZO+HdyIdIy8+d6ehO
+         mKsXo5KEt440hsfPs9w0SsMm2feoVKGTAC90B1XrD8cMJY5D2+OVrQNSUsVwKBMeKmKd
+         1tMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVsyXxwVIuTPA0DhJnD6mhnc27WVHanghTyd8DwalQOhE+OubwQT+x6vD9FLVTCc6qcRIqwS1P+CmG/ag=@vger.kernel.org, AJvYcCXrlnj0BbOCuhBdnvzeV8O3B8KY2LkvEXAY646VvdNSngxQpxA7Hiq3q4Do9VcG8wKuMDo2Y/qS7AeYZfaZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIt4yVGnPZyKFJgmtukLW7FUY5Sk0xgVh3RFRpy48UuP2R47Gn
+	cS0zWGIwuer2bWC3EkzJaNjL+f1i1q3eKCUaU0JB/Cr8xbRaybLAWElz
+X-Gm-Gg: ASbGnctFzdxJ0k321QcM8Lbujmyu8ltqO06xzRZLuB+Gutcy/UGfsjRXqTEcrc4Wrb0
+	in94N1CN6GBGIiiEDr7tKO7rCsS8oJyf+rABq4C8PmJgWduPYbj40LVMlNlF4oDkL9Xz1OdwdmU
+	MiMc15oBZzqlc9AzCdORzS5hrQED6wTQIRoG/WoSuP5YBfVJNc9HIAl0Jjb6JwVq6SEyNLVbrMk
+	qnTaNATQ4zxwyngZ1dQ/yUomJq3piNSgd8zVsUrQm9Rdo3yF2NCHBIN1K40M/5OuKJi9F4Hdd3v
+	sVcLZtjz3W0M3LPz3YJUbQur5A1YbBCPrvpeHFYqcqhAjTXHsBxhCuR1hBZ3ICmnh3jiRO8JV3Q
+	=
+X-Google-Smtp-Source: AGHT+IG2W4RiEIKOP1cdVrQs5oIBrb+dGkYJvqPdZKRCaRwD1JVKgzL5Mw0lQq3snaidPWHlUSFbZA==
+X-Received: by 2002:a17:907:3e8b:b0:ade:32fa:739e with SMTP id a640c23a62f3a-ae3c2a904e4mr715630966b.2.1751552012723;
+        Thu, 03 Jul 2025 07:13:32 -0700 (PDT)
+Received: from gmail.com ([2620:10d:c092:500::4:6e61])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c01201sm1301680866b.97.2025.07.03.07.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 07:13:32 -0700 (PDT)
+Date: Thu, 3 Jul 2025 15:13:26 +0100
+From: Breno Leitao <leitao@debian.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: cov@codeaurora.org, rmk+kernel@armlinux.org.uk, catalin.marinas@arm.com,
+	linux-serial@vger.kernel.org, rmikey@meta.com,
+	linux-arm-kernel@lists.infradead.org, usamaarif642@gmail.com,
+	leo.yan@arm.com, linux-kernel@vger.kernel.org, paulmck@kernel.org
+Subject: Re: arm64: csdlock at early boot due to slow serial (?)
+Message-ID: <aGaQBghdAl8VGWmV@gmail.com>
+References: <aGVn/SnOvwWewkOW@gmail.com>
+ <aGZbYmV26kUKJwu_@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aGWBgLLtOzVGwXek@debian-BULLSEYE-live-builder-AMD64>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <aGZbYmV26kUKJwu_@J2N7QTR9R3>
 
-On Wed, Jul 02, 2025 at 03:59:12PM -0300, Marcelo Schmitt wrote:
-> On 07/02, Andy Shevchenko wrote:
-> > On Wed, Jul 02, 2025 at 09:00:42AM -0300, Marcelo Schmitt wrote:
-> > > On 07/02, Andy Shevchenko wrote:
-> > > > On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:
+On Thu, Jul 03, 2025 at 11:28:50AM +0100, Mark Rutland wrote:
+> On Wed, Jul 02, 2025 at 10:10:21AM -0700, Breno Leitao wrote:
+> > I'm observing two unusual behaviors during the boot process on my SBSA
+> > ARM machine, with upstream kernel (6.16-rc4):
+> 
+> Can you say which SoC in particular that is? Knowing that would help to
+> identify whether there's some known erratum, clocking issue, etc.
 
-...
+This is custom made rack mounted machine based on Grace CPU. Here are
+some info about the hardware:
 
-> > > > >  6 files changed, 3601 insertions(+)
-> > > > 
-> > > > This is weird. At least patches 11 & 12 have '-' lines...
-> > > > 
-> > > Yeah, sorry about that. These ADCs are fancy such that the base driver is about
-> > > 1500 LoCs due to channel setup handling and support for multiple combinations of
-> > > voltage references and channel setups.
-> > > 
-> > > About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
-> > > patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
-> > > after patch 7 and I think it would lead to '-' lines if coming before patch 10
-> > > since both increment the number of IIO channels. Anyway, I'll see how to further
-> > > reduce the number of lines being removed.
+	# lscpu:
+		Vendor ID:                   ARM
+		  Model name:                Neoverse-V2
+		    Model:                   0
+		    Thread(s) per core:      1
+		    Core(s) per socket:      72
+		    Socket(s):               1
+		    Stepping:                r0p0
+
+	# /proc/cpuinfo
+		processor	: 71
+		BogoMIPS	: 2000.00
+		Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti
+		CPU implementer	: 0x41
+		CPU architecture: 8
+		CPU variant	: 0x0
+		CPU part	: 0xd4f
+		CPU revision	: 0
+
+	# lshw
+	    description: Rack Mount Chassis
+	    product: <Internal name>
+	    vendor: Quanta
+	    version: <Internal name>
+	    width: 64 bits
+	    capabilities: smbios-3.6.0 dmi-3.6.0 smp sve_default_vector_length tagged_addr_disabled
+	    configuration: boot=normal chassis=rackmount family=Default string sku=Default string uuid=...
+
+How do I find the SoC exactly?
+
+> Likewise that might imply more folk to add to Cc.
+> 
+> [...]
+> 
+> > At timestamp 9.69 seconds, the serial console is still flushing messages from
+> > 0.92 seconds, indicating that the initial 9-second gap is spent looping in
+> > cpu_relax()-about 20,000 times per message, which is clearly suboptimal.
 > > 
-> > My point is that the above statistics is mangled and I don't know how I can
-> > trust the contents of this series if it already lied about that.
+> > Further debugging revealed the following sequence with the pl011 registers:
+> > 
+> > 	1) uart_console_write()
+> > 	2) REG_FR has BUSY | RXFE | TXFF for a while (~1k cpu_relax())
+> > 	3) RXFE and TXFF are cleaned, and BUSY stay on for another 17k-19k cpu_relax()
+> > 
+> > Michael has reported a hardware issue where the BUSY bit could get
+> > stuck (see commit d8a4995bcea1: "tty: pl011: Work around QDF2400 E44 stuck BUSY
+> > bit"), which is very similar. TXFE goes down, but BUSY is(?) still stuck for long.
 > 
-> Looks like git format-patch summarizes the changes from all patches when
-> printing the statistics to the cover letter. Also, git format-patch doc [1]
-> says the 'changes' dirstat option (default behavior) doesn't count
-> rearranged lines as much as other changes.
-
-TIL. Thanks for pointing that out.
-
-> There are cover letters of other
-> patch sets where the number of '-' lines don't match the sum of lines
-> removed by each patch. [2] and [3] are examples of that.
-
-That's different I believe due to the diff algorithm in use
-(btw, do you use histogramm?).
-
-> [1]: https://git-scm.com/docs/git-format-patch
-> [2]: https://lore.kernel.org/linux-iio/20250630-losd-3-inv-icm42600-add-wom-support-v6-0-5bb0c84800d9@tdk.com/
-> [3]: https://lore.kernel.org/linux-iio/20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com/
+> Looking at the commit message, that was an issue with the a "custom
+> (non-PrimeCell) implementation of the SBSA UART" present on QDF400. I
+> assume that was soemthing that Qualcomm Datacenter Technologies designed
+> themselves.
 > 
-> This set doesn't remove stuff that existed prior to it so I think it makes
-> sense the cover letter to show that lines are only being added.
-> 
-> I'll send v8 with the change I mentioned earlier. Unless patches 11 and 12
-> already look good the way they are in v7.
+> It's possible that your SoC has a similar issue with whatever IP block
+> is being used as the UART, but the issue in that commit certainly
+> doesn't apply to most PL011 / SBSA-UART implementations.
 
--- 
-With Best Regards,
-Andy Shevchenko
+That makes total sense. Decoding SPCR I see the following:
 
+	# iasl -d spcr.dat
+	Intel ACPI Component Architecture
+	ASL+ Optimizing Compiler/Disassembler version 20210604
+	Copyright (c) 2000 - 2021 Intel Corporation
 
+	File appears to be binary: found 56 non-ASCII characters, disassembling
+	Binary file appears to be a valid ACPI table, disassembling
+	Input file spcr.dat, Length 0x50 (80) bytes
+	ACPI: SPCR 0x0000000000000000 000050 (v02 NVIDIA A M I    00000001 ARMH 00010000)
+	Acpi Data Table [SPCR] decoded
+	Formatted output:  spcr.dsl - 2624 bytes
+
+Thanks,
+--breno
