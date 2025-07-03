@@ -1,259 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587342E498A;
-	Thu,  3 Jul 2025 11:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083B82E5428
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751540430; cv=none; b=aJ5bAgbGt8Oo/gl/9UtLK7AWr8oyQGLzVfRhXfHd66JILKEvJ7sWVXiRgzl2nuOsPR8ydCD9jj0HUr42pRmSzYkyaY2cHes9CmPuBnIFoDrVYfdSxX3+W91ByB82CrlC1BgWFf2IA3fyci3ILG7cQFYJNeYnv2F2lTsHCFqtV3Y=
+	t=1751540451; cv=none; b=qVaeSkKRmhv516DwjbWhzT5t3iq68FhNNbjkZ7js4s1BZYoU0SZu2mrvcEHP/X070beci3XxLe6CQGlyOa1WBplw4N8JI9wiFSpIjZZKZM4ddTJ+6Ci4YyIjzEpQdlgnsawEzxT/Z0Yk2KUDS9zMsiMVjUuzWe3cYq03hkekiqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751540430; c=relaxed/simple;
-	bh=Ib82rjmxVB/4uHkaCH4KJLsoHomS5YRNyB+GNi2QfO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqVPT11dsSXV5ThquC3MJ+QVFQistgmWwwAd+LQoKjIDHXCtbweFq8QCe8G0BJhFi97ghbl5uQDyAXIUOsKudVhRZH/KsNXIicCxzx+x3hSviMEQ9K/HP5PjfkwHyZULXYEUun7aFJhxfCYbpT6HMXoUBdp0IrojgTa26ZxFJcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdIHqay0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751540451; c=relaxed/simple;
+	bh=pq71cQC0uBkTrByxknfDokTuXj4TZF9Xo9CXv4m2J1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aoSFUz5vpZEaqcwex1iFxVy0hoV97iUntAVDOpyXYJZWkd2waFmqeFNk8OyLJDu5p4q7uLIrU3XQ6AO1zjMB7FSvvvPWPvN/PPgAMgHPBfLUEFADlpb3rUC/v5rVsYaCV6SrM7fE6PqDPskyvct6UX/fVNugkBjDQmmYTC+4pwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=EvBC2a4p; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdIHqay0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F2BEC4CEEB;
-	Thu,  3 Jul 2025 11:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751540429;
-	bh=Ib82rjmxVB/4uHkaCH4KJLsoHomS5YRNyB+GNi2QfO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gdIHqay0D6RqD9E/DQq+r0h+l/A7PC1D9lULY2M+h+zn71qtTLI+NsAS+V7t856U4
-	 QCfbq4NpUT9jKY0SdIzRrSoJQfVKIM8X7jB5CntWzWsGXCIVXGTmJSZcGiVk+z9QcY
-	 QbbMROjFaxo/m1xQD8ROIkFwGqXmaX1RnmW+NM6/4RRknryC0MK2sGTR1EiW4Sfykt
-	 DPukSpomYBUixqGY2v6b10q1ul26GRnF95/S7hWB2rX9KZKttgJjjab0CprwN/kmbz
-	 LVxIFINc1kPTmQMOCU3azp1mg9WCCH8ywsVuTtIhYiCULj3xC1QLKAo7SZiyes4e2J
-	 N/Nv5Xj8vLpig==
-Date: Thu, 3 Jul 2025 13:00:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
- for File
-Message-ID: <aGZixxMG-IJ39lEn@pollux>
-References: <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
- <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
- <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org>
- <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
- <aGLUl7ZtuQBPoCuv@pollux>
- <2025070131-icon-quarters-0c16@gregkh>
- <aGPtCBB6nWTNJuwK@pollux>
- <2025070137-tartar-juncture-fcd2@gregkh>
- <aGP6d2-jJy5rtjMK@pollux>
- <aGZVUqangIR-c4aW@google.com>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="EvBC2a4p"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso9165138a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1751540448; x=1752145248; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ov9dvzlRKndQHh6tUxnGLDmEEkae5LZqZBxHgs9G6wc=;
+        b=EvBC2a4p4yVPF17ZTbttUn/Z6FCvl8eQN6r+J730B2YMXf1nfvwlulY2zIfq5NFYvD
+         9H3A48hEhiFqU7/+FkGB0YePmg68PynUWsmhDOkm7fVOO/uHnW28uJ5VgZ05dtceoNMv
+         Zskh8Kug/tPZiI+EBQ+QTQwfzFECXamfzx6U+Z4i4DPo0TP3f4oo3s1uFRo5YymCiJUp
+         YeOH/BfO7Q9qIu/Orkqj6sGB9JvDIXnWYgKFUX3vFlX3ELkylkqtaZvxlMj8u53TK68Q
+         L1EsxKkM8fulrbKDQfHLHR+jD5Xd0P74fIYeBRA2ONll8xeGijMnHpzCAzZQyayTOW0I
+         ijrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751540448; x=1752145248;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ov9dvzlRKndQHh6tUxnGLDmEEkae5LZqZBxHgs9G6wc=;
+        b=D0vXxdF3aOD41maKu1Qu1/Lw6HCP28pvEZ+zSYR0xvyVYxmMBsnPiFZ25Ou+fT5hHc
+         BLdcUhTstMv1OVok/gKvAbAcvppkoxAiJKPzgjJrJElLIrh37hjLcH2lgft+4ltqg62m
+         65SzNLxsynmKEUVbK2rWLGgm5ChwlwW8ypAT6elgDK1EgIDYt9etcP8OgHewlMQ73VQ+
+         ai2l6hmyHCIjZw+oekK5QQROATxREBEfJ/F08/oSdaVbYsGs2Svn2Gdw6c29jwYeCsWx
+         X4f/RNX4GyBkaruV+ANoNzjz8xYTYIJTYSfTMu6NquATh7isZGmjWhhrIfTXPPGugM3y
+         ARQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxWcAo7Ey0sphAaP9o7j6F4gz1LfpjKJq38MC6AtV48n1zQMG9jnW0A1rWzYC6GVePBlwmODduOm3mh38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ1bFjHF/TnjjO79mTJDy6etnWOtHRFEGYkk6bKD8C7/WCiOar
+	t+VXad7XbH6JSn2m8AmtVSOxKkAafjOBeUvS7KqiynUCDT386xJdpYqMbL/VH0oykzJnAftOLPF
+	wUlFo3nFIZdgE/0imSoTeaG8ssjx4wpMMYR6Q5T471Q==
+X-Gm-Gg: ASbGncuhAOnK3WqaQLKBKXNZz9eFKLHQLP2VUmYt2A30IYHXOhyXrPeCGiRtTWqn9wR
+	QDUFY9DmBaTu12MYMpo2Vi43Xj4LnkIz8VCZZLWMi0x3M75F7gdUVT7+K+1dgb8j6SE6/xPqlJD
+	motAlgAs1S6h/kj7sasnhckisht50jC5YpWwgM5h0W7/mGZpTlY3TQ8WHwWIxj1jsdxbv9
+X-Google-Smtp-Source: AGHT+IFq99AvGxW5aLC9eG5GTz/XC5r0d/uxg8Wd9qm18IHSvd8rdkOX3/+DZL2a9gIRJngK/mdb0k4KA/1u3ufWHFo=
+X-Received: by 2002:a05:6402:4552:b0:606:c8fa:d059 with SMTP id
+ 4fb4d7f45d1cf-60e6ccbf0c5mr2412747a12.14.1751540447822; Thu, 03 Jul 2025
+ 04:00:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGZVUqangIR-c4aW@google.com>
+References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
+ <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+ <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
+ <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
+ <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
+ <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
+ <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
+ <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com>
+ <CAADnVQ+_UZ2xUaV-=mb63f+Hy2aVcfC+y9ds1X70tbZhV8W9gw@mail.gmail.com>
+ <CAGis_TUNfUOD3+GdbJn1U33W8wW5pWmASxiMa5e5+5-BqJ-PKw@mail.gmail.com> <CAADnVQJp-AtrRj_XESbE5TUj6_dGNDwpRWwu2vEHv1HGOb4Fdw@mail.gmail.com>
+In-Reply-To: <CAADnVQJp-AtrRj_XESbE5TUj6_dGNDwpRWwu2vEHv1HGOb4Fdw@mail.gmail.com>
+From: Matt Fleming <mfleming@cloudflare.com>
+Date: Thu, 3 Jul 2025 12:00:36 +0100
+X-Gm-Features: Ac12FXwth0AL_93FPjmSeTcvedAjmjaHBh1eXmSTqMK8uh_2jpjAenacQlOjT8w
+Message-ID: <CAGis_TXJH9cXNe=mveV0cCGiebXy5uJNd7ibCbaPcOsbjDt+kw@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Matt Fleming <matt@readmodwrite.com>, Ignat Korchagin <ignat@cloudflare.com>, 
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-team <kernel-team@cloudflare.com>, Jesper Dangaard Brouer <hawk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 03, 2025 at 10:02:58AM +0000, Alice Ryhl wrote:
-> On Tue, Jul 01, 2025 at 05:10:47PM +0200, Danilo Krummrich wrote:
-> > On Tue, Jul 01, 2025 at 04:21:56PM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Jul 01, 2025 at 04:13:28PM +0200, Danilo Krummrich wrote:
-> > > > Instead this should just be:
-> > > > 
-> > > > 	struct GPU {
-> > > > 	   fw: debugfs::File<Firmware>,
-> > > > 	}
-> > > > 
-> > > > and then I would initialize it the following way:
-> > > > 
-> > > > 	let fw = KBox::new(Firmware::new(), GFP_KERNEL)?;
-> > > > 	let file = dir.create_file("firmware", fw);
-> > > > 
-> > > > 	// debugfs::File<Firmware> dereferences to Firmware
-> > > > 	file.do_something();
-> > > > 
-> > > > 	// Access to fw is prevented by the compiler, since it has been moved
-> > > > 	// into file.
-> > > > 
-> > > > This is much better, since now I have the guarantee that my Firmare instance
-> > > > can't out-live the GPU instance.
-> > > 
-> > > That's better, yes, but how would multiple files for the same
-> > > "structure" work here?  Like a debugfs-file-per-field of a structure
-> > > that we often have?
-> > 
-> > That is a very good question and I thought about this as well, because with only
-> > the current API this would require us to have more and more dynamic allocations
-> > if we want to have a more fine grained filesystem representations of structures.
-> > 
-> > The idea I have for this is to use pin-init, which we do in quite some other
-> > places as well.
-> > 
-> > I think we can add an additional API like this:
-> > 
-> > 	impl Dir {
-> > 	   pub fn create_file<T>(&self, data: impl PinInit<T>) -> impl PinInit<Self> {
-> > 	      pin_init!(Self {
-> > 	         data <- data,
-> > 	         ...
-> > 	      })
-> > 	   }
-> > 	}
-> > 
-> > This allows us to do things like:
-> > 
-> > 	#[pin_data]
-> > 	struct Firmware {
-> > 	   #[pin]
-> > 	   minor: debugfs::File<u32>,
-> > 	   #[pin]
-> > 	   major: debugfs::File<u32>,
-> > 	   #[pin]
-> > 	   buffer: debugfs::File<[u8]>,
-> > 	}
-> > 
-> > 	impl Firmware {
-> > 	   pub fn new(&dir: debugfs::Dir, buffer: [u8]) -> impl PinInit<Self> {
-> > 	      pin_init!(Self {
-> > 	         minor <- dir.create_file("minor", 1),
-> > 	         major <- dir.create_file("major", 2),
-> > 	         buffer <- dir.create_file("buffer", buffer),
-> > 	      })
-> > 	   }
-> > 	}
-> > 
-> > 	// This is the only allocation we need.
-> > 	let fw = KBox::pin_init(Firmware::new(...), GFP_KERNEL)?;
-> > 
-> > With this everything is now in a single allocation and since we're using
-> > pin-init, Dir::create_file() can safely store pointers of the corresponding data
-> > in debugfs_create_file(), since this structure is guaranteed to be pinned in
-> > memory.
-> > 
-> > Actually, we can also implement *only this*, since with this my previous example
-> > would just become this:
-> > 
-> > 	struct GPU {
-> > 	   fw: debugfs::File<Firmware>,
-> > 	}
-> > 
-> > 	let file = dir.create_file("firmware", Firmware::new());
-> > 	let file = KBox::pin_init(file, GFP_KERNEL)?;
-> > 
-> > 	// debugfs::File<Firmware> dereferences to Firmware
-> > 	file.do_something();
-> > 
-> > Given that, I think we should change things to use pin-init right away for the
-> > debugfs::File API.
-> 
-> Does this actually work in practice for anything except immutable data?
-> I mean, let's take Rust Binder as an example and lets say that I want to
-> expose a directory for each Process object with some of the fields
-> exposed. Let's just simplify Rust Binder a bit and only include some of
-> the fields:
-> 
-> #[pin_data]
-> struct Process {
->     task: ARef<Task>,
->     #[pin]
->     inner: SpinLock<ProcessInner>,
-> }
-> 
-> pub(crate) struct ProcessInner {
->     threads: RBTree<i32, Arc<Thread>>,
->     nodes: RBTree<u64, DArc<Node>>,
->     requested_thread_count: u32,
->     max_threads: u32,
->     started_thread_count: u32,
-> }
-> 
-> Rust Binder already does expose some debugging data through a file
-> system, though it doesn't do so using debugfs. It exposes a lot of data,
-> but among them are the pid, the number of threads and nodes, as well as
-> the values of requested_thread_count, started_thread_count, and
-> max_threads.
-> 
-> Now, we run into problem number one: pinning is not supported inside
-> mutexes. But let's say we solved that and we could do this:
-> 
-> #[pin_data]
-> struct Process {
->     task: File<ARef<Task>>, // prints the pid
->     #[pin]
->     inner: SpinLock<ProcessInner>,
-> }
-> 
-> pub(crate) struct ProcessInner {
->     threads: File<RBTree<i32, Arc<Thread>>>, // prints the count
->     nodes: File<RBTree<u64, DArc<Node>>>, // prints the count
->     requested_thread_count: File<u32>,
->     max_threads: File<u32>,
->     started_thread_count: File<u32>,
-> }
-> 
-> However, this still doesn't work! Debugfs may get triggered at any time
-> and need to read these fields, and there's no way for it to take the
-> spinlock with the above design - it doesn't know where the spinlock is.
-> For the integers I guess we could make them atomic to allow reading them
-> in parallel with mutation, but that option is not available for the
-> red/black trees.
-> 
-> What is the intended solution in this case? If the argument is that this
-> is a rare case, then keep in mind that this is a real-world example of
-> debugging information that we actually expose today in a real driver.
+On Tue, 1 Jul 2025 at 17:25, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> What is the height of 100m tree ?
 
-I'd like to question the decision of having a separate File for each member of
-ProcessInner in this case a bit:
+Because this trie implementation is essentially a binary tree the
+height is given by log2(100m) = 26.
 
-Given the decision to protect all members of ProcessInner with the same lock, I
-assume that they are in a certain relationship to each other, such that it is
-either necessary or (at least) makes the most sense to keep them synchronized
-with each other.
+> What kind of "recursive algo" you have in mind?
 
-In other words, you probably don't want that, for instance, changes on
-requested_thread_count can race with threads, or max_threads, etc.
+Something like this:
 
-So the question I want to raise is, given that, does it make sense to expose
-those values to userspace unsychronized to each other, i.e. through separate
-files?
+---
+ kernel/bpf/lpm_trie.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-For instance:
+diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
+index 010e91ac978e..f4b07920a321 100644
+--- a/kernel/bpf/lpm_trie.c
++++ b/kernel/bpf/lpm_trie.c
+@@ -33,7 +33,13 @@ struct lpm_trie {
+  struct bpf_map map;
+  struct lpm_trie_node __rcu *root;
+  size_t n_entries;
++ /* Maximum prefix length permitted */
+  size_t max_prefixlen;
++ /* Largest prefix length of any node ever inserted. Used for an
++ * optimisation in trie_free() and is not updated on node
++ * deletion.
++ */
++ size_t largest_prefixlen;
+  size_t data_size;
+  spinlock_t lock;
+ };
+@@ -450,6 +456,10 @@ static long trie_update_elem(struct bpf_map *map,
+ out:
+  if (ret)
+  kfree(new_node);
++ else
++ trie->largest_prefixlen = max(trie->largest_prefixlen,
++ key->prefixlen);
++
+  spin_unlock_irqrestore(&trie->lock, irq_flags);
+  kfree_rcu(free_node, rcu);
 
-	$ cat max_threads && cat threads
-	$ 5
-	$ 10
+@@ -599,12 +609,40 @@ static struct bpf_map *trie_alloc(union bpf_attr *attr)
+  return &trie->map;
+ }
 
-This way you may read 5 max_threads, but 10 actual threads, because things have
-changed in between the two cat commands.
++static void __trie_free(struct lpm_trie_node __rcu **slot)
++{
++ struct lpm_trie_node *node;
++
++ node = rcu_dereference_protected(*slot, 1);
++ if (!node)
++ return;
++
++ if (rcu_access_pointer(node->child[0]))
++ __trie_free(&node->child[0]);
++
++ if (rcu_access_pointer(node->child[1]))
++ __trie_free(&node->child[1]);
++
++ kfree(node);
++ RCU_INIT_POINTER(*slot, NULL);
++}
++
+ static void trie_free(struct bpf_map *map)
+ {
+  struct lpm_trie *trie = container_of(map, struct lpm_trie, map);
+  struct lpm_trie_node __rcu **slot;
+  struct lpm_trie_node *node;
 
-Or is it more that you want to expose them all at once, such that reading
-those values from debugfs you can be sure that they were *all* captured under
-the same lock at the same time and are in a valid relationship to each other?
++ /* When we know the largest prefixlen used by any node is <= 32
++ * we're guaranteed that the height of the trie is at most 32.
++ * And in that case, we can use a faster recursive freeing
++ * algorithm without worrying about blowing the stack.
++ */
++ if (trie->largest_prefixlen <= 32) {
++ __trie_free(&trie->root);
++ goto out;
++ }
++
+  /* Always start at the root and walk down to a node that has no
+  * children. Then free that node, nullify its reference in the parent
+  * and start over.
 
-For instance:
+> Could you try to keep a stack of nodes visited and once leaf is
+> freed pop a node and continue walking.
+> Then total height won't be a factor.
+> The stack would need to be kmalloc-ed, of course,
+> but still should be faster than walking from the root.
 
-	$ cat process_info
-	$ threads: 2
-	$ nodes: 2
-	$ requested_thread_count: 5
-	$ max_threads: 10
-	$ started_thread_count: 1
-
-(I don't know if the numbers make sense semantically, but you get the idea.)
-
-So, what I'm trying to say is, I think that usually we want to expose data
-protected with the same lock as a whole and otherwise protect data that is
-independant from other data with separate locks.
-
-- Danilo
+Sure, I can give this a shot. Plus we won't need to guard against
+blowing up the stack.
