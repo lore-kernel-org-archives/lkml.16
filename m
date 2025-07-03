@@ -1,191 +1,98 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816E24A054;
-	Thu,  3 Jul 2025 09:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741EB2D0292;
+	Thu,  3 Jul 2025 09:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533287; cv=none; b=FDDudkzu/AaFyXrLvDz2jfWRkC9jsDarMxGjMV7YHI8GPYMSFvWSDjGNghvW2XCpmcIx8w5hEPOoBDPrhRU03Qgojn+pSJSx5DhivEdTlzVk0/QGCb1vAga/eGDs/D/ChlXwJXNVDzNbNZhAZnN9tGYY5OMm8HUBwatfYbRvKx8=
+	t=1751533313; cv=none; b=mPI9SvGtWtiaDiHKjebO/GED2RbUqL8aAIZRKlQTmH7zE6cvn77K82Vct02EOndsbWr1XHXd84i5HsikC+2Ek7NwmK0QuQxfj/hm8zNbGYgTjG9/R/Wm3ZpvDeiNlW/CwulUeBrnpiTEGPqPi4M4jnHq9QaMRHNC4PYYa6uZq7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533287; c=relaxed/simple;
-	bh=It4Yzf/cq/OZHF/i74LdCyTJ52/QRKsGa2yNEZKCaP4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=haCKmQnd+OKYHBVkiABtDHRhqIGqtBoViYA2aBFiGZ4Y2HMAjpS3K9VuGd4eTyxtthMLDEPPE/pv8H4/qAs5l020Y+eNPxz3ru1EqbKqKppaA860moKD8oEN0PPXj3SkjXvu+InQfvDNeJ2ilok+Nqt8pDJacc6ZvGs1elgxlb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JZoiMtpI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751533313; c=relaxed/simple;
+	bh=NAPX3z+5Hzs1tzhGj4iLZXmU149A+uDXJDgyn5k9ggk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXWnncl9kuEUATWR5UZP5SRbjtEp8tlG5YFgUWC/eLRjl/ckobrgJDpl9p44MACM8oC7KXEaUb3d33ElE6zC8CfM8/JYIrnSNOFgCg5bIyS5Dj5vUcDa8ZFXxWSumZ3CDrvc9bN4MwszW81fG6mFYHkbNUf4m69OL5FNZOfUYNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JaNj9cTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JZoiMtpI"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5631xo9d024877;
-	Thu, 3 Jul 2025 09:01:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=ywd6s1HBGy/xILoiidjOHLd2E+10hnFHI88SzQApckA=; b=JZ
-	oiMtpII60AGhwlSiSEVjNqX84F5RPPXCWaocdJmPlejNOBG2iKLgX1TzuyXWgIZc
-	/vUwxuD/scAv3zrqnupKQGLhkirgZyrjH6qypKiYxQZTdCBo2F+5+ioUPHTIjDq4
-	mrPQ6NUEftCQxNHjqKW4Gv3wGQh2FLrYDOy6ecj++c7H5UnA++Ix+w53YjNApGxP
-	v4NKWd4NqZBynmDkCbq8Ex2p1j6VzIL1kzM+IF2A7I0od5kvvQLGMxW1+DV1MAUJ
-	Zo+Jg79oj+Vj67jmwzjnM96VoE/HlKlzEzHV2V9mTZA2MFyyAQF6M6KUyDi5qqpl
-	D7wOU5fW4ocMqG0yjyow==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8027j9v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 09:01:01 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563910BX001271
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 09:01:00 GMT
-Received: from hu-sarohasa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 3 Jul 2025 02:00:55 -0700
-From: Sarosh Hasan <quic_sarohasa@quicinc.com>
-To: Wei Fang <wei.fang@nxp.com>, "andrew @ lunn . ch" <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Florian Fainelli
-	<f.fainelli@gmail.com>,
-        "hkallweit1 @ gmail . com" <hkallweit1@gmail.com>,
-        "davem @ davemloft . net" <davem@davemloft.net>,
-        "edumazet @ google . com"
-	<edumazet@google.com>,
-        "kuba @ kernel . org" <kuba@kernel.org>,
-        "pabeni @
- redhat . com" <pabeni@redhat.com>,
-        "xiaolei . wang @ windriver . com"
-	<xiaolei.wang@windriver.com>,
-        "linux-kernel @ vger . kernel . org"
-	<linux-kernel@vger.kernel.org>,
-        "imx @ lists . linux . dev"
-	<imx@lists.linux.dev>,
-        "netdev @ vger . kernel . org"
-	<netdev@vger.kernel.org>
-CC: Prasad Sodagudi <quic_psodagud@quicinc.com>,
-        Abhishek Chauhan
-	<quic_abchauha@quicinc.com>,
-        Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
-        Girish Potnuru <quic_gpotnuru@quicinc.com>, <kernel@oss.qualcomm.com>
-Subject: [PATCH net v1] net: phy: Change flag to autoremove the consumer
-Date: Thu, 3 Jul 2025 14:30:41 +0530
-Message-ID: <20250703090041.23137-1-quic_sarohasa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JaNj9cTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7961BC4CEE3;
+	Thu,  3 Jul 2025 09:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751533313;
+	bh=NAPX3z+5Hzs1tzhGj4iLZXmU149A+uDXJDgyn5k9ggk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JaNj9cTvilRL1BXp9dI71RP1VExcmeRml6tzrJQmopCX2CCjbnw4R5UF9887xL0F7
+	 Xifb8roVNzKhu7Sah44k3nkKKRwb4NHGCHLJPA+9e7JKMwQbjeKptez22c/MsErYQx
+	 V2ZqTO/NHMkUPFW+WqUfL2gE42k+2R3s20vWb7SVh42DbAvOjaCEX9K9QbTS5423+W
+	 GS6yNoKt9meth48YXsi9sFRkkVSSrEeN8BF/qdZfgm/6haetTQB4c2zkSfco6mXL21
+	 OT+MnJSDdWXOUAHOlLEJhteMpR0tXlg6xdj2wj1omjH0zwTMLXzVZuEPott84R64Yz
+	 8roZc413BpGKA==
+Date: Thu, 3 Jul 2025 11:01:50 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: document Samsung
+ S6E8AA5X01 panel driver
+Message-ID: <20250703-true-archetypal-skylark-dfb055@houat>
+References: <20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org>
+ <20250625-panel-samsung-s6e8aa5x01-v3-1-9a1494fe6c50@disroot.org>
+ <80055981-3624-4165-af0c-3b60c345e8f8@linaro.org>
+ <4b9e44b14395ff4c64eba1bd71e63150@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YiaMy12t1KuOcPz3axauiUzftVNYJc04
-X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=686646cd cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=8AirrxEcAAAA:8 a=m1-PlO-VolDZHzCB4_kA:9 a=TjNXssC_j7lpFel5tvFf:22
- a=ST-jHhOKWsTCqRlWije3:22
-X-Proofpoint-ORIG-GUID: YiaMy12t1KuOcPz3axauiUzftVNYJc04
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA3MyBTYWx0ZWRfX2x62OZcuq18L
- IVSUNgpWqSYJ3CrWMdgOEtjg9l1Ml/Vv3hzJvOzA3B3hXKbYliMG07wSY+CfYlBP3xmVMYHGVlB
- xpYYdLwbJslpzSEIF4/kjLzjuOjMpgFnZpxtADRbFPV00lj4SabqF2muTUawbm/HIorI2WYaHZn
- ZLYZ924urdMRNzrvvHcbAGEKgpQn7G8igx2PQzHcCXdx0J5iTUdBceef0kPzVX2cLoTi551nHyM
- +MpL+HqwXE+DLj/oWXHi7+tD9TTnEpNgteb65SbKHEKgIB0d2J+7hIrsw7J28mYK9ke1olv405E
- fxS6AwF1AgNePs1Dxz2JxO9Hq2UFSMozSQX8zGz36CKHu6qhjwRqkwSFEvaFfXvcg8bG1hIPf3t
- +qufYk+awGw/QNZGil+Xs+yFXZ0nK8UvejDu6qHFcBPfjzHUCp6swHSNrL6dTFVQgcPDtvH6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_02,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxlogscore=845 mlxscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507030073
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="vgt7kszogf7yzhtt"
+Content-Disposition: inline
+In-Reply-To: <4b9e44b14395ff4c64eba1bd71e63150@disroot.org>
 
-phy_detach() is not called when the MDIO controller driver is
-removed. So phydev->devlink is not cleared, but actually the device
-link has been removed by phy_device_remove()--> device_del().Therefore,
-it will cause the crash when the MAC controller driver is removed.
-In such case delete link between phy dev and mac dev. Change the 
-DL_FLAG_STATELESS flag to DL_FLAG_AUTOREMOVE_SUPPLIER,so that the
-consumer (MAC controller) driver will be automatically removed
-when the link is removed.
 
-Fixes: bc66fa87d4fd ("net: phy: Add link between phy dev and mac dev")
-Link: https://lore.kernel.org/all/e6824f1a-c1a9-4c2e-9b46-6fe224877bfc@quicinc.com/
-Suggested-by: Wei Fang <wei.fang@nxp.com>
-Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
-Signed-off-by: Sarosh Hasan <quic_sarohasa@quicinc.com>
----
- drivers/net/phy/phy_device.c | 17 +++++++++--------
- include/linux/phy.h          |  4 ----
- 2 files changed, 9 insertions(+), 12 deletions(-)
+--vgt7kszogf7yzhtt
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: document Samsung
+ S6E8AA5X01 panel driver
+MIME-Version: 1.0
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 90951681523c..f3db3dd93c74 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1630,6 +1630,7 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
- 	struct mii_bus *bus = phydev->mdio.bus;
- 	struct device *d = &phydev->mdio.dev;
- 	struct module *ndev_owner = NULL;
-+	struct device_link *devlink;
- 	int err;
- 
- 	/* For Ethernet device drivers that register their own MDIO bus, we
-@@ -1760,9 +1761,14 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
- 	 * another mac interface, so we should create a device link between
- 	 * phy dev and mac dev.
- 	 */
--	if (dev && phydev->mdio.bus->parent && dev->dev.parent != phydev->mdio.bus->parent)
--		phydev->devlink = device_link_add(dev->dev.parent, &phydev->mdio.dev,
--						  DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-+	if (dev && phydev->mdio.bus->parent && dev->dev.parent != phydev->mdio.bus->parent) {
-+		devlink = device_link_add(dev->dev.parent, &phydev->mdio.dev,
-+					  DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_SUPPLIER);
-+		if (!devlink) {
-+			err = -ENOMEM;
-+			goto error;
-+		}
-+	}
- 
- 	return err;
- 
-@@ -1834,11 +1840,6 @@ void phy_detach(struct phy_device *phydev)
- 	struct module *ndev_owner = NULL;
- 	struct mii_bus *bus;
- 
--	if (phydev->devlink) {
--		device_link_del(phydev->devlink);
--		phydev->devlink = NULL;
--	}
--
- 	if (phydev->sysfs_links) {
- 		if (dev)
- 			sysfs_remove_link(&dev->dev.kobj, "phydev");
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index b037aab7b71d..e20643fb6f41 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -507,8 +507,6 @@ struct macsec_ops;
-  *
-  * @mdio: MDIO bus this PHY is on
-  * @drv: Pointer to the driver for this PHY instance
-- * @devlink: Create a link between phy dev and mac dev, if the external phy
-- *           used by current mac interface is managed by another mac interface.
-  * @phyindex: Unique id across the phy's parent tree of phys to address the PHY
-  *	      from userspace, similar to ifindex. A zero index means the PHY
-  *	      wasn't assigned an id yet.
-@@ -613,8 +611,6 @@ struct phy_device {
- 	/* And management functions */
- 	const struct phy_driver *drv;
- 
--	struct device_link *devlink;
--
- 	u32 phyindex;
- 	u32 phy_id;
- 
--- 
-2.17.1
+On Mon, Jun 30, 2025 at 05:18:22PM +0000, Kaustabh Chakraborty wrote:
+> On 2025-06-30 15:29, Neil Armstrong wrote:
+> > On 25/06/2025 14:41, Kaustabh Chakraborty wrote:
+> > > Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document
+> > > the
+> > > compatible and devicetree properties of this panel driver. Timings are
+> > > provided through the devicetree node as panels are available in
+> > > different sizes.
+> >=20
+> > Wait, why ? Why not multiple compatibles ?
+>=20
+> The panel dimensions is the only thing which differs. The model name,
+> controller, registers, and functionality are supposedly all similar, so
+> I believe this is fine...
 
+If only the dimensions change, then width-mm and height-mm would be enough,=
+ right?
+
+Maxime
+
+--vgt7kszogf7yzhtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGZG+QAKCRAnX84Zoj2+
+dkaKAYCpDgUynGpFGg0nAqhZ30rfPSkxPdT3Biba4y/wI3F/AcjI9V5YST4HJiga
+ZYrL9SMBf0M/4B6wrK0XPpwgMoKZsNfd5A6/xz/MW8Mf5bKc38jYSUrQQ4OzDSSo
+1h6PhC25sA==
+=PL0P
+-----END PGP SIGNATURE-----
+
+--vgt7kszogf7yzhtt--
