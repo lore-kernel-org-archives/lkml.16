@@ -1,114 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5D22DE6F8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966F2DE6F1;
+	Thu,  3 Jul 2025 15:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751557019; cv=none; b=SWLdWkvOIGAP4bE6iCbYCqTSnyquTXmbTWJDeC3e3wf3rmMDPm0ftji5ppsxDi1UrtpqFyE4wbN85JswKQb8lNa1b384N4hSvGHdUo6+X2AVFYfdg4fCInuZBIGu18FDPQIr41/Ag9QZfxQ2hJ1ql/OlyEDv606Ti7Hoplhd2J8=
+	t=1751557052; cv=none; b=K7buz8H/VtNAO6xnxw6rjG/AYw/sqSeCNkRvuKU4OGVyPtvXTTD0zOCDTQ2t/+H1Cq2AzFezXG0PgewUcYQY105yHehaYFirZwph5nDoRC3WzSY9xDzccZ8L78L6kJkCK+QbV1OSni7Q5YtCUW8/0btCrySBV0PXaoaZF6R2g+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751557019; c=relaxed/simple;
-	bh=HjhLvZ/H1P2qjBwChvmJUpJrRBCOZ7tQGFPyGBSuZ7E=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Xv61Ls/xmgDKfLLqQjtCL2KMXFVLKewzloQxdU8ljZ9It7mB+K5YaOx2dHwkdXLpNF4vT2DKjTpmWuBYJB3uIm2AUxVdqpYibaRrudq05scebioH83YOSKrng8NXJ6ppj92AAOZUH3sqotf8c/71EraYPcZflzbOWnkozyIWPuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gXtgXu5y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751557052; c=relaxed/simple;
+	bh=PG8kZ/GY/zO2V+FT8JqnduyAZzDlLNvlfDqA7IsapfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NRkJgU/NT5Lo1dq5PK38OwIVYxwXG1tV4jWAqW3H6H31G2St2hHrL0quTed481JbIs2IeTmhzfQIP7xoib0tZeHfq23aXaCo24taVBvONKRjcVjtoDgMtId8BsNY3a9yyT+/Gv0FGbMkio13gxspYV6tPsnXm5GOICxTmE8iUr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nToDnmAz; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXtgXu5y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751557017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7ZIDgAzyBTQUEBiTF8A+c8zCA7OsCfb4nYut225EcXo=;
-	b=gXtgXu5yYF8aRdP5nm+SIik5jWmZU4aoXuwnkkCePOXfx99kolsLRoeevpV4cQYuGNJzJR
-	iCwFcGSeOIiNTm1PxolzQPY20/zVcNqldjxz0/CW6Ec4L4PIBYsmg97IzOcOUgX8BeDAk1
-	/sEQKMEnEU+A6WQ5z4MwmCdb0MUHb68=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-xJKfPUenPTaLJA_uasGIVw-1; Thu,
- 03 Jul 2025 11:36:53 -0400
-X-MC-Unique: xJKfPUenPTaLJA_uasGIVw-1
-X-Mimecast-MFC-AGG-ID: xJKfPUenPTaLJA_uasGIVw_1751557011
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 918041955D4E;
-	Thu,  3 Jul 2025 15:36:50 +0000 (UTC)
-Received: from [10.22.80.10] (unknown [10.22.80.10])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 333D11956087;
-	Thu,  3 Jul 2025 15:36:45 +0000 (UTC)
-Date: Thu, 3 Jul 2025 17:36:38 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, song@kernel.org, 
-    yukuai3@huawei.com, hch@lst.de, nilay@linux.ibm.com, 
-    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    linux-raid@vger.kernel.org, linux-block@vger.kernel.org, 
-    ojaswin@linux.ibm.com, martin.petersen@oracle.com
-Subject: Re: [PATCH v3 5/5] block: use chunk_sectors when evaluating stacked
- atomic write limits
-In-Reply-To: <f7f342de-1087-47f6-a0c1-e41574abe985@oracle.com>
-Message-ID: <8b5e009a-9e2a-4542-69fb-fc6d47287255@redhat.com>
-References: <20250703114613.9124-1-john.g.garry@oracle.com> <20250703114613.9124-6-john.g.garry@oracle.com> <b7bd63a0-7aa6-2fb3-0a2b-23285b9fc5fc@redhat.com> <f7f342de-1087-47f6-a0c1-e41574abe985@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nToDnmAz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751557051; x=1783093051;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PG8kZ/GY/zO2V+FT8JqnduyAZzDlLNvlfDqA7IsapfQ=;
+  b=nToDnmAzLKebl/FMJ1TcMJg8usn7Zc6boPp5uqAF0aPWPUssWj0W1GPk
+   MOsdPKjUwKC77pIy9UZ38cQ1Z+IhGORxW+LJO1bCkszwlFrImoPTTqpRQ
+   OnFtUnXrwoKkNtebTBzR8+VyPmKQUa7+RAZ+CfcwYfb7Xf4onFkS2+Jty
+   UmEp7jOICnAj356zCmfuz3b8lNZYPVUuhH+Jche5yJ+FFvIwO44fpJd6L
+   tOBs6IXskdXuk/JpADIYDz1KWV63w67Q6UgnDyBRzP4lw7pZSDZGwR2EH
+   BOCBdv5+A4QgL8Ew6LkCutcRUukgRtO1feGG3wXYpw99UJ9Am4iH70uBY
+   Q==;
+X-CSE-ConnectionGUID: g4ZBJZW+QCyvOFnGgbEBvQ==
+X-CSE-MsgGUID: tiFrVgvjRAi2UTe5UDtWcg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76436646"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="76436646"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 08:37:30 -0700
+X-CSE-ConnectionGUID: xWjytiHcTkOP31GxAiNVqQ==
+X-CSE-MsgGUID: CQyWMTkbRayFjFD2y4kOdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="178065068"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.244.86])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 08:37:25 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	vannapurve@google.com
+Cc: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	rick.p.edgecombe@intel.com,
+	kirill.shutemov@linux.intel.com,
+	kai.huang@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@linux.intel.com,
+	binbin.wu@linux.intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com
+Subject: [PATCH V2 0/2] x86/tdx: Skip clearing reclaimed pages unless X86_BUG_TDX_PW_MCE is present
+Date: Thu,  3 Jul 2025 18:37:10 +0300
+Message-ID: <20250703153712.155600-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
+
+Hi
+
+Here are 2 small self-explanatory patches related to clearing TDX private
+pages.
+
+Patch 1 is a minor tidy-up.
+
+In patch 2, by skipping the clearing step, shutdown time can improve by
+up to 40%.
 
 
+Changes in V2 (as requested by Dave):
 
-On Thu, 3 Jul 2025, John Garry wrote:
+      x86/tdx: Eliminate duplicate code in tdx_clear_page()
+	Rename reset_tdx_pages() to tdx_quirk_reset_paddr()
+	Call tdx_quirk_reset_paddr() directly
 
-> > >   -/* Check stacking of first bottom device */
-> > > -static bool blk_stack_atomic_writes_head(struct queue_limits *t,
-> > > -				struct queue_limits *b)
-> > > +static void blk_stack_atomic_writes_chunk_sectors(struct queue_limits *t)
-> > >   {
-> > > -	if (b->atomic_write_hw_boundary &&
-> > > -	    !blk_stack_atomic_writes_boundary_head(t, b))
-> > > -		return false;
-> > > +	unsigned int chunk_bytes = t->chunk_sectors << SECTOR_SHIFT;
-> > 
-> > What about integer overflow?
-> 
-> I suppose theoretically it could happen, and I'm happy to change.
-> 
-> However there seems to be precedent in assuming it won't:
-> 
-> - in stripe_op_hints(), we hold chunk_size in an unsigned int
-> - in raid0_set_limits(), we hold mddev->chunk_sectors << 9 in lim.io_min,
-> which is an unsigned int type.
-> 
-> Please let me know your thoughts on also changing these sort of instances. Is
-> it realistic to expect chunk_bytes > UINT_MAX?
-> 
-> Thanks,
-> John
+      x86/tdx: Skip clearing reclaimed pages unless X86_BUG_TDX_PW_MCE is present
+	Improve the comment
 
-dm-stripe can be created with a stripe size that is more than 0xffffffff 
-bytes.
 
-Though, the integer overflow already exists in the existing dm-stripe 
-target:
-static void stripe_io_hints(struct dm_target *ti,
-                            struct queue_limits *limits)
-{
-        struct stripe_c *sc = ti->private;
-        unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
+Adrian Hunter (2):
+      x86/tdx: Eliminate duplicate code in tdx_clear_page()
+      x86/tdx: Skip clearing reclaimed pages unless X86_BUG_TDX_PW_MCE is present
 
-        limits->io_min = chunk_size;
-        limits->io_opt = chunk_size * sc->stripes;
-}
-What should we set there as io_min and io_opt if sc->chunk_size << 
-SECTOR_SHIFT overflows? Should we set nothing?
+ arch/x86/include/asm/tdx.h  |  2 ++
+ arch/x86/kvm/vmx/tdx.c      | 25 +++----------------------
+ arch/x86/virt/vmx/tdx/tdx.c | 13 +++++++++++--
+ 3 files changed, 16 insertions(+), 24 deletions(-)
 
-Mikulas
 
+Regards
+Adrian
