@@ -1,152 +1,105 @@
-Received: from smtp-out0.aaront.org (smtp-out0.aaront.org [52.10.12.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79A22BD595;
-	Thu,  3 Jul 2025 21:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.10.12.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806DC28688E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751578051; cv=none; b=M6/5cW4JFqktNcONxJiHmh7JpXNqZpyfmH0wkeL8zMMZXu/L0hPhgRBXKoBdTTHQwrsFb/RfQWhrMFwA8LI8TcVJ6+y+OgltDO4MpyGlIt391YXvTvuqHiVC2ol2TDdyNDRj78NTfPb/2fkX5mZglk3dSJlD4Ws7677FlXswD28=
+	t=1751578066; cv=none; b=BDLcifATX5COTiWmqgtKJI1bJ6mscdupdprin0PePuSq6poWvLiZcwvvzt4QdStDTfEnQ50MtZ7xmG5clASbPxTjtoVbXl0luzCsDiuy7m1bJWwUqCh5CiAipe7MmoojFK83EgvhQ6etf7+f3V8AYVB3BvXlciyGboWlTJazBVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751578051; c=relaxed/simple;
-	bh=/kZmNYWZNOTJQa4opCPhE9MeAHI82FTFippa+nVrA1o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQlXIgFcTFb0mU38VV4BxDl4smCiZLGx79alQEj/kDw4VA3yJnu5gooGUwCZPscZC0Im6eB6qhjUA3lI2PjHYNQfnR1XS/I8pECI1i13EGgVLErp0X7WTnjKYH9hQBpcbkwNmsp0nkbLCxys3TO8jce3kde9xAud7N4EUD6AmGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aaront.org; spf=pass smtp.mailfrom=aaront.org; dkim=permerror (0-bit key) header.d=aaront.org header.i=@aaront.org header.b=dqoXjpFe; dkim=pass (2048-bit key) header.d=aaront.org header.i=@aaront.org header.b=v/BVgkC3; arc=none smtp.client-ip=52.10.12.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aaront.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aaront.org
+	s=arc-20240116; t=1751578066; c=relaxed/simple;
+	bh=pR1IIRHr8ArJ0Y+JNiMFcAvCzTUuROwWD3R7Ya4SR3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnVEh2r2clHsNPvlMQirtcOjUPYoOwBrP2JIQFQB5dyO48tFrY9z2HCqy1ZrI2MEpC9NXUmEYYmSE1pt99xutiEKV1SyGiPH9PEiS3psXiEo0Oevo4c+HZUxQxXam26KZVaDEJ6uRZNzUorql+O+q0qFXQMd9bv3mgJlDUdZSYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=Zv9tRpGk; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=aaront.org header.i=@aaront.org header.b="dqoXjpFe";
-	dkim=pass (2048-bit key) header.d=aaront.org header.i=@aaront.org header.b="v/BVgkC3"
-Received: from smtp-send0.aaront.org (localhost [IPv6:::1])
-	by smtp-out0.aaront.org (Postfix) with ESMTP id 4bY8mq5CtwzMY;
-	Thu,  3 Jul 2025 21:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple; d=aaront.org;
-    h=from:to:cc:subject:date:message-id:mime-version
-    :content-transfer-encoding; s=3r7feyyp; bh=/kZmNYWZNOTJQa4opCPhE
-    9MeAHI82FTFippa+nVrA1o=; b=dqoXjpFePZxdEULpDnRSc1iIU4UTydj/TLfKH
-    HPMBaqlkHTLVMC3dGVYex9NVU6iBEYzQmXt8W7LxEMeYThhAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aaront.org; h=
-    from:to:cc:subject:date:message-id:mime-version
-    :content-transfer-encoding; s=4x7dsrm2; bh=/kZmNYWZNOTJQa4opCPhE
-    9MeAHI82FTFippa+nVrA1o=; b=v/BVgkC3yRTStqMBR2f8EZeF/HuMKVSqzUfqb
-    HxVf5nKI7XyG5CgmhaI4PA6+MoQIVykqJYaxMC4e9JYhTBMI8Oh9/3O1B3vQAJzA
-    yT2qo3NmNXZx/dWD34nULC8n6maD5SQR/xGNsh5iNgOJIrUxOV2McxS++VvkUKhq
-    dUDyj0q+yqm1NV4nNraI9k9HuU/OO/G1hgnJsho3gpx3WQRKYpNqNhP26Cf+J6UW
-    ZACEQtJm0eJV4qEn5NmRynCJAFU8SnrjpamGAqpqgz6HEktS8gABBh8nvkeNHtqe
-    icIBqKWKHm0g67l8+0EPGXIG9g2CgVUc+/O3lNR0i3LQ2J98w==
-Received: by smtp-send0.aaront.org (Postfix) id 4bY8mq323rzJm;
-	Thu,  3 Jul 2025 21:20:11 +0000 (UTC)
-From: Aaron Thompson <dev@aaront.org>
-To: nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Timur Tabi <ttabi@nvidia.com>
-Cc: linux-kernel@vger.kernel.org,
-	Aaron Thompson <dev@aaront.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/nouveau: Do not fail module init on debugfs errors
-Date: Thu,  3 Jul 2025 21:19:49 +0000
-Message-Id: <20250703211949.9916-1-dev@aaront.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="Zv9tRpGk"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d3e7503333so39300085a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1751578063; x=1752182863; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uU8YCv9CcoLMUipTRqeJpo55S+l6K/zToV39VgctkOo=;
+        b=Zv9tRpGkLIyynsSvDOZxT7vBTsqaNcVLmHPXaT9PLaOp7626SQUDxZsxrindIEeUBQ
+         i/GQhAiyJ7DpTuYEjBgFZC3aKwjT1fL2oxAHUdU/QJ3OEo+muWQISq36mv3f8ozQaEsR
+         VjOoNJzzLigwgVI00ry4ZBQ2ieAqt02BAQ7JKVDMM8XCDnGT/dJlOtTQjMcbN1mO/nrV
+         2Mhf06OaNv7xyq615uimzzJOdlBDU/EOdpB5IEvdSYBGR56yM5rOFqa0r3H9aJNcUTfB
+         dFUM6+FDn3ZG/xtjEJ0NeA3fOGWKCgP3gMf4wZZtblhMaEFevPcYIP6iYkmGtKiIRnLH
+         siFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751578063; x=1752182863;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uU8YCv9CcoLMUipTRqeJpo55S+l6K/zToV39VgctkOo=;
+        b=d1nHzCJUjKYCQFG1yBjrLOXlbIFF8YyJ4R3YihLD4gpVJwiLKuWQlRgvE6tg6E2l2G
+         Bza6rsgGlgJ1kIk2bJ4ZL0zDsuG9dVZjPV3uB7AR3zvuH0l38HG2axWrzmg06GBpRNkm
+         pl4Li14yvAUZTJ7zi/6GTAx+MZdEmcBAEWC/zbpmu6W5syNGfaFveDM5GJGKG5ULn1LO
+         sybF2TA1JggbfZBYYuwyzKRjeNXR9WgfH+vQUsV60kiCguP4Vn8pNj5G9rxD8POPUzEk
+         KWXYy+PV/QsJlJYHY7KHHSWjfAX0odPMF2JX0WhF+YM0pRLSw6UxRgjCJBdq7BDAEzH8
+         jcJg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3Pt/PS8a3v/nQdJEMJmHpkOVew74b2qzfyrSku7S8nU5nb0NuPcUwXQefbHSRj0GESWo/2qPGtX7ld6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxox5ZA2BADvxYvfyXVbBpXmiRdF14o07yPgL9Q5ZgTtMA0FxIO
+	7RvvNJLIgnqnG3C67HFkypi2+ziMVz7W/IBidrgY2JJs7DrIvQSw8ICZ5RhAebQbBQ==
+X-Gm-Gg: ASbGnctm8LRNgL2W+nziEybT3DLwS7rPqhLXBJsXghD2WM1eXIaNQ+20jfcnUEfcNla
+	mjxdttxOLPKUxW248BONlrtZID/OICR8bTu31RLTFsd6CtaoYuEjhgQe+KKysa22JPiHjthiOfQ
+	sm1MtPIyOJP/NvEMGNgpisq8952ZqO0mTKnNQa4S7MVo+IztK2W39kqkFHVsbiqf2Sa8PC0rOsJ
+	2TtxEiLG3Sn1z5qxD11mFKYXdwuVEVJv8r+uydhzoOpVpWJvvBo1YBPM1vbTGPxkbTIraPxncYG
+	EdHr65uuu3RBaeURj2usoddNdUQ/d3H6eIebQiqXuKy76gBRoLBSRMRvb5aKXo4=
+X-Google-Smtp-Source: AGHT+IFayeYDIBHtgolb1suqZFOVVasoaMun4Cb8238l1PWvfo39hWVGjmS9btydEA6scnP1+J1ijA==
+X-Received: by 2002:a05:620a:2495:b0:7d5:d49d:3e29 with SMTP id af79cd13be357-7d5dcd0a63cmr70764785a.45.1751578063435;
+        Thu, 03 Jul 2025 14:27:43 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::35a6])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbd94242sm54327185a.9.2025.07.03.14.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 14:27:42 -0700 (PDT)
+Date: Thu, 3 Jul 2025 17:27:39 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Hillf Danton <hdanton@sina.com>, Mark Brown <broonie@kernel.org>,
+	Mathias Nyman <mathias.nyman@linux.intel.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	syzbot <syzbot+d630bd89141124cc543e@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	Boqun Feng <boqun.feng@gmail.com>, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: task hung in hub_activate (3)
+Message-ID: <b1657fab-b34f-4f52-94e7-333577cdb450@rowland.harvard.edu>
+References: <68648254.a70a0220.3b7e22.20c4.GAE@google.com>
+ <20250702080515.2160-1-hdanton@sina.com>
+ <20250703000946.2200-1-hdanton@sina.com>
+ <d73e0c09-b71e-40c9-af60-86b0dd6258e8@I-love.SAKURA.ne.jp>
+ <de8af03b-4948-47c4-b9f8-68f7e4112264@I-love.SAKURA.ne.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de8af03b-4948-47c4-b9f8-68f7e4112264@I-love.SAKURA.ne.jp>
 
-From: Aaron Thompson <dev@aaront.org>
+On Thu, Jul 03, 2025 at 10:48:56AM +0900, Tetsuo Handa wrote:
+> On 2025/07/03 10:20, Tetsuo Handa wrote:
+> > Caused by commit 9bd9c8026341 ("usb: hub: Fix flushing of delayed work
+> > used for post resume purposes") with cc: stable.
+> > Shouldn't we revert that commit and seek for a different approach
+> > than wait for a reproducer?
+> > 
+> 
+> Sorry, wrong commit.
+> 
+> The line was added by commit a49e1e2e785f ("usb: hub: Fix flushing and
+> scheduling of delayed work that tunes runtime pm") with cc: stable.
 
-If CONFIG_DEBUG_FS is enabled, nouveau_drm_init() returns an error if it
-fails to create the "nouveau" directory in debugfs. One case where that
-will happen is when debugfs access is restricted by
-CONFIG_DEBUG_FS_ALLOW_NONE or by the boot parameter debugfs=off, which
-cause the debugfs APIs to return -EPERM.
+Mathias has posted a fix for this problem:
 
-So just ignore errors from debugfs. Note that nouveau_debugfs_root may
-be an error now, but that is a standard pattern for debugfs. From
-include/linux/debugfs.h:
+https://lore.kernel.org/linux-usb/20250627164348.3982628-2-mathias.nyman@linux.intel.com/
 
-"NOTE: it's expected that most callers should _ignore_ the errors
-returned by this function. Other debugfs functions handle the fact that
-the "dentry" passed to them could be an error and they don't crash in
-that case. Drivers should generally work fine even if debugfs fails to
-init anyway."
+It hasn't gotten into Linus's tree yet.
 
-Fixes: 97118a1816d2 ("drm/nouveau: create module debugfs root")
-Cc: stable@vger.kernel.org
-Signed-off-by: Aaron Thompson <dev@aaront.org>
----
- drivers/gpu/drm/nouveau/nouveau_debugfs.c | 6 +-----
- drivers/gpu/drm/nouveau/nouveau_debugfs.h | 5 ++---
- drivers/gpu/drm/nouveau/nouveau_drm.c     | 4 +---
- 3 files changed, 4 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-index 200e65a7cefc..c7869a639bef 100644
---- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-@@ -314,14 +314,10 @@ nouveau_debugfs_fini(struct nouveau_drm *drm)
- 	drm->debugfs = NULL;
- }
- 
--int
-+void
- nouveau_module_debugfs_init(void)
- {
- 	nouveau_debugfs_root = debugfs_create_dir("nouveau", NULL);
--	if (IS_ERR(nouveau_debugfs_root))
--		return PTR_ERR(nouveau_debugfs_root);
--
--	return 0;
- }
- 
- void
-diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.h b/drivers/gpu/drm/nouveau/nouveau_debugfs.h
-index b7617b344ee2..d05ed0e641c4 100644
---- a/drivers/gpu/drm/nouveau/nouveau_debugfs.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.h
-@@ -24,7 +24,7 @@ extern void nouveau_debugfs_fini(struct nouveau_drm *);
- 
- extern struct dentry *nouveau_debugfs_root;
- 
--int  nouveau_module_debugfs_init(void);
-+void nouveau_module_debugfs_init(void);
- void nouveau_module_debugfs_fini(void);
- #else
- static inline void
-@@ -42,10 +42,9 @@ nouveau_debugfs_fini(struct nouveau_drm *drm)
- {
- }
- 
--static inline int
-+static inline void
- nouveau_module_debugfs_init(void)
- {
--	return 0;
- }
- 
- static inline void
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 0c82a63cd49d..1527b801f013 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1461,9 +1461,7 @@ nouveau_drm_init(void)
- 	if (!nouveau_modeset)
- 		return 0;
- 
--	ret = nouveau_module_debugfs_init();
--	if (ret)
--		return ret;
-+	nouveau_module_debugfs_init();
- 
- #ifdef CONFIG_NOUVEAU_PLATFORM_DRIVER
- 	platform_driver_register(&nouveau_platform_driver);
-
-base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
--- 
-2.39.5
-
+Alan Stern
