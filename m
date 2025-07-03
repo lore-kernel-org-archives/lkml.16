@@ -1,483 +1,313 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D05E2E498F;
-	Thu,  3 Jul 2025 10:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B03A2E7F39;
+	Thu,  3 Jul 2025 10:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538408; cv=none; b=bKgL2DBB1UhZpEvtJ3GVvnJnDFm0YcfaJe7hKwUErVIVSlYl7fu1sSktmgJ9w9Dh9PySup+PGWyKmQEaY4TeUXmAAxT1Q+8tWM2WqxYcDKyHb2VuQs1xtuWqO547IMwVIJnbCvThPKLouwBLFWINy7PcIcepDQ6k0xvSctgB+H0=
+	t=1751538413; cv=none; b=XrraCuy9IOWLzt72b03i41dvqUggxdPGXMc7qzbmi83T4BGYNW1HwKoGUdx/sE2W+vTdG9Kw6gBMLPCNu74NtenydCcwbuTx/Z+2/WkixMAj7ra7G9V2QLU8VYSSBpW6u6ilxAHYfVp2Lk9uZrJeukNtyAFEHyN9LpQ4F70iDww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538408; c=relaxed/simple;
-	bh=dbilV22VO3muDCanYbKJvEOTnVO+6+dJBtvhpcD3hOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lXon81TTanQ8Am9Vy3n/OYT9JMwNjaqj7IDSqrCxX23VyODgj22m+eStLDJAfA7ovEg3XR4dYe0ZD/0JOornHDVmuePBW1CVZiwxI5klJcObLA8Ejl4pNZ5vccdZGHOryqPHGbVoflm+3cjnUGdyv0X94wgCrCLKg8GQToDOjzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcCowKGf; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751538413; c=relaxed/simple;
+	bh=jmKU/AVW3es/n6fJNXdjcwxCLiVu0aOx0X//TygUoKY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bdt3YTnr+cf+FsRDmJDrBWe6b3uxtbXR3adRDCXkyyGKcgi1okoalWILFKxRAdmBrMFPXv6IMGgsW4JljxCk0MnI0gTf3mFp4fi1z3Vk0+FAehIjkOLRytq7QCogti26jOWv5umGczBvuRAiie+mp9eJ1uOMG+HgV+lgX6Ht3Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOYsieoq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcCowKGf"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so53099895e9.1;
-        Thu, 03 Jul 2025 03:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751538402; x=1752143202; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXWowOmGIffPRxlOWADDgGpb22fWorXamFRtd495nzE=;
-        b=hcCowKGfnetq7n6mbgM6WHJOs9GhuEPYJqm3y+c3mdGk6hup6E+8uv8SLN3zO+VBwI
-         gJb0/UkqFqCSlUp+78Ee8OXJ9/AoT3p9VNf2VOBlLyqmN6Qi31aHsk/rT8nZ7IlCK5H5
-         5fCXX9DsuzrhAlVyBRwUaYaU2fYbRlgnaqVYjNxpFe/zylCJ91XNeoy9Nb5oSWYKLoD0
-         psXHvBR3UpMmHiX6Q/55lhOYjVlv0OtEbT2ngO6/ZJvmBQqQK+2xE1sMwa/UwRSg/ADm
-         R81/4TxoF8MuUMtiNa9M38j6CfsQ1Q4VEnRjHhyVV/TCbBJ1vAmrG+5VhS8fVzajxWXi
-         FQCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751538402; x=1752143202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pXWowOmGIffPRxlOWADDgGpb22fWorXamFRtd495nzE=;
-        b=KITbZ1m/6IQeduAoT02NSi0qTcgfcbTL3wyW7WQOMOZldvRGvWB7iCelvRpCNEGwY1
-         B5rNxl/Th5XJbuhFG2bUrGI6gaJqWm51Sjx1PlD95Mwy0NOFYDbaGlU/OM1zRvS1O005
-         GY7mbBmJxvY5+2nTCTzQmxTd/DI97AW1iHScmustiDWBFKZQrdQt/GtGs5tCAnjED3jW
-         TApSQPAf+OPwP1YUSO/QRk/iVJvNdMJITSp8lSvQBufPTP7sLW7nbo7N6gYrJmPjVA/n
-         qKgXiu94e6OGmzR0yNE5MeLsJQmvoAoIBWcK5/H8JH1U3ixDhEeF0dLtj/TKv6uMeiOJ
-         AWLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpODsyqa0n0YCv3mqG/L/JJMpEOv568E5MzR/jg8/VQvoIjg+lvQy1DpUTzr+5LPmso0jhqYF3sPOK@vger.kernel.org, AJvYcCV0hg6zK0Eiq+P1H1V42bYpbj6gupmIk5dn8KZv0S8XXABr5LEFGHJWuJLXDOiQFAEqj+4jRxlmTNpO@vger.kernel.org, AJvYcCXFWik9faBxjc0Mv+56i5NT6yBZ9FtqRsWAnJNSq42FihJ3epOMNyepBGLSP2b4Fm7l1/CX4yrhyppOFVw=@vger.kernel.org, AJvYcCXSLUxF3f4r0XwnXswWv8afX7mgUYsEUaOhtyd8dhcRAz0WIZLuruxIgSPvgmTPwD6kQPHIkPe7liy4QtN8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVsiTegJ9X0OsP7GIguDDh++9NY6I6oULW6m0DYgcdcy9DAwud
-	v8h70csLJdIx4T/eGGywncIYMkx2+l/RkqgTmPcu6K6gyETeiv6pAhU401EuCw==
-X-Gm-Gg: ASbGncva2FGXBE2frlMrhV9TtQFf9omdRIckIgPRp+gknB0yRcVaxB2BwQtojeE9rNb
-	bbeXlfYRdoqXIqyzRdkLV64GdWn0IMQg5+spvLFIkdoAstNXm/bwVV+dkyfbzmPVZ+/JgYkn0De
-	Fk3CiAusxGCxKHETANQ5EBwPFZYLWVca2UBgP2AE15LoJHGzXdCVD2SOzQzE8+Yy9ic9me5TpEA
-	wAMf+36vmOTS03mkxygSYSYoo4ktCBmyv2ldhs7BIi8W2GSNJ88FtNft5/ay/AAocYT+M9ydQSu
-	smbHgLotJlmfsrwVs6Zq/dvYI82iC4PUAbR1Bdm/ITNGOsSlwrw0GKMvRC+j33Hq0BKQeA+wlym
-	BP149P94ydrD1m2Cy+dmKdhBle75bbGvZqS2FEEm+XoJfvWn2Ylca15wMTS0=
-X-Google-Smtp-Source: AGHT+IE9NZ2kqm5+/q6eR4siHuvm2lG5FAQ6w9JKxUm/eJ0KPWyzwgq9Kp8BLuTCzWpyoZ146BVymQ==
-X-Received: by 2002:a05:600c:19d4:b0:453:5c30:a1fd with SMTP id 5b1f17b1804b1-454ab3778a3mr23192875e9.8.1751538402020;
-        Thu, 03 Jul 2025 03:26:42 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997de2asm22779675e9.12.2025.07.03.03.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:26:40 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:26:38 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Joseph Lo <josephl@nvidia.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, 
-	Thierry Reding <treding@nvidia.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: clock: Convert nvidia,tegra124-dfll to DT
- schema
-Message-ID: <hphr525b57li2fe4xstxbpwihldv6fr5kslktpphlvku22buv7@w3n5ynczr27v>
-References: <20250630232632.3700405-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOYsieoq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC94BC4CEE3;
+	Thu,  3 Jul 2025 10:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751538413;
+	bh=jmKU/AVW3es/n6fJNXdjcwxCLiVu0aOx0X//TygUoKY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=NOYsieoqhimaXGfMqzeu7sVAzUmU6v4n4Vo01k0gStM0MntuliWzZhoUvkULKWNYt
+	 jNU/qdqPeQlrULmVLWqD4CbDcZe9EJqim4FpD5yBHKraQ5nk/anarHjEED4un0e7r+
+	 RVjdv29y7iw0KU4MEhfpA6fXXQOQg4ozvAFCgqXzpGSWPLheftCcbh+8zO+Sq78n2G
+	 z7ht2BngIZ9TZoWn7WmBAkr4SL9DkHT54wM+xf7eQZUsk0/f80sivkw0xdZXggYZQG
+	 UkY7T7fPmXvFXEt7On8uy8PqRV9LvE0R7AfpFlpZOyH4jd1L3Nhtw1tfn+HiGsx+dK
+	 HQxHUIfFxJqZg==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 03 Jul 2025 12:25:08 +0200
+Subject: [PATCH v7 18/31] arm64: smp: Support non-SGIs for IPIs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="howhl4r74vwsl3vi"
-Content-Disposition: inline
-In-Reply-To: <20250630232632.3700405-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250703-gicv5-host-v7-18-12e71f1b3528@kernel.org>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
+From: Marc Zyngier <maz@kernel.org>
 
---howhl4r74vwsl3vi
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dt-bindings: clock: Convert nvidia,tegra124-dfll to DT
- schema
-MIME-Version: 1.0
+The arm64 arch has relied so far on GIC architectural software
+generated interrupt (SGIs) to handle IPIs. Those are per-cpu
+software generated interrupts.
 
-On Mon, Jun 30, 2025 at 06:26:30PM -0500, Rob Herring (Arm) wrote:
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/clock/nvidia,tegra124-dfll.txt   | 155 -------------
->  .../bindings/clock/nvidia,tegra124-dfll.yaml  | 219 ++++++++++++++++++
->  2 files changed, 219 insertions(+), 155 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra1=
-24-dfll.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra1=
-24-dfll.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll=
-=2Etxt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> deleted file mode 100644
-> index f7d347385b57..000000000000
-> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> +++ /dev/null
-> @@ -1,155 +0,0 @@
-> -NVIDIA Tegra124 DFLL FCPU clocksource
-> -
-> -This binding uses the common clock binding:
-> -Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -
-> -The DFLL IP block on Tegra is a root clocksource designed for clocking
-> -the fast CPU cluster. It consists of a free-running voltage controlled
-> -oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
-> -control module that will automatically adjust the VDD_CPU voltage by
-> -communicating with an off-chip PMIC either via an I2C bus or via PWM sig=
-nals.
-> -
-> -Required properties:
-> -- compatible : should be one of:
-> -  - "nvidia,tegra124-dfll": for Tegra124
-> -  - "nvidia,tegra210-dfll": for Tegra210
-> -- reg : Defines the following set of registers, in the order listed:
-> -        - registers for the DFLL control logic.
-> -        - registers for the I2C output logic.
-> -        - registers for the integrated I2C master controller.
-> -        - look-up table RAM for voltage register values.
-> -- interrupts: Should contain the DFLL block interrupt.
-> -- clocks: Must contain an entry for each entry in clock-names.
-> -  See clock-bindings.txt for details.
-> -- clock-names: Must include the following entries:
-> -  - soc: Clock source for the DFLL control logic.
-> -  - ref: The closed loop reference clock
-> -  - i2c: Clock source for the integrated I2C master.
-> -- resets: Must contain an entry for each entry in reset-names.
-> -  See ../reset/reset.txt for details.
-> -- reset-names: Must include the following entries:
-> -  - dvco: Reset control for the DFLL DVCO.
-> -- #clock-cells: Must be 0.
-> -- clock-output-names: Name of the clock output.
-> -- vdd-cpu-supply: Regulator for the CPU voltage rail that the DFLL
-> -  hardware will start controlling. The regulator will be queried for
-> -  the I2C register, control values and supported voltages.
-> -
-> -Required properties for the control loop parameters:
-> -- nvidia,sample-rate: Sample rate of the DFLL control loop.
-> -- nvidia,droop-ctrl: See the register CL_DVFS_DROOP_CTRL in the TRM.
-> -- nvidia,force-mode: See the field DFLL_PARAMS_FORCE_MODE in the TRM.
-> -- nvidia,cf: Numeric value, see the field DFLL_PARAMS_CF_PARAM in the TR=
-M.
-> -- nvidia,ci: Numeric value, see the field DFLL_PARAMS_CI_PARAM in the TR=
-M.
-> -- nvidia,cg: Numeric value, see the field DFLL_PARAMS_CG_PARAM in the TR=
-M.
-> -
-> -Optional properties for the control loop parameters:
-> -- nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in =
-the TRM.
-> -
-> -Optional properties for mode selection:
-> -- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> -
-> -Required properties for I2C mode:
-> -- nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
-> -
-> -Required properties for PWM mode:
-> -- nvidia,pwm-period-nanoseconds: period of PWM square wave in nanosecond=
-s.
-> -- nvidia,pwm-tristate-microvolts: Regulator voltage in micro volts when =
-PWM
-> -  control is disabled and the PWM output is tristated. Note that this vo=
-ltage is
-> -  configured in hardware, typically via a resistor divider.
-> -- nvidia,pwm-min-microvolts: Regulator voltage in micro volts when PWM c=
-ontrol
-> -  is enabled and PWM output is low. Hence, this is the minimum output vo=
-ltage
-> -  that the regulator supports when PWM control is enabled.
-> -- nvidia,pwm-voltage-step-microvolts: Voltage increase in micro volts
-> -  corresponding to a 1/33th increase in duty cycle. Eg the voltage for 2=
-/33th
-> -  duty cycle would be: nvidia,pwm-min-microvolts +
-> -  nvidia,pwm-voltage-step-microvolts * 2.
-> -- pinctrl-0: I/O pad configuration when PWM control is enabled.
-> -- pinctrl-1: I/O pad configuration when PWM control is disabled.
-> -- pinctrl-names: must include the following entries:
-> -  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
-> -  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
-> -
-> -Example for I2C:
-> -
-> -clock@70110000 {
-> -        compatible =3D "nvidia,tegra124-dfll";
-> -        reg =3D <0 0x70110000 0 0x100>, /* DFLL control */
-> -              <0 0x70110000 0 0x100>, /* I2C output control */
-> -              <0 0x70110100 0 0x100>, /* Integrated I2C controller */
-> -              <0 0x70110200 0 0x100>; /* Look-up table RAM */
-> -        interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> -        clocks =3D <&tegra_car TEGRA124_CLK_DFLL_SOC>,
-> -                 <&tegra_car TEGRA124_CLK_DFLL_REF>,
-> -                 <&tegra_car TEGRA124_CLK_I2C5>;
-> -        clock-names =3D "soc", "ref", "i2c";
-> -        resets =3D <&tegra_car TEGRA124_RST_DFLL_DVCO>;
-> -        reset-names =3D "dvco";
-> -        #clock-cells =3D <0>;
-> -        clock-output-names =3D "dfllCPU_out";
-> -        vdd-cpu-supply =3D <&vdd_cpu>;
-> -
-> -        nvidia,sample-rate =3D <12500>;
-> -        nvidia,droop-ctrl =3D <0x00000f00>;
-> -        nvidia,force-mode =3D <1>;
-> -        nvidia,cf =3D <10>;
-> -        nvidia,ci =3D <0>;
-> -        nvidia,cg =3D <2>;
-> -
-> -        nvidia,i2c-fs-rate =3D <400000>;
-> -};
-> -
-> -Example for PWM:
-> -
-> -clock@70110000 {
-> -	compatible =3D "nvidia,tegra124-dfll";
-> -	reg =3D <0 0x70110000 0 0x100>, /* DFLL control */
-> -	      <0 0x70110000 0 0x100>, /* I2C output control */
-> -	      <0 0x70110100 0 0x100>, /* Integrated I2C controller */
-> -	      <0 0x70110200 0 0x100>; /* Look-up table RAM */
-> -	interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> -	clocks =3D <&tegra_car TEGRA210_CLK_DFLL_SOC>,
-> -	         <&tegra_car TEGRA210_CLK_DFLL_REF>,
-> -		 <&tegra_car TEGRA124_CLK_I2C5>;;
-> -	clock-names =3D "soc", "ref", "i2c";
-> -	resets =3D <&tegra_car TEGRA124_RST_DFLL_DVCO>;
-> -	reset-names =3D "dvco";
-> -	#clock-cells =3D <0>;
-> -	clock-output-names =3D "dfllCPU_out";
-> -
-> -	nvidia,sample-rate =3D <25000>;
-> -	nvidia,droop-ctrl =3D <0x00000f00>;
-> -	nvidia,force-mode =3D <1>;
-> -	nvidia,cf =3D <6>;
-> -	nvidia,ci =3D <0>;
-> -	nvidia,cg =3D <2>;
-> -
-> -	nvidia,pwm-min-microvolts =3D <708000>; /* 708mV */
-> -	nvidia,pwm-period-nanoseconds =3D <2500>; /* 2.5us */
-> -	nvidia,pwm-to-pmic;
-> -	nvidia,pwm-tristate-microvolts =3D <1000000>;
-> -	nvidia,pwm-voltage-step-microvolts =3D <19200>; /* 19.2mV */
-> -
-> -	pinctrl-names =3D "dvfs_pwm_enable", "dvfs_pwm_disable";
-> -	pinctrl-0 =3D <&dvfs_pwm_active_state>;
-> -	pinctrl-1 =3D <&dvfs_pwm_inactive_state>;
-> -};
-> -
-> -/* pinmux nodes added for completeness. Binding doc can be found in:
-> - * Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.yaml
-> - */
-> -
-> -pinmux: pinmux@700008d4 {
-> -	dvfs_pwm_active_state: dvfs_pwm_active {
-> -		dvfs_pwm_pbb1 {
-> -			nvidia,pins =3D "dvfs_pwm_pbb1";
-> -			nvidia,tristate =3D <TEGRA_PIN_DISABLE>;
-> -		};
-> -	};
-> -	dvfs_pwm_inactive_state: dvfs_pwm_inactive {
-> -		dvfs_pwm_pbb1 {
-> -			nvidia,pins =3D "dvfs_pwm_pbb1";
-> -			nvidia,tristate =3D <TEGRA_PIN_ENABLE>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll=
-=2Eyaml b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
-> new file mode 100644
-> index 000000000000..67d99fd89ea9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
-> @@ -0,0 +1,219 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/nvidia,tegra124-dfll.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NVIDIA Tegra124 DFLL FCPU clocksource
-> +
-> +maintainers:
-> +  - Joseph Lo <josephl@nvidia.com>
-> +  - Thierry Reding <treding@nvidia.com>
-> +  - Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+arm64 architecture code that allocates the IPIs virtual IRQs and
+IRQ descriptors was written accordingly.
 
-Tuomas isn't at NVIDIA anymore, as far as I can tell.
+On GICv5 systems, IPIs are implemented using LPIs that are not
+per-cpu interrupts - they are just normal routable IRQs.
 
-> +
-> +description:
-> +  The DFLL IP block on Tegra is a root clocksource designed for clocking=
- the
-> +  fast CPU cluster. It consists of a free-running voltage controlled osc=
-illator
-> +  connected to the CPU voltage rail (VDD_CPU), and a closed loop control=
- module
-> +  that will automatically adjust the VDD_CPU voltage by communicating wi=
-th an
-> +  off-chip PMIC either via an I2C bus or via PWM signals.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nvidia,tegra124-dfll
-> +      - nvidia,tegra210-dfll
-> +
-> +  reg:
-> +    items:
-> +      - description: DFLL control logic registers
-> +      - description: I2C output logic registers
-> +      - description: Integrated I2C master controller registers
-> +      - description: Look-up table RAM for voltage register values
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#clock-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: Clock source for the DFLL control logic
-> +      - description: Closed loop reference clock
-> +      - description: Clock source for the integrated I2C master
-> +
-> +  clock-names:
-> +    items:
-> +      - const: soc
-> +      - const: ref
-> +      - const: i2c
-> +
-> +  clock-output-names:
-> +    description: Name of the DFLL CPU clock output
-> +    items:
-> +      - const: dfllCPU_out
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    minItems: 1
-> +    items:
-> +      - const: dvco
-> +      - const: dfll
-> +
-> +  vdd-cpu-supply: true
-> +
-> +  nvidia,sample-rate:
-> +    description: Sample rate of the DFLL control loop
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+Add arch code to set-up IPIs on systems where they are handled
+using normal routable IRQs.
 
-I have a local patch for this and have a few additional restrictions for
-some of these properties that I think would make sense to include.
+For those systems, force the IRQ affinity (and make it immutable)
+to the cpu a given IRQ was assigned to.
 
-For sample-rate, I have minimum: 12500 and maximum: 25000.
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+[timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
+Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+[lpieralisi: changed affinity set-up, log]
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+---
+ arch/arm64/include/asm/smp.h |   7 ++-
+ arch/arm64/kernel/smp.c      | 127 +++++++++++++++++++++++++++++++------------
+ 2 files changed, 99 insertions(+), 35 deletions(-)
 
-> +
-> +  nvidia,droop-ctrl:
-> +    description: Droop control parameter (CL_DVFS_DROOP_CTRL) in TRM
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-For this I have "enum: [ 0x00000f00 ]".
-
-> +
-> +  nvidia,force-mode:
-> +    description: Force mode parameter (DFLL_PARAMS_FORCE_MODE) in TRM
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-enum: [ 0, 1, 2, 3 ]
-
-> +
-> +  nvidia,cf:
-> +    description: CF parameter (DFLL_PARAMS_CF_PARAM) in TRM
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 63
-
-> +
-> +  nvidia,ci:
-> +    description: CI parameter (DFLL_PARAMS_CI_PARAM) in TRM
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 7
-
-> +
-> +  nvidia,cg:
-> +    description: CG parameter (DFLL_PARAMS_CG_PARAM) in TRM
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 255
-
-> +
-> +  nvidia,cg-scale:
-> +    description: CG scale flag (DFLL_PARAMS_CG_SCALE) in TRM
-> +    type: boolean
-> +
-> +  nvidia,pwm-to-pmic:
-> +    description: Use PWM to control regulator rather than I2C
-> +    type: boolean
-> +
-> +  nvidia,i2c-fs-rate:
-> +    description: I2C full speed transfer rate when using I2C mode
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-enum: [ 100000, 400000 ]
-
-> +
-> +  nvidia,pwm-period-nanoseconds:
-> +    description: Period of PWM square wave in nanoseconds
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 1000, maximum: 1000000000
-
-> +
-> +  nvidia,pwm-tristate-microvolts:
-> +    description: Regulator voltage in microvolts when PWM control is dis=
-abled
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 3300000
-
-> +
-> +  nvidia,pwm-min-microvolts:
-> +    description: Regulator voltage in microvolts when PWM control is ena=
-bled
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 3300000
-
-> +
-> +  nvidia,pwm-voltage-step-microvolts:
-> +    description: Voltage increase in microvolts per duty cycle increment
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0, maximum: 1000000
-
-Though given the additional comment that I added:
-
-+      Voltage increase in micro volts corresponding to a 1/33th increase
-+      in duty cycle. Eg the voltage for 2/33th duty cycle would be:
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index 2510eec026f7..d6fd6efb66a6 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -53,7 +53,12 @@ extern void smp_init_cpus(void);
+ /*
+  * Register IPI interrupts with the arch SMP code
+  */
+-extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
++extern void set_smp_ipi_range_percpu(int ipi_base, int nr_ipi, int ncpus);
 +
-+        nvidia,pwm-min-microvolts + nvidia,pwm-voltage-step-microvolts * 2
++static inline void set_smp_ipi_range(int ipi_base, int n)
++{
++	set_smp_ipi_range_percpu(ipi_base, n, 0);
++}
+ 
+ /*
+  * Called from the secondary holding pen, this is the secondary CPU entry point.
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 3b3f6b56e733..2c501e917d38 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -83,7 +83,16 @@ enum ipi_msg_type {
+ 
+ static int ipi_irq_base __ro_after_init;
+ static int nr_ipi __ro_after_init = NR_IPI;
+-static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
++
++struct ipi_descs {
++	struct irq_desc *descs[MAX_IPI];
++};
++
++static DEFINE_PER_CPU_READ_MOSTLY(struct ipi_descs, pcpu_ipi_desc);
++
++#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
++
++static bool percpu_ipi_descs __ro_after_init;
+ 
+ static bool crash_stop;
+ 
+@@ -844,7 +853,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+ 			   prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
++			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
+ 		seq_printf(p, "      %s\n", ipi_types[i]);
+ 	}
+ 
+@@ -917,9 +926,20 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+ #endif
+ }
+ 
++static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
++{
++	unsigned int cpu;
++
++	if (!percpu_ipi_descs)
++		__ipi_send_mask(get_ipi_desc(0, nr), mask);
++	else
++		for_each_cpu(cpu, mask)
++			__ipi_send_single(get_ipi_desc(cpu, nr), cpu);
++}
++
+ static void arm64_backtrace_ipi(cpumask_t *mask)
+ {
+-	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
++	arm64_send_ipi(mask, IPI_CPU_BACKTRACE);
+ }
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+@@ -944,7 +964,7 @@ void kgdb_roundup_cpus(void)
+ 		if (cpu == this_cpu)
+ 			continue;
+ 
+-		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
++		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
+ 	}
+ }
+ #endif
+@@ -1013,14 +1033,16 @@ static void do_handle_IPI(int ipinr)
+ 
+ static irqreturn_t ipi_handler(int irq, void *data)
+ {
+-	do_handle_IPI(irq - ipi_irq_base);
++	unsigned int ipi = (irq - ipi_irq_base) % nr_ipi;
++
++	do_handle_IPI(ipi);
+ 	return IRQ_HANDLED;
+ }
+ 
+ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+ {
+ 	trace_ipi_raise(target, ipi_types[ipinr]);
+-	__ipi_send_mask(ipi_desc[ipinr], target);
++	arm64_send_ipi(target, ipinr);
+ }
+ 
+ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+@@ -1046,11 +1068,15 @@ static void ipi_setup(int cpu)
+ 		return;
+ 
+ 	for (i = 0; i < nr_ipi; i++) {
+-		if (ipi_should_be_nmi(i)) {
+-			prepare_percpu_nmi(ipi_irq_base + i);
+-			enable_percpu_nmi(ipi_irq_base + i, 0);
++		if (!percpu_ipi_descs) {
++			if (ipi_should_be_nmi(i)) {
++				prepare_percpu_nmi(ipi_irq_base + i);
++				enable_percpu_nmi(ipi_irq_base + i, 0);
++			} else {
++				enable_percpu_irq(ipi_irq_base + i, 0);
++			}
+ 		} else {
+-			enable_percpu_irq(ipi_irq_base + i, 0);
++			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+ 		}
+ 	}
+ }
+@@ -1064,44 +1090,77 @@ static void ipi_teardown(int cpu)
+ 		return;
+ 
+ 	for (i = 0; i < nr_ipi; i++) {
+-		if (ipi_should_be_nmi(i)) {
+-			disable_percpu_nmi(ipi_irq_base + i);
+-			teardown_percpu_nmi(ipi_irq_base + i);
++		if (!percpu_ipi_descs) {
++			if (ipi_should_be_nmi(i)) {
++				disable_percpu_nmi(ipi_irq_base + i);
++				teardown_percpu_nmi(ipi_irq_base + i);
++			} else {
++				disable_percpu_irq(ipi_irq_base + i);
++			}
+ 		} else {
+-			disable_percpu_irq(ipi_irq_base + i);
++			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+ 		}
+ 	}
+ }
+ #endif
+ 
+-void __init set_smp_ipi_range(int ipi_base, int n)
++static void ipi_setup_sgi(int ipi)
++{
++	int err, irq, cpu;
++
++	irq = ipi_irq_base + ipi;
++
++	if (ipi_should_be_nmi(irq)) {
++		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
++		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
++	} else {
++		err = request_percpu_irq(irq, ipi_handler, "IPI", &irq_stat);
++		WARN(err, "Could not request IRQ %d as IRQ, err=%d\n", irq, err);
++	}
++
++	for_each_possible_cpu(cpu)
++		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
++
++	irq_set_status_flags(irq, IRQ_HIDDEN);
++}
++
++static void ipi_setup_lpi(int ipi, int ncpus)
++{
++	for (int cpu = 0; cpu < ncpus; cpu++) {
++		int err, irq;
++
++		irq = ipi_irq_base + (cpu * nr_ipi) + ipi;
++
++		err = irq_force_affinity(irq, cpumask_of(cpu));
++		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
++
++		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
++				  NULL);
++		WARN(err, "Could not request IRQ %d, err=%d\n", irq, err);
++
++		irq_set_status_flags(irq, (IRQ_HIDDEN | IRQ_NO_BALANCING_MASK));
++
++		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
++	}
++}
++
++void __init set_smp_ipi_range_percpu(int ipi_base, int n, int ncpus)
+ {
+ 	int i;
+ 
+ 	WARN_ON(n < MAX_IPI);
+ 	nr_ipi = min(n, MAX_IPI);
+ 
+-	for (i = 0; i < nr_ipi; i++) {
+-		int err;
+-
+-		if (ipi_should_be_nmi(i)) {
+-			err = request_percpu_nmi(ipi_base + i, ipi_handler,
+-						 "IPI", &irq_stat);
+-			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
+-			     i, err);
+-		} else {
+-			err = request_percpu_irq(ipi_base + i, ipi_handler,
+-						 "IPI", &irq_stat);
+-			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
+-			     i, err);
+-		}
+-
+-		ipi_desc[i] = irq_to_desc(ipi_base + i);
+-		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+-	}
+-
++	percpu_ipi_descs = !!ncpus;
+ 	ipi_irq_base = ipi_base;
+ 
++	for (i = 0; i < nr_ipi; i++) {
++		if (!percpu_ipi_descs)
++			ipi_setup_sgi(i);
++		else
++			ipi_setup_lpi(i, ncpus);
++	}
++
+ 	/* Setup the boot CPU immediately */
+ 	ipi_setup(smp_processor_id());
+ }
 
-that maximum should probably be 100000 instead.
+-- 
+2.48.0
 
-Otherwise this looks very similar to what I have.
-
-Thanks for taking care of this.
-
-Thierry
-
---howhl4r74vwsl3vi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhmWtsACgkQ3SOs138+
-s6FIeA/8CAy41guIi8myMrlDgJUF8D1I0dyjzo59wfb9jZnpMqwpe0qHISPMasJa
-1MT04ZoILZpN7iHu7sWRE8S1WSDSlF0MqSzMw3sSrh4Dtv47ORuEhYudHFnYpLUF
-Gkr5FUScFCYUxFxh/NrHTdAzckNkAvy7ae29LDwAHydgDjqCCG2kfA5kPy/NMGWa
-I8JJCKpdYFEFWrrFV7UOBURN2bP9VOJgKocDZp6o7O5IWICsnsajEACJzixhp8RE
-b4HEwfqFWxiu1FEAtplEyAvmMRxrP3HtmNG5RrljpqFfi0u3Kpe6FecxpIg8lTrO
-dSgzYeAhc57a3XiOhE4S4cpJOfj6J3DsP5sSl6iCWpQpQPJvTyevf7ZGxs44pTGT
-saC6mKhjw5QCQQV4KL2G/sxvWvscSAvAtm66/Vf1odGSzv+1ZUaZ3iNoGE0iVJ9i
-x2qKOtiMJHg7wt1x/vgz558/izAU6NZuPSz1++NDCDRrKrMIwQsrYDlBJk/HCLU+
-mb3KpZ0q05XPioBC3TsRekzW9Lwq6tUs+tiQCCPnZxTEwhf9jyAKIctKKCjG98MQ
-O5h3v9Db1rVZCTY13X73p6RoTdavnbM2yWyB47wk35G09olGUHRo1ZfATOqJSWH+
-LcjwMknh/Am6NPvtIvbqDBZiPGV2E2EJ5kiA7kUiWApuLJtyEhM=
-=QvNW
------END PGP SIGNATURE-----
-
---howhl4r74vwsl3vi--
