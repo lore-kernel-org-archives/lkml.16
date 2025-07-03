@@ -1,148 +1,75 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C51B291C26;
-	Thu,  3 Jul 2025 07:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C54227BB5;
+	Thu,  3 Jul 2025 07:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751527992; cv=none; b=qu4U1S9aY41FK1ujs7IX76jFTDN+dkA+Ek1a1YOkKpLCNXuxXnAP4irmceCt/rdcbb2eVNCvwHDLfN3Ij3SNQ9E3QKcaZTeubGFFc/qmK85J6pNqgSukSgFZsxVJbRRxKGZQ3ykig1SBv09GVdarESl8t2RTdmtlsP+bTrV44+s=
+	t=1751528003; cv=none; b=Qzg/o5LiKrf6+l3WEbWJAMoypdekXsMmS0uXlSVlOrM0yhuly2yPwdPhUbOzZ41c8+qUIIek+3WPtAKaWphXQQg+/RGXoO0Fls3nwhg6eou/gQqjnmMy+/hP9BbLR5a78fRwgIlQOovulTM2JWP4JXb3JOtQxrz1JovwIi0+GXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751527992; c=relaxed/simple;
-	bh=bBdoyOqxX1N4/kKu9tvAYpQdaHvF4VHbV9k8rIFm3VY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=koVi7CTLPIPh8T/fqC8v8QUPFk8Gd24kblf8Loqa6+eK2Yt5WkPf+PCfvL4PzhMd3tjCl5xEVP+QAmP9/zLPW+m9Vf2HT6bJccRmCKOw/B5r2ZD3SKDtMOQak7eWxRPFMEtOrwRdaqa41u/I4SMy/RZ0DBIgDiTMcN9KVKzA0sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pwBdhWJ/; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751528003; c=relaxed/simple;
+	bh=tuLVdbCKa68TtTOLX/EbusqENXfnicxUtW6vguu6Q/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mb1ndcm86P1W9TpNYZ5jesp/rxTOpySaQaYdASO9T7ct0zwOuyWwwXMPx7Ck+Vorv8sttapRUDF+nEykEt0JXVm53jHFRDyrTWraEtdyXr651FIC4cXDF+RnnN3RDV5ceO5LcxJDfuxZggYcfrHdpHnDMnD52zW8gr/jlLwhr28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILei2U46; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pwBdhWJ/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A9F94434F;
-	Thu,  3 Jul 2025 07:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751527986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6WHf5/XL+HMRo9BdoaiRtR1OsAjGQGF9hVUHi3YoI8=;
-	b=pwBdhWJ/3SgTYZZ+WczqkHPciuGzf9A95dIDtbRvuqV2qZXAgnsown6tAunBjPevUJXIi5
-	NSI2ENMobUBEWoZ9H67Pb9pld0WakNKvrWE84aFmg7YDljkOFbHlUtVNzZcgbvyQGC97it
-	fY77ZLVTUpMnmvh7uyU/ltl8E612bvMw7qebyKIDSTPPJC8ber2asvZKpy7jSKwKWjoayA
-	Oj7OErEmp8Lz7Fx1SZu1sfKJ0eoFtSZuOAqPFKgcncxY/VeUEJDB04L2/v6QIkcUoxiXMb
-	fIRQrEf28FLEPkaNqnxy6AZH5Up1zXrIsa8I+S4kJ8YoYcFHx6/ziha8De6olw==
-Date: Thu, 3 Jul 2025 09:33:02 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
- Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 05/28] bus: simple-pm-bus: Populate child nodes at
- probe
-Message-ID: <20250703093302.4f7743ea@bootlin.com>
-In-Reply-To: <20250627155200.GB3234475-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-6-herve.codina@bootlin.com>
-	<20250627155200.GB3234475-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILei2U46"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5E5C4CEE3;
+	Thu,  3 Jul 2025 07:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751528002;
+	bh=tuLVdbCKa68TtTOLX/EbusqENXfnicxUtW6vguu6Q/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ILei2U46QoFiSPtYqcdx4hQTjSod0gGTjkvANfO1neJAmtbL06Fg2HW4FRkKPlmot
+	 EJymmcVl20AK4sD6V5Tot+VFLglOnvjZqJX+X5MM3Buhi/eb+gSvr3YryNKoxzoqe7
+	 3sgZM55Wb99sFgsIbsCZRw7V5M+HiBV1CiEH/Lp8Sd8qSABsRN3ieI9rPNvglnqY0o
+	 4LxzHyVqE4HDt7ETI6PwwSYqDLJAKSFjBLCQerXWMdBHSpji/qAGdNLeZJURyglJ3k
+	 xIbGRzcH+hLoi3YatX75JS60nBDQMfe0MX+8u7O0E7DJFl5g5P1Q1In8rD2CylY9kS
+	 Z+gOE3dXuplzg==
+Date: Thu, 3 Jul 2025 09:33:20 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?Q?Jean-Fran=C3=A7ois?= Lessard <jefflessard3@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, 
+	Boris Gjenero <boris.gjenero@gmail.com>, Christian Hewitt <christianshewitt@gmail.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Paolo Sabatino <paolo.sabatino@gmail.com>
+Subject: Re: [PATCH v2 6/8] dt-bindings: auxdisplay: add Titan Micro
+ Electronics TM16XX
+Message-ID: <20250703-bear-of-astonishing-typhoon-6afa2b@krzk-bin>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-8-jefflessard3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleeilecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdekpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeekpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250629130002.49842-8-jefflessard3@gmail.com>
 
-Hi Rob,
+On Sun, Jun 29, 2025 at 08:59:56AM -0400, Jean-Fran=C3=A7ois Lessard wrote:
+> Add documentation for Titanmec TM16XX and compatible LED display controll=
+ers.
+>=20
+> This patch is inspired by previous work from Andreas F=C3=A4rber and Hein=
+er Kallweit.
+>=20
+> Co-developed-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> Co-developed-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
 
-On Fri, 27 Jun 2025 10:52:00 -0500
-Rob Herring <robh@kernel.org> wrote:
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-> On Fri, Jun 13, 2025 at 03:47:45PM +0200, Herve Codina wrote:
-> > The simple-pm-bus driver handles several simple busses. When it is used
-> > with busses other than a compatible "simple-pm-bus", it doesn't populate
-> > its child devices during its probe.
-> > 
-> > This confuses fw_devlink and results in wrong or missing devlinks.
-> > 
-> > Once a driver is bound to a device and the probe() has been called,
-> > device_links_driver_bound() is called.
-> > 
-> > This function performs operation based on the following assumption:
-> >     If a child firmware node of the bound device is not added as a
-> >     device, it will never be added.
-> > 
-> > Among operations done on fw_devlinks of those "never be added" devices,
-> > device_links_driver_bound() changes their supplier.
-> > 
-> > With devices attached to a simple-bus compatible device, this change
-> > leads to wrong devlinks where supplier of devices points to the device
-> > parent (i.e. simple-bus compatible device) instead of the device itself
-> > (i.e. simple-bus child).
-> > 
-> > When the device attached to the simple-bus is removed, because devlinks
-> > are not correct, its consumers are not removed first.
-> > 
-> > In order to have correct devlinks created, make the simple-pm-bus driver
-> > compliant with the devlink assumption and create its child devices
-> > during its probe.  
-> 
-> IIRC, skipping child nodes was because there were problems with 
-> letting the driver handle 'simple-bus'. How does this avoid that now?
-
-I don't know about the specific issues related to those problems. Do you
-have some pointers about them?
-
-> 
-> The root of_platform_populate() that created the simple-bus device that 
-> gets us to the probe here will continue descending into child nodes. 
-> Meanwhile, the probe here is also descending into those same child 
-> nodes. Best case, that's just redundant. Worst case, won't you still 
-> have the same problem if the first of_platform_populate() creates the 
-> devices first?
-> 
-
-Maybe we could simply avoid of_platform_populate() to be recursive when a
-device populate by of_platform_populate() is one of devices handled by
-the simple-bus driver and let the simple-bus driver do the job.
-
-of_platform_populate will handle the first level. It will populate children
-of the node given to of_platform_populate() and the children of those
-children will be populate by the simple-bus driver.
-
-I could try a modification in that way. Do you think it could be a correct
-solution?
+See also submitting patches explaining how these tags work.
 
 Best regards,
-Hervé
+Krzysztof
+
