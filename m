@@ -1,77 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826392F19AE;
-	Thu,  3 Jul 2025 15:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C66A2EBB8D;
+	Thu,  3 Jul 2025 15:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555596; cv=none; b=qvbLo5/FRGBiUMEoouUlRsdWnbMxduDsmpd7cf3YuLLY59LB4sgd+KLxz4V67BrZxGYap935SdqVsAWVbO6vqdmGir+qJWnbVRJNfN3jTIZrbZPW3zctMaWGQQtdnHJfJKU0CY4dWaMwQrnUOWmhriBIAlKs48PJIS2vj14LfY0=
+	t=1751555604; cv=none; b=TdDAIKk37iGKRXfiyeL1ofdUdjFEQ8pebBdFUlVYZ9ntrqmJtlnIQ0e83yrIjyspyfUXMKsLa0RjmATMG3Ctc4YMZ/pp5aVeLCX8C/Ae6aPYPf19Vu2/v6H+rRnskYCc/S7np36APfcdqUYB5gRKuJ5fmgKNeUlgVauwt2uGhPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555596; c=relaxed/simple;
-	bh=8e5mj+lNVEPhzv6lVExpdk5WTdjfGcM+AvYmWCMOf/Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VOdLedDX6KnPcq/LnNi5jeXPS7/awWT8Znbl5qJHQ5qzc4ayyMxtcEKYSCa6qlHE1unGLBRlfPejYYgJ2MfQJRtsRneLtEGFmrYoPyrvoVeubrPCl1agEN1aeQIlr/nzPW1wpXEu9eWrk0PElYDKLjJvJoXdOgMdamMNZ1SteJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvSYvhWQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751555604; c=relaxed/simple;
+	bh=nv9OK1L0UQMxg74LXR+ORBLR37vlz1npBtTJKz/DTXg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eQDHFR8FzcdVWKIhaDxnF5BJIzoUtv9s+2ukOnLItfv3b5VLdNZ6Nlehiinp9R/8l7VjEeIHNA9LCChExMNAtB394Z62jUOecNZRaXy4JVw32bbQphsdYx2pB7Lrj5BeTqmM2hwqX7OE2WeS7dwmyzcuhsruHOplypOWMiWq6xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bKrZZbkX; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvSYvhWQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A21C4CEF2;
-	Thu,  3 Jul 2025 15:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751555596;
-	bh=8e5mj+lNVEPhzv6lVExpdk5WTdjfGcM+AvYmWCMOf/Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=EvSYvhWQKzKV27w7+3Ixr/7N1sLHclKLx7rxFl8hztoEiB9UEDZXFfnyJy+Ax8yVX
-	 zx2rVF3oiVJ11sWkrknBIDPtMOvdEYevge3k3Xw9LvmlBGD49uQ/qd1Ku7h+KaAYym
-	 rMQobezhY8xiv75FaN+JJwjC7wDf4nfDQ8ffj058gv/v/TNmAZi7+YOdwxH2OgeYYN
-	 /I8sANGHL9rrFBfVbHXazhJSJSk5EzYHeS0NBX3ZagEgZrSuAdV8PlmfqalqgOcCG6
-	 aWFsMEISu55ziLVNqkUUO3FFzM2Nt2x5/z+AcOwZPkZ1e17zWeGk5H0i+SVtJ+nrT9
-	 2Sp+Qzkye9+kw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,
-  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  linux-mtd@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  stable@vger.kernel.org,  Jean-Marc Ranger
- <jmranger@hotmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: Fix spi_nor_try_unlock_all()
-In-Reply-To: <20250701140426.2355182-1-mwalle@kernel.org>
-References: <20250701140426.2355182-1-mwalle@kernel.org>
-Date: Thu, 03 Jul 2025 17:13:13 +0200
-Message-ID: <mafs0bjq11f5i.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKrZZbkX"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b8134ef6aso352911fa.0;
+        Thu, 03 Jul 2025 08:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751555601; x=1752160401; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K/HlbY0O85zcixYzgYTA8H0Mdv+GR5C9KDIOJVQIiKc=;
+        b=bKrZZbkXGULAT/YkPMxe2h0qjI/AJLTssJYM99eRc0LSJONCQ5KLYsIFHQ+Xm384t2
+         /9UvJtZ/wp6VSP4pXev6kaEFk1hT5bwDy6HVFKwzTd2BRl+iyrXiqL1cQrMg5L2667pC
+         vYSeTwax3EsKYQiReaL8Sha1HESONBy6Rgntc2HUooCN6n+opciZvke8R1wWDZXgcGEm
+         ODecxFi+ay9WUxvHUlLBh6YahUj5zbJAyuDUY5iqcHYs2j1JcuqJOsRjHKYhLw7rIbL/
+         HupGG1pG4wmU8nLRu0PV1ZuPg3n/NYiQKegZBuAW9kdRVQniot+fvslARgLqaLJBHebP
+         IAGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751555601; x=1752160401;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K/HlbY0O85zcixYzgYTA8H0Mdv+GR5C9KDIOJVQIiKc=;
+        b=EkI+ZD8BmqTpGsvVFoiwhn/JHXAJW1+2/PtAwQ8nNEI5kMW1lYFt17roRGceAgXNH4
+         TF7L0uhiWDD0ikT9d7ZCkQ8WNkvP17BMIU2G/62uad4i1Y4cdCaalmoEnNbH41Qrtej5
+         XBIlULbMZi0s+AwLDU3mZuiVRZgyoVNhCUTOZbH05wkCZBuMVyJeD3WaZMvTYgG89vct
+         KtbGfp5Efr0SHNce3W4LZK0bJlDori5jNGq2YMcqzepjz20hkwPfL6C4cy8TBAzgUvU/
+         GJyvRGL7qSqn8yGKADAW6JCIuX0hzwB9XDYdc4PCeBN571WddroagRI4eVB22AbSB6nH
+         vDuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEWLtf+GRZnAH1oC9OiOsc4tPCIrnUHyCLjcHXY5mHP11iJ2rnBNsdYKfJo9HSekjKvzUdc/2S8UdQoqFE@vger.kernel.org, AJvYcCX98cZ9z8cMC8uw0su0UlDvjdPVpj801MSr4QCHI+HDpnwURYN02CD0Bh5JNGA5AEhHdGm00D5MSjQ=@vger.kernel.org, AJvYcCXQCq8A1qmnZaUKK0pSW5JyhQylhdoDjKL2AIsmvQmbx/nawKWmHTYdsjwalAmXjXZ5fHJROBte2FTP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnaiCnC/9kurYU+kAJYc6hTjQBwFWWKuWaVmSe+DfkuxTkGZ0k
+	uvmKrz1Ne/sIusi175VdU1MhmRHJ0ge+yabIJStSyjtJz/bjHJVYoXSL
+X-Gm-Gg: ASbGncs04LdfQYzhnuObzlKSRj1a7VSqGTELSyYW4u4UG3gYTjSBPNUkp/a+tLxeL3x
+	dlCwXU4Mt5FIBlrkNhE2Z6OCww5ekNbrLomtBFzoSFMX9PfEGPuJLs8+z9/95Brmn9XmQmTSWCI
+	A2N9/RyEed96kyafxoubWHOxvz3fqArRQvQo507k1aaTDLiqC7axWoOHKCSkqPLmchzYX9bwTQ8
+	fmxgf09nC1sBpAQwfaYx0ZMkzpJUBTy8/dRc0T/BOOMvavUfgqK/ByZPZOhrjdwvIDBYcOWOBY7
+	c0JgoESUuXnv1K6twFvKr9q7KGryoCUEfWmt3Ox4JDdvbnrP3U6xx5D9I6FTZ/okR7ZM1Qw=
+X-Google-Smtp-Source: AGHT+IFizivHRCGbn2xa6qy5KahETw6sFgoEVp5+fipVdvBjkYyulTltzT89w8oz7cos8x+uQdLuBg==
+X-Received: by 2002:a05:6512:aca:b0:553:25e4:274b with SMTP id 2adb3069b0e04-55628344003mr2815796e87.41.1751555601020;
+        Thu, 03 Jul 2025 08:13:21 -0700 (PDT)
+Received: from localhost.localdomain ([212.192.12.80])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384ae15esm725e87.178.2025.07.03.08.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 08:13:20 -0700 (PDT)
+From: iuncuim <iuncuim@gmail.com>
+To: Srinivas Kandagatla <srini@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Maxime Ripard <mripard@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v2 4/8] thermal/drivers/sun8i: replace devm_reset_control_get to devm_reset_control_get_shared_deasserted
+Date: Thu,  3 Jul 2025 23:11:28 +0800
+Message-ID: <20250703151132.2642378-5-iuncuim@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250703151132.2642378-1-iuncuim@gmail.com>
+References: <20250703151132.2642378-1-iuncuim@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01 2025, Michael Walle wrote:
+From: Mikhail Kalashnikov <iuncuim@gmail.com>
 
-> Commit ff67592cbdfc ("mtd: spi-nor: Introduce spi_nor_set_mtd_info()")
-> moved all initialization of the mtd fields at the end of spi_nor_scan().
-> Normally, the mtd info is only needed for the mtd ops on the device,
-> with one exception: spi_nor_try_unlock_all(), which will also make use
-> of the mtd->size parameter. With that commit, the size will always be
-> zero because it is not initialized. Fix that by not using the size of
-> the mtd_info struct, but use the size from struct spi_nor_flash_parameter.
->
-> Fixes: ff67592cbdfc ("mtd: spi-nor: Introduce spi_nor_set_mtd_info()")
-> Cc: stable@vger.kernel.org
-> Reported-by: Jean-Marc Ranger <jmranger@hotmail.com>
-> Closes: https://lore.kernel.org/all/DM6PR06MB561177323DC5207E34AF2A06C547A@DM6PR06MB5611.namprd06.prod.outlook.com/
-> Tested-by: Jean-Marc Ranger <jmranger@hotmail.com>
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+The A523 processor has two temperature controllers, but they share a common
+reset line. We can to use devm_reset_control_get_shared_deasserted() instead
+of devm_reset_control_get(). This will simplify the driver.
 
-This patch hasn't had much time on the list but we are already at -rc4
-and I want it to get some time in linux-next. If later reviews come in
-and changes are needed, I can drop it and apply the new version. So
-applied to spi-nor/next. Thanks!
+Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+---
+ drivers/thermal/sun8i_thermal.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-[...]
-
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index 45aaf5348..bdd15ee45 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -344,11 +344,6 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+ 	return ret;
+ }
+ 
+-static void sun8i_ths_reset_control_assert(void *data)
+-{
+-	reset_control_assert(data);
+-}
+-
+ static struct regmap *sun8i_ths_get_sram_regmap(struct device_node *node)
+ {
+ 	struct platform_device *sram_pdev;
+@@ -391,19 +386,10 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+ 		return PTR_ERR(tmdev->regmap);
+ 
+ 	if (tmdev->chip->has_bus_clk_reset) {
+-		tmdev->reset = devm_reset_control_get(dev, NULL);
++		tmdev->reset = devm_reset_control_get_shared_deasserted(dev, NULL);
+ 		if (IS_ERR(tmdev->reset))
+ 			return PTR_ERR(tmdev->reset);
+ 
+-		ret = reset_control_deassert(tmdev->reset);
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_add_action_or_reset(dev, sun8i_ths_reset_control_assert,
+-					       tmdev->reset);
+-		if (ret)
+-			return ret;
+-
+ 		tmdev->bus_clk = devm_clk_get_enabled(&pdev->dev, "bus");
+ 		if (IS_ERR(tmdev->bus_clk))
+ 			return PTR_ERR(tmdev->bus_clk);
 -- 
-Regards,
-Pratyush Yadav
+2.49.0
+
