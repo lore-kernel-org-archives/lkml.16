@@ -1,110 +1,134 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FB82E5424;
-	Thu,  3 Jul 2025 10:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870222EA176;
+	Thu,  3 Jul 2025 10:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538442; cv=none; b=fuyheWGJjtaPWm18FLxMwPky5URVsfaPm79wZPBG7CNbHlNVFDWg4rZQEBWmKwjefPzGEnGyfta4go0dM2s3Y8JyDnY/pDBNf0A+92o/sfd1QkkmI/2St4Tj2JFEfUwCKpqOMGuqjz6+WxuRXW0z6bL4MqD4oFat4gx9mc5ysrg=
+	t=1751538442; cv=none; b=dTeHH/2yvLfREC7VRG4AtY4EyO5PbAdTCEK/FUOj70k9UMJyZVQfmch93yby+En8fba+zQpSS8Dh48RK1wlLXDaffS699fhf/ixecyVlD7rBJDmogilke6G04YxxtoroGCUO19xm/lhcZzw4+cmR3viFGv96thbwGqY211nMpm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751538442; c=relaxed/simple;
-	bh=DjI8oLdMLDrBuy1PxAjHjfkK1mZRk2rczmkFo0BW58g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sLz0SJmpP6wwmKX4CKjaI238RrlSU8PspcvSvBDB0vbQcfLoUjLbvhfw7Q7fNPSnSv9N+fBpj3rhOzqiNPWLQMG+VItMWh0E4FAZ8vPT09x9FvLRK6iY0jb8L0U0eoXN7PFWy0cqaF/vMMnj3/n1a5IMr/lWjPgCwNSLdZWA0y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXtGm1MV0z6DKbF;
-	Thu,  3 Jul 2025 18:26:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E8F231402F0;
-	Thu,  3 Jul 2025 18:27:08 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Jul
- 2025 12:27:08 +0200
-Date: Thu, 3 Jul 2025 11:27:06 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Andrew Ijano <andrew.ijano@gmail.com>
-CC: Andy Shevchenko <andriy.shevchenko@intel.com>, "Colin King (gmail)"
-	<colin.i.king@gmail.com>, Jonathan Cameron <jic23@kernel.org>, "David
- Lechner" <dlechner@baylibre.com>, <nuno.sa@analog.com>, Andy Shevchenko
-	<andy@kernel.org>, Gustavo Bastos <gustavobastos@usp.br>, Julien Stephan
-	<jstephan@baylibre.com>, <linux-iio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: iio: accel: sca3000: dead code issue
-Message-ID: <20250703112706.0000064d@huawei.com>
-In-Reply-To: <CANZih_Rc3aht-ZTuuEytad8A1d5eC8Z_Dq2GQD8K2QiyFjcBZQ@mail.gmail.com>
-References: <1c1e39cb-5fe0-46b3-898e-c65bbb3beb30@gmail.com>
-	<aGUh7uXenHc7NYB2@smile.fi.intel.com>
-	<20250702164022.000027e8@huawei.com>
-	<CANZih_Rc3aht-ZTuuEytad8A1d5eC8Z_Dq2GQD8K2QiyFjcBZQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=xP1ZSDvdEMNzLFTksEUUUoXYt9M+SQ6BRBD+ihLwiLw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Mup/6CeKa8CkixC3/wXTlWb9R0xOUqcPENmU6g5OkAGCudsMRfueIf6r0RhUp5T5JeAKY+O0x6r5Hi/t2EPKUACXtW79TpP8LRZsfsw8oyTEKnErENhcjphYbgLK60MpeJuBBFAcoxT/rwtR5Tmzc0RHR2gJhZqSiQhgV22KRDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxmPvPSp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxmPvPSp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BADBC4CEFA;
+	Thu,  3 Jul 2025 10:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751538442;
+	bh=xP1ZSDvdEMNzLFTksEUUUoXYt9M+SQ6BRBD+ihLwiLw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=uxmPvPSpq33kyeY4be5Z2tqaZ5bDx4d3LlGrIKmUr5634blz9o5VEZeSLXUrMS1nZ
+	 mhH11KUbpxOkDlCQlJs2yiKoECjGL8Pzm7npRb+rjy/A3SUxXXyp2oHqRLV74lKMMv
+	 g8fY+nOfY3FFnsfER/ALJ2DQtFemxK5Uzf+kITaq/WHIZ7oEsFRXkqrsAJi/fxBgua
+	 wEC9e/S5elECcAptXiOMht8j6MuwPWcF37gdyiv/b0JkyTJ1HEvjcryVM8pCgGxAUO
+	 JBPlUGzstqUI795XYxO5g1usxHGR5qmD5MoA488hPKCIt24HkB5C2hjZnrfPader6g
+	 T+2kfttwTkpIg==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 03 Jul 2025 12:25:13 +0200
+Subject: [PATCH v7 23/31] irqchip/gic-v5: Enable GICv5 SMP booting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250703-gicv5-host-v7-23-12e71f1b3528@kernel.org>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-On Wed, 2 Jul 2025 23:52:02 -0300
-Andrew Ijano <andrew.ijano@gmail.com> wrote:
+Set up IPIs by allocating IPI IRQs for all cpus and call into
+arm64 core code to initialise IPIs IRQ descriptors and
+request the related IRQ.
 
-> On Wed, Jul 2, 2025 at 12:40=E2=80=AFPM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Wed, 2 Jul 2025 15:11:26 +0300
-> > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > =20
-> > > On Wed, Jul 02, 2025 at 10:00:55AM +0100, Colin King (gmail) wrote:
-> > > =20
-> > > >                 ret =3D spi_w8r8(st->us,
-> > > > SCA3000_READ_REG(SCA3000_REG_BUF_COUNT_ADDR));
-> > > > =20
-> > > > >>>  the call to spi_w8r8 returns 0 on success or -ve on an error =
-=20
-> > >
-> > > Where did you get this from, please?  Any link to elixir or Git repo?
-> > > =20
-> >
-> > Hmm.  Just for reference the docs of spi_w8r8 are:
-> >
-> > * Return: the (unsigned) eight bit number returned by the
-> > * device, or else a negative error code.
-> >
-> > Not 0 on success (well not unless it is zero.
-> >
-> > So the check indeed looks wrong as should be if (ret < 0)
-> >
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=
-=3Dtesting&id=3Dca66d8208762492df8442a503db568d9aab65f2f
-> > It's in my tree.
-> >
-> > I'll drop the patch when I'm on the right machine.  Andrew, could
-> > you do a new version fixing this up?  If not can make the changes
-> > but will be at least the weekend before I get a chance.
-> > =20
->=20
-> Hey, guys! Thanks for pointing this out, I totally missed this problem
-> before. I'll try to fix this tomorrow.
->=20
-> In this case, should I send a new version of the patchset fixing the
-> problem or a single patch following this commit with the fix?
+Implement hotplug callback to enable interrupts on a cpu
+and register the cpu with an IRS.
 
-Given there will probably be some fuzz for the later patches, send
-a new version of the whole series.
+Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v5.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Thanks
+diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+index 84ed13c4f2b1..97ff935d79bd 100644
+--- a/drivers/irqchip/irq-gic-v5.c
++++ b/drivers/irqchip/irq-gic-v5.c
+@@ -5,6 +5,7 @@
+ 
+ #define pr_fmt(fmt)	"GICv5: " fmt
+ 
++#include <linux/cpuhotplug.h>
+ #include <linux/idr.h>
+ #include <linux/irqdomain.h>
+ #include <linux/slab.h>
+@@ -918,6 +919,8 @@ static void gicv5_cpu_enable_interrupts(void)
+ 	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+ }
+ 
++static int base_ipi_virq;
++
+ static int gicv5_starting_cpu(unsigned int cpu)
+ {
+ 	if (WARN(!gicv5_cpuif_has_gcie(),
+@@ -929,6 +932,22 @@ static int gicv5_starting_cpu(unsigned int cpu)
+ 	return gicv5_irs_register_cpu(cpu);
+ }
+ 
++static void __init gicv5_smp_init(void)
++{
++	unsigned int num_ipis = GICV5_IPIS_PER_CPU * nr_cpu_ids;
++
++	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
++				  "irqchip/arm/gicv5:starting",
++				  gicv5_starting_cpu, NULL);
++
++	base_ipi_virq = irq_domain_alloc_irqs(gicv5_global_data.ipi_domain,
++					      num_ipis, NUMA_NO_NODE, NULL);
++	if (WARN(base_ipi_virq <= 0, "IPI IRQ allocation was not successful"))
++		return;
++
++	set_smp_ipi_range_percpu(base_ipi_virq, GICV5_IPIS_PER_CPU, nr_cpu_ids);
++}
++
+ static void __init gicv5_free_domains(void)
+ {
+ 	if (gicv5_global_data.ppi_domain)
+@@ -1050,6 +1069,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+ 	if (ret)
+ 		goto out_int;
+ 
++	gicv5_smp_init();
++
+ 	return 0;
+ 
+ out_int:
 
-Jonathan
-
->=20
-> Thanks,
-> Andrew
+-- 
+2.48.0
 
