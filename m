@@ -1,133 +1,111 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2AB2F29;
-	Thu,  3 Jul 2025 12:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB6E233127;
+	Thu,  3 Jul 2025 12:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546968; cv=none; b=uNBZadFixui2qSlyjxzorKwxeq2do/mHJMfxKZhwvV7s2uqHupQJSii4BM2VKhCOYIaA0nEcDR8Lw9pQC1ScM7lpaeXOPs9FEhqNT7yKlvOkbiskESpzmozlm0QFHJ4xxSuMsDTpOGGaS9xpp5bRDlwLIcNnMnLBEqvGOfCPIAI=
+	t=1751546983; cv=none; b=C0eLWHA8K+U+xfE8qDGLKDWmB63xcVaHGBogFpiyfWvFu4kr1JSr0GDFH+7iFmSRRiQWYtqFaGfOmEeLFdeo6fqkBh+fxq4BxyOIJy7WlgJ81Cb4mXodLxSWoNnwad0ejnyocmHeyb1M6DEgpJ+c1IJRtIGPv5dLvNpNuPFhI/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546968; c=relaxed/simple;
-	bh=1h5td7mHaRLVwU1IITV6OOtvq2fJvXJzQHsZ+1xTOZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bEwpQL+70uileltkjufcva5r/p49ctUw0Ckebf3WigeQa4ccdkgimyfejNGBwQrjMx8RnGuzSXX6gHzYApsxM20eZVH681loPCfJIB5AuhVbvq1px8yZDeGAXyuqQygR8EVZknckmGltF4elfdoNZVqihXOvW0NhapaY0Zv9L/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlxP7FOM; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751546983; c=relaxed/simple;
+	bh=B/L4oIFgwl3Hxch2Pmb5tdewjqC/ENSMUQWNB9qtBC4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=SZSft6dHjHEeUI5r8ByveBG7//sBPoRNF2cSeBeHD/plwHSXa/9PNsOvduj5lu2uxtBN3rPhivS4pTCdBKnIQ8q3N97uc6liF5yRbDaSEukNhkRNH0Z5E015y6aa7BY9Lqws8xvPhcnUy49T5NO/tVHdUhiQ4M2sC4+M5KAK0uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GqZMHZnw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PgToSr9A; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlxP7FOM"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313a001d781so4180818a91.3;
-        Thu, 03 Jul 2025 05:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751546966; x=1752151766; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6LiFOh64v/siwXdil08hktvYo8/cVuoCtLxNd2EEmBc=;
-        b=KlxP7FOMzLfWr/q3PRJgXZ9NO7dgHRBK8Iu1qxCCyRqFhOfDdy2EsgyY87bJOkhuwV
-         IGga29OAdWWQlklw1M/BAozeERZM5/ZRTGlDCwe3kzB6WgIW02uoWF9YdCZDdA47KH1H
-         7Qyp41y19O/ZhWQ9skncNMpo1oCzoQO6iv15pEeRCj+w08EBN0jt1AjD8oYT8Ab0lCph
-         wxhdcskP/slH2XnzEjhVMfAkyWJnA0r18wM1htiVruMUYsSibNWpRCxiWSRKDMCFMdXV
-         mQ8ML0AW2fEBxT9XmFu8JxdeZRqw8W0oeroZRANshZ94/SwvKhLD4LJKSNdhDg37Um18
-         A/sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751546966; x=1752151766;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6LiFOh64v/siwXdil08hktvYo8/cVuoCtLxNd2EEmBc=;
-        b=qYrmiVBZwWfqfWpzjon3PjV0+D9foCeaQLSad5lWwTnxLqokq7HjjsFAoK52QdCDmZ
-         5Do6K12lBOXueqbJZZCajwwEERo2PXBUlJq3h5KWM5URMHa0qcQJHyMQ7ENxd6c8t9rq
-         a8XA7MBS7fmcMzVfVI9qN2o6EvRIAZvKYGDT01f89HFDQRoAy31iI3/7FPIvfb5oA2le
-         CPV0Eb97q8eGWrKEmfUgatCeYfxhWlWqAYRVdsTYFuuPo1LAU3LxFo0iHtzVIiVLgcSQ
-         04f1U/x0PO0U+NpztpD95+mmgaoMoy2T3nLziATA5qPmiEuUY7yym/X/R01eHW0TVXE9
-         23aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtsmxhJmgn+KWg59h5ed4QHDwGkuZ6GKHLvkMz2sabDbdRa26YOo14E4iR/LYPGnwie7jF3at5JevszxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz93fT08ERV5cqCGreSY+bKAB1ij+XigMPMWPSzfya9VYYWPjH6
-	4w8oYwWe5HmSMOycfUqu+cPif0/XuLQwI+c1bTvC0Yt08tB7zq0AmUb3lugC7dGVCS5r9ejtcMV
-	mRQ6xE/l44QKyAkmbLAd82pyHSUolW/s=
-X-Gm-Gg: ASbGncv+tEB8x8vJ2aFm+nmSrmUqM2b9fS32WGQH0bl3OdXDuaBKfS85rhGnh96tCx6
-	X9clvXRvw2WANhcUz7avx+8m925IJ3VIB6nMYp+QyZGtoBBPpTFuvNnVu25rS8drEU/DYfKuVMp
-	6r11qwnl5bqC7Hkqqy4Zwg9PRc26SlFeG9XwvspGiVNXcj0B8vkAeEyd82
-X-Google-Smtp-Source: AGHT+IH48/BERJnuPtZYQjLpcSnA8IMxSKCWbJND9Uz0Hh0HUl6pAtP7F+1crfYQJpC40rwlfFoBgshJvPClIiy9Goo=
-X-Received: by 2002:a17:90b:3cc5:b0:311:c939:c851 with SMTP id
- 98e67ed59e1d1-31a9d52bcbcmr4116449a91.4.1751546965945; Thu, 03 Jul 2025
- 05:49:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GqZMHZnw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PgToSr9A"
+Date: Thu, 03 Jul 2025 12:49:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751546980;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pHFAxVWLbQyAvu3oURRPmlTXh7OSPuGh19aHRHRFeqg=;
+	b=GqZMHZnwFx0FHt8CuquORACv4adJjdOi9CvMo9wAB6VuVw88HR0aK7zeIfwSOdj6aMdB+a
+	pbskaO+XXX8WZpKFrWRvpKZuHXN57fJycliy9E8gyaoXsTQsVCdWPpjcLnAHwYyLMymRAZ
+	U1TV8j1FMZY0WYjrBiTkvU9bYi7EcIYk6eSO0cH/OefWF7PTX4oPFTpqqQPOZ9ceS1diJz
+	wDi77Gar8Wbu33D205+mjSgdgtPKkNvqPV6H43oxWmutDPqVTrivnJ1EonvfqH/J9pN/Gr
+	iE+41CS0veLjjNFz/xqFfIaOMwE3fvt0emI8EGQAdFfuEH9TivjV0pYzb3oPfg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751546980;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pHFAxVWLbQyAvu3oURRPmlTXh7OSPuGh19aHRHRFeqg=;
+	b=PgToSr9ADN1n9AohKXn4V0VRjFH9+Bd33LKkR3+jM7J+Cl7nV5aHa4bkMq9Sw4XIvc4VHP
+	vfBBo72VXid0RVDA==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: timers/ptp] timekeeping: Remove the temporary CLOCK_AUX workaround
+Cc: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250701130923.579834908@linutronix.de>
+References: <20250701130923.579834908@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702153312.351080-1-aha310510@gmail.com> <2025070322-front-purchase-b66f@gregkh>
-In-Reply-To: <2025070322-front-purchase-b66f@gregkh>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Thu, 3 Jul 2025 21:49:19 +0900
-X-Gm-Features: Ac12FXycYs6l1_4Q6i9Y6NhpTZ-YgwI7DO1P07o9n57x9nl5UTWxk6QJqmx-x3Q
-Message-ID: <CAO9qdTE0SGJTgzTRnOU=tn+uR3kH_zsuuMWEz=0h1k1ottzPWA@mail.gmail.com>
-Subject: Re: [PATCH 6.15.y] mm/vmalloc: fix data race in show_numa_info()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, urezki@gmail.com, akpm@linux-foundation.org, 
-	edumazet@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <175154697931.406.10685240214515263929.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 03, 2025 at 12:33:12AM +0900, Jeongjun Park wrote:
-> > commit 5c5f0468d172ddec2e333d738d2a1f85402cf0bc upstream.
-> >
-> > The following data-race was found in show_numa_info():
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
-> >
-> > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
-> >  show_numa_info mm/vmalloc.c:4936 [inline]
-> >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
-> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > ....
-> >
-> > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
-> >  show_numa_info mm/vmalloc.c:4934 [inline]
-> >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
-> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > ....
-> >
-> > value changed: 0x0000008f -> 0x00000000
-> > ==================================================================
-> >
-> > According to this report,there is a read/write data-race because
-> > m->private is accessible to multiple CPUs.  To fix this, instead of
-> > allocating the heap in proc_vmalloc_init() and passing the heap address to
-> > m->private, vmalloc_info_show() should allocate the heap.
-> >
-> > Link: https://lkml.kernel.org/r/20250508165620.15321-1-aha310510@gmail.com
-> > Fixes: 8e1d743 ("mm: vmalloc: support multiple nodes in vmallocinfo")
->
-> Why did you change this line?
+The following commit has been merged into the timers/ptp branch of tip:
 
-Oops, I accidentally imported the commit message from GitHub, so this
-commit hash was shortened to 7 digits. I'll fix it right away and send
-v2 patch.
+Commit-ID:     8959338617a85e35820e3a7fa21801cf55b068bf
+Gitweb:        https://git.kernel.org/tip/8959338617a85e35820e3a7fa21801cf55b068bf
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 03 Jul 2025 14:39:28 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 03 Jul 2025 14:44:15 +02:00
 
->
-> > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> > Suggested-by: Eric Dumazet <edumazet@google.com>
-> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-> > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> > ---
-> >  mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
-> >  1 file changed, 35 insertions(+), 28 deletions(-)
->
-> Please document what you changed from the original version, as this does
-> not match what is in Linus's tree.
->
-> thanks,
->
-> greg k-h
+timekeeping: Remove the temporary CLOCK_AUX workaround
 
-Regards,
+ktime_get_clock_ts64() was provided for the networking tree as a stand
+alone commit based on v6.16-rc1. It contains a temporary workaround for the
+CLOCK_AUX* defines, which are only available in the timekeeping tree.
 
-Jeongjun Park
+As this commit is now merged into the timers/ptp branch, which contains the
+real CLOCK_AUX* defines, the workaround is obsolete.
+
+Remove it.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250701130923.579834908@linutronix.de
+---
+ include/linux/timekeeping.h |  9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index 6121924..aee2c1a 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -357,13 +357,4 @@ void read_persistent_wall_and_boot_offset(struct timespec64 *wall_clock,
+ extern int update_persistent_clock64(struct timespec64 now);
+ #endif
+ 
+-/* Temporary workaround to avoid merge dependencies and cross tree messes */
+-#ifndef CLOCK_AUX
+-#define CLOCK_AUX			MAX_CLOCKS
+-#define MAX_AUX_CLOCKS			8
+-#define CLOCK_AUX_LAST			(CLOCK_AUX + MAX_AUX_CLOCKS - 1)
+-
+-static inline bool ktime_get_aux_ts64(clockid_t id, struct timespec64 *kt) { return false; }
+-#endif
+-
+ #endif
