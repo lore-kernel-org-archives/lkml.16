@@ -1,33 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DF62D12FD;
-	Thu,  3 Jul 2025 08:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F252D29CF;
+	Thu,  3 Jul 2025 08:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531807; cv=none; b=qjBSpTdbhXARgWFACHD92hSIAMnm7zMiqnURTY8m/u5fCA1mZ5geKSLzCvsRxsDbiALvN2tOX8+Ydec8FRDeLWLNbCiprMh4o+1XeNKt6g9Mm/VJhtjB2LzQi6rCoeklq/fXc1r+cD+uRUEWf4wkrmMpS8BC/FCCVT0napvXXMA=
+	t=1751531816; cv=none; b=Bbj4fhg0jFl+UyahsiDkZjTl4jhEAd5I2Jf2SMpAfrDalfVd5UVJlfdrxCRKaGWAwCs6N4DNug2CsA1Zwjb4shSsL2KhB6vr8plJROCc2eSa88qZi7FW4Lcmx3XxvBnihvbEvI/qI8bMGC3J6XciBF+sPddAVlwaxEV9Rk6RXIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531807; c=relaxed/simple;
-	bh=qppQWxVXiOFfDlGryBoHGtYg0F5qikJ097SKtmZOXSI=;
+	s=arc-20240116; t=1751531816; c=relaxed/simple;
+	bh=91bla5ktTh31bZ+QC7RyOT+9Zzll21yp330pcc8HPmA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lcGaTuLfmdUZWAAwwCAb0hMkKEowbFjpUePMc73xd72fSTRQhOjJ8wg34PplidPZ8m5weOA+uFColwoKE4JhMqAHgjVCXo5sNNoqts1RxrcE95Am6Ef6H70oAZUUwlc2v+ULTCsVsAdaL0xcO+qwmg5511tBlOTeV3ZCLYvw9/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+9X1gsH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=V/r1CKV5lE8BzFNLuYpU7RTIA7yEwIekh483adewArHSexJBe6IzoGDCIVLrKlyAKo2++Es5oH7JeKmc02ZaB9hu10AAGZE/taUDseEuLxPBfCApduU2ZmJ9eo0EEhfCXrj2CrLL/nO74IzvG1bHxiyAjmYTA0veU6cFfUwD8VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=I4RU9TjF; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+9X1gsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE7BAC4CEE3;
-	Thu,  3 Jul 2025 08:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751531805;
-	bh=qppQWxVXiOFfDlGryBoHGtYg0F5qikJ097SKtmZOXSI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H+9X1gsH+tonAwfV+2IpIYuBDA3W7RFg+gYrzIvAbPp8ECQci4eaGj/SGbaPaFmrL
-	 Mo7kqVnSmVj/xksfqG8hYheZs4ufM9mEP9WOwDB9joss9vm56eNbQEMwcLXbyOAY4s
-	 s1gHU0bSxA66nDv3qKgUER4tE/oY5jNxhTR8N0T+0wjtBh7SPROxgD0HxM8g7L0nO2
-	 bTbfvLby9MrjkF9C5IbXowdZFVfpiGyjN4XXVLwzASwiaLcGdnq+pSG93iHyTBx8V3
-	 7GFc20i4R3ooK4A7cWWX1pTToB6mCTIB3ugaqGkCJ9Y7vUr+XE3evXmCywTDRD8ewa
-	 4x8uSBXH70/yQ==
-Message-ID: <6df04862-2254-4181-8db7-c58023f9716c@kernel.org>
-Date: Thu, 3 Jul 2025 10:36:39 +0200
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="I4RU9TjF"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uXFQw-001Lnc-VN; Thu, 03 Jul 2025 10:36:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=ZvbJbTZZn9ydZb429veIWX9aAM3F0/cpPoXKF/bzbOU=; b=I4RU9TjFY7hFOfmKX4ihBRqyiD
+	mOEPfS7SFlj/kpgOiUS9u2yn9khXdMI9LskexIr+3AdNTZxpVbCgOmv/1tnhjtJ6jYsuG8E62OqY5
+	UVx+xTciMwZWDVDy/Qkd6oD4gEw6EclQcQJNZrMjyFiAKHhhSGf1yEzrREqURmpgTLyBL1rTqaAAF
+	hNzxTiieNTJLpPow0sD1PQPlmS/dYFLYQPI+U365qYvHarDpJAjPEz+QQ7+5YIbDsOvAjKNReU/J3
+	1zUwhPQrvTn4WbsbZgsU4FeLYytYIjadLmWgUXZHMTQ9lApm0ugnJvFOOULYBF4v3ulXy0mKtU25P
+	4U/TuIYw==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uXFQw-00044F-85; Thu, 03 Jul 2025 10:36:42 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uXFQd-00DSTl-3W; Thu, 03 Jul 2025 10:36:23 +0200
+Message-ID: <e69847a1-7a54-417d-95df-4c0a98a6120f@rbox.co>
+Date: Thu, 3 Jul 2025 10:36:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,92 +46,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] Add support for clock controllers and CPU scaling
- for QCS615
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250702-qcs615-mm-cpu-dt-v4-v5-0-df24896cbb26@quicinc.com>
- <20250703-daft-asparagus-gaur-e77861@krzk-bin>
- <b6cabc11-a4f0-4d8a-97b1-140be394feca@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <b6cabc11-a4f0-4d8a-97b1-140be394feca@quicinc.com>
+Subject: Re: [PATCH net v3 2/3] vsock: Fix transport_* TOCTOU
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250702-vsock-transports-toctou-v3-0-0a7e2e692987@rbox.co>
+ <20250702-vsock-transports-toctou-v3-2-0a7e2e692987@rbox.co>
+ <u36jztpit63o2b33ulnmax2xrw2c6hgrkwabto3fccocdmay7w@xlpkemxcgve4>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <u36jztpit63o2b33ulnmax2xrw2c6hgrkwabto3fccocdmay7w@xlpkemxcgve4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/07/2025 10:28, Taniya Das wrote:
-> 
-> 
-> On 7/3/2025 12:51 PM, Krzysztof Kozlowski wrote:
->> On Wed, Jul 02, 2025 at 02:43:08PM +0530, Taniya Das wrote:
->>> Add the video, camera, display and gpu clock controller nodes and the
->>> cpufreq-hw node to support cpu scaling.
->>>
->>> Clock Dependency:
->>> https://lore.kernel.org/all/20250702-qcs615-mm-v10-clock-controllers-v11-0-9c216e1615ab@quicinc.com
->>>
->>> Changes in v5:
->>> - Update the documentation for CPUFREQ-HW for QCS615.
+On 7/3/25 10:20, Stefano Garzarella wrote:
+> On Wed, Jul 02, 2025 at 03:38:44PM +0200, Michal Luczaj wrote:
+>> Transport assignment may race with module unload. Protect new_transport
+>>from becoming a stale pointer.
 >>
->> What did you update? This has to be specific, not vague.
+>> This also takes care of an insecure call in vsock_use_local_transport();
+>> add a lockdep assert.
+>>
+>> BUG: unable to handle page fault for address: fffffbfff8056000
+>> Oops: Oops: 0000 [#1] SMP KASAN
+>> RIP: 0010:vsock_assign_transport+0x366/0x600
+>> Call Trace:
+>> vsock_connect+0x59c/0xc40
+>> __sys_connect+0xe8/0x100
+>> __x64_sys_connect+0x6e/0xc0
+>> do_syscall_64+0x92/0x1c0
+>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>
+>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>> Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>> ---
+>> net/vmw_vsock/af_vsock.c | 28 +++++++++++++++++++++++-----
+>> 1 file changed, 23 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>> index 39473b9e0829f240045262aef00cbae82a425dcc..9b2af5c63f7c2ae575c160415bd77208a3980835 100644
+>> --- a/net/vmw_vsock/af_vsock.c
+>> +++ b/net/vmw_vsock/af_vsock.c
+>> @@ -407,6 +407,8 @@ EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
+>>
+>> static bool vsock_use_local_transport(unsigned int remote_cid)
+>> {
+>> +	lockdep_assert_held(&vsock_register_mutex);
+>> +
+>> 	if (!transport_local)
+>> 		return false;
+>>
+>> @@ -464,6 +466,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>>
+>> 	remote_flags = vsk->remote_addr.svm_flags;
+>>
+>> +	mutex_lock(&vsock_register_mutex);
+>> +
+>> 	switch (sk->sk_type) {
+>> 	case SOCK_DGRAM:
+>> 		new_transport = transport_dgram;
+>> @@ -479,12 +483,15 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>> 			new_transport = transport_h2g;
+>> 		break;
+>> 	default:
+>> -		return -ESOCKTNOSUPPORT;
+>> +		ret = -ESOCKTNOSUPPORT;
+>> +		goto err;
+>> 	}
+>>
+>> 	if (vsk->transport) {
+>> -		if (vsk->transport == new_transport)
+>> -			return 0;
+>> +		if (vsk->transport == new_transport) {
+>> +			ret = 0;
+>> +			goto err;
+>> +		}
+>>
+>> 		/* transport->release() must be called with sock lock acquired.
+>> 		 * This path can only be taken during vsock_connect(), where we
+>> @@ -508,8 +515,16 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>> 	/* We increase the module refcnt to prevent the transport unloading
+>> 	 * while there are open sockets assigned to it.
+>> 	 */
+>> -	if (!new_transport || !try_module_get(new_transport->module))
+>> -		return -ENODEV;
+>> +	if (!new_transport || !try_module_get(new_transport->module)) {
+>> +		ret = -ENODEV;
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* It's safe to release the mutex after a successful try_module_get().
+>> +	 * Whichever transport `new_transport` points at, it won't go await
 > 
-> Sorry, this is the update: "compatible for cpufreq hardware on Qualcomm
-> QCS615 platform."
+> Little typo, s/await/away
 > 
-Do you mean you added a new patch?
+> Up to you to resend or not. My R-b stay for both cases.
 
-Best regards,
-Krzysztof
+Arrgh, thanks. I'll fix it.
+
+pw-bot: changes-requested
+
