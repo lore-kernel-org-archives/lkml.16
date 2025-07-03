@@ -1,81 +1,66 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CD8EEB5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FA3293C4F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751525887; cv=none; b=fsnQY8lF2a4RXyAqe6Tu8qWJxzRDUf32ZTao3mObTTjCzDdD9OpfOWK317xYarjBTLMzrX+IO7NROC7sM5Tz92PvAFE/EengTDmrQtKXPAxDZfaIGp6/Bg0m2HsLelrF9BOPMtupYRLDhrAhTS00Pe9SLBWokhMTGEd83Psd31M=
+	t=1751525902; cv=none; b=me12B82/FAztLeEycSN4FjuDzx8XjhGQ/ZuFzr7Z/DRLYxVlDKmCAN98S0na1txCMWX7t8HnJOZY+q/m1BEAprQJq/zl6xArirYyVnEQhn1GfwuV6nWzcrA3LVjighrFdbER6lk+YJwqUJUihknk9TQceYjD2MQ+SgmXXQfbzBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751525887; c=relaxed/simple;
-	bh=MiFb7oNrkcZmadEbXGPfi400/7byvb7i53fdpey0wwg=;
+	s=arc-20240116; t=1751525902; c=relaxed/simple;
+	bh=bickAPlR7/NP79mWKt8/KneNlEYimMJnZ+NoqIvI854=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DylOnNogHuxfu/j1t5XHLjgclDoH4xNoKpXYEnqKg5PNmCt91h4luay00O+x6Js/1U0+1N3ObiATWIY2+s0SYAnURdQ/QKd+SFAAYug8x70vK5OTA1i1EDofa5NzFL3lwR+rF3DRWlWIObtbKrCFckA2j1UZtUkU9+l9RzRC8l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m4nW6xnh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xQZD9tRr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TE3zkJ7I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+FWzNcWR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=j3UUefx1mJ/QwyVWihNGFOtaseIv4ygXpb+6eZF8NZSdDpQIl5XrlPp420aXwsvU8wuf9a5Bt+7S55R7rTZq7dDGcjYAduihfrzhB1//lkqSDdZfcDpxAjWZSOsH1MXdYccy9lU2rTJy2Z0eUguUhDzrKwAjThP3QIfPsuN+MYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=dh1tWdqt; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m4nW6xnh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xQZD9tRr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TE3zkJ7I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+FWzNcWR"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DF72521185;
-	Thu,  3 Jul 2025 06:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751525884; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUbc++Fz1+vt/VzybyWwNssiulZcT0uY8D6xoHGrF7M=;
-	b=m4nW6xnh53fJ7amnbj5N7ei1QAA7tuEBVoq1NumXAmJURYixd8kq+afkHNlLuHWvwPKXNL
-	p6yorRiT7AbFURQLO5ijI9H1TXUpH9SmGlX97i/4LMnnxtGS76Rar3udcrDtyEymTGO3be
-	sd9fA3jGa376sp3HbSrxH2lfDbrpVQQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751525884;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUbc++Fz1+vt/VzybyWwNssiulZcT0uY8D6xoHGrF7M=;
-	b=xQZD9tRrGUcNoFKjfBtNUnjNR9WredQqikK7BWN/izCyP9tpC6x63bWW4/S9oUJzqiZiTg
-	xl5SH17jAIB8WcBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TE3zkJ7I;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+FWzNcWR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751525883; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUbc++Fz1+vt/VzybyWwNssiulZcT0uY8D6xoHGrF7M=;
-	b=TE3zkJ7IT/2CM5bxHvNjIlOyubeA+9WNLI0KnIaOcXKQ4CeFoh225wiciIpSMVP4MpB8CN
-	HSc+jUGBA9LOtxiWfZBwl5KpKrPpD55ibbt0aD6FMmzMwTW+1NUStZK/xCdraI3ULyvEW5
-	JcIQntrGWV/A0kBicjAW84yFseaKOp8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751525883;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUbc++Fz1+vt/VzybyWwNssiulZcT0uY8D6xoHGrF7M=;
-	b=+FWzNcWRZW+AeBPGJLerU6Z2alqBIlY9hNLWX15wjXwl95DUqXtsBl9sQnNwWZ+P1xbVeQ
-	hGTSzwgVoEQVpWBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2226413721;
-	Thu,  3 Jul 2025 06:58:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tNzgBvspZmg0UQAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 03 Jul 2025 06:58:03 +0000
-Message-ID: <9025c412-9b6f-4714-a880-e8e6084e1b4c@suse.de>
-Date: Thu, 3 Jul 2025 08:58:02 +0200
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="dh1tWdqt"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so1347340f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google; t=1751525898; x=1752130698; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=uGKG5g4X2FtIIBBBni+nAn11AVuFyvfdg7Z2wu+7sP4=;
+        b=dh1tWdqtB6NPRpo0/mK42wwS3VGH8FsFkNqIPeIBLmg2QY0JnNQYPvTHM1jVhMFlgE
+         GzB2f+xQMNHHNfYWjtScja1t9a+QNdGQG9TMZc7eHL2qzKu9XgbFFPhZNdKL8tey+GWy
+         WTT7UUPUJegTvHMkoI7HuC8xzcHny0hH36hPfjMFDEaYMl3u1VgaBKM4PKs7G6FNW8O7
+         EBLSHSWkFMAF1Zu3cRCQWTCWrkNxVtt3C7zgBVG0oCLLoUR73tHtNWhM/32/XDzs+OdY
+         +EmF4HdNtwnp0btOurmMHkZ+r5HQEJOVf/KpGbiwfxCz+jUYTG1l+PzElCNtxElkYd3N
+         wpCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751525898; x=1752130698;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uGKG5g4X2FtIIBBBni+nAn11AVuFyvfdg7Z2wu+7sP4=;
+        b=Lx09my9ykd1OJkUaMfJysw0QjyizlQ9FOYzgYIw46fBr0fjLsxlRGelYlSG/WJQDXI
+         P5TEnu2GYcKONK9i2/tp9TRxz008fqKQTVOQgW34YmHe8olaL7QKdvXNwVYsyXyEyL9Q
+         LW3m532Io9QndHl1kSX5RXBQ6eWwTs42WwrbZTw9OG4Z0Jmc+O/kcfZcEetgRGQvmKuh
+         UZDXaejCHKQ4MuZmq3cmzoAhFBnvtBBLaeckzuC4jOg8CIgKhci2jTleThlYA6WpSlO9
+         MkDzdlmOOp7CcF4KvPsYsiq/gJJ3v6cn2SQEnXsdqXAOT1q14RJsfGNXmnSdV7CHZ3rs
+         kSIA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2pttr0NZ5DmY1b7ZEAMTr6bc4o50qPseqPrBXjNDQBKCy/Xdj1AmAitjz+Erz8gYuPnz5uhXFJzk5oew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHFJ9pLyLU3C1hP5Vdo7D8iI3vdkpOEjra6C+brjDdPmS+Uq/v
+	eVTpOEaApA/8Vg7cJgwY8NzlFt5wolmqBSLJMaRAG3ZPQFVHKbaGlJXIRYk0WjWYu1I=
+X-Gm-Gg: ASbGncs1Q50SswczmUN8/wUARdWJcPLMyrGtXY9+ZeFffZVBUB4rivqRRGBmuFME3J5
+	OaKGrIvl899SzLBxGD8po6Ai1pJhdVryE9wQcYsx/mDH/cZ6cCyBLAUza0CG9oV7JZi64jIQUEM
+	sIcPspiDwXOGTNzIwtAcgXPH+15Sn6cb/14KCCkai2IJ4FnNekYoKfuj+3Fqi7ey+VtDBhnBlK9
+	ThLpOQtTfysQaIr9ddPsuY2tDX9ErkbiqJAiyymXpQmuc0uAk2GpblcS4mRJyj+QJL8P7E4tL+W
+	j7lj3f/kv/0DuAHsOR2MNJU+OnHqxpJLg88NzsmWOA8BpUUB6X4cmYesFyJln9woZbepvDzEx+U
+	e1hAs7aarjOmEJAL4UDr3lS6E+ihs3AX1tgZFp7I=
+X-Google-Smtp-Source: AGHT+IFFoiiowVu/8wR0tlX292EVRJFeXC5GLN8cUKtKtyQtGsaIToPUA9LCF0OxS2wvlY0ljK8jzQ==
+X-Received: by 2002:a05:6000:24c7:b0:3a4:dbdf:7152 with SMTP id ffacd0b85a97d-3b20110b371mr1611335f8f.14.1751525897572;
+        Wed, 02 Jul 2025 23:58:17 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:5568:c43d:79bc:c2ec? ([2a01:e0a:b41:c160:5568:c43d:79bc:c2ec])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5966csm17977144f8f.72.2025.07.02.23.58.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 23:58:16 -0700 (PDT)
+Message-ID: <869cd247-2cde-46bd-9100-0011d8dbd47c@6wind.com>
+Date: Thu, 3 Jul 2025 08:58:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,412 +68,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/10] blk-mq: use hk cpus only when isolcpus=io_queue
- is enabled
-To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Aaron Tomlin <atomlin@atomlin.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin
- <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
- Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>,
- Mel Gorman <mgorman@suse.de>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
- linux-scsi@vger.kernel.org, storagedev@microchip.com,
- virtualization@lists.linux.dev, GR-QLogic-Storage-Upstream@marvell.com
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-8-557aa7eacce4@kernel.org>
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: Randy Dunlap <rdunlap@infradead.org>,
+ Gabriel Goller <g.goller@proxmox.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ David Ahern <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702074619.139031-1-g.goller@proxmox.com>
+ <c39c99a7-73c2-4fc6-a1f2-bc18c0b6301f@6wind.com>
+ <53d8eaa7-6684-4596-ae98-69688068b84c@infradead.org>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250702-isolcpus-io-queues-v7-8-557aa7eacce4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: 6WIND
+In-Reply-To: <53d8eaa7-6684-4596-ae98-69688068b84c@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: DF72521185
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
 
-On 7/2/25 18:33, Daniel Wagner wrote:
-> Extend the capabilities of the generic CPU to hardware queue (hctx)
-> mapping code, so it maps houskeeping CPUs and isolated CPUs to the
-> hardware queues evenly.
-> 
-> A hctx is only operational when there is at least one online
-> housekeeping CPU assigned (aka active_hctx). Thus, check the final
-> mapping that there is no hctx which has only offline housekeeing CPU and
-> online isolated CPUs.
-> 
-> Example mapping result:
-> 
->    16 online CPUs
-> 
->    isolcpus=io_queue,2-3,6-7,12-13
-> 
-> Queue mapping:
->          hctx0: default 0 2
->          hctx1: default 1 3
->          hctx2: default 4 6
->          hctx3: default 5 7
->          hctx4: default 8 12
->          hctx5: default 9 13
->          hctx6: default 10
->          hctx7: default 11
->          hctx8: default 14
->          hctx9: default 15
-> 
-> IRQ mapping:
->          irq 42 affinity 0 effective 0  nvme0q0
->          irq 43 affinity 0 effective 0  nvme0q1
->          irq 44 affinity 1 effective 1  nvme0q2
->          irq 45 affinity 4 effective 4  nvme0q3
->          irq 46 affinity 5 effective 5  nvme0q4
->          irq 47 affinity 8 effective 8  nvme0q5
->          irq 48 affinity 9 effective 9  nvme0q6
->          irq 49 affinity 10 effective 10  nvme0q7
->          irq 50 affinity 11 effective 11  nvme0q8
->          irq 51 affinity 14 effective 14  nvme0q9
->          irq 52 affinity 15 effective 15  nvme0q10
-> 
-> A corner case is when the number of online CPUs and present CPUs
-> differ and the driver asks for less queues than online CPUs, e.g.
-> 
->    8 online CPUs, 16 possible CPUs
-> 
->    isolcpus=io_queue,2-3,6-7,12-13
->    virtio_blk.num_request_queues=2
-> 
-> Queue mapping:
->          hctx0: default 0 1 2 3 4 5 6 7 8 12 13
->          hctx1: default 9 10 11 14 15
-> 
-> IRQ mapping
->          irq 27 affinity 0 effective 0 virtio0-config
->          irq 28 affinity 0-1,4-5,8 effective 5 virtio0-req.0
->          irq 29 affinity 9-11,14-15 effective 0 virtio0-req.1
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   block/blk-mq-cpumap.c | 194 +++++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 191 insertions(+), 3 deletions(-)
-> 
-> diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
-> index 8244ecf878358c0b8de84458dcd5100c2f360213..4cb2724a78e13216e50f0e6b1a18f19ea41a54f8 100644
-> --- a/block/blk-mq-cpumap.c
-> +++ b/block/blk-mq-cpumap.c
-> @@ -17,12 +17,25 @@
->   #include "blk.h"
->   #include "blk-mq.h"
->   
-> +static struct cpumask blk_hk_online_mask;
-> +
->   static unsigned int blk_mq_num_queues(const struct cpumask *mask,
->   				      unsigned int max_queues)
->   {
->   	unsigned int num;
->   
-> -	num = cpumask_weight(mask);
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE)) {
-> +		const struct cpumask *hk_mask;
-> +		struct cpumask avail_mask;
-> +
-> +		hk_mask = housekeeping_cpumask(HK_TYPE_IO_QUEUE);
-> +		cpumask_and(&avail_mask, mask, hk_mask);
-> +
-> +		num = cpumask_weight(&avail_mask);
-> +	} else {
-> +		num = cpumask_weight(mask);
-> +	}
-> +
->   	return min_not_zero(num, max_queues);
->   }
->   
-> @@ -31,9 +44,13 @@ static unsigned int blk_mq_num_queues(const struct cpumask *mask,
->    *
->    * Returns an affinity mask that represents the queue-to-CPU mapping
->    * requested by the block layer based on possible CPUs.
-> + * This helper takes isolcpus settings into account.
->    */
->   const struct cpumask *blk_mq_possible_queue_affinity(void)
->   {
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE))
-> +		return housekeeping_cpumask(HK_TYPE_IO_QUEUE);
-> +
->   	return cpu_possible_mask;
->   }
->   EXPORT_SYMBOL_GPL(blk_mq_possible_queue_affinity);
-> @@ -46,6 +63,12 @@ EXPORT_SYMBOL_GPL(blk_mq_possible_queue_affinity);
->    */
->   const struct cpumask *blk_mq_online_queue_affinity(void)
->   {
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE)) {
-> +		cpumask_and(&blk_hk_online_mask, cpu_online_mask,
-> +			    housekeeping_cpumask(HK_TYPE_IO_QUEUE));
-> +		return &blk_hk_online_mask;
-> +	}
-> +
->   	return cpu_online_mask;
->   }
->   EXPORT_SYMBOL_GPL(blk_mq_online_queue_affinity);
-> @@ -57,7 +80,8 @@ EXPORT_SYMBOL_GPL(blk_mq_online_queue_affinity);
->    *		ignored.
->    *
->    * Calculates the number of queues to be used for a multiqueue
-> - * device based on the number of possible CPUs.
-> + * device based on the number of possible CPUs. This helper
-> + * takes isolcpus settings into account.
->    */
->   unsigned int blk_mq_num_possible_queues(unsigned int max_queues)
->   {
-> @@ -72,7 +96,8 @@ EXPORT_SYMBOL_GPL(blk_mq_num_possible_queues);
->    *		ignored.
->    *
->    * Calculates the number of queues to be used for a multiqueue
-> - * device based on the number of online CPUs.
-> + * device based on the number of online CPUs. This helper
-> + * takes isolcpus settings into account.
->    */
->   unsigned int blk_mq_num_online_queues(unsigned int max_queues)
->   {
-> @@ -80,11 +105,169 @@ unsigned int blk_mq_num_online_queues(unsigned int max_queues)
->   }
->   EXPORT_SYMBOL_GPL(blk_mq_num_online_queues);
->   
-> +static bool blk_mq_hk_validate(struct blk_mq_queue_map *qmap,
-> +			       const struct cpumask *active_hctx)
-> +{
-> +	/*
-> +	 * Verify if the mapping is usable.
-> +	 *
-> +	 * First, mark all hctx which have at least online houskeeping
-> +	 * CPU assigned.
-> +	 */
-> +	for (int queue = 0; queue < qmap->nr_queues; queue++) {
-> +		int cpu;
-> +
-> +		if (cpumask_test_cpu(queue, active_hctx)) {
-> +			/*
-> +			 * This htcx has at least one online houskeeping
-> +			 * CPU thus it is able to serve any assigned
-> +			 * isolated CPU.
-> +			 */
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * There is no online houskeeping CPU for this hctx, all
-> +		 * good as long as all isolated CPUs are also offline.
-> +		 */
-> +		for_each_online_cpu(cpu) {
-> +			if (qmap->mq_map[cpu] != queue)
-> +				continue;
-> +
-> +			pr_warn("Unable to create a usable CPU-to-queue mapping with the given constraints\n");
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +/*
-> + * blk_mq_map_hk_queues - Create housekeeping CPU to
-> + *                        hardware queue mapping
-> + * @qmap:	CPU to hardware queue map
-> + *
-> + * Create a housekeeping CPU to hardware queue mapping in @qmap. @qmap
-> + * contains a valid configuration honoring the isolcpus configuration.
-> + */
-> +static void blk_mq_map_hk_queues(struct blk_mq_queue_map *qmap)
-> +{
-> +	cpumask_var_t active_hctx __free(free_cpumask_var) = NULL;
-> +	struct cpumask *hk_masks __free(kfree) = NULL;
-> +	const struct cpumask *mask;
-> +	unsigned int queue, cpu, nr_masks;
-> +
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE))
-> +		mask = housekeeping_cpumask(HK_TYPE_IO_QUEUE);
-> +	else
-> +		goto fallback;
-> +
-> +	if (!zalloc_cpumask_var(&active_hctx, GFP_KERNEL))
-> +		goto fallback;
-> +
-> +	/* Map housekeeping CPUs to a hctx */
-> +	hk_masks = group_mask_cpus_evenly(qmap->nr_queues, mask, &nr_masks);
-> +	if (!hk_masks)
-> +		goto fallback;
-> +
-> +	for (queue = 0; queue < qmap->nr_queues; queue++) {
-> +		unsigned int idx = (qmap->queue_offset + queue) % nr_masks;
-> +
-> +		for_each_cpu(cpu, &hk_masks[idx]) {
-> +			qmap->mq_map[cpu] = idx;
-> +
-> +			if (cpu_online(cpu))
-> +				cpumask_set_cpu(qmap->mq_map[cpu], active_hctx);
+Le 03/07/2025 à 00:26, Randy Dunlap a écrit :
 
-Why cpu_online? Up until this point it really didn't matter if the 
-affinity mask was set to 'online' or 'possible' cpus, but here you
-require CPUs to be online...
+[snip]
 
-> +		}
-> +	}
-> +
-> +	/* Map isolcpus to hardware context */
-> +	queue = cpumask_first(active_hctx);
-> +	for_each_cpu_andnot(cpu, cpu_possible_mask, mask) {
-> +		qmap->mq_map[cpu] = (qmap->queue_offset + queue) % nr_masks;
-> +		queue = cpumask_next_wrap(queue, active_hctx);
-> +	}
-
-Really? Doesn't this map _all_ cpus, and not just the isolcpus?
-
-> +
-> +	if (!blk_mq_hk_validate(qmap, active_hctx))
-> +		goto fallback;
-> +
-> +	return;
-> +
-> +fallback:
-> +	/*
-> +	 * Map all CPUs to the first hctx to ensure at least one online
-> +	 * housekeeping CPU is serving it.
-> +	 */
-> +	for_each_possible_cpu(cpu)
-> +		qmap->mq_map[cpu] = 0;
-
-I think you need to map all hctx, no?
-
-> +}
-> +
-> +/*
-> + * blk_mq_map_hk_irq_queues - Create housekeeping CPU to
-> + *                            hardware queue mapping
-> + * @dev:	The device to map queues
-> + * @qmap:	CPU to hardware queue map
-> + * @offset:	Queue offset to use for the device
-> + *
-> + * Create a housekeeping CPU to hardware queue mapping in @qmap. @qmap
-> + * contains a valid configuration honoring the isolcpus configuration.
-> + */
-> +static void blk_mq_map_hk_irq_queues(struct device *dev,
-> +				     struct blk_mq_queue_map *qmap,
-> +				     int offset)
-> +{
-> +	cpumask_var_t active_hctx __free(free_cpumask_var) = NULL;
-> +	cpumask_var_t mask __free(free_cpumask_var) = NULL;
-> +	unsigned int queue, cpu;
-> +
-> +	if (!zalloc_cpumask_var(&active_hctx, GFP_KERNEL))
-> +		goto fallback;
-> +
-> +	if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
-> +		goto fallback;
-> +
-> +	/* Map housekeeping CPUs to a hctx */
-> +	for (queue = 0; queue < qmap->nr_queues; queue++) {
-> +		for_each_cpu(cpu, dev->bus->irq_get_affinity(dev, offset + queue)) {
-> +			qmap->mq_map[cpu] = qmap->queue_offset + queue;
-> +
-> +			cpumask_set_cpu(cpu, mask);
-> +			if (cpu_online(cpu))
-> +				cpumask_set_cpu(qmap->mq_map[cpu], active_hctx);
-
-Now that is really curious. You pick up the interrupt affinity from the
-'bus', which, I assume, is the PCI bus. And this would imply that the
-bus can (or already is) programmed for this interrupt affinity.
-Which would imply that this is a usable interrupt affinity from the
-hardware perspective, irrespective on whether the cpu is online or not.
-So why the check to cpu_online()? Can't we simply take the existing 
-affinity and rely on the hardware to do the right thing?
-
-> +		}
-> +	}
-> +
-> +	/* Map isolcpus to hardware context */
-> +	queue = cpumask_first(active_hctx);
-> +	for_each_cpu_andnot(cpu, cpu_possible_mask, mask) {
-> +		qmap->mq_map[cpu] = qmap->queue_offset + queue;
-> +		queue = cpumask_next_wrap(queue, active_hctx);
-> +	}
-> +
-> +	if (!blk_mq_hk_validate(qmap, active_hctx))
-> +		goto fallback;
-> +
-> +	return;
-> +
-> +fallback:
-> +	/*
-> +	 * Map all CPUs to the first hctx to ensure at least one online
-> +	 * housekeeping CPU is serving it.
-> +	 */
-> +	for_each_possible_cpu(cpu)
-> +		qmap->mq_map[cpu] = 0;
-
-Same comment as previously; don't we need to map all hctx?
-
-> +}
-> +
->   void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
->   {
->   	const struct cpumask *masks;
->   	unsigned int queue, cpu, nr_masks;
->   
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE)) {
-> +		blk_mq_map_hk_queues(qmap);
-> +		return;
-> +	}
-> +
->   	masks = group_cpus_evenly(qmap->nr_queues, &nr_masks);
->   	if (!masks) {
->   		for_each_possible_cpu(cpu)
-> @@ -139,6 +322,11 @@ void blk_mq_map_hw_queues(struct blk_mq_queue_map *qmap,
->   	if (!dev->bus->irq_get_affinity)
->   		goto fallback;
->   
-> +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE)) {
-> +		blk_mq_map_hk_irq_queues(dev, qmap, offset);
-> +		return;
-> +	}
-> +
->   	for (queue = 0; queue < qmap->nr_queues; queue++) {
->   		mask = dev->bus->irq_get_affinity(dev, queue + offset);
->   		if (!mask)
+>>> +static int addrconf_sysctl_force_forwarding(const struct ctl_table *ctl, int write,
+>>> +					    void *buffer, size_t *lenp, loff_t *ppos)
+>>> +{
+>>> +	int *valp = ctl->data;
+>>> +	int ret;
+>>> +	int old, new;
+>>> +
+>>> +	// get extra params from table
+>> /* */ for comment
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst#n598
 > 
+> Hm, lots there from the BK to git transfer in 2005, with a few updates by Mauro, Jakub, and myself.
+> 
+> 
+> More recently (2016!), Linus said this:
+>   https://lore.kernel.org/lkml/CA+55aFyQYJerovMsSoSKS7PessZBr4vNp-3QUUwhqk4A4_jcbg@mail.gmail.com/
+> 
+> which seems to allow for "//" style commenting. But yeah, it hasn't been added to
+> coding-style.rst.
+I wasn't aware. I always seen '//' rejected.
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+> 
+>>> +	struct inet6_dev *idev = ctl->extra1;
+>>> +	struct net *net = ctl->extra2;
+>> Reverse x-mas tree for the variables declaration
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-netdev.rst#n368
+> 
+> Shouldn't maintainer-netdev.rst contain something about netdev-style comment blocks?
+> (not that I'm offering since I think it's ugly)
+> 
+It has been removed:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=82b8000c28b5
