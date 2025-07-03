@@ -1,72 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD85D298CC0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DF62D12FD;
+	Thu,  3 Jul 2025 08:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531784; cv=none; b=hS+SwVc+K07yToSAPfvTbbdMxXRq1VsWvTAybelm3e0QTecj4/HBj76RZ3QWb/3BPHeC6rML2qmt7GbSyC1Ft/hnqGwFuvhm8kjSPLNaYZH0eKVYAx+gMGHhc1u+9sGM4IAVTyrJIGtEnSIBL8yXOsXSGhXc1s8b8escHi2ge7o=
+	t=1751531807; cv=none; b=qjBSpTdbhXARgWFACHD92hSIAMnm7zMiqnURTY8m/u5fCA1mZ5geKSLzCvsRxsDbiALvN2tOX8+Ydec8FRDeLWLNbCiprMh4o+1XeNKt6g9Mm/VJhtjB2LzQi6rCoeklq/fXc1r+cD+uRUEWf4wkrmMpS8BC/FCCVT0napvXXMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531784; c=relaxed/simple;
-	bh=T6PpFeQ/ohri03+CGLWWlYLkV2rqEwutq9AcbGax4X8=;
+	s=arc-20240116; t=1751531807; c=relaxed/simple;
+	bh=qppQWxVXiOFfDlGryBoHGtYg0F5qikJ097SKtmZOXSI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mWYNYYfJbP3IWdyo0BMfU/ya3uNkoBFHTbuupPCYb68XuuRspoqf/geBGB0Sf9C2o/XD5m116SeFZWvAp7sWIfuEFgqEmqcxMxsgkwtBPOJmUVNUIW6y8Q5QRz66RJYJW/xlcU57j/g3B05vruyt+5vjmZh26pEShIA3pMDSKJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGajvd7g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=lcGaTuLfmdUZWAAwwCAb0hMkKEowbFjpUePMc73xd72fSTRQhOjJ8wg34PplidPZ8m5weOA+uFColwoKE4JhMqAHgjVCXo5sNNoqts1RxrcE95Am6Ef6H70oAZUUwlc2v+ULTCsVsAdaL0xcO+qwmg5511tBlOTeV3ZCLYvw9/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+9X1gsH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGajvd7g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751531781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9gO/OHQvAP6w5kh7oQzia//h/ythwr2wIvD22NPjXXU=;
-	b=KGajvd7gRpxUOp+i07xqI/y9kpvxJ1UAU3KHQuphXQTY25yIp7ozJNs2XAn/SeDgwQMJx8
-	HwPX47FjaiLYPIDbbmVoyi2UaxZN5q4Rj/Gmi7tnTv/m5E/NBwmfYIdAp5xgsYytsWKy/9
-	gOP3fRdYxeyf4p9/HAGxv1BRNApafQU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-9NEM-pW0O_urqN2oCCA1jg-1; Thu, 03 Jul 2025 04:36:19 -0400
-X-MC-Unique: 9NEM-pW0O_urqN2oCCA1jg-1
-X-Mimecast-MFC-AGG-ID: 9NEM-pW0O_urqN2oCCA1jg_1751531778
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae3c5ed22dfso131229366b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:36:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531778; x=1752136578;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9gO/OHQvAP6w5kh7oQzia//h/ythwr2wIvD22NPjXXU=;
-        b=lTjjoJwDPU4cxPQeEDuOV7JhxTSJ+LaC2zVC5gefftX3RruxRT8abwqNKpFqtQrALt
-         BdxKL8bG08d4RikqdE1+ECr4d7pJrdHFeqa62QorLhYArj41gwsnKOYr7elXdDbZy4eW
-         W/Di1KkkmzWc9mEIyrnEmc/m5Ac+w0wL9a+BPeULWOXET1TULbbtNJWCIOCwKtXKn+Wm
-         sBM+MvB88e2i2YKu+pGItSCPoPdUqF3fFBhsQvemU95YKE3zFziMEhIEbGULJxuzQSaB
-         byAo1zCIMviM7EbG3wZRRekjkZkapPvtvRAYbBgZn597XzNzXqpqrmDc6IGz9LYdRfmZ
-         deVg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9kU1uJZRdGuqXv9W7jakD9T/TUJ7hoYP/q0Pbo48WJmEnmqMIyrhkiftC4Q+fv/gm0rbSRXc8rYHRAY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkM4EPbxLaG718UM6edCGbddlKOFcqU3E7cUNP9vwVf8rQjKxl
-	eZT8UPFrNtGqdfqr1opaCVZw0yH7hOjSP8sOjcs1fcBK2WmLUU6K4EAb2ScB6eiI72RSoLBkb4r
-	qIbRtKa7mMc9iTG+iGbX2DPLQ0I7f9jHgB0Fio3TfpuyCHSGcud/K1NOADhb9cx3cyg==
-X-Gm-Gg: ASbGncuVUOiXN90ZQykpjeXkbm3PG/+BDZ4AXQZaCjMMmBe3Wklvle1CZBijZyYdg0o
-	/KvWsV4o9/SMSujR45ENixC7uvydTOmq/Kc6IFnACdefWIGiS+YsvYDcg5bfK14r4mIcgueuQXU
-	c8PJAZFeCcuEs6McktTdIGblze35h1Enig0SmvVQuuybUN5gr/bD3lHa6gL8e8aXSQfIobat0+l
-	OSyUWW1iluuqwMrabPCs3oL4JkS+LMbHzh0tMAWb9ctj7/z5WbHSmZiP3B6cXHIMsphHpLA/Nik
-	Ni3A/bkA59ewGiV0u9139cjTwo/B16c9GovIdU1Rp8Ld
-X-Received: by 2002:a17:907:9813:b0:ae0:d019:dac7 with SMTP id a640c23a62f3a-ae3d8a00e87mr207397266b.23.1751531778385;
-        Thu, 03 Jul 2025 01:36:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdZn7Xzvu2kuD04w0WXoNHvONDJk1+Shs/4Cy35t8g6LHSLZdzBllHtVL4w3wNSP1r10N5MQ==
-X-Received: by 2002:a17:907:9813:b0:ae0:d019:dac7 with SMTP id a640c23a62f3a-ae3d8a00e87mr207393866b.23.1751531777914;
-        Thu, 03 Jul 2025 01:36:17 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363a149sm1205694966b.9.2025.07.03.01.36.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 01:36:17 -0700 (PDT)
-Message-ID: <165faf55-4376-4fa8-9a9b-aefd00de6a66@redhat.com>
-Date: Thu, 3 Jul 2025 10:36:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+9X1gsH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE7BAC4CEE3;
+	Thu,  3 Jul 2025 08:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751531805;
+	bh=qppQWxVXiOFfDlGryBoHGtYg0F5qikJ097SKtmZOXSI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H+9X1gsH+tonAwfV+2IpIYuBDA3W7RFg+gYrzIvAbPp8ECQci4eaGj/SGbaPaFmrL
+	 Mo7kqVnSmVj/xksfqG8hYheZs4ufM9mEP9WOwDB9joss9vm56eNbQEMwcLXbyOAY4s
+	 s1gHU0bSxA66nDv3qKgUER4tE/oY5jNxhTR8N0T+0wjtBh7SPROxgD0HxM8g7L0nO2
+	 bTbfvLby9MrjkF9C5IbXowdZFVfpiGyjN4XXVLwzASwiaLcGdnq+pSG93iHyTBx8V3
+	 7GFc20i4R3ooK4A7cWWX1pTToB6mCTIB3ugaqGkCJ9Y7vUr+XE3evXmCywTDRD8ewa
+	 4x8uSBXH70/yQ==
+Message-ID: <6df04862-2254-4181-8db7-c58023f9716c@kernel.org>
+Date: Thu, 3 Jul 2025 10:36:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,102 +35,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] selftests/mm: Skip thuge-gen if shmmax is too
- small or no 1G huge pages
-To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
- pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
-References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
- <20250703060656.54345-7-aboorvad@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v5 0/3] Add support for clock controllers and CPU scaling
+ for QCS615
+To: Taniya Das <quic_tdas@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250702-qcs615-mm-cpu-dt-v4-v5-0-df24896cbb26@quicinc.com>
+ <20250703-daft-asparagus-gaur-e77861@krzk-bin>
+ <b6cabc11-a4f0-4d8a-97b1-140be394feca@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250703060656.54345-7-aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <b6cabc11-a4f0-4d8a-97b1-140be394feca@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03.07.25 08:06, Aboorva Devarajan wrote:
-> Make thuge-gen skip instead of fail when it can't run due to system
-> settings. If shmmax is too small or no 1G huge pages are available,
-> the test now prints a warning and is marked as skipped.
-
-Maybe change the subject to
-
-"selftests/mm: Skip thuge-gen test if system is not setup properly"
-
+On 03/07/2025 10:28, Taniya Das wrote:
 > 
-> -------------------
-> Before Patch:
-> -------------------
-> ~ running ./thuge-gen
-> ~ Bail out! Please do echo 262144 > /proc/sys/kernel/shmmax
-> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-> ~ [FAIL]
-> not ok 28 thuge-gen ~ exit=1
 > 
-> -------------------
-> After Patch:
-> -------------------
-> ~ running ./thuge-gen
-> ~ ~ WARNING: shmmax is too small to run this test.
-> ~ ~ Please run the following command to increase shmmax:
-> ~ ~ echo 262144 > /proc/sys/kernel/shmmax
-> ~ 1..0 ~ SKIP Test skipped due to insufficient shmmax value.
-> ~ [SKIP]
-> ok 29 thuge-gen ~ SKIP
+> On 7/3/2025 12:51 PM, Krzysztof Kozlowski wrote:
+>> On Wed, Jul 02, 2025 at 02:43:08PM +0530, Taniya Das wrote:
+>>> Add the video, camera, display and gpu clock controller nodes and the
+>>> cpufreq-hw node to support cpu scaling.
+>>>
+>>> Clock Dependency:
+>>> https://lore.kernel.org/all/20250702-qcs615-mm-v10-clock-controllers-v11-0-9c216e1615ab@quicinc.com
+>>>
+>>> Changes in v5:
+>>> - Update the documentation for CPUFREQ-HW for QCS615.
+>>
+>> What did you update? This has to be specific, not vague.
 > 
+> Sorry, this is the update: "compatible for cpufreq hardware on Qualcomm
+> QCS615 platform."
+> 
+Do you mean you added a new patch?
 
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
-
+Best regards,
+Krzysztof
