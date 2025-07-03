@@ -1,122 +1,144 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE012E3AE1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA592E9EB2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545194; cv=none; b=i+5Nev34j+ehxaMVdwfW/HoYBemrDitgvmUPde/GxS13VcOYuj5XwkgWegEZ38kx2cGaLRRs2DuVGXiXoj4scBp5ysgZuoWPCiDZ5lgsQ/xMrDx0VHpFO06l3lOz/FthGc6n8WDHIxZeCZ4ptnFuE10WCCWO5w5k+00nLOJ/tB0=
+	t=1751545202; cv=none; b=G07QbRkPrI+7wF6rdKxtNA6YAUGwsJU9dHYDEUGyPgjge2BtUFEdVSWN4ou9aEJknh2IX01GLxLZJUOxdK/N0mvDiLLkT31fS54K/88MLFbCNXj/FNnjDjrpYMUx/A3pRZGLuwFvERXY/JTPMGNg0b2fP03f4cugE2LN6u/oJtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545194; c=relaxed/simple;
-	bh=TMekI+ePGLb2dVGIQvd4eMWoX3DAqPDpxNlAHJXJ7ns=;
+	s=arc-20240116; t=1751545202; c=relaxed/simple;
+	bh=kKL3IDHxSL9ur5slPrsn/ZT6vo1aStrKbY0F9D9k7cI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gcp4jDfoIj+Oku88T5gmiBvX7/cX3w3K+e0Ew1GHzBInmcPx93O3k3B/BUSg9f1dZI8wG+MYxukAypEdlzTUbdr5saTurkMWXE65ASuybJvQl6tnbqibeRbV3tK5BQawEIUHGFvnOjUcMQ59IYXz+m5YknAQasLdyWV8veD2Nzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FsFG6m01; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=shWodr6f+vTg8EFF0PWV4BSaG7NaiyWL914vMEO32RHiJuqtgyrCZ7qx66cD2U8uV4RsJ5Q91/ahTnoiGbjGO5XSb8sLpAmkGV16r8a5Sr/sDOU7zKpVMkviT03yVPpc+ToAw21cZMd1kVy4k07J/E2rM+jLYT5V/Oluuf7h/Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mUGzxWfL; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FsFG6m01"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-713fba639f3so78351617b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:19:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mUGzxWfL"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e733e25bfc7so4936204276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:20:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751545192; x=1752149992; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qTC597t48bncltdn47anMKlxgf1mIXgbQUWYTJlSUZI=;
-        b=FsFG6m01aZ51iejphuFwUpt31/T+xR9uKywCpw7cm9ywNpd/LLHUjszKwZk5zye1B+
-         t7bSgTzx00+un7s3RYZxjTOoYSxGB40D/zJ5bam2G/MtEH1eAMtHItdeFaVfrEpYt/4O
-         6yTBRO2CPWGXi2W9VfvDEOTsi4ylB9QmH2g+MBaWF3h8/fB+P55CX2VCaivTyIc91xeX
-         xjf+pTYigO5mru1+M0D+0zq8TRkV0O7cT5wJi9It0DHiAGwcvBbvEOg++3jvGJsNcDs+
-         ObazsHRB5pHCOARh3IzqbaKTzVnllYMTFZLhycZAN2YqvEWqhk6VMFDKhm01xcsL50XD
-         ZQ2A==
+        d=linaro.org; s=google; t=1751545199; x=1752149999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P5OmxI4SidnpS0vVfCbFw2K2gtQJNYphQeO8RrhcQo8=;
+        b=mUGzxWfLcANgIxZC82zeORoSi9LpLxJy/TrmbbrTWvsWDXtbUhAMg7g/UfWKxCiLdx
+         pWg9dQnI5SRs4wpZWbevVtXSYFK1A/wXGbrrrVDSBqsEG7U0D6INKcOnnUbFU6iksZ5K
+         wqbVe1R5YEEeFeNJVXKZSWzyfWe0dJ/FvV2CLvMIyEPrCjN/idtFvrNrKJT/hHWDfYlH
+         idUDFdL3MWn5fjFuOZyAiVx6wDx5puarMwaCDb0H+wlqE4wHrMSms6P00vMY7ZIGGYFZ
+         pxQ7Qq4kRnttqwTEdMznfEsA7ly806I0CbvOUkMdIuFEoOiadaJ5wbsRjZsk1P6K93T2
+         LIsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545192; x=1752149992;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qTC597t48bncltdn47anMKlxgf1mIXgbQUWYTJlSUZI=;
-        b=izUVHZEEIiTMMweJxpCn3nsREtA+NR7xORlgwfoTGjJrYx9WxNQRbMlQsP911CgRQ4
-         HiqgZGvmudNDi+OQiGEegDgQqnVnUkhWR4YDeYt7nOOtTP0JApfo3gYyrwUuOhe73p9k
-         iY2MPSMUa5u5aU4/IVrYpkFkEf8cYyonpxH+uryOhvHEkT6+vYzZ1HPklQpVho2mM/RZ
-         ta/RagVLa+EE2hlETJq0Dyakp9aocVFEgVVuKdv75Ue8PgUVv779Ky6A4c3J3I0DYjqN
-         2LrBxFEMJ4rDjFv2LGTSN8hJNfIw0DDHeQKqkqNU5r/kJBX7a5RDblGY0Pw8aTNcfhlQ
-         C3Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCULQ3Abz1QpTCPEHdN+/SxiIlIoZa4HZGZPwIgMU9N7kcbTfciRYJuFTdkkguwwGzIDDICDo/M4rXeQg3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl25QBpaHJ3UNw/NGcFXaVAw3r3Shpuein4rFYBy8DbQtgexuG
-	grIxIhyozbuYaw54yQClHHMjlbXxIKQ9pTk/bIWGK7BzehCKfDpqVadmolMyFQDQ40L9vcdN6Q2
-	2I2WWuGtl0LH2oDc13p6s9IWJ3P5NIIjVcBCJLmv+5g==
-X-Gm-Gg: ASbGncthQLYNTiKv1UDHpBGN5Tm1uDmfyEebP4IeOVcKnCPK4hRnd3RdbuzeSFkesIx
-	TzraPFMO8vWU6YUxxQfOllH5rgLylfgztahNFtJ4uDZ866MoN3RkEndVOUSkc2Z2lvr0XvHGm3U
-	IBHX0tTJfjc5ToPYFd9/IJlimTQ7CXC4sYlg5eusMl4pFU
-X-Google-Smtp-Source: AGHT+IEwi+jGBSSdoJm9iL9oKLTvyrTQHOBeWUAEM9l7fKOqqBksvPOst1zV7M7DzNv8oipsKvDD/lmQ+H+HLHXKg+Q=
-X-Received: by 2002:a05:690c:61ca:b0:710:edf9:d940 with SMTP id
- 00721157ae682-7164d5755b7mr87945397b3.36.1751545191877; Thu, 03 Jul 2025
- 05:19:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751545199; x=1752149999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P5OmxI4SidnpS0vVfCbFw2K2gtQJNYphQeO8RrhcQo8=;
+        b=g54fXB0+YXcj7donWS9lEWANOIOk2dbHcczVuwPDUfu0IfG/DPvnkSfJJ5H7VEYRox
+         4kW39wzoxEMXY5B5rgkRIT2Y+EiDMN0Q28sm9cG1CrfpJH7+E4X/IxqQaZs/MHx8/Xuh
+         ruGrUtk2fxgZ82PZFcxJXoUps0mJy6sfkO8UNftFuGwX037MzIy/tBijKWhV0/PPG+Uh
+         3Tfjt89ichE1Ww9n8mCh9mrE7RzR8k5dPHYar29wvBTKIG6jmA02aNzvyyLkHbSkWRgx
+         A2WO/syBbtn2NWZnRKPykPVxR1VS8Mg2q4fpdffin/4wexavAAKug0J5rraOTrLrlQDa
+         uq4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUauNs8UtkY+qIpMYbPejCSPgO2KTwf55K9AOQ/Me4BkGDd8v2fhwPyJE6GCEo0rBShen5tVHb3RuOInns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywiy5H8m2O5Z1QTW9TMJUFioaR0YGAc9R3O9jgm97n9HDorR0XH
+	yeYc88Kp8jrcDgZgLqoiIKxXocTnLFSm4xht/IxXTFjOBBoTX3ktT/Fmc2BP3hVnnGyWaXYk5A0
+	L/tu77iG3GehNeD3d8UIPBPQKIvEAIoV9WDtwUfWMbA==
+X-Gm-Gg: ASbGncv9xeVPNsEgBypLTT1wNxEbjugBoOjyz0dXYPYUcaFB9xoomwiinOw0TOkAfs5
+	zNoP2s5KCA+/mOe4qX2zFmRjz2ArGAij+n244ZtSSBt5l2JRmlRCwrX4IDACaZmJZ+PGBYu0WsG
+	zJIqDWqEaJXxXth/D6O/UNPoA1mnT8NN30KQgyPQpGn+Hl
+X-Google-Smtp-Source: AGHT+IGeQ25BfOeCZ6K58In/sB8b1ZR/YJwrPf+U8PqmfpS8N2JgDxJX3EH5egsVw60A4HjnBNqsJSLLaMm5U7EBU3c=
+X-Received: by 2002:a05:690c:4802:b0:714:268:a9f8 with SMTP id
+ 00721157ae682-716590ec815mr46729757b3.27.1751545199558; Thu, 03 Jul 2025
+ 05:19:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620043517.172705-1-lidong@vivo.com>
-In-Reply-To: <20250620043517.172705-1-lidong@vivo.com>
+References: <20250626112442.9791-1-edson.drosdeck@gmail.com>
+ <81d519f5-caac-4fd8-8491-3580ce1b6060@intel.com> <CAMSsBRyvdvxgAQMkoB3UTZUs8MDEdPEVcKh2fFto6TFz-hUeiA@mail.gmail.com>
+In-Reply-To: <CAMSsBRyvdvxgAQMkoB3UTZUs8MDEdPEVcKh2fFto6TFz-hUeiA@mail.gmail.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 3 Jul 2025 14:19:15 +0200
-X-Gm-Features: Ac12FXzM1OH6jEp4Aj99iKPDBaVLgh5QaSjxOO1gOJ_img1HJBSw-vdI_UPPTnc
-Message-ID: <CAPDyKFp+w5UvpGKPtehqUrZHsAJ+tivLKtBcn8vJgOm1ZxWJrQ@mail.gmail.com>
-Subject: Re: [PATCH v1] mmc: Convert ternary operator to str_true_false() helper
-To: Li Dong <lidong@vivo.com>
-Cc: Aubin Constans <aubin.constans@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	"open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." <linux-mmc@vger.kernel.org>, 
-	"moderated list:ARM/Microchip (AT91) SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, opensource.kernel@vivo.com, 
-	rongqianfeng@vivo.com
+Date: Thu, 3 Jul 2025 14:19:23 +0200
+X-Gm-Features: Ac12FXz3uWlhWrNuVR3FR61kkpyGiUJaNlibnmXBnTwXEWNnSDIxaj442r_4-YA
+Message-ID: <CAPDyKFrLBV=AwDTiSC14N+qBknU+zM7bK-Vtj4a=c+byiUOgZA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci: Quirk for broken command queuing on Intel
+ GLK-based Positivo models
+To: edson drosdeck <edson.drosdeck@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 20 Jun 2025 at 06:35, Li Dong <lidong@vivo.com> wrote:
+On Wed, 2 Jul 2025 at 01:07, edson drosdeck <edson.drosdeck@gmail.com> wrot=
+e:
 >
-> Replace direct ternary condition check with existing helper function
-> str_true_false() to improve code readability and maintain consistency.
+> Thanks for the feedback!
 >
-> Signed-off-by: Li Dong <lidong@vivo.com>
+> Just to confirm: should I resend this as v2 with the corrected subject li=
+ne?
 
-Applied for next, thanks!
+No need for that this time.
 
-Note that I am applying this since $subject patch takes care of *all*
-possible conversions (it just happens to one in this case) to
-str_true_false() for the mmc subsystem.
+I have applied it for fixes and amended the patch according to
+Adrian's suggestions, thanks!
 
 Kind regards
 Uffe
 
 
-> ---
->  drivers/mmc/host/atmel-mci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-> index 0e0666c0bb6e..1f11626c8f47 100644
-> --- a/drivers/mmc/host/atmel-mci.c
-> +++ b/drivers/mmc/host/atmel-mci.c
-> @@ -38,6 +38,7 @@
->  #include <asm/cacheflush.h>
->  #include <asm/io.h>
->  #include <linux/unaligned.h>
-> +#include <linux/string_choices.h>
+> Best regards,
+> Edson Juliano Drosdeck
 >
->  #define ATMCI_MAX_NR_SLOTS     2
 >
-> @@ -2264,7 +2265,7 @@ static int atmci_init_slot(struct atmel_mci *host,
->                 "slot[%u]: bus_width=%u, detect_pin=%d, "
->                 "detect_is_active_high=%s, wp_pin=%d\n",
->                 id, slot_data->bus_width, desc_to_gpio(slot_data->detect_pin),
-> -               !gpiod_is_active_low(slot_data->detect_pin) ? "true" : "false",
-> +               str_true_false(!gpiod_is_active_low(slot_data->detect_pin)),
->                 desc_to_gpio(slot_data->wp_pin));
->
->         mmc->ops = &atmci_ops;
-> --
-> 2.34.1
->
+> Em qui., 26 de jun. de 2025 =C3=A0s 11:05, Adrian Hunter
+> <adrian.hunter@intel.com> escreveu:
+> >
+> > On 26/06/2025 14:24, Edson Juliano Drosdeck wrote:
+> > > Disable command queuing on Intel GLK-based Positivo models.
+> > >
+> > > Without this quirk, CQE (Command Queuing Engine) causes instability
+> > > or I/O errors during operation. Disabling it ensures stable
+> > > operation on affected devices.
+> > >
+> > > Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
+> >
+> > Subject would normally begin "mmc: sdhci-pci:" instead of "mmc: sdhci:"
+> >
+> > Otherwise:
+> >
+> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> >
+> > Also I guess:
+> >
+> > Fixes: bedf9fc01ff1 ("mmc: sdhci: Workaround broken command queuing on =
+Intel GLK")
+> > Cc: stable@vger.kernel.org
+> >
+> > > ---
+> > >  drivers/mmc/host/sdhci-pci-core.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdh=
+ci-pci-core.c
+> > > index 13a84b9309e0..e3877a1c72a9 100644
+> > > --- a/drivers/mmc/host/sdhci-pci-core.c
+> > > +++ b/drivers/mmc/host/sdhci-pci-core.c
+> > > @@ -913,7 +913,8 @@ static bool glk_broken_cqhci(struct sdhci_pci_slo=
+t *slot)
+> > >  {
+> > >       return slot->chip->pdev->device =3D=3D PCI_DEVICE_ID_INTEL_GLK_=
+EMMC &&
+> > >              (dmi_match(DMI_BIOS_VENDOR, "LENOVO") ||
+> > > -             dmi_match(DMI_SYS_VENDOR, "IRBIS"));
+> > > +             dmi_match(DMI_SYS_VENDOR, "IRBIS") ||
+> > > +             dmi_match(DMI_SYS_VENDOR, "Positivo Tecnologia SA"));
+> > >  }
+> > >
+> > >  static bool jsl_broken_hs400es(struct sdhci_pci_slot *slot)
+> >
