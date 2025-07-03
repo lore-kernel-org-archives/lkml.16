@@ -1,208 +1,88 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85C146D6A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFAA14658D;
+	Thu,  3 Jul 2025 13:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549816; cv=none; b=k8AWjj7fm5vT/i+r23rI2PkiMQy8Eg5bXow5zWtFB42gJRQoIiZdoBfJTdg6spfH2jlFrJKBAa9TArp/m/BBcbVBiUE5yHsSi2X4ZPVTKWha8cElRaS2vWint5Vnh8ML3QgUXkBEE2rWS4ajXMkY4DShQV/oYYK50Mp7FgVznQw=
+	t=1751549828; cv=none; b=CJ1rUZU3BD2rpCrP9eDa9BvJYgpWqGePUrFm5EsFEian5cJqZMIcru3w7aze5nWDVzDwLJFa+7aj9rMJN6HEKVtENMsPoDONuM+B4mi1vFdQUjdmvpyjSbvwFBwMH2ZWVB8MHbCuWy5ycaViF+HVzEnqULFuerBTBIt3ivBMOnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549816; c=relaxed/simple;
-	bh=QcYEbOcAUAAcx49jz95XgHUgtihwpn2gj4zLe9LO+rY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HvHFCSLkZowNrXFx1SzM1uJ52+Qlpla+JzNeFevBrj95YpXXLDW26qKrlkaUjlGD706/C5ksS78mdk3d3sGsYPwUHnPnnLvUaJjiqWhVTh/DbGd+UDSzah9ga0R5rMox9/c29phtrJmYl8JSk36Upb3YCCDvx00KbA2MhlGVbdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=dvjY3Aq+; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
+	s=arc-20240116; t=1751549828; c=relaxed/simple;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YfPqx5i0vOXI4dx//ppQkSz5TMVyEv1xnR7hR1cwuRU2UnGNHU6zdxHKhHcPeswTTwOSQJN0a4Iq75jTd5QfLYYomywDljpCJ4Q8RLoXfdJWdb0/wf0WoCUuWA0vhB4gPqB8ed0UFabNAyjiTXT2O788/6FEkQASgcpei+SmaN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jPlD8res; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rFlMcXtV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="dvjY3Aq+"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e898de36cfbso1141243276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1751549812; x=1752154612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Pa1E42imXzEppSh60Pt3n9Kcxaz89TjQ5VMNqR0H6o=;
-        b=dvjY3Aq+cTZyKJ3EKDp1GP9oDUfeGQj+CpXt5KBkTsR7P2FM7RwhRQOPigDWeI4jGm
-         g9EzF6zH5lMi6G5C4I/8Qw9G2QmLwv1eCBBhC80QtAInD/fsMjhdEAaTll9g7oBb6N07
-         4lAGDxOZq5pbXUWnef6VzoHXTwUIfZz9630+8ayxqwBebrE/3dLdYtbyDQNOX7+OsXZa
-         nwQrkYdUu6dqzFO55l6hkXHo/8GtsbQP4V7exYJNkJEvi2WbWN+ltSt3F4pQFEsroQdt
-         NM55h70YzCGQpYWKuscTyVoe3MeUpyIAq+nPvkdBWB88JCxOK/WvzURc6OfBx77OgoUv
-         JlIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751549812; x=1752154612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Pa1E42imXzEppSh60Pt3n9Kcxaz89TjQ5VMNqR0H6o=;
-        b=ANwMWezvBCeCfCCRLtiZmOh6YQeKtzJzQddW0gjzl8ATelraVy+n7XtUej1CTIFMOD
-         R/Fzz6cHuz2xyzly44dfxHFrQ4ElLfbH4OCr2lE8BioDQ8ka98IePFIqTYwp2PS4qIUt
-         QEzTVsSQEdS1L0Q2T3nyBrAzEJUBfspnOkMX5WMGFYasd0onZga0CPy6ehcuq9RNgmIS
-         i27d14b2dBRwVzlpxi6w+BBifh2IHhHfeoejrvokzSgIP83pxn9olRCL42EiIVm96HGv
-         oWKk5vA5kcMvZbmnycv7JWzUEFyrmsZLjACwNC6hNbhl3yyIIbsNOJhXCKCUSqkC7NtO
-         2lmA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6XiYVhqonpTPjHPoGkG/U8a94rQnp8XPaOdCgT/9wdQMekegmndBQAYYUynS5yWuFwnLceuVOzazIqJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX8o+gpLXBaLCBIwGZP59k6IHwbNxpLltsrQHRbDVupmF+m4MT
-	gcA7R+4ba3RxjjPU7gCLwTxQZIlBqPxSLWQpZ1Hv+ZqyLsgwvEsKXWJ6B5s0r5N0ftbNF6Bsqxn
-	BMrAhZ28RSwQsZcRpSWH8yL/02FcIiZwqPT9sM572
-X-Gm-Gg: ASbGncv2jKPRRNt2Ow3KswRhqzHV65xR75e76PPrldgDPkgzd2zeGWx8UUQd2C5uH1u
-	6rqz2dxdY3HgIAFlw27SsyMcvICS/br55OgZfa95RYqvPHdEA/+FWSlK17sNGUwIcx318jLksHg
-	ZQi0vtGXlZgbN5LaNQcdr3OtWKpycP9bi50q1MdX4E1yaBcC8jwT5u
-X-Google-Smtp-Source: AGHT+IFPcRpzmHXQSJxoX3k/ToHbl1IES0n24poBBCf559T3PMHo+hJcvP1KxLowwGhrEZSDnSiIgaoj9AtH399wcQI=
-X-Received: by 2002:a05:690c:930f:10b0:70f:84c8:311a with SMTP id
- 00721157ae682-7164d26dd0fmr57930917b3.5.1751549812499; Thu, 03 Jul 2025
- 06:36:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jPlD8res";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rFlMcXtV"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751549825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=jPlD8resdPQkScUW8H+r89NtnlB219MoiJ/YnR9hyuhHe+XmwvqwrJk92WU7yjoFjzYWLy
+	BaMnX7X+9lPLrwOSdnnw1YCmaYuPss9YJmbwUMLyNevM/vvufC8TlQ1pH9/qfPxecTRgs5
+	dLbL0aTegfclO/rvENzRnIh45mTmsIhuzJrGeJ9gF7F8wnJxN9ublP00XeQLJZjdTBGhcr
+	QKTMoJmZAXMzqRkIV2K5vsfuHiMypGgCXumXCfK2jimOe7YQqVa6iWsGcYkRZ7EOG5Ea4U
+	inn89QrpwP4IdxEKkkLHhQ5RSts4S6c4W1Mon7P8r1X2pDKTdMRR/+4qTouolA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751549825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=rFlMcXtVEOh3SYdsFm5qqJb37aRdK7toIdXVLCjHNoOEx2tQ/KjUuH8sry3ci/ccMEdwrG
+	oWuuPvIAHCNYC5Aw==
+To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
+ Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
+ Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
+ <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
+ <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
+ Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
+ <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+ <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 16/16] PCI: vmd: Switch to msi_create_parent_irq_domain()
+In-Reply-To: <de3f1d737831b251e9cd2cbf9e4c732a5bbba13a.1750858083.git.namcao@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <de3f1d737831b251e9cd2cbf9e4c732a5bbba13a.1750858083.git.namcao@linutronix.de>
+Date: Thu, 03 Jul 2025 15:37:04 +0200
+Message-ID: <874ivtv1j3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702164926.2990958-1-s-ramamoorthy@ti.com> <20250702164926.2990958-2-s-ramamoorthy@ti.com>
-In-Reply-To: <20250702164926.2990958-2-s-ramamoorthy@ti.com>
-From: Jon Cormier <jcormier@criticallink.com>
-Date: Thu, 3 Jul 2025 09:36:41 -0400
-X-Gm-Features: Ac12FXy2zQFI6mRDTso8dA6ZiKpXB6flvP9ZnKFZlc6xV7haoVtmkKufuRBRABQ
-Message-ID: <CADL8D3bunxRXvoDOK-y=iy28CLQrfNCvmXarcH_kQO1j=zkm4A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jul 2, 2025 at 12:49=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@ti=
-.com> wrote:
->
-> TPS65215 and TPS65219 are overlapping PMIC devices. While their regulator
-> features differe, the GPIO features are the same. In the TPS65219 MFD
-> driver, the 2 PMICs share the same "tps65219-gpio" compatible string to
-> limit support for TPS65215 in this GPIO driver to comments.
->
-> The TPS6521X_GPIO0_IDX and TPS6521X_GPIO0_OFFSET macro name prefixes are
-> updated to indicate these macros apply to both PMICs.
->
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-> Reviewed-by: Roger Quadros <rogerq@kernel.org>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Jun 26 2025 at 16:48, Nam Cao wrote:
 
-Reviewed-by: Jonathan Cormier <jcormier@criticallink.com>
-> ---
->  drivers/gpio/gpio-tps65219.c | 27 +++++++++++++++++----------
->  1 file changed, 17 insertions(+), 10 deletions(-)
+> Move away from the legacy MSI domain setup, switch to use
+> msi_create_parent_irq_domain().
 >
-> diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
-> index 526640c39a11..3c762103babc 100644
-> --- a/drivers/gpio/gpio-tps65219.c
-> +++ b/drivers/gpio/gpio-tps65219.c
-> @@ -1,8 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * GPIO driver for TI TPS65219 PMICs
-> + * GPIO driver for TI TPS65215/TPS65219 PMICs
->   *
-> - * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com=
-/
-> + * Copyright (C) 2025 Texas Instruments Incorporated - http://www.ti.com=
-/
->   */
->
->  #include <linux/bits.h>
-> @@ -13,8 +13,15 @@
->  #include <linux/regmap.h>
->
->  #define TPS65219_GPIO0_DIR_MASK                BIT(3)
-> -#define TPS65219_GPIO0_OFFSET          2
-> -#define TPS65219_GPIO0_IDX             0
-> +#define TPS6521X_GPIO0_OFFSET          2
-> +#define TPS6521X_GPIO0_IDX             0
-> +
-> +/*
-> + * TPS65215 & TPS65219 GPIO mapping
-> + * Linux gpio offset 0 -> GPIO (pin16) -> bit_offset 2
-> + * Linux gpio offset 1 -> GPO1 (pin8 ) -> bit_offset 0
-> + * Linux gpio offset 2 -> GPO2 (pin17) -> bit_offset 1
-> + */
->
->  struct tps65219_gpio {
->         struct gpio_chip gpio_chip;
-> @@ -26,7 +33,7 @@ static int tps65219_gpio_get_direction(struct gpio_chip=
- *gc, unsigned int offset
->         struct tps65219_gpio *gpio =3D gpiochip_get_data(gc);
->         int ret, val;
->
-> -       if (offset !=3D TPS65219_GPIO0_IDX)
-> +       if (offset !=3D TPS6521X_GPIO0_IDX)
->                 return GPIO_LINE_DIRECTION_OUT;
->
->         ret =3D regmap_read(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,=
- &val);
-> @@ -42,7 +49,7 @@ static int tps65219_gpio_get(struct gpio_chip *gc, unsi=
-gned int offset)
->         struct device *dev =3D gpio->tps->dev;
->         int ret, val;
->
-> -       if (offset !=3D TPS65219_GPIO0_IDX) {
-> +       if (offset !=3D TPS6521X_GPIO0_IDX) {
->                 dev_err(dev, "GPIO%d is output only, cannot get\n", offse=
-t);
->                 return -ENOTSUPP;
->         }
-> @@ -71,7 +78,7 @@ static void tps65219_gpio_set(struct gpio_chip *gc, uns=
-igned int offset, int val
->         struct device *dev =3D gpio->tps->dev;
->         int v, mask, bit;
->
-> -       bit =3D (offset =3D=3D TPS65219_GPIO0_IDX) ? TPS65219_GPIO0_OFFSE=
-T : offset - 1;
-> +       bit =3D (offset =3D=3D TPS6521X_GPIO0_IDX) ? TPS6521X_GPIO0_OFFSE=
-T : offset - 1;
->
->         mask =3D BIT(bit);
->         v =3D value ? mask : 0;
-> @@ -117,7 +124,7 @@ static int tps65219_gpio_direction_input(struct gpio_=
-chip *gc, unsigned int offs
->         struct tps65219_gpio *gpio =3D gpiochip_get_data(gc);
->         struct device *dev =3D gpio->tps->dev;
->
-> -       if (offset !=3D TPS65219_GPIO0_IDX) {
-> +       if (offset !=3D TPS6521X_GPIO0_IDX) {
->                 dev_err(dev, "GPIO%d is output only, cannot change to inp=
-ut\n", offset);
->                 return -ENOTSUPP;
->         }
-> @@ -131,7 +138,7 @@ static int tps65219_gpio_direction_input(struct gpio_=
-chip *gc, unsigned int offs
->  static int tps65219_gpio_direction_output(struct gpio_chip *gc, unsigned=
- int offset, int value)
->  {
->         tps65219_gpio_set(gc, offset, value);
-> -       if (offset !=3D TPS65219_GPIO0_IDX)
-> +       if (offset !=3D TPS6521X_GPIO0_IDX)
->                 return 0;
->
->         if (tps65219_gpio_get_direction(gc, offset) =3D=3D GPIO_LINE_DIRE=
-CTION_OUT)
-> @@ -179,5 +186,5 @@ module_platform_driver(tps65219_gpio_driver);
->
->  MODULE_ALIAS("platform:tps65219-gpio");
->  MODULE_AUTHOR("Jonathan Cormier <jcormier@criticallink.com>");
-> -MODULE_DESCRIPTION("TPS65219 GPIO driver");
-> +MODULE_DESCRIPTION("TPS65215/TPS65219 GPIO driver");
->  MODULE_LICENSE("GPL");
-> --
-> 2.43.0
->
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-
---=20
-Jonathan Cormier
-Senior Software Engineer
-
-Voice:  315.425.4045 x222
-
-http://www.CriticalLink.com
-6712 Brooklawn Parkway, Syracuse, NY 13211
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
