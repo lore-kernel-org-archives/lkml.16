@@ -1,152 +1,64 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352292E7BBE;
-	Thu,  3 Jul 2025 15:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1285C2E7649
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751554937; cv=none; b=fQF/VUe92hr/sQpR2An1YnhRLRv5g1TV1xHlf5Fo3ZSGHHh/O97QyGQoXDx7yVrj2KCF4MoG+wYM2d85WlAMwq7VlIox2NhWKEXlmlNVz17/D4TLd80Z3NWhNVQ/hUYFEiNtd06JGqgRU/xVE7NqbJo1JCkW7k+Gi0hoLtPRR6Q=
+	t=1751554958; cv=none; b=QwJ9m0w96qxdwn/70A2FVWDsjHU2pJ3go0gkPBd0n25VtLkpgUI5BwdqY0AklYRT5EGPb1rWz7oYoRZ6i3p5iLrwfzcsM8H1zoWFlJxLRi86Z8eE/w5/xIPOc6Lmy6r+UUFq0sX6rCnEC1416ElvI870ZDSNDMEEKdgp6qBivBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751554937; c=relaxed/simple;
-	bh=Zl8BffPR8rnREgtYfU4AlvafGOWoybBGrZam8tP38lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LB1KrNKxHffnywSnH3dNYLANrFlK0/xM8Bbwa4XLS93wHuYpElCTpfrw4XLhxHFGnYrOFl3Ux6KSE+b3vlAO2jdW1LnlOJS8HjIY2HJpGHJpMwHezRT0K6jxmow5f9ZVBZwhZoFxhXf4xYNxP8hIrosB02eS2TWIPEktKJSlXV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b5165cf5so35973e87.0;
-        Thu, 03 Jul 2025 08:02:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751554933; x=1752159733;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W9fsm/GMzU4nqbcKsxS9glFMOJCYfvJ+oEJCI8KRLbc=;
-        b=PJU4cT0uOY/0ECVl0v4KXglriusYfc51ZAOcNn04ZQPMg43cP+RmuaYRnHp6J18My3
-         cWOQHAey+OpbW+H+FyeUj1XpIqbtbInRAYUhHQox01XI5/ORZaNRLlSiUxx4qYx4D1Al
-         LXQj6cKqwmwbNwUCZfoQTVxrfhSdhImjmljNf6yDVOTik3IvVYquFRyR0bT2WcN/50Lk
-         9hcVTcwS0dYfz5VhqzpIcCAViqwwbgD87wKA0BQ0dMshbd0X+SbPDKCFV+eoIglZlzw9
-         70xK0M05oRsLDX2TscsS6wsnJqhe0xS//SMKQXY+895UG8Jxmm6WMi+kJRL8mXOQF//i
-         OTyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUlc/LKK2+2dunCgBDwRxCAwEfDriKVV6p1aOPLgt5FvdT9l4pH4wDS5QBx+jgxcsEMU//KUosO3kN0kM=@vger.kernel.org, AJvYcCWNlyy2oRdGR6u9JErKzrVfy2/7b79ilrfsPEi8ipw4KRWWOtyuNh7snWJLXrj+Erushl7QtBwvdRo3hkOF@vger.kernel.org
-X-Gm-Message-State: AOJu0YztydbDhioPqv+26o21PsNDovquQPPy3n05+h9mfjivgiEaYRc6
-	C5wreNJC/vjTUnIYI9pawRIQLjlRMhYpvojj4HlM+RLo73x1r9n/zZzNgBqN6032
-X-Gm-Gg: ASbGncvqUcMw+UN/OZorD07WqzfzarCAg8cHffXPtqf/WKOqn92THn3pph2gATapwX7
-	qO0088E7oEFZwtFLqUAp1rrflwE8pEAA2LnRxW0CipQ4fUpcnwuVBJHWWi1lVLg1D+HMfIbgdnR
-	qssOWJpQpkiFFdIxNS39/yXDA+5eu84zv89ISjWg0pH9CwEcb6YQ46kY6lsGhSFnNcpCJnh7/eN
-	C019XLhb85FGRnnGyA4XgqY6kIB4ghikshO/+dsNThc2V0X/hzasTexlH4QncvzFPPBFxlvYeDC
-	iK0PI23UpwAY6DdoWizydLai+inxweNs+6XUDP8XNXYeXOqL6KchCmb+Yg1tzuLp7vo/ivG5Qu0
-	=
-X-Google-Smtp-Source: AGHT+IEri2yurMSh6ssyzS0tOyLJvejqQ9bKtd90V7OhU858+wxFHpFvVOr1IMzHvMpLeoNexrxbtw==
-X-Received: by 2002:a05:6402:2549:b0:608:a7a0:48 with SMTP id 4fb4d7f45d1cf-60e71e50e18mr3056093a12.28.1751554918954;
-        Thu, 03 Jul 2025 08:01:58 -0700 (PDT)
-Received: from gmail.com ([2620:10d:c092:500::4:6e61])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c826f6788sm10500440a12.0.2025.07.03.08.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:01:58 -0700 (PDT)
-Date: Thu, 3 Jul 2025 16:01:54 +0100
-From: Breno Leitao <leitao@debian.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: cov@codeaurora.org, rmk+kernel@armlinux.org.uk, mark.rutland@arm.com,
-	catalin.marinas@arm.com, linux-serial@vger.kernel.org,
-	rmikey@meta.com, linux-arm-kernel@lists.infradead.org,
-	usamaarif642@gmail.com, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: arm64: csdlock at early boot due to slow serial (?)
-Message-ID: <aGabYkQixrVeYlLD@gmail.com>
-References: <aGVn/SnOvwWewkOW@gmail.com>
- <20250702172036.GC1039028@e132581.arm.com>
- <aGZVP8A2a3VVQwzt@gmail.com>
- <20250703114557.GD1039028@e132581.arm.com>
+	s=arc-20240116; t=1751554958; c=relaxed/simple;
+	bh=c6xCAWjHpumkTQLOfh7WvSy3V1SunS+02KYf2drw/lo=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HG8wJGcYPdPJgrFkBxJVGKVbW/gzs0qmZ6a0obrD4kuXlng1RM6YH4atYPqi9YLN1IlXmUzR4fXOMfQUXJfWSF9W1Z5eDw1jjulxrcVtnmfoJAzs97lA3lqWCemkG+hkH5xxsivdma5LC8MkTs0BDzHV6NcQ176cEAqTLzb6brc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu; spf=pass smtp.mailfrom=bitology.eu; dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b=ASFMyeqf; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitology.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b="ASFMyeqf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitology.eu
+	; s=ds202506; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
+	MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:
+	Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eIyAAbqN+4lS1rk3wroLQ2daHGjjheVhbTGGrKJP/5Y=; b=ASFMyeqf3OQoFtWkSBAmjgXy0M
+	It0iP3O5pvg1vyM3BhrWt3WxpDRRYg3HYIAMltfhLTu8wOdE6EuJMnAM+UEvjshftQ5AccBlQqtJd
+	ufNhEuqaW/uCdmUC9l+JyIZ6mIF5hxjAfAhyFmQt9IHRT6I6R3yEf2loEimAbffyP7cXihRmJBJBj
+	N9XTCesuqakCaFSPZeGV9HkYiRVw/xDKYnVhsybdCKvH5dD9XZ+ZA1rz13eh9+OblrktHKb4/5lP6
+	g36VZtgTHNU3GhV48y58+U2qMfxt2SItth/tjEM3vReytjCp+TDxzkorkZVMx0wzgDD3unzSXMCND
+	3lq2QR9w==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1uXL4D-00Bgy6-6w
+	for linux-kernel@vger.kernel.org;
+	Thu, 03 Jul 2025 16:37:37 +0200
+Message-ID: <3a2adf68-4e2b-4700-80b4-bb91060b14b7@bitology.eu>
+Date: Thu, 3 Jul 2025 16:37:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703114557.GD1039028@e132581.arm.com>
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bit-budi@bitology.eu>
+Subject: Example of allergory via (computer) Bit (He in Islam) (was Fair Pay
+ Philosophy, Low Jitter)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Leo,
+My youtube channel is now an example of allergory via the Bit concept, 
+and the kawai Bit symbol. suitable for instance for a launch menu.
 
-On Thu, Jul 03, 2025 at 12:45:57PM +0100, Leo Yan wrote:
-> On Thu, Jul 03, 2025 at 03:02:39AM -0700, Breno Leitao wrote:
-> > > In some cases, if normal world and secure world share the same UART
-> > > port, it can cause the UART state machine malfunction and long wait.
-> > 
-> > I don't know how to check it for sure, but, looking at the serial
-> > console output, I don't see anything else using the UART. The only
-> > output I see on the console at that time is coming from linux kernel.
-> > 
-> > Would you recommend any additional check?
-> 
-> I have no experience in the driver, I should avoid any noise. But two
-> things in my head for quick trying.
-> 
-> - First, you could try earlycon mode, e.g., add option in kernel
->   command line:
->   
->     earlycon=pl011,mmio32,0xc280000
->     earlycon=pl011,0xc280000
-> 
->   This would be possible to give more printing logs. If earlycon works
->   well, then the issue might be caused by later init code (clock, or
->   UART driver itself).
+https://www.youtube.com/@Mugoth_Star_Bitstreams
 
-That is an interesting experiment, thanks for the heads-up.
+mUSLIM translated is Mugot. - The whole story is told here via media I 
+made in the 90s, with some comic retro videos. + playlists!
 
-I got `earlycon=pl011,mmio32,0xc280000` working, the machine boots fine,
-and I see different behaviours.
-
-Booting up the system the following lines (as examples):
-
-	[    0.000000] earlycon: pl11 at MMIO32 0x000000000c280000 (options '115200')
-	[    0.000000] printk: legacy bootconsole [pl11] enabled
-	[    0.493205] smp: Brought up 1 node, 72 CPUs
-	[    4.232864] SMP: Total of 72 processors activated.
-	[    4.242788] CPU: All CPU(s) started at EL2
-	[    6.318137] ARMH0011:00: ttyAMA0 at MMIO 0xc280000 (irq = 66, base_baud = 0) is a SBSA
-	[    6.978245] netpoll: netconsole: local port 6666
-	[    7.234429] Run /init as init process
-
-Also, I have a trace_printk() in pl011_console_write_atomic, and it only
-start later in the code. More precisely at:
-
-       swapper/0-1       [000] dN.1.     6.334581: pl011_console_write_atomic: Printing 49 [    6.334573] printk: console [ttyAMA0] enabled
-
-I understand that the early boot messages got sent by some other
-function? (Or maybe the tracing framework was not initialized?)
-
-Anyway, pl011_console_write_atomic() continues to call ~20K times cpu_relax()
-waiting for the BUSY bit to disappear, as before.
-
-For comparison, these are the same line as above, when earlycon is not
-set:
-
-	[    0.154009] smp: Brought up 1 node, 72 CPUs
-	[    0.154012] SMP: Total of 72 processors activated.
-	[    0.154013] CPU: All CPU(s) started at EL2
-	[    0.466949] ARMH0011:00: ttyAMA0 at MMIO 0xc280000 (irq = 66, base_baud = 0) is a SBSA
-	[    0.466967] printk: console [ttyAMA0] enabled
-	[    0.466949] ARMH0011:00: ttyAMA0 at MMIO 0xc280000 (irq = 66, base_baud = 0) is a SBSA
-	[    5.513307] smp: csd: Detected non-responsive CSD lock (#1) on CPU#0, waiting 5001000000 ns for CPU#05 do_nothing+0x0/0x10(0x0).
-	[   10.719305] netpoll: netconsole: local port 6666
-	[   10.961798] Run /init as init process
-
-
-From what I see, using earlycon boots the kernel faster. Here are some
-ideas I got:
-
-	1) Earlycon enables the message to be printed earlier, thus, it smooth
-	out the serial console
-
-	2) without earlycon, the messages are printed at once, with interrupt
-	disabled
-	 2.a) This causes CSD locks
-	 2.b) CSD locks caused an additional 3 seconds delay
-
-	3) pl011_console_write_atomic is slow on both cases
-
-Thanks for the good suggestion,
---breno
+Light,
+Ywe.
+Bit Budi.
+https://bitology.eu/
