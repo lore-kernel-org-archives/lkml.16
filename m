@@ -1,41 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3192E2E7620;
-	Thu,  3 Jul 2025 16:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037F2EF9CB;
+	Thu,  3 Jul 2025 16:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558574; cv=none; b=CUklfUpIg0/D5RySqix0kBLin+VAi0j3IQ42o0lSrPA8dueu46CE9OvM1psFp3Qlm46ZDMvTNjrCp/pfFXXC5lfOGgfynJs3cKqD1plXqfvzPsHZWl9ii8rEPB4+xYTiABdqVMG2Vqi/iNasPOffFOYC5JaKFWwxHLkMXtR4alw=
+	t=1751558581; cv=none; b=PzyIViJIP98QNUeJYz7Xlxb7KBOw4rL2acQjZxtE6OvwMVAg4keVxQ/jXEfQo7XHzRthYi3Gab6yYlisxzoNP5HlNxjN4QuoiypC96+Ls6dYl8zMlrLsPATQ6ZLFe4aFpAR55A4//dLa9325x5Hu4LFUUhxxyXMBgKnyGfvgxew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558574; c=relaxed/simple;
-	bh=7hiT5yYbddKCXqvkzW/vOMypP7ypjCXDDJiBjipHzqs=;
+	s=arc-20240116; t=1751558581; c=relaxed/simple;
+	bh=can3F0NiK+RM/o/h/N4y84gESEsFFjLqz7fOQSUjTuA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZiJGEMj/UglJmGC6KunSf1Oh2hlo1sD4UcRa/YUosrRCT/NkqFL5Ek5fiD7zi67bJoYDKBezy8UrwYK2mIOiF0cAUhs/4UQFrq+lWvErbtC+Lf87kWZqXSHxmB6WPY++jOKlm4T2YirbEzuG+GDJ39jepR2XyrEEx9cRfLEcp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81696C4CEF1;
-	Thu,  3 Jul 2025 16:02:50 +0000 (UTC)
-Date: Thu, 3 Jul 2025 17:02:48 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 14/31] arm64/sysreg: Add ICH_HFGITR_EL2
-Message-ID: <aGapqD8BbZeryTJK@arm.com>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-14-12e71f1b3528@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3ZAF/9IHIZgUzO9NEcJ9YlKjmZdgFCDNM9NwChGnxZBgsb5w2sPv6m0PBIMQaTe+Ad/aHM7jvav+20MeSg04Rb8ymgviUDzuhA3qu2reoXJR7CZBA1xRlztGEmFmcR9Q64DUWAdAM+4XEh9Vx/+Ugm2LMis40PrsgT5egTR92Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ei9Kh3pV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ei9Kh3pV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=wtjRuAyC7vMRMx/UJSaY6ovJK30TPRL48z6eA243l8I=; b=Ei9Kh3pVvB6iyQDYBACPJ3WWRB
+	UA5sMKAdqAeWJyAzn7SUrmaE3ldJGc4cKGtebzXPpzC4fjdvwMYXw2r2JUheQZRFSonaYPrMsc1C3
+	HCwKhbK8CGTH0i0eDzvU0g6Ajqhcu9b8WC+Z3GZkHBqUrndxlszGtilS9tvgQ+roZO8g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXMOe-0007HZ-Dn; Thu, 03 Jul 2025 18:02:48 +0200
+Date: Thu, 3 Jul 2025 18:02:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: weishangjuan@eswincomputing.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	rmk+kernel@armlinux.org.uk, yong.liang.choong@linux.intel.com,
+	vladimir.oltean@nxp.com, jszhang@kernel.org,
+	jan.petrous@oss.nxp.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+	inochiama@gmail.com, boon.khai.ng@altera.com,
+	dfustini@tenstorrent.com, 0x1207@gmail.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, lizhi2@eswincomputing.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: ethernet: eswin: Document for
+ EIC7700 SoC
+Message-ID: <3efddad3-87f7-4f4b-a406-a0c866ef5fd4@lunn.ch>
+References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
+ <20250703091947.1148-1-weishangjuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,16 +56,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703-gicv5-host-v7-14-12e71f1b3528@kernel.org>
+In-Reply-To: <20250703091947.1148-1-weishangjuan@eswincomputing.com>
 
-On Thu, Jul 03, 2025 at 12:25:04PM +0200, Lorenzo Pieralisi wrote:
-> Add ICH_HFGITR_EL2 register description to sysreg.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+> +    ethernet@50400000 {
+> +        compatible = "eswin,eic7700-qos-eth", "snps,dwmac-5.20";
+> +        reg = <0x50400000 0x10000>;
+> +        interrupt-parent = <&plic>;
+> +        interrupt-names = "macirq";
+> +        interrupts = <61>;
+> +        phy-mode = "rgmii";
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Please don't user 'rgmii' in examples. It is normally wrong, and we
+don't want DT developers copying it into real DT binding, just for me
+to tell them it is wrong.
+
+	Andrew
