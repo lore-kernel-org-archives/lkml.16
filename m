@@ -1,126 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDDD229B36
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E372F229B36;
+	Thu,  3 Jul 2025 20:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751573879; cv=none; b=snl1D4jwbz8BcqM8qn6OElLNf8mEQ/0QIHif0Vn2aFYqlCrKYkujYHYFy2VFGvaS8VDrcC+XlIqJaDtgsjdV4LDdYuW100sKsOCGKH9FYBNvbdrMNXJp4g42iBA6/LEINv0IGvh/ZjbiIOonnX8CZfQwIfWhrW/n32umpPec/hk=
+	t=1751574003; cv=none; b=l5t8zjKZv0pgbQxrI28r1Y8xX/CLYMqkYL1YFiNJSSwzTEH28J53/b/AkoisdByhpUSzYFXoEFh4WI1Hp/cymQK4rvhO/YHemtSecTE3by4gyElcMxKilyFjvBq1wnGFARywdvimAg3elhutIFKzEOm9R4oJvA1JmL5XW6E39ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751573879; c=relaxed/simple;
-	bh=5Zc5AYO/w4IUy0DP1VkVLeKbvMqQ25BFVpD7sEhMVrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SaJvCvxF5J4wAL3hfxv2lppvxmjWHdpGLbvE3JMS/kZQN5+MzjpBY+TgNomsx+r3mtvaoxYesKvtPvNHG5axYfGyXdl0Fhqr64aZ+C7xyVHWgZ/OG9IWQcaxCsrHRuuvHeoFt9UxNdPPpdsp83HUFe8oL4brzJagQxzcNfnTa5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QG7y0/9e; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751574003; c=relaxed/simple;
+	bh=/Z6dqwWKcpslEvJUI8LhwqbM2J/z4HV3/9EflldkIS4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VsKVhX6m2p+g8P5qx5nqjgVQ0YHIP8nWQG7ZyfxXBGfvNMGH+WhpiaMIj5VTyVdFkEXEVMBiXx/mqrtLDTRYohs9ap9wwGArHROxVZGcHnLyVrb85QoR/ocgJ7hsplwdRn4iwy5JmMZuQ/cK+P9Q56pEPIFd3S88kVqHgaajf2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gL1N+Tkz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QG7y0/9e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751573878; x=1783109878;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5Zc5AYO/w4IUy0DP1VkVLeKbvMqQ25BFVpD7sEhMVrc=;
-  b=QG7y0/9eU5lOF/d9QD3aC87Yh9bJiCDRBPOXYDHof5OI0YF25gUpEHEd
-   idoYpuiar64FDkkY77no60zWNEr/Le52HCLg+n1GdC4g0xhBjwuTgIpXz
-   x46dxR5E1mplKzt4dNjVwBq6HAf+KbHYlInH6yt74UQgun2a4ae02y8rk
-   NetW47TcLfbYCggegbrB35T4mSdopFno6qwuGbzxacXxseYaoY2u0VFWM
-   +KyDkBR4+OAJ56iEv5nUOKpxI7UMsq5T+S6js1rW5FdKprQKft5aFRG35
-   E7dI/Q8QfGf5JzMMOpRW2yr5zmUWGptEk5p/fu93ZCSlEndXj+c59nYMF
-   w==;
-X-CSE-ConnectionGUID: EB6RH6HVTjWJTHeazdaNbw==
-X-CSE-MsgGUID: bFeL91hbQD+iAMU69RpuXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="71482987"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="71482987"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:17:57 -0700
-X-CSE-ConnectionGUID: ah1uz+S5RxiXgleAzZFvkA==
-X-CSE-MsgGUID: 1ugZKt8JRj+M8STKY0E6Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="158813004"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:17:57 -0700
-Date: Thu, 3 Jul 2025 13:17:55 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v6 17/30] x86/resctrl: Discover hardware telemetry events
-Message-ID: <aGblc2VimjIiy_bY@agluck-desk3>
-References: <20250626164941.106341-1-tony.luck@intel.com>
- <20250626164941.106341-18-tony.luck@intel.com>
- <aF7dt2iQpvuahZil@agluck-desk3>
- <eb6f7bc0-23ae-4100-9a34-fade6c650460@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gL1N+Tkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F6BC4CEF1;
+	Thu,  3 Jul 2025 20:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751574002;
+	bh=/Z6dqwWKcpslEvJUI8LhwqbM2J/z4HV3/9EflldkIS4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gL1N+Tkz0OLj2NMAhLtIDCKg5/fS+DhRasCnj+SqRlpM8NFvysOtOlTCR5iYjE8ed
+	 xnfhUAewgXuKSGrWeNGmZoEST0fJhvNY9eAEkrzZTIj/Qs5yYvOti1bbwBIDWZd6no
+	 b9AZ6LqyGe/3aOe4Xgjsv/wIJ8DJh4R8tYO+zv1VkJgInVHm2eOEKA/JSjvcD7lDwG
+	 Hc9EWXC1HmCdYS3Ymzsg3gfeSebgRURaV2bSFSHl+PbqMyZ0dFw3geasAyJNOJ0E9j
+	 A5591Ld/1BadRwFSBKP5ged+niipxIlcxHPQyhDU3DaG2EA71By+6UQi1dZKyo7b11
+	 v/IlvtbIMeleA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso417391a12.1;
+        Thu, 03 Jul 2025 13:20:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+JCbqLn+r0S2QtpFGQm84jJkeof/qE4VZeYxC/vvJqQoeSOqBMbGVFUEiKFxWU/O0Tg+fXGHySeOsY2BIsg==@vger.kernel.org, AJvYcCWEDsr/67B32EShW9O5re8IbTbm1lZSmXmDS8S6nNNstPRiqqrezqOmxiAnEaDwTQ/I70mT6lUfcEBCn30=@vger.kernel.org, AJvYcCWUVZ71ehxEae113sbPFB73gUwwbH4b/rIe7QhwQlGyUU0hsoNSmrzlHg0qgnY/804xIXW1l16cueU7do0O@vger.kernel.org, AJvYcCXU6PltZ+8DHau95W7wAezUkWdU6OggdYnc2JFMF8sUqhWIMCYR0v/AHXRUnFLFgk2Fv3hWBWwTxxiW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcYXBVatCt7asSDIXLKtUxcUL1t2Cls++9O2NIa0DNkD/jDX3j
+	LIJjYTXIiVFyUZA0ZdJxdIEDK8lvp8knFvtPQz3NnToZc0IvP6LeTnl2G9Qq3ZaKxkIDxUVCjBL
+	emCAjlw8RAnbl7bnhnAnVZijCoTqjlg==
+X-Google-Smtp-Source: AGHT+IE9hz7l5h4gKfA2Gok0trbBLrord6Qv4/OAvtCHoDspRQQMpgsUWP4XL2MXTLDAW0VEjFlalhjZGgWnYj7Qmpg=
+X-Received: by 2002:a17:907:2d2c:b0:adb:2a66:85bc with SMTP id
+ a640c23a62f3a-ae3d89953bamr452586966b.34.1751574000959; Thu, 03 Jul 2025
+ 13:20:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb6f7bc0-23ae-4100-9a34-fade6c650460@intel.com>
+References: <20250612-sm8550-camss-v2-1-ed370124075e@quicinc.com> <175021976651.732077.6463322520296960558.b4-ty@kernel.org>
+In-Reply-To: <175021976651.732077.6463322520296960558.b4-ty@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 3 Jul 2025 15:19:49 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
+X-Gm-Features: Ac12FXzxV16zTuZlQN8D9DXY_qZpyOqeBk68ONoeu6ESaQCeuGhWEMIIFPY_tlk
+Message-ID: <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sm8550: Add support for camss
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, todor.too@gmail.com, rfoss@kernel.org, 
+	bryan.odonoghue@linaro.org, Wenmeng Liu <quic_wenmliu@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	Depeng Shao <quic_depengs@quicinc.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 11:27:19AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 6/27/25 11:06 AM, Luck, Tony wrote:
-> > On Thu, Jun 26, 2025 at 09:49:26AM -0700, Tony Luck wrote:
-> >> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> >> index 71019b3b54ea..8eb68d2230be 100644
-> >> --- a/arch/x86/Kconfig
-> >> +++ b/arch/x86/Kconfig
-> >> @@ -512,6 +512,9 @@ config X86_CPU_RESCTRL
-> >>  	select ARCH_HAS_CPU_RESCTRL
-> >>  	select RESCTRL_FS
-> >>  	select RESCTRL_FS_PSEUDO_LOCK
-> >> +	select X86_PLATFORM_DEVICES
-> >> +	select INTEL_VSEC
-> >> +	select INTEL_PMT_TELEMETRY
-> >>  	help
-> >>  	  Enable x86 CPU resource control support.
-> >>  
-> > 
-> > The list of dependencies to "select" keeps growing. "lkp"
-> > just told me that "INTEL_VSEC" depends on "PCI".
-> > 
-> > An alternative approach is to just add:
-> > 
-> > 	depends on INTEL_PMT_DISCOVERY=y
-> > 
-> > instead of all the extra "select" lines.
-> > 
-> > Pro: This describes exactly what is needed. The INTEL_PMT_DISCOVERY
-> > driver must be built-in to the kernel so that resctrl can enumerate the
-> > telemetry features.
-> 
-> How will this behave on AMD systems?
+On Tue, Jun 17, 2025 at 11:09=E2=80=AFPM Bjorn Andersson <andersson@kernel.=
+org> wrote:
+>
+>
+> On Thu, 12 Jun 2025 16:01:26 +0800, Wenmeng Liu wrote:
+> > Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
+> > includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
+> >
+> > SM8550 provides
+> > - 3 x VFE, 3 RDI per VFE
+> > - 2 x VFE Lite, 4 RDI per VFE
+> > - 3 x CSID
+> > - 2 x CSID Lite
+> > - 8 x CSI PHY
+> >
+> > [...]
+>
+> Applied, thanks!
+>
+> [1/1] arm64: dts: qcom: sm8550: Add support for camss
+>       commit: c5aeb681fcdd23d042d780f89ddcf908a13baee2
 
-The call to intel_pmt_get_regions_by_feature() in the INTEL_PMT_DISCOVERY
-driver will return that there are no telemetry events.
+And adds warnings:
 
-If it is a problem to force resctrl users building AMD only kernels
-to load the INTEL_PMT_DISCOVERY in order to use resctrl, then I can
-look at providing stubs for the entry points in intel_aet.c and
-create a new CONFIG option to allow resctrl to be built without
-Intel telemetry support.
+      6  clock-controller@ade0000 (qcom,sm8550-camcc): required-opps:
+[[33]] is too short
+      6  clock-controller@ade0000 (qcom,sm8550-camcc): power-domains:
+[[56, 6]] is too short
+      6  clock-controller@ade0000 (qcom,sm8550-camcc): Unevaluated
+properties are not allowed ('power-domains', 'required-opps' were
+unexpected)
+      6  clock-controller@aaf0000 (qcom,sm8550-videocc):
+required-opps: [[33]] is too short
+      6  clock-controller@aaf0000 (qcom,sm8550-videocc):
+power-domains: [[56, 6]] is too short
+      6  clock-controller@aaf0000 (qcom,sm8550-videocc): Unevaluated
+properties are not allowed ('power-domains', 'required-opps' were
+unexpected)
 
-> > 
-> > Con: "make olddefconfig" will now drop X86_CPU_RESCTRL until the user
-> > hunts down and enables the chain of dependencies to get RESCTRL turned
-> > back on again.
-> 
-> Reinette
-> 
-
--Tony
+Rob
