@@ -1,138 +1,129 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A12B1BEF7E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FAA20EB;
+	Thu,  3 Jul 2025 02:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751508801; cv=none; b=jbcUKdqx54sgRnFkbGm7VDNEbUPf/ScV15ffqDPrmcf5wHM2l/QHdpTfIBPFea9PA1xw6uO3veilMQh1cqPbsRVgJrd9gu/i0uRUn3cP5vUJJd727LSw/dYcwQqidh7N/rppJBzaiJ+stZ56euKBnOtDWtAyinADHzTMyuq7Fpg=
+	t=1751508983; cv=none; b=iGn+uUEtq0eVzP/66YYl1zpc3VGRwNYwCMzNg0nKPA7fHtR1ktCctNmbFFykKIrdLg8WocI+ty7AmjOitDRtZntvIk1c+CfL9gupha9IjYErrvlNcjkJ1hJthIGTtivFCQcpopell+bhk10V8jk8BKi4LgQMwmAjsV6fQ3vqlrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751508801; c=relaxed/simple;
-	bh=5ymmmvaYHZkZ63J3xtIxq0o0ASFDyKJPxoguG2Sd+B0=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=QOfEqcQkg5PEETOLs6DYdoJBH5h/FhfL9iFVyQAna+dg2U4aOB0ZCW4Ioazrka8fYy9IfWrZXV3NFm28mxw2rawBF8nP4kHJF6hdi0ANbq5ggJ7iEvC/ecP8TuwBflo+RzpeldO/WNOb2jcVTYkWCth0IRr9/RFIn8Zh3nKKvEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=e8xmKeux; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1751508983; c=relaxed/simple;
+	bh=w7P/ThZlp2YoPL7eRVXzxVMbMFbrGp7mOD4RD45qZIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=osYc7fFuyd7YzeX1A+kWL/Y3R4otLIlm4VQ+b62G8WJL8oxd1GbENPsAA9ToBMbF68PyTANp2ycFx55fvCZ2umoJHMhxcXNvrY3d4xs3ynOZDIHZYshk8dnBMMYNdDlOyZDPf3Jc8P4zo9KnLEUG/2baJwWrrQIbp7AuOmJflhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6wubJER; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="e8xmKeux"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a5851764e1so148423141cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 19:13:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6wubJER"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23636167afeso48708075ad.3;
+        Wed, 02 Jul 2025 19:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1751508797; x=1752113597; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TzXhie4CIWJW7jzt+VKFb4S+L+Efm25Tu2fG/WJtN10=;
-        b=e8xmKeuxN8pjpI9dI7PMfKLhAdn3rhXeTwTPuJGm6mG9lYLViCvAOysvO2DA4uva3e
-         LQ3aEQrfZ+HPPm7h4flY5zzSEnL8Ncib/SROeW5ptYSgE8iLE8WUrmYT53DFkvaZeuXU
-         GJ2uZa1xQUJVL0lFeVEUpCD3+YvgvqIVQCaXJIYv08dPIfdQdQVllVa3bVwyyQpyUep5
-         bBGjwkBqY/d4VSINVzCUXbjhrkY30HGAOc2R2MFl7ADcVuBRky5z3vSJ0Pb+zyNiLN83
-         ljIYpLU1QinagELHB2JpPhKWvflRsq1RXfaHvFqOTosaebS9V4Fr6OGwqR20+pZfZGGp
-         NSIA==
+        d=gmail.com; s=20230601; t=1751508980; x=1752113780; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b73IFjduWMb1WKYfWwZmDk2oXeQfWsAxTJaEVv/UhN4=;
+        b=Q6wubJERI9tv+Op0Dphhx3mXJvinblp+wx83cx+xrCFRYf7/n0mNK3oMWzPxiMR/Ot
+         Ktb+21TPL8NwbQpyHyFl7dACHMpRJcVz0/951dQA8LzHTDo1xZIzYOEC/XU6MvQB9XTT
+         qtcF5W5txiocuMwafMcuhEX9Lka5sl09fuJoJzrFnnwW5KES4LfgUhmrkfL22x6iJmIg
+         Ed6jz89M7d1LwkLqVlpjjg5p/Vd8LnkpIx1nyJb3PXG6sgn3yQCFbijQOrFMsSLBWwyl
+         7cVMWIK7JT9+6mtAqjXZl0caZVvOb10OsuFH1GFYrd+y1gx/jqeo6qQu/tknW5KaKlOS
+         iCTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751508797; x=1752113597;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TzXhie4CIWJW7jzt+VKFb4S+L+Efm25Tu2fG/WJtN10=;
-        b=l4HKGzjav+u+4PGGBRf0cGF4rikFtAlEVcikgoGIUhYXFQKR3lfZSKvZ+ql6pyA2EY
-         0D05p162Z59NW6fCmJQ6gv3k3mVvwcIjBTaI2M0mbLcsIXmyx8Bj5A8KnzV+jyaPhL6Q
-         YYqOFdkf4qRlgq2VpWtCt9t7nj+JbDgiorOibJWsY2/QW/XT1hciPtSTA8CwIbNucAp8
-         gBDNhMWC1Ov++zVeR15G5jQWyvXd1XVebHfOpoW0HoXD5kUeRZS7PaYppmlyVESNDoG5
-         mZph5t8JMSeegJbzphFaHP8kDLf8RQ6SjMki8R50FaIbei4yLUDDjMe0reTkPUJdYMIJ
-         ZrkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXE7ZYLkLuniyU1cU5rod2wGnYjgIeootbqbHEVCAxKYxEnagWqEeeSDLp4n205i9HOMUqm8O8M/W02DTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd4qj1y62wgluNLXHtQd3/cgi/4r7MxFJ8ry+tmhbKBoBlo2db
-	ikLeiqfIJVLvVGJxBag4Mj//Ah1Um3LbFI7o34fTE67wI43wZr1Kd77avARocLxi5Q==
-X-Gm-Gg: ASbGncvKOYlHD0Ay1J3JYfNqTBuJ6RXTqZkwuF/NxSzBl/l6i2CGbhDFMv2CLIMWkTr
-	kQH0Em7YYk0U7dPYk05nuH075Uho8oIWiPf89m+ZLQuZOWn7gyaJ4qcS67SqU0xXLiNtmGrVxmN
-	/28i/sbHexsKTM1Mr/KNRaW9ql1vyiOiKFRIOMofIXkSxnyTDkZ9NyLO7mrTCzCE5RGqfdJU0KS
-	Bcn8WKRo7+Gq6xY3eK0x5/gmwXM6260l0/DbbeFEOo3uBNWj1a3HpVfXpK63+7r/ScsCz9A35D7
-	mmF1yhWah3gDsOg1MNK8OfDmx5fmH0xWgVAsuUyB7+q5PcpSp+SeLO8yySohgdqAy9CBtkEChj0
-	DU2ozTltpqp9mpeUT89jLMj+SxnhbyFQ=
-X-Google-Smtp-Source: AGHT+IELjxIty3QvxZPgn1IkijyUpwDEpAbFyjSsKr5nQr+vunzikG5BR25gm20fjjhw/qG4dKVsnw==
-X-Received: by 2002:a05:622a:4e:b0:476:add4:d2cf with SMTP id d75a77b69052e-4a9879c3c8fmr28867621cf.16.1751508797160;
-        Wed, 02 Jul 2025 19:13:17 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d44316a54fsm1034468285a.34.2025.07.02.19.13.16
+        d=1e100.net; s=20230601; t=1751508980; x=1752113780;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b73IFjduWMb1WKYfWwZmDk2oXeQfWsAxTJaEVv/UhN4=;
+        b=jbpYgYD86xuB2n6gFe0IOb/w9ZWtkgAfRuTWNYjlgQ2U1A9+LJ4RWn8TM5jQPnstbY
+         55yiXyWMMfFjFvJH4NNZd9MTBlDqmhhBEE8jfwoLkw8/Fg1vBYHs0YoKnpSEAX8ohxvy
+         h+VeK4RZBSfcsoeSXuy/dWYAEkmR37hn22Y41iysmNHFxP98MKxTwsejepOlsUjdXgu7
+         F+EGGAZxsIm9u3OD+DSb996zfYJ2HXaZpoKoWxBwnbPF73H5i4RrhWRX3CfhAIPe4ovg
+         m0gQg9h0pRklWNJsxmrwZf77GCqXGPoydzuy60EJm2HJ6/CVWgR3upASpThSz7uHpaVx
+         9wKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVG0bmvy9Q3z3rTfT/4BJ+DZK/amkLlNhQ0/tgQhDVPr2kqSO2FwdeeQC9Weo6ghV+aGqPaLAICWRx+gEA=@vger.kernel.org, AJvYcCWLeYkvORPThv0YB6X7zx9JqDa1ptVZYGYRsXUp/ZnHd84kMKBE+Hga1yTKowCwzzILa1eP7GMU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfCPqucpZoT1cr4/vQ3W59lmKq5XgHNaA7zbO3WUHScgf8U0/W
+	u+yftbvTRuTFtzrT0Oxn8v0VXL637f7gsxCzShFpGMogvsxShoXnf9CI
+X-Gm-Gg: ASbGncsQyufZoDdfDnvYYEbKrQzF7Ajc+hU3pGuC/Lqr2Ev5qNHzuoZsxEuLeLoy0BJ
+	RP2JS6V04/G6bBJdq33QlNvzFEp3PnMdxW/is+TgY7VS067FcxVVvkdO44i4BKvNxDjBfNJgdNs
+	nhZViSfVDuk3VWUW6YZR3P2z1D299FpP+JRIefpAf8WOImYDGdT/25sp5x1b1awJMgEldYzFRWT
+	amOY07ACxPcUUeTQT69y7IMbHmLlW5S8dIMEKVLsGyrH0ExIz0tY/J+noqvEwYTYVjAzzF8KJgC
+	u1SoQhrH4VTSiKpRBlxuCPx9t7nZqvFvf/w6oMrLzyD8XJnh35tOf/YA9ASstA==
+X-Google-Smtp-Source: AGHT+IF3aWQEIJ3OQUGSFDn1pwNfNUpQyfdxXnfcNGViNxR2eItFwHBlfmUboW2xyi3NlJBMfC4t4A==
+X-Received: by 2002:a17:903:41c5:b0:234:c5c1:9b5f with SMTP id d9443c01a7336-23c6e502bbemr72113865ad.16.1751508980315;
+        Wed, 02 Jul 2025 19:16:20 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23acb2f2557sm139107235ad.83.2025.07.02.19.16.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 19:13:16 -0700 (PDT)
-Date: Wed, 02 Jul 2025 22:13:16 -0400
-Message-ID: <a888364d0562815ca7e848b4d4f5b629@paul-moore.com>
+        Wed, 02 Jul 2025 19:16:20 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Yixun Lan <dlan@gentoo.org>,
+	Ze Huang <huangze@whut.edu.cn>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH 0/3] riscv: dts: sophgo: Add ethernet support for cv18xx
+Date: Thu,  3 Jul 2025 10:15:55 +0800
+Message-ID: <20250703021600.125550-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250702_2201/pstg-lib:20250702_2201/pstg-pwork:20250702_2201
-From: Paul Moore <paul@paul-moore.com>
-To: Shivank Garg <shivankg@amd.com>, <david@redhat.com>, <akpm@linux-foundation.org>, <brauner@kernel.org>, <rppt@kernel.org>, <viro@zeniv.linux.org.uk>
-Cc: <seanjc@google.com>, <vbabka@suse.cz>, <willy@infradead.org>, <pbonzini@redhat.com>, <tabba@google.com>, <afranji@google.com>, <ackerleytng@google.com>, <shivankg@amd.com>, <jack@suse.cz>, <hch@infradead.org>, <cgzones@googlemail.com>, <ira.weiny@intel.com>, <roypat@amazon.co.uk>, <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v3] fs: generalize anon_inode_make_secure_inode() and fix  secretmem LSM bypass
-References: <20250626191425.9645-5-shivankg@amd.com>
-In-Reply-To: <20250626191425.9645-5-shivankg@amd.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Jun 26, 2025 Shivank Garg <shivankg@amd.com> wrote:
-> 
-> Extend anon_inode_make_secure_inode() to take superblock parameter and
-> make it available via fs.h. This allows other subsystems to create
-> anonymous inodes with proper security context.
-> 
-> Use this function in secretmem to fix a security regression, where
-> S_PRIVATE flag wasn't cleared after alloc_anon_inode(), causing
-> LSM/SELinux checks to be skipped.
-> 
-> Using anon_inode_make_secure_inode() ensures proper security context
-> initialization through security_inode_init_security_anon().
-> 
-> Fixes: 2bfe15c52612 ("mm: create security context for memfd_secret inodes")
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> Acked-by: Pankaj Gupta <pankaj.gupta@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> ---
-> The handling of the S_PRIVATE flag for these inodes was discussed
-> extensively ([1], [2], [3]).
-> 
-> As per discussion [3] with Mike and Paul, KVM guest_memfd and secretmem
-> result in user-visible file descriptors, so they should be subject to
-> LSM/SELinux security policies rather than bypassing them with S_PRIVATE.
-> 
-> [1] https://lore.kernel.org/all/b9e5fa41-62fd-4b3d-bb2d-24ae9d3c33da@redhat.com
-> [2] https://lore.kernel.org/all/cover.1748890962.git.ackerleytng@google.com
-> [3] https://lore.kernel.org/all/aFOh8N_rRdSi_Fbc@kernel.org
-> 
-> V3:
-> - Drop EXPORT to be added later in separate patch for KVM guest_memfd and
->   keep this patch focused on fix.
-> 
-> V2: https://lore.kernel.org/all/20250620070328.803704-3-shivankg@amd.com
-> - Use EXPORT_SYMBOL_GPL_FOR_MODULES() since KVM is the only user.
-> 
-> V1: https://lore.kernel.org/all/20250619073136.506022-2-shivankg@amd.com
-> 
->  fs/anon_inodes.c   | 22 +++++++++++++++++-----
->  include/linux/fs.h |  2 ++
->  mm/secretmem.c     |  9 +--------
->  3 files changed, 20 insertions(+), 13 deletions(-)
+Add device binding and dts for CV18XX series SoC.
 
-Thanks again for your continued work on this!  I think the patch looks
-pretty reasonable, but it would be good to hear a bit about how you've
-tested this before ACK'ing the patch.  For example, have you tested this
-against any of the LSMs which provide anonymous inode support?
+Change from RFC v4:
+- https://lore.kernel.org/all/20250701011730.136002-1-inochiama@gmail.com
+1. split the binding patch as a standalone series.
 
-At the very least, the selinux-testsuite has a basic secretmem test, it
-would be good to know if the test passes with this patch or if any
-additional work is needed to ensure compatibility.
+Change from RFC v3:
+- https://lore.kernel.org/all/20250626080056.325496-1-inochiama@gmail.com
+1. patch 3: change internal phy id from 0 to 1
 
-https://github.com/SELinuxProject/selinux-testsuite
+Change from RFC v2:
+- https://lore.kernel.org/all/20250623003049.574821-1-inochiama@gmail.com
+1. patch 1: fix wrong binding title
+2. patch 3: fix unmatched mdio bus number
+3. patch 4: remove setting phy-mode and phy-handle in board dts and move
+	    them into patch 3.
 
+Change from RFC v1:
+- https://lore.kernel.org/all/20250611080709.1182183-1-inochiama@gmail.com
+1. patch 3: switch to mdio-mux-mmioreg
+2. patch 4: add configuration for Huashan Pi
+
+Inochi Amaoto (3):
+  riscv: dts: sophgo: Add ethernet device for cv18xx
+  riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
+  riscv: dts: sophgo: Enable ethernet device for Huashan Pi
+
+ arch/riscv/boot/dts/sophgo/cv180x.dtsi        | 73 +++++++++++++++++++
+ .../boot/dts/sophgo/cv1812h-huashan-pi.dts    |  8 ++
+ 2 files changed, 81 insertions(+)
+
+
+base-commit: a3d69a2aa44f50fb09f513bd2b8d8c91fb175207
+prerequisite-patch-id: ab3ca8c9cda888f429945fb0283145122975b734
+prerequisite-patch-id: bd94f8bd3d4ce4f3b153cbb36a3896c5dc143c17
+prerequisite-patch-id: 52a475a6d4f8743011963384316d9907ed16d5a7
 --
-paul-moore.com
+2.50.0
+
