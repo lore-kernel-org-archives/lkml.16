@@ -1,50 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04681F94A;
-	Thu,  3 Jul 2025 02:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990BA2F32;
+	Thu,  3 Jul 2025 02:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751508300; cv=none; b=Nv4dAy7+kWyOgWFhpVdnOp5WUveOLv+d7HtBbLt2Ggz5FiGkw+B1jomlM58mCFOQAoNBZQr8fFqk6bTAgmmMrs1SFR5Wf5Fw62lQLgPL3QW3yvdcI6S9lsSCqVvgItO8Ass0e0WwGJWf8iIAjr7Ib/Smaf1gh25utMCiqMskksY=
+	t=1751508322; cv=none; b=CwZui8Yj3ygO/WE5vr8cvS/hDuJNx5Fcw6Tr4okQc2JHB4GCDJrF849V2XVTq0w/Vv4CIdgWQWxrV8dV7TatNU4FmDFvrWoqAYz21pg6UWT98FJ1jZdwJO3ad3VtrLBfJPMnh+BhQQRGlOmqAFHMyi6uUkYJlV6VT/QcY1hK6qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751508300; c=relaxed/simple;
-	bh=ghjz4C75wfN8JRFKxQVod63LoXDkM1idBHHdqSL8WoM=;
+	s=arc-20240116; t=1751508322; c=relaxed/simple;
+	bh=wz2hO77el1aq9zOCPG42YTLU5SEI6sVB4Utc4vOYjmM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aosWRUu31QMLzw5QgZ466LXujApbcv8CyxNnDRTjOgnPLwc1vJNSySgGVhLMhang8V9kTOYqswcFXzHECNkccts30LkMz2D+L9Dz/oba4oQuursxcakJdd19ionMePgUvwRbr8+SWIE/W5bAhYRAoXVHJaRHqyn46xFPq5fWFe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqEgVNpW; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqEgVNpW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751508299; x=1783044299;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ghjz4C75wfN8JRFKxQVod63LoXDkM1idBHHdqSL8WoM=;
-  b=kqEgVNpWcGJ7DWOUpbZ1oS3Sh/qGE2zts23zh/9oFIb0wD58PRdINH5T
-   q5K5UWFXivBWVQSrm0N5hMi6rjV5xVHUP97xykFgsQZi+gcbR4H6GPodL
-   ofvZRmwgyuY5Ijd8ngJhOpa7AaI5EN2RRxBiudH4TMK1PX3TmFkhbEenl
-   Y8VfpSyN6++26ts/Wf+NtWhWKMM1KYGLchO3E1Np8+nFlczVqFOAjHceF
-   9BX5LLImhwODbDOU4ElhFs/japUmrHD0c+Ftmu0oQQozdRgr0qfaGXxcm
-   /9r0f3mREyU6mHmHmylcsB/s/UBSFZgcdSC38X6lFvlAHF//OYRdNBcD7
-   g==;
-X-CSE-ConnectionGUID: l84M8Vp5QwOq6w59v2kfTw==
-X-CSE-MsgGUID: XDkpN9gMSiWnGKyEF4hUaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53965269"
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="53965269"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:04:58 -0700
-X-CSE-ConnectionGUID: MBuCpl/xSs+B1epg0BstbA==
-X-CSE-MsgGUID: NNfpWYmrT82c63w5IBxKVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="153999973"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:04:56 -0700
-Message-ID: <b25e6891-89cc-4ead-88b3-c1c548615daa@linux.intel.com>
-Date: Thu, 3 Jul 2025 10:03:27 +0800
+	 In-Reply-To:Content-Type; b=DLxHCstQ1VWq17PZL7zIkcySddMWKqXyj0ZjnEElF+xWgxxhQfKyIGZ3Sh21kTwOunzce50/aDpMvkmdheuBytI9Xz+ap/EQStHZTogNN+uW45kDjeHqVFsDazkBATXH5jdi1IjGEkRkA5mlDoGWNVL811hv0PxrQyBFAzfnSX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bXg8D62y5zYQvMY;
+	Thu,  3 Jul 2025 10:05:16 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B01BB1A0E8C;
+	Thu,  3 Jul 2025 10:05:15 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHaCVa5WVo2TfrAQ--.65001S3;
+	Thu, 03 Jul 2025 10:05:15 +0800 (CST)
+Message-ID: <fa74ce4b-6dd0-4f65-8daf-36faa94709ef@huaweicloud.com>
+Date: Thu, 3 Jul 2025 10:05:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,76 +32,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
- Kernel 6.10
-To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
-Cc: kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
- will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
- <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
- <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
- <CAOLeGd3a63_za6cYs3HyzFn1A=j7gaEcWurT9yuXknMspa80fA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] ext4: fix stale data if it bail out of the
+ extents mapping loop
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+ ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com,
+ libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-4-yi.zhang@huaweicloud.com>
+ <hybrquimicexphjrsgcqawpdwtkauemo7ckolnnoygvd5zbtg4@epiqru756uip>
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <CAOLeGd3a63_za6cYs3HyzFn1A=j7gaEcWurT9yuXknMspa80fA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <hybrquimicexphjrsgcqawpdwtkauemo7ckolnnoygvd5zbtg4@epiqru756uip>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgAHaCVa5WVo2TfrAQ--.65001S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxur1kXw17ArW7Wr15JF1kXwb_yoW5ur47pF
+	WSkan8CF48Jayakr92qF4DZryIk393ZrW7Jay7Ga4ayFn0kr9akr1fK3WY9FW5Jry8Jay0
+	vF4Utw17W3WDAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
+	mii3UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 7/3/25 00:45, Ioanna Alifieraki wrote:
-> On Wed, Jul 2, 2025 at 12:00 PM Baolu Lu<baolu.lu@linux.intel.com> wrote:
->> On 7/2/2025 1:14 PM, Baolu Lu wrote:
->>> On 7/2/25 01:11, Ioanna Alifieraki wrote:
->>>> #regzbot introduced: 129dab6e1286
->>>>
->>>> Hello everyone,
->>>>
->>>> We've identified a performance regression that starts with linux
->>>> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
->>>> Bisection pointed to commit:
->>>> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in
->>>> iotlb_sync_map").
->>>>
->>>> The issue occurs when running fio against two NVMe devices located
->>>> under the same PCIe bridge (dual-port NVMe configuration). Performance
->>>> drops compared to configurations where the devices are on different
->>>> bridges.
->>>>
->>>> Observed Performance:
->>>> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
->>>> - After the commit:
->>>>     -- Same PCIe bridge: ~4985 MiB/s
->>>>     -- Different PCIe bridges: ~6150 MiB/s
->>>>
->>>>
->>>> Currently we can only reproduce the issue on a Z3 metal instance on
->>>> gcp. I suspect the issue can be reproducible if you have a dual port
->>>> nvme on any machine.
->>>> At [1] there's a more detailed description of the issue and details
->>>> on the reproducer.
->>> This test was running on bare metal hardware instead of any
->>> virtualization guest, right? If that's the case,
->>> cache_tag_flush_range_np() is almost a no-op.
->>>
->>> Can you please show me the capability register of the IOMMU by:
->>>
->>> #cat/sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
->> Also, can you please try whether the below changes make any difference?
->> I've also attached a patch file to this email so you can apply the
->> change more easily.
-> Thanks for the patch Baolu, I've tested and I can confirm we get ~6150MiB/s
-> for nvme pairs both under the same and different bridge.
-> The output of
-> cat/sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
-> 19ed008c40780c66
-> for all nvmes.
-> I got confirmation there's no virtualization happening on this instance
-> at all.
-> FWIW, I had run perf when initially investigating the issue and it was
-> showing quite some time spent in cache_tag_flush_range_np().
+On 2025/7/2 22:07, Jan Kara wrote:
+> On Tue 01-07-25 21:06:28, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> During the process of writing back folios, if
+>> mpage_map_and_submit_extent() exits the extent mapping loop due to an
+>> ENOSPC or ENOMEM error, it may result in stale data or filesystem
+>> inconsistency in environments where the block size is smaller than the
+>> folio size.
+>>
+>> When mapping a discontinuous folio in mpage_map_and_submit_extent(),
+>> some buffers may have already be mapped. If we exit the mapping loop
+>> prematurely, the folio data within the mapped range will not be written
+>> back, and the file's disk size will not be updated. Once the transaction
+>> that includes this range of extents is committed, this can lead to stale
+>> data or filesystem inconsistency.
+>>
+>> Fix this by submitting the current processing partially mapped folio.
+>>
+>> Suggested-by: Jan Kara <jack@suse.cz>
+>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> 
+> Looks good. Feel free to add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> Just one naming suggestion below:
+> 
+>> +/*
+>> + * This is used to submit mapped buffers in a single folio that is not fully
+>> + * mapped for various reasons, such as insufficient space or journal credits.
+>> + */
+>> +static int mpage_submit_buffers(struct mpage_da_data *mpd)
+> 
+> mpage_submit_buffers() sounds somewhat generic. How about
+> mpage_submit_partial_folio()?
+> 
+> 								Honza
+>
 
-Okay, I will post a formal fix patch for this. Thank you!
+Yeah, mpage_submit_partial_folio looks better to me.
 
 Thanks,
-baolu
+Yi.
+
+
+>> +{
+>> +	struct inode *inode = mpd->inode;
+>> +	struct folio *folio;
+>> +	loff_t pos;
+>> +	int ret;
+>> +
+>> +	folio = filemap_get_folio(inode->i_mapping,
+>> +				  mpd->start_pos >> PAGE_SHIFT);
+>> +	if (IS_ERR(folio))
+>> +		return PTR_ERR(folio);
+>> +	/*
+>> +	 * The mapped position should be within the current processing folio
+>> +	 * but must not be the folio start position.
+>> +	 */
+>> +	pos = mpd->map.m_lblk << inode->i_blkbits;
+>> +	if (WARN_ON_ONCE((folio_pos(folio) == pos) ||
+>> +			 !folio_contains(folio, pos >> PAGE_SHIFT)))
+>> +		return -EINVAL;
+>> +
+>> +	ret = mpage_submit_folio(mpd, folio);
+>> +	if (ret)
+>> +		goto out;
+>> +	/*
+>> +	 * Update start_pos to prevent this folio from being released in
+>> +	 * mpage_release_unused_pages(), it will be reset to the aligned folio
+>> +	 * pos when this folio is written again in the next round. Additionally,
+>> +	 * do not update wbc->nr_to_write here, as it will be updated once the
+>> +	 * entire folio has finished processing.
+>> +	 */
+>> +	mpd->start_pos = pos;
+>> +out:
+>> +	folio_unlock(folio);
+>> +	folio_put(folio);
+>> +	return ret;
+>> +}
+>> +
+>>  /*
+>>   * mpage_map_and_submit_extent - map extent starting at mpd->lblk of length
+>>   *				 mpd->len and submit pages underlying it for IO
+>> @@ -2411,8 +2452,16 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+>>  			 */
+>>  			if ((err == -ENOMEM) ||
+>>  			    (err == -ENOSPC && ext4_count_free_clusters(sb))) {
+>> -				if (progress)
+>> +				/*
+>> +				 * We may have already allocated extents for
+>> +				 * some bhs inside the folio, issue the
+>> +				 * corresponding data to prevent stale data.
+>> +				 */
+>> +				if (progress) {
+>> +					if (mpage_submit_buffers(mpd))
+>> +						goto invalidate_dirty_pages;
+>>  					goto update_disksize;
+>> +				}
+>>  				return err;
+>>  			}
+>>  			ext4_msg(sb, KERN_CRIT,
+>> -- 
+>> 2.46.1
+>>
+
