@@ -1,123 +1,108 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC46239E76;
-	Thu,  3 Jul 2025 22:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADD22405F5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751580950; cv=none; b=AXwm4OOuEBXEOSWXpo11SGuVbiwhPFzhTIJjgCwT/l+2syZO0BGuN2RUR3IXMKMdaUCSeZkE+iTUDM+2DA8nB/s5TG6EwjRIZbfeZHitoao5YrCFtRn09rG+neqBBMbABR1JD7orkEyTZuPMDXuR5GEyDX1hLJwHmFFZ5M/7YAM=
+	t=1751580967; cv=none; b=PM0xHs1ff7dh8jHz9cvnM0OO65MH9JC6hW9u8eRwx7OA0wK7xg/DkebXhPC0Gka/DfSG9uG1RKuyMvtHVinqsu9PkKrITGx4VLCGnuqOdGXBlyghUkDMvmC13SDRrSzMLfox6Tw5xf1qcRKl6r+7fawa5zOQ8ZElfxyq+tNBTOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751580950; c=relaxed/simple;
-	bh=YVJ2GQaQkp9/YKzcuk9Fu2K0QO5HX/rZ9FG6NmQyo3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZiwOsPJUn7x0Z0FhfCrsHaRFXXxTcJc2z79C8s0sfuMzlD2hYE2MLZDaj5sglppAS1b0Ozktz8vhXpWVemY3y9KfxzoY5jW4PFXuLA2ho/V8fPircwR0ggJWIFcxsc7+Ywlm5O8M8fdLUEo3LE/6nUzZlwHI4ndIcpPeG95RXKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQYMmqPS; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751580967; c=relaxed/simple;
+	bh=30eSpXy4De1lX70AW8XZs3ihzdfzo6XZ/C3uT7syH5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kb/syES9tVvbkbYNhWzJYX2QuZZPJqe8NUebBxp0VrXqTw8imOx9krHbIHSIA3gFUKr7iz4crzmW6fTFCdCAD+lu7uzuxd2U/wqwRiudWMWGVnNBAqQsiHntpHFKRg3WFwDdZAj4Yr+lz7/fJe/ZcP6SwmFde53DNOGcQiH9Tpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fYhX5tbs; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQYMmqPS"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7426c44e014so528092b3a.3;
-        Thu, 03 Jul 2025 15:15:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fYhX5tbs"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8733548c627so11380139f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751580948; x=1752185748; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LdVEyliI7CI2o2rNcOBW/maFK6t06bm6iyL8o0UQrKM=;
-        b=YQYMmqPSp/kP8F+KCdblrfgDF8D0sSejL7MXhG45a0P+2FHFdvc99Lqbb5Yz5+LAAT
-         opka3aVU9vEM+r9uaK8PJ6KgNoX1X6A0H12qcG2p3CO0C/UIdDq88CvDSP4Oy4e8k5Uc
-         B9ogWXQwoXQqsTKYj8uPTbsi1lo8J+QJDq0ZRH5teAhUehSpaEJEgZpOG6MUkYR33KLN
-         C84AKW107fEd7HUbywlPjbgKcFTeIuCkOf4GKtdVEOLieWVsg7byvg5QPEqn+lVncpcs
-         KYOAlRiDQWvSiSezYq+eX0i8/VXVT5agY6O2jOKjrBwZriAbgUtVqhlaJu/aRIETtO99
-         DsJQ==
+        d=linuxfoundation.org; s=google; t=1751580965; x=1752185765; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6+8Lqju2v3JEpna1RtwZcpnJkSUldnP87c8e45HlgwE=;
+        b=fYhX5tbs92CWzBQmSLFcJXeDUk0wDZ9Pkn43DBwPUwlNvNbDsRWitjCRMqg2Kuk/3K
+         6PYf57yOluThqbuFPNfCizmJhLknZ3mdDujxWuBq03+QORyi05KJypAqkP8ksiPrl5iD
+         fcf1Z6JcuY2vP9sJ81KCMc0zG/tOfGHSeSuB4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751580948; x=1752185748;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LdVEyliI7CI2o2rNcOBW/maFK6t06bm6iyL8o0UQrKM=;
-        b=K58eVkH96V7r6dBZtbnL24dmn09yGIk04i8/0eNZ6ofwn4eG/R7IwnqqOUQHXoBG25
-         135wFPxYePa1ytW7i38vKWsJ/iDnbkh/FUP8pJCDI/Ja/webY2BtmRy7/nX+LkAPC7eB
-         9WGgaKxmZAvaBivCkiSzmIJCUeuNZt9NKGcHuXDqN6nkVmRaFCfkLpIdLHjPAx9R6gqe
-         zRGLTvVTrPamcjE8cnKEeh1s9vYOdh2NeEtbpR9J+1JSZNvgNQXDRkDI1UIESiQ8cvDL
-         NM19V0zAOyMilN97vDXsPWxciSzR43yaCux4jnuuQLX55ZVQJIf2zsuas7FCjR8IGY3k
-         X25Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV5x+ZyhJbWwP5kPK8yeZ7HjjDF1VHW6yLawR0KN4fG0I16ZaZDfBH1RyO1rfYBVrPW9sb23a7An7Jq@vger.kernel.org, AJvYcCVFiQ7kdu94KXjZceSczzbJfoY+Lb6OD8KIN2d0G2qg92xw+yHuFMOywDz7iO5LLdQ3Ue31ShAPZq3B1Tu4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq3Rvfv2lTJGgcbwGCWTEeDxRTbQiusOVT4DV+yPJbTqARsQxL
-	MbUY7vWasYepRl2UbW3kOfbBq3AkhY9JUjTaJcsRKO1Dun9vcI6E83cV
-X-Gm-Gg: ASbGncvqKKMCgJgdcKS7JnyQRBu/yT67oORg2FUpJfCtIoq9NDCqYyU3OFHdiiXe64E
-	NH3HQuwgxLJ9D/bIS3f+UnEM/Xpxueco4rcIu/tqb6tLrlwRkP9CpmY/1K3Iwg+PlX2aJ3anb3S
-	f9AGxlcBQLlNBUVOGpCdfxrCnEYuYRX0NN0igmUF4I872O42HIOZO87Dwu4RTmpLhEG77Yj7Upt
-	jxHMXb0ZnAXQff0WI5Ead2v5rU80dIaG1o3+s+KjeGoWvSg8Umnl12VY2WFKzfLafg2h4jtuwMR
-	6STAD+EPq90e35e0HUh+lIWRON9SEUfI8dtLMRaILan5GgBzHvATTW7GrkLmQjwn16aczBjkCCq
-	8xRoKpqOvMmP+TC0uMuZf7650VnTulAbGXG2OSzNB8WeHbTo8CA==
-X-Google-Smtp-Source: AGHT+IGUk7PwRYq/uESipZTr5l7TnZjN4IATKVV7k9iHCae7JNaUFn05U63lEW19hVmJQS8UvmDn3w==
-X-Received: by 2002:a05:6a20:72a3:b0:220:33ae:dabb with SMTP id adf61e73a8af0-225c0de25fdmr530119637.29.1751580948326;
-        Thu, 03 Jul 2025 15:15:48 -0700 (PDT)
-Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce429b34dsm423082b3a.120.2025.07.03.15.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 15:15:47 -0700 (PDT)
-Date: Thu, 3 Jul 2025 15:15:44 -0700
-From: Tao Ren <rentao.bupt@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Tao Ren <taoren@meta.com>
-Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Darwin (AST2600) BMC
-Message-ID: <aGcBEHMEyQJuzmjj@localhost.localdomain>
-References: <20250702050421.13729-1-rentao.bupt@gmail.com>
- <20250702050421.13729-6-rentao.bupt@gmail.com>
- <a6f6966b-50ee-4b4f-9422-96c6ac9391a2@lunn.ch>
- <aGW8Nm8ZWMwRYVOo@localhost.localdomain>
- <220ac6c2-8373-4742-86fa-f322d6ada624@lunn.ch>
+        d=1e100.net; s=20230601; t=1751580965; x=1752185765;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+8Lqju2v3JEpna1RtwZcpnJkSUldnP87c8e45HlgwE=;
+        b=QjfT0SQIvKYj/faYAfKWvMeIvE2cnXYUTs3XlCLLRP3K/VQ/xAR8qPv49Uq5roP2B2
+         7wt0tEj4Z8K9WZmGdSiDEuNZXyO+4OhaRgRynHQKgg+kIQtpcBnGoJiQeacMEta+bHTx
+         A0z4IHRYq0KmhA8y2q9d0xr0gREgree/VZKrLqCVLMeiBIUnaIGb7mSH3J/uibYNfCJd
+         ZGZRa0XaUqNuS6XLhvtpA2vzDhxKXkcz4Uq3QoKmQgftu1GyauzasN3oiluy4l/w8kPW
+         ZvnIZoOSYQs24qkdSUTIsvBEXMcFgWt6JklMt6Qz8plQn37OXQNdKINDa2cwCWnnIB5o
+         d6Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyKlONUTN4ktBwoqbARN6BYCJJI7sfzZgedF7DRPnmkPhuQ99DVNdmFJUGgFw4NWmj7sorV2I7/ot9glU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaL9cveCZs26MhgByKCYMzhduz8L5+P65I0G0Jf1VTr73+y/J7
+	UgB3k9enWPDTDXPn9Jg7ZlER+0yV5mjiJWreVX5Fv1teKGFhk20Rpajw+sqioaBz0vo=
+X-Gm-Gg: ASbGncuCDbZyj0/85pbCqk3KYmDWjeSn24dFZNjlu8NINIEOUXJru4L0pCd4VRk9hkq
+	eRqZj7Ac2rMV79b2ARh6i+jbbmLug/H4efJhtjjVQM5kdthnCN2qTB/chGlkncnDAZCI4zO9A9u
+	xEwHRm7BpiXW6p3hHsuZ+UNN0tdFfW64n2HTNumyHWgBs4hoXzTsF9O6xDCm3avKGTeRrLY67I7
+	sif4qGQVZ+IJ6FMdIkdvl7Y1eO37Mf3VieSlHvFfUTZCoJaHqRYqVvlkR5pZUwdVlPIpaFZ/+p6
+	2ysCW4AsQFPuzAkMF/R+Shd3F14IGdo+SglRjHdXY93ScTkEkN/2qspa/rr3NjLXW94JCtkDvA=
+	=
+X-Google-Smtp-Source: AGHT+IG4hKTQLow1Kg67H0QZK1tw9mJw0uWny6JBPFtWfdVzPOL4FEhBvhn/KJThkLj9LlPS0fuDrg==
+X-Received: by 2002:a05:6e02:1c06:b0:3dc:7f3b:aca9 with SMTP id e9e14a558f8ab-3e135576383mr2032415ab.14.1751580965094;
+        Thu, 03 Jul 2025 15:16:05 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3e0f9b8cdb0sm2167885ab.17.2025.07.03.15.16.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 15:16:04 -0700 (PDT)
+Message-ID: <1a3a5dba-b42d-4f4d-8441-ec34fb37d10d@linuxfoundation.org>
+Date: Thu, 3 Jul 2025 16:16:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <220ac6c2-8373-4742-86fa-f322d6ada624@lunn.ch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250703143941.182414597@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 03, 2025 at 09:58:48AM +0200, Andrew Lunn wrote:
-> > > How do RGMII delays work? Connections to switches have to be handled
-> > > different to PHYs, to avoid double delays. But is there extra long
-> > > clock lines? Or are you expecting the switch to add the delays?
-> > > 
-> > >       Andrew
-> > 
-> > Hi Andrew,
-> > 
-> > The delays are introduced in BMC MAC by setting SCU control registers in
-> > u-boot. The delays on the switch side are disabled.
+On 7/3/25 08:41, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.96 release.
+> There are 139 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Sorry, but not acceptable. This is something i've been NACKing Aspeed
-> DT patches for. You need the MAC driver to interpret the phy-mode and
-> program the SCU control register as needed.
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
 > 
-> Since you have the MAC introducing the delays, you want phy-mode
-> 'rgmii-id'.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.96-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
 > 
-> If you want to submit some DT now, drop the ethernet node. This is
-> what others have been doing while waiting for Aspeed to fix their MAC
-> driver. Having said that, i've not seen any progress from Aspeed, so
-> it either needs their customers to apply more pressure, or somebody in
-> the community to just fix it and submit patches.
+> thanks,
 > 
->     Andrew
+> greg k-h
+> 
 
-Hi Andrew,
+Compiled and booted on my test system. No dmesg regressions.
 
-Got it, and thanks for sharing the context.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-I will reach out to ASPEED offline to see if they are actively working
-on the MAC fix, or if I have enough knowledge to work out the patch.
-
-
-Thanks,
-
-Tao
+thanks,
+-- Shuah
