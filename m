@@ -1,77 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF842E7BD6;
-	Thu,  3 Jul 2025 13:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3BC2E2EE0;
+	Thu,  3 Jul 2025 13:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549382; cv=none; b=mtuCIUOkNuh8McPOUUUud0/KtBD4OCZudWhzPRszqKN13SqB+YO+bGnqF+X4YMRP8DgE2wpd+4biV4QLmJbe+Az0hCTb1v4wGk532NvRH0IBn61qoX1U7awXMyXVlhYbIIkJhg3Eq98CHcNNfRF2kKh6MlKEJRuWR11Q1ieNKfs=
+	t=1751549390; cv=none; b=Q2LWEhGk3ioIFiEQnRIthtfSzwjgMSYyQFiyIjGW6z2yaeENQJdfTcl6TZLZrq8JoeYL4r2pO3vFqgHxsAjTaHp1YTHMPQ8kZoSpPG++KlsrNjT02e1seke5EtLP5A3hTfGd7bKYxTkR1oUxIXe4s77XRIAf960ATjZO6Z1xadk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549382; c=relaxed/simple;
-	bh=3tUymL6xjx4clRzBeqwvtTm9KaapLckMSHFmrwbJtlg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KgfGW+BDnZyEp6/Y9H2Ugg8BKBJCImIKemqQQsMFkJnK+c8Z7n+9v1ds1asIYQjoDnwb5g3HdlVPpB104a9ycViroP3e3e0yLxQ6G512OEYoo+7BMdhRAXCBOXtgANrcyzB2UxAI2Jum+xD2mE0Wpp/ExzV/7+w/c3aRWLe87J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzHoaPe/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751549390; c=relaxed/simple;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GS3qBmU9jTt00/oNiwMcdJusyxPR8KOhPOSa4UxyHTl2c2l2c4qpNQiwylozIH6hSpBAjZUq2VEFPg69SCHiKZ4HOFU+52vRqsUj/yK/aKRWpWx/H7obgpbhdhEhaA2st3LVk2yhYKF8z3nxv/qbBawbeyvfSbKJpoBm5bumH8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2B5McK0S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZziIAgfs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzHoaPe/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8F1BC4CEF1;
-	Thu,  3 Jul 2025 13:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751549381;
-	bh=3tUymL6xjx4clRzBeqwvtTm9KaapLckMSHFmrwbJtlg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AzHoaPe/R65JsEbh4DFlKlYo4fOo6uIJa+95MoOU7ZdhpV3HCAoYZg+yQxPowytqT
-	 jI7MkfWSGlUyrpa+uQJCLBDEPpj2iU+3FkCVNY2m5nxpYAYmgiUDOu7N/Tn797RSXb
-	 FxhBuFqoq2rUB3d32tIitT98A0Gpwu9XvlUESLl4TLFAnu1YxfLTRsHV58WSg6xMn5
-	 j2MTRmjuWFtBmIdrcyt0yAaK2Rkc/bCwJfCHo7/Ez5lFy2IaPQJayrmc/ztVPJj3tI
-	 SUYRyRex1SL+a5pwkHi9jjC6ZOoaLSwtnUrU1OH8T32jEZ43B6vwRiWZBbPEOVvsql
-	 /u9ebRHaTau6Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34166383B273;
-	Thu,  3 Jul 2025 13:30:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2B5McK0S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZziIAgfs"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751549387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=2B5McK0SKryyStR4OnxLzCMH9jmj6Uica4T0tpF2J9MRZJcRGUqodK1yhhydxLQ0eJdN6R
+	00I/D3U21EFmTbfIdOdcK6eoZPauuTP6bcK8GLOUxQDNqVNMpW973xf+XeNuoATSgoXJSJ
+	w4bCKVd0oXueFYiRooEc8yHNO4KfoMmfsO8sW6yaLXQ0kneo1T30wpLLcXYgxRLfIh24Ij
+	hIYgtI4LC6N0LtKsQafre4s5O6OJ4BpC6JNIYkRqs7Jjv3gCmI5tT8dKHTgA0H8jYD06WC
+	p38rHYZx5kCh7+AYBeI/zXT4Ci3KoLtOCPqIcSqsuABO4CHensISTYqzZhGeVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751549387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=ZziIAgfs4UH5dxXIOzWwmn1b6pdrIANkYDUK2xrQq52h7jllLfRTup5qqWWCfnei2A21CS
+	AzKefBZrq01jCnDg==
+To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
+ Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
+ Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
+ <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
+ <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
+ Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
+ <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+ <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 12/16] PCI: xilinx: Switch to
+ msi_create_parent_irq_domain()
+In-Reply-To: <b1353c797ce53714c22823de3bd2ae3d09fcd84f.1750858083.git.namcao@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <b1353c797ce53714c22823de3bd2ae3d09fcd84f.1750858083.git.namcao@linutronix.de>
+Date: Thu, 03 Jul 2025 15:29:46 +0200
+Message-ID: <87frfdv1v9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bonding: don't force LACPDU tx to ~333 ms boundaries
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175154940611.1481668.18355488754972268861.git-patchwork-notify@kernel.org>
-Date: Thu, 03 Jul 2025 13:30:06 +0000
-References: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
-In-Reply-To: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
-To: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-Cc: jv@jvosburgh.net, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- carlos.bilbao@kernel.org, tonghao@bamaicloud.com
+Content-Type: text/plain
 
-Hello:
+On Thu, Jun 26 2025 at 16:48, Nam Cao wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+> Move away from the legacy MSI domain setup, switch to use
+> msi_create_parent_irq_domain().
+>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-On Wed, 25 Jun 2025 11:01:24 -0500 you wrote:
-> The timer which ensures that no more than 3 LACPDUs are transmitted in
-> a second rearms itself every 333ms regardless of whether an LACPDU is
-> transmitted when the timer expires. This causes LACPDU tx to be delayed
-> until the next expiration of the timer, which effectively aligns LACPDUs
-> to ~333ms boundaries. This results in a variable amount of jitter in the
-> timing of periodic LACPDUs.
-> 
-> [...]
-
-Here is the summary with links:
-  - bonding: don't force LACPDU tx to ~333 ms boundaries
-    https://git.kernel.org/netdev/net-next/c/135faae63218
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
