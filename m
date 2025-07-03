@@ -1,108 +1,99 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38E6239E76
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691A24A078
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751581148; cv=none; b=BndWdqAW4cwWay2xVXF78HIEL54GK+p24d/1CckOO8Sfdj7dZ4h5htgWNNEidWp2P2pkD77lj7RRhcPSN/LiXrwjtv65EqcJtFTdQdpilv2jCDoVDxVSXn6MthIiE9hiPeuvJUhGN6C29FNlrBjFMFVrdEJA0kqH1DUeOG5SmDo=
+	t=1751581310; cv=none; b=tha5JKWBA83T8FPlRhGx+fRhLdjfsgLHXLPJ7+nQtlYH7ekVdS4J6LyGOrEpSsFyJ2lSgq+Y/91b+LZ/ZGs1+PcUDx4MHAy1179t7RhnHYGbTDfP2Ej0qw7eGAUf186pdDunNvjlrJY0Gmg60NMRmgpt+nTQnTFgQwFcGISweoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751581148; c=relaxed/simple;
-	bh=bsQzXNp8DClq+bAKZa3sdGA9BUSFmOPEFWdTtJqquII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sx4ENUKFEE5ftvp5cS3rblpHdWhhy8Gg6o/56x2ygvaFL75vxP5Lokpp06sQ7vhx+vY29GCv6yxbka8gArfgdStFQnn76dLnvbiXE9SicBu+JQmrQAYTlvsldwjxFs78gJZHh0+4FV+o0BcNPX9uJ9c/6Im7LZKQSJRjsgfEjes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hY8v05Ic; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751581310; c=relaxed/simple;
+	bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0MuM1IFKSn3VBdwncL2E6xFxmNU8wJu3btKE1K82JEcjN73OCbVUIgkI74qjfDSi9j8uDkvfvtAY5+bbJE58z5HEXu32CuPUFlZqlyDmuLYlz7WI3hfyVMwwmpNWOjzpESzMWVY3Vw7gZV3psDOS5j39xlSnPKnYiGUlJi0Pl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s06L0ePE; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hY8v05Ic"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3df2ddd39c6so1546745ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s06L0ePE"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55516abe02cso413861e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751581145; x=1752185945; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K/ohUAJwNxFFjxA7YgIpc1NqK4PGnlTrw2zPL9RW/ps=;
-        b=hY8v05IcJdcYv1Qx0OqiqVEUTfTC9LfjHDyvDy/hG3sKE1VkCpfVXNl1jDAzIrcSIB
-         Ou8Hca+iBZbPqo2M+/uhpT5qPQoa+qls4RZcQd4J+OQqmgeuV4WkzusyHFTxtIkEVerb
-         7PuHIDNf7AvDdMH+5KTf6ajyUpHA7AAs37QTM=
+        d=linaro.org; s=google; t=1751581305; x=1752186105; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
+        b=s06L0ePEV+Ik/W++lG6RnHh2ha8t1mhR9yAbOmBc/IokvzgsMjUYG2PGa5hCfZfyYu
+         7suCgB0NhgU8mGTFAZE3l5VeQRtkAR48nM0X9mIan6GXsHMLV/MI5JL1h2WkOgLa4vjv
+         mKgIldSipKXKAg695Z58qM0JMF0JDcv3nj5MGoG297pVRjK+Sy0CIWOFM6YUBdGn38sF
+         zZEVUROaG/Eggrt/Cemq4QpG/jU1RWDVhm0a0f8iUbxp47Lyn+MmfB3hoKwSXdHwyqtd
+         uJJ2z1pJcgrWs+5Dt1m91CZj1ftxAJMLJkPpw0MVns+3YRo2A5+0nuuD9WohhQN2sQBo
+         87JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751581145; x=1752185945;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K/ohUAJwNxFFjxA7YgIpc1NqK4PGnlTrw2zPL9RW/ps=;
-        b=H8DgGV+Ro+VKGIzRmVb9YsKrlNWnj5ml3yy0kNNzYKy4dU1ADSdxBC/2MIXyDr/r07
-         7ptGkQsMMamvutIan+UwL8L3XOdFrfNuxNM5TnEgTShbM5WMLaZuJ4hXGOoWoRzwNVjM
-         HBA1wTScMM7Qt35XNvLI7bJf+eR0utLD18EXBpSVAUZtf1eoiZvdi1g49LjVF5lK4mhn
-         g8Wjii81YUWooTRUP9aJLbBE/Qklz9k4G0yP+EJB5ZNTRi7l5qF7PJ5w9iLdIQidgT3s
-         OZUw7klnLGD9MDBB9OOQ1Aa2JSzS52T3ubsazgTdSoBHjmS1u1qrUJnFGX/ntY+F66cy
-         l38A==
-X-Forwarded-Encrypted: i=1; AJvYcCVDhfgb4U6b4z3xEuswTPr9CFBHEKUWTbO6XG65gH4/b3ORhZWgBH+K3riBRdmOkdN+LUXj8wjIFzureXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeDzJtA7Y9VuCAuViMqm+CJIuwEc4WZ7wMY8lk9XDXfG2bCwcK
-	TN+D9e/4H1yOOCsuOjKswnxnyWAUtIWPGLaR3BuOmCyA6xj5yyxlrwW4l0jdN2+KttM=
-X-Gm-Gg: ASbGnctqDBnDRvIZaU6VOvnCscNeQuw1i8Z5AGXj7tUnTxlm84ZIr0KLlmvxrvpREFk
-	IiOjQ4iC2zR/NMLwjHZ913OL1wM0gNj3/mcYtWyZaBxHPQCa9f+qnb14lESQA147ieIOqwv0XJp
-	WqV6PITzWQKkt06ynbU38yLc5bSs2y6nuwJLvCat93fGeZVW5yFjWRIp2LJDr+Qrr/Xda7XV1Sl
-	oRNkyxGpCUTDuTjUnLqp6rggZA+pUMo4BuMrE50U8JjINN0el18Z8h39BNlL/qypX9p3W99Uq9n
-	H/REDRuYKs112q3pu+AQu+OWWnJULOW5rUhfVRurrF6XTMaCR2hr+z2+wTZHKHvgDHT9FcnVRw=
-	=
-X-Google-Smtp-Source: AGHT+IFkjsoDOoPrzIbbcNU8K6UylrmjRvuaaN9lDoZeoFFVq77lPnUcgvPUJ5086KzCi0xghesVaA==
-X-Received: by 2002:a05:6e02:2189:b0:3dd:cbbb:b731 with SMTP id e9e14a558f8ab-3e1354bfa00mr2010855ab.9.1751581144798;
-        Thu, 03 Jul 2025 15:19:04 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-503b599a3f9sm160059173.12.2025.07.03.15.19.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 15:19:04 -0700 (PDT)
-Message-ID: <70155955-936f-4280-a0ae-c1e48af3ef28@linuxfoundation.org>
-Date: Thu, 3 Jul 2025 16:19:03 -0600
+        d=1e100.net; s=20230601; t=1751581305; x=1752186105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hXa7xVr03JFbcgBBljLOZWrTDtWUk6UBg/vmRmvPVoo=;
+        b=UA1+DWsPEXX+n9Gr0yaAAW/tO8eVGxHSdKhu+3POd25bBnThmmHNAfSJeH5mohpbTz
+         AWr7py6Fss/kjx4K2Dnp67s5hfENTGUY9GIjvIscyg5l5xb1YAsDWg20RXcOgk14WKcu
+         K+ZDPNe3vnUxLnXgTmH0wmnegoEcdSkAqIHJUziLJa6FDtRrhFg7tJiHoCSEHvRHLVsw
+         uXnZ4uBAcStYoyrGCTNKPypTy63tSXrM0D2QT16yynXIrHNAi7+++gycvhC8XxINXUxF
+         3YpHaB9RM57Eq3pj2o0H05/nblszBv2hTsyp2wTbDnV4mcHmfcplRtQGyF2iAJOYjES4
+         +fqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlfYQZgZVM4/n81YNK3u+08Yjk0mx+9HB5Dr0/mI1dUtF+ruyW2FOADyA2xryLPBDPdOWzeTqUl3W1oSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsnCtaFUFsY4GYoje2jJWqYt6V2DfMFOWDxvRDEHsI/DTe8v3m
+	O+c8Fk6B7ZMgwyxQR5V2HbQSH+7ADfAMLvSEB+aNZfRMiJVUxK+33HWVwPK63XwDgOQKrXt0mno
+	r9IaplipN+2l+NvhLq82qXYKbAlh66llDTBOuiL5slH5W3Wsa51wc6jpc9w==
+X-Gm-Gg: ASbGncsh8gFsKsstkin+Lh3AzZjT+L01eu+h2U1SOTJ7DPum6xPuuID1Mw6z3RaWawM
+	madf/yaRWpYtqOsuOybdhZ3Vr+opJpiddmHjnsLXRWw/8eqMOjnPJ9INvI1uErJEsKI6A3iYL9L
+	EDLqTK4vg6vBY8p3msEbIFYBnyQ8KRT08oiqtiB+zAG8M=
+X-Google-Smtp-Source: AGHT+IEdCJvHXhlmBq1702X71zoM5ng69d7Mh6npUYCQ1PTXuNgk3bG87vuighjDtFReOyDckV1OsZwH3mt/qEZLkiU=
+X-Received: by 2002:a05:6512:3f0c:b0:553:2969:1d6d with SMTP id
+ 2adb3069b0e04-5565baa76a4mr164653e87.13.1751581305466; Thu, 03 Jul 2025
+ 15:21:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/132] 6.1.143-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250703143939.370927276@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250703143939.370927276@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250625153711.194208-1-brgl@bgdev.pl> <d92e7c52-eab5-4759-af3f-16b24254bff6@oss.qualcomm.com>
+ <CAMRc=Md=ABd+aSc7DE-2dsR5rMnpnvbetuexw8vmrf7_zzT31Q@mail.gmail.com>
+In-Reply-To: <CAMRc=Md=ABd+aSc7DE-2dsR5rMnpnvbetuexw8vmrf7_zzT31Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 00:21:34 +0200
+X-Gm-Features: Ac12FXyNl8F_EhX9xgzHWQ-gwTL-nTjQtlFOhsSbHuo_tnMvAihEfroUUjENXQE
+Message-ID: <CACRpkdZTXzyROqb3mGoQrsO5X_Y9-yDSU2ESUxivpb=N1WsP-g@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT] pinctrl: qcom: make the pinmuxing strict
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/3/25 08:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.143 release.
-> There are 132 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.143-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Fri, Jun 27, 2025 at 10:26=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 
-Compiled and booted on my test system. No dmesg regressions.
+> Yeah, I would be surprised if nothing broke.It's probably worth
+> looking into the implementation of the strict flag as it makes every
+> muxed pin unavailable as GPIO even if - like in this case - the
+> function *is* "gpio". Of course the "gpio" string has no real meaning
+> to the pinctrl core, it's just a name but it would be awesome if we
+> could say for a given function that this means GPIO and as such should
+> be available to the GPIOLIB API.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Can't we just add a special callback to the pinmux_ops for that?
+like
 
-thanks,
--- Shuah
+int (*is_gpio_mode) (struct pinctrl_dev *pctldev, unsigned int pin);
+
+That the core code can call to ask the driver if a pin is in GPIO
+mode already? A simple strcmp("gpio", ...) is one way for the
+Qualcomm driver to implement that.
+
+Yours,
+Linus Walleij
