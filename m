@@ -1,157 +1,262 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B383157E99;
-	Thu,  3 Jul 2025 16:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751559722; cv=none; b=MOgwN9AvWCQtJJmipMhPUK57HGeMlQCpwXFBE4sUanMWcpRqAbUUsbElFYVk5z0MVAdijW8TYRmFtOu5D8PBcnMkY1tqm048p0+t4k1Jn/AeG7X4/keSPlL2X1dLQcOPK07u3OlyPodr6BAmssY1qq7h8bVkXeKU030uEOvIGHg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751559722; c=relaxed/simple;
-	bh=qsElSjws3oA4dpN+ZkpRfZW49vQ5t5xw1uuPlsuVDnQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RxZSr1a06y2dTuv2EynDD75NOrEhb4f9k+WRpJQmxrS41QPEYARgHpuV8/uvL6+kzw0KZNLMVJDgPqStIIIt9DoAXCiqA7paXqrAuLDFFOVv+SA3h5jomVZfdOwZMXWrd2M/BTt+Vm3f9K8C+XzWE1ea9qolBkbjFlfkmUyo6lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nPjVjOhH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DC024C060;
+	Thu,  3 Jul 2025 16:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751559754; cv=fail; b=gtZU22cgN7tFxF+6wKR7+Sx4r++4WTDQlyoRr5Oo93J0im5e5fVOL7If8T+WwcTVJWpbtpBxAFR4HedWGg9wE5OXT8tRon52UvWmkUQ/FMPDdLoA17aQvrH0Osk7HisYs9ku4LSVdXO7rI99GjHBefzbIcNDr2CIcS0xHsDFxCk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751559754; c=relaxed/simple;
+	bh=wJm7M9/CBq965+GifxVTOie2qep7l6BL9c+HChw+8E8=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eJZtTc9JV4wHCdsJc54e2Al4CfOKiQcThH+6kJUujlYSYA1+H9rPW7fjozKvarwUONEWShgY4oFzodZbr/MDIUPgsyJqAyZAlHa3+N8Yc2Q000KH25tLZunF0OHuq7VFU5zlSk6jcYsBP+J3HP3l9/at+hwmt02nwKmYgxXubDA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cKmhssdV; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nPjVjOhH"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563BMSVt001883;
-	Thu, 3 Jul 2025 16:21:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=i8NkVe
-	LpEBDLuD6THW1Trv/bMVVo2C2v0DHjwQo3bG8=; b=nPjVjOhH5nq/W9IrKkYFwE
-	yFP0QDNtTxXvm0SbaV+ruC9KKFuXRmsUQjZgM3XIljJMTig51wjj9HGddeV9urDg
-	MvLcOHE/yQHBEvm7FGyeU3qu5YGtdd7FKC8cIGTim87eQsBRWI2pEnalw6h8pr8C
-	9lJuMhSO3KLP2Kia3b67Kq07PSpTcir+F9HlPkkQ0+VivUv7/OMX1xk/TRltepGm
-	C2nfj2kDzcDkHh/gE58CVD66eZPRmVyCp/QJxd3csmEOWqW1cnk7uqtvAraZEwln
-	C0pzjf1KtO+ZPrLncSFrgs1Y3KjEnqxw1qL6SbIxw211yeiTQyOPaBwZMidA19rQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dn1d9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 16:21:15 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563EQ8r2012027;
-	Thu, 3 Jul 2025 16:21:14 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n5qsu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 16:21:14 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563GLCAi34800222
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Jul 2025 16:21:12 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E9EB2004D;
-	Thu,  3 Jul 2025 16:21:12 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A78D72004B;
-	Thu,  3 Jul 2025 16:21:11 +0000 (GMT)
-Received: from [9.152.222.224] (unknown [9.152.222.224])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Jul 2025 16:21:11 +0000 (GMT)
-Message-ID: <d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
-Date: Thu, 3 Jul 2025 18:21:10 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cKmhssdV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751559753; x=1783095753;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wJm7M9/CBq965+GifxVTOie2qep7l6BL9c+HChw+8E8=;
+  b=cKmhssdVlZiCPQ4Ql3nRUnJ/pfSG8WotMzC0/9whCPxNhrCVRnJHDNZ3
+   lMuYgRCO7GJiwY7yGygpaVSljrX3b2drBoIElrmqxyX8WfmJ2yY5krI4y
+   OPzs0vw/++mR6ZFoL7jvryimNMuoEmS/WEP1PrNzT6IaICGupVIpWbSNH
+   MQHCWho0w5PsS9Y0BGke1l7mYvJu3zVlKJMw8OJeW2KsRzxr68GE9RZy2
+   TqxdzGDcg+m87y4S6Gp2omO2cL5z3WccOyWm6Rapsn6m1MT9vvE2dqgIo
+   Ti/kSWVIdU/RCaNUNPbi2diaKRXP940n84gDT1eIRRztOKNWHo77p00Ff
+   g==;
+X-CSE-ConnectionGUID: 2WT8l2hcSMOp0EVOgXfcXA==
+X-CSE-MsgGUID: Ckm67xGnTrGxxETWGX7k5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="56513726"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="56513726"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 09:22:32 -0700
+X-CSE-ConnectionGUID: mSM67MphT6Wc3kpGSnlygQ==
+X-CSE-MsgGUID: 3TUiZfZSSx2ETl93bLkrQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="153845480"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 09:22:32 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 3 Jul 2025 09:22:31 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 3 Jul 2025 09:22:31 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.57) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 3 Jul 2025 09:22:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oDn0c+XAGlms22/HhFir0jjMsqiCza+/N95qA9SbEbY6EzQKqegaMxYTae64dYccflQr+j1st0L8bIKxkp/5Mx9wHBp4qK6AzpadH4BExybv+CrJoPRzgUOASIr4AOKC3C5iCttEA5Y+K5O+XyWoWptqJ2U/o6HS0vjDRtAvC4ysSGb8CXpnAdGnqpnPgJdwCcRSYWgeXNgHOyLJI27Xyfe80mi+zi0m33QRwjeXzniTqwFpU64zjH71qLZXHD+nF7EGE4FYsxFz+ypSXwdqqQ3msU0vuLSirO7uf4qtuIxUtftfuCjJusMVs0T57keyGqcwug0I9b8HxeCKVITEmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W3+fnlhF0CBNwaMrsYvM/LkNIe9kxuuixd5KwSuEPRw=;
+ b=tPvAI4c8wH1iI0y0HIVoDEx6NY3GLjh/M360YMjrLjyOWd6NCIusDv71WIPj5v0EyyUkSb5ojOsqRIFP6LdFmySRcqGGXiZ84wR3e2QNYmxB+zh4ihMAfOb9KDO0bzIuW1HDuYGlhzaLtaMA9M9lI/ZagxV3D3UHIW+hII+nar9du5PTtbo3psYzdkG2P9ocLEQh86xtmvuc2l7sQ3s+SpOu+sEStfg2o9zDMGQEj1tqPpaM7JQAwN7V1KrQ1NqTtNKa6QcVuUrJGSmOVQ1rEJDL9MykmXfdP7JuFsAotNLGGAq0xgsdBpqhURxuxiFkOLHbGeeR3V2otDWAcyPCMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by LV3PR11MB8742.namprd11.prod.outlook.com (2603:10b6:408:212::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Thu, 3 Jul
+ 2025 16:21:10 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8901.018; Thu, 3 Jul 2025
+ 16:21:10 +0000
+Message-ID: <d5c4d3e8-6d5f-4892-83b5-867ec8bfc97a@intel.com>
+Date: Thu, 3 Jul 2025 09:21:07 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 30/32] fs/resctrl: Hide the BMEC related files when
+ mbm_event mode is enabled
+To: <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
+	<Dave.Martin@arm.com>, <james.morse@arm.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
+	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<manali.shukla@amd.com>, <perry.yuan@amd.com>, <kai.huang@intel.com>,
+	<peterz@infradead.org>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
+	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <gautham.shenoy@amd.com>,
+	<xin@zytor.com>, <chang.seok.bae@intel.com>, <fenghuay@nvidia.com>,
+	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
+	<eranian@google.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <cover.1749848714.git.babu.moger@amd.com>
+ <4769751d1de7c4f66b1c7f3c5ea7eeeb49951363.1749848715.git.babu.moger@amd.com>
+ <3c753f3c-e91b-4cfe-983d-efe8ff07b750@intel.com>
+ <f85e467a-1d17-4f34-98e3-512679baad47@amd.com>
+ <ff314427-1c03-4e26-be19-c5f5090f3d8a@intel.com>
+ <471975cf-1094-42dd-a965-f536cf399d0a@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <471975cf-1094-42dd-a965-f536cf399d0a@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0271.namprd04.prod.outlook.com
+ (2603:10b6:303:89::6) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
-References: <20250701005321.942306427@goodmis.org>
- <20250701005450.888492528@goodmis.org>
- <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
- <20250630225603.72c84e67@gandalf.local.home>
- <a6a460e6-8cff-4353-a9e1-2e071d28e993@linux.ibm.com>
- <20250702195058.7ebb026d@gandalf.local.home>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250702195058.7ebb026d@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vzwp24uTChfZOwCfiOSdmh2MJX-g-FDG
-X-Proofpoint-GUID: vzwp24uTChfZOwCfiOSdmh2MJX-g-FDG
-X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=6866adfb cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEzNCBTYWx0ZWRfX4i3gZy03aGTn +UyaW6pjuXxS9HBDjaXxdAFGU2vVeZTksbcysv33oK/sWDQiXVcfPLUmrHJ4m69D+GZQp/TQGAl L9+GhDLjrIf41Wf8l5R2ONu7t+KnAs+ozcDvq/JU5vtji49/+InHQdseR7XeJRxgVsVtNtFV++n
- ZkeJMIg6Kv7Ay9NJUIoGxlQOVi9VHpJcEFSm5DmPKBN/b6RZHFUs58w/eva3KqFPaveo0JNcRfA zVNoWYABKaDb+7MSOPgCRSgzbWW15BkLouqf6ZGH5oyX67uUgWM9ib5vqlnuBXcumVgNPxbgTfv 8GUUHRsvaF4Ep1gxGTv5DLl3aPKwTSEWupRD4rVB3HRppt/dTgeZTcJ/FiWtZVgNSKVeZTbA6Xp
- lidc9L96tzI29OyW8iKor/pKr2quVuuhpdWeU/V3Stzrl7VPzuoqvL1ubSs9uymwtbMgZZLP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030134
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|LV3PR11MB8742:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04c418f3-4890-4c2d-3520-08ddba4d9f2d
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?anR2TFV5dGY0VFNKU1U3b1RvNkp0S3ZsWjA1dE1JQVpuL0U4MnZQQXJwLzda?=
+ =?utf-8?B?YWFHSlFSYnN5V2diV1ZUd0ZBRTFpZU9SU1h6YzdaTVgrQ2FPZHhNQlNFUmdH?=
+ =?utf-8?B?cGQyNXVlKzMwYWxpcTF6YUFMQW5rTHg0dEoySTJONGM5cW5pcDFCSHNJRWhT?=
+ =?utf-8?B?djlXRkR0QTdHdExyeUh4K2l0eDlZREF4cG56Tlg1bmxTOVRvY294ZTBNSXVI?=
+ =?utf-8?B?QmZFYjBubUdCQzZLSzd5ZW1yQ2lIOEl6ZVl1OE5MdTRQQ3NsM3lCT2tmSkZi?=
+ =?utf-8?B?bk9TUVdhSUJqUm1KcEk4Wmh4Rjc4N2J0WVpYbkRUUm1PY2lGYWx0QjhiZ2Fx?=
+ =?utf-8?B?bjBORTBNL0JEVkFXclhaNlN6VmtJMVBMOURWaWFmWHpmODhjOVBKbEVNZ2gy?=
+ =?utf-8?B?Ym9ucmZsR1RUMndkMllIY3FmZ3ZuMWdiU2lYNUZqN1dnQ2ppU2VZNUJ4SFNv?=
+ =?utf-8?B?dWN1cWszeXRIMjRGdUx1ODlXYkxrcUZpMjhLL1ErZC96Z0x6c0t5ZURJYkR0?=
+ =?utf-8?B?Y2lJa1gzSHF1UHJnR1JzaUxoWG5wN0dvK0RmU2lzeVVGNGQ3SnBnMGw4ZkN5?=
+ =?utf-8?B?OVZqK1NNR2Q3RmExTjRxd0VuSE4wa2RGNlRiN3R0aW1hZ281R0tyZFBRT3Ny?=
+ =?utf-8?B?cHg4WGJlL3NZWDdjaDBIYithYWdTRE1lSVNrTXIyR3BLRm5zTTBkdTVFdmhJ?=
+ =?utf-8?B?VHVwT0NUVjd4OSs0YXFnT0Y3N2htVDV6enI3Ry9nMFhQeVR1c3ZlbGdocDRP?=
+ =?utf-8?B?Y3JCOEJZQ0tSY2JvZmNtejhKdEZFTGxZYVdyUHVmWlU0MWxrbHU0QWZjcGdP?=
+ =?utf-8?B?RGhCVjZ3NllrSzNId1R4dDVsbUZDYUE0VnZTMEpDNHVYNFRGbXVMcTRyemc3?=
+ =?utf-8?B?dDBjSHhVNlhJTk5LY3hrUW9oK2w4ZHpSOXppMXhyVDNDcGhZSUNhalVpTjU1?=
+ =?utf-8?B?TTMvKzhJclcwcWpndUk1TmhCeVl3OTlmUFFQT1R6Z2ladlh2eTFLUzlxS204?=
+ =?utf-8?B?eVJ2WlpLZy9aanpuMm15OVFLMzVveE1hVTdOQWJzK1hNakVSUHlvY0h3SHIz?=
+ =?utf-8?B?YUFMOEZyajY0eFN2QnZ3L2I1OWNkSGNQbVJwamlTT2JvUXk4UENiUjdkbmJ2?=
+ =?utf-8?B?dE1reVQ4dFNoMGZFUFZjdmZyREVhK1hOcjdoTWYwdmprc0ZiMCtSTXVaVm9R?=
+ =?utf-8?B?bElyRFNtUzU3NFpFdTV5WXBzQTNscTQ1VG1oby9vUHpFL3grWGh5OEt0YmlX?=
+ =?utf-8?B?S2FTMWJpV0ErUjZzRForclkyZFFpS2ZaZks1am5naUcvdlZqM3hwTWxDRW9Z?=
+ =?utf-8?B?MjlOYkVlQmVGcHRkUHVmTExxaDR1Zi9aMUJoTU1DekNud3NjM0RscDU0TlJD?=
+ =?utf-8?B?T21Cd0JVOW01TUcxbk5iOHhiYU9LWllRUzliWHhRcUIveW9JZ1Yzc3BHUlFj?=
+ =?utf-8?B?ZlhIVldDL2g3c09xRXhPZmZsNVpDemtiaktVdkZ6Qkp2U0FTc2pQbi9MMFRh?=
+ =?utf-8?B?dnBBaE90cUZPY1IrdlpsRE9qM0oxczhaY3hlK2c3TkNYenB2VjJjdFIrOEsv?=
+ =?utf-8?B?RExXSVNQYTZIZ3h5TnVvcDhRT1JxcTFFQVRjTjVjK1M5ODJodmVDVHI5NmFq?=
+ =?utf-8?B?c0lPUGU1Nkt2YXpIcUtCOHc2RmJoa2RUR3hMc0hZTFI0OGZnU0l5UWFNZXNr?=
+ =?utf-8?B?SS9vNm1qRW8rTzV4a3dVNmVRdjA4ZlFpRGZLbUx0QWpWc1NpZDI1TGlDYStJ?=
+ =?utf-8?B?NGVyVStUa24vYVMzaGR0SU9pVmJYVWtjM2pIU1orbGJQbFVkSXJRNFh2K0ZT?=
+ =?utf-8?B?TkZ5dVQxTGp6dC9mcURTd2prcmlvMTNNdDRpY2lKMktsV25jay9mWEVyUlpk?=
+ =?utf-8?B?TDJ1anZRV2U5aDdKaFRvMVVPanlNK2l1OFFxZi81d1ppVnhOcll3bG9jeDdO?=
+ =?utf-8?Q?4YteVK4vej4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ejMvb1ZWOGVjdzdCbDRDdGdsUlB3SGwvRDYxeHNLU29BUnV1L3Q3NmxUOERV?=
+ =?utf-8?B?RjJMUk5KNGFLZGxHcHZBTGs4UVRoWWhEbjMwNVVSaXQ1bjNPaExKeTR1dWZp?=
+ =?utf-8?B?cjFTUjh1T1l5Z3JBZElVYkN0SFlPZ09ZM0NZblordnpFYjhKUng4bUdJaFBD?=
+ =?utf-8?B?YU1xd2ZBTGwyakZ5VmNSeXZwQjhEbUlyL1ZxTkxVSFU3ZWh5K09iNVU0alJC?=
+ =?utf-8?B?emJKNThxb05hQy93RC9Tc01heklGTGJFaUpmSUxkMDNQb2xBdXpRajR6QjRr?=
+ =?utf-8?B?Njc1MnZGRWJSajlCcXVJT3NKbk9jTCt4dktGb2taRnU0VWltNmd6emZReFht?=
+ =?utf-8?B?bVdYd091aGRTUE80UkNXRnprbmF5dUFveFpsM0tySW9RT2RBTTNFUVd6UlpQ?=
+ =?utf-8?B?ek5IKzk0eHdEb3ZPOUhqWlBQYzQvMTZSdmZrbkZyWXBZaWJqbk5QVEZwUEtJ?=
+ =?utf-8?B?dG1Ic0czVFdXdUVmazlYOVkzNWRNWG05Nnc4RytqcnBQSXN5d0Q1b2tkTzJ6?=
+ =?utf-8?B?WlNiV0dycjZkOXdzcHhoWG1EV0toMzB3bVVyZFVzK21lVzd6T09MN2dJWExL?=
+ =?utf-8?B?NndRTkc5djF0ZlpGWXloY2k4WjNXMVg5Q2NGbFA0MndRK1BMcS9VMDBOcDRn?=
+ =?utf-8?B?QzlkVmt2ZG9MUWhVZjlDSDR0SGdlbXFxYTRuUTM5ejhiUzZNZEFJcG9xMEdv?=
+ =?utf-8?B?QnZMSWNKd2UxRkFIUVltbHI4Y0pHclRCVUtoT0pTaEp5SDlsZ2dIUEhObkY2?=
+ =?utf-8?B?UVp1bUhmYTZ0clpHdjJxR21JSHkvOEFORzF3WWphdStlbjI1NUs0dzdGMjQx?=
+ =?utf-8?B?Y2VXUnQ5Z3hMQ2FYVkJ3dHRKRHc4RTRZS2Y5VzRKTGdBNkRtRFZWZlM0VzMv?=
+ =?utf-8?B?TktoR1EvTnVwSUQ1Q09hMzUxUldGSzFqT3JMWTJIRVVxZEduREptNE5Udkdz?=
+ =?utf-8?B?cUdQMUlFL0FSYzh2NzFJb1RiWjdXcWtRQ2pIbGZEOWZBdkVaQmVQU3dPLzcr?=
+ =?utf-8?B?U1pxQXQ0WlpUcUhMRXgwdTQvMlRtV2tGWmFJWWY4a20xQS9GN0FtcDYyblBF?=
+ =?utf-8?B?bnVHSk9RWU93a0l1bEtvVGVoUWxnbm9LQllMckx0U0xMalpzbTFlM3ZBdUhD?=
+ =?utf-8?B?MFBOZXVpL09SWmxjN0xmcWxVOVRtZ1lDQUUyalBlcnpoUytmR3hPbXY2UFVt?=
+ =?utf-8?B?KzBjT3NYQy85S1lFRFRxQ21hUGNOQVUwOUJFb1NPNHZlYmw4YXJkVlYzeWVP?=
+ =?utf-8?B?cHYrTThmVk1QOFJJTDljQ1BiRG9kaWNWSHQ4ek5NaGpwTXBGMTM5ZFZsRElu?=
+ =?utf-8?B?VzNreWlyTWdBTDN2dXJCeVMybFJLSCtNakZiaU9LSUxneVBPb253Tk5MRk1B?=
+ =?utf-8?B?dFZiVFZndGlLK2h4d0N5emxad0ppaG85QmN1d05RU2JnRHRLNk9RdkFzNVd4?=
+ =?utf-8?B?QXBlQ2FRblU5a09iNGJscGlRamVKbTlGZmkycDdoZVcwYlE3V1ZaVmh2Rzc0?=
+ =?utf-8?B?YXB1UVRoVStLcXlFcWd6WE9DMno2N1hOK3AvRHlud2l0SndrRDF2RCtxLytp?=
+ =?utf-8?B?ajJiR1ZET1dGVUhmcGs0L0x2WHkxMzVWblh4UW8zYUh4UDFjQkhYY05MdFI4?=
+ =?utf-8?B?WG1JR095OCt3Uys2Q09jbTlBaExKUHROdXlwR1NUMEtJd1R6OTQvNHc3eWxN?=
+ =?utf-8?B?a3pLck90a3J1cVA0U0FWNjhVVUMycWdPemVveW8vbE10ZUc2TUpqRDkzU3Bx?=
+ =?utf-8?B?eEw3WEJPZjVHejQrNUxNU2hLa20rOGJJNGFIQ3NydnpBR0pyMWxtZGEwWkZF?=
+ =?utf-8?B?bW5Ra1VLTlpUcU5SSTB4RkJsOTJGOHJQUGJydW1MSVJYc2M4Sy9GK2pwOE4r?=
+ =?utf-8?B?eWorcVcrTkxJUHNqWjI3azh4cnlXaHFmeGJ4MVhDVnZya21QbXRJNlRYbkVM?=
+ =?utf-8?B?UFFZaTJsSXRVYkR6VHpvZzN5UXlwVG9oQTU4UWF6c0NoMk9peXd4cHpiTlpa?=
+ =?utf-8?B?aXhSMnB5TE1aVWxzY3ZPZVg0NDhDa0MwS09MK2o1MVE3NFJ4R1EwMjhBZGlk?=
+ =?utf-8?B?SG5naXBpeFdpVDB6TGlFSmtVckRuaUxVK20zaWNoNE1CN1c1cDdVUkcvZjB3?=
+ =?utf-8?B?UDdBK05zTnorWk5tYmFVdmtUdTVIQVRQTkpFblBwWDArUXdLT09mb0ZGdDRm?=
+ =?utf-8?B?WGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04c418f3-4890-4c2d-3520-08ddba4d9f2d
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 16:21:10.7223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zSceQb3y3l94+k5hK7skeJuNaDHCFIYfLPLqJkJGww0oyRVs1bd1wkA2vFCnQIJf2/R6Rc6hqNC1cMyzQ3BxH9zdiapkwbUlEjttCpDlZws=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8742
+X-OriginatorOrg: intel.com
 
-On 03.07.2025 01:50, Steven Rostedt wrote:
-> On Tue, 1 Jul 2025 17:36:55 +0200
-> Jens Remus <jremus@linux.ibm.com> wrote:
+Hi Babu,
+
+On 7/2/25 12:04 PM, Moger, Babu wrote:
+> Hi Reinette,
 > 
->> On s390 the prev_frame_sp may be equal to curr_frame_sp for the topmost
->> frame, as long as the topmost function did not allocate any stack.  For
->> instance when early in the prologue or when in a leaf function that does
->> not require any stack space.  My s390 sframe support patches would
->> therefore currently change above check to:
+> On 7/2/25 12:21, Reinette Chatre wrote:
+>> Hi Babu,
 >>
->> 	/* stack going in wrong direction? */
->> 	if (sp <= state->sp - topmost)
->> 		goto done;
+>> On 7/2/25 9:42 AM, Moger, Babu wrote:
+>>> On 6/25/25 18:39, Reinette Chatre wrote:
+>>>> Hi Babu,
+>>>>
+>>>> On 6/13/25 2:05 PM, Babu Moger wrote:
+>>>>> BMEC (Bandwidth Monitoring Event Configuration) and mbm_event mode do not
+>>>>> work simultaneously.
+>>>>
+>>>> Could you please elaborate why they do not work simultaneously?
+>>>
+>>> Changed the changelog.
+>>>
+>>> When mbm_event counter assignment mode is enabled, events are configured
+>>> through the "event_filter" files under
+>>> /sys/fs/resctrl/info/L3_MON/event_configs/.
+>>>
+>>> The default monitoring mode and with BMEC (Bandwidth Monitoring Event
+>>> Configuration) support, events are configured using the files
+>>> mbm_total_bytes_config or mbm_local_bytes_config in
+>>> /sys/fs/resctrl/info/L3_MON/.
+>>
+>> A reasonable question here may be why not just keep using the existing
+>> (BMEC supporting) event configuration files for event configuration? Why
+>> are new event configuration files needed?
 > 
-> How do you calculate "topmost" then?
+> New interface that enables users to read and write memory transaction
+> events using human-readable strings, simplifying configuration and
+> improving usability.
+
+I find the "simplifying configuration and improving usability" a bit vague
+for a changelog. The cover letter already claims that ABMC and BMEC are
+incompatible and links to some email discussions. I think it will be helpful
+to summarize here why ABMC and BMEC are considered incompatible and then use
+that as motivation to hide BMEC. The motivation in this changelog is to
+"avoid confusion" but the motivation is stronger than that.
+
 > 
-> Is it another field you add to "state"?
+> In future it can be extended to create free form event names.
+> 
+>>
+>>>
+>>> To avoid the confusion, hide BMEC-related files when mbm_event counter
+>>> assignment mode is enabled and update the mon_features display accordingly.
 
-Correct.  It is a boolean set to true in unwind_user_start() and set to
-false in unwind_user_next() when updating the state.
-
-I assume most architectures need above change, as their SP at function
-entry should be equal to the SP at call site (unlike x86-64 due to CALL).
-
-s390 also needs this information to allow restoring of FP/RA saved in
-other registers (instead of on the stack) only for the topmost frame.
-For any other frame arbitrary register contents would not be available,
-as user unwind only unwinds SP, FP, and RA.
-
-I would post my s390 sframe support patches as RFC once you have
-provided a merged sframe branch as discussed in:
-https://lore.kernel.org/all/20250702124737.565934b5@batman.local.home/
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Reinette
 
