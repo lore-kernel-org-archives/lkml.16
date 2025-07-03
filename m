@@ -1,48 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C0A2F2C7B;
-	Thu,  3 Jul 2025 18:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395A32F362F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 18:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567707; cv=none; b=V9QIHdHJyrs15TnrxUlkALontCOBKpkHUqtMRV+fKyeNhrRBjkznHTkDSlYFqQAXmdfTOSGTzcxGLt/QVg1gsxCRBIHMbZBjpYP3zuRkP1LBK5SC/XJ5OW8ukqeg3Ilm7L8+/2/ErciL8kJDXT6aKFOpGI9YfAVFFps5N7EsLfQ=
+	t=1751567713; cv=none; b=HwO2AoCPG/YSLEzI0TyHmsKO50DAsbw8tpRzNyC0HR4s9ebD4gX2LStMPraxUPey0hBs1hwsr9GiG9Z656ivGP2ixY6fyXw4EfOwx6Q+f4xXmddESwaL9ttuCb0ku2eLASbdz0rJWNj1X7i0vzU1gPhIkzpH1MRDz5wuwrpDwR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751567707; c=relaxed/simple;
-	bh=oQJxz7AsS+vnaXVxBJfrbdUGXV9WZlv60FGu/AgCo/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XxI+Rv1UD+x81ffublQDkktCQ19mGcAq92KlWKPReGK1nj/WPB/w5IZjU6CPabwso97JXYdNfmLR3JsLmcCpIRSAJJB9ZR4OxPu6LRyg8Wqs+IcuiMII0yBH964sgaYbaNJdu1RG2HQGApS8RAuCs+mhIOaa3Q/YtCEJ00tKhsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD0XQ8SI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751567713; c=relaxed/simple;
+	bh=g2Jp3nFdzDCpqkTRi8VIAw0hMS6wPtk21mPBmhu++tY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jtacxPlbdOK2J/k+Iw4fZCfg/N0+Wjooghspm/Di04OsL8cftGzysn6MtKSlos9az6Mkt/rVHoewLmmosVElWoOYc76+awHWbKobi1vPMcx1FJbSSbIvlCmPw5ADjb0JXNt7QyW+q1H34dSr9RtAPwD2/wxRb3TT4i/SIjIl5fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUzjlcwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD0XQ8SI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A11C4CEEB;
-	Thu,  3 Jul 2025 18:35:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUzjlcwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD4AC4CEE3;
+	Thu,  3 Jul 2025 18:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751567706;
-	bh=oQJxz7AsS+vnaXVxBJfrbdUGXV9WZlv60FGu/AgCo/8=;
+	s=k20201202; t=1751567713;
+	bh=g2Jp3nFdzDCpqkTRi8VIAw0hMS6wPtk21mPBmhu++tY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=CD0XQ8SIrPwDatdyuxIeN97jUm5gWGeYJoxaMC/IQuTCKLCbTRhuwNbO3OUQNqYtJ
-	 OjkXulFwfGmXq5/zzJNRxYDLzvFbxkFxEpi+jQuRWaVjCVNrzN9rkgGqemAfVp9tT5
-	 yk+Bx8jWkS+efI7OxHif+7pGeUXJw5MTHaQy0dcP/+GFiqcnRrosO79UcvGcuZwVLU
-	 Vhig93WWef1H5iPAWNxS0azpS+VLTjMZ3rmQRviiXPdwkA5xbCdnMufvjHzuj1YIjx
-	 WukkFz2Zpt4bHXdsHIv9QyNrFaIBx+zVNsoSZxpNKH/xIWmk4iQsdpq6fZsIvC7WvT
-	 I0VyNgJ6NBHPQ==
+	b=RUzjlcwoLNijbmZtgaC063oZlSftT7OSR304vJ9hQCLhQ2N7gpBcQugMFgMqt+Yw8
+	 K0LHrYDwbktvSF8uFo7QgTyp+FqIsgQxyJYXlxCXumvxcgO66j3jGYMGwgJ5bEWxQh
+	 YkDA9rcwST1+/KaSOXbpWehG/bBuswMqtL4k1+4uE0tIbI7UjWa36WMpRurUt6JNAX
+	 J13miDVT7bMAWypLXEhgcMU0O9+pgPcBRpGq8VzNSL5HOGaXu3MzU6IGEPJjGIBG3F
+	 8EECS6h72sov1okm2KGFkgHYYVLPhg6jjk+EkRQ1uB3u1OBNlxwsY7+FlItcfocorJ
+	 bfuhlI35Ki8qw==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Jeff Johnson <jjohnson@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-wireless@vger.kernel.org,
-	ath10k@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] wireless: Use of_reserved_mem_region_to_resource() for "memory-region"
-Date: Thu,  3 Jul 2025 13:35:01 -0500
-Message-ID: <20250703183502.2074538-1-robh@kernel.org>
+To: Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: aspeed: Use of_reserved_mem_region_to_resource() for "memory-region"
+Date: Thu,  3 Jul 2025 13:35:07 -0500
+Message-ID: <20250703183508.2074735-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,8 +46,8 @@ Content-Transfer-Encoding: 8bit
 Use the newly added of_reserved_mem_region_to_resource() function to
 handle "memory-region" properties.
 
-The error handling is a bit different for ath10k. "memory-region" is
-optional, so failed lookup is not an error. But then an error in
+The error handling is a bit different. "memory-region" is optional, so
+failed lookup is not an error. But then an error in
 of_address_to_resource() is treated as an error. However, that
 distinction is not really important. Either the region is available
 and usable or it is not. So now, it is just
@@ -64,183 +55,81 @@ of_reserved_mem_region_to_resource() which is checked for an error.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/snoc.c        | 14 +++----------
- drivers/net/wireless/ath/ath11k/ahb.c         | 17 +++------------
- drivers/net/wireless/ath/ath11k/qmi.c         | 17 ++++-----------
- .../net/wireless/mediatek/mt76/mt7915/soc.c   | 21 +++++++------------
- 4 files changed, 18 insertions(+), 51 deletions(-)
+ drivers/soc/aspeed/aspeed-lpc-ctrl.c | 14 +++-----------
+ drivers/soc/aspeed/aspeed-p2a-ctrl.c | 14 +++-----------
+ 2 files changed, 6 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index b2bf9d72b92f..5c61a3abd33b 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -13,7 +13,7 @@
- #include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/remoteproc/qcom_rproc.h>
--#include <linux/of_address.h>
+diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+index ee58151bd69e..b7dbb12bd095 100644
+--- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
++++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+@@ -10,6 +10,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
 +#include <linux/of_reserved_mem.h>
- #include <linux/iommu.h>
+ #include <linux/platform_device.h>
+ #include <linux/poll.h>
+ #include <linux/regmap.h>
+@@ -254,17 +255,8 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, lpc_ctrl);
  
- #include "ce.h"
-@@ -1557,19 +1557,11 @@ static void ath10k_modem_deinit(struct ath10k *ar)
- static int ath10k_setup_msa_resources(struct ath10k *ar, u32 msa_size)
- {
- 	struct device *dev = ar->dev;
--	struct device_node *node;
- 	struct resource r;
- 	int ret;
- 
+ 	/* If memory-region is described in device tree then store */
 -	node = of_parse_phandle(dev->of_node, "memory-region", 0);
--	if (node) {
--		ret = of_address_to_resource(node, 0, &r);
+-	if (!node) {
+-		dev_dbg(dev, "Didn't find reserved memory\n");
+-	} else {
+-		rc = of_address_to_resource(node, 0, &resm);
 -		of_node_put(node);
--		if (ret) {
--			dev_err(dev, "failed to resolve msa fixed region\n");
--			return ret;
+-		if (rc) {
+-			dev_err(dev, "Couldn't address to resource for reserved memory\n");
+-			return -ENXIO;
 -		}
 -
-+	ret = of_reserved_mem_region_to_resource(dev->of_node, 0, &r);
-+	if (!ret) {
- 		ar->msa.paddr = r.start;
- 		ar->msa.mem_size = resource_size(&r);
- 		ar->msa.vaddr = devm_memremap(dev, ar->msa.paddr,
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index fde1ce43c499..2e8a77ceb8bb 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -9,8 +9,8 @@
- #include <linux/property.h>
- #include <linux/of_device.h>
++	rc = of_reserved_mem_region_to_resource(dev->of_node, 0, &resm);
++	if (!rc) {
+ 		lpc_ctrl->mem_size = resource_size(&resm);
+ 		lpc_ctrl->mem_base = resm.start;
+ 
+diff --git a/drivers/soc/aspeed/aspeed-p2a-ctrl.c b/drivers/soc/aspeed/aspeed-p2a-ctrl.c
+index 6cc943744e12..3be2e1b1085b 100644
+--- a/drivers/soc/aspeed/aspeed-p2a-ctrl.c
++++ b/drivers/soc/aspeed/aspeed-p2a-ctrl.c
+@@ -19,7 +19,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
  #include <linux/of.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/dma-mapping.h>
 -#include <linux/of_address.h>
- #include <linux/iommu.h>
- #include "ahb.h"
- #include "debug.h"
-@@ -919,16 +919,10 @@ static int ath11k_ahb_setup_msa_resources(struct ath11k_base *ab)
- {
- 	struct ath11k_ahb *ab_ahb = ath11k_ahb_priv(ab);
- 	struct device *dev = ab->dev;
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -334,7 +334,6 @@ static int aspeed_p2a_ctrl_probe(struct platform_device *pdev)
+ 	struct aspeed_p2a_ctrl *misc_ctrl;
+ 	struct device *dev;
+ 	struct resource resm;
 -	struct device_node *node;
- 	struct resource r;
- 	int ret;
+ 	int rc = 0;
  
+ 	dev = &pdev->dev;
+@@ -346,15 +345,8 @@ static int aspeed_p2a_ctrl_probe(struct platform_device *pdev)
+ 	mutex_init(&misc_ctrl->tracking);
+ 
+ 	/* optional. */
 -	node = of_parse_phandle(dev->of_node, "memory-region", 0);
--	if (!node)
--		return -ENOENT;
+-	if (node) {
+-		rc = of_address_to_resource(node, 0, &resm);
+-		of_node_put(node);
+-		if (rc) {
+-			dev_err(dev, "Couldn't address to resource for reserved memory\n");
+-			return -ENODEV;
+-		}
 -
--	ret = of_address_to_resource(node, 0, &r);
--	of_node_put(node);
-+	ret = of_reserved_mem_region_to_resource(dev->of_node, 0, &r);
- 	if (ret) {
- 		dev_err(dev, "failed to resolve msa fixed region\n");
- 		return ret;
-@@ -937,12 +931,7 @@ static int ath11k_ahb_setup_msa_resources(struct ath11k_base *ab)
- 	ab_ahb->fw.msa_paddr = r.start;
- 	ab_ahb->fw.msa_size = resource_size(&r);
- 
--	node = of_parse_phandle(dev->of_node, "memory-region", 1);
--	if (!node)
--		return -ENOENT;
--
--	ret = of_address_to_resource(node, 0, &r);
--	of_node_put(node);
-+	ret = of_reserved_mem_region_to_resource(dev->of_node, 1, &r);
- 	if (ret) {
- 		dev_err(dev, "failed to resolve ce fixed region\n");
- 		return ret;
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 2782f4723e41..fb53efbc5b68 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -11,7 +11,7 @@
- #include "debug.h"
- #include "hif.h"
- #include <linux/of.h>
--#include <linux/of_address.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/ioport.h>
- #include <linux/firmware.h>
- #include <linux/of_irq.h>
-@@ -2038,23 +2038,14 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
- static int ath11k_qmi_assign_target_mem_chunk(struct ath11k_base *ab)
- {
- 	struct device *dev = ab->dev;
--	struct device_node *hremote_node = NULL;
--	struct resource res;
-+	struct resource res = {};
- 	u32 host_ddr_sz;
- 	int i, idx, ret;
- 
- 	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
- 		switch (ab->qmi.target_mem[i].type) {
- 		case HOST_DDR_REGION_TYPE:
--			hremote_node = of_parse_phandle(dev->of_node, "memory-region", 0);
--			if (!hremote_node) {
--				ath11k_dbg(ab, ATH11K_DBG_QMI,
--					   "fail to get hremote_node\n");
--				return -ENODEV;
--			}
--
--			ret = of_address_to_resource(hremote_node, 0, &res);
--			of_node_put(hremote_node);
-+			ret = of_reserved_mem_region_to_resource(dev->of_node, 0, &res);
- 			if (ret) {
- 				ath11k_dbg(ab, ATH11K_DBG_QMI,
- 					   "fail to get reg from hremote\n");
-@@ -2093,7 +2084,7 @@ static int ath11k_qmi_assign_target_mem_chunk(struct ath11k_base *ab)
- 			}
- 
- 			if (ath11k_core_coldboot_cal_support(ab)) {
--				if (hremote_node) {
-+				if (resource_size(&res)) {
- 					ab->qmi.target_mem[idx].paddr =
- 							res.start + host_ddr_sz;
- 					ab->qmi.target_mem[idx].iaddr =
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/soc.c b/drivers/net/wireless/mediatek/mt76/mt7915/soc.c
-index c823a7554a3a..5f19b506cc50 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/soc.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/soc.c
-@@ -284,20 +284,15 @@ static int mt798x_wmac_coninfra_check(struct mt7915_dev *dev)
- static int mt798x_wmac_coninfra_setup(struct mt7915_dev *dev)
- {
- 	struct device *pdev = dev->mt76.dev;
--	struct reserved_mem *rmem;
--	struct device_node *np;
-+	struct resource res;
- 	u32 val;
-+	int ret;
- 
--	np = of_parse_phandle(pdev->of_node, "memory-region", 0);
--	if (!np)
--		return -EINVAL;
--
--	rmem = of_reserved_mem_lookup(np);
--	of_node_put(np);
--	if (!rmem)
--		return -EINVAL;
-+	ret = of_reserved_mem_region_to_resource(pdev->of_node, 0, &res);
-+	if (ret)
-+		return ret;
- 
--	val = (rmem->base >> 16) & MT_TOP_MCU_EMI_BASE_MASK;
-+	val = (res.start >> 16) & MT_TOP_MCU_EMI_BASE_MASK;
- 
- 	if (is_mt7986(&dev->mt76)) {
- 		/* Set conninfra subsys PLL check */
-@@ -318,8 +313,8 @@ static int mt798x_wmac_coninfra_setup(struct mt7915_dev *dev)
- 			       MT_TOP_EFUSE_BASE_MASK, 0x11f20000 >> 16);
++	rc = of_reserved_mem_region_to_resource(dev->of_node, 0, &resm);
++	if (!rc) {
+ 		misc_ctrl->mem_size = resource_size(&resm);
+ 		misc_ctrl->mem_base = resm.start;
  	}
- 
--	mt76_wr(dev, MT_INFRA_BUS_EMI_START, rmem->base);
--	mt76_wr(dev, MT_INFRA_BUS_EMI_END, rmem->size);
-+	mt76_wr(dev, MT_INFRA_BUS_EMI_START, res.start);
-+	mt76_wr(dev, MT_INFRA_BUS_EMI_END, resource_size(&res));
- 
- 	mt76_rr(dev, MT_CONN_INFRA_EFUSE);
- 
 -- 
 2.47.2
 
