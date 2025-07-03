@@ -1,46 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848B513AA3E;
-	Thu,  3 Jul 2025 05:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmty1ljiyny4xntuumtyw.icoremail.net (zg8tmty1ljiyny4xntuumtyw.icoremail.net [165.227.155.160])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02A013AA3E;
+	Thu,  3 Jul 2025 05:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.227.155.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751520279; cv=none; b=tyiqLGAz4OBsxAjzivSAqXeWo6CFEmzT14KsI1zRpZrBqbOi2z3og5SrvhN3Om2OtKLuPnKRs9z+rrAQL52AZub/6OI1JT1/r+hetvf2Tw1zmY1JCpojH1kMar/XiZtu5WR0q1+mdjwjNsN97vuwDOFx7EFmuak202kYhU6hbJA=
+	t=1751520324; cv=none; b=E98JM7N264ndQfdFx4/kyh4/XZKIyG41rlZRTN5rhKG519NNwMsUWGfhVz84zSqrus1W8j4hjaTDnVf5gDQgXyFTMXrkJnuxeOPMFL6HJFW/dEmpGepI0alRaa9uJj0nfIm+R+86u/aI3F0/n7s3snn2HmsXo4raLK7ryABm9cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751520279; c=relaxed/simple;
-	bh=ZLIWmnaB/4VL4QjgzSpWp4WX95XD/DjC3uUTSgVtLKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S6NOzx77iOKZRFFGueLtQztpsntsQnnJiSO68Sdcgi0BJEiCT29YNggR/znga20lJ5QvNFVbkBKF32Z3K2Uu3zSSeg0S7kyxhd3ugVpcsIn3pQjhPs7NkgkZlwcck8bW9CNy+elmhP9iDyrybDtbbu763006X2+KaI63b5IB6T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TK+y1WY4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TK+y1WY4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB464C4CEE3;
-	Thu,  3 Jul 2025 05:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751520278;
-	bh=ZLIWmnaB/4VL4QjgzSpWp4WX95XD/DjC3uUTSgVtLKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TK+y1WY4lU3p4ObjZgA3R6/OR/o9crmVjL5fE6b4uRHdsCYfrQTy3aZB9CcdLrYAV
-	 GgFPx2T3jITaGToOnJsIUvDA28qcPXAwM1GnPyNcCOrA1F0l73RC5hnXKZVpsK+nas
-	 zKCJ2wGvGs3u0mP71uFDz4sNs4dd793zaxWVay5PFHj8y5NEnqaIiZDKxWt+SUhxzE
-	 N8vWqBBby47vuzdKnqpTTm1+7fynyBL9lNhNLMB0t82k6iJjAaacWJrJDqoN9BP2uq
-	 Gr4msvh2tnh9NQ7LdVN6AVuuJxxjSWhM037BOFWoPLultcsRdAw/H2BYPV+uKF+z3V
-	 vp1XZOsGUtsOw==
-From: SeongJae Park <sj@kernel.org>
-To: Yunjeong Mun <yunjeong.mun@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com
-Subject: Re: [RFC PATCH 1/2] samples/damon: convert node id to physical address
-Date: Wed,  2 Jul 2025 22:24:36 -0700
-Message-Id: <20250703052436.39603-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250703051836.1759-1-yunjeong.mun@sk.com>
-References: 
+	s=arc-20240116; t=1751520324; c=relaxed/simple;
+	bh=tYSMB1/HKKU1iGw24W4Ac/5pddmmMa4Y5kgwGrxbLXE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=gEwqlKCiElzWyIrPymS7zeDujCQRsiQdn8b7UhbB/aVm5+ssQ5RJxCuuZS4fyrrkgkpXx6i++qW2o9uW2donVW2ywAF9lKsKPx/uS8o9Ll1xplYf73pd+Mf6ZDaybhPnUVbSZSmp8L2IGfrp3X2N5TnJ10ezEQcnczsgsjm+ijo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=165.227.155.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [115.197.243.13])
+	by mtasvr (Coremail) with SMTP id _____wAXEEwYFGZoOzbaAw--.9161S3;
+	Thu, 03 Jul 2025 13:24:41 +0800 (CST)
+Received: from localhost (unknown [115.197.243.13])
+	by mail-app2 (Coremail) with SMTP id zC_KCgCXiIAXFGZoN7dZAA--.37319S2;
+	Thu, 03 Jul 2025 13:24:40 +0800 (CST)
+From: Lin Ma <linma@zju.edu.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	linma@zju.edu.cn,
+	mingo@kernel.org,
+	tglx@linutronix.de,
+	pwn9uin@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] net: atm: Fix incorrect net_device lec check
+Date: Thu,  3 Jul 2025 13:24:27 +0800
+Message-Id: <20250703052427.12626-1-linma@zju.edu.cn>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,49 +40,154 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zC_KCgCXiIAXFGZoN7dZAA--.37319S2
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+X-CM-DELIVERINFO: =?B?EjbRfQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHuzd9MjVyyPJ6TZADBymyvaveGrJD+twvrqpBrrXdl0ok7gwD6Bxs4sQxZiwfzey8DhT
+	zEajDmDktEMY54T241WVKUjJTMQVRzgKF9lnMIMw
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw1UAr4kCFyUZryDGF1rGrX_yoW7CrWkpr
+	WUWFWDCr4ktr15JF4kAF1Utr17trWkAFy7uFWrJrnYy3WDW34UXr1UGrW2kry5ur45X3W7
+	X3WDJ3WUt34jvabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU801v3UUUUU==
 
-On Thu,  3 Jul 2025 14:18:33 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+There are two sites in atm mpoa code that believe the fetched object
+net_device is of lec type. However, both of them do just name checking
+to ensure that the device name starts with "lec" pattern string.
 
-> Hi Seongjae, thanks for your review :)
+That is, malicious user can hijack this by creating another device
+starting with that pattern, thereby causing type confusion. For example,
+create a *team* interface with lecX name, bind that interface and send
+messages will get a crash like below:
 
-My pleasure! :)
+[   18.450000] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+[   18.452366] BUG: unable to handle page fault for address: ffff888005702a70
+[   18.454253] #PF: supervisor instruction fetch in kernel mode
+[   18.455058] #PF: error_code(0x0011) - permissions violation
+[   18.455366] PGD 3801067 P4D 3801067 PUD 3802067 PMD 80000000056000e3
+[   18.455725] Oops: 0011 [#1] PREEMPT SMP PTI
+[   18.455966] CPU: 0 PID: 130 Comm: trigger Not tainted 6.1.90 #7
+[   18.456921] RIP: 0010:0xffff888005702a70
+[   18.457151] Code: .....
+[   18.458168] RSP: 0018:ffffc90000677bf8 EFLAGS: 00010286
+[   18.458461] RAX: ffff888005702a70 RBX: ffff888005702000 RCX: 000000000000001b
+[   18.458850] RDX: ffffc90000677c10 RSI: ffff88800565e0a8 RDI: ffff888005702000
+[   18.459248] RBP: ffffc90000677c68 R08: 0000000000000000 R09: 0000000000000000
+[   18.459644] R10: 0000000000000000 R11: ffff888005702a70 R12: ffff88800556c000
+[   18.460033] R13: ffff888005964900 R14: ffff8880054b4000 R15: ffff8880054b5000
+[   18.460425] FS:  0000785e61b5a740(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
+[   18.460872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   18.461183] CR2: ffff888005702a70 CR3: 00000000054c2000 CR4: 00000000000006f0
+[   18.461580] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   18.461974] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   18.462368] Call Trace:
+[   18.462518]  <TASK>
+[   18.462645]  ? __die_body+0x64/0xb0
+[   18.462856]  ? page_fault_oops+0x353/0x3e0
+[   18.463092]  ? exc_page_fault+0xaf/0xd0
+[   18.463322]  ? asm_exc_page_fault+0x22/0x30
+[   18.463589]  ? msg_from_mpoad+0x431/0x9d0
+[   18.463820]  ? vcc_sendmsg+0x165/0x3b0
+[   18.464031]  vcc_sendmsg+0x20a/0x3b0
+[   18.464238]  ? wake_bit_function+0x80/0x80
+[   18.464511]  __sys_sendto+0x38c/0x3a0
+[   18.464729]  ? percpu_counter_add_batch+0x87/0xb0
+[   18.465002]  __x64_sys_sendto+0x22/0x30
+[   18.465219]  do_syscall_64+0x6c/0xa0
+[   18.465465]  ? preempt_count_add+0x54/0xb0
+[   18.465697]  ? up_read+0x37/0x80
+[   18.465883]  ? do_user_addr_fault+0x25e/0x5b0
+[   18.466126]  ? exit_to_user_mode_prepare+0x12/0xb0
+[   18.466435]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[   18.466727] RIP: 0033:0x785e61be4407
+[   18.467948] RSP: 002b:00007ffe61ae2150 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+[   18.468368] RAX: ffffffffffffffda RBX: 0000785e61b5a740 RCX: 0000785e61be4407
+[   18.468758] RDX: 000000000000019c RSI: 00007ffe61ae21c0 RDI: 0000000000000003
+[   18.469149] RBP: 00007ffe61ae2370 R08: 0000000000000000 R09: 0000000000000000
+[   18.469542] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+[   18.469936] R13: 00007ffe61ae2498 R14: 0000785e61d74000 R15: 000057bddcbabd98
 
-> 
-> On Tue,  1 Jul 2025 16:54:07 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > Hi Yunjeong,
-> > 
-> > On Tue,  1 Jul 2025 17:54:16 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
-> > 
-> > > This patch removes the `node#_start_addr` and `node#_end_addr` knobs,
-> > > and introduces logic for converting numa node id to physical address.
-> > > It only checks whether a numa node is online and calculates the
-> > > start and end addresses of the node. It does not verify whether each
-> > > memory block within the numa node is `usable` or part of `System RAM`,
-> > > as performed by `damo` [1],[2].
-> > 
-> > This is just a sample module, but I'd like to avoid making unnecessary
-> > user-breaking changes.  How about keeping the existing knobs but adding yet
-> > another knob for the automatic detection, say, 'detect_node_addresses'?
-> > 
-> 
-> I agree. From my understanding, 'detect_node_addresses' can be set to 
-> either 'Y' or 'N'. If it is set to 'Y', mtier converts node0 and node1
-> to their physical addresses internally. If it is set to 'N', it uses
-> the existing knobs. Is that correct? 
+Refer to other net_device related subsystem, checking netlink_ops seems
+like the correct way out, e.g., see how xgbe_netdev_event() validates
+the netdev object. Hence, add correct comparison with lec_netdev_ops to
+safeguard the casting. Since the *lec_netdev_ops* is defined in lec.c,
+add one helpful function *is_netdev_lec()*.
 
-Yes, you're correctly understanding my suggestion.
+By the way, this bug dates back to pre-git history (2.3.15), hence use
+the first reference for tracking.
 
-[...]
-> Thanks for your detailed reviw! Next time, I will make sure to check 
-> checkpatch.pl:)
+Signed-off-by: Lin Ma <linma@zju.edu.cn>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+---
+V2 -> V3: add a helpful function to ensure the changes can compile.
 
-Looking forward to your next patches!  Fyi, I use 'hkml patch format', which
-automatically runs[1] checkpatch.pl and misc checks for common mistakes.
+ net/atm/lec.c | 5 +++++
+ net/atm/lec.h | 2 ++
+ net/atm/mpc.c | 5 ++++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-[1] https://github.com/sjp38/hackermail/blob/master/USAGE.md#checker-run
+diff --git a/net/atm/lec.c b/net/atm/lec.c
+index 73078306504c..46f0b5a00200 100644
+--- a/net/atm/lec.c
++++ b/net/atm/lec.c
+@@ -565,6 +565,11 @@ static const struct net_device_ops lec_netdev_ops = {
+ 	.ndo_set_rx_mode	= lec_set_multicast_list,
+ };
+ 
++bool is_netdev_lec(const struct net_device *dev)
++{
++	return dev->netdev_ops == &lec_netdev_ops;
++}
++
+ static const unsigned char lec_ctrl_magic[] = {
+ 	0xff,
+ 	0x00,
+diff --git a/net/atm/lec.h b/net/atm/lec.h
+index be0e2667bd8c..399726484097 100644
+--- a/net/atm/lec.h
++++ b/net/atm/lec.h
+@@ -152,4 +152,6 @@ struct lec_vcc_priv {
+ 
+ #define LEC_VCC_PRIV(vcc)	((struct lec_vcc_priv *)((vcc)->user_back))
+ 
++bool is_netdev_lec(const struct net_device *dev);
++
+ #endif				/* _LEC_H_ */
+diff --git a/net/atm/mpc.c b/net/atm/mpc.c
+index 583c27131b7d..48ce67a1cf4d 100644
+--- a/net/atm/mpc.c
++++ b/net/atm/mpc.c
+@@ -275,6 +275,9 @@ static struct net_device *find_lec_by_itfnum(int itf)
+ 	sprintf(name, "lec%d", itf);
+ 	dev = dev_get_by_name(&init_net, name);
+ 
++	if (!dev || !is_netdev_lec(dev))
++		return NULL;
++
+ 	return dev;
+ }
+ 
+@@ -1006,7 +1009,7 @@ static int mpoa_event_listener(struct notifier_block *mpoa_notifier,
+ 	if (!net_eq(dev_net(dev), &init_net))
+ 		return NOTIFY_DONE;
+ 
+-	if (strncmp(dev->name, "lec", 3))
++	if (!is_netdev_lec(dev))
+ 		return NOTIFY_DONE; /* we are only interested in lec:s */
+ 
+ 	switch (event) {
+-- 
+2.17.1
 
-
-Thanks,
-SJ
-
-[...]
