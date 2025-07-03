@@ -1,137 +1,114 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF1612CDAE;
-	Thu,  3 Jul 2025 23:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BD823E23C;
+	Thu,  3 Jul 2025 23:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751586265; cv=none; b=BFInycYK1TRGXzAoU162KI29XqXy6Q0QCdj2f7ErGNvZf3z/96tV+n2HuT1wjGbCOzBgAyxOd9oRdBEpqRcdAgb69oC3Qi0usIiy21KnRX+NVPrvtCQPFiQGhpo91xdRZcCfspX5x5S0lhStgFufyOEXT0N+XWjwDa5GeiIbnsA=
+	t=1751586442; cv=none; b=LasW0wGU54Mr1h0gHMy6IyVDj3BjXWLIBN8WIKGRHv2XKabuYbkgXPamBvqi4T8wTgfGdy+h3Ar2MpX+cIPkVYt4s26oNGqk+NBsgVz/KiPLXtsD4c+WxWuz1gKAW6fiiOy2jqkiz3VPAbQMpOSn5ZVqyfiZgxhugRYlLO143SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751586265; c=relaxed/simple;
-	bh=C5n/3+Yc/0ULIWRm+2EP8wuC5UaJgRnVLl/seRFTxzA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=QHjPuPtEiNmfBA/00gpeoinS4xT+2z802Lvkf4UmKaMt80wy4JAqPzPlxNy+li7MEmE/aDuglQZG12Tn61MAVNkDiF15IKyh4xTLqDQhBt6s475jMXqkNbw69Bbksa7cNiOtqX4A4xTtGFBBnF3EY1ODP4gPqzgtBsLJBCGAB9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uXTbA-0019F8-0Y;
-	Thu, 03 Jul 2025 23:44:12 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1751586442; c=relaxed/simple;
+	bh=ga5lXAmOfzr8qoFLiMRpwuhprlQ+GSnRSQn6xJ63Cxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FgMcJACmJ7RyLEwExVC0R3NW7BiangTYPjwGe/65DXniOdJyf12ss/SzQjwYxQSR5nwccpDu4JP7x4Plg5cXspPyEo8YLxd/S6JA5hj+LOTtaW6H/+AkSRCd21ccjWX8Zr2/cSuHZsi7vgyMDLCy5Ag+dBgOLOrbraMS1RFHgew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VyOe8Oyb; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VyOe8Oyb"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-701046cfeefso7979106d6.2;
+        Thu, 03 Jul 2025 16:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751586437; x=1752191237; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YLIL3/Ux09fpL7/ZZ7enwXyp/uTFzedzuYlNNIkAKmw=;
+        b=VyOe8Oybqx5AkW8SokbAqR7TkesxuJvL+fcL7pC4gPpM/98XCOeGLnlyJIdb64Aanp
+         v6/sUNHY5V0oWYf6wwK4mF2xtWvINmTDvyGXy+kKSBVO3S8B3YxMW2Czoy9f4uvPCM5B
+         qQwj+mL6bzgeSWNM8dE6FoqfdaGlSdDYhb/JMnPG6l7/bpl+TIgbQRQPC9Oy9RwvxvDE
+         NBS5lXwAyZtr+StXfhdWjcTokFZ+Jmfls8PMVz1R7bc4j76AVJmuRBpmmINxiPielaU0
+         1P7MK8qA4SuSmYXfnQ3nphH4HbYEISSIn97rG4l0cVZxFfpiNopwSvHAbD4f3ef6SuSq
+         2NYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751586437; x=1752191237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YLIL3/Ux09fpL7/ZZ7enwXyp/uTFzedzuYlNNIkAKmw=;
+        b=iIjzZwyMR9z05/p01U7AiBnIZtUOmMupbQK3rXbKMNpt835VPFmNeOcB4xBm+uAFNN
+         HvL+BeBB6H7VfMjLG6VoHCxe+jMHodx3NvkX5eOpMsMwLMzgtTaVywnwIzjdQQmnfLR9
+         dwVZoMHygAQgq7cL1SWZgoBXI4TVxx5JXNCONFBsTIoi2GrGFoRDgnO5C9aHZK6w1L9/
+         LA4oAGuByXf75Tcc/QHtrdyyxixDho7kDRSpgvstk0PEpyb8NGx8R2OWdeJdTgtb7bYQ
+         y9TKLNPETo7+qJA5021a4OSTGKz9nCqpY9gtU6pPmhvG6szc2PRj+lO6hSsAwzpN+chv
+         0gQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWY7t1rFbARR84QxFJHj3Ayn8NU6edllpnERUs/1S46PeMefAJWlZTaiEdH08XCC95vbcVpQYHRnZqz@vger.kernel.org, AJvYcCWdtca3Zjj5Wf4ufyFAdh7Q8HEYn8fUkyXVTD4yJidVxmtaVSRcPJFieBydDLYSYhs1bY/fb1qAHY8J9g==@vger.kernel.org, AJvYcCXXaVZpBcIMFHHLk1Hcen5Y3oDJeXfvGFKQ1oi7P8waMwCeelGDSaRtd35dF24e8nxgBXOZoUfOjtNiF2Hh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpMZ5Vi+7H19mC7VxJPgoKROoSAZ+ensKDkL9tLdRwKpE0Itqm
+	1l/+FHdxK6ie178vcwYG+0i9tUmbKlxQpYpjo3z48ugW7UJAiHt4yVX1DwUtogtt+SP2wQkNqGV
+	M3AjXMcFdhc9fDV8IAZv847d1sAnq3wc=
+X-Gm-Gg: ASbGncszPthqWEiCyH4+AeCCExCcnm22ZXCG5AJWrtvilxorNHwUrxRfj2vTN/Lq/1T
+	VeKBJWES+AMZB0QTR5OiK9agt4Dr3/Vj/T1XFCcFml5B097q/doD7p3g7L4kCUrD1bz+TuIPoGp
+	OS9oKxm8agPerfSVxZsq9aPz1Llw3i7ClqFb0zBr1hlCMZdtRnauawnOl2Ow9VaNaLBeRboiC0D
+	lpQ9g==
+X-Google-Smtp-Source: AGHT+IFJ8i59RX9o6nUtArcwP5MLck456ZtZUPcJJR1fIuwYynkz4sO7gDtGy4SWdC5Xmp97SrO3F3Kgwr47kO0PySQ=
+X-Received: by 2002:a05:6214:1242:b0:702:c03f:c409 with SMTP id
+ 6a1803df08f44-702c6a5cd5bmr4745976d6.0.1751586436973; Thu, 03 Jul 2025
+ 16:47:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Mike Snitzer" <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH RFC 2/2] nfsd: call generic_fadvise after v3 READ, stable
- WRITE or COMMIT
-In-reply-to: <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
-References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>,
- <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
-Date: Fri, 04 Jul 2025 09:44:10 +1000
-Message-id: <175158625070.565058.13878074995107810351@noble.neil.brown.name>
+References: <20250704082645.37b267dd@canb.auug.org.au>
+In-Reply-To: <20250704082645.37b267dd@canb.auug.org.au>
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 3 Jul 2025 18:47:05 -0500
+X-Gm-Features: Ac12FXyY_9waV6qthjXtaFUCn1GT3nDII1Pot0e_062gFHHmm4hp5NOoawpmrzs
+Message-ID: <CAH2r5msMEgi9PfeeesWWxGBXOUpDVhDzbPD+b+r_hQDLS_-zRQ@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the cifs tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Wang Zhaolong <wangzhaolong@huaweicloud.com>, CIFS <linux-cifs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Paulo Alcantara <pc@manguebit.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 04 Jul 2025, Jeff Layton wrote:
-> Recent testing has shown that keeping pagecache pages around for too
-> long can be detrimental to performance with nfsd. Clients only rarely
-> revisit the same data, so the pages tend to just hang around.
->=20
-> This patch changes the pc_release callbacks for NFSv3 READ, WRITE and
-> COMMIT to call generic_fadvise(..., POSIX_FADV_DONTNEED) on the accessed
-> range.
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/debugfs.c  |  2 ++
->  fs/nfsd/nfs3proc.c | 59 +++++++++++++++++++++++++++++++++++++++++++++-----=
-----
->  fs/nfsd/nfsd.h     |  1 +
->  fs/nfsd/nfsproc.c  |  4 ++--
->  fs/nfsd/vfs.c      | 21 ++++++++++++++-----
->  fs/nfsd/vfs.h      |  5 +++--
->  fs/nfsd/xdr3.h     |  3 +++
->  7 files changed, 77 insertions(+), 18 deletions(-)
->=20
-> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
-> index 84b0c8b559dc90bd5c2d9d5e15c8e0682c0d610c..b007718dd959bc081166ec84e06=
-f577a8fc2b46b 100644
-> --- a/fs/nfsd/debugfs.c
-> +++ b/fs/nfsd/debugfs.c
-> @@ -44,4 +44,6 @@ void nfsd_debugfs_init(void)
-> =20
->  	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
->  			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
-> +	debugfs_create_bool("enable-fadvise-dontneed", 0644,
-> +			    nfsd_top_dir, &nfsd_enable_fadvise_dontneed);
->  }
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index b6d03e1ef5f7a5e8dd111b0d56c061f1e91abff7..11261cf67ea817ec566626f08b7=
-33e09c9e121de 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -9,6 +9,7 @@
->  #include <linux/ext2_fs.h>
->  #include <linux/magic.h>
->  #include <linux/namei.h>
-> +#include <linux/fadvise.h>
-> =20
->  #include "cache.h"
->  #include "xdr3.h"
-> @@ -206,11 +207,25 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
-> =20
->  	fh_copy(&resp->fh, &argp->fh);
->  	resp->status =3D nfsd_read(rqstp, &resp->fh, argp->offset,
-> -				 &resp->count, &resp->eof);
-> +				 &resp->count, &resp->eof, &resp->nf);
->  	resp->status =3D nfsd3_map_status(resp->status);
->  	return rpc_success;
->  }
-> =20
-> +static void
-> +nfsd3_release_read(struct svc_rqst *rqstp)
-> +{
-> +	struct nfsd3_readargs *argp =3D rqstp->rq_argp;
-> +	struct nfsd3_readres *resp =3D rqstp->rq_resp;
-> +
-> +	if (nfsd_enable_fadvise_dontneed && resp->status =3D=3D nfs_ok)
-> +		generic_fadvise(nfsd_file_file(resp->nf), argp->offset, resp->count,
-> +				POSIX_FADV_DONTNEED);
-> +	if (resp->nf)
-> +		nfsd_file_put(resp->nf);
-> +	fh_put(&resp->fh);
+good catch.
 
-This looks wrong - testing resp->nf after assuming it was non-NULL.
-I don't think it *is* wrong because ->state =3D=3D nfs_ok ensures
-->nf is valid. But still....
+Corrected the Fixes tag and updated cifs-2.6.git for-next
 
-How about:
+On Thu, Jul 3, 2025 at 5:26=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote:
+>
+> Hi all,
+>
+> In commit
+>
+>   2799c0ada68c ("smb: client: fix race condition in negotiate timeout by =
+using more precise timing")
+>
+> Fixes tag
+>
+>   Fixes: 515ccdbe9b2f ("[Backport] smb: client: fix hang in wait_for_resp=
+onse() for negproto")
+>
+> has these problem(s):
+>
+>   - Target SHA1 does not exist
+>
+> Maybe you meant
+>
+> Fixes: 7ccc1465465d ("smb: client: fix hang in wait_for_response() for ne=
+gproto")
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-    fh_put(resp->fh);
-    if (!resp->nf)
-         return;
-    if (nfsd_enable_fadvise_dontneed)
-	generic_fadvise(nfsd_file_file(resp->nf), argp->offset, resp->count,
-		POSIX_FADV_DONTNEED);
-    nfsd_file_put(resp->nf);
 
-??
-Note that we don't test ->status because that is identical to testing ->nf.
-Ditto for other release functions.
 
-Otherwise it makes sense for exploring how to optimise IO.
+--=20
+Thanks,
 
-Reviewed-by: NeilBrown <neil@brown.name>
-
-NeilBrown
+Steve
