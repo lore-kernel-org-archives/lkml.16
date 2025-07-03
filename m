@@ -1,120 +1,142 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AA82EA158
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9A91AAA1C;
+	Thu,  3 Jul 2025 14:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552701; cv=none; b=ie4g1bz2fLbkjCCecvfpVtD5pFYwJlvX1MAejPBPPIMB8fHLiARsykV0sC4sgbPyocBzocdIstBsvaJ0DqE88uS6ZHCYdDRLPHaTRSZQV35xcNlaOxKLMzt+HbpfKIyqfguUfv1sks5SYDkMpM1mz0BZyNsn+21C0dXGsKcj+Lw=
+	t=1751552735; cv=none; b=SZEZzKE9+LqTo7q/LzBwwfvPUEYlGxzjE4/PXJcgc3kyxZFazdYOrsBysEdl4Rih8zxsMcmD2vaemCWzTE/pm/Y+5PiJrxJs3u7Dpgvv3l2y5A1mifYspscKeBAaXKlHrNvHoqnEa9BPSRL039ac/lX6HgGbak7BF5mxWMUMf1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552701; c=relaxed/simple;
-	bh=IB3QhT6znI80F0swDwqnAhPwb1Be+kKxBOX5V40joG4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bb/Tj2JE0GOVnZvBbW5Ibh4by7D2UaaSV1XXCeNYcQf3XR2k1lCma7hgn63w1NTJWT6CHPuyotzQAvfdCvYO6TwJ8g+4fZ/58h4K7e5L39wnEBPUPfsKeGFJaxfnIUcH7vcgbRJAgjmWGSUi3bhxFJh0fNz/Nlix5R73A6V6Iz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SlwaRSxF; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751552735; c=relaxed/simple;
+	bh=D7Ex4CS8dD1ltntuZsF6t4VIEfE6k9LR2nt1JXfS3To=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C1O66vTLq3WvbB7D2E6EAwshFuogbCfU3/OmS8T1w9Ecq9ZsTWHxXjDvHIk0Rqsv/tSy413BZ0zCt8JcLby1tpZeTGXM+/YmgcswmZ3dDSF6jF9UG+XdW2I54bkVqA5sskEKYzJ7O2sSU2Xq64Go6/jC7HuvQBiIY2pXEv8Dhck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h+M97LYs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SlwaRSxF"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751552697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6eLE6S+rhxIPN+jrOj2f4vJ4zw6L3esP7/0wSDddCRk=;
-	b=SlwaRSxFkqrj8/p5s7Hz4d3LF5UWxu7QBnL8Rnktqv8WnBS4ad81vpMJX5/E5dyd69qNzy
-	48NYS+YSEFrIrXj0AnA0ZneJAdrQUNGyAp64JzFHSD90Qg1lk2LsZs//jiRs5fcak1v2TS
-	IF8Aw4QS/RnVIXlJhmucqy+N/LZfBRE=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: netdev@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com,
-	Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] tcp: Correct signedness in skb remaining spac calculation
-Date: Thu,  3 Jul 2025 22:24:42 +0800
-Message-ID: <20250703142443.13762-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h+M97LYs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751552734; x=1783088734;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=D7Ex4CS8dD1ltntuZsF6t4VIEfE6k9LR2nt1JXfS3To=;
+  b=h+M97LYs1NkyF0fhKYQ/QYI94ea02Ve42l8xi95lVwRQEP/rcud7qsPI
+   HflvEpApYHNAKEhR6oEh5ig78eX4DXToSz1x71jOyQ6rpwZB5eiPEuxTe
+   wyk/Q+QmvPclsJQZ+TjplxCUg4GrNuyuKZ4wnP0txh4WHvLyLDyfOYBGJ
+   SaVE8A4u4IzNHexQVUPAu3DxQYlq5p/7kgXDKwIFojH4OhOK1UpnpgTAt
+   GsgbL7RsfR48lVKIrBhLdZMEc98oeYJ1OlLNy1bxwhTXpl2r47VPA6UYQ
+   vN3oSr4P8lD8I/+ILCN6GUZhDJmSb3N8tn6ct8fG3VhcCsNslo7SZhcET
+   w==;
+X-CSE-ConnectionGUID: 04bTr26eR5StJQFa5YMmWg==
+X-CSE-MsgGUID: Q5IOQKJ4Q02Pp5dwUgfWkw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65227621"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="65227621"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:25:28 -0700
+X-CSE-ConnectionGUID: JItw5yr/RkahzZ5oOWeQww==
+X-CSE-MsgGUID: NS3z1/klQ6iL4U4vUpkkrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="158661873"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.13]) ([10.125.110.13])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:25:26 -0700
+Message-ID: <4bce6d90-c0d4-4f0d-bcb7-4a58fa9643e3@intel.com>
+Date: Thu, 3 Jul 2025 07:25:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] x86/tdx: Skip clearing reclaimed pages unless
+ X86_BUG_TDX_PW_MCE is present
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com,
+ seanjc@google.com, vannapurve@google.com
+Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ x86@kernel.org, H Peter Anvin <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
+ kirill.shutemov@linux.intel.com, kai.huang@intel.com,
+ reinette.chatre@intel.com, xiaoyao.li@intel.com,
+ tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+References: <20250703114038.99270-1-adrian.hunter@intel.com>
+ <20250703114038.99270-3-adrian.hunter@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250703114038.99270-3-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Syzkaller reported a bug [1] where sk->sk_forward_alloc can overflow.
+On 7/3/25 04:40, Adrian Hunter wrote:
+> @@ -642,6 +642,15 @@ static void reset_tdx_pages(unsigned long base, unsigned long size)
+>  	const void *zero_page = (const void *)page_address(ZERO_PAGE(0));
+>  	unsigned long phys, end;
 
-When we send data, if an skb exists at the tail of the write queue, the
-kernel will attempt to append the new data to that skb. However, the code
-that checks for available space in the skb is flawed:
-'''
-copy = size_goal - skb->len
-'''
+If the only possible use for reset_tdx_pages() is for the erratum, then
+it needs to be in the function name.
 
-The types of the variables involved are:
-'''
-copy: ssize_t (s64 on 64-bit systems)
-size_goal: int
-skb->len: unsigned int
-'''
+> +	/*
+> +	 * Linux uses only KeyID 0 which can read or write pages
+> +	 * that were formerly TDX private pages, without poisoning
+> +	 * memory. However on platforms with the partial-write errata,
+> +	 * poisoning still happens for partial writes.
+> +	 */
+> +	if (!boot_cpu_has_bug(X86_BUG_TDX_PW_MCE))
+> +		return;
 
-Due to C's type promotion rules, the signed size_goal is converted to an
-unsigned int to match skb->len before the subtraction. The result is an
-unsigned int.
+Would this be more clear?
 
-When this unsigned int result is then assigned to the s64 copy variable,
-it is zero-extended, preserving its non-negative value. Consequently, copy
-is always >= 0.
-
-Assume we are sending 2GB of data and size_goal has been adjusted to a
-value smaller than skb->len. The subtraction will result in copy holding a
-very large positive integer. In the subsequent logic, this large value is
-used to update sk->sk_forward_alloc, which can easily cause it to overflow.
-
-The syzkaller reproducer uses TCP_REPAIR to reliably create this
-condition. However, this can also occur in real-world scenarios. The
-tcp_bound_to_half_wnd() function can also reduce size_goal to a small
-value. This would cause the subsequent tcp_wmem_schedule() to set
-sk->sk_forward_alloc to a value close to INT_MAX. Further memory
-allocation requests would then cause sk_forward_alloc to wrap around and
-become negative.
-
-[1] https://syzkaller.appspot.com/bug?extid=de6565462ab540f50e4
-
-Reported-by: syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com
-Fixes: 270a1c3de47e ("tcp: Support MSG_SPLICE_PAGES")
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-
----
-v1 -> v2: Added more commit message
-https://lore.kernel.org/netdev/20250702110039.15038-1-jiayuan.chen@linux.dev/
----
- net/ipv4/tcp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 8a3c99246d2e..803a419f4ea0 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1176,7 +1176,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
- 		goto do_error;
- 
- 	while (msg_data_left(msg)) {
--		ssize_t copy = 0;
-+		int copy = 0;
- 
- 		skb = tcp_write_queue_tail(sk);
- 		if (skb)
--- 
-2.47.1
-
+	/*
+	 * Typically, any write to the page will convert it from TDX
+	 * private back to normal kernel memory. Systems with the
+	 * erratum need to do the conversion explicitly.
+	 */
