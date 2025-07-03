@@ -1,139 +1,151 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFE32D63F1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B424C2D63F1;
+	Thu,  3 Jul 2025 09:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534509; cv=none; b=PVdBK5RbKjWjbZHJY/5hb5csWK90dIEDh92a7tsRynOuImfA3cgfDnwsX/Ztneuc+m0joM4bQTaBPa7BRrUffu9WKVjj51OzBt2mkEM4PvU5F6WUhGjtL0g9GWB9+W2gcaJVkQs8EiTLYHQd6EhO+a3UBFxexZbaCkHkpwu5HJY=
+	t=1751534523; cv=none; b=JYtgtJ+gd4gZeHarew1xqAGBtcnZj7wlU+v8g5SPpoAdTVMLVo4XjVyeHJ49WtDns6XE4u4vubsTLgjDxUE4ctv1RCNlLujBi9n+go8beG5s256gydVBKbilJMQkuO0Pi8BxxWpCrtBUjfegD2amWjhPsPZ4cjjirKqcewMDG9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534509; c=relaxed/simple;
-	bh=rq4mTYB/1560UB0rBsKFmXq0QzxdfbBTetPKVFWDkkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpUw+xto0xxIAO/cCeQXPPE2CQ6KgH/imVmkJyoYvxxfJufpb5nwR70yUHM5vQyXXait2P6YoQqHY1iAhQqyOBtyJk3mXCXvYdgtmGvtvXjW3AXrQOQVtmdRlU17GZpKqIZqq58OY5AMF/jiSUDSZy+7Rn9Z/GVjFNKYfgyUhG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EFRjm3SS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IOFH0rFP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EFRjm3SS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IOFH0rFP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751534523; c=relaxed/simple;
+	bh=aFMvk+jreGEXLCinkXWC9FxMdtaXOF399uZ36lbBq2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WV8x+ePpVfoagdTayzJN9Zf2xY12pREOgi193fnduPJ+xDewOHPYL6mbz2FCsiBml9h8s9NH53U43iIXAVlju/QsNEbID9wp4D2i2Y/pyzZoUm5q/gkWAsZ4dDhp8zN79UMHVGJmPamfC3OtSNe9AbxfeF/NWYgWqsvlAa05Tj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Rg6zIqxX; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EFRjm3SS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IOFH0rFP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EFRjm3SS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IOFH0rFP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 55DFA1F387;
-	Thu,  3 Jul 2025 09:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751534506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Por51rfQpl+HHWn6dQahsNai+AbHBReTEPcU5b2UV4U=;
-	b=EFRjm3SSQXTyy7c4Q0xH73zmLMTImh9tiTAO2As83Omug7Eq+f+zTKU+/DUGfUMOkb4m90
-	VxwfRaB7YqZ755ULiGUZHt2DI7k50yIxTx8lRk3gs3x0uGBw2KpEidolfvOmd2nlp92jAu
-	n3A0ngfhmNhwEyRnxxvqUElXnv0qme8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751534506;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Por51rfQpl+HHWn6dQahsNai+AbHBReTEPcU5b2UV4U=;
-	b=IOFH0rFP+n9CYvIMetfQd9A+oEqCiouc+1vzuBEUczsNGAICGobX8epSoRcl8YU7EaLALS
-	jVZTJeYOeYZ6D7Cw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EFRjm3SS;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=IOFH0rFP
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751534506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Por51rfQpl+HHWn6dQahsNai+AbHBReTEPcU5b2UV4U=;
-	b=EFRjm3SSQXTyy7c4Q0xH73zmLMTImh9tiTAO2As83Omug7Eq+f+zTKU+/DUGfUMOkb4m90
-	VxwfRaB7YqZ755ULiGUZHt2DI7k50yIxTx8lRk3gs3x0uGBw2KpEidolfvOmd2nlp92jAu
-	n3A0ngfhmNhwEyRnxxvqUElXnv0qme8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751534506;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Por51rfQpl+HHWn6dQahsNai+AbHBReTEPcU5b2UV4U=;
-	b=IOFH0rFP+n9CYvIMetfQd9A+oEqCiouc+1vzuBEUczsNGAICGobX8epSoRcl8YU7EaLALS
-	jVZTJeYOeYZ6D7Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DFA2E13721;
-	Thu,  3 Jul 2025 09:21:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SR3sM6lLZmjffQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 03 Jul 2025 09:21:45 +0000
-Date: Thu, 3 Jul 2025 11:21:44 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	David Hildenbrand <david@redhat.com>,
-	Pratyush Yadav <ptyadav@amazon.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] cma: move __cma_declare_contiguous_nid() before its
- usage
-Message-ID: <aGZLqItjir7Vmmgg@localhost.localdomain>
-References: <20250702173605.2198924-1-rppt@kernel.org>
- <20250702173605.2198924-2-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Rg6zIqxX"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5639KN7v012395;
+	Thu, 3 Jul 2025 11:21:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	U8/3UFXjScc/VhoP6EsW6/w+rmVzUP3VLZMHXQEnMOc=; b=Rg6zIqxXVN/lfQGs
+	fKnQFf0q/7ilTG9vRlVMMzqP/IgJ92tkaLQr0rS2KExqysC3Gy6bGWQZhiSg9SRA
+	jPXgr7nCkK63QVKuTpnMDT6fg8jn97ZefaBY+hOB+VJ8t3DSDHOupGONAyg8dHE5
+	sHbhWZGSOr88smm5nf3mNdHedMB6jSUpHqp2dRgtTQQp53Pt5zv7CgCk5S74shfW
+	u0lGL8pRyaqSKir+pjJ/47XtcfNMHjAG6Q2vykONLC6UkAYpCthqqASIIu8KvJa5
+	w2Gvkb2yRzCfgbdOCIrjV6GU3SY6XNIPh/8VDNxIlmXv6nxOEC/QwvH+yk5bCZws
+	8I56Bg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jubp3tx3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:21:37 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 570B54002D;
+	Thu,  3 Jul 2025 11:20:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD797B2B8A3;
+	Thu,  3 Jul 2025 11:19:06 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Jul
+ 2025 11:19:05 +0200
+Message-ID: <01d03052-4d9b-4d71-9781-a050ee669d45@foss.st.com>
+Date: Thu, 3 Jul 2025 11:19:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702173605.2198924-2-rppt@kernel.org>
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 55DFA1F387
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] i2c: stm32f7: unmap DMA mapped buffer
+To: Andi Shyti <andi.shyti@kernel.org>
+CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Sumit Semwal
+	<sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?=
+	<christian.koenig@amd.com>,
+        M'boumba Cedric Madianga
+	<cedric.madianga@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        "Pierre-Yves
+ MORDRET" <pierre-yves.mordret@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>
+References: <20250630-i2c-upstream-v3-0-7a23ab26683a@foss.st.com>
+ <20250630-i2c-upstream-v3-2-7a23ab26683a@foss.st.com>
+ <zp3pagbojmu67o4sjm65a44ovvui5uvybs32nayvhtewfbm4el@n5lro4v5iq36>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <zp3pagbojmu67o4sjm65a44ovvui5uvybs32nayvhtewfbm4el@n5lro4v5iq36>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_02,2025-07-02_04,2025-03-28_01
 
-On Wed, Jul 02, 2025 at 08:36:03PM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Hi Andi,
+
+On 7/2/25 19:08, Andi Shyti wrote:
+> Hi Clement,
 > 
-> and kill static declaration
+> On Mon, Jun 30, 2025 at 02:55:14PM +0200, Clément Le Goffic wrote:
+>> Fix an issue where the mapped DMA buffer was not unmapped.
 > 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> "Fix an issue..." is too generic. Can you be more specific? Where
+> was it mapped? Where was it left unmapped?
+> 
+> Please, do consider that the user needs to understand what
+> happens in the patch without needing to look into the patch.
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
+Ok sure I'll refine the commit message.
 
-Thanks Mike ;-)!
+> 
+>> Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
+>> Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> ---
+>>   drivers/i2c/busses/i2c-stm32f7.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+>> index e4aaeb2262d0..042386b4cabe 100644
+>> --- a/drivers/i2c/busses/i2c-stm32f7.c
+>> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+>> @@ -1554,6 +1554,8 @@ static irqreturn_t stm32f7_i2c_handle_isr_errs(struct stm32f7_i2c_dev *i2c_dev,
+>>   	if (i2c_dev->use_dma) {
+>>   		stm32f7_i2c_disable_dma_req(i2c_dev);
+>>   		dmaengine_terminate_async(dma->chan_using);
+>> +		dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
+>> +				 dma->dma_data_dir);
+>>   	}
+>>   
+>>   	i2c_dev->master_mode = false;
+>> @@ -1622,6 +1624,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
+>>   		if (i2c_dev->use_dma) {
+>>   			stm32f7_i2c_disable_dma_req(i2c_dev);
+>>   			dmaengine_terminate_async(dma->chan_using);
+>> +			dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
+>> +					 dma->dma_data_dir);
+>>   		}
+>>   		f7_msg->result = -ENXIO;
+>>   	}
+>> @@ -1642,6 +1646,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
+>>   				dev_dbg(i2c_dev->dev, "<%s>: Timed out\n", __func__);
+>>   				stm32f7_i2c_disable_dma_req(i2c_dev);
+>>   				dmaengine_terminate_async(dma->chan_using);
+>> +				dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
+>> +						 dma->dma_data_dir);
+> 
+> Can't we use the dma_callback here, or similar? I see some
+> similar patterns and I think the code can be improved.
 
+Yes, it seems the code can be factorized.
+I'll submit a new version with the factorization.
 
--- 
-Oscar Salvador
-SUSE Labs
+Best regards,
+Clément
+
