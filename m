@@ -1,258 +1,108 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DA8EEA9;
-	Thu,  3 Jul 2025 12:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D41EEA9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544206; cv=none; b=bjteR2WjY6oSR7NcqeR209RPpOOUJwPLzu0n6x2roJFLiqtJmOJhWYmRK0AZvonvpgafHjWcfhg8usr0FbSdtTmN4SgwT1PPB3Eo8JddCKlFKxldDYXNZTNRGpr9l8HIG0T68i98mZOPd8JdW9pt3GcjLDDmM+TqdQIJFV9qhRw=
+	t=1751544213; cv=none; b=XzE36zCJWGUwjA77IJQ0VR+m8JjyfXFP9o91dXjBa++xlawfhS5o3wI8MpJy89yFkqgeyOKvXZs2wnipzBRHBJoNjdWvMBzrFiROvyUmNPLY6uD1DVbu2e/zQYoAr2YOcDgEcvLlv+dqY2rsJhvQ3dbX7JUs8GR4m2Ko2GKKnQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544206; c=relaxed/simple;
-	bh=13Mtr8tfOpo/bjU47Z0Ixv/RqoqZx+pkZNbvLw+MH6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+K554ORNE55rd86EsHyHfgxEPY5qvlt8lOVgh3swoi8byA345KlyMVSOpkAOTEItzWyOLaFk0xrIuAwKsi9M0eqKyANYl91ST3ePa0nppS4MYSM+oQEJQszyNCJFaN+QnM3NZQrDJqV2ADj0UqR7ny6Nyk82k9ia+8zngI/0ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ayEG+PtL; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1751544213; c=relaxed/simple;
+	bh=gWmMucoOuA1az6fC3asUkLhxguswTObwGrLfdc8ob0Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ROBQme/3tapwMo0b5od7dzTX6LnRn5VAbWQhumi7tJtnNRklcYfuLmiu+1wbAEScZ/fuQXtoL5UT96AxlCI9mwVnTZCs5qZWr+m+k6o6kKyrrW1NptXd0hRu/gWubW5+JRMq5I4YzjT1VF6akNWOES37jkd1y7j+nC1l3jHwQlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhVa+qDt; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ayEG+PtL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0bLFCgSGsGWYqU1VUzp/98s4ncOYCMUP6PUrfSKkQ9I=; b=ayEG+PtL2NdfYFXcLmfnMMc+/o
-	REzK/c2hbPC5peR8ZFgtSTCGIwfArWZLcKgJZYlfV4CQSgckIAtgEpCBuc0U9ApE8zxEcdu84+/Vp
-	/8m8ibuEVYYA0mOJUFD3FeLs4FzBiiugflhOFF//Qlplz/DBrvsIu8Li98qAgzaldWJ08LShkNJMw
-	k678K+PC1fbvUgCwdIlPjRJGFyYe7M8RBdMckjrhpz9jEDTLsc53yiMyEQNgrFIdUmsxPZON/xTch
-	KRAGlD50wX7grhb9R40HOToRDopp9oo4HXTCggU+zZHztGDRVUjubbE2dbpddRVH+1FXWgZvCetN0
-	M2/p8Rbw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43908)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uXIeh-0000gv-0k;
-	Thu, 03 Jul 2025 13:03:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uXIeZ-00054e-1E;
-	Thu, 03 Jul 2025 13:02:59 +0100
-Date: Thu, 3 Jul 2025 13:02:59 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: weishangjuan@eswincomputing.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	yong.liang.choong@linux.intel.com, vladimir.oltean@nxp.com,
-	jszhang@kernel.org, jan.petrous@oss.nxp.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
-	boon.khai.ng@altera.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, lizhi2@eswincomputing.com
-Subject: Re: [PATCH v3 2/2] ethernet: eswin: Add eic7700 ethernet driver
-Message-ID: <aGZxc-9C0rPVMsGH@shell.armlinux.org.uk>
-References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
- <20250703092015.1200-1-weishangjuan@eswincomputing.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhVa+qDt"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so14555941a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751544210; x=1752149010; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/6Az8/htOon/tG5o1K/fhfx5nMaY5HuhIoQAgZM+Fi0=;
+        b=UhVa+qDtcvCN0zmyJNYsiozxNGsAD0b1UuT0UwdlQ/ua7mW0B6yDk/O0JpOg65nov8
+         Eak5rfRwsE7265fyCQokwzHgOi09hru+qf0U6o+o+FXiIpguqYk8Y3a61pQqAMOAgqd7
+         6/1fYGuNtrAyRnMcN25YWZIwN4dmjHyphEZ14Ezod+b0A6ITxuPfhD48RtXGb0kDML68
+         gb6ckQZlOacG/l0tEhlY0XirFGR4DmmYXkoxZ1GaW5VKbLuRyLSMoWec2fXlZlMvWS5v
+         hoJCRYuwxgARevtTLCyMuu2kMDa5tzUwc05daZR+WLSxess1NOto6QY5sJMrwTuCn0oJ
+         oOkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751544210; x=1752149010;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/6Az8/htOon/tG5o1K/fhfx5nMaY5HuhIoQAgZM+Fi0=;
+        b=GPSrhbCaOKoFqMsFqoUus+/zc4SqvarQH/CTLvvj/8Wz80l1KXBJ6vNxAHfFDnxr4y
+         USyzkLx2a40ObmMIp2Nda2/xbb4ej0JM6rAo8fzGpcf6sBtf9hAO263xtjeRRTV2yldt
+         zJStvMprgo0PcG+Wc8ULPMPIedyzvRdTR4YBBO9FwH/FRz3w+vkGKNhcQF2rsd0x6DMX
+         KfDhsJOQ8CCqqoUzLgWmq5Uli+CPyNgNv0qtsMOcFniAayEQTC17onlI/tCL8FT+l+J1
+         OuTtkFFmFixBdeWQl4jhjItbtkwQVdmtP24qncHNotek+xZVzGVXK8ZRamJlJkqgiI04
+         hM+A==
+X-Gm-Message-State: AOJu0YyLU+b0HTbdVqdpeGtuWuR3puM9tzr01xrvIB+xO8Juq64Jqc6Q
+	3rM9vGhdGYg6lfkUc7nt/aAmx6UKSb8ys+cHcUxDS6eANxURYKV3grajiGcn9iH5
+X-Gm-Gg: ASbGncs6Y7UNxMu7MsdqoL9oDxw0xI6VIHX8KElUxd75SKFGdKhwjVGB7bcJrslLndH
+	PtS7R0qhUMcvAanR9X4CoRQfVtG1BDWqp+Y0Uw8VgILO93FCZXSEnq7aX9RsCCm631E32mKJyp0
+	n46vQYOsMNif3dMB3F0PqGSdC7AliA6lUMG9vBW3XuYI7FPfZRZF+HeZoEDlQ1cpW00gCokSHcJ
+	JJciweQVZMpfZZLTos8BisQZ2cvRYgWERNBILq25uEDpdN38RDYU2P/zjBjMb2XCxH6kU5iT6Kk
+	GDFO2trRxhGF6+Gsg9b/wzYfJEOqpUoeg7WMVCg34iYVlbmBHDbmJYTwLtw+gKOWTNCMcZOBm1c
+	QsOFugAeGYwFdhHVXm2jvAajRdFGp
+X-Google-Smtp-Source: AGHT+IGrone20PK/ICj88SFDR6rGiCEtSCIee4w6s6pvA2Jp+3DW3EPJVfXOqrskPBFuxSDlu6YXFw==
+X-Received: by 2002:a05:6402:2690:b0:608:6711:a06f with SMTP id 4fb4d7f45d1cf-60e6cc91a60mr2948677a12.4.1751544209617;
+        Thu, 03 Jul 2025 05:03:29 -0700 (PDT)
+Received: from Mac.lan (p5088513f.dip0.t-ipconnect.de. [80.136.81.63])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c83205eb0sm10563837a12.72.2025.07.03.05.03.28
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 03 Jul 2025 05:03:28 -0700 (PDT)
+From: Laura Brehm <laurajfbrehm@gmail.com>
+X-Google-Original-From: Laura Brehm <laurabrehm@hey.com>
+To: linux-kernel@vger.kernel.org
+Cc: Laura Brehm <laurabrehm@hey.com>
+Subject: [PATCH 0/2] coredump: socket PIDFD+PIDFD_INFO_COREDUMP issues
+Date: Thu,  3 Jul 2025 14:02:42 +0200
+Message-Id: <20250703120244.96908-1-laurabrehm@hey.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703092015.1200-1-weishangjuan@eswincomputing.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 05:20:15PM +0800, weishangjuan@eswincomputing.com wrote:
-> +static void eic7700_qos_fix_speed(void *priv, int speed, u32 mode)
-> +{
-> +	struct eic7700_qos_priv *dwc_priv = priv;
-> +	int i;
-> +
-> +	switch (speed) {
-> +	case SPEED_1000:
-> +		for (i = 0; i < 3; i++)
-> +			regmap_write(dwc_priv->hsp_regmap,
-> +				     dwc_priv->dly_hsp_reg[i],
-> +				     dwc_priv->dly_param_1000m[i]);
-> +		break;
-> +	case SPEED_100:
-> +		for (i = 0; i < 3; i++) {
-> +			regmap_write(dwc_priv->hsp_regmap,
-> +				     dwc_priv->dly_hsp_reg[i],
-> +				     dwc_priv->dly_param_100m[i]);
-> +		}
+Preamble: This is my first foray into the kernel mailing list, so
+	apologies for any blunders - I've tried my best to make sure
+	this is addressed to the right place, and to follow the
+    appropriate conventions, but I'm likely to miss many.
 
-The other two instances don't have the curley braces, why does this need
-it?
+This set of patches addresses some issues I *think* I've identified with
+some of the new coredump socket/PIDFD_INFO_COREDUMP ioctl functionality.
 
-> +		break;
-> +	case SPEED_10:
-> +		for (i = 0; i < 3; i++) {
-> +			regmap_write(dwc_priv->hsp_regmap,
-> +				     dwc_priv->dly_hsp_reg[i],
-> +				     dwc_priv->dly_param_10m[i]);
-> +		}
-> +		break;
-> +	default:
-> +		dev_err(dwc_priv->dev, "invalid speed %u\n", speed);
-> +		break;
-> +	}
+There's a reasonable chance that these aren't actual issues - I've 
+tried my best to make sure the error wasn't on my end using these
+features, and checked the kernel tests for them to make sure I'm not
+doing anything wrong, but it's definitely still possible since I don't
+have a lot of experience with the kernel.
 
-Overall, wouldn't:
+I sent these as a PATCH because it seemed the most straightforward way
+to illustrate the issues I'm mentioning.
+They're signed off, so if these do turn out to be actual issues which
+the included patches address/can address with some changes, I'd like
+to see them merged.
+However,in the likely case the issues I brought up are not real/I'm
+just doing something wrong, please accept my apologies for the spam.
 
-	const u32 *dly_param;
+Laura Brehm (2):
+  coredump: fix race condition between connect and putting pidfs dentry
+  coredump: fix PIDFD_INFO_COREDUMP ioctl check
 
-	switch (speed) {
-	case SPEED_1000:
-		dly_param = dwc_priv->dly_param_1000m;
-		break;
-	... etc ...
-	default:
-		dly_param = NULL;
-		dev_err(dwc_priv->dev, "invalid speed %u\n", speed);
-		break;
-	}
+ fs/coredump.c | 8 ++------
+ fs/pidfs.c    | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-	if (dly_param)
-		for (i = 0; i < 3; i++)
-			regmap_write(dwc_priv->hsp_regmap,
-				     dwc_priv->dly_hsp_reg[i],
-				     dly_param[i]);
 
-be more concise and easier to read?
-
-> +}
-> +
-> +static int eic7700_dwmac_probe(struct platform_device *pdev)
-> +{
-> +	struct plat_stmmacenet_data *plat_dat;
-> +	struct stmmac_resources stmmac_res;
-> +	struct eic7700_qos_priv *dwc_priv;
-> +	u32 hsp_aclk_ctrl_offset;
-> +	u32 hsp_aclk_ctrl_regset;
-> +	u32 hsp_cfg_ctrl_offset;
-> +	u32 eth_axi_lp_ctrl_offset;
-> +	u32 eth_phy_ctrl_offset;
-> +	u32 eth_phy_ctrl_regset;
-> +	bool has_rx_dly = false;
-> +	bool has_tx_dly = false;
-> +	int ret;
-> +
-> +	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				"failed to get resources\n");
-> +
-> +	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
-> +	if (IS_ERR(plat_dat))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(plat_dat),
-> +				"dt configuration failed\n");
-> +
-> +	dwc_priv = devm_kzalloc(&pdev->dev, sizeof(*dwc_priv), GFP_KERNEL);
-> +	if (!dwc_priv)
-> +		return -ENOMEM;
-> +
-> +	dwc_priv->dev = &pdev->dev;
-> +	dwc_priv->dly_param_1000m[0] = EIC7700_DELAY_VALUE0;
-> +	dwc_priv->dly_param_1000m[1] = EIC7700_DELAY_VALUE1;
-> +	dwc_priv->dly_param_1000m[2] = EIC7700_DELAY_VALUE0;
-> +	dwc_priv->dly_param_100m[0] = EIC7700_DELAY_VALUE0;
-> +	dwc_priv->dly_param_100m[1] = EIC7700_DELAY_VALUE1;
-> +	dwc_priv->dly_param_100m[2] = EIC7700_DELAY_VALUE0;
-> +	dwc_priv->dly_param_10m[0] = 0x0;
-> +	dwc_priv->dly_param_10m[1] = 0x0;
-> +	dwc_priv->dly_param_10m[2] = 0x0;
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "rx-internal-delay-ps",
-> +				   &dwc_priv->rx_delay_ps);
-> +	if (ret)
-> +		dev_dbg(&pdev->dev, "can't get rx-internal-delay-ps, ret(%d).", ret);
-
-Consider using %pe and ERR_PTR(ret) so that error codes can be
-translated to human readable strings. Ditto elsewhere.
-
-> +	else
-> +		has_rx_dly = true;
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "tx-internal-delay-ps",
-> +				   &dwc_priv->tx_delay_ps);
-> +	if (ret)
-> +		dev_dbg(&pdev->dev, "can't get tx-internal-delay-ps, ret(%d).", ret);
-> +	else
-> +		has_tx_dly = true;
-> +	if (has_rx_dly && has_tx_dly) {
-> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
-> +				  &dwc_priv->dly_param_1000m[1]);
-> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
-> +				  &dwc_priv->dly_param_100m[1]);
-> +		eic7700_set_delay(dwc_priv->rx_delay_ps, dwc_priv->tx_delay_ps,
-> +				  &dwc_priv->dly_param_10m[1]);
-> +	} else {
-> +		dev_dbg(&pdev->dev, " use default dly\n");
-> +	}
-> +
-> +	ret = of_property_read_variable_u32_array(pdev->dev.of_node, "eswin,dly_hsp_reg",
-> +						  &dwc_priv->dly_hsp_reg[0], 3, 0);
-> +	if (ret != 3) {
-> +		dev_err(&pdev->dev, "can't get delay hsp reg.ret(%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dwc_priv->crg_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +							       "eswin,syscrg_csr");
-> +	if (IS_ERR(dwc_priv->crg_regmap))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(dwc_priv->crg_regmap),
-> +				"Failed to get syscrg_csr regmap\n");
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 1,
-> +					 &hsp_aclk_ctrl_offset);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "can't get hsp_aclk_ctrl_offset\n");
-> +
-> +	regmap_read(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, &hsp_aclk_ctrl_regset);
-> +	hsp_aclk_ctrl_regset |= (EIC7700_HSP_ACLK_CLKEN | EIC7700_HSP_ACLK_DIVSOR);
-> +	regmap_write(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, hsp_aclk_ctrl_regset);
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 2,
-> +					 &hsp_cfg_ctrl_offset);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "can't get hsp_cfg_ctrl_offset\n");
-> +
-> +	regmap_write(dwc_priv->crg_regmap, hsp_cfg_ctrl_offset, EIC7700_HSP_CFG_CTRL_REGSET);
-> +
-> +	dwc_priv->hsp_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +							       "eswin,hsp_sp_csr");
-> +	if (IS_ERR(dwc_priv->hsp_regmap))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(dwc_priv->hsp_regmap),
-> +				"Failed to get hsp_sp_csr regmap\n");
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 2,
-> +					 &eth_phy_ctrl_offset);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "can't get eth_phy_ctrl_offset\n");
-> +
-> +	regmap_read(dwc_priv->hsp_regmap, eth_phy_ctrl_offset, &eth_phy_ctrl_regset);
-> +	eth_phy_ctrl_regset |= (EIC7700_ETH_TX_CLK_SEL | EIC7700_ETH_PHY_INTF_SELI);
-> +	regmap_write(dwc_priv->hsp_regmap, eth_phy_ctrl_offset, eth_phy_ctrl_regset);
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 3,
-> +					 &eth_axi_lp_ctrl_offset);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "can't get eth_axi_lp_ctrl_offset\n");
-> +
-> +	regmap_write(dwc_priv->hsp_regmap, eth_axi_lp_ctrl_offset, EIC7700_ETH_CSYSREQ_VAL);
-> +
-
-Consider more sensible wrapping of this (netdev frowns at >80
-characters per line, except for message strings that should remain
-greppable.)
-
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.5 (Apple Git-154)
+
