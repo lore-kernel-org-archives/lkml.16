@@ -1,76 +1,156 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA8022258C;
-	Thu,  3 Jul 2025 15:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E47C2EAD10;
+	Thu,  3 Jul 2025 15:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555916; cv=none; b=pRupAHQrVmqDPeq3V2KEu2FBA465Sc9QyRGTGLo4E1kcg+AWI5EhleSh9ya7AVfcGh/noSLLktBjcAGG+mLLzFesar6/Vuv48hVJgHwQzbdGnPhOVGBesq63cXr63GxX4sll25xucavu9x8C05IaL8EtcD/QXU5/4tOXqtDNskw=
+	t=1751555960; cv=none; b=Kf4TQDISydEONf0NBhH9z7hDdte3hLJJOtRd4Grhtx2Qkz8X/XWp/ATz1pO2DDnQokM+LEPKoyGP3rxeO/pw0Rn86h19d2MM5d1cjR/3f+5DdkbpldHt2sdaFH+CZ6YeHN0K3XhbFLecjjaEMTuezx2yvgK8ei9S5cmoRWTf+M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555916; c=relaxed/simple;
-	bh=P70pfd9tdtQjkw7oXculwEXnekh/fTPgtpELUc1VrL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A2bS/ber7cgVj+KHV2aOd12A+BDvpiOF8V2e9ahwJ831xBIwDXE24TUYgPFlyg58l+CQsXJpKZPz1ipKyAupL4RkYoctQXr5SvtGdAa3QMRJegWJSBU+Df0wPhbRBIm/Bh6hdvzkU5sLMj4T24lTRGTC36J36KHxTNNzgYi6dNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.48.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 6725734206E;
-	Thu, 03 Jul 2025 15:18:34 +0000 (UTC)
-Date: Thu, 3 Jul 2025 15:18:23 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Alex Elder <elder@riscstar.com>, linux-clk@vger.kernel.org,
-	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Immutable tag between SpacemiT's reset and clock trees
- for v6.17
-Message-ID: <20250703151823-GYA312602@gentoo>
+	s=arc-20240116; t=1751555960; c=relaxed/simple;
+	bh=7R1O2w50zFVFdltzoczZuuzjYk84Ji5n0+6r3bBzZuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L74oY4TMeaGYZ0r2aJMkQXkpLsLUFK4t/LhNC/Li2Qt9eMbawgU+nwa/hHeG1+SCiZ0nlXBeoYN0Tfg9/E67ROU1I3Avdqy1bQ2viAV5X7UfS245tr/OFVTQ4gQuwpWS1kCuLOScF/JXD2MAcnrmFE2OPNHvJvrQRKXnEBYdNCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WYW0qcLi; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WYW0qcLi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 36B6D4433D;
+	Thu,  3 Jul 2025 15:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751555949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3vPbA55GiZOX20WwUdHkWkbBRAgEIfKrszAkQo+WB4o=;
+	b=WYW0qcLiT4vUm+pNNStTnW831aKTemEVwc+gCHUY6xKk/NtXaJjaqxwxpWv2WdW0e2BQ4Y
+	kf0PKD0b6P8isXfU4Vc5vefI726O2iG2WkLgbXFskKMM5oJevjCE/gm5cjHtLPvTm6l8dj
+	sCbTHLYLLlWbpPWWYyAIDOk6AYyT7C3BWpi9/XugIR9g/kCp35W032g2NUESsKCpmkegcv
+	cBUWO9vPpc918ug03XtOwZCrPgr6tGumYbpULTMrSRc7HLdZ6Ve9ZsX/G/ubSAwH48J7Yp
+	HUxPkRrUHwUfbJwccKfKpsC0htQC1s9PagdzubfbLV3Taoavcmx8aY64gijLiA==
+Date: Thu, 3 Jul 2025 17:19:07 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Ayush Singh <ayush@beagleboard.org>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ luca.ceresoli@bootlin.com, robh@kernel.org, thomas.petazzoni@bootlin.com,
+ wsa+renesas@sang-engineering.com
+Subject: Re: [RFC PATCH 0/3] i2c: Introduce i2c bus extensions
+Message-ID: <20250703171907.12b00c43@bootlin.com>
+In-Reply-To: <8859d983-f4ff-498b-bb0b-eb84206ad969@beagleboard.org>
+References: <20250205173918.600037-1-herve.codina@bootlin.com>
+	<525877c8-6c64-45b3-b4aa-a52768e59b86@beagleboard.org>
+	<20250613093016.43230e3b@bootlin.com>
+	<8859d983-f4ff-498b-bb0b-eb84206ad969@beagleboard.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevleefvdeujedvheekvdegleevjefgtdeuieetveefhedvvdejleeuhedvfeetieenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdekpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Philipp,
+Hi Ayush,
 
-Please pull the following change into the reset tree. This
-allows you to apply the patch 5 of the SpacemiT reset driver [1].
+On Thu, 3 Jul 2025 16:56:20 +0530
+Ayush Singh <ayush@beagleboard.org> wrote:
 
-Thanks,
-Yixun Lan
+> On 6/13/25 13:00, Herve Codina wrote:
+> 
+> > Hi Ayush,
+> >
+> > On Thu, 12 Jun 2025 13:22:45 +0530
+> > Ayush Singh <ayush@beagleboard.org> wrote:
+> >  
+> >> I have tested this patch series for use with pocketbeagle 2 connector
+> >> driver [0]. To get a better idea how it looks in real devicetree, see
+> >> the base tree [1] and the overlay [2]. Since it also used gpio and pwm
+> >> nexus nodes, along with providing pinmux for pins, it can provide a
+> >> better picture of how the different pieces (export-symbols, nexus nodes,
+> >> etc) look when combined.  
+> > Nice. Happy to see that I am no more alone with a system using these
+> > features.
+> >  
+> >>
+> >> I also have a question for Herve. Do you already have any working
+> >> patches for similar extension for SPI and UART in some private tree?  
+> > No, I didn't do anything related to SPI nor UART.
+> >
+> > On my system, no SPI nor UART are wired to my connector and so, I haven't
+> > got any needs to implement extension busses for SPI an UART (serial dev bus)
+> > nor any support for nexus nodes for other kind of components.
+> >
+> > Best regards,
+> > Hervé  
+> 
+> 
+> I have added SPI bus extension to my kernel tree [0]. Now, the techlab 
+> cape (other than mikrobus port) works using export-symbols + i2c and spi 
+> bus extension + eeprom auto detection.
+> 
+> 
+> Here is a list of everything currently working on the tree:
+> 
+> 1. EEPROM based auto-detection.
+> 
+> 2. SPI
+> 
+> 3. I2C
+> 
+> 4. PWM
+> 
+> 5. GPIO
+> 
+> 
+> Missing:
+> 
+> 1. UART (Don't have a cape that has something using the UART yet. Maybe 
+> need to experiment with MikroBUS).
+> 
+> 
+> Not quite sure what else to do to move things forward.
+> 
+> 
+> Best Regards,
+> 
+> Ayush Singh
+> 
+> 
+> [0]: https://github.com/Ayush1325/linux/tree/beagle-cape-v1
+> 
 
-Link: https://lore.kernel.org/r/20250702113709.291748-6-elder@riscstar.com [1]
+I've just looked at your code related to SPI. It is closed to the I2C code
+and that's pretty nice!
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+I think to move forward we have to wrote the SPI bus extension binding and
+propose the binding + the code upstream.
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+Compared to I2C bus extension, only one repo is involved for SPI, the Linux
+kernel repo. On I2C bus extension, I am stuck on the binding which is a
+modification on the dtschema repo [0].
 
-are available in the Git repository at:
+The SPI binding modifications for SPI bus extension will probably take place
+in spi-controller.yaml [1] and should be pretty close to modifications done
+for the I2C binding.
 
-  https://github.com/spacemit-com/linux tags/spacemit-reset-binding-for-6.17-1
+When one of the two series (I2C or SPI) is accepted, it will be easier
+for the other one to follow (Same concept, same kind of binding, same kind
+of code).
 
-for you to fetch changes up to 25a59e813cd2ca728047f657d64f9b29480be393:
+The advantage of the SPI series, I think, is that only one repo is involved.
 
-  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets (2025-07-03 22:16:08 +0800)
+Best regards,
+Hervé
 
-----------------------------------------------------------------
-RISC-V SpacemiT Binding for 6.17
-
-- Reset DT Binding for K1 SoC
-
-----------------------------------------------------------------
-Alex Elder (1):
-      dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
-
- .../bindings/soc/spacemit/spacemit,k1-syscon.yaml  |  27 +++-
- include/dt-bindings/clock/spacemit,k1-syscon.h     | 141 +++++++++++++++++++++
- 2 files changed, 162 insertions(+), 6 deletions(-)
-
+[0]: https://lore.kernel.org/all/20250618082313.549140-1-herve.codina@bootlin.com/
+[1]: https://elixir.bootlin.com/linux/v6.16-rc4/source/Documentation/devicetree/bindings/spi/spi-controller.yaml
