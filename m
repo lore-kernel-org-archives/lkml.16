@@ -1,125 +1,93 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6B333DF;
-	Thu,  3 Jul 2025 01:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6693A1F956
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 01:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751504680; cv=none; b=ho3kH9P9svGTCZzsk/jjTXkTy7wQ9y2PBhnq3mRZ8LKlVcm7vRj26BSI9TCYQ1Yx22HZYX5VpljJHbTe8zIjVx8q1XbcEFHnKToZkwkmhwN/mdlmEq49Zc+Mgj7hbFMt1n73yLpw/rdW016ZxKeNb0DdHO3xwgDDwIxLpUw+u74=
+	t=1751504898; cv=none; b=lE8dpgfRC2idJBzZ9f3brNc+ElSmDwD0ViLiavjJqGEP6yXX1tb9DzDscF+Nw/X66niyVVY8N//EksWdFYWAwCDTpTTjBtT+y2/4iwtOAPS55KxwChnDGjZ2SVTyQqLvGeONl0AFowIuqC7pSRvxFNURYfW2qYBfWr1ITHmTG5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751504680; c=relaxed/simple;
-	bh=JlAOZZjzEGS5FPV5Oiqzo/4Njn+txUSWp1s0aZkR5iY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=R0JiBks/6Vj5enkisqXKnkygWrJMDuxCv2zzchiW7J+/nDz87tUvt7dKhZ24JsUBdr3M+aSZVMkkejka27kR3XseJfAwAkUGi8Vx4XskvAu/W30aq/pdGx7iivR5w87k7LBztjIWovPKDi+FHyS75e7Qv0WA2oxCq+2aUTugmoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bXdm56rNkz2TSmQ;
-	Thu,  3 Jul 2025 09:02:45 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A6FA14022E;
-	Thu,  3 Jul 2025 09:04:33 +0800 (CST)
-Received: from kwepemq500009.china.huawei.com (7.202.195.53) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 3 Jul 2025 09:04:32 +0800
-Received: from [10.174.179.5] (10.174.179.5) by kwepemq500009.china.huawei.com
- (7.202.195.53) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 3 Jul
- 2025 09:04:31 +0800
-Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
- irq_exit() causes dead loop
-To: Joel Fernandes <joelagnelf@nvidia.com>, Qi Xi <xiqi2@huawei.com>,
-	<paulmck@kernel.org>
-CC: Joel Fernandes <joel@joelfernandes.org>, <ankur.a.arora@oracle.com>,
-	Frederic Weisbecker <frederic@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	<neeraj.upadhyay@kernel.org>, <urezki@gmail.com>, <rcu@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Wangshaobo (bobo)"
-	<bobo.shaobowang@huawei.com>, Xie XiuQi <xiexiuqi@huawei.com>
-References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
- <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
- <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
- <20250603185939.GA1109523@joelnvbox>
- <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
- <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
- <c448118b-9f7e-4c29-d6b3-a66e70f7163f@huawei.com>
- <a963b475-72cd-474d-96d4-9e651fc8f857@paulmck-laptop>
- <e7354668-2573-4564-834b-44d76d983222@nvidia.com>
- <09e4d018-3db4-404e-a8f0-041cdee15a62@huawei.com>
- <279d2f06-d4f7-46e1-9678-999a2d19b710@nvidia.com>
- <506d8c4e-c317-4c85-9bcf-695596551d28@huawei.com>
- <166bc5aa-a715-438e-8805-c74c2b5fc83b@nvidia.com>
- <c16ddb6e-73f1-4eff-bbcf-c03b95f79fdf@nvidia.com>
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <8f5925c1-9553-63d3-d5a0-387c2395963d@huawei.com>
-Date: Thu, 3 Jul 2025 09:04:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+	s=arc-20240116; t=1751504898; c=relaxed/simple;
+	bh=SUVlWdQqDyKJ4LhgmTpbGQqJAa4sQ+Phf/BlrfPW6h0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pzvj0xGsrhHoZSlJjaRyCIQlyOeXvLcCPyotpIiuu7lkIMC1wJ1VSKomRCMuYva7gb8PCP81o9QDn/jCAYKLI56vuvnldLJid6Xp5FeqCgnPFrQj5TTn8ej4htKmoxZwLO1uLEdubi7dS2iMKEvGsb/wMRa1whfJ+SUQqHfEEt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=ude8dWvI; arc=none smtp.client-ip=202.108.3.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="ude8dWvI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751504893;
+	bh=1jJ//o1g6ALetyXYXwk4Tl4JBYGREwme42sNYEyCAjg=;
+	h=From:Subject:Date:Message-ID;
+	b=ude8dWvIkBhvmNrvzxoZDoY95EGpWER09emEpS6MTX9wd63LXNDpmIkzV3ikbpOP0
+	 DP7/qVqAA38bkfi08gqKgf+GoSyCBvKNfNL3rfY7akB4+3qufxwFZF/iQlIuupYXLC
+	 VtpdYLAYpS8OgFwc6X55MYWkGRJYvMHTBn1D0vuc=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 6865D6AD00000771; Thu, 3 Jul 2025 09:02:39 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 1764334457055
+X-SMAIL-UIID: 325FC3E2E72347A98D65E01A22244399-20250703-090239-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+169412e85b1803dfda81@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [kernel?] general protection fault in __cpa_flush_tlb
+Date: Thu,  3 Jul 2025 09:02:26 +0800
+Message-ID: <20250703010227.2223-1-hdanton@sina.com>
+In-Reply-To: <6865460d.a00a0220.270cb1.0001.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c16ddb6e-73f1-4eff-bbcf-c03b95f79fdf@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemq500009.china.huawei.com (7.202.195.53)
 
-
-
-On 2025/7/3 1:24, Joel Fernandes wrote:
+> Date: Wed, 02 Jul 2025 07:45:33 -0700
+> syzbot found the following issue on:
 > 
-> 
-> On 7/2/2025 6:59 AM, Joel Fernandes wrote:
->>
->>
->> On 7/2/2025 5:14 AM, Qi Xi wrote:
->>> Hi Joel,
->>>
->>> After applying the 2 patches, the problem still exists. Compared to the previous
->>> fixes which did solve the problem, the difference is ct_in_irq() in the first
->>> patch.
->>>
->>> I am wondering why "nesting != CT_NESTING_IRQ_NONIDLE" is added?
->>>
->>>
->>> (previous fix: problem is solved)
->>>
->>> +bool ct_in_irq(void)
->>> +{
->>> +    return ct_nmi_nesting() != 0;
->>> +}
->>>
->>> (current fix: problem still exists)
->>>
->>> +bool ct_in_irq(void)
->>> +{
->>> +    long nesting = ct_nmi_nesting();
->>> +
->>> +    return (nesting && nesting != CT_NESTING_IRQ_NONIDLE);
->>> +}
->>
->> Oh gosh, thanks for spotting that! Indeed,  I had changed it to != 0 in the last
->> version but applied an older patch. I will fix it in the tree. Thank you again!
->>
->> Neeraj, would you like this as a separate commit that you can then squash? Or
->> could you fix it up in your tree?
->>
-> Qi, Xiongfeng, I am currently working on alternative fix after discussing with
-> the crew. I will keep you posted with the fix, and would it to be good to get
-> your testing on it once I have it (hopefully in couple of days), thanks for the
-> report!
+> HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10aa93d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
+> dashboard link: https://syzkaller.appspot.com/bug?extid=169412e85b1803dfda81
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10ed648c580000
 
-Sure, we are glad to help test once we get the fix patch.
+#syz test
 
-Thanks,
-Xiongfeng
-
-> 
->  - Joel
-> 
-> .
-> 
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -802,7 +802,6 @@ static void smp_call_function_many_cond(
+ 
+ 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
+ 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
+-		run_remote = true;
+ 		cfd = this_cpu_ptr(&cfd_data);
+ 		cpumask_and(cfd->cpumask, mask, cpu_online_mask);
+ 		__cpumask_clear_cpu(this_cpu, cfd->cpumask);
+@@ -816,6 +815,7 @@ static void smp_call_function_many_cond(
+ 				continue;
+ 			}
+ 
++			run_remote = true;
+ 			csd_lock(csd);
+ 			if (wait)
+ 				csd->node.u_flags |= CSD_TYPE_SYNC;
+@@ -843,8 +843,6 @@ static void smp_call_function_many_cond(
+ 			send_call_function_single_ipi(last_cpu);
+ 		else if (likely(nr_cpus > 1))
+ 			send_call_function_ipi_mask(cfd->cpumask_ipi);
+-		else
+-			run_remote = false;
+ 	}
+ 
+ 	/* Check if we need local execution. */
+--
