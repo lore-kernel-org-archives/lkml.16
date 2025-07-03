@@ -1,82 +1,34 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49708288C15
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC819288C15
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535042; cv=none; b=mv6+6bAP0ZF4qxmNb1lnKJtbs0RxnK+uj+XV0hfO61Pwal+5ROS8ZtkCup4d7XTxbaiqBdsCaQiobxv2z1urLUuAuM6iAxg48hR6mGXhZ77OxXYu3qSVv+nZLeQQapv4pWZb5amulyyDTuzLJy/mfatN1/qFAZZzJn/Gr9u+t7I=
+	t=1751535053; cv=none; b=BAkqVkaCKrn7RDLffiQThCagRawyzmC68hx9xd2cRqqkedY3LG1MtUQsoNcZvQBau/MjwV3pXxgTNvGxbydEAa8QA3Q+uzN0Apvabk5oFN1VjVYyaPLz0+ans8zA9BmSAPALAV7azBqpfdbVE69BAkxQsgdfz+tqOibnMaSobww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535042; c=relaxed/simple;
-	bh=+9LY65EJRBu4Z+OtHRUlcwV0eyAifNrUhOiPBXIMhGM=;
+	s=arc-20240116; t=1751535053; c=relaxed/simple;
+	bh=5dEuxX6YNR/26yYDBwOG+R9/sOuOWGvFuUFdmXGa/us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NMCWR6J1gIcJGYSgt4VXGMduxKlzB3ENpfhA27Pj3K/+AmxWGYjWf8w6vZD9audH/GiUGLrydmFFeJYwW1mpZX1R9xD5Mg89dcmx0VmKmSGhUtJeWsuMVuX1gj3qguUJzdPfLFVE1YRp2dmYLM0gOy3tH/YZ0WRRKtiTrZE7zOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D4BXHVOK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D4BXHVOK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751535040;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qRFdLYJ4q7/MAXUEMWlpPtrPV11dB3OuQtvNTnayJQo=;
-	b=D4BXHVOKop+JmmO5kOf30mgX08WDZ5D+QWx7xoL49YfF94JFjZZ/36VQ/QoEXV2MoKx0KJ
-	YM+SqW1Il/vAZhp1ZjDIUgKTJ3aVlVbpg4NtZ+RMCrbC/FA6feqYBRnag7XqsGON+UMMXi
-	uLoAdMbeoT4M0U6sxDAxGZ2jXjkPnXw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-606-f1nMf-owNy6yc2zwciP8fw-1; Thu, 03 Jul 2025 05:30:38 -0400
-X-MC-Unique: f1nMf-owNy6yc2zwciP8fw-1
-X-Mimecast-MFC-AGG-ID: f1nMf-owNy6yc2zwciP8fw_1751535038
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4532514dee8so51071125e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:30:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751535037; x=1752139837;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qRFdLYJ4q7/MAXUEMWlpPtrPV11dB3OuQtvNTnayJQo=;
-        b=AmsSNt+aki5G3erznx7fK6L6psRRYTnr1C1Y0KZTsx5M61Z0vSsGKz0trgvGNEk86h
-         OuKojP6SfX65FSRT5ZlZQK6dTzMTOE8RLxw8FOvQbf56QTqmKF3MDuBsDJ6z2DfYOocp
-         PeLAkYudwtuseMdXb6ptJShUwfvw9Q9bs8yZHwsEQaPjFyXTDX7LRIJD7RMJPN/inzYl
-         M6n9YcSzCNQGmMZGgiGNk93TH6m5I3SYNf3lgDaxFu0RgcYUs0sIxeYEqW1u0V72Zr/k
-         VugW6rd0KJr4q037j4Ab/KIuiyM5Plj6skq9ev8i2xsnLUSL5MC0NpJaTdlJVdBbR5Up
-         pMhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2RyliqW/i09AKkunk88YiQDsS/VT2NSb0atOJmiUGj1qhyluwdCqZcF8umbBwcmww+zS5269l8d8wXOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKRKVNnmuFGVH3pPPGu7wkoBDBHpIXdXj5hrNGGmjvhlpR2Eyr
-	JNl1vq3yVdDAnWiEPV/p90JY0pD+yQyS84fjzIURgu5T25wa17Z3npnd4og9Ynrx+o3gJi5LKhk
-	BxnFLISYOUD0U0lhDKGl0s1Rtejkt/B43f/tfG66NRjALmoVjs/Jn4PbE68KyflMNLQ==
-X-Gm-Gg: ASbGncsabns2Hbm7XFHlSnwhma8Fi0c+ecBY/5/Y+6VvdeHtzq698rSMeDJTaQFVbf8
-	GyWrJ2UzeUDLgmfe0ZCZmSGArD3vipPF3D89mbaU9BE9cl2ZrwyU/es9a23LH5FkRJvh8humpBO
-	XuOUrDEufIRra8l3huKUP8TlOirShxDwBNdviirUQrHQpowju2nloLTkSTRzuItEGADn1nFoqAz
-	LHLp8xMHm6hkdTNdoU+3211cdpO09WFXGJoRGah5o8dp6c94sQzi2dQq99pAw5J+6TcmHe9C3Ny
-	oIVGdjnQK/RZNO1V
-X-Received: by 2002:a05:6000:1a8f:b0:3b3:a6b2:9cd3 with SMTP id ffacd0b85a97d-3b3a6b29e99mr848223f8f.48.1751535037383;
-        Thu, 03 Jul 2025 02:30:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELWFqj9I+aIUDU/5RiZ+sKsYw2mzWKRfT/gfXBnwZnWoC9nFVXzrA0v3mthR9QtuA2m2qUlQ==
-X-Received: by 2002:a05:6000:1a8f:b0:3b3:a6b2:9cd3 with SMTP id ffacd0b85a97d-3b3a6b29e99mr848203f8f.48.1751535036898;
-        Thu, 03 Jul 2025 02:30:36 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997e24bsm21380565e9.16.2025.07.03.02.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:30:35 -0700 (PDT)
-Date: Thu, 3 Jul 2025 05:30:33 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Laurent Vivier <lvivier@redhat.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
- reporting
-Message-ID: <20250703052907-mutt-send-email-mst@kernel.org>
-References: <20250521092236.661410-1-lvivier@redhat.com>
- <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
- <20250528031540-mutt-send-email-mst@kernel.org>
- <770fc206-70e4-4c63-b438-153b57144f23@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cfMtV7wX1bb+K9YrWUibl0oUxOwIx7YqFeKOciCckKjwLJflABOOrIQbPGrJpvkINBFnJHs0EUtXICS/0pNmiYpSvL/aHq1QFID5RAZG/8l6BRaxiJMTvy9QoN6/IKlTH2Cf5UfHu4l1j64NTVTs7yBLsdWHFfM3+vvQkKRgCVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 880E668C4E; Thu,  3 Jul 2025 11:30:43 +0200 (CEST)
+Date: Thu, 3 Jul 2025 11:30:42 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Ben Copeland <ben.copeland@linaro.org>,
+	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
+	sagi@grimberg.me, iommu@lists.linux.dev,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
+ after 06cae0e3f61c
+Message-ID: <20250703093042.GA7387@lst.de>
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com> <20250630133343.GA26040@lst.de> <aGLyswGYD6Zai_sI@kbusch-mbp> <20250701132936.GA18807@lst.de> <aGRMilWhgF4z0WOf@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,46 +37,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <770fc206-70e4-4c63-b438-153b57144f23@redhat.com>
+In-Reply-To: <aGRMilWhgF4z0WOf@kbusch-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jul 03, 2025 at 09:43:46AM +0200, Laurent Vivier wrote:
-> On 28/05/2025 09:20, Michael S. Tsirkin wrote:
-> > On Wed, May 28, 2025 at 08:24:32AM +0200, Paolo Abeni wrote:
-> > > On 5/21/25 11:22 AM, Laurent Vivier wrote:
-> > > > This patch series contains two fixes and a cleanup for the virtio subsystem.
-> > > > 
-> > > > The first patch fixes an error reporting bug in virtio_ring's
-> > > > virtqueue_resize() function. Previously, errors from internal resize
-> > > > helpers could be masked if the subsequent re-enabling of the virtqueue
-> > > > succeeded. This patch restores the correct error propagation, ensuring that
-> > > > callers of virtqueue_resize() are properly informed of underlying resize
-> > > > failures.
-> > > > 
-> > > > The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
-> > > > 
-> > > > The third patch addresses a reliability issue in virtio_net where the TX
-> > > > ring size could be configured too small, potentially leading to
-> > > > persistently stopped queues and degraded performance. It enforces a
-> > > > minimum TX ring size to ensure there's always enough space for at least one
-> > > > maximally-fragmented packet plus an additional slot.
-> > > 
-> > > @Michael: it's not clear to me if you prefer take this series via your
-> > > tree or if it should go via net. Please LMK, thanks!
-> > > 
-> > > Paolo
-> > 
-> > Given 1/3 is in virtio I was going to take it. Just after rc1,
-> > though.
-> > 
+On Tue, Jul 01, 2025 at 05:00:58PM -0400, Keith Busch wrote:
+> On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
+> > Yes, that's broken, and I remember fixing it before.  A little digging
+> > shows that my fixes disappeared between the oct 30 version of Leon's
+> > dma-split branch and the latest one somewhere.  Below is what should
+> > restore it, but at least when forcing my Intel IOMMU down this path it
+> > still has issues with VPTEs already set.  So maybe Bob should not try
+> > it quite yet.  I'll try to get to it, but my availability today and
+> > tomorrow is a bit limited.
 > 
-> Michael, if you don't have time to merge this series, perhaps Paolo can?
+> Let's say we're using ARM64 SMMU configured with 64k granularity like I
+> showed earlier.
 > 
-> Thanks,
-> Laurent
+> Now let's send a read command with 128k transfer, and let's assume the
+> payload is two 64k aligned physical segments, so we have 2 bvecs.
+> 
+> Since nvme's virtual boundary is smaller than the iommu's granule, we
+> won't attempt to coalesce. We instead iommu map each bvec segment
+> individually.
+> 
+> And let's say each segment just so happens to get consecutive IOVA's.
+> The mapping side had done each segment individually, but your proposal
+> here will assume the contiguous dma_addr ranges were done as a single
+> larger mapping. Is that okay?
 
+Not on the DMA API level, and depending on the implementation also
+not in practice.
 
-Sorry I forgot I asked that netdev guys don't handle it.
+I think the idea to reconstruct the dma addresses from PRPs should
+be considered a failure by now.  It works fine for SGLs, but for
+PRPs we're better off just stashing them away.  Bob, can you try
+something like the patch below?  To be fully safe it needs a mempool,
+and it could use some cleanups, but it does pass testing on my setup
+here, so I'd love to see if if fixes your issue.
 
--- 
-MST
-
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f5cf90ddc3e9..f1242e321a58 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -262,6 +262,11 @@ enum nvme_iod_flags {
+ 	IOD_SINGLE_SEGMENT	= 1U << 2,
+ };
+ 
++struct dma_vec {
++	dma_addr_t addr;
++	unsigned int len;
++};
++
+ /*
+  * The nvme_iod describes the data in an I/O.
+  */
+@@ -274,6 +279,8 @@ struct nvme_iod {
+ 	unsigned int total_len;
+ 	struct dma_iova_state dma_state;
+ 	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
++	struct dma_vec *dma_vecs;
++	unsigned int nr_dma_vecs;
+ 
+ 	dma_addr_t meta_dma;
+ 	struct sg_table meta_sgt;
+@@ -676,42 +683,12 @@ static void nvme_free_prps(struct request *req)
+ 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
+ 	struct device *dma_dev = nvmeq->dev->dev;
+ 	enum dma_data_direction dir = rq_dma_dir(req);
+-	int length = iod->total_len;
+-	dma_addr_t dma_addr;
+-	int i, desc;
+-	__le64 *prp_list;
+-	u32 dma_len;
+-
+-	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
+-	dma_len = min_t(u32, length,
+-		NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
+-	length -= dma_len;
+-	if (!length) {
+-		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+-		return;
+-	}
+-
+-	if (length <= NVME_CTRL_PAGE_SIZE) {
+-		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+-		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
+-		dma_unmap_page(dma_dev, dma_addr, length, dir);
+-		return;
+-	}
+-
+-	i = 0;
+-	desc = 0;
+-	prp_list = iod->descriptors[desc];
+-	do {
+-		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+-		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
+-			prp_list = iod->descriptors[++desc];
+-			i = 0;
+-		}
++	unsigned int i;
+ 
+-		dma_addr = le64_to_cpu(prp_list[i++]);
+-		dma_len = min(length, NVME_CTRL_PAGE_SIZE);
+-		length -= dma_len;
+-	} while (length);
++	for (i = 0; i < iod->nr_dma_vecs; i++)
++		dma_unmap_page(dma_dev, iod->dma_vecs[i].addr,
++				iod->dma_vecs[i].len, dir);
++	kfree(iod->dma_vecs);
+ }
+ 
+ static void nvme_free_sgls(struct request *req)
+@@ -770,6 +747,17 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
+ 	unsigned int prp_len, i;
+ 	__le64 *prp_list;
+ 
++	if (dma_need_unmap(nvmeq->dev->dev)) {
++		/* XXX: use mempool */
++		iod->dma_vecs = kmalloc_array(blk_rq_nr_phys_segments(req),
++				sizeof(struct dma_vec), GFP_NOIO);
++		if (!iod->dma_vecs)
++			return BLK_STS_RESOURCE;
++		iod->dma_vecs[0].addr = iter->addr;
++		iod->dma_vecs[0].len = iter->len;
++		iod->nr_dma_vecs++;
++	}
++
+ 	/*
+ 	 * PRP1 always points to the start of the DMA transfers.
+ 	 *
+@@ -793,6 +781,11 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
+ 				goto bad_sgl;
+ 			goto done;
+ 		}
++		if (dma_need_unmap(nvmeq->dev->dev)) {
++			iod->dma_vecs[iod->nr_dma_vecs].addr = iter->addr;
++			iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
++			iod->nr_dma_vecs++;
++		}
+ 	}
+ 
+ 	/*
+@@ -838,6 +831,12 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
+ 					goto bad_sgl;
+ 				goto done;
+ 			}
++			if (dma_need_unmap(nvmeq->dev->dev)) {
++				iod->dma_vecs[iod->nr_dma_vecs].addr =
++					iter->addr;
++				iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
++				iod->nr_dma_vecs++;
++			}
+ 		}
+ 
+ 		/*
+@@ -1108,6 +1107,7 @@ static blk_status_t nvme_prep_rq(struct request *req)
+ 	iod->nr_descriptors = 0;
+ 	iod->total_len = 0;
+ 	iod->meta_sgt.nents = 0;
++	iod->nr_dma_vecs = 0;
+ 
+ 	ret = nvme_setup_cmd(req->q->queuedata, req);
+ 	if (ret)
