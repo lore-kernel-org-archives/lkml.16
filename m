@@ -1,82 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E372580E2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9056C253B7E;
+	Thu,  3 Jul 2025 16:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560793; cv=none; b=BmRuZL/62sIKiciidv1+W0DnRlL13Lm8m+avznalBK3rlsaujroMzhPesuxCIhMmw2iyf3ka4jo6VWZL1cPMlI8WdpDIYuP7I6y2+3c3Dge7fXDfz9flFod4uklNlZ0A12wKbBQKyMgC/3jnFvKlQ4dbe2jWvsYbjHD2eyXIm2c=
+	t=1751560831; cv=none; b=PAIyyq8SjZ1lT3rKVvdBTolkFFybuUsbTKOdAjeDv5w9B5J9DTDmGx/1kIYhSuOU/3sfCFkzLz2zTgdHX00PHAGaW6YQXrkb/hU8PkOOrSL7qGUc2C+PZMty1NR8Lo81J8MoKcjsSV+Hh9Wc9tw3n6AwrNa5ONe+uN/qMvv1XxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560793; c=relaxed/simple;
-	bh=01jH8r428sLMr1d83sAv7rayhaGU9MJiVCYZ+lKY90Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C7S/IdcEfcVhmLXoD8z/z88OStAKvvyYDpCDd/sHgSsmRVhQQTZ8uSNzk0/feKNPeysdnw/UMVD+x9FVEpyJycFjn2DBcksixt6xkZmHIJSZu3EDQkc1ZFiHrmNdW3OUKXiREhNB2AszoZu1P8PD8foL5fJpi+m1ALFscKrVsXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DJuR/T0G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VDi6FmiS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751560831; c=relaxed/simple;
+	bh=Nq9rNp9BVIlEabZcClAYVRdzkuHt8U33NMSV2tNtP3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F51lBVEPt3PdiVirnSTx3gHB7LS+UZm5Ob6gEBmjBBZGdM8Lr6aiTTOR+9bDN7QIkLuuXNXDAr5dXxP0pK60WjT3zAfcWaJCnKTfrFfuS1QyvQ76gy27Dg5bA4isxvTkWlqWsdkv90zVnFemwAjLZOjKjxaPHd8kcBspIeCKGBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WvIbrqQY; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DJuR/T0G";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VDi6FmiS"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751560789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jjOLwEZEZwj6P2cZondP2eaYEZTd2Boa5qjSBHDModI=;
-	b=DJuR/T0GsNfopXDnSPcTyaZ77QMbyWDWudCydZqj1R20l4csZI3pzmc6P8WYaOjMUxKQs/
-	2ZSqUQJ/lc/+z7OGomXF/F8zgIkgL55T6x3pOq5PXga8aIfajQC9Xb2q/LtGBALayPZ7gy
-	+ZV6B7NjyWGdkQvcaO2nSF//VKsZ5sbnVJEWQJrSEMkcU0M2GqNLAj6bz/8hUVDkNPQMq6
-	JR4tHEirmSORHx08aAjw/ia8ykAhe6VGAjvH00Br3HTIx5CoLrsnDr0ithECDHVkCqee1G
-	jqlVo8ZdLWw0hWRTd4BbXcXx3jr1h9XUL9JgsAvV5ghOlx1Mc4zciIAO2frPqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751560789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jjOLwEZEZwj6P2cZondP2eaYEZTd2Boa5qjSBHDModI=;
-	b=VDi6FmiSJTl7dRJH5WanB3BzmI9QfNeyqElOW0KK/ZxJkACgTIdSDNc79HsNI+KjvOpSVZ
-	ejAsrSbh+puqqvCg==
-To: Nam Cao <namcao@linutronix.de>, Johannes Berg <johannes@sipsolutions.net>
-Cc: Marc Zyngier <maz@kernel.org>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] um: virt-pci: Switch to
- msi_create_parent_irq_domain()
-In-Reply-To: <20250630070249.oVVkmFZg@linutronix.de>
-References: <cover.1751266049.git.namcao@linutronix.de>
- <5f0bd8e877e7bfdfb1a7e99d6b126caf6a7eea48.1751266049.git.namcao@linutronix.de>
- <e64a4c40b0234fc265a74cb60633117dc6911518.camel@sipsolutions.net>
- <20250630070249.oVVkmFZg@linutronix.de>
-Date: Thu, 03 Jul 2025 18:39:48 +0200
-Message-ID: <87plehtei3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WvIbrqQY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=p22ulm2JTnD0JZ9x5PYLNt42pL3casjMF3JEqG3pYOY=; b=WvIbrqQYf/a11dI5GiRZZ1D/xz
+	pvNPmRHMpt5KHiHCnyk9kD1avieKDt50bs4HKSsZ67uheOEkBC4dk7ECasA+qaMblsYmCVE4ZsES1
+	/zvICV/bU96sN1ulN+h5wGC6hvymQn0NySDz0ExCqufoKhaxyADDhJDLAwtNBHwh77vTGa3jeGPs1
+	N7te0jr1w+wpXn7pVhqYsTqgHYtmePuGjceA5w7MHVQSGUrx/+TIRXONuxwSeR6JBWWUN3y/qV8sT
+	sL3ctt3w1W1HSifXrjxmnKl9ll57kuw0PLKcDfPAVQKXYoSFIFAOLonWqSYhlxoZM5f0di1CX/zP5
+	LLkyz73Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXMz0-00000007iGW-2g8d;
+	Thu, 03 Jul 2025 16:40:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 95B5230017D; Thu, 03 Jul 2025 18:40:21 +0200 (CEST)
+Date: Thu, 3 Jul 2025 18:40:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Zihuan Zhang <zhangzihuan@kylinos.cn>, pavel@kernel.org,
+	len.brown@intel.com, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
+Message-ID: <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
+References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
+ <20250611101247.15522-2-zhangzihuan@kylinos.cn>
+ <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
 
-Johannes,
+On Thu, Jul 03, 2025 at 04:15:10PM +0200, Rafael J. Wysocki wrote:
+> The patch subject appears to be incomplete.
+> 
+> On Wed, Jun 11, 2025 at 12:13 PM Zihuan Zhang <zhangzihuan@kylinos.cn> wrote:
+> >
+> > When freezing user space during suspend or hibernation, the freezer
+> > iterates over all tasks and attempts to freeze them via
+> > try_to_freeze_tasks().
+> >
+> > However, zombie processes (i.e., tasks in EXIT_ZOMBIE state) are no
+> > longer running and will never enter the refrigerator. Trying to freeze
+> > them is meaningless and causes extra overhead, especially when there are
+> > thousands of zombies created during stress conditions such as fork
+> > storms.
+> >
+> > This patch skips zombie processes during the freezing phase.
+> >
+> > In our testing with ~30,000 user processes (including many zombies), the
+> > average freeze time during suspend (S3) dropped from ~43 ms to ~16 ms:
+> >
+> >     - Without the patch: ~43 ms average freeze latency
+> >     - With the patch:    ~16 ms average freeze latency
+> >     - Improvement:       ~62%
+> 
+> And what's the total suspend time on the system in question?
+> 
+> > This confirms that skipping zombies significantly speeds up the freezing
+> > process when the system is under heavy load with many short-lived tasks.
+> >
+> > Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+> >
+> > Changes in v3:
+> > - Added performance test
+> >
+> > Changes in v2:
+> > - Simplified code, added judgment of dead processes
+> > - Rewrite changelog
+> > ---
+> >  kernel/power/process.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/power/process.c b/kernel/power/process.c
+> > index a6f7ba2d283d..2bbe22610522 100644
+> > --- a/kernel/power/process.c
+> > +++ b/kernel/power/process.c
+> > @@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
+> >                 todo = 0;
+> >                 read_lock(&tasklist_lock);
+> >                 for_each_process_thread(g, p) {
+> > -                       if (p == current || !freeze_task(p))
+> > +                       if (p == current || p->exit_state || !freeze_task(p))
+> >                                 continue;
+> >
+> >                         todo++;
+> > --
+> 
+> This is basically fine by me, but I wonder what other people think.
+> 
+> Peter?
 
-On Mon, Jun 30 2025 at 09:02, Nam Cao wrote:
-> On Mon, Jun 30, 2025 at 08:55:54AM +0200, Johannes Berg wrote:
->> On Mon, 2025-06-30 at 08:51 +0200, Nam Cao wrote:
->> > Move away from the legacy MSI domain setup, switch to use
->> > msi_create_parent_irq_domain().
->> > 
->> 
->> Do you want this to go through the UML tree, or is it a dependency
->> somewhere else? In the latter case, I suppose you can add
->
-> Please take it into the UML tree.
->
->> Acked-by: Johannes Berg <johannes@sipsolutions.net>
->> Tested-by: Johannes Berg <johannes@sipsolutions.net>
+How realistic is it to have a significant amount of zombies when
+freezing? This seems like an artificial corner case at best.
 
-are you picking this up or want me to queue it?
+Zombie tasks are stuck waiting on their parent to consume their exit
+state or something, right? And those parents being frozen, they pretty
+much stay there.
 
-Thanks,
-
-        tglx
+So I suppose the logic holds, but urgh, do we really need this?
