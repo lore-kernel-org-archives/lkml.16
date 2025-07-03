@@ -1,71 +1,71 @@
 Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3961229B38
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7F7226D1B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751512197; cv=none; b=frRiYC7z/NpWeHDa3c+5PNchS/OR63Qvd6Z8rgDltqtz2YfbHkxMIMg7wMVq6RhLV2dcLPzDTgBekmS6vk56hrV5WlTb6l7PZiHdeqBR3acGJQo3cvdf0Ipvs+vMZFLpNiAy57DxUfAyIxjvbXwybuFR8qp2Nrnt7Q9X+wua8d0=
+	t=1751512223; cv=none; b=hKnMUMfd7fcNtEh9Ngxu6Rkd0AXuIUwHzkSINPicGY+oMLLfO/knFvf6D85nAUbz3CpWG9zifx8uF4XQaJMgHw8fPZ+OH4kv+MIGfqTD1JBs+414C7BMKIN0aVkMadiS/8hyudpKW77t7tu3IH+3R4dlgGriI8GmuA2Vvsv3rGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751512197; c=relaxed/simple;
-	bh=JnCo2aoHFSJ11Aw5PF1ftslLuVHtM2rnPxMlpD4sHYs=;
+	s=arc-20240116; t=1751512223; c=relaxed/simple;
+	bh=GnDP24M2FuP6ya9HMEQ8qsEoAAD+Uo+ti/fKB1+PdCc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TLGfCB09G8qEW8U60Fy/5On+ctOGmiVcBJiNIBx50ELjDqVbngeao/tetQqjHHewsU3VEloq168Y6xMpnoLPCm6hvk97iCMdLwK4+gm9BnoePNIjbw9YJjWbpftvRy+5UxVzPFL6b6EsabjpEnUB9cd73f5eYYRdKW947E03/TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tv777b7Y; arc=none smtp.client-ip=209.85.166.173
+	 To:Cc:Content-Type; b=V7TL5GARhqBQR4vTHbQ0UKviUo1vl6oJPCkB1ObeHW1oeaMM0ACcYJZxILtPnngaTOrsu2z848NWi3jNKIbr0Zk67Y/BsxjHq5olBHxJarCHyqtqTeGZPEQWyQIktYBBv/XCZNqxUg3jXy8UUvR2QqDYFi7vnJTR5sPoYqo2kls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=srFtpxVU; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tv777b7Y"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so119825ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 20:09:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="srFtpxVU"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so94635ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 20:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751512194; x=1752116994; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751512221; x=1752117021; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PwA3weHf33UXUUiOiLIv8oEn40SuH4N/NO2dHdlTtm4=;
-        b=Tv777b7YTdH2eQmEpz8OwWcMwIO6rbERaspV87/nXcQHHW2lNT2WB0VPGkOmHpWiU3
-         bs9ivfTVNEshYOgrEwY+lWqq9TUZ4tuNoDsmpjzBadwJ/o+JcbPcUakWtG7/Yw/jPNgh
-         LtzGQkUAf/fyAukY4ItfCpcK1xqmn8yX5/YpXHEh4sYJVI8ULA/TbVjR8YEZeumP5je8
-         s6L1HtBbbmZ9ks5q6/eNWWTtBC0mLi6jwbL47YNPj22/37sPyKLQfhsS2KWhWqMP4ZL/
-         Hhbksk/a3Amk6KpsOglL26y27gsovT2b5qASHZhp3GCm5Wh+pXbd+Ny2gHMFkmFNl8C3
-         8edw==
+        bh=U10Trg2+kMrB/Phnk8oajYlRaXXMBmg0wJp6OkDPPfw=;
+        b=srFtpxVUz54N+T/GfilJB7UFLiQu1UkSX7LUVPkrwu9ZE+tb8i7bsTs4uSbWoNh+jZ
+         DFngbB7rzYoJx3nqi9/wgBWY4cywWCFRrhl9Hi2ovQ0lGrOZD2nitQhwYXrIUytlTbux
+         JXYyVqIBOdHqVWrCANegkFezCeED56BrdOKZTu2LbNbLrA4HcYtXl5buPa51XHe91Y/7
+         G6GgQJpND2LmEEFGwn1zC2kM1paGvM5IskuhRNFEGf5c8S9PdYqhMm7kEUqGmTHCzZYZ
+         70j9qcs8S5wFE+eVjEea4nbqK6hDv56eIJS9HYtiQXt/NfUlysN9Rrjn0s/j+rRPly1q
+         ztfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751512194; x=1752116994;
+        d=1e100.net; s=20230601; t=1751512221; x=1752117021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PwA3weHf33UXUUiOiLIv8oEn40SuH4N/NO2dHdlTtm4=;
-        b=TtLx0C5eZQkz5f71LG7vcVRfn5kYT6Q55IFbAqtx73I5qasiUBX0InwwhYj8yH8RL7
-         EGfLy3kkI6hxgI2ouulTp9/FoA/lCfB52OYEp9PTIGs0kX0Heh42BU4cgaeGGM0vBjLM
-         oFa08Jopcc2H0GTt7gwGWHjFEx7FPv0ZWgszNUi+8zxMIlc98eWwnv4w7GtbHvOfWg2D
-         FY/R7MSg4u65mMb3o3I0t82pWtosKS3fFwM0l+eYVa+0fOQlGGZ41L96MYlIoViCncyn
-         ijh2//fNJgjX3M196Fh+2pxO5dXrAdy6c+bdQQ9saI9snEsrPGRP0A/45L/XRiEF/5/9
-         8TDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHKoy8KgFogtGrFsHg2ktTA18mqoA8ylVYF/trhXG4qHckEc4ML6ryRjsFrha9G4tHcAJspHR3QETVdeY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuiHI0hMHIHj4G6yAbBC9HSw7LNN5CobYQNWJHzOM2xiQfTLfS
-	/gQw6eoIpz1ZzGGx01zS4o1dCbFdup7oktO3+aZOA5H2dCKJYuxlsuzjPmu9IUtGh2zvvaPtPvS
-	u729TXA8vaFbYCw3Wg3CaYq/4TdQkBfxVwAtJdoma
-X-Gm-Gg: ASbGncsPvmCM0GYml2a/0tgqI37g1QXRhK08P6PS9m3VgzTUevHkM03+PMPnQN6rIhg
-	Qk8PI6EJmz84oo2ERt7nFixU2Nv2mihH/ZgYTVIADdUL3PtD1XFU6kHJQa0qainy9UgYUo8HNHL
-	pyORM39Vi0R0jI5o0LTOrDpxKQCKqTW58bZG15UoQR711D
-X-Google-Smtp-Source: AGHT+IEXHJ3CbfVBewiNP3m8cBhI4iq/+6/9THX/DJXwQBljwiviqC1+5WHP5TzSI6evYlTvpTNbgvBi0QNghl9XDGE=
-X-Received: by 2002:a05:6e02:16c6:b0:3dd:bdcc:5b29 with SMTP id
- e9e14a558f8ab-3e05d28fc57mr975795ab.21.1751512193547; Wed, 02 Jul 2025
- 20:09:53 -0700 (PDT)
+        bh=U10Trg2+kMrB/Phnk8oajYlRaXXMBmg0wJp6OkDPPfw=;
+        b=hpMEPD/E2u0CYUMgR2GkveYYs5KFvvgQtI24uJ4JplfNHqIbo90K7SjUXHo4B/N5LA
+         R3bq4fygmpoejKxTQYZOPLrIUkvlZNv7H7Hv3zgkwT6g+qZGAWovOZrgZvVh6onldOJr
+         sOKs41/zkGaSyDIBmpg/RetXOkzWE5Gwg0qDoOXMhS/Gmphg/v92ZORNzswEU/WvjzE+
+         2Fw2F7EcjmPRF60F1oycNY7XO/pVwK5Moen7YqmDvMsXeKSITW1vpOk7Xn0QXEmmlUS1
+         J/3Hr/4IN2o7VzYt+zdpCRRbkpHP8IWUxsuQMhFAYK4hVR7kXGMSjSNZCffHRgZsFuvh
+         wwOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOSRRBfzUTOAxKmhIqZH2l+5oeg3n5r04yhunTVSrx+rJHNNATO2dnA1RV/6OVes5aRNhpAZX6LXYKoV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO/kxJp5DAlCxUTIii/PAeA9z8uLF6Q+Be3bW7RQx2YcdpRJgw
+	26F11pxwEU0FSSS7wn9DUw68tH5U2iwtmuPDV8NSqzNDABG+jDXULAXC+Fmnsu4YpvPYhzcCjup
+	bQNKXEpuLuBvfoZak5zaDdZZUcc+J0Jz49ozVayqf
+X-Gm-Gg: ASbGnctvbtI+Pm4d3mBUEdc0N3SpM+EokZlvlzGqLIjKEQJ2x6RfRxkK7JlbIMU9yVu
+	O+7BZNkpvrpx42YPxWhx8FO6sf9JmTuLuxV/NILFm8cU2R9KMXz5qT4TVmAN9U+A6pjAMMf7vlI
+	EXYc11wKudwAzGHGF34Nbwq9pIon3hIN04YHev1H+A90OT
+X-Google-Smtp-Source: AGHT+IHRuHQ1sBc/LAsn38NJ7OaGp/8Lfxz6PE+0mZwxQyQdfVsg72Jo2h9/3XFBRmTQyNdPwKGAceiTdyBqMZeJaXg=
+X-Received: by 2002:a92:c245:0:b0:3dc:5cb1:8f24 with SMTP id
+ e9e14a558f8ab-3e05d272402mr1097295ab.9.1751512221092; Wed, 02 Jul 2025
+ 20:10:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703014942.1369397-1-namhyung@kernel.org> <20250703014942.1369397-6-namhyung@kernel.org>
-In-Reply-To: <20250703014942.1369397-6-namhyung@kernel.org>
+References: <20250703014942.1369397-1-namhyung@kernel.org> <20250703014942.1369397-7-namhyung@kernel.org>
+In-Reply-To: <20250703014942.1369397-7-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Jul 2025 20:09:41 -0700
-X-Gm-Features: Ac12FXxAzfpEgisJE9Q7lMR6b7WxYi4yZIZKQDLrblBd0vccQT1yOURI4IoeEyI
-Message-ID: <CAP-5=fX2gUk-R-cYjv7j4SF=Sya9hFS_7HMOpzpR6V0KSQq59w@mail.gmail.com>
-Subject: Re: [PATCH 5/8] perf sched: Fix memory leaks for evsel->priv in timehist
+Date: Wed, 2 Jul 2025 20:10:09 -0700
+X-Gm-Features: Ac12FXyY3OAmv0vbuKDrGKJL9ePo0TEvoxhw9G8HyPTny8ecMmqLgfmLP1sa9FY
+Message-ID: <CAP-5=fULGaFXNqmcvQDc-n-7OKGq1bdWFs9mY6by7HupKkYFuQ@mail.gmail.com>
+Subject: Re: [PATCH 6/8] perf sched: Use RC_CHK_EQUAL() to compare pointers
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -77,10 +77,8 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jul 2, 2025 at 6:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> It uses evsel->priv to save per-cpu timing information.  It should be
-> freed when the evsel is released.
->
-> Add the priv destructor for evsel same as thread to handle that.
+> So that it can check two pointers to the same object properly when
+> REFCNT_CHECKING is on.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -90,89 +88,23 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/builtin-sched.c | 12 ++++++++++++
->  tools/perf/util/evsel.c    | 11 +++++++++++
->  tools/perf/util/evsel.h    |  2 ++
->  3 files changed, 25 insertions(+)
+>  tools/perf/builtin-sched.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 83b5a85a91b7ffbd..a6eb0462dd5be20f 100644
+> index a6eb0462dd5be20f..087d4eaba5f7160d 100644
 > --- a/tools/perf/builtin-sched.c
 > +++ b/tools/perf/builtin-sched.c
-> @@ -2020,6 +2020,16 @@ static u64 evsel__get_time(struct evsel *evsel, u3=
-2 cpu)
->         return r->last_time[cpu];
->  }
->
-> +static void timehist__evsel_priv_destructor(void *priv)
-> +{
-> +       struct evsel_runtime *r =3D priv;
-> +
-> +       if (r) {
-> +               free(r->last_time);
-> +               free(r);
-> +       }
-> +}
-> +
->  static int comm_width =3D 30;
->
->  static char *timehist_get_commstr(struct thread *thread)
-> @@ -3314,6 +3324,8 @@ static int perf_sched__timehist(struct perf_sched *=
-sched)
->
->         setup_pager();
->
-> +       evsel__set_priv_destructor(timehist__evsel_priv_destructor);
-> +
->         /* prefer sched_waking if it is captured */
->         if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched=
-_waking"))
->                 handlers[1].handler =3D timehist_sched_wakeup_ignore;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 9c50c3960487feee..3896a04d90af71f3 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1657,6 +1657,15 @@ static void evsel__free_config_terms(struct evsel =
-*evsel)
->         free_config_terms(&evsel->config_terms);
->  }
->
-> +static void (*evsel__priv_destructor)(void *priv);
-> +
-> +void evsel__set_priv_destructor(void (*destructor)(void *priv))
-> +{
-> +       assert(evsel__priv_destructor =3D=3D NULL);
-> +
-> +       evsel__priv_destructor =3D destructor;
-> +}
-> +
->  void evsel__exit(struct evsel *evsel)
->  {
->         assert(list_empty(&evsel->core.node));
-> @@ -1687,6 +1696,8 @@ void evsel__exit(struct evsel *evsel)
->         hashmap__free(evsel->per_pkg_mask);
->         evsel->per_pkg_mask =3D NULL;
->         zfree(&evsel->metric_events);
-> +       if (evsel__priv_destructor)
-> +               evsel__priv_destructor(evsel->priv);
->         perf_evsel__object.fini(evsel);
->         if (evsel__tool_event(evsel) =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME |=
-|
->             evsel__tool_event(evsel) =3D=3D TOOL_PMU__EVENT_USER_TIME)
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 6dbc9690e0c9258c..b84ee274602d7d2b 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -280,6 +280,8 @@ void evsel__init(struct evsel *evsel, struct perf_eve=
-nt_attr *attr, int idx);
->  void evsel__exit(struct evsel *evsel);
->  void evsel__delete(struct evsel *evsel);
->
-> +void evsel__set_priv_destructor(void (*destructor)(void *priv));
-> +
->  struct callchain_param;
->
->  void evsel__config(struct evsel *evsel, struct record_opts *opts,
+> @@ -994,7 +994,7 @@ thread_atoms_search(struct rb_root_cached *root, stru=
+ct thread *thread,
+>                 else if (cmp < 0)
+>                         node =3D node->rb_right;
+>                 else {
+> -                       BUG_ON(thread !=3D atoms->thread);
+> +                       BUG_ON(!RC_CHK_EQUAL(thread, atoms->thread));
+>                         return atoms;
+>                 }
+>         }
 > --
 > 2.50.0.727.gbf7dc18ff4-goog
 >
