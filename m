@@ -1,108 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2483F2E62BF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6152F29;
+	Thu,  3 Jul 2025 12:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546716; cv=none; b=TI50iDkKXT1cKaf0roQb8M1YCsDAqmCGcRCnH0wyuwZqgbuZafpPpC06xrZarD8jbsVatrmWDtRm/yGhLn09/wejAeso8hh85mbMpLUPwcCdU5UNMwJEY/Scxs7RHTa7AJTRQXxCS3UE7B2U4eYn6idAFEgGwgrztNvUh1m1orc=
+	t=1751546804; cv=none; b=sq1MCZWPmtkYorDUAwYLQsSbjD9irWBsMwsWpMCjFHrm0lRVh3Yk31+ao3JOVWP3zjZPVhDvldnMOBNHWWn5GCCu3YwCskPifAcxHGdvGj58J+xVIPlRbS5rgbBMqwsnCsKN5f0nF1jWbwXiRrMkIMFXqZy1Isu0j/EqYRGd7wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546716; c=relaxed/simple;
-	bh=OdB9Z/1oXCZLQL4ed1pRZa1HSCO0cZgpMlg7EAntNnA=;
+	s=arc-20240116; t=1751546804; c=relaxed/simple;
+	bh=mp40cjvepCQgKtZQVLT1Hw4inCVI29fLBN8FjgZ0QI8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Z5/uxC/U1yLMDkaRQMcseVLC9jDzatuszEEVJfVbCYrM+r9dASLPoNooVyfA0ggQV1I0cujYof6pSMuCEimKqhK7xESax7VvQxpUMWQeInk/Ay6/m930BI9Y5g7h64moBxZdAdCdAutucCgP0c6F3G1Z2cynAsNfSSj5oRPKsP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LJZXvb7b; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version:Content-Type; b=iJ4JDybZc3ySq6rcmsBksQzwtJb/OXZ6ckQ9SqKAtpZ2kzvdr5mceGXNfLn9y1zFq73ItKL7OdLgxrkFwrBosqvtZ0zWSRwtE8D/b+4ct9YYk9A349Q1xpKmGgCKjp+gMLzyuDuo6i80WxXgvo0VT3aXzmPe9CS8bvz+LlCYSso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Uh/tp8cE; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LJZXvb7b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751546715; x=1783082715;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=OdB9Z/1oXCZLQL4ed1pRZa1HSCO0cZgpMlg7EAntNnA=;
-  b=LJZXvb7baWraE3bWkiVVQCJ3gIQg64AT3VTtL0bFzYEXTZ7SVpgaxBUl
-   /Ll1z6azbrUXg2O9cxDw9vWWwAqKvFpsyoz3qVzWHbxHYKfgq6RNLhxl3
-   J5+WgeL3wcJKpjJeI5MWgg+k0QXvsqmg+z3Kk9mfJym3E/OzENaD842ur
-   XwUcJEsHWBR9/jFkfIbwxiqOCqPfEtbqLSMvOBkrdbRzdDxnjKyq7BU0H
-   hgU3W3ZLNDPQGku77md9jnytRgGRI4V1LiqLj0V4XjXQyl056phN51T6m
-   1Mp0AIcBps16/2s9aZg+Pe/w+0jO88JjDOjXg/5OUonuetizSNsizgCnj
-   Q==;
-X-CSE-ConnectionGUID: 5jJVi7VoSKeecbX4VSrLrQ==
-X-CSE-MsgGUID: BW/zKISKQI6Y/vZXRSn5Yg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53965330"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="53965330"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:45:14 -0700
-X-CSE-ConnectionGUID: s9Imzx6uQLW4PADWNprNIw==
-X-CSE-MsgGUID: 93rTjm1rRCWnp/2M7aYYTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154726441"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.73])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:45:12 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, Thomas
- Gleixner <tglx@linutronix.de>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, ville.syrjala@linux.intel.com
-Subject: Re: [PATCH] iopoll: use fsleep() instead of usleep_range()
-In-Reply-To: <2axg64hx4qjg3hvk27du4yifoojpemkzht2kuxzecuggomrbyv@difktc36et6m>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250626145119.2048423-1-jani.nikula@intel.com>
- <2axg64hx4qjg3hvk27du4yifoojpemkzht2kuxzecuggomrbyv@difktc36et6m>
-Date: Thu, 03 Jul 2025 15:45:10 +0300
-Message-ID: <d5ab9db3940ae708dcbe784bc2f85563ec9755df@intel.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Uh/tp8cE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=HdJz+59RreHrgcp30WhqNIopahdkIoDA5pLVohUNIiI=; b=Uh/tp8cE95qFHsZb26LT+2R16g
+	XodkKFjokPkArTYxf0hfAqx28Rt7F53GqSftOcRdq+GQ+BBpPAnskXVRnrBOgECpIZXqxb4+Sx5ip
+	qIInEgsdgoTokD26dEoHigoD63YJQ8LZq55uTm/GQjWuhdOjN3TvLocsOJLzAbitG12MwvwxZhn36
+	d/GSUZBXLKIhtibv82gCXgvBLyP7ZveLnwIWhkEbLTZ99gdzcHk77adedrdEdMe9XQJb2ZD+a/a1Z
+	mPIKdjAT/oGwzTdiz+GE+gAFOAes1wK2wd5/QgTWbxsrFLgiD/FRsH9ElCDF7rXTT2wrIKsSXSbTM
+	VFEWGGwA==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uXJKi-00Bu9u-8x; Thu, 03 Jul 2025 14:46:32 +0200
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Bernd Schubert <bernd@bsbernd.com>,  Laura Promberger
+ <laura.promberger@cern.ch>,  Dave Chinner <david@fromorbit.com>,  Matt
+ Harvey <mharvey@jumptrading.com>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] fuse: new workqueue to periodically invalidate
+ expired dentries
+In-Reply-To: <87bjq2k0tm.fsf@igalia.com> (Luis Henriques's message of "Wed, 02
+	Jul 2025 17:35:33 +0100")
+References: <20250520154203.31359-1-luis@igalia.com>
+	<CAJfpegue3szRGZs+ogvYjiVt0YUo-=e+hrj-r=8ZDy11Zgrt9w@mail.gmail.com>
+	<87bjq2k0tm.fsf@igalia.com>
+Date: Thu, 03 Jul 2025 13:46:26 +0100
+Message-ID: <87ldp5e925.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 02 Jul 2025, Andi Shyti <andi.shyti@kernel.org> wrote:
-> Hi Jani,
+On Wed, Jul 02 2025, Luis Henriques wrote:
+
+> On Wed, Jul 02 2025, Miklos Szeredi wrote:
 >
-> On Thu, Jun 26, 2025 at 05:51:19PM +0300, Jani Nikula wrote:
->> Sometimes it's necessary to poll with long sleeps, and the accuracy of
->> usleep_range() is overkill. Use the flexible sleep helper fsleep() for
->> sleeping in the read_poll_timeout() family of macros to automatically
->> choose the appropriate method of waiting.
->> 
->> Functionally there are a few consequences for existing users:
->> 
->> - 10 us and shorter sleeps will use usleep() instead of
->>   usleep_range(). Presumably this will not be an issue.
->> 
->> - When it leads to a slack of less than 25%, msleep() will be used
->>   instead of usleep_range(). Presumably this will not be an issue, given
->>   the sleeps will be longer in this case.
->> 
->> - Otherwise, the usleep_range() slack gets switched from the begin of
->>   the range to the end of the range, i.e. [sleep/2+1..sleep] ->
->>   [sleep..sleep+sleep/2]. In theory, this could be an issue in some
->>   cases, but difficult to determine before this hits the real world.
->> 
->> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>> On Tue, 20 May 2025 at 17:42, Luis Henriques <luis@igalia.com> wrote:
+>>>
+>>> This patch adds a new module parameter 'inval_wq' which is used to star=
+t a
+>>> workqueue to periodically invalidate expired dentries.  The value of th=
+is
+>>> new parameter is the period, in seconds, of the workqueue.  When it is =
+set,
+>>> every new dentry will be added to an rbtree, sorted by the dentry's exp=
+iry
+>>> time.
+>>>
+>>> When the workqueue is executed, it will check the dentries in this tree=
+ and
+>>> invalidate them if:
+>>>
+>>>   - The dentry has timed-out, or if
+>>>   - The connection epoch has been incremented.
+>>
+>> I wonder, why not make the whole infrastructure global?  There's no
+>> reason to have separate rb-trees and workqueues for each fuse
+>> instance.
 >
-> this patch makes sense to me even with the fixes in the commit
-> message suggested byt Geert.
+> Hmm... true.  My initial approach was to use a mount parameter to enabled
+> it for each connection.  When you suggested replacing that by a module
+> parameter, I should have done that too.
+
+While starting working on this, I realised there's an additional
+complication with this approach.  Having a dentries tree per connection
+allows the workqueue to stop walking through the tree once we find a
+non-expired dentry: it has a valid timestamp *and* it's epoch is equal to
+the connection epoch.
+
+Moving to a global tree, I'll need to _always_ walk through all the
+dentries, because the epoch for a specific connection may have been
+incremented.
+
+So, I can see two options to solve this:
+
+1) keep the design as is (i.e. a tree/workqueue per connection), or
+
+2) add another flag indicating whether there has been an epoch increment
+   in any connection, and only keep walking through all the dentries in
+   that case.
+
+A third option could be to change dentries timestamps and re-order the
+tree when there's an epoch increment.  But this would probably be messy,
+and very hacky I believe.
+
+Any thoughts?
+
+Cheers,
+--=20
+Lu=C3=ADs
+
+
+>> Contention on the lock would be worse, but it's bad as it
+>> is, so need some solution, e.g. hashed lock, which is better done with
+>> a single instance.
 >
-> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+> Right, I'll think how to fix it (or at least reduce contention).
+>
+>>> The workqueue will run for, at most, 5 seconds each time.  It will
+>>> reschedule itself if the dentries tree isn't empty.
+>>
+>> It should check need_resched() instead.
+>
+> OK.
+>
+>>> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+>>> index 1fb0b15a6088..257ca2b36b94 100644
+>>> --- a/fs/fuse/dir.c
+>>> +++ b/fs/fuse/dir.c
+>>> @@ -34,33 +34,153 @@ static void fuse_advise_use_readdirplus(struct ino=
+de *dir)
+>>>         set_bit(FUSE_I_ADVISE_RDPLUS, &fi->state);
+>>>  }
+>>>
+>>> -#if BITS_PER_LONG >=3D 64
+>>> -static inline void __fuse_dentry_settime(struct dentry *entry, u64 tim=
+e)
+>>> +struct fuse_dentry {
+>>> +       u64 time;
+>>> +       struct rcu_head rcu;
+>>> +       struct rb_node node;
+>>> +       struct dentry *dentry;
+>>> +};
+>>> +
+>>
+>> You lost the union with rcu_head.   Any other field is okay, none of
+>> them matter in rcu protected code.  E.g.
+>>
+>> struct fuse_dentry {
+>>         u64 time;
+>>         union {
+>>                 struct rcu_head rcu;
+>>                 struct rb_node node;
+>>         };
+>>         struct dentry *dentry;
+>> };
+>
+> Oops.  I'll fix that.
+>
+> Thanks a lot for your feedback, Miklos.  Much appreciated.  I'll re-work
+> this patch and send a new revision shortly.
+>
+> Cheers,
+> --=20
+> Lu=C3=ADs
 
-Thanks! However I think Ville's series [1] should have more priority
-here. It's mostly orthogonal, but IMO it's more important and should go
-first. I can follow up with this one afterwards.
-
-BR,
-Jani.
-
-
-[1] https://lore.kernel.org/r/20250702223439.19752-1-ville.syrjala@linux.intel.com
-
--- 
-Jani Nikula, Intel
