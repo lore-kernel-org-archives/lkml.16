@@ -1,258 +1,108 @@
-Received: from sysclose.org (smtp.sysclose.org [69.164.214.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21683238C0D;
-	Thu,  3 Jul 2025 11:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.164.214.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CEF2E4261
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542511; cv=none; b=eUTM4ocAwHEF5QhvyiXWCkp0A0G80e/7Z9+BwDWgOjLUSjCKQ4GaL5Swfs0e1rOyCaYpj9IG4/sRcCvb/kOkBdgTgYugyhEbNPUd/cUH1e/+c4PN+VLL3Pswi87M11w/6G73i+IBjxN8atPe1DSfTUzPOwkuhyOF6rsP0CRBaCs=
+	t=1751542523; cv=none; b=Ei9EULssQh3hN5phiLWz7GLZa+Dcdf5CBsQvyOnX/ahJPQQK8q7kMHOjurATU7ILF+ebzpW+5g4e5VQHNmcwujqC+6LTfz+xVq6B/49V69ZkVAUupfeDNV0pBtUxb9WDDUW1sWqaFK5p3okfC/+dSStynvgKmlN9gE76+AUBI+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542511; c=relaxed/simple;
-	bh=6zkP3jo6Cy7SzbIRIiBMWXxf86rcBordIPBqKUeIjCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7eWAQ7BCWvoVd4GfbvFNf0/1lPHXJWhnR9xAl0lYNDk9Lj3qedaG8pwnCoJ5/ONjtr9hhj50Se2wbo69sF96LoWUHhXWrfMHEJy2/Y9KQhCHSTe4l8TIFRKhQRvwziLzkAMH/0jCtKHntdP1zbv4CU4jQUQORr585v0thjvrZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysclose.org; spf=pass smtp.mailfrom=sysclose.org; dkim=pass (2048-bit key) header.d=sysclose.org header.i=@sysclose.org header.b=Jx0VPJ3R; arc=none smtp.client-ip=69.164.214.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysclose.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sysclose.org
+	s=arc-20240116; t=1751542523; c=relaxed/simple;
+	bh=49LA24cLdBXtfBo2L/H078CwoY9pwKgiR1lZ6ffAE8g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dBdfxQ0xmblB9WHjymt8oBpbaytdrGy0YfV1dKpyT8qUcbKfLhpcvT3gDmKdH6ZDvpuAQVr0HSECmOVsymE28cft67rX+QIEW5iJd3xyVCQV1DZmL44AYHXsYlL7l4iKJjJpKu4/M6xE0IedL2LgZZ5VpK0iPiQ6IdKW1bt7bYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Vp/ex/Fc; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sysclose.org header.i=@sysclose.org header.b="Jx0VPJ3R"
-Received: from uranium (unknown [131.100.62.92])
-	by sysclose.org (Postfix) with ESMTPSA id 9EDAD396A6;
-	Thu,  3 Jul 2025 11:35:06 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 sysclose.org 9EDAD396A6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sysclose.org;
-	s=201903; t=1751542508;
-	bh=cxGTUr9emguv4AYQzJsHWOZ6cyRcKsz/Qk+cF6aMxE8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jx0VPJ3RLVThrcDJuGh0oPGfMUy50X+cYIdRQCV6RZUFRdetVibk8XZqUiZejlZw2
-	 a+sdEA7ocoDGLApgqK0ppscujvpyqRvZY6xPZQLqMPNtY91RlmSe9jvVNHOwpUoUe4
-	 sDqpZT84HY+91pVokFY0MEVAbe+iEzlZ8SU6ezkTfzyI/es/D+JgKwbt8zTN4kn7df
-	 0QUUF5VB4pc4c1GR1BBax71U/kkl2KTX+QPjfWdMeuhXu1XTZtNJL1zxbW464uHqWd
-	 p3+g0B+y/fqt67ZWjZfY3sGwP+sNxi4Ow/9S7+3kzw6swNlD6mUZk1ptedWTaam9ME
-	 701T66VH2I2VQ==
-Date: Thu, 3 Jul 2025 08:35:04 -0300
-From: Flavio Leitner <fbl@sysclose.org>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, dev@openvswitch.org,
- linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>, Simon
- Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [ovs-dev] [PATCH net-next v2] net: openvswitch: allow providing
- upcall pid for the 'execute' command
-Message-ID: <20250703083504.2394bc61@uranium>
-In-Reply-To: <20250702155043.2331772-1-i.maximets@ovn.org>
-References: <20250702155043.2331772-1-i.maximets@ovn.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Vp/ex/Fc"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235f9e87f78so57417255ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751542522; x=1752147322; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dIC4vniCF6Jqd7vCiFRupPwWt+zfgF+lY4LJeYjZ13c=;
+        b=Vp/ex/FceUlpkTv2zGSo1C/R119wc2WGt5NcZ8K0AcE5w0x75eSzzraltS5NKp1d6T
+         TXaNS6bsuCMj5wQHTYQdjKRbJ7I4CZFhu4ltEMmEH4RLRdwsblO89PwHDFqe6hOx4TPT
+         tkrydgbxQ4i1XUBioAxPUQ0u5/VSklhf+Ok6FmFJ9cZGyQTlPOnfMuNFXSb+CU5Y/JrV
+         jogtqivkN7GaLdP7+aBhSSTQAf+q7xbmqYTGXFipdgbfc6FM54rb5/UyEx49Jt3JUd75
+         0+4lRWnLA6z2liwZVAvdhvN+583iBiYY1z50OgI1Zq3mzE9l8BocLcPfDXok8mQcsj7J
+         oQoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751542522; x=1752147322;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dIC4vniCF6Jqd7vCiFRupPwWt+zfgF+lY4LJeYjZ13c=;
+        b=X71O9Hkdta5du9l41OPW/fm8YeXAznzxwlB/rKxQ/jGd/uO/cnJKtzj54H5/RxH/jP
+         kQBDSkG0iKq3NsxqO+WuUWqZ6rhgtiBpohJWk0+/MAiriSxP9Zw+vGUTcv0q3SIdttLw
+         mkmw0zY5JTJ71LiQ2sUL1kqX5IStXP878owRmN71tWErFaTvAcw4snduYmaBE4YZAuBD
+         twuHsOOyWIZW9bpal6Zrq7RgXiaKvFqcgcM9Q6TDCvL/SyQlhWyW1uG3wKxaJo6H7nWx
+         hGCwyYslbSfG8noD2ibASdE8DrtrjJDQ6O2YJLTq8rWPbLV/jGG+T7XE6JfMmCm3u7AX
+         DcNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqQ17v52ccAIfrrMcART/Iets6A1ahMb0lXWYV23cr6roWyy81RWz/DuhFEC7SAbqoxl0E45NSrlDa9sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFMOCq1K6V8nhGqp7zJbY1X7tcsXoZ+4tCfb4GchFjoSNCPz6L
+	sKI2KZWHvzpGvFu/en8Ym7OQ5Um232lMPyKduHZNY1FBS8VqTX5asIWW/ruwf8LAuOc=
+X-Gm-Gg: ASbGnctpjymC7PmfXkSB2T2CjR0FnNLzxg5QNZros+qbXeOh794RJHdGC8bqQXUkgfq
+	6ILU09eVkBbR4Nag9OFsG72aljo9rXbGXnkbhLHhjp0VB7CgiU0nqjY2PvUUKiUQvAvQSzmBOmm
+	4E57/pHFs1V4a+sUaDlDdBCNI4+yagpR8S+7/O540vS0HjhozldOd10BeWa2ZtrGZCXxYqw4xYu
+	lI1OFad7Ijlu1G8dv57U0ELVKxW25kVV0u1gTbJ8qKcp/FgvRbDHTUG1vy8aHqGS2hymnxOWPDQ
+	wuUpF9+4wLcB5wUIkFXMvsimIlLHHsnc+Wy5fYs43WJT5EPJfCBELXjIDscqSwn5W71cHZ2wHJG
+	tywWXpHszYo43K3PzA6fLCFw=
+X-Google-Smtp-Source: AGHT+IH36VF/CIGqz+2J2aqsF/vYGGyR1x2CSKcSaVSwMlw7fNYhqdolTNSbc3ljFBefYDzlONxU4g==
+X-Received: by 2002:a17:903:1b2f:b0:21f:1202:f2f5 with SMTP id d9443c01a7336-23c79624058mr36281695ad.8.1751542521730;
+        Thu, 03 Jul 2025 04:35:21 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cd0ba3dsm2094455a91.36.2025.07.03.04.35.18
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 03 Jul 2025 04:35:21 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: jgg@ziepe.ca
+Cc: alex.williamson@redhat.com,
+	david@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH 0/4] vfio/type1: optimize vfio_pin_pages_remote() and vfio_unpin_pages_remote() for large folio
+Date: Thu,  3 Jul 2025 19:35:15 +0800
+Message-ID: <20250703113515.66745-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250703111216.GG904431@ziepe.ca>
+References: <20250703111216.GG904431@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed,  2 Jul 2025 17:50:34 +0200
-Ilya Maximets <i.maximets@ovn.org> wrote:
+On Thu, 3 Jul 2025 08:12:16 -0300, jgg@ziepe.ca wrote:
 
-> When a packet enters OVS datapath and there is no flow to handle it,
-> packet goes to userspace through a MISS upcall.  With per-CPU upcall
-> dispatch mechanism, we're using the current CPU id to select the
-> Netlink PID on which to send this packet.  This allows us to send
-> packets from the same traffic flow through the same handler.
+> On Thu, Jul 03, 2025 at 01:06:26PM +0200, David Hildenbrand wrote:
+> > > +{
+> > > +	struct page *first_page = pages[0];
+> > > +	unsigned long i;
+> > > +
+> > > +	for (i = 1; i < size; i++)
+> > > +		if (pages[i] != nth_page(first_page, i))
+> > > +			break;
+> > > +	return i;
+> > > +}
+> > 
+> > LGTM.
+> > 
+> > I wonder if we can find a better function name, especially when moving this
+> > to some header where it can be reused.
 > 
-> The handler will process the packet, install required flow into the
-> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
+> It should be a common function:
 > 
-> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
-> recirculation action that will pass the (likely modified) packet
-> through the flow lookup again.  And if the flow is not found, the
-> packet will be sent to userspace again through another MISS upcall.
-> 
-> However, the handler thread in userspace is likely running on a
-> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
-> in the syscall context of that thread.  So, when the time comes to
-> send the packet through another upcall, the per-CPU dispatch will
-> choose a different Netlink PID, and this packet will end up processed
-> by a different handler thread on a different CPU.
-> 
-> The process continues as long as there are new recirculations, each
-> time the packet goes to a different handler thread before it is sent
-> out of the OVS datapath to the destination port.  In real setups the
-> number of recirculations can go up to 4 or 5, sometimes more.
-> 
-> There is always a chance to re-order packets while processing upcalls,
-> because userspace will first install the flow and then re-inject the
-> original packet.  So, there is a race window when the flow is already
-> installed and the second packet can match it and be forwarded to the
-> destination before the first packet is re-injected.  But the fact that
-> packets are going through multiple upcalls handled by different
-> userspace threads makes the reordering noticeably more likely, because
-> we not only have a race between the kernel and a userspace handler
-> (which is hard to avoid), but also between multiple userspace handlers.
-> 
-> For example, let's assume that 10 packets got enqueued through a MISS
-> upcall for handler-1, it will start processing them, will install the
-> flow into the kernel and start re-injecting packets back, from where
-> they will go through another MISS to handler-2.  Handler-2 will install
-> the flow into the kernel and start re-injecting the packets, while
-> handler-1 continues to re-inject the last of the 10 packets, they will
-> hit the flow installed by handler-2 and be forwarded without going to
-> the handler-2, while handler-2 still re-injects the first of these 10
-> packets.  Given multiple recirculations and misses, these 10 packets
-> may end up completely mixed up on the output from the datapath.
-> 
-> Let's allow userspace to specify on which Netlink PID the packets
-> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
-> This makes it possible to ensure that all the packets are processed
-> by the same handler thread in the userspace even with them being
-> upcalled multiple times in the process.  Packets will remain in order
-> since they will be enqueued to the same socket and re-injected in the
-> same order.  This doesn't eliminate re-ordering as stated above, since
-> we still have a race between kernel and the userspace thread, but it
-> allows to eliminate races between multiple userspace threads.
-> 
-> Userspace knows the PID of the socket on which the original upcall is
-> received, so there is no need to send it up from the kernel.
-> 
-> Solution requires storing the value somewhere for the duration of the
-> packet processing.  There are two potential places for this: our skb
-> extension or the per-CPU storage.  It's not clear which is better,
-> so just following currently used scheme of storing this kind of things
-> along the skb.  We still have a decent amount of space in the cb.
-> 
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
+>   unsigned long num_pages_contiguous(struct page *list, size_t nelms);
 
-Acked-by: Flavio Leitner <fbl@sysclose.org>
-Thanks!
+I fully agree with you.
 
-
-> ---
-> 
-> Version 2:
->   * Converted to use nla_get_u32_default() instead of plain-coding it.
-> 
-> Version 1:
->   *
-> https://lore.kernel.org/netdev/20250627220219.1504221-1-i.maximets@ovn.org/
-> 
->  include/uapi/linux/openvswitch.h | 6 ++++++
->  net/openvswitch/actions.c        | 6 ++++--
->  net/openvswitch/datapath.c       | 8 +++++++-
->  net/openvswitch/datapath.h       | 3 +++
->  net/openvswitch/vport.c          | 1 +
->  5 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/openvswitch.h
-> b/include/uapi/linux/openvswitch.h index 3a701bd1f31b..3092c2c6f1d2 100644
-> --- a/include/uapi/linux/openvswitch.h
-> +++ b/include/uapi/linux/openvswitch.h
-> @@ -186,6 +186,11 @@ enum ovs_packet_cmd {
->   * %OVS_PACKET_ATTR_USERSPACE action specify the Maximum received fragment
->   * size.
->   * @OVS_PACKET_ATTR_HASH: Packet hash info (e.g. hash, sw_hash and l4_hash
-> in skb).
-> + * @OVS_PACKET_ATTR_UPCALL_PID: Netlink PID to use for upcalls while
-> + * processing %OVS_PACKET_CMD_EXECUTE.  Takes precedence over all other
-> ways
-> + * to determine the Netlink PID including %OVS_USERSPACE_ATTR_PID,
-> + * %OVS_DP_ATTR_UPCALL_PID, %OVS_DP_ATTR_PER_CPU_PIDS and the
-> + * %OVS_VPORT_ATTR_UPCALL_PID.
->   *
->   * These attributes follow the &struct ovs_header within the Generic
-> Netlink
->   * payload for %OVS_PACKET_* commands.
-> @@ -205,6 +210,7 @@ enum ovs_packet_attr {
->  	OVS_PACKET_ATTR_MRU,	    /* Maximum received IP fragment
-> size. */ OVS_PACKET_ATTR_LEN,	    /* Packet size before truncation.
-> */ OVS_PACKET_ATTR_HASH,	    /* Packet hash. */
-> +	OVS_PACKET_ATTR_UPCALL_PID, /* u32 Netlink PID. */
->  	__OVS_PACKET_ATTR_MAX
->  };
->  
-> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-> index 3add108340bf..2832e0794197 100644
-> --- a/net/openvswitch/actions.c
-> +++ b/net/openvswitch/actions.c
-> @@ -941,8 +941,10 @@ static int output_userspace(struct datapath *dp,
-> struct sk_buff *skb, break;
->  
->  		case OVS_USERSPACE_ATTR_PID:
-> -			if (dp->user_features &
-> -			    OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
-> +			if (OVS_CB(skb)->upcall_pid)
-> +				upcall.portid = OVS_CB(skb)->upcall_pid;
-> +			else if (dp->user_features &
-> +				 OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
->  				upcall.portid =
->  				  ovs_dp_get_upcall_portid(dp,
->  							   smp_processor_id());
-> diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-> index b990dc83504f..d5b6e2002bc1 100644
-> --- a/net/openvswitch/datapath.c
-> +++ b/net/openvswitch/datapath.c
-> @@ -267,7 +267,9 @@ void ovs_dp_process_packet(struct sk_buff *skb, struct
-> sw_flow_key *key) memset(&upcall, 0, sizeof(upcall));
->  		upcall.cmd = OVS_PACKET_CMD_MISS;
->  
-> -		if (dp->user_features & OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
-> +		if (OVS_CB(skb)->upcall_pid)
-> +			upcall.portid = OVS_CB(skb)->upcall_pid;
-> +		else if (dp->user_features &
-> OVS_DP_F_DISPATCH_UPCALL_PER_CPU) upcall.portid =
->  			    ovs_dp_get_upcall_portid(dp,
-> smp_processor_id()); else
-> @@ -651,6 +653,9 @@ static int ovs_packet_cmd_execute(struct sk_buff *skb,
-> struct genl_info *info) !!(hash & OVS_PACKET_HASH_L4_BIT));
->  	}
->  
-> +	OVS_CB(packet)->upcall_pid =
-> +		nla_get_u32_default(a[OVS_PACKET_ATTR_UPCALL_PID], 0);
-> +
->  	/* Build an sw_flow for sending this packet. */
->  	flow = ovs_flow_alloc();
->  	err = PTR_ERR(flow);
-> @@ -719,6 +724,7 @@ static const struct nla_policy
-> packet_policy[OVS_PACKET_ATTR_MAX + 1] = { [OVS_PACKET_ATTR_PROBE] = {
-> .type = NLA_FLAG }, [OVS_PACKET_ATTR_MRU] = { .type = NLA_U16 },
->  	[OVS_PACKET_ATTR_HASH] = { .type = NLA_U64 },
-> +	[OVS_PACKET_ATTR_UPCALL_PID] = { .type = NLA_U32 },
->  };
->  
->  static const struct genl_small_ops dp_packet_genl_ops[] = {
-> diff --git a/net/openvswitch/datapath.h b/net/openvswitch/datapath.h
-> index cfeb817a1889..db0c3e69d66c 100644
-> --- a/net/openvswitch/datapath.h
-> +++ b/net/openvswitch/datapath.h
-> @@ -121,6 +121,8 @@ struct datapath {
->   * @cutlen: The number of bytes from the packet end to be removed.
->   * @probability: The sampling probability that was applied to this skb; 0
-> means
->   * no sampling has occurred; U32_MAX means 100% probability.
-> + * @upcall_pid: Netlink socket PID to use for sending this packet to
-> userspace;
-> + * 0 means "not set" and default per-CPU or per-vport dispatch should be
-> used. */
->  struct ovs_skb_cb {
->  	struct vport		*input_vport;
-> @@ -128,6 +130,7 @@ struct ovs_skb_cb {
->  	u16			acts_origlen;
->  	u32			cutlen;
->  	u32			probability;
-> +	u32			upcall_pid;
->  };
->  #define OVS_CB(skb) ((struct ovs_skb_cb *)(skb)->cb)
->  
-> diff --git a/net/openvswitch/vport.c b/net/openvswitch/vport.c
-> index 8732f6e51ae5..6bbbc16ab778 100644
-> --- a/net/openvswitch/vport.c
-> +++ b/net/openvswitch/vport.c
-> @@ -501,6 +501,7 @@ int ovs_vport_receive(struct vport *vport, struct
-> sk_buff *skb, OVS_CB(skb)->mru = 0;
->  	OVS_CB(skb)->cutlen = 0;
->  	OVS_CB(skb)->probability = 0;
-> +	OVS_CB(skb)->upcall_pid = 0;
->  	if (unlikely(dev_net(skb->dev) != ovs_dp_get_net(vport->dp))) {
->  		u32 mark;
->  
-
+Thanks,
+Zhe
