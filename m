@@ -1,129 +1,265 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B16429C33E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1002E2F09
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751540074; cv=none; b=Az/I+DtmoawauIQLmPT0Os1yuAQIpnm12vghAUwwgNxRoq8DHqe96eJlZfrKqv8j3V66NQzN+EpugUIsjxxY1Hj+iWKXholCaLe60CIlQMejlwbOEEVWP+CZGL7Xj2WUrzAvPnE0np+ZEi9dhnL0LFvNbjh4qAslYPBj5auhNtU=
+	t=1751540074; cv=none; b=FWz2oMOUON+cvl/QEWrGyAvRKMZR9OK0rOlbI0HNwRL+VHPgzbAyFyFc5Rhu02uQt30avsrwNZETKTXMqJDJBrusdKCRspFHa5l6xuzeubvExEkKbx29JNqOgAWBqfkRkgEhgWDg/HCrmfEhM2cJYV2O+GdD6vZPV3Pz076MYjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751540074; c=relaxed/simple;
-	bh=9Um7uqVayv1y9jJFqULzHKt3MEGzxLbLkz23BHaitvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ndm3iV0MGIWR6PcFMxHqD8BZiB5uC601amTbwM+ZO7VW4IQIo7t83IhYp7s4+u9P8XjeGnB2T6bPC+Lguh6LLNEG+fiFSpvAeDjbYBtquV5/wWmzhUhkhcQzQPxCo/ZYQKkT4QCwAYZLcnP9m1tetBSdYzVez8TmM5LZsRmkSTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=XsywZlyF; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	bh=RgNcL93BMmoiZOwzy9RKRHXKIXRtNdOMVlR7++CYF/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U2LU08LVnMpVDomGtMHu9eTXuLrAkzHeD9yNMXGz5saHCTqaymZ11x7r8E1UwrIlT1S4oxLZ6ZgaD1ISPmACySWRGnaEAaqIiPEPSr/Pup+HhyP+RrtJ+LPUF1Om2Hw5xfX3Oi43/FfqqHejE29iYt6WVZvfZ7IGkMnMcMMDXjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zdwYXmzy; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="XsywZlyF"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234f17910d8so76559425ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:54:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zdwYXmzy"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a522224582so4090315f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751540073; x=1752144873; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2s+0RaBS3vJpNgepBHSmk/I/U4Dvicv46WDE7RU8TKg=;
-        b=XsywZlyFZKDwUjRTunWPaMQwmKfQIjlzjqhqMs2eLfuv79cc9CIu/BAOs4yJmruXaD
-         5ztuQUrvRkFL7ZAawFO90LoW+h8TavRg5CzQG1pfOqo0IusW2IMivbJRH5Zvu+smQLg6
-         KxUq+pTXMQFXXGU72hipZUFB9eMR3yoAbYSKoR//9rKWG/0NB94qmMSmfhYFbiyb/xKG
-         xd1T1h0RgelmR+PAR4b2WKuU2efv3cQAXqMavOKaqhO6AVfHYi+0R/vIidaj3BoUGhxO
-         xhu628Bny1QzZ481DpjTr5kUXw5axzJinK3MRsJ1w0fwG/hMJjFN6p3eNZ1yn78SEmwz
-         aN3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751540073; x=1752144873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751540071; x=1752144871; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2s+0RaBS3vJpNgepBHSmk/I/U4Dvicv46WDE7RU8TKg=;
-        b=R4jdJDsDh0iQenwNdq7KzL6avegb6Y08AwYWHBfVFarrSBhF2hrlhkSb92tEyyxuah
-         IW3QCLvcwTFPrALWY7vAnLQwUD+1h6u0NjwHDX3rnr6gnrIrV44aR+T7yCCuQar0f/bd
-         ixwM1xMkRgjivzGq8jWLn0PTYmLR5F9wQxDiQnkPhPYtNIGMaRPjYIzjc4VY1hjJ5Fkh
-         qO53ZUE5BNL1DiWUIXWdulolnssw85jHhy9YrqiVzNg7V2D9Q4gGQC3en6snxBj3/Fw2
-         9SX/pDNWBIJdqqSKpvebg+j68Izf8kDowE2dcQ7fCUtpAMs9eIdNl7Mp+NZvYLNN7jGL
-         PxLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWA6uJMMX9aK+PJr8fkvkqSenCUQOYOfoMDR/0Xb/RxQnzKQaDdOjSDDYPA75OgPVBcaYUu7JQFu8YgMHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMqCkr6UgwqmfzTLJkC69ujo8HKOcdessAtrYI5qUypJhWSeQE
-	R7+vjggMc/Pxpn++AwIb24/8ht5NITLeqqSA0XidCDrKZog9BQh4XVuTLkdVwYAQCn8=
-X-Gm-Gg: ASbGncsjddi/HgJk56PSnDt+X273cwJ9CSO+yLw/TZgk9qBttj/AB5/SwFWe9FAuxD6
-	TflWSE3VmYjISwHeoVS8p7L4UgB8WmTU1cnwGZ4oHjCcXjlE4kXPiFJ5+pIxis1fqFY7eEgHkxw
-	gsJA4fg2YQRTBT+5hycxYSIMhESKQbAHaeumf9zz40mFEa9LF8iC6neUH+tr2WdQMUwFxJyAN6r
-	V6qSgldVmXw2kLROCuZOFaFTxXTpp3q+US9LiyWZJ6bYUs7oZFmLa2laL9PM52reSIviplfeHiG
-	5IBATETkZsq/7c7+bm4Drgc41hF/z905PjsBS4eFLNKLo4iyCQwdmrpKUPxel/tG/beylw==
-X-Google-Smtp-Source: AGHT+IFq25HTQ9QEIhNCp27zmZLx97EGsAxug71BXz+j7RxWXx0ck3JUwKi8dLTS3DtAE17Jq1LekQ==
-X-Received: by 2002:a17:903:2307:b0:234:8a4a:adad with SMTP id d9443c01a7336-23c797fd795mr34397665ad.26.1751540072871;
-        Thu, 03 Jul 2025 03:54:32 -0700 (PDT)
-Received: from sunil-laptop ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b9344sm158881255ad.192.2025.07.03.03.54.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:54:32 -0700 (PDT)
-Date: Thu, 3 Jul 2025 16:24:18 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 21/24] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aGZhWlxxQG0Z8awP@sunil-laptop>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-22-apatel@ventanamicro.com>
- <aGUl_S9irfhlHmy2@smile.fi.intel.com>
+        bh=txbv/v+IJnhaJQYXgtX5pE98Wu6gJw5FJNfTHHHCGQQ=;
+        b=zdwYXmzyYQq6K5lLwjD1HQHdb010kBjbjiSzS0KkdFbONZ5NUo9TXVcP/7ELlg+6Ct
+         YVbuz6Jg3j38kBo6WoenHht2AhDC4bIZn3WShCKtVC44dGlQHZJ0QN33IGxnancQTTXN
+         2t42z2iHS/M7uwKRouaT0K2c49/6fI0N1MUA1SU10N0QffJKRneuNafoAnF6dsSPauIp
+         f0bq6gKjJdaMDXrSCzNhB9NJI/cBJ1x3OpGfFFzu13urjAWb7+pREj0v+7rFyZRzKxX1
+         xifBkzTSUZX86pzWjjy3d84fMv/pIEQjWYerptiN5tpCxbvjFaEEQEosIcIHMbGNzqax
+         Y0og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751540071; x=1752144871;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=txbv/v+IJnhaJQYXgtX5pE98Wu6gJw5FJNfTHHHCGQQ=;
+        b=VFIQi6rnu+Mlh8E92JB+FLCtqZQHS2eX9LAEJHBAHok7/qqoG2QArIf2A0OH+sfqPU
+         Yc/aEN7DmYddaQRG9A9DrqYl2i9rIaKVb3eGzgCK3yEPh89KpzWdWYMu3iregqQHUDyT
+         X0VOiPKoi5KwQ3IOIyyBqQ6f3lX1e+rE/AuVztSfSIccy7zDoQOoSV18Ji90uiUvaGpD
+         mIdKGBVg6iOt269KgotPd/u8+zE73A5I+/L1Ex7rgpvPPGj73z5yEi8q4uG9Aw7S4c9b
+         GlWL7TToj5/ZV4Inxi0o/AuvY3Hp1VenG3N7WYPTbTJDuvY5cF7ZiPuU4zNVzG01TeYD
+         /miQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHyvWUck3IdFfmmSHgpWLXqlrQvCU4Z7z5yalVgQ9aDcgX1OlbrKM1QBsMQVWavdMgwm+XoIh/Uv9+2Fc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/r0YC/lHHQKZgLWEgco9I5G8kmyb9yJL/t+WRpOB/AtuQXthr
+	5AL8Z4usWlsSJMrvByrUs7SgN4eQjLr4eDFd/6Y8Qf8AEk/kxE2W89jY6Hfcn4Th2qRM2afW1NN
+	53loG58GqyS4GSyxNgoZrp66dmlcJ5VB7a3d+xWD2
+X-Gm-Gg: ASbGncu6uk21YuxDFKxE/s+ZDgZNimGzZKNdhuyvWMxp3fc76KNxtMz7MkioRwrSpm4
+	9epvcJeF/CszGm5S6nZDcenAWuHGqa/X9GdkVe0I8QakxCpBKnE9qT3UnoEJ/pbU0IyevzAKaco
+	ddoLLOq/L8fPF6NqQttXAbcry7w5dnszf2ZlpawD0jZibK0inaUxnTjc/XgGubHiS6rOJuxCLzc
+	A==
+X-Google-Smtp-Source: AGHT+IHw+OmwbsPnER5y3bOhHH6dIzQU/wmEoRtPIcFiVQoP0t1m30DD+YmugjsLrcN51rME03/iKufPzJK3sT+gXlc=
+X-Received: by 2002:a5d:64ef:0:b0:3b3:9c75:bb0e with SMTP id
+ ffacd0b85a97d-3b39c75bcabmr1496075f8f.11.1751540070595; Thu, 03 Jul 2025
+ 03:54:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGUl_S9irfhlHmy2@smile.fi.intel.com>
+References: <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
+ <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org> <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
+ <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org> <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
+ <aGLUl7ZtuQBPoCuv@pollux> <2025070131-icon-quarters-0c16@gregkh>
+ <aGPtCBB6nWTNJuwK@pollux> <2025070137-tartar-juncture-fcd2@gregkh>
+ <aGP6d2-jJy5rtjMK@pollux> <aGZVUqangIR-c4aW@google.com> <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org>
+In-Reply-To: <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 3 Jul 2025 12:54:18 +0200
+X-Gm-Features: Ac12FXz4wcIvdCoLgteoK4wV0gDkGf_IPAS-c0UXryLVZEMWGtAf8WARILZXomA
+Message-ID: <CAH5fLgjaNzOHNxa+XY1c2V5A1H2RhWP9gHAAmHx=9LN9CbHq=Q@mail.gmail.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing for File
+To: Benno Lossin <lossin@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 03:28:45PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 10:43:42AM +0530, Anup Patel wrote:
-> > From: Sunil V L <sunilvl@ventanamicro.com>
-> > 
-> > Add ACPI support for the RISC-V SBI message proxy (MPXY) based
-> > mailbox driver.
-> 
-> ...
-> 
-> > -		if (dev_of_node(dev))
-> > +		if (is_of_node(fwnode)) {
-> >  			of_msi_configure(dev, dev_of_node(dev));
-> > +		} else if (is_acpi_device_node(fwnode)) {
-> > +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> > +							      DOMAIN_BUS_PLATFORM_MSI);
-> > +			dev_set_msi_domain(dev, msi_domain);
-> > +		}
-> 
-> Actually you don't need to have the if-else-if if I am not mistaken.
-> The OF does almost the same as it's done in the second branch for ACPI case.
-> How many MSI parents this may have?
-> 
-OF already has a well defined interface to configure the MSI domain. The
-mechanisms existing today are different for DT vs ACPI to find out the
-fwnode of the MSI controller. So, it is done differently.
+On Thu, Jul 3, 2025 at 12:33=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> On Thu Jul 3, 2025 at 12:02 PM CEST, Alice Ryhl wrote:
+> > On Tue, Jul 01, 2025 at 05:10:47PM +0200, Danilo Krummrich wrote:
+> >> On Tue, Jul 01, 2025 at 04:21:56PM +0200, Greg Kroah-Hartman wrote:
+> >> > On Tue, Jul 01, 2025 at 04:13:28PM +0200, Danilo Krummrich wrote:
+> >> > > Instead this should just be:
+> >> > >
+> >> > >  struct GPU {
+> >> > >     fw: debugfs::File<Firmware>,
+> >> > >  }
+> >> > >
+> >> > > and then I would initialize it the following way:
+> >> > >
+> >> > >  let fw =3D KBox::new(Firmware::new(), GFP_KERNEL)?;
+> >> > >  let file =3D dir.create_file("firmware", fw);
+> >> > >
+> >> > >  // debugfs::File<Firmware> dereferences to Firmware
+> >> > >  file.do_something();
+> >> > >
+> >> > >  // Access to fw is prevented by the compiler, since it has been m=
+oved
+> >> > >  // into file.
+> >> > >
+> >> > > This is much better, since now I have the guarantee that my Firmar=
+e instance
+> >> > > can't out-live the GPU instance.
+> >> >
+> >> > That's better, yes, but how would multiple files for the same
+> >> > "structure" work here?  Like a debugfs-file-per-field of a structure
+> >> > that we often have?
+> >>
+> >> That is a very good question and I thought about this as well, because=
+ with only
+> >> the current API this would require us to have more and more dynamic al=
+locations
+> >> if we want to have a more fine grained filesystem representations of s=
+tructures.
+> >>
+> >> The idea I have for this is to use pin-init, which we do in quite some=
+ other
+> >> places as well.
+> >>
+> >> I think we can add an additional API like this:
+> >>
+> >>      impl Dir {
+> >>         pub fn create_file<T>(&self, data: impl PinInit<T>) -> impl Pi=
+nInit<Self> {
+> >>            pin_init!(Self {
+> >>               data <- data,
+> >>               ...
+> >>            })
+> >>         }
+> >>      }
+> >>
+> >> This allows us to do things like:
+> >>
+> >>      #[pin_data]
+> >>      struct Firmware {
+> >>         #[pin]
+> >>         minor: debugfs::File<u32>,
+> >>         #[pin]
+> >>         major: debugfs::File<u32>,
+> >>         #[pin]
+> >>         buffer: debugfs::File<[u8]>,
+> >>      }
+> >>
+> >>      impl Firmware {
+> >>         pub fn new(&dir: debugfs::Dir, buffer: [u8]) -> impl PinInit<S=
+elf> {
+> >>            pin_init!(Self {
+> >>               minor <- dir.create_file("minor", 1),
+> >>               major <- dir.create_file("major", 2),
+> >>               buffer <- dir.create_file("buffer", buffer),
+> >>            })
+> >>         }
+> >>      }
+> >>
+> >>      // This is the only allocation we need.
+> >>      let fw =3D KBox::pin_init(Firmware::new(...), GFP_KERNEL)?;
+> >>
+> >> With this everything is now in a single allocation and since we're usi=
+ng
+> >> pin-init, Dir::create_file() can safely store pointers of the correspo=
+nding data
+> >> in debugfs_create_file(), since this structure is guaranteed to be pin=
+ned in
+> >> memory.
+> >>
+> >> Actually, we can also implement *only this*, since with this my previo=
+us example
+> >> would just become this:
+> >>
+> >>      struct GPU {
+> >>         fw: debugfs::File<Firmware>,
+> >>      }
+> >>
+> >>      let file =3D dir.create_file("firmware", Firmware::new());
+> >>      let file =3D KBox::pin_init(file, GFP_KERNEL)?;
+> >>
+> >>      // debugfs::File<Firmware> dereferences to Firmware
+> >>      file.do_something();
+> >>
+> >> Given that, I think we should change things to use pin-init right away=
+ for the
+> >> debugfs::File API.
+> >
+> > Does this actually work in practice for anything except immutable data?
+> > I mean, let's take Rust Binder as an example and lets say that I want t=
+o
+> > expose a directory for each Process object with some of the fields
+> > exposed. Let's just simplify Rust Binder a bit and only include some of
+> > the fields:
+> >
+> > #[pin_data]
+> > struct Process {
+> >     task: ARef<Task>,
+> >     #[pin]
+> >     inner: SpinLock<ProcessInner>,
+> > }
+> >
+> > pub(crate) struct ProcessInner {
+> >     threads: RBTree<i32, Arc<Thread>>,
+> >     nodes: RBTree<u64, DArc<Node>>,
+> >     requested_thread_count: u32,
+> >     max_threads: u32,
+> >     started_thread_count: u32,
+> > }
+> >
+> > Rust Binder already does expose some debugging data through a file
+> > system, though it doesn't do so using debugfs. It exposes a lot of data=
+,
+> > but among them are the pid, the number of threads and nodes, as well as
+> > the values of requested_thread_count, started_thread_count, and
+> > max_threads.
+> >
+> > Now, we run into problem number one: pinning is not supported inside
+> > mutexes. But let's say we solved that and we could do this:
+> >
+> > #[pin_data]
+> > struct Process {
+> >     task: File<ARef<Task>>, // prints the pid
+> >     #[pin]
+> >     inner: SpinLock<ProcessInner>,
+> > }
+> >
+> > pub(crate) struct ProcessInner {
+> >     threads: File<RBTree<i32, Arc<Thread>>>, // prints the count
+> >     nodes: File<RBTree<u64, DArc<Node>>>, // prints the count
+> >     requested_thread_count: File<u32>,
+> >     max_threads: File<u32>,
+> >     started_thread_count: File<u32>,
+> > }
+> >
+> > However, this still doesn't work! Debugfs may get triggered at any time
+> > and need to read these fields, and there's no way for it to take the
+> > spinlock with the above design - it doesn't know where the spinlock is.
+> > For the integers I guess we could make them atomic to allow reading the=
+m
+> > in parallel with mutation, but that option is not available for the
+> > red/black trees.
+> >
+> > What is the intended solution in this case? If the argument is that thi=
+s
+> > is a rare case, then keep in mind that this is a real-world example of
+> > debugging information that we actually expose today in a real driver.
+> > With Matt's current approach, it's relatively easy - just store a bunch
+> > of File<Arc<Process>> instances somewhere and define each one to take
+> > the mutex and print the relevant value.
+>
+> How would your example look like with the current approach? IIUC, it
+> also wouldn't work, because the debugfs data can't be mutated?
 
-In RISC-V case at least, there will be only one MSI parent.
+I would store a bunch of `File<Arc<Process>>` instances somewhere.
+Each one has a closure that takes the spinlock and prints the
+appropriate value.
 
-Thanks,
-Sunil
+Alice
