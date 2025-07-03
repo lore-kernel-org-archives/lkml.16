@@ -1,124 +1,95 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1FE158535;
-	Thu,  3 Jul 2025 16:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1205022CBF1;
+	Thu,  3 Jul 2025 16:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560536; cv=none; b=iHbFtHlUaEXMofunICr+WLBoP2i/0EcIQpqqujDLZ7Cw5zayPa01Mx8yoGuLn8Z7QoGtVctm7x34C9bmdKyMiGNgerYtEaBHs/z3mLrFqyP45/uMlTqYx2kRHf5NSyv95+ih/OaeNPMObIunpYpk7efgpYdKVyxyccJjoULr/48=
+	t=1751560553; cv=none; b=FNceYzmzi7bNTshCzaRXAg9QksivF7aOhRc5choKZakIMyzWpXfhzT7N97I8bUBmjsKXv/p+7toXW/anABjzFYfj4+ypiznXuJhYMiQPxr4dxjdeCaGTnahMoZ+LPiu2SfHYuyh0A6MYPdTW2RlHPGnG2cAjB3sYwq9o2/qW8xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560536; c=relaxed/simple;
-	bh=mitvISWYz9VXM4jc5Q04XMHY5jFnGMTPup9ISmOOkYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gJ9jpFy10p7Iu7N+ERRQYynpSg0SEr1EHWJq7uLrOmpHIwW+aPbibqKiCZ/1vnL8VLQdbsa+CYmoCAXJYf9xrTJRR2MsP/4atkzdqvnciii+wNCJyQTM2ViKCRA50I01UuSt5Q7bpk+1NCALUZHHtT1h3PX5YoE0hhy/ZjZHG3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UY5FOgby; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UY5FOgby"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-710bbd7a9e2so857b3.0;
-        Thu, 03 Jul 2025 09:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751560533; x=1752165333; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=utBS017XFgzQ0zp8Wqpxes+6RofiALZItP1TdxQEbKI=;
-        b=UY5FOgbyBBj+kSSZpBFIsg8aTN3KuofERMODv1/VLegb2csYRXt0QZmyRzLfYM9ApQ
-         kf3XsOC52LXL/+7R3Exf40yz+UjyJjJUsVzqwOVvpbxwys0WMNVdBUgl+nqS7b8oVoiN
-         20Ec8cOnP2vepiTP5KnPMLhfIKMgs52E+MH4N4KhQcyRKfex0afMq1tVN2Ld4Hc4VNe7
-         tnLeFObkdai4YkbtMk1RRP04cHrXBr5lEoW5BrSIEvBmW9vFI5xw1n0amMJaMjfjxc3M
-         TpbSq3/29YLU2hHWk5nmadz/sEOeN7r3PfFQxvWOVly5BN3JwzlL9/n7R3+4jO5EIEhd
-         ampg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751560533; x=1752165333;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=utBS017XFgzQ0zp8Wqpxes+6RofiALZItP1TdxQEbKI=;
-        b=QRzDwDWir3RHUcWtUxQC7Mz4QINvh2rQSjsBz/phYJjT08Wi+cUkd7Y6NAKbK414nU
-         SW3YQ3yawxLI1+qlZ8zUWQw1ixW5bFYe35uUuumY/18KNHvnYKGb89ImaiSgCfZLmw/7
-         jNK+oeSeHeMwa52ckNXIYFYZikHuhcA7/Up5UisMurmRBBQt0BCtqZheVgVbODatbtUy
-         PM89DU8+8LnVtI9zTxu3CQcQIseYqQcZ6vD0ahwj2kx3S7YpoAFTS55MppokmYdwuQhi
-         pHJjFkBe7XDYWK064pzdXY0gGr2/3T/IcDrOYoVoGIId7kkg8MZaSu04kpjrgbBs9CXR
-         iivg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGIwfUbeWwol2SPRIo21a55i02R8g4zrvirM7m9VAiW0mMXAkpTSevEdPqrIMqPMEU+QAOCyujoA/hZco=@vger.kernel.org, AJvYcCVEsw6Ebqk4kNaDmrgLgxsVPHkk7IGQ3e08DqzOVK1PM1vmY7KNFdiOlFxGfVBgpohMSLJomYoj9bin1hUHZuc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdRiKrnNwY4YxXtEFXeKgoIZutQjY+aFZvopm4dBa0gndmKPAE
-	7Hh0s8U+ggFlhPO/4HhYMI/Yy9e0HcdvuE92IK+jmj0HCGuU3NqSq7HCHD4H4LkiyDRhL/RWBLy
-	tV0Ex+EgsV/I7CwoMu1QjdNwTAuBgTlM=
-X-Gm-Gg: ASbGncthucmBi2+6JPa7lri71tTKa8cXxRdggg9UefJKNc8zRql9wWHdQQu+w0VWpNn
-	72sSal31HOuS1BwP4rAz739Bzl0fh2Sj4aIZ//Wn/mwDpQo2SrvhpJ0tUOM2J7WfRJA7mv67gnl
-	z/QEMXq9byR5Og6p1w9UqFS7Xrs7M5Fdf3UWpQF115MF0lxMeyhm4cD+Vy60xIfl884xrsXjN8e
-	w0=
-X-Google-Smtp-Source: AGHT+IH/iyPTFqL3M3jHfprWGyO2TfoMbrPC7NbrggZ1Yo0bYJAC8QHCPeDEMdhCNBakZBK3OaY2qZtlskNgpVcnuS0=
-X-Received: by 2002:a05:690c:9993:b0:70f:253d:f278 with SMTP id
- 00721157ae682-7164d2d0f01mr107532887b3.15.1751560533232; Thu, 03 Jul 2025
- 09:35:33 -0700 (PDT)
+	s=arc-20240116; t=1751560553; c=relaxed/simple;
+	bh=eDxyHqr/H2pXzWjaCvMAY8ucHIFqwnhnbIY8SPE3mbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtyAaPyzDQPt+lob/giQzXTLiHDkgAJjIR5ylZTte6PHmEMrf8o8j3qrlLFppXKUfV+4MVjIKJq/ilYRthow9CwvCsbMH40XNmeQeFuOg6uateQh6FtnSJI0AfV9TobH3FxXoIMB0wNFU6KxGBd44ccEMUi91xsuQaXGxkGpU3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BADC4CEE3;
+	Thu,  3 Jul 2025 16:35:50 +0000 (UTC)
+Date: Thu, 3 Jul 2025 17:35:48 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Will Deacon <will@kernel.org>, usamaarif642@gmail.com,
+	Ard Biesheuvel <ardb@kernel.org>, rmikey@meta.com,
+	andreyknvl@gmail.com, kasan-dev@googlegroups.com,
+	linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] arm64: efi: Fix KASAN false positive for EFI runtime
+ stack
+Message-ID: <aGaxZHLnDQc_kSur@arm.com>
+References: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702065908.430229-2-moonhee.lee.ca@gmail.com>
- <DB29OMQH4W9Z.1GPKEZBBIRSTS@gmail.com> <CAF3JpA7wM4JBdd6OvGS+hmv0UahcW=h4HrPNDwRNhduk8iKsWw@mail.gmail.com>
- <1f13328a55c54fb49d8ca1dd72bc5de23f161ac8.camel@sipsolutions.net> <6ecced8b962cf3a6f5056a87aa3442c49941e74c.camel@sipsolutions.net>
-In-Reply-To: <6ecced8b962cf3a6f5056a87aa3442c49941e74c.camel@sipsolutions.net>
-From: Moonhee Lee <moonhee.lee.ca@gmail.com>
-Date: Thu, 3 Jul 2025 09:35:22 -0700
-X-Gm-Features: Ac12FXwg4u1q7mSzj9AU16Ms01bFVIpviQb0K31UMy7j7IsxJBZgw4Jou9gHLgw
-Message-ID: <CAF3JpA7ZeG5uxLJr1NQBBzF=UZRi4sj4TSfBw=Pvx7xb1NCqTw@mail.gmail.com>
-Subject: Re: [PATCH wireless-next] wifi: mac80211: reject VHT opmode for
- unsupported channel widths
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Nicolas Escande <nico.escande@gmail.com>, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
-	syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org>
 
-Hi Johannes,
+On Tue, Jun 24, 2025 at 05:55:53AM -0700, Breno Leitao wrote:
+> KASAN reports invalid accesses during arch_stack_walk() for EFI runtime
+> services due to vmalloc tagging[1]. The EFI runtime stack must be allocated
+> with KASAN tags reset to avoid false positives.
+> 
+> This patch uses arch_alloc_vmap_stack() instead of __vmalloc_node() for
+> EFI stack allocation, which internally calls kasan_reset_tag()
+> 
+> The changes ensure EFI runtime stacks are properly sanitized for KASAN
+> while maintaining functional consistency.
+> 
+> Link: https://lore.kernel.org/all/aFVVEgD0236LdrL6@gmail.com/ [1]
+> Suggested-by: Andrey Konovalov <andreyknvl@gmail.com>
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  arch/arm64/kernel/efi.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> index 3857fd7ee8d46..d2af881a48290 100644
+> --- a/arch/arm64/kernel/efi.c
+> +++ b/arch/arm64/kernel/efi.c
+> @@ -15,6 +15,7 @@
+>  
+>  #include <asm/efi.h>
+>  #include <asm/stacktrace.h>
+> +#include <asm/vmap_stack.h>
+>  
+>  static bool region_is_misaligned(const efi_memory_desc_t *md)
+>  {
+> @@ -214,9 +215,11 @@ static int __init arm64_efi_rt_init(void)
+>  	if (!efi_enabled(EFI_RUNTIME_SERVICES))
+>  		return 0;
+>  
+> -	p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
+> -			   NUMA_NO_NODE, &&l);
+> -l:	if (!p) {
+> +	if (!IS_ENABLED(CONFIG_VMAP_STACK))
+> +		return -ENOMEM;
 
-On Thu, Jul 3, 2025 at 8:09 AM Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> I'm not entirely sure that'd be correct. 320 MHz can only be used on the
-> 6 GHz band, so clients must be at least HE, but I'm not sure that VHT
-> opmode notification frames are completely illegal for them, even if
-> they'd like use OMI instead.
->
+Mark Rutland pointed out in a private chat that this should probably
+clear the EFI_RUNTIME_SERVICES flag as well.
 
-Understood. That clarifies the case for not filtering out 320 MHz, even when a
-VHT opmode notification is present.
+> +
+> +	p = arch_alloc_vmap_stack(THREAD_SIZE, NUMA_NO_NODE);
+> +	if (!p) {
+>  		pr_warn("Failed to allocate EFI runtime stack\n");
+>  		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+>  		return -ENOMEM;
+> 
 
-On Thu, Jul 3, 2025 at 8:11 AM Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> n/m, it just did that quite explicitly. I really want to get rid of all
-> that 5/10 MHz code, but we still have S1G so that might still happen
-> anyway, and I expect for S1G VHT operating mode notification frames
-> _are_ invalid.
+With that:
 
-To address this, I plan to reject the set of channel widths that are not valid
-with VHT opmode. This includes all channel widths below 20 MHz, as well as
-20 MHz without HT (20_NOHT), which is also incompatible.
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
-Would the following logic for v2 be acceptable?
-
-    /* reject channel widths not valid with VHT opmode */
-    switch (width) {
-    case NL80211_CHAN_WIDTH_5:
-    case NL80211_CHAN_WIDTH_10:
-    case NL80211_CHAN_WIDTH_1:
-    case NL80211_CHAN_WIDTH_2:
-    case NL80211_CHAN_WIDTH_4:
-    case NL80211_CHAN_WIDTH_8:
-    case NL80211_CHAN_WIDTH_16:
-    case NL80211_CHAN_WIDTH_20_NOHT:
-        return -EINVAL;
-    default:
-        break;
-    }
-
-This allows valid HT/VHT channel widths, including 20, 40, 80, 80+80, 160, and
-320, to pass through while filtering out values that would otherwise trigger a
-WARN_ON.
-
-Best regards,
-Moonhee
+(but let's see if Ard has a different opinion on the approach)
