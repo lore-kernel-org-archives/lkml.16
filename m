@@ -1,316 +1,136 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806B429A9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 07:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7402C1CD1F;
+	Thu,  3 Jul 2025 07:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751526824; cv=none; b=fB43ol2NJfpWgFekZ1hKXTzkr/RFlNpu+zMn+9vMVNQJn4Dx9RLaKudbJi4cxABnYfEhmJVcpv5PtDqlCwOMbP/GUjPdprZUTnFdoAtjbJI5j9SEsYSyvwXQaSqNKxQUf3AZq3Fd0ZsY8dZgdue1B7FFjv6/F3R5T9vwccFBLEU=
+	t=1751526941; cv=none; b=SgCGDq3IkpoIytY7nqmDL5zsdEp9LGx/T5/vw4E2qPOm8nL5Rk+X7SviHF1m5zu45ExZujslTdzpqPWCCfRmh1KkrkArujB6gO0B1zHss1z9sqO8PBAeWPyLY7IDJbmmfEr9iitIVK9SrGDxIQmK+QqNYklCLFJyMvldKEc4pfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751526824; c=relaxed/simple;
-	bh=GY8lBEudUjdH13/4qkYN6D0tr+u1ve1vnksPHDyFDBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mfCSVBL+H5rda3gEsnz7wSYOH464pDfrEJjo8dBrB3Chn5Lu2vAOVW4vARbyZD8L5YDSe/OKFmgiFLr8omwpetKn91Dr56ejIl3D0cNueyj3Y2DzzJpWgoSBRU3gYMc1ZqTM2JbdWB5rP3aSGMyj5EmXRU7yE6xUDHOZj5gWEYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R8qHpLs9; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751526941; c=relaxed/simple;
+	bh=Md0dRMRkkbSeOSf2T1Uii6t+/Dj1H4mzaP7TnbUy7wo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mW87UrHerV1aDbwm/jsXGwLSnV0i1+NlfyfaKuoNDTBu+gPvEMN3uS4H9KBxillNAdPxkzOMKB9+9izHEoNNQ2bt5twWWIofs6I+O1RpGA/ViBtgE97rQVrSYojrjlrrrOYM9mDbRsSjBvZCZfavQUxrO/kAl+p4PKNVBRttyDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7hSGf6l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8qHpLs9"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-612033bb26cso656484eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 00:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751526820; x=1752131620; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3dr0G0HPuVKXln/Mnb/5UY0SQE5MginO3Nb336jQ6YM=;
-        b=R8qHpLs9METWpsA3crQOQCyWSl4HB8S4IOzTumtNUxguhH5jrTNXS7wenulAZoeHIu
-         1+gR+rXQNFIQuSjvTPOHt30aZYeUUzm7p0dAiOdYEMRm4KslQ2qNbWqugMxTiCiRfV62
-         WjqGtQNia+Dz2nUCy9ewShSa4sP15aMM+it/vL0USBzQfYuLsFq8NqZ+M6PXffgs2Gps
-         wababi7db+l1tJk38BvswECOJFpc2Bm4IiamKDn0Sn98nplTLrJlXagGbQVuFs3uQKeZ
-         Yuo9FuNKdKtCFKhhbJRmOGyxD6OCXigqMI74xyB5xbs6nDZYZ+9GAyz2FMp3KnJo0sH6
-         Eemg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751526820; x=1752131620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3dr0G0HPuVKXln/Mnb/5UY0SQE5MginO3Nb336jQ6YM=;
-        b=nYTE8+p3FZ7XmW0TZr+gCS6gtCDLDPRoGQhd024DcLzcUMBvupndLmgwiXug7cOJJm
-         U/MdNI1DenPtrmxKnr/Br/nD6VMEP45Wpnj/zLxhRQH50XGqZDMrbXD7dXVBESOYsl+j
-         hXJ0GT4uN3sSntfqF2ReP2jM3ZxlVtwgXTBwq1gzxDT5quDS7yyUHkC49rujzUdtMywJ
-         nWYh0mjYzLcGrCKlVtU1ui+yO0d7FNaE8fY5toD/rmMf1eTv9U0VJK5Wchh1o7z5G4bM
-         cmbQFqkpA0XwlaHvLf1fswZcyYetQSodrtmDQEAzF6LoRtUregj0Gm5jL5S9rqubi43M
-         SMCA==
-X-Gm-Message-State: AOJu0Yw/NOVoUpPAqmtn2b5NcF59BGbtbFVJ0ryyKZ7LkxKqXBcSc1VA
-	L6DSHGUq6mFXKgMFsibsMFHB4w0XWRU8zMUHgWhWCefSXFNVvsHxr8HD8j/WKWmU9/xL3EC2IOB
-	jPvCXBzZibueir7Dg8OADVT6MGQUfp4PxSfDyPiUReA==
-X-Gm-Gg: ASbGncuKaFY0ScqnMu4HSefdYW0vKMWJSgkve8Xuj4rDNSw159qH0nZcrbP2xjFUObR
-	pzNRsolNhldsQdCkH893tb/bJERA0rOdBVAfZFv+M9g9Nh7lBcx2pVYKgkRJP9zya2p9an3NDma
-	9Ya1HVV9j0ivigvBShUW05V2YxmHfQpRL8RHgXtSpJp/6k
-X-Google-Smtp-Source: AGHT+IGzumX+zMN3Zsc0frMnoZjTbrKq52LE81xJcdL6f0gu7EmyIA9p7bwSTX/LNs7SEM2NnBBBJP0kpnIk//vZz6Q=
-X-Received: by 2002:a05:6820:198d:b0:611:e30a:fa1c with SMTP id
- 006d021491bc7-61200f7034bmr3538676eaf.1.1751526820429; Thu, 03 Jul 2025
- 00:13:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7hSGf6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6247C4CEE3;
+	Thu,  3 Jul 2025 07:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751526941;
+	bh=Md0dRMRkkbSeOSf2T1Uii6t+/Dj1H4mzaP7TnbUy7wo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=p7hSGf6l1wB62yE+NBdSGrVdqXxyYdvsFfD+7P8T5oO8m9C3zbDyXgHy+M2PLg1BZ
+	 +vZysQwtgP+ZF2XSwv+PdgPdcCExsl+SUzR2rDLb/pUFOqdAzdTnuaUidrlOQqbBu1
+	 5v33G0WOuI8Jd8bgrpoLMMlks7bGaZqgYlZG4KjwPtxBy3s2fOUdzf0xZluVUTlIVF
+	 O9YIv80UBKIEOiiTi61Efuz+9U5yfNXo6npsk8LVPIdzQzm8jdZ5YIl9F/RGb94vBy
+	 I1M5GaKwc+Wkh7qZe2Sd5iKMJAQwXpuM0zCq7wUsQiIpj+f+yNsCsQCtBTmRGAlkiR
+	 qb2jrQsbCbFnA==
+Message-ID: <6e209f3c-1d24-4669-8a51-3b651a28420c@kernel.org>
+Date: Thu, 3 Jul 2025 09:15:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610131600.2972232-1-jens.wiklander@linaro.org>
- <20250610131600.2972232-7-jens.wiklander@linaro.org> <aFFSWDiVsxA1CbCX@sumit-X1>
- <CAHUa44HP5EbURyLCmawMLc0d5jz1oTQZ53V1w2h0-ngUC2hbEw@mail.gmail.com> <aGYi8QkgI3WyeN59@sumit-X1>
-In-Reply-To: <aGYi8QkgI3WyeN59@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 3 Jul 2025 09:13:28 +0200
-X-Gm-Features: Ac12FXzyoTs9Jn3XWoE-_WRgcRKkI1fV8anRZvH7Atzw9NHwCMp1fhg-J6G_50I
-Message-ID: <CAHUa44EMtaSw9uMz5WNSMXSfYXwQ-1TwFjd=R1ZfCo02ir2cjw@mail.gmail.com>
-Subject: Re: [PATCH v10 6/9] tee: add tee_shm_alloc_dma_mem()
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>, robin.murphy@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] ASoC: dt-bindings: Add dt bindings for FS2104/5S
+ audio amplifiers
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nick <nick.li@foursemi.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com,
+ like.sin@gmail.com, xiaoming.yang@foursemi.com, danyang.zheng@foursemi.com,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250703035639.7252-1-nick.li@foursemi.com>
+ <20250703035639.7252-4-nick.li@foursemi.com>
+ <20250703-primitive-puzzling-toucanet-2c4870@krzk-bin>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703-primitive-puzzling-toucanet-2c4870@krzk-bin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 3, 2025 at 8:28=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org> w=
-rote:
->
-> On Wed, Jun 18, 2025 at 09:03:00AM +0200, Jens Wiklander wrote:
-> > On Tue, Jun 17, 2025 at 1:32=E2=80=AFPM Sumit Garg <sumit.garg@kernel.o=
-rg> wrote:
-> > >
-> > > On Tue, Jun 10, 2025 at 03:13:50PM +0200, Jens Wiklander wrote:
-> > > > Add tee_shm_alloc_dma_mem() to allocate DMA memory. The memory is
-> > > > represented by a tee_shm object using the new flag TEE_SHM_DMA_MEM =
-to
-> > > > identify it as DMA memory. The allocated memory will later be lent =
-to
-> > > > the TEE to be used as protected memory.
-> > > >
-> > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > > ---
-> > > >  drivers/tee/tee_shm.c    | 85 ++++++++++++++++++++++++++++++++++++=
-+++-
-> > > >  include/linux/tee_core.h |  5 +++
-> > > >  2 files changed, 88 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> > > > index e63095e84644..60b0f3932cee 100644
-> > > > --- a/drivers/tee/tee_shm.c
-> > > > +++ b/drivers/tee/tee_shm.c
-> > > > @@ -5,6 +5,8 @@
-> > > >  #include <linux/anon_inodes.h>
-> > > >  #include <linux/device.h>
-> > > >  #include <linux/dma-buf.h>
-> > > > +#include <linux/dma-mapping.h>
-> > > > +#include <linux/highmem.h>
-> > > >  #include <linux/idr.h>
-> > > >  #include <linux/io.h>
-> > > >  #include <linux/mm.h>
-> > > > @@ -13,9 +15,14 @@
-> > > >  #include <linux/tee_core.h>
-> > > >  #include <linux/uaccess.h>
-> > > >  #include <linux/uio.h>
-> > > > -#include <linux/highmem.h>
-> > > >  #include "tee_private.h"
-> > > >
-> > > > +struct tee_shm_dma_mem {
-> > > > +     struct tee_shm shm;
-> > > > +     dma_addr_t dma_addr;
-> > > > +     struct page *page;
-> > > > +};
-> > > > +
-> > > >  static void shm_put_kernel_pages(struct page **pages, size_t page_=
-count)
-> > > >  {
-> > > >       size_t n;
-> > > > @@ -48,7 +55,16 @@ static void tee_shm_release(struct tee_device *t=
-eedev, struct tee_shm *shm)
-> > > >  {
-> > > >       void *p =3D shm;
-> > > >
-> > > > -     if (shm->flags & TEE_SHM_DMA_BUF) {
-> > > > +     if (shm->flags & TEE_SHM_DMA_MEM) {
-> > > > +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
-> > >
-> > > nit: this config check can be merged into the above if check.
-> >
-> > No, because dma_free_pages() is only defined if
-> > CONFIG_TEE_DMABUF_HEAPS is enabled.
->
-> It looks like you misunderstood my above comment, I rather meant:
->
->         if (IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS) &&
->             (shm->flags & TEE_SHM_DMA_MEM))
+On 03/07/2025 09:10, Krzysztof Kozlowski wrote:
+> On Thu, Jul 03, 2025 at 11:56:38AM +0800, Nick wrote:
+>> From: Nick Li <nick.li@foursemi.com>
+>>
+>> This patch adds bindings for FourSemi FS2104/5S audio amplifiers
+>> which can support both I2S and I2C interface.
+>>
+>> Signed-off-by: Nick Li <nick.li@foursemi.com>
+>> ---
+>>  .../bindings/sound/foursemi,fs210x.yaml       | 95 +++++++++++++++++++
+>>  1 file changed, 95 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml b/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+>> new file mode 100644
+>> index 000000000..3a1aba9b8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+>> @@ -0,0 +1,95 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> 
+> Please run scripts/checkpatch.pl on the patches and fix reported
+> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+> patches and (probably) fix more warnings. Some warnings can be ignored,
+> especially from --strict run, but the code here looks like it needs a
+> fix. Feel free to get in touch if the warning is not clear.
 
-That depends on the compiler optimizing away the call to
-dma_free_pages() if CONFIG_TEE_DMABUF_HEAPS isn't defined. This is
-normally the case, but if you compile for debugging, you may get
-unresolved symbols.
 
-Cheers,
-Jens
+One more thing: Drop "dt-bindings for" from subject.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
->
-> -Sumit
->
-> >
-> > >
-> > > > +             struct tee_shm_dma_mem *dma_mem;
-> > > > +
-> > > > +             dma_mem =3D container_of(shm, struct tee_shm_dma_mem,=
- shm);
-> > > > +             p =3D dma_mem;
-> > > > +             dma_free_pages(&teedev->dev, shm->size, dma_mem->page=
-,
-> > > > +                            dma_mem->dma_addr, DMA_BIDIRECTIONAL);
-> > > > +#endif
-> > > > +     } else if (shm->flags & TEE_SHM_DMA_BUF) {
-> > >
-> > > Do we need a similar config check for this flag too?
-> >
-> > No, because DMA_SHARED_BUFFER is selected, so the dma_buf functions are=
- defined.
-> >
-> > Cheers,
-> > Jens
-> >
-> >
-> > >
-> > > With these addressed, feel free to add:
-> > >
-> > > Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
-> > >
-> > > -Sumit
-> > >
-> > > >               struct tee_shm_dmabuf_ref *ref;
-> > > >
-> > > >               ref =3D container_of(shm, struct tee_shm_dmabuf_ref, =
-shm);
-> > > > @@ -303,6 +319,71 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct =
-tee_context *ctx, size_t size)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
-> > > >
-> > > > +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
-> > > > +/**
-> > > > + * tee_shm_alloc_dma_mem() - Allocate DMA memory as shared memory =
-object
-> > > > + * @ctx:     Context that allocates the shared memory
-> > > > + * @page_count:      Number of pages
-> > > > + *
-> > > > + * The allocated memory is expected to be lent (made inaccessible =
-to the
-> > > > + * kernel) to the TEE while it's used and returned (accessible to =
-the
-> > > > + * kernel again) before it's freed.
-> > > > + *
-> > > > + * This function should normally only be used internally in the TE=
-E
-> > > > + * drivers.
-> > > > + *
-> > > > + * @returns a pointer to 'struct tee_shm'
-> > > > + */
-> > > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > > +                                   size_t page_count)
-> > > > +{
-> > > > +     struct tee_device *teedev =3D ctx->teedev;
-> > > > +     struct tee_shm_dma_mem *dma_mem;
-> > > > +     dma_addr_t dma_addr;
-> > > > +     struct page *page;
-> > > > +
-> > > > +     if (!tee_device_get(teedev))
-> > > > +             return ERR_PTR(-EINVAL);
-> > > > +
-> > > > +     page =3D dma_alloc_pages(&teedev->dev, page_count * PAGE_SIZE=
-,
-> > > > +                            &dma_addr, DMA_BIDIRECTIONAL, GFP_KERN=
-EL);
-> > > > +     if (!page)
-> > > > +             goto err_put_teedev;
-> > > > +
-> > > > +     dma_mem =3D kzalloc(sizeof(*dma_mem), GFP_KERNEL);
-> > > > +     if (!dma_mem)
-> > > > +             goto err_free_pages;
-> > > > +
-> > > > +     refcount_set(&dma_mem->shm.refcount, 1);
-> > > > +     dma_mem->shm.ctx =3D ctx;
-> > > > +     dma_mem->shm.paddr =3D page_to_phys(page);
-> > > > +     dma_mem->dma_addr =3D dma_addr;
-> > > > +     dma_mem->page =3D page;
-> > > > +     dma_mem->shm.size =3D page_count * PAGE_SIZE;
-> > > > +     dma_mem->shm.flags =3D TEE_SHM_DMA_MEM;
-> > > > +
-> > > > +     teedev_ctx_get(ctx);
-> > > > +
-> > > > +     return &dma_mem->shm;
-> > > > +
-> > > > +err_free_pages:
-> > > > +     dma_free_pages(&teedev->dev, page_count * PAGE_SIZE, page, dm=
-a_addr,
-> > > > +                    DMA_BIDIRECTIONAL);
-> > > > +err_put_teedev:
-> > > > +     tee_device_put(teedev);
-> > > > +
-> > > > +     return ERR_PTR(-ENOMEM);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
-> > > > +#else
-> > > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > > +                                   size_t page_count)
-> > > > +{
-> > > > +     return ERR_PTR(-EINVAL);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
-> > > > +#endif
-> > > > +
-> > > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, siz=
-e_t align,
-> > > >                            int (*shm_register)(struct tee_context *=
-ctx,
-> > > >                                                struct tee_shm *shm,
-> > > > diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> > > > index f17710196c4c..e46a53e753af 100644
-> > > > --- a/include/linux/tee_core.h
-> > > > +++ b/include/linux/tee_core.h
-> > > > @@ -29,6 +29,8 @@
-> > > >  #define TEE_SHM_POOL         BIT(2)  /* Memory allocated from pool=
- */
-> > > >  #define TEE_SHM_PRIV         BIT(3)  /* Memory private to TEE driv=
-er */
-> > > >  #define TEE_SHM_DMA_BUF              BIT(4)  /* Memory with dma-bu=
-f handle */
-> > > > +#define TEE_SHM_DMA_MEM              BIT(5)  /* Memory allocated w=
-ith */
-> > > > +                                     /* dma_alloc_pages() */
-> > > >
-> > > >  #define TEE_DEVICE_FLAG_REGISTERED   0x1
-> > > >  #define TEE_MAX_DEV_NAME_LEN         32
-> > > > @@ -310,6 +312,9 @@ void *tee_get_drvdata(struct tee_device *teedev=
-);
-> > > >   */
-> > > >  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, si=
-ze_t size);
-> > > >
-> > > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > > +                                   size_t page_count);
-> > > > +
-> > > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, siz=
-e_t align,
-> > > >                            int (*shm_register)(struct tee_context *=
-ctx,
-> > > >                                                struct tee_shm *shm,
-> > > > --
-> > > > 2.43.0
-> > > >
+
+... and that was my third email today... I apologize I did not send
+these as one review email, that's not really professional from my side
+but somehow coffee did not work good this morning.
+
+Best regards,
+Krzysztof
