@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538D1A255C;
-	Thu,  3 Jul 2025 01:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041691DB148;
+	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507385; cv=none; b=XCiFOJy/o0r2xTuaQYfkjY9ifa80f3JXrnRjKlqYnjWrFC2Y/qNXQVH5CA9XEIyTIBJiyC4rS8iv04dZl47VHwSXwMyu+QbN2+RnhV1RhIZhh+uxy/KI1UzfpNSvodxdY4AVgXVnlM/uIRvO57vPdKv+39ccQkDkZchYD1zz2KM=
+	t=1751507386; cv=none; b=DebzXCrtq8oZ35pQGv69R5xI83a6vN9Rte+3ft1YCVoINdYYP9XWDWPKys7npSxDAw2tTB/+gvwryRz3QxCDjxbNgJSwPZtarwdfeOzlHxvCo+oHerprAQ/f9LiDYRsWx7rQk3p0gzcsWIihQTCCnjdt8j07S4aPlMROq2vl7R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507385; c=relaxed/simple;
-	bh=tF5hq04ITDCTuA5/QUZgiNjxB2wr7fs/oP92CaOXSEI=;
+	s=arc-20240116; t=1751507386; c=relaxed/simple;
+	bh=brjZ66S2Sv5ZaBEezsenPWufMzSYuey2BvMpjs1HNps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dvWUAIcz8DNsFWnVxZA0JyNGQpIw5fBHmpygzLtEBgWlJpeSjr9dQNFsrmHfn6QQqSQEH+88k5nrX3+/qcAsK9YdvcRgDUm7OJZSpsQ7d+KWBevIlE19WZG264C2+GMeW+a4h/hRNFQI1yzUQRXBdVx9SCQBszBar8JPfJFtuJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKXOnDRO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=omJea0FF5wdtNsqJ6jsKJyVFyh+JC1aS6TnBh24CFVpXpmVt9+ob3iGHrybExllwKFem7tulbQg6XX/h2BF3Q9gRh81moCZsGQ2qhFvy7+BqWrTYgXxvKvJvn7h4WDMx5MDdDH0nmpGwyHn7Ad0XFkdlDnUVnuFHZfRw+kivkmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDxvh7WA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKXOnDRO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A55C4CEF0;
-	Thu,  3 Jul 2025 01:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDxvh7WA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BC2C4CEED;
+	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751507384;
-	bh=tF5hq04ITDCTuA5/QUZgiNjxB2wr7fs/oP92CaOXSEI=;
+	s=k20201202; t=1751507385;
+	bh=brjZ66S2Sv5ZaBEezsenPWufMzSYuey2BvMpjs1HNps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WKXOnDROfbEjWtUEfguclljF1Ll1Ud59MujWqY0kGvMdnFueJFoWvOKc6CLkLmC2+
-	 +2L00ca7fzYrgXrpbN8HYJeI/BYMGoWJjd/JDit8CMKK2dGv97O5lfiz297MxwwB19
-	 pwc85eWHB9YeVihCopWyhfydrvpRe2DNRYA9DYey+taA9Qo8fNxLDdu0m44RyKYmdP
-	 eGXy5qDyrO4On9IaAdqLmz5TfplyhOhwxFUYCY1Kkf1sFW3C/v5CPN1cuHnKn8yAC8
-	 4FYTMteVf2iv/nLW+eupuYVlLp1nC5qJM2uKSo7MRHk5y4vnbWXpwokTQ16gQZacoX
-	 UtEy8kceWXP2w==
+	b=pDxvh7WAxh2dVh/HvhUQuAui4ShsIpFsKiHoo8GgHGUYl1zSNZKGTvuhSTEclunXi
+	 rfwTe91yr0e9OryeGlMUtYFU2kbxGvzbOHnRKaOYbntW6mNgUHwNIipzi+T5QEhZEt
+	 Qrod+OmJ9SYMq7fV8S0BxiSaYcSvPYgsQRAqnZ+Rw3Eo3X6mcdeTRL656eeqOqw2+5
+	 Vsb+Trrpa1xSqAlDjT4kr64FY0yxU0l8lhguMXyfZvtD6Xb4W9TYnezdIthmnMZW6c
+	 e+u1SBQnBqUxsNIH1s7M8W8Yg3sxjQB7vhpICHXsWjXzvH1m4u0dhJdFpURy4ToBYu
+	 owLslqbvF0FgQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/8] perf sched: Free thread->priv using priv_destructor
-Date: Wed,  2 Jul 2025 18:49:36 -0700
-Message-ID: <20250703014942.1369397-3-namhyung@kernel.org>
+Subject: [PATCH 5/8] perf sched: Fix memory leaks for evsel->priv in timehist
+Date: Wed,  2 Jul 2025 18:49:39 -0700
+Message-ID: <20250703014942.1369397-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
 References: <20250703014942.1369397-1-namhyung@kernel.org>
@@ -50,29 +50,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In many perf sched subcommand saves priv data structure in the thread
-but it forgot to free them.  As it's an opaque type with 'void *', it
-needs to register that knows how to free the data.  In this case, just
-regular 'free()' is fine.
+It uses evsel->priv to save per-cpu timing information.  It should be
+freed when the evsel is released.
+
+Add the priv destructor for evsel same as thread to handle that.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/builtin-sched.c | 12 ++++++++++++
+ tools/perf/util/evsel.c    | 11 +++++++++++
+ tools/perf/util/evsel.h    |  2 ++
+ 3 files changed, 25 insertions(+)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b7bbfad0ed600eee..fa4052e040201105 100644
+index 83b5a85a91b7ffbd..a6eb0462dd5be20f 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -3898,6 +3898,8 @@ int cmd_sched(int argc, const char **argv)
- 	if (!argc)
- 		usage_with_options(sched_usage, sched_options);
+@@ -2020,6 +2020,16 @@ static u64 evsel__get_time(struct evsel *evsel, u32 cpu)
+ 	return r->last_time[cpu];
+ }
  
-+	thread__set_priv_destructor(free);
++static void timehist__evsel_priv_destructor(void *priv)
++{
++	struct evsel_runtime *r = priv;
 +
- 	/*
- 	 * Aliased to 'perf script' for now:
- 	 */
++	if (r) {
++		free(r->last_time);
++		free(r);
++	}
++}
++
+ static int comm_width = 30;
+ 
+ static char *timehist_get_commstr(struct thread *thread)
+@@ -3314,6 +3324,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 
+ 	setup_pager();
+ 
++	evsel__set_priv_destructor(timehist__evsel_priv_destructor);
++
+ 	/* prefer sched_waking if it is captured */
+ 	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+ 		handlers[1].handler = timehist_sched_wakeup_ignore;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 9c50c3960487feee..3896a04d90af71f3 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1657,6 +1657,15 @@ static void evsel__free_config_terms(struct evsel *evsel)
+ 	free_config_terms(&evsel->config_terms);
+ }
+ 
++static void (*evsel__priv_destructor)(void *priv);
++
++void evsel__set_priv_destructor(void (*destructor)(void *priv))
++{
++	assert(evsel__priv_destructor == NULL);
++
++	evsel__priv_destructor = destructor;
++}
++
+ void evsel__exit(struct evsel *evsel)
+ {
+ 	assert(list_empty(&evsel->core.node));
+@@ -1687,6 +1696,8 @@ void evsel__exit(struct evsel *evsel)
+ 	hashmap__free(evsel->per_pkg_mask);
+ 	evsel->per_pkg_mask = NULL;
+ 	zfree(&evsel->metric_events);
++	if (evsel__priv_destructor)
++		evsel__priv_destructor(evsel->priv);
+ 	perf_evsel__object.fini(evsel);
+ 	if (evsel__tool_event(evsel) == TOOL_PMU__EVENT_SYSTEM_TIME ||
+ 	    evsel__tool_event(evsel) == TOOL_PMU__EVENT_USER_TIME)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6dbc9690e0c9258c..b84ee274602d7d2b 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -280,6 +280,8 @@ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+ void evsel__exit(struct evsel *evsel);
+ void evsel__delete(struct evsel *evsel);
+ 
++void evsel__set_priv_destructor(void (*destructor)(void *priv));
++
+ struct callchain_param;
+ 
+ void evsel__config(struct evsel *evsel, struct record_opts *opts,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
