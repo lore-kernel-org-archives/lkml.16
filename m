@@ -1,119 +1,130 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269232DE713
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A612512FF;
+	Thu,  3 Jul 2025 11:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542286; cv=none; b=JQ+w4NevMecHOc8bHZMoOV01YXtNb7Y6njqmPAZAfpLhUAkpHuxdffvXOFNV1GZFKPk9HIPeQbxg77uRBdnkcNjEwcu7WVs+77ADtMO2nhz9NFpqvF/3yFAzSH23kDH9XceLJ6tSnJNk43K2dC3YVzlX2XkZ79LRT4LMmhvuUaY=
+	t=1751542308; cv=none; b=TD+46wQXnVTbPRkKP1j6okUYVlZMKg1jsaNbZc6qVx1DUuURbplyc8KyBBRdaOp1FhAteD5/jLEne7LRouR8y5vmkNf9x82sqMb+skEOdhZ1CZ4x4z3iJU1e+75K1es/1WFcIayWFcryN5Nczd3QsPw53Y4AbO55iuPZyukTRpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542286; c=relaxed/simple;
-	bh=uP7Rr37PuYg5dHU6HWiu9xFkXLAx+9OBBp94Kf1AYzA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FOFvnM2EcPH+vL3c5C5sC1JYJFDYepvei5l2tHjoHnn2MGVPrzzOeL44/nPfC1k2ECxc+9VvI14w9VP2LeAb720FHwLhX1r6UrB83U0zFebW2z4SIrOHWDwUYiLmTxJyPwXKD7U/qkvBtS9PZYqr2u/gFStjb8sa+0qW4RCLZSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GkgedwV6; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1751542308; c=relaxed/simple;
+	bh=mz2HO5e+m0EVO4Bso9dOWmH5VXn5tebaRN4tyuLfYyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X37oaOxna4v5L9ixmINOMr1+2RZLClrzlJUjsdpCPqz8W4/EEDkISczhKKBGO+NP/x6DlHFUmorjs+Npq8Km1Rp8VTDoSa6S7VvnFVQLa5dLuNhgQ5UkCzxdryMiGeQpoL5IlaC5Q1eykE6OpGJrA7U5IPnszzBFGPj+WOOdUU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=icvujwCm; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GkgedwV6"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553bd56011dso520797e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:31:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751542282; x=1752147082; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPqrBVnVHFXf0pkS74FSHKy1+dZI9RB7aeR+nURK7zw=;
-        b=GkgedwV644LcSYvlVXUJHG91vPn58wD7Ml3VXIh3J3BJ5NscTcbUOU/s3UCz9C8e63
-         4R0f+9ZaStHCApBH6a70QPJPW6QHkHecf1x1KmLTQgGkyQvUQLZ07S3dxxpiyS8HKuga
-         EyBffjayeMxbgUXBpc16Hy0MExVxKwzkSmrWe7uKOtnf7CiT88B31DoI//uzGrs3Wm7a
-         zNU4L9DmAAgEOYLxs7WlS97lUJxKg1k+p0z/i/ANw2pB3C0IZTQkf/525Zp+5UWmXjMo
-         a+InZGgkuKb36kvcAJRTKsBaURQGRH9Qw0Ucpmyx6dGMIEaf6/IzdQeCgh6WVVp3Sv/L
-         FaNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542282; x=1752147082;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jPqrBVnVHFXf0pkS74FSHKy1+dZI9RB7aeR+nURK7zw=;
-        b=D1c7ppnd04toPuXfN75fay9Dg/QmofMY9snSnmrv6xx0InhsHvkmiQ+AsmEix7KBH5
-         t8jl2/egYF0PaHfgmfySv/GaPdttZ9B45z04DsjfgEBicRAwVlNerNZcJF9dcbSkNKtE
-         7XhAsTpDYQEzPZ0Et5jMNQqMslGJ0U93Ez6WXArnG995DScGSuKWRdVKGHB0N/mh1u/5
-         wY4LPsCiBpSmSjDqrpPrAtCIoM9FONxBGq4FZFpRYrD8AT87dzxpmi9PekQ9mQNBAV+a
-         TY1f/FKhG7G6z/8cIf2MoeCGnGxkdz4v/bKKrPRaa9AfZqNRFp3MxwRg+bdF7BBJ8jLk
-         sWVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbFpxLQMvLaWMwlR1K5803Th7PKprP7eGmPlcqfU5SxsjFoG3FDumbkSA1uUvUBzR/yfys4U8QXMrZFdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9Lw3HSFKVCVaXjGuhExJ9FZRQ3iStl953L1qqHz56r4TmjxCP
-	qa4zVxhnewWhnKnBcbWB9H9OrmYEdeEgzLDjUfImuHHeKLRDdijS4/ycu14x7uKmBYAFads5TSD
-	XjuiD3knKpybydyxq9ckV/MrNpUpIfZgn7OfRT/MuPQ==
-X-Gm-Gg: ASbGnctEEg8wXoi5eOs9M3aShzS0UDZ9rZ3VBs8NOBzKndAVBhvMCYnF7fF9PRX57Sb
-	bt+O86TXo4Dcio9RWZpdecy3ZL2W5q5AbknrBIzpsBM3OJmK+MhIoeMhchW6X7/N75LG+7Oo2Dv
-	QcAajsU9NMgoKwMacN6WPP03xvOfSBEv6WSRVM0Hwg9kK0V3mXWzrtVIdD
-X-Google-Smtp-Source: AGHT+IHqwZ00JzaSxoHP5Y5eGO6U1F00cLkLgLHN8uq84JwqyOmuyFj/rx7viXN7xQL8y5yojWgEcXAb4bcR3EsVmBI=
-X-Received: by 2002:a05:6512:3e1c:b0:553:cc61:172b with SMTP id
- 2adb3069b0e04-55632c67ae6mr203802e87.3.1751542282204; Thu, 03 Jul 2025
- 04:31:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="icvujwCm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751542307; x=1783078307;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mz2HO5e+m0EVO4Bso9dOWmH5VXn5tebaRN4tyuLfYyQ=;
+  b=icvujwCmzoZiEcBfrizQDS2rg7NbkGkB10DL01IzPoFPIjf1224AdHAg
+   lWP1u9Ygy4G8zV9W5Io0Ce4Kk63AEH+TlCzfV+DsP553xACOJHOnA64A5
+   o2fDl+JBU36nfLKnVhCyx9n7H2p66JBhXVQiBlUcs1UtiYsMNZF/rwC1N
+   Woe7QvFlovKZAEoESJLS+NIqgTGZdMPBWBr8j4zvdtVf0sXzmQ80B4+Qz
+   7/Ljalq5URRFqlGoJT2kU8AdB5cN/fkQFYsOxjBebE4AiWUZNWdmoRL4R
+   iBTSjxcXRts+dEA3PwaoG4h1hgJ1zyhBmYnIob4X3mLtrePjj3av3uboi
+   g==;
+X-CSE-ConnectionGUID: QP5H9CcJTnmSLNqzIZAmuA==
+X-CSE-MsgGUID: brfc9Hq7TG+XDIp7ajPx3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53731270"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="53731270"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 04:31:46 -0700
+X-CSE-ConnectionGUID: Hol9m/2jRjWHXEvh17EZ8g==
+X-CSE-MsgGUID: ey2HETopSV6Moa5CZajchA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="154920492"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Jul 2025 04:31:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 4EA371E0; Thu, 03 Jul 2025 14:31:33 +0300 (EEST)
+Date: Thu, 3 Jul 2025 14:31:33 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon <daniel.sneddon@linux.intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Breno Leitao <leitao@debian.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
+Message-ID: <h7pjqco4nngern4ucj2krt4uuau5v522ni6w5vjup3qlkvn2yb@oskfps5mlzbc>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-15-kirill.shutemov@linux.intel.com>
+ <95dc18fd-73b0-4019-92d2-c0e6aaf22c96@intel.com>
+ <mgo3qfjekobe6qflwkpey3p7tzsp3b2mrirama4w2rxyckce7g@3gce3fn5emvu>
+ <bbe9dfb6-88c7-4724-bafd-0524599c9369@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702155112.40124-1-heshuan@bytedance.com> <aGYkx4a4eJUJorYp@sunil-laptop>
-In-Reply-To: <aGYkx4a4eJUJorYp@sunil-laptop>
-From: =?UTF-8?B?5ou05L2V?= <heshuan@bytedance.com>
-Date: Thu, 3 Jul 2025 19:31:10 +0800
-X-Gm-Features: Ac12FXwmgaLHVh9stIrXQTsWM1XVkm09j05abjeG1jdXSTB5G1pTJuNhmJuU4TA
-Message-ID: <CAKmKDKksSTrT=wMBpnqGupe4WRnHosYZLunw0FdVbhW_dyym+A@mail.gmail.com>
-Subject: Re: [External] Re: [RFC 0/1] PCI: Fix pci devices double register
- WARNING in the kernel starting process
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: bhelgaas@google.com, cuiyunhui@bytedance.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbe9dfb6-88c7-4724-bafd-0524599c9369@intel.com>
 
-Hi Sunil,
-Thanks for your reply! (really appricate it).
-This WARNING truly occurred. Through the added debug info, I found
-that the device was registered to proc via pci_proc_init and
-acpi_pci_root_add paths respectively, which ultimately triggered
-the warning message.
-Let me try to reproduce it on qemu first. I'll keep you updated.
-Thanks again.
+On Wed, Jul 02, 2025 at 01:05:17PM -0700, Sohil Mehta wrote:
+> On 7/2/2025 6:27 AM, Kirill A. Shutemov wrote:
+> 
+> >>
+> >> Maybe I've misunderstood something:
+> >>
+> >> Is the underlying assumption here that #SS were previously only
+> >> generated by userspace, but now they can also be generated by the
+> >> kernel? And we want the kernel generated #SS to behave the same as the #GP?
+> > 
+> > It can be generated by both kernel and userspace if RSP gets corrupted.
+> > 
+> > So far, do_error_trap() did the trick, handling what has to be handled.
+> > LASS requires a bit more, though.
+> > 
+> Thank you for the information! The discussion in the other thread helped
+> clarify my confusion about the new FRED specific fixup outside the LASS
+> check.
+> 
+> IIUC, for kernel generated #SS, the prior code in do_error_trap()
+> would've done a few things such as notify_die() and
+> cond_local_irq_enable() before calling die().
 
-Regards,
-Shuan
+cond_local_irq_enable() need to happen if we want to do something
+sleepable during exception handling. It is not the case here.
 
-On Thu, Jul 3, 2025 at 2:36=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com>=
- wrote:
->
-> On Wed, Jul 02, 2025 at 11:51:11PM +0800, Shuan He wrote:
-> > Hi All.
-> > I encountered a WARNING printed out during the kernel starting process
-> > on my developing environment.
-> > (with RISC-V arch, 6.12 kernel, and Debian 13 OS).
-> >
-> > WARN Trace:
-> > [    0.518993] proc_dir_entry '000c:00/00.0' already registered
-> > [    0.519187] WARNING: CPU: 2 PID: 179 at fs/proc/generic.c:375 proc_r=
-egister+0xf6/0x180
-> > [    0.519214] [<ffffffff804055a6>] proc_register+0xf6/0x180
-> > [    0.519217] [<ffffffff80405a9e>] proc_create_data+0x3e/0x60
-> > [    0.519220] [<ffffffff80616e44>] pci_proc_attach_device+0x74/0x130
-> > [    0.509991] [<ffffffff805f1af2>] pci_bus_add_device+0x42/0x100
-> > [    0.509997] [<ffffffff805f1c76>] pci_bus_add_devices+0xc6/0x110
-> > [    0.519230] [<ffffffff8066763c>] acpi_pci_root_add+0x54c/0x810
-> > [    0.519233] [<ffffffff8065d206>] acpi_bus_attach+0x196/0x2f0
-> > [    0.519234] [<ffffffff8065d390>] acpi_scan_clear_dep_fn+0x30/0x70
-> > [    0.519236] [<ffffffff800468fa>] process_one_work+0x19a/0x390
-> > [    0.519239] [<ffffffff80047a6e>] worker_thread+0x2be/0x420
-> > [    0.519241] [<ffffffff80050dc4>] kthread+0xc4/0xf0
-> > [    0.519243] [<ffffffff80ad6ad2>] ret_from_fork+0xe/0x1c
-> >
-> This should not happen. I suspect some issue in ACPI namespace/_PRT. Can
-> you reproduce this on qemu virt machine?
->
-> Regards
-> Sunil
->
+notify_die() will be called die_addr()->__die_body()->notify_die().
+
+> The new code now directly calls die_addr(). Are we changing the behavior
+> for legacy kernel #SS? Also, why don't we need those calls for the new
+> LASS #SS?
+
+do_error_trap() provides catch-all handling for unallowed-thing-happened
+exception handling in either kernel or userspace.
+
+We can take simpler path for fatal in-kernel exception. Following #GP
+logic matches what we need.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
