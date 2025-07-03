@@ -1,185 +1,109 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B71A2DE6F3;
-	Thu,  3 Jul 2025 14:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF16136658
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 14:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551419; cv=none; b=EVSR5jWZN9aW0SD+civsynrhKPjyq/q6tpws/YkQQdGB2xxgS8tYfjM95/gbbJtwS3cQUFhlcJdWp+ML4nO1ImqjFuAPr5qXWujhjOGAzLL5xPDwNzI1Dva1y3n1IULKGvdEtEeQvWuT6kWCom9mDDSpmc2t8PnMR/i+NtVWfYk=
+	t=1751551460; cv=none; b=tsMABi5GUyqWMKLVa8sfj4D/tNcHRFl1Ky8XUhuShwrvvw5XOHQWFY5jgw6VR2DbkqiWZpphM4cE7pyVVDkjObkDbNY/SRMlqfyYKAd0d1u+SLDg0lJThxgA20bUJbhI52/RmJXZ7syfOaXu2Xx7JHFY+xAvfQTOIMcFKs8Ro+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551419; c=relaxed/simple;
-	bh=FpZLtZ9+kg2xfwMSODwaNlSk19qiCrhlb9UcLr8pDQM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W+L0jLkoxF17KLUUi8XSvZ9OPS20iNFfOJOceG2xFWQ33ulEtR+LhwAOuF7pIkrXBWZnWhoZKEXUkwB90yZqGJ6D0Wyse4W0XMCAWR+uA4ai/SHE1U7PN9oGTAbremMZ3JOHccwn4MpxJ+Oz73yXNEQWiKm2vu3B+/LwmdYvWuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EzFU7kBm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751551460; c=relaxed/simple;
+	bh=2Ja0DRql3lathYbsnh14IuivZQ4FJiihEMyCBFg1y6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I9jtjY6W23lSnw1d3T1JykCq8K2trNFiNXLgsaGd1WS41yE010m2Q+KvhoUeXdeNddD6FtITvxGKBMuGzvxfqeHjCtk7/uqaL25ps96Lw3w1r/LmzJK7SQksa3gN1qqSI0BVp+uqRl9Q0Nxb6nNXaOJ7in1evR2pcuqbdcMU+DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=TtSV7JHA; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EzFU7kBm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751551415;
-	bh=FpZLtZ9+kg2xfwMSODwaNlSk19qiCrhlb9UcLr8pDQM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EzFU7kBmDoOu3fC4oMWsBxPdYyWqgM2KbTgQG5ezlvt34ZcMaIxUdwADSU93UtylT
-	 vmTj7RyC5Z6Q6C/BtYNM7WV9CB7tB/lCBrgbwrE940HxUmHT4UYhByragcmbx3W+gM
-	 gDIWgxFxMptnJ3Qo1aPQ/U5O+TrUIoxx/Hx9nxxQvF/e30pIhlv3/YNFk5oQIKztsW
-	 ROdncfWCRtWxmU5Kb7uwbTHrZCTVenLJ2xknl56dKA0XmXnu+DdYPQ8JHLRwshtJXe
-	 +cEBl0cirn3EAo3Nv62UgZGWLgR7DEiXVLgJlFc/eziU1FLHvkCV1cYEejkAiEDCg9
-	 gUQ0MXW7T6AwA==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892F2d600c8f85cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8A2D517E04AA;
-	Thu,  3 Jul 2025 16:03:34 +0200 (CEST)
-Message-ID: <026ab4ca4a237e84ce53bfa491bf27268b745fa8.camel@collabora.com>
-Subject: Re: [PATCH v5 18/24] media: i2c: maxim-serdes: add MAX96717 driver
-From: Julien Massot <julien.massot@collabora.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
- <cosmin.tanislav@analog.com>, Tomi Valkeinen	
- <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
- =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
- <sakari.ailus@linux.intel.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Date: Thu, 03 Jul 2025 16:03:34 +0200
-In-Reply-To: <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
-References: <20250702132104.1537926-1-demonsingur@gmail.com>
-	 <20250702132104.1537926-19-demonsingur@gmail.com>
-	 <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
-	 <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="TtSV7JHA"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3b20fcbaf3aso317676f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 07:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google; t=1751551457; x=1752156257; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=dDrJgI2UVALwAFMMfVSy2p69AmBm6S+zzAfjuuFd4NM=;
+        b=TtSV7JHA98z6F4GHH35zpp4gDOAvs7W87NmDHqfSW96LSgYzE2ROJfELFFr+YWQLwZ
+         t+ApmACziJ8WHArk3KjRI7peWUyiXamCAm0KTW0Rxngxz02dBm8L+euTcdeugX8tIyMC
+         2dxFv3s9SJ+czqY1sFB42Ciyw2JENoadUcJlZZkAJTjk5w0cFesvYGin7PQVZWIvlDU6
+         swCyJ27phZ0eGOUZt7nVNq3bXV4Bw1gyD872B886oIkPmtnK7xVi8gIU7D8GwicNJ7/U
+         +/SANI61epMP3IuIEFIS3QISo4DwPMZxImRtfN6NiVFSNkC80xHGjDuiCc08mHxVaOBw
+         H7LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751551457; x=1752156257;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dDrJgI2UVALwAFMMfVSy2p69AmBm6S+zzAfjuuFd4NM=;
+        b=NyxwnzCmjJ+yfEZOMv1IiyTkDI53IUyTNxwev8vJ+cPdnKXk+PBurthgi3h3v1m5+y
+         lNSsQ0eLj1A5G4zfIlPg3xAd6SQyfbWscLX4KD+cYbpFbudh+i9X/1Sk1XWqWGHLSAhU
+         oF4HrB7DJVzwdStMXQnEAWt73R8RsEKudLWYnNUBq54nH8yheraY2ZULbRoPYGEwJ3WP
+         5qD43S6APq6fRzYh7LUHP/7AfsGSXIWB4wOfeVtTwSHRXZvNdHqACl0uqPaXuv0C7Cq2
+         P3GFrUte2CJ6RJhHW1GLiBKb1rGnQWPKyM1CC62wSf7vOQqcCqTORmfo7Pdf/Phfq+TG
+         vl9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVsYrIra3v0JERq21j1s75wd+707xuaThvKpfji+1PsalcjIwM/RdBp9aAK0P9VbEJz+IXZWmiUrx7TJyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDfuicXfbHmV0SCNNdheytAVuKEGZo7xhMSNrUo+yYOmXNIdIc
+	hfjaQO4mcwDljjE9tSA+qbWRn9aJhoM5HsJsuXqkLF9W7rONEuTSFPdQtf097uc9G+HyYdMt5je
+	2PCz78ys=
+X-Gm-Gg: ASbGnctY5f5I9TX+xbqFjzfpcuBCf8An+D8LqHvyXQxbQ2n9FdQs2KCZ+uYZI40Uh91
+	G/gP+X68JYjsMOvslPSwKv6nBuYU4gkTBccte3PvX+eGq0NaiUNfcEC6NPgCPYbAF/cD6tpA/Np
+	Qeg24DAwTgH9A+WrvBr9dcs4eeqRo+DYJMYbQSWKyIRHhckhvYY6uuNVoWKsYgs5dqtDKo93U5m
+	KskxNgpmNvo6+tbAMfAtJWVAVeRXj6HxmE6WvPXbHVW8uHwRhz8KiXamI4gDJLl1Yyolripc8cH
+	v90S4H8HB/SOBuOvuSmUKWjy1K/iIAFqC/De6hopmk956nh2m7CrdlLs7rEw37qKPVxnvvRA0Pq
+	RXsSlq5XpIPZPJoMOHtX7+5dzkyZHUJxKkHzOfPQ=
+X-Google-Smtp-Source: AGHT+IF5rCFDzUmRIqGfxH4DlbOtx7wQkmAk4Z9+J1BmQz88TZ603h5r95CnF2l2Jg+U+vKV4H4iEg==
+X-Received: by 2002:a5d:64c8:0:b0:3a4:e740:cd6e with SMTP id ffacd0b85a97d-3b37b7687c6mr698382f8f.8.1751551457041;
+        Thu, 03 Jul 2025 07:04:17 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:61e4:bb55:bb2c:ae50? ([2a01:e0a:b41:c160:61e4:bb55:bb2c:ae50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a99c07fcsm27185885e9.35.2025.07.03.07.04.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 07:04:14 -0700 (PDT)
+Message-ID: <1e896215-5f3a-40f9-9ab5-121109c48b3c@6wind.com>
+Date: Thu, 3 Jul 2025 16:04:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, David Ahern <dsahern@kernel.org>,
+ netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702074619.139031-1-g.goller@proxmox.com>
+ <c39c99a7-73c2-4fc6-a1f2-bc18c0b6301f@6wind.com>
+ <jsfa7qvqpspyau47xrqz5gxpzdxfyeyszbhcyuwx7ermzjahaf@jrznbsy3f722>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Content-Language: en-US
+Organization: 6WIND
+In-Reply-To: <jsfa7qvqpspyau47xrqz5gxpzdxfyeyszbhcyuwx7ermzjahaf@jrznbsy3f722>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-07-03 at 15:31 +0300, Cosmin Tanislav wrote:
->=20
->=20
-> On 7/3/25 3:16 PM, Julien Massot wrote:
-> > On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
-> > > Add a new MAX96717 driver that also supports MAX9295A, MAX96717F and
-> > > MAX96793.
-> > >=20
-> > > Integrate it with the common serializer framework, while keeping
-> > > compatibility with existing usecases, avoiding code duplication, and
-> > > also enabling more features across all chips.
-> > >=20
-> > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> > > ---
-> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/Kconfig=C2=A0=C2=A0=C2=A0 =
-|=C2=A0=C2=A0 16 +
-> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/Makefile=C2=A0=C2=A0 |=C2=
-=A0=C2=A0=C2=A0 1 +
-> > > =C2=A0=C2=A0drivers/media/i2c/maxim-serdes/max96717.c | 1685 ++++++++=
-+++++++++++++
-> > > =C2=A0=C2=A03 files changed, 1702 insertions(+)
-> > > =C2=A0=C2=A0create mode 100644 drivers/media/i2c/maxim-serdes/max9671=
-7.c
-> > >=20
-> > > diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i=
-2c/maxim-serdes/Kconfig
-> > > index cae1d5a1293e..648cb891eefe 100644
-> > > --- a/drivers/media/i2c/maxim-serdes/Kconfig
-> > > +++ b/drivers/media/i2c/maxim-serdes/Kconfig
-> > > @@ -14,3 +14,19 @@ config VIDEO_MAXIM_SERDES
-> > > =C2=A0=20
-> > > =C2=A0=C2=A0	=C2=A0 To compile this driver as a module, choose M here=
-: the module
-> > > =C2=A0=C2=A0	=C2=A0 will be called max_serdes.
-> > > +
-> > > +config VIDEO_MAX96717
-> > > +	tristate "Maxim MAX96717 Serializer support"
-> > > +	depends on COMMON_CLK
-> > > +	select VIDEO_MAXIM_SERDES
-> > > +	select GENERIC_PINCONF
-> > > +	select GENERIC_PINCTRL_GROUPS
-> > > +	select GENERIC_PINMUX_FUNCTIONS
-> > > +	select GPIOLIB
-> > > +	help
-> > > +	=C2=A0 This driver supports the Maxim MAX9295A, MAX96717, MAX96717F=
-,
-> > > +	=C2=A0 MAX96793 Serializers, which receive video on a MIPI CSI-2
-> > > +	=C2=A0 interface and output it on a GMSL2/3 link.
-> > > +
-> > > +	=C2=A0 To compile this driver as a module, choose M here: the modul=
-e
-> > > +	=C2=A0 will be called max96717.
-> > > diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/=
-i2c/maxim-serdes/Makefile
-> > > index b54326a5c81b..04abda6a5437 100644
-> > > --- a/drivers/media/i2c/maxim-serdes/Makefile
-> > > +++ b/drivers/media/i2c/maxim-serdes/Makefile
-> > > @@ -1,3 +1,4 @@
-> > > =C2=A0=C2=A0# SPDX-License-Identifier: GPL-2.0
-> > > =C2=A0=C2=A0max-serdes-objs :=3D max_serdes.o max_ser.o max_des.o
-> > > =C2=A0=C2=A0obj-$(CONFIG_VIDEO_MAXIM_SERDES) +=3D max-serdes.o
-> > > +obj-$(CONFIG_VIDEO_MAX96717) +=3D max96717.o
-> > > diff --git a/drivers/media/i2c/maxim-serdes/max96717.c b/drivers/medi=
-a/i2c/maxim-
-> > > serdes/max96717.c
-> > > new file mode 100644
-> > > index 000000000000..60b285e547b7
-> > > --- /dev/null
-> > > +++ b/drivers/media/i2c/maxim-serdes/max96717.c
-> > > @@ -0,0 +1,1685 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Maxim MAX96717 GMSL2 Serializer Driver
-> > > + *
-> > > + * Copyright (C) 2025 Analog Devices Inc.
-> > > + */
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/clk-provider.h>
-> > > +#include <linux/gpio/driver.h>
-> > > +#include <linux/pinctrl/pinctrl.h>
-> > > +#include <linux/pinctrl/pinmux.h>
-> > > +#include <linux/pinctrl/pinconf.h>
-> > > +#include <linux/pinctrl/pinconf-generic.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#include "max_ser.h"
-> > > +
-> > > +#define MAX96717_REG0				0x0
-> > > +
-> > > +#define MAX96717_REG2				0x2
-> > > +#define MAX96717_REG2_VID_TX_EN_P(p)		BIT(4 + (p))
-> > > +
-> > > +#define MAX96717_REG3				0x3
-> > > +#define MAX96717_REG3_RCLKSEL			GENMASK(1, 0)
-> > > +#define MAX96717_REG3_RCLK_ALT			BIT(2)
-> > > +
-> > > +#define MAX96717_REG6				0x6
-> > > +#define MAX96717_REG6_RCLKEN			BIT(5)
-> > > +
-> > > +#define MAX96717_I2C_2(x)			(0x42 + (x) * 0x2)
-> > > +#define MAX96717_I2C_2_SRC			GENMASK(7, 1)
-> > > +
-> > > +#define MAX96717_I2C_3(x)			(0x43 + (x) * 0x2)
-> > > +#define MAX96717_I2C_3_DST			GENMASK(7, 1)
-> > > +
-> > > +#define MAX96717_TX3(p)				(0x53 + (p) * 0x4)
-> > > +#define MAX96717_TX3_TX_STR_SEL			GENMASK(1, 0)
-> > > +
-> > > +#define MAX96717_VIDEO_TX0(p)			(0x100 + (p) * 0x8)
-> > This is a bit confusing, looks like this register address is valid for =
-MAX9295a VIDEO_TX0
-> > but not for MAX96717, VIDEO_TX0 (Z) is at 0x110.
-> >=20
->=20
-> See pipe_hw_ids field of max96717_chip_info.
-> MAX9295A has pipes 0, 1, 2, 3, MAX96717 has pipe 2 only.
-> Registers and strides are the same, just pipes are missing.
-You are right my brain is just not really good for math today :)
+Le 03/07/2025 à 13:04, Gabriel Goller a écrit :
+[snip]
+>>> +    // get extra params from table
+>> /* */ for comment
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/
+>> Documentation/process/coding-style.rst#n598
+> 
+> NAK
+> (https://lore.kernel.org/lkml/
+> CA+55aFyQYJerovMsSoSKS7PessZBr4vNp-3QUUwhqk4A4_jcbg@mail.gmail.com/#r)
+
+I will follow the netdev maintainers' guidelines.
+
+If the doc I pointed to is wrong, please update it. It will be easier to find
+than a 9-year-old email.
+
+
+Regards,
+Nicolas
