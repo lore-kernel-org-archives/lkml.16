@@ -1,102 +1,114 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DAE22259F
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5D22DE6F8
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556973; cv=none; b=oJZtT9AlK3nh9jFoiVlCTc4jvyeciseQv41WW372eahjL5yKKWNwiDBApCy74UmJ+LV3zPoCtbbzfOC8/6XtgZXZ2AxxvbSgBv0iEGZQ8Cex5Z1BllAEBzLLsSTYxpjA2QuFC29/HODZPvt8vW6ILTTROEWIjJbRfCIO91fcqRg=
+	t=1751557019; cv=none; b=SWLdWkvOIGAP4bE6iCbYCqTSnyquTXmbTWJDeC3e3wf3rmMDPm0ftji5ppsxDi1UrtpqFyE4wbN85JswKQb8lNa1b384N4hSvGHdUo6+X2AVFYfdg4fCInuZBIGu18FDPQIr41/Ag9QZfxQ2hJ1ql/OlyEDv606Ti7Hoplhd2J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556973; c=relaxed/simple;
-	bh=+oQfP1Bds2NStfrSIzwtMkBJ7FoMmRtjt5wrpXL9d3Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WWEeE/kGCpsHxuhVGR4L8UzupwyK3QpawOkCnDGeKI6SB0zs404unB7V/CYpch5Uh2woLi+qFy69KclIu1dm+pLDp2SipOBuiVdb2G8abpqftePfOu/Sdso6HYbzdNk93HSPczOI/DuUSiuLuv/GuvbHyJGj9nsvdxsk39SnC64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GACBzkMs; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751557019; c=relaxed/simple;
+	bh=HjhLvZ/H1P2qjBwChvmJUpJrRBCOZ7tQGFPyGBSuZ7E=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Xv61Ls/xmgDKfLLqQjtCL2KMXFVLKewzloQxdU8ljZ9It7mB+K5YaOx2dHwkdXLpNF4vT2DKjTpmWuBYJB3uIm2AUxVdqpYibaRrudq05scebioH83YOSKrng8NXJ6ppj92AAOZUH3sqotf8c/71EraYPcZflzbOWnkozyIWPuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gXtgXu5y; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GACBzkMs"
-Message-ID: <b4925bd4-8169-47c2-9cff-5a4023f07a32@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751556958;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXtgXu5y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751557017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3eRVsX60PZyYuNbYRScH64M22xCUcDp+0crN+OJ6Ra4=;
-	b=GACBzkMsaqWE1QUIRDa0I+YZATjc4bnBA0JsEmS4WRXa+o9tyjSx3wxSx+hQp+wZWsc3tc
-	iE0f59L/CLG/8xpbC3B4Leen32Ruip8FrWE+mRvgxnYdwLeYBIPLTy0t61qMuB8+mWYnsQ
-	wW9x6gUh88pwU2/DSjV3n5gQZtWnoho=
-Date: Thu, 3 Jul 2025 08:35:51 -0700
+	bh=7ZIDgAzyBTQUEBiTF8A+c8zCA7OsCfb4nYut225EcXo=;
+	b=gXtgXu5yYF8aRdP5nm+SIik5jWmZU4aoXuwnkkCePOXfx99kolsLRoeevpV4cQYuGNJzJR
+	iCwFcGSeOIiNTm1PxolzQPY20/zVcNqldjxz0/CW6Ec4L4PIBYsmg97IzOcOUgX8BeDAk1
+	/sEQKMEnEU+A6WQ5z4MwmCdb0MUHb68=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-xJKfPUenPTaLJA_uasGIVw-1; Thu,
+ 03 Jul 2025 11:36:53 -0400
+X-MC-Unique: xJKfPUenPTaLJA_uasGIVw-1
+X-Mimecast-MFC-AGG-ID: xJKfPUenPTaLJA_uasGIVw_1751557011
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 918041955D4E;
+	Thu,  3 Jul 2025 15:36:50 +0000 (UTC)
+Received: from [10.22.80.10] (unknown [10.22.80.10])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 333D11956087;
+	Thu,  3 Jul 2025 15:36:45 +0000 (UTC)
+Date: Thu, 3 Jul 2025 17:36:38 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: John Garry <john.g.garry@oracle.com>
+cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, song@kernel.org, 
+    yukuai3@huawei.com, hch@lst.de, nilay@linux.ibm.com, 
+    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
+    linux-raid@vger.kernel.org, linux-block@vger.kernel.org, 
+    ojaswin@linux.ibm.com, martin.petersen@oracle.com
+Subject: Re: [PATCH v3 5/5] block: use chunk_sectors when evaluating stacked
+ atomic write limits
+In-Reply-To: <f7f342de-1087-47f6-a0c1-e41574abe985@oracle.com>
+Message-ID: <8b5e009a-9e2a-4542-69fb-fc6d47287255@redhat.com>
+References: <20250703114613.9124-1-john.g.garry@oracle.com> <20250703114613.9124-6-john.g.garry@oracle.com> <b7bd63a0-7aa6-2fb3-0a2b-23285b9fc5fc@redhat.com> <f7f342de-1087-47f6-a0c1-e41574abe985@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Clean code with bpf_copy_to_user
-Content-Language: en-GB
-To: Tao Chen <chen.dylane@linux.dev>, ast@kernel.org, daniel@iogearbox.net,
- john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250703124336.672416-1-chen.dylane@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250703124336.672416-1-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
 
 
-On 7/3/25 5:43 AM, Tao Chen wrote:
-> No logic change, just use bpf_copy_to_user to clean code.
->
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->   kernel/bpf/syscall.c | 17 +++--------------
->   1 file changed, 3 insertions(+), 14 deletions(-)
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index e6eea594f1c..ca152d36312 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -5208,21 +5208,10 @@ static int bpf_task_fd_query_copy(const union bpf_attr *attr,
->   
->   			if (put_user(zero, ubuf))
->   				return -EFAULT;
-> -		} else if (input_len >= len + 1) {
-> -			/* ubuf can hold the string with NULL terminator */
-> -			if (copy_to_user(ubuf, buf, len + 1))
-> -				return -EFAULT;
->   		} else {
-> -			/* ubuf cannot hold the string with NULL terminator,
-> -			 * do a partial copy with NULL terminator.
-> -			 */
-> -			char zero = '\0';
-> -
-> -			err = -ENOSPC;
-> -			if (copy_to_user(ubuf, buf, input_len - 1))
-> -				return -EFAULT;
-> -			if (put_user(zero, ubuf + input_len - 1))
-> -				return -EFAULT;
-> +			err = bpf_copy_to_user(ubuf, buf, input_len, len);
-> +			if (err)
-> +				return err;
->   		}
->   	}
+On Thu, 3 Jul 2025, John Garry wrote:
 
-Actually, there is a return value change with this patch.
-bpf_copy_to_user() return returns -ENOSPC while the original
-implementation may return -EFAULT due to following code.
+> > >   -/* Check stacking of first bottom device */
+> > > -static bool blk_stack_atomic_writes_head(struct queue_limits *t,
+> > > -				struct queue_limits *b)
+> > > +static void blk_stack_atomic_writes_chunk_sectors(struct queue_limits *t)
+> > >   {
+> > > -	if (b->atomic_write_hw_boundary &&
+> > > -	    !blk_stack_atomic_writes_boundary_head(t, b))
+> > > -		return false;
+> > > +	unsigned int chunk_bytes = t->chunk_sectors << SECTOR_SHIFT;
+> > 
+> > What about integer overflow?
+> 
+> I suppose theoretically it could happen, and I'm happy to change.
+> 
+> However there seems to be precedent in assuming it won't:
+> 
+> - in stripe_op_hints(), we hold chunk_size in an unsigned int
+> - in raid0_set_limits(), we hold mddev->chunk_sectors << 9 in lim.io_min,
+> which is an unsigned int type.
+> 
+> Please let me know your thoughts on also changing these sort of instances. Is
+> it realistic to expect chunk_bytes > UINT_MAX?
+> 
+> Thanks,
+> John
 
-         if (put_user(prog_id, &uattr->task_fd_query.prog_id) ||
-             put_user(fd_type, &uattr->task_fd_query.fd_type) ||
-             put_user(probe_offset, &uattr->task_fd_query.probe_offset) ||
-             put_user(probe_addr, &uattr->task_fd_query.probe_addr))
-                 return -EFAULT;
+dm-stripe can be created with a stripe size that is more than 0xffffffff 
+bytes.
 
-         return err;
+Though, the integer overflow already exists in the existing dm-stripe 
+target:
+static void stripe_io_hints(struct dm_target *ti,
+                            struct queue_limits *limits)
+{
+        struct stripe_c *sc = ti->private;
+        unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
+
+        limits->io_min = chunk_size;
+        limits->io_opt = chunk_size * sc->stripes;
+}
+What should we set there as io_min and io_opt if sc->chunk_size << 
+SECTOR_SHIFT overflows? Should we set nothing?
+
+Mikulas
 
