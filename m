@@ -1,78 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657AE2BD5BF;
-	Thu,  3 Jul 2025 21:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0934B2AF19;
+	Thu,  3 Jul 2025 21:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751577280; cv=none; b=VjwK2soWxLFwGJZUd0qSQV+HXjPHqexujPf4nymdC9vZZ007hIUA2HOwRFEmE7XSWEqHfumK3iZeaITeiYxvAPZu8zvHdVc38l98/IdiL2pio8ZayNxoI7NOVpBtWEVncJxx6YBuBK5a2M/NMWRlQ7Xkcql4ofV3imZmcb0W5aA=
+	t=1751577708; cv=none; b=cWiWSYSJ+XBcpwBhB2QRpOgOJ9BH3MoadP+TFkZD5vw6d8FqSaVmn7SpmW2L9IkZPZFe+ZYYJ/Kwr9sloCfPtWiektHXtlA7785tLrrJrunWkVqVnAo42DyQdqdFwnOTKWw7/dBQ9fUFLGCJF49YOb7razQOV4Vm5q2KyShhQKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751577280; c=relaxed/simple;
-	bh=dT3HXJdueQ/TtIh10MafcagW9grURrInOFDiHaE4YAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f8IWzOgOfjFakIadpnEwQd5DiUzWQGdrbhs8oCwIGJGOKQ7LHEiHG4bDamsKyXdYZnuVC1/xp9OQ+bFPRGBKgAETOzNQwy3AICp25TV8xDYsKdmQsQzlaw1cV4+WfGnoHkj+LyoWPJAdDC39VrrjDYteU0ajecx47x1VLesqr74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dN6Y+S7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751577708; c=relaxed/simple;
+	bh=doF1JUusy9fYnF34jAg32ZbtCJcXq0q2b/EreVr4l1w=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WWrB6ZYPXT/Rhh/7ruB2Y1n9gfzrfhqgUVCI5kS4s0TKio5x7PE395Bbo0gbieRpY1vVtzoblhlu0mPGhr22XQ0+tfPl0E6FJlJmsG4OHH2HuEV66J3Z9Cc6mBeVyNfu3aDPRVhA5JbCTc9cvmpT/suhhVRM6Vn7U/VIP3N0b/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IYFrFYQO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bWaXK53c; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dN6Y+S7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 674D6C4CEE3;
-	Thu,  3 Jul 2025 21:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751577279;
-	bh=dT3HXJdueQ/TtIh10MafcagW9grURrInOFDiHaE4YAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dN6Y+S7/irGC1QtJuoxuGkKwnvtHa2E3PZfRG8brGqKjhENIg5sioAaRoEwKW/GWg
-	 Px8Zee01GDBXIyQpKdR6AmE7H/hcij1i6TaDgl0enlVzXeIxJK5yCFCt0ELN3RZqi7
-	 MS1a85taNpTxP+e0HVLcTexZLqfXWIOHhlM8fIn5MlfpaViQm+0kGIVa6mwPb+yRQ7
-	 Eihg1+bDXPdvTdYpEgh7v8qNSiPA+o+by5E1lcu1KgZLi9yRRmoaF0N1iKi5Gm+Hyl
-	 AdexxqsUF/bp5/NP+pMeGcD+A3cJsi7TaRCzZFEx9PUac8awfMllymNHmf+v2xSIkC
-	 IiV/b5sRd2JzQ==
-Date: Thu, 3 Jul 2025 14:14:37 -0700
-From: Drew Fustini <fustini@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 7/8] riscv: dts: thead: Add PWM controller node
-Message-ID: <aGbyvc16om2v7Qpv@x1>
-References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
- <CGME20250702135002eucas1p29d0a0393fec6158a3ca158ea09b61cf1@eucas1p2.samsung.com>
- <20250702-rust-next-pwm-working-fan-for-sending-v7-7-67ef39ff1d29@samsung.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IYFrFYQO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bWaXK53c"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751577705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IuSfHDCBdrHLll9p6MJyRsE2HoBAkIn29Et99Ze6jio=;
+	b=IYFrFYQO1tfIhbWjskMeQI3itoJRVBQPFIp4KWK/W9o2gLiFMGY1NsFToYDsjlvCKSiKHo
+	H2S4Qu1mRNSIt3K3en8Fh1k0EUCNuiIQJaqguEEqYDN0eXSMkVU4zsEn5aS0o20XQrSoUf
+	VVyJfxNZz6//D3xUnzWPRP/Dp/prbUDboTms9jp+MIO+uSt89tu1tJp9LJtuC14NEgOaQN
+	1yGyOAagwpTVosMu3JunoyyswO9/WeIV2NloYE8HhIgb3bCR/Fimti4aZo4pCwA3LLOMjb
+	hZ4JjzeQKhS3AD3KbXyzmYIuJREaDa0ph/YnxVF60rigy3hMwNijBHtxkTXxoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751577705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IuSfHDCBdrHLll9p6MJyRsE2HoBAkIn29Et99Ze6jio=;
+	b=bWaXK53cGighMH1SvpiRBNIK5QAIv7RA0O/M2RZwhs34n1vzCdNAXb5cYJ922PNXjSOsGq
+	qbgroTxaCeSOdKCQ==
+To: Michael Kelley <mhklinux@outlook.com>, Nam Cao <namcao@linutronix.de>,
+ Marc
+ Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Karthikeyan Mitran
+ <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+ Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, Pali =?utf-8?Q?Roh=C3=A1r?=
+ <pali@kernel.org>, "K
+ . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
+ <jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian
+ Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
+ list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+ <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+In-Reply-To: <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyaht595.ffs@tglx>
+ <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Date: Thu, 03 Jul 2025 23:21:44 +0200
+Message-ID: <87zfdlrmvr.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-7-67ef39ff1d29@samsung.com>
+Content-Type: text/plain
 
-On Wed, Jul 02, 2025 at 03:45:35PM +0200, Michal Wilczynski wrote:
-> Add the Device Tree node for the T-HEAD TH1520 SoC's PWM controller.
-> 
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+On Thu, Jul 03 2025 at 20:15, Michael Kelley wrote:
+> From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, July 3, 2025 1:00 PM
+>> Does it conflict against the PCI tree?
+>
+> There's no conflict in the "next" or "for-linus" tags in
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/.
+>
+> The conflict is with Patch 2 of this series:
+>
+> https://lore.kernel.org/linux-hyperv/1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com/
+>
+> which is in netdev/net-next.
 
-Reviewed-by: Drew Fustini <fustini@kernel.org>
+That's a trivial one. There are two ways to handle it:
 
-I'll apply this to the thead-dt-for-next branch once the PWM driver is
-accepted by Uwe.
+  1) Take it through the PCI tree and provide a conflict resolution for
+     linux-next and later for Linus as reference.
+
+  2) Route it through the net-next tree with an updated patch.
+
+As there are no further dependencies (aside of the missing export which
+is needed anyway) it's obvious to pick #2 as it creates the least
+headaches. Assumed that the PCI folks have no objections.
+
+Michael, as you have resolved the conflict already, can you please
+either take care of it yourself or provide the resolution here as
+reference for Nam?
 
 Thanks,
-Drew
+
+        tglx
