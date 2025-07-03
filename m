@@ -1,143 +1,111 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537F321ADB5;
-	Thu,  3 Jul 2025 17:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C8825524C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751564857; cv=none; b=hfzwyzSOfUq6dhKfG8Ddkc9tqGUxfZxmsb7l/MHlcL7pfGFVSqLcqFVkyVGAyG+d7YrKiL76hKwwMUl174LZ7L4q33wdKpt1oSijv/PvBtN/TPfAAX/rCU/B4EdBs1wCtvPPBnjkxtZJES2XY25Q+bMHb+ZU0E+Er8bKaU3eag4=
+	t=1751564920; cv=none; b=Gf72NJpTSSNeMXv0l9Veq39SGTS5+Y0wfb8hwU4Ts33HDpmDTTyfqQT+4mFWhZOUgjfhPiDZJd9C37ZGE4DA0ppxnviwuEwk/yxkz7NGW5bcaUsISqV7JyiJi+0i+Eu0h+YYV0MCE5NksU+CGvEJXPf9sFLyVenbpbi1YKHojQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751564857; c=relaxed/simple;
-	bh=z/XqvfHH+o8HjoNd37Jvcw+MMU7RQAv24xWmlnpctdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NJ1GIninRj8Y44EUR6rD6Ji3rC/EAH4jHU7IEH//hAeWwaD/FqH5TEJ33ix6LCF0YN2Lp6Zpm5ZnMTLLAX8WCNTnK9frGvEwHUWOYfBBpgyaZfrGGZ2KLe/ygY3euJhtn5OGDvqHYdstvTXDHLrXmdap9nYrFcKDnrvwQ6V0QiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kn5hSX/b; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751564920; c=relaxed/simple;
+	bh=JkBwRtm5noTWKFgY9qCFMaDWn6VtteefAZGCIVvvmJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLpSymMYP3RSVuwpNfNdJY0MgGs5zy6p8c+8bBe6DqpVKWGx815Vc+JAJEOXzpW0TXS3TYHQvessMdwqCZPkhnnDfay5RWhBdh5SD1CQCOfygOuAwaCB1MAYupoS2/3KKDtjRSgymGeRryL1degX+3HPCEyVeJjYTg/PL7HfYQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLkpcLaA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kn5hSX/b"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234f17910d8so1903605ad.3;
-        Thu, 03 Jul 2025 10:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751564855; x=1752169655; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=conF8W0S8vt5NV1q5V+4xWgkkTW7kP77L1ugaCqJfE8=;
-        b=kn5hSX/bVqZLeE+bYOJyV7ikcjJ9j04uUgm7x8hxgPUVkgGdGHEImyALFDD/RQjU+q
-         H4kMr/JNIPiICIKfIG4cGk3vqmgDYNV7lm8i9/yi1/LozxDyfoeVgnOPjcNIlTbwlxvm
-         DpG2Gn84xITE4nS2DC5BRSYpD4rjlDjUPV5dP4BFjUVaWcX/+5FkZro4Gaf2iHPPjMkt
-         kSgZD2bMSl8EjIbiWqGPPOCMnCVRUNUA9H0KMyoYNH5iyZsdFfeP5PirhIkAfX5Qsg4U
-         IPfvvW7UPeWc576NocfGDSc9+uDgA/5y3XzVhT+JOaNUZC/ASZwzuGo2+/fZUKq3ZEhD
-         v3nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751564855; x=1752169655;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=conF8W0S8vt5NV1q5V+4xWgkkTW7kP77L1ugaCqJfE8=;
-        b=KPF8Mmb0WR+iSmth7MUPp6LylBgnRF5HISP/InskFfdeop8SBGpetK2FLTvxnb4ojO
-         AJnYC/lG93MxRxMyrsPBIXT1Qb/GtAVo6AlGVT/fHKKSBcM8LlVoIFWr+RvITWIrRc+L
-         pnH6d06txPSfgu7/imD0T4oiba5QWHHwco6uTNt9rCQFUGJuRJNBpX/9BajC29fADqyA
-         PGLUa+Eq8W4X1DVsrKmz/PNwTevp/YgOyYKTmOKPeutXf6xj/pnHM41Unl8wYKngdNQ0
-         Z/AMhA8TEJkOaCqvsKA0cXS2u7Da5twXrXwvn+Q5PoydEhPNNco2lYofvqF5Avka/o81
-         i57Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVX2j7+uRKoQ4YHnp1R0Up73Gwj/D2rikRJQGiaAfFUDzl5xKEv/+rI+KfreqeVUki8m/B8NiEa@vger.kernel.org, AJvYcCWc9rDD7wlM5RYo93cLpqLeo7BlQEHhEeS55SglrmifuW5yl3Gu1dhn7bi03i+k0Xdgfuy3rvGkaQVlBMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBsCjI/ubewdLy2R40OXoO7rkBrHyb0d2sTU0rKpNIwYCn+vIS
-	UZL3dabyiMY3bvEXgMqunB5VbnHISQ5A2QcpLwwx9uyxPF1ar2unIwdl
-X-Gm-Gg: ASbGnct4Jdng2fZzqAzSu/4tVEUcmYDqpRfhkWOikobRL/PpUlIoN2dMHoCEwAfDJpz
-	Zwltru5wS4wG0s25UoOqVn6SpIkeBMvJlSwBkxB4LVOUf/hgcZSuSvah3QvsfLlmxkWwup+aUEn
-	tUZX4Ci4VCAteaOetjGeEk2GA/+O+zPUJSqyTtuJdUddF7fklncRRADx3exP9kKLdNpQh4pMnno
-	PYBWW0FW4/Mak4Naa46Lj//6T5KixdtV4t/UvXrSsPjQtM2Ty+JYPuNMMHjCByrsj0Sov1sqijt
-	SUsMnCV0mMnGjIsGKLjTTU206FOdoxoa1ltoH7rNUrZhTf5BZ9UEWYfyF3HK80dSlf2hDvmEWJa
-	SW+L+P7nOpvbnIw==
-X-Google-Smtp-Source: AGHT+IHOiMYHe86AtIZKT/Bf2Qkx52cYDf7+LG9U2zlC2Y3YltBfnE0ONWF+I6yPXSLPMfQJutsvyA==
-X-Received: by 2002:a17:903:3510:b0:234:f4da:7eed with SMTP id d9443c01a7336-23c79819bcemr71828105ad.44.1751564855378;
-        Thu, 03 Jul 2025 10:47:35 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457b27fsm1000005ad.159.2025.07.03.10.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 10:47:34 -0700 (PDT)
-Message-ID: <dab3ecdd-5375-49f0-b4e0-5b51dbb1fe3b@gmail.com>
-Date: Thu, 3 Jul 2025 10:47:33 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLkpcLaA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBF4C4CEED;
+	Thu,  3 Jul 2025 17:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751564919;
+	bh=JkBwRtm5noTWKFgY9qCFMaDWn6VtteefAZGCIVvvmJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sLkpcLaA46r+A0bNmHQIJTX9W4LlLmMvVDUYG0hfyaNiZxcbC3A6sItOJyoMPZXNP
+	 J4j4D1lGD126CZmRZvn3dj0oT9gRxiUyEmfzpCA4JQM4secstpb9EZiu6/6oe6MiAa
+	 3TxxrdXiPAgSsld3cvHV8+mDDVC7qHbMEZoWK7qi7xOgY1KMFQN8XAseBpuO8NCddj
+	 iTN9eTEHP3YsIEk3m6qVemRkFPGDCiVftgHfPQ2y8tJVqjJN2Gs15PFuObVNLjRD4r
+	 Rxc8lgdwXg24mUboC3R4H4q9OvrlecLuBYVXbPfgqe4Cs8uKM83WQ/LVexpbagLgWG
+	 RN8cinogO9Jhg==
+Date: Thu, 3 Jul 2025 20:48:29 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: Nikita Kalyazin <kalyazin@amazon.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+	Muchun Song <muchun.song@linux.dev>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	James Houghton <jthoughton@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>
+Subject: Re: [PATCH v2 1/4] mm: Introduce vm_uffd_ops API
+Message-ID: <aGbCbW7hUf3a2do2@kernel.org>
+References: <20250627154655.2085903-1-peterx@redhat.com>
+ <20250627154655.2085903-2-peterx@redhat.com>
+ <aaaca9d4-b8df-45b8-a3a4-a431c99f26c7@lucifer.local>
+ <CAJuCfpHN6vpDx+UNPEzJgZ_qD9USTJZ_+yZzQg2BpF_aRpufYw@mail.gmail.com>
+ <982f4f94-f0bf-45dd-9003-081b76e57027@lucifer.local>
+ <cda7c46b-c474-48f4-b703-e2f988470f3b@amazon.com>
+ <aGVu1Isy-R9RszxW@kernel.org>
+ <aGWMsfbayEco0j4R@x1.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250703143941.182414597@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGWMsfbayEco0j4R@x1.local>
 
-On 7/3/25 07:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.96 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Jul 02, 2025 at 03:46:57PM -0400, Peter Xu wrote:
+> On Wed, Jul 02, 2025 at 08:39:32PM +0300, Mike Rapoport wrote:
 > 
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
+> [...]
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.96-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> > > The main target of this change is the implementation of UFFD for
+> > > KVM/guest_memfd (examples: [1], [2]) to avoid bringing KVM-specific code
+> > > into the mm codebase.  We usually mean KVM by the "drivers" in this context,
+> > > and it is already somewhat "knowledgeable" of the mm.  I don't think there
+> > > are existing use cases for other drivers to implement this at the moment.
+> > > 
+> > > Although I can't see new exports in this series, there is now a way to limit
+> > > exports to particular modules [3].  Would it help if we only do it for KVM
+> > > initially (if/when actually needed)?
+> > 
+> > There were talks about pulling out guest_memfd core into mm, but I don't
+> > remember patches about it. If parts of guest_memfd were already in mm/ that
+> > would make easier to export uffd ops to it.
 > 
-> thanks,
-> 
-> greg k-h
+> Do we have a link to such discussion?  I'm also curious whether that idea
+> was acknowledged by KVM maintainers.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+AFAIR it was discussed at one of David's guest_memfd calls
+ 
+> Having an abstraction layer for userfaultfd memtypes within mm always makes
+> some sense on its own to me, so as to remove separate random checks over
+> either shmem or hugetlb.  E.g. after the series applied, we can drop the
+> shmem header in userfaultfd code, which should also be a step forward.
+> 
+> Thanks,
+> 
+> >  
+> > > [1]
+> > > https://lore.kernel.org/all/114133f5-0282-463d-9d65-3143aa658806@amazon.com/
+> > > [2]
+> > > https://lore.kernel.org/all/7666ee96-6f09-4dc1-8cb2-002a2d2a29cf@amazon.com/
+> > > [3] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git/commit/?h=kbuild&id=707f853d7fa3ce323a6875487890c213e34d81a0
+> 
+> -- 
+> Peter Xu
+> 
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Florian
+Sincerely yours,
+Mike.
