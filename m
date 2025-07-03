@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C527586B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335F428A1EE;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567593; cv=none; b=Zfd05t2XbPtqZG737oAZ7qX1bOyNfn7JQVvf2lCqa09ipp6PnZxHzTDL7WtWvf9pqkbaHTLVNgEN5ihUQPxwWy4OsI4TIt9/t7gbrNQbW2fRq9A3RXuuQqK31Fd7aecb1saq0E0v3crarg6eB5+IpVsX5M/gpu/VFDgdqHlVxGc=
+	t=1751567593; cv=none; b=XTvC75xS2g/ZJdV2khTMT6rSVzMlrnLucZi0aYcEksqI09gvGcyJi4l0b0Us0u/O2jifXWtS4RGDqTx0T+Up33HGX5BAK5m6ySCktjiVxaPf34rVDStoUNBFhwYddFXYPnFDhWpy8xgdofxyU/I3Q/kyiVpuyfHWtun2lG8Md/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751567593; c=relaxed/simple;
-	bh=+RKXSd49QNGxofon9O/ZcqEa2ERFrhs7K98DpEYCjC0=;
+	bh=twKLCDvgvJ4N3es1zViUdUytVpc1yuuskuyBdmZ+9lY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=icfa9VX10uXMrlIPA8s1qrAFwrsS1KjZewSKbSEtj6vkuZ0Fs8hZvr6VaEFWpCUjB7N0xdbb92AjWTmiDEUvKR5fMpYEBKLfK5t3wIq/RHzdxlVFbsgsJUYvoRcXCB8yMknSMjnl8BJaxjVbIxy3SFBtAsn7Zwo8DctQ7ycM/dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvZ0T79U; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GR049/tMCV8+9qE0wbT/+SX+1PmTfjBCLYtV0JBGjapNXYCecgXm1FQldyDdQOWk8k7k0yAzTkXC8KqDaDfx5eCfABgZ5/EHIx+gQHyVeTZsKI26mCqjR6Hkr/wb9HWH5X1eTYFowt67f2e6mB+er/Xn1+n4tLfeLt7f9HaifcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9uvwg7H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvZ0T79U"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A17EFC4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9uvwg7H"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C5E7FC4AF0B;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751567592;
-	bh=+RKXSd49QNGxofon9O/ZcqEa2ERFrhs7K98DpEYCjC0=;
+	bh=twKLCDvgvJ4N3es1zViUdUytVpc1yuuskuyBdmZ+9lY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FvZ0T79U5BC4bXeJoKKGOoYWP/Jkmx2D+LX++NlPea5UNG092WKAk6ck4szKB5/gn
-	 lICR87gKfM2tzA9aAqCQIxd5GRM0onRg6HXafN5ExRpwRruua1BtdeWynLgwQAS8qm
-	 1R8sRx7Ivlx39CXkmqCDDn1c0DdN+BRq+j9wUNuO1BmC2mIy1wMi2mqtyHoXolEmYE
-	 t35iaG6BxCBaEKMMAMrIGG52roi4JvGnZEMHqfjUhf7Cal1B1bVdym832wEMNVzGro
-	 m+MkqM2mR6OJSK3FNLEwHSgWEYNZ5iEWbEASaSWCM/Ew1G+C47/4Bk+xfjhFays8vJ
-	 DG31TbkL6fwuA==
+	b=R9uvwg7H/tZrWUiU2XNSphV19N7RZhq3VTIpr7RkePXVvXiuqfSjEbdEzy1u3/L8b
+	 BFLr0DNU/yhCT7/1IUGjYrZD/H05T7tEsS0jatIK1XXfmfDWAUPuGGBDy8c23cOExj
+	 99fYWcPpD/ie3wppt3cOBlDSeYIDsq3Hr+XpZ2pZ6oILdUhX5+oqPnhX2yZNxn9iKM
+	 cDxSZ9sAdczy71F/0yRRIpGi10PELYcwYHEwGh61oXrPqdUz1J0KtPNjV7NBnE43JE
+	 TwJk1hGaFpCJt7EdrJ0AVHb6dA0HIynhRAO3yFkVg9dZmdIUzqjuQ8/ajijWxBMs1n
+	 aLjKhv9aeVDcg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912ECC83F03;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1BBC83F05;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 From: Frank Li via B4 Relay <devnull+Frank.Li.nxp.com@kernel.org>
-Date: Thu, 03 Jul 2025 14:33:06 -0400
-Subject: [PATCH v2 1/4] dt-bindings: media: add i.MX parallel csi support
+Date: Thu, 03 Jul 2025 14:33:09 -0400
+Subject: [PATCH v2 4/4] arm64: dts: imx8qxp-mek: add parallel ov5640 camera
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-imx8qxp_pcam-v2-1-188be85f06f1@nxp.com>
+Message-Id: <20250703-imx8qxp_pcam-v2-4-188be85f06f1@nxp.com>
 References: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
 In-Reply-To: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -53,14 +54,13 @@ To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-media@vger.kernel.org, imx@lists.linux.dev, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
- Alice Yuan <alice.yuan@nxp.com>
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=4271;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=3715;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=F6iDqFZ8amoJXqI666QahOsEJxKCsFei15ZM+Oj2BqQ=;
- b=7ppXxyhOnTf0rhvMnaPHXuBxIhJFJ6XuY6YkyCBO1UEaSQ0AIcE7qhCD4ApvPzaVhKGn9xJQK
- xYkZ3SuXoc+Ajmw8pv+yKY8oUs119hDRMkjhSlxTDhbOWu8O0pz9FuR
+ bh=xrlatQtLaiuinBwAmL4cEzL3pNe437Uvr/YWmYMVyX4=;
+ b=OrYhgbxp0mxYiuvD4zwpejFQ9E/eldojxDR2ZfCT44z4t7F/rAzD6h8/JvNn4OeWKbkLfnHiQ
+ jMyCzGG8e6aCOEQMci3BgiDtLjGFLAEhTs1FhhzET3OdH5wncSPru8A
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
@@ -68,149 +68,124 @@ X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
 X-Original-From: Frank Li <Frank.Li@nxp.com>
 Reply-To: Frank.Li@nxp.com
 
-From: Alice Yuan <alice.yuan@nxp.com>
+From: Frank Li <Frank.Li@nxp.com>
 
-Document the binding for parallel CSI controller found in i.MX8QXP, i.MX93
-and i.MX91 SoCs.
+Add parallel ov5640 nodes in imx8qxp-mek and create overlay file to enable
+it because it can work at two mode: MIPI and parallel mode.
 
-Signed-off-by: Alice Yuan <alice.yuan@nxp.com>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
-Change in v2:
-- use pcif surfix as Laurent Pinchart's suggest.
-- put power-domains into required list
+change in v2
+- move ov5640 part to overlay file
+- rename to imx8qxp-mek-ov5640-parallel.dtso
+- remove data-lanes
 ---
- .../devicetree/bindings/media/fsl,imx93-pcif.yaml  | 109 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 2 files changed, 110 insertions(+)
+ arch/arm64/boot/dts/freescale/Makefile             |  3 +
+ .../dts/freescale/imx8qxp-mek-ov5640-parallel.dtso | 82 ++++++++++++++++++++++
+ 2 files changed, 85 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml b/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 02ef35578dbc7e05b35b781dbfca0f0bc124ead1..25787fc7143f36301f8b334d4b0d84d543e1f320 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -330,6 +330,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-pcie-ep.dtb
+ imx8qxp-mek-ov5640-csi-dtbs := imx8qxp-mek.dtb imx8qxp-mek-ov5640-csi.dtbo
+ dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-csi.dtb
+ 
++imx8qxp-mek-ov5640-parallel-dtbs := imx8qxp-mek.dtb imx8qxp-mek-ov5640-parallel.dtbo
++dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-parallel.dtb
++
+ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqps-mb-smarc-2.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek-ov5640-parallel.dtso b/arch/arm64/boot/dts/freescale/imx8qxp-mek-ov5640-parallel.dtso
 new file mode 100644
-index 0000000000000000000000000000000000000000..ff9a32e0bec1d1bd90d93f45dbd7825d1e12650e
+index 0000000000000000000000000000000000000000..e184a5beb5c835e6801495ae2adc3b14cfcde2e5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/fsl,imx93-pcif.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek-ov5640-parallel.dtso
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2025 NXP
++ */
 +
-+title: i.MX8/9 Parallel Camera Interface
++/dts-v1/;
++/plugin/;
 +
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
++#include <dt-bindings/clock/imx8-lpcg.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/media/video-interfaces.h>
++#include <dt-bindings/pinctrl/pads-imx8qxp.h>
 +
-+description: |
-+  This is device node for the Parallel Camera Interface which enables the
-+  chip to connect directly to external Parallel CMOS image sensors.
-+  Supports up to 80MHz input clock from sensor.
-+  Supports the following input data formats
-+    - 8-bit/10-bit Camera Sensor Interface (CSI)
-+    - 8-bit data port for RGB, YCbCr, and YUV data input
-+    - 8-bit/10-bit data ports for Bayer data input
-+  Parallel Camera Interface is hooked to the Imaging subsystem via the
-+  Pixel Link.
++&cm40_i2c {
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: fsl,imx8qxp-pcif
-+      - items:
-+          - enum:
-+              - fsl,imx91-pcif
-+          - const: fsl,imx93-pcif
-+      - const: fsl,imx93-pcif
++	ov5640_pi: camera@3c {
++		compatible = "ovti,ov5640";
++		reg = <0x3c>;
++		clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
++		clock-names = "xclk";
++		assigned-clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
++		assigned-clock-rates = <24000000>;
++		AVDD-supply = <&reg_2v8>;
++		DOVDD-supply = <&reg_1v8>;
++		DVDD-supply = <&reg_1v5>;
++		pinctrl-0 = <&pinctrl_parallel_csi>;
++		pinctrl-names = "default";
++		powerdown-gpios = <&lsio_gpio3 2 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&lsio_gpio3 3 GPIO_ACTIVE_LOW>;
 +
-+  reg:
-+    maxItems: 1
++		port {
++			ov5640_pi_ep: endpoint {
++				bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
++				bus-width = <8>;
++				hsync-active = <1>;
++				pclk-sample = <1>;
++				remote-endpoint = <&parallel_csi_in>;
++				vsync-active = <0>;
++			};
++		};
++	};
++};
 +
-+  clocks:
-+    maxItems: 2
++&iomuxc {
++	pinctrl_parallel_csi: parallelcsigrp {
++		fsl,pins = <
++			IMX8QXP_CSI_D00_CI_PI_D02		0xc0000041
++			IMX8QXP_CSI_D01_CI_PI_D03		0xc0000041
++			IMX8QXP_CSI_D02_CI_PI_D04		0xc0000041
++			IMX8QXP_CSI_D03_CI_PI_D05		0xc0000041
++			IMX8QXP_CSI_D04_CI_PI_D06		0xc0000041
++			IMX8QXP_CSI_D05_CI_PI_D07		0xc0000041
++			IMX8QXP_CSI_D06_CI_PI_D08		0xc0000041
++			IMX8QXP_CSI_D07_CI_PI_D09		0xc0000041
 +
-+  clock-names:
-+    items:
-+      - const: pixel
-+      - const: ipg
++			IMX8QXP_CSI_MCLK_CI_PI_MCLK		0xc0000041
++			IMX8QXP_CSI_PCLK_CI_PI_PCLK		0xc0000041
++			IMX8QXP_CSI_HSYNC_CI_PI_HSYNC		0xc0000041
++			IMX8QXP_CSI_VSYNC_CI_PI_VSYNC		0xc0000041
++			IMX8QXP_CSI_EN_LSIO_GPIO3_IO02		0xc0000041
++			IMX8QXP_CSI_RESET_LSIO_GPIO3_IO03	0xc0000041
++		>;
++	};
++};
 +
-+  power-domains:
-+    maxItems: 1
++&isi {
++	status = "okay";
++};
 +
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
++&parallel_csi {
++	status = "okay";
 +
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          Input port node.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          Output port node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx93-clock.h>
-+    #include <dt-bindings/power/fsl,imx93-power.h>
-+
-+    pcif@4ac10070 {
-+        compatible = "fsl,imx93-pcif";
-+        reg = <0x4ac10070 0x10>;
-+        clocks = <&clk IMX93_CLK_MIPI_CSI_GATE>,
-+                 <&clk IMX93_CLK_MEDIA_APB>;
-+        clock-names = "pixel", "ipg";
-+        assigned-clocks = <&clk IMX93_CLK_CAM_PIX>;
-+        assigned-clock-parents = <&clk IMX93_CLK_VIDEO_PLL>;
-+        assigned-clock-rates = <140000000>;
-+        power-domains = <&media_blk_ctrl IMX93_MEDIABLK_PD_MIPI_CSI>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+
-+                endpoint {
-+                    remote-endpoint = <&mt9m114_ep>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                endpoint {
-+                    remote-endpoint = <&isi_in>;
-+                };
-+            };
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8dc0f6609d1fe2e3eefd50088dbe566d9e107bfa..8ae0667d2bb41fb6a1549bd3b2b33f326cbd1303 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15107,6 +15107,7 @@ L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media.git
- F:	Documentation/admin-guide/media/imx7.rst
-+F:	Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
- F:	Documentation/devicetree/bindings/media/nxp,imx-mipi-csi2.yaml
- F:	Documentation/devicetree/bindings/media/nxp,imx7-csi.yaml
- F:	Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
++	ports {
++		port@0 {
++			parallel_csi_in: endpoint {
++				remote-endpoint = <&ov5640_pi_ep>;
++			};
++		};
++	};
++};
 
 -- 
 2.34.1
