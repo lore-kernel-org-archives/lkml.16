@@ -1,118 +1,152 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-out0.aaront.org (smtp-out0.aaront.org [52.10.12.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BABB29B21C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79A22BD595;
+	Thu,  3 Jul 2025 21:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.10.12.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751578023; cv=none; b=mAEcPmSnPxHqPKi04qwVlROpE4uDJFHb+yOlzhcK24/9dbDad1OM3FdY3At4djss+CBeNtXdDW2AIgL7mayWkbOLCdeVaNpmfc0Os5y6hnnn8gI60zcoQzo01tXnkbdkCZRenhMqaTerO7Qb9jpuZzuj1Pc0ChKMPY0IZaJocSU=
+	t=1751578051; cv=none; b=M6/5cW4JFqktNcONxJiHmh7JpXNqZpyfmH0wkeL8zMMZXu/L0hPhgRBXKoBdTTHQwrsFb/RfQWhrMFwA8LI8TcVJ6+y+OgltDO4MpyGlIt391YXvTvuqHiVC2ol2TDdyNDRj78NTfPb/2fkX5mZglk3dSJlD4Ws7677FlXswD28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751578023; c=relaxed/simple;
-	bh=0eZUQlunxZ8ZDJSlGg5YWG682u4zGCezcHWcVBPA8Lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X9xODMtiqBELmWRmWCKqaza22coFicWJFhsO9SIDXBrMbQAAj8hDRi3JIsXWmbhhx+Ykyju3+p80igXMOuDPiLWmg86fTqh16Di/HcDjyFijiEvMwE5IK9wvV9StPBkkXmgb1jzOoUhIF3/JMd/KFBD+G35Ky414oUsjTyMjmQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=y3WsPSGt; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751578051; c=relaxed/simple;
+	bh=/kZmNYWZNOTJQa4opCPhE9MeAHI82FTFippa+nVrA1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQlXIgFcTFb0mU38VV4BxDl4smCiZLGx79alQEj/kDw4VA3yJnu5gooGUwCZPscZC0Im6eB6qhjUA3lI2PjHYNQfnR1XS/I8pECI1i13EGgVLErp0X7WTnjKYH9hQBpcbkwNmsp0nkbLCxys3TO8jce3kde9xAud7N4EUD6AmGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aaront.org; spf=pass smtp.mailfrom=aaront.org; dkim=permerror (0-bit key) header.d=aaront.org header.i=@aaront.org header.b=dqoXjpFe; dkim=pass (2048-bit key) header.d=aaront.org header.i=@aaront.org header.b=v/BVgkC3; arc=none smtp.client-ip=52.10.12.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aaront.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aaront.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y3WsPSGt"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-735a6faec9eso235830a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751578019; x=1752182819; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0oJ8ujZlzaPcZCmdOGOROSSXlk7hultXH6uDj8y1p0g=;
-        b=y3WsPSGt6KofVFHQ15vJmM3j4/IE3YhCNFJXX/7eoDI9Idfalg08NbQzyTky8YYgb+
-         DZboWJZJQCMIzuBFdJMKcmP+uxMC7RCD93/YJi6G74oA4ysjv4lHdwACyHP9Q4jpcf3c
-         ktCAFiHdsD+hZHVuFa4V/Lob+dRRCL1BTkn0JeJfXn9IH107Ezg205pGN6P+qs87ei5O
-         SWU26vw47OrdvnEtc2HTcLD3oSi1USljWqxIlhN2r6BM+4TUaFuv0EpmU789CH22bqFY
-         Dro29edbfugyZgKnkG74Ve9tMdk/oIX7eVlxtYgJWlb1OvR2Bymo/MSCUHAWvRNya3oT
-         WLLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751578019; x=1752182819;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0oJ8ujZlzaPcZCmdOGOROSSXlk7hultXH6uDj8y1p0g=;
-        b=KO4tCh5EpwW93bddIqljGLzjoszidKSV1rcKNYBm5iJgbeTVUUO7a58rh5clyzw0wr
-         9BkD2ydqOd0er7k7egn6OMnsehk03AvBggJfJ1PahDVxqevRPk3Mkwf0L4x5hytzqFX9
-         RS4RAvNmKNFuFSbQzlYblWmmJHl8VQy+kmOjKIPzSqFozSnf+WvH3DDd4PihHdpYp1kX
-         bKpTmU6W122Fvtb5c8gcoenO0R+C3VubQyp+sIhzf+HbnIYCNbyf2u8nt2d3YEK3YmDP
-         Bv8TWg179o9V88bifRgVvJWM/yNCYUYrJhho50HTlqeXiLqviKRcE7iGFedlumYC7xfQ
-         0AfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzjDWo3ndUN9mlgkPQdZdEWekK3kRofFHFRhrimO318rZURBuNI6GpScMdGy4PunqRGGirhZ+al3xRhig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPqHPNOa7NkILBehdpqsNtZoQqKulm2JEqweOSZhD3bYJsPV24
-	ZXEvGQ4KRiiMe2Dulf4620vkpxvRCXMR19+PPCD6w9HXHmnhzGWsdUDmjWJBXovbX+M=
-X-Gm-Gg: ASbGncsbzMrxL4V+yN5glcbeXsHlgHLVollLuY9nS6P45swNBGUMe7TPCs1FRmg1Lc6
-	2ihZHDmxVMONXfzDursXrfWDPPm7kwL6aC79o7yL6XZ4Pp7u450eySvBfRBFhdm654P87GDr2F/
-	64MiCqCZzuVzicYBNq4wVmuRc0azFqahr/0+3xsnhcGJKSsdCzGmlExdSt8wHubACw0gDqaqFfe
-	F356D/SsIRZ1OC70YXmeAqJJZBg6YlKb78Sz/ebJR8me8jni82kPg3Bfg2cmGlGCHeLJuXkrApF
-	O1x+VyC9xIGIWphGyraQsidS2U+m0XBfTAmLvhiu9auZC1+Ng9t5cOEBVYKhaA3yWicDAUKSBzm
-	VcQn1mzxLt0dsKP6aGktiyuAnRxC3a+PqjNq/E28=
-X-Google-Smtp-Source: AGHT+IHgAPBq1aur/7S/6mcI4NLp7GN7zcjgxxqJEIA8K08LOieFpkPn8SZoEH61J9kn9BXdbBYAmQ==
-X-Received: by 2002:a05:6830:6b0c:b0:727:3439:5bdf with SMTP id 46e09a7af769-73ca12c508cmr453337a34.13.1751578019296;
-        Thu, 03 Jul 2025 14:26:59 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4f2b:5167:10f4:c985? ([2600:8803:e7e4:1d00:4f2b:5167:10f4:c985])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f938346sm126011a34.53.2025.07.03.14.26.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 14:26:58 -0700 (PDT)
-Message-ID: <8f4b72bb-3c5f-4137-a4f9-5ce94631d3c1@baylibre.com>
-Date: Thu, 3 Jul 2025 16:26:58 -0500
+	dkim=permerror (0-bit key) header.d=aaront.org header.i=@aaront.org header.b="dqoXjpFe";
+	dkim=pass (2048-bit key) header.d=aaront.org header.i=@aaront.org header.b="v/BVgkC3"
+Received: from smtp-send0.aaront.org (localhost [IPv6:::1])
+	by smtp-out0.aaront.org (Postfix) with ESMTP id 4bY8mq5CtwzMY;
+	Thu,  3 Jul 2025 21:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple; d=aaront.org;
+    h=from:to:cc:subject:date:message-id:mime-version
+    :content-transfer-encoding; s=3r7feyyp; bh=/kZmNYWZNOTJQa4opCPhE
+    9MeAHI82FTFippa+nVrA1o=; b=dqoXjpFePZxdEULpDnRSc1iIU4UTydj/TLfKH
+    HPMBaqlkHTLVMC3dGVYex9NVU6iBEYzQmXt8W7LxEMeYThhAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aaront.org; h=
+    from:to:cc:subject:date:message-id:mime-version
+    :content-transfer-encoding; s=4x7dsrm2; bh=/kZmNYWZNOTJQa4opCPhE
+    9MeAHI82FTFippa+nVrA1o=; b=v/BVgkC3yRTStqMBR2f8EZeF/HuMKVSqzUfqb
+    HxVf5nKI7XyG5CgmhaI4PA6+MoQIVykqJYaxMC4e9JYhTBMI8Oh9/3O1B3vQAJzA
+    yT2qo3NmNXZx/dWD34nULC8n6maD5SQR/xGNsh5iNgOJIrUxOV2McxS++VvkUKhq
+    dUDyj0q+yqm1NV4nNraI9k9HuU/OO/G1hgnJsho3gpx3WQRKYpNqNhP26Cf+J6UW
+    ZACEQtJm0eJV4qEn5NmRynCJAFU8SnrjpamGAqpqgz6HEktS8gABBh8nvkeNHtqe
+    icIBqKWKHm0g67l8+0EPGXIG9g2CgVUc+/O3lNR0i3LQ2J98w==
+Received: by smtp-send0.aaront.org (Postfix) id 4bY8mq323rzJm;
+	Thu,  3 Jul 2025 21:20:11 +0000 (UTC)
+From: Aaron Thompson <dev@aaront.org>
+To: nouveau@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Timur Tabi <ttabi@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	Aaron Thompson <dev@aaront.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/nouveau: Do not fail module init on debugfs errors
+Date: Thu,  3 Jul 2025 21:19:49 +0000
+Message-Id: <20250703211949.9916-1-dev@aaront.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: trivial-devices: Add Garmin lidar-lite-v3
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250701223341.36835-1-rodrigo.gobbi.7@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250701223341.36835-1-rodrigo.gobbi.7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/1/25 5:30 PM, Rodrigo Gobbi wrote:
-> The compatible grmn,lidar-lite-v3 is managed by the same
-> driver of pulsedlight,lidar-lite-v2, which is a trivial device.
+From: Aaron Thompson <dev@aaront.org>
 
-As a general rule of thumb, using the driver as justification for
-dt-bindings is never a good reason. The bindings describe the hardware,
-not the driver.
+If CONFIG_DEBUG_FS is enabled, nouveau_drm_init() returns an error if it
+fails to create the "nouveau" directory in debugfs. One case where that
+will happen is when debugfs access is restricted by
+CONFIG_DEBUG_FS_ALLOW_NONE or by the boot parameter debugfs=off, which
+cause the debugfs APIs to return -EPERM.
 
-Assuming I found the correct datasheet [1], I see a power enable pin
-and a mode control pin, so I would say that this isn't a trivial device.
-Therefore this will need it's own new file. We could at least add
-power-gpios and power-supply properties. How to handle the mode pin
-isn't so clear to me though, so might omit that for now.
+So just ignore errors from debugfs. Note that nouveau_debugfs_root may
+be an error now, but that is a standard pattern for debugfs. From
+include/linux/debugfs.h:
 
-[1]: https://static.garmin.com/pumac/LIDAR_Lite_v3_Operation_Manual_and_Technical_Specifications.pdf
+"NOTE: it's expected that most callers should _ignore_ the errors
+returned by this function. Other debugfs functions handle the fact that
+the "dentry" passed to them could be an error and they don't crash in
+that case. Drivers should generally work fine even if debugfs fails to
+init anyway."
 
-> 
-> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-> Fixes: b257c1a45e99 ("iio: pulsedlight-lidar-lite-v2: add lidar-lite-v3 property")
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 8da408107e55..cd9d7d5eec51 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -107,6 +107,8 @@ properties:
->            - fsl,mpl3115
->              # MPR121: Proximity Capacitive Touch Sensor Controller
->            - fsl,mpr121
-> +            # Optical Distance Measurement Sensor
-> +          - grmn,lidar-lite-v3
->              # Honeywell Humidicon HIH-6130 humidity/temperature sensor
->            - honeywell,hi6130
->              # IBM Common Form Factor Power Supply Versions (all versions)
+Fixes: 97118a1816d2 ("drm/nouveau: create module debugfs root")
+Cc: stable@vger.kernel.org
+Signed-off-by: Aaron Thompson <dev@aaront.org>
+---
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c | 6 +-----
+ drivers/gpu/drm/nouveau/nouveau_debugfs.h | 5 ++---
+ drivers/gpu/drm/nouveau/nouveau_drm.c     | 4 +---
+ 3 files changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+index 200e65a7cefc..c7869a639bef 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+@@ -314,14 +314,10 @@ nouveau_debugfs_fini(struct nouveau_drm *drm)
+ 	drm->debugfs = NULL;
+ }
+ 
+-int
++void
+ nouveau_module_debugfs_init(void)
+ {
+ 	nouveau_debugfs_root = debugfs_create_dir("nouveau", NULL);
+-	if (IS_ERR(nouveau_debugfs_root))
+-		return PTR_ERR(nouveau_debugfs_root);
+-
+-	return 0;
+ }
+ 
+ void
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.h b/drivers/gpu/drm/nouveau/nouveau_debugfs.h
+index b7617b344ee2..d05ed0e641c4 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.h
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.h
+@@ -24,7 +24,7 @@ extern void nouveau_debugfs_fini(struct nouveau_drm *);
+ 
+ extern struct dentry *nouveau_debugfs_root;
+ 
+-int  nouveau_module_debugfs_init(void);
++void nouveau_module_debugfs_init(void);
+ void nouveau_module_debugfs_fini(void);
+ #else
+ static inline void
+@@ -42,10 +42,9 @@ nouveau_debugfs_fini(struct nouveau_drm *drm)
+ {
+ }
+ 
+-static inline int
++static inline void
+ nouveau_module_debugfs_init(void)
+ {
+-	return 0;
+ }
+ 
+ static inline void
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 0c82a63cd49d..1527b801f013 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -1461,9 +1461,7 @@ nouveau_drm_init(void)
+ 	if (!nouveau_modeset)
+ 		return 0;
+ 
+-	ret = nouveau_module_debugfs_init();
+-	if (ret)
+-		return ret;
++	nouveau_module_debugfs_init();
+ 
+ #ifdef CONFIG_NOUVEAU_PLATFORM_DRIVER
+ 	platform_driver_register(&nouveau_platform_driver);
+
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+-- 
+2.39.5
 
