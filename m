@@ -1,100 +1,160 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6D231845;
-	Thu,  3 Jul 2025 17:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F82F25BEE4;
+	Thu,  3 Jul 2025 17:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751562819; cv=none; b=q6J/CeHavYYO0XStbqlwy9lTIEYQrjpTWSOiHg5BliWK0z7eaf/pjmqO+7uDSgoF+ZeuGykt1NBUd9ubvs4qVVVcP2/Vu7hbjLqKeqZxqyLZ4XT8CB8nTkrCEoG1X4w7ByyKdDXvOBkCsWa9Q8gAG0uBdPFYqEnjeSB8hRrKJ1s=
+	t=1751562831; cv=none; b=l2N0Sy+Y+R36Aj14G7Q7M/v1VA3W7QDsyjXWdwgqeeRaoNKuKmx1SEkUMw2Jh3E33re5Fc1n0U3HsZQygcdxB0FKZ+6qHLW5748KuY9T+K9DB8u4THavYiCNZ8o6H44thg0k9QtRblBGs6ww1ZYySuQ4BNTQtHCp8TYNY8BqMOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751562819; c=relaxed/simple;
-	bh=6FBRIhLw7SoIW6pc+6sf2AmVUL5skHEhgKr+2K3ugFw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cQrtrLCRTXKefAFWUoJggRi+06rbqBIEYkXvB090XIs/FOAgsfQq+IBFUByaP4FMo4HVUaJBtYJ37WBJYTLwVpP5ltHG4kHJlphzA60aKKfQtAxkhBwoemj/x9ziDGRBWxUJ0K82rYmAQ23Q+eqlc8M+ogaRR7Kxoai9nuGtBLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net; spf=pass smtp.mailfrom=hadess.net; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hadess.net
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8EEBB444FF;
-	Thu,  3 Jul 2025 17:13:30 +0000 (UTC)
-Message-ID: <ffdf6fcea7730dd24c14404fe219259c9b9768d1.camel@hadess.net>
-Subject: Re: [PATCH 3/7] Bluetooth: btrtl: Fix typo
-From: Bastien Nocera <hadess@hadess.net>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: trivial@kernel.org, Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto
- von Dentz <luiz.dentz@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Matthias Brugger	 <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno	
- <angelogioacchino.delregno@collabora.com>, Sven Peter <sven@kernel.org>, 
- Janne Grunau	 <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Neal Gompa	 <neal@gompa.dev>, Johan Hedberg <johan.hedberg@gmail.com>, Ingo
- Molnar	 <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Al Viro	
- <viro@zeniv.linux.org.uk>, Kees Cook <kees@kernel.org>, Erick Archer	
- <erick.archer@outlook.com>, Chris Lu <chris.lu@mediatek.com>, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	asahi@lists.linux.dev
-Date: Thu, 03 Jul 2025 19:13:29 +0200
-In-Reply-To: <6be1c1c6-8d8a-49e3-bb14-dc8fcbfc2c50@molgen.mpg.de>
-References: <20250703142542.985248-1-hadess@hadess.net>
-	 <20250703142542.985248-4-hadess@hadess.net>
-	 <6be1c1c6-8d8a-49e3-bb14-dc8fcbfc2c50@molgen.mpg.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1751562831; c=relaxed/simple;
+	bh=8xI2ulcaB6bEMI1hmPTC/d7AzkiBhConLlLh5TVuNxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aLnneZwi6zkU0R/l3AZeICVqgTipznKzEA9heHhlqPCUEqr05r0FQ4WWKpodAlvCEvNv4IsV3eDq9ZRB4mwoD22Hew+IY5VEiuzhsslqMHflHF5tKlM4DUVahV1GmDV65BmNccZ7WVtLzKXHm7yMUl+yx0g1vim6SUBTFYGXlQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H63p7QBs; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H63p7QBs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751562830; x=1783098830;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8xI2ulcaB6bEMI1hmPTC/d7AzkiBhConLlLh5TVuNxA=;
+  b=H63p7QBsH/D6f2JrvUcuPSPVl3lU1yP1oXm9gBqj3WmV1Mmmk6Xt4Pcs
+   7ZN/t2vb8z11Nkjonnx+KjXKTGXS3PBG08T8DgdQJ356eT+0ZRrhKsni0
+   ooy810rzvC02c52yVkSOrwHp/fh+MqFJTDfI8YKR0QoZzIhBcegLjiWTn
+   BP6MIgCFH+KGvGodn48qquAHx3KzXK+Reb5WD1rfw7222RmeQLhxmglro
+   +1M2MeWAsMAHEYyQiHUeVW5tfIxUbgSMCwsDbuO8ujbFFmGtSQ+hAbn/3
+   F9hgIUZjbMIEPyR6ia6TiNTFOuJaDpfqQs2nrccyn6thGtYavgPxpqeyX
+   w==;
+X-CSE-ConnectionGUID: oxSx7TTzRFG6xn5C8xLkiA==
+X-CSE-MsgGUID: qaseB+ovQVGSbWSxKfx6tw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53619898"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="53619898"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 10:13:49 -0700
+X-CSE-ConnectionGUID: uCinLdqCRgKSXww9uxHlbQ==
+X-CSE-MsgGUID: QLWttZa4RlSe/Ylmiyye8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="154992519"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.13]) ([10.125.110.13])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 10:13:46 -0700
+Message-ID: <49f7c370-1e28-494b-96a9-f45e06ed4631@intel.com>
+Date: Thu, 3 Jul 2025 10:13:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpeeurghsthhivghnucfpohgtvghrrgcuoehhrgguvghssheshhgruggvshhsrdhnvghtqeenucggtffrrghtthgvrhhnpeeifffgheettdeggfejgefgffeguedvgeevkeevjeefkeekudejheetffeufeffueenucfkphepvdgrtddumegvfeegmegvtgejfeemtghfvddtmeejudgurgemfegsugemvddtrgelmedufeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgejfeemtghfvddtmeejudgurgemfegsugemvddtrgelmedufeefpdhhvghloheplgfkrfhvieemvdgrtddumegvfeegmegvtgejfeemtghfvddtmeejudgurgemfegsugemvddtrgelmedufeefngdpmhgrihhlfhhrohhmpehhrgguvghssheshhgruggvshhsrdhnvghtpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehpmhgvnhiivghlsehmohhlghgvnhdrmhhpghdruggvpdhrtghpthhtohepthhrihhvihgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhgtvghlsehhohhlthhmrghnnhdrohhrghdprhgtp
- hhtthhopehluhhiiidruggvnhhtiiesghhmrghilhdrtghomhdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehmrghtthhhihgrshdrsghgghesghhmrghilhdrtghomhdprhgtphhtthhopegrnhhgvghlohhgihhorggttghhihhnohdruggvlhhrvghgnhhosegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepshhvvghnsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: hadess@hadess.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Breno Leitao <leitao@debian.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+ Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>,
+ Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-07-03 at 16:35 +0200, Paul Menzel wrote:
-> Dear Bastien,
->=20
->=20
-> Am 03.07.25 um 16:24 schrieb Bastien Nocera:
-> > Found by codespell.
-> >=20
-> > Signed-off-by: Bastien Nocera <hadess@hadess.net>
-> > ---
-> > =C2=A0 drivers/bluetooth/btrtl.c | 2 +-
-> > =C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-> > index 7838c89e529e..3d137944c458 100644
-> > --- a/drivers/bluetooth/btrtl.c
-> > +++ b/drivers/bluetooth/btrtl.c
-> > @@ -693,7 +693,7 @@ static int rtlbt_parse_firmware(struct hci_dev
-> > *hdev,
-> > =C2=A0=20
-> > =C2=A0=C2=A0	/* Loop from the end of the firmware parsing instructions,
-> > until
-> > =C2=A0=C2=A0	 * we find an instruction that identifies the "project ID"
-> > for the
-> > -	 * hardware supported by this firwmare file.
-> > +	 * hardware supported by this firmwmare file.
->=20
-> Without the second m.
+On 7/1/25 02:58, Kirill A. Shutemov wrote:
+> Extract memcpy and memset functions from copy_user_generic() and
+> __clear_user().
+> 
+> They can be used as inline memcpy and memset instead of the GCC builtins
+> whenever necessary. LASS requires them to handle text_poke.
 
-*facepalm*
+Why are we messing with the normal user copy functions? Code reuse is
+great, but as you're discovering, the user copy code is highly
+specialized and not that easy to reuse for other things.
 
-> > =C2=A0=C2=A0	 * Once we have that, we double-check that project_id is
-> > suitable
-> > =C2=A0=C2=A0	 * for the hardware we are working with.
-> > =C2=A0=C2=A0	 */
->=20
->=20
-> Kind regards,
->=20
-> Paul
->=20
->=20
-> PS: Should you resend, it=E2=80=99d be great if you wrote in the
-> summary/title=20
-> if it=E2=80=99s in a comment or in a log string.
+Don't we just need a dirt simple chunk of code that does (logically):
 
-Noted.
+	stac();
+	asm("rep stosq...");
+	clac();
+
+Performance doesn't matter for text poking, right? It could be stosq or
+anything else that you can inline. It could be a for() loop for all I
+care as long as the compiler doesn't transform it into some out-of-line
+memset. Right?
