@@ -1,101 +1,81 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F062D3751;
-	Thu,  3 Jul 2025 22:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B332D3A6C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751583195; cv=none; b=QRqvw+agjJwCjBrw8O/wBTYrOfG7XJyziTCFkjP7aqGj7D6kuH+vAOjHfTYvw5w7Heq6OucnTzkGjmkPdB+zqmXrsnp2m2hIvpId13BIRA847AHpF+WmQxBlC2abA5SeWiZfhhtK0GMn2DRoxHp83CqQI94IeleHbbdcHOFlitk=
+	t=1751583217; cv=none; b=nHi8k3IGEZbabs2KnYJcqsxnYCMZT1CX0XkD3V6oHby/CoHbwbwJiwkqKsc44Fa7NlmWvxogjOzn/v+Poc4vA/QV/9KO9AO+vxJytBXLeoOc01pIpADiMQDSMRk2hklD/XvSzjs4k0+3BtYJtBIjQPdKqyvjMSiZtJ9ROO7EYkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751583195; c=relaxed/simple;
-	bh=3bWBSlOd1mEysHg8taMzS1I42clX6SsWKrJ8TpC5pSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U833O2lzPvP4M2Yf9gxcHXuccSQGDM6QfZgKXmuj6IVdVE57GeszTy1t7t4n1fLArH5tJWRsMlTHKAWruEt1is4VyrpfIDAZU4wH4qb2wcANuSRvU/8ckHQqtIj/I+IB40USUTuSmL/iBdGlPzsD+gmeoG2iz/a6E9MQQFgoq4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=let/ROpg; arc=none smtp.client-ip=91.218.175.180
+	s=arc-20240116; t=1751583217; c=relaxed/simple;
+	bh=ULQqKoYh2RjDI9TSKSxCqwj9ka7ofVBZbeuB6/CEVgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j7zaq1QOwgByfJNgkNSx+dLRKq+q+6T2wGA7K9HEOwTw0VC4Ds8YqYa4qbBoRRlEwjFFCDsxARhyKKxmRattJf9UDbAxQ49QvSlyLbq0T1kLMNEiVAxbFBjMbvXuWDNqoiA2G63/ojvH/16PcWYoDW5dc9Fwu393N+FBW9lDLrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=urFHdEeZ; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="let/ROpg"
-Message-ID: <218ed5ce-6e0d-41f7-809b-04e554d08c5a@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="urFHdEeZ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751583186;
+	t=1751583213;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LIyqDlLt3CT1utfTbk2TkfmajXEi5ZvgikV+/3VcJck=;
-	b=let/ROpgpEs+HqLRrGdvieskEbzt9tFEKP9ekxEOGcwqnmErdLrGJ016+f28aLWFswBbmF
-	exExgIED9KiRFUeIyT4jn1VfJq/r0JPY0xLLmJbbbF+GAA6mGFCUB1WGIJTwYsMse1RLb4
-	HiQRVv3DpWbFq6UjPVjAFyXhxzupLh0=
-Date: Thu, 3 Jul 2025 23:52:17 +0100
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oIRglgn/9ldYHUc7IhNCSY6KbnwH4OkGlYmr7LfN2B8=;
+	b=urFHdEeZN0hDQWUseEy8s44kzzllwidfjnHyb36vx5P+MKIsquEq9KFnGgf4vuudfvv1Bv
+	Xmx5kX6L9mSIhuNLS/MuIWwQu/JaeIBVRjA5CeRiUHmTF095dqBHlYnA/eYhOFJ55cTanu
+	dPSjDQvyUIUL7E95JipuXeoxUE1qhb4=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Wentao Liang <vulab@iscas.ac.cn>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: hda: Remove old commented out sanity check
+Date: Fri,  4 Jul 2025 00:52:36 +0200
+Message-ID: <20250703225238.308359-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v10 06/11] net: ti: prueth: Adds HW timestamping
- support for PTP using PRU-ICSS IEP module
-To: Parvathi Pudi <parvathi@couthit.com>, danishanwar@ti.com,
- rogerq@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, ssantosh@kernel.org,
- richardcochran@gmail.com, s.hauer@pengutronix.de, m-karicheri2@ti.com,
- glaroque@baylibre.com, afd@ti.com, saikrishnag@marvell.com,
- m-malladi@ti.com, jacob.e.keller@intel.com, diogo.ivo@siemens.com,
- javier.carrasco.cruz@gmail.com, horms@kernel.org, s-anna@ti.com,
- basharath@couthit.com
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pratheesh@ti.com,
- prajith@ti.com, vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
- krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
-References: <20250702140633.1612269-1-parvathi@couthit.com>
- <20250702151756.1656470-7-parvathi@couthit.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250702151756.1656470-7-parvathi@couthit.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On 02/07/2025 16:17, Parvathi Pudi wrote:
-> From: Roger Quadros <rogerq@ti.com>
-> 
-> PRU-ICSS IEP module, which is capable of timestamping RX and
-> TX packets at HW level, is used for time synchronization by PTP4L.
-> 
-> This change includes interaction between firmware and user space
-> application (ptp4l) with required packet timestamps. The driver
-> initializes the PRU firmware with appropriate mode and configuration
-> flags. Firmware updates local registers with the flags set by driver
-> and uses for further operation. RX SOF timestamp comes along with
-> packet and firmware will rise interrupt with TX SOF timestamp after
-> pushing the packet on to the wire.
-> 
-> IEP driver is available in upstream and we are reusing for hardware
-> configuration for ICSSM as well. On top of that we have extended it
-> with the changes for AM57xx SoC.
-> 
-> Extended ethtool for reading HW timestamping capability of the PRU
-> interfaces.
-> 
-> Currently ordinary clock (OC) configuration has been validated with
-> Linux ptp4l.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
-> ---
->   drivers/net/ethernet/ti/icssg/icss_iep.c      |  42 ++
->   drivers/net/ethernet/ti/icssm/icssm_ethtool.c |  23 +
->   drivers/net/ethernet/ti/icssm/icssm_prueth.c  | 423 +++++++++++++++++-
->   drivers/net/ethernet/ti/icssm/icssm_prueth.h  |  11 +
->   .../net/ethernet/ti/icssm/icssm_prueth_ptp.h  |  85 ++++
->   5 files changed, 582 insertions(+), 2 deletions(-)
->   create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ptp.h
-> 
+The sanity check has been commented out for more than 12 years since
+commit d5657ec9f4ad ("ALSA: hda - Disable the sanity check in
+snd_hda_add_pincfg()") - remove it.
 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ sound/pci/hda/hda_codec.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 5508381a1833..cb72e9655c8a 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -479,15 +479,6 @@ int snd_hda_add_pincfg(struct hda_codec *codec, struct snd_array *list,
+ {
+ 	struct hda_pincfg *pin;
+ 
+-	/* the check below may be invalid when pins are added by a fixup
+-	 * dynamically (e.g. via snd_hda_codec_update_widgets()), so disabled
+-	 * for now
+-	 */
+-	/*
+-	if (get_wcaps_type(get_wcaps(codec, nid)) != AC_WID_PIN)
+-		return -EINVAL;
+-	*/
+-
+ 	pin = look_up_pincfg(codec, list, nid);
+ 	if (!pin) {
+ 		pin = snd_array_new(list);
+-- 
+2.50.0
 
