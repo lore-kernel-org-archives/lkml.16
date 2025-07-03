@@ -1,189 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392E12DCC06;
-	Thu,  3 Jul 2025 23:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AE12D4B53;
+	Thu,  3 Jul 2025 23:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751586827; cv=none; b=qE3L+j6Et0ASOvLG9T7RKeqJgEXS4l3C01V8fgK9RJNQwPr9xrodiNWB1+rDbAYgbABTWirQ+PhnE/W3jBLreuvDe6DUapAfsEyVALUs7EC3vS8wMWFiJeO6tV/Oro/QgGykRuqq4+BSmqIG4MgOlaMyap5fYS+iNh9e6x1vMZg=
+	t=1751586954; cv=none; b=nVGCvbUoNije0lVJXqQumkCkFDQD01kEmuNhx4x1AAO3Kuk0fHEWAHDT7tOYTXHs7ZNikbVnfzl8Fy2ntXkdk8b6lttLRyGYxXVuHj6iQTB8pjZ+9AlozFV06DYCzffOWV+DilNLiy1O8lg/fnCoqaMp8Hy8pxF8WYah5Zl4yxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751586827; c=relaxed/simple;
-	bh=qukI32wDemMhrFXO13zfcpkB5KdHJVb7oljNa0uLMHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=seZWnY8TYsnTM730Uy3+oX8zFIxDKXU1yRv848XLushhFCYjKjB599hZj1braJzp4T8WhCnT3XCRgSCPDhOWEyznKYhVBX/zE//lkGtd/4NduHsOyJrtqfgtxNaHZs+bpSwYgR9GBBfBCPEIpl2f4YnqRbFmT6+Hinsd65l4TFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElIk1J98; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751586954; c=relaxed/simple;
+	bh=dj+7ebJKVoDtYctJz9uTithcTe1oC5BEjsUMPwFSYB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKBu6Y+j39Hs90sXG30taLw5Xj6USFTbVVSkr3pfhggKF2a4mAYZkaIt7D7V9D1Xf9/n3+FpcrgX0LRvuXCAkXxMAqJgh5wQWK46FaiOjIr/+kbRgSh1IgvYQtoP6C1oMIIedEI/aWGEox8J2txVXNaWLayDiw+itYhaud+yM7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VLrLjXAP; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElIk1J98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5674C4CEF1;
-	Thu,  3 Jul 2025 23:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751586825;
-	bh=qukI32wDemMhrFXO13zfcpkB5KdHJVb7oljNa0uLMHE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=ElIk1J98ka4kXvejP33Ieez21jyiulfz3tqxd8YuDuCx6d9oriNW+Me2CiDDChian
-	 Kp5d7HzMeJ6DHKrbuk6bYTidwbuUTDf6NgKx8Pk0v9oktECuxxcMVNkBifZ4v2C4ne
-	 3/nJ5+bD0bJDt/p7gsd4G3vc/McrS2xc5CfRZms/C2St/h9kD0iRFwJXapAwK9aZs7
-	 Z/2F/83BeNlrKXQy/uPG/Dmtxdvgbk2mg/IeQE9cIwuJJ/m3g84vWKwSP0oktLP8Kb
-	 wIsOTfIsCPpRFx8BCr+cCcKOcrlF7/KUe4c/KFuxXGyScaFNJvkMIBUnawWXsowGfM
-	 oq14fprt/l+XA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 50894CE0D3B; Thu,  3 Jul 2025 16:53:45 -0700 (PDT)
-Date: Thu, 3 Jul 2025 16:53:45 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLrLjXAP"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso2689055e9.2;
+        Thu, 03 Jul 2025 16:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751586951; x=1752191751; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L+4Z2K0VK4treV/9ak47i8S0ql9LKU6g1u/cXAT3ogo=;
+        b=VLrLjXAPgppQYQE+u/cbj7pTFwencMMdJhvgFnsU45l5/bkVc18pv4f1XMBQA/Smfk
+         BxwpK1E/oeRWunOXmRWU/LgzKJZiXJu5vUdz2xU3sUGVHz4nOfqqHluUoafw4Gmulv53
+         luceEBeq6cjopUOrUkqQcHt0iMyCFleFoSayTkX3di+7mMsQMNj/uDWfidmFpswm+MRw
+         lfrV+nZw04QJk8DA3DKBkyp/VliHZQLUjmLqFmIlLoZgn3/Xl9Xxc/NYkqR7+r5vJogt
+         wwTQEOpWB3oJJvXObvgDwqmby5X/0GtcbeyQlODfwmT9UHO/IjJbAMCbcYckYWt99xpu
+         4gbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751586951; x=1752191751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L+4Z2K0VK4treV/9ak47i8S0ql9LKU6g1u/cXAT3ogo=;
+        b=QbJTYKP7NGZlzyMSIYZeVJ8b8dYedv7n2fDoBf9MeK2Hjd/R6x3SgpppglWtYqwfUt
+         Mle8dsc+uxs3+gnm3XHDQX4F/o5UGDdC7uumHrWcX3fKwcWddJK+KbEI/fScWtjmiDM3
+         PLFcq/kyOXPqtc54qYupB+i5jLPyObvAQln5zfGcWEbLdbNzHLZ3yeYodkSDLVX4ytGi
+         2KpuTst17uuy4bFYKbRaNbQCNSBzH8CkNL1wrbU7l6RrYpz2L8SFXXUz3jXpsU+NUJQ9
+         vJ92tZx3VS5MhWEuEAGfEfaPR11My1TBYsC9MlnyMm4R5Ayera12jMuluWm1cG11pz6v
+         iqpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjmbvxLDAXwOpWA7IS7cuYdoDv9U/r6HrO1w1ORJAjynHZO3lAKdhnxlAZz5wb+w8zWWL4FDwRX946@vger.kernel.org, AJvYcCXWOCqKWHMWy4LEmq6N3VQmW8X1E9qRmaJWW3Y47mIoAZnYyAh4k1BXOSngUMrneF4zifBNohoilfLmmU4B@vger.kernel.org
+X-Gm-Message-State: AOJu0YztLVf45dvYnxJojZh3yOGJ6y1aEPnqGuMbeHPEdG2bQwV+7e1y
+	lj8zd22HQO/OZytqpBuaY46/ZarLLRZMm/D95wsLGnKCZaT4p8aFaEaS
+X-Gm-Gg: ASbGnctumJBw21pc8r2OqayumdQ989cmr9FOO+UCCbQAZbb4E2Atsw8Qaas6N37rIAD
+	44t6J19G083Ga2ZXCrQEarhNYCDJtOUnYIX8Cj5P3UtHn8/XoxF761vcZgikaccNjeHhPKSzH7w
+	970s4nXNQgean+IZsX6rTBucrh2MeT1b3eU/7wWVkj2q7iHxmqb7vdCkxqwscOdxfqA8OhbYHPt
+	qZUvPXP7kvLfhe7iICTGG6eiQdeLhoDQybI0XjA8kR0vlLEtHxAFcGayTrAKJZVfQtiHDOhfz9I
+	qkbmQwiJeE3dDvk155nUO27kkRJrL0YKrRBQWk3qcaG77OQr9RzI48wF5JE1ngm8t40BjeuAadc
+	KRaQdNvlYgsY=
+X-Google-Smtp-Source: AGHT+IGi7hSSuvLiBPv/4UrLrCBRaZJ+2egiw5vhTGl9xic+5pACw+TJ52WEXgdhb5omJdnhHDv0+Q==
+X-Received: by 2002:a05:600c:3b23:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-454b30d89b1mr4253145e9.18.1751586951065;
+        Thu, 03 Jul 2025 16:55:51 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:5f46:9d65:6ef9:1650])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225b5cdsm932436f8f.85.2025.07.03.16.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 16:55:50 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
-Message-ID: <f6900de7-bfab-47da-b29d-138c75c172fd@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
- <20250703200012.3734798-2-shakeel.butt@linux.dev>
- <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
- <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t>
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/2] arm64: dts: renesas: r9a09g056n48/r9a09g057h44: Fix pinctrl node names for GBETH1
+Date: Fri,  4 Jul 2025 00:55:42 +0100
+Message-ID: <20250703235544.715433-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 03:46:07PM -0700, Shakeel Butt wrote:
-> On Thu, Jul 03, 2025 at 03:29:16PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jul 03, 2025 at 01:00:12PM -0700, Shakeel Butt wrote:
-> > > Currently the rstat updater and the flusher can race and cause a
-> > > scenario where the stats updater skips adding the css to the lockless
-> > > list but the flusher might not see those updates done by the skipped
-> > > updater. This is benign race and the subsequent flusher will flush those
-> > > stats and at the moment there aren't any rstat users which are not fine
-> > > with this kind of race. However some future user might want more
-> > > stricter guarantee, so let's add appropriate comments and data_race()
-> > > tags to ease the job of future users.
-> > > 
-> > > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > ---
-> > >  kernel/cgroup/rstat.c | 32 +++++++++++++++++++++++++++++---
-> > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-> > > index c8a48cf83878..b98c03b1af25 100644
-> > > --- a/kernel/cgroup/rstat.c
-> > > +++ b/kernel/cgroup/rstat.c
-> > > @@ -60,6 +60,12 @@ static inline struct llist_head *ss_lhead_cpu(struct cgroup_subsys *ss, int cpu)
-> > >   * Atomically inserts the css in the ss's llist for the given cpu. This is
-> > >   * reentrant safe i.e. safe against softirq, hardirq and nmi. The ss's llist
-> > >   * will be processed at the flush time to create the update tree.
-> > > + *
-> > > + * NOTE: if the user needs the guarantee that the updater either add itself in
-> > > + * the lockless list or the concurrent flusher flushes its updated stats, a
-> > > + * memory barrier is needed before the call to css_rstat_updated() i.e. a
-> > > + * barrier after updating the per-cpu stats and before calling
-> > > + * css_rstat_updated().
-> > >   */
-> > >  __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
-> > >  {
-> > > @@ -86,8 +92,13 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
-> > >  		return;
-> > >  
-> > >  	rstatc = css_rstat_cpu(css, cpu);
-> > > -	/* If already on list return. */
-> > > -	if (llist_on_list(&rstatc->lnode))
-> > > +	/*
-> > > +	 * If already on list return. This check is racy and smp_mb() is needed
-> > > +	 * to pair it with the smp_mb() in css_process_update_tree() if the
-> > > +	 * guarantee that the updated stats are visible to concurrent flusher is
-> > > +	 * needed.
-> > > +	 */
-> > > +	if (data_race(llist_on_list(&rstatc->lnode)))
-> > 
-> > OK, I will bite...
-> > 
-> > Why is this needed given the READ_ONCE() that the earlier patch added to
-> > llist_on_list()?
-> > 
-> > >  		return;
-> > >  
-> > >  	/*
-> > > @@ -145,9 +156,24 @@ static void css_process_update_tree(struct cgroup_subsys *ss, int cpu)
-> > >  	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
-> > >  	struct llist_node *lnode;
-> > >  
-> > > -	while ((lnode = llist_del_first_init(lhead))) {
-> > > +	while ((lnode = data_race(llist_del_first_init(lhead)))) {
-> > 
-> > And for this one, why not make init_llist_node(), which is invoked from
-> > llist_del_first_init(), do a WRITE_ONCE()?
-> > 
-> 
-> Let me answer this one first. The previous patch actually made
-> init_llist_node() do WRITE_ONCE().
-> 
-> So the actual question is why do we need
-> data_race([READ|WRITE]_ONCE()) instead of just [READ|WRITE]_ONCE()?
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-You should *almost* always use [READ|WRITE]_ONCE() instead of data_race().
+Hi All,
 
-> Actually I had the similar question myself and found the following
-> comment in include/linux/compiler.h:
-> 
-> /**
->  * data_race - mark an expression as containing intentional data races
->  *
->  * This data_race() macro is useful for situations in which data races
->  * should be forgiven.  One example is diagnostic code that accesses
->  * shared variables but is not a part of the core synchronization design.
->  * For example, if accesses to a given variable are protected by a lock,
->  * except for diagnostic code, then the accesses under the lock should
->  * be plain C-language accesses and those in the diagnostic code should
->  * use data_race().  This way, KCSAN will complain if buggy lockless
->  * accesses to that variable are introduced, even if the buggy accesses
->  * are protected by READ_ONCE() or WRITE_ONCE().
->  *
->  * This macro *does not* affect normal code generation, but is a hint
->  * to tooling that data races here are to be ignored.  If the access must
->  * be atomic *and* KCSAN should ignore the access, use both data_race()
->  * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
->  */
-> 
-> IIUC correctly, I need to protect llist_node against tearing and as well
-> as tell KCSAN to ignore the access for race then I should use both.
-> Though I think KCSAN treat [READ|WRITE]_ONCE similar to data_race(), so
-> it kind of seem redundant but I think at least I want to convey that we
-> need protection against tearing and ignore KCSAN and using both conveys
-> that. Let me know if you think otherwise.
-> 
-> thanks a lot for taking a look.
+This patch series fixes the pinctrl node names for GBETH1 in the device
+trees for the RZ/V2N and RZ/V2H evaluation kits. The node names were
+incorrectly named as "eth0" instead of "eth1", which could lead to
+confusion when configuring the Ethernet interfaces.
 
-The thing to remember is that data_race() does not affect the
-generated code (except of course when running KCSAN), and thus does
-absolutely nothing to prevent load/store tearing.  You need things like
-[READ|WRITE]_ONCE() to prevent tearing.
+Cheers,
+Prabhakar
 
-So if it does not affect the generated code, what is the point of
-data_race()?
+Lad Prabhakar (2):
+  arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Fix pinctrl node name for
+    GBETH1
+  arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Fix pinctrl node name for
+    GBETH1
 
-One answer to this question is for diagnostics where you want KCSAN
-to check the main algorithm, but you don't want KCSAN to be confused
-by the diagnostic accesses.  For example, you might use something like
-ASSERT_EXCLUSIVE_ACCESS() as in __list_splice_init_rcu(), and not want
-your diagnostic accesses to result in false-positive KCSAN reports
-due to interactions with ASSERT_EXCLUSIVE_ACCESS() on some particular
-memory location.  And if you were to use READ_ONCE() to access that same
-memory location in your diagnostics, KCSAN would complain if they ran
-concurrently with that ASSERT_EXCLUSIVE_ACCESS().  So you would instead
-use data_race() to suppress such complaints.
+ arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts | 2 +-
+ arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Does that make sense?
+-- 
+2.49.0
 
-						Thanx, Paul
