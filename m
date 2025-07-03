@@ -1,137 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248F223C4E5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A24528A1F8;
+	Thu,  3 Jul 2025 21:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751578984; cv=none; b=sfl827J/TpVnevNPpuguf0Tu/8p76fCb2WgUC1I9nshJEaAvm9UWqzOFHv4BJsT/rNkm/y+y7HXZO0/6MWxvZiIfVAJPeyPlFznenuwaWgedidCk+6wYpi7wDxdEhOcJwTf/tqDgUDSnq8C5DSsxUoTj5UJY4vu60LJ+6LXb1Z0=
+	t=1751579079; cv=none; b=NuMaUvGTNMukoaTlxrNt1CFKEDf5sjzVDgsdndaQkgJWdFW8dXW99qc5CwDxP2RDQlMSGaOYonDENgtt7a7GFN12M4+EXqOuwe1R0zTD16kvkUflFNJtLfnk/hlu+X1kyV/dn4gfRVeyfZnIZNojYoyiVB2bvSjZpTW2i/QeyGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751578984; c=relaxed/simple;
-	bh=NQ0Qk+TMUANYCWV5dlSD/i/jLVaSorn/SnDHk88J94A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSTZ2SaJFlQLxwLqRmApgYAyTiGB0wfZgxVXZ75rl/AfM6ULelE9r2x21+6ss1q01rQ+qf2moT4bhDN0RFGboPl6OO+gkD5jUQoheg6/LVZVN4I+ZOIYfvM3nhuS9OL5eGmPgfVkn2SGbAk26trAbGwiqWFy1ZQrUOXsB0ofZ0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lS+/7q34; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751579079; c=relaxed/simple;
+	bh=IIoeyyq1GZIa2BjYk3OpqgiSGOD9oO9LywnSHtt7jvU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fvShPOok6PRQSUQagdiPrrFc8v11gOXtGBuxnWLfPPTV+terG15YwOrzMRcOSAaRiUgJEEcisNQ7ppCxEozRreaPJmvAR43cWNMWvD68Dy+9kgOB7+agH0eB193BENm+X9BJO04TwZKeq8Og2w78ax2dRCi4cxuJysdt3sstFfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWmpe8ad; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lS+/7q34"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563JbvLm029619
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 21:43:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=0qdR+SCx3OWhYnC0S9E4S9JM
-	ShEJeWi1WMEl049av6o=; b=lS+/7q342bAzqp8ZFDO3iMZYuA0uOQdrrbO5kIU4
-	eNcRDPpVD1Fwlis6JVo5p1uWlqg4uE925T6cSSTEkuFP9aA3NJQ2rtmWc9lMT7np
-	M5NiLPv+nPe6kza5mHV6+NdcIVFLfBWLkcitV7V2hAXl4EBH+9wOcYKz4C1KSZ7D
-	fbk7subCH+Dn1+WAbFTeqF4kXOnqdJOPq3Jf+wZXdmdz7mHGr5xeV1Sdgf/XhY+3
-	28MZ/e8Ma/XO3jR7NNJqYICGm8n5UnpbuLgJ250qBoy/RRvA7kEnQX1CrrAFS87H
-	rQ2TDkNvBhZiyWl27FzoOu81XrLGcd5WAISRUMOO3h9rUg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47nh9s330j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 21:43:02 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c760637fe5so43454585a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:43:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751578981; x=1752183781;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWmpe8ad"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so490096a12.3;
+        Thu, 03 Jul 2025 14:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751579075; x=1752183875; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0qdR+SCx3OWhYnC0S9E4S9JMShEJeWi1WMEl049av6o=;
-        b=j3mmGlirjnLcA2Rc1zImTOCOeXX3t6RALt0tSc6OsCKn0u6pen94SdGTWUKrsAoCm0
-         yiiSe/19d4KBA4+otlDJ4mPNT6+7Sf/kSzwE94A8Nl2vkfwbYxVykUOaROf2rR3FFqJP
-         UVvagwKeukq/RAp1+/1DXdhkBOIW3csZz89z7hhnygA0SddiIecH5EbnbgPcKinfnBTa
-         FyYCw3+rWKeav4qAws/GOwB9J5qGXJ5JHw1L2QYgUhJeacf72G1xpP8PL8YRH/j5q8tr
-         pGb1XBdyPzscXeQKlm5c9Nrj80UOg7en4zIMMQA7KrWENM5s8QD2TeHFC0OJqrwus7+1
-         awWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBGqTZ7ooGm0NMd9QnCuIYRS4+KagkjYtpHW7VwRGdT3U7+ui0Ay77BuiaCdjnuNyS/5GccNb3jHZWCCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOHHDyYRSvoEfk5SQxn7uQb4r4f+i/QUsrqKEK8YZpic0CNBAL
-	1+2oOuV/IfPk8/CQ3RCJyFfuiJqpnHLgvxK8D8TEvt2mwr+xfPw/UJLvpe+rtDQQP0iOJo3J9Hu
-	ye6GYB6mgxQbUkkGUXFkKExFHT+vBznDt78V5wMywfHzLVAhjWBWZ2VBQ2f8qrjzBygQ=
-X-Gm-Gg: ASbGnctAf37NtJZU2yd6NLXQqxfpv+/OuOh07fh3ELyOc9G333oXTMZ8RhNJYhi0uaZ
-	uTyU//rBIJDW9RuUC5w9ab9Vsp4Fg0ff1iD5XJ9QZezC2ZYfn31p9+Cs3Qd0K6dCn09Ixc0T2Zo
-	iAG3C2uNwOUKav9PYtzazOYQQvqbz5xpGsp9pRGIS2mzYxOjaE4Z4kq515SfpKSo6d8z+x9Dtf3
-	bskRERUikeg36b9MIx+Si3UkewTasQowhdaQYf8i8CAiZy1WcWdTwtcPclx63OnyFbaFthy5cb6
-	qZaOeUJl0kx6vbV3jSVm/+6jZY1XFGo/WQolgWZwCjnlUygUi2RgzVNAUZ7ZfZjd3d0JLO8CIV/
-	P2u+N9rj4nOzygGvHrQMBusUzmxYFJowZ3Wc=
-X-Received: by 2002:a05:620a:7187:b0:7d5:cbfb:8844 with SMTP id af79cd13be357-7d5ddb1d9d6mr7418685a.4.1751578980954;
-        Thu, 03 Jul 2025 14:43:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0r+yYXY87tfD9NzSKu2cGD8cQwmepM7gyxeU11O6CFVmLIqXER+CNuV5QEvR6O0qoT+qaMA==
-X-Received: by 2002:a05:620a:7187:b0:7d5:cbfb:8844 with SMTP id af79cd13be357-7d5ddb1d9d6mr7415685a.4.1751578980482;
-        Thu, 03 Jul 2025 14:43:00 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384cea54sm74195e87.247.2025.07.03.14.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 14:42:59 -0700 (PDT)
-Date: Fri, 4 Jul 2025 00:42:57 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Pushpendra Singh <quic_pussin@quicinc.com>
-Cc: cros-qcom-dts-watchers@chromium.org, andersson@kernel.org,
-        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@quicinc.com, kernel@oss.qualcomm.com
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7280: Add support for two
- additional DDR frequencies
-Message-ID: <waxxtkaqatisuvdhejahcion3i62d5ojljtgkmhw7acckjpxzq@qbe2pb3jg45b>
-References: <20250702000120.2902158-1-quic_pussin@quicinc.com>
+        bh=IIoeyyq1GZIa2BjYk3OpqgiSGOD9oO9LywnSHtt7jvU=;
+        b=UWmpe8adDfGOpGY0/t/bS9mEvmIzgwuwtWV2nJiPaLbgbUH8l5fxy+Iy5vDTjvcwIN
+         oRhCC3aiTtyZuaRUlQJX4owMEVmRhfxbpn3QGK9pkmkQFWNxHDEWwjNV8cRw2uiyM8kq
+         yQYlQ9OHQE3HKwArB6fMEuH1s96bo+m+JPQGURcW9xPG07GWoJEke9R2uKQgMQIxdvfc
+         /wViav3rpl+V3lQy7jhShrLdMqIsiLS5adLTMhPmQvDAmaE+HcCF0mqxV9lpl79EvkK7
+         rt4suVb64yvgOnaGiT2Kbg5nca9+wjDBwYdshH40a/0TICTYK1qlTjwRr4OFeUvMXRlP
+         1z9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751579075; x=1752183875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IIoeyyq1GZIa2BjYk3OpqgiSGOD9oO9LywnSHtt7jvU=;
+        b=kr/GcY6/U0Oz0+fC0zU+PxD6iwOrMbPyg5T4f1QNZQFJNP6490WjROuTHpcS+qDuzv
+         vRIOK0HY5EiXP5uUaAjdxtetXzOO604ys7xnxcpRHPxByyApL2LwPR+lAY11RS2czUGE
+         kNBeypaqLQ23XLpfOrMGQntS1GI3wtDtQ5ABIXPWuODBcxZWQ/dkxhHVY8mZH3lwhEgC
+         He0Za9ZnKnuA0GNx6vnsPAlWmRtU2ZfAek3CmiemlGlq4mAxyBZv8rJyA33N7XodyDK/
+         ST56elmW0LxZ4ggo0X8TwnNOlQ1rA9dGzm11M6qQt8+igFafRbZls9R84t4y3zS/faqD
+         +h8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX9V5H67XXVuY8UZLr5Yy0iPgx3s9pisAtdrht1vt4s8jdfXiMGkBPIN9Ze77iEGqUL5JC4izDibhhfVAQ=@vger.kernel.org, AJvYcCXnQ/VrGlqr9S/8wzXp558bBxTq+EFN3TSEFBB6VQtuOCyuIbAyOAj1VK0JZy2wshTTnjyd/I2KCzuB8VM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjKK9JTAVZrZcaYJNvOg9XLlPWz3TY1NtrIx9+AYNu8c63jrrO
+	5jIKz+AUxYRcggdTt1ufEi0iW6prXAfo5IPlNckC8QE8rlm/axtYHgrGbhdTKRnx7YP7N9H7QsC
+	ztsi8uBwHJ6LRCqV7xlJ9OELrhNaIXYyfcCHGDJZ8+A==
+X-Gm-Gg: ASbGncsLkxBNqVzPjnCqnw5Tr6wBJWMSb92ClQ7UGoBokt1vwltVLRvDYyjPWgw93a+
+	xepdLJ84G6PfsV5qNOfDRhqv+F109KPiYZbTfzjmu+QFGHeGOLMx2lEXsT0eI+XC1HdRkDwinBp
+	uhWcvRdYtRiWbYZFYO05zPjQcges+K6h/uwA/IbwAMTHk=
+X-Google-Smtp-Source: AGHT+IHp4LtpoHgPrz8vKo5NxF0850fg3ZRp89l0VEVuQnqdnTSUiMkcg6zqLhd4WpnMFCUIhnuEr8ripxN8lv9rITI=
+X-Received: by 2002:a17:907:3e9f:b0:ade:4339:9358 with SMTP id
+ a640c23a62f3a-ae3fbc5bcc1mr11741166b.22.1751579075044; Thu, 03 Jul 2025
+ 14:44:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702000120.2902158-1-quic_pussin@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=frrcZE4f c=1 sm=1 tr=0 ts=6866f966 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=C_4s4C4ZoqFTuNAt9h8A:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDE3OSBTYWx0ZWRfXxqgdhPOQs+Ky
- XcEfm2ZS3lSSAk9w91+7R137tbA998S3jCG8oYnLb0L/D1jN+RvnHa7isv9e1yYb9azTADCbwzA
- F/60WH/90iHevsWyAMHe96GddrFeS3CJ6fjQwW4o8Mcm2xw8re4zT5XHEqsskXAN4lZehS39w/p
- KvvV1KC1UZUCyjlca+Ir5n0vd6DKKJvbn8ETZ1fBa3l/0lUNjsGoYyfQHa68fHLRCDvtUB9GXPU
- IKfxaXIrTsjrbndE5xhy3ivrmn5p0pAhBF9uFen8Ufev+EyoD77eWVsDK+jpyTMt+qRFUGco0qF
- CF/a/87GkJRTKyWpreQOTxMK/lMwcnL2E4vFdVIecRjasfKIGQeyMlTpABi7madPfiBc4HaSPGT
- jiHRorIBTEcxWbGzW10cKT7/eFmRJ1KT6dt3XjlR3myqxke4dO4kI8CEHEly5cB3uEyvLXDW
-X-Proofpoint-GUID: ul4zt6efir3K2-ZSIcMuXN4GJOLpLo_j
-X-Proofpoint-ORIG-GUID: ul4zt6efir3K2-ZSIcMuXN4GJOLpLo_j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_06,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507030179
+References: <20250703163350.5163-1-abdelrahmanfekry375@gmail.com>
+In-Reply-To: <20250703163350.5163-1-abdelrahmanfekry375@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 4 Jul 2025 00:43:58 +0300
+X-Gm-Features: Ac12FXyhrh_8lMHSEmUBcj2pEZdCZKx9DoJsYb6ibx03ED0ZVcENiX9lPD_jlAo
+Message-ID: <CAHp75VfOVksdSwLjWPZqSeRS9_zxSKp=DD2xL06TPnjy5N2jzg@mail.gmail.com>
+Subject: Re: [PATCH] staging: media: atomisp: Remove custom sysfs attributes
+ from atomisp_drvfs.c
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: hansg@kernel.org, mchehab@kernel.org, sakari.ailus@linux.intel.org, 
+	andy@kernel.org, gregkh@linuxfoundation.org, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, 
+	dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 05:31:20AM +0530, Pushpendra Singh wrote:
-> The SC7280 SoC now supports two additional frequencies. This patch
-> add those frequencies to the BWMON OPP table and updates the frequency
-> mapping table accordingly.
-> 
-> These changes do not impact existing platforms, as the updated mapping
-> only affects the highest OPP. On any given platform, this will continue
-> to vote for the maximum available OPP.
-> 
-> Signed-off-by: Pushpendra Singh <quic_pussin@quicinc.com>
-> ---
-> 
-> 	changes in v2:
-> 	Fixed the commit message [removed cc and change id]
-> 	Link to v1: https://lore.kernel.org/all/20250701074334.1782967-1-quic_pussin@quicinc.com/
-> 
->  arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+On Thu, Jul 3, 2025 at 7:34=E2=80=AFPM Abdelrahman Fekry
+<abdelrahmanfekry375@gmail.com> wrote:
+>
+> Continue the process of atomisp driver cleanup as dicussed with hans
+> and andy in [1].
+>
+> Tackle TODO item "Remove custom sysfs files created by atomisp_drvfs.c":
+> - Removing dbglvl, dbgfun, and dbgopt sysfs attributes
+> - Eliminating their show/store handler functions
+> - Deleting the attribute group definitions
+> - Preserving dbg_attr_groups[] as an empty array for compatibility
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> [1]: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@ker=
+nel.org/
+>
 
-> 
--- 
-With best wishes
-Dmitry
+Make this Link tag:
+
+Link: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@kern=
+el.org/
+[1]
+
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+
+Change LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+--=20
+With Best Regards,
+Andy Shevchenko
