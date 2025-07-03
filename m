@@ -1,93 +1,99 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3962DE701
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BA42DE701;
+	Thu,  3 Jul 2025 21:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579503; cv=none; b=lsK5HaNWSBJcceBAAxU/e1eRaeQ4HxKerDya3cK13TE+bPoAILt3YXmoBWr304EVYvGBypOmvox+0TLm3ieFUi23qZNrtxMZcAXHThPh02TLaMRD4zdLoyOlVt1edLIqtd/jTc5YE27i4FoWfjfsbx9QKe7drQOFtlAUHDwa9zk=
+	t=1751579568; cv=none; b=K82lnVBhfCnINRUoOM9/qbKcoWhITuy0OQaFKb8U25TsaCVFJjItYPeDjuQ/46XlOFGxZy3G88kg6VAZaIC/zHuLy/IDJYnjSRNJdV7PJ0Hj6HVx3JFs6exseTinbhKD/Blz841Yho7l1fNu4bx+8v9akjXGoeJ22/rwFvvUFHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579503; c=relaxed/simple;
-	bh=3Q0iNSrxY/+0+4HWOT6KwZHJuWt0xV9uvF8SsizPuyk=;
+	s=arc-20240116; t=1751579568; c=relaxed/simple;
+	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rNenePS113fWH/9eHTZEYNV0vayIWS9kP3DpIEpAMgptL8co0MN9/6vw04Lxxf7MD1lKZuRrv1J5jyK9sDeegEy8ga3Tik9E79WuBG6o/uiltqE9b8fIPDZzclgc4wkanSRDK6ZmiFA4OrxQskJN4cXaecKdD0f8FZwUXDhl7qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ulaEXyvF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L5UMvyEY; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=PxKkfEStBw3oxJ5xGc2/g4LI5JmDj7L8NLQaifUA9CcKdiqIAmWEpzSMT4AJdq+hdYGS5nIrrGeY4EDY6phFYaTRD2CqPpOz+2TXQTFWT3rJWeVIuujomlBLpy76FGSRS+z7Su0O7S4ltvrwMeli+n//75HoZOTmx0rMk8S5v/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l+1wDbtm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dWJYNReI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ulaEXyvF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L5UMvyEY"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l+1wDbtm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dWJYNReI"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751579500;
+	s=2020; t=1751579565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AMctfDgk0d/ScRhzx0rzzgoIcZATCyOAgGRtgKIvgdA=;
-	b=ulaEXyvF8lkZ9O/fuPn0xyurtQIMi+IvaHirBUjvcFj9jXXhdY0hircZMBWVeQyFU42xfa
-	637SdcE7LpBN4PL+kb1nBLN5dw35Zf2diqJGxa1IgpRPHMHifhEsRGzCTw7xOyuyMNsIkv
-	W3LqcFeh6+u+im9jnkraNeaz4PNf+0dlrHYUVEhy0rDXhQ8PW8l+YW8EEGruHJGSM83DTq
-	C0z0dfl2D/x/RwnelM/3Yo5kcbtUjaMHOBHthp5ZRUO6tFDK43+Zof8cJeLedIXAgGRxmS
-	UJSPoRKwoLD3O6H2sGddTBjo8Wu8Z398VVpFYG48s+wqh8BjAUQXcvk/Lyj4OA==
+	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
+	b=l+1wDbtmX5AiOOWEeigcXFhl+t2sTg0fHkUt5qJoqkmSBNRCXEXQXzn4U5Tm2LI/yu7c+U
+	XexkvkxZYhwEUaXRifilsiQeAjeM2ZcyBFPslBQh/AV+WCSzGorg9LkFwMExhRslqoeJp8
+	O3dT3G9x99c0XqaiDsAIS5SCBB3zcBoQ4ZtaDMeBh+GO2sdqsONGleQB7K5wJUK2ix2SdA
+	pRNnB0TQhRJN1mxyeb26CSM92iZW/xIh8UNMII619fFwRx60DDGvjqTEba9PaRXgLHtKm+
+	n4fqWlSrHoXXxoPVXsBoDFJrYc0cdF1A8M9zD2YEUQhO1GtDiAu1hYXdx1ojSg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751579500;
+	s=2020e; t=1751579565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AMctfDgk0d/ScRhzx0rzzgoIcZATCyOAgGRtgKIvgdA=;
-	b=L5UMvyEY1jCDC1OXRz+eNorYsITvFtvyOecn2hidSoUYofsH8eQLzS8kcIzlOgGvEN4DBh
-	Lf/Rgj3QwzQA2lBg==
-To: Himanshu Madhani <himanshu.madhani@oracle.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: System hang with latest kernel v6.16.0-rc1 (rc2 & rc3)
-In-Reply-To: <85A10B5D-67E5-44F5-886F-CA9D5E7EBFAF@oracle.com>
-References: <ABB1DAF0-048A-4373-9007-988D20F359DD@oracle.com>
- <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com> <87a55lt48k.ffs@tglx>
- <85A10B5D-67E5-44F5-886F-CA9D5E7EBFAF@oracle.com>
-Date: Thu, 03 Jul 2025 23:51:39 +0200
-Message-ID: <87tt3trlhw.ffs@tglx>
+	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
+	b=dWJYNReIOQ2eB8r/KfLfgDmz4t7V9E3h7DMRPjyZluvj3HLgsHSM3z8I7W5OY/BD31GY2L
+	+Lnnu56yF4QvHoDA==
+To: Nam Cao <namcao@linutronix.de>, Michael Kelley <mhklinux@outlook.com>
+Cc: Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Karthikeyan Mitran
+ <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Pali =?utf-8?Q?Roh=C3=A1?=
+ =?utf-8?Q?r?=
+ <pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
+ <jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel
+ review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ryder Lee
+ <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, Marek
+ Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+In-Reply-To: <20250703210056.sDzAytHT@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyaht595.ffs@tglx>
+ <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250703210056.sDzAytHT@linutronix.de>
+Date: Thu, 03 Jul 2025 23:52:44 +0200
+Message-ID: <87qzyxrlg3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Jul 03 2025 at 20:34, Himanshu Madhani wrote:
->> On Jul 3, 2025, at 13:21, Thomas Gleixner <tglx@linutronix.de> wrote:
->> The problem is obvious and if you would have enabled
->> CONFIG_PROVE_LOCKING then you would have got the reason presented on a
->> silver tablet in dmesg. I encourage you to do so nevertheless.
->>=20
-> Great tip on this. I=E2=80=99ll keep that in mind for future debugging ef=
-forts.=20
+On Thu, Jul 03 2025 at 23:00, Nam Cao wrote:
+> On Thu, Jul 03, 2025 at 08:15:07PM +0000, Michael Kelley wrote:
+>> which is in netdev/net-next.
+>
+> I need some guidance here. If I make it apply cleanly to linux-next, it
+> won't apply to pci tree.
+>
+> I saw this type of conflict being resolved during merging to Linus's tree.
+> Shouldn't we do the same for this case?
 
-Actually the very first thing in testing of a new kernel should be to
-run it with a copious amount of debug options. That avoids all the
-headaches of chasing fallout caught by them, in painful ways later.
-
-I'm truly surprised that this is not done already and testing blindly
-assumes that rc1 has already been objected to such tests completely.
-
-It's bloody obvious that with a code base of the complexity of the
-kernel and the gazillion of drivers, the CI coverage is far from
-complete and only best effort based.
-
-Obviously the companies, who have access to and care about their
-specialized hardware, should run CI against linux-next to begin
-with. Then such problems would be caught way before they hit Linus tree.
-
-I know there is no budget for this kind of effort. Companies rather
-waste their budget on chasing problems, which could have been avoided
-upfront. That's a huge cost saving, which is proven by applying magic to
-the relevant Excel-sh*ts.
-
-Not your decision, I know.
-
-Shrug,
-
-        tglx
+There are many ways to skin a cat. See my other reply.
