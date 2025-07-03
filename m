@@ -1,89 +1,134 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BEB1DDD1;
-	Thu,  3 Jul 2025 13:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585121DDD1;
+	Thu,  3 Jul 2025 13:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549324; cv=none; b=G0j+eFv0Ua5SdPxmByNYQoEdF5JrWBN/W9JqgHyEmFQydRFwpccYQ4HK+Y14bIBBn1OkKaVjdBuTX3bbvTHX3jqgukrfv6ai0PCp1fyJ5IHS3rwJcg8GJs0Mx+Ju1gFfMVoppuJKozYp6Z70/FUtSPGeO3aZ7Ldf+RKw27rOzRI=
+	t=1751549369; cv=none; b=IBtSa/Ei4AaTkeSLfljk8FKUw1qsH7I1ax1xsiJnL0hLUMWqy2H/J/ZUpRidd0P/BU19eNsEQSa0UUOcYMRrvJk8Xr7yhCiV8NaCL9fz4ySTTWHduRrNd86cbX8Csmr8Zi4S4s4b8REOFOdPQB51wV9P+XuDjeQFq+/uHqV7RvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549324; c=relaxed/simple;
-	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HZdvUswjzOFabwfKCOXPDeoFdqRA8ulop1TkMblchGw/Lw2A4sHhVfmEGMcvp7lYMxD3SkC+RccrfTfzkn+Ur+fdyJNzxAPnhUSIgaUCMC3LoEeJMW92Acu0gmSiHSZwpeBHQ2BtoTsQdegW1UVuEkkr2Com3n/qE1VwG0ZBXrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k6BnCmhr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ROnQ+kLc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751549369; c=relaxed/simple;
+	bh=XD+0M/+zCuo2tdMuEHDUd3fH2NYMzesi4Z2cIPur/bM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=coqHmU/mnKAXMGLtAFcwojkJ3mO+7whGm6RAEXyNJm0GICHyDoU80HMq53702QadA+7zkC3a81vmIhGRLXnLZic2q/vSaMYyS3Oxl04Gf9wl5Ubj7/iD1Gm489QxlJX8Zn1Da8G2P9CZAThLuYUsgPXSwUUHEu5xRSWSYrRvRM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=jKOzT2lb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6BnCmhr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROnQ+kLc"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751549321;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jKOzT2lb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7F2C4CEF0;
+	Thu,  3 Jul 2025 13:29:26 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jKOzT2lb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1751549364;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
-	b=k6BnCmhrUKnjyhGZR/aiCAsL14gYTfxPkP6AI8tNGVPzQb9xE2NLcgezU9aziYkNSCR7lX
-	nLKwosaEebR5GKTcC5jnaB0E/L9QSds/2dKXB0nvjxhftNJ9To6iW1YDZAtLnqlWiKeWC/
-	dCpTjL+384DvvxIN2NIh3uPDzwYewUEN/QckGkOFqGMnLOZZKkfODH2j0FxzxWOKDQkbEf
-	4SNtz6dBXeXH8o+50+zTeC18oWAm709Aoo8/TX34UvMIsxYFCAbsDTG56pcr8MtfCrHN24
-	S6Cp9LqqbYgwFVfm59VsbUaLI53TfnYBct+BWbUOMHczlRCxiPtPs+TxKjortg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751549321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
-	b=ROnQ+kLcAQGVWiVEwPRgZEiqBhGTKQ40YBCkpXyv+5uCrFk0aKeSlCKKNLCtKKKmfZPuvV
-	Gza6PZ2ifwfXQ1Aw==
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
- Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
- <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
- <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
- Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
- <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
- <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 11/16] PCI: xilinx-nwl: Switch to
- msi_create_parent_irq_domain()
-In-Reply-To: <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
-Date: Thu, 03 Jul 2025 15:28:40 +0200
-Message-ID: <87ikk9v1x3.ffs@tglx>
+	bh=ttQ9IlSas/7byHbl3N830DTSnlGxfWvdLVjZQAWvIdk=;
+	b=jKOzT2lb2+tzjr/h7XdTM6pY64vKrZT+NyVEfAjhWGFUqRwxcaTHGJG7y2sxpY2y6iQ8bo
+	XokFr/A5k9b/+tlJZt+UyTwpaq/Ff/5lpia1H9WzWV8b7+avnJ4CLcb8mg57R0/vlS44se
+	0Ah1gTu1dh32SLD8z1M8TXiwfjwdL2E=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d211acee (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 3 Jul 2025 13:29:24 +0000 (UTC)
+Date: Thu, 3 Jul 2025 15:29:21 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Gu Bowen <gubowen5@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>, keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Lu Jialin <lujialin4@huawei.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH RFC 0/4] Reintroduce the sm2 algorithm
+Message-ID: <aGaFsaUOuNd1xs8m@zx2c4.com>
+References: <20250630133934.766646-1-gubowen5@huawei.com>
+ <aGaCTOJ30KNPOBIC@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aGaCTOJ30KNPOBIC@zx2c4.com>
 
-On Thu, Jun 26 2025 at 16:48, Nam Cao wrote:
+On Thu, Jul 03, 2025 at 03:14:52PM +0200, Jason A. Donenfeld wrote:
+> Hi,
+> 
+> On Mon, Jun 30, 2025 at 09:39:30PM +0800, Gu Bowen wrote:
+> > To reintroduce the sm2 algorithm, the patch set did the following:
+> >  - Reintroduce the mpi library based on libgcrypt.
+> >  - Reintroduce ec implementation to MPI library.
+> >  - Rework sm2 algorithm.
+> >  - Support verification of X.509 certificates.
+> > 
+> > Gu Bowen (4):
+> >   Revert "Revert "lib/mpi: Extend the MPI library""
+> >   Revert "Revert "lib/mpi: Introduce ec implementation to MPI library""
+> >   crypto/sm2: Rework sm2 alg with sig_alg backend
+> >   crypto/sm2: support SM2-with-SM3 verification of X.509 certificates
+> 
+> I am less than enthusiastic about this. Firstly, I'm kind of biased
+> against the whole "national flag algorithms" thing. But I don't know how
+> much weight that argument will have here. More importantly, however,
+> implementing this atop MPI sounds very bad. The more MPI we can get rid
+> of, the better.
+> 
+> Is MPI constant time? Usually the good way to implement EC algorithms
+> like this is to very carefully work out constant time (and fast!) field
+> arithmetic routines, verify their correctness, and then implement your
+> ECC atop that. At this point, there's *lots* of work out there on doing
+> fast verified ECC and a bunch of different frameworks for producing good
+> implementations. There are also other implementations out there you
+> could look at that people have presumably studied a lot. This is old
+> news. (In 3 minutes of scrolling around, I noticed that
+> count_leading_zeros() on a value is used as a loop index, for example.
+> Maybe fine, maybe not, I dunno; this stuff requires analysis.)
+> 
+> On the other hand, maybe you don't care because you only implement
+> verification, not signing, so all info is public? If so, the fact that
+> you don't care about CT should probably be made pretty visible. But
+> either way, you should still be concerned with having an actually good &
+> correct implementation of which you feel strongly about the correctness.
+> 
+> Secondly, the MPI stuff you're proposing here adds a 25519 and 448
+> implementation, and support for weierstrauss, montgomery, and edwards,
+> and... surely you don't need all of this for SM-2. Why add all this
+> unused code? Presumably because you don't really understand or "own" all
+> of the code that you're proposing to add. And that gives me a lot of
+> hesitation, because somebody is going to have to maintain this, and if
+> the person sending patches with it isn't fully on top of it, we're not
+> off to a good start.
+> 
+> Lastly, just to nip in the bud the argument, "but weierstrauss is all
+> the same, so why not just have one library to do all possible
+> weierstrauss curves?" -- the fact that this series reintroduces the
+> removed "generic EC library" indicates there's actually not another user
+> of it, even before we get into questions of whether it's a good idea.
 
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
->
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+I went looking for reference implementations and came across this
+"GmSSL" project and located:
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+https://github.com/guanzhi/GmSSL/blob/master/src/sm2_sign.c#L271
+which uses some routines from
+https://github.com/guanzhi/GmSSL/blob/master/src/sm2_z256.c
+
+I have no idea what the deal actually is here -- is this any good? has
+anybody looked at it? is it a random github? -- but it certainly
+_resembles_ something more comfortable than the MPI code. Who knows, it
+could be terrible, but you get the idea.
+
+Jason
