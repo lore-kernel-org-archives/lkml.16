@@ -1,121 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1FE2620E4;
-	Thu,  3 Jul 2025 11:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7172E3AFD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542664; cv=none; b=PHmMFSdVdrfiBmojJ5kcJod76aoy7sXKIpQ8d3ZMfCIiV/hRtdtZKeQZyRsuaTbMoG+JSaL+44ORsGRAJP4k2D9pSQ0Fve45TFDZ2ZJbaCcxC0hvu0Nan2yi7PRFUaxDAMM2S/fLTvAzbCLtXGJ3vp9UrMPhbkKClaPSCD7UiMc=
+	t=1751542669; cv=none; b=D4Juw6bUKreJ90SVydMTrXU5g+8HIuu3d+hMlYZEAdqmpiatakdyWnBNFn5tvmm3H0RRy6/6+yDCcdkNfMvV7M8z2VAyMaCL3sSQnf2yKWCu1nwcO9XGibY9GCA/Eu1HGVcxzUPoNnBChrz0hErbojFcMFOmiKr48qRh+NBeT+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542664; c=relaxed/simple;
-	bh=uRR7PVJBnOulCRdECwCySqV8cmACYmPxijoJvk6TQH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0O1D1+yWO+TBvKkM4654fzWnmYqoyPc9ku4oV6/m4e9IgPu6i93buhmswux3fuCW1UIidfe2Ohlj2Tf0Lg2FM0C1mIVfxLgL/4CotxpZZOZSrcraoSuXDAvoK2Fjshe82IkV2jZ+OZXMbVh1UHUMYdst8SWdLciFQ/DYohCxeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWHumouA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751542669; c=relaxed/simple;
+	bh=evYGdWXWw+/6PRQoXuVCrMVKNTai1x93mZvTubwFAMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=rLt1ONL3+drls1GOxMu1WLjlflLO4n6uwDnmWSppRuk0UOBsZVQfd/AewIAaf89gc/hjpZWMqBFlnCujViwrHVG7zO7tRxs4yl6MVFuOSLU+0OhY5jPTH5TzRjwmbBa4mqEW24ZHyLTGJBqOKajdWqyBZkNvcD2bVTku33lJpog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fTHWtAb9; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWHumouA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9A1C4CEE3;
-	Thu,  3 Jul 2025 11:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751542664;
-	bh=uRR7PVJBnOulCRdECwCySqV8cmACYmPxijoJvk6TQH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hWHumouAkU++FuaNOLE0xjB/643dhpSzlvWcHXO0LxLH47vD4t0R+AaSZpe4eX9H9
-	 T16VKASNqFbmiQdevYGnhJ32iGeaLLRamiXPJxtMCHSS/z57+bfrXS3mTFdRfi0Ejl
-	 rm8ZHGEbAuJcI0q4wz/vai6fB23hpaXgbVAiqAa9E2Agk0vCYJfiiJYJJV3c/YrrqR
-	 oRrfiYCzeKP2bXvs2ntUzhbC1UgIfCkZD7K1shTLNtw0ATdK2Z3zich56rIpplfrrb
-	 CCDz+Eez/RvtRJM1qYFWVcbB/qqoJbmu7PnSvthqLq0Q6pSyTxjEQsSueN0dMWx4UZ
-	 UWR7/tL1yg7bQ==
-Date: Thu, 3 Jul 2025 11:37:41 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Dawid =?utf-8?Q?Nied=C5=BAwiecki?= <dawidn@google.com>
-Cc: Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com,
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>
-Subject: Re: [PATCH] platform/chrome: Add ChromeOS EC USB driver
-Message-ID: <aGZrhe8Ku7eEIRqm@google.com>
-References: <20250624110028.409318-1-dawidn@google.com>
- <aF5N5jrRUlj3SUGS@google.com>
- <CAJ_BA_CppC58kc-Uv49PSmWFcCih-ySuGDuRcO5-AWQQqcqWVQ@mail.gmail.com>
- <aGOiu-sXFj1EUQAB@google.com>
- <CAJ_BA_CZWvC2=i8riNe5LReLKzPXK1vPwymiG2dzLEntda7TRg@mail.gmail.com>
- <aGSuS81Psqm_Ie4N@google.com>
- <CAJ_BA_BQOQe61r9t9rL=UiOqpHwOoTSbQcZNe=CrCcjMha_YQg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fTHWtAb9"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250703113745euoutp02a3ab0566edced2857d32262eba3b28a2~OusYqZ7bw2882828828euoutp02H
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:37:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250703113745euoutp02a3ab0566edced2857d32262eba3b28a2~OusYqZ7bw2882828828euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751542665;
+	bh=IaUSrP5vF7c7LGO5H4Eij7O+D07WlO1LwH0IQDoV9Z8=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=fTHWtAb9YYu5inKO0J3HoW674ZkV25N5g2HW/kyUJ50zhaNeytdMrVsog2TjpZqdG
+	 Jj0WC7gFvDyT+IEt+0PceeUd8tVS+W8U4ugRgC6jAbNCcnsF/1vOlJdsKktQ6zK0Bx
+	 CrQg+OofpOOAJosMNakVfLKwYgn6YHGLQqR8QFR8=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250703113744eucas1p157ec555de6855afe8b1d1280030fc06d~OusX8uDZc2942729427eucas1p1O;
+	Thu,  3 Jul 2025 11:37:44 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250703113743eusmtip18065c1273aae5e6af7f4987e4c46d79b~OusW4AM3g1070910709eusmtip1C;
+	Thu,  3 Jul 2025 11:37:43 +0000 (GMT)
+Message-ID: <6d9ce601-b81e-4c2a-b9c3-4cba6fa87b8b@samsung.com>
+Date: Thu, 3 Jul 2025 13:37:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ_BA_BQOQe61r9t9rL=UiOqpHwOoTSbQcZNe=CrCcjMha_YQg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/8] rust: pwm: Add core 'Device' and 'Chip' object
+ wrappers
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
+	Turquette <mturquette@baylibre.com>, Drew Fustini <fustini@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aGVMnmoepIVSS0yK@pollux>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250703113744eucas1p157ec555de6855afe8b1d1280030fc06d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6
+X-EPHeader: CA
+X-CMS-RootMailID: 20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6
+References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+	<CGME20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6@eucas1p1.samsung.com>
+	<20250702-rust-next-pwm-working-fan-for-sending-v7-3-67ef39ff1d29@samsung.com>
+	<aGVMnmoepIVSS0yK@pollux>
 
-On Wed, Jul 02, 2025 at 09:43:40AM +0200, Dawid Niedźwiecki wrote:
-> > They doesn't look like shortcomings to me. The corresponding destructor
-> > callbacks have to be called when a device is removed anyway.
-> >
+
+
+On 7/2/25 17:13, Danilo Krummrich wrote:
+> On Wed, Jul 02, 2025 at 03:45:31PM +0200, Michal Wilczynski wrote:
+>> Building on the basic data types, this commit introduces the central
+>> object abstractions for the PWM subsystem: Device and Chip. It also
+>> includes the core trait implementations that make the Chip wrapper a
+>> complete, safe, and managed object.
+>>
+>> The main components of this change are:
+>>  - Device and Chip Structs: These structs wrap the underlying struct
+>>    pwm_device and struct pwm_chip C objects, providing safe, idiomatic
+>>    methods to access their fields.
+>>
+>>  - High-Level `Device` API: Exposes safe wrappers for the modern
+>>    `waveform` API, allowing consumers to apply, read, and pre-validate
+>>    hardware configurations.
+>>
+>>  - Core Trait Implementations for Chip:
+>>     - AlwaysRefCounted: Links the Chip's lifetime to its embedded
+>>       struct device reference counter. This enables automatic lifetime
+>>       management via ARef.
+>>     - Send and Sync: Marks the Chip wrapper as safe for use across
+>>       threads. This is sound because the C core handles all necessary
+>>       locking for the underlying object's state.
+>>
+>> These wrappers and traits form a robust foundation for building PWM
+>> drivers in Rust.
+>>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > 
-> Yes, anything related to USB communication itself has to be freed, but
-> freeing the cros_ec_device structure and calling the cros_ec_unregister
-> function can crash the system if any of a userland application has the
-> original file cros_ec open and tries to send a command. The chardev driver
-> is not aware that the device has been removed and will try to access the
-> removed structures.
-
-We have seen a similar crash before but I didn't come out with a solution
-at that time. Could you please try [3]?
-
-[3]: https://patchwork.kernel.org/project/chrome-platform/cover/20250703113509.2511758-1-tzungbi@kernel.org/
-
-> > Instead, re-using the same inode for the userland interface however
-> > *silently* swapping the underlying devices makes less sense to me.
-> >
+> Few more comments below, with those fixed:
 > 
-> We are sure it is the same EC device, so why do you think accessing the
-> same inode makes less sense? It is a case for specific interface, that reboot
-> causes reprobing, which is not a case for other interfaces. I believe
-> it should be
-> transparent for the cros_ec device user, what interface type is used
-> e.g. if it is
-> SPI, you can reboot the EC device and wait until it responds to a next command,
-> but if it is USB, you would need to reopen the cros_ec file after reboot.
-
-Did some experiments and I understand the difference now. It probably depends
-on the bus implementation.
-
-1) SCP over RPMSG
-# ectool --name=cros_scp reboot_ec
-# dmesg
-cros-ec-rpmsg 10500000.scp.cros-ec-rpmsg.13.-1: rpmsg send timeout
-mtk-scp 10500000.scp: SCP watchdog timeout! 0x0
-remoteproc remoteproc0: crash detected in scp: type watchdog
-...
-cros-ec-rpmsg 10500000.scp.cros-ec-rpmsg.13.-1: Chrome EC device registered
-
-2) FP over SPI
-# ectool --name=cros_fp reboot_ec
-# dmesg
-cros-ec-spi spi-PRP0001:01: EC failed to respond in time
-
-Anyway, I see your point about the EC over USB gets re-probe once it reboots,
-sysjumps, crashes, firmware updates, and etc.
-
-Given that:
-- The crash you encountered is a common issue for all cros_ec_X drivers.
-- I prefer to keep cros_ec_X drivers simple and similar rather than have
-  something special (e.g. the memorized `struct cros_ec_device` in current
-  cros_ec_usb) for fixing the crash.
-Could you give [3] a try to see if it fixes the crash and also call
-cros_ec_register()/cros_ec_unregister() everytime in the probe/disconnect?
-
-> > No, I don't think so. I think all EC-like devices share the same concern
-> > regardless of the transport medium (e.g. SCP over RPMSG, ISH over ISHTP).
+> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 > 
-> Yes, you can run a userland program that opens a cros_ec file and constantly
-> sends commands e.g. ectool stress, and then manually unbind the ec
-> device, but I believe it can cause some crashes/memory leakage. I don't think
-> all drivers are adjusted to hot-plugging.
+>> +/// Wrapper for a PWM device [`struct pwm_device`](srctree/include/linux/pwm.h).
+>> +#[repr(transparent)]
+>> +pub struct Device(Opaque<bindings::pwm_device>);
+>> +
+>> +impl Device {
+> 
+> <snip>
+> 
+>> +    /// Gets a reference to the parent `Chip` that this device belongs to.
+>> +    pub fn chip(&self) -> &Chip {
+>> +        // SAFETY: `self.as_raw()` provides a valid pointer. (*self.as_raw()).chip
+>> +        // is assumed to be a valid pointer to `pwm_chip` managed by the kernel.
+>> +        // Chip::as_ref's safety conditions must be met.
+>> +        unsafe { Chip::as_ref((*self.as_raw()).chip) }
+> 
+> I assume the C API does guarantee that a struct pwm_device *always* holds a
+> valid pointer to a struct pwm_chip?
+> 
+>> +
+>> +/// Wrapper for a PWM chip/controller ([`struct pwm_chip`](srctree/include/linux/pwm.h)).
+>> +#[repr(transparent)]
+>> +pub struct Chip(Opaque<bindings::pwm_chip>);
+>> +
+>> +impl Chip {
+>> +    /// Creates a reference to a [`Chip`] from a valid pointer.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
+>> +    /// returned [`Chip`] reference.
+>> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> &'a Self {
+>> +        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
+>> +        // `Chip` type being transparent makes the cast ok.
+>> +        unsafe { &*ptr.cast::<Self>() }
+>> +    }
+>> +
+>> +    /// Returns a raw pointer to the underlying `pwm_chip`.
+>> +    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
+>> +        self.0.get()
+>> +    }
+>> +
+>> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
+>> +    pub fn npwm(&self) -> u32 {
+>> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+>> +        unsafe { (*self.as_raw()).npwm }
+>> +    }
+>> +
+>> +    /// Returns `true` if the chip supports atomic operations for configuration.
+>> +    pub fn is_atomic(&self) -> bool {
+>> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+>> +        unsafe { (*self.as_raw()).atomic }
+>> +    }
+>> +
+>> +    /// Returns a reference to the embedded `struct device` abstraction.
+>> +    pub fn device(&self) -> &device::Device {
+>> +        // SAFETY: `self.as_raw()` provides a valid pointer to `bindings::pwm_chip`.
+>> +        // The `dev` field is an instance of `bindings::device` embedded within `pwm_chip`.
+>> +        // Taking a pointer to this embedded field is valid.
+>> +        // `device::Device` is `#[repr(transparent)]`.
+>> +        // The lifetime of the returned reference is tied to `self`.
+>> +        let dev_field_ptr = unsafe { core::ptr::addr_of!((*self.as_raw()).dev) };
+> 
+> I think you can use `&raw` instead.
+> 
+>> +        // SAFETY: `dev_field_ptr` is a valid pointer to `bindings::device`.
+>> +        // Casting and dereferencing is safe due to `repr(transparent)` and lifetime.
+>> +        unsafe { &*(dev_field_ptr.cast::<device::Device>()) }
+> 
+> Please use Device::as_ref() instead.
+> 
+>> +    }
+>> +
+>> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
+>> +    pub fn drvdata<T: 'static>(&self) -> &T {
+> 
+> You need to make the whole Chip structure generic over T, i.e.
+> Chip<T: ForeignOwnable>.
+> 
+> Otherwise the API is unsafe, since the caller can pass in any T when calling
+> `chip.drvdata()` regardless of whether you actually stored as private data
+> through Chip::new().
 
-Yes, we have seen a similar crash before. See comment above.
+You were right that the original drvdata<T>() method was unsafe. The
+most direct fix, making Chip generic to Chip<T>, unfortunately creates a
+significant cascade effect:
+
+- If Chip becomes Chip<T>, then anything holding it, like ARef, must
+  become ARef<Chip<T>>.
+
+- This in turn forces container structs like Registration to become
+  generic (Registration<T>).
+
+- Finally, the PwmOps trait itself needs to be aware of T, which
+  complicates the trait and all driver implementations.
+
+This chain reaction adds a lot of complexity. To avoid it, I've
+figured an alternative:
+
+The new idea keeps Chip simple and non generic but ensures type safety
+through two main improvements to the abstraction layer:
+
+1. A Thread Safe DriverData Wrapper
+
+The pwm.rs module now provides a generic pwm::DriverData<T> struct. Its
+only job is to wrap the driver's private data and provide the necessary
+unsafe impl Send + Sync.
+
+// In `rust/kernel/pwm.rs`
+// SAFETY: The contained data is guaranteed by the kernel to have
+// synchronized access during callbacks.
+pub struct DriverData<T>(T);
+unsafe impl<T: Send> Send for DriverData<T> {}
+unsafe impl<T: Sync> Sync for DriverData<T> {}
+
+// In the driver's `probe` function
+let safe_data = pwm::DriverData::new(Th1520PwmDriverData{ });
+
+2. A More Ergonomic PwmOps Trait
+
+The PwmOps trait methods now receive the driver's data directly as
+&self, which is much more intuitive. We achieve this by providing a
+default associated type for the data owner, which removes boilerplate
+from the driver.
+
+// In `rust/kernel/pwm.rs`
+pub trait PwmOps: 'static + Sized {
+    type Owner: Deref<Target = DriverData<Self>> + ForeignOwnable =
+        Pin<KBox<DriverData<Self>>>;
+    /// For now I'm getting compiler error here: `associated type defaults are unstable`
+    /// So the driver would need to specify this for now, until this feature
+    /// is stable
+
+
+    // Methods now receive `&self`, making them much cleaner to implement.
+    fn round_waveform_tohw(&self, chip: &Chip, pwm: &Device, wf: &Waveform) -> Result<...>;
+}
+
+// In the driver
+impl pwm::PwmOps for Th1520PwmDriverData {
+    type WfHw = Th1520WfHw;
+
+    fn round_waveform_tohw(&self, chip: &pwm::Chip, ...) -> Result<...> {
+        // no drvdata() call here :-)
+        let rate_hz = self.clk.rate().as_hz();
+        // ...
+    }
+}
+
+This solution seem to address to issue you've pointed (as the user of
+the API never deals with drvdata directly at this point), while making
+it easier to develop PWM drivers in Rust.
+
+Please let me know what you think.
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
