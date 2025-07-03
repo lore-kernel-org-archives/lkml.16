@@ -1,90 +1,92 @@
-Received: from mail-m32120.qiye.163.com (mail-m32120.qiye.163.com [220.197.32.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EBB2DE6FC;
-	Thu,  3 Jul 2025 05:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98D82DE6FC;
+	Thu,  3 Jul 2025 05:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751518985; cv=none; b=lZYkNO8so6/zc824RCQal7a6++IwGAxvmH934onwa3bLRD/gJg9vVeLCNMZ4A9sCvdQOoZK5FLQzR3+sn485VNQ5M0FfDajX4aUX6k2bI9EO7S19O6A6sOOj4P0CmP7dq28rFEwPvm2ojszU72TpjjdLueyfuU1kGmukSfT041E=
+	t=1751519098; cv=none; b=G4fwl3zGTJaT6JqTn6Ply8+FOBtQZO4cXJYVKxgBVslar4L4Rfgfa0Kk37eISG0iuqpSBO3NHXHhU5ZRvBN8hRsGpF3K+kFZRgvODvNQUHjzKr/m1WjCABZkHydjfbxD5ZeTILdh9agIsQwdUs1PmiHu5w3ujt0BppSflEj7vgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751518985; c=relaxed/simple;
-	bh=iYMKqf5avjr+g3XPzcixJlsuO4LQdPf1nBoLZVMiQng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TgbKLYJP0UrwmwnrPz5M63y5clY23wq3K2pTvN00ZIXy8ZeWQBcycOWkrZuhq7Nva3V8aColPwdjmn4tUVoqfhMWXC/MW/ytI4bvF6IW6LIO/ungExFqynA2TzJsw7Q+s4hAO8u0PuI102xC4MliVuT4MDgo1oKI8UVHR8yiBZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=BSMAk/mc; arc=none smtp.client-ip=220.197.32.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+	s=arc-20240116; t=1751519098; c=relaxed/simple;
+	bh=7Y52CS4Sendh9bM4VJVMhnz0UCov0PgAIUIVYcJ32BI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O2DuVYyXpj8F9wVcf2Ml1y/Cbku1qQ9DWS6EQkOsTFDLAEwiETHgQbQtd2TASSOFSn2jKh6kFhTgL8+pPyp1WRcRNz9dZdX03UMMXbICRPo69Veypkxgao1BSKTNtjuHoOEJr5mAioWsgvB3JTEVIoLf9eXwiBEF8sqrsP3vh3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJR6vGz7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="BSMAk/mc"
-Received: from localhost.localdomain (unknown [117.184.129.134])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1ac2888fc;
-	Thu, 3 Jul 2025 13:02:53 +0800 (GMT+08:00)
-From: Albert Yang <yangzh0906@thundersoft.com>
-To: krzk@kernel.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: vendor-prefixes: Add Black Sesame Technologies Co., Ltd.
-Date: Thu,  3 Jul 2025 13:02:52 +0800
-Message-Id: <20250703050252.4104290-1-yangzh0906@thundersoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <c9160561-3792-4230-a7f6-57caf35f9a1d@kernel.org>
-References: <c9160561-3792-4230-a7f6-57caf35f9a1d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJR6vGz7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F13CC4CEE3;
+	Thu,  3 Jul 2025 05:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751519098;
+	bh=7Y52CS4Sendh9bM4VJVMhnz0UCov0PgAIUIVYcJ32BI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AJR6vGz7kEpMb2l+dQl1iyWFZ2eHeSJcRvXCVES22QhnvFBDsDf0zUUhQDwpvM5i8
+	 XRn7xU/Thx4d1CgHtl0UjvRmyVUEH3SF8mWEeNkzkrR4nul9LQcgjDc/Inec1U1NGj
+	 QB21/iH/40ODBihxHMoo5DCNIVksZdsVVowAbxmZA8iurbp2t2dor0gOfyM66nwLpD
+	 jUws3juXFUkiLQCaQAhD8y1mFq6Sp8/gjRnLmyprFlY70gMfOT4ljqvgKS79mbQuU6
+	 DZHZH1S68AwDgCZI/xhKN9ncuGeGWhSB3u7deLGt4Esf6TzA5TpQ6TuKPES1qPoNIc
+	 Yt7XdOzbQr+7g==
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a6f0bcdf45so65204491cf.0;
+        Wed, 02 Jul 2025 22:04:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUDlQ25Gib/TQga1JE844AsNlCxC4pRh4bliDE+uUCSquefZpkcuAXwFLWoN6h0cBJ79xBgT+bOt8nmSYQLHs0UzkkmVxqX@vger.kernel.org, AJvYcCV6jTyhPsso/so91hqNXS/qCUsT2g+k2A8rbvd4O5dUj98MQ8cUAK2TKVXxcYBQp2CuXX9dZkzqD/NlCQ8g@vger.kernel.org, AJvYcCVWjf6fiNnaAVYWP2atFDm9qyH9fSoLzw4wEAZCgcFPq6HuV+x4kp2XT5KzHYIyaMaIAFTdbAE9mGRQwy7J@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqYYcO6tiN2Kw33ax61K9QhDQNtdLvBvXmp5i4gA/Q4GL7D0+V
+	XlWWMnCz5rNSxfM0g0z9s8SaNYMPcHwpzF5b1vgp6APeo88Xn1HuVQ6ZpKRRM7Dk3TFzk2Y0sgn
+	mUZdyzr8tbtYlSt91rMb8SEYZl/KrsZA=
+X-Google-Smtp-Source: AGHT+IHchTb2tT5cDJShXd/0VF6AyMX97c9t70vPAkrlFvFZ8cTiloHlW0K7A6g2Bm/75obbRCoiyLOwZCkSvmeCIFA=
+X-Received: by 2002:a05:622a:5a0d:b0:4a4:2ffb:5482 with SMTP id
+ d75a77b69052e-4a987a43c68mr38617851cf.38.1751519097321; Wed, 02 Jul 2025
+ 22:04:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGk1JVk4eH0MdTU4fGU1CH1YVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTEpVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a97ceaa8d0f09cckunm8b3059b7562d72
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pgg6Dxw5TTE6AkwaNRIZECwP
-	FhFPCiJVSlVKTE5KTkpDQkxPSUNJVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
-	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQUlISE83Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=BSMAk/mc2Z372jIJuTVax7HuBGA6/5qf85k6ZJ4aDgiV1HSfEOWoftJO3dRUNdWzYwlZWjltXq+IIYs9yQCBxYga/UETLBXlgL9obgjGrDFT0G+t43F+1Drp96Ja97Z2MuLps86oni4mSWCyhg92IQKyyb1n6dtA6TW+OqX5/4U=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
-	bh=iYMKqf5avjr+g3XPzcixJlsuO4LQdPf1nBoLZVMiQng=;
-	h=date:mime-version:subject:message-id:from;
+References: <20250617061116.3681325-1-song@kernel.org> <CAPhsuW5uu8cOYJWJ3Gne+ixpiWVAby1hZOnUgsXcFASEhV4Xhg@mail.gmail.com>
+ <20250624.xahShi0iCh7t@digikod.net>
+In-Reply-To: <20250624.xahShi0iCh7t@digikod.net>
+From: Song Liu <song@kernel.org>
+Date: Wed, 2 Jul 2025 22:04:46 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7EyTTh-qkrA86ERfSUUJK0o1Jz1UKH+o6rMY1-QioJRA@mail.gmail.com>
+X-Gm-Features: Ac12FXx3mCaq13l3a5Zpqb-icNQ9vwHconECRRuC3pcVzdEwJmFf6y41opiBE94
+Message-ID: <CAPhsuW7EyTTh-qkrA86ERfSUUJK0o1Jz1UKH+o6rMY1-QioJRA@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, brauner@kernel.org
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org, 
+	neil@brown.name, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+Hi Christian,
 
-Thank you for your feedback.
+On Tue, Jun 24, 2025 at 11:46=E2=80=AFAM Micka=C3=ABl Sala=C3=BCn <mic@digi=
+kod.net> wrote:
+>
+> On Fri, Jun 20, 2025 at 02:59:17PM -0700, Song Liu wrote:
+> > Hi Christian, Micka=C3=ABl, and folks,
+> >
+> > Could you please share your comments on this version? Does this
+> > look sane?
+>
+> This looks good to me but we need to know what is the acceptable next
+> step to support RCU.  If we can go with another _rcu helper, I'm good
+> with the current approach, otherwise we need to figure out a way to
+> leverage the current helper to make it compatible with callers being in
+> a RCU read-side critical section while leveraging safe path walk (i.e.
+> several calls to path_walk_parent).
 
-> Why is this attached to v1?
+Could you please share your suggestions on this topic? RCU
+protected path walk out of fs/ seems controversial in multiple
+ways. Do we have to let this set wait indefinitely for a solution
+of RCU protected path walk? I would like to highlight that this
+set doesn't add any persistent APIs. path_walk_parent() is not
+in the UAPI, nor exported. If a newer and better API is created,
+we can refactor bpf and landlock code and deprecate
+path_walk_parent().
 
-I apologize for the confusion. This is indeed v2 of the patch series. The patch itself hasn't changed from v1 because it already received Rob Herring's Acked-by in the v1 review.
-
-> Where is the changelog?
-
-You are right to ask for this. For this specific patch (1/8), there is no changelog because it received "Acked-by: Rob Herring (Arm) <robh@kernel.org>" in v1 and required no modifications. However, I should have included a note in the cover letter explaining that some patches were unchanged from v1.
-
-The changes in v2 were primarily in other patches of the series (DTS consolidation, defconfig separation, etc.) based on your previous review feedback.
-
-> Most of your emails did not reach mailing list. I also did not get them.
-> ... and the huge amount of CC list, mostly redundant and not relevant to
-> this work, could explain that. Don't Cc random people.
-
-You are absolutely correct, and I apologize for this. I used get_maintainer.pl without proper filtering, which resulted in an unnecessarily large CC list. For future submissions, I will:
-
-1. Limit TO/CC to only directly relevant maintainers and lists
-2. Use a more targeted recipient list
-3. Consider using b4 send if delivery issues persist
-
-> Anyway, fix above points - all three - and resend after 24h at least.
-
-I will prepare v3 with:
-1. Proper changelog documentation in the cover letter
-2. Reduced and targeted recipient lists
-3. Clear indication of which patches changed vs. which carried forward acks
-
-Thank you for your patience and guidance on proper submission practices.
-
-Best regards,
-Albert Yang
+Thanks,
+Song
