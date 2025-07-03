@@ -1,164 +1,140 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455592E3AFF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EE32E3B0F;
+	Thu,  3 Jul 2025 12:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544880; cv=none; b=LrcwZGCClIpgwFQUHJdjLyLhDSsMA1OYGw889lmBzna5okY7y7IYQS6nPlRH66OH+f68Yia+4oZLShFVsVtXs2kc1LK4RyOhKn/LaqWX+yXksTIhs0EzpMuOS5OXc2P921e83aowG7lMPHji0dvA0O2PPT1HQ3GJgCVJGr0wo3Q=
+	t=1751544900; cv=none; b=bZp/VCHU8v02/wVL6TZvhNpKOxUm5w7s/1jGmppTEX3JP9PM6Ek3VGbZAm2ZfSqETxpnhUQ7edvKjVVcG04Cdue6jI+SNaAXUIde00XKVOi7bhfJ6cjDrQ57RHa/k7yWRIn6AmG4GZl2DmFtG3GCbJctxgH2wy0YM0fgvw39C2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544880; c=relaxed/simple;
-	bh=NxTRFXEOSM97xS6sYUrK3OZV1E+9Shcf60A8QqXUvPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HJ586iDFjOSpVP4lnr86bRBzsPMuWmhwPoI6AZ1KNGs1/kKd/9qj/XhPFOmuDzIikP6zGzvBf5bt2f/CQ1WRev4KEMn5R9sFtCLAwQoLDcLFXxetKQzjMHhRK8XwWZmkxo05jfxJUbIj1Y++lka15DeNeYhbjbTDqEy4RVmSO60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g4UhgkLL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751544900; c=relaxed/simple;
+	bh=qBIYkKU41cbvXE7eQ9qC7MixzXczSqkdCffvtQZmnkg=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=F0kBZ7kosBU3txppncNRZ1jEUTsAGw7moROQ77OTRjmWXEOLSKqZqkxTAFrC9rKpHtD3z5RKnRhA/fbbJ0JVyGIRedQJEPi786jud2D2i7LCdz848/Dht/y/MNu0qjM9Byin7KmxL6p3OnftRB3Ybk1ik0ngEcjDMd8JH3nMecg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pakZ4RGg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g4UhgkLL"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563AJUdN026279
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 12:14:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	h2x3WpVgowQyzY4em9pyKWoaGXSc06FpOT7YW7pB1lw=; b=g4UhgkLLr1VlwHfN
-	wVL7Bj3Q5Nn7x1YdMiQ8oMgKdzy6ldIZ6NRpj2gkV+iNalwLwG7i9fdK4T7vngAn
-	wACxt2VbL9ruvTNdep6qvs+C0Y2RwbjWgzrQ6AiDC2aWbgIZgsybjlq5ghkSwJ5D
-	ncPDMQpGvB4pn4WB59CTmF7PVflGFuFnyRI7ZvwLMOAb40j3D7WkFBl1+G29gKFD
-	F+zBuhoCfuiIioBvCay5n1p9XXk0tRBjKx5We1kWHZLsS5E3pZfoGhqackEMXGYB
-	qfTtkbeSZ9DUUKJcdqlTzPmpX9a/b4hg+ZFQjUcGMg6cqePIirVa9NYOa0qqHBJh
-	KJ4iMQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64wg91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 12:14:37 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d094e04aa4so234018885a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:14:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751544877; x=1752149677;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2x3WpVgowQyzY4em9pyKWoaGXSc06FpOT7YW7pB1lw=;
-        b=f1K+z9wYw3goa/BqOeHMl3Xhfe6uKh36g/8gVrOthE7wzPtX6XZgG4Cfq4khTcqFNv
-         rxTVXqOP2cTibs+LcV3z/zE76P6m4h79m99q4hiRbXoprtyeJKB+3m2W0XDWcchvcaAT
-         ENnCWKtd/WPaLPRnYfsJhGqEm11ySjm+9Ail/NbbT5m9/6CIJ/8Wzjz4bNYY1VWf0Yda
-         D4PsNwRnk+heQxoolW0Xa/XDKhVUkRiHpyNP3+Jtrs9AUP1DriuWs1eTCPYguE20QOsW
-         HqbMXreA7sIItidN1hE+RbKdp/DRrxeO8bw6pdheOR8rniAIbbGaRdrdB5R9QOPQ/O8N
-         QXrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMbZggvS/LeZqU4o2Kb5czMpqwrP01dMdK9l8Oa9z7lDkAQ3dzUF3NvpyoIqIByYJZA4VTTYjkwcOeLTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgNZnUmF7l3G0WbyOraheH+wUQQalGNRV5eYY+JIwJgoeYsiKU
-	/r+LkcLtLnu8dyp/BOYs7P0r9SuOMkjT581QQSjeEhDvtqiXV3ORIBdUdVP0AazjWpmZexpOecV
-	kJs2YcrUlOH4WT586yalJqTkCsWVQbMBSq8YXWsJKGcVOHVfAgS0+5f1oOlv8znz35tc=
-X-Gm-Gg: ASbGncvG8J7O6KOvr7mL+tYN5qn48qOUqWYJZ+8E6MJXQ5Ye0RUjEJTl0CFyM1ZS3kZ
-	4Jv+uWljkMxWERl9P1e/b8MvZwaS9a4U2Qej6Ww6XBXHtO0zF+460IdEBihrIxHVyXU+0kQvDu+
-	b75yajAVhUrLl1ptk+9oOJ1743j2y3JIIFceJ3fXQSYCdMyxbzmpXCPNLXckwpfMNl6ovBk+F3E
-	ulO1Ju/B6xwXmcNWnuuWPp5QY+KVFRibs/yfghVBh4Ixxrs7SatYpUIG03ipV9qBTG53F4eeQk1
-	+fXQWah8bEcSnQrfGgltS3a0B1KXLqX8thPJtexoihtogCZOZA7yvGbJOn6LciDlRvuGI3O0q96
-	EZB7XTp/R
-X-Received: by 2002:a05:620a:4620:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7d5d3f957abmr99411285a.12.1751544876871;
-        Thu, 03 Jul 2025 05:14:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMv5CgId/QhgXJ5gc0O6c/YrTGP1GxnRv/PEaNbJnkJ4hBNjdFtHUDliUBepNzEy+MEM5IEw==
-X-Received: by 2002:a05:620a:4620:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7d5d3f957abmr99409185a.12.1751544876461;
-        Thu, 03 Jul 2025 05:14:36 -0700 (PDT)
-Received: from [192.168.1.114] (83.9.29.190.neoplus.adsl.tpnet.pl. [83.9.29.190])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c013b7sm1244061366b.80.2025.07.03.05.14.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 05:14:35 -0700 (PDT)
-Message-ID: <9217c52e-f0c0-4e7e-a2c2-bfb580c7cb17@oss.qualcomm.com>
-Date: Thu, 3 Jul 2025 14:14:31 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pakZ4RGg"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563B8Qph000320;
+	Thu, 3 Jul 2025 12:14:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=F6u7/nRfv9Ok7xGZ5lsXNn
+	DCvmfSSR5PqthDlJPEKao=; b=pakZ4RGgD3Pc5TDTo18kG2TTZC96a3r20aGHxz
+	gK/AOihHRxh+gIcgjCAhBDWbXNOInBOmm9rvdu095E27QgAMYvBck66ehygE/R1V
+	jg3gocvLJs2FUWk0/WfNYU/4vt4/WUHsA0+E5Ig928Um8ITM05BDTfvI/0+L5E5I
+	fgeXQHjc3ZVyoV3exjfEyWURW6bCKYtlzPqo8LMePjKoXtvDZmDZyi+lhJJ4EK55
+	zmIXmAg+JK3vg3iObBRq8KVEQgfWJJ6TZJEWnHQYFAdK+yTcvl9SNg9b/k3tp8XG
+	0ixj43B/xEoAI5CfaOQ+f1V4tS6AKa/p+kH6NLvWZbSu2Liw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qmg9em-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 12:14:41 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563CEeSg002237
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Jul 2025 12:14:40 GMT
+Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 3 Jul 2025 05:14:37 -0700
+From: Luo Jie <quic_luoj@quicinc.com>
+Subject: [PATCH net-next 0/3] Fix QCA808X WoL Issue and Enable WoL Support
+ for QCA807X
+Date: Thu, 3 Jul 2025 20:14:27 +0800
+Message-ID: <20250703-qcom_phy_wol_support-v1-0-83e9f985b30a@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/9] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
- speakers amplifier
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250625082927.31038-1-quic_pkumpatl@quicinc.com>
- <20250625082927.31038-7-quic_pkumpatl@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250625082927.31038-7-quic_pkumpatl@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6866742d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=fKQzr7EGRj+VoE0XNsDNvQ==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=ZTnHXLMoH8r4M2ZBRPgA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEwMSBTYWx0ZWRfX2SjdWXWO7DI1
- OE8quI/AV9q0Zc9D0G2WKWyCmFJQWDrINyPJ41ZkebMWFue2tRmlP1r/KnUE7jG6H/K5OvEY8cR
- 4hd2YUXozVgNHtOX9XuKxSze5Jn61rf5pZxh4TYCGsadRdPagQbE4YO6mxuarJqhKp4cVpbTtK0
- NprIQq5saapUpy5GC+rpw4jKXLkHij08iHk5VMpnPwpFASJ3ATPMHiDRiR4boc6KNXzxa/BwAaY
- FLqlHFkFhQU6wkT1x5JiUopSep66hFydyc5Tinb9UWNxffI/XoCAdl6cWeEzAgPwz0+cvlBL0lr
- znQSj+5M7Xm/dw/e6LFBMDKKx5/IfCspYGfxdK7l8VSKJCz/4/0B0Mkb7XpFVU8ioNFtowFzgEe
- GQRpM9kLRcu/nx2p/Ymq6/kFxteIprqdheylvjYo2pxGFXSIlU5k0lZu6qAZhDSMd8X6KGzE
-X-Proofpoint-GUID: sKmKbF27N-WPQQ8wNDYuDipUQML2WXMq
-X-Proofpoint-ORIG-GUID: sKmKbF27N-WPQQ8wNDYuDipUQML2WXMq
+X-B4-Tracking: v=1; b=H4sIACR0ZmgC/x3MQQrDIBBA0auEWUdQk2Dbq4QgxU7qQKtWTWqQ3
+ L3S5Vv8XyFhJExw6ypE3CmRdw2i78DYu3sio0czSC4nrvjAPsa/dbCH/vqXTlsIPmY2crkqoS5
+ mMldoaYi4UvlvZ3CYmcOSYTnPH1bJ5kJwAAAA
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Russell King (Oracle)"
+	<rmk+kernel@armlinux.org.uk>,
+        Viorel Suman <viorel.suman@nxp.com>, Li Yang
+	<leoyang.li@nxp.com>,
+        Wei Fang <wei.fang@nxp.com>
+CC: <netdev@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Luo Jie <luoj@qti.qualcomm.com>,
+        Luo Jie
+	<quic_luoj@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751544877; l=1288;
+ i=luoj@qti.qualcomm.com; s=20250209; h=from:subject:message-id;
+ bh=qBIYkKU41cbvXE7eQ9qC7MixzXczSqkdCffvtQZmnkg=;
+ b=w6OZjcGgnf4lI5YRqcT/LmV/18mPgRBKCjcQtWAEPnG7yQL1BQLYgijMqHgFQ8mlIg+JZmotd
+ k1EZJyhS4VRDkREnHfK1l2OevGPW9K7USUqM3+8jpjZbriHtened2ar
+X-Developer-Key: i=luoj@qti.qualcomm.com; a=ed25519;
+ pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=68667432 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8
+ a=QfVGnWNc7DW3J7Ta4DgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: w4BcLmJ9FsC-RWLzApV9dJGwYXr1_bIp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEwMSBTYWx0ZWRfX95q/eEf3ywmR
+ oCpDbLGcA4nW/WkfyNPReJoa+znrm9ZQi5MqmKg6k+o6dcZLhCVVqtOnNrnX09Z6rjU9kkRyCic
+ F1YnIRklptxf5olR1TrTYUG2V3WUSdd9heG8jDOD6nHsjik1wsxm5Qf8BdOiL5ipuktj8ppMRHd
+ 9yk98oF/phj4q3eS55OCUQksq3ey+PbzjqRW54A6+ciNO6H14YuAwU8gorNSgqwtN5HKe8oL4dp
+ i9yp2ny1zmfeTj/r3LaIo2haTXzBGmXoNSDNRJOcKq10q9g0yx3puN/cfk0+/DrKCp6E5p2guTW
+ qo+QJiLek2EGEPGMPSojSbX9riutge6OsxwVol9IVclkHB+MNokU6famjqc+zL8CX4cLsrlNbqU
+ WRLcOCEfVpYh6OTam1gtd66CNRVqH/vSgFZeCt+MbjegJNbJWP5Hasxqllc34sECnS9ZWxLZ
+X-Proofpoint-GUID: w4BcLmJ9FsC-RWLzApV9dJGwYXr1_bIp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=654
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
  definitions=main-2507030101
 
+Restore WoL (Wake-on-LAN) enablement via MMD3 register 0x8012 BIT5 for
+the QCA808X PHY. This change resolves the issue where WoL functionality
+was not working due to its unintended removal in a previous commit.
 
+Refactor at8031_set_wol() into a shared library to enable reuse of the
+Wake-on-LAN (WoL) functionality by the AT8031, QCA807X and QCA808X PHY
+drivers.
 
-On 25-Jun-25 10:29, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> Add nodes for WSA8830 speakers amplifier on qcs6490-rb3gen2 board.
-> 
-> Enable lpass_wsa and lpass_va macros along with pinctrl settings
-> for audio.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
->  .../boot/dts/qcom/qcs6490-audioreach.dtsi     |  6 ++++
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  | 35 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi          |  6 ++++
->  3 files changed, 47 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> index 6d3a9e171066..078936237e20 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> @@ -58,6 +58,12 @@ &lpass_va_macro {
->  	clock-names = "mclk",
->  		      "macro",
->  		      "dcodec";
-> +
-> +	pinctrl-0 = <&lpass_dmic01_clk>, <&lpass_dmic01_data>,
-> +		    <&lpass_dmic23_clk>, <&lpass_dmic23_data>;
-> +	pinctrl-names = "default";
+Additionally, enable the WoL function for the QCA807X PHY by utilizing
+the at8031_set_wol() function from the shared library.
 
-This can be moved to sc7280.dtsi (and removed from IDP
-and chromebook DTs as it's always assigned when VA macro is
-enabled - they also make the same changes to the pinmux
-properties that you make here) - perhaps in a separate
-commit to keep things clear
+Signed-off-by: Luo Jie <luoj@qti.qualcomm.com>
+---
+Luo Jie (3):
+      net: phy: qcom: move the WoL function to shared library
+      net: phy: qcom: qca808x: Fix WoL issue by utilizing at8031_set_wol()
+      net: phy: qcom: qca807x: Enable WoL support using shared library
 
-otherwise, I this looks good as far as I'm concerned
+ drivers/net/phy/qcom/at803x.c       | 27 ---------------------------
+ drivers/net/phy/qcom/qca807x.c      |  4 ++++
+ drivers/net/phy/qcom/qca808x.c      |  2 +-
+ drivers/net/phy/qcom/qcom-phy-lib.c | 25 +++++++++++++++++++++++++
+ drivers/net/phy/qcom/qcom.h         |  5 +++++
+ 5 files changed, 35 insertions(+), 28 deletions(-)
+---
+base-commit: 8b98f34ce1d8c520403362cb785231f9898eb3ff
+change-id: 20250703-qcom_phy_wol_support-402f7178c5c9
 
-Konrad
+Best regards,
+-- 
+Luo Jie <luoj@qti.qualcomm.com>
+
