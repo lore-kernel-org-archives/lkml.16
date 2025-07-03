@@ -1,114 +1,102 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB5E1A2545;
-	Thu,  3 Jul 2025 15:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DAE22259F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556970; cv=none; b=nxxTzpnZqHULpY41f1NqEgMbmdGTLv0GOdAFLTaeA0lOcKq61HHaBlYxb5iaZwGRABmp82D/cq58LYf56HfMnT0oiX/O8EP9wOTtQrbJQXE+647cG2cdn7V826dx1GEtfNbKEvLrkMcLM6BrDjrwPLxhqB0f0oDLnSZWlCN+wt0=
+	t=1751556973; cv=none; b=oJZtT9AlK3nh9jFoiVlCTc4jvyeciseQv41WW372eahjL5yKKWNwiDBApCy74UmJ+LV3zPoCtbbzfOC8/6XtgZXZ2AxxvbSgBv0iEGZQ8Cex5Z1BllAEBzLLsSTYxpjA2QuFC29/HODZPvt8vW6ILTTROEWIjJbRfCIO91fcqRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556970; c=relaxed/simple;
-	bh=2G5I9ZzG9yjrij4WFXM4JUOGhKPUcmmPVs9pnSIs/Wc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=meBfazJctDD7B4Mns+P63NTQon+jG91r5lHPI6XFpLjIccMcCzVV7eAvtzweW0EsyQvZ/bE5B9EGbqoeVEQbQpHTOm5m6xh70xDo1OkDTxm+6/ecGG+s/DPN9A7wkfK8/y/BlPSH9MQ+DD1C58mIq8nZH0ILfAThLixY89OnLmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qwb9gvWJ; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751556973; c=relaxed/simple;
+	bh=+oQfP1Bds2NStfrSIzwtMkBJ7FoMmRtjt5wrpXL9d3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WWEeE/kGCpsHxuhVGR4L8UzupwyK3QpawOkCnDGeKI6SB0zs404unB7V/CYpch5Uh2woLi+qFy69KclIu1dm+pLDp2SipOBuiVdb2G8abpqftePfOu/Sdso6HYbzdNk93HSPczOI/DuUSiuLuv/GuvbHyJGj9nsvdxsk39SnC64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GACBzkMs; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qwb9gvWJ"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5535652f42cso39837e87.2;
-        Thu, 03 Jul 2025 08:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751556967; x=1752161767; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HApDpWOeyUX3Z+9UGcv6amhDxGy0QeLAJcPFfZICILU=;
-        b=Qwb9gvWJV6WAIzEBvmCKJoXcTojIHl1FhWlS1R73wavTexunx7fUyHpfldcHrAWqbQ
-         xBljQAG3P813uUaHmatLoW7mYio5XZIj5a6uiJrjfTgnL7qLFgkSpZ150JxxgRL2W894
-         AfUF4/a4z5jXtet59sQwb7Hzcl6r92WK2B4N1zpEnbhO79OqHOoO24Ay3ZFyoYCA/VHf
-         UbTjnEbmDjbjHeCGI5dRXu6gMkrEKE2m/YD14ANG9m+vD3obG5kwhjgakn8TUirAytbs
-         4xaBTMB5lu8iqkU/Qy3Rjx+Q5yYCEvyBOTjmM2qucWCJf2Rd3VFeISA2/5140YiRsxvs
-         AuCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751556967; x=1752161767;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HApDpWOeyUX3Z+9UGcv6amhDxGy0QeLAJcPFfZICILU=;
-        b=dZayrA3BfeJB58EH674iqPv6a/AgMTYTH+ikhd0YxYbHdJ9xhs13EbSoRpCeZ2P+T7
-         jYQTgqiJYKNTTr2UFRYRkkW9mVj1hFTFuLnpMc3XPJIAoENHr9g4jUIom5YwK5LUStg5
-         cOjI068Ec/isydY8RkXxbBFtt7YeAbZtSnv3aDeTwZqKqMpVl3c8aFVunL6pOXZXfV6v
-         AKtnTKvE90WpmvwzxoAdenIkvQlhTIoBEgZ0j1gONVNrLjMIXf3JrpuJtHxVRW1ddFaV
-         hBFW1ND9UOTzRxoDpehvNln+OLQ/MfINdOFZSLr/E/lwxhm1RG2XpSBhr2orONW9cxYt
-         ac7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBiIEO0TiKvWitTu+VrCtIHpoTzTB3CMRh/+mO9dJLCDB6+z9YHf/hVhbcwCE+cKNtZLavBeyo/cmpQCg=@vger.kernel.org, AJvYcCX3wm/lKSdiYXVYA3UWn2iJMgOQVTBAyByE/bMkzaj6Cinr9RTEOv3oCxZTJGhQV99aAV6o@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRJqGHt/DuMQSSx92Zt+QFi25zpGTcVJLcnHn+3tcgTDhgyOpS
-	jwelcKobPFnTQ9jR68NIwSyPrktc5QF/uSyCkOkQQ4xUP44anTPMrSOQAipGHQ==
-X-Gm-Gg: ASbGncvO12Pbm5HgzaI1KngwRmnbTveUzTGRuzZ37pxFidXfucbBTUAl/aUYydvLOby
-	wfhO3gLYTbVdm14f/M04vmW5GaYMUQ3r9zomphK8wuUEyK8nvFRq7WC5YHjk7CgtVgCGqj8IpVj
-	zYdoj4GPJBQ78mvYkouQWejLN1kVdL08RwHRCCJ6UHyVssMka2t/JsfHKPLi0dL+zrwnDKW0+7A
-	U8a5IkNQlLpuSwXqS7frvXrvUtNNcKoGesNtjlQF13wRASla8xD+nQzMmqLHDSfDCAXjGp+9xIW
-	xMVTI8mkZzGp4vGXLjX33lD0x2Eu6guxaVqdt52FV3G+ijAFagZzN9IFV0oSkd7EUhcAlj25vRy
-	jthowWYG54bk=
-X-Google-Smtp-Source: AGHT+IGfIgmXFwoivrCu2LKr0j0KhwMIyS3oiIX4QSGJ4eOg65zgCZhe6DcRajyDGesAQiwgpUIt3A==
-X-Received: by 2002:a05:6512:1104:b0:553:a64a:18b0 with SMTP id 2adb3069b0e04-55628344807mr2818073e87.42.1751556966260;
-        Thu, 03 Jul 2025 08:36:06 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384cea54sm5685e87.247.2025.07.03.08.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:36:05 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 3 Jul 2025 17:36:02 +0200
-To: Neeraj upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: "Paul E . McKenney" <paulmck@kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Joel Fernandes <joel@joelfernandes.org>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>
-Subject: Re: [PATCH v3 2/2] Documentation/kernel-parameters: Update
- rcu_normal_wake_from_gp doc
-Message-ID: <aGajYsyMTAD17WIY@pc636>
-References: <20250702145938.66459-1-urezki@gmail.com>
- <20250702145938.66459-2-urezki@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GACBzkMs"
+Message-ID: <b4925bd4-8169-47c2-9cff-5a4023f07a32@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751556958;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3eRVsX60PZyYuNbYRScH64M22xCUcDp+0crN+OJ6Ra4=;
+	b=GACBzkMsaqWE1QUIRDa0I+YZATjc4bnBA0JsEmS4WRXa+o9tyjSx3wxSx+hQp+wZWsc3tc
+	iE0f59L/CLG/8xpbC3B4Leen32Ruip8FrWE+mRvgxnYdwLeYBIPLTy0t61qMuB8+mWYnsQ
+	wW9x6gUh88pwU2/DSjV3n5gQZtWnoho=
+Date: Thu, 3 Jul 2025 08:35:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702145938.66459-2-urezki@gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Clean code with bpf_copy_to_user
+Content-Language: en-GB
+To: Tao Chen <chen.dylane@linux.dev>, ast@kernel.org, daniel@iogearbox.net,
+ john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250703124336.672416-1-chen.dylane@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20250703124336.672416-1-chen.dylane@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jul 02, 2025 at 04:59:37PM +0200, Uladzislau Rezki (Sony) wrote:
-> Update the documentation about rcu_normal_wake_from_gp parameter.
-> 
-> Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+
+
+On 7/3/25 5:43 AM, Tao Chen wrote:
+> No logic change, just use bpf_copy_to_user to clean code.
+>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 > ---
->  Documentation/admin-guide/kernel-parameters.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index f1f2c0874da9..f7e4bee2b823 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5485,7 +5485,8 @@
->  			echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
->  			or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=1"
->  
-> -			Default is 0.
-> +			Default is 1 if num_possible_cpus() <= 16 and it is not explicitly
-> +			disabled by the boot parameter passing 0.
->  
->  	rcuscale.gp_async= [KNL]
->  			Measure performance of asynchronous
-> -- 
-> 2.39.5
-> 
-Same this one. Are you planning?
+>   kernel/bpf/syscall.c | 17 +++--------------
+>   1 file changed, 3 insertions(+), 14 deletions(-)
+>
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index e6eea594f1c..ca152d36312 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -5208,21 +5208,10 @@ static int bpf_task_fd_query_copy(const union bpf_attr *attr,
+>   
+>   			if (put_user(zero, ubuf))
+>   				return -EFAULT;
+> -		} else if (input_len >= len + 1) {
+> -			/* ubuf can hold the string with NULL terminator */
+> -			if (copy_to_user(ubuf, buf, len + 1))
+> -				return -EFAULT;
+>   		} else {
+> -			/* ubuf cannot hold the string with NULL terminator,
+> -			 * do a partial copy with NULL terminator.
+> -			 */
+> -			char zero = '\0';
+> -
+> -			err = -ENOSPC;
+> -			if (copy_to_user(ubuf, buf, input_len - 1))
+> -				return -EFAULT;
+> -			if (put_user(zero, ubuf + input_len - 1))
+> -				return -EFAULT;
+> +			err = bpf_copy_to_user(ubuf, buf, input_len, len);
+> +			if (err)
+> +				return err;
+>   		}
+>   	}
 
---
-Uladzislau Rezki
+Actually, there is a return value change with this patch.
+bpf_copy_to_user() return returns -ENOSPC while the original
+implementation may return -EFAULT due to following code.
+
+         if (put_user(prog_id, &uattr->task_fd_query.prog_id) ||
+             put_user(fd_type, &uattr->task_fd_query.fd_type) ||
+             put_user(probe_offset, &uattr->task_fd_query.probe_offset) ||
+             put_user(probe_addr, &uattr->task_fd_query.probe_addr))
+                 return -EFAULT;
+
+         return err;
+
