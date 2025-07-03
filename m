@@ -1,45 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6E9289E38
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935F928A707;
+	Thu,  3 Jul 2025 17:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751563681; cv=none; b=ZUGKB2wlzPo+6abvVNg2KjiJPymrt1KnBBXRtQfLail73jOjK3IWQZKXcbqhwHitH1zZ5J8o5DM28eq1dSLfyaAiXKkopp0frvKaHAzu+KSuF39vLpo2bBluf2E9D/y1bldeoXGjk1O97mLfZNCgaBbHV/cWjK0T9iMSjw5ZoyY=
+	t=1751563683; cv=none; b=OBhw60c+fGe2F0NnP+Kd6hu3DE6bfONyV9TuFDtah8KivbbQVMWnwivw1UIuQSRDBw6B4K75086xVGV9ueEWFgN2IJxMxeum7Wv3/hXF7Dly9o+aZNm6q1s+Y1z0qgrS52lJXDjBtcQD6Tz4lCSouFpWM3NbHQPM+o3OItCjhjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751563681; c=relaxed/simple;
-	bh=IybfEWRjtWPI3vgAe1K+ogML3aRIqiWylmbRMg2TS4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IoSU7qLxq+GFNLJZq5vBy/LPa71XKfYpU0crTDJPoV+dw8EnVM8vFobZL4ukPddDdR7Js3Q21MjpcuqXZ0RKAJGMrbEIOYm9AsXs3n3Zc4JQulst1LCe9m1rErLukZ32+MUIaex3G/CprDtM1lJstkpH7GVhd1GSvqgiNtCbRAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4QmyCGY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751563683; c=relaxed/simple;
+	bh=7DItQyd/iDiXcaQ1oEjOGACHtzfWw4WzefkYn8OTkwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hnYtamYZ6Rom7VXsv5WnDz0aO7USCzhCLuy9BVHiNYsfezZnmKPRzRZYWzohmcVWylLtANiXHgBTNUjr3UzVrvUH6QnvPvV25W9EKu9RI2fC9UtVYPTP6qHU0Ei3t0b8n8pW7WlfWcbeieBfoc0bFrjaHu681/4dYkq8Z2c0vFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5ZftxTx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4QmyCGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB48C4CEE3;
-	Thu,  3 Jul 2025 17:27:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5ZftxTx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D73C4CEE3;
+	Thu,  3 Jul 2025 17:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751563681;
-	bh=IybfEWRjtWPI3vgAe1K+ogML3aRIqiWylmbRMg2TS4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u4QmyCGYJccppXLi/utWO3Asz33p4If0D/yWQ2Vv8J0qRff2M5vTzpE1iT5Onnhyp
-	 k7fmnhyVrcV5s/nrb7amumz4UlQc2Q3pXd7HUmunjuqUpFExA+qgpP4hu0Z3lgY1dR
-	 ey79NaAsiwa3FtQxi1R/wYhLCZXZXDb08nXNs7Zr24zQQjvxT1I4aPf2iERYzrwpCe
-	 TmRDYPLgsH62puoIVbift8wvH/ME3OtjpsoNeABXafwxj93A8Ja3beYswDETRDa+K0
-	 r2iCeCZDwJt9qXa3HGm0q6xEiZUm1rNupCC2bMzSdAYtXIcqJ3VLyInllF13ETNkTe
-	 MyZamdx2xwYEg==
-Date: Thu, 3 Jul 2025 20:27:55 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	David Hildenbrand <david@redhat.com>,
-	Pratyush Yadav <ptyadav@amazon.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 3/3] cma: move allocation from HIGHMEM to a helper
- function
-Message-ID: <aGa9mworOcOE6GhV@kernel.org>
-References: <20250702173605.2198924-1-rppt@kernel.org>
- <20250702173605.2198924-4-rppt@kernel.org>
- <aGZTApK8WxFrTxI0@localhost.localdomain>
+	s=k20201202; t=1751563683;
+	bh=7DItQyd/iDiXcaQ1oEjOGACHtzfWw4WzefkYn8OTkwU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=H5ZftxTxWMfwxHZ+Pz3upY30k01iBoXdImqR+W/HMOoyYzD3f9V7nCF4lK/kiNDZk
+	 Iv/a4u5MSqT8IyVdWMKt/77YNztWhnMVkI9jWlOVKXqlAoxQpMObMsOsZNgt3mrBzd
+	 azBm0mh/xpH1TaR6W097mqBwLGUYZw+hfLFuqmy0dHTsMlEx3NfczGuOn3DQJBYmTs
+	 rmwl0RQjoupydZDcb1P37q76NVU3kFSi5kZwkrCDNvz1ducn1Tc2kKbXh0JmDQBSVI
+	 hQjavWGtQqoz8VzpB9ZusWsjtax/P5fIQ0C+xaskpPdNwILfdXtRyVYmu4AXYp6DXJ
+	 eN5ZOW0iYQJgA==
+Date: Thu, 3 Jul 2025 12:28:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 00/16] PCI: MSI parent domain conversion
+Message-ID: <20250703172801.GA1934994@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,66 +71,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGZTApK8WxFrTxI0@localhost.localdomain>
+In-Reply-To: <cover.1750858083.git.namcao@linutronix.de>
 
-On Thu, Jul 03, 2025 at 11:53:06AM +0200, Oscar Salvador wrote:
-> On Wed, Jul 02, 2025 at 08:36:05PM +0300, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > When CONFIG_HIGMEM is enabled, __cma_declare_contiguous_nid() first
-> > tries to allocate the area from HIGHMEM and if that fails it falls back
-> > to allocation from low memory.
-> > 
-> > Split allocation from HIGMEM into a helper function to further decouple
-> > logic related to CONFIG_HIGHMEM.
-> > 
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  mm/cma.c | 52 +++++++++++++++++++++++++++++-----------------------
-> >  1 file changed, 29 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/mm/cma.c b/mm/cma.c
-> > index 1df8ff312d99..0a24c46f3296 100644
-> > --- a/mm/cma.c
-> > +++ b/mm/cma.c
-> > @@ -376,6 +376,30 @@ static int __init cma_fixed_reserve(phys_addr_t base, phys_addr_t size)
-> >  	return 0;
-> >  }
-> >  
-> > +static phys_addr_t __init cma_alloc_highmem(phys_addr_t base, phys_addr_t size,
-> > +			phys_addr_t align, phys_addr_t *limit, int nid)
-> > +{
-> > +	phys_addr_t addr = 0;
-> > +
-> > +	if (IS_ENABLED(CONFIG_HIGHMEM)) {
-> > +		phys_addr_t highmem = __pa(high_memory - 1) + 1;
-> > +
-> > +		/*
-> > +		 * All pages in the reserved area must come from the same zone.
-> > +		 * If the requested region crosses the low/high memory boundary,
-> > +		 * try allocating from high memory first and fall back to low
-> > +		 * memory in case of failure.
-> > +		 */
-> > +		if (base < highmem && *limit > highmem) {
-> > +			addr = memblock_alloc_range_nid(size, align, highmem,
-> > +							*limit, nid, true);
-> > +			*limit = highmem;
-> > +		}
-> > +	}
+On Thu, Jun 26, 2025 at 04:47:50PM +0200, Nam Cao wrote:
+> The initial implementation of PCI/MSI interrupt domains in the hierarchical
+> interrupt domain model used a shortcut by providing a global PCI/MSI
+> domain.
 > 
-> Not a big deal, but maybe better to do it in one function? Maybe even move
-> the CONFIG_PHYS_ADDR_T_64BIT block in there as well? So memblock_alloc_range_nid()
-> calls would be contained in one place and the X86_64/HIGHMEM comments as
-> well.
-> Just a thought.
+> This works because the PCI/MSI[X] hardware is standardized and uniform, but
+> it violates the basic design principle of hierarchical interrupt domains:
+> Each hardware block involved in the interrupt delivery chain should have a
+> separate interrupt domain.
+> 
+> For PCI/MSI[X], the interrupt controller is per PCI device and not a global
+> made-up entity.
+> 
+> Unsurprisingly, the shortcut turned out to have downsides as it does not
+> allow dynamic allocation of interrupt vectors after initialization and it
+> prevents supporting IMS on PCI. For further details, see:
+> 
+> https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de/
+> 
+> The solution is implementing per device MSI domains, this means the
+> entities which provide global PCI/MSI domain so far have to implement MSI
+> parent domain functionality instead.
+> 
+> This series converts the PCI controller drivers to implement MSI parent
+> domain.
+> 
+>  drivers/pci/Kconfig                           |   1 +
+>  drivers/pci/controller/Kconfig                |  11 +
+>  drivers/pci/controller/dwc/Kconfig            |   1 +
+>  .../pci/controller/dwc/pcie-designware-host.c |  68 ++----
+>  drivers/pci/controller/dwc/pcie-designware.h  |   1 -
+>  drivers/pci/controller/mobiveil/Kconfig       |   1 +
+>  .../controller/mobiveil/pcie-mobiveil-host.c  |  42 ++--
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   |   1 -
+>  drivers/pci/controller/pci-aardvark.c         |  59 ++---
+>  drivers/pci/controller/pci-hyperv.c           |  98 ++++++--
+>  drivers/pci/controller/pcie-altera-msi.c      |  44 ++--
+>  drivers/pci/controller/pcie-brcmstb.c         |  44 ++--
+>  drivers/pci/controller/pcie-iproc-msi.c       |  45 ++--
+>  drivers/pci/controller/pcie-mediatek-gen3.c   |  67 ++---
+>  drivers/pci/controller/pcie-mediatek.c        |  46 ++--
+>  drivers/pci/controller/pcie-rcar-host.c       |  69 ++----
+>  drivers/pci/controller/pcie-xilinx-dma-pl.c   |  48 ++--
+>  drivers/pci/controller/pcie-xilinx-nwl.c      |  45 ++--
+>  drivers/pci/controller/pcie-xilinx.c          |  55 +++--
+>  drivers/pci/controller/plda/Kconfig           |   1 +
+>  drivers/pci/controller/plda/pcie-plda-host.c  |  44 ++--
+>  drivers/pci/controller/plda/pcie-plda.h       |   1 -
+>  drivers/pci/controller/vmd.c                  | 229 +++++++++---------
+>  23 files changed, 504 insertions(+), 517 deletions(-)
 
-Yeah, this will be neater, thanks!
-Will send v2 shortly.
+Looks good to me, thanks!  I think Mani will probably pick this up.
 
-> -- 
-> Oscar Salvador
-> SUSE Labs
+I might have included the specific "legacy MSI domain" thing you're
+replacing.  It looks like you're replacing pci_msi_create_irq_domain()
+with msi_create_parent_irq_domain()?
 
--- 
-Sincerely yours,
-Mike.
+Minor merge conflict in pcie-mediatek-gen3.c with dcbea1c7e94e ("PCI:
+mediatek-gen3: Use dev_fwnode() for irq_domain_create_linear()").  No
+problem, we can easily fix that up.
+
+The "++i" in vmd.c stuck out to me since "i++" is so much more common.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
