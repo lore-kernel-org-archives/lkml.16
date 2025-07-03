@@ -1,116 +1,100 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80B42D77F2;
-	Thu,  3 Jul 2025 11:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BEE2D77F2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751543338; cv=none; b=KN7q1U/CmaWRQQhFDKAQaOmoPn5C7J2KLh7tmV/tAb8OIcNU0idWxKklOCNx666I2gLM/tMrIL/KrYtC2YWQWRa/D1F6TIoenY77a4i4/8dF7G0q03d3gcww+B7MPCFF7+uGnoSK0CrVBx42JyK39K5Rzad/MWty8lYJZuVXYcg=
+	t=1751543395; cv=none; b=HfV9S2oWI25KmUac5+YMnPGZe0mdGQVHNfccHEm7N1oGwJpPC/Kd3RseTftjErtrl1eZabrS3Be+C7QBhUR4zbnRIrK/TJq3WJkyUti3V/ZiXB6EBk/nPuo/iqo4ZbZbxfZawpHO3blLXdi5K07fMuf7PiqzCeKOV1ecVbEMfG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751543338; c=relaxed/simple;
-	bh=A20LFGjNp+gZfOV/c+s4NxwTMpmAgEjZ3epNnBK6ubI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TiIuoWR1UMpBL4q/2nNax4VAw/fEnQ/c2sg7hvOdsEqAhmdxBwWggwlbZaJ0rEFrFuDgFOiyF2ZfpmyFpVcmL0jbgXQh4yirRATFOUlbzx626ck41MNgFE+cxoHZyLzb23nZYdTbPG/Rc/phKqCTMNFRsv2Xz77Wrd6vPlY+f3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pYmAqzRK; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pYmAqzRK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751543333;
-	bh=A20LFGjNp+gZfOV/c+s4NxwTMpmAgEjZ3epNnBK6ubI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pYmAqzRKKwXxndgRMsp7Ue/kMz/YJIN4bFZKXJxaUMrQGS/f/MO1aa22l3DVpB3is
-	 Vk284nYKACgB0LiXWw3JEWGv+5dQFVHDdQMRzmQ8jitoYGGc7W7QMMxGriePUGgMQz
-	 fl30PmBCXWuFgu8ULKXUokZhiDDvrXUKvliRf/kuBgw46dbtw7JCZ4bMm9Lo51lRcQ
-	 mFmf6uWIW4HawaDXDILRmBNYHoQITYS9Lv7Ejg4v44N2hmhvWQzZGgboKzoP+ple4X
-	 BPP4rIoPMxtmW6LHwp5yK9CejrlKQeXwnntJvE0vqJn044Xj9IUlHn03znwAnkAdrs
-	 MpozlXGbRJx8A==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1CD5D17E07FF;
-	Thu,  3 Jul 2025 13:48:53 +0200 (CEST)
-Message-ID: <5ee16a72-01a0-4f2c-9bcb-e4b4b069b2dd@collabora.com>
-Date: Thu, 3 Jul 2025 13:48:52 +0200
+	s=arc-20240116; t=1751543395; c=relaxed/simple;
+	bh=nu9JXSZwUcrtrbeMb8GBu3E0t3shtkd3mlAhDbK/gP4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aXcSlP3r8hui/lIzh6uqFuO8Grda7IAuVu7KJ7VGKW3IrmVECfxmVM6fjq+f2L9+6m/WrsXZqWVjyEIWxvL57CR6B0xgZONShILQ2yZgD41x/WiCf891sQ1zSeesxRNBZU4QL0sEtIpdUyO4QurlXNzinMtjlZFx0b0iLIr1fOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uXIRk-0004Pe-FK; Thu, 03 Jul 2025 13:49:44 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uXIRi-006awF-1c;
+	Thu, 03 Jul 2025 13:49:42 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uXIRi-00DbtD-1K;
+	Thu, 03 Jul 2025 13:49:42 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	Andre Edich <andre.edich@microchip.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH net v2 0/4] net: phy: smsc: robustness fixes for LAN87xx/LAN9500
+Date: Thu,  3 Jul 2025 13:49:38 +0200
+Message-Id: <20250703114941.3243890-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] arm64: mediatek: Enable efuse GPU speed bin
- post-processing
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lala Lin <lala.lin@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- Srinivas Kandagatla <srini@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-References: <20250610063431.2955757-1-wenst@chromium.org>
- <CAGXv+5HDAZ-MBBMk00O+cdcq55KnsKdEAMD7E2uaAf=2LY=1cg@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CAGXv+5HDAZ-MBBMk00O+cdcq55KnsKdEAMD7E2uaAf=2LY=1cg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Il 01/07/25 11:15, Chen-Yu Tsai ha scritto:
-> Hi Angelo,
-> 
-> On Tue, Jun 10, 2025 at 2:34 PM Chen-Yu Tsai <wenst@chromium.org> wrote:
->>
->> Hi everyone,
->>
->> This is v2 of the MT8188 efuse GPU speed bin post-processing enablement
->> patches. In v1 [1] the change was made to the driver. Angelo, the platform
->> maintainer believes the change should be made to the DT binding instead
->> [2]. v2 adopts Angelo's argument.
->>
->> Patch 1 updates the efuse DT binding so that MT8186 is a base compatible
->> with no fallback, and MT8188 falls back to MT8186.
->>
->> Patch 2 updates the MT8188 DT to follow the new binding.
->>
->> If possible I would like to see both patches merged through the soc
->> tree once the DT binding maintainers give an ack. This avoids prolonged
->> waiting for the binding changes to land and uncertainty about whether
->> things have fully landed or not.
->>
->>
->> Thanks
->> ChenYu
->>
->> [1] https://lore.kernel.org/all/20241223100648.2166754-1-wenst@chromium.org/
->> [2] https://lore.kernel.org/all/11028242-afe4-474a-9d76-cd1bd9208987@collabora.com/
->>
->> Chen-Yu Tsai (2):
->>    dt-bindings: nvmem: mediatek: efuse: split MT8186/MT8188 from base
->>      version
->>    arm64: dts: mediatek: mt8188: Change efuse fallback compatible to
->>      mt8186
-> 
-> Friendly ping. Please take a look and see if this scheme is to your liking.
-> 
+changes v2:
+- drop IRQ patch.
+- no other changes are made
 
-For the whole series
+Hi all,
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+The SMSC 10/100 PHYs (LAN87xx family) found in smsc95xx (lan95xx)
+USB-Ethernet adapters show several quirks around the Auto-MDIX feature:
 
-> 
-> Thanks
-> ChenYu
-> 
->>   .../bindings/nvmem/mediatek,efuse.yaml          | 17 +++++++++++++++--
->>   arch/arm64/boot/dts/mediatek/mt8188.dtsi        |  2 +-
->>   2 files changed, 16 insertions(+), 3 deletions(-)
->>
->> --
->> 2.50.0.rc0.604.gd4ff7b7c86-goog
->>
+- A hardware strap (AUTOMDIX_EN) may boot the PHY in fixed-MDI mode, and
+  the current driver cannot always override it.
 
+- When Auto-MDIX is left enabled while autonegotiation is forced off,
+  the PHY endlessly swaps the TX/RX pairs and never links up.
+
+- The driver sets the enable bit for Auto-MDIX but forgets the override
+  bit, so userspace requests are silently ignored.
+
+- Rapid configuration changes can wedge the link if PHY IRQs are
+  enabled.
+
+The four patches below make the MDIX state fully predictable and prevent
+link failures in every tested strap / autoneg / MDI-X permutation.
+
+Tested on LAN9512 Eval board.
+
+Best Regards,
+Oleksij
+
+Oleksij Rempel (3):
+  net: phy: smsc: Fix Auto-MDIX configuration when disabled by strap
+  net: phy: smsc: Force predictable MDI-X state on LAN87xx
+  net: phy: smsc: Fix link failure in forced mode with Auto-MDIX
+
+ drivers/net/phy/smsc.c | 57 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 5 deletions(-)
+
+--
+2.39.5
 
