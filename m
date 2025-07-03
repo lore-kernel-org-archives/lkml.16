@@ -1,42 +1,40 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC282F2372;
-	Thu,  3 Jul 2025 18:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4052F4320;
+	Thu,  3 Jul 2025 18:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567675; cv=none; b=ltlZhL2IxCZkgFOBinEUcW9UVUawDlgViLM2yzkSRhHWp9BFFKWh+3AJo6jCF/ZNXJZw8XpVUKIWY5xjXd66NMP4ZCqJ7b/bpjgAf3iPUPZMezWFi/I4h95W7fn3KZX6kGxK+UpLL7w03CN4Luon94WvirxPpJw+E1mOzxFuJwM=
+	t=1751567674; cv=none; b=CMYfGu1OevCt/avBvPL36d8eBT4L7NHCXX9wKMRU8uh/Bz9sXBLkVk/Ly4BMdUuxlILOT8aClIX+zxULbXgpn5kM00exijGh+5a0N1Wt+Hqj2Nbr5ioMld9+rXMevwx3TMDnWdEcrIjTWofYzmo1HJrcz8Fn36aeRFD5rIACiIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751567675; c=relaxed/simple;
-	bh=mpWqcXuS0ML7BvrUerZSSfgv2FiifVn5w5SGwaHYBpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AD/TkH0bvjO/Qb1fZbCtpk4pNj5JcTT5Om7tG2sk2rlmtuab93AKR+ceYc6O8rAtZgmrnP7XhgMhAR4eIP/K11xLaGoUoEfknIj26Knf4XCrjKiF90yvzOkmfHoIkP18ArxFNeB8zQo9WQEf2S9P4zWDWpPQwLrc4Ql9fLKH/SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: 69HFzsYgQmuU8C4HTz+i+w==
-X-CSE-MsgGUID: jQZM59EUSu2x2kiyubOoYA==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 04 Jul 2025 03:34:31 +0900
-Received: from localhost.localdomain (unknown [10.226.92.64])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7324E401D165;
-	Fri,  4 Jul 2025 03:34:28 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	linux-can@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH 4/4] can: rcar_canfd: Replace RCANFD_CFG_* macros with FIELD_PREP
-Date: Thu,  3 Jul 2025 19:34:02 +0100
-Message-ID: <20250703183411.332828-5-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250703183411.332828-1-biju.das.jz@bp.renesas.com>
-References: <20250703183411.332828-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1751567674; c=relaxed/simple;
+	bh=lA9ANhw3QErm4wzUqrLyOddiDx+o1BLzt3YH5G9fTCQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qxc9ed4YxXQwXynajafGSN2lqbm5ZtMOYlcgUEnFHHcwnjL1vZXuHtQdtn0Tij8+A9262akAkRXp7WlrL5/6z/rXBRKfS3NAMhJFTsb+vVjGTfd0Vn53/xZxJ24dBoJTROsrFhQyFjsvDCphfYzvTUN5wKZ/j3Hdg0Kt5Pfghok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EO+yULKi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EO+yULKi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84993C4CEF1;
+	Thu,  3 Jul 2025 18:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751567673;
+	bh=lA9ANhw3QErm4wzUqrLyOddiDx+o1BLzt3YH5G9fTCQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EO+yULKiSEhzL8yrGseevChENL0UD3mhn2lN9TSQDBuJhb2eTEu2sgtqL3wLs+NLu
+	 j2+wkq7kZTMtmKLUAMhYcNwYuMPvURq/xhgE4b14rnnydm/NGzggzB57ZXW9bQuxga
+	 xKqZjiOFykv6Badof5aPat0FiGnQTRPCcxdeZyYLpZ22bemnwTJ7UJ6J/76arCzKxz
+	 fyCHV/jyg2ZWuIJhSU/dlz/k8stzkZvUrw/jLj/YZaIIFCybP00Y1WDU34NgKyoD2f
+	 omwfjCXKSg040gag0eUJ4g6djQePMxxQ+4DtWLFWRvMyl6Ll75I9Avj7DJ4K73PnRd
+	 nXzhGlLiXiu1g==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tpm: Use of_reserved_mem_region_to_resource() for "memory-region"
+Date: Thu,  3 Jul 2025 13:34:24 -0500
+Message-ID: <20250703183424.2073075-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,41 +43,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace RCANFD_CFG_* macros with simpler FIELD_PREP macro.
+Use the newly added of_reserved_mem_region_to_resource() function to
+handle "memory-region" properties.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/net/can/rcar/rcar_canfd.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/char/tpm/eventlog/of.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-index b5b059e83374..dd87b4e8e688 100644
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -102,12 +102,6 @@
+diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+index 930fe43d5daf..92cec9722ee4 100644
+--- a/drivers/char/tpm/eventlog/of.c
++++ b/drivers/char/tpm/eventlog/of.c
+@@ -24,16 +24,10 @@
  
- /* Channel register bits */
+ static int tpm_read_log_memory_region(struct tpm_chip *chip)
+ {
+-	struct device_node *node;
+ 	struct resource res;
+ 	int rc;
  
--/* RSCFDnCmCFG - Classical CAN only */
--#define RCANFD_CFG_SJW(x)		(((x) & 0x3) << 24)
--#define RCANFD_CFG_TSEG2(x)		(((x) & 0x7) << 20)
--#define RCANFD_CFG_TSEG1(x)		(((x) & 0xf) << 16)
--#define RCANFD_CFG_BRP(x)		(((x) & 0x3ff) << 0)
+-	node = of_parse_phandle(chip->dev.parent->of_node, "memory-region", 0);
+-	if (!node)
+-		return -ENODEV;
 -
- /* RSCFDnCFDCmCTR / RSCFDnCmCTR */
- #define RCANFD_CCTR_CTME		BIT(24)
- #define RCANFD_CCTR_ERRD		BIT(23)
-@@ -1418,8 +1412,8 @@ static void rcar_canfd_set_bittiming(struct net_device *ndev)
- 	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || gpriv->info->shared_can_regs) {
- 		cfg = rcar_canfd_compute_nominal_bit_rate_cfg(gpriv->info, tseg1, brp, sjw, tseg2);
- 	} else {
--		cfg = (RCANFD_CFG_TSEG1(tseg1) | RCANFD_CFG_BRP(brp) |
--		       RCANFD_CFG_SJW(sjw) | RCANFD_CFG_TSEG2(tseg2));
-+		cfg = FIELD_PREP(GENMASK(19, 16), tseg1) | FIELD_PREP(GENMASK(9, 0), brp) |
-+		      FIELD_PREP(GENMASK(25, 24), sjw) | FIELD_PREP(GENMASK(22, 20), tseg2);
- 	}
+-	rc = of_address_to_resource(node, 0, &res);
+-	of_node_put(node);
++	rc = of_reserved_mem_region_to_resource(chip->dev.parent->of_node, 0, &res);
+ 	if (rc)
+ 		return rc;
  
- 	rcar_canfd_write(priv->base, RCANFD_CCFG(ch), cfg);
 -- 
-2.43.0
+2.47.2
 
