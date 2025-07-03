@@ -1,85 +1,124 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F79F2DBF7C;
-	Thu,  3 Jul 2025 10:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF7C2E2EFC
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538103; cv=none; b=H4lCDXji0650pEPAL/92Qkq0THHwA+IGs9xWtWRLLLZbCQ/VywRe8OCrLYA146LdzrIxX7leoqRBVz4U8cwYbGxzYa8GztLNE+XgOnET8QcfgpbrMDW7yO9NNMItIE9NFD814v4Huk+Egb9rvNNy37txE5GROLQuzXq9lxwlJqk=
+	t=1751538108; cv=none; b=NeEO7l+UYdwzHpvTLF5e+5j4dlP2fhlz5W5mXepOLc8PXEDCFkpqZPNqocB2IOJX8aXE2bnorwn5eDos84sZHQv4PgDQz2UtcogZDuS/Q0KIBBSYqRb+VIMPzpNasktp03vg3Xz28FYSMOJAp1vHTacty1HiRd1Y/fWZTeLarIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538103; c=relaxed/simple;
-	bh=FGoJPVfwutBWJwGj9qB2xybMR3b6ZeRVmlw88KOQWHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CCzPEHhpO64DPkL1DApRJpoV7U8Zw3Qwtjhm9fmVhb31V5o2YCautfwUhkqxgsWYXw7PPlGFCewvV6LWgBY8y1CIAbhGxLKr6hAMKHPnJG68zGFUhttDOO5Tu4QR1gsrb9d5BYpD4y9DB+RPCMMUPxnhrU5PX57HV3QaAJx1AFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hF8dXvJA; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751538108; c=relaxed/simple;
+	bh=XexxHMorXGwQYFT4LewShysFN8Ru8ThU14NlLP6LrT0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=tvsxe7wW6d6cwCh9N6W4arkKl0f1k03WLHheSpDRv8tWFM8i+iajElAFhWIt4GNEwwmSvnmxHdVJ5XadfDlTo4vKbiE6Gq+SRrnDVQcDMdXJ5MLnWqb4pUW8w9kRvtyQg0Ejd0aCWFtA4JZVaF7LNxi+596b+s7G/zxI9GEPuoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UMvZTPf5; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hF8dXvJA"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-748e81d37a7so5470869b3a.1;
-        Thu, 03 Jul 2025 03:21:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751538102; x=1752142902; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bf3OnllIKy74CmmPzQiN5iB51QA0QlwijmOja/0ll0Q=;
-        b=hF8dXvJAdXf1/elj6pTzh3Sm3vUjCA+N8gdROppp67prT++S71fjgtcYau3Xg/Mc7X
-         JS1rHLR5P07ZvPf3kli+EIPbKgaFw1dHx+9WNyA7uIBr1bMiv5gpMklv4FppARaaO71B
-         I76OO5Ay5AqcFhAh17EtOa7FNTHbxal8DKl9iwJHumzwq/O24fSf3tKYwJ4/DuvvhZFk
-         yudvnbVuAbFrpHhvnFecS/0cqHC7VZ4u5csC8LaYjZRrKjZoRf390XvK67pQ33sLaj9p
-         Up2TiKIuQnO6QuOd/rFgSWDvii2fkTUqqrUtZkgxauKi2LEPXQjzQKzJDZ5fdkUD8iUi
-         1Vvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751538102; x=1752142902;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bf3OnllIKy74CmmPzQiN5iB51QA0QlwijmOja/0ll0Q=;
-        b=ujvfNWG+iZUJhTOKWzIUTtdqun/gk7aGvV/4bQhhYzvfsSONYNFaA/S27efAAIlD20
-         LYxYkLrssm9ygUJoOvK2fJlOqHEVOKCmaOBJcsdUb8mXS6wexChexJ2DJJ+Mcjmep75H
-         wVgzcTgsv9Qfrv6p3PuKbgIOkbpab/ty0/WdaadkiO8nNiG40yKwEeitnMMHrd7TpZ2d
-         wGunk1p1PFwvewR29p7Fy4u7IOsZgKMm94IzIhJAG0LGiBTb1kbxrb4DQnK9q3HINBqG
-         O6wBt6SnYOmo3To+2EzBRJqx3P18eHJ6DLFblxWvs2+lXG6tUS4RQTLojqXGM25saFL3
-         3Edw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhg+7iZM7c4GnrJvvYWNhCaph7tS/wwGf5n4tWFe/+Sw2wdU1KtDp9P62EHavzdOdz8DUD0xcKKmzM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUXnFLeVBo0/DQiIiMaKqPbzz0eSojP6VFKYlMV2nP3KKiPvuL
-	dejIhP2iFPaNy8oeQ2CmoK2W+zFHUO56JVsj5Rb0llEwI0Y8dO4OluOm
-X-Gm-Gg: ASbGncvR6L0zAUF/4WByWpjuSSt5QPT7J7TIoAi6mTRRsNrjZ+UZM110MFp1FbJl+ku
-	VfZ36POCWomjnRP2IOlMtFYPe0l+D12uJtaRritgWfEly1r51FJ8GchGbG2/U84fkSYHRXlR5Az
-	LYTyBxpubvCxgw8JDC266oAv/uo6u00c9nt1qRjWpreRG7ZNp2RI94bWfE+wTpn0AO1bGnpn2T7
-	OirpvOzHDos3nBWJoFnpJhQLZjiqv9cQy8Sww+k90yspHuAtQ18m6Oeco7S4OoU4n/7PcxMoUJD
-	GnamRon6kSc99uAPWy2ArqJJiQdcUS/faALkxb9qWIYTp7vKH0k9evCsp31aYg==
-X-Google-Smtp-Source: AGHT+IGq73HxNPtEVSnp5azdraH+JoXEP6E2e3ILYaUPK7FTlIC70puJ7IGvGTsd2cf9o9WMfsGxwA==
-X-Received: by 2002:a05:6a00:3cd2:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-74c997fd590mr3720134b3a.1.1751538101662;
-        Thu, 03 Jul 2025 03:21:41 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af541b6e5sm15788469b3a.43.2025.07.03.03.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:21:41 -0700 (PDT)
-Date: Thu, 3 Jul 2025 18:21:38 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Junhui Liu <junhui.liu@pigmoral.tech>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Yuntao Dai <d1581209858@live.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Question for CV1800 mailbox users series SoC
-Message-ID: <iq36z2mqetrdhxe24w455quvqixcy25ovuxjz3rgelpgln4j3f@kjxn5z7yb6bz>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UMvZTPf5"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250703102143euoutp013321df8b592fd44e4c3dc43db6154113~OtqATxe2A1939719397euoutp01P
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:21:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250703102143euoutp013321df8b592fd44e4c3dc43db6154113~OtqATxe2A1939719397euoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751538103;
+	bh=nS7gGLPcYu431wACYDIpnQCjfgmdMYV2m+06WEOimxI=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=UMvZTPf5MFlYbVthTszDlaAh2NyGedz2J80TIqan8EPLEip18Xoe//ExhI+DzeMZ7
+	 Y414rsSATVtoYPH/HyaGIRHkKHOIJbBL0jjLdx0Ln3JoUL8WtRta+WIHlpziSIfn4m
+	 j5SnuJeiSMBtJPx9MMOL0WQSQXWRykSbsz9ilvEw=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250703102143eucas1p273c64519df9ebb05e9b3a7d9a38ad341~Otp-qSogJ1836718367eucas1p2p;
+	Thu,  3 Jul 2025 10:21:43 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250703102141eusmtip2ab7c1f9865f3ac73941aa40cc36a67b8~Otp_moHuq2747427474eusmtip20;
+	Thu,  3 Jul 2025 10:21:41 +0000 (GMT)
+Message-ID: <fa235fa1-d5ad-44b7-bf52-068ea41fc9ea@samsung.com>
+Date: Thu, 3 Jul 2025 12:21:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/5] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, Drew Fustini <fustini@kernel.org>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <20250626-apr_14_for_sending-v7-1-6593722e0217@samsung.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250703102143eucas1p273c64519df9ebb05e9b3a7d9a38ad341
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250626093356eucas1p1adfcd565173d939f82e15252189c316f
+X-EPHeader: CA
+X-CMS-RootMailID: 20250626093356eucas1p1adfcd565173d939f82e15252189c316f
+References: <20250626-apr_14_for_sending-v7-0-6593722e0217@samsung.com>
+	<CGME20250626093356eucas1p1adfcd565173d939f82e15252189c316f@eucas1p1.samsung.com>
+	<20250626-apr_14_for_sending-v7-1-6593722e0217@samsung.com>
 
-As I have seen you take the mailbox driver for CV1800, I wonder
-if you have developed the driver for the 8051 core on the CV1800
-system? 
 
-Regards,
-Inochi
+
+On 6/26/25 11:33, Michal Wilczynski wrote:
+> Update the Imagination PVR DRM driver to leverage the pwrseq framework
+> for managing the complex power sequence of the GPU on the T-HEAD TH1520
+> SoC.
+> 
+> To cleanly separate platform specific logic from the generic driver,
+> this patch introduces a `pwr_power_sequence_ops` struct containing
+> function pointers for power_on and power_off operations. This allows for
+> different power management strategies to be selected at probe time based
+> on the device's compatible string.
+> 
+> A `pvr_device_data` struct, associated with each compatible in the
+> of_device_id table, points to the appropriate ops table (manual or
+> pwrseq).
+> 
+> At probe time, the driver inspects the assigned ops struct. If the
+> pwrseq variant is detected, the driver calls
+> devm_pwrseq_get("gpu-power"), deferring probe if the sequencer is not
+> yet available. Otherwise, it falls back to the existing manual clock and
+> reset handling. The runtime PM callbacks now call the appropriate
+> functions via the ops table.
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  drivers/gpu/drm/imagination/pvr_device.c |  36 +++++++-
+>  drivers/gpu/drm/imagination/pvr_device.h |  17 ++++
+>  drivers/gpu/drm/imagination/pvr_drv.c    |  27 +++++-
+>  drivers/gpu/drm/imagination/pvr_power.c  | 139 ++++++++++++++++++++++---------
+>  drivers/gpu/drm/imagination/pvr_power.h  |  13 +++
+>  5 files changed, 185 insertions(+), 47 deletions(-)
+> 
+
+Hi,
+
+I'm checking in on the status of my pwrseq patch above. Is this on track
+for the next merge window?
+
+Please let me know if there's anything else needed from my end to help
+get it ready.
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
