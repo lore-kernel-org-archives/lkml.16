@@ -1,150 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C2C2DCF68;
-	Thu,  3 Jul 2025 09:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F8D2E03FD;
+	Thu,  3 Jul 2025 09:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536573; cv=none; b=EJsOf1WBCXPpIyCwk/FTB906qPttKe0coYPlG2sBBXXYeBuuK9nwkQ4SefLo2oGXyx1m+ASO5/cXAcWhKhqjn99agoAd/HYm/GGaazpAYWpB/8CV7ZqlqVAWyXpPhaXoYAJbvqGAqwNLE99uNRwrFv5mdT2Qgy5rG5ihaQPbFRw=
+	t=1751536586; cv=none; b=nzw39TkD/LIUqqbF6e/3x3v1/tC/o+A4fHbFGNpm2tZOAG77JFstiqH3ltFobVnUmDcfixz2JrsM/4aL67G9MDr3Zq7K7UdrB/vkXGVajvor/aWySXtF1wG1rtbRqfAQEIkPFW45NQfHst0tlIjT6UNdaho1EY15S4Q3dZvXN2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536573; c=relaxed/simple;
-	bh=yDEfNAy1j7gX923WAV0zbCdun77AkpWmT/YAxb4sIm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rdk+tspb9CimrVxQa8cHSEqcijCkd8Dd6SWKuhFRhVNmYpA8ANWeD3NlwpV+gSXb6ITC4T6Kb3g3Vl9DRfqCEAMeqjHFxkp5hCmpQDn1TVNCJmxswQo6UVIGIipO6mVGWFBn4K7nj26WdmEe1kIXLtqlUMReZGQaG1gKBN3J7Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDOhe0lb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751536586; c=relaxed/simple;
+	bh=qDLm4CgNLZPOYtYXEq9zAF6zy52XqGAELNE6mJ8vijg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UVHG8aVp80LTNpHE8UreNByt1IenADjJso0ZQ72ngPb4neIZGVSRUfYRikpKTU2NLPeu4OR5bn/z7kMrTYP19aGM46Kp+FLj6hMq631pGRqYPGEPcUACk/WmE/ditqs3KYoYvDcpokQBbYuwo+mmTs+CktJ0TSdwjtBkOCiQx9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p86i/b8J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iqDGoKzl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDOhe0lb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD926C4CEE3;
-	Thu,  3 Jul 2025 09:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751536572;
-	bh=yDEfNAy1j7gX923WAV0zbCdun77AkpWmT/YAxb4sIm0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hDOhe0lb3UjIGnpCC4bXn+cIH0RvZIH6s95qY/L17U48s1NMV9ctnk8oKlaGOV1Zy
-	 i0AzEQmTKeL3WuOqvWWrHz2dXTM8Qrz5FP4bYLD3q2EoEPNdY2w5RAiJvee6jODLgW
-	 uZ9rimO04IDH1CtwHcVibqDU2uGMWu4iv5yLNys6YkyLo9NGZ+FIODe2Gb0OyYJwC2
-	 UAtXXKihlUD/Lni5ozBocQ6SJN6TaBVHVX2OSXrVTk/xL12dsfpClhPa37mo/SsOjO
-	 +uX7spCCTcVwoAVYOKMPPMJ1EK6S01b3oBLxBYGL238UjV50/Xl9jnuFq2XWobbwbM
-	 /Ay6ELPPPyd/Q==
-Message-ID: <66fb9c67-8f2b-4ce3-8fcb-f6479a1ea507@kernel.org>
-Date: Thu, 3 Jul 2025 11:56:07 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p86i/b8J";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iqDGoKzl"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751536582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=McVtbViVAKjtJayVZUeulSTCPeoSBRL44rxBPUG2jB8=;
+	b=p86i/b8JUVbnwgdjsNfwmENRt/T+VGmjJhmhkljdHJXvR0sTYvxvMUtIMAWhk0HqR86opU
+	V/7mrMfVSKi+JhOBdfZ2F8zsrtAIk+Uxq2cVtG8P+sHhJ4+n1lhS6Uvg9RHrvrTALii+eP
+	bdgAfjxEORipzy76Ti3r0MEGqP2Y1jn7vviPr4jzWUAbzSM6PYf45eClIhLCz0fSvKbIrF
+	ZXOJotGfsfFpE4xFufPgNzAdqSwuFlU6lY8f6d3DzRMf4kWJDDXauBN9dQCH/QKJAypuOQ
+	rBa1aS8NfJRA67EENXnp3qZth6OlKkQkLZs18ngojlFLbcU06FjtwU5PSeIORw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751536582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=McVtbViVAKjtJayVZUeulSTCPeoSBRL44rxBPUG2jB8=;
+	b=iqDGoKzloeHZz6Nnx+UChibR0z94U5nMP8x6gDXEyVt2mfQvdrnoGSxCmyNAVRA+Gsx1MC
+	4xnIBfXwsZgA9AAw==
+To: =?utf-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
+Cc: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.cn>,
+ linux-kernel@vger.kernel.org, syzkaller@googlegroups.com,
+ kvm@vger.kernel.org, Paolo Bonzini <bonzini@redhat.com>
+Subject: Re: BUG: spinlock bad magic in lock_timer_base
+In-Reply-To: <8d6bd3e.1228f.197cf7e7892.Coremail.baishuoran@hrbeu.edu.cn>
+References: <8d6bd3e.1228f.197cf7e7892.Coremail.baishuoran@hrbeu.edu.cn>
+Date: Thu, 03 Jul 2025 11:56:21 +0200
+Message-ID: <87jz4pwqbe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: pwm: Add enable-gpios property
-To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>,
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
- "lee@kernel.org" <lee@kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "pavel@kernel.org" <pavel@kernel.org>,
- "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-References: <20250702114759.223925-1-Qing-wu.Li@leica-geosystems.com.cn>
- <175146290821.1131432.4001907939183416459.robh@kernel.org>
- <AM9PR06MB79557F8FFA113011C4D824D6D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
- <e98aa9ed-2d32-4db2-b7f2-a5e5ce1d1d84@kernel.org>
- <AM9PR06MB7955DCFFBADEF3A56A923D92D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <AM9PR06MB7955DCFFBADEF3A56A923D92D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 03/07/2025 10:52, LI Qingwu wrote:
-> 
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Thursday, July 3, 2025 3:12 PM
->> To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>; Rob Herring (Arm)
->> <robh@kernel.org>
->> Cc: krzk+dt@kernel.org; conor+dt@kernel.org; linux-kernel@vger.kernel.org;
->> GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>;
->> lee@kernel.org; devicetree@vger.kernel.org; pavel@kernel.org;
->> linux-leds@vger.kernel.org
->> Subject: Re: [PATCH V2 1/2] dt-bindings: leds: pwm: Add enable-gpios property
->>
->> This email is not from Hexagon’s Office 365 instance. Please be careful while
->> clicking links, opening attachments, or replying to this email.
->>
->>
->> On 03/07/2025 05:54, LI Qingwu wrote:
->>>>
->>>> On Wed, 02 Jul 2025 19:47:58 +0800, LI Qingwu wrote:
->>>>> Some PWM LED chips have a dedicated enable GPIO.
->>>>> This commit adds the support to specify such GPIO.
->>>>>
->>>>> Signed-off-by: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/leds/leds-pwm.yaml | 8 ++++++++
->>>>>  1 file changed, 8 insertions(+)
->>>>>
->>>>
->>>> My bot found errors running 'make dt_binding_check' on your patch:
->>>>
->>>> yamllint warnings/errors:
->>>> ./Documentation/devicetree/bindings/leds/leds-pwm.yaml:44:21: [error]
->>>> empty value in block mapping (empty-values)
->>>
->>> Fixed in V3
->>
->> So your answer to my "never tested" was to send again the same as v2 and still
->> not tested?
-> 
-> Nop,  "Fixed in V3" answer "bot found errors running 'make dt_binding_check'"
-> Testing info comes later in v4
-I responded to you on v1 in the morning my time. 4 hours later you sent
-v2, so what is the "Nop"?
+On Thu, Jul 03 2025 at 16:54, =E7=99=BD=E7=83=81=E5=86=89 wrote:
 
-Best regards,
-Krzysztof
+> Dear Maintainers,
+
+The timer maintainers are hardly the right group to ask. The timer code
+is just the messenger :)
+
+I've Cc'ed the KVM folks, as you correctly identified KVM already as the
+probable source of the problem.
+
+> When using our customized Syzkaller to fuzz the latest Linux kernel, the =
+following crash (110th)was triggered.
+
+6.14 is not really the latest kernel.
+
+> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
+> git tree: upstream
+> Output:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG%3A%20=
+spinlock%20bad%20magic%20in%20lock_timer_base/report110.txt=20
+> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/co=
+nfig.txt
+> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG=
+%3A%20spinlock%20bad%20magic%20in%20lock_timer_base/110repro.c Syzlang=20
+> reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0702_6.14/BUG%3=
+A%20spinlock%20bad%20magic%20in%20lock_timer_base/110repro.txt Our reproduc=
+er uses mounts a constructed filesystem image.
+>=20=20
+> The error occurs in the lock_timer_base (timer.c lines 1770-1790 or
+> so). It happens cleanup_srcu_struct during the KVM VM shutdown
+> process, and it is likely that the memory pointed to by the timer
+> object has been freed. The timer_base pointer returned by the
+> get_timer_base (tf) points to an invalid memory area
+> (__init_begin+0x2a500)
+
+If you enable DEBUG_OBJECTS_TIMERS and DEBUG_OBJECTS_FREE the kernel
+should survive and provide some useful output.
+
+> We have reproduced this issue several times on 6.14 again.
+
+Does the probkem still exist on the latest upstream kernel release
+candidate, i.e. v6.16-rc4?
+
+Leaving the report context intact for kvm folks.
+
+Thanks,
+
+        tglx
+=20=20=20=20
+
+> If you fix this issue, please add the following tag to the commit:
+> Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.ed=
+u.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>
+>
+>
+>
+>
+> BUG: spinlock bad magic on CPU#2, syz.6.399/18129
+>  lock: __init_begin+0x2a500/0x41000, .magic: 00000000, .owner: <none>/-1,=
+ .owner_cpu: 0
+> CPU: 2 UID: 0 PID: 18129 Comm: syz.6.399 Not tainted 6.14.0 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubunt=
+u1.1 04/01/2014
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x116/0x1b0
+>  do_raw_spin_lock+0x22c/0x2e0
+>  _raw_spin_lock_irqsave+0x45/0x60
+>  lock_timer_base+0x125/0x1c0
+>  __try_to_del_timer_sync+0x7f/0x160
+>  __timer_delete_sync+0x120/0x1c0
+>  cleanup_srcu_struct+0x122/0x5a0
+>  kvm_put_kvm+0x7c9/0xa10
+>  kvm_vcpu_release+0x4b/0x70
+>  __fput+0x417/0xb60
+>  __fput_sync+0xa6/0xc0
+>  __x64_sys_close+0x8b/0x120
+>  do_syscall_64+0xcf/0x250
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7fafdad1ebdb
+> Code: 03 00 00 00 0f 05 48 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0=
+c e8 63 fc ff ff 8b 7c 24 0c 41 89 c0 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff=
+ ff 77 2f 44 89 c7 89 44 24 0c e8 a1 fc ff ff 8b 44
+> RSP: 002b:00007ffde8c95b20 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 00007fafdad1ebdb
+> RDX: ffffffffffffffff RSI: 0000000000000000 RDI: 0000000000000005
+> RBP: 00007ffde8c95bf8 R08: 0000000000000000 R09: 00007fafda8015a6
+> R10: 0000000000000001 R11: 0000000000000293 R12: 00007fafdafa5fa0
+> R13: 000000000002f3ea R14: ffffffffffffffff R15: 00007fafdafa5fa0
+>  </TASK>
