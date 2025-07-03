@@ -1,46 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7CD28EA4D;
-	Thu,  3 Jul 2025 05:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A42541C07F6;
+	Thu,  3 Jul 2025 05:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751520514; cv=none; b=b8f5Y2ABsQ87WN+VEmmvLkSJ8T1JLTEdSzv8RKH4a6rCI18buNnLExtGY8ZQf3OWNaQzYCPZQXpnNqDgX9ddP8Edl6R8eQlzyNCoaqFwp05vuzbZGCwo8TPDQLfODwfTpmy2G6mC2XD/l/Du/SeVOArJfOSEkOKZw/chJeSkK70=
+	t=1751520537; cv=none; b=Ktv8hlWZedx6nGoDAS4wZMx5H8JaFxyFbq78Qj4k38oTuqbSKm87pMkG0W8rygaH+MMG26RcYYoYg1VPVF4APxmR7LF7M9f6etzDUT75zCqJMPcJYn43gc6ODS2To/hZ/UEHgGciIUJQsqExOj9Rm9I3MFstAn6ESPs0UoT7LNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751520514; c=relaxed/simple;
-	bh=5tLCkmTWSmAOMPRYGBW/tP4yMqa+RmtgXftKpMpI9l0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aBEnKDEoW/7MrDc0n+v2JUlXIaDZ9K5/BWFPtZUbSaYL9VTi29qmsIhn1tpotDqqCldF+7DLgw8BfZaLlhtiBmZr1lwuLF2HVNJ62oAHtjadsDGCnJckdpp8ErbzmfRGEbxpS2y5qcLPLjir5hN73INFEnOu3jwoL0wPcmvyC4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI9Zq1IZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI9Zq1IZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D60DC4CEE3;
-	Thu,  3 Jul 2025 05:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751520513;
-	bh=5tLCkmTWSmAOMPRYGBW/tP4yMqa+RmtgXftKpMpI9l0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GI9Zq1IZo/VnkSPu/v9k/Lw+yeS8o6igRnmxmLWaXambJwSosvDsfhpJDipYF1Tsf
-	 mL5QG5ypsY3vLmHjiC6yg4erM88R3jh0bpD2FcIe/0enUXNSZHCuLqwFS7CFWPgoUi
-	 jnjzHWRPYu7T3XrsBedKO10nTfXn1wJ9NI3TPtK/Ero2Fhbk+at9tVV82haF/duj5+
-	 EwSVGB9p/V3HkLf5QCT4y7nfxRxlScb9P7OfC7/QuSejbo1umZ7xUoWtHKvtNSDz4d
-	 3KRSxeZPdIewGe6jOzthWNw5IKy6u65fSo4htQNApNc/6DfL1iNk16gzVy9uQpEDJY
-	 1h0i9uC0sD1PA==
-From: SeongJae Park <sj@kernel.org>
-To: Yunjeong Mun <yunjeong.mun@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1751520537; c=relaxed/simple;
+	bh=xXjg+mMtePg8ixC8zfpL06ib7Pt5Av0xiipOlmFlMmQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T7O+OxUMYhoPcD+81Pa30xT9v1RqX3FR7k1i+Er/rKK0kYDxnfqM+n4pPLE0rQl6XAt9TgwjtlprXAp9bCrFcrKwf+6Z1N02TCWkzbYin0FHNsWmrIHfLcIm5UNHqS+KH1EYL1oQy6CLLQs5p5jpbNwZobg0L9toU1ibUQSgC14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=13.75.44.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [115.197.243.13])
+	by mtasvr (Coremail) with SMTP id _____wD3ZiwNFWZo2DzaAw--.9240S3;
+	Thu, 03 Jul 2025 13:28:45 +0800 (CST)
+Received: from localhost (unknown [115.197.243.13])
+	by mail-app2 (Coremail) with SMTP id zC_KCgAnGIAMFWZoPLtZAA--.10948S2;
+	Thu, 03 Jul 2025 13:28:45 +0800 (CST)
+From: Lin Ma <linma@zju.edu.cn>
+To: davem@davemloft.net,
+	kuba@kernel.org,
+	linma@zju.edu.cn,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com
-Subject: Re: [RFC PATCH 2/2] samples/damon: add `migrate_hot` and `migrate_cold` knobs
-Date: Wed,  2 Jul 2025 22:28:31 -0700
-Message-Id: <20250703052831.39709-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250703051836.1759-2-yunjeong.mun@sk.com>
-References: 
+	gregkh@linuxfoundation.org
+Cc: stable@kernel.org
+Subject: [PATCH v1 2/2] appletalk: Fix type confusion in handle_ip_over_ddp
+Date: Thu,  3 Jul 2025 13:28:37 +0800
+Message-Id: <20250703052837.15458-1-linma@zju.edu.cn>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,42 +36,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zC_KCgAnGIAMFWZoPLtZAA--.10948S2
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+X-CM-DELIVERINFO: =?B?4GeRVgXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHuzd9MjVyyPJ6TZADBymyvbsvqc/VSH5eqB8r7G4h2xJViVvYU3nEJt6lpmy7wnJutiH
+	yVTGVaZNpjEjEL/klx6E69bPlRaDnS6o/Is3qDBX
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZw4xGryUZr1kZFyxtF47Awc_yoWDCFXE9F
+	W0yrZ3Ww48JFn2vw47Can5Ar1ftr1jqFyrXr1xtFWxJ3W5Aa9Yqr1FyFWxZF15W3yruFZ8
+	JFn0grs5Kr1xCosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbskYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7xvr2IYc2Ij64
+	vIr40E4x8a64kEw24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+	vjxU7nNVDUUUU
 
-On Thu,  3 Jul 2025 14:18:34 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+This code uses "ipddp0" calling __dev_get_by_name(), believing it must
+return device created in ipddp_init() function, ignoring the fact that a
+malicious user could hijack the interface name.
 
-> Hello SeongJae,
-> 
-> On Tue,  1 Jul 2025 17:08:25 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > Hello Yunjeong,
-> > 
-> > On Tue,  1 Jul 2025 17:54:17 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
-[...]
-> > Because mtier is a sample code, I think it's primary goal is to help developers
-> > know how they can use DAMON API functions for writing kernel code that is
-> > required for a situation similar to the sample.  Hence the sample should be
-> > clean and simple enough to be understood.
-> 
-> Thanks for explanation. I understand the intention of mtier module.
-> As you mentioned, mtier is helpful for leraning how to configure and 
-> run DAMON.
+Fortunately, the upstream kernel already removed the code via commit
+85605fb694f0 ("appletalk: remove special handling code for ipddp"). This
+fix should be applied to other stable versions.
 
-Glad to hear this sample is working for the intended goal!
+Cc: stable@kernel.org
+Signed-off-by: Lin Ma <linma@zju.edu.cn>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+---
+ net/appletalk/ddp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[...]
-> > But, I feel like this change is rather making code too longer and complicated.
-> > Hence I would suggest dropping this patch if you agree.  Please let me know if
-> > you have different opinions, or I'm missing something.
-> > 
-> 
-> Ok, I will drop this patch in next version RFC. As you mentiond, mtier
-> module should be simple and intuitive enough. I will consider this
-> kind of tiering module to mm/damon. I'll send you RFC v2 soon.
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 8daa3a1bfa4c..9ecf90102d62 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1296,7 +1296,7 @@ static int handle_ip_over_ddp(struct sk_buff *skb)
+ 	struct net_device_stats *stats;
+ 
+ 	/* This needs to be able to handle ipddp"N" devices */
+-	if (!dev) {
++	if (!dev || dev->type != ARPHRD_IPDDP) {
+ 		kfree_skb(skb);
+ 		return NET_RX_DROP;
+ 	}
+-- 
+2.17.1
 
-Thank you for kindly accepting my suggestion.  Looking forward to the next
-patches!
-
-
-Thanks,
-SJ
-
-[...]
