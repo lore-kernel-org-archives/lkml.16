@@ -1,129 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F44D236A9F;
-	Thu,  3 Jul 2025 07:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F9B2DE6FC;
+	Thu,  3 Jul 2025 07:32:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751527798; cv=none; b=TyA+gG+nvx4l3Srzvoj2/p9zZEr1433V+9zrxNwKKTBGgrDYN0ntraEJmMPAFs7LjfATCktwW2NXTDF9zIKFy31W5u5nj+6FdFJb4g2e+o8HFasXORZztqrXpMKTSHRdm/x+8XpKiHCODhLcqV+IQjFFAuA5EP+STY+E4RDHKCE=
+	t=1751527958; cv=none; b=iZ5fFAY0rOWOC8YQiIbF2Xn1EPsZO9ZTWIHctr3XsusY5cpZHNmM/O8LyfWCD5dvMOS88QsUsWU9t1LheuWdT27NedMPknPucnjXwDeIy9GPAdR8ErB3NUz5nFuwoubpK+f26f18wxrDGEYIOEGR35InZy/+BQ8hLNBcWgt04Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751527798; c=relaxed/simple;
-	bh=AuSpVTLw+I+ijwZH8DDHo/ZkzuiQJlfSGZ2G1OmFwhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uHAbCjaiMJnY0IsMUssL7vNBwRnjA8wV4aIi4FRj+v6WD5IOS5SO+S/mcu+doE3KwXh4o0fZ8w/JT3C7lVzneAa+jlZfntSU2GI+I/jjAtdfmR+1Sqz4vY2Y1aqShUlcTkGesQqyiZVVbcgZlmBsUw1cLEpznx2ss0loXOX4m18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAlO9Lib; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751527958; c=relaxed/simple;
+	bh=BNjh7SDj90SVwYeC3gHweQPSa84FkJJVfTboO/TLVq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SulxTcqjISIkj6pLJOM3KMxF4Y8ZNKrxLLhiXXUQ2pKpDkHTihPV4ZCVoVqa+/yZRHF3bBV1Pum2pO7vruhvE9HyRKukcXwyJlARyrF+IVOMgbCAL7zzmLv6OkJzEDa02DksD8A+QA6nptQAXcIfWUS2psZqXhvdJ489GVPq9JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FB0PFlQ4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAlO9Lib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DBEDC4CEE3;
-	Thu,  3 Jul 2025 07:29:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FB0PFlQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D875C4CEE3;
+	Thu,  3 Jul 2025 07:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751527798;
-	bh=AuSpVTLw+I+ijwZH8DDHo/ZkzuiQJlfSGZ2G1OmFwhQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=cAlO9LibGytd4exJshop0PYbfBcuyxZJQpjV/VfLQCQlq/NW6iYtpLE8GK99Vn/Cp
-	 JCEAuwf0npzl90lWDxL/nRwFn+9kQMjElM7rlcILWYAsHUiQJMGSejWew88b+PQq0G
-	 SL8ZYjgq0Wlc0SUgXiyPtETnDY6ECU6S11NyJCmmBykx3KXc1ivzT/zC3PQ0flNwCy
-	 BR6tlzeYsPLyrTXOfWY2UL7lwqUBM4Qs/w6sEJeyhUxIjCkvdf/Jg6w4IehP8rULo0
-	 fwSmmqsMlekGkojo84ZeyqcPB0C7fWSg36ioW2YbJ19qFXBziQBrJgNDA4E6+VgcRr
-	 9JdimZiKHasww==
-Message-ID: <24dd3e64-958a-41d5-8032-1da91063eaeb@kernel.org>
-Date: Thu, 3 Jul 2025 09:29:53 +0200
+	s=k20201202; t=1751527958;
+	bh=BNjh7SDj90SVwYeC3gHweQPSa84FkJJVfTboO/TLVq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FB0PFlQ48nhA5GqWEQCiTudnftCbuT9eysNO4W2iQwl9RtRifDy2jXs8XLdhCaemB
+	 3nRB3xgsGR5nv06N1UOyT35rf1zLs4Y0yJem6+Bw68zKG4zxT1mT3cH3kCLZiJJMiq
+	 enm1ydHMeWdFP0aYH3HwtSGwvBVgTR694IVkq+Xqsx/0eZ45OGRCJwZWeJk38GsCPi
+	 oZDiBRZInMEecIcABjvNmyJskZ2IF1bONnPAf66CgtONAZ9flAtclb60yu70mkYa5Z
+	 gC1E1/qiCYTuaLI0rqJHfEUCuwXwyXgC1As5UXYY3qS4lV+zxli57842u9PapmExWc
+	 bFh4BVcTk0DKg==
+Date: Thu, 3 Jul 2025 09:32:35 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?Q?Jean-Fran=C3=A7ois?= Lessard <jefflessard3@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, 
+	Boris Gjenero <boris.gjenero@gmail.com>, Christian Hewitt <christianshewitt@gmail.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Paolo Sabatino <paolo.sabatino@gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: vendor-prefixes: Add Princeton
+ Technology Corp
+Message-ID: <20250703-truthful-warm-bobcat-b03e55@krzk-bin>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-5-jefflessard3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250629130002.49842-5-jefflessard3@gmail.com>
 
-On 02/07/2025 13:13, Krzysztof Kozlowski wrote:
->> ---
->>  .../bindings/media/qcom,sm8550-iris.yaml           | 40 ++++++++++++++++++++--
->>  1 file changed, 38 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
->> index c79bf2101812d83b99704f38b7348a9f728dff44..4dda2c9ca1293baa7aee3b9ee10aff38d280fe05 100644
->> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
->> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
->> @@ -65,10 +65,31 @@ properties:
->>        - const: core
->>  
->>    iommus:
->> +    minItems: 1
->>      maxItems: 2
-> 
-> No, why hardware suddenly has different amount?
-> 
->>  
->>    dma-coherent: true
->>  
->> +  non-pixel:
-> 
-> Why EXISTING hardware grows?
+On Sun, Jun 29, 2025 at 08:59:53AM -0400, Jean-Fran=C3=A7ois Lessard wrote:
+> Assign vendor prefix "princeton", based on their domain name.
 
-One more comment here - this entire node is not needed, there is no
-device here being described. Just solve the problem in the main device node.
+princeton.com gives me consultants, although I expected known
+university, so same questions or problem in commit msg as in other
+cases.
 
 Best regards,
 Krzysztof
+
