@@ -1,227 +1,126 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064E92E267E;
-	Thu,  3 Jul 2025 13:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CFB2E6D06
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548182; cv=none; b=mQABWyGA/cQtTQZJeuwFqOM4HpcwqwtadgXDtSXsD0IkocjNnzs/+rytxqWxGlwK6FQO/oTrSU8oIGHcDKz3zzm8m6mWRSzQgCJy6Hfw9fqbDS38vURgwTcOatst8REWJEIy5rW2fJ61xM6FMT+O4iVk0myMn3yX0R8GTQrj/cg=
+	t=1751548226; cv=none; b=FwU7McbIVassnNsevK1Vr/aipuT+I0KO2PJBv25QrgxSzSiJK4/5dbJRSYgFqEefy9kkSRFqbqF1CMwjFirQrTC1eY3fJ1s61+Hw/Padyv9IfOg+qK4hHq2h6q3GZbRCGuoLW8/HwkNsHQIEoGG8jjKtTn8z8X96jVA7Bfci6/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548182; c=relaxed/simple;
-	bh=kgui7inL/vqDsBTMEH69lNiIWQHRQWTR+OPqeHY6vs0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=htTk3xkMs+EWIia+8HkcNosg86Txm4InmJrzEC3niEK8/ICirdfZlxXxAIbw7KstKY3/4dwKSc225EDS/jhZkc0I+jmdF5HX+6jUDk/pCv8NygL5nYSGYS8zieMZQ3HsivXdHhzLbX+XXf6/daxdHkEVnUmzW73TBevP8MeupBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so9682423a12.1;
-        Thu, 03 Jul 2025 06:09:40 -0700 (PDT)
+	s=arc-20240116; t=1751548226; c=relaxed/simple;
+	bh=Gb1IkFXCIe7rVjXkOXMxbgXAPrqKvgtCMq1ITbov+90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i948rFDLVE8jqf9aPOXI17bncjTWpshZeVyPuET+WNlBHEsGvAs/XW7lM7YKi1021kAeQ9tPntWn6aVtA3Vfkgz3GXZNSGddHX4AYnhQAHIN7qPxNXBIe4sHyNYkZRug/N2W65xZrPEQj2fIJBWgqL+10Kxl7kUUUz/+2CK3qrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fm3QByJS; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fm3QByJS"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d98aa5981so8115987e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751548223; x=1752153023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
+        b=Fm3QByJS1yrxbRmZp3fOZbS12FUsmKzC2qR7cr2S+7KhebkmQmRw3L+fqVH2FLiepS
+         NSw86W06C7Spe5LBxo6PM9Gk89o8eKYgwkgJX9TXS7fs+/yfDQWf03dQU2YhcaPM2mNx
+         x/r0xAx0ILvD0EXqW3YrUNh3MfagoLNiYc/LjA/hJazb4zn6YCW4DCfu3fZglztQKjjy
+         RF2UG1hPgCdwYlDaLGeW/1WSSEZbM0uGTxJSiZeZiOp5/RnNI2f2fHJ+FmRCHU+tbE8I
+         N20c55GoqW60+x+MWu5yMJ8wzYMLiA4gVc+RYZ4tEEfH/jxSCVbbaVBzN/dEf7ZSGio0
+         xKww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751548179; x=1752152979;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JbShCvDOHKErkMP/Gg1T/sR3JkdeJYzMVJhkxwSXBGw=;
-        b=miD0VAe/4DAcEuqUZalWA0vsczvmi2J3OqiHBiQh5y2pnPzSpWlMB3hhrgBCLoLE5R
-         o2BecKWNGVDlha1opmmqZNhJeDPaPqP1bOa+boFOCAGDDZDG5ajWyRTTxEZYrRtdqoqP
-         /OUt6/yjHF9Ogf5Wsj9MQ6fFDyJHIjaNj/ucylrYWaxvQNJ6TTedPH8P70LwH4dC4YeE
-         ij433+iOcPIlgZgGRfewWzTivMh6b/vsX1Oi6XX83t2a6nVFNyIrQKvpivQ5KA/kdK56
-         CwrXJ6/82eMJ1Rt5HmyotAbp8GqqJLah2LP71AKprzVY83qHCrLbrxJvOfPOMCOcKbfq
-         5LPw==
-X-Forwarded-Encrypted: i=1; AJvYcCULE6RRBngmA5C432Z6CDfq7f95eT3bnzkXhH/8spZxusC5IVJJLWUxfSUb8IY3n8PLyCQB4bg2en1bmLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCa3NcmF33JmKs8mC2fJNegV3ms92ipKyEaw9ct+qEamat14S7
-	9qebl5HFYaMu88RaW/fJcvIwkfcTndrEBW70D2/NaI0jMqZcA8OcmZp/
-X-Gm-Gg: ASbGnct0TXuIavVuqzXTG1bfv0kNC/CR3ps2wbJS5GwT1SnqiuquNzT2PYKrLma/6ln
-	vxXJt92aGWkZdcvX1kMkUooUuyGq2NqMwGckYlux/C/2XZaJkU+MITja9BfWhTWLYgpyvy8gJXI
-	SvWLCXeowD2h4qZZV3eT+eA5sVy/9YyWSzTpnNBvCQc/FFdudOBXJ8xp8fyyGFO1tFx4wUjwD5F
-	k9FD78PSLOAImghpLjqsjT/9rlpb29wkXY38NSpWHS57dupjNyZGRlMq3GW4eX6AgJr4RMOwLkn
-	SXgvxrPCnmOIoC0NjeQdBCfMSpiaUzgdS/IAxBWOpc1CSr7+GqfRHw==
-X-Google-Smtp-Source: AGHT+IH7hCjykRgI9mpodZMOhaf85NYz4FocHyyQgjmldVU3vGkcWKPV4AoKvcwsfoHIqsVpJ5ac/Q==
-X-Received: by 2002:a05:6402:2113:b0:602:1b8b:2925 with SMTP id 4fb4d7f45d1cf-60e52e3ba2amr5561204a12.29.1751548178913;
-        Thu, 03 Jul 2025 06:09:38 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:70::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3c55ed0d8sm300195766b.184.2025.07.03.06.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 06:09:38 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 03 Jul 2025 06:09:31 -0700
-Subject: [PATCH net-next v2] netdevsim: implement peer queue flow control
+        d=1e100.net; s=20230601; t=1751548223; x=1752153023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
+        b=hh3+x0s8t+bmatMa/KQuuglditlgmLT++owosRtJL6Gm7YBduijtUzkOCNXsC14ja3
+         vp3ICkXDTbR3ERPvxq2K/imlwZsGqaIPIWBw5dH6VFVuHMviPCbxrPKk/p82ppb2gAWT
+         E4jOGNp9+Zv+SHPGARzasroHrN/JVEkTb+hc2GKeS9JZzN5eH8zgjU+A69WINT99pzro
+         d7OFPqOy2el4XCf/KKAesZc+Y3PQlSTcYE4Ev7MGUh+yhXk4NsZRBSI9AgN5ZgNyfZ+5
+         B7ak5fy0eR5cpxTkYT48EJp7qPNAsFuNDUp975gIjPs1dgdW3JPN8Oxebu7fGgSdUDBJ
+         sf0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXyY43RWk0eFzXRrXqSjVqR/NVMURWO7noTwYvmIvftumTbKg8lXSniiQ7hZYU8XnVJ0cDGLExyoZnhknA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAvc1MaLtERpiqzYJgCUpCRJS9lFbEiFsTi3pDyuTc6jYLFo3s
+	DAtyiURegx8TMbspYyy5OD6hPkZGLkigYi0OtCZ1JjJ0O/JL6+atKSOOh/Q5cWyGqyhE7rNqrtg
+	CtTun8S5ljFotRY7TPViMpDbrv51lRVMsAONNyGrNCw==
+X-Gm-Gg: ASbGnctryJndzJMFlraRrhne0o1lMsIGwmYfAHO/aIL1GEaGvhO2io0MfwjtVUmh9JZ
+	6Ze+AMAr5AOnbxgqlxq7nPp1i4kpMTcNrIk5FDVpmpqjKbaV/389/gAx+vDVstQ8tOQXjdtL2zx
+	qbWjjrcRgP1IgZBYsfucIeTe530bC8VJ609MRbOKVqrNaLIJkrkedFeW3Ka3w90TGfjahA4bGDl
+	A==
+X-Google-Smtp-Source: AGHT+IHxWXlh+Xi5UEoyYXBIiyt+vfXSa6QG+Av8aHQdIOn0y2uNTayumcpylHFwtGf6UVpFfTW0gACu+FLBVk2PB+I=
+X-Received: by 2002:a05:6512:12d1:b0:553:3178:2928 with SMTP id
+ 2adb3069b0e04-556282c250bmr2816540e87.16.1751548223074; Thu, 03 Jul 2025
+ 06:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-netdev_flow_control-v2-1-ab00341c9cc1@debian.org>
-X-B4-Tracking: v=1; b=H4sIAAqBZmgC/23N0QqDIBSA4VeRc51Djyupq73HiKg8lRAaKq4Rv
- fvA613/8P0XRAqWInTsgkDZRusddAwrBvM2upW4NdAxQIG1aJTgjpKhPCy7/wyzdyn4neOERum
- 2qZXWUDE4Ai32LOobHCXu6EzQVww2G5MP37LLsvQiayH/yllyyfEpFLbL3MpJvgxNdnQPH1bo7
- /v+AVBVVdLBAAAA
-X-Change-ID: 20250630-netdev_flow_control-2b2d37965377
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@meta.com, dw@davidwei.uk, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-dd21f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4672; i=leitao@debian.org;
- h=from:subject:message-id; bh=kgui7inL/vqDsBTMEH69lNiIWQHRQWTR+OPqeHY6vs0=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoZoERcft8bK3dMVKQb6yXmuyia5dVmmZX1fuCW
- OdEkvDfGveJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaGaBEQAKCRA1o5Of/Hh3
- beP7D/0RIGkLt+gYe9hGiFpgO5Vbjel27Tcg8bhVWGFHBrhltBotjNvwizDW8kHBktKc9Lbm7Ef
- y4asKd46RjeOczmGeWWpJUKy1LAzmnASk3bCdLP9eKzV9hyad28xX8aGBRTKMJ1caM63nQQPx/C
- uNyy8Bht3yHmbpgOC5w+MQeLeZifPYdR6yBptJ/grZ72CUe8hEsNRcoijhB4ZtnAenwv6mTSE5E
- nL5hh5KiOgDBEo/r6Pgkrk8T0ID9JK6M0tLb7uzolNcGm1sHIVhzzvSFG93Cs/8KGd0o+PHddoi
- r8mwu0yxZa7NQmb9ndBszgS5eGtwOBj0rLHNxmt3imw9tSA9wPmba6+fD0s/+NUdH/H0Z+nSoQM
- oPehLXmtN0qbVU1KZ9oA7Rlen9XHqjxiGqN7Bsb5brSRXsg8gWViReUt23PnjYl/BmT23dw7ajx
- bpe0EPf+HzeCjGsjv3sOnczi1+2M39GP+x7qX2ABWLG8surlZ5Twi3BVPG7K3hjlZh360bPnM0L
- is/DHNpDL+Kb7HBaWR4jCYRGkNWlkiXnSpVqbdtsAsZC26V7QwHgbpsjKJEGxP83gyYoL5Mcl85
- yrdFE20Clu64UDZtrWpq5RabfErPdmZwPLM9zVfdsn5GaaG9edhLTvHKsnFyXmNw4ohEuGiMa3d
- 8mRGkISuF1Uh9bw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+References: <20250701161629.9782-1-mariagarcia7293@gmail.com> <20250701161629.9782-3-mariagarcia7293@gmail.com>
+In-Reply-To: <20250701161629.9782-3-mariagarcia7293@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Jul 2025 15:10:11 +0200
+X-Gm-Features: Ac12FXwrt5arm8lRyaVLiwyu4dMeVOLCnYVwDOO42VXwvsCRxSv67Szmz7sFT_Y
+Message-ID: <CAMRc=MdEr+bP1y9DHYa-qrXGJT3-zEvemWm7FzHvkqyfBZC2bw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: pca953x: Add support for TI TCA6418
+To: Maria Garcia <mariagarcia7293@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maria Garcia <mgarcia@qblox.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add flow control mechanism between paired netdevsim devices to stop the
-TX queue during high traffic scenarios. When a receive queue becomes
-congested (approaching NSIM_RING_SIZE limit), the corresponding transmit
-queue on the peer device is stopped using netif_subqueue_try_stop().
+On Tue, Jul 1, 2025 at 6:16=E2=80=AFPM Maria Garcia <mariagarcia7293@gmail.=
+com> wrote:
+>
+> The TI TCA6418 is a 18-channel I2C I/O expander. It is slightly
+> different to other models from the same family, such as TCA6416,
+> but has enough in common with them to make it work with just a
+> few tweaks, which are explained in the code's documentation.
+>
+> Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
+> ---
+>
+> +/* Helper function to get the correct bit mask for a given offset and ch=
+ip type.
+> + * The TCA6418's input, output, and direction banks have a peculiar bit =
+order:
+> + * the first byte uses reversed bit order, while the second byte uses st=
+andard order.
+> + */
 
-Once the receive queue has sufficient capacity again, the peer's
-transmit queue is resumed with netif_tx_wake_queue().
+No networking-style comments in drivers/gpio/ please.
 
-Key changes:
-  * Add nsim_stop_peer_tx_queue() to pause peer TX when RX queue is full
-  * Add nsim_start_peer_tx_queue() to resume peer TX when RX queue drains
-  * Implement queue mapping validation to ensure TX/RX queue count match
-  * Wake all queues during device unlinking to prevent stuck queues
-  * Use RCU protection when accessing peer device references
+> +static inline u8 pca953x_get_bit_mask(struct pca953x_chip *chip, unsigne=
+d int offset)
+> +{
+> +       unsigned int bit_pos_in_bank =3D offset % BANK_SZ;
+> +       int msb =3D BANK_SZ - 1;
+> +
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE && offse=
+t <=3D msb)
+> +               return BIT(msb - bit_pos_in_bank);
 
-The flow control only activates when devices have matching TX/RX queue
-counts to ensure proper queue mapping.
+Since you're going to respin it anyway, please add newlines between
+one return here and elsewhere.
 
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changes in v2:
-- Move the RCU locks inside the function (David)
-- Use better helpers for waking up all the queues (Jakub)
-- Link to v1: https://lore.kernel.org/r/20250701-netdev_flow_control-v1-1-240329fc91b1@debian.org
----
- drivers/net/netdevsim/bus.c    |  3 ++
- drivers/net/netdevsim/netdev.c | 63 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 64 insertions(+), 2 deletions(-)
+>
+> +/* TCA6418 breaks the PCA953x register order rule */
+> +static bool tca6418_check_register(struct pca953x_chip *chip, unsigned i=
+nt reg,
+> +                                  u32 access_type_mask)
+> +{
+> +       /*  Valid Input Registers - BIT(0) for readable access */
+> +       if (reg >=3D TCA6418_INPUT && reg < (TCA6418_INPUT + NBANK(chip))=
+)
+> +               return (access_type_mask & BIT(0));
 
-diff --git a/drivers/net/netdevsim/bus.c b/drivers/net/netdevsim/bus.c
-index 64c0cdd31bf85..1ba52471f3fbc 100644
---- a/drivers/net/netdevsim/bus.c
-+++ b/drivers/net/netdevsim/bus.c
-@@ -366,6 +366,9 @@ static ssize_t unlink_device_store(const struct bus_type *bus, const char *buf,
- 	err = 0;
- 	RCU_INIT_POINTER(nsim->peer, NULL);
- 	RCU_INIT_POINTER(peer->peer, NULL);
-+	synchronize_net();
-+	netif_tx_wake_all_queues(dev);
-+	netif_tx_wake_all_queues(peer->netdev);
- 
- out_put_netns:
- 	put_net(ns);
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index e36d3e846c2dc..b5b13fba6450d 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -37,9 +37,67 @@ MODULE_IMPORT_NS("NETDEV_INTERNAL");
- 
- #define NSIM_RING_SIZE		256
- 
--static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
-+static void nsim_start_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq)
-+{
-+	struct netdevsim *ns = netdev_priv(dev);
-+	struct net_device *peer_dev;
-+	struct netdevsim *peer_ns;
-+	struct netdev_queue *txq;
-+	u16 idx;
-+
-+	idx = rq->napi.index;
-+	rcu_read_lock();
-+	peer_ns = rcu_dereference(ns->peer);
-+	if (!peer_ns)
-+		goto out;
-+
-+	/* TX device */
-+	peer_dev = peer_ns->netdev;
-+	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
-+		goto out;
-+
-+	txq = netdev_get_tx_queue(peer_dev, idx);
-+	if (!(netif_tx_queue_stopped(txq)))
-+		goto out;
-+
-+	netif_tx_wake_queue(txq);
-+out:
-+	rcu_read_unlock();
-+}
-+
-+static void nsim_stop_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq,
-+				    u16 idx)
-+{
-+	struct netdevsim *ns = netdev_priv(dev);
-+	struct net_device *peer_dev;
-+	struct netdevsim *peer_ns;
-+
-+	rcu_read_lock();
-+	peer_ns = rcu_dereference(ns->peer);
-+	if (!peer_ns)
-+		goto out;
-+
-+	/* TX device */
-+	peer_dev = peer_ns->netdev;
-+
-+	/* If different queues size, do not stop, since it is not
-+	 * easy to find which TX queue is mapped here
-+	 */
-+	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
-+		goto out;
-+
-+	netif_subqueue_try_stop(peer_dev, idx,
-+				NSIM_RING_SIZE - skb_queue_len(&rq->skb_queue),
-+				NSIM_RING_SIZE / 2);
-+out:
-+	rcu_read_unlock();
-+}
-+
-+static int nsim_napi_rx(struct net_device *dev, struct nsim_rq *rq,
-+			struct sk_buff *skb)
- {
- 	if (skb_queue_len(&rq->skb_queue) > NSIM_RING_SIZE) {
-+		nsim_stop_peer_tx_queue(dev, rq, skb_get_queue_mapping(skb));
- 		dev_kfree_skb_any(skb);
- 		return NET_RX_DROP;
- 	}
-@@ -51,7 +109,7 @@ static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
- static int nsim_forward_skb(struct net_device *dev, struct sk_buff *skb,
- 			    struct nsim_rq *rq)
- {
--	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(rq, skb);
-+	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(dev, rq, skb);
- }
- 
- static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
-@@ -351,6 +409,7 @@ static int nsim_rcv(struct nsim_rq *rq, int budget)
- 			dev_dstats_rx_dropped(dev);
- 	}
- 
-+	nsim_start_peer_tx_queue(dev, rq);
- 	return i;
- }
- 
+Same here, please sprinkle in some newlines when returning for better
+readability.
 
----
-base-commit: be4ea6c336b9a4fc1cc4be1c0549b24d0e687488
-change-id: 20250630-netdev_flow_control-2b2d37965377
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
-
+Bart
