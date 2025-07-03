@@ -1,191 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0825A298CB7
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41432D0C94;
+	Thu,  3 Jul 2025 08:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531384; cv=none; b=c5XnxWp7NgXAKm+fKozJW/TYykAdHoWfeAiEzKa8kaFrZS+V3AdFDqcBmNFnOb88Yx8igGg2A4wdDDoOiWUl7cqrxAzGCVUvQCM3bVrP51dlt8ZkC3eipYbiIN5ZOh/y3gS/7LL6MYJ5on5komW3fqdSMeI/4rOFwQzkFia2V5I=
+	t=1751531412; cv=none; b=OjUHgXG+FlMp5OxGVWkaar7OssjyMqu8eeeviibFANrkCdtYdU8ZD26BOVqat7NVMTDVzrh6Cpkd9nVMN67Jk/MFBOCNbwsCPzXUqffvUuvKnXkLKBnkRm+r45At2esvDp/0zL3cfvCQ4AJt8fFL/TdFurnxPMkUAIV7GkaWuSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531384; c=relaxed/simple;
-	bh=JmFTr4VG2yzIn+6cqotg3dpPO5cEw0/ijns6BC8xnpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BkUDRPOUSZVzcgkwQN4ppCaOgSqgpohUBjgRmnVStRpMiCM91oZdhK/of8joK6zSw+1MkaNyqoAjgd7jkPlhYE96NXBViwTWUQjB4EXyENUzPErt1TQmfOyy4NuruZ7qOrboMnW+8iGVMc8t1UM+CZXdLKGgaEKoi9uqLLH4I8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eFXGnCa0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751531412; c=relaxed/simple;
+	bh=CpZl4mdMF2Ctv/6uj/sWaWxp/0nirQHJdLY3NvBHDmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oAZIpo32iM2MfxvGF0edQ8toYr7ZwDpUF/PIoXEVU1A/Y7Y2r+k00jIcqFjPtECgpIGnHHf/by94Q3MHsvJQYtrmWYtwLh36+oW4Q7w5AyS9tIEQXtVvFEcQfU9kOeEQCKC9G6Wj8kdevTuWxurpZbYrRetBsIiBYaZ2yS/aU+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=h/IhFapT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lIvRjtSX; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFXGnCa0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751531382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ao7iXo6bPr/lMtF2Dn4u+FVUcO1qO3WglYeGUpi07GA=;
-	b=eFXGnCa04wNomChCFDCUkL13zzN9VrFpfAJkyrAX4YysAAOwyXfkoyEbd4aw5dnUU5Cp8S
-	wHjTg48mN5k3UJk0WqJrV+tBvl6EbrQG1aiwuuU9zL9iK/C09isO7VtV9SYzL1jqvpV8HD
-	ju++0xcFlLiBLdGLd4+WXd0UvFmSodg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-hV2OiQpEMGyfhROtyT5JEA-1; Thu, 03 Jul 2025 04:29:40 -0400
-X-MC-Unique: hV2OiQpEMGyfhROtyT5JEA-1
-X-Mimecast-MFC-AGG-ID: hV2OiQpEMGyfhROtyT5JEA_1751531379
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ade81d27cddso751241466b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:29:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531379; x=1752136179;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ao7iXo6bPr/lMtF2Dn4u+FVUcO1qO3WglYeGUpi07GA=;
-        b=Odk8pQnRFbkGk93CwicRfbwN7/p8+7dMt+jNamCeep54PXJqofTjW5ZK4fctTpX/wA
-         oFd0Xz64HEwEPjhrINin1IEo3a/Mc3RJvSvFXWUzw/PX71J7LuSHLvNAEbMkEpR7uM6b
-         YOFQWq+LzyPiCoWFzLCf0ChAIaa/U/eS8jZmzfkeLc/J2ZkYQTLQh0SCGfN2P8e4JZJt
-         umSJxoofIre7hpyTzFX/yFFzvvOkTeEs9PeCj6W4zw52mrKVVsFy5y1hl66HcT1y6EAY
-         5rqlJ0qwrRLzESDj2rhNiGKnrFyr2umMeeprx+HndqOg3AdkQOf8OExnyCiABUMBerLK
-         eIFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWE2hMmRbYIc65EkYze+OF4P7Rm1DzHlbj4U2qK7mK1Xs4IBRJ+M1yEjzBeWeAXgzC+dJJeifYbaJ5e6cI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy72o2n8YNyJysXylJcepheRS5oAPLFJaAGRVxrY9nb1z0neIU9
-	8ez62AjZ1HLAD6dfewv4LAZ6YGqNBVa69a6hTewKoCdkmoLiUkedbI9y6b3IN9nkIXcSW4aRDoX
-	smI0sD8gv/PzxIs6v0KBj+HxBGAng33FTO598uBBQY7M4LOtPg0uVkUA5UrUDCpksjQ==
-X-Gm-Gg: ASbGncuZZWuSANqRbxWeoNdvCkbODCw8vH1D8Z5zM+p74pg2f1tVx3Xg6ht2IakMBLo
-	akxUznbBi9PqIHOp1QbYThJta40vhBaxmg6k9ePSMh3KGkT5Y8FlayWhWHn7tJwyX2kgLwjLEsA
-	Bn8vUxETWbwJ7m8izrLlLyhJyCpmN25qFjUpvqb48Jg6aAG+/xV0FMu68iEZPBntWAwLwbSXayN
-	EZUC3HLhjXvDUrdv5yducFJkgkGacqFkw9OXQLwe5Ik/vvJ04SKXoREHEMxP5Ug/2fNzzd7eKMr
-	FoFpO+/pUMcr4T+UbxKcfAjW73HETKroETNXKOYBIUTq
-X-Received: by 2002:a17:906:ee89:b0:add:ede0:b9d4 with SMTP id a640c23a62f3a-ae3d7dec8c4mr211838266b.0.1751531379339;
-        Thu, 03 Jul 2025 01:29:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQR9Sq+kwX+EgrNsiJGUPRsQvrn7rKaEleIhOhduYW9+Qa0jv7W//ZA8gBY3JGvvrmcUIaZQ==
-X-Received: by 2002:a17:906:ee89:b0:add:ede0:b9d4 with SMTP id a640c23a62f3a-ae3d7dec8c4mr211834566b.0.1751531378784;
-        Thu, 03 Jul 2025 01:29:38 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6beb8sm1226408166b.132.2025.07.03.01.29.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 01:29:38 -0700 (PDT)
-Message-ID: <897dbcbf-d98e-4177-9d38-3d179c7d560b@redhat.com>
-Date: Thu, 3 Jul 2025 10:29:37 +0200
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="h/IhFapT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lIvRjtSX"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id F02A7EC028E;
+	Thu,  3 Jul 2025 04:30:08 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Thu, 03 Jul 2025 04:30:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1751531408; x=1751617808; bh=NoARKltq1A
+	RrFEtbCmiaou5A31Cm9AxIgFmsgyxez6o=; b=h/IhFapTVKOeAU3LyvYvCrmqMm
+	NzY4CqLa9l0dVFnweUaq9cJJgTxO/Qu56rNQF/7C4KUnvNtnCAiX1byFIcjt3twt
+	FWJ2ovqGkVPCDpUqnbIw1DGWKUxGoLFfuPcey2F8jlYPndzcihPnqfEIf7hMki/+
+	Dj0KuwnxBu9a1u0cKruzKpkk6Jt+Mz/MaCSYcIO0Kn/ZxvJvqFZRXXgCN4bIb4Ob
+	5Ebq1DFHca5l6Hv73qMMlJmdaj7IoEH7Ecr1qSFA9/rwIk8jRgxgtbVp4cL+GGoJ
+	yCnmE0MRndKrFa9bLUb138GsXwTdZHtnd+5Y4yJRA7QErz46U7LEoMA2qG3A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1751531408; x=1751617808; bh=NoARKltq1ARrFEtbCmiaou5A31Cm9AxIgFm
+	sgyxez6o=; b=lIvRjtSXnbdVjOMai31LMuurfVTsantAudgFaUUqAksLEWY/f8m
+	r0otOTA65jlDDkLH516IV5Gy6Q8yzzzj90oSxKknpjoSdkYCULfxHzF+PAdn+hlt
+	OUwc6MLCgz1zPEDlR9S0iXIIbQd4C0YkoBMZLRUsLz0BVVXMUFUe3ENBvgdwQvga
+	ixbj6Vy5jK3/916HvcplLDGfJsap4e17GuYWjMJDizd/sKa+BMKxaqlLK4zULapE
+	bs/BiZWuZVeY0zH80plDrynaRd0eA1Q5edlbAMTA0Rz/yeWwXpaN/PR62GhRJMAq
+	OWab+aPBvgRfTk4FJuQlj1RLBukMaMMCGWA==
+X-ME-Sender: <xms:kD9maJOWwW9RpkJEfEH0EAaBPqdsERWTLdbGhVAQ6FhMjcXXr5RTaw>
+    <xme:kD9maL9KLxRPXqmcZCuyhsYulGx_yhCD46JfjBTYngUtyiV13dJ8y1UgrEgqEHd_h
+    Il7T0b3VSBkUw>
+X-ME-Received: <xmr:kD9maITFvpbawx4NDhpe9TJod0yHfVsRZe7qkDHD0O3H0konkltYey4LQ4nMxYv8tPu7SG1lNe4fM7nuSawhJzNOoIMCDrk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleektdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffj
+    uceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvvedvle
+    ejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
+    homhdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopehlihiihhhird
+    iguhesfihinhgurhhivhgvrhdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdr
+    uggvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:kD9maFsdQmcu6OByVvwLUhusJEBka5WthD0DbEwdgs2X1PmPxzk87Q>
+    <xmx:kD9maBcGrpN39_VkhZ1tdfpqhugnlPnCI3Iwjbbhw8z8fS4x5QSHBQ>
+    <xmx:kD9maB3eq0rNVkHT3_n8O2svewDOYgLkL_PDl1z9bCEXA6vyv57ykQ>
+    <xmx:kD9maN8xFZCTe85nekKl5HbULkfhRcaTPQ76bdM4uCSX0LSxmA5Xfw>
+    <xmx:kD9maI5d1_SIPJ8LYDdopKRM39DmOp_f5UxJP0atvQw5EBiPYW42bT7i>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Jul 2025 04:30:07 -0400 (EDT)
+Date: Thu, 3 Jul 2025 10:30:01 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Lizhi Xu <lizhi.xu@windriver.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <2025070335-situated-sloped-bc1c@gregkh>
+References: <20250703171021.0aee1482@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/7] selftests/mm: Fix child process exit codes in
- ksm_functional_tests
-To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
- pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
-References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
- <20250703060656.54345-6-aboorvad@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250703060656.54345-6-aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703171021.0aee1482@canb.auug.org.au>
 
-On 03.07.25 08:06, Aboorva Devarajan wrote:
-> In ksm_functional_tests, test_child_ksm() returned negative values
-> to indicate errors. However, when passed to exit(), these were
-> interpreted as large unsigned values (e.g, -2 became 254), leading to
-> incorrect handling in the parent process. As a result, some tests
-> appeared to be skipped or silently failed.
+On Thu, Jul 03, 2025 at 05:10:21PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> This patch changes test_child_ksm() to return positive error codes
-> (1, 2, 3) and updates test_child_ksm_err() to interpret them correctly.
-> This ensures the parent accurately detects and reports child process
-> failures.
+> After merging the char-misc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
 > 
-> --------------
-> Before patch:
-> --------------
-> - [RUN] test_unmerge
-> ok 1 Pages were unmerged
-> ...
-> - [RUN] test_prctl_fork
-> - No pages got merged
-> - [RUN] test_prctl_fork_exec
-> ok 7 PR_SET_MEMORY_MERGE value is inherited
-> ...
-> Bail out! 1 out of 8 tests failed
-> - Planned tests != run tests (9 != 8)
-> - Totals: pass:7 fail:1 xfail:0 xpass:0 skip:0 error:0
+> In file included from include/linux/string.h:392,
+>                  from include/linux/bitmap.h:13,
+>                  from include/linux/cpumask.h:12,
+>                  from arch/x86/include/asm/paravirt.h:21,
+>                  from arch/x86/include/asm/irqflags.h:102,
+>                  from include/linux/irqflags.h:18,
+>                  from include/linux/spinlock.h:59,
+>                  from include/linux/wait.h:9,
+>                  from include/linux/wait_bit.h:8,
+>                  from include/linux/fs.h:7,
+>                  from include/linux/highmem.h:5,
+>                  from drivers/misc/vmw_vmci/vmci_context.c:10:
+> In function 'fortify_memset_chk',
+>     inlined from 'ctx_fire_notification.isra' at drivers/misc/vmw_vmci/vmci_context.c:254:3:
+> include/linux/fortify-string.h:480:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>   480 |                         __write_overflow_field(p_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
 > 
-> --------------
-> After patch:
-> --------------
-> - [RUN] test_unmerge
-> ok 1 Pages were unmerged
-> ...
-> - [RUN] test_prctl_fork
-> - No pages got merged
-> not ok 7 Merge in child failed
-> - [RUN] test_prctl_fork_exec
-> ok 8 PR_SET_MEMORY_MERGE value is inherited
-> ...
-> Bail out! 2 out of 9 tests failed
-> - Totals: pass:7 fail:2 xfail:0 xpass:0 skip:0 error:0
+> Caused by commit
 > 
-> Fixes: 6c47de3be3a0 ("selftest/mm: ksm_functional_tests: extend test case for ksm fork/exec")
-> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>   bfb4cf9fb97e ("vmci: Prevent the dispatching of uninitialized payloads")
 
-Surprising, but seems to be the right thing to do.
+Ah, nice catch!  Sorry this didn't trigger in my testing.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Yes, it looks like both the code is correct, AND the warning is correct
+as the compiler has no idea that you can just scribble off the end of
+the structure like this.  In fact I would say the code is wrong as there
+could be padding between the two fields that the change doesn't handle
+properly (which in reality probably isn't happening).
 
--- 
-Cheers,
+Lizhi, I'm going to revert this change now, please fix it up "properly"
+either by correctly changing the structure definition to show that the
+payload is hanging out after the header (and also you can use the
+__counted_by mark), or just properly zapping out the payload length in
+the proper way instead of doing "fun" pointer math like your change did.
 
-David / dhildenb
+thanks,
 
+greg k-h
