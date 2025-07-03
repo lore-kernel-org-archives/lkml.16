@@ -1,39 +1,65 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD10295DA9;
-	Thu,  3 Jul 2025 10:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0BA2D9EFB;
+	Thu,  3 Jul 2025 10:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751539603; cv=none; b=lfl/ZwWm6pRGoXYRLDJqoY1H+8QIClPz9L4ufijuxzX7L35wwd5csd4kUMn9yeS1jnDshLr8prC2i8ktixeq46xALq/nTN+WuSHVuZr5+GPmmWgmlDFvZUgkE0ytYRx13qQdXjst37e9Bsou2MCbkBZBt8b2dBPv2hyeb9mNkV0=
+	t=1751539634; cv=none; b=GS5+GkIuRUtDhEGxa9b5A63zrbM+okj7TJe2mfnl78WkoNUGi4HPhUXzfUn2dnd3OMjDu14YHtP3j7u7Mx8l24Q7DGrvCSwsk7wIRiUozXUKZ+VIqOqc82vxRmUUQJ6sX5jSM0WOrPKeqE5HMHXwf94lxKQNb1InbuBm9oWgzK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751539603; c=relaxed/simple;
-	bh=MDprOtwUwQVTK0Sa0F3ryVGRaYd7wQ6YQ990mpaQSqM=;
+	s=arc-20240116; t=1751539634; c=relaxed/simple;
+	bh=NkBVSvIRK6m5xJpAYwjcb6boeOKxulWEgOMtKfEgvGU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k+EVATvlrDiNfhJOzkvdfPZkfrFVYmnpelm657Dwd9I5CnsJn2spRQlAD3JrAD/9O1YjgxIXHOongt6IKApLTTJY413G06+WIAFoyB8KSguAdqGI61PLcGjoK1wgqhs9Op9VpDuQlRUmpOvGl/reeDY9ys8B5cjNiM6CO6xNJ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=rZOP02ua; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=aGFSF83/Yzg7g8ne0QreuBGmuTrGh8FhH8ORY5NlmrMS2AKEAjuAiFa4P9tvFqubP/bWyhEMpG47WFuYavdvi6RENLCH3NSjoXuBaF4LA9hYtcglkMojSGE6ExjKDcgYqq4W8isMzpwxidu0WQKJvkvTiVByNhsIYXA3lcaLtrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0x232XR; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rZOP02ua"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uHE2Sz4tSWkVHZNPOCqymh9OWBFs/4o18Ht0g9fHypQ=; b=rZOP02uarHKKBiJ9jp9rFpj0YQ
-	2ZHF27MQ/xPzmqpzYCoHlZrO6Cp2zB2x0CL9m/MlmKJga+kdBh1jCFOPBneClK3r2vjpPkCjzXuhQ
-	Tanavd7w1cJPS+b0BgTiUCBOwdO8A0J33agAZC0IMdYlTwjlfIbF2GtyqhhYl0wwgSM7dd5aIr29I
-	n/i9l75+4mpph/7tsJwV1EX3QFK8waX5T7x0lGdEIqXKjRidmDiTlPKAIXrePkLKLbu184LccvFrs
-	yqiUOsskbYb6LAtNH1lyO9xwXUHfUhketdfo5b/xuF/Ec2auOweXzVC0Myv0sJXIz6XwB799pTrlh
-	fysIbryA==;
-Received: from [189.7.87.79] (helo=[192.168.0.7])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uXHSC-00Brd4-If; Thu, 03 Jul 2025 12:46:08 +0200
-Message-ID: <5f28693f-a181-485a-aee7-38c5212bdea1@igalia.com>
-Date: Thu, 3 Jul 2025 07:45:56 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0x232XR"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23602481460so80836355ad.0;
+        Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751539632; x=1752144432; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yT116BmQVYQp7TgXBQY166ymvqYjgN3gIl7mlb2d3wM=;
+        b=R0x232XRd3uS4UHUgKiGB5nheq8G2pOpy245WXg1l5hkAMGcNbwQT7KZUILV703xdP
+         ZDTtQGdkI6OdmQvdOxVgBCOdvnZCjpDnixnJ28CrxKf+YZ+FIXJK5wHtsgvCdJHif0jE
+         wpq0yG1Rnms0ULntbXSbEw/qqs6LdYvaP7rLSqvqmIeq5nwqiRVI/7je5WM47LfKngNx
+         BwA9Q2sJLfxg5480HbDk2pLwdooYwtbgytp34iPV1ib6OymHzsMogAzWxsM2BRlXN0Rf
+         rLl8tQl4rf1dBZYAfPa56WQrh/UIw4UTY1JkaLfdGt0YPURZ4dnZv1cdKLqMmEh9LZBd
+         kgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751539632; x=1752144432;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yT116BmQVYQp7TgXBQY166ymvqYjgN3gIl7mlb2d3wM=;
+        b=UYJausX8eSq0pAUPEDKwhXcUsJSPZaSOqYyjSaJloh/tVEuSBerAaFBB36BB8WkVlv
+         VohjShdz7+27T+UHdaWqZqSAu9DKINl0odD318bJ/3Ztns3BHB5RdEo/dirHEhSY0ma/
+         6S5FgBWGzSsVWP5OdAF30Fi0ZYBnD0fOemZIznProKXRqtdnxfGurhb2CYRlGFpCa7hR
+         4kliYk2SeuO5d/coS4A4Hc49AwFJvr+ya0QTECaD0ybiGOh6ZIMfE7Tan6I/nIVz+70b
+         A6VCsZxuAGuAAl3UI1eI7ayRRRWFlIh/1UkUN+5nwjv/5C8KMaWerUnYCue3Ql8EHvpe
+         Cqag==
+X-Forwarded-Encrypted: i=1; AJvYcCVEbrkv7b2GETlohwdySaalXVdlrZQegDUMt8Cz5AqSlTYR+xjWJSj3rR90fOh7NZOl7aoHxcg6x5liReFW@vger.kernel.org, AJvYcCVRoTlSFWIyLy/1bTxSf2i4AVFZxIMHFsAFgQr0Af3hFGc0q/XoCeT+hWho28RKifufxwXcJdgE4enBtkej@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEmUYILDNWNhDuatBWefZcD5Dxullk94aNakAkiOrHC6ysKjk0
+	MybisMmUbp02MV8qMadoXkCOKNHswJZUgMfpD/RAGQ37zYnXyLKHOgJFlAqVKSFj
+X-Gm-Gg: ASbGncskUcZIjhxUaMZojWspxYkLB5HWq4dVdaEZx9rxVnxUIC+1slMzIh0OGdsM+IE
+	p9UAWE3Drzm74ZBw8v7jaKB23C89PR+hq6l5l0PzDaIQPHu55KKzBA27aDhc//jMe5HR0QwyMVk
+	sZcv1r6/WdEDmBXbArNRO4viCXAYNeic+CMTmdmqfQk/cICp6hkYPuD3b5z1UqHfnMXzFZBF2VY
+	vSyQLLC1e9Dx7EvQUKEv/WL57Fnz1zh9nGqbzkLvdXOSB5itdbIN8gqDtfQUhvcXDTFHKULv0iw
+	yfiLP6uGHglxRovsfE++WtT/XDFhpb55blk4pkaeiiXrMx2FXPnx3QeO8Cw++DMh5AUnTvxt3w6
+	+efA=
+X-Google-Smtp-Source: AGHT+IE+BSY2N3Ksp1Ngu882oItJhHDV437LBfkyE/yfOf+Y7Tt3xVRjNgqMrrvyEVdLEqjOCjXpZg==
+X-Received: by 2002:a17:903:1aab:b0:234:f825:b2c3 with SMTP id d9443c01a7336-23c7a1f0e25mr31795975ad.17.1751539632373;
+        Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+Received: from [30.221.128.104] ([47.246.101.56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39b9f2sm162265655ad.99.2025.07.03.03.47.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+Message-ID: <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
+Date: Thu, 3 Jul 2025 18:47:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,118 +67,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Introduce Tyr
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>,
- Rob Herring <robh@kernel.org>, Alice Ryhl <alice.ryhl@google.com>,
- Beata Michalska <beata.michalska@arm.com>,
- Carsten Haitzler <carsten.haitzler@foss.arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Ashley Smith <ashley.smith@collabora.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
- kernel@collabora.com
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
- <f0ad78da-d4ba-44ec-beda-4f8c616053f8@igalia.com>
- <C2A539D0-8C07-44A4-93AD-21343396D84F@collabora.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <C2A539D0-8C07-44A4-93AD-21343396D84F@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
+ Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+ <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+From: Joseph Qi <jiangqi903@gmail.com>
+In-Reply-To: <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Daniel,
 
-On 30/06/25 10:53, Daniel Almeida wrote:
-> Hi Maíra, thanks for chiming in :)
-> 
->>
->> To enhance readability, consider using a regmap similar to
->> panthor_regs.h. This would help avoid 'magic numbers' and make the
->> code's intent much clearer.
-> 
-> 
-> Are you referring to "struct regmap" itself? Because last I checked, this
-> abstraction is not available upstream. There was a person working on it, but I
-> guess it hasn't seen any traction for a few months. I also don't see it being
-> used in panthor_regs.h?
 
-Sorry, I think I didn't express myself clearly. When I say regmap, I
-mean using macros to express the register addresses and its fields. From
-example, in Panthor, "1 | bit_u32(8)" is expressed as
-GPU_IRQ_RESET_COMPLETED, which can make things more readable.
+On 2025/7/3 15:26, Naresh Kamboju wrote:
+> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
+>>
+>> Hi, Naresh!
+>>
+>> On 2025/6/26 20:31, Naresh Kamboju wrote:
+>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
+>>> test case on the Linux next-20250616..next-20250626 with the extra build
+>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
+>>>
+>>> Not reproducible with 4K page size.
+>>>
+>>> Test environments:
+>>> - Dragonboard-410c
+>>> - Juno-r2
+>>> - rk3399-rock-pi-4b
+>>> - qemu-arm64
+>>>
+>>> Regression Analysis:
+>>> - New regression? Yes
+>>> - Reproducibility? Yes
+>>>
+>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+>>> transaction.c start_this_handle
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>
+>> Thank you for the report. The block size for this test is 1 KB, so I
+>> suspect this is the issue with insufficient journal credits that we
+>> are going to resolve.
+> 
+> I have applied your patch set [1] and tested and the reported
+> regressions did not fix.
+> Am I missing anything ?
+> 
+> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+> 
 
-Best Regards,
-- Maíra
+I can also reproduce the similar warning with xfstests generic/730 under
+64k page size + 4k block size.
 
-> 
->>
->>> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
->>> +
->>> +    let op = || regs::GPU_INT_RAWSTAT.read(iomem);
->>> +    let cond = |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 == 1 };
->>> +    let res = io::poll::read_poll_timeout(
->>> +        op,
->>> +        cond,
->>> +        time::Delta::from_millis(100),
->>> +        Some(time::Delta::from_micros(20000)),
->>> +    );
->>> +
->>> +    if let Err(e) = res {
->>> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
->>> +        pr_err!(
->>> +            "GPU_INT_RAWSTAT is {}\n",
->>> +            regs::GPU_INT_RAWSTAT.read(iomem)?
->>> +        );
->>> +    }
->>> +
->>> +    Ok(())
->>> +}
->>> +
->>> +kernel::of_device_table!(
->>> +    OF_TABLE,
->>> +    MODULE_OF_TABLE,
->>> +    <TyrDriver as platform::Driver>::IdInfo,
->>> +    [
->>> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
->>> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
->>> +    ]
->>> +);
->>> +
->>> +impl platform::Driver for TyrDriver {
->>> +    type IdInfo = ();
->>> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
->>> +
->>> +    fn probe(
->>> +        pdev: &platform::Device<Core>,
->>> +        _info: Option<&Self::IdInfo>,
->>> +    ) -> Result<Pin<KBox<Self>>> {
->>> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
->>> +
->>> +        let core_clk = Clk::get(pdev.as_ref(), Some(c_str!("core")))?;
->>> +        let stacks_clk = Clk::get(pdev.as_ref(), Some(c_str!("stacks")))?;
->>
->> Shouldn't it be OptionalClk::get? From the DT schema for "arm,mali-
->> valhall-csf", I see that "stacks" and "coregroups" are optional.
->>
->>> +        let coregroup_clk = Clk::get(pdev.as_ref(), Some(c_str!("coregroup")))?;
->>
->> Same.
->>
->> Best Regards,
->> - Maíra
->>
->>
-> 
-> Ah yes, you’re right. I will fix that in v2.
-> 
-> — Daniel
-> 
+Thanks,
+Joseph
+
 
