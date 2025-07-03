@@ -1,1256 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78325227574;
-	Thu,  3 Jul 2025 02:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174CB1DF248
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751509728; cv=none; b=Yo8Q5zcvs2weolMbX3rtF9lQY80bSwldTCTL/EY0zTMCvkE/+EmhQkvvmFFqvlIzBq1Wj8iGZjkJ3HT3YOw9Qbn5YGl8pFFfFkm6Efs8sPjtVtpcxcPr798ExPlAacULDn9fv1YdYIV4asLKDfOOADwHlfRnXIyi3b+HOfpi4xM=
+	t=1751509795; cv=none; b=GfvSY29obBfSz8600W6L3iGRw3NAK4A3oNuMtNUDEHJcinBsKuc+KXbUiROsO/pXU+NY67HmNWD2ooJjr2iM8y32D2siDVAx05OHHF9cRKeY8u4eUhuL3+ZI56OjaxsH3d7wBs6ICmgyddcJ3NX4UR9L5J2yHD551ZaMjXsJpaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751509728; c=relaxed/simple;
-	bh=F2g2Q/8Beox83kLpv8UL9H9zm0yem9gXQ6Vfv3d+az4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KEU+Oz8CdKeyNKVKJ7eyqDOdGlrPvMXMfyRy37kjxcDqvGnsWestFJUtMnCSVlGxF9bultTqRqA+a4fYr6hAkmJh3Y6X3Pl7FjNIBgSFgm4cnNNk5lfNH0+ULssVWxKMq+LQq1GOXxKk6AiT1bvRaMP6KFn0xlCx2wl2+qR/c9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fWFXoM94; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751509795; c=relaxed/simple;
+	bh=tZfPKhgGB2j9eNbdHLBmjtYb/P4kAmGPCTMVYa6VqU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/8EYw7ZGfnf0TjXgm97etDcfTS8rXnBeoxFdCPyeAcamPOUjeownYbEVVwt27gCGJ2d0+nQwMx5YqJpit0AfJJekWfsPjbSpMVu52FcipbmvzX6a/zkGMf7OJjMAaJ+CjjNP+8oTYAGEMgUA0t8Zh09aK+pwAtvivwDBEfi6AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=GmaLsEb9; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fWFXoM94"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751509726; x=1783045726;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=F2g2Q/8Beox83kLpv8UL9H9zm0yem9gXQ6Vfv3d+az4=;
-  b=fWFXoM94RU+QEYBuHlPhMlVeVFlE8Z4e+qsWU2URv5/zut94TgS8ABHA
-   Vr+LLFsL7l9deU+81rnN8BUbQsJFmOPG3dCgoKwLx3+mq1W9r05snVIVp
-   R2H2khcEg1qcIqPHm72gXCSJ4RnEpXlP0WiqTuctKw+rR5UXLohR/Gv9r
-   w0gdkzMjG3+J+CRanQoBEsrJlcbRocAA7Ht4sBFaBjXlupjDZxX3c6eat
-   V03h9wfvYvUMxjWmxWhWpE0C/jER2Trxk86h98oDKIuA4iVuKMSIko9We
-   CsZrq23O8qjukrMaCHm5BOiwUV5r/NT1RBdKtci2/j99h9BFsr+dyWeUt
-   A==;
-X-CSE-ConnectionGUID: jEY+xwk8Rk2Z2oqLaVFayg==
-X-CSE-MsgGUID: thhcxLNYR36NVnj8ookcVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="41450245"
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="41450245"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:43 -0700
-X-CSE-ConnectionGUID: VoEXY99RQLWh1B/h3SebFw==
-X-CSE-MsgGUID: H4wdWeCuSb+7VZJkbxHJRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="154594054"
-Received: from mgerlach-mobl1.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.124.223.28])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:42 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	david.e.box@linux.intel.com,
-	srinivas.pandruvada@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	tony.luck@intel.com,
-	xi.pardee@linux.intel.com
-Cc: hdegoede@redhat.com
-Subject: [PATCH V3 08/15] platform/x86/intel/pmt: Add PMT Discovery driver
-Date: Wed,  2 Jul 2025 19:28:23 -0700
-Message-ID: <20250703022832.1302928-9-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250703022832.1302928-1-david.e.box@linux.intel.com>
-References: <20250703022832.1302928-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="GmaLsEb9"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a7a8c2b7b9so76308471cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 19:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1751509793; x=1752114593; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8rh1JDHYagyiIPyBOK33Dd4va5HKceQEpdzxYICKvUs=;
+        b=GmaLsEb935m8MXCrDqm+XSPlbzR9SZmpLmtvsvvIOhfXdoquH06h68czB9KvrMKWoz
+         ZmXcxZY1q85AbQNyHdaXcK2DblCiyl5J+uAjOXWxDaLE0hM/iO+CIW8yfNtE91CHTK94
+         b89Xsig9RyUWrSE8ZlZLn2ZLqYvJ6nMMWrKcFGQRkhFu/b905Ia98fOyFCks8fLGt5QS
+         yFGXAXtEq80sYmU0NQiOtf5o2zvgSCKTbkGmPDWa+V8l4hUUxyN44RlbkbX5XCFbGZtT
+         qbNZi0jQ6KHNneoVjUDERL7dXGt09vJI+/yorVySyDMmCMM7VYXH64HeLUComShom9y9
+         +LJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751509793; x=1752114593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8rh1JDHYagyiIPyBOK33Dd4va5HKceQEpdzxYICKvUs=;
+        b=qni17fFZThQ9d3jWr5eBHKuE76oLPu/4DPAFHVWKT3B9Dsw4IsAFb10lDmw/yRz+3M
+         obeOnKqprMGc5rkJ6xfWKl4gHFaPzffJs+bqGGtwqhLnnGcxUcNqjqIZDdjy5Hn4DLlE
+         T/RzuD+Ate4e1jGx09QW+sicf9E7FdoIHX9Xcu9RsyUZQBgojFtZtZeSsMU1TM9tytZ4
+         3rh+0Zna7AVkvlosmUz0BSWtNpGQf7CA+Ylif0chozDF3MnfPac3OGUA/N0/q6FtHaSR
+         hqS6CV/YTBbxDpgNAjq81iZoQRcPzJj4B7/Z62g6F4E0FFdNdrRKqGbHwCPQjcZHo5Ku
+         Ndmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsqZ9jJJdfs3s28RUlxze/1fM7okNNDvko8fh8Mzl1iBeEfYc8TF/ZHNVQdB6JSBBcH7d20qU6i5K1E+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzYrg79sBhCI+A7FkuoOKrkpQAKIHc/FrwR7HGeKuKhbqz2Bc5
+	7/zT4b7uQfDwCFSy5qMt8b/Dvze8EqLoa/VknO+94SsSGlAiH7OIpRtmeduV59k7Kw==
+X-Gm-Gg: ASbGncvVSF0YVCMl46G2geuq3yESqFGmT8aicauyMBKSJW8sWRzXOLs07cXYpl7NNyE
+	yEmyQ3RjlQXqtdfGWFPQeS+zxrq8q6Cf00/vjxj0wyc0Urn5b/3lVU/H2EeJDFq0rdyT6gx4cWk
+	f7U7Y1ZHa1s0XtKfT6S3iM327db0bPhH9Damji+NWlFBLsLKK3yDHKrD29+immMXlTti6WmLj9m
+	mP20faYftgUsbU8WQJEgoCDW8nMSgt92IrYMIF3uN6fFH9Sr9j5gcR+23D+Ta0HXVXeD5wIT+BS
+	UHKdOXRxYhWfoIcwwBAMwRi9H2XySVhUmeoVvugRq82+G0E/XdrWOAR1l4LJvB8=
+X-Google-Smtp-Source: AGHT+IFgUtIfacM1/yKau1yKcyG4dbEm+p1dcMbN7bUAVPQ51hz2fKYw5S+OeAykLbIKxmJzZvxwUA==
+X-Received: by 2002:a05:622a:138f:b0:4a6:f6e7:7214 with SMTP id d75a77b69052e-4a9769b9da8mr73400481cf.40.1751509792827;
+        Wed, 02 Jul 2025 19:29:52 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::4179])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc10620dsm100820671cf.7.2025.07.02.19.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 19:29:52 -0700 (PDT)
+Date: Wed, 2 Jul 2025 22:29:49 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: contact@arnaud-lcm.com
+Cc: manas18244@iiitd.ac.in, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Pete Zaitcev <zaitcev@redhat.com>,
+	Paolo Abeni <paolo.abeni@email.it>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>,
+	syzbot+86b6d7c8bcc66747c505@syzkaller.appspotmail.com
+Subject: Re: [PATCH] usbmon: Fix out-of-bounds read in mon_copy_to_buff
+Message-ID: <22cdd2ea-9240-45ed-8667-cc315eccf0e0@rowland.harvard.edu>
+References: <20250703-fix-oob-mon_copy_to_buff-v1-1-1aa7f5723d91@iiitd.ac.in>
+ <32d213c565df4c2a4bdb15b8c5b7c1ba@arnaud-lcm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32d213c565df4c2a4bdb15b8c5b7c1ba@arnaud-lcm.com>
 
-This patch introduces a new driver to enumerate and expose Intel Platform
-Monitoring Technology (PMT) capabilities via a simple discovery mechanism.
-The PMT Discovery driver parses hardware-provided discovery tables from
-Intel Out of Band Management Services Modules (OOBMSM) and extracts feature
-information for various providers (such as TPMI, Telemetry, Crash Log,
-etc). This unified interface simplifies the process of determining which
-manageability and telemetry features are supported by a given platform.
+On Wed, Jul 02, 2025 at 10:42:42PM +0100, contact@arnaud-lcm.com wrote:
+> Hi Manas, I just noticed your patch while I was working on it and we had the
+> same idea. I think you are not covering every cases of the issue.
+> I've done it this way:
 
-This new feature is described in the Intel Platform Monitoring Technology
-3.0 specification, section 6.6 Capability.
+Why do both of you guys think that mon_copy_to_buff() is trying to 
+transfer data from an empty source buffer?  Maybe the destination buffer 
+is the cause of the problem instead.
 
-Key changes and additions:
+> From 49f4d231a1c4407d52fee83e956b1d40b3221e37 Mon Sep 17 00:00:00 2001
+> From: Arnaud Lecomte <contact@arnaud-lcm.com>
+> Date: Wed, 2 Jul 2025 22:39:08 +0100
+> Subject: [PATCH] usb: mon: Add read length checking in mon_copy_to_buff
+> 
+> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+> ---
+>  drivers/usb/mon/mon_bin.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+> index c93b43f5bc46..e7b390439743 100644
+> --- a/drivers/usb/mon/mon_bin.c
+> +++ b/drivers/usb/mon/mon_bin.c
+> @@ -249,6 +249,8 @@ static unsigned int mon_copy_to_buff(const struct
+> mon_reader_bin *this,
+>  		 * Copy data and advance pointers.
+>  		 */
+>  		buf = this->b_vec[off / CHUNK_SIZE].ptr + off % CHUNK_SIZE;
+> +		if(strlen(from) < step_len)
 
-New file drivers/platform/x86/intel/pmt/discovery.c:
-  =E2=80=93 Implements the discovery logic to map the discovery resource, r=
-ead
-    the feature discovery table, and validate feature parameters.
-New file drivers/platform/x86/intel/pmt/features.c:
-  =E2=80=93 Defines feature names, layouts, and associated capability masks.
-  =E2=80=93 Provides a mapping between raw hardware attributes and sysfs
-    representations for easier integration with user-space tools.
-New header include/linux/intel_pmt_features.h:
-  =E2=80=93 Declares constants, masks, and feature identifiers used across =
-the
-    PMT framework.
-Sysfs integration:
-  =E2=80=93 Feature attributes are exposed under /sys/class/intel_pmt.
-  =E2=80=93 Each device is represented by a subfolder within the intel_pmt =
-class,
-    named using its DBDF (Domain:Bus:Device.Function), e.g.:
-        features-0000:00:03.1
-  =E2=80=93 Example directory layout for a device:
+strlen() is absolutely the wrong thing to use here for both of your 
+patches.  "from" is not a NUL-terminated string but rather a general 
+memory buffer.  The caller is supposed to guarantee that "from" contains 
+at least "length" bytes of data.  If something is going wrong here, it 
+is the caller's fault.
 
-    /sys/class/intel_pmt/features-0000:00:03.1/
-    =E2=94=9C=E2=94=80=E2=94=80 accelerator_telemetry
-    =E2=94=9C=E2=94=80=E2=94=80 crash_log
-    =E2=94=9C=E2=94=80=E2=94=80 per_core_environment_telemetry
-    =E2=94=9C=E2=94=80=E2=94=80 per_core_performance_telemetry
-    =E2=94=9C=E2=94=80=E2=94=80 per_rmid_energy_telemetry
-    =E2=94=9C=E2=94=80=E2=94=80 per_rmid_perf_telemetry
-    =E2=94=9C=E2=94=80=E2=94=80 tpmi_control
-    =E2=94=9C=E2=94=80=E2=94=80 tracing
-    =E2=94=94=E2=94=80=E2=94=80 uncore_telemetry
+Alan Stern
 
-By exposing PMT feature details through sysfs and integrating with the
-existing PMT class, this driver paves the way for more streamlined
-integration of PMT-based manageability and telemetry tools.
-
-Link: https://www.intel.com/content/www/us/en/content-details/710389/intel-=
-platform-monitoring-technology-intel-pmt-external-specification.html
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-
-Changes in v3:
-  - No changes
-
-Changes in v2:
-  - Add comment spelling out RMID
-  - Remove extra parens around several uses of PTR_ERR()
-  - Add PMT_ACCESS_TYPE_RSVD for magic number 0x7
-  - In pmt_feature_discovery() clarify zero-init of disc_tbl is for false
-    positive compiler warning.
-  - In features.c fix several spelling errors, use snake case
-    consistently for all capability names, and spell out "telemetry".
-
- drivers/platform/x86/intel/pmt/Kconfig     |  12 +
- drivers/platform/x86/intel/pmt/Makefile    |   2 +
- drivers/platform/x86/intel/pmt/class.c     |  35 +-
- drivers/platform/x86/intel/pmt/class.h     |   2 +
- drivers/platform/x86/intel/pmt/discovery.c | 602 +++++++++++++++++++++
- drivers/platform/x86/intel/pmt/features.c  | 205 +++++++
- include/linux/intel_pmt_features.h         | 157 ++++++
- 7 files changed, 1013 insertions(+), 2 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmt/discovery.c
- create mode 100644 drivers/platform/x86/intel/pmt/features.c
- create mode 100644 include/linux/intel_pmt_features.h
-
-diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/=
-intel/pmt/Kconfig
-index e916fc966221..0ad91b5112e9 100644
---- a/drivers/platform/x86/intel/pmt/Kconfig
-+++ b/drivers/platform/x86/intel/pmt/Kconfig
-@@ -38,3 +38,15 @@ config INTEL_PMT_CRASHLOG
-=20
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_pmt_crashlog.
-+
-+config INTEL_PMT_DISCOVERY
-+	tristate "Intel Platform Monitoring Technology (PMT) Discovery driver"
-+	depends on INTEL_VSEC
-+	select INTEL_PMT_CLASS
-+	help
-+	  The Intel Platform Monitoring Technology (PMT) discovery driver provides
-+	  access to details about the various PMT features and feature specific
-+	  attributes.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pmt_discovery.
-diff --git a/drivers/platform/x86/intel/pmt/Makefile b/drivers/platform/x86=
-/intel/pmt/Makefile
-index 279e158c7c23..8aed7e1592e4 100644
---- a/drivers/platform/x86/intel/pmt/Makefile
-+++ b/drivers/platform/x86/intel/pmt/Makefile
-@@ -10,3 +10,5 @@ obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+=3D pmt_telemetry.o
- pmt_telemetry-y				:=3D telemetry.o
- obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+=3D pmt_crashlog.o
- pmt_crashlog-y				:=3D crashlog.o
-+obj-$(CONFIG_INTEL_PMT_DISCOVERY)	+=3D pmt_discovery.o
-+pmt_discovery-y				:=3D discovery.o features.o
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/=
-intel/pmt/class.c
-index 7233b654bbad..a806a81ece52 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -9,11 +9,13 @@
-  */
-=20
- #include <linux/kernel.h>
-+#include <linux/log2.h>
- #include <linux/intel_vsec.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/pci.h>
-+#include <linux/sysfs.h>
-=20
- #include "class.h"
-=20
-@@ -166,12 +168,41 @@ static struct attribute *intel_pmt_attrs[] =3D {
- 	&dev_attr_offset.attr,
- 	NULL
- };
--ATTRIBUTE_GROUPS(intel_pmt);
-=20
--static struct class intel_pmt_class =3D {
-+static umode_t intel_pmt_attr_visible(struct kobject *kobj,
-+				      struct attribute *attr, int n)
-+{
-+	struct device *dev =3D container_of(kobj, struct device, kobj);
-+	struct auxiliary_device *auxdev =3D to_auxiliary_dev(dev->parent);
-+	struct intel_vsec_device *ivdev =3D auxdev_to_ivdev(auxdev);
-+
-+	/*
-+	 * Place the discovery features folder in /sys/class/intel_pmt, but
-+	 * exclude the common attributes as they are not applicable.
-+	 */
-+	if (ivdev->cap_id =3D=3D ilog2(VSEC_CAP_DISCOVERY))
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static bool intel_pmt_group_visible(struct kobject *kobj)
-+{
-+	return true;
-+}
-+DEFINE_SYSFS_GROUP_VISIBLE(intel_pmt);
-+
-+static const struct attribute_group intel_pmt_group =3D {
-+	.attrs =3D intel_pmt_attrs,
-+	.is_visible =3D SYSFS_GROUP_VISIBLE(intel_pmt),
-+};
-+__ATTRIBUTE_GROUPS(intel_pmt);
-+
-+struct class intel_pmt_class =3D {
- 	.name =3D "intel_pmt",
- 	.dev_groups =3D intel_pmt_groups,
- };
-+EXPORT_SYMBOL_GPL(intel_pmt_class);
-=20
- static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 				    struct intel_vsec_device *ivdev,
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/=
-intel/pmt/class.h
-index b2006d57779d..39c32357ee2c 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -20,6 +20,7 @@
- #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
-=20
- struct pci_dev;
-+extern struct class intel_pmt_class;
-=20
- struct telem_endpoint {
- 	struct pci_dev		*pcidev;
-@@ -48,6 +49,7 @@ struct intel_pmt_entry {
- 	unsigned long		base_addr;
- 	size_t			size;
- 	u32			guid;
-+	u32			num_rmids; /* Number of Resource Monitoring IDs */
- 	int			devid;
- };
-=20
-diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/=
-x86/intel/pmt/discovery.c
-new file mode 100644
-index 000000000000..4b4fa3137ad2
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmt/discovery.c
-@@ -0,0 +1,602 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Platform Monitory Technology Discovery driver
-+ *
-+ * Copyright (c) 2025, Intel Corporation.
-+ * All Rights Reserved.
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/kdev_t.h>
-+#include <linux/kobject.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/overflow.h>
-+#include <linux/pci.h>
-+#include <linux/slab.h>
-+#include <linux/string_choices.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+
-+#include <linux/intel_pmt_features.h>
-+#include <linux/intel_vsec.h>
-+
-+#include "class.h"
-+
-+#define MAX_FEATURE_VERSION	0
-+#define DT_TBIR			GENMASK(2, 0)
-+#define FEAT_ATTR_SIZE(x)	((x) * sizeof(u32))
-+#define PMT_GUID_SIZE(x)	((x) * sizeof(u32))
-+#define PMT_ACCESS_TYPE_RSVD	0xF
-+#define SKIP_FEATURE		1
-+
-+struct feature_discovery_table {
-+	u32	access_type:4;
-+	u32	version:8;
-+	u32	size:16;
-+	u32	reserved:4;
-+	u32	id;
-+	u32	offset;
-+	u32	reserved2;
-+};
-+
-+/* Common feature table header */
-+struct feature_header {
-+	u32	attr_size:8;
-+	u32	num_guids:8;
-+	u32	reserved:16;
-+};
-+
-+/* Feature attribute fields */
-+struct caps {
-+	u32		caps;
-+};
-+
-+struct command {
-+	u32		max_stream_size:16;
-+	u32		max_command_size:16;
-+};
-+
-+struct watcher {
-+	u32		reserved:21;
-+	u32		period:11;
-+	struct command	command;
-+};
-+
-+struct rmid {
-+	u32		num_rmids:16;	/* Number of Resource Monitoring IDs */
-+	u32		reserved:16;
-+	struct watcher	watcher;
-+};
-+
-+struct feature_table {
-+	struct feature_header	header;
-+	struct caps		caps;
-+	union {
-+		struct command command;
-+		struct watcher watcher;
-+		struct rmid rmid;
-+	};
-+	u32			*guids;
-+};
-+
-+/* For backreference in struct feature */
-+struct pmt_features_priv;
-+
-+struct feature {
-+	struct feature_table		table;
-+	struct kobject			kobj;
-+	struct pmt_features_priv	*priv;
-+	struct list_head		list;
-+	const struct attribute_group	*attr_group;
-+	enum pmt_feature_id		id;
-+};
-+
-+struct pmt_features_priv {
-+	struct device		*parent;
-+	struct device		*dev;
-+	int			count;
-+	u32			mask;
-+	struct feature		feature[];
-+};
-+
-+static LIST_HEAD(pmt_feature_list);
-+static DEFINE_MUTEX(feature_list_lock);
-+
-+#define to_pmt_feature(x) container_of(x, struct feature, kobj)
-+static void pmt_feature_release(struct kobject *kobj)
-+{
-+}
-+
-+static ssize_t caps_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+	struct pmt_cap **pmt_caps;
-+	u32 caps =3D feature->table.caps.caps;
-+	ssize_t ret =3D 0;
-+
-+	switch (feature->id) {
-+	case FEATURE_PER_CORE_PERF_TELEM:
-+		pmt_caps =3D pmt_caps_pcpt;
-+		break;
-+	case FEATURE_PER_CORE_ENV_TELEM:
-+		pmt_caps =3D pmt_caps_pcet;
-+		break;
-+	case FEATURE_PER_RMID_PERF_TELEM:
-+		pmt_caps =3D pmt_caps_rmid_perf;
-+		break;
-+	case FEATURE_ACCEL_TELEM:
-+		pmt_caps =3D pmt_caps_accel;
-+		break;
-+	case FEATURE_UNCORE_TELEM:
-+		pmt_caps =3D pmt_caps_uncore;
-+		break;
-+	case FEATURE_CRASH_LOG:
-+		pmt_caps =3D pmt_caps_crashlog;
-+		break;
-+	case FEATURE_PETE_LOG:
-+		pmt_caps =3D pmt_caps_pete;
-+		break;
-+	case FEATURE_TPMI_CTRL:
-+		pmt_caps =3D pmt_caps_tpmi;
-+		break;
-+	case FEATURE_TRACING:
-+		pmt_caps =3D pmt_caps_tracing;
-+		break;
-+	case FEATURE_PER_RMID_ENERGY_TELEM:
-+		pmt_caps =3D pmt_caps_rmid_energy;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	while (*pmt_caps) {
-+		struct pmt_cap *pmt_cap =3D *pmt_caps;
-+
-+		while (pmt_cap->name) {
-+			ret +=3D sysfs_emit_at(buf, ret, "%-40s Available: %s\n", pmt_cap->name,
-+					     str_yes_no(pmt_cap->mask & caps));
-+			pmt_cap++;
-+		}
-+		pmt_caps++;
-+	}
-+
-+	return ret;
-+}
-+static struct kobj_attribute caps_attribute =3D __ATTR_RO(caps);
-+
-+static struct watcher *get_watcher(struct feature *feature)
-+{
-+	switch (feature_layout[feature->id]) {
-+	case LAYOUT_RMID:
-+		return &feature->table.rmid.watcher;
-+	case LAYOUT_WATCHER:
-+		return &feature->table.watcher;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
-+static struct command *get_command(struct feature *feature)
-+{
-+	switch (feature_layout[feature->id]) {
-+	case LAYOUT_RMID:
-+		return &feature->table.rmid.watcher.command;
-+	case LAYOUT_WATCHER:
-+		return &feature->table.watcher.command;
-+	case LAYOUT_COMMAND:
-+		return &feature->table.command;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
-+static ssize_t num_rmids_show(struct kobject *kobj,
-+			      struct kobj_attribute *attr, char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+
-+	return sysfs_emit(buf, "%u\n", feature->table.rmid.num_rmids);
-+}
-+static struct kobj_attribute num_rmids_attribute =3D __ATTR_RO(num_rmids);
-+
-+static ssize_t min_watcher_period_ms_show(struct kobject *kobj,
-+					  struct kobj_attribute *attr, char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+	struct watcher *watcher =3D get_watcher(feature);
-+
-+	if (IS_ERR(watcher))
-+		return PTR_ERR(watcher);
-+
-+	return sysfs_emit(buf, "%u\n", watcher->period);
-+}
-+static struct kobj_attribute min_watcher_period_ms_attribute =3D
-+	__ATTR_RO(min_watcher_period_ms);
-+
-+static ssize_t max_stream_size_show(struct kobject *kobj,
-+				    struct kobj_attribute *attr, char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+	struct command *command =3D get_command(feature);
-+
-+	if (IS_ERR(command))
-+		return PTR_ERR(command);
-+
-+	return sysfs_emit(buf, "%u\n", command->max_stream_size);
-+}
-+static struct kobj_attribute max_stream_size_attribute =3D
-+	__ATTR_RO(max_stream_size);
-+
-+static ssize_t max_command_size_show(struct kobject *kobj,
-+				     struct kobj_attribute *attr, char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+	struct command *command =3D get_command(feature);
-+
-+	if (IS_ERR(command))
-+		return PTR_ERR(command);
-+
-+	return sysfs_emit(buf, "%u\n", command->max_command_size);
-+}
-+static struct kobj_attribute max_command_size_attribute =3D
-+	__ATTR_RO(max_command_size);
-+
-+static ssize_t guids_show(struct kobject *kobj, struct kobj_attribute *att=
-r,
-+			  char *buf)
-+{
-+	struct feature *feature =3D to_pmt_feature(kobj);
-+	int i, count =3D 0;
-+
-+	for (i =3D 0; i < feature->table.header.num_guids; i++)
-+		count +=3D sysfs_emit_at(buf, count, "0x%x\n",
-+				       feature->table.guids[i]);
-+
-+	return count;
-+}
-+static struct kobj_attribute guids_attribute =3D __ATTR_RO(guids);
-+
-+static struct attribute *pmt_feature_rmid_attrs[] =3D {
-+	&caps_attribute.attr,
-+	&num_rmids_attribute.attr,
-+	&min_watcher_period_ms_attribute.attr,
-+	&max_stream_size_attribute.attr,
-+	&max_command_size_attribute.attr,
-+	&guids_attribute.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(pmt_feature_rmid);
-+
-+static const struct kobj_type pmt_feature_rmid_ktype =3D {
-+	.sysfs_ops =3D &kobj_sysfs_ops,
-+	.release =3D pmt_feature_release,
-+	.default_groups =3D pmt_feature_rmid_groups,
-+};
-+
-+static struct attribute *pmt_feature_watcher_attrs[] =3D {
-+	&caps_attribute.attr,
-+	&min_watcher_period_ms_attribute.attr,
-+	&max_stream_size_attribute.attr,
-+	&max_command_size_attribute.attr,
-+	&guids_attribute.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(pmt_feature_watcher);
-+
-+static const struct kobj_type pmt_feature_watcher_ktype =3D {
-+	.sysfs_ops =3D &kobj_sysfs_ops,
-+	.release =3D pmt_feature_release,
-+	.default_groups =3D pmt_feature_watcher_groups,
-+};
-+
-+static struct attribute *pmt_feature_command_attrs[] =3D {
-+	&caps_attribute.attr,
-+	&max_stream_size_attribute.attr,
-+	&max_command_size_attribute.attr,
-+	&guids_attribute.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(pmt_feature_command);
-+
-+static const struct kobj_type pmt_feature_command_ktype =3D {
-+	.sysfs_ops =3D &kobj_sysfs_ops,
-+	.release =3D pmt_feature_release,
-+	.default_groups =3D pmt_feature_command_groups,
-+};
-+
-+static struct attribute *pmt_feature_guids_attrs[] =3D {
-+	&caps_attribute.attr,
-+	&guids_attribute.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(pmt_feature_guids);
-+
-+static const struct kobj_type pmt_feature_guids_ktype =3D {
-+	.sysfs_ops =3D &kobj_sysfs_ops,
-+	.release =3D pmt_feature_release,
-+	.default_groups =3D pmt_feature_guids_groups,
-+};
-+
-+static int
-+pmt_feature_get_disc_table(struct pmt_features_priv *priv,
-+			   struct resource *disc_res,
-+			   struct feature_discovery_table *disc_tbl)
-+{
-+	void __iomem *disc_base;
-+
-+	disc_base =3D devm_ioremap_resource(priv->dev, disc_res);
-+	if (IS_ERR(disc_base))
-+		return PTR_ERR(disc_base);
-+
-+	memcpy_fromio(disc_tbl, disc_base, sizeof(*disc_tbl));
-+
-+	devm_iounmap(priv->dev, disc_base);
-+
-+	if (priv->mask & BIT(disc_tbl->id))
-+		return dev_err_probe(priv->dev, -EINVAL, "Duplicate feature: %s\n",
-+				     pmt_feature_names[disc_tbl->id]);
-+
-+	/*
-+	 * Some devices may expose non-functioning entries that are
-+	 * reserved for future use. They have zero size. Do not fail
-+	 * probe for these. Just ignore them.
-+	 */
-+	if (disc_tbl->size =3D=3D 0 || disc_tbl->access_type =3D=3D PMT_ACCESS_TY=
-PE_RSVD)
-+		return SKIP_FEATURE;
-+
-+	if (disc_tbl->version > MAX_FEATURE_VERSION)
-+		return SKIP_FEATURE;
-+
-+	if (!pmt_feature_id_is_valid(disc_tbl->id))
-+		return SKIP_FEATURE;
-+
-+	priv->mask |=3D BIT(disc_tbl->id);
-+
-+	return 0;
-+}
-+
-+static int
-+pmt_feature_get_feature_table(struct pmt_features_priv *priv,
-+			      struct feature *feature,
-+			      struct feature_discovery_table *disc_tbl,
-+			      struct resource *disc_res)
-+{
-+	struct feature_table *feat_tbl =3D &feature->table;
-+	struct feature_header *header;
-+	struct resource res =3D {};
-+	resource_size_t res_size;
-+	void __iomem *feat_base, *feat_offset;
-+	void *tbl_offset;
-+	size_t size;
-+	u32 *guids;
-+	u8 tbir;
-+
-+	tbir =3D FIELD_GET(DT_TBIR, disc_tbl->offset);
-+
-+	switch (disc_tbl->access_type) {
-+	case ACCESS_LOCAL:
-+		if (tbir)
-+			return dev_err_probe(priv->dev, -EINVAL,
-+				"Unsupported BAR index %u for access type %u\n",
-+				tbir, disc_tbl->access_type);
-+
-+
-+		/*
-+		 * For access_type LOCAL, the base address is as follows:
-+		 * base address =3D end of discovery region + base offset + 1
-+		 */
-+		res =3D DEFINE_RES_MEM(disc_res->end + disc_tbl->offset + 1,
-+				     disc_tbl->size * sizeof(u32));
-+		break;
-+
-+	default:
-+		return dev_err_probe(priv->dev, -EINVAL, "Unrecognized access_type %u\n",
-+				     disc_tbl->access_type);
-+	}
-+
-+	feature->id =3D disc_tbl->id;
-+
-+	/* Get the feature table */
-+	feat_base =3D devm_ioremap_resource(priv->dev, &res);
-+	if (IS_ERR(feat_base))
-+		return PTR_ERR(feat_base);
-+
-+	feat_offset =3D feat_base;
-+	tbl_offset =3D feat_tbl;
-+
-+	/* Get the header */
-+	header =3D &feat_tbl->header;
-+	memcpy_fromio(header, feat_offset, sizeof(*header));
-+
-+	/* Validate fields fit within mapped resource */
-+	size =3D sizeof(*header) + FEAT_ATTR_SIZE(header->attr_size) +
-+	       PMT_GUID_SIZE(header->num_guids);
-+	res_size =3D resource_size(&res);
-+	if (WARN(size > res_size, "Bad table size %ld > %pa", size, &res_size))
-+		return -EINVAL;
-+
-+	/* Get the feature attributes, including capability fields */
-+	tbl_offset +=3D sizeof(*header);
-+	feat_offset +=3D sizeof(*header);
-+
-+	memcpy_fromio(tbl_offset, feat_offset, FEAT_ATTR_SIZE(header->attr_size));
-+
-+	/* Finally, get the guids */
-+	guids =3D devm_kmalloc(priv->dev, PMT_GUID_SIZE(header->num_guids), GFP_K=
-ERNEL);
-+	if (!guids)
-+		return -ENOMEM;
-+
-+	feat_offset +=3D FEAT_ATTR_SIZE(header->attr_size);
-+
-+	memcpy_fromio(guids, feat_offset, PMT_GUID_SIZE(header->num_guids));
-+
-+	feat_tbl->guids =3D guids;
-+
-+	devm_iounmap(priv->dev, feat_base);
-+
-+	return 0;
-+}
-+
-+static void pmt_features_add_feat(struct feature *feature)
-+{
-+	guard(mutex)(&feature_list_lock);
-+	list_add(&feature->list, &pmt_feature_list);
-+}
-+
-+static void pmt_features_remove_feat(struct feature *feature)
-+{
-+	guard(mutex)(&feature_list_lock);
-+	list_del(&feature->list);
-+}
-+
-+/* Get the discovery table and use it to get the feature table */
-+static int pmt_features_discovery(struct pmt_features_priv *priv,
-+				  struct feature *feature,
-+				  struct intel_vsec_device *ivdev,
-+				  int idx)
-+{
-+	struct feature_discovery_table disc_tbl =3D {}; /* Avoid false warning */
-+	struct resource *disc_res =3D &ivdev->resource[idx];
-+	const struct kobj_type *ktype;
-+	int ret;
-+
-+	ret =3D pmt_feature_get_disc_table(priv, disc_res, &disc_tbl);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D pmt_feature_get_feature_table(priv, feature, &disc_tbl, disc_res);
-+	if (ret)
-+		return ret;
-+
-+	switch (feature_layout[feature->id]) {
-+	case LAYOUT_RMID:
-+		ktype =3D &pmt_feature_rmid_ktype;
-+		feature->attr_group =3D &pmt_feature_rmid_group;
-+		break;
-+	case LAYOUT_WATCHER:
-+		ktype =3D &pmt_feature_watcher_ktype;
-+		feature->attr_group =3D &pmt_feature_watcher_group;
-+		break;
-+	case LAYOUT_COMMAND:
-+		ktype =3D &pmt_feature_command_ktype;
-+		feature->attr_group =3D &pmt_feature_command_group;
-+		break;
-+	case LAYOUT_CAPS_ONLY:
-+		ktype =3D &pmt_feature_guids_ktype;
-+		feature->attr_group =3D &pmt_feature_guids_group;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret =3D kobject_init_and_add(&feature->kobj, ktype, &priv->dev->kobj,
-+				   pmt_feature_names[feature->id]);
-+	if (ret)
-+		return ret;
-+
-+	kobject_uevent(&feature->kobj, KOBJ_ADD);
-+	pmt_features_add_feat(feature);
-+
-+	return 0;
-+}
-+
-+static void pmt_features_remove(struct auxiliary_device *auxdev)
-+{
-+	struct pmt_features_priv *priv =3D auxiliary_get_drvdata(auxdev);
-+	int i;
-+
-+	for (i =3D 0; i < priv->count; i++) {
-+		struct feature *feature =3D &priv->feature[i];
-+
-+		pmt_features_remove_feat(feature);
-+		sysfs_remove_group(&feature->kobj, feature->attr_group);
-+		kobject_put(&feature->kobj);
-+	}
-+
-+	device_unregister(priv->dev);
-+}
-+
-+static int pmt_features_probe(struct auxiliary_device *auxdev, const struc=
-t auxiliary_device_id *id)
-+{
-+	struct intel_vsec_device *ivdev =3D auxdev_to_ivdev(auxdev);
-+	struct pmt_features_priv *priv;
-+	size_t size;
-+	int ret, i;
-+
-+	size =3D struct_size(priv, feature, ivdev->num_resources);
-+	priv =3D devm_kzalloc(&auxdev->dev, size, GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->parent =3D &ivdev->pcidev->dev;
-+	auxiliary_set_drvdata(auxdev, priv);
-+
-+	priv->dev =3D device_create(&intel_pmt_class, &auxdev->dev, MKDEV(0, 0), =
-priv,
-+				  "%s-%s", "features", dev_name(priv->parent));
-+	if (IS_ERR(priv->dev))
-+		return dev_err_probe(priv->dev, PTR_ERR(priv->dev),
-+				     "Could not create %s-%s device node\n",
-+				     "features", dev_name(priv->dev));
-+
-+	/* Initialize each feature */
-+	for (i =3D 0; i < ivdev->num_resources; i++) {
-+		struct feature *feature =3D &priv->feature[priv->count];
-+
-+		ret =3D pmt_features_discovery(priv, feature, ivdev, i);
-+		if (ret =3D=3D SKIP_FEATURE)
-+			continue;
-+		if (ret !=3D 0)
-+			goto abort_probe;
-+
-+		feature->priv =3D priv;
-+		priv->count++;
-+	}
-+
-+	return 0;
-+
-+abort_probe:
-+	/*
-+	 * Only fully initialized features are tracked in priv->count, which is
-+	 * incremented only after a feature is completely set up (i.e., after
-+	 * discovery and sysfs registration). If feature initialization fails,
-+	 * the failing feature's state is local and does not require rollback.
-+	 *
-+	 * Therefore, on error, we can safely call the driver's remove() routine
-+	 * pmt_features_remove() to clean up only those features that were
-+	 * fully initialized and counted. All other resources are device-managed
-+	 * and will be cleaned up automatically during device_unregister().
-+	 */
-+	pmt_features_remove(auxdev);
-+
-+	return ret;
-+}
-+
-+static const struct auxiliary_device_id pmt_features_id_table[] =3D {
-+	{ .name =3D "intel_vsec.discovery" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, pmt_features_id_table);
-+
-+static struct auxiliary_driver pmt_features_aux_driver =3D {
-+	.id_table	=3D pmt_features_id_table,
-+	.remove		=3D pmt_features_remove,
-+	.probe		=3D pmt_features_probe,
-+};
-+module_auxiliary_driver(pmt_features_aux_driver);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel PMT Discovery driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("INTEL_PMT");
-diff --git a/drivers/platform/x86/intel/pmt/features.c b/drivers/platform/x=
-86/intel/pmt/features.c
-new file mode 100644
-index 000000000000..8a39cddc75c8
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmt/features.c
-@@ -0,0 +1,205 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ * Author: "David E. Box" <david.e.box@linux.intel.com>
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/types.h>
-+
-+#include <linux/intel_pmt_features.h>
-+
-+const char * const pmt_feature_names[] =3D {
-+	[FEATURE_PER_CORE_PERF_TELEM]	=3D "per_core_performance_telemetry",
-+	[FEATURE_PER_CORE_ENV_TELEM]	=3D "per_core_environment_telemetry",
-+	[FEATURE_PER_RMID_PERF_TELEM]	=3D "per_rmid_perf_telemetry",
-+	[FEATURE_ACCEL_TELEM]		=3D "accelerator_telemetry",
-+	[FEATURE_UNCORE_TELEM]		=3D "uncore_telemetry",
-+	[FEATURE_CRASH_LOG]		=3D "crash_log",
-+	[FEATURE_PETE_LOG]		=3D "pete_log",
-+	[FEATURE_TPMI_CTRL]		=3D "tpmi_control",
-+	[FEATURE_TRACING]		=3D "tracing",
-+	[FEATURE_PER_RMID_ENERGY_TELEM]	=3D "per_rmid_energy_telemetry",
-+};
-+EXPORT_SYMBOL_NS_GPL(pmt_feature_names, "INTEL_PMT_DISCOVERY");
-+
-+enum feature_layout feature_layout[] =3D {
-+	[FEATURE_PER_CORE_PERF_TELEM]	=3D LAYOUT_WATCHER,
-+	[FEATURE_PER_CORE_ENV_TELEM]	=3D LAYOUT_WATCHER,
-+	[FEATURE_PER_RMID_PERF_TELEM]	=3D LAYOUT_RMID,
-+	[FEATURE_ACCEL_TELEM]		=3D LAYOUT_WATCHER,
-+	[FEATURE_UNCORE_TELEM]		=3D LAYOUT_WATCHER,
-+	[FEATURE_CRASH_LOG]		=3D LAYOUT_COMMAND,
-+	[FEATURE_PETE_LOG]		=3D LAYOUT_COMMAND,
-+	[FEATURE_TPMI_CTRL]		=3D LAYOUT_CAPS_ONLY,
-+	[FEATURE_TRACING]		=3D LAYOUT_CAPS_ONLY,
-+	[FEATURE_PER_RMID_ENERGY_TELEM]	=3D LAYOUT_RMID,
-+};
-+
-+struct pmt_cap pmt_cap_common[] =3D {
-+	{PMT_CAP_TELEM,		"telemetry"},
-+	{PMT_CAP_WATCHER,	"watcher"},
-+	{PMT_CAP_CRASHLOG,	"crashlog"},
-+	{PMT_CAP_STREAMING,	"streaming"},
-+	{PMT_CAP_THRESHOLD,	"threshold"},
-+	{PMT_CAP_WINDOW,	"window"},
-+	{PMT_CAP_CONFIG,	"config"},
-+	{PMT_CAP_TRACING,	"tracing"},
-+	{PMT_CAP_INBAND,	"inband"},
-+	{PMT_CAP_OOB,		"oob"},
-+	{PMT_CAP_SECURED_CHAN,	"secure_chan"},
-+	{PMT_CAP_PMT_SP,	"pmt_sp"},
-+	{PMT_CAP_PMT_SP_POLICY,	"pmt_sp_policy"},
-+	{}
-+};
-+
-+struct pmt_cap pmt_cap_pcpt[] =3D {
-+	{PMT_CAP_PCPT_CORE_PERF,	"core_performance"},
-+	{PMT_CAP_PCPT_CORE_C0_RES,	"core_c0_residency"},
-+	{PMT_CAP_PCPT_CORE_ACTIVITY,	"core_activity"},
-+	{PMT_CAP_PCPT_CACHE_PERF,	"cache_performance"},
-+	{PMT_CAP_PCPT_QUALITY_TELEM,	"quality_telemetry"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_pcpt[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_pcpt,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_pcet[] =3D {
-+	{PMT_CAP_PCET_WORKPOINT_HIST,	"workpoint_histogram"},
-+	{PMT_CAP_PCET_CORE_CURR_TEMP,	"core_current_temp"},
-+	{PMT_CAP_PCET_CORE_INST_RES,	"core_inst_residency"},
-+	{PMT_CAP_PCET_QUALITY_TELEM,	"quality_telemetry"},
-+	{PMT_CAP_PCET_CORE_CDYN_LVL,	"core_cdyn_level"},
-+	{PMT_CAP_PCET_CORE_STRESS_LVL,	"core_stress_level"},
-+	{PMT_CAP_PCET_CORE_DAS,		"core_digital_aging_sensor"},
-+	{PMT_CAP_PCET_FIVR_HEALTH,	"fivr_health"},
-+	{PMT_CAP_PCET_ENERGY,		"energy"},
-+	{PMT_CAP_PCET_PEM_STATUS,	"pem_status"},
-+	{PMT_CAP_PCET_CORE_C_STATE,	"core_c_state"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_pcet[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_pcet,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_rmid_perf[] =3D {
-+	{PMT_CAP_RMID_CORES_PERF,	"core_performance"},
-+	{PMT_CAP_RMID_CACHE_PERF,	"cache_performance"},
-+	{PMT_CAP_RMID_PERF_QUAL,	"performance_quality"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_rmid_perf[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_rmid_perf,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_accel[] =3D {
-+	{PMT_CAP_ACCEL_CPM_TELEM,	"content_processing_module"},
-+	{PMT_CAP_ACCEL_TIP_TELEM,	"content_turbo_ip"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_accel[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_accel,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_uncore[] =3D {
-+	{PMT_CAP_UNCORE_IO_CA_TELEM,	"io_ca"},
-+	{PMT_CAP_UNCORE_RMID_TELEM,	"rmid"},
-+	{PMT_CAP_UNCORE_D2D_ULA_TELEM,	"d2d_ula"},
-+	{PMT_CAP_UNCORE_PKGC_TELEM,	"package_c"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_uncore[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_uncore,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_crashlog[] =3D {
-+	{PMT_CAP_CRASHLOG_MAN_TRIG,	"manual_trigger"},
-+	{PMT_CAP_CRASHLOG_CORE,		"core"},
-+	{PMT_CAP_CRASHLOG_UNCORE,	"uncore"},
-+	{PMT_CAP_CRASHLOG_TOR,		"tor"},
-+	{PMT_CAP_CRASHLOG_S3M,		"s3m"},
-+	{PMT_CAP_CRASHLOG_PERSISTENCY,	"persistency"},
-+	{PMT_CAP_CRASHLOG_CLIP_GPIO,	"crashlog_in_progress"},
-+	{PMT_CAP_CRASHLOG_PRE_RESET,	"pre_reset_extraction"},
-+	{PMT_CAP_CRASHLOG_POST_RESET,	"post_reset_extraction"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_crashlog[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_crashlog,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_pete[] =3D {
-+	{PMT_CAP_PETE_MAN_TRIG,		"manual_trigger"},
-+	{PMT_CAP_PETE_ENCRYPTION,	"encryption"},
-+	{PMT_CAP_PETE_PERSISTENCY,	"persistency"},
-+	{PMT_CAP_PETE_REQ_TOKENS,	"required_tokens"},
-+	{PMT_CAP_PETE_PROD_ENABLED,	"production_enabled"},
-+	{PMT_CAP_PETE_DEBUG_ENABLED,	"debug_enabled"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_pete[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_pete,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_tpmi[] =3D {
-+	{PMT_CAP_TPMI_MAILBOX,		"mailbox"},
-+	{PMT_CAP_TPMI_LOCK,		"bios_lock"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_tpmi[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_tpmi,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_tracing[] =3D {
-+	{PMT_CAP_TRACE_SRAR,		"srar_errors"},
-+	{PMT_CAP_TRACE_CORRECTABLE,	"correctable_errors"},
-+	{PMT_CAP_TRACE_MCTP,		"mctp"},
-+	{PMT_CAP_TRACE_MRT,		"memory_resiliency"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_tracing[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_tracing,
-+	NULL
-+};
-+
-+struct pmt_cap pmt_cap_rmid_energy[] =3D {
-+	{PMT_CAP_RMID_ENERGY,		"energy"},
-+	{PMT_CAP_RMID_ACTIVITY,		"activity"},
-+	{PMT_CAP_RMID_ENERGY_QUAL,	"energy_quality"},
-+	{}
-+};
-+
-+struct pmt_cap *pmt_caps_rmid_energy[] =3D {
-+	pmt_cap_common,
-+	pmt_cap_rmid_energy,
-+	NULL
-+};
-diff --git a/include/linux/intel_pmt_features.h b/include/linux/intel_pmt_f=
-eatures.h
-new file mode 100644
-index 000000000000..53573a4a49b7
---- /dev/null
-+++ b/include/linux/intel_pmt_features.h
-@@ -0,0 +1,157 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _FEATURES_H
-+#define _FEATURES_H
-+
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+
-+/* Common masks */
-+#define PMT_CAP_TELEM			BIT(0)
-+#define PMT_CAP_WATCHER			BIT(1)
-+#define PMT_CAP_CRASHLOG		BIT(2)
-+#define PMT_CAP_STREAMING		BIT(3)
-+#define PMT_CAP_THRESHOLD		BIT(4)
-+#define PMT_CAP_WINDOW			BIT(5)
-+#define PMT_CAP_CONFIG			BIT(6)
-+#define PMT_CAP_TRACING			BIT(7)
-+#define PMT_CAP_INBAND			BIT(8)
-+#define PMT_CAP_OOB			BIT(9)
-+#define PMT_CAP_SECURED_CHAN		BIT(10)
-+
-+#define PMT_CAP_PMT_SP			BIT(11)
-+#define PMT_CAP_PMT_SP_POLICY		GENMASK(17, 12)
-+
-+/* Per Core Performance Telemetry (PCPT) specific masks */
-+#define PMT_CAP_PCPT_CORE_PERF		BIT(18)
-+#define PMT_CAP_PCPT_CORE_C0_RES	BIT(19)
-+#define PMT_CAP_PCPT_CORE_ACTIVITY	BIT(20)
-+#define PMT_CAP_PCPT_CACHE_PERF		BIT(21)
-+#define PMT_CAP_PCPT_QUALITY_TELEM	BIT(22)
-+
-+/* Per Core Environmental Telemetry (PCET) specific masks */
-+#define PMT_CAP_PCET_WORKPOINT_HIST	BIT(18)
-+#define PMT_CAP_PCET_CORE_CURR_TEMP	BIT(19)
-+#define PMT_CAP_PCET_CORE_INST_RES	BIT(20)
-+#define PMT_CAP_PCET_QUALITY_TELEM	BIT(21)	/* Same as PMT_CAP_PCPT */
-+#define PMT_CAP_PCET_CORE_CDYN_LVL	BIT(22)
-+#define PMT_CAP_PCET_CORE_STRESS_LVL	BIT(23)
-+#define PMT_CAP_PCET_CORE_DAS		BIT(24)
-+#define PMT_CAP_PCET_FIVR_HEALTH	BIT(25)
-+#define PMT_CAP_PCET_ENERGY		BIT(26)
-+#define PMT_CAP_PCET_PEM_STATUS		BIT(27)
-+#define PMT_CAP_PCET_CORE_C_STATE	BIT(28)
-+
-+/* Per RMID Performance Telemetry specific masks */
-+#define PMT_CAP_RMID_CORES_PERF		BIT(18)
-+#define PMT_CAP_RMID_CACHE_PERF		BIT(19)
-+#define PMT_CAP_RMID_PERF_QUAL		BIT(20)
-+
-+/* Accelerator Telemetry specific masks */
-+#define PMT_CAP_ACCEL_CPM_TELEM		BIT(18)
-+#define PMT_CAP_ACCEL_TIP_TELEM		BIT(19)
-+
-+/* Uncore Telemetry specific masks */
-+#define PMT_CAP_UNCORE_IO_CA_TELEM	BIT(18)
-+#define PMT_CAP_UNCORE_RMID_TELEM	BIT(19)
-+#define PMT_CAP_UNCORE_D2D_ULA_TELEM	BIT(20)
-+#define PMT_CAP_UNCORE_PKGC_TELEM	BIT(21)
-+
-+/* Crash Log specific masks */
-+#define PMT_CAP_CRASHLOG_MAN_TRIG	BIT(11)
-+#define PMT_CAP_CRASHLOG_CORE		BIT(12)
-+#define PMT_CAP_CRASHLOG_UNCORE		BIT(13)
-+#define PMT_CAP_CRASHLOG_TOR		BIT(14)
-+#define PMT_CAP_CRASHLOG_S3M		BIT(15)
-+#define PMT_CAP_CRASHLOG_PERSISTENCY	BIT(16)
-+#define PMT_CAP_CRASHLOG_CLIP_GPIO	BIT(17)
-+#define PMT_CAP_CRASHLOG_PRE_RESET	BIT(18)
-+#define PMT_CAP_CRASHLOG_POST_RESET	BIT(19)
-+
-+/* PeTe Log specific masks */
-+#define PMT_CAP_PETE_MAN_TRIG		BIT(11)
-+#define PMT_CAP_PETE_ENCRYPTION		BIT(12)
-+#define PMT_CAP_PETE_PERSISTENCY	BIT(13)
-+#define PMT_CAP_PETE_REQ_TOKENS		BIT(14)
-+#define PMT_CAP_PETE_PROD_ENABLED	BIT(15)
-+#define PMT_CAP_PETE_DEBUG_ENABLED	BIT(16)
-+
-+/* TPMI control specific masks */
-+#define PMT_CAP_TPMI_MAILBOX		BIT(11)
-+#define PMT_CAP_TPMI_LOCK		BIT(12)
-+
-+/* Tracing specific masks */
-+#define PMT_CAP_TRACE_SRAR		BIT(11)
-+#define PMT_CAP_TRACE_CORRECTABLE	BIT(12)
-+#define PMT_CAP_TRACE_MCTP		BIT(13)
-+#define PMT_CAP_TRACE_MRT		BIT(14)
-+
-+/* Per RMID Energy Telemetry specific masks */
-+#define PMT_CAP_RMID_ENERGY		BIT(18)
-+#define PMT_CAP_RMID_ACTIVITY		BIT(19)
-+#define PMT_CAP_RMID_ENERGY_QUAL	BIT(20)
-+
-+enum pmt_feature_id {
-+	FEATURE_INVALID			=3D 0x0,
-+	FEATURE_PER_CORE_PERF_TELEM	=3D 0x1,
-+	FEATURE_PER_CORE_ENV_TELEM	=3D 0x2,
-+	FEATURE_PER_RMID_PERF_TELEM	=3D 0x3,
-+	FEATURE_ACCEL_TELEM		=3D 0x4,
-+	FEATURE_UNCORE_TELEM		=3D 0x5,
-+	FEATURE_CRASH_LOG		=3D 0x6,
-+	FEATURE_PETE_LOG		=3D 0x7,
-+	FEATURE_TPMI_CTRL		=3D 0x8,
-+	FEATURE_RESERVED		=3D 0x9,
-+	FEATURE_TRACING			=3D 0xA,
-+	FEATURE_PER_RMID_ENERGY_TELEM	=3D 0xB,
-+	FEATURE_MAX			=3D 0xB,
-+};
-+
-+enum feature_layout {
-+	LAYOUT_RMID,
-+	LAYOUT_WATCHER,
-+	LAYOUT_COMMAND,
-+	LAYOUT_CAPS_ONLY,
-+};
-+
-+struct pmt_cap {
-+	u32		mask;
-+	const char	*name;
-+};
-+
-+extern const char * const pmt_feature_names[];
-+extern enum feature_layout feature_layout[];
-+extern struct pmt_cap pmt_cap_common[];
-+extern struct pmt_cap pmt_cap_pcpt[];
-+extern struct pmt_cap *pmt_caps_pcpt[];
-+extern struct pmt_cap pmt_cap_pcet[];
-+extern struct pmt_cap *pmt_caps_pcet[];
-+extern struct pmt_cap pmt_cap_rmid_perf[];
-+extern struct pmt_cap *pmt_caps_rmid_perf[];
-+extern struct pmt_cap pmt_cap_accel[];
-+extern struct pmt_cap *pmt_caps_accel[];
-+extern struct pmt_cap pmt_cap_uncore[];
-+extern struct pmt_cap *pmt_caps_uncore[];
-+extern struct pmt_cap pmt_cap_crashlog[];
-+extern struct pmt_cap *pmt_caps_crashlog[];
-+extern struct pmt_cap pmt_cap_pete[];
-+extern struct pmt_cap *pmt_caps_pete[];
-+extern struct pmt_cap pmt_cap_tpmi[];
-+extern struct pmt_cap *pmt_caps_tpmi[];
-+extern struct pmt_cap pmt_cap_s3m[];
-+extern struct pmt_cap *pmt_caps_s3m[];
-+extern struct pmt_cap pmt_cap_tracing[];
-+extern struct pmt_cap *pmt_caps_tracing[];
-+extern struct pmt_cap pmt_cap_rmid_energy[];
-+extern struct pmt_cap *pmt_caps_rmid_energy[];
-+
-+static inline bool pmt_feature_id_is_valid(enum pmt_feature_id id)
-+{
-+	if (id > FEATURE_MAX)
-+		return false;
-+
-+	if (id =3D=3D FEATURE_INVALID || id =3D=3D FEATURE_RESERVED)
-+		return false;
-+
-+	return true;
-+}
-+#endif
---=20
-2.43.0
-
+> +			return -ENOMEM;
+>  		memcpy(buf, from, step_len);
+>  		if ((off += step_len) >= this->b_size) off = 0;
+>  		from += step_len;
+> -- 
+> 2.43.0
+> 
+> 
+> On 2025-07-02 22:27, Manas Gupta via B4 Relay wrote:
+> > From: Manas Gupta <manas18244@iiitd.ac.in>
+> > 
+> > memcpy tries to copy buffer 'from' when it is empty. This leads to
+> > out-of-bounds crash.
+> > 
+> > This checks if the buffer is already empty and throws an appropriate
+> > error message before bailing out.
+> > 
+> > Fixes: 6f23ee1fefdc1 ("USB: add binary API to usbmon")
+> > Reported-by: syzbot+86b6d7c8bcc66747c505@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=86b6d7c8bcc66747c505
+> > Signed-off-by: Manas Gupta <manas18244@iiitd.ac.in>
+> > ---
+> > I have used printk(KERN_ERR ... to keep things consistent in usbmon.
+> > dev_err and pr_err are not used anywhere else in usbmon.
+> > ---
+> >  drivers/usb/mon/mon_bin.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+> > index c93b43f5bc4614ad75568b601c47a1ae51f01fa5..bd945052f6fb821ba814fab96eba5a82e5d161e2
+> > 100644
+> > --- a/drivers/usb/mon/mon_bin.c
+> > +++ b/drivers/usb/mon/mon_bin.c
+> > @@ -249,6 +249,11 @@ static unsigned int mon_copy_to_buff(const struct
+> > mon_reader_bin *this,
+> >  		 * Copy data and advance pointers.
+> >  		 */
+> >  		buf = this->b_vec[off / CHUNK_SIZE].ptr + off % CHUNK_SIZE;
+> > +		if (!strlen(from)) {
+> > +			printk(KERN_ERR TAG
+> > +			       ": src buffer is empty, cannot copy from it\n");
+> > +			return -ENOMEM;
+> > +		}
+> >  		memcpy(buf, from, step_len);
+> >  		if ((off += step_len) >= this->b_size) off = 0;
+> >  		from += step_len;
+> > 
+> > ---
+> > base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+> > change-id: 20250703-fix-oob-mon_copy_to_buff-7cfe26e819b9
+> > 
+> > Best regards,
+> 
