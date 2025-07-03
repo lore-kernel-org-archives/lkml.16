@@ -1,156 +1,229 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D052D77E8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2932D77FF;
+	Thu,  3 Jul 2025 09:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535004; cv=none; b=ifjwE07u1iXRows+eIkSI4mgeVijSfy+St8+o/XMZct/PBmT/FNQSUaHGfYpOQff3xWKu52wdbyo9WfLEvACsKjvjsVmnmLIni6VcA4dXpxHXdSLlcM3M9Yk/d6XICnpwd+JYgGIBmGOGhM137d5G5G0w0BRuFzrc7JVBVM+0f0=
+	t=1751535007; cv=none; b=mke3AFYbr+jh1UBYPBUSX92J8OcAUm4/MF3PWMrfUPvS6NP1+r7cgNmE3qeYW1eGTOrdjWUJAdAbpuGLI/mzIkaHKEqF3a+FCpXuNIOJ0XOuXyKgG2pRUGtpjGvNv6hG1suPTzhhRf5pqNzK6M+OI2x9nRrgDKa2xVJVcyzUs+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535004; c=relaxed/simple;
-	bh=NUbOO1LkhU4fqWdYniY0ngtGCX4mheJRlQgsq40wJm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k8PaCDuDilPV51h2MdJzy5ztSkriLlIx00MLvbHzzD0/WNUakKKeiyuNfqlscoKsPo4OFR0U9dhfFU38qtcBn82Cs7Mm9j+P54GCY66b9w6g02Tc6aGGd0oNKFaN3zd/4SxU6or513rlW4BB6E/xxDKQhlDxMTxkwxrOPo0YcSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=uz0FWDvU; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="uz0FWDvU"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0dd7ac1f5so1368301666b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1751535000; x=1752139800; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIWiG9dqFQFHdKj4M2wbUUNwQxdB0m9vMthTEJMZrmc=;
-        b=uz0FWDvUXoXq5v64nPtdUhYogPICqd2o7D9WDNZPKgfUW+e/B40CVr7LwwVxS9KRkZ
-         ksNUshvsWw55k6IwKYJ8oplhAnCkHhcfg1qfzCE8yli2+lOdCXMUUmvbrS9Fi5eCKZ8Y
-         iXK8okeq1qf7CYnlSjAjoGS1E8IirziiMj307ItxLzdFxEBtVsf3bMTxStURIWzK7aaG
-         jfhMnkpR7CLxETs4GfYAgqt1o1EKoSpBLIP+n3gT8S5I2uJ5tyM6IfAuC6DXSuPJg4f+
-         2ufSmJjGxTR0nV8gShuh8j8Z+RniexXRD8jv78k+ULiJHagIB+0Q2bnXEIBJCcavd05/
-         /Cjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751535000; x=1752139800;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QIWiG9dqFQFHdKj4M2wbUUNwQxdB0m9vMthTEJMZrmc=;
-        b=PFc+rNBOivQJlY1Md79FF464UiC+P/U0+83r3cnvskdHNKxm1B/++TI0JP8zh7EOSQ
-         fE9dkL5gCaV5w6D8K3cf2Uj8YUP2i4dmN54KbPTupp/+dsqzI2DZsz4Ay3u4FABd1FJU
-         dQCbqjVGkp9eUgDW063DDc4I3AYxF2XU3NhhjcQyw4IP39LnvWe8z3VerMoz3K8bBrz+
-         U4OogQE5XLhduEFAhyHrzepbrtXdBO40MFhadvvGGvv96jDdrhkNFPaZNtDgPUSQXkaG
-         z8Ld3JmUMUgqlQs16mCOVsQ3FwdDENF/i4UQPaHrlNVC2Lb+kqPhYMV6vyti0GZyJ+49
-         SSsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF1Lm+AG0bMFN5uzS9yy/nsgTk5z0QiuigpoVJolX46L0vj7ux0zj7QrRhisUy2TmttJ3hOVGNcuywYEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGo7biAtax0jr/bfALXChrmM0rnxU+xFoYw3PLh4ksE5nN8777
-	FFtnypJuRL0Aq0ro4zq8TdG5czGmJJO6FgnYq6vaBTwYWQ4QypE8B4q4xVcA5Syd5N7AYmtye7B
-	cV2FW
-X-Gm-Gg: ASbGncvMQrlAGTvWzTPDwE6AVQho4gr6WbkmHJZCN9LsTf9VQnMY7Zg3f2RzZuFCDOi
-	2mnoSX5TF8vCCNLGiHLGuRVEDPcDTxgxQyxMMcnxiZ6ebnvljlW2ScjvVN6NX4Y8PLBN8MYeF5t
-	ekLwRyuhM6LjKsisJ+6r43+Gizy74H3PxrjyDcdXSPUWxgMGoUblIP/ev3HZQxQoEHp0vUil019
-	xcZPtx3x1HlkkYHC5ab4sJpk+jg6kflJEDwh8wuCsEJtErTQE/0esN39snhPMJxYjd1QsS0QU1L
-	xOu4LBpldrmeY0r9aGm1BW4w2jUQ3UtK3J+r9zlcMf8JUwEwO2t+cYw3ZN75wR80lNPX5pwIHiu
-	AdZZdJGhTPOiNoBkLdaWJl3HP7+E=
-X-Google-Smtp-Source: AGHT+IF6ggB54PB58WsdUlPptBXf+B1DdD84f3tx0QpZNb0Gubfb/YJFRtUnI7TT/jSbgpB2+0kCpA==
-X-Received: by 2002:a17:907:a088:b0:adb:4143:4c8 with SMTP id a640c23a62f3a-ae3d83c0c05mr192246666b.8.1751534999498;
-        Thu, 03 Jul 2025 02:29:59 -0700 (PDT)
-Received: from somecomputer (85-127-104-84.dsl.dynamic.surfer.at. [85.127.104.84])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a021sm1256411366b.54.2025.07.03.02.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:29:59 -0700 (PDT)
-From: Richard Weinberger <richard@sigma-star.at>
-To: Damien Le Moal <dlemoal@kernel.org>, upstream@sigma-star.at
-Cc: Richard Weinberger <richard@nod.at>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, kch@nvidia.com, sagi@grimberg.me, hch@lst.de,
- upstream+nvme@sigma-star.at, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2] nvmet: Make blksize_shift configurable
-Date: Thu, 03 Jul 2025 11:29:58 +0200
-Message-ID: <2880421.FSEd18e0ET@nailgun>
-In-Reply-To: <20250703085451.GA4459@lst.de>
-References:
- <20250630191341.1263000-1-richard@nod.at>
- <132c1bdf-e100-4e3a-883f-27f9e9b78020@kernel.org>
- <20250703085451.GA4459@lst.de>
+	s=arc-20240116; t=1751535007; c=relaxed/simple;
+	bh=ammVNu30WDVN5jEEqGssYZKkOvQnpMM5FyGYLZGNyKc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gpRwyFjhjCKJ8t+oKPwKocxC1+tOdWLj/ARRyiH1B24BQy+GL9VC9Oz4dNNe+hn++gh9cIdP1VJFrQwRkQA1YftjAfZoAayifF99Xnrxxj9/c+qxtEa+ya8pPdZqhL0n/jp94teNnkVfsfQ5L37033z3rrvY/T+/vwjizzSXaVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4857af8057f011f0b29709d653e92f7d-20250703
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:fb65c855-279a-4f21-9949-176d3165a549,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:bc53333ac3cd15831769d67461648726,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4857af8057f011f0b29709d653e92f7d-20250703
+X-User: dengjie03@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <dengjie03@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 280611619; Thu, 03 Jul 2025 17:29:56 +0800
+From: Jie Deng <dengjie03@kylinos.cn>
+To: stern@rowland.harvard.edu
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	linux-kernel@vger.kernel.org,
+	Jie Deng <dengjie03@kylinos.cn>
+Subject: [PATCH] usb: storage: Ignore UAS driver for SanDisk Extreme Pro 55AF storage device
+Date: Thu,  3 Jul 2025 17:29:46 +0800
+Message-Id: <20250703092946.939936-1-dengjie03@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Donnerstag, 3. Juli 2025 10:54 Christoph Hellwig wrote:
-> On Tue, Jul 01, 2025 at 09:34:00AM +0900, Damien Le Moal wrote:
-> > Even if internally you use the block size bit shift, I think it would b=
-e better
-> > if the user facing interface is the block size as that is much easier to
-> > manipulate without having to remember the exponent for powers of 2 valu=
-es :)
->=20
-> Yeah, block sizes are probably a nice user interface indeed.
+The SanDisk Extreme Pro 55AF storage device(0781:55af) has poor compatibility with UAS drivers.
+The logs:
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.359859][ 0] [  T163] usb 2-1: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.385708][ 0] [  T163] usb 2-1: New USB device found, idVendor=0781, idProduct=55af, bcdDevice=10.85
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.385709][ 0] [  T163] usb 2-1: New USB device strings: Mfr=2, Product=3, SerialNumber=1
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.385710][ 0] [  T163] usb 2-1: Product: Extreme Pro 55AF
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.385711][ 0] [  T163] usb 2-1: Manufacturer: SanDisk
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.385711][ 0] [  T163] usb 2-1: SerialNumber: 323234323935343030343636
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.927603][ 0] [  T306] usbcore: registered new interface driver usb-storage
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.940511][ 0] [  T306] scsi host3: uas
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.940584][ 0] [  T306] usbcore: registered new interface driver uas
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.940843][ 0] [  T188] scsi 3:0:0:0: Direct-Access     SanDisk  Extreme Pro 55AF 1085 PQ: 0 ANSI: 6
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.941363][ 0] [  T188] scsi 3:0:0:1: Enclosure         SanDisk  SES Device       1085 PQ: 0 ANSI: 6
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.941697][ 0] [  T188] sd 3:0:0:0: Attached scsi generic sg0 type 0
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.941783][ 0] [  T188] scsi 3:0:0:1: Attached scsi generic sg1 type 13
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.942296][ 0] [  T189] sd 3:0:0:0: [sda] 1953459617 512-byte logical blocks: (1.00 TB/931 GiB)
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.942373][ 0] [  T189] sd 3:0:0:0: [sda] Write Protect is off
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.942374][ 0] [  T189] sd 3:0:0:0: [sda] Mode Sense: 37 00 10 00
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.942534][ 0] [  T189] sd 3:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.943586][ 0] [  T189] sd 3:0:0:0: [sda] Optimal transfer size 2097152 bytes
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.976797][ 0] [  T189]  sda: sda1
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.977898][ 0] [  T189] sd 3:0:0:0: [sda] Attached SCSI disk
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.980406][ 0] [  T267] scsi 3:0:0:1: Failed to get diagnostic page 0x1
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.980408][ 0] [  T267] scsi 3:0:0:1: Failed to bind enclosure -19
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.980414][ 0] [  T267] ses 3:0:0:1: Attached Enclosure device
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.981068][ 0] [    C0] sd 3:0:0:0: [sda] tag#10 data cmplt err -75 uas-tag 1 inflight: CMD
+Jun 23 18:21:48 FD-0528-pc kernel: [    1.981071][ 0] [    C0] sd 3:0:0:0: [sda] tag#10 CDB: Read(10) 28 00 74 6f 6d 00 00 00 08 00
+Jun 23 18:21:48 FD-0528-pc kernel: [   33.819186][ 0] [  T188] sd 3:0:0:0: [sda] tag#10 uas_eh_abort_handler 0 uas-tag 1 inflight: CMD
+Jun 23 18:21:48 FD-0528-pc kernel: [   33.819188][ 0] [  T188] sd 3:0:0:0: [sda] tag#10 CDB: Read(10) 28 00 74 6f 6d 00 00 00 08 00
+Jun 23 18:21:48 FD-0528-pc kernel: [   33.843186][ 0] [  T309] scsi host3: uas_eh_device_reset_handler start
 
-Ok!
+Device decriptor is below:
+Bus 002 Device 003: ID 0781:55af SanDisk Corp. Extreme Pro 55AF
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               3.20
+  bDeviceClass            0
+  bDeviceSubClass         0
+  bDeviceProtocol         0
+  bMaxPacketSize0         9
+  idVendor           0x0781 SanDisk Corp.
+  idProduct          0x55af
+  bcdDevice           10.85
+  iManufacturer           2 SanDisk
+  iProduct                3 Extreme Pro 55AF
+  iSerial                 1 323234323935343030343636
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x0079
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0
+    bmAttributes         0x80
+      (Bus Powered)
+    MaxPower              896mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass         8 Mass Storage
+      bInterfaceSubClass      6 SCSI
+      bInterfaceProtocol     80 Bulk-Only
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst              15
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst              15
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       1
+      bNumEndpoints           4
+      bInterfaceClass         8 Mass Storage
+      bInterfaceSubClass      6 SCSI
+      bInterfaceProtocol     98
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst              15
+        MaxStreams             32
+        Data-in pipe (0x03)
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst              15
+        MaxStreams             32
+        Data-out pipe (0x04)
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst              15
+        MaxStreams             32
+        Status pipe (0x02)
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x04  EP 4 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0400  1x 1024 bytes
+        bInterval               0
+        bMaxBurst               0
+        Command pipe (0x01)
 
->=20
-> > 		pr_err("Configured blksize needs to be at least %u for device %s\n",
-> > 			bdev_logical_block_size(ns->bdev),
-> > 			ns->device_path);
-> > 		return -EINVAL;
-> > 	}
-> >=20
-> > Also, if the backend is an HDD, do we want to allow the user to configu=
-re a
-> > block size that is less than the *physical* block size ? Performance wi=
-ll
-> > suffer on regular HDDs and writes may fail with SMR HDDs.
->=20
-> I don't think we should babysit the user like that, just like we allow
-> creating file systems with block size smaller than the physical block
-> size.
+So ignore UAS driver for this device.
 
-I'm fine with either way.
+Signed-off-by: Jie Deng <dengjie03@kylinos.cn>
+---
+ drivers/usb/storage/unusual_uas.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->=20
-> > > +			if (!vfs_getattr(&ns->file->f_path, &st, STATX_DIOALIGN, 0) &&
-> > > +			    (st.result_mask & STATX_DIOALIGN) &&
-> > > +			    (1 << ns->blksize_shift) < st.dio_offset_align)
-> > > +				return -EINVAL;
-> > > +
-> > > +			if (sb_bdev && (1 << ns->blksize_shift < bdev_logical_block_size(=
-sb_bdev)))
-> > > +				return -EINVAL;
-> >=20
-> > I am confused... This is going to check both... But if you got STATX_DI=
-OALIGN
-> > and it is OK, you do not need (and probably should not) do the second i=
-f, no ?
-> >=20
-> > Also, the second condition of the second if is essentially the same che=
-ck as
-> > for the block dev case. So maybe reuse that by creating a small helper =
-function ?
->=20
-> This code is copy and pasted from loop, so it's originally my fault.
-> It just missed the comment that explains why it is there:
->=20
-> 	/*
->          * In a perfect world this wouldn't be needed, but as of Linux 6.=
-13 only
->          * a handful of file systems support the STATX_DIOALIGN flag.
->          */
-
-Well, my code is the other way around. I checks the logical block size of a=
- device
-even if STATX_DIOALIGN succeeded, which is a bit too paranoid I guess.
-
-Thanks,
-//richard
-
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
-ATU 66964118 | FN: 374287y
-
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index 1477e31d7763..9f093a6af7f9 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -199,3 +199,10 @@ UNUSUAL_DEV(0x4971, 0x8024, 0x0000, 0x9999,
+ 		"External HDD",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_ALWAYS_SYNC),
++
++/* Reported-by: Jie Deng <dengjie03@kylinos.cn> */
++UNUSUAL_DEV(0x0781, 0x55af, 0x0000, 0x9999,
++		"SanDisk",
++		"Extreme Pro 55AF",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_IGNORE_UAS),
+-- 
+2.25.1
 
