@@ -1,77 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9568B24DD07;
-	Thu,  3 Jul 2025 11:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4022E267B;
+	Thu,  3 Jul 2025 11:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751543169; cv=none; b=NvgCntIOehWnWjPJ+41aX1bAxLDGsYZrjQdHHbBe4m0oc1emPrqGacgPMgDUJh0yK78uf37ZLnBUjy/CRGuFt9QK4GpvtUDiZnUBr0JrGv0a0/BpETRtrOKgf2U8IP9WkGTX9G70lKmVVCvTRbQo7450bDVIHPOKC9EGmckymdI=
+	t=1751543170; cv=none; b=tSAg8wfjB6bABj2GxhnR+stvn5FzA0hISUcpF6seFkLcVnHQ/x0PlR8DB6pBS8B2LA0ATipWff0JpXoN5ML73y50KpxkuGsOqREpEmWOD7Z1hT6CqWt13WPfGRQWOAQMB9GEY3oIhlyzATBxCwrSRUlXwRG/BgEkknKgtyZ4DTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751543169; c=relaxed/simple;
-	bh=2k11KvoMBeQIvrAWZA7P5gWj9h1H7/1T5f53ZD8lUOM=;
+	s=arc-20240116; t=1751543170; c=relaxed/simple;
+	bh=SaOLZYAvxBJHY9SXYKJzXOhjVc8dEjGQSwYhkSs/WXw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qpNjrKrInjTExdTO9XV+834QPUZTVTB7DeWg1yMgXEfu6eH+X6WsQ7JKn2/+9/9I4lenZbSCu+OYRvGvdrfInPgHKNEFYK51LtLyscpC/6BUKKiqzlJaVLPJBWLi0vujQTXYOSm1iKN2C+cftBholPK4vdaicBvvFkjCmYjSSIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD9DF1596;
-	Thu,  3 Jul 2025 04:45:45 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5B1E3F6A8;
-	Thu,  3 Jul 2025 04:45:59 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:45:57 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: cov@codeaurora.org, rmk+kernel@armlinux.org.uk, mark.rutland@arm.com,
-	catalin.marinas@arm.com, linux-serial@vger.kernel.org,
-	rmikey@meta.com, linux-arm-kernel@lists.infradead.org,
-	usamaarif642@gmail.com, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: arm64: csdlock at early boot due to slow serial (?)
-Message-ID: <20250703114557.GD1039028@e132581.arm.com>
-References: <aGVn/SnOvwWewkOW@gmail.com>
- <20250702172036.GC1039028@e132581.arm.com>
- <aGZVP8A2a3VVQwzt@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADiRyuFnRMaA6LJK3y9GYMFBHoj2ITQczJ7IHYGY3p8adHAWpYTgPLpcrg6jIoOGfrOdv0todnPDp5dL8Bd3HcOJJVrhTAkn7+UmbYPjkf7+TtWtu1qoBBM2xifluAEBvMErEneLbl0h5M08gJ2cp+9srEinbbh1kiW9xzHTiNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SdzgeONL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdzgeONL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=LVjnHK2a2/GS8JYOQqAkvsSJ569rLPDcokWUDEILfso=; b=SdzgeONLE0Cs/spa7Ech+FjeJR
+	uUtVmD7cSnZ+6KeETxIeGJ0LCoLK580X2oh6bF3SdRoFLS9qASFrCRLqkuU8kF6S2ACiwM7IiOmiu
+	oBoszR+/N1SUVPi7YNRMxU4uJtkfnXpcrxOPlR13goCBbbNOenZLqK62kfj9sGUBHTcbF5g3FTVxw
+	n11VCCHII9HBNq41D32dMXZ9Fb7qBP0hL4b6s7oAcTeL2Bu0h4/MjCioH7Ztg72L0Euz6vKk6S1fn
+	IsDFZLUIoXwX4dv7bzSbFJsPiqNInlB60/tAjzguvvt+6wWAoyIzSL874/4HpJNxsguwpae0OdnVS
+	XWKn310Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXIO1-0000000CwiZ-3tcP;
+	Thu, 03 Jul 2025 11:45:53 +0000
+Date: Thu, 3 Jul 2025 12:45:53 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "hch@infradead.org" <hch@infradead.org>
+Cc: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>,
+	"tytso@mit.edu" <tytso@mit.edu>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+	"tursulin@ursulin.net" <tursulin@ursulin.net>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chentao325@qq.com" <chentao325@qq.com>,
+	"frank.li@vivo.com" <frank.li@vivo.com>
+Subject: Re: [PATCH v3 4/4] ext4: support uncached buffered I/O
+Message-ID: <aGZtcSIryAj4zJtF@casper.infradead.org>
+References: <20250627110257.1870826-1-chentaotao@didiglobal.com>
+ <20250627110257.1870826-5-chentaotao@didiglobal.com>
+ <aF7OzbVwXqbJaLQA@casper.infradead.org>
+ <aGIxiOeJ_-lmRmiT@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aGZVP8A2a3VVQwzt@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGIxiOeJ_-lmRmiT@infradead.org>
 
-On Thu, Jul 03, 2025 at 03:02:39AM -0700, Breno Leitao wrote:
-
-[...]
-
-> > In some cases, if normal world and secure world share the same UART
-> > port, it can cause the UART state machine malfunction and long wait.
+On Sun, Jun 29, 2025 at 11:41:12PM -0700, hch@infradead.org wrote:
+> On Fri, Jun 27, 2025 at 06:03:09PM +0100, Matthew Wilcox wrote:
+> > On Fri, Jun 27, 2025 at 11:03:13AM +0000, 陈涛涛 Taotao Chen wrote:
+> > I think this needs to be:
+> > 
+> > 	if (iocb && iocb->ki_flags & IOCB_DONTCACHE)
+> > 
+> > because it's legit to call write_begin with a NULL argument.  The
+> > 'file' was always an optional argument, and we should preserve that
+> > optionality with this transformation.
 > 
-> I don't know how to check it for sure, but, looking at the serial
-> console output, I don't see anything else using the UART. The only
-> output I see on the console at that time is coming from linux kernel.
-> 
-> Would you recommend any additional check?
+> write_begin and write_end are only callbacks through helpers called
+> by the file system.  So if the file system never passes a NULL
+> file/kiocb it doesn't need to check for it.
 
-I have no experience in the driver, I should avoid any noise. But two
-things in my head for quick trying.
+Sure, but some of those helpers are non-obvious, like page_symlink().
 
-- First, you could try earlycon mode, e.g., add option in kernel
-  command line:
-  
-    earlycon=pl011,mmio32,0xc280000
-    earlycon=pl011,0xc280000
-
-  This would be possible to give more printing logs. If earlycon works
-  well, then the issue might be caused by later init code (clock, or
-  UART driver itself).
-
-- Try another UART port if this is possible.
-
-Just curious, you mentioned you are working on the mainline kernel. If
-you can confirm a workable kernel version, then this info can help to
-rule out hardware issue and we can review the delta changes.
-
-Thanks,
-Leo
