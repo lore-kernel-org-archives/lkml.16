@@ -1,109 +1,82 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D5C259CAF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E372580E2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560781; cv=none; b=Oy7gHGt6IgM8O/JyoU/I/aW8Qs1eAJjwLSIe9PQ8MuwESg/d/rf04qftJ33x5v7ECmHw0InGJ4nKNut3flwNwuBlQaBugHyP8UMw9wDZWTYuazm6u80k5v6jdu3lo6Wl/aYHJOyBYhlTt16i2S23IN/JQLWbwLResFiT3tkiRrQ=
+	t=1751560793; cv=none; b=BmRuZL/62sIKiciidv1+W0DnRlL13Lm8m+avznalBK3rlsaujroMzhPesuxCIhMmw2iyf3ka4jo6VWZL1cPMlI8WdpDIYuP7I6y2+3c3Dge7fXDfz9flFod4uklNlZ0A12wKbBQKyMgC/3jnFvKlQ4dbe2jWvsYbjHD2eyXIm2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560781; c=relaxed/simple;
-	bh=AJBCLhZWdjOBgCD1smyX71MFhrqFmFPh/WG4+1amZyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pxKtca/H0vY/e2izRzn+pmJJ852SXu2n5h2O+tXIQ2baDWUNoXGDrIqrdSo8BmvVnzMMJACLXDuCYGUQAwo2RXnhn+Ju7HoukMnp/O3hDUg4yq87X+T8zFay0OXC72tvafvot9mB5a5qtFZhjaCRmiIFVmKJEJA3sKMSRZxdniw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=Nli/qseQ; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
+	s=arc-20240116; t=1751560793; c=relaxed/simple;
+	bh=01jH8r428sLMr1d83sAv7rayhaGU9MJiVCYZ+lKY90Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=C7S/IdcEfcVhmLXoD8z/z88OStAKvvyYDpCDd/sHgSsmRVhQQTZ8uSNzk0/feKNPeysdnw/UMVD+x9FVEpyJycFjn2DBcksixt6xkZmHIJSZu3EDQkc1ZFiHrmNdW3OUKXiREhNB2AszoZu1P8PD8foL5fJpi+m1ALFscKrVsXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DJuR/T0G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VDi6FmiS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="Nli/qseQ"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7426c44e014so224467b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1751560779; x=1752165579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vFvcp/2SBfCsuhz1Gt3KZ5rIg4J2coSjWWNFBPpEbm4=;
-        b=Nli/qseQ5GGn4qMpDZpc15eds604ciZzWvClSfi15GJMo2XKSLI1HeML8uTdXaBnbU
-         Vh4Sp8q+kBl1lYDEJkzKtwolplK03Jmv7hqr29iC1/BaOPt4aRurqUAh2kMXdalf1JEk
-         1pPE7zBnBWPp5hyLLadOuvJTR7Oz/r7MiSAoNW9QKbOF3SOkWiNf9nU3Nsip6oh+3UEo
-         u85GUIx6BKONPpvlg0lpLdYOXMUHsm3RJbCv/HonCZWrRkX5opAduU5S8mUxpeQw1m+E
-         RUrZc93dB48FoufsuqoMRQSdzWesNMKxFAQ7qXsJnqqN4T3gScMV1c8asmvvcNFeDpid
-         tQYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751560779; x=1752165579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vFvcp/2SBfCsuhz1Gt3KZ5rIg4J2coSjWWNFBPpEbm4=;
-        b=TrzyCpHSBfl/fP5AmMpsqggieXtXVssaJ7S0LbJJJVFT1CajwlEoniLOuA7Tvqice0
-         kJiSpLXmLAY//Ss/TtrVo42skg1+NWGBiF4i2xhCkLVnwgTE6L8Oc9sX3cPmxXcRvYuy
-         Si1wg74dRB98F+sWwaQVBKD6Oo0oSySRHZpos1vLwC4Ka4xrkAK+Wpxzlnw3fLDyiG7Q
-         gjo5y9Gdt3OQ5TH4oiez7pQeWUg6hi0uHX9dFmZtldv80vxRWNXbb+sM+2Xmt7mtkGL/
-         ZeFM5CTVeChqt5r/vqzA1lGwh+EcCHpVwWKBphDDPeLhE1pNxp0hA56IqLjRIHdc13vp
-         l+9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWpyiMicp7XmR6eNm4rbIcWSxtPd3KQzdPmkw/DPG8mbw/ErfxZsnr2L/SxCCAydgPrM40VS/NLxNrcMpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynwTaXZULOPeAsXkQv9MxEJPeuHiT5S05AHfn3elgewzzw55gX
-	wJNjcJSRAw1Q+6Up0oVxBxkcWjvDEYSxkoA7gwLfxSKsHiUOgg6/JekavtrBKOMKmNHH++GRv2r
-	bSjYduMa1hcfyiHh4dzGHS4PFEVumaNJ2Ldtvpvuc1g2s+VPAWSI=
-X-Gm-Gg: ASbGncuO3oJWjNQiSVaQA5+F2qXk3H8gy0sovciGR7BsabeonbPfdugGgVzKshlHXQM
-	JnPfBrKI3tplIAHle9k9n9lif9f76PE0vlcG1zP2PMRzcUaac4I54yJYOS/Av23bJFQJh2lAkvh
-	wXvLKlP7j73aM8hXIZGGgcDqYkmt8j1f3Vi2HDxcj/RQ==
-X-Google-Smtp-Source: AGHT+IFz/tty/KbZCIqVMSBW/IY7VmKn+WafAd4UBuzZLL76rgE18vyMvHSfq4cziXjtk/ACaLQVoVekX+BYY7KEhzs=
-X-Received: by 2002:a05:6a00:1788:b0:748:edf5:95de with SMTP id
- d2e1a72fcca58-74cd165c1a0mr4540738b3a.10.1751560778870; Thu, 03 Jul 2025
- 09:39:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DJuR/T0G";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VDi6FmiS"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751560789;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jjOLwEZEZwj6P2cZondP2eaYEZTd2Boa5qjSBHDModI=;
+	b=DJuR/T0GsNfopXDnSPcTyaZ77QMbyWDWudCydZqj1R20l4csZI3pzmc6P8WYaOjMUxKQs/
+	2ZSqUQJ/lc/+z7OGomXF/F8zgIkgL55T6x3pOq5PXga8aIfajQC9Xb2q/LtGBALayPZ7gy
+	+ZV6B7NjyWGdkQvcaO2nSF//VKsZ5sbnVJEWQJrSEMkcU0M2GqNLAj6bz/8hUVDkNPQMq6
+	JR4tHEirmSORHx08aAjw/ia8ykAhe6VGAjvH00Br3HTIx5CoLrsnDr0ithECDHVkCqee1G
+	jqlVo8ZdLWw0hWRTd4BbXcXx3jr1h9XUL9JgsAvV5ghOlx1Mc4zciIAO2frPqw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751560789;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jjOLwEZEZwj6P2cZondP2eaYEZTd2Boa5qjSBHDModI=;
+	b=VDi6FmiSJTl7dRJH5WanB3BzmI9QfNeyqElOW0KK/ZxJkACgTIdSDNc79HsNI+KjvOpSVZ
+	ejAsrSbh+puqqvCg==
+To: Nam Cao <namcao@linutronix.de>, Johannes Berg <johannes@sipsolutions.net>
+Cc: Marc Zyngier <maz@kernel.org>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] um: virt-pci: Switch to
+ msi_create_parent_irq_domain()
+In-Reply-To: <20250630070249.oVVkmFZg@linutronix.de>
+References: <cover.1751266049.git.namcao@linutronix.de>
+ <5f0bd8e877e7bfdfb1a7e99d6b126caf6a7eea48.1751266049.git.namcao@linutronix.de>
+ <e64a4c40b0234fc265a74cb60633117dc6911518.camel@sipsolutions.net>
+ <20250630070249.oVVkmFZg@linutronix.de>
+Date: Thu, 03 Jul 2025 18:39:48 +0200
+Message-ID: <87plehtei3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <68663c93.a70a0220.5d25f.0857.GAE@google.com> <68666a48.a00a0220.c7b3.0003.GAE@google.com>
- <CAM0EoM=JWBb-Ap8Wutic8-7k7_+5rrt-t65h5Bv-iyiJ+JtOCA@mail.gmail.com>
-In-Reply-To: <CAM0EoM=JWBb-Ap8Wutic8-7k7_+5rrt-t65h5Bv-iyiJ+JtOCA@mail.gmail.com>
-From: Jamal Hadi Salim <jhs@mojatatu.com>
-Date: Thu, 3 Jul 2025 12:39:27 -0400
-X-Gm-Features: Ac12FXyWQz0PUHIUtvscAG_GY56CKkqB8RuzS5xnkfPHcGQKJxY1PmvlH9ooA_w
-Message-ID: <CAM0EoM=TwzOF9Osb4qtHzxdBcHewKFq_nAYAqx64UTjOF_Z55w@mail.gmail.com>
-Subject: Re: Lion, can you take a look at his? WAS(Re: [syzbot] [net?] general
- protection fault in htb_qlen_notify
-To: syzbot <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com>, 
-	Lion <nnamrec@gmail.com>
-Cc: David Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Simon Horman <horms@kernel.org>, Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linux Kernel Network Developers <netdev@vger.kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Jul 3, 2025 at 11:05=E2=80=AFAM Jamal Hadi Salim <jhs@mojatatu.com>=
- wrote:
+Johannes,
+
+On Mon, Jun 30 2025 at 09:02, Nam Cao wrote:
+> On Mon, Jun 30, 2025 at 08:55:54AM +0200, Johannes Berg wrote:
+>> On Mon, 2025-06-30 at 08:51 +0200, Nam Cao wrote:
+>> > Move away from the legacy MSI domain setup, switch to use
+>> > msi_create_parent_irq_domain().
+>> > 
+>> 
+>> Do you want this to go through the UML tree, or is it a dependency
+>> somewhere else? In the latter case, I suppose you can add
 >
-> On Thu, Jul 3, 2025 at 7:32=E2=80=AFAM syzbot
-> <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has found a reproducer for the following issue on:
-> >
-> > HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.=
-org..
-> > git tree:       net
-
-[..]
-> It is triggered by your patch. On the first try, removing your patch
-> seems to fix it.
-> It may have nothing to do with your patch i.e your patch may have
-> opened it up to trigger an existing bug.
-> You removed that if n=3D0, len=3D0 check which earlier code was using to
-> terminate the processing.
+> Please take it into the UML tree.
 >
+>> Acked-by: Johannes Berg <johannes@sipsolutions.net>
+>> Tested-by: Johannes Berg <johannes@sipsolutions.net>
 
-Ok, after some more digging - this is not a bug you caused but rather
-one you exposed.
-We are looking into it.
+are you picking this up or want me to queue it?
 
-cheers,
-jamal
-> cheers,
-> jamal
+Thanks,
+
+        tglx
