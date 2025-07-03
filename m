@@ -1,291 +1,198 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2063.outbound.protection.outlook.com [40.107.220.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F54E2F94A7;
-	Thu,  3 Jul 2025 18:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751568704; cv=none; b=t5uW9afaBlzauWU7FE2jMW6p9muG37lZEyf3sAm3V5vxnYkfLoyOnW+rst6O9VKIbA96mEBZkvSvOFJDXV8lhVXYSiskeHcwaUtvjlEqw++76DGKKPRT3IR3Pyj8uBYSIumBDAqbbOKIToYS3tdoe7z8V8YK/T0+ii77TcdvD7w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751568704; c=relaxed/simple;
-	bh=2GAozt3GI52rhisyuFm59adRbnyMvu8uPfkVdb4WXbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XP5ft2FZdU3E7I85FK9Bp6tGn2GdD/xLpLvOpr3e/Yrk1g5BVf0F248qftY30tThvspXBff79cmaMhZ1z2y4YRyNRQ6+TLAy3ryvWQoGCfqJIHrjpnSEybUG7H80kyici6gqSOcf3BvHiLlhSJynsfx4zEoGWJSHKNOY89CRZUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xou/obCu; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F760291C10;
+	Thu,  3 Jul 2025 18:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751568716; cv=fail; b=WlQ8yDuiP9+43+/w6Axti6Rn0KVtP2s74VJ3q3KgzwNdUZGoFbDbrmoxGUNYE/Zrh6pcaOIhquSsexj9TXqaQMsj12uJBZn9vLIh7a/zaE5xifY54FuCrqcbBN6PLNKA3JabEjF3vVxYxur9k+X42yvGwir/LK1AwH5gXBEi/gk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751568716; c=relaxed/simple;
+	bh=dSVGEh0PO/A8kEfrRLkiEMau5tW1+Zf8WKKpvXlRFpk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=peX5SHtX8ow9azAZhhfuKunPFA/M8fN3CV4OVGo9LnH4XId34NAAR3+t6HnjGYNX6D97GUS72W1LfQS/eQrjsDRkzHNBBxwxl4R55uMk5qJoDmq7YbvsitILZnbNaP0YhmNhdR1If3B2nB+r0SPBIP6AsR0iPprq/SRM6afhXgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=h6SPdhzw; arc=fail smtp.client-ip=40.107.220.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xou/obCu"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2ea080f900cso82302fac.2;
-        Thu, 03 Jul 2025 11:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751568701; x=1752173501; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kk7l0GfRD3h+I6lOGqS5B01ZAdefY7DdGtDZDmtpdlE=;
-        b=Xou/obCuVVLFMEBeXWLXeJOZVN49NFOmZmnM4ZdpOZ35swNumJw0LLJ4on/MuZi6S+
-         gICUhcKhnvvEgZn3vsgqwMryICPLhZHWr8qR9Hm7Wt2paQebJmc/i+MlNbsdgVhISJPS
-         UoHIGlAgcqZ9E4P2nGwFFWp8V4CNRL9tB5Q116X+9S5Gt+hrcbA3i7GZa+/0eDrBnZvF
-         OA4Wx6EDOzrTfA67cKhjUCqh60iA4hbh6rjwFX4bSjw10HznrO4d0J7kjvMQ3lrNCvCl
-         HWpu5sgIvlIXCM7RxolTSinETLJEF/IfaDbkhUdsnm0ahLzZxkvUFnZ22V4O8G4XS1hQ
-         31mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751568701; x=1752173501;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kk7l0GfRD3h+I6lOGqS5B01ZAdefY7DdGtDZDmtpdlE=;
-        b=s9OFtsyfqHPVOcZFIktdQSu2QVbPsO2z6wigjUPLDE5pQqzZdlyQffv7FOR2CTBZ03
-         n4CIek3IcZlfkfrLPOlx9ZB/qe394EbtYLeFneiV0Upi/o9I5cUDSg19CLJJ8hZvM9va
-         PiE+KCniprAJ+byEsfkMSW2sXorJ00isSg9IiqJXCrAASlN2mPufazU48rmguNhNLYRJ
-         aw4EjR/9RqkBT8U0ba6igenCk/p3Y4yeCeA9umWt/GOVzgl3vecNZNzFMx7pV5I8sch4
-         CD2eievXz/+7Vf200oeNpIqqkWiKXP6F6bOU+LB1j16shSwatlthUfftcRlyhqwqaiEI
-         3TRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVS4rgzQpMIKUzDgMN4AMDzaWod6BrvzAoKdyT4s0vx64E/JQYzdjZQGmGxABRrSw5O6zwmhXR9m/yQWUj1CQ==@vger.kernel.org, AJvYcCW9EMjY4OWjLiti0bmvfx7RqSQhdVsVWFMq6+R514EEHewjyv3ruggkQQR4QoX2lIgJV2N5QolnadKg@vger.kernel.org, AJvYcCWM/n/SJ2X8WXT8CgCQXFLu5LM6RNiYpT4LluHVEJ1Y1hRyUIDgG3OjAePqQdy8UYvzsqsJse3I0X4=@vger.kernel.org, AJvYcCWqWwbLKRnsNAWCrkxxeHn2mcuggsSXKuAhrdXsk/qMlv/LrumuFA5EeyItS3KWFjzTCVVfg4t0uWNM/ieb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDZbbprWlpKFNcwzgxOtu4A+DS+1RxrrKI1Q4hzhO3tFYcXfz0
-	dBzug5sLPUC74agd3e+m0pkxpQwwvm4qJOMENiGFkeNdUlCB+YeO8Ch7
-X-Gm-Gg: ASbGncuE3QcISYzFAz5JF6oE3wNkTFnakPMTPBcn9NKMkG47sxe0xdtnPaV2Are/NrA
-	xIiyiQLqWySk89pcDodVHtpmbhkDMr4H1xbD+V5GqU9NdhiW60vMp2JXzCTo4qsUuOnPJgU05Pl
-	9aiBnE4Gal5AnT/JcjVDZtvi4zB/pqZRdZDrsVOBYqZXhJGSfz9R/gRu544Akv54uZXCoYybztJ
-	jL4TcDHVAK3QBdznOKHoKrbPfyUoqECtP44pJAJj2G9F4DUkJPIQL5Az6u6C2SBRhwstwGpScF2
-	Lzu9xhmPa4ShE0PZyy5Q8WAKZEKRI2UEfXt9w1iXbDHKdi2angNOx8ZAWetaZhQcuyCJnezx9sK
-	AkO1hdXXA9IHlPNJ7qCgrFFYq
-X-Google-Smtp-Source: AGHT+IGyynocoCnJ7HhmXu2ub5GrunKuCD0K0j7iMXpe886ZyEto3OHXwpTDbVj7W1yPxb0He4yvEQ==
-X-Received: by 2002:a05:6871:454:b0:2e8:eccb:fe1c with SMTP id 586e51a60fabf-2f76ca3651cmr3726270fac.31.1751568700979;
-        Thu, 03 Jul 2025 11:51:40 -0700 (PDT)
-Received: from localhost.localdomain ([2603:8080:1500:3d89:cd4:2776:8c4a:3597])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f90d1ccsm68195a34.44.2025.07.03.11.51.38
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Jul 2025 11:51:40 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-From: John Groves <John@Groves.net>
-X-Google-Original-From: John Groves <john@groves.net>
-To: John Groves <John@Groves.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	John Groves <john@groves.net>
-Subject: [RFC V2 18/18] famfs_fuse: Add documentation
-Date: Thu,  3 Jul 2025 13:50:32 -0500
-Message-Id: <20250703185032.46568-19-john@groves.net>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250703185032.46568-1-john@groves.net>
-References: <20250703185032.46568-1-john@groves.net>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="h6SPdhzw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C3Gf5hfNOfMtmy50UrY052J1weMEPF7DIH7e9A3SrAUFZdmtcv4WyZsra+ztGsHyl33qFsiTM6o82qrpmsTByaU3NHjYHm7mMYOBATyqKsNkQFYAmgi+Anb5JpEAN1p20geQ/SpabwtQiQj50ON0DYk5yGcNz6IZrdEMqvqyd/YVyoKqpZJAJ7ywr9+ipsfZD6+M57S+wmAxuT6aXC6yYhYDAZyHJ30iQTuKwx8yan47e2JwMFhFGeP6MLU7/FZvbq6QHuuG1rxRxIo6cFDISB6wgZ0ZKfX3Pe8Y7uChd90epIhDIrbHIXp9T6L3dp/v4lUTvqLWeg+rViO0fYIfRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xep81FPZrtAYp1UnFrMB4jZ5qzLldxdwCp8+rnQ8xJk=;
+ b=KndeJOzAMPb5fWcXoH7nBe9U/VBGEvyUALmAwYEuQ2Tp+kg0XgjweUi4nJZ5NXczUQ365uJ7pu0u+FDPcelPafu9xyEkLKtqprK3luXmB4ePYk49HfETtjp+Wd7zZ+q8oGebQHPoYOI7zoyrk2QvGCBcKE4Ufab3iysHIxgxCiVIT/jrOceEpwLerOsJ44tbHv2ey3YmkWPonhX4lzAY7ppzWeHH1FqsxfrVxkXjDpLAghIjhbw0bdz0zXMFuuF6gL3tA1N14x155reV7aGmueLTpwqFuNJZFQQUp/ZkJ9LJ2yqwEFl1zy73KYQgUsdS8jn9klSMnrx6dsknxR1QuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xep81FPZrtAYp1UnFrMB4jZ5qzLldxdwCp8+rnQ8xJk=;
+ b=h6SPdhzwxQx3oet5MgQwjbpOOOr7+rjRc9WQMLAE7nZeHcVoP9d0SLtIDDaAR7THaB5STRRZh4xx2tGQvyXOPCFc9bm8nsV+BVO/BUYZsyEFoJMGYEsf00FizTa2rJQYaRP3CRd74Zf7ovUMCPH6m3XlEWJA5rSLKnAsfefToOE99tM923Mk3vnFRAJ0iBUQ/cDgKWBEv6SE3YPEzrhdSmKT1qQSjbPo3wGpQWkouXOCSaPl2oVlBJeAsx/0b4UImfO5p4P64x7ELfWTqP9IMUyJXv0SBgmF9Cg+R+Cim+H8xqrP67fuF+pAsaGQTbuJdxoxlZrcyjv3aDEQA4Lk5w==
+Received: from CH3PR12MB7738.namprd12.prod.outlook.com (2603:10b6:610:14e::9)
+ by MN2PR12MB4080.namprd12.prod.outlook.com (2603:10b6:208:1d9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Thu, 3 Jul
+ 2025 18:51:52 +0000
+Received: from CH3PR12MB7738.namprd12.prod.outlook.com
+ ([fe80::fad1:1acb:f5eb:98ee]) by CH3PR12MB7738.namprd12.prod.outlook.com
+ ([fe80::fad1:1acb:f5eb:98ee%3]) with mapi id 15.20.8901.018; Thu, 3 Jul 2025
+ 18:51:52 +0000
+From: Asmaa Mnebhi <asmaa@nvidia.com>
+To: Andrew Lunn <andrew@lunn.ch>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
+Subject: RE: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
+ degradation bug
+Thread-Topic: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
+ degradation bug
+Thread-Index:
+ AQHbPTCwkw/5mDAiDkuucKlF479Xq7LJ1/+AgP/0uKCAAAhugIAAAetQgE7YCVCAAOb/AIAG7chAgAAxwACAAQV7kA==
+Date: Thu, 3 Jul 2025 18:51:52 +0000
+Message-ID:
+ <CH3PR12MB7738A206A5EFCD81318DC463D743A@CH3PR12MB7738.namprd12.prod.outlook.com>
+References: <20241122224829.457786-1-asmaa@nvidia.com>
+ <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
+ <CH3PR12MB7738C758D2A87A9263414AFBD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <6e3435a0-b04e-44cc-9e9d-981a8e9c3165@lunn.ch>
+ <CH3PR12MB7738C25C6403C3C29538DA4BD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <CH3PR12MB773870BA2AA47223FF9A72D7D745A@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
+ <CH3PR12MB7738E1776CD326A2566254D5D740A@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <c6f5da79-df83-4fad-9bfc-6fd45940d10f@lunn.ch>
+In-Reply-To: <c6f5da79-df83-4fad-9bfc-6fd45940d10f@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR12MB7738:EE_|MN2PR12MB4080:EE_
+x-ms-office365-filtering-correlation-id: 703d7681-323c-4f40-3762-08ddba62ac8e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?jk+6Mr0ziE3RKxFhOkKiFWzoE07hOFloesb5YTOOkUjbGnka/XWRK0f/mUkt?=
+ =?us-ascii?Q?hRHQhgZ2o6AAqCYvGjCcZB7Q2CN28qtY1Axa2Gf/3VjFKDmayWsiR9tyZAy4?=
+ =?us-ascii?Q?0lim4Ks9wedmNzaULGkc83pUPZC3ZbGhOtoukJ4uAGbrE55OzUaKsyBMR4T/?=
+ =?us-ascii?Q?KSZtSv2SbeX8noCgcr/dnFrcLvXp/JF7VPYMVkYUbd3Z+OAalLbKor+EFNF4?=
+ =?us-ascii?Q?guuRzW5/TAV1i6sNeSKRw2YMP2cxYq0lMX4n1gtbwSbmCP8aaw6wbmgSZBzP?=
+ =?us-ascii?Q?sr/uXA8IlkZiJGgoShACdJOm2hyzChxIyCkfEt7YcwXKNXttoNl4k3dv4QEZ?=
+ =?us-ascii?Q?Hh+ZBue8+O5kA2dmZDXuWNXBeXCMU7LDif6VKUDNyqI1gKbA8lJnN/ytbcCr?=
+ =?us-ascii?Q?zJHw/F1aeGZdN9vZNKzSjJ9ZmqdOM8UTnMshCNi/eepePEeyFdtfGlA91jN1?=
+ =?us-ascii?Q?23eEu4ggvzBPZM4MlBy9jz4iG3zk+dmae8Mpy7U411p+wavN82aBWialtxu6?=
+ =?us-ascii?Q?cakQoskkdDiZHU+lywF6vIQqgFnlI9pR3k2uW2pxpxf46RU6KqTIpxWH1Ksd?=
+ =?us-ascii?Q?EO/Ro7YPiq9Eckwsc5bIarJsYq7F6VNUA0OCB1Y8RLydWLgKv6c3ObalTKsD?=
+ =?us-ascii?Q?96LylsdWtk5ZCUgCpIt+MoSGnlduwmgv7IgQGaMBm+cA64DuIhZuF40oi2B7?=
+ =?us-ascii?Q?zqI14f8VmQeHiZFv7khw5waf1R9tigFJx3P2BDpgkPi22lM7+pdxLIum/Vnz?=
+ =?us-ascii?Q?kvNsQWph2xQ9XfPiYI0rav+9IoZoM9kB9+5bo4qIvHAxRsvhbBAzwQzl8Bhi?=
+ =?us-ascii?Q?oNw3VgfMRnebMhN2LGxzSybbM4EZSa4Il9zH0yWHngv06g5/gH6Y+otLirSh?=
+ =?us-ascii?Q?j2OqYx4GK6+7tvff0igt1tnGy8RUPSTMQExpikEfyCuvMA7V6HWBsYdA8uh1?=
+ =?us-ascii?Q?QTjdB3LIG1E8VYkGER6BmuxWqzREy+kEJpBmijk4z053pCYgZd/OkuE8FeIK?=
+ =?us-ascii?Q?SA+DAOUdMPURlfwl+AKdzole6xQyzKd3uEj+EEscayDT4v8GSyOWZ8GN0KjN?=
+ =?us-ascii?Q?Dta4XQnmLNU3GfUxbhuNLWGge1OpR6Qirxqi0QB3k4tJzpBoI8U04qHZP4L/?=
+ =?us-ascii?Q?km88Z0aRZcSVrLG0jxxCEwswYvm+pX/1MPSC3RVxq0JeCLLmOguEiG2/wQtm?=
+ =?us-ascii?Q?uX2eMNRf/Z9MY+tNa2KqN8XeRUT6hnwZYrM2KZSGho009Zy8PUB0CO6rrhT0?=
+ =?us-ascii?Q?7NNikSojx6JUnPmUNChchS/sXvReDQraySdzOarOEwPxyhbB1nbvCKaGwBxI?=
+ =?us-ascii?Q?RLJWhVfWDpBgbJOXP2rJDvXdiqltLaZzE+1300WulebS4VPVNh3lGDxnnZ61?=
+ =?us-ascii?Q?SCV1x69qU7tDTBGrOhnGLuOZsUTrvJrvOrXMgHFsqt9vedbK9Vwjs13WmT59?=
+ =?us-ascii?Q?zFznVBvGCEdCgkKjy079dDRZUF3StYrwH0wGrBSGtUwkxwSCeo9fm5q7tGRZ?=
+ =?us-ascii?Q?ZWIznM5tlMPm8oE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7738.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?WZRfqEdhmqTry9PFEym6bPDuvULUw7CBlOdXaHxjBaIHvMQxPJwO4AwoXlQf?=
+ =?us-ascii?Q?qyydkHDNgWWtlbvwWbdf3X8pT3E2ejB5PRIVtAj8jKRyPdOY1hCpFrM6AGt8?=
+ =?us-ascii?Q?Xvw/9uHarOk6BvNejV6Vki1QtBuwVGkBMGXhkhatXfP29aMmssivmVRX9ZB/?=
+ =?us-ascii?Q?+nn+iO0mfarRmMosQWdNlQHHJftah+W9hisqIhkA3FFqUZo41JyIKLmDuFUz?=
+ =?us-ascii?Q?aZebmCHShGQGtP07INRzO48dA2xfGwXH9ZJUJ4eq7m0+utWPkrujPPXVkWzq?=
+ =?us-ascii?Q?//o8Rj+Is14pqHZ3bukLSjM5vDRYiKp8DVTmMbEGow5hOMdr9EXJOg+9rSNu?=
+ =?us-ascii?Q?EtVgl/UINVqMWz7qnZANUDsOslgCwoe4t9JQNGsD9fqEsMch8+rRTGC34xE2?=
+ =?us-ascii?Q?G5oiTiLC1RNX2AZns8ZfXiGQegpu6URcpPDNkpm1uq+rnuzDK0y9WmkfXYyb?=
+ =?us-ascii?Q?2tS/H78btr8UXW/L5dqLpfoubLBJ0XtZbT4zv+qV8iRz+0eyEVSzITszHx6f?=
+ =?us-ascii?Q?+mlps93AJJGF/TxW2H+5SEiISEGGSVw4lWmdV/aayg0KBt1irHVEq2sAOLzH?=
+ =?us-ascii?Q?GWh9STTDD9oYF+CZl820fGVbSjd3cVaWdrtiIQjcwuOC2+u4YzM1ZxlknfN5?=
+ =?us-ascii?Q?keWAnJ4iuZYImFdEpBmpXYOHZYJfpUzQUBTc6AZpRjcpbZCrDQGLDILuOY1F?=
+ =?us-ascii?Q?pPcDEfMvq8+KQKFtIhYkJALRmR3rzo5F8w5RbS6SXzvBLP+vdCFM9LIzHc+L?=
+ =?us-ascii?Q?w3ia7PJIbwV1q90V6298973ip6P2lBO5HQYRuEJKehsB3rq6nTYK7sG4wdEK?=
+ =?us-ascii?Q?EFxC8GMI2Ib+rM03XVHXoB7iP6XPaVPNPJ246oIg7ZEyMCLhhbJ1t+RlbXpo?=
+ =?us-ascii?Q?ZqlsQ9+4iYTSU/WKIe1LswMJndeEOKDuN2zSPnset/RbVtJdKsnLwvA2i5uQ?=
+ =?us-ascii?Q?T6MI8yvYsyPdkmHoBBhQtFrVeLx+5eTG2Jthp50qe6iVMjNPLWjzovHiY71W?=
+ =?us-ascii?Q?a9aNEzGBY+oQhiS3uwanU22yLmtvmiCs7rSbhli72ziMqQVQgJLgUq3PjJNE?=
+ =?us-ascii?Q?xyIsMeXOw8IKGjz3PQJuuAD3AvLla8W/Jl/2NCe2nfr0VmYYNQ7+m5R3vAek?=
+ =?us-ascii?Q?vBQMjjeq/gKEPM/1SMHTf5Fmkd5+6RZe3VZ9bbXvY056OjXNfoRqTrB+mYFh?=
+ =?us-ascii?Q?rMtBbnlfgsEbHaZ0gwN+oAw8wOiOTwBm1zZXhsrehT7z3Iz6PklLQWYFTWKI?=
+ =?us-ascii?Q?O0AQha/qK0bzn66E4+Gj2NwZvJnW0QwZx/EbLJNL0xiCWG+1dw7yTwAjRv9H?=
+ =?us-ascii?Q?nmKLRUDQfMGHlLpbZpIC4UyUGcpmC5wvfVBRVZZ4JQmDvCO/C5Fvy6OKwS/u?=
+ =?us-ascii?Q?BXri+OrjZOyngInkb3Wl3gdtkHoeKFVYvReWDpaIRcwHw39mKN8V/+B1rMTg?=
+ =?us-ascii?Q?vRO1kOdZnW9Dm9VI86FWTpsezX5xu87BoV3Z2faWkFN9tWB2ad/vRL9fqKjr?=
+ =?us-ascii?Q?69kYyDyb5qlhqXFCtpBVKs1sHr5iVAERfnoJcArYoPSHVWP8s0RgXp7+w4Vc?=
+ =?us-ascii?Q?TaPHrHiow9bTxrbdEjU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7738.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 703d7681-323c-4f40-3762-08ddba62ac8e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2025 18:51:52.0392
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KTt0FdOxZ+aWsiyY8rGihHdlQdSW3m3bdwOxC8BTcRIsl+XstNXZLDG6pwCbz6B7U0ENS/xeAs0LeqQSMBJLig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4080
 
-Add Documentation/filesystems/famfs.rst and update MAINTAINERS
+ > > > You need to put the MDIO bus device into its own pm_domain. Try
+> > > calling dev_pm_domain_set() to separate the MDIO bus from the MAC
+> > > driver in terms of power domains. ethtool will then power on/off the
+> > > MAC but leave the MDIO bus alone.
+> > >
+>=20
+> > Using dev_pm_domain_set() has the same effect as
+> SET_RUNTIME_PM_OPS. The dev struct is shared so ethtool is still calling =
+the
+> suspend/resume.
+> >
+> > int mlxbf_gige_mdio_probe(struct platform_device *pdev, struct
+> > mlxbf_gige *priv)  {
+> >         struct device *dev =3D &pdev->dev; @@ -390,14 +418,27 @@ int
+> > mlxbf_gige_mdio_probe(struct platform_device *pdev, struct mlxbf_gige
+> *priv)
+> >         snprintf(priv->mdiobus->id, MII_BUS_ID_SIZE, "%s",
+> >                  dev_name(dev));
+> >
+> > +       pm_runtime_set_autosuspend_delay(priv->mdiobus->parent, 100);
+> > +       pm_runtime_use_autosuspend(priv->mdiobus->parent);
+>=20
+> Why parent?
 
-Signed-off-by: John Groves <john@groves.net>
----
- Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
- Documentation/filesystems/index.rst |   1 +
- MAINTAINERS                         |   1 +
- 3 files changed, 144 insertions(+)
- create mode 100644 Documentation/filesystems/famfs.rst
+That was just an experiment. I tried priv->dev, same result but I guess tha=
+t is expected because it is the MAC dev. priv->mdiobus->dev is only set in =
+mdiobus_register which:
+- sets dev struct and calls device_register
+- device_register calls device_pm_init and device_add
+- device_add calls device_pm_add
+- device_pm_check_callbacks sets dev->power.no_pm_callbacks based on if pm_=
+domain/pm_ops were defined or not.
 
-diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
-new file mode 100644
-index 000000000000..0d3c9ba9b7a8
---- /dev/null
-+++ b/Documentation/filesystems/famfs.rst
-@@ -0,0 +1,142 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _famfs_index:
-+
-+==================================================================
-+famfs: The fabric-attached memory file system
-+==================================================================
-+
-+- Copyright (C) 2024-2025 Micron Technology, Inc.
-+
-+Introduction
-+============
-+Compute Express Link (CXL) provides a mechanism for disaggregated or
-+fabric-attached memory (FAM). This creates opportunities for data sharing;
-+clustered apps that would otherwise have to shard or replicate data can
-+share one copy in disaggregated memory.
-+
-+Famfs, which is not CXL-specific in any way, provides a mechanism for
-+multiple hosts to concurrently access data in shared memory, by giving it
-+a file system interface. With famfs, any app that understands files can
-+access data sets in shared memory. Although famfs supports read and write,
-+the real point is to support mmap, which provides direct (dax) access to
-+the memory - either writable or read-only.
-+
-+Shared memory can pose complex coherency and synchronization issues, but
-+there are also simple cases. Two simple and eminently useful patterns that
-+occur frequently in data analytics and AI are:
-+
-+* Serial Sharing - Only one host or process at a time has access to a file
-+* Read-only Sharing - Multiple hosts or processes share read-only access
-+  to a file
-+
-+The famfs fuse file system is part of the famfs framework; user space
-+components [1] handle metadata allocation and distribution, and provide a
-+low-level fuse server to expose files that map directly to [presumably
-+shared] memory.
-+
-+The famfs framework manages coherency of its own metadata and structures,
-+but does not attempt to manage coherency for applications.
-+
-+Famfs also provides data isolation between files. That is, even though
-+the host has access to an entire memory "device" (as a devdax device), apps
-+cannot write to memory for which the file is read-only, and mapping one
-+file provides isolation from the memory of all other files. This is pretty
-+basic, but some experimental shared memory usage patterns provide no such
-+isolation.
-+
-+Principles of Operation
-+=======================
-+
-+Famfs is a file system with one or more devdax devices as a first-class
-+backing device(s). Metadata maintenance and query operations happen
-+entirely in user space.
-+
-+The famfs low-level fuse server daemon provides file maps (fmaps) and
-+devdax device info to the fuse/famfs kernel component so that
-+read/write/mapping faults can be handled without up-calls for all active
-+files.
-+
-+The famfs user space is responsible for maintaining and distributing
-+consistent metadata. This is currently handled via an append-only
-+metadata log within the memory, but this is orthogonal to the fuse/famfs
-+kernel code.
-+
-+Once instantiated, "the same file" on each host points to the same shared
-+memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-+that has a famfs instance mounted. Use cases are free to allow or not
-+allow mutations to data on a file-by-file basis.
-+
-+When an app accesses a data object in a famfs file, there is no page cache
-+involvement. The CPU cache is loaded directly from the shared memory. In
-+some use cases, this is an enormous reduction read amplification compared
-+to loading an entire page into the page cache.
-+
-+
-+Famfs is Not a Conventional File System
-+---------------------------------------
-+
-+Famfs files can be accessed by conventional means, but there are
-+limitations. The kernel component of fuse/famfs is not involved in the
-+allocation of backing memory for files at all; the famfs user space
-+creates files and responds as a low-level fuse server with fmaps and
-+devdax device info upon request.
-+
-+Famfs differs in some important ways from conventional file systems:
-+
-+* Files must be pre-allocated by the famfs framework; allocation is never
-+  performed on (or after) write.
-+* Any operation that changes a file's size is considered to put the file
-+  in an invalid state, disabling access to the data. It may be possible to
-+  revisit this in the future. (Typically the famfs user space can restore
-+  files to a valid state by replaying the famfs metadata log.)
-+
-+Famfs exists to apply the existing file system abstractions to shared
-+memory so applications and workflows can more easily adapt to an
-+environment with disaggregated shared memory.
-+
-+Memory Error Handling
-+=====================
-+
-+Possible memory errors include timeouts, poison and unexpected
-+reconfiguration of an underlying dax device. In all of these cases, famfs
-+receives a call from the devdax layer via its iomap_ops->notify_failure()
-+function. If any memory errors have been detected, access to the affected
-+daxdev is disabled to avoid further errors or corruption.
-+
-+In all known cases, famfs can be unmounted cleanly. In most cases errors
-+can be cleared by re-initializing the memory - at which point a new famfs
-+file system can be created.
-+
-+Key Requirements
-+================
-+
-+The primary requirements for famfs are:
-+
-+1. Must support a file system abstraction backed by sharable devdax memory
-+2. Files must efficiently handle VMA faults
-+3. Must support metadata distribution in a sharable way
-+4. Must handle clients with a stale copy of metadata
-+
-+The famfs kernel component takes care of 1-2 above by caching each file's
-+mapping metadata in the kernel.
-+
-+Requirements 3 and 4 are handled by the user space components, and are
-+largely orthogonal to the functionality of the famfs kernel module.
-+
-+Requirements 3 and 4 cannot be met by conventional fs-dax file systems
-+(e.g. xfs) because they use write-back metadata; it is not valid to mount
-+such a file system on two hosts from the same in-memory image.
-+
-+
-+Famfs Usage
-+===========
-+
-+Famfs usage is documented at [1].
-+
-+
-+References
-+==========
-+
-+- [1] Famfs user space repository and documentation
-+      https://github.com/cxl-micron-reskit/famfs
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2636f2a41bd3..5aad315206ee 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -90,6 +90,7 @@ Documentation for filesystem implementations.
-    ext3
-    ext4/index
-    f2fs
-+   famfs
-    gfs2
-    gfs2-uevents
-    gfs2-glocks
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 02688f27a4d0..faa7de4a43de 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8814,6 +8814,7 @@ M:	John Groves <John@Groves.net>
- L:	linux-cxl@vger.kernel.org
- L:	linux-fsdevel@vger.kernel.org
- S:	Supported
-+F:	Documentation/filesystems/famfs.rst
- F:	fs/fuse/famfs.c
- F:	fs/fuse/famfs_kfmap.h
- 
--- 
-2.49.0
+So I have to call dev_pm_domain_set before mdiobus_register for it to be re=
+gistered properly. But then, priv->mdiobus->dev is not set up yet so we can=
+not call dev_pm_domain_set.
+
+Thank you.
+Asmaa
 
