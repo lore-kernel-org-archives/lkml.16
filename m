@@ -1,90 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp153-166.sina.com.cn (smtp153-166.sina.com.cn [61.135.153.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016CC2C9D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 00:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07674A2D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 00:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751500918; cv=none; b=GdL67NlYkbpaGQd9RaexavHo5uTaoKOy8Xnvy0ksZNVidDMXPxe0ZDRxJ9+xEAzzCLpLyejIN+oubN6OCpn/rE5C0H+ldU3z/CxxjY1ZYZ79DWyAHKm/gZAQEw9WTVYFYQWJyy64u7WbyjiF7NPtDebII9ELGt75RuL/sMAmiQY=
+	t=1751501413; cv=none; b=DkFGTAmra6AfchJrnh0TUSWeyuZ2mEEQacQ6u21Ig3WmEhmVOXiiLfrNCdPs0n8PNYG+0zy3TDR0EFmSs/1Foorsc0MU6I1tpGSClgj8bJRok+Z/HDvaKqE1shXlNFuqFQx6iYCLefyIVJ/u2GvaCH7DPEwwkcprppvrWYPlm7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751500918; c=relaxed/simple;
-	bh=2gFhDpWkVfMr3D/JXrWFs9vuiy+VIOgn7cNm5cwE534=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLwyFYUHLki7EVw/eYodBN3KaYvDPkNae1Tl87PJXk+wMF1OOwRHvpoU6FKe0TO2CJ4FeoV56sRF6JBw0x3y/By+onGUM3nXMSQkkfGVYV0gkphkd5/NAnnZJa5vUjvPqXLewRaZQ0akJRoZYbnAmL/8MAV8fO8MBCFixONFzB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQUTAErY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751501413; c=relaxed/simple;
+	bh=rRPioumneuiJaVlhzjVZhRS9MlUjEeHTutmHxkuuMrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LrZEsCdn+IKukDa47sdsNln0NHoxokTk5ghGHFSR2VToLvKGr2L6P7ZZSb9SluAgBqVx7ad6S7dPTIddh+ZaoY/zBik4WtZ7il+pAon7gt/GKeSd55t4CClvX5j88wFbTbb1Zp+y8iOfNGL9Cl0VyWcu35fCBB12UuFte652Vqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=ZBoHmU5B; arc=none smtp.client-ip=61.135.153.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQUTAErY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F28D2C4CEE7;
-	Thu,  3 Jul 2025 00:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751500917;
-	bh=2gFhDpWkVfMr3D/JXrWFs9vuiy+VIOgn7cNm5cwE534=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aQUTAErYmf2mdhGNxat/1G/cWZ8O9Rro4KLtNqA91Ps40Yn7x3yUzYZNyvXApAyTe
-	 6mMfqNkSKXpi7uBd5QF72q3yfL02Qo5JHjXlTM1LR5usLxrOXbhYldW3zZKv9PnCAP
-	 OTBmICoCai5Ve6Y7a6UKZOYGJQtvG+ml9WuYyhrn1bKKFIVvsONDLOmGSJVqfZF3tu
-	 zuS3iPzuk0pt1kEjZyywYJgQWgysIVG4VnjLltMq4ChaTfOJHLZv+rCYHj2v4qUKAK
-	 VmGOYTG8NbuafhA8jrpOmOBDiJoYkRoSM67f+lWXszZ4bBbcFVHFEcTkaNWFP1B5/3
-	 tfSVhW+26e+Bw==
-Message-ID: <63310a08-e01f-464d-9f46-54bb817f2121@kernel.org>
-Date: Thu, 3 Jul 2025 08:59:47 +0900
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="ZBoHmU5B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751501406;
+	bh=6m40dybLDUQecOAnZiZrJZiryDjKCDJTyHboSV03wXA=;
+	h=From:Subject:Date:Message-ID;
+	b=ZBoHmU5B/teard6miBHBnZeg+LCnkfglt2V3HTavUlBjYsX34bnZgrgI4ED7hH5cO
+	 Uj/Xyqm3QIMvFJLPz4XX8ujHej0WBIdK76s4pCKw4HF/dRGTthoLKaVMIlprEag6tn
+	 HEmoW08PPU1YiDGA9VfWBHxCYhcr5Y6zUsrUJqoI=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.33) with ESMTP
+	id 6865CA5400002D5F; Thu, 3 Jul 2025 08:09:58 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 313486685340
+X-SMAIL-UIID: F0653F4ED50045D6A8531C61B87761C7-20250703-080958-1
+From: Hillf Danton <hdanton@sina.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: syzbot <syzbot+d630bd89141124cc543e@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: task hung in hub_activate (3)
+Date: Thu,  3 Jul 2025 08:09:45 +0800
+Message-ID: <20250703000946.2200-1-hdanton@sina.com>
+In-Reply-To: <fc5f7057-1c91-4354-89d5-f8bdeeae988a@rowland.harvard.edu>
+References: <68648254.a70a0220.3b7e22.20c4.GAE@google.com> <20250702080515.2160-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] nvme: prevent ioq creation for discovery
- controllers
-To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
- "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
- <axboe@kernel.dk>, hch <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "cassel@kernel.org" <cassel@kernel.org>
-References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
- <20250702005830.889217-4-kamaljit.singh1@wdc.com>
- <c168acff-66ff-4692-b21e-093c0aa592a1@kernel.org>
- <MN2PR04MB68626BDAC087B4CC8CC1A1A9BC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <MN2PR04MB68626BDAC087B4CC8CC1A1A9BC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 7/3/25 3:09 AM, Kamaljit Singh wrote:
-> Hi Damien,
->  
-> On 7/1/25 19:18, Damien Le Moal wrote:
->>>   /*
->>> - * An admin controller has one admin queue, but no I/O queues.
->>> + * An admin or discovery controller has one admin queue, but no I/O queues.
->>>    * Override queue_count so it only creates an admin queue.
->>>    */
->>>   void nvme_override_prohibited_io_queues(struct nvme_ctrl *ctrl)
->>>   {
->>> -     if (nvme_admin_ctrl(ctrl))
->>> +     if (nvme_admin_ctrl(ctrl) || nvme_discovery_ctrl(ctrl))
->>>                ctrl->queue_count = 1;
->>>   }
->>>   EXPORT_SYMBOL_GPL(nvme_override_prohibited_io_queues);
->>
->> Repeating comment on patch 1. Can't we do this in nvme_init_subsystem() or may
->> be better, in nvme_set_queue_count() or nvme_init_ctrl_finish() ?
-> nvme_set_queue_count() won’t even be called in this case, as its only used to
-> configure IO queues, which are not being configured for an admin controller.
->  
-> If we move nvme_override_prohibited_io_queues() up the stack into either of your
-> suggested core.c functions, it will affect apple & fc drivers, which I don’t have any
-> means of testing. Any suggestions?
+On Wed, 2 Jul 2025 10:34:51 -0400 Alan Stern wrote:
+> On Wed, Jul 02, 2025 at 04:05:14PM +0800, Hillf Danton wrote:
+> > On Tue, 01 Jul 2025 17:50:28 -0700
+> > > Hello,
+> > > 
+> > > syzbot found the following issue on:
+> > > 
+> > > HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=10d1f88c580000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=66357ac5b0466f16
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=d630bd89141124cc543e
+> > > compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> > > 
+> > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > 
+> > > Downloadable assets:
+> > > disk image: https://storage.googleapis.com/syzbot-assets/b005e1db0f8c/disk-1343433e.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/cb3aa8bfd514/vmlinux-1343433e.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/e01227599a09/bzImage-1343433e.xz
+> > > 
+> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > Reported-by: syzbot+d630bd89141124cc543e@syzkaller.appspotmail.com
+> > > 
+> > > INFO: task kworker/0:0:9 blocked for more than 143 seconds.
+> > >       Not tainted 6.16.0-rc4-next-20250630-syzkaller #0
+> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > > task:kworker/0:0     state:D stack:21240 pid:9     tgid:9     ppid:2      task_flags:0x4208060 flags:0x00004000
+> > > Workqueue: events_power_efficient hub_init_func2
+> > > Call Trace:
+> > >  <TASK>
+> > >  context_switch kernel/sched/core.c:5313 [inline]
+> > >  __schedule+0x16f5/0x4d00 kernel/sched/core.c:6696
+> > >  __schedule_loop kernel/sched/core.c:6774 [inline]
+> > >  schedule+0x165/0x360 kernel/sched/core.c:6789
+> > >  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6846
+> > >  __mutex_lock_common kernel/locking/mutex.c:679 [inline]
+> > >  __mutex_lock+0x724/0xe80 kernel/locking/mutex.c:747
+> > >  device_lock include/linux/device.h:884 [inline]
+> > >  hub_activate+0xb7/0x1ea0 drivers/usb/core/hub.c:1096
+> > >  process_one_work kernel/workqueue.c:3239 [inline]
+> > >  process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3322
+> > >  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3403
+> > >  kthread+0x70e/0x8a0 kernel/kthread.c:463
+> > >  ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+> > >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> > >  </TASK>
+> > 
+> > Due to lockdep_set_novalidate_class(&dev->mutex) in device_initialize(),
+> > task hung instead of deadlock is reported once more.
+> > 
+> > 	kworker/0:0:9		kworker/0:5:5923
+> > 	---			---
+> > 	hub_init_func2()	usb_disconnect()
+> > 				device_lock()
+> > 	device_lock()		hub_disconnect()
+> > 				hub_quiesce()
+> > 				flush_delayed_work(&hub->init_work);
+> > 	*** DEADLOCK ***
+> 
+> This analysis looks right.  How would you fix the deadlock?  Make 
+> hub_disconnect do device_unlock() and device_lock() around the 
+> flush_delayed_work() call?
+> 
+I will try it once a reproducer is available.
 
-Why would the controller vendor or its fabric matter ?
-If the controller type is admin or discovery, you want queue_count set to 1. So
-I do not think there is any problem.
+Hillf
 
-
--- 
-Damien Le Moal
-Western Digital Research
+> Alan Stern
