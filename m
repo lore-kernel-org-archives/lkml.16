@@ -1,151 +1,139 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204EB2E8E0B;
-	Thu,  3 Jul 2025 14:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9641E19CC02;
+	Thu,  3 Jul 2025 14:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552481; cv=none; b=NVjsScCc4lX2itNMlZr88chnKOuIbmRpyJb0mrgN5eb91VgEiWVOr1yLa/HlgP5CMd667IU4LqNGTh//Tqgh7b9v/e7coq7dqUhm2gIVNxUkhfzjf1UT1LzYaQJ/6QctlijG7lZTMCNH8k9AteyP9V9+gAl6IiCRCBRqqrtEVSY=
+	t=1751552504; cv=none; b=acxbHUsiaMzDrk3sT2kN+Pajz4PBzmukPrRfLoq2GUh9+l67jnWox+LAZJ421dI0fFblFox5f++m7PkNxTppkw4BPRNME/5bOEgPlZ8p6xYzB+5vUmFSkZHihJFhxe9QPG3/LI+zaJcZT1VGaMsMdfSB3QQYJF5zFRDZR1Hsw9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552481; c=relaxed/simple;
-	bh=zImvd/kgd1afrH/UXH2667AxFgtQy1j88l6X4nP2wM8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=LihSi2zsdfiNU/9mtap9p4v3g7Sbuc3aExFagkmDLcSb3y+yu2HkEjNfGddLpCr7eT7MOmJ2qZIk+xRqEAGSprFqZujNzf8lyMKacizgn6myZSOq/2oB2UHCR6swEEDEr3m7sOKc85npKHZ1/wa89q2IxbjGXTtbWIzfWN2lUuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4+qJx9x; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751552504; c=relaxed/simple;
+	bh=8q/IVKrUxZauGxiUn174NgZfIXYmxkzaKI174acXcJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RailLG86oRa+c4S+xVxb/k+9+7xNHKUYP6OTno7DTtdbwj7MN+ZgQ6MHyueT6RDY1cCU4RqMfLGg00bTDBS84eX6U/dSuIuv1XcV4UWiYAvwxhM7mnH8eQDKjnQ3ZNvmuuE4j+JEsRDDexcis0sVwrUcswGTxH5qDAQRCNAZ5ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOnfj6Jd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4+qJx9x"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b60de463so6470966e87.3;
-        Thu, 03 Jul 2025 07:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751552477; x=1752157277; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FklnJtDo9yeFD4xiZdN1VsVaoDfKdcDRiLzMHURLjos=;
-        b=k4+qJx9x1T7RdUSUvkEWLftdx1cMk5VqvTGFmrMDUXe4R7T/UzScLTqD1SO+2E1bk6
-         uwp9jSQp9h61i8TCHrGaCGWc+87FakdiaRmF1wwBb0yCmXc8/PdQKk8tjJrt6DNT+ZDt
-         Ge7eJCtiQzqriRQEw1dyREB4xthXHuSjL2O9DDkyh5f1OWZ6VcJkWpIm4fJkG7cmoyy+
-         5O1S13p/sXliW3mB2MR6740YgNRlCvVBGhEAenfvnt5Qx6AMzOHupXoiDOXFkZvPQ85U
-         PZvD9lMM7tg6UZ8bZFBnBBfsAL/meAKAl9RvJkDLR9m/rADDlrlMqqmDixAasgEzIe4a
-         r3yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751552477; x=1752157277;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FklnJtDo9yeFD4xiZdN1VsVaoDfKdcDRiLzMHURLjos=;
-        b=crVUqfuXYla7J65jAYUdoF6U2jNvXnButkndBfDPhh41bqwQaAiB9GW4jsII0Ppdlg
-         5+bP3w75UnF+7bU6ZJoFhqQfphW1KJgjHfEFzD+nSDRhnKuvE5NniRh4I8R74/IMP6g6
-         OhwN62o7NLnpYHB1N0hIfv2pdGpZiS1BOwfEqIxIpbOwY+vJLKicSLgAjx2u3bEzx7Ro
-         pDmS9rmLvfHyRCii3fo7o1MT9JDEmE2CiGTfer5A8h35k5J5xbPujhjloC6Pdg2Y8X/M
-         Idv1RYb0g1zE/8viKP8p+CHRZh86pS+ssIJtxOwK+79hTGcBvyLmgtsuz6XWUi4ELYJt
-         Y4fw==
-X-Forwarded-Encrypted: i=1; AJvYcCUScmyho3X0rxE48ra2pFFpuaB5VV4LiQ1AwNtD8G9fRin/cAaHVIou+bVxZz4OPqrUvrAQ2SyvVMOe@vger.kernel.org, AJvYcCVJgOCqQGPtfdQ2CiBLLnpyJqLgmYSIpxR8Ri0oLKfta7n96hKqwRf4BSqLNOuU0+8oxbiNe6COQBc=@vger.kernel.org, AJvYcCVv3Aw/bBc/88BdH56SrR1x7BncHYBUgqS8A3mRsg7gw2odKWnCyPO7RVoqmXDYkWHWY5UT7mKNJEHFLQ83@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTMkQVGnxZIOF5ATZn9n+arX2CoSeAbvflAtOoisGhOAo1SLgL
-	kIiRZeaN9uS9F9odT2kkbH7/YU185uN95Te3riSouRxM68n9yiCtSrh8
-X-Gm-Gg: ASbGncsc3KICjCMWfmuOQbd8RHtfYDlDi/EI3WT6cQjR6359TXeTKAMFsEu6X/KdgGS
-	PMPieegUAjhxTbnxxQJJfHZ1vO0ojBUtyNBaUT1rl1OW1Xv8bFzxh++H2LUBrDXmMisVjDEZSWs
-	o0mgM4X7DDaCaQtWYopUIMFyTidGQ8BSuR2toeiC1vo+a9Df1Cv6dKiETkDqJohYK5RWbJA1DjO
-	lERvLkG4R4M7c6g3XjdAx9dqfFfKTH/rHZAvE0w7MwahFmWkCco2T6u03Saejh/640Br/W9iMIn
-	3Z9SlmtTsy6OSAey5vGYigTAacWSASa2hvpWArthLjbuNCFBYrYCvJENNnOL+bYtMdXeGs0=
-X-Google-Smtp-Source: AGHT+IFUX1eZbzcysBzHHtBsEBGjLX6NVKG8N8wt7URL6mkGsrdwM/ImOqWq0Nxkz3QPURabSYjy1A==
-X-Received: by 2002:a05:6512:2307:b0:553:2868:6355 with SMTP id 2adb3069b0e04-5562ee3f0d8mr1549077e87.18.1751552476789;
-        Thu, 03 Jul 2025 07:21:16 -0700 (PDT)
-Received: from localhost.localdomain ([176.106.241.81])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2a861esm2483058e87.97.2025.07.03.07.20.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 07:21:16 -0700 (PDT)
-From: iuncuim <iuncuim@gmail.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 0/8] Allwinner: A523: add support for A523 THS0/1 controllers
-Date: Thu,  3 Jul 2025 22:20:32 +0800
-Message-ID: <20250703142040.2639742-1-iuncuim@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOnfj6Jd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE4AC4CEE3;
+	Thu,  3 Jul 2025 14:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751552504;
+	bh=8q/IVKrUxZauGxiUn174NgZfIXYmxkzaKI174acXcJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gOnfj6JddvGC2tczpxc5Nhlp+9Z0UiFGRRU3sr4q71VnRB/GwYAQRCLZmuHr4sxxA
+	 vEZU7xqhdgzNxuNCO3jBWjnpljc8VTGcskBdQEC556pU9PhKZcOTRVcBCzaMmQR+bJ
+	 s9+uOMF6FGLhRLlVxnWJqQgXF4lPrSwE7sfN3zlKS0x9xMxXxyfq5b0b/Ys53xJ79N
+	 3/rhDg3aIR2ZYVy29OK+y6hX9gwwhCcLOcDN1+TDIDhuxGHglj5hs8laI0aqAr8uf2
+	 2UxfmVUtfg2N/objv3RDgkIZOnSwMCKi9DT6cACPvZ4UCg5vDGQ6jOT5EC7Tjapg5B
+	 Nu+V/A49DF7fQ==
+Date: Thu, 3 Jul 2025 15:21:36 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Robert Marko <robert.marko@sartura.hr>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Vinod Koul <vkoul@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Daniel Machon <daniel.machon@microchip.com>, luka.perkov@sartura.hr
+Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
+Message-ID: <20250703-lapped-itunes-1cd711479f75@spud>
+References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+ <20250702183856.1727275-2-robert.marko@sartura.hr>
+ <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MYqRzWYWScpig/dd"
+Content-Disposition: inline
+In-Reply-To: <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
 
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
 
-This patch series adds temperature sensor support for the Allwinner A523
-family of processors (same die with H728/A527/T527)
+--MYqRzWYWScpig/dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes:
-1) dt-bindings: nvmem: SID: Add binding for A523 SID controller
- - added new patch
+On Wed, Jul 02, 2025 at 09:57:10PM +0200, Arnd Bergmann wrote:
+> On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
+> > Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
+> >
+> > However, this means that new Microchip platforms that share drivers need
+> > to constantly keep updating depends on various drivers.
+> >
+> > So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
+> > could instead depend on.
+>=20
+> Thanks for updating the series to my suggestion!
+>=20
+> > @@ -174,6 +160,27 @@ config ARCH_MESON
+> >  	  This enables support for the arm64 based Amlogic SoCs
+> >  	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
+> >=20
+> > +menuconfig ARCH_MICROCHIP
+> > +	bool "Microchip SoC support"
+> > +
+> > +if ARCH_MICROCHIP
+> > +
+> > +config ARCH_SPARX5
+> > +	bool "Microchip Sparx5 SoC family"
+>=20
+> This part is the one bit I'm not sure about: The user-visible
+> arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
+> so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
+> here, or more generally speaking any of the nested ARCH_*
+> symbols.
+>=20
+> This version of your patch is going to be slightly annoying
+> to existing sparx5 users because updating an old .config
+> breaks when ARCH_MICROCHIP is not enabled.
+>=20
+> The two options that I would prefer here are=20
+>=20
+> a) make ARCH_SPARX5 a hidden symbol in order to keep the
+>    series bisectable, remove it entirely once all references
+>    are moved over to ARCH_MICROCHIP
+>=20
+> b) Make ARCH_MICROCHIP a hidden symbol that is selected by
+>    ARCH_SPARX5 but keep the menu unchanged.
+>=20
+> Let's see what the sparx5 and at91 maintainers think about
+> these options.
+>=20
+> The other patches all look fine to me.
 
-2) dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
- - changed clock order
- - added additional nvmem cell with calibration data
- - added requirements for new controllers
- - added description
+One more fun thing to consider is that we ended up defining
+ARCH_MICROCHIP on riscv because people didn't want to have an
+ARCH_MICROCHIP_POLARFIRE symbol enabling the pic64gx SoC. Therefore,
+anything that relies on CONFIG_AT91 to be only selectable by users on
+arm/arm64 when moved to CONFIG_ARCH_MICROCHIP (as this patch does) will
+become selectable on riscv as a result.
 
-3) thermal/drivers/sun8i: add gpadc clock
- - removed unnecessary call to clk_prepare_enable() since
- devm_clk_get_enabled()includes this
+--MYqRzWYWScpig/dd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-4) thermal/drivers/sun8i: replace devm_reset_control_get to
- - original function replaced with devm_reset_control_get_shared_deasserted()
- - removed some of the repetitive code executed by 
- devm_reset_control_get_shared_deasserted()
+-----BEGIN PGP SIGNATURE-----
 
-5) thermal/drivers/sun8i: get calibration data from two nvmem cells
- - added possibility to get calibration data from two independent cells
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGaRywAKCRB4tDGHoIJi
+0kalAP9rQkzuJjuFkyPd9IlOQj3R+Ld5bQNONlz6IG3u/RaW3wEA1mcw+qjQrIc8
+tzY+P2Bw7n2cprxDhZQKO1xk0ihwGws=
+=qB70
+-----END PGP SIGNATURE-----
 
-6) thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
- - removed magic digits
- - changed description of calibration data procedure for A523
- - changed numbers of array elements with calibration data
-
-7) arm64: dts: allwinner: A523: Add SID controller node
- - fix typo (sun50i->sun55i)
-
-8) arm64: dts: allwinner: A523: Add thermal sensors and zones
- - cell with calibration data divided into two
- - added passive trips for gpu
- - added information that information obtained from BSP
-
-v1: https://lore.kernel.org/linux-sunxi/20250411003827.782544-1-iuncuim@gmail.com
-
-Mikhail Kalashnikov (8):
-  dt-bindings: nvmem: SID: Add binding for A523 SID controller
-  dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
-  thermal/drivers/sun8i: add gpadc clock
-  thermal/drivers/sun8i: replace devm_reset_control_get to
-    devm_reset_control_get_shared_deasserted
-  thermal/drivers/sun8i: get calibration data from two nvmem cells
-  thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
-  arm64: dts: allwinner: A523: Add SID controller node
-  arm64: dts: allwinner: A523: Add thermal sensors and zones
-
- .../nvmem/allwinner,sun4i-a10-sid.yaml        |   1 +
- .../thermal/allwinner,sun8i-a83t-ths.yaml     |  49 +++-
- .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 162 ++++++++++++
- drivers/thermal/sun8i_thermal.c               | 240 ++++++++++++++----
- 4 files changed, 406 insertions(+), 46 deletions(-)
-
--- 
-2.49.0
-
+--MYqRzWYWScpig/dd--
