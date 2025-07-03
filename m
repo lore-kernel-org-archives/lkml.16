@@ -1,214 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F7B2F19A3
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 23:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5322D94B6;
+	Thu,  3 Jul 2025 23:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751585017; cv=none; b=AwYL8DvZpW4cvz2wZgBBUA5ayl9mrD9KrZDVZ7t08FNuXBMkQzcwVIFOYI08sP1pLBMCFY7ACdP2q+hSi2Ip3RAEL+00YEwtQg2AS8x3vioo2QS8Bp6m2UcNdJkBkl68Ehsys/Tru2SgkjrO1geXZTKox+RK3Ro407X1tHr9gJw=
+	t=1751585045; cv=none; b=me1G+SuI97piT1PixwaDwSumdWD3pR/Huv8e5ysO9ypsFR9qwtNRU2CfKGkJ/9btlw343Zxkjnsqj2xVDXwFAjqPpPEskcbvDXGhlYBgW/4awV2iwBwG6fxmAprUKKF8Y+CPiEbomgfXKF/d6tpM3WIqXyO5KwM3Gc4z5eDS2Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751585017; c=relaxed/simple;
-	bh=4fRm/4wvZQWe/TuI4l5eob8PB/NYw5v9nV4VOmFwTUI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=anlUv94XgcYCUBxE1B9nXuZGWPw9lVU2Mxlap/tsC0TbVR051W3oMQeHdjYD2a8M+W6eSpQeAZanYcGfBdkZerbk/ZklZjzCbmjM5VDuRBw2bW4n11aYlw9ey0+jAUWBmfYe910wtFAF3ze/G/6Lztk/mIbWYW4mdOHZZyvacew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bt6NTxNA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751585045; c=relaxed/simple;
+	bh=nJsInj/KQx9EGZtnfCPTimlBjeCBkdNYOhqpDUWoVDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PBxl8owFfTYp252jN9lEq182f4ZnQvcgBNTYAGsFe1D/WnmpHOVof2UUQ5zceV/fmZ1+GHCFrJzgn1yH+07br1Ll7g/AhdEZQpLP7ZBf6ybbPgf9AeKEWapsbnKk91YT8YWlxVSQLcG2EULEtU6ZR0hkSV5fOiX5EOLLXcnhMoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gB9tu05g; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bt6NTxNA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751585014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vIUTPB0Xa7IujQxGdU5BbuzZFcJXYmPAbUo0ojDRNf8=;
-	b=bt6NTxNAkDsk1zHArRnM9FLuPNTFmtBPqmvJAtg1ghEjiP2uFNlsuETAZWI3TQlNoXujQk
-	dKLrCSWAvWvQPPercVDF2U46L6J0KaA1z4PJuiO3vkSqhGDFuVpEdXce51JCykOJwAmuSt
-	TZQBiMlsQWsOGdznUvNaZHPzFM1gI0A=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-450-5sEln9snPbiB_ZKZF5-d3g-1; Thu, 03 Jul 2025 19:23:33 -0400
-X-MC-Unique: 5sEln9snPbiB_ZKZF5-d3g-1
-X-Mimecast-MFC-AGG-ID: 5sEln9snPbiB_ZKZF5-d3g_1751585013
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fd3aeb2825so11884666d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 16:23:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gB9tu05g"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32cd0dfbd66so3274591fa.3;
+        Thu, 03 Jul 2025 16:24:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751585042; x=1752189842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NtvbM0ZJbl7PRtVkId0uy2JLD6jAbUhYMSmm1BPeVlY=;
+        b=gB9tu05guwikixpb2+OLLd5FSD0A3Zqv1vIOWC+LySdSdvlJhhRAJsp8A/E2fu34vj
+         YYe9wR4Un8P+Dj4EAwgGgSb2K3ixFG8qAys/DrSHFbRUvrHtF8LpiCePigrx8NvGwIMG
+         1rpdurTzh0eB1LyvrDdgsyW9ovRyP43xdIFY6LsGTab/0TQZUG4r+yNx1RRah62nz9wC
+         gn/aWy7Hg1+cX0W4POjtgsEsAirs/ili44VQWFmvOzpffMRGPVKMlyH8gGVhQ1OUgrzx
+         LMAoxV8ygpjkuwK1lDo0J44+eIcVx/GAIREJpbbZLfZuNJGWgEc3e/cJGp2gV4YmMww+
+         //bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751585013; x=1752189813;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751585042; x=1752189842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vIUTPB0Xa7IujQxGdU5BbuzZFcJXYmPAbUo0ojDRNf8=;
-        b=oVTFPeQQ4kcgXROZSQUWTMEO0yxtoVXX2tBKmH5CuwGIBoftsspU8CrCCI4zKP66zk
-         7DMoFnWxeNCE5SV+Lj5Rqd2q9kUsu6GQYurJbhfx8AkWd/X1LwgYPHXhXGs32tSD6n+D
-         2GrIcN0pPx5CtLq6MQEcCVWWo3teXLR/ZrG+TZO18EutgumNKkK3NxX1jbbYttcsSMks
-         GMWMBj4hSme/qsI7hylfdsTzLeJxPwcpMPWlCMSergLL2eMnIHPl1dDussVAFh+oRYwz
-         B7Kqz3fWi2hVNfMfhG2adEWjIFF+RjyYASgRasMMmPPYbSMdkA4nTKZx1vfRKDF6jrBM
-         8fIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVds/fygGvGW4WKjRpgkyqGiVI/2br5/QKxc3HRF+0VG0cTVuXi1xDol3DXCM3aK4uEy56QWOmGGay3KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvb2F7BJ2AK1bMNrXFoUduQ1dzwrqs7fisJGL8VwB8DyaD9O9+
-	wRUvcAXO3PV27xuztPH8YDeHdGAFTyVv5n+cuw+omQgb2rJZP/je8qnOJ3/manuCHCl4kGu9aV4
-	rqmpaJCwGNvq4WI2F2Gd2FWjwYMuQj8fGQj02ljKvCSDII5cUNTmIVpCS7ysGmUIQhA==
-X-Gm-Gg: ASbGncuwQ0Tpj6pUcsjO5bUdnj+KXSJbLxPbaSncklvHOUHre11oGtG4R6BnQ+Gel72
-	+6EAix3SZXB7vAc1/J3rosSafhb3ReZ7ADow7PI0w4CBziHUtR4DRTfh6D40PjjrUOi+skzbaPm
-	2Vg0eGl6h1XZTEu/8K5X0A9Uk/VPbRCVy042Q80+9E4FM5hIniYYfRPNvVoWwVUZ+5BIeRPwldc
-	8noYX9s71rz38luEA8u2R6rRiCciQYIxm7wNtjrIpqHP3HvtDNyyGupHrH7n6oL2auo4r4rSiMn
-	QK4YocAven/Sv/jrv5J1qhUbVvS2NAoPPcGaI8088IY5MCVhD2hPNZocOMkusg==
-X-Received: by 2002:a05:6214:400f:b0:701:945:68a0 with SMTP id 6a1803df08f44-702c6db6d72mr2550926d6.26.1751585012819;
-        Thu, 03 Jul 2025 16:23:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsLP+EtTPJqTbUAM3azCv14keKHQHBVX2XiZhb2AArhva5ftrpXUEhswiQr1GgZeMTOKJdIA==
-X-Received: by 2002:a05:6214:400f:b0:701:945:68a0 with SMTP id 6a1803df08f44-702c6db6d72mr2550676d6.26.1751585012507;
-        Thu, 03 Jul 2025 16:23:32 -0700 (PDT)
-Received: from [192.168.1.15] (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d5a958sm4469956d6.84.2025.07.03.16.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 16:23:29 -0700 (PDT)
-From: Brian Masney <bmasney@redhat.com>
-Date: Thu, 03 Jul 2025 19:22:34 -0400
-Subject: [PATCH 10/10] clk: sunxi-ng: ccu_nm: convert from round_rate() to
- determine_rate()
+        bh=NtvbM0ZJbl7PRtVkId0uy2JLD6jAbUhYMSmm1BPeVlY=;
+        b=UdbXuAMhIvtW+S5FnD5h/58wNpzEQ0zEhYOGlQcbo0JadRDWc8ltsf9zJGVr3mlOLB
+         xF5Ly1ThDTVEW7wsQzjIcyOHJhLyj25Kuw5Ey0kWSZ2awjLocd6DW8H9ZxSWJAvb1w2z
+         k9WJ4E+2O9UZF+KydRRBZ2iIcBiA26uPezhwwv0UBUoJ1aiMujy3Pfj5xb0LGXjonsTq
+         EWv2zdg5HhCbtw/x04zMhFkIkfXYoffjvGzj6413qOUHgrzp4t+iuT4Nr3SikFOoZWm4
+         2X4MMdgJjOB+JaQhO5l50v4uDWvQazJWzl8zyqKidRPZwjRbYjigIuENse5swesMMcQu
+         hTOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBVfZJu+yCKUCc1DhccOSaqCp/o2KmIS+qQ/LO1LjXHK7LdXSuZnvbDofHtVZDcw1ZoxcLwVu3W3RW@vger.kernel.org, AJvYcCUInYjqaTCCYziykyiMasmPG5GXxvNt+ALwX1IJM4mMub3CZ0XKRdKTFiJLFC8nJcnBR4FXYcmw9/fsOePSGJk=@vger.kernel.org, AJvYcCUhvzmLPpOwL7FPWRib3ngiLvPVNhcGG8oFi4uHmMEmuNo+pfGMkWn2RuMOCRYiCWX4nX7mB+Y2rIU=@vger.kernel.org, AJvYcCVGOKaezMtDqqgtE0XrNrAf3oZ4wGoh1z7HmVRO++oB2qTAz5axjQhkeyAg5y0/mL8hkKhYa3l41QCB@vger.kernel.org, AJvYcCVS9CPlPD3HL1p8BTA6CtvDTSlm9vK13cUPE96iONBbKxrpwg2gIdM98Mr5I64tOz7Q6AoBMqotvJwC@vger.kernel.org, AJvYcCVdLg79700bRZTxo6TkDpK4SfM4+j8SftpRhPv0WO9NYr8YvhrIN/cKoafbcm9cDF3kMgWA4XOp6QwPcTA=@vger.kernel.org, AJvYcCW5jmhSOXPjFaK2sVIV8OIHqXXZqvD9tZCtVxqKc27Uoq8wl3RhyAG8J5yOe9Ora/m56bnGnao79F8iZZVW3ztQ@vger.kernel.org, AJvYcCWqPd/m8Vhdij+EBRz3TpsqKebZGWeyvZ9PQyG8nMrNk/JxIlvngTQKhID/jzP36EWCbKsX4uBr@vger.kernel.org, AJvYcCXptT5Umji3Ip6YnPn3KI44APAkEuBfvKXv1NHw7K+ilzsVU57fGKroMb/wH0blAW4UfnSWPmwKkLc7GD3Z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6tjsPMGIax4sWTIup1ofsiA/1PgXpM9rYjiZWmV9paWUzCZA5
+	ImLBjpfMgnT8XhLLsAp7Mm7AoTj4FwmuxwFIEbYbcqCI/apB+ORVK3Rr380pDx0xX3hUIBMbWQI
+	Ox7Ux165VHDPSWs4zkHaP9/fSmgpCRNg=
+X-Gm-Gg: ASbGncsCOmtdACNbfcZal+qJ74g7+iNrss48iYO8Vz2WeXZxndTeVVyZcAAHg/Z5JYY
+	QHpRgPJmLmyK5jBVVsaZS4hQqfyg1wudZEOzMCLx2Fzj6hPe3wY0S72W4GVaq9wwkrML+oot+rH
+	Y+okwBhOlxGZPq/QU0SkskGb4L0dk7XcZDgKPZY1NlpW48/oVc6SGODAUlpt2YsfccRqEuVmvnd
+	IXQ6zNcQ2cy1yGe
+X-Google-Smtp-Source: AGHT+IGEPG+g+OxH8rOfSaGvbFyeTmDB+1fQ7xPcfMGDOeGLeCcig+uAF9z9wcJ3Z5LOomVIJicrX6bQd17nnYWnOI4=
+X-Received: by 2002:a05:651c:2155:b0:32a:604c:504e with SMTP id
+ 38308e7fff4ca-32e5f62cdfcmr641231fa.38.1751585041586; Thu, 03 Jul 2025
+ 16:24:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-clk-cocci-drop-round-rate-v1-10-3a8da898367e@redhat.com>
-References: <20250703-clk-cocci-drop-round-rate-v1-0-3a8da898367e@redhat.com>
-In-Reply-To: <20250703-clk-cocci-drop-round-rate-v1-0-3a8da898367e@redhat.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Bjorn Andersson <andersson@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@redhat.com>
-Cc: linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-sunxi@lists.linux.dev, 
- Brian Masney <bmasney@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751584976; l=3661;
- i=bmasney@redhat.com; s=20250528; h=from:subject:message-id;
- bh=4fRm/4wvZQWe/TuI4l5eob8PB/NYw5v9nV4VOmFwTUI=;
- b=fvx7qhP1aLoIOPU3sjNvBCth81x2jcOY/I9wnn1tKMT2BbPA4cFWn1Ytapjub1E1HqAvCp+zr
- RDPpPrT6r0wCY9IQ3u30PGRfoAmv/kGQTGOqlafbNKX0lErw2qUupAD
-X-Developer-Key: i=bmasney@redhat.com; a=ed25519;
- pk=x20f2BQYftANnik+wvlm4HqLqAlNs/npfVcbhHPOK2U=
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com> <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org> <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <DB2PIGAQHCJR.3BF8ZHECYH3KB@kernel.org> <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 3 Jul 2025 19:23:25 -0400
+X-Gm-Features: Ac12FXySgZtzHdWG_UZyVlFR27yExYl4PiFasz3P6nXfOoJ_ZKfjtj833w6aTPo
+Message-ID: <CAJ-ks9kNiOgPO7FF3cAbaSNtTWs0_PzQ4k4W0AxjHNFuMJnDcQ@mail.gmail.com>
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The round_rate() clk ops is deprecated, so migrate this driver from
-round_rate() to determine_rate() using the Coccinelle semantic patch
-on the cover letter of this series.
+On Thu, Jul 3, 2025 at 6:41=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> On Thu, Jul 3, 2025 at 4:36=E2=80=AFPM Benno Lossin <lossin@kernel.org> w=
+rote:
+> >
+> > On Thu Jul 3, 2025 at 8:55 PM CEST, Tamir Duberstein wrote:
+> > > On Thu, Jul 3, 2025 at 11:08=E2=80=AFAM Benno Lossin <lossin@kernel.o=
+rg> wrote:
+> > >> On Thu Jul 3, 2025 at 3:55 PM CEST, Tamir Duberstein wrote:
+> > >> > On Thu, Jul 3, 2025 at 5:32=E2=80=AFAM Benno Lossin <lossin@kernel=
+.org> wrote:
+> > >> >> On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
+> > >> >> > Introduce a `fmt!` macro which wraps all arguments in
+> > >> >> > `kernel::fmt::Adapter` and a `kernel::fmt::Display` trait. This=
+ enables
+> > >> >> > formatting of foreign types (like `core::ffi::CStr`) that do no=
+t
+> > >> >> > implement `core::fmt::Display` due to concerns around lossy con=
+versions which
+> > >> >> > do not apply in the kernel.
+> > >> >> >
+> > >> >> > Replace all direct calls to `format_args!` with `fmt!`.
+> > >> >> >
+> > >> >> > Replace all implementations of `core::fmt::Display` with implem=
+entations
+> > >> >> > of `kernel::fmt::Display`.
+> > >> >> >
+> > >> >> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > >> >> > Link: https://rust-for-linux.zulipchat.com/#narrow/channel/2880=
+89-General/topic/Custom.20formatting/with/516476467
+> > >> >> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >> >> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > >> >> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > >> >> > ---
+> > >> >> >  drivers/block/rnull.rs       |  2 +-
+> > >> >> >  drivers/gpu/nova-core/gpu.rs |  4 +-
+> > >> >> >  rust/kernel/block/mq.rs      |  2 +-
+> > >> >> >  rust/kernel/device.rs        |  2 +-
+> > >> >> >  rust/kernel/fmt.rs           | 89 ++++++++++++++++++++++++++++=
++++++++++++
+> > >> >> >  rust/kernel/kunit.rs         |  6 +--
+> > >> >> >  rust/kernel/lib.rs           |  1 +
+> > >> >> >  rust/kernel/prelude.rs       |  3 +-
+> > >> >> >  rust/kernel/print.rs         |  4 +-
+> > >> >> >  rust/kernel/seq_file.rs      |  2 +-
+> > >> >> >  rust/kernel/str.rs           | 22 ++++------
+> > >> >> >  rust/macros/fmt.rs           | 99 ++++++++++++++++++++++++++++=
+++++++++++++++++
+> > >> >> >  rust/macros/lib.rs           | 19 +++++++++
+> > >> >> >  rust/macros/quote.rs         |  7 ++++
+> > >> >> >  scripts/rustdoc_test_gen.rs  |  2 +-
+> > >> >> >  15 files changed, 236 insertions(+), 28 deletions(-)
+> > >> >>
+> > >> >> This would be a lot easier to review if he proc-macro and the cal=
+l
+> > >> >> replacement were different patches.
+> > >> >>
+> > >> >> Also the `kernel/fmt.rs` file should be a different commit.
+> > >> >
+> > >> > Can you help me understand why? The changes you ask to be separate=
+d
+> > >> > would all be in different files, so why would separate commits mak=
+e it
+> > >> > easier to review?
+> > >>
+> > >> It takes less time to go through the entire patch and give a RB. I c=
+an
+> > >> take smaller time chunks and don't have to get back into the entire
+> > >> context of the patch when I don't have 30-60min available.
+> > >
+> > > Ah, I see what you mean. Yeah, the requirement to RB the entire patch
+> > > does mean there's a benefit to smaller patches.
+> > >
+> > >> In this patch the biggest problem is the rename & addition of new
+> > >> things, maybe just adding 200 lines in those files could be okay to =
+go
+> > >> together, see below for more.
+> > >
+> > > After implementing your suggestion of re-exporting things from
+> > > `kernel::fmt` the diffstat is
+> > >
+> > > 26 files changed, 253 insertions(+), 51 deletions(-)
+> > >
+> > > so I guess I could do all the additions in one patch, but then
+> > > *everything* else has to go in a single patch together because the
+> > > formatting macros either want core::fmt::Display or
+> > > kernel::fmt::Display; they can't work in a halfway state.
+> >
+> > I don't understand, can't you just do:
+> >
+> > * add `rust/kernel/fmt.rs`,
+> > * add `rust/macros/fmt.rs`,
+> > * change all occurrences of `core::fmt` to `kernel::fmt` and
+> >   `format_args!` to `fmt!`.
+>
+> Yes, such a split could be done - I will do so in the next spin
+>
+>
+> > The last one could be split by subsystem, no? Some subsystems might
+> > interact and thus need simultaneous splitting, but there should be some
+> > independent ones.
+>
+> Yes, it probably can. As you say, some subsystems might interact - the
+> claimed benefit of doing this subsystem-by-subsystem split is that it
+> avoids conflicts with ongoing work that will conflict with a large
+> patch, but this is also the downside; if ongoing work changes the set
+> of interactions between subsystems then a maintainer may find
+> themselves unable to emit the log message they want (because one
+> subsystem is using kernel::fmt while another is still on core::fmt).
 
-I manually fixed up one minor formatting issue that occurred after
-applying the semantic patch:
-
-        req->rate = ccu_nm_find_best(&nm->common, req->best_parent_rate,
-                                     req->rate,
-                                     &_nm);
-
-I manually changed it to:
-
-        req->rate = ccu_nm_find_best(&nm->common, req->best_parent_rate,
-                                     req->rate, &_nm);
-
-Signed-off-by: Brian Masney <bmasney@redhat.com>
----
- drivers/clk/sunxi-ng/ccu_nm.c | 43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
-index a4e2243b8d6b4a8fdd9ea1ff2ca06e2f1a009632..df01ed3b37a6b56e93e18cc4c1ad5909e2ba0c5b 100644
---- a/drivers/clk/sunxi-ng/ccu_nm.c
-+++ b/drivers/clk/sunxi-ng/ccu_nm.c
-@@ -116,39 +116,39 @@ static unsigned long ccu_nm_recalc_rate(struct clk_hw *hw,
- 	return rate;
- }
- 
--static long ccu_nm_round_rate(struct clk_hw *hw, unsigned long rate,
--			      unsigned long *parent_rate)
-+static int ccu_nm_determine_rate(struct clk_hw *hw,
-+				 struct clk_rate_request *req)
- {
- 	struct ccu_nm *nm = hw_to_ccu_nm(hw);
- 	struct _ccu_nm _nm;
- 
- 	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--		rate *= nm->fixed_post_div;
-+		req->rate *= nm->fixed_post_div;
- 
--	if (rate < nm->min_rate) {
--		rate = nm->min_rate;
-+	if (req->rate < nm->min_rate) {
-+		req->rate = nm->min_rate;
- 		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--			rate /= nm->fixed_post_div;
--		return rate;
-+			req->rate /= nm->fixed_post_div;
-+		return 0;
- 	}
- 
--	if (nm->max_rate && rate > nm->max_rate) {
--		rate = nm->max_rate;
-+	if (nm->max_rate && req->rate > nm->max_rate) {
-+		req->rate = nm->max_rate;
- 		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--			rate /= nm->fixed_post_div;
--		return rate;
-+			req->rate /= nm->fixed_post_div;
-+		return 0;
- 	}
- 
--	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, rate)) {
-+	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, req->rate)) {
- 		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--			rate /= nm->fixed_post_div;
--		return rate;
-+			req->rate /= nm->fixed_post_div;
-+		return 0;
- 	}
- 
--	if (ccu_sdm_helper_has_rate(&nm->common, &nm->sdm, rate)) {
-+	if (ccu_sdm_helper_has_rate(&nm->common, &nm->sdm, req->rate)) {
- 		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--			rate /= nm->fixed_post_div;
--		return rate;
-+			req->rate /= nm->fixed_post_div;
-+		return 0;
- 	}
- 
- 	_nm.min_n = nm->n.min ?: 1;
-@@ -156,12 +156,13 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsigned long rate,
- 	_nm.min_m = 1;
- 	_nm.max_m = nm->m.max ?: 1 << nm->m.width;
- 
--	rate = ccu_nm_find_best(&nm->common, *parent_rate, rate, &_nm);
-+	req->rate = ccu_nm_find_best(&nm->common, req->best_parent_rate,
-+				     req->rate, &_nm);
- 
- 	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
--		rate /= nm->fixed_post_div;
-+		req->rate /= nm->fixed_post_div;
- 
--	return rate;
-+	return 0;
- }
- 
- static int ccu_nm_set_rate(struct clk_hw *hw, unsigned long rate,
-@@ -233,7 +234,7 @@ const struct clk_ops ccu_nm_ops = {
- 	.is_enabled	= ccu_nm_is_enabled,
- 
- 	.recalc_rate	= ccu_nm_recalc_rate,
--	.round_rate	= ccu_nm_round_rate,
-+	.determine_rate = ccu_nm_determine_rate,
- 	.set_rate	= ccu_nm_set_rate,
- };
- EXPORT_SYMBOL_NS_GPL(ccu_nm_ops, "SUNXI_CCU");
-
--- 
-2.50.0
-
+I gave this a try. I ran into the problem that `format_args!` (and,
+after this patch, `fmt!`) is at the center of `print_macro!`, which
+itself underpins various other formatting macros. This means we'd have
+to bifurcate the formatting infrastructure to support an incremental
+migration. That's quite a bit of code, and likely quite a mess in the
+resulting git history -- and that's setting aside the toil required to
+figure out the correct combinations of subsystems that must migrate
+together.
