@@ -1,139 +1,101 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E98028688E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F062D3751;
+	Thu,  3 Jul 2025 22:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751583134; cv=none; b=iJGo49d2tkpAHpv6UAeCxwrLyV1+oTO92iWKqwoqLgZDJS3CepVRYxJUpuGYk5xEeac7iNGoVQ1vlNflq+T1EmVN0r84yk4i3UPuZfRjUNP3/pk7IgZeC3P//Bl8ecn5ZxVtSNgw6rOqaFJwpMmb2rxtAjSqfkd/Unc79skbBNU=
+	t=1751583195; cv=none; b=QRqvw+agjJwCjBrw8O/wBTYrOfG7XJyziTCFkjP7aqGj7D6kuH+vAOjHfTYvw5w7Heq6OucnTzkGjmkPdB+zqmXrsnp2m2hIvpId13BIRA847AHpF+WmQxBlC2abA5SeWiZfhhtK0GMn2DRoxHp83CqQI94IeleHbbdcHOFlitk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751583134; c=relaxed/simple;
-	bh=SrbSgR8z7VAFvgNtPOHjzyUA0i8Iy37C/quNnt5Y7sg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GM0FBlTKsSaCnIlNNXaalRib448mgf+Pf6hLJtTGg2QgWFnGCTeXyqkeV4ZOMNopJXrxgr3K4mX/1ElhoQlOvP+znvW5Zq9b8wCUK8V3UsIqcSvbbpt+KLvXLCCFWbXW0qtJA2s2n30sB7qbbZvdmN1QQtPLyfo2KLYgSMPt7y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sbpVjUub; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1751583195; c=relaxed/simple;
+	bh=3bWBSlOd1mEysHg8taMzS1I42clX6SsWKrJ8TpC5pSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U833O2lzPvP4M2Yf9gxcHXuccSQGDM6QfZgKXmuj6IVdVE57GeszTy1t7t4n1fLArH5tJWRsMlTHKAWruEt1is4VyrpfIDAZU4wH4qb2wcANuSRvU/8ckHQqtIj/I+IB40USUTuSmL/iBdGlPzsD+gmeoG2iz/a6E9MQQFgoq4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=let/ROpg; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sbpVjUub"
-Received: from gem-name-lb-02.localdomain (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C97C52112234;
-	Thu,  3 Jul 2025 15:52:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C97C52112234
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751583133;
-	bh=hkN8L9xgqGTz5SjbY2lKznqJQajE7JkxLsFT/BgDVSM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sbpVjUub2Vsk1TkQ1ZGCLm706D8CpRnhbjwpwNJjcBSBcuJrcxd74qVAgZ/GzgiIL
-	 Q/StG9Dr330EVko5xEjZugWVNVG1lwSRcJb8GkAmS/NwN5+dl3LnhyTU7Ot7fOXs1q
-	 Oiz1spIN8L6+adLRfiB8BT4WQ/1yICoN1EeFDeWA=
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-To: Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	cocci@inria.fr (moderated list:COCCINELLE/Semantic Patches (SmPL)),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Ricardo Ribalda <ribalda@chromium.org>
-Subject: [RESEND PATCH] coccinelle: misc: secs_to_jiffies: Implement context and report modes
-Date: Thu,  3 Jul 2025 15:51:32 -0700
-Message-ID: <20250703225145.152288-1-eahariha@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="let/ROpg"
+Message-ID: <218ed5ce-6e0d-41f7-809b-04e554d08c5a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751583186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LIyqDlLt3CT1utfTbk2TkfmajXEi5ZvgikV+/3VcJck=;
+	b=let/ROpgpEs+HqLRrGdvieskEbzt9tFEKP9ekxEOGcwqnmErdLrGJ016+f28aLWFswBbmF
+	exExgIED9KiRFUeIyT4jn1VfJq/r0JPY0xLLmJbbbF+GAA6mGFCUB1WGIJTwYsMse1RLb4
+	HiQRVv3DpWbFq6UjPVjAFyXhxzupLh0=
+Date: Thu, 3 Jul 2025 23:52:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v10 06/11] net: ti: prueth: Adds HW timestamping
+ support for PTP using PRU-ICSS IEP module
+To: Parvathi Pudi <parvathi@couthit.com>, danishanwar@ti.com,
+ rogerq@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, ssantosh@kernel.org,
+ richardcochran@gmail.com, s.hauer@pengutronix.de, m-karicheri2@ti.com,
+ glaroque@baylibre.com, afd@ti.com, saikrishnag@marvell.com,
+ m-malladi@ti.com, jacob.e.keller@intel.com, diogo.ivo@siemens.com,
+ javier.carrasco.cruz@gmail.com, horms@kernel.org, s-anna@ti.com,
+ basharath@couthit.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pratheesh@ti.com,
+ prajith@ti.com, vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+ krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+References: <20250702140633.1612269-1-parvathi@couthit.com>
+ <20250702151756.1656470-7-parvathi@couthit.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250702151756.1656470-7-parvathi@couthit.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-As requested by Ricardo and Jakub, implement report and context  modes
-for the secs_to_jiffies Coccinelle script. While here, add the option to
-look for opportunities to use secs_to_jiffies() in headers.
+On 02/07/2025 16:17, Parvathi Pudi wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> PRU-ICSS IEP module, which is capable of timestamping RX and
+> TX packets at HW level, is used for time synchronization by PTP4L.
+> 
+> This change includes interaction between firmware and user space
+> application (ptp4l) with required packet timestamps. The driver
+> initializes the PRU firmware with appropriate mode and configuration
+> flags. Firmware updates local registers with the flags set by driver
+> and uses for further operation. RX SOF timestamp comes along with
+> packet and firmware will rise interrupt with TX SOF timestamp after
+> pushing the packet on to the wire.
+> 
+> IEP driver is available in upstream and we are reusing for hardware
+> configuration for ICSSM as well. On top of that we have extended it
+> with the changes for AM57xx SoC.
+> 
+> Extended ethtool for reading HW timestamping capability of the PRU
+> interfaces.
+> 
+> Currently ordinary clock (OC) configuration has been validated with
+> Linux ptp4l.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> ---
+>   drivers/net/ethernet/ti/icssg/icss_iep.c      |  42 ++
+>   drivers/net/ethernet/ti/icssm/icssm_ethtool.c |  23 +
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.c  | 423 +++++++++++++++++-
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.h  |  11 +
+>   .../net/ethernet/ti/icssm/icssm_prueth_ptp.h  |  85 ++++
+>   5 files changed, 582 insertions(+), 2 deletions(-)
+>   create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ptp.h
+> 
 
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Ricardo Ribalda <ribalda@chromium.org>
-Closes: https://lore.kernel.org/all/20250129-secs_to_jiffles-v1-1-35a5e16b9f03@chromium.org/
-Closes: https://lore.kernel.org/all/20250221162107.409ae333@kernel.org/
-Tested-by: Ricardo Ribalda <ribalda@chromium.org>
-Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
----
- scripts/coccinelle/misc/secs_to_jiffies.cocci | 49 +++++++++++++++++--
- 1 file changed, 44 insertions(+), 5 deletions(-)
-
-diff --git a/scripts/coccinelle/misc/secs_to_jiffies.cocci b/scripts/coccinelle/misc/secs_to_jiffies.cocci
-index 416f348174ca..f3241ce75a7b 100644
---- a/scripts/coccinelle/misc/secs_to_jiffies.cocci
-+++ b/scripts/coccinelle/misc/secs_to_jiffies.cocci
-@@ -7,26 +7,65 @@
- // Confidence: High
- // Copyright: (C) 2024 Easwar Hariharan, Microsoft
- // Keywords: secs, seconds, jiffies
--//
-+// Options: --include-headers
- 
- virtual patch
-+virtual report
-+virtual context
- 
--@depends on patch@ constant C; @@
-+@pconst depends on patch@ constant C; @@
- 
- - msecs_to_jiffies(C * 1000)
- + secs_to_jiffies(C)
- 
--@depends on patch@ constant C; @@
-+@pconstms depends on patch@ constant C; @@
- 
- - msecs_to_jiffies(C * MSEC_PER_SEC)
- + secs_to_jiffies(C)
- 
--@depends on patch@ expression E; @@
-+@pexpr depends on patch@ expression E; @@
- 
- - msecs_to_jiffies(E * 1000)
- + secs_to_jiffies(E)
- 
--@depends on patch@ expression E; @@
-+@pexprms depends on patch@ expression E; @@
- 
- - msecs_to_jiffies(E * MSEC_PER_SEC)
- + secs_to_jiffies(E)
-+
-+@r depends on report && !patch@
-+constant C;
-+expression E;
-+position p;
-+@@
-+
-+(
-+  msecs_to_jiffies(C@p * 1000)
-+|
-+  msecs_to_jiffies(C@p * MSEC_PER_SEC)
-+|
-+  msecs_to_jiffies(E@p * 1000)
-+|
-+  msecs_to_jiffies(E@p * MSEC_PER_SEC)
-+)
-+
-+@c depends on context && !patch@
-+constant C;
-+expression E;
-+@@
-+
-+(
-+* msecs_to_jiffies(C * 1000)
-+|
-+* msecs_to_jiffies(C * MSEC_PER_SEC)
-+|
-+* msecs_to_jiffies(E * 1000)
-+|
-+* msecs_to_jiffies(E * MSEC_PER_SEC)
-+)
-+
-+@script:python depends on report@
-+p << r.p;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING opportunity for secs_to_jiffies()")
--- 
-2.43.0
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
 
