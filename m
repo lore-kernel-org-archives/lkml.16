@@ -1,151 +1,103 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD612E266C;
-	Thu,  3 Jul 2025 09:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94EA2DCF68
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536618; cv=none; b=sWGEJ/Bmu4PlFVcQFtOHdEIya5fKmFoLpFQ1zldQE7mSvknJ0wd5gEkc7VMbL9kvZnFRstsdis4883ryMGesnn5IwGaYg2198ZMRza2i7HcGm8Q7bj4NzVwSWyh4ByZIP4JUBgcMEcxSFTdmsfoJGbWuif/bSwvpX4EjpewncXI=
+	t=1751536645; cv=none; b=iq9xlenTzco5EQP3GWyGhVKOUtlGDaF/FcwzgUYLTZOWklaNLG2ibiz/6ibCczI77rBD6fYyyJFcdERN7uiouWZknjYDpn7cg3lN/C5X0lKmV8x3rFdIG9jxddIc/fYi+Kruvgc+Szj2hrXXNAQB6cdKrTpRfKHCaltgQQlCdXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536618; c=relaxed/simple;
-	bh=eNDQVSH8v0uC/hwjkbPHcqXX9/2fnwj+diBc34svhKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oZttUNgONYOsPFEXO+aCVEk8PMy0ClBo0H/xW+tcUffFvR1Z88mtezwrH2WTpYcUgM23mr2tA2HQnGemNzcfh5/r9Bn+EmYeUseki6nU3ZkZzoXI0bWYLA7qfG/Y0jM5tvoYCNqYAgH48M7bZADCxWRfkfnAONI2LBRvxl+IySU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5314b486207so1699605e0c.2;
-        Thu, 03 Jul 2025 02:56:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751536614; x=1752141414;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L8fCFmqiRtYjx8NxRrvwOc9lKPDy8QiuCPlA93ibkU4=;
-        b=Ix7XuhjLsxrLw2AHKCrOjgnKj08lWg0IQ5AiRDrDmMP8pvRDMAJco482uGq1YxpFfH
-         e+cjOU5sg5cZt7ozlvcQhZdjkX9QjN+jkkow8+dBgfP11SYvUXTXeZVq1RCyKU+ED1qE
-         1A6IeHXpIZMN1mSVQS38LTWdLXxMBI4i69BCOkNEMWVPUOIbEl+wpLH7wL8qbkklV4G1
-         MnjhhkwdsQS8fJPEholpP+dKwGv0MTWCx/+TwadkprWN1/9ePenXcMX5Go9y0OIQu8mi
-         GBof6+NyWpJuPRY9OoyeWlHlqrLEO0zi+8jW/T5eZfAV2IV8nTrmwixhToX/lEUg8CnI
-         FT8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDdcCwDHLulnnRquA+vVjCE32tycKrtjTKAq0UbzIOQu1/yp5u2sHlqvBwaADyG1E85zlltYH0uMGOszz0x47W4s=@vger.kernel.org, AJvYcCW7ElAt9cSrAsgnwgoPJcA23OGASh9shN3f2cGhNH4NPZNLaAEju0DFEQZ1Zw8k04MDbHvwtBCRQ96QNGwW@vger.kernel.org, AJvYcCXGQgwc6wD2DdNz1V15hnPv8ZAYmBP26mHjVimriklkflyvj2N4bt8FJPGK1oX+t4PLINClMnuj5SFM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfrmmdFDBF/hONswvEDp9ugop0dOdssMIwLqjByjvl55ibkOgO
-	3QHx6tP2jDQSmPHrn1DZaGW+5H3MDs2hFLC7VvxAzj/5zsYYkuYjNN1+Cn+A9v5z
-X-Gm-Gg: ASbGnctz0xToSEAzGrK8bcRUazV40UR3nO1RJhLROv5Ph36cgeCaree90jhccoiaWnp
-	7aEFu1y6JrZuYoHo8Z8aXajIRYPWokTHVokxjo6uyWUTIUfOYhOZrHXcBIvwsi/akLJSjn2xzhQ
-	EzG6p6pFmDu944s1PefY6c5AxY9beQHFxzzle0lV+b63Nzmj2KUYnzttUGnVaZGR9VCIeJY4XmQ
-	y71eANasdkXDTU/zADmfiqBM7oA+7fJ0HdbAed/GH7d47KaBi6pxltZLMIKUVsP3sGM0ALhvuqK
-	dF8D/SGr1IlOgmv9lQ69kzQe4OY4sDu0BKTFPFimAXeAfXhJjDxty28nZMD9U2b9h9BLiwQqRNc
-	Ynhh1ANiaFOfflRXPki1RxUix
-X-Google-Smtp-Source: AGHT+IHOzpSSPWUwa9G8ZY9dCfLbcfBQ6bG6coj3guRdRNSXdQhjdxHUy3p2ruURVt7S7WOgxD3nww==
-X-Received: by 2002:a05:6122:30a1:b0:52f:47de:3700 with SMTP id 71dfb90a1353d-5346677b5b3mr1968399e0c.5.1751536613861;
-        Thu, 03 Jul 2025 02:56:53 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53309079316sm2434504e0c.6.2025.07.03.02.56.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 02:56:53 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7ade16082so1422115137.1;
-        Thu, 03 Jul 2025 02:56:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUOfSf53TyAjHHC+RdeW6YARtfHbpvAz8EqVFHuxPAxvLuiGD3JKK9TkZDb5RUORgC4xDTJXR7ANdJS@vger.kernel.org, AJvYcCUcHytCR3UB7ncyzw6H85j6/mjsdJ6d8T5IRgH2U2d+l7w58R46j+aCI//mOkUrKvjRBIkYjESZWqlOu3rU@vger.kernel.org, AJvYcCVVvVaZt/i08dUm2dZ+0TUUUMJ2IRot/un1DPxC2iUxxD8BEWhkaVHWx0lD+HDFxtp/HVrX98f+Lb4brBRD4nr/rRw=@vger.kernel.org
-X-Received: by 2002:a05:6102:292c:b0:4eb:f003:a636 with SMTP id
- ada2fe7eead31-4f174707381mr2600388137.0.1751536612823; Thu, 03 Jul 2025
- 02:56:52 -0700 (PDT)
+	s=arc-20240116; t=1751536645; c=relaxed/simple;
+	bh=c5big+j1eLYqTd9f91QD21CM2Uu+ovktIk2We9V9Kms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUCtpqnTmw5lhL+vmLJUscyjUCnjBECNrxJBwarxWiT2vv++K6fneJatgCbhgkrpMgYuhU8kRZcx8TDC5KzjoY5O0l0OZxP9W85AblNu2UG0FxkqSfkt5fhU0rXuVrfcqemOgDFIGsiGYHUfSYPAe/ukczrcspcxh9cUgk32m/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uXGgb-0007Za-5y; Thu, 03 Jul 2025 11:56:57 +0200
+Message-ID: <8db56c73-191e-48ec-9a28-cbb0da9a8a80@pengutronix.de>
+Date: Thu, 3 Jul 2025 11:56:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625153042.159690-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625153042.159690-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 3 Jul 2025 11:56:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUuqwo5Q2SuB=GBMLVYr1yNTB0hoOCohV=HeQ09NE32xw@mail.gmail.com>
-X-Gm-Features: Ac12FXwDFXpvJZ6kxdhFAuOGQAkK_IU-1R3OV7hX30hnHfp4LknSluCwrqzk5X8
-Message-ID: <CAMuHMdUuqwo5Q2SuB=GBMLVYr1yNTB0hoOCohV=HeQ09NE32xw@mail.gmail.com>
-Subject: Re: [PATCH 4/6] arm64: dts: renesas: r9a09g087: Add SDHI nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/6] imx8mp: add support for the IMX AIPSTZ bridge
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+ Marco Felsch <m.felsch@pengutronix.de>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+ <3615415b-7ebd-45e5-8d7b-8a1b26ac7130@pengutronix.de>
+ <10ef8a9a-6d23-4fb9-933f-71ab493d21c7@gmail.com>
+Content-Language: en-US, de-DE, de-BE
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <10ef8a9a-6d23-4fb9-933f-71ab493d21c7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Hello Laurentiu,
 
-On Wed, 25 Jun 2025 at 17:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add SDHI0-SDHI1 nodes to RZ/N2H ("R9A09G087") SoC DTSI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 7/3/25 10:51, Laurentiu Mihalcea wrote:
+> 
+> 
+> On 7/3/2025 11:11 AM, Ahmad Fatoum wrote:
+>> Hello Laurentiu,
+>>
+>> On 10.06.25 18:01, Laurentiu Mihalcea wrote:
+>>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>>
+>>> The AIPSTZ bridge offers some security-related configurations which can
+>>> be used to restrict master access to certain peripherals on the bridge.
+>>>
+>>> Normally, this could be done from a secure environment such as ATF before
+>>> Linux boots but the configuration of AIPSTZ5 is lost each time the power
+>>> domain is powered off and then powered on. Because of this, it has to be
+>>> configured each time the power domain is turned on and before any master
+>>> tries to access the peripherals (e.g: AP, CM7, DSP, on i.MX8MP).
+>> Sorry if this has been asked before, but I hoped the cover letter or patch
+>> 3/6 would explain if it were.
+>>
+>> What is the default configuration for the AIPSTZ before this series?
+> 
+> the default configuration is the reset configuration since AIPSTZ registers go
+> back to their reset values during domain power cycling.
+> 
+>> I assume the SAIs under AIPS5 can be accessed by SDMA already, so why was
+>> changing the AIPSTZ settings needed for the DSP to work?
+> 
+> AFAIK SDMA transactions to peripherals don't go through AIPS5. They use SPBA, which
+> is why SDMA works even w/o this series. As for the DSP: transactions to peripherals go
+> through AIPS5. With the reset configuration, the DSP is not allowed to access said peripherals,
+> which is why this series was needed.
 
-Thanks for your patch!
+I see. Thanks for tackling this issue and your explanation.
 
-> --- a/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> @@ -155,6 +155,46 @@ gic: interrupt-controller@83000000 {
->                         interrupt-controller;
->                         interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
->                 };
-> +
-> +               sdhi0: mmc@92080000  {
-> +                       compatible = "renesas,sdhi-r9a09g087",
-> +                                    "renesas,sdhi-r9a09g057";
-> +                       reg = <0x0 0x92080000 0 0x10000>;
-> +                       interrupts = <GIC_SPI 782 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 783 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 1212>,
+Cheers,
+Ahmad
 
-1112?
-
-> +                                <&cpg CPG_CORE R9A09G087_SDHI_CLKHS>;
-> +                       clock-names = "aclk", "clkh";
-> +                       power-domains = <&cpg>;
-> +                       status = "disabled";
-> +
-> +                       sdhi0_vqmmc: vqmmc-regulator {
-> +                               regulator-name = "SDHI0-VQMMC";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +
-> +               sdhi1: mmc@92090000 {
-> +                       compatible = "renesas,sdhi-r9a09g087",
-> +                                    "renesas,sdhi-r9a09g057";
-> +                       reg = <0x0 0x92090000 0 0x10000>;
-> +                       interrupts = <GIC_SPI 784 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 1213>,
-
-1113?
-
-> +                                <&cpg CPG_CORE R9A09G087_SDHI_CLKHS>;
-> +                       clock-names = "aclk", "clkh";
-> +                       power-domains = <&cpg>;
-> +                       status = "disabled";
-> +
-> +                       sdhi1_vqmmc: vqmmc-regulator {
-> +                               regulator-name = "SDHI1-VQMMC";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               status = "disabled";
-> +                       };
-> +               };
->         };
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Pengutronix e.K.                  |                             |
+Steuerwalder Str. 21              | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
