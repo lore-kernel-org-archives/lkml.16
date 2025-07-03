@@ -1,237 +1,153 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EFDB652;
-	Thu,  3 Jul 2025 13:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316D857C9F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751547729; cv=none; b=pudsvk1jMixCy/YeL2/Atfeh2wnFYTzj83vxANXNviGCHO0ab5mG7EneVppecaMpLDP7+JpZ8VgJKp3HSXpnEF3oZmiNecCQHDSGd8Co5J95Pg5z5YJWb+fm5BPzIIv5XFa0pCjdJCCbR/uSsG2NCA0cxcR2tuQzbIwhTDFH9b4=
+	t=1751547815; cv=none; b=HfeIlqGZEmZZoIvHfdkTEzW42CdmTK8i9Mov6pMEOzhKcK6t7m2kP4gt7m0Sit3Y3fKDl73FVI3ATEoIGB+/o6IE1I47JhnzRmE+VDu+n8TPY/Hne0hGRzXfexlyt2uu5plwqPLFcrWFOotyjXAgY07Qm+ekhAPZZV/FzZMhbwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751547729; c=relaxed/simple;
-	bh=TrGYughrHDhywCZQzuv7f57ns1JdlSyF4/JJubTYWo4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jhiJFlwH8xsXQfBcgPxeQnS2c8pKBbcjsTmMfFX9aDtSq0YtsCu8ZubqHAdiAt5L1G0aI9mTVsOQH9FjZ2IZFE1TzU2bYL+zAGMFbimjEjyurt9a0bFtCZFU8Q6PAE2a1sRHXG4ASags8/QQvELsyPvEh6zWI+fYRwTkTJHaBO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+cch1ye; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751547815; c=relaxed/simple;
+	bh=ZYfjP7FwB1GpkWrGjPRU1WDQ3B9s1Ej+w3TERaVUTTA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u4lnsMVMmz6J12Tuxi4G/HHRZNdeEuehkERVwbGltn65q9zZnV9OBgl0CNSeC7YMkIqkgm2bzMH0XZMgEUIMA0JnypHWZc4IiBgYrN4mtx2VAGKyzX5ucC7jRsppl47hfETS/6ky1CK7xNfU+xk/xoVVJaWkYUB9Vyck1likgAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AOz6qUhW; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+cch1ye"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23508d30142so66508445ad.0;
-        Thu, 03 Jul 2025 06:02:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AOz6qUhW"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453643020bdso69544805e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751547726; x=1752152526; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=suqxcEDNBCLHVH6MEYrG4k9pSxU63uJSQ0xDlxOIj8M=;
-        b=Y+cch1yeiKHQsgW2vPTgX4MDe3wLS+bE3dwLTids92A5cQGKH+Yo4IJzX6AM//V/WO
-         w+ZVPEvXAqs185QeQsT1Oz0RBVjsOMsBXBXLoPpodMdUYj9ChtBOvXap7+F1Ln2a8x2h
-         RJigi1jJ9GSYOpxvyP1JFAQTnW94zWUhW7VtyN/d/y/TpwN+IcYjS2fFC4uNDUvKBxAc
-         ZSrIFjILImYBHIxvAw2t+6B1poNVqLGAav7Lye0uHtxTt9MhUyHFRO5URgXcIx+lnFgT
-         iAjsPcd3ri2sNiSKSEqNqGL7kgfz2rF7aEt91nbxn/z5u8GxE+cC5G2tdp6oWh5TDur1
-         rh+w==
+        d=linaro.org; s=google; t=1751547811; x=1752152611; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t8sMnLmbVBtviSShW9F4axvuEDVtfhtpbcNw4bBlT7c=;
+        b=AOz6qUhW7P+PPO2Jvo7E/0Hr8O2rVgb6NtEuLYeX4nQqS4cPMbOcH+DeyASKyk01u2
+         e4dWeIlx3AcbYxITH5SZyh3Yk4S88Vs/r7iJMx4or8DYR+RjSrRXEicCbsZCfcOiFLct
+         C5zDDaqYH27KLfU874rl+4scoIujbI4hDX8Lsnmb8xryNHVjivywH5scetZDaMhwWfa+
+         1jA787GewInL3TRyzF9T7jlD/Aaqtj1N8qLS3Da9yxElqqMp6cJNiQaaER5KCirApY7I
+         un3z4JU9lrjwmBBK1Pcs9lM0+h8WRIS1JQwqBt+0Kdt2r0KuoKG3imU/0FBLjBDft8bt
+         g0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751547726; x=1752152526;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751547811; x=1752152611;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=suqxcEDNBCLHVH6MEYrG4k9pSxU63uJSQ0xDlxOIj8M=;
-        b=EhFlgYtF9MbEqu5BF4LQvqvJG2vdMaVvIOj4Am7PWQVQh5fFx2D6z4aD4yuh2Wwtrj
-         ocrLl9kNW5I9ZHYaAAC3f6ZS1qsYJKh82J4k6dL26VE4ntbzbMqiyDgUUGHkwOWi9XDZ
-         ZRTJGgj1k+zqNXmmlpGvvYzpwQoWmrCL7qL8MRbR/yg7PF1xZ+AdS9/MzPfvGzItCKR7
-         jXeIiiJfH10g+IN7DkTxCNl5Vbluw+fqCURZoffD6g3ru4nmWMgpK8cD2UM04W/u/CLb
-         GtiB8KXm/vPrOr9iA/Zzd8bj5iYNpV8ST+nLDqmPMSiRf9GBj0zPr/1uAR9TVOZsHedP
-         8f9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVdwsW+g1MXZyrbIQmp0dUAsDbdPCMMCi5BjKL8IebzXkBza4Q+VRwjKmh9py+lP47uLb0W2tjuJuDOgXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMlJKc5Dg2DcNQlJGdAwhC86mTZ8FJwwu/jNqofYeMEdQ5116A
-	ye+nO7fwxrjJrTGZbm2VT7Sw+4z/cfPvg1znOPs9/JKQPKHreHFd1wumsATwne2im9s=
-X-Gm-Gg: ASbGncv/nVabL+irCu4+xaJVnFc/UTgkvFnLPLa8qYlC2UWupOZy6mQMdqNxbqrCe8H
-	Irtoc3pKTy5K+irUT3FSfCmcq64dUmqxLUgG1xPTfC1O4mvOlMV7+ZQZrxJhorEhHMg4Ww8yYpn
-	V7Tw14nYI5wglN3or+UcaV5akWO5UGGnmokpq6Wie9pFlPldD0gDKNny0Q1B8IomIJGBToN3E/U
-	uxu2bmtNCuPMYlvgN3lsgEjY++YCwJR+plwiJz+4C4S2NfO2VAL8BtEwZ5WRasbJjhjOIrK4cUL
-	xC83T3D33TWfw+rsBxECiaCkNyIpdE8ORGhNAy0lwKS7MHnaf22kudrKYfZEHlVnVjcRsOXqNJV
-	K2TDcTxTRs2E=
-X-Google-Smtp-Source: AGHT+IFN3jK2lulyfvEhbh3K9++N3V/25lbHMvU2+TI6rKDdiedwACpF7X62+K8yahmFiIa6kkFmCA==
-X-Received: by 2002:a17:903:1aa7:b0:234:de0a:b36e with SMTP id d9443c01a7336-23c797b288emr46884075ad.49.1751547725660;
-        Thu, 03 Jul 2025 06:02:05 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ad9f5sm161942995ad.151.2025.07.03.06.02.02
+        bh=t8sMnLmbVBtviSShW9F4axvuEDVtfhtpbcNw4bBlT7c=;
+        b=imo2vCI+WMyz6mZ1QA6oGG8NPWPyFXf7qJThvcwXvuc9WgT+3yPO1vMPRBURsju6c1
+         2k/NJGhR1kwp3ize4AcH4wLlKRuGRhSGLuhp2ZhjQpUwzOoF0HiHBxyD1qxPvK1UOppX
+         /30o3S/MMKRj2oIA5aQelBy2u45zqYIr19ffMUBToAoWm942nS63pt4suZOF4YnHuDdU
+         PO3Lqsk6B7M2AcS84RJJPAeSu1qnO/HMlXaP7ItCPM9g53MEAo5pxBqrf1WIhlLUo0zx
+         1vmIT3mRrhTr0SDXaRVTov303UNymlFCyXkhbA7SzJGWRVTKudaPWS679CVMiMKI3tOj
+         yj3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXBA2fbgvXD82qws7xqKGxojydFiC8F71EX5l+3pfj3yEljscBgHoierfQWNtdAJ+sJ4etFcBj4rzBfviU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw2XXb4m1CsyawsfLyFoDm3IebvPCXQqNnJ1DsyRr0g5aXuy38
+	WST+btUecspHvSH1ZWRZRKJr66ZEOKqlF1E7uRlUkBZljqvfcK7Ih71CmGdH89x6+wQ=
+X-Gm-Gg: ASbGncuvzbhdO5CtMc8tETrrrtp9m9oxVlCQYC3smpzYjMHMuK4mkYdV/B0OG3a9Cu4
+	SCFm58YpTw0cn4hTKxVC9+ICR2R8d0P6RHmtQaY4SfAt1eJ/aygGXe8/E2Nsr/N7a1VVYENKkXa
+	UM/UnFtgHPZZt3QrMRkiQhoxNEkQTtcH2oM+YmnbuNyOr+gIxepl4Y3iTNuvdSvb38oYcolzjIR
+	xMqNkaLVvvhneFzQEyM4P9625R/05lvVrTz+zSLDt/LaPhahctnsDMTqGSD7rg17m6kALxJVjlw
+	QzOkM08QiFieE2A0I3SmtkDu19U8U19EN4dExAM3lzakYsssBE6uk5OgSWkl/8EwDwOQBTR7jfz
+	l2dZPPT88GM+EN0Ic
+X-Google-Smtp-Source: AGHT+IEZcpwBB34LdSCvoGZVWtrYKSw+G3TApJ8ZTvGGFXgDj4RIhH4+oyBw0wZkTYa243/SZJTHFQ==
+X-Received: by 2002:a05:600c:3e17:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-454aeebbbd2mr18095885e9.0.1751547811082;
+        Thu, 03 Jul 2025 06:03:31 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([145.224.66.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a99693fesm26170005e9.7.2025.07.03.06.03.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 06:02:04 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: stable@vger.kernel.org
-Cc: urezki@gmail.com,
-	akpm@linux-foundation.org,
-	edumazet@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH 6.12.y v2] mm/vmalloc: fix data race in show_numa_info()
-Date: Thu,  3 Jul 2025 22:01:48 +0900
-Message-ID: <20250703130148.18096-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        Thu, 03 Jul 2025 06:03:30 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 0/2] Add new phy_notify_pmstate() api
+Date: Thu, 03 Jul 2025 14:03:21 +0100
+Message-Id: <20250703-phy-notify-pmstate-v2-0-fc1690439117@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJl/ZmgC/x2NQQ7CIBBFr9KwlgYG0caV9zBdoA7tJApkII2k6
+ d2lXb6X/PdXkZEJs7h1q2BcKFMMDeDUidfswoSS3o0FKLDqqoxMc5UhFvJVpm8urqD0Cp7O2gH
+ 8xYo2TIyefkf0MTaeKZfI9fhY9G733FkrBaC0tbY3xoA2gwSZsCD3E5P3FO4fCo5jH3kS47Ztf
+ 8gMlG2uAAAA
+X-Change-ID: 20250703-phy-notify-pmstate-f02ba5582f65
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ kernel-team@android.com, William Mcvicker <willmcvicker@google.com>, 
+ Peter Griffin <peter.griffin@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2003;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=ZYfjP7FwB1GpkWrGjPRU1WDQ3B9s1Ej+w3TERaVUTTA=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoZn+gsenijhnxKUpeWCimXuCgH87uwqGvZ5h9B
+ ItzoiuZf8qJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaGZ/oAAKCRDO6LjWAjRy
+ ukmVEACZ0M/YG9thUntvvqJNn1ALzw38f/38Op1eJmLNktFegKZPe7cw3exdz9z5Cedz8JKpRdJ
+ 7OLXUspk0PpOMeSlMxgZ9/I/SosG/NW6FogiUTYp5NP6cJI29frGBmPBa58ESACp2ZmoT6HU4WK
+ 4iuxz1sz905KPYKeQzbVvDpq7cvUeBU2lDndiUpYca1IIcpABOYdS+vaelSaHOUJ16BijTMUYF6
+ LA1Sno7YcJrDHwck9XAiMsRtx1TCxevJ+UOw+MctfARkFmEtby1l5PlEQlkXPNTHZvofoxZ/jMW
+ ecICz63mFFrvCfa3AecCmFACrO4CtMilo04/Z0r75qy5guAoel/HytbeDZBZanDRAM4Kz85tPQ1
+ I1QYPj1YWVsVwxpASjNuNl5OIbczHipzsEUhKj7pi5x9jao0uOAmE/WP0bDXmSdtbq4CRMo0IHT
+ VNdfkbqSEfdT1HaTDTm9zfjYO2UqkmOc6b9eQR4zvYi326n1Q26GI0wfean3GWWwc2uOjxnu7ew
+ I9tBJtZsxQ5dDSPxXX7fbvsBMf5kM2KXbL96ImXGDH+kULjShiixR6gZcGbV8nqrEhWkPQZl46t
+ eACzHe60dZh/t9eSzVZoRSIaXArw4G4wEjNrLNSTK95TM/UvamybZPR43mJK7borZCi7xrdcz60
+ 5JvP+ZqhLH1zgZA==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-commit 5c5f0468d172ddec2e333d738d2a1f85402cf0bc upstream.
+This series adds a new phy_notify_pmstate() API to the phy subsystem. It is
+designed to be used when some specific runtime configuration parameters
+need to be changed when transitioning to the desired pm state which can't
+be handled by phy_calibrate()or phy_power_{on|off}().
 
-The following data-race was found in show_numa_info():
+The first user of the new API is phy-samsung-ufs and phy-gs101-ufs which
+needs to issue some register writes when entering and exiting the hibern8
+link state.
 
-==================================================================
-BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+A separate patch will be sent for ufs-exynos driver to make use of this new
+API in the hibern8 callbacks.
 
-read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
- show_numa_info mm/vmalloc.c:4936 [inline]
- vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-....
+To: Vinod Koul <vkoul@kernel.org>
+To: Kishon Vijay Abraham I <kishon@kernel.org>
+To: André Draszik <andre.draszik@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: Alim Akhtar <alim.akhtar@samsung.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-phy@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: William Mcvicker <willmcvicker@google.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 
-write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
- show_numa_info mm/vmalloc.c:4934 [inline]
- vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-....
+Changes in v2:
+- Add new phy_notify_pmstate API() instead of using phy_set_mode() (Vinod)
+- Link to v1: https://lore.kernel.org/r/20241002201555.3332138-1-peter.griffin@linaro.org
 
-value changed: 0x0000008f -> 0x00000000
-==================================================================
-
-According to this report,there is a read/write data-race because
-m->private is accessible to multiple CPUs.  To fix this, instead of
-allocating the heap in proc_vmalloc_init() and passing the heap address to
-m->private, vmalloc_info_show() should allocate the heap.
-
-Link: https://lkml.kernel.org/r/20250508165620.15321-1-aha310510@gmail.com
-Fixes: 8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 28 deletions(-)
+Peter Griffin (2):
+      phy: add new phy_notify_pmstate() api
+      phy: samsung: gs101-ufs: Add .notify_pmstate() and hibern8 enter/exit values
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index cc04e501b1c5..7888600b6a79 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3095,7 +3095,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
- 	/*
- 	 * Before removing VM_UNINITIALIZED,
- 	 * we should make sure that vm has proper values.
--	 * Pair with smp_rmb() in show_numa_info().
-+	 * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
- 	 */
- 	smp_wmb();
- 	vm->flags &= ~VM_UNINITIALIZED;
-@@ -4938,28 +4938,29 @@ bool vmalloc_dump_obj(void *object)
- #endif
- 
- #ifdef CONFIG_PROC_FS
--static void show_numa_info(struct seq_file *m, struct vm_struct *v)
--{
--	if (IS_ENABLED(CONFIG_NUMA)) {
--		unsigned int nr, *counters = m->private;
--		unsigned int step = 1U << vm_area_page_order(v);
- 
--		if (!counters)
--			return;
-+/*
-+ * Print number of pages allocated on each memory node.
-+ *
-+ * This function can only be called if CONFIG_NUMA is enabled
-+ * and VM_UNINITIALIZED bit in v->flags is disabled.
-+ */
-+static void show_numa_info(struct seq_file *m, struct vm_struct *v,
-+				 unsigned int *counters)
-+{
-+	unsigned int nr;
-+	unsigned int step = 1U << vm_area_page_order(v);
- 
--		if (v->flags & VM_UNINITIALIZED)
--			return;
--		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
--		smp_rmb();
-+	if (!counters)
-+		return;
- 
--		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-+	memset(counters, 0, nr_node_ids * sizeof(unsigned int));
- 
--		for (nr = 0; nr < v->nr_pages; nr += step)
--			counters[page_to_nid(v->pages[nr])] += step;
--		for_each_node_state(nr, N_HIGH_MEMORY)
--			if (counters[nr])
--				seq_printf(m, " N%u=%u", nr, counters[nr]);
--	}
-+	for (nr = 0; nr < v->nr_pages; nr += step)
-+		counters[page_to_nid(v->pages[nr])] += step;
-+	for_each_node_state(nr, N_HIGH_MEMORY)
-+		if (counters[nr])
-+			seq_printf(m, " N%u=%u", nr, counters[nr]);
- }
- 
- static void show_purge_info(struct seq_file *m)
-@@ -4987,6 +4988,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 	struct vmap_area *va;
- 	struct vm_struct *v;
- 	int i;
-+	unsigned int *counters;
-+
-+	if (IS_ENABLED(CONFIG_NUMA))
-+		counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
- 
- 	for (i = 0; i < nr_vmap_nodes; i++) {
- 		vn = &vmap_nodes[i];
-@@ -5003,6 +5008,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 			}
- 
- 			v = va->vm;
-+			if (v->flags & VM_UNINITIALIZED)
-+				continue;
-+
-+			/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-+			smp_rmb();
- 
- 			seq_printf(m, "0x%pK-0x%pK %7ld",
- 				v->addr, v->addr + v->size, v->size);
-@@ -5037,7 +5047,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 			if (is_vmalloc_addr(v->pages))
- 				seq_puts(m, " vpages");
- 
--			show_numa_info(m, v);
-+			if (IS_ENABLED(CONFIG_NUMA))
-+				show_numa_info(m, v, counters);
-+
- 			seq_putc(m, '\n');
- 		}
- 		spin_unlock(&vn->busy.lock);
-@@ -5047,19 +5059,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 	 * As a final step, dump "unpurged" areas.
- 	 */
- 	show_purge_info(m);
-+	if (IS_ENABLED(CONFIG_NUMA))
-+		kfree(counters);
- 	return 0;
- }
- 
- static int __init proc_vmalloc_init(void)
- {
--	void *priv_data = NULL;
--
--	if (IS_ENABLED(CONFIG_NUMA))
--		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
--
--	proc_create_single_data("vmallocinfo",
--		0400, NULL, vmalloc_info_show, priv_data);
--
-+	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
- 	return 0;
- }
- module_init(proc_vmalloc_init);
---
+ drivers/phy/phy-core.c                | 25 +++++++++++++++++++++++
+ drivers/phy/samsung/phy-gs101-ufs.c   | 28 ++++++++++++++++++++++++++
+ drivers/phy/samsung/phy-samsung-ufs.c | 38 +++++++++++++++++++++++++++++++++++
+ drivers/phy/samsung/phy-samsung-ufs.h |  7 +++++++
+ include/linux/phy/phy.h               | 25 +++++++++++++++++++++++
+ 5 files changed, 123 insertions(+)
+---
+base-commit: 97bdc30f39b63758868f67841cebb8c50869e16d
+change-id: 20250703-phy-notify-pmstate-f02ba5582f65
+
+Best regards,
+-- 
+Peter Griffin <peter.griffin@linaro.org>
+
