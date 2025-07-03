@@ -1,121 +1,215 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C9291166
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FBF291C25
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524108; cv=none; b=u3l+tUX2N3QnPKKeE1WNOGUjlLP7k0PSML6w4auV3kRaOxSmSlOYeYgr0tT64ClckSPry/CIPNMPybTRqr12WJqv6/OsdD0AxiQ+TTMHl1Pwfk0Sz0rv+WWw9EwY17Oh+jnOCSTnQ2QuLcegFJCBnMnBzE7NruC5VU+d30gcD/U=
+	t=1751524153; cv=none; b=NMwhuqcInuUbS530MPAyJuRp8LRukubigvGFIbZMLFrcseIuvp4fTt4PPuc6C0K/PIfq4xJmb/6ZbXTZuqblIGvL70F73mChLWxiYRMHrv2XAwQ7Bqyj8HK4/QxrL48JCahzERJPt2Jrmx2wb8rYlypW+5v7OvLU/Bh6h+PbkN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524108; c=relaxed/simple;
-	bh=MO59kQdKIQ3jRqDULHDpVDumKyq+YbjeeZVE+XaSpoE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KCMdJMUbHMdTnDEsHJWqvBNWlHKdVSJWNy+63C6DbJHGxsRzQAhfrYUqA/fye2uLdiNdSLDExOX/vAzMLKJuVGYY8kgtrqvEwq38pE9JIHt12fUz0IBAWT3ZakwKuo8WVGoRESuvdsEhGj0YUyW1ZWT3CsNO/Jbo5dA0sWx6akY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xACxaZEt; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751524153; c=relaxed/simple;
+	bh=uEpA5sAVAtkTsmd1jq37ugQMrB4trK381/2tv3mNq3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G2Nr5s4gxbgxEXKFCBMHDUOo20+i3f4ABpv1nmC9KprN+dViCLPhaxishwQSk+QDMWWo0EaGql6Z38PB9xfHGcwjYG2PiGOCMyl6gZk0PjsVVy9wVfeyu2nmZsDX/EVp+ckodk9GCKDSQC7vctTzrwUF64/VSqd6zRs9FCJk+eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jj+PhLlB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bJyjhwV0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jj+PhLlB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bJyjhwV0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xACxaZEt"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a54690d369so4963899f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751524104; x=1752128904; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MO59kQdKIQ3jRqDULHDpVDumKyq+YbjeeZVE+XaSpoE=;
-        b=xACxaZEtZzNddQVaa69kh/phyWzwSRWQdUHdNE5V+SqhMVH2BpcAWZkmwfrX8rCIh/
-         6kirOdzkO33H4dimHfcc7LNDuSf4u1ErTsT2eION8QZS2uSmUju8kholZu51b18MmUzU
-         RnJYhc2Ppxb3VNMlDUxNZSDQmISKWm3Y8GxbRdjbkYnUSKWWI8ZpHiKIDUoqyFXmCW2h
-         uVgr4L/HIuUlSFsfakqR2wsjWZA1/LfU5rlGEnLhbEuLdRS1JMIHao/mbmFX3uN5kLns
-         pEfMwIICqPvR/Qz4j7WdxGV/Vg75yTIHrYzQbKCTgQlv2I0oPDWEp81E1HoT3Hoba3Qj
-         UorA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751524104; x=1752128904;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MO59kQdKIQ3jRqDULHDpVDumKyq+YbjeeZVE+XaSpoE=;
-        b=w14uhkHyo1WHJCgvnUZn7pyjbcmhn+h5iNVEAiZOTk7pxhw73MsZ2DCPYVFElKY3Mm
-         /YH9WqAkTCZ9xd7vdgXYwUWMfPZtheVOCOUe+i2iaFITDlTEkEnpd+Y95hHeiGTvJa6N
-         MD4C4i8WJz6Cp7w8d9Ufl0NHXRBDO5c0lVzLFPekT9M34oJoDzz/4EUuw9lEuxZ4iG9U
-         rTLouezLaL5CTsdQF71W2ziP4hi5cO76MQb3scUgrahPlo4R6bjZoT+vDB9cv7qOqJ8K
-         2S6201fEwwGWbTtu/4oOW6d70fIEZXFGb0I+EV1v4ZL/8fOd6gBxE2LfgVE0n3//yNzU
-         aqeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCK+dWD0+3yHvdu0gL4AtypoA6ig5gO36R1tQJ2dpE8Xhp9dU6vg9B1kpE+SRLuiGgp1eHHRVS+kalzZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNvM5tKSoizYUERQa5jF4Dh+ZriDFjo0rtmkvmXMNMoJC2pwGx
-	953Y9NIclcNBBZgHOuRZDh0nh6wSpM+fM/Gl1480q9oScvFWBiWuYnKFrxcQ6CPKM6U=
-X-Gm-Gg: ASbGncszQpD/z89kRhTCgGIiKCUjt0esEz0uq02qoHI0R5xW/yOSAtsC+oBQUdwnXfE
-	kND8s50UgZ8YwGOk1Tqzw7Rf+u+TUdgWFbnWBF1CmY66oupQSjp62WcQvFE1EjkwibhCV3X7jSx
-	3Mwhv7hV9SFYSRxalQU1bt/wssMqurhVwgvStjRF1/pGwAkkdaxP3/s64jmbtOpYQBaowu2SEg3
-	7T9/sC2zkssPR8jt3TgL0wX98hXElXM+T1O+DczqVjlkr2yvtfVF2u5BGlguL0xPiCMua63DU7x
-	Z6cGJhH+iY8hIM8RTjhGR7UlTVgfFTtfyIKcn6S0jAUTrTWGkARMVJq8qOM20J/A78HRButgMRm
-	l
-X-Google-Smtp-Source: AGHT+IF5h/wZ6d5NNeUR6agDG/7PLqUPnsk7I84b3H4DX8EaAsYMBom8LuJRN2UToI44f6ice+Jz5g==
-X-Received: by 2002:a05:6000:703:b0:3a4:f6ba:51c8 with SMTP id ffacd0b85a97d-3b1fe5c082fmr4402569f8f.14.1751524104371;
-        Wed, 02 Jul 2025 23:28:24 -0700 (PDT)
-Received: from [10.1.1.59] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997b1ecsm17126905e9.11.2025.07.02.23.28.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 23:28:23 -0700 (PDT)
-Message-ID: <e3a974d1f7fd1ed2a631d3ddf46eceec3a386615.camel@linaro.org>
-Subject: Re: [PATCH v3 bpf-next 1/4] kernfs: remove iattr_mutex
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com,
- andrii@kernel.org, 	eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, 	viro@zeniv.linux.org.uk,
- jack@suse.cz, kpsingh@kernel.org, 	mattbobrowski@google.com,
- amir73il@gmail.com, gregkh@linuxfoundation.org, 	tj@kernel.org,
- daan.j.demeyer@gmail.com, Will McVicker <willmcvicker@google.com>,  Peter
- Griffin <peter.griffin@linaro.org>, Tudor Ambarus
- <tudor.ambarus@linaro.org>, kernel-team@android.com
-Date: Thu, 03 Jul 2025 07:28:22 +0100
-In-Reply-To: <20250702-hochmoderne-abklatsch-af9c605b57b2@brauner>
-References: <20250623063854.1896364-1-song@kernel.org>
-	 <20250623063854.1896364-2-song@kernel.org>
-	 <78b13bcdae82ade95e88f315682966051f461dde.camel@linaro.org>
-	 <20250702-hochmoderne-abklatsch-af9c605b57b2@brauner>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1+build1 
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jj+PhLlB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bJyjhwV0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jj+PhLlB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bJyjhwV0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9F78C2118E;
+	Thu,  3 Jul 2025 06:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751524149; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BcDHMkFTXoj37LpVYdwr2vQBaGqjqXSrgjGcPFlY/1I=;
+	b=jj+PhLlBlVvDqRRTPaeN5k8r08UZmVAy1fXewAadlcag4CAoMlfW1kafV/qiL5ZriHjPF4
+	wO2Oe+5Z2uSps2wW5/12JVh2BUbYsVfvaSFIVFAGisdA8r86hnIjR0aQ5AUpE8EVZ5F8Kn
+	KxL+eak+IwrujtWBDfBCCJxivZ6cljU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751524149;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BcDHMkFTXoj37LpVYdwr2vQBaGqjqXSrgjGcPFlY/1I=;
+	b=bJyjhwV0u/KWb9wAglXK+TyaN4hPjvADakXvL/sB8WEORmmEm8ySxdlu4GvR4TWaKWGIE8
+	M03RBrBQSTXzH0DA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751524149; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BcDHMkFTXoj37LpVYdwr2vQBaGqjqXSrgjGcPFlY/1I=;
+	b=jj+PhLlBlVvDqRRTPaeN5k8r08UZmVAy1fXewAadlcag4CAoMlfW1kafV/qiL5ZriHjPF4
+	wO2Oe+5Z2uSps2wW5/12JVh2BUbYsVfvaSFIVFAGisdA8r86hnIjR0aQ5AUpE8EVZ5F8Kn
+	KxL+eak+IwrujtWBDfBCCJxivZ6cljU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751524149;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BcDHMkFTXoj37LpVYdwr2vQBaGqjqXSrgjGcPFlY/1I=;
+	b=bJyjhwV0u/KWb9wAglXK+TyaN4hPjvADakXvL/sB8WEORmmEm8ySxdlu4GvR4TWaKWGIE8
+	M03RBrBQSTXzH0DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C46861368E;
+	Thu,  3 Jul 2025 06:29:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kt4nLTQjZmj6SAAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 03 Jul 2025 06:29:08 +0000
+Message-ID: <9c7f50c9-dd43-4b75-83ee-eac6a6ee2093@suse.de>
+Date: Thu, 3 Jul 2025 08:29:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/10] blk-mq: add
+ blk_mq_{online|possible}_queue_affinity
+To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Aaron Tomlin <atomlin@atomlin.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin
+ <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
+ Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Mel Gorman <mgorman@suse.de>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
+ linux-scsi@vger.kernel.org, storagedev@microchip.com,
+ virtualization@lists.linux.dev, GR-QLogic-Storage-Upstream@marvell.com
+References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
+ <20250702-isolcpus-io-queues-v7-3-557aa7eacce4@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250702-isolcpus-io-queues-v7-3-557aa7eacce4@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Wed, 2025-07-02 at 14:17 +0200, Christian Brauner wrote:
-> I'm folding:
->=20
-> diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-> index 3c293a5a21b1..457f91c412d4 100644
-> --- a/fs/kernfs/inode.c
-> +++ b/fs/kernfs/inode.c
-> @@ -142,9 +142,9 @@ ssize_t kernfs_iop_listxattr(struct dentry *dentry, c=
-har *buf, size_t size)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct kernfs_node *kn =3D ker=
-nfs_dentry_node(dentry);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct kernfs_iattrs *attrs;
->=20
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 attrs =3D kernfs_iattrs_noalloc(kn)=
-;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 attrs =3D kernfs_iattrs(kn);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!attrs)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -ENODATA;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -ENOMEM;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return simple_xattr_list(d_ino=
-de(dentry), &attrs->xattrs, buf, size);
-> =C2=A0}
->=20
-> which brings it back to the old behavior.
+On 7/2/25 18:33, Daniel Wagner wrote:
+> Introduce blk_mq_{online|possible}_queue_affinity, which returns the
+> queue-to-CPU mapping constraints defined by the block layer. This allows
+> other subsystems (e.g., IRQ affinity setup) to respect block layer
+> requirements.
+> 
+> It is necessary to provide versions for both the online and possible CPU
+> masks because some drivers want to spread their I/O queues only across
+> online CPUs, while others prefer to use all possible CPUs. And the mask
+> used needs to match with the number of queues requested
+> (see blk_num_{online|possible}_queues).
+> 
+Technically you are correct.
+However, I do have the sneaking suspicion that most drivers just use
+num_online_cpus() for convenience and to reduce the size of the
+structures.
+But I guess I'll comment on that in the patch modifying the drivers.
 
-Yes, that makes sense and works for me too.
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   block/blk-mq-cpumap.c  | 24 ++++++++++++++++++++++++
+>   include/linux/blk-mq.h |  2 ++
+>   2 files changed, 26 insertions(+)
+> 
+> diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+> index 705da074ad6c7e88042296f21b739c6d686a72b6..8244ecf878358c0b8de84458dcd5100c2f360213 100644
+> --- a/block/blk-mq-cpumap.c
+> +++ b/block/blk-mq-cpumap.c
+> @@ -26,6 +26,30 @@ static unsigned int blk_mq_num_queues(const struct cpumask *mask,
+>   	return min_not_zero(num, max_queues);
+>   }
+>   
+> +/**
+> + * blk_mq_possible_queue_affinity - Return block layer queue affinity
+> + *
+> + * Returns an affinity mask that represents the queue-to-CPU mapping
+> + * requested by the block layer based on possible CPUs.
+> + */
+> +const struct cpumask *blk_mq_possible_queue_affinity(void)
+> +{
+> +	return cpu_possible_mask;
+> +}
+> +EXPORT_SYMBOL_GPL(blk_mq_possible_queue_affinity);
+> +
+> +/**
+> + * blk_mq_online_queue_affinity - Return block layer queue affinity
+> + *
+> + * Returns an affinity mask that represents the queue-to-CPU mapping
+> + * requested by the block layer based on online CPUs.
+> + */
+> +const struct cpumask *blk_mq_online_queue_affinity(void)
+> +{
+> +	return cpu_online_mask;
+> +}
+> +EXPORT_SYMBOL_GPL(blk_mq_online_queue_affinity);
+> +
+>   /**
+>    * blk_mq_num_possible_queues - Calc nr of queues for multiqueue devices
+>    * @max_queues:	The maximum number of queues the hardware/driver
+> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+> index 2a5a828f19a0ba6ff0812daf40eed67f0e12ada1..1144017dce47af82f9d010e42bfbf26fa4ddf33f 100644
+> --- a/include/linux/blk-mq.h
+> +++ b/include/linux/blk-mq.h
+> @@ -947,6 +947,8 @@ int blk_mq_freeze_queue_wait_timeout(struct request_queue *q,
+>   void blk_mq_unfreeze_queue_non_owner(struct request_queue *q);
+>   void blk_freeze_queue_start_non_owner(struct request_queue *q);
+>   
+> +const struct cpumask *blk_mq_possible_queue_affinity(void);
+> +const struct cpumask *blk_mq_online_queue_affinity(void);
+>   unsigned int blk_mq_num_possible_queues(unsigned int max_queues);
+>   unsigned int blk_mq_num_online_queues(unsigned int max_queues);
+>   void blk_mq_map_queues(struct blk_mq_queue_map *qmap);
+> 
 
-Thanks Christian!
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
