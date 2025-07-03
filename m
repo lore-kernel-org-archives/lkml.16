@@ -1,140 +1,111 @@
 Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EB22EA46D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDC62EA746
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545209; cv=none; b=HNuFxrDNnDmM/ZBB2g8IOEJwR9/ICTbZQGlf0gNKWP2DZV/JKZIJm9iwbTv0IQAHtsXogEjwlrEIiobKnR1lTZ1gJypmBJkhEAzjjQ1Gl0lKq8gt9EeCMNnYGM1fngEkfJpaR6zXg0CxqcaVNEHgjs7jckoEg2SoSPJe0xHfz6g=
+	t=1751545212; cv=none; b=G2EugrVDNHM2YWajfk9ZRNNxgcwncCKYpjXVDDGXi3Zw+Oxbwp+AiBtwg/2bwXvr6wlZqNjkJCU9CCvdhfeZi+V77ZJf5wApuD+wcVHwfrSlgSocSYUX4qOt6JaH1Q6atmBOcZOFPUrEH9ZoELvSwGK+N1Fc2+wF3Avqx2sWaZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545209; c=relaxed/simple;
-	bh=DaaFv8arGlHGPm5oC87p+hTcAPvrGVmo/YtNa3ziKvA=;
+	s=arc-20240116; t=1751545212; c=relaxed/simple;
+	bh=H22Cm7fAW2Mgix3sRqzR1xLudwssIplbSErTvmzGv3A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhanRdFpzO0F0LrepT/QL9NTYXXcVkJdCXW6u1cJjC1zkHnlycoz/xM/1D0UPTiojsr+lni7wbsmyHuTBhD0G4Vag+Xc22NjmVFyigiF8qFc0pCJjPOP7BAFWBPhIaVVFvOZdO+yH+QDVpZeug2eS9Zx7GQ8Bf8zSUwBzkWgLqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Un7AHl6e; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=iM25IHVJSjeUG1fZdhQpWbUat8Yw4xYbXQseOD5I2GiKU2AzATbLlKkInQrtG94DvcVatjGBD/8ori2ZACnrLgoVFp75ubUxfbrnPSFWJLXveGbll3JEy6iL59zEPWGOKfxo2tdDFpfijeheYSxZS6Er32KmJtsgtBtxCrws8Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DJXzZJOk; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Un7AHl6e"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso5183352276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJXzZJOk"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7569ccf04cso4637467276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751545207; x=1752150007; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751545210; x=1752150010; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9/FTLpn5NiRGQ3LTafRamigGNZeC4WBTSQgNEibO8s=;
-        b=Un7AHl6eqgCaUfwyW4/OVKUK9Ikbn6YrsFbYhgTP3OPtA+3SmTYaKvaDH8W8IwZMH9
-         mqiOit+vZXjb111CTMrr0PA13Z5NzrUfI/9mkRLUtrbmG9OwJTx7aD26pwpaR58hPh3a
-         6bKL7TITeEY0ndbuP4UpVkjdgv9g21oM8t3d6WkhPPrqJ2huXgKEUJ6orVQmf5jlT3N2
-         bQXr5QRcHnRSRuHoXlfbt2Zj5NbMoL615w0d7HjDFWmZYgRR9f/+gbJtb1zfTDZDK+cP
-         emotrxgPv2k0faywXq6tEK1oNYN/8TnxQ7RGG+UwCjtY3qgmNkg2wdDld07nCkr6H2l4
-         dSXw==
+        bh=LJfwdzUcr077GDT95X0ikFnOKfcLc/LKi5CDyQoMdQA=;
+        b=DJXzZJOkPLA0wrKmKvpP1dWoueX82Jqw0EKwkQaedkMPaDxW4DbktalE+5S84MdCg5
+         rs6/mkLyOTPUM3ZvRGMU4J6GWkVtjslmdBFZtZsbVWSsRMDxXOo1MYKmF1nB5wiirX6Y
+         7D/zMFmsGSfOrqa5AbzWMvgmQ5B6MgCBl9R6efXSChKRj0U91ervPfQ8v8HTa4OHHL16
+         tPaDehHDkKvyPHQ6XxCvVKV93gPXPttOVWgMPzQIoTbyUispQf4kzfu7KPy2WA6Jgtt2
+         lYpEsDyUXQcNDTnBbOLtVThfMh1sPOXuUgIoxKEhSBp5n1O1P3/i4FMPeuBu/TDwgqTO
+         eDbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545207; x=1752150007;
+        d=1e100.net; s=20230601; t=1751545210; x=1752150010;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=K9/FTLpn5NiRGQ3LTafRamigGNZeC4WBTSQgNEibO8s=;
-        b=MkZPw1qLlAorUgmgQKDIEJeog5psPygUqWw3AJQoPuBKd6Mqbidj+MGP9NzhY6rx0I
-         PJIFXVfU3cR3TTTQNZG1EZqw2uKGAOTItk8JzhBYaXw+eJB8KuWknK2KcVOMJYYFyNga
-         R5Ms504t+XdfpuR/o4O02H+B2VGwDM9yZ3xTJqA9GBann8F5ZwqSlCV46a2Ae+YblKBP
-         KpFoMQF/pNWSdctuDzyegW8vzOLdkpdrbcz2Btom/+KGRFwqMWGpXYhOvP35QBnWP5rg
-         empbfK81EqCWzt3kYSLgTtvCUiPDNQ5NvypC3I3XCQEiC+PPZypwsI3uoxiB8EqDcJWM
-         xXSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoo9WkGwj/SzQFSwXYXExmpI2p3eoO+ayBZf9PjDdxgKmfTHFye0h5zI18ES7WtaXvRZCWsO0+2HGb+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFL476WGK2PloHbIXURqUHrxUeI2eGUU0pyNyf1W/qutNLo5OO
-	GaY2OWIMmN/SzBTqN5ZH3q7nVa9ML29LAr0i1tNH46NpiA15GopD52I6eQYWGpEP6lxd5WziNsB
-	G7TAXzd92Y5AwfYJkH+oPv7LQRPggrixSUvGqi7ID4C31HAWyOkrc
-X-Gm-Gg: ASbGnctDukJYNileZgZMk46Kx+aqzMbiueijQUhMgD4wMrnDTQc95BNb1tTkQ84+DeK
-	htVWinAmOEaa4oh66i21ClMXiC7yfVVEnijFHNUJj3oVsl3kkwOcgmgxnMbgSy5WmbviQ1fhAL+
-	q4kMEEI0TofEC87faLKrc2WA3qmTPXmirMZyjpn9WXUT+R
-X-Google-Smtp-Source: AGHT+IF56qUTFIuC/dd5f/t6kaXb8O7+9gtfhTDmhN3Qt6B+PI0BaNXhbDG9tZDXH1SGEvegSmXerSSSuu5lHUdXJw4=
-X-Received: by 2002:a05:690c:61c1:b0:70e:7882:ea8e with SMTP id
- 00721157ae682-7164d46bde5mr101768967b3.31.1751545206699; Thu, 03 Jul 2025
- 05:20:06 -0700 (PDT)
+        bh=LJfwdzUcr077GDT95X0ikFnOKfcLc/LKi5CDyQoMdQA=;
+        b=bL0OmMW3OeI5CVvsJ5W2b2fZnBvQ1XhH/sp0uoFh+9Odcxh0RyRpOFP/KqZY3Tj9mr
+         HuO0LBsD6jm7Gb3heyhAXzUlCHssTncIqHSf7acRxITO2BEtuky4poaAUlhnf2LQCuiH
+         1sMz9wnXFF8B7yRX1W3tpkT7VnZEHu1imP0H/bBO54X64djqsEhnMBpZ87GMmyK9d43r
+         T2z6k6SXchAs0hD9YwvXo82XER4Y88GeTwjboIkLPfPOHqhMWWrVG1Tdm2i4ALJ6b644
+         hTzWCH7ZwS6QYizacN9+eH4FGxP5SXqy/4oG8CVi/QfAxekNTP9Iv9P/jsfAYoy6pqoc
+         f5tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUSZI25axG0L0r8earGcH/0F+V1FGWiEUnzrvnuUBzaLVBs4SNa6gj7Gx+du+zNGCMLqiqXOQn5iontJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTRX4Ie5l9ON+au3x+4oAMKmYn9yoQAAK8+TCLaA/r2Bqa1g7l
+	RVaROAOY4SiCJQIzyYNI8wqHxZTnuNtPUGYV1l2c+t4h3lXDZBkZRxAklehi95fdDiWal9L0viQ
+	xzOltnQB4D/FZ/WSRWMqKRMkMhx9sDpgpzo2g3SD33g==
+X-Gm-Gg: ASbGncveZcsck1qHsF16BLcYhISO3PZm1oKVdKisKgaeAOpJl8yHYfj4P0UKDaHWBT0
+	9f/l4hLWEhvqenGzjN+C2d9AF5rT1Gfbbi6QHpwTSrrRMic0sn1Qx2GDUcJPsU4vnLEXZqsCFAq
+	MqxRGtRI6KySUWNDfcWqPL2slH/mFYfwtuox/lSr6pgx5WZWy47AyPnHA=
+X-Google-Smtp-Source: AGHT+IH5KK9d/YuYxQOB2tPs48I1FLMdjmeeJGaqw1PPBtxv5ff4Hj3lOd6N/27ae75D8h/sJhJCSFTlBM89Ljh9umw=
+X-Received: by 2002:a05:690c:6ac2:b0:714:250:8355 with SMTP id
+ 00721157ae682-7164d26c4a8mr89863427b3.4.1751545210173; Thu, 03 Jul 2025
+ 05:20:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626231452.3460987-1-jm@ti.com>
-In-Reply-To: <20250626231452.3460987-1-jm@ti.com>
+References: <20250702085927.10370-1-quic_sayalil@quicinc.com> <20250702085927.10370-2-quic_sayalil@quicinc.com>
+In-Reply-To: <20250702085927.10370-2-quic_sayalil@quicinc.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 3 Jul 2025 14:19:31 +0200
-X-Gm-Features: Ac12FXzPltRJ63gnLQjiDWMDi7jPRlN5Dcc8lvlBEvIo0x3Wdbqeqg10YzXGJm8
-Message-ID: <CAPDyKFrbHEPJJzo9Ysc4NFKCHVJwBumZMo6+dSE4OvoBn-+fRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci_am654: Workaround for Errata i2312
-To: Judith Mendez <jm@ti.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Date: Thu, 3 Jul 2025 14:19:34 +0200
+X-Gm-Features: Ac12FXy4OCjuCOdO4kTz7sGzO0ku__i49w4Rk35FXh2a6GcbuOrgABPgI4LBfco
+Message-ID: <CAPDyKFrP3EqozUObUZuS3D26YOwnViSrWSOcdNX8J6419TpPKg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Add sdhci compatible for qcs8300
+To: Sayali Lokhande <quic_sayalil@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mmc-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 27 Jun 2025 at 01:14, Judith Mendez <jm@ti.com> wrote:
+On Wed, 2 Jul 2025 at 11:00, Sayali Lokhande <quic_sayalil@quicinc.com> wrote:
 >
-> Errata i2312 [0] for K3 silicon mentions the maximum obtainable
-> timeout through MMC host controller is 700ms. And for commands taking
-> longer than 700ms, hardware timeout should be disabled and software
-> timeout should be used.
+> Document the sdhci compatible for Qualcomm qcs8300
+> to support function for emmc on the Soc.
 >
-> The workaround for Errata i2312 can be achieved by adding
-> SDHCI_QUIRK2_DISABLE_HW_TIMEOUT quirk in sdhci_am654.
->
-> [0] https://www.ti.com/lit/pdf/sprz487
->
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
 
-Applied for fixes and by adding a fixes and a stable tag, thanks!
+Applied for next, thanks!
+
+Note that, you didn't send this to linux-mmc, hence it did not reach
+the patchtracker. Please make sure to update the to/cc-list next time.
 
 Kind regards
 Uffe
 
 
 > ---
-> Changes since v1:
-> - Split series [v1] according to Vignesh's review comment in v1
-> - Add Adrian's tag
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> v1: https://lore.kernel.org/linux-mmc/20250624221230.1952291-1-jm@ti.com/
-> ---
->  drivers/mmc/host/sdhci_am654.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index ea14d56558c4..86d87d8e0675 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -613,7 +613,8 @@ static const struct sdhci_ops sdhci_am654_ops = {
->  static const struct sdhci_pltfm_data sdhci_am654_pdata = {
->         .ops = &sdhci_am654_ops,
->         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->
->  static const struct sdhci_am654_driver_data sdhci_am654_sr1_drvdata = {
-> @@ -643,7 +644,8 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
->  static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
->         .ops = &sdhci_j721e_8bit_ops,
->         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->
->  static const struct sdhci_am654_driver_data sdhci_j721e_8bit_drvdata = {
-> @@ -667,7 +669,8 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
->  static const struct sdhci_pltfm_data sdhci_j721e_4bit_pdata = {
->         .ops = &sdhci_j721e_4bit_ops,
->         .quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +                  SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->
->  static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> index 2b2cbce2458b..5ba2da8dbc7d 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> @@ -45,6 +45,7 @@ properties:
+>                - qcom,qcm2290-sdhci
+>                - qcom,qcs404-sdhci
+>                - qcom,qcs615-sdhci
+> +              - qcom,qcs8300-sdhci
+>                - qcom,qdu1000-sdhci
+>                - qcom,sar2130p-sdhci
+>                - qcom,sc7180-sdhci
 > --
-> 2.49.0
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
 >
