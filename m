@@ -1,310 +1,154 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D87F2D4B51
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70DE2DE701;
+	Thu,  3 Jul 2025 09:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534095; cv=none; b=ogMq5BXMv7BbOXSBioDp4e6v/nXZLd88L/0QcM6iWUG2z6VtzZk+vk8ZkDsaKI6Rdh5ZP8FN0hxDxJoYM3pvYpsljAkJtlPFwQzxhWqzJ6YvIu8ayQRZJKsQyMjrLgMXQI28dGxuL829XGKuD6DKIzK5ZJEXuhCtMgYAnSjayHo=
+	t=1751534161; cv=none; b=WbTj7EQFE2i2RzNogMIAEbAx463LsAkZsNa/fiF25vvgcN+l1c1fvyhkbQ7/yatGsDJRyLGPxiHHYOJL281ndbUUbs7FylCgMgVFO98C5qQa7ORSC2zsKE32OtXopDE62af5uJphOt9kY0KLBcUYDwGJuEPO8QJL2rKwDJ4vDrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534095; c=relaxed/simple;
-	bh=s3VUtHmPjct842E1v4IeUqWB0HGSRJlrlYaAQOOIcjs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VPiewrTo5YwPC33yoqVGZzQvez8/k2K58yNcufl4iDU2SKH9ahADiF8xhldg1sVyUVe+vjAvN/jh9JlKCkwxNTG/3zUsS+hK298igsnnF6j3nMQihd9ox7O3/3vkN07+GlkR28iA2K6YcYWZ6SLYYmT1+dWp6Q4OQ6CZsVYUM8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 291bb16857ee11f0b29709d653e92f7d-20250703
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:6be4beca-0aa8-4e8f-8a4c-134434d22d73,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:619065f3335f1fe002877f5bfface112,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 291bb16857ee11f0b29709d653e92f7d-20250703
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 265518452; Thu, 03 Jul 2025 17:14:45 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id E8964E008FA2;
-	Thu,  3 Jul 2025 17:14:44 +0800 (CST)
-X-ns-mid: postfix-68664A04-801599893
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 8F5BCE008FA1;
-	Thu,  3 Jul 2025 17:14:40 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: xuewen.yan@unisoc.com,
-	vincent.guittot@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com
-Cc: rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	hongyan.xia2@arm.com,
+	s=arc-20240116; t=1751534161; c=relaxed/simple;
+	bh=IXGjNYrCCJ7z//O8GYBQaRJVFFgl9rp2iE2vE4wR4HM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bBo2KSRrzsAyuE8f+uKbEdQtETcUqhMqrvoaMqUfHz42TR9nbJ33nvuDnYYXTTyvIvklbqeiV2eBzzd7GPJVkmZWSo/r6EdYtHnaN1OmHJR5eYuYQTAdwPS1F7N+56t+ZbYsP3FFALKEhgVU8ClkswxlXzG++Zfgl+QHXMgU6ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=apgLy2d+; arc=none smtp.client-ip=93.188.205.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="apgLy2d+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
+	s=mail; t=1751534152;
+	bh=IXGjNYrCCJ7z//O8GYBQaRJVFFgl9rp2iE2vE4wR4HM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=apgLy2d+CCDpyBhkSBMPO9MoRvsMvL//U5NfSIqC/B7MuKLu0kPh7SZd318nhY5Tz
+	 SkXrt17d2ZWrxzyLJWxEFDHmfJ4+RRPezHoaSXCAZ2OYm3pscQQyQaXw8s+Uuf7i8C
+	 mwvsMZDL3N29Rib5j5Kiy7cHBoQR+8U2L0FeyHqg1t2/PNVi0kARCDutT1fPLIt/Rs
+	 +qkS6VcFKmSQMC+D793ZOg5IiPbmuZ8jujUTjrFuqgs64895UNKWmULSce2laQPUW0
+	 34fS2CnrkbwB9Q2ZQmguYbDB3PErMjINHTdylAyWeecDyo1txWyIZSdeYaPd9ppDC5
+	 jW1cIDKkIr2Fg==
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id D2AF41F707;
+	Thu,  3 Jul 2025 12:15:52 +0300 (MSK)
+Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Thu,  3 Jul 2025 12:15:50 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.190.6.76])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bXrhy3qHMz16Hnq;
+	Thu,  3 Jul 2025 12:15:45 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Steve French <sfrench@samba.org>,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
 	linux-kernel@vger.kernel.org,
-	ke.wang@unisoc.com,
-	di.shen@unisoc.com,
-	xuewen.yan94@gmail.com,
-	kprateek.nayak@amd.com,
-	kuyo.chang@mediatek.com,
-	juju.sung@mediatek.com,
-	qyousef@layalina.io,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] sched/uclamp: Exclude kernel threads from uclamp logic
-Date: Thu,  3 Jul 2025 17:14:37 +0800
-Message-Id: <20250703091437.79861-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	lvc-project@linuxtesting.org,
+	Enzo Matsumiya <ematsumiya@suse.de>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.10] cifs: fix small mempool leak in SMB2_negotiate()
+Date: Thu,  3 Jul 2025 12:15:28 +0300
+Message-ID: <20250703091529.129846-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 194515 [Jul 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 05:31:00 #27614197
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-Kernel threads (PF_KTHREAD) are not subject to user-defined utilization
-clamping. They do not represent user workloads and should not participate
-in any uclamp logic, including:
+From: Enzo Matsumiya <ematsumiya@suse.de>
 
- - clamp initialization during fork/post-fork
- - effective clamp value computation
- - runtime aggregation (uclamp_rq_inc/dec)
+commit 27893dfc1285f80f80f46b3b8c95f5d15d2e66d0 upstream.
 
-Allowing kernel threads into these paths may pollute the rq->uclamp[]
-statistics, mislead schedutil governor's frequency selection, and
-complicate debugging or trace interpretation.
+In some cases of failure (dialect mismatches) in SMB2_negotiate(), after
+the request is sent, the checks would return -EIO when they should be
+rather setting rc = -EIO and jumping to neg_exit to free the response
+buffer from mempool.
 
-This patch ensures that:
- - uclamp_fork() and uclamp_post_fork() skip kernel threads
- - uclamp_eff_value() return default values
- - uclamp_rq_inc() and uclamp_rq_dec() skip kernel threads
-
-This aligns the semantics of uclamp with its original intent:
-user-space task-specific clamping.
-
-dmesg in uclamp_rq_inc_id:
-[   76.373903] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.375905] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.379837] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.379839] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.379839] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.379841] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.383897] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.383897] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.383900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.383901] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.387885] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.387885] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.387888] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.387889] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.388139] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:0 valu=
-e:0 kthread:1
-[   76.388140] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.388142] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.388143] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.388169] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 val=
-ue:0 kthread:1
-[   76.388171] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.388891] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.388893] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.392900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.392902] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.398850] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.398852] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.401880] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:0 value=
-:0 kthread:1
-[   76.401883] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:1 value=
-:1024 kthread:1
-[   76.409053] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.409054] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.410881] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0 va=
-lue:0 kthread:1
-[   76.410884] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1 va=
-lue:1024 kthread:1
-[   76.419947] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.419949] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.419976] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 val=
-ue:0 kthread:1
-[   76.419979] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.420119] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 val=
-ue:0 kthread:1
-[   76.420121] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.420642] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.420644] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.434914] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:0 value=
-:0 kthread:1
-[   76.434916] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:1 value=
-:1024 kthread:1
-[   76.447689] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 valu=
-e:0 kthread:1
-[   76.447691] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.447705] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:0 value=
-:0 kthread:1
-[   76.447707] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:1 value=
-:1024 kthread:1
-[   76.448809] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.448811] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.451260] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.451263] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.452806] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 value=
-:0 kthread:1
-[   76.452808] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 value=
-:1024 kthread:1
-[   76.488052] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.488054] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.488767] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-[   76.488770] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.490847] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 valu=
-e:0 kthread:1
-[   76.490848] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:0 valu=
-e:0 kthread:1
-[   76.490849] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:0 valu=
-e:0 kthread:1
-[   76.490848] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:0 valu=
-e:0 kthread:1
-[   76.490849] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:0 val=
-ue:0 kthread:1
-[   76.490850] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.490851] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.490851] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.490851] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.490853] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.490857] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:0 valu=
-e:0 kthread:1
-[   76.490859] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.491850] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:0 valu=
-e:0 kthread:1
-[   76.491852] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.504848] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:0 val=
-ue:0 kthread:1
-[   76.504852] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:1 val=
-ue:1024 kthread:1
-[   76.508785] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:0 valu=
-e:0 kthread:1
-[   76.508787] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:1 valu=
-e:1024 kthread:1
-[   76.514856] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0 va=
-lue:0 kthread:1
-[   76.514859] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1 va=
-lue:1024 kthread:1
-[   76.522742] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 val=
-ue:0 kthread:1
-
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Signed-off-by: Enzo Matsumiya <ematsumiya@suse.de>
+Cc: stable@vger.kernel.org
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 ---
- kernel/sched/core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Backport fix for CVE-2022-49938
+ fs/cifs/smb2pdu.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a3..a1e6b4157682 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1630,6 +1630,9 @@ unsigned long uclamp_eff_value(struct task_struct *=
-p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
-=20
-+	if (p->flags & PF_KTHREAD)
-+		return uclamp_none(clamp_id);
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 4197096e7fdb..fa75dc0a372d 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -883,23 +883,24 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
+ 	} else if (rc != 0)
+ 		goto neg_exit;
+ 
++	rc = -EIO;
+ 	if (strcmp(server->vals->version_string,
+ 		   SMB3ANY_VERSION_STRING) == 0) {
+ 		if (rsp->DialectRevision == cpu_to_le16(SMB20_PROT_ID)) {
+ 			cifs_server_dbg(VFS,
+ 				"SMB2 dialect returned but not requested\n");
+-			return -EIO;
++			goto neg_exit;
+ 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
+ 			cifs_server_dbg(VFS,
+ 				"SMB2.1 dialect returned but not requested\n");
+-			return -EIO;
++			goto neg_exit;
+ 		}
+ 	} else if (strcmp(server->vals->version_string,
+ 		   SMBDEFAULT_VERSION_STRING) == 0) {
+ 		if (rsp->DialectRevision == cpu_to_le16(SMB20_PROT_ID)) {
+ 			cifs_server_dbg(VFS,
+ 				"SMB2 dialect returned but not requested\n");
+-			return -EIO;
++			goto neg_exit;
+ 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
+ 			/* ops set to 3.0 by default for default so update */
+ 			server->ops = &smb21_operations;
+@@ -913,7 +914,7 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
+ 		/* if requested single dialect ensure returned dialect matched */
+ 		cifs_server_dbg(VFS, "Invalid 0x%x dialect returned: not requested\n",
+ 				le16_to_cpu(rsp->DialectRevision));
+-		return -EIO;
++		goto neg_exit;
+ 	}
+ 
+ 	cifs_dbg(FYI, "mode 0x%x\n", rsp->SecurityMode);
+@@ -931,9 +932,10 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
+ 	else {
+ 		cifs_server_dbg(VFS, "Invalid dialect returned by server 0x%x\n",
+ 				le16_to_cpu(rsp->DialectRevision));
+-		rc = -EIO;
+ 		goto neg_exit;
+ 	}
 +
- 	/* Task currently refcounted: use back-annotated (effective) value */
- 	if (p->uclamp[clamp_id].active)
- 		return (unsigned long)p->uclamp[clamp_id].value;
-@@ -1769,6 +1772,9 @@ static inline void uclamp_rq_inc(struct rq *rq, str=
-uct task_struct *p, int flags
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
-=20
-+	if (p->flags & PF_KTHREAD)
-+		return;
-+
- 	/* Only inc the delayed task which being woken up. */
- 	if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
- 		return;
-@@ -1797,6 +1803,9 @@ static inline void uclamp_rq_dec(struct rq *rq, str=
-uct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
-=20
-+	if (p->flags & PF_KTHREAD)
-+		return;
-+
- 	if (p->se.sched_delayed)
- 		return;
-=20
-@@ -1977,6 +1986,8 @@ static void uclamp_fork(struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
-=20
-+	if (p->flags & PF_KTHREAD)
-+		return;
++	rc = 0;
+ 	server->dialect = le16_to_cpu(rsp->DialectRevision);
+ 
  	/*
- 	 * We don't need to hold task_rq_lock() when updating p->uclamp_* here
- 	 * as the task is still at its early fork stages.
-@@ -1995,6 +2006,8 @@ static void uclamp_fork(struct task_struct *p)
-=20
- static void uclamp_post_fork(struct task_struct *p)
- {
-+	if (p->flags & PF_KTHREAD)
-+		return;
- 	uclamp_update_util_min_rt_default(p);
- }
-=20
---=20
-2.25.1
+-- 
+2.43.0
 
