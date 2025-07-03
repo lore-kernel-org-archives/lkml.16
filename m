@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE4718C01D;
-	Thu,  3 Jul 2025 01:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53401A2545;
+	Thu,  3 Jul 2025 01:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507384; cv=none; b=YJboBieum7uxHvO8IR4ActaOYXN7zDfiWXI+0aVt7PTq463W37ZhdH6Gigj6yolWFNvmdGbtgIoRvCK8Cvh7/G6wkS35AjLhm9n0bJhl1J+0pt/o53//snu24d+UkzNAZl2PFhxuVaONThvyzCf2UtXuWfVggql7c8TVViLEvMY=
+	t=1751507385; cv=none; b=adkwWLatEpV4S33hprPEHAIknFuGk9d7qn93hCxbq3i1KD4oZmZ6fYOB/euX/+FZ1YYDlbzqMjWCvEFjn9s2WvkfTZqNPB5bzm/OVdUj1IisQHH4kgm6sVD0SXeshy5zO1SRhECeQ0TikCR15PJmlxN5PfqC2UfA2WjExok+PFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507384; c=relaxed/simple;
-	bh=2Ecqkg2lROeWhWTABKLBvt4hqMUUv7D6JgnQACCprWE=;
+	s=arc-20240116; t=1751507385; c=relaxed/simple;
+	bh=dWEA9ZdTPWOFgxHfGqwXTpZdPwdHlpg76bVqV0LyIzc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BvovkGcivxad+ESZBCzI4KkS6uWwTBXzFwJk3RiY8QTHRgKeg0GAW9v2ifRqgu0YYPJA0+sMU6hjbV5z4uyNba4rLhY9MLur20/p14jS2R9zrD8rxsf05n9gtFPGZKReMpW6wHLm1vLeN+P2wlX59BmI3u169Oy2P05DCX79QNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5M249xL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GXQC3srU4qasgNlXMJ+EepCIs2UQ1t7XyXPBl/Brp8CE9B0c0q4uxieFA6UeFW0zz8aO+YRB9+clJpoNVAX2Z6x5iNl/tBSZtmk35+dxuYTbXCQuOvHIYWFuzO3z8Nd2s2YwyIce9RqvfonA96I5zrdR2NaDecyk3UPM9lRSIaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEckU2sv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5M249xL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4130DC4CEF2;
-	Thu,  3 Jul 2025 01:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEckU2sv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4050CC4CEED;
+	Thu,  3 Jul 2025 01:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751507383;
-	bh=2Ecqkg2lROeWhWTABKLBvt4hqMUUv7D6JgnQACCprWE=;
+	s=k20201202; t=1751507384;
+	bh=dWEA9ZdTPWOFgxHfGqwXTpZdPwdHlpg76bVqV0LyIzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R5M249xLo/ROR3pgtJpOFATfsQeKehj8tID2jPeyNq/izfhmM+xd0KpCRDKP9AKgz
-	 5YK+W55jwSMGQnKhof+jsj6jKt6ApLZx/LPufyWuPTntsAMDLsZ7gQjyrHsHl31JoH
-	 3ezSbCXSgfg8x+2EsiHPAlWMaBxbLJm2XnlU1b+Rp0K/m9yYOsL2zGQ0pZUAmbgvyi
-	 XAjPKbkVdXGqXTiVvOeGu6XCoGsKmEMU9tDYRlNA1kcIrjmPRxzIc528A5ilNTpmzC
-	 tkOXc4FHNXnG+Xo7mwBZVv2WxfyL0gtu3YX09Ns1fDwXlEB5i1pW94fpmIFxeaX2we
-	 vfcG2D9K4Or4w==
+	b=bEckU2svP7L2afnRVqMefL+Jxr9gIvZAOKNFdaIIMXSCnumr0yJW9h9lO/6NqEwFx
+	 TZe1dy9a8bOrnNdAs1X+rZNRpzofwnk2iZrevV63r0qjqhq3cDr+6hLfEn8n1UmaHV
+	 jjJK5wFbS/DfO3w6fFX79ATrvxMLL+nw9zPyzx9ytdcSpQRkTW3Ei5dAzn5QQt9iH0
+	 8jOtyQWO1wG/dsz0GguAjg6TAuVnxz6WznTXqJHymLbpi1y6UUWXeGIlkOECD4Rpk8
+	 KujEeU41r+pMuVowPd3k7u3QcWXSs8Yba6vzhBLeiMZPi6zFY9ZXcHRoTfs80vffA+
+	 wDT04wg2352GA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/8] perf sched: Make sure it frees the usage string
-Date: Wed,  2 Jul 2025 18:49:35 -0700
-Message-ID: <20250703014942.1369397-2-namhyung@kernel.org>
+Subject: [PATCH 3/8] perf sched: Fix memory leaks in 'perf sched map'
+Date: Wed,  2 Jul 2025 18:49:37 -0700
+Message-ID: <20250703014942.1369397-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
 References: <20250703014942.1369397-1-namhyung@kernel.org>
@@ -50,91 +50,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The parse_options_subcommand() allocates the usage string based on the
-given subcommands.  So it should reach the end of the function to free
-the string to prevent memory leaks.
+It maintains per-cpu pointers for the current thread but it doesn't
+release the refcounts.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ tools/perf/builtin-sched.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 26ece6e9bfd167b3..b7bbfad0ed600eee 100644
+index fa4052e040201105..b73989fb6acef8d6 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -3902,9 +3902,9 @@ int cmd_sched(int argc, const char **argv)
- 	 * Aliased to 'perf script' for now:
- 	 */
- 	if (!strcmp(argv[0], "script")) {
--		return cmd_script(argc, argv);
-+		ret = cmd_script(argc, argv);
- 	} else if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
--		return __cmd_record(argc, argv);
-+		ret = __cmd_record(argc, argv);
- 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
- 		sched.tp_handler = &lat_ops;
- 		if (argc > 1) {
-@@ -3913,7 +3913,7 @@ int cmd_sched(int argc, const char **argv)
- 				usage_with_options(latency_usage, latency_options);
- 		}
- 		setup_sorting(&sched, latency_options, latency_usage);
--		return perf_sched__lat(&sched);
-+		ret = perf_sched__lat(&sched);
- 	} else if (!strcmp(argv[0], "map")) {
- 		if (argc) {
- 			argc = parse_options(argc, argv, map_options, map_usage, 0);
-@@ -3924,13 +3924,14 @@ int cmd_sched(int argc, const char **argv)
- 				sched.map.task_names = strlist__new(sched.map.task_name, NULL);
- 				if (sched.map.task_names == NULL) {
- 					fprintf(stderr, "Failed to parse task names\n");
--					return -1;
-+					ret = -1;
-+					goto out;
- 				}
- 			}
- 		}
- 		sched.tp_handler = &map_ops;
- 		setup_sorting(&sched, latency_options, latency_usage);
--		return perf_sched__map(&sched);
-+		ret = perf_sched__map(&sched);
- 	} else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
- 		sched.tp_handler = &replay_ops;
- 		if (argc) {
-@@ -3938,7 +3939,7 @@ int cmd_sched(int argc, const char **argv)
- 			if (argc)
- 				usage_with_options(replay_usage, replay_options);
- 		}
--		return perf_sched__replay(&sched);
-+		ret = perf_sched__replay(&sched);
- 	} else if (!strcmp(argv[0], "timehist")) {
- 		if (argc) {
- 			argc = parse_options(argc, argv, timehist_options,
-@@ -3954,19 +3955,19 @@ int cmd_sched(int argc, const char **argv)
- 				parse_options_usage(NULL, timehist_options, "w", true);
- 			if (sched.show_next)
- 				parse_options_usage(NULL, timehist_options, "n", true);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out;
- 		}
- 		ret = symbol__validate_sym_arguments();
--		if (ret)
--			return ret;
--
--		return perf_sched__timehist(&sched);
-+		if (!ret)
-+			ret = perf_sched__timehist(&sched);
- 	} else {
- 		usage_with_options(sched_usage, sched_options);
- 	}
+@@ -1634,6 +1634,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 	const char *color = PERF_COLOR_NORMAL;
+ 	char stimestamp[32];
+ 	const char *str;
++	int ret = -1;
  
-+out:
- 	/* free usage string allocated by parse_options_subcommand */
- 	free((void *)sched_usage[0]);
+ 	BUG_ON(this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0);
+ 
+@@ -1664,17 +1665,20 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 	sched_in = map__findnew_thread(sched, machine, -1, next_pid);
+ 	sched_out = map__findnew_thread(sched, machine, -1, prev_pid);
+ 	if (sched_in == NULL || sched_out == NULL)
+-		return -1;
++		goto out;
+ 
+ 	tr = thread__get_runtime(sched_in);
+-	if (tr == NULL) {
+-		thread__put(sched_in);
+-		return -1;
+-	}
++	if (tr == NULL)
++		goto out;
++
++	thread__put(sched->curr_thread[this_cpu.cpu]);
++	thread__put(sched->curr_out_thread[this_cpu.cpu]);
+ 
+ 	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+ 	sched->curr_out_thread[this_cpu.cpu] = thread__get(sched_out);
+ 
++	ret = 0;
++
+ 	str = thread__comm_str(sched_in);
+ 	new_shortname = 0;
+ 	if (!tr->shortname[0]) {
+@@ -1769,12 +1773,10 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 	color_fprintf(stdout, color, "\n");
+ 
+ out:
+-	if (sched->map.task_name)
+-		thread__put(sched_out);
+-
++	thread__put(sched_out);
+ 	thread__put(sched_in);
  
 -	return 0;
 +	return ret;
+ }
+ 
+ static int process_sched_switch_event(const struct perf_tool *tool,
+@@ -3556,10 +3558,10 @@ static int perf_sched__map(struct perf_sched *sched)
+ 
+ 	sched->curr_out_thread = calloc(MAX_CPUS, sizeof(*(sched->curr_out_thread)));
+ 	if (!sched->curr_out_thread)
+-		return rc;
++		goto out_free_curr_thread;
+ 
+ 	if (setup_cpus_switch_event(sched))
+-		goto out_free_curr_thread;
++		goto out_free_curr_out_thread;
+ 
+ 	if (setup_map_cpus(sched))
+ 		goto out_free_cpus_switch_event;
+@@ -3590,7 +3592,14 @@ static int perf_sched__map(struct perf_sched *sched)
+ out_free_cpus_switch_event:
+ 	free_cpus_switch_event(sched);
+ 
++out_free_curr_out_thread:
++	for (int i = 0; i < MAX_CPUS; i++)
++		thread__put(sched->curr_out_thread[i]);
++	zfree(&sched->curr_out_thread);
++
+ out_free_curr_thread:
++	for (int i = 0; i < MAX_CPUS; i++)
++		thread__put(sched->curr_thread[i]);
+ 	zfree(&sched->curr_thread);
+ 	return rc;
  }
 -- 
 2.50.0.727.gbf7dc18ff4-goog
