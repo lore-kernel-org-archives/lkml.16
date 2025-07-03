@@ -1,696 +1,172 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022121.outbound.protection.outlook.com [40.107.75.121])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B08128D831;
-	Thu,  3 Jul 2025 08:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751529642; cv=fail; b=UKcuoIu+6qEY0ZHP0FWOJCcQNBdlCNbRVbZ+oKat/y+B1M2BLzPKQcHgLy07vNUiKnGKMSIhLQmlxpGh4bn23oqNd5gh8OovhlIOxCtM+RcW0bNYiTcsSDzsnYuS/NFpZ6bASq+TgKVIjQQfzQYbyoUo+9WvvY016mFsaotjDUE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751529642; c=relaxed/simple;
-	bh=r/3oC8we5UrW3L3EpB5BhAq18tCXc6/n2sRJFmyw0Kk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nO484pgGK4cim7ffajLZ5DYixuIZxSA2jio6peH6pVIZtA4IZMUmX2MRarJ6ft64MNPuaRbjcr3GtvoGLATCpu2spVWrgSIfGCmg68Kqa+BvutvycW635DusfdN0mhXeQNb3ZWWpEAQGV8PmLNh7UlU8+8x5fjDU75j7LZ2TL48=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=TAq7MZni; arc=fail smtp.client-ip=40.107.75.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361622989B2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751529793; cv=none; b=S11PftOgtb4e4SjSeLfyKLCF6oSZVRyVyReZuE/YoDMZhWlbQC4qvAnGkvIcmw6D2cN2FK5+lkpoK3BNC6ZUjesdZzqWXspjXyQ0M1dRkrh4+CZ78YT4hMm9sO7g2tqok55HLle/Zuc9J7JvugAgno7zDKgFXzN6ZshzLC+U+l4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751529793; c=relaxed/simple;
+	bh=2hIcxknYvwGEoobgwAOn7Jc5kfjLqpyk1kwt89ajjF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=snk4T11Wu8f6aCg6lfOJuNi4KkT5yhCyj57tm+oBfo+98KOmEKruk1TcKQCboDC6wN2aHD7KA2EiVJq0X8qea2Pg9MXz5eJQps7p5/E1JP2q7/m5N4joU2eLhP41kmugxoer/Jsytf6rKaXaHI3jQ/lbve+7/GPfmG5Y7pDgil0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gX5TMU4Z; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="TAq7MZni"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bMnEICBY7e1RPIcSxgVuHAvSFAFHRkumsrFNiRc/53rPi2opTnvA7pv4QgvrjzDa66UojbPJVv/Yc2Sau+8dcrs7pJupl6iiux9Bs3Iv4c+JGuEYQKvB4GRM47LjX6PlOQO4rjAEiQMZ/1ey/V+KqEwe3FwtifUtHoVl52mcULVSH53MOUP7VXmT0RSSpj1FsY7D9To182BMN58lsvyCgL2cCRkb0paeHo18n0TxfCKp3sA2uHWZKc4Tferbua7wZCWJaCQew8f+spC0cZsV7xF+lDKqPiZJr+hYWSFE69xI05Sqsa+LsLInqIl5ScSsva/HAWLQ0Hm+gPtZPBd/xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W/3Z2VVpjYxnZecOWPqvFbgpDb/bl8iuMCwj9r0FpIQ=;
- b=Ohcw0xUjIESwQy60UJY6aVhg8QwMKf9aW4jFydYHAbCkT+77eC1jakYpyC99NlyCtlcQnsEHj7g17lAiYuZeuCroNkyoIbmETZnl3c4Ns1DyyJULkUQBNdxT46IFAhpKdnJsfRmzPMfg8TBtvTVNQL2BQ9t05dH755t/WdKwyCQfyoZiV0ZVn1azr9QdkJeC++hsc+d5NDuTlXF2WfHADTEuk6hhKDG/uUP/CuHiQDgGu9KO7cdScLFN9cVVQspv/24w5FI9XUwlaq63O8G/VjA5F6rZKSwAdPWmVPB76NssXjxKqy0mWOXDWN9YfB5AWCdngOzoCwudUOdUPJPD4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W/3Z2VVpjYxnZecOWPqvFbgpDb/bl8iuMCwj9r0FpIQ=;
- b=TAq7MZnimH2Onl4elVEIn2CjkX52/Hje7JewaOnzUI28DzHPaqunFRLS0CfhLtSq1ihDJFjcUOhuT7POKh9fUnnBbFC/4vp3OWEIG9rnF2K1e2fpXcb41+Shl010AKorXjPfGzZBDGaBVmzJAMwuQiYAccDC3mMY/JQCWOeTjn8pRdcOqnm5N66cTwJQ3p/gMuyRmgtclRY+1QsZFhRXow130EaYJ82pvilpdajp6CMYGzgz18Rl+jNycxsrV6NGttyLr7XUjp8FuIpWGehY/6Il5TJieW9xZkkwIBs7A0FUTCaNTUIH5I4adGf5ceAxrSY9FmAw7xnpjkmuZW4wGw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from KL1PR03MB5778.apcprd03.prod.outlook.com (2603:1096:820:6d::13)
- by TYUPR03MB7232.apcprd03.prod.outlook.com (2603:1096:400:354::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Thu, 3 Jul
- 2025 08:00:36 +0000
-Received: from KL1PR03MB5778.apcprd03.prod.outlook.com
- ([fe80::9d11:d1f6:1097:22ca]) by KL1PR03MB5778.apcprd03.prod.outlook.com
- ([fe80::9d11:d1f6:1097:22ca%6]) with mapi id 15.20.8901.021; Thu, 3 Jul 2025
- 08:00:35 +0000
-Message-ID: <0b566a2b-c189-4dc0-a661-019e9c68d009@amlogic.com>
-Date: Thu, 3 Jul 2025 16:00:09 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/26] clk: amlogic: s4-peripherals: naming consistency
- alignment
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-meson-clk-cleanup-24-v1-0-e163c9a1fc21@baylibre.com>
- <20250702-meson-clk-cleanup-24-v1-12-e163c9a1fc21@baylibre.com>
- <a7738c67-25fc-4919-bee8-69a72abb4871@amlogic.com>
- <1jsejdd805.fsf@starbuckisacylon.baylibre.com>
-From: Chuan Liu <chuan.liu@amlogic.com>
-In-Reply-To: <1jsejdd805.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0032.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::12) To KL1PR03MB5778.apcprd03.prod.outlook.com
- (2603:1096:820:6d::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gX5TMU4Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751529791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rU5Offe+0rSj19APlLiLOhHgLRiJXDUZDGfkGR8DMfM=;
+	b=gX5TMU4ZEW6vy5EbSmSOvWDC5KHgZ48XYU5GitgOhSzawDM/1dWhx9wtFWgBETpZJvjYO3
+	YgW6pqDMe6A+wHi/O/b4IL7cInyI7S0Lczv6UHfJUE5iBv5kONqKjadWxRJh3HSD9d8CFa
+	EfeUmg5GhOs9RgA/ozujOr6ipK0pLRQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-641-1EBHxlg_Pei-vPy5Jimxqw-1; Thu, 03 Jul 2025 04:03:04 -0400
+X-MC-Unique: 1EBHxlg_Pei-vPy5Jimxqw-1
+X-Mimecast-MFC-AGG-ID: 1EBHxlg_Pei-vPy5Jimxqw_1751529784
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ae354979e7aso379182866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:03:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751529784; x=1752134584;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rU5Offe+0rSj19APlLiLOhHgLRiJXDUZDGfkGR8DMfM=;
+        b=ewf7FuauBwe/NRsut7TIJuCM7TNKSRKsLCsV8FXloJ2NtLLwjHNwsYDeI/3Z1bnSVU
+         YcbYwTkUSwt7o+Ha4bHH4lKLIs7AwqHiIJCrDzLHGQbz2dCSRsoSxwj7jTrhvdrRhySn
+         gF1n9n+RSCa9BduDVZpur04UZ8dKKUdYFg17ixHiyy49tjM6uP08NvnWGtLpDjITB5aQ
+         NmDGRVmj7fRo1VWy25NxOIG6i8sYvVBY35iqnALzkigcmM66onedSadX/Nn/q3AswX28
+         hKM1epXgZKgSYLk2enOKUfREBEXsDTnBglZ9g75P2DtNBvV2PdI3iZtvLe1+2O1U3e1O
+         zttA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHvGm2y06TvMpDYD1wDvx0dHbZ3X1TQaCGxTCBmcbN/xz9xMCzHN9fZh77YGvvojcFuzy/I7SQDzCAmRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUV0O/oD5S3/U/hnRYCdPfe233/sKaS9VW2WVCXy5UIh3LJ7SL
+	FCRA6P+aLvX9Ml84L2g/z0WoxylYBi+U55tx2iDb/bDgFUgNvczhol/aZ7nyCev0u7hIBPHf3Vw
+	9hrtX4fG2pGVWDs21DSyPrUvpxO6b9wLAKvZ/wcmasgrL312hAwapKN3WHIIlocByJw==
+X-Gm-Gg: ASbGnctxNjCYrqcmzhVuhYWZtXZFyy24T/QBf29A/imyGwUtwVMHNzXPgvdqGi0tAPx
+	7jLaOYnPr7kescw7qKvaOolKU4RA6dDLq1j8rc66H7dXdm9a1ccrWYM6WyU8AftIrVDtlywPEbQ
+	Q/DFfgPUNHUGNWBW8sbSa8rdfeeS5m90tdcDpEgSSzoXCCNyGtiYM43AObV740ou8wHQKTBzjcH
+	QvnjLPcBoqfRSqiBvWoA9eIBacqK/eJsYjy2luQLe491UC7VleJw2ExL+iVfw7XPgNUDdoR/j8i
+	0NSlkJbet0W9CMBS26sOrhXmDz9UIgRKKGQNl81kXVCI
+X-Received: by 2002:a17:907:930a:b0:adf:7740:9284 with SMTP id a640c23a62f3a-ae3d8b956ecmr238108466b.57.1751529783562;
+        Thu, 03 Jul 2025 01:03:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHN+d3U8Q/iQsyL2MRs8lXfAMehX7tLoN1mBKlzYUA4dzhVi2aypXBlEYkxHUC75seobjJ6gQ==
+X-Received: by 2002:a17:907:930a:b0:adf:7740:9284 with SMTP id a640c23a62f3a-ae3d8b956ecmr238104766b.57.1751529783091;
+        Thu, 03 Jul 2025 01:03:03 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6b448sm1203266966b.127.2025.07.03.01.03.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 01:03:02 -0700 (PDT)
+Message-ID: <adcdaa67-9eb4-47a8-86dd-56ccae0dd99b@redhat.com>
+Date: Thu, 3 Jul 2025 10:03:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR03MB5778:EE_|TYUPR03MB7232:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f7ce975-5af2-426b-2a87-08ddba07b132
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RHFkZHdvT3dGL2FUMVF5andzeHI5bDFWM2hVV2gzL0NkYVFTVWV6YjB1WnVs?=
- =?utf-8?B?bVFMNkthanplbmRyTzNYTVhTZWtyNFhWQ3d5bTR1NVRKSUJuRXdMcjhKelRp?=
- =?utf-8?B?eDFib2prMEVsdFBRN2p0UTJWaHVXenI3cE8wQkU4aXFRTjZuOEY0WGgrenNw?=
- =?utf-8?B?SGRJdXhza01XOTRxV3FLSHUvL1lER1k1Z1hjNVZZSjNTbWJIbnRkWkt4dm5R?=
- =?utf-8?B?c1VSaTR0NnpMTE5YckZjYllEclBXV0VBQjJWMld5ejhlQ1pHVlVjenU5enZ3?=
- =?utf-8?B?QmRTbDZ1cjRxOW1DVWtVSGswNmZNWnVEYWZYa2MyQnc2RGxjSUJOU1h1cWYz?=
- =?utf-8?B?VTV2OXpXdTlmL0dSbTBtdU5waElwbXlvN2gyVHdkUGl1Nll0UWMvRktMb0Rz?=
- =?utf-8?B?c0NYa2wvTEZGWHhLckNCTGxsYm03dGM2MkRMNUhEcjIrRzlRalRWMCtGbUxQ?=
- =?utf-8?B?VmsyOVNVZzRxREczVkpCRThGWk9zdmt6VmZtU3prNFpBMExSRG5LQVR2N3d1?=
- =?utf-8?B?K296ellTU1VjZDBnZjF4OU1kT0owMVI4NWlhNDZzdVNOTlJVdzVCblc2bFh3?=
- =?utf-8?B?cGpjYnh0eHFWSjVNL0YxTVVVdXVPM3BmUlgzMzdHaGFnb1RPbnpJSHEzcUdB?=
- =?utf-8?B?dDhrcGsrd2dXOXdDTm5yeGJ4ZmcwMHY4dCt6WVFsalI2Y05FbnRsRHRxSUJW?=
- =?utf-8?B?ajVzc1dwd2NsMDhGQ09FUVd4STl5eW0yVFRpZTVobDdUcUVQemk3MVpxWjlO?=
- =?utf-8?B?Z2Fzc1B0NEptQ3I1aXZGTFBtYkRrQTh4Nld5b3hRM1RMQ0l4OU5ZeEV4eXBP?=
- =?utf-8?B?djBkMVF1N2dwS3NJS08xeFFSK3JVck1pL0g3NEZNUExKVjBBbTF1b3FvZENt?=
- =?utf-8?B?Wm54T0wxbk1PMmpmWE1hZ2RHdnROU1JzZ0U1ZWlsYjRRYWpmMGVXQlFmMTQ5?=
- =?utf-8?B?dVhNd0VSNXFwVEdsd3poM2RRNEJDMTdycGdCbXBHNHlWd1NQazZISTBMakdl?=
- =?utf-8?B?ZGFmNmFtS2txY2VLK2huby9sWjl3cElVdW1YT1phZFFLQnBvczg4OW5vS2lJ?=
- =?utf-8?B?SXVNNWtzekhEMVpHeVVCeExjRytFQVZyK1dXd3dOeS95TTZuZWRzbVgvb1dE?=
- =?utf-8?B?Y1BheUxTejR5Z1dseVVQNSs4Zmw1T2RIZGt2MVpZcUxRMzdtRzJBMkdyRW44?=
- =?utf-8?B?dFZVZnJZcHNadVlTNi9vMDhPb2JGSDFJYU9XWTRFZ0FOd2pnWWVsQWVUUzFM?=
- =?utf-8?B?YlRXRUZkQWIvanowdUpaN1FRMjFNL29RcFZ6dVNEYndWeGhaWmVmSUY0NDIx?=
- =?utf-8?B?UU5FcVQzM0ozWklpRURSajIvYU41UEQ1NUtDbVprMThnRTVKaDVINkNEdWdJ?=
- =?utf-8?B?T09VUUorWFFyallZYlYzYjRrdC9qRmY5dE9SaDdUNjB4bGI1M0FrSitKRjZa?=
- =?utf-8?B?MlR4RTd3aHBrZlBhNk1nMXR0Um9acHBzRzNvZFd3aHFjSUt2clg3YndEOVYr?=
- =?utf-8?B?RlFvSEZoaDZkOTh3bDRFNUxhaERZYUZnMTVVdmxuVHFpVFNyZkYrOGo2MENN?=
- =?utf-8?B?eGV0S0pNZDBrTWhqUkg3WW1mWW50eWlGQU1KeWY1QUdOY2NGV1RmR0RjUFQr?=
- =?utf-8?B?K1RCNEdFaGVzdXpZYkJjdHJPYklmN3FyMFRZUFFGa2p4bnQ5M3lTdU42ajBQ?=
- =?utf-8?B?SHJtMGRieWx0TnlOSkRWK1M5M0xjb3dVdm5oTDNWN3R3Vk5hc0tER2FWSTg5?=
- =?utf-8?B?TXlSUXkwTUs0dFFSQmtTMXI5d3djTGlRdksyUWp0dE4rNEk0S1pJZ1NxS0Iw?=
- =?utf-8?B?RFZMc1cra1VQZ1kxYjQxa2lBY09oSzlSd0pZSDRqWERsT1dGb0U4SXVxbCsz?=
- =?utf-8?B?S0taRi8xejFNcTlWem5KVkFjNHlhd2pNeGZ6b0ZSTjlGVnpYUFU3QlVTbjdk?=
- =?utf-8?Q?amP+9vcSzNU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB5778.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?US9rc2U1eG1VOTA3Yk9Jd0JHTDVHbm5VMWtaVEcxSUhPOFQzMnYvaTlaZk5J?=
- =?utf-8?B?Lzg1eFA4MDVGWlRSanBWeXVIZDA3cURpTGZ2clRZRG5SMDBPeHFkblY3d0xP?=
- =?utf-8?B?eVRMK3VEdk5GTnNKL2FLakpIaGZFNEJHOU1ZNUxweXJHWEozdUt4V3hZUGxu?=
- =?utf-8?B?ZE9PVkhUaHA5SEZqTGt2VzJ0d21wdlFldmZUWlNlNnM4U3NheFJRaHNVMEo0?=
- =?utf-8?B?M0VlcjFGTFBSNzJLYWVsVnM1Q1MyNi9PUDFOM0tXU1Q2eEp0ZEVOVm91dFpa?=
- =?utf-8?B?Rm1iakFvZlJvWkdxTkdvS2VyWDJ5a1B3b1FKQ2x5QlFzUXN4ckI3cTF1Z2dh?=
- =?utf-8?B?U3FnNW9tblh6a3I0NkRqUkZpVTlEcUlkTUltbUJHangxRUNVc2NrcEZxRWEx?=
- =?utf-8?B?RU8wQ1VyNkNPWksvbVluNUhIVHpRUUZMOFhqTml1MjdIVmNlaGRycVBwWENk?=
- =?utf-8?B?SGdDMXdlSUFpUEgvSlk0eGZpYlBKa21jYlE4ZmNwVWxiUWVuM21PYThZUnJR?=
- =?utf-8?B?TndjNWRabGhIMy82VC9wOWVFelhkVlRNbkF3WEtUOFhhUGVRRE9MUTA1QzlX?=
- =?utf-8?B?dWlBQ2NWUC9jOTFqZythUFdkeHZseUsrcHZ0MUEvNnFSZ083VXlWVXBKMXda?=
- =?utf-8?B?Z05oV2F3VFRhbTRScUNIS2N2Kzh5KzJJU0NEcE9xUVJaNDlrdFVUMkxoZzdW?=
- =?utf-8?B?UGw4aG1GUk0xNW5HMlJka2xMcUFCOVViRGI1eVZxM3NHVU5mdHpnVkhCeVJK?=
- =?utf-8?B?ZEFXdXlieVV5aElLTnZsTytqTTJlUUFlMGk3TWdiaHFwc1VkT0tLSGhGMDRH?=
- =?utf-8?B?QWtoNllxRm1xMjAxeCtwVmJSbU1RajJnOUhXVXNJVkF3VXg4Unc3NnY5U29u?=
- =?utf-8?B?UFVOTWo3eitHUGF1c0c3bVdHWloxcEFPNG4wTnVkTFZZQTZTRjMvaG1laUE0?=
- =?utf-8?B?YjIyR1JUdERLY0ZOdHl0L0JRMlZXYnd4MC8vLzZwcFVmRkt0enZ3SXEwdzNU?=
- =?utf-8?B?Y1lhSlpGT2cxNXFodFpIeWZ0U3lkb3JSRlZiZERuZ1JzUE5EUVJPWTRaWmpI?=
- =?utf-8?B?UVJVdGZwbHlRQzVVc1ZYeGJmbnRCYUNoVDNwdnFUcksxWk5seE9rcDltNVFB?=
- =?utf-8?B?bjc5MWdwWVRZc2NmWEE4LzNqb05INFFsVW1VOEFrVjhXNlRTUnJLbnhDemZz?=
- =?utf-8?B?M3FvaisvNzdWVWtReTUzc29ZS2FtK05waDkzWWlIOUx6Q0lDdWdFK0ZTczVo?=
- =?utf-8?B?aHZUNEsxQUpibGxXV3ZxdWNJQmUvc1p5dlYvb0RxQmFnUVRxNlZCSURaVzIr?=
- =?utf-8?B?cWhiRDRQakV2QkpYd0owVnJiNjRlUzBvOGMwMU5XOU1HeVRJcXhaQ1BvZXg4?=
- =?utf-8?B?U0lSMTIxMjBwb0ViR1ZHWC8xUDBLaGtCVmxob084Q25pVE9xRGlUQUZNSjM0?=
- =?utf-8?B?d2k0d2MvWUp5QUlWQ1FBQzhHMTR6bFVINVViTnR1ZTBlR3ZjRUF0QnNRWWNW?=
- =?utf-8?B?amdJRDNFQ2haK2NJTGpyLzBBcGNIMklPVG5yeEJ2bkhjaXFlR1pkMFJLdlV1?=
- =?utf-8?B?b29jUHFPdE1QRGJYdXpyY0VUZGUvSlVaSjlUVHU2VU1tL01VSDZQQ0pscnd6?=
- =?utf-8?B?QkhkRTAxY2tQdmRlRDJibitHQjZrdHlFOTZibDVnNGlocWVvU1ErUTB0WFlX?=
- =?utf-8?B?aG9mTlF3ckE0Z1VnUHlnQ2dQS1h1U2xWNml4dll3Y3VlcEdSN2ZkTlNBalND?=
- =?utf-8?B?N2hTajdYV3lTNmVrQnVGaGxqcHpmM21sdFVCelRzVGZ4K0dycXRHc0RVY0FB?=
- =?utf-8?B?R0llRlEwdEJMWjlXZzNVZDFCT2JHN3NnazRFQi9GR1g5bWVCS1REd2tMWklK?=
- =?utf-8?B?VnRlc1pVcmh2bDVOaE9rdU5qTFRJOTJSWmpyOGcyb3EzYUJSMDdLTCt6U2Vz?=
- =?utf-8?B?MnNMZVhzRjFPcTY4c2Rkc1JiUFhTMWNlSDlQSW9aNG5LZzNjaDlQZE4zdkFr?=
- =?utf-8?B?dVhvc0RpMGY5U1FJNXRyNlJ5TDZYNll0YlUwZWZIVXI0Uk5OclFQZXJvQmds?=
- =?utf-8?B?RDhXb0NqbTdPbk5ITUp6akhjUm1KNUYwVHlFZ0wySjlRVHU5ekhCbk5nclFS?=
- =?utf-8?Q?wq9fVETUDyzVlGGRVgmpHzYE9?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f7ce975-5af2-426b-2a87-08ddba07b132
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB5778.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 08:00:35.9114
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VeDxgvDp9UPMNZTmWnpnY/1RjWwEFnLfkFKiCHHhF0qWnf2whPizqeyXaOPsxFyU0Muuhi6BBz02jKDpVExfBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR03MB7232
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] mm/selftests: Fix incorrect pointer being passed
+ to mark_range()
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
+ pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
+References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+ <20250703060656.54345-2-aboorvad@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250703060656.54345-2-aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 03.07.25 08:06, Aboorva Devarajan wrote:
+> From: Donet Tom <donettom@linux.ibm.com>
+> 
+> In main(), the high address is stored in hptr, but for mark_range(),
+> the address passed is ptr, not hptr. Fixed this by changing ptr[i] to
+> hptr[i] in mark_range() function call.
+> 
+> Fixes: b2a79f62133a ("selftests/mm: virtual_address_range: unmap chunks after validation")
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> ---
+>   tools/testing/selftests/mm/virtual_address_range.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
+> index 169dbd692bf5..e24c36a39f22 100644
+> --- a/tools/testing/selftests/mm/virtual_address_range.c
+> +++ b/tools/testing/selftests/mm/virtual_address_range.c
+> @@ -227,7 +227,7 @@ int main(int argc, char *argv[])
+>   		if (hptr[i] == MAP_FAILED)
+>   			break;
+>   
+> -		mark_range(ptr[i], MAP_CHUNK_SIZE);
+> +		mark_range(hptr[i], MAP_CHUNK_SIZE);
+>   		validate_addr(hptr[i], 1);
+>   	}
+>   	hchunks = i;
 
-On 7/3/2025 3:54 PM, Jerome Brunet wrote:
-> [ EXTERNAL EMAIL ]
->
-> On Thu 03 Jul 2025 at 11:18, Chuan Liu <chuan.liu@amlogic.com> wrote:
->
->> Hi Jerome:
->>
->>
->> On 7/2/2025 11:26 PM, Jerome Brunet wrote:
->>> [ EXTERNAL EMAIL ]
->>>
->>> Amlogic clock controller drivers are all doing the same thing, more or
->>> less. Yet, over the years, tiny (and often pointless) differences have
->>> emerged.
->>>
->>> This makes reviews more difficult, allows some errors to slip through and
->>> make it more difficult to exploit SoC commonalities, leading to code
->>> duplication.
->>>
->>> This change enforce, wherever possible, a consistent and predictable scheme
->>> when it comes to code organisation and naming, The scheme chosen is what
->>> was used the most already, to try and minimise the size of the ugly
->>> resulting diff. Here are some of the rules applied:
->>> - Aligning clock names, variable names and IDs.
->>>     - ID cannot change (used in DT)
->>>     - Variable names w/ SoC name prefixes
->>>     - Clock names w/o SoC name prefixes, except pclks for historic reasons
->>> - Composite clock systematic naming : mux: X_sel, div:X_div, gate:X
->>> - Parent table systematically named with the same name as the clock and
->>>     a '_parents' suffix
->>> - Group various tables next to the related clock
->>> - etc ...
->>>
->>> Doing so removes what would otherwise show up as unrelated diff in
->>> following changes. It will allow to introduce common definitions for
->>> peripheral clocks, probe helpers, composite clocks, etc ... making further
->>> review and maintenance easier.
->>>
->>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->>> ---
->>>    drivers/clk/meson/s4-peripherals.c | 746 ++++++++++++++++++-------------------
->>>    1 file changed, 370 insertions(+), 376 deletions(-)
->>>
->>> diff --git a/drivers/clk/meson/s4-peripherals.c b/drivers/clk/meson/s4-peripherals.c
->>> index c9400cf54c84c3dc7c63d0636933951b0cac230c..9bcd35f12836de5e318fd1ad9c9ae15a2bfc3dd7 100644
->>> --- a/drivers/clk/meson/s4-peripherals.c
->>> +++ b/drivers/clk/meson/s4-peripherals.c
->>
->> [...]
->>
->>
->>> @@ -1320,7 +1320,7 @@ static struct clk_regmap s4_ts_clk_gate = {
->>>     * mux because it does top-to-bottom updates the each clock tree and
->>>     * switches to the "inactive" one when CLK_SET_RATE_GATE is set.
->>>     */
->>> -static const struct clk_parent_data s4_mali_0_1_parent_data[] = {
->>> +static const struct clk_parent_data s4_mali_parents[] = {
->>>           { .fw_name = "xtal", },
->>>           { .fw_name = "gp0_pll", },
->>>           { .fw_name = "hifi_pll", },
->>> @@ -1340,8 +1340,8 @@ static struct clk_regmap s4_mali_0_sel = {
->>>           .hw.init = &(struct clk_init_data){
->>>                   .name = "mali_0_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_mali_0_1_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_mali_0_1_parent_data),
->>> +               .parent_data = s4_mali_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_mali_parents),
->>>                   /*
->>>                    * Don't request the parent to change the rate because
->>>                    * all GPU frequencies can be derived from the fclk_*
->>> @@ -1394,8 +1394,8 @@ static struct clk_regmap s4_mali_1_sel = {
->>>           .hw.init = &(struct clk_init_data){
->>>                   .name = "mali_1_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_mali_0_1_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_mali_0_1_parent_data),
->>> +               .parent_data = s4_mali_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_mali_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1433,28 +1433,26 @@ static struct clk_regmap s4_mali_1 = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_hw *s4_mali_parent_hws[] = {
->>> -       &s4_mali_0.hw,
->>> -       &s4_mali_1.hw
->>> -};
->>> -
->>> -static struct clk_regmap s4_mali_mux = {
->>> +static struct clk_regmap s4_mali_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_MALI_CLK_CTRL,
->>>                   .mask = 1,
->>>                   .shift = 31,
->>>           },
->>>           .hw.init = &(struct clk_init_data){
->>> -               .name = "mali",
->>> +               .name = "mali_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_hws = s4_mali_parent_hws,
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &s4_mali_0.hw,
->>> +                       &s4_mali_1.hw,
->>> +               },
->>>                   .num_parents = 2,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>>           },
->>>    };
->>>
->>>    /* VDEC clocks */
->>> -static const struct clk_parent_data s4_dec_parent_data[] = {
->>> +static const struct clk_parent_data s4_dec_parents[] = {
->>>           { .fw_name = "fclk_div2p5", },
->>>           { .fw_name = "fclk_div3", },
->>>           { .fw_name = "fclk_div4", },
->>> @@ -1465,7 +1463,7 @@ static const struct clk_parent_data s4_dec_parent_data[] = {
->>>           { .fw_name = "xtal", }
->>>    };
->>>
->>> -static struct clk_regmap s4_vdec_p0_mux = {
->>> +static struct clk_regmap s4_vdec_p0_sel = {
->>
->> Since both vdec_clk and mali_clk are 'no glitch clock', should we also unify
->> the naming from 's4_vdec_p0'/'s4_vdec_p1' to 's4_vdec_0'/'s4_vdec_1'?
-> Please have another look at the description.
->
-> As much as possible, I want the ID, clock name, and variable names
-> aligned. ID do not change and has that 'p' ... so no, the 'p' stays.
+Acked-by: David Hildenbrand <david@redhat.com>
 
+-- 
+Cheers,
 
-Okay, understand
+David / dhildenb
 
-
-Reviewed-by: Chuan Liu <chuan.liu@amlogic.com>
-
-
->>
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC_CLK_CTRL,
->>>                   .mask = 0x7,
->>> @@ -1473,10 +1471,10 @@ static struct clk_regmap s4_vdec_p0_mux = {
->>>                   .flags = CLK_MUX_ROUND_CLOSEST,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vdec_p0_mux",
->>> +               .name = "vdec_p0_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_dec_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_dec_parent_data),
->>> +               .parent_data = s4_dec_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_dec_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1492,7 +1490,7 @@ static struct clk_regmap s4_vdec_p0_div = {
->>>                   .name = "vdec_p0_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_vdec_p0_mux.hw
->>> +                       &s4_vdec_p0_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1515,7 +1513,7 @@ static struct clk_regmap s4_vdec_p0 = {
->>>           },
->>>    };
->>>
->>> -static struct clk_regmap s4_vdec_p1_mux = {
->>> +static struct clk_regmap s4_vdec_p1_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC3_CLK_CTRL,
->>>                   .mask = 0x7,
->>> @@ -1523,10 +1521,10 @@ static struct clk_regmap s4_vdec_p1_mux = {
->>>                   .flags = CLK_MUX_ROUND_CLOSEST,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vdec_p1_mux",
->>> +               .name = "vdec_p1_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_dec_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_dec_parent_data),
->>> +               .parent_data = s4_dec_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_dec_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1542,7 +1540,7 @@ static struct clk_regmap s4_vdec_p1_div = {
->>>                   .name = "vdec_p1_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_vdec_p1_mux.hw
->>> +                       &s4_vdec_p1_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1565,27 +1563,25 @@ static struct clk_regmap s4_vdec_p1 = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_hw *s4_vdec_mux_parent_hws[] = {
->>> -       &s4_vdec_p0.hw,
->>> -       &s4_vdec_p1.hw
->>> -};
->>> -
->>> -static struct clk_regmap s4_vdec_mux = {
->>> +static struct clk_regmap s4_vdec_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC3_CLK_CTRL,
->>>                   .mask = 0x1,
->>>                   .shift = 15,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vdec_mux",
->>> +               .name = "vdec_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_hws = s4_vdec_mux_parent_hws,
->>> -               .num_parents = ARRAY_SIZE(s4_vdec_mux_parent_hws),
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &s4_vdec_p0.hw,
->>> +                       &s4_vdec_p1.hw,
->>> +               },
->>> +               .num_parents = 2,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>>           },
->>>    };
->>>
->>> -static struct clk_regmap s4_hevcf_p0_mux = {
->>> +static struct clk_regmap s4_hevcf_p0_sel = {
->>
->> +static struct clk_regmap s4_hevcf_0_sel
->> +static struct clk_regmap s4_hevcf_0_div
->> .
->> .
->> .
->>
->>
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC2_CLK_CTRL,
->>>                   .mask = 0x7,
->>> @@ -1593,10 +1589,10 @@ static struct clk_regmap s4_hevcf_p0_mux = {
->>>                   .flags = CLK_MUX_ROUND_CLOSEST,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "hevcf_p0_mux",
->>> +               .name = "hevcf_p0_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_dec_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_dec_parent_data),
->>> +               .parent_data = s4_dec_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_dec_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1612,7 +1608,7 @@ static struct clk_regmap s4_hevcf_p0_div = {
->>>                   .name = "hevcf_p0_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_hevcf_p0_mux.hw
->>> +                       &s4_hevcf_p0_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1625,7 +1621,7 @@ static struct clk_regmap s4_hevcf_p0 = {
->>>                   .bit_idx = 8,
->>>           },
->>>           .hw.init = &(struct clk_init_data){
->>> -               .name = "hevcf_p0_gate",
->>> +               .name = "hevcf_p0",
->>>                   .ops = &clk_regmap_gate_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>>                           &s4_hevcf_p0_div.hw
->>> @@ -1635,7 +1631,7 @@ static struct clk_regmap s4_hevcf_p0 = {
->>>           },
->>>    };
->>>
->>> -static struct clk_regmap s4_hevcf_p1_mux = {
->>> +static struct clk_regmap s4_hevcf_p1_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC4_CLK_CTRL,
->>>                   .mask = 0x7,
->>> @@ -1643,10 +1639,10 @@ static struct clk_regmap s4_hevcf_p1_mux = {
->>>                   .flags = CLK_MUX_ROUND_CLOSEST,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "hevcf_p1_mux",
->>> +               .name = "hevcf_p1_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_dec_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_dec_parent_data),
->>> +               .parent_data = s4_dec_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_dec_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1662,7 +1658,7 @@ static struct clk_regmap s4_hevcf_p1_div = {
->>>                   .name = "hevcf_p1_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_hevcf_p1_mux.hw
->>> +                       &s4_hevcf_p1_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1685,28 +1681,26 @@ static struct clk_regmap s4_hevcf_p1 = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_hw *s4_hevcf_mux_parent_hws[] = {
->>> -       &s4_hevcf_p0.hw,
->>> -       &s4_hevcf_p1.hw
->>> -};
->>> -
->>> -static struct clk_regmap s4_hevcf_mux = {
->>> +static struct clk_regmap s4_hevcf_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VDEC4_CLK_CTRL,
->>>                   .mask = 0x1,
->>>                   .shift = 15,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "hevcf",
->>> +               .name = "hevcf_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_hws = s4_hevcf_mux_parent_hws,
->>> -               .num_parents = ARRAY_SIZE(s4_hevcf_mux_parent_hws),
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &s4_hevcf_p0.hw,
->>> +                       &s4_hevcf_p1.hw,
->>> +               },
->>> +               .num_parents = 2,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>>           },
->>>    };
->>>
->>>    /* VPU Clock */
->>> -static const struct clk_parent_data s4_vpu_parent_data[] = {
->>> +static const struct clk_parent_data s4_vpu_parents[] = {
->>>           { .fw_name = "fclk_div3", },
->>>           { .fw_name = "fclk_div4", },
->>>           { .fw_name = "fclk_div5", },
->>> @@ -1726,8 +1720,8 @@ static struct clk_regmap s4_vpu_0_sel = {
->>>           .hw.init = &(struct clk_init_data){
->>>                   .name = "vpu_0_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_vpu_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_vpu_parent_data),
->>> +               .parent_data = s4_vpu_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_vpu_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1770,8 +1764,8 @@ static struct clk_regmap s4_vpu_1_sel = {
->>>           .hw.init = &(struct clk_init_data){
->>>                   .name = "vpu_1_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_vpu_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_vpu_parent_data),
->>> +               .parent_data = s4_vpu_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_vpu_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1823,24 +1817,24 @@ static struct clk_regmap s4_vpu = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_parent_data vpu_clkb_tmp_parent_data[] = {
->>> +static const struct clk_parent_data vpu_clkb_tmp_parents[] = {
->>>           { .hw = &s4_vpu.hw },
->>>           { .fw_name = "fclk_div4", },
->>>           { .fw_name = "fclk_div5", },
->>>           { .fw_name = "fclk_div7", }
->>>    };
->>>
->>> -static struct clk_regmap s4_vpu_clkb_tmp_mux = {
->>> +static struct clk_regmap s4_vpu_clkb_tmp_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VPU_CLKB_CTRL,
->>>                   .mask = 0x3,
->>>                   .shift = 20,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vpu_clkb_tmp_mux",
->>> +               .name = "vpu_clkb_tmp_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = vpu_clkb_tmp_parent_data,
->>> -               .num_parents = ARRAY_SIZE(vpu_clkb_tmp_parent_data),
->>> +               .parent_data = vpu_clkb_tmp_parents,
->>> +               .num_parents = ARRAY_SIZE(vpu_clkb_tmp_parents),
->>>                   .flags = CLK_SET_RATE_PARENT,
->>>           },
->>>    };
->>> @@ -1855,7 +1849,7 @@ static struct clk_regmap s4_vpu_clkb_tmp_div = {
->>>                   .name = "vpu_clkb_tmp_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_vpu_clkb_tmp_mux.hw
->>> +                       &s4_vpu_clkb_tmp_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1911,7 +1905,7 @@ static struct clk_regmap s4_vpu_clkb = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_parent_data s4_vpu_clkc_parent_data[] = {
->>> +static const struct clk_parent_data s4_vpu_clkc_parents[] = {
->>>           { .fw_name = "fclk_div4", },
->>>           { .fw_name = "fclk_div3", },
->>>           { .fw_name = "fclk_div5", },
->>> @@ -1922,17 +1916,17 @@ static const struct clk_parent_data s4_vpu_clkc_parent_data[] = {
->>>           { .fw_name = "gp0_pll", },
->>>    };
->>>
->>> -static struct clk_regmap s4_vpu_clkc_p0_mux  = {
->>> +static struct clk_regmap s4_vpu_clkc_p0_sel  = {
->>
->> +static struct clk_regmap s4_vpu_clkc_0_sel
->> +static struct clk_regmap s4_vpu_clkc_0_div
->> .
->> .
->> .
->>
->>
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VPU_CLKC_CTRL,
->>>                   .mask = 0x7,
->>>                   .shift = 9,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vpu_clkc_p0_mux",
->>> +               .name = "vpu_clkc_p0_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_vpu_clkc_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_vpu_clkc_parent_data),
->>> +               .parent_data = s4_vpu_clkc_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_vpu_clkc_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1947,7 +1941,7 @@ static struct clk_regmap s4_vpu_clkc_p0_div = {
->>>                   .name = "vpu_clkc_p0_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_vpu_clkc_p0_mux.hw
->>> +                       &s4_vpu_clkc_p0_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -1970,17 +1964,17 @@ static struct clk_regmap s4_vpu_clkc_p0 = {
->>>           },
->>>    };
->>>
->>> -static struct clk_regmap s4_vpu_clkc_p1_mux = {
->>> +static struct clk_regmap s4_vpu_clkc_p1_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VPU_CLKC_CTRL,
->>>                   .mask = 0x7,
->>>                   .shift = 25,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vpu_clkc_p1_mux",
->>> +               .name = "vpu_clkc_p1_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_data = s4_vpu_clkc_parent_data,
->>> -               .num_parents = ARRAY_SIZE(s4_vpu_clkc_parent_data),
->>> +               .parent_data = s4_vpu_clkc_parents,
->>> +               .num_parents = ARRAY_SIZE(s4_vpu_clkc_parents),
->>>                   .flags = 0,
->>>           },
->>>    };
->>> @@ -1995,7 +1989,7 @@ static struct clk_regmap s4_vpu_clkc_p1_div = {
->>>                   .name = "vpu_clkc_p1_div",
->>>                   .ops = &clk_regmap_divider_ops,
->>>                   .parent_hws = (const struct clk_hw *[]) {
->>> -                       &s4_vpu_clkc_p1_mux.hw
->>> +                       &s4_vpu_clkc_p1_sel.hw
->>>                   },
->>>                   .num_parents = 1,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>> @@ -2018,28 +2012,26 @@ static struct clk_regmap s4_vpu_clkc_p1 = {
->>>           },
->>>    };
->>>
->>> -static const struct clk_hw *s4_vpu_mux_parent_hws[] = {
->>> -       &s4_vpu_clkc_p0.hw,
->>> -       &s4_vpu_clkc_p1.hw
->>> -};
->>> -
->>> -static struct clk_regmap s4_vpu_clkc_mux = {
->>> +static struct clk_regmap s4_vpu_clkc_sel = {
->>>           .data = &(struct clk_regmap_mux_data){
->>>                   .offset = CLKCTRL_VPU_CLKC_CTRL,
->>>                   .mask = 0x1,
->>>                   .shift = 31,
->>>           },
->>>           .hw.init = &(struct clk_init_data) {
->>> -               .name = "vpu_clkc_mux",
->>> +               .name = "vpu_clkc_sel",
->>>                   .ops = &clk_regmap_mux_ops,
->>> -               .parent_hws = s4_vpu_mux_parent_hws,
->>> -               .num_parents = ARRAY_SIZE(s4_vpu_mux_parent_hws),
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &s4_vpu_clkc_p0.hw,
->>> +                       &s4_vpu_clkc_p1.hw,
->>> +               },
->>> +               .num_parents = 2,
->>>                   .flags = CLK_SET_RATE_PARENT,
->>>           },
->>>    };
->>
->> [...]
->>
->>
->>>    MODULE_DESCRIPTION("Amlogic S4 Peripherals Clock Controller driver");
->>>    MODULE_AUTHOR("Yu Tu <yu.tu@amlogic.com>");
->>>
->>> --
->>> 2.47.2
->>>
->>>
->>> _______________________________________________
->>> linux-amlogic mailing list
->>> linux-amlogic@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> --
-> Jerome
