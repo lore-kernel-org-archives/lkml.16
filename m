@@ -1,104 +1,71 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061EE221F1E;
-	Thu,  3 Jul 2025 09:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AE2D7812
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534639; cv=none; b=B8WuWp/m5GUOQIo4Qtkb+3D2y3Ch+FSrh5DgS3MFUd4CULQUaqrb6HcQo7WScFJvngW+cxtDC4S1P8W238O78qu0UqsS3764gr1G0BtN7s6FntLF+h/LH0efuRqGVfTTF5w/wjgZw6NUsoLGIYAutv3aOwO5jGumsl422t/NFXU=
+	t=1751534644; cv=none; b=dLMWR3hwYISfdE5HtxM5PEii1r8CjrgvNOLXskqAZdVkTAGgyRhFrDwj6w5j/C5eadRft9OjLdO8SDlDEHHWUHH4aFmskiDWq8A0/nIx1wSY7MCsAEJMXX6dL/UHHufD8YCmaXXD2w3FF51CWyZbhoc6Xajl+6JrNVvNbfAenSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534639; c=relaxed/simple;
-	bh=yz+VXBl7zBZmljtkWVQF/zfdlI5B+BW7GJtbNl8TSUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B/0Zjl0jCeP7dRmgZAvKVQ0slhWgKOyyH7vRnBglydmaFTCUUoxeZroaChxj8m8xk8dJ6eXAXcGYQvyoYqyfXBy0P+NafbetSELnuOx515g8uVswb40VGlFiR+z7+GL86JS5azo3ycoY+dwx82iNuyxkEFaU2nlLrHKIb7U5p2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=plTe8ttn; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="plTe8ttn"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5637OLbU018922;
-	Thu, 3 Jul 2025 11:23:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	mi/np96huTpzemlSEPT47ivnNTAhi9p9kP4BY7V5Dek=; b=plTe8ttnU3beSTHr
-	Oq7OU+9mH5o57+1TikvjDuCxgr+8f1FVkcIWT777l+P3VM4cp8lHkPxMN97FoDWN
-	mumYZ3vLNIuCYKoKyPLLg76qriKwwVLUwkI+A46tjtUp5O59pbaHeI8N57ElxEpX
-	8o9rkdDBtRsz+hx+jfaloob+i+rhesP5mWMdeIjjiiO9ZbOSBx3E3MuZaSeViRy2
-	XD7kze4NlfLXeahkYLkR/+Qp4ZTN3lkkLIAwxgMdgfsXEMKqKx2n1vuFppXsIOaE
-	rlkBHxVlTYS5w7dlwoSLudMlie04jdTbTfTfScCtCg3DGxNw6mZoEsdhE3I569ge
-	vwrbuw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47j5tmf6ec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 11:23:26 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 27B8440059;
-	Thu,  3 Jul 2025 11:22:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 92F68AF65C7;
-	Thu,  3 Jul 2025 11:21:01 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Jul
- 2025 11:21:00 +0200
-Message-ID: <313d1cc7-eff9-47c7-940f-4ef9e92bccd0@foss.st.com>
-Date: Thu, 3 Jul 2025 11:21:00 +0200
+	s=arc-20240116; t=1751534644; c=relaxed/simple;
+	bh=+IQcbyBaMHkh+iDIU5U9tdvK2LEK+rR6EFAfvgJ+dwY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=oHhVOs2LRuM9+XMmMeM711p2CB5YEz4BO5xEGGYPlGrYvO+b7GOyyG54F9pB7gh5ffFr9L3T89Ne63Jkj2qe46/iPCNIOuXps+A0oLGiRO/qVc2jtthk8ovnLfDv/nE9TlH4SDw39QxuxwBaf6Nx58Ja4JneU0Nr+/15FarKSXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86f4e2434b6so546349639f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:24:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751534642; x=1752139442;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zn0+O30mLs+II4HZDAwukewO2S08QpU1eRG/ZTBn8Rc=;
+        b=qfTXbmuNUkfgko3rmou3LvQoPWPmKrnpWCox992wOsEkdZIhQY0Ml8KXHBT3LSEvBf
+         T+9GNBkr1M5ld7NekDhmoOoZzRxVkDodo53Go6hy2c+eerhyy1nIgBIesgof9q5xD5cH
+         IdPrkNNNwzbUIGCWmUdPIA3pWRsDW95ccFW56akrzsWIMIAVyV5sl+X1aqwqjmwGmlhm
+         Xqtv/urTbKhUis36omniTENZthwB+1BROee2HTq93nAv06mMNa9PZilZSzCtW4IkQ7fe
+         Um7Sv1IExsNmSLF+5M68vhUAFt1E9JzDx1w0X0Xz+gtblAXZ41CEb6lQm5z+SK6J7mVl
+         ZJXA==
+X-Gm-Message-State: AOJu0YytLAi5YJhDNR/SIyebi2ofW27PUop+ro7Wb3vCJ+/dqDom3ybd
+	xIebQNdOoO4/3A/JnZm3zLlefdT6CuiZI/tqN4EsYy75x9D9CRVGDVA3g6YtI8bp6iwKCDypeBk
+	zyMnf7+7JDM9XTrcnMOb1tIZkGUZ04VkaxDbswoxlMlnzSz4c9Hl/DvjX1RE=
+X-Google-Smtp-Source: AGHT+IE6/J/nO2fEiaUGhQ2A2cI3ONUjhsQO/69hDBYBXQ8m0mQuAzddv6CHazT5ufVoAFo03AP5Vu5+3Lxd2fj1wS98RdKzSjsx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Alain Volmat
-	<alain.volmat@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>,
-        M'boumba Cedric Madianga
-	<cedric.madianga@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        "Pierre-Yves
- MORDRET" <pierre-yves.mordret@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-References: <20250630-i2c-upstream-v3-0-7a23ab26683a@foss.st.com>
- <20250630-i2c-upstream-v3-3-7a23ab26683a@foss.st.com>
- <4lqsyuabfwnclt2pbxmgqz5zpd6zm5y6q5djiwopuq5eelz7ui@fgep3x24ur3e>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <4lqsyuabfwnclt2pbxmgqz5zpd6zm5y6q5djiwopuq5eelz7ui@fgep3x24ur3e>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_02,2025-07-02_04,2025-03-28_01
+X-Received: by 2002:a05:6602:4191:b0:85b:538e:1fad with SMTP id
+ ca18e2360f4ac-876d1dcdc2bmr388880039f.6.1751534642310; Thu, 03 Jul 2025
+ 02:24:02 -0700 (PDT)
+Date: Thu, 03 Jul 2025 02:24:02 -0700
+In-Reply-To: <20250703024914.1196577-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68664c32.a70a0220.5d25f.0864.GAE@google.com>
+Subject: Re: [syzbot] [fs?] possible deadlock in __simple_recursive_removal
+From: syzbot <syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andy,
+Hello,
 
-On 7/2/25 19:15, Andi Shyti wrote:
-> Hi Clement,
-> 
-> On Mon, Jun 30, 2025 at 02:55:15PM +0200, Clément Le Goffic wrote:
->> Use the i2c-core-base APIs to allocate a DMA safe buffer when needed.
-> 
-> same here, I don't understand anything... you could have written
-> "do some coding" and it would have been the same :-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Ok I'll try to be more precise here also.
+Reported-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
+Tested-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
 
-Best regards,
-Clément
+Tested on:
+
+commit:         50c8770a Add linux-next specific files for 20250702
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=110a33d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=76d012e863976d4c
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d7771315ecb9233f395
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=126bb48c580000
+
+Note: testing is done by a robot and is best-effort only.
