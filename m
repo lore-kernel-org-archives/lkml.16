@@ -1,297 +1,156 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2B6255F59;
-	Thu,  3 Jul 2025 17:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAC92DE6E2;
+	Thu,  3 Jul 2025 17:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751562141; cv=none; b=h+D3i+PaB710YYbkCQNhGDZth9+QS1Jqo2NoiNcbAjT/uYRkYHXXMm2VCaSKw1eH+swCUX6z6yuhMnF4PoFeE7bc/UJFnP3fh1xGjchWH1K1ap45wBHFmuSSTLRegYmqyCwYPuIErZpI9StDJ7Lg8TgcG44MAQe59WZbIvjlDww=
+	t=1751562289; cv=none; b=I79do1JhZM+qtUx3CLB0LF2hE3u8vBxw0DpGRfNvpRTcwIyPyrZ3ouzV7laQq3WCqckAqXiYE39l7j+O9sSKLWieNeqND0p+AZUdGs27xLW/0K1Y3JdDIHA7ejvQK2F5NR5AZ9T2puYCeEUi8I/D7N+RJB/OTuVGwJKBEUITA+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751562141; c=relaxed/simple;
-	bh=hW8gRXE5rn8Ruy5t7sRdtYCyNtZ6p1F+fSUWDln33qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EeXGX9nXF84+GaplNleUtKqnnUwaXxBPNQi4YwQYmtjbkWXrRnM6TE5aiYTdMAmy1/xzswnOuvdiN7tiSa3EU8OFdsTZhgJiH2O3Tb9ASYFDH2YR+3zE7oKXqpmx+sHZk97sYJezuZMzCMgix7fHZ9PAXYlqEH6BuJ22cnh0mRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JODN/mBG; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751562289; c=relaxed/simple;
+	bh=bZcJzIvU2xfVHTfZc29TBf4+77DN+3g3AyZAs8mpWR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QOKw372+XMI6pCSOypcoO4lzQXicgwlXkMkcxoOGB1Zqb6YiBRv0eUdoNBJGzzuhPHUHPrNc2+/0z/qQjN4rQsEphxDsJdylq4S5IMwNIKMjMQDt7j+bEkMXgHHy5ty+yD6RpvTe4EiQY/JomwuhksUXzgorzLdwORXb2ilVt4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPP1CG6N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JODN/mBG"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso8930f8f.2;
-        Thu, 03 Jul 2025 10:02:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751562138; x=1752166938; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pqSUbsPjahwSUAB6AZ/GxcwqbVye734kyCehbMAYMyw=;
-        b=JODN/mBGGI2dPCPEc83bg2nsPpGnAlVvs2c6XZM60w1wW9fT9VttsmD+OuGBtnRiwg
-         LaId9ZqGaJDUdteDXfzy7rwWivmtocqnRUaFXgXFuXKGF5ejdxkor3zm95CkkBE55Pj3
-         VNc6SL9wayEn+cdF7hcgZ5Gh0TWYKfxHaZTUBSzfDc27YyGBzhWcihnGxOCiHD7laukB
-         vxqV9S+kOXbAhGCYxEhK/7C1iBavPduF7VvaUwugzowR1wn3du/mvzB7B/DudhY7CJUf
-         gpVP7b2IK3YGJNnKYu1jzDNeRwd6ttFobdtVxpD7nhwJH+heTpAg5QKyXP0hnn4qG/Q7
-         nPcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751562138; x=1752166938;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pqSUbsPjahwSUAB6AZ/GxcwqbVye734kyCehbMAYMyw=;
-        b=nKQbA8RgXxcG7/pu8KbP7a2E1d9mtEXDkwQVB7MnZQ52YZGwIrycGETgzznE+9pTOs
-         Me+xgWVQDvpUArnvbO0IgW6/LgVyzYjNC885ZLrG/gZ6uX5HPmMEI9OwMnwGrtzpHxXv
-         6zGhXAGgMIdTOuhWp5gajlEUsB7I7eLzLKRffL+gX8XnppvTtsjW8TehyJoXITCEydiV
-         bHtpBsUjmqjyfWoFKuzBCVV26B2NSgCpusyfL6Aw5EV1PMen6CSLRREhJjxwwFxH99fd
-         mIvlEBG6GgdoAa3kZDCUeIwCD7ONFghdj2A/ItEX2kb6nIlsmGintr4+ehHSyDApg7gx
-         o8dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUD+/6qsMcZSqTLjqkuD/vm4f/d98PkFirEcFhiFmOSyxgPZlOPZNubKF3Ps3l5oQiWFog373cnxPo=@vger.kernel.org, AJvYcCUW/PiBSuLTMR9Tlmpk45Wme8Lom/QaZRQA64d/e8qBKQzvT3xMzZRSAVHo8Elnq297FrTaU3NkwJoQMZGp@vger.kernel.org, AJvYcCWizKCKU/LPSocxgXCkNgWTEMAOjsqE27MNy/OMAOqlLlmUGUqkykdQ30LwznFDZ1tmhI0z9PeYj+4s@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTia20WJqRk65m4Q3nmOhhojtmyfpQEQuyWmlUGnVuAueO9YID
-	/KnyHnqWd3XZc0zSrVC6i641PNdLLsWcTb8Xiy8YZ4TM/IiW1bUYm8Q/
-X-Gm-Gg: ASbGncu7h/I1mCvmcISP9rAak9aZhzxZrC+ZF0IVqBszo9jcCOzLd6SFOnUoPkMYbaM
-	yYDgegBsvTzYH+d92sFCJXX0Rj++Cqcdl/nlf/2YZnVFnD2L8xncq8+CmXvPNZhgV1Azi3PWjFJ
-	nOzR2O/ekLynZoFQzWd46gHJvYhezE4vgGNG3Av/x1XQxvLI8EaYI5hCozquRA4g8mUuhWrZbB6
-	SahXn8pFcSs5aUFiGCcnt3EkgcuffMgx4c8rqFi8+S/tFKkopJiDhbtIMKe9i6mbkFgmFdc0IBO
-	RUA55riqqXNejKkUqL+aqjRJOOcrEgGiw8DVc6elEzQqTgUHS3bQJSzeLnhYdQiVx0X646lV9Ym
-	EAO5VjEAAtCNgAvpmxw==
-X-Google-Smtp-Source: AGHT+IHaQgjZrXhRgzZx++9Yi/fzdCBPXdZfk6poOyduS7JH7jm8D3wKUoXwoBb3dw9YTRiJNjYZkA==
-X-Received: by 2002:a05:6000:4b11:b0:3a3:7ba5:9618 with SMTP id ffacd0b85a97d-3b32e70d7d7mr3507915f8f.29.1751562137307;
-        Thu, 03 Jul 2025 10:02:17 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0ed9sm279010f8f.38.2025.07.03.10.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 10:02:16 -0700 (PDT)
-Date: Thu, 3 Jul 2025 18:02:13 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel
- <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, Xin Li
- <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh
- <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, Tony Luck
- <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jonathan Corbet
- <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar
- <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel
- Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
- Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, Rick
- Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov
- <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross
- <jgross@suse.com>, Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook
- <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, Jason Gunthorpe
- <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrew
- Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, Huang
- Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Namhyung Kim <namhyung@kernel.org>, Arnaldo
- Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
-Message-ID: <20250703180213.28c0e92e@pumpkin>
-In-Reply-To: <uoysignw2pmdls5v57z4cty76hhz7fv7ikcih2qgeltbgnem4f@jt2r24bqvzau>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
-	<20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
-	<20250703094417.165e5893@pumpkin>
-	<uvvh6qfpan6f56fdvuch67nss2h5nqxbmocztf6v2lfbvnihbg@vtzbr6anzqnl>
-	<20250703131552.32adf6b8@pumpkin>
-	<uoysignw2pmdls5v57z4cty76hhz7fv7ikcih2qgeltbgnem4f@jt2r24bqvzau>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPP1CG6N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917CFC4CEE3;
+	Thu,  3 Jul 2025 17:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751562289;
+	bh=bZcJzIvU2xfVHTfZc29TBf4+77DN+3g3AyZAs8mpWR4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RPP1CG6NuYbwA4N9BynixQ6y29XsBe7R2jABg659D4ywBgjQWLPIlELLEqj/5ryVR
+	 6JWa0dLceCLaDEYMcHR/H8fAAJjhsWRlo+ilzipyataUNldg4FVI1OEx8g41zPjiwb
+	 fBhtKzfXRqbV0NsR7wyvk51BndNAWE0jityG9Pv0Awlq6uotN0yvFIli1FEmWu/Sfx
+	 kOwPI83tbecp0ZZGEorUK6nVj3n5dS9aN+UslhbuMzumHsK6Jn3vAxPTRyhvJwpUFS
+	 ZhPKTiHQoNkikwDV+AiKJ15T6tAJ4Lg4i74Eq+IvfIKzekeBNX9YQOQBwrKbAdBsac
+	 Et2kwFVCpYfSw==
+Message-ID: <77463344-1b1a-443a-97be-a7ef8a88b8af@kernel.org>
+Date: Thu, 3 Jul 2025 19:04:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next,v3 2/2] selftests/bpf: Enhance XDP Rx metadata
+ handling
+To: Song Yoong Siang <yoong.siang.song@intel.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250702165757.3278625-1-yoong.siang.song@intel.com>
+ <20250702165757.3278625-3-yoong.siang.song@intel.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250702165757.3278625-3-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 3 Jul 2025 17:10:34 +0300
-"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 
-> On Thu, Jul 03, 2025 at 01:15:52PM +0100, David Laight wrote:
-> > On Thu, 3 Jul 2025 13:39:57 +0300
-> > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> >   
-> > > On Thu, Jul 03, 2025 at 09:44:17AM +0100, David Laight wrote:  
-> > > > On Tue,  1 Jul 2025 12:58:31 +0300
-> > > > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> > > >     
-> > > > > Extract memcpy and memset functions from copy_user_generic() and
-> > > > > __clear_user().
-> > > > > 
-> > > > > They can be used as inline memcpy and memset instead of the GCC builtins
-> > > > > whenever necessary. LASS requires them to handle text_poke.    
-> > > > 
-> > > > Except they contain the fault handlers so aren't generic calls.    
-> > > 
-> > > That's true. I will add a comment to clarify it.  
-> > 
-> > They need renaming.  
-> 
-> __inline_memcpy/memset_safe()?
 
-'safe' against what :-)
-They can't be used for user accesses without access_ok() and clac.
-The get/put_user variants without access_ok() have _unsafe() suffix.
+On 02/07/2025 18.57, Song Yoong Siang wrote:
+> Introduce the XDP_METADATA_SIZE macro as a conservative measure to
+> accommodate any metadata areas reserved by Ethernet devices.
+> 
 
-> 
-> > ...  
-> > > > > diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-> > > > > index a508e4a8c66a..47b613690f84 100644
-> > > > > --- a/arch/x86/lib/clear_page_64.S
-> > > > > +++ b/arch/x86/lib/clear_page_64.S
-> > > > > @@ -55,17 +55,26 @@ SYM_FUNC_END(clear_page_erms)
-> > > > >  EXPORT_SYMBOL_GPL(clear_page_erms)
-> > > > >  
-> > > > >  /*
-> > > > > - * Default clear user-space.
-> > > > > + * Default memset.
-> > > > >   * Input:
-> > > > >   * rdi destination
-> > > > > + * rsi scratch
-> > > > >   * rcx count
-> > > > > - * rax is zero
-> > > > > + * al is value
-> > > > >   *
-> > > > >   * Output:
-> > > > >   * rcx: uncleared bytes or 0 if successful.
-> > > > > + * rdx: clobbered
-> > > > >   */
-> > > > >  SYM_FUNC_START(rep_stos_alternative)
-> > > > >  	ANNOTATE_NOENDBR
-> > > > > +
-> > > > > +	movzbq %al, %rsi
-> > > > > +	movabs $0x0101010101010101, %rax
-> > > > > +
-> > > > > +	/* RDX:RAX = RAX * RSI */
-> > > > > +	mulq %rsi    
-> > > > 
-> > > > NAK - you can't do that here.
-> > > > Neither %rsi nor %rdx can be trashed.
-> > > > The function has a very explicit calling convention.    
-> > > 
-> > > What calling convention? We change the only caller to confirm to this.  
-> > 
-> > The one that is implicit in:
-> >   
-> > > > > +	asm volatile("1:\n\t"
-> > > > > +		     ALT_64("rep stosb",
-> > > > > +			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
-> > > > > +		     "2:\n\t"
-> > > > > +		     _ASM_EXTABLE_UA(1b, 2b)
-> > > > > +		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
-> > > > > +		     : "a" ((uint8_t)v)  
-> > 
-> > The called function is only allowed to change the registers that
-> > 'rep stosb' uses - except it can access (but not change)
-> > all of %rax - not just %al.
-> > 
-> > See: https://godbolt.org/z/3fnrT3x9r
-> > In particular note that 'do_mset' must not change %rax.
-> > 
-> > This is very specific and is done so that the compiler can use
-> > all the registers.  
-> 
-> Okay, I see what you are saying.
-> 
-> > > > It is also almost certainly a waste of time.
-> > > > Pretty much all the calls will be for a constant 0x00.
-> > > > Rename it all memzero() ...    
-> > > 
-> > > text_poke_memset() is not limited to zeroing.  
-> > 
-> > But you don't want the overhead of extending the constant
-> > on all the calls - never mind reserving %rdx to do it.
-> > Maybe define a function that requires the caller to have
-> > done the 'dirty work' - so any code that wants memzero()
-> > just passes zero.
-> > Or do the multiply in the C code where it will get optimised
-> > away for constant zero.
-> > You do get the multiply for the 'rep stosb' case - but that
-> > is always going to be true unless you complicate things further.    
-> 
-> The patch below seems to do the trick: compiler optimizes out the
-> multiplication for v == 0.
-> 
-> It would be nice to avoid it for X86_FEATURE_FSRM, but we cannot use
-> cpu_feature_enabled() here as <asm/cpufeature.h> depends on
-> <asm/string.h>.
-> 
-> I cannot say I like the result.
-> 
-> Any suggestions?
-> 
-> diff --git a/arch/x86/include/asm/string.h b/arch/x86/include/asm/string.h
-> index becb9ee3bc8a..c7644a6f426b 100644
-> --- a/arch/x86/include/asm/string.h
-> +++ b/arch/x86/include/asm/string.h
-> @@ -35,16 +35,27 @@ static __always_inline void *__inline_memcpy(void *to, const void *from, size_t
->  
->  static __always_inline void *__inline_memset(void *addr, int v, size_t len)
->  {
-> +	unsigned long val = v;
->  	void *ret = addr;
->  
-> +	if (IS_ENABLED(CONFIG_X86_64)) {
-> +		/*
-> +		 * Fill all bytes by value in byte 0.
-> +		 *
-> +		 * To be used in rep_stos_alternative()i
-> +		 */
-> +		val &= 0xff;
-> +		val *= 0x0101010101010101;
-> +	}
+This seems like a sloppy workaround :-(
 
-That won't compile for 32bit, and it needs the same thing done.
-	val *= (unsigned long)0x0101010101010101ull;
-should work.
-I don't think you need the 'val &= 0xff', just rely on the caller
-passing a valid value - nothing will break badly if it doesn't.
+To me, the problem arise because AF_XDP is lacking the ability to
+communicate the size of the data_meta area.  If we had this capability,
+then we could allow the IGC driver to take some of the space, have the
+BPF-prog expand it futher (bpf_xdp_adjust_meta) and then userspace
+AF_XDP would simply be able to see the size of the data_meta area, and
+apply the struct xdp_meta at right offset.
 
-	David
 
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> ---
+>   tools/testing/selftests/bpf/prog_tests/xdp_metadata.c | 2 +-
+>   tools/testing/selftests/bpf/progs/xdp_hw_metadata.c   | 2 +-
+>   tools/testing/selftests/bpf/progs/xdp_metadata.c      | 2 +-
+>   tools/testing/selftests/bpf/xdp_hw_metadata.c         | 2 +-
+>   tools/testing/selftests/bpf/xdp_metadata.h            | 7 +++++++
+>   5 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
+> index 19f92affc2da..8d6c2633698b 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
+> @@ -302,7 +302,7 @@ static int verify_xsk_metadata(struct xsk *xsk, bool sent_from_af_xdp)
+>   
+>   	/* custom metadata */
+>   
+> -	meta = data - sizeof(struct xdp_meta);
+> +	meta = data - XDP_METADATA_SIZE;
+>   
+>   	if (!ASSERT_NEQ(meta->rx_timestamp, 0, "rx_timestamp"))
+>   		return -1;
+> diff --git a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
+> index 330ece2eabdb..3766f58d3486 100644
+> --- a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
+> +++ b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
+> @@ -72,7 +72,7 @@ int rx(struct xdp_md *ctx)
+>   		return XDP_PASS;
+>   	}
+>   
+> -	err = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
+> +	err = bpf_xdp_adjust_meta(ctx, -(int)XDP_METADATA_SIZE);
+>   	if (err) {
+>   		__sync_add_and_fetch(&pkts_fail, 1);
+>   		return XDP_PASS;
+> diff --git a/tools/testing/selftests/bpf/progs/xdp_metadata.c b/tools/testing/selftests/bpf/progs/xdp_metadata.c
+> index 09bb8a038d52..5cada85fe0f4 100644
+> --- a/tools/testing/selftests/bpf/progs/xdp_metadata.c
+> +++ b/tools/testing/selftests/bpf/progs/xdp_metadata.c
+> @@ -73,7 +73,7 @@ int rx(struct xdp_md *ctx)
+>   
+>   	/* Reserve enough for all custom metadata. */
+>   
+> -	ret = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
+> +	ret = bpf_xdp_adjust_meta(ctx, -(int)XDP_METADATA_SIZE);
+>   	if (ret != 0)
+>   		return XDP_DROP;
+>   
+> diff --git a/tools/testing/selftests/bpf/xdp_hw_metadata.c b/tools/testing/selftests/bpf/xdp_hw_metadata.c
+> index 3d8de0d4c96a..a529d55d4ff4 100644
+> --- a/tools/testing/selftests/bpf/xdp_hw_metadata.c
+> +++ b/tools/testing/selftests/bpf/xdp_hw_metadata.c
+> @@ -223,7 +223,7 @@ static void verify_xdp_metadata(void *data, clockid_t clock_id)
+>   {
+>   	struct xdp_meta *meta;
+>   
+> -	meta = data - sizeof(*meta);
+> +	meta = data - XDP_METADATA_SIZE;
+>   
+>   	if (meta->hint_valid & XDP_META_FIELD_RSS)
+>   		printf("rx_hash: 0x%X with RSS type:0x%X\n",
+> diff --git a/tools/testing/selftests/bpf/xdp_metadata.h b/tools/testing/selftests/bpf/xdp_metadata.h
+> index 87318ad1117a..2dfd3bf5e7bb 100644
+> --- a/tools/testing/selftests/bpf/xdp_metadata.h
+> +++ b/tools/testing/selftests/bpf/xdp_metadata.h
+> @@ -50,3 +50,10 @@ struct xdp_meta {
+>   	};
+>   	enum xdp_meta_field hint_valid;
+>   };
 > +
->  	asm volatile("1:\n\t"
->  		     ALT_64("rep stosb",
->  			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
->  		     "2:\n\t"
->  		     _ASM_EXTABLE_UA(1b, 2b)
->  		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
-> -		     : "a" (v)
-> -		     : "memory", _ASM_SI, _ASM_DX);
-> +		     : "a" (val)
-> +		     : "memory");
->  
->  	return ret + len;
->  }
-> diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-> index 47b613690f84..3ef7d796deb3 100644
-> --- a/arch/x86/lib/clear_page_64.S
-> +++ b/arch/x86/lib/clear_page_64.S
-> @@ -58,23 +58,15 @@ EXPORT_SYMBOL_GPL(clear_page_erms)
->   * Default memset.
->   * Input:
->   * rdi destination
-> - * rsi scratch
->   * rcx count
->   * al is value
->   *
->   * Output:
->   * rcx: uncleared bytes or 0 if successful.
-> - * rdx: clobbered
->   */
->  SYM_FUNC_START(rep_stos_alternative)
->  	ANNOTATE_NOENDBR
->  
-> -	movzbq %al, %rsi
-> -	movabs $0x0101010101010101, %rax
-> -
-> -	/* RDX:RAX = RAX * RSI */
-> -	mulq %rsi
-> -
->  	cmpq $64,%rcx
->  	jae .Lunrolled
->  
-
+> +/* XDP_METADATA_SIZE must be at least the size of struct xdp_meta. An additional
+> + * 32 bytes of padding is included as a conservative measure to accommodate any
+> + * metadata areas reserved by Ethernet devices. If the device-reserved metadata
+> + * exceeds 32 bytes, this value will need adjustment.
+> + */
+> +#define XDP_METADATA_SIZE	(sizeof(struct xdp_meta) + 32)
