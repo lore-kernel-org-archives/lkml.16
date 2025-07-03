@@ -1,129 +1,153 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB3F770E2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CCD19F43A;
+	Thu,  3 Jul 2025 21:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751576384; cv=none; b=uKjAfAh1eYyT+K3scOgwcgEpfl/4cXHtN6rPdEMo8Hg4FZFoXjqfqIWGWcEVMAYcmYkAQtnxAXaV+YNhmIoa03alSzVfTdiC2u+9+R60LMjOZOWWn9tQqANePYZqieUmpnG2P393tXIO43OqhBc++fOXyAYsJP22LMnT+pHhb1g=
+	t=1751576462; cv=none; b=X2pheJaBeR/lGnzopqXELZvuy5t3LMcAKmYRIMvoHzpiwlPPq8B3oUB5ZXAfuNkZ6UuXLcCqtA26ophgXwHEPY1iX9FJJrbhAk7wjNK5UayAD2sTz2zdiG+UnjEH01qqzuXH6r/PjPgMc6bongtH69/mb1dZ25KCQLW7zTRfvwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751576384; c=relaxed/simple;
-	bh=q1HXzZCKe+WU8zeTxusGqPb3t5lQPTGT04MNAOAOVVs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e0ocff5wmyfeevfCX/alQVoTgRI9Arj42CgxLvoq1yPtd52EvXvcCzRNP/rVAYeaYlrq/Q54R4ft+nkY2Qby/TWv1WaAsXK+22FEdV5C3ozWp1pDzCh3NJDyagy63macixiSjz0zSZUZpfKobUQaWiYJdwAbx6D4P6UR+X9ygUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gyUwQHXq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xxZgy+uk; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1751576462; c=relaxed/simple;
+	bh=LMkJSyY9cv/+8k8DnkC/yiglcrPiZ8K5h/C1h6vibYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MB1h95BEY+x5QixKa3VdozpVb8Z8h6mdP8KbYuEebRd0zJnV1+Qu7LAUEmMCKrlDVXnBT/azCm44kku6XSuHIChOm7Rqka+NhQFPKa3+ghstRGT7tDAH46MjpftCp6K61fNffjKL8tf5x+jw8K7NvT0MkMDQmaxyQMlvdItiuj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dTn5r753; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mcFlxZK5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gyUwQHXq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xxZgy+uk"
-From: Thomas Gleixner <tglx@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dTn5r753";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mcFlxZK5"
+Date: Thu, 3 Jul 2025 23:00:56 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751576381;
+	s=2020; t=1751576458;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CCRmMU2DqQB/WGYJD/I/B9KAT5c7zyCLdXM1Ty+fbzk=;
-	b=gyUwQHXqlKlMgNVo6c+8R6S7PRDZM98IX0JPdLsDat90oIN2tKjeeXzJ6u6Dsd2RFvRMTJ
-	zpuj9dr1lkAnrd9kfwb8vcTsPQ/h8QRwK0iWcM93mRqvhxKjy16nkyhF5D8fM7ti3FawHs
-	y34VT/VU2dNujTNpsRklvcsbJXpK6e53eQQNhRfbVXTND/nxT+4fnCIIlswFbV88NA6pYg
-	orzXyigoFdWKAzpkapqqRab+PNiSzX7VDCsNqeEg3Y4lMLxms2EG6/ZyxY4mJ800mwWTJk
-	qZG/lDqSKoFQWk0OAMkYOrr7PSAWL2VrZoom1RxzIiBJwMnU4fcCS039YTVUVQ==
+	bh=DTXvd5Uvp6Q4AKEPN0WQMwq/tMxtiUVrV4mMQxECWg4=;
+	b=dTn5r7531nUAApuRrJVEdSU1yHQgN8OqgV/tVp18i0lXAnb6BkUZgnHlf7StaSFIv0Jz9M
+	BNNct7Wcf3Poy9tY7EAT9Iv0/Znzi3/8d4/cCyrLJ+jswLaS3RHVFrD2HuVu8VHATIkPvO
+	XQTJ9RS88X/x7KoggIeL5yOlHBDZ3b+BN42a8aWclYymUVLxZ1arwKhzpODAoDqgufFswo
+	8UNzyNBkAaC/orKnvXhYvUMZGfJCQsiuDsvGprxUEc9UZHIGlhDHp19N2pX5+0YgB04iQw
+	uPk2PRvtk4WZCK2bI5q+tmxx3ytZUeE2DMLnQjzoCEl2sh5+gpYGBiLSlHMbNA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751576381;
+	s=2020e; t=1751576458;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CCRmMU2DqQB/WGYJD/I/B9KAT5c7zyCLdXM1Ty+fbzk=;
-	b=xxZgy+ukjndFizJvg452/dOHMfF8atJjUT4EB3JdR5DollsgfG6qnDk1aS7vM/C9PQuTd0
-	2oSsSwXEq/tutrDw==
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Christoph Lameter via B4 Relay <devnull+cl.gentwo.org@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, sh@gentwo.org, Darren
- Hart <dvhart@infradead.org>, Arjan van de Ven <arjan@infradead.org>
-Subject: Re: [PATCH] Skew tick for systems with a large number of processors
-In-Reply-To: <96b6702a-8e3d-0ff9-2a86-75120bac189e@gentwo.org>
-References: <87sejew87r.ffs@tglx>
- <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org> <87ms9lwscq.ffs@tglx>
- <96b6702a-8e3d-0ff9-2a86-75120bac189e@gentwo.org>
-Date: Thu, 03 Jul 2025 22:59:40 +0200
-Message-ID: <8734bdt2gz.ffs@tglx>
+	bh=DTXvd5Uvp6Q4AKEPN0WQMwq/tMxtiUVrV4mMQxECWg4=;
+	b=mcFlxZK5m7AaTULHDD29cnWKaEO4XCMTydboJXdrQ9VKl2m7LlecU8z5SM+r0xOGESw1hx
+	APh3s/XqB5ssTKAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+Message-ID: <20250703210056.sDzAytHT@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyaht595.ffs@tglx>
+ <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Thu, Jul 03 2025 at 07:51, Christoph Lameter wrote:
-> On Thu, 3 Jul 2025, Thomas Gleixner wrote:
->> It's not rocket science to validate whether these power saving concerns
->> still apply and to reach out to people who have been involved in this
->> and ask them to revalidate. I just Cc'ed Arjan for you.
->
-> They definitely apply on an Android phone with fewer cores. There you
-> would want to reduce the number of wakeups as much as possible to
-> conserver power so it needs synchronized mode.
+On Thu, Jul 03, 2025 at 08:15:07PM +0000, Michael Kelley wrote:
+> From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, July 3, 2025 1:00 PM
+> > 
+> > On Thu, Jul 03 2025 at 17:41, Michael Kelley wrote:
+> > > From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:48 AM
+> > >>
+> > >> Move away from the legacy MSI domain setup, switch to use
+> > >> msi_create_parent_irq_domain().
+> > >
+> > > From a build standpoint, this patch does not apply cleanly to
+> > > linux-next20250630. See also an issue below where a needed irq
+> > > function isn't exported.
+> > 
+> > Does it conflict against the PCI tree?
+> 
+> There's no conflict in the "next" or "for-linus" tags in
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/.
+> 
+> The conflict is with Patch 2 of this series:
+> 
+> https://lore.kernel.org/linux-hyperv/1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com/
+> 
+> which is in netdev/net-next.
 
-That's kinda obvious, but with the new timer migration model, which
-stops to place timers by crystalball logic, this might not longer be
-true and needs actual data to back up that claim.
+I need some guidance here. If I make it apply cleanly to linux-next, it
+won't apply to pci tree.
 
-> That is why my initial thought was to make it dependent on the number of
-> active processors.
->
->> There is only a limited range of scenarios, which need to be looked at:
->>
->>       - Big servers and the power saving issues on lightly loaded
->>         machines
->
-> If it is only a few active cores and the system is basically idle then
-> it is better to have a synchronized tick but if the system has lots of
-> active processors then the tick should be skewed.
+I saw this type of conflict being resolved during merging to Linus's tree.
+Shouldn't we do the same for this case?
 
-I agree with the latter, but is your 'few active cores' claim backed by
-actual data taken from a current kernel or based on historical evidence
-and hearsay?
+> Michael
+> 
+> > 
+> > > At runtime, I've done basic smoke testing on an x86 VM in the Azure
+> > > cloud that has a Mellanox NIC VF and two NVMe devices as PCI devices.
+> > > So far everything looks good. But I'm still doing additional testing, and
+> > > I want to also test on an ARM64 VM. Please give me another day or two
+> > > to be completely satisfied.
 
-> So maybe one idea would be to have a counter of active ticks and skew
-> them if that number gets too high.
+Good to hear, thanks!
 
-The idea itself is not that horrible. Though we should tap into the
-existing accounting resources to figure that out instead of adding yet
-another ill defined global counter to the mess. All the required metrics
-should be there already.
+> > Sure.
+> > >> +static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
+> > >> +{
+> > >> +	struct msi_domain_info *info = d->host_data;
+> > >> +
+> > >> +	for (int i = 0; i < nr_irqs; i++)
+> > >> +		hv_msi_free(d, info, virq + i);
+> > >> +
+> > >> +	irq_domain_free_irqs_top(d, virq, nr_irqs);
+> > >
+> > > This code can be built as a module, so irq_domain_free_irqs_top() needs to be
+> > > exported, which it currently is not.
+> > 
+> > Nam, can you please create a seperate patch, which exports this and take
+> > care of the conflict?
 
-Actually it should be solvable if you look at it just from a per CPU
-perspective. This assumes that NOHZ_IDLE is active, because if it is not
-then you can just go and skew unconditionally.
+Will do.
 
-If a CPU is busy, then it just arms the tick skewed. If it goes idle,
-then it looks at the expected idle time, which is what NOHZ does already
-today. If it decides to stop the tick until the next timer list expires,
-then it aligns it. Earlier expiring high resolution timers obviously
-override the initial decision, but that's not much different from what
-is happening today already.
-
->>       - Battery operated devices
->
-> These usually have 1-4 cores. So synchronized is obviously the best.
-
-Same question as above.
-
->> If we could have predicted the future and the consequences of ad hoc
->> decisions, we wouldn't have had a BKL, which took only 20 years of
->> effort to get rid of (except for the well hidden leftovers in tty).
->
-> Oh the BKL was good. Synchronization was much faster after all and less
-> complex. I am sure a BKL approach on small systems would still improve
-> performance.
-
-Feel free to scale back to 4 cores and enjoy the undefined BKL
-semantics forever in your own fork of 2.2.final :)
-
-Thanks,
-
-        tglx
+Best regards,
+Nam
