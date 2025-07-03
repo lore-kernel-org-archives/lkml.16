@@ -1,104 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FD4EC2;
-	Thu,  3 Jul 2025 14:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB0C19CC02;
+	Thu,  3 Jul 2025 14:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551472; cv=none; b=VmTmduFDS1sQz5t7P5fGq2UXvkmCuM125Mo6o6YC5YUPAHbVRZ+sYNT8wg4BrAbQCtz2fKIPcOIhFXaPiwh90aMDzjykpIr/0oWiKew0PL4ewDgCCK+ZkxSivMyZbQeKbAGpbSCj4RSUbGngy9ZVAPK8+zmfiD5G4BD3sCp1ydQ=
+	t=1751551521; cv=none; b=rHSgG2C26Foi2ujjcgjmynZD7QOTpLPu8tWXiTMJMeo7ozsjF9q1xMdiOfrkqHPd8QxUHMwJXwguuRrUV8rFRsOGeSOegf4jd3FR82PjydjAglrTq3YHntQb+uj3np4nhakPv0hB7q2revxwOVIsX8vTSx/pB0oOAdqxjEpiNvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551472; c=relaxed/simple;
-	bh=XxFehov2mpyqjrTtvjAVi3gAe6jCIoB4PFQTddnMFdY=;
+	s=arc-20240116; t=1751551521; c=relaxed/simple;
+	bh=U4ubF4srjWWEZmfciFKdSrN8FMIJ8HJdc+JOZAcLcv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdgnOp5ZQExGqA3/VE/98sVvL1bWYu2p8ApaWzC2JO5haRhP6sMJQ+QMY7lsvmm2HDyaaIkwnQ/7pZmedRhSOfR2NYcliPEt3i6808pQiFRKkvmJE4fFud3RJdKq1FBvXHJmBuBOWt/VjG9B9GINkuyV4BWDLsVCe7oV/a81+cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/Cwf+bb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/Cwf+bb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E8CC4CEE3;
-	Thu,  3 Jul 2025 14:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751551470;
-	bh=XxFehov2mpyqjrTtvjAVi3gAe6jCIoB4PFQTddnMFdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F/Cwf+bbcCzXtqyRWcaw4ikovxESzc/UpTNm7gRGtdzl8oQwo9LPXXUrE2aFeMAdb
-	 kzKVYYqRPHSV186y8va1pfRLb4rFlmMCSG8XRx+msLspJBhZcVNJ+fsNQ8GsKewpz8
-	 LcA4Wkbad7br2dmqv1Zk2APBk+ud7hqvqumqxAMlDJ7CbQ9XYtGkyWZQdbh4jpVQ+G
-	 CCPv0oD8V/Qn0WpkGyoAkTJS5FZkZmgzvU5znOSigFFniQ5+TZH3CXqIhvu/0upNlx
-	 rvuUpHoxQ2n0jFmedY477roeIEQhtk5KZjcmONq8G8q8pDMt6mqv3pwUI9bAhZTZIV
-	 By/6X0eHjGI8g==
-Date: Thu, 3 Jul 2025 16:04:24 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
- for File
-Message-ID: <aGaN6PT-w9b2pQOr@pollux>
-References: <2025070131-icon-quarters-0c16@gregkh>
- <aGPtCBB6nWTNJuwK@pollux>
- <2025070137-tartar-juncture-fcd2@gregkh>
- <aGP6d2-jJy5rtjMK@pollux>
- <aGZVUqangIR-c4aW@google.com>
- <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org>
- <CAH5fLgjaNzOHNxa+XY1c2V5A1H2RhWP9gHAAmHx=9LN9CbHq=Q@mail.gmail.com>
- <2025070349-tricky-arguable-5362@gregkh>
- <aGZ3q0PEmZ7lV4I-@pollux>
- <DB2GJB0ZRCSN.32R6OOCOMSO2Q@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfCTSlsp4xEWOtjCo0kRFqZOyTtSfPKpZnPCjw+W+1WZdsbW9n/GRgz9wDicrfNcs12BmhYId9uJ00DGh/eC+ZC6BRTF8lSh7+h977+5vgfsDL4hE2B5C/gXrAaVy+oX4soPoRYAsK9OpYJdRCTsQ/Oe91bhv01EFcrdhgnnAws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.53.4)
+	(envelope-from <n.schier@avm.de>)
+	id 68668cdb-bb09-7f0000032729-7f00000184c0-1
+	for <multiple-recipients>; Thu, 03 Jul 2025 15:59:55 +0200
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu,  3 Jul 2025 15:59:55 +0200 (CEST)
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id F25BE808E1;
+	Thu,  3 Jul 2025 15:59:54 +0200 (CEST)
+Received: from l-nschier-aarch64.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:6472::1])
+	by buildd.core.avm.de (Postfix) with ESMTPS id C8614189F02;
+	Thu,  3 Jul 2025 15:59:54 +0200 (CEST)
+Date: Thu, 3 Jul 2025 15:59:52 +0200
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v4 01/15] kbuild: userprogs: avoid duplication of flags
+ inherited from kernel
+Message-ID: <20250703-fanatic-funky-jerboa-d8d82c@l-nschier-aarch64>
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
+ <20250626-kunit-kselftests-v4-1-48760534fef5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t5abbrXTdUbzxWZq"
 Content-Disposition: inline
-In-Reply-To: <DB2GJB0ZRCSN.32R6OOCOMSO2Q@kernel.org>
+In-Reply-To: <20250626-kunit-kselftests-v4-1-48760534fef5@linutronix.de>
+Organization: AVM GmbH
+X-purgate-ID: 149429::1751551195-9E521740-0589DA78/0/0
+X-purgate-type: clean
+X-purgate-size: 1552
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-On Thu, Jul 03, 2025 at 03:34:23PM +0200, Benno Lossin wrote:
-> On Thu Jul 3, 2025 at 2:29 PM CEST, Danilo Krummrich wrote:
-> > So, what I'm trying to say is, I think it's a good thing if fields that are
-> > protected by the same lock can't be exposed through separate files, because it
-> > means that the fields only make sense in the context of each other.
-> 
-> I think that even the pin-init API can have multiple files for different
-> elements of the locked structure, you just need to nest `File`:
-> 
->     #[pin_data]
->     struct Process {
->         task: ARef<Task>,
->         #[pin]
->         inner: File<File<SpinLock<ProcessInner>>>,
->     }
->     
->     pub(crate) struct ProcessInner {
->         threads: RBTree<i32, Arc<Thread>>,
->         max_threads: u32,
->     }
-> 
-> Now you can do:
-> 
->     pin_init!(Process {
->         inner <- dir.create_file(
->             "threads",
->             dir.create_file("max_threads", new_spinlock!(...)),
->         ),
->         // ...
->     })
-> 
-> But I'd say this will at least raise eyebrows for the reviewers, which
-> is good, since it catches the footgun.
 
-Heh! I didn't even think of this trick. I agree, this should at least raise some
-eyebrows. :)
+--t5abbrXTdUbzxWZq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 26, 2025 at 08:10:09AM +0200, Thomas Wei=C3=9Fschuh wrote:
+> The duplication makes maintenance harder. Changes need to be done in two
+> places and the lines will grow overly long.
+>=20
+> Use an intermediary variable instead.
+>=20
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  Makefile | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+
+Reviewed-by: Nicolas Schier <n.schier@avm.de>
+
+--t5abbrXTdUbzxWZq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmhmjNAACgkQiMa8nIia
+bbgZmw//bcwO/HfGc1WRkxirOFpym6UM5OMeFwy2HNnMeuYwMLndwLpxQj2aBTXw
+1WRml22MebaAASoxoZ6riV3r4Kag9NkMPvulsmQJzB03Kchn/xb8Y10jihgIcNDV
+LH9lmTS8bf70MArpID3Gv/aZIP987WoY5hqRU5SKzDG1YDHM3maYHahVlkqwWEg0
+0HN686vS/WFmju0DgtN8tE/lDFM7ZpSNT7OsdN9j209Z7vQOhEl5SND5YJB0pNJO
+X5uULV2EKBiWp1HYnwrxkL+nj8K0Tn57J7Wj5uTB+W+aoWhTEjZh8NszYkyxZ0aR
+hwboouhODGk9gvaYPzMXaUpigYgB9m72zz+HqabFWPjHMO1xFFUapoLfR02eOzjv
+6qeL8XI9ZA25RAYbkbv9NzbyJdlViDcAZuj0oszDolRsr51udM6Tf2qPlWYzm876
+usYVeOTcQI8y6lvR8q5u7BVV0XXZb9iRdSB9pkWo8VqRcL5x50Dtkx1b9FghzlKv
+JL0wm1h9yVUKhNROLaVpy7F1MO5+Nv7w/hlbIRCFGLbNO1FXqWiKlGiGYo6T31Z7
+sqAUYKz9fNgLzauk5U5L1QhjJ6sen6TYmFLousvkSV5ITrxyuoJftuRSEfcpNTB+
+0iQqp7a0kZ95r6+lexC72J3BRcl++lgfwKresIQ9tXDV5673MQE=
+=4nvN
+-----END PGP SIGNATURE-----
+
+--t5abbrXTdUbzxWZq--
