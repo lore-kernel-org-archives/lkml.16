@@ -1,93 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4750672617;
-	Thu,  3 Jul 2025 15:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF2F1714C6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556646; cv=none; b=PF/cyvvzAIE0CS9I80YZtyuOGekYm+lRmWl7PJAGpIIM5xobq/ICjpxrCSTJhDa7hexLWXNasN5kisaBfJCUKMPXyauhyxadVKDt4F11y2OsdElTPYV6VUuc6OJ9e3E6S+EdIg+7UNKE2HXCw3X7CEwbAEAxcYu2/51aR7cynEo=
+	t=1751556689; cv=none; b=ZmSb9zTP3usPsZrAPH4DDsvtOm25+q5XVpbuMotOrNcRrWGw5PRP8Y1bnRYPNkVCqo04Y8nnFvdZyJ1ik7W/XYR3vmO/EgawoMrcs9Yq5LnqTqdIWhK1GPHZRh4JCuRv26kdFbkDt2SK1/SwnCTfqMD42vWeCRRLFhK/v5m0kW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556646; c=relaxed/simple;
-	bh=kf3R69g/8+n9ejwwkL6h4el8NdPueW74hEy4yuQ+Fcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pRAt9LLnFfZg+M79nfJ5NP5Em3BV8LjKtlBKqIm1U2MMfrdBrLJFI39wy1m7NRtleapxaR7ML+BRC/JEl5KK5lclf8PXH6ktmUSSk11KhH6yGTmF/xMhj5n4tzSNU5Y+ks+AUMUV4cniWgFZymH8ehAl7Aics1gDWXNGmhRHQzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nG0c3PQK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751556689; c=relaxed/simple;
+	bh=awNKlH71K5ThSNA2Cmxa2R4NeYIYuE0Ijy7qTv36sOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RUwJv+n8VTi2M3c6swxpRCFMX+ad7ocboRwNXVCZ7yLf8arksQJqJBZm8NIPw96/ku6pHyLbxja+b1JKSAH3ZaFH2d8ANnYJjGcV3+tC8JdUS/3OwrGD3j5QT+KTORhQz7sIhcXYWttKZG7LsSBfmoki8PoCuZwVBgIAevW+K/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WnLdgC7Y; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nG0c3PQK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB859C4CEED;
-	Thu,  3 Jul 2025 15:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751556645;
-	bh=kf3R69g/8+n9ejwwkL6h4el8NdPueW74hEy4yuQ+Fcs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nG0c3PQKGVGoTtfCDduTcEI7W1NSi6vabGp+6w7YXIKmlYKIrjxaDRvDafBw0K0Qr
-	 oGHuVf6XBn3o1jILbhnAFdiQFJAdbFG38T/avxI6ruCAYXZEdVWCGO+I2FetJqbA3d
-	 vpLTDmrQksbPAlmfTn3E+RzN+ASyuwjyreA220nPQK5WV+iLFhfactLuqf5ACtHbyP
-	 O6gmYgwTkqq5P3KCMd0lCz5w+DjoZg7FOygXUggOVQwA89jEtX8Q6ZdT72lTiQxoGr
-	 3XhRfmbBLBier1wTDGeV6f5IRMyEsmjeQKZYxC6JtFxhF9fZG6A75HUqI0edagzTat
-	 ose0hmAvxc0yQ==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ade5b8aab41so2917266b.0;
-        Thu, 03 Jul 2025 08:30:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSPbFVi+ZqqRBs2UnEZUoQhIyO8LyXdY8K+fcPNsxa6dZM+N1KQ/knDSsM7N99wU49gUQK4lZUhN/rLeNA@vger.kernel.org, AJvYcCWI/f4V8tSEAJOAgtwqigNvlBW+PGPxgx0mBoUZKghnyGNFDmhnUZWizjfkeqP6m+dtFQfRr0fd@vger.kernel.org, AJvYcCWmn6ksIxJEbF/bGmuq8DMP26pGhSflPdheG1YLrO+6jdwD0rR0McebSJGci89YEK7CEbTN+0GxgtTm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr/m+51b/mIQaksCF9v/AxI5krZWmLPvhvM5HjQt1LPNAQF25q
-	oz+i0TQrSO/0Ey1A8SZGkB7KWOqxYwbWJ3k4dtZAu3BFMx5Y3FhmekoYkSqYX6znt4QinvLYT3q
-	h8tEkIthR0KVMtVAYjxd4lgim6KuWOQ==
-X-Google-Smtp-Source: AGHT+IFGK3wNYEmDTQE7cJvW5bwhu5w4lNajdS9akjc5i1/E/t6dIX21GgObTKsLF38FMy+/VygKrLB7PYcfFn+IPck=
-X-Received: by 2002:a17:907:94cb:b0:ade:44f8:569 with SMTP id
- a640c23a62f3a-ae3c2c9d41bmr815278466b.42.1751556644360; Thu, 03 Jul 2025
- 08:30:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WnLdgC7Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751556686;
+	bh=awNKlH71K5ThSNA2Cmxa2R4NeYIYuE0Ijy7qTv36sOk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WnLdgC7Yo5+x0c55E+zY8ijTdhtaiTLAzCmzGGoI/aouaHvY67AmAY1Qg88+/TS1H
+	 pbrD0COuH3+nEn/hsjbE13MelRWFUeMzCkQLv5oHa3t0gpFk3qWG6mkIxDYsBUiRzo
+	 Y1bKqUdYE+FjyYx+9mZrQgkbUd1a4BXt4krvz4As6ZnllHbuLxw0eHaroVCt9oxEaP
+	 bcfufYzN+BOrIaD2YSA8GbwWNYkS4sqJRx7Gzi77ndktnnhf3yAcovGaWo1cg1DuuC
+	 9qONbG0sl1es00pfn9TiqXBbXO2FN1m7saJp7+NQHzu/JZLR/M+aJB+a+jVKPGf0+1
+	 m4r++23pW8O6g==
+Received: from debian-rockchip-rock5b-rk3588.. (unknown [90.168.160.154])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nanokatze)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4857C17E080D;
+	Thu,  3 Jul 2025 17:31:25 +0200 (CEST)
+From: Caterina Shablia <caterina.shablia@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	Caterina Shablia <caterina.shablia@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/7] drm/panthor: Add support for atomic page table updates
+Date: Thu,  3 Jul 2025 15:28:54 +0000
+Message-ID: <20250703152908.16702-3-caterina.shablia@collabora.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250703152908.16702-2-caterina.shablia@collabora.com>
+References: <20250703152908.16702-2-caterina.shablia@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630213748.71919-1-matthew.gerlach@altera.com>
-In-Reply-To: <20250630213748.71919-1-matthew.gerlach@altera.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 3 Jul 2025 10:30:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLrLJ6wiqBk31NhronsUqX4_5FN-Lb26r-3SceDD7kkAA@mail.gmail.com>
-X-Gm-Features: Ac12FXxuKTihI_ySZjceamap3hZ9PwUnYru49iIiSxON-urQArDwhuRwHAUu1ZI
-Message-ID: <CAL_JsqLrLJ6wiqBk31NhronsUqX4_5FN-Lb26r-3SceDD7kkAA@mail.gmail.com>
-Subject: Re: [PATCH v7] dt-bindings: net: Convert socfpga-dwmac bindings to yaml
-To: Matthew Gerlach <matthew.gerlach@altera.com>
-Cc: dinguyen@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, maxime.chevallier@bootlin.com, mcoquelin.stm32@gmail.com, 
-	alexandre.torgue@foss.st.com, richardcochran@gmail.com, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, Mun Yew Tham <mun.yew.tham@altera.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 4:38=E2=80=AFPM Matthew Gerlach
-<matthew.gerlach@altera.com> wrote:
->
-> Convert the bindings for socfpga-dwmac to yaml. Since the original
-> text contained descriptions for two separate nodes, two separate
-> yaml files were created.
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-Did you test this against your dts files?:
+Move the lock/flush_mem operations around the gpuvm_sm_map() calls so
+we can implement true atomic page updates, where any access in the
+locked range done by the GPU has to wait for the page table updates
+to land before proceeding.
 
-ethernet@ff804000 (altr,socfpga-stmmac-a10-s10): iommus: [[11, 3]] is too s=
-hort
-ethernet@ff802000 (altr,socfpga-stmmac-a10-s10): iommus: [[11, 2]] is too s=
-hort
-ethernet@ff800000 (altr,socfpga-stmmac-a10-s10): iommus: [[11, 1]] is too s=
-hort
+This is needed for vkQueueBindSparse(), so we can replace the dummy
+page mapped over the entire object by actual BO backed pages in an atomic
+way.
 
-There's also one for 'phy-addr', but that needs to be dropped from the
-.dts files as it doesn't appear to be used.
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Caterina Shablia <caterina.shablia@collabora.com>
+---
+ drivers/gpu/drm/panthor/panthor_mmu.c | 65 +++++++++++++++++++++++++--
+ 1 file changed, 62 insertions(+), 3 deletions(-)
 
-[...]
+diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+index b39ea6acc6a9..1e58948587a9 100644
+--- a/drivers/gpu/drm/panthor/panthor_mmu.c
++++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+@@ -387,6 +387,15 @@ struct panthor_vm {
+ 	 * flagged as faulty as a result.
+ 	 */
+ 	bool unhandled_fault;
++
++	/** @locked_region: Information about the currently locked region currently. */
++	struct {
++		/** @locked_region.start: Start of the locked region. */
++		u64 start;
++
++		/** @locked_region.size: Size of the locked region. */
++		u64 size;
++	} locked_region;
+ };
+ 
+ /**
+@@ -775,6 +784,10 @@ int panthor_vm_active(struct panthor_vm *vm)
+ 	}
+ 
+ 	ret = panthor_mmu_as_enable(vm->ptdev, vm->as.id, transtab, transcfg, vm->memattr);
++	if (!ret && vm->locked_region.size) {
++		lock_region(ptdev, vm->as.id, vm->locked_region.start, vm->locked_region.size);
++		ret = wait_ready(ptdev, vm->as.id);
++	}
+ 
+ out_make_active:
+ 	if (!ret) {
+@@ -902,6 +915,9 @@ static int panthor_vm_unmap_pages(struct panthor_vm *vm, u64 iova, u64 size)
+ 	struct io_pgtable_ops *ops = vm->pgtbl_ops;
+ 	u64 offset = 0;
+ 
++	drm_WARN_ON(&ptdev->base,
++		    (iova < vm->locked_region.start) ||
++		    (iova + size > vm->locked_region.start + vm->locked_region.size));
+ 	drm_dbg(&ptdev->base, "unmap: as=%d, iova=%llx, len=%llx", vm->as.id, iova, size);
+ 
+ 	while (offset < size) {
+@@ -915,13 +931,12 @@ static int panthor_vm_unmap_pages(struct panthor_vm *vm, u64 iova, u64 size)
+ 				iova + offset + unmapped_sz,
+ 				iova + offset + pgsize * pgcount,
+ 				iova, iova + size);
+-			panthor_vm_flush_range(vm, iova, offset + unmapped_sz);
+ 			return  -EINVAL;
+ 		}
+ 		offset += unmapped_sz;
+ 	}
+ 
+-	return panthor_vm_flush_range(vm, iova, size);
++	return 0;
+ }
+ 
+ static int
+@@ -938,6 +953,10 @@ panthor_vm_map_pages(struct panthor_vm *vm, u64 iova, int prot,
+ 	if (!size)
+ 		return 0;
+ 
++	drm_WARN_ON(&ptdev->base,
++		    (iova < vm->locked_region.start) ||
++		    (iova + size > vm->locked_region.start + vm->locked_region.size));
++
+ 	for_each_sgtable_dma_sg(sgt, sgl, count) {
+ 		dma_addr_t paddr = sg_dma_address(sgl);
+ 		size_t len = sg_dma_len(sgl);
+@@ -985,7 +1004,7 @@ panthor_vm_map_pages(struct panthor_vm *vm, u64 iova, int prot,
+ 		offset = 0;
+ 	}
+ 
+-	return panthor_vm_flush_range(vm, start_iova, iova - start_iova);
++	return 0;
+ }
+ 
+ static int flags_to_prot(u32 flags)
+@@ -1654,6 +1673,38 @@ static const char *access_type_name(struct panthor_device *ptdev,
+ 	}
+ }
+ 
++static int panthor_vm_lock_region(struct panthor_vm *vm, u64 start, u64 size)
++{
++	struct panthor_device *ptdev = vm->ptdev;
++	int ret;
++
++	mutex_lock(&ptdev->mmu->as.slots_lock);
++	drm_WARN_ON(&ptdev->base, vm->locked_region.start || vm->locked_region.size);
++	vm->locked_region.start = start;
++	vm->locked_region.size = size;
++	if (vm->as.id >= 0) {
++		lock_region(ptdev, vm->as.id, start, size);
++		ret = wait_ready(ptdev, vm->as.id);
++	}
++	mutex_unlock(&ptdev->mmu->as.slots_lock);
++
++	return ret;
++}
++
++static void panthor_vm_unlock_region(struct panthor_vm *vm)
++{
++	struct panthor_device *ptdev = vm->ptdev;
++
++	mutex_lock(&ptdev->mmu->as.slots_lock);
++	if (vm->as.id >= 0) {
++		write_cmd(ptdev, vm->as.id, AS_COMMAND_FLUSH_MEM);
++		drm_WARN_ON(&ptdev->base, wait_ready(ptdev, vm->as.id));
++	}
++	vm->locked_region.start = 0;
++	vm->locked_region.size = 0;
++	mutex_unlock(&ptdev->mmu->as.slots_lock);
++}
++
+ static void panthor_mmu_irq_handler(struct panthor_device *ptdev, u32 status)
+ {
+ 	bool has_unhandled_faults = false;
+@@ -2179,6 +2230,11 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
+ 
+ 	mutex_lock(&vm->op_lock);
+ 	vm->op_ctx = op;
++
++	ret = panthor_vm_lock_region(vm, op->va.addr, op->va.range);
++	if (ret)
++		goto out;
++
+ 	switch (op_type) {
+ 	case DRM_PANTHOR_VM_BIND_OP_TYPE_MAP:
+ 		if (vm->unusable) {
+@@ -2199,6 +2255,9 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
+ 		break;
+ 	}
+ 
++	panthor_vm_unlock_region(vm);
++
++out:
+ 	if (ret && flag_vm_unusable_on_failure)
+ 		vm->unusable = true;
+ 
+-- 
+2.47.2
 
-> +  iommus:
-> +    maxItems: 2
-
-You need to add:
-
-minItems: 1
-
-
-Rob
