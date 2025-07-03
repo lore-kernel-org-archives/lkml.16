@@ -1,71 +1,99 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433272DE70B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636142E2EFD;
+	Thu,  3 Jul 2025 11:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751540887; cv=none; b=DhaFJ5cA3cRZyocZ2AXcmaWhcsvarv8FMUUKXlen2aJvPWTRnmWxNxPnDFZ1mymtLkjqWaiY7WyPl82T7OdRnllwD5XnBBVrC+7o4kUOpqD1nSrhxgdLd3mxA4u65QxMjWXcXDgqw4LaC+ulYrEUeSG8MDxKWSfg+CiN9TNdHUY=
+	t=1751540894; cv=none; b=JrmTV+ggBTiit0UT8ILDgnG7nePNHkhfIWfSoS8Z9C9h23ZCHZrzbuVNQCw12qzj3kn8qq1htdLNiMteRG3trNPAb246+wrDAF5QMeR4EsOPX84jBWUT4kaWW7bk3q17dyuHBPhMlCfdjGtI0gyOMFLMB8R//0LCYkLj7aOtOAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751540887; c=relaxed/simple;
-	bh=MPSNj8tWw+VyxLZS+h/0hvZHLTe44L3A2V+Y/Oyilck=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Z+pgAWUJwiwfDRZhnJzYThZbD/SCZ1mGv9CYP+0nW0KTd8S4ZYT0yImLJrL+YVrj02y1lMf1SYht1tZ6Iosxt2hiKtktkPD+1W83s2xOIjs8tgd3Duy0CbpXJ+7wVGFdyoRg4bNDoAHDEqiI5I24dmld493uI80XrUICeCCT5Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso59276525ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:08:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751540885; x=1752145685;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U4NOZMlABcLY/rRXPDEgzMXy+AfZ4u/sPTCtTPJWoXo=;
-        b=VIgZCIxDvQxbDeLEdXVaJutiLDS3zFpjlOI9or7Y18yVZQh/0ObYtr7Ki8iXo9sm2E
-         cUAnUbhVdg5HD+39qLD/hm/l3f8iop7bwN7xsduNIzkkVvOqewdxXf1ENUoY8xploup9
-         PHHGkg8qM3uwwuYSWq39qc7ABTmw4gePUiO1abd6xfXOCnjcCmmOCZWZ8dmiPrWv9n7B
-         piI0k64eBpo7XxvqZaCc4P579jo+gN4K5Z+Y7bc1U2BfNaKRMmxWgocH4emm6NrGDfTZ
-         q50mTpMHlP1siQspQXfPNOI/go0f/RvdIYmjCbDq7TR2GNwrag+w1DR1UVViBCFHUYRj
-         VlOA==
-X-Gm-Message-State: AOJu0YzN5vlh0ad4lck9xhLXuLJUI40XJdf0CLQm/zlsi+dT+ZeeKsCT
-	Jqf/NZG58isU1CedKLUJEsOTRDutLGHkhtplURdqHesGTPdAaieGR9gU3Nq08SwMsaquZsY87Vq
-	65jXtSMgg68HDEck2rtR1AtA/4XaVJ++lAicrm5GH0topvXIs+aknB5/wNBA=
-X-Google-Smtp-Source: AGHT+IGjfCTIqp1nGBlW2xfdPPDOGHzxZNhNTr2JKAqarzF+tInjrXMTgjqlwOEpagmjMezHd13oA8r+n2mVLV3mH05dbvjwpqi8
+	s=arc-20240116; t=1751540894; c=relaxed/simple;
+	bh=nQ0i//OeOyftxY70pnyCLFIQiHmHKowvqGnd/2lFKU4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Uwj094H1893cMh/60gumzlwTq/1bQQoHcMRWQE1DqyeICZNyRIFkQVsiVDB9An5eDOybeoMjx25lJBqLASdXv0ECZIoS6MyzPW0u/zk0M8YoaCKFXoQ6vS/FlOaa7V1icJ2cLHIzpkyS4/RJ4WUq4MOCVOO3Cq6OSLxrbvpWpxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: bmOSdLTPTR+ov5eeu73bJg==
+X-CSE-MsgGUID: mum5qDdKSmiqoKaxWWLuew==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 03 Jul 2025 20:08:08 +0900
+Received: from [127.0.1.1] (unknown [10.226.78.19])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id D2FF040029D3;
+	Thu,  3 Jul 2025 20:08:06 +0900 (JST)
+From: Michael Dege <michael.dege@renesas.com>
+Subject: [PATCH v4 0/2] phy: renesas: r8a779f0-ether-serdes: driver
+ enhancement
+Date: Thu, 03 Jul 2025 13:07:22 +0200
+Message-Id: <20250703-renesas-serdes-update-v4-0-1db5629cac2b@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2167:b0:3df:3271:6aba with SMTP id
- e9e14a558f8ab-3e0549ea181mr64021555ab.15.1751540885402; Thu, 03 Jul 2025
- 04:08:05 -0700 (PDT)
-Date: Thu, 03 Jul 2025 04:08:05 -0700
-In-Reply-To: <20250703092137.1888114-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68666495.050a0220.37fcff.0001.GAE@google.com>
-Subject: Re: [syzbot] [fs?] possible deadlock in __simple_recursive_removal
-From: syzbot <syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGpkZmgC/3XNTQ7CIBAF4Ks0rB3DX0t15T2MC4TBsrBtoBJNw
+ 92ljSa66PK9zPtmJhGDx0iO1UwCJh/90JcgdxUxne5vCN6WTDjlNa25gIA9Rh2h7CxGeIxWTwg
+ CjWy4Y41zkpTtGND55+qeLyV3Pk5DeK1vEl/ar6g2xMSBAjqmjGLGHqQ5fe72ZriTxUzi12m3H
+ FGcVjLhjFXUXvW/k3N+A8S+V3kEAQAA
+X-Change-ID: 20250523-renesas-serdes-update-3ec462f16ff4
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Dege <michael.dege@renesas.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751540886; l=1312;
+ i=michael.dege@renesas.com; s=20250523; h=from:subject:message-id;
+ bh=nQ0i//OeOyftxY70pnyCLFIQiHmHKowvqGnd/2lFKU4=;
+ b=dyfl8jNl0FVwyzaeYjDy0Zl/mdDbVHMxbeKF568+fBnu9uoiCDKLyCLbKh1+JPjVQfOYmlQ1+
+ LlrWSIJ+fvmDmGbuz2vL+YjTFeIBhdwty8tEZHcjGQIVbuudpvJH0lF
+X-Developer-Key: i=michael.dege@renesas.com; a=ed25519;
+ pk=+gYTlVQ3/MlOju88OuKnXA7MlapP4lYqJn1F81HZGSo=
 
-Hello,
+Hi,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+This patch set adds the following to the r8a779f0-ether-serdes driver:
 
-Reported-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
-Tested-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
+ * USXGMII mode support for 2.5GBit/s ethernet Phys
+ * A new configuration step suggested by the latest R-Car S4-8 users
+   manual V. 1.20.
 
-Tested on:
+Changes in v4:
+- Fixed email threading
+- Link to v3: https://lore.kernel.org/r/20250528-renesas-serdes-update-v3-0-8413fcd70dba@renesas.com
 
-commit:         8d6c5833 Add linux-next specific files for 20250703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e40582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=223eb69834aa2df6
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d7771315ecb9233f395
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=127ff982580000
+Changes in v3: 
+- Fixed wrong macro (reported by kernel test bot).
+- Link to v2: https://lore.kernel.org/r/20250527-renesas-serdes-update-v2-0-ef17c71cd94c@renesas.com
 
-Note: testing is done by a robot and is best-effort only.
+Changes from v1:
+ - Modify this driver for the R-Car S4-8 only
+ - So, this patch set drops the followings:
+ -- any dt doc modification
+ -- X5H support.
+ -- 5GBASER support
+ -- Registers' macros
+
+Thanks,
+
+Michael
+
+Signed-off-by: Michael Dege <michael.dege@renesas.com>
+---
+---
+Michael Dege (2):
+      phy: renesas: r8a779f0-ether-serdes: add USXGMII mode
+      phy: renesas: r8a779f0-ether-serdes: add new step added to latest datasheet
+
+ drivers/phy/renesas/r8a779f0-ether-serdes.c | 97 +++++++++++++++++++++++++----
+ 1 file changed, 85 insertions(+), 12 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250523-renesas-serdes-update-3ec462f16ff4
+
+Best regards,
+-- 
+Michael Dege <michael.dege@renesas.com>
+
