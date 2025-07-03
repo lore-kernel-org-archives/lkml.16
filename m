@@ -1,183 +1,114 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5832D8783;
-	Thu,  3 Jul 2025 09:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E662E03E6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536269; cv=none; b=n5ICruOrgXf1V4DPU7zz+2KZqljJX/CFTxjqqOY6pA9MGJBvJ6tDO5Z3fkgo/Qe4XXM1+7MBptkJIDjMA3y5jDecE9biRoQTMMqDlepSVprIbnDCUt7Do0R3zvAkUAmwu23clxDdaJC0Wd32zsWAnO54t7vvYVLzw7cR5Ex94O0=
+	t=1751536296; cv=none; b=u7uUJCHAGNnP4fgF4zl18gbpo1pmy51f8HnubVYsvDfcmeBcAoym2U3EW0NwSdCO464ISY0IGMPikvbEs+k8+RoHBCOFom0InJIBQf9FZ6EGEOzZ3Ni6f8mBzhUGlZVYA/XdhSvmPEibu/XM1Q+70BRezNPPVgZkTjLFzLQ2n5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536269; c=relaxed/simple;
-	bh=4tHBMGYPbtDNX4c95d5DdGLxYFokfo+G5JDtcZw6FJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zmhn9mD+es1Hvp6YIB26Cc74HU7g+5JgNBrjIL5bN8k5uQYyYEVl+3BxHvn7R6Dc4vnhgqfbqC96up5U5pX7o7crGOomkejsxSiCyqhrcxnz+59igHwFytU44iUjEpGTzPw/o3XU05WPSNYJFQR5vnPJtlIACNUrK0r8hme8jGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=bKpX686F; arc=none smtp.client-ip=93.188.205.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+	s=arc-20240116; t=1751536296; c=relaxed/simple;
+	bh=YpTyljxwyw07U4P0gHb4gnrakvNkh+/hIrM+ABJ+fj0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qb7koBwEXRHHOrIa+aZNmYKz+Hg5bPncyPD5Qz30CVk4NbaimS+8uRu2j9KSKtLnK/DaYgOK7izl3cVjOqZGpH39LCVU4pd9SMPJ3JomOMckUrlUwSN9mrO9HG7IU4bUpyX20NZt/PQ3FzfmoOgYf8DPIvCucJCVyKFwt4uoFpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2xRyu5kp; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="bKpX686F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
-	s=mail; t=1751536257;
-	bh=4tHBMGYPbtDNX4c95d5DdGLxYFokfo+G5JDtcZw6FJo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bKpX686FSJ3YnzUeaoRuSP6PVjMzoNp6eAS6SV3zMEcQ6Pu4s4uNXhpg42TDGRcO3
-	 hQMaHqp9tX5amfMosYwNLBBMAuDuOkv64PCo/iseCfVNP3kIb3DtDeSpwDnm/26p1q
-	 bmi4qMTAeQKWPbsfwE13MaOB6obdIkyH/wNU6XQ4h63pizZWF8IJjBtY9M6hgTWEeJ
-	 UBtDXmrqkbC0U+Mnvm+jOhP9FFHbP7DfBBTzFywDC+sCe14e8jMp0HI8OreXaxSuLE
-	 kmn32TVb/QwK8gwWg+Ch2Tcvy2w/E5fkTo+LJRkL9vqwD02ZmyIsjXS+1uFzhF+co9
-	 yPsExjAtOii3A==
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 8DD651F96E;
-	Thu,  3 Jul 2025 12:50:57 +0300 (MSK)
-Received: from new-mail.astralinux.ru (unknown [10.177.185.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Thu,  3 Jul 2025 12:50:54 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.190.6.76])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bXsSs5ybgztQTX;
-	Thu,  3 Jul 2025 12:50:21 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10/5.15] bpf: Do mark_chain_precision for ARG_CONST_ALLOC_SIZE_OR_ZERO
-Date: Thu,  3 Jul 2025 12:50:12 +0300
-Message-ID: <20250703095013.148069-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2xRyu5kp"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5551a770828so4688494e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751536292; x=1752141092; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fm9C4xWfuuIKIxeM1FG7nAWF3Huvmfev7MnDCCzIEeo=;
+        b=2xRyu5kpBk32c8BFiGQ2GK2WOFFJHt38z+jgrUYl5ctvpo/ZGXTPEpt3mUnkXwlSnc
+         ONmpIfLJPriVZ9pppbTFbxn7Bc1ccQb9CZLX/d7Mjy2wWBuYacI19cLhdswRa8suDeHC
+         Vwviu3AzO0wopJY+YB5NtxbVIwQ/cVE+thlICj84t5BUg5Z8kqEmrKM1+v1f010xkmxv
+         NnIQb9F7JWSyn/L+jNjaRL7mmLCiyJVqYn+cdC62FTCgB8JEyC7R3FkHBv+2O+T9lGzb
+         ZuFcLFr9a2gSr6sX7eyaDB7hKh5bPq4zJ/PQrGpiP/8OUcnWtSKVy00b5dbaJbphxqJQ
+         Hgdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751536292; x=1752141092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fm9C4xWfuuIKIxeM1FG7nAWF3Huvmfev7MnDCCzIEeo=;
+        b=JIHaKi7MkauIN/R+ZKIRsrm7U+lZpiIJ4hzu7gKeskDwhTu5mp5lb8ml46Ai0HgwfO
+         bMIdcNEQioG34GekrFQ9cdmKXUCyV0Oyijbgav1VfYRRwCECGapwVd3QOWV2g0dlStg8
+         pM+VbnNBOGquJ9fMyYwao7hAP2dTios9psUvzyo8qxAcixSkP/Z0TwWjla9yY0h0DGiQ
+         aL69OUHtafyB7HRHV0rMCL6HOWRWovmuXqnRoy1zeUUumeQcjoc417N7xZqJmCv9T7Gg
+         Dck5ebap/r6svaKLM0uIcnW0mjdmolhAT6S2o4T2+P4i3baVfi99fccLrzCCCY8cz7Me
+         qhdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUh4vuMxbK2uSsBxPC+h0r3aO8AR0easNM4RMPbIdc5n8p7t8FixJUoFApa/hjEiaSF4gR8TlgGCJSMZgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx50Bk07foICKuKTmEBHfPKOSPF1vio+BiITfXpHFcbXWcn1Fbf
+	vSgMgEPk66dJxQbpx5blo/TXxp+LZJD/AcQv9JBv9Sa1igZy1e1D9O8E85DHu/gg0wAhepjYVIn
+	A5Xhwr6FghSh+qsm35Aq+Yxdc94Q8/bOI3IX3BtTIDg==
+X-Gm-Gg: ASbGncvFns2+Jgy3+TaOZejI6A7qFJfL/0CC8uVJPY/X3j83V8KNo6GUiypi/0cdwua
+	n5XUIpcV4B8m9MM0Cg+7HXOSkCfgoOboizN/qZfxY2ekyygZAisR91FyiopXp06LDAFEV++Ra6o
+	sx6GhL3JuUUuz6EpkbSHaVP5khxAoVfFPhyshKzeDgvFUOefX5Vr2UliPycSyxaqdSuQ5o5btYt
+	g==
+X-Google-Smtp-Source: AGHT+IFNLwhbBpukbVu0dvBLmLJ9QPZOvXagKslA4IQMG8t7aHrgsvuCJVnQ/Jp0X0+rUTcLV0jdkLs/XNf8N29ZrsA=
+X-Received: by 2002:a05:6512:3b29:b0:553:36b7:7b14 with SMTP id
+ 2adb3069b0e04-5562828523bmr2206635e87.37.1751536292037; Thu, 03 Jul 2025
+ 02:51:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/07/03 08:54:00
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 194515 [Jul 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 05:31:00 #27614197
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/07/03 08:54:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+References: <20250702164926.2990958-1-s-ramamoorthy@ti.com> <20250702164926.2990958-2-s-ramamoorthy@ti.com>
+In-Reply-To: <20250702164926.2990958-2-s-ramamoorthy@ti.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Jul 2025 11:51:20 +0200
+X-Gm-Features: Ac12FXyCwoICVUr3Z51apCKRhZU7x6W4kGidAOB345u_C9-RSlabdFl5B5KxSls
+Message-ID: <CAMRc=Mdg8_Tq1PWAaOSzzPGUMu6-_3SvOy6F+n_Qv90arVyeLg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
+	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
+	jcormier@criticallink.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+On Wed, Jul 2, 2025 at 6:51=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@ti.=
+com> wrote:
+>
+> TPS65215 and TPS65219 are overlapping PMIC devices. While their regulator
+> features differe, the GPIO features are the same. In the TPS65219 MFD
+> driver, the 2 PMICs share the same "tps65219-gpio" compatible string to
+> limit support for TPS65215 in this GPIO driver to comments.
+>
+> The TPS6521X_GPIO0_IDX and TPS6521X_GPIO0_OFFSET macro name prefixes are
+> updated to indicate these macros apply to both PMICs.
+>
+> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+> Reviewed-by: Roger Quadros <rogerq@kernel.org>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/gpio/gpio-tps65219.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
+> index 526640c39a11..3c762103babc 100644
+> --- a/drivers/gpio/gpio-tps65219.c
+> +++ b/drivers/gpio/gpio-tps65219.c
+> @@ -1,8 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * GPIO driver for TI TPS65219 PMICs
+> + * GPIO driver for TI TPS65215/TPS65219 PMICs
+>   *
+> - * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com=
+/
+> + * Copyright (C) 2025 Texas Instruments Incorporated - http://www.ti.com=
+/
 
-[ Upstream commit 2fc31465c5373b5ca4edf2e5238558cb62902311 ]
+Should be 2022,2025.
 
-Precision markers need to be propagated whenever we have an ARG_CONST_*
-style argument, as the verifier cannot consider imprecise scalars to be
-equivalent for the purposes of states_equal check when such arguments
-refine the return value (in this case, set mem_size for PTR_TO_MEM). The
-resultant mem_size for the R0 is derived from the constant value, and if
-the verifier incorrectly prunes states considering them equivalent where
-such arguments exist (by seeing that both registers have reg->precise as
-false in regsafe), we can end up with invalid programs passing the
-verifier which can do access beyond what should have been the correct
-mem_size in that explored state.
-
-To show a concrete example of the problem:
-
-0000000000000000 <prog>:
-       0:       r2 = *(u32 *)(r1 + 80)
-       1:       r1 = *(u32 *)(r1 + 76)
-       2:       r3 = r1
-       3:       r3 += 4
-       4:       if r3 > r2 goto +18 <LBB5_5>
-       5:       w2 = 0
-       6:       *(u32 *)(r1 + 0) = r2
-       7:       r1 = *(u32 *)(r1 + 0)
-       8:       r2 = 1
-       9:       if w1 == 0 goto +1 <LBB5_3>
-      10:       r2 = -1
-
-0000000000000058 <LBB5_3>:
-      11:       r1 = 0 ll
-      13:       r3 = 0
-      14:       call bpf_ringbuf_reserve
-      15:       if r0 == 0 goto +7 <LBB5_5>
-      16:       r1 = r0
-      17:       r1 += 16777215
-      18:       w2 = 0
-      19:       *(u8 *)(r1 + 0) = r2
-      20:       r1 = r0
-      21:       r2 = 0
-      22:       call bpf_ringbuf_submit
-
-00000000000000b8 <LBB5_5>:
-      23:       w0 = 0
-      24:       exit
-
-For the first case, the single line execution's exploration will prune
-the search at insn 14 for the branch insn 9's second leg as it will be
-verified first using r2 = -1 (UINT_MAX), while as w1 at insn 9 will
-always be 0 so at runtime we don't get error for being greater than
-UINT_MAX/4 from bpf_ringbuf_reserve. The verifier during regsafe just
-sees reg->precise as false for both r2 registers in both states, hence
-considers them equal for purposes of states_equal.
-
-If we propagated precise markers using the backtracking support, we
-would use the precise marking to then ensure that old r2 (UINT_MAX) was
-within the new r2 (1) and this would never be true, so the verification
-would rightfully fail.
-
-The end result is that the out of bounds access at instruction 19 would
-be permitted without this fix.
-
-Note that reg->precise is always set to true when user does not have
-CAP_BPF (or when subprog count is greater than 1 (i.e. use of any static
-or global functions)), hence this is only a problem when precision marks
-need to be explicitly propagated (i.e. privileged users with CAP_BPF).
-
-A simplified test case has been included in the next patch to prevent
-future regressions.
-
-Fixes: 457f44363a88 ("bpf: Implement BPF ring buffer and verifier support for it")
-Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Link: https://lore.kernel.org/r/20220823185300.406-2-memxor@gmail.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
----
-Backport fix for CVE-2022-49961
- kernel/bpf/verifier.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 7049a85a78ab..fbfdfec46199 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5518,6 +5518,9 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 			return -EACCES;
- 		}
- 		meta->mem_size = reg->var_off.value;
-+		err = mark_chain_precision(env, regno);
-+		if (err)
-+			return err;
- 	} else if (arg_type_is_int_ptr(arg_type)) {
- 		int size = int_ptr_type_to_size(arg_type);
- 
--- 
-2.43.0
-
+Bart
