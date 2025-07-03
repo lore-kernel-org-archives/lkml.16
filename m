@@ -1,89 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE8A3594F;
-	Thu,  3 Jul 2025 13:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFCA18A6A7;
+	Thu,  3 Jul 2025 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549085; cv=none; b=BlwMm817/faBl/KJuhsPB0aLL+oB45/jZK2sVjtfQpvrGKBMMY0i35zXvBHXkE++mugPSN027ckZMU7mbfUoOFIH+iC3o8zTAJmlh8Q06RFLeMPe6OjCEKkwbJe7Ts9ahWoLVuYdSncygVGBBsHn33lltYQvk+wdxit9l+zKcks=
+	t=1751549088; cv=none; b=qYYx57DNiqpcSxc2KPCw1MqVrBc/1HFZo2eg4+qdrYj5ZN8sI/jgp2lWlnZDNqJnZnOXignx0V6q1j4YqWzPZ5l/akx7a3fEzT0TvVGETuhv9nphoWbWIkzLoAeOjXCBqyzvEPDmiI4YWLAfB3W46LvL0bKUFRsXiEYm0yCTZEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549085; c=relaxed/simple;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZZTVeji7t6YCudj4s3vU9aIHqMHPc25CAx/GUhzgKCFa2rq1RCzCscMtAt2VztBOnTXt/uBp7BBQEiDSm0dbn5pHW1gGzJUqyhJEJBp1xRMyYYyp/kTzBeKrG6KjjKpw0Z/ZxeRC7w+CYpOVcPPs9z9hCW44It0uoA2+DkzkWeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=376o97Qx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/C5oGZ2k; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751549088; c=relaxed/simple;
+	bh=MMa+jF3el3GtnrW4iX2kpoHYC/QRRb5dOZUixMIAOmE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cDjfIJb4nULyK0Jp0HDe5E9Q3SRK34L4KA07mReSh7uRctIRB29Vny12yvgy7J31VXIvksOX1bMDtwNbk/pAp2jnh3/an+5UVhBN6DNBUZuHVJ2yuJeXpBqyhzWu8Ga7Rz5ouQz6VWjHO2yr7WZMAyBgHI7Q5t0J1TlmE3xuER4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aREBEIjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="376o97Qx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/C5oGZ2k"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751549082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	b=376o97Qx2wdc2kUhD1th5RgVOfTZnyPaTpO9tUsLOFpxWsdLzQaOHhdbB/PRmamsJjEAsy
-	CZuU08v5t0jBHvRNxaD569CYw73PJuAdaDXUykm7HqRri9W/qSSvypRTW/TFsYQYYVQbcO
-	zXCFjBBC9GDIJWdX7ghY4ADMR31lHAgsa12BgMi1y1qxo/WINu2jlem3TV7qj/2r57MLyd
-	NzWgW8V8L23TCMiA9qqzSO4D7cSlt0RyGXRRMChTes3g1L+MPjLrmWckC0BMswjbzS2uT3
-	p4MlIcbCQeWJien+2biC34X8iT6GbDS0yQPqF5cFgBooWAKgD2OuY5Fh4Bx9fg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751549082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	b=/C5oGZ2knWTlEc/Olt/DOHI2N6Qig8x2UdQPKWlbWFZHDwPatMJhgLsBiqhhPnTnQNEjnX
-	lHgUhX6ak+1UC8BQ==
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
- Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
- <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
- <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
- Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
- <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
- <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 07/16] PCI: mediatek-gen3: Switch to
- msi_create_parent_irq_domain()
-In-Reply-To: <bfbd2e375269071b69e1aa85e629ee4b7c99518f.1750858083.git.namcao@linutronix.de>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <bfbd2e375269071b69e1aa85e629ee4b7c99518f.1750858083.git.namcao@linutronix.de>
-Date: Thu, 03 Jul 2025 15:24:41 +0200
-Message-ID: <87tt3tv23q.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aREBEIjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37579C4CEF0;
+	Thu,  3 Jul 2025 13:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751549088;
+	bh=MMa+jF3el3GtnrW4iX2kpoHYC/QRRb5dOZUixMIAOmE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aREBEIjS2yi/Rzluj2Mno2b7cD5JzsPoT0Xld54xcVtyW8rnyg/86mlhCeJwzrWSb
+	 igPKiCJeQhs4DsvQQ6ri4khjDdi6ks6oOhMEG5BvfJ4On+eHyFLRevMGT0pLz9YqAZ
+	 MbbIrFMIwpigGulvjmPu3caItsCIHHMcAwQUSYSb5Fqby8avyZOiYwC7Eyu5juw47x
+	 yhaATv8RNuWNXuoOvgNHPFN9XQh11DpHirNuIvnPPDcf6y4pRWoDAjR6FBc7QanbaT
+	 hH03gR4ciGTVE2wUIwn5lrhAL0IkyPC22+hP6ZshxzPfMS1LR/qcaYEykFNycmQBf1
+	 GB42idTxDwJgQ==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60efc773b5fso4223273eaf.3;
+        Thu, 03 Jul 2025 06:24:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfA5kDH9g5KM+7y5LtUWC3BBM9ITzBkjmdbphP+/1srrkxm4Jn8eqYOupphGa6T33U1jZLrc146qUEYiOi@vger.kernel.org, AJvYcCWTV0xDxwXy9veWV8RYE756xjJMlWYqF2zrZYWDYOCNrH0JzHKA6gJMHKppLRTnkTCwG6RbvXjo0gyk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3nPkaqrrxFndbv//nkzKuM/veKKscTjmZtQ6c+Mv4POmBoS2V
+	3J8HGadFcLckcNfCmMcKv5QMXMRPZJ7xNC4KXb46fBxvXZ41o2ZgnCFGEVvU7OSxvrhtiiCjBDn
+	7UrDG6x+DRrRCmSOkgsaoQR46ttxSVKU=
+X-Google-Smtp-Source: AGHT+IGKOaYeS3uSQsqk3L/SgSbNDEzwcQYW/lvR9TwbMrEnG3OB9OGH2Dob8RRBvv9eIGtKPjYf00+J4SGWZYmFLJM=
+X-Received: by 2002:a05:6820:c83:b0:60b:ad9e:2bbf with SMTP id
+ 006d021491bc7-61380a704f9mr1819072eaf.8.1751549087423; Thu, 03 Jul 2025
+ 06:24:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250702-add_tain-v1-1-9187b10914b9@debian.org> <aGVe4nv18dRHHV16@agluck-desk3>
+In-Reply-To: <aGVe4nv18dRHHV16@agluck-desk3>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Jul 2025 15:24:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jx=OG5tTi5u8-sfM5SqwsV=kx_OYMSc3RVitAu+v9oHg@mail.gmail.com>
+X-Gm-Features: Ac12FXwZ52lQN_EfOqCn5vgNdSbeFhPO60u_A8pDMR7_gZJCPhSGndway-Yj5_U
+Message-ID: <CAJZ5v0jx=OG5tTi5u8-sfM5SqwsV=kx_OYMSc3RVitAu+v9oHg@mail.gmail.com>
+Subject: Re: [PATCH] acpi/ghes: add TAINT_MACHINE_CHECK on GHES panic path
+To: "Luck, Tony" <tony.luck@intel.com>, Breno Leitao <leitao@debian.org>
+Cc: Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26 2025 at 16:47, Nam Cao wrote:
-
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
+On Wed, Jul 2, 2025 at 6:31=E2=80=AFPM Luck, Tony <tony.luck@intel.com> wro=
+te:
 >
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> On Wed, Jul 02, 2025 at 08:39:51AM -0700, Breno Leitao wrote:
+> > When a GHES (Generic Hardware Error Source) triggers a panic, add the
+> > TAINT_MACHINE_CHECK taint flag to the kernel. This explicitly marks the
+>
+> While it might not strictly be a machine check that caused GHES to
+> panic, it seems close enough from the available TAINT options.
+>
+> So unless someone feels it would be better to create a new TAINT
+> flag (TAINT_FATAL_GHES? TAINT_FIRMWARE_REPORTED_FATAL_ERRROR?)
+> then this seems OK to me.
+>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Applied as 6.17 material, thanks!
+
+> > kernel as tainted due to a machine check event, improving diagnostics
+> > and post-mortem analysis. The taint is set with LOCKDEP_STILL_OK to
+> > indicate lockdep remains valid.
+> >
+> > At large scale deployment, this helps to quickly determin panics that
+> > are coming due to hardware failures.
+> >
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/acpi/apei/ghes.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> > index f0584ccad4519..3d44f926afe8e 100644
+> > --- a/drivers/acpi/apei/ghes.c
+> > +++ b/drivers/acpi/apei/ghes.c
+> > @@ -1088,6 +1088,8 @@ static void __ghes_panic(struct ghes *ghes,
+> >
+> >       __ghes_print_estatus(KERN_EMERG, ghes->generic, estatus);
+> >
+> > +     add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
+> > +
+> >       ghes_clear_estatus(ghes, estatus, buf_paddr, fixmap_idx);
+> >
+> >       if (!panic_timeout)
+> >
+> > ---
+> > base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
+> > change-id: 20250702-add_tain-902925f3eb96
+> >
+> > Best regards,
+> > --
+> > Breno Leitao <leitao@debian.org>
+> >
