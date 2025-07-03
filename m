@@ -1,92 +1,79 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9481B95B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAE9233D88;
+	Thu,  3 Jul 2025 10:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751537255; cv=none; b=G04OMcgm4QydChiqLcqLPcD/UvWyCZ7ash9EjxmMV/M6L/L1WqbEgKd3s2MERHBWg7Kc1xz0DkAKsViRBnj7z6lux56WTP1cXchabYd6mXd0rh41iagFTWm/+rZWMslZnL8WoR1O1u6potNKGyo6h89A4Q0g1FRsspqVkp6Id1w=
+	t=1751537363; cv=none; b=eIwBHNMNzYY7rXB8t1lTAsS/ob+9c7/4IkOzzDSYXN07t8WoO31sQlFWOFK+7N+969KvCZoKglYLIypPs9siIAKO+4JUp2r6TuGM7X+hvAplDILu3QNmWBrrTrXj7ccMUTOsQBOb7adOWLMrnEoxKj07d9Eqye51LVAVPS9H14Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751537255; c=relaxed/simple;
-	bh=UQw8PLFCVn+GRBoqlmEyr2k14Vw9FgKodvE746aNBcU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=upmhRjfUWWLh9bDFfjxPnZveVJDZVGH7WxGRtxXNFB+i7ceVj5eqM5C2VtgRrS9UDdLzM/bMQ8H616RMXoyI3h8v70WbqpR3rZLAYyTgo4QjJRwKpSuMvpyBBVxoKNdS20YBg7NbEHChtqVSw+yhiiubGBMf636ixmtdlJrey7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 83dde6fa57f511f0b29709d653e92f7d-20250703
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:21e0c986-6669-42b1-8596-4cfdedb62aa2,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:c5391f75d4344f6a4e0bf28554583991,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 83dde6fa57f511f0b29709d653e92f7d-20250703
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1683196157; Thu, 03 Jul 2025 18:07:23 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id A23FCE008FA2;
-	Thu,  3 Jul 2025 18:07:23 +0800 (CST)
-X-ns-mid: postfix-6866565B-5138481025
-Received: from [172.25.120.24] (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 14CC2E008FA1;
-	Thu,  3 Jul 2025 18:07:20 +0800 (CST)
-Message-ID: <6414cb05-11d3-4b2a-ae97-7bb0ca0ea898@kylinos.cn>
-Date: Thu, 3 Jul 2025 18:07:20 +0800
+	s=arc-20240116; t=1751537363; c=relaxed/simple;
+	bh=8oFnaDx8yWVXgMM76SE9vU05ZBgM/KqyVMU9quvFQu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RvsaJCAck3OZw4DG3O29pHfzZC9u+hTQwH5eRW8Uuu+qM/Wj3xZCkK/74bM2+RPPGxzsMAuQDiIRmrK35tR2RISJcFjYOeN0ujQofXaQGLFZSeGngcRNpCXmD4/MQm0bbYqkhVt8ar5m48HhH/q9qb7VTXaZH6+/RgNgHXWvn4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YtOtvu6f; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YtOtvu6f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=We
+	qACTZgfJCdNsvenNHl/KCtlQOAdLai2F3zW9rTuY4=; b=YtOtvu6f1su/Vp0mcq
+	AWl9cuBDquXN85rS/vpg7sVG5BDVuuEurnYJ2LQnqxfi+zual8OrKmXKZhGTfgWR
+	kX0oSdAJvvNYNmcNqoGMaSgA7QVdAJv30Sxa3316Dkd9vaTuUf7nNIdTpvkVrgUN
+	kkYht8ULbfrF9iFhfxQmVT8BQ=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBn3nOKVmZobwkoCQ--.29235S4;
+	Thu, 03 Jul 2025 18:08:12 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	haoxiang_li2024@163.com,
+	dan.j.williams@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] x86/pmem: Fix a null pointer dereference in register_e820_pmem()
+Date: Thu,  3 Jul 2025 18:08:09 +0800
+Message-Id: <20250703100809.2542430-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] sched/uclamp: Exclude kernel threads from uclamp logic
-To: Christian Loehle <christian.loehle@arm.com>, xuewen.yan@unisoc.com,
- vincent.guittot@linaro.org, mingo@redhat.com, peterz@infradead.org,
- juri.lelli@redhat.com
-Cc: rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, hongyan.xia2@arm.com, linux-kernel@vger.kernel.org,
- ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com,
- kprateek.nayak@amd.com, kuyo.chang@mediatek.com, juju.sung@mediatek.com,
- qyousef@layalina.io
-References: <20250703091437.79861-1-zhangzihuan@kylinos.cn>
- <675563a5-8f1d-4249-9828-9fb353dd7dd1@arm.com>
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-In-Reply-To: <675563a5-8f1d-4249-9828-9fb353dd7dd1@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBn3nOKVmZobwkoCQ--.29235S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruw48urWkAr1Dur1DWrWkXrb_yoW3Awb_Kr
+	17K3yDurWFvr929F13Aw4fZr1fJwn7tFWF9r1UKFnavr90gr45X3yjqFWFyr43XrZ7KrWU
+	XasxCrZxGFy7CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRG0PfUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkAl-bmhmVB1MfQAAs+
 
-Hi Christian,
+Add check for the return value of platform_device_alloc()
+to prevent null pointer dereference.
 
-Thanks for the question!
+Fixes: 7a67832c7e44 ("libnvdimm, e820: make CONFIG_X86_PMEM_LEGACY a tristate option")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+ arch/x86/kernel/pmem.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-=E5=9C=A8 2025/7/3 17:22, Christian Loehle =E5=86=99=E9=81=93:
-> On 7/3/25 10:14, Zihuan Zhang wrote:
->> Kernel threads (PF_KTHREAD) are not subject to user-defined utilizatio=
-n
->> clamping. They do not represent user workloads and should not particip=
-ate
->> in any uclamp logic, including:
-> Why not?
->
-As Xuewen mentioned, some kernel threads may intentionally set=20
-scheduling attributes for performance. So instead of unconditionally=20
-excluding all kernel threads, I=E2=80=99m now considering a more conserva=
-tive=20
-approach:
-skip only those kthreads that haven=E2=80=99t explicitly set any clamp va=
-lues.
+diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
+index 23154d24b117..04fb221716ff 100644
+--- a/arch/x86/kernel/pmem.c
++++ b/arch/x86/kernel/pmem.c
+@@ -27,6 +27,8 @@ static __init int register_e820_pmem(void)
+ 	 * simply here to trigger the module to load on demand.
+ 	 */
+ 	pdev = platform_device_alloc("e820_pmem", -1);
++	if (!pdev)
++		return -ENOMEM;
+ 
+ 	rc = platform_device_add(pdev);
+ 	if (rc)
+-- 
+2.25.1
 
-This should help avoid unintended clamp aggregation while still=20
-supporting performance-tuned kthreads.
-
->> [snip]
-Best regards,
-Zihuan
