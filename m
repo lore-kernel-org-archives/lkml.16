@@ -1,76 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80BF70823;
-	Thu,  3 Jul 2025 16:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A4A2EF9DB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558673; cv=none; b=eTT8F8KdIHhKFj1Ijh8ID23snptvyRFTu12Q/oieXqS1WFwY0NRD5C5cp3IHn/EAN3yz3ZyW12g1JfkcuQrgQPkcY8Uxiz0xlpBuo5z9A3fJCnNwg9cDxgkMG0K4wjFVfEMvytx+X6I08Jo+2JvxE9/cQyAtRFg4bbA7vRm7GnE=
+	t=1751558690; cv=none; b=LUmDo3RFgLWDuK78rMlAYW7/JyFK6lXe3n+9StrkRler49Rolm9+wgZT/nL4QbF5hjwd6giMgK3cGmGdtq5A8l5GerCxIMtuV1WFaW339UOgNsrCKCFDJPLwZ4ABTwttNi2EhF3xseqGswZf7mBLDh2gDGfE5gs7gfx5iw9uqvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558673; c=relaxed/simple;
-	bh=58aM0K/86rOEBlpZHaNUBM3QI7pc8TJva4aXr53+6X0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tr0TLXNAHcf4mXTqKb8zs+OaKU/g13uoMPG7Uwyna2701JdrTSy7920NxwVilzuC07E7z7LcJtXqz0h+nO/xXuHuz5s87nUkNERvNdLpeT/JiHHh+FyF2+Hf1qWZovV8AJ+UcaI1g/WsVh4vTh+sEM96XfoJeln16XteGPAK8Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A1BC4CEEE;
-	Thu,  3 Jul 2025 16:04:28 +0000 (UTC)
-Date: Thu, 3 Jul 2025 17:04:26 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 18/31] arm64: smp: Support non-SGIs for IPIs
-Message-ID: <aGaqCofcXUxAdVAZ@arm.com>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-18-12e71f1b3528@kernel.org>
+	s=arc-20240116; t=1751558690; c=relaxed/simple;
+	bh=2ZNpXpjmbapVB3/yiaGZZ8q5PA+OVEKQHwLIswPdyRw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=crm/7LuzPAwW1QNKTICHsi57zzFTITUz8lGVcWs5aGlFRTXuQNW6yKhy7A5vYFsjqHyudp4PBjY1bejGjOeLARwwrsVuiU4R5Jus1x8MBBPJfBf5dk00xnZNS5KnLKTxLYU701/lEynLfN0xGSnSJ8lR5vXPL8ioLQ0mhM776Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-869e9667f58so1269122339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:04:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751558687; x=1752163487;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZNpXpjmbapVB3/yiaGZZ8q5PA+OVEKQHwLIswPdyRw=;
+        b=P53UA1xWBpgvzB+4nWu9xmHK9HAvq5Cmbr+mXavswvGPKEl17Vr5OSVOu4LqL5Ssm8
+         MbFBAgHlCDXsaofnsM/7Y4XOCOBldB42rIHKkLrLXnpHl60oKOX/fy79kI0s9LTNOs2g
+         GyCAD59mG+sadw6lMNfN5FOkeIEqO/dKtJbhxd9LbVsKUtDVtlR0IJgSFpHOoezueBN7
+         6xGPoQ4yhh6AobiZuhdmkxBPCJOpXqXaH7QuaGLyZJF7wZKwdO0lO1uEeBXV1WqpZGtG
+         pobK+PG6GBgp9VzTwz5bVU8zkREAVdY5bJeMD0u2SggDbUe0ffqOELrrEvzCG2NcVKgB
+         Ahhg==
+X-Gm-Message-State: AOJu0YxpChbdA7VJHhDUvuzhhowjgrdeQ3CGmv/3pLslZBmsXqIHjd+f
+	T/6wVntPnchLGIpGOOc3+mE6dVGYP4c3FzYpsPAycp5YWw+l5nhX42PAAR2eErKldIBcAm+c8nI
+	VAeW8HgoBGJwgQETfwz3tqjJfVoEYP7jnSgjyivGn3zWCHcRudPdU6oueuW4=
+X-Google-Smtp-Source: AGHT+IF4opcerBuuzTKPNj/Coc8KIotmmtdFqXZC1X9PuemQtbQYELgJQ9DStE3x0OBI94PqCl79l3IW+pNAt0EVOQ3T6CZSYZB+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703-gicv5-host-v7-18-12e71f1b3528@kernel.org>
+X-Received: by 2002:a6b:fc03:0:b0:876:b8a0:6a16 with SMTP id
+ ca18e2360f4ac-876c6a8a90cmr823778839f.13.1751558678437; Thu, 03 Jul 2025
+ 09:04:38 -0700 (PDT)
+Date: Thu, 03 Jul 2025 09:04:38 -0700
+In-Reply-To: <6862c942.a70a0220.2f4de1.002c.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6866aa16.a00a0220.c7b3.0004.GAE@google.com>
+Subject: Re: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ b4911fb0b060899e4eebca0151eb56deb86921ec
+From: syzbot <syzbot+5322c5c260eb44d209ed@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 03, 2025 at 12:25:08PM +0200, Lorenzo Pieralisi wrote:
-> From: Marc Zyngier <maz@kernel.org>
-> 
-> The arm64 arch has relied so far on GIC architectural software
-> generated interrupt (SGIs) to handle IPIs. Those are per-cpu
-> software generated interrupts.
-> 
-> arm64 architecture code that allocates the IPIs virtual IRQs and
-> IRQ descriptors was written accordingly.
-> 
-> On GICv5 systems, IPIs are implemented using LPIs that are not
-> per-cpu interrupts - they are just normal routable IRQs.
-> 
-> Add arch code to set-up IPIs on systems where they are handled
-> using normal routable IRQs.
-> 
-> For those systems, force the IRQ affinity (and make it immutable)
-> to the cpu a given IRQ was assigned to.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> [timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> [lpieralisi: changed affinity set-up, log]
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+***
+
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b4911fb0b060899e4eebca0151eb56deb86921ec
+Author: dmantipov@yandex.ru
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b4911fb0b060899e4eebca0151eb56deb86921ec
