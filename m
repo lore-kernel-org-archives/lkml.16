@@ -1,105 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA9224B01;
-	Thu,  3 Jul 2025 20:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FC629CB4A;
+	Thu,  3 Jul 2025 20:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751575314; cv=none; b=vBvNbThf5CxiRFFiDKdfprdHE1G9KBTn/tLPmNsaeAV/v6Fv0otyZnUNforTtfWBPjjGBOViaAU4w3hY1vsNd7FxMwMKshkyo9/zMZ+rutipLL9V7oFiEHawK26PjUQ7I+36JODpm7ZuG5PnOut9AO8jTwWy/lkQNaYPbokYBlE=
+	t=1751575374; cv=none; b=PsfIoRU5UziQguk6nBylIPsVjyAkvaE7mfBWPth6lSxuZTP+Q88Pd2Ow2aZxWczLg9es3CYSufkP6RUBg20JXZ40C3CwSzchmvZBGoaCz3f2jI+s3uaP+wRbEQ+czIbCp0y2UlULqWryz793ED88d+2eVjj3DWXL45D+pRKxQ/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751575314; c=relaxed/simple;
-	bh=kfQCrWTU8jF0Wb8PkVzyL3vCnCGGq4Sl58weKgDBXNI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ejv9QX3M1h5sVGBdc8At26gklukLmbaUdEiWVfE6MqYIhiJMCBeq9JhMa1NZOS51c+cy4UWqWtU2lfOXAy9idH7rIQyRv9LuFT/7BFb0cQ0fpRYlkHAhkimNRQbQ+3/Vl6fOSuPreDzGq5EcXy/XRdsMgxLlxy814+MBYODyAjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibt7q1in; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751575374; c=relaxed/simple;
+	bh=S3Qiddw1A/Zn9W+fIM17Ljsk5wEnvLdg5XYDuk1y0yE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l8rESeDYraMZUJ86/fJ1+q6KOR7z/ablAuLgyaNnpm1q3VUKDYjAcwg6Mm2pRS0kNX1/GgD1qhX56RnKYvOwK8h6XARFJcVZInrJt4xE/5/apfvsC4Ts56fvn0aKELKbpntog+rDzJBn9ceN9LLuGPX+jShlTfV88lyTim0lzUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsBVSBs/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibt7q1in"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391E1C4CEE3;
-	Thu,  3 Jul 2025 20:41:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsBVSBs/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB46C4CEED;
+	Thu,  3 Jul 2025 20:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751575313;
-	bh=kfQCrWTU8jF0Wb8PkVzyL3vCnCGGq4Sl58weKgDBXNI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ibt7q1insR1nFsC3nmwtOtPt2S8QoUreqHzdhiXnaP+1kdgOG1CWm/1PdoSZUN/Hu
-	 /O9SZX+I0Qhe5KZckoe4kMnE9/+DiWGHcXbEjhxtxeB7cFCXZpM5Xwo8CrrmChL783
-	 DqFJEp+DjM20T3NZdhlte4CHsMYRAoMv4UFlZYmM++nH+dEkwdNkza2ZpHdOo1Pt+U
-	 /go0ZezP7aLj3HqGilqBnIOe3LJuNM2wVEtdT05GYh/5ri/eA+OFRXKkbrxh5rBv2U
-	 41PZzacjdw953uljPolHeVkJsIm+SYob6QGyMO3b0wsuD6fd6gCL/tNzYDp9DicJnB
-	 brzjwCUji7auA==
+	s=k20201202; t=1751575373;
+	bh=S3Qiddw1A/Zn9W+fIM17Ljsk5wEnvLdg5XYDuk1y0yE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CsBVSBs/tv77pqTxmlxHJRGzueLXCkEnh5OrHC98eFJRqLdxgxfxVCNDDePyyCOBr
+	 ISDrBfh7P1w3+pPTb+A0xU9B9z/zf/sXVYgImNz5P4ji8pUo7lviA+CRoQaDb+F+AY
+	 EM0t+P+uSDsmHyqSjhMz25JHxdfKOdNOkiO8a7kiQKdKzMVssX/LbcUsKz6wVaWu5p
+	 fOP884W/RV0MmlhYGEyfal+Iir6gG3t6wozNIbX9cdUNjSNeGnh8zEl54w1PA5vu4z
+	 OpZ+iiM6SSjwZ5bEC2HelMCRKLFmjTI0NoQjWyy2w59gWDPkBM9WN6UxAufvsdMh6b
+	 Pq4WIYQIKYHYw==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso400836a12.0;
+        Thu, 03 Jul 2025 13:42:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUADKLLs88hj+8k+31mCvaG7M5PGuoB3P7OalyElIDu5bwslpwebRXyl7nKqqRgqrfUh+DXYKjwy7I5xdg2@vger.kernel.org, AJvYcCUawTvMfJVF5YFSteZFRx2U+U+k3Y4ko7N0wJqBDyc9DIP/nOjfFnc/DcsfHNYFzrQ44IyTyDNTyPsz4bG0gA==@vger.kernel.org, AJvYcCWvIaZK6MpxvufpkKqhhz2+3Vqas4IkQaQ8uPtMRWqHqHVFNfADWke+veAnOdIH1eOJjXGk9SKQDAJIF0Y=@vger.kernel.org, AJvYcCXZokttz4vmrHmegsysCdfW0IxPOxOp5pQ5lKGGSBQaRFpajHqZ5wc3+hkNQKZpOEYLO3p5e1Iey0s/@vger.kernel.org
+X-Gm-Message-State: AOJu0YybaFP2yQF2Nm9V5vdrxG+CDUy2/xfIdCPDEqN2K1DW/szz9Yzb
+	ZHn9RFJytuFuhgIyikRHBuNjjbqxXcONyGCgelnm7q9pO78dqahci0a6LcblXCxVEwz3zINVgxO
+	gRtOVutn1jCt4mXH1ATqqIcClj56YGw==
+X-Google-Smtp-Source: AGHT+IE7u+N95burKlExkwTD90qVHoArfcaqb2runQxI+LEZ8vqMAFBb7o0PlXFoCB14cvv77kcjPkMVsiK9RnFzq6k=
+X-Received: by 2002:a05:6402:13d2:b0:609:b263:41c9 with SMTP id
+ 4fb4d7f45d1cf-60e536499c9mr7795095a12.32.1751575372188; Thu, 03 Jul 2025
+ 13:42:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250612-sm8550-camss-v2-1-ed370124075e@quicinc.com>
+ <175021976651.732077.6463322520296960558.b4-ty@kernel.org> <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 3 Jul 2025 15:42:41 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKyMpCxMXw-w4rFF+MS8T7uuPc48gvzekgcMu5mqCDMwQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxL07CywnCOnQ_ZurwE4PGfzvOA0rYgUW2sef1JYVjT8LlXLMmZC6-ZA_U
+Message-ID: <CAL_JsqKyMpCxMXw-w4rFF+MS8T7uuPc48gvzekgcMu5mqCDMwQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sm8550: Add support for camss
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, todor.too@gmail.com, rfoss@kernel.org, 
+	bryan.odonoghue@linaro.org, Wenmeng Liu <quic_wenmliu@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	Depeng Shao <quic_depengs@quicinc.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 03 Jul 2025 22:41:47 +0200
-Message-Id: <DB2PMJKCP2K6.3SRFFDDXL3CV1@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
- Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
- Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
- "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
- <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
- Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v14 1/7] rust: sync: add `OnceLock`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
- <20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org>
- <dO7tJL6M4FKz_QOo-Vbb0bZOybyXa9CkBI0SIIKeCGBHIjNHlpElEV0iPbNeXBa6elnsQXqrGS5AGXdGU5hefQ==@protonmail.internalid> <DB1NVTWHU7BN.2WGPMAY9LQYNW@kernel.org> <87bjq1ve6t.fsf@kernel.org> <vbMLL995UAW3v-0IanP32kkT2-kRHTK21bCbdsgaykKMsJk3gEKRbJk4CegAZWuTR8oAhAI1R-wFgMuezTeNLw==@protonmail.internalid> <DB2BM4UMCFQR.3SQWIRF7HDP09@kernel.org> <87y0t5tf56.fsf@kernel.org>
-In-Reply-To: <87y0t5tf56.fsf@kernel.org>
 
-On Thu Jul 3, 2025 at 6:25 PM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
->> On Thu Jul 3, 2025 at 11:03 AM CEST, Andreas Hindborg wrote:
->>> "Benno Lossin" <lossin@kernel.org> writes:
->>>> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
->>>>> +impl<T: Copy> OnceLock<T> {
->>>>> +    /// Get a copy of the contained object.
->>>>> +    ///
->>>>> +    /// Returns [`None`] if the [`OnceLock`] is empty.
->>>>> +    pub fn copy(&self) -> Option<T> {
->>>>> +        if self.init.load(Acquire) =3D=3D 2 {
->>>>> +            // SAFETY: As determined by the load above, the object i=
-s ready for shared access.
->>>>> +            Some(unsafe { *self.value.get() })
->>>>> +        } else {
->>>>> +            None
->>>>> +        }
->>>>
->>>> The impl can just be:
->>>>
->>>>     self.as_ref().copied()
->>>
->>> Nice. I was thinking of dropping this method and just have callers do
->>>
->>>  my_once_lock.as_ref().map(|v| v.copied())
->>>
->>> What do you think?
->>
->> There is `Option::copied`, so no need for the `.map` call.
+On Thu, Jul 3, 2025 at 3:19=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
 >
-> Cool.
+> On Tue, Jun 17, 2025 at 11:09=E2=80=AFPM Bjorn Andersson <andersson@kerne=
+l.org> wrote:
+> >
+> >
+> > On Thu, 12 Jun 2025 16:01:26 +0800, Wenmeng Liu wrote:
+> > > Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
+> > > includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
+> > >
+> > > SM8550 provides
+> > > - 3 x VFE, 3 RDI per VFE
+> > > - 2 x VFE Lite, 4 RDI per VFE
+> > > - 3 x CSID
+> > > - 2 x CSID Lite
+> > > - 8 x CSI PHY
+> > >
+> > > [...]
+> >
+> > Applied, thanks!
+> >
+> > [1/1] arm64: dts: qcom: sm8550: Add support for camss
+> >       commit: c5aeb681fcdd23d042d780f89ddcf908a13baee2
 >
->> I don't
->> really have a preference, if users always want to access it by-value,
->> then we should have `copy`.
+> And adds warnings:
 >
-> But should it be `copy` or `copied` like `Option`?
+>       6  clock-controller@ade0000 (qcom,sm8550-camcc): required-opps:
+> [[33]] is too short
+>       6  clock-controller@ade0000 (qcom,sm8550-camcc): power-domains:
+> [[56, 6]] is too short
+>       6  clock-controller@ade0000 (qcom,sm8550-camcc): Unevaluated
+> properties are not allowed ('power-domains', 'required-opps' were
+> unexpected)
+>       6  clock-controller@aaf0000 (qcom,sm8550-videocc):
+> required-opps: [[33]] is too short
+>       6  clock-controller@aaf0000 (qcom,sm8550-videocc):
+> power-domains: [[56, 6]] is too short
+>       6  clock-controller@aaf0000 (qcom,sm8550-videocc): Unevaluated
+> properties are not allowed ('power-domains', 'required-opps' were
+> unexpected)
 
-I'd say `copy`. With `copied` I'm thinking of something that turns
-`OnceLock<&T>` into `OnceLock<T>`, which is weird...
+Actually, looks like we are waiting on "[PATCH v5 17/18] arm64: dts:
+qcom: sm8550: Additionally manage MXC power domain in camcc"  and
+other patches in the series to be applied.
 
----
-Cheers,
-Benno
+Rob
