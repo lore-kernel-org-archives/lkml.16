@@ -1,233 +1,311 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012028.outbound.protection.outlook.com [52.101.71.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6F2F3622
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 18:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.28
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751568946; cv=fail; b=oFQvJfIoJ5TXfHQecb7aVekY6CTDpaYccJW4AyrECyTsJ/OdEtsyYzlcvy/5XWjHVHNopIV8CKKRibWE2T5Dx/uDzEYQ8MHJBBawFzH2wgp7u+7o+laQb0ZWGwIyyx4J8xWUBAcHov3Mk8qhIbzXoeZsJhyYMs2NfKFkPcv3hrY=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751568946; c=relaxed/simple;
-	bh=Af4Aic9jPIAp7qsNDuvXXGH+JzTYC2myKEtfM7qajIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rQ72D4CgrCoAs1lVPZcSRrXrv72NLRhxa5grvb9C2XSnQ/cby6TBZce1QnE8nSe5c9FIlAFfYlTljcCcuw60kjojPDAKzEOpBxsnK+Brpu43Gmxm/zA//5fyje40T//dAUNZBMKVF9M4PGdVfxi4+AsJflKVl7XwY1kXCM6P/aE=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=RChKMpUx; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=RChKMpUx; arc=fail smtp.client-ip=52.101.71.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647E62F5C55;
+	Thu,  3 Jul 2025 18:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751568970; cv=none; b=FiVBQoXGTYKMMGgfPdpaj/dHFuTc8JVCljEl3SgMRaYR4jpN7cC9qsXkQlDHDcZx7cbKBUu7h1MD2jEfxUFYQMcmGiSectaTZdt9ljeVKKxwUFdFvrJvWkTNqHfaKOd4fopEIwazwONjkw1XLCNh0yvd2pZU7ZmEIi1Tq+ex1RM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751568970; c=relaxed/simple;
+	bh=TdOQqjfiFpv5JgCqOUv45vMq2yn0djpQsY+eYJdX7Nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JXimyWt2CsBukrJqgDiGboutIigDeffBvkaIncCIRJqseh5kX74uN7ZbwwaYtuMyIhDTya5M1uiRSzGmjmh8R3B/ZK+AlWPLedkabBbvFdFYxwr8dF+tz49DZr1T8b+8EThrud/KmnzCYJeVioIgvsN8xCBLutupXDIgfXjdCMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQ+ficnX; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="RChKMpUx";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="RChKMpUx"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=ZP8CMtMlA9MWEamwrTkIORvbCkBPY14hYLpKgrTfuUlMGYdWWEvS5xD+itHaMiMDPw3kQwLrob4MheBrAq+QIFjjZCcWfsc7BSeTwv9OQybyfIxQUoQANSS4TU3M4x/EJKr1MA5nY4jEaa6OLcbcAl1v73MO4NnC9RytN7uv+skMUlOrV2mjJgdoBvQguASKPPAQENEAK44Pgq6PeIsiIPlXAa0r5NYEAErW8rTESdQWRaaMjYSoMql5OKCCiJhA2iulRTgGWKVBU8sHGghl/IxrDx/x0rM5zEdea//VLd8YmSa9lCmGh6ID/CLPxHkKgOrPIX5Xtw/qMJxDZkDfEQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gZw4qscm6Odl02eAKUFBl+K4BWWENTOF8o7MLivTahk=;
- b=AX4rB1l2iu3uWiOnoIBVvSFhX/13n1u4CGQikX6VbR0h/tv1vuyLItrGwRcPHimso5YYwNmytcNJD/5EXm7cOcj4D/3t5+iQgxqAYmCXI4OkBmXzf3yBxR6eKs47RkC6wd/X73GzvGt/cz/bgc6nUi+MNUMmVGvaqSLZylsGgHzDUiK5ek5ufnfQwt+VJgNWxgsyehlAnX2sjhwrsy4aC9kkkPE+cvs1pIHeGgdPUzWztmXN7weymtmfWJWTFF4R0GMC1B2gDECIbQEiWD8fJ67XSv1ewwOOpVlIewD5rI8k9fytO+/Kgjj/UrQC5k/qwbqCycbl57lx+hSjowP+3Q==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=gmail.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gZw4qscm6Odl02eAKUFBl+K4BWWENTOF8o7MLivTahk=;
- b=RChKMpUx/Vo0uhRSA8QPozskjM6Gp9lqlUvWPZQWUKMi6df6VS1A0shRAHezTU21Be56xOB0RoIuMI5c45ByIYyBHCczGWSXjrq+8MgtoSnJZczUscPaaC2z4rOs8ldS23VwWY3Y8dKTJyIOLNY1XEPUfMMKj43XR4LRLRlWmzs=
-Received: from AM0PR03CA0024.eurprd03.prod.outlook.com (2603:10a6:208:14::37)
- by FRZPR08MB11024.eurprd08.prod.outlook.com (2603:10a6:d10:137::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Thu, 3 Jul
- 2025 18:55:39 +0000
-Received: from AMS1EPF0000004D.eurprd04.prod.outlook.com
- (2603:10a6:208:14:cafe::35) by AM0PR03CA0024.outlook.office365.com
- (2603:10a6:208:14::37) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Thu,
- 3 Jul 2025 18:55:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AMS1EPF0000004D.mail.protection.outlook.com (10.167.16.138) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.15
- via Frontend Transport; Thu, 3 Jul 2025 18:55:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IGNOfibb+sZM84Z0SMQvOdN0j7hb653XqzcYIiLeOuIcbXDORhXuzNjYrZRJrV8Z7axf1sK7pdvmht6DXtnIZCd0Ky0Agi5CZOMzKUo7C41EUZuUxmdQPwCNMmxLSrADFWZ5azh4vC0K1knd4Y9Emv0xok8cfIHH0TiQjgPiJY6j9MDQWQTRAtewBr1m3MUZdf+dWgIB0P4xo78QZpnoqzaDcYA+/foem0rjyFNSgGUsJosDQhcA7MYRXbv4HF55lX6RHIl2MWEnl8MN489jsUTow8A10p2cg9bemdJ9KMm4UR+FDZsHkeoh7J42aFfSPAGCeM8RXqzpKLfmlkBBQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gZw4qscm6Odl02eAKUFBl+K4BWWENTOF8o7MLivTahk=;
- b=IMaKevwB2sprsD0KbjGFbloYmwc5J12jw9i5QtcZRniV4qpcEppQWd7EChP+Q0IMUbd19rKp0wV9l6iHupA5a3MxUl+hUe51AVikCO5OQDDqu8iMeMfGkXjysnN+6YiJi4QSp48rPaP2ojbpR6FX6/eSVqClOxA/AKinhUhkEulkaAiC3miitsJK3+gGkrfeBv8B3UsAFoJnm9dAb3/VIC8NhR00G6lL2xLd3Qyp/cJDU5vcKGAde2vgcRR/qQwstS8uaY6Q690KMNSE9Mu5WntVvpumWMLgFEb36u16UF/UkBXSX0pzIheKrxNebkFpcYa0UpPbldN5gw5i5cVs9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gZw4qscm6Odl02eAKUFBl+K4BWWENTOF8o7MLivTahk=;
- b=RChKMpUx/Vo0uhRSA8QPozskjM6Gp9lqlUvWPZQWUKMi6df6VS1A0shRAHezTU21Be56xOB0RoIuMI5c45ByIYyBHCczGWSXjrq+8MgtoSnJZczUscPaaC2z4rOs8ldS23VwWY3Y8dKTJyIOLNY1XEPUfMMKj43XR4LRLRlWmzs=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by DB4PR08MB8077.eurprd08.prod.outlook.com
- (2603:10a6:10:387::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Thu, 3 Jul
- 2025 18:55:07 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%5]) with mapi id 15.20.8901.021; Thu, 3 Jul 2025
- 18:55:07 +0000
-Date: Thu, 3 Jul 2025 19:55:04 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, rostedt@goodmis.org, byungchul@sk.com,
-	max.byungchul.park@gmail.com, ysk@kzalloc.com,
-	kasan-dev@googlegroups.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v2] kasan: remove kasan_find_vm_area() to prevent
- possible deadlock
-Message-ID: <aGbSCG2B6464Lfz7@e129823.arm.com>
-References: <20250703181018.580833-1-yeoreum.yun@arm.com>
- <CA+fCnZeL4KQJYg=yozG7Tr9JA=d+pMFHag_dkPUT=06khjz4xA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+fCnZeL4KQJYg=yozG7Tr9JA=d+pMFHag_dkPUT=06khjz4xA@mail.gmail.com>
-X-ClientProxiedBy: LO4P265CA0118.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::8) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ+ficnX"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b3b250621so2257241fa.2;
+        Thu, 03 Jul 2025 11:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751568966; x=1752173766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8dlaeAwrvJ5aPEylVD9MPrXhE+oUlcOe0WL6Bhz2K6Q=;
+        b=eQ+ficnXPs/fnyBtR6yMoKY+lf9MUoHUKYg9Su72NxLrmdPkCSBGFFmcg+psfE8i81
+         9Ow+zTz3V6UvQkNUo3Lvf0xk5lYTs3RrswucD9YuXawsP9RaIwoqi5/NrWFnepZGOEms
+         1S3q/zQdAUrGlLLriMDIGemUgYlrvLhHi8mGR6nKwW4GKJA429qfv+sfyflq2n/Rl1oP
+         qy2mow8osESBICkUM9r9rbXs0EBwVuVz8SYTYLD+VgcXBHDHTfAZEy+BrZx6cCSYXPNl
+         xZ2hl2HVQxlMBzckiDagIYXewdarqAjLnnL5ktzBoHuWUzc2Y6spIjyzl9XipfjIathz
+         6Taw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751568966; x=1752173766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8dlaeAwrvJ5aPEylVD9MPrXhE+oUlcOe0WL6Bhz2K6Q=;
+        b=IJ12ar0Kuc9WvoYB3eDMhdSrXtORYL6QBAUzKA08RfTcEFuZlJ62D8F2uzRe3nU4Cz
+         P8sQ5ThVW42/sBPSwjKY9x5+HuT5mAvuf5h0maIs/jvM/v+tiWbuq40TUG5m+gIKGhww
+         lY/ejk2MTTrSOxyYniXnkFDbsNjEnjoysqkFLhDZ2LcfwmuYWBwlYzs/CVP0PKxUvCj7
+         I3XXk3QlFzMnqlS0sHKWEOz9+Ih+CyWHhhKE8TQIDLzCRt/PqLy7Djikpw5xZMa6j43q
+         AOJazwRCiKg1caJnYpz1oehI/fxGj8lg77b7NnlK6KQ2WQA/ra2OktFycFL0KlkblDne
+         DHbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJYloJWaUCHY3fB2HkBN7EUix8qJ5eSInXqlD+e3BoBVqdzpgZWm9f1C7HZb1p2g5zF1o1aCIYROpG@vger.kernel.org, AJvYcCUhzgxDy8wr0UIB8J04ijTJuwJ+Rj63pN7sD2g9IDR7odOmsjpeBRd2a5S43yvJVbCXG+W0cZE2UnDBHNd+k9k=@vger.kernel.org, AJvYcCVHLJ3le85YeLU4BiuFuFdY+Zl8iE6htid7YDyZnYz0AfrumMZUiiPvha71DsXeyewzn+TeGQWU@vger.kernel.org, AJvYcCVV7Gu5ugq9bIhjlXA77bFfhA+5KIfKIhybf27XUdzhouVB4MXpQMmVeZXxuylJklGqRZtpx+0tqM4=@vger.kernel.org, AJvYcCVyiM5E7XyvXdJIvuRHkVzRCA7fLhkmgacS62C+42ewGvZ3S/ytG/Ic48U3I1I85/yxK/Vr+CpgMAXH@vger.kernel.org, AJvYcCWQWJWSx0DxVMXSu8fUZ6MnmbFyTSLuIEtIJhQVNhRGg2nFXh3hdfNVbxtyHiR65eh0TQB0fLk2u8kCmxy9+rgv@vger.kernel.org, AJvYcCXjXF77TDytr81Gmy6VtE95JWkUFfk95UQpm+jTuAYReh/3KSviJ5ZYRIuorIqwUaSNl8EG5TfwxSx6Jbk=@vger.kernel.org, AJvYcCXnjtUKXci0UoTaM7LWf7ihAUu+k4a/JnjRv6QMaEP15r2RlGErMVFUSNpqkVAvUeGVICrjguozb5nd@vger.kernel.org, AJvYcCXoMXnYI/dHTTVILOkejCcF3nsNNwB5vx1juYcERyB6n7dXi8tc21QCXJQQw6TyagnNLg3p0xF2AtaiD4uo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWBhkk9ZUgX433r3NjyScL27Q7nn0weX/QvF38s+2KceCIqQnW
+	9C7cITB6XC4JMBF4/VCtildqyRiXciFVImJpLSHeg48Zf3IukhbjnEgPN948FL0gA9CWpULS815
+	HrwqrlriMHQuNpcTUuQIgTc1WX2rFuY8=
+X-Gm-Gg: ASbGnctF2HOYVMEVarGrEp74GFD39JSEY/3xBbRQBiFdj/SFH7DNMIH+azcg8qB0P8p
+	RkTYuWyXQp7Lci6Es1JRtcfhbKp550ysnskaYrd/C7vagSsuVTw+39fRWW8To8PI7IVrM2PZcpy
+	Rqu3pPwYQDaV2frxiQIQvyyKC/LjOjvko8en2IEr9bfb5kbA==
+X-Google-Smtp-Source: AGHT+IED1JBlPUd1eRe4RrZF/42GMBs1msnXpWGnR4Sjy9Tl8Qa7LsZTxooDAniTWu0s2lDdtE1e4sjgynV0m7hycZM=
+X-Received: by 2002:a2e:be9e:0:b0:32b:3689:8d80 with SMTP id
+ 38308e7fff4ca-32dfffc1d46mr29314031fa.18.1751568966060; Thu, 03 Jul 2025
+ 11:56:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|DB4PR08MB8077:EE_|AMS1EPF0000004D:EE_|FRZPR08MB11024:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8f47e9e-88e8-4222-b6db-08ddba633422
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?btdki1ZELYEVhsFrjZ1om64lXz6dO31IxQSW7diTMxiyhT2SHgKzUusBFj5h?=
- =?us-ascii?Q?0iFPa0x7yOMcD8wa7E5QNHHDRQdsrG9Dm0M6hwpKT0YLoDX/Ybq3xlozpXH3?=
- =?us-ascii?Q?teiqu0FSl5GIEqQOOi7MfX5tHdz9FBRsgt+A8NENOC+lvnGylxec+rV6KQbw?=
- =?us-ascii?Q?t54YaiW2odsHsNt15KKSDn9W2aNnvIkbAE7zWg4i/yZa4lvIvX9Eo1iNWpwu?=
- =?us-ascii?Q?ObhheZFxr/xPuKJa8kTqd9ENkjplcuge7U6xV0U8lD1MTz1vXPfxB64By1Up?=
- =?us-ascii?Q?0Xr5YjVOFmP0I/9NghKC+6F1SNEuwHJ/4ZWioWqBNmA0y9ylBtMeXJOt0SdX?=
- =?us-ascii?Q?h+iqYsn3WvK8uCGup3zZhrOpsLA70QmKW6g6mgjKMTGuqLWUzJlxCh3GnEB3?=
- =?us-ascii?Q?ZHvwHH9bsAUIh8GGu67UhwLU6s7RkMi2+M1RE/Mi6tC7ZpAwGd6h3IYPSmhv?=
- =?us-ascii?Q?tPQzdw4lmEijn0oEkCAPrsFBRIK9haPm8P090ORsDSViaTCejlrd7NvXbx8S?=
- =?us-ascii?Q?VZBHUFCD3CP2Itgm4lGZAxfn7nDe4pdXQmg9KV8Jsg73TZTUTj6uWP/Ie7/L?=
- =?us-ascii?Q?JvHzbEZtjcHksBJKupSgE+LYS+Vbsr0EX2xx+wK3pVKiFI7FPigkudpIHdPO?=
- =?us-ascii?Q?1YQ562E1b9GF0oCmE536lxVybZVHikL1F/Gtva1Aj8qjA/7mbj5mZZJoOW53?=
- =?us-ascii?Q?PTS7VzvzFCxzq/F7JWUkXOf2jVcdKVWszqAU4m4g48iaiZx9AoZdvkCtEZoz?=
- =?us-ascii?Q?AkPI+IbqkfO1xYTA0B3zSqk8fu6TlUExWlyIVutaMHCt2CWSpbDgBlR30OMZ?=
- =?us-ascii?Q?OvrFdLH0qCWQH+0BSjuaJQRTJyM2fBqc9AQ+kRNck8sLMHAsiFw+H+DInSOx?=
- =?us-ascii?Q?xGdq+qI8uXNuBRq6FbElFhLtwSmo4Nbct85REu/QHhkAw52vRejif5Rd0B15?=
- =?us-ascii?Q?maYX5HN6c1wZU49Qt2haeCgQjg3bDoPWG7DXj8NXZ0Ik/rj3/Mm+vT0GkpG9?=
- =?us-ascii?Q?fLgEu15kJjamZy9JZuB1PymaMwKs9ZQ8+Q/vmY4GcbinEi4EyXkjaJTz9rGE?=
- =?us-ascii?Q?u38N3YOUExYiOYFgABeeP9sL5vX4YNfsM2yj2Kj0PP4wAPLNKgM1JfCYbpWT?=
- =?us-ascii?Q?pIi2yNEv3Q9Rk6Ue8hiWs+Jk8Ll1l22rmv+vF9Yz8UTrt1WGL5wsnFDNfFQ3?=
- =?us-ascii?Q?R8duMVfgy77bTJG8YhRRleFFR4gJJTeTkyyDx9NH2zaLXTmlpF3jBlCWrfYu?=
- =?us-ascii?Q?PrP/pkWe18JZV/kuAs01u9N1JaKpQTqu/rd2CM0J4XD3s0tPVoVVVNnUUO6Y?=
- =?us-ascii?Q?sLR9KC4mIftQmaH2puJVscyKH6FZmMjhKFyf/644f6f1SE4uhHlwPceLp9wy?=
- =?us-ascii?Q?NJw21DlOJgbeHLLxUzPfINICBsi1JUkq6tPX0k5k4eBG2YEi82LBDsNFf7lx?=
- =?us-ascii?Q?Ztkeq085NAA=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR08MB8077
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS1EPF0000004D.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	14534c07-9a58-488f-7397-08ddba6320a1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|14060799003|82310400026|35042699022|7416014|376014|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HnMHFhlFNScq6yV2vZ6S3/ku0RTpbkGEYYHK/XuEG9jJNzYXpseTlbqLAaKN?=
- =?us-ascii?Q?MxhYCmQiZrDzKB24sIG3lIa537HATdxvb7aTQy7Br6vHr7O2EBsMBbEX0Xg4?=
- =?us-ascii?Q?5wRw11fOuWpWS75j8YxlqZVqNVTPj7I1sSz2yS083gFEWctjKbcCPLeeuq6t?=
- =?us-ascii?Q?CO4VhBJGuNzOVlihexLkFl8QRzqFAMYO0EEHES2dI4iV3FbIbsEMZvS68tQY?=
- =?us-ascii?Q?2b6MsmaenboRBt9NAGxCvFmxQiBMstkCuR9tW3ebkGY1c1Sfta6KZG+pOHGE?=
- =?us-ascii?Q?Exc7T0CYMgluuR3Izd8VS7+xE+hYLGotpwUz3Hp9AG3T5Vi6/v6bylBVLf1D?=
- =?us-ascii?Q?lKv25lzc7XXy6ICizW20YyXzGXTlxYa00c8oq2SY+NDT+bxPsTxzOWQjqpLn?=
- =?us-ascii?Q?+Oxk9WdN75lI4/c5mvdaS+GbQGdb0HsxO76vMQPqqCsBFyle/8GYBsXCSu9U?=
- =?us-ascii?Q?9yR9xRvScWt2yYpKRZjlWjBJmzK4xi7eO0v5O8vB/RJZoPA+mpn/7qOmcZcP?=
- =?us-ascii?Q?lSfG/ZK+fkJuOWEebMJOXABjoeFTnkiUaevBHVei+85xfRgrG0Wuuq+5vQoC?=
- =?us-ascii?Q?f9DWwYHZwoFO+8Oo0jlzexQ5DjRsy6lbNkgf76w0si2KNBS2GTBrwIgNUQJN?=
- =?us-ascii?Q?+U7BQcn2QLuIW/ktZ0gipMIITsaw+cLmV/bkCggAhtF1QFhmU51u0kE8dLTn?=
- =?us-ascii?Q?E4KapyMlo0nm3jrkC2eDGtsixrr4byqYwWrn+3DdSNIqotQNwIfCtLbsaCIw?=
- =?us-ascii?Q?a0Jo/atcEX7MxZ672mEsMTPIOaKlVriaYeMaOi93BPw4khX4MtFzMuyXwCwm?=
- =?us-ascii?Q?G5pp8dzFFWnxO0yPO8cBHsXRVe0WmNIzpmrhEeYgLQDttEacR2lYodM5kS82?=
- =?us-ascii?Q?vnUPe0ql1UIOnsrek+2kdauI5cCH/NPnAx45l7tGoXoxZxUAcMJ92UZa1wMa?=
- =?us-ascii?Q?OU6UzUZD9qd4JslLAoHcudDvuB9LlcVr4vKzXoWyId2Dhy2FFnyW2GG8q527?=
- =?us-ascii?Q?JB5DlBsidZR9LoLs7xnpnqZ6MXnIBV5/LkKsivVoAeLTRWmmeZR96WxumcO/?=
- =?us-ascii?Q?0OBBwBUUlbSmbhIKCdVbmxMdbZBU6Gckg7js2wTvB43lII0jNGlS9suU/0la?=
- =?us-ascii?Q?Slvwit9V7VbvB420wxe0hh7S/PvLk+EmjljiVI4VNTTl7uXseGn2Xv1Qu9Rs?=
- =?us-ascii?Q?1uQpcPLYnJtzo51ZOWuRRb03LTH6a35MdtBBfUTjgahIYHAEm1+gNGm5Y5PR?=
- =?us-ascii?Q?h3Nahmb0CsIVL/6iMBxPNvCNYHhoymZBsqxd8xBjMC5hPwXntTOg0Q/jsAr6?=
- =?us-ascii?Q?qXYVMpqCGsNgDzw6g4RrvkMr35rYIFhBz6SbAqUZ6yLZTZcpcP8MF9iUr7cg?=
- =?us-ascii?Q?wO83laRlgCIA70JgY/36VTrLhUolNNKZblmfEcNDhnFJdgVNtF6emy8hXq3N?=
- =?us-ascii?Q?r6qI10klrK0ZJX9rhd79zRKN/EPEXobkNUb+hCA1+seI1a+hzNpBaqGykZZ1?=
- =?us-ascii?Q?cpDYKxQUGJmkaPdEo1jDbHeldj/owqB7NaaR8d/HNqN6c4u8jZGM+r5fpg?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(14060799003)(82310400026)(35042699022)(7416014)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 18:55:39.4817
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8f47e9e-88e8-4222-b6db-08ddba633422
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF0000004D.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRZPR08MB11024
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com> <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com> <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+In-Reply-To: <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 3 Jul 2025 14:55:30 -0400
+X-Gm-Features: Ac12FXxiBqIHZiPi3oRBzp1Rr9KNYcKSHhX18HEqYkevVJN6WhbjlGZhD89_4qA
+Message-ID: <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrey,
-
-> >
-> > find_vm_area() couldn't be called in atomic_context.
-> > If find_vm_area() is called to reports vm area information,
-> > kasan can trigger deadlock like:
-> >
-> > CPU0                                CPU1
-> > vmalloc();
-> >  alloc_vmap_area();
-> >   spin_lock(&vn->busy.lock)
-> >                                     spin_lock_bh(&some_lock);
-> >    <interrupt occurs>
-> >    <in softirq>
-> >    spin_lock(&some_lock);
-> >                                     <access invalid address>
-> >                                     kasan_report();
-> >                                      print_report();
-> >                                       print_address_description();
-> >                                        kasan_find_vm_area();
-> >                                         find_vm_area();
-> >                                          spin_lock(&vn->busy.lock) // deadlock!
-> >
-> > To prevent possible deadlock while kasan reports, remove kasan_find_vm_area().
+On Thu, Jul 3, 2025 at 11:08=E2=80=AFAM Benno Lossin <lossin@kernel.org> wr=
+ote:
 >
-> Can we keep it for when we are in_task()?
+> On Thu Jul 3, 2025 at 3:55 PM CEST, Tamir Duberstein wrote:
+> > On Thu, Jul 3, 2025 at 5:32=E2=80=AFAM Benno Lossin <lossin@kernel.org>=
+ wrote:
+> >> On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
+> >> > Introduce a `fmt!` macro which wraps all arguments in
+> >> > `kernel::fmt::Adapter` and a `kernel::fmt::Display` trait. This enab=
+les
+> >> > formatting of foreign types (like `core::ffi::CStr`) that do not
+> >> > implement `core::fmt::Display` due to concerns around lossy conversi=
+ons which
+> >> > do not apply in the kernel.
+> >> >
+> >> > Replace all direct calls to `format_args!` with `fmt!`.
+> >> >
+> >> > Replace all implementations of `core::fmt::Display` with implementat=
+ions
+> >> > of `kernel::fmt::Display`.
+> >> >
+> >> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> >> > Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-Ge=
+neral/topic/Custom.20formatting/with/516476467
+> >> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> >> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> >> > ---
+> >> >  drivers/block/rnull.rs       |  2 +-
+> >> >  drivers/gpu/nova-core/gpu.rs |  4 +-
+> >> >  rust/kernel/block/mq.rs      |  2 +-
+> >> >  rust/kernel/device.rs        |  2 +-
+> >> >  rust/kernel/fmt.rs           | 89 +++++++++++++++++++++++++++++++++=
+++++++
+> >> >  rust/kernel/kunit.rs         |  6 +--
+> >> >  rust/kernel/lib.rs           |  1 +
+> >> >  rust/kernel/prelude.rs       |  3 +-
+> >> >  rust/kernel/print.rs         |  4 +-
+> >> >  rust/kernel/seq_file.rs      |  2 +-
+> >> >  rust/kernel/str.rs           | 22 ++++------
+> >> >  rust/macros/fmt.rs           | 99 +++++++++++++++++++++++++++++++++=
++++++++++++
+> >> >  rust/macros/lib.rs           | 19 +++++++++
+> >> >  rust/macros/quote.rs         |  7 ++++
+> >> >  scripts/rustdoc_test_gen.rs  |  2 +-
+> >> >  15 files changed, 236 insertions(+), 28 deletions(-)
+> >>
+> >> This would be a lot easier to review if he proc-macro and the call
+> >> replacement were different patches.
+> >>
+> >> Also the `kernel/fmt.rs` file should be a different commit.
+> >
+> > Can you help me understand why? The changes you ask to be separated
+> > would all be in different files, so why would separate commits make it
+> > easier to review?
+>
+> It takes less time to go through the entire patch and give a RB. I can
+> take smaller time chunks and don't have to get back into the entire
+> context of the patch when I don't have 30-60min available.
 
-We couldn't do. since when kasan_find_vm_area() is called,
-the report_lock is grabbed with irq disabled.
+Ah, I see what you mean. Yeah, the requirement to RB the entire patch
+does mean there's a benefit to smaller patches.
 
-Please check discuss with Andrey Ryabinin:
-  https://lore.kernel.org/all/4599f645-f79c-4cce-b686-494428bb9e2a@gmail.com/
+> In this patch the biggest problem is the rename & addition of new
+> things, maybe just adding 200 lines in those files could be okay to go
+> together, see below for more.
 
-Thanks
+After implementing your suggestion of re-exporting things from
+`kernel::fmt` the diffstat is
 
---
-Sincerely,
-Yeoreum Yun
+26 files changed, 253 insertions(+), 51 deletions(-)
+
+so I guess I could do all the additions in one patch, but then
+*everything* else has to go in a single patch together because the
+formatting macros either want core::fmt::Display or
+kernel::fmt::Display; they can't work in a halfway state.
+
+>
+> > I prefer to keep things in one commit because the changes are highly
+> > interdependent. The proc macro doesn't make sense without
+> > kernel/fmt.rs and kernel/fmt.rs is useless without the proc macro.
+>
+> I think that `Adapter`, the custom `Display` and their impl blocks
+> don't need to be in the same commit as the proc-macro. They are related,
+> but maybe someone is not well-versed in proc-macros and thus doesn't
+> want to review that part.
+
+Sure, I guess I will split them. But as noted above: changing the
+formatting macros and all the types' trait implementations has to be a
+"flag day" change.
+
+>
+> >> > diff --git a/rust/kernel/fmt.rs b/rust/kernel/fmt.rs
+> >> > new file mode 100644
+> >> > index 000000000000..348d16987de6
+> >> > --- /dev/null
+> >> > +++ b/rust/kernel/fmt.rs
+> >> > @@ -0,0 +1,89 @@
+> >> > +// SPDX-License-Identifier: GPL-2.0
+> >> > +
+> >> > +//! Formatting utilities.
+> >> > +
+> >> > +use core::fmt;
+> >>
+> >> I think we should pub export all types that we are still using from
+> >> `core::fmt`. For example `Result`, `Formatter`, `Debug` etc.
+> >>
+> >> That way I can still use the same pattern of importing `fmt` and then
+> >> writing
+> >>
+> >>     impl fmt::Display for MyType {
+> >>         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {}
+> >>     }
+> >
+> > Great idea, done for the next spin. It would be nice to be able to
+> > lint against references to `core::fmt` outside of kernel/fmt.rs.
+>
+> I think there was something in clippy that can do that globally and we
+> could allow that in this file?
+
+I didn't find anything suitable. Do you have one in mind?
+
+> >> > +
+> >> > +/// Internal adapter used to route allow implementations of formatt=
+ing traits for foreign types.
+> >> > +///
+> >> > +/// It is inserted automatically by the [`fmt!`] macro and is not m=
+eant to be used directly.
+> >> > +///
+> >> > +/// [`fmt!`]: crate::prelude::fmt!
+> >> > +#[doc(hidden)]
+> >> > +pub struct Adapter<T>(pub T);
+> >> > +
+> >> > +macro_rules! impl_fmt_adapter_forward {
+> >> > +    ($($trait:ident),* $(,)?) =3D> {
+> >> > +        $(
+> >> > +            impl<T: fmt::$trait> fmt::$trait for Adapter<T> {
+> >> > +                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::R=
+esult {
+> >> > +                    let Self(t) =3D self;
+> >> > +                    fmt::$trait::fmt(t, f)
+> >> > +                }
+> >> > +            }
+> >> > +        )*
+> >> > +    };
+> >> > +}
+> >> > +
+> >> > +impl_fmt_adapter_forward!(Debug, LowerHex, UpperHex, Octal, Binary,=
+ Pointer, LowerExp, UpperExp);
+> >> > +
+> >> > +/// A copy of [`fmt::Display`] that allows us to implement it for f=
+oreign types.
+> >> > +///
+> >> > +/// Types should implement this trait rather than [`fmt::Display`].=
+ Together with the [`Adapter`]
+> >> > +/// type and [`fmt!`] macro, it allows for formatting foreign types=
+ (e.g. types from core) which do
+> >> > +/// not implement [`fmt::Display`] directly.
+> >> > +///
+> >> > +/// [`fmt!`]: crate::prelude::fmt!
+> >> > +pub trait Display {
+> >> > +    /// Same as [`fmt::Display::fmt`].
+> >> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result;
+> >> > +}
+> >> > +
+> >> > +impl<T: ?Sized + Display> Display for &T {
+> >> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+> >> > +        Display::fmt(*self, f)
+> >> > +    }
+> >> > +}
+> >> > +
+> >> > +impl<T: ?Sized + Display> fmt::Display for Adapter<&T> {
+> >> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+> >> > +        let Self(t) =3D self;
+> >> > +        Display::fmt(t, f)
+> >>
+> >> Why not `Display::fmt(&self.0, f)`?
+> >
+> > I like destructuring because it shows me that there's only one field.
+> > With `self.0` I don't see that.
+>
+> And what is the benefit here?
+
+In general the benefit is that the method does not ignore some portion
+of `Self`. A method that uses `self.0` would not provoke a compiler
+error in case another field is added, while this form would.
+
+>
+> >> > +
+> >> > +    let mut args =3D TokenStream::from_iter(first_opt);
+> >> > +    {
+> >> > +        let mut flush =3D |args: &mut TokenStream, current: &mut To=
+kenStream| {
+> >>
+> >> You don't need to pass `args` as a closure argument, since you always
+> >> call it with `&mut args`.
+> >
+> > This doesn't work because of the borrow checker. If I wrote what you
+> > suggest, then `args` is mutably borrowed by the closure, which
+> > prohibits the mutable borrow needed for the .extend() call here:
+>
+> Ahh right... Well then it's fine.
+>
+> ---
+> Cheers,
+> Benno
