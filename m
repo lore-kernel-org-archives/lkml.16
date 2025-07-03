@@ -1,171 +1,78 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E942D3A74
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C402D29C8;
+	Thu,  3 Jul 2025 08:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533013; cv=none; b=dRRuA5HrADutTn3FKWX1tXuav1PLnSjjmi0Ns5a7XIIJ1sJFKJ4MTb0i6WjQDwhuN2FQMHoaHjScGZSc9AyIWDzvxJgqh4UU+vb/G8kXR6uqSpXpWby/PE2lOJmrkKEeGzJZKIvfQ0N7mriLvd1uVEigR0VoZxW5CrUXKqBgY4E=
+	t=1751533030; cv=none; b=l53SyF1ULEbyaLOF0qEm3ODNaL3dNT7ZAtGoapiWPWn7EkXxMFPOILidAkASf7fOTonlqaGF4tEnQDA1WznIF0ODFvgvs4ViJ60rbXNqX1Yr4FdCkiLjy/24xmh5nMkUu4HaM+GeWaBnXg/V+irCC6wUFtyQniBDgsNH9hyR11c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533013; c=relaxed/simple;
-	bh=Jxog2IoFv7idskIfKrEnJxlaYigitE9t3NSke2lZh7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E7DsrfvVHeYDQKG+PZvhqgjhKWGOCQBTy2IiXfZ88s2yVYMH9rHokemBTIo4m7sGCnPj/Dh03D1srbb9m2E9qpTphS3+q20Tm691O01zljzBx3qI/Zax0V3HZZ62bC1obRDQrLZ/bXjWM7w7nZ4REmxNdaDlpJI7ff7Z8mOOhko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fQnC7lfX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iLUDohGd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fQnC7lfX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iLUDohGd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751533030; c=relaxed/simple;
+	bh=NFW2YyTqEtJaZEFW122fYjnxT1eH+RBQ4tejPPFMRCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2QhSo/hhX/2msagvFZaCeM7FHWqznVef/worDkW+TjFoB4jf/sp5iAccsbzxyGLCA//JHgTPEkb+surAuZl+c6MuVnZpV1GtHhebmTn+TSJi2pjMdRlIl9aQB9WIQNTVWzmZdmeMVhc33Ex7cts56LLOZ/FQ5hoW9livwTV6pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mBrdP+dT; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fQnC7lfX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iLUDohGd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fQnC7lfX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iLUDohGd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3ED951F387;
-	Thu,  3 Jul 2025 08:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751533009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oycqRPKYrKrU48lYuQEibM7u281caSR1VZVk0+w2pi0=;
-	b=fQnC7lfXKodxC1NnNc5cI3h2rpnMomRWtcUfHvsu55eW0P42U2z26lhK+hn7G/G1Up2N22
-	+gq1g4eeKsFZqg8ruiAtteiNqjqdly9nRRFtuOnMxUzyTslEyGo7bhwfKGc4/KswMozQz2
-	BjKvN6cj5kkePCy1cM4llRN+/dw4S6A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751533009;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oycqRPKYrKrU48lYuQEibM7u281caSR1VZVk0+w2pi0=;
-	b=iLUDohGdKioE47x8hrIsnnBXwB5ClzsiiXehVlPokiLLzT+H/N3rZXd731VmOv3KFqyQdN
-	NPdeC4IjIFsxHVCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fQnC7lfX;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=iLUDohGd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751533009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oycqRPKYrKrU48lYuQEibM7u281caSR1VZVk0+w2pi0=;
-	b=fQnC7lfXKodxC1NnNc5cI3h2rpnMomRWtcUfHvsu55eW0P42U2z26lhK+hn7G/G1Up2N22
-	+gq1g4eeKsFZqg8ruiAtteiNqjqdly9nRRFtuOnMxUzyTslEyGo7bhwfKGc4/KswMozQz2
-	BjKvN6cj5kkePCy1cM4llRN+/dw4S6A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751533009;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oycqRPKYrKrU48lYuQEibM7u281caSR1VZVk0+w2pi0=;
-	b=iLUDohGdKioE47x8hrIsnnBXwB5ClzsiiXehVlPokiLLzT+H/N3rZXd731VmOv3KFqyQdN
-	NPdeC4IjIFsxHVCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D444A1368E;
-	Thu,  3 Jul 2025 08:56:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1ExmM9BFZmg+dgAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 03 Jul 2025 08:56:48 +0000
-Message-ID: <b5849e57-8b8a-4c62-8960-18c4802b8d67@suse.de>
-Date: Thu, 3 Jul 2025 10:56:48 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mBrdP+dT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7v+FVph2p3AjKUXXMP962eD76NtSca8p122IP5PfJck=; b=mBrdP+dTWCx2IeD12Mcjc459U7
+	StfEKWNoxulXdMYk5WiKT5+w1eKkPakUmCOz6ef/r/TTPSPeCbaan+lpZv6L8rD4y5Esz+1LdDfhC
+	ocgQo/0dF+d7PCZC+PbbGiuiCOB9hmOz90fnW6eZUr6Fwnf+Uw0yrXPt3hGq6AsDyN9NOjMlNAVOk
+	gAs/NiZ7QrQfDCKl2/3oDSRFW4zxx7Q+o+zLTAcGbrSxcIMfinYM6wFn3wCioRIQzc7GqPmbxycdM
+	D5dq/e/VaLMiYUa6RUr9veQIwIeQXu8vQymBGLzH6YSB8lbG29oV6WxPvRxt5QdrDn7Ir7i9ikRXZ
+	Kxz5ROqw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXFkh-0000000AkgY-3XwQ;
+	Thu, 03 Jul 2025 08:57:07 +0000
+Date: Thu, 3 Jul 2025 01:57:07 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jason Wang <jasowang@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, xuanzhuo@linux.alibaba.com,
+	eperezma@redhat.com, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, hch@infradead.org,
+	xieyongji@bytedance.com
+Subject: Re: [PATCH 0/9] Refine virtio mapping API
+Message-ID: <aGZF4025JPO3wgnm@infradead.org>
+References: <20250701011401.74851-1-jasowang@redhat.com>
+ <20250701030150-mutt-send-email-mst@kernel.org>
+ <CACGkMEtr+Rwu+imU1rLtLLQxY50sNzCC8gi8sE4xVhCoDphJwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] nvme: prevent admin controller from smart log
- fetch (LID 2)
-To: Kamaljit Singh <kamaljit.singh1@wdc.com>, kbusch@kernel.org,
- axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: cassel@kernel.org, dlemoal@kernel.org
-References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
- <20250702005830.889217-3-kamaljit.singh1@wdc.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250702005830.889217-3-kamaljit.singh1@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 3ED951F387
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACGkMEtr+Rwu+imU1rLtLLQxY50sNzCC8gi8sE4xVhCoDphJwg@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 7/2/25 02:58, Kamaljit Singh wrote:
-> Similar to a discovery ctrl, prevent an admin-ctrl from getting a smart
-> log. LID 2 is optional for admin controllers to support.
+On Tue, Jul 01, 2025 at 04:00:31PM +0800, Jason Wang wrote:
+> Actually not, it doesn't change how things work for the device that
+> does DMA already like:
 > 
-> In the future when support for the newly added LID=0 (supported log
-> pages) is added, GLP accesses can be made smarter by basing such calls
-> on response from LID=0 reads.
+> If device has its specific mapping ops
+>         go for device specific mapping ops
+> else
+>         go for DMA API
 > 
-> Reference: NVMe Base rev 2.2, sec 3.1.3.5, fig 31.
+> VDUSE is the only user now, and extra indirection has been used for
+> VDUSE even without this series (via abusing DMA API). This series
+> switch from:
 > 
-> Signed-off-by: Kamaljit Singh <kamaljit.singh1@wdc.com>
-> ---
->   drivers/nvme/host/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> virtio core -> DMA API -> VDUSE DMA API -> iova domain ops
 > 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index a1155fb8d5be..c310634e75f3 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -3705,7 +3705,7 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended)
->   
->   	nvme_configure_opal(ctrl, was_suspended);
->   
-> -	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {
-> +	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl) && !nvme_admin_ctrl(ctrl)) {
->   		/*
->   		 * Do not return errors unless we are in a controller reset,
->   		 * the controller works perfectly fine without hwmon.
+> to
+> 
+> virtio core -> virtio map ops -> VDUSE map ops -> iova domain ops
 
-Nope. You said yourself, that log page is optional.
-But that also means that there _might_ be controller who support it.
-If you want to avoid an error here we would need to check if that log
-page is supported, not disable it upfront.
+And that's exaxctly how it should be done.
 
-Cheers,
+Thanks for doing the work!  I'll go through if I find some nitpicks,
+but the concept is the only right one here.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
