@@ -1,153 +1,150 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C6F2D6632;
-	Thu,  3 Jul 2025 09:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C2C2DCF68;
+	Thu,  3 Jul 2025 09:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536564; cv=none; b=q8vlyJ0K/7jSemz060bYZQCbDGv0Fn66fxlTG0FzbSDvEQRCEq8eQQKmz1D2iujlRYlC7x0c0Zy9dAsNn0OMlyXlvRdbNcLpZWszkWGK7qtbbO6/lwVoEHPovFQACryqGxjk+i6LUl+d8N50UTjpdDiHzWeSnMqJ3VVzBo0iSMg=
+	t=1751536573; cv=none; b=EJsOf1WBCXPpIyCwk/FTB906qPttKe0coYPlG2sBBXXYeBuuK9nwkQ4SefLo2oGXyx1m+ASO5/cXAcWhKhqjn99agoAd/HYm/GGaazpAYWpB/8CV7ZqlqVAWyXpPhaXoYAJbvqGAqwNLE99uNRwrFv5mdT2Qgy5rG5ihaQPbFRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536564; c=relaxed/simple;
-	bh=BacjBBfMYBpi9NV3JM7kqy5QRyTAmHqzbPyhsxloO6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TaWdNHyHTqVck+LAaAfNsUQSfhZj7h7ShDoJl9m/QavP3NPCw5AHQvQwHwNghinw4jv50Q5u+tGIs79pEYl1i/zANGqZYhpb4pyacvngDsGI4r6MYsnIxGpgYiH5AfyHYmweuDNwd+5uNKBM5wGNWVbELkH7LwaOXKWb1vFazQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87f30519147so1615750241.0;
-        Thu, 03 Jul 2025 02:56:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751536562; x=1752141362;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NUiiIKD0lUTItPi1CnCx/nn/P2433OkxYlP7+gl/pyc=;
-        b=ElG91yLGETLLoDW88zBmcYAjycmE6oRFsTYaT7BAJ7xpUepVQS58H3vvebYoKzbOSj
-         VD4n17ICsweG8ylua6Fj0RAB4vSO1FsLH35pAl9o5yHc6La9OT78YxCoR/SCRXsz7lT2
-         ITuu+iy70AYNQsmVlM7iIq7ZZOrpjpBMniWmL66/XoJKuH3xcPc3LgRoWE9puouo2IH+
-         G4emMCcbqxc04+l0Ezrr33HAcOu1dzrHgtjzY0mAaE1dZuHG7WLdEGPOnHrdZx/nF1OK
-         uMRWS9bbO1397OdFXSCpn1xj2xV0bubo4zPNKC/c0TOOruYKPOfT7CKt2a42elut6pG8
-         toKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9XTj6keijvDYP45kvkAhy8pN29/4b4mKZLZvTTtOVT8dU1qfbmbj+WHcf23ytxPvcXxxJJcU5gaTx7Vnt@vger.kernel.org, AJvYcCX+SO46T3CJfMa/D9BQhFwIMXeysLPYVXIGc01P4BDWyuWs9BUcEUImhuM56OYZ33Q27es6kR+XMO8Og36SDSjBJsc=@vger.kernel.org, AJvYcCXFvIWOhx3PLQv1LjQEW/utPtM18HzR+W/gtZHkLnQkIJOxVLwgbwmD0/Np9LgTAgVC9wtmQjs/fGrc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkXwb23QRIqEBtUR/HWK7cqRp6raGMtfh0ZksPSrujqtn7vFVy
-	5SVf8a9zPvQdJWgMJrakT9DRQEddhnRwWkDBEGWWO+HQiKWvQh9annfB/Q8G7NWL
-X-Gm-Gg: ASbGncsQKIRYNFulsneLnXFiD19NmYi2aRxC+rZimrm0qwDABwVY2YrunHXbqLGhCn7
-	JoHupPdtip1h2bG3juLWbMc0hMn5f3sz93lFnEBBuJBkRHLAYNcNJ9xCElsUtA4J77qUrtjn6+y
-	Z8+5t9wJFKRYr4oxcQ8Gte2t3zmVJ9LBteyHIPECIm5OMofSb/0mZPF/7LYSAduVyHKjU20H085
-	vkWyvuhqOePIgSTwkmgrYAticnJpECKz0ezZ1LzAYHug6pvMsxKB+Y8Fs1JamanROg44qGor0s7
-	zcQVatjW0qIGjruWqwj6jrxhy110Q0UVA0Q55pERajXV9LrlLu0kSPB/IcFPEJvhY1zGRnD8eu1
-	YRj4RdusmcrhDoooy4d+I8hIUT+BQ
-X-Google-Smtp-Source: AGHT+IG8hEfcI+Jv+G+uBCM9avGAQ2JbDMXly56VC+pQcWOpZpS4Pm3QM1a1g3L7e/RABjoCtJJfPw==
-X-Received: by 2002:a05:6102:3048:b0:4e5:997a:748f with SMTP id ada2fe7eead31-4f1747e464fmr2062406137.22.1751536561597;
-        Thu, 03 Jul 2025 02:56:01 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f1745d469esm236219137.27.2025.07.03.02.56.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 02:56:01 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-53167fb5690so2804870e0c.3;
-        Thu, 03 Jul 2025 02:56:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+xdR2mqsF4+0cim2HLQywddGFzA9ISXGob5mA3ixMK7DyWgFpBgvhMiCw3HHqmwhzgWit9k9HDGrsFawu@vger.kernel.org, AJvYcCWF/EMFExJrxbw8c4J6BC6knYiS1+wPwFFMtWb+iWHFDuQdE4PpBSBdaHVh0DMwjvm/pANB5KobLY8t@vger.kernel.org, AJvYcCX0obQDf0GhbEArzq/zYDLb6F86PFwIun4sOtScZGzz5H2LQLWMPu52ivcCBhZu1tYUwTOnx/lRMxe2BGYz09hcxnE=@vger.kernel.org
-X-Received: by 2002:a05:6122:6216:b0:534:69b3:a230 with SMTP id
- 71dfb90a1353d-53469b41444mr815611e0c.11.1751536561150; Thu, 03 Jul 2025
- 02:56:01 -0700 (PDT)
+	s=arc-20240116; t=1751536573; c=relaxed/simple;
+	bh=yDEfNAy1j7gX923WAV0zbCdun77AkpWmT/YAxb4sIm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rdk+tspb9CimrVxQa8cHSEqcijCkd8Dd6SWKuhFRhVNmYpA8ANWeD3NlwpV+gSXb6ITC4T6Kb3g3Vl9DRfqCEAMeqjHFxkp5hCmpQDn1TVNCJmxswQo6UVIGIipO6mVGWFBn4K7nj26WdmEe1kIXLtqlUMReZGQaG1gKBN3J7Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDOhe0lb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDOhe0lb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD926C4CEE3;
+	Thu,  3 Jul 2025 09:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751536572;
+	bh=yDEfNAy1j7gX923WAV0zbCdun77AkpWmT/YAxb4sIm0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hDOhe0lb3UjIGnpCC4bXn+cIH0RvZIH6s95qY/L17U48s1NMV9ctnk8oKlaGOV1Zy
+	 i0AzEQmTKeL3WuOqvWWrHz2dXTM8Qrz5FP4bYLD3q2EoEPNdY2w5RAiJvee6jODLgW
+	 uZ9rimO04IDH1CtwHcVibqDU2uGMWu4iv5yLNys6YkyLo9NGZ+FIODe2Gb0OyYJwC2
+	 UAtXXKihlUD/Lni5ozBocQ6SJN6TaBVHVX2OSXrVTk/xL12dsfpClhPa37mo/SsOjO
+	 +uX7spCCTcVwoAVYOKMPPMJ1EK6S01b3oBLxBYGL238UjV50/Xl9jnuFq2XWobbwbM
+	 /Ay6ELPPPyd/Q==
+Message-ID: <66fb9c67-8f2b-4ce3-8fcb-f6479a1ea507@kernel.org>
+Date: Thu, 3 Jul 2025 11:56:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625153042.159690-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625153042.159690-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 3 Jul 2025 11:55:49 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVvxebkm9A4g9hADww=9zREXJqyW3eQ6tFVwVJvkUkEOw@mail.gmail.com>
-X-Gm-Features: Ac12FXzW3YNmL7fyTjxzXkgoVv1aLPfErnuGIFoPYkh0a7V_m04VM5PhljaJKrs
-Message-ID: <CAMuHMdVvxebkm9A4g9hADww=9zREXJqyW3eQ6tFVwVJvkUkEOw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] arm64: dts: renesas: r9a09g077: Add SDHI nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: pwm: Add enable-gpios property
+To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+ "lee@kernel.org" <lee@kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "pavel@kernel.org" <pavel@kernel.org>,
+ "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+References: <20250702114759.223925-1-Qing-wu.Li@leica-geosystems.com.cn>
+ <175146290821.1131432.4001907939183416459.robh@kernel.org>
+ <AM9PR06MB79557F8FFA113011C4D824D6D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
+ <e98aa9ed-2d32-4db2-b7f2-a5e5ce1d1d84@kernel.org>
+ <AM9PR06MB7955DCFFBADEF3A56A923D92D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <AM9PR06MB7955DCFFBADEF3A56A923D92D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+On 03/07/2025 10:52, LI Qingwu wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Thursday, July 3, 2025 3:12 PM
+>> To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>; Rob Herring (Arm)
+>> <robh@kernel.org>
+>> Cc: krzk+dt@kernel.org; conor+dt@kernel.org; linux-kernel@vger.kernel.org;
+>> GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>;
+>> lee@kernel.org; devicetree@vger.kernel.org; pavel@kernel.org;
+>> linux-leds@vger.kernel.org
+>> Subject: Re: [PATCH V2 1/2] dt-bindings: leds: pwm: Add enable-gpios property
+>>
+>> This email is not from Hexagon’s Office 365 instance. Please be careful while
+>> clicking links, opening attachments, or replying to this email.
+>>
+>>
+>> On 03/07/2025 05:54, LI Qingwu wrote:
+>>>>
+>>>> On Wed, 02 Jul 2025 19:47:58 +0800, LI Qingwu wrote:
+>>>>> Some PWM LED chips have a dedicated enable GPIO.
+>>>>> This commit adds the support to specify such GPIO.
+>>>>>
+>>>>> Signed-off-by: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/leds/leds-pwm.yaml | 8 ++++++++
+>>>>>  1 file changed, 8 insertions(+)
+>>>>>
+>>>>
+>>>> My bot found errors running 'make dt_binding_check' on your patch:
+>>>>
+>>>> yamllint warnings/errors:
+>>>> ./Documentation/devicetree/bindings/leds/leds-pwm.yaml:44:21: [error]
+>>>> empty value in block mapping (empty-values)
+>>>
+>>> Fixed in V3
+>>
+>> So your answer to my "never tested" was to send again the same as v2 and still
+>> not tested?
+> 
+> Nop,  "Fixed in V3" answer "bot found errors running 'make dt_binding_check'"
+> Testing info comes later in v4
+I responded to you on v1 in the morning my time. 4 hours later you sent
+v2, so what is the "Nop"?
 
-On Wed, 25 Jun 2025 at 17:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add SDHI0-SDHI1 nodes to RZ/T2H ("R9A09G077") SoC DTSI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> @@ -155,6 +155,46 @@ gic: interrupt-controller@83000000 {
->                         interrupt-controller;
->                         interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
->                 };
-> +
-> +               sdhi0: mmc@92080000  {
-> +                       compatible = "renesas,sdhi-r9a09g077",
-> +                                    "renesas,sdhi-r9a09g057";
-> +                       reg = <0x0 0x92080000 0 0x10000>;
-> +                       interrupts = <GIC_SPI 782 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 783 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 1212>,
-
-1112?
-
-> +                                <&cpg CPG_CORE R9A09G077_SDHI_CLKHS>;
-> +                       clock-names = "aclk", "clkh";
-> +                       power-domains = <&cpg>;
-> +                       status = "disabled";
-> +
-> +                       sdhi0_vqmmc: vqmmc-regulator {
-> +                               regulator-name = "SDHI0-VQMMC";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +
-> +               sdhi1: mmc@92090000 {
-> +                       compatible = "renesas,sdhi-r9a09g077",
-> +                                    "renesas,sdhi-r9a09g057";
-> +                       reg = <0x0 0x92090000 0 0x10000>;
-> +                       interrupts = <GIC_SPI 784 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 1213>,
-
-1113?
-
-> +                                <&cpg CPG_CORE R9A09G077_SDHI_CLKHS>;
-> +                       clock-names = "aclk", "clkh";
-> +                       power-domains = <&cpg>;
-> +                       status = "disabled";
-> +
-> +                       sdhi1_vqmmc: vqmmc-regulator {
-> +                               regulator-name = "SDHI1-VQMMC";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               status = "disabled";
-> +                       };
-> +               };
->         };
->
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
