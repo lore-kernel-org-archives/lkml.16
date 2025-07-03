@@ -1,106 +1,157 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8955528E616;
-	Thu,  3 Jul 2025 18:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567308; cv=pass; b=Xnv3yBKLCIdRJk3fQZyyFz4CvsRrxdDqDLLUn8iAXgglriWvWA6e/djjhL9yuCNYsm8uBETwOUSb0xqs4QrBpCGqye5A4CCfVVEraguj/BrzBqHzSgVCxxPBPKjbXWYfJmgwaolZAFEGcPla9ONCnFx+6wKClQNksKY+N+y7M3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751567308; c=relaxed/simple;
-	bh=EIGTeSFGl+y3lSh82LnuwOwDvyKO/NJTdsF2vBpDxJ0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kOI843MKyM6YVuLsI1QxO8QmxAW1U1Gd/6tuQ7HcCwAmMrYOBZieqIr0hJZTx2zP4edATqVagHt78ipdB632TG0fCsBTLyauYv9GA0CssMo7KH9XbVAgkyhas4CvtIFDa/Yb0cPtGs0z3dPFJj7sBlVXJ32A7Gs7JQZz3Zrs/hw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=lB5lACBU; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0F2184524
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 18:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751567395; cv=none; b=LGWRY04ueqE0zlDmI/wSc83T1XCi/TxeauvFQ+SE/eb8KNUBZJNHj+fUYFKF1FsR2+ZNzlXuBmyCjKMR6QcTHQIu3nb0/p46iF+XHvqI+merRHjRsjrI5JOgtZz+OD4l4fE0fYVNCvKeV0iDtJtUcBxHNm34zgaPK4yYzvCScnY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751567395; c=relaxed/simple;
+	bh=/Xd1T8wiq9QS2PQrB8TihU9vnBp9oQciJWaaT5AJXMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lTSsH0DbiwTzmK6ipgBZeuqc+Lw1ZLynsp3YOMVWnRI9FXZ01Ev9GAY0zBwpSsdyzU3fuNKJEjjp47UKmkihK4Xh1j+qT8bKUQKNalQ9p09Nyr4cyyf9GDcrCQcR28xhwEl8ja/dztUM3dxpvM83lq2IzeLj2pDLwejyFYAfgxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ftu3KUDq; arc=none smtp.client-ip=185.125.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="lB5lACBU"
-ARC-Seal: i=1; a=rsa-sha256; t=1751567269; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EAwRzK/atLZp81y99CJDlb538jQm470pWJL4qPIlO8yDaz/DWV2sIUxttUGQHjEl44LLYuE4sHAVToGp3ItB4hvFekOq1tkPgSHMhWmyBO0b+edEooKS8kV0ovrSYr3icN1n4sMdmnLop98XqG7Sk9kEt8I1Ab6bAzG/USpdsiA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751567269; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=EIGTeSFGl+y3lSh82LnuwOwDvyKO/NJTdsF2vBpDxJ0=; 
-	b=oB0LfmZBG66ZUZ/wv2kO3rQ97NauunYjM3/lZhpzefJ4wUSNUf15RztBrKGu7NBuyE4lFC5hwuyj0wBCPTHU3df5Eiq/AV1roJVSMbp0NyYEYnzBRPBNR0yKbmGWAgK0ZHyWewIRMIjFESDHy9RjAEGPSiA7vsdR0h17mRUOduQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751567269;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=EIGTeSFGl+y3lSh82LnuwOwDvyKO/NJTdsF2vBpDxJ0=;
-	b=lB5lACBUqAuSqEfnmk/y2Ek/zH4biccP08KIK/ORsFGlJv/GtpNvLOKD96lJEfkC
-	io0PymrNsahr9NRUjcE28owwMk57ai76yrZR6iFrzMzFSYWU6z6+jjXEMIOVNENEopU
-	OUosdZjl2cu7sFBOMDJ6QRDtaa1d5+CmypeIdqss=
-Received: by mx.zohomail.com with SMTPS id 1751567267207310.7183175991179;
-	Thu, 3 Jul 2025 11:27:47 -0700 (PDT)
-Message-ID: <5bfcd5e059e86a96807426bfc6543209d09b557f.camel@collabora.com>
-Subject: Re: [PATCH 00/10] pmdomain: Partial refactor, support modem and RTFF
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, ulf.hansson@linaro.org, y.oudjana@protonmail.com, 
-	fshao@chromium.org, wenst@chromium.org, lihongbo22@huawei.com, 
-	mandyjh.liu@mediatek.com, mbrugger@suse.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pm@vger.kernel.org, kernel@collabora.com
-Date: Thu, 03 Jul 2025 14:27:45 -0400
-In-Reply-To: <20250703110247.99927-1-angelogioacchino.delregno@collabora.com>
-References: <20250703110247.99927-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ftu3KUDq"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bY5061CGMzVXd;
+	Thu,  3 Jul 2025 20:29:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1751567382;
+	bh=kXS5gqoeMvo9Iem3RQHQuwFAC/FZUccj8O/swd8K6zk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ftu3KUDqesHolrP4UGRnQ2kMVc2Bgl+OIjrXZgpC8wphuh4NghJNqFUl+7I3vFYEi
+	 jBPaYrbyol6zEF3gIhL5srGNviC+B29weXrFOnj3wnYrRcyiiNnRktoLDTK6cVAALV
+	 B91fu/zJ9sgBrXyUbgWiynegCtuiP2sgY0gVqQ/c=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bY5050gtRzt9F;
+	Thu,  3 Jul 2025 20:29:40 +0200 (CEST)
+Date: Thu, 3 Jul 2025 20:29:40 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Song Liu <song@kernel.org>, brauner@kernel.org
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@linux.dev, viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, 
+	mattbobrowski@google.com, m@maowtm.org, neil@brown.name, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v5 bpf-next 2/5] landlock: Use path_walk_parent()
+Message-ID: <20250703.ogh0eis8Ahxu@digikod.net>
+References: <20250617061116.3681325-1-song@kernel.org>
+ <20250617061116.3681325-3-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250617061116.3681325-3-song@kernel.org>
+X-Infomaniak-Routing: alpha
 
-On Thu, 2025-07-03 at 13:02 +0200, AngeloGioacchino Del Regno wrote:
-> This series is a subset of [1], leaving out the Hardware Voter
-> specific
-> bits for MT8196 until the discussion around it reaches a conclusion.
-[..]
-> Compared to v1 in [1]:
-> =C2=A0- Changed mediatek,bus-protection to access-controllers
-> =C2=A0=C2=A0 as suggested by Rob (thanks!)
-> =C2=A0- Added commits to document #access-controller-cells on all of
-> =C2=A0=C2=A0 the access control providers
-[..]
-> [1]
-> https://lore.kernel.org/all/20250623120154.109429-1-angelogioacchino.delr=
-egno@collabora.com
->=20
-> AngeloGioacchino Del Regno (10):
-> =C2=A0 dt-bindings: memory: mtk-smi: Document #access-controller-cells
-> =C2=A0 dt-bindings: clock: mediatek: Document #access-controller-cells
-> =C2=A0 dt-bindings: power: mediatek: Document access-controllers property
-> =C2=A0 pmdomain: mediatek: Refactor bus protection regmaps retrieval
-> =C2=A0 pmdomain: mediatek: Handle SoCs with inverted SRAM power-down bits
-> =C2=A0 pmdomain: mediatek: Move ctl sequences out of power_on/off
-> functions
-> =C2=A0 pmdomain: mediatek: Add support for modem power sequences
-> =C2=A0 pmdomain: mediatek: Add support for RTFF Hardware in MT8196/MT6991
-> =C2=A0 pmdomain: mediatek: Convert all SoCs to new style regmap retrieval
-> =C2=A0 arm64: dts: mediatek: Convert all SoCs to use access-controllers
+On Mon, Jun 16, 2025 at 11:11:13PM -0700, Song Liu wrote:
+> Use path_walk_parent() to walk a path up to its parent.
+> 
+> No functional changes intended.
 
-As already pointed out by rob's bot you're missing adding the
-properties to
+Using this helper actualy fixes the issue highlighted by Al.  Even if it
+was reported after the first version of this patch series, the issue
+should be explained in the commit message and these tags should be
+added:
 
-mediatek,mt8195-sys-clock.yaml
-mediatek,mt8188-sys-clock.yaml
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Closes: https://lore.kernel.org/r/20250529231018.GP2023217@ZenIV
+Fixes: cb2c7d1a1776 ("landlock: Support filesystem access-control")
 
-on patch 2. But other than that, for the whole series (since the tag
-wasn't added from the previous version):
+I like this new helper but we should have a clear plan to be able to
+call such helper in a RCU read-side critical section before we merge
+this series.  We're still waiting for Christian.
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+I sent a patch to fix the handling of disconnected directories for
+Landlock, and it will need to be backported:
+https://lore.kernel.org/all/20250701183812.3201231-1-mic@digikod.net/
+Unfortunately a rebase would be needed for the path_walk_parent patch,
+but I can take it in my tree if everyone is OK.
 
---=20
-Thanks,
+However, users of path_walk_parent() would still have to properly deal
+with such disconnected directories.  The Landlock fix I sent takes a
+safe approach by handling disconnected directories such as only their
+mount point is actually taken into account for access control decision
+(see rationale in the patch series).  I'm wondering if
+path_walk_parent() should not help its users avoid the same issue, or at
+least force them to make an explicit and informed choice.
 
-N=C3=ADcolas
+> 
+> Signed-off-by: Song Liu <song@kernel.org>
+> ---
+>  security/landlock/fs.c | 30 ++++++++----------------------
+>  1 file changed, 8 insertions(+), 22 deletions(-)
+> 
+> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> index 6fee7c20f64d..e26ab8c34dd4 100644
+> --- a/security/landlock/fs.c
+> +++ b/security/landlock/fs.c
+> @@ -837,8 +837,8 @@ static bool is_access_to_paths_allowed(
+>  	 * restriction.
+>  	 */
+>  	while (true) {
+> -		struct dentry *parent_dentry;
+>  		const struct landlock_rule *rule;
+> +		struct path root = {};
+>  
+>  		/*
+>  		 * If at least all accesses allowed on the destination are
+> @@ -895,34 +895,20 @@ static bool is_access_to_paths_allowed(
+>  		/* Stops when a rule from each layer grants access. */
+>  		if (allowed_parent1 && allowed_parent2)
+>  			break;
+> -jump_up:
+> -		if (walker_path.dentry == walker_path.mnt->mnt_root) {
+> -			if (follow_up(&walker_path)) {
+> -				/* Ignores hidden mount points. */
+> -				goto jump_up;
+> -			} else {
+> -				/*
+> -				 * Stops at the real root.  Denies access
+> -				 * because not all layers have granted access.
+> -				 */
+> -				break;
+> -			}
+> -		}
+> -		if (unlikely(IS_ROOT(walker_path.dentry))) {
+> +
+> +		if (unlikely(IS_ROOT(walker_path.dentry)) &&
+> +		    (walker_path.mnt->mnt_flags & MNT_INTERNAL)) {
+
+This would not fit well with the ongoing Landlock fix because
+!MNT_INTERNAL root directories should also be handled specifically, but
+only if they are not mount points.
+
+>  			/*
+>  			 * Stops at disconnected root directories.  Only allows
+>  			 * access to internal filesystems (e.g. nsfs, which is
+>  			 * reachable through /proc/<pid>/ns/<namespace>).
+>  			 */
+> -			if (walker_path.mnt->mnt_flags & MNT_INTERNAL) {
+> -				allowed_parent1 = true;
+> -				allowed_parent2 = true;
+> -			}
+> +			allowed_parent1 = true;
+> +			allowed_parent2 = true;
+>  			break;
+>  		}
+> -		parent_dentry = dget_parent(walker_path.dentry);
+> -		dput(walker_path.dentry);
+> -		walker_path.dentry = parent_dentry;
+> +		if (path_walk_parent(&walker_path, &root))
+> +			break;
+>  	}
+>  	path_put(&walker_path);
+>  
+> -- 
+> 2.47.1
+> 
+> 
