@@ -1,96 +1,98 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1633230D14
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F254230D14;
+	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579760; cv=none; b=FbT1BBqzmUzuLH0UClF7RENo14CcxOM4OaZtRrsdXunofSZ+sK0KRuV/pJILU6gZu3Hjww7044OXja8fugMdxgH2L4BqAfPeidmmejSnhhKBy1z0mVslLu95kdfQ9ool9e9BaeceT5dmJG3VZJJ2A0TxtJatm8J3HN9z8cXSV2A=
+	t=1751579825; cv=none; b=iL7cl76U0CVslNUqrRAqG2463V9R0gscKYnEDNo173UPjl1BYYz5RsbXx4MCVWL2oWyGoWzw5KyfWhHivcwWuXqroJ/SwCY3wku6PMbsFOg/knDTUGTEeJpNvyyT+XDFFmvobJiPK7AlrtxqeUkMqwNpouKpTbCi5T40LUwOhho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579760; c=relaxed/simple;
-	bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WgMNXe5uKa+aL7ZDh6k6z/LJ/1pBmaQjZjS6TDRl/aWHY584yHdwjz15wERyJgNXyJyCekq78KAGWycCmi1NxqcpzSlDSq7e2YibvlzV3MeDmb77xoiM0CZtORS3NtoRkm4T4Pbg5Y4BVe0OXU6leUIGLGh110gki1NkTIu4nE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWyqy1IB; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751579825; c=relaxed/simple;
+	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZUmHjEs134l3+qUwnGEld6/7FzkPM0MCG/AjQkpxCckwLPQsuFvdzLMIXn+TZtXYlnyYjE/Pm1djbBuG6kfUAwraDiQHCc+opcjwpjZ8/nduZPQQVanhIfBuoAdfrGCNZ2cpRT8usbwoqK/6UrIo4mvDtRwPhZfADRW6kTkJ82E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U28/K6/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWyqy1IB"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32cd0dfbdb8so3093301fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 14:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751579757; x=1752184557; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
-        b=bWyqy1IBCzRXd2OHO7XovA2Oxu+XZE2bCT5SzIaPA2UEjDiZal6gMhXBU5cVNLIyzK
-         R96ovz7e5B41iyeJ6fwBMfRg3FKWGvor1RkZe5DLD3Ky0UfJe2ZZxdREYlSh9Mk6kSb+
-         41Lx0zrFd9hZmiT5mxZ79rKQB4Tm7lixfmEGO375L2pKK5ZuTBxauQ7coFhrytSi2568
-         UX58opaRHQPy+Zx0i18uVjXh0vThBXv+qcGbV6+kethHeRgUY4/QR2BuMqNFFkZr08cq
-         WCSGAK7Gf3bYdS6VjhlzG9AP4hJt6eYYUJ4MisKBbNZ+OEU+/uN1thDuhF7Mty4O5XB1
-         uavw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751579757; x=1752184557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
-        b=ffwiiWCNRnbVN8cneQ7qh2TgyCA/6kK60L8UIQkcNZIQuhPS6NiPgq7oxAHMqzHri7
-         Qxm79YMRrgzhtceTEuER05HQE7ndI0ennAPCjE2rZBANLI9iAUd4QfW7kV+XR1ZFgsXl
-         N63wsSldhALmjQFmAIE3jEzApBxwv21HVDr5sLFFWFzmcYx32szdaCxBQLkA+qiWjluu
-         2quz+9UJnD9xHTaGfJmZ68Ig+hY2YvFv6CDXzWbWCrOtRLBoZF/VumvDQTEDCDwDGVsQ
-         J8B2QaJ0mUkSbr393V42+CHJrORZc793fd7KfLXyjeH4fAapj6qO/vZHlR+7jhRR+Y6t
-         B80A==
-X-Forwarded-Encrypted: i=1; AJvYcCXkFmvNO95j0UgBJGPSDaPN+kZJvhhyWOiKy3ZG3JhNzg8E3UMT5mimzpitvF4VbBmXd3ctvLdb/On3+n8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzunKCXggh1Cxv8z+zk88ZTCo9MD5q8ajeI4icanLk+TZWwKnia
-	gn3hZUp7bmshw5ZDavJlSCXiQI+R0vUP3s3yFb6Ysa7jl4ezkKIqjL4P85xnMwlO7rbyVvBVicZ
-	oizj+cXSwdl/zMpEVx6p7WPoXypAinGjOkAbOQ1Knvw==
-X-Gm-Gg: ASbGncvMACfg32SDtZBCbWWi0Sb9zy5rapfxzLq+IGtCXIgKOkwx7rS2lqfwu/u/sBJ
-	31YTnrqC8SOzseLhfsoOjrGltOOBsLgeL7UUzbibCxnJj/h9TBFdWFwKL9gaUxAsrdsVzyi2wJj
-	g73hJVNjeMr9L1Rq7FSUIzS6m0SeYMdPhaJI6dcGpRBb4=
-X-Google-Smtp-Source: AGHT+IHaNTjaTi4rRrNiknGoZhKdAy0nR6vSTWwutP5sj+WgtzM1iPq+I6faszK16by8wPiLXBJSSCeRTyl3tRP9WBs=
-X-Received: by 2002:a2e:a9a0:0:b0:32a:8153:6934 with SMTP id
- 38308e7fff4ca-32e5a4b393bmr565651fa.1.1751579756933; Thu, 03 Jul 2025
- 14:55:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U28/K6/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE31C4CEE3;
+	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751579825;
+	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U28/K6/JfF56Rc+NVoYoPLT8SKPqnqwsagT17avDyskR/ynownshy4LFLdhKRnlRP
+	 iilMUUHz4bw5FS6V8uj+mpC0qnBJnyklKkOEsNZHvynwU13LsgDNTsJxuCaYc0dYuB
+	 WNqI6EJaxGEqQnE4K/u04PjgXmu/dTUXnGMf1xu3DIK0ZUvQ2DI5Oc4CfdVX7hBh9b
+	 bRAe2BYkyWYperkwd3i0Stt7nfNIOn1gnUIIPFPrbMC39Ng3ssjfiJHLJMjpVpPnq6
+	 3LyfesIzKM0WFbPJESM24wymGY5rcRWSqPMG7crxlN+h0jNHBSz3ToSK6r4OQaYFVS
+	 0huPc8uzI1BCw==
+Date: Thu, 3 Jul 2025 14:57:04 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+	Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
+ array member
+Message-ID: <202507031448.C3DAD52@keescook>
+References: <20250703171933.253654-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
- <20250625-gpiochip-set-rv-gpio-round2-v1-12-bc110a3b52ff@linaro.org>
-In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-12-bc110a3b52ff@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 3 Jul 2025 23:55:46 +0200
-X-Gm-Features: Ac12FXyJ5knyp1mOJyZQmth8ooUCQJdl18NRhMK4RYZjhZxWH_hhFCTHLqF6V_M
-Message-ID: <CACRpkdZ7B7FZtU6a+n8qcvNhhuqhzeZ=jfs+xQPqAWLa5n2LAw@mail.gmail.com>
-Subject: Re: [PATCH 12/12] gpio: tc3589x: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, Andy Shevchenko <andy@kernel.org>, 
-	Thorsten Scherer <t.scherer@eckelmann.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703171933.253654-2-thorsten.blum@linux.dev>
 
-On Wed, Jun 25, 2025 at 12:33=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Thu, Jul 03, 2025 at 07:19:34PM +0200, Thorsten Blum wrote:
+> Replace the deprecated zero-length array with a modern flexible array
+> member in the struct zstd_ctx.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Oh, weird. This is a very recent change. This should include:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: f5ad93ffb541 ("crypto: zstd - convert to acomp")
 
-Yours,
-Linus Walleij
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  crypto/zstd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/crypto/zstd.c b/crypto/zstd.c
+> index 657e0cf7b952..c489976c3e8b 100644
+> --- a/crypto/zstd.c
+> +++ b/crypto/zstd.c
+> @@ -25,7 +25,7 @@ struct zstd_ctx {
+>  	zstd_dctx *dctx;
+>  	size_t wksp_size;
+>  	zstd_parameters params;
+> -	u8 wksp[0] __aligned(8);
+> +	u8 wksp[] __aligned(8);
+
+And likely, to use __counted_by(wksp_size)
+
+I'm surprised checkpatch.pl didn't warn, but I guess the __aligned
+confused the script?
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-Kees
+
+>  };
+>  
+>  static DEFINE_MUTEX(zstd_stream_lock);
+> -- 
+> 2.50.0
+> 
+> 
+
+-- 
+Kees Cook
