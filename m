@@ -1,132 +1,114 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EEB2D3A71
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EB32D3A86;
+	Thu,  3 Jul 2025 08:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751532313; cv=none; b=CHXYvAsBOWsMw//OmZYlEttSGkBSdXCVQDmF6xMl0YOgso5QouHdx+KBJ1n29LsmzcBxv/b03hNE9+oOjAehzMpcXq+bFdZZjxI0zL8IBmTxzMgnuka9T21D3NGZutFlxy4ps7s5flUDrQ81lzz1M5Ktr3aYrnd5D0cA9xdCRl4=
+	t=1751532317; cv=none; b=ghcc6ma8Cd3B8uMwvsX6puc1EcPGNhCouHiQhhVglQIdNmZSUet4sQ4G/TBlN/9BiWC2ES3R5hLZvF+G7vAoAoVDzR0WYivejWr8U9mCLgz/YeoqNjXUK8YTaTbTH0aCwwctXXHplPOiup2TasIEkvues5JQv8vL+fbpwSx3eqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751532313; c=relaxed/simple;
-	bh=Z4RUc6Gbwf0nFs7S38pgF7gJ69XRpnkcl9klBzAiOQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K7bswzQqkxk5T+4C0kY/9dKQ5XScNR5cHADArMA4BoNh8RDNgkYqB1VcaiaCBDm1W6upJXzTYuBpLcKiIZAr1CeaB4neMG3QGZ7bGjPN/VlsMnqr/Sv3vTMJm13Fu1eVGrU02e1XUaGwQL1dsH4RiLj81/ZX+jm+G3eIucEC+XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lb0pWSSX; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751532317; c=relaxed/simple;
+	bh=fACPwdKa9I+gICnB9XJcGx1Obt64T2jRw8e7fPeXt0k=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FCyrO9yP/gYNdHtYkhTGGldXpzu+jIGIubYRllCJz3EWuVoWiQx/by2wvm1lSnvDQpFOfST/mLueef0wE5v3+OUGoxerdVZpVYr7dUWZcGr3OXYaSW/6Sz/Yy30E0ALZIUSEEgK8+9tTpw8Azvn0DZoMJP3YaKVafP7cX6erw84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YHO0dAD9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/VWYGn7X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lb0pWSSX"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so8287463b3a.0;
-        Thu, 03 Jul 2025 01:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751532311; x=1752137111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3Z107VnaAMLtYbjfxHTZ3Ws4rPY5VMWknkGImN8dII=;
-        b=lb0pWSSX0T6p+GE6061wGOuB5yct9Doc11N79oT4GhJw8xAhqpvVuJRbe1hjs3JKM4
-         M33z/e7LbK8SUtl6FOs5PwrKVKTCfcsfSlXzcZAJ6GA4Mib7X2YFhT3lOykYD9IrDHOB
-         kzzkNyKxoJHUG+bH5cDcigMBwnnZT6aRl0L70fgPhgNjGdYkIhLprltnoYd+cdlzVcAs
-         3AB5IoJcnVBHYuTlDfLWYXgUC8i1LyAIdzrSCIk/8iPFWtNWMJS6jNCFJOWhitKtkl7J
-         iJs8TX2CYS8Pjht5WV03gckmSHIjgeu3TT+ZOYLkWKgCE0gNGxGsb2+MDHFUOSykNEFk
-         IIXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751532311; x=1752137111;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D3Z107VnaAMLtYbjfxHTZ3Ws4rPY5VMWknkGImN8dII=;
-        b=oprCFLaelvE2xJlWhyyyMfqF3dw8vrSmS572wNt27aPaI/UzRQIIZD/8J2n33l9bJ5
-         4dVFQuianyDqnhJT6lRvdsDc+LJKeuOCAovWqsvB0o64xllrGQONF131CKOoBM/3LUcp
-         Vb1X804HiAY8LbuTN3VTmbKnJwozdkjW4x6JI6gnn90d/otDwCMd4a/eggd6UJUrESTs
-         22VwTJjestfy1S/x76deVY1y0JyBk1HXo3upUNLqnBw1mBLIdXUJ+iePuigweOgVi1Y2
-         ZX8N3MsU6blxY7j6VvdoEGpdA3bDkUGIFHD80dJtMbIYK25eGOYOAyGwTqU1hGeYRx06
-         S4mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZo5ezZ7Zvu8Mt4UNDiW2SCFtWf1srU4k8Pg9GEAMzIz9rZ0rObX9J1dnjtI0WJMO3CK3UiJ7UR8g4r54=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywej+OXQ8n8DI0iiLbpF8t4CrCdYv6kK1aG0NVE6kRbwmW9E3wS
-	JmvLdPEJX/SXc7H4nvc2AlnYRPKUmd50lbQF2ypdqMMiUsxFDSJ0W0we1jmnkQmQlv1CtFpf
-X-Gm-Gg: ASbGncuE/BBksXSblLMNcJNP80HdrYHVaEVHioo9bRVJRhkkBHg1PS5j89w/p4fd5fX
-	W3ryuJsJosCLRDx1e5jmuzKrPT9gyI49j0/gSHR+6Jh8c790KZBiyDaje/jH14quKemX1QUMWbv
-	SJlZQuq5tjdsqn/f5fjJeDB9LGGOfviDc3Z9hTyY09b5IDLrfOVls8EdnrUkqUEe/619llMxrlL
-	FJS2v24k3oNSt4syufRM9aAREpY6gdHMXcuGNqfJNUFAPC4U0fIXuy02jKrXYEtc8mGrQOUxWcP
-	R00M7s/k4t8ouqxcPg/j3RGMn+bciWVcvJv9cm2Np+Oj05EziTWLFBt31g==
-X-Google-Smtp-Source: AGHT+IEnjPIE4RkD8yeyExMffXHw1vkN2HUWnhx/66EOeXkQyVnH+BLsxBWYvtQaheJO0JIaL9o5zA==
-X-Received: by 2002:a05:6a21:498:b0:21a:e751:e048 with SMTP id adf61e73a8af0-222d7f086f0mr11000209637.35.1751532311182;
-        Thu, 03 Jul 2025 01:45:11 -0700 (PDT)
-Received: from nyaos.. ([202.212.79.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3023a11sm12982398a12.25.2025.07.03.01.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 01:45:10 -0700 (PDT)
-From: ChenMiao <chenmiao.ku@gmail.com>
-To: Linux RISCV <linux-riscv@vger.kernel.org>
-Cc: chenmiao <chenmiao.ku@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE selection
-Date: Thu,  3 Jul 2025 08:45:02 +0000
-Message-ID: <20250703084502.394406-1-chenmiao.ku@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YHO0dAD9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/VWYGn7X"
+Date: Thu, 03 Jul 2025 08:45:13 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751532314;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c+L67L7e2SGYbC7kdFozrW8IzHhFOq27DJdOXABdcBQ=;
+	b=YHO0dAD94f5CeGeGW9D2sKY2SCjRx3HVxTeMJCfOZIEbxgqt6aWs3vDAPhc8Ntu8Ly27qp
+	PgV4Nu/pqzDt6JzChzxDxBiqIyMIaQr0boqhkLc8sqRP0uWOd870UteB0wP4u0mKwgu0hc
+	Dth9PBYE74/XCoe/XRgbGseRyLa2MZGrnpgXxQvFqGP11WK6q+A/ov5cZKpEXxGfPlgH2h
+	yI3a52D9zY8y9jAUig4pMg80WSr5k+BTeH2rxpdrEpxKxa4XVsWww1+WxfAvJQg+dFdj3q
+	QcZijM/2DM94cT39suaUPLsXPiyPRTPzxq+WAE3u4BgprTiqDmtUkEQB701fQg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751532314;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c+L67L7e2SGYbC7kdFozrW8IzHhFOq27DJdOXABdcBQ=;
+	b=/VWYGn7Xq/ESJ6xHGWbbWWB3+NnldQTuL8TLAfw48WYp7L34EPmDqgCeYAAjuxfOH0KrtZ
+	WdItPjO+vkh2gYAA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: perf/urgent] perf: Revert to requiring CAP_SYS_ADMIN for uprobes
+Cc: Jann Horn <jannh@google.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
+References:
+ <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <175153231306.406.639427734132565496.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: chenmiao <chenmiao.ku@gmail.com>
+The following commit has been merged into the perf/urgent branch of tip:
 
-When I was reading the source code of ftrace, I learned that
-ftrace has two types: static and dynamic. Initially, I planned
-to prioritize reading the static source code, so I disabled
-the enable dynamic option in RISCV.
+Commit-ID:     ba677dbe77af5ffe6204e0f3f547f3ba059c6302
+Gitweb:        https://git.kernel.org/tip/ba677dbe77af5ffe6204e0f3f547f3ba059c6302
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 02 Jul 2025 18:21:44 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 03 Jul 2025 10:33:55 +02:00
 
-[*]   Kernel Function Tracer
-[ ]   Kernel Function Graph Tracer
-[ ]   enable/disable function tracing dynamically (NEW)
+perf: Revert to requiring CAP_SYS_ADMIN for uprobes
 
-However, when I tried to compile it, the build failed.
+Jann reports that uprobes can be used destructively when used in the
+middle of an instruction. The kernel only verifies there is a valid
+instruction at the requested offset, but due to variable instruction
+length cannot determine if this is an instruction as seen by the
+intended execution stream.
 
-./include/linux/ftrace.h:190:16: error: implicit declaration of
-function ‘arch_ftrace_get_regs’; did you mean ‘arch_ftrace_regs’?
-[-Wimplicit-function-declaration]
-  190 |         return arch_ftrace_get_regs(fregs);
-      |                ^~~~~~~~~~~~~~~~~~~~
-      |                arch_ftrace_regs
+Additionally, Mark Rutland notes that on architectures that mix data
+in the text segment (like arm64), a similar things can be done if the
+data word is 'mistaken' for an instruction.
 
-After comparing it with the ARM64 architecture, I found that
-ARM64 automatically enables DYNAMIC_FTRACE by default once
-FUNCTION_TRACER is turned on, and this cannot be set to "no".
-Therefore, I believe the optional DYNAMIC_FTRACE setting in
-RISC-V has a logic flaw—if FUNCTION_TRACER is enabled,
-DYNAMIC_FTRACE should also be enabled, and vice versa. Moreover,
-it's clear that RISC-V lacks the necessary support to successfully
-compile the kernel when DYNAMIC_FTRACE is disabled.
+As such, require CAP_SYS_ADMIN for uprobes.
 
-[*]   Kernel Function Tracer
-[ ]   Kernel Function Graph Tracer
--*-   enable/disable function tracing dynamically
-
-Signed-off-by: chenmiao <chenmiao.ku@gmail.com>
+Fixes: c9e0924e5c2b ("perf/core: open access to probes for CAP_PERFMON privileged process")
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com
 ---
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 36061f473..f7fc8b460 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -97,6 +97,7 @@ config RISCV
- 	select CLONE_BACKWARDS
- 	select COMMON_CLK
- 	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
-+	select DYNAMIC_FTRACE if FUNCTION_TRACER
- 	select EDAC_SUPPORT
- 	select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYNAMIC_FTRACE)
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if DYNAMIC_FTRACE
--- 
-2.45.2
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bf2118c..0db36b2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11116,7 +11116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+ 	if (event->attr.type != perf_uprobe.type)
+ 		return -ENOENT;
+ 
+-	if (!perfmon_capable())
++	if (!capable(CAP_SYS_ADMIN))
+ 		return -EACCES;
+ 
+ 	/*
