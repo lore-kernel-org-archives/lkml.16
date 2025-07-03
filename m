@@ -1,116 +1,166 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAE3126BFF;
-	Thu,  3 Jul 2025 14:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C14B2ED85E;
+	Thu,  3 Jul 2025 14:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751554225; cv=none; b=BIG2qIk6AnYhU7i0yNaJgG934tA2kPGumkQK9jSS8QwXy7AMQcnlkK+LuBjxKMwDBoWel/A8vgaCO3m07uFqTDZViZnnnLJerNZKAO39MmSMziHSIPsdTaY4ezMM/US4JGPWraUC8eOf8P7QU92w5deqUdMd+0eaHIhB31m/9cI=
+	t=1751554247; cv=none; b=XB/wDj5HOXBTK9b1fJiBVxd7uLKeNM2tXim9tfg94f3lJrHmAVeJdvesdSa52qskbao1MeLaA2Nix3XYINzFsxjV3F/ub84SyAHbAswsmdXgV5A1k2Dm1vmH/TRhlNyosemLdcCFVcpBU8gvCNbYM4vAsOnfSFqumM9tpzJKtLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751554225; c=relaxed/simple;
-	bh=wAu0Srl3KlrnuOT7XKfRmg7X9fvoPiPkkGiyEdQ4yjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p7ol+aHT38OZOczjTXFOBN52P8rjoEHx1QSC14z+4CFmmAR7V7cpo/om9z/7oZ3rpSNP/ucX98y3wdjexuDP9Ocfg+dmME1ft4BnKZSivS3A0QpL8jln6BjfYgdgNI7m4jK6sjXX/q4m/WofZHkOdpZJ1jDtk3ljePoOouZfY3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXCos5Wk; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751554247; c=relaxed/simple;
+	bh=uk6nLy8qmqW49ZT/udjHfsqtbcPLKiTAsnFtafAEi9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fL9NnTQfo8iptBbRXIWDFreN8pA59Cp8CmqWAPtfEhNRWJ5kZKeVIgd5/csf9oMejkAyZmQ724ij9F50FVFS21K2uo4uy1dy3pIyh1hu09DChrr7dupCHr/0xa7jaOjcPFw3+cU4Q3gV53h07kkP2IP6yCjzqjIAQvl5AOTsVbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xb7GqeE0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXCos5Wk"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fafd3cc8f9so95093996d6.3;
-        Thu, 03 Jul 2025 07:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751554222; x=1752159022; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wAu0Srl3KlrnuOT7XKfRmg7X9fvoPiPkkGiyEdQ4yjw=;
-        b=NXCos5Wk4jvJPPIGntAKmdZtpiymu1+RKsOOIPmfV1FbwTvQ+ow/8BHGg7ADXKHM7U
-         SRA+yu12jnbaxJGgwUEHKMQQOasB2nFOzjnaO6fJO0lX2wrHOK7kEJngHD+B9WdUweaA
-         vTOtFZ/lhITBf2Y6RGNiQxChDl8qBGJxC6iruHED4Rr1tLj0ZCMLJG5F2uv85qn/eYxY
-         gKdjzjrxo3Ep2vXOrgajnCmSdNAkPboPGrCSkIscZtxiCFDBzmoqySKuYU7smUkb5WeY
-         C7mGtV5X2ne/BG0su3pIEXXrGNF2/GUcbKm1SXUFaeAN3jAzwbriYy7l06pT8h0EBm2m
-         CPvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751554222; x=1752159022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wAu0Srl3KlrnuOT7XKfRmg7X9fvoPiPkkGiyEdQ4yjw=;
-        b=EufkUfSb+EZ8IdWq85H4rLadOyKvbyw0U27UHXylumM2XOPTc95Pas6APc1v5ov0yD
-         6T0LmnAsUpYp8CnxzTXViSBFhZevWJQxprKT+dV8chmOntoKy/FsmXaFW/8YoM5tx29b
-         TvnUOHVVrCldSZSxDYYfgZDeoxnUxzu+/qQtaB1GgDJayeAGCMf1+aaYO/Hij6dJgdnv
-         uEHGprjyEqCOQVcq9cDiOCzh4ck2EXzNKA4nC03dQflpT3jn5dosR/wuHGOSn+iuMf/5
-         ZsHNZuCJ5Xkm8TffMec8FmdtpBeEKXI8mI90KrI868xNC7BFlQQg+9JpiU3zNgOVvAwH
-         YLjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGDiGnc2GFx3XOHW/moCQUtOda7nflhEQJBZONLRDLMJEEW1bNBiKEvcOc73+s+ZmpBYXm5JbJpbrLhb/F@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmFXGDkoSDGJZtTRtsfZTXoGWgbWRtRpksFx4GC5C6PIu8OUwz
-	JGDxqzIFmlpn3+WL43Z+AAjg+YukNvVfslOriz5LuCOkb5lSxuy8qOs2Q21BarhEqb6cFrkMoff
-	AcwMoDCk6FuMmu9vX31/3IR2E7ID9TIU=
-X-Gm-Gg: ASbGncv9nPYWRT5JKYJfR7yRZ1S+XsBjPGP49HA8Zv1ZR6kk6c69G0jK5/rmP4WaeNN
-	dh3QizctqcqWrtUdtQfxdJZpFIMiLIBFzTYk479KnT/kHTcf2RMJvJc59xo2MrDcHFlB4ao7EFH
-	PdCEzpO6ZP6QY/QveuCu2BHQsoDvSNocWI3zHi+OCGIDZxroc=
-X-Google-Smtp-Source: AGHT+IHam6lHXqujRmliCd8fP53JY0cmIKecpqja2QUPkFqqfyOqhuHsgnCtrvS2/8TMwwLErUkaLQ0u6woBONIJHz8=
-X-Received: by 2002:ad4:5966:0:b0:6ff:16da:ae22 with SMTP id
- 6a1803df08f44-702bc8c8946mr56172046d6.17.1751554222280; Thu, 03 Jul 2025
- 07:50:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xb7GqeE0"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5637tVk2024499;
+	Thu, 3 Jul 2025 14:50:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9YMey3
+	siK0wqCW94xx52T29gHvYnSHgMxewAlTL36Sc=; b=Xb7GqeE0Ka16QsK2x1h1/g
+	kjn6/hLU2kGhaMO8qHz8vqnpzA05xGuJoFeohppV9BCfk6wmetUaUPLPNRZDXBwo
+	sTI+bHEzHnI2tXdlpHnCXZQlhcdGnL574YN0e/mPJnj7De+LHG8ZEVPZaoZzIe6N
+	It84Lnhn7sFQU5NhwA8Qu/c29J2D1oMIp8cSSMXkTWJ029am+UJN1fIiR5/CO3tS
+	LEQDA8rd23vvX8fLe8h95REamA14wQygQNzzvu4C94Hb2gfH9Tsn3iNALrEx03xu
+	euuHIzgF0mhMR+yqEgCj0SR7dk2ma2OkDycjY967FQ2aA9VRffg7kyRGoCTCdZWg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j8314fm0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 14:50:25 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563EmXvm009354;
+	Thu, 3 Jul 2025 14:50:24 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j8314fkx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 14:50:24 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563EmbvK021385;
+	Thu, 3 Jul 2025 14:50:23 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jwe3n49w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 14:50:23 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563EoMZB25952806
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 14:50:22 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7ADD258059;
+	Thu,  3 Jul 2025 14:50:22 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C0FA58043;
+	Thu,  3 Jul 2025 14:50:17 +0000 (GMT)
+Received: from [9.109.245.113] (unknown [9.109.245.113])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 14:50:16 +0000 (GMT)
+Message-ID: <8e7dbebe-59c5-42cc-bc44-570842b8e82c@linux.ibm.com>
+Date: Thu, 3 Jul 2025 20:20:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617154345.2494405-1-david@redhat.com> <20250617154345.2494405-2-david@redhat.com>
-In-Reply-To: <20250617154345.2494405-2-david@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 3 Jul 2025 22:50:09 +0800
-X-Gm-Features: Ac12FXy9pobZ-Tyl0lhkLRCeovsWyWwet9l7NdvI0FrXp3EdnqPiHRcREj1ytcE
-Message-ID: <CABzRoyaea-qmw4JsA85H4QgRAEPPXWKuq2z2Bi41hEXMKifnjg@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
- in vm_normal_page()
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, nvdimm@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Alistair Popple <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] selftests/mm: Add support to test 4PB VA on PPC64
+To: Zi Yan <ziy@nvidia.com>, Aboorva Devarajan <aboorvad@linux.ibm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+        lorenzo.stoakes@oracle.com, shuah@kernel.org, pfalcato@suse.de,
+        david@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com,
+        ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
+References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+ <20250703060656.54345-3-aboorvad@linux.ibm.com>
+ <5FA05361-1FA8-4CAA-AF23-7BB0974DA78B@nvidia.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <5FA05361-1FA8-4CAA-AF23-7BB0974DA78B@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TfIyuWwW6FDd5tr5QLsQNmpp_EvBf-eo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEyNSBTYWx0ZWRfX7to6koSyXMzN J3j2/Lz/QeMgvqWVX5bwlcBr5cZzYCoJKFka6CrYoNdojMfbyrsThtsgfhiuFOnYVTUUS5ksOJ0 LkXGbEoNgSUFjjGX5/6Biqca8V8E6tW7YSN8+1HpgLbLoAT5iiYPAAQ/Ki0OazoPQBF5r/eq+pz
+ bcX2VJiYxh1ioG4OW23S/Uyd11R4/UP6Kn+fSvh0zvf55dudBvGRA+gbW4Wcw6O7npjj3b48qjE JTj9rOv4Op/WFZcN6mOsJ3m9rh3Ca2l9+Zey/4AL/RfOZdOjq77x7GRvdcotA0tB+/jpu37FU98 ExeLt+HA0kNL00yX8BcF8h0njI/IR/ONMjFQMjK4eSW27AosBXZe8sI5+nThbdem2RyDaV0XnZR
+ pcAYxlGyN6KnJK0CFZWSJlvtZ8U3z0b0WFIDbP2v+YNQ28Sh5mCngWduFqG+NkTgdFlxRq07
+X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=686698b1 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=Ikd4Dj_1AAAA:8 a=R9CAwAD-EEtMngcwLj8A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: lgvv0nC3QP17oZr9MFbZFZXwQiTKAVGo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030125
 
-On Tue, Jun 17, 2025 at 11:44=E2=80=AFPM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
-> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
-> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
-> readily available.
->
-> Nowadays, this is the last remaining highest_memmap_pfn user, and this
-> sanity check is not really triggering ... frequently.
->
-> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
-> simplify and get rid of highest_memmap_pfn. Checking for
-> pfn_to_online_page() might be even better, but it would not handle
-> ZONE_DEVICE properly.
->
-> Do the same in vm_normal_page_pmd(), where we don't even report a
-> problem at all ...
->
-> What might be better in the future is having a runtime option like
-> page-table-check to enable such checks dynamically on-demand. Something
-> for the future.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-LGTM. Feel free to add:
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+On 7/3/25 8:11 PM, Zi Yan wrote:
+> On 3 Jul 2025, at 2:06, Aboorva Devarajan wrote:
+>
+>> From: Donet Tom <donettom@linux.ibm.com>
+>>
+>> PowerPC64 supports a 4PB virtual address space, but this test was
+>> previously limited to 512TB. This patch extends the coverage up to
+>> the full 4PB VA range on PowerPC64.
+>>
+>> Memory from 0 to 128TB is allocated without an address hint, while
+>> allocations from 128TB to 4PB use a hint address.
+>>
+>> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+>> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>> ---
+>>   tools/testing/selftests/mm/virtual_address_range.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
+>> index e24c36a39f22..619acf0b9239 100644
+>> --- a/tools/testing/selftests/mm/virtual_address_range.c
+>> +++ b/tools/testing/selftests/mm/virtual_address_range.c
+>> @@ -50,6 +50,7 @@
+>>   #define NR_CHUNKS_256TB   (NR_CHUNKS_128TB * 2UL)
+>>   #define NR_CHUNKS_384TB   (NR_CHUNKS_128TB * 3UL)
+>>   #define NR_CHUNKS_3840TB  (NR_CHUNKS_128TB * 30UL)
+>> +#define NR_CHUNKS_3968TB  (NR_CHUNKS_128TB * 31UL)
+>>
+>>   #define ADDR_MARK_128TB  (1UL << 47) /* First address beyond 128TB */
+>>   #define ADDR_MARK_256TB  (1UL << 48) /* First address beyond 256TB */
+>> @@ -59,6 +60,11 @@
+>>   #define HIGH_ADDR_SHIFT 49
+>>   #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
+>>   #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
+>> +#elif defined(__PPC64__)
+>> +#define HIGH_ADDR_MARK  ADDR_MARK_128TB
+>> +#define HIGH_ADDR_SHIFT 48
+>> +#define NR_CHUNKS_LOW   NR_CHUNKS_128TB
+>> +#define NR_CHUNKS_HIGH  NR_CHUNKS_3968TB
+>>   #else
+>>   #define HIGH_ADDR_MARK  ADDR_MARK_128TB
+>>   #define HIGH_ADDR_SHIFT 48
+> Could you also update the comment above this code to say PowerPC64 also
+> supports 4PB virtual address space?
 
-Thanks,
-Lance
+
+Sure. I will add
+
+
+>
+>  From the comment, arm64 supports 4PB but its NR_CHUNKS_HIGH is only 3840TB,
+> whereas PowerPC64 here can get to 3968TB. I do not know why arm64’s
+> 4PB is smaller. ;)
+>
+> Otherwise, the patch looks good to me.
+>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+>
+> Best Regards,
+> Yan, Zi
