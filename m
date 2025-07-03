@@ -1,157 +1,124 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46534258CDC;
-	Thu,  3 Jul 2025 16:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60468231845
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561913; cv=none; b=a2Pd17K+X6yfzu8yOEPHoXA5p0LVunffEGeH0CPo7p2/AVIxQYrCStAogL74tWlIWPWL/uenPx0Q40r29vpSSBrMjyUoVvrDTSzR/TVCHlis+Lezf6X3twtvw5lQaq/aik6jtkfLNcSRHGLw0qnaUXdlpVFfdsUcs/ppvDNN8g4=
+	t=1751562117; cv=none; b=mDmRAuPoff5g7R8CWzp6jh+ZU3gLMTkWm4ZLMeW4M4HiWcPeIc+xjWBfbCidzZu7kWNO1yUMa3+R1LK/UbyuXeMKVorbFxDlvB3nYRYRQ4x0UFdHfrjW9ncZ57BhOy7NA8YzkcxdYqN+Cb1TtReIC+xIOlxZ1T+ffdsn/DnK1C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561913; c=relaxed/simple;
-	bh=exFRltBZ/xeP4dmW57mF1WF3LqGWGFdS7kYw9lBwwDI=;
+	s=arc-20240116; t=1751562117; c=relaxed/simple;
+	bh=kM7rWDRXYZslPAwvUjI0S1vtqE3V3/5uSDlQQKhDaA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qsM52l8Bw9JOcWS/jvuaZh1i4Gh9GhtL/gTDoR0arXvJj/OKfFkvCHTa3QsxfLBlQWbyZulZj2RihUcTkbrvRpG7U5UNgajEpfzC/lhDH33I+K8rRrJtViQmqA3OVVsej3T6xJKLdH+OZSJ4YmOLGk6T8aTT3I8zOm2+qIiLVOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oop0y/en; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYZbj4B7LmgWRKrBNw5dsHa+jYpRwsKJWGwMWKF6LWxGE/sLtQj7X/LR/lZycy+lA+xVS7YOe7Od4D+AudJSQBcYjIuYEmRvsiWS6LC6fhaoLQxthYHDmRi9vzlJt3ZPP3cFqk3riJRWmwBo2Q1TESuxpF45OjEANLfDHr2BTJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SqepL67E; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oop0y/en"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7490acf57b9so182320b3a.2;
-        Thu, 03 Jul 2025 09:58:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SqepL67E"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso342005e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 10:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751561911; x=1752166711; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1751562114; x=1752166914; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vaMWvr/LwOy/DPFt7E6Ou21vzc6EQJXl4tZisI0lbDw=;
-        b=Oop0y/enecvcm4oZUec/pYBJ/NUE9GsnZlq0boUrxuJVwxnjW1+9HXHW2H8P8DTX2I
-         hKg3N8Yedd7HD91N0Z4wUoBM1+y3ndBGJSioIYZ1IJCRZOY6oyfCbN91yfJy+Cv/E+ed
-         nWE9XCamHnhI+E2Y+lC/2qkck/a4kE2fHgumsYiZ5MiOKm49nrofNnQBxI20g8k1zCDB
-         pe3gbhzJ1cH2SwdZ8QCsFlH1gtynHnRY7LB1TW14cVJBKI+AM+fDgAJutDwQ3/Z0ASQQ
-         vtaTciUQCwMextYdD53FhTv9ew/n0qSwYmIsZ7qJepqFLRdBBbZ5xZHep/EqQ00a948m
-         OwhA==
+        bh=tvgXEYfYW5xzDI3GjDygpJ4QKWQyuJxRS6wokAGcsB8=;
+        b=SqepL67E69vWyKWmWbFrFHh1ySRSZVxuyKYRxk8Gqdt2l5s6iEy85xJ017ceHT2N4d
+         3k39kFBy3p93yxFXmjnHul9Y5nTZT47peEcmO+5uGAz3ow7XV44YdMaXagr0cXmsY01/
+         Cq1ssDCrt2sLeZrm/AqnHqOpj0fOfrczwdJYz3Veq88qG6v+iUgt63j0RKO9qF0R8nH9
+         lUb4X0WYM+yF7b2fHexgNvwAF+rO6dIVUc/uRgX8jmuuyfwIbFMRcf8pKR6s4e5PoiUI
+         7N7wDqwGwV0TRmOD6Q9qV/0APHWO1QSQbYNdjDFfcFNNV3Y3/npGd7RhOSe6acUts1yu
+         u4nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751561911; x=1752166711;
+        d=1e100.net; s=20230601; t=1751562114; x=1752166914;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vaMWvr/LwOy/DPFt7E6Ou21vzc6EQJXl4tZisI0lbDw=;
-        b=G75LIXz/i4siGZ0R0nRDhX1R58G1XN9+U4OT+cwXs1Gc/RKXL9bstnhsVA8HbLnFr9
-         WHECh/jVZs9ZsY7kvMHFItIUXiYFvjMmbItf7ZWM3BjND7cWk2eL4uquq73+Bwc9cCD1
-         vtxt8Y60ySI4cgho7PMW9bBZBVKN0UN7S1psy1cttBwdbn8It21PxQUF5DD36ATC7aL3
-         mbMaT7d/WwV/GKMJn0ymSmHqKKKJl8CNjxZuH8JB2CmD6ENugDCklj7qpolkN5Ycz7EZ
-         V5ww7AJnzmRVCDZkdRUvEfAJz+9QjKMwstlNHIBOR9cQ+elaF97jK8VX2sK/U5+dGvDI
-         Btsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW25mbelTh0WwJRgvtTLck++Vcjlig7uWfnzchr5ik0X+aePZZ+lbvuWu3OvN8kUn0FpAoZP7ZFMteOmkFD@vger.kernel.org, AJvYcCX+CHnw2RhPEC9C5jsXJZZ4W5zosiEPBiduBtZPTRWlHSLz6LKcZfQE/bHcX3B/m4lPckO3oxjQcmMv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP5h0qtpHjyOFg5Xwqo6repb+tgsgmAIIECrLtF2eV+yq8+SjE
-	I443cCSQm2P1miJa0UziJ3QZ0arA2u+2Y+8wHvHrga4/6tHmH0p/tNgC
-X-Gm-Gg: ASbGncuJl4gJ/3sAIT7sBqhyH/SYqQ9Gx6ZzRzdHR/6f2dtSdpKkRBkZRnKAESKbKmf
-	1S7ZzJA+M7lNOYzWqjS6U6ap++6VNOmD397J1Y3HqEFerCd8YAYGciv0NrZwGF0a6RgYw0lMo4L
-	BwEO7VH2fUh2nckW7OUVdkoOH/LCjjwdeShJUqQd2zqSlsBWlnVr2gKbFuLX3MycB5k82AM+G3e
-	XQPRnkKVvWQ53Z179QB0O4q2KRRUlWNNuT6OW2WVThqhEcBIHndEFctzN2nus77m1VMjbHGzg7Z
-	1QoOxufHCe9Qhsdqb87UEqIPYZgC2J0bpYYJ2kYWs7kce/0icp+cbItMmT0BVA==
-X-Google-Smtp-Source: AGHT+IHBLGDwR+y0/xmd0/Az+y9ZiXd4ddJjrXR1M7ccldKrPt5j62yq3oXJYN+rOaUM3mayriZ9mQ==
-X-Received: by 2002:a05:6a20:2d06:b0:1f5:92ac:d6a1 with SMTP id adf61e73a8af0-224096f8835mr7006936637.4.1751561911487;
-        Thu, 03 Jul 2025 09:58:31 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee4755c5sm111522a12.20.2025.07.03.09.58.30
+        bh=tvgXEYfYW5xzDI3GjDygpJ4QKWQyuJxRS6wokAGcsB8=;
+        b=j53lfwDgoHk7H6uHybmTWF4WMqMxZo/LUXtw8ovnp06LxvA3fpmH+tBOk/FZw+oTg/
+         xDEMb2vxWfmwxNkQt2S/uQ2EQgOZd2k5SZgHJXgw7FEO4oDkuy1CnuedwwyPyd55YlGL
+         g2G+01UgDHRWZsfadPHHXGecHNiVD6z4ojzvvZ+5DVdwdyJpNJ4BnQ8bgE0aOIvQjXqw
+         5YWDzklC92HF9H0ZjnPTnCn84hfurOuo54y+K/cqQDyBTN0MKnhEb/ySKr0FD1k9ALJU
+         V+9XfXe4806YvKM/n5XxgxyYhQ0Lj4xtnzSyrn4JRpyFPibWl6Yhco1uPy3XICsCtUxi
+         kjZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWJCoaQTSTWGWpARX3ztwmU5GRBT1B4LRbC3b4x6mSEfme88s6MxLE3/GEBc+l6AvG53bOanvSRb79c9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/i4cmnJchteOD6W1LGLo1N+4qSH+3LruSemg2bwmSEFcPkkhL
+	r8Axnua7TSov3Z8G9GZpONBCSHltYWgTqd0umqJXcCDN9DT5qlED5LlLxROsPJnTzug=
+X-Gm-Gg: ASbGnctsDFWtl2jMTT/xjTsP1lG/IqqIaBxeAxT49t5fHzoNazpUa2LCWPCZgaOleXQ
+	QfzkNC8hJxbkRhvsEd/CkR/tVUfifV9omJA/rryV++q1cs7j+/9yP+nD+lc6jLURoJwxWWorEz1
+	KxwqlLnfp50n7ozh+hYWlyRLZEUtAzj/qV89AIo7rl0bY3VNjsfxOYpU96H0DP00+cGzyybOuFI
+	QuXpV4JNg6SYVmkqKgGf51MMxmw3LNMBu+yaTt6Jxp9zc/vwoq1Kb7hQzRvc6eM/jI7Rt/kfaDm
+	uMWmZbwtk3mmpLaWgdyDpOME4+96BfXbAaaYIZeni+Y7FbEjlcOK+FHM+tPIY+5n
+X-Google-Smtp-Source: AGHT+IFNvWkN9/aq49nSwsZIeBAVziMrqd9QiExz2sWR+Q9F9wTW5KtDczlzUQmKWE4QnsQoUtU9Ig==
+X-Received: by 2002:a05:6000:38a:b0:3a4:f2ed:217e with SMTP id ffacd0b85a97d-3b200f20826mr5442466f8f.42.1751562113092;
+        Thu, 03 Jul 2025 10:01:53 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470caa1b3sm265358f8f.43.2025.07.03.10.01.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 09:58:30 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:58:28 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: cp0613@linux.alibaba.com, alex@ghiti.fr, aou@eecs.berkeley.edu,
-	arnd@arndb.de, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux@rasmusvillemoes.dk, palmer@dabbelt.com,
-	paul.walmsley@sifive.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
- extension
-Message-ID: <aGa2tKXJutz_Gvsi@yury>
-References: <aGLA78usaJOnpols@yury>
- <20250701124737.687-1-cp0613@linux.alibaba.com>
- <aGQprv3HTplw9r-q@yury>
- <20250702111135.37854d1b@pumpkin>
+        Thu, 03 Jul 2025 10:01:52 -0700 (PDT)
+Date: Thu, 3 Jul 2025 19:01:49 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: peterz@infradead.org, rafael@kernel.org, pavel@kernel.org, 
+	timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
+Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
+ frozen
+Message-ID: <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
+References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xxkdtvnm4vyog2mi"
 Content-Disposition: inline
-In-Reply-To: <20250702111135.37854d1b@pumpkin>
+In-Reply-To: <20250703133427.3301899-1-chenridong@huaweicloud.com>
 
-On Wed, Jul 02, 2025 at 11:11:35AM +0100, David Laight wrote:
-> On Tue, 1 Jul 2025 14:32:14 -0400
-> Yury Norov <yury.norov@gmail.com> wrote:
-> 
-> I'd not worry about rotates of 8 bits or more (for ror8).
-> They can be treated as 'undefined behaviour' under the assumption they don't happen.
 
-Good for you. But generic implementation is safe against overflowing
-the shift, so the arch must be safe as well.
+--xxkdtvnm4vyog2mi
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
+ frozen
+MIME-Version: 1.0
 
-> The 'generic' version needs them to get gcc to generate a 'rorb' on x86.
-> The negated shift needs masking so that clang doesn't throw the code away when
-> the value is constant.
+Hello Ridong.
 
-...
+On Thu, Jul 03, 2025 at 01:34:27PM +0000, Chen Ridong <chenridong@huaweiclo=
+ud.com> wrote:
+> 2. The cgroup freezer state changes to FROZEN (Can be triggered by reading
+>    freezer.state).
+/o\
 
-> > > I compared the performance of ror8 (zbb optimized) and generic_ror8 on the XUANTIE C908
-> > > by looping them. ror8 is better, and the advantage of ror8 becomes more obvious as the
-> > > number of iterations increases. The test code is as follows:
-> > > ```
-> > > 	u8 word = 0x5a;
-> > > 	u32 shift = 9;
-> > > 	u32 i, loop = 100;
-> > > 	u8 ret1, ret2;
-> > > 
-> > > 	u64 t1 = ktime_get_ns();
-> > > 	for (i = 0; i < loop; i++) {
-> > > 		ret2 = generic_ror8(word, shift);
-> > > 	}
-> > > 	u64 t2 = ktime_get_ns();
-> > > 	for (i = 0; i < loop; i++) {
-> > > 		ret1 = ror8(word, shift);
-> > > 	}
-> > > 	u64 t3 = ktime_get_ns();
-> > > 
-> > > 	pr_info("t2-t1=%lld t3-t2=%lld\n", t2 - t1, t3 - t2);
-> > > ```  
-> > 
-> > Please do the following:
-> > 
-> > 1. Drop the generic_ror8() and keep only ror/l8()
-> > 2. Add ror/l16, 34 and 64 tests.
-> > 3. Adjust the 'loop' so that each subtest will take 1-10 ms on your hw.
-> 
-> That is far too many iterations.
-> You'll get interrupts dominating the tests.
+> 3. freezing() is called and returns false.
 
-That's interesting observation. Can you show numbers for your
-hardware?
+I can see how this can happen because freezer_lock !=3D freezer_mutex.
 
-> The best thing is to do 'just enough' iterations to get a meaningful result,
-> and then repeat a few times and report the fastest (or average excluding
-> any large outliers).
-> 
-> You also need to ensure the compiler doesn't (or isn't allowed to) pull
-> the contents of the inlined function outside the loop - and then throw
-> the loop away,
+> As a result, the task may escape being frozen when it should be.
+>=20
+> To fix this, move the setting of the FROZEN flag to occur just before
+> schedule(). This ensures the flag is only set when we're certain the
+> task must be switched out.
 
-Not me - Chen Pei needs. I wrote __always_used for it. It should
-help.
- 
-> The other question is whether any of it is worth the effort.
-> How many ror8() and ror16() calls are there?
-> I suspect not many.
+Is it sufficient? (If the task is spuriously woken up, the next
+iteration in that refrigerator loop would be subject to same race, no?)
 
-I'm not a RISC-V engineer, and I can't judge how they want to use the
-functions. This doesn't bring significant extra burden on generic
-side, so I don't object against arch ror8() on RISCs.
+Thanks,
+Michal
 
-> Improving the generic ones might be worth while.
-> Perhaps moving the current versions to x86 only.
-> (I suspect the only other cpu with byte/short rotates is m68k)
-> 
-> 	David
+--xxkdtvnm4vyog2mi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGa3ewAKCRB+PQLnlNv4
+CCUFAQD3hbnHt6PHs2Vbx/lZ/VZFBWrkd+p+gXvj0bzi1u0q8gEAjE60O9uuwUNi
+/Pu7OAzzoXpYzXZHU7/xtTnmlkzJcAU=
+=cMjT
+-----END PGP SIGNATURE-----
+
+--xxkdtvnm4vyog2mi--
