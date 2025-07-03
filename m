@@ -1,172 +1,125 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D99238C12
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0295B22173A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558335; cv=none; b=njclGrUyj/UhdXhBPxkcQ38/Zaz7CScp0cOhGMe6M1s8x9AGDPvauoWo+zEboBO4XdAZtwYv/utRLzQmyLvFnzpro+J/6/pW/p3n1B0F7OHd5rtgBAyIEw0GpJPmKpL9IQGWpxLjt6E5BFznzBWwHghfMcnyR/7kmDbn/Bt5tj0=
+	t=1751558353; cv=none; b=JgkEHiVMJDkq2HuqW9jhs+KLw0JVJ0fBhk+iQO6wJkk3k9+V96m8Dcj+v52X85++fUZps0rGlGfrT5/VES3vaAuxrBKpp6YYAWmzn390VJfly2s9F9kOU/TR7+v+CDO6HCKgJG8ZJ2xKrEhz6w8U1IlYox3wfVEarzPB95Cg1hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558335; c=relaxed/simple;
-	bh=6TojZ78eEbxhRsuBRUuBMZf6SEaQ1t+9yVSxoCPVVQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9hThCLlnhm1QMdv1bGIz6EcypezGvngwnrgW6sfDbjX79V8FnM4wp+2SXzS+3/VUzx5LG3gcWkjoJ11k/9VGVd8SrzDWu4Ju6sldPewzYbsgXhRX+xC6Yboi1IfogCwKR2bIOj6ItMdqsFYMQKJTR+Fn7grR/B3QK6vSLhTdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TPvsPcQB; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751558353; c=relaxed/simple;
+	bh=S2/vYQejGHSatFM71+Ak2Ob/vzkp+bC05d6mwYbWB1U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N7xUNGubP+oxCjEHAWxPLLPC6pdB+soovglEEXi7Bv7AmoRYGgQRi0RuHh7issYiSf76zW6QzHuBLLii2ELPespVy0lYin+RQvpKVgahGLofa2dCwNtiHrfoo08X5+M+k7pG5vE6//wDS40NmLcZ4SBJM2ttHJo8lGZ2L33jXzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6wu9wK0; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TPvsPcQB"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453634d8609so49855e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 08:58:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6wu9wK0"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-735b2699d5dso57709a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 08:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751558331; x=1752163131; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CJaN7nbaO6lmM2Mxzm86rsAdldbhCFrvDwkgjL03x1A=;
-        b=TPvsPcQBtsQ/mbEPgBEIzslCmWo230SVP/NmsQNJz+otsARABUPjGwzNMu4ONh1Off
-         EjrcP58YtOg/8W9znosD54jKFb212u3Viv1NjYeL4ExzXpn4SEfKPNlVx8LOYUK2wWSF
-         ofvz6Dlx/MMaOGtDmcBrqH60iCn88qW76sSkmF1bHyE9ulCdplj0zDDJgq9Kp44jwKbz
-         7fKAjNWPY0ZdS8uSZLvcrg2ry5uJmxJdz38beSMc+KzaF1gcqI1xeTq87ikFKe8eIOGi
-         hZUcDZlJHgA8hp+A5oubB916oBAv/L8i3FztnlQHLKsATbAL23kHJcXkd9hFBv3jLkvB
-         0CaA==
+        d=gmail.com; s=20230601; t=1751558351; x=1752163151; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TEShNNGw8YA9FF8iT3UXsWuzd6q34qlsvmUa14RxNng=;
+        b=V6wu9wK0gRMuyz/Occhb5dLyeZTVbf8gSK2mIjOG81dLBCeYnLRnDyHzWM/XuDxoNH
+         lGNKozMCfSZ9AtqDfgbfYTYlTOLxU1AXJ/d5B0N5DBl1LAv6c1zmpBdW6oLQ3RQbxuO9
+         0LZtHWbse7DW0V/35Qj2aSRO86PZ4XMnxQ8a5srKdERMX8mPg6zq/OddbddP+aokdBZq
+         endRMhg4td7kuHgWJd21BLTopxd3qdm2fXoojeRoJOgY+e8FctJ4rK86yb0Z+vY3IXho
+         8yjJrIcfZHhmfGJX6nqjSB36aHPlXKX3mscncqimmFllqjOzi8+STVvd0M4L42xo4PYq
+         Au6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751558331; x=1752163131;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CJaN7nbaO6lmM2Mxzm86rsAdldbhCFrvDwkgjL03x1A=;
-        b=MAUuVo5e/F6xOQE7LE6mMPZZjGw1NxrkyGHzkphgrLlnOpBo1pC51Aw2cWh6BBXBh9
-         MD+JcT86Hqvru0mCZ5joLyz9n71HsFN7gz0v4PtY2SSPGwA39Lm9x67wDvpjWfb8y7RC
-         BiHhN+TmwNLNinlVs7hWzY8C/Y0mWxr1QKUYQGO5Tx5HZzLPh3UlQVXpeOdgoPkCtZp+
-         CGLFxj/p+1YpYzYK4RvV0lLSUzOCOWRpQ3WgaBsBgKIAPlMtrFSN5YjJAN5kvHzt0x5X
-         Sr3aqBL00K6qf8bXvEN3fnmhG9N4dyvcxBXhoM2uE+4vXqcHsKa9EEoMH0otRWFNuX3Y
-         Nfqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCmXirF2cq8qfBsOVwAGNDXTK/FQoACCZaiF+mfLT93Tj8M/jtzW7lBD46tWLBqsE7vjclEPB6Zdnit8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrITizgmQkQPtEApaXQoOoe5j7F+tFyjETI9BP2jXiVcEw1s4Z
-	il9nuHrMO24KzSkFnKFIoi864s0VYLnj7I8fHy1tdfjpzZAqF1J3zCR8aWfGPUaMaz0=
-X-Gm-Gg: ASbGncvShl8vKO8dcqXT5+RHrxx++wksFNx3c90Ej0m8MpMD24xKQg1+RXHejajAQWK
-	TmVr7f4wwcx5NFls+dVtjjGBoUFNyz7MIJ0Nc8EPs4rHeLCpI8vdRzp+Ht390p29PibtiGqcTWU
-	QCoTStpavK2GNrWRuCDwJWU8ez0H05MG1Sm9ClZvVKhjT/Nq72+XlS1GbToFxN6eucBi+FeTiMJ
-	A9UJJqjQt45s5vix/NQAfhfMUkJYP/+hVAxTRaOWWKxWURPq6XfZuZ9/ng8JeJEg4lrAHxw9WKC
-	5eEo2jjqQDL697i5o7CALLbnwtpL86Y/l/Q47MtLrfF/GPxWXxCVSSaYu4gqCAPP
-X-Google-Smtp-Source: AGHT+IGOdqwh+prx1CMvKrozB3yHTxkvomqeSkFHf9OzqxVK+h2PONAOl4dn1TVwcAb/HP3myCfYHA==
-X-Received: by 2002:a05:600c:820d:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-454ab368d5dmr35870815e9.6.1751558330555;
-        Thu, 03 Jul 2025 08:58:50 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be5bbfsm29835925e9.34.2025.07.03.08.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:58:50 -0700 (PDT)
-Date: Thu, 3 Jul 2025 17:58:48 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-Message-ID: <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
-References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
- <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
+        d=1e100.net; s=20230601; t=1751558351; x=1752163151;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TEShNNGw8YA9FF8iT3UXsWuzd6q34qlsvmUa14RxNng=;
+        b=E+u7pMSbKc4Hcum6B/0MjJhRYPJJoyJeUeCW4ET8A7V7lbO4ogoRLYPAAkihS/rYZB
+         zSYusUoeyEnEnquZtJCMz2BLNXvkisySsqtJTLf93gcOly2TPpacyaFW6wpyMHnbEEEr
+         4i7e9jrlZCE7hbpwr9Wjqn/KaxwDbXiQ/aOIustSa68DFk8Z1t9OIvYkGJYnioZHqrPK
+         YySK9IzEoBH9HdQaX71cSgWV6yZqnlWnegQtOaF6ND80vFhx4nlYBuYxGwJUgNGJK/8H
+         CJ6Cn6URHYDJv/0cl5Rb1D/TcvMxY6Q4mfREFQOKszi8xvrNaXA4VTDxjHXHK3X7wKmZ
+         EtKw==
+X-Gm-Message-State: AOJu0Yymmbkk4ZDvm/ECg7fioJCfPxJ1w73L6nNoC8Mctc19BJj22GuL
+	vv0UlGjb7HjiVlwyYwxvNDNvF/6td/BvJiwYuc3m6G9LKF0hP61ke6x/
+X-Gm-Gg: ASbGncvEcOsYXCqQ3r2I0Oz5OJHFp16rVeOYaRZT2jyaKYh49ZBnijkwkhuVHu0ysi6
+	iGm3JDe+dl8rXrto8qA+12jo9g6N1rRSR3KuuwyCVfeT3tunKc8SXahYSfQtsv5EFnVjV2Thcvq
+	kGXeEOuabxl31wFtFXoeQm71Tpub8THyYJv/1uZiEJs8oYzdKarBhQ7cIp2SIjvcnuvtD7Vst3U
+	whO788m0qjEKJw6YMZ8l3tr603/UreP7ObOMrk5y1xeWBT3IsVgNVs8R22Xyt9NNfcdEST6QIM6
+	aXAJAGlc1mjzrsm4n7lMCKEeVznhaAEZa8e3MKrJiGff35UKAUAKIzreeFoESMyIeJ6qvuCFiiS
+	RNW+Fme78SIbs029AowWcGl6LDdntQC+QZpI9kSSozIPgMg8=
+X-Google-Smtp-Source: AGHT+IH3XSWyuRx4s4rWAzGyVmRCzIl6dx+V/4MhE8t8BbqVL+X1lePf0vai1om3aMrYs1aq7sCYNw==
+X-Received: by 2002:a05:6830:370c:b0:73a:e90d:5c95 with SMTP id 46e09a7af769-73b4cd6cd74mr5712699a34.26.1751558351027;
+        Thu, 03 Jul 2025 08:59:11 -0700 (PDT)
+Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f7351cbsm10537a34.7.2025.07.03.08.59.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 08:59:10 -0700 (PDT)
+Message-ID: <893b1fd8-9f34-4118-9c53-05a1295850fd@gmail.com>
+Date: Thu, 3 Jul 2025 10:59:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ctwb4begphfg7q3l"
-Content-Disposition: inline
-In-Reply-To: <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/5] shut down devices asynchronously
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-kernel@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Martin Belanger <Martin.Belanger@dell.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Daniel Wagner <dwagner@suse.de>,
+ Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+ David Jeffery <djeffery@redhat.com>, Jeremy Allison <jallison@ciq.com>,
+ Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+ linux-nvme@lists.infradead.org, Nathan Chancellor <nathan@kernel.org>,
+ Jan Kiszka <jan.kiszka@seimens.com>, Bert Karwatzki <spasswolf@web.de>
+References: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
+ <20250703114656.GE17686@lst.de>
+Content-Language: en-US
+From: stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <20250703114656.GE17686@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 7/3/2025 6:46 AM, Christoph Hellwig wrote:
+> On Wed, Jun 25, 2025 at 03:18:48PM -0500, Stuart Hayes wrote:
+>> Address resource and timing issues when spawning a unique async thread
+>> for every device during shutdown:
+>>    * Make the asynchronous threads able to shut down multiple devices,
+>>      instead of spawning a unique thread for every device.
+>>    * Modify core kernel async code with a custom wake function so it
+>>      doesn't wake up threads waiting to synchronize every time the cookie
+>>      changes
+> 
+> Given all these thread spawning issues, why can't we just go back
+> to the approach that kicks off shutdown asynchronously and then waits
+> for it without spawning all these threads?
+> 
 
---ctwb4begphfg7q3l
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-MIME-Version: 1.0
+If you mean for drivers to have an extra call like shutdown_start() 
+that's called for all devices before waiting for any of them to finish, 
+it seems like that would just push the work of spawning a shutdown 
+thread onto the individual drivers (unless they just had a single 
+command they issue to the device that takes all the time), and 
+synchronization might be more of an issue since shutdown_start() could 
+be called on a device before that device's children or dependents have 
+finished shutting down.
 
-On Thu, Jul 03, 2025 at 09:03:20PM +0900, Shashank Balaji <shashank.mahadas=
-yam@sony.com> wrote:
-> Current cpu.max tests (both the normal one and the nested one) are inaccu=
-rate.
->=20
-> They setup cpu.max with 1000 us quota and the default period (100,000 us).
-> A cpu hog is run for a duration of 1s as per wall clock time. This corres=
-ponds
-> to 10 periods, hence an expected usage of 10,000 us. We want the measured
-> usage (as per cpu.stat) to be close to 10,000 us.
->=20
-> Previously, this approximate equality test was done by
-> `!values_close(usage_usec, duration_usec, 95)`: if the absolute
-> difference between usage_usec and duration_usec is greater than 95% of
-> their sum, then we pass. This is problematic for two reasons:
->=20
-> 1. Semantics: When one sees `values_close` they expect the error
->    percentage to be some small number, not 95. The intent behind using
-> `values_close` is lost by using a high error percent such as 95. The
-> intent it's actually going for is "values far".
->=20
-> 2. Bound too wide: The condition translates to the following expression:
->=20
-> 	|usage_usec - duration_usec| > (usage_usec + duration_usec)*0.95
->=20
->   	0.05*duration_usec > 1.95*usage_usec (usage < duration)
->=20
-> 	usage_usec < 0.0257*duration_usec =3D 25,641 us
->=20
->    So, this condition passes as long as usage_usec is lower than 25,641
-> us, while all we want is for it to be close to 10,000 us.
->=20
-> Fix this by explicitly calcuating the expected usage duration based on the
-> configured quota, default period, and the duration, and compare usage_usec
-> and expected_usage_usec using values_close() with a 10% error margin.
->=20
-> Also, use snprintf to get the quota string to write to cpu.max instead of
-> hardcoding the quota, ensuring a single source of truth.
->=20
-> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
->=20
-> ---
->=20
-> Changes in v2:
-> - Incorporate Michal's suggestions:
-> 	- Merge two patches into one
-> 	- Generate the quota string from the variable instead of hardcoding it
-> 	- Use values_close() instead of labs()
-> 	- Explicitly calculate expected_usage_usec
-> - v1: https://lore.kernel.org/all/20250701-kselftest-cgroup-fix-cpu-max-v=
-1-0-049507ad6832@sony.com/
-> ---
->  tools/testing/selftests/cgroup/test_cpu.c | 63 ++++++++++++++++-------
->  1 file changed, 43 insertions(+), 20 deletions(-)
+With the async shutdown code from this patch set in place, any driver 
+can be fully enabled to shut down devices asynchronously with no work 
+other than setting a flag to allow it, and no device will start shutting 
+down until its children and dependents have finished.
 
+I think the main issue in the previous version of this patch was just 
+that it was taking too long on smaller systems to spawn a thread for 
+every single device shutdown, when most or all of those devices were 
+shutting down synchronously anyway. This version of the patch solves 
+that issue... it should only spawn on the order of roughly 2N threads on 
+systems with N async shutdown devices, and it improves the kernel async 
+code to make synchronizing to a cookie faster, too.
 
-> -	user_usec =3D cg_read_key_long(cpucg, "cpu.stat", "user_usec");
-> -	if (user_usec <=3D 0)
-> +	if (usage_usec <=3D 0)
->  		goto cleanup;
-> =20
-> -	if (user_usec >=3D expected_usage_usec)
-> -		goto cleanup;
-
-I think this was a meaningful check. Not sure if dropped accidentally or
-on purpose w/out explanation.
-
-After that's addressed, feel free to add
-Acked-by: Michal Koutn=FD <mkoutny@suse.com>
-
-
---ctwb4begphfg7q3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGaotgAKCRB+PQLnlNv4
-CEdaAP0XHWsChnbaP5kR0bs2fgV1QmnWmul24yC8kEn2cDlzUAD8C2S+dXKJJUMt
-We9vCI1hRxJLPl7E7xFaqmhjWJ8dxQo=
-=xHRi
------END PGP SIGNATURE-----
-
---ctwb4begphfg7q3l--
