@@ -1,260 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F61246798
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433272DE70B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751540793; cv=none; b=EhzHr78lVvIxMaSyEdsdknbRxc2ftjdCdK/DmfEuGcIqqQUQAIAQAfAUI9V1hd014L+xNhqx09jR9mF6FSyR41lJ8JA6CBaQOIoL74E/vTcUBDVGZmO1cWnv+tE2PlKZxmasjLYyhuVs4OHwNzvyFJfWbuiLN8x2Iwv3G/wWOPY=
+	t=1751540887; cv=none; b=DhaFJ5cA3cRZyocZ2AXcmaWhcsvarv8FMUUKXlen2aJvPWTRnmWxNxPnDFZ1mymtLkjqWaiY7WyPl82T7OdRnllwD5XnBBVrC+7o4kUOpqD1nSrhxgdLd3mxA4u65QxMjWXcXDgqw4LaC+ulYrEUeSG8MDxKWSfg+CiN9TNdHUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751540793; c=relaxed/simple;
-	bh=r+oqXIqw8qmyS+u2KpND911TTLofAjnGxEz1wNX+R5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pG+qPUomLb+NqwqRPcPE3l0G1msL25Tgv4t+Ml8McVFMTyALzT4lzIsrCDMK+5c6lTZS+NRuOC80yzUtxTq9DkojrLNCh7mlSEbqcklI7Oiduv/QrC6UkmF/un7+w6BrzH+N1EmBsEDxuaduRJqy6Cr0q9jao+8io2uRE7235so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FluohAD+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FluohAD+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751540790;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HsHhtfxwP4AkJ0C4R+XbbC4W0huoGibBzxG5SHnup00=;
-	b=FluohAD+S7sPaB2ZE79iN/4ufL8izuyhS693opCbnspVOjCk5Gx/zlHT1otSz3xMjkU07j
-	svHet9JHET0ADY3+A+lYSVocUUyroQTG+EPWokExX0MT8ZuNZRrzjUhgtvDCnUy+0tFQxX
-	H0AddMIVIYEqn2TIjc/mXJqNguYaDlg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-529-n9l-QNfuMOWx6JQpBJP2yw-1; Thu, 03 Jul 2025 07:06:29 -0400
-X-MC-Unique: n9l-QNfuMOWx6JQpBJP2yw-1
-X-Mimecast-MFC-AGG-ID: n9l-QNfuMOWx6JQpBJP2yw_1751540788
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb94dbd01fso433767666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:06:29 -0700 (PDT)
+	s=arc-20240116; t=1751540887; c=relaxed/simple;
+	bh=MPSNj8tWw+VyxLZS+h/0hvZHLTe44L3A2V+Y/Oyilck=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Z+pgAWUJwiwfDRZhnJzYThZbD/SCZ1mGv9CYP+0nW0KTd8S4ZYT0yImLJrL+YVrj02y1lMf1SYht1tZ6Iosxt2hiKtktkPD+1W83s2xOIjs8tgd3Duy0CbpXJ+7wVGFdyoRg4bNDoAHDEqiI5I24dmld493uI80XrUICeCCT5Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso59276525ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:08:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751540788; x=1752145588;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HsHhtfxwP4AkJ0C4R+XbbC4W0huoGibBzxG5SHnup00=;
-        b=rbMV1hTwjtSBbYpZKzm5+i7lmEUVHq3wEzFD+KTkZYhrLuhXOTzYnCNrRmaCrfD2v6
-         9p79PdTom9vxz2V3yevWJKwnY1Gz4UwiW0uMK41A4Su7z3Uuyz0+P4cbt4V0AY3n6Ig6
-         Xo2ZiE/WZt+F4geb6uNtFCb98lgVXVTKMf1ZYBpqxwdQqPsn35yWAGVJ2sdv90+/cb7N
-         PUiFr6gufn3mmz3NNwoQveDjuar9+d9uTAi5AhMEF5WasUFOEslG0b9QAOWwsJcOF58u
-         cOJz2Gk0rg9vBVNzzGLbGQecDcfYDwMYTyOoGJA585p2INvw/+Pe9YN3REg/oe1xaJ8q
-         J/LA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdkKcbcxVpbwtkpzGvu1I9laSsm8XoQv6pe0jm742h1aeqnmJDJ+jedhrUfVCGiAvQfKLIj209YgpkZh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD4wDQcohfAgLLSsp9Mnz8E5IKGVUpti1kzllg+4a3s3KVQ/ab
-	60DbPGNEOYZKT4kb6INJk1kGMvdCtHdNMPqy+SBcT6kEVM7E6usd+kLsJXeKDyQzPhzgzRMQcaJ
-	K+Ju8dbGaFapqztrHZ88V2JgOcdN0qDeaD+hpuGXgPSo/Tteed/M07ren0isDRCLFcw==
-X-Gm-Gg: ASbGncvDU7jQnKDtPUZ/YKHXbGvOOncqaEQ+01jvxUprLSOIL192esPjbq0Lu/OZKHn
-	umcVXV5brL5uGBS6mzAwsAHXM/R6QsPMY4eZKrE0PC4Ahfj3CY1DnfbOxPHKqNrELh0XZNS2AY3
-	sDLZqKSLDfyBxMwNgQV7/JIF8/SZ7m7vocjRgtncGQGQfEoVVvLjMWAn2W2hw37V8vu/2KqPsrn
-	3d6XdpVDZbdWbOgKfuNXGyJNkevXcVp21VZdUPSiF7fOFotMCJT7VmWbCvJzT9WTUAWuTaip0m8
-	fqOPQTykW9+Wcc65qxzvEZ36a6Ec71sjgz16fZWcSy5O
-X-Received: by 2002:a17:907:a088:b0:ad8:9c97:c2da with SMTP id a640c23a62f3a-ae3d8573490mr273226866b.40.1751540788050;
-        Thu, 03 Jul 2025 04:06:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVvp9Sw667LoyN8pe3RF8JIiHhiLdr0Wi9Bk4IMrJCFkoPHPGrLe5Nzh71vgQ6iT9qRpi8Qg==
-X-Received: by 2002:a17:907:a088:b0:ad8:9c97:c2da with SMTP id a640c23a62f3a-ae3d8573490mr273224366b.40.1751540787592;
-        Thu, 03 Jul 2025 04:06:27 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a923sm1264922066b.68.2025.07.03.04.06.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 04:06:26 -0700 (PDT)
-Message-ID: <664e5604-fe7c-449f-bb2a-48c9543fecf4@redhat.com>
-Date: Thu, 3 Jul 2025 13:06:26 +0200
+        d=1e100.net; s=20230601; t=1751540885; x=1752145685;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U4NOZMlABcLY/rRXPDEgzMXy+AfZ4u/sPTCtTPJWoXo=;
+        b=VIgZCIxDvQxbDeLEdXVaJutiLDS3zFpjlOI9or7Y18yVZQh/0ObYtr7Ki8iXo9sm2E
+         cUAnUbhVdg5HD+39qLD/hm/l3f8iop7bwN7xsduNIzkkVvOqewdxXf1ENUoY8xploup9
+         PHHGkg8qM3uwwuYSWq39qc7ABTmw4gePUiO1abd6xfXOCnjcCmmOCZWZ8dmiPrWv9n7B
+         piI0k64eBpo7XxvqZaCc4P579jo+gN4K5Z+Y7bc1U2BfNaKRMmxWgocH4emm6NrGDfTZ
+         q50mTpMHlP1siQspQXfPNOI/go0f/RvdIYmjCbDq7TR2GNwrag+w1DR1UVViBCFHUYRj
+         VlOA==
+X-Gm-Message-State: AOJu0YzN5vlh0ad4lck9xhLXuLJUI40XJdf0CLQm/zlsi+dT+ZeeKsCT
+	Jqf/NZG58isU1CedKLUJEsOTRDutLGHkhtplURdqHesGTPdAaieGR9gU3Nq08SwMsaquZsY87Vq
+	65jXtSMgg68HDEck2rtR1AtA/4XaVJ++lAicrm5GH0topvXIs+aknB5/wNBA=
+X-Google-Smtp-Source: AGHT+IGjfCTIqp1nGBlW2xfdPPDOGHzxZNhNTr2JKAqarzF+tInjrXMTgjqlwOEpagmjMezHd13oA8r+n2mVLV3mH05dbvjwpqi8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] vfio/type1: optimize vfio_pin_pages_remote() and
- vfio_unpin_pages_remote() for large folio
-To: lizhe.67@bytedance.com
-Cc: alex.williamson@redhat.com, jgg@nvidia.com, jgg@ziepe.ca,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterx@redhat.com
-References: <c1144447-6b67-48d3-b37c-5f1ca6a9b4a7@redhat.com>
- <20250703035425.36124-1-lizhe.67@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250703035425.36124-1-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:2167:b0:3df:3271:6aba with SMTP id
+ e9e14a558f8ab-3e0549ea181mr64021555ab.15.1751540885402; Thu, 03 Jul 2025
+ 04:08:05 -0700 (PDT)
+Date: Thu, 03 Jul 2025 04:08:05 -0700
+In-Reply-To: <20250703092137.1888114-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68666495.050a0220.37fcff.0001.GAE@google.com>
+Subject: Re: [syzbot] [fs?] possible deadlock in __simple_recursive_removal
+From: syzbot <syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 03.07.25 05:54, lizhe.67@bytedance.com wrote:
-> On Wed, 2 Jul 2025 11:57:08 +0200, david@redhat.com wrote:
-> 
->> On 02.07.25 11:38, lizhe.67@bytedance.com wrote:
->>> On Wed, 2 Jul 2025 10:15:29 +0200, david@redhat.com wrote:
->>>
->>>> Jason mentioned in reply to the other series that, ideally, vfio
->>>> shouldn't be messing with folios at all.
->>>>
->>>> While we now do that on the unpin side, we still do it at the pin side.
->>>
->>> Yes.
->>>
->>>> Which makes me wonder if we can avoid folios in patch #1 in
->>>> contig_pages(), and simply collect pages that correspond to consecutive
->>>> PFNs.
->>>
->>> In my opinion, comparing whether the pfns of two pages are contiguous
->>> is relatively inefficient. Using folios might be a more efficient
->>> solution.
->>
->> 	buffer[i + 1] == nth_page(buffer[i], 1)
->>
->> Is extremely efficient, except on
->>
->> 	#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
->>
->> Because it's essentially
->>
->> 	buffer[i + 1] == buffer[i] + 1
->>
->> But with that config it's less efficient
->>
->> 	buffer[i + 1] == pfn_to_page(page_to_pfn(buffer[i]) + 1)
->>
->> That could be optimized (if we care about the config), assuming that we don't cross
->> memory sections (e.g., 128 MiB on x86).
->>
->> See page_ext_iter_next_fast_possible(), that optimized for something similar.
->>
->> So based on the first page, one could easily determine how far to batch
->> using the simple
->>
->> 	buffer[i + 1] == buffer[i] + 1
->>
->> comparison.
->>
->> That would mean that one could exceed a folio, in theory.
-> 
-> Thank you very much for your suggestion. I think we can focus on
-> optimizing the case where
-> 
-> !(defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP))
-> 
-> I believe that in most scenarios where vfio is used,
-> CONFIG_SPARSEMEM_VMEMMAP is enabled. Excessive CONFIG
-> may make the patch appear overly complicated.
-> 
->>> Given that 'page' is already in use within vfio, it seems that adopting
->>> 'folio' wouldn't be particularly troublesome? If you have any better
->>> suggestions, I sincerely hope you would share them with me.
->>
->> One challenge in the future will likely be that not all pages that we can
->> GUP will belong to folios. We would possibly be able to handle that by
->> checking if the page actually belongs to a folio.
->>
->> Not dealing with folios where avoidable would be easier.
->>
->>>
->>>> What was the reason again, that contig_pages() would not exceed a single
->>>> folio?
->>>
->>> Regarding this issue, I think Alex and I are on the same page[1]. For a
->>> folio, all of its pages have the same invalid or reserved state. In
->>> the function vfio_pin_pages_remote(), we need to ensure that the state
->>> is the same as the previous pfn (through variable 'rsvd' and function
->>> is_invalid_reserved_pfn()). Therefore, we do not want the return value
->>> of contig_pages() to exceed a single folio.
->>
->> If we obtained a page from GUP, is_invalid_reserved_pfn() would only trigger
->> for the shared zeropage. but that one can no longer be returned from FOLL_LONGTERM.
->>
->> So if you know the pages came from GUP, I would assume they are never invalid_reserved?
-> 
-> Yes, we use function vaddr_get_pfns(), which ultimately invokes GUP
-> with the FOLL_LONGTERM flag.
-> 
->> Again, just a thought on how to apply something similar as done for the unpin case, avoiding
->> messing with folios.
-> 
-> Taking into account the previous discussion, it seems that we might
-> simply replace the contig_pages() in patch #1 with the following one.
-> Also, function contig_pages() could also be extracted into mm.h as a
-> helper function. It seems that Jason would like to utilize it in other
-> contexts. Moreover, the subject of this patchset should be changed to
-> "Optimize vfio_pin_pages_remote() and vfio_unpin_pages_remote()". Do
-> you think this would work?
-> 
-> +static inline unsigned long contig_pages(struct page **pages,
-> +					 unsigned long size)
+Hello,
 
-size -> nr_pages
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> +{
-> +	struct page *first_page = pages[0];
-> +	unsigned long i;
-> +
-> +	for (i = 1; i < size; i++)
-> +		if (pages[i] != nth_page(first_page, i))
-> +			break;
-> +	return i;
-> +}
+Reported-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
+Tested-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
 
-LGTM.
+Tested on:
 
-I wonder if we can find a better function name, especially when moving 
-this to some header where it can be reused.
+commit:         8d6c5833 Add linux-next specific files for 20250703
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e40582580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=223eb69834aa2df6
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d7771315ecb9233f395
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=127ff982580000
 
-Something that expresses that we will return the next batch that starts 
-at the first page.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Note: testing is done by a robot and is best-effort only.
