@@ -1,284 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CF22D94AF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6D62D77F0;
+	Thu,  3 Jul 2025 09:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751534808; cv=none; b=BKd7zRC8NhXx/AbXIoCToJDBRIEKlc8iZc7d5iufKobAuj2Df1J4H8eTeAUfDOdc6dz07Qy1i5WtfkcWjwAGt0C+fpEl0qhIqxbr+B7z9xRjbvZ4k9Li0JcOPuCYtFxoEkbR64mhOw0QFMbPul+FYjkXOMCNruwnHEpejxfFQUo=
+	t=1751534866; cv=none; b=b/v+J72tQdfdxg7SSZJbGb1bm1qinokHQ5105wqvW0dseosVGwk7RQdtVGRl/zMBvmfmKcOt4xcYyNhA2gHEczl9TAjT7XPJVtiyfKV4kgRtQd3ST6eBA/bfN4HG8yNeEhzKDfzJSQE8zbAm09dDvw6mn26pQQ2YmbhEdPmZPpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751534808; c=relaxed/simple;
-	bh=tkgblbTFuQnMgah+b3qVfqQkZaZdA6aVb5an/8MM4jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CNHnxHpScpJa8RXmfH1vJwWLlsQsHyWwcS3oDE/VKBuFt6LSApLI+WmL2HarZpzTUS9wQBod+KfQ9oDZDrSBBq0ZASGMqHneoYcjD4fDTJxqI39H+SEX3vAGvpYHQcdV2jiYaWWL0EHW0nd9vCrErCSt/F3tbrb3CVnCIWAopQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Al7k0xG3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751534866; c=relaxed/simple;
+	bh=VzhiqByXgLMeSkkslWm+EtEK5qyexWArSelTCC/0AMg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JWGJW47CGiQurNYdOXP3EbpZ6TDYqPU/dZPhNr4XxQ6gd2sJ31JH1S0JCp3ovjaaD9tEMIE37Ed0p2lTcwlBGW1KJmyKgS818JqeOY9o58aFjd8U3mx2IAVUbhqjREmF2mFWU8AlIEowa9xh3fTuSFm5iWy20ljz516mDdLpErU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+THJFDc; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Al7k0xG3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751534805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6MdKqwpmU7OaPUd1S1vImlbly2qp2E4LikNix66Cy2A=;
-	b=Al7k0xG3P24AvTG7db/SySDOXO3lj8Dnx6KRIysEOhErH35LtGX1HoqDehEctpNpwDLmLX
-	7BBWlVbVGb8DO0gm9q3BCQszQtPZE1Pu5vovorSPpJyNE8cS6LMwb6yxrrvsUsWwSxTSII
-	jXzqiOF/jzibGysiL4z+21YLi8RG0bs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-283-f-U-mx1INRyUNsBKAbsLzg-1; Thu, 03 Jul 2025 05:26:42 -0400
-X-MC-Unique: f-U-mx1INRyUNsBKAbsLzg-1
-X-Mimecast-MFC-AGG-ID: f-U-mx1INRyUNsBKAbsLzg_1751534801
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso3832290f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:26:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751534801; x=1752139601;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6MdKqwpmU7OaPUd1S1vImlbly2qp2E4LikNix66Cy2A=;
-        b=S9TnCfOrA541XyVOKUR3mHPwS6NQogOFrAuRMFseyxhHEHuwEYGECFY/y1WJVvpBbM
-         L6nTBbyPIaGoHrwLtIPeg/yyFsAwR4Q0B+Y8uPcYKYOg8xbqJizxaVPKoEp4T1NtdP1d
-         evG6/fAmbM+OIx+fWNMtriM7tInSO/6DwytFc4oR3gcervJSMcqgERuKAxSiXiYjhlA8
-         /upAn1oEuiRj7nz3U2V7USbXkPS4pZB9pH8I1hwRfMep5MRwos7WCTPyY55MPIX7vw0D
-         eEW+XgsCY0WxOi90SMbXdVr7aBKRCkXeFaBMId4qEQ0R6A98PRvT18aqrSplBNDLQsjY
-         dgCQ==
-X-Gm-Message-State: AOJu0YyQO9RicOmn4rnWbIw7b6dPFH6MivKvKkIvYMbZXuJIhMPunhpU
-	vsuiGhVJn1mR7hZPhXbs8gJioiV3YRkiUmcea/36SJMLo22NvvPRyTKmeOnTBG5c/WmitGHjriY
-	qb7CL8/L/z/qA9GaisDUrrwDrXVQ23BCWmrwq8Izew/7Nuy/Gqb1999ZXOqtvwbO62xzbrJ0na6
-	585lEKstoPtkSL+YVW4rOmo5wItpolvBR6kJtpf+TbpLY=
-X-Gm-Gg: ASbGncsROSoqBKjI7MtUrC/c9Gvj6i5QSchIJdlSn2UroyEM/GormC3u5Da9GQcugUV
-	BoahfbVmKIQc4+vQWrZukXg++lSfht3+mdYZMarLHi6kunvRcSi+x9wJJ2KkCiP0e02sYJdYro6
-	Z7jeOuud6dTq3ABoylirPznh+lfjxoUGn0aNc9eH8jEftvveL5ndueJnOUbqeRE3sFPHvYWXRbK
-	12BGKw2fu1/XQfe6PANYoVYOc/2RUhkegd5O1tmmu975W8r0gDhQdDHnezUiaqmo4GdDXC1Zoo2
-	YYpxrYdid606m2K0
-X-Received: by 2002:a05:6000:2c01:b0:3b3:a6e1:135c with SMTP id ffacd0b85a97d-3b3a6e113afmr893722f8f.42.1751534800716;
-        Thu, 03 Jul 2025 02:26:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkQtx6dTZNMo9PhkqNuSJxJCajqjzjsNPok7wcdjiw76P3Vf7cyfZYrozQCIx+rHWOI+RfQg==
-X-Received: by 2002:a05:6000:2c01:b0:3b3:a6e1:135c with SMTP id ffacd0b85a97d-3b3a6e113afmr893677f8f.42.1751534800113;
-        Thu, 03 Jul 2025 02:26:40 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fab6esm18489438f8f.31.2025.07.03.02.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:26:39 -0700 (PDT)
-Date: Thu, 3 Jul 2025 05:26:37 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
-	stefanha@redhat.com, alok.a.tiwari@oracle.com,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>
-Subject: [PATCH RFC v4 5/5] virtio: support device disconnect
-Message-ID: <1854be16aefc3c0f033472099c909c442d3bc555.1751534711.git.mst@redhat.com>
-References: <cover.1751534711.git.mst@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+THJFDc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751534864; x=1783070864;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=VzhiqByXgLMeSkkslWm+EtEK5qyexWArSelTCC/0AMg=;
+  b=a+THJFDckHc3KT6E+JgqSK+DIsQhe52bCovv93kIo38x2cb/UY0hBbg+
+   CUaebmEIB5qAMpWmg2T61yKhm7ZrCiG6N8KHW+EdI7vVi432Kzc3ouk8i
+   dCUcDgbjRN+jvMaV/+66i6KK8OHg9qPLAJ0Vki/mV06Vr65duNlmuvCj5
+   GUdyh9fAWlnZJVZsU+7frhXUdVDdfKQMPFrbmlRNb1iVz6/AbCXU0ldxQ
+   JJjyuGDoC5J2SCoSCMSJXCgtMKPVZYovzZ/ecZG7grt15InU/eVnIKP4p
+   I6QYS/BKH7IzY7RVF5MzLunA380TUM34gOL1ANnVwzqNJGQsC0cfuaZQQ
+   A==;
+X-CSE-ConnectionGUID: /03hNDkcTyOfRiNGLwNhsw==
+X-CSE-MsgGUID: 0GRnrL5LQMW1N4/NUcS6/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65308024"
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="65308024"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 02:27:43 -0700
+X-CSE-ConnectionGUID: oOykCtReR7W4UX17C+gjsg==
+X-CSE-MsgGUID: BwbPXvI2Sr2Mys8YYQ4gdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="154396935"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.117])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 02:27:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Jul 2025 12:27:37 +0300 (EEST)
+To: Reinette Chatre <reinette.chatre@intel.com>
+cc: linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+    Tony Luck <tony.luck@intel.com>, Dave Martin <Dave.Martin@arm.com>, 
+    James Morse <james.morse@arm.com>, 
+    Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, 
+    LKML <linux-kernel@vger.kernel.org>, Fenghua Yu <fenghuay@nvidia.com>
+Subject: Re: [RFC PATCH v1 0/2] kselftest/resctrl: CAT functional tests
+In-Reply-To: <0e9137e0-ec21-42b9-98be-af90becc2318@intel.com>
+Message-ID: <6e4aada6-005e-95ba-207d-f867c2405a1c@linux.intel.com>
+References: <20250616082453.3725-1-ilpo.jarvinen@linux.intel.com> <0e9137e0-ec21-42b9-98be-af90becc2318@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1751534711.git.mst@redhat.com>
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+Content-Type: multipart/mixed; boundary="8323328-1968015734-1751534857=:2373"
 
-This adds support for device disconnect:
-upon device surprise removal, virtio core makes sure
-to no callbacks are running, and then notifies the driver.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-At the moment, virtio pci is the only transport with this
-functionality enabled, it does nothing for other transports.
+--8323328-1968015734-1751534857=:2373
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/virtio/virtio_pci_common.c | 45 ++++++++++++++++++++++++++++++
- drivers/virtio/virtio_pci_common.h |  3 ++
- drivers/virtio/virtio_pci_legacy.c |  2 ++
- drivers/virtio/virtio_pci_modern.c |  2 ++
- include/linux/virtio.h             |  3 ++
- include/linux/virtio_config.h      | 32 +++++++++++++++++++++
- 6 files changed, 87 insertions(+)
+On Fri, 27 Jun 2025, Reinette Chatre wrote:
+> On 6/16/25 1:24 AM, Ilpo J=C3=A4rvinen wrote:
+> >=20
+> > In the last Fall Reinette mentioned functional tests of resctrl would
+> > be preferred over selftests that are based on performance measurement.
+> > This series tries to address that shortcoming by adding some functional
+> > tests for resctrl FS interface and another that checks MSRs match to
+> > what is written through resctrl FS. The MSR test is only available for
+> > Intel CPUs at the moment.
+>=20
+> Thank you very much for keeping this in mind and taking this on!
+>=20
+> >=20
+> > Why RFC?
+> >=20
+> > The new functional selftest itself works, AFAIK. However, calling
+> > ksft_test_result_skip() in cat.c if MSR reading is found to be
+> > unavailable is problematic because of how kselftest harness is
+> > architected. The kselftest.h header itself defines some variables, so
+> > including it into different .c files results in duplicating the test
+> > framework related variables (duplication of ksft_count matters in this
+> > case).
+> >=20
+> > The duplication problem could be worked around by creating a resctrl
+> > selftest specific wrapper for ksft_test_result_skip() into
+> > resctrl_tests.c so the accounting would occur in the "correct" .c file,
+> > but perhaps that is considered hacky and the selftest framework/build
+> > systems should be reworked to avoid duplicating variables?
+>=20
+> I do not think resctrl selftest's design can demand such a change from=20
+> kselftest. The way I understand this there is opportunity to improve
+> (fix?) resctrl's side.
 
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index d6d79af44569..a475f47052eb 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -594,6 +594,51 @@ const struct cpumask *vp_get_vq_affinity(struct virtio_device *vdev, int index)
- 				    vp_dev->vqs[index]->msix_vector);
- }
- 
-+/* Report disconnect to the driver. */
-+static void virtio_pci_disconnect_work(struct work_struct *work)
-+{
-+	struct pci_dev *pci_dev = container_of(work, struct pci_dev,
-+					       disconnect_work);
-+	struct virtio_pci_device *vp_dev = pci_get_drvdata(pci_dev);
-+	struct virtio_device *vdev = &vp_dev->vdev;
-+	struct virtio_driver *drv = drv_to_virtio(vdev->dev.driver);
-+
-+	if (!pci_test_and_clear_disconnect_enable(pci_dev))
-+		return;
-+
-+        virtio_config_transport_disable(vdev);
-+	virtio_break_device(vdev);
-+
-+	vp_synchronize_vectors(vdev);
-+
-+	drv->disconnect(&vp_dev->vdev);
-+}
-+
-+void virtio_pci_enable_disconnect(struct virtio_device *vdev)
-+{
-+	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-+	struct pci_dev *pci_dev = vp_dev->pci_dev;
-+	struct virtio_driver *drv = drv_to_virtio(vdev->dev.driver);
-+
-+	if (!drv->disconnect)
-+		return;
-+
-+	INIT_WORK(&pci_dev->disconnect_work, virtio_pci_disconnect_work);
-+	pci_set_disconnect_work(pci_dev);
-+}
-+
-+void virtio_pci_disable_disconnect(struct virtio_device *vdev)
-+{
-+	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-+	struct pci_dev *pci_dev = vp_dev->pci_dev;
-+	struct virtio_driver *drv = drv_to_virtio(vdev->dev.driver);
-+
-+	if (!drv->disconnect)
-+		return;
-+
-+	pci_clear_disconnect_work(pci_dev);
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static int virtio_pci_freeze(struct device *dev)
- {
-diff --git a/drivers/virtio/virtio_pci_common.h b/drivers/virtio/virtio_pci_common.h
-index 8cd01de27baf..982c4c8aabc8 100644
---- a/drivers/virtio/virtio_pci_common.h
-+++ b/drivers/virtio/virtio_pci_common.h
-@@ -161,6 +161,9 @@ static inline void virtio_pci_legacy_remove(struct virtio_pci_device *vp_dev)
- int virtio_pci_modern_probe(struct virtio_pci_device *);
- void virtio_pci_modern_remove(struct virtio_pci_device *);
- 
-+void virtio_pci_enable_disconnect(struct virtio_device *);
-+void virtio_pci_disable_disconnect(struct virtio_device *);
-+
- struct virtio_device *virtio_pci_vf_get_pf_dev(struct pci_dev *pdev);
- 
- #define VIRTIO_LEGACY_ADMIN_CMD_BITMAP \
-diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virtio_pci_legacy.c
-index d9cbb02b35a1..cd424f619b47 100644
---- a/drivers/virtio/virtio_pci_legacy.c
-+++ b/drivers/virtio/virtio_pci_legacy.c
-@@ -191,6 +191,8 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
- 	.set		= vp_set,
- 	.get_status	= vp_get_status,
- 	.set_status	= vp_set_status,
-+	.enable_disconnect = virtio_pci_enable_disconnect,
-+	.disable_disconnect = virtio_pci_disable_disconnect,
- 	.reset		= vp_reset,
- 	.find_vqs	= vp_find_vqs,
- 	.del_vqs	= vp_del_vqs,
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 7182f43ed055..b3dfb403913f 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -1230,6 +1230,8 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
- 	.generation	= vp_generation,
- 	.get_status	= vp_get_status,
- 	.set_status	= vp_set_status,
-+	.enable_disconnect = virtio_pci_enable_disconnect,
-+	.disable_disconnect = virtio_pci_disable_disconnect,
- 	.reset		= vp_reset,
- 	.find_vqs	= vp_modern_find_vqs,
- 	.del_vqs	= vp_del_vqs,
-diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-index 072a25f6622c..a091651e3144 100644
---- a/include/linux/virtio.h
-+++ b/include/linux/virtio.h
-@@ -214,6 +214,8 @@ size_t virtio_max_dma_size(const struct virtio_device *vdev);
-  * @scan: optional function to call after successful probe; intended
-  *    for virtio-scsi to invoke a scan.
-  * @remove: the function to call when a device is removed.
-+ * @disconnect: the function to call on disconnect (surprise removal),
-+ *    before remove.
-  * @config_changed: optional function to call when the device configuration
-  *    changes; may be called in interrupt context.
-  * @freeze: optional function to call during suspend/hibernation.
-@@ -235,6 +237,7 @@ struct virtio_driver {
- 	int (*validate)(struct virtio_device *dev);
- 	int (*probe)(struct virtio_device *dev);
- 	void (*scan)(struct virtio_device *dev);
-+	void (*disconnect)(struct virtio_device *dev);
- 	void (*remove)(struct virtio_device *dev);
- 	void (*config_changed)(struct virtio_device *dev);
- 	int (*freeze)(struct virtio_device *dev);
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index b3e1d30c765b..861198a74be2 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -58,6 +58,10 @@ struct virtqueue_info {
-  * @set_status: write the status byte
-  *	vdev: the virtio_device
-  *	status: the new status byte
-+ * @enable_disconnect: driver will get disconnect callbacks
-+ *	vdev: the virtio_device
-+ * @disable_disconnect: driver will not get disconnect callbacks
-+ *	vdev: the virtio_device
-  * @reset: reset the device
-  *	vdev: the virtio device
-  *	After this, status and feature negotiation must be done again
-@@ -113,6 +117,8 @@ struct virtio_config_ops {
- 	u32 (*generation)(struct virtio_device *vdev);
- 	u8 (*get_status)(struct virtio_device *vdev);
- 	void (*set_status)(struct virtio_device *vdev, u8 status);
-+	void (*enable_disconnect)(struct virtio_device *vdev);
-+	void (*disable_disconnect)(struct virtio_device *vdev);
- 	void (*reset)(struct virtio_device *vdev);
- 	int (*find_vqs)(struct virtio_device *vdev, unsigned int nvqs,
- 			struct virtqueue *vqs[],
-@@ -299,6 +305,32 @@ void virtio_device_ready(struct virtio_device *dev)
- 	dev->config->set_status(dev, status | VIRTIO_CONFIG_S_DRIVER_OK);
- }
- 
-+/**
-+ * virtio_device_enable_disconnect - enable disconnect callback
-+ * @dev: the virtio device
-+ *
-+ * Driver must call this in the probe function.
-+ */
-+static inline
-+void virtio_device_enable_disconnect(struct virtio_device *dev)
-+{
-+	if (dev->config->enable_disconnect)
-+		dev->config->enable_disconnect(dev);
-+}
-+
-+/**
-+ * virtio_device_disable_disconnect - enable disconnect callback
-+ * @dev: the virtio device
-+ *
-+ * Driver must call this in the remove function.
-+ */
-+static inline
-+void virtio_device_disable_disconnect(struct virtio_device *dev)
-+{
-+	if (dev->config->disable_disconnect)
-+		dev->config->disable_disconnect(dev);
-+}
-+
- static inline
- const char *virtio_bus_name(struct virtio_device *vdev)
- {
--- 
-MST
+Perhaps resctrl can be improved as well but I think it's also a bad=20
+practice to create variables in any header like that. I just don't know=20
+what would be the preferred way to address that in the context of=20
+kselftest because AFAIK, there's no .c file currently injected into all=20
+selftests by the build system.
 
+> Just for benefit of anybody following (as I am sure you are very familiar
+> with this), on a high level the resctrl selftests are run via a wrapper t=
+hat
+> calls a test specific function:
+> =09run_single_test() {
+> =09=09...
+> =09=09ret =3D test->run_test(test, uparams);
+> =09=09ksft_test_result(!ret, "%s: test\n", test->name);
+> =09=09...
+> =09}
+>=20
+> I believe that you have stumbled onto a problem with this since
+> the wrapper can only handle "pass" and "fail" (i.e. not "skip").
+>=20
+> This is highlighted by patch #2 that sets cat_ctrlgrp_msr_test()
+> as the "test->run_test" and it does this:
+>=20
+> =09cat_ctrlgrp_msr_test() {
+> =09=09...
+> =09=09if (!msr_access_supported(uparams->cpu)) {
+> =09=09=09ksft_test_result_skip("Cannot access MSRs\n");
+> =09=09=09return 0;
+> =09=09}
+> =09}
+>=20
+> The problem with above is that run_single_test() will then set "ret" to
+> 0, and run_single_test()->ksft_test_result() will consider the test a "pa=
+ss".
+>=20
+> To address this I do not think the tests should call any of the
+> ksft_test_result_*() wrappers but instead should return the actual
+> kselftest exit code. For example, cat_ctrl_grp_msr_test() can be:
+>=20
+> =09cat_ctrlgrp_msr_test() {
+> =09=09...
+> =09=09if (!msr_access_supported(uparams->cpu))
+> =09=09=09return KSFT_SKIP;
+> =09=09...
+> =09}
+>=20
+> To support that run_single_test() can be:
+> =09run_single_test() {
+> =09=09...
+> =09=09ret =3D test->run_test(test, uparams);
+> =09=09ksft_test_result_report(ret, "%s: test\n", test->name);
+> =09=09...
+> =09}
+>=20
+> I think making this explicit will make the tests also easier to read. For=
+ example,
+> cat_ctrlgrp_tasks_test() in patch #1 contains many instances of the below
+> pattern:
+> =09ksft_print_msg("some error message");
+> =09ret =3D 1;
+>=20
+> A positive return can be interpreted many ways. Something like
+> below seems much clearer to me:
+>=20
+> =09ksft_print_msg("some error message");
+> =09ret =3D KSFT_FAIL;
+>=20
+> What do you think?
+
+I hadn't notice there are already these defines for the status value=20
+in kselftest.h. Yes, it definitely makes sense to use them in resctrl=20
+selftests instead of literal return values.
+
+That, however, addresses only half of the problem as=20
+ksft_test_result_skip() takes string which would naturally come from=20
+the test case because it knows better what went wrong.
+
+IMO, most optimal solution would be to call ksft_test_result_skip() right=
+=20
+at the test case ifself and then return KSFT_SKIP from the test to=20
+run_single_test(). run_single_test() would then skip doing=20
+ksft_test_result() call. But that messes up the test result counts due to=
+=20
+the duplicated ksft_cnt in different .c files.
+
+> On a different topic, the part of this series that *does* raise a questio=
+n
+> in my mind is the introduction of the read_msr() utility local to resctrl=
+=2E
+> Duplicating code always concerns me and I see that there are already a fe=
+w
+> places where user space tools and tests read MSRs by opening/closing the =
+file
+> while there is also one utility (tools/power/cpupower/utils/helpers/msr.c=
+) that looks
+> quite similar to what is created here.
+>=20
+> It is not obvious to me how to address this though. Looking around I see=
+=20
+> tools/lib may be a possible candidate and the changelog of
+> commit 553873e1df63 ("tools/: Convert to new topic libraries") gave me im=
+pression
+> that the goal of this area is indeed to host code shared by things
+> living in tools/ (that includes kselftest). While digging I could not fin=
+d
+> a clear pattern of how this is done in the kselftests though. This could
+> perhaps be an opportunity to pave the way for more code sharing among
+> selftests by creating such a pattern with this already duplicated code?
+
+The duplication of MSR reading code was a bit annoying to me as well,=20
+although I only thought it within inside kselftests. But I can look at=20
+this considering tools/ too now that you pointed to that direction.
+
+--=20
+ i.
+
+--8323328-1968015734-1751534857=:2373--
