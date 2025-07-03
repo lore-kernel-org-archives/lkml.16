@@ -1,41 +1,66 @@
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8827BFBF6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3D122CBD8;
+	Thu,  3 Jul 2025 17:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751564158; cv=none; b=l8S9LeA53Ms8WjCTUTQ7QNSZFUkffhBXCYcMr4y5RkFFqhn75pD8qZl8LL8BuRVihv9JeSkbm93v81oKbNj1LsmJsiwCEtegj4LKUAVp3Vri1BTjX0izH9/2WtUiTFr7+xdRU4uhjsny727c3HKdbaeORu4y6Xvsb8LKJfcEwwM=
+	t=1751564213; cv=none; b=OQv3RE1aL4OSu4K6yEXY56Qh9PmorGpmVkRClbMmFtaeGXGV71woV1YNtCqliCsPAv0AQTRIgZSR3bGrYRJ76cbhcUW2VPleuovYLfU7Iw73Fz8DJBQV4vDFchhWEs/0t2u8mtP+k/AMQuUO/u2NBpoud7pbvOCc48cZHrmyPcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751564158; c=relaxed/simple;
-	bh=QPjE0tU2Dius03JDG9NS75jvx9O7C8YaZBCejK06Abc=;
+	s=arc-20240116; t=1751564213; c=relaxed/simple;
+	bh=gC5oxC05JYMnHdkqc1iDIhgZs86EWHCHEt5NMMKSsfY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eLbk8OAvczarCLdHCCUYfalK4keS7f3prB564SmUsaDhUx9SHnzZTpU2FDk0eUsm9gS/LoD3bJdZePjZSKrs3MqaE3Vzj4/fUnqX/GDcumbAt/x9AyWiSh7LRQPWG72zHE4VHZataf0atHngsoZEc9trIEQkNuou8Et47egllyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gRDGE1nZ; arc=none smtp.client-ip=80.12.242.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=aqtTnFnmKPo5C+UGZAr68ntJ6TdgtPKiLzTALax5eFBiHH1HnBVI+2mTFfpmbUPvb4T2SgE7hOzoBIHQTU0WIh0erjXy64DELHOa9Mu6cO6boYKpRMTxQIkF21wjErmW6cHRTpIremRXJ5NiWBrvdqoP53zexEKozz/M0hxNGcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OMKZlWnd; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gRDGE1nZ"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id XNqjuxFR98jLiXNqjuUJqz; Thu, 03 Jul 2025 19:35:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751564153;
-	bh=ZQ0aSIIkruxyS5VG7Wq7+L5vmBZtmZ6PRQHg4mDtPZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=gRDGE1nZ3NNDO66Ct/nhWmX+978ORto8+Ecj/OeVwD8Ajs2VkL6vgEf76ddx+KLtU
-	 rujymNj2t1Qp6gkEYnn3E0RzfqyuAXVN2ZrP8y5/CZ/qS3TrguHTkuE3CsuLqUSduk
-	 kpzEmxZ0Sx3fSrogpq+FTtOeNlvRbjjl+ObtVadsa278//bHLXRR+PwrBwOf3z/ftT
-	 NUrJRVu12MYz1yRTAYOZm06MPJ2bNhBKcglF8epcZ996boshAtkbARg6G3Z2Zr5QI7
-	 YnMTijBeneFqJwb1SZHlBlQBO0x9KEqv5LycitMqqu7irSUs1mNlz64v6lp5RpIKsP
-	 4hDILbnKXosNw==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 03 Jul 2025 19:35:53 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <f1c68345-a511-46b8-964c-a00bb62274ba@wanadoo.fr>
-Date: Thu, 3 Jul 2025 19:35:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMKZlWnd"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b271f3ae786so122778a12.3;
+        Thu, 03 Jul 2025 10:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751564211; x=1752169011; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kfdgrwoaedf860rN7B8LGcaFfwnl4UwNfcpp+jVQ3QU=;
+        b=OMKZlWndyrpIJeaGu+kdVEp0260rEWfrGP7NvUiFowtVixaoWMT2IRwPLxCqE7owm1
+         MHry6uozESEnsNHgAEA5Xol+R/faBu5XTL99EsREN0nb6/mNuN5CAKkU6OtJGnQttGRQ
+         s4k22qD8NElq2Cw+LwFEKJWmnG+pIO9wIskGy6kn5dy4QVwrzmdSlCKOgJFcdK9G+u3k
+         oXhG8XZvo4Cwi5bchGd9qk6jPhnL2VEkWD3EEcjBPwIWHNTO2kSBVFA02U+yZSW6zkO/
+         h7TTIgBo6df6DaOUX7m8F+p+U5daw6fkH3xwPlCyRwhp3s6VY/g1uUP7rtxjZDbKHy2v
+         p6DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751564211; x=1752169011;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kfdgrwoaedf860rN7B8LGcaFfwnl4UwNfcpp+jVQ3QU=;
+        b=nateHVRjq+oNzTsiEW4qSpvtVQqnK2Q7CBtBusKol01gIGwqf58FoQkozJHBL+/za+
+         YhLMR+G1Dp16mjmOsFgQhNhGeYVf+sre0O2mkql5XDbiLA/jimEqvZcLep++QKgW3sB6
+         /O47Oeg8bSR5lFaUqTkd1pBUD9LbRQ79WR67EjjHiSJhcILWKGkILAiWBfXEuuZI1tHy
+         VraiLUUXZpFfcBzJ6I2Xu2FW1irmRLSSjMu69+6YhptNaOJgva0D7wBI7WkTadYbtofB
+         20MNrLZaNLSo7mhJXZQqCwGMd/t5frBLsu3n82ahbd+TDIfe5yHmLzlalBLhdDXipaX9
+         r1rA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDqBoDE8+ptY8shBr1Ul6xfYJb8wRH7z1JUEhQ10yuU693wbMuKQ/tdbtfrcDYaWo6NYEaxqU8c7/s/0w=@vger.kernel.org, AJvYcCX5sBSqmoolOMenaL196bivaOEo7DlBbsjOWaNw3548kK/EzdfdDBBq1cKSFa5Redu6QQE/Ypj7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPjz61XQHT11XbzXAPIayAO8qzHGlvbXj3ZJSrJ7W6j0X36XUt
+	UBpP+I04+a/1MHUguWr7RAeKm5hGX1dlQLmGhH2trVcNcX0mRFxUiJrL
+X-Gm-Gg: ASbGncvAX9S8O9D+kueQHr5X0yOxezq/Q6WAFlGQJpfXiKD9ErvHlviQHL8AcyE60I7
+	znaOZOdslpdRVfM3Fq6qm78nOInZVI2ROn9NjVI1O4culUC+v31mzKsCFMw3d4PPHdTbb059cY2
+	38G2gakhb/jIbK7JM1ESabKk62IVgAYU9dxdJ+C1k4Mxk8+FElXnQYah8drmqa/RKwz4kjBfgXr
+	sAZDA6iZJn47BykuhekqFw9wPBLvf4gicSnbbZk6cTQv217XCAAkYIyZG8o+lEOfyytt9ZC1gHf
+	Tyt/D8vsR27hwCby+keqzX6JGdkEHqkOFUvm6PwjvcbYNIKuv7IMpoHzAWys5MOUk6HnOWarwl1
+	w/u5mw/pID/26Ug==
+X-Google-Smtp-Source: AGHT+IHwGgt7Bg+h9xyatF0LD1ghP4SHeSyGYJPL0pxhSBY1346SnGty5LqaLn9PN7gN4mJ5k+YUAw==
+X-Received: by 2002:a17:90b:2541:b0:30a:4874:5397 with SMTP id 98e67ed59e1d1-31a9deae2fcmr5197371a91.9.1751564211338;
+        Thu, 03 Jul 2025 10:36:51 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc4c7c3sm3036573a91.9.2025.07.03.10.36.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 10:36:50 -0700 (PDT)
+Message-ID: <0d727070-5e23-4f28-a45b-70e7e869e037@gmail.com>
+Date: Thu, 3 Jul 2025 10:36:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,124 +68,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] xen/gntdev: reduce stack usage by dynamically
- allocating gntdev_copy_batch
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
- Tu Dinh <ngoc-tu.dinh@vates.tech>, Abinash <abinashlalotra@gmail.com>
-Cc: sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- Abinash Singh <abinashsinghlalotra@gmail.com>
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com>
- <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
- <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
- <ab668ddb-1ea5-4444-95fc-f31469b4f05e@vates.tech>
- <f8bde276-9d4e-47d0-9841-fd8724ef5275@suse.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <f8bde276-9d4e-47d0-9841-fd8724ef5275@suse.com>
+Subject: Re: [PATCH 6.1 000/132] 6.1.143-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250703143939.370927276@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250703143939.370927276@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Le 03/07/2025 à 07:22, Jürgen Groß a écrit :
-> On 03.07.25 00:42, Tu Dinh wrote:
->> On 01/07/2025 23:53, Abinash wrote:
->>> Hi ,
->>>
->>> Thanks for pointing that out.
->>>
->>> I haven’t measured the performance impact yet — my main focus was on
->>> getting rid of the stack usage warning triggered by LLVM due to
->>> inlining. But you're right, gntdev_ioctl_grant_copy() is on a hot
->>> path, and calling kmalloc() there could definitely slow things down,
->>> especially under memory pressure.
->>>
->>> I’ll run some benchmarks to compare the current approach with the
->>> dynamic allocation, and also look into alternatives — maybe
->>> pre-allocating the struct or limiting inlining instead. If you have
->>> any ideas or suggestions on how best to approach this, I’d be happy to
->>> hear them.
->>>
->>> Do you have any suggestions on how to test the performance?
->>>
->>> Best,
->>> Abinash
->>>
->>>
->>
->> Preallocating may work but I'd be wary of synchronization if the
->> preallocated struct is shared.
->>
->> I'd look at optimizing status[] which should save quite a few bytes.
->>
->> Reducing GNTDEV_COPY_BATCH could be a last resort, but that may also
->> impact performance.
+On 7/3/25 07:41, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.143 release.
+> There are 132 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> IMHO the most promising way would be to dynamically allocate the struct, 
-> but
-> don't free it at the end of the ioctl. Instead it could be put into a list
-> anchored in struct gntdev_priv, so freeing would be done only at close() 
-> time.
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
 > 
-> Synchronization would be minimal (just for taking a free struct from the 
-> list
-> or putting it back again), while memory usage would be basically just as 
-> needed,
-> depending on the number of concurrent threads using the same file 
-> descriptor
-> for the ioctl.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.143-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
 > 
-> This approach would even allow to raise GNTDEV_COPY_BATCH, maybe 
-> resulting even
-> in a gain of performance.
+> thanks,
 > 
-> I'll write a patch implementing the allocation scheme.
-> 
-> 
-> Juergen
+> greg k-h
 
-It may be an overkill, but sometimes we see pattern that try to keep the 
-best of the 2 worlds. Something like:
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-
-static struct gntdev_copy_batch static_batch;
-static struct mutex my_mutex;
-
-static long gntdev_ioctl_grant_copy(...)
-{
-	struct gntdev_copy_batch *dynamic_batch = NULL;
-	struct gntdev_copy_batch *batch;
-
-	...
-
-	if (mutex_trylock(&my_mutex)) {
-		/*
-		 * No concurrent access?
-		 * Use a shared static variable to avoid an allocation
-		 */
-		batch = &static_batch;
-	else {
-		/* otherwise, we need some fresh memory */
-		dynamic_batch = kmalloc(sizeof(*batch), GFP_KERNEL);
-		if (!batch)
-			return -ENOMEM;
-
-		batch = dynamic_batch;
-	}
-
-	/* do stuff with 'batch' */
-	...
-
-free_batch:
-	if (!dynamic_batch)
-		mutex_unlock(&my_mutex);
-	else
-		kfree(dynamic_batch);
-  	return ret;
-  }
-
-
-Just my 2c.
-
-CJ
-
-
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
