@@ -1,123 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965FB25228C;
-	Thu,  3 Jul 2025 19:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE95D190679;
+	Thu,  3 Jul 2025 20:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751572779; cv=none; b=YV6WVT0a2B9eDenLNn89E07eH8KNNWKVpQNhNmkmerjbtbdd14yomh+8xk57H5ksI2eiA5RtJlGB5utEqeAgq6glcp++lywp6GzmVZuY03ieBJfO2jhQY7h3NKrY87FFvEsWw8D5YvFJ3xuJm/kS2GJ34c95SXi0CHPkjyWjBa0=
+	t=1751572838; cv=none; b=YXNdqwTU4b8GfZ6Fd+EVfe02exyAW5FhLJYJUI7tss3ePhcNnvNJKJTq84MKjcNf6yRBL2m2Z71A0MFIYYrtmR3HOd0m19VWpbLw448IbvmJYLOoqspN30Xvm1Dle9rWDtCauPGskFwwRjpc6JyXrN9wkZ8kj/bYN66W8ldoIZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751572779; c=relaxed/simple;
-	bh=lY55ECqDsxZNqp15zYLwy9T/g7qWxH7wryMpr3+Xu8A=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=umdomSU5dX1M9McU7Z2iHH0EvftDowNngl+Mech7ZSi0goYQ3znusofEFoe7pLG/PaAP/JQEii8X1Y7eYx0ni3L9iWSfk7zOjMNzXuXb9YLTgEkUh5wi22FR0TTEobQ4XEBYkN5J5CGbuZKogcou3gFmNi5JLIDSRjSNnvszkAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FEw4D24y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gcOi8Aam; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751572838; c=relaxed/simple;
+	bh=ZN/sSZ5VqDrJ+/+zU/enR2Lt6V5eNXGWEbWy7w+DLlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oPM9s9wnmfQL7MXA6mw1hPG1UAY0vqDLJjrNnn78wCkSgfBTf5i2mJVDZ4TNuMMBzuWoubiT5mYogQEpESGjOIcVYhfW9C62AlHZsPNVE+x6LAId4h02mNv5XBwsvUjf7cH+4wCVWI8NwMUwiq+vH76AniJmhG9JURbpPhCBs68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M8R6JXbF; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FEw4D24y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gcOi8Aam"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751572775;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M8R6JXbF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751572823;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgxsuIMDDXARhsRWgLrILUs/XsyS+TZEtoBBb/RsYm0=;
-	b=FEw4D24yX86GGy1rTWJ6zgH6Tlp5yOHO2h19VrQVJd4soMjXNtcLFhCIhBmDcIfo3afyMj
-	GH127yUbXDNuBwtaRHEi3ZdZq1EtVgrFX538bhU2DxEWijBcrYdtsbcPrHNXmmJo9oigK2
-	p8tlXD9sQkkbAEVYgixGuE4g/C1C8SERxleQFZ6JK4QAYdSnvoCipiRlj9XG1+zgC+PcYi
-	P1+WPyUM/DcSNaeacoqIXzqO0l/JuCUlWJVgJtqJD9sBqQW82ryw/C9BjBZLTQ2Ex85h76
-	JpECmRlt2nY9d/HdGO8XKDQWVUSZHBMUUcyw4iSOA9qF3eLPWuCRcbf7lfETnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751572775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgxsuIMDDXARhsRWgLrILUs/XsyS+TZEtoBBb/RsYm0=;
-	b=gcOi8AamD60gBuSLM6+XBj7cc6BNGHuWvnQ0nejzuIxbahpVhbP1ZuQex8HvkFndFkmXZR
-	hOi5o2qE1taW8LDw==
-To: Michael Kelley <mhklinux@outlook.com>, Nam Cao <namcao@linutronix.de>,
- Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Karthikeyan Mitran
- <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
- Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, Pali =?utf-8?Q?Roh=C3=A1r?=
- <pali@kernel.org>, "K
- . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
- <jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Florian
- Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
- list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
- <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
- <linux-rpi-kernel@lists.infradead.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
-In-Reply-To: <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
- <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Date: Thu, 03 Jul 2025 21:59:34 +0200
-Message-ID: <87cyaht595.ffs@tglx>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SGhXzWJsGk56JycQmQ+hoC74TrLHTSnR2HKmNnQu/Nw=;
+	b=M8R6JXbF/SaGFD0ewZZk0dtUaSuRsaRB2w+WYGGTkJNFxeUR/FELr5MkCYl+5heZ1Bvldu
+	rAph2Kt+lIAcvjEPESRtd9zcuPsoTSp6uH2XtCtVCdFuMlg4YCVOSVphNeCcvtXwz7vm07
+	MnYUxRFP7aFUHRwrjaetduqdFT0oXjA=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Tejun Heo <tj@kernel.org>
+Cc: "Paul E . McKenney" <paulmck@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	JP Kobryn <inwardvessel@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH 1/2] llist: avoid memory tearing for llist_node
+Date: Thu,  3 Jul 2025 13:00:11 -0700
+Message-ID: <20250703200012.3734798-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jul 03 2025 at 17:41, Michael Kelley wrote:
-> From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:48 AM
->> 
->> Move away from the legacy MSI domain setup, switch to use
->> msi_create_parent_irq_domain().
->
-> From a build standpoint, this patch does not apply cleanly to
-> linux-next20250630. See also an issue below where a needed irq
-> function isn't exported.
+Before the commit 36df6e3dbd7e ("cgroup: make css_rstat_updated nmi
+safe"), the struct llist_node is expected to be private to the one
+inserting the node to the lockless list or the one removing the node
+from the lockless list. After the mentioned commit, the llist_node in
+the rstat code is per-cpu shared between the stacked contexts i.e.
+process, softirq, hardirq & nmi. It is possible the compiler may tear
+the loads or stores of llist_node. Let's avoid that.
 
-Does it conflict against the PCI tree?
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ include/linux/llist.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> At runtime, I've done basic smoke testing on an x86 VM in the Azure
-> cloud that has a Mellanox NIC VF and two NVMe devices as PCI devices.
-> So far everything looks good. But I'm still doing additional testing, and
-> I want to also test on an ARM64 VM. Please give me another day or two
-> to be completely satisfied.
+diff --git a/include/linux/llist.h b/include/linux/llist.h
+index 27b17f64bcee..607b2360c938 100644
+--- a/include/linux/llist.h
++++ b/include/linux/llist.h
+@@ -83,7 +83,7 @@ static inline void init_llist_head(struct llist_head *list)
+  */
+ static inline void init_llist_node(struct llist_node *node)
+ {
+-	node->next = node;
++	WRITE_ONCE(node->next, node);
+ }
+ 
+ /**
+@@ -97,7 +97,7 @@ static inline void init_llist_node(struct llist_node *node)
+  */
+ static inline bool llist_on_list(const struct llist_node *node)
+ {
+-	return node->next != node;
++	return READ_ONCE(node->next) != node;
+ }
+ 
+ /**
+@@ -220,7 +220,7 @@ static inline bool llist_empty(const struct llist_head *head)
+ 
+ static inline struct llist_node *llist_next(struct llist_node *node)
+ {
+-	return node->next;
++	return READ_ONCE(node->next);
+ }
+ 
+ /**
+-- 
+2.47.1
 
-Sure.
->> +static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
->> +{
->> +	struct msi_domain_info *info = d->host_data;
->> +
->> +	for (int i = 0; i < nr_irqs; i++)
->> +		hv_msi_free(d, info, virq + i);
->> +
->> +	irq_domain_free_irqs_top(d, virq, nr_irqs);
->
-> This code can be built as a module, so irq_domain_free_irqs_top() needs to be
-> exported, which it currently is not.
-
-Nam, can you please create a seperate patch, which exports this and take
-care of the conflict?
-
-Thanks,
-
-        tglx
