@@ -1,176 +1,109 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067E1293C6D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03187296147
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524196; cv=none; b=cSf2WzxZVGsWjVWgJrJd5EyPJ3HpBz2eRtKqleO1f5GamztYUmcJax5wISvOBhj3t4bge9c5mNHrBVbAPJcUt58ZtS07pFhQhPqD5VHYNP6V5XEDvYG4nCdpSaPqlFErIFgyhRsj1vUIdXUnhad6KiqOtnpyVE42ba9aQdSsjYs=
+	t=1751524203; cv=none; b=Ru3x3y9rVC4S5wKpVDJr2JoRHg36vk5gS4CoJaPPnggXJXm5RoGjAQbwSijbOH0aT9/LinW53aIoZsa995A7ZbYlH5XYxXSEVvUvCbalgUYRNl4uUhgJ+qPqbksPlmklqK0nsH2+yFqLrRKgqduqb/wvejSQ11LdlgCA0G1Pbp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524196; c=relaxed/simple;
-	bh=ECZsDDl1TKGG4YWaeZysqUnhyotAlHo4xWKR7RY0iE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J5isVS4CIXihAsg24hg36y73t/eHdxbSvtML92GzrRJ1qs2vqaotvpiyYdu8thYnGIlJO1Twrc+5iXbw2vBEccyQ4A1G3c1Ro7PpmxqeP1uFCxKDTbXtno3EpZgtb3Y9OlJHU4AjctAmiYEoh51z3sMFem4bpxGmQ/VsoR57hy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hdanQT/B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8f/nrZVz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hdanQT/B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8f/nrZVz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hdanQT/B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8f/nrZVz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hdanQT/B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8f/nrZVz"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1F9E81F38D;
-	Thu,  3 Jul 2025 06:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751524193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+2Q0mOGHh5KVfoOEylVWcUYpGF+d4DxD/1fzSg/ERY=;
-	b=hdanQT/B/YrdbDJ252ztmualMT3ROdiRXiGELHqvpl+5vq5uftybIJQspM/Py2eo2a96QK
-	JZVfJj3nDJHrS2qgm7liNhn8PueJ+E8aW9qqQFGPV9qi8nhswmLjlKsAhtJOFIi3pQlwal
-	Jek0zACoiBu2CJHS5H2V0fjTR7qmOlI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751524193;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+2Q0mOGHh5KVfoOEylVWcUYpGF+d4DxD/1fzSg/ERY=;
-	b=8f/nrZVz0G186gxGJsowBq8+kGM1HB97fcEz8pMxnKaifONmSVJQ906bG4VKNGRe4ZKUm0
-	XiOAsK8ygvDXRZDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="hdanQT/B";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="8f/nrZVz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751524193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+2Q0mOGHh5KVfoOEylVWcUYpGF+d4DxD/1fzSg/ERY=;
-	b=hdanQT/B/YrdbDJ252ztmualMT3ROdiRXiGELHqvpl+5vq5uftybIJQspM/Py2eo2a96QK
-	JZVfJj3nDJHrS2qgm7liNhn8PueJ+E8aW9qqQFGPV9qi8nhswmLjlKsAhtJOFIi3pQlwal
-	Jek0zACoiBu2CJHS5H2V0fjTR7qmOlI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751524193;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+2Q0mOGHh5KVfoOEylVWcUYpGF+d4DxD/1fzSg/ERY=;
-	b=8f/nrZVz0G186gxGJsowBq8+kGM1HB97fcEz8pMxnKaifONmSVJQ906bG4VKNGRe4ZKUm0
-	XiOAsK8ygvDXRZDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 540BD1368E;
-	Thu,  3 Jul 2025 06:29:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nNLzEmAjZmgsSQAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 03 Jul 2025 06:29:52 +0000
-Message-ID: <1299faff-d6f0-43f7-9c94-89d23dff09ff@suse.de>
-Date: Thu, 3 Jul 2025 08:29:51 +0200
+	s=arc-20240116; t=1751524203; c=relaxed/simple;
+	bh=igRhDsuiSuXQRzp+0eQ1JsrZSJ5AY9mIOhpTpRULOVE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Z4dejoZMGRFqkT2GCRCREfVvs6hrEkdCpKm7030ck4dZeRTE4SDz2LlVuCPWbk815IENTSdxklvVDnhWhbYIEazF2bh09w+pOG9dikiPDBPIZQrLKejTmozBIVnoeNkxt+fqFixmUsCuU6LB3DJ9mKc/apaBvrn1yaT8iudoE4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=13.76.142.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [115.197.243.13])
+	by mtasvr (Coremail) with SMTP id _____wAXEExVI2ZoJKfaAw--.10212S3;
+	Thu, 03 Jul 2025 14:29:42 +0800 (CST)
+Received: from linma$zju.edu.cn ( [115.197.243.13] ) by
+ ajax-webmail-mail-app2 (Coremail) ; Thu, 3 Jul 2025 14:29:40 +0800
+ (GMT+08:00)
+Date: Thu, 3 Jul 2025 14:29:40 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Lin Ma" <linma@zju.edu.cn>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+Cc: wkang77@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v1 1/2] staging: gdm724x: fix type confusion in
+ gdm_lte_event_rcv()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
+ 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
+In-Reply-To: <2025070343-halves-prison-c40f@gregkh>
+References: <20250703052723.14616-1-linma@zju.edu.cn>
+ <2025070343-halves-prison-c40f@gregkh>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 04/10] nvme-pci: use block layer helpers to constrain
- queue affinity
-To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Aaron Tomlin <atomlin@atomlin.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin
- <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
- Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>,
- Mel Gorman <mgorman@suse.de>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
- linux-scsi@vger.kernel.org, storagedev@microchip.com,
- virtualization@lists.linux.dev, GR-QLogic-Storage-Upstream@marvell.com
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-4-557aa7eacce4@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250702-isolcpus-io-queues-v7-4-557aa7eacce4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1F9E81F38D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Message-ID: <97e5af3.9183.197cefa02cc.Coremail.linma@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:zC_KCgAnToVUI2ZowvxZAA--.11651W
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwEQEmhlCw4LqQAAsq
+X-CM-DELIVERINFO: =?B?9E9y5AXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHlVyJpD759Nt3m89ewvKkHS2l85V1JX4pgBxrPTgKXn82pmPe1xoh9OFE5HRk2gjSVLO
+	fm3FMTiIbenwKZIMugowJ7SMZAUJS1HMGBlyRbnUeJ8zLClqYtuHwjweEWzeCw==
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF4Dury8GF4fJryxWFWrXrc_yoW8uw4rpa
+	y5uayrtrW8XF97Wan5GFW2gF42gr1xK348C3s3ta45Wr1DXay8JFyrKrW5A3s8AF95AryS
+	v3WUZ3y3Kw17uagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxM4xvF2IEb7IF0Fy264kE64k0F24lFcxC0VAYjxAxZF0Ex2IqxwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMVCEFcxC0VAYjxAxZFUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU8CJm5UUUUU==
 
-On 7/2/25 18:33, Daniel Wagner wrote:
-> Ensure that IRQ affinity setup also respects the queue-to-CPU mapping
-> constraints provided by the block layer. This allows the NVMe driver
-> to avoid assigning interrupts to CPUs that the block layer has excluded
-> (e.g., isolated CPUs).
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   drivers/nvme/host/pci.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index a509dc1f1d1400bc0de6d2f9424c126d9b966751..5293d5a3e5ee19427bec834741258be134bdc2c9 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -2589,6 +2589,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
->   		.pre_vectors	= 1,
->   		.calc_sets	= nvme_calc_irq_sets,
->   		.priv		= dev,
-> +		.mask		= blk_mq_possible_queue_affinity(),
->   	};
->   	unsigned int irq_queues, poll_queues;
->   	unsigned int flags = PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY;
-> 
+SGVsbG8gR3JlZywKCj4gPiBAQCAtNTIyLDYgKzUyMiw5IEBAIHN0YXRpYyB2b2lkIGdkbV9sdGVf
+ZXZlbnRfcmN2KHN0cnVjdCBuZXRfZGV2aWNlICpkZXYsIHUxNiB0eXBlLAo+ID4gIHsKPiA+ICAJ
+c3RydWN0IG5pYyAqbmljID0gbmV0ZGV2X3ByaXYoZGV2KTsKPiA+ICAKPiA+ICsJaWYgKGRldi0+
+bmV0ZGV2X29wcy0+bmRvX29wZW4gIT0gZ2RtX2x0ZV9vcGVuKQo+ID4gKwkJcmV0dXJuOwo+IAo+
+IFdoeSBzaG91bGQgYSBkcml2ZXIgYmUgcG9raW5nIGFyb3VuZCBpbiBuZXRkZXZfb3BzPyAgVGhh
+dCBmZWVscyB3cm9uZywKPiB3aGF0IHdvdWxkIGV2ZXIgY2hhbmdlIHRoaXM/ICBXaHkgbm90IGZp
+eCB0aGF0IGluc3RlYWQ/Cj4gCj4gdGhhbmtzLAo+IAo+IGdyZWcgay1oCgpZZXMsIGl0IHNlZW1z
+IHRoYXQgY29tcGFyaW5nIG9wcyBpcyBxdWl0ZSBhbWJpZ3VvdXMgYW5kIHdlaXJkLiBIb3dldmVy
+LCBpbnZlc3RpZ2F0aW9uIG9uCmNvZGUgc2hvd3MgdmFyaW91cyBjaGVja3MgYWdhaW5zdCBuZXRf
+ZGV2aWNlLgoKLSBieSBgZGV2LT5wcml2X2ZsYWdzYC4gU2VlIGlzX3ZsYW5fZGV2KCkKYGBgCnN0
+YXRpYyBpbmxpbmUgYm9vbCBpc192bGFuX2Rldihjb25zdCBzdHJ1Y3QgbmV0X2RldmljZSAqZGV2
+KQp7CiAgICAgICAgcmV0dXJuIGRldi0+cHJpdl9mbGFncyAmIElGRl84MDJfMVFfVkxBTjsKfQpg
+YGAKCi0gYnkgYGRldi0+cnRubF9saW5rX29wcy0+a2luZGAuIFNlZSBsb29rdXBfaW50ZXJmYWNl
+KCkKYGBgCnN0YXRpYyBzdHJ1Y3Qgd2dfZGV2aWNlICpsb29rdXBfaW50ZXJmYWNlKHN0cnVjdCBu
+bGF0dHIgKiphdHRycywKICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBza19idWZmICpza2Ip
+CnsKICAgIGRldiA9IGRldl9nZXRfYnlfaW5kZXgoc29ja19uZXQoc2tiLT5zayksCiAgICAgICAg
+ICAgICAgICAgICAgICAgbmxhX2dldF91MzIoYXR0cnNbV0dERVZJQ0VfQV9JRklOREVYXSkpOwog
+ICAgLi4uCiAgICBpZiAoIWRldi0+cnRubF9saW5rX29wcyB8fCAhZGV2LT5ydG5sX2xpbmtfb3Bz
+LT5raW5kIHx8CiAgICAgICAgc3RyY21wKGRldi0+cnRubF9saW5rX29wcy0+a2luZCwgS0JVSUxE
+X01PRE5BTUUpKSB7CiAgICAuLi4KfQpgYGAKCi0gYnkgYGRldi0+dHlwZWAuIFNlZSBheDI1X2Rl
+dmljZV9ldmVudCgpCmBgYApzdGF0aWMgaW50IGF4MjVfZGV2aWNlX2V2ZW50KHN0cnVjdCBub3Rp
+Zmllcl9ibG9jayAqdGhpcywgdW5zaWduZWQgbG9uZyBldmVudCwKICAgICAgICAgICAgICAgICB2
+b2lkICpwdHIpCnsKICAgIHN0cnVjdCBuZXRfZGV2aWNlICpkZXYgPSBuZXRkZXZfbm90aWZpZXJf
+aW5mb190b19kZXYocHRyKTsKCiAgICAuLi4uLi4KCiAgICAvKiBSZWplY3Qgbm9uIEFYLjI1IGRl
+dmljZXMgKi8KICAgIGlmIChkZXYtPnR5cGUgIT0gQVJQSFJEX0FYMjUpCiAgICAgICAgcmV0dXJu
+IE5PVElGWV9ET05FOwpgYGAKCkFzIGZvciBwb2tpbmcgYXJvdW5kIGluIG5ldGRldl9vcHMsIHdl
+IGRpZG4ndCBrbm93IGlmIGl0IGlzIHRoZSBiZXN0IHNvbHV0aW9uLApqdXN0IGJlY2F1c2Ugc29t
+ZSBjb2RlIGRpZCBzaW1pbGFyIGNoZWNrcywgZS5nLgoKYGBgCnN0YXRpYyBzdHJ1Y3QgdGVhbSAq
+dGVhbV9ubF90ZWFtX2dldChzdHJ1Y3QgZ2VubF9pbmZvICppbmZvKQp7CiAgICBkZXYgPSBkZXZf
+Z2V0X2J5X2luZGV4KG5ldCwgaWZpbmRleCk7CiAgICBpZiAoIWRldiB8fCBkZXYtPm5ldGRldl9v
+cHMgIT0gJnRlYW1fbmV0ZGV2X29wcykgewogICAgICAgIC4uLiAKICAgIH0KfQpgYGAKCmFuZAoK
+YGBgCnN0YXRpYyBpbnQgbWx4NWVfc2V0X3ZmX3R1bm5lbCguLi4pCnsKICAgIHJvdXRlX2RldiA9
+IGRldl9nZXRfYnlfaW5kZXgoZGV2X25ldChvdXRfZGV2KSwgcm91dGVfZGV2X2lmaW5kZXgpOwoK
+ICAgIGlmICghcm91dGVfZGV2IHx8IHJvdXRlX2Rldi0+bmV0ZGV2X29wcyAhPSAmbWx4NWVfbmV0
+ZGV2X29wcyB8fCAuLi4gKSB7CiAgICAgICAgLi4uCiAgICB9Cn0KYGBgCgpGcm9tIG15IHBvaW50
+IG9mIHZpZXcsIHVzaW5nIGBkZXYtPnR5cGUvZmxhZ3MvcHJpdl9mbGFnc2AgY291bGQgYmUgYSBi
+ZXR0ZXIKY2hvaWNlIGlmIGl0J3Mgb2theSB0byBpbnRyb2R1Y2UgbW9yZSBkZWZpbml0aW9ucy4K
+ClVzaW5nIG5ldGRldl9vcHMgaXMgbW9yZSBzdHJhaWdodGZvcndhcmQuIE9yIG1heWJlIEkgc2hv
+dWxkIGp1c3QgY29tcGFyZSB0aGUKYC0+bmV0ZGV2X29wc2AgaW5zdGVhZCBvZiB0aGUgYC0+bmV0
+ZGV2X29wcy0+bmRvX29wZW5gPwoKCgpUaGFuc2sKTGlu
 
-That was easy :-)
-
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
