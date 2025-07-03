@@ -1,118 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD37F29A30E;
-	Thu,  3 Jul 2025 07:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E3F225D6;
+	Thu,  3 Jul 2025 07:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751528925; cv=none; b=Rz6C4HF5zXWvpAl41YUQttki+pLDOZoNwq/xZ78b8eC7+7isd1vlpxdK4NSp7WBUZUwXrNy6wAYPtuR/VmqMpgyGZXy5XIs575uxa6qsbbqaInYNqIpn+TrBHeK6C87NgCKwTwN6WI/BOOD2IYkGmHQd4N4hsiR7tpH0fHMe10U=
+	t=1751528980; cv=none; b=MHTxKbmHzssVrzPg7WK/KQHpgm/NUzzfFF18kWl2c1923PzugvrPe4BjK/qAL6bh7k0Pbf1Dd32WqfW3FwWf3KUwPQ4Dl2AR5k1ExlGvpqlX4osAnqBAwI670rCeWEvMDy3asQ0OyPjZc9NyZWmGO5i02h5Rtg+pE5bbQJXPDkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751528925; c=relaxed/simple;
-	bh=k9s86Bitakb5EWdaksTRK4OU/QCAaLRPUqXqxzF3t2o=;
+	s=arc-20240116; t=1751528980; c=relaxed/simple;
+	bh=JAcb44Dm2Yo5eJrTvxaGRn4/w45OBGxTt8yGvkFC6Q4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wy3J1bPIkzGePKoXhlLB/aE7UNvm3jM9V2UXRko5MYK+Mi/3EYjmyTyNgHuLKfoyzZ9Cv5QeEVVr0quaaE3b6ogrNrYYzpG3CTajcebMK0G27gfwJmT7lGa8Wb5+smbFNk+DyE6P8ZFvIS+h6Wt59KHIu50zOaNiuBxYRSL4IPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GR1OQnx2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GR1OQnx2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C10A8C4CEEB;
-	Thu,  3 Jul 2025 07:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751528925;
-	bh=k9s86Bitakb5EWdaksTRK4OU/QCAaLRPUqXqxzF3t2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GR1OQnx2TADAvu1cP1RgCcyQYr9CIATXKHJ4viMQMTKoRWFrPbCpfWONyvBV8BbQ/
-	 rPtFqUAVuGb+GRAwBTnqt79RdfxNdRm/tsDcj4QlOoUnhgozaTRmrBAAio8cG5BAYq
-	 FWtZBdSlXdxhM2v/BdjrWPRKWE4zwmeTfF8yDb6A=
-Date: Thu, 3 Jul 2025 09:48:42 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lin Ma <linma@zju.edu.cn>
-Cc: wkang77@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [PATCH v1 1/2] staging: gdm724x: fix type confusion in
- gdm_lte_event_rcv()
-Message-ID: <2025070359-remold-aneurism-c0ac@gregkh>
-References: <20250703052723.14616-1-linma@zju.edu.cn>
- <2025070343-halves-prison-c40f@gregkh>
- <97e5af3.9183.197cefa02cc.Coremail.linma@zju.edu.cn>
- <2025070355-uncommon-handlebar-c6f3@gregkh>
- <7792df9a.9245.197cf193a6a.Coremail.linma@zju.edu.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3fLvXBUCOWqTpOsi1R8Qv4Dml2f6+6r1x9DP5uYYjyQlR2lNKQVIH3AvUpXMSjjRUuG+bwd/ymdDTbXtth2X7oI5mIgvQDrJwlp9Qa79iLZjSO9QgliqqVUpVr7JfPy1O67mgIeOFRmrySZjrZJTe84+peTNgiiDMe48hWjQs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4EFC4CEE3;
+	Thu,  3 Jul 2025 07:49:39 +0000 (UTC)
+Date: Thu, 3 Jul 2025 09:49:37 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, sophgo@lists.linux.dev, 
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Move sophgo,cv1800b-rtc to rtc directory
+Message-ID: <20250703-naughty-diligent-nightingale-d2fa9f@krzk-bin>
+References: <20250608224252.3902421-1-robh@kernel.org>
+ <ywln42bb3i5hyzlsmfbx3xt2kjbefqmcxytcqxdcgah77gcesi@2cdw3cgxbg4c>
+ <20250617130924.GA1678432-robh@kernel.org>
+ <mig7k5zyhmata6uvjwlwlompwf22qffwvma2nhjww3cmsmxnas@y2t5ukucs76q>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7792df9a.9245.197cf193a6a.Coremail.linma@zju.edu.cn>
+In-Reply-To: <mig7k5zyhmata6uvjwlwlompwf22qffwvma2nhjww3cmsmxnas@y2t5ukucs76q>
 
-On Thu, Jul 03, 2025 at 03:03:46PM +0800, Lin Ma wrote:
-> Hello Greg,
-> 
-> > > ```
+On Wed, Jun 18, 2025 at 07:18:32AM +0800, Inochi Amaoto wrote:
+> On Tue, Jun 17, 2025 at 08:09:24AM -0500, Rob Herring wrote:
+> > On Mon, Jun 09, 2025 at 06:49:38AM +0800, Inochi Amaoto wrote:
+> > > On Sun, Jun 08, 2025 at 05:42:51PM -0500, Rob Herring (Arm) wrote:
+> > > > The $id path for the sophgo,cv1800b-rtc binding was missing part of the
+> > > > path 'soc'. However, the correct place for RTC bindings (even if it's
+> > > > also a "syscon") is the rtc directory, so move the binding there while
+> > > > fixing the $id value.
+> > > > 
+> > > > Fixes: 76517429dbfd ("dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series")
+> > > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > > > ---
+> > > >  .../bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml        | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >  rename Documentation/devicetree/bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml (96%)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+> > > > similarity index 96%
+> > > > rename from Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
+> > > > rename to Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+> > > > index 5cf186c396c9..c695d2ff9fcc 100644
+> > > > --- a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
+> > > > +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+> > > > @@ -1,7 +1,7 @@
+> > > >  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > >  %YAML 1.2
+> > > >  ---
+> > > > -$id: http://devicetree.org/schemas/sophgo/sophgo,cv1800b-rtc.yaml#
+> > > > +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800b-rtc.yaml#
+> > > >  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > >  
+> > > >  title: Real Time Clock of the Sophgo CV1800 SoC
+> > > > -- 
+> > > > 2.47.2
+> > > > 
 > > > 
-> > > - by `dev->type`. See ax25_device_event()
-> > > ```
-> > > static int ax25_device_event(struct notifier_block *this, unsigned long event,
-> > >                  void *ptr)
-> > > {
-> > >     struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> > > 
-> > >     ......
-> > > 
-> > >     /* Reject non AX.25 devices */
-> > >     if (dev->type != ARPHRD_AX25)
-> > >         return NOTIFY_DONE;
-> > > ```
+> > > As the rtc syscon has a sub function for remoteproc, is it proper to
+> > > move this binding into rtc subsystem?
 > > 
+> > Does that affect the binding (is there more to add)? Looks like an RTC 
+> > from the binding.
 > > 
-> > Those are core functions that all drivers are using, and the "type" of
-> > device is also ok to look at.  You are trying to compare a specific
-> > callback in this change, which feels wrong to me.
 > 
-> Got it. I will try to prepare another version.
-> 
-> > 
-> > Wait, what tree are you making this change against?  I don't even see
-> > the file you are trying to patch in the latest tree, are you sure it's
-> > not just deleted already?
-> > 
-> > ...
-> > 
-> > Again, make sure this file is still present in the tree before going
-> > further :)
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Yes, you are right, just like how I pointed out in the patch:
-> 
-> """
-> This bug was "fixed" in upstream kernel by the commit 1c2d364e7f7f
-> ("staging: gdm724x: Remove unused driver"). However, other stable
-> versions still contain it. Fix the confusion bug by adding checks.
-> """
-> 
-> That is, together with another identified bug, has already been deleted the
-> latest upstream kernel. (see https://lore.kernel.org/lkml/20250703052837.15458-1-linma@zju.edu.cn/T/#u)
+> I think at least "resets" property may be added for the this, but I am
+> not sure whether there will be more.
 
-That email was not threaded, and also not obvious what was going on, so
-I long deleted it from my review queue.
+Just post complete bindings - see writing bindings...
 
-> I sent this patch just because the stable version, like 5.15.186, still
-> contains it. T.T
+Best regards,
+Krzysztof
 
-Ah, that was not obvious at all.  Remember, some of us get thousands of
-emails a day to review, please make things that you are submitting for
-non-mainline kernels very very very obvious as to what is going on.
-
-> Therefore, shall I proceed with the patches? Or maybe the stable tree
-> could also delete that vulnerable code?
-
-For a staging driver, it's not an issue, don't worry about it, no distro
-should be using it anyway as no one has the hardware :)
-
-thanks,
-
-greg k-h
