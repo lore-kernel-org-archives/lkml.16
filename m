@@ -1,176 +1,456 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2063.outbound.protection.outlook.com [40.107.100.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF652E5424
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223DD2E6114;
+	Thu,  3 Jul 2025 10:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751539163; cv=pass; b=VTUvlgWKlJtPIoAUt8FS8P3IzeNvDD8lQx9612mzIsDy8rf/SbgLsjMgIURW9u4a9E+yfQVjawtJZHKbJdEq3VyY/ighthhAUi6pc3cu+lHD5gdlOJp2IYna9mvqajlrRAZjSsFM+MyNvBmpaET5QOQVLoQrMLIMHDUabBtUGZo=
+	t=1751539169; cv=fail; b=Zq76FaXAlyUxRIiYz60hwqWW1Li3Ijr7S0kud+9SBrWoEPpIWKVONV8Na1/1n24JrQsh2eaPIBqj3s/+2ZNfRtJOmQ1j9uHRY3zLrmojSPsb3KEE13dtgaEa3htDo4tWZJyDB3XYX9PivVZCtxZAqohm22U4EPigjEU5NG8d2FY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751539163; c=relaxed/simple;
-	bh=J/vbYDbPU3juWbr/LwjVCLU1cq1NokQV/yI+R7rcD0I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bcUeZ7YqNaD4f7Y+Lj3+SdNURs9hEupETcibVShLqW3f4If0MsLEQLZMtpjpONSozVkM+LesbckXx7vGjZQhMoJmzp2blOZ5xSQkuSxcsQDa5NzSKutSlMw5uS2IM9BCaKUdZIu1DYRQWh02+o17JR/zEqVxPx7bqM4C7b7v0OI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=Ua4joRz7; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751539169; c=relaxed/simple;
+	bh=0w1WRmNrBe9Bk/rOn1eYzRIo1LU/DGDk72oK+CjXhWU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nqx02eWpqoKJrt9ABsiNHL2/bOUDNt0iptXiWYsUrav0JVsZ1MO87YhH/g1CFqPRdmPTdYV4WRojtYgDgQ9dzl+WdJje5c771n8tX8cVFOg4x4Mj49WaLxQ6rHUQMLt5Y4gtmlUu6fvHBOnBiv8VHvjq2snnZBiGMpfay1znX8E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TrGX9w5k; arc=fail smtp.client-ip=40.107.100.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="Ua4joRz7"
-ARC-Seal: i=1; a=rsa-sha256; t=1751539145; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OGmTYjb87a/HQQfJ80nuoMM3J5giu9DFlFLheBZM1lWvnWDiOMp9wWhc6sM77tEy1ydXz087rntZgP0XRPFayh7/+6AIYl4/GsM1wkQ3n8qa6H0FCKLoRUVY6HRRJ61CZ9b1OB/QBYNTWJ3UA09pcCeMVrIaAE3yG/LAQMsMunA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751539145; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PUMUxTQyz4Rw+I/k6r4nKllDMvLQcH1q/9NQSkvh/Tc=; 
-	b=gYW8iVfmd0xLbwpe/lltOymsMhP2xnfMuf9kG5gDgz4TIM77kd5B/HOrZYUOxLvR/HxU5dRuW5kbHKrZAECfrY4FR6TvgZRFrBMwIyVjXu0l4aNreUspfiSwGUYHgp026ULp0m84Y1wDGwJtZOeb9kzDr9ML2p9IyKB0j+jh7IE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751539145;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=PUMUxTQyz4Rw+I/k6r4nKllDMvLQcH1q/9NQSkvh/Tc=;
-	b=Ua4joRz7J0WXVyQAc9oiuwImuog9VPquGVoKz8hsGX4MlyXyvGKyYEWhXUMYSB1b
-	bxWzSzqxKFQXqxPM/+iZ+zse3v9BlcQY/CYJ239YdacuajaqPPZhXqldqhvDkvEt+pJ
-	elYxIhb16kp8exk5hBD/X4HuM6rC5REb8wCqfDBU=
-Received: by mx.zohomail.com with SMTPS id 1751539143453232.01329008697712;
-	Thu, 3 Jul 2025 03:39:03 -0700 (PDT)
-Message-ID: <8958966b96140aaaae97b480b7a6c1698a6d2ae2.camel@collabora.com>
-Subject: Re: [PATCH] MFD: mt6397: do not use generic name for keypad
- sub-devices
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	 <angelogioacchino.delregno@collabora.com>, Yassine Oudjana
-	 <y.oudjana@protonmail.com>, =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado"
-	 <nfraprado@collabora.com>, Fabien Parent <fparent@baylibre.com>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Date: Thu, 03 Jul 2025 12:38:59 +0200
-In-Reply-To: <r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw>
-References: 
-	<r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TrGX9w5k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BvqHIFkr/hpn3Jit3dkozntruIiGkbSvvD245aAGI1uiiTq7e4y7tWJYGbyPgjy9OQ76jAb5APtlFGj2gIClAbaN++wARtRor3SZ3h9474s3o4Oj4OFBIcjCaDqOW9TZtVeQQ43mvL7Cvvs9KFSWHiUeskQSpMZuSirrydohny+XbzeBagY0/CLMorXd4by8ORNkepoIy9p0FV47LCOSx6vDjsUtobGg6IfP9FxbyihNxDRNRw1kVC141mDwUTFiXgCOnP8XbbLWRZT4LIojz9R8ETBhCA/zPUHPDXFoQn+VJUyc1oSsUzKqYlpT8+76RIiizabxr3KE2xxi1B2luw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=61mAfCzyzqeg0/MBhcGJnHKH6gnjph+pclp4P+GT/J8=;
+ b=FPXwV/+4782nKbXksGScABhyGfWBAHe8Pa+xYZJtd9vm14KrgK+f3niRti9/7Bmk5/j1H+Trq1GgJK3qW4boduc+W3GwoWHgOTkIfqUNBuiN7xZF/xiE/CY7G5ASVvhTuFLSROXrp3P29lYef9Z83+O/ut1zODS+ebQOChAtej9hMX9AiJR0lHe3y9epbOTDoK3m5QhfSrCD8tZHYlEtaPVRxpWH/k0Q+k2ImKQ6ytPdCsTrbCh/YYVNLcSU8wwoWm9uHgNn1vYl7YWmvhTxbsGlHoRw5caomMDuaW1ve9HEvcU2e1zDuEKZtvuRlCHM/RZSczJNZYs/+UHtdV0UmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=61mAfCzyzqeg0/MBhcGJnHKH6gnjph+pclp4P+GT/J8=;
+ b=TrGX9w5k3cnewPoR9tiTa+74/8hoM+KtdLdber2vi9oWf6GNuL0SpQ2e4nMiHFE6O7Cpnk9rzoX7Ue6M9nv+6R1DyMDzn5KO1UpHAgXJLy2cmIuuaR6pkNK/1PdNII3WuqFz6I6kl7SW5xlGFqeP67sW0cjWESJPTObQ1wBUOGhfY22L8rP1y0ZKnNmfz/vMTi+c95Hk41xAf2/7ecDstWynY7MmYdLS96WwzU2/5j/eqw2uW89+xgolq1eJVi1jS0rlBWoK/I7NEH+5gi6DGEXgqurHc0Os6F9Uwxgz9MN4Hm/WOW4RypkhGILbVd0NW9KqTFtS4Z6vvqw/ZLrl9Q==
+Received: from DM6PR13CA0026.namprd13.prod.outlook.com (2603:10b6:5:bc::39) by
+ IA0PR12MB7530.namprd12.prod.outlook.com (2603:10b6:208:440::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.20; Thu, 3 Jul 2025 10:39:19 +0000
+Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
+ (2603:10b6:5:bc:cafe::d1) by DM6PR13CA0026.outlook.office365.com
+ (2603:10b6:5:bc::39) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.11 via Frontend Transport; Thu,
+ 3 Jul 2025 10:39:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Thu, 3 Jul 2025 10:39:19 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 3 Jul 2025
+ 03:39:09 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 3 Jul
+ 2025 03:39:08 -0700
+Received: from sumitg-l4t.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Thu, 3 Jul 2025 03:39:05 -0700
+From: Sumit Gupta <sumitg@nvidia.com>
+To: <treding@nvidia.com>, <jonathanh@nvidia.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <tbergstrom@nvidia.com>, <bbasu@nvidia.com>, <sumitg@nvidia.com>
+Subject: [PATCH v2 7/8] soc: tegra: cbb: add support for cbb fabrics in Tegra264
+Date: Thu, 3 Jul 2025 16:08:28 +0530
+Message-ID: <20250703103829.1721024-8-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250703103829.1721024-1-sumitg@nvidia.com>
+References: <20250703103829.1721024-1-sumitg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|IA0PR12MB7530:EE_
+X-MS-Office365-Filtering-Correlation-Id: e908d9f0-4969-4b16-aebd-08ddba1dddbf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8nZXNEzM+HmVCQfdUoWo6R6WGtlDTN5VvR6rsZykEFOUsHF5KQ0IWQDI5to2?=
+ =?us-ascii?Q?D1BievQeJmWBYTArbAyA5zZ/Nzq8/48hSif6RJgqV1KFe+9WVEDQeZtLPCz0?=
+ =?us-ascii?Q?MDksrCyB/CM4xPjX5ljJUSiK4coLvIk7Fy47gDoGEq4L+GyQMLBZubzm21AM?=
+ =?us-ascii?Q?Uyy6xeNkbxuD0XDRUH74Bztct7zsI69IOHQ5IpqhBOyaMKFZOe/GEII8+4xa?=
+ =?us-ascii?Q?s0GbZQEJBHP0S91rnIkrDr+iUzXaVFezFT8OncIWbzhKBAPzV6fvkxRR9kcK?=
+ =?us-ascii?Q?F+Bc0hJSPfVTc+R5FCPtthAY77J173isVl72E7/wfJ2c3BbeWNtv6tImmGDZ?=
+ =?us-ascii?Q?3jbekWYjQSLXY6CN1HaZYbbPjzibMkvA2IZ5zpP/6Z074t2+TN2qJ1gtdnu3?=
+ =?us-ascii?Q?kYxAWUC2TftUOxC5BQBySzTAOhPoXpfz9CFXd3fmHnJnhDp1JD2z04Khl0Oz?=
+ =?us-ascii?Q?XO61jfJr55VuPMrPxV9KiZVRAYRJOY+sJYE1OfkDCSWTSygpI80HlSrjkNFp?=
+ =?us-ascii?Q?Zes8DLJpV4YLOnJyGR2/dkPjKlc6Ovt5TA9KEnlArrP9PA5Crm1TtuF/2UgU?=
+ =?us-ascii?Q?4op3JLGsGLmEChh+T1I+PkBk/y2GPo813seYM27LYBWOtwWpJY7NWoyvOCUy?=
+ =?us-ascii?Q?p843Nrny/cz7MVuq5FVdcuO41RTfy1Lh9gEu4wLSSIdMNSCSuP7Wc/4kWefo?=
+ =?us-ascii?Q?b8lZQNXulVahUghVtlmHG86u3eVLJ3BM+W7yw2jzyZ2IYeFdznMb+e/umNPf?=
+ =?us-ascii?Q?fp1MPEWOc7u6iuBCV3+En1I59B0locymHoUBvTXhm5KNvMibOdpZXiOQQYNS?=
+ =?us-ascii?Q?WiACpU4aI2ewCROMbYtb/oGLqzwBoVy+MEL4kdRZWZ4vSmJQ4q54nzrz7QGA?=
+ =?us-ascii?Q?1+ujgxYlr6xsPNKarCa96z3xFD2UABK89GQjhbE6vx9+NoxEjYE8GwmdsYXp?=
+ =?us-ascii?Q?zwOx3ZuIO0al6Y1gNtLBfBik9knr1W/Tw9fW3QuWMNaTITStl3sN5IiwaK2M?=
+ =?us-ascii?Q?tala1q0K3WqemqCyx0Dn2yAB7EdYTVJyr64zlU0nyzSQfB48/uoY1odyeqva?=
+ =?us-ascii?Q?x90uDig1xtAuK8Cmb+dutieh6Z2lm47F8NwTv/4Du8YfYPrHz38RiH6kpdJO?=
+ =?us-ascii?Q?mIcXDr6AXSNWeQFqb2Kw2Dt0jIMFDA6TzsDE55jvcCD/W3QENTjY2jG1YOXi?=
+ =?us-ascii?Q?iR07wYUZQIf+32ftfIocuJLAgez0HcmiinxF92iTEMHNi7Y1kcIMn4RqaLeO?=
+ =?us-ascii?Q?QvYvTokg8xwn6c2TJF5YHbMDwLMTdsgYRam0c3ouTnheAYe8cuKbmK3RZcCe?=
+ =?us-ascii?Q?jgZNoZzJAhw6isDXGAEuqWsQ4rtyeQYURhZAT0T2tUtQVm3Jg1qmbN5PYXTq?=
+ =?us-ascii?Q?D4dmhgU2N2kRsQwAjQjHlVVI7hhkd575fmnElIJfPQ1Cj+XMbFXJP7R5nVb0?=
+ =?us-ascii?Q?trzX0o996lWkX2pVNraEh3xq+Ac9xZEhkuYoWYbdAvgc13Lmopf3M62xBvLV?=
+ =?us-ascii?Q?66zsUl3vBnfGCj+kan0X/Gjsh/m4XRMui5WS?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 10:39:19.2324
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e908d9f0-4969-4b16-aebd-08ddba1dddbf
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE37.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7530
 
-Hi Dmitry,
+Add support for CBB 2.0 based fabrics in Tegra264 SoC using DT.
+Fabrics reporting errors are: SYSTEM, TOP0, UPHY0, VISION.
 
-On Mon, 2025-06-30 at 16:01 -0700, Dmitry Torokhov wrote:
-> Do not use "mtk-pmic-keys" when creating sub-device for the keypad to
-> make sure the keypad driver will only bind to the sub-device if it
-> has
-> support for the variant/has matching compatible.
->=20
-> Reported-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-> Fixes: 6e31bb8d3a63 ("mfd: mt6397: Add initial support for MT6328")
-> Fixes: de58cee8c6b8 ("mfd: mt6397-core: Add MT6357 PMIC support")
-> Fixes: 4a901e305011 ("mfd: mt6397-core: Add resources for PMIC keys
-> for MT6359")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->=20
-> This is not tested so if someone with hardware could try it out that
-> would be great. I *think* it should work...
->=20
-> =C2=A0drivers/mfd/mt6397-core.c | 12 ++++++------
-> =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 5f8ed8988907..3e58d0764c7e 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -136,7 +136,7 @@ static const struct mfd_cell mt6323_devs[] =3D {
-> =C2=A0		.name =3D "mt6323-led",
-> =C2=A0		.of_compatible =3D "mediatek,mt6323-led"
-> =C2=A0	}, {
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6323-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6323_keys_resources),
-> =C2=A0		.resources =3D mt6323_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6323-keys"
-> @@ -153,7 +153,7 @@ static const struct mfd_cell mt6328_devs[] =3D {
-> =C2=A0		.name =3D "mt6328-regulator",
-> =C2=A0		.of_compatible =3D "mediatek,mt6328-regulator"
-> =C2=A0	}, {
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6328-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6328_keys_resources),
-> =C2=A0		.resources =3D mt6328_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6328-keys"
-> @@ -175,7 +175,7 @@ static const struct mfd_cell mt6357_devs[] =3D {
-> =C2=A0		.name =3D "mt6357-sound",
-> =C2=A0		.of_compatible =3D "mediatek,mt6357-sound"
-> =C2=A0	}, {
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6357-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6357_keys_resources),
-> =C2=A0		.resources =3D mt6357_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6357-keys"
-> @@ -196,7 +196,7 @@ static const struct mfd_cell mt6331_mt6332_devs[]
-> =3D {
-> =C2=A0		.name =3D "mt6332-regulator",
-> =C2=A0		.of_compatible =3D "mediatek,mt6332-regulator"
-> =C2=A0	}, {
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6331-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6331_keys_resources),
-> =C2=A0		.resources =3D mt6331_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6331-keys"
-> @@ -240,7 +240,7 @@ static const struct mfd_cell mt6359_devs[] =3D {
-> =C2=A0	},
-> =C2=A0	{ .name =3D "mt6359-sound", },
-> =C2=A0	{
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6359-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6359_keys_resources),
-> =C2=A0		.resources =3D mt6359_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6359-keys"
-> @@ -272,7 +272,7 @@ static const struct mfd_cell mt6397_devs[] =3D {
-> =C2=A0		.name =3D "mt6397-pinctrl",
-> =C2=A0		.of_compatible =3D "mediatek,mt6397-pinctrl",
-> =C2=A0	}, {
-> -		.name =3D "mtk-pmic-keys",
-> +		.name =3D "mt6397-keys",
-> =C2=A0		.num_resources =3D ARRAY_SIZE(mt6397_keys_resources),
-> =C2=A0		.resources =3D mt6397_keys_resources,
-> =C2=A0		.of_compatible =3D "mediatek,mt6397-keys"
-> --=20
-> 2.50.0.727.gbf7dc18ff4-goog
->=20
-Thanks for the patch.
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+---
+ drivers/soc/tegra/cbb/tegra234-cbb.c | 279 +++++++++++++++++++++++++++
+ 1 file changed, 279 insertions(+)
 
-I've tested it with a kernel based on next-20250702 on both Mediatek
-Genio 350-EVK and Genio 1200-EVK boards with mtk-pmic-keys driver
-enabled either as builtin or module.
+diff --git a/drivers/soc/tegra/cbb/tegra234-cbb.c b/drivers/soc/tegra/cbb/tegra234-cbb.c
+index aab0cd85dea5e..69c7049386795 100644
+--- a/drivers/soc/tegra/cbb/tegra234-cbb.c
++++ b/drivers/soc/tegra/cbb/tegra234-cbb.c
+@@ -89,6 +89,34 @@ enum tegra234_cbb_fabric_ids {
+ 	T234_MAX_FABRIC_ID,
+ };
+ 
++enum tegra264_cbb_fabric_ids {
++	T264_SYSTEM_CBB_FABRIC_ID,
++	T264_TOP_0_CBB_FABRIC_ID,
++	T264_VISION_CBB_FABRIC_ID,
++	T264_DISP_USB_CBB_FABRIC_ID,
++	T264_UPHY0_CBB_FABRIC_ID,
++	T264_RSVD0_FABRIC_ID,
++	T264_RSVD1_FABRIC_ID,
++	T264_RSVD2_FABRIC_ID,
++	T264_RSVD3_FABRIC_ID,
++	T264_RSVD4_FABRIC_ID,
++	T264_RSVD5_FABRIC_ID,
++	T264_AON_FABRIC_ID,
++	T264_PSC_FABRIC_ID,
++	T264_OESP_FABRIC_ID,
++	T264_APE_FABRIC_ID,
++	T264_BPMP_FABRIC_ID,
++	T264_RCE_0_FABRIC_ID,
++	T264_RCE_1_FABRIC_ID,
++	T264_RSVD6_FABRIC_ID,
++	T264_DCE_FABRIC_ID,
++	T264_FSI_FABRIC_ID,
++	T264_ISC_FABRIC_ID,
++	T264_SB_FABRIC_ID,
++	T264_ISC_CPU_FABRIC_ID,
++	T264_RSVD7_FABRIC_ID,
++};
++
+ struct tegra234_target_lookup {
+ 	const char *name;
+ 	unsigned int offset;
+@@ -455,6 +483,17 @@ static void print_errlog_err(struct seq_file *file, struct tegra234_cbb *cbb)
+ 	tegra_cbb_print_err(file, "\t  Fabric\t\t: %s (id:%#x)\n",
+ 			    cbb->fabric->fab_list[fab_id].name, fab_id);
+ 
++	if (of_machine_is_compatible("nvidia,tegra264") && fab_id == T264_UPHY0_CBB_FABRIC_ID) {
++		/*
++		 * In T264, AON Fabric ID value is incorrectly same as UPHY0 fabric ID.
++		 * For 'ID = 0x4', we must check for the address which caused the error
++		 * to find the correct fabric which returned error.
++		 */
++		tegra_cbb_print_err(file, "\t  or Fabric\t\t: %s\n",
++				    cbb->fabric->fab_list[T264_AON_FABRIC_ID].name);
++		tegra_cbb_print_err(file, "\t  Please use Address to determine correct fabric.\n");
++	}
++
+ 	tegra_cbb_print_err(file, "\t  Target_Id\t\t: %#x\n", target_id);
+ 	tegra_cbb_print_err(file, "\t  Burst_length\t\t: %#x\n", burst_length);
+ 	tegra_cbb_print_err(file, "\t  Burst_type\t\t: %#x\n", burst_type);
+@@ -1143,6 +1182,242 @@ static const struct tegra234_cbb_fabric tegra241_bpmp_fabric = {
+ 	.firewall_wr_ctl = 0x8e8,
+ };
+ 
++static const char * const tegra264_initiator_id[] = {
++	[0x0] = "TZ",
++	[0x1] = "CCPLEX",
++	[0x2] = "ISC",
++	[0x3] = "BPMP_FW",
++	[0x4] = "AON",
++	[0x5] = "MSS_SEQ",
++	[0x6] = "GPCDMA_P",
++	[0x7] = "TSECA_NONSECURE",
++	[0x8] = "TSECA_LIGHTSECURE",
++	[0x9] = "TSECA_HEAVYSECURE",
++	[0xa] = "CORESIGHT",
++	[0xb] = "APE_0",
++	[0xc] = "APE_1",
++	[0xd] = "PEATRANS",
++	[0xe] = "JTAGM_DFT",
++	[0xf] = "RCE",
++	[0x10] = "DCE",
++	[0x11] = "PSC_FW_USER",
++	[0x12] = "PSC_FW_SUPERVISOR",
++	[0x13] = "PSC_FW_MACHINE",
++	[0x14] = "PSC_BOOT",
++	[0x15] = "BPMP_BOOT",
++	[0x16] = "GPU_0",
++	[0x17] = "GPU_1",
++	[0x18] = "GPU_2",
++	[0x19] = "GPU_3",
++	[0x1a] = "GPU_4",
++	[0x1b] = "PSC_EXT_BOOT",
++	[0x1c] = "PSC_EXT_RUNTIME",
++	[0x1d] = "OESP_EXT",
++	[0x1e] = "SB_EXT",
++	[0x1f] = "FSI_SAFETY_0",
++	[0x20] = "FSI_SAFETY_1",
++	[0x21] = "FSI_SAFETY_2",
++	[0x22] = "FSI_SAFETY_3",
++	[0x23] = "FSI_CHSM",
++	[0x24] = "RCE_1",
++	[0x25] = "BPMP_OEM_FW",
++	[0x26 ... 0x3d] = "RSVD",
++	[0x3e] = "CBB_SMN",
++	[0x3f] = "CBB_RSVD"
++};
++
++static const struct tegra234_target_lookup tegra264_top0_cbb_target_map[] = {
++	{ "RSVD",               0x000000 },
++	{ "CBB_CENTRAL",        0xC020000 },
++	{ "AXI2APB_1",          0x80000 },
++	{ "AXI2APB_10",         0x81000 },
++	{ "AXI2APB_11",         0x82000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_14",         0x83000 },
++	{ "AXI2APB_15",         0x84000 },
++	{ "AXI2APB_16",         0x85000 },
++	{ "AXI2APB_17",         0x86000 },
++	{ "AXI2APB_2",          0x87000 },
++	{ "AXI2APB_3",          0x88000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_5",          0x8A000 },
++	{ "AXI2APB_6",          0x8B000 },
++	{ "AXI2APB_7",          0x8C000 },
++	{ "AXI2APB_8",          0x8D000 },
++	{ "AXI2APB_9",          0x8E000 },
++	{ "FSI_SLAVE",          0x64000 },
++	{ "DISP_USB_CBB_T",     0x65000 },
++	{ "SYSTEM_CBB_T",       0x66000 },
++	{ "UPHY0_CBB_T",        0x67000 },
++	{ "VISION_CBB_T",       0x68000 },
++	{ "CCPLEX_SLAVE",       0x69000 },
++	{ "PCIE_C0",            0x6A000 },
++	{ "SMN_UCF_RX_0",       0x6B000 },
++	{ "SMN_UCF_RX_1",       0x6C000 },
++	{ "AXI2APB_4",          0x89000 },
++};
++
++static const struct tegra234_target_lookup tegra264_sys_cbb_target_map[] = {
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_1",          0xE1000 },
++	{ "RSVD",               0x00000 },
++	{ "AON_SLAVE",          0x79000 },
++	{ "APE_SLAVE",          0x73000 },
++	{ "BPMP_SLAVE",         0x74000 },
++	{ "OESP_SLAVE",         0x75000 },
++	{ "PSC_SLAVE",          0x76000 },
++	{ "SB_SLAVE",           0x7A000 },
++	{ "SMN_SYSTEM_RX",      0x7B000 },
++	{ "STM",                0x77000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_3",          0xE3000 },
++	{ "TOP_CBB_T",          0x7C000 },
++	{ "AXI2APB_2",          0xE4000 },
++	{ "AXI2APB_4",          0xE5000 },
++	{ "AXI2APB_5",          0xE6000 },
++};
++
++static const struct tegra234_target_lookup tegra264_uphy0_cbb_target_map[] = {
++	[0 ... 20] =  { "RSVD", 0x00000 },
++	{ "AXI2APB_1",          0x71000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_3",          0x75000 },
++	{ "SMN_UPHY0_RX",       0x53000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "PCIE_C4",            0x4B000 },
++	{ "AXI2APB_2",          0x74000 },
++	{ "AXI2APB_4",          0x76000 },
++	{ "AXI2APB_5",          0x77000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_7",          0x79000 },
++	{ "PCIE_C2",            0x56000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "PCIE_C1",            0x55000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_10",         0x72000 },
++	{ "AXI2APB_11",         0x7C000 },
++	{ "AXI2APB_8",          0x7A000 },
++	{ "AXI2APB_9",          0x7B000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "PCIE_C5",            0x4E000 },
++	{ "PCIE_C3",            0x58000 },
++	{ "RSVD",               0x00000 },
++	{ "ISC_SLAVE",          0x54000 },
++	{ "TOP_CBB_T",          0x57000 },
++	{ "AXI2APB_12",         0x7D000 },
++	{ "AXI2APB_13",         0x70000 },
++	{ "AXI2APB_6",          0x7E000 },
++};
++
++static const struct tegra234_target_lookup tegra264_vision_cbb_target_map[] = {
++	[0 ... 5] =       { "RSVD", 0x0 },
++	{ "HOST1X",             0x45000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "AXI2APB_2",          0x71000 },
++	{ "RSVD",               0x00000 },
++	{ "RSVD",               0x00000 },
++	{ "SMN_VISION_RX",      0x47000 },
++	[13 ... 19] =     { "RSVD", 0x0 },
++	{ "RCE_0_SLAVE",        0x4B000 },
++	{ "RCE_1_SLAVE",        0x4C000 },
++	{ "AXI2APB_1",          0x72000 },
++	{ "AXI2APB_3",          0x73000 },
++	{ "TOP_CBB_T",          0x4D000 },
++
++};
++
++static const struct tegra234_fabric_lookup tegra264_cbb_fab_list[] = {
++	[T264_SYSTEM_CBB_FABRIC_ID]   = { "system-cbb-fabric", true,
++					  tegra264_sys_cbb_target_map,
++					  ARRAY_SIZE(tegra264_sys_cbb_target_map) },
++	[T264_TOP_0_CBB_FABRIC_ID]    = { "top0-cbb-fabric", true,
++					  tegra264_top0_cbb_target_map,
++					  ARRAY_SIZE(tegra264_top0_cbb_target_map) },
++	[T264_VISION_CBB_FABRIC_ID]   = { "vision-cbb-fabric", true,
++					  tegra264_vision_cbb_target_map,
++					  ARRAY_SIZE(tegra264_vision_cbb_target_map) },
++	[T264_DISP_USB_CBB_FABRIC_ID] = { "disp-usb-cbb-fabric" },
++	[T264_UPHY0_CBB_FABRIC_ID]    = { "uphy0-cbb-fabric", true,
++					  tegra264_uphy0_cbb_target_map,
++					  ARRAY_SIZE(tegra264_uphy0_cbb_target_map) },
++	[T264_AON_FABRIC_ID]          = { "aon-fabric" },
++	[T264_PSC_FABRIC_ID]          = { "psc-fabric" },
++	[T264_OESP_FABRIC_ID]         = { "oesp-fabric" },
++	[T264_APE_FABRIC_ID]          = { "ape-fabirc" },
++	[T264_BPMP_FABRIC_ID]         = { "bpmp-fabric" },
++	[T264_RCE_0_FABRIC_ID]        = { "rce0-fabric" },
++	[T264_RCE_1_FABRIC_ID]        = { "rce1-fabric" },
++	[T264_DCE_FABRIC_ID]          = { "dce-fabric" },
++	[T264_FSI_FABRIC_ID]          = { "fsi-fabric" },
++	[T264_ISC_FABRIC_ID]          = { "isc-fabric" },
++	[T264_SB_FABRIC_ID]           = { "sb-fabric" },
++	[T264_ISC_CPU_FABRIC_ID]      = { "isc-cpu-fabric" },
++};
++
++static const struct tegra234_cbb_fabric tegra264_top0_cbb_fabric = {
++	.fab_id = T264_TOP_0_CBB_FABRIC_ID,
++	.fab_list = tegra264_cbb_fab_list,
++	.initiator_id = tegra264_initiator_id,
++	.errors = tegra241_cbb_errors,
++	.max_errors = ARRAY_SIZE(tegra241_cbb_errors),
++	.err_intr_enbl = 0x7,
++	.err_status_clr = 0x1ff007f,
++	.notifier_offset = 0x90000,
++	.off_mask_erd    = 0x4a004,
++	.firewall_base   = 0x3c0000,
++	.firewall_ctl    = 0x5b0,
++	.firewall_wr_ctl = 0x5a8,
++};
++
++static const struct tegra234_cbb_fabric tegra264_sys_cbb_fabric = {
++	.fab_id = T264_SYSTEM_CBB_FABRIC_ID,
++	.fab_list = tegra264_cbb_fab_list,
++	.initiator_id = tegra264_initiator_id,
++	.errors = tegra241_cbb_errors,
++	.max_errors = ARRAY_SIZE(tegra241_cbb_errors),
++	.err_intr_enbl = 0xf,
++	.err_status_clr = 0x1ff007f,
++	.notifier_offset = 0x40000,
++	.firewall_base   = 0x29c000,
++	.firewall_ctl    = 0x170,
++	.firewall_wr_ctl = 0x168,
++};
++
++static const struct tegra234_cbb_fabric tegra264_uphy0_cbb_fabric = {
++	.fab_id = T264_UPHY0_CBB_FABRIC_ID,
++	.fab_list = tegra264_cbb_fab_list,
++	.initiator_id = tegra264_initiator_id,
++	.errors = tegra241_cbb_errors,
++	.max_errors = ARRAY_SIZE(tegra241_cbb_errors),
++	.err_intr_enbl = 0x1,
++	.err_status_clr = 0x1ff007f,
++	.notifier_offset = 0x80000,
++	.firewall_base   = 0x360000,
++	.firewall_ctl    = 0x590,
++	.firewall_wr_ctl = 0x588,
++};
++
++static const struct tegra234_cbb_fabric tegra264_vision_cbb_fabric = {
++	.fab_id = T264_VISION_CBB_FABRIC_ID,
++	.fab_list = tegra264_cbb_fab_list,
++	.initiator_id = tegra264_initiator_id,
++	.errors = tegra241_cbb_errors,
++	.max_errors = ARRAY_SIZE(tegra241_cbb_errors),
++	.err_intr_enbl = 0x1,
++	.err_status_clr = 0x1ff007f,
++	.notifier_offset = 0x80000,
++	.firewall_base   = 0x290000,
++	.firewall_ctl    = 0x5d0,
++	.firewall_wr_ctl = 0x5c8,
++};
++
+ static const struct of_device_id tegra234_cbb_dt_ids[] = {
+ 	{ .compatible = "nvidia,tegra234-cbb-fabric", .data = &tegra234_cbb_fabric },
+ 	{ .compatible = "nvidia,tegra234-aon-fabric", .data = &tegra234_aon_fabric },
+@@ -1150,6 +1425,10 @@ static const struct of_device_id tegra234_cbb_dt_ids[] = {
+ 	{ .compatible = "nvidia,tegra234-dce-fabric", .data = &tegra234_dce_fabric },
+ 	{ .compatible = "nvidia,tegra234-rce-fabric", .data = &tegra234_rce_fabric },
+ 	{ .compatible = "nvidia,tegra234-sce-fabric", .data = &tegra234_sce_fabric },
++	{ .compatible = "nvidia,tegra264-sys-cbb-fabric", .data = &tegra264_sys_cbb_fabric },
++	{ .compatible = "nvidia,tegra264-top0-cbb-fabric", .data = &tegra264_top0_cbb_fabric },
++	{ .compatible = "nvidia,tegra264-uphy0-cbb-fabric", .data = &tegra264_uphy0_cbb_fabric },
++	{ .compatible = "nvidia,tegra264-vision-cbb-fabric", .data = &tegra264_vision_cbb_fabric },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, tegra234_cbb_dt_ids);
+-- 
+2.34.1
 
-With the Genio 350-EVK, the mtk-pmic-keys driver probes OK:=20
-```
-[    0.601874] input: mtk-pmic-keys as
-/devices/platform/soc/1000d000.pwrap/1000d000.pwrap:pmic/mt6357-
-keys/input/input0
-```
-The keys work too.
-
-For the Genio 1200-EVK, it fails to probe as expected (because
-'mediatek,mt6359-keys' compatible is missing) and there is indeed no
-kernel panic in the builtin case (the issue I reported with my patch)
-```
-[    0.459178] mt6359-keys: Failed to locate of_node [id: -1]
-```
-
-Tested-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> # on
-Mediatek Genio 350-EVK and Genio 1200-EVK
-
-Regards,
-Louis-Alexis
