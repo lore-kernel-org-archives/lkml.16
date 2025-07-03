@@ -1,86 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71481FFC59
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9D8C23BE;
+	Thu,  3 Jul 2025 02:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511290; cv=none; b=eyXZK9/CtsQusP2hcm/8ITUn0bYEEE4/0uELGcxAB6IsaC1QX0DDYR9TRJAYB7L4HaUdRGq+DiTmq2oCBwM16EtZevUT2vAcYlDRJnjsi6793qV1iQ5Td1x76Avm2ihrdcwnuVGTTJCN4VAN60cHGnZHYHEWqmZ8khdl03hj5uQ=
+	t=1751511290; cv=none; b=e1zHLOxOey/CUiCbyAnozN1q3bNyN0dlN43ERRuMHMF6cNjFcbL0WQir9JGS5QAXfZ+Rx0Y4D6u38PTdamnc2d/4w3ysS+QABDRJtXNiVriWgFsCLK2hKW3nB7NBGbwONp3EUfekUO7jhI/5WxnpQ4iPzv+5Wl1zkf5SllKwN80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751511290; c=relaxed/simple;
-	bh=kFmQptJ2um6gQpVBecE2eyF0GAIxnUceibqL3Hs0n3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bpRJeD2iH7k+yOmKmSkZG3DO3P7m3/nghmntCB3DG/uGRk9yhyh2mf4tCGqf9/0Ef+TWmQyMNmJ2riZolGm3u15TTe+eaBOdBSY6IwVpWcL5ZpyX0v334J7R/JvTgrqstGGYVxkq0ayG5kUxTlB0Ls2Xh1AHkGr0oEQ7YP6H3CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HoMWjCWa; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=5WYfMc5xlqprXqGplo8TPRTwoTJcHq8cNIKht6TcDnM=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=P+fFE11oKocdnxaL/c2aEnreIKi3McsCNoBGR9G3lT4RyZRXLWoKeQgXJTciZi9kHRdmwV0LgDmdVT1Lkb92VgzY45mymYZu8D7amO8P+509zwY1n38ISI4zTklloCFAMAbvhUjLZ7h3npFIMXmtoBI2WWRKRGnMuzpoEI1CgRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=HavHrXb4; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HoMWjCWa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751511289; x=1783047289;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=kFmQptJ2um6gQpVBecE2eyF0GAIxnUceibqL3Hs0n3Y=;
-  b=HoMWjCWa9iUCxO4UOlJiQyah8k1pQn2+aWGacHN+IASZInIenRR7t0Dv
-   hHhyHVKug+QSfZLQ4SXbA9IFAeMSYIR5JdxZDiIqPooXKXVhS1so49ZFY
-   7ogyaxvQYzzsGzl3Fgb3R/BJG9opab63i+59JY5RQA4H6BBoMOvCPSOJ0
-   qbow2jZd5RJFeojscB3qmQ0B406zC4I/lKimQYMyWDQobfbLS+//ZYSMV
-   lOAknXC9S54BuB8/XrSDdzoXTjjYRPNWHTQy9G/f12oglaq6HoTRr5MO0
-   qAO8iO1HnN9MN/jculoJocZ8o7IaI93XR4+RL0Zfwe0u4XOjBBXCy8GhD
-   Q==;
-X-CSE-ConnectionGUID: P0oV/M/kSSKGD0idLFdArw==
-X-CSE-MsgGUID: cMv1FqLNTiCe5DolpnNSmQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71259634"
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="71259634"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:54:19 -0700
-X-CSE-ConnectionGUID: RsaEUOVmTZSxPm2nFYUumg==
-X-CSE-MsgGUID: 3Zmldh7fSJyZRYZlJFDcDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="154990385"
-Received: from igk-lkp-server01.igk.intel.com (HELO 030a839a1121) ([10.91.175.65])
-  by fmviesa010.fm.intel.com with ESMTP; 02 Jul 2025 19:54:17 -0700
-Received: from kbuild by 030a839a1121 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXA5W-0000OL-2e;
-	Thu, 03 Jul 2025 02:54:14 +0000
-Date: Thu, 3 Jul 2025 04:53:15 +0200
-From: kernel test robot <lkp@intel.com>
-To: Mel Gorman <mgorman@suse.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: fs/fat/dir.o: warning: objtool: fat_ioctl_filldir+0x7dd: stack state
- mismatch: cfa1=4+168 cfa2=4+160
-Message-ID: <202507030459.nFRTDqOT-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="HavHrXb4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id; bh=RNGiMRA7tuQYaNu
+	ZL6aNqt4/FrG725yke/AkkJExntU=; b=HavHrXb4n7y1jl4SFU67iohdY9hlFac
+	nVJw3fz3JqKzheZtNn87cqcdMyJYJV8cJ4F0U7r8AvffxQ0Wu2X8cTmc7ay/Rhbd
+	NEo8tPF6HzazIgXBnFj/Mj6zQvcAfGlWNs/cm08EKXZDK5CjcIZGpSzzeelUnwN3
+	xtxpPAMZJXiw=
+Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHz3Iv7WVo3yJGAw--.37667S2;
+	Thu, 03 Jul 2025 10:38:40 +0800 (CST)
+From: yangge1116@126.com
+To: ardb@kernel.org
+Cc: jarkko@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	ilias.apalodimas@linaro.org,
+	jgg@ziepe.ca,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	liuzixing@hygon.cn,
+	Ge Yang <yangge1116@126.com>
+Subject: [PATCH] efi/tpm: Fix the issue where the CC platforms event log header can't be correctly identified
+Date: Thu,  3 Jul 2025 10:38:37 +0800
+Message-Id: <1751510317-12152-1-git-send-email-yangge1116@126.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID:_____wDHz3Iv7WVo3yJGAw--.37667S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJryxCF4UKF4rtF1UXFyrZwb_yoW8Zry8p3
+	ZrGrnakr95try2gr93Zw18Cw4UA395CrZrGFykKw10yr98Wr92qayjg345K3WfGrZrJFZ8
+	Wa4jqr17Ca4UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoKZXUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOgZ-G2hl5F7-FQAAsF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b4911fb0b060899e4eebca0151eb56deb86921ec
-commit: 496d2d23886436f7c651bf4c14950eb002815c61 mm: security: Check early if HARDENED_USERCOPY is enabled
-date:   4 months ago
-config: x86_64-buildonly-randconfig-2004-20250703 (https://download.01.org/0day-ci/archive/20250703/202507030459.nFRTDqOT-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250703/202507030459.nFRTDqOT-lkp@intel.com/reproduce)
+From: Ge Yang <yangge1116@126.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507030459.nFRTDqOT-lkp@intel.com/
+Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
+for CC platforms") reuses TPM2 support code for the CC platforms, when
+launching a TDX virtual machine with coco measurement enabled, the
+following error log is generated:
 
-All warnings (new ones prefixed by >>):
+[Firmware Bug]: Failed to parse event in TPM Final Events Log
 
->> fs/fat/dir.o: warning: objtool: fat_ioctl_filldir+0x7dd: stack state mismatch: cfa1=4+168 cfa2=4+160
+Call Trace:
+efi_config_parse_tables()
+  efi_tpm_eventlog_init()
+    tpm2_calc_event_log_size()
+      __calc_tpm2_event_size()
 
+The pcr_idx value in the Intel TDX log header is 1, causing the
+function __calc_tpm2_event_size() to fail to recognize the log header,
+ultimately leading to the "Failed to parse event in TPM Final Events
+Log" error.
+
+According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
+MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
+event log header, the check for a pcr_idx value of 0 has been removed
+here, and it appears that this will not affect other functionalities.
+
+Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#intel-trust-domain-extension
+Fixes: d228814b1913 ("efi/libstub: Add get_event_log() support for CC platforms")
+Signed-off-by: Ge Yang <yangge1116@126.com>
+Cc: stable@vger.kernel.org
+---
+ include/linux/tpm_eventlog.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index 891368e..05c0ae5 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -202,8 +202,7 @@ static __always_inline u32 __calc_tpm2_event_size(struct tcg_pcr_event2_head *ev
+ 	event_type = event->event_type;
+ 
+ 	/* Verify that it's the log header */
+-	if (event_header->pcr_idx != 0 ||
+-	    event_header->event_type != NO_ACTION ||
++	if (event_header->event_type != NO_ACTION ||
+ 	    memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
+ 		size = 0;
+ 		goto out;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.7.4
+
