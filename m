@@ -1,200 +1,126 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91822D3729;
-	Thu,  3 Jul 2025 12:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63C517548
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545927; cv=none; b=Hd+CxEMp6cIRmKtCXLEUjmzkcnzjWv65I3sDpxCNLwkICgedat/8c3lLS2/umVgxlm+S9onX/AxpGU1HuEtXM2uKdhjIqtfQyx/HN/BKz1arP969s3pCIeFjVhvHCVnErRhBGx2UB+BKihpJ/QFhCjCGyXkcWOJB4b/bhKA7LSs=
+	t=1751546011; cv=none; b=EuVgi5VZ54vP+j4cjcrwRbZ8tm35j9M1VuZvproAexEKhGpAU2ivUIe+b6UyVoPC902GFiM38n9ugpgjuvImugJZmuT9Ot4s/NDLzd1K2LNXyW8wVQuLLpyMv4VMmiDEPJV0KUQtknJm/1F87Zat5TCo/yecPlpnpbBRqB93xTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545927; c=relaxed/simple;
-	bh=q2mcQoL00V2Ae5Z7ktClCO7OMB85dTKElX64vAtjs7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dgdW4zWjvxpTWpOP5rddSvJUgjIZFBc9g4FpMsEXTdq5cOhq+HukgjEmvZZDQb9wdVSJiPyniYd7rsWytqbZKrTIozgEmTAv1Xz2wEjJc8uTiZ6tkw35nRPlvehMaco/ddFAXypMnSa5TVZOZJwju/KEugZLnX5XQOoUtLNA/Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YH2HyAYN; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751546011; c=relaxed/simple;
+	bh=Ptsjzf8+zecQzbj9dMtjUikfyamkQ+9Ox2BXpSwfkxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uuq3RY9u04U6TY7v2yNy7CCQPU5ElFfjO/sD95tV0J6yNMAbnkxSjcojDKOjThXWhNdsf73xkgD5Mwb1bXd99h9CXS46Dy7bDEV+oGND49ZR42BUIQhQxKxWp3qFHGP4OdxDVRfT+93PlCWKlJYXuJModTQlijwNVNCfUnKGJAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZddOiBiZ; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YH2HyAYN"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so12053989a12.2;
-        Thu, 03 Jul 2025 05:32:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZddOiBiZ"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a585dc5f4aso91740731cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545924; x=1752150724; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SZPLWfXiCCARjQLVMbM6O6mOQhpsqAEIICbBKDhLFXs=;
-        b=YH2HyAYNtvjADcZYOjdDIOs/5xcPr8DPDQhHyzlhS8TL2JuHZV5+NOe473DIzbdNFs
-         1P7PWGaXT9sS8THyM+LFV7mrDNNkDYzxTLbtQot6p+FSkuyd/J07Z2eCMK1Uywc8x54g
-         iKsMGgcgboDCTbZ0dpEfC/mkRNRzOzo8xuaHkCBK6CIQsWJ1bSv98sL/ErYyGsPjypOx
-         4nVmO8F3P6HFUuTnLS4gfdFNiv4NLe0G2Iz3hi7SPic/4huuRtdtjQZg5ZPID4NaMKZA
-         rxTOrzEWEom23NuP9S5yINDHPOeVDS3Ollw/9jw3nLNeQ9Ran80GwfZjumkgyP3Hhok0
-         H6Uw==
+        d=google.com; s=20230601; t=1751546008; x=1752150808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ptsjzf8+zecQzbj9dMtjUikfyamkQ+9Ox2BXpSwfkxI=;
+        b=ZddOiBiZLmtx4grLzKnfksSKl/aKFRgU/C4WULR8znD2CEboCyw96JbpljLltTqCzh
+         2jipic95mUhjIvoHFIQ+uNqG2LOqPQ7i3ISnO2hv33/aifbsfXUevL7MeM8ofAt6ap2Z
+         8P6rUFNzgofOc0PbyeV/rHHIjF83PN+H62uiUCFhMYf0wsby0351UzN21j7cgeXGJ6kZ
+         tssgeem65u2jusBL7RWPrS35+ZmAMCKlG+rZTiJuvHENiTjQm5AzjA7rKyi1GxnvImFW
+         iLHBiRqXuaj/Vd3qxX4YLOHt1/5Ub7lDm/vd9dtMobgfrANklja7C2nyigIe9yemRwT9
+         ddnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545924; x=1752150724;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SZPLWfXiCCARjQLVMbM6O6mOQhpsqAEIICbBKDhLFXs=;
-        b=b8p22jiFZVjDJLouX/EPcSlCkmqnudvncloykhEHeHwHZQFyGaVfuYGVDKRlvE/sVS
-         KbVBh+vWcoLEP50nhlgg+XcG5g3glJlmeBmFs2A2gfVxGSghBlCjpufKbYoI6Obct7LE
-         5pcF7OlSOXrcMooO1E0w7GpQJmO5HPYGYv+g/hR35gdvnCpSbrGHnwR+tpQsvLRDb/hf
-         Djc5sufQik1pKwQRcLJ/jy/IxdXjgsMTU9E9tpTZdg0BgUO8ZmBYldoJG0wK0aBxL6hf
-         9BA8c+yef9pTyOyQs6hqVGN9FYuW0/ax9QufVfWlZcQxpQ5FBQ6n2iedV8Nl0Ck4JqVw
-         IJrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjvjUGhsd2jduJqx1zX5PR0QYAyDGuiZiyi0bkIAI3A4Tx1a2LpBVxz4mxV+1YMlePRhFV3agPVibt+w==@vger.kernel.org, AJvYcCUvsLqMsRnNyA2F/mThwpiaHM5GqtVSVatLFnks8wW2PZxxq16MBTm8M9dbMhopvnCqD577izEFjkkK@vger.kernel.org, AJvYcCW4hHDxeQTIBxgHrivBnD+Os9RO6gss6nW9Mj07Uc/PUsKXuQ/HpwX1KYBnBs/NALG5u0gLpzFR209KM9bZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkJTS8d3A2tSsAfR9qNlHcSyA2iKUZ2aSzryScWCptUTQkF60B
-	IRMA+IuNwwEToAUX63MNqYSJ2re16A5ARe85tQnJOBPgOJ5QYXRl9mP7
-X-Gm-Gg: ASbGnctlg34AuUbBxnvvF7EyVHe8kS6pvgyQR4xAE4mwamIcy65yZwX9aw9cHV27k4x
-	rEqgVNOQXFmEI3g8n/mVBPKYP9gZSrIQGO8VS9/nCM5a5X09TwS9fxzG1W9791ByCp5kPrCppf9
-	nGAsrFJcbAMUkd7NMITavQFQQhn5X4wx+dB7jdbL8tZxxWGln7jPFARSU+yQifLGxpB6qA+nIOf
-	JWv7oKOIlBS14sW/IOWOS+QVOn6+HuG9LYe5LL/FQOrmTJLYn4GVj+nq2cIVGmQmL8FQyVpRhbo
-	TKbClxk87xnAlozQ4oDasJ4ksVAWNmhktdOkKVoGSobwoGIBu/CsuHc2pHhHuRWeQsyn64fkGCQ
-	pTyI=
-X-Google-Smtp-Source: AGHT+IHuheH2n6bV6dLkCNbg1HG9FS/Kp24cqUOr7wqs04JRCAIlvn2pDbqaGZ7WBJdV42dGc8EYOw==
-X-Received: by 2002:a05:6402:238a:b0:60c:44d6:2817 with SMTP id 4fb4d7f45d1cf-60e536053a9mr5295465a12.20.1751545923806;
-        Thu, 03 Jul 2025 05:32:03 -0700 (PDT)
-Received: from [192.168.0.100] ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8320b5aasm10343175a12.76.2025.07.03.05.32.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 05:32:03 -0700 (PDT)
-Message-ID: <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
-Date: Thu, 3 Jul 2025 15:31:58 +0300
+        d=1e100.net; s=20230601; t=1751546008; x=1752150808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ptsjzf8+zecQzbj9dMtjUikfyamkQ+9Ox2BXpSwfkxI=;
+        b=Y5sa4rUK5/JJzQuj54CCpS21QLbg/T5sxSx/guSnDgSuZV/ZEGfGIwMKdSSU/ADQdu
+         ZfXMEYdW906Q8YGNs5LHkLY0tKBrlV2MMgYNkH0Bxu5gzePtF4YfDurocAVVpIR+fyJk
+         zYZRrT2TFsj0kdDEC6M/7MqBcur2lBjE3XxXCVURHFkfadRZ14Lp75VUlD0uW1hksZKW
+         A19/03cx9ja4SEliaaP1aMH1uaiWbTyhteEe/smKc/HMSDqWA0C/77cCsf26SkFcR8uM
+         PF4v/e/JVXoDT8sRw+A8dGvytzyM2Y8+34nHPBGKN59d0c5tNwE70juQz13Y8SQWWwlb
+         FpOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFRKMlmR3lGIEdfZbv5rqT7bG/BRGa98miLL2kS7E5uuXREq+WvK7Jv27ftfdH6OnbcwQz8d6oya00YSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJdzBgTRP5/PmW9i8Bw4MDDd62q0rzdjSRrbfAOlIriQ1/sz+9
+	DOgE47Vmgb63DGQgkZ0qllSchtBPAqp+d/TUKw+XgePTrhsQ3/HHlD+YeNS0j+jZm7BIOTCgkNx
+	vKp42afDFNiUNbqTfjGP411mjIv6mc7WCKc45ERx+
+X-Gm-Gg: ASbGnctPH3ci0otpgFtFFwdZ52Uv5fLDWhEeHp3glT8RhRQuEaPzPWhMuPL0m/yy4vh
+	pWZ+XmEkPyw1AUPetrNFgxApTXJfWewuI8G6+uzji8WJmIqYfhLoMjcifB05GtZhlMpwvRHU8MR
+	vHtTmYeNmykSU4jRq61t5jOLvdCpn58pOit4U22uZKf3c=
+X-Google-Smtp-Source: AGHT+IHxCWPBsSRbtYOVftLPJkM3kyPLupAKcQLcv+QF0+EbxfFG7g/xCWEfeXsj+2gKQRieuEutHEvyqdr+9YatpbI=
+X-Received: by 2002:ac8:59c3:0:b0:4a7:9d00:770 with SMTP id
+ d75a77b69052e-4a97695c4ccmr122755671cf.18.1751546007977; Thu, 03 Jul 2025
+ 05:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 18/24] media: i2c: maxim-serdes: add MAX96717 driver
-To: Julien Massot <julien.massot@collabora.com>,
- Cosmin Tanislav <cosmin.tanislav@analog.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-References: <20250702132104.1537926-1-demonsingur@gmail.com>
- <20250702132104.1537926-19-demonsingur@gmail.com>
- <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
-From: Cosmin Tanislav <demonsingur@gmail.com>
-Content-Language: en-US
-In-Reply-To: <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250702110039.15038-1-jiayuan.chen@linux.dev>
+ <c9c5d36bc516e70171d1bb1974806e16020fbff1@linux.dev> <CANn89iJdGZq0HW3+uGLCMtekC7G5cPnHChCJFCUhvzuzPuhsrA@mail.gmail.com>
+ <CANn89iJD6ZYCBBT_qsgm_HJ5Xrups1evzp9ej=UYGP5sv6oG_A@mail.gmail.com>
+ <c910cfc4b58e9e2e1ceaca9d4dc7d68b679caa48@linux.dev> <CANn89iL=GR5iHXUQ6Jor_rjkn91vuL5w8DCrxwJRQGSO7zmQ-w@mail.gmail.com>
+ <6724e69057445ab66d70f0b28c115e2d8fb5543b@linux.dev>
+In-Reply-To: <6724e69057445ab66d70f0b28c115e2d8fb5543b@linux.dev>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 3 Jul 2025 05:33:16 -0700
+X-Gm-Features: Ac12FXyLpTLWTKVyDtut9uoSQuD_gpE99ErR38nFK0rRJuJ6pTn1bXL_9TRwT8g
+Message-ID: <CANn89iKxTj29DG-44d7SbhEh3_h4PG8009RK9+sAZJx_pg04kw@mail.gmail.com>
+Subject: Re: [PATCH net-next v1] tcp: Correct signedness in skb remaining
+ space calculation
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: netdev@vger.kernel.org, mrpre@163.com, 
+	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 3, 2025 at 5:03=E2=80=AFAM Jiayuan Chen <jiayuan.chen@linux.dev=
+> wrote:
 
+> Hi Eric,
+>
+> I'm working with a reproducer generated by syzkaller [1], and its core
+> logic is roughly as follows:
+>
+> '''
+> setsockopt(fd, TCP_REPAIR, 1)
+> connect(fd);
+> setsockopt(fd, TCP_REPAIR, -1)
+>
+> send(fd, small);
+> sendmmsg(fd, buffer_2G);
+> '''
+>
+> First, because TCP_REPAIR is enabled, the send() operation leaves the skb
+> at the tail of the write_queue. Subsequently, sendmmsg is called to send
+> 2GB of data.
+>
+> Due to TCP_REPAIR, the size_goal is reduced, which can cause the copy
+> variable to become negative. However, because of integer promotion bug
+> mentioned in the previous email, this negative value is misinterpreted as
+> a large positive number. Ultimately, copy becomes a huge value, approachi=
+ng
+> the int32 limit. This, in turn, causes sk->sk_forward_alloc to overflow,
+> which is the exact issue reported by syzkaller.
+>
+> On a related note, even without using TCP_REPAIR, the tcp_bound_to_half_w=
+nd()
+> function can also reduce size_goal on its own. Therefore, my understandin=
+g is
+> that under extreme conditions, we might still encounter an overflow in
+> sk->sk_forward_alloc.
+>
+> So, I think we have good reason to change copy to an int.
 
-On 7/3/25 3:16 PM, Julien Massot wrote:
-> On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
->> Add a new MAX96717 driver that also supports MAX9295A, MAX96717F and
->> MAX96793.
->>
->> Integrate it with the common serializer framework, while keeping
->> compatibility with existing usecases, avoiding code duplication, and
->> also enabling more features across all chips.
->>
->> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
->> ---
->>   drivers/media/i2c/maxim-serdes/Kconfig    |   16 +
->>   drivers/media/i2c/maxim-serdes/Makefile   |    1 +
->>   drivers/media/i2c/maxim-serdes/max96717.c | 1685 +++++++++++++++++++++
->>   3 files changed, 1702 insertions(+)
->>   create mode 100644 drivers/media/i2c/maxim-serdes/max96717.c
->>
->> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
->> index cae1d5a1293e..648cb891eefe 100644
->> --- a/drivers/media/i2c/maxim-serdes/Kconfig
->> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
->> @@ -14,3 +14,19 @@ config VIDEO_MAXIM_SERDES
->>   
->>   	  To compile this driver as a module, choose M here: the module
->>   	  will be called max_serdes.
->> +
->> +config VIDEO_MAX96717
->> +	tristate "Maxim MAX96717 Serializer support"
->> +	depends on COMMON_CLK
->> +	select VIDEO_MAXIM_SERDES
->> +	select GENERIC_PINCONF
->> +	select GENERIC_PINCTRL_GROUPS
->> +	select GENERIC_PINMUX_FUNCTIONS
->> +	select GPIOLIB
->> +	help
->> +	  This driver supports the Maxim MAX9295A, MAX96717, MAX96717F,
->> +	  MAX96793 Serializers, which receive video on a MIPI CSI-2
->> +	  interface and output it on a GMSL2/3 link.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called max96717.
->> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
->> index b54326a5c81b..04abda6a5437 100644
->> --- a/drivers/media/i2c/maxim-serdes/Makefile
->> +++ b/drivers/media/i2c/maxim-serdes/Makefile
->> @@ -1,3 +1,4 @@
->>   # SPDX-License-Identifier: GPL-2.0
->>   max-serdes-objs := max_serdes.o max_ser.o max_des.o
->>   obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
->> +obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
->> diff --git a/drivers/media/i2c/maxim-serdes/max96717.c b/drivers/media/i2c/maxim-serdes/max96717.c
->> new file mode 100644
->> index 000000000000..60b285e547b7
->> --- /dev/null
->> +++ b/drivers/media/i2c/maxim-serdes/max96717.c
->> @@ -0,0 +1,1685 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Maxim MAX96717 GMSL2 Serializer Driver
->> + *
->> + * Copyright (C) 2025 Analog Devices Inc.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/gpio/driver.h>
->> +#include <linux/pinctrl/pinctrl.h>
->> +#include <linux/pinctrl/pinmux.h>
->> +#include <linux/pinctrl/pinconf.h>
->> +#include <linux/pinctrl/pinconf-generic.h>
->> +#include <linux/regmap.h>
->> +
->> +#include "max_ser.h"
->> +
->> +#define MAX96717_REG0				0x0
->> +
->> +#define MAX96717_REG2				0x2
->> +#define MAX96717_REG2_VID_TX_EN_P(p)		BIT(4 + (p))
->> +
->> +#define MAX96717_REG3				0x3
->> +#define MAX96717_REG3_RCLKSEL			GENMASK(1, 0)
->> +#define MAX96717_REG3_RCLK_ALT			BIT(2)
->> +
->> +#define MAX96717_REG6				0x6
->> +#define MAX96717_REG6_RCLKEN			BIT(5)
->> +
->> +#define MAX96717_I2C_2(x)			(0x42 + (x) * 0x2)
->> +#define MAX96717_I2C_2_SRC			GENMASK(7, 1)
->> +
->> +#define MAX96717_I2C_3(x)			(0x43 + (x) * 0x2)
->> +#define MAX96717_I2C_3_DST			GENMASK(7, 1)
->> +
->> +#define MAX96717_TX3(p)				(0x53 + (p) * 0x4)
->> +#define MAX96717_TX3_TX_STR_SEL			GENMASK(1, 0)
->> +
->> +#define MAX96717_VIDEO_TX0(p)			(0x100 + (p) * 0x8)
-> This is a bit confusing, looks like this register address is valid for MAX9295a VIDEO_TX0
-> but not for MAX96717, VIDEO_TX0 (Z) is at 0x110.
-> 
+Ok, I wish you had stated you were working on a syzbot report from the
+very beginning.
 
-See pipe_hw_ids field of max96717_chip_info.
-MAX9295A has pipes 0, 1, 2, 3, MAX96717 has pipe 2 only.
-Registers and strides are the same, just pipes are missing.
+Why hiding ?
 
-> 
-> 
-
+Please send a V2 of the patch.
