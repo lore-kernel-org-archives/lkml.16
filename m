@@ -1,94 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E5134CB;
-	Thu,  3 Jul 2025 17:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E5C134CB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751562631; cv=none; b=hCSbQOIlcBZ5yTRJwnQ2YZrjoGespQ1fnVmLJsgUUVpzbQvdEwEEfuKQaEaET+s2toEnni4Cm31e/ag5n84M//SHNGeRQqolRvqOZQwRrxRyxpXXB7AtkYBNlpxChPjg1LSQdGtMZl2ED5vrK49IxWFyFePSnwUFROP6GXeEF7M=
+	t=1751562697; cv=none; b=QOPqWZWG28AMVulGDCeJmYkOGCntmf28Rl5uwLeSxffbT26qlOVv6IvRSPMnvN8OwlG76jrvGzmX2aJfn8r7VOf4h6jbiU9/wG3IvOkvnj6nzZNRM2AJoI8l+DiwIRd7NdjiXpzzTl2T//tYrnGVZSgGMxwGmK+c/IfJ9A2lYO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751562631; c=relaxed/simple;
-	bh=VBNBTHMTAZlDZfjt9bZrrU4QHStDFo99Vh/bJIt/n/s=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bNREYcxXecK+qZ6ADvZpdglAkfe51rRkwFwFV/qnqt74jC18oWO0yEhEkEDSM9QF7z4w27jEPqPsjEX9ceX6O3pA54Umq/seTVDOqosu2JSPY9CokIu4BvQv3K/IfsvQv8tG7rshgkmxR4hryYuNHWg/gY85eFhFszsivsupAwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkVZJJm1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751562697; c=relaxed/simple;
+	bh=Z4QbIweEJlx3aDw1A7YnK+QxLMV983fgVz0Xqf5xbXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSwkBDL49JyLhpRbKVB1sWB3yqvrvRvFfFWNyzJBSD0NAhekIkdkaZzajNYDaqUrwDpnVSnSEAWP1Pn3AhCFoouXWv4H+G1KLhJDkuNkqxzKUuydBceak8rUsrcBcThjD7qPSkc8WoN2s3Iw4rEdBHtjYv/dzIOEXpcKPOmKg08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CfR2cjY9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkVZJJm1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEDDBC4CEED;
-	Thu,  3 Jul 2025 17:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751562630;
-	bh=VBNBTHMTAZlDZfjt9bZrrU4QHStDFo99Vh/bJIt/n/s=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=fkVZJJm1iGyGdp1Ja5Tu7Hch65JO16hxP0lASxwcxLGUwtJQu5KhA+/rbghPX8WOd
-	 n7HF7bEC35BDP86O+2jDjpro7I1wSGc0l8/kzK2wy2Wp8jyIWDFDNTZHSw9b5iLNcW
-	 Yyir5cL8JKJnM6WonM33j4aBQh/yJEW2ZiQV2ybl8LxoLn4vYm2mXZQYHT6Z0vMhsZ
-	 BxiIZSdLAnLWt1XC8t/lQzg1aQOHbpv0mR8aP0/jNKauYtj3QPVvTzy1p2CGCjqp74
-	 PRciY3DOiw0Lw2YQ0dr8aEsMBosEPslC8LW/bMSi26BkNmP4UeWl3j7o/KyDf+Wffj
-	 NsheR+fjLrhCw==
-From: Mark Brown <broonie@kernel.org>
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
- festevam@gmail.com, shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, 
- nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- cristian.marussi@arm.com, peng.fan@nxp.com, sudeep.holla@arm.com, 
- arnd@arndb.de, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, Shengjiu Wang <shengjiu.wang@nxp.com>
-In-Reply-To: <20250620055229.965942-1-shengjiu.wang@nxp.com>
-References: <20250620055229.965942-1-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH 0/2] ASoC: fsl_mqs: support MQS2 on i.MX94 platform
-Message-Id: <175156262671.651944.3516186569995786227.b4-ty@kernel.org>
-Date: Thu, 03 Jul 2025 18:10:26 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfR2cjY9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751562693;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1hMcBI0Anwzvu7fPyDZWuajt8mR27da4n7DNG0pz860=;
+	b=CfR2cjY9jCD8x9ucDeQePH9psODNDdspAwPAqCpdZOtPwDbnRbe+vKorJwGD2sFKEOaw07
+	4L1eaATvTGA6VwF85hEzmivDnbPafF3ynbFzjr/vFm2xPptIV/8W8etoCGIe3Dj3NT102k
+	Ezx+y9RYCZeIx7y3p822pGNrEnzTTOQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-SdG9r84BOsa63x31_lw-oA-1; Thu,
+ 03 Jul 2025 13:11:28 -0400
+X-MC-Unique: SdG9r84BOsa63x31_lw-oA-1
+X-Mimecast-MFC-AGG-ID: SdG9r84BOsa63x31_lw-oA_1751562687
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EACB9180034E;
+	Thu,  3 Jul 2025 17:11:26 +0000 (UTC)
+Received: from pauld.westford.csb (unknown [10.22.80.203])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B2F619560A7;
+	Thu,  3 Jul 2025 17:11:23 +0000 (UTC)
+Date: Thu, 3 Jul 2025 13:11:21 -0400
+From: Phil Auld <pauld@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, clm@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/12] sched: Add ttwu_queue support for delayed tasks
+Message-ID: <20250703171121.GE245663@pauld.westford.csb>
+References: <20250702114924.091581796@infradead.org>
+ <20250702121159.652969404@infradead.org>
+ <20250703160027.GC245663@pauld.westford.csb>
+ <20250703164708.GZ1613200@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-cff91
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703164708.GZ1613200@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, 20 Jun 2025 13:52:27 +0800, Shengjiu Wang wrote:
-> ASoC: fsl_mqs: support MQS2 on i.MX94 platform
+On Thu, Jul 03, 2025 at 06:47:08PM +0200 Peter Zijlstra wrote:
+> On Thu, Jul 03, 2025 at 12:00:27PM -0400, Phil Auld wrote:
 > 
-> Shengjiu Wang (2):
->   ASoC: fsl_mqs: Distinguish different modules by system manager indices
->   ASoC: fsl_mqs: rename system manager indices for i.MX95
+> > > +	if (ttwu_do_migrate(rq, p, cpu))
+> > > +
+> > 
+> > This doesn't compile because ttwu_do_migrate() doesn't take a *rq.
+> > 
+> > It's easy enough to fix up and I'll try to have our perf team try these
+> > out. 
 > 
-> include/linux/firmware/imx/sm.h | 20 ++++++++++++++------
->  sound/soc/fsl/fsl_mqs.c         | 11 ++++++++---
->  2 files changed, 22 insertions(+), 9 deletions(-)
+> I'm confused, isn't that what patch 7 does?
+>
+
+Heh,  I seem to have not had patch 7 (psi did not make it through my
+stupid gmail filters).  I did look through all the ones I had but did
+not look at the numbers and see I was missing one... 
+
+Nevermind.
+
+
+Cheers,
+Phil
+
+> Also, I updated the git tree today, fixing a silly mistake. But I don't
+> remember build failures here.
 > 
-> [...]
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/2] ASoC: fsl_mqs: Distinguish different modules by system manager indices
-      commit: 9931d2899eec3737f4e4fa9fc900be7329816e94
-[2/2] ASoC: fsl_mqs: rename system manager indices for i.MX95
-      commit: baee26a9d6cd3d3c6c3c03c56270aa647a67e4bd
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
 
