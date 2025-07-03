@@ -1,117 +1,288 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC10A2E6D04
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38712E1744;
+	Thu,  3 Jul 2025 10:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751539178; cv=none; b=nte9gR9k68tYM1M8XWa+wRSNM0tG16YQ/thWkSEaFmXk71LHqNJC3BgdHaYrwPNQ2e/izdVAzbyQuM2TVAoZe/fKyFgDJDusvmprYMmvikD6i2peSkQVZYN1ko4rwNfGLJiUSflpAn5TRzOBK/BAZKFL5v9TTbShoBUc+3NX/J0=
+	t=1751539215; cv=none; b=mRdj+YzPBUD5V7Ch+eRj2snZRT7XySkVfRqAdlFVifQPl7zeJ1IYEsdT4d81MTPKAo9beU73PiZss0yaTMtOIZozVvYKg+NiskvJMuubDYbxcNqzu3UILqldqN3wkMUJBPTbhibwtmU0JeP91qEO4jyBoYOzqfjgstp7HL3nW6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751539178; c=relaxed/simple;
-	bh=bGwLvvH+krpxqZJW/aKT+tTKat2sdRhbvziWM56lIss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QgyGWodNz1csb4umO+rjJJWD8Nf161BefYwWNvBNmZxMw0cjs5BtrOhsGVG/ijMRljCNvc4zzORc+W0em2BoxM1D7HxSoBMy5MD9Q4QVvxnTqiMkEZCyjk8LrkJaxJfUMikxZa8kajTszAVMhvJKQkIp3+0vQxDBjmzNHTfRaus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SpLjYFsI; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751539215; c=relaxed/simple;
+	bh=/QFzSYlDk96wJWtvoJqxVFlqu43W4FEzZE0XzT6dz6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cO+RLyyxqLj4sCOpKxwe+iEQPdP2EtX0CYcDqNDSRm8Oe6uuuszd9UpkHGS4DhRf0A0PHcE/3+E2YhyMgzmGjgIGCjo06bkGbG5zaBB62Q4MXCuY0hWy/poTds0tqr8ObbH/BydqvYJUTBWxvVoksRFwBTs/3Gzgtq0tFGfRF2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NVTiF0B0; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SpLjYFsI"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e64b430daso59921887b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751539175; x=1752143975; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nbccPWOLMeO5ZiCDV22jEjK7nQ6LCiFcg1Ikp2bgtaE=;
-        b=SpLjYFsIeaeLZNe5zWyXHUZeaqfukoxmfm+giFclTMNef1wfyx+KGc4LAlVh9gk5qw
-         v52I4la6BBWsmJHTLQRh6UT4ETguXXRj5A0S43LiELwbD9Iz6+AqRH52ifPupBpvzY+r
-         XSiN7bmZaCgOsvHGi83o7ZbQuvxi52/Ivn66Tokg4z751pPfhibpiLoiSGfSAHw1ilDf
-         zSwtEyveHXKEuFbxe4rCV1JLh1G9JnyOiN6eGxVfqLecRkI90sD2LdbH+4Sac4bT/jLV
-         bNqPI+7XbFxrxEVCjBgDMS0EhxUzGIpSlOWG5GIVPcUuqM6tCyZEDsoqk2CEjbsBPmcL
-         oDoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751539175; x=1752143975;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nbccPWOLMeO5ZiCDV22jEjK7nQ6LCiFcg1Ikp2bgtaE=;
-        b=VJcy9HVBd452hTs7AqzU5osC1kUjQ4IBh/4paWI45qsMMzq23/KHU5IyH+QvWZ5DAP
-         5yvP+Txl4lIU9OrGQskXXXFJjBl34gm+gRU07Hl0MW1z5II4r6WfWwbz6GIbhWYXnvSe
-         kce6tZtqSOHTN73Giwd1AyCpTSPM74hvfCfsYcW9CGh4JX4ZnzgaF/+uG+riZx/hEUeu
-         qkCYASz7OhQHQWQRhWdtI8efk2xokyyGc+5Uy0ES4oV0uxtP9yu2gEyZeqISplEcQLR1
-         7dVXy5kxuo18ewg+CL3N0W7z61d47dUd8unaIe/oLm410FY85PMUHqKIG7ERe+LvtARN
-         cwSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbM/oMhxEnWD0eTe28KzplgHtzud9kMUZtlRejqHs261lOcftaRuxmu5EZi4nUi96eKw7P/s6NpLlpILw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYoaDBnVXiI/ghIHZ7NBb/qc4gbKplNDxkF7txK5KqBc8qcqny
-	tPNTF3L8m1l9mUQVe6o4fR2GcOvXaIwiH4aqZuA+qO9+QxRbCZjPTlo4V5qbPo499TnhRHakzfU
-	UfnQJxQDlY/chH2aZWcPOdcsrQqDuPdcak92BdCJTIA==
-X-Gm-Gg: ASbGnctZ96ygphk0KaO5JNYfMXGBxRU3UOmYBwIAZ7Bdbd1RX8TT9EzbJhJnvbZ40FD
-	GI4fch/BYOQUrDzZN0A4abvEvXn+QIjurhY1iQiGUOh8VsUaSRE6PyWgiLEhxuOH6adNRieV3rS
-	Cw63jyvEqPtaujYmGvODYGloduUI653+zPnz2NkpmxMmMiSW4T4VwA8Is=
-X-Google-Smtp-Source: AGHT+IF9eVk0FlIbMoHs5RgnCTviyum9RB4oGuI3RQdRmxuzWPhnfbE8XXHvyI2bhvdId129RaE1973qQU974VuN4FY=
-X-Received: by 2002:a05:690c:39c:b0:70e:29d2:fb96 with SMTP id
- 00721157ae682-7164d4d235emr83418887b3.36.1751539174826; Thu, 03 Jul 2025
- 03:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NVTiF0B0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751539213; x=1783075213;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/QFzSYlDk96wJWtvoJqxVFlqu43W4FEzZE0XzT6dz6U=;
+  b=NVTiF0B0hub3F7sdYKImHEB621KKwD3vmIEBlBx2XzlfKqPlNzGa8T96
+   lq6PDsDOF1j7FYfODEDpllHKtnrBFMhujWNbfI5F75FAqdcYFPxsTpcix
+   OXO7UVpSX/wYFwh7pjQ88zX3K3eECWGPJXzOdHXDOVvR887bx2uq/uair
+   hDfgv5KjB6ojVV37HQraCt+NxELic7q6MOuJhBGypEx9jsBxG5kSfBZd3
+   gXDVh4a6AtDrD9ULIz1Uasfbfet6M0GFuZaZPPJwWTDlOgUbIT81os+r1
+   uehla3edEFF107EEG9EMeD1BmQU7+ScGePj9oxtYw+DlRrj8Z4yOjiLr3
+   Q==;
+X-CSE-ConnectionGUID: 7nfcG5bIQ0qkcaNH3iuecA==
+X-CSE-MsgGUID: MzHCH2PvRmq7YdQf6PKodQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71296928"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="71296928"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 03:40:11 -0700
+X-CSE-ConnectionGUID: JMsPgBN7SpybGEfPT/WDlA==
+X-CSE-MsgGUID: SDEzVWdjTVKsq90XD7Ugbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="160030340"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 03 Jul 2025 03:39:59 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 0D7D41FE; Thu, 03 Jul 2025 13:39:58 +0300 (EEST)
+Date: Thu, 3 Jul 2025 13:39:57 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
+Message-ID: <uvvh6qfpan6f56fdvuch67nss2h5nqxbmocztf6v2lfbvnihbg@vtzbr6anzqnl>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
+ <20250703094417.165e5893@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620033018.87920-1-lidong@vivo.com>
-In-Reply-To: <20250620033018.87920-1-lidong@vivo.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 3 Jul 2025 12:38:58 +0200
-X-Gm-Features: Ac12FXwr34opsEKBKvjMq0YQRpajMerqzhzzFcEylaOwubo_bokLxMggyMS1_jE
-Message-ID: <CAPDyKFrkjuwU5b2-26LLWJ9gWduvXa9SOZ5j1+ndk1n5grXHVA@mail.gmail.com>
-Subject: Re: [PATCH v1] mmc: Convert ternary operator to str_write_read() helper
-To: Li Dong <lidong@vivo.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	"open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." <linux-mmc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	opensource.kernel@vivo.com, luhongfei@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703094417.165e5893@pumpkin>
 
-On Fri, 20 Jun 2025 at 05:30, Li Dong <lidong@vivo.com> wrote:
->
-> Replace direct ternary condition check with existing helper function
-> str_write_read() to improve code readability and maintain consistency.
+On Thu, Jul 03, 2025 at 09:44:17AM +0100, David Laight wrote:
+> On Tue,  1 Jul 2025 12:58:31 +0300
+> "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
+> 
+> > Extract memcpy and memset functions from copy_user_generic() and
+> > __clear_user().
+> > 
+> > They can be used as inline memcpy and memset instead of the GCC builtins
+> > whenever necessary. LASS requires them to handle text_poke.
+> 
+> Except they contain the fault handlers so aren't generic calls.
 
-The below tells me there are more cases than mmc_spi. Please re-spin
-and take care of all in one patch for the mmc subsystem.
+That's true. I will add a comment to clarify it.
 
-git grep "\"write\"" drivers/mmc
+> > Originally-by: Peter Zijlstra <peterz@infradead.org>
+> > Link: https://lore.kernel.org/all/20241029184840.GJ14555@noisy.programming.kicks-ass.net/
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/string.h     | 46 +++++++++++++++++++++++++++++++
+> >  arch/x86/include/asm/uaccess_64.h | 38 +++++++------------------
+> >  arch/x86/lib/clear_page_64.S      | 13 +++++++--
+> >  3 files changed, 67 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/string.h b/arch/x86/include/asm/string.h
+> > index c3c2c1914d65..17f6b5bfa8c1 100644
+> > --- a/arch/x86/include/asm/string.h
+> > +++ b/arch/x86/include/asm/string.h
+> > @@ -1,6 +1,52 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_X86_STRING_H
+> > +#define _ASM_X86_STRING_H
+> > +
+> > +#include <asm/asm.h>
+> > +#include <asm/alternative.h>
+> > +#include <asm/cpufeatures.h>
+> > +
+> >  #ifdef CONFIG_X86_32
+> >  # include <asm/string_32.h>
+> >  #else
+> >  # include <asm/string_64.h>
+> >  #endif
+> > +
+> > +#ifdef CONFIG_X86_64
+> > +#define ALT_64(orig, alt, feat) ALTERNATIVE(orig, alt, feat)
+> > +#else
+> > +#define ALT_64(orig, alt, feat) orig "\n"
+> > +#endif
+> > +
+> > +static __always_inline void *__inline_memcpy(void *to, const void *from, size_t len)
+> > +{
+> > +	void *ret = to;
+> > +
+> > +	asm volatile("1:\n\t"
+> > +		     ALT_64("rep movsb",
+> > +			    "call rep_movs_alternative", ALT_NOT(X86_FEATURE_FSRM))
+> > +		     "2:\n\t"
+> > +		     _ASM_EXTABLE_UA(1b, 2b)
+> > +		     : "+c" (len), "+D" (to), "+S" (from), ASM_CALL_CONSTRAINT
+> > +		     : : "memory", _ASM_AX);
+> > +
+> > +	return ret + len;
+> > +}
+> > +
+> > +static __always_inline void *__inline_memset(void *addr, int v, size_t len)
+> > +{
+> > +	void *ret = addr;
+> > +
+> > +	asm volatile("1:\n\t"
+> > +		     ALT_64("rep stosb",
+> > +			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
+> > +		     "2:\n\t"
+> > +		     _ASM_EXTABLE_UA(1b, 2b)
+> > +		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
+> > +		     : "a" ((uint8_t)v)
+> 
+> You shouldn't need the (uint8_t) cast (should that be (u8) anyway).
+> At best it doesn't matter, at worst it will add code to mask with 0xff.
 
-Kind regards
-Uffe
+Right, will drop.
 
->
-> Signed-off-by: Li Dong <lidong@vivo.com>
-> ---
->  drivers/mmc/host/mmc_spi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 47443fb5eb33..0a1098140dc0 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -27,6 +27,7 @@
->  #include <linux/spi/mmc_spi.h>
->
->  #include <linux/unaligned.h>
-> +#include <linux/string_choices.h>
->
->
->  /* NOTES:
-> @@ -774,7 +775,7 @@ mmc_spi_data_do(struct mmc_spi_host *host, struct mmc_command *cmd,
->         unsigned                n_sg;
->         bool                    multiple = (data->blocks > 1);
->         bool                    write = (data->flags & MMC_DATA_WRITE);
-> -       const char              *write_or_read = write ? "write" : "read";
-> +       const char              *write_or_read = str_write_read(write);
->         u32                     clock_rate;
->         unsigned long           timeout;
->
-> --
-> 2.34.1
->
+> > +		     : "memory", _ASM_SI, _ASM_DX);
+> > +
+> > +	return ret + len;
+> > +}
+> > +
+> > +#endif /* _ASM_X86_STRING_H */
+> > diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+> > index c8a5ae35c871..eb531e13e659 100644
+> > --- a/arch/x86/include/asm/uaccess_64.h
+> > +++ b/arch/x86/include/asm/uaccess_64.h
+> > @@ -13,6 +13,7 @@
+> >  #include <asm/page.h>
+> >  #include <asm/percpu.h>
+> >  #include <asm/runtime-const.h>
+> > +#include <asm/string.h>
+> >  
+> >  /*
+> >   * Virtual variable: there's no actual backing store for this,
+> > @@ -118,21 +119,12 @@ rep_movs_alternative(void *to, const void *from, unsigned len);
+> >  static __always_inline __must_check unsigned long
+> >  copy_user_generic(void *to, const void *from, unsigned long len)
+> >  {
+> > +	void *ret;
+> > +
+> >  	stac();
+> > -	/*
+> > -	 * If CPU has FSRM feature, use 'rep movs'.
+> > -	 * Otherwise, use rep_movs_alternative.
+> > -	 */
+> > -	asm volatile(
+> > -		"1:\n\t"
+> > -		ALTERNATIVE("rep movsb",
+> > -			    "call rep_movs_alternative", ALT_NOT(X86_FEATURE_FSRM))
+> > -		"2:\n"
+> > -		_ASM_EXTABLE_UA(1b, 2b)
+> > -		:"+c" (len), "+D" (to), "+S" (from), ASM_CALL_CONSTRAINT
+> > -		: : "memory", "rax");
+> > +	ret = __inline_memcpy(to, from, len);
+> >  	clac();
+> > -	return len;
+> > +	return ret - to;
+> >  }
+> >  
+> >  static __always_inline __must_check unsigned long
+> > @@ -178,25 +170,15 @@ rep_stos_alternative(void __user *addr, unsigned long len);
+> >  
+> >  static __always_inline __must_check unsigned long __clear_user(void __user *addr, unsigned long size)
+> >  {
+> > +	void *ptr = (__force void *)addr;
+> > +	void *ret;
+> > +
+> >  	might_fault();
+> >  	stac();
+> > -
+> > -	/*
+> > -	 * No memory constraint because it doesn't change any memory gcc
+> > -	 * knows about.
+> > -	 */
+> > -	asm volatile(
+> > -		"1:\n\t"
+> > -		ALTERNATIVE("rep stosb",
+> > -			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS))
+> > -		"2:\n"
+> > -	       _ASM_EXTABLE_UA(1b, 2b)
+> > -	       : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
+> > -	       : "a" (0));
+> > -
+> > +	ret = __inline_memset(ptr, 0, size);
+> >  	clac();
+> >  
+> > -	return size;
+> > +	return ret - ptr;
+> >  }
+> >  
+> >  static __always_inline unsigned long clear_user(void __user *to, unsigned long n)
+> > diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
+> > index a508e4a8c66a..47b613690f84 100644
+> > --- a/arch/x86/lib/clear_page_64.S
+> > +++ b/arch/x86/lib/clear_page_64.S
+> > @@ -55,17 +55,26 @@ SYM_FUNC_END(clear_page_erms)
+> >  EXPORT_SYMBOL_GPL(clear_page_erms)
+> >  
+> >  /*
+> > - * Default clear user-space.
+> > + * Default memset.
+> >   * Input:
+> >   * rdi destination
+> > + * rsi scratch
+> >   * rcx count
+> > - * rax is zero
+> > + * al is value
+> >   *
+> >   * Output:
+> >   * rcx: uncleared bytes or 0 if successful.
+> > + * rdx: clobbered
+> >   */
+> >  SYM_FUNC_START(rep_stos_alternative)
+> >  	ANNOTATE_NOENDBR
+> > +
+> > +	movzbq %al, %rsi
+> > +	movabs $0x0101010101010101, %rax
+> > +
+> > +	/* RDX:RAX = RAX * RSI */
+> > +	mulq %rsi
+> 
+> NAK - you can't do that here.
+> Neither %rsi nor %rdx can be trashed.
+> The function has a very explicit calling convention.
+
+What calling convention? We change the only caller to confirm to this.
+
+> It is also almost certainly a waste of time.
+> Pretty much all the calls will be for a constant 0x00.
+> Rename it all memzero() ...
+
+text_poke_memset() is not limited to zeroing.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
