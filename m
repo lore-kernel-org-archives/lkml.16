@@ -1,116 +1,236 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1618F2E0411;
-	Thu,  3 Jul 2025 09:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420042DFF17
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536372; cv=none; b=Ygl1rFLfRrB/XK+gq+RVC4tWKQHBxUvFcn4pELkPSgPwbexMuh3gONuPYIAnyKeOt83l6dzikQ7Qw4NZy9bEOL0hGgKN8UgYl10BiySoChGOY65Z9BmJpRHIe+r1YkMc9dSoXyhqrUCANnchL/eQ3EteT+TL87MuSyfO0Bi1Rg8=
+	t=1751536392; cv=none; b=fJpfK5/6DFkglpS4uslrQfUzr5ntDoBlFw1YTamZD4QTHZWPTFgAMh77c06N+kyzJyvYNww7M1fDAfidZW3BzKMD00ms+ZXpMzcT5FLJxDbJN+DRWWQo79JJJkCyGFlYECLhnqRHxj9RYOeTrT86X3tPHBzTodqqqTpuD5kinio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536372; c=relaxed/simple;
-	bh=mV7xMp6TFO+YQwzpnn+FnEIQmIkBb8Cgt9hINbPFbSA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rWQFzkIJ5g0hGnnQWEz/xy4eYQZK0k6t58jxUnnhFSL2GLQLOaP/wYxtpvhUJg596VyaiZ1TegcAlXJ5hPi/1G2U+n5f4cPovSShzwF5LaB9Xxy4X415SKc5CVItjrpBCWT9y+iv6ytFQqwvy1VfSeXFkqX9beltVTRRhJM3C/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXsSH5xbsz6L51S;
-	Thu,  3 Jul 2025 17:49:51 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 896441402F0;
-	Thu,  3 Jul 2025 17:52:47 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 3 Jul 2025 11:52:47 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Thu, 3 Jul 2025 11:52:47 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Li Ming <ming.li@zohomail.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "andriy.shevchenko@linux.intel.com"
-	<andriy.shevchenko@linux.intel.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] resource: Introduce a new helper
- resource_contains_addr()
-Thread-Topic: [PATCH v2 1/3] resource: Introduce a new helper
- resource_contains_addr()
-Thread-Index: AQHb6yHhHtFU4bW2uUO6pVheFz/yK7QgJMAg
-Date: Thu, 3 Jul 2025 09:52:47 +0000
-Message-ID: <95a899051e5c46aca70aa0b0016c0f90@huawei.com>
-References: <20250702072008.468371-1-ming.li@zohomail.com>
-In-Reply-To: <20250702072008.468371-1-ming.li@zohomail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1751536392; c=relaxed/simple;
+	bh=uPbguE/8OAOATIPW9RykVhl8O/CGv8inu1oPmLQ4M7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hngDnlzSer+LV8gtNPb9RV9RtPW60z/2L9OyC5BvZpCyBwFTU34/cX2t5NXsOJwk/QbtQxHwkwDVEo1lKThtMqTkkAs59xt/1P32Ihav+CFjJ158OTPjuge0Jjp9j/uGuwpcD0xvWBJ5O6klGwmE6HUG9tsoIxU+ot7z/wSPLAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K4dy94I1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=irUAu815; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K4dy94I1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=irUAu815; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K4dy94I1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="irUAu815";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K4dy94I1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="irUAu815"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5BC3B1F387;
+	Thu,  3 Jul 2025 09:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751536388; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ASGLg+R2jtd9A6SKFohBR505MT0D8s64e+2Cx+0rS/M=;
+	b=K4dy94I1QjSIye0Zp/yef9GHWsU+jIvS48MkYq5jLeguRxsd7EYBiFBUsY7KJE4hOfHuJo
+	YkfP8c8Oho0dqO/80fXI6r4wdV8mYOB4lhDya4SuO09fqPyb+YuVVIIlpU4ed0yTuZoUbd
+	WR6nYYqToGZ6HNbPyQJ7jBDSpHPQHIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751536388;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ASGLg+R2jtd9A6SKFohBR505MT0D8s64e+2Cx+0rS/M=;
+	b=irUAu815G4wRehMLcBMN7OjR1KEfji/6qTkoGKDAZJ88hhvP5CzbApsBJquUg3ASCOPFxH
+	FM+fcLP4j/GMWcBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=K4dy94I1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=irUAu815
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751536388; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ASGLg+R2jtd9A6SKFohBR505MT0D8s64e+2Cx+0rS/M=;
+	b=K4dy94I1QjSIye0Zp/yef9GHWsU+jIvS48MkYq5jLeguRxsd7EYBiFBUsY7KJE4hOfHuJo
+	YkfP8c8Oho0dqO/80fXI6r4wdV8mYOB4lhDya4SuO09fqPyb+YuVVIIlpU4ed0yTuZoUbd
+	WR6nYYqToGZ6HNbPyQJ7jBDSpHPQHIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751536388;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ASGLg+R2jtd9A6SKFohBR505MT0D8s64e+2Cx+0rS/M=;
+	b=irUAu815G4wRehMLcBMN7OjR1KEfji/6qTkoGKDAZJ88hhvP5CzbApsBJquUg3ASCOPFxH
+	FM+fcLP4j/GMWcBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E47D213721;
+	Thu,  3 Jul 2025 09:53:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0nUZNQNTZmh7CQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 03 Jul 2025 09:53:07 +0000
+Date: Thu, 3 Jul 2025 11:53:06 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	David Hildenbrand <david@redhat.com>,
+	Pratyush Yadav <ptyadav@amazon.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 3/3] cma: move allocation from HIGHMEM to a helper
+ function
+Message-ID: <aGZTApK8WxFrTxI0@localhost.localdomain>
+References: <20250702173605.2198924-1-rppt@kernel.org>
+ <20250702173605.2198924-4-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702173605.2198924-4-rppt@kernel.org>
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 5BC3B1F387
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
->-----Original Message-----
->From: Li Ming <ming.li@zohomail.com>
->Sent: 02 July 2025 08:20
->To: akpm@linux-foundation.org; andriy.shevchenko@linux.intel.com;
->bhelgaas@google.com; ilpo.jarvinen@linux.intel.com; dave@stgolabs.net;
->Jonathan Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->dan.j.williams@intel.com; Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org; Li Ming
-><ming.li@zohomail.com>
->Subject: [PATCH v2 1/3] resource: Introduce a new helper
->resource_contains_addr()
->
->In CXL subsystem, many functions need to check an address availability by
->checking if the resource range contains the address. Providing a new helpe=
-r
->function resource_contains_addr() to check if the resource range contains =
-the
->input address.
->
->Suggested-by: Alison Schofield <alison.schofield@intel.com>
->Signed-off-by: Li Ming <ming.li@zohomail.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
->---
->v2:
->* Implement a general helper resource_contains_addr(). (Alison)
->
->base-commit: 0a46f60a9fe16f5596b6b4b3ee1a483ea7854136 cxl/fixes
->---
-> include/linux/ioport.h | 8 ++++++++
-> 1 file changed, 8 insertions(+)
->
->diff --git a/include/linux/ioport.h b/include/linux/ioport.h index
->e8b2d6aa4013..75f5e9ccd549 100644
->--- a/include/linux/ioport.h
->+++ b/include/linux/ioport.h
->@@ -308,6 +308,14 @@ static inline bool resource_contains(const struct
->resource *r1, const struct res
-> 	return r1->start <=3D r2->start && r1->end >=3D r2->end;  }
->
->+/* True if res contains addr */
->+static inline bool resource_contains_addr(const struct resource *res,
->+const resource_size_t addr) {
->+	if (res->flags & IORESOURCE_UNSET)
->+		return false;
->+	return res->start <=3D addr && addr <=3D res->end; }
->+
-> /* True if any part of r1 overlaps r2 */  static inline bool
->resource_overlaps(const struct resource *r1, const struct resource *r2)  {
->--
->2.34.1
+On Wed, Jul 02, 2025 at 08:36:05PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> When CONFIG_HIGMEM is enabled, __cma_declare_contiguous_nid() first
+> tries to allocate the area from HIGHMEM and if that fails it falls back
+> to allocation from low memory.
+> 
+> Split allocation from HIGMEM into a helper function to further decouple
+> logic related to CONFIG_HIGHMEM.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  mm/cma.c | 52 +++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 29 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/cma.c b/mm/cma.c
+> index 1df8ff312d99..0a24c46f3296 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -376,6 +376,30 @@ static int __init cma_fixed_reserve(phys_addr_t base, phys_addr_t size)
+>  	return 0;
+>  }
+>  
+> +static phys_addr_t __init cma_alloc_highmem(phys_addr_t base, phys_addr_t size,
+> +			phys_addr_t align, phys_addr_t *limit, int nid)
+> +{
+> +	phys_addr_t addr = 0;
+> +
+> +	if (IS_ENABLED(CONFIG_HIGHMEM)) {
+> +		phys_addr_t highmem = __pa(high_memory - 1) + 1;
+> +
+> +		/*
+> +		 * All pages in the reserved area must come from the same zone.
+> +		 * If the requested region crosses the low/high memory boundary,
+> +		 * try allocating from high memory first and fall back to low
+> +		 * memory in case of failure.
+> +		 */
+> +		if (base < highmem && *limit > highmem) {
+> +			addr = memblock_alloc_range_nid(size, align, highmem,
+> +							*limit, nid, true);
+> +			*limit = highmem;
+> +		}
+> +	}
 
+Not a big deal, but maybe better to do it in one function? Maybe even move
+the CONFIG_PHYS_ADDR_T_64BIT block in there as well? So memblock_alloc_range_nid()
+calls would be contained in one place and the X86_64/HIGHMEM comments as
+well.
+Just a thought.
+
+ diff --git a/mm/cma.c b/mm/cma.c
+ index dd7643fc01db..532b56e6971a 100644
+ --- a/mm/cma.c
+ +++ b/mm/cma.c
+ @@ -377,11 +377,12 @@ static int __init cma_fixed_reserve(phys_addr_t base, phys_addr_t size)
+  	return 0;
+  }
+ 
+ -static phys_addr_t __init cma_alloc_highmem(phys_addr_t base, phys_addr_t size,
+ -			phys_addr_t align, phys_addr_t *limit, int nid)
+ +static phys_addr_t __init cma_alloc_mem(phys_addr_t base, phys_addr_t size,
+ +			phys_addr_t align, phys_addr_t limit, int nid)
+  {
+  	phys_addr_t addr = 0;
+ 
+ +	/* On systems with HIGHMEM try allocating from there first */
+  	if (IS_ENABLED(CONFIG_HIGHMEM)) {
+  		phys_addr_t highmem = __pa(high_memory - 1) + 1;
+ 
+ @@ -393,11 +394,15 @@ static phys_addr_t __init cma_alloc_highmem(phys_addr_t base, phys_addr_t size,
+  		 */
+  		if (base < highmem && *limit > highmem) {
+  			addr = memblock_alloc_range_nid(size, align, highmem,
+ -							*limit, nid, true);
+ +							limit, nid, true);
+  			*limit = highmem;
+  		}
+  	}
+ 
+ +	if (!addr)
+ +		addr = memblock_alloc_range_nid(size, alignment, base,
+ +						limit, nid, true);
+ +
+  	return addr;
+  }
+ 
+ @@ -487,16 +492,8 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
+  		}
+  #endif
+ 
+ -		/* On systems with HIGHMEM try allocating from there first */
+  		if (!addr)
+ -			addr = cma_alloc_highmem(base, size, alignment, &limit,
+ -						 nid);
+ -		if (!addr) {
+ -			addr = memblock_alloc_range_nid(size, alignment, base,
+ -					limit, nid, true);
+ -			if (!addr)
+ -				return -ENOMEM;
+ -		}
+ +			addr = cma_alloc_mem(base, size, alignment, limit, nid);
+ 
+  		/*
+  		 * kmemleak scans/reads tracked objects for pointers to other
+
+
+
+-- 
+Oscar Salvador
+SUSE Labs
