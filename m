@@ -1,45 +1,88 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00571AF0C1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170DC78F3B;
+	Thu,  3 Jul 2025 02:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751508620; cv=none; b=MpMJ+eLJnflP+tR9r1kHaIIuX/sS5XTMXNvLxw+A6FsFlGu1gigqvo+Zty7i5p2MN/aUSmB9A8rZ31fIRWeKN7gIuI2XARUt1y52TpFI5TEb1oxaSeDWB7r3gFk2lmo6kaCePpFhgM2A73mlS8IiZIOsDdNtHP8CA4iKPiwD5hA=
+	t=1751508763; cv=none; b=LlTfC2ZGl4sDyLXXUAneHho41e85ZcKjLO66jchnZV/YyO8wywkkz1bR4XatBEc2BYcUh/iBWO8/P8f/FzOSAp6nM+GrsEgSBcRLPuUDwmqLJalZnlGhIQRMnSpLSnZxurhAoZh/OcV5EkfKdYDARhmlcwINzi+uzXZEhClPLKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751508620; c=relaxed/simple;
-	bh=PrbpDPIGwbVnLN+XYaYPxiEMUbBiLtTOwlu9YoQVYDc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ig3ReYNo3d0DCXPRsiU8bTBxXqx8yoaWyYm+FMlSd4wlRSQE3HN5V5AM6oRqswEDZj+JEmrt6taqfSl8DJBW+/xRQHTQosXtRLxY0t9iMOOeZN20eIpLUFQIDw9yhfqJmAwMvTHw0ku6zFFOmVYm+FAwQqzG6sV7i6QH6cy8l+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QEZcP9KC; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751508763; c=relaxed/simple;
+	bh=sMqFnXsB9KHf9HSqojnNLZvxtE3M1hEaE1+cY5TdKiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hUR/I8N1Zxeb8fdXfSzejrfjpJyvHY3PQ8MbT/8PACfHbucbSCenlCqry524sWzqTIlb+KVv/j1A5buaotnlkn/V0i6glHlfcil5jwLmh9Pyonuf7nbwyjz5qKcy4jyRwm8mxjbNZ1cRvX1Y6g514NDTM2d1Bw5hWz3nLhcPOC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCmPu2DF; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QEZcP9KC"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751508610; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=sCxjicG5r3fkQxnVPRBp7xHrgO61Yw1xC3KdXRbaghg=;
-	b=QEZcP9KCuneqETxHwWmpXTUd2so8WPsozc6pp/BuVdoW6VKIDlsrUrPuptwQWPGvh1xSWGYWHTXLzLh7kL5F0N4FhfXjsx+kLUg8zkryFAbN63GeY4mGndjCkWBr/UsTxggFz4pFZ3i7bDE/59CrjEfTHu0vtn1Y951si8ZPEPc=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WgqQisY_1751508608 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 03 Jul 2025 10:10:09 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org
-Cc: paulmck@kernel.org,
-	john.ogness@linutronix.de,
-	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v3 5/5] panic: add note that panic_print sysctl interface is deprecated
-Date: Thu,  3 Jul 2025 10:10:04 +0800
-Message-Id: <20250703021004.42328-6-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250703021004.42328-1-feng.tang@linux.alibaba.com>
-References: <20250703021004.42328-1-feng.tang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCmPu2DF"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ef62066eso96182965ad.3;
+        Wed, 02 Jul 2025 19:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751508761; x=1752113561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S16+Wo1JY0zCcQqq1dcPzIA9NOiw0i4loy9qh5wd/pc=;
+        b=KCmPu2DFpT+ia3G8ZJ0BwfYp+d7q91+IS6f8IPkwJvA6u4X8UP8uVoQHJhJw67h1ur
+         sIHtA/rdGgCBIA7CJIfbR2FZeqLTEYPxnmJhXr6HQWWWkNnWZOtV/oSPhGIq+HIMX0Bo
+         h3qie4UEKeItaKBcwaucMjL60ArPOPBcRM1QXHZX3GTj/fpIMfP6CzU8kUcs3XaVqvB6
+         XcR1Hwq9Sp1k2tw4zTir7kcxAmiQgYNld87s3QIqgqke5Lt1QGDRf/bMKiVGG4pVEEqV
+         SHoOTDhUIhxVkV7oGGsBlfO3uyDlsEBVv8MNYwbHr2dbTRdqk3ArKD3Hav1I1EieKY5o
+         3skg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751508761; x=1752113561;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S16+Wo1JY0zCcQqq1dcPzIA9NOiw0i4loy9qh5wd/pc=;
+        b=Dzgvg27YNFoEp6z06hHc2NZwF0f3eHQ8rxDBZF/V3gh5T3myN3IcMz7EIODXnexi8w
+         CpccjJgtbkRPq2i3jp4nxsZrIgpRBkKP3Ac8Qr0u6Z847gqd5u0CueRJ9RMfIyH+XqqY
+         d6kcCdxlNR5uF+o+SfAu5Q1WEKQDBvyEI+rD0aGfEwcdJx4LqCrmdtVqDxU5lPlzS3IM
+         +AIc2OwK0PafSh2L8Gd6Zg7QsoA2ucOfLq6vHZCBhdMfe3b+J2oV3s1ILaeJxaS3xYwn
+         K4ZA8nwntdM3np+A1hYgmF0C7JUe9FYWrCP7qjLo9e/yMZj8xlVbvbhqd7CIJ1WoetG2
+         PC7g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6ED4GK0TOfEyzpX3pmZPp7yt9sYYhuMeb29Sda3iseNpTt+0LAVXrEdPe9KUWAATmG2OTQ7EpVgPo@vger.kernel.org, AJvYcCWmG/2JawE9gIHhNXIl8PjXhuQqtOVmzpAfNLDB3B2tb1U45VolkoDJA/mbjNNdmOmMh2+ggkWRm1RsuIUD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPbJWwhhQWgdM/x/pAaI8xPzrwzpyzcPRMWd2zy6Ql/Kj26R2K
+	qpcVEy0Do3ODSlDi98dJ2gIWZ+E4LI7wGxohb14/Id9IKt8X7RRX71jd
+X-Gm-Gg: ASbGncst0kN9kgZme7EjdCjpQxTW9qyuc3rWTCieUdRtHaOlKq97YJ3nlLx3qbg+1HZ
+	Ph7EoNH5VGRN3F/FYLOf7MRbgxYgCZGFe1AndDZGuuY1D8eH1btC3ajpI3z7mNmvUucSbJcaA2/
+	F2HZSWOdJ/IKxyNoqUdSpPDog623tQIvEvpbn5nDHcjd9Pgma1bUvjRg8tN1T9l5azkqf7Szbkt
+	GzRYAz8rXl8P76KTbQW7JX2afhkZTrlJH2Hqi6Xz/801j7iSb0TfRbwKwsNiQbyDAIS/Jv79wv2
+	lICe/lxOkWQw/HtFnNw8gruMX1Y5p5UtqwLrikD9wm84gf66lkM1tdGwn2zTwA==
+X-Google-Smtp-Source: AGHT+IFnmlwLaBLaGwc+N19c2w52c0k4AcjFAlDtZ/2XEfLCT2lg1jaNUPZxftwxJdpBB1iqrVZDJA==
+X-Received: by 2002:a17:902:d492:b0:236:8df9:ab38 with SMTP id d9443c01a7336-23c6e591cd5mr88563685ad.34.1751508761218;
+        Wed, 02 Jul 2025 19:12:41 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23acb2f1b31sm140649065ad.69.2025.07.02.19.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 19:12:40 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH net-next] dt-bindings: net: Add support for Sophgo CV1800 dwmac
+Date: Thu,  3 Jul 2025 10:12:19 +0800
+Message-ID: <20250703021220.124195-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,100 +91,146 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a dedicated core parameter 'panic_console_replay' for controlling
-console replay, and add note that 'panic_print' sysctl interface  will
-be obsoleted by 'panic_sys_info' and 'panic_console_replay'.  When it
-happens, the SYS_INFO_PANIC_CONSOLE_REPLAY can be removed as well.
+The GMAC IP on CV1800 series SoC is a standard Synopsys
+DesignWare MAC (version 3.70a).
 
-Suggested-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+Add necessary compatible string for this device.
+
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 ++++
- kernel/panic.c                                | 21 ++++++++++++-------
- 2 files changed, 17 insertions(+), 8 deletions(-)
+The binding patch is split from the origianl series
+"[PATCH net-next RFC v4 0/4] riscv: dts: sophgo: Add ethernet support
+for cv18xx".
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 39ddef7c5857..f34de9978a91 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4556,6 +4556,10 @@
- 
-                         This is a human readable alternative to the 'panic_print' option.
- 
-+	panic_console_replay
-+			When panic happens, replay all kernel messages on
-+			consoles at the end of panic.
+Change from origianl RFC v4:
+- https://lore.kernel.org/all/20250701011730.136002-1-inochiama@gmail.com
+2. remove status, add "phy-handle" and "phy-mode" for binding test.
+---
+ .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+new file mode 100644
+index 000000000000..b89456f0ef83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+@@ -0,0 +1,114 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/sophgo,cv1800b-dwmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	parkbd.port=	[HW] Parallel port number the keyboard adapter is
- 			connected to, default is 0.
- 			Format: <parport#>
-diff --git a/kernel/panic.c b/kernel/panic.c
-index d9d4fcd5e318..bb16f254cd02 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -64,6 +64,7 @@ int panic_on_warn __read_mostly;
- unsigned long panic_on_taint;
- bool panic_on_taint_nousertaint = false;
- static unsigned int warn_limit __read_mostly;
-+static bool panic_console_replay;
- 
- bool panic_triggering_all_cpu_backtrace;
- 
-@@ -77,6 +78,13 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
- EXPORT_SYMBOL(panic_notifier_list);
- 
- #ifdef CONFIG_SYSCTL
-+static int sysctl_panic_print_handler(const struct ctl_table *table, int write,
-+			   void *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	pr_info_once("Kernel: 'panic_print' sysctl interface will be obsoleted by both 'panic_sys_info' and 'panic_console_replay'\n");
-+	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
-+}
++title: Sophgo CV1800B DWMAC glue layer
 +
- static const struct ctl_table kern_panic_table[] = {
- #ifdef CONFIG_SMP
- 	{
-@@ -108,7 +116,7 @@ static const struct ctl_table kern_panic_table[] = {
- 		.data		= &panic_print,
- 		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_minmax,
-+		.proc_handler	= sysctl_panic_print_handler,
- 	},
- 	{
- 		.procname	= "panic_on_warn",
-@@ -247,12 +255,6 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
- }
- EXPORT_SYMBOL(nmi_panic);
- 
--static void panic_console_replay(void)
--{
--	if (panic_print & SYS_INFO_PANIC_CONSOLE_REPLAY)
--		console_flush_on_panic(CONSOLE_REPLAY_ALL);
--}
--
- void check_panic_on_warn(const char *origin)
- {
- 	unsigned int limit;
-@@ -427,7 +429,9 @@ void panic(const char *fmt, ...)
- 	debug_locks_off();
- 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
- 
--	panic_console_replay();
-+	if ((panic_print & SYS_INFO_PANIC_CONSOLE_REPLAY) ||
-+		panic_console_replay)
-+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
- 
- 	if (!panic_blink)
- 		panic_blink = no_blink;
-@@ -869,6 +873,7 @@ core_param(panic_print, panic_print, ulong, 0644);
- core_param(pause_on_oops, pause_on_oops, int, 0644);
- core_param(panic_on_warn, panic_on_warn, int, 0644);
- core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
-+core_param(panic_console_replay, panic_console_replay, bool, 0644);
- 
- static int __init oops_setup(char *s)
- {
--- 
-2.43.5
++maintainers:
++  - Inochi Amaoto <inochiama@gmail.com>
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - sophgo,cv1800b-dwmac
++  required:
++    - compatible
++
++properties:
++  compatible:
++    items:
++      - const: sophgo,cv1800b-dwmac
++      - const: snps,dwmac-3.70a
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: GMAC main clock
++      - description: PTP clock
++
++  clock-names:
++    items:
++      - const: stmmaceth
++      - const: ptp_ref
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-names:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: stmmaceth
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - interrupt-names
++  - resets
++  - reset-names
++
++allOf:
++  - $ref: snps,dwmac.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    ethernet@4070000 {
++      compatible = "sophgo,cv1800b-dwmac", "snps,dwmac-3.70a";
++      reg = <0x04070000 0x10000>;
++      clocks = <&clk 35>, <&clk 36>;
++      clock-names = "stmmaceth", "ptp_ref";
++      interrupts = <31 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "macirq";
++      phy-handle = <&internal_ephy>;
++      phy-mode = "internal";
++      resets = <&rst 12>;
++      reset-names = "stmmaceth";
++      rx-fifo-depth = <8192>;
++      tx-fifo-depth = <8192>;
++      snps,multicast-filter-bins = <0>;
++      snps,perfect-filter-entries = <1>;
++      snps,aal;
++      snps,txpbl = <8>;
++      snps,rxpbl = <8>;
++      snps,mtl-rx-config = <&gmac0_mtl_rx_setup>;
++      snps,mtl-tx-config = <&gmac0_mtl_tx_setup>;
++      snps,axi-config = <&gmac0_stmmac_axi_setup>;
++
++      mdio {
++        compatible = "snps,dwmac-mdio";
++        #address-cells = <1>;
++        #size-cells = <0>;
++      };
++
++      gmac0_mtl_rx_setup: rx-queues-config {
++        snps,rx-queues-to-use = <1>;
++        queue0 {};
++      };
++
++      gmac0_mtl_tx_setup: tx-queues-config {
++        snps,tx-queues-to-use = <1>;
++        queue0 {};
++      };
++
++      gmac0_stmmac_axi_setup: stmmac-axi-config {
++        snps,blen = <16 8 4 0 0 0 0>;
++        snps,rd_osr_lmt = <2>;
++        snps,wr_osr_lmt = <1>;
++      };
++    };
+--
+2.50.0
 
