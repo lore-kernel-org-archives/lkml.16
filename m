@@ -1,44 +1,42 @@
 Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF4B2F5C38;
-	Thu,  3 Jul 2025 18:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60692F5C4C;
+	Thu,  3 Jul 2025 18:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751566884; cv=none; b=U1xVoBJpUArW+5HWuyMxmwx9hKEO9nLuvN3DDOQEzyr+FgcmlX/HKk+AM9SE7PcrbyR4AiWhfDmIO+ktwIzDZORoFU4PklBxlUMuz0PjQhwh+I24l3bc0w0EMFjTcj0jsoM8D3e49CAh4d+3kYhEP06D6gQMWJCXuKwgS0t879E=
+	t=1751566887; cv=none; b=Al0ExIBnDRkPFcybwUQq5xiIQdE722zLZEJIRu2+EwpgPHgItyJZbQlsLUAzi7sCKf7bz+jvvDx8dz1x4176hHhUxvlDhJnZWLtwOJJoE6MVxFE1GDiyM9lMD1WvAdPsvdWW2EhBKNdDym+DfjHlb8ZZNJsDBNRrmaqE1dpbRpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751566884; c=relaxed/simple;
-	bh=3k4foJwiSwCxZ5Vjm6odRPJ35c0stk5RDqto91j+ZoA=;
+	s=arc-20240116; t=1751566887; c=relaxed/simple;
+	bh=rW7lsUbbdv45tTpapetNvocz8Ey2KxfxNvy9S+/4ky4=;
 	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J1+sW6lXI3YHr3D4zZNIroqEHq1gDLwqm998FinpQpRoB4OJXYb5gG2BEsjDqJuwRIGd2UQpYo8wu0ElnUssKbNXbX6IiCbeXMbA2qbjcnxUSJQfaj59CYBgByuIBZ5rbQmJvfAMsvbeUVUWZz1BXr2P4r6Ch2nMnUTeLGAsloM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=CyhmBNlk; arc=none smtp.client-ip=139.28.40.42
+	 Content-Disposition; b=IbbijTFY4tKwPvAaFCpkOdMLBbLy+/nmimt+9vZGTX0lx3j8ipVPizA9W2hzfwbWV18/fLImf1NOvP+BigPme5IbxnlbhCnzTyb9y8c+E7I+Ds9CquIEPNrHeBbn50+as/vXvkp0nS4ZJiqAgS4os7zkBMAquBRgywe1YB/84Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=GH3J7u9A; arc=none smtp.client-ip=139.28.40.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="CyhmBNlk"
+	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="GH3J7u9A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202505; t=1751566880;
-	bh=3k4foJwiSwCxZ5Vjm6odRPJ35c0stk5RDqto91j+ZoA=;
+	s=202505; t=1751566883;
+	bh=rW7lsUbbdv45tTpapetNvocz8Ey2KxfxNvy9S+/4ky4=;
 	h=Date:From:Cc:Subject:From;
-	b=CyhmBNlk6BYwYmpW+amx/cud/qS87ltU4KWbQUomjWyLqkFv4gR7jEieOPV9eWagP
-	 VTKP8aWF+ML8WLfxaLrrTBVd9f1gL/3HABIkzOqGQgNdAvojmhkdCF8FOhmlXclOHY
-	 5nNbbzOPpb7EZYV2XOtvh3aFj0ECrWkiJjtFV9QeQPXTr9dJM2p0YGdgvcYgUHRqSw
-	 N7+PaZBfzxgEYKHr86O/J66aJhgyEDH+/8hy89arLRIlXc6XPJuB9EnTSJIjDf1fba
-	 vrM6AZ3aRYW/BGrWcNE0MC9rIYkBakZwFthyfHa2cCj102GjSNRnxPQtoWPNJDFv7V
-	 5R6spGXoMeZUA==
+	b=GH3J7u9AYkjLWF3HpCgzrO3zDvfP1w/sYUdLzwSbpkO2/yw4vZv8SDTOHwMCKzJPW
+	 gLxNlxcSqpUJ8jZS9fw1etw//LKvUyKz7LwnU0uJCX050+O4uOmnlk3Ny4jDFiAANV
+	 bW8RuX5L93TMSlMKFvMtKjR0twxZYFvDse2LWLLtuISZ2p/k4f0+oIbGXb/iC61xBz
+	 soF9hFEEbeUYRoWo1cwC8YtJK9ay/byQuTSvAxeP/Pq75PN2P4Av4rtiErlyqqTeqL
+	 XB15TxDUsIXG0Grqd5++X0CGvHo20h9V+KVEOj8wcCuIb6LhSNfzstnVnxRqiHn607
+	 p6674km4V+OAg==
 Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id A58AF6B8;
-	Thu,  3 Jul 2025 20:21:20 +0200 (CEST)
-Date: Thu, 3 Jul 2025 20:21:20 +0200
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id A9817436;
+	Thu,  3 Jul 2025 20:21:23 +0200 (CEST)
+Date: Thu, 3 Jul 2025 20:21:23 +0200
 From: 
 	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] gve: global: fix "for a while" typo
-Message-ID: <5zsbhtyox3cvbntuvhigsn42uooescbvdhrat6s3d6rczznzg5@tarta.nabijaczleweli.xyz>
+Cc: Don Brace <don.brace@microchip.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	storagedev@microchip.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scsi: hpsa: global: fix "take a while" typo
+Message-ID: <x5n4ozo4ch2awphz74yea5y2qedu7m6zvmbvdfj3r7kxou2ngl@tarta.nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,12 +44,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="brwvz2pc7ut54udy"
+	protocol="application/pgp-signature"; boundary="luymollfbgmcjkdp"
 Content-Disposition: inline
 User-Agent: NeoMutt/20231221-2-4202cf-dirty
 
 
---brwvz2pc7ut54udy
+--luymollfbgmcjkdp
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -61,45 +59,44 @@ Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
 v1: https://lore.kernel.org/lkml/h2ieddqja5jfrnuh3mvlxt6njrvp352t5rfzp2cvnr=
 ufop6tch@tarta.nabijaczleweli.xyz/t/#u
 
- drivers/net/ethernet/google/gve/gve_rx_dqo.c | 2 +-
+ drivers/scsi/hpsa.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/eth=
-ernet/google/gve/gve_rx_dqo.c
-index dcb0545baa50..6a0be54f1c81 100644
---- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-@@ -608,7 +608,7 @@ static int gve_rx_dqo(struct napi_struct *napi, struct =
-gve_rx_ring *rx,
- 	buf_len =3D compl_desc->packet_len;
- 	hdr_len =3D compl_desc->header_len;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index c73a71ac3c29..0066f15153a7 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -7795,7 +7795,7 @@ static int hpsa_wait_for_mode_change_ack(struct ctlr_=
+info *h)
+ 	u32 doorbell_value;
+ 	unsigned long flags;
 =20
--	/* Page might have not been used for awhile and was likely last written
-+	/* Page might have not been used for a while and was likely last written
- 	 * by a different thread.
+-	/* under certain very rare conditions, this can take awhile.
++	/* under certain very rare conditions, this can take a while.
+ 	 * (e.g.: hot replace a failed 144GB drive in a RAID 5 set right
+ 	 * as we enter this code.)
  	 */
- 	if (rx->dqo.page_pool) {
 --=20
 2.39.5
 
---brwvz2pc7ut54udy
+--luymollfbgmcjkdp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmhmyiAACgkQvP0LAY0m
-WPH6pQ//RLNMtsmQwFFeA/nb3vlKUFkUf+m8JHRjZwElO9B+Vzwn7yx4URWCTjME
-wKnrnbZXNrNhqAPledUCvAXvyNKT6Q46YA5xcaLZEKBZbAv1jYYcQmfRMgpu5wj7
-xncfvW5e/2Dq7ik4HQf1u3gXaMhfE4XspnViRyje+EAcR6XWpBUlaH7LytqE+OFG
-kZDeRmTuhAx97J19P5bCDOeqKXrW7tejTO2Rz/PNDnT7ZQP0MrsD8zPKXuiIFGE8
-sX3kVcri0jNw/wZ2EtLHMAXf3jK/YtXZ61leydBfec0mhKt5Qi5qDwrUMLsazRWX
-+VnLdbQpbExAN3WCiBqYQ8lh/piJQfTF55bJCg/MyVEoAziCBjr/7Xvs1fENq3OZ
-tH4vegKG+uxxGCknbKM+9IeUdVkGOhhB2nG5lBOKH+IPotuipM252l9ptJynvqK0
-sDhbTNiT5FKKYqf/IuTQ7Gc+76myJ1IK67oo4m1qSFoEmmsvyFaqoFmujP1syegc
-tA72TlmCUKWHFcvV8Vzqy3Cws2zXpLGH3eZ2aRKIGXMwFiDMY77ZIyks3+eh4YUX
-E3LxsuxOku92a9BqG77FgUuO4VYSxKG7XLtNWa2Ws1HF78hXS7ITasLznb/gReLr
-L33O8NQ3c2D1v20Oswjp/3hULrWiRGwHPl+0pcPROmmygHLblVo=
-=+FX2
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmhmyiMACgkQvP0LAY0m
+WPE11xAAjH+4T7ENRV7NeCxhRP0Yff64wq+8Z5cPubInknRQ+gF44iULL97Kf9Ju
+K+E1B7pG9zytjIecfVKSiyIPpQVnnq7Dz3wg2NMHLzj8tb8Mbr/TrtylUnkOCErl
+JkIvrqtMI9j7an1IAmYAnlNZ2DliSbH+IX4GTWyIP8xelcgkzMRLTsg9vwG5ONFu
+kQovd0L7sXkzYsSROnVcKe5ZgK/QeTIxFe8755G9Rk00ojR+MhOsnyNxgM7cqd2q
+SlyUsEXKi9LprrSPIgA2P4vU8hrVd6GZJzbMv2vNjVq1bKKbHeugucr9ujCuV/ZZ
+UjAgEVoC0cb6GbfCtSa1Fc04+7eUJaGwyQ6oTHlkl01gSNLC7T5H2WcMszzletxS
+LX8hkPNVmyihkq/zJ6qjP9mUUFLeNb3W/SfcLVH8IgC+9t8hs4rhu+pCVzAdxcAL
+VfFW/ygyj1JRfyiudMcZ3A3PG/Gt96GU8rlyxfPoYHhfFjx4WOs8R7LvmidEBKp8
+FRuxNwahyH6Uhj2p6rpt/Bfl2xXW6gvbS0Gk+d5ikGtN3/byAsbejYJ9PghIwVQW
+gVSENkrtOmKuKvWHEuyDvyYGsmRDwL24UuqsvFv6LGph+8w4xndVycJkw8WxMr6A
+qS1ppfVpu3DMNDWIwyhfWRiBIuTzXk2ADTNuRUsPcn94jaQh0eQ=
+=QZvg
 -----END PGP SIGNATURE-----
 
---brwvz2pc7ut54udy--
+--luymollfbgmcjkdp--
