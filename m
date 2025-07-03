@@ -1,64 +1,99 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1285C2E7649
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794C12B9A6;
+	Thu,  3 Jul 2025 15:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751554958; cv=none; b=QwJ9m0w96qxdwn/70A2FVWDsjHU2pJ3go0gkPBd0n25VtLkpgUI5BwdqY0AklYRT5EGPb1rWz7oYoRZ6i3p5iLrwfzcsM8H1zoWFlJxLRi86Z8eE/w5/xIPOc6Lmy6r+UUFq0sX6rCnEC1416ElvI870ZDSNDMEEKdgp6qBivBI=
+	t=1751555036; cv=none; b=syo0fGgVxW+5OOt3rAVDw98FRBKMooG5/queiako1tXZpqVaCw7SP9QA2IUq4DdbsDbhzVkvwlquoDsdOkfwN17BnuTXE/ijAE28Q8o+0lAcqCe/3D7cnYtVhLKKyXn7OXhwEWamr3ywrkOavg4wgUsHeKz7hhMVuu62ewShr6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751554958; c=relaxed/simple;
-	bh=c6xCAWjHpumkTQLOfh7WvSy3V1SunS+02KYf2drw/lo=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HG8wJGcYPdPJgrFkBxJVGKVbW/gzs0qmZ6a0obrD4kuXlng1RM6YH4atYPqi9YLN1IlXmUzR4fXOMfQUXJfWSF9W1Z5eDw1jjulxrcVtnmfoJAzs97lA3lqWCemkG+hkH5xxsivdma5LC8MkTs0BDzHV6NcQ176cEAqTLzb6brc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu; spf=pass smtp.mailfrom=bitology.eu; dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b=ASFMyeqf; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitology.eu
+	s=arc-20240116; t=1751555036; c=relaxed/simple;
+	bh=agq/qe8sXsc3dCu6lab7Vni2cwMdaK7LfiV13CgmH/0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YfilRFQfP9PbJ5UayoyUJ2Ue5V8bc8CIef1t21MDX7poVsMtq5qebEK80/hYWh4ajbgni6elh0L624mRa0MfZtaiSiJ1zTEO4gdPHMLVEnfoxuzW7iy4ZwirqVAEN1usaXpkwLGBAaT5zSlzvbbgyGZUwVnGSpoIxdNaJlLJVdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ciw/whlb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b="ASFMyeqf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitology.eu
-	; s=ds202506; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
-	MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:
-	Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eIyAAbqN+4lS1rk3wroLQ2daHGjjheVhbTGGrKJP/5Y=; b=ASFMyeqf3OQoFtWkSBAmjgXy0M
-	It0iP3O5pvg1vyM3BhrWt3WxpDRRYg3HYIAMltfhLTu8wOdE6EuJMnAM+UEvjshftQ5AccBlQqtJd
-	ufNhEuqaW/uCdmUC9l+JyIZ6mIF5hxjAfAhyFmQt9IHRT6I6R3yEf2loEimAbffyP7cXihRmJBJBj
-	N9XTCesuqakCaFSPZeGV9HkYiRVw/xDKYnVhsybdCKvH5dD9XZ+ZA1rz13eh9+OblrktHKb4/5lP6
-	g36VZtgTHNU3GhV48y58+U2qMfxt2SItth/tjEM3vReytjCp+TDxzkorkZVMx0wzgDD3unzSXMCND
-	3lq2QR9w==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1uXL4D-00Bgy6-6w
-	for linux-kernel@vger.kernel.org;
-	Thu, 03 Jul 2025 16:37:37 +0200
-Message-ID: <3a2adf68-4e2b-4700-80b4-bb91060b14b7@bitology.eu>
-Date: Thu, 3 Jul 2025 16:37:36 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ciw/whlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45276C4CEED;
+	Thu,  3 Jul 2025 15:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751555036;
+	bh=agq/qe8sXsc3dCu6lab7Vni2cwMdaK7LfiV13CgmH/0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ciw/whlbBkJv7CbcN4DuFihAaw2gPPgWaXmYRESD5tWV7Dxq3JfbGiJaSgv8BC8e5
+	 Y+fZnuyOD2ILcXwRKPPxHpOa+/elaFSnR6imbvthYByfLxQltru16nB3kM94L1plfb
+	 4esjB/XSspLFe7WkoR5BA5ZdRP2rumvE6t+HxCyDlRIzYBm06MeJVTjFQOrf4AClCR
+	 KPHGWJyZLK4PYT3SukB/LxWPobsxCz5MZKe9CTOvRGOlo43/GCNCky+jm2wfPvmga9
+	 /cAuJ1R1s1BzatidqjQbdIFLIrRuG5uamwu53ZDynYlB8b20BSFCHiA/VMv3Nu5+LH
+	 xZsmMIG2IUXOw==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2eacb421554so19956fac.1;
+        Thu, 03 Jul 2025 08:03:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVekMUOrkoR642cVJFigebJPqfK6yc/rHSg01ezeA9yRIxH8rzx8mFgQQsYqZl0FkX8ryPrkpQtv83lFmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQJczjxkjbyaqcf38c6J/3ToiuuXPcO1+aOSRcGiOO1a35he/Y
+	LwXKc2AkozoNiwUMrlEdIZWbtZenwcAbKPEpJVfPPkI2zzxRAPi3QiF8N529Z0yFiiGZ8gqAo7V
+	75+P+v6ZA69VzfNSRfvNVcpOBObW2hoY=
+X-Google-Smtp-Source: AGHT+IEqy5XefO+GaHlEDA7AIKCnaU/Uvzlfmt0/ui1TVGFVpiq35KhvPC9/VafsQGyHh8koBGWrsQ4D7WyTcMOWgeI=
+X-Received: by 2002:a05:6870:2420:b0:2eb:adf2:eb2 with SMTP id
+ 586e51a60fabf-2f76ca89a81mr2583505fac.36.1751555035383; Thu, 03 Jul 2025
+ 08:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bit-budi@bitology.eu>
-Subject: Example of allergory via (computer) Bit (He in Islam) (was Fair Pay
- Philosophy, Low Jitter)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250626154244.324265-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250626154244.324265-1-andriy.shevchenko@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Jul 2025 17:03:44 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hQLbKZ-DBWcQ-VKryV24Lc-=nsqJQ_fpkystvq6kVCbw@mail.gmail.com>
+X-Gm-Features: Ac12FXzVKYTQZ3rI1JVwVCd722cmyjy9biQf3ZlkFDmrXr5Lz0hYK0O90PHnecw
+Message-ID: <CAJZ5v0hQLbKZ-DBWcQ-VKryV24Lc-=nsqJQ_fpkystvq6kVCbw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] PM: Don't use "proxy" headers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-My youtube channel is now an example of allergory via the Bit concept, 
-and the kawai Bit symbol. suitable for instance for a launch menu.
+On Thu, Jun 26, 2025 at 5:42=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/pm.h | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index f0bd8fbae4f2..938b1b446a5d 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -8,14 +8,15 @@
+>  #ifndef _LINUX_PM_H
+>  #define _LINUX_PM_H
+>
+> -#include <linux/export.h>
+> -#include <linux/list.h>
+> -#include <linux/workqueue.h>
+> -#include <linux/spinlock.h>
+> -#include <linux/wait.h>
+> -#include <linux/timer.h>
+> -#include <linux/hrtimer.h>
+>  #include <linux/completion.h>
+> +#include <linux/export.h>
+> +#include <linux/hrtimer_types.h>
+> +#include <linux/mutex.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
+> +#include <linux/util_macros.h>
+> +#include <linux/wait.h>
+> +#include <linux/workqueue_types.h>
+>
+>  /*
+>   * Callbacks for platform drivers to implement.
+> --
 
-https://www.youtube.com/@Mugoth_Star_Bitstreams
-
-mUSLIM translated is Mugot. - The whole story is told here via media I 
-made in the 90s, with some comic retro videos. + playlists!
-
-Light,
-Ywe.
-Bit Budi.
-https://bitology.eu/
+Applied as 6.17 material, thanks!
