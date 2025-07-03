@@ -1,135 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0892F0C72;
-	Thu,  3 Jul 2025 16:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FA914B092
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558778; cv=none; b=bb3yg2BEBeZXXBPZ4YylKjPqRt87lDNdenjBBnhR/YafTzOj9Hivr/NEXtXftsPmWbuxOHSYVWZQsoMXp31Ch8pQ37HJk3l/B4VIUUXPmg6Nt4G50A9kyzq80smr6WTGtoB+m7/RJO3kJSzAGxHdbtSSu0YsUfpGBjOwrR9Y6G4=
+	t=1751558814; cv=none; b=A7mpQUGymXQqcWhNrrTa38blsW3zTS3aEYt0KjQ2pctTYNGBKtmALeDZd6yqieNlMeJpfZAT8HyM7J/SEIqcpGC58HGEZSLRztq3M7F/kSarkl5BvxEwpkqiBSvcwwka5TxkVeOAdo3pdaEKADlI/+Gux7PF9Mr3CYcyfSj0/Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558778; c=relaxed/simple;
-	bh=k95pgC8uYho6a+kXi0z4LRYhCqPs5d/JUrw8wGO3J2U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h9UiBBWeov7NEyFEqPt9YNC0oFJ9EBoihBIBO3jgA2gydMp0DJ1oGaZeYr0uKL2jjJv75SHLditSl+je+2Bldld7fNeoIo930CvLJzJkbim1CXBFek+A6jib9sDZ5uYVLNdFG+SwwFVZ89JoCs4alTMeG8tLrtex2BACcmJV3Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZlNlyTt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZlNlyTt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1670C4CEEE;
-	Thu,  3 Jul 2025 16:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751558777;
-	bh=k95pgC8uYho6a+kXi0z4LRYhCqPs5d/JUrw8wGO3J2U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=sZlNlyTttCKjCKDEo8ZvK65gLEsZunjGIXsP5gHiBfqrFJbIFhcXTs6X3P5LOtxPm
-	 VgDQNJD4JdNzbPL5OWGyWLWFHmAiHV21mBI5VjqiTGkAUqk9sY/78KWKK+ONvC+onB
-	 k5QMMuBXcSqpvs5xjg+qLQJz3mhhev98wO6GUX1ueaxXDNmPorRoJxboxe9rDVIRqG
-	 gnNoiMcD42iPK6tG+fBR78lcSX/alafSN/bFlvYAgpUaMrn5Uflmo+Q5KEeLyivCe5
-	 7pybOZVPCUmJcKKYOkEoucLTz2QQ86DBvfgZENH/0EJzTUBUMTP/tyQIeNF6ThXJVf
-	 AysWdl4zV3alQ==
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 03 Jul 2025 17:00:18 +0100
-Subject: [PATCH v3 4/4] selftests/nolibc: Add coverage of vfork()
+	s=arc-20240116; t=1751558814; c=relaxed/simple;
+	bh=3fM8QbpLi5S9eWL6BnFcgOU3p+EMTb87jhKTAOfai7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PQQIk113WDdgndR9T4bpOQ+1mruOTvHUVcr9XnvTyD0oz9KiSQ/K2S17PPI2xTfxSTVsJXlsTSS1HmKeBcTJVsSOkf9UNAzwBxaP4SZpo1o81Gm16G2xQfywt0KA+51a0BicGXZisufRA1eq46vcVqjXs5P/PZOnhautby1ya3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 03A5041C7D;
+	Thu,  3 Jul 2025 16:06:41 +0000 (UTC)
+Message-ID: <5ac2c90c-5907-40ce-a31e-05cb6d88fa52@ghiti.fr>
+Date: Thu, 3 Jul 2025 18:06:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE
+ selection
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: ChenMiao <chenmiao.ku@gmail.com>,
+ Linux RISCV <linux-riscv@vger.kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250703084502.394406-1-chenmiao.ku@gmail.com>
+ <f7e12c6d-892e-4ca3-9ef0-fbb524d04a48@ghiti.fr>
+ <20250703114018.6fab0b8a@batman.local.home>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250703114018.6fab0b8a@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-arm64-gcs-vfork-exit-v3-4-1e9a9d2ddbbe@kernel.org>
-References: <20250703-arm64-gcs-vfork-exit-v3-0-1e9a9d2ddbbe@kernel.org>
-In-Reply-To: <20250703-arm64-gcs-vfork-exit-v3-0-1e9a9d2ddbbe@kernel.org>
-To: Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Christian Brauner <brauner@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-cff91
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2649; i=broonie@kernel.org;
- h=from:subject:message-id; bh=k95pgC8uYho6a+kXi0z4LRYhCqPs5d/JUrw8wGO3J2U=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoZqpp3i92RBIH/xgX25THZxzWR1YIDTNkbJkXN
- aX0+ZotRh2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaGaqaQAKCRAk1otyXVSH
- 0EP3B/9g2ihNKWqWkt4iW9QbyCgKDPCPqf+nZBPeEOOS7APQmwzTyQnuCfYmcEBB1fqKDN8wgss
- gBxNEKi9+ZtR4twbwAqnOr4+44Tq1oU1/hyBKt/6gFP0NkojKMOuKDVt1Z9b9Ac8qjGW/Z+zqcT
- tnnAFa5iY2+8MSMd8cO04Jc9FYZ8IeF+oKwfXfHL/1e6gpvSKS7cY7pcgil6Fiqx4TdYahvBdmq
- S2t4AeIyE5WcHgJdxol0nkzHlXry4UMz0tYsWsdlnkrzwovKBSTGtbkAqBjRrqoYTKuvoMvdz8t
- LKTVIDb5ETcI1KEUqCcSbZBVeXpDSJeYAS80FxSbHyKQAoxN
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdejudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepheeihfdutdduudekteekheehtdffudfhveeffedtfeevfffgueffjeejjeefkeeunecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmedvugegleemhegsudelmegrsgguieemkehfiegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmedvugegleemhegsudelmegrsgguieemkehfiegspdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmedvugegleemhegsudelmegrsgguieemkehfiegsngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopegthhgvnhhmihgrohdrkhhusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhug
+ idqrhhishgtvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-Generalise the existing fork() test to also cover the newly added vfork()
-implementation.
+Hi Steve,
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/nolibc/nolibc-test.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+On 7/3/25 17:40, Steven Rostedt wrote:
+> On Thu, 3 Jul 2025 15:00:02 +0200
+> Alexandre Ghiti <alex@ghiti.fr> wrote:
+>
+>
+>> We could support static ftrace, but I don't think we should, so I agree
+>> with this patch. In fact I had just prepared a patch for this here
+>> https://github.com/linux-riscv/linux/pull/556/commits/0481092a5bec3818658981c11f629e06e66382b3
+>> which is a bit more complete since I have removed some dead code.
+>>
+>> Let's see what other people think about supporting static ftrace, I have
+>> added Steven in cc if he has an opinion.
+> Yes, please only support the dynamic ftrace. The static is there only
+> to help archs to get ftrace up and running. Once dynamic is supported,
+> static should not be used.
+>
+> Hmm, maybe I should just remove the prompt for DYNAMIC_FTRACE.
+>
+> That is, once it is supported by an architecture, it should be the only
+> thing used.
+>
+> -- Steve
 
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index dbe13000fb1a..d682434c6442 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -877,7 +877,12 @@ int test_file_stream(void)
- 	return 0;
- }
- 
--int test_fork(void)
-+enum fork_type {
-+	FORK_STANDARD,
-+	FORK_VFORK,
-+};
-+
-+int test_fork(enum fork_type type)
- {
- 	int status;
- 	pid_t pid;
-@@ -886,14 +891,23 @@ int test_fork(void)
- 	fflush(stdout);
- 	fflush(stderr);
- 
--	pid = fork();
-+	switch (type) {
-+	case FORK_STANDARD:
-+		pid = fork();
-+		break;
-+	case FORK_VFORK:
-+		pid = vfork();
-+		break;
-+	default:
-+		return 1;
-+	}
- 
- 	switch (pid) {
- 	case -1:
- 		return 1;
- 
- 	case 0:
--		exit(123);
-+		_exit(123);
- 
- 	default:
- 		pid = waitpid(pid, &status, 0);
-@@ -1330,7 +1344,7 @@ int run_syscall(int min, int max)
- 		CASE_TEST(dup3_m1);           tmp = dup3(-1, 100, 0); EXPECT_SYSER(1, tmp, -1, EBADF); if (tmp != -1) close(tmp); break;
- 		CASE_TEST(execve_root);       EXPECT_SYSER(1, execve("/", (char*[]){ [0] = "/", [1] = NULL }, NULL), -1, EACCES); break;
- 		CASE_TEST(file_stream);       EXPECT_SYSZR(1, test_file_stream()); break;
--		CASE_TEST(fork);              EXPECT_SYSZR(1, test_fork()); break;
-+		CASE_TEST(fork);              EXPECT_SYSZR(1, test_fork(FORK_STANDARD)); break;
- 		CASE_TEST(getdents64_root);   EXPECT_SYSNE(1, test_getdents64("/"), -1); break;
- 		CASE_TEST(getdents64_null);   EXPECT_SYSER(1, test_getdents64("/dev/null"), -1, ENOTDIR); break;
- 		CASE_TEST(directories);       EXPECT_SYSZR(proc, test_dirent()); break;
-@@ -1374,6 +1388,7 @@ int run_syscall(int min, int max)
- 		CASE_TEST(uname_fault);       EXPECT_SYSER(1, uname(NULL), -1, EFAULT); break;
- 		CASE_TEST(unlink_root);       EXPECT_SYSER(1, unlink("/"), -1, EISDIR); break;
- 		CASE_TEST(unlink_blah);       EXPECT_SYSER(1, unlink("/proc/self/blah"), -1, ENOENT); break;
-+		CASE_TEST(vfork);             EXPECT_SYSZR(1, test_fork(FORK_VFORK)); break;
- 		CASE_TEST(wait_child);        EXPECT_SYSER(1, wait(&tmp), -1, ECHILD); break;
- 		CASE_TEST(waitpid_min);       EXPECT_SYSER(1, waitpid(INT_MIN, &tmp, WNOHANG), -1, ESRCH); break;
- 		CASE_TEST(waitpid_child);     EXPECT_SYSER(1, waitpid(getpid(), &tmp, WNOHANG), -1, ECHILD); break;
 
--- 
-2.39.5
+Thanks for your input.
+
+@ChenMiao: can you come up with a v2 that, in addition, deletes the dead 
+code and with a commit log that explains what Steven said? If not 
+possible for you, let me know and I'll do it.
+
+Thanks,
+
+Alex
 
