@@ -1,148 +1,134 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2DD2BCF51
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FCF29B21C;
+	Thu,  3 Jul 2025 20:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751574098; cv=none; b=SOTZsYfnGXefkD7/5FCVeJf/hnQVr4lFUwBTBemnHx1taTMyFXsAemLZ86dBQ3cKJK9uq8WgnRIp0ztdNG7AdU8FzSYX+lhpn6PbL93JW+MvB+FWqT+9cfGox8j+9lqZMxDrtohTFtgBE1uynFlSpg97VZIL5Ahk7rDk+B0qX10=
+	t=1751574129; cv=none; b=Ej6gRLIsOM5N1BENHOkBIjfPOK4TvnE3QQnuyIzUNhmDAZti0dZbWoFEOTy1IZ2OBAfUyJ8A7nOnO0u621iJzzFn3orGgbHZZAE7XxzOyYndrw/T6iaexMN0EqfO73re+TgaNl+mHKiIJPe4thMgFirQEM7Isib5an9GllTsF3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751574098; c=relaxed/simple;
-	bh=pyS7Y6GIrPU10d/ryQJM3Wqvm4C9Tt6BQzqo0p89Cyk=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BOHHI/d7HNVxcr4JVGrt/gLvlCwOCjLSjVp/I8gUn1DZlcV0JRfEHDUtHX/rg4bhyB7ws61Mt7JFCkpdTWaCaP7bciuGqWKhdmQnJYgtmXIdkgH9rXAMxBbIj99mlTHqoUBcSwv/ougw8Xv4MC7nS6XsESP1kOYzCymHfkGty3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zx4FMsX4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4qoKC9bm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751574129; c=relaxed/simple;
+	bh=pXwrev0Wlewpdvm8JzYFeAW6vtWIxQ26LcMODJmbrp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qq/kHXyIJvJTD0ks1il8hfXeIJEA6xRVNnglEpdhg1BzgLK/IWxlzeoWfujUTj8qfkZy6YU3jm8lAgtJ2wEeniCb/SxQvt2hvDv8722tR64Yljj191eke/LfHd5y5L7URqd+ImYli89957CPmMW0rLH/ha90QSr4JmK/39TAlP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HFQyc5HN; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zx4FMsX4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4qoKC9bm"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751574092;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aSp3/iXHDvBtL6PbWGs8D+kj6lt5OBJlh2r7j0tPdGE=;
-	b=Zx4FMsX4jXEQ1xo270ycn9VnZ07F8ww81sc1+SzvfjAzVum7GL8LueoXr2H6qRQhlQwp/0
-	UNnwMoOQ7PxBcD/e0/SqBe1QVcjQEtcTtJpBuiUwcdRJBC6PqcAh061MdFO+ZLpNtU+CRs
-	x3K9ge9VM0BNDxDOJR2K3Y67zD9NvvqdhdFRpWPUfgfqFFo/23Ad7P99V+hQ87sqoKlOUH
-	IQFdQzv6F5PbpNqx8lkZC2r499PMOPTU/Nq9xFe0JwFHTd0dw520spimbv/m8zReU74V9o
-	wi1mfPdHaf7xk6W9k+XhfMnKtTqOhXA+F9ukzpp7J1g5nCzIU8ABR8KVSe0O8Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751574092;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aSp3/iXHDvBtL6PbWGs8D+kj6lt5OBJlh2r7j0tPdGE=;
-	b=4qoKC9bmn1Nf+GqK8v3tvWutfgG00IqGFI7x8lyHJGzEP1bHjMhgVffpKBNUCFUZX7PeHW
-	l7hGh0HuHzF5O5BQ==
-To: Himanshu Madhani <himanshu.madhani@oracle.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: System hang with latest kernel v6.16.0-rc1 (rc2 & rc3)
-In-Reply-To: <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com>
-References: <ABB1DAF0-048A-4373-9007-988D20F359DD@oracle.com>
- <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com>
-Date: Thu, 03 Jul 2025 22:21:31 +0200
-Message-ID: <87a55lt48k.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFQyc5HN"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a9741b513eso4865751cf.1;
+        Thu, 03 Jul 2025 13:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751574127; x=1752178927; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a747o1y/RYYYigtxoWLdqE1IuHEAIgaSXmW9vjL8liQ=;
+        b=HFQyc5HNZB7OJtjFhkf0Vn8A897A8uBluueLQpI2rKonXB2bVpyNS5KFqCShSGKg2k
+         jcUL4QRT11zsJCEborWn+jwiDUyoSn8zBqR+6mkKGeY1k9RdigZ1EOxddoKDBa5cubaE
+         kByHvv+CGTT0TOtBZavvMZtyZiHfm1MwSvfnZELEwXG4uK5YpJYbhd7N6V00e2mARQ7f
+         1bBhEm5qhA2RS1fVY3OEyrX78BAbMndTmZUS4SELZirI5voI7Lrep4tnlFxNABsPAlZQ
+         SOO9LOpRKq8HIz9mW83eCx9wfhom1kjpmOdcUj/qQ9ZjXv5yzLzYKAdYHfjYR/WjgV6f
+         TdFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751574127; x=1752178927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a747o1y/RYYYigtxoWLdqE1IuHEAIgaSXmW9vjL8liQ=;
+        b=dvD+7KxMY7a6U0qXXMLTg4KenBNYZQTIfcS38H3KRwW0yMJXHxWF/IGmnWnFFnQFP3
+         jMNK7RdISCV4fbU6UoFM29G3HEKuoFjQbdqYhAgL6WEliQ7QCnSBNIqXmuX5Mk6nppsG
+         3a+5VVHj3aMqbpSQsV27kvKECMjSgJ1S9Bk8k/q7nYMgDZhjVTEwlSQ5H4tilwbaJXOs
+         nTSfE1rEaz3OHbHY4ZQZ2VNJCO5xmtbNcRXH7533lzskdCbYY5/YvRYqFSRPPyi2LqBR
+         CEDh9u9n5v5Z7WUVbFTuy6G9n9gOqxAbt295NtD4VUZ1xS1mTJK7sPddXtOBcUmwLf9Z
+         JE6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPxEwSVdlMVcV9i++ZUnEtBPHDj5vi/3ZkRQRH1c/teDNWHjli6XM1rE9WB5O7qcITv2guJ0RtmUEl2Q==@vger.kernel.org, AJvYcCV/n97EvE82RfAqlr2KoDdTQJslBgCFaRBqHJ0fMj8l6VWzY3otBJ2iNO16T9DYd0FMKTAKmEZ9Czr9@vger.kernel.org, AJvYcCWCKaYtZIczRQifurU2I35WqT8VCvLxj3n6nDfU7FKyUN7lt2Lt/LysFwDGfn0a0yko6jS+Y2ByjLo+@vger.kernel.org, AJvYcCWp/iKIGQGxWylX9vP/poeDd+zhXPhSIkmwlf22NSAjOIx0tI6rCsZT/lOMD3LHgpWRsWeJnIo1KeqHbwnw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMTVBwODNNSkCXM7mgkG+LwN3+lIRHsEExExDJqRySFnGlz/ed
+	TqfxVlQ6TEQ/+/nfgKKPEemhQYvAVmQQ5S9yRjVImSfXjDz4Hw4Rzwv6
+X-Gm-Gg: ASbGncsx+DSLAbqhf3ewYzPTdqdfiFfkXGeiOzTecmdV5jO2UcCWcJkyQMWPPP5uuft
+	+LTOUsxujSwh5nmKEL4+nAkFpzVfybSNu0+ab4jop/jpJ8saiUk8yqchNKQnzGnBjLehGGl5qlX
+	Lmzg2SmjPyr6ZJdmv9vGKxEGjHxtwC1dOaEYWXc1T/NMKUTZjBuKia+6wnpE0NdEv4RzXEfMCsy
+	V9eIUS+R+GfW5tadR84wKsrbBNTWcExI9soI4hYZdSJrSBiSBc3nbVI6ZeT36GRKQ9BKZ1x18bH
+	HwUbSsUcgANaGZS110NNcoWRMnbi9LGcJWogb+Bus9lxkxjuSY0XzrPczfue+26Dp7vxuA==
+X-Google-Smtp-Source: AGHT+IHVeU6RF37SlrnkPxVamS/XAdS3AhgW060ULgIeHYEa8MW9SZgsHl0vzD/V74sg/tHaGQiT7Q==
+X-Received: by 2002:ad4:5610:0:b0:702:bd34:75c8 with SMTP id 6a1803df08f44-702bd3475cdmr53597746d6.5.1751574127123;
+        Thu, 03 Jul 2025 13:22:07 -0700 (PDT)
+Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-702c4ccd346sm2894826d6.38.2025.07.03.13.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 13:22:06 -0700 (PDT)
+Date: Thu, 3 Jul 2025 17:24:07 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com
+Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of ADCs
+Message-ID: <aGbm5zZMN4FIohM_@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1751289747.git.marcelo.schmitt@analog.com>
+ <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
+ <aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
+ <aGUi7r2dgnbqLOAH@smile.fi.intel.com>
+ <aGWBgLLtOzVGwXek@debian-BULLSEYE-live-builder-AMD64>
+ <aGaP-HBbIbfEoKlo@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGaP-HBbIbfEoKlo@smile.fi.intel.com>
 
-On Thu, Jul 03 2025 at 18:32, Himanshu Madhani wrote:
-> On Jul 3, 2025, at 11:27, Himanshu Madhani <himanshu.madhani@oracle.com> wrote:
-> Git-bisect point to this merge commit
->
-> commit 6376c0770656f3bdf7f411faf068371b6932aeca
-> Merge: 5e8bbb2caa4e 29857e6f4e30
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Tue May 27 09:01:26 2025 -0700
->
->    Merge tag 'timers-clocksource-2025-05-25' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->
->    Pull clocksource updates from Thomas Gleixner:
->     "Updates for clocksource/clockevent drivers:
->
->       - The final conversion of text formatted device tree binding to
->         schemas
->
->       - A new driver fot the System Timer Module on S32G NXP SoCs
->
->       - A new driver fot the Econet HPT timer
->
->       - The usual improvements and device tree binding updates"
+On 07/03, Andy Shevchenko wrote:
+> On Wed, Jul 02, 2025 at 03:59:12PM -0300, Marcelo Schmitt wrote:
+> > On 07/02, Andy Shevchenko wrote:
+> > > On Wed, Jul 02, 2025 at 09:00:42AM -0300, Marcelo Schmitt wrote:
+> > > > On 07/02, Andy Shevchenko wrote:
+> > > > > On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:
+> 
+> ...
+> 
+> > > > > >  6 files changed, 3601 insertions(+)
+> > > > > 
+> > > > > This is weird. At least patches 11 & 12 have '-' lines...
+> > > > > 
+> > > > Yeah, sorry about that. These ADCs are fancy such that the base driver is about
+> > > > 1500 LoCs due to channel setup handling and support for multiple combinations of
+> > > > voltage references and channel setups.
+> > > > 
+> > > > About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
+> > > > patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
+> > > > after patch 7 and I think it would lead to '-' lines if coming before patch 10
+> > > > since both increment the number of IIO channels. Anyway, I'll see how to further
+> > > > reduce the number of lines being removed.
+> > > 
+> > > My point is that the above statistics is mangled and I don't know how I can
+> > > trust the contents of this series if it already lied about that.
+> > 
+> > Looks like git format-patch summarizes the changes from all patches when
+> > printing the statistics to the cover letter. Also, git format-patch doc [1]
+> > says the 'changes' dirstat option (default behavior) doesn't count
+> > rearranged lines as much as other changes.
+> 
+> TIL. Thanks for pointing that out.
+> 
+> > There are cover letters of other
+> > patch sets where the number of '-' lines don't match the sum of lines
+> > removed by each patch. [2] and [3] are examples of that.
+> 
+> That's different I believe due to the diff algorithm in use
+> (btw, do you use histogramm?).
 
-That obviously does not make sense, so your bisect got side ways.
-
-> Following further in this commit, I only see this following series
-> that had changes which may or may not be related to hang.
->
-> https://lore.kernel.org/all/20250429065337.117370076@linutronix.de/
-
-They are not. There is a hint in both backtraces:
-
-> [  514.305717]  schedule_preempt_disabled+0x15/0x30
-> [  514.360954]  __mutex_lock.constprop.0+0x4be/0x8a0
-> [  514.417232]  msi_domain_get_virq+0xcc/0x110
-> [  514.467279]  pci_msix_write_tph_tag+0x3c/0x100
-
-and
-
-> [  525.930478]  schedule_preempt_disabled+0x15/0x30
-> [  525.985718]  __mutex_lock.constprop.0+0x4be/0x8a0
-> [  526.041993]  msi_domain_get_virq+0xcc/0x110
-> [  526.092031]  pci_msix_write_tph_tag+0x3c/0x100
-
-pci_msix_write_tph_tag() is the function which ends up trying to lock
-the mutex and gets stuck. This function was introduced with commit
-
-  d5124a9957b2 ("PCI/MSI: Provide a sane mechanism for TPH")
-
-and the subsequent commit
-
-  71296eae5887 ("PCI/TPH: Replace the broken MSI-X control word update")
-
-flipped the TPH code over to use that.
-
-The problem is obvious and if you would have enabled
-CONFIG_PROVE_LOCKING then you would have got the reason presented on a
-silver tablet in dmesg. I encourage you to do so nevertheless.
-
-I definitely screwed that one up in the most stupid way.
-
-As I had no idea how to exercise that code path I did not test it. It
-seems this code is not really tested by any of the CI stuff either
-before it hits Linus tree and as some folks start testing only post rc1
-it takes some time to surface :( 
-
-The fix is as obvious as the problem. See uncompiled and untested patch
-below. If it solves the problem, which it should, feel free to take it
-and create a proper patch with changelog and Fixes tag yourself (Adding
-Suggested-by: Thomas ... is good enough). Otherwise let me know, and I
-take care of it in my copious spare time :)
+Nope, I was using the default diff algorithm to generate the patches.
+I tried the --histogram option today but didn't notice any difference. Maybe
+default and histogram output the same result for the ad4170 set.
+I'll send v8 using histogram alg. Nevertheless, is there any preferred alg for
+generating patches (so I can use what's best on next patch sets)? 
 
 Thanks,
-
-        tglx
----
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index 6ede55a7c5e6..eb26f3816922 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -934,10 +934,11 @@ int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
- 	if (!pdev->msix_enabled)
- 		return -ENXIO;
- 
--	guard(msi_descs_lock)(&pdev->dev);
- 	virq = msi_get_virq(&pdev->dev, index);
- 	if (!virq)
- 		return -ENXIO;
-+
-+	guard(msi_descs_lock)(&pdev->dev);
- 	/*
- 	 * This is a horrible hack, but short of implementing a PCI
- 	 * specific interrupt chip callback and a huge pile of
+Marcelo
