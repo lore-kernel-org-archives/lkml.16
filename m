@@ -1,122 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA7128DB6C;
-	Thu,  3 Jul 2025 07:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC6298CDA;
+	Thu,  3 Jul 2025 07:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751527404; cv=none; b=UMdJVzYDD/FgJdZwkMN/rOgg3MuDZQCWPLJkRHGuSUdhRrpwbuye19vyPWPnAllGxHelrbuKRspzj6ID5Nz0gctygYwKBpwAkr6rUm0ke5glivvUT3ESiqU4hpeQvgWOhvgJDVprFxaDTL6Aa5yTt0UCGB0naayOXjbCSwfB7j8=
+	t=1751527407; cv=none; b=nARzPsmZcx3YmXC1CbWJpy5c440/xD9AOqo6rbVZ2KRoCvHkF69ICR+5/V9xFP6GrpZyNpjCrfUlEFcYPh40DlE5F87vsKsXPvFccK4RcAtq1is357LlbkEU3B555Jgk+LpuhjhKOgsASf9R4JuJztSzKBJCAFT1rwIPFXiBE4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751527404; c=relaxed/simple;
-	bh=s5RWJAg4D/dfrnb7YGisPOZh4Cfa5pW76OvfehJpRrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZigGWZ7aVyRxMlmY5JyTY51AvmAmiKUQc35PrkCzPgjp2RRSA2IU58VSTpPR4q3NxygmebHVoJ1yhQ5obH5I8SqWP3a56WQncDfjDMYLB5QbBTQmmEphq6tCdl+Gp8klu6J03BvT8mUc+vADDFWA1REk94c4KzucQ6f8UMCIYxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LU9bRVZV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751527407; c=relaxed/simple;
+	bh=zfp7MeUjLThzEqmoKcHvTQjkE2fAaEDgONJduzQdNnM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BHcXEhIMjAP5uxU3JTq76ynTbJbhmFJweAQdaNDd56QIpO/vORosmxygm1em/VIPMZTc7HZ4Pbj3oN3EvNwHUHmMjv+el2sDh1sqBQZXkDPHybEALCntphcupEKFwqczg1VJuJNoT83+442lxVYU3MPIAQTbdSsGrRy5bLWkcIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Uj1QAxdP; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LU9bRVZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B18C4CEE3;
-	Thu,  3 Jul 2025 07:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751527404;
-	bh=s5RWJAg4D/dfrnb7YGisPOZh4Cfa5pW76OvfehJpRrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LU9bRVZVARclMxuotJzPyZUdWvMWimJM0bCBdp9xQTehCbGFBKnrrZt1NPOIg0FB2
-	 l/lkw9utKHcUCu7bzIEtGdTcsnGkUcMcs8fmfbcc0T7v7f2OC1FjsxAxKjQM/lppTS
-	 //pVlbiCk+tNBqApDCJVUuo2207S6zsGPYvV5pbv30tOsgYfGgaRs9atP9Is4g07MR
-	 bIMHWiHIirevd1HB42xTYFqI3sa9qVp6euIfeVNVD30BWxjrm9Y5Ks7buOYjweVrh5
-	 AwKSWS0bHRY9gkfN0Wksk3+fXS7OvZtaEGlMrgT4qj4mGoPXQqupLh63Kc1NS1n/6o
-	 MHuMzePyC26Vg==
-Date: Thu, 3 Jul 2025 08:23:17 +0100
-From: Simon Horman <horms@kernel.org>
-To: Vivian Wang <wangruikang@iscas.ac.cn>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Vivian Wang <uwu@dram.page>,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH net-next v3 0/5] Add Ethernet MAC support for SpacemiT K1
-Message-ID: <20250703072317.GK41770@horms.kernel.org>
-References: <20250702-net-k1-emac-v3-0-882dc55404f3@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Uj1QAxdP"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5636iKQV002403;
+	Thu, 3 Jul 2025 09:23:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	npzxxQg3AAleq0Lybv60/mXXydV8H5IHVXqUHauWTxs=; b=Uj1QAxdPfx6LqXSh
+	1+ryb8pe7ooyPtWVa7Z+iCLzfHWV92go8qbzCrCafplRgwUiZqCVBFK4pH5+Ifvt
+	u+62KttT2B0xFNxEoDnMRW5bhqezQaYJLLxHsBP9XCO+2GH4wThfQuNe5TWfGuf2
+	zI0aC3ls5dNIr+S9RCNLGu4S8EJSiuP1rz4LmSSyApYqyewv66QrhQTRPzFbUeU7
+	I4s96SUsp8XocexpRUPm2ur2TZ2AKAS6gthIggspdBJPwPIlRFLbPJjv8ZgAvzXl
+	zb0NCzKvoUKnbVibDymFj+qbXxUNatvAV1wU5wzXOeH5un+Fyi5bH2Q0/8dCS5DY
+	Lm0dJA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47j7r6e53n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 09:23:03 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3CFA24002D;
+	Thu,  3 Jul 2025 09:21:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ABD54AF01A6;
+	Thu,  3 Jul 2025 09:20:27 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Jul
+ 2025 09:20:26 +0200
+Message-ID: <44f4f1a4-0225-4fda-b17b-f3159e00851d@foss.st.com>
+Date: Thu, 3 Jul 2025 09:20:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-net-k1-emac-v3-0-882dc55404f3@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] i2c: stm32: fix the device used for the DMA map
+To: Andi Shyti <andi.shyti@kernel.org>
+CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Sumit Semwal
+	<sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?=
+	<christian.koenig@amd.com>,
+        M'boumba Cedric Madianga
+	<cedric.madianga@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        "Pierre-Yves
+ MORDRET" <pierre-yves.mordret@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>
+References: <20250630-i2c-upstream-v3-0-7a23ab26683a@foss.st.com>
+ <20250630-i2c-upstream-v3-1-7a23ab26683a@foss.st.com>
+ <n4mx3xukr5zffajpwomuwp27fywmogm6nmv7hgkcwpghjaorwv@2mqmgg3u5far>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <n4mx3xukr5zffajpwomuwp27fywmogm6nmv7hgkcwpghjaorwv@2mqmgg3u5far>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_02,2025-07-02_04,2025-03-28_01
 
-On Wed, Jul 02, 2025 at 02:01:39PM +0800, Vivian Wang wrote:
-> SpacemiT K1 has two gigabit Ethernet MACs with RGMII and RMII support.
-> Add a driver for them, as well as the supporting devicetree and bindings
-> updates.
-> 
-> Tested on BananaPi BPI-F3 and Milk-V Jupiter.
-> 
-> I would like to note that even though some bit field names superficially
-> resemble that of DesignWare MAC, all other differences point to it in
-> fact being a custom design.
-> 
-> Based on SpacemiT drivers [1].
-> 
-> This series depends on reset controller support [2] and DMA buses [3]
-> for K1. There are some minor conflicts resulting from both touching
-> k1.dtsi, but it should just both be adding nodes.
-> 
-> These patches can also be pulled from:
-> 
-> https://github.com/dramforever/linux/tree/k1/ethernet/v3
-> 
-> [1]: https://github.com/spacemit-com/linux-k1x
-> [2]: https://lore.kernel.org/all/20250613011139.1201702-1-elder@riscstar.com
-> [3]: https://lore.kernel.org/all/20250623-k1-dma-buses-rfc-wip-v1-0-c0144082061f@iscas.ac.cn
-> 
-> ---
-> Changes in v3:
-> - Refactored and simplified emac_tx_mem_map
-> - Addressed other minor v2 review comments
-> - Removed what was patch 3 in v2, depend on DMA buses instead
-> - DT nodes in alphabetical order where appropriate
-> - Link to v2: https://lore.kernel.org/r/20250618-net-k1-emac-v2-0-94f5f07227a8@iscas.ac.cn
-> 
-> Changes in v2:
-> - dts: Put eth0 and eth1 nodes under a bus with dma-ranges
-> - dts: Added Milk-V Jupiter
-> - Fix typo in emac_init_hw() that broke the driver (Oops!)
-> - Reformatted line lengths to under 80
-> - Addressed other v1 review comments
-> - Link to v1: https://lore.kernel.org/r/20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn
-> 
-> ---
-> Vivian Wang (5):
->       dt-bindings: net: Add support for SpacemiT K1
->       net: spacemit: Add K1 Ethernet MAC
->       riscv: dts: spacemit: Add Ethernet support for K1
->       riscv: dts: spacemit: Add Ethernet support for BPI-F3
->       riscv: dts: spacemit: Add Ethernet support for Jupiter
+Hi Andy,
 
-I'm unsure on the plan for merging this.  But it seems to me that the first
-two patches ought to go though net-next. But in order for patches to
-proceed through net-next the entire series ought to apply on that tree - so
-CI can run.
+On 7/2/25 18:57, Andi Shyti wrote:
+> Hi Clement,
+> 
+> ...
+> 
+>> @@ -118,7 +118,7 @@ int stm32_i2c_prep_dma_xfer(struct device *dev, struct stm32_i2c_dma *dma,
+>>   	dma->dma_len = len;
+>>   	chan_dev = dma->chan_using->device->dev;
+>>   
+>> -	dma->dma_buf = dma_map_single(chan_dev, buf, dma->dma_len,
+>> +	dma->dma_buf = dma_map_single(dev, buf, dma->dma_len,
+>>   				      dma->dma_data_dir);
+>>   	if (dma_mapping_error(chan_dev, dma->dma_buf)) {
+> 			      ^^^^^^^^
+> 
+> this one should be "dev" too, which renders the chan_dev variable
+> unused.
 
-I'm not sure on the way forward.  But perhaps splitting the series in two:
-the first two patches for net-next; and, the riscv patches targeted elsewhere
-makes sense?
+Oh yes will send a v4
 
-</2c>
+Best regards,
+Clément
+
