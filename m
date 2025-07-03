@@ -1,151 +1,139 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C5813D8A4;
-	Thu,  3 Jul 2025 14:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A082D5418;
+	Thu,  3 Jul 2025 14:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552020; cv=none; b=LHStHKc6MdngsciY5We1Kpa+ZroUm6HFiIFMwdVLmrnElXnUCmtJtf3KVIoBH9xbAXeNsWA1E8JVJGucSy9GukQ5Z8fsb+whUjqRHn1IY043HhmzoVL9EbERLrOi53yC4nlJloObJNcR7ummndFrzqQu+N4LSXrozwhscuUsV30=
+	t=1751552040; cv=none; b=Y6nlH8J/OBkXzshUYWBf34iX2m734KEJ5pgAARtT3z7dWTnTy8cYVbyXDH6X5dZCV4ueZux66SEM1PZiNWQXkUSa73PJHXO9hhbERzDbBhBWLqVyGxv8PI4wAlqCNFdbIGNMXhN2QL6G67Z+/05se8rUHf0V3/UO1JoLRJeVMng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552020; c=relaxed/simple;
-	bh=Q2ylaOeBTtuJNcCw5v7aJ6VeP3eyBOiwu7/dJRAIPOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T1Z8+7/7JavXgG49gkRTgKj3mt4TEAY1r4UqHRNZufRsaWTtDvG+XVMpfsqqKp+GsMhnpVY/QOnLcJj+hyDNup+b4HQQozydhnDWyfCzRF1PGcdMhjI6ZT4T6VilETueobLAkwKvt50k0zk0mUS/4RvZ+casgODtNbeSHhTgaD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so11271804a12.0;
-        Thu, 03 Jul 2025 07:13:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751552013; x=1752156813;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z18oj+x92MNc/0S9Y8xHuEcemOWJBgJqXoJ/JKjM/Uo=;
-        b=dSTREdfd95NhutSreX3l0j4AHIiS6+Qi5FXVdQ9znXMWnSKBEYSfVfVdkvyRc9P1jv
-         M3tWBaUjp6oGV2flH+a+xbYuLaxa5aTRAwnWPkMKPICHH+C9BWZ4BW/ezizDnZzgtiOV
-         1oUiGvW2HPomg8Lgp6NXFJY/Xjbjmo4ruMYUcVQRGtTonVZPvMfSY0zrSltJ40gaBPDV
-         Gz4W9oDaRD1Ch9NlmKT+x9lulW8+JxRWjPrIblxLGOpbNMZk9nAZO+HdyIdIy8+d6ehO
-         mKsXo5KEt440hsfPs9w0SsMm2feoVKGTAC90B1XrD8cMJY5D2+OVrQNSUsVwKBMeKmKd
-         1tMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVsyXxwVIuTPA0DhJnD6mhnc27WVHanghTyd8DwalQOhE+OubwQT+x6vD9FLVTCc6qcRIqwS1P+CmG/ag=@vger.kernel.org, AJvYcCXrlnj0BbOCuhBdnvzeV8O3B8KY2LkvEXAY646VvdNSngxQpxA7Hiq3q4Do9VcG8wKuMDo2Y/qS7AeYZfaZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIt4yVGnPZyKFJgmtukLW7FUY5Sk0xgVh3RFRpy48UuP2R47Gn
-	cS0zWGIwuer2bWC3EkzJaNjL+f1i1q3eKCUaU0JB/Cr8xbRaybLAWElz
-X-Gm-Gg: ASbGnctFzdxJ0k321QcM8Lbujmyu8ltqO06xzRZLuB+Gutcy/UGfsjRXqTEcrc4Wrb0
-	in94N1CN6GBGIiiEDr7tKO7rCsS8oJyf+rABq4C8PmJgWduPYbj40LVMlNlF4oDkL9Xz1OdwdmU
-	MiMc15oBZzqlc9AzCdORzS5hrQED6wTQIRoG/WoSuP5YBfVJNc9HIAl0Jjb6JwVq6SEyNLVbrMk
-	qnTaNATQ4zxwyngZ1dQ/yUomJq3piNSgd8zVsUrQm9Rdo3yF2NCHBIN1K40M/5OuKJi9F4Hdd3v
-	sVcLZtjz3W0M3LPz3YJUbQur5A1YbBCPrvpeHFYqcqhAjTXHsBxhCuR1hBZ3ICmnh3jiRO8JV3Q
-	=
-X-Google-Smtp-Source: AGHT+IG2W4RiEIKOP1cdVrQs5oIBrb+dGkYJvqPdZKRCaRwD1JVKgzL5Mw0lQq3snaidPWHlUSFbZA==
-X-Received: by 2002:a17:907:3e8b:b0:ade:32fa:739e with SMTP id a640c23a62f3a-ae3c2a904e4mr715630966b.2.1751552012723;
-        Thu, 03 Jul 2025 07:13:32 -0700 (PDT)
-Received: from gmail.com ([2620:10d:c092:500::4:6e61])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c01201sm1301680866b.97.2025.07.03.07.13.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 07:13:32 -0700 (PDT)
-Date: Thu, 3 Jul 2025 15:13:26 +0100
-From: Breno Leitao <leitao@debian.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: cov@codeaurora.org, rmk+kernel@armlinux.org.uk, catalin.marinas@arm.com,
-	linux-serial@vger.kernel.org, rmikey@meta.com,
-	linux-arm-kernel@lists.infradead.org, usamaarif642@gmail.com,
-	leo.yan@arm.com, linux-kernel@vger.kernel.org, paulmck@kernel.org
-Subject: Re: arm64: csdlock at early boot due to slow serial (?)
-Message-ID: <aGaQBghdAl8VGWmV@gmail.com>
-References: <aGVn/SnOvwWewkOW@gmail.com>
- <aGZbYmV26kUKJwu_@J2N7QTR9R3>
+	s=arc-20240116; t=1751552040; c=relaxed/simple;
+	bh=jYa0ElrOwg3E30m7l7Nw6tKSbtT2mPC05vfYnMLOo4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dyVqQV4td19MX6b3V4SclwLedlszhobjetCacf3in47A7NfXYVrOK4g9YFAtE1jW1M3nhHwzxqIIeBhecWAPqKIZcVNCsjrXdPoSXmV3TIH32+Eg6EHKDOt/JWxte8n57jD+DPIEtdQDwzKMH/LY3BGwMvW8wIA3s9ufcdm/qLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bXzJz0DsgzYQtrH;
+	Thu,  3 Jul 2025 22:13:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id D8C491A108E;
+	Thu,  3 Jul 2025 22:13:53 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHaCUfkGZoidghAg--.13097S3;
+	Thu, 03 Jul 2025 22:13:53 +0800 (CST)
+Message-ID: <a6225180-9983-4a0a-8898-435b014b8ebe@huaweicloud.com>
+Date: Thu, 3 Jul 2025 22:13:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <aGZbYmV26kUKJwu_@J2N7QTR9R3>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] ext4: enable large folio for regular file
+To: Theodore Ts'o <tytso@mit.edu>, "D, Suneeth" <Suneeth.D@amd.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, willy@infradead.org, adilger.kernel@dilger.ca,
+ jack@suse.cz, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com,
+ yangerkun@huawei.com
+References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+ <20250512063319.3539411-9-yi.zhang@huaweicloud.com>
+ <f59ef632-0d11-4ae7-bdad-d552fe1f1d78@amd.com>
+ <94de227e-23c1-4089-b99c-e8fc0beae5da@huaweicloud.com>
+ <20250626145647.GA217371@mit.edu>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250626145647.GA217371@mit.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgAHaCUfkGZoidghAg--.13097S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr17uFWkWFyDGr4rJw4DXFb_yoW5XFyxpF
+	WakFn7AFnxXw4xAwn7Gw1kZr9Iy3s5XFW3G3Z5GryjvwnxGF4S9FW0qas5uFW7GrWUX3WI
+	qw4jv343Z3W5XFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Thu, Jul 03, 2025 at 11:28:50AM +0100, Mark Rutland wrote:
-> On Wed, Jul 02, 2025 at 10:10:21AM -0700, Breno Leitao wrote:
-> > I'm observing two unusual behaviors during the boot process on my SBSA
-> > ARM machine, with upstream kernel (6.16-rc4):
+On 2025/6/26 22:56, Theodore Ts'o wrote:
+> On Thu, Jun 26, 2025 at 09:26:41PM +0800, Zhang Yi wrote:
+>>
+>> Thanks for the report, I will try to reproduce this performance regression on
+>> my machine and find out what caused this regression.
 > 
-> Can you say which SoC in particular that is? Knowing that would help to
-> identify whether there's some known erratum, clocking issue, etc.
-
-This is custom made rack mounted machine based on Grace CPU. Here are
-some info about the hardware:
-
-	# lscpu:
-		Vendor ID:                   ARM
-		  Model name:                Neoverse-V2
-		    Model:                   0
-		    Thread(s) per core:      1
-		    Core(s) per socket:      72
-		    Socket(s):               1
-		    Stepping:                r0p0
-
-	# /proc/cpuinfo
-		processor	: 71
-		BogoMIPS	: 2000.00
-		Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti
-		CPU implementer	: 0x41
-		CPU architecture: 8
-		CPU variant	: 0x0
-		CPU part	: 0xd4f
-		CPU revision	: 0
-
-	# lshw
-	    description: Rack Mount Chassis
-	    product: <Internal name>
-	    vendor: Quanta
-	    version: <Internal name>
-	    width: 64 bits
-	    capabilities: smbios-3.6.0 dmi-3.6.0 smp sve_default_vector_length tagged_addr_disabled
-	    configuration: boot=normal chassis=rackmount family=Default string sku=Default string uuid=...
-
-How do I find the SoC exactly?
-
-> Likewise that might imply more folk to add to Cc.
+> I took a quick look at this, and I *think* it's because lmbench is
+> measuring the latency of mmap read's --- I'm going to guess 4k random
+> page faults, but I'm not sure.  If that's the case, this may just be a
+> natural result of using large folios, and the tradeoff of optimizing
+> for large reads versus small page faults.
 > 
-> [...]
+> But if you could take a closer look, that would be great, thanks!
 > 
-> > At timestamp 9.69 seconds, the serial console is still flushing messages from
-> > 0.92 seconds, indicating that the initial 9-second gap is spent looping in
-> > cpu_relax()-about 20,000 times per message, which is clearly suboptimal.
-> > 
-> > Further debugging revealed the following sequence with the pl011 registers:
-> > 
-> > 	1) uart_console_write()
-> > 	2) REG_FR has BUSY | RXFE | TXFF for a while (~1k cpu_relax())
-> > 	3) RXFE and TXFF are cleaned, and BUSY stay on for another 17k-19k cpu_relax()
-> > 
-> > Michael has reported a hardware issue where the BUSY bit could get
-> > stuck (see commit d8a4995bcea1: "tty: pl011: Work around QDF2400 E44 stuck BUSY
-> > bit"), which is very similar. TXFE goes down, but BUSY is(?) still stuck for long.
-> 
-> Looking at the commit message, that was an issue with the a "custom
-> (non-PrimeCell) implementation of the SBSA UART" present on QDF400. I
-> assume that was soemthing that Qualcomm Datacenter Technologies designed
-> themselves.
-> 
-> It's possible that your SoC has a similar issue with whatever IP block
-> is being used as the UART, but the issue in that commit certainly
-> doesn't apply to most PL011 / SBSA-UART implementations.
 
-That makes total sense. Decoding SPCR I see the following:
+After analyzing what the lmbench mmap test actually does, I found that
+the regression is related to the mmap writes, not mmap reads. In other
+words, the latency increases in ext4_page_mkwrite() after we enable
+large folios.
 
-	# iasl -d spcr.dat
-	Intel ACPI Component Architecture
-	ASL+ Optimizing Compiler/Disassembler version 20210604
-	Copyright (c) 2000 - 2021 Intel Corporation
+The lmbench mmap test performed the following two tests:
+1. mmap a range with PROT_READ|PROT_WRITE and MAP_SHARED, and then
+   write one byte every 16KB sequentially.
+2. mmap a range with PROT_READ and MAP_SHARED, and then read byte
+   one by one sequentially.
 
-	File appears to be binary: found 56 non-ASCII characters, disassembling
-	Binary file appears to be a valid ACPI table, disassembling
-	Input file spcr.dat, Length 0x50 (80) bytes
-	ACPI: SPCR 0x0000000000000000 000050 (v02 NVIDIA A M I    00000001 ARMH 00010000)
-	Acpi Data Table [SPCR] decoded
-	Formatted output:  spcr.dsl - 2624 bytes
+For the mmap read test, the average page fault latency on my machine
+can be improved from 3,634 ns to 2,005 ns. This improvement is due to
+the ability to save the folio readahead loop in page_cache_async_ra()
+and the set PTE loop in filemap_map_pages() after implementing support
+for large folios.
 
-Thanks,
---breno
+For the mmap write test, the number of page faults does not decrease
+due to the large folio (the maximum order is 5), each page still
+incurs one page fault. However, the ext4_page_mkwrite() does multiple
+iterations through buffer_head in the folio, so the time consumption
+will increase. The latency of ext4_page_mkwrite() can be increased
+from 958ns to 1596ns.
+
+After looking at the comments in finish_fault() and 43e027e414232
+("mm: memory: extend finish_fault() to support large folio").
+
+vm_fault_t finish_fault(struct vm_fault *vmf)
+{
+	...
+	nr_pages = folio_nr_pages(folio);
+
+	/*
+	 * Using per-page fault to maintain the uffd semantics, and same
+	 * approach also applies to non-anonymous-shmem faults to avoid
+	 * inflating the RSS of the process.
+	 */
+	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
+	    unlikely(needs_fallback)) {
+		nr_pages = 1;
+	...
+	set_pte_range(vmf, folio, page, nr_pages, addr);
+}
+
+I believe this regression can be resolved if the finish_fault()
+supports file-based large folios, but I'm not sure if we are planning
+to implement this.
+
+As for ext4_page_mkwrite(), I think it can also be optimized by reducing
+the number of the folio iterations, but this would make it impossible to
+use existing generic helpers and could make the code very messy.
+
+Best regards,
+Yi.
+
