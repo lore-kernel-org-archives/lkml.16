@@ -1,185 +1,102 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A2629B8C3
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EED728EA70
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751530646; cv=none; b=AEvNH7krgmuURtBoPawGNmT74hGKN/1FcqyJDGuR+MY1L4ktfTZNYQ9BaH5u7SwHbQmBaEJf2dqV9jeuSJQNQYHx+AgGDPkb2U6NxL4saX0dhjImKOAvkKRb/+4hDeQ3pZpI5XNC9pyQXFDFPgyq4UEXvkKo9HOHPTacZzvUIVU=
+	t=1751530678; cv=none; b=qR9/LFy3tT/sxa9qrZv/NoBT9to9M2Au1W519Dgi0+Uj5rLQqKmgekGg3mLsBdLwWyNIqKZdi9UqVTyQZ5hEFlWv3IJ6CJhtBZidZp0dfHDwguYnt84/WA5VYVJ/Zy7RxgJ4r0OaBgtU0forIn/eNshTHKBzyFr9sanvmaUjvTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751530646; c=relaxed/simple;
-	bh=0tqfQcdcQKvuybNYYmd7zqhw/ToCZ5BO8caAXPV5fps=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RAaMp2q0w8yHIjHbNHqv42BZNYF9n0JB08+Xx2ja9XfYoBXsXEdsm4SI1P8ITxD4so1s0koSwD/wC0MpWjVYz77nv0xKZxKgLWcneI9Ts/3aKLC2MIbojbp6CzlF3OC3DwHX0cj/Q2AtJkvuOA2VlOh26kTD3D/0EyV45tNg2sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86d01ff56ebso964606939f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:17:24 -0700 (PDT)
+	s=arc-20240116; t=1751530678; c=relaxed/simple;
+	bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cs76zuYADxrCV+1xt9uGbNt9ytGSuthSq1w4Y7gV+Q50DQ3asr3QH69QQL5dQcSEG5FsELNoGzyuOybKNwb/vHjVAjjr1UHz2Ho1b55hGeYgZO8B+BPTSJIyF3EzUQZ8L2e4fPBKS1ytQhPBX+ZstPkdKx4m1JLC0IpWgp51gP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gBSjjCtL; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gBSjjCtL"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b82f3767so6059083e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751530675; x=1752135475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
+        b=gBSjjCtLZ0AfY+4WmtgAHnMn3xujCUz4LEzDs0ZKKHvCJKsTpY1KRfopnyRSluJGVT
+         qRbLfDMhDNJ1O5hIDNUqnQlEpBIiK4EIiA6mBmrB28aNo9bK1OTl77FipAWsVhS8J76Y
+         xHUFdCrjw8Dp4gZdrl4wMjAe/jnlNSKxMRz99ap/bPe8vqhkkCr/EKIq4F8CZcL3bNVi
+         1oD1/W0jsQNNW23C7YltUVLH9/4L//WQMrQ0C/S2T+Jkqu2jufUzbrWD9YH8d48pIPNz
+         g4PCBnW9M0z6YAK6Ufeow8d9zT81oxrPktHfAwxxVSbr01D3AN5boOE+dN35H49ZRk8K
+         Np1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751530644; x=1752135444;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tP8fSrrWw+c6oVlbKpv1/K9lt7NV7UPwWnh/sxdbK/k=;
-        b=WQNlUWCQR9idZkDA4n2NuQQIbijSY20LHVPnaOyru1iIDlczssFPN9zQLFH/h6eCG8
-         CYc5sS1+qAPtBpKhLOvPQXOur5eSlha6zKKR9bU6X5DaYXEtq9Ul+GtuWGyFonpF/iBK
-         Ru0oyFIffXVeUYkaeaekAZGyroV5kKZ8TEU1yh3mky9N9w68bt/PbtfEvYpLujK+74ey
-         JVDAq7kxVaKwEJGlGZT8QOCfq0l2kr27mit9BSnwEaRdametWrym5KMvywNjajIm11IX
-         PCzjb1zOr8caiRBl54Uy2wDPdEoYa/rCCm0+Ic88XG6Cc6i4arTpXE1TS4if3pOlIbKJ
-         YzCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOAmBvoCTP6ZX0AD6hZ4h9fGVwD9q2WT+BmaZvdyJ0oyMra4z1cDU9NNAx4gRQL0jnbGTSWEv+fDdlCmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7bFFDTsFsa+6NbFxABb/0RW5XPYCLeZMGeufkjWX9cL9O2PhT
-	ZaUv4uWYy6wrUDU2S+A6p44yLs+uQThgsWbuzkpAtrRNTJP1gqILuJWhzzWUg/KzRd4fLQkzP8v
-	5r+oOznubfSpZb97zmsEJXlcciZvKHPO2FsFlAW/y+59uN0Y7bq8I3d4YzE4=
-X-Google-Smtp-Source: AGHT+IFOZtOW8lab3M0KveD6JB+xB55jCeWVZWok95T1ybd9U5+90wzOI5xdlMgBLaLI8WNjjxGiRaN/pL4TlllEyOLbZEnV1N7G
+        d=1e100.net; s=20230601; t=1751530675; x=1752135475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fr4tryANRMAKvC10Gw6Bqr691NWLmKYtyncdqdalZnk=;
+        b=xKt4ybWi45GWx7bJFpXEDd+HMRQHWgDIEr21XjZsu7yYCwGhCSyVon7Dmk4H7Uev/v
+         3ycz2Bru85l1Hpr5mdCVS9NG4hzu8IsPR3eLDazMgA4qzloCFS98Gij/Y1rlyHWwaOUX
+         ecqrZ8NOo5EdStG5lVwvSX/bCSlpbHga+JzEzzI4sk9OQn7dRtKt5rQroTbJ5ePfk7qa
+         AhS1SYsxpBgUcvc15UT7oPRyGAohzKzliZ8P1DaePgl1ksoBUfRWfc9KR8/nSYY0IX9r
+         4iT7uSTSMMZaW41zcfBkeCkW1xh1pTxJlzkIlXlzL9XtJE5WljefFLlhJDRka0qOtZlL
+         eQaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrvN48HY77vqDbeYPFcCVDa3t4UTCSZD6zIZdXqHMYAc9950sh8lzUJTVwcc35nF+D2yE841yx7KNs34U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxat5T2ncD3CpDap+MOxwPpjZbrXq1TZ7Mow7CAo6q8IY1Rf+Z0
+	myQ3rkhzRx/dNu6RB8ClzMcjWI+eLKNjV1dvw5SpkmoOKkqwH9ya/DlLsnYju3qkxEhXz3iMXjG
+	cmKdXMcFfar6HtqSv83L23t85YRcPNGpwtbGmZzHxNA==
+X-Gm-Gg: ASbGncvlr9aQp0ke/tyd+P+hOfWMHfaoluasang/1ubw8JLTWLfy43X5x6BGjauPpM1
+	C3GSIqFhe8Lyt7ZY91/64gPmBWPdHPIVyR87+4slhhuwTevyi8X2Eoj2y0rF5AxjJloiNjjpR5O
+	WnQqjgKuVmXgYOMqhxbka2BvzO2SLjEur5DA4noSkOChcVBSTiatWGkzPtP3SqyesCXoOe8fru5
+	w==
+X-Google-Smtp-Source: AGHT+IHE2Sj+rBPZdn50coXiNzm6TTMkLQjJMv8vYGqovDiSzp/PXFleV4dA1cphbYTssEL1h42v0mUc/icqE5r4NKc=
+X-Received: by 2002:ac2:51d1:0:b0:553:d910:9340 with SMTP id
+ 2adb3069b0e04-5562837a5edmr2394201e87.46.1751530674493; Thu, 03 Jul 2025
+ 01:17:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fc03:0:b0:876:b8a0:6a16 with SMTP id
- ca18e2360f4ac-876c6a8a90cmr653146239f.13.1751530644171; Thu, 03 Jul 2025
- 01:17:24 -0700 (PDT)
-Date: Thu, 03 Jul 2025 01:17:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68663c94.a70a0220.5d25f.0858.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in hfsc_qlen_notify
-From: syzbot <syzbot+5eccb463fa89309d8bdc@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+References: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
+ <20250702-pinctrl-gpio-pinfuncs-v1-3-ed2bd0f9468d@linaro.org> <qwlhmbsd5gqrgjsfzvaqha43pztq34bxjswske72igg2z37euw@2rkx76ikaclq>
+In-Reply-To: <qwlhmbsd5gqrgjsfzvaqha43pztq34bxjswske72igg2z37euw@2rkx76ikaclq>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Jul 2025 10:17:43 +0200
+X-Gm-Features: Ac12FXxG3UqzMErB72B4Ppo-EF4j9trbecSa-j04jTmTWEzOnHV6-j5zLK5onj4
+Message-ID: <CAMRc=Mdk+fGiVOH_Zq0K_gRpo-c2Gyh=SakKL77bL2BscS_PKQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/5] pinctrl: qcom: sm8650: mark the `gpio` pin
+ function as a non-strict function
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Jul 3, 2025 at 12:50=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Wed, Jul 02, 2025 at 10:45:33AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Allow pins muxed to the "gpio" function to be requested as GPIOs even i=
+f
+> > pinmux_ops say the controller should be strict.
+>
+> This is a strange commit message, shouldn't "gpio" function behave
+> exactly like that - mark the pin as a GPIO?
+>
 
-syzbot found the following issue on:
+They should but they don't. I should maybe rework the commit message
+to say: "muxed to the function called `gpio`...". The "gpio" here is
+just a name, it could as well be saying "dmitry" or "123456", the
+pinctrl core doesn't interpret it in any special way. What I'm doing
+here, is marking the associated struct pinfunction object as one that
+should allow pinmux core to export this pin as a GPIOLIB GPIO.
 
-HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=16510c8c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=5eccb463fa89309d8bdc
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d59bc82a55e0/disk-bd475eea.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2a83759fceb6/vmlinux-bd475eea.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/07576fd8e432/bzImage-bd475eea.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5eccb463fa89309d8bdc@syzkaller.appspotmail.com
-
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000005d: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x00000000000002e8-0x00000000000002ef]
-CPU: 0 UID: 0 PID: 13767 Comm: syz.0.2184 Not tainted 6.16.0-rc3-syzkaller-00144-gbd475eeaaf3c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:hfsc_qlen_notify+0x2e/0x160 net/sched/sch_hfsc.c:1238
-Code: 55 41 57 41 56 41 55 41 54 53 48 89 f3 49 bc 00 00 00 00 00 fc ff df e8 d0 ef 45 f8 4c 8d b3 ec 02 00 00 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 e8 00 00 00 41 8b 2e 31 ff 89 ee e8 e9
-RSP: 0018:ffffc90003d2f070 EFLAGS: 00010203
-RAX: 000000000000005d RBX: 0000000000000000 RCX: 0000000000080000
-RDX: ffffc9000c0e9000 RSI: 0000000000000323 RDI: 0000000000000324
-RBP: dffffc0000000000 R08: ffff88802c831e00 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff897a5e80 R12: dffffc0000000000
-R13: ffff888053eaa000 R14: 00000000000002ec R15: ffff888053eaa000
-FS:  00007f783fff36c0(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8d435e1e9c CR3: 000000005e97a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- qdisc_tree_reduce_backlog+0x29c/0x480 net/sched/sch_api.c:811
- fq_codel_change+0xa96/0xef0 net/sched/sch_fq_codel.c:450
- fq_codel_init+0x355/0x960 net/sched/sch_fq_codel.c:487
- qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1324
- __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
- tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
- rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f783f18e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f783fff3038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f783f3b5fa0 RCX: 00007f783f18e929
-RDX: 0000000000000800 RSI: 0000200000000100 RDI: 0000000000000005
-RBP: 00007f783f210b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f783f3b5fa0 R15: 00007ffd53451d68
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:hfsc_qlen_notify+0x2e/0x160 net/sched/sch_hfsc.c:1238
-Code: 55 41 57 41 56 41 55 41 54 53 48 89 f3 49 bc 00 00 00 00 00 fc ff df e8 d0 ef 45 f8 4c 8d b3 ec 02 00 00 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 e8 00 00 00 41 8b 2e 31 ff 89 ee e8 e9
-RSP: 0018:ffffc90003d2f070 EFLAGS: 00010203
-RAX: 000000000000005d RBX: 0000000000000000 RCX: 0000000000080000
-RDX: ffffc9000c0e9000 RSI: 0000000000000323 RDI: 0000000000000324
-RBP: dffffc0000000000 R08: ffff88802c831e00 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff897a5e80 R12: dffffc0000000000
-R13: ffff888053eaa000 R14: 00000000000002ec R15: ffff888053eaa000
-FS:  00007f783fff36c0(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8d435e1e9c CR3: 000000005e97a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	55                   	push   %rbp
-   1:	41 57                	push   %r15
-   3:	41 56                	push   %r14
-   5:	41 55                	push   %r13
-   7:	41 54                	push   %r12
-   9:	53                   	push   %rbx
-   a:	48 89 f3             	mov    %rsi,%rbx
-   d:	49 bc 00 00 00 00 00 	movabs $0xdffffc0000000000,%r12
-  14:	fc ff df
-  17:	e8 d0 ef 45 f8       	call   0xf845efec
-  1c:	4c 8d b3 ec 02 00 00 	lea    0x2ec(%rbx),%r14
-  23:	4c 89 f0             	mov    %r14,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 0f b6 04 20       	movzbl (%rax,%r12,1),%eax <-- trapping instruction
-  2f:	84 c0                	test   %al,%al
-  31:	0f 85 e8 00 00 00    	jne    0x11f
-  37:	41 8b 2e             	mov    (%r14),%ebp
-  3a:	31 ff                	xor    %edi,%edi
-  3c:	89 ee                	mov    %ebp,%esi
-  3e:	e8                   	.byte 0xe8
-  3f:	e9                   	.byte 0xe9
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Bart
