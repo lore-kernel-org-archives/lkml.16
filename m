@@ -1,127 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1962C239099;
-	Thu,  3 Jul 2025 16:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C71804A;
+	Thu,  3 Jul 2025 16:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561560; cv=none; b=pXo0+RP5a8TmznibNmQRXCHcKusU8NCw6RYVvbBi3fMzdjp3cY/otVRQFHV3fk9LMWQI2lKzeibomhFgnrTR7YUUzQ6xetJ5NC+lKEWKi36SRCZA8fIVrQnqRa+Z0xIFrEBzyKLqi54KxC9vPtm0M+A6mdnAaWQiAWTg8gMmrfA=
+	t=1751561654; cv=none; b=k3tvqMzpxNacKs6JRu/kufGI4f5nBPWIWsEbg2Xd32PnxQQ5ipZ16R2AuAsgkaxHCRYl5uNNsLNDPDszKaXl53uTTVqYd5eadxQk5rya+uFfpgw3bY1P8Fit0DCkcLcoaw0yGTKsJ/wEIQ6/ufnid3N074c1S+kxAoNW72lN0Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561560; c=relaxed/simple;
-	bh=FXncib9IFgDGC6K+cesVYMgwW7vQ5WoISOE2fNWV3IY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z4wPPrlBmjNSutCLawL50WuI3tr/Augwhz2jCpZ2XNsQu3tCEF+qLyniKiNnIPgU+GAbI+FxeoRHSkmPeACnqLKu4ZLYzXbsKLV4FvxxqIKlihCcHXeWchXaBVhFp305bIspTwTZOycaD2Xj/FesVjcChVbPk3Q2Z1QU/Edvme0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sbjkl3By; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751561654; c=relaxed/simple;
+	bh=RW0IfchVo7MJxIYM7d362pMnzo5nycFf1HXLEBxbIVo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uB5XRv8IjZ1WcKqusA1KKI+W3PrhcT+DPKXtAHWbpK5XC0FYqJprb1bmdN+yibF641SJJkNp1JhJptRpaavZ8QUKQpl4Z6RnWBFop7tAV7j5iDMSDuOdDlCJVd9cREWT2pR5w4CEcX0qDeLECQTVLJuXi0PZotVTtrYPhP4wUus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=UN0ZqC/2; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sbjkl3By"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD95C4CEE3;
-	Thu,  3 Jul 2025 16:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751561559;
-	bh=FXncib9IFgDGC6K+cesVYMgwW7vQ5WoISOE2fNWV3IY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Sbjkl3ByTogVRPsjQQTSV0b3uGmpTx9m3ntm9CmonxC6waeVZ5pTSvBUvbIXzmfVX
-	 YOQVuSqCrkPGSZb+uV4wDDUQ/1NZxGW4buP5zLyy9CY8ovX7QfgVbs9ud+XRK4bIxH
-	 KADW1gDQjW7syUY6MXnnLyMwLA5M0MRYOwcMVOxp7pbs+X69f57Y0fWLwZTgsscMra
-	 RL8eraCK0bKLPjZwm1TRHyOfNNfMv+trhhX7Kl6Gow7AC52HsdCJGFQzVSUOwSKdzw
-	 uA//VZ2g/vSUdbQZGYVOl2pG+vXhNGTnGhfkDjxie/5jU/UGQCY45Oxs4QCUrxjD27
-	 +qkraSVIRv4ag==
-From: SeongJae Park <sj@kernel.org>
-To: Yunjeong Mun <yunjeong.mun@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com
-Subject: Re: [RFC PATCH v2] samples/damon: support automatic node address detection
-Date: Thu,  3 Jul 2025 09:52:37 -0700
-Message-Id: <20250703165237.43771-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250703074423.1771-1-yunjeong.mun@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="UN0ZqC/2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=8tSAj2yt9qfQ16qmhmFGf5l7dehPpx10XvpWLTkHXyA=;
+	t=1751561653; x=1752771253; b=UN0ZqC/2LuEacHnj9T+ouD8U33H5umNogJZAZcLgfIXbK0Z
+	DDfl6rEG+nsFMO0zbPuJeKyGsjGMI232HmRuC8eORBsPhdkCUKU6+f5kvwMmCS5SdMYe6yzQdqPD7
+	XOKPhHdyWPpPJSMXq4eQxL+eYHX+3nigDejigPNPHMnDrJ+F8XJ37sHn+7YCQKWik3tuSSlViF44Q
+	NDK0b0z3EKUNQxuDbmg1/+nLB4rmVmJ4DgHJGNs6uJhrfl+yfoIXlik875ov1xKFSVFvdQ0cJEiYC
+	bm+bDh5tCxT1x4McpfwUukfwOg7TEPKRpwv76jZIdKttU5bt0CFWDTgquWMY/rhQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uXNCM-00000005XNf-0Kcc;
+	Thu, 03 Jul 2025 18:54:10 +0200
+Message-ID: <5fda29626ca04e7c2ad46ca4a3d0eb1d992789d9.camel@sipsolutions.net>
+Subject: Re: [PATCH wireless-next] wifi: mac80211: reject VHT opmode for
+ unsupported channel widths
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Moonhee Lee <moonhee.lee.ca@gmail.com>
+Cc: Nicolas Escande <nico.escande@gmail.com>,
+ linux-wireless@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, 
+	syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
+Date: Thu, 03 Jul 2025 18:54:09 +0200
+In-Reply-To: <CAF3JpA7ZeG5uxLJr1NQBBzF=UZRi4sj4TSfBw=Pvx7xb1NCqTw@mail.gmail.com> (sfid-20250703_183535_569381_928B48E3)
+References: <20250702065908.430229-2-moonhee.lee.ca@gmail.com>
+	 <DB29OMQH4W9Z.1GPKEZBBIRSTS@gmail.com>
+	 <CAF3JpA7wM4JBdd6OvGS+hmv0UahcW=h4HrPNDwRNhduk8iKsWw@mail.gmail.com>
+	 <1f13328a55c54fb49d8ca1dd72bc5de23f161ac8.camel@sipsolutions.net>
+	 <6ecced8b962cf3a6f5056a87aa3442c49941e74c.camel@sipsolutions.net>
+	 <CAF3JpA7ZeG5uxLJr1NQBBzF=UZRi4sj4TSfBw=Pvx7xb1NCqTw@mail.gmail.com>
+	 (sfid-20250703_183535_569381_928B48E3)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-Hello Yunjeong,
+On Thu, 2025-07-03 at 09:35 -0700, Moonhee Lee wrote:
+>=20
+> To address this, I plan to reject the set of channel widths that are not =
+valid
+> with VHT opmode. This includes all channel widths below 20 MHz, as well a=
+s
+> 20 MHz without HT (20_NOHT), which is also incompatible.
+>=20
+> Would the following logic for v2 be acceptable?
+>=20
+>     /* reject channel widths not valid with VHT opmode */
+>     switch (width) {
+>     case NL80211_CHAN_WIDTH_5:
+>     case NL80211_CHAN_WIDTH_10:
+>     case NL80211_CHAN_WIDTH_1:
+>     case NL80211_CHAN_WIDTH_2:
+>     case NL80211_CHAN_WIDTH_4:
+>     case NL80211_CHAN_WIDTH_8:
+>     case NL80211_CHAN_WIDTH_16:
+>     case NL80211_CHAN_WIDTH_20_NOHT:
+>         return -EINVAL;
+>     default:
+>         break;
+>     }
+>=20
+> This allows valid HT/VHT channel widths, including 20, 40, 80, 80+80, 160=
+, and
+> 320, to pass through while filtering out values that would otherwise trig=
+ger a
+> WARN_ON.
 
-On Thu,  3 Jul 2025 16:44:22 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+I think it'd make more sense to go the other way around and list the
+bandwidths that are _valid_ here, even if I don't see it getting
+extended any time soon (anyone working on TVHT? ;-) )
 
-> This patch adds a new knob `detect_node_addresses`, which determines
-> whether the physical address range is set manually using the existing
-> knobs or automatically by the mtier module. When `detect_node_addresses`
-> set to 'Y', mtier automatically converts node0 and node1 to their
-> physical addresses. If set to 'N', it uses the existing
-> 'node#_start_addr' and 'node#_end_addr' to define regions as before.
+But in some way I also have a feeling we _should_ be able to reject this
+in cfg80211 already - although it seems that right now we cannot. Hmm. I
+guess better to have this validation here now than fail/WARN, but then
+I'd like a positive list of allowed values, rather than forbidden ones.
 
-Thank you for this patch!
-
-> 
-> Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-
-Reviewed-by: SeongJae Park <sj@kernel.org>
-
-> ---
-
-From next time, please consider adding a summary of what changes have made from
-the previous version here, like suggested[1] on the documentation.
-
->  samples/damon/mtier.c | 42 +++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 39 insertions(+), 3 deletions(-)
-> 
-> diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
-> index f3220d6e6739..3570ebe10fab 100644
-> --- a/samples/damon/mtier.c
-> +++ b/samples/damon/mtier.c
-> @@ -42,8 +42,34 @@ static bool enable __read_mostly;
->  module_param_cb(enable, &enable_param_ops, &enable, 0600);
->  MODULE_PARM_DESC(enable, "Enable of disable DAMON_SAMPLE_MTIER");
->  
-> +static bool detect_node_addresses __read_mostly;
-> +module_param(detect_node_addresses, bool, 0600);
-> +
->  static struct damon_ctx *ctxs[2];
->  
-> +struct region_range {
-> +	phys_addr_t start;
-> +	phys_addr_t end;
-> +};
-> +
-> +static int nid_to_phys(int target_node, struct region_range *range)
-> +{
-> +
-> +	if (!node_online(target_node)) {
-> +		pr_err("NUMA node %d is not online\n", target_node);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* TODO: Do we need to support more accurate region range?  */
-
-I understand you are saying we might need to remove address ranges in the node
-that DAMON will anyway unable to check accesses, e.g., reserved memory.  Since
-those are uusally only a small portion and this is a sample code, I think we
-don't really need to do that, so I think you can drop this TODO comment from
-your next version, if you are gonna make it.
-
-> +	unsigned long start_pfn = node_start_pfn(target_node);
-> +	unsigned long end_pfn   = node_end_pfn(target_node);
-> +
-> +	range->start = PFN_PHYS(start_pfn);
-> +	range->end  = PFN_PHYS(end_pfn);
-> +
-> +	return 0;
-> +}
-[...]
-
-[1] https://docs.kernel.org/process/submitting-patches.html#commentary
-
-
-Thanks,
-SJ
+johannes
