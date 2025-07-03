@@ -1,109 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4D328ECF4;
-	Thu,  3 Jul 2025 22:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3E72AF19;
+	Thu,  3 Jul 2025 22:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751581462; cv=none; b=qUPQqqMWj442iM0chUfFcE/5x1CiycU+bZqKZhPb8dYoTQUL4fLNky1pGxtybzUjPmbz4CvtwulR7i6hbpcpaJFIR7s/X4ajaF8NRTmZ4QLI2DiDsUQP/HmvxVQceA0zBpVNf1jhLFWN0a9h1GH3z1VZ41AS3AWiF3rqD9K+4Sk=
+	t=1751581616; cv=none; b=CLb+TN6f2POGOlHC0+FUj2TJS8BFjGYAkR1pg1fLK3mDANnecUbHgp8A5KNn4lRBDTzTKBpSldyYJMEVSsu8PITeF5uc6str3jQ6mEOFnUqzdwasU4xdEcU+Knh1KcPfdecdUc9JIJh51cB1XGI/ORuuVV270Na9X8i5psRDjAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751581462; c=relaxed/simple;
-	bh=w3w1HWQyGrjxfcDVX2a88rURwMNQ/bcqmR87nd0s9Z8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VzxBnDHv9O/gcpWxzdklEuw+SP5kaNWcgVGJFyZdOdjj0irs81/ETkFH7zDSh2HKyMbQg0oMuO3ACqKlzgDdEBRn5W94vxx9ApEPNWIJyYOvQfMgUCfqaZQm/NHxY9T6jZYoPKKOJgT/uucQrVzzwz1mMm0/vpqC2Lytmpg/2Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7D1V8lv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751581616; c=relaxed/simple;
+	bh=cLgp5L2FcC2uJ9MnO2hzh+7uym2B9XXH1jyaMDpQAxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=g49aT5FFBZ1NIQV5+BxVCRfycB9uWyw4GrhpcvnVliUiTrn17zXJ/AJdXwDI4SjleS406M3ZbbIaHzHa4vLv3LBDZihst4j0vxFnXmpBrJsUb5w40M9J8bIwvzlgNljwKTTFljFhyGwME8f0c3vQyzPmLiIv1C0BRmY8cDpTDmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=s9eh9/+A; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7D1V8lv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF723C4CEE3;
-	Thu,  3 Jul 2025 22:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751581461;
-	bh=w3w1HWQyGrjxfcDVX2a88rURwMNQ/bcqmR87nd0s9Z8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=m7D1V8lvjoTrd6PjJFv97POmRk+UwpwxR+LzTocMLe/xsSNRhHobl/uHgb5255QMN
-	 v7amSpj80uwaAx16SBhhDPWQ35p6mdwGQhSU+jR3Gj+qJMKSWOScm6pCaJeqBwsuuH
-	 lCOMVNgrdLHU756bL5Ck6fc8woPLcLjJ5tBYw6TIvb1ST5WaCdL34r0uVObPOowGzH
-	 Nk4snpd8+8Mmj4myMi37u2r9QvNvaWGqnxJP9mvbxLyJWsgfr2uxa4sv+3iN/uxGGI
-	 G8Uq8ZLwKC2tpiQZBzXDY2ODw9gG1ijfCJbFAhMmuE3AFGK+SfvhUgXBYR6ZyngGAi
-	 Oh3lvRnXgQyXw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 80FF4CE0C97; Thu,  3 Jul 2025 15:24:21 -0700 (PDT)
-Date: Thu, 3 Jul 2025 15:24:21 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 1/2] llist: avoid memory tearing for llist_node
-Message-ID: <e33d07a0-8470-44a8-88c1-10dfcb1171ea@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s9eh9/+A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751581581;
+	bh=k9/GILL9jYnHpUreGhxCR6p5KrN5Ntd00d/w/2da71w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=s9eh9/+AFgbCn/oYD8vVQqJgzOXflUFrn8xtP9EuSIH7lC8EaSfE/m2YZPpB7BLgX
+	 tJ8PCPzyHcgszpMBDmXwiqxelclCo7GBSitYdIbqWcTOXCgMoKZbg+I928QIljWy4A
+	 cRvxPDq3rJPM9SjSQrpPFbTjtPAFd02g+QuQ905BDdGRLe6MnOCYQePwaz/JdZyGhK
+	 SFx4GeMTDYz4mdD3LFVZOX3iEseX8Xq4GaGcYKcgeVNYYh78qw6x2BwG8GZulnnrXC
+	 cOb8Z2MBs03qYckpY951gjll90ZeZlatSEDXmUlm3/21ilii/rDi2xN5ATO7a/XlRW
+	 1eRuOOD6Cp+rg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYBF86fvRz4wcg;
+	Fri,  4 Jul 2025 08:26:20 +1000 (AEST)
+Date: Fri, 4 Jul 2025 08:26:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steve French <smfrench@gmail.com>
+Cc: Wang Zhaolong <wangzhaolong@huaweicloud.com>, CIFS
+ <linux-cifs@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the cifs tree
+Message-ID: <20250704082645.37b267dd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703200012.3734798-1-shakeel.butt@linux.dev>
+Content-Type: multipart/signed; boundary="Sig_/GJ_tB3cllo_N6UywFaNhkLH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, Jul 03, 2025 at 01:00:11PM -0700, Shakeel Butt wrote:
-> Before the commit 36df6e3dbd7e ("cgroup: make css_rstat_updated nmi
-> safe"), the struct llist_node is expected to be private to the one
-> inserting the node to the lockless list or the one removing the node
-> from the lockless list. After the mentioned commit, the llist_node in
-> the rstat code is per-cpu shared between the stacked contexts i.e.
-> process, softirq, hardirq & nmi. It is possible the compiler may tear
-> the loads or stores of llist_node. Let's avoid that.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+--Sig_/GJ_tB3cllo_N6UywFaNhkLH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Hi all,
 
-> ---
->  include/linux/llist.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/llist.h b/include/linux/llist.h
-> index 27b17f64bcee..607b2360c938 100644
-> --- a/include/linux/llist.h
-> +++ b/include/linux/llist.h
-> @@ -83,7 +83,7 @@ static inline void init_llist_head(struct llist_head *list)
->   */
->  static inline void init_llist_node(struct llist_node *node)
->  {
-> -	node->next = node;
-> +	WRITE_ONCE(node->next, node);
->  }
->  
->  /**
-> @@ -97,7 +97,7 @@ static inline void init_llist_node(struct llist_node *node)
->   */
->  static inline bool llist_on_list(const struct llist_node *node)
->  {
-> -	return node->next != node;
-> +	return READ_ONCE(node->next) != node;
->  }
->  
->  /**
-> @@ -220,7 +220,7 @@ static inline bool llist_empty(const struct llist_head *head)
->  
->  static inline struct llist_node *llist_next(struct llist_node *node)
->  {
-> -	return node->next;
-> +	return READ_ONCE(node->next);
->  }
->  
->  /**
-> -- 
-> 2.47.1
-> 
+In commit
+
+  2799c0ada68c ("smb: client: fix race condition in negotiate timeout by us=
+ing more precise timing")
+
+Fixes tag
+
+  Fixes: 515ccdbe9b2f ("[Backport] smb: client: fix hang in wait_for_respon=
+se() for negproto")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: 7ccc1465465d ("smb: client: fix hang in wait_for_response() for negp=
+roto")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GJ_tB3cllo_N6UywFaNhkLH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnA6YACgkQAVBC80lX
+0GyBWQf/YYom00j+DyPWixOfM12dmTAzn2hQfqcdGeEVI7WSq8P2uM+2h7p0bCnA
+uQ+kzR0BOTnYhQMzrqA4YsmF4xmM6URTiY+dKk26cfkHbXGSZxQ1dO8npeBSPezo
+nwEsOhmxCQu41njLo0AS12f+Ram3JV9a/7vkOpVCYzbR6G5nzLBfLZvz/6sdtGMB
+8rKGTh9UEx7VEw08bs8IqVfy56LbsfCDAzl9rxfNHgvndYqgHEAGHITyHoDKuzOd
+/qle5bsvhxnW/tszprNhShwP6CLtsPjZkLDH6W39lQN4g76Cr4cz5p6NjCD1WbFR
+d4qpc96nyW9JA3K28hU6OIYB8Kb1xA==
+=lhbM
+-----END PGP SIGNATURE-----
+
+--Sig_/GJ_tB3cllo_N6UywFaNhkLH--
