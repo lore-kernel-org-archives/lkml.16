@@ -1,174 +1,215 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF222E7643;
-	Thu,  3 Jul 2025 12:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2AB2E6114
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546362; cv=none; b=J/QIN0moRksa9grgrZcKtgwsmXAHTwsPCklLf5aT6kCC6EeRaLtIzsLilgpao0fNxsz5lCi6gSiVyVq2vkbON/OI8H03Rd5M0vkRpjNY32X65a/o3zLuMA4i96nxAs0lg+cC1B0XaP2Y/mgqnCI2sApgWVaWYs4B9jaxu0MejGg=
+	t=1751546379; cv=none; b=TwQUYjQ+fiYo9txM1WiqrgrymHTCe+7JW7GmxBqMz45sMsk/hmsnvgv/xl/d4cW5mMvd4816VjajCnqNdSZDmLa71IB73DuxaDInZl0z7MVfNtmjaRsEMTuVIeuIi0tj2xcUE37HbSi7WkanmgK5fEDOm8ZAG82ABZnowlzDYQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546362; c=relaxed/simple;
-	bh=dnPaUSVSFnBxHAuvBN3ugpTqEkDkWs7TpZEV1h+4drE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCwaaWW+WeIyHThMyCtJ/EBavSZdNcJM4etYPhWG20tsxzg9G2NulxkVGRxoZazGoIvdRzyPvhEFHPAv3UOF1aC+YsrLRK1uC4cy8XBIByBILc24qfaUcn1dbeZZ25SBQhcTmrIpVVzd2wpXyj/4XEe67c4ZerU5mT6r4IiFhtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=05MTyX4I; arc=none smtp.client-ip=93.188.205.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+	s=arc-20240116; t=1751546379; c=relaxed/simple;
+	bh=jZQnj2z/DOc1XgDzZQWNW56cMJAgY58Qfkyd+rsZzYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GjHi7EZbbdvi4I8ZG6Z2ctN80aoTwvwNPnUG4cWotqC4qghuI8CaDMBQY7ApTJZZ7M68t03h+wpD1aQWRzIb0fVh4p/6BIVQgFAvF5xH/S65sAxL9uqWeMCIJ5FYj6dY0Hd3n4RNJAnJjpA1XhA66C2E+IT8R2LqKWf65qa8Kn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xp8gGQoH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="05MTyX4I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
-	s=mail; t=1751546352;
-	bh=dnPaUSVSFnBxHAuvBN3ugpTqEkDkWs7TpZEV1h+4drE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=05MTyX4ITmjSMjBJJ4gpDexb0esJniSCqDHJD837JQ0h6PBDCH36iDwSgrT/ddafZ
-	 bp/okzXoVjAhluguf3FRJ7A27UMyv+fDezNQa6l+YMDKfIZgAYAu2kCepJeT2k7eKO
-	 u2JJ/V33II2dJkW94CiMrjaB+FRtvUHs5D65M9K0Jm5LW28/vCDm9tuBA0wsIauzS5
-	 vZuV+uBlGkqwG0s9BJo02gh5CkaXsGwvbL/tQrDDjcnWWY24GkDZpEZgFh+vFM45uy
-	 625C9VzW9jG6lSHp+av4vYzYB9CC9gUMUTd0+ufsdYYh2VYfpCzQiKjfEPzHpD7OX6
-	 SfbJcCkgUjWcA==
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id B6CB81FA37;
-	Thu,  3 Jul 2025 15:39:12 +0300 (MSK)
-Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Thu,  3 Jul 2025 15:39:10 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.190.6.76])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bXxBy4vVBz16Hny;
-	Thu,  3 Jul 2025 15:38:34 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Paul Mackerras <paulus@samba.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Gavin Shan <gwshan@linux.vnet.ibm.com>,
-	Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
-	Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	David Dai <zdai@linux.ibm.com>,
-	Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH 5.10] powerpc/pseries: Fix use after free in remove_phb_dynamic()
-Date: Thu,  3 Jul 2025 15:38:30 +0300
-Message-ID: <20250703123831.29005-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xp8gGQoH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751546376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Oi7wV4GKMcMHM1v/VB7INbDIKNe9eVceq3H9f21UYs0=;
+	b=Xp8gGQoHIhNAQjVECH4A7WZ/BxXgQxb3YIrN6oYuSZ6NU59c6TJ8qco5aVBcIR2xbrOxyd
+	qp6CzCu+eudTYVThJlb17b+jkYgObE7VP9IPH6cZk7cC29XZTe+WEt75u07ne4lDkCg1xh
+	gpsGV/uHX5o6tYYAqWmeeIrTq0zJXJE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-WmKRaaXoN8OWJron7KWNYw-1; Thu, 03 Jul 2025 08:39:35 -0400
+X-MC-Unique: WmKRaaXoN8OWJron7KWNYw-1
+X-Mimecast-MFC-AGG-ID: WmKRaaXoN8OWJron7KWNYw_1751546375
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ade81d27cddso775408466b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:39:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751546374; x=1752151174;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Oi7wV4GKMcMHM1v/VB7INbDIKNe9eVceq3H9f21UYs0=;
+        b=PWPBFYjVGPl/veLrVOI5yQVWhiNDis8iHBeqhig9vafKKMgZ1ElwxNzTLv+HajTK3e
+         AAHX4vjcSmdh+ULoUA6lyNxLwcXF9WeWOg8pjnzwLCU2O4AupbJkB5qzxZ17lgkHwLfl
+         3dNQgLmsmbESzXKdZnITdHoA5Vw1i7jM1nrtsWjI0blkUOhKtfrjFFwn2FZbSeu7mnba
+         7LS59eI3wCs549lEFgwZrr2fDAQ/QGSW0C+A3Z7akwk+nQrqovaUdNQVoAM9dlV1Kyrb
+         85QBBeHAXdSxh46WzudFHYFSkaMIiCv7PewrWrfaaT468T5/ZQnDU1ubRZRcuz80g1Fj
+         h01g==
+X-Forwarded-Encrypted: i=1; AJvYcCVN/P8F3T6F0t5sj10XjXy+Vl3X2Pl3kEgAu6Czhu0xlhjj98rcqIgbIepbcKo+fFWE/xPEzeafn7rVryo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW+wsRHqDXYsDxCBFy9+8NrK/qISH9VuYqyJRDlEeufaNC/+Gx
+	/TeDpeSQO/9Yn7vX8opS5A+W9xuOMSBeq0T+K4EV7xhep/i/mAQ22AHfGKEgOxi9wUhu7CSlY2C
+	cr3M5guc+jXaQO9UNvTVxShl+X3YKM86js8HnmWdjLn3rMWD1X6K4JqLGwBntv7O7UQ==
+X-Gm-Gg: ASbGncsOh9+Q+lvxhZG+dgtBScifxEUpuVPgGyvQjxLwv1AbxRpJFHZ/NbivNk43nid
+	M1pLHYnIQGY28FbLi+NlLag0GtS9/lFwXSxTH4Q6RbZFy5P4+Vd7XWNGuTeV4XLqCxANLWTZs9x
+	Tn/rXD1MMQTDd0xMU8kgwKJM6LKsllVk6mSXCt7edJC/1U7CCmxrENL/cA/ii5BBLInMw25uOwH
+	FTVff2L7rFyLRFoBuFWQIXGGzTdbNihExlgZLrH2v98SntLVzq4ti7dL5bpYq9QpD83ol7Nzus8
+	en8jnncd5nds9XDRdG62HLWHad6+VTPbTsvfNnsxICUy
+X-Received: by 2002:a17:906:eecd:b0:ad8:9b5d:2c1e with SMTP id a640c23a62f3a-ae3d8c9dcb1mr329383166b.29.1751546374401;
+        Thu, 03 Jul 2025 05:39:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvAzLYe4u7bVgIF4rIZO0Kh3Dh5wNxg2vLubpdGWNR3UdIrBCXy0Ue3tb6YegI5ciU5tlGPQ==
+X-Received: by 2002:a17:906:eecd:b0:ad8:9b5d:2c1e with SMTP id a640c23a62f3a-ae3d8c9dcb1mr329377766b.29.1751546373856;
+        Thu, 03 Jul 2025 05:39:33 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c0136asm1283943666b.90.2025.07.03.05.39.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 05:39:33 -0700 (PDT)
+Message-ID: <5e5e8d79-61b1-465d-ab5a-4fa82d401215@redhat.com>
+Date: Thu, 3 Jul 2025 14:39:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
+ in vm_normal_page()
+To: Lance Yang <ioworker0@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-2-david@redhat.com>
+ <aFVZCvOpIpBGAf9w@localhost.localdomain>
+ <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
+ <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/07/03 11:46:00
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 194527 [Jul 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 05:31:00 #27614197
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/07/03 11:46:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+On 03.07.25 14:34, Lance Yang wrote:
+> On Mon, Jun 23, 2025 at 10:04 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 20.06.25 14:50, Oscar Salvador wrote:
+>>> On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
+>>>> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
+>>>> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
+>>>> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
+>>>> readily available.
+>>>>
+>>>> Nowadays, this is the last remaining highest_memmap_pfn user, and this
+>>>> sanity check is not really triggering ... frequently.
+>>>>
+>>>> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
+>>>> simplify and get rid of highest_memmap_pfn. Checking for
+>>>> pfn_to_online_page() might be even better, but it would not handle
+>>>> ZONE_DEVICE properly.
+>>>>
+>>>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>>>> problem at all ...
+>>>>
+>>>> What might be better in the future is having a runtime option like
+>>>> page-table-check to enable such checks dynamically on-demand. Something
+>>>> for the future.
+>>>>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>
+>>
+>> Hi Oscar,
+>>
+>>> I'm confused, I'm missing something here.
+>>> Before this change we would return NULL if e.g: pfn > highest_memmap_pfn, but
+>>> now we just print the warning and call pfn_to_page() anyway.
+>>> AFAIK, pfn_to_page() doesn't return NULL?
+>>
+>> You're missing that vm_normal_page_pmd() was created as a copy from
+>> vm_normal_page() [history of the sanity check above], but as we don't
+>> have (and shouldn't have ...) print_bad_pmd(), we made the code look
+>> like this would be something that can just happen.
+>>
+>> "
+>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>> problem at all ...
+>> "
+>>
+>> So we made something that should never happen a runtime sanity check
+>> without ever reporting a problem ...
+> 
+> IIUC, the reasoning is that because this case should never happen, we can
+> change the behavior from returning NULL to a "warn and continue" model?
 
-[ Upstream commit fe2640bd7a62f1f7c3f55fbda31084085075bc30 ]
+Well, yes. Point is, that check should have never been copy-pasted that 
+way, while dropping the actual warning :)
 
-In remove_phb_dynamic() we use &phb->io_resource, after we've called
-device_unregister(&host_bridge->dev). But the unregister may have freed
-phb, because pcibios_free_controller_deferred() is the release function
-for the host_bridge.
+It's a sanity check for something that should never happen, turned into 
+something that looks like it must be handled and would be valid to 
+encounter.
 
-If there are no outstanding references when we call device_unregister()
-then phb will be freed out from under us.
-
-This has gone mainly unnoticed, but with slub_debug and page_poison
-enabled it can lead to a crash:
-
-  PID: 7574   TASK: c0000000d492cb80  CPU: 13  COMMAND: "drmgr"
-   #0 [c0000000e4f075a0] crash_kexec at c00000000027d7dc
-   #1 [c0000000e4f075d0] oops_end at c000000000029608
-   #2 [c0000000e4f07650] __bad_page_fault at c0000000000904b4
-   #3 [c0000000e4f076c0] do_bad_slb_fault at c00000000009a5a8
-   #4 [c0000000e4f076f0] data_access_slb_common_virt at c000000000008b30
-   Data SLB Access [380] exception frame:
-   R0:  c000000000167250    R1:  c0000000e4f07a00    R2:  c000000002a46100
-   R3:  c000000002b39ce8    R4:  00000000000000c0    R5:  00000000000000a9
-   R6:  3894674d000000c0    R7:  0000000000000000    R8:  00000000000000ff
-   R9:  0000000000000100    R10: 6b6b6b6b6b6b6b6b    R11: 0000000000008000
-   R12: c00000000023da80    R13: c0000009ffd38b00    R14: 0000000000000000
-   R15: 000000011c87f0f0    R16: 0000000000000006    R17: 0000000000000003
-   R18: 0000000000000002    R19: 0000000000000004    R20: 0000000000000005
-   R21: 000000011c87ede8    R22: 000000011c87c5a8    R23: 000000011c87d3a0
-   R24: 0000000000000000    R25: 0000000000000001    R26: c0000000e4f07cc8
-   R27: c00000004d1cc400    R28: c0080000031d00e8    R29: c00000004d23d800
-   R30: c00000004d1d2400    R31: c00000004d1d2540
-   NIP: c000000000167258    MSR: 8000000000009033    OR3: c000000000e9f474
-   CTR: 0000000000000000    LR:  c000000000167250    XER: 0000000020040003
-   CCR: 0000000024088420    MQ:  0000000000000000    DAR: 6b6b6b6b6b6b6ba3
-   DSISR: c0000000e4f07920     Syscall Result: fffffffffffffff2
-   [NIP  : release_resource+56]
-   [LR   : release_resource+48]
-   #5 [c0000000e4f07a00] release_resource at c000000000167258  (unreliable)
-   #6 [c0000000e4f07a30] remove_phb_dynamic at c000000000105648
-   #7 [c0000000e4f07ab0] dlpar_remove_slot at c0080000031a09e8 [rpadlpar_io]
-   #8 [c0000000e4f07b50] remove_slot_store at c0080000031a0b9c [rpadlpar_io]
-   #9 [c0000000e4f07be0] kobj_attr_store at c000000000817d8c
-  #10 [c0000000e4f07c00] sysfs_kf_write at c00000000063e504
-  #11 [c0000000e4f07c20] kernfs_fop_write_iter at c00000000063d868
-  #12 [c0000000e4f07c70] new_sync_write at c00000000054339c
-  #13 [c0000000e4f07d10] vfs_write at c000000000546624
-  #14 [c0000000e4f07d60] ksys_write at c0000000005469f4
-  #15 [c0000000e4f07db0] system_call_exception at c000000000030840
-  #16 [c0000000e4f07e10] system_call_vectored_common at c00000000000c168
-
-To avoid it, we can take a reference to the host_bridge->dev until we're
-done using phb. Then when we drop the reference the phb will be freed.
-
-Fixes: 2dd9c11b9d4d ("powerpc/pseries: use pci_host_bridge.release_fn() to kfree(phb)")
-Reported-by: David Dai <zdai@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-Link: https://lore.kernel.org/r/20220318034219.1188008-1-mpe@ellerman.id.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
----
-Backport fix for CVE-2022-49196
- arch/powerpc/platforms/pseries/pci_dlpar.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
-index a8f9140a24fa..325871d6f5b0 100644
---- a/arch/powerpc/platforms/pseries/pci_dlpar.c
-+++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
-@@ -74,6 +74,9 @@ int remove_phb_dynamic(struct pci_controller *phb)
- 		}
- 	}
- 
-+	/* Keep a reference so phb isn't freed yet */
-+	get_device(&host_bridge->dev);
-+
- 	/* Remove the PCI bus and unregister the bridge device from sysfs */
- 	phb->bus = NULL;
- 	pci_remove_bus(b);
-@@ -97,6 +100,7 @@ int remove_phb_dynamic(struct pci_controller *phb)
- 	 * the pcibios_free_controller_deferred() callback;
- 	 * see pseries_root_bridge_prepare().
- 	 */
-+	put_device(&host_bridge->dev);
- 
- 	return 0;
- }
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
