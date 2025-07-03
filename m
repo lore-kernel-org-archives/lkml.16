@@ -1,239 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269ED25A2DE;
-	Thu,  3 Jul 2025 16:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3F7254B03
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561825; cv=none; b=gDP8xP+Xoyn8CIwUX9sTsD8Qb3ZlAl2/okfw05VDb6g89I86LFlqjOzcMmORJ7Ffb3Lhfv6M9EdULZ7L3OVnNTy24LltVPnhvZZxvQ2uc5iKdCq1BDyPNobbvMfdWw0zwr7IiQtXOFu0gr7BR1SYsW/4qSbkf49N1QzSyLpJwCM=
+	t=1751561879; cv=none; b=MCICwjSdpqCcO/axdXPQVKgHHLet2gShyRIskWt1vjXZTs1rzv3rypsvfk+o9ES7pMZLvGtlZbkkEtpDEcFqOqzZsgzH+cQ0Z3h9g844JKrkFyo61Q/3ZMc2w4Qek+5UKd8GZBZ5Ncx8grEdX3kwmwRdvJBchxLQ4Et1qKvyAPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561825; c=relaxed/simple;
-	bh=HmSWFEnyVZcq3dmbFhdSejbsJWSd1jjqG2e39rMp8qk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hKUdrPOobzP8iknq/yWdjUW2UR9s9q85qtmZl5iCPf+/fPiBp/13cDe6+R3hAV16fjALbJpfeyzqHcYc5h6frB/4EDg9mOwwR5Tcw04YUGCnU719+0mCWtR2zb1kNDmDCQo09+dXcbqC86yC+vyqIudKmf/jEKs38bQmfJCUcJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jd6h1E5T; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751561879; c=relaxed/simple;
+	bh=F2cRwTeL5Q02MUSGx0I7upITT+Oj9nP6G9v3ZnYL8d0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dvs/uFKX4bcvJSW23cP9VU+xZjunW8GKulK1kyuPH16nzuBo6f7hEiz7F7TiY+PjgJgxEw8XPylKIySfjLSJz/NVGR6A6DAImhTkcbRhV6j2hXrFKjyRtSQ7BftqDSUA131iutGAd207F1QIqTvQIVgpYNT1lUYeyl6E/w7K0P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KnwLr/Ls; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jd6h1E5T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751561822; x=1783097822;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HmSWFEnyVZcq3dmbFhdSejbsJWSd1jjqG2e39rMp8qk=;
-  b=jd6h1E5TZtA7QYvcsXFaneKguLnQ/DBpML54MP6CP4Z247PHpvuopYjV
-   cRfknW3mx6BN3UL+gX+cs6iyAXuZe53jnD95GJA1k3d9kHEhJihXBZj2a
-   utCWgxhIJmcKGNBMu8C3tVDygeHkld/sUsk969JfwCdupV4wswjHQPgWj
-   kggBm1eXBHbub5fMgl2xyUHtXMKnA3sxBWR+hymoB9bvjp19ElDUAJclw
-   r80c4cfRuqy5fRzGiOnjoqbNNjNaOKWhhhaAtlyFra1QqXQNe7VmGBQAc
-   hfvFVY+XslEau86rcxkdt6vLdKhYttrrwG33hK50LHqy6h1+6D2Q1k06b
-   A==;
-X-CSE-ConnectionGUID: IG0KY+2zQnqeb8DKE2Ui5g==
-X-CSE-MsgGUID: og6aPH9YRkavg/3LMrsO8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53992523"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="53992523"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 09:56:54 -0700
-X-CSE-ConnectionGUID: Ks57F0zwSwaKnt7LnIevWA==
-X-CSE-MsgGUID: OyiNlkpyQYuzzJbSau/VWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154554263"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa007.jf.intel.com with ESMTP; 03 Jul 2025 09:56:53 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: dapeng1.mi@linux.intel.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 3/4] perf/x86/intel/uncore: Add Panther Lake support
-Date: Thu,  3 Jul 2025 09:56:13 -0700
-Message-Id: <20250703165614.606446-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250703165614.606446-1-kan.liang@linux.intel.com>
-References: <20250703165614.606446-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KnwLr/Ls"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae3cd8fdd77so20089366b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751561875; x=1752166675; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DPbWJ5gECIxcFGRGN+7adOfD7zhRX4GszEmCOYZfHT0=;
+        b=KnwLr/LsNUolyvDinrwhQB+usO5dGsNN9tJU0LQIpONhFKyMM7Ma/58lVc0nlvZHPg
+         8wBxj7tt0Sbbxu3/rWS+bLtGqx7byDBi9Y/1fRHJ5/qkIy9DDamKo1yWSE6ehpQBXXlj
+         aZIaPo36SnTEc0DBcYBRt1d1AMfsmdR9ySq0g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751561875; x=1752166675;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DPbWJ5gECIxcFGRGN+7adOfD7zhRX4GszEmCOYZfHT0=;
+        b=gJoYROJVbzlhIQ3OGU3AtiGvyxGv/aR/HumFYs7m/DqgEP6whYPvrQGMacUBJDpX1a
+         ABEWz7x6eTTECHgEzbqLt+1JWULcaB9FHHSg4u4WmLtAOOCaJP6cJ4ZZm687wIOqOiAB
+         6DvmUKjynfB8PB758P5LbGgQ+AASreb9Vo+wkRCR7eHP9jJnfBu5NjHE2bZKINqOUDMx
+         34z13jyna5r4uhwi2QlVYJctaE2Pi/jxUi/stqm9ENPGWVQ9eB16Cjsko5PpsT9S6u3U
+         LeK1V5lh0Txf5ML4Ll4kf/9NVWlEk7NTPw/nwW6nxWLX/VjjwzlZKgE3q/UTGbFUsYZ6
+         r6xA==
+X-Gm-Message-State: AOJu0YwJSHZ3AAb5/qVaEWOKv3KnkZ21E8BbFne6rsEeyR0sSRyh90uw
+	2eIQfJpaJGVNwnQom7dKZsxwfBUo8jytBhzW324aClcpZ4mLN2WrbIHN1awhwUbZzf6COf5lB9j
+	CoHMNjs4Yrw==
+X-Gm-Gg: ASbGncsMXCaF95Sw6vvGnqh7gALD7GWAKgUhImdBkpEnZjpedwttReQP57+A5qOLY03
+	vwLlKCFcrOP/oU33iuI1sRSQDfZ81Lqy1qvfKG61iMafzSltNvqWsIM6W2gU7hjo8PNVvMITO/d
+	Rq/n8rgjX2TJoABssFZLtXBuIXM9MFjGn3TNiHpSyzMxdnceTzlMYLTvsAsia0aJzhZjel1Dz8R
+	xJlKQKQ5xjIQb5bKly0t1cZYwnaYtoFXWlkgyZc79SvP2VOV+U80z0Qtlw5pDuHkhI6SREMrYOP
+	HZl5By4ttGRVRIvMDjOIGiXRNb0UFuMTQRilOoPJezHupqODrjt/8V+K24Q+kg8Vxh7dX0dpeSK
+	ZmUITJRnRfFEbE4Yjeb37Y+mPs5ggnRq6cDou
+X-Google-Smtp-Source: AGHT+IE2/emizdiPFd5id/CP41NPYP9WAEC7/EuI1EsN8ed1JLDU6eEt4dVntsX357M3gLy6/WCyig==
+X-Received: by 2002:a17:907:1ca3:b0:ae0:54b9:dc17 with SMTP id a640c23a62f3a-ae3c2a90a00mr809668666b.11.1751561875377;
+        Thu, 03 Jul 2025 09:57:55 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b02a2esm5770866b.119.2025.07.03.09.57.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 09:57:54 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae3b336e936so16459866b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:57:54 -0700 (PDT)
+X-Received: by 2002:a17:907:7f05:b0:ae0:dfa5:3520 with SMTP id
+ a640c23a62f3a-ae3c2c53817mr841638166b.31.1751561873784; Thu, 03 Jul 2025
+ 09:57:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703115222.2d7c8cd5@batman.local.home>
+In-Reply-To: <20250703115222.2d7c8cd5@batman.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 3 Jul 2025 09:57:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
+X-Gm-Features: Ac12FXx0_b_6E6Blsv0QKfQcWy3HLbRStARf9mJgYWm5joFulPTlFaOEYVysL7s
+Message-ID: <CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
+ architectures that support it
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, 3 Jul 2025 at 08:52, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Remove the prompt to pick DYNAMIC_FTRACE and simply enable it if the
+> architecture supports it.
 
-The Panther Lake supports CBOX, MC, sNCU, and HBO uncore PMON.
+I don't disagree with removing pointless Kconfig options, but if we do
+this, we should do it properly.
 
-The CBOX is similar to Lunar Lake. The only difference is the number of
-CBOX.
+Because now we have that entirely pointless "HAVE_DYNAMIC_FTRACE*" set
+of config options. Which with this patch would be just stupid and
+extra indirection that makes things harder to see.
 
-The other three uncore PMON can be retrieved from the discovery table.
-The global control register resides in the sNCU. The global freeze bit
-is set by default. It must be cleared before monitoring any uncore
-counters.
+IOW, with this patch we'd have
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/uncore.c           |  7 +++
- arch/x86/events/intel/uncore.h           |  2 +
- arch/x86/events/intel/uncore_discovery.h |  4 ++
- arch/x86/events/intel/uncore_snb.c       | 71 ++++++++++++++++++++++++
- arch/x86/events/intel/uncore_snbep.c     |  2 +-
- 5 files changed, 85 insertions(+), 1 deletion(-)
+ (a) architectures that support dynamic ftrace will do
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 5811e172f721..8a4f5a86e18d 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1806,6 +1806,12 @@ static const struct intel_uncore_init_fun lnl_uncore_init __initconst = {
- 	.mmio_init = lnl_uncore_mmio_init,
- };
- 
-+static const struct intel_uncore_init_fun ptl_uncore_init __initconst = {
-+	.cpu_init = ptl_uncore_cpu_init,
-+	.mmio_init = ptl_uncore_mmio_init,
-+	.use_discovery = true,
-+};
-+
- static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
- 	.cpu_init = icx_uncore_cpu_init,
- 	.pci_init = icx_uncore_pci_init,
-@@ -1887,6 +1893,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&mtl_uncore_init),
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&mtl_uncore_init),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_uncore_init),
-+	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&ptl_uncore_init),
- 	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&spr_uncore_init),
- 	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&spr_uncore_init),
- 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	&gnr_uncore_init),
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 3dcb88c0ecfa..d8815fff7588 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -612,10 +612,12 @@ void tgl_uncore_cpu_init(void);
- void adl_uncore_cpu_init(void);
- void lnl_uncore_cpu_init(void);
- void mtl_uncore_cpu_init(void);
-+void ptl_uncore_cpu_init(void);
- void tgl_uncore_mmio_init(void);
- void tgl_l_uncore_mmio_init(void);
- void adl_uncore_mmio_init(void);
- void lnl_uncore_mmio_init(void);
-+void ptl_uncore_mmio_init(void);
- int snb_pci2phy_map_init(int devid);
- 
- /* uncore_snbep.c */
-diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index 690f737e6837..dff75c98e22f 100644
---- a/arch/x86/events/intel/uncore_discovery.h
-+++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -171,3 +171,7 @@ bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
- 					  struct intel_uncore_box *box);
- void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
- 			  struct rb_root *root, u16 *num_units);
-+struct intel_uncore_type **
-+uncore_get_uncores(enum uncore_access_type type_id, int num_extra,
-+		   struct intel_uncore_type **extra, int max_num_types,
-+		   struct intel_uncore_type **uncores);
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index edb7fd50efe0..817dddc1454d 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -1854,3 +1854,74 @@ void lnl_uncore_mmio_init(void)
- }
- 
- /* end of Lunar Lake MMIO uncore support */
-+
-+/* Panther Lake uncore support */
-+
-+#define UNCORE_PTL_MAX_NUM_UNCORE_TYPES		42
-+#define UNCORE_PTL_TYPE_IMC			6
-+#define UNCORE_PTL_TYPE_SNCU			34
-+#define UNCORE_PTL_TYPE_HBO			41
-+
-+#define PTL_UNCORE_GLOBAL_CTL_OFFSET		0x380
-+
-+static struct intel_uncore_type ptl_uncore_imc = {
-+	.name			= "imc",
-+	.mmio_map_size		= 0xf00,
-+};
-+
-+static void ptl_uncore_sncu_init_box(struct intel_uncore_box *box)
-+{
-+	intel_generic_uncore_mmio_init_box(box);
-+
-+	/* Clear the global freeze bit */
-+	if (box->io_addr)
-+		writel(0, box->io_addr + PTL_UNCORE_GLOBAL_CTL_OFFSET);
-+}
-+
-+static struct intel_uncore_ops ptl_uncore_sncu_ops = {
-+	.init_box		= ptl_uncore_sncu_init_box,
-+	.exit_box		= uncore_mmio_exit_box,
-+	.disable_box		= intel_generic_uncore_mmio_disable_box,
-+	.enable_box		= intel_generic_uncore_mmio_enable_box,
-+	.disable_event		= intel_generic_uncore_mmio_disable_event,
-+	.enable_event		= intel_generic_uncore_mmio_enable_event,
-+	.read_counter		= uncore_mmio_read_counter,
-+};
-+
-+static struct intel_uncore_type ptl_uncore_sncu = {
-+	.name			= "sncu",
-+	.ops			= &ptl_uncore_sncu_ops,
-+	.mmio_map_size		= 0xf00,
-+};
-+
-+static struct intel_uncore_type ptl_uncore_hbo = {
-+	.name			= "hbo",
-+	.mmio_map_size		= 0xf00,
-+};
-+
-+static struct intel_uncore_type *ptl_uncores[UNCORE_PTL_MAX_NUM_UNCORE_TYPES] = {
-+	[UNCORE_PTL_TYPE_IMC] = &ptl_uncore_imc,
-+	[UNCORE_PTL_TYPE_SNCU] = &ptl_uncore_sncu,
-+	[UNCORE_PTL_TYPE_HBO] = &ptl_uncore_hbo,
-+};
-+
-+void ptl_uncore_mmio_init(void)
-+{
-+	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
-+						 UNCORE_PTL_MAX_NUM_UNCORE_TYPES,
-+						 ptl_uncores);
-+}
-+
-+static struct intel_uncore_type *ptl_msr_uncores[] = {
-+	&mtl_uncore_cbox,
-+	NULL
-+};
-+
-+void ptl_uncore_cpu_init(void)
-+{
-+	mtl_uncore_cbox.num_boxes = 6;
-+	mtl_uncore_cbox.ops = &lnl_uncore_msr_ops;
-+	uncore_msr_uncores = ptl_msr_uncores;
-+}
-+
-+/* end of Panther Lake uncore support */
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 2f5c2eb1ce0c..b19c262d47f5 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6412,7 +6412,7 @@ static void uncore_type_customized_copy(struct intel_uncore_type *to_type,
- 		to_type->mmio_map_size = from_type->mmio_map_size;
- }
- 
--static struct intel_uncore_type **
-+struct intel_uncore_type **
- uncore_get_uncores(enum uncore_access_type type_id, int num_extra,
- 		   struct intel_uncore_type **extra, int max_num_types,
- 		   struct intel_uncore_type **uncores)
--- 
-2.38.1
+        select HAVE_DYNAMIC_FTRACE
+        select HAVE_DYNAMIC_FTRACE_WITH_REGS
 
+     (or whatever combination)
+
+and then
+
+ (b) kernel/trace/Kconfig will just turn that into the proper
+DYNAMIC_FTRACE_xyz macros
+
+and when this no longer involves any questions, there is absolutely
+*zero* reason I can see for that pointless indirection through another
+config variables.
+
+Yes, yes, there's still the "depends on FUNCTION_TRACER" that
+technically is a "reason" for that indirection, but it seems to be a
+reall ybad one.
+
+IOW, I think that if we do this, we should just get rid of the
+"HAVE_DYNAMIC_FTRACE{_XYZ}" config variables entirely, and just make
+architectures say
+
+        select DYNAMIC_FTRACE if FUNCTION_TRACER
+
+because the "HAVE_xyz" config variables seem to add no actual value,
+only confusion.
+
+Or am I missing some reason for still having that extra config
+variable indirection?
+
+             Linus
