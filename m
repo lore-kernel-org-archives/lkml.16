@@ -1,105 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009FC2222B4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F92295524;
+	Thu,  3 Jul 2025 13:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549744; cv=none; b=FITkCnmQ9Yb/JzNTCFO4ATMAj1WfU1MJYk0OQ89W23kuq6JAjwcmqElO8AuVVZormI0l6q+cdZ6EdHOo4JEW+i7IUFc2RuEo90vYevZ/9TUGpW9fzx/bkn6w+793oylfazvhw4M9h0MApwGjbP2rCoMtTIk8SqTrVy0b4TmgwWk=
+	t=1751549757; cv=none; b=MrOgUIIm6EQYZub9eRgRxsaqshadzAofHio7IuHW7nmNAeADb4HGFss3LvyPyIPRSUGaNYKigMx4vA9NOldjdYW/kKTMAnWBkF02TmO/ZthSi0cTwf3CPkQNFkkY2KljUzIT4sJtvSt0l2wRsr4mzGBKOodDtUwCuumQ1Pi/9P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549744; c=relaxed/simple;
-	bh=a+w31SBzpx20AQVT5u5Pj5TY/qHbG3BfdlMP+1tjTIk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BWpjY5pS1rOjY2YSSYGAAD6NuwNhtUE/b6AmAwKw6z0b5iFyNILU9YIfJ7I2ge2G/nsvfZZTE4SkTmWeGMh2XNR5latObSzJq2Crg5JBEhaLJwhYmdDysVYQJWZIUntTRrMjnD1v/E+nimAFzuk1jcuM1/c/4340dicFrdeE76E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GhGe50BY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751549757; c=relaxed/simple;
+	bh=Sw56mQH+HjIAjMB6ARuILcj1oqw5cMB+35BgJfWA2uE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bQZAR3sB/rQ+2ULA9f4Km68LbDP3FsNizaBOcd8Lmh7tb7OXljNzKnZQ3EAhvF7WggRNcmw7gpdSi6KBFmfwmFSMjZZxlJEXmHhJBNIqag4Ld0rVcrG0d5kkIDve1OrYW2ZJfyHMU0pB3mTiQFCtznJ6FiW7LL1qjo0yp4/j8qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFbFGG+1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GhGe50BY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751549741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a+w31SBzpx20AQVT5u5Pj5TY/qHbG3BfdlMP+1tjTIk=;
-	b=GhGe50BYCvVlcDaVtr8EGY/r7NE/chU6iWxhE12eDO1MQJoeNGR+3FEfnks66ppmFQW6Og
-	yIEk44cgk4QSWwAoVrxVtAv8Xe+nQzmm7qwlMGhDTJreEC9x6QfODFoDZwTAY4A7RfW6hf
-	uLZ5fbhvdVaiC5LjcolozPPyMV0dsaM=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-226-hAXNQMz2PASB2-V1gwMpIQ-1; Thu, 03 Jul 2025 09:35:40 -0400
-X-MC-Unique: hAXNQMz2PASB2-V1gwMpIQ-1
-X-Mimecast-MFC-AGG-ID: hAXNQMz2PASB2-V1gwMpIQ_1751549739
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-32b3ba8088fso34764111fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:35:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751549739; x=1752154539;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a+w31SBzpx20AQVT5u5Pj5TY/qHbG3BfdlMP+1tjTIk=;
-        b=qlrpbGF3lZB/xmz1gzaLYxyuxgPYcVkg/B85zbyKOL1eC68Nl0bi+9AWrfNgGG1O2Q
-         xN3pb/JxikEbzrPg1IYy9BzXdCPYMgkp4ZtE3+X1VIshVpOhUpRNaBI4fbWvJPzydoO9
-         HuZfo/+EK4VvBBWY/C8QQqja6HNh1v5iwAgY62UWTm0/ejXhZrK4Q/twi6UzE9e2gaT8
-         hAoJDfXTpH2ZBt2CM+LXc1ckB2fvaeMyDfyUv4h5Z0JGVm2x4TdOzKqFvdqy5C55FSaw
-         Wf69H8x0enAcBk7QL4Dw+TUddAAdNJKYjN2V2ZXcrlq9AnipR96zA/D1UiKY8fW/gLkP
-         Jtew==
-X-Forwarded-Encrypted: i=1; AJvYcCVNvulwrCJUubIT1vAIIewDObTHInyfLVPCeJ0sbrf75Qux8x7N0eDjiNqw+cqQNuEQjkfh2twd13sE0v4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJXVtRSrMficfQQHODAxaocCt9ezxGo8Y+yNPYSpLIeaQ3a8sd
-	5bVHEQ2Ci4R2J/ZNdt+bjTa29/A2XuuQsvHm+ELojcY92Es3O9Faa5aBexs/mn+HUbD3WqCteSj
-	kaTSUIwwKrY7dXffatxh/Bgvi5J2jaM/8nS6/1V6cKEyy8wEus9e9GjLLnZT9eVo1mA==
-X-Gm-Gg: ASbGncstrV7AidQusuE8ibVfvqxfmuMNPnzyPjL2CXP6fM8XfOwfdo1wqwlTyFOEEnQ
-	20yyP/8pbaNDGhl0O1bil9zWL50WEcHOKYoy0lXzsFNt0ONZPvzFZ/8ioBjRBD56pHpDYwtENc7
-	4ptlKkbm2ganZ4pDZmTLJu33fQb2zFzuKu1j53RSF7TgLhi2pBcp/rW9Knl/O2xdyVZ0xn/ap4N
-	gZzhKibvtcmNCr554tx9rllMGw92Y5qVArOUT0H+UyNoA6pXPKLIACi3fV1ZtLbKh5Vy/y1xsDu
-	C/VYaFjstR7K65raZEJXYYoWkC4N5lChI9M+cj6Z+c4UKas=
-X-Received: by 2002:a2e:be89:0:b0:32b:7149:9396 with SMTP id 38308e7fff4ca-32e0fd18fe6mr8228121fa.41.1751549738991;
-        Thu, 03 Jul 2025 06:35:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQaqzYM0ICxZ0BcYvjzIBIgaPPoPD7CoeNzD4IOdnJqDmOWKXFznuKZROMVSn5ZIRHwy1dDw==
-X-Received: by 2002:a2e:be89:0:b0:32b:7149:9396 with SMTP id 38308e7fff4ca-32e0fd18fe6mr8227821fa.41.1751549738530;
-        Thu, 03 Jul 2025 06:35:38 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2ec6592sm21550691fa.57.2025.07.03.06.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 06:35:38 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 3747B1B383C6; Thu, 03 Jul 2025 15:35:36 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Fengyuan Gong <gfengyuan@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- edumazet@google.com, "David S . Miller" <davem@davemloft.net>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Stanislav
- Fomichev <sdf@fomichev.me>, Kuniyuki Iwashima <kuniyu@google.com>, Ahmed
- Zaki <ahmed.zaki@intel.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, cake@lists.bufferbloat.net,
- willemb@google.com, Fengyuan Gong <gfengyuan@google.com>
-Subject: Re: [PATCH net-next] net: account for encap headers in qdisc pkt len
-In-Reply-To: <20250702160741.1204919-1-gfengyuan@google.com>
-References: <20250702160741.1204919-1-gfengyuan@google.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 03 Jul 2025 15:35:36 +0200
-Message-ID: <87zfdl8kif.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFbFGG+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B53C4CEE3;
+	Thu,  3 Jul 2025 13:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751549757;
+	bh=Sw56mQH+HjIAjMB6ARuILcj1oqw5cMB+35BgJfWA2uE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=nFbFGG+1LWRVB+UTMbuXa6UmIaoC12qKa8hRLtv4klELQiThESBPcduJU4mRPBEDV
+	 qswHwc9zCXIPeO6/kTpNs2rIoH8xnNKu7Rh0gQRWVJDnOGjJJX+i22JpyLA4E6zsJw
+	 rGhXri9lOzp7tcWFWeYiI4RPLV0w9dZakq5TVdCGQxScun3eMKWrb4YBidiC7xeU9I
+	 Lxdmn8xaxytosqZdmsm9IjxwkWAfxzmi1NpyK4H3cBtmArtkzlvzpviUJlKU2wm3Mh
+	 5K/9v/55YUZij4limnmUfXvFZ6d7+U7MMaYRJvuo0QCB6dRAuFFPduoPMs32qCQ14b
+	 +SRHCANHrZlmQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 03 Jul 2025 15:35:52 +0200
+Message-Id: <DB2GKFUREH3U.15ME8JB2HJOQN@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Matthew Maurer"
+ <mmaurer@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
+ for File
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>
+X-Mailer: aerc 0.20.1
+References: <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com> <aGLUl7ZtuQBPoCuv@pollux> <2025070131-icon-quarters-0c16@gregkh> <aGPtCBB6nWTNJuwK@pollux> <2025070137-tartar-juncture-fcd2@gregkh> <aGP6d2-jJy5rtjMK@pollux> <aGZVUqangIR-c4aW@google.com> <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org> <CAH5fLgjaNzOHNxa+XY1c2V5A1H2RhWP9gHAAmHx=9LN9CbHq=Q@mail.gmail.com> <2025070349-tricky-arguable-5362@gregkh> <aGZ3q0PEmZ7lV4I-@pollux>
+In-Reply-To: <aGZ3q0PEmZ7lV4I-@pollux>
 
-Fengyuan Gong <gfengyuan@google.com> writes:
-
-> Refine qdisc_pkt_len_init to include headers up through
-> the inner transport header when computing header size
-> for encapsulations. Also refine net/sched/sch_cake.c
-> borrowed from qdisc_pkt_len_init().
+On Thu Jul 3, 2025 at 2:29 PM CEST, Danilo Krummrich wrote:
+> On Thu, Jul 03, 2025 at 01:41:53PM +0200, Greg Kroah-Hartman wrote:
+>> Yes, we need to be able to have a debugfs file callback handle a mutable
+>> structure in order to lock things correctly.  We also need to have it be
+>> mutable so that it can MODIFY the value (everyone seems to forget that
+>> debugfs allows that...)
 >
-> Signed-off-by: Fengyuan Gong <gfengyuan@google.com>
+> Well, that's possible with both approaches. Data behind a lock becomes mu=
+table
+> once you grabbed the lock. That's the same in both cases.
+>
+> The difference is that with the pin-init approach I propose you can't hav=
+e what
+> Alice sketched up. And I think it's even desirable that you can't do it.
+>
+> Let's me explain the difference on a simplified example, based on Alice'
+> example.
+>
+> ForeignOwnable API
+> ------------------
+>
+> 	#[pin_data]
+> 	struct Process {
+> 	    task: ARef<Task>,
+> 	    #[pin]
+> 	    inner: SpinLock<ProcessInner>,
+> 	}
+> =09
+> 	pub(crate) struct ProcessInner {
+> 	    threads: RBTree<i32, Arc<Thread>>,
+> 	    max_threads: u32,
+> 	}
+>
+> Here we have to create an Arc<Process> (let's call it process) and create=
+ files
+> from it.
+>
+> 	let file_threads =3D dir.create_file("threads", process);
+> 	let file_max_threads =3D dir.create_file("max_threads", process);
+>
+> In the file system callback of both of these, we now have an Arc<Process>=
+, hence
+> we can access:
+>
+> 	let guard =3D process.inner.lock();
+>
+> 	read_or_write(guard.max_threads);
+>
+> and in the other file:
+>
+> 	let guard =3D process.inner.lock();
+>
+> 	read_or_write(guard.max_threads);
 
-Acked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+Where do you actually specify this callback? At the moment, the API asks
+for `Display` and thus it can only read values?
 
+---
+Cheers,
+Benno
