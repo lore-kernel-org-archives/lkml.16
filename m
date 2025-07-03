@@ -1,250 +1,258 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sysclose.org (smtp.sysclose.org [69.164.214.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57302E611E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21683238C0D;
+	Thu,  3 Jul 2025 11:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.164.214.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542474; cv=none; b=sbxKZzX1OBQtpTgVUQ9UxAVATJeDOWivadNNA1hJDjNH4FQojp4/LR/9uzUI8grVthuyEw2OdvMxlDjCIejJbx1tev+n25xzfSkWG0vqtliaOxrg7rvL3/FpDIwyjrT7JF0L4JGVAmzbL3SVMzx/JRDysKfG3Qi1FYbeqj3d5xE=
+	t=1751542511; cv=none; b=eUTM4ocAwHEF5QhvyiXWCkp0A0G80e/7Z9+BwDWgOjLUSjCKQ4GaL5Swfs0e1rOyCaYpj9IG4/sRcCvb/kOkBdgTgYugyhEbNPUd/cUH1e/+c4PN+VLL3Pswi87M11w/6G73i+IBjxN8atPe1DSfTUzPOwkuhyOF6rsP0CRBaCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542474; c=relaxed/simple;
-	bh=c2tsJjFJ9vSavOpZnhYvTr4JJmozuk1MtWh1Imcs78Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=InZ89Hzt6erEBFU+RPGbS4hUDBwoGofYiUzxfkMqnbbIytib1TM141XpO1OEem/CaCr+Fw0I1TAAt130ax330jpyCnvyu8MFgOBkFkBlInP/YMCctFn7E5Ycsng3F9odBitxZOCoCF03ZRhS4DjccDJZ1zxRwKHfINYZnsQ/xFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YaV6lcYh; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751542511; c=relaxed/simple;
+	bh=6zkP3jo6Cy7SzbIRIiBMWXxf86rcBordIPBqKUeIjCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T7eWAQ7BCWvoVd4GfbvFNf0/1lPHXJWhnR9xAl0lYNDk9Lj3qedaG8pwnCoJ5/ONjtr9hhj50Se2wbo69sF96LoWUHhXWrfMHEJy2/Y9KQhCHSTe4l8TIFRKhQRvwziLzkAMH/0jCtKHntdP1zbv4CU4jQUQORr585v0thjvrZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysclose.org; spf=pass smtp.mailfrom=sysclose.org; dkim=pass (2048-bit key) header.d=sysclose.org header.i=@sysclose.org header.b=Jx0VPJ3R; arc=none smtp.client-ip=69.164.214.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysclose.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sysclose.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YaV6lcYh"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so4494960e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751542471; x=1752147271; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VKu/zfJ+vFov6qPGzjqcOdspoBv6skBDRoDtXZ5kxPY=;
-        b=YaV6lcYhUzCkJRaPKWK0TTYcLVbfS6ZSwfGYZPuQ9y0Sv+gdhdThruauY2kRo0weuk
-         F/+BAGpuDfPTmh1Ht3O7XJaeEaIRTQYHoxulR1iw+/wFSCbBo58t7SNob9oaWsJOISoD
-         w7MtcnJdkHftHuPRap46cvJQOxI3cCMMfCj8o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542471; x=1752147271;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VKu/zfJ+vFov6qPGzjqcOdspoBv6skBDRoDtXZ5kxPY=;
-        b=aigpTAioG9Y495NDQ0OtkgKm9IYK3d0QGT00mXfTuLfSlGiVxQwceL9rsFslApNSOQ
-         tFErnCNYHPrtQK1S2KlJau4uiZ1OwiIUpFMvHVMD43i4V5llV3YbC4r8JwU000AL1/7t
-         5LtnnVSMOeTFYUXP65qdwGnWI0V2LacbD6pKSlA8AFDgf+ehukzZ3/fC7FnY0iJKe3Lc
-         kWZo9WoRVTMSIL75Yl3D65PCadmZBHeYBkIdPKkDIZeo8+hpW4ECSgoXphW3JRacjJxM
-         prpNdRPVXn8bWdIS6DHk6UKKpmzkm8BnIxCeiKpkAPjkIh/8xrvbyG9y7tQzhsN/SEuD
-         EMFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcK17evX0np3PVUhzYjqdMa6Pitma8mqYMtujUONqGD/PcjcMvCyUDXFqD1rP2uvURtyc1JQSrE3JPRoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/siVjt1NJ/3c98eVrrpCIDks8KYMwhVjQyr530bh2k4eUc4f0
-	zBRbgRASrxxWXqf40P28poRqH56Hvx1VD2oA7rmIg0Eq8vEqj8A3bf3MXlm6Jq29FcDnt0gkg4Z
-	gp1cVIg==
-X-Gm-Gg: ASbGncs3fRvh9XBqIIfHMh7eVfKmG2Xd3YJnY9hpugtTuzlG1WFdfYcVn6ssSG50mW9
-	eTvQ8HMppxle6ObU4Z+hlZA90DBvm7/agDkpfT8QbIIxcMIrasoc+/rJ1bXTSzi3j7xiPbibZpM
-	aB3FAro+jqm33iw47Ofs0zmXzj7ZV4JEWoP3zoxc0Bh/8jwQFbNN1zpoEBg8EoN2nH37OU2p/r+
-	gAf9Y740R5Fri7fvG59ag+bZgKxOBQ7TTKjoPlBKkLejxvHPm3YnfG7ZaB5MnP+aPECPXWsUbz1
-	w+IfyXiNCE2L4kIdAPm2IiOpVEDGKnHTFu1p9uEXsUNDVtq6S4UAFq409uf5zOlTl9Vhwr07GXK
-	C9G6xjIl1DGGWRMGDPJs810bG
-X-Google-Smtp-Source: AGHT+IEmXG55IppCnTwQenXzdlf+bsjZAOGcPQ7xYgzfckW549AwpoMlMW3Qwl+sm5q5dFSZ1j02LA==
-X-Received: by 2002:a05:6512:3e04:b0:553:cede:6a9 with SMTP id 2adb3069b0e04-5562ef960b9mr934657e87.55.1751542470841;
-        Thu, 03 Jul 2025 04:34:30 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2da80dsm2395258e87.220.2025.07.03.04.34.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 04:34:29 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so4494873e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:34:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXD2hRfvIvmZyg0wG3KMXQHoExM4UHV3LhKHD7GCoNTFxOKq7kK7pLa3vrxj48ltYTnLzYZODS4ohYofko=@vger.kernel.org
-X-Received: by 2002:a05:6512:3b89:b0:553:252f:adf8 with SMTP id
- 2adb3069b0e04-5562ee21626mr930140e87.9.1751542468121; Thu, 03 Jul 2025
- 04:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sysclose.org header.i=@sysclose.org header.b="Jx0VPJ3R"
+Received: from uranium (unknown [131.100.62.92])
+	by sysclose.org (Postfix) with ESMTPSA id 9EDAD396A6;
+	Thu,  3 Jul 2025 11:35:06 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 sysclose.org 9EDAD396A6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sysclose.org;
+	s=201903; t=1751542508;
+	bh=cxGTUr9emguv4AYQzJsHWOZ6cyRcKsz/Qk+cF6aMxE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Jx0VPJ3RLVThrcDJuGh0oPGfMUy50X+cYIdRQCV6RZUFRdetVibk8XZqUiZejlZw2
+	 a+sdEA7ocoDGLApgqK0ppscujvpyqRvZY6xPZQLqMPNtY91RlmSe9jvVNHOwpUoUe4
+	 sDqpZT84HY+91pVokFY0MEVAbe+iEzlZ8SU6ezkTfzyI/es/D+JgKwbt8zTN4kn7df
+	 0QUUF5VB4pc4c1GR1BBax71U/kkl2KTX+QPjfWdMeuhXu1XTZtNJL1zxbW464uHqWd
+	 p3+g0B+y/fqt67ZWjZfY3sGwP+sNxi4Ow/9S7+3kzw6swNlD6mUZk1ptedWTaam9ME
+	 701T66VH2I2VQ==
+Date: Thu, 3 Jul 2025 08:35:04 -0300
+From: Flavio Leitner <fbl@sysclose.org>
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: netdev@vger.kernel.org, dev@openvswitch.org,
+ linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>, Simon
+ Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [ovs-dev] [PATCH net-next v2] net: openvswitch: allow providing
+ upcall pid for the 'execute' command
+Message-ID: <20250703083504.2394bc61@uranium>
+In-Reply-To: <20250702155043.2331772-1-i.maximets@ovn.org>
+References: <20250702155043.2331772-1-i.maximets@ovn.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703103811.4048542-1-xu.yang_2@nxp.com> <20250703103811.4048542-3-xu.yang_2@nxp.com>
-In-Reply-To: <20250703103811.4048542-3-xu.yang_2@nxp.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 3 Jul 2025 13:34:15 +0200
-X-Gmail-Original-Message-ID: <CANiDSCvYwSb9mrc63=0ioJdSkEik4H19r2c+j7yv7V-43RBxFA@mail.gmail.com>
-X-Gm-Features: Ac12FXyVqorehuUK0wzBq5BWngmbjwNbNsjrYe5IAIc3GAyeQui3lCJ45PdgYOQ
-Message-ID: <CANiDSCvYwSb9mrc63=0ioJdSkEik4H19r2c+j7yv7V-43RBxFA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] media: uvcvideo: use usb_alloc_noncoherent/usb_free_noncoherent()
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org, 
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, 
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de, 
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk, 
-	thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, imx@lists.linux.dev, 
-	jun.li@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 3 Jul 2025 at 13:02, Xu Yang <xu.yang_2@nxp.com> wrote:
->
-> This will use USB noncoherent API to alloc/free urb buffers, then
-> uvc driver needn't to do dma sync operations by itself.
->
+On Wed,  2 Jul 2025 17:50:34 +0200
+Ilya Maximets <i.maximets@ovn.org> wrote:
 
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> When a packet enters OVS datapath and there is no flow to handle it,
+> packet goes to userspace through a MISS upcall.  With per-CPU upcall
+> dispatch mechanism, we're using the current CPU id to select the
+> Netlink PID on which to send this packet.  This allows us to send
+> packets from the same traffic flow through the same handler.
+> 
+> The handler will process the packet, install required flow into the
+> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
+> 
+> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
+> recirculation action that will pass the (likely modified) packet
+> through the flow lookup again.  And if the flow is not found, the
+> packet will be sent to userspace again through another MISS upcall.
+> 
+> However, the handler thread in userspace is likely running on a
+> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
+> in the syscall context of that thread.  So, when the time comes to
+> send the packet through another upcall, the per-CPU dispatch will
+> choose a different Netlink PID, and this packet will end up processed
+> by a different handler thread on a different CPU.
+> 
+> The process continues as long as there are new recirculations, each
+> time the packet goes to a different handler thread before it is sent
+> out of the OVS datapath to the destination port.  In real setups the
+> number of recirculations can go up to 4 or 5, sometimes more.
+> 
+> There is always a chance to re-order packets while processing upcalls,
+> because userspace will first install the flow and then re-inject the
+> original packet.  So, there is a race window when the flow is already
+> installed and the second packet can match it and be forwarded to the
+> destination before the first packet is re-injected.  But the fact that
+> packets are going through multiple upcalls handled by different
+> userspace threads makes the reordering noticeably more likely, because
+> we not only have a race between the kernel and a userspace handler
+> (which is hard to avoid), but also between multiple userspace handlers.
+> 
+> For example, let's assume that 10 packets got enqueued through a MISS
+> upcall for handler-1, it will start processing them, will install the
+> flow into the kernel and start re-injecting packets back, from where
+> they will go through another MISS to handler-2.  Handler-2 will install
+> the flow into the kernel and start re-injecting the packets, while
+> handler-1 continues to re-inject the last of the 10 packets, they will
+> hit the flow installed by handler-2 and be forwarded without going to
+> the handler-2, while handler-2 still re-injects the first of these 10
+> packets.  Given multiple recirculations and misses, these 10 packets
+> may end up completely mixed up on the output from the datapath.
+> 
+> Let's allow userspace to specify on which Netlink PID the packets
+> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
+> This makes it possible to ensure that all the packets are processed
+> by the same handler thread in the userspace even with them being
+> upcalled multiple times in the process.  Packets will remain in order
+> since they will be enqueued to the same socket and re-injected in the
+> same order.  This doesn't eliminate re-ordering as stated above, since
+> we still have a race between kernel and the userspace thread, but it
+> allows to eliminate races between multiple userspace threads.
+> 
+> Userspace knows the PID of the socket on which the original upcall is
+> received, so there is no need to send it up from the kernel.
+> 
+> Solution requires storing the value somewhere for the duration of the
+> packet processing.  There are two potential places for this: our skb
+> extension or the per-CPU storage.  It's not clear which is better,
+> so just following currently used scheme of storing this kind of things
+> along the skb.  We still have a decent amount of space in the cb.
+> 
+> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
->
+Acked-by: Flavio Leitner <fbl@sysclose.org>
+Thanks!
+
+
 > ---
-> Changes in v4:
->  - remove uvc_stream_to_dmadev()
-> Changes in v3:
->  - no changes
-> ---
->  drivers/media/usb/uvc/uvc_video.c | 61 +++++++------------------------
->  1 file changed, 14 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> index e3567aeb0007..a75af314e46b 100644
-> --- a/drivers/media/usb/uvc/uvc_video.c
-> +++ b/drivers/media/usb/uvc/uvc_video.c
-> @@ -1275,20 +1275,6 @@ static inline enum dma_data_direction uvc_stream_dir(
->                 return DMA_TO_DEVICE;
->  }
->
-> -static inline struct device *uvc_stream_to_dmadev(struct uvc_streaming *stream)
-> -{
-> -       return bus_to_hcd(stream->dev->udev->bus)->self.sysdev;
-> -}
-> -
-> -static int uvc_submit_urb(struct uvc_urb *uvc_urb, gfp_t mem_flags)
-> -{
-> -       /* Sync DMA. */
-> -       dma_sync_sgtable_for_device(uvc_stream_to_dmadev(uvc_urb->stream),
-> -                                   uvc_urb->sgt,
-> -                                   uvc_stream_dir(uvc_urb->stream));
-> -       return usb_submit_urb(uvc_urb->urb, mem_flags);
-> -}
-> -
->  /*
->   * uvc_video_decode_data_work: Asynchronous memcpy processing
+> 
+> Version 2:
+>   * Converted to use nla_get_u32_default() instead of plain-coding it.
+> 
+> Version 1:
 >   *
-> @@ -1310,7 +1296,7 @@ static void uvc_video_copy_data_work(struct work_struct *work)
->                 uvc_queue_buffer_release(op->buf);
->         }
->
-> -       ret = uvc_submit_urb(uvc_urb, GFP_KERNEL);
-> +       ret = usb_submit_urb(uvc_urb->urb, GFP_KERNEL);
->         if (ret < 0)
->                 dev_err(&uvc_urb->stream->intf->dev,
->                         "Failed to resubmit video URB (%d).\n", ret);
-> @@ -1736,12 +1722,6 @@ static void uvc_video_complete(struct urb *urb)
->         /* Re-initialise the URB async work. */
->         uvc_urb->async_operations = 0;
->
-> -       /* Sync DMA and invalidate vmap range. */
-> -       dma_sync_sgtable_for_cpu(uvc_stream_to_dmadev(uvc_urb->stream),
-> -                                uvc_urb->sgt, uvc_stream_dir(stream));
-> -       invalidate_kernel_vmap_range(uvc_urb->buffer,
-> -                                    uvc_urb->stream->urb_size);
-> -
->         /*
->          * Process the URB headers, and optionally queue expensive memcpy tasks
->          * to be deferred to a work queue.
-> @@ -1750,7 +1730,7 @@ static void uvc_video_complete(struct urb *urb)
->
->         /* If no async work is needed, resubmit the URB immediately. */
->         if (!uvc_urb->async_operations) {
-> -               ret = uvc_submit_urb(uvc_urb, GFP_ATOMIC);
-> +               ret = usb_submit_urb(uvc_urb->urb, GFP_ATOMIC);
->                 if (ret < 0)
->                         dev_err(&stream->intf->dev,
->                                 "Failed to resubmit video URB (%d).\n", ret);
-> @@ -1765,17 +1745,15 @@ static void uvc_video_complete(struct urb *urb)
->   */
->  static void uvc_free_urb_buffers(struct uvc_streaming *stream)
->  {
-> -       struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> +       struct usb_device *udev = stream->dev->udev;
->         struct uvc_urb *uvc_urb;
->
->         for_each_uvc_urb(uvc_urb, stream) {
->                 if (!uvc_urb->buffer)
->                         continue;
->
-> -               dma_vunmap_noncontiguous(dma_dev, uvc_urb->buffer);
-> -               dma_free_noncontiguous(dma_dev, stream->urb_size, uvc_urb->sgt,
-> -                                      uvc_stream_dir(stream));
-> -
-> +               usb_free_noncoherent(udev, stream->urb_size, uvc_urb->buffer,
-> +                                    uvc_stream_dir(stream), uvc_urb->sgt);
->                 uvc_urb->buffer = NULL;
->                 uvc_urb->sgt = NULL;
->         }
-> @@ -1786,26 +1764,13 @@ static void uvc_free_urb_buffers(struct uvc_streaming *stream)
->  static bool uvc_alloc_urb_buffer(struct uvc_streaming *stream,
->                                  struct uvc_urb *uvc_urb, gfp_t gfp_flags)
->  {
-> -       struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> -
-> -       uvc_urb->sgt = dma_alloc_noncontiguous(dma_dev, stream->urb_size,
-> -                                              uvc_stream_dir(stream),
-> -                                              gfp_flags, 0);
-> -       if (!uvc_urb->sgt)
-> -               return false;
-> -       uvc_urb->dma = uvc_urb->sgt->sgl->dma_address;
-> -
-> -       uvc_urb->buffer = dma_vmap_noncontiguous(dma_dev, stream->urb_size,
-> -                                                uvc_urb->sgt);
-> -       if (!uvc_urb->buffer) {
-> -               dma_free_noncontiguous(dma_dev, stream->urb_size,
-> -                                      uvc_urb->sgt,
-> -                                      uvc_stream_dir(stream));
-> -               uvc_urb->sgt = NULL;
-> -               return false;
-> -       }
-> +       struct usb_device *udev = stream->dev->udev;
->
-> -       return true;
-> +       uvc_urb->buffer = usb_alloc_noncoherent(udev, stream->urb_size,
-> +                                               gfp_flags, &uvc_urb->dma,
-> +                                               uvc_stream_dir(stream),
-> +                                               &uvc_urb->sgt);
-> +       return !!uvc_urb->buffer;
->  }
->
->  /*
-> @@ -1953,6 +1918,7 @@ static int uvc_init_video_isoc(struct uvc_streaming *stream,
->                 urb->complete = uvc_video_complete;
->                 urb->number_of_packets = npackets;
->                 urb->transfer_buffer_length = size;
-> +               urb->sgt = uvc_urb->sgt;
->
->                 for (i = 0; i < npackets; ++i) {
->                         urb->iso_frame_desc[i].offset = i * psize;
-> @@ -2009,6 +1975,7 @@ static int uvc_init_video_bulk(struct uvc_streaming *stream,
->                                   size, uvc_video_complete, uvc_urb);
->                 urb->transfer_flags = URB_NO_TRANSFER_DMA_MAP;
->                 urb->transfer_dma = uvc_urb->dma;
-> +               urb->sgt = uvc_urb->sgt;
->
->                 uvc_urb->urb = urb;
->         }
-> @@ -2120,7 +2087,7 @@ static int uvc_video_start_transfer(struct uvc_streaming *stream,
->
->         /* Submit the URBs. */
->         for_each_uvc_urb(uvc_urb, stream) {
-> -               ret = uvc_submit_urb(uvc_urb, gfp_flags);
-> +               ret = usb_submit_urb(uvc_urb->urb, gfp_flags);
->                 if (ret < 0) {
->                         dev_err(&stream->intf->dev,
->                                 "Failed to submit URB %u (%d).\n",
-> --
-> 2.34.1
->
->
+> https://lore.kernel.org/netdev/20250627220219.1504221-1-i.maximets@ovn.org/
+> 
+>  include/uapi/linux/openvswitch.h | 6 ++++++
+>  net/openvswitch/actions.c        | 6 ++++--
+>  net/openvswitch/datapath.c       | 8 +++++++-
+>  net/openvswitch/datapath.h       | 3 +++
+>  net/openvswitch/vport.c          | 1 +
+>  5 files changed, 21 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/openvswitch.h
+> b/include/uapi/linux/openvswitch.h index 3a701bd1f31b..3092c2c6f1d2 100644
+> --- a/include/uapi/linux/openvswitch.h
+> +++ b/include/uapi/linux/openvswitch.h
+> @@ -186,6 +186,11 @@ enum ovs_packet_cmd {
+>   * %OVS_PACKET_ATTR_USERSPACE action specify the Maximum received fragment
+>   * size.
+>   * @OVS_PACKET_ATTR_HASH: Packet hash info (e.g. hash, sw_hash and l4_hash
+> in skb).
+> + * @OVS_PACKET_ATTR_UPCALL_PID: Netlink PID to use for upcalls while
+> + * processing %OVS_PACKET_CMD_EXECUTE.  Takes precedence over all other
+> ways
+> + * to determine the Netlink PID including %OVS_USERSPACE_ATTR_PID,
+> + * %OVS_DP_ATTR_UPCALL_PID, %OVS_DP_ATTR_PER_CPU_PIDS and the
+> + * %OVS_VPORT_ATTR_UPCALL_PID.
+>   *
+>   * These attributes follow the &struct ovs_header within the Generic
+> Netlink
+>   * payload for %OVS_PACKET_* commands.
+> @@ -205,6 +210,7 @@ enum ovs_packet_attr {
+>  	OVS_PACKET_ATTR_MRU,	    /* Maximum received IP fragment
+> size. */ OVS_PACKET_ATTR_LEN,	    /* Packet size before truncation.
+> */ OVS_PACKET_ATTR_HASH,	    /* Packet hash. */
+> +	OVS_PACKET_ATTR_UPCALL_PID, /* u32 Netlink PID. */
+>  	__OVS_PACKET_ATTR_MAX
+>  };
+>  
+> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+> index 3add108340bf..2832e0794197 100644
+> --- a/net/openvswitch/actions.c
+> +++ b/net/openvswitch/actions.c
+> @@ -941,8 +941,10 @@ static int output_userspace(struct datapath *dp,
+> struct sk_buff *skb, break;
+>  
+>  		case OVS_USERSPACE_ATTR_PID:
+> -			if (dp->user_features &
+> -			    OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
+> +			if (OVS_CB(skb)->upcall_pid)
+> +				upcall.portid = OVS_CB(skb)->upcall_pid;
+> +			else if (dp->user_features &
+> +				 OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
+>  				upcall.portid =
+>  				  ovs_dp_get_upcall_portid(dp,
+>  							   smp_processor_id());
+> diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
+> index b990dc83504f..d5b6e2002bc1 100644
+> --- a/net/openvswitch/datapath.c
+> +++ b/net/openvswitch/datapath.c
+> @@ -267,7 +267,9 @@ void ovs_dp_process_packet(struct sk_buff *skb, struct
+> sw_flow_key *key) memset(&upcall, 0, sizeof(upcall));
+>  		upcall.cmd = OVS_PACKET_CMD_MISS;
+>  
+> -		if (dp->user_features & OVS_DP_F_DISPATCH_UPCALL_PER_CPU)
+> +		if (OVS_CB(skb)->upcall_pid)
+> +			upcall.portid = OVS_CB(skb)->upcall_pid;
+> +		else if (dp->user_features &
+> OVS_DP_F_DISPATCH_UPCALL_PER_CPU) upcall.portid =
+>  			    ovs_dp_get_upcall_portid(dp,
+> smp_processor_id()); else
+> @@ -651,6 +653,9 @@ static int ovs_packet_cmd_execute(struct sk_buff *skb,
+> struct genl_info *info) !!(hash & OVS_PACKET_HASH_L4_BIT));
+>  	}
+>  
+> +	OVS_CB(packet)->upcall_pid =
+> +		nla_get_u32_default(a[OVS_PACKET_ATTR_UPCALL_PID], 0);
+> +
+>  	/* Build an sw_flow for sending this packet. */
+>  	flow = ovs_flow_alloc();
+>  	err = PTR_ERR(flow);
+> @@ -719,6 +724,7 @@ static const struct nla_policy
+> packet_policy[OVS_PACKET_ATTR_MAX + 1] = { [OVS_PACKET_ATTR_PROBE] = {
+> .type = NLA_FLAG }, [OVS_PACKET_ATTR_MRU] = { .type = NLA_U16 },
+>  	[OVS_PACKET_ATTR_HASH] = { .type = NLA_U64 },
+> +	[OVS_PACKET_ATTR_UPCALL_PID] = { .type = NLA_U32 },
+>  };
+>  
+>  static const struct genl_small_ops dp_packet_genl_ops[] = {
+> diff --git a/net/openvswitch/datapath.h b/net/openvswitch/datapath.h
+> index cfeb817a1889..db0c3e69d66c 100644
+> --- a/net/openvswitch/datapath.h
+> +++ b/net/openvswitch/datapath.h
+> @@ -121,6 +121,8 @@ struct datapath {
+>   * @cutlen: The number of bytes from the packet end to be removed.
+>   * @probability: The sampling probability that was applied to this skb; 0
+> means
+>   * no sampling has occurred; U32_MAX means 100% probability.
+> + * @upcall_pid: Netlink socket PID to use for sending this packet to
+> userspace;
+> + * 0 means "not set" and default per-CPU or per-vport dispatch should be
+> used. */
+>  struct ovs_skb_cb {
+>  	struct vport		*input_vport;
+> @@ -128,6 +130,7 @@ struct ovs_skb_cb {
+>  	u16			acts_origlen;
+>  	u32			cutlen;
+>  	u32			probability;
+> +	u32			upcall_pid;
+>  };
+>  #define OVS_CB(skb) ((struct ovs_skb_cb *)(skb)->cb)
+>  
+> diff --git a/net/openvswitch/vport.c b/net/openvswitch/vport.c
+> index 8732f6e51ae5..6bbbc16ab778 100644
+> --- a/net/openvswitch/vport.c
+> +++ b/net/openvswitch/vport.c
+> @@ -501,6 +501,7 @@ int ovs_vport_receive(struct vport *vport, struct
+> sk_buff *skb, OVS_CB(skb)->mru = 0;
+>  	OVS_CB(skb)->cutlen = 0;
+>  	OVS_CB(skb)->probability = 0;
+> +	OVS_CB(skb)->upcall_pid = 0;
+>  	if (unlikely(dev_net(skb->dev) != ovs_dp_get_net(vport->dp))) {
+>  		u32 mark;
+>  
 
-
--- 
-Ricardo Ribalda
