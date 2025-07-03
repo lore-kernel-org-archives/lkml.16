@@ -1,496 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975612BE7A8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 21:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751578744; cv=fail; b=CO30G/UMjnvYdj8QR56dny/LZhiFIHOUik0CQYQmRu51piD4KICf7fIa2xEjYFQmih0AmyruQ1glw7rM9v4DdKjxNHXpMzhFzMCoBwTU7oW0CtwtwWsulJdvQeOnAz0oE8IpVFZcfcxZPG55A97F3Fyc+lmdkkrzNPHZ86tBLAI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751578744; c=relaxed/simple;
-	bh=r59rTeeMnoNvRebYR5cERZDTnVbkgcbncI0chrFdJJg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mNDtbltaTPtDLufrnkiq2gZG4rR3EGS3Kkux8pFT7teSBQkifb5FClALteh/JagrnfBX4au9BxWq2nzL7pKnAALVuhHMW4dht0N9Zj3wJxaYTiD4mdBrBy98YVwfeDW3Cn9AbnOWZ4nTjib8P9bTbMJy1PwyTFMwE0ly28IZ8/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ixQtK2Fe; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EAE28A1F8;
+	Thu,  3 Jul 2025 21:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751578929; cv=none; b=FQAJaKhohijA0aTztUncmErmGt37yEQ0M5Jb3a1uIwI+enJ13C+dZswWqnHKrSSPO6PZrFlP/UyhbmMbYkO4ef+QzL62KteseRQroOAwPqChZUCinG8jHzL7BjBd8ZXiHkGlmyTaCtemQPYXbaOoGY95pIZW9vdyLXD+1ASl+1w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751578929; c=relaxed/simple;
+	bh=JIc216TD6Fdsg8JjBU1n2EPcafEU6cCdPeEtNvKR04c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSJOZeGXXHipg26VSf6F13bRucnTOEi8O0ixxrOqrfjgFUQFvP0qZ4qIdOD73bcjgRyQSfwZXBxboePnEcebli4zr2IflS5k5tKYg38uSOxrS8dibaU4WPw+deNorCks5LH2iw4gsucQQxS6geYoYOxHhTJYt2+1C+G74zoLt7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyAaunPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ixQtK2Fe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751578743; x=1783114743;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=r59rTeeMnoNvRebYR5cERZDTnVbkgcbncI0chrFdJJg=;
-  b=ixQtK2FedUuPcTm3NbZiLLEI4aKyxJkfELZdsJ3S3ZZweeVTHS1pxnSC
-   H0s3HTOTO5BMlo2babj7EmI1+bwJ4B9uyRDROeCPb6qLwPnd1B2KjEvow
-   Wq+CDTBvgxsjIpgpiXbOvbSrecMHyN31jdpj8GAx9NWgKAQmktbFewSm+
-   Y1yrM+I/N+7RZX3piz0qnonrWVtjhVWhLgowqbJtVAYpFV6hTF8KiXQGR
-   Wtd11VGh8trj6FzWBRLi+FhzzmP3tUOtP99M/euf3vZ9udF8L5HH4T0+b
-   GHLkHQjdHneAyejH7tu6szhpMYXc7qILBg8zb7dkupZUEPiDiO0cNVj6k
-   Q==;
-X-CSE-ConnectionGUID: KD/aG/W/T3iditare4dK+A==
-X-CSE-MsgGUID: 4KK4pWCWTFK0LSXKIMiinA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="54034861"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="54034861"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:39:03 -0700
-X-CSE-ConnectionGUID: YrXdFSomTxKgluwLQnfumA==
-X-CSE-MsgGUID: L4Vk0e0GTXO796bCZ/xO3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="155233150"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:39:01 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 3 Jul 2025 14:39:01 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 3 Jul 2025 14:39:01 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.81)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 3 Jul 2025 14:39:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=md4nIdCmvkXCnzj9tWAwUamyWYCk4khw4YUPrQ+MSpNdeFyU+Cs4L59qB6suwmPh7gATtbwqWEsl9BpC/ZewzABrNbqcwOZlNvvvLfupudlrJSRmbCBLeCVrL3rOaje+TB4CIcXlr6ZLoB21Y4fGeqEkdiDHty5efS3VLM/6MgcNSEGJmX3JlUWLYdc3De1MPavIxOtsyq68xgGrQDmhRxEbvVehBFyJU0j5RLuJP1mkLWk6GiGhqC97E1U98Ujp5sbBL23qx1zKp4YOIXrftLfO9e8Zf2huUve+f7gQBhX9yOT030rt/LOpLM4tpgpq3bAhThJWXQLswbhN9szT8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wmu1hT8/mA0ovD90SCSh7fMAyrYeSV6ycy8YmoE993E=;
- b=tZrib7wjNTwGxU/98Tzi6yRb7qO2akCcD/dSJXApBTFkzRh/qRDxpJiXRP0mrDUz+Y4o1/8SLsj9O7LXeWVPdTib2Vgfb4gpqAfypS85zTtse+zCYFdtsCZNKYRvjxyy/Ggwh/lE7o5gXNHH5j7UBhi5jStgKYy0Em96fUPe/+B08vpDr5PTu2BK7lr3F8rzQ+QtIxP+y7ACkbbvH39D5ZoGiZyUONT0CdKye+/P7h/vVLPAwUTY3ZKkTGGQt+UFCF9yYmNIstC/FojlMchqiucI5Q/44v0YOxk1OFcCJdVV6hBhkqAeVpvnlicHgOWy9qxdMuyvq95Do5TDu3DCHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5)
- by PH8PR11MB6732.namprd11.prod.outlook.com (2603:10b6:510:1c8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Thu, 3 Jul
- 2025 21:38:18 +0000
-Received: from PH7PR11MB7605.namprd11.prod.outlook.com
- ([fe80::d720:25db:67bb:6f50]) by PH7PR11MB7605.namprd11.prod.outlook.com
- ([fe80::d720:25db:67bb:6f50%4]) with mapi id 15.20.8857.025; Thu, 3 Jul 2025
- 21:38:18 +0000
-Message-ID: <82ca3a0f-fa4c-46ec-b7c4-3a53932a386f@intel.com>
-Date: Thu, 3 Jul 2025 14:38:17 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/10] drm/xe/xe_late_bind_fw: Load late binding
- firmware
-To: Badal Nilawar <badal.nilawar@intel.com>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
-	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>
-References: <20250703193106.954536-1-badal.nilawar@intel.com>
- <20250703193106.954536-6-badal.nilawar@intel.com>
-Content-Language: en-US
-From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-In-Reply-To: <20250703193106.954536-6-badal.nilawar@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0029.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::42) To PH7PR11MB7605.namprd11.prod.outlook.com
- (2603:10b6:510:277::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyAaunPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4300EC4CEE3;
+	Thu,  3 Jul 2025 21:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751578928;
+	bh=JIc216TD6Fdsg8JjBU1n2EPcafEU6cCdPeEtNvKR04c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eyAaunPrYungqOwFO5XP03ITzASFwg9OJxBO9iYAYeaIT2EZXDwtB5uzaG99eC9tk
+	 gQFglakosCsIV/ZfScD4paPjDopDp866pfW0YfHZskfGeZsI2HfL+8cIiJP0AoNXdv
+	 u/XFzEriM0yLPnBgEbPBaalKOgzXAtWLzmtCklge3V9aVy1IzEzGjbc+axXBQLzisw
+	 fjiC9v0wSDNe05v+KW5WS5/Xr9d+8vRefI0oEjJ1lDm04+/WOAanADer4wmt3UqQCC
+	 3/AF1epUemQk+qACRydnAg9V3M8Xklq4hRKgORi3+g05V6aH1GAh/ztu3vtPOev4tN
+	 WHk9AGCrAQ1bQ==
+Date: Thu, 3 Jul 2025 23:42:00 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 3/8] rust: pwm: Add core 'Device' and 'Chip' object
+ wrappers
+Message-ID: <aGb5KNWKwTbLgteI@pollux>
+References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+ <CGME20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6@eucas1p1.samsung.com>
+ <20250702-rust-next-pwm-working-fan-for-sending-v7-3-67ef39ff1d29@samsung.com>
+ <aGVMnmoepIVSS0yK@pollux>
+ <6d9ce601-b81e-4c2a-b9c3-4cba6fa87b8b@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB7605:EE_|PH8PR11MB6732:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24ee4450-c6ab-491b-233d-08ddba79ece9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?RG9FZCtuaDByYkdCTXRFcVNlQnFNekxKa1lpeTgwbExzMXl2M0NlanVxWHpk?=
- =?utf-8?B?V2xXMDhSQjRrbVVacEZ1dTArYVhaRlptWDJBODZUTlBTYStkYVlCS05HT0V3?=
- =?utf-8?B?SDQ1OXM3SGo1YXo3eFBjUTJVMUpKbVpuVEZiVmo0VndFcHpSR29kR1RYZ2tQ?=
- =?utf-8?B?UGE0bFhLaHp3VURvWUFYMlYwSXJVNVJ2cFM1a2ZyV2d4YTU1ME02OWw2eitQ?=
- =?utf-8?B?YlRWdWp1dStSSWZiYXpJSTVReG9SdTkyNHV0YzM2SFFYdk92UTNGQi9PWEtp?=
- =?utf-8?B?dXdqWXBzL0xwWkhZVFcxenJIS3dEdFN4SFZCUEF2VEhQWGRwSlBpa3RiZ0lH?=
- =?utf-8?B?Y2s2ekM5VStGc0JrcWFsS3BodFdKZGt4Wm41Yzk5ZG1LbWlvY2o5V2tkYlJB?=
- =?utf-8?B?eU1sTzdDMVN5Nm11bW5qc0phWXdCRHVzTmMwVkRSUXQwYVVWZlgxTWFjVTA2?=
- =?utf-8?B?ZWc5ODF4KzIzR09iSUhWbUI2NjJVQVpIbkptTFl1THlLVy9CdGVNd0lsaEpp?=
- =?utf-8?B?eW1Qakt1bXgzdUdFbmFQaTRWamVJVVN4d1ZyUzJkZjNudktvTDgvRlQ3NDRW?=
- =?utf-8?B?M2w2U216SVpIcVZBb2hMcWt3Rnh3bkhwNEU1NjlHQy8rNmhkVlVONVFLaEVu?=
- =?utf-8?B?NTg2TFh2cVgyQkhIdTRQYlFQbGRTSTVpOWxvMHJCWTlUSjhpVFgrT0ZCT3lP?=
- =?utf-8?B?U1RZNS9GZHZXaDNoQVVBd243V3pFMGZQS1h1b3h3QVRra1cxRWNOM3hzeExp?=
- =?utf-8?B?V3VVSTQxZVdQVFdNQUpmNjhyOExxT1JPTjdDei8waGQ5emtZVEJyK1IyZ1F5?=
- =?utf-8?B?aytWa1FLaHVUVjRFdVR6TG54SU5acTg1L0Q0bzNORllrcWJ1aTJRU3E4UjdE?=
- =?utf-8?B?NUJUbUVDdjJFblgxRlJaT3lwSklIN0RxbzZhQUdMY29YT3FVL21RVXJSVlRu?=
- =?utf-8?B?RkltNWVxOWRXQ0VtUXBWRGtzNmNFUkNnUG0zVWszWEFCSXgzRjFxdUlEZ0tH?=
- =?utf-8?B?R281YmFwREJaM3RMc3UrSjhnSWpya1ZVZWpxMytWL0g4T2VGQVl0Q0pyR0Zi?=
- =?utf-8?B?bDMwcGROQUVBL2FOVkxrR3VqVjBPT2ZJZjVFanVhNDM4ZWIvVStFODdVSENQ?=
- =?utf-8?B?V29KYVQ2WSszTXBrNGhzSU5XU1RxVVFLLytNb3VZYkNqMXEvSnV6NDM1U1RP?=
- =?utf-8?B?VTBRa0hUTDBoVjQzcjdpNlZaalo0V0RtR3dJU1g0bnh0L3pYRWJxSmN3Zjky?=
- =?utf-8?B?SlVWTEVWVHd6OEk4ZTJVYXkzREhRSVVNanFpanB5dU9QbmJtdlYzcDZUbmJI?=
- =?utf-8?B?eUlsTjV3VlBCUHMxSXRPNTlDaWcwQURYT2NPL0EwSUNqa3Y2ZTJLZmVqQWRm?=
- =?utf-8?B?QndqdDFuaHVwZllFUXNsb2pVWWFISk16M1pxQkdoOGg3a2Q3cFU4K1hsY3F3?=
- =?utf-8?B?djVLbE1MSmszOHRwUnA4TEhVZDBqS2VLWEdaSllHdU9hRkNGd3M4b0pTNi9R?=
- =?utf-8?B?OVBndE1MZ1ZLa2QxdThwdEdCTzZ6Q1FDVGUrY1dVN2NZUTRGdGFYVzJlVS9B?=
- =?utf-8?B?RFBKVER6QVQyQUFndkc4ZHVlT094NUsrUk54SFRXZjNYL3AvamxnN0J5QWFJ?=
- =?utf-8?B?ejlTL1VTbnRuelhvcHRjNHp2T1pIUGZmVlZkTklqV1BSTWFMdXVVM00zKzNQ?=
- =?utf-8?B?eGp2a2xacnJqcVg2SEQvcC80OFF5U2gzbHgzYzZNaEwxeCtjKzAwT2J0cHNq?=
- =?utf-8?B?bUZMR3psdWRST1lRcEJyMjZScHlaQjduT1JHek9Yb3pUd1JHZEdZcStxOURE?=
- =?utf-8?B?ZzFSdzdqMUFKTFo1dmVHVkRsR2lVUGtnTTI3SlY1ZUVReFdvYWhudVlOV082?=
- =?utf-8?B?THJaRFBMVkhKMGw0Tkp0ZlRIZG0xamhEK0wzVWNrYmFCUHZBUFdJaDUzTm9D?=
- =?utf-8?Q?DRSTtTI5NkY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB7605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGhHdmRtMXpnS0VRVWc0TzZJZllDOEtFdEFqZ045UTdHL2VtRUtQRjdvTi83?=
- =?utf-8?B?eklFZEZWUDVNaFBpVS96dG5QUkFwQllsRFlzdlFKOWlpZW1FR1Y2K3o5QUMv?=
- =?utf-8?B?NEJ3SjlRZVRvaE5MR1o3MFduOXIzRmZFWnlORVE1R1QyVUNMd0Iva0ZyS1B3?=
- =?utf-8?B?NmhVR1NabWpBZWhVZlZOU2N1K1p6R0NXL0hIMCt5WDRpclVzdGRvdEV0RUQy?=
- =?utf-8?B?L2N1U25xQ0VuTzZwWHZ4Wnp6dGEyUHNjU2hSUGR0Tlk1Q09sSjQ5OXFYSGNM?=
- =?utf-8?B?czkrMjF3SWFyS0NTRmJidzBoWE5YRUV6aDk1NkRnZU43WkNENDYxalNWVlhr?=
- =?utf-8?B?YWZyeFVMZFlNSGhLcS90a3hKdU15WEZNdDNDYmZ4RjlLSXdpdTFEcUFHRjU5?=
- =?utf-8?B?VlBGYTFsZkZuaytJSzcyL1FrVkpVNHExa3MxU09UUVprVENIdTU0QlR5RGg1?=
- =?utf-8?B?SmoxbWFyU1pTOFVWTXUvN01Ob3pTbnZEZEdDakxGd2d2Lzg5ZElDUkFkU2o3?=
- =?utf-8?B?ZTdqVUl4RW83K3FNNURsVjZZMUo1eUprREd5OUpWR1ZobW5iVmVGaFJVSGpF?=
- =?utf-8?B?Y2ZYRG1TRVhzQmY2a2tvSEFkZ0RkVnFKRCt6emxDZUhlN3Q2VFhuc0lPR2g4?=
- =?utf-8?B?cUxCQzdrd3JtTGVaQjVZb1JJSCsvTjRRQldoT2ZoSUVMQVY0TFNZVHc3YmJR?=
- =?utf-8?B?eXJWS3VkUDFId1BLd2FENldJTUxrK2lzaEJ0cmZyK0lEZkdzdXN4bis2Um8x?=
- =?utf-8?B?SWpqTmdxK3c5VG5XUzFNZFQvQW1FVUVEUzBzLzFDUUtFQUozbFJaMVkyUnRh?=
- =?utf-8?B?R3MvVUdJRlQ1L3QycVpZWGtFOXRqaHFtdWd0d28zWDlib3ZPOVBRTE9ZWXRC?=
- =?utf-8?B?YWNnVDk5ZTN4UUlyWW5WVmJBczZCbVd5RnhQcUpYcEQyYWgvMVJTcWp3TktO?=
- =?utf-8?B?Vm8rZy9uMEZrMFNWYURITGdlM3RtQ0ZtK2swdEw5Z2FjTTFhUWlqbmRLTGdG?=
- =?utf-8?B?cU40RDJBa2x4UDd6YmMwSWxmRytsaFZoR25SdkVGbzVpQmFsZmxDaDhmUVFG?=
- =?utf-8?B?TG82YnpqaXpYYjJBWTlEb2xGbVM0R2ZWTFVIdHNEREpEL0tETDNQQ2JVdHZr?=
- =?utf-8?B?SG9GamN2NU5nM2pFek9kdlZLcnh6ejZSdDdscGFYSFp2Q2U4V3NyZVdPanJi?=
- =?utf-8?B?T0dka1NQa1NCMFltTVIvU3lhdk9HUnZocjYvR1BVOVhuY1BnQVNmWndxUWtq?=
- =?utf-8?B?SVloZXM4NDZHMDJVMDJ4aVhXcVRaLzZCRm1rRG4rSVFYNzZlZXpEWHJWY3d2?=
- =?utf-8?B?QWthWmdPaThhM0lHMlZsbkpObmFlNXF2Z3JENTlxd0h0M1FNcG9XZ1lVZ0VE?=
- =?utf-8?B?QlI5OGQrS1kzSjBCVGZuS1h3VmxFUW5jckNTdVp5SjFXUVJBTXdORkFBcWR0?=
- =?utf-8?B?bVV4NFdtNWIzL3g2VVdtRnMrUmpDTmtFQjE5UHlIOUZKRzVaU0VhNUpmVVJi?=
- =?utf-8?B?Wk9odlBLQzUxekNoc0I3RHlWaGI0UStIMHhsTngyK3RIQW5iQVJIazIzMVR3?=
- =?utf-8?B?YlpqclkzRm95Vzg0Vkt1cjdxTlA5VUlTb013VVdCOWs0d0tLZVRLcFUwN25Q?=
- =?utf-8?B?ZmlMZERKTXRFQ01BdlBEKzE0MGF3YStPenpIZjRTd3B2YUhrQUJEdjdLZVhm?=
- =?utf-8?B?aEZpU3lycWt0anNOWHMvVGVCSW8wM0RlUFR2T1VlNTVHNDAxK3dTOXJXbjZW?=
- =?utf-8?B?V2M5UDVZQzFzT2ZyME9saGFGc2s4TXNNS2FZczJSQVRoNDBCQlZNMnVTamdm?=
- =?utf-8?B?Qm1COUdUY2IvRUNFVGNDc3k2QXRaZFR3dndDVlRwWDdRSXJpY1J5NWZsUDRM?=
- =?utf-8?B?VjQrWEhVTHNjYjFST0tWVDZDend6UDAwK1greHNzTzhia3hOK05aMEMvL1By?=
- =?utf-8?B?QzRsS3hLWW1wNm1xZmpSa3VPckRJSG5VS2dnTDBvQUpESnVqbDg3UDBpQ1hk?=
- =?utf-8?B?ZzMrNHlXVlR3UFhmd0FtWm8xdURXTW9xcDFrM0MyWTdCaTdxbjJCYjhmNnFL?=
- =?utf-8?B?bE1iNlRzNm1qamcxejF2U3dEUmMxOFJtcEFoSEFmUWRIOGJmYnVBc3BvYjZJ?=
- =?utf-8?B?czVsOCtBWG9NUWRZaEpqdUJkT2FieFFaaVVVek42bnJEQXgrbi9ZbkFyeFJJ?=
- =?utf-8?Q?8Y+eAJvt46ClaGXQ5akiuhw=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24ee4450-c6ab-491b-233d-08ddba79ece9
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB7605.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 21:38:18.6274
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ahl8WtJAX/5qgDo4Clop8eLgXBHfl/ALf0iA1pdRiuX9wmEu2mu2z/LcSs6c1W73Zc79xLIi6LhcQ+DHP80Vh3ldNupioEcrY0/5iN1ER2w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6732
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d9ce601-b81e-4c2a-b9c3-4cba6fa87b8b@samsung.com>
 
+On Thu, Jul 03, 2025 at 01:37:43PM +0200, Michal Wilczynski wrote:
+> 
+> 
+> On 7/2/25 17:13, Danilo Krummrich wrote:
+> > On Wed, Jul 02, 2025 at 03:45:31PM +0200, Michal Wilczynski wrote:
+> >> Building on the basic data types, this commit introduces the central
+> >> object abstractions for the PWM subsystem: Device and Chip. It also
+> >> includes the core trait implementations that make the Chip wrapper a
+> >> complete, safe, and managed object.
+> >>
+> >> The main components of this change are:
+> >>  - Device and Chip Structs: These structs wrap the underlying struct
+> >>    pwm_device and struct pwm_chip C objects, providing safe, idiomatic
+> >>    methods to access their fields.
+> >>
+> >>  - High-Level `Device` API: Exposes safe wrappers for the modern
+> >>    `waveform` API, allowing consumers to apply, read, and pre-validate
+> >>    hardware configurations.
+> >>
+> >>  - Core Trait Implementations for Chip:
+> >>     - AlwaysRefCounted: Links the Chip's lifetime to its embedded
+> >>       struct device reference counter. This enables automatic lifetime
+> >>       management via ARef.
+> >>     - Send and Sync: Marks the Chip wrapper as safe for use across
+> >>       threads. This is sound because the C core handles all necessary
+> >>       locking for the underlying object's state.
+> >>
+> >> These wrappers and traits form a robust foundation for building PWM
+> >> drivers in Rust.
+> >>
+> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> > 
+> > Few more comments below, with those fixed:
+> > 
+> > 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > 
+> >> +/// Wrapper for a PWM device [`struct pwm_device`](srctree/include/linux/pwm.h).
+> >> +#[repr(transparent)]
+> >> +pub struct Device(Opaque<bindings::pwm_device>);
+> >> +
+> >> +impl Device {
+> > 
+> > <snip>
+> > 
+> >> +    /// Gets a reference to the parent `Chip` that this device belongs to.
+> >> +    pub fn chip(&self) -> &Chip {
+> >> +        // SAFETY: `self.as_raw()` provides a valid pointer. (*self.as_raw()).chip
+> >> +        // is assumed to be a valid pointer to `pwm_chip` managed by the kernel.
+> >> +        // Chip::as_ref's safety conditions must be met.
+> >> +        unsafe { Chip::as_ref((*self.as_raw()).chip) }
+> > 
+> > I assume the C API does guarantee that a struct pwm_device *always* holds a
+> > valid pointer to a struct pwm_chip?
+> > 
+> >> +
+> >> +/// Wrapper for a PWM chip/controller ([`struct pwm_chip`](srctree/include/linux/pwm.h)).
+> >> +#[repr(transparent)]
+> >> +pub struct Chip(Opaque<bindings::pwm_chip>);
+> >> +
+> >> +impl Chip {
+> >> +    /// Creates a reference to a [`Chip`] from a valid pointer.
+> >> +    ///
+> >> +    /// # Safety
+> >> +    ///
+> >> +    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
+> >> +    /// returned [`Chip`] reference.
+> >> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> &'a Self {
+> >> +        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
+> >> +        // `Chip` type being transparent makes the cast ok.
+> >> +        unsafe { &*ptr.cast::<Self>() }
+> >> +    }
+> >> +
+> >> +    /// Returns a raw pointer to the underlying `pwm_chip`.
+> >> +    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
+> >> +        self.0.get()
+> >> +    }
+> >> +
+> >> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
+> >> +    pub fn npwm(&self) -> u32 {
+> >> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+> >> +        unsafe { (*self.as_raw()).npwm }
+> >> +    }
+> >> +
+> >> +    /// Returns `true` if the chip supports atomic operations for configuration.
+> >> +    pub fn is_atomic(&self) -> bool {
+> >> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+> >> +        unsafe { (*self.as_raw()).atomic }
+> >> +    }
+> >> +
+> >> +    /// Returns a reference to the embedded `struct device` abstraction.
+> >> +    pub fn device(&self) -> &device::Device {
+> >> +        // SAFETY: `self.as_raw()` provides a valid pointer to `bindings::pwm_chip`.
+> >> +        // The `dev` field is an instance of `bindings::device` embedded within `pwm_chip`.
+> >> +        // Taking a pointer to this embedded field is valid.
+> >> +        // `device::Device` is `#[repr(transparent)]`.
+> >> +        // The lifetime of the returned reference is tied to `self`.
+> >> +        let dev_field_ptr = unsafe { core::ptr::addr_of!((*self.as_raw()).dev) };
+> > 
+> > I think you can use `&raw` instead.
+> > 
+> >> +        // SAFETY: `dev_field_ptr` is a valid pointer to `bindings::device`.
+> >> +        // Casting and dereferencing is safe due to `repr(transparent)` and lifetime.
+> >> +        unsafe { &*(dev_field_ptr.cast::<device::Device>()) }
+> > 
+> > Please use Device::as_ref() instead.
+> > 
+> >> +    }
+> >> +
+> >> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
+> >> +    pub fn drvdata<T: 'static>(&self) -> &T {
+> > 
+> > You need to make the whole Chip structure generic over T, i.e.
+> > Chip<T: ForeignOwnable>.
+> > 
+> > Otherwise the API is unsafe, since the caller can pass in any T when calling
+> > `chip.drvdata()` regardless of whether you actually stored as private data
+> > through Chip::new().
+> 
+> You were right that the original drvdata<T>() method was unsafe. The
+> most direct fix, making Chip generic to Chip<T>, unfortunately creates a
+> significant cascade effect:
+> 
+> - If Chip becomes Chip<T>, then anything holding it, like ARef, must
+>   become ARef<Chip<T>>.
+> 
+> - This in turn forces container structs like Registration to become
+>   generic (Registration<T>).
+> 
+> - Finally, the PwmOps trait itself needs to be aware of T, which
+>   complicates the trait and all driver implementations.
+> 
+> This chain reaction adds a lot of complexity. To avoid it, I've
+> figured an alternative:
+> 
+> The new idea keeps Chip simple and non generic but ensures type safety
+> through two main improvements to the abstraction layer:
+> 
+> 1. A Thread Safe DriverData Wrapper
+> 
+> The pwm.rs module now provides a generic pwm::DriverData<T> struct. Its
+> only job is to wrap the driver's private data and provide the necessary
+> unsafe impl Send + Sync.
+> 
+> // In `rust/kernel/pwm.rs`
+> // SAFETY: The contained data is guaranteed by the kernel to have
+> // synchronized access during callbacks.
+> pub struct DriverData<T>(T);
+> unsafe impl<T: Send> Send for DriverData<T> {}
+> unsafe impl<T: Sync> Sync for DriverData<T> {}
 
+I think you don't need to implement them explicitly, it's automatically derived
+from T.
 
-On 7/3/2025 12:31 PM, Badal Nilawar wrote:
-> Load late binding firmware
->
-> v2:
->   - s/EAGAIN/EBUSY/
->   - Flush worker in suspend and driver unload (Daniele)
-> v3:
->   - Use retry interval of 6s, in steps of 200ms, to allow
->     other OS components release MEI CL handle (Sasha)
-> v4:
->   - return -ENODEV if component not added (Daniele)
->   - parse and print status returned by csc
-> v5:
->   - Use payload to check firmware valid (Daniele)
->   - Obtain the RPM reference before scheduling the worker to
->     ensure the device remains awake until the worker completes
->     firmware loading (Rodrigo)
-> v6:
->   - In case of error donot re-attempt fw download (Daniele)
->
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> ---
->   drivers/gpu/drm/xe/xe_late_bind_fw.c       | 155 ++++++++++++++++++++-
->   drivers/gpu/drm/xe/xe_late_bind_fw.h       |   1 +
->   drivers/gpu/drm/xe/xe_late_bind_fw_types.h |   7 +
->   3 files changed, 162 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-> index ab83ab06aee7..4e8a2256802d 100644
-> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-> @@ -16,6 +16,20 @@
->   #include "xe_late_bind_fw.h"
->   #include "xe_pcode.h"
->   #include "xe_pcode_api.h"
-> +#include "xe_pm.h"
-> +
-> +/*
-> + * The component should load quite quickly in most cases, but it could take
-> + * a bit. Using a very big timeout just to cover the worst case scenario
-> + */
-> +#define LB_INIT_TIMEOUT_MS 20000
-> +
-> +/*
-> + * Retry interval set to 6 seconds, in steps of 200 ms, to allow time for
-> + * other OS components to release the MEI CL handle
-> + */
-> +#define LB_FW_LOAD_RETRY_MAXCOUNT 30
-> +#define LB_FW_LOAD_RETRY_PAUSE_MS 200
->   
->   static const u32 fw_id_to_type[] = {
->   		[XE_LB_FW_FAN_CONTROL] = CSC_LATE_BINDING_TYPE_FAN_CONTROL,
-> @@ -31,6 +45,30 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
->   	return container_of(late_bind, struct xe_device, late_bind);
->   }
->   
-> +static const char *xe_late_bind_parse_status(uint32_t status)
-> +{
-> +	switch (status) {
-> +	case CSC_LATE_BINDING_STATUS_SUCCESS:
-> +		return "success";
-> +	case CSC_LATE_BINDING_STATUS_4ID_MISMATCH:
-> +		return "4Id Mismatch";
-> +	case CSC_LATE_BINDING_STATUS_ARB_FAILURE:
-> +		return "ARB Failure";
-> +	case CSC_LATE_BINDING_STATUS_GENERAL_ERROR:
-> +		return "General Error";
-> +	case CSC_LATE_BINDING_STATUS_INVALID_PARAMS:
-> +		return "Invalid Params";
-> +	case CSC_LATE_BINDING_STATUS_INVALID_SIGNATURE:
-> +		return "Invalid Signature";
-> +	case CSC_LATE_BINDING_STATUS_INVALID_PAYLOAD:
-> +		return "Invalid Payload";
-> +	case CSC_LATE_BINDING_STATUS_TIMEOUT:
-> +		return "Timeout";
-> +	default:
-> +		return "Unknown error";
-> +	}
-> +}
-> +
->   static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
->   {
->   	struct xe_device *xe = late_bind_to_xe(late_bind);
-> @@ -44,6 +82,99 @@ static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
->   		return 0;
->   }
->   
-> +static void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
-> +{
-> +	struct xe_device *xe = late_bind_to_xe(late_bind);
-> +	struct xe_late_bind_fw *lbfw;
-> +	int fw_id;
-> +
-> +	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
-> +		lbfw = &late_bind->late_bind_fw[fw_id];
-> +		if (lbfw->payload && late_bind->wq) {
-> +			drm_dbg(&xe->drm, "Flush work: load %s firmware\n",
-> +				fw_id_to_name[lbfw->id]);
-> +			flush_work(&lbfw->work);
-> +		}
-> +	}
-> +}
-> +
-> +static void xe_late_bind_work(struct work_struct *work)
-> +{
-> +	struct xe_late_bind_fw *lbfw = container_of(work, struct xe_late_bind_fw, work);
-> +	struct xe_late_bind *late_bind = container_of(lbfw, struct xe_late_bind,
-> +						      late_bind_fw[lbfw->id]);
-> +	struct xe_device *xe = late_bind_to_xe(late_bind);
-> +	int retry = LB_FW_LOAD_RETRY_MAXCOUNT;
-> +	int ret;
-> +	int slept;
-> +
-> +	xe_device_assert_mem_access(xe);
-> +
-> +	/* we can queue this before the component is bound */
-> +	for (slept = 0; slept < LB_INIT_TIMEOUT_MS; slept += 100) {
-> +		if (late_bind->component.ops)
-> +			break;
-> +		msleep(100);
-> +	}
-> +
-> +	if (!late_bind->component.ops) {
-> +		drm_err(&xe->drm, "Late bind component not bound\n");
-> +		/* Do not re-attempt fw load */
-> +		drmm_kfree(&xe->drm, (void *)lbfw->payload);
-> +		lbfw->payload = NULL;
-> +		goto out;
-> +	}
-> +
-> +	drm_dbg(&xe->drm, "Load %s firmware\n", fw_id_to_name[lbfw->id]);
-> +
-> +	do {
-> +		ret = late_bind->component.ops->push_config(late_bind->component.mei_dev,
-> +							    lbfw->type, lbfw->flags,
-> +							    lbfw->payload, lbfw->payload_size);
-> +		if (!ret)
-> +			break;
-> +		msleep(LB_FW_LOAD_RETRY_PAUSE_MS);
-> +	} while (--retry && ret == -EBUSY);
-> +
-> +	if (!ret) {
-> +		drm_dbg(&xe->drm, "Load %s firmware successful\n",
-> +			fw_id_to_name[lbfw->id]);
-> +		goto out;
-> +	}
-> +
-> +	if (ret > 0)
-> +		drm_err(&xe->drm, "Load %s firmware failed with err %d, %s\n",
-> +			fw_id_to_name[lbfw->id], ret, xe_late_bind_parse_status(ret));
-> +	else
-> +		drm_err(&xe->drm, "Load %s firmware failed with err %d",
-> +			fw_id_to_name[lbfw->id], ret);
-> +	/* Do not re-attempt fw load */
-> +	drmm_kfree(&xe->drm, (void *)lbfw->payload);
-> +	lbfw->payload = NULL;
-> +
-> +out:
-> +	xe_pm_runtime_put(xe);
-> +}
-> +
-> +int xe_late_bind_fw_load(struct xe_late_bind *late_bind)
-> +{
-> +	struct xe_device *xe = late_bind_to_xe(late_bind);
-> +	struct xe_late_bind_fw *lbfw;
-> +	int fw_id;
-> +
-> +	if (!late_bind->component_added)
-> +		return -ENODEV;
-> +
-> +	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
-> +		lbfw = &late_bind->late_bind_fw[fw_id];
-> +		if (lbfw->payload) {
-> +			xe_pm_runtime_get_noresume(xe);
-> +			queue_work(late_bind->wq, &lbfw->work);
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
->   static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
->   {
->   	struct xe_device *xe = late_bind_to_xe(late_bind);
-> @@ -97,6 +228,7 @@ static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
->   
->   	memcpy((void *)lb_fw->payload, fw->data, lb_fw->payload_size);
->   	release_firmware(fw);
-> +	INIT_WORK(&lb_fw->work, xe_late_bind_work);
->   
->   	return 0;
->   }
-> @@ -106,11 +238,16 @@ static int xe_late_bind_fw_init(struct xe_late_bind *late_bind)
->   	int ret;
->   	int fw_id;
->   
-> +	late_bind->wq = alloc_ordered_workqueue("late-bind-ordered-wq", 0);
-> +	if (!late_bind->wq)
-> +		return -ENOMEM;
-> +
->   	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
->   		ret = __xe_late_bind_fw_init(late_bind, fw_id);
->   		if (ret)
->   			return ret;
->   	}
-> +
->   	return 0;
->   }
->   
-> @@ -132,6 +269,8 @@ static void xe_late_bind_component_unbind(struct device *xe_kdev,
->   	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
->   	struct xe_late_bind *late_bind = &xe->late_bind;
->   
-> +	xe_late_bind_wait_for_worker_completion(late_bind);
-> +
->   	late_bind->component.ops = NULL;
->   }
->   
-> @@ -145,7 +284,15 @@ static void xe_late_bind_remove(void *arg)
->   	struct xe_late_bind *late_bind = arg;
->   	struct xe_device *xe = late_bind_to_xe(late_bind);
->   
-> +	xe_late_bind_wait_for_worker_completion(late_bind);
-> +
-> +	late_bind->component_added = false;
-> +
->   	component_del(xe->drm.dev, &xe_late_bind_component_ops);
-> +	if (late_bind->wq) {
-> +		destroy_workqueue(late_bind->wq);
-> +		late_bind->wq = NULL;
-> +	}
->   }
->   
->   /**
-> @@ -173,9 +320,15 @@ int xe_late_bind_init(struct xe_late_bind *late_bind)
->   		return err;
->   	}
->   
-> +	late_bind->component_added = true;
-> +
->   	err = devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
->   	if (err)
->   		return err;
->   
-> -	return xe_late_bind_fw_init(late_bind);
-> +	err = xe_late_bind_fw_init(late_bind);
-> +	if (err)
-> +		return err;
-> +
-> +	return xe_late_bind_fw_load(late_bind);
->   }
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-> index 4c73571c3e62..28d56ed2bfdc 100644
-> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.h
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-> @@ -11,5 +11,6 @@
->   struct xe_late_bind;
->   
->   int xe_late_bind_init(struct xe_late_bind *late_bind);
-> +int xe_late_bind_fw_load(struct xe_late_bind *late_bind);
->   
->   #endif
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> index cd3143256a7c..f650cb8641b3 100644
-> --- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> @@ -9,6 +9,7 @@
->   #include <linux/iosys-map.h>
->   #include <linux/mutex.h>
->   #include <linux/types.h>
-> +#include <linux/workqueue.h>
->   
->   #define XE_LB_MAX_PAYLOAD_SIZE SZ_4K
->   
-> @@ -36,6 +37,8 @@ struct xe_late_bind_fw {
->   	const u8  *payload;
->   	/** @late_bind_fw.payload_size: late binding blob payload_size */
->   	size_t payload_size;
-> +	/** @late_bind_fw.work: worker to upload latebind blob */
-> +	struct work_struct work;
->   };
->   
->   /**
-> @@ -60,6 +63,10 @@ struct xe_late_bind {
->   	struct xe_late_bind_component component;
->   	/** @late_bind.late_bind_fw: late binding firmware array */
->   	struct xe_late_bind_fw late_bind_fw[XE_LB_FW_MAX_ID];
-> +	/** @late_bind.wq: workqueue to submit request to download late bind blob */
-> +	struct workqueue_struct *wq;
-> +	/** @late_bind.component_added: whether the component has been added */
-> +	bool component_added;
+> 
+> // In the driver's `probe` function
+> let safe_data = pwm::DriverData::new(Th1520PwmDriverData{ });
+> 
+> 2. A More Ergonomic PwmOps Trait
+> 
+> The PwmOps trait methods now receive the driver's data directly as
+> &self, which is much more intuitive. We achieve this by providing a
+> default associated type for the data owner, which removes boilerplate
+> from the driver.
+> 
+> // In `rust/kernel/pwm.rs`
+> pub trait PwmOps: 'static + Sized {
+>     type Owner: Deref<Target = DriverData<Self>> + ForeignOwnable =
+>         Pin<KBox<DriverData<Self>>>;
+>     /// For now I'm getting compiler error here: `associated type defaults are unstable`
+>     /// So the driver would need to specify this for now, until this feature
+>     /// is stable
+> 
+> 
+>     // Methods now receive `&self`, making them much cleaner to implement.
+>     fn round_waveform_tohw(&self, chip: &Chip, pwm: &Device, wf: &Waveform) -> Result<...>;
+> }
+> 
+> // In the driver
+> impl pwm::PwmOps for Th1520PwmDriverData {
+>     type WfHw = Th1520WfHw;
 
-The hooks run by CI spotted issues with the docs here. With those addressed:
+Shouldn't this be:
 
-Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+	type Owner = Pin<KBox<DriverData<Self>>>;
 
-Daniele
+> 
+>     fn round_waveform_tohw(&self, chip: &pwm::Chip, ...) -> Result<...> {
 
->   };
->   
->   #endif
+If you accept any ForeignOwnable, I think this has to be Owner::Borrowed.
 
+>         // no drvdata() call here :-)
+>         let rate_hz = self.clk.rate().as_hz();
+>         // ...
+>     }
+> }
+> 
+> This solution seem to address to issue you've pointed (as the user of
+> the API never deals with drvdata directly at this point), while making
+> it easier to develop PWM drivers in Rust.
+> 
+> Please let me know what you think.
+
+In DRM [1][2] we used the approach I proposed, but at a first glance what you
+propose seems like it should work as well.
+
+Drivers having to set the Owner type seems a bit unfortunate, but otherwise it
+seems like a matter of personal preference.
+
+Although, I just notice, isn't this broken if a driver sets Owner to something
+else than Self?
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/drm/device.rs
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/drm/driver.rs
