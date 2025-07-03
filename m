@@ -1,208 +1,190 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81834298CB7
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533351; cv=none; b=ZU7fOrYuU2siRYaB9LhzRQVWG7l+YjiowEVh1YXAlCjdVKXl5ZFAM+MurQG+GU7+BxKbJENoCGL55JcD9vCu9rahzqs6PA6L8GSPPe/UJz+y/rClHuBtlBPdgZBXCjmfleril0Z5BYSeWKLw/q1hMNTuibKZqoNMlyXJp1Be5gQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533351; c=relaxed/simple;
-	bh=wSBzuFutXlxhtQUuNemypiuvl59GnjyGrzdoy8POasE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fyZElS4EYQOTs01dCfb0PJLxNaNE59EfqlYA/G4YYSMwy2WlXEv5GHBrSz0IZP+sc0gtb0aiBWQUPIMh8tdHDFUZ7MqKVxS6TLSxvQ0ZdS+ECaG5/V++rdlnAtsz19dl4RN/X+8i0SXs5zf9EOKe4Tzz54gB8vmHNyKH8yfUZQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xwrsGYbr; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5436A2D46D8;
+	Thu,  3 Jul 2025 09:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751533355; cv=pass; b=I66GwIrWSxpMW6EXDIZsd9OOQSYL+fREVNiGix/H6l7fxvmm+71SrRWR5lL6SRYM736w8vzYxvp74fAmeJDEM3cRsO4ctGphNLX8KW+F63KQVtcU0yqiiV7mQWgemMWMFW2iYGHm1Ky78PzfiFds578gOOvzLaIPoM5CpSb5Xt8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751533355; c=relaxed/simple;
+	bh=1x9noGp/YyjeYTaho9SwTajjJAkTELQbXuhXq6ypjTQ=;
+	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
+	 Content-Type; b=CgauUw8aqm3WjwYDN7paiAPwiMLd2ewvJA3nF5FcyzXlmgU1yLFgHAIc69bz9gT44gNvGIQGX78V60dlgosvk/ZZoRCJNgyM/dwFTMYfcjuDmfCPb53yRNJKJukjGrQI0h/l6jP9Hoo46CIkb65oQI1+xGStwfN9Z8NEWLJPs4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=qXVoJZH4; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xwrsGYbr"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-453643020bdso67392305e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751533347; x=1752138147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fLpRhZ8oYlqdUPrBtWQJGdWQR4/qJlb3vPx62hFSxUg=;
-        b=xwrsGYbrozg0+2KzHDsm/PMkYJdUio9n9EtabwAZdEPKRNBprYQmrmBThrExTr0yxG
-         4QJDL7myzv/ZvWXHp3IINF/51+ZOn8un0ezfg5SYgmSbvgh2JZbefB+CIsiHwfwfgtSI
-         Pqa3/GLwVwjHt+kj8xa3u/ejHTxA0UHzBOKMl1nD/dubgDxPhatT2OaYga4/YUu+OWe1
-         lztn8Yi2mSwy93iO+fHci9t4CDq5SHlHeg/vmWaWGkle3g/3xFmbL1wUuN27o7O7HdLt
-         kwVIUR/VHP66mAcL2ilySFJYWs5o+ydmN6BWd51ZzycG0qos2miPuEUBsrvLnYsWrq2u
-         IFxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751533347; x=1752138147;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fLpRhZ8oYlqdUPrBtWQJGdWQR4/qJlb3vPx62hFSxUg=;
-        b=OmVhVdf6yXY0PbAAraV3rYmjdXQdTKSs0aNsEY6/O/WBfpNiScH/aWxMBLOmKdhglh
-         GKit5/Lw/+2LVktJebeQink230YYgpBae4XOKXla29uQ1v8Tn01mFdnBCgbjdGSHxBmK
-         mACa4X3FAMLyZEA53Y2WdAoY0o7OrILsNv0I7KJ6ZfAeK/4zjmj+wr9uEC2O2ISmMfYy
-         at2OH7qm4JvQ43jtkeVFLqV3serRDjmvBqR4fxRRDZ5ohipcQGipLdxp9be9ivTtcd14
-         7C7MsuWJWYetzXKhFQMwGJwSEfONfUCJJW/EA79FEXOdiy7pRlzKusF1Uxtlp9TuQfpI
-         u4zw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhbrrvZxpAyXnuOuo6Wz/xUezeMB1Sj7ZzbXXvW7flXVnN4bGfNiPn0IVm3nxYcPYCQ9L/1CI9/mptxjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmOg7vRGhnUmpzk7oNah2Ri+Vd0/ZE+NNTR/orKS8GSggNGDDv
-	vVxYAIR5S78bF5DC6q6YDrW6xaxy3f9OWest+a+TJ4oOEZFMFxFFWak2Rbj0S4dQZ8w=
-X-Gm-Gg: ASbGncvEvfcU9lJgbx9c3Yfu4x2rsbTnFA9FtajpGKXYR/vhydCHC2Ff6hu7kbGS16z
-	Za6hdybZH/6LcN4EZ168y58ZymwQozobj//29fkhrEkCA43ogILR3F71X5oSpY0NZ76BMkvwz1/
-	5uwEM24NoplGBummRWJGTDVWmGErS1u+VqkWb1WwfMo1VirI8YlnlJmA3MoKqujffcgJ7PKVXdR
-	61wky/6T5lP/WHKIMZT3tjyOctNfsAMZTnUsrTODj9wyG2V/pW4kegpRRb5c38iNnrQlHGuootb
-	WppetpnSLgg7tA+H6lSG/B4lIRE9oQpO0b2cdayHLMkeAcTijW07GjBBKz5FKK5HYLsUvLQU
-X-Google-Smtp-Source: AGHT+IEpB6jnvVhDM96CIt4ZF+uBHmqcylICsBSVvBhL7X6XFgQme1VhuXRkTOD5F0uhXQjbeKMrBQ==
-X-Received: by 2002:a05:6000:4914:b0:3a4:eef5:dece with SMTP id ffacd0b85a97d-3b1ff9f5966mr5613528f8f.35.1751533346613;
-        Thu, 03 Jul 2025 02:02:26 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:1b4c:1be9:25d0:5634])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e52a35sm18381340f8f.57.2025.07.03.02.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:02:26 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Chuan Liu <chuan.liu@amlogic.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,  Michael Turquette
- <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,  Kevin Hilman
- <khilman@baylibre.com>,  Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>,  linux-amlogic@lists.infradead.org,
-  linux-clk@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/26] clk: amlogic: c3-peripherals: naming consistency
- alignment
-In-Reply-To: <99ba0e33-cec2-4577-b949-010537a8c4df@amlogic.com> (Chuan Liu's
-	message of "Thu, 3 Jul 2025 16:31:12 +0800")
-References: <20250702-meson-clk-cleanup-24-v1-0-e163c9a1fc21@baylibre.com>
-	<20250702-meson-clk-cleanup-24-v1-5-e163c9a1fc21@baylibre.com>
-	<eb233f20-1927-4944-9b57-f90c998db19a@amlogic.com>
-	<1jy0t5d8a2.fsf@starbuckisacylon.baylibre.com>
-	<99ba0e33-cec2-4577-b949-010537a8c4df@amlogic.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 03 Jul 2025 11:02:25 +0200
-Message-ID: <1jtt3tbqam.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="qXVoJZH4"
+ARC-Seal: i=1; a=rsa-sha256; t=1751533249; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KKVvBkeo3qxgezrXeVABLPlIw6eJ6RvPjxqCLLPR4Wnc8F2rJVoSc/AEIptXtdu4xG8yAAuWEOf9cdgo/kBECOzxLRuHqdPPDDAw/HmE/CuvN4cezsUdL0OCJ0GWzVrpS1LI2/Ciu1SQcN+OkAXEc0lqPwn2fEYKP8P9g+y1ACg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751533249; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1x9noGp/YyjeYTaho9SwTajjJAkTELQbXuhXq6ypjTQ=; 
+	b=TRDiAOb2YJWhEJMbR3dNNALR4dGoxA+pcqocs96/m/wERWsEejxGwuKEswbte2hd4eCHqJ37IJcmfQpdtcXRghKbNQxmFwIBZEz0JQqpF5QPbA5aIHFiSRdlqguMcVL2q8hyAMcP+FHQDlYCVZSao3IGgWy6LHN9cWiT2WoY9Kg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=pigmoral.tech;
+	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
+	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751533249;
+	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
+	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=1x9noGp/YyjeYTaho9SwTajjJAkTELQbXuhXq6ypjTQ=;
+	b=qXVoJZH4IPSkxKuRWuy6EJrTq8XQNfEpvvT6bKfDt6znEZxc8MF2TGctYNIe6epI
+	Q7bHijO9JmxE/LeFbyiARWeQSK/7g+i/aq/na+ZyVvlj+wBYaPLB93n3J6D4yIr5+r1
+	l5cmMXZN430EDk9vglEow6IExvLngACe4mS9YahQ=
+Received: by mx.zohomail.com with SMTPS id 175153324571033.72754487040095;
+	Thu, 3 Jul 2025 02:00:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: "Junhui Liu" <junhui.liu@pigmoral.tech>
+To: "Vivian Wang" <wangruikang@iscas.ac.cn>, 
+	"Andrew Lunn" <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, 
+	"Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, 
+	"Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh@kernel.org>, 
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
+	"Conor Dooley" <conor+dt@kernel.org>, "Yixun Lan" <dlan@gentoo.org>, 
+	"Philipp Zabel" <p.zabel@pengutronix.de>, 
+	"Paul Walmsley" <paul.walmsley@sifive.com>, 
+	"Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, 
+	"Alexandre Ghiti" <alex@ghiti.fr>
+In-Reply-To: <ce2881b9-38ed-42b6-824d-72948389e8fa@iscas.ac.cn>
+Cc: "Vivian Wang" <uwu@dram.page>, 
+	"Lukas Bulwahn" <lukas.bulwahn@redhat.com>, 
+	"Geert Uytterhoeven" <geert+renesas@glider.be>, 
+	"Parthiban Veerasooran" <Parthiban.Veerasooran@microchip.com>, 
+	<netdev@vger.kernel.org>, <devicetree@vger.kernel.org>, 
+	<linux-riscv@lists.infradead.org>, <spacemit@lists.linux.dev>, 
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 5/5] riscv: dts: spacemit: Add Ethernet support
+	 for Jupiter
+Message-ID: <184eb232eceb01f8.c7773f00732f7e87.4136a253a628cb2b@Jude-Air.local>
+Date: Thu, 3 Jul 2025 09:00:36 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
->>>>
->>>> -#define C3_CLK_GATE(_name, _reg, _bit, _fw_name, _ops, _flags)       =
-  \
->>>> -struct clk_regmap _name =3D {                                        =
-    \
->>>> +#define C3_PCLK(_name, _reg, _bit, _fw_name, _ops, _flags)           =
-  \
->>>> +struct clk_regmap c3_##_name =3D {                                   =
-    \
->>>>           .data =3D &(struct clk_regmap_gate_data){                   =
-      \
->>>>                   .offset =3D (_reg),                                 =
-      \
->>>>                   .bit_idx =3D (_bit),                                =
-      \
->>>>           },                                                          =
-    \
->>>>           .hw.init =3D &(struct clk_init_data) {                      =
-      \
->>>> -               .name =3D #_name,                                     =
-    \
->>>> +               .name =3D "c3_" #_name,                               =
-    \
+Hi Vivian,
+
+On 03/07/2025 15:46, Vivian Wang wrote:
+> Hi Junhui,
+>=20
+> On 7/3/25 14:48, Junhui Liu wrote:
+>> Hi Vivian,
+>> Thanks for you work!
+>>
+>> On 2025/7/2 14:01, Vivian Wang wrote:
+>>> Milk-V Jupiter uses an RGMII PHY for each port and uses GPIO for PHY
+>>> reset.
 >>>
->>> Prefixing variable names with 'SoC' is understandable (to avoid duplica=
-te
->>> definitions and facilitate variable searching), but is it necessary to =
-add
->>> 'SoC' prefixes to clock names?
->> This is part of the description but I'll ellaborate.
+>>> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
 >>
->> Some controllers do so, some do not. This is a typical pointless
->> difference that make code sharing difficult and lead to the duplication
->> I'm addressing now.
->
->
-> Yes, in fact most clock configurations are consistent across our SoCs. Ov=
-er
-> the years, we've been continuously working to make our driver code more
-> 'common'
-> and efficient.
->
-
-No they are not consistent at all when it come to this
-
-Controller prefixing the pclks:
-* axg-ao
-* axg
-* g12-ao
-* g12
-* gxbb
-* s4-periphs
-
-Controllers not prefixing the pclks
-* gxbb-ao
-* a1-periphs
-* c3-periphs
-* meson8b
-
-I do not want to invent new names to avoid the names clashes if the
-prefixes are dropped. I tried that way and it was a mess.
-
-As noted in the description, clock names will not be prefixed with SoC
-name, *except* for the pclks for the historic reason explained above.
-
->
+>> Successfully tested with iperf3 on Milk-V Jupiter.
 >>
->> Both with and without are fine but picking one a sticking to it helps a
->> lot. I would have preferred to drop the prefix from the pclk clock
->> names, same as the other clock, but:
->
->
-> I still prefer adding SoC prefixes to variable names but not to clock nam=
-es.
-> clocks with the same name generally have similar functions across differe=
-nt
-> chips.
+>> TCP Rx: 941 Mbits/sec
+>> TCP Tx: 943 Mbits/sec
+>> UDP Rx: 956 Mbits/sec
+>> UDP Tx: 956 Mbits/sec
+>>
+>> Tested-by: Junhui Liu <junhui.liu@pigmoral.tech>=C2=A0
+>>
+> Thanks for the testing! I do not have a Milk-V Jupiter handy, so that
+> was very helpful.
+>=20
+> As discussed [1], I will post a v4 soon with minor fixes and also sans
+> the DTS changes. I will put your Tested-by on the driver patch instead
+> of this DTS patch, so it will show up in v4.
+>=20
+> Are you okay with this? If you don't like it feel free to tell me.
 
-It is not a matter of preference.
+It's okay to me. Thanks!
 
->
->
->> * It would have changed more clock names and I prefer to minimize those
->> changes
->
->
-> Your recent patch series has already made significant changes, and this is
-> relatively a minor adjustment=F0=9F=98=89
->
->
->> * It would have caused several name clashes with other clocks.
->>
->> so prefix it is for the peripheral clock.
->>
->> In the end, what matters is consistency.
->>
+>=20
+> Regards,
+> Vivian "dramforever" Wang
+>=20
+> [1]: https://lore.kernel.org/spacemit/a9cad07c-0973-43c3-89f3-95b856b575df=
+@iscas.ac.cn/
+>=20
+>>> ---
+>>> =C2=A0 arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 46
+>>> +++++++++++++++++++++++
+>>> =C2=A0 1 file changed, 46 insertions(+)
 >>>
->>>>                   .ops =3D _ops,                                      =
-      \
->>>>                   .parent_data =3D &(const struct clk_parent_data) {  =
-      \
->>>> -                       .fw_name =3D #_fw_name,                       =
-    \
->>>> +                       .fw_name =3D (_fw_name),                      =
-    \
->>>>                   },                                                  =
-    \
->>>>                   .num_parents =3D 1,                                 =
-      \
->>>>                   .flags =3D (_flags),                                =
-      \
->>>>           },                                                          =
-    \
->>>>    }
+>>> diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+>>> b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+>>> index
+>>> 4483192141049caa201c093fb206b6134a064f42..c5933555c06b66f40e61fe2b9c159b=
+a0770c2fa1
+>>> 100644
+>>> --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+>>> +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+>>> @@ -20,6 +20,52 @@ chosen {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> =C2=A0 };
+>>> =C2=A0 +&eth0 {
+>>> +=C2=A0=C2=A0=C2=A0 phy-handle =3D <&rgmii0>;
+>>> +=C2=A0=C2=A0=C2=A0 phy-mode =3D "rgmii-id";
+>>> +=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+>>> +=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&gmac0_cfg>;
+>>> +=C2=A0=C2=A0=C2=A0 rx-internal-delay-ps =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0 tx-internal-delay-ps =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mdio-bus {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <0x1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0x0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-gpios =3D <&gpio K1_GP=
+IO(110) GPIO_ACTIVE_LOW>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-delay-us =3D <10000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-post-delay-us =3D <100=
+000>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rgmii0: phy@1 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
+=3D <0x1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0 };
+>>> +};
+>>> +
+>>> +&eth1 {
+>>> +=C2=A0=C2=A0=C2=A0 phy-handle =3D <&rgmii1>;
+>>> +=C2=A0=C2=A0=C2=A0 phy-mode =3D "rgmii-id";
+>>> +=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+>>> +=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&gmac1_cfg>;
+>>> +=C2=A0=C2=A0=C2=A0 rx-internal-delay-ps =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0 tx-internal-delay-ps =3D <250>;
+>>> +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mdio-bus {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <0x1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0x0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-gpios =3D <&gpio K1_GP=
+IO(115) GPIO_ACTIVE_LOW>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-delay-us =3D <10000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-post-delay-us =3D <100=
+000>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rgmii1: phy@1 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
+=3D <0x1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0 };
+>>> +};
+>>> +
+>>> =C2=A0 &uart0 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&uart0_2_cfg>;
 >>>
->>> [...]
->> --
->> Jerome
 
 --=20
-Jerome
+Best regards,
+Junhui Liu
