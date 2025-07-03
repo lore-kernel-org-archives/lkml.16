@@ -1,101 +1,62 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9D8C23BE;
-	Thu,  3 Jul 2025 02:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A7523BE
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511290; cv=none; b=e1zHLOxOey/CUiCbyAnozN1q3bNyN0dlN43ERRuMHMF6cNjFcbL0WQir9JGS5QAXfZ+Rx0Y4D6u38PTdamnc2d/4w3ysS+QABDRJtXNiVriWgFsCLK2hKW3nB7NBGbwONp3EUfekUO7jhI/5WxnpQ4iPzv+5Wl1zkf5SllKwN80=
+	t=1751511410; cv=none; b=oMhcGB5lgQ/cMz9VjN7xGk+Oo5w1pwL5J13NVpfuKpw0rPGCp2/XqgDkVrRU5WyIVpWW7XVN8Uh3Gjd4CtLeglUTooXK6clxfW1pYkN8nMSJtjy9GzJK6A4+TvzZKqJZi5wQSOMH0+eowNmIiATLgZtXhf75/+FEUiPYH1Zh/FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751511290; c=relaxed/simple;
-	bh=5WYfMc5xlqprXqGplo8TPRTwoTJcHq8cNIKht6TcDnM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=P+fFE11oKocdnxaL/c2aEnreIKi3McsCNoBGR9G3lT4RyZRXLWoKeQgXJTciZi9kHRdmwV0LgDmdVT1Lkb92VgzY45mymYZu8D7amO8P+509zwY1n38ISI4zTklloCFAMAbvhUjLZ7h3npFIMXmtoBI2WWRKRGnMuzpoEI1CgRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=HavHrXb4; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1751511410; c=relaxed/simple;
+	bh=7t1Juu1/vJhJ8KD6SaaDx4nPrBBxEzIbewlZVZv5gWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tHCDzkkSjccCtjg2Ogd+KCV6vzhaMHViOa6c9353mJyEq9cht6RcMrHxAiCcMmJkS+Bw6vC+SIxVFsHrSB4ur4xRL4xRAnq93RVQNManjgK3lVGoteXSZjwA/SBk/Lnn92bMoEUSplQRO7m798CANiPnlD7ZXKy60FeE0uFuraI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EyCHZq2d; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="HavHrXb4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id; bh=RNGiMRA7tuQYaNu
-	ZL6aNqt4/FrG725yke/AkkJExntU=; b=HavHrXb4n7y1jl4SFU67iohdY9hlFac
-	nVJw3fz3JqKzheZtNn87cqcdMyJYJV8cJ4F0U7r8AvffxQ0Wu2X8cTmc7ay/Rhbd
-	NEo8tPF6HzazIgXBnFj/Mj6zQvcAfGlWNs/cm08EKXZDK5CjcIZGpSzzeelUnwN3
-	xtxpPAMZJXiw=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHz3Iv7WVo3yJGAw--.37667S2;
-	Thu, 03 Jul 2025 10:38:40 +0800 (CST)
-From: yangge1116@126.com
-To: ardb@kernel.org
-Cc: jarkko@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	ilias.apalodimas@linaro.org,
-	jgg@ziepe.ca,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH] efi/tpm: Fix the issue where the CC platforms event log header can't be correctly identified
-Date: Thu,  3 Jul 2025 10:38:37 +0800
-Message-Id: <1751510317-12152-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDHz3Iv7WVo3yJGAw--.37667S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJryxCF4UKF4rtF1UXFyrZwb_yoW8Zry8p3
-	ZrGrnakr95try2gr93Zw18Cw4UA395CrZrGFykKw10yr98Wr92qayjg345K3WfGrZrJFZ8
-	Wa4jqr17Ca4UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoKZXUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOgZ-G2hl5F7-FQAAsF
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EyCHZq2d"
+Message-ID: <e680cfd4-8a03-42e9-a2f2-23a7b5d5bc1e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751511405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UCxj7y2HUGKnQKz44JSIRWKaeF7tBFzgx7r+HHsY720=;
+	b=EyCHZq2dSOuRPM3V0dLjF1IIw8D8uw3SCHrvTZ3YKOr5LIcFVme7Ade6cKjBEArmYpy1DD
+	akVSF15mqsugIOcvhJcWMIOovhKSJR7NWnPdCsEz+9Z4X15uYHx+uSySCJCHlUEJwYP40E
+	+49WGxnxeYfSyttI3XwqOaX5+So77zk=
+Date: Thu, 3 Jul 2025 10:56:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 3/5] panic: add 'panic_sys_info' sysctl to take human
+ readable string parameter
+Content-Language: en-US
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: paulmck@kernel.org, john.ogness@linutronix.de,
+ Jonathan Corbet <corbet@lwn.net>, Steven Rostedt <rostedt@goodmis.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ Petr Mladek <pmladek@suse.com>
+References: <20250703021004.42328-1-feng.tang@linux.alibaba.com>
+ <20250703021004.42328-4-feng.tang@linux.alibaba.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20250703021004.42328-4-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Ge Yang <yangge1116@126.com>
+[PATCH 3/5] panic: add 'panic_sys_info' sysctl to take human readable 
+string parameter
 
-Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
-for CC platforms") reuses TPM2 support code for the CC platforms, when
-launching a TDX virtual machine with coco measurement enabled, the
-following error log is generated:
+Just a minor nitpick on the subject line: it seems to be missing the
+"v3" tag, unlike the other patches in this series.
 
-[Firmware Bug]: Failed to parse event in TPM Final Events Log
-
-Call Trace:
-efi_config_parse_tables()
-  efi_tpm_eventlog_init()
-    tpm2_calc_event_log_size()
-      __calc_tpm2_event_size()
-
-The pcr_idx value in the Intel TDX log header is 1, causing the
-function __calc_tpm2_event_size() to fail to recognize the log header,
-ultimately leading to the "Failed to parse event in TPM Final Events
-Log" error.
-
-According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
-MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
-event log header, the check for a pcr_idx value of 0 has been removed
-here, and it appears that this will not affect other functionalities.
-
-Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#intel-trust-domain-extension
-Fixes: d228814b1913 ("efi/libstub: Add get_event_log() support for CC platforms")
-Signed-off-by: Ge Yang <yangge1116@126.com>
-Cc: stable@vger.kernel.org
----
- include/linux/tpm_eventlog.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 891368e..05c0ae5 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -202,8 +202,7 @@ static __always_inline u32 __calc_tpm2_event_size(struct tcg_pcr_event2_head *ev
- 	event_type = event->event_type;
- 
- 	/* Verify that it's the log header */
--	if (event_header->pcr_idx != 0 ||
--	    event_header->event_type != NO_ACTION ||
-+	if (event_header->event_type != NO_ACTION ||
- 	    memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
- 		size = 0;
- 		goto out;
--- 
-2.7.4
+Thanks,
+Lance
 
