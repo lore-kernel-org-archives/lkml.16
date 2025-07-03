@@ -1,120 +1,148 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860372D9492;
-	Thu,  3 Jul 2025 15:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60E62F0C41
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751555548; cv=none; b=kdayT70CG7Xx13CUuKZD+1BIN4BR9z9MUpdK1JJ+hxW6/HSb87Ynq3CDFZocXfxERIw2s1tOsyb3y3cRAlxb1JGYyJosuZaFPtIpNRRia2Te4ees2Lf5nznbzaCYqVKzsClfH85XCpYlrEwP+e6lYL37tkpM42yfdnjFcTp3F8E=
+	t=1751555556; cv=none; b=m6/0/0rF/34ftyzG14U7tj+snNHONQHSuhrl30okWwxvcElP0GP8+Y0r3UOoFwdkKxthIMseNRzPdEjQ1vZBl64k12EQ4s0bqVpnvvYr67z20UNu+CxksaOqGB0uauK1raHfpUE8YYDdEOdTWxJFPLJxXltHDInsZIC9b7F7a9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751555548; c=relaxed/simple;
-	bh=2VtHhvZZXe9k5UmGankZAg4IjeCT2vcwRjcFNQsN6hQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jvhlXJ5rJgljVvBY0bvOMnBtq5EBdbMaBrbQmea2VZzdrlF4WjRBGF9/Nkiusc4+JgxULQYL1oE1a9bReTX0RpeF67Xme0WrEJFK2QxubjbRn0s6y6+8qG0MPgb9XMWh8GRFgu1367PBsYORTVZ9hwKf2F2nBjwAxhzXY6FcraM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PMfvuQYx; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751555556; c=relaxed/simple;
+	bh=qe1JM/9Edxr517BEh9k1qGxj4Z6LKzeE0S/ti1xkI9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bfu6igqlYi9KtdjqKwfRFDLNn3+8A86x6btVqt4ITAqPh5BvB6HPN11mcv5aPDbzn9GGDPe35mRH3L3ofRTZtCQ0dy0fGp2qdW5UkYejirfnC3T/HNzSwow95kcEhFu+m//tdEkph+hRYdeHwV4rZ5p7yYGG1zitXoUACadV+4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t3aB0RNQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4r8JsJti; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t3aB0RNQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4r8JsJti; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMfvuQYx"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b553e33e6so108461fa.2;
-        Thu, 03 Jul 2025 08:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751555545; x=1752160345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BUCZaITB+JbIKX4CqImv9IU6yGF5XIw9/F8cQCdwhok=;
-        b=PMfvuQYxvexEbuC9M+ffD1jeDS1M1QKsmzILOQgxySVlqovmhVewrqrghm7IMAMXTO
-         QKR5x1NezcNuMazGA9cShEws8dN8M5RW9piUK0SB2we7hp00MhcJ+7gIofKhzP7PKACL
-         x+ROpiFzNMTTwhA4pZchRPaB5WxG9bhAC16N+nuL24D02PbQA6kfdbLr7ac4iIfJ8uSf
-         HsGPnD4Ykj9Ctu8+wmPgRjpQt/UGPJmcaiWCmsNhZwTPrSGKgkyB8o3Em4UEfPdD+Svm
-         9Tfm6X0TebofM33V/2SIvwqY1nr/Dj2vldnEb1MndThAhJbfGN7wzBThQzXvXB8rS67v
-         sIgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751555545; x=1752160345;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BUCZaITB+JbIKX4CqImv9IU6yGF5XIw9/F8cQCdwhok=;
-        b=W76fDvVd2FIWxZoaSJFDCuvCV2sSsXxpbc2gIEgtO6mfv2LNWJy/kFNc7p3vBpsj+N
-         3OL3P4AY9l+ugvdbhheIC+XbqrdSQOZxDEXdhTaqhH6F4Y75AiIqa461LVx7EwxbxWqB
-         4lL5hypxh5VF35tCEwXMl5oI860DzSllyNcypO7ICAh9MTEQrKlRQDQI/cG5sHaSj80M
-         lGj4V/wMGv89YdGg2mhb1AsBuIrZNwYbzVEhCSeR9S5q11iW540kWeRD/dlzo/hqNnzg
-         zPBQXsMw1bq/jC2UcBfN1S9jNhlB04jk+VnbJ88xxiZjEeZUS2z+cccC0DaVS8wnYbl/
-         /Ymg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQFRNoxsnC1h8Y+kNHKYnX+W+zgGY8mneMznzIPG5CjmS+bGNfDJPo8pAL7KITZc7vlVzBR1tHuHWL+mke@vger.kernel.org, AJvYcCW3ovZAljjPTjJ7213mFkigk9hXr7+i+1NhAmx26sjPVmxaaWJtFATxfMqOJcrkuPBdmv2t0+HnBio=@vger.kernel.org, AJvYcCW5o1+WneZjLURu4DdEtvmxx4Adbk7G9RWoPalE8OrDWzJ8LwWRO64pU67oUOKj+UbYXo7mLGGL4bvG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym5wjiywVMlgA6AwoHwJCIy7bHN1YaxwIXqyk/751j7GZj8wFY
-	d1vJsA166rTGPBTcULvuhin+Njc5qfQDykloEpY/FMALboBQZyU0jD8c
-X-Gm-Gg: ASbGnct+9nIskMe/gcqMbiFEDsJmDTA35EBBjdkG6czzSqxoslvt6I42Zfq4HHAYEQt
-	63rnHp/zMe2cIeLFlzBEKI6gVsDeCO+qe8qsGlamtJjpQYeVRvtlctIu++VZG8+XKcsE0eBVH+F
-	hb7R1I+R56YqlDo8q+ipC7TbkvqSUboyum7Vif5Wti5/F4jruZcYm8/9rdiSwzt5fJqZQUWee3e
-	U2MIN+yBcOka5hzQ3Jm3yHcsaqk91gmXrpL9NaJjmUH4Mf1MzPviXaRZY2TZfszBJva/XJTlg5H
-	JkayA6m2Y2x/iCUcKwiQpauZbOVDq588Lv7Qwi+9nDF3cZ4GFj65T0WkgFTF5kAtlU1ie1fuVgK
-	1XW8lDw==
-X-Google-Smtp-Source: AGHT+IHZy8BDgg1jwQmCpKDukxqhrE2LVb6Ay/AY5cKY8tq1yT7pP0bu22FEBsebRudNWJpZ7jrRNA==
-X-Received: by 2002:a05:6512:3e22:b0:554:f76a:baba with SMTP id 2adb3069b0e04-556282e0d4amr3008654e87.3.1751555544426;
-        Thu, 03 Jul 2025 08:12:24 -0700 (PDT)
-Received: from localhost.localdomain ([212.192.12.80])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384ae15esm725e87.178.2025.07.03.08.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:12:24 -0700 (PDT)
-From: iuncuim <iuncuim@gmail.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 1/8] dt-bindings: nvmem: SID: Add binding for A523 SID controller
-Date: Thu,  3 Jul 2025 23:11:25 +0800
-Message-ID: <20250703151132.2642378-2-iuncuim@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250703151132.2642378-1-iuncuim@gmail.com>
-References: <20250703151132.2642378-1-iuncuim@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t3aB0RNQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4r8JsJti";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t3aB0RNQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4r8JsJti"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2CC4A1F387;
+	Thu,  3 Jul 2025 15:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751555552;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TlEXwrb7QIoZVzgJfIWUuvjzMFc9SONyRlwFyYMxNUs=;
+	b=t3aB0RNQhtEzflNi71/qB5mzvvPShp5ybcO+aVcXRXyI+L5YfZ+koXlDow25etVBgP8aIi
+	//c/RjUrsbQHGtQNchVuIPrraPposumEfvsMWLO8tQL1G/rhulFlmFA1V2bKA3GKWeUyQE
+	BtIKyjDmMkwmQp/xA4X0xhXpw9sxiKo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751555552;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TlEXwrb7QIoZVzgJfIWUuvjzMFc9SONyRlwFyYMxNUs=;
+	b=4r8JsJtiCrCHxjfKDlDa27Ag+Kok5NOfv4rGc8Qdy853A5E8EmzT/jMvtuN5+3p8OqkHvA
+	FjTckPJfYHYpysAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751555552;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TlEXwrb7QIoZVzgJfIWUuvjzMFc9SONyRlwFyYMxNUs=;
+	b=t3aB0RNQhtEzflNi71/qB5mzvvPShp5ybcO+aVcXRXyI+L5YfZ+koXlDow25etVBgP8aIi
+	//c/RjUrsbQHGtQNchVuIPrraPposumEfvsMWLO8tQL1G/rhulFlmFA1V2bKA3GKWeUyQE
+	BtIKyjDmMkwmQp/xA4X0xhXpw9sxiKo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751555552;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TlEXwrb7QIoZVzgJfIWUuvjzMFc9SONyRlwFyYMxNUs=;
+	b=4r8JsJtiCrCHxjfKDlDa27Ag+Kok5NOfv4rGc8Qdy853A5E8EmzT/jMvtuN5+3p8OqkHvA
+	FjTckPJfYHYpysAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 10E4C13721;
+	Thu,  3 Jul 2025 15:12:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dX3kA+CdZmhdcgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Thu, 03 Jul 2025 15:12:32 +0000
+Date: Thu, 3 Jul 2025 17:12:26 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Brahmajit Das <listout@listout.xyz>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
+	ailiop@suse.com, mark@harmstone.com, Brahmajit Das <bdas@suse.de>
+Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
+Message-ID: <20250703151226.GW31241@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250620164957.14922-1-listout@listout.xyz>
+ <20250702182712.GA3453770@ax162>
+ <25hcimtuueppt4w3ccvid3d7c3eots7nat4qspdr6t6minxfa2@zb4fmwz7qsyp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25hcimtuueppt4w3ccvid3d7c3eots7nat4qspdr6t6minxfa2@zb4fmwz7qsyp>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -4.00
 
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
+On Thu, Jul 03, 2025 at 06:08:24AM +0530, Brahmajit Das wrote:
+> On 02.07.2025 11:27, Nathan Chancellor wrote:
+> > Hi Brahmajit,
+> > 
+> > On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
+> ...
+> > 
+> > This change is now in -next as commit d282edfe8850 ("btrfs: replace
+> > strcpy() with strscpy()"), where this hunk appears to causes a slew of
+> > warnings on my arm64 systems along the lines of:
+> > 
+> ...
+> > 
+> > It looks like the offset_in_page(buf) part of the WARN() in
+> > sysfs_emit() gets triggered with this, presumably because kmalloc()
+> > returns something that is not page aligned like sysfs_emit() requires?
+>
+> Nathan, can you help me with providing a bit more info to debug this. I
+> set up qemu aarch64 env with btrfs but couldn't reproduce this issue by
+> boot test. Basically trying to understand what workflow triggered this.
+> 
+> You can find my kernel config, dmesg log and boot logs here:
+> https://gist.github.com/listout/de8b6efa6ddb02805b5886f35c3f73d4
 
-The SID controller should be compatible with A64 and others SoC with 0x200
-offset.
-
-Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
----
- .../devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml       | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-index 4424c3c5e..f67470b8a 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-@@ -27,6 +27,7 @@ properties:
-           - enum:
-               - allwinner,sun50i-a100-sid
-               - allwinner,sun50i-h616-sid
-+              - allwinner,sun55i-a523-sid
-           - const: allwinner,sun50i-a64-sid
-       - const: allwinner,sun50i-h5-sid
-       - const: allwinner,sun50i-h6-sid
--- 
-2.49.0
-
+sysfs_emit() is wrapper for scnprintf with implicit buffer length, so
+we can use that instead. I'll fix it in for-next.
