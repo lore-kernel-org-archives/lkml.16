@@ -1,80 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2398C24DD0C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D06226D02
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751560643; cv=none; b=PoL07eYY21UkPasfwYQ+WzTEYN7ZynH5AeXM3rWxwS1vGzK3O5J6rsz7kQvEN/Umr0XcvyWKCgE0sDten/YdzccP482vvo6jYQW4Jz/+TCwZ71DNLTRJvO9sY6unSfPF4VLCjL1BAUpDOk5Lb3Cq2S4fB9maNw2yBJZacC8SRf0=
+	t=1751560704; cv=none; b=ZDiHjz+GJCdZ/O9+8gUMPglTVkE/kJjwvGcxfkzISOt23DtAE2Mxox8HUPQYzUly9OE9ZHdi9G3zPS7+QvmIDIi/ZzfTwT9PvG4POCq6bSCC1JElcHRPhF4MX1PzU00q5XvE+NAk0F7aF1EqnHubsBwKu+d3UALjGv4KImJKB8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751560643; c=relaxed/simple;
-	bh=HoSZQvuVCpqWZpJ242iajwBFjcCc0TGUuKTY9xVgSkY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=didGH3syo45QPRC/SPZ50us1EmgMnHAacxq8JDnh7H+8FWQR07i7AYL+/F0QbaTFSCrYrOYBZnwN8sGHaO4kRZ2go1pUBaZEvcVn1dq52zdDRuchvMdUQL/p2QvQgo5AtPoJJyzVY8CXqS13/fwj+VQyK67eGEMGpskYQh9ODjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jTJhALoz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sZAPoNN+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751560704; c=relaxed/simple;
+	bh=tMw2h77EUdUJwSIctCdwYMpVl+/MG/Hi5H+pZeMOfOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oldg0IulqnqbtKKEon5IMicgwZ5Qzan4Bu6TRg1T8IOVrpIUxNyfczUXUqkl1odr8uAQCGqxCY4/ZExMQFfP4B71E6Jt2LFPicd+H2ZNScxRf64MoqYtr4XmcKL5fGk82C7R6ShZxQOeo/f3dytsLo2N61NnRk9/ZUmXyaBKDYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k/3xGlcf; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jTJhALoz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sZAPoNN+"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751560640;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k/3xGlcf"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751560700;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vNJeWSeRcHeJYp56ea0icbMw4D9OJYF8Ft586dydoJE=;
-	b=jTJhALozm1XSZmVKfGIYmaK+SkyCaAt2Om3QT/cEPLVbMBjvna3p9xaQHEBf4d5bSIlARr
-	PNsZVISnaP3GA4KHOQJSqcZYBeFiegi6MAsiwMHrf1gUbOcsAmnUrWA3zsOlTVoSAW5qOM
-	MpsbVQ1gBDbs9LmAOwbWeKo+KU54GzwPsomVjgKshq9sfLzC/eF8Cl/bgwlNxdyDod26Dg
-	i6IMs4anElx0GWHeUVpNSbA5eQNent7afauN3ucsuGKdBgwVMxZ5JjlFGhCMmcD7FuJOKp
-	uI22IfhrwBkj+oafUjL1PGQxdSgABLt4S8s67rc0pCR931bFL2XCaxalRcD3Ow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751560640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vNJeWSeRcHeJYp56ea0icbMw4D9OJYF8Ft586dydoJE=;
-	b=sZAPoNN+HzM27I6PWIqMYVMZiFPSh/b9hFaed8OPF4y/bXdM+aW8i8kUCi6AEZilOvCEiQ
-	c26ZKjLOJQCddZDw==
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 0/3] powerpc: Cleanup and convert to MSI parent domain
-In-Reply-To: <cover.1750861319.git.namcao@linutronix.de>
-References: <cover.1750861319.git.namcao@linutronix.de>
-Date: Thu, 03 Jul 2025 18:37:19 +0200
-Message-ID: <87sejdtem8.ffs@tglx>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lATfwAAqsGvlKdPeL43bykiRSCI9nUnpe0EI/piiyfw=;
+	b=k/3xGlcfdUx1S1RdNT/zUK2XrQAqNy76uL61+jctA6W99xIl0hHimYJc/FaBgtkUEnGjHj
+	KcQVPVU5zwRtThQ/bmf6HAFcdvuJaRSNka3OTCni0a0Glcm15jvwAZ/+BZZrU4DMxDIHXM
+	kqGlonSUfdMtrYoWbObCdGpP+6RT9Mo=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v2] bpf: Clean code with bpf_copy_to_user
+Date: Fri,  4 Jul 2025 00:37:00 +0800
+Message-ID: <20250703163700.677628-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 26 2025 at 16:47, Nam Cao wrote:
-> The solution is implementing per device MSI domains, this means the
-> entities which provide global PCI/MSI domain so far have to implement MSI
-> parent domain functionality instead.
->
-> This series:
->
->    - Untangle XIVE driver from Powernv and Pseries drivers
->
->    - Convert the Powernv and Pseries drivers to implement MSI parent domain
->      functionality
->
-> Nam Cao (3):
->   powerpc/xive: Untangle xive from child interrupt controller drivers
->   powerpc/powernv/pci: Switch to use msi_create_parent_irq_domain()
->   powerpc/pseries/msi: Switch to msi_create_parent_irq_domain()
+No logic change, just use bpf_copy_to_user to clean code.
 
-Gentle reminder @PPC people.
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/bpf/syscall.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-Thanks,
+Change list:
+  v1 -> v2:
+    - do not directly return when handle err ENOSPC.(Yonghong)
+  v1:
+    https://lore.kernel.org/bpf/20250703124336.672416-1-chen.dylane@linux.dev
 
-        tglx
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index e6eea594f1c..6ea3a8e3f7e 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -5208,21 +5208,10 @@ static int bpf_task_fd_query_copy(const union bpf_attr *attr,
+ 
+ 			if (put_user(zero, ubuf))
+ 				return -EFAULT;
+-		} else if (input_len >= len + 1) {
+-			/* ubuf can hold the string with NULL terminator */
+-			if (copy_to_user(ubuf, buf, len + 1))
+-				return -EFAULT;
+ 		} else {
+-			/* ubuf cannot hold the string with NULL terminator,
+-			 * do a partial copy with NULL terminator.
+-			 */
+-			char zero = '\0';
+-
+-			err = -ENOSPC;
+-			if (copy_to_user(ubuf, buf, input_len - 1))
+-				return -EFAULT;
+-			if (put_user(zero, ubuf + input_len - 1))
+-				return -EFAULT;
++			err = bpf_copy_to_user(ubuf, buf, input_len, len);
++			if (err == -EFAULT)
++				return err;
+ 		}
+ 	}
+ 
+-- 
+2.48.1
+
