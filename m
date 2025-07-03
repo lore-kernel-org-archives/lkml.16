@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3932E9EC9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 18:35:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09352F85DA;
+	Thu,  3 Jul 2025 18:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567737; cv=none; b=bmPAXxIfchQWNpuEUZkKs3+io8uywGXYxG+8SpHrgt1B7uQF3krhv/GZM5ZVNdzUUEZizA5z9skIVqcN+lPq5HhCxpwxxXqbUaL+LaQ7hJ5DuxI5VcijRFPGdjwEOL6IuV4k22Tdb+cZvUqpki+WLL8sAuVMwbljXlweegWJ+cU=
+	t=1751567742; cv=none; b=LubXzN5WgZBqBBqcGtmvuxY0vnZRRPb63UOkKREejgIyKm9cmVl2Uou78V4vnWywtFmhvFv+HSNZt6GggnbEJjuQjLa4awaNEjnU2fD2+q4CE13RlNlMGoHsmTis0vNAD5mR3qdj61f5tY3zFB7zlQ2BhJ+tWEeD2P0+O5n3yaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751567737; c=relaxed/simple;
-	bh=4IQJmfRPn5wOvf8eRJE9LC5lIdjzqxsiARifvlsXhAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jsNOv3DdHJOZdf0tyT5ytnDltSJsGpW9Dzy5593ZVD6i9DxrUnaDSClrBhyqW5qqG2Emnm86Og2j0gvb+VftnOzRvk693MIQTP1nX2KsHGZ2Z3uvxJw66roIdQz8zrwIIDc3KYXQ0Xk6aBzhod5GBov7+IqIWWH8iDEv9Z+/3ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5PR6d7i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751567742; c=relaxed/simple;
+	bh=IC0AaW5NceEW8wxtKNxGomplDZEXFb+Zwef0eWisnmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BJUeEvbzZiNPAsXRPP3UcwU3hnlvfPAE7m2TKV4yVgEnldrPmVrJ2AIu/J5IRsHSuLRDIdxaDPnhXVb/+pH9/X2ivxCDHwRFH03ffrtE9v4W0wT5JHdPxU2GfYmRrTkktVUtikaFMg4nxWVHqBS56V6jbAAMDeFVPiy5NC1DqRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PheJp7dW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5PR6d7i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87C6FC4CEEB;
-	Thu,  3 Jul 2025 18:35:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PheJp7dW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4F4C4CEE3;
+	Thu,  3 Jul 2025 18:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751567736;
-	bh=4IQJmfRPn5wOvf8eRJE9LC5lIdjzqxsiARifvlsXhAk=;
+	s=k20201202; t=1751567742;
+	bh=IC0AaW5NceEW8wxtKNxGomplDZEXFb+Zwef0eWisnmM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=l5PR6d7ij5o2bBnv3i4c24V4q+HIAjYLh8cszOeCWYjKOpgo79o6h5WGPGnTDygOH
-	 yC3XzD7djv814c0IMAcvcPSBvtTEt0cAc2+0+qQCXyJ+J8qweyrqKeVsuVxnimTs8b
-	 Zo5+AuLmBPopJ1DBv+2vcFWhvKowclDkkjEPJmPu8+AURPigEHktPShNgkVQyC8W4q
-	 etaA28PNFdeHpmTibqbndNc+6tFSft3fyuQZxVVfwMhexKN3COovYk9onNeqZ7JoYe
-	 TbUU92VGOj3rrchpEMeWYpj1vlmSGolyHJFn4/sMeVvnj3TPw0vYg0+hN6h74DAlPC
-	 pVv96QlPCJAcQ==
+	b=PheJp7dWH1mp9+0iIi+SIENaoI39JddxSfVd9oADxS2XX9TvHBmG8aVj5XsY99dtU
+	 8GAh+dffJIKsFZ87UQTsXNggJL2zVcssdldw1A/BPNtjcUGxZyfkO19lnr+vK3Ranr
+	 nVI1qh0IZZ5HuI7yfcgdZeHuio9qskwZ7ooRvlHSgai/C6+YjSFCPthc8wDkg2p19s
+	 smvV/H1emWZbk3ie33DnFEt5FzUk2naSynnrHwRE0iNQ20RArlo+bL8Avz5McfVqaJ
+	 lzQDY2QlYjYs2khC6a74BnjN/pY7fzWFIhwOD65jbP652AkmRX03pqBcST9M8yjwDc
+	 Ub8ed2A0aHHWA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: coresight@lists.linaro.org,
+To: Mark Brown <broonie@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwtracing: coresight: Use of_reserved_mem_region_to_resource() for "memory-region"
-Date: Thu,  3 Jul 2025 13:35:33 -0500
-Message-ID: <20250703183534.2075569-1-robh@kernel.org>
+Subject: [PATCH] spi: stm32-ospi: Use of_reserved_mem_region_to_resource() for "memory-region"
+Date: Thu,  3 Jul 2025 13:35:37 -0500
+Message-ID: <20250703183537.2075746-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,52 +50,46 @@ handle "memory-region" properties.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../hwtracing/coresight/coresight-tmc-core.c  | 22 +++++--------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/spi/spi-stm32-ospi.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
-index 88afb16bb6be..be964656be93 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-core.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
-@@ -24,6 +24,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/coresight.h>
- #include <linux/amba/bus.h>
- #include <linux/platform_device.h>
-@@ -634,25 +635,14 @@ static int of_tmc_get_reserved_resource_by_name(struct device *dev,
- 						const char *name,
- 						struct resource *res)
+diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+index 7c1fa55fbc47..fbf00909b6c5 100644
+--- a/drivers/spi/spi-stm32-ospi.c
++++ b/drivers/spi/spi-stm32-ospi.c
+@@ -771,7 +771,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
  {
--	int index, rc = -ENODEV;
--	struct device_node *node;
-+	int rc = -ENODEV;
+ 	struct device *dev = &pdev->dev;
+ 	struct stm32_ospi *ospi = platform_get_drvdata(pdev);
+-	struct resource *res;
++	struct resource *res, _res;
+ 	struct reserved_mem *rmem = NULL;
+ 	struct device_node *node;
+ 	int ret;
+@@ -825,17 +825,13 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
+ 			goto err_dma;
+ 	}
  
--	if (!is_of_node(dev->fwnode))
--		return -ENODEV;
--
--	index = of_property_match_string(dev->of_node, "memory-region-names",
--					 name);
--	if (index < 0)
--		return rc;
--
--	node = of_parse_phandle(dev->of_node, "memory-region", index);
--	if (!node)
-+	rc = of_reserved_mem_region_to_resource_byname(dev->of_node, name, res);
-+	if (rc < 0)
- 		return rc;
- 
--	if (!of_address_to_resource(node, 0, res) &&
--	    res->start != 0 && resource_size(res) != 0)
--		rc = 0;
+-	node = of_parse_phandle(dev->of_node, "memory-region", 0);
+-	if (node)
+-		rmem = of_reserved_mem_lookup(node);
 -	of_node_put(node);
-+	if (res->start == 0 || resource_size(res) == 0)
-+		rc = -ENODEV;
- 
- 	return rc;
- }
+-
+-	if (rmem) {
+-		ospi->mm_size = rmem->size;
+-		ospi->mm_base = devm_ioremap(dev, rmem->base, rmem->size);
++	res = &_res;
++	ret = of_reserved_mem_region_to_resource(dev->of_node, 0, res);
++	if (!ret) {
++		ospi->mm_size = resource_size(res);
++		ospi->mm_base = devm_ioremap_resource(dev, res);
+ 		if (!ospi->mm_base) {
+-			dev_err(dev, "unable to map memory region: %pa+%pa\n",
+-				&rmem->base, &rmem->size);
++			dev_err(dev, "unable to map memory region: %pR\n", res);
+ 			ret = -ENOMEM;
+ 			goto err_dma;
+ 		}
 -- 
 2.47.2
 
