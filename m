@@ -1,301 +1,223 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221B1FFC45
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1653019F120
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556488; cv=none; b=CT1SAozGf107U51+nYPd0BwZrDwuatC6Okku2ifZHxEM0akqD5tABUSvyB2DKEgheIvf5IKXRJwlVsBd4+qcYs31U3Dnqb5pS9tsbKtOzn0mZQDR4EmvVEw/LaAn0ojZB3CtTEr3w6ov1Yc6poKWhg9cPwAs+uGZLqzndm5jREI=
+	t=1751556527; cv=none; b=tNfs3qUhhtMOAUIjH3zShVihkKQ1Eg+fbJq1sWK+qq7W2whlMsUcXUTHEYrsXuhpkIFKaRMTCLJb23uUf0F1AUFzSDTn2ep4arQd1PMh3a1zZ1MqNLxurFtKjedSJGbLD42KIGGKzaOYvKe4z36FoHTd1sHdSN/uDKwrD1jzV4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556488; c=relaxed/simple;
-	bh=6J+m7sJfFYde+NRfy6nf+kjWVxfONpUpn9vTU0wAjGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EZUGbAoxCS5crckSfpMGAD4MTZj/D4n62haT228MzaY7qLdS879Hh2+CIoxBPT3IX0G/9YfdBQRAlqe86gBtWy/PW2U8EzZ+QX81fCE2Yh+CGxn+6f1C/RSmF/Yv4Rvau5tNhrNc0nt8KDu7udl/P8qJ7uM5nBriqw2GnSjZrgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XAU/zrr+; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751556527; c=relaxed/simple;
+	bh=8CzUJQpMWoh2iCytXS+C8OvozoPZGZ3UARwoY554gH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WY4TZAwhkirtjTkiuhuL5frGmRV8ZTogdBRkNLH0aqR7ml+bvqMzwbbvPMewtXc7XmDl9GqlqYfCgZY4DN44sPrEgs/+5SfCaddXaWarKEhd2A1LcTTgpGRkn+N9Psi06QkB+xfx3S2Tr2mka1G4afaSElJFGi28B9A/zvpubzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VE0KPHD4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XAU/zrr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751556484;
-	bh=6J+m7sJfFYde+NRfy6nf+kjWVxfONpUpn9vTU0wAjGw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XAU/zrr+CDG4mzbucUUD20vHKKZbRUsflpgqcl0XMAFCF+QkyX9Wsr+/R9Q6bEkfE
-	 2GvWRyUatkVTKnQG6ovMN78kj2RLqHrlBZdwC8Wgo9ZR0AckjgZ91Z9iznp4MtNMEx
-	 a0FVFYi4vnEnxfplkXSP6BukDEvrUaZosYk5yLiPkUYGfeecmjedIZtwpY27x3l/J6
-	 6o6DGMMsLlE+AAyjIxfxTmhpYD+5PWJvvxMESVSls5DFQkrqoU1rA3fqCsb+4kozMf
-	 15gBLW6UWm+Wfm9e+aDlL/TOn4nm/w22f4bw8Wx2XXRjIlrcC01Ltk+UIE1c3bW5HN
-	 AHwyF/Bp5TR/w==
-Received: from debian-rockchip-rock5b-rk3588.. (unknown [90.168.160.154])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nanokatze)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 02A2417E0B1E;
-	Thu,  3 Jul 2025 17:28:03 +0200 (CEST)
-From: Caterina Shablia <caterina.shablia@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com,
-	Caterina Shablia <caterina.shablia@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] drm/panthor: Add support for repeated mappings
-Date: Thu,  3 Jul 2025 15:27:37 +0000
-Message-ID: <20250703152746.16511-8-caterina.shablia@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250703152746.16511-6-caterina.shablia@collabora.com>
-References: <20250703152746.16511-6-caterina.shablia@collabora.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VE0KPHD4"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563D6J7B020476
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 15:28:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lB3GyQgbImWw0wJtLFROwCUwuZIRVk6wsudtXt6O2WY=; b=VE0KPHD4lxSt/UMe
+	U57ikihOWP3zDwVydsLozE4e8z/gNcvLkWQcryjj2C8iKia7UFSF2o7XAwFTVugR
+	RtNBfHLu4jEddjRHQGg7TMD9Y4NQIwKNmnl9Ff1I2RnCq0nWX/m0eqlciL5J8vTr
+	iQQ+u8N70tqWVyQ0MeTrnuEANVrASRw/Iqf8Yr/JdDiUfYJy7o2TEexI8EwZH1bj
+	EgTmgkze3pkLJ8fKUhcdA29wzRxmu49xtjno87Uy69X+blZYdT4+UDyZBb74qRUm
+	6VjCqAFCLIjd7mQw40dPFeHIVAnXOP50FCv+GUceZyx/+nRPRsxYLEPSvtd7htmo
+	0ifDfQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn7mj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:28:44 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d21080c26fso137268585a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 08:28:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751556524; x=1752161324;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lB3GyQgbImWw0wJtLFROwCUwuZIRVk6wsudtXt6O2WY=;
+        b=ZuUw9mUp5ZktTLx05mjQE6fErIwYWmSDyFF2w7TxpIv3HZZP3y8ubK23FQu/qnTXwL
+         3sQEbiqneOJ8l7pmJSjLu0XyPaEbvQmkR+ynV5uu5EjDvM8hQ8d9j2IsQVVcWHZgx5DQ
+         RI/EGEZk8NNhc1DcbZr7siuBqlkjuKyeat8kAgbri2J/hLs4NDMK7+Th6rWHQLakFOCi
+         nOFENMcd0azIRQo8EMzPQ6j9Ynlin1cLEgXzClZniPSARL9aPTUSFcIY+aIL6r0zLbQr
+         n55Op2g26XwCHVaTyr3ov6zdIOHknlcQqNXaUIcqbjpZnp84d944V5cHM9CiLxEmqmpW
+         0OhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlounuUU5VSXHk595yO9KouNzCKjHtp+BOweS87Id1gaORFfCmDrVi0WCt3Vim2hPaIucHxIgQ9JBMYOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypEPs0YTibDHg9lW5dP3Yp7hniE2pnwrvlHXNxbHbBkWIHUNSR
+	5pZ6Y2U3yWadjd/mxFT+E0SCjBEmNwwI4RK41SyL6w1hnDq3voAHNKmMyL0fSDxR3ILzJ8p9X0J
+	JZc3pBbriuYQsRM3HgtL6OyiIhPoKgr2pS1/9DYyilpPc7yJZhPMhT+/6+Qq8xOC12gY=
+X-Gm-Gg: ASbGncuqGS+Rj+T2m1bJaqzS/y/0NLV+/g6wWQoRBDBktMdc64FqVgNLFXBq4aNTW+n
+	+YPiEXd0ehoKnPW5sKchIBM8uJ8I08rCMwEhe3vYgosMXcn+ugkFymjEASZqdIMXa5s9yGe2C63
+	nyxtn9c8riVUg2xJ533iFDV50J0n15bP8MNVuz14vX3NiCvQRO0D/sJBXMo0I4938tb47TQh4dK
+	AWWV7Io1tTMsCtNR2FDJkyK5u+bUgmZfgiuFP+WYm0FPufBGdZNNE5121BtML7yVgLviONtpobE
+	ow3XIX4BANtdhu5jKCNJZgKejrrz+NvjL4X4VEF43aXyBbURp9Hx7CeSWEbVVNVpwb6fGAknv1p
+	JVMTudg==
+X-Received: by 2002:a05:620a:408a:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7d5c476ce96mr338195885a.11.1751556523400;
+        Thu, 03 Jul 2025 08:28:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYROatQiIdSRndOVo9BLkkhoc+SWGXG6ITnZGJxgqN8bVXUZzt8u+b3n1+LTxv13qnf9jpMQ==
+X-Received: by 2002:a05:620a:408a:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7d5c476ce96mr338192585a.11.1751556522666;
+        Thu, 03 Jul 2025 08:28:42 -0700 (PDT)
+Received: from [192.168.1.106] (83.9.29.45.neoplus.adsl.tpnet.pl. [83.9.29.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae37e7508fdsm939819166b.106.2025.07.03.08.28.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 08:28:41 -0700 (PDT)
+Message-ID: <6840d462-8269-4359-a6e5-d154842b62db@oss.qualcomm.com>
+Date: Thu, 3 Jul 2025 17:28:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
+ <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+ <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+ <f5ebf0d6-2f0b-45cc-b99a-b786e5df9edc@linaro.org>
+ <5qsgbqml367yq6g5vb4lotrzulojqhi5zlwwribze373a63qrn@rxi4kwyt66m2>
+ <4f38058d-a2f1-4ac5-b234-228cfb2e85ff@kernel.org>
+ <1ad2ca1e-1d57-4ad8-a057-ab0d804f1d49@oss.qualcomm.com>
+ <7da769b4-88e9-401f-bb21-0ff123818b9c@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <7da769b4-88e9-401f-bb21-0ff123818b9c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEyOSBTYWx0ZWRfX188f15o9ctUF
+ iFxls1BwfLou9PyCZ02EQJTUSUQTyiC/FY5ajBb5vfAjQWlP0miLyX/6imHc1Rr7x/ydOxidJY5
+ vmrLaG0pwDDr4hJXqKkPGc/2WMtCBuZqm2UkVoj+JJpnS2NVdLSfZspwI0jwkyUtXBqgpH0kimH
+ gpvghOZEQ7quL0eMSeeF3uo41buVIpHnT4ts66u0IazVU9Lt980Pa3Onrd+JrxilQbfmarFXHxz
+ rc4v79bfdoTgo+4cZNUzhUqWa5ZIGBz4Iz4ozv28b4miV1ZfEAMVXExI0BU3r4tTpvg2iacY4uz
+ VuO/hJybriEpGxOOJ6Bqto04OafEkEVDZXHSBip09lb7Vt6q4OJe8dvpjWOhvLnl63wr/yL1L6R
+ SbS800Ye8Fl4LKEMbE0TGtBQrTWmKC0e3LH2VJ30VFF0y5i4nPz7MgkZMP5qvvql6PdQ8zjC
+X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=6866a1ac cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=qmfFy4ndMtQ753Zl/n/b/A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=gHlHN3BjToyBUNvogygA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: SbY7-fJYZYXoqX9QrXhMf4ILs8PRIQSG
+X-Proofpoint-GUID: SbY7-fJYZYXoqX9QrXhMf4ILs8PRIQSG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030129
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
 
-This allows us to optimize mapping of a relatively small
-portion of a BO over and over in a large VA range, which
-is useful to support Vulkan sparse bindings in an efficient
-way.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Co-developed-by: Caterina Shablia <caterina.shablia@collabora.com>
-Signed-off-by: Caterina Shablia <caterina.shablia@collabora.com>
----
- drivers/gpu/drm/panthor/panthor_drv.c |  3 +-
- drivers/gpu/drm/panthor/panthor_mmu.c | 78 ++++++++++++++++++++++++---
- include/uapi/drm/panthor_drm.h        | 23 ++++++++
- 3 files changed, 95 insertions(+), 9 deletions(-)
+On 03-Jul-25 14:54, Krzysztof Kozlowski wrote:
+> On 03/07/2025 14:38, Konrad Dybcio wrote:
+>>
+>>
+>> On 03-Jul-25 09:27, Krzysztof Kozlowski wrote:
+>>> On 03/07/2025 00:26, Dmitry Baryshkov wrote:
+>>>> On Wed, Jul 02, 2025 at 01:06:17PM +0100, Bryan O'Donoghue wrote:
+>>>>> On 02/07/2025 13:01, Vikash Garodia wrote:
+>>>>>>> Anyway, in other messages I explained what is missing. You are changing
+>>>>>>> existing hardware and you clearly must explain how existing hardware is
+>>>>>>> affected, how can we reproduce it, how users are affected.
+>>>>>> Exactly all of these i have explained in the commit message. The limitation with
+>>>>>> existing hardware binding usage and how my new approach mitigates that limition.
+>>>>>>
+>>>>>> Coming to usecase, i made a generic comment saying usecases which needs higher
+>>>>>> IOVA, i can add the explicit detail about usecase like 8k or higher
+>>>>>> concurrencies like 32 or higher concurrent sessions.
+>>>>>
+>>>>> Why not make this change for a new SoC, instead of an existing ?
+>>>>
+>>>> Because we definitely want to improve support for older SoCs too.
+>>>
+>>> Older SoCs came with completely new drivers and bindings, instead of
+>>> evolving existing Venus, so they for sure came with correct code and
+>>> correct binding.
+>>
+>> No, this is a terrible assumption to make, and we've been
+>> through this time and time again - a huge portion of the code
+>> submitted in the early days of linux-arm-msm did the bare minimum
+> 
+> We do not talk about early days of linux-arm-msm, but latest where they
+> rejected existing venus drivers and instead insisted on completely new
+> driver iris. This is a new code, so how early days are applicable?
+> 
+>> to present a feature, without giving much thought to the sanity of
+>> hw description, be it on a block or platform level.
+> 
+> You are saying that iris driver was again shoved without any sanity? It
+> should have never been merged then. Better to grow existing insanity
+> than allow to have two insanities - old venus and new iris.
 
-diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-index 1116f2d2826e..585c07b07c42 100644
---- a/drivers/gpu/drm/panthor/panthor_drv.c
-+++ b/drivers/gpu/drm/panthor/panthor_drv.c
-@@ -1608,6 +1608,7 @@ static void panthor_debugfs_init(struct drm_minor *minor)
-  * - 1.3 - adds DRM_PANTHOR_GROUP_STATE_INNOCENT flag
-  * - 1.4 - adds DRM_IOCTL_PANTHOR_BO_SET_LABEL ioctl
-  * - 1.5 - adds DRM_PANTHOR_SET_USER_MMIO_OFFSET ioctl
-+ * - 1.6 - adds DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT flag
-  */
- static const struct drm_driver panthor_drm_driver = {
- 	.driver_features = DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ |
-@@ -1621,7 +1622,7 @@ static const struct drm_driver panthor_drm_driver = {
- 	.name = "panthor",
- 	.desc = "Panthor DRM driver",
- 	.major = 1,
--	.minor = 5,
-+	.minor = 6,
- 
- 	.gem_create_object = panthor_gem_create_object,
- 	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table,
-diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
-index a7852485e638..adea26985c31 100644
---- a/drivers/gpu/drm/panthor/panthor_mmu.c
-+++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-@@ -202,6 +202,9 @@ struct panthor_vm_op_ctx {
- 		/** @map.bo_offset: Offset in the buffer object. */
- 		u64 bo_offset;
- 
-+		/** @bo_repeat_range: Repeated BO range. */
-+		u32 bo_repeat_range;
-+
- 		/**
- 		 * @map.sgt: sg-table pointing to pages backing the GEM object.
- 		 *
-@@ -1007,6 +1010,26 @@ panthor_vm_map_pages(struct panthor_vm *vm, u64 iova, int prot,
- 	return 0;
- }
- 
-+static int
-+panthor_vm_repeated_map_pages(struct panthor_vm *vm, u64 iova, int prot,
-+			      struct sg_table *sgt, u64 offset, u64 size,
-+			      u64 count)
-+{
-+	/* FIXME: we really need to optimize this at the io_pgtable level. */
-+	for (u64 i = 0; i < count; i++) {
-+		int ret;
-+
-+		ret = panthor_vm_map_pages(vm, iova + (size * i), prot,
-+					   sgt, offset, size);
-+		if (ret) {
-+			panthor_vm_unmap_pages(vm, iova, size * (i - 1));
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int flags_to_prot(u32 flags)
- {
- 	int prot = 0;
-@@ -1203,12 +1226,14 @@ panthor_vm_op_ctx_prealloc_vmas(struct panthor_vm_op_ctx *op_ctx)
- 	(DRM_PANTHOR_VM_BIND_OP_MAP_READONLY | \
- 	 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC | \
- 	 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED | \
-+	 DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT | \
- 	 DRM_PANTHOR_VM_BIND_OP_TYPE_MASK)
- 
- static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 					 struct panthor_vm *vm,
- 					 struct panthor_gem_object *bo,
- 					 u64 offset,
-+					 u32 repeat_range,
- 					 u64 size, u64 va,
- 					 u32 flags)
- {
-@@ -1224,9 +1249,22 @@ static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 	    (flags & DRM_PANTHOR_VM_BIND_OP_TYPE_MASK) != DRM_PANTHOR_VM_BIND_OP_TYPE_MAP)
- 		return -EINVAL;
- 
--	/* Make sure the VA and size are aligned and in-bounds. */
--	if (size > bo->base.base.size || offset > bo->base.base.size - size)
--		return -EINVAL;
-+	if (!(flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT)) {
-+		/* Make sure the VA and size are aligned and in-bounds. */
-+		if (size > bo->base.base.size || offset > bo->base.base.size - size)
-+			return -EINVAL;
-+	} else {
-+		/* Make sure the repeat_range is in-bounds. */
-+		if (repeat_range > bo->base.base.size || offset > bo->base.base.size - repeat_range)
-+			return -EINVAL;
-+
-+		/* Make sure size is a multiple of repeat_range */
-+
-+		u64 repeat_count = size;
-+
-+		if (do_div(repeat_count, repeat_range))
-+			return -EINVAL;
-+	}
- 
- 	/* If the BO has an exclusive VM attached, it can't be mapped to other VMs. */
- 	if (bo->exclusive_vm_root_gem &&
-@@ -1295,6 +1333,7 @@ static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 		drm_gem_shmem_unpin(&bo->base);
- 
- 	op_ctx->map.bo_offset = offset;
-+	op_ctx->map.bo_repeat_range = repeat_range;
- 
- 	/* L1, L2 and L3 page tables.
- 	 * We could optimize L3 allocation by iterating over the sgt and merging
-@@ -2112,9 +2151,22 @@ static int panthor_gpuva_sm_step_map(struct drm_gpuva_op *op, void *priv)
- 
- 	panthor_vma_init(vma, op_ctx->flags & PANTHOR_VM_MAP_FLAGS);
- 
--	ret = panthor_vm_map_pages(vm, op->map.va.addr, flags_to_prot(vma->flags),
--				   op_ctx->map.sgt, op->map.gem.offset,
--				   op->map.va.range);
-+	if (op_ctx->flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT) {
-+		u64 repeat_count = op->map.va.range;
-+
-+		do_div(repeat_count, op->map.gem.range);
-+		ret = panthor_vm_repeated_map_pages(vm, op->map.va.addr,
-+						    flags_to_prot(vma->flags),
-+						    op_ctx->map.sgt,
-+						    op->map.gem.offset,
-+						    op->map.gem.range,
-+						    repeat_count);
-+	} else {
-+		ret = panthor_vm_map_pages(vm, op->map.va.addr,
-+					   flags_to_prot(vma->flags),
-+					   op_ctx->map.sgt, op->map.gem.offset,
-+					   op->map.va.range);
-+	}
- 	if (ret)
- 		return ret;
- 
-@@ -2237,7 +2289,7 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
- 
- 	switch (op_type) {
- 	case DRM_PANTHOR_VM_BIND_OP_TYPE_MAP: {
--		const struct drm_gpuvm_map_req map_req = {
-+		struct drm_gpuvm_map_req map_req = {
- 			.va.addr = op->va.addr,
- 			.va.range = op->va.range,
- 			.gem.obj = op->map.vm_bo->obj,
-@@ -2249,6 +2301,11 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
- 			break;
- 		}
- 
-+		if (op->flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT) {
-+			map_req.flags |= DRM_GPUVA_REPEAT;
-+			map_req.gem.range = op->map.bo_repeat_range;
-+		}
-+
- 		ret = drm_gpuvm_sm_map(&vm->base, vm, &map_req);
- 		break;
- 	}
-@@ -2497,6 +2554,7 @@ panthor_vm_bind_prepare_op_ctx(struct drm_file *file,
- 		ret = panthor_vm_prepare_map_op_ctx(op_ctx, vm,
- 						    gem ? to_panthor_bo(gem) : NULL,
- 						    op->bo_offset,
-+						    op->bo_repeat_range,
- 						    op->size,
- 						    op->va,
- 						    op->flags);
-@@ -2698,7 +2756,11 @@ int panthor_vm_map_bo_range(struct panthor_vm *vm, struct panthor_gem_object *bo
- 	struct panthor_vm_op_ctx op_ctx;
- 	int ret;
- 
--	ret = panthor_vm_prepare_map_op_ctx(&op_ctx, vm, bo, offset, size, va, flags);
-+	/* TODO: would be nice to replace with assert instead */
-+	if (flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT)
-+		return -EINVAL;
-+
-+	ret = panthor_vm_prepare_map_op_ctx(&op_ctx, vm, bo, offset, 0, size, va, flags);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
-index e1f43deb7eca..ad278bc234b0 100644
---- a/include/uapi/drm/panthor_drm.h
-+++ b/include/uapi/drm/panthor_drm.h
-@@ -496,6 +496,17 @@ enum drm_panthor_vm_bind_op_flags {
- 	 */
- 	DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED = 1 << 2,
- 
-+	/**
-+	 * @DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT: Repeat a BO range
-+	 *
-+	 * Only valid with DRM_PANTHOR_VM_BIND_OP_TYPE_MAP.
-+	 *
-+	 * When this is set, a BO range is repeated over the VA range.
-+	 * drm_panthor_vm_bind_op::bo_repeat_range defines the size of the
-+	 * BO range to repeat.
-+	 */
-+	DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT = 1 << 3,
-+
- 	/**
- 	 * @DRM_PANTHOR_VM_BIND_OP_TYPE_MASK: Mask used to determine the type of operation.
- 	 */
-@@ -560,6 +571,18 @@ struct drm_panthor_vm_bind_op {
- 	 */
- 	struct drm_panthor_obj_array syncs;
- 
-+	/**
-+	 * @bo_repeat_range: The size of the range to be repeated.
-+	 *
-+	 * Must be zero if DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT is not set in
-+	 * flags.
-+	 *
-+	 * Size must be a multiple of bo_repeat_range.
-+	 */
-+	__u32 bo_repeat_range;
-+
-+	/** @pad: Padding field. MBZ. */
-+	__u32 pad;
- };
- 
- /**
--- 
-2.47.2
+Iris was created with the hard requirement of being compatible with the
+bindings previously consumed by Venus. I think the logical consequences
+of that are rather clear.
 
+
+Perhaps you're saying that the binding for "newer" ("not previously
+supported by venus") platforms should have included that from the start,
+and I agree, that would have been better, but hindsight's always 20/20.
+
+On a flip side, any additional requirements we talk about here, also
+apply (in reality/hw, not talking about current bindings/driver state) to
+every single "older" platform as well, and skipping them is pushing your
+luck every time you access the hardware.
+
+
+I also don't think it's fair to leave them in a permanently-suboptimal
+state just because the initial submission wasn't forward-looking to
+these previously-unimplemented requirements. I'd even say that if we
+want to fix it, we should do it sooner than later, before the bindings
+age and get more users that would care about breakage.
+
+Comparing against downstream, I only really see IOMMU specifics (binding
+SIDs to a PA range, which this series touches upon plus ensuring secure
+buffers are associated with a specific SID, which is done basically the
+same way) and (on some targets) an nvmem-cell for speedbinning.
+Everything else (PDs, clks, icc, irq, etc.), we've already covered.
+
+>> That's why we're still adding clocks to mdss, regulators to camera
+>> etc. etc. to this day. And it's only going to get worse when there
+>> will be a need or will to add S2disk support with register
+> 
+> We speak about iris here only.
+
+Sure, I'm using the other ones as an example to show you the actual
+root cause of the problem. It's the same "the initial bindings
+submission was not perfect and to make better use of the hardware, we
+need to describe more resources / describe them more precisely"
+problem that pops up every now and then and is actually difficult
+to prevent.
+
+Maybe we can have some sort of a broader conversation about whether
+bindings from before SOME_DATE or e.g. not older than N kernel releases
+back should be deemed volatile, but that is a story for another day.
+
+Back to the point, I actually think what this patchset does is
+resonable, especially given the address range and SMMU SID requirements
+that the OS *must* be aware of (or the device will crash after a
+translation fault / security violation).
+
+Konrad
