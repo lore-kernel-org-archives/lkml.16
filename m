@@ -1,113 +1,120 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8751A3FD4;
-	Fri,  4 Jul 2025 03:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073561E5213
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751601211; cv=none; b=oREfn3xbk3KVJni4fxBJbJiTkzXMnXArzNJfHyEOr50ZRQ/I8DWuJDViw4GlRNLMYF6MfDEpr+6jNCrXmqo8WBWRPI1p0jJ4HQtFMQCK2ZjRKitlnlcwgfUmWHoLS1X/wGlXrBJT3UQnmRGYKU0cSPV9SRDzi0Q+UpA5RwX/b+Y=
+	t=1751601495; cv=none; b=iWpM1f7/cYh8GFbW++pAQ8Sa13TNKCjz3j0K6jA+ZuQHV+meTah/Q3+fhFulzeSKq3yyW19obw7+rguH51jB3Q1iSaJnAK5qMDV1T6J9/v9bR0KKClgscg3UjcKDNijbSC7+lRMCWQIYLn4g7/yG/lXZbKe7oF+hjON8uQyARxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751601211; c=relaxed/simple;
-	bh=zwRLPwT2eQg168Wfug2SYslZnKArpTcPqpw6Tg/LhSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmtI8RFKY9eOUVr9zTy5UmpkLImj192Yyby2bIKxlB2/AwY6TPtIEMVq/3M8M8pD03ryqfCYzdAktJVRvSAKmGjDRs/8/8L1JR4jz06WDCxzvhP8W3lTpwpMzgh6yvHBPjBH/5G4YQRJ7vgQCxWoUHiNUXm4HRzbwsePoVik410=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iOfG5h+b; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751601495; c=relaxed/simple;
+	bh=CwsW/v3kGTUgLenN3mCNVgbHpSdDlpbvzUgi56ChsA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=txk0iuaEPdF2n8M+bxMsx/Dk8FqfucP7JPrPiMv4NnSlfNFBJxVNK9UqRz51SVC9ug12iDHylAqAnn38dDOZseHZypYaMrRN1ZnUT0HFfVTL6WkqAFnaQKZPg6iwwFllHCG9RW7azn3SPKQZRf67LWtonnWwudo4GHjTV9eg/8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Sy5ykVVv; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOfG5h+b"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso644615a91.3;
-        Thu, 03 Jul 2025 20:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751601210; x=1752206010; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V98NwQHZpZ1xGgxUD4OMgi+d8tY5VWQjICNCxbkdWoI=;
-        b=iOfG5h+bSX6OrSMJMoTzhV6idn02WCZQFpJtui13jmF+3FH+q45o6Mb+RYprv3Rt4k
-         GhKYd8M6XeDGMSMxteo93Qhv8lDaI0tJ3fkyqwwKFeVI7BdkLcvoFRKm8kul3VbBMTF6
-         Vtzz/vdaipnUdwVNakkSa0QtJE8a3Cc6mZu1ANDy3ymulJrn5b3ASolGcQoXbJFXMsFr
-         zz33+/5oxgr53Sbsuantv9DHBQ8easWAavB7isC/RVGslu4gBC/amXr9F+SGf8U9p0O/
-         wcfAErfvsiKFQmzedG/1SjNAMeoMZyPUptbleiqGUI9eQBVsGYd2Xt2kjzWTl9cSCzo3
-         L2cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751601210; x=1752206010;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V98NwQHZpZ1xGgxUD4OMgi+d8tY5VWQjICNCxbkdWoI=;
-        b=sconyij02+O9pHhLicNnp08cHX+ccnt1a63aPzfFa7DUoXFEhwfXaf+o/+LSuGKLYs
-         Pecqm7nCK67GKheOzx3QcyKwADjNiGeDnwIx94Kvqu6/vlVtS6yL9RwXk58uT4qZWlas
-         ZMyUZo+5la2fGZrM3jqQLui5VXsOf5/k5MaDMQAbhaHF0LLvRAe3VCCSwXPxuA/yjZDH
-         +2Rm0tzM2Sb1Pd6XpprcSaWKiq8MmxQ2Q8TUxeip2/QEuvxofhFttK1mviQoiO8QpXCv
-         xfG7PKowkm4BefzvJDJR/osXJrgKH62mXvMbvu78pThXU/tXJ/0ISjdV01uL3dWCbhvY
-         NjhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvaN8yA1IEQxXKxI9W3FIafd37fdUdzs0I0QPmkLpXTQV5FUnwMgqm1rO+5oAF6nYO6rZIBoEwnEQK@vger.kernel.org, AJvYcCXOgRndqkTYiFzPXbkGW2cULdecDWvFPMKMULL+tEGuO8pJRarobU1nHWJDB+bnOtIot7TPKH99hBXE256U@vger.kernel.org, AJvYcCXlCjFY82//bDCEdbqyyPKWGH4jIMZ1PbhSlL7A/Tsz4lp7xxxZA6YMByDOxepE/KiLobwCvb7sSyc=@vger.kernel.org, AJvYcCXvWwgnxIMvIOJVPTV1BwU48VjG3va/x7M7uch/B2G/MRxRNTS4l4Y0a+ZKy94jw+IMCHmrb86M9Lx3j1QXyg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwj3wGTCef+e9A2au1RxLHeRX+9MFPox7pQ4P9WGKuNNIFHmv4
-	3YwxlY9xE0h9YcL/i0lsCZsFtmV8fJTA41BsR9GX0aIeQ6nBYXLxVcBB
-X-Gm-Gg: ASbGnct5Z8urcNNsATWO/CYEygMAeOsg/jyvSqjOzviUkKp51mK2E7a2jZ9F5FUR0Bk
-	UuNJF2x05D46t6ex5lZYP21cV1zl8RZdsEc4SomSbU8/TaaD8HldryCftAAdvKpFjS0PxrfCeNE
-	t8CwKspratOx3+Ed58U1lqwulQJhQLTxvGQZ+BrKG/XgDa4A+IhV9jCj46fGipk2ogqzmimW2Mv
-	PXQzRaKA3gRRJ9kC+FhpvWHLSZDRe9wA5SQRhN+uB4SUO2pPveUMnYrf879g97rCQEY0O+iEcwr
-	3MnFVxsvofpwPIfRrgig602xiTwb4SH12OuXWLCBZMWnxsSxcRTG/uHvrm4wjw==
-X-Google-Smtp-Source: AGHT+IHogvr66NhGLX5buUAq1Mw27chMolznrtFETznmKR2+R2UdttsZVVX9IjUimzMH84E5+HrBtA==
-X-Received: by 2002:a17:90b:3e8e:b0:311:eb85:96ea with SMTP id 98e67ed59e1d1-31aadd231c8mr890732a91.9.1751601209705;
-        Thu, 03 Jul 2025 20:53:29 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaaf2cd54sm831381a91.23.2025.07.03.20.53.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 20:53:28 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1E7564206885; Fri, 04 Jul 2025 10:53:24 +0700 (WIB)
-Date: Fri, 4 Jul 2025 10:53:23 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>, John Groves <John@groves.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
-Message-ID: <aGdQM-lcBo6T5Hog@archie.me>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-19-john@groves.net>
- <aGcf4AhEZTJXbEg3@archie.me>
- <87ecuwk83h.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Sy5ykVVv"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250704035806epoutp01daf199b2f8b51c4342fcec23bc010c0b~O8EWBvYTU2664626646epoutp016
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:58:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250704035806epoutp01daf199b2f8b51c4342fcec23bc010c0b~O8EWBvYTU2664626646epoutp016
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751601486;
+	bh=x/8gj71UJV86nP6lspRD9k7s8nGbai8aJQjsGNNfkWs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Sy5ykVVv9igqpbrP5eTn+ACaqNixyqCQJqmIqarv/c9xCb+XH518N4F8tsGuN6meQ
+	 wLMHXZFJBXmVuGd56oPNBUItOsjxPfYYpWTsJNPvjw6GK21ZZFZfTZ+F5jWxKGOdyt
+	 zmIDWub3p70R5y6CFiKvCITYFA7C0LqlI6nfY/QY=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250704035805epcas5p320c4465b7969403a662650d43de3d573~O8EVMpvZo0399503995epcas5p3J;
+	Fri,  4 Jul 2025 03:58:05 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bYKbx3SWkz6B9m6; Fri,  4 Jul
+	2025 03:58:05 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250703100429epcas5p1dd84b9da7f710c941e856857e212f64a~Ota9A8bTr0702407024epcas5p1G;
+	Thu,  3 Jul 2025 10:04:29 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250703100426epsmtip1b6479f8c372de8f2814a0faefe0c5332~Ota6ltdXZ2058220582epsmtip1u;
+	Thu,  3 Jul 2025 10:04:26 +0000 (GMT)
+Date: Thu, 3 Jul 2025 15:34:21 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
+	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
+	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: Re: [RFC PATCH 02/20] nvdimm/label: Prep patch to accommodate cxl
+ lsa 2.1 support
+Message-ID: <158453976.61751601485478.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <6865728b489a7_30f2b72947b@iweiny-mobl.notmuch>
+X-CMS-MailID: 20250703100429epcas5p1dd84b9da7f710c941e856857e212f64a
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124011epcas5p2264e30ec58977907f80d311083265641
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124011epcas5p2264e30ec58977907f80d311083265641@epcas5p2.samsung.com>
+	<700072760.81750165203833.JavaMail.epsvc@epcpadp1new>
+	<6865728b489a7_30f2b72947b@iweiny-mobl.notmuch>
+
+------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-In-Reply-To: <87ecuwk83h.fsf@trenco.lwn.net>
 
-On Thu, Jul 03, 2025 at 08:22:58PM -0600, Jonathan Corbet wrote:
-> Bagas.  Stop.
-> 
-> John has written documentation, that is great.  Do not add needless
-> friction to this process.  Seriously.
-> 
-> Why do I have to keep telling you this?
+On 02/07/25 12:55PM, Ira Weiny wrote:
+>Neeraj Kumar wrote:
+>> In order to accommodate cxl lsa 2.1 format region label, renamed
+>> nd_namespace_label to nd_lsa_label.
+>
+>This does not really make it clear why a name change is required.
+>
+>Could you elaborate here?
 
-Cause I'm more of perfectionist (detail-oriented)...
+Hi Ira,
 
--- 
-An old man doll... just what I always wanted! - Clara
+LSA 2.1 format introduces region label, which can also reside into LSA
+along with only namespace label as per v1.1 and v1.2
+
+As both namespace and region labels are of same size, i.e, 256 bytes.
+Therefore I have introduced nd_lsa_label as following
+
+   struct nd_lsa_label {
+	union {
+		struct nd_namespace_label ns_label;
+		struct cxl_region_label rg_label;
+	};
+   };
+
+Sure, I will update commit message with above information in next
+patch-set.
+
+
+Thanks,
+Neeraj
+
+------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_
+Content-Type: text/plain; charset="utf-8"
+
+
+------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_--
+
