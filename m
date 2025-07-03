@@ -1,146 +1,227 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F242D3A72;
-	Thu,  3 Jul 2025 13:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064E92E267E;
+	Thu,  3 Jul 2025 13:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548138; cv=none; b=gpCqJ3TuckDxbkSmq2NJT0prOTNGfY8bTv+m/CaJxR0SzP6593rUeAFRSmI0lTMkLI0jcobLCTxwWjyZj+cFbl2+w3dj0RYAUUwpnd3oghwn2wHzjCGbwxRVDYgi19ieUwrEYq4d9jZbK+YyCA/t9E+L9AMLHQA85h9Ni3gDG08=
+	t=1751548182; cv=none; b=mQABWyGA/cQtTQZJeuwFqOM4HpcwqwtadgXDtSXsD0IkocjNnzs/+rytxqWxGlwK6FQO/oTrSU8oIGHcDKz3zzm8m6mWRSzQgCJy6Hfw9fqbDS38vURgwTcOatst8REWJEIy5rW2fJ61xM6FMT+O4iVk0myMn3yX0R8GTQrj/cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548138; c=relaxed/simple;
-	bh=pZbI5ym7TtzcRfecHeI0uDxdfaVbnqScARauxiC1Sd0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=imOwKLFqt7k2JYiZhIMsSQkActsyPjf9BUJ1Bch5mCHBxLe2MJk1VLPghejL+OX2gBrnUBUh6E+h8R+ad6prihYRMtvFkf9UF8bnABwWK28tVyzyaLC2ZVc05HQh3syGP/+nuk3AvH9xNN3mtmwTkPdHd9mbBoENxLWAo/JrjhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zp62OkkM; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1751548182; c=relaxed/simple;
+	bh=kgui7inL/vqDsBTMEH69lNiIWQHRQWTR+OPqeHY6vs0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=htTk3xkMs+EWIia+8HkcNosg86Txm4InmJrzEC3niEK8/ICirdfZlxXxAIbw7KstKY3/4dwKSc225EDS/jhZkc0I+jmdF5HX+6jUDk/pCv8NygL5nYSGYS8zieMZQ3HsivXdHhzLbX+XXf6/daxdHkEVnUmzW73TBevP8MeupBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zp62OkkM"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a823b532a4so39460601cf.2;
-        Thu, 03 Jul 2025 06:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751548135; x=1752152935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSWkEMF2WVElgQiqk1mWdTcpv8AKmbdHRCi0k3irPWQ=;
-        b=Zp62OkkMSnOm7TpGUhYVWrcHnPURZFDCedQKpGOCJkYZNSkgBfoXCmKWr+MHUwGZFW
-         EjlqlSpjWyydIN5yjaLMHwB/55A8+uK7YD083A3LSh8gHyDj9zYxh5HAl6OF8gwYaE0w
-         fQnt/u3YbVeA3+eyc1kfzX+cgSTbP5/j4nXGsYUwWrod3MBAaVcQg2xal9RkxW0obkrF
-         Eiv1PTwXIP8Ys71Fj8psHHSwwcs7y8xDo9hjIie1aCMNH0zh1+ul5krQ7TgiYlud1A7O
-         yt5eflfZlrQkhEtB9lDKa4bedcMsVpLo1ng33BobD6wYpD1liqy96Sb42IzgMW79Ffqt
-         E2XA==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so9682423a12.1;
+        Thu, 03 Jul 2025 06:09:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751548135; x=1752152935;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751548179; x=1752152979;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MSWkEMF2WVElgQiqk1mWdTcpv8AKmbdHRCi0k3irPWQ=;
-        b=bY9dfdDeSre2mu79gsvbgZjVGLWU1HLkQwNe/MmKyfH8IxWsjGBexqjd6jgEhtpg7a
-         TXOn1/o+bOOcIJiuOOsTZOfOBovqted3tUQ8K8ODmY0zQO2WUAXfq2nNH5JMQgmKGC5D
-         e0m6PGpyI3Ol/jL03pwWT9ewJxcnT2z5gmFaBc+H1CU/OO3EchJXm8Pm7LAJ9MmpRkd7
-         xpRZQ213MJvcjk9UD1rRAwiFcpztneDbon36cKqYB6OiC4mat8l0sxOW6MvpTcmjRP4I
-         H+S5bibevVccW34r9sYHuQKIlDIKYHGGBofoJpjkKzx3BDhMOXZpgondUGNlbQD4WG3N
-         MCKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ8D26/GYjl+XSPCpawWhzIJyu1o1j4YG4fzgbPU1bFqVuHYVGLtVzXhd8zZaMYHzJhBBmx1eR2/zh6xHa2d7IHg==@vger.kernel.org, AJvYcCXpdTw3m6/gRIGCUtn0+ZWgYYbsbwC2wasNPWAvDMK2hM5MgxTwd/s1oRKKvCb9sSuyWFjLK8MkvsYBtFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPb/rsYrsmcE3FNor2ujDsCCvFXSoKPs/8P1MvVl4DcEPttjQm
-	vjEwEqv6mDm+jIleXK5pJHW+l8nykn1q96/xMjQ4apTl+ZcIWyihf02+
-X-Gm-Gg: ASbGncvTOMonCJRKFlGJEylorGzBinXlQvfW72EHNdwUw4GdSTCNOXleTQMmHTbIy/q
-	1kPFyftYXyZbm9Szqv0jWAI5f/6G+oZxxiT0pjcmupPD/71kH/ygg6YvIumM9M5TjnG1YE52iEI
-	50j0DadeQrNLl170nn5bSzWIiom9DaGZxQBUcIPJX7LVsEZdUhXmqmlVINKm1dx9mV8Zvg6hHQc
-	P8+gGMoPO1SoYn0yVdJJr2y0Y88FDa3zwlq1yfPqsHkKUsCC8jfvCNwqJNHtVo8tY+XuQGKhrqb
-	j2xz1pUw1LZ+f2RSUjN551m5XWGg8ay5RoZ8UFPE+yHVqZagNzjEnderj50VGUyltyDP1zDtXtz
-	PeHk=
-X-Google-Smtp-Source: AGHT+IGroe8sSDGARASmREqDinTKJNPHDZfD5QFZoPsxPWLxadIu9TXjl+Rxu7ZcO3g4suDjXSuCiA==
-X-Received: by 2002:a05:622a:153:b0:4a7:ff6d:e94c with SMTP id d75a77b69052e-4a9879c6e11mr49451301cf.22.1751548135066;
-        Thu, 03 Jul 2025 06:08:55 -0700 (PDT)
-Received: from localhost.localdomain ([2804:1b3:a7c0:b293:bc62:f957:108d:1060])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc57d7dcsm107314561cf.60.2025.07.03.06.08.50
+        bh=JbShCvDOHKErkMP/Gg1T/sR3JkdeJYzMVJhkxwSXBGw=;
+        b=miD0VAe/4DAcEuqUZalWA0vsczvmi2J3OqiHBiQh5y2pnPzSpWlMB3hhrgBCLoLE5R
+         o2BecKWNGVDlha1opmmqZNhJeDPaPqP1bOa+boFOCAGDDZDG5ajWyRTTxEZYrRtdqoqP
+         /OUt6/yjHF9Ogf5Wsj9MQ6fFDyJHIjaNj/ucylrYWaxvQNJ6TTedPH8P70LwH4dC4YeE
+         ij433+iOcPIlgZgGRfewWzTivMh6b/vsX1Oi6XX83t2a6nVFNyIrQKvpivQ5KA/kdK56
+         CwrXJ6/82eMJ1Rt5HmyotAbp8GqqJLah2LP71AKprzVY83qHCrLbrxJvOfPOMCOcKbfq
+         5LPw==
+X-Forwarded-Encrypted: i=1; AJvYcCULE6RRBngmA5C432Z6CDfq7f95eT3bnzkXhH/8spZxusC5IVJJLWUxfSUb8IY3n8PLyCQB4bg2en1bmLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCa3NcmF33JmKs8mC2fJNegV3ms92ipKyEaw9ct+qEamat14S7
+	9qebl5HFYaMu88RaW/fJcvIwkfcTndrEBW70D2/NaI0jMqZcA8OcmZp/
+X-Gm-Gg: ASbGnct0TXuIavVuqzXTG1bfv0kNC/CR3ps2wbJS5GwT1SnqiuquNzT2PYKrLma/6ln
+	vxXJt92aGWkZdcvX1kMkUooUuyGq2NqMwGckYlux/C/2XZaJkU+MITja9BfWhTWLYgpyvy8gJXI
+	SvWLCXeowD2h4qZZV3eT+eA5sVy/9YyWSzTpnNBvCQc/FFdudOBXJ8xp8fyyGFO1tFx4wUjwD5F
+	k9FD78PSLOAImghpLjqsjT/9rlpb29wkXY38NSpWHS57dupjNyZGRlMq3GW4eX6AgJr4RMOwLkn
+	SXgvxrPCnmOIoC0NjeQdBCfMSpiaUzgdS/IAxBWOpc1CSr7+GqfRHw==
+X-Google-Smtp-Source: AGHT+IH7hCjykRgI9mpodZMOhaf85NYz4FocHyyQgjmldVU3vGkcWKPV4AoKvcwsfoHIqsVpJ5ac/Q==
+X-Received: by 2002:a05:6402:2113:b0:602:1b8b:2925 with SMTP id 4fb4d7f45d1cf-60e52e3ba2amr5561204a12.29.1751548178913;
+        Thu, 03 Jul 2025 06:09:38 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3c55ed0d8sm300195766b.184.2025.07.03.06.09.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 06:08:54 -0700 (PDT)
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Iuliana Prodan <iuliana.prodan@nxp.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	linux-remoteproc@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>,
-	Ritesh Kumar <ritesh.kumar@toradex.com>
-Subject: [PATCH] remoteproc: imx_rproc: merge ITCM and DTCM regions
-Date: Thu,  3 Jul 2025 10:08:31 -0300
-Message-Id: <20250703130831.18830-1-hiagofranco@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Thu, 03 Jul 2025 06:09:38 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 03 Jul 2025 06:09:31 -0700
+Subject: [PATCH net-next v2] netdevsim: implement peer queue flow control
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250703-netdev_flow_control-v2-1-ab00341c9cc1@debian.org>
+X-B4-Tracking: v=1; b=H4sIAAqBZmgC/23N0QqDIBSA4VeRc51Djyupq73HiKg8lRAaKq4Rv
+ fvA613/8P0XRAqWInTsgkDZRusddAwrBvM2upW4NdAxQIG1aJTgjpKhPCy7/wyzdyn4neOERum
+ 2qZXWUDE4Ai32LOobHCXu6EzQVww2G5MP37LLsvQiayH/yllyyfEpFLbL3MpJvgxNdnQPH1bo7
+ /v+AVBVVdLBAAAA
+X-Change-ID: 20250630-netdev_flow_control-2b2d37965377
+To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, dw@davidwei.uk, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-dd21f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4672; i=leitao@debian.org;
+ h=from:subject:message-id; bh=kgui7inL/vqDsBTMEH69lNiIWQHRQWTR+OPqeHY6vs0=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoZoERcft8bK3dMVKQb6yXmuyia5dVmmZX1fuCW
+ OdEkvDfGveJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaGaBEQAKCRA1o5Of/Hh3
+ beP7D/0RIGkLt+gYe9hGiFpgO5Vbjel27Tcg8bhVWGFHBrhltBotjNvwizDW8kHBktKc9Lbm7Ef
+ y4asKd46RjeOczmGeWWpJUKy1LAzmnASk3bCdLP9eKzV9hyad28xX8aGBRTKMJ1caM63nQQPx/C
+ uNyy8Bht3yHmbpgOC5w+MQeLeZifPYdR6yBptJ/grZ72CUe8hEsNRcoijhB4ZtnAenwv6mTSE5E
+ nL5hh5KiOgDBEo/r6Pgkrk8T0ID9JK6M0tLb7uzolNcGm1sHIVhzzvSFG93Cs/8KGd0o+PHddoi
+ r8mwu0yxZa7NQmb9ndBszgS5eGtwOBj0rLHNxmt3imw9tSA9wPmba6+fD0s/+NUdH/H0Z+nSoQM
+ oPehLXmtN0qbVU1KZ9oA7Rlen9XHqjxiGqN7Bsb5brSRXsg8gWViReUt23PnjYl/BmT23dw7ajx
+ bpe0EPf+HzeCjGsjv3sOnczi1+2M39GP+x7qX2ABWLG8surlZ5Twi3BVPG7K3hjlZh360bPnM0L
+ is/DHNpDL+Kb7HBaWR4jCYRGkNWlkiXnSpVqbdtsAsZC26V7QwHgbpsjKJEGxP83gyYoL5Mcl85
+ yrdFE20Clu64UDZtrWpq5RabfErPdmZwPLM9zVfdsn5GaaG9edhLTvHKsnFyXmNw4ohEuGiMa3d
+ 8mRGkISuF1Uh9bw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-From: Hiago De Franco <hiago.franco@toradex.com>
+Add flow control mechanism between paired netdevsim devices to stop the
+TX queue during high traffic scenarios. When a receive queue becomes
+congested (approaching NSIM_RING_SIZE limit), the corresponding transmit
+queue on the peer device is stopped using netif_subqueue_try_stop().
 
-Merge the contiguous ITCM and DTCM regions into a single region to
-prevent failures when loading ELF files with large sections:
+Once the receive queue has sufficient capacity again, the peer's
+transmit queue is resumed with netif_tx_wake_queue().
 
-remoteproc remoteproc0: powering up imx-rproc
-remoteproc remoteproc0: Booting fw image rproc-imx-rproc-fw, size 151824
-imx-rproc imx8mp-cm7: Translation failed: da = 0x1f48 len = 0x1fcb0
-remoteproc remoteproc0: bad phdr da 0x1f48 mem 0x1fcb0
-remoteproc remoteproc0: Failed to load program segments: -22
-remoteproc remoteproc0: Boot failed: -22
+Key changes:
+  * Add nsim_stop_peer_tx_queue() to pause peer TX when RX queue is full
+  * Add nsim_start_peer_tx_queue() to resume peer TX when RX queue drains
+  * Implement queue mapping validation to ensure TX/RX queue count match
+  * Wake all queues during device unlinking to prevent stuck queues
+  * Use RCU protection when accessing peer device references
 
-This approach is the same as commit 8749919defb8 ("remoteproc:
-imx_rproc: Merge TCML/U").
+The flow control only activates when devices have matching TX/RX queue
+counts to ensure proper queue mapping.
 
-Suggested-by: Ritesh Kumar <ritesh.kumar@toradex.com>
-Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-Hi,
-
-The ELF I tested had the following data section:
-
-Memory region         Used Size  Region Size  %age Used
-    m_interrupts:         680 B         1 KB     66.41%
-          m_text:        6984 B       127 KB      5.37%
-          m_data:      130224 B       128 KB     99.35%
-         m_data2:          0 GB        16 MB      0.00%
-[100%] Built target hello_world_cm7.elf
-
-Which triggered the error. After this patch, remoteproc was able to boot
-and work fine. Thanks!
+Changes in v2:
+- Move the RCU locks inside the function (David)
+- Use better helpers for waking up all the queues (Jakub)
+- Link to v1: https://lore.kernel.org/r/20250701-netdev_flow_control-v1-1-240329fc91b1@debian.org
 ---
- drivers/remoteproc/imx_rproc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/netdevsim/bus.c    |  3 ++
+ drivers/net/netdevsim/netdev.c | 63 ++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 64 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 74299af1d7f1..bbf089ef48ee 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -166,8 +166,8 @@ static const struct imx_rproc_att imx_rproc_att_imx8qxp[] = {
+diff --git a/drivers/net/netdevsim/bus.c b/drivers/net/netdevsim/bus.c
+index 64c0cdd31bf85..1ba52471f3fbc 100644
+--- a/drivers/net/netdevsim/bus.c
++++ b/drivers/net/netdevsim/bus.c
+@@ -366,6 +366,9 @@ static ssize_t unlink_device_store(const struct bus_type *bus, const char *buf,
+ 	err = 0;
+ 	RCU_INIT_POINTER(nsim->peer, NULL);
+ 	RCU_INIT_POINTER(peer->peer, NULL);
++	synchronize_net();
++	netif_tx_wake_all_queues(dev);
++	netif_tx_wake_all_queues(peer->netdev);
  
- static const struct imx_rproc_att imx_rproc_att_imx8mn[] = {
- 	/* dev addr , sys addr  , size	    , flags */
--	/* ITCM   */
--	{ 0x00000000, 0x007E0000, 0x00020000, ATT_OWN | ATT_IOMEM },
-+	/* D/ITCM */
-+	{ 0x00000000, 0x007E0000, 0x00040000, ATT_OWN | ATT_IOMEM },
- 	/* OCRAM_S */
- 	{ 0x00180000, 0x00180000, 0x00009000, 0 },
- 	/* OCRAM */
-@@ -180,8 +180,6 @@ static const struct imx_rproc_att imx_rproc_att_imx8mn[] = {
- 	{ 0x08000000, 0x08000000, 0x08000000, 0 },
- 	/* DDR (Code) - alias */
- 	{ 0x10000000, 0x40000000, 0x0FFE0000, 0 },
--	/* DTCM */
--	{ 0x20000000, 0x00800000, 0x00020000, ATT_OWN | ATT_IOMEM },
- 	/* OCRAM_S - alias */
- 	{ 0x20180000, 0x00180000, 0x00008000, ATT_OWN },
- 	/* OCRAM */
--- 
-2.39.5
+ out_put_netns:
+ 	put_net(ns);
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index e36d3e846c2dc..b5b13fba6450d 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -37,9 +37,67 @@ MODULE_IMPORT_NS("NETDEV_INTERNAL");
+ 
+ #define NSIM_RING_SIZE		256
+ 
+-static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
++static void nsim_start_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq)
++{
++	struct netdevsim *ns = netdev_priv(dev);
++	struct net_device *peer_dev;
++	struct netdevsim *peer_ns;
++	struct netdev_queue *txq;
++	u16 idx;
++
++	idx = rq->napi.index;
++	rcu_read_lock();
++	peer_ns = rcu_dereference(ns->peer);
++	if (!peer_ns)
++		goto out;
++
++	/* TX device */
++	peer_dev = peer_ns->netdev;
++	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
++		goto out;
++
++	txq = netdev_get_tx_queue(peer_dev, idx);
++	if (!(netif_tx_queue_stopped(txq)))
++		goto out;
++
++	netif_tx_wake_queue(txq);
++out:
++	rcu_read_unlock();
++}
++
++static void nsim_stop_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq,
++				    u16 idx)
++{
++	struct netdevsim *ns = netdev_priv(dev);
++	struct net_device *peer_dev;
++	struct netdevsim *peer_ns;
++
++	rcu_read_lock();
++	peer_ns = rcu_dereference(ns->peer);
++	if (!peer_ns)
++		goto out;
++
++	/* TX device */
++	peer_dev = peer_ns->netdev;
++
++	/* If different queues size, do not stop, since it is not
++	 * easy to find which TX queue is mapped here
++	 */
++	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
++		goto out;
++
++	netif_subqueue_try_stop(peer_dev, idx,
++				NSIM_RING_SIZE - skb_queue_len(&rq->skb_queue),
++				NSIM_RING_SIZE / 2);
++out:
++	rcu_read_unlock();
++}
++
++static int nsim_napi_rx(struct net_device *dev, struct nsim_rq *rq,
++			struct sk_buff *skb)
+ {
+ 	if (skb_queue_len(&rq->skb_queue) > NSIM_RING_SIZE) {
++		nsim_stop_peer_tx_queue(dev, rq, skb_get_queue_mapping(skb));
+ 		dev_kfree_skb_any(skb);
+ 		return NET_RX_DROP;
+ 	}
+@@ -51,7 +109,7 @@ static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
+ static int nsim_forward_skb(struct net_device *dev, struct sk_buff *skb,
+ 			    struct nsim_rq *rq)
+ {
+-	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(rq, skb);
++	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(dev, rq, skb);
+ }
+ 
+ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
+@@ -351,6 +409,7 @@ static int nsim_rcv(struct nsim_rq *rq, int budget)
+ 			dev_dstats_rx_dropped(dev);
+ 	}
+ 
++	nsim_start_peer_tx_queue(dev, rq);
+ 	return i;
+ }
+ 
+
+---
+base-commit: be4ea6c336b9a4fc1cc4be1c0549b24d0e687488
+change-id: 20250630-netdev_flow_control-2b2d37965377
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
