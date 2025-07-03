@@ -1,46 +1,71 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A5291C37
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382551B95B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751537667; cv=none; b=O2b5XKkXvxAYHD7dGicn9p32MfvArL5argtE8J2+4xnm3JI6n13HFd2impNX8vkN7aqfzqBHzDtm8dhIJlUIwlTNWEGtp3Tpj+2TqtyFblgjMWYSGSDoct1lW/GU43ZUPVqGiMv3lh+DweRaCDBXC4YAHGtJRYxMfkC7W+fx9zU=
+	t=1751537861; cv=none; b=kmMDABjMV24wOk375y94I67bs4ix/bSe3xN8wgzHdu/087OsYTJ2vfUfMUbR5QMVyOBcYVp3ODndWOB2r5ELRGUxyzhRMNDJ73RR/Tdadd4EEJwOUoYayshs+gyskSi+elHurY+ejVP+b7Mn5BNNBkmTRZpTSmVPDfdERsJvT9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751537667; c=relaxed/simple;
-	bh=1SyaE8X7sL1OoajKeDkoTMe0SoZJKBQj8Xqr0p5F82k=;
+	s=arc-20240116; t=1751537861; c=relaxed/simple;
+	bh=7FiUXG03y5bMSiB9VO4YZAgtye/Y2LylQnBEoNChdBA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RoctH1TsOVjMSjGsqn1qqcMscx8SMCT4paJYyC+sx/wCNDQIWc0ZsiRwcmINrPuyRZgORRGeji8bI6dlhwgUqNMTchBM9OD+pPv4lXDGPfZW5Mur4cN6OOffXlIMT6VykCZU6YtAK/7gpcGWr+zDtydyRl0uGqmYY9xnIJhoJkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7a1103cc57f611f0b29709d653e92f7d-20250703
-X-CID-CACHE: Type:Local,Time:202507031807+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:8d03a6f1-8376-4126-9f68-6b37c01e0ed3,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:c5391f75d4344f6a4e0bf28554583991,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7a1103cc57f611f0b29709d653e92f7d-20250703
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1384937523; Thu, 03 Jul 2025 18:14:16 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id B5F79E008FA2;
-	Thu,  3 Jul 2025 18:14:16 +0800 (CST)
-X-ns-mid: postfix-686657F8-34930727
-Received: from [172.25.120.24] (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id E1834E008FA1;
-	Thu,  3 Jul 2025 18:14:14 +0800 (CST)
-Message-ID: <eab45ccf-c9f5-4dff-bc36-40133783d369@kylinos.cn>
-Date: Thu, 3 Jul 2025 18:14:12 +0800
+	 In-Reply-To:Content-Type; b=VGoRJGuyK2P1f9QFMviTrbgkAMoFP59lMOIFHPLengq4LD4lMSmlIDIKMeqN3xyBZIALM+zQzLcC91oVO1wvvAFvQMNxU1LibAgsK13Ca2yTDXLxH0GrVoMstk7IhjDiw4FoRFqXr6wp9kK+KvtjUGVX7f2KZ2XP1iWmU0t+p/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LeIjA+5J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LeIjA+5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751537858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jfQsXeetvvPPzsJ3/8ZSvfFMQdwAGhV0ruew1VUXFPQ=;
+	b=LeIjA+5JP/HPAsjP1xKQLE9rD3aJDh2K3qh/2QaY+rQ+teomhnJnvfBOuejAmCu2B6BxPF
+	pvdp3buuU5K9JO7OSK5NH49MV0BLKKLlQX8uPLz4K/yzs0l7rKq8NNRY+n66p6u83qE6+B
+	mCv7I3SYWnC7xw6X+DpRepwstukK4vw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-319-VcPE-MhXO5W9gyupsgmyjQ-1; Thu, 03 Jul 2025 06:17:37 -0400
+X-MC-Unique: VcPE-MhXO5W9gyupsgmyjQ-1
+X-Mimecast-MFC-AGG-ID: VcPE-MhXO5W9gyupsgmyjQ_1751537856
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45320bfc18dso4214025e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:17:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751537856; x=1752142656;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jfQsXeetvvPPzsJ3/8ZSvfFMQdwAGhV0ruew1VUXFPQ=;
+        b=amy/y5DmqsAv75/cUZrcLTM1UVrR7eIryB6Drlb3p8vQ2IgENd4w9kR4XL56hV0SoX
+         leFtK7TdtfO7awqnpEY8MVk73xj0uxoiTgqo6P3AbEjBG4G35wROuUnB7pG4LG1dvlZY
+         1dTWopyuKSRqUhqdR5mCh60P9GiumJSJJzkHBMs8obi45cqpEqCYfgHJfgi4/dXTzCJK
+         N8CjuBzfrQm6x0fUWgR41Wpb38NYMxadxTYc5KOHuAFW1BKRp9ljLcYuqqOP1ws4BVDf
+         Zxjm74df4Jrl/VUgQ4/VmGQztSGUdbJFSv3BGv5l7iOWnvJdZQ7OU7zXv4nx2YrZvgAC
+         VHFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXir++ylFWA/DODxYzDD3Nat6F4HIhAXTwV1bRTvOHPgHNzeXgYvl8y89A5Pw4rtWPWQhsIAOD6DDTL2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfr1qbyluGwId39cz7DEcJI+5wwDzvvomrXc453r/tdn3M+Bi2
+	UB+nE4bZ+bjofPThO+31h7A7lbGf3mkQy52BV0AONq3PofKxwdmTYaMzmxk2NpQK0BYm8tYvKi+
+	QjyNAPHQQMWfYDAGlJ1bfVXl4vwWeWtJ26wjygc3UpGn4ifAyPphXvupgt4YRVEgsvg==
+X-Gm-Gg: ASbGncuxeWQGwmDu1ukhZeRP4MEKFUf8zFJFT4oK4G8avHcrE8rwcGsTyDrgmUFm+S6
+	7AYP8Pun4zYzomxjGtk0eOvboGj46DTJYTGfw2FGQn+IGfqbZBkeTh69ZhoMSUnWbC7j8Qpp2RF
+	y4EejJtaaX4e1uUF64s7MbL0RF3x87FXCLj52hRZSRi3Ub6NLvg5Fk84QyWOO+crywhHj+2HKRy
+	lfDPcJgVate0s+8//QC6ynyDvN6VYsOeqQ8DaGzbux500DqeMbSwgvmcQw0hmeHdgqpyNDrgJSk
+	v71+25x+At1MLguHrsairoQ+rz53o8aujuXE0z2imXuQ66/1S+NH67iTgYXc0+ESUq0=
+X-Received: by 2002:a05:600c:a104:b0:453:5c7e:a806 with SMTP id 5b1f17b1804b1-454ab31f49cmr17484765e9.8.1751537855719;
+        Thu, 03 Jul 2025 03:17:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHzsDilheHoSsZdDQok8pr2Px2x0eKxdKvVnOdfVvAvRP1Jm7fZHNWlhFagRLLbenLbksn8tA==
+X-Received: by 2002:a05:600c:a104:b0:453:5c7e:a806 with SMTP id 5b1f17b1804b1-454ab31f49cmr17484295e9.8.1751537855244;
+        Thu, 03 Jul 2025 03:17:35 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314? ([2a0d:3344:270a:b10:5fbf:faa5:ef2b:6314])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e597a8sm18185205f8f.70.2025.07.03.03.17.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 03:17:34 -0700 (PDT)
+Message-ID: <1982e894-b61f-48c9-90a0-00e0236aa6be@redhat.com>
+Date: Thu, 3 Jul 2025 12:17:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,291 +73,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] sched/uclamp: Exclude kernel threads from uclamp logic
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: xuewen.yan@unisoc.com, vincent.guittot@linaro.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- hongyan.xia2@arm.com, linux-kernel@vger.kernel.org, ke.wang@unisoc.com,
- di.shen@unisoc.com, kprateek.nayak@amd.com, kuyo.chang@mediatek.com,
- juju.sung@mediatek.com, qyousef@layalina.io
-References: <20250703091437.79861-1-zhangzihuan@kylinos.cn>
- <CAB8ipk_MZ8j_HNtPL4zB3FXVKHMLxCkn_9ohGhhHqrx8xTRnYA@mail.gmail.com>
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-In-Reply-To: <CAB8ipk_MZ8j_HNtPL4zB3FXVKHMLxCkn_9ohGhhHqrx8xTRnYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net v1 4/4] net: phy: smsc: Disable IRQ support to prevent
+ link state corruption
+To: Lukas Wunner <lukas@wunner.de>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, kernel@pengutronix.de,
+ linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+ netdev@vger.kernel.org, Andre Edich <andre.edich@microchip.com>
+References: <20250701122146.35579-1-o.rempel@pengutronix.de>
+ <20250701122146.35579-5-o.rempel@pengutronix.de> <aGPba6fX1bqgVfYC@wunner.de>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <aGPba6fX1bqgVfYC@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Xuewen,
+On 7/1/25 2:58 PM, Lukas Wunner wrote:
+> On Tue, Jul 01, 2025 at 02:21:46PM +0200, Oleksij Rempel wrote:
+>> Disable interrupt handling for the LAN87xx PHY to prevent the network
+>> interface from entering a corrupted state after rapid configuration
+>> changes.
+>>
+>> When the link configuration is changed quickly, the PHY can get stuck in
+>> a non-functional state. In this state, 'ethtool' reports that a link is
+>> present, but 'ip link' shows NO-CARRIER, and the interface is unable to
+>> transfer data.
+> [...]
+>> --- a/drivers/net/phy/smsc.c
+>> +++ b/drivers/net/phy/smsc.c
+>> @@ -746,10 +746,6 @@ static struct phy_driver smsc_phy_driver[] = {
+>>  	.soft_reset	= smsc_phy_reset,
+>>  	.config_aneg	= lan87xx_config_aneg,
+>>  
+>> -	/* IRQ related */
+>> -	.config_intr	= smsc_phy_config_intr,
+>> -	.handle_interrupt = smsc_phy_handle_interrupt,
+>> -
+> 
+> Well, that's not good.  I guess this means that the interrupt is
+> polled again, so we basically go back to the suboptimal behavior
+> prior to 1ce8b37241ed?
+> 
+> Without support for interrupt handling, we can't take advantage
+> of the GPIOs on the chip for interrupt generation.  Nor can we
+> properly support runtime PM if no cable is attached.
+> 
+> What's the actual root cause?  Is it the issue described in this
+> paragraph of 1ce8b37241ed's commit message?
+> 
+>     Normally the PHY interrupt should be masked until the PHY driver has
+>     cleared it.  However masking requires a (sleeping) USB transaction and
+>     interrupts are received in (non-sleepable) softirq context.  I decided
+>     not to mask the interrupt at all (by using the dummy_irq_chip's noop
+>     ->irq_mask() callback):  The USB interrupt endpoint is polled in 1 msec
+>     intervals and normally that's sufficient to wake the PHY driver's IRQ
+>     thread and have it clear the interrupt.  If it does take longer, worst
+>     thing that can happen is the IRQ thread is woken again.  No big deal.
+> 
+> There must be better options than going back to polling.
+> E.g. inserting delays to avoid the PHY getting wedged.
 
-Thanks for your feedback =E2=80=94 that makes a lot of sense.
+I agree the solution proposed by this patch looks too rough. I think
+more effort should be invested to at least understand why the phy got stuck.
 
-=E5=9C=A8 2025/7/3 17:42, Xuewen Yan =E5=86=99=E9=81=93:
-> Hi zihuan,
->
-> On Thu, Jul 3, 2025 at 5:15=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylino=
-s.cn> wrote:
->> Kernel threads (PF_KTHREAD) are not subject to user-defined utilizatio=
-n
->> clamping. They do not represent user workloads and should not particip=
-ate
->> in any uclamp logic, including:
-> Indeed, some driver would use set_scheduler() to set some kthread to
-> improve performance.
-> It is not a good idea to exclude it.
->
-> Thanks=EF=BC=81
->
-I agree that kernel threads may need explicit scheduling control, so=20
-it=E2=80=99s indeed not a good idea to exclude them unconditionally.
-Our main concern was that uclamp_rq_inc() is a performance-sensitive=20
-path, and letting default-initialized kthreads participate in clamp=20
-aggregation could lead to unnecessary overhead and distort frequency=20
-decisions.
+@Oleksij: possibly you could re-submit patch 1-3 only while you keep
+investigating the issue addressed here.
 
-We=E2=80=99ll rework the patch to be more selective =E2=80=94 possibly sk=
-ipping only=20
-those kernel threads that don=E2=80=99t have user-defined clamp values.
-
-Thanks again for the helpful input!
->>   - clamp initialization during fork/post-fork
->>   - effective clamp value computation
->>   - runtime aggregation (uclamp_rq_inc/dec)
->>
->> Allowing kernel threads into these paths may pollute the rq->uclamp[]
->> statistics, mislead schedutil governor's frequency selection, and
->> complicate debugging or trace interpretation.
->>
->> This patch ensures that:
->>   - uclamp_fork() and uclamp_post_fork() skip kernel threads
->>   - uclamp_eff_value() return default values
->>   - uclamp_rq_inc() and uclamp_rq_dec() skip kernel threads
->>
->> This aligns the semantics of uclamp with its original intent:
->> user-space task-specific clamping.
->>
->> dmesg in uclamp_rq_inc_id:
->> [   76.373903] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.375905] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.379837] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.379839] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.379839] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.379841] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.383897] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.383897] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.383900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.383901] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.387885] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.387885] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.387888] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.387889] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.388139] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.388140] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.388142] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.388143] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.388169] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 =
-value:0 kthread:1
->> [   76.388171] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 =
-value:1024 kthread:1
->> [   76.388891] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.388893] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.392900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.392902] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.398850] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.398852] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.401880] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.401883] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.409053] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.409054] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.410881] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0=
- value:0 kthread:1
->> [   76.410884] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1=
- value:1024 kthread:1
->> [   76.419947] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.419949] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.419976] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 =
-value:0 kthread:1
->> [   76.419979] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 =
-value:1024 kthread:1
->> [   76.420119] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
-value:0 kthread:1
->> [   76.420121] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
-value:1024 kthread:1
->> [   76.420642] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.420644] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.434914] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.434916] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.447689] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.447691] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.447705] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.447707] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.448809] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.448811] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.451260] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.451263] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.452806] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
-lue:0 kthread:1
->> [   76.452808] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
-lue:1024 kthread:1
->> [   76.488052] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.488054] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.488767] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->> [   76.488770] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
-value:1024 kthread:1
->> [   76.490847] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.490848] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.490849] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.490848] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.490849] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:0 =
-value:0 kthread:1
->> [   76.490850] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.490851] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.490851] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:1 =
-value:1024 kthread:1
->> [   76.490851] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.490853] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.490857] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.490859] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.491850] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.491852] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.504848] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:0 =
-value:0 kthread:1
->> [   76.504852] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:1 =
-value:1024 kthread:1
->> [   76.508785] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:0 v=
-alue:0 kthread:1
->> [   76.508787] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:1 v=
-alue:1024 kthread:1
->> [   76.514856] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0=
- value:0 kthread:1
->> [   76.514859] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1=
- value:1024 kthread:1
->> [   76.522742] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
-value:0 kthread:1
->>
->> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
->> ---
->>   kernel/sched/core.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index 8988d38d46a3..a1e6b4157682 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -1630,6 +1630,9 @@ unsigned long uclamp_eff_value(struct task_struc=
-t *p, enum uclamp_id clamp_id)
->>   {
->>          struct uclamp_se uc_eff;
->>
->> +       if (p->flags & PF_KTHREAD)
->> +               return uclamp_none(clamp_id);
->> +
->>          /* Task currently refcounted: use back-annotated (effective) =
-value */
->>          if (p->uclamp[clamp_id].active)
->>                  return (unsigned long)p->uclamp[clamp_id].value;
->> @@ -1769,6 +1772,9 @@ static inline void uclamp_rq_inc(struct rq *rq, =
-struct task_struct *p, int flags
->>          if (unlikely(!p->sched_class->uclamp_enabled))
->>                  return;
->>
->> +       if (p->flags & PF_KTHREAD)
->> +               return;
->> +
->>          /* Only inc the delayed task which being woken up. */
->>          if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
->>                  return;
->> @@ -1797,6 +1803,9 @@ static inline void uclamp_rq_dec(struct rq *rq, =
-struct task_struct *p)
->>          if (unlikely(!p->sched_class->uclamp_enabled))
->>                  return;
->>
->> +       if (p->flags & PF_KTHREAD)
->> +               return;
->> +
->>          if (p->se.sched_delayed)
->>                  return;
->>
->> @@ -1977,6 +1986,8 @@ static void uclamp_fork(struct task_struct *p)
->>   {
->>          enum uclamp_id clamp_id;
->>
->> +       if (p->flags & PF_KTHREAD)
->> +               return;
->>          /*
->>           * We don't need to hold task_rq_lock() when updating p->ucla=
-mp_* here
->>           * as the task is still at its early fork stages.
->> @@ -1995,6 +2006,8 @@ static void uclamp_fork(struct task_struct *p)
->>
->>   static void uclamp_post_fork(struct task_struct *p)
->>   {
->> +       if (p->flags & PF_KTHREAD)
->> +               return;
->>          uclamp_update_util_min_rt_default(p);
->>   }
->>
->> --
->> 2.25.1
->>
->>
-Best regards,
-Zihuan
+/P
 
