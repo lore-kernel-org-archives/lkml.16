@@ -1,161 +1,113 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85608263F22
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D320136E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751522973; cv=none; b=QsKALqoML6cDA3gALa2xw0LBg6oRLrYChngpSr7hicgWGhlsT1jA3FtLNIkIGx54mmtiVvTOUDNBOHDxxFor1Q/mJfIdJQgZNh0iwlkTscNiSQMDMk3LxPCsC3p3Wh4+8gVOCB2Q1et72fpT8SrfyqohXGnXVWFUht6JJRhdKOQ=
+	t=1751523168; cv=none; b=sj0Qgxa9fTk+mXVH2rrO3PdjOinGxHy4Sj0suzb5cD8l/vdMYGjrn/uuXDlLN43JRrYk84vdnFTWVGNcYif4dUxI8hqRwkwPxmZjgX+2iWmVSyxnXBEaqaL0907oFJed1I/2DkVKibQinQMhsOaeZ11LZi5OEpmKKVai0ZJ10q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751522973; c=relaxed/simple;
-	bh=ZpaUmFPSRJFhK6DgF8GWZernQpN7SC+FSGETckXYpsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZWHghHutPdHS1xG1Pp6wtgt7yZO8JFAAPfBr3sxC/4X+3nAKNfD5HK2BltHyPQ9xJxOADWeD7/Ns1Pb+D6i86a8le0QoSxxNGH1Xe/X16qkeLHDJMOrKiTwKTC5H6ylt4pyGcCM8gNqt2mdg/IpvZNooGBkxdo+RGp692fVlgG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7XaQkHr; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751523168; c=relaxed/simple;
+	bh=+GFrTEQW4VtQLeGxZZJBvJeNWOVxp3sEDmGVQ5Nt8qE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W9CKXpcGR45DVY3kYeXMRz24I+DWoSIx5FN1YPokK/j0XIG5us3JNutLkH0KPxnAdJPV/mcVyHBZ0boBJFXkbuuGnnUx1QCc9lTQ0yUAJz8cf8UUwAIKkeQRjiWvZ23J5mgKG6nWYBciBulyjtAmshWWoX652ETR6ulXsIiFXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OjuXXSNh; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7XaQkHr"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b271f3ae786so6733262a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:09:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OjuXXSNh"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2366e5e4dbaso4367365ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751522971; x=1752127771; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zuuZADxXuyOUxUlWSv3SmGbccP/kTl0lSgA2T0+Pw48=;
-        b=L7XaQkHrGIFvSJX/jh+FMXesuXypOlH4QRGuCcGHJI2ocAvuLFx0A3mRRgUb4g5p01
-         OXq9OQacyTWMVYkpVTWC0TRHxSqsyXA0kHEtZb4FWPpySUPY/lRnLj/+iR8LUQktCSsE
-         gweswhSGvEU+wEAzei6PZNsBZIGwTPjp95jMQEywECt4QU3ENKM+d/K0BTPmU88ybP5b
-         Bl3njxJPPjUPFsqwS81H809Gzi4U0Yqvjnp3RyNOkasLPXLkMpjT2E1x2DIfeDCgS7VD
-         el/MgDrKvWagQays7ykAPtg2TsmEcqw66wzlatTrukjIU8DECSU1zRhh610qj09ATynO
-         71zA==
+        d=bytedance.com; s=google; t=1751523166; x=1752127966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZP19DwcEqNYpAz3GY1aNZTVSSoO+WvR4gIwyuoMkaTw=;
+        b=OjuXXSNhA7MbOjma8nSVYDPKGGcIDb+y+JxRgacrPai9Af+lOar7eecZt4DS8VvvQx
+         UNNlVYQ36LTO3mHJbSgLLW6EltQvMFsJ5fKsxFmazzLwgUiMn0JEwbAQOFo7ZKx5kUkT
+         dl8+SxFnBd9Y5gGx1jr7RmMhKbuMH0zN6pc9/EbWSPs/oB7Z/MfN+Em6akEtRmJK48I9
+         +h6qk4gwqrGcw/BI59Dzs3hQ3H7Y0fXn9GKznLiWwTkRveeX+7iHGsm8y3Gb5G1T0dP/
+         AmYMNd7fTa35GA8f7Sm1sUWdTpDsk/umGlVq0atuKgkaLbeyTJDmpjsB0noFuL09ZOKR
+         nzYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751522971; x=1752127771;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zuuZADxXuyOUxUlWSv3SmGbccP/kTl0lSgA2T0+Pw48=;
-        b=dYzIjQRTxGxOlyc2ZDscQmzFWzoZ42Vj5slmYvyA4n1xgJn1yBr1P3a640aLiMmOxw
-         SyuymaTFNnPcIUkvsfFnkPrJ1+hBF21ttzTLzg8k1P3PqLHKtkVsZdyX+O62EcdfrOLq
-         aOkJCe1MTTYQ0xOvdEaB8iholkecH3z1XfVOr7K4Awx0wROB5UF7qXC9vyjIxq2Pstrc
-         tqVyMC8zTF+IqudBoS9Rh9mgVZcDds6vy8ieTrFmTLZMhJCrGFhW2cDxx2a+1InE0uCO
-         L3ekEUETtQ/6EPnJ3yEGYQwYrsozEhGDqFsnOzp0Efo7Q4p3X9HMJsrEShoCkImZBfcb
-         GRSw==
-X-Forwarded-Encrypted: i=1; AJvYcCX53t9HpXSyF/M/dVm6wwQ5YQ2kkCdSpGsQeoNHmcFwiTexgxJ37aU8yQc5g6syZRAT4p72m5tfMh9Qxeo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEVhpnKBf+HRcsF2OPDypZvEti7nzXj3Ct9f9OoV8Zdyg1ENv4
-	WiOUZ45uMIzjKnnPTvviEWLbPva4qU9UVMn/OEAYlwU9oe7519dGhUmj4uaPf8TO5m1xXA+gMca
-	lWFntSyaYRueBP4zosYAR0nBmBY/llrY=
-X-Gm-Gg: ASbGncssaBmeL8zy4n/vY3LNMK9K71Sd4+cE3CuEkHCZ8sXWeU0vE9ANp4ETajRX63L
-	AjEBEpoW01GF9IN9QbNia8MoD+c9gyv2ui+KQyf1KIlZtgg1wmjvWdXfvRKPP/lqVv9oB8wz0Q2
-	+N6SujNcutuPuGVaFQ3rqYqunB5WdDC7uVaBYFmucOPu0=
-X-Google-Smtp-Source: AGHT+IFdl3iRPzC7io67vAWkuxbZGAjAeotegr/GTnPvHCevmw+ZMUKzoFm2ry4bWDIj4n9zdG9D0vPBAWoO6bqqNps=
-X-Received: by 2002:a17:90a:e7d1:b0:313:bdbf:36c0 with SMTP id
- 98e67ed59e1d1-31a9dc97f5bmr2941518a91.0.1751522971452; Wed, 02 Jul 2025
- 23:09:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751523166; x=1752127966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZP19DwcEqNYpAz3GY1aNZTVSSoO+WvR4gIwyuoMkaTw=;
+        b=W3Wow+8ILX5TlTC+C4XdHGW2bBGSfDGUgp8dGkzHeiswBO3SqpQNAyiCffkTLDZHET
+         0+4VyVYUP44LauXduoDzx2CVg7xPkkKLGX9370fT7fU43Cwz6n4xcMkIaSNK81/5NmgO
+         1s6MpvcdSe62F21I912FdDY1d+eGs8xxexhmrYTtfkftl7+aBOPJT11DR4Jce0YY7b3Z
+         2T0cs1WAdcucyj3PL6/XCJ0HYoYQWQtB1b4E+rqLcwQHfxm451Pi6yykT2557SrJb91k
+         ik2SOEG1vIo5M+/PJwKf8q5PMzGrlmKnsFpiPzm5mzjIe6ctkNQOw5PZZlcCknTuoF6H
+         Dfgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzQ0PsoJl2l5HmZ8lJdRabq6r0qfON1yDWhEEyKaqC1qTVxkp0ABtmFa5mJSOfJXMrJYzjm1ZdYUyUEIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+oAF+h1kBhJCbRE0T5rUXzZewNnV2G+sort/UIxlVen92t4ci
+	MKZxmInTqcs1ft985F4tVfBaXnoPh6r2xvkBc1+8XjSoT8ZyhMDMscSie+UqxKUfTs1RokK41Ew
+	+LZbb
+X-Gm-Gg: ASbGncsa6oCEvBXhCh4TXQvIPvFoaDy3pJW/6Ghuw5LHkxB+w7CnEdB6Q+ydSwkXiTp
+	5XtOK+18aJ5ETPDu2zAjh35y1LfLGg7jsyLl9kzzND6RgjcMmRaTm/s5D7KDj/yiS62db88wpVS
+	Q9pCjgdGnpNMbJs2cn/5C9O1WVEMuJFIsoHe5o9ipMHj1nsIBwEyzbRKN9lMXSmTEDT2rIK0FCa
+	jB88eTBx2bHJ9aqJBxSMlhqJhsiVV5aJk8r0u19s348cLYZL8BSbtPYwreOF9+nel0ZhuwElYK6
+	j3y0o8d1tXYoF3504cDg9B9vblptjm5cdddLaTlGtwJrg7saVlCb560Bw0t8t8GZAwALhuSK6U3
+	ed4KRReAn96dFXg==
+X-Google-Smtp-Source: AGHT+IG9TJqwTNtfxrPH58LfJ10nO1Soztf0kKYr0OvPKIYoj8BHcKplX2cGlta/2DTSLXVu9jZNTA==
+X-Received: by 2002:a17:902:c40a:b0:234:b445:3f31 with SMTP id d9443c01a7336-23c7b8e0d02mr15568795ad.17.1751523165729;
+        Wed, 02 Jul 2025 23:12:45 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bc7dsm143087765ad.114.2025.07.02.23.12.42
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 02 Jul 2025 23:12:45 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: jgg@ziepe.ca
+Cc: alex.williamson@redhat.com,
+	david@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com,
+	jgg@nvidia.com
+Subject: Re: [PATCH 4/4] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+Date: Thu,  3 Jul 2025 14:12:38 +0800
+Message-ID: <20250703061238.44078-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250702182844.GE904431@ziepe.ca>
+References: <20250702182844.GE904431@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702082749.141616-1-aha310510@gmail.com> <7b7d353f-f38b-3205-8fd4-1072dbf69cb6@gentwo.org>
- <CAO9qdTEidRnO4O_D7Z1jKZTyJadFyEyWBnfitTz8t1CdBaM1nw@mail.gmail.com> <aGYaXcB1CaA3BKEa@snowbird>
-In-Reply-To: <aGYaXcB1CaA3BKEa@snowbird>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Thu, 3 Jul 2025 15:09:20 +0900
-X-Gm-Features: Ac12FXx880e4AsSL41ULv1Xim55w3pwBvzjTZak8X2qGavfUgyTsdCqFhCh29HE
-Message-ID: <CAO9qdTEwPVqKMOJxoGqgWjHsqEZU+xy7afwZdg=wDi4h+jF63w@mail.gmail.com>
-Subject: Re: [PATCH] mm/percpu: prevent concurrency problem for
- pcpu_nr_populated read with spin lock
-To: Dennis Zhou <dennis@kernel.org>
-Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, tj@kernel.org, akpm@linux-foundation.org, vbabka@suse.cz, 
-	rientjes@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On Wed, 2 Jul 2025 15:28:44 -0300, jgg@ziepe.ca wrote:
 
-Dennis Zhou <dennis@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, Jul 03, 2025 at 01:45:36PM +0900, Jeongjun Park wrote:
-> > Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
-> > >
-> > > On Wed, 2 Jul 2025, Jeongjun Park wrote:
-> > >
-> > > > diff --git a/mm/percpu.c b/mm/percpu.c
-> > > > index b35494c8ede2..0f98b857fb36 100644
-> > > > --- a/mm/percpu.c
-> > > > +++ b/mm/percpu.c
-> > > > @@ -3355,7 +3355,13 @@ void __init setup_per_cpu_areas(void)
-> > > >   */
-> > > >  unsigned long pcpu_nr_pages(void)
-> > > >  {
-> > > > -     return pcpu_nr_populated * pcpu_nr_units;
-> > > > +     unsigned long flags, ret;
-> > > > +
-> > > > +     spin_lock_irqsave(&pcpu_lock, flags);
-> > > > +     ret = pcpu_nr_populated * pcpu_nr_units;
-> > > > +     spin_unlock_irqrestore(&pcpu_lock, flags);
-> > >
-> > >
-> > > Ummm.. What? You are protecting a single read with a spinlock? There needs
-> > > to be some updating of data somewhere for this to make sense.
-> > >
-> > >
-> > > Unless a different critical section protected by the lock sets the value
-> > > intermittendly to something you are not allowed to see before a final
-> > > store of a valid value. But that would be unusual.
-> > >
-> > > This is an academic exercise or did you really see a problem?
-> > >
-> > > What is racing?
-> > >
-> > >
-> >
-> > This patch is by no means an academic exercise.
-> >
-> > As written in the reported tag, This race has actually been reported
-> > in syzbot [1].
-> >
-> > [1]: https://syzkaller.appspot.com/bug?extid=e5bd32b79413e86f389e
-> >
->
-> A report by syzbot doesn't mean it is a real problem. A production
-> problem or broken test case is much more urgent.
->
-> > pcpu_nr_populated is currently being write in pcpu_chunk_populated()
-> > and pcpu_chunk_depopulated(), and since this two functions perform
-> > pcpu_nr_populated write under the protection of pcpu_lock, there is no
-> > race for write/write.
-> >
-> > However, since pcpu_nr_pages(), which performs a read operation on
-> > pcpu_nr_populated, is not protected by pcpu_lock, races between read/write
-> > can easily occur.
-> >
-> > Therefore, I think it is appropriate to protect it through pcpu_lock
-> > according to the comment written in the definition of pcpu_nr_populated.
-> >
->
-> You're right that this is a race condition, but this was an intention
-> choice done because the value read here is only being used to pass
-> information to userspace for /proc/meminfo. As Christoph mentioned, the
-> caller of pcpu_nr_pages() will never see an invalid value nor does it
-> really matter either.
->
-> The pcpu_lock is core to the percpu allocator and isn't something we
-> would want to blindly expose either.
->
-> The appropriate solution here is what Shakeel proposed to just mark the
-> access as a data_race().
->
-> Thanks,
-> Dennis
+> On Mon, Jun 30, 2025 at 03:25:18PM +0800, lizhe.67@bytedance.com wrote:
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index a02bc340c112..7cacfb2cefe3 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -802,17 +802,29 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+> >  	return pinned;
+> >  }
+> >  
+> > +static inline void put_valid_unreserved_pfns(unsigned long start_pfn,
+> > +		unsigned long npage, int prot)
+> > +{
+> > +	unpin_user_page_range_dirty_lock(pfn_to_page(start_pfn), npage,
+> > +					 prot & IOMMU_WRITE);
+> > +}
+> 
+> I don't think you need this wrapper.
+> 
+> This patch and the prior look OK
 
-If this data race was intentional, it makes sense why it was written
-this way. I'll send v2 patch with the fix Shakeel proposed.
---
-Regards,
+Thank you very much for your review. The primary purpose of adding
+this wrapper is to make the code more comprehensible. Would it be
+better to keep this wrapper? Perhaps we could also save on the need
+for some comments.
 
-Jeongjun Park
+Thanks,
+Zhe
