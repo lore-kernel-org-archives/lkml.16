@@ -1,258 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E184734CF5;
-	Thu,  3 Jul 2025 06:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0504934CF5;
+	Thu,  3 Jul 2025 06:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524092; cv=none; b=AgDRuRHHTqlF47qr2QdZJeM8VF/F/hgkOXPgoDyiaS7IkoSZnYDHdiJQd5sCanH0vycC4C2LVuhiw3yNey5q7zuKu8sv0t8cWhRMlTYa4Gn3iiZYzsBBcHA4kSN1sCU8U61Duhl1AfahlK5wOOfxPr+9VUT5o2hUAl08Wz0nd/Y=
+	t=1751524107; cv=none; b=eOiDnEc9+NsM3R2V+H/6bcS51/B64k7M4LBEf4evgafS2VzodvhvVIzqV4FGYicy7waneDgLhsKP987oheAuY2VqWM1JrTS4YyTI7HTDgTKVx9puWAeMUNgW4llegXHQJdzTUSXCWdgjiCY2xsL/Czc+Nw+5zJwvj7VTUiU0kgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524092; c=relaxed/simple;
-	bh=T72yXCmWdX5uoyXouBY6LyB4JVY9V6cpBLUYnY5mazQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGlCKRnEHYsIpJk5Kqgazf2RFNCnNsi6EIpYuQkdCJ+4X/OHKefSdB4s30FglZcO2/oRoNOZqA5VK0uHyRLJv0liUEXZrnFm/Aj8BBiE35C8KcqY0ER9B1DOGNPZvEd9U5I3oU/38w/dvDroAv0Tzi1cMaVx2U/cEjjuVM8jGao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uL70UOkq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751524107; c=relaxed/simple;
+	bh=k2fQ15blhXnokoZCixT/LqKBpaoOPiZz7TLHKu3xLxE=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=XiSIWW1AAav4UrZUcrrz7Me8iIJ+RU3eKxDqcywDsU+M0vg9FVCpm/SUW+ahTI8ZN8Lc9v7bFKV1jUSsMStlwKm9dtG0cH63jzIF6pNef4wIFJMgV7pIY6bUDgGcRlKQ/xnuH8rLN2kQYG155cagzDm815KuomSV8QnbRltxKiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=yPQ8Hje4; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uL70UOkq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A16EEC4CEEB;
-	Thu,  3 Jul 2025 06:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751524091;
-	bh=T72yXCmWdX5uoyXouBY6LyB4JVY9V6cpBLUYnY5mazQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uL70UOkq3bTbtQc6sV0B15O2BmBs+JKSMF5sViA6FpL5BEFxDRZ2EMCCuGe1EvaaM
-	 APZWQiXwZQJcn56XDKHVuOI7rLGD+Xs1E9FreeF9wIQa/PhwbDmEI2TrrmyJAXfJPW
-	 Z4SP060V1akKVI83GrwoWWlMtTY2fI8hb8AaPKjyYUNuOivHvr7vDLpkkSxtsGGVQq
-	 BsI2UOgEyyShfWxVYe1VW8CodBSutQeeW7mRVA5n+7s/A9ym5TU6fkXMS4V6/NfxKK
-	 81RwZTsLAY8ADwAK5VkoPb9oT0b5ELh2S5CI7coneJ4PeHDrPqfaJHCSJxbm9ZVGci
-	 O5fq+JWp5PBQA==
-Date: Thu, 3 Jul 2025 11:58:01 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
-	robin.murphy@arm.com
-Subject: Re: [PATCH v10 6/9] tee: add tee_shm_alloc_dma_mem()
-Message-ID: <aGYi8QkgI3WyeN59@sumit-X1>
-References: <20250610131600.2972232-1-jens.wiklander@linaro.org>
- <20250610131600.2972232-7-jens.wiklander@linaro.org>
- <aFFSWDiVsxA1CbCX@sumit-X1>
- <CAHUa44HP5EbURyLCmawMLc0d5jz1oTQZ53V1w2h0-ngUC2hbEw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="yPQ8Hje4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1751523797;
+	bh=nE5o0ZqeNH5gAh0+GhcCOmyyvJ/oaeaGfaV8MIneIgk=;
+	h=From:To:Cc:Subject:Date;
+	b=yPQ8Hje4K5Rz2pz7rPuUdFaKpeGnsnW6ZKqh6DJvGKFxwFZm86d3AJ4b2l0DhxhDQ
+	 xTh8ehxF1h5X/0e9HdKrM+NHRuq2eFX/CUllhDEMbl2TXWH7VEXLfgykgRFqG1R9no
+	 NNs9jdKyKoo7nExLuWVG2jxYhKKEu2fu5SUDbl/s=
+Received: from meizu-Precision-3660.meizu.com ([14.21.33.154])
+	by newxmesmtplogicsvrsza28-0.qq.com (NewEsmtp) with SMTP
+	id 5CF33025; Thu, 03 Jul 2025 14:23:15 +0800
+X-QQ-mid: xmsmtpt1751523795tikroen7m
+Message-ID: <tencent_D06DEE8D71295798F385BCC52FACAE96A207@qq.com>
+X-QQ-XMAILINFO: MMwjR1C73eIs3QfeLzO2lVtLnj7bWfRMm+8Iu0tVq8lBrc+Mi/7zpRftqsC4Ri
+	 1fRium/jka+geMb5PIdCC69ZnQ0NMT4kzyQJS3hg7IplUlc81FMbJS+cojkr6C2Bk2EtsnGI/vxY
+	 krvAPKvVhdo8+UIq5J/kc4penx/O/3ZFBGt8Xk+r2R780k/b2a6akT2+3wOyfR8xkVUTeEwyGfv6
+	 DnuMPJxxLbYQkg56ZPmptat9fdKz7rmhFGP+PylC71fwSfNVdIKTyNTA/84RLkCu68EwjBve5imp
+	 CwN37vk6C9KwXmy4xH64r48lPIbDAQRRwQRmvIkX3RyXP3NrGiM6hcawzxfqQllVnMttX+cU8r+Z
+	 erOjQ50Ae/17BLE269goMX5zA9GN7v8NWPV3mnVHsg76xnBj6Vrm7RveJLAuivF4unib933y2x40
+	 rB28NWy2cWWJRPCFgEwY7yzIM8F9cZ5+8Gmm+xYWhnH375TutQ/wG9L2idy1EEW1p1XmYGFAMjXR
+	 DoHEU9Nnfb0vBnFAO5rg3twDSvki62rA16hEc4QjVDZ8H6rDCnzEbQL4ZzxXAj0ClXLX8tFPVXRn
+	 QRVLxxHNSvYOGbbNvy+CMbLOTHV7jYAxc+DlsmdfkFKbvcC+bPdJ77VblOuKc8jPaOR2tic/bwGZ
+	 JhqiodUEP4DvymwKvF+QXzv8J6XgbbXZ/ISO3AbgG3RDVgmK3GlRT9uJf+TC2qtOqPIOI/p9bA7w
+	 UE78ZWNVzIq72TT4+LkEqfZLoZ3DTZbuyL+pUwTQ8eO0PnYXUOq7rUBUp4lv4Y3p49viJEacU8LY
+	 oqiudUAlYvszwWMeYusMXnb7oU1vEbfnUWJ8Lri0uLKF7+nbHd0B5CIK40aLV5RPndm2h8Gf5TOH
+	 2SrEYqwJE2qriBBq83IEk+4gbK0ZEiIl14kPPydDYxb6V5a7zVQaxJeIQflilCzPtWj2DQesS4OA
+	 kSyilN/9oF6//2nJ6ydnbepamIQa4+zhKi9apeIb+QAdrMW0nKsUQ3Af85K62FzgAz00pBTZeI/c
+	 e3Zg+eSAF117X1/pPuzkRsGqxGdfAi8NQhV9fRRg==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Yuwen Chen <ywen.chen@foxmail.com>
+To: ebiggers@kernel.org,
+	tytso@mit.edu,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	jaegeuk@kernel.org
+Cc: linux-fscrypt@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	Yuwen Chen <ywen.chen@foxmail.com>
+Subject: [PATCH] fscrypt: improve filename encryption and decryption performance
+Date: Thu,  3 Jul 2025 14:19:01 +0800
+X-OQ-MSGID: <20250703061901.3662034-1-ywen.chen@foxmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHUa44HP5EbURyLCmawMLc0d5jz1oTQZ53V1w2h0-ngUC2hbEw@mail.gmail.com>
 
-On Wed, Jun 18, 2025 at 09:03:00AM +0200, Jens Wiklander wrote:
-> On Tue, Jun 17, 2025 at 1:32 PM Sumit Garg <sumit.garg@kernel.org> wrote:
-> >
-> > On Tue, Jun 10, 2025 at 03:13:50PM +0200, Jens Wiklander wrote:
-> > > Add tee_shm_alloc_dma_mem() to allocate DMA memory. The memory is
-> > > represented by a tee_shm object using the new flag TEE_SHM_DMA_MEM to
-> > > identify it as DMA memory. The allocated memory will later be lent to
-> > > the TEE to be used as protected memory.
-> > >
-> > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > ---
-> > >  drivers/tee/tee_shm.c    | 85 +++++++++++++++++++++++++++++++++++++++-
-> > >  include/linux/tee_core.h |  5 +++
-> > >  2 files changed, 88 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> > > index e63095e84644..60b0f3932cee 100644
-> > > --- a/drivers/tee/tee_shm.c
-> > > +++ b/drivers/tee/tee_shm.c
-> > > @@ -5,6 +5,8 @@
-> > >  #include <linux/anon_inodes.h>
-> > >  #include <linux/device.h>
-> > >  #include <linux/dma-buf.h>
-> > > +#include <linux/dma-mapping.h>
-> > > +#include <linux/highmem.h>
-> > >  #include <linux/idr.h>
-> > >  #include <linux/io.h>
-> > >  #include <linux/mm.h>
-> > > @@ -13,9 +15,14 @@
-> > >  #include <linux/tee_core.h>
-> > >  #include <linux/uaccess.h>
-> > >  #include <linux/uio.h>
-> > > -#include <linux/highmem.h>
-> > >  #include "tee_private.h"
-> > >
-> > > +struct tee_shm_dma_mem {
-> > > +     struct tee_shm shm;
-> > > +     dma_addr_t dma_addr;
-> > > +     struct page *page;
-> > > +};
-> > > +
-> > >  static void shm_put_kernel_pages(struct page **pages, size_t page_count)
-> > >  {
-> > >       size_t n;
-> > > @@ -48,7 +55,16 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
-> > >  {
-> > >       void *p = shm;
-> > >
-> > > -     if (shm->flags & TEE_SHM_DMA_BUF) {
-> > > +     if (shm->flags & TEE_SHM_DMA_MEM) {
-> > > +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
-> >
-> > nit: this config check can be merged into the above if check.
-> 
-> No, because dma_free_pages() is only defined if
-> CONFIG_TEE_DMABUF_HEAPS is enabled.
+With the CONFIG_UNICODE configuration enabled, the fname_decrypt
+and fscrypt_fname_encrypt functions may be called very frequently.
+Since filenames are generally short, the frequent invocation of
+memory allocation and release operations by these two functions
+will lead to very poor performance.
 
-It looks like you misunderstood my above comment, I rather meant:
+Signed-off-by: Yuwen Chen <ywen.chen@foxmail.com>
+---
+ fs/crypto/fname.c         | 11 +++--------
+ include/crypto/skcipher.h |  9 +++++++++
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-	if (IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS) &&
-	    (shm->flags & TEE_SHM_DMA_MEM))
+diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+index 010f9c0a4c2f1..a3cc30ff3586b 100644
+--- a/fs/crypto/fname.c
++++ b/fs/crypto/fname.c
+@@ -77,6 +77,7 @@ static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+ 	return is_dot_dotdot(str->name, str->len);
+ }
+ 
++#define MAX_SKCIPHER_REQSIZE (384)
+ /**
+  * fscrypt_fname_encrypt() - encrypt a filename
+  * @inode: inode of the parent directory (for regular filenames)
+@@ -92,10 +93,10 @@ static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+ int fscrypt_fname_encrypt(const struct inode *inode, const struct qstr *iname,
+ 			  u8 *out, unsigned int olen)
+ {
+-	struct skcipher_request *req = NULL;
+ 	DECLARE_CRYPTO_WAIT(wait);
+ 	const struct fscrypt_inode_info *ci = inode->i_crypt_info;
+ 	struct crypto_skcipher *tfm = ci->ci_enc_key.tfm;
++	SKCIPHER_REQUEST_ON_STACK(req, tfm, MAX_SKCIPHER_REQSIZE);
+ 	union fscrypt_iv iv;
+ 	struct scatterlist sg;
+ 	int res;
+@@ -124,7 +125,6 @@ int fscrypt_fname_encrypt(const struct inode *inode, const struct qstr *iname,
+ 
+ 	/* Do the encryption */
+ 	res = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
+-	skcipher_request_free(req);
+ 	if (res < 0) {
+ 		fscrypt_err(inode, "Filename encryption failed: %d", res);
+ 		return res;
+@@ -148,18 +148,14 @@ static int fname_decrypt(const struct inode *inode,
+ 			 const struct fscrypt_str *iname,
+ 			 struct fscrypt_str *oname)
+ {
+-	struct skcipher_request *req = NULL;
+ 	DECLARE_CRYPTO_WAIT(wait);
+ 	struct scatterlist src_sg, dst_sg;
+ 	const struct fscrypt_inode_info *ci = inode->i_crypt_info;
+ 	struct crypto_skcipher *tfm = ci->ci_enc_key.tfm;
++	SKCIPHER_REQUEST_ON_STACK(req, tfm, MAX_SKCIPHER_REQSIZE);
+ 	union fscrypt_iv iv;
+ 	int res;
+ 
+-	/* Allocate request */
+-	req = skcipher_request_alloc(tfm, GFP_NOFS);
+-	if (!req)
+-		return -ENOMEM;
+ 	skcipher_request_set_callback(req,
+ 		CRYPTO_TFM_REQ_MAY_BACKLOG | CRYPTO_TFM_REQ_MAY_SLEEP,
+ 		crypto_req_done, &wait);
+@@ -172,7 +168,6 @@ static int fname_decrypt(const struct inode *inode,
+ 	sg_init_one(&dst_sg, oname->name, oname->len);
+ 	skcipher_request_set_crypt(req, &src_sg, &dst_sg, iname->len, &iv);
+ 	res = crypto_wait_req(crypto_skcipher_decrypt(req), &wait);
+-	skcipher_request_free(req);
+ 	if (res < 0) {
+ 		fscrypt_err(inode, "Filename decryption failed: %d", res);
+ 		return res;
+diff --git a/include/crypto/skcipher.h b/include/crypto/skcipher.h
+index 9e5853464345b..ff2c5ac9252ff 100644
+--- a/include/crypto/skcipher.h
++++ b/include/crypto/skcipher.h
+@@ -226,6 +226,15 @@ struct lskcipher_alg {
+ 			crypto_sync_skcipher_tfm((_tfm)), \
+ 		 (void *)__##name##_desc)
+ 
++
++#define SKCIPHER_REQUEST_ON_STACK(name, _tfm, reqsize) \
++	char __##name##_desc[sizeof(struct skcipher_request) + reqsize \
++		] CRYPTO_MINALIGN_ATTR; \
++	struct skcipher_request *name = \
++		(((struct skcipher_request *)__##name##_desc)->base.tfm = \
++			crypto_skcipher_tfm((_tfm)), \
++		 (void *)__##name##_desc)
++
+ /**
+  * DOC: Symmetric Key Cipher API
+  *
+-- 
+2.34.1
 
--Sumit
-
-> 
-> >
-> > > +             struct tee_shm_dma_mem *dma_mem;
-> > > +
-> > > +             dma_mem = container_of(shm, struct tee_shm_dma_mem, shm);
-> > > +             p = dma_mem;
-> > > +             dma_free_pages(&teedev->dev, shm->size, dma_mem->page,
-> > > +                            dma_mem->dma_addr, DMA_BIDIRECTIONAL);
-> > > +#endif
-> > > +     } else if (shm->flags & TEE_SHM_DMA_BUF) {
-> >
-> > Do we need a similar config check for this flag too?
-> 
-> No, because DMA_SHARED_BUFFER is selected, so the dma_buf functions are defined.
-> 
-> Cheers,
-> Jens
-> 
-> 
-> >
-> > With these addressed, feel free to add:
-> >
-> > Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
-> >
-> > -Sumit
-> >
-> > >               struct tee_shm_dmabuf_ref *ref;
-> > >
-> > >               ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
-> > > @@ -303,6 +319,71 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
-> > >
-> > > +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
-> > > +/**
-> > > + * tee_shm_alloc_dma_mem() - Allocate DMA memory as shared memory object
-> > > + * @ctx:     Context that allocates the shared memory
-> > > + * @page_count:      Number of pages
-> > > + *
-> > > + * The allocated memory is expected to be lent (made inaccessible to the
-> > > + * kernel) to the TEE while it's used and returned (accessible to the
-> > > + * kernel again) before it's freed.
-> > > + *
-> > > + * This function should normally only be used internally in the TEE
-> > > + * drivers.
-> > > + *
-> > > + * @returns a pointer to 'struct tee_shm'
-> > > + */
-> > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > +                                   size_t page_count)
-> > > +{
-> > > +     struct tee_device *teedev = ctx->teedev;
-> > > +     struct tee_shm_dma_mem *dma_mem;
-> > > +     dma_addr_t dma_addr;
-> > > +     struct page *page;
-> > > +
-> > > +     if (!tee_device_get(teedev))
-> > > +             return ERR_PTR(-EINVAL);
-> > > +
-> > > +     page = dma_alloc_pages(&teedev->dev, page_count * PAGE_SIZE,
-> > > +                            &dma_addr, DMA_BIDIRECTIONAL, GFP_KERNEL);
-> > > +     if (!page)
-> > > +             goto err_put_teedev;
-> > > +
-> > > +     dma_mem = kzalloc(sizeof(*dma_mem), GFP_KERNEL);
-> > > +     if (!dma_mem)
-> > > +             goto err_free_pages;
-> > > +
-> > > +     refcount_set(&dma_mem->shm.refcount, 1);
-> > > +     dma_mem->shm.ctx = ctx;
-> > > +     dma_mem->shm.paddr = page_to_phys(page);
-> > > +     dma_mem->dma_addr = dma_addr;
-> > > +     dma_mem->page = page;
-> > > +     dma_mem->shm.size = page_count * PAGE_SIZE;
-> > > +     dma_mem->shm.flags = TEE_SHM_DMA_MEM;
-> > > +
-> > > +     teedev_ctx_get(ctx);
-> > > +
-> > > +     return &dma_mem->shm;
-> > > +
-> > > +err_free_pages:
-> > > +     dma_free_pages(&teedev->dev, page_count * PAGE_SIZE, page, dma_addr,
-> > > +                    DMA_BIDIRECTIONAL);
-> > > +err_put_teedev:
-> > > +     tee_device_put(teedev);
-> > > +
-> > > +     return ERR_PTR(-ENOMEM);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
-> > > +#else
-> > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > +                                   size_t page_count)
-> > > +{
-> > > +     return ERR_PTR(-EINVAL);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
-> > > +#endif
-> > > +
-> > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
-> > >                            int (*shm_register)(struct tee_context *ctx,
-> > >                                                struct tee_shm *shm,
-> > > diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> > > index f17710196c4c..e46a53e753af 100644
-> > > --- a/include/linux/tee_core.h
-> > > +++ b/include/linux/tee_core.h
-> > > @@ -29,6 +29,8 @@
-> > >  #define TEE_SHM_POOL         BIT(2)  /* Memory allocated from pool */
-> > >  #define TEE_SHM_PRIV         BIT(3)  /* Memory private to TEE driver */
-> > >  #define TEE_SHM_DMA_BUF              BIT(4)  /* Memory with dma-buf handle */
-> > > +#define TEE_SHM_DMA_MEM              BIT(5)  /* Memory allocated with */
-> > > +                                     /* dma_alloc_pages() */
-> > >
-> > >  #define TEE_DEVICE_FLAG_REGISTERED   0x1
-> > >  #define TEE_MAX_DEV_NAME_LEN         32
-> > > @@ -310,6 +312,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
-> > >   */
-> > >  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
-> > >
-> > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> > > +                                   size_t page_count);
-> > > +
-> > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
-> > >                            int (*shm_register)(struct tee_context *ctx,
-> > >                                                struct tee_shm *shm,
-> > > --
-> > > 2.43.0
-> > >
