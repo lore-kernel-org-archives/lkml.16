@@ -1,73 +1,215 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B982BD58E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815022DE716;
+	Thu,  3 Jul 2025 20:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751574005; cv=none; b=FQpyJgAwvZHWO2G94WeuMfvFrtPyylYIqSYSEA16XIPTwTwD2gQnVkjC3Enq7Fwchh9tFvym66S4OYcKtpA1XIeom8waP491JiYdXoJG0DIXrMDGwFGBQlxyPV9If5gY6WBM8mm+nJn9NQ6qzfI1ixmyub8McysJRuWNUT0HvNM=
+	t=1751574082; cv=none; b=vEbsR6LP9H3hXeY/xXpAaTYLxb3Zouw7E5W88xVckupTnWCJLo1MzibmfpsQBZCCmrdqB8bZXrf31l9PS7z4zi7giwTNHTqjZQ0aKoBvwvRTtkIks8z0Dsc9YueG1+ftGiLleU54bKi5+Qyex9zrVICtEiVSRhl3k0bSS4ThPQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751574005; c=relaxed/simple;
-	bh=ktUtWHn6ctGIrk0DA195Z10iPpgYiR4PsnMaxDvortA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RSQ1//sPJ5cauM9dEYvd6NtAplVA4hNrGZ7Xu/l6ca/Y7C+nqQlvdJsGwbIaxF1/nkTVrWK8nLlvUaqnVQ2WFw1BwQYnEQP1lTkiyQiLau1DXDBpbuHEO0MHNRigwpNxOh3F6j0jiGj8iDc8DoNDCWxmRdALUGgEdJQccIE8MOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3df2d0b7c7eso3348865ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:20:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751574003; x=1752178803;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IMerz2n+tFN8TsF5zv7+dKlx5F1JGkpVWG+36MCX5+8=;
-        b=IJSsjqfESEW+I5ACDLHpKL585MxUsGakZ5Oc2rDrAGImD5jyh76ZQrJXfarfVwYvms
-         NFsfFwzp7d2XiAdp50hx5TaSBkE0EdOtmjnWhDLv02k4u4ouLTXPY6E+16VuOQ74YgD+
-         8QLcHkdY7ZHFCZfVb4nyV3300OpylI6v1j2WqK6lg9YyQp6xCQ+AbXb4sQDG0RN9uO7a
-         0ZeD03IDOnc4XFPeAEyawOzVTtcOM59S/2qwfBrRZp5gQrhVuFGaZ7P+eclvBDFKgPfY
-         AU+zTN843vzATTx1ekaTGf6Load3d10Wna7JLhIXcz3inK5z1XtHvogljW66gOHorSgx
-         DCqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8e62QUZ8zMgJtqJ2J5Sy6iOIRQm69UlSYSUnFzfZfgvnhP3iz3lt/VBt0ck8p1xsFJ2nc41i78itDImA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzezm+hgsMUnLjF9p9FZQPhKk6dI0UpMaOQun9aF5CUVmh9nE3A
-	9NGGmD/yCYjxxmqHWEgshl7dMbCdRZf8HOoRvrVYuPc/YrrvI+ws0Imo17KCbS1popeArendKrJ
-	hZ2SvL7zIuGy2wzvLTylqZrllgJlUVia88p37sAZ4I2ldB/nw5oJ7TxizjWI=
-X-Google-Smtp-Source: AGHT+IHSYeMvwEbudyKZxAAc16iQbkAMBdLxZVFQBfHXNJuS6bF4GAOQva2GfzxgT2xZB1qthR7gV5Llchlthg6MYhNLNnCBGksU
+	s=arc-20240116; t=1751574082; c=relaxed/simple;
+	bh=Jfr8JdW39USFVD5rVEGkztLqXwMVGiYT2JVULiNeHPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arqG2aiD5wmO7a9ZT5pxsr0jhxZF2N7ehUE63ARIupzVb+l1mhHCHr7iWjQLqFkAifD9+RUYLZmipuij+Trl6nDByBQzG264Gc8gq7XOG+nTnrDjcE58/0XwPaUgx9XOEwn0lQneTC5TFtCHY/iPBTIyiLHkXtxojsnMP7BUJVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Iz0s078F; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Iz0s078F"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563EofZL029218;
+	Thu, 3 Jul 2025 20:21:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=mOhcQc
+	e1/REOOAGksLQLRh7WXaZMOzoFQV9AhXqsYwg=; b=Iz0s078FPXx0lWSdrfluoq
+	zaITAzAeXx65N2dMmlnN2HiyPia99bcfmWg0FpA5oJChI5WG1myhtxHvc9hkezh9
+	H1Yg9Cj2t2zLuGwLXP9B1jRRUHEQ3f//0nLpy+vNB8DDWc4V1VxYTiI6nFJuShLg
+	I2BsD1CNVv7HZGvPVc3CtteptLFu+bcfJszXuZE7KdTvgNzTtArsiMtdr78cHdP0
+	0vjiRLbgaveT2FXuDb4u6jPBKaC09INQSyx95atiBHi/MUb47gjKORpIwEIsTFJL
+	nmJjPxP+oI35E83rSP8n3lDO7R5UqCVzO6BoQrzMRLvebyB01gWqqh4OojRLMGzg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttny10-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 20:21:08 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563KKOF8013661;
+	Thu, 3 Jul 2025 20:21:08 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttny0w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 20:21:08 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563KH4E7021084;
+	Thu, 3 Jul 2025 20:21:07 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqupux5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 20:21:07 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563KL6up19661450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 20:21:06 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4142858068;
+	Thu,  3 Jul 2025 20:21:06 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 865A658064;
+	Thu,  3 Jul 2025 20:21:05 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 20:21:05 +0000 (GMT)
+Message-ID: <be1c5bef-7c97-4173-b417-986dc90d779c@linux.ibm.com>
+Date: Thu, 3 Jul 2025 16:21:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3008:b0:3df:4ad5:3a71 with SMTP id
- e9e14a558f8ab-3e0549c5d57mr92223615ab.11.1751574003214; Thu, 03 Jul 2025
- 13:20:03 -0700 (PDT)
-Date: Thu, 03 Jul 2025 13:20:03 -0700
-In-Reply-To: <f368bd06-73b4-47bb-acf1-b8eba2cfe669@kernel.dk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6866e5f3.050a0220.37fcff.0006.GAE@google.com>
-Subject: Re: [syzbot] [io-uring?] INFO: task hung in vfs_coredump
-From: syzbot <syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com>
-To: anna-maria@linutronix.de, axboe@kernel.dk, frederic@kernel.org, 
-	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] tpm: Managed allocations for tpm_buf instances
+To: Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org
+Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+References: <20250703181712.923302-1-jarkko@kernel.org>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250703181712.923302-1-jarkko@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lp-aR4ky0_U7sUonk1QXmKBppoXIZM9X
+X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6866e634 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=rMIA4TsMAAAA:8 a=VnNF1IyMAAAA:8 a=zK6BKokPSosMEhBhtdYA:9 a=QEXdDO2ut3YA:10
+ a=hVBJ2aql8SDTymIzffKL:22
+X-Proofpoint-ORIG-GUID: iUZRldA-a_LVj1MWDmYg5DBuych4SL60
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDE2NyBTYWx0ZWRfX7KAE7n9gTdrK IpXmGbFa/BWQrauxMkK/uhcL3O4K+eN6qrtraZ1DGtf6914KwLjRPkg5okXPWTRhEIjOBHtvA30 zLlR8DAD8NnjV6WABppRhF1kB6VtTHkGIK0Eyf/sYwJn619NzZK3bumoKpdn1xcEA4WTSY5k6uB
+ 1/M76UO9tiHasyx34Zg5MfdvsI1lUYvvChczornhFIvWYM+Bd418Dw2X+HwPQzhSu5n3VsQQ1KP 5po+1ImBg1dkdNjCBCEcLc4G/RT3v5n0JUJEL7wmLzfRe/7RC96LzbK9PrQrLDzOjTWMyTaV2I8 UZWu5zuexk/sN5vqyEYiEn7UBolVo7zIvMTPJ/MHJxxqNeW5ubo3SwCGS09IfQYl0wcMsHVpXaI
+ CMZkQFs5840xPMWujBrhwoqerLJger/eZjzztXlFn9Sfnmgm+IKUELLFicWpD3OI5/XzG4q5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_05,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=852
+ adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030167
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-by: syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com
-Tested-by: syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com
+On 7/3/25 2:17 PM, Jarkko Sakkinen wrote:
+> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> 
+> Repeal and replace tpm_buf_init() and tpm_buf_init_sized() with
+> tpm_buf_alloc(), which returns a buffer of  memory with the struct tpm_buf
+> header at the beginning of the returned buffer. This leaves 4092 bytes of
+> free space for the payload.
+> 
+> Given that kfree() becomes the destructor for struct tpm_buf instances,
+> tpm_buf_destroy() is now obsolete, and can be removed.
+> 
+> The actual gist is that a struct tpm_buf instance can be declared using
+> __free(kfree) from linux/slab.h:
+> 
+> 	struct tpm_buf *buf __free(kfree) buf = tpm_buf_alloc();
+> 
+> Doing this has two-folded benefits associated with struct tpm_buf:
+> 
+> 1. New features will not introduce memory leaks.
+> 2. It addresses undiscovered memory leaks.
+> 
+> In addition, the barrier to contribute is lowered given that managing
+> memory is a factor easier.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> ---
 
-Tested on:
+> @@ -374,20 +362,18 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>    */
+>   void tpm2_flush_context(struct tpm_chip *chip, u32 handle)
+>   {
+> -	struct tpm_buf buf;
+> -	int rc;
+> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+ >
 
-commit:         8d6c5833 Add linux-next specific files for 20250703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11670582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d7dc16394230c170
-dashboard link: https://syzkaller.appspot.com/bug?extid=c29db0c6705a06cb65f2
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16837770580000
+Remove empty line?
 
-Note: testing is done by a robot and is best-effort only.
+> -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
+> -	if (rc) {
+> +	if (!buf) {
+>   		dev_warn(&chip->dev, "0x%08x was not flushed, out of memory\n",
+>   			 handle);
+>   		return;
+>   	}
+>   
+> -	tpm_buf_append_u32(&buf, handle);
+> +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
+> +	tpm_buf_append_u32(buf, handle);
+>   
+> -	tpm_transmit_cmd(chip, &buf, 0, "flushing context");
+> -	tpm_buf_destroy(&buf);
+> +	tpm_transmit_cmd(chip, buf, 0, "flushing context");
+>   }
+>   EXPORT_SYMBOL_GPL(tpm2_flush_context);
+>   
+> @@ -414,19 +400,20 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
+>   			const char *desc)
+>   {
+>   	struct tpm2_get_cap_out *out;
+> -	struct tpm_buf buf;
+>   	int rc;
+>   
+> -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> -	if (rc)
+> -		return rc;
+> -	tpm_buf_append_u32(&buf, TPM2_CAP_TPM_PROPERTIES);
+> -	tpm_buf_append_u32(&buf, property_id);
+> -	tpm_buf_append_u32(&buf, 1);
+> -	rc = tpm_transmit_cmd(chip, &buf, 0, NULL);
+> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> +	tpm_buf_append_u32(buf, TPM2_CAP_TPM_PROPERTIES);
+> +	tpm_buf_append_u32(buf, property_id);
+> +	tpm_buf_append_u32(buf, 1);
+> +	rc = tpm_transmit_cmd(chip, buf, 0, NULL);
+>   	if (!rc) {
+>   		out = (struct tpm2_get_cap_out *)
+> -			&buf.data[TPM_HEADER_SIZE];
+> +			&buf->data[TPM_HEADER_SIZE];
+>   		/*
+>   		 * To prevent failing boot up of some systems, Infineon TPM2.0
+>   		 * returns SUCCESS on TPM2_Startup in field upgrade mode. Also
+> @@ -438,7 +425,6 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
+>   		else
+>   			rc = -ENODATA;
+>   	}
+> -	tpm_buf_destroy(&buf);
+>   	return rc;
+>   }
+>   EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
+> @@ -455,15 +441,14 @@ EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
+>    */
+>   void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type)
+>   {
+> -	struct tpm_buf buf;
+> -	int rc;
+> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+>   
+
+Remove empty line here.
+
+With this nit fixed:
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
