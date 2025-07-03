@@ -1,24 +1,65 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AE721D3F8;
-	Thu,  3 Jul 2025 12:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91822D3729;
+	Thu,  3 Jul 2025 12:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545929; cv=none; b=SuSjA64oJxqRq+VaZsN40UtS8M0CpjbJJ7CMWW1e3yJ6zdmJjmqbVJPxuBBFgGW9lZ2aTH3T4UIvdZSuE6vNOBzYOtCLbBF6DnQ7nia1XTEI7qLZ8ZE0Y60Zj/hi4PSmh/+V05jI8xa89Zug80rimjFFp2YHSwFnXnez/qlIBNY=
+	t=1751545927; cv=none; b=Hd+CxEMp6cIRmKtCXLEUjmzkcnzjWv65I3sDpxCNLwkICgedat/8c3lLS2/umVgxlm+S9onX/AxpGU1HuEtXM2uKdhjIqtfQyx/HN/BKz1arP969s3pCIeFjVhvHCVnErRhBGx2UB+BKihpJ/QFhCjCGyXkcWOJB4b/bhKA7LSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545929; c=relaxed/simple;
-	bh=oAFqXq1QyFv35ms999RYltPlUo10N7M57paHMCPoPSc=;
+	s=arc-20240116; t=1751545927; c=relaxed/simple;
+	bh=q2mcQoL00V2Ae5Z7ktClCO7OMB85dTKElX64vAtjs7Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mFHA4o6msEi59LLkayTEaeQf4h8IoLJLZuwAsOkgA4eibZjUhfNdMliViRPaDuFzkLxPq7AvHUSEoLRFD5Az/h6HW/mTmBDOiSF/A80eg9LGXWrxZZL1XAJc0z0NzzaK4zQ0tS52JbhX4s2vdEyqlVxGd2byglLWMm12k2PCDCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.0.105] (unknown [114.241.87.235])
-	by APP-05 (Coremail) with SMTP id zQCowAC3Dl8YeGZoHT+zAA--.45946S2;
-	Thu, 03 Jul 2025 20:31:20 +0800 (CST)
-Message-ID: <17733827-8038-4c85-9bb1-0148a50ca10f@iscas.ac.cn>
-Date: Thu, 3 Jul 2025 20:31:20 +0800
+	 In-Reply-To:Content-Type; b=dgdW4zWjvxpTWpOP5rddSvJUgjIZFBc9g4FpMsEXTdq5cOhq+HukgjEmvZZDQb9wdVSJiPyniYd7rsWytqbZKrTIozgEmTAv1Xz2wEjJc8uTiZ6tkw35nRPlvehMaco/ddFAXypMnSa5TVZOZJwju/KEugZLnX5XQOoUtLNA/Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YH2HyAYN; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YH2HyAYN"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so12053989a12.2;
+        Thu, 03 Jul 2025 05:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751545924; x=1752150724; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SZPLWfXiCCARjQLVMbM6O6mOQhpsqAEIICbBKDhLFXs=;
+        b=YH2HyAYNtvjADcZYOjdDIOs/5xcPr8DPDQhHyzlhS8TL2JuHZV5+NOe473DIzbdNFs
+         1P7PWGaXT9sS8THyM+LFV7mrDNNkDYzxTLbtQot6p+FSkuyd/J07Z2eCMK1Uywc8x54g
+         iKsMGgcgboDCTbZ0dpEfC/mkRNRzOzo8xuaHkCBK6CIQsWJ1bSv98sL/ErYyGsPjypOx
+         4nVmO8F3P6HFUuTnLS4gfdFNiv4NLe0G2Iz3hi7SPic/4huuRtdtjQZg5ZPID4NaMKZA
+         rxTOrzEWEom23NuP9S5yINDHPOeVDS3Ollw/9jw3nLNeQ9Ran80GwfZjumkgyP3Hhok0
+         H6Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751545924; x=1752150724;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SZPLWfXiCCARjQLVMbM6O6mOQhpsqAEIICbBKDhLFXs=;
+        b=b8p22jiFZVjDJLouX/EPcSlCkmqnudvncloykhEHeHwHZQFyGaVfuYGVDKRlvE/sVS
+         KbVBh+vWcoLEP50nhlgg+XcG5g3glJlmeBmFs2A2gfVxGSghBlCjpufKbYoI6Obct7LE
+         5pcF7OlSOXrcMooO1E0w7GpQJmO5HPYGYv+g/hR35gdvnCpSbrGHnwR+tpQsvLRDb/hf
+         Djc5sufQik1pKwQRcLJ/jy/IxdXjgsMTU9E9tpTZdg0BgUO8ZmBYldoJG0wK0aBxL6hf
+         9BA8c+yef9pTyOyQs6hqVGN9FYuW0/ax9QufVfWlZcQxpQ5FBQ6n2iedV8Nl0Ck4JqVw
+         IJrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjvjUGhsd2jduJqx1zX5PR0QYAyDGuiZiyi0bkIAI3A4Tx1a2LpBVxz4mxV+1YMlePRhFV3agPVibt+w==@vger.kernel.org, AJvYcCUvsLqMsRnNyA2F/mThwpiaHM5GqtVSVatLFnks8wW2PZxxq16MBTm8M9dbMhopvnCqD577izEFjkkK@vger.kernel.org, AJvYcCW4hHDxeQTIBxgHrivBnD+Os9RO6gss6nW9Mj07Uc/PUsKXuQ/HpwX1KYBnBs/NALG5u0gLpzFR209KM9bZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkJTS8d3A2tSsAfR9qNlHcSyA2iKUZ2aSzryScWCptUTQkF60B
+	IRMA+IuNwwEToAUX63MNqYSJ2re16A5ARe85tQnJOBPgOJ5QYXRl9mP7
+X-Gm-Gg: ASbGnctlg34AuUbBxnvvF7EyVHe8kS6pvgyQR4xAE4mwamIcy65yZwX9aw9cHV27k4x
+	rEqgVNOQXFmEI3g8n/mVBPKYP9gZSrIQGO8VS9/nCM5a5X09TwS9fxzG1W9791ByCp5kPrCppf9
+	nGAsrFJcbAMUkd7NMITavQFQQhn5X4wx+dB7jdbL8tZxxWGln7jPFARSU+yQifLGxpB6qA+nIOf
+	JWv7oKOIlBS14sW/IOWOS+QVOn6+HuG9LYe5LL/FQOrmTJLYn4GVj+nq2cIVGmQmL8FQyVpRhbo
+	TKbClxk87xnAlozQ4oDasJ4ksVAWNmhktdOkKVoGSobwoGIBu/CsuHc2pHhHuRWeQsyn64fkGCQ
+	pTyI=
+X-Google-Smtp-Source: AGHT+IHuheH2n6bV6dLkCNbg1HG9FS/Kp24cqUOr7wqs04JRCAIlvn2pDbqaGZ7WBJdV42dGc8EYOw==
+X-Received: by 2002:a05:6402:238a:b0:60c:44d6:2817 with SMTP id 4fb4d7f45d1cf-60e536053a9mr5295465a12.20.1751545923806;
+        Thu, 03 Jul 2025 05:32:03 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8320b5aasm10343175a12.76.2025.07.03.05.32.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 05:32:03 -0700 (PDT)
+Message-ID: <5fad0945-27a5-4c49-8f20-59c197fc1ba0@gmail.com>
+Date: Thu, 3 Jul 2025 15:31:58 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,93 +67,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/2] dt-bindings: net: Add support for
- SpacemiT K1
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- Eric Dumazet <edumazet@google.com>, Junhui Liu <junhui.liu@pigmoral.tech>,
- Conor Dooley <conor.dooley@microchip.com>, netdev@vger.kernel.org,
- Philipp Zabel <p.zabel@pengutronix.de>, Jakub Kicinski <kuba@kernel.org>,
- linux-riscv@lists.infradead.org, Simon Horman <horms@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org,
- Vivian Wang <uwu@dram.page>, Yixun Lan <dlan@gentoo.org>,
- spacemit@lists.linux.dev, Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Paolo Abeni <pabeni@redhat.com>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>
-References: <20250703-net-k1-emac-v4-0-686d09c4cfa8@iscas.ac.cn>
- <20250703-net-k1-emac-v4-1-686d09c4cfa8@iscas.ac.cn>
- <175153978342.612698.13197728053938266111.robh@kernel.org>
+Subject: Re: [PATCH v5 18/24] media: i2c: maxim-serdes: add MAX96717 driver
+To: Julien Massot <julien.massot@collabora.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+ <20250702132104.1537926-19-demonsingur@gmail.com>
+ <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 Content-Language: en-US
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <175153978342.612698.13197728053938266111.robh@kernel.org>
+In-Reply-To: <b591e7daf1e351fbfee181fcce399db08b28faf9.camel@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:zQCowAC3Dl8YeGZoHT+zAA--.45946S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cry3WF48Kr4UWryfuF13CFg_yoW8uF43pa
-	ySkwnIkrWjvFy7Jw43tr92v3WFgr4ftFyaqFy2gr17t3Z8XF4ftrWS9r48uF18CrWrJa4f
-	Zw17u3WxGry5AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
-	1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjxU3wIDUUUUU
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+Content-Transfer-Encoding: 8bit
 
 
-On 7/3/25 18:49, Rob Herring (Arm) wrote:
-> On Thu, 03 Jul 2025 17:42:02 +0800, Vivian Wang wrote:
->> The Ethernet MACs on SpacemiT K1 appears to be a custom design. SpacemiT
->> refers to them as "EMAC", so let's just call them "spacemit,k1-emac".
+
+On 7/3/25 3:16 PM, Julien Massot wrote:
+> On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+>> Add a new MAX96717 driver that also supports MAX9295A, MAX96717F and
+>> MAX96793.
 >>
->> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
->> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>> Integrate it with the common serializer framework, while keeping
+>> compatibility with existing usecases, avoiding code duplication, and
+>> also enabling more features across all chips.
+>>
+>> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 >> ---
->>   .../devicetree/bindings/net/spacemit,k1-emac.yaml  | 81 ++++++++++++++++++++++
->>   1 file changed, 81 insertions(+)
+>>   drivers/media/i2c/maxim-serdes/Kconfig    |   16 +
+>>   drivers/media/i2c/maxim-serdes/Makefile   |    1 +
+>>   drivers/media/i2c/maxim-serdes/max96717.c | 1685 +++++++++++++++++++++
+>>   3 files changed, 1702 insertions(+)
+>>   create mode 100644 drivers/media/i2c/maxim-serdes/max96717.c
 >>
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> Error: Documentation/devicetree/bindings/net/spacemit,k1-emac.example.dts:36.36-37 syntax error
-> FATAL ERROR: Unable to parse input tree
+>> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
+>> index cae1d5a1293e..648cb891eefe 100644
+>> --- a/drivers/media/i2c/maxim-serdes/Kconfig
+>> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+>> @@ -14,3 +14,19 @@ config VIDEO_MAXIM_SERDES
+>>   
+>>   	  To compile this driver as a module, choose M here: the module
+>>   	  will be called max_serdes.
+>> +
+>> +config VIDEO_MAX96717
+>> +	tristate "Maxim MAX96717 Serializer support"
+>> +	depends on COMMON_CLK
+>> +	select VIDEO_MAXIM_SERDES
+>> +	select GENERIC_PINCONF
+>> +	select GENERIC_PINCTRL_GROUPS
+>> +	select GENERIC_PINMUX_FUNCTIONS
+>> +	select GPIOLIB
+>> +	help
+>> +	  This driver supports the Maxim MAX9295A, MAX96717, MAX96717F,
+>> +	  MAX96793 Serializers, which receive video on a MIPI CSI-2
+>> +	  interface and output it on a GMSL2/3 link.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called max96717.
+>> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
+>> index b54326a5c81b..04abda6a5437 100644
+>> --- a/drivers/media/i2c/maxim-serdes/Makefile
+>> +++ b/drivers/media/i2c/maxim-serdes/Makefile
+>> @@ -1,3 +1,4 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>>   max-serdes-objs := max_serdes.o max_ser.o max_des.o
+>>   obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
+>> +obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+>> diff --git a/drivers/media/i2c/maxim-serdes/max96717.c b/drivers/media/i2c/maxim-serdes/max96717.c
+>> new file mode 100644
+>> index 000000000000..60b285e547b7
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/maxim-serdes/max96717.c
+>> @@ -0,0 +1,1685 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Maxim MAX96717 GMSL2 Serializer Driver
+>> + *
+>> + * Copyright (C) 2025 Analog Devices Inc.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/gpio/driver.h>
+>> +#include <linux/pinctrl/pinctrl.h>
+>> +#include <linux/pinctrl/pinmux.h>
+>> +#include <linux/pinctrl/pinconf.h>
+>> +#include <linux/pinctrl/pinconf-generic.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include "max_ser.h"
+>> +
+>> +#define MAX96717_REG0				0x0
+>> +
+>> +#define MAX96717_REG2				0x2
+>> +#define MAX96717_REG2_VID_TX_EN_P(p)		BIT(4 + (p))
+>> +
+>> +#define MAX96717_REG3				0x3
+>> +#define MAX96717_REG3_RCLKSEL			GENMASK(1, 0)
+>> +#define MAX96717_REG3_RCLK_ALT			BIT(2)
+>> +
+>> +#define MAX96717_REG6				0x6
+>> +#define MAX96717_REG6_RCLKEN			BIT(5)
+>> +
+>> +#define MAX96717_I2C_2(x)			(0x42 + (x) * 0x2)
+>> +#define MAX96717_I2C_2_SRC			GENMASK(7, 1)
+>> +
+>> +#define MAX96717_I2C_3(x)			(0x43 + (x) * 0x2)
+>> +#define MAX96717_I2C_3_DST			GENMASK(7, 1)
+>> +
+>> +#define MAX96717_TX3(p)				(0x53 + (p) * 0x4)
+>> +#define MAX96717_TX3_TX_STR_SEL			GENMASK(1, 0)
+>> +
+>> +#define MAX96717_VIDEO_TX0(p)			(0x100 + (p) * 0x8)
+> This is a bit confusing, looks like this register address is valid for MAX9295a VIDEO_TX0
+> but not for MAX96717, VIDEO_TX0 (Z) is at 0x110.
+> 
 
-My bad. The example still depends on the reset bindings for the constant 
-RESET_EMAC0. I just tried with reset v12 [1] and that fixes it.
+See pipe_hw_ids field of max96717_chip_info.
+MAX9295A has pipes 0, 1, 2, 3, MAX96717 has pipe 2 only.
+Registers and strides are the same, just pipes are missing.
 
-[1]: https://lore.kernel.org/spacemit/20250702113709.291748-2-elder@riscstar.com/
-
-Vivian "dramforever" Wang
-
-> make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/net/spacemit,k1-emac.example.dtb] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
->
-> doc reference errors (make refcheckdocs):
->
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250703-net-k1-emac-v4-1-686d09c4cfa8@iscas.ac.cn
->
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
+> 
+> 
 
