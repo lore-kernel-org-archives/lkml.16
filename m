@@ -1,30 +1,50 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957806EB79;
-	Thu,  3 Jul 2025 02:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04681F94A;
+	Thu,  3 Jul 2025 02:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751508236; cv=none; b=i6IQigCMoeKQziZCsYQPJKI/Wc7gGnWAXavjc0JqoqkQmnDU78lzciCSyPJzr7FqAIOBuL0Za9whR2xqhTUysHQK6IkqgcXjlBuNeIBZq//BFKQ5Vk2qGr3lABhaSLveeGOiQLf628Tw11R6AeeRX5Ec6SbHcp78OVjZQ68GhMA=
+	t=1751508300; cv=none; b=Nv4dAy7+kWyOgWFhpVdnOp5WUveOLv+d7HtBbLt2Ggz5FiGkw+B1jomlM58mCFOQAoNBZQr8fFqk6bTAgmmMrs1SFR5Wf5Fw62lQLgPL3QW3yvdcI6S9lsSCqVvgItO8Ass0e0WwGJWf8iIAjr7Ib/Smaf1gh25utMCiqMskksY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751508236; c=relaxed/simple;
-	bh=cj5tk4s7MeSPch96CAZg7LHsRgPqCa/4i/SmhJI+HbI=;
+	s=arc-20240116; t=1751508300; c=relaxed/simple;
+	bh=ghjz4C75wfN8JRFKxQVod63LoXDkM1idBHHdqSL8WoM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XSYgRw5DfkeRFtJTVo5i78cYPfakOlk5dwTLf+vSlcTM8HWERG9MxljmNtDLZiT/vfy9a3jZk76Rm2M347M5hHzG8opIcg0nPyk6TYNg0DRs2mU7/pNEhK+R43rN5EAkd65a2gM9PsGCOOHclMAqcdTTqq34ncBvIeJZWa63wes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXg6c2z9dzKHN1m;
-	Thu,  3 Jul 2025 10:03:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id CDF4D1A0A4F;
-	Thu,  3 Jul 2025 10:03:50 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgA3mSYE5WVogxzrAQ--.65249S3;
-	Thu, 03 Jul 2025 10:03:50 +0800 (CST)
-Message-ID: <abbdba63-2e15-4a11-844a-0423d0bc4a87@huaweicloud.com>
-Date: Thu, 3 Jul 2025 10:03:48 +0800
+	 In-Reply-To:Content-Type; b=aosWRUu31QMLzw5QgZ466LXujApbcv8CyxNnDRTjOgnPLwc1vJNSySgGVhLMhang8V9kTOYqswcFXzHECNkccts30LkMz2D+L9Dz/oba4oQuursxcakJdd19ionMePgUvwRbr8+SWIE/W5bAhYRAoXVHJaRHqyn46xFPq5fWFe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqEgVNpW; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqEgVNpW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751508299; x=1783044299;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ghjz4C75wfN8JRFKxQVod63LoXDkM1idBHHdqSL8WoM=;
+  b=kqEgVNpWcGJ7DWOUpbZ1oS3Sh/qGE2zts23zh/9oFIb0wD58PRdINH5T
+   q5K5UWFXivBWVQSrm0N5hMi6rjV5xVHUP97xykFgsQZi+gcbR4H6GPodL
+   ofvZRmwgyuY5Ijd8ngJhOpa7AaI5EN2RRxBiudH4TMK1PX3TmFkhbEenl
+   Y8VfpSyN6++26ts/Wf+NtWhWKMM1KYGLchO3E1Np8+nFlczVqFOAjHceF
+   9BX5LLImhwODbDOU4ElhFs/japUmrHD0c+Ftmu0oQQozdRgr0qfaGXxcm
+   /9r0f3mREyU6mHmHmylcsB/s/UBSFZgcdSC38X6lFvlAHF//OYRdNBcD7
+   g==;
+X-CSE-ConnectionGUID: l84M8Vp5QwOq6w59v2kfTw==
+X-CSE-MsgGUID: XDkpN9gMSiWnGKyEF4hUaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53965269"
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="53965269"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:04:58 -0700
+X-CSE-ConnectionGUID: MBuCpl/xSs+B1epg0BstbA==
+X-CSE-MsgGUID: NNfpWYmrT82c63w5IBxKVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="153999973"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:04:56 -0700
+Message-ID: <b25e6891-89cc-4ead-88b3-c1c548615daa@linux.intel.com>
+Date: Thu, 3 Jul 2025 10:03:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,69 +52,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] ext4: process folios writeback in bytes
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com,
- libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-2-yi.zhang@huaweicloud.com>
- <oggzqu4j23ihzsi7qfwiluy5w3nwubgbyhqu2a3hdtta7cyhno@smlzq7xmrflq>
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Cc: kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
+ will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+ <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+ <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
+ <CAOLeGd3a63_za6cYs3HyzFn1A=j7gaEcWurT9yuXknMspa80fA@mail.gmail.com>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <oggzqu4j23ihzsi7qfwiluy5w3nwubgbyhqu2a3hdtta7cyhno@smlzq7xmrflq>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgA3mSYE5WVogxzrAQ--.65249S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFy5Xr15ZrW3ZryxWF47XFb_yoWDWFg_uF
-	ZYyr4xKr4v9F1xA3Z7Z3ZxAr4vkF4UKF1rCryrCr98A34fZrykZFn5G3s0kr4UWa9rWr47
-	uFW7Xr43ArZxujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <CAOLeGd3a63_za6cYs3HyzFn1A=j7gaEcWurT9yuXknMspa80fA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2025/7/2 22:00, Jan Kara wrote:
-> On Tue 01-07-25 21:06:26, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> Since ext4 supports large folios, processing writebacks in pages is no
->> longer appropriate, it can be modified to process writebacks in bytes.
->>
->> Suggested-by: Jan Kara <jack@suse.cz>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> 
-> Just one small issue. With that fixed feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
->> @@ -2786,18 +2788,18 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
->>  		writeback_index = mapping->writeback_index;
->>  		if (writeback_index)
->>  			cycled = 0;
->> -		mpd->first_page = writeback_index;
->> -		mpd->last_page = -1;
->> +		mpd->start_pos = writeback_index << PAGE_SHIFT;
->> +		mpd->end_pos = -1;
-> 
-> Careful here. Previously last_page was unsigned long so -1 was fine but now
-> loff_t is signed. So we should rather store LLONG_MAX here.
-> 
-> 									Honza
+On 7/3/25 00:45, Ioanna Alifieraki wrote:
+> On Wed, Jul 2, 2025 at 12:00 PM Baolu Lu<baolu.lu@linux.intel.com> wrote:
+>> On 7/2/2025 1:14 PM, Baolu Lu wrote:
+>>> On 7/2/25 01:11, Ioanna Alifieraki wrote:
+>>>> #regzbot introduced: 129dab6e1286
+>>>>
+>>>> Hello everyone,
+>>>>
+>>>> We've identified a performance regression that starts with linux
+>>>> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+>>>> Bisection pointed to commit:
+>>>> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in
+>>>> iotlb_sync_map").
+>>>>
+>>>> The issue occurs when running fio against two NVMe devices located
+>>>> under the same PCIe bridge (dual-port NVMe configuration). Performance
+>>>> drops compared to configurations where the devices are on different
+>>>> bridges.
+>>>>
+>>>> Observed Performance:
+>>>> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+>>>> - After the commit:
+>>>>     -- Same PCIe bridge: ~4985 MiB/s
+>>>>     -- Different PCIe bridges: ~6150 MiB/s
+>>>>
+>>>>
+>>>> Currently we can only reproduce the issue on a Z3 metal instance on
+>>>> gcp. I suspect the issue can be reproducible if you have a dual port
+>>>> nvme on any machine.
+>>>> At [1] there's a more detailed description of the issue and details
+>>>> on the reproducer.
+>>> This test was running on bare metal hardware instead of any
+>>> virtualization guest, right? If that's the case,
+>>> cache_tag_flush_range_np() is almost a no-op.
+>>>
+>>> Can you please show me the capability register of the IOMMU by:
+>>>
+>>> #cat/sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
+>> Also, can you please try whether the below changes make any difference?
+>> I've also attached a patch file to this email so you can apply the
+>> change more easily.
+> Thanks for the patch Baolu, I've tested and I can confirm we get ~6150MiB/s
+> for nvme pairs both under the same and different bridge.
+> The output of
+> cat/sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
+> 19ed008c40780c66
+> for all nvmes.
+> I got confirmation there's no virtualization happening on this instance
+> at all.
+> FWIW, I had run perf when initially investigating the issue and it was
+> showing quite some time spent in cache_tag_flush_range_np().
 
-Ha, right! Sorry for missed this corner, will fix.
+Okay, I will post a formal fix patch for this. Thank you!
 
 Thanks,
-Yi.
-
+baolu
