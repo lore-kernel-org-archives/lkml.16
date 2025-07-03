@@ -1,120 +1,96 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B15A2D;
-	Thu,  3 Jul 2025 05:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848B513AA3E;
+	Thu,  3 Jul 2025 05:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751520239; cv=none; b=aJpbpC1DHKwF6SSDaU+OL5Tt6ALYjnzWxlIYQsvzKWeR402lhbCEqxSIlTzbRycgikudcnRyjMsbSwFAMPLvg0trzuittsX0owMstsusxg+lZjVJ8/ShdfJQxc556ArSJdx76FlzonwztM9ClOd1ReJOxeXvlYK73SKlqtJT4F8=
+	t=1751520279; cv=none; b=tyiqLGAz4OBsxAjzivSAqXeWo6CFEmzT14KsI1zRpZrBqbOi2z3og5SrvhN3Om2OtKLuPnKRs9z+rrAQL52AZub/6OI1JT1/r+hetvf2Tw1zmY1JCpojH1kMar/XiZtu5WR0q1+mdjwjNsN97vuwDOFx7EFmuak202kYhU6hbJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751520239; c=relaxed/simple;
-	bh=EtoSA3VHJSWBfagW7ggQB3tJ1+3hNatvkz5DniWklAg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OBpV3A6PpGkQrgm/kUWxfXz+gAsZrxL4kZUGl/yIRslcVmwr8yUEFy7vYwZYFtIFRhs0C7S+6xH9ogKUCzg30Crs9JtHQgC7epvDCiQSWiEXnkx4HhK+l4QGixKGnHAtbyBh+qJ8ZCx5JhK5RlKGQYdJoblICI6Dw+h+6hgyopM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Wbw0l3oq; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751520279; c=relaxed/simple;
+	bh=ZLIWmnaB/4VL4QjgzSpWp4WX95XD/DjC3uUTSgVtLKQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S6NOzx77iOKZRFFGueLtQztpsntsQnnJiSO68Sdcgi0BJEiCT29YNggR/znga20lJ5QvNFVbkBKF32Z3K2Uu3zSSeg0S7kyxhd3ugVpcsIn3pQjhPs7NkgkZlwcck8bW9CNy+elmhP9iDyrybDtbbu763006X2+KaI63b5IB6T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TK+y1WY4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Wbw0l3oq"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5635NieZ3434909;
-	Thu, 3 Jul 2025 00:23:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751520224;
-	bh=1S3pKObAAMv/1F4yr4SBhJZKzZhbIJykyhQ4qvCndNg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Wbw0l3oqL4/rixWyINFJeo0ZSkz7qHcrG47gl/oXIj+8eVEHy2S6V/jnTSr1IJ2d+
-	 SD5y+NVXbwVfTN+hQx2+u7WmEQYydXHHxcRg8vwsFHeMdKcEEUiyUcb8YjDKGRIG+e
-	 BDvGNp2acph+WjRXF5QrVWsOpuYqaeWVwnPgrB8s=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5635NhJP057019
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 3 Jul 2025 00:23:43 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 3
- Jul 2025 00:23:43 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 3 Jul 2025 00:23:42 -0500
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5635Ncic540229;
-	Thu, 3 Jul 2025 00:23:39 -0500
-Message-ID: <95d7cf5c-6995-401a-b9de-08b82482b175@ti.com>
-Date: Thu, 3 Jul 2025 10:53:37 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TK+y1WY4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB464C4CEE3;
+	Thu,  3 Jul 2025 05:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751520278;
+	bh=ZLIWmnaB/4VL4QjgzSpWp4WX95XD/DjC3uUTSgVtLKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TK+y1WY4lU3p4ObjZgA3R6/OR/o9crmVjL5fE6b4uRHdsCYfrQTy3aZB9CcdLrYAV
+	 GgFPx2T3jITaGToOnJsIUvDA28qcPXAwM1GnPyNcCOrA1F0l73RC5hnXKZVpsK+nas
+	 zKCJ2wGvGs3u0mP71uFDz4sNs4dd793zaxWVay5PFHj8y5NEnqaIiZDKxWt+SUhxzE
+	 N8vWqBBby47vuzdKnqpTTm1+7fynyBL9lNhNLMB0t82k6iJjAaacWJrJDqoN9BP2uq
+	 Gr4msvh2tnh9NQ7LdVN6AVuuJxxjSWhM037BOFWoPLultcsRdAw/H2BYPV+uKF+z3V
+	 vp1XZOsGUtsOw==
+From: SeongJae Park <sj@kernel.org>
+To: Yunjeong Mun <yunjeong.mun@sk.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com
+Subject: Re: [RFC PATCH 1/2] samples/damon: convert node id to physical address
+Date: Wed,  2 Jul 2025 22:24:36 -0700
+Message-Id: <20250703052436.39603-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250703051836.1759-1-yunjeong.mun@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net: ethernet: ti: am65-cpsw-nuss: Fix skb size by
- accounting for skb_shared_info
-To: Jakub Kicinski <kuba@kernel.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-        <pabeni@redhat.com>, <rogerq@kernel.org>, <horms@kernel.org>,
-        <mwalle@kernel.org>, <jacob.e.keller@intel.com>, <jpanis@baylibre.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250626051226.2418638-1-c-vankar@ti.com>
- <20250627170835.75c73445@kernel.org>
-Content-Language: en-US
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <20250627170835.75c73445@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
-Hello Jakub,
+On Thu,  3 Jul 2025 14:18:33 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
 
-On 28/06/25 05:38, Jakub Kicinski wrote:
-> On Thu, 26 Jun 2025 10:42:26 +0530 Chintan Vankar wrote:
->> While transitioning from netdev_alloc_ip_align() to build_skb(), memory
->> for the "skb_shared_info" member of an "skb" was not allocated. Fix this
->> by including sizeof(skb_shared_info) in the packet length during
->> allocation.
->>
->> Fixes: 8acacc40f733 ("net: ethernet: ti: am65-cpsw: Add minimal XDP support")
->> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
->> ---
->>
->> This patch is based on the commit '9caca6ac0e26' of origin/main branch of
->> Linux-net repository.
->>
->> Link to v1:
->> https://lore.kernel.org/r/598f9e77-8212-426b-97ab-427cb8bd4910@ti.com/
->>
->> Changes from v1 to v2:
->> - Updated commit message and code change as suggested by Siddharth
->>    Vadapalli.
->>
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
->> index f20d1ff192ef..67fef2ea4900 100644
->> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
->> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
->> @@ -856,7 +856,7 @@ static struct sk_buff *am65_cpsw_build_skb(void *page_addr,
->>   {
->>   	struct sk_buff *skb;
->>   
->> -	len += AM65_CPSW_HEADROOM;
->> +	len += AM65_CPSW_HEADROOM + SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->>   
->>   	skb = build_skb(page_addr, len);
+> Hi Seongjae, thanks for your review :)
+
+My pleasure! :)
+
 > 
-> Looks to me like each packet is placed in a full page, isn't it?
-> If that's the case the correct value for "buffer size" is PAGE_SIZE
+> On Tue,  1 Jul 2025 16:54:07 -0700 SeongJae Park <sj@kernel.org> wrote:
+> > Hi Yunjeong,
+> > 
+> > On Tue,  1 Jul 2025 17:54:16 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+> > 
+> > > This patch removes the `node#_start_addr` and `node#_end_addr` knobs,
+> > > and introduces logic for converting numa node id to physical address.
+> > > It only checks whether a numa node is online and calculates the
+> > > start and end addresses of the node. It does not verify whether each
+> > > memory block within the numa node is `usable` or part of `System RAM`,
+> > > as performed by `damo` [1],[2].
+> > 
+> > This is just a sample module, but I'd like to avoid making unnecessary
+> > user-breaking changes.  How about keeping the existing knobs but adding yet
+> > another knob for the automatic detection, say, 'detect_node_addresses'?
+> > 
+> 
+> I agree. From my understanding, 'detect_node_addresses' can be set to 
+> either 'Y' or 'N'. If it is set to 'Y', mtier converts node0 and node1
+> to their physical addresses internally. If it is set to 'N', it uses
+> the existing knobs. Is that correct? 
+
+Yes, you're correctly understanding my suggestion.
+
+[...]
+> Thanks for your detailed reviw! Next time, I will make sure to check 
+> checkpatch.pl:)
+
+Looking forward to your next patches!  Fyi, I use 'hkml patch format', which
+automatically runs[1] checkpatch.pl and misc checks for common mistakes.
+
+[1] https://github.com/sjp38/hackermail/blob/master/USAGE.md#checker-run
 
 
-Thanks for reviewing the patch and pointing this out. Since the maximum
-packet size received from the wire is AM65_CPSW_MAX_PACKET_SIZE that is
-2024 Bytes, after adding headroom and tailroom, the total Bytes will
-remain below the minimum page size available that is 4096, it is better
-to use PAGE_SIZE.
+Thanks,
+SJ
 
-Regards,
-Chintan.
+[...]
