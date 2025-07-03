@@ -1,70 +1,63 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B85275AEF;
-	Thu,  3 Jul 2025 23:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFAB2D5427;
+	Thu,  3 Jul 2025 23:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751584621; cv=none; b=UZFyOSA3Ffe0TF05WeEs+9rAnKutVWw6lzLTzVhyLfLOkS9qoEI9euuMFC0SNUti8jeff6CRpGNaKQIosKJXXFW1IOi8E0Kknf+V7FHVTzbsFGl91aplv2IFUwG8aZHT7gvVuHwacLcBWB66KHUTnPSO7635n3aXfQtzwY/Y01s=
+	t=1751584670; cv=none; b=bq0WnRgVZg6mXECxsup9Ptc/n0w7ZL6DEhJj9Ml9kPmv9zj8bEbNyYtfUvp7yyPJKTQWv02ftEcbVsVq86zRRvw3ioyd/8cg0NTK0ixsarvD48jwxIsPkGzR7m8cIj/BZ23SGDOHGjStL5+EdGwJwmXRpBEErsWInx+eLhEKh+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751584621; c=relaxed/simple;
-	bh=f75U+fsFaWBghqHI2kF+1eVpwBrvlSS1bBLtPTWtINg=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=UQCPNBrxmTlWypOLrZrzl69S3WjMt1qvSjEdJVAEN4M57lhKtYZ+pyHHO8NDjCjIlRdJ8wUJ8Yf3M5fBkV099OVYZZY/mik6jEwR+UNIuyQ4E84BO21RRdqX3cYeBdNJ+QRneOfLt/NJkFJXuLGsEF5AYdGISDdlgphxRaOvKaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uXTAc-0018BH-UK;
-	Thu, 03 Jul 2025 23:16:46 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1751584670; c=relaxed/simple;
+	bh=uhsiemPpx0IFgieoxgJV8+bHgab638fpTiXPrK5ZQug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ihg4HzCFzbrLcFdPSsWVqxFXJnEpRorTtQvKPKFl8oOaaWXy2sbJtRtYgN8SA5tWzP2HzND0Jp6Rkdjj3AaQYgK7mHwaEaa4gqQmD28a5k5PURywiTiXDs1F6OpBBK1WShvkGTk8LJzMGPqoXSYwkiemv4zGtWnPUM4WvbPMDRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ilVfLGWJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ilVfLGWJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFFDC4CEE3;
+	Thu,  3 Jul 2025 23:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751584669;
+	bh=uhsiemPpx0IFgieoxgJV8+bHgab638fpTiXPrK5ZQug=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ilVfLGWJzxkpd4YF29J3kgwJOetoi/cZ0RVlxrcxojgyzf/Fqwwo1n/LbHC3yqVDt
+	 ONVzIY3WVg55yq+Eod9bbI+ihBORKcEhRGs9gETcito/CdfUqW2OcvUtj+D7Ybw71L
+	 T3GkmrYwlAqGsaZe81racJ3wQ8PM2+uWsY+yTCa4=
+From: Shuah Khan <skhan@linuxfoundation.org>
+To: shuah@kernel.org
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: print installation complete message
+Date: Thu,  3 Jul 2025 17:17:46 -0600
+Message-ID: <20250703231747.37544-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Mike Snitzer" <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [PATCH RFC 0/2] nfsd: issue POSIX_FADV_DONTNEED after READ/WRITE/COMMIT
-In-reply-to: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
-References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
-Date: Fri, 04 Jul 2025 09:16:43 +1000
-Message-id: <175158460396.565058.1455251307012063937@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Fri, 04 Jul 2025, Jeff Layton wrote:
-> Chuck and I were discussing RWF_DONTCACHE and he suggested that this
-> might be an alternate approach. My main gripe with DONTCACHE was that it
-> kicks off writeback after every WRITE operation. With NFS, we generally
-> get a COMMIT operation at some point. Allowing us to batch up writes
-> until that point has traditionally been considered better for
-> performance.
+Add installation complete message to Makefile install logic.
 
-I wonder if that traditional consideration is justified, give your
-subsequent results.  The addition of COMMIT in v3 allowed us to both:
- - delay kicking off writes
- - not wait for writes to complete
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/testing/selftests/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think the second was always primary.  Maybe we didn't consider the
-value of the first enough.
-Obviously the client caches writes and delays the start of writeback.
-Adding another delay on the serve side does not seem to have a clear
-justification.  Maybe we *should* kick-off writeback immediately.  There
-would still be opportunity for subsequent WRITE requests to be merged
-into the writeback queue.
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 9dae84a74e7f..b95de208265a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -300,6 +300,7 @@ ifdef INSTALL_PATH
+ 	else \
+ 		printf "Unable to get version from git describe\n"; \
+ 	fi
++	@echo "**Kselftest Installation is complete: $(INSTALL_PATH)**"
+ else
+ 	$(error Error: set INSTALL_PATH to use install)
+ endif
+-- 
+2.47.2
 
-Ideally DONTCACHE should only affect cache usage and the latency of
-subsequence READs.  It shouldn't affect WRITE behaviour.
-
-Thanks,
-NeilBrown
