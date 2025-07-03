@@ -1,61 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8613C2236E3;
-	Thu,  3 Jul 2025 15:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0485819DF61;
+	Thu,  3 Jul 2025 15:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751557499; cv=none; b=Li2SRnshkbdpYdJOzs+PfB4lRztyxkWGgVuSBIH/COLpi+ZQazTDnin5Av+PxpmiFZ0nQL2kHEuHGC+MjF6KVNq6KOOaK6FI9SowmHdCPwnrACJ/2ELb2XU746jbgacMgovvIDQusvqRu9yACd/E2LtMi9SsC75KOhMbOCLX+2Y=
+	t=1751557531; cv=none; b=ZlNmjydKfykuz9xrICelXYeadXg08eVCAjDK18UGSjJE4d9outIIQWsKd7qz/B6etEFrDbi/NBSaqsheHNHkHSJ7KYnT8CmaPLQiyL73txDnMnWCb36Uz4UYpaHInUesV04sDAwV6IyijglSqQneXZ5dwgW6erd9Hs9Emeb3Fd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751557499; c=relaxed/simple;
-	bh=bY+Xljp0l6L+Y1+hUN3hWFShFUuv2QI+G4X/M1K7w7c=;
+	s=arc-20240116; t=1751557531; c=relaxed/simple;
+	bh=8qLi44poKRoblhr2C3ruUsFr604c9UYKBm11l8n99CM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfHEpL+YjgD4JlaYZJb5f4jt/47o1r17PtSfW1bxS5o0lseN4TQ4L9Ania61nt904IZdkUyruplnZO/rD/wJlFWR8kMU30YhMauIaTeDEYUlPSXxARdSGwtsP3SJB/kGQVD+luiYHXr6sWz6YUDKVrGwp06jqT9vbqTJl4ODqHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM1gWYfQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iZOhUN/hXGak/p2J8g13A8rCmAQwLWlL5lnur5qhJHYUW8H4NhzDA5A/PS/sOc4+QGw9rEScsr7aUiWROiba79rQOKXCiUrjmAxCAu2a26W7gbd+Elx/TE7gYqA7y3dRZCFDvzdgCTgEegcJ4eCsB9/MnT19dY6bbMN/s4n0m6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5xt1+MA; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM1gWYfQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3FEC4CEE3;
-	Thu,  3 Jul 2025 15:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751557499;
-	bh=bY+Xljp0l6L+Y1+hUN3hWFShFUuv2QI+G4X/M1K7w7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eM1gWYfQIkW+fVVPM2em1oRqEQ/5mkowKAFrekz9Er7UNVQHAHduRnaOvLJDG8Jrs
-	 dKaYD/l77Of5i9e2mRm+KRWxxPiMfL06u7VujnWsgHELUb0yyGJLM8+IqkVaGe1scO
-	 Sw34WtAk+30NA/4zVKXXwJ2cPb1+VXaL67PMYLeGBid43RU4p/RFvm5sHqFAqGjITy
-	 +QQ4m9jnmjDxVTK1fSP3kBacVuTwDg2Jm0I1dzZW8Y6+yig9owsNAOFTvnataY97m7
-	 c+d55bQipQdEo2ncbN3fhEhPRgCEMIkOFJxuvNWgUDQ+DqzLPWGnGiue5EqTlKVrxl
-	 4d5IzBLs5iB1Q==
-Date: Thu, 3 Jul 2025 10:44:58 -0500
-From: Rob Herring <robh@kernel.org>
-To: Meng Li <Meng.Li@windriver.com>
-Cc: krzk+dt@kernel.org, linux@roeck-us.net, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, linux-watchdog@vger.kernel.org,
-	imx@lists.linux.dev, shawnguo@kernel.org, conor+dt@kernel.org,
-	Frank.Li@nxp.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v4 PATCH 1/2] dt-bindings: watchdog: fsl-imx-wdt: add
- compatible string fsl,ls1046a-wdt
-Message-ID: <20250703154458.GA1470571-robh@kernel.org>
-References: <20250608030616.3874517-1-Meng.Li@windriver.com>
- <20250608030616.3874517-2-Meng.Li@windriver.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5xt1+MA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751557529; x=1783093529;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=8qLi44poKRoblhr2C3ruUsFr604c9UYKBm11l8n99CM=;
+  b=b5xt1+MANymvQWDUabx/u38XVcXAgAWSFwSQvo2wLUT4f5hE5N3aq+nR
+   TP41wBiv33dzXLXkSDTk7uTqfE9JDu7J8dbJ3W+n+aFcEp6JX/b/heDuH
+   MLhbnq8tBq3tj0z1C+q5VKVEChN9ayUuQWxlZCc6107FqO43RfHW0pedd
+   +gPJSJ4l59kPWZxzHzpFy7FBWTF7CLwkq/sJd8WImtIMeyfNf2s19vkal
+   r89xA6M8K8MgbCFxwgvPBEZh1ZtmjUmU1loGxGSbN4gSy2xx6VJ9Um2bu
+   UL7q1RDaC7SJEdALbXVDsZV21Lquqa0kGBovBirmHda74A1UQXcQy1yjI
+   Q==;
+X-CSE-ConnectionGUID: ryuPhG5RThi41PpMzAG2Vw==
+X-CSE-MsgGUID: P5ItKD/bQM+2EFzo4KGMHg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="71329432"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="71329432"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 08:45:29 -0700
+X-CSE-ConnectionGUID: NnComOITQdK4pQxSKP4Mgw==
+X-CSE-MsgGUID: qu82479pRqauvpL6VVdZ8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="154172233"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 08:45:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uXM7m-0000000CFHy-0sN8;
+	Thu, 03 Jul 2025 18:45:22 +0300
+Date: Thu, 3 Jul 2025 18:45:21 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v11 4/8] iio: accel: adxl345: add inactivity feature
+Message-ID: <aGalkb42uRQ12Wr0@smile.fi.intel.com>
+References: <20250702230315.19297-1-l.rubusch@gmail.com>
+ <20250702230315.19297-5-l.rubusch@gmail.com>
+ <aGaTH6gVqHxn9Xct@smile.fi.intel.com>
+ <CAFXKEHb4MQk=6hyh-02Fq_XmkQmMiwc-WT4ZSviP6x4XA463mQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250608030616.3874517-2-Meng.Li@windriver.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFXKEHb4MQk=6hyh-02Fq_XmkQmMiwc-WT4ZSviP6x4XA463mQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Sun, Jun 08, 2025 at 11:06:15AM +0800, Meng Li wrote:
-> Add compatible string fsl,ls1046a-wdt for ls1046a SoC. fsl,ls1046a-wdt
-> allows big-endian property.
+On Thu, Jul 03, 2025 at 04:59:50PM +0200, Lothar Rubusch wrote:
+> On Thu, Jul 3, 2025 at 4:26 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Jul 02, 2025 at 11:03:11PM +0000, Lothar Rubusch wrote:
+
+...
+
+> > >  #define ADXL345_REG_TAP_SUPPRESS_MSK BIT(3)
+> > >  #define ADXL345_REG_TAP_SUPPRESS     BIT(3)
+> > >  #define ADXL345_REG_ACT_AXIS_MSK     GENMASK(6, 4)
+> > > +#define ADXL345_REG_INACT_AXIS_MSK   GENMASK(2, 0)
+> > > +#define ADXL345_POWER_CTL_INACT_MSK  (ADXL345_POWER_CTL_AUTO_SLEEP | ADXL345_POWER_CTL_LINK)
+> > >
+> > >  #define ADXL345_TAP_Z_EN             BIT(0)
+> > >  #define ADXL345_TAP_Y_EN             BIT(1)
+> > >  #define ADXL345_TAP_X_EN             BIT(2)
+> > >
+> > > +#define ADXL345_INACT_Z_EN           BIT(0)
+> > > +#define ADXL345_INACT_Y_EN           BIT(1)
+> > > +#define ADXL345_INACT_X_EN           BIT(2)
+> > > +#define ADXL345_INACT_XYZ_EN         (ADXL345_INACT_Z_EN | ADXL345_INACT_Y_EN | ADXL345_INACT_X_EN)
+> > > +
+> > >  #define ADXL345_ACT_Z_EN             BIT(4)
+> > >  #define ADXL345_ACT_Y_EN             BIT(5)
+> > >  #define ADXL345_ACT_X_EN             BIT(6)
+> >
+> > Now it's even more mess. I am lost in understanding which bits/masks are from
+> > the same offset and which are not.
+> >
 > 
-> Signed-off-by: Meng Li <Meng.Li@windriver.com>
-> ---
->  Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> I'm sorry for that. I mean, while the above is supposed to make it
+> clear where the "values" are coming from, I also could setup something
+> like the following which is shorter.
+> +#define ADXL345_INACT_XYZ_EN        GENMASK(2,0)
+> +#define ADXL345_ACT_XYZ_EN        GENMASK(6,4)
+> 
+> As I understand you, you'd rather prefer to see the latter one in the kernel?
 
-Applied since this hasn't been picked up by the wdog maintainers.
+My personal preference can be found, for example, in
+drivers/pinctrl/intel/pinctrl-intel.c. But I'm not insisting to use
+_my_ schema. Just find a way how to group them semantically.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
