@@ -1,52 +1,72 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3B32D1F45;
-	Thu,  3 Jul 2025 08:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39E92D0C94
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531935; cv=none; b=FaaUQXBezrO1WKEiJflVpW8L9jga19BtAFBIPQnRs+Pg34lwsqR55tNYVXJT4eJG9I/koWUnoI+u76T8Xof0vEQMnpDTvTO80dIHI5v6+di/HaBeYeHKgodk1TmEAbSy2ithy08ayk0dxzgfQElUDhDRS8jJLoiQWejgDtsMYo0=
+	t=1751531941; cv=none; b=tALYxHE/vkEnvKXsmkOOd7h36viMWMJiGHNHeK4EHnnTy4K1rHrl5ybLbIm/L97eXlJPf6+qTDm8OSg/hNfQSykuioIP0VgLWQkuFDJG+nv/dMMYGn3YGwyQaWV8bof2pW/5p8oYG2Bo/LaTxuVpdSPJGzYIOwiY/yyr9p3kcq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531935; c=relaxed/simple;
-	bh=TDWtO36xCApLJGHjYfNDmkWqDXAf1lfae4hLzZVvAgI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mODk/8u7rV3irojwvWYIIBaq+ZW+PR0WyamcZeHU3IHBBaJ0lIWaavKJpBtg8b775j9m0IW8OxIUM40XoZtTF/uXdd1h16SQmU731rc81Di4bfDcW6EhK0azNl/TNWlgYMIQu56U/fdBMAzINiMApY7Y1U81n54zaOQ9zn64ZQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-454ac069223so2028285e9.1;
-        Thu, 03 Jul 2025 01:38:53 -0700 (PDT)
+	s=arc-20240116; t=1751531941; c=relaxed/simple;
+	bh=u/mXG+meyVkPQSN2d60rE2m9IxtuxrWEsKxW9ctKNZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qzxF2b+W/gphsO4Y4D92dg0McaLT9+pvQpJmiHwmhCBxVwXtrxcX2OdTo7Wtym0ivoMgzYq6Jr2YxLNFrfgkbNjX8hJBUYj4hHNV5sBa7EbknbitNY+1esMegMCeEfEZwbUc2ZGPzWWCchtZDr+8p1Yvc2y8jstW8j09EswnRuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YgFMcaNV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YgFMcaNV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751531938;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Gwm34b4PAcYIoCMAqHNNcMIyyJWm1FjC0e6znIfowBQ=;
+	b=YgFMcaNVUWCWwmAiGnOQwm08HqouVdfaDK/Ih0N2y4csJLVW2oBqF9/IhTG5I023Lr5prH
+	DWen93EAWWzf/6pbOTK6lW8iZr4XSaUNO2Nektmd6GXUlBAXaXryqmGVGDIIQuWbGtxUv/
+	qX53v0rchEQhXTz+wsfZ+yFklCHg6U4=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-130-IeRX0eC-M8-FXlSEEna_Eg-1; Thu, 03 Jul 2025 04:38:54 -0400
+X-MC-Unique: IeRX0eC-M8-FXlSEEna_Eg-1
+X-Mimecast-MFC-AGG-ID: IeRX0eC-M8-FXlSEEna_Eg_1751531934
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c955be751aso1197992285a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531932; x=1752136732;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:cc:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qlry0P/PddBF7z9fvMBWRavm2Ir6vmKfUW08If9YO5w=;
-        b=T7E95lZcS3qGeWBB0iSr/qpNgIgrBUzagztZJxQWW9DUrpP+tbP9JcUUNo+QzxddFB
-         1U+kNJQehB8vX6tuDK4CCHAFVQDuH/5aKWqg429nj2+Vo78eWoG79A3xMd6tl8faQ2k8
-         q/z29v3M0N+K2BD1GwfRHoe5ylH3if7DjR9bwPDQTFV7eg+dyQ5UF+XR730RMflUBNs/
-         3AAMrgq+WlWEQpXlo0yBcGjsHOvMbGWN0UiZdbcMDxm6L2b812xYSCxMDRbg+UVW4VXy
-         PboXboXCw6p1r9nFHggO4juTjQJm175gZmTbNqfQzmChMDM9/BWT+uIFS7oohFE5jPj0
-         S3zA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+UbLmjloSWoFHLZUO9Zq7HQqJjKIkTsN/mPEvAtxCQb8o4LVGysuzVUKLmKgrqmnqmG7j8NO5@vger.kernel.org, AJvYcCVZporJloyfrGCmbFTxnXFb1HYBuK7FRkt0n2YlR4LWR4x2nzx1kflyztboJ9Hk1eqhLrQWWpc8uUagb+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/5Z5UyPMN7b1GPh2uSg1fAt4KaJOPk1gCFSzaJ+yQ5uk+DoUx
-	8RWyvsLiJquCV/7s6meAJ/DIVYdBVS85uEeD8AgASWo4iMZXhsoOypbi
-X-Gm-Gg: ASbGncuswXHZ2CJboxhtEPTzKBC5a9wC8X8cq15PD0gAIk7zZ0BzXXM8UoO4dpmtd1e
-	dYOUKZFNGYqMnunQxQ2PLzeAxuGQZ9l1xXDM2riftNn3lVCRvsy8WSIGVMikhUJAPAmxxe+x0ew
-	bx7a5UaF8W32MNV8A2zGlRx7INRASLP+5l9J4sYkYSOwycEZjhgT/ROmXpUuvZz+PmjhakNiLHu
-	o45zG8Vw4fNUk7nSuVURlwa/ujh3LlFXUO/INzmK8yqsliBNJH3vFvJYmELQ6OGqNkRnSOmUCIi
-	f+FEWid17Gi/PwQ+24TunmtxBLajDuGPd0QtnH5X62x/Xyfg5vJ54dudB0dm3ROZnwovels2A0t
-	GETxY+2R4evmPCpY=
-X-Google-Smtp-Source: AGHT+IF6NXYnWwX+LpF6525ZA4+YuOAQlaWJhsEKO1vvXGxCBbEeUZdE6UC5ZqiOPsIPuMWi0Z+9GQ==
-X-Received: by 2002:a05:600c:a304:b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-454ab34ba80mr16504065e9.13.1751531931608;
-        Thu, 03 Jul 2025 01:38:51 -0700 (PDT)
-Received: from [192.168.88.252] (89-24-56-28.nat.epc.tmcz.cz. [89.24.56.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcebd4sm20054065e9.26.2025.07.03.01.38.50
+        d=1e100.net; s=20230601; t=1751531934; x=1752136734;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Gwm34b4PAcYIoCMAqHNNcMIyyJWm1FjC0e6znIfowBQ=;
+        b=kaLtOl+do6YWkqNs9UXgVxtXWtASfZftWOBR7KcMeqec/p696l4KRR+T8eQfUxcks0
+         UgeVKPzq5Jk+uVo7ekxZMOa/uKQ38tAzVLDD0LWlim2AEq8vsICwJnXfQ0nvO+Cn4GOi
+         AXZ+xzG+N5CdaHipjSWfMafvb+tStXrljVXJT/1Zr1nLL9A+B/99WagyV3xMkbYSA8Ci
+         OA/Xdnqps7hnaBpag9Z/Cc4/Z5fLqlnxboYOM8U34dI0F1vogrG9FHUTfWSskDLszqWt
+         G4eaqfJkDAG+kCh3Dd6OQH2JDGg4LuG2pmGgBG4ac17JWghJaQA/e0WO/sSgxYLxnil5
+         X6Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXmUc+zaKbLFfUFnPydA7G5SxvS+ZtfV3wEvEvAOROKvt3KgkcXUQrx8QnSnjUsGUiHUHLPXXQaOnu6kds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwCBgZfykzmopBlut2oq9tblt0wOawn1bCItwoKjvq/RUOzO6Y
+	TmxkHWdWPE7x+sThw5E+FeCkyJhoMkAn2etr1wAmpHAZaI7Trpdv6qkfNAtdUBfOtr4z/yvr+tF
+	lRtoxWk4FG4tl0SxCZbKpnbLRRKikUrqY9WP/js1StEHaTvE0HMBNwk+MF751Xq5GSw==
+X-Gm-Gg: ASbGncvi7mlhfuT4g956bi3t+CG9k/b3xRfRXnjh9PbKiBXE7dDWkf71ROcufXJyGKS
+	9CMTTeuox2jMzSR0lGk7ZXsScDnk1QPHo5kSfFWQfz+1g6/PJa5SKws4BgKwxFNv8Wt0/RAqLVr
+	vghaGWI+subO6c8W5oRNTBbqI2gIG6vueEaAZudE6YNtk47X07olgsnM+Gi+v0VwtJf1FMITJuV
+	kpaMC1SURvf8pL6q6G3u4z5cDzP99s+UTK/rfTmeD61/dq/FiRAf5OoLTJ6o4fYqSJ4ICaTGh2m
+	v8w06rdZ8GE05gZ71lY09VYpaej/k7O9bMBdt4aCIWwZ
+X-Received: by 2002:a05:620a:28d0:b0:7c7:739d:5cea with SMTP id af79cd13be357-7d5d1cc976bmr335587385a.35.1751531934187;
+        Thu, 03 Jul 2025 01:38:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG66Bc+x/z1lMoRTJBPMfEoClFFZ2A277lXc5gjdCv9n4Sr9TbMvl9YfSBPbAiwce62LOrADQ==
+X-Received: by 2002:a05:620a:28d0:b0:7c7:739d:5cea with SMTP id af79cd13be357-7d5d1cc976bmr335583885a.35.1751531933764;
+        Thu, 03 Jul 2025 01:38:53 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443229ccfsm1072780185a.88.2025.07.03.01.38.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 01:38:50 -0700 (PDT)
-Message-ID: <5c0e9359-6bdd-4d49-b427-8fd1e8802b7c@ovn.org>
-Date: Thu, 3 Jul 2025 10:38:49 +0200
+        Thu, 03 Jul 2025 01:38:53 -0700 (PDT)
+Message-ID: <d6ded113-2fab-45a1-94dc-5cde0c9f9006@redhat.com>
+Date: Thu, 3 Jul 2025 10:38:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,82 +74,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, netdev@vger.kernel.org, dev@openvswitch.org,
- linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [ovs-dev] [PATCH net-next] net: openvswitch: allow providing
- upcall pid for the 'execute' command
-To: Flavio Leitner <fbl@sysclose.org>
-References: <20250627220219.1504221-1-i.maximets@ovn.org>
- <20250702105316.43017482@uranium>
- <00067667-0329-4d8c-9c9a-a6660806b137@ovn.org>
- <20250702200821.3119cb6c@uranium>
+Subject: Re: [PATCH v2 7/7] selftests/mm: Skip hugepage-mremap test if
+ userfaultfd unavailable
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
+ pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
+References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
+ <20250703060656.54345-8-aboorvad@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <20250702200821.3119cb6c@uranium>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250703060656.54345-8-aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 7/3/25 1:08 AM, Flavio Leitner wrote:
->>>> @@ -651,6 +654,10 @@ static int ovs_packet_cmd_execute(struct sk_buff
->>>> *skb, struct genl_info *info) !!(hash & OVS_PACKET_HASH_L4_BIT));
->>>>  	}
->>>>  
->>>> +	if (a[OVS_PACKET_ATTR_UPCALL_PID])
->>>> +		upcall_pid =
->>>> nla_get_u32(a[OVS_PACKET_ATTR_UPCALL_PID]);
->>>> +	OVS_CB(packet)->upcall_pid = upcall_pid;
+On 03.07.25 08:06, Aboorva Devarajan wrote:
+> Gracefully skip test if userfaultfd is not supported (ENOSYS) or not
+> permitted (EPERM), instead of failing. This avoids misleading failures
+> with clear skip messages.
+> --------------
+> Before Patch
+> --------------
+> ~ running ./hugepage-mremap
+> ...
+> ~ Bail out! userfaultfd: Function not implemented
+> ~ Planned tests != run tests (1 != 0)
+> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
+> ~ [FAIL]
+> not ok 4 hugepage-mremap # exit=1
 > 
-> Since this is coming from userspace, does it make sense to check if the
-> upcall_pid is one of the pids in the dp->upcall_portids array?
+> --------------
+> After Patch
+> --------------
+> ~ running ./hugepage-mremap
+> ...
+> ~ ok 2 # SKIP userfaultfd is not supported/not enabled.
+> ~ 1 skipped test(s) detected.
+> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:1 error:0
+> ~ [SKIP]
+> ok 4 hugepage-mremap # SKIP
+> 
+> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> ---
+>   tools/testing/selftests/mm/hugepage-mremap.c | 16 +++++++++++++---
+>   1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
+> index c463d1c09c9b..1a0e6dd87578 100644
+> --- a/tools/testing/selftests/mm/hugepage-mremap.c
+> +++ b/tools/testing/selftests/mm/hugepage-mremap.c
+> @@ -65,10 +65,20 @@ static void register_region_with_uffd(char *addr, size_t len)
+>   	struct uffdio_api uffdio_api;
+>   
+>   	/* Create and enable userfaultfd object. */
+> -
+>   	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+> -	if (uffd == -1)
+> -		ksft_exit_fail_msg("userfaultfd: %s\n", strerror(errno));
+> +	if (uffd == -1) {
+> +		switch (errno) {
+> +		case EPERM:
+> +			ksft_exit_skip("No userfaultfd permissions, try running as root.\n");
 
-Not really.  IMO, this would be an unnecessary artificial restriction.
-We're not concerned about security here since OVS_PACKET_CMD_EXECUTE
-requires the same privileges as the OVS_DP_CMD_NEW or the
-OVS_DP_CMD_SET.
+"Insufficient permissions, try ..." ?
 
-Best regards, Ilya Maximets.
+> +			break;
+> +		case ENOSYS:
+> +			ksft_exit_skip("userfaultfd is not supported/not enabled.\n");
+> +			break;
+
+Note that we have in tools/testing/selftests/mm/config
+
+	CONFIG_USERFAULTFD=y
+
+But I don't have anything about making the test more versatile.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
