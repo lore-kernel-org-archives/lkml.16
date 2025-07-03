@@ -1,170 +1,121 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691441D9694
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1BA7BAEC;
+	Thu,  3 Jul 2025 02:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751508766; cv=none; b=rxncNg4KGDqTC0q9fUBfzjY9aOxg1Gb0gq3aoGy6DRjYi17Ox5jmu/8gTJ0mipaahppEypSQMBdFPaqGvgTz+tiYyH0L4EBve6+rmzKPiOr3I5cbzlrOBXLG8Dq4ZcdymATaQOT0TbX56oH6xfv1VHtS767TXDyUwpkJ/rhPBFs=
+	t=1751508793; cv=none; b=S3ro2NBqbD5h0V34HgUIBR1CpVQ5X8Ypgvt3JYd33N3TeF+EHMDYwpc7Os63ghexoIZDhmOKoT9EmB1BdTdAMv6p0pU4ehvROyDaO/XtKcsKS3Xkn+J3fn42gFXClMC3iMnlwHITU36846k4TESiRMREBI7gYGDEN7uYC0MQ7C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751508766; c=relaxed/simple;
-	bh=lBg+2rfNaGnjS0hbzaYfp1CeUFtw5//muHuGCu2lNkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EluTkRvJXEAZRPoSfYfaDKmncmNgZgXMtsGnBhn+a3tkLXwFWfycxY6/PWd/wT7y8LhJc+QtXnMrDy3CUmyQJmiaYaz57ki+WGKfI5v2tAsZlgfONYTBxDUGnAjRdeplJK6GBgOf4nMmgOTI0K8P50XUfQRq12vvPztEkcqIqTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DPv/EHZ6; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DPv/EHZ6"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so6161951a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 19:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751508764; x=1752113564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6NO73RfR6Y3gr9CLEXQ/SnY7i03Uc20liAAl3u3Q+Dk=;
-        b=DPv/EHZ656vNnmW1Bkn/Ws5mrldtenzkVYMOUvdDCDORnuZ/+tip6rJGDvLfgQ0A72
-         8YRh51X+q9dPjOzWf1QDH2CmPEEnEtNOTntdYfhAacoCjYuN9s3/62iXKq32Jp6gPRiB
-         hN781T7XX+7YOKsVj8pSPBQaUv4Qalsmh+mRbixMiYq9hubT0zKExpTlTb8pGOadVhDJ
-         GFJfvu6uM+/CJUNYHkTt1k10IElrLsQFQi8TwKG2+mwupemHr4sD+rTW2Uz3eqxxbdJ+
-         JItysBqbZ1Z1W6fEYwnErQmsnLYF1z/KWSZdnmBh4+rystKqd7fOykGL2ouV1XEDQ1WJ
-         PsKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751508764; x=1752113564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6NO73RfR6Y3gr9CLEXQ/SnY7i03Uc20liAAl3u3Q+Dk=;
-        b=CfeB6vssxnvnj+EsRVgOAzxcvijde0D/n6ukqZESGHlKVmd5cfzrRva7Un/oanSjDf
-         HzcCDGikI/OkU2jYzPMc5+eJSVqW77Wv07Y/GsuolMLQWZhdLF7imNkDFWTQpMUJ1NsE
-         zc60vniapEXrcGFopHBT9TWbZBooG4gBLPY8aoX1dAeh3ocNsTYM9eryIBc2i1U+HFUC
-         0EDtkEp+2+/dqlE8zEQMApipS0ikh1CAnyk1VzNlqaW+scVTCqKsY61Uimw/14KiVm2z
-         L9DkJXKidSPsqAgMrWt/NguusynbhcL8yFXU2e2iHWdupNPRGZp8dJ8UkQdgAR2ZKSMG
-         hp8w==
-X-Gm-Message-State: AOJu0YywZd792oME3iICLwbEkwr7M9yc0LoxZHLPv0egxOmJIHZ7xMYp
-	vCq5ClumcDDCEvbaTfme9+5LsasT2AYXm6Tc1S7PPr1QE8tifzNzHwunfyizZR0W2aAay0/InrE
-	6PvaP/F2uRJ3qijIJXL2LxhzlHSTJsY5Zbvav3NCI
-X-Gm-Gg: ASbGncs640m1bzAOvsE0n2t2tBI/PNYPDhu3n0frQCi0ZJL6s6lm9m/lImP45LLX4yL
-	WLQv+OiY5MsfELdbnY8MQwOyLftWXCZDI+zMVs9+IG6anMmeKSXfcVlb5xTwoYEI4sy+0xHtREz
-	sm/7u5fTNtiJ7Xo9Il9meXBFmMY497eDfYnGbPnjb45dhj2DF64GQvNSigtzWoFZqagtR3lzUOp
-	MPN8RnCmElCZUg=
-X-Google-Smtp-Source: AGHT+IEfk5Evrrn1hWvkFobuV0tS0uqK20Nkb4L5h50gd31HYQ14M5AinIcG/AgD9Ggo+cNn9dNRqqkwceDxacax1UY=
-X-Received: by 2002:a17:90b:53ce:b0:311:c5d9:2c7c with SMTP id
- 98e67ed59e1d1-31a9df94759mr1241067a91.23.1751508763578; Wed, 02 Jul 2025
- 19:12:43 -0700 (PDT)
+	s=arc-20240116; t=1751508793; c=relaxed/simple;
+	bh=vdZUiIwKI1Cl3zCwisdXooEoOnjgrFiTCmB7ZQbdyXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XIXEXzSCpy6EM9xPqp45lSkCTPqlORUPSPxgEPQJa4ckvpiyqkjTQuZEUkXQgejnZoK1e582wTKN1YstvF3ACj6ikZ4AmzHnKO/5Lg8BFwLdpuwnJCiRCtbKWU6Z0Qmy4tYdMOttButuO61q1sx+rHRksJ3OvjpSeuX8C5UtUCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXgKL2Tg6zKHMjW;
+	Thu,  3 Jul 2025 10:13:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B9EA31A0924;
+	Thu,  3 Jul 2025 10:13:08 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgA3mSYz52VoaNDrAQ--.65417S3;
+	Thu, 03 Jul 2025 10:13:08 +0800 (CST)
+Message-ID: <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
+Date: Thu, 3 Jul 2025 10:13:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701083922.97928-1-aleksandr.mikhalitsyn@canonical.com> <20250701083922.97928-7-aleksandr.mikhalitsyn@canonical.com>
-In-Reply-To: <20250701083922.97928-7-aleksandr.mikhalitsyn@canonical.com>
-From: Kuniyuki Iwashima <kuniyu@google.com>
-Date: Wed, 2 Jul 2025 19:12:31 -0700
-X-Gm-Features: Ac12FXxZ3hrF9DXpmcOwKNJ_VHMmv3IGoCk3Oxc0vEHSANkYmmlrMbUy8AXWM1A
-Message-ID: <CAAVpQUAXwWE6ssHYwaA4Wi4U0j_VOQ0vPD6oTAEhEV3q92fPnQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/6] af_unix: introduce and use
- __scm_replace_pid() helper
-To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Willem de Bruijn <willemb@google.com>, Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, Lennart Poettering <mzxreary@0pointer.de>, 
-	Luca Boccassi <bluca@debian.org>, David Rheinsberg <david@readahead.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/10] ext4: restart handle if credits are insufficient
+ during allocating blocks
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+ ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com,
+ libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-6-yi.zhang@huaweicloud.com>
+ <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgA3mSYz52VoaNDrAQ--.65417S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw1kXw1DuF45JrW3KrWrGrg_yoW8ZrWrpF
+	WfCF1jkr17Wa47ua1Iqw4kXFWfG3y8CrW7JrZ8W3savan8ur9akF4rJ3Z8Kas0yrWxW3W3
+	Zr4jy343u3WYyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	0PfPUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, Jul 1, 2025 at 1:41=E2=80=AFAM Alexander Mikhalitsyn
-<aleksandr.mikhalitsyn@canonical.com> wrote:
->
-> Existing logic in __scm_send() related to filling an struct scm_cookie
-> with a proper struct pid reference is already pretty tricky. Let's
-> simplify it a bit by introducing a new helper. This helper will be
-> extended in one of the next patches.
->
-> Cc: linux-kernel@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Simon Horman <horms@kernel.org>
-> Cc: Willem de Bruijn <willemb@google.com>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Kuniyuki Iwashima <kuniyu@google.com>
-> Cc: Lennart Poettering <mzxreary@0pointer.de>
-> Cc: Luca Boccassi <bluca@debian.org>
-> Cc: David Rheinsberg <david@readahead.eu>
-> Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com=
->
-> ---
-> v2:
->         - don't do get_pid() in __scm_replace_pid() [ as Kuniyuki suggest=
-ed ]
->         - move __scm_replace_pid() from scm.h to scm.c [ as Kuniyuki sugg=
-ested ]
-> ---
->  net/core/scm.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
->
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index 0225bd94170f..68441c024dd8 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -145,6 +145,16 @@ void __scm_destroy(struct scm_cookie *scm)
->  }
->  EXPORT_SYMBOL(__scm_destroy);
->
-> +static inline int __scm_replace_pid(struct scm_cookie *scm, struct pid *=
-pid)
+On 2025/7/2 22:18, Jan Kara wrote:
+> On Tue 01-07-25 21:06:30, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> After large folios are supported on ext4, writing back a sufficiently
+>> large and discontinuous folio may consume a significant number of
+>> journal credits, placing considerable strain on the journal. For
+>> example, in a 20GB filesystem with 1K block size and 1MB journal size,
+>> writing back a 2MB folio could require thousands of credits in the
+>> worst-case scenario (when each block is discontinuous and distributed
+>> across different block groups), potentially exceeding the journal size.
+>> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
+>> when delalloc is not enabled.
+>>
+>> Fix this by ensuring that there are sufficient journal credits before
+>> allocating an extent in mpage_map_one_extent() and
+>> ext4_block_write_begin(). If there are not enough credits, return
+>> -EAGAIN, exit the current mapping loop, restart a new handle and a new
+>> transaction, and allocating blocks on this folio again in the next
+>> iteration.
+>>
+>> Suggested-by: Jan Kara <jack@suse.cz>
+>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> 
+> Very nice. Feel free to add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> One small comment below:
+> 
+>> +/*
+>> + * Make sure that the current journal transaction has enough credits to map
+>> + * one extent. Return -EAGAIN if it cannot extend the current running
+>> + * transaction.
+>> + */
+>> +static inline int ext4_journal_ensure_extent_credits(handle_t *handle,
+>> +						     struct inode *inode)
+>> +{
+>> +	int credits;
+>> +	int ret;
+>> +
+>> +	if (!handle)
+> 
+> Shouldn't this rather be ext4_handle_valid(handle) to catch nojournal mode
+> properly?
+> 
+__ext4_journal_ensure_credits() already calls ext4_handle_valid() to handle
+nojournal mode, and the '!handle' check here is to handle the case where
+ext4_block_write_begin() passes in a NULL 'handle'.
 
-As you will need v3, I'd remove "__" because there's no-prefix-version.
+Thanks,
+Yi.
 
-
-> +{
-> +       /* drop all previous references */
-> +       scm_destroy_cred(scm);
-> +
-> +       scm->pid =3D pid;
-> +       scm->creds.pid =3D pid_vnr(pid);
-> +       return 0;
-> +}
-> +
->  int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cooki=
-e *p)
->  {
->         const struct proto_ops *ops =3D READ_ONCE(sock->ops);
-> @@ -189,15 +199,21 @@ int __scm_send(struct socket *sock, struct msghdr *=
-msg, struct scm_cookie *p)
->                         if (err)
->                                 goto error;
->
-> -                       p->creds.pid =3D creds.pid;
->                         if (!p->pid || pid_vnr(p->pid) !=3D creds.pid) {
->                                 struct pid *pid;
->                                 err =3D -ESRCH;
->                                 pid =3D find_get_pid(creds.pid);
->                                 if (!pid)
->                                         goto error;
-> -                               put_pid(p->pid);
-> -                               p->pid =3D pid;
-> +
-> +                               /* pass a struct pid reference from
-> +                                * find_get_pid() to __scm_replace_pid().
-> +                                */
-> +                               err =3D __scm_replace_pid(p, pid);
-> +                               if (err) {
-> +                                       put_pid(pid);
-> +                                       goto error;
-> +                               }
->                         }
->
->                         err =3D -EINVAL;
-> --
-> 2.43.0
->
