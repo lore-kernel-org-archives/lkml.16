@@ -1,263 +1,563 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEB91A83F5;
-	Thu,  3 Jul 2025 14:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341F1A83F5;
+	Thu,  3 Jul 2025 14:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751551851; cv=none; b=uB3q16pg8xyxwPHKtboXfvT1l3eXC1jK8nWyGOhkNnBWiL6opBRaQogZaZVW+kJVgQTNrgZHZL7rjcWbrLTMTVZ6hGTYc/NuCNNpUAIFL63e3tmNPE8LEU/o8+VWMRpcjwc8shDQ0RUPY1hAa0ClAAW3bTXqGNzHnor6jHkLOsQ=
+	t=1751551858; cv=none; b=Nzk/6DEeQ03mXBd0P/WyZC2lCkRuLXaljbVbhHl/92ak71oCjInfR7QRQDstrbCnwvKGD3zFm4bvVtR+1/zk47VcJDyKpemRsq4IvdCyF8t+s4KzFo3WJl8QBB6zA33Qnht91B9dRsGj8qfBOBZWkMdhSyeGLcIAzi6Oqv6Kwbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751551851; c=relaxed/simple;
-	bh=UKZDj7Dr6U+nDPNDBDqz64P+s+8aLK1xb7gK+2NOHNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hyma+jkbwlBgfgnFMmJQ2Jf9F+oOWb+dDvsyFYJYNu2VGFR4Mlcs8TSPBWqYotxaoJlb3xfDYFzt18GZKJ3k0jn3YJXpZBTd13xwCGwZer4CzVFm3PwHEhuG+6H5dmDxGpvzQJ8s5wRYIOj9g1KMrKKH6PS+1MN8n3w0Ysi2d9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WXnTn2Rp; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751551858; c=relaxed/simple;
+	bh=jX6AHlesBP+K64VRKPHQJz2QTAfw4aq/qoFApEzOjhY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JIkngl1WtTUT9ucoubUeCFhy24Mx7PWqg/1rClS7odXryWQhE9LJUAcZPDsT5SgEHZBz4UrgIkPvZ1+edHwYp/ZDwbyjCEvlIXGz4Es+Pr6i2gX0NHdmMR0z9FX8ncZKUe83VVoeigODKStq6pBI2JZzVdrcZtu7eritCLNNZB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Ggd98dDw; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WXnTn2Rp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751551850; x=1783087850;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UKZDj7Dr6U+nDPNDBDqz64P+s+8aLK1xb7gK+2NOHNc=;
-  b=WXnTn2Rp1odHVNR1+bHMBR2HDYk36F5VDu8Lz8da1C8F72G2W0uUS1SI
-   5WJYLEjDQ7UGWBSukX9ZjJXTsKFGhSowtj1RahNqI3A+epWnUMHWD8g6L
-   08UsCAUXNxODJycr99c+IGfQr6kNGajqmmYbPH5/ZaywhaRts6qhM4l9L
-   6qmmLunoqVsyfWLISgPlFo0seSZYmC+KDbxyvCH0wkY1Jbm6PVq2NQ+68
-   hhjlbyHl1YyUb5dkwy+s+ts1PBDWlUbZWaaapJCqXSaMD/OuUg5d0mcZh
-   dLx5fo+YemLctLWrJ8s/Q/Nj8BuJFaL3AvGMy7jgCR5n/9So3sda1EwfE
-   A==;
-X-CSE-ConnectionGUID: vQCElQioQTGBjshUdzuMvA==
-X-CSE-MsgGUID: +8GcKvKaQnqz0VvcM4UmcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65333999"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="65333999"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:10:49 -0700
-X-CSE-ConnectionGUID: n/f2VhrpRXW5ix8BRRZ06g==
-X-CSE-MsgGUID: tjOT0cYYRgu2z73konZ4hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="153792238"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 03 Jul 2025 07:10:36 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id E997D1E0; Thu, 03 Jul 2025 17:10:34 +0300 (EEST)
-Date: Thu, 3 Jul 2025 17:10:34 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
-Message-ID: <uoysignw2pmdls5v57z4cty76hhz7fv7ikcih2qgeltbgnem4f@jt2r24bqvzau>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
- <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
- <20250703094417.165e5893@pumpkin>
- <uvvh6qfpan6f56fdvuch67nss2h5nqxbmocztf6v2lfbvnihbg@vtzbr6anzqnl>
- <20250703131552.32adf6b8@pumpkin>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Ggd98dDw"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 70B3D406FC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1751551854; bh=VmiR0v/cpVL++YCOgvxMwiHyRVgJNLteSEBmnJPrDO8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Ggd98dDwbaNqjvR2NIR+/IYdh0FA07QbbYRFH2HJmmC90GbqATlefY/G+HMRR8UGw
+	 498fX2YRCaXy/wHJ6DsgBU17jSjuA84dj21jpMJMQDWigkpy58CTaovGYT/AjREQrV
+	 aOzOr+3RNzk7Mn526p3DTVCPRJylDdsDsRduyo3gDbNNNAahtLI+z5Wf7CZ8Fys6o2
+	 p6WH7IE3cTzHc/38L8czqH8t2y9qw0p20t9zqL/TSkESUMVtdza8Bk9iiFQZKMDEPc
+	 E+856XaOStIGttYSPNRQnX3sTLuY4m3mk+UDgxcil5w1y0FbnubrpDivUW+9CAjDpG
+	 E0YrCIKzt6TiA==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 70B3D406FC;
+	Thu,  3 Jul 2025 14:10:54 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, kernel@collabora.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas
+ Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: Re: [PATCH v2] docs: document linked lists
+In-Reply-To: <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
+References: <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
+Date: Thu, 03 Jul 2025 08:10:53 -0600
+Message-ID: <874ivtmkk2.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703131552.32adf6b8@pumpkin>
+Content-Type: text/plain
 
-On Thu, Jul 03, 2025 at 01:15:52PM +0100, David Laight wrote:
-> On Thu, 3 Jul 2025 13:39:57 +0300
-> "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> 
-> > On Thu, Jul 03, 2025 at 09:44:17AM +0100, David Laight wrote:
-> > > On Tue,  1 Jul 2025 12:58:31 +0300
-> > > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> > >   
-> > > > Extract memcpy and memset functions from copy_user_generic() and
-> > > > __clear_user().
-> > > > 
-> > > > They can be used as inline memcpy and memset instead of the GCC builtins
-> > > > whenever necessary. LASS requires them to handle text_poke.  
-> > > 
-> > > Except they contain the fault handlers so aren't generic calls.  
-> > 
-> > That's true. I will add a comment to clarify it.
-> 
-> They need renaming.
+Thanks for doing this!
 
-__inline_memcpy/memset_safe()?
+I have a few comments, most of which are just nits.  I think we should
+be able to get this in for 6.17.
 
-> ...
-> > > > diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-> > > > index a508e4a8c66a..47b613690f84 100644
-> > > > --- a/arch/x86/lib/clear_page_64.S
-> > > > +++ b/arch/x86/lib/clear_page_64.S
-> > > > @@ -55,17 +55,26 @@ SYM_FUNC_END(clear_page_erms)
-> > > >  EXPORT_SYMBOL_GPL(clear_page_erms)
-> > > >  
-> > > >  /*
-> > > > - * Default clear user-space.
-> > > > + * Default memset.
-> > > >   * Input:
-> > > >   * rdi destination
-> > > > + * rsi scratch
-> > > >   * rcx count
-> > > > - * rax is zero
-> > > > + * al is value
-> > > >   *
-> > > >   * Output:
-> > > >   * rcx: uncleared bytes or 0 if successful.
-> > > > + * rdx: clobbered
-> > > >   */
-> > > >  SYM_FUNC_START(rep_stos_alternative)
-> > > >  	ANNOTATE_NOENDBR
-> > > > +
-> > > > +	movzbq %al, %rsi
-> > > > +	movabs $0x0101010101010101, %rax
-> > > > +
-> > > > +	/* RDX:RAX = RAX * RSI */
-> > > > +	mulq %rsi  
-> > > 
-> > > NAK - you can't do that here.
-> > > Neither %rsi nor %rdx can be trashed.
-> > > The function has a very explicit calling convention.  
-> > 
-> > What calling convention? We change the only caller to confirm to this.
-> 
-> The one that is implicit in:
-> 
-> > > > +	asm volatile("1:\n\t"
-> > > > +		     ALT_64("rep stosb",
-> > > > +			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
-> > > > +		     "2:\n\t"
-> > > > +		     _ASM_EXTABLE_UA(1b, 2b)
-> > > > +		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
-> > > > +		     : "a" ((uint8_t)v)
-> 
-> The called function is only allowed to change the registers that
-> 'rep stosb' uses - except it can access (but not change)
-> all of %rax - not just %al.
-> 
-> See: https://godbolt.org/z/3fnrT3x9r
-> In particular note that 'do_mset' must not change %rax.
-> 
-> This is very specific and is done so that the compiler can use
-> all the registers.
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com> writes:
 
-Okay, I see what you are saying.
+> The kernel contains various generic data structures that should ideally
+> not be reinvented. However, it often fails to document the usage of
+> these in the in-tree kernel documentation beyond just a listing of
+> header symbols in the very lengthy kernel-api docs page. This is fine
+> for things that have simple invocations, but occasionally things devolve
+> into several layers of concatenating macros, which are subpar for humans
+> to parse.
 
-> > > It is also almost certainly a waste of time.
-> > > Pretty much all the calls will be for a constant 0x00.
-> > > Rename it all memzero() ...  
-> > 
-> > text_poke_memset() is not limited to zeroing.
-> 
-> But you don't want the overhead of extending the constant
-> on all the calls - never mind reserving %rdx to do it.
-> Maybe define a function that requires the caller to have
-> done the 'dirty work' - so any code that wants memzero()
-> just passes zero.
-> Or do the multiply in the C code where it will get optimised
-> away for constant zero.
-> You do get the multiply for the 'rep stosb' case - but that
-> is always going to be true unless you complicate things further.  
+We don't really need the above in the changelog - just say what you're
+doing.
 
-The patch below seems to do the trick: compiler optimizes out the
-multiplication for v == 0.
+> Begin making a small impact by adding some rudimentary example-driven
+> documentation for the linked list functions. Many aspects are covered,
+> though it is not an exhaustive listing of the entire set of list
+> operations. We also direct readers towards further documentation should
+> they be interested in concurrency.
+>
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+> This series started out with a much more ambitious goal of documenting
+> every undocumented generic kernel data structure. About 6 hours in I had
+> to tell myself that maybe it's better to do this piece-meal. So here is
+> the first of what will hopefully be many similar series: documenting
+> linked lists.
+>
+> As an aside note, I didn't set out to exclusively use Swiss clowns in my
+> examples, but as I reached for more names to illustrate longer lists, I
+> discovered that the tiny nation of Switzerland has a rich history of
+> clowning. You learn something new every day.
+>
+> For future en-beautification, we could add integration for svgbob
+> (<https://github.com/ivanceras/svgbob>) into the kernel docs sphinx in
+> the future, which would let us generate drawn diagrams from the text
+> doodles, therefore serving both audiences a satisfactory viewing
+> experience.
+>
+> Based against lwn/docs-next, but b4 should let you know already.
+> ---
+> Changes in v2:
+> - drop unrelated sphinx theme patch.
+> - replace graphviz diagrams with simpler ascii art in literal blocks,
+>   which omit the back edges for clarity and are readable as plain text.
+> - add explanatory paragraphs after every diagram that describe what is
+>   depicted in plain English. This is to help users that use assistive
+>   technologies like screen readers.
+> - add examples illustrating the use of list_cut_position and
+>   list_cut_before.
+> - add examples illustrating the use of list_move, list_move_tail and
+>   list_bulk_move_tail.
+> - add examples illustrating the use of list_rotate_left and
+>   list_rotate_to_front.
+> - add example illustrating the use of list_swap.
+> - add example illustrating the use of list_splice, and its caveats with
+>   regards to stale pointers.
+> - Link to v1: https://lore.kernel.org/r/20250520-linked-list-docs-v1-0-db74f7449785@collabora.com
+> ---
+>  Documentation/core-api/index.rst |   1 +
+>  Documentation/core-api/list.rst  | 847 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 848 insertions(+)
+>
+> diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+> index 7a4ca18ca6e2d37644553cfcb0c41c9f05513294..a03a99c2cac56f4ade418f43da723e49216b1062 100644
+> --- a/Documentation/core-api/index.rst
+> +++ b/Documentation/core-api/index.rst
+> @@ -54,6 +54,7 @@ Library functionality that is used throughout the kernel.
+>     union_find
+>     min_heap
+>     parser
+> +   list
+>  
+>  Low level entry and exit
+>  ========================
+> diff --git a/Documentation/core-api/list.rst b/Documentation/core-api/list.rst
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..b0586056abb04d2bcc4518f7238ff9a94d3dd774
+> --- /dev/null
+> +++ b/Documentation/core-api/list.rst
+> @@ -0,0 +1,847 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +=====================
+> +Linked Lists in Linux
+> +=====================
+> +
+> +:Author: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> +
+> +.. contents::
+> +
+> +Introduction
+> +============
+> +
+> +Linked lists are one of the most basic data structures used in many programs.
+> +The Linux kernel implements several different flavours of linked lists. The
+> +purpose of this document is not to explain linked lists in general, but to show
+> +new kernel developers how to use the Linux kernel implementations of linked
+> +lists.
+> +
+> +Please note that while linked lists certainly are ubiquitous, they may not
+> +always be the best data structure to use in cases where a simple array doesn't
+> +already suffice. Familiarizing oneself with other in-kernel generic data
+> +structures, especially for concurrent accesses, is highly encouraged.
 
-It would be nice to avoid it for X86_FEATURE_FSRM, but we cannot use
-cpu_feature_enabled() here as <asm/cpufeature.h> depends on
-<asm/string.h>.
+I wonder if this should be made just a bit stronger, given that linked
+lists are positively out of favor for situations where cache behavior
+matters.
 
-I cannot say I like the result.
+> +Linux implementation of doubly linked lists
+> +===========================================
+> +
+> +Linux's linked list implementations can be used by including the header file
+> +``<linux/list.h>``.
+> +
+> +The doubly-linked list will likely be the most familiar to many readers. It's a
+> +list that can efficiently be traversed forwards and backwards.
+> +
+> +The Linux kernel's doubly-linked list is circular in nature. This means that to
+> +get from the head node to the tail, we can just travel one edge backwards.
+> +Similarly, to get from the tail node to the head, we can simply travel forwards
+> +"beyond" the tail and arrive back at the head.
+> +
+> +Declaring a node
+> +----------------
+> +
+> +A node in a doubly-linked list is declared by adding a ``struct list_head``
+> +member to the struct you wish to be contained in the list:
+> +
+> +.. code-block:: c
+> +
+> +  struct clown {
+> +          unsigned long long shoe_size;
+> +          const char *name;
+> +          struct list_head node;  /* the aforementioned member */
+> +  };
+> +
+> +This may be an unfamiliar approach to some, as the classical explanation of a
+> +linked list is a list node struct with pointers to the previous and next list
+> +node, as well the payload data. Linux chooses this approach because it allows
+> +for generic list modification code regardless of what data struct is contained
 
-Any suggestions?
+data *structure*
 
-diff --git a/arch/x86/include/asm/string.h b/arch/x86/include/asm/string.h
-index becb9ee3bc8a..c7644a6f426b 100644
---- a/arch/x86/include/asm/string.h
-+++ b/arch/x86/include/asm/string.h
-@@ -35,16 +35,27 @@ static __always_inline void *__inline_memcpy(void *to, const void *from, size_t
- 
- static __always_inline void *__inline_memset(void *addr, int v, size_t len)
- {
-+	unsigned long val = v;
- 	void *ret = addr;
- 
-+	if (IS_ENABLED(CONFIG_X86_64)) {
-+		/*
-+		 * Fill all bytes by value in byte 0.
-+		 *
-+		 * To be used in rep_stos_alternative()i
-+		 */
-+		val &= 0xff;
-+		val *= 0x0101010101010101;
-+	}
-+
- 	asm volatile("1:\n\t"
- 		     ALT_64("rep stosb",
- 			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
- 		     "2:\n\t"
- 		     _ASM_EXTABLE_UA(1b, 2b)
- 		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
--		     : "a" (v)
--		     : "memory", _ASM_SI, _ASM_DX);
-+		     : "a" (val)
-+		     : "memory");
- 
- 	return ret + len;
- }
-diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-index 47b613690f84..3ef7d796deb3 100644
---- a/arch/x86/lib/clear_page_64.S
-+++ b/arch/x86/lib/clear_page_64.S
-@@ -58,23 +58,15 @@ EXPORT_SYMBOL_GPL(clear_page_erms)
-  * Default memset.
-  * Input:
-  * rdi destination
-- * rsi scratch
-  * rcx count
-  * al is value
-  *
-  * Output:
-  * rcx: uncleared bytes or 0 if successful.
-- * rdx: clobbered
-  */
- SYM_FUNC_START(rep_stos_alternative)
- 	ANNOTATE_NOENDBR
- 
--	movzbq %al, %rsi
--	movabs $0x0101010101010101, %rax
--
--	/* RDX:RAX = RAX * RSI */
--	mulq %rsi
--
- 	cmpq $64,%rcx
- 	jae .Lunrolled
- 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> +within the list. Since the ``struct list_head`` member is not a pointer but part
+
+Better to just say "struct list_head", and the automarkup logic should
+take care of the rest.
+
+> +of the struct proper, the ``container_of`` pattern can be used by the list
+
+Here too - just container_of().  I note we don't have documentation for
+that macro, which seems like a big oversight.
+
+> +implementation to access the payload data regardless of its type, while staying
+> +oblivious to what said type actually is.
+
+I do wonder if you should start by showing the list_head structure
+itself?  It is simple enough and not a secret that needs to be kept.
+
+> +Declaring and initializing a list
+> +---------------------------------
+> +
+> +A doubly-linked list can then be declared as just another ``struct list_head``,
+> +and initialised with the LIST_HEAD_INIT() macro during initial assignment, or
+> +with the INIT_LIST_HEAD() function later:
+> +
+> +.. code-block:: c
+> +
+> +  struct clown_car {
+> +          int tyre_pressure[4];
+> +          struct list_head clowns;        /* Looks like a node! */
+> +  };
+> +
+> +  /* ... Somewhere later in our driver ... */
+> +
+> +  static int circus_init(struct circus_priv *circus)
+> +  {
+> +          struct clown_car other_car = {
+> +                .tyre_pressure = {10, 12, 11, 9},
+> +                .clowns = LIST_HEAD_INIT(other_car.clowns)
+> +          };
+> +
+> +          circus->car.clowns = INIT_LIST_HEAD(&circus->car.clowns);
+> +
+> +          return 0;
+> +  }
+> +
+> +A further point of confusion to some may be that the list itself doesn't really
+> +have its own type. The concept of the entire linked list and a
+> +``struct list_head`` member that points to other entries in the list are one and
+> +the same.
+> +
+> +Adding nodes to the list
+> +------------------------
+> +
+> +Adding a node to the linked list is done through the list_add() function.
+
+Nitly, but list_add() is a macro
+
+> +We'll return to our clown car example to illustrate how nodes get added to the
+> +list:
+> +
+> +.. code-block:: c
+> +
+> +  static int circus_fill_car(struct circus_priv *circus)
+> +  {
+> +          struct clown_car *car = &circus->car;
+> +          struct clown *grock;
+> +          struct clown *dimitri;
+> +
+> +          /* State 1 */
+> +
+> +          grock = kzalloc(sizeof(*grock), GFP_KERNEL);
+> +          if (!grock)
+> +                  return -ENOMEM;
+> +          grock->name = "Grock";
+> +          grock->shoe_size = 1000;
+> +
+> +          /* Note that we're adding the "node" member */
+> +          list_add(&grock->node, &car->clowns);
+> +
+> +          /* State 2 */
+> +
+> +          dimitri = kzalloc(sizeof(*dimitri), GFP_KERNEL);
+> +          if (!dimitri)
+> +                  return -ENOMEM;
+> +          dimitri->name = "Dimitri";
+> +          dimitri->shoe_size = 50;
+> +
+> +          list_add(&dimitri->node, &car->clowns);
+> +
+> +          /* State 3 */
+> +
+> +          return 0;
+> +  }
+> +
+> +In State 1, our list of clowns is still empty::
+> +
+> +         .------.
+> +         v      |
+> +    .--------.  |
+> +    | clowns |--'
+> +    '--------'
+> +
+> +This diagram shows the singular "clowns" node pointing at itself. In this
+> +diagram, and all following diagrams, only the forward edges are shown, to aid in
+> +clarity.
+> +
+> +In State 2, we've added Grock after the list head::
+> +
+> +         .--------------------.
+> +         v                    |
+> +    .--------.     .-------.  |
+> +    | clowns |---->| Grock |--'
+> +    '--------'     '-------'
+> +
+> +This diagram shows the "clowns" node pointing at a new node labeled "Grock".
+> +The Grock node is pointing back at the "clowns" node.
+> +
+> +In State 3, we've added Dimitri after the list head, resulting in the following::
+> +
+> +         .------------------------------------.
+> +         v                                    |
+> +    .--------.     .---------.     .-------.  |
+> +    | clowns |---->| Dimitri |---->| Grock |--'
+> +    '--------'     '---------'     '-------'
+> +
+> +This diagram shows the "clowns" node pointing at a new node labeled "Dimitri",
+> +which then points at the node labeled "Grock". The "Grock" node still points
+> +back at the "clowns" node.
+> +
+> +If we wanted to have Dimitri inserted at the end of the list instead, we'd use
+> +list_add_tail(). Our code would then look like this:
+> +
+> +.. code-block:: c
+> +
+> +  static int circus_fill_car(struct circus_priv *circus)
+> +  {
+> +          /* ... */
+> +
+> +          list_add_tail(&dimitri->node, &car->clowns);
+> +
+> +          /* State 3b */
+> +
+> +          return 0;
+> +  }
+> +
+> +This results in the following list::
+> +
+> +         .------------------------------------.
+> +         v                                    |
+> +    .--------.     .-------.     .---------.  |
+> +    | clowns |---->| Grock |---->| Dimitri |--'
+> +    '--------'     '-------'     '---------'
+> +
+> +This diagram shows the "clowns" node pointing at the node labeled "Grock",
+> +which points at the new node labeled "Dimitri". The node labeled "Dimitri"
+> +points back at the "clowns" node.
+> +
+> +Traversing the list
+> +-------------------
+> +
+> +To iterate the list, we can loop through all nodes within the list with
+> +list_for_each().
+> +
+> +In our clown example, this results in the following somewhat awkward code:
+> +
+> +.. code-block:: c
+> +
+> +  static unsigned long long circus_get_max_shoe_size(struct circus_priv *circus)
+> +  {
+> +          unsigned long long res = 0;
+> +          struct clown *e;
+> +          struct list_head *cur;
+> +
+> +          list_for_each(cur, &circus->car.clowns) {
+> +                  e = list_entry(cur, struct clown, node);
+> +                  if (e->shoe_size > res)
+> +                          res = e->shoe_size;
+> +          }
+> +
+> +          return res;
+> +  }
+> +
+> +Note how the additional ``list_entry`` call is a little awkward here. It's only
+> +there because we're iterating through the ``node`` members, but we really want
+> +to iterate through the payload, i.e. the ``struct clown`` that contains each
+> +node's ``struct list_head``. For this reason, there is a second macro:
+> +list_for_each_entry()
+
+You don't say what list_entry() is actually doing - that seems worth a
+sentence.
+
+> +Using it would change our code to something like this:
+> +
+> +.. code-block:: c
+> +
+> +  static unsigned long long circus_get_max_shoe_size(struct circus_priv *circus)
+> +  {
+> +          unsigned long long res = 0;
+> +          struct clown *e;
+> +
+> +          list_for_each_entry(e, &circus->car.clowns, node) {
+> +                  if (e->shoe_size > res)
+> +                          res = e->shoe_size;
+> +          }
+> +
+> +          return res;
+> +  }
+> +
+> +This eliminates the need for the ``list_entry`` step, and our loop cursor is now
+> +of the type of our payload. The macro is given the member name that corresponds
+> +to the list's ``struct list_head`` within the clown struct so that it can still
+> +walk the list.
+> +
+> +Removing nodes from the list
+> +----------------------------
+> +
+> +The list_del() function can be used to remove entries from the list. It not only
+> +removes the given entry from the list, but poisons the entry's ``prev`` and
+> +``next`` pointers, so that unintended use of the entry after removal does not
+> +go unnoticed.
+> +
+> +We can extend our previous example to remove one of the entries:
+> +
+> +.. code-block:: c
+> +
+> +  static int circus_fill_car(struct circus_priv *circus)
+> +  {
+> +          /* ... */
+> +
+> +          list_add(&dimitri->node, &car->clowns);
+> +
+> +          /* State 3 */
+> +
+> +          list_del(&dimitri->node);
+> +
+> +          /* State 4 */
+> +
+> +          return 0;
+> +  }
+> +
+> +The result of this would be this::
+> +
+> +         .--------------------.
+> +         v                    |
+> +    .--------.     .-------.  |      .---------.
+> +    | clowns |---->| Grock |--'      | Dimitri |
+> +    '--------'     '-------'         '---------'
+> +
+> +This diagram shows the "clowns" node pointing at the node labeled "Grock",
+> +which points back at the "clowns" node. Off to the side is a lone node labeled
+> +"Dimitri", which has no arrows pointing anywhere.
+> +
+> +Note how the Dimitri node does not point to itself; its pointers are
+> +intentionally set to a "poison" value that the list code refuses to traverse.
+> +
+> +If we wanted to reinitialize the removed node instead to make it point at itself
+> +again like an empty list head, we can use list_del_init() instead:
+> +
+> +.. code-block:: c
+> +
+> +  static int circus_fill_car(struct circus_priv *circus)
+> +  {
+> +          /* ... */
+> +
+> +          list_add(&dimitri->node, &car->clowns);
+> +
+> +          /* State 3 */
+> +
+> +          list_del_init(&dimitri->node);
+> +
+> +          /* State 4b */
+> +
+> +          return 0;
+> +  }
+> +
+> +This results in the deleted node pointing to itself again::
+> +
+> +         .--------------------.           .-------.
+> +         v                    |           v       |
+> +    .--------.     .-------.  |      .---------.  |
+> +    | clowns |---->| Grock |--'      | Dimitri |--'
+> +    '--------'     '-------'         '---------'
+> +
+> +This diagram shows the "clowns" node pointing at the node labeled "Grock",
+> +which points back at the "clowns" node. Off to the side is a lone node labeled
+> +"Dimitri", which points to itself.
+> +
+> +Traversing whilst removing nodes
+> +--------------------------------
+> +
+> +Deleting entries while we're traversing the list will cause problems if we use
+> +list_for_each() and list_for_each_entry(), as deleting the current entry would
+> +modify the ``next`` pointer of it, which means the traversal can't properly
+> +advance to the next list entry.
+> +
+> +There is a solution to this however: list_for_each_safe() and
+> +list_for_each_entry_safe(). These take an additional parameter of a pointer to
+> +a ``struct list_head`` to use as temporary storage for the next entry during,
+> +iteration, solving the issue.
+> +
+> +An example of how to use it:
+> +
+> +.. code-block:: c
+> +
+> +  static void circus_eject_insufficient_clowns(struct circus_priv *circus)
+> +  {
+> +          struct clown *e;
+> +          struct clown *n;      /* temporary storage for safe iteration */
+> +
+> +          list_for_each_entry_safe(e, n, &circus->car.clowns, node) {
+> +                if (e->shoe_size < 500)
+> +                        list_del(&e->node);
+> +          }
+> +  }
+> +
+> +Proper memory management (i.e. freeing the deleted node while making sure
+> +nothing still references it) in this case is left up as an exercise to the
+> +reader.
+> +
+> +Cutting a list
+> +--------------
+> +
+> +There are two helper functions to cut lists with. Both take elements from the
+> +list ``head``, and replace the contents of the list ``list``.
+> +
+> +The first such function is list_cut_position(). It removes all list entries from
+> +``head`` up to and including ``entry``, placing them in ``list`` instead.
+> +
+> +In this example, it's assumed we start with the following list::
+> +
+> +         .----------------------------------------------------------------.
+> +         v                                                                |
+> +    .--------.     .-------.     .---------.     .-----.     .---------.  |
+> +    | clowns |---->| Grock |---->| Dimitri |---->| Pic |---->| Alfredo |--'
+> +    '--------'     '-------'     '---------'     '-----'     '---------'
+> +
+> +This diagram depicts the list head "clowns" pointing to a node labeled "Grock",
+> +which points to a node labeled "Dimitri", which points to a node labeled
+> +"Pic", which points to a node labeled "Alfredo", which points back to the
+> +"clowns" list head.
+
+There comes a point, I think, where the (very nice) diagrams speak for
+themselves; I'm not entirely sure it needs to be spelled out in this
+much detail.  By this point, I would expect readers to be just skipping
+over these descriptions.
+
+> +With the following code, every clown up to and including "Pic" is moved from
+> +the "clowns" list head to a separate ``struct list_head`` initialized at local
+> +stack variable ``retirement``:
+
+[...]
+
+
+> +Further reading
+> +---------------
+> +
+> +* `How does the kernel implements Linked Lists? - KernelNewbies <https://kernelnewbies.org/FAQ/LinkedLists>`_
+
+I do still think you should move the kerneldoc for lists over from
+kernel-api.rst; just tack it onto the end here.
+
+Thanks,
+
+jon
