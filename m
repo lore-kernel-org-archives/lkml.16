@@ -1,152 +1,158 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB661DED5F
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79B41E9B3D;
+	Thu,  3 Jul 2025 02:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751509719; cv=none; b=Z+06zfrP7zSAD5M7lQCAWmLurRA/qKRLqapXjfq2WETnywbZVCIXjtYOsaYNvE2xpVoYnVajYc6Y1Eq+o1CnCMdyZPcdJ92CtEgxEUhN8p0ADcnF+ERriTvc+AEW23W/RyxintKmorZ8gQz/An/QuD3GAIo12isaPEdR5tvw8Zs=
+	t=1751509721; cv=none; b=lrS29XKg4r8Yqae5WaubWp/4LAv6NsWnnMG8GbgsSPvEYiPxXVKy6TS2jApmp3DJeFmC8QCzgnqv6gvpeLpdAW3KA+LhMo/Q9GelEGDRspuKgHc07QG70e8aZM9W5SV5HzNjkv8LcNWdsdbVE+LwVW66BcUf4OauLlHkTmwHyrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751509719; c=relaxed/simple;
-	bh=oI+NQH+nFJLnW1KEYVWh8bCi6cQjiUciyVOdI8RQ9jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PSkkpE23CcC0FP+98gUqaIFbZh9FRKcDzh12B2jDVXZd/lPlDXOOp6ZrH5R/cQQC/upXLkAHa7CHlLO3vhisQJiVKDCPk6XNQVj7l2h4PxjjxeRnhip2bPa9qY19YJsjDu61i2g1PnOiNIHUempZtZjr/iD+LoYwPNMBNxJ3UI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gXx4bsi2; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751509721; c=relaxed/simple;
+	bh=aU8FEVOH9p4QlopgS3RyFqvauECgUG+suhNF7f5naI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uEnBcK+U7AFRLPanuXLZ/ig5JP5MCg4KAqWeUT19eL8NgWEROE+Cc5x6NhCPS7vIKZI6yMeT18Be/qR+BPS+5PMf2+/8j+h/UARU77rpdskj0mUukOixo8TTuxe3mcVVJYcbvD0icgdT8rfOQmHygndF5SXpGZClU4q0twx/fA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gixsSHoc; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXx4bsi2"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6223487b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 19:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751509717; x=1752114517; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t2nTXIo+CvpirZ9A1QVaQpQOlJd4MreiW9qDAdilxYI=;
-        b=gXx4bsi27gy8C/9QSu11WuXlJ2tNIZ3xTcmLj8+js07ghOG5/TIusM5Enf3iism0En
-         LmMygaeq8TWHzB9s/5xAZZToWDjJ4CDaNCf2uVze4KKKUP/UZAjcOEs04St4fAhgxXkp
-         tfG9A3LuLXDxV2Ty3D18qbtZxQN6L2LF3KZAY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751509717; x=1752114517;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2nTXIo+CvpirZ9A1QVaQpQOlJd4MreiW9qDAdilxYI=;
-        b=gPRZya4r053ASQk0QoxniCnsLP7FEq8yaLP4pDM+fjzZvfeqRMD8PQzsRnObyOWOoU
-         4LlHi+qEePTg0aQ90W2lF+zWPu9a+vk04Mh1Isq4NWfUzfIgcjqYi5504FM/05CxI4Oa
-         ZhXJeEi6Q4Yvz2OWOUnHT5knSnowQ3pjPeqlUIZqZuCJJjehB5wCyBhGAFcsE3H7c8jm
-         XaZv7HW7/Q/ZI6i65TNwTv6hvD9RetbOQAcmEb16ruOmiAv9UeZ4kxvEcFjzudEe+erG
-         RIKF3AOyhd57BbiGOL8qnZuG0GLtfAovxwHFVC/hRgRUd9gUGcPNAc/5eb7nHrzY6+xL
-         gsJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4e6Hr+ld2S6yxpJR6+z/VHodWQwldvAvaYOLXhMJRqcmScC2KWWu2Ch7bKDU7wtgGd4Iw7qKWiWBS0ho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIoIkkmgE41JlMsdUl+Nhy9iW4ruoqK2y202/twlrMPxvPxbJa
-	/4nSGfEZ9Gv2RskdryheMJ07c7RvH8pff7lbVIwD1uUArPB7eGmctgfqFjsFPWvY7g==
-X-Gm-Gg: ASbGncsdF0Tyq8Txubf6lmKJkZgawj25BvgPtueGrgpBv6aHYUNItlIk4kVpsIgMfiq
-	tg19Jen7hm7GvMuw5i9wEoMuqP39mO6rfYGrLvNRdWNHWXyMDyBa6cWN9HEXPAmf/EH9H7XgW2m
-	8fh1sdMt20M0VBEIzdzvJvN9nwXuJ6XMIe+o3y3i2GaZNckKgfXJ7ljkDWBh50uw3lg9xaAwoUy
-	vo7hG5an+yFWpcrrkBivPTkQ372N2JeQUcLxIb0CmR3yfh2JbQvIz3RHbghsW/PHUFPdHyFq3oP
-	3EqMA2YxWZe3HSGZfkuFrovmGvpMkwB5DBfA6WVQcDEErnLirWamQ5oChiBlOFb8uA==
-X-Google-Smtp-Source: AGHT+IF0mvA6yS/npwsiNYiL0/8VVavPM/4qMbTse5ZctfFIAIwQSgruKczXUi/oxdeocj+35zKyHA==
-X-Received: by 2002:a05:6a00:3d11:b0:748:de24:1ade with SMTP id d2e1a72fcca58-74c9980d533mr2410295b3a.7.1751509716701;
-        Wed, 02 Jul 2025 19:28:36 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:8e3f:7c33:158f:349b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541d23fsm15895056b3a.59.2025.07.02.19.28.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 19:28:35 -0700 (PDT)
-Date: Thu, 3 Jul 2025 11:28:23 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Minchan Kim <minchan@kernel.org>, Brendan Jackman <jackmanb@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
-Message-ID: <5thkl2h5qan5gm7putqd4o6yn5ht2c5zeei5qbjoni677xr7po@kbfokuekiubj>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-13-david@redhat.com>
- <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
- <757cf6b9-730b-4b12-9a3d-27699e20e3ac@redhat.com>
- <ugm7j66msq2w2hd3jg3thsxd2mv7vudozal3nblnfemclvut64@yp7d6vgesath>
- <11de6ae0-d4ec-43d5-a82e-146d82f17fff@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gixsSHoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751509720; x=1783045720;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aU8FEVOH9p4QlopgS3RyFqvauECgUG+suhNF7f5naI8=;
+  b=gixsSHoc1xk78TKtWNafZb7MEVWOsBqd+vBHqrXeuDO+3VczaCD9dNxH
+   K9Smy0VIrY1ReZpUepMXTN0zn6EJ8oeD/LOZp2xQLhD6gsyfemjI3IyBq
+   iQATQ4EZ6TfNyUgiN+TdU1nfYEDPRln05xp0U0zTM6E8gwjPY7No7j5IN
+   F/6v1rceLpIvxvnW4MaUB6fj0+I5ain3HgyzU0qlPUD3zZv5ZTpDyuM4+
+   gM+i/6jB/oSC/Yr8DbZmaClzkZjyA9MmG7vRqYFwUG2EddOGBCp6nb2Sl
+   aH4XXtK/JaGuT98NKddGHm/GOzCaXuVCSUDtrHCaBALmOVGTO132lYnCa
+   w==;
+X-CSE-ConnectionGUID: m+WwS58mSfuvW2xmu5bFXw==
+X-CSE-MsgGUID: Ue9WPEmESdmYH2cvWdZwGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="41450225"
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="41450225"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:39 -0700
+X-CSE-ConnectionGUID: v5xkgAXdQJ2ivHdMXrT4kA==
+X-CSE-MsgGUID: rxPOhIkwRwWgNJLy4zSvCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="154594008"
+Received: from mgerlach-mobl1.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.124.223.28])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:38 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	xi.pardee@linux.intel.com
+Cc: hdegoede@redhat.com
+Subject: [PATCH V3 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Date: Wed,  2 Jul 2025 19:28:15 -0700
+Message-ID: <20250703022832.1302928-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11de6ae0-d4ec-43d5-a82e-146d82f17fff@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On (25/07/02 12:55), David Hildenbrand wrote:
-> On 02.07.25 12:10, Sergey Senozhatsky wrote:
-> > On (25/07/02 10:25), David Hildenbrand wrote:
-> > > On 02.07.25 10:11, Sergey Senozhatsky wrote:
-> > > > On (25/06/30 14:59), David Hildenbrand wrote:
-> > > > [..]
-> > > > >    static int zs_page_migrate(struct page *newpage, struct page *page,
-> > > > > @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
-> > > > >    	unsigned long old_obj, new_obj;
-> > > > >    	unsigned int obj_idx;
-> > > > > +	/*
-> > > > > +	 * TODO: nothing prevents a zspage from getting destroyed while
-> > > > > +	 * isolated: we should disallow that and defer it.
-> > > > > +	 */
-> > > > 
-> > > > Can you elaborate?
-> > > 
-> > > We can only free a zspage in free_zspage() while the page is locked.
-> > > 
-> > > After we isolated a zspage page for migration (under page lock!), we drop
-> >                        ^^ a physical page? (IOW zspage chain page?)
-> > 
-> > > the lock again, to retake the lock when trying to migrate it.
-> > > 
-> > > That means, there is a window where a zspage can be freed although the page
-> > > is isolated for migration.
-> > 
-> > I see, thanks.  Looks somewhat fragile.  Is this a new thing?
-> 
-> No, it's been like that forever. And I was surprised that only zsmalloc
-> behaves that way
+This patch series introduces a new discovery driver for Intel Platform
+Monitoring Technology (PMT) and a set of supporting changes to improve
+telemetry integration across Intel VSEC features.
 
-Oh, that makes two of us.
+The primary goal of this series is to add the PMT Discovery driver, which
+enumerates and exposes telemetry attributes by parsing hardware-provided
+discovery tables from OOBMSM devices. In particular, the discovery driver
+gathers detailed capability information (such as telemetry region
+attributes) that will later enable direct access to telemetry regions via a
+new API (intel_pmt_get_regions_by_feature()). This API is crucial for
+retrieving data like per-RMID counters.
 
-> > > While we currently keep that working (as far as I can see), in the future we
-> > > want to remove that support from the core.
-> > 
-> > Maybe comment can more explicitly distinguish zspage isolation and
-> > physical page (zspage chain) isolation?  zspages can get isolated
-> > for compaction (defragmentation), for instance, which is a different
-> > form of isolation.
-> 
-> Well, it's confusing, as we have MM compaction (-> migration) and apparently
-> zs_compact.
+The remainder of the series consists of several preparatory and testing
+patches:
 
-True.
+1. Private Data and CPU Mapping:  The VSEC driver now includes
+per-device private data to store the OOBMSM-to-CPU mapping. The TPMI driver
+copies its platform info into this common area (via
+intel_vsec_set_mapping()), allowing other VSEC features to access CPU
+mapping information without redundant queries.
 
-> I'll try to clarify that we are talking about isolation for page migration
-> purposes.
+2. Device Links Enhancements:  With telemetry now depending on both the
+TPMI driver (for CPU mapping) and the new discovery driver (for telemetry
+region attributes), device links have been added and optimized. These
+changes ensure that supplier drivers are probed and registered before
+consumer drivers, enforcing the proper dependency order for reliable
+telemetry feature access.
 
-Thanks.
+4. Discovery Driver and API:  The core of the series is the addition of
+the PMT Discovery driver. This driver not only implements discovery of
+telemetry attributes and capability data (exposed via sysfs) but also
+introduces an API to retrieve telemetry regions by feature, which is
+essential for features like per-RMID telemetry counters.
+
+5. Testing:  A simple KUNIT test is provided for the enhanced discovery
+API to ensure its reliability and correctness.
+
+Together, these patches provide a foundation for future telemetry
+enhancements in the Intel VSEC framework. They enable a unified interface
+for accessing hardware telemetry capabilities and ensure that inter-driver
+dependencies are properly managed through device links.
+
+David E. Box (15):
+  MAINTAINERS: Add link to documentation of Intel PMT ABI
+  platform/x86/intel/vsec: Add private data for per-device data
+  platform/x86/intel/vsec: Create wrapper to walk PCI config space
+  platform/x86/intel/vsec: Add device links to enforce dependencies
+  platform/x86/intel/vsec: Skip absent features during initialization
+  platform/x86/intel/vsec: Skip driverless features
+  platform/x86/intel/vsec: Add new Discovery feature
+  platform/x86/intel/pmt: Add PMT Discovery driver
+  docs: Add ABI documentation for intel_pmt feature directories
+  platform/x86/intel/tpmi: Relocate platform info to intel_vsec.h
+  platform/x86/intel/vsec: Set OOBMSM to CPU mapping
+  platform/x86/intel/tpmi: Get OOBMSM CPU mapping from TPMI
+  platform/x86/intel/pmt/discovery: Get telemetry attributes
+  platform/x86/intel/pmt/telemetry: Add API to retrieve telemetry
+    regions by feature
+  platform/x86/intel/pmt: KUNIT test for PMT Enhanced Discovery API
+
+ .../testing/sysfs-class-intel_pmt-features    | 134 ++++
+ MAINTAINERS                                   |   2 +
+ drivers/platform/x86/intel/plr_tpmi.c         |   3 +-
+ drivers/platform/x86/intel/pmt/Kconfig        |  27 +
+ drivers/platform/x86/intel/pmt/Makefile       |   4 +
+ drivers/platform/x86/intel/pmt/class.c        |  35 +-
+ drivers/platform/x86/intel/pmt/class.h        |   9 +
+ .../platform/x86/intel/pmt/discovery-kunit.c  | 116 ++++
+ drivers/platform/x86/intel/pmt/discovery.c    | 635 ++++++++++++++++++
+ drivers/platform/x86/intel/pmt/features.c     | 205 ++++++
+ drivers/platform/x86/intel/pmt/telemetry.c    |  94 ++-
+ .../intel/speed_select_if/isst_tpmi_core.c    |   9 +-
+ .../uncore-frequency/uncore-frequency-tpmi.c  |   7 +-
+ drivers/platform/x86/intel/vsec.c             | 372 +++++++++-
+ drivers/platform/x86/intel/vsec_tpmi.c        |   8 +-
+ drivers/powercap/intel_rapl_tpmi.c            |   9 +-
+ include/linux/intel_pmt_features.h            | 157 +++++
+ include/linux/intel_tpmi.h                    |  27 +-
+ include/linux/intel_vsec.h                    |  98 ++-
+ 19 files changed, 1885 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt-features
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery-kunit.c
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery.c
+ create mode 100644 drivers/platform/x86/intel/pmt/features.c
+ create mode 100644 include/linux/intel_pmt_features.h
+
+
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+--=20
+2.43.0
+
