@@ -1,149 +1,249 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCDC1F1906
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E4D29C33E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751539898; cv=none; b=uendmnSJuGBxFCn7hdnT+tFSAkXRwAt/NMCzmX9Zf6DYwRrPQs/cIpjxw4dM7oyu6r7GTLrzRbO5B+RF6QeIkXC3ejwJx52G+9ZqjBksJpbCmxpAhQYckPCHdEv/hjUu0DQLPSWbbnN3DDWdJ0dGgH53aeGNSOwlHxSuDBHW+wY=
+	t=1751539930; cv=none; b=Xji3D54pX63B/uJ1+1npoXW+S4/Eio24kCwcRcc/HlcoEHqyfTcOVfTwKVG2G6TmTVfRpAySXDJvax6j74Dj0b7RljcojxOjkqpGwspSvUCzrJLOfcd0lPucBA0uX4dQ2OSk4UJ/V4TJxG3rVEK/LOTCUvczFKYefeV7a5GnaTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751539898; c=relaxed/simple;
-	bh=OqvSnj012lk+x7sxrjtbztoI/YmrJYSA0WWNrX5Fpj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rzWxrp9dRIb57whnY0Oo9zC+LjBiS5I3YJGKT51hfB9HVCHjlxl9j3JwqieMLal1dWy1oJ6yqVQGV4kK3NSUll0VZ2jJScC54UGQ0uzgRXQXCvJvg27+TDhxx2pGkfr7euKCTnv//SejFLtxVs2GggrHqt53fwvOp1OIF/SZzXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H3N5BSfF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751539930; c=relaxed/simple;
+	bh=rmNSYOw+HEy63n/h92TyS7aMyLFXLaBLj2X6TT6vDAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tMIYdUMqUzadwG2fQIsWKsbtqlieFpFUe8blCo0zyEZAbq7o4OMJk7pCmkhT3yVkbRqm1jPbO4TgupS4pyjHFvJs9i6xb3TrfhTy/p1hkG3zpd1Ryn1TgBLku7Ij+QvPfoIF9OWei8xhgZ47sieHnSobcJLfayVlF7AsRfPR2Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PzJehx1J; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3N5BSfF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751539895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PTP2cROOIMAlCq/5T6gTKModShdkxtZnGGTA7OvrtwI=;
-	b=H3N5BSfFWDrDRV95R4aNyBp5ThsfEFj0ZFfB5N4BWe0DoBQDyFqXGqxUA2iiMrflhrngaI
-	tqOuScSSAMqeuWdoypEPKy+oITZSNvdDc65GjFNU9Ma9TKW/8r9m/ouFLgJQmKDwpSXugy
-	s4MJFShFlRIz4oCl2Fkjg5jZU9aLGMw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-348-FseMB3ydO-iE51N-hRdA_w-1; Thu, 03 Jul 2025 06:51:34 -0400
-X-MC-Unique: FseMB3ydO-iE51N-hRdA_w-1
-X-Mimecast-MFC-AGG-ID: FseMB3ydO-iE51N-hRdA_w_1751539893
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so3323419f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PzJehx1J"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5634Ce4K024441
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 10:52:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YWZCms/xP7PO1LNBdrvjW70mXAYc+B54BtYn47HqjmU=; b=PzJehx1JbtWXCDmp
+	WqLy0bSwXfYyTiF7FiqrE+Xs/XxJcKExopBipIE4CujfQmDJraRThd2iwJwRyqz1
+	K/SBJXxZP9fzsEouNN/sEJwwpvScbGEXC9m/cc8BVxQUpQ0qrJLzht9z8+8tXXGM
+	HBPaPJ18q3xY6d8xCjZLEzQ0dKDXlq8r8W8Hf3BQCF1G87BZ0w0veN2thAGC3V4J
+	An1VuGy6OV6fba2t2DDFnTJchcTvcOH5m4rPrZXP2v7yf+W+eG/jxhhLw8iglxd9
+	ubDQpFj+nsggw3LEe9ST3CrZAuYaeSrR1BGmVapj8Weqma1tzlI+X4IiEJ4wLb5X
+	glvdIg==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bw07y7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 10:52:07 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-313c3915345so11762611a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751539893; x=1752144693;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PTP2cROOIMAlCq/5T6gTKModShdkxtZnGGTA7OvrtwI=;
-        b=P5wE6iK2Wk+Lzaor4J+EGigi0zSBmm1kV+JYLKKwbYFQc9ZRcfjMsQzp4XHDFHiu5e
-         koRCWw9+ElM8py+iAVre4F5W/YEE+/YUBwyRW7nC3jVCHsVna2iIb18+q8DdestYp0po
-         lMScIe1HFBnEe9TbEp8QDu7LWrO5kLUbweRfkcOyF36eNIQtl8r3Ma7VGXATB9hzMrUz
-         BzoBwrSCnvTxDKcQjnC2aujRJtvGr6lZyTwWONb521bTmhEfW0UcnkBFC21NUU3V0aUA
-         rNRyOKPVfcWvI1orrV6lakdBTgQxKo2szNOHQZoBITfKH6NaAGjuiiJlvYKr50oCRA9O
-         VYQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQh56YJhg0wWkCbIlPDTHv9qntIIEBA3xWDyUnbaMS/+Tv6K9Il2VShbt7dheH7Yf/w5PItHhJrAroqNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFxhG12L15AQnEM/dqNTmrLGD7QJ2WJPmx/vcDP5kN+gdlleKm
-	lT3w/XHeUr5OFBSUciSSDCxQ6bcoP75Upazlq/lvZRsAGqZvLYhe7lz8Vbk6IWKIeN/gE3PjD21
-	jinPdf3seWLUwmLV0tddyqcZCK37IcG5fGY3LkcNxm5B25n8/uJnlfQtxAdrrYemNXg==
-X-Gm-Gg: ASbGncsHAJTaArG/lmKHxCjFSqEf7GDJk+hrzHSnndGS/hMw0gNBW0qF8QUflreybsQ
-	mk5v43K34rEMVwnpUupB+oBEY8bV4+L959KOHBmN8CaebYziHj8UD28kZMQCOfF/VxKcfZndYhi
-	30ezPoqlRnyPB9r4Y/FNc6tHsNziDmRF3HRwMeOBAJ+sIiNB7qo1/Dpot6PQ37AG0fHuJQ3za2L
-	FNVY7Ws/UQKdgnoGmQPXADw3I0bllexxoC4zi4Avk0iir6Qag9escDueWDTbCu7pZw73g/0jLfb
-	uViwpZyjX87aldwYRFycj6XGDzGe
-X-Received: by 2002:a05:6000:98a:b0:3a0:aed9:e34 with SMTP id ffacd0b85a97d-3b32fa3aaa1mr2092541f8f.48.1751539893417;
-        Thu, 03 Jul 2025 03:51:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaIrtPC6+L1M9apwjRSTfcpVN1M7WJhIIwoutF3s+xjdaNvBgiwXew6JQLCZDeO5sbSJK9KA==
-X-Received: by 2002:a05:6000:98a:b0:3a0:aed9:e34 with SMTP id ffacd0b85a97d-3b32fa3aaa1mr2092503f8f.48.1751539892823;
-        Thu, 03 Jul 2025 03:51:32 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.161.238])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e62144sm18619571f8f.92.2025.07.03.03.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:51:32 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:51:25 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	HarshaVardhana S A <harshavardhana.sa@broadcom.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
-	Vishnu Dasa <vishnu.dasa@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
-	stable <stable@kernel.org>
-Subject: Re: [PATCH net] vsock/vmci: Clear the vmci transport packet properly
- when initializing it
-Message-ID: <ktxstfr4rxrvk4pvdreumdch55ieexfclozovszm24o6xmb7zd@nmo2w2ffu2kw>
-References: <20250701122254.2397440-1-gregkh@linuxfoundation.org>
+        d=1e100.net; s=20230601; t=1751539927; x=1752144727;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YWZCms/xP7PO1LNBdrvjW70mXAYc+B54BtYn47HqjmU=;
+        b=F6EFzRfu/CEWLDTGcjziFLAJtR9Q4vqeecMHwMWd7CkL03dfJcEE96WDmWYna7d8p0
+         rbZKsPv1xxv2Gjh1c1d6pCoEgJm4rc2FMlXUaekSX1KN/V/k95e2TQQmVhA8nOwI5I5K
+         1lQ1o4HbByMxpTZY5O3bAZo5DCoUs99xGnkgF8ec+8ZN00H86Re6yW1vhW9zb4v8E3bk
+         sL6vJGq6TrRuToo8gaR1FukDt1OMz/xQQ7QvSLVtcnN/VQKEvPfDzCJ5XKVDqBvCEe2a
+         fccwvecNWTFmG9PFJ+aZsPr0u2zWtDu4kXiv/Hqv/oy3LcT2HQzpxQWjd3ndxFajPnnp
+         8CbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbmbCHVX1xD3JcrCeaQ4ffyFkHcCr3LAt/dy/tjzZ93WQL6f2HWi4RKeCvxP2wP2ABmRY1bsWYUK+VCGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpQMo0oNwK7lK7Cb3ZVIsxhyjnM2rdEtotLlqnQ5TuX60bCRoC
+	mKrGQUP2tVQxmhyuRsPtYJzrSXd18CljbuWGEzhePLtjXWiIRuEUEgwHC2UIU285/E9i99Y/z1L
+	nhHyBMxL2kkPM6iaLdND7i/BTAZfkWaIZDyptitfanAbWvTvhQitPLcOueLkFvcn9dGY=
+X-Gm-Gg: ASbGncs9f91gRHRBqKtpiC8MowCG4IBosDDaqY2FUYg5K6zojhewUo83FWGBqORVlvJ
+	sB6spsbhI7ge8OUsmuYttkAIStHKK8xDc0Y5omHfwCb4X7QotvOi7SzHA3CUU+DPeFFPwHI4+ph
+	PVwWZ2aM+NSNZj+xuCg84mECzYLFhk69OHwXhTdvJDKKzEwEHM+i3zMLiTSJiWCC9iKdsXHlCTj
+	7KOhkiW61NARUQkFZ3skCbr87RQvccoS0Vo7DrZiMiskp5CnOyyuqDdUGhHflKbHUfO55OG+47A
+	d0GgB9WQfAMaCftbuAO645vprUE28fEN64p7bne+HYZYv6GyE6RO
+X-Received: by 2002:a17:90b:58c4:b0:311:b5ac:6f63 with SMTP id 98e67ed59e1d1-31a90bc9845mr8300497a91.21.1751539926604;
+        Thu, 03 Jul 2025 03:52:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGU2ttb8arRAA533CuSXsGogWAaWWt4oh1TJBQPDAc1tI7amiUizM28F44lNiZLDBYSJCJ3TQ==
+X-Received: by 2002:a17:90b:58c4:b0:311:b5ac:6f63 with SMTP id 98e67ed59e1d1-31a90bc9845mr8300464a91.21.1751539926013;
+        Thu, 03 Jul 2025 03:52:06 -0700 (PDT)
+Received: from [10.218.37.122] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc7edffsm2123326a91.35.2025.07.03.03.52.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 03:52:05 -0700 (PDT)
+Message-ID: <9ede83ab-f494-4975-b896-da14958f727d@oss.qualcomm.com>
+Date: Thu, 3 Jul 2025 16:21:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250701122254.2397440-1-gregkh@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Tony Lindgren <tony@atomide.com>,
+        JeffyChen <jeffy.chen@rock-chips.com>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, Sherry Sun <sherry.sun@nxp.com>
+References: <20250610164154.GA812762@bhelgaas>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20250610164154.GA812762@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: GTSPL5qnrKXCVEaVD70SM7-hha9n9InQ
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=686660d7 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=s8YR1HE3AAAA:8
+ a=i8TGq4d7xC6VReilZ34A:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
+ a=jGH_LyMDp9YhSvY-UuyI:22
+X-Proofpoint-ORIG-GUID: GTSPL5qnrKXCVEaVD70SM7-hha9n9InQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA4OSBTYWx0ZWRfX0X4v4otLXV9+
+ j48iVXOX7rZlfTDhfTpelwKWvQBUP9jqiIFMstMm5BjUIEZ6N6VSsORvno8QWnFuCvKonOz2B4/
+ z4TZFCB06VwTYLUe4eqY07MbDVL2IELhoOlZRc2JQlUTj47GdYUmkqWa5JETI+VmT/7szMaaNw4
+ Ui+D/PopEt8z8QQeHJKGbMgO2uQa1RFVpCP21cGlxMZE4lCwOe81mvQwiSxJMRyjMmrVO5A+/XE
+ CchFPm1xDaLJCr1/g7n4/v91y+C7INDBA7s4qxCsIUuiRfRAYBN0ilMEGwER0X3qVtPW3gR47P1
+ ROCth6n/Uc8i6Jcr5Z+Y5h99N4QgSz+h9KPoCWs8qTdXXLc5a2Lxr23EbAxmKnUrCfCwbKUKHQp
+ jkFyo7vAcX4K//reHFJET2ykrcXMkFzBZqhn35vuhGJ1Tf7fc9uxhKEm+XPtOWBuQCMAzecW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030089
 
-On Tue, Jul 01, 2025 at 02:22:54PM +0200, Greg Kroah-Hartman wrote:
->From: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
->
->In vmci_transport_packet_init memset the vmci_transport_packet before
->populating the fields to avoid any uninitialised data being left in the
->structure.
->
->Cc: Bryan Tan <bryan-bt.tan@broadcom.com>
->Cc: Vishnu Dasa <vishnu.dasa@broadcom.com>
->Cc: Broadcom internal kernel review list
->Cc: Stefano Garzarella <sgarzare@redhat.com>
->Cc: "David S. Miller" <davem@davemloft.net>
->Cc: Eric Dumazet <edumazet@google.com>
->Cc: Jakub Kicinski <kuba@kernel.org>
->Cc: Paolo Abeni <pabeni@redhat.com>
->Cc: Simon Horman <horms@kernel.org>
->Cc: virtualization@lists.linux.dev
->Cc: netdev@vger.kernel.org
->Cc: stable <stable@kernel.org>
->Signed-off-by: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
->Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->---
->Tweaked from original version by rewording the text and adding a blank
->line and correctly sending it to the proper people for inclusion in net.
->
-> net/vmw_vsock/vmci_transport.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Patch LGTM, we can fix the switch later.
+On 6/10/2025 10:11 PM, Bjorn Helgaas wrote:
+> On Tue, Jun 10, 2025 at 10:00:20AM +0530, Krishna Chaitanya Chundru wrote:
+>> On 6/10/2025 4:04 AM, Bjorn Helgaas wrote:
+>>> On Mon, Jun 09, 2025 at 05:29:49PM +0530, Manivannan Sadhasivam wrote:
+>>>> + Brian, Rafael, Tony, Jeffy (who were part of the previous attempt to add WAKE#
+>>>> GPIO/interrupt support:
+>>>> https://lore.kernel.org/linux-pci/20171225114742.18920-1-jeffy.chen@rock-chips.com
+>>>>
+>>>> On Mon, Jun 09, 2025 at 11:27:49AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>> On 6/6/2025 1:56 AM, Bjorn Helgaas wrote:
+>>>>>> On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>> PCIe wake interrupt is needed for bringing back PCIe device state
+>>>>>>> from D3cold to D0.
+>>>>>>
+>>>>>> Does this refer to the WAKE# signal or Beacon or both?  I guess the
+>>>>>> comments in the patch suggest WAKE#.  Is there any spec section we can
+>>>>>> cite here?
+>>>>>>
+>>>>> we are referring only WAKE# signal, I will add the PCIe spec r6.0, sec
+>>>>> 5.3.3.2 in next patch version.
+>>>>>>> Implement new functions, of_pci_setup_wake_irq() and
+>>>>>>> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
+>>>>>>> using the Device Tree.
+>>>>>>>
+>>>>>>>    From the port bus driver call these functions to enable wake support
+>>>>>>> for bridges.
+>>>>>>
+>>>>>> What is the connection to bridges and portdrv?  WAKE# is described in
+>>>>>> PCIe r6.0, sec 5.3.3.2, and PCIe CEM r6.0, sec 2.3, but AFAICS neither
+>>>>>> restricts it to bridges.
+>>>>
+>>>> You are right. WAKE# is really a PCIe slot/Endpoint property and
+>>>> doesn't necessarily belong to a Root Port/Bridge. But the problem is
+>>>> with handling the Wake interrupt in the host. For instance, below is
+>>>> the DT representation of the PCIe hierarchy:
+>>>>
+>>>> 	PCIe Host Bridge
+>>>> 		|
+>>>> 		v
+>>>> 	PCIe Root Port/Bridge
+>>>> 		|
+>>>> 		|
+>>>> 		v
+>>>> PCIe Slot <-------------> PCIe Endpoint
+>>>>
+>>>> DTs usually define both the WAKE# and PERST# GPIOs
+>>>> ({wake/reset}-gpios property) in the PCIe Host Bridge node. But we
+>>>> have decided to move atleast the PERST# to the Root Port node since
+>>>> the PERST# lines are per slot and not per host bridge.
+>>>>
+>>>> Similar interpretation applies to WAKE# as well, but the major
+>>>> difference is that it is controlled by the endpoints, not by the
+>>>> host (RC/Host Bridge/Root Port). The host only cares about the
+>>>> interrupt that rises from the WAKE# GPIO.  The PCIe spec, r6.0,
+>>>> Figure 5-4, tells us that the WAKE# is routed to the PM controller
+>>>> on the host. In most of the systems that tends to be true as the
+>>>> WAKE# is not tied to the PCIe IP itself, but to a GPIO controller in
+>>>> the host.
+>>>
+>>> If WAKE# is supported at all, it's a sideband signal independent of
+>>> the link topology.  PCIe CEM r6.0, sec 2.3, says WAKE# from multiple
+>>> connectors can be wire-ORed together, or can have individual
+>>> connections to the PM controller.
+>>
+>> I believe they are referring to multi root port where WAKE# can
+>> routed to individual root port where each root port can go D3cold
+>> individually.
+> 
+> AFAICT there's no requirement that WAKE# be routed to a Root Port or a
+> Switch Port.  The routing is completely implementation specific.
+> 
+>>  From endpoint perspective they will have single WAKE# signal, the
+>> WAKE# from endpoint will be routed to its DSP's i.e root port in
+>> direct attach and in case of switch they will routed to the USP from
+>> their again they will be connected to the root port only as there is
+>> noway that individual DSP's in the switch can go to D3cold from
+>> linux point of view as linux will not have control over switch
+>> firmware to control D3cold to D0 sequence.
+>>
+>> But still if the firmware in the DSP of a switch can allow device to
+>> go in to D3cold after moving host moving link to D3hot, the DSP in
+>> the switch needs to receive the WAKE# signal first to supply power
+>> and refclk then DSP will propagate WAKE# to host to change device
+>> state to D0. In this case if there is separate WAKE# signal routed
+>> to the host, we can define WAKE# in the device-tree assigned to the
+>> DSP of the switch. As the DSP's are also tied with the portdrv, the
+>> same existing patch will work since this patch is looking for
+>> wake-gpios property assigned to that particular port in the DT.
+> 
+> WAKE# is only defined for certain form factors, and Root Ports and
+> Switch Ports have no WAKE#-related behavior defined by the PCIe specs.
+> 
+> I don't want to make assumptions about how WAKE# is routed, whether
+> Switches have implementation-specific WAKE# handling, or how D3cold
+> transitions happen.  Those things are all implementation specific.
+> 
+> My main objections are:
+> 
+>    - Setting up a wake IRQ should be done on an endpoint, but this
+>      patch assumes doing it on a Root Port or Switch Port is enough.
+> 
+>      We can start a DT search for a wake IRQ at the endpoint and
+>      traverse up the hierarchy if necessary, of course.
+> 
+>    - The code should not be in portdrv.c.  Putting it in portdrv means
+>      it won't work unless CONFIG_PCIEPORTBUS is enabled, and WAKE# has
+>      nothing to do with the rest of portdrv.
+I went through the SPEC again and you are right the spec hasn't
+mentioned about wake# routing properly.
 
-Stefano
+I will move the code from portdrv to pci core framework and for your
+1st objection, you are suggesting to search for wake IRQ in the endpoint
+DT and then traverse up. I believe you are suggesting this because we
+may more than one wake# routed to root port from multiple endpoints.
+if this is the case then we need to register for more than one wake
+IRQ. For this case I feel better to check for wake# gpio in the DT
+when ever there is a new device is detected in the pci core and create
+the wake IRQ with the dev associated with the pci_dev.
 
->
->diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
->index b370070194fa..7eccd6708d66 100644
->--- a/net/vmw_vsock/vmci_transport.c
->+++ b/net/vmw_vsock/vmci_transport.c
->@@ -119,6 +119,8 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-> 			   u16 proto,
-> 			   struct vmci_handle handle)
-> {
->+	memset(pkt, 0, sizeof(*pkt));
->+
-> 	/* We register the stream control handler as an any cid handle so we
-> 	 * must always send from a source address of VMADDR_CID_ANY
-> 	 */
->@@ -131,8 +133,6 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-> 	pkt->type = type;
-> 	pkt->src_port = src->svm_port;
-> 	pkt->dst_port = dst->svm_port;
->-	memset(&pkt->proto, 0, sizeof(pkt->proto));
->-	memset(&pkt->_reserved2, 0, sizeof(pkt->_reserved2));
->
-> 	switch (pkt->type) {
-> 	case VMCI_TRANSPORT_PACKET_TYPE_INVALID:
->-- 
->2.50.0
->
+Please correct me if I was wrong.
 
+- Krishna Chaitanya.
+> 
+> Bjorn
