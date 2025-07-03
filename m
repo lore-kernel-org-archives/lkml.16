@@ -1,102 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1D2FEE2A;
-	Thu,  3 Jul 2025 19:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965FB25228C;
+	Thu,  3 Jul 2025 19:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751572549; cv=none; b=gg7d63tV8bxDuMzRwtXaQP6NBehDX1m1SCQLdo2ERzfAv6OCN5GARqON0AHES+O0vGAARcWz6UjqZQZvh9/B5g53Ae4NfzVamv0wL91ZsPwt/VkijknXVmOVRxGmw/fgzyPV9rX8bfabd0AVeKnW9Z0Wvs0CrdfSAoW9qbfljv8=
+	t=1751572779; cv=none; b=YV6WVT0a2B9eDenLNn89E07eH8KNNWKVpQNhNmkmerjbtbdd14yomh+8xk57H5ksI2eiA5RtJlGB5utEqeAgq6glcp++lywp6GzmVZuY03ieBJfO2jhQY7h3NKrY87FFvEsWw8D5YvFJ3xuJm/kS2GJ34c95SXi0CHPkjyWjBa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751572549; c=relaxed/simple;
-	bh=z6ZuFPFQCILhwVyx9iU+iK6Y5gFTaCZgVh9XLzBiyLw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=UqlzGBipQGrXOFEaWQBTqgXlkLY/09/l2ed2nU9Jxr4n1J7dSmwHZGMnzh3TjSCRsAhMI+oBuKRvPECcuxsu7Wagxkf1e/OTAIhy40vU5GGRMK8z/iFaDWQTy0QR7aMMkqwxzeHb3N834sf7cIwIo4LHT4vHhAqHfk9gXsGRdrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTHF2138; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751572779; c=relaxed/simple;
+	bh=lY55ECqDsxZNqp15zYLwy9T/g7qWxH7wryMpr3+Xu8A=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=umdomSU5dX1M9McU7Z2iHH0EvftDowNngl+Mech7ZSi0goYQ3znusofEFoe7pLG/PaAP/JQEii8X1Y7eYx0ni3L9iWSfk7zOjMNzXuXb9YLTgEkUh5wi22FR0TTEobQ4XEBYkN5J5CGbuZKogcou3gFmNi5JLIDSRjSNnvszkAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FEw4D24y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gcOi8Aam; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTHF2138"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903B9C4CEEB;
-	Thu,  3 Jul 2025 19:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751572549;
-	bh=z6ZuFPFQCILhwVyx9iU+iK6Y5gFTaCZgVh9XLzBiyLw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=nTHF2138OKFv1OkMcPY2aBCfmub1J6Rm9Y3uoFJUAckQ5DoX6+YtCv6h5w0lb+NrF
-	 mZidcwHDmy3t5h5Ui4b4YMhoZg3rSGlGjAwE2AHstlS7289H9I+EFx102QZwXqZqAz
-	 kIB5FjRITRqTc2XT++wHNP1TKghjZxztfk1NZX5lLQM+3koH5Sl80vNz19Ps3bK+W4
-	 sScpdrbE9EM6/7XBGUfCZIopgerTNDTf2Ig1SlLkkX18AEpe3d8qein3ZtKU9X6im0
-	 wvsDlVE2r1ytduNxJclJ6jKmDJLlyOgahmKzTJCLp+qLeejuFYT7IGvEMOvZFfWvtH
-	 +oioGNeeQmVew==
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FEw4D24y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gcOi8Aam"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751572775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgxsuIMDDXARhsRWgLrILUs/XsyS+TZEtoBBb/RsYm0=;
+	b=FEw4D24yX86GGy1rTWJ6zgH6Tlp5yOHO2h19VrQVJd4soMjXNtcLFhCIhBmDcIfo3afyMj
+	GH127yUbXDNuBwtaRHEi3ZdZq1EtVgrFX538bhU2DxEWijBcrYdtsbcPrHNXmmJo9oigK2
+	p8tlXD9sQkkbAEVYgixGuE4g/C1C8SERxleQFZ6JK4QAYdSnvoCipiRlj9XG1+zgC+PcYi
+	P1+WPyUM/DcSNaeacoqIXzqO0l/JuCUlWJVgJtqJD9sBqQW82ryw/C9BjBZLTQ2Ex85h76
+	JpECmRlt2nY9d/HdGO8XKDQWVUSZHBMUUcyw4iSOA9qF3eLPWuCRcbf7lfETnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751572775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgxsuIMDDXARhsRWgLrILUs/XsyS+TZEtoBBb/RsYm0=;
+	b=gcOi8AamD60gBuSLM6+XBj7cc6BNGHuWvnQ0nejzuIxbahpVhbP1ZuQex8HvkFndFkmXZR
+	hOi5o2qE1taW8LDw==
+To: Michael Kelley <mhklinux@outlook.com>, Nam Cao <namcao@linutronix.de>,
+ Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Karthikeyan Mitran
+ <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+ Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, Pali =?utf-8?Q?Roh=C3=A1r?=
+ <pali@kernel.org>, "K
+ . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
+ <jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian
+ Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
+ list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+ <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+In-Reply-To: <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Date: Thu, 03 Jul 2025 21:59:34 +0200
+Message-ID: <87cyaht595.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 03 Jul 2025 21:55:44 +0200
-Message-Id: <DB2ONAGQF92H.1ARBZW47KMVV8@kernel.org>
-Cc: <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
- <acourbot@nvidia.com>, <joelagnelf@nvidia.com>, <wedsonaf@gmail.com>
-Subject: Re: [PATCH] rust: fix outdated safety note in
- `Revocable::revoke_internal`
-From: "Benno Lossin" <lossin@kernel.org>
-To: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250703172605.28891-1-work@onurozkan.dev>
-In-Reply-To: <20250703172605.28891-1-work@onurozkan.dev>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Something went wrong with your TO addresses, merging Alex's and
-Boqun's...
-
-On Thu Jul 3, 2025 at 7:26 PM CEST, Onur =C3=96zkan wrote:
-> The code used to use `compare_exchange` in the initial version
-> but it was changed to `swap` after a reviewer suggestion (see [1]),
-> and then the safety comment was not updated and became incorrect.
+On Thu, Jul 03 2025 at 17:41, Michael Kelley wrote:
+> From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:48 AM
+>> 
+>> Move away from the legacy MSI domain setup, switch to use
+>> msi_create_parent_irq_domain().
 >
-> Link: https://lore.kernel.org/all/20241211104742.533392-1-benoit@dugarrea=
-u.fr [1]
+> From a build standpoint, this patch does not apply cleanly to
+> linux-next20250630. See also an issue below where a needed irq
+> function isn't exported.
+
+Does it conflict against the PCI tree?
+
+> At runtime, I've done basic smoke testing on an x86 VM in the Azure
+> cloud that has a Mellanox NIC VF and two NVMe devices as PCI devices.
+> So far everything looks good. But I'm still doing additional testing, and
+> I want to also test on an ARM64 VM. Please give me another day or two
+> to be completely satisfied.
+
+Sure.
+>> +static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
+>> +{
+>> +	struct msi_domain_info *info = d->host_data;
+>> +
+>> +	for (int i = 0; i < nr_irqs; i++)
+>> +		hv_msi_free(d, info, virq + i);
+>> +
+>> +	irq_domain_free_irqs_top(d, virq, nr_irqs);
 >
-> Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
-> ---
->  rust/kernel/revocable.rs | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> index 06a3cdfce344..5c0b7afa76fb 100644
-> --- a/rust/kernel/revocable.rs
-> +++ b/rust/kernel/revocable.rs
-> @@ -163,8 +163,10 @@ unsafe fn revoke_internal<const SYNC: bool>(&self) -=
-> bool {
->                  unsafe { bindings::synchronize_rcu() };
->              }
-> =20
-> -            // SAFETY: We know `self.data` is valid because only one CPU=
- can succeed the
-> -            // `compare_exchange` above that takes `is_available` from `=
-true` to `false`.
-> +            // SAFETY: We just used an atomic `swap` to check if the dat=
-a was still marked
-> +            // as available. If it returns `true`, that means we are the=
- first (and only)
-> +            // thread to see it as available and mark it as unavailable.=
- So no other thread
-> +            // can access or drop the data after this. That makes it saf=
-e to drop the data here.
+> This code can be built as a module, so irq_domain_free_irqs_top() needs to be
+> exported, which it currently is not.
 
-I think this is already addressed by this series:
+Nam, can you please create a seperate patch, which exports this and take
+care of the conflict?
 
-    https://lore.kernel.org/all/20250626165927.66498-1-marcelomoreira1905@g=
-mail.com
+Thanks,
 
----
-Cheers,
-Benno
-
->              unsafe { drop_in_place(self.data.get()) };
->          }
-> =20
-
+        tglx
