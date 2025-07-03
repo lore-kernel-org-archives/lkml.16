@@ -1,164 +1,154 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F2320EB;
-	Thu,  3 Jul 2025 15:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E557520EB;
+	Thu,  3 Jul 2025 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558231; cv=none; b=sr8xRmOVCg4s85uy14Ni3XCpKOtG+BImFjN/ymUOvBrJBplFvluINy6JxsvPg29Bm8m8QwrDpzUyiLmZIRcUvGWmfljlTazduPvACaRu9Kri05MBk6JdYz7QFlVxUiEKxg5PFGkElkX0BQXDHIdiN3YRXXuEpj7LtHzC6Zr+Jcc=
+	t=1751558257; cv=none; b=kunvf/4cK1ksSojyEokqO/nUlBouvwZsemUm2KhPbj/aD5IGbNX3L4AxMBgutbbQxDXiCLUFZjur+O3bQcvlkuhijNT5adD1VsI90Z2meM/1NOP0kb7jfrqFDRCsF6PiQI7Brywxb0O1f4hQ7iwWkHGgMhMoiZJt9Z9td98CVR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558231; c=relaxed/simple;
-	bh=/5x31bYLbnmAB83D37kcWKmGopV4qwGGMcLgHfFnwYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+XRXib5p6BOhiZcla4Mpo6AhNMf8A8gNuFvenAyVghqi84mH+CHR5zXTbVZk6U2cO1lkto68r6XFvD9bXoR161iCWQ5cgnTPk757gX33izfsYJnvQQhZHQIxIimSesmmTwLgTZyT+2dzwI8DzBCkpePpQiunxT7mOt1WqbpcZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=gr9PokIw; arc=none smtp.client-ip=93.188.205.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+	s=arc-20240116; t=1751558257; c=relaxed/simple;
+	bh=7KNpatLJFMObFQZJV07eWiGlAQkdEIknmFv/0sasSUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rc7H8vJ/1OXbv8k2wcNJ6wIWv6mUmm9wsKUeuwRRyo6dFmWIiFNeTJkJpNDWAkqJ3iMi4SPgvE1v6IOWkox3z6rTjRzZ/vq+1Giv6YV0rEPVp9NFhKJqQZySFZ6MJIQGn1kADzfoBx51DaQRfN2utTw1drxLLVxYsayC5OxVSnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyEwXIWF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="gr9PokIw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
-	s=mail; t=1751558223;
-	bh=/5x31bYLbnmAB83D37kcWKmGopV4qwGGMcLgHfFnwYY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gr9PokIw4mIydopjmsjlW9V00fNc/aOuSYdYpsM6iLdWO/JXrAyvB97mwUZP+1Uoq
-	 +a6gELptkbQ4K0U3gYkSJaYHnNc2KGpf4CIrhTDoDPiBSfMhl6kTMgrJI2OO6h98vr
-	 xB58gK0sZSTYYH+obolVodBju+V5feyUlj2AJz0ZcAuJttgTt9d6ofYSeAT1WU3YdD
-	 6dFX4DHqYhwVMNBz9KC8BNoQZlQR/1ieoMyyPmjNfdV6lNZlbUHduV1pmrzvQczTjd
-	 62C8sdytROg9EIuwQxsYteCbrFNDydAmjDWh2JUBKs4GseXbYjfNuruQ/fcp5Z4eY5
-	 pHkPfc0EyM1Ug==
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 5C9D21FA52;
-	Thu,  3 Jul 2025 18:57:03 +0300 (MSK)
-Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Thu,  3 Jul 2025 18:57:02 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.198.59.101])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bY1bv6HP3z16Hnq;
-	Thu,  3 Jul 2025 18:56:59 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	linux-bluetooth@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Yake Yang <yake.yang@mediatek.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10] Bluetooth: btmtksdio: fix use-after-free at btmtksdio_recv_event
-Date: Thu,  3 Jul 2025 18:56:56 +0300
-Message-ID: <20250703155657.32865-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyEwXIWF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506EAC4CEED;
+	Thu,  3 Jul 2025 15:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751558256;
+	bh=7KNpatLJFMObFQZJV07eWiGlAQkdEIknmFv/0sasSUc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZyEwXIWF+QinKrZrLJlRtlbUR3eLNzaWZjisFJJ/ja4v4g2bNbnjT/Y2EBTflTw0T
+	 TsNTvHRJgNAf0HX5trWB/CT62JlIaK6Gm6BCVu6dxn5X60w479agDyhen0S0ZwfoyR
+	 fraTvVeciRkchaVAT4GGCLDof5koNe5P/kEZkZHZwKiyyq7y5ZeENF+etjVlNUFpK4
+	 Vt52q2YYpK2enu9oxfc1k3AG6zuca+6TxwLAgFdB+7Ev8D9CFU5LfwmZ01/qhsIAsr
+	 DkZFyHsX7xL1TIZtOwkduma2fj/CNIpbifALL5cEoBPJS80AJMLDvRiI63cGFxANAH
+	 fH9WmbYEr3O8w==
+Date: Thu, 3 Jul 2025 17:57:31 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
+ <akiyks@gmail.com>
+Subject: Re: [PATCH 7/7] docs: kdoc: pretty up dump_enum()
+Message-ID: <20250703175731.1a4871e3@sal.lan>
+In-Reply-To: <20250701205730.146687-8-corbet@lwn.net>
+References: <20250701205730.146687-1-corbet@lwn.net>
+	<20250701205730.146687-8-corbet@lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2;new-mail.astralinux.ru:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 194547 [Jul 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 14:34:00 #27614855
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Sean Wang <sean.wang@mediatek.com>
+Em Tue,  1 Jul 2025 14:57:30 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-[ Upstream commit 0fab6361c4ba17d1b43a991bef4238a3c1754d35 ]
+> Add some comments to dump_enum to help the next person who has to figure
+> out what it is actually doing.
+> 
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> ---
+>  scripts/lib/kdoc/kdoc_parser.py | 39 +++++++++++++++++++++------------
+>  1 file changed, 25 insertions(+), 14 deletions(-)
+> 
+> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
+> index d5ef3ce87438..50e25cf62863 100644
+> --- a/scripts/lib/kdoc/kdoc_parser.py
+> +++ b/scripts/lib/kdoc/kdoc_parser.py
+> @@ -860,39 +860,48 @@ class KernelDoc:
+>          # Strip #define macros inside enums
+>          proto = KernRe(r'#\s*((define|ifdef|if)\s+|endif)[^;]*;', flags=re.S).sub('', proto)
+>  
+> -        members = None
+> -        declaration_name = None
+> -
+> +        #
+> +        # Parse out the name and members of the enum.  Typedef form first.
+> +        #
+>          r = KernRe(r'typedef\s+enum\s*\{(.*)\}\s*(\w*)\s*;')
+>          if r.search(proto):
+>              declaration_name = r.group(2)
+>              members = r.group(1).rstrip()
+> +        #
+> +        # Failing that, look for a straight enum
+> +        #
+>          else:
+>              r = KernRe(r'enum\s+(\w*)\s*\{(.*)\}')
+>              if r.match(proto):
+>                  declaration_name = r.group(1)
+>                  members = r.group(2).rstrip()
+> -
+> -        if not members:
+> -            self.emit_msg(ln, f"{proto}: error: Cannot parse enum!")
+> -            return
+> -
+> +        #
+> +        # OK, this isn't going to work.
+> +        #
+> +	    else:
+> +                self.emit_msg(ln, f"{proto}: error: Cannot parse enum!")
+> +                return
+> +        #
+> +        # Make sure we found what we were expecting.
+> +        #
+>          if self.entry.identifier != declaration_name:
+>              if self.entry.identifier == "":
+>                  self.emit_msg(ln,
+>                                f"{proto}: wrong kernel-doc identifier on prototype")
+>              else:
+>                  self.emit_msg(ln,
+> -                              f"expecting prototype for enum {self.entry.identifier}. Prototype was for enum {declaration_name} instead")
+> +                              f"expecting prototype for enum {self.entry.identifier}. "
+> +                              f"Prototype was for enum {declaration_name} instead")
 
-We should not access skb buffer data anymore after hci_recv_frame was
-called.
+Even being a big one, my personal preference would be to break the long
+string here, as keeping together is easier for grep, but yeah, I also
+considered breaking it ;-)
 
-[   39.634809] BUG: KASAN: use-after-free in btmtksdio_recv_event+0x1b0
-[   39.634855] Read of size 1 at addr ffffff80cf28a60d by task kworker
-[   39.634962] Call trace:
-[   39.634974]  dump_backtrace+0x0/0x3b8
-[   39.634999]  show_stack+0x20/0x2c
-[   39.635016]  dump_stack_lvl+0x60/0x78
-[   39.635040]  print_address_description+0x70/0x2f0
-[   39.635062]  kasan_report+0x154/0x194
-[   39.635079]  __asan_report_load1_noabort+0x44/0x50
-[   39.635099]  btmtksdio_recv_event+0x1b0/0x1c4
-[   39.635129]  btmtksdio_txrx_work+0x6cc/0xac4
-[   39.635157]  process_one_work+0x560/0xc5c
-[   39.635177]  worker_thread+0x7ec/0xcc0
-[   39.635195]  kthread+0x2d0/0x3d0
-[   39.635215]  ret_from_fork+0x10/0x20
-[   39.635247] Allocated by task 0:
-[   39.635260] (stack is not available)
-[   39.635281] Freed by task 2392:
-[   39.635295]  kasan_save_stack+0x38/0x68
-[   39.635319]  kasan_set_track+0x28/0x3c
-[   39.635338]  kasan_set_free_info+0x28/0x4c
-[   39.635357]  ____kasan_slab_free+0x104/0x150
-[   39.635374]  __kasan_slab_free+0x18/0x28
-[   39.635391]  slab_free_freelist_hook+0x114/0x248
-[   39.635410]  kfree+0xf8/0x2b4
-[   39.635427]  skb_free_head+0x58/0x98
-[   39.635447]  skb_release_data+0x2f4/0x410
-[   39.635464]  skb_release_all+0x50/0x60
-[   39.635481]  kfree_skb+0xc8/0x25c
-[   39.635498]  hci_event_packet+0x894/0xca4 [bluetooth]
-[   39.635721]  hci_rx_work+0x1c8/0x68c [bluetooth]
-[   39.635925]  process_one_work+0x560/0xc5c
-[   39.635951]  worker_thread+0x7ec/0xcc0
-[   39.635970]  kthread+0x2d0/0x3d0
-[   39.635990]  ret_from_fork+0x10/0x20
-[   39.636021] The buggy address belongs to the object at ffffff80cf28a600
-                which belongs to the cache kmalloc-512 of size 512
-[   39.636039] The buggy address is located 13 bytes inside of
-                512-byte region [ffffff80cf28a600, ffffff80cf28a800)
+>              return
+>  
+>          if not declaration_name:
+>              declaration_name = "(anonymous)"
+> -
+> +        #
+> +        # Parse out the name of each enum member, and verify that we
+> +        # have a description for it.
+> +        #
+>          member_set = set()
+> -
+> -        members = KernRe(r'\([^;]*?[\)]').sub('', members)
+> -
+> +        members = KernRe(r'\([^;)]*\)').sub('', members)
 
-Fixes: 9aebfd4a2200 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
-Co-developed-by: Yake Yang <yake.yang@mediatek.com>
-Signed-off-by: Yake Yang <yake.yang@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
----
-Backport fix for CVE-2022-49470
- drivers/bluetooth/btmtksdio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I wonder why we had this "?" there... Not sure if it has any effect on
+this particular regex. I *guess* not.
 
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index c41560be39fb..6b31ee1a1dd9 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -331,6 +331,7 @@ static int btmtksdio_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct btmtksdio_dev *bdev = hci_get_drvdata(hdev);
- 	struct hci_event_hdr *hdr = (void *)skb->data;
-+	u8 evt = hdr->evt;
- 	int err;
- 
- 	/* Fix up the vendor event id with 0xff for vendor specific instead
-@@ -355,7 +356,7 @@ static int btmtksdio_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
- 	if (err < 0)
- 		goto err_free_skb;
- 
--	if (hdr->evt == HCI_EV_VENDOR) {
-+	if (evt == HCI_EV_VENDOR) {
- 		if (test_and_clear_bit(BTMTKSDIO_TX_WAIT_VND_EVT,
- 				       &bdev->tx_state)) {
- 			/* Barrier to sync with other CPUs */
--- 
-2.43.0
+if the output is the same, I'm all for such change :-)
 
+>          for arg in members.split(','):
+>              if not arg:
+>                  continue
+> @@ -903,7 +912,9 @@ class KernelDoc:
+>                  self.emit_msg(ln,
+>                                f"Enum value '{arg}' not described in enum '{declaration_name}'")
+>              member_set.add(arg)
+> -
+> +        #
+> +        # Ensure that every described member actually exists in the enum.
+> +        #
+>          for k in self.entry.parameterdescs:
+>              if k not in member_set:
+>                  self.emit_msg(ln,
+
+Either way, with or without changes on the above nitpicks:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Regards,
+Mauro
