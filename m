@@ -1,51 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2683D2EFDB8;
-	Thu,  3 Jul 2025 17:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555D628AB1A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751563277; cv=none; b=lAWuysgeTeaEisHhPeMG2ezFZ7K7O1J3cn1LZA7MKVhPZ2CpxIlxnV5AiFTfF1W3KWmi9M5E3J9HcdPcC/wrMY8JwpYJ4KJbyvqcBB979EwGVuMbCUtb69lK2Wyi8/vhhqgJ5ldl9ZjjfsMhGMqMK2w7YgqQ/ByhyiPrgvbMEWg=
+	t=1751563330; cv=none; b=MQBmiqDivPl6+F07EqjBi5fdB9YdJ+9KqoCghyDim2JgTxSgfemKbxhJZkrDEzzQTw76Qa/kHZRpR1NhOCmdGEUBb9NbmEzAOgEmfdHApESadre6bXKQuvDt/a+CW4Ubj3lgfLIMfA+W6IsSBL8KV/2s8Wv70L9WN6c1gdGY19A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751563277; c=relaxed/simple;
-	bh=QSWSgP88K9/XOwXn+0LAYcUUYUYzmhBKlB//U0h7uNs=;
+	s=arc-20240116; t=1751563330; c=relaxed/simple;
+	bh=Qw+IYDTpeU25wnsb845P44ht13JehRjuPI0KIa8k8PQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUDJVLz0256+h/9EDeUxMaAfKM+maLpoJIJQKrwvPRa2wahrdsp7OxG73gHqdZQxHZNtTBiuXHdvAMuDR+YOjx2X6OilmUIdJDTJWxW7/vG9oxxue8mxb/8tI+Hj2rzg+l8BI+Ch1YW0ptjDLpLLSkOnMmgnSWFqZ5FtOqAjLug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmcCscFG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bP0acGEIEDxyUlUyq2g3KITUia2Y6E2npMnuXB3Fo77/KP60gtXsUl9UDOzS0hPQlemRZ29nnTVivLzWRlHJjLkhJEqV88Wf104WyKlk7OSwWaripsSCwPqylxOg8gwk8Y5G+IA1la8vLD5bfsIn0BOb+BTA+n63nHvnIZm6Dss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epzG8Wsh; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmcCscFG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D17C4CEE3;
-	Thu,  3 Jul 2025 17:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751563274;
-	bh=QSWSgP88K9/XOwXn+0LAYcUUYUYzmhBKlB//U0h7uNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cmcCscFGjUVTvi02LFPDrtB4XhBXhIkok/0xvyZvccqVpa4psFK6L82D2SPVCgnSP
-	 UdPJc3izafcoHPP8TTH5V6WG52EYUvCR88QaT+1MMONc7pcor0o4bgRAzThfxGcT3A
-	 FSH6//LbV9m6na8XsSQZmtvjnGuPaKzSj6CwIvpaGSBEcgCZghfBCKvE6zdoC33ijp
-	 +e6dPq/CnEOb4b9LRtSbwgWjcgoK7BPakxin+/56rx+M6egpBw0a2ZzCnxrZEYC0Fu
-	 J8UwCAyzEFVzEVJ1YCFwqGK2qEOpKNPFGO4KoKUFjIqjbSi/hBQ3Zxmox1SA9rQjmY
-	 RqwZKWNOvznQw==
-Date: Thu, 3 Jul 2025 10:20:32 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Joerg Schmidbauer <jschmidb@de.ibm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org,
-	Ingo Franzki <ifranzki@linux.ibm.com>
-Subject: Re: [PATCH] crypto: s390/sha - Fix uninitialized variable in SHA-1
- and SHA-2
-Message-ID: <20250703172032.GA2284@sol>
-References: <20250627185649.35321-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epzG8Wsh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751563329; x=1783099329;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qw+IYDTpeU25wnsb845P44ht13JehRjuPI0KIa8k8PQ=;
+  b=epzG8Wshflk79KSf1njXVraUkfCrtxeBKGiqqruAOag/ahLlRGSxYYF1
+   gvsoGYPUB7BuimKsi1EGpoLgHE0Hb1OI4UuqDOD6gPjd8WiN9E1o5C1yC
+   GcPyHPDJVMYHhIdEkmB3hzKuj/Xd+bYCJJEK/kfnBB567HIh1XZaogcfD
+   TkzR8n1FXv4LsXWm6rgx5avra/rBvJr8MDho0yQijv6kNyR/AujXqwb2S
+   wS1AOmrFsObxYrlSMhUGqCYCyj+6UWT2sW4Rlh4Vc2mpVxOye8zMkdUjV
+   WmtKBKFq9OwpqqP63Dt9gWAlUv9Md7rRt8WcqSh887Yscla5hzZUpNGLj
+   w==;
+X-CSE-ConnectionGUID: d1NnBG41ToG9z6aDzr5h3A==
+X-CSE-MsgGUID: yDoINrPlQ6yQ/q7Yy8MJ4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64951489"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="64951489"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 10:22:08 -0700
+X-CSE-ConnectionGUID: 3zxplcqwR4Gi+sL3lJbOrA==
+X-CSE-MsgGUID: oo8s2FnVTJuPzOxBOrRnhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="154793762"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 10:22:07 -0700
+Date: Thu, 3 Jul 2025 10:22:06 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v6 00/30] x86,fs/resctrl telemetry monitoring
+Message-ID: <aGa8Pg9pSCJ3XjtY@agluck-desk3>
+References: <20250626164941.106341-1-tony.luck@intel.com>
+ <b2de4c92-a883-40b0-92e0-16fac9e386b0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,45 +67,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627185649.35321-1-ebiggers@kernel.org>
+In-Reply-To: <b2de4c92-a883-40b0-92e0-16fac9e386b0@intel.com>
 
-On Fri, Jun 27, 2025 at 11:56:49AM -0700, Eric Biggers wrote:
-> Commit 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
-> added the field s390_sha_ctx::first_message_part and made it be used by
-> s390_sha_update_blocks().  At the time, s390_sha_update_blocks() was
-> used by all the s390 SHA-1, SHA-2, and SHA-3 algorithms.  However, only
-> the initialization functions for SHA-3 were updated, leaving SHA-1 and
-> SHA-2 using first_message_part uninitialized.
+On Thu, Jul 03, 2025 at 09:45:15AM -0700, Reinette Chatre wrote:
+> Hi Tony and Dave,
 > 
-> This could cause e.g. CPACF_KIMD_SHA_512 | CPACF_KIMD_NIP to be used
-> instead of just CPACF_KIMD_NIP.  It's unclear why this didn't cause a
-> problem earlier; this bug was found only when UBSAN detected the
-> uninitialized boolean.  Perhaps the CPU ignores CPACF_KIMD_NIP for SHA-1
-> and SHA-2.  Regardless, let's fix this.  For now just initialize to
-> false, i.e. don't try to "optimize" the SHA state initialization.
+> On 6/26/25 9:49 AM, Tony Luck wrote:
+> >  --- 14 ---
+> > Add mon_evt::is_floating_point set by resctrl file system code to limit
+> > which events architecture code can request be displayed in floating point.
+> > 
+> > Simplified the fixed-point to floating point algorithm. Reinette is
+> > correct that the additional "lshift" and "rshift" operations are not
+> > required. All that is needed is to multiply the fixed point fractional
+> > part by 10**decimal_places, add a rounding amount equivalent to a "1"
+> > in the binary place after those supplied. Finally divide by 2**binary_places
+> > (with a right shift).
+> > 
+> > Explained in commit comment how I chose the number of decimal places to
+> > use for each binary places value.
+> > 
+> > N.B. Dave Martin expressed an opinion that the kernel should not do
+> > this conversion. Instead it should enumerate the scaling factor for
+> > each event where hardware reported a fixed point value. This patch
+> > could be dropped and replaced with one to enumerate scaling factors
+> > per event if others agree with Dave.
 > 
-> Note: in 6.16, we need to patch SHA-1, SHA-384, and SHA-512.  In 6.15
-> and earlier, we'll also need to patch SHA-224 and SHA-256, as they
-> hadn't yet been librarified (which incidentally fixed this bug).
+> Could resctrl accommodate both usages? For example, it does not
+> look too invasive to add a second file <mon_evt::name>.raw for the
+> mon_evt::is_floating_point events that can output something like Dave
+> suggested in [1]:
 > 
-> Fixes: 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
-> Cc: stable@vger.kernel.org
-> Reported-by: Ingo Franzki <ifranzki@linux.ibm.com>
-> Closes: https://lore.kernel.org/r/12740696-595c-4604-873e-aefe8b405fbf@linux.ibm.com
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
+> .raw file format could be:
+> 	#format:<output that depends on format>
+> 	#fixed-point:<value>/<scaling factor>
 > 
-> This is targeting 6.16.  I'd prefer to take this through
-> libcrypto-fixes, since the librarification work is also touching this
-> area.  But let me know if there's a preference for the crypto tree or
-> the s390 tree instead.
-> 
->  arch/s390/crypto/sha1_s390.c   | 1 +
->  arch/s390/crypto/sha512_s390.c | 2 ++
->  2 files changed, 3 insertions(+)
+> Example output:
+> 	fixed-point:0x60000/0x40000
 
-I just realized this patch is incomplete: it updated s390_sha1_init(),
-sha384_init(), and sha512_init(), but not s390_sha1_import() and sha512_import()
-which need the same fix...  I'll send a v2.
+Dave: Is that what you want in the ".raw" file? An alternative would be
+to put the format information for non-integer events into an
+"info" file ("info/{RESOURCE_NAME}_MON/monfeatures.raw.formats"?)
+and just put the raw value into the ".raw" file under mon_data.
 
-- Eric
+> 
+> Reinette
+> 
+> [1] https://lore.kernel.org/lkml/aEhMWBemtev%2Ff3yf@e133380.arm.com/
+
+-Tony
