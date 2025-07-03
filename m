@@ -1,99 +1,132 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34647298CB6;
-	Thu,  3 Jul 2025 20:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF9021ADB5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751575810; cv=none; b=YuWCx821D4jc9/uPcaI0Kj1PP5O2Vs8UG5fLCPE8CTW8oVGadexo6RePvVzPcLmeoRc3i2DXtUTlQgfVZ4aIhxNEKv6oHsIcbugx88CQC+/WuSbVOXBmgtCPHJGOjpYDGF2MbaVm93pwk50f5r9OYvXSrByTvGocNSY2e/7aQDQ=
+	t=1751576019; cv=none; b=DlZI30VIBrpEUh20fy4KxEp38OZvKxUQBcPMZMU/lQRLHFwShLPaoypGf8heENApxtu2T8jKkKjZ4+WixdlGOsqsDCpIu1eVZ31d9MOTydkRPGjBLKckN9Ey+q1ZOtGmakJsG5RLVhYIbYTUU56VofEHBCgl+3dAfnCcExUz5vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751575810; c=relaxed/simple;
-	bh=4o9iyxz5qR0fTPYep1v4H9rotKmvSnUzoM9c/reZWbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ANkbKj+4fm2jB//wBPuH0Bl74rp/Ct5YnpsrrSQsG+IAM8M0ojm+aHaQjggBXaHeLIc36v8D040a/bmwWAjH4Jy8+9aQmD81SiUiGC1YIE2lh+1iQWsQkL/PcK1xy3QyzhwArqSrvhiW5NcFf/TU3ulWzErWvRN1Lt2lqnADIbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4Qr61vG/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751576019; c=relaxed/simple;
+	bh=MzhB8SgpO91E94cGPaUZXDiJCZRh8U3Yn6qnM9Wvq5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i0wz7vVm2djGSxdprH1VJ1YCvXX3Wd2TDs4r3ETEfBDE5RrT+GObng0QYQHewxHbRYr+cFUF8yUSbtOs9W/l8VV1YB8e9pwrpyM+fbJ1hJlImCSfLRAJLfKXiG9NI+fWY3Y2vauzx1d2xiSQPGS7ssqql/O7JY+H9/5mVI3Ft0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nnxA36hi; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4Qr61vG/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=nqaZgCdbl/q/xizW75aQsdYUUQjV4Mg7xA5lLYJ8o6c=; b=4Qr61vG/g+shXKVtMgfiuyOAeN
-	HAaMOXpezrWOqHeyHZ7vZehfCbHLSez/OJkQ4dP7iYnkWcD7ZW34i3GRl3/e3xdA9QbJGLVSk/VLu
-	Fxn2s+Ss6PCeSASugY0GR5rYr+5wnKWhVjvo8jimDuCZsblizkc8ijZFKzrAWEJf0L/Y=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXQsY-0008IF-Vp; Thu, 03 Jul 2025 22:49:58 +0200
-Date: Thu, 3 Jul 2025 22:49:58 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Asmaa Mnebhi <asmaa@nvidia.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	David Thompson <davthompson@nvidia.com>
-Subject: Re: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
- degradation bug
-Message-ID: <3251e228-8ca5-4e33-be90-5e262c47722e@lunn.ch>
-References: <20241122224829.457786-1-asmaa@nvidia.com>
- <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
- <CH3PR12MB7738C758D2A87A9263414AFBD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
- <6e3435a0-b04e-44cc-9e9d-981a8e9c3165@lunn.ch>
- <CH3PR12MB7738C25C6403C3C29538DA4BD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
- <CH3PR12MB773870BA2AA47223FF9A72D7D745A@CH3PR12MB7738.namprd12.prod.outlook.com>
- <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
- <CH3PR12MB7738E1776CD326A2566254D5D740A@CH3PR12MB7738.namprd12.prod.outlook.com>
- <c6f5da79-df83-4fad-9bfc-6fd45940d10f@lunn.ch>
- <CH3PR12MB7738A206A5EFCD81318DC463D743A@CH3PR12MB7738.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nnxA36hi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751576015;
+	bh=MzhB8SgpO91E94cGPaUZXDiJCZRh8U3Yn6qnM9Wvq5g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nnxA36hiHrNJo1j5cIfU+mxZubuP2518ohigVkwP/vIK2h5cQwSz3li5FcgJnehOT
+	 DKvz+GrrfuNAuYfD6NQNSRPX6VknUlwFyTATwe8wlrPwwWuypzwShCAXvwqlyYA0w4
+	 NtWRd6klBn7AS/W0u0MeDVmPV9q6NnS6QBJxwO2wS4N7jWACA5KsuA/WO3BNsVZBSE
+	 EskIiDwcptrrfUuWOeMc1fTf0vSLxXtp6/JH2eLo0kKvdUwQSXWpMk8Q7jA/YMPkNf
+	 RtsyvvG7h5emqXZffvMwroQi5Yhs1s9+CDUZm4tN8vIaAW7/XYJCqivJEI13I0VH4e
+	 rQgFrzmCt7SXw==
+Received: from debian-rockchip-rock5b-rk3588.. (unknown [90.168.160.154])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nanokatze)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B028117E0B1E;
+	Thu,  3 Jul 2025 22:53:33 +0200 (CEST)
+From: Caterina Shablia <caterina.shablia@collabora.com>
+To: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+	"Maxime Ripard" <mripard@kernel.org>,
+	"Thomas Zimmermann" <tzimmermann@suse.de>,
+	"David Airlie" <airlied@gmail.com>,
+	"Simona Vetter" <simona@ffwll.ch>,
+	"Frank Binns" <frank.binns@imgtec.com>,
+	"Matt Coster" <matt.coster@imgtec.com>,
+	"Karol Herbst" <kherbst@redhat.com>,
+	"Lyude Paul" <lyude@redhat.com>,
+	"Danilo Krummrich" <dakr@kernel.org>,
+	"Boris Brezillon" <boris.brezillon@collabora.com>,
+	"Steven Price" <steven.price@arm.com>,
+	"Liviu Dudau" <liviu.dudau@arm.com>,
+	"Lucas De Marchi" <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Rodrigo Vivi" <rodrigo.vivi@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	nouveau@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	Asahi Lina <lina@asahilina.net>,
+	Caterina Shablia <caterina.shablia@collabora.com>
+Subject: [PATCH v3 0/7] drm/panthor: support repeated mappings
+Date: Thu,  3 Jul 2025 20:52:52 +0000
+Message-ID: <20250703205308.19419-1-caterina.shablia@collabora.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH3PR12MB7738A206A5EFCD81318DC463D743A@CH3PR12MB7738.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 06:51:52PM +0000, Asmaa Mnebhi wrote:
->  > > > You need to put the MDIO bus device into its own pm_domain. Try
-> > > > calling dev_pm_domain_set() to separate the MDIO bus from the MAC
-> > > > driver in terms of power domains. ethtool will then power on/off the
-> > > > MAC but leave the MDIO bus alone.
-> > > >
-> > 
-> > > Using dev_pm_domain_set() has the same effect as
-> > SET_RUNTIME_PM_OPS. The dev struct is shared so ethtool is still calling the
-> > suspend/resume.
-> > >
-> > > int mlxbf_gige_mdio_probe(struct platform_device *pdev, struct
-> > > mlxbf_gige *priv)  {
-> > >         struct device *dev = &pdev->dev; @@ -390,14 +418,27 @@ int
-> > > mlxbf_gige_mdio_probe(struct platform_device *pdev, struct mlxbf_gige
-> > *priv)
-> > >         snprintf(priv->mdiobus->id, MII_BUS_ID_SIZE, "%s",
-> > >                  dev_name(dev));
-> > >
-> > > +       pm_runtime_set_autosuspend_delay(priv->mdiobus->parent, 100);
-> > > +       pm_runtime_use_autosuspend(priv->mdiobus->parent);
-> > 
-> > Why parent?
-> 
-> That was just an experiment. I tried priv->dev, same result but I guess that is expected because it is the MAC dev. priv->mdiobus->dev is only set in mdiobus_register which:
-> - sets dev struct and calls device_register
-> - device_register calls device_pm_init and device_add
-> - device_add calls device_pm_add
-> - device_pm_check_callbacks sets dev->power.no_pm_callbacks based on if pm_domain/pm_ops were defined or not.
-> 
-> So I have to call dev_pm_domain_set before mdiobus_register for it to be registered properly. But then, priv->mdiobus->dev is not set up yet so we cannot call dev_pm_domain_set.
+This patch series adds OP_MAP_REPEAT flag, which lets the user map a BO
+region over an address range repeatedly with just one map operation.
 
-You are the first needing this, so i'm not surprised. Please look at
-how priv->mdiobus->dev can be made to work. Maybe the
-device_register() needs moving into mdiobus_alloc_size()?
+Sparse resources in the Vulkan API let the user leave regions of a
+resource unmapped (from the API perspective.) Accesses to such regions
+must not result in program termination, but loads produce undefined
+values.
 
-	Andrew
+To implement this feature on Mali hardware, Vulkan sparse unmap is
+implemented by mapping the specified region to a "dummy bo" so that the
+accesses do not fault. A newly created sparse resource starts off
+unmapped, and therefore also has to be mapped to the "dummy bo".  This
+"dummy bo" is small (a page size) in comparison to the sizes of va
+ranges that we might want to map to it, and a large number of vm_bind
+ops can be necessary. For example, if the user were to create a
+100e6-byte sparse resident resource, we'd have to poke VM_BIND with
+ceil(100e6/0x1000)=24415 map operations.
+
+OP_MAP_REPEAT addresses this particular inefficiency by letting us
+implement a single Vulkan sparse unmap operation and sparse resident
+resource initialization with just one map operation.
+
+The panvk changes making use of this uapi can be found at
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/35287
+
+No changes in v3.
+
+Changes in v2:
+- Make panthor use this stuff.
+- Make it possible to express a repeated mappina of any suitably sized
+  and aligned range of a BO, rather than strictly the page size -sized
+  prefix, generalizing the API. Rename DRM_GPUVA_SINGLE_PAGE to
+  DRM_GPUVA_REPEAT.
+- Clean up parts of drm/gpuvm affected by these changes.
+
+Link to v1: https://lore.kernel.org/lkml/20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net/
+
+Asahi Lina (2):
+  drm/gpuvm: Add a flags field to drm_gpuvm_map_req/drm_gpuva_op_map
+  drm/gpuvm: Add DRM_GPUVA_REPEAT flag and logic
+
+Boris Brezillon (5):
+  drm/panthor: Add support for atomic page table updates
+  drm/gpuvm: Kill drm_gpuva_init()
+  drm/gpuvm: Pass map arguments through a struct
+  drm/gpuvm: Add a helper to check if two VA can be merged
+  drm/panthor: Add support for repeated mappings
+
+ drivers/gpu/drm/drm_gpuvm.c            | 182 ++++++++++++++++++-------
+ drivers/gpu/drm/imagination/pvr_vm.c   |  15 +-
+ drivers/gpu/drm/nouveau/nouveau_uvmm.c |  11 +-
+ drivers/gpu/drm/panthor/panthor_drv.c  |   3 +-
+ drivers/gpu/drm/panthor/panthor_mmu.c  | 154 +++++++++++++++++++--
+ drivers/gpu/drm/xe/xe_vm.c             |  13 +-
+ include/drm/drm_gpuvm.h                | 101 +++++++++++---
+ include/uapi/drm/panthor_drm.h         |  23 ++++
+ 8 files changed, 408 insertions(+), 94 deletions(-)
+
+
+base-commit: 026a60e3c1c55845bd9fdaa202dad81c3f95ae6b
+-- 
+2.47.2
+
