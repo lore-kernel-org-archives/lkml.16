@@ -1,59 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0A81F76A5;
-	Thu,  3 Jul 2025 13:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B085081E;
+	Thu,  3 Jul 2025 13:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548501; cv=none; b=qjoHPmU7FCGG7yvlVkwE4pp/cu761Itt0tlKB/TbAmtrYrE2iHXgSSjFnnVAGxi18gnr6PLK23qpt7EDhFxsNhZSR3mMyEeseMe9WT4lDcWecvSCUtFgFG9wAdQiqSgpDvGMcM84Rlu+nLuKH1sJ53yr/fXMB+H+pRFFRc1Z/vQ=
+	t=1751548588; cv=none; b=UhKCLHta/OyKuZ7wJAQKCOknlyx/oX5BXlCweB6JBxd/23WytsQ3HLg9XorA3lmrc1lkfSz6HBsBlCvin8c8eYX5wjB6wVwz07cXV/lb5Lynv1+T10Cw0UJZB+rBtNc+u9zp5MtzkDvaAdvun9J8K4rWpcCoLxSOYKxTj36ky7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548501; c=relaxed/simple;
-	bh=x6rhCvsaJ/VXQv2sLssQ3HLVw0d6XihLUY4zvLhajbE=;
+	s=arc-20240116; t=1751548588; c=relaxed/simple;
+	bh=XytcD+vaZ9RJo/DfZdRUZv3WXvu5odrf278v+i2KoHs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTS79cxD595cyIJCV4aiEif2dYrcQ7RpfYriLa38KDvKUuqkT9NynJ+UbdW629WWnEZ64eB7w4J3ILqSPYHmEFQeZEJLSbL226NKBOQT8GDGEIPjN/zf+aAPrRGzR4Yf1lmwI53IaNtkQvpqKu3IQ+vA6RkusYKAOOeDvRlMuW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=A5NsHkt/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qGqGxj6FtiKmY+KvHelXHm56bI7SNcnhf78OerzFKk1s6tLuIQo/IJnsLeqgCYxEVKuYvgaWre6TxwgxIUGIuod1T/odM5uAdfrTsPOfwto47b5ambqhvgxY2VWtvkq562bEPwEU/s3GlUwy++em3YJKFAFOCtKZlGxFYKE2Rwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SLmp6xJ/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mAocVhQk; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A5NsHkt/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FFEC4CEED;
-	Thu,  3 Jul 2025 13:14:58 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A5NsHkt/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1751548496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xkiEb1x5aeo2U5t7p61ZjNQh1p++o+M4e3PN96IzcNk=;
-	b=A5NsHkt/twS0bSDj/dJyaVEYb0DcjCIKrsfieIG5usjSVyLy5UjwXc9Fmro5QFrNm4+oN4
-	zntJYgFFrWmxhGHjKr9bh3rpoCZZEUGfgjRACZntqAV8ad3nPAPoEq+xVC9ViWH+oGBfAo
-	fi7x52XGQtuUYW396Ey2rPe2bCT2vII=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 91f8f88e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 3 Jul 2025 13:14:56 +0000 (UTC)
-Date: Thu, 3 Jul 2025 15:14:52 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Gu Bowen <gubowen5@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Lu Jialin <lujialin4@huawei.com>,
-	GONG Ruiqi <gongruiqi1@huawei.com>
-Subject: Re: [PATCH RFC 0/4] Reintroduce the sm2 algorithm
-Message-ID: <aGaCTOJ30KNPOBIC@zx2c4.com>
-References: <20250630133934.766646-1-gubowen5@huawei.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SLmp6xJ/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mAocVhQk"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 8AE197A0178;
+	Thu,  3 Jul 2025 09:16:24 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Thu, 03 Jul 2025 09:16:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751548584;
+	 x=1751634984; bh=BOGBp2DJegAx2Lc/mJxCM1Eut5ojkmLVEQeycC/XxH8=; b=
+	SLmp6xJ/tPVDiaA5ooFReHwnYWyXCGOD4CZUs39MpuykhRPXb6lLCTjLst84fo3N
+	/SSInCJYaDIYO/RURtuLkeXgWLeSHO+dn2/ffU/Kw0FnAh3MSH5sD+y2lYkr/hMz
+	zoBUq4prc7TwrFLi+GNYevzXEOODe9E1rL0RqqJJxljAVb/35dH2/3l70tpYsbu7
+	RMpnKOJ6l6SPvA4GUtxTLA+1PNFUcKPzo7jejiXoh/JOjQRmrKbUVN5A44pvhAzu
+	E4Jsf2hDknzw+S2Jf6uj1TVGyKa4RvhPmlin0VfjwyhfajrHL/3EEdsvAhpShhnx
+	RvT24+LCYVvhzB0cmjekFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751548584; x=
+	1751634984; bh=BOGBp2DJegAx2Lc/mJxCM1Eut5ojkmLVEQeycC/XxH8=; b=m
+	AocVhQkiUtqa5yHFhPYWsVRPfvekoRGfnPsytzCArFklpslMni53h1K3wmbtiDjS
+	BL/eCFE3mrMSKjXGDXhCRbKY16Z0qHx79VfktuC78ThTnp4bVCLr+2JeTzYEdoAc
+	VQ9iVtQx0jK2LCVEhfvWoYRyvAZ8bwd5Ut1HmaXUBa32ABE6HRmwseF++LiwzYkP
+	0Z/WY1GDWhUOSlevdhgAtlm2AGN5UYZwZV9iqyrUN1YBEj+TasnuE5Gy++Amc7tp
+	D+E3wOzZiy43byEphB7nhidxgTIfK6g1jmjtcUOL/b+PYM63f671xYznlKlas6c2
+	QZL/V+k+YKgJnvVNelCow==
+X-ME-Sender: <xms:qIJmaDSSR9LmqGPrfgfcIgZcBZyxFfepZ-IzPs6NraVsd4o8I8SFew>
+    <xme:qIJmaEwUuv2le5Y5qsy2Gm3tY9qQ3ssZGHITqmaKuRZHfp_4OPNJlR6ulpguLCHyA
+    ng7nCFo5X9TzmBkY4M>
+X-ME-Received: <xmr:qIJmaI1E58ujjTX93pRqPB3OdeW4PqZJkIbb2uASVLxSsJ5BzgwYB4dYZRTMJKkUVC2HT9f9iVM0PrvoI3z68n5xEh85B1PJRQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghs
+    ucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
+    gvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveetgedtvddvhfdtkeeghfeffeehteeh
+    keekgeefjeduieduueelgedtheekkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgr
+    thgvtghhrdhsvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehhrghogihirghnghgplhhivddtvdegseduieefrdgtohhmpdhrtghpthht
+    oheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvg
+    hmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrihgthhgrrhgu
+    tghotghhrhgrnhesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhs
+    ohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:qIJmaDBK7lUQ_By2uIWr5UtX3THEi_zbpdfh0jnjzMPqeeEcEYGdHA>
+    <xmx:qIJmaMh6oO0szYF9TLacp2BMO92KUT0ng5h6VGVfPbYDgLYxpp3GKw>
+    <xmx:qIJmaHqT6nzcM3yrTMSThzH2xayrXDB_iQCIg5xNGVtIRBV4fWJBsg>
+    <xmx:qIJmaHj4dSMI9mfPDKPd-6p3ceeUgTkvQqVjJLZ6750y6jQGO9yKeA>
+    <xmx:qIJmaFEGiyLTcw_JceSAG82Ik7gWYRB-XbAOxd5rALA0GyBPYHsmC1Vd>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Jul 2025 09:16:23 -0400 (EDT)
+Date: Thu, 3 Jul 2025 15:16:21 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, richardcochran@gmail.com,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] net: ethernet: rtsn: Fix a null pointer dereference
+ in rtsn_probe()
+Message-ID: <20250703131621.GB3900914@ragnatech.se>
+References: <20250703100109.2541018-1-haoxiang_li2024@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,59 +94,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250630133934.766646-1-gubowen5@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250703100109.2541018-1-haoxiang_li2024@163.com>
 
-Hi,
+Hi Haoxiang,
 
-On Mon, Jun 30, 2025 at 09:39:30PM +0800, Gu Bowen wrote:
-> To reintroduce the sm2 algorithm, the patch set did the following:
->  - Reintroduce the mpi library based on libgcrypt.
->  - Reintroduce ec implementation to MPI library.
->  - Rework sm2 algorithm.
->  - Support verification of X.509 certificates.
+Thanks for your work.
+
+On 2025-07-03 18:01:09 +0800, Haoxiang Li wrote:
+> Add check for the return value of rcar_gen4_ptp_alloc()
+> to prevent potential null pointer dereference.
 > 
-> Gu Bowen (4):
->   Revert "Revert "lib/mpi: Extend the MPI library""
->   Revert "Revert "lib/mpi: Introduce ec implementation to MPI library""
->   crypto/sm2: Rework sm2 alg with sig_alg backend
->   crypto/sm2: support SM2-with-SM3 verification of X.509 certificates
+> Fixes: b0d3969d2b4d ("net: ethernet: rtsn: Add support for Renesas Ethernet-TSN")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 
-I am less than enthusiastic about this. Firstly, I'm kind of biased
-against the whole "national flag algorithms" thing. But I don't know how
-much weight that argument will have here. More importantly, however,
-implementing this atop MPI sounds very bad. The more MPI we can get rid
-of, the better.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-Is MPI constant time? Usually the good way to implement EC algorithms
-like this is to very carefully work out constant time (and fast!) field
-arithmetic routines, verify their correctness, and then implement your
-ECC atop that. At this point, there's *lots* of work out there on doing
-fast verified ECC and a bunch of different frameworks for producing good
-implementations. There are also other implementations out there you
-could look at that people have presumably studied a lot. This is old
-news. (In 3 minutes of scrolling around, I noticed that
-count_leading_zeros() on a value is used as a loop index, for example.
-Maybe fine, maybe not, I dunno; this stuff requires analysis.)
+> ---
+> Changes in v2:
+> - Add a blank line to make the grouping similar to the
+> style of other error checks in probe. Thanks, Niklas!
+> ---
+>  drivers/net/ethernet/renesas/rtsn.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/renesas/rtsn.c b/drivers/net/ethernet/renesas/rtsn.c
+> index 6b3f7fca8d15..05c4b6c8c9c3 100644
+> --- a/drivers/net/ethernet/renesas/rtsn.c
+> +++ b/drivers/net/ethernet/renesas/rtsn.c
+> @@ -1259,7 +1259,12 @@ static int rtsn_probe(struct platform_device *pdev)
+>  	priv = netdev_priv(ndev);
+>  	priv->pdev = pdev;
+>  	priv->ndev = ndev;
+> +
+>  	priv->ptp_priv = rcar_gen4_ptp_alloc(pdev);
+> +	if (!priv->ptp_priv) {
+> +		ret = -ENOMEM;
+> +		goto error_free;
+> +	}
+>  
+>  	spin_lock_init(&priv->lock);
+>  	platform_set_drvdata(pdev, priv);
+> -- 
+> 2.25.1
+> 
 
-On the other hand, maybe you don't care because you only implement
-verification, not signing, so all info is public? If so, the fact that
-you don't care about CT should probably be made pretty visible. But
-either way, you should still be concerned with having an actually good &
-correct implementation of which you feel strongly about the correctness.
-
-Secondly, the MPI stuff you're proposing here adds a 25519 and 448
-implementation, and support for weierstrauss, montgomery, and edwards,
-and... surely you don't need all of this for SM-2. Why add all this
-unused code? Presumably because you don't really understand or "own" all
-of the code that you're proposing to add. And that gives me a lot of
-hesitation, because somebody is going to have to maintain this, and if
-the person sending patches with it isn't fully on top of it, we're not
-off to a good start.
-
-Lastly, just to nip in the bud the argument, "but weierstrauss is all
-the same, so why not just have one library to do all possible
-weierstrauss curves?" -- the fact that this series reintroduces the
-removed "generic EC library" indicates there's actually not another user
-of it, even before we get into questions of whether it's a good idea.
-
-Jason
+-- 
+Kind Regards,
+Niklas Söderlund
