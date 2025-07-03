@@ -1,76 +1,131 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BA32F2E;
-	Thu,  3 Jul 2025 15:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CEA222561;
+	Thu,  3 Jul 2025 15:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751557671; cv=none; b=cHMmGEbmFT0/aDUkHFJGW20bQFIPRCPmQHO0zxSbGawa5MpBtr7Az+SbLbaiwPmjuBPie4+Ek4GZZxlpMBkQSCH0eXCRroqd3JM/nCd9lgcRxRDw7mQpdYiNjKxelJgB/+xFKGg/p+H3gzPoZjAyqRFCLBtzyef4dffHfHtLsJo=
+	t=1751557711; cv=none; b=PxljARkuNUk5NXuL5PA8ajcPc1gkBwudsQmRVXT+f70k0BjlTAeI1vq1e7GSCtdX0utrhto0fBm3+fBQyNfIogy3ZGMPYiLN42SnrGJKtewF3o9zy/oGeFERFQbM376JRhUUF+aVAQGr7nA8uk85/zCdrZncOSepnBo4FE3/O9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751557671; c=relaxed/simple;
-	bh=RkiQbv6jcjROw1Dp0k32vk+7Ay6/ZtjNUJJxbO9e8lY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nz+4bTmGnnPkluF2T4WgSqIFunl2YacvmSBzmh15zHOyqBSWXvy+4uqJV3VGpVGZOOHhjGKe2vpWyy941mCzKsaQqKzmsUCPhrOy+8VM1sMHTPKNr1VdLsz6s58tvTnu5gTiH3xSX8tFxmF6sSNTRngXFL/ESwNhuMyY5Y90s+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bY1N8715Vz6M4lV;
-	Thu,  3 Jul 2025 23:46:48 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 43813140447;
-	Thu,  3 Jul 2025 23:47:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Jul
- 2025 17:47:45 +0200
-Date: Thu, 3 Jul 2025 16:47:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v7 00/31] Arm GICv5: Host driver implementation
-Message-ID: <20250703164743.00004f3e@huawei.com>
-In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751557711; c=relaxed/simple;
+	bh=YUlTJubogaVf8vWj1k/2MOXltbdxw8OZ6jbDvUZH18w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hzba12wo+yx4BSp4ddJ3wfaFSajLBz6TuzYQH055cL+OqY7dQ3Ymi6yRzAnw4+3WZRlX47HhsmxF3wc4COyf/Yicr8tU9u+t7u3zzeAbVJKQNNjapAOhBzlS1T0ygn4Nhx0VMjixbIK1IQPxwFUkswjfUs3MVTilgk4aEIRE2cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qU15Kbaj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qU15Kbaj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F511C4CEE3;
+	Thu,  3 Jul 2025 15:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751557710;
+	bh=YUlTJubogaVf8vWj1k/2MOXltbdxw8OZ6jbDvUZH18w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qU15KbajMFLSqQVlloVOL5FLJHO/bXA5Ov0oN/Go7Z4/X/NBfzcZ2QBl30D2Qlmk0
+	 sK5vu3Hod31ReB7adwpJgFQMsBgigAuXQkAuibQpX8ETTFhzKsEdp2C8brdzTyPuTU
+	 M+QE201pkGGtYgqjHkAy/qeByMvIs1XxlfzefT46yCPNN0GxaXEHC7RF3znz8FmdY0
+	 2wS2VArRIX6t2IO3IgzMhGD1915VAQs7qByAUoqgsw6g8sbxcPSV8nGOlTdb44evsq
+	 OvPdcLRlTH4x25E6nF8FcilhxwOG6IohKVFBWpJeImmSBGQH88Rx1aHgDq9BDpmOoq
+	 NvGPptewnrnaQ==
+Date: Thu, 3 Jul 2025 17:48:24 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
+ <akiyks@gmail.com>
+Subject: Re: [PATCH 5/7] docs: kdoc: some tweaks to process_proto_function()
+Message-ID: <20250703174824.5dcb22f0@sal.lan>
+In-Reply-To: <20250701205730.146687-6-corbet@lwn.net>
+References: <20250701205730.146687-1-corbet@lwn.net>
+	<20250701205730.146687-6-corbet@lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
+Em Tue,  1 Jul 2025 14:57:28 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Add a set of comments to process_proto_function and reorganize the logic
+> slightly; no functional change.
+> 
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+
+LGTM.
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 > ---
-> Changes in v7:
-> - Added CDDI/CDDIS/CDEN FIELD_PREP(hwirqid) for instruction preparation
-> - Fixed IST/DT/ITT L2 size selection logic for 64K PAGE_SIZE
-
-Hi Lorenzo,
-
-I took another look, particularly focused on this aspect and it all looks good to
-me.  Thanks for making these last minute changes.
-
-No more RBs from me but that is just down to my lack of confidence that I know my way
-around the spec well enough. It's not anything to do with the content of your series!
-
-Thanks
-
-Jonathan
-
-
-> - Reordered some ITS error paths according to review
-> - Link to v6: https://lore.kernel.org/r/20250626-gicv5-host-v6-0-48e046af4642@kernel.org
+>  scripts/lib/kdoc/kdoc_parser.py | 43 ++++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 19 deletions(-)
+> 
+> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
+> index 61da297df623..d5ef3ce87438 100644
+> --- a/scripts/lib/kdoc/kdoc_parser.py
+> +++ b/scripts/lib/kdoc/kdoc_parser.py
+> @@ -1553,39 +1553,44 @@ class KernelDoc:
+>          """Ancillary routine to process a function prototype"""
+>  
+>          # strip C99-style comments to end of line
+> -        r = KernRe(r"\/\/.*$", re.S)
+> -        line = r.sub('', line)
+> -
+> +        line = KernRe(r"\/\/.*$", re.S).sub('', line)
+> +        #
+> +        # Soak up the line's worth of prototype text, stopping at { or ; if present.
+> +        #
+>          if KernRe(r'\s*#\s*define').match(line):
+>              self.entry.prototype = line
+> -        elif line.startswith('#'):
+> -            # Strip other macros like #ifdef/#ifndef/#endif/...
+> -            pass
+> -        else:
+> +        elif not line.startswith('#'):   # skip other preprocessor stuff
+>              r = KernRe(r'([^\{]*)')
+>              if r.match(line):
+>                  self.entry.prototype += r.group(1) + " "
+> -
+> +        #
+> +        # If we now have the whole prototype, clean it up and declare victory.
+> +        #
+>          if '{' in line or ';' in line or KernRe(r'\s*#\s*define').match(line):
+>              # strip comments and surrounding spaces
+> -            r = KernRe(r'/\*.*\*/')
+> -            self.entry.prototype = r.sub('', self.entry.prototype).strip()
+> -
+> +            self.entry.prototype = KernRe(r'/\*.*\*/').sub('', self.entry.prototype).strip()
+> +            #
+>              # Handle self.entry.prototypes for function pointers like:
+>              #       int (*pcs_config)(struct foo)
+> -
+> +            # by turning it into
+> +            #	    int pcs_config(struct foo)
+> +            #
+>              r = KernRe(r'^(\S+\s+)\(\s*\*(\S+)\)')
+>              self.entry.prototype = r.sub(r'\1\2', self.entry.prototype)
+> -
+> +            #
+> +            # Handle special declaration syntaxes
+> +            #
+>              if 'SYSCALL_DEFINE' in self.entry.prototype:
+>                  self.entry.prototype = self.syscall_munge(ln,
+>                                                            self.entry.prototype)
+> -
+> -            r = KernRe(r'TRACE_EVENT|DEFINE_EVENT|DEFINE_SINGLE_EVENT')
+> -            if r.search(self.entry.prototype):
+> -                self.entry.prototype = self.tracepoint_munge(ln,
+> -                                                             self.entry.prototype)
+> -
+> +            else:
+> +                r = KernRe(r'TRACE_EVENT|DEFINE_EVENT|DEFINE_SINGLE_EVENT')
+> +                if r.search(self.entry.prototype):
+> +                    self.entry.prototype = self.tracepoint_munge(ln,
+> +                                                                 self.entry.prototype)
+> +            #
+> +            # ... and we're done
+> +            #
+>              self.dump_function(ln, self.entry.prototype)
+>              self.reset_state(ln)
+>  
