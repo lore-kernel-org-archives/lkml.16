@@ -1,76 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769DD214A7B;
-	Thu,  3 Jul 2025 01:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66F017C208
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 01:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507387; cv=none; b=apFMHeTJyaCwfl6reQMkUmMe0VMaw8wR1ydoRWg8X5+iFSYYyQ4Em7OyvVEu/QhAa58Ut4/lPP25JNimvryX/5a/1GO6wDkZ1JLeEdpnosLI5sznRTPGuo2x7oKL9VSwCTku/eEfGvhGz05W64FLbUQe9+huqhADJuYEpbbkeDo=
+	t=1751507440; cv=none; b=devZrXpN/B5R8VxdEwA/RrCpYE0OpLIQMiGTP44cNWmb/wKG+LGGq009JCuSI0IgFAQ6jOeH4Uno+0S6eYgmgB7D+ANrRz5HnQorqrRHfpsT6nQbPR4G4wHmVYpPDVgLNisVGxh0zuq4DWfq/MndP9GcQJBjhvSC6WYmcL4Wnng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507387; c=relaxed/simple;
-	bh=qV50sNpmeQ+z4VHzK7ckgYbxgB6pDIXg/c1TlYYcuLw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Au6Pdr2aH8vHy/Ac/puVWGITVqXQoAgHyZz3mNL8iax7HVAkELuvb0d4Sw6KomxQJ9V3BlWsGSVNzdzwl0mXMyz3PgYA8X6n0YT0j8LdFWCwz2rTVerUz5Zxve2QUbaQRAdWUEvdNlKU1AoQpgz5+sEyzWyx5Qt8knFe1mVuldM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcQv0sHT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751507440; c=relaxed/simple;
+	bh=uU5CNAmJ7OpvToYcOnn9d4jA3wBsGzcqaarRtjLrDTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Out08Z1JxZH6mQXF7WZdtd1vDXaV9ZPTpVuImkw1TkezgW+RIUHUPYg5UXTp/EKkJqJWgdFcjkfZczp1taxzSSeE4QY0VzCKfpTbM4rQKWZRTXOFV1BS3wUoav//D1BWgTc/runSbsFEeHHOCOqsiJ2h7PADFOunQvLZp8CAG5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=CJHJ+GJm; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcQv0sHT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3EBC4CEF0;
-	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751507386;
-	bh=qV50sNpmeQ+z4VHzK7ckgYbxgB6pDIXg/c1TlYYcuLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jcQv0sHTsdAz3whlyscoDezIa+gypvgDAxztngAUEdKWHhdk6kzq/Hqs2UNWlJC95
-	 eGlEPBU6imwAhOW8/cs6KyK6Yd1EpM0BiU2FYfxD8/psRSLtun+cR9DG4sLzIzaaoO
-	 tiEnbds8Nmz2qU/Afp8p6vmFyghKhYYUjLLdUXWDJhfLjkT08/T7VPVIXaZ87KAMqI
-	 KhXEGS6khkAWSFbABw0PcQPR+tpRIrtsNYDFPU4MB67tbnBx1C6sZPuTgULR6pzjPQ
-	 f0On84tKwFe7accZ64iluR9JTli3RwnbZmfzjYepge7aW/Sos4bju6Zz7ZgoWvnA24
-	 DFSNuLZ1SznDw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/8] perf sched: Use RC_CHK_EQUAL() to compare pointers
-Date: Wed,  2 Jul 2025 18:49:40 -0700
-Message-ID: <20250703014942.1369397-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
-References: <20250703014942.1369397-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="CJHJ+GJm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qF1BJOkB08ifdMBhZHOeavutsh91VXITQ7EETILhaDc=; b=CJHJ+GJmnO5kkJ9a3BKgnPbOPH
+	42I7Z99Jk9Y7ZXsBoxzRhrPKi3Gm2Y6fmMmJkVto9iGUc5QENd5V0+P4jVEfw6oYsPLpec+cqpx5Q
+	T5Zl1SPjfz/VPWL1DOxZ5D2RqSXk067MoAlTPDBSxpyzr+RSUBIu9vPcMKpwaS34xzDnOLQrqNONw
+	JovLJkyU6G+PVqcrFiR5g7W70y6dILhwwlemPP8Zyzw//sthEpsHvw80gTi1ctr3eh4iwwoOssZbI
+	ktUU7h/6BrNyKy1z3+K7U75DYcYmSbK8obX75mH56EK7SG7umMohkza4xppCPZxOsYxzyeQqpxFEv
+	BvhywnvQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uX95t-0000000GExH-19bq;
+	Thu, 03 Jul 2025 01:50:33 +0000
+Date: Thu, 3 Jul 2025 02:50:33 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com
+Subject: Re: [syzbot] Re: [syzbot] [nfs?] [net?] possible deadlock in
+ rpc_close_pipes
+Message-ID: <20250703015033.GH1880847@ZenIV>
+References: <68656f4c.a70a0220.2b31f5.0000.GAE@google.com>
+ <6865da26.a70a0220.2b31f5.0009.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6865da26.a70a0220.2b31f5.0009.GAE@google.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-So that it can check two pointers to the same object properly when
-REFCNT_CHECKING is on.
+On Wed, Jul 02, 2025 at 06:17:26PM -0700, syzbot wrote:
+> For archival purposes, forwarding an incoming command email to
+> linux-kernel@vger.kernel.org.
+> 
+> ***
+> 
+> Subject: Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
+> Author: lizhi.xu@windriver.com
+> 
+> #syz test
+> 
+> diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+> index 0bd1df2ebb47..ae5643e0bc43 100644
+> --- a/net/sunrpc/rpc_pipe.c
+> +++ b/net/sunrpc/rpc_pipe.c
+> @@ -693,7 +693,7 @@ void
+>  rpc_unlink(struct rpc_pipe *pipe)
+>  {
+>  	if (pipe->dentry) {
+> -		simple_recursive_removal(pipe->dentry, rpc_close_pipes);
+> +		locked_recursive_removal(pipe->dentry, rpc_close_pipes);
+>  		pipe->dentry = NULL;
+>  	}
+>  }
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Excuse me, but... which caller of rpc_unlink() is holding any directories locked?
+IOW, this patch is an LLM-grade nonsense.  If it really *is* chatbot-generated,
+that's a lovely demonstration of the reasons why generative AI have no business
+sending patches of any kind.
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index a6eb0462dd5be20f..087d4eaba5f7160d 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -994,7 +994,7 @@ thread_atoms_search(struct rb_root_cached *root, struct thread *thread,
- 		else if (cmp < 0)
- 			node = node->rb_right;
- 		else {
--			BUG_ON(thread != atoms->thread);
-+			BUG_ON(!RC_CHK_EQUAL(thread, atoms->thread));
- 			return atoms;
- 		}
- 	}
--- 
-2.50.0.727.gbf7dc18ff4-goog
+Note that report clearly refers to rpc_close_pipes() as one of the locations
+involved in a possible deadlock.  The difference between simple_recursive_removal()
+and locked_recursive_removal() is that the latter is to be called when the caller
+is already holding ->i_rwsem on the victim's parent.  *IF* that was the case,
+the deadlock report would point to that caller vs. simple_recursive_removal().
 
+rpc_close_pipes() is a *callback* passed to simple_recursive_removal(); if it
+turned around and called rpc_unlink() we would have a serious problem indeed,
+and it's very easy to see that nothing of that sort is happening.
+
+The worst part is, that patch is likely to make lockdep STFU - by failing to
+lock the parent.  You really need to reason; "throw random shit at the bot
+until the warning goes away" is an actively harmful strategy.
+
+As for the warning, it is a false positive caused by lockdep annotations, as
+the original report suggested.  Replace inode_lock(inode) in rpc_close_pipes()
+with inode_lock_nested(inode, I_MUTEX_CHILD) and try to reproduce that.
+
+For syzbot maintainers - git blame is useful.  I would really appreciate the
+original report...
