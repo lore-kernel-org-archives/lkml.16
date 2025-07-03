@@ -1,158 +1,338 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78930291C37;
-	Thu,  3 Jul 2025 10:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A5291C37
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751537585; cv=none; b=pZHJyS7pivSKX8lxv7LGy6yMpg2ZH3b6mBfdmXIob/sX9e6xstS98ZzA7TSXBGy0NSq5adJJCO7Gr4bfvVqLBBhcFHICBGX5udxvMoe/Q2ZbZSqZOnxhTiQBkBeIYvAP6pfLJa8bIDsDqRFhkJXeWS27egyBM0sY++QBZZI81DE=
+	t=1751537667; cv=none; b=O2b5XKkXvxAYHD7dGicn9p32MfvArL5argtE8J2+4xnm3JI6n13HFd2impNX8vkN7aqfzqBHzDtm8dhIJlUIwlTNWEGtp3Tpj+2TqtyFblgjMWYSGSDoct1lW/GU43ZUPVqGiMv3lh+DweRaCDBXC4YAHGtJRYxMfkC7W+fx9zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751537585; c=relaxed/simple;
-	bh=jI5y4w4Jg1M6SSOkvsxhZhYUU5dmWJp5WydaZEe96Kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHaRo7WdWv4DiF9Pedz88t5shb2ZQ+Myypu1No76RptR6w9jl0zb5kMf3Z0BIOZzXHsmLunapskTECK2YYppFxAQQGYEvGW2BJ64weiIYzhzyjVV4Ot/o5FeAehrTcCjd5lBJDjPYpUFx6Ziocwory8TnuXBWUnuynsyardeZeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEQVR8L+; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEQVR8L+"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-454ac069223so2675515e9.1;
-        Thu, 03 Jul 2025 03:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751537582; x=1752142382; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iS2Kx1MHtdS+NqOiTgmuiEvuCx54VIe7tsJZ/SXx6xc=;
-        b=JEQVR8L+4CTLUWqKvplJK7qK1RBO+uWl/yCHg+UyHD+jUegr5atpVjCZBSx7PItD4Z
-         jPO9HBRMkmhPA7buVubLfLEFcGhlHqd2tKE+GHIi6d8l6GycZjM8G+/PKD8mSyWcP84B
-         WU8ud277zWo4R8m5y1C0tv8UHLE2TOsUL/8cr838gV/mYyu0R1D6Tc3IIQ5OO8NI1hr1
-         VInxScCvTkGXB97oebRvNmijubqjpCPyI4rZM4loxzjBnwd3zYKNTkIlKntZIYCVG7Pv
-         RTB9wOMXHEpc2vs4/uxrDNz/KblodCQP2qStrBdGXas6f1/GqKGPGzmR9sFTkmhxvNtR
-         CN1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751537582; x=1752142382;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iS2Kx1MHtdS+NqOiTgmuiEvuCx54VIe7tsJZ/SXx6xc=;
-        b=Tj2sYS6kBQg9yZmApfLYMOqDF9pHbyZT38BRta2CDE+4p1eQKXlJ53CfoOMS/1qSPc
-         0zobWNCifkRDdq3wFzXhYYtILvrczQWX3DNCbKretR6Ynt9OkZu4lHEghLczkKu63Wtq
-         q/Px2qBl7lSOH1yKnuuHCIKyo55IH+UNr/8E0WfV/iRjsA3wdaED5Qv6b55Nm/JWvEyE
-         gKMXRFBQWWQj8MuY6XT4+KXdtFTU8kI3QuFgKOVvfR6eJ8G1nmvI4kigWkysJw9UoGx+
-         dglSVBqfITIVOEKaHv95V6dp1YQWMAMzxJpVV4Dy5oKghS4rcbYN88rpMmpJ2quN1gkw
-         HWOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4sCB1YcHQ0D24qmmEUYx54D+Hw66xEnI9mFTUKO2fF0WRmccRunTLNqJGjsmsguFi9ML8cb5mYXgqNdY=@vger.kernel.org, AJvYcCX7KWS+sd8Oxfm2JdKKEPakF1LJjzlrryyn3zbyDhJ6wOYHeCKqSfKX3TIc6+X8xHxIFqMnvsKBO7cL2tw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkFU+uBgIftwRxneZrMAjGHQnTkce3t5qYz3QSJ+3Y2GFf4LE8
-	c3GE8u3WY2w5SMD22L1qIiEtPPHFeTYsugKRt6uKjqCUDB/q3R4zl0xVA9kD1w==
-X-Gm-Gg: ASbGncsXrU3c5vENaRHfPM3lGOoRxgq1C0gDIXTJiwpm5huTmKMRzMIRBQF1u5m/R7r
-	+UZiM+2UdSpYayTdOzXsDk6NrVVdmQjXAuw1VfBuWdbCXl5Q6CThrUGchwZo6IVzBcWG7PVTtCL
-	dJwqg8i5hStGQTkhXGK0UFS7bRYY5ICM/9IFWajUnnCbZJTHs8VMT+IwVMuKsJXEoc2SoE5J+0R
-	2zYQebzSqslkRb6Huzq3K1oB8NJtQlRLJjS+PBR1GFnk54sBjWcgt55acSMuevCyQ7fB5Q1YyMS
-	fZkgb5bY4xc3lX9kQrjhz1u5MZyhDLTTD7Z46i3Q2vQJNQX90CiSe2UBKiXWcW80bFsE27Rozv4
-	PYZkqkPxyITT2BXoSfm9q7ZmOhwC9Z+YevdtQs4qRm83fP7PC
-X-Google-Smtp-Source: AGHT+IHq43wos2q63DBVQ6dySg+D+Po9VRCWAvy4miSVcr5ICyaOEZJUULw4fEwfAx+/80oTuye5GA==
-X-Received: by 2002:a05:600c:681b:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-454ab3462b0mr17374605e9.11.1751537581286;
-        Thu, 03 Jul 2025 03:13:01 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52c23sm18405625f8f.52.2025.07.03.03.12.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:13:00 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:12:58 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Kartik Rajput <kkartik@nvidia.com>, daniel.lezcano@linaro.org, 
-	tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] clocksource: timer-tegra186: Enable WDT at probe
-Message-ID: <k2t3dkh3acoenhxtsd3ekvpnwl5yir6qaun52h5prdfwcx5lsb@h3ieoj7jfu6t>
-References: <20250630110135.201930-1-kkartik@nvidia.com>
- <3wesm6syeqmjdzyyj2mjp4sjfwl7ebeahqxwcvub6gwvoifuh4@43tunmtjsq4h>
- <a0d7a8c6-af60-4f70-9d60-a87e0701bc91@nvidia.com>
+	s=arc-20240116; t=1751537667; c=relaxed/simple;
+	bh=1SyaE8X7sL1OoajKeDkoTMe0SoZJKBQj8Xqr0p5F82k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RoctH1TsOVjMSjGsqn1qqcMscx8SMCT4paJYyC+sx/wCNDQIWc0ZsiRwcmINrPuyRZgORRGeji8bI6dlhwgUqNMTchBM9OD+pPv4lXDGPfZW5Mur4cN6OOffXlIMT6VykCZU6YtAK/7gpcGWr+zDtydyRl0uGqmYY9xnIJhoJkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7a1103cc57f611f0b29709d653e92f7d-20250703
+X-CID-CACHE: Type:Local,Time:202507031807+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:8d03a6f1-8376-4126-9f68-6b37c01e0ed3,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:c5391f75d4344f6a4e0bf28554583991,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 7a1103cc57f611f0b29709d653e92f7d-20250703
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1384937523; Thu, 03 Jul 2025 18:14:16 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id B5F79E008FA2;
+	Thu,  3 Jul 2025 18:14:16 +0800 (CST)
+X-ns-mid: postfix-686657F8-34930727
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id E1834E008FA1;
+	Thu,  3 Jul 2025 18:14:14 +0800 (CST)
+Message-ID: <eab45ccf-c9f5-4dff-bc36-40133783d369@kylinos.cn>
+Date: Thu, 3 Jul 2025 18:14:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ev5qopqwprgsmpbh"
-Content-Disposition: inline
-In-Reply-To: <a0d7a8c6-af60-4f70-9d60-a87e0701bc91@nvidia.com>
-
-
---ev5qopqwprgsmpbh
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] sched/uclamp: Exclude kernel threads from uclamp logic
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: xuewen.yan@unisoc.com, vincent.guittot@linaro.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ hongyan.xia2@arm.com, linux-kernel@vger.kernel.org, ke.wang@unisoc.com,
+ di.shen@unisoc.com, kprateek.nayak@amd.com, kuyo.chang@mediatek.com,
+ juju.sung@mediatek.com, qyousef@layalina.io
+References: <20250703091437.79861-1-zhangzihuan@kylinos.cn>
+ <CAB8ipk_MZ8j_HNtPL4zB3FXVKHMLxCkn_9ohGhhHqrx8xTRnYA@mail.gmail.com>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <CAB8ipk_MZ8j_HNtPL4zB3FXVKHMLxCkn_9ohGhhHqrx8xTRnYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] clocksource: timer-tegra186: Enable WDT at probe
-MIME-Version: 1.0
 
-On Thu, Jul 03, 2025 at 08:55:04AM +0100, Jon Hunter wrote:
->=20
->=20
-> On 03/07/2025 07:55, Thierry Reding wrote:
-> > On Mon, Jun 30, 2025 at 04:31:35PM +0530, Kartik Rajput wrote:
-> > > Currently, if the system crashes or hangs during kernel boot before
-> > > userspace initializes and configures the watchdog timer, then the
-> > > watchdog won=E2=80=99t be able to recover the system as it=E2=80=99s =
-not running. This
-> > > becomes crucial during an over-the-air update, where if the newly
-> > > updated kernel crashes on boot, the watchdog is needed to reset the
-> > > device and boot into an alternative system partition. If the watchdog
-> > > is disabled in such scenarios, it can lead to the system getting
-> > > bricked.
-> > >=20
-> > > Enable the WDT during driver probe to allow recovery from any crash/h=
-ang
-> > > seen during early kernel boot. Also, disable interrupts once userspace
-> > > starts pinging the watchdog.
-> > >=20
-> > > Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
-> > > ---
-> > >   drivers/clocksource/timer-tegra186.c | 42 +++++++++++++++++++++++++=
-+++
-> > >   1 file changed, 42 insertions(+)
-> >=20
-> > This seems dangerous to me. It means that if the operating system
-> > doesn't start some sort of watchdog service in userspace that pings the
-> > watchdog, the system will reboot 120 seconds after the watchdog probe.
->=20
->=20
-> I don't believe that will happen with this change. The kernel will contin=
-ue
-> to pet the watchdog until userspace takes over with this change. At least
-> that is my understanding.
+Hi Xuewen,
 
-Ah yes... I skipped over that IRQ handling bit. However, I think this
-still violates the assumptions because the driver will keep petting the
-watchdog no matter what, which means that we now have no way of forcing
-a reset of the system when userspace hangs. As long as just a tiny part
-of the kernel keeps running, the watchdog would keep getting petted and
-prevent it from resetting the system.
+Thanks for your feedback =E2=80=94 that makes a lot of sense.
 
-Using a second watchdog still seems like a more robust alternative. Or
-maybe we can find a way to remove the kernel petting once userspace
-starts the watchdog.
+=E5=9C=A8 2025/7/3 17:42, Xuewen Yan =E5=86=99=E9=81=93:
+> Hi zihuan,
+>
+> On Thu, Jul 3, 2025 at 5:15=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylino=
+s.cn> wrote:
+>> Kernel threads (PF_KTHREAD) are not subject to user-defined utilizatio=
+n
+>> clamping. They do not represent user workloads and should not particip=
+ate
+>> in any uclamp logic, including:
+> Indeed, some driver would use set_scheduler() to set some kthread to
+> improve performance.
+> It is not a good idea to exclude it.
+>
+> Thanks=EF=BC=81
+>
+I agree that kernel threads may need explicit scheduling control, so=20
+it=E2=80=99s indeed not a good idea to exclude them unconditionally.
+Our main concern was that uclamp_rq_inc() is a performance-sensitive=20
+path, and letting default-initialized kthreads participate in clamp=20
+aggregation could lead to unnecessary overhead and distort frequency=20
+decisions.
 
-Thierry
+We=E2=80=99ll rework the patch to be more selective =E2=80=94 possibly sk=
+ipping only=20
+those kernel threads that don=E2=80=99t have user-defined clamp values.
 
---ev5qopqwprgsmpbh
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks again for the helpful input!
+>>   - clamp initialization during fork/post-fork
+>>   - effective clamp value computation
+>>   - runtime aggregation (uclamp_rq_inc/dec)
+>>
+>> Allowing kernel threads into these paths may pollute the rq->uclamp[]
+>> statistics, mislead schedutil governor's frequency selection, and
+>> complicate debugging or trace interpretation.
+>>
+>> This patch ensures that:
+>>   - uclamp_fork() and uclamp_post_fork() skip kernel threads
+>>   - uclamp_eff_value() return default values
+>>   - uclamp_rq_inc() and uclamp_rq_dec() skip kernel threads
+>>
+>> This aligns the semantics of uclamp with its original intent:
+>> user-space task-specific clamping.
+>>
+>> dmesg in uclamp_rq_inc_id:
+>> [   76.373903] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.375905] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.379837] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.379839] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.379839] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.379841] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.383897] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.383897] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.383900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.383901] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.387885] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.387885] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.387888] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.387889] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.388139] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.388140] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.388142] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.388143] uclamp_rq_inc_id: task:jbd2/sda3-8 pid:316 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.388169] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 =
+value:0 kthread:1
+>> [   76.388171] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.388891] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.388893] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.392900] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.392902] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.398850] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.398852] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.401880] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.401883] uclamp_rq_inc_id: task:ksoftirqd/8 pid:67 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.409053] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.409054] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.410881] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0=
+ value:0 kthread:1
+>> [   76.410884] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1=
+ value:1024 kthread:1
+>> [   76.419947] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.419949] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.419976] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:0 =
+value:0 kthread:1
+>> [   76.419979] uclamp_rq_inc_id: task:kworker/u48:6 pid:93 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.420119] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:0 =
+value:0 kthread:1
+>> [   76.420121] uclamp_rq_inc_id: task:kworker/2:1H pid:188 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.420642] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.420644] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.434914] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.434916] uclamp_rq_inc_id: task:kcompactd0 pid:108 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.447689] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.447691] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.447705] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.447707] uclamp_rq_inc_id: task:ksoftirqd/3 pid:37 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.448809] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.448811] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.451260] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.451263] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.452806] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:0 va=
+lue:0 kthread:1
+>> [   76.452808] uclamp_rq_inc_id: task:rcu_preempt pid:16 clamp_id:1 va=
+lue:1024 kthread:1
+>> [   76.488052] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.488054] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.488767] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>> [   76.488770] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.490847] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.490848] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.490849] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.490848] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.490849] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:0 =
+value:0 kthread:1
+>> [   76.490850] uclamp_rq_inc_id: task:kworker/2:1 pid:143 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.490851] uclamp_rq_inc_id: task:kworker/3:2 pid:244 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.490851] uclamp_rq_inc_id: task:kworker/11:1 pid:146 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.490851] uclamp_rq_inc_id: task:kworker/7:2 pid:687 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.490853] uclamp_rq_inc_id: task:kworker/1:3 pid:462 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.490857] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.490859] uclamp_rq_inc_id: task:kworker/5:1 pid:141 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.491850] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.491852] uclamp_rq_inc_id: task:kworker/4:2 pid:534 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.504848] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:0 =
+value:0 kthread:1
+>> [   76.504852] uclamp_rq_inc_id: task:kworker/10:2 pid:228 clamp_id:1 =
+value:1024 kthread:1
+>> [   76.508785] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:0 v=
+alue:0 kthread:1
+>> [   76.508787] uclamp_rq_inc_id: task:kworker/9:1 pid:142 clamp_id:1 v=
+alue:1024 kthread:1
+>> [   76.514856] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:0=
+ value:0 kthread:1
+>> [   76.514859] uclamp_rq_inc_id: task:kworker/u48:10 pid:97 clamp_id:1=
+ value:1024 kthread:1
+>> [   76.522742] uclamp_rq_inc_id: task:kworker/1:1H pid:153 clamp_id:0 =
+value:0 kthread:1
+>>
+>> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+>> ---
+>>   kernel/sched/core.c | 13 +++++++++++++
+>>   1 file changed, 13 insertions(+)
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index 8988d38d46a3..a1e6b4157682 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -1630,6 +1630,9 @@ unsigned long uclamp_eff_value(struct task_struc=
+t *p, enum uclamp_id clamp_id)
+>>   {
+>>          struct uclamp_se uc_eff;
+>>
+>> +       if (p->flags & PF_KTHREAD)
+>> +               return uclamp_none(clamp_id);
+>> +
+>>          /* Task currently refcounted: use back-annotated (effective) =
+value */
+>>          if (p->uclamp[clamp_id].active)
+>>                  return (unsigned long)p->uclamp[clamp_id].value;
+>> @@ -1769,6 +1772,9 @@ static inline void uclamp_rq_inc(struct rq *rq, =
+struct task_struct *p, int flags
+>>          if (unlikely(!p->sched_class->uclamp_enabled))
+>>                  return;
+>>
+>> +       if (p->flags & PF_KTHREAD)
+>> +               return;
+>> +
+>>          /* Only inc the delayed task which being woken up. */
+>>          if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
+>>                  return;
+>> @@ -1797,6 +1803,9 @@ static inline void uclamp_rq_dec(struct rq *rq, =
+struct task_struct *p)
+>>          if (unlikely(!p->sched_class->uclamp_enabled))
+>>                  return;
+>>
+>> +       if (p->flags & PF_KTHREAD)
+>> +               return;
+>> +
+>>          if (p->se.sched_delayed)
+>>                  return;
+>>
+>> @@ -1977,6 +1986,8 @@ static void uclamp_fork(struct task_struct *p)
+>>   {
+>>          enum uclamp_id clamp_id;
+>>
+>> +       if (p->flags & PF_KTHREAD)
+>> +               return;
+>>          /*
+>>           * We don't need to hold task_rq_lock() when updating p->ucla=
+mp_* here
+>>           * as the task is still at its early fork stages.
+>> @@ -1995,6 +2006,8 @@ static void uclamp_fork(struct task_struct *p)
+>>
+>>   static void uclamp_post_fork(struct task_struct *p)
+>>   {
+>> +       if (p->flags & PF_KTHREAD)
+>> +               return;
+>>          uclamp_update_util_min_rt_default(p);
+>>   }
+>>
+>> --
+>> 2.25.1
+>>
+>>
+Best regards,
+Zihuan
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhmV6oACgkQ3SOs138+
-s6Fo4Q/+PaURXa6J4gH6uXIppGhNsYQx0Sh2GoEPy0NYy3QQoMXHFrod6KThsAXl
-jLYOWqElHR9um0+Idp+vyLlgBprYh9dId9wHYdhRggSHxErTsqEM3qjVLjEI3nU9
-NatfA9Fs3rcblhN0H3+9LTQuuqVCNj8wLkqDauZp+2OUcL4cRPvPTi1DIsz1qaQ0
-y2LEvnvT3qyrBUanVl7rRXkbm6M2VdhSKv+LzP4futecebcMWEsHpYFiwF2sg/ho
-rDV3Ax35EJ0e32/z75dWoMIR/ZwCqlMqXTksRwB52sR7Gahb3YxCrxaqU60nW2YM
-f1mFJkb3dG/TvgazkE3dJPB15euiDVlzPyn3ntdDIogyFwgqBsKhTiZkFqheN0W0
-ZSsDRTAZMwB5FFWXmvNZEwJVn+kU6LS+iW8v+uJGL0CebCuU1msQNYDrmCr7x5rO
-DADwe2m3Gq785scz5M78sgrwcuHSpT5NhK1WL8OtSOu9SO7Fcbm6WGm2Uio64bT/
-rq3zQsZCVCDOSLU+3agIsHBKCdDhOcGQdNg7hRYrR2E39zik0RUvpG9YQiRh3pqt
-CxPBaiR4hbfxnUZSDBMn/tMBF+lZwClYF2WaVBxmi56bMy7cbE3cEAhk0FDnOs9z
-kyC1wvI41J2MwdbGkIahKpKCnTRO7Rv8ABnAlH8Xky1RShGsoew=
-=2/5n
------END PGP SIGNATURE-----
-
---ev5qopqwprgsmpbh--
