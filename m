@@ -1,196 +1,420 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818C92FEE2C;
-	Thu,  3 Jul 2025 19:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751571083; cv=none; b=oSjUM3xBtxZ89d/vWFPGxoRLpSV8i1NilfhEOIRHO16vNTUEm7QDoJ3k5Chqsp0KOrJUbGBC3KQVbQlf95uMhCMBEvFUCuA6G3SttewZMO6aJMPoPQtvqjNtGLt2OYW6Lac6/XYaYN1Gwgy/VfF3+c1kx8frrIpAFpbwrSWr5oo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751571083; c=relaxed/simple;
-	bh=myhGY+wL/+nI6WirhjHbJl7w+o4iNkVILjdgWN6Ix4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lEU8r0TsV5F7Km1QqWzcB4v8JcqS4DkpuVnKxhuhV/Onf1A4NiqlDpat2FDsuYDL9Rb1DOT34KCF9jNAyWi0kFMBxpBXpoIEmP+NREM4RI5DXH6/JRrlOHzGd0SHGSYoCyicpxp2DYhgvzHG+m9I1vZUP8T0Yl6ExHSbPllD1+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hbg+t8G2; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5569E2FEE34;
+	Thu,  3 Jul 2025 19:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751571084; cv=pass; b=AzkkFmqZJR6WPGV0OIIhLYpNFGjTdqNrRYwmY6sfkIY2ejZy2smtkUIyMcjo8XOVTliia+0GV8A1EQTYsOxXESObl52U+WWEr+Ocv2D3g4yPPx/YEt34M5HakcXm4WNc9JCEBnXwjtV+VXD4QLT8gQ1UxBd8zwO9krVAJq95/wg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751571084; c=relaxed/simple;
+	bh=R141UbZ2MJ+Lmd8p/5NuzNewQfpmG80jwub4dwATn98=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fjb/o7VTC2YVoDF0ZmqxVp1emzUG4eN02uub/OWNT366DMw9WSCPS/dJrF58U4DDIt/+/9uFgV2oVdYTXihxteIPDFAKCInhO2mC87GoDafBUuNhWWPcMWSh/wTvryvH6Z7wa5QnOKlDNsxwBSnn9pXZxyleU8G7jXMyjSjZUw8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=QYWQlwd3; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hbg+t8G2"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 563JVBcC108295;
-	Thu, 3 Jul 2025 14:31:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751571071;
-	bh=EyAAmzRd4ACr//ZBtdwhdaSbEwuX2K9tOqctWHmBUDM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=hbg+t8G2c+PJbpP3mdlaPPXms6ITfVf8IMgdGLXzweIxJNLK29vYIKmNsixnYju4H
-	 PNrnUDr6Uz5/ZmpbjJ4l1VwJ9UhADPIZF0oFopbr2rvG89+3tK/3hEekjiFa0X50IB
-	 IfcZHU0ozK3rtBOEQhRgpcCAHSOe+gA84WDeIhwI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 563JVBMD2640475
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 3 Jul 2025 14:31:11 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 3
- Jul 2025 14:31:10 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 3 Jul 2025 14:31:10 -0500
-Received: from [128.247.81.19] (uda0506412.dhcp.ti.com [128.247.81.19])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 563JVAZQ1364345;
-	Thu, 3 Jul 2025 14:31:10 -0500
-Message-ID: <049171d7-d4ee-4499-8414-4b66b2c6e5b2@ti.com>
-Date: Thu, 3 Jul 2025 14:31:10 -0500
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="QYWQlwd3"
+ARC-Seal: i=1; a=rsa-sha256; t=1751571054; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=V9g3C6c2BG7NoM1zqAQBgI43XlPCDTsXEch5jwn2/F5ue99WSBer+npmmEFKDEvp9+5ivG9xREO2J0r0ExNU3Rcy1z/l/Z5AKLVIiG9jAIH4ndEz52/08AYStuzcvc1UA3dbk82JWYrjNnGaWzN889fi+UDGaHsuUXMgqbtpPTs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751571054; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=7tzGk2bWskELc3lBl6isyxFZIxOYyDuIcmJBxgT3gsA=; 
+	b=mJzvDbVhT8NAf0uOdNPEisfKUbgFqvWU9jx3d/EWYbrGQ4nzUQtU3bYc0/gY0Eqs7I6ZzZ08MBS/TpCmgJiVEW0w0agVxVJHLdLDVnP/IN+IngYXMhtBMGMFPZBubbc/4+ZRqQSjMFta8raSkrgpVKIRQQ3xpLkX0ubxxxqsF9M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751571054;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=7tzGk2bWskELc3lBl6isyxFZIxOYyDuIcmJBxgT3gsA=;
+	b=QYWQlwd3qHW730BCZQ8kv224QN8W8Yj5axCCS7CSCqSZmQuEn6ZcD0vPfFfePIDL
+	76nyEj83m+bgB1cq/ctewk9qerarfsFy3ET8nB4d2l9Ud4tLdy2ZKnfxSixEreruA+s
+	25M2nhWTZsZOJDoOjWcMH0puFX5qhVq4erv/k7Eg=
+Received: by mx.zohomail.com with SMTPS id 17515710517921006.8159695544626;
+	Thu, 3 Jul 2025 12:30:51 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Date: Thu, 03 Jul 2025 16:30:01 -0300
+Subject: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pmdomain: ti_sci: Add LPM abort sequence to suspend
- path
-To: Ulf Hansson <ulf.hansson@linaro.org>
-CC: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <d-gole@ti.com>, <vishalm@ti.com>,
-        <sebin.francis@ti.com>, <msp@baylibre.com>, <khilman@baylibre.com>
-References: <20250627204821.1150459-1-k-willis@ti.com>
- <20250627204821.1150459-3-k-willis@ti.com>
- <CAPDyKForKeb=uTkOXWcJea-P9c+7wQ3ZRWFYpTXk=xLoQPsQaw@mail.gmail.com>
-Content-Language: en-US
-From: Kendall Willis <k-willis@ti.com>
-In-Reply-To: <CAPDyKForKeb=uTkOXWcJea-P9c+7wQ3ZRWFYpTXk=xLoQPsQaw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
+References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
+In-Reply-To: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
-On 7/2/25 07:06, Ulf Hansson wrote:
-> On Fri, 27 Jun 2025 at 22:49, Kendall Willis <k-willis@ti.com> wrote:
->>
->> Create ->suspend_late() and ->suspend_noirq() hooks to add abort sequence
->> to any driver within the PM domain with either of those hooks. If a driver
->> fails to suspend with those hooks, add a call to the DM to abort entering
->> the LPM. The suspend hooks of the PM domains driver inserts itself into
->> the suspend path of all devices connected to the TI SCI PM domain. So if
->> any device in the PM domain with either a ->suspend_late() or
->> ->suspend_noirq hook fails to suspend, the PM domain drivers suspend hook
->> will send the abort call to the DM.
->>
->> Adding an abort call in the ->suspend() hook is not necessary. TI SCI
->> suspend sends the message to the DM to prepare to enter a low power mode.
->> TI SCI suspend ALWAYS occurs after the ->suspend() hook for all TI SCI
->> devices has been called.
->>
->> Signed-off-by: Kendall Willis <k-willis@ti.com>
->> ---
->>   drivers/pmdomain/ti/ti_sci_pm_domains.c | 46 ++++++++++++++++++++++++-
->>   1 file changed, 45 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pmdomain/ti/ti_sci_pm_domains.c b/drivers/pmdomain/ti/ti_sci_pm_domains.c
->> index 82df7e44250bb..975defc16271d 100644
->> --- a/drivers/pmdomain/ti/ti_sci_pm_domains.c
->> +++ b/drivers/pmdomain/ti/ti_sci_pm_domains.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * TI SCI Generic Power Domain Driver
->>    *
->> - * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
->> + * Copyright (C) 2015-2025 Texas Instruments Incorporated - http://www.ti.com/
->>    *     J Keerthy <j-keerthy@ti.com>
->>    *     Dave Gerlach <d-gerlach@ti.com>
->>    */
->> @@ -149,8 +149,47 @@ static int ti_sci_pd_suspend(struct device *dev)
->>
->>          return 0;
->>   }
->> +
->> +static int ti_sci_pd_suspend_late(struct device *dev)
->> +{
->> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
->> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
->> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
->> +       int ret;
->> +
->> +       ret = pm_generic_suspend_late(dev);
->> +       if (ret) {
->> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
->> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
->> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static int ti_sci_pd_suspend_noirq(struct device *dev)
->> +{
->> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
->> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
->> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
->> +       int ret;
->> +
->> +       ret = pm_generic_suspend_noirq(dev);
->> +       if (ret) {
->> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
->> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
->> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>   #else
->>   #define ti_sci_pd_suspend              NULL
->> +#define ti_sci_pd_suspend_late         NULL
->> +#define ti_sci_pd_suspend_noirq                NULL
->>   #endif
->>
->>   /*
->> @@ -264,6 +303,11 @@ static int ti_sci_pm_domain_probe(struct platform_device *pdev)
->>                                      pd_provider->ti_sci->ops.pm_ops.set_latency_constraint)
->>                                          pd->pd.domain.ops.suspend = ti_sci_pd_suspend;
->>
->> +                               if (pd_provider->ti_sci->ops.pm_ops.lpm_abort) {
->> +                                       pd->pd.domain.ops.suspend_late = ti_sci_pd_suspend_late;
->> +                                       pd->pd.domain.ops.suspend_noirq = ti_sci_pd_suspend_noirq;
-> 
-> This doesn't work as pm_genpd_init() is assigning the
-> ->suspend_noirq() callback, hence overriding the callback.
-> 
-> Moreover I am not sure this is the correct thing to do, as having your
-> own ->suspend_noirq() callback would mean that you will be by-passing
-> genpd's internal reference counting to understand when it's fine to
-> power-off the PM domain, vi a the ->power_off() callback.
-> 
-> Can the LPM abort be handled from a ->complete() callback instead?
+This patch adds support for non-threaded IRQs and handlers through
+irq::Registration and the irq::Handler trait.
 
-Handling the abort from a ->complete() callback does look like a much 
-better solution than adding the ->suspend_late() and ->suspend_noirq() 
-callbacks. The only problem with it is that there doesn't seem to be a 
-way to tell if system suspend failed in order to call the abort sequence.
+Registering an irq is dependent upon having a IrqRequest that was
+previously allocated by a given device. This will be introduced in
+subsequent patches.
 
-However, the abort sequence just clears the LPM selection in the DM 
-which the DM already does upon successful suspend/resume. Clearing it 
-multiple times shouldn't be an issue, but I will have to look into this 
-more.
+Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+---
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/irq.c              |   9 ++
+ rust/kernel/irq.rs              |   5 +
+ rust/kernel/irq/request.rs      | 273 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 289 insertions(+)
 
-Thanks,
-Kendall
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index 8cbb660e2ec218021d16e6e0144acf6f4d7cca13..da0bd23fad59a2373bd873d12ad69c55208aaa38 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -51,6 +51,7 @@
+ #include <linux/ethtool.h>
+ #include <linux/file.h>
+ #include <linux/firmware.h>
++#include <linux/interrupt.h>
+ #include <linux/fs.h>
+ #include <linux/jiffies.h>
+ #include <linux/jump_label.h>
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 393ad201befb80a9ae39866a725744ab88620fbb..e3579fc7e1cfc30c913207a4a78b790259d7ae7a 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -22,6 +22,7 @@
+ #include "dma.c"
+ #include "drm.c"
+ #include "err.c"
++#include "irq.c"
+ #include "fs.c"
+ #include "io.c"
+ #include "jump_label.c"
+diff --git a/rust/helpers/irq.c b/rust/helpers/irq.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..1faca428e2c047a656dec3171855c1508d67e60b
+--- /dev/null
++++ b/rust/helpers/irq.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/interrupt.h>
++
++int rust_helper_request_irq(unsigned int irq, irq_handler_t handler,
++			    unsigned long flags, const char *name, void *dev)
++{
++	return request_irq(irq, handler, flags, name, dev);
++}
+diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
+index 9abd9a6dc36f3e3ecc1f92ad7b0040176b56a079..01bd08884b72c2a3a9460897bce751c732a19794 100644
+--- a/rust/kernel/irq.rs
++++ b/rust/kernel/irq.rs
+@@ -12,3 +12,8 @@
+ 
+ /// Flags to be used when registering IRQ handlers.
+ pub mod flags;
++
++/// IRQ allocation and handling.
++pub mod request;
++
++pub use request::{Handler, IrqRequest, IrqReturn, Registration};
+diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f4beaa3c7887660440b9ddc52414020a0d165ac
+--- /dev/null
++++ b/rust/kernel/irq/request.rs
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
++
++//! This module provides types like [`Registration`] which allow users to
++//! register handlers for a given IRQ line.
++
++use core::marker::PhantomPinned;
++
++use crate::alloc::Allocator;
++use crate::device::Bound;
++use crate::device::Device;
++use crate::devres::Devres;
++use crate::error::to_result;
++use crate::irq::flags::Flags;
++use crate::prelude::*;
++use crate::str::CStr;
++use crate::sync::Arc;
++
++/// The value that can be returned from an IrqHandler or a ThreadedIrqHandler.
++pub enum IrqReturn {
++    /// The interrupt was not from this device or was not handled.
++    None,
++
++    /// The interrupt was handled by this device.
++    Handled,
++}
++
++impl IrqReturn {
++    fn into_inner(self) -> u32 {
++        match self {
++            IrqReturn::None => bindings::irqreturn_IRQ_NONE,
++            IrqReturn::Handled => bindings::irqreturn_IRQ_HANDLED,
++        }
++    }
++}
++
++/// Callbacks for an IRQ handler.
++pub trait Handler: Sync {
++    /// The hard IRQ handler.
++    ///
++    /// This is executed in interrupt context, hence all corresponding
++    /// limitations do apply.
++    ///
++    /// All work that does not necessarily need to be executed from
++    /// interrupt context, should be deferred to a threaded handler.
++    /// See also [`ThreadedRegistration`].
++    fn handle(&self) -> IrqReturn;
++}
++
++impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
++    fn handle(&self) -> IrqReturn {
++        T::handle(self)
++    }
++}
++
++impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
++    fn handle(&self) -> IrqReturn {
++        T::handle(self)
++    }
++}
++
++/// # Invariants
++///
++/// - `self.irq` is the same as the one passed to `request_{threaded}_irq`.
++/// - `cookie` was passed to `request_{threaded}_irq` as the cookie. It
++/// is guaranteed to be unique by the type system, since each call to
++/// `new` will return a different instance of `Registration`.
++#[pin_data(PinnedDrop)]
++struct RegistrationInner {
++    irq: u32,
++    cookie: *mut kernel::ffi::c_void,
++}
++
++impl RegistrationInner {
++    fn synchronize(&self) {
++        // SAFETY: safe as per the invariants of `RegistrationInner`
++        unsafe { bindings::synchronize_irq(self.irq) };
++    }
++}
++
++#[pinned_drop]
++impl PinnedDrop for RegistrationInner {
++    fn drop(self: Pin<&mut Self>) {
++        // SAFETY:
++        //
++        // Safe as per the invariants of `RegistrationInner` and:
++        //
++        // - The containing struct is `!Unpin` and was initialized using
++        // pin-init, so it occupied the same memory location for the entirety of
++        // its lifetime.
++        //
++        // Notice that this will block until all handlers finish executing,
++        // i.e.: at no point will &self be invalid while the handler is running.
++        unsafe { bindings::free_irq(self.irq, self.cookie) };
++    }
++}
++
++// SAFETY: We only use `inner` on drop, which called at most once with no
++// concurrent access.
++unsafe impl Sync for RegistrationInner {}
++
++// SAFETY: It is safe to send `RegistrationInner` across threads.
++unsafe impl Send for RegistrationInner {}
++
++/// A request for an IRQ line for a given device.
++///
++/// # Invariants
++///
++/// - `ìrq` is the number of an interrupt source of `dev`.
++/// - `irq` has not been registered yet.
++pub struct IrqRequest<'a> {
++    dev: &'a Device<Bound>,
++    irq: u32,
++}
++
++impl<'a> IrqRequest<'a> {
++    /// Creates a new IRQ request for the given device and IRQ number.
++    ///
++    /// # Safety
++    ///
++    /// - `irq` should be a valid IRQ number for `dev`.
++    pub(crate) unsafe fn new(dev: &'a Device<Bound>, irq: u32) -> Self {
++        IrqRequest { dev, irq }
++    }
++}
++
++/// A registration of an IRQ handler for a given IRQ line.
++///
++/// # Examples
++///
++/// The following is an example of using `Registration`. It uses a
++/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
++///
++/// ```
++/// use core::sync::atomic::AtomicU32;
++/// use core::sync::atomic::Ordering;
++///
++/// use kernel::prelude::*;
++/// use kernel::device::Bound;
++/// use kernel::irq::flags;
++/// use kernel::irq::Registration;
++/// use kernel::irq::IrqRequest;
++/// use kernel::irq::IrqReturn;
++/// use kernel::sync::Arc;
++/// use kernel::c_str;
++/// use kernel::alloc::flags::GFP_KERNEL;
++///
++/// // Declare a struct that will be passed in when the interrupt fires. The u32
++/// // merely serves as an example of some internal data.
++/// struct Data(AtomicU32);
++///
++/// // [`kernel::irq::request::Handler::handle`] takes `&self`. This example
++/// // illustrates how interior mutability can be used when sharing the data
++/// // between process context and IRQ context.
++///
++/// type Handler = Data;
++///
++/// impl kernel::irq::request::Handler for Handler {
++///     // This is executing in IRQ context in some CPU. Other CPUs can still
++///     // try to access to data.
++///     fn handle(&self) -> IrqReturn {
++///         self.0.fetch_add(1, Ordering::Relaxed);
++///
++///         IrqReturn::Handled
++///     }
++/// }
++///
++/// // Registers an IRQ handler for the given IrqRequest.
++/// //
++/// // This is executing in process context and assumes that `request` was
++/// // previously acquired from a device.
++/// fn register_irq(handler: Handler, request: IrqRequest<'_>) -> Result<Arc<Registration<Handler>>> {
++///     let registration = Registration::new(request, flags::SHARED, c_str!("my_device"), handler);
++///
++///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
++///
++///     // The data can be accessed from process context too.
++///     registration.handler().0.fetch_add(1, Ordering::Relaxed);
++///
++///     Ok(registration)
++/// }
++/// # Ok::<(), Error>(())
++/// ```
++///
++/// # Invariants
++///
++/// * We own an irq handler using `&self.handler` as its private data.
++///
++#[pin_data]
++pub struct Registration<T: Handler + 'static> {
++    #[pin]
++    inner: Devres<RegistrationInner>,
++
++    #[pin]
++    handler: T,
++
++    /// Pinned because we need address stability so that we can pass a pointer
++    /// to the callback.
++    #[pin]
++    _pin: PhantomPinned,
++}
++
++impl<T: Handler + 'static> Registration<T> {
++    /// Registers the IRQ handler with the system for the given IRQ number.
++    pub fn new<'a>(
++        request: IrqRequest<'a>,
++        flags: Flags,
++        name: &'static CStr,
++        handler: T,
++    ) -> impl PinInit<Self, Error> + 'a {
++        try_pin_init!(&this in Self {
++            handler,
++            inner <- Devres::new(
++                request.dev,
++                try_pin_init!(RegistrationInner {
++                    // SAFETY: `this` is a valid pointer to the `Registration` instance
++                    cookie: unsafe { &raw mut (*this.as_ptr()).handler }.cast(),
++                    irq: {
++                        // SAFETY:
++                        // - The callbacks are valid for use with request_irq.
++                        // - If this succeeds, the slot is guaranteed to be valid until the
++                        // destructor of Self runs, which will deregister the callbacks
++                        // before the memory location becomes invalid.
++                        to_result(unsafe {
++                            bindings::request_irq(
++                                request.irq,
++                                Some(handle_irq_callback::<T>),
++                                flags.into_inner() as usize,
++                                name.as_char_ptr(),
++                                (&raw mut (*this.as_ptr()).handler).cast(),
++                            )
++                        })?;
++                        request.irq
++                    }
++                })
++            ),
++            _pin: PhantomPinned,
++        })
++    }
++
++    /// Returns a reference to the handler that was registered with the system.
++    pub fn handler(&self) -> &T {
++        &self.handler
++    }
++
++    /// Wait for pending IRQ handlers on other CPUs.
++    ///
++    /// This will attempt to access the inner [`Devres`] container.
++    pub fn try_synchronize(&self) -> Result {
++        let inner = self.inner.try_access().ok_or(ENODEV)?;
++        inner.synchronize();
++        Ok(())
++    }
++
++    /// Wait for pending IRQ handlers on other CPUs.
++    pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
++        let inner = self.inner.access(dev)?;
++        inner.synchronize();
++        Ok(())
++    }
++}
++
++/// # Safety
++///
++/// This function should be only used as the callback in `request_irq`.
++unsafe extern "C" fn handle_irq_callback<T: Handler>(
++    _irq: i32,
++    ptr: *mut core::ffi::c_void,
++) -> core::ffi::c_uint {
++    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
++    let handler = unsafe { &*(ptr as *const T) };
++    T::handle(handler).into_inner()
++}
 
-> 
->> +                               }
->> +
->>                                  pm_genpd_init(&pd->pd, NULL, true);
->>
->>                                  list_add(&pd->node, &pd_provider->pd_list);
->> --
->> 2.34.1
->>
-> 
-> Kind regards
-> Uffe
+-- 
+2.50.0
 
