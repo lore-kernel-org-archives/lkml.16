@@ -1,122 +1,140 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C19128E61E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 05:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E29B2DE716;
+	Thu,  3 Jul 2025 05:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751521225; cv=none; b=eQetTvkghHVkSmP5tFq3ROuDN9mvbjrwfcgVp0Hf6U5o295wwRiy2xk6qnhoL/aVoF2q7sPdONrFTEyXzOo+9VNTwwfdRE86jkS4pOP9pvrX4CkuqAZUbvEmpaQY+FO7/9mvNVWHOa2Hu9YwUDKJ0W1vzwaViYI9aEqCvp0+dFo=
+	t=1751521479; cv=none; b=dhzqHGTFDAJpKzsWg1+steXd39PYJZirDfUvau2WZMkX/V78MwjW/eD1reOxqG9LADhpeMWHMBV60D1Yj2ydzELnDTzZ0bUOZsmB5El+5OVFEz3Qo19Y+94myGUxYieX+Hj6VmeY8yz43BDuMffUDUULPZxqCTLYYfad6NsZDgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751521225; c=relaxed/simple;
-	bh=M2vyeWH0DutHMkqV6DcIyt6SCatd8hktuKbQTf/JtJo=;
+	s=arc-20240116; t=1751521479; c=relaxed/simple;
+	bh=yOfEIFqX2imR8AFW57bVZeSFTtG6JNpds2CoQPnAH9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7R3JQRIV1asg2UV6N2D7vYOrCZxb8/N0ePAEg6Rtcqn6Hm+fva37xB1RHQXqbGgcfCgZ5CrRfRVWM+9PHYi/NlFBp89t0NmGu1KhZpvLCWaZ1e4LP79dbuqDCVNhFhdeF33B3nHPSd7mQZMXUpgN+Uom1Lsc0yqpxBmAntaCuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iiitd.ac.in; spf=pass smtp.mailfrom=iiitd.ac.in; dkim=pass (1024-bit key) header.d=iiitd.ac.in header.i=@iiitd.ac.in header.b=WT2Gsbez; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iiitd.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iiitd.ac.in
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfBCTTEkjAHafWEbH9yXLikqkCoBzxg1sg1t+Yu3gsCmliK/60bFknQO3wa6pAGKLCSE0s0l3DnDxHfyS9BFECi6lz63e8t2e5hfE7CPHC7YnZt84fBDNCzAl7/MZiKUCQIv2aZZxrrN80r/2MBiBUdkm1XyftzbrQ2SttmT1o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2uYPOsiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iiitd.ac.in header.i=@iiitd.ac.in header.b="WT2Gsbez"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748e81d37a7so5344454b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 22:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iiitd.ac.in; s=google; t=1751521222; x=1752126022; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZJ3D9BdUXcaieDRgLM5GSqlyr9PlwsCgm1po43FpSQ=;
-        b=WT2GsbezdQf77UVJV+TskuYfnEfbdpB4SxncHPvGB06PzpVNgVADpP/2oo3hJvgD+k
-         d6QzF8HAUHW0IW4vVCwFrM59KPKyfvLE0y/t+tGxKQIRGMQfUzjc5DV2KHI4SbKakVds
-         /U+/hTKjJslVFAvLA300KMQZsv1aRAcBhx5uI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751521222; x=1752126022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eZJ3D9BdUXcaieDRgLM5GSqlyr9PlwsCgm1po43FpSQ=;
-        b=pgakbp2IzlguJ8BMMeRRA6Y/UBAtwfkUrDPKF+ja5mJ2GqOlGelNOCeo6zSNKCZP/0
-         4zKqZ2ywb8kNVtX33q7RHPst0gppOotx4spNDBJpBI6bXvCmAXdjJqKlulaTX/F2SLeA
-         RJFWBSvSc+xG1jy9Zem3NLgOwGjhDzfFYBxsQwU6tiz7SEwWODuqahDQ3voD4Tcao6aW
-         5Yf2uFrNyjkbPTcoluA/OylL8FKcsNgHCcEkQg/rfZZItYvTTybQ/lrV3Q5P15dBoYGe
-         Qn6zWARo+ZEomggcFp0FXWCEzd4aT98j5uXCCXHzFxbWe+xZUhhdlCnjcWjDIHUCz5Vh
-         t9hA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/VDODtzhkvJQwe4ZOhXKGNzG7SXIJgbfpV5X1FAgZW7mV/2HAZehsk9Ph10iaQ/VzpC5W/wOwedLNhYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZT5aFHwWVWQi/erGFUhG+ic3j138a/pqGIi4nXyCc62yukYHs
-	WYIkGhCoYQhfrP9r/rgX0bMYipsesqxvYk0UtUrU5tR67WvJu22U5zRhFKqNXBRsMwo=
-X-Gm-Gg: ASbGncue7/hQLiE6e07BqQicvn1H7N9KmNLGnUxuPnISItYiAgP0iFJxodSwbXP0523
-	RWz/rBjte9NB8jxT32aR1yC4PWVZ+xKjEEqwZQhJHA5NOFGiPY4r6ZZkFxa/4PqM3AWHdEsxKqT
-	c2ZD5yTimONHAgbBNIacAj28+S+yG23vmYGYeDWZi7f2wvEaV7E2fbfBaBU+1aer92d0DDbEHoa
-	fklQ64e9tPd+CHGRqaWpjqCVlcgGOJRGjjaactZeCKe6aMgCYhvNy6YaO5X6RDJEPEu7uhPckOf
-	iEjL6nQyH7b2tX/o9qF775Xgftv+M988P2W38Pw+bCiKMd90ss/bLJWB
-X-Google-Smtp-Source: AGHT+IHBqMwtweqX9zHJzqYFxoWDjzmtyx2Umni0voQWk/BC+z7nOVvDheUtLCx8ITkinSUCSdPYgg==
-X-Received: by 2002:a05:6a00:2354:b0:748:fb2c:6b95 with SMTP id d2e1a72fcca58-74ca8495056mr3197822b3a.18.1751521221899;
-        Wed, 02 Jul 2025 22:40:21 -0700 (PDT)
-Received: from fedora ([103.3.204.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af58068b6sm15774866b3a.175.2025.07.02.22.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 22:40:21 -0700 (PDT)
-Date: Thu, 3 Jul 2025 11:10:14 +0530
-From: Manas <manas18244@iiitd.ac.in>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Alan Stern <stern@rowland.harvard.edu>
-Cc: Pete Zaitcev <zaitcev@redhat.com>, Paolo Abeni <paolo.abeni@email.it>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@suse.de>, syzbot+86b6d7c8bcc66747c505@syzkaller.appspotmail.com
-Subject: Re: [PATCH] usbmon: Fix out-of-bounds read in mon_copy_to_buff
-Message-ID: <uew7bu3uxpppew5bhnpzw2oiqyrzv64co54fjthwnhqtnybv6o@lh5pzvkubzo3>
-References: <20250703-fix-oob-mon_copy_to_buff-v1-1-1aa7f5723d91@iiitd.ac.in>
- <2025070322-overstay-compacter-3544@gregkh>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2uYPOsiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DF3C4CEE3;
+	Thu,  3 Jul 2025 05:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751521479;
+	bh=yOfEIFqX2imR8AFW57bVZeSFTtG6JNpds2CoQPnAH9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2uYPOsiPguDEaYYyqvF0V/d3MGp0rYq+VKeFiE8LR/JTR1Bn+MvdoCIv+tdKqtwpw
+	 7d0VOQdemZWTQ9fzsf/Wn+p8f2Hd4VPc8gYqgb760i9Xf2a39P3iHqg/4v2mauqQ63
+	 12yKHm4LfKGz0BJdo3gjGhkrIj+SMon33XIWcso4=
+Date: Thu, 3 Jul 2025 07:44:36 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: wkang77@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v1 1/2] staging: gdm724x: fix type confusion in
+ gdm_lte_event_rcv()
+Message-ID: <2025070343-halves-prison-c40f@gregkh>
+References: <20250703052723.14616-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025070322-overstay-compacter-3544@gregkh>
+In-Reply-To: <20250703052723.14616-1-linma@zju.edu.cn>
 
-On 03.07.2025 07:12, Greg Kroah-Hartman wrote:
->On Thu, Jul 03, 2025 at 02:57:40AM +0530, Manas Gupta via B4 Relay wrote:
->> From: Manas Gupta <manas18244@iiitd.ac.in>
->>
->> memcpy tries to copy buffer 'from' when it is empty. This leads to
->> out-of-bounds crash.
->
->What exactly is the "crash" that you are seeing?  What is reporting it,
->and how?
->
-Hi Greg and Alan,
+On Thu, Jul 03, 2025 at 01:27:23PM +0800, Lin Ma wrote:
+> This code assumes ifindex provided by user always result in device of
+> gdb netdev type. Without proper type checking, the casting to nic type
+> could cause type confusion.
+> 
+> Example crash trace shown as below:
+> 
+> [   49.516445] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [   49.520016] #PF: supervisor read access in kernel mode
+> [   49.520397] #PF: error_code(0x0000) - not-present page
+> [   49.520780] PGD 0 P4D 0
+> [   49.520997] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [   49.521324] CPU: 0 PID: 172 Comm: trigger Tainted: G         C         6.1.90 #2
+> [   49.521877] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+> [   49.522709] RIP: 0010:gdm_lte_event_rcv+0x17/0x40 [gdmulte]
+> [   49.523121] Code: 48 89 e5 5d 31 ff c3 cc cc cc cc 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 48 8b 87 c8 09 00 00 48 89 d6 45 31 c0 89 ca 31 c9 <48> 8b 38 48 8b 40 28 48 89 e5 e8 3a 10 00 c2 5d 31 c0 31 d2 31 c9
+> [   49.524533] RSP: 0018:ffffc900006879d0 EFLAGS: 00010246
+> [   49.524929] RAX: 0000000000000000 RBX: ffff888004af8000 RCX: 0000000000000000
+> [   49.525461] RDX: 0000000000000010 RSI: ffff888004aa1e14 RDI: ffff888004af8000
+> [   49.525958] RBP: ffffc90000687a08 R08: 0000000000000000 R09: 0000000000000000
+> [   49.526487] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000010
+> [   49.527029] R13: ffff888004aa1e00 R14: 0000000000000001 R15: ffff888004aa1e14
+> [   49.527567] FS:  00007e6a8ab2c740(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
+> [   49.528122] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   49.528544] CR2: 0000000000000000 CR3: 0000000005cc2000 CR4: 00000000000006f0
+> [   49.529033] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   49.529615] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   49.530120] Call Trace:
+> [   49.530310]  <TASK>
+> [   49.530492]  ? __die_body.cold+0x1a/0x1f
+> [   49.530790]  ? __die+0x2a/0x3b
+> [   49.531024]  ? page_fault_oops+0x170/0x2f0
+> [   49.531387]  ? gdm_lte_event_rcv+0x17/0x40 [gdmulte]
+> [   49.531735]  ? kernelmode_fixup_or_oops+0xb2/0x140
+> [   49.532105]  ? __bad_area_nosemaphore+0x197/0x1f0
+> [   49.532492]  ? find_vma+0x30/0x50
+> [   49.532739]  ? bad_area_nosemaphore+0x16/0x30
+> [   49.533072]  ? do_user_addr_fault+0x2a8/0x5a0
+> [   49.533403]  ? exc_page_fault+0x80/0x1b0
+> [   49.533731]  ? asm_exc_page_fault+0x27/0x30
+> [   49.534034]  ? gdm_lte_event_rcv+0x17/0x40 [gdmulte]
+> [   49.534412]  ? netlink_rcv+0x9a/0xd0 [gdmulte]
+> [   49.534748]  netlink_unicast+0x24d/0x390
+> [   49.535059]  netlink_sendmsg+0x25e/0x4d0
+> [   49.535350]  __sock_sendmsg+0x6d/0x70
+> [   49.535664]  __sys_sendto+0x151/0x1b0
+> [   49.535958]  __x64_sys_sendto+0x24/0x40
+> [   49.536236]  x64_sys_call+0x18d4/0x21b0
+> [   49.536533]  do_syscall_64+0x56/0x90
+> [   49.536831]  ? kmem_cache_alloc+0x180/0x340
+> [   49.537132]  ? security_file_alloc+0x2e/0xf0
+> [   49.537500]  ? apparmor_file_alloc_security+0x40/0x1e0
+> [   49.537897]  ? __wake_up_common_lock+0x8b/0xd0
+> [   49.538237]  ? __check_object_size+0x71/0x260
+> [   49.538623]  ? _copy_to_user+0x25/0x60
+> [   49.538920]  ? move_addr_to_user+0x53/0xe0
+> [   49.539228]  ? __sys_getsockname+0xa8/0x110
+> [   49.539567]  ? exit_to_user_mode_prepare+0x49/0x230
+> [   49.539958]  ? syscall_exit_to_user_mode+0x22/0x60
+> [   49.540307]  ? do_syscall_64+0x62/0x90
+> [   49.540618]  ? lock_mm_and_find_vma+0x43/0x220
+> [   49.540945]  ? exit_to_user_mode_prepare+0x49/0x230
+> [   49.541304]  ? irqentry_exit_to_user_mode+0x10/0x30
+> [   49.541685]  ? irqentry_exit+0x43/0x50
+> [   49.541995]  ? exc_page_fault+0x91/0x1b0
+> [   49.542316]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [   49.542666] RIP: 0033:0x7e6a8abb6407
+> 
+> This bug was "fixed" in upstream kernel by the commit 1c2d364e7f7f
+> ("staging: gdm724x: Remove unused driver"). However, other stable
+> versions still contain it. Fix the confusion bug by adding checks.
+> 
+> Cc: stable@kernel.org
+> Fixes: 61e121047645 ("staging: gdm7240: adding LTE USB driver")
+> Signed-off-by: Lin Ma <linma@zju.edu.cn>
+> ---
+>  drivers/staging/gdm724x/gdm_lte.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/staging/gdm724x/gdm_lte.c b/drivers/staging/gdm724x/gdm_lte.c
+> index 1f0283fc1d2c..73c7bea16b80 100644
+> --- a/drivers/staging/gdm724x/gdm_lte.c
+> +++ b/drivers/staging/gdm724x/gdm_lte.c
+> @@ -522,6 +522,9 @@ static void gdm_lte_event_rcv(struct net_device *dev, u16 type,
+>  {
+>  	struct nic *nic = netdev_priv(dev);
+>  
+> +	if (dev->netdev_ops->ndo_open != gdm_lte_open)
+> +		return;
 
-I ran the reproducer[1] on my machine and got the following stacktrace.
+Why should a driver be poking around in netdev_ops?  That feels wrong,
+what would ever change this?  Why not fix that instead?
 
-```
-[   41.601410][  T769] ==================================================================
-[   41.601908][  T769] BUG: KASAN: slab-out-of-bounds in mon_copy_to_buff+0xc6/0x180
-[   41.602405][  T769] Read of size 832 at addr ffff888043ee6081 by task kworker/0:2/769
-[   41.602898][  T769]
-```
+thanks,
 
-which led me on a different path. I assumed that out-of-bounds was occuring in
-`mon_copy_to_buff` without realizing it may be the caller at fault, as Alan
-pointed out in his feedback.
-
-I now notice that my stacktrace is also slightly different (or rather
-incomplete) as compared to the syzkaller report which says
-
-```
-BUG: KASAN: slab-out-of-bounds in mon_copy_to_buff drivers/usb/mon/mon_bin.c:252 [inline]
-BUG: KASAN: slab-out-of-bounds in mon_bin_get_data drivers/usb/mon/mon_bin.c:420 [inline]
-BUG: KASAN: slab-out-of-bounds in mon_bin_event+0x1211/0x2250 drivers/usb/mon/mon_bin.c:606
-Read of size 832 at addr ffff88802888f1e1 by task kworker/0:2/979
-```
-
-where it does mention that the issue is in the caller. The caller must ensure
-the correctness of write buffer.
-
-Also, Hillf has produced a patch [2] which looks better than mine.
-
-
-[1] https://syzkaller.appspot.com/text?tag=ReproC&x=1770d770580000
-[2] https://lore.kernel.org/all/20250703043448.2287-1-hdanton@sina.com/
-
--- 
-Manas
+greg k-h
