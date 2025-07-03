@@ -1,98 +1,138 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D97A2E1742
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988B72E175F;
+	Thu,  3 Jul 2025 10:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536936; cv=none; b=MrXaVLTe26JdvuVxUvXXYIF6qvJmgGkAI3X86OWMyIjk5RvmZ7h/yiAKAaNfc2ehJae1E/UqTb/K7R9YPZB7j/BAQ+UKPOwurLKrPXvHw7KAzFkg+La5sNIrdct0MVLo+CnGjJNZGd7myCfrSQxOtWICD+u6t1ymEEnk8prgKr4=
+	t=1751536940; cv=none; b=TBu67o/O/ng6EvyJZSFzJJjr12YEebXokt3oHIDlDuwOlC6I4eUSy9ZRXLRwTCmToi3myiXCJZCHiV8hDbD2b87kIXp8YZ//N5lc2QldYN61akNKi2zZN2nQBDD0gJKXoZvA5ExN8De6FyDhuIXC40LjfvcDox71eTUE4g8lrEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536936; c=relaxed/simple;
-	bh=JmWBIaZIEXTqWgc1d9lJjj7obLmoLdMEe/kLaCBoJ9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j8Qgkng/fMCgDoyqKTUd2veoVV/a+MbiV3HYVSGaMXfJOnmsgSDji/C7W7MbBaPtgsvWaHw990/g2Lw11nwvmSppaj7g5EgcV8HM2V7ZHMGXyTI75HHBmjvDxV8EwE1Wi2D5+Oq0xEG7qPQ2XTb/COZ5Ve5l2LRx7SApe94juY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=XKfi85jX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="XKfi85jX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DD9B640E0218;
-	Thu,  3 Jul 2025 10:02:09 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6o0ZalNZ2Ozj; Thu,  3 Jul 2025 10:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751536926; bh=TsyabOvKr1X++m2XWt3fdAjbToxnuDzJpUamwg7eCas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XKfi85jX3gGnE3za3KFVqla6c4AZiJ+IbYY/KdLw3GCyWyeyAtvVSaxipbLGtd84L
-	 hexkZjXToqgfg6muNvuq2TiGVdRHhcSrCHwkCpxElAYm+rKyYlm/msFoe5v9gvQx6l
-	 TtTi7/WzhJsDQAFVZZmFu8C7STrncRj/32SLLiDvYxYJhn6DLYR694EW0DNS3i9OwO
-	 Kx5wfOzb0ljZqox/XpRblrCD2rBmuLI9Q+byVvT6vOsA8z/EJ180Qjx3T4dU7v48M0
-	 qbIpLyVqWmFtmF3Hxwk8pldZ3yURywgdCApg/y56q9leT7I7CJ4DBOwxd9l5F5hluT
-	 yBbnjlySoyQZjwbbhEbf11nOu0f3JjlLoXoq+GyREPy6nIKnDj/ZDsZBDr5NbknkQR
-	 ge56bcH5zQ0h+rErrF8ZXojdZJ1/iPmfdr1bA8n6U40DrBaRQmQDkodvWzQJDUzmdg
-	 R3GfKfjm43Jg6DNZtVCORONU5yw4ZMpEBjCUnIOrB6Fu6JkGMVMFZWv/+7IqbMW5qp
-	 X8sbQkjSEgz7hmC7SSJNBUyBiiZDWEIGsnUIQIR4+GaOOLjGISqhebXW8AxvMPyG3T
-	 4N3x21MVT5EEF/Z9Gu+T/3GhKyCrT4VCi0TtK+yiPvZaj6AUK10QrE+jsBVGKH40RS
-	 3aI8Kr7skn6/SWHws2jajB6c=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 921B740E0205;
-	Thu,  3 Jul 2025 10:01:56 +0000 (UTC)
-Date: Thu, 3 Jul 2025 12:01:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 14/20] x86/bugs: Add attack vector controls for BHI
-Message-ID: <20250703100155.GAaGZVEwI9BWv9Cwjs@fat_crate.local>
-References: <20250509162839.3057217-1-david.kaplan@amd.com>
- <20250509162839.3057217-15-david.kaplan@amd.com>
- <20250630124038.GFaGKFxtAiYEBUAFRy@fat_crate.local>
- <LV3PR12MB926540104F695798EDD4240C9441A@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250701114537.GAaGPKYTbiLl4ABJ0l@fat_crate.local>
- <LV3PR12MB9265FD7451212DFA64F8B4009440A@LV3PR12MB9265.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1751536940; c=relaxed/simple;
+	bh=gDX780VY4dR/qG1ozIAynPHoGgqIhKcREQIqdk8HTsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=grmJTsGcGItgzEJ0lGdIp0JKnbth4ySPUIBLNkz8nN7bvoMjRpVC5jnyqPQ1xw5pdBKNUd7RNU3muXoqVcZnk5BSME8aQN6qFbfE6uWayVg0tLT2qHF1ax9yveRj5GwsVbJAwFdrJGWidqDoW0sYwARe5UCDVjYx86p+53xiz9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d3900f90f6so519074585a.1;
+        Thu, 03 Jul 2025 03:02:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751536937; x=1752141737;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cvo2bpcwGrGHE2F3u33rAVWzmYgZxRKIZST4sTWJ+JM=;
+        b=k7a6P2YBIHnRk8xtQocNCnUDmnFfAzllz5dW+AlWKUrrnZ12nvXKnG+064KUl4L8Bv
+         gar4rhclkXksHV8sh8hhnn5yObYhSxAdvgaRx2XFISFbKjWCP1gr/gFUUxT4NuRj+uV+
+         UW8DthGNTh3Ad+Nx6c3oMbdP76T7gevNwmeyedx/d6G/2CgYiAjf+K7hM29yfYWF0YDJ
+         MHcw85A+upDx8YHcCI6HyACuXoSLnO+CrNhdXDqUWW367ekz1nlJ3FLNEVwc0HQvRIFi
+         SSkPIp1yyC+PzJaE+btgK5H29VVyKg7d14j6iOH2iT/GCg+xGU4XPhp2fDrMVxGEQ8s+
+         cSIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVb8XyzhhvhdmGU6rhamRvTPpReZAp07X248iRQZSfhjThrLzNtnzrnUOGoKo2Chb9kfyj9xtUrCPXj2FY80ZrkH8U=@vger.kernel.org, AJvYcCWdgNhQE2pBNaHMGSFyQ5rYu0qZtSPRKLu3biOcMlY46WYne5b1o6JFbc7FKXLp7pjyMpKvysJrBzr2IXKz@vger.kernel.org, AJvYcCWoTWDQBUYUCE7LVyOeV+KOJCcNRnPPyQMlOXiAGQ5ZzNAHenK5R3fvS5Ofzx4MGZb2MdK/lygaNvw5@vger.kernel.org, AJvYcCX8Q2DLfGePVLH8rKlRL8c1UR7+Wtl68Vo3qBNuszLpT1uo4OzOQmYOPNwHzOue6Eqw9uTrLLjpsSk9gA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyic/kYFYqxxLOIIS7vPt3eVIDhKV/zJI525adAEI2OzCvuIQ/7
+	YIpek/eMDRvBV+5MAUJzt3sGNUD8jyIt8+hmAXEsr3jTvQMOva912+mxf4yXaeA0
+X-Gm-Gg: ASbGncv3ub9aTAAhtn6tgTjnQzMR4P0k9JyGB9TnmGiraz7jsnFWnhPBYsziUQiQuYI
+	5T2/aijwukrOFFpG5mfbIWrCPw1Y9JAWj2jwVztvO70ochshBKRBDI3cNt1w+XDlQZ9YuUKfMac
+	DKG77SyPBqiLibcsiWuzXmeTE8rVrTJ3G1KlTpDcGemxyMwTyn33t+y3G+Zg6m2j5gxFR0BGH4K
+	MQdtumT2SsuMrxKs/48F5MD3eKk/vHeNOp0B81JeW4lOyCcoRgNeWonHh1QSnOZfMNkmRFT6EsB
+	RdP8jcTaSHNqqIRbo5q/fceTuUkA7yFAaHdSOqvX6SR3mKGknZdiiDiJ/5ErmB7G5yG/Dxnhk+2
+	gIBMNUfR1QwymlkGcHJlkXTWuXD7A
+X-Google-Smtp-Source: AGHT+IH4KfkaGI+crNbYLz5U9XyfcLTcQbqsilihqV8cektXO9ZV8A8TWKAL3i0G/pS/NfkxJU13UA==
+X-Received: by 2002:a05:620a:6602:b0:7d4:4b7d:fc66 with SMTP id af79cd13be357-7d5d13f3c8fmr460247985a.18.1751536934432;
+        Thu, 03 Jul 2025 03:02:14 -0700 (PDT)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44320572dsm1079786085a.69.2025.07.03.03.02.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 03:02:14 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d3cc0017fdso588072385a.3;
+        Thu, 03 Jul 2025 03:02:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVwJEl1xcb0WsLPDLYYIekDytjDwALjPc5SzfwxVU5LcbEpGTnKHJ1gHS+s4GwixJg2yZC57u8ZVyPfWw==@vger.kernel.org, AJvYcCW9VOwV7Qn/9Lhm0JHrHjt2LCutbvqY6eKswyG42zb03MGMeZ15rJzMaeN5ogxccJ1XmjtvmpPDKqt3@vger.kernel.org, AJvYcCX53FrnYRVJODX6NBgAGkgXOzw+4aJgIHemepheYQ7kPpt5MdInNDj0Snew9Y7PGxolpCMOvHz9cFesqsNKlWbjYq4=@vger.kernel.org, AJvYcCXZU28PUJe7USTXWAYXAUG+76qHpX2iN4ig8StkAXuuxVQFcYkH6jV+l2juzcnPRBYvfCuFjhEyPfCLBtgc@vger.kernel.org
+X-Received: by 2002:a05:620a:2792:b0:7d4:4e42:7b43 with SMTP id
+ af79cd13be357-7d5d14612f0mr347575085a.30.1751536933143; Thu, 03 Jul 2025
+ 03:02:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB9265FD7451212DFA64F8B4009440A@LV3PR12MB9265.namprd12.prod.outlook.com>
+References: <20250625130712.140778-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625130712.140778-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250625130712.140778-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 3 Jul 2025 12:02:01 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW1+4EhYNWOHu1skaAg7jwLc373ZkBmPOhU=R5jhLJf_w@mail.gmail.com>
+X-Gm-Features: Ac12FXxLzVyjzWFl5fPBiLIrQzerhqd0vyh3KZSzE3KEWfQf4b8isxzF0-1Pg6s
+Message-ID: <CAMuHMdW1+4EhYNWOHu1skaAg7jwLc373ZkBmPOhU=R5jhLJf_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: renesas: Add support for RZ/T2H
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 02, 2025 at 06:24:31PM +0000, Kaplan, David wrote:
-> So probably the right answer here is to split this up.  I'll change the
-> patch to just use the existing mitigations and structure it like your
-> snippet above.  If someone wants to add a new user->kernel only option for
-> BHI, that can be done in a separate patch later.  There's actually probably
-> several other mitigations that could similarly be split up based on attack
-> vector (e.g. have separate controls for VERW in various places), if we
-> wanted to have more mitigation options based on attack vectors (instead of
-> just a simple on/off).
+Hi Prabhakar,
 
-Yeah, the thought that our mitigations are not really consistent wrt vectors
-did cross my mind. We should definitely keep this in mind and perhaps
-restructure them into a common pattern later, if it turns beneficial.
+On Wed, 25 Jun 2025 at 15:07, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+>
+> Add the pinctrl and gpio driver for RZ/T2H
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Co-developed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2:
+> - All the regions are now accessed by reg names
+> - Added support to validate the pins
 
-Thx.
+Thanks for the update!
 
--- 
-Regards/Gruss,
-    Boris.
+> --- a/drivers/pinctrl/renesas/Kconfig
+> +++ b/drivers/pinctrl/renesas/Kconfig
+> @@ -44,6 +44,7 @@ config PINCTRL_RENESAS
+>         select PINCTRL_RZG2L if ARCH_R9A09G047
+>         select PINCTRL_RZG2L if ARCH_R9A09G056
+>         select PINCTRL_RZG2L if ARCH_R9A09G057
+> +       select PINCTRL_RZT2H if ARCH_R9A09G077
+>         select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+>         select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+>         select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
+> @@ -249,6 +250,18 @@ config PINCTRL_RZN1
+>         help
+>           This selects pinctrl driver for Renesas RZ/N1 devices.
+>
+> +config PINCTRL_RZT2H
+> +       bool "pin control support for RZ/T2H"
+> +       depends on OF
+> +       depends on ARCH_R9A09G077 || COMPILE_TEST
 
-https://people.kernel.org/tglx/notes-about-netiquette
+This line is not needed, as PINCTRL_RZT2H is selected above (On RZ/A1,
+RZ/A2, and RZ/N1, the pin control driver is optional).  Please move the
+"|| COMPILE_TEST" to the prompt, like is done for most other drivers.
+
+> +       select GPIOLIB
+> +       select GENERIC_PINCTRL_GROUPS
+> +       select GENERIC_PINMUX_FUNCTIONS
+> +       select GENERIC_PINCONF
+> +       help
+> +         This selects GPIO and pinctrl driver for Renesas RZ/T2H
+> +         platforms.
+> +
+>  config PINCTRL_RZV2M
+>         bool "pin control support for RZ/V2M"
+>         depends on OF
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
