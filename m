@@ -1,120 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B303B142E73
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F28917996
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531040; cv=none; b=Y+kDP/mGmTzmqP1TQZefVC7zOPtUQRmdlFHByBNq8eJ8/MxU6+cr1RJqDGG4bfqnJaC6/ZfLRsrnHngB5SahwU7Ee/KHdAiLqjSjHDIzpKwbBFJJm3NrZVqzMy0dcziTO46OMmON7SSSfAZWDk2Jrjcf54sQO09VgP1us7EntmU=
+	t=1751531047; cv=none; b=lCWifXYunYbNinYF3TXxn/a9vPOeA2+ui1zv7Hg/1Xj6CNjnzJFpWbTP+TakXz+azgcf4c8VX1eZ29mtokmIZPU+rHh36Rw+OzBNOGVdupDmrlQW8XuvRnoQfyO8/03ndT3JZ7uiQCeg3pfWdZzc3jFzT5YsYW0sG9caGxp36G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531040; c=relaxed/simple;
-	bh=o+NkW4UjRCYC3Ox02bP9Grs2dJLcAnd5IKgqdCW1eLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tIqJbXYkROWNNy7zsCwQderCt4otKEjCQXx02yL7NTlqQnG1xlwGimJdip8l17GuH9qdVb2x7ZAUuv4ZKCery8rRAglIJbsXpUOjyNNBeVS2AiteacFD8ktlwnZMUTYXYkgO3PkmaQ/rZ97W7nsKYqt/4yoQRURZnRKkDIWEhSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BBzq4HO3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751531047; c=relaxed/simple;
+	bh=ZNNIcMU0wGV5rgO7U1S7eadoZOp3kW87TNvl63DPAgE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FMhg4TZQhhZ7p8QlkiuuL7781uZpEu/2qopXJV9n25aSFxn0LkPIh3cm6Apqn/Y5ClFRvuoicaazHPLE76j5ftCiRjFK3CjvTjKdR0/ISM6+ynJICHW3vdxzPcHSpT8M2YGw35A9O3Q13b25qo6YqPEKgZlu3hF9kP8j7DJCMJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CV5EY8kW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BBzq4HO3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751531037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ke2YfmZqQvuyIhOn4BkIuW587OZjecPx0SDiI46FKLs=;
-	b=BBzq4HO3bm4L8uLva9XYnQz9lPYd3fJB7qSfFcg70CN/g/2fBZkR9A1WTjK1BAz7yH/Ajo
-	NXlfYP4aMyPBgRkdeGOpuAuE4aN66mQs39RJ2RZrwwFI+PjFEe5jp24Qy70qaTSFY0z51Z
-	a60ik0/bwsbYRg9wZFX0mgJ1vCOijxk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-glzomTrfNUC9G_4Yb_OQzQ-1; Thu, 03 Jul 2025 04:23:56 -0400
-X-MC-Unique: glzomTrfNUC9G_4Yb_OQzQ-1
-X-Mimecast-MFC-AGG-ID: glzomTrfNUC9G_4Yb_OQzQ_1751531035
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a54a8a0122so3879959f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:23:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531035; x=1752135835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ke2YfmZqQvuyIhOn4BkIuW587OZjecPx0SDiI46FKLs=;
-        b=DAdcLECMDLogFnXkrZcauH8jaU61LySV9H4iI2uky07p86q/xFK0YenNNHrngwxtQd
-         bz7Zda5OnZqxApCRtWSwt5TyDaujMcJGQLS+9HIzbqMN21AiJlhQjI1ZCpzbv78mEYRZ
-         NGc/radPPDyjdrvfZxIe+ZYlkVaSNJLc+CYTKyPb2uiood9vlFqTXDJBDBYk69wInZkr
-         +fDB4THxHbwV19mjSLQA/hutbKe9wjvsJAVjDp0L01hy+tknANtJGqprYe99rq42qQN4
-         GD7jrNj1AcFEKiJcyohzYrDlNEx5axftGYXe55uCtklgpiO9eCCz01TuI8w55WetEli5
-         2WLw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/N3om9WoatOjSPBfufVCr0/JYYdsz24dCoKJoHR45nVNQ0c+H3EXShWTeXbI5ArjSk1x++geR3igmoBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9w4KHaZ7rD4MAZUauDIDAqfG+bq+WdYo80jrhSLcDx7IiBgUB
-	qKBOBpFZdTsKt7IJD/HvutheQDN5h2lzZFLSFwixFfbBT88mmsALCREtnNd3NpiXulPP7i3+GLO
-	XTn/JkjQmo1YaNwn2LODJzv/+tvB0w4rAjayZXZQEjlZG5v9farFZu8deipK1LrGg7A==
-X-Gm-Gg: ASbGnctHlgIckhYiy59iECwZ4Tyhwu/RouV47HXao96w/wxe1smoMO2glRQEjVPZO6I
-	LJwIczOvoxOXU+rW5xygD3+0ZCmdnSBL2IoyScZ/z6xyPzmvC9quWmdNO3pMk3DQsepPUTT231A
-	JkfKEUy3AT3g0CMYzzbabfScxB5C0GfK4cerPc6sRzuTK3M0GYJc+83+tEReu5xdT/JGC4cSnnD
-	4wHqOF3iIZ1o6ro+3p24F3ozl7MsYRFq2bQr2woHMESvHSGNM+S7gQ+9kBxAl1lfBHqcEJPb7bm
-	h72zLYi7bu0bT8QbHWrgLgx/3kg=
-X-Received: by 2002:a05:6000:18ae:b0:3b3:9c75:c4cf with SMTP id ffacd0b85a97d-3b39c75c60dmr972430f8f.51.1751531034888;
-        Thu, 03 Jul 2025 01:23:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCYV82hCMNv406EdS8av4JOq7IBDVQLti9dcL/h1KSI+kswFV5uEQ+Wn0KudAapNB0JCaiDw==
-X-Received: by 2002:a05:6000:18ae:b0:3b3:9c75:c4cf with SMTP id ffacd0b85a97d-3b39c75c60dmr972392f8f.51.1751531034265;
-        Thu, 03 Jul 2025 01:23:54 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.200.84])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f92esm18167611f8f.90.2025.07.03.01.23.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 01:23:53 -0700 (PDT)
-Date: Thu, 3 Jul 2025 10:23:49 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v3 3/3] vsock: Fix IOCTL_VM_SOCKETS_GET_LOCAL_CID to
- check also `transport_local`
-Message-ID: <34n3no6ip55yftyqtdpww6jzsse4mhnk3pjmd5sfqhpp5nt3my@wiql5wlf3zzp>
-References: <20250702-vsock-transports-toctou-v3-0-0a7e2e692987@rbox.co>
- <20250702-vsock-transports-toctou-v3-3-0a7e2e692987@rbox.co>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CV5EY8kW"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5637hxuL032118;
+	Thu, 3 Jul 2025 08:23:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	slYJXYayr0rGomugWFVTr2Z5S5ZLiUsJOkvUf/lIMGg=; b=CV5EY8kWH6JdlOeJ
+	2KUiROTId11i4Jqq8tDWx659VEzg/OvF7JqDwk7X85Nf0lrht7GI05Yw1YgVfXHq
+	A7NHZk8a9/gqJnMpN3l1Ur3W7ZRkLqAGZ2EmRbd4ZnSJ1DZWvX2EjK0/E0YqfkwU
+	nWp+UTGb7hmDFdevrhzq9KQLa39AcbkyyFLMgvqJsL+caxQT8/dwWmYthNp7eALs
+	bJ6EwuZ5V8LPQIhEWK+HxhmpTXISTkgxh3kQRSM7WGmsLTLhh7YP3JfVhpbVcp7Q
+	Wfs0kKYfNufSYl39GA+dFcLwSb+r6jgOHzNI+jP4Tn2j4am+sRQYVGqcFnEGM1oE
+	S5PxGQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kfwhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 08:23:55 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5638Nt2L030475
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Jul 2025 08:23:55 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
+ 2025 01:23:52 -0700
+Message-ID: <b221cc88-f269-4920-8843-31ab92fcf92b@quicinc.com>
+Date: Thu, 3 Jul 2025 16:23:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250702-vsock-transports-toctou-v3-3-0a7e2e692987@rbox.co>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight-tmc: Add configurable timeout for flush and
+ tmcready
+To: Leo Yan <leo.yan@arm.com>
+CC: James Clark <james.clark@linaro.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, <kernel@oss.qualcomm.com>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
+ <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
+ <20250627141745.GS794930@e132581.arm.com>
+ <5f2527d2-be55-411b-a79b-f628e9fe7f06@quicinc.com>
+ <20250630110836.GT794930@e132581.arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <20250630110836.GT794930@e132581.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=68663e1b cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
+ a=i40Tm4eTu_XNabV6h-wA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA2NyBTYWx0ZWRfXzHOfQABRBosI
+ njHoKiB8+gUL5L+ZuhcYrRolEUsVAEt6viB4FIdXHlX1uciYKg8sbocsqgrHjJkCQLKo+gEAAuP
+ 5jhr9GzcRAbh2ysi9RiQDQtFecRzfajKP+EOcDLKirVRTky5RXD2o4U/WAp+PTTU8CvFVHI9Bry
+ ZYatm3xxvQkwV5KVtbD4Cr5RR4y5bgI0KGi9PPklQpcygkxC+Y3ikZ+4VxFnvrfyO8RKZab+K9H
+ T5JhfxThz9uQcBgsSgdstQjYlB/yUjjVQUT9QRpVKqZs26WVpItH0PsPAYSx3Ma1W9O7I1FARuN
+ 8QnZiwOoNZ9MvVbe+rFsjUPJkcpUYeJSjJvUQjeAlXyXLNZm+l84hlykD1ebiSLOyPCu0R7bq/j
+ 0FGmJRmvh1B5C2aKHb5yAh6MqzQBGkBJhXByVEkT5Of+dQON9F9aTRWkc/mjWCLiz9O7ILgn
+X-Proofpoint-ORIG-GUID: msw_2bq5bJAalCVedPQw6mpmxXWsJjli
+X-Proofpoint-GUID: msw_2bq5bJAalCVedPQw6mpmxXWsJjli
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_02,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 mlxlogscore=901 spamscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507030067
 
-On Wed, Jul 02, 2025 at 03:38:45PM +0200, Michal Luczaj wrote:
->Support returning VMADDR_CID_LOCAL in case no other vsock transport is
->available.
->
->Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
->Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> net/vmw_vsock/af_vsock.c | 2 ++
-> 1 file changed, 2 insertions(+)
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 9b2af5c63f7c2ae575c160415bd77208a3980835..c8398f9cec5296e07395df8e7ad0f52b8ceb65d5 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -2581,6 +2581,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
-> 		cid = vsock_registered_transport_cid(&transport_g2h);
-> 		if (cid == VMADDR_CID_ANY)
-> 			cid = vsock_registered_transport_cid(&transport_h2g);
->+		if (cid == VMADDR_CID_ANY)
->+			cid = vsock_registered_transport_cid(&transport_local);
->
-> 		if (put_user(cid, p) != 0)
-> 			retval = -EFAULT;
->
->-- 
->2.49.0
->
+On 6/30/2025 7:08 PM, Leo Yan wrote:
+> On Mon, Jun 30, 2025 at 06:40:53PM +0800, Yuanfang Zhang wrote:
+> 
+> [...]
+> 
+>>>>> The current implementation uses a fixed timeout via
+>>>>> coresight_timeout(), which may be insufficient when multiple
+>>>>> sources are enabled or under heavy load, leading to TMC
+>>>>> readiness or flush completion timeout.
+>>>
+>>> I would suggest that we first make clear if this is a hardware quirk or
+>>> a common issue in Arm CoreSight.
+> 
+>> sure, now this issue has been found that not only CPU ETM, but also subsystem ETM.
+> 
+> As the commit log states, "sources are enabled or under heavy load,
+> leading to TMC readiness or flush completion timeout." I would like to
+> confirm how this situation can happen.
+> 
+Enable all etms, then cat TMC without disable source.
+> When disabling a CoreSight path, the driver follows a sequential
+> order: the source device is disabled first, followed by flushing and
+> disabling the TMC. We expect that there should be no contention
+> between source devices and the sink when disabling the path. For a
+> subsystem ETM, I expect we should also follow this sequence.
+> 
+> Leo
+this issue is a different case: running cat tmc directly did not disable source.
+
 
