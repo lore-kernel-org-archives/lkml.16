@@ -1,109 +1,197 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B29225D6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 07:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15086298CB7;
+	Thu,  3 Jul 2025 07:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751529109; cv=none; b=IFxp0gdasEMUE5fhC3o9Th3RM5f9orKm0sp/oLGR0a74EHSHDlo8SnEMViVnadw5U8ZYrmaruuBmXgbr3goUTtNtbdGZ1TLslp51DId9MC5AaW9Tc39EjR7cAIsORUkPuLAjWPxBS4ymZ27BQu9mGCSsnjtfU3hjf9nkNSPXkQU=
+	t=1751529125; cv=none; b=i7fiHj1lSfbBv/9Bw2a2BUMqBxF84reZ64ARq5M5qTDZ8xXUWJCMvoqOyYXviEtA+n0pvYGS5lW4mw7wLs0Xt1yYPzd8GonS+dKRr6WXUNPOoRjcbgXQA+Ne+Ru/yr9r8+PyMrA9yaZ9PsqxTBUS9Y/70ikGRe0lrzOXuxF7YYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751529109; c=relaxed/simple;
-	bh=aetFDDrK02IXhBM57705wpAX6sb2EWo1af3VTImZsYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iQTKg3dyHej/X8bizXhk/KWaF8AOm+16Ys1qDDP1CnAT92AvE4H7d0l8bzGQlfkhrbzo7k5/65yxWF7GCdDfPJrk0uduSHt/h9FCO26y6OOMb9iXrEiIcsf4qSRG7g3zqDXHYamW1nm9DflYG03tjE0jY0XY3jXIUlu2Adm3jXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QM4pYAV5; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751529125; c=relaxed/simple;
+	bh=TIb8Vu1zmttjZ1M0dwM7ar8hOBslW93Xl1m9iCYHcQs=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=GIXcxRWvqNmii5c+KNkcXVdI8dbun5jRCQWhMdR54uB/q+11w9eNOZxJOcqn1jBm5oDalgjYit67TaLIn74FOFR3buSakexgB8kFamJunLgXObVeCGy1blsa1xRpvKG3m+C9JcRzx/n8qtmIYJge4AP+q2uye3twzUzKRh0PRro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=JzhbKh2S; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QM4pYAV5"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d7b50815so40513265e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 00:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751529106; x=1752133906; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HCOocaiZE3RHaNr4ijYeQaRjphYIZIyLbI3fYSnEAzM=;
-        b=QM4pYAV5OqG2FNj7F40j7nA0+De4qo+EQ9dbVa51+9cW6KYmsWjRSCiS6rnnDomZsZ
-         uzu7cz0aZQxG1PJoD8GZxL8SlLl4ItrmL7WCqXJrbs1BL4UEIbpvs/TnEb7DE+/SYnHY
-         6vSAbOM26TrNcXTZ8/XyduDCy9iTac9UZabyypt9ZbI6NI4jPOmETeNwdWTiOcmPOda6
-         BeFDDB5C75THezT9+rnVR4UdwkxnXrGwVvzTbHWGIjthRS3/Y+iVH7f4cMoF6jt/YqWZ
-         krSdvpe+lCA85Y4bMvvyfrmGCKENr9JKbVT2W06Tq4rMwsQDzNIxRklwuzFPYxXgz8R8
-         TrkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751529106; x=1752133906;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HCOocaiZE3RHaNr4ijYeQaRjphYIZIyLbI3fYSnEAzM=;
-        b=topcb6bFxA9IJnFd8n6CJaKvhGDb58XHJJv9AUeizFjNJw45PMGq4F5e0cAZu4VrG/
-         84NcBD24F8Vg5e0f/c31+GAtR8F7o1Mad90uKZLv1uNNDpzGKUGyT5Hpq6q88iOmI0O4
-         2iZPqjDL8DQdfvF0Gwp1uTcPCg+OA12uRZDXJrJMChGGtkzCSxVEPKXweTZ86oMxuo3A
-         blufeDVfCSfg1ste826iMOwlnNCXNUEwESHj2Bw6AH3DsgB2kANl+hngU+IDNU6bOJfG
-         6Fe854STPk2ArCdmj+ED7zm/exgI06DpvBNwuGeSYeiBess84crMh6RErl9TknuI0CGO
-         hS2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXkYr1AQKF060BpeGDxQ8NK25uQCvRkaEU0oUT5oGCV1kjh6FLTB4DtSLenBGm5+OsOqKBrQhALKBEtoZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/KZGg/hcGmZiPByBnkDtPI5bhSOxe000St1DLIIStfLYi3zZ3
-	ou3XnMyk1MEmsXD3hUIfPTZ5Czzg6iFrect5ghTBZLkgj3MBJ442stAJ
-X-Gm-Gg: ASbGnctQ92CVT67HkUq+WR9bv5kBpBZ/P8CnAFHzZ/Xys6oIZZtAlJhiE8avb1FRIT7
-	kmMIZU0lHaJy6WQG0pLum7JyY2dbiUR1whX/g6sQLUZWmnBK67hVE0ef0XrAPLxNuxc9jY8xJO4
-	VY7wH4sb3vpjJQ6FHXLlVslAbg7O7b7+fAGqHNITozoLciE6J5hyODYjkKLZ8y5CkbGtjOVQCQE
-	tuvpfeNuUSeRKCxQ7XJkDkusPVUKrKqxf/dJVbedKMrDVL+xMe0Jmihx9XNk5RvPachY2JOImNC
-	Qhrd7NalpasVrPrRxDuJAVe10TnvzNpTCTASpWRvLBRwij9qh8o6BkiFA1iQd4HsGG6NG/sQ83o
-	TCI2SZ1mMIoQHr8AUuw==
-X-Google-Smtp-Source: AGHT+IFz+l/hIELHhsBalX2bIxe469fhX4JRJjdI+dTOlBmgT4PKi4zvv+CcPxztLihcKrsGhMzOrA==
-X-Received: by 2002:a05:600c:3593:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-454a9c620e9mr26826685e9.2.1751529106099;
-        Thu, 03 Jul 2025 00:51:46 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9989fcesm18768755e9.16.2025.07.03.00.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 00:51:45 -0700 (PDT)
-Date: Thu, 3 Jul 2025 08:51:43 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Alexander Potapenko <glider@google.com>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, Andrey
- Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
- Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco
- Elver <elver@google.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 02/11] kcov: apply clang-format to kcov code
-Message-ID: <20250703085144.4afe788f@pumpkin>
-In-Reply-To: <20250626134158.3385080-3-glider@google.com>
-References: <20250626134158.3385080-1-glider@google.com>
-	<20250626134158.3385080-3-glider@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="JzhbKh2S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1751529104; x=1752133904; i=frank-w@public-files.de;
+	bh=TIb8Vu1zmttjZ1M0dwM7ar8hOBslW93Xl1m9iCYHcQs=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=JzhbKh2SwdXzZM9Ks4J8reStpKuZOQyBvGxhiTwZ+W3Aa9k5MrNrl715l3LP1jjW
+	 jfUV9h2zU860mQOZb3G5mX45+EL/53v4p3Gh0ubCwIuBvpz1S/xtOBTU3FYNJGlLq
+	 FFUF0RNHktl39DIfrn0V5MY9TuGH+T0GAIdT5dCU9d/pd3zsKHPHjBEP2GGUAm+HB
+	 ZghZmcrKZYwhV3wKwcyIYnGdglBdTL8TlUoe9/wqfbIIf+D4dCic3vs2cSYeRDcWo
+	 AE+QUIe8FuVAgkvI9HHCsOrK5jLturcTrmgFfpa29bkNOq8dEybT40sJbnfb+ALAI
+	 g6T8CbzZNNczXvk28w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [100.71.3.167] ([100.71.3.167]) by
+ trinity-msg-rest-gmx-gmx-live-847b5f5c86-wpb8f (via HTTP); Thu, 3 Jul 2025
+ 07:51:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Message-ID: <trinity-112cc1ce-74d3-4fd8-a800-e302916dde33-1751529104009@trinity-msg-rest-gmx-gmx-live-847b5f5c86-wpb8f>
+From: frank-w@public-files.de
+To: krzk@kernel.org, linux@fw-web.de
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+ cw00.choi@samsung.com, djakov@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, johnson.wang@mediatek.com,
+ arinc.unal@arinc9.com, Landen.Chao@mediatek.com, dqfext@gmail.com,
+ sean.wang@mediatek.com, daniel@makrotopia.org, lorenzo@kernel.org,
+ nbd@nbd.name, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Aw: Re: [PATCH v7 02/14] dt-bindings: net: mediatek,net: update for
+ mt7988
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 3 Jul 2025 07:51:44 +0000
+In-Reply-To: <24081402-4690-4a1b-a6d0-adab803d0049@kernel.org>
+References: <20250628165451.85884-1-linux@fw-web.de>
+ <20250628165451.85884-3-linux@fw-web.de>
+ <20250701-rebel-mellow-parrot-fda216@krzk-bin>
+ <8C311FDD-094A-4F1C-AE26-7E3ABB337C14@public-files.de>
+ <24081402-4690-4a1b-a6d0-adab803d0049@kernel.org>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:Y5ZQ8Y1C/j8ZgyHcUkGFJFXJlcCBeb2rydmw7I1JcmLTb5aoJmKZa/IEDJj1c37Qi5y5f
+ CdmV/21E99vlXJVPNGgppFsjOEBqrmZnjdXOeecSli/Ktb2cb0So+H9d2MG/b6mJlEi/VCo0w3hC
+ 5h7V5tCJzvWG+0fGtsqlHu/sRR0kKL90/VbvCmL5p20oS6GCjb93AHx4kPPUBy9MqaRhKASxrj2y
+ +tBrYRB3BjvCGL4VbSyPitzOO6WyqHBei0SfyKkLh4vZkPpZSm+udN+KyvVsuMsjDdSaKpuv8UXt
+ YU2mZydqBntLo1TNjKeKPesXQ4rzsPf2PtPRUaHPS44Ws3ExTuaiAX+fr3+Cg9Du3w=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5IGurp4wuy4=;61DYLIahmylHpOzMtce5fa0vxtC
+ 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
+ 3meBAARWEA==
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 26 Jun 2025 15:41:49 +0200
-Alexander Potapenko <glider@google.com> wrote:
+> Gesendet: Mittwoch, 2. Juli 2025 um 08:29
+> Von: "Krzysztof Kozlowski" <krzk@kernel.org>
+> Betreff: Re: [PATCH v7 02/14] dt-bindings: net: mediatek,net: update for=
+ mt7988
+>
+> On 01/07/2025 12:33, Frank Wunderlich wrote:
+> > Am 1. Juli 2025 08:41:42 MESZ schrieb Krzysztof Kozlowski <krzk@kernel=
+.org>:
+> >> On Sat, Jun 28, 2025 at 06:54:37PM +0200, Frank Wunderlich wrote:
+> >>> From: Frank Wunderlich <frank-w@public-files.de>
+> >>>
+> >>> Update binding for mt7988 which has 3 gmac and a sram for dma
+> >>> operations.
+> >>
+> >> I asked why you are updating. You claim you update because it has 3
+> >> GMAC... but that's irrelevant, because it is easy to answer with: it =
+did
+> >> not have 3 GMAC before?
+> >>
+> >> So same question: Provide real reason why you are making updates. Tha=
+t's
+> >> why you have commit msg.
+> >=20
+> > MT7988 had always 3 gmac,but no dts with ethernet
+> > node till now.
+> > As i try to upstream the dts,i fell over this.
+>=20
+> What does it mean? Are you adding new device or not? Nothing explains
+> that something was missing.
 
-> kcov used to obey clang-format style, but somehow diverged over time.
-> This patch applies clang-format to kernel/kcov.c and
-> include/linux/kcov.h, no functional change.
-> 
-... 
-> -#define kcov_prepare_switch(t)			\
-> -do {						\
-> -	(t)->kcov_mode |= KCOV_IN_CTXSW;	\
-> -} while (0)
-> +#define kcov_prepare_switch(t)                   \
-> +	do {                                     \
-> +		(t)->kcov_mode |= KCOV_IN_CTXSW; \
-> +	} while (0)
->  
+The binding already exists, but was incomplete. It was added while changin=
+g ethernet driver but was not used
+because i'm the first person adding mt7988 Ethernet node to devicetree in =
+this series.
 
-Too many level of indent.
+> >=20
+> > Imho changing the regex for the mac subnodes was
+> > simply forgotten to be updated on initial mt7988
+> > support patch.
+>=20
+> Fix
+> your
+> wrapping because
+> it is
+> difficult
+> to follow
+> such
+> style.
 
-(and too much churn I just deleted)
+i understand that it is not the best, but i have to manually wrap lines be=
+cause neither my webmail nor
+my Android Mail-App (K9Mail) supports automatic wrapping (created a featur=
+e-request some years ago which
+got rejected). I try to wrap it as good as possible, but still manually (o=
+n phone it is not that easy).
 
-	David
+> >=20
+> > I try to rephrase it like this:
+> >=20
+> > Binding was not aware for 3 MAC subnodes because
+> > previous mediatek SoC had only 2. Change this to allow
+> > 3 GMAC in mt7988 devicetree.
+>=20
+> So a fix for existing? Than add Fixes tag, describe the issue and fix
+> ONLY that issue.
 
+Yes, binding for mt7988 already exists withing the mediatek,net binding, b=
+ut the pattern for mac subnodes
+was not updated while adding. So i had to do it before adding the ethernet=
+ node to dts in same series.
+
+But yes, i can separate this change again and add Fixes Tag. So just the s=
+ram-Property is added in this patch
+and i repharse it like this.
+
+> Best regards,
+> Krzysztof
+
+regards Frank
