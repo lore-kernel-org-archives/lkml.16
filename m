@@ -1,205 +1,337 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39E92D0C94
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C5D2D2381
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531941; cv=none; b=tALYxHE/vkEnvKXsmkOOd7h36viMWMJiGHNHeK4EHnnTy4K1rHrl5ybLbIm/L97eXlJPf6+qTDm8OSg/hNfQSykuioIP0VgLWQkuFDJG+nv/dMMYGn3YGwyQaWV8bof2pW/5p8oYG2Bo/LaTxuVpdSPJGzYIOwiY/yyr9p3kcq4=
+	t=1751531967; cv=none; b=oYPoqZABO6QBBDIF9zXbwf9w1XlAzqv5uPZtJ8iFlWdaMMuOCYcluBGYkIeTGoOV9KEtDFYVYxE8Uqr1XD86A8M5+mLXGNAt+HDHdNO2/WNnCdtK0d9qqB9G4P7/3T6tvF7eGXddG7ba0U1kYwVOV9x1dY9FTw6/bXaAYg12gA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531941; c=relaxed/simple;
-	bh=u/mXG+meyVkPQSN2d60rE2m9IxtuxrWEsKxW9ctKNZg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qzxF2b+W/gphsO4Y4D92dg0McaLT9+pvQpJmiHwmhCBxVwXtrxcX2OdTo7Wtym0ivoMgzYq6Jr2YxLNFrfgkbNjX8hJBUYj4hHNV5sBa7EbknbitNY+1esMegMCeEfEZwbUc2ZGPzWWCchtZDr+8p1Yvc2y8jstW8j09EswnRuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YgFMcaNV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751531967; c=relaxed/simple;
+	bh=oeEJeRpohsvPzBmZ1Faihcy2y9EpVE2V5TndzPQFvYk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ASozPBvZeLe0wKX9W2HrH5XBrC4AUbX3iMsXlKCmgTwioimVk1sn8pqMRp02SWfyz9gso8ttL8p7era04AYDjUMSEOczgWKXWMqz/l8nOLz3AsKQrcypXDoP3RuGehkoCRSKuombJrDETRU+6eN44otsHUm+hDMYHyhqMacM5rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DljF/uYk; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YgFMcaNV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751531938;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Gwm34b4PAcYIoCMAqHNNcMIyyJWm1FjC0e6znIfowBQ=;
-	b=YgFMcaNVUWCWwmAiGnOQwm08HqouVdfaDK/Ih0N2y4csJLVW2oBqF9/IhTG5I023Lr5prH
-	DWen93EAWWzf/6pbOTK6lW8iZr4XSaUNO2Nektmd6GXUlBAXaXryqmGVGDIIQuWbGtxUv/
-	qX53v0rchEQhXTz+wsfZ+yFklCHg6U4=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-IeRX0eC-M8-FXlSEEna_Eg-1; Thu, 03 Jul 2025 04:38:54 -0400
-X-MC-Unique: IeRX0eC-M8-FXlSEEna_Eg-1
-X-Mimecast-MFC-AGG-ID: IeRX0eC-M8-FXlSEEna_Eg_1751531934
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c955be751aso1197992285a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:38:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DljF/uYk"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a51481a598so3032004f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751531963; x=1752136763; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8bfHzYesKlfwRcWidP0bBqhx3KAGU/Um8O30E5akgo=;
+        b=DljF/uYkN3z4fqKwZ4ox45RmfzLIsngcIsmed3NBvsgzQ4mTm0rv+kHyuBhnY7zqto
+         7iQ0inFGUw4l7Iu0fne85l4En8jXMs5Z5Nl9+ZogeUVWRf+nn9WAcxOzdOrt9U10Hvq1
+         pT34/7Cz4rk/whPymgTVyzjoc/dAz+8q0+ArB9ZgINPMrqd/VufjRpMZdxJR+bTkIC0f
+         Km7Va9OMz2ykPjbcJn7qtEy0CyOlCyWKuEu4xAA9EOz1blgf1Mfr3XE7dgYdVjIKiDFV
+         Zekla+Fs2oELaP33xWN+CKjI69A55Mo92x3dEDaqlKkDKwGHjh+DNYT6q7Zmlu4vc8Ej
+         uJnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531934; x=1752136734;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Gwm34b4PAcYIoCMAqHNNcMIyyJWm1FjC0e6znIfowBQ=;
-        b=kaLtOl+do6YWkqNs9UXgVxtXWtASfZftWOBR7KcMeqec/p696l4KRR+T8eQfUxcks0
-         UgeVKPzq5Jk+uVo7ekxZMOa/uKQ38tAzVLDD0LWlim2AEq8vsICwJnXfQ0nvO+Cn4GOi
-         AXZ+xzG+N5CdaHipjSWfMafvb+tStXrljVXJT/1Zr1nLL9A+B/99WagyV3xMkbYSA8Ci
-         OA/Xdnqps7hnaBpag9Z/Cc4/Z5fLqlnxboYOM8U34dI0F1vogrG9FHUTfWSskDLszqWt
-         G4eaqfJkDAG+kCh3Dd6OQH2JDGg4LuG2pmGgBG4ac17JWghJaQA/e0WO/sSgxYLxnil5
-         X6Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXmUc+zaKbLFfUFnPydA7G5SxvS+ZtfV3wEvEvAOROKvt3KgkcXUQrx8QnSnjUsGUiHUHLPXXQaOnu6kds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwCBgZfykzmopBlut2oq9tblt0wOawn1bCItwoKjvq/RUOzO6Y
-	TmxkHWdWPE7x+sThw5E+FeCkyJhoMkAn2etr1wAmpHAZaI7Trpdv6qkfNAtdUBfOtr4z/yvr+tF
-	lRtoxWk4FG4tl0SxCZbKpnbLRRKikUrqY9WP/js1StEHaTvE0HMBNwk+MF751Xq5GSw==
-X-Gm-Gg: ASbGncvi7mlhfuT4g956bi3t+CG9k/b3xRfRXnjh9PbKiBXE7dDWkf71ROcufXJyGKS
-	9CMTTeuox2jMzSR0lGk7ZXsScDnk1QPHo5kSfFWQfz+1g6/PJa5SKws4BgKwxFNv8Wt0/RAqLVr
-	vghaGWI+subO6c8W5oRNTBbqI2gIG6vueEaAZudE6YNtk47X07olgsnM+Gi+v0VwtJf1FMITJuV
-	kpaMC1SURvf8pL6q6G3u4z5cDzP99s+UTK/rfTmeD61/dq/FiRAf5OoLTJ6o4fYqSJ4ICaTGh2m
-	v8w06rdZ8GE05gZ71lY09VYpaej/k7O9bMBdt4aCIWwZ
-X-Received: by 2002:a05:620a:28d0:b0:7c7:739d:5cea with SMTP id af79cd13be357-7d5d1cc976bmr335587385a.35.1751531934187;
-        Thu, 03 Jul 2025 01:38:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG66Bc+x/z1lMoRTJBPMfEoClFFZ2A277lXc5gjdCv9n4Sr9TbMvl9YfSBPbAiwce62LOrADQ==
-X-Received: by 2002:a05:620a:28d0:b0:7c7:739d:5cea with SMTP id af79cd13be357-7d5d1cc976bmr335583885a.35.1751531933764;
-        Thu, 03 Jul 2025 01:38:53 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443229ccfsm1072780185a.88.2025.07.03.01.38.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 01:38:53 -0700 (PDT)
-Message-ID: <d6ded113-2fab-45a1-94dc-5cde0c9f9006@redhat.com>
-Date: Thu, 3 Jul 2025 10:38:50 +0200
+        d=1e100.net; s=20230601; t=1751531963; x=1752136763;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8bfHzYesKlfwRcWidP0bBqhx3KAGU/Um8O30E5akgo=;
+        b=hF/wyOk3qxNRGQbqghjeYXpRnxPdRzfWZh7hP0zg7Escg7b50Y3vWxYkpQrjZeVC9t
+         kpunnwt1uRuIpU+ptOwhTamGGfye5dDI54oMpsCPBoKGX/4XA4EgNs/e5VikH1Ksbn5O
+         dlbTerOkoMjOu8ZbGeSDR41q4fjZsEkJEBp0AxDkRMCBjbBxueh15fE9pM17UR6PR4c1
+         TY5lAX1eHcOlmxJ5BBitwlvCUvB4HJqdqMnEbcOzdvcLWdHdfOQ73gxc8pxO7f/YcLZ+
+         ZatAT4hOZ5LmMxtNetKLwweDlE9Z876+G2TeT2f2HdQS+672TxUbxJNvhHsWMRyxvVRM
+         cxqw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/2R0JppwXNgANyMdJcbgz/6IhWGa+9dXacc1gWX2ma9nk4zaNW0ivZP1QpJ/yC+d1rNXBv69l4XcBBks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOuvHuSs5IVTumcm3q4jY/faCethDhaa9bTBnzt1jSgoPTOHze
+	7g+xDkJEoB/TYbvAmuClf9fPdxUe9brlUqwCDmcMeEiwm9OzXEpihcuCtqvG1qHa+2I=
+X-Gm-Gg: ASbGnctv2t5Sii7kRlkrbo2tQmKFJ1Og9zH+C/8t6V+lnCLgQjOoRRnMe+KRnzsqc2Y
+	CTDAwmmk/NbvqNoep8/w1qqPXwMa0YX8P7VqQft9vgqRzllqAIEK+mUsCGEi/3Pc5APF1L6BSht
+	4bNSt/fiWMNTvNIvhkdkD8skLeLGW3ysVUpJZ99hVOu8S0u3XqIQ36pK+3WdVgxFvQKdMGff2Mf
+	fe1k7DTxpgOPP7TS2MXcMCDzHL4/7/QekjpqDXPJbhBPP09AKg3goRAvC+EoMbyWM0r0iFZUuXy
+	b3kwHcp9xPeR1gEmRhZt67H/PnAJ2Snuji5Ug5DYRQ10+SOj9lzcYFaHBpyQvg==
+X-Google-Smtp-Source: AGHT+IFk0GiSnUT1zfe9NSXWr0EcN2n9FCxVOudGKE8dPnwlMzp1PFM9M1gfeXEtcpX/kdpzNxhwhg==
+X-Received: by 2002:a05:6000:4205:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3b1fe5bf32fmr5156869f8f.3.1751531963412;
+        Thu, 03 Jul 2025 01:39:23 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1b4c:1be9:25d0:5634])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e52ebcsm17684011f8f.46.2025.07.03.01.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 01:39:22 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Chuan Liu <chuan.liu@amlogic.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,  Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,  Kevin Hilman
+ <khilman@baylibre.com>,  Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>,  linux-amlogic@lists.infradead.org,
+  linux-clk@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 23/26] clk: amlogic: use the common pclk definition
+In-Reply-To: <1fcf7e52-b265-4341-a360-93aaf293f131@amlogic.com> (Chuan Liu's
+	message of "Thu, 3 Jul 2025 15:16:36 +0800")
+References: <20250702-meson-clk-cleanup-24-v1-0-e163c9a1fc21@baylibre.com>
+	<20250702-meson-clk-cleanup-24-v1-23-e163c9a1fc21@baylibre.com>
+	<1fcf7e52-b265-4341-a360-93aaf293f131@amlogic.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 03 Jul 2025 10:39:22 +0200
+Message-ID: <1jbjq1d5xh.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] selftests/mm: Skip hugepage-mremap test if
- userfaultfd unavailable
-To: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
- pfalcato@suse.de, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, donettom@linux.ibm.com, ritesh.list@gmail.com
-References: <20250703060656.54345-1-aboorvad@linux.ibm.com>
- <20250703060656.54345-8-aboorvad@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250703060656.54345-8-aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 03.07.25 08:06, Aboorva Devarajan wrote:
-> Gracefully skip test if userfaultfd is not supported (ENOSYS) or not
-> permitted (EPERM), instead of failing. This avoids misleading failures
-> with clear skip messages.
-> --------------
-> Before Patch
-> --------------
-> ~ running ./hugepage-mremap
-> ...
-> ~ Bail out! userfaultfd: Function not implemented
-> ~ Planned tests != run tests (1 != 0)
-> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-> ~ [FAIL]
-> not ok 4 hugepage-mremap # exit=1
-> 
-> --------------
-> After Patch
-> --------------
-> ~ running ./hugepage-mremap
-> ...
-> ~ ok 2 # SKIP userfaultfd is not supported/not enabled.
-> ~ 1 skipped test(s) detected.
-> ~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:1 error:0
-> ~ [SKIP]
-> ok 4 hugepage-mremap # SKIP
-> 
-> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> ---
->   tools/testing/selftests/mm/hugepage-mremap.c | 16 +++++++++++++---
->   1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
-> index c463d1c09c9b..1a0e6dd87578 100644
-> --- a/tools/testing/selftests/mm/hugepage-mremap.c
-> +++ b/tools/testing/selftests/mm/hugepage-mremap.c
-> @@ -65,10 +65,20 @@ static void register_region_with_uffd(char *addr, size_t len)
->   	struct uffdio_api uffdio_api;
->   
->   	/* Create and enable userfaultfd object. */
-> -
->   	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
-> -	if (uffd == -1)
-> -		ksft_exit_fail_msg("userfaultfd: %s\n", strerror(errno));
-> +	if (uffd == -1) {
-> +		switch (errno) {
-> +		case EPERM:
-> +			ksft_exit_skip("No userfaultfd permissions, try running as root.\n");
+On Thu 03 Jul 2025 at 15:16, Chuan Liu <chuan.liu@amlogic.com> wrote:
 
-"Insufficient permissions, try ..." ?
+> Hi Jerome:
+>
+>
+> On 7/2/2025 11:26 PM, Jerome Brunet wrote:
+>> [ EXTERNAL EMAIL ]
+>>
+>> Replace marcros defining pclks with the common one, reducing code
+>> duplication.
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>   drivers/clk/meson/axg-aoclk.c      | 35 +++++++++-----------------
+>>   drivers/clk/meson/c3-peripherals.c | 34 +++++++-------------------
+>>   drivers/clk/meson/g12a-aoclk.c     | 50 +++++++++++++++-----------------------
+>>   drivers/clk/meson/gxbb-aoclk.c     | 33 +++++++++----------------
+>>   4 files changed, 51 insertions(+), 101 deletions(-)
+>>
+>> diff --git a/drivers/clk/meson/axg-aoclk.c b/drivers/clk/meson/axg-aoclk.c
+>> index 74c2f51424f11cc04a80a3a4918e4de0a5d11d08..902fbd34039cc06d512f1237a1e5d9050fd00b4b 100644
+>> --- a/drivers/clk/meson/axg-aoclk.c
+>> +++ b/drivers/clk/meson/axg-aoclk.c
+>> @@ -34,30 +34,19 @@
+>>   #define AO_RTC_ALT_CLK_CNTL0   0x94
+>>   #define AO_RTC_ALT_CLK_CNTL1   0x98
+>>
+>> -#define AXG_AO_GATE(_name, _bit, _flags)                               \
+>> -static struct clk_regmap axg_ao_##_name = {                            \
+>> -       .data = &(struct clk_regmap_gate_data) {                        \
+>> -               .offset = (AO_RTI_GEN_CNTL_REG0),                       \
+>> -               .bit_idx = (_bit),                                      \
+>> -       },                                                              \
+>> -       .hw.init = &(struct clk_init_data) {                            \
+>> -               .name =  "axg_ao_" #_name,                              \
+>> -               .ops = &clk_regmap_gate_ops,                            \
+>> -               .parent_data = &(const struct clk_parent_data) {        \
+>> -                       .fw_name = "mpeg-clk",                          \
+>> -               },                                                      \
+>> -               .num_parents = 1,                                       \
+>> -               .flags = (_flags),                                      \
+>> -       },                                                              \
+>> -}
+>> +static const struct clk_parent_data axg_ao_pclk_parents = { .fw_name = "mpeg-clk" };
+>>
+>> -AXG_AO_GATE(remote,    0, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(i2c_master,        1, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(i2c_slave, 2, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(uart1,     3, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(uart2,     5, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(ir_blaster,        6, CLK_IGNORE_UNUSED);
+>> -AXG_AO_GATE(saradc,    7, CLK_IGNORE_UNUSED);
+>> +#define AXG_AO_GATE(_name, _bit, _flags)                      \
+>> +       MESON_PCLK(axg_ao_##_name, AO_RTI_GEN_CNTL_REG0, _bit, \
+>> +                  &axg_ao_pclk_parents, _flags)
+>> +
+>> +static AXG_AO_GATE(remote,     0, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(i2c_master, 1, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(i2c_slave,  2, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(uart1,      3, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(uart2,      5, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(ir_blaster, 6, CLK_IGNORE_UNUSED);
+>> +static AXG_AO_GATE(saradc,     7, CLK_IGNORE_UNUSED);
+>>
+>>   static struct clk_regmap axg_ao_cts_oscin = {
+>>          .data = &(struct clk_regmap_gate_data){
+>> diff --git a/drivers/clk/meson/c3-peripherals.c b/drivers/clk/meson/c3-peripherals.c
+>> index e9c1ef99be13d0542b8a972ceffe69c8a9977118..02c9820cd98655e57a290859b595cf09d39e5fe3 100644
+>> --- a/drivers/clk/meson/c3-peripherals.c
+>> +++ b/drivers/clk/meson/c3-peripherals.c
+>> @@ -164,30 +164,13 @@ static struct clk_regmap c3_rtc_clk = {
+>>          },
+>>   };
+>>
+>> -#define C3_PCLK(_name, _reg, _bit, _fw_name, _ops, _flags)             \
+>> -struct clk_regmap c3_##_name = {                                       \
+>> -       .data = &(struct clk_regmap_gate_data){                         \
+>> -               .offset = (_reg),                                       \
+>> -               .bit_idx = (_bit),                                      \
+>> -       },                                                              \
+>> -       .hw.init = &(struct clk_init_data) {                            \
+>> -               .name = "c3_" #_name,                                   \
+>> -               .ops = _ops,                                            \
+>> -               .parent_data = &(const struct clk_parent_data) {        \
+>> -                       .fw_name = (_fw_name),                          \
+>> -               },                                                      \
+>> -               .num_parents = 1,                                       \
+>> -               .flags = (_flags),                                      \
+>> -       },                                                              \
+>> -}
+>> +static const struct clk_parent_data c3_sys_pclk_parents = { .fw_name = "sysclk" };
+>>
+>> -#define C3_SYS_PCLK(_name, _reg, _bit, _flags)                         \
+>> -       C3_PCLK(_name, _reg, _bit, "sysclk",                            \
+>> -               &clk_regmap_gate_ops, _flags)
+>> +#define C3_SYS_PCLK(_name, _reg, _bit, _flags) \
+>> +       MESON_PCLK(c3_##_name, _reg, _bit, &c3_sys_pclk_parents, _flags)
+>>
+>> -#define C3_SYS_PCLK_RO(_name, _reg, _bit)                              \
+>> -       C3_PCLK(_name, _reg, _bit, "sysclk",                            \
+>> -               &clk_regmap_gate_ro_ops, 0)
+>> +#define C3_SYS_PCLK_RO(_name, _reg, _bit) \
+>> +       MESON_PCLK_RO(c3_##_name, _reg, _bit, &c3_sys_pclk_parents, 0)
+>
+>
+> Adding 'SoC' prefix to clock names appears redundant and inconsistent - only
+> 'sys_clk' carries this prefix while all other clock names don't.
+>
 
-> +			break;
-> +		case ENOSYS:
-> +			ksft_exit_skip("userfaultfd is not supported/not enabled.\n");
-> +			break;
+The prefix is not added here but on patch 5 and I've replied there.
 
-Note that we have in tools/testing/selftests/mm/config
-
-	CONFIG_USERFAULTFD=y
-
-But I don't have anything about making the test more versatile.
-
-Acked-by: David Hildenbrand <david@redhat.com>
+>
+>>
+>>   static C3_SYS_PCLK(sys_reset_ctrl,     SYS_CLK_EN0_REG0, 1, 0);
+>>   static C3_SYS_PCLK(sys_pwr_ctrl,       SYS_CLK_EN0_REG0, 3, 0);
+>> @@ -290,9 +273,10 @@ static C3_SYS_PCLK(sys_vc9000e,            SYS_CLK_EN0_REG2, 2, 0);
+>>   static C3_SYS_PCLK(sys_pwm_mn,         SYS_CLK_EN0_REG2, 3, 0);
+>>   static C3_SYS_PCLK(sys_sd_emmc_b,      SYS_CLK_EN0_REG2, 4, 0);
+>>
+>> -#define C3_AXI_PCLK(_name, _reg, _bit, _flags)                         \
+>> -       C3_PCLK(_name, _reg, _bit, "axiclk",                            \
+>> -               &clk_regmap_gate_ops, _flags)
+>> +static const struct clk_parent_data c3_axi_pclk_parents = { .fw_name = "axiclk" };
+>> +
+>> +#define C3_AXI_PCLK(_name, _reg, _bit, _flags) \
+>> +       MESON_PCLK(c3_##_name, _reg, _bit, &c3_axi_pclk_parents, _flags)
+>>
+>>   /*
+>>    * NOTE: axi_sys_nic provides the clock to the AXI bus of the system NIC. After
+>> diff --git a/drivers/clk/meson/g12a-aoclk.c b/drivers/clk/meson/g12a-aoclk.c
+>> index 45e4df393feb6f916b6e035ad71e379e6e30ee99..96981da271fa1453ebbe433e36cff4409661fa6a 100644
+>> --- a/drivers/clk/meson/g12a-aoclk.c
+>> +++ b/drivers/clk/meson/g12a-aoclk.c
+>> @@ -37,22 +37,10 @@
+>>   #define AO_RTC_ALT_CLK_CNTL0   0x94
+>>   #define AO_RTC_ALT_CLK_CNTL1   0x98
+>>
+>> -#define G12A_AO_PCLK(_name, _reg, _bit, _flags)                                \
+>> -static struct clk_regmap g12a_ao_##_name = {                           \
+>> -       .data = &(struct clk_regmap_gate_data) {                        \
+>> -               .offset = (_reg),                                       \
+>> -               .bit_idx = (_bit),                                      \
+>> -       },                                                              \
+>> -       .hw.init = &(struct clk_init_data) {                            \
+>> -               .name =  "g12a_ao_" #_name,                             \
+>> -               .ops = &clk_regmap_gate_ops,                            \
+>> -               .parent_data = &(const struct clk_parent_data) {        \
+>> -                       .fw_name = "mpeg-clk",                          \
+>> -               },                                                      \
+>> -               .num_parents = 1,                                       \
+>> -               .flags = (_flags),                                      \
+>> -       },                                                              \
+>> -}
+>> +static const struct clk_parent_data g12a_ao_pclk_parents = { .fw_name = "mpeg-clk" };
+>> +
+>> +#define G12A_AO_PCLK(_name, _reg, _bit, _flags) \
+>> +       MESON_PCLK(g12a_ao_##_name, _reg, _bit, &g12a_ao_pclk_parents, _flags)
+>>
+>>   /*
+>>    * NOTE: The gates below are marked with CLK_IGNORE_UNUSED for historic reasons
+>> @@ -63,22 +51,22 @@ static struct clk_regmap g12a_ao_##_name = {                                \
+>>    *  - add a comment explaining why the use of CLK_IGNORE_UNUSED is desirable
+>>    *    for a particular clock.
+>>    */
+>> -G12A_AO_PCLK(ahb,      AO_CLK_GATE0,    0, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(ir_in,    AO_CLK_GATE0,    1, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(i2c_m0,   AO_CLK_GATE0,    2, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(i2c_s0,   AO_CLK_GATE0,    3, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(uart,     AO_CLK_GATE0,    4, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(prod_i2c, AO_CLK_GATE0,    5, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(uart2,    AO_CLK_GATE0,    6, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(ir_out,   AO_CLK_GATE0,    7, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(saradc,   AO_CLK_GATE0,    8, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(ahb,       AO_CLK_GATE0,    0, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(ir_in,     AO_CLK_GATE0,    1, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(i2c_m0,    AO_CLK_GATE0,    2, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(i2c_s0,    AO_CLK_GATE0,    3, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(uart,      AO_CLK_GATE0,    4, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(prod_i2c,  AO_CLK_GATE0,    5, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(uart2,     AO_CLK_GATE0,    6, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(ir_out,    AO_CLK_GATE0,    7, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(saradc,    AO_CLK_GATE0,    8, CLK_IGNORE_UNUSED);
+>>
+>> -G12A_AO_PCLK(mailbox,  AO_CLK_GATE0_SP, 0, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(m3,       AO_CLK_GATE0_SP, 1, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(ahb_sram, AO_CLK_GATE0_SP, 2, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(rti,      AO_CLK_GATE0_SP, 3, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(m4_fclk,  AO_CLK_GATE0_SP, 4, CLK_IGNORE_UNUSED);
+>> -G12A_AO_PCLK(m4_hclk,  AO_CLK_GATE0_SP, 5, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(mailbox,   AO_CLK_GATE0_SP, 0, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(m3,                AO_CLK_GATE0_SP, 1, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(ahb_sram,  AO_CLK_GATE0_SP, 2, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(rti,       AO_CLK_GATE0_SP, 3, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(m4_fclk,   AO_CLK_GATE0_SP, 4, CLK_IGNORE_UNUSED);
+>> +static G12A_AO_PCLK(m4_hclk,   AO_CLK_GATE0_SP, 5, CLK_IGNORE_UNUSED);
+>>
+>>   static struct clk_regmap g12a_ao_cts_oscin = {
+>>          .data = &(struct clk_regmap_gate_data){
+>> diff --git a/drivers/clk/meson/gxbb-aoclk.c b/drivers/clk/meson/gxbb-aoclk.c
+>> index 2bf45fd7fe4ba0783e736fbbb126209870985b22..c7dfb3a06cb5f70c98f65bb91b937e1b870b34fe 100644
+>> --- a/drivers/clk/meson/gxbb-aoclk.c
+>> +++ b/drivers/clk/meson/gxbb-aoclk.c
+>> @@ -23,29 +23,18 @@
+>>   #define AO_RTC_ALT_CLK_CNTL0   0x94
+>>   #define AO_RTC_ALT_CLK_CNTL1   0x98
+>>
+>> -#define GXBB_AO_PCLK(_name, _bit, _flags)                                      \
+>> -static struct clk_regmap gxbb_ao_##_name = {                           \
+>> -       .data = &(struct clk_regmap_gate_data) {                        \
+>> -               .offset = AO_RTI_GEN_CNTL_REG0,                         \
+>> -               .bit_idx = (_bit),                                      \
+>> -       },                                                              \
+>> -       .hw.init = &(struct clk_init_data) {                            \
+>> -               .name = "gxbb_ao_" #_name,                              \
+>> -               .ops = &clk_regmap_gate_ops,                            \
+>> -               .parent_data = &(const struct clk_parent_data) {        \
+>> -                       .fw_name = "mpeg-clk",                          \
+>> -               },                                                      \
+>> -               .num_parents = 1,                                       \
+>> -               .flags = (_flags),                                      \
+>> -       },                                                              \
+>> -}
+>> +static const struct clk_parent_data gxbb_ao_pclk_parents = { .fw_name = "mpeg-clk" };
+>>
+>> -GXBB_AO_PCLK(remote,           0, CLK_IGNORE_UNUSED);
+>> -GXBB_AO_PCLK(i2c_master,       1, CLK_IGNORE_UNUSED);
+>> -GXBB_AO_PCLK(i2c_slave,                2, CLK_IGNORE_UNUSED);
+>> -GXBB_AO_PCLK(uart1,            3, CLK_IGNORE_UNUSED);
+>> -GXBB_AO_PCLK(uart2,            5, CLK_IGNORE_UNUSED);
+>> -GXBB_AO_PCLK(ir_blaster,       6, CLK_IGNORE_UNUSED);
+>> +#define GXBB_AO_PCLK(_name, _bit, _flags)                      \
+>> +       MESON_PCLK(gxbb_ao_##_name, AO_RTI_GEN_CNTL_REG0, _bit, \
+>> +                  &gxbb_ao_pclk_parents, _flags)
+>> +
+>> +static GXBB_AO_PCLK(remote,    0, CLK_IGNORE_UNUSED);
+>> +static GXBB_AO_PCLK(i2c_master,        1, CLK_IGNORE_UNUSED);
+>> +static GXBB_AO_PCLK(i2c_slave, 2, CLK_IGNORE_UNUSED);
+>> +static GXBB_AO_PCLK(uart1,     3, CLK_IGNORE_UNUSED);
+>> +static GXBB_AO_PCLK(uart2,     5, CLK_IGNORE_UNUSED);
+>> +static GXBB_AO_PCLK(ir_blaster,        6, CLK_IGNORE_UNUSED);
+>>
+>>   static struct clk_regmap gxbb_ao_cts_oscin = {
+>>          .data = &(struct clk_regmap_gate_data){
+>>
+>> --
+>> 2.47.2
+>>
+>>
+>> _______________________________________________
+>> linux-amlogic mailing list
+>> linux-amlogic@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
 
 -- 
-Cheers,
-
-David / dhildenb
-
+Jerome
