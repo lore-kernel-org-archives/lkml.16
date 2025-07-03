@@ -1,75 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31450298262;
-	Thu,  3 Jul 2025 07:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB942298262;
+	Thu,  3 Jul 2025 07:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751528297; cv=none; b=UHAuVMXLsSl56MF8eaDcqliQl5pknBP97YaVJYVIP04uD3rYHcxVBONb0fkEku1mQNRXwL3v2Pq8KqBUhXSzwsDszfVlUdD+KlvWbbR0ixJx2I5iTvy9RytR/aZHeWiyQvQ4izi3UEwjvxldejrZuhvPIUqJfhW/LL9NJhB1RGA=
+	t=1751528310; cv=none; b=s+ATV/9mSZmL1/V25WGZGf+MV/OHusiOrrlftZe23yzOE96swEWJdTBbhnTbtowlqAkQgLZ/sp1lE3b4UBZKx5eHPOcnHieW7tUguB3m8Py72ZFJwtlEnTgsLXJvtA67s0Ff7E2icFEQLFCdzm+t7/v0CJL4hs+Eqn9ZwcuUu8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751528297; c=relaxed/simple;
-	bh=bPAdNa3X8EhTJmuygX9fPL1Pr2+T2oa+I0dsXMyn1Mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AEaM+cvJVvGOgO2vF0us377MYK61KOcNO12JH4PTqkXUDl84HWvgVxshEcorc79hD/FID62PqiAH/+jVwlUW9I+COceVGUqrsqUzK2aPoslrAiIgG2lRS1YwBbl70eXtJ3RyFs76vPA+yzx1Zz8OiQrLPENXVMtZUn3ZckRNMVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ft1vF1I4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751528310; c=relaxed/simple;
+	bh=vG+Joviv1dl+dWwKuzGYlENosRlADezMchazk7x1Bq0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hGMlIePo2NHdKvPGbliGQ7fB92UGtnQD/lwbGtxeVojwz0O+t5QJTCaUSWiO/D5eMZwIkWVlQIaVlmiJfIsVVFZ/xHWPUxi93hvzJYTmgRT2S2LCFqZBvwFiTYhxnLo0gfIKWP0suX+dhzE89l3jumcvKRkhd5lT25i/dE6H7qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3U5YG8A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ft1vF1I4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE2DC4CEE3;
-	Thu,  3 Jul 2025 07:38:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3U5YG8A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70689C4CEE3;
+	Thu,  3 Jul 2025 07:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751528296;
-	bh=bPAdNa3X8EhTJmuygX9fPL1Pr2+T2oa+I0dsXMyn1Mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ft1vF1I4iki46Sz33pbkWqT+1CaYUE1DFOm1VaBY8+ycOn5fpbIsyrONvLpQHwfxl
-	 3BWTzlzw+kLWfsMRehs4lE8YbUPBwI7KtpN3fJTMszPH8qW6SFbD2uyiimsmOI74xV
-	 RYqboYFAiMN8q5k5aEQs+VCyVLWyPWXX9c1xN8WyiaNJCp/gazkBsxG02Me4crP0t+
-	 HVlp6yQt3Uw98WTsvZ8LwyQt62SN9zkbf4q49IPGxEf9TlT1X6ioGzfPTWcRXkcpd4
-	 KFmdnPVNHa44Q0kB3zUTGsghsjRw3277FaQa/ZOHyD0cveb+a/n9doSc3knRfqhe6j
-	 E3dv9Pwr3Jv3g==
-Date: Thu, 3 Jul 2025 09:38:14 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
-	jean-baptiste.maneyrol@tdk.com, ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: iio: pressure: add invensense,icp10100
-Message-ID: <20250703-rational-laughing-hedgehog-cc0eec@krzk-bin>
-References: <20250701221700.34921-1-rodrigo.gobbi.7@gmail.com>
+	s=k20201202; t=1751528309;
+	bh=vG+Joviv1dl+dWwKuzGYlENosRlADezMchazk7x1Bq0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=A3U5YG8AM5o3kQlwEx/WHSvnOIBtrkzbBI09p3KV1FBWs/tV7XlPH1iWLL86zt2/s
+	 mHb7KDr97Wc9cdNXNC4iykwdA3jvQwn34BCv41j8jeZa3p5DOwwLIS5pxOp/wbqt+I
+	 psLBLQbrAJLkb+uRZ97j2kY178AnW6wt4VJXOcx2kE6ACDcyZTgvIt+1HirVlCMJI9
+	 h80M/rk000i/VIvyJO5vxY38iFou/Ep1I5O3zWNGvJDEP7aXLg98Q27V5n9U0BAZp4
+	 YxPU67NrgG+7t8KNcz3upYDjMv9Z19DNHpl72J/J+68YjOaQc7keP/PIznowpCcgcX
+	 89UKzzbd7xBhA==
+Date: Thu, 3 Jul 2025 09:38:27 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Qasim Ijaz <qasdev00@gmail.com>
+cc: bentiss@kernel.org, gargaditya08@live.com, jirislaby@kernel.org, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v2] HID: appletb-kbd: fix memory corruption of
+ input_handler_list
+In-Reply-To: <20250627110121.7802-1-qasdev00@gmail.com>
+Message-ID: <qp120s01-q22q-52rr-97n2-or6o30n1qrqq@xreary.bet>
+References: <20250627110121.7802-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250701221700.34921-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jul 01, 2025 at 07:05:43PM -0300, Rodrigo Gobbi wrote:
-> +$id: http://devicetree.org/schemas/iio/pressure/invensense,icp10100.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: InvenSense ICP-101xx Barometric Pressure Sensors
-> +
-> +maintainers:
-> +  - Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> +
-> +description: |
-> +  Support for ICP-101xx family: ICP-10100, ICP-10101, ICP-10110, ICP-10111.
+On Fri, 27 Jun 2025, Qasim Ijaz wrote:
 
-The problem with title and description here is that they do not match
-compatible. oneOf:
+> In appletb_kbd_probe an input handler is initialised and then registered
+> with input core through input_register_handler(). When this happens input
+> core will add the input handler (specifically its node) to the global
+> input_handler_list. The input_handler_list is central to the functionality
+> of input core and is traversed in various places in input core. An example
+> of this is when a new input device is plugged in and gets registered with
+> input core.
+> 
+> The input_handler in probe is allocated as device managed memory. If a
+> probe failure occurs after input_register_handler() the input_handler
+> memory is freed, yet it will remain in the input_handler_list. This
+> effectively means the input_handler_list contains a dangling pointer
+> to data belonging to a freed input handler.
+> 
+> This causes an issue when any other input device is plugged in - in my
+> case I had an old PixArt HP USB optical mouse and I decided to
+> plug it in after a failure occurred after input_register_handler().
+> This lead to the registration of this input device via
+> input_register_device which involves traversing over every handler
+> in the corrupted input_handler_list and calling input_attach_handler(),
+> giving each handler a chance to bind to newly registered device.
+> 
+> The core of this bug is a UAF which causes memory corruption of
+> input_handler_list and to fix it we must ensure the input handler is
+> unregistered from input core, this is done through
+> input_unregister_handler().
 
-1. Your statement is correct, but then compatibles are incomplete and
-will encourage people to use incomplete compatibles for e.g. ICP-10111.
-2. Compatible is correct but your statement is not correct, so then fix
-the statement - drop other devices.
+Applied to hid.git#for-6.16/upstream-fixes, thanks!
 
-Assuming 1 is closer to truth, then I suggest to express it with
-documenting these compatibles and using invensense,icp10100 as fallback.
-
-
-Best regards,
-Krzysztof
+-- 
+Jiri Kosina
+SUSE Labs
 
