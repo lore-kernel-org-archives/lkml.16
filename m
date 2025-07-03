@@ -1,89 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F01291C37;
-	Thu,  3 Jul 2025 09:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11FE7226CF8
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535586; cv=none; b=KvV9Vc7ecvNH2yED/91VXO9V0unBdNO1GwezI0ekwV3MUs8wDF2b7G/YxgjOAmUAaiJwEpYanRK24MsEG8MmNgVHr06nQj/opgYgR/AQXr/S54o6jJhenKfIZNXGjMoKw1lTt36fxjsCUGbTiyg5CqCtpYvPb5m6n+lntAGbLI4=
+	t=1751535647; cv=none; b=LTcY8Z0GZAVStq7qQ3OaFDV8/9GB5iVSW7HDAscP9y1BpGo2rmMhQssSsglN6WnJBl5wAE3DbdCof62XnmXYoPLDOpYl4n3L5UVw1zEeD8K4iysJsumB6hQhJytUhUx+VjUMWAsHAzL6/S0JBt+28iihdCmQ2CKesQ0XQNsVq0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535586; c=relaxed/simple;
-	bh=ODf9SeJXknLRDbICjYsDqcjPJruZILYsOHMug+ircg0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ujrwOoIsp7OVUFbIaphY9kxJmrKS7KRq2zlOxDN+d0/qAB3cuPAufAzieopxI+3LkVFwk4I4s5xYCG+w4Tsi/ZHdC28f+Ta8NzPyhfEpP1uf6v//UsKhQCp0LceX49UU/tdEMrXFxB34YnoEdPWM1Acootkjgos5VjhBIWAtNw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXV+6bY3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXV+6bY3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A66C6C4CEE3;
-	Thu,  3 Jul 2025 09:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751535583;
-	bh=ODf9SeJXknLRDbICjYsDqcjPJruZILYsOHMug+ircg0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GXV+6bY3MEwhu3tRKgKfyLwKCxNQBGfhs7i5IfgfFcqtzPbtUCdGpSYuLpF0/z+oq
-	 v0I0AknKHPj7X3zNynSLuB8jzwpWdr89a7ceCsOVTtYeuHFVWqC9r1q1fusVXsaXA+
-	 YqUvHUCycJ2kxW9t+NfV3daWE82+3+VIBie2ny+Xj0B9HleaFqdpgLXVuIyiDkr64Q
-	 ZmVOrtu5uF60Onkph8XM8DYMHoagyZVVpeS8X6VFBujaRijSrWT+x6nUCmkf7acKx/
-	 CTp59st/6lbRWHLn2Iz2K29gtkxU70fE713L+BQzunMzxYHVBzxEhmq47JVCEuxvGj
-	 MDAuhQyA8rizQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F42383B273;
-	Thu,  3 Jul 2025 09:40:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1751535647; c=relaxed/simple;
+	bh=wgtiWB8hczNV4zv16jUfwZ8x5PwUJd9ZAn1/7IhQIRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cm+pQ9zMe+xV/e7YbLvxqG3pgctT+LDiUFNLcKJup/8qpMWIEYVH9MGudaVVVgGy6J35+y6Qhm/tDazkycr7i4gNgF3FQnhFqRTHBYkw8Lzi5oCanA9bTE/ukC0K6OfhAj0eAZStkah15cIJcnmW9d6PcKkdbW6nFSBy+m3o96Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEFE012FC;
+	Thu,  3 Jul 2025 02:40:30 -0700 (PDT)
+Received: from [10.164.146.16] (J09HK2D2RT.blr.arm.com [10.164.146.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72BFF3F58B;
+	Thu,  3 Jul 2025 02:40:41 -0700 (PDT)
+Message-ID: <474399c9-21cf-409c-883b-85b437979503@arm.com>
+Date: Thu, 3 Jul 2025 15:10:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] khugepaged: Reduce race probability between migration
+ and khugepaged
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ akpm@linux-foundation.org
+Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250703054823.49149-1-dev.jain@arm.com>
+ <1d82c930-be52-4983-9fd7-099df487eb48@redhat.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <1d82c930-be52-4983-9fd7-099df487eb48@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v3 0/2] virtio-net: xsk: rx: fix the frame's length
- check
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175153560802.1029220.2379425113852015641.git-patchwork-notify@kernel.org>
-Date: Thu, 03 Jul 2025 09:40:08 +0000
-References: <20250630151315.86722-1-minhquangbui99@gmail.com>
-In-Reply-To: <20250630151315.86722-1-minhquangbui99@gmail.com>
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, mst@redhat.com, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, eperezma@redhat.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, sdf@fomichev.me, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 
-Hello:
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
 
-On Mon, 30 Jun 2025 22:13:13 +0700 you wrote:
-> Hi everyone,
+On 03/07/25 2:55 PM, David Hildenbrand wrote:
+> On 03.07.25 07:48, Dev Jain wrote:
+>> Suppose a folio is under migration, and khugepaged is also trying to
+>> collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
+>> page cache via filemap_lock_folio(), thus taking a reference on the folio
+>> and sleeping on the folio lock, since the lock is held by the migration
+>> path. Migration will then fail in
+>> __folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
+>> such a race happening (leading to migration failure) by bailing out
+>> if we detect a PMD is marked with a migration entry.
+>>
+>> This fixes the migration-shared-anon-thp testcase failure on Apple M3.
+>>
+>> Note that, this is not a "fix" since it only reduces the chance of
+>> interference of khugepaged with migration, wherein both the kernel
+>> functionalities are deemed "best-effort".
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>
+>> v1->v2:
+>>   - Remove SCAN_PMD_MIGRATION, merge into SCAN_PMD_MAPPED (David, Anshuman)
+>>   - Add a comment (Lorenzo)
+>>
+>> v1:
+>>   - https://lore.kernel.org/all/20250630044837.4675-1-dev.jain@arm.com/
+>>
+>>   mm/khugepaged.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 1aa7ca67c756..3fdefc4f4984 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -941,6 +941,15 @@ static inline int check_pmd_state(pmd_t *pmd)
+>>         if (pmd_none(pmde))
+>>           return SCAN_PMD_NONE;
+>> +
+>> +    /*
+>> +     * The folio may be under migration when khugepaged is trying to
+>> +     * collapse it. Migration success or failure will eventually end
+>> +     * up with the PMD still pointing to a PMD-order folio, so return
+>> +     * SCAN_PMD_MAPPED.
 > 
-> This series contains 2 patches for the zerocopy XDP receive path in virtio
-> net
-> - Patch 1: there is a difference between first buffer and the following
-> buffers in this receive path. While the first buffer contains virtio
-> header, the following ones do not. So the length of the remaining region
-> for frame data is also different in 2 cases. The current maximum frame's
-> length check is only correct for the following buffers not the first one.
-> - Patch 2: no functional change. The tricky xdp->data adjustment due to
-> the above difference is moved to buf_to_xdp() so that this helper contains
-> all logic to build xdp_buff and the tricky adjustment does not scatter
-> over different functions.
+> Nit: the last part (, so return ..) is obvious from the code.
 > 
-> [...]
+> I would have written
+> 
+> /*
+>  * The folio may be under migration when khugepaged is trying to
+>  * collapse it. Migration success or failure will eventually end
+>  * up with a present PMD entry again.
+>  */
 
-Here is the summary with links:
-  - [net,v3,1/2] virtio-net: xsk: rx: fix the frame's length check
-    https://git.kernel.org/netdev/net/c/5177373c3131
-  - [net,v3,2/2] virtio-net: xsk: rx: move the xdp->data adjustment to buf_to_xdp()
-    (no matching commit)
++1
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> 
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+>
 
-
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
