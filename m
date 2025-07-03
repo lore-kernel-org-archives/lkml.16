@@ -1,107 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B142DE6E2;
-	Thu,  3 Jul 2025 12:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8322E03F4
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751544707; cv=none; b=PVYUY9iPLXKhNc4ysy0rC8YQWINxEs6SIkiVgCkcSD0c4pQpnsg3FSdxW7PtsYixh6tOZwT/mM6tzsiy3iv2zxPY20jF/cuswJL/7GVAtjp0oBFU4LdUm1j3h4eZMbI9dNJk6Isg/gL17sZXwd989+4W8SMkB5pjLAQyfyvTab8=
+	t=1751544768; cv=none; b=XkxPAZFYrg1TAINRKv/VVu/L4BGaR2Z39aEn7GrnGs/EHr5SkYIDJx/pN9uTFp7EFdH1Ae8r+cKJVdd2k7vcbJWfp+tMK3gF7Pp5jtm9l8ZnSKaffzIaqk9tn6yQIDjveK7ITsWTjDOZNvW/vY9VlpFH6+04yTaeo9ElZQTqgFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751544707; c=relaxed/simple;
-	bh=/u695DCkL8w+yoQZGNJnVtq6t82qtpyg/gJ1B9UDub0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T8K7rb2SiynnxpUoZTioGeNW3K1T8AzvlMW7H7MgMRuUJFZ2X9WpOKrFMKwMgCZpCGOIFT6pSn20HU//H7EgkD/glcclkAYiAu/pHAuY6veyUXTcDsRCE9dPKcRF3NXC3ZJStWfT3ynmhJKbd8M9n5n+GypehDVRL0ewqHuCAl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjPVz5eT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751544768; c=relaxed/simple;
+	bh=lK9/zIpcgyID7Oxf5HcNgeUdGwrFaIUNt/Dd6pBk1cA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=vAatli1wARwIYAkZEE9kOqt52NmnAqzFs7NGSLqXPNl2N5z07X7mvfu/VwHvoxypsCDuJcp+cac3QFC05XkcOt2zsh80FgZ0178Cq1apNr+iPuBDm7l/ZJLtnmV8BFtc0E0OJP+iDtA18+oJZw2XKuAjhLU+mFnuQCDdW1NpInE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZvBJALxW; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjPVz5eT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C03C4CEE3;
-	Thu,  3 Jul 2025 12:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751544706;
-	bh=/u695DCkL8w+yoQZGNJnVtq6t82qtpyg/gJ1B9UDub0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FjPVz5eTcZjLiKLc4yZNGS0tEKOsUK6irjZ9OpErjuLjVQ3MlgZqs2Mizo/tELfkC
-	 wp7kmeqOWM7ZR3MJYNLTKRMYJDgpb3/z+U6cXgX1vuuiecmAgeQR7dWlDdQTNIlc4w
-	 qrE2Z8QfHdOhueZCRzMv1gj96sqtR530RHuKv19GObiCzplnCqUI6i7qj5tq/t5fAD
-	 8O6Fnf3KbLniVCrlyP6FhtIJ69r5o2jtPdpc7NKghF7GEPa/2Cgd+1nFehqd/gMCQz
-	 xlYpglmpmDMwRBG2cyWP5jxcXUVQL7vVXya3CTBnspG9CX0hlvtHqrygjXV1SaIHyF
-	 H5LOMcG2QEMVw==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6113f0cafb2so2556478eaf.1;
-        Thu, 03 Jul 2025 05:11:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVFKLdsbRfccLYcWSgqMkUkFE3byc2I2WNqSiqch1eO8MpJDqN8S9gEiPu6empzmrlwVQCBZ2scwmA=@vger.kernel.org, AJvYcCXPO0jVbJMh3Djvd1N+4ZIfAKN++o1XyKpKYvgaEdtqRrif+Yu+4PxqPs0LS+8DU5coB7m6oby9kLKL3Ofv@vger.kernel.org, AJvYcCXzbVVJrv/D/WSvH6xAmTrHRSV/a3XLViMrD1h2t8JfnREVv9cAX/Mh+wTtVMcug6O1wEc4wTmd7pIT@vger.kernel.org
-X-Gm-Message-State: AOJu0YynrG5NlE4LuXQ3taQvMQZGI95wwWlCoWq7+ERwy6+fu1LlSMJs
-	4Po6Itb+J6824rJW825RxN4ApFL6n8lNkGVRbBZQ53pyci1TWfr0tuB3a/nI5NsjJrqDsgOCw6S
-	STS0DtOnB+cH7GgIKHJzpPDhtSI597vY=
-X-Google-Smtp-Source: AGHT+IE5Vw4m4mXPct9wVJmubJXbT4c5/+l/c/Mue+EJKIDprCrU46NbVGdZsrRTFJ0qceb/2zMPdR465PTwB9KXq7c=
-X-Received: by 2002:a05:6820:c8f:b0:611:e00a:598d with SMTP id
- 006d021491bc7-6120116d82fmr4804121eaf.8.1751544705742; Thu, 03 Jul 2025
- 05:11:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvBJALxW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751544767; x=1783080767;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=lK9/zIpcgyID7Oxf5HcNgeUdGwrFaIUNt/Dd6pBk1cA=;
+  b=ZvBJALxWnCYd2F90QM8PuNqwl8b1lJQIPoJCDuUZMrSYPwFRFl1+kJ2q
+   d6Anhij3JWfbfD1Y+ooyH4Wrxi9nufnLDVakVdY+i0jFhEOdLFq5rCIfD
+   jhQD0EqW17M2+TeUscR8VFd3faLA25z5l8VE+IFRTywk4oYmfzOSIgeXU
+   Y/1gKlj/G6T5BNc8TiXrpEm5V1Szod32LkapTOyHmXFkoCBgE5idHm2PG
+   DGJlL+i6iznTv5+E9Q7mCrw8UI9pvTjI00Hce9FldZ0E1Nd6ljv0aSfLS
+   2uuyrvuvJhqUYMcepz80cBKxXOc5KxwpNoJaftEnhuqYQrgFWHtN+0ZxO
+   Q==;
+X-CSE-ConnectionGUID: NixhB9siTF28KU2KekfiPA==
+X-CSE-MsgGUID: TCIrPjBnRB+xCcgpyaBTqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53586819"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="53586819"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:12:46 -0700
+X-CSE-ConnectionGUID: zeqOJXspRR+2UdS7yHvWyA==
+X-CSE-MsgGUID: GExY0AUjSSi5MGt6U7oBUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="160049879"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.73])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 05:12:42 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Ville Syrjala <ville.syrjala@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>, Dibin Moolakadan
+ Subrahmanian <dibin.moolakadan.subrahmanian@intel.com>, Imre Deak
+ <imre.deak@intel.com>, David Laight <david.laight.linux@gmail.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Matt Wagantall
+ <mattw@codeaurora.org>, Dejin Zheng <zhengdejin5@gmail.com>,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, Ville
+ =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH 4/4] DO-NOT-MERGE: drm/i915: Use poll_timeout_us()
+In-Reply-To: <20250702223439.19752-4-ville.syrjala@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250702223439.19752-1-ville.syrjala@linux.intel.com>
+ <20250702223439.19752-4-ville.syrjala@linux.intel.com>
+Date: Thu, 03 Jul 2025 15:12:39 +0300
+Message-ID: <9bca3e31879af4ba4abd9cb3c5bd89e80ec013f1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621051704.12050-1-sumeet4linux@gmail.com>
- <CAJZ5v0hqAO32zdLcwZ9UtWEhf=OfCqUN0PkB83v6=suXMP14UQ@mail.gmail.com> <CAJ9orWQAPun6Oy3wMOBK+OYcvUTHDEZ7GUgsuxU2pctNY7O3Mw@mail.gmail.com>
-In-Reply-To: <CAJ9orWQAPun6Oy3wMOBK+OYcvUTHDEZ7GUgsuxU2pctNY7O3Mw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 14:11:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g-bArTdntUCv=NiuBX7aDTGifYFF8Q8nhn6XmBgSKgCQ@mail.gmail.com>
-X-Gm-Features: Ac12FXxyhSxv2LmBLQfy0x5Qbf55cDQu9Rq43uU9cCdIUQP2BDKCcltIagN9xd4
-Message-ID: <CAJZ5v0g-bArTdntUCv=NiuBX7aDTGifYFF8Q8nhn6XmBgSKgCQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: FAN: Update fps count debug print
-To: "Sumeet R.P." <sumeet4linux@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org, lenb@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2025 at 1:37=E2=80=AFPM Sumeet R.P. <sumeet4linux@gmail.com>=
- wrote:
+On Thu, 03 Jul 2025, Ville Syrjala <ville.syrjala@linux.intel.com> wrote:
+> From: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
 >
+> Make sure poll_timeout_us() works by using it in i915
+> instead of the custom __wait_for().
 >
-> On Wed, Jul 2, 2025 at 11:24=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
-org> wrote:
->>
->> On Sat, Jun 21, 2025 at 7:17=E2=80=AFAM Sumeet Pawnikar <sumeet4linux@gm=
-ail.com> wrote:
->> >
->> > Update invalid value returned debug print with fps_count
->> > instead of control value for checking fan fps count condition.
->> >
->> > Signed-off-by: Sumeet Pawnikar <sumeet4linux@gmail.com>
->> > ---
->> >  drivers/acpi/fan_core.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
->> > index 8ad12ad3aaaf..9f2696a1928c 100644
->> > --- a/drivers/acpi/fan_core.c
->> > +++ b/drivers/acpi/fan_core.c
->> > @@ -102,7 +102,7 @@ static int fan_get_state_acpi4(struct acpi_device =
-*device, unsigned long *state)
->> >                         break;
->> >         }
->> >         if (i =3D=3D fan->fps_count) {
->> > -               dev_dbg(&device->dev, "Invalid control value returned\=
-n");
->> > +               dev_dbg(&device->dev, "Invalid fps_count value returne=
-d\n");
->>
->> I guess this should be "fps" instead of "fps_count" because the latter
->> is just the array size, isn't it?
->>
+> Remaining difference between two:
+>                | poll_timeout_us() | __wait_for()
+> ---------------------------------------------------
+> backoff        | fixed interval    | exponential
+> usleep_range() | N/4+1 to N        | N to N*2
+> clock          | MONOTONIC         | MONOTONIC_RAW
 >
-> Yes, this can be fps.
->
->>
->> But I don't see why it should not be "control" either.
->>
-> In this same function fan_get_state_acpi4(), the same debug print message
-> is already present for invalid control value.
-> So, it's confusing when we get the message and difficult to identify
-> due to which condition the message is coming from.
+> Just a test hack for now, proper conversion probably
+> needs actual thought.
 
-Agreed, so maybe change the second message to something like "No
-matching fps control value".
+Agreed.
+
+I feel pretty strongly about converting everything to use
+poll_timeout_us() and poll_timeout_us_atomic() directly. I think the
+plethora of wait_for variants in i915_utils.h is more confusing than
+helpful (even if some of them are supposed to be "simpler"
+alternatives). I also think the separate atomic variant is better than
+magically deciding that based on delay length.
+
+I'm also not all that convinced about the exponential wait. Not all of
+the wait_for versions use it, and then it needs to have a max wait
+anyway (we have an issue with xe not having that [1]). I believe callers
+can decide on a sleep length that is appropriate for the timeout, case
+by case, and gut feeling says it's probably fine. ;)
+
+BR,
+Jani.
+
+
+[1] https://lore.kernel.org/r/fe44d12c701c3d410de6e0ebc1f08bae2eec10a1@inte=
+l.com
+
+
+>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: Dibin Moolakadan Subrahmanian <dibin.moolakadan.subrahmanian@intel.co=
+m>
+> Cc: Imre Deak <imre.deak@intel.com>
+> Cc: David Laight <david.laight.linux@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Matt Wagantall <mattw@codeaurora.org>
+> Cc: Dejin Zheng <zhengdejin5@gmail.com>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: intel-xe@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+> ---
+>  drivers/gpu/drm/i915/i915_utils.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i91=
+5_utils.h
+> index f7fb40cfdb70..8509d1de1901 100644
+> --- a/drivers/gpu/drm/i915/i915_utils.h
+> +++ b/drivers/gpu/drm/i915/i915_utils.h
+> @@ -32,6 +32,7 @@
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/iopoll.h>
+>=20=20
+>  #ifdef CONFIG_X86
+>  #include <asm/hypervisor.h>
+> @@ -238,7 +239,7 @@ wait_remaining_ms_from_jiffies(unsigned long timestam=
+p_jiffies, int to_wait_ms)
+>   * timeout could be due to preemption or similar and we've never had a c=
+hance to
+>   * check the condition before the timeout.
+>   */
+> -#define __wait_for(OP, COND, US, Wmin, Wmax) ({ \
+> +#define __wait_for_old(OP, COND, US, Wmin, Wmax) ({ \
+>  	const ktime_t end__ =3D ktime_add_ns(ktime_get_raw(), 1000ll * (US)); \
+>  	long wait__ =3D (Wmin); /* recommended min for usleep is 10 us */	\
+>  	int ret__;							\
+> @@ -263,6 +264,8 @@ wait_remaining_ms_from_jiffies(unsigned long timestam=
+p_jiffies, int to_wait_ms)
+>  	ret__;								\
+>  })
+>=20=20
+> +#define __wait_for(OP, COND, US, Wmin, Wmax)				\
+> +	poll_timeout_us(OP, COND, (Wmin), (US), false)
+>  #define _wait_for(COND, US, Wmin, Wmax)	__wait_for(, (COND), (US), (Wmin=
+), \
+>  						   (Wmax))
+>  #define wait_for(COND, MS)		_wait_for((COND), (MS) * 1000, 10, 1000)
+
+--=20
+Jani Nikula, Intel
