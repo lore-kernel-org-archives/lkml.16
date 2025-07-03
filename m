@@ -1,204 +1,97 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098D3225D6;
-	Thu,  3 Jul 2025 05:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFFF225D6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 05:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751522158; cv=none; b=Dpma8PGhfeji+Xp6bnBhiohM+Zun1TjwEBjVriWYwlZuDpYroSt5Sp6QlNQbraLXkG8TenHNkoczPycFqmFakuOsqtcXN4gNY5nXBfK84/y8pY/vKGs7yGMAECJExrlmIyycpfTznKfDMpxedmwbMBKlD/uK68InJ7bpFXZOiNs=
+	t=1751522272; cv=none; b=EvxlKcER1DbODyXCaTft/whW37ZbU8/2do6jOQ5Dv/q2SUj4BGTizMjDXzoUURYsr66yIKZ6Rzl3uJvALuoYWI9SZioyDvnqAgI/Q8pNgSDRGKKGrz0di3qr1josse3cpKw9+hp46XnFznIScM6bxE+eoh88fVr/hSVITZOFCHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751522158; c=relaxed/simple;
-	bh=S38JpONH6W8dZbBwYv5WWAtVirhkEf8Ih0JiRwpo9MA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eBZlSG3zo6SFUqirtq5AF/HEtL8KpqohTy6Y8dkcDVqQxprUD45g7VoNZp+Kz9WfilnILKRGvdPJpgCSMhtUZVtCEOgC4o8Dw+o2YW9glF0bkseYrXXQwONMGMhyA5OhlYugaC3bDDLoWo5xyxRtacWdkpUDBub2RF4UmRb2coo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G6wxXthv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751522272; c=relaxed/simple;
+	bh=x0bqtaLqnIyJug6o4pbtBOZSZUAHS5NK6xRC8csKi/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqmpExbNPqd+Cbm1vnF4icuUiUE6dYXW3M1++21cbuuakwkEM2zCnYXEa946oJDiHLOrHY80frYJxL9xA9lsZZRlHTjHFTknUzYSkah1DGtrHMM7MfgxO+G+u85QjFISbdReg3a/vxT6UKXpjk+ZUdnqB0zWt+1pMgqf2BCeXyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thoISwQL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G6wxXthv"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562MwDSt030091;
-	Thu, 3 Jul 2025 05:55:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=JeY9R6QXpHeFJS6EQcb6j6
-	0aqIhPOXjzXLqFIeCf1yc=; b=G6wxXthvfUMfWt28bmVTMQUHuSy+I1nKnYcLZ7
-	Ju9IpjhuEbJdrboJyJNrFOADpA6Dy16BDJHTS7aB5Ynprh1T73Rne+M2xkVu0SBt
-	wFgezrInEzZf5hkhiEnaUg8Ha5Jnmpn3JaOL60LovWsl47i6OoX6glaVNWxrC2m7
-	097z7I9q3d0xr3a8CO2SILNXDBYNz2islH0m/53IGh4LOX62gK0C0A9eSezHqHmW
-	T9LqNM7t1SkeAnUnLFghYgPo20fPGvgOYc4dYNU3MRcXpJm2u6LUqqYL8MGNmQsZ
-	+ArFCXi9M6Mi9mphBxOc03ZDn3d98YhmRDkQ1iCjadM8vH7A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn5utq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 05:55:53 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5635tqge029568
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 05:55:52 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 2 Jul 2025 22:55:49 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ling Xu <quic_lxu5@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: qcs615: Add ADSP and CDSP fastrpc nodes
-Date: Thu, 3 Jul 2025 11:25:32 +0530
-Message-ID: <20250703055532.2199477-1-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thoISwQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FAEC4CEE3;
+	Thu,  3 Jul 2025 05:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751522272;
+	bh=x0bqtaLqnIyJug6o4pbtBOZSZUAHS5NK6xRC8csKi/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=thoISwQLq8WNToaz9ucAbB2oDVQEbOFc3Z8DBDQGQ8jYYvTpv28IRamleWmJLjzMS
+	 elEJgND8ucwiBui6O7jgPoYQ3QNYeRT/s36JcYfsJMAIoAoSVD29ZujteqBiKAQh+5
+	 WhMRAi5PmGqAVXCzWm01mXptST856nA1TFJqD2xkFOoRCkWm9AaNapreCT5Rtr+C+n
+	 wRXyf8ZLf1xlnhkKJQsd9blAozGYJHU1nYWtlYPicy13uu8QWshW50IgssV9PQbD6u
+	 RMrNEVgTv8928rf6O37ALQF68UdITKlI8sVRNpVSiA5pExOAkf2W14QY/SWmFUJhSf
+	 vS/kjGK1Lpb2A==
+Date: Wed, 2 Jul 2025 22:57:50 -0700
+From: Dennis Zhou <dennis@kernel.org>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, tj@kernel.org, cl@gentwo.org,
+	akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
+Subject: Re: [PATCH] mm/percpu: prevent concurrency problem for
+ pcpu_nr_populated read with spin lock
+Message-ID: <aGYb3oqXlva9ASO5@snowbird>
+References: <20250702082749.141616-1-aha310510@gmail.com>
+ <zvczeiqk535pvryfae4lta5ezvqks6knhugnzgyq6gu634gn4c@av5hhiabqmzf>
+ <CAO9qdTG0uDcG5ydXbj5XZdsdH=pD2yHaq9dR=N=Nq5QvUMvuBA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA0NSBTYWx0ZWRfXzkoFuccDgLZ6
- T4UrjvcylpyT//h8LsLDJmJLRaJZGPxRWAbrIbvGxZwMfUr4iK4bryXMHOupZS2MgSlAOu5L7hd
- WMoXb4JfJeLBwVs04Ci9OQMS3yABl2OlPe1VV9/tTygsWLqX0BW/5yqm0LAoVbEE3Zq39q9yRvv
- WLU168d3hc9g46Rt5+j9TETDele0plWkaOpH4if8iYX1jDr35vCFbcNSoJUHHxql//SqUcJsKSA
- O1xjDyJiaKP0W+jxLlLUiBmgryF0F0Uz1XvEloRevaf78Xp5VzQhXT14reY7IAWv/VxI6wR/olv
- XQA/HSYUo7dFY19f8CTPy6PNK+JoRNs5pvo7vU2Tp62MIz/EagJqju6EfXMNe9khDBrLojWXPye
- nb013yEG91LsGW0Qyx3z3dbdbMzQ9f5HddaiK9j32xoMtATJzqA43k2iXwIpcKyg0Le9Hvw/
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68661b69 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=XD3BUoiH-jNJIxuL50sA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 4ccLEQl74UUtp4TTnUuV5pXkaCFRwYV4
-X-Proofpoint-GUID: 4ccLEQl74UUtp4TTnUuV5pXkaCFRwYV4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_01,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=566 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030045
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO9qdTG0uDcG5ydXbj5XZdsdH=pD2yHaq9dR=N=Nq5QvUMvuBA@mail.gmail.com>
 
-Add ADSP and CDSP fastrpc nodes for QCS615 platform.
+On Thu, Jul 03, 2025 at 02:19:34PM +0900, Jeongjun Park wrote:
+> Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> >
+> > On Wed, Jul 02, 2025 at 05:27:49PM +0900, Jeongjun Park wrote:
+> > > Read/Write to pcpu_nr_populated should be performed while protected
+> > > by pcpu_lock. However, pcpu_nr_pages() reads pcpu_nr_populated without any
+> > > protection, which causes a data race between read/write.
+> > >
+> > > Therefore, when reading pcpu_nr_populated in pcpu_nr_pages(), it should be
+> > > modified to be protected by pcpu_lock.
+> > >
+> > > Reported-by: syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
+> > > Fixes: 7e8a6304d541 ("/proc/meminfo: add percpu populated pages count")
+> > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> > > ---
+> > >  mm/percpu.c | 8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/mm/percpu.c b/mm/percpu.c
+> > > index b35494c8ede2..0f98b857fb36 100644
+> > > --- a/mm/percpu.c
+> > > +++ b/mm/percpu.c
+> > > @@ -3355,7 +3355,13 @@ void __init setup_per_cpu_areas(void)
+> > >   */
+> > >  unsigned long pcpu_nr_pages(void)
+> > >  {
+> > > -     return pcpu_nr_populated * pcpu_nr_units;
+> >
+> > No need for the lock as I think race is fine here. Use something like
+> > the following and add a comment.
+> >
+> >         data_race(READ_ONCE(pcpu_nr_populated)) * pcpu_nr_units;
+> >
+> 
+> This race itself is not a critical security vuln, but it is a read/write
+> race that actually occurs. Writing to pcpu_nr_populated is already
+> systematically protected through pcpu_lock, so why do you think you can
+> ignore the data race only when reading?
+> 
 
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
-v1 -> v2:
-  - resend patch.
-Patch [v1]: https://lore.kernel.org/linux-arm-msm/20250523103853.1538813-1-quic_lxu5@quicinc.com/
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 86 ++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+As mentioned in the other thread, the reader of this value is
+/proc/meminfo and reading a stale value isn't the end of the world
+either.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bfbb21035492..58e07c9c08c1 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -3166,6 +3166,56 @@ glink-edge {
- 				mboxes = <&apss_shared 4>;
- 				label = "cdsp";
- 				qcom,remote-pid = <5>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "cdsp";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x1081 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x1082 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x1083 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x1084 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x1085 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_smmu 0x1086 0x0>;
-+						dma-coherent;
-+					};
-+				};
- 			};
- 		};
- 
-@@ -3838,6 +3888,42 @@ glink_edge: glink-edge {
- 				mboxes = <&apss_shared 24>;
- 				label = "lpass";
- 				qcom,remote-pid = <2>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "adsp";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x1723 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x1724 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x1725 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_smmu 0x1726 0x0>;
-+						dma-coherent;
-+					};
-+				};
- 			};
- 		};
- 	};
--- 
-2.34.1
-
+Thanks,
+Dennis
