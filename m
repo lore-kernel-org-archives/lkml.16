@@ -1,301 +1,376 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750A42E62DF;
-	Thu,  3 Jul 2025 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5315123AB86;
+	Thu,  3 Jul 2025 13:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751547934; cv=none; b=upJB5j0XVTlPwZxjTQNw1mwQXa4RBzpTikcT2OvgVpUOS1tVlZW59oEpKgA94XvAODXMVLYMckBVzjhJMIGtJBIJIEe+fOrHhelxbn+j83z+1+9lIKt8hHYAk8YvXdA82sRIZezVc0h8Z5xgKaJBzIw2gqVeOSyYYGdzmlfjt+I=
+	t=1751547943; cv=none; b=r3yGnsbvoDCd91/BB2Rj0RDUrtEI//1qYNpXwwHD+mhvl+9wE2saS9iCZWwF/BbGQOMA94FimIULku/zkqtiVk1avExQH2Jvh+dByfTeQozfyy1HetF3VMA87WWp4sgjlF4Rg50zzdZXMfkDwQWk40BO5wz+n+aq+bnuEwjeetA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751547934; c=relaxed/simple;
-	bh=ENwYM3GT8rtXMdRl+Kcz8VKX1m6WvfmHEE7+B7zlxZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dxAHi8Tw84zvNv6ZmFFj/S9JvibOiFgChM/6oBIh6s3qo6XGw6MC7fx0yYOnfmpu7F6uVUkq2LjW4bnqraFVaKuqKbvksmeymQ4vg9YZfTc7vKGI6qYv+fCsWmsyebqYb5ZdHLzoG3plQjS6hi/83GRkatDeq2l3WumOMjDYyHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L1GwJ2aT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751547943; c=relaxed/simple;
+	bh=GpN8xHP63XM+oTXtjDyjENa6zCm9aLFaBITzhIXThVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jBu8OUWrQxL9zEE6oVCZWwScm7H8ze4xbGIS7qM8gwQ63BItspbe83QuCs3CC8cLkYfFaqZ4LCmbTWo7tLH7iBgl3KF8D+kgo6U1ofofsHXbdJ2Ce82dEDLi3dQjLdENtKp0eIAnuyBQactjE8y8J7gI7Ecsuqu4pM9gc0DrDso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KDACpp1Q; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L1GwJ2aT"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5637e4Ho024769;
-	Thu, 3 Jul 2025 13:05:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=wqAISnYaodB/zxGpiVkzt2OK
-	xktYuPv1mTd83UKa5iE=; b=L1GwJ2aTwNBxnNwNDhLEyYPchyowEU+qUnzJ5/0I
-	UEaoahIXI6pqEUDd7Y85m4b4pBbMAPLQTRVJW8FD26HD8MS6arfk2lu45XuN9PM6
-	roKrywPQmFI1jqRQAQQPfU3OZZQiDpWcy5rKQJAzUy9gAb0cn3HcuK8qnMpzUkz1
-	Xy+SNe+hGIl+zM7mjLlulPKG0w5++EQQEHfkAnIUxqS8U++0eZGdTfIXVyNgWA8i
-	loFrvgz6M6B60P0/gsXqgkCuHS/3S4+JvH5WXzeyc/F0eonWA98PuMIRYt0mIiLU
-	6Gpat3qWIRXQZfF/2HF7g6pvWP7fCDEEaINXVxObR+HVVQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8s9rhxw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 13:05:21 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563D5G1S014509
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 13:05:16 GMT
-Received: from jinlmao-gv.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 3 Jul 2025 06:05:13 -0700
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v8 1/2] dt-bindings: arm: Add label in the coresight components
-Date: Thu, 3 Jul 2025 21:04:52 +0800
-Message-ID: <20250703130453.4265-2-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250703130453.4265-1-quic_jinlmao@quicinc.com>
-References: <20250703130453.4265-1-quic_jinlmao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KDACpp1Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751547939;
+	bh=GpN8xHP63XM+oTXtjDyjENa6zCm9aLFaBITzhIXThVU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KDACpp1QMNA461z1ue9x8IPlUIObuv3owwbXpsmhy/7s7y+cNE8tEQwkbHNVtAGXv
+	 DX2S4cgAFcTAxMhSBQXX/G25TJZinfcgxebypD+fShb5YQeZIaRRUbEqXti4KxZud5
+	 6TmA8LjhiGLj9Tf+54Dit/E/69zHbDceZIcll+NeEDzLWD1si2Dp0z+l2n+GRh5g7Q
+	 nYZEzXikzlJSBgn/4TYgft7oXmhI4h2kD90EqEzPCEhkf4JxbKkWauc2FdJkMEkvGG
+	 7q9LeqpcWAI56/TD50rWtCyZmux4fLksYhfgIv7OogR/cX2mGFr7V3KmSUXQYbF0DU
+	 auIIAMI3Loqhg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A313717E0506;
+	Thu,  3 Jul 2025 15:05:38 +0200 (CEST)
+Message-ID: <183a3b40-cd06-437a-84d9-9949965bf176@collabora.com>
+Date: Thu, 3 Jul 2025 15:05:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=H/Pbw/Yi c=1 sm=1 tr=0 ts=68668012 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=krfrvTQUIteJPxDwGS8A:9 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: zL0e70W3XM2JWbRrgBAMsplHmBZ35qzY
-X-Proofpoint-GUID: zL0e70W3XM2JWbRrgBAMsplHmBZ35qzY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDExMCBTYWx0ZWRfX6h2RrPYf6awz
- sjY5AzSFDPIeuQSPK3r/yRaXQ/9B9ctIHnXZh6WXtF1G5qEuOEHnpMx2JP6ZBxIQ6fH+3AyjuNU
- qrKoUWG5o3JoJYr5XuVpPsCPAuiSKsb3OHtSmwwUKnpaXuq3ZJElySRYXUTHvLrviCPjMW4CHhk
- SceO0Jai+8uUo5oWwx9jHGFARsRwjonyD1/Q1/dKVtaIAKFV03KHo+cQtbppRqGmP3jyziNS5MX
- TrXHWebSp2RMHeTuix2pw91nQLWMj+ed8KFNN+2NSjTil1esa9kDNTGiGyklBFHMQCegaJaBpSv
- N6bXf8Bj9PQ7JPWdcPLw7RVO7tT9ec4a2vhS7GNv/gltg9hg4ja36Hzj9u9v2++82bblEBS56/f
- HCeGb+299WY33TSBZ5gK2xu4iY0SU4bKL/HDHzwx/c2rgT6w4c3LXMsjvMBggvksCvOngjE1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 spamscore=0
- adultscore=0 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507030110
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
+ PMIC AUXADC
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
+ <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
+ <20250628170118.2bd3e68b@jic23-huawei>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250628170118.2bd3e68b@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Current name of coresight component's folder consists of prefix of
-the device and the id in the device list. When run 'ls' command,
-we can get the register address of the device. Take CTI for example,
-if we want to set the config for modem CTI, but we can't know which
-CTI is modem CTI from all current information.
+Il 28/06/25 18:01, Jonathan Cameron ha scritto:
+> On Mon, 23 Jun 2025 14:00:27 +0200
+> AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wrote:
+> 
+>> MediaTek MT6363 is a PMIC found on MT8196/MT6991 board designs
+>> and communicates with the SoC over SPMI.
+>>
+>> This PMIC integrates an Auxiliary ADC (AUXADC) which has a grand
+>> total of 54 ADC channels: 49 PMIC-internal channels, 2 external
+>> NTC thermistor channels and 2 generic ADC channels (mapped to 7
+>> PMIC ADC external inputs).
+>>
+>> To use a generic ADC channel it is necessary to enable one of
+>> the PMIC ADC inputs at a time and only then start the reading,
+>> so in this case it is possible to read only one external input
+>> for each generic ADC channel.
+>>
+>> Due to the lack of documentation, this implementation supports
+>> using only one generic ADC channel, hence supports reading only
+>> one external input at a time.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Hi,
+> 
+> A few comments that may or may not overlap with Andy's review.
+> 
+> thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>   drivers/iio/adc/mt6359-auxadc.c | 238 +++++++++++++++++++++++++++++---
+>>   1 file changed, 217 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/mt6359-auxadc.c b/drivers/iio/adc/mt6359-auxadc.c
+>> index ae7b65f5f551..f49b0b6e78da 100644
+>> --- a/drivers/iio/adc/mt6359-auxadc.c
+>> +++ b/drivers/iio/adc/mt6359-auxadc.c
+> 
+>> +enum mtk_pmic_auxadc_flags {
+>> +	MTK_PMIC_AUXADC_IS_SPMI = BIT(0),
+>> +	MTK_PMIC_AUXADC_NO_RESET = BIT(1),
+>> +};
+> 
+> With just two bits I think flags obscures what is going on over
+> a pair of separate booleans.
+> 
 
-cti_sys0 -> ../../../devices/platform/soc@0/138f0000.cti/cti_sys0
-cti_sys1 -> ../../../devices/platform/soc@0/13900000.cti/cti_sys1
+Okay, I'll change this to two booleans then!
 
-Add label to show hardware context information of each coresight
-device. There will be a sysfs node label in each device folder.
+>>   };
+>> @@ -123,7 +155,9 @@ struct mtk_pmic_auxadc_chan {
+>>    * @desc:           PMIC AUXADC channel data
+>>    * @regs:           List of PMIC specific registers
+>>    * @sec_unlock_key: Security unlock key for HK_TOP writes
+>> + * @vref_mv:        AUXADC Reference Voltage (VREF) in millivolts
+>>    * @imp_adc_num:    ADC channel for battery impedance readings
+>> + * @flags:          Feature flags
+>>    * @read_imp:       Callback to read impedance channels
+>>    */
+>>   struct mtk_pmic_auxadc_info {
+>> @@ -133,22 +167,33 @@ struct mtk_pmic_auxadc_info {
+>>   	const struct mtk_pmic_auxadc_chan *desc;
+>>   	const u16 *regs;
+>>   	u16 sec_unlock_key;
+>> +	u16 vref_mv;
+> I'd not worry about the space saving here and instead make this a u32 so that
+> can avoid the casting when using this.
+> 
 
-cat /sys/bus/coresight/devices/cti_sys0/label
+Okay, will do.
 
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
----
- .../devicetree/bindings/arm/arm,coresight-cti.yaml          | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-dummy-sink.yaml   | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-dummy-source.yaml | 6 ++++++
- .../bindings/arm/arm,coresight-dynamic-funnel.yaml          | 6 ++++++
- .../bindings/arm/arm,coresight-dynamic-replicator.yaml      | 6 ++++++
- .../bindings/arm/arm,coresight-static-funnel.yaml           | 6 ++++++
- .../bindings/arm/arm,coresight-static-replicator.yaml       | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-tmc.yaml          | 6 ++++++
- .../devicetree/bindings/arm/qcom,coresight-tpda.yaml        | 6 ++++++
- .../devicetree/bindings/arm/qcom,coresight-tpdm.yaml        | 6 ++++++
- 10 files changed, 60 insertions(+)
+>>   	u8 imp_adc_num;
+>> +	u8 flags;
+> 
+> As above. Pair of bool preferred.
+> 
+>>   	int (*read_imp)(struct mt6359_auxadc *adc_dev,
+>>   			const struct iio_chan_spec *chan, int *vbat, int *ibat);
+>>   };
+> 
+>>   static void mt6358_stop_imp_conv(struct mt6359_auxadc *adc_dev)
+>>   {
+>>   	const struct mtk_pmic_auxadc_info *cinfo = adc_dev->chip_info;
+>> @@ -379,13 +488,13 @@ static int mt6359_read_imp(struct mt6359_auxadc *adc_dev,
+>>   	int ret;
+>>   
+>>   	/* Start conversion */
+>> -	regmap_write(regmap, cinfo->regs[PMIC_AUXADC_IMP0], MT6359_IMP0_CONV_EN);
+>> +	regmap_write(regmap, cinfo->regs[desc->req_idx], desc->req_mask);
+> 
+> Given desc->req_idx is not introduced in this patch, why is this needed now
+> but not previously?  Maybe this change belongs in a separate patch with
+> a description to explain that.
+> 
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-index 2d5545a2b49c..5ca6d3d313a3 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-@@ -98,6 +98,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   arm,cti-ctm-id:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-index 08b89b62c505..bc82cd1f3595 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-@@ -39,6 +39,12 @@ properties:
-     enum:
-       - arm,coresight-dummy-sink
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-index 742dc4e25d3b..3010055d5ad6 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-@@ -38,6 +38,12 @@ properties:
-     enum:
-       - arm,coresight-dummy-source
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   arm,static-trace-id:
-     description: If dummy source needs static id support, use this to set trace id.
-     $ref: /schemas/types.yaml#/definitions/uint32
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-index 44a1041cb0fc..30776610d4b4 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-@@ -57,6 +57,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-index 03792e9bd97a..178a3861ee29 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-@@ -54,6 +54,12 @@ properties:
-       - const: apb_pclk
-       - const: atclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   power-domains:
-     maxItems: 1
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-index cc8c3baa79b4..39b291909cc4 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-@@ -30,6 +30,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-index 0c1017affbad..a3e8a105b2ae 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-@@ -43,6 +43,12 @@ properties:
-           - const: dbg_trc
-           - const: dbg_apb
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-     additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-index 4787d7c6bac2..6a37ebaf474b 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-@@ -55,6 +55,12 @@ properties:
-       - const: apb_pclk
-       - const: atclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   iommus:
-     maxItems: 1
- 
-diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-index 5ed40f21b8eb..f42ecb4e8539 100644
---- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-@@ -64,6 +64,12 @@ properties:
-     items:
-       - const: apb_pclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     description: |
-       Input connections from TPDM to TPDA
-diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-index 07d21a3617f5..5e758476ad7f 100644
---- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-@@ -76,6 +76,12 @@ properties:
-     minimum: 0
-     maximum: 32
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   clocks:
-     maxItems: 1
- 
--- 
-2.17.1
+Oh wow, many many many... many thanks for catching this!!!!
+
+This change was not supposed to be in this commit, as I had implemented both
+the IBAT and VBAT "IMP" for the 6363 but then left them out because I was in
+doubt whether to add them here or if they are read from the fuel gauge chip
+transparently and in firmware; I wouldn't even be able to test that on the
+MT8196 Chromebook that I'm bringing up, because the battery is managed by EC
+instead, unlike smartphones.
+
+I have to remove that from mt6359_read_imp, the addition was unintentional;
+only mt6359_auxadc_read_adc() should use it (and already did before this commit).
+
+>>   	ret = regmap_read_poll_timeout(regmap, cinfo->regs[desc->rdy_idx],
+>>   				       val, val & desc->rdy_mask,
+>>   				       IMP_POLL_DELAY_US, AUXADC_TIMEOUT_US);
+>>   
+>>   	/* Stop conversion regardless of the result */
+>> -	regmap_write(regmap, cinfo->regs[PMIC_AUXADC_IMP0], 0);
+>> +	regmap_write(regmap, cinfo->regs[desc->req_idx], 0);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> @@ -416,6 +525,7 @@ static const struct mtk_pmic_auxadc_info mt6357_chip_info = {
+>>   	.regs = mt6357_auxadc_regs,
+>>   	.imp_adc_num = MT6357_IMP_ADC_NUM,
+>>   	.read_imp = mt6358_read_imp,
+>> +	.vref_mv = 1800,
+>>   };
+>>   
+>>   static const struct mtk_pmic_auxadc_info mt6358_chip_info = {
+>> @@ -426,6 +536,7 @@ static const struct mtk_pmic_auxadc_info mt6358_chip_info = {
+>>   	.regs = mt6358_auxadc_regs,
+>>   	.imp_adc_num = MT6358_IMP_ADC_NUM,
+>>   	.read_imp = mt6358_read_imp,
+>> +	.vref_mv = 1800,
+>>   };
+>>   
+>>   static const struct mtk_pmic_auxadc_info mt6359_chip_info = {
+>> @@ -436,6 +547,17 @@ static const struct mtk_pmic_auxadc_info mt6359_chip_info = {
+>>   	.regs = mt6359_auxadc_regs,
+>>   	.sec_unlock_key = 0x6359,
+>>   	.read_imp = mt6359_read_imp,
+>> +	.vref_mv = 1800,
+> 
+> Add vref_mv and code using it in a precursor patch.  Not a problem that all
+> vref_mv will be 1800 at that point.  That way we can quickly see that it
+> has no affect on existing parts, and simplify what is present in this patch.
+> 
+
+Right, I agree. I'll move that addition to a separate patch.
+
+>> +};
+>> +
+>> +static const struct mtk_pmic_auxadc_info mt6363_chip_info = {
+>> +	.model_name = "MT6363",
+>> +	.channels = mt6363_auxadc_channels,
+>> +	.num_channels = ARRAY_SIZE(mt6363_auxadc_channels),
+>> +	.desc = mt6363_auxadc_ch_desc,
+>> +	.regs = mt6363_auxadc_regs,
+>> +	.flags = MTK_PMIC_AUXADC_IS_SPMI | MTK_PMIC_AUXADC_NO_RESET,
+>> +	.vref_mv = 1840,
+>>   };
+>>   
+>>   static void mt6359_auxadc_reset(struct mt6359_auxadc *adc_dev)
+>> @@ -464,27 +586,74 @@ static int mt6359_auxadc_read_adc(struct mt6359_auxadc *adc_dev,
+>>   	const struct mtk_pmic_auxadc_info *cinfo = adc_dev->chip_info;
+>>   	const struct mtk_pmic_auxadc_chan *desc = &cinfo->desc[chan->scan_index];
+>>   	struct regmap *regmap = adc_dev->regmap;
+>> -	u32 val;
+>> +	u32 reg, rdy_mask, val, lval;
+>> +	u8 ext_sel;
+>>   	int ret;
+>>   
+>> +	if (desc->ext_sel_idx >= 0) {
+>> +		ext_sel = FIELD_PREP(MT6363_EXT_PURES_MASK, desc->ext_sel_pu);
+>> +		ext_sel |= FIELD_PREP(MT6363_EXT_CHAN_MASK, desc->ext_sel_ch);
+>> +
+>> +		ret = regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
+>> +					 MT6363_EXT_PURES_MASK | MT6363_EXT_CHAN_MASK,
+>> +					 ext_sel);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>>   	/* Request to start sampling for ADC channel */
+>>   	ret = regmap_write(regmap, cinfo->regs[desc->req_idx], desc->req_mask);
+>>   	if (ret)
+>> -		return ret;
+>> +		goto end;
+>>   
+>>   	/* Wait until all samples are averaged */
+>>   	fsleep(desc->num_samples * AUXADC_AVG_TIME_US);
+>>   
+>> -	ret = regmap_read_poll_timeout(regmap,
+>> -				       cinfo->regs[PMIC_AUXADC_ADC0] + (chan->address << 1),
+>> -				       val, val & PMIC_AUXADC_RDY_BIT,
+>> +	reg = cinfo->regs[PMIC_AUXADC_ADC0] + (chan->address << 1);
+>> +	rdy_mask = PMIC_AUXADC_RDY_BIT;
+>> +
+>> +	/*
+>> +	 * Even though for both PWRAP and SPMI cases the ADC HW signals that
+>> +	 * the data is ready by setting AUXADC_RDY_BIT, for SPMI the register
+>> +	 * read is only 8 bits long: for this case, the check has to be done
+>> +	 * on the ADC(x)_H register (high bits) and the rdy_mask needs to be
+>> +	 * shifted to the right by the same 8 bits.
+>> +	 */
+>> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
+> 
+> This is getting close to the point where the complexity for the IS_SPMI case
+> is compled enough you'd be better off just splitting the code.  I'd try that
+> and see if it ends up neater than this.
+> 
+
+That was the first thing I did... but it's not so many changes... I'd be ending
+up almost completely duplicating this driver for no reason.
+
+I'm mostly sure that there won't be any more spmi-specific differences in the
+AuxADC, but if one day turns out I'm wrong, I guess we can always split the
+driver in two and move the SPMI platforms away... but again, I'm mostly sure
+that won't happen.
+
+>> +		rdy_mask >>= 8;
+>> +		reg += 1;
+>> +	}
+>> +
+>> +	ret = regmap_read_poll_timeout(regmap, reg, val, val & rdy_mask,
+>>   				       AUXADC_POLL_DELAY_US, AUXADC_TIMEOUT_US);
+>> -	if (ret)
+>> -		return ret;
+>> +	if (ret) {
+>> +		dev_dbg(adc_dev->dev, "ADC read timeout for chan %lu\n", chan->address);
+>> +		goto end;
+>> +	}
+>> +
+>> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
+>> +		/* If the previous read succeeded, this can't fail */
+> 
+> As per discussion with Andy, I don't think we can ever assume that.
+> 
+
+I'll add all the checks around :-)
+
+>> +		regmap_read(regmap, reg - 1, &lval);
+>> +		val = (val << 8) | lval;
+>> +	}
+>>   
+>> -	/* Stop sampling */
+> 
+> If you have code that ends up with an internal goto for a specific
+> block, that often suggests you should be factoring some code out to simplify
+> the flow.
+> 
+> I would take everything between the activiate ADC GPIO and deactivate out
+> as another function.  That will still need a goto to get to the stop
+> sampling but then we won't have the dance below where we do some
+> stuff from the main code flow on error and then exit (with more after
+> that not run).
+> 
+
+Actually, I have removed the goto as well - I moved everything but the write
+to stop the sampling to a new function; I'm calling it, then stopping the
+sampling unconditionally, as was already done before.
+
+To let you understand, this is the description:
+/**
+  * mt6359_auxadc_sample_value() - Start ADC channel sampling and read value
+  * @adc_dev: Main driver structure
+  * @out:     Preallocated variable to store the value read from HW
+  *
+  * This function starts the sampling for an ADC channel, waits until all
+  * of the samples are averaged and then reads the value from the HW.
+  *
+  * Note that the caller must stop the ADC sampling on its own, as this
+  * function *never* stops it.
+  *
+  * Return:
+  * Negative number for error;
+  * Upon success returns zero and writes the read value to *out.
+  */
+
+...you can imagine the rest, or anyway I'm sending a v2 shortly :-)
+
+>> +end:
+>> +	/* Stop sampling unconditionally... */
+>>   	regmap_write(regmap, cinfo->regs[desc->req_idx], 0);
+>>   
+>> +	/* ...and deactivate the ADC GPIO if previously done */
+>> +	if (desc->ext_sel_idx >= 0) {
+>> +		ext_sel = FIELD_PREP(MT6363_EXT_PURES_MASK, MT6363_PULLUP_RES_OPEN);
+>> +
+>> +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
+>> +				   MT6363_EXT_PURES_MASK, ext_sel);
+>> +	}
+>> +
+>> +	/* Check if we reached this point because of an error or regular flow */
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Everything went fine, give back the ADC reading */
+>>   	*out = val & GENMASK(chan->scan_type.realbits - 1, 0);
+>>   	return 0;
+>>   }
+>> @@ -505,7 +674,7 @@ static int mt6359_auxadc_read_raw(struct iio_dev *indio_dev,
+>>   	int ret;
+>>   
+>>   	if (mask == IIO_CHAN_INFO_SCALE) {
+>> -		*val = desc->r_ratio.numerator * AUXADC_VOLT_FULL;
+>> +		*val = desc->r_ratio.numerator * (u32)cinfo->vref_mv;
+> 
+> As above.  If vref_mv was already a (u32) no need to cast here.
+
+Changed!
+
+Cheers,
+Angelo
+
+
 
