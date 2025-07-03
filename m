@@ -1,239 +1,140 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D56227574;
-	Thu,  3 Jul 2025 07:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751526044; cv=fail; b=ShuSi/lFxVOdqaqKWoOjwNyOpkDOUSqycrvvXKVbWmfEwBbBG2gtZtKRdg1odT86oVkaH0VKFNXJwNnqJeUeG/UumStrT9gPkXguHd0EJYoquM+9mtyuNOywMBpfdkkIbD7dhLoJHaP4a9azrZ3U1SenN+uNpNSC8kupChtcXIw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751526044; c=relaxed/simple;
-	bh=uKvotf3sPCQc+ihGg3FQQOZXVvIbeP7g/0VCws1N2Ck=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qjMR+TGzrsFLckTwyQsg8YC4ONwJFB6oO0zAQjy4vFo95DEqhOtmoldAsNoM8RILEsfrqVEWdWeJr2ZX4NANzkjnuZKcmb/NAhbpKfZ9u54xB3B2fzUi+q8uywsP6J/3+ZI5yGafnlRDuyCYOwnZZGNyHxqj12ajaaVzwL8jRpk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hiKbjBkM; arc=fail smtp.client-ip=40.107.243.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1AE2F32;
+	Thu,  3 Jul 2025 07:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751526152; cv=none; b=g61bXN3O6saBrUdbjrqPmVMEbpBiDvkTUIFWzjtCPG3BwoGYyST5bw2vqjTEDXoLOoZX1XFS2msZjvLueW8U/B9qT2rrz2ExgJVF2DDGkL4uxAkhR5mJGuKzqFSBiV0s8IW6iDfv7rqTmKb1WyMZpurF0AaLkB8cRthgz2u2fdQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751526152; c=relaxed/simple;
+	bh=7ztDh0ju2t70qkPn3UcxbGubUYXa6myNkFd7W3IdfWY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jPRZBZOhkKVuT+wX4RYaUNM/W0o1StOgag8U2yEGSmZF+8eEA5CWwAC7xVQ2loe703dB6ozneprsq1l85kzezj/p+tVbEc3sPB72BcPpeOOcCtS6rRvrk+BNIk607Uw3HUDtocqusxJVM4yUvGnKpPB/V1UzKrBOMh9RfOkn7g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRYT3kCL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hiKbjBkM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WH1YiWsZ9acldT+t0Y9bx+Os9cMXT9NLVsyBIVFFzteO+Eo2Bl20GFVvUk0Gpcvr1ZByYlYSmeebFMu51wqgYIH9UrgyTX3jGrPM0znJ6ah7S4fb2OadgkNM5x87GJPu6huXXPRX7iVUraxPbw5wo3zq6F9ooZoPuLUwAHwzNrDuexirSf57RxsuMp6Jj8dUXSY2cTX5p3lEIxpMSHSSzHFmSeIz3EuBDTOZPuTYEmiUMeSA8fonkMYyNo+BiJ+2DDyb22p8/g2QgDeJz8nN+IBG98o3yxqUedEhXeqmmkrd8lWzaPks8OHMCU2CxV6M33se6mVOF/+HdJps2XpflA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c/W3ya9FW7/sxVqC7hFyi0zTf2PMEx4bdBXh+K7Nhtw=;
- b=N/SXr5wRjESYj8/q4RjdBkq8GEoNwfGxCV8Uekf/67CYOvNSwDIzzjSJvxopxxZ4JTahDpARXS0IgOtfn/8Pl+X0ezYNA5HgDUQ6pJowa5En3vo8hjdL6LDCv6DiHIdN6nfuF8lbAjGb7J6lh6avA6ylDNoZ1PcOuZDDYjkjR42R6xvek+7NrW2CxDc18ZLGp3rC5qVambX64k6L3mhY4mjiyUWznDbtn0HCuRG6Xl22m/9Tf88qkTCYQlcO1pN9cDxBg86qm9ZXvEm56VJDwIopur7hpMAGQliiVgI+TJu4D34Rousjrd2MPPnwk/dfQov9FRyNo8IvCl78pdXxpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c/W3ya9FW7/sxVqC7hFyi0zTf2PMEx4bdBXh+K7Nhtw=;
- b=hiKbjBkMYkX5NWwjbbrp5Yag3l1aKZT5Oz7nQa2meSlNFBTLKXoDmKfhrT2n38XKZHdkWYjRaYI1qkTemX51Wcnm9YJikwrMQ5qk/7F7fIrCKfh65Ej6o56jzZ8o3lnwdXM0kXtEyQ+CuNwMZUipxp2pzBkbrCZP0EF45tsoayk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com (2603:10b6:208:3a8::19)
- by DS0PR12MB8442.namprd12.prod.outlook.com (2603:10b6:8:125::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Thu, 3 Jul
- 2025 07:00:40 +0000
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3]) by IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3%6]) with mapi id 15.20.8901.018; Thu, 3 Jul 2025
- 07:00:39 +0000
-Message-ID: <e2347f7c-a1a4-f012-0b24-cf3bb4f3cb8a@amd.com>
-Date: Thu, 3 Jul 2025 12:30:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 10/14] RDMA/ionic: Register device ops for control path
-Content-Language: en-US
-To: Leon Romanovsky <leon@kernel.org>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
- jgg@ziepe.ca, andrew+netdev@lunn.ch, allen.hubbe@amd.com,
- nikhil.agarwal@amd.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Boyer <andrew.boyer@amd.com>
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250624121315.739049-11-abhijit.gangurde@amd.com>
- <20250701103844.GB118736@unreal>
-From: Abhijit Gangurde <abhijit.gangurde@amd.com>
-In-Reply-To: <20250701103844.GB118736@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0131.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:bf::18) To IA1PR12MB9064.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRYT3kCL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403EAC4CEE3;
+	Thu,  3 Jul 2025 07:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751526151;
+	bh=7ztDh0ju2t70qkPn3UcxbGubUYXa6myNkFd7W3IdfWY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pRYT3kCL8/igIl1lgxneLvSitiJfNrFGeJDuNmhDJ+JpCWI5YHXylKwZuwquzeVOp
+	 4+CtIccyeOLvpOa+32Ck6GIuOBxpdAq4B3AXRBtqMVjIhjLgMcTROBUHnYLRrd8bN9
+	 25PPfnhWCJjQ2zPOlx73jWmvHkQv4SGiKXxOUKm0KqvsPT8FYg0hK0YUmdAzxA4X7k
+	 +2X35/X+qakrVYtSzu23pZbB3dPT9ieOGDKWGtiipPyiUbQRtjrG5NNENhO7ogy6DZ
+	 dVukbrPru/M4UY/ob++zxsMqza+XGCtQfmlDcDYLIXAWETsr0mw6xMj2EvqHIsnpYf
+	 e6MNM9n0UQKFQ==
+Message-ID: <6586071b-e914-4ab3-9a5f-3091d654e6a6@kernel.org>
+Date: Thu, 3 Jul 2025 09:02:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9064:EE_|DS0PR12MB8442:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7d678e4-f3d5-467d-eb06-08ddb9ff51b5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cVp5UE5jTVlvL1ZzV3d2R2pzZ2pEZ0ZpTFZZM3E5eDk3aXQ2RzZDbHBVM3J3?=
- =?utf-8?B?ZmtYc3J4QWdpV2RzTGlVMlhoZUZUSVhwdGpaU0JZWG5vaHdXUk5tTk9sNmRl?=
- =?utf-8?B?M0N5MWtoZk9Sb3hlWVl6YmVCUDVkT2ZwMXlIQnRpcURUMVlPemVvOW11V2dR?=
- =?utf-8?B?bFdvQUxZaVNKdEFOVk1jOERmK3NqeHZ5MmM3R0hTOGVvdFo0N1FCRVlOUmNh?=
- =?utf-8?B?cDFyYW4wK1JaTTZ4Q3BJQXNDZjd1MnpIZW5yTVRZZzEvSnpFcnQvY1luT21i?=
- =?utf-8?B?MlVPcXhVRnVzRHRVNkRVN0lJRXFUTEVXM2ZmbDg4NlFPTXZrOEkvYlFXTzNn?=
- =?utf-8?B?MnA0MFZUUjZZdm5ndnYyTUphZkxWQTd5TVVxWG5yL3o5b3haZGg1ekNabnNn?=
- =?utf-8?B?SHpOekdJT0NoMGxjTTdmcXgrb0FmVUdPQlh5MXFpMzJpY1c4TWR5RS94WlNL?=
- =?utf-8?B?ak81Z3FNTi9zbjQ0SGtPZ0NpNzUrNnBJOHEvc1B6NWc3anZtSlZRU3RjblFh?=
- =?utf-8?B?UnUva0FhanFuWHQ3QXR1dnNZOHorYnliNStxT01Mekg3YUFEdStqM1hUK3Zk?=
- =?utf-8?B?eHRiU09rU2FHMDVWd0VwaitCOW1FYm9FN2c1c1FvQ2NkUFZtQU1paGZ1QlNT?=
- =?utf-8?B?RGF6VXQ2ajdVS2tPVm5TZWI3Rmo1MnlDTDJjbFVFeGZmQ2Uwb0JsSTRQTmk0?=
- =?utf-8?B?UU1WaElnVkIyeVFXbURjQ0hNSDBpY1NzSW1WVUhtNmc5NlVrbEhmY1pxTG15?=
- =?utf-8?B?d2pqY3hKM3dPMzB0ZmcyVEpnQTNQMGtKTHFOa1RjaERscC91Q1JQem1kaFJM?=
- =?utf-8?B?QU5SRUNZMGF3TzhaSlhvaFRRbFEzOFRyMEdsdWZYRFFzTGtESVhrL1NiNlVJ?=
- =?utf-8?B?cFRSMllkbklhUzZPS1lRWFVCVjRra1ZvRml6T1ErUlZVTWJWZFArbnNRcG9I?=
- =?utf-8?B?WnRmZG9rRjcrczlDWEc5UERxWmxkcjExck9UYjRTMHFZZm9mY1IrcXFEeGI4?=
- =?utf-8?B?aURXQktrZ282Q2dvU3hOQ3d3cnRCaTFleVdrTmNablh3bklHU0M3eHRualFZ?=
- =?utf-8?B?c3RkYTFvOThUTzhzUFVsQ1N0STJOSUJnbGRHWTdzTXM1a2djSGZDbXpiamFQ?=
- =?utf-8?B?RFVISGIzSkl6bXI1OXYvZTJ4dHRlMHlaZ3hYSlR3N01Fb1U1V0tUdUdBN09h?=
- =?utf-8?B?MkM2VlVXRVRtZjdEZ1lDY2dTL3Y1L3ZNN3UrSXNobVphSmNtdklWbzJpb3JJ?=
- =?utf-8?B?akhkMlcyTXZWN1NFV2ovNDk3d0RVYUsrOHI1Z0JJUFJMRFdSR3grS1J0aFND?=
- =?utf-8?B?bDN0RWErenJ3cEtJOWtYUlloZHJBYTd5ditxa2dDaHlsRnRBRG1RaXU3TG5H?=
- =?utf-8?B?cUFHSWx3RnlpV2I5S1N0WVA3ZGpZdUlURjlzNXdLSUY4L0FyOGZzS2xFa3dv?=
- =?utf-8?B?ZGJaNXVIWVNaMTZZYzNDVnNQeHdvQUx1dnlmVHpVL1Nta2JhSVBuM0dleVZt?=
- =?utf-8?B?SXJQWGhmcGxQaURyeFZkTWxPTkJEL0VYM0dQbEZ3ek9QQTNPbEZnTlRuUnFD?=
- =?utf-8?B?d2JtaS9pN3NiTTVnQ0RmL3B3b0lDcldGN2tTR053RzArdDROdGtVTGRkNWh3?=
- =?utf-8?B?aTVIMERXaFltbHk3dXhTclBBUjZDV2luc0JleThJVGhQUzJ0SjI5UkdGbytI?=
- =?utf-8?B?WDNROHB5eW53V1M1VFh6bXhSdWFiM0hsUktocGwvMUNOR2V3TGVEcHZsVzYr?=
- =?utf-8?B?ZnhBM0p0eUh1U2FmSXV5NVJNTytyVUF0YWdHTFN5Y1JlK2k3OTMyeGJkY1Rv?=
- =?utf-8?B?biswMERiYnNTVEg0OXlIS0JCbWt6NGgzT3pJK2xrb0JLOG13ZVp0ZUJqZFpV?=
- =?utf-8?B?MVlMaFBPd2JBMlVpNmZBZDRmWE54eHNyendyTlFoWEJiUWc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9064.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RmFOOHlWQ2VVQVhqMzBVWWZwS2xZNVJSZ1NSNE45S3Ywanh2RG5wM2pRbHo0?=
- =?utf-8?B?em42NHNQeklWcWRJcGxmRzlVc1krV091Nkh6TWdhbnVkSXRYaHFRLzN0aHgv?=
- =?utf-8?B?ZWJhSDJSQndjcnVMOUNwelJSOXBYdTlrWVpUNGFkY3R2WDJuNWVJQXZrRTJx?=
- =?utf-8?B?clBRbTdVQmlydGt1Q29QSmk0NThEcWt4UFlBL28raFdwYnZVUG0vL29DWnlZ?=
- =?utf-8?B?bVNUdDRpbWFFWSticksvWngwT0JmSTFoY2F4WXdTekU3cllhODJnOG5rY3RQ?=
- =?utf-8?B?ZUhIbVRCdzNBTXVSdDF0Wk9tS1RmNEMrT1lsVExobWs5NUFQenVZV1dhTWpw?=
- =?utf-8?B?Q0YzVDJMUzEyZlNKZG5rVzhzUm1LRldFSlFNKzYxVUpKL2pEWDJCVW10WlFM?=
- =?utf-8?B?ay9ZeDl2SFRmWGJGSU5OVk9YWWsyeUpZZElHLzZiL1N2OTQyVW5RUnhDbnZP?=
- =?utf-8?B?cHJYLzh2bjRDR3dkeFduSlh0ODMzMEg1ZlNXT2t1NytTR0hGSFBxNW9lSnBy?=
- =?utf-8?B?QXU5ejZZajYvaHpBOFVtNWpXYXJZRFhOMFpYbWRHTFVQVDRCakxwS0xEOTk3?=
- =?utf-8?B?azZLcU5Jd1dFSWgwQ1h0ZFpVUFY5WnhVMUdIMVJvZTZGRGNkNFY5dno4d3Ux?=
- =?utf-8?B?SlN2cnNCWllPRXI0ajNnVXMyWk5JcTgzOGdYRHZtUTlLczBDVStkNUMvdjVh?=
- =?utf-8?B?V0Vzbm9Vcm1HNkxFbnV4NThnSWVMTVU2bTB4S1BqRlQxZGk4ckZUaG1xN2Jx?=
- =?utf-8?B?cjloWkV4LzFWcG1NRzRhVHhGQlA5TjFYWjljem1JcUpkWEFjRkQwb0ZyYlgw?=
- =?utf-8?B?TTRmZkRMbUpjcVZhTUJldDNsanBqRHRGN0k5T0hSa3M4dk9VWHV2Qnk0cmxw?=
- =?utf-8?B?T3g4b25Cb0d2Nndha1piOXhmblRvS3ZVY1FpaWZEcUtKTm11dzVjOVJhbUF4?=
- =?utf-8?B?QVhMblZVS3p0OG9weTVFb294aW45RXVMUUwyc1ErT0U1WjhTVy8vRTRpWS9h?=
- =?utf-8?B?U1doUVROOGZzWXFVam1sak95bUFSaWU5NlBkeVYvV25aWVpjdmN4WnVySGlh?=
- =?utf-8?B?MTBDblFObE9mMm1Ra254b21VOUE2ZFdlZHhZWXVsQXVFT2ZXcVRtR1RkcWJ1?=
- =?utf-8?B?UDQyU0hKdE13dFZ2NjRFLzVQQy8vdXppV3dwVkFwU3h1Q0ZkcEp3Q2JVN0pi?=
- =?utf-8?B?Nm02UXJQbTNPT0VYdTVKNWNpSmtNeVNya2ZkYTlwVDFRb01jc0pGZGJ4MWtt?=
- =?utf-8?B?bGF3U1F2V0tLWU5MK1hXcllUQXNXTGZUVVQ2QXpWMlphVkNjTEF3Z1g3bSsw?=
- =?utf-8?B?NUM1VHhoTmZWZmJOaEl5allvTU5WQUZqak9ud0hhZFRTaXZqTVh6NXkrOHVT?=
- =?utf-8?B?MGY3NUM4VnNsQmF6SWtTR2c0V1Z5Q3Zta242RTJxSU91K2cyRUNPSUpWcExO?=
- =?utf-8?B?dXhhakt0dHIxL251K2ZkVVY5VlhNMnFNdW9wN3JYTlNXVkY3b1p5VFcxQlVp?=
- =?utf-8?B?OU4xbHc4Um1nbHRYSVFFRjErbVpkdlJUd0h6QlJFQ0JuUU9WL3Z0WmJ4N2tK?=
- =?utf-8?B?SnF5a3NibDl1N3FBSTF0Z3ZvdDhEYlphZnpiNG5scy9kRUV4Uk1xOVQzZXZI?=
- =?utf-8?B?aDlISnEwOGRNMkwzb2g4Z1ZXRHl3TGxNNFE2RkdFOWpZc3IyTmMzWWtHUWsv?=
- =?utf-8?B?ZTRlKzltdkpuY25qRk0yRmVHQVFMTUtVWnZNejZiV0x2clZBTDRJb2pBS2Ux?=
- =?utf-8?B?M2krNGxFVG5pbXlYL2pEWEw4ei9hNjVMU2JEN29UbkQyNE1VcmdCWEJkcnBq?=
- =?utf-8?B?cW4wSGEyNjJKT3lYOHZDUTBVandKNFFyMitUK0I4Ym1MbW5Lbmt2SXNxb3dU?=
- =?utf-8?B?RGFCTFFrWjhzZWExN0xFZDFXeFRHRnZSODdZWW00bU1GSnZIWGdab2xGVjhZ?=
- =?utf-8?B?czVTd1NkcldreTM0Qm9PSnhFZEpTUTFBbTB0QnRvb1FrVVQ5STBuVk9IV2w0?=
- =?utf-8?B?cmM2Nm5COGNuby9hbnkrUFQxNGJxdW9LaDE5NjJCRnl6NjJFNlZMeEhuNTI5?=
- =?utf-8?B?Tjc2czA4cVJQRG5MbWoxOHZPQkE0NnJJRTd2Zmd6cFNjUXFUMHBYNklYUmFS?=
- =?utf-8?Q?Of35LnMC0LmqillbrrjjmspNQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7d678e4-f3d5-467d-eb06-08ddb9ff51b5
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9064.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2025 07:00:39.8085
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jgLwdX4QDosUjm1K0D1TXY90G0eZ0nC1ZH68oBAbGwgP//zU/TIX0nyVcAYeNtlAtubY2eZGZ904BTF63jx7Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8442
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: qcom: Split HP Omnibook X14 AI
+ in SoC variants
+To: jens.glathe@oldschoolsolutions.biz, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250703-hp-x14-x1p-v3-0-affe103b4356@oldschoolsolutions.biz>
+ <20250703-hp-x14-x1p-v3-1-affe103b4356@oldschoolsolutions.biz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703-hp-x14-x1p-v3-1-affe103b4356@oldschoolsolutions.biz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 03/07/2025 08:59, Jens Glathe via B4 Relay wrote:
+> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> 
+> The HP Omnibook X14 AI PC is available in fe0 (Hamoa, x1e80100) and
+> fe1 (Purwa, x1p42100) SKUs. Since they are not completely dtb-compatible,
+> split the model strings in 2 variants:
+> 
+> hp,omnibook-x14-fe0 compatible to qcom,x1e80100
+> hp,omnibook-x14-fe1 compatible to cqom,x1p42100
+> 
+> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> index ae43b35565808ed27cd8354b9a342545c4a98ed6..d114b7ae4fa7b162a83a152d9bf8d3fc2d74750a 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> @@ -1148,7 +1148,7 @@ properties:
+>                - asus,zenbook-a14-ux3407ra
+>                - dell,xps13-9345
+>                - hp,elitebook-ultra-g1q
+> -              - hp,omnibook-x14
+
+You just added it half a year ago... Anyway, it  is an ABI now, you
+cannot drop it.
+
+> +              - hp,omnibook-x14-fe0
+>                - lenovo,yoga-slim7x
+>                - microsoft,romulus13
+>                - microsoft,romulus15
+> @@ -1159,6 +1159,7 @@ properties:
+>        - items:
+>            - enum:
+>                - asus,zenbook-a14-ux3407qa
+> +              - hp,omnibook-x14-fe1
+
+This part is fine.
 
 
-On 7/1/25 16:08, Leon Romanovsky wrote:
-> On Tue, Jun 24, 2025 at 05:43:11PM +0530, Abhijit Gangurde wrote:
->> Implement device supported verb APIs for control path.
->>
->> Co-developed-by: Andrew Boyer <andrew.boyer@amd.com>
->> Signed-off-by: Andrew Boyer <andrew.boyer@amd.com>
->> Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
->> Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
->> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
->> ---
->> v2->v3
->>    - Registered main ib ops at once
->>    - Removed uverbs_cmd_mask
->>    - Removed uverbs_cmd_mask
->>    - Used rdma_user_mmap_* APIs for mappings
->>    - Removed rw locks around xarrays
->>    - Fixed sparse checks
->>
->>   drivers/infiniband/hw/ionic/ionic_admin.c     |  101 +
->>   .../infiniband/hw/ionic/ionic_controlpath.c   | 2530 +++++++++++++++++
->>   drivers/infiniband/hw/ionic/ionic_fw.h        |  717 +++++
->>   drivers/infiniband/hw/ionic/ionic_ibdev.c     |   44 +
->>   drivers/infiniband/hw/ionic/ionic_ibdev.h     |  249 +-
->>   drivers/infiniband/hw/ionic/ionic_pgtbl.c     |   19 +
->>   include/uapi/rdma/ionic-abi.h                 |  115 +
->>   7 files changed, 3767 insertions(+), 8 deletions(-)
->>   create mode 100644 include/uapi/rdma/ionic-abi.h
-> <...>
->
->> +static void ionic_flush_qs(struct ionic_ibdev *dev)
->> +{
->> +	struct ionic_qp *qp, *qp_tmp;
->> +	struct ionic_cq *cq, *cq_tmp;
->> +	LIST_HEAD(flush_list);
->> +	unsigned long index;
->> +
->> +	/* Flush qp send and recv */
->> +	rcu_read_lock();
->> +	xa_for_each(&dev->qp_tbl, index, qp) {
->> +		kref_get(&qp->qp_kref);
->> +		list_add_tail(&qp->ibkill_flush_ent, &flush_list);
->> +	}
->> +	rcu_read_unlock();
-> Same question as for CQ. What does RCU lock protect here?
->
->> +
->> +	list_for_each_entry_safe(qp, qp_tmp, &flush_list, ibkill_flush_ent) {
->> +		ionic_flush_qp(dev, qp);
->> +		kref_put(&qp->qp_kref, ionic_qp_complete);
->> +		list_del(&qp->ibkill_flush_ent);
->> +	}
-> <...>
->
->> +err_buf:
->> +err_hdr:
-> Please don't use empty goto labels.
 
-I will correct this.
-
->
->> +	return rc;
->> +}
-> <...>
->
->> +#define IONIC_ABI_VERSION	4
-> For us it is 1.
->
-> Thanks
-
-I will correct this and others in next spin.
-
-Thanks,
-Abhijit
-
-
+Best regards,
+Krzysztof
