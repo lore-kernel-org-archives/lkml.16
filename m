@@ -1,103 +1,149 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63728E17;
-	Thu,  3 Jul 2025 16:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE424C09E;
+	Thu,  3 Jul 2025 16:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751559853; cv=none; b=kUzlTFQPYzZ44FE50wWLksQRvVMfSPimbBuf8oScIoybmQGOy7G39naYbhrXn1x7GS/lfcyRuZHufZhHNQqo8dYrPvxkhmp9wqkIgzaepPc693tzzPgdDcMQPH+FSlwC855bJhPwJCakS6OmfkOioX8HX1iSt5iB87vCztsLUe0=
+	t=1751559962; cv=none; b=B8g7G7muRyCbAP4sOT0wgHwbq519678DTBipd82EBoDYADBoxkasM1xNzjJ+SPhyyMmiQZ8mIaiS8XPBhFZxPB1kcukC2JI5yzzUe2vFKSlPivemOcEFwFyvGSrrkV1hhLKslMp2fcZEepZgakPzE1+C/wS3XDMiwhDNXafSEow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751559853; c=relaxed/simple;
-	bh=ZattO5Mn2hbw8j6k+Ojc2VZsIcamMU7rl1sPrW/W0SA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j9r8EWEqPeQfDMdKRFSxSN6MG57YKidd9raHC4Aix5j5fZfwOrHlruUiOwpnlwMY6jeGhMyXquLkwPHm5+hh6jLj84zSvgjb348dWBn49MOlXFqJi+mDzbYvjAsNH8Qv99hdJtdG0s4f4olgLY2QxRg5btBRfrA0b+bGB1sOyrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEgCWzvH; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751559962; c=relaxed/simple;
+	bh=QebVaURP5uWhfVmJTa2ANVbxyzaQ3bbX6YuMh/FiStU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uryOEcSqdNpwBZSyYJa49sY+7QFcLNkoNVj/vsbk0jLy716vra6XUvr4Mf5YObFyLh1YP53rPhY/euj+h4W5jZKn/z7bENgiRs5i/qqJOSBMW0LBLiJEiF1tcIKStwqo13U5Zwk5ZkT+dqyFzapWGU/e+6ZThqZPTm/ItLR4XCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qfuQz9I9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEgCWzvH"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-60f24b478e3so76176eaf.3;
-        Thu, 03 Jul 2025 09:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751559850; x=1752164650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZattO5Mn2hbw8j6k+Ojc2VZsIcamMU7rl1sPrW/W0SA=;
-        b=ZEgCWzvHLTVHSgww+IzCSNfW+8Ih7H+5gTka5NGtzjwlOSTSd2yudGQfJaR6ZdLFE2
-         8woLK3hlCwW9YuvNC5lu2m3TlAGF4B1slPveL9pUCn+sSTTQfGQ7HZiwTysWgSTRxAjt
-         WTuOdxIrURSEihndDtlTLwtR/Wsnxxlbs//PIoY3v1eTZwUKYOwOmHmm5m+00hVTGE7f
-         2IJsra+44L7fAF0CX+rJE0HPDew+xxV7UiFM8DHLK2bPCsBGzTAJ3Mvzez9KHgMRtlRE
-         VTMDpUXxj8Kxru0CClgxJqafkskjYT3HW6hzlPnEJ33T4AOFDKCa7GA43pMMfwRZG028
-         M+nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751559850; x=1752164650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZattO5Mn2hbw8j6k+Ojc2VZsIcamMU7rl1sPrW/W0SA=;
-        b=FKooUpFvffqwboSoGTlO5sNeDuN2CyMVdrU5In0Se8kLc0nOGoCXGN2xRuNIw4WSrB
-         gxLAaeOLsDJpJFJpO20sFItlDNJkJ/Da+0mRljrXasGCAXiNKQMr1ARikB830ZQwj4lV
-         9fEQfOLu7oirpJQnxtsWQQS1Alrg41jHiHSVD+nMpXIfXizQ1gwsKyIMnNl5xEFiIXn3
-         pqBpFVJPtChjKr0zcqaWum+ZLuLyIG65sAAjgcEtzwAPANfUljRWi49ZaYADv4DhEV9S
-         FrBXMIJXLre45LZmd4BtUziN9zshSZ6FL6NBnBGOk51DGELOP0QkStNj+r7bJEGbNjvA
-         5UgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVN1x5rV7vgUlgkpvME3J63XGxpbwODzo/3p5/VyNUEVKWSnWJkIw1maJDeZtyalxYLuc2B0lfQKuqb@vger.kernel.org, AJvYcCWTOCiaWU8W2FULAqqLVFYSbPK5uJFIaxma2QXlRvCN+sJRNIPnweWhiLhj1ILoWl8AL32t36Zyd6mL8DLi@vger.kernel.org, AJvYcCXyVwLUlW+lney2jqoMPzaEuj0J08/aBKTYI4N0yEFmUo/ZM/9Cbxa27FTaXg1IjeCNF/IIE37urApwK/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCAWBXn4NqLJTHGDYauzmsMJIL6CUMV8QXRPckv6AoCuBbpVYL
-	uNHtL/vJK4bwcXpjGKZuma09ip7ihMJ6OP94nV1LQN8am4YNEAZ+706hZx6KIdkMOIAjKI8dANc
-	4DGEzytVAseIERRs41dTQMsCe9cxSkqM=
-X-Gm-Gg: ASbGncsUCtAD2BAY19faOwhvax/2CsfivtnG5E2Rsjw2B3g6ks5bJO2h7FQ3dsl7+Un
-	rR3tvb/Ay91X4uV89eNxiq2krOZ6vMuFrgfy+Cs2t/bVxmD8hxjjZaQk/4+KJcKM1bY2q/OOYH0
-	nsIGyy67iEm3vVCn+K+GLuSCO0+zrh3YI8oopYbful
-X-Google-Smtp-Source: AGHT+IH23ww8t4Ksjbvw04Pw1dg6g23ybwLHvx+e9HpnjY0WklCP4KSUDd3Djui5CG6kL/P3nrBFNMGPKv5nAgOzn1k=
-X-Received: by 2002:a05:6820:c8f:b0:611:e00a:598d with SMTP id
- 006d021491bc7-6120116d82fmr5594771eaf.8.1751559849936; Thu, 03 Jul 2025
- 09:24:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qfuQz9I9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=qnHNMB9Wfamba1Y4mNkWqdOlZbzxSMLmhoIZOCtejcY=; b=qfuQz9I9tdu+smZ2gd5rOAhiwq
+	wFjbdh+nAEOUd4BEdVsi5KxZYYbKz0yxUDGD2JX9Wm2o5M/RmZaeZGJ379YwoEJldFY7Z6u9HF8Nc
+	J7Ie0cUhJYCUEX7qbRI5CLtmWuq2S4eQG15GFb9cZlnlEPhrbfkL/ydo9iA5URW8ttgA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXMkT-0007PZ-4b; Thu, 03 Jul 2025 18:25:21 +0200
+Date: Thu, 3 Jul 2025 18:25:21 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dong Yibo <dong100@mucse.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/15] net: rnpgbe: Add build support for rnpgbe
+Message-ID: <0bf45c1a-96ec-4a9d-9c41-fcb3d366d6a3@lunn.ch>
+References: <20250703014859.210110-1-dong100@mucse.com>
+ <20250703014859.210110-2-dong100@mucse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526-p3450-mts-bug-v1-1-78500613f02c@gmail.com>
- <CALHNRZ_7wChDsvpUnQHnOTT9VzT1Lgg8JYgg13AFV8Jg_3itwQ@mail.gmail.com> <nuicekbfdgjbfudtlul74ifsqckfg6itybb76bkzuaxfcp5ve5@yevlttgtobxy>
-In-Reply-To: <nuicekbfdgjbfudtlul74ifsqckfg6itybb76bkzuaxfcp5ve5@yevlttgtobxy>
-From: Nicolas Chauvet <kwizart@gmail.com>
-Date: Thu, 3 Jul 2025 18:23:58 +0200
-X-Gm-Features: Ac12FXxB8p0am1jeHuRsG3pEC3-oMtt-Xsi26v4UVhYH88yQRdtMwuJ6D3jOGbA
-Message-ID: <CABr+WTnn2qOXEMCiRDywySAxn0UeKAcx5XOJNpn731tXxbCPDQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] arm64: tegra: Add reserved-memory node for P3450
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Aaron Kling <webgeek1234@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703014859.210110-2-dong100@mucse.com>
 
-Le jeu. 3 juil. 2025 =C3=A0 13:00, Thierry Reding
-<thierry.reding@gmail.com> a =C3=A9crit :
->
-> On Mon, May 26, 2025 at 02:07:35PM -0500, Aaron Kling wrote:
-> > On Mon, May 26, 2025 at 2:06=E2=80=AFPM Aaron Kling via B4 Relay
-> > <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> > >
-> > > From: Aaron Kling <webgeek1234@gmail.com>
-> > >
-> > > The Tegra210 L4T bootloader ram training will corrupt the in-ram kern=
-el
-> > > dt if no reserved-memory node exists. This prevents said bootloader f=
-rom
-> > > being able to boot a kernel without this node, unless a chainloaded
-> > > bootloader loads the dt. Add the node to eliminate the requirement fo=
-r
-> > > extra boot stages.
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16001,11 +16001,7 @@ F:	tools/testing/vma/
+>  
+>  MEMORY MAPPING - LOCKING
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+> -M:	Suren Baghdasaryan <surenb@google.com>
+> -M:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> -M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> -R:	Vlastimil Babka <vbabka@suse.cz>
+> -R:	Shakeel Butt <shakeel.butt@linux.dev>
+> +M:	Suren Baghdasaryan <surenb@google.com> M:	Liam R. Howlett <Liam.Howlett@oracle.com> M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com> R:	Vlastimil Babka <vbabka@suse.cz> R:	Shakeel Butt <shakeel.butt@linux.dev>
 
-Is there any particular reason why this applies on jetson-nano but not
-jetson-tx1 (or any other l4t based boards ?)
-I wonder if it would be enough to boot an upstream kernel with the l4t
-bootloader (and no chainloaded upstream u-boot) as I cannot do the
-other way for some reason (using fedora based upstream u-boot cannot
-boot downstream l4t kernel anymore)
+You clearly have not reviewed your own patch, or you would not be
+changing this section of the MAINTAINERs file.
 
-Thanks for the hints.
+> +if NET_VENDOR_MUCSE
+> +
+> +config MGBE
+> +	tristate "Mucse(R) 1GbE PCI Express adapters support"
+> +        depends on PCI
+> +	select PAGE_POOL
+> +        help
+> +          This driver supports Mucse(R) 1GbE PCI Express family of
+> +          adapters.
+> +
+> +	  More specific information on configuring the driver is in
+> +	  <file:Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst>.
+> +
+> +          To compile this driver as a module, choose M here. The module
+> +          will be called rnpgbe.
+
+There is some odd indentation here.
+
+> +#include <linux/string.h>
+> +#include <linux/etherdevice.h>
+> +
+> +#include "rnpgbe.h"
+> +
+> +char rnpgbe_driver_name[] = "rnpgbe";
+> +static const char rnpgbe_driver_string[] =
+> +	"mucse 1 Gigabit PCI Express Network Driver";
+> +#define DRV_VERSION "1.0.0"
+> +const char rnpgbe_driver_version[] = DRV_VERSION;
+
+Driver versions are pointless, since they never change, yet the kernel
+around the driver changes all the time. Please drop.
+
+> +static const char rnpgbe_copyright[] =
+> +	"Copyright (c) 2020-2025 mucse Corporation.";
+
+Why do you need this as a string?
+
+> +static int rnpgbe_add_adpater(struct pci_dev *pdev)
+> +{
+> +	struct mucse *mucse = NULL;
+> +	struct net_device *netdev;
+> +	static int bd_number;
+> +
+> +	pr_info("====  add rnpgbe queues:%d ====", RNPGBE_MAX_QUEUES);
+
+If you are still debugging this driver, please wait until it is mostly
+bug free before submitting. I would not expect a production quality
+driver to have prints like this.
+
+> +	netdev = alloc_etherdev_mq(sizeof(struct mucse), RNPGBE_MAX_QUEUES);
+> +	if (!netdev)
+> +		return -ENOMEM;
+> +
+> +	mucse = netdev_priv(netdev);
+> +	memset((char *)mucse, 0x00, sizeof(struct mucse));
+
+priv is guaranteed to be zero'ed.
+
+> +static void rnpgbe_shutdown(struct pci_dev *pdev)
+> +{
+> +	bool wake = false;
+> +
+> +	__rnpgbe_shutdown(pdev, &wake);
+
+Please avoid using __ function names. Those are supposed to be
+reserved for the compiler. Sometimes you will see single _ for
+functions which have an unlocked version and a locked version.
+
+> +static int __init rnpgbe_init_module(void)
+> +{
+> +	int ret;
+> +
+> +	pr_info("%s - version %s\n", rnpgbe_driver_string,
+> +		rnpgbe_driver_version);
+> +	pr_info("%s\n", rnpgbe_copyright);
+
+Please don't spam the log. Only print something on error.
+
+	Andrew
