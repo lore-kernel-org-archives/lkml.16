@@ -1,71 +1,99 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88D2D0292
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810812D46D4
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751533455; cv=none; b=EUBuK8pCn9Wo5NURI6sDgKz20dAvrJdArlgaqKUL92nSUMzyRjDGxNlh6SY706PtsOwluZokYYBZkOfOxZ+AdA15YuBeZROY1nMi7apk//G6lJGC7UxKYxeQbSzVhn2tzpLJAAgMbc+ggwAbaErUJRrhAcjnoLqz+Hy5ZhJ/ZYM=
+	t=1751533525; cv=none; b=qsP9ybcMOiMXE2hBXNH7z3ThODR43qTujNLCAI9jD/ImzsUkk6dcEguoskmb7g+IxXUv9BSOp2XDvvqLSDK2dxMkp0ws4PFNaM5A2GnwcWloE7f0q0RAF2iRa5xzzTgR+XSu1ub9JWYuFzBwPoSGX58eGXzkc3Jc2iOfkWmkgsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751533455; c=relaxed/simple;
-	bh=L+Pb8NdJFXEleDGoRwNqem8F3z5Rl7a0a5J02MzIdKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8dkR6FqDfSPxOA7ijp53V+Zqut5njk6g0/KzBYAm0U36siI5ZRTbcAB22nra4r2zTymuL9Xd7iK2aYn70BFDHhTqMIhc20uYJc3QaKduozQItj0CozrkT+PGeu/+gvwpdwc+00UYSOqDhqbLykhyKDUx6HPjQ6dZ1+9NFn2SA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E89D568C4E; Thu,  3 Jul 2025 11:04:06 +0200 (CEST)
-Date: Thu, 3 Jul 2025 11:04:06 +0200
-From: hch <hch@lst.de>
-To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"axboe@kernel.dk" <axboe@kernel.dk>, hch <hch@lst.de>,
-	"sagi@grimberg.me" <sagi@grimberg.me>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"cassel@kernel.org" <cassel@kernel.org>
-Subject: Re: [PATCH v2 1/3] nvme: add capability to connect to an admin
- controller
-Message-ID: <20250703090406.GB4757@lst.de>
-References: <20250702005830.889217-1-kamaljit.singh1@wdc.com> <20250702005830.889217-2-kamaljit.singh1@wdc.com> <22f8ec86-2d50-4237-9313-79bfc93c8e3d@kernel.org> <MN2PR04MB686294B136454530692AEC1ABC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
+	s=arc-20240116; t=1751533525; c=relaxed/simple;
+	bh=X/OtZrHYw9wMzUW+LghhL9+Dxd7vhit5tE+xLb7/ldc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EMgrZXEC6LKfE6vEFcPKq9mwfVdllMzF0KpUjbv1SznKZAFYWZyxewEFDVCfXxIZcWX0eVelCZOcGpin5BFZODH0goEsAI5NwY5woa/CnDQgeyiMUKTVV3ApEWrgHfd2gDYcbAgXqgbydPt3TkqIFA37VPoJPuWiueV6rEN8F+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id d4d9889c-57ec-11f0-9796-005056bdd08f;
+	Thu, 03 Jul 2025 12:05:14 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 3 Jul 2025 12:05:14 +0300
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Akshay Bansod <akbansd@gmail.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Message-ID: <aGZHyr5zSRLp1m2p@surfacebook.localdomain>
+References: <20250702135855.59955-1-akbansd@gmail.com>
+ <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+ <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+ <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
+ <20250702163342.00003c66@huawei.com>
+ <3361875b-712e-423f-88ed-baf41af5ad22@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MN2PR04MB686294B136454530692AEC1ABC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <3361875b-712e-423f-88ed-baf41af5ad22@baylibre.com>
 
-On Wed, Jul 02, 2025 at 06:39:09PM +0000, Kamaljit Singh wrote:
-> >call this in all fabrics drivers.
-> Like I mentioned in response for 3/3, this can affect other drivers like apple/fc
-> and I don't have any way of testing them. If you're okay with that, I can move
-> nvme_override_prohibited_io_queues() into nvme_init_subsystem(). I did some
-> analysis and nvme_init_subsystem() seems to be covering reconnects as well.
+Wed, Jul 02, 2025 at 10:53:31AM -0500, David Lechner kirjoitti:
+> On 7/2/25 10:33 AM, Jonathan Cameron wrote:
+> > On Wed, 2 Jul 2025 10:04:23 -0500
+> > David Lechner <dlechner@baylibre.com> wrote:
+> >> On 7/2/25 9:55 AM, Andy Shevchenko wrote:
+> >>> On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:  
+> >>>> On 7/2/25 8:58 AM, Akshay Bansod wrote:  
 
-This should go into generic code.  Apple does not support admin controllers.
-FC should, and this does the right thing for them.
+...
 
-> >> @@ -3215,6 +3231,11 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
-> >>               kfree(subsys);
-> >>               return -EINVAL;
-> >>       }
-> >> +     if (nvme_admin_ctrl(ctrl))
-> >> +             dev_info(ctrl->device,
-> >> +                     "Subsystem %s is an administrative controller",
-> >> +                     subsys->subnqn);
-> >
-> >We do not print an equivalent message for other subsystem controller types. So
-> >drop this.
-> I left that msg in there for debugging purposes. I can either change it to
-> dev_dbg() or if that's still not likeable/cluttering, I can remove it.
-> Please let me know.
+> >>>>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+> >>>>>  				 odr_table->odr_avl[i].milli_hz / 1000,
+> >>>>>  				 odr_table->odr_avl[i].milli_hz % 1000);  
+> >>>>
+> >>>> Let's keep checkpatch happy and change the indent of the wrapped lines to
+> >>>> line up with ( since the ( moved.  
+> >>>
+> >>> While I see the point, wouldn't be better to have 1000 replaced with MILLI
+> >>> at the same time?
+> >>
+> >> For anything with 3 zeros, I don't consider MILLI better (or worse).
+> >> Science shows that the average human can easily see 3 or 4 things
+> >> without having to count them [1]. So it is only when we start getting
+> >> more 0s than that is when I think we should be picky about using macros
+> >> instead.
+> >>
+> >> And in this particular case, we are converting milli to micro so `1000`
+> >> should be replaced by `(MICRO / MILLI)` if we are going to do that.
+> > No we aren't.
+> > 
+> > This one is converting from milli_hz to hz + sticking to milli for the decimal
+> > part.
+> > 
+> > Lots of other IIO cases where you would have been right, but I think not here.
+> 
+> Oops. The %03d instead of %06d should have given it away!
 
-I'd leave this as dev_dbg only.
+I'm not sure I got your comment. The '3' vs. '6' will just define
+the minimum amount of printed digits, it does *not* limit the upper
+numbers anyhow (it's limited by the 'd', which is (INT_MIN .. INT_MAX).
+
+
+> >> [1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
