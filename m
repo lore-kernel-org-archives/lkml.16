@@ -1,159 +1,224 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103EC2E2679
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FB8233127;
+	Thu,  3 Jul 2025 12:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751547013; cv=none; b=MoK6WcSa7Gfws9Few+hc7t/aza94/H3BqIQP22gORTcuwYZRnj+cvGpW2c54SU3aqvL/uyQDnLC1GxqBkdppjx1Vjd2g30WFD2NJi/4t6/MBkiS9PQ1nvtX4LPv8NBxCXaQQRvsyO1LVIpvb85F3G7B0T50iUcioBYDClTCv1sU=
+	t=1751547053; cv=none; b=JdJ2hZyJB7Mad5zs6nPYCkUh8c2MxkR9dySco9LHoXjgi/CHmmuw5e09l2Kd+qhPrkaedvhnGlMY/w7Hqj+1XM+eTWbVzuQKjShSdfaZP8LbvkVCrTz8AcR4ASfJjspm59T5YzsFiRrHdnJ4e4D95RFmHztkF2skRS96X7ORKXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751547013; c=relaxed/simple;
-	bh=Qqgc1GnsOOAq4v1APP985iIN3JGVd/bERoSbPbqKFAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZFUWLogxdcQSP5az4aswAfC/B6nMzBhjSekLGMzixLGCaJwyCHu6OcAmrqDcqbE9hncddgV7hvDo84B9vBekeNTj3uIrb1vD67lJbpkpnBdSF/djobBT1PItNmmiKMU5AtnyTo4B02srcirLIYKfg/BtO4v5VOWGmaQ8aJ74Lt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ceIyflyr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751547053; c=relaxed/simple;
+	bh=RUtbH0FKvFEZ9xAEl4E1iiZ0teKFnEEvUjve+lHqvEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LuAlTmN17vZDmHZ/0t07gcoBQkjfYFuxyu1cTvSeDjLJ/xR9J98AFRjSQD4HansljEEfsqHBvwoWT6qNyreapIU7XjwFY8wb2i4m5jUH0cg2zSCSM03L4F/WADp3h18ZmxbUjbIfsvQ5WNAx5ArBDyYVCTy+LuR5ubNWazgLrSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SWvE5RKE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ceIyflyr"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5636vRo8020476
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 12:50:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uj1sS16Dw8PguzC7LFhxazWH4isKpN88omJ0VRX+99Y=; b=ceIyflyrPBy0NZjV
-	JjVKQl9IXmvqESL+iKNOQ89Ru+xutmghTyTYK5EGp42+lVDIR2p8WQpK/pfEBOuh
-	Cut0L5fIVUaYkSPZef+Be8Wc8zGbE55uixKvrwSfPV29jE4xyTk53tGYU2l38gxF
-	/r00NMy7mQeCibDWjRGgyG6PIBzhY6IHAu9LNfxu52o+9O3DjB8JfW1LkEhYZMHr
-	d403Hv+GCrQcnPprsD98e5eYyY5mJCmdXFHgUHUFUbvtnuHcEgrAg4sT7mKy0WeZ
-	ik+kmm0rcoQfNI0GeNxE2YpdUO4c107araPDhvKtCvrmcSJyGXqY8icv375VLe1a
-	+D3mEQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn75xe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 12:50:10 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5e2872e57so908129885a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:50:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751547010; x=1752151810;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uj1sS16Dw8PguzC7LFhxazWH4isKpN88omJ0VRX+99Y=;
-        b=psUwFX+zlTQgRo5gROxpddKuqgapncg1bs4fOJK/xDKBOokveGWlw7fukNZGh9pnwo
-         CWVGy3hPsUnQDHu7tnGqaHWR6cPKCEZ5mcFiSmGCkpnoWsU6WQWRRTJBZckSgFxK0MpF
-         y3U8ZBm3FfuqeHh8ggXrygfhftYAz+NZr/LarGzxLbI7PWqGR/56vYj0ZyVGtADX2H9a
-         AQ58zIm4y1jjDFyFBcLQjgg13/cMW5CXcKCfi1L3sqfsh1v25dC6BtW76Mcpt6Pkq+eI
-         /5ounBjrq61yM8rxnvStwXWt5CsqzRJLZLDpMMmzaa1D3jIcTLEPYY09mn41Dx6ihkKA
-         BAJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYLR0PoSGQo/pK5ntw3pB9SC0WSVDWQOVoqnXKtl9Y9CNR9XaIVKR0bdDGMDPAiOYwBlXtNO5+Q9Pl200=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw72t/sZ6Vxx03BlVzdCYJ/GuIN1z1a+/PkMGdLkqVcWRyI0dYD
-	s4/AAxkbgelbuTii3kYTpGqKS0yrN2YzKBNAXFy47u9fyFeAY0kkPDc6vS7nqNTW0dmnJ4ZXLJX
-	dM+qCYuCC4OLmfXVeFDmkJVy0BDZBQhI6JcbsHl30hl4hGBM6ABA/64THASmlV+DhueA=
-X-Gm-Gg: ASbGncvVsC/jvvFGI9JjyUmqwXRHoBYdntDkfPvfD4MSjY4g/0y3D5eJw3FhbkIQ9BY
-	4j3CdNkIFSwB8VwK2Uj1oDJQewzeYwLkyVP85G6eafnMV30XdkZkC2Q39YfrAcxTNxEHQYqC0t5
-	AZaRhqP0v8de39kU6s/Gt4lbrcDPqBML36q6wHF7AOYUXbkex9pGBnw3ZtOWtpI8j1RfoDqb/fP
-	+FuXEe9xvGPjl/9PS3ap3KFUVw1K3WtxTw2pZuQInbIkAx8Lj4VEB8jiIsRltAkYXKs69zQ69M9
-	1WY8BFG32CqQZKBNBRYTnVxzqEMXq/WYOp2CQuwyBDP9MIMG
-X-Received: by 2002:a05:620a:28cc:b0:7d4:536a:c0c5 with SMTP id af79cd13be357-7d5c4704096mr755996785a.2.1751547009980;
-        Thu, 03 Jul 2025 05:50:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5zoCjhAwYQJaY5mtO22xdyqlDuhd9aBfqot1+DE6Zj4R49CJv87BJ4eKnl1sxbcb4/h4Iyg==
-X-Received: by 2002:a05:620a:28cc:b0:7d4:536a:c0c5 with SMTP id af79cd13be357-7d5c4704096mr755991085a.2.1751547009398;
-        Thu, 03 Jul 2025 05:50:09 -0700 (PDT)
-Received: from [192.168.68.115] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec6aesm18533845f8f.5.2025.07.03.05.50.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 05:50:08 -0700 (PDT)
-Message-ID: <4f51fa0f-96ac-4b9a-8e8f-e9e3d9c1f512@oss.qualcomm.com>
-Date: Thu, 3 Jul 2025 13:50:07 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SWvE5RKE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED63C4CEE3;
+	Thu,  3 Jul 2025 12:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751547053;
+	bh=RUtbH0FKvFEZ9xAEl4E1iiZ0teKFnEEvUjve+lHqvEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SWvE5RKE62wnCSZHCqbLlsbjze6jvLQd0XxrOHq3OKeKu/y3rdLg3XgSGmDOM+Aum
+	 40A5DMWH2MRWCQap9DvsM75Znj3zy9FEd7vShfa/i1vWLbAuSdOiwsG+lDgzBs3Rxv
+	 9SJqnZidFyH6WSRk8pt7qHVBxMD3bMCH/xNEid7c=
+Date: Thu, 3 Jul 2025 14:50:48 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
+	Matthew Maurer <mmaurer@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
+ for File
+Message-ID: <2025070353-algebra-exhume-1f21@gregkh>
+References: <aGLUl7ZtuQBPoCuv@pollux>
+ <2025070131-icon-quarters-0c16@gregkh>
+ <aGPtCBB6nWTNJuwK@pollux>
+ <2025070137-tartar-juncture-fcd2@gregkh>
+ <aGP6d2-jJy5rtjMK@pollux>
+ <aGZVUqangIR-c4aW@google.com>
+ <DB2COGYW20C5.2YN1TFXR87UTS@kernel.org>
+ <CAH5fLgjaNzOHNxa+XY1c2V5A1H2RhWP9gHAAmHx=9LN9CbHq=Q@mail.gmail.com>
+ <2025070349-tricky-arguable-5362@gregkh>
+ <aGZ3q0PEmZ7lV4I-@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] ASoC: codecs: add new pm4125 audio codec driver
-To: Alexey Klimov <alexey.klimov@linaro.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
- <20250626-pm4125_audio_codec_v1-v1-3-e52933c429a0@linaro.org>
- <00b63483-8012-4a04-9486-536a7b236497@oss.qualcomm.com>
- <DB16S3FI8AXX.1LA99XCPAW1UF@linaro.org>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-In-Reply-To: <DB16S3FI8AXX.1LA99XCPAW1UF@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDEwNyBTYWx0ZWRfX2YdLiwPmkSSA
- lfo62SctM/0UD8VOuDYGrcxj1zVIvfVbtSbRy5Uv6TGcKLY92rDAPPPPatsj8MvW8/BT1BqGDT2
- ENnLrX2HVGit0Ch79BeGirPXSRW4tH0TR3pyHxw0bUwjbq26H4n5lP7vawGKGOnE3KvKJZcNP6p
- jMVSIDiPJH0PkV8gy2R7sX2ANJaN2AGWpDZbSOlqwNFgO251LbhoniLYQEwJB4CL+6a0yQNFjc0
- lp3QltsIU/XJrN+rT3NzjSb04K2xz/kOISh57Rc8lwVMSJzy7q8gulmXypl1NqHx2kOUnkEZ7Yd
- EtnUsLmg7uzj1ikUPFnx8fA08vxGvM+sUTviHw+Wct6LAwL1qfpXipPFDFr4XrN/7ePIQALNZEe
- FxRnjPnm7co8EJzW7uh7S4tyzvMc/l3tpcc2RLHfd8hwWB0m1ZMEtfI/UzYde+N64taC8X7O
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68667c82 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=Men2jHeljtYBJhSsfTwA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: gXUfYZG6lnKGGFWoLZXhiQFydWJBzDJI
-X-Proofpoint-GUID: gXUfYZG6lnKGGFWoLZXhiQFydWJBzDJI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=607 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGZ3q0PEmZ7lV4I-@pollux>
 
-On 7/2/25 2:43 AM, Alexey Klimov wrote:
->>> +static int pm4125_handle_post_irq(void *data)
->>> +{
->>> +	struct pm4125_priv *pm4125;
->>> +
->>> +	if (data)
->>> +		pm4125 = (struct pm4125_priv *)data;
->>> +	else
->>> +		return IRQ_HANDLED;
->> This will result in interrupt storm, as you are not clearning the source.
->>
->>> +
->>> +	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_0, 0);
->>> +	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_1, 0);
->>> +	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_2, 0);
->>> +
->>> +	return IRQ_HANDLED;
->>> +}
-> Do you mean that it should be:
+On Thu, Jul 03, 2025 at 02:29:31PM +0200, Danilo Krummrich wrote:
+> On Thu, Jul 03, 2025 at 01:41:53PM +0200, Greg Kroah-Hartman wrote:
+> > Yes, we need to be able to have a debugfs file callback handle a mutable
+> > structure in order to lock things correctly.  We also need to have it be
+> > mutable so that it can MODIFY the value (everyone seems to forget that
+> > debugfs allows that...)
 > 
-> static int pm4125_handle_post_irq(void *data)
-> {
-> 	struct pm4125_priv *pm4125 = (struct pm4125_priv *)data;
+> Well, that's possible with both approaches. Data behind a lock becomes mutable
+> once you grabbed the lock. That's the same in both cases.
 > 
-> 	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_0, 0);
-> 	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_1, 0);
-> 	regmap_write(pm4125->regmap, PM4125_DIG_SWR_INTR_CLEAR_2, 0);
+> The difference is that with the pin-init approach I propose you can't have what
+> Alice sketched up. And I think it's even desirable that you can't do it.
 > 
-> 	return IRQ_HANDLED;
-> }  
+> Let's me explain the difference on a simplified example, based on Alice'
+> example.
+> 
+> ForeignOwnable API
+> ------------------
+> 
+> 	#[pin_data]
+> 	struct Process {
+> 	    task: ARef<Task>,
+> 	    #[pin]
+> 	    inner: SpinLock<ProcessInner>,
+> 	}
+> 	
+> 	pub(crate) struct ProcessInner {
+> 	    threads: RBTree<i32, Arc<Thread>>,
+> 	    max_threads: u32,
+> 	}
+> 
+> Here we have to create an Arc<Process> (let's call it process) and create files
+> from it.
+> 
+> 	let file_threads = dir.create_file("threads", process);
+> 	let file_max_threads = dir.create_file("max_threads", process);
+> 
+> In the file system callback of both of these, we now have an Arc<Process>, hence
+> we can access:
+> 
+> 	let guard = process.inner.lock();
+> 
+> 	read_or_write(guard.max_threads);
+> 
+> and in the other file:
+> 
+> 	let guard = process.inner.lock();
+> 
+> 	read_or_write(guard.max_threads);
+> 
+> Pin-Init API
+> ------------
+> 
+> 	#[pin_data]
+> 	struct Process {
+> 	    task: ARef<Task>,
+> 	    #[pin]
+> 	    inner: File<SpinLock<ProcessInner>>,
+> 	}
+> 	
+> 	pub(crate) struct ProcessInner {
+> 	    threads: RBTree<i32, Arc<Thread>>,
+> 	    max_threads: u32,
+> 	}
+> 
+> Here Process does not need to be within an Arc and no separate file instances
+> need to be kept around, that happens already within the constructor of Process:
+> 
+> 	pin_init!(Process {
+> 	   inner <- dir.create_file("process_inner", ...),
+> 	   [...]
+> 	})
+> 
+> The file itself has a reference to SpinLock<ProcessInner>, hence we can access:
+> 
+> 	let guard = inner.lock();
+> 
+> 	read_or_write(guard.threads)
+> 	read_or_write(guard.max_threads)
+> 
+> The difference is that with the ForeignOwnable API it was possible to have
+> separate files for threads and max_threads.
+> 
+> While with the pin-init one we either have to have a single file exposing
+> ProcessInner (which is what I did above) or protect threads and max_threads
+> with separate locks (of course max_threads could also just be an atomic).
+> 
+> (If you like I can sketch up this case as well.)
+> 
+> At a first glance this seems like an undesirable limitation, but I argue that
+> this is a good thing.
+> 
+> The reason I think so is what I also explained in [1], but let me adjust it a
+> bit for this reply:
+> 
+> threads and max_threads being protected by the same lock means that they are in
+> a certain relationship to each other. Meaning that they only really make sense
+> looking at them atomically.
+> 
+> So I argue it does not make sense to expose those values to userspace through
+> separate files.
+> 
+> For instance:
+> 
+> 	$ cat max_threads && cat threads
+> 	$ 5
+> 	$ 10
+> 
+> This way you may read 5 max_threads, but 10 actual threads, because things may
+> have changed in between the two cat commands.
+> 
+> However, if instead, they are exposed through a single file, we get an atomic
+> view of them, such that the semantic relationship between them is preserved.
+> 
+> For instance:
+> 
+> 	$ cat process_info
+> 	$ threads: 2
+> 	$ max_threads: 10
 
-yes. We can not return IRQ_HANDLED without clearing the pending
-interrupt source.
+I think you mean to write:
+ 	$ cat process_info
+ 	threads: 2
+ 	max_threads: 10
 
---srini
+right?
+
+> So, what I'm trying to say is, I think it's a good thing if fields that are
+> protected by the same lock can't be exposed through separate files, because it
+> means that the fields only make sense in the context of each other.
 > 
-> I need to fix irq_drv_data = NULL in pm4125_regmap_irq_chip then.
-> IIRC it is always NULL.
+> Or saying it the other way around, if it makes sense to expose fields through
+> separate files, it means they're unrelated to each other and hence should be
+> protected with separate locks, rather than a common one.
+> 
+> IMHO it's even a good thing beyond the scope of debugfs, because it forces
+> developers to really think about organizing structures properly, e.g. in a way
+> that only fields that really belong behind a certain lock are placed behind this
+> lock.
+> 
+> > So how about a platform driver that exposes values read from a platform
+> > device (i.e. a soc info driver), that also includes a
+> > local-to-the-device data structure that can be locked and modified?
+> > That should cover all the use cases that I can think of at the moment.
+> 
+> Yes, I also really like to have that.
+> 
+> But, again, both approaches can do this. It's just that I really discourage the
+> one that forces us to have an Arc instance on structures exposed through
+> debugfs, since this messes with the driver's lifetime and ownership
+> architecture in a bad way.
+> 
+
+Thanks for the long descriptions, that's great to help out here.  I'll
+wait for the next patch series with a real example to show my ignorance
+of rust some more :)
+
+thanks,
+
+greg k-h
