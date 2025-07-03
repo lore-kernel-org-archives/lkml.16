@@ -1,170 +1,395 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739292E7BD0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF9E2E7BDC;
+	Thu,  3 Jul 2025 11:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542347; cv=none; b=uYplLImP/3ku+R46m+kYQ7TaWY7zO1E7hM+DoUNDUdJfM0djspZi4ZKaUq01KzzStBZlEGkwe7nZSSZLXz8jX4KXVE6Tpb9MzBlcnpQUnpca2juKjWum2G0clGPmiutvAoEqpw2XoXThDHezDKB6uD4SO+TeouJsNu+0eBRNnaI=
+	t=1751542346; cv=none; b=TkC3MqI0hqMiw2ZlSNn5FIFZXVgWNBtnfwrivR8ys+Jz/Ac+aJoGIKkGOkHhI+jQHbBhktekj/mkH5reH3z/EarTGta+vg2aUXsDJEPvHYb0rHN95EzWC88Z8Z7HNcddTZSv4mG0rWIHoVi/ujbI6sIIg5R/OgJLvwuDRTeqNXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542347; c=relaxed/simple;
-	bh=15sgvDrCMngNi2KRD1pTbi8iQeaa7H+WRKVs/zLyUuk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mLBCLkJYyrUQLL01S61zwaskUzmjWuBtqkg/XGi85AKIyiIo/zADNvSOqyBskFaX09A5tiAj05iB5T2HIC0k0Y8IIwJNtuad7KT1ugP2tqX0eAycR8g7GxuZBMmv3CO0salgwv2SwjRB/y+DOewIO2RW05S9BflxJFozlKf4pFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso59478075ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:32:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542344; x=1752147144;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T90dKRdxOLTTjBQjmngo+1QGU8lPyFFkQr4AZvGHzek=;
-        b=lo9mgsL3wWaRqwW63z+EWFuHQWPhuFhTOUaA6smC5RUlpEQSaoyYIeQuFcMOE55Yv9
-         kjUkvAkJ/ReV666Nu3kbo0tDpbH0w4daMJbTqfXvA7QWdHXSXO4cO33z9S+aUJ93iVFP
-         DSfsMElfXmQssPq23oRZYb7plpj6Z/7M/PG2hIbmZ2JOfiaTnFoEr/UA6/Akg92elktS
-         rFOJh3brXAv+VAkYPOz34/mwVyYZWL5rm+wnNOKpRaH2Ca79C9ZZUVZTN7dcuOZVCjj2
-         d2/a8cUmzl514q/YqRlQYvON0SsmZZyWQtBh+uZiCWYrCw8MuOIpk2Nj4yECsm0Rz53z
-         3yhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb4FaIkPnLFV7Yw5dJj/EtE3ZcM9Xe4Jl/o4dzeR1DqTnXz8bpH2kJqGuPdhzccsSae04EB8HtpwFbdI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6y2q1BL//UJmvLfNLwagzNuVtcuHw+/y4QQM/XIlGHoreNYXj
-	y7T/k3XqP13uckYPZugPKgoipjF9QIc5IAvuXtTeWjZrXK8Y/S4/hoodmLo0c7wg/4NH+0EHzyF
-	ajoJoLqRihXLRUebmT0BSbZ73AasXfUbRBmfkysNzC+lqJSNfoK+MoR7FUHQ=
-X-Google-Smtp-Source: AGHT+IExYvMiTZITzHpsANSMR31vFVL+NSWXXVpk2PsE0K+TrVzTQvqxDNjNdvqnt57qbsCdBauIP9AWak1A2GjLmJHXXxv6bW+B
+	s=arc-20240116; t=1751542346; c=relaxed/simple;
+	bh=0+BrFq8UJUgrXrzTNW/WoFpuZ6X2firnB27vkFu+wfs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eLWCieaHL3YiN+LqK3OT5aBn5AQ+iEcPUIe7bOUfb9BB3HnVHBsf9xLKut+G3o/x41UMY+TVtiOHRjfCx68JxMIfRQBn8T7nwbM7PScFCA7M7cjukfnLA/W+DD7wzWpElvnP2/tvcQjJTvY8Z3N7xqL0DQA0vc4t6nLyJ1eofqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fO0oKpLI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fO0oKpLI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14038C4CEEB;
+	Thu,  3 Jul 2025 11:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751542345;
+	bh=0+BrFq8UJUgrXrzTNW/WoFpuZ6X2firnB27vkFu+wfs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fO0oKpLIXupdZpDCPZDwAB7a9R6vua594b/SVSQtty2o5fqA4iFj7ekiBMF2JdhEE
+	 QvuEC5HDkwg3cBozvkQFTq6FkcVgyvVnrakAGjS/Mct9KIsgqj1+EiXjx54NMwo4Fs
+	 ql+71WayUQPU/PKISIFU1nuFZgPNH7KzP4pUqgGuUTg0ot15TYjIwCtBDkZVZ1o0fR
+	 adC3BDGW1HYt3vgTahc5Xzdl8jqWiS+VhFcWAVQqHK5szwsLCrp3HH1idZwx0QAuBn
+	 3WbyiQy1KzlP6ew0myu952lfhelN/XrI1gYx9rszrPOqvGwG5qcvsTQ3wUAa29JZ4W
+	 sdBTzB4RY4LjA==
+From: Michael Walle <mwalle@kernel.org>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Julien Panis <jpanis@baylibre.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH v3 7/8] regulator: tps6594-regulator: refactor variant descriptions
+Date: Thu,  3 Jul 2025 13:31:52 +0200
+Message-Id: <20250703113153.2447110-8-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250703113153.2447110-1-mwalle@kernel.org>
+References: <20250703113153.2447110-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:180e:b0:3dd:ceb0:f603 with SMTP id
- e9e14a558f8ab-3e05493524dmr78384945ab.2.1751542344640; Thu, 03 Jul 2025
- 04:32:24 -0700 (PDT)
-Date: Thu, 03 Jul 2025 04:32:24 -0700
-In-Reply-To: <68663c93.a70a0220.5d25f.0857.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68666a48.a00a0220.c7b3.0003.GAE@google.com>
-Subject: Re: [syzbot] [net?] general protection fault in htb_qlen_notify
-From: syzbot <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+Instead of using conditionals or tri state operators throughout the
+.probe() provide a description per variant. This will make it much
+easier to add new variants later.
 
-HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15cc0582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=d8b58d7b0ad89a678a16
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1113748c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10909ebc580000
+While at it, make the variable naming more consistent.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d59bc82a55e0/disk-bd475eea.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2a83759fceb6/vmlinux-bd475eea.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/07576fd8e432/bzImage-bd475eea.xz
+This patch is only compile-time tested.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com
-
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000035: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x00000000000001a8-0x00000000000001af]
-CPU: 1 UID: 0 PID: 6017 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-00144-gbd475eeaaf3c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:htb_deactivate net/sched/sch_htb.c:613 [inline]
-RIP: 0010:htb_qlen_notify+0x31/0xc0 net/sched/sch_htb.c:1489
-Code: 41 56 41 55 41 54 53 49 89 f6 49 89 ff 49 bc 00 00 00 00 00 fc ff df e8 3d c6 46 f8 49 8d 9e a8 01 00 00 49 89 dd 49 c1 ed 03 <43> 0f b6 44 25 00 84 c0 75 4d 8b 2b 31 ff 89 ee e8 5a ca 46 f8 85
-RSP: 0018:ffffc900034f6fb0 EFLAGS: 00010206
-RAX: ffffffff89798833 RBX: 00000000000001a8 RCX: ffff88802714bc00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807a6ac000
-RBP: dffffc0000000000 R08: ffff88802714bc00 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff89798810 R12: dffffc0000000000
-R13: 0000000000000035 R14: 0000000000000000 R15: ffff88807a6ac000
-FS:  00007fa0c3df16c0(0000) GS:ffff888125d50000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0c3dd0d58 CR3: 00000000743e8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- qdisc_tree_reduce_backlog+0x29c/0x480 net/sched/sch_api.c:811
- fq_change+0x1519/0x1f50 net/sched/sch_fq.c:1147
- fq_init+0x699/0x960 net/sched/sch_fq.c:1201
- qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1324
- __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
- tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
- rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa0c2f8e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fa0c3df1038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fa0c31b5fa0 RCX: 00007fa0c2f8e929
-RDX: 0000000000044080 RSI: 0000200000000040 RDI: 0000000000000006
-RBP: 00007fa0c3010b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fa0c31b5fa0 R15: 00007ffd14aa8178
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:htb_deactivate net/sched/sch_htb.c:613 [inline]
-RIP: 0010:htb_qlen_notify+0x31/0xc0 net/sched/sch_htb.c:1489
-Code: 41 56 41 55 41 54 53 49 89 f6 49 89 ff 49 bc 00 00 00 00 00 fc ff df e8 3d c6 46 f8 49 8d 9e a8 01 00 00 49 89 dd 49 c1 ed 03 <43> 0f b6 44 25 00 84 c0 75 4d 8b 2b 31 ff 89 ee e8 5a ca 46 f8 85
-RSP: 0018:ffffc900034f6fb0 EFLAGS: 00010206
-RAX: ffffffff89798833 RBX: 00000000000001a8 RCX: ffff88802714bc00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807a6ac000
-RBP: dffffc0000000000 R08: ffff88802714bc00 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff89798810 R12: dffffc0000000000
-R13: 0000000000000035 R14: 0000000000000000 R15: ffff88807a6ac000
-FS:  00007fa0c3df16c0(0000) GS:ffff888125d50000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0c3dd0d58 CR3: 00000000743e8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	41 56                	push   %r14
-   2:	41 55                	push   %r13
-   4:	41 54                	push   %r12
-   6:	53                   	push   %rbx
-   7:	49 89 f6             	mov    %rsi,%r14
-   a:	49 89 ff             	mov    %rdi,%r15
-   d:	49 bc 00 00 00 00 00 	movabs $0xdffffc0000000000,%r12
-  14:	fc ff df
-  17:	e8 3d c6 46 f8       	call   0xf846c659
-  1c:	49 8d 9e a8 01 00 00 	lea    0x1a8(%r14),%rbx
-  23:	49 89 dd             	mov    %rbx,%r13
-  26:	49 c1 ed 03          	shr    $0x3,%r13
-* 2a:	43 0f b6 44 25 00    	movzbl 0x0(%r13,%r12,1),%eax <-- trapping instruction
-  30:	84 c0                	test   %al,%al
-  32:	75 4d                	jne    0x81
-  34:	8b 2b                	mov    (%rbx),%ebp
-  36:	31 ff                	xor    %edi,%edi
-  38:	89 ee                	mov    %ebp,%esi
-  3a:	e8 5a ca 46 f8       	call   0xf846ca99
-  3f:	85                   	.byte 0x85
-
-
+Signed-off-by: Michael Walle <mwalle@kernel.org>
+Acked-by: Mark Brown <broonie@kernel.org>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ drivers/regulator/tps6594-regulator.c | 199 +++++++++++++++-----------
+ 1 file changed, 112 insertions(+), 87 deletions(-)
+
+diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
+index 2c7c4df80695..39adb2db6de8 100644
+--- a/drivers/regulator/tps6594-regulator.c
++++ b/drivers/regulator/tps6594-regulator.c
+@@ -21,10 +21,6 @@
+ #define BUCK_NB			5
+ #define LDO_NB			4
+ #define MULTI_PHASE_NB		4
+-/* TPS6593 and LP8764 supports OV, UV, SC, ILIM */
+-#define REGS_INT_NB		4
+-/* TPS65224 supports OV or UV */
+-#define TPS65224_REGS_INT_NB	1
+ 
+ enum tps6594_regulator_id {
+ 	/* DCDC's */
+@@ -192,7 +188,7 @@ static const struct regulator_ops tps6594_ldos_4_ops = {
+ 	.map_voltage		= regulator_map_voltage_linear_range,
+ };
+ 
+-static const struct regulator_desc buck_regs[] = {
++static const struct regulator_desc tps6594_buck_regs[] = {
+ 	TPS6594_REGULATOR("BUCK1", "buck1", TPS6594_BUCK_1,
+ 			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS6594_MASK_BUCKS_VSET,
+ 			  TPS6594_REG_BUCKX_VOUT_1(0),
+@@ -549,6 +545,63 @@ static int tps6594_request_reg_irqs(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++struct tps6594_regulator_desc {
++	const struct regulator_desc *multi_phase_regs;
++	unsigned int num_multi_phase_regs;
++
++	const struct regulator_desc *buck_regs;
++	int num_buck_regs;
++
++	const struct regulator_desc *ldo_regs;
++	int num_ldo_regs;
++
++	const struct tps6594_regulator_irq_type **bucks_irq_types;
++	const struct tps6594_regulator_irq_type **ldos_irq_types;
++	int num_irq_types;
++
++	const struct tps6594_regulator_irq_type *ext_irq_types;
++	int num_ext_irqs;
++};
++
++static const struct tps6594_regulator_desc tps65224_reg_desc = {
++	.multi_phase_regs = tps65224_multi_regs,
++	.num_multi_phase_regs = ARRAY_SIZE(tps65224_multi_regs),
++	.buck_regs = tps65224_buck_regs,
++	.num_buck_regs = ARRAY_SIZE(tps65224_buck_regs),
++	.ldo_regs = tps65224_ldo_regs,
++	.num_ldo_regs = ARRAY_SIZE(tps65224_ldo_regs),
++	.bucks_irq_types = tps65224_bucks_irq_types,
++	.ldos_irq_types = tps65224_ldos_irq_types,
++	.num_irq_types = 1, /* OV or UV */
++	.ext_irq_types = tps65224_ext_regulator_irq_types,
++	.num_ext_irqs = ARRAY_SIZE(tps65224_ext_regulator_irq_types),
++};
++
++static const struct tps6594_regulator_desc tps6594_reg_desc = {
++	.multi_phase_regs = tps6594_multi_regs,
++	.num_multi_phase_regs = ARRAY_SIZE(tps6594_multi_regs),
++	.buck_regs = tps6594_buck_regs,
++	.num_buck_regs = ARRAY_SIZE(tps6594_buck_regs),
++	.ldo_regs = tps6594_ldo_regs,
++	.num_ldo_regs = ARRAY_SIZE(tps6594_ldo_regs),
++	.bucks_irq_types = tps6594_bucks_irq_types,
++	.ldos_irq_types = tps6594_ldos_irq_types,
++	.num_irq_types = 4, /* OV, UV, SC and ILIM */
++	.ext_irq_types = tps6594_ext_regulator_irq_types,
++	.num_ext_irqs = 2, /* only VCCA OV and UV */
++};
++
++static const struct tps6594_regulator_desc lp8764_reg_desc = {
++	.multi_phase_regs = tps6594_multi_regs,
++	.num_multi_phase_regs = ARRAY_SIZE(tps6594_multi_regs),
++	.buck_regs = tps6594_buck_regs,
++	.num_buck_regs = ARRAY_SIZE(tps6594_buck_regs),
++	.bucks_irq_types = tps6594_bucks_irq_types,
++	.num_irq_types = 4, /* OV, UV, SC and ILIM */
++	.ext_irq_types = tps6594_ext_regulator_irq_types,
++	.num_ext_irqs = ARRAY_SIZE(tps6594_ext_regulator_irq_types),
++};
++
+ static int tps6594_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
+@@ -559,38 +612,32 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 	struct tps6594_regulator_irq_data *irq_data;
+ 	struct tps6594_ext_regulator_irq_data *irq_ext_reg_data;
+ 	const struct tps6594_regulator_irq_type *irq_type;
+-	const struct tps6594_regulator_irq_type *irq_types;
+ 	bool buck_configured[BUCK_NB] = { false };
+ 	bool buck_multi[MULTI_PHASE_NB] = { false };
++	const struct tps6594_regulator_desc *desc;
++	const struct regulator_desc *multi_regs;
+ 
+ 	const char *npname;
+ 	int error, i, irq, multi;
+ 	int irq_idx = 0;
+ 	int buck_idx = 0;
+-	int nr_ldo;
+-	int nr_buck;
+-	int nr_types;
+-	unsigned int irq_count;
+-	unsigned int multi_phase_cnt;
+ 	size_t reg_irq_nb;
+-	const struct tps6594_regulator_irq_type **bucks_irq_types;
+-	const struct regulator_desc *multi_regs;
+-	const struct tps6594_regulator_irq_type **ldos_irq_types;
+-	const struct regulator_desc *ldo_regs;
+ 
+-	if (tps->chip_id == TPS65224) {
+-		bucks_irq_types = tps65224_bucks_irq_types;
+-		multi_regs = tps65224_multi_regs;
+-		ldos_irq_types = tps65224_ldos_irq_types;
+-		ldo_regs = tps65224_ldo_regs;
+-		multi_phase_cnt = ARRAY_SIZE(tps65224_multi_regs);
+-	} else {
+-		bucks_irq_types = tps6594_bucks_irq_types;
+-		multi_regs = tps6594_multi_regs;
+-		ldos_irq_types = tps6594_ldos_irq_types;
+-		ldo_regs = tps6594_ldo_regs;
+-		multi_phase_cnt = ARRAY_SIZE(tps6594_multi_regs);
+-	}
++	switch (tps->chip_id) {
++	case TPS65224:
++		desc = &tps65224_reg_desc;
++		break;
++	case TPS6594:
++	case TPS6593:
++		desc = &tps6594_reg_desc;
++		break;
++	case LP8764:
++		desc = &lp8764_reg_desc;
++		break;
++	default:
++		dev_err(tps->dev, "unknown chip_id %lu\n", tps->chip_id);
++		return -EINVAL;
++	};
+ 
+ 	enum {
+ 		MULTI_BUCK12,
+@@ -611,13 +658,14 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 	 * In case of Multiphase configuration, value should be defined for
+ 	 * buck_configured to avoid creating bucks for every buck in multiphase
+ 	 */
+-	for (multi = 0; multi < multi_phase_cnt; multi++) {
+-		np = of_find_node_by_name(tps->dev->of_node, multi_regs[multi].supply_name);
++	for (multi = 0; multi < desc->num_multi_phase_regs; multi++) {
++		multi_regs = &desc->multi_phase_regs[multi];
++		np = of_find_node_by_name(tps->dev->of_node, multi_regs->supply_name);
+ 		npname = of_node_full_name(np);
+ 		np_pmic_parent = of_get_parent(of_get_parent(np));
+ 		if (of_node_cmp(of_node_full_name(np_pmic_parent), tps->dev->of_node->full_name))
+ 			continue;
+-		if (strcmp(npname, multi_regs[multi].supply_name) == 0) {
++		if (strcmp(npname, multi_regs->supply_name) == 0) {
+ 			switch (multi) {
+ 			case MULTI_BUCK12:
+ 				buck_multi[0] = true;
+@@ -650,28 +698,19 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	if (tps->chip_id == TPS65224) {
+-		nr_buck = ARRAY_SIZE(tps65224_buck_regs);
+-		nr_ldo = ARRAY_SIZE(tps65224_ldo_regs);
+-		nr_types = TPS65224_REGS_INT_NB;
+-	} else {
+-		nr_buck = ARRAY_SIZE(buck_regs);
+-		nr_ldo = (tps->chip_id == LP8764) ? 0 : ARRAY_SIZE(tps6594_ldo_regs);
+-		nr_types = REGS_INT_NB;
+-	}
+-
+-	reg_irq_nb = nr_types * (nr_buck + nr_ldo);
++	reg_irq_nb = desc->num_irq_types * (desc->num_buck_regs + desc->num_ldo_regs);
+ 
+ 	irq_data = devm_kmalloc_array(tps->dev, reg_irq_nb,
+ 				      sizeof(struct tps6594_regulator_irq_data), GFP_KERNEL);
+ 	if (!irq_data)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < multi_phase_cnt; i++) {
++	for (i = 0; i < desc->num_multi_phase_regs; i++) {
+ 		if (!buck_multi[i])
+ 			continue;
+ 
+-		rdev = devm_regulator_register(&pdev->dev, &multi_regs[i], &config);
++		rdev = devm_regulator_register(&pdev->dev, &desc->multi_phase_regs[i],
++					       &config);
+ 		if (IS_ERR(rdev))
+ 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+ 					     "failed to register %s regulator\n",
+@@ -682,89 +721,74 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 			buck_idx = 2;
+ 
+ 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-						 bucks_irq_types[buck_idx],
+-						 nr_types, &irq_idx);
++						 desc->bucks_irq_types[buck_idx],
++						 desc->num_irq_types, &irq_idx);
+ 		if (error)
+ 			return error;
+ 
+ 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-						 bucks_irq_types[buck_idx + 1],
+-						 nr_types, &irq_idx);
++						 desc->bucks_irq_types[buck_idx + 1],
++						 desc->num_irq_types, &irq_idx);
+ 		if (error)
+ 			return error;
+ 
+ 		if (i == MULTI_BUCK123 || i == MULTI_BUCK1234) {
+ 			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-							 bucks_irq_types[buck_idx + 2],
+-							 nr_types, &irq_idx);
++							 desc->bucks_irq_types[buck_idx + 2],
++							 desc->num_irq_types,
++							 &irq_idx);
+ 			if (error)
+ 				return error;
+ 		}
+ 		if (i == MULTI_BUCK1234) {
+ 			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-							 bucks_irq_types[buck_idx + 3],
+-							 nr_types, &irq_idx);
++							 desc->bucks_irq_types[buck_idx + 3],
++							 desc->num_irq_types,
++							 &irq_idx);
+ 			if (error)
+ 				return error;
+ 		}
+ 	}
+ 
+-	for (i = 0; i < nr_buck; i++) {
++	for (i = 0; i < desc->num_buck_regs; i++) {
+ 		if (buck_configured[i])
+ 			continue;
+ 
+-		const struct regulator_desc *buck_cfg = (tps->chip_id == TPS65224) ?
+-							 tps65224_buck_regs : buck_regs;
+-
+-		rdev = devm_regulator_register(&pdev->dev, &buck_cfg[i], &config);
++		rdev = devm_regulator_register(&pdev->dev, &desc->buck_regs[i], &config);
+ 		if (IS_ERR(rdev))
+ 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+ 					     "failed to register %s regulator\n", pdev->name);
+ 
+ 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-						 bucks_irq_types[i], nr_types, &irq_idx);
++						 desc->bucks_irq_types[i],
++						 desc->num_irq_types, &irq_idx);
+ 		if (error)
+ 			return error;
+ 	}
+ 
+-	/* LP8764 doesn't have LDO */
+-	if (tps->chip_id != LP8764) {
+-		for (i = 0; i < nr_ldo; i++) {
+-			rdev = devm_regulator_register(&pdev->dev, &ldo_regs[i], &config);
+-			if (IS_ERR(rdev))
+-				return dev_err_probe(tps->dev, PTR_ERR(rdev),
+-						     "failed to register %s regulator\n",
+-						     pdev->name);
+-
+-			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+-							 ldos_irq_types[i], nr_types,
+-							 &irq_idx);
+-			if (error)
+-				return error;
+-		}
+-	}
++	for (i = 0; i < desc->num_ldo_regs; i++) {
++		rdev = devm_regulator_register(&pdev->dev, &desc->ldo_regs[i], &config);
++		if (IS_ERR(rdev))
++			return dev_err_probe(tps->dev, PTR_ERR(rdev),
++					     "failed to register %s regulator\n",
++					     pdev->name);
+ 
+-	if (tps->chip_id == TPS65224) {
+-		irq_types = tps65224_ext_regulator_irq_types;
+-		irq_count = ARRAY_SIZE(tps65224_ext_regulator_irq_types);
+-	} else {
+-		irq_types = tps6594_ext_regulator_irq_types;
+-		if (tps->chip_id == LP8764)
+-			irq_count = ARRAY_SIZE(tps6594_ext_regulator_irq_types);
+-		else
+-			/* TPS6593 supports only VCCA OV and UV */
+-			irq_count = 2;
++		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
++						 desc->ldos_irq_types[i],
++						 desc->num_irq_types, &irq_idx);
++		if (error)
++			return error;
+ 	}
+ 
+ 	irq_ext_reg_data = devm_kmalloc_array(tps->dev,
+-					      irq_count,
++					      desc->num_ext_irqs,
+ 					      sizeof(struct tps6594_ext_regulator_irq_data),
+ 					      GFP_KERNEL);
+ 	if (!irq_ext_reg_data)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < irq_count; ++i) {
+-		irq_type = &irq_types[i];
++	for (i = 0; i < desc->num_ext_irqs; ++i) {
++		irq_type = &desc->ext_irq_types[i];
+ 		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+ 		if (irq < 0)
+ 			return -EINVAL;
+@@ -782,6 +806,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 					     "failed to request %s IRQ %d\n",
+ 					     irq_type->irq_name, irq);
+ 	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.39.5
+
