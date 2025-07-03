@@ -1,159 +1,183 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE792BD591;
-	Thu,  3 Jul 2025 09:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5832D8783;
+	Thu,  3 Jul 2025 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536262; cv=none; b=SXrzrgHzbQWv1279EHOGd+JKl7S2A00hnBuA9M7JOP1b6JwiWBkYHT6F3bGLI+72TbgyYSY/q0SucSma1VCV65cR5Uc6e3TPG2BLQvu/zjDN/7WQQWcFIXAZWDq32255TsfUghVgayMyzDiBgAD+mTHtNzuEs6kZEMSzwcs2yDg=
+	t=1751536269; cv=none; b=n5ICruOrgXf1V4DPU7zz+2KZqljJX/CFTxjqqOY6pA9MGJBvJ6tDO5Z3fkgo/Qe4XXM1+7MBptkJIDjMA3y5jDecE9biRoQTMMqDlepSVprIbnDCUt7Do0R3zvAkUAmwu23clxDdaJC0Wd32zsWAnO54t7vvYVLzw7cR5Ex94O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536262; c=relaxed/simple;
-	bh=hG8K1aWvudNlPwAN883pKE3U+4Z+u61tte9vHKVgy4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hVW7Ea/tdYdJWAwJfXnPHiVeXi6nvTZu3skuVwZ2N8LZDxxi+X3I/YYjK3SzuCrnXbVoNEaNhEuWJsLlhI1lYCQEbaZsoF5zGJPbmoC5OOyRAoTXV1w7eJWpAhEOkxKL78oDou3axI0iD6PE99geAcDeU4kZm+zP7qtKAKV+4w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87f0efa51c0so1504237241.1;
-        Thu, 03 Jul 2025 02:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751536259; x=1752141059;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xqd8yGqNLo9cuGqviDpXd5FpjhJYhFTdtFhMPVsQm4U=;
-        b=PBcoS4KTeCPS69Q5WSRao82An7Ii4Ytd0iRCEor2Yg7wGb+pHguLLLtNhlsG7JYvcc
-         ce1w0E8Le6A+G2RXqrKnDbxwWd9MmyaK7T7vFyPrEwm5fIK5q1KIy9azGG+VRPS0/FFt
-         NKUOHptQ5LdZo7/yJADwvc0tZjANdxnIu7hH4l49UeS7Z0QxOj1UyvvzUFrAyPcLtPzP
-         LNFqEQC58+qRoZFXeDRePQjrf0Fsnijsr1PlJ7L8SUvVj3j6dS+Q3fHZB3zBZScL1M9X
-         pJ4twZBKljuwreAkGWHe4AP9cHfFF4qp73/hGhmpCFGrGSCxIVLtkMSyuatXeZcU0HQ1
-         yfTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo5c0OTZvuSdOEcHSCnpFwregy5LMTos0hV+uF40yfXZidvMBC1izMvY5GU3uPI5+TfQJhkw5rH5Dz@vger.kernel.org, AJvYcCW62zE3e66MLLa030PLhedn+rrTaMhznw828iq9aLMlcCcTKnKRP2v6aao8WeXS7waaAW+iBrAfokTmMuxioNbUg5o=@vger.kernel.org, AJvYcCWWjkAR0QnZMD3AO3g87txl81cSkTLlGllUxrx60+oCCvHVoqYnBjnjl2y3s3U9/5AXFUeQ8aIRZY/hkObc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHNaJ+2KxbXtOYbvqvsgtQuUMb/CbXXubS16voVOnVg9Hi6Vx3
-	u5vnONTigolmrvi3l4F8obrTXuibTbCllPjp9/5hh68u+TTNVDMDp7a+ZDSbwXQV
-X-Gm-Gg: ASbGncuqGLSzzyrYAinRaHRztFo0UiHBC0pdbfvpREVhaEy8b/vBcT1oLLFFpZJRVij
-	I044pytCSglCYXfLiU9QzAqb5dOf6QyEhisIG899x2tn/gGYbQOvZXMobweJviTWuhscBY7Bu/V
-	fbkYk+isadVnKLeGveGdoUjgXNE+ObDhNk+0zxfcxhyfnJ2jQ/K4IaRO6GFNGrDbOBaZ9S8HDc5
-	FjkD5gHI6d0hhs0vyUiVo1g9oOXXXATgBpiJ9SqIt6gi11UdBpomLDHmxg8hFQTEu3vbvvabBLP
-	dv5BOtJ29C/sLxvDlC/Tnx7A10sMPSVteB5e9a8mrU+8gtO4ecb7uymDJHDbHvt3dPJSg9KrgEo
-	FJWkc8oQ/qfArp762C5ghaNZZ
-X-Google-Smtp-Source: AGHT+IE7pJeV6/5U5pfkFvyC1Itlb26db2mr7L8RWDfGgaa8xV9iSuoj6D4PhU808nF5kvbaUXZqDA==
-X-Received: by 2002:a05:6102:4485:b0:4e9:add0:2828 with SMTP id ada2fe7eead31-4f1745a09camr2312949137.1.1751536258721;
-        Thu, 03 Jul 2025 02:50:58 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7ec2cfsm2084553137.7.2025.07.03.02.50.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 02:50:58 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e9b26a5e45so3092065137.1;
-        Thu, 03 Jul 2025 02:50:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgvlUGzoKqVxTLNay+afg7ztqIsOMlIZZ/jcCRD2dzUIpL+kSS9Bek/0Q0YbXlVqyv6wmE9Dba+EWe@vger.kernel.org, AJvYcCVwmrYp5Y5Hs1XjzhmwEnMcaE6LS/fSZun8ry5XDnWYuYoLqdOIPYHJUyGu64YqWztOwFJqRFiVVEmRb5+U@vger.kernel.org, AJvYcCW2Non3VUnTyLcFAGdgVmkzAYLpWrreMLu6N86okZOeyViQ4pqk5VT9X9Y4O9alZtUlQKhVLofnllfQCqbCtpIqUsY=@vger.kernel.org
-X-Received: by 2002:a05:6102:160d:b0:4eb:2eac:aaa0 with SMTP id
- ada2fe7eead31-4f17479d53fmr2481310137.19.1751536258137; Thu, 03 Jul 2025
- 02:50:58 -0700 (PDT)
+	s=arc-20240116; t=1751536269; c=relaxed/simple;
+	bh=4tHBMGYPbtDNX4c95d5DdGLxYFokfo+G5JDtcZw6FJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zmhn9mD+es1Hvp6YIB26Cc74HU7g+5JgNBrjIL5bN8k5uQYyYEVl+3BxHvn7R6Dc4vnhgqfbqC96up5U5pX7o7crGOomkejsxSiCyqhrcxnz+59igHwFytU44iUjEpGTzPw/o3XU05WPSNYJFQR5vnPJtlIACNUrK0r8hme8jGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=bKpX686F; arc=none smtp.client-ip=93.188.205.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="bKpX686F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
+	s=mail; t=1751536257;
+	bh=4tHBMGYPbtDNX4c95d5DdGLxYFokfo+G5JDtcZw6FJo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bKpX686FSJ3YnzUeaoRuSP6PVjMzoNp6eAS6SV3zMEcQ6Pu4s4uNXhpg42TDGRcO3
+	 hQMaHqp9tX5amfMosYwNLBBMAuDuOkv64PCo/iseCfVNP3kIb3DtDeSpwDnm/26p1q
+	 bmi4qMTAeQKWPbsfwE13MaOB6obdIkyH/wNU6XQ4h63pizZWF8IJjBtY9M6hgTWEeJ
+	 UBtDXmrqkbC0U+Mnvm+jOhP9FFHbP7DfBBTzFywDC+sCe14e8jMp0HI8OreXaxSuLE
+	 kmn32TVb/QwK8gwWg+Ch2Tcvy2w/E5fkTo+LJRkL9vqwD02ZmyIsjXS+1uFzhF+co9
+	 yPsExjAtOii3A==
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 8DD651F96E;
+	Thu,  3 Jul 2025 12:50:57 +0300 (MSK)
+Received: from new-mail.astralinux.ru (unknown [10.177.185.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Thu,  3 Jul 2025 12:50:54 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.190.6.76])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bXsSs5ybgztQTX;
+	Thu,  3 Jul 2025 12:50:21 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10/5.15] bpf: Do mark_chain_precision for ARG_CONST_ALLOC_SIZE_OR_ZERO
+Date: Thu,  3 Jul 2025 12:50:12 +0300
+Message-ID: <20250703095013.148069-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625153042.159690-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625153042.159690-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 3 Jul 2025 11:50:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV=9q8qw69BtErOQ-=qojBEppUZWbRdAzikCNg+pbnC4w@mail.gmail.com>
-X-Gm-Features: Ac12FXyFMmL_1m6_QnACLMWn2MDSc5_v8PXHpaccbRsEvJ4pd5SOniBUZ93DUFw
-Message-ID: <CAMuHMdV=9q8qw69BtErOQ-=qojBEppUZWbRdAzikCNg+pbnC4w@mail.gmail.com>
-Subject: Re: [PATCH 2/6] arm64: dts: renesas: r9a09g087: Add I2C controller nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/07/03 08:54:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 194515 [Jul 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/03 05:31:00 #27614197
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/07/03 08:54:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-Hi Prabhakar,
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 
-On Wed, 25 Jun 2025 at 17:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The Renesas RZ/N2H ("R9A09G087") SoC includes three I2C (RIIC) channels.
-> Adds the device tree nodes for all three I2C controllers to RZ/N2H
-> SoC DTSI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+[ Upstream commit 2fc31465c5373b5ca4edf2e5238558cb62902311 ]
 
-Thanks for your patch!
+Precision markers need to be propagated whenever we have an ARG_CONST_*
+style argument, as the verifier cannot consider imprecise scalars to be
+equivalent for the purposes of states_equal check when such arguments
+refine the return value (in this case, set mem_size for PTR_TO_MEM). The
+resultant mem_size for the R0 is derived from the constant value, and if
+the verifier incorrectly prunes states considering them equivalent where
+such arguments exist (by seeing that both registers have reg->precise as
+false in regsafe), we can end up with invalid programs passing the
+verifier which can do access beyond what should have been the correct
+mem_size in that explored state.
 
-> --- a/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> @@ -90,6 +90,51 @@ sci0: serial@80005000 {
->                         status = "disabled";
->                 };
->
-> +               i2c0: i2c@80088000 {
-> +                       compatible = "renesas,riic-r9a09g087", "renesas,riic-r9a09g077";
-> +                       reg = <0 0x80088000 0 0x400>;
-> +                       interrupts = <GIC_SPI 614 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 615 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 616 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 617 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 100>;
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c1: i2c@80088004 {
+To show a concrete example of the problem:
 
-80088400
+0000000000000000 <prog>:
+       0:       r2 = *(u32 *)(r1 + 80)
+       1:       r1 = *(u32 *)(r1 + 76)
+       2:       r3 = r1
+       3:       r3 += 4
+       4:       if r3 > r2 goto +18 <LBB5_5>
+       5:       w2 = 0
+       6:       *(u32 *)(r1 + 0) = r2
+       7:       r1 = *(u32 *)(r1 + 0)
+       8:       r2 = 1
+       9:       if w1 == 0 goto +1 <LBB5_3>
+      10:       r2 = -1
 
-> +                       compatible = "renesas,riic-r9a09g087", "renesas,riic-r9a09g077";
-> +                       reg = <0 0x80088400 0 0x400>;
-> +                       interrupts = <GIC_SPI 618 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 619 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 620 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 621 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 101>;
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c2: i2c@81008000 {
-> +                       compatible = "renesas,riic-r9a09g087", "renesas,riic-r9a09g077";
-> +                       reg = <0 0x81008000 0 0x400>;
-> +                       interrupts = <GIC_SPI 622 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 623 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 624 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "eei", "rxi", "txi", "tei";
-> +                       clocks = <&cpg CPG_MOD 501>;
+0000000000000058 <LBB5_3>:
+      11:       r1 = 0 ll
+      13:       r3 = 0
+      14:       call bpf_ringbuf_reserve
+      15:       if r0 == 0 goto +7 <LBB5_5>
+      16:       r1 = r0
+      17:       r1 += 16777215
+      18:       w2 = 0
+      19:       *(u8 *)(r1 + 0) = r2
+      20:       r1 = r0
+      21:       r2 = 0
+      22:       call bpf_ringbuf_submit
 
-601
+00000000000000b8 <LBB5_5>:
+      23:       w0 = 0
+      24:       exit
 
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
->                 cpg: clock-controller@80280000 {
->                         compatible = "renesas,r9a09g087-cpg-mssr";
->                         reg = <0 0x80280000 0 0x1000>,
+For the first case, the single line execution's exploration will prune
+the search at insn 14 for the branch insn 9's second leg as it will be
+verified first using r2 = -1 (UINT_MAX), while as w1 at insn 9 will
+always be 0 so at runtime we don't get error for being greater than
+UINT_MAX/4 from bpf_ringbuf_reserve. The verifier during regsafe just
+sees reg->precise as false for both r2 registers in both states, hence
+considers them equal for purposes of states_equal.
 
-Gr{oetje,eeting}s,
+If we propagated precise markers using the backtracking support, we
+would use the precise marking to then ensure that old r2 (UINT_MAX) was
+within the new r2 (1) and this would never be true, so the verification
+would rightfully fail.
 
-                        Geert
+The end result is that the out of bounds access at instruction 19 would
+be permitted without this fix.
 
+Note that reg->precise is always set to true when user does not have
+CAP_BPF (or when subprog count is greater than 1 (i.e. use of any static
+or global functions)), hence this is only a problem when precision marks
+need to be explicitly propagated (i.e. privileged users with CAP_BPF).
+
+A simplified test case has been included in the next patch to prevent
+future regressions.
+
+Fixes: 457f44363a88 ("bpf: Implement BPF ring buffer and verifier support for it")
+Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Link: https://lore.kernel.org/r/20220823185300.406-2-memxor@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+---
+Backport fix for CVE-2022-49961
+ kernel/bpf/verifier.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 7049a85a78ab..fbfdfec46199 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -5518,6 +5518,9 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 			return -EACCES;
+ 		}
+ 		meta->mem_size = reg->var_off.value;
++		err = mark_chain_precision(env, regno);
++		if (err)
++			return err;
+ 	} else if (arg_type_is_int_ptr(arg_type)) {
+ 		int size = int_ptr_type_to_size(arg_type);
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.43.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
