@@ -1,80 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9204246BB9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB682367CF;
+	Thu,  3 Jul 2025 09:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535101; cv=none; b=jVb32tspz+Iu77EB3J0ux0uN1G41mcM/LOMnn/xI4yx6ErJlcaVwGvZ/LFR5mwLv5O/1dP4pJjwmgmsvheDD6ZtX3SQP6xkFFRHoULCLeUtwTkNgZgd2/gK7w2GJsqnKu52QGGmgjjHcwRPYm/7BDMByrD5GTim0Mfk7OdgIb9o=
+	t=1751535121; cv=none; b=pZRDJWXNdH2Al/HGuXW+3ra+lu35HCsSoDDfAIn4IcluP9DPXeJ5C+TVA65+sAJ8/sPVRala5kq4wShCNJKtu6AHhqqozaQL6x8ACrq0+P4xKqULdZG76rOypgf/zKtvLYgH7Q5k11Xws29v8ANdRqHIUMe8pqWeRMwfzD5jDxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535101; c=relaxed/simple;
-	bh=PVDBSjyULPbs5x3zIrE5o9Rl0g38caEh9UMxzPrn+Us=;
+	s=arc-20240116; t=1751535121; c=relaxed/simple;
+	bh=ExqD5d6a/XP0/7CJDE4X2XA3FnRIg/4hfc9AdBw2mkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2IhMejQSv/6qCGBppKTI+NpCxgX21MLfHTQjIXj4zt1PRO1mW2gP5Cv/YErDhCZ10cwzYT+lIPy06d/VvWVshbxqyIvb8kjz0BspbX5Se+0iqqAyIt8vsyeCqAdlGX0Sk7EAiqdk63ynMEi+2RvhgHdHcJdJKrGwOP0qOotKSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kb5dMga7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oA+AQk1DkalYajhkougd+r3bRs0oEgfVnlJAko/Qj5xuLN7VTWEuiZAv56/7CV8/iFGDiMD7XG6geyyfb+k0WX5YEL5KmUBA80LDZOx/Ze90Qg5lkrpkJm3L6HcVKeQ4jcqNIz4g28pxkN5ZQjRrW/fzWZ1ZCpwbf1o2+ZE+0XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g3xIVqQ8; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kb5dMga7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751535098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kiM34ne3qqgNc/PC2+T8kkcXMp5a3XxcjcM9ongF81s=;
-	b=Kb5dMga7m+vgexq2Sv+XAhst7C/Qear+LSSp6WnDo/EGKNquNXHpUng4GdTB4zydDu0eKw
-	Nfohh4ztGbG92dAy+vCbblKyINtf7e2AF72B3eWhlxdAEhDxEiMQhhygdQxcNGtXWWeqzo
-	6NAe8i3mLQZ5GiTCjcn/X1w4R23kd1A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-102-uazNomkLOG2V3y9X4hveFA-1; Thu, 03 Jul 2025 05:31:37 -0400
-X-MC-Unique: uazNomkLOG2V3y9X4hveFA-1
-X-Mimecast-MFC-AGG-ID: uazNomkLOG2V3y9X4hveFA_1751535096
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4532ff43376so48238145e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:31:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3xIVqQ8"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d3f72391so56724065e9.3;
+        Thu, 03 Jul 2025 02:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751535118; x=1752139918; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+IqJtSVOD+e8QSYxAC5vLFloXRl2VFDwWfvOie3ktVs=;
+        b=g3xIVqQ8SlzUmqvhIxV77dy7jc/d32G66j3g1D9KKI5BpmxSuwDDA1jA74jtZye7Yn
+         R1Q80Pq8tT0jyv2NL/CNFl4KcYbMtNFazseu29Dxn3qAj/LTzdAhv3t5C5aEJhrX0foN
+         h4TQwz7e9GTk0fZA5vxhHCQbEpbo+KvQ5NaycDbE/B24HYA3Mhj9xMCWx8KE6k6O9VlV
+         iAjstmK5nGiPknpyzFzHENG7R7bf6fBeoxm7uMwnWZkweuGFFUNPSJnDWFPBt60IPShj
+         7OiXDB6yRF2Ppfw3ZVXuq/qTyzuybV0MJORLEdIr3AFJfuX06MkinlHtFdPspgXn8Qim
+         vd3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751535096; x=1752139896;
+        d=1e100.net; s=20230601; t=1751535118; x=1752139918;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kiM34ne3qqgNc/PC2+T8kkcXMp5a3XxcjcM9ongF81s=;
-        b=SZmLoS1Jr7oLGzqfdVXz1O+JOEcxkzrwPEHvhcv5wiifUfuG9VsepnYyeUSXHT0p0r
-         NZUzoZokWLIEruZM/MLPaRI5w151GTGDdi3iDC1DpmPr4n+rRRy60qZDRqE/wG5YiEFa
-         o0fVZaX8ANkDjNz9XjjtPp0CCqCK2DD3hy5y2OaD0nqLXmhreEcNoYC0aw7f3CfAfiM2
-         HkzJlM2kEJDaGOGway+DLwW+AFqVTily4tdwho04C1kcilLMbjMTRozpXX1H4V9uTiaV
-         wt0XGpPJF2nYkRSs4UzEpBWG2iE+ZKRKGeKRCbZW6JfsOg5W71uKXXVdei1ExmyZ8iW/
-         z8Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9rAFUz1jzSp+WItbNstKAWbq+o39pcpciQOqAPQleMMZZFWQDhNb+UOGxdIp7chkBIVz1rx256Tx4IlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq7ZhnLGuQVu5ECYrcBBqvfCoWW1sB9M0bEsWOPkoiby8R/pVT
-	FL90hNGWdtnzHtIblk2569VLHI9R7mXae78xr5y/wFtLMqjCha+xgiOHJFzLl3WT6kcCw09+Tvy
-	PMJXTFDg/vWLUsWWq+XO7K4sb7DXctA0nR52LkqCHcJ0wPx/UmWeW0Pm/V78omTCDNA==
-X-Gm-Gg: ASbGncsMTgDWpFUwpEo/OOKToT0KnKYQ3DqisqKnUWCnB5xQU4KkcjqWUha9cfjaZOJ
-	Wt3Zt5QWZBQNZCuEg+YzgiEqcWNyU9K8lPJ02so7GOgpBTDn9RRmp6HLKj0n3VMjECdbNOTENXi
-	ctGf7C9DFwSQ2QPDyDGuB4fj996RkIo6QvlXAt6qfpbvVH+lYgSq6CHh7qbHCHneCCYN8pqj53n
-	PJBJCdQQRFF8mhbJOGIg7TG4pObOtY7Cke5a+H+sziIVlkNvpjxmOZ4dmYBNZNCoTZi90J3Jdlg
-	BIWpKzqc1HsEJnil
-X-Received: by 2002:a05:600c:3b07:b0:450:30e4:bdf6 with SMTP id 5b1f17b1804b1-454a3704fd2mr58221235e9.19.1751535095944;
-        Thu, 03 Jul 2025 02:31:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFMIuf6yUQDcBc0LWWmzv/B2M8HuBjvXyhM6QvDp7XQF9yZebMii/qbfs/UzrXjc5q42VPkzg==
-X-Received: by 2002:a05:600c:3b07:b0:450:30e4:bdf6 with SMTP id 5b1f17b1804b1-454a3704fd2mr58220935e9.19.1751535095479;
-        Thu, 03 Jul 2025 02:31:35 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be0bacsm20751665e9.32.2025.07.03.02.31.34
+        bh=+IqJtSVOD+e8QSYxAC5vLFloXRl2VFDwWfvOie3ktVs=;
+        b=mw4qF/isOeUgHKUyvqaLszG2vS6qER3kbRjbSx5hFToqwCCAOVKdcIDoelLCUMG6Pb
+         +U2YCerDIX7iYvOgFcrRUWJD4AKvs4M2kwXul9bLxTDtlX4ff6FEY+b6Uj6DmICLAlcN
+         B0zEEb8xamqYXJb4eowM+2HR/0Uxt26ry/T343mS9UVM72om5Z+RLszYTqBlVgARAkY1
+         d280zGZrXxBvTs4qiuQcNjzcNhUSLd7pnlVN4zGJrS1jnBFu69Qw/0c8D3wds/BDti8G
+         1Q5QWvn6YeFy43sxM62bnvvS/3ZeGtMIuFXt3o6jBVk1HcWpAuYYvO4z3wbpGu6R4Qpf
+         qQjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjwTKjiEaTcb5jAvPLqVsTGoVGRYLuIwNU+b5qB4fGwkGNO+K+VisKVtGo2l3h8gWwCl/cw1KJ@vger.kernel.org, AJvYcCWIGFggmsXtp/C9Gqs3YvdN4Ec3UIaMcNvUOcBWEhT0Md6oJUmMKs7cQb8uJPuNKsCnbV0e9l3u29+iSD2j@vger.kernel.org, AJvYcCWfCViqx0HWricOcLTF9bm8ghtiBhIIjwp4IHIWwlfBwC/sWHst9UM0SCIlNGJXJUu4BR64YJdBAEo7Pw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YygeLww1Gg3q3d+vMc23Qy1ZGaYttQe7RA1Iq6iRXF2zkul1ocE
+	/Vc3duRUxLihdm/ngNSMc8zQqilrXo3BdNIwX33wbaiafC+bfK0ek0gG
+X-Gm-Gg: ASbGnct6RSu98ssdkmMZSYIjVA7qljosnyvK3jGvEIV5BMGzmDNjMK9GjofXTE6pBKw
+	i3cZ+xagV6XxvrtuewITP8wBQOeXdnDD4yfVwzrffdE1brbkhd6llmC50JIgMTVnNF3trB1TS/D
+	b5OR76y0LJtmeb2v8Cztyl66QNvPB6TDvw6zukp6L/HS/0OMDPe69z9BEp3DuFBe2IRvG8pVQJT
+	Gvs/V4sbBB58Cpz6dZ+C2l9uFCOuypxvmw5YueQqZSmrbDkj+YUJ6PXUH2mBNIZ/g9oL08xllQg
+	Nv4c62rLQ86uyOOepnJbeGLDHE9r2yA0t7OPJ6U5Tk3oVtuqVZbS+50KMw==
+X-Google-Smtp-Source: AGHT+IHIjp6mGQKcdLydiIk1U6Fe+bPGoowa+9F9nFtc5bMKZ65jj96rrZ6hfhDHiPgCxguK7+TKOw==
+X-Received: by 2002:a5d:5e84:0:b0:3b1:3466:6734 with SMTP id ffacd0b85a97d-3b32de6b0f1mr2274454f8f.44.1751535117705;
+        Thu, 03 Jul 2025 02:31:57 -0700 (PDT)
+Received: from gmail.com ([2a02:c7c:f4f0:900:5d4:bab7:f2ad:ef73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e595c6sm18622605f8f.66.2025.07.03.02.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 02:31:35 -0700 (PDT)
-Date: Thu, 3 Jul 2025 05:31:32 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Laurent Vivier <lvivier@redhat.com>, netdev@vger.kernel.org,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
- reporting
-Message-ID: <20250703053042-mutt-send-email-mst@kernel.org>
-References: <20250521092236.661410-1-lvivier@redhat.com>
- <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+        Thu, 03 Jul 2025 02:31:57 -0700 (PDT)
+Date: Thu, 3 Jul 2025 10:31:39 +0100
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: bentiss@kernel.org, gargaditya08@live.com, jirislaby@kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] HID: appletb-kbd: fix memory corruption of
+ input_handler_list
+Message-ID: <aGZN-0aYscZMYpld@gmail.com>
+References: <20250627110121.7802-1-qasdev00@gmail.com>
+ <qp120s01-q22q-52rr-97n2-or6o30n1qrqq@xreary.bet>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,38 +75,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+In-Reply-To: <qp120s01-q22q-52rr-97n2-or6o30n1qrqq@xreary.bet>
 
-On Wed, May 28, 2025 at 08:24:32AM +0200, Paolo Abeni wrote:
-> On 5/21/25 11:22 AM, Laurent Vivier wrote:
-> > This patch series contains two fixes and a cleanup for the virtio subsystem.
-> > 
-> > The first patch fixes an error reporting bug in virtio_ring's
-> > virtqueue_resize() function. Previously, errors from internal resize
-> > helpers could be masked if the subsequent re-enabling of the virtqueue
-> > succeeded. This patch restores the correct error propagation, ensuring that
-> > callers of virtqueue_resize() are properly informed of underlying resize
-> > failures.
-> > 
-> > The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
-> > 
-> > The third patch addresses a reliability issue in virtio_net where the TX
-> > ring size could be configured too small, potentially leading to
-> > persistently stopped queues and degraded performance. It enforces a
-> > minimum TX ring size to ensure there's always enough space for at least one
-> > maximally-fragmented packet plus an additional slot.
+On Thu, Jul 03, 2025 at 09:38:27AM +0200, Jiri Kosina wrote:
+> On Fri, 27 Jun 2025, Qasim Ijaz wrote:
 > 
-> @Michael: it's not clear to me if you prefer take this series via your
-> tree or if it should go via net. Please LMK, thanks!
+> > In appletb_kbd_probe an input handler is initialised and then registered
+> > with input core through input_register_handler(). When this happens input
+> > core will add the input handler (specifically its node) to the global
+> > input_handler_list. The input_handler_list is central to the functionality
+> > of input core and is traversed in various places in input core. An example
+> > of this is when a new input device is plugged in and gets registered with
+> > input core.
+> > 
+> > The input_handler in probe is allocated as device managed memory. If a
+> > probe failure occurs after input_register_handler() the input_handler
+> > memory is freed, yet it will remain in the input_handler_list. This
+> > effectively means the input_handler_list contains a dangling pointer
+> > to data belonging to a freed input handler.
+> > 
+> > This causes an issue when any other input device is plugged in - in my
+> > case I had an old PixArt HP USB optical mouse and I decided to
+> > plug it in after a failure occurred after input_register_handler().
+> > This lead to the registration of this input device via
+> > input_register_device which involves traversing over every handler
+> > in the corrupted input_handler_list and calling input_attach_handler(),
+> > giving each handler a chance to bind to newly registered device.
+> > 
+> > The core of this bug is a UAF which causes memory corruption of
+> > input_handler_list and to fix it we must ensure the input handler is
+> > unregistered from input core, this is done through
+> > input_unregister_handler().
 > 
-> Paolo
+> Applied to hid.git#for-6.16/upstream-fixes, thanks!
 
-I take it back: given I am still not fully operational, I'd like it
-to be merged through net please. Does it have to be resubmitted for
-this?
+Thanks Jiri, would it also be possible to apply this one too: 
+<https://lore.kernel.org/all/20250624125256.20473-1-qasdev00@gmail.com/>
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Its a bug fix I sent before this a while back but I think it may have been buried
+deep down in your inbox causing you to miss it.
 
--- 
-MST
-
+Thanks,
+Qasim
+> 
+> -- 
+> Jiri Kosina
+> SUSE Labs
+> 
