@@ -1,51 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [178.154.239.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502CB288C8E;
-	Thu,  3 Jul 2025 17:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B9A288C9B;
+	Thu,  3 Jul 2025 17:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751563507; cv=none; b=asDjqt1vkONhJNZa0gJZlqbFs9p68W0gmKo4xdXgWEx82CIN5EWdimfnjVAP7uSrIogxOg7jf3gpt5K4E6IX2xo2+EMM63Rs2NPSMTM4gvFi8HQajdqsrjRdeyW8LrPQXDFrLdpE2RGCF+mhI2SWduN7WKJ7lYNEdqgas2Z45PY=
+	t=1751563618; cv=none; b=KKxjPfxGR0iSWIBqRzkiDrdRofrDTzAyleT3qwuysfQq/cxG/1aVaJ1XVJWoeV/r4JFLZkMWvlwXn4awcgBuAR+Tlvur62E3hlr6byCDNsLPe6M27ZcjLCtL1n7ctqkwY+IOQ4/f6EwmMsRXXjNH9BJ6Z+G0VpFVgSkT/uGBDPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751563507; c=relaxed/simple;
-	bh=A15z3AA71ydQ9j/FLKzepHpNvIVkbCiQdVaADIO/60w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k/O1zvMYgzr/8mGwHp95MfcGYIr/gw7tz8jeidMcabFUVQwfOt8bi5yrTuUAelKrWuh4H6uZnGStFggNWiGzzQvQ7sHp8zTTfWO/rbJ18ObG1oHUVUvk8U4OJUKVIgc9Yu5ugu/QcjeHYZ+a3kaGYhO9rrA1q74R7TzP5KVZpk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m16XJT2h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751563618; c=relaxed/simple;
+	bh=SM8lYkR5HE7giqEtfGgk9mB5gPnaSPRZUMEMtuEWai8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S47UyRBtzCc1Z/ZCF6vmuW6w684q3BTR5kT+P3MJsojlQAIp7r+v8knDR0MUDdONJsHUQjp11bf7CsH+n9784KTLu2QzGTKTUkbJK/TOkkv3+s6Y9GO3yKQWAoeHJu15/IR8yGeOIWjX7yQIv4lkMULTZmEArLvzZTrB9p96qyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=fail (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=D0FlLEef reason="signature verification failed"; arc=none smtp.client-ip=178.154.239.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m16XJT2h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5E4C4CEE3;
-	Thu,  3 Jul 2025 17:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751563506;
-	bh=A15z3AA71ydQ9j/FLKzepHpNvIVkbCiQdVaADIO/60w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=m16XJT2hqQXJpfk5u6m0DE15gcd5YTtkSD+i3RI3aspNCD9Hdp3X9B6oHk1MjQMlQ
-	 +8PRfaqvLo4KYeALIcvvunkm63qf+hNd5xyFLykaUZ3kYTJykD1RUob4u+DBu0zUlJ
-	 gURZrBgB9uKoi1HPNQPBgLc06r0aI4oGW9B27UVbFmiVTvysEDNdRAZueoloOvS4P2
-	 vLmlVFSMEqo31PoSrCCH8Q6nxYjnxrbE/1RVV4WoAbw9XjR/ZGmSlBJrO3rxh2wyPU
-	 mtQoVh7n0TrfM1yPRrNWXW/hden970MiDJmUq3aD1D8MpxPvbrSOIUep3LWvP6v9K6
-	 5XWOvhVLo9WNA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Joerg Schmidbauer <jschmidb@de.ibm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	stable@vger.kernel.org,
-	Ingo Franzki <ifranzki@linux.ibm.com>
-Subject: [PATCH v2] crypto: s390/sha - Fix uninitialized variable in SHA-1 and SHA-2
-Date: Thu,  3 Jul 2025 10:23:16 -0700
-Message-ID: <20250703172316.7914-1-ebiggers@kernel.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="D0FlLEef"
+Received: from mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:1115:0:640:abf2:0])
+	by forward100b.mail.yandex.net (Yandex) with ESMTPS id EEF6760927;
+	Thu,  3 Jul 2025 20:26:44 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id cQg4EvKL1Sw0-U24gxadN;
+	Thu, 03 Jul 2025 20:26:43 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1751563604;
+	bh=0nowOd9g3OEwPon5R+zMkJ5oeBWn22IfpORnZmHlNhk=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=D0FlLEefKj5VeCMPFWjMqCABhfscXpPvrxLvtTTlGh0AWKfBEmo2TTCT716lJkJRO
+	 +B82QmLpgmk7saMe/D0XvEe9YEElgiCywe1f6EhFm8+naHmsAG/bYFkSCL8VqJMPN5
+	 xiLYgb25aS70pPhCrSvCeBk2f9MyjX8LmJQgUJFQ=
+Authentication-Results: mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+To: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ojeda@kernel.org, "alex.gaynor@gmail.comboqun.feng"@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, acourbot@nvidia.com, joelagnelf@nvidia.com,
+	wedsonaf@gmail.com,
+	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+Subject: [PATCH] rust: fix outdated safety note in `Revocable::revoke_internal`
+Date: Thu,  3 Jul 2025 20:26:05 +0300
+Message-ID: <20250703172605.28891-1-work@onurozkan.dev>
 X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,115 +48,37 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Commit 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
-added the field s390_sha_ctx::first_message_part and made it be used by
-s390_sha_update() (now s390_sha_update_blocks()).  At the time,
-s390_sha_update() was used by all the s390 SHA-1, SHA-2, and SHA-3
-algorithms.  However, only the initialization functions for SHA-3 were
-updated, leaving SHA-1 and SHA-2 using first_message_part uninitialized.
+The code used to use `compare_exchange` in the initial version
+but it was changed to `swap` after a reviewer suggestion (see [1]),
+and then the safety comment was not updated and became incorrect.
 
-This could cause e.g. the function code CPACF_KIMD_SHA_512 |
-CPACF_KIMD_NIP to be used instead of just CPACF_KIMD_SHA_512.  This
-apparently was harmless, as the SHA-1 and SHA-2 function codes ignore
-CPACF_KIMD_NIP; it is recognized only by the SHA-3 function codes
-(https://lore.kernel.org/r/73477fe9-a1dc-4e38-98a6-eba9921e8afa@linux.ibm.com/).
-Therefore, this bug was found only when first_message_part was later
-converted to a boolean and UBSAN detected its uninitialized use.
-Regardless, let's fix this by just initializing to zero.
+Link: https://lore.kernel.org/all/20241211104742.533392-1-benoit@dugarreau.fr [1]
 
-Note: in 6.16, we need to patch SHA-1, SHA-384, and SHA-512.  In 6.15
-and earlier, we'll also need to patch SHA-224 and SHA-256, as they
-hadn't yet been librarified (which incidentally fixed this bug).
-
-Fixes: 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
-Cc: stable@vger.kernel.org
-Reported-by: Ingo Franzki <ifranzki@linux.ibm.com>
-Closes: https://lore.kernel.org/r/12740696-595c-4604-873e-aefe8b405fbf@linux.ibm.com
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Onur Özkan <work@onurozkan.dev>
 ---
+ rust/kernel/revocable.rs | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-v2:
-  - Also fix s390_sha1_import() and sha512_import()
-  - Use 0 instead of false
-  - Improved commit message
-
- arch/s390/crypto/sha1_s390.c   | 2 ++
- arch/s390/crypto/sha512_s390.c | 3 +++
- 2 files changed, 5 insertions(+)
-
-diff --git a/arch/s390/crypto/sha1_s390.c b/arch/s390/crypto/sha1_s390.c
-index d229cbd2ba229..9b0d55be12394 100644
---- a/arch/s390/crypto/sha1_s390.c
-+++ b/arch/s390/crypto/sha1_s390.c
-@@ -36,10 +36,11 @@ static int s390_sha1_init(struct shash_desc *desc)
- 	sctx->state[2] = SHA1_H2;
- 	sctx->state[3] = SHA1_H3;
- 	sctx->state[4] = SHA1_H4;
- 	sctx->count = 0;
- 	sctx->func = CPACF_KIMD_SHA_1;
-+	sctx->first_message_part = 0;
+diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+index 06a3cdfce344..5c0b7afa76fb 100644
+--- a/rust/kernel/revocable.rs
++++ b/rust/kernel/revocable.rs
+@@ -163,8 +163,10 @@ unsafe fn revoke_internal<const SYNC: bool>(&self) -> bool {
+                 unsafe { bindings::synchronize_rcu() };
+             }
  
- 	return 0;
- }
+-            // SAFETY: We know `self.data` is valid because only one CPU can succeed the
+-            // `compare_exchange` above that takes `is_available` from `true` to `false`.
++            // SAFETY: We just used an atomic `swap` to check if the data was still marked
++            // as available. If it returns `true`, that means we are the first (and only)
++            // thread to see it as available and mark it as unavailable. So no other thread
++            // can access or drop the data after this. That makes it safe to drop the data here.
+             unsafe { drop_in_place(self.data.get()) };
+         }
  
- static int s390_sha1_export(struct shash_desc *desc, void *out)
-@@ -58,10 +59,11 @@ static int s390_sha1_import(struct shash_desc *desc, const void *in)
- 	const struct sha1_state *ictx = in;
- 
- 	sctx->count = ictx->count;
- 	memcpy(sctx->state, ictx->state, sizeof(ictx->state));
- 	sctx->func = CPACF_KIMD_SHA_1;
-+	sctx->first_message_part = 0;
- 	return 0;
- }
- 
- static struct shash_alg alg = {
- 	.digestsize	=	SHA1_DIGEST_SIZE,
-diff --git a/arch/s390/crypto/sha512_s390.c b/arch/s390/crypto/sha512_s390.c
-index 33711a29618c3..6cbbf5e8555f8 100644
---- a/arch/s390/crypto/sha512_s390.c
-+++ b/arch/s390/crypto/sha512_s390.c
-@@ -30,10 +30,11 @@ static int sha512_init(struct shash_desc *desc)
- 	ctx->sha512.state[6] = SHA512_H6;
- 	ctx->sha512.state[7] = SHA512_H7;
- 	ctx->count = 0;
- 	ctx->sha512.count_hi = 0;
- 	ctx->func = CPACF_KIMD_SHA_512;
-+	ctx->first_message_part = 0;
- 
- 	return 0;
- }
- 
- static int sha512_export(struct shash_desc *desc, void *out)
-@@ -55,10 +56,11 @@ static int sha512_import(struct shash_desc *desc, const void *in)
- 	sctx->count = ictx->count[0];
- 	sctx->sha512.count_hi = ictx->count[1];
- 
- 	memcpy(sctx->state, ictx->state, sizeof(ictx->state));
- 	sctx->func = CPACF_KIMD_SHA_512;
-+	sctx->first_message_part = 0;
- 	return 0;
- }
- 
- static struct shash_alg sha512_alg = {
- 	.digestsize	=	SHA512_DIGEST_SIZE,
-@@ -95,10 +97,11 @@ static int sha384_init(struct shash_desc *desc)
- 	ctx->sha512.state[6] = SHA384_H6;
- 	ctx->sha512.state[7] = SHA384_H7;
- 	ctx->count = 0;
- 	ctx->sha512.count_hi = 0;
- 	ctx->func = CPACF_KIMD_SHA_512;
-+	ctx->first_message_part = 0;
- 
- 	return 0;
- }
- 
- static struct shash_alg sha384_alg = {
-
-base-commit: 64f7548aad63d2fbca2eeb6eb33361c218ebd5a5
 -- 
 2.50.0
 
