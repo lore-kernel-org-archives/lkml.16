@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3366228A3E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C527586B;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567593; cv=none; b=ZSnCxJ5OuRLeq154Gur+yqeBBl0B3fDGzVj1DhWJIfP3VJ7vjf2/2wJVlT1F8Vrdd0Gzh2ovzunfT9eoJNOex6MyBt8mxnn+W0ScRXPKR6qPu21b5OxCyAwe+qO9sz28VDENV0c7NHRvtRN66xe87qDIR/JfsO4jxMo5CYk/vms=
+	t=1751567593; cv=none; b=Zfd05t2XbPtqZG737oAZ7qX1bOyNfn7JQVvf2lCqa09ipp6PnZxHzTDL7WtWvf9pqkbaHTLVNgEN5ihUQPxwWy4OsI4TIt9/t7gbrNQbW2fRq9A3RXuuQqK31Fd7aecb1saq0E0v3crarg6eB5+IpVsX5M/gpu/VFDgdqHlVxGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751567593; c=relaxed/simple;
-	bh=lnATMb/XmCNNMy1igSdCLxsZP2Vd/a/i5coedasJ6Ec=;
+	bh=+RKXSd49QNGxofon9O/ZcqEa2ERFrhs7K98DpEYCjC0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RiFznfOxZn+ZcrMocce+s2D9803ISFSvahxuJshF2ubWiAL5iRHbkiOhAR2vlGONqMgToDHCJNJbXNW56FuFudtVhfqJOL4HzW5Rl2B1/MvEIXQ7+iPdEN7ozh9IQIKtT1wxeZUjhNpxD1RtvqiJK1Q+VnlWJ91dgqMu02cL9/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwwzqZjc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=icfa9VX10uXMrlIPA8s1qrAFwrsS1KjZewSKbSEtj6vkuZ0Fs8hZvr6VaEFWpCUjB7N0xdbb92AjWTmiDEUvKR5fMpYEBKLfK5t3wIq/RHzdxlVFbsgsJUYvoRcXCB8yMknSMjnl8BJaxjVbIxy3SFBtAsn7Zwo8DctQ7ycM/dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvZ0T79U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwwzqZjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C0AAAC4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvZ0T79U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A17EFC4CEED;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751567592;
-	bh=lnATMb/XmCNNMy1igSdCLxsZP2Vd/a/i5coedasJ6Ec=;
+	bh=+RKXSd49QNGxofon9O/ZcqEa2ERFrhs7K98DpEYCjC0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=qwwzqZjcKtOl8/553fhUXtGV5cSS+O56najS82u0rLCWI5zFaQwv7KxGgmdECxS3U
-	 s2dkH5ydHtL1Xrb/O4ydhNxlIcwhLzhYLJEK75Yudxr95MZRHdFMyT/FH9aUq9OYtZ
-	 Lj4Gc4ESm9tQ1RCKRSeY1bmk/iF/oZbLqowhr0TVgrcBPr3mO3xtn/yXtcB6Yhy3nX
-	 y4mbGrRkH7p8JaNBQ/TAhSYiX5iVSecnD78N1MfwLRCfWx/CTGTRCiZG3+d05TPVlk
-	 OhIMHdeNtrbFiHQBTfgXD3J1C3AYtEEohNsePKJiThhvWfLsAZoJn7yGtefFj2E0sR
-	 /35+V/uFd7Edg==
+	b=FvZ0T79U5BC4bXeJoKKGOoYWP/Jkmx2D+LX++NlPea5UNG092WKAk6ck4szKB5/gn
+	 lICR87gKfM2tzA9aAqCQIxd5GRM0onRg6HXafN5ExRpwRruua1BtdeWynLgwQAS8qm
+	 1R8sRx7Ivlx39CXkmqCDDn1c0DdN+BRq+j9wUNuO1BmC2mIy1wMi2mqtyHoXolEmYE
+	 t35iaG6BxCBaEKMMAMrIGG52roi4JvGnZEMHqfjUhf7Cal1B1bVdym832wEMNVzGro
+	 m+MkqM2mR6OJSK3FNLEwHSgWEYNZ5iEWbEASaSWCM/Ew1G+C47/4Bk+xfjhFays8vJ
+	 DG31TbkL6fwuA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF646C83F0A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912ECC83F03;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 From: Frank Li via B4 Relay <devnull+Frank.Li.nxp.com@kernel.org>
-Date: Thu, 03 Jul 2025 14:33:08 -0400
-Subject: [PATCH v2 3/4] arm64: dts: imx8: add parallel CSI node
+Date: Thu, 03 Jul 2025 14:33:06 -0400
+Subject: [PATCH v2 1/4] dt-bindings: media: add i.MX parallel csi support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-imx8qxp_pcam-v2-3-188be85f06f1@nxp.com>
+Message-Id: <20250703-imx8qxp_pcam-v2-1-188be85f06f1@nxp.com>
 References: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
 In-Reply-To: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -53,13 +53,14 @@ To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-media@vger.kernel.org, imx@lists.linux.dev, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+ Alice Yuan <alice.yuan@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=2229;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=4271;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=egvyIYm9Ny7RwG4VqCUmjTBkLSU8NimkbRJ5GJUfMCg=;
- b=0DiK8tKXGe724gjHRzMZk45Ar6ghYBLBifnXK2kF2u5SRCj3q649yBEdL/Rg9kJnjnsrMYMyP
- KvscQ92k649AaIVhdfok6kql5Di1O3TLWV46TiUjkLyRHXO0YE1oDIc
+ bh=F6iDqFZ8amoJXqI666QahOsEJxKCsFei15ZM+Oj2BqQ=;
+ b=7ppXxyhOnTf0rhvMnaPHXuBxIhJFJ6XuY6YkyCBO1UEaSQ0AIcE7qhCD4ApvPzaVhKGn9xJQK
+ xYkZ3SuXoc+Ajmw8pv+yKY8oUs119hDRMkjhSlxTDhbOWu8O0pz9FuR
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
@@ -67,85 +68,149 @@ X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
 X-Original-From: Frank Li <Frank.Li@nxp.com>
 Reply-To: Frank.Li@nxp.com
 
-From: Frank Li <Frank.Li@nxp.com>
+From: Alice Yuan <alice.yuan@nxp.com>
 
-Add parallel CSI nodes.
+Document the binding for parallel CSI controller found in i.MX8QXP, i.MX93
+and i.MX91 SoCs.
 
+Signed-off-by: Alice Yuan <alice.yuan@nxp.com>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
-changes in v2
-- update compatible string to match binding's change
+Change in v2:
+- use pcif surfix as Laurent Pinchart's suggest.
+- put power-domains into required list
 ---
- arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi    | 13 +++++++++++
- arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi | 27 +++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+ .../devicetree/bindings/media/fsl,imx93-pcif.yaml  | 109 +++++++++++++++++++++
+ MAINTAINERS                                        |   1 +
+ 2 files changed, 110 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
-index 2cf0f7208350a416d77b11140279d2f66f41498f..1f7bf9efdbca266fbda82d2bc84acd9a27ed0bd1 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
-@@ -224,6 +224,19 @@ irqsteer_parallel: irqsteer@58260000 {
- 		status = "disabled";
- 	};
- 
-+	parallel_csi: csi@58261000 {
-+		compatible = "fsl,imx8qxp-pcif";
-+		reg = <0x58261000 0x1000>;
-+		clocks = <&pi0_pxl_lpcg IMX_LPCG_CLK_0>,
-+			 <&pi0_ipg_lpcg IMX_LPCG_CLK_4>;
-+		clock-names = "pixel", "ipg";
-+		assigned-clocks = <&clk IMX_SC_R_PI_0 IMX_SC_PM_CLK_PER>;
-+		assigned-clock-parents = <&clk IMX_SC_R_PI_0_PLL IMX_SC_PM_CLK_PLL>;
-+		assigned-clock-rates = <160000000>;
-+		power-domains = <&pd IMX_SC_R_PI_0>;
-+		status = "disabled";
-+	};
+diff --git a/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml b/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..ff9a32e0bec1d1bd90d93f45dbd7825d1e12650e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/fsl,imx93-pcif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	pi0_ipg_lpcg: clock-controller@58263004 {
- 		compatible = "fsl,imx8qxp-lpcg";
- 		reg = <0x58263004 0x4>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
-index 50015f8dd4e43b507c879479e7320cb58ec8bf74..60aa43c45d15c8b0c2c425be52ed79458d8c96b9 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
-@@ -62,6 +62,14 @@ isi_in_2: endpoint {
- 				remote-endpoint = <&mipi_csi0_out>;
- 			};
- 		};
++title: i.MX8/9 Parallel Camera Interface
 +
-+		port@4 {
-+			reg = <4>;
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
 +
-+			isi_in_4: endpoint {
-+				remote-endpoint = <&parallel_csi_out>;
-+			};
-+		};
- 	};
- };
- 
-@@ -94,3 +102,22 @@ &jpegenc {
- &mipi_csi_1 {
- 	status = "disabled";
- };
++description: |
++  This is device node for the Parallel Camera Interface which enables the
++  chip to connect directly to external Parallel CMOS image sensors.
++  Supports up to 80MHz input clock from sensor.
++  Supports the following input data formats
++    - 8-bit/10-bit Camera Sensor Interface (CSI)
++    - 8-bit data port for RGB, YCbCr, and YUV data input
++    - 8-bit/10-bit data ports for Bayer data input
++  Parallel Camera Interface is hooked to the Imaging subsystem via the
++  Pixel Link.
 +
-+&parallel_csi {
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx8qxp-pcif
++      - items:
++          - enum:
++              - fsl,imx91-pcif
++          - const: fsl,imx93-pcif
++      - const: fsl,imx93-pcif
 +
-+		port@0 {
-+			reg = <0>;
-+		};
++  reg:
++    maxItems: 1
 +
-+		port@1 {
-+			reg = <1>;
++  clocks:
++    maxItems: 2
 +
-+			parallel_csi_out: endpoint {
-+				remote-endpoint = <&isi_in_4>;
-+			};
-+		};
-+	};
-+};
++  clock-names:
++    items:
++      - const: pixel
++      - const: ipg
++
++  power-domains:
++    maxItems: 1
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Input port node.
++
++      port@1:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Output port node.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - power-domains
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx93-clock.h>
++    #include <dt-bindings/power/fsl,imx93-power.h>
++
++    pcif@4ac10070 {
++        compatible = "fsl,imx93-pcif";
++        reg = <0x4ac10070 0x10>;
++        clocks = <&clk IMX93_CLK_MIPI_CSI_GATE>,
++                 <&clk IMX93_CLK_MEDIA_APB>;
++        clock-names = "pixel", "ipg";
++        assigned-clocks = <&clk IMX93_CLK_CAM_PIX>;
++        assigned-clock-parents = <&clk IMX93_CLK_VIDEO_PLL>;
++        assigned-clock-rates = <140000000>;
++        power-domains = <&media_blk_ctrl IMX93_MEDIABLK_PD_MIPI_CSI>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++
++                endpoint {
++                    remote-endpoint = <&mt9m114_ep>;
++                };
++            };
++
++            port@1 {
++                reg = <1>;
++                endpoint {
++                    remote-endpoint = <&isi_in>;
++                };
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8dc0f6609d1fe2e3eefd50088dbe566d9e107bfa..8ae0667d2bb41fb6a1549bd3b2b33f326cbd1303 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15107,6 +15107,7 @@ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media.git
+ F:	Documentation/admin-guide/media/imx7.rst
++F:	Documentation/devicetree/bindings/media/fsl,imx93-pcif.yaml
+ F:	Documentation/devicetree/bindings/media/nxp,imx-mipi-csi2.yaml
+ F:	Documentation/devicetree/bindings/media/nxp,imx7-csi.yaml
+ F:	Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
 
 -- 
 2.34.1
