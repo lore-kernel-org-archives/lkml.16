@@ -1,94 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77682D9EEA;
-	Thu,  3 Jul 2025 14:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF15D2ED846;
+	Thu,  3 Jul 2025 14:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553627; cv=none; b=UVB9O79Jp3CkWUKCaBMXe3x47ieHip+9whMHGg45Kgjc/NC7iI+f6i6bamtw1D0wfro5SO6MOPa9viMfq2+cvT/fQm3axgVA3XMf0IdSg4Ro1xJNFl8MoVMjEZ/UVOkY21FyaPjcymwTqMzDDjDxh58BWibe/eMzdxaIkJBYHrw=
+	t=1751553643; cv=none; b=jALVzJSNe0iqIepN3zdm8SEuliF3RsPAhJDxZnhCpBqY1TGIU0MQBAf5PRxQvbmq8FWpQenfY7RF4aUUNAtJkxSB4eGkP8CvZp2dlGEFiVuD2tnoIkc0rk5E9dpA2EY4q0C3CxcsIkWdCGCJRJQq0SwDeOawHUQz/eicpOnMq80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553627; c=relaxed/simple;
-	bh=XXMeCgokzx98niMoHTPrXBV55pjM60kvk0FrPv49lWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C3jdMnQTeUSf1LqezTzcN99bNPELlwhpbRjSdvuOtgrUsFVNeMkWwZr9Hnm7pbZpKPvr284lNqIvbe+Id32viOX5VLW1nkIZskCnqUIxhycvIY95mpoOmknkfTW04QYvNcv846YVien5+BTAZBmuI9u0+QNYxWnVHe48N5nGPiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVG7aDkf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751553643; c=relaxed/simple;
+	bh=pge19sZrf0PUvRXmEe9xEQSZDWyU6lnUwOcQUIu4hQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FgbyBFO4zqXSb2LORGSyXWUsAjD55ODrvIka4J/ICxAM6PSC0I+QJkIkUN8wad5BZr7THis/ezjVqtK7VHHWgNLayNTe4Hjro/KKqwz5T/ZAGFQ/YyLsdUAuWlak85PCtpWCt4ufphW6zSl3W+e9foVzJR29zwZ4NR03q98tGLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WGwT7TQM; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVG7aDkf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C194C4CEE3;
-	Thu,  3 Jul 2025 14:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751553627;
-	bh=XXMeCgokzx98niMoHTPrXBV55pjM60kvk0FrPv49lWg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dVG7aDkfbqbYdrBECpZWIgyJ6KluK5azY975xciI3A7wR38tzG8rdvP7qV0XQtYKz
-	 1u1o28cgz2tJGpnfy9BGFEerFYI5PrtfxT7IOhm5QN9MLoI8VvhspASlBU0NWVgjF0
-	 WG7YNRfJ+W1exvu7Y4yYE8gV/lfcIZKXe35peLpB/1cH4RecJOXq5NlkA72o+mAouv
-	 wnEcWhKgFM2W34EMIdSOSq3tGOzuyRGcBew8mKHehZg5K1Zuwl97zE9NItiTzN5myv
-	 ue7kCHOSuxbPEGjCoTaq9CcApU/jJsP/tgRw7j87urhmWpJvjQQYh+9WHe0CuN/pf4
-	 3YDZRYx0l+Yog==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-611e455116aso10373eaf.1;
-        Thu, 03 Jul 2025 07:40:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW0RRzixmJPZiVDLVE/8ycXH4FXpWVec1nMZO5b9snbGV40bux6mQevDVambWrQs+Wt/V15A8upPcI=@vger.kernel.org, AJvYcCXzQUtd3fHGk9LwR+txYbnZ4GpE1hb/c07wVNc1ONl1FB02Mf5ZStFecWWnU+zREJeOQtSh99oDSPOQWco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPg6IkNiYxAGIjpxQr8q2VOEQNw43trS7WjQWCV37h1HGk1uWk
-	K7zYwS5mj0xuOISSz3UAQkevxniYqU+4GTVvXglw7qz+tER63yZZ718+8Uxfk414zaoPKkQKjbW
-	0H8TQWlOEfVr2C9Q76DQ4xWRJn0SQbBs=
-X-Google-Smtp-Source: AGHT+IER/sMuSGQEFAsoM82w38J6W3Ql7R2iTp4LsFImGUU9KDmwJNRGkTiL9vgKh7Lzcas4txH5n+sYaJcmN2NRFfU=
-X-Received: by 2002:a4a:e90a:0:b0:611:4bfe:610a with SMTP id
- 006d021491bc7-6120122b7camr5001293eaf.8.1751553626457; Thu, 03 Jul 2025
- 07:40:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WGwT7TQM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751553639;
+	bh=pge19sZrf0PUvRXmEe9xEQSZDWyU6lnUwOcQUIu4hQA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WGwT7TQMUCYTum1QY1ogt/jyEc0WTdGqMnWxcE7uq45SwYmTgRjqhwa6lBd+S/fOp
+	 FFJx495wQGsH10vrUJb/k2uZhIbsvcE21Oi4vPRHgjCHilVNND8vqo2vKsQP5U1wl3
+	 Mj3XwG1dieAd2Dc+3n6K5zTEwCiM2CbOBvyNXYmCgs0CBBsiGP0jeu9S9Dz4k1aQkC
+	 Iv+RoSPp93uQPi5wYl0nhCsPEyHYXlEEoEHspOsnXIxM6u8B3OkfKXVDQL9KW9x6Fy
+	 WeZYklF7A1JPCqmzErZNUUbpYGWx/TZu02f+yuKzo2wKUXHZ3sle1VyQko66pMQP3J
+	 DCtgk3I1XjsgQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1C65117E0636;
+	Thu,  3 Jul 2025 16:40:39 +0200 (CEST)
+Message-ID: <cbd79481-474e-4c9f-bbe8-367917115ccd@collabora.com>
+Date: Thu, 3 Jul 2025 16:40:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619035355.33402-1-zhangzihuan@kylinos.cn> <20250619035355.33402-3-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250619035355.33402-3-zhangzihuan@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:40:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
-X-Gm-Features: Ac12FXy5NQqYWXStnmleOPfeHm086ElU3e2sj0kpZeHMiJ10XoXafFZGiwitG90
-Message-ID: <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] PM: freezer: Print tasks stuck in D-state during freeze
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: rafael@kernel.org, pavel@kernel.org, len.brown@intel.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] iio: adc: mt6359: Move reference voltage to
+ platform data
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
+ <20250703141146.171431-5-angelogioacchino.delregno@collabora.com>
+ <aGaThTSAriz46D7T@smile.fi.intel.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <aGaThTSAriz46D7T@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 5:54=E2=80=AFAM Zihuan Zhang <zhangzihuan@kylinos.c=
-n> wrote:
->
-> To help diagnose freezing delays caused by tasks stuck in D-state, this
-> patch adds logging for tasks that are stuck in D-state during each retry
-> of the freezer loop.  Such tasks are not killable and cannot be frozen,
-> which can cause the system suspend process to retry many times
-> before aborting.  This message can help developers identify which
-> user-space or kernel tasks are blocking the freeze process.
->
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
-> ---
->  kernel/power/process.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/kernel/power/process.c b/kernel/power/process.c
-> index 87616ca710ac..4007f621c2ad 100644
-> --- a/kernel/power/process.c
-> +++ b/kernel/power/process.c
-> @@ -55,6 +55,9 @@ static int try_to_freeze_tasks(bool user_only)
->                         if (p =3D=3D current || !freeze_task(p))
->                                 continue;
->
-> +                       if (retry > 1 && READ_ONCE(p->__state) =3D=3D TAS=
-K_UNINTERRUPTIBLE)
-> +                               sched_show_task(p);
-> +
+Il 03/07/25 16:28, Andy Shevchenko ha scritto:
+> On Thu, Jul 03, 2025 at 04:11:44PM +0200, AngeloGioacchino Del Regno wrote:
+>> In preparation to add support for new PMICs, add a `vref_mv`
+> 
+> I still think that the vref_mV is a better naming.
+> 
 
-This is going to be too noisy IMV.  Any chance to rate limit it somehow?
+Ouch, I think I missed that comment; if there's nothing else to change,
+I wonder if the capital V can be fixed while applying?
 
->                         todo++;
->                 }
->                 read_unlock(&tasklist_lock);
-> --
-> 2.25.1
->
+Otherwise I can send a v3...
+
+Cheers,
+Angelo
+
+>> the AUXADC_VOLT_FULL definition.
+>>
+>> As a consequence, the definition was also removed.
+> 
+
