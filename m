@@ -1,52 +1,92 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47283218584
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1517D7;
+	Thu,  3 Jul 2025 03:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511599; cv=none; b=m8sS8TiCrAaae+qMT37sq63IwB7LIpi1HeVrHnKdnMHbjguBvGROfaCG1Mzx6ifZnvbAatpurFprV5Lkr4eh/MCVyYAbH7Fd+NdoUMyFI+y25TVSXWCSNljr+xdJ5NXrf2OubOLX6ftw1MXGjmy0kr1uBTuJ6XzfIucd1oRxqvs=
+	t=1751511669; cv=none; b=I6iPRoTAqnGQQr1YjgNV+9Op8KFLCz8kzCiKWvq1O+J6qj1CTtClKlWSqCTAjeUuoAOG+9geqPMacZFie6iv+mwi1dhZ2Y8KVg+M+GRW+sp2xHNuKlwdTb9hntFsC18DMLbvkO9N0CzU2Gi7jZdXyS13frZ6fntE+UnItFomIqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751511599; c=relaxed/simple;
-	bh=dc0q65wuq3GoR9j9LYlZBNRnSdKlprh5s7W9GHJWoMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXHvz55TGbSQfWgJp5HpRokR0EyZ9t7H6sZp7LoRB8DqmYkR+v9pIfGz9Rk96cOhX9bUjBn3jihS5udXRUIRqYZacg5SY0UtstdcGltNwG++dkgNjIALUjhgjmjHFGo3hfgHMcqdYOTZnKhntM17Kf4z28PY9q0d3AqlijsqnCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=CX8Ul4jv; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1751511669; c=relaxed/simple;
+	bh=vUY7f0Djx0zEZn+AW+YZahB84Jscggn6xd3e4dSocY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rGUMneWcyaiCzGFQsz6OsvluqpmPy8mWVy/QaUbK3wt44Vv4QAZrTHviMOCJqQ+vlDQDjS0qeDfyIn1Xor06X9WuG/7wDUsSJIJJ9vRxn2Xl1xjZsTquDslSdOP1Yzp9Y1RHSpZ49GG2Bah0rlE6uhZIYEsovBpV9ewDZKkXFes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=KEj8cY9H; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="CX8Ul4jv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dc0q65wuq3GoR9j9LYlZBNRnSdKlprh5s7W9GHJWoMo=; b=CX8Ul4jvxalmkYU9DQ87BpmkWy
-	jHEzlbtbO7oL1HIl9uzZYxiYzn/aVkGYMaB5EI8sNI+S4RdA9FqwuHHgoZlBcdnOBH6Q7ksaud/Lt
-	QQgBPvMA2vhWzrgcsC11chAy3BMtRPDtN3dJKG5jGo857cjcNmjhptFNB6w6MtevVuHA07ZJ0dEm1
-	ygT6HHtFqfTZzVS6IxBJeMiBhKaRtp5HaQnoFVf89mpGDgT/BYNDbEiI/RB1SBd8T6Tj3dii7sTI8
-	SGcM1mxah65biWkDcOxUbZEUziWlqxC9bmpfrNtU5fpFlw48Gjt7sMgiog+CNQ/0xpwvV7lea91ey
-	rvFDcsZQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXAB1-0000000Gfbi-1tuK;
-	Thu, 03 Jul 2025 02:59:55 +0000
-Date: Thu, 3 Jul 2025 03:59:55 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [syzbot] Re: [syzbot] [nfs?] [net?] possible deadlock in
- rpc_close_pipes
-Message-ID: <20250703025955.GJ1880847@ZenIV>
-References: <68656f4c.a70a0220.2b31f5.0000.GAE@google.com>
- <6865ef59.a70a0220.2b31f5.000b.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KEj8cY9H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751511644;
+	bh=s+yk+uAqFV3gUgjqjAi/UjTCw86A3rGnDWfIHLwuDr4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KEj8cY9HQ9gu91hmJMqS7aCogt6uGlKtT9DNlBNAmu2dFoEF1NR8nR+He49Epv6Gp
+	 T/nV4XzyvyokxPuVQwnYe0slCMZkYvUam8Hld1BXJcgZLJiCn+MHirPUd/k01y/oGA
+	 /hn77fT41nwU+3lqb7ksMaSKkT2pnsgZhAVkwAI1BqsU69BDcDf4qxovfJHy9qZQ5B
+	 pc0M7W8HHPngVUa76eIVNbT0aN9btrCLjX5RuS5lfJR11sAai8ZIlVD92bnvUjaZGq
+	 Ny4H9uOeZEiN2Yv0C1tLTmAjAo/T8gMWqFvH9KuKvdq1qMqlSDcWS6TYlBxnEHud1w
+	 l8UYy6Sq04Xxg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXhND0LV7z4xQP;
+	Thu,  3 Jul 2025 13:00:44 +1000 (AEST)
+Date: Thu, 3 Jul 2025 13:01:04 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com>, Johannes
+ Berg <johannes@sipsolutions.net>, David Miller <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the iwlwifi-next tree
+Message-ID: <20250703130104.4b187e13@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6865ef59.a70a0220.2b31f5.000b.GAE@google.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: multipart/signed; boundary="Sig_/CA+r1kYDXcYp56kIqnF5DPs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.rpc_pipe
+--Sig_/CA+r1kYDXcYp56kIqnF5DPs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+The following commit is also in the net-next tree as a different commit
+(but the same patch):
+
+  fc80ea519981 ("wifi: iwlwifi: dvm: fix potential overflow in rs_fill_link=
+_cmd()")
+
+This is commit
+
+  e3ad987e9dc7 ("wifi: iwlwifi: dvm: fix potential overflow in rs_fill_link=
+_cmd()")
+
+in the net-next tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CA+r1kYDXcYp56kIqnF5DPs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhl8nAACgkQAVBC80lX
+0Gy3+wf+NlLpJCrUkb5ydwDtthwHZZcdFrYJml4Kv8FG2GWXeVDNf+bYHB7HepaW
+Sl3PCy+3D7SMN1IB5R8T56klfOibVXQt3wGbh8gCje43a87spbr9hfbKUnbVzgBo
+NjGkPAz3BMLd0DF4qzz4qr+M9SMzpffUlA7PiYTawga7ZoLPevdDPHZmhwdlzi+1
+KSU3fKouAGgwLiMiablQTTZsOVNyrt2Qb+Sjt8TQnUpwfJf0dYvKdXaEzROOqMYF
+CpY8Yzr1mVuCfisexGlOj/apZGu05kbuJrEkKmKzOiyAL2xrxGsPwrO5SqyOzFAA
+BKt514FH02sTBBYoTdB34PSWsbJBSA==
+=HII7
+-----END PGP SIGNATURE-----
+
+--Sig_/CA+r1kYDXcYp56kIqnF5DPs--
