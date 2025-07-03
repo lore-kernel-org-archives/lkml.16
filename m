@@ -1,238 +1,168 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6510224882;
-	Thu,  3 Jul 2025 15:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF462E41E;
+	Thu,  3 Jul 2025 15:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556615; cv=none; b=XEZTyaqj2Tx96dUCm6sua2v7lOuU++z6DZGHQ+D5g7GDmcHWu1WJP1fyvnsfAfViUO7dj3uyRz/zeD6pB8xyTA+RZuMuLyjzyrTUiCwyNnA7ycV+G0sXdxcqnRiOe2U5BUfWw2Y05WfhhIRVxX0gmVxihzOQMiJUZReIsQeMLHA=
+	t=1751556625; cv=none; b=gXsO+X5c79OoUJacy4aa8UFOFjLcKw3YGPK23kPay/y4TbAzsqyaRxV/KE8E70/PpE1CyACLMcNNuTdRtxMRT1tiSYsSDXItSstF7qUWaOrmU5sn9965TYcYo/7G77/IsG5qp8GE8gw80EXzxlUWzIQeurAKTpvguvfjJrLoPrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556615; c=relaxed/simple;
-	bh=Midkn1Xwtp4OL+Lym1QanU5upXg6cal2GSP4RDHTegU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lXkddZWieSJhn5calxt7JPgTyI3KODD5+bjKwA8U94pUm230jzQJA889IXGwqsZqFvcWyKIlhFLqLtWTtCc7D7wxGBtb9TmC5TvX2hst+2Rxr3erpnI19cOayHvhFfgA763NO4N+TC+uWS+FEwHCnGCX1w41D7ZEF2OCd6EPSGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 6557416027E;
-	Thu,  3 Jul 2025 15:30:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id CD5243B;
-	Thu,  3 Jul 2025 15:30:02 +0000 (UTC)
-Date: Thu, 3 Jul 2025 11:30:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, jolsa@kernel.org, bpf@vger.kernel.org,
- Menglong Dong <dongml2@chinatelecom.cn>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 04/18] ftrace: add reset_ftrace_direct_ips
-Message-ID: <20250703113001.099dc88f@batman.local.home>
-In-Reply-To: <20250703121521.1874196-5-dongml2@chinatelecom.cn>
-References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
-	<20250703121521.1874196-5-dongml2@chinatelecom.cn>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751556625; c=relaxed/simple;
+	bh=suwZtmA/bkO4pu6z6zqIT7/QlTmUTdBres8SXOQ//Do=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qmV6vAW0sGWF+b+rPmodIxsyp8nOOHuJlxu35xrPiCiK4zOMVSTMgy8Xxx1PpJ1vT3WvbtEKC7j18VBLH4/rMUxK7kuiAQlbWFiZh43LSyNV2VSN42RaGowgcb3nV6i+xkIqmnPi7w8C5FAhwdREmqGGRCERmoZ2QPIB9tck/d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGiSvIGq; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGiSvIGq"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso15101813a12.0;
+        Thu, 03 Jul 2025 08:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751556621; x=1752161421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/DGs2fZZIChUDK1MfzACEqWRIQR03D4HhGtXUb2EUok=;
+        b=aGiSvIGqiCm1vLs4rDUPjpNAwIzJi+LNLwCvxqGNgUU9ZS12eRpUxwyqUBMXfKvPXa
+         pV9hJSMWFZRddb8lr8dUu7l2XLlnoCLB5mbzeDWHEuJexXbwpWhUGSyxzbQr5N9HkjEL
+         ptCC+zDPgxaKiV0wAps1y4JOD5S2jMLZapnIADc48Bpeu5FfREG2+5/gxY9KrLyTra0g
+         BjHVQ/kvKq3Zwfkj5+y/VSjc6oKz0vspLqURjly2dwKtk9xSVHdZpLvR8rITJPKLnp3F
+         2FuLFsOtvzFVle1fRC6LJz+bqoKKzIHAtiClWp1mFeNgNUcbo5gO4WBVHZaIjD1WdpX0
+         WeUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751556621; x=1752161421;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/DGs2fZZIChUDK1MfzACEqWRIQR03D4HhGtXUb2EUok=;
+        b=POdaNyrONIU5Ndp4beLJvTIHnKzskV+9joEY6F9TXa9R7dM2aQwUJ+g5TtgiWEPIBM
+         oEaboMmo37hb9hAueBs/QlrnznhGPjp9AlKqQJ1fyq7QOsMFhMgZVnW5NP2WZe1ARhhn
+         YWMRFpmG2JLUJTNnjkyK3bqFSS9nfuSMDTksRc2eljmgv+txNo6F9tphBTwyrz7XuAI5
+         hqMGQUoivhC/T4tpx7RuTtnouYAVgSpU26zm9h8Sb/W7ZPMQ27R0reyBA7SIbj4yfSxD
+         sN/mkgVkbJaASBrZ27WNnQI3oydbkHjF5OePwZJjwkhaG6p9Rgk+mxtNvPpFkqFJbp0X
+         BIUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIAXhe/+MtxwJVKep2XC5H4+9AFEQR2rC4ssna+QNcfWg0fwXrqD3+EIsnTlhnpA0o5QMT5dMU@vger.kernel.org, AJvYcCWZtLcc2Kpb3b1KBxmyYIIbys4rX1uhsSQ2UPLdpQQy4m0kZpLKEFAQGoTCgNlgRS+Ci7kTwD0f9AOgF/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweUQrNzfltcSUnlNKKuAfIlRS9WPIIP9yxe03mL0KCHea3ZiK4
+	BU/Ie8MbMs26K+ljSwAEhqvalaWlrxmy6svjOBsP5A3J+FWvnw/EnhHhTWGHkaLN
+X-Gm-Gg: ASbGncsULYCr2UhQ4mJtYJjFQnbVT8CS/4yPdZ/B6UjoBOjLVivwkiCjn7VOy9+5xC/
+	sbAzd8Vzk4+TPyA43V8M2UZOnzhfFYxPFTI8E5NkPWkBdnbn1E4PX6nRogfbKKgz99uMTB7kjBf
+	FYYqsaI+2wmQXIALDU6YfHlJzf7mRL03fa3nAHLbPgs4qlP/tYA5yKgaRe7TC7/5hf5m1+HnTx8
+	Acrp4hbOMdke3Pun2cmJchnNpkQZ+PCRdM1KGZPKeFrHaKIMTh4zq9b/4m9JcspxhIxxCc+ytwj
+	DhD5axqEbSz2s+NyM0IUn8PQyVKkfb7GG1PuO2OD7E47odwEokJlZWXPMgCP4VD20ojO1M+zdGc
+	=
+X-Google-Smtp-Source: AGHT+IED0O8R+/wRKm2NKib20kCoJhGhXU1WtskJ9jN+V5+RleE3IEO24/3Xb4AIOoCNu78agUbhLw==
+X-Received: by 2002:a17:907:9490:b0:ae3:7b53:31b9 with SMTP id a640c23a62f3a-ae3d8c9dcd6mr313325866b.35.1751556620827;
+        Thu, 03 Jul 2025 08:30:20 -0700 (PDT)
+Received: from localhost.localdomain ([45.128.133.218])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c013cdsm1289978766b.93.2025.07.03.08.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 08:30:20 -0700 (PDT)
+From: Oscar Maes <oscmaes92@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Oscar Maes <oscmaes92@gmail.com>
+Subject: [PATCH net v2 2/2] selftests: net: add test for variable PMTU in broadcast routes
+Date: Thu,  3 Jul 2025 17:28:38 +0200
+Message-Id: <20250703152838.2993-2-oscmaes92@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250703152838.2993-1-oscmaes92@gmail.com>
+References: <20250703152838.2993-1-oscmaes92@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: yu9k4juoddbxh539wfecre1dnfmdgbzk
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: CD5243B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/x9+2Gkl0bLv99oqhAlyDopYKg4Dbgx6k=
-X-HE-Tag: 1751556602-956081
-X-HE-Meta: U2FsdGVkX19dPdUqBcQIwd55zOtqPhMAfP9K1ZUY4b6lHAd3pwk0Iy1sV1K/m/r1wORmWx3jBgV8J/4Ct+MnvvnN5XhCNEJIYkyPwAzgUtq5IXE7gU5cwxmgBo5b4k2TPmeAX/M750OVZjcKnnfqygvXP3iHuhYyxljycr/0ef/KceelGDbznfr+ng1MWmUpEAOCr0egjhf139Qw6+lx3mDRdZ2qlgd3H1NxPsWTlaqdoKLQXdOWx+RufD85szWqhnoIC5BbBzCUofZT2UGLnKKPBd/v96I67YhV22oJdkG0vH2ukV3muvmex2RJ5Az8iyGMu4IXv/oddVOk/BDxv1AFqbzAZTlh
+Content-Transfer-Encoding: 8bit
 
-On Thu,  3 Jul 2025 20:15:07 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+Added a test for variable PMTU in broadcast routes.
 
-Note, the tracing subsystem uses capitalization in the subject:
+This test uses iputils' ping and attempts to send a ping between
+two peers, which should result in a regular echo reply.
 
-  ftrace: Add reset_ftrace_direct_ips
+This test will fail when the receiving peer does not receive the echo
+request due to a lack of packet fragmentation.
 
+Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
+---
+ tools/testing/selftests/net/Makefile          |  1 +
+ tools/testing/selftests/net/broadcast_pmtu.sh | 47 +++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100755 tools/testing/selftests/net/broadcast_pmtu.sh
 
-> For now, we can change the address of a direct ftrace_ops with
-> modify_ftrace_direct(). However, we can't change the functions to filter
-> for a direct ftrace_ops. Therefore, we introduce the function
-> reset_ftrace_direct_ips() to do such things, and this function will reset
-> the functions to filter for a direct ftrace_ops.
-> 
-> This function do such thing in following steps:
-> 
-> 1. filter out the new functions from ips that don't exist in the
->    ops->func_hash->filter_hash and add them to the new hash.
-> 2. add all the functions in the new ftrace_hash to direct_functions by
->    ftrace_direct_update().
-> 3. reset the functions to filter of the ftrace_ops to the ips with
->    ftrace_set_filter_ips().
-> 4. remove the functions that in the old ftrace_hash, but not in the new
->    ftrace_hash from direct_functions.
-
-Please also include a module that can be loaded for testing.
-See samples/ftrace/ftrace-direct*
-
-But make it a separate patch. And you'll need to add a test in selftests.
-See tools/testing/selftests/ftrace/test.d/direct
-
-> 
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> ---
->  include/linux/ftrace.h |  7 ++++
->  kernel/trace/ftrace.c  | 75 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 82 insertions(+)
-> 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index b672ca15f265..b7c60f5a4120 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -528,6 +528,8 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
->  
->  void ftrace_stub_direct_tramp(void);
->  
-> +int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +			    unsigned int cnt);
->  #else
->  struct ftrace_ops;
->  static inline unsigned long ftrace_find_rec_direct(unsigned long ip)
-> @@ -551,6 +553,11 @@ static inline int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned l
->  {
->  	return -ENODEV;
->  }
-> +static inline int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +					  unsigned int cnt)
-> +{
-> +	return -ENODEV;
-> +}
->  
->  /*
->   * This must be implemented by the architecture.
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f5f6d7bc26f0..db3aa61889d3 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6224,6 +6224,81 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(modify_ftrace_direct);
-> +
-> +/* reset the ips for a direct ftrace (add or remove) */
-
-As this function is being used externally, it requires proper KernelDoc
-headers.
-
-What exactly do you mean by "reset"?
-
-> +int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +			    unsigned int cnt)
-> +{
-> +	struct ftrace_hash *hash, *free_hash;
-> +	struct ftrace_func_entry *entry, *del;
-> +	unsigned long ip;
-> +	int err, size;
-> +
-> +	if (check_direct_multi(ops))
-> +		return -EINVAL;
-> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&direct_mutex);
-> +	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
-> +	if (!hash) {
-> +		err = -ENOMEM;
-> +		goto out_unlock;
-> +	}
-> +
-> +	/* find out the new functions from ips and add to hash */
-
-Capitalize comment: /* Find out ...
-
-> +	for (int i = 0; i < cnt; i++) {
-> +		ip = ftrace_location(ips[i]);
-> +		if (!ip) {
-> +			err = -ENOENT;
-> +			goto out_unlock;
-> +		}
-> +		if (__ftrace_lookup_ip(ops->func_hash->filter_hash, ip))
-> +			continue;
-> +		err = __ftrace_match_addr(hash, ip, 0);
-> +		if (err)
-> +			goto out_unlock;
-> +	}
-> +
-> +	free_hash = direct_functions;
-
-Add newline.
-
-> +	/* add the new ips to direct hash. */
-
-Again capitalize.
-
-> +	err = ftrace_direct_update(hash, ops->direct_call);
-> +	if (err)
-> +		goto out_unlock;
-> +
-> +	if (free_hash && free_hash != EMPTY_HASH)
-> +		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-
-Since the above is now used more than once, let's make it into a helper
-function so that if things change, there's only one place to change it:
-
-	free_ftrace_direct(free_hash);
-
-static inline void free_ftrace_direct(struct ftrace_hash *hash)
-{
-	if (hash && hash != EMPTY_HASH)
-		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-}
-
-> +
-> +	free_ftrace_hash(hash);
-> +	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS,
-> +					  ops->func_hash->filter_hash);
-> +	if (!hash) {
-> +		err = -ENOMEM;
-> +		goto out_unlock;
-> +	}
-> +	err = ftrace_set_filter_ips(ops, ips, cnt, 0, 1);
-> +
-> +	/* remove the entries that don't exist in our filter_hash anymore
-> +	 * from the direct_functions.
-> +	 */
-
-This isn't the network subsystem, we use the default comment style for multiple lines:
-
-/*
- * line 1
- * line 2
- * ...
- */
-
--- Steve
-
-> +	size = 1 << hash->size_bits;
-> +	for (int i = 0; i < size; i++) {
-> +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> +			if (__ftrace_lookup_ip(ops->func_hash->filter_hash, entry->ip))
-> +				continue;
-> +			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> +			if (del && del->direct == ops->direct_call) {
-> +				remove_hash_entry(direct_functions, del);
-> +				kfree(del);
-> +			}
-> +		}
-> +	}
-> +out_unlock:
-> +	mutex_unlock(&direct_mutex);
-> +	if (hash)
-> +		free_ftrace_hash(hash);
-> +	return err;
-> +}
->  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
->  
->  /**
+diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+index 332f38761..f4aa94588 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -112,6 +112,7 @@ TEST_PROGS += skf_net_off.sh
+ TEST_GEN_FILES += skf_net_off
+ TEST_GEN_FILES += tfo
+ TEST_PROGS += tfo_passive.sh
++TEST_PROGS += broadcast_pmtu.sh
+ 
+ # YNL files, must be before "include ..lib.mk"
+ YNL_GEN_FILES := busy_poller netlink-dumps
+diff --git a/tools/testing/selftests/net/broadcast_pmtu.sh b/tools/testing/selftests/net/broadcast_pmtu.sh
+new file mode 100755
+index 000000000..726eb5d25
+--- /dev/null
++++ b/tools/testing/selftests/net/broadcast_pmtu.sh
+@@ -0,0 +1,47 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Ensures broadcast route MTU is respected
++
++CLIENT_NS=$(mktemp -u client-XXXXXXXX)
++CLIENT_IP4="192.168.0.1/24"
++CLIENT_BROADCAST_ADDRESS="192.168.0.255"
++
++SERVER_NS=$(mktemp -u server-XXXXXXXX)
++SERVER_IP4="192.168.0.2/24"
++
++setup() {
++	ip netns add "${CLIENT_NS}"
++	ip netns add "${SERVER_NS}"
++
++	ip -net "${SERVER_NS}" link add link1 type veth peer name link0 netns "${CLIENT_NS}"
++
++	ip -net "${CLIENT_NS}" link set link0 up
++	ip -net "${CLIENT_NS}" link set link0 mtu 9000
++	ip -net "${CLIENT_NS}" addr add "${CLIENT_IP4}" dev link0
++
++	ip -net "${SERVER_NS}" link set link1 up
++	ip -net "${SERVER_NS}" link set link1 mtu 1500
++	ip -net "${SERVER_NS}" addr add "${SERVER_IP4}" dev link1
++
++	read -r -a CLIENT_BROADCAST_ENTRY <<< "$(ip -net "${CLIENT_NS}" route show table local type broadcast)"
++	ip -net "${CLIENT_NS}" route del "${CLIENT_BROADCAST_ENTRY[@]}"
++	ip -net "${CLIENT_NS}" route add "${CLIENT_BROADCAST_ENTRY[@]}" mtu 1500
++
++	ip net exec "${SERVER_NS}" sysctl -wq net.ipv4.icmp_echo_ignore_broadcasts=0
++}
++
++cleanup() {
++	ip -net "${SERVER_NS}" link del link1
++	ip netns del "${CLIENT_NS}"
++	ip netns del "${SERVER_NS}"
++}
++
++trap cleanup EXIT
++
++setup &&
++	echo "Testing for broadcast route MTU" &&
++	ip net exec "${CLIENT_NS}" ping -f -M want -q -c 1 -s 8000 -w 1 -b "${CLIENT_BROADCAST_ADDRESS}" > /dev/null 2>&1
++
++exit $?
++
+-- 
+2.39.5
 
