@@ -1,1148 +1,1528 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15362EE617;
-	Thu,  3 Jul 2025 12:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EAE2E54BF;
+	Thu,  3 Jul 2025 12:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545096; cv=none; b=sq+uzPVTfL8RHPo3ONNmoWmt4Pe0SgeBYGAU5x68gsYbTle2bOtWgWzFyFXn6518+eE2SOdrIH4cpyKx9vZVQCM/poJC4mERTCMXsENmPDe2q55whjglefAjNjulsPDMPywH3PsYkRkM7cKzU6SwRQggRaM1aWFGkzCOwkkuzBY=
+	t=1751545167; cv=none; b=XIYCckHbd742AMN0kypwtpFuC0y0CBLW/dt5f+gS6Ct1+iH9V9gVkNqBfRVsyaHBh7e3AeonalGhVUVjW6DuZoNvckac6ydgXcmWkYqUMDP2i6470/n8sCFMAAazwB0xJorjq2/cyaPvCmlYVRL7XlSn2Ss1zzZQPOqgfq+SaHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545096; c=relaxed/simple;
-	bh=ggjMWjo9dzdHc8vGV+AFBOfAHkdf49rO8nWorVjPqbc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DeBB7nS9ahtbO2xz9MgcCtLAXSoglexhKTqHpzZ1LaeCUFb/Ux6zZXD892adC4vrfcHKdcLQOmhcwerNyPL/XLrFPjpaNa1wCjgaImfPSAPi2LuHijyCQqtumAKa4FmDANxxYDBzEu6PEXixz2rmY/UkUPwoYOr6YQyTDqKlkJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrsA+ZpQ; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751545167; c=relaxed/simple;
+	bh=Zt3vfI96YWKkUOhKmCDh4scykPQVsxPo4DdchFLuVLc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=A4E7TwN3qsPFMZ9nCc+tEbAaVgnZf4s0iAuz8ZybIDqjbtjmPB9YW+GMcPYGuapIjfCaYN1RIzZZeRxlwOd4qxCjDsXaBuxSWmcQVAfK0mE3Qt3tQfWEuuiephfGZL8Tbhtz8deW1ZsHUmfWoK/f2U5Ygh+ub380czEtnJewH9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ApsTurDC; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrsA+ZpQ"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-748e63d4b05so3582407b3a.2;
-        Thu, 03 Jul 2025 05:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545093; x=1752149893; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=81yxCIGAi+pZiTG+ZtQqhKBsE1y3xIl6UxS2rPadYt8=;
-        b=QrsA+ZpQlH8yPkQm1et8ZLIQWxFtIpvj2S1r8nJ+6Hxz2BU4wbZgmNGYLt8XmnXvte
-         IM+7Kesjlpv7tD4CdmCDlF970mrOfVWHK1yijAR0YpoZOGT35dNo46XjFO/Q9Y9Akz9M
-         uqr9TRzBoqR7Jh52/FLWnDaU2FF+mqtw3re8JdPmQuy2+YJQ2kQ7Uq1uo1dKfEFSv0Cy
-         yoWThtlQNvw88695D4LIQVm66du+qwFSt0L5olEiZHf+/mzmWqN14tVK8OxGHleeFYqc
-         xKz2WiOqMze37m/mGM2YgQHvyaZ0t8pFamoypK/YmJfjBIjEsvPh62japOAm7jyzTrlG
-         nlzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545093; x=1752149893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=81yxCIGAi+pZiTG+ZtQqhKBsE1y3xIl6UxS2rPadYt8=;
-        b=vmxJUAb2FtqVWTUWqOLgUH/S1dH6f9jZmr3zwJlihgPA1GI4xNlAc6oiPF2OUc3ayx
-         w9U2APLDCicX7iaRa6FXcoQVBmNNBeS+WI43YNBgO63IWzsk1TP0dFpu7AvmpmrOy+Vt
-         NJQKFMVw9guLOqpoD1nF1Gu/McPmSJRTqPhI/YjlGjODqL6IDpmLIEpVLgxxzxPBLJrp
-         IZbkOiSJEzEzVAPe2CcvI+soN4kRu4vFYhK28jd1P608cK1xdlA98bzj+jm7EY32mRwp
-         N3Uu+pORkIQwpvt3NQQ7qxyD8XGaVnX9N905efDRnccvF857JAN9ZuaVqg20KDM+i4vv
-         P76g==
-X-Forwarded-Encrypted: i=1; AJvYcCW6hCP+P0+u8TZdiWXbQPospgzuechhAI16QylbghUgk8O8kcyiigVXUYf7bzrZAj5FWFepxCtBf8Rrh8Y=@vger.kernel.org, AJvYcCWgoSmf7+vnlNkDYRbB5AKg67CYEEAdTi8s2eJ2mhzK7rY6a2NMRcIbR7dVIymnE0iEKvG1aU7fEzzSCcIZPOW5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzESEH7gTvgllozQsJa+TY2scX948EAyC1kCFkpeQBmicf+nrWh
-	NCmtXIDd9dbLjnAF8hgREzbL1F7JyzEVKoNqljDi3md0vGVlLM4KlbQ6
-X-Gm-Gg: ASbGncuAV4OsAVod4Pf1YbugkkPeZFICRU1D9NFbJsgnndYH3LDefxL9MFmmilO3oIf
-	a/F1ymrKSS7evPcxCM4AFmHRXlZeIfFrRxh6fPaQeuWXrvm/f+RqYEBj7YRKSXpNAUV6d1kJdZn
-	3e86LFHBHQsrwj6JGTR77VfFZ325dArEeSrtzTsXUVsgTRDGFt06Fmm7engEmOizheimk7/uSgt
-	oOChzOjDjZGSG0bkw6pz0DM+nmYXIekYflKa8kVriI5G8JYUJdpmD7g/GqqxOBVZ8aqnm3svHje
-	4KkZ7eWGhkkrMiU6jZ1ubwlKZz591rbqvmti3nALWs8MNsMhgyZZT9C4E+woXFlCdelF5gPX8II
-	LcXg=
-X-Google-Smtp-Source: AGHT+IEeULaBlyscxQYttwhGr76vxRO967SQxsaj9KakTVjPulR/8ZvydQtW7zfOnBO+trZkmhwoHQ==
-X-Received: by 2002:a05:6a00:1823:b0:749:8c3:873e with SMTP id d2e1a72fcca58-74b513efdebmr8967270b3a.24.1751545092970;
-        Thu, 03 Jul 2025 05:18:12 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.18.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 05:18:12 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org,
-	jolsa@kernel.org
-Cc: bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH bpf-next v2 17/18] selftests/bpf: add basic testcases for tracing_multi
-Date: Thu,  3 Jul 2025 20:15:20 +0800
-Message-Id: <20250703121521.1874196-18-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
-References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ApsTurDC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751545160;
+	bh=Zt3vfI96YWKkUOhKmCDh4scykPQVsxPo4DdchFLuVLc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ApsTurDChGHad3aJC65f4RjUBN9jJbwF4BCli9Mp1Mpn13Z6+8FMLNchomAz2Cq9T
+	 qycr15KdvkiXFn0VifrYdeHpuxKNGO9Pth2gfvO/Bm/hubK6Q63qZ72jJxH0sNMKtA
+	 we/1CE3dLkoErfXH5iVPb0s3ecJlNLZZW9iYUtHHcZF1VbePcI17Y3zzIel30LhA+j
+	 zAEXXMPdjq3s6GXHw9ot2gAifTQjlk29R3/4a3z9yBI5yt0NxojJ1boUo5acea2ps6
+	 S+PKPf4MDgcqtYMHteE8tchIq101CYiLtRZ/aYCIJ6OHjk/d+sp/vvCbEtvVRIlf4X
+	 iPbH4bmpn8nLA==
+Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600C8f85Cf092D4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 072A017E080D;
+	Thu,  3 Jul 2025 14:19:19 +0200 (CEST)
+Message-ID: <ab41191cb9aab730414c4a93a2d37ccabd394fe0.camel@collabora.com>
+Subject: Re: [PATCH v5 20/24] media: i2c: maxim-serdes: add MAX9296A driver
+From: Julien Massot <julien.massot@collabora.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
+ <cosmin.tanislav@analog.com>, Tomi Valkeinen	
+ <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
+ =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Date: Thu, 03 Jul 2025 14:19:19 +0200
+In-Reply-To: <20250702132104.1537926-21-demonsingur@gmail.com>
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+	 <20250702132104.1537926-21-demonsingur@gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In this commit, we add some testcases for the following attach types:
+On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+> Add a new MAX9296A driver that also supports MAX96714, MAX96714F,
+> MAX96714R, MAX96716A and MAX96792A.
+>=20
+> Integrate it with the common Deserializer framework, while keeping
+> compatibility with existing usecases, avoiding code duplication, and
+> also enabling more features across all chips.
+>=20
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+> =C2=A0drivers/media/i2c/maxim-serdes/Kconfig=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 12 +
+> =C2=A0drivers/media/i2c/maxim-serdes/Makefile=C2=A0=C2=A0 |=C2=A0=C2=A0=
+=C2=A0 1 +
+> =C2=A0drivers/media/i2c/maxim-serdes/max9296a.c | 1354 ++++++++++++++++++=
++++
+> =C2=A03 files changed, 1367 insertions(+)
+> =C2=A0create mode 100644 drivers/media/i2c/maxim-serdes/max9296a.c
+>=20
+> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/m=
+axim-serdes/Kconfig
+> index 2acd96cdbfa4..05868624f3b6 100644
+> --- a/drivers/media/i2c/maxim-serdes/Kconfig
+> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+> @@ -41,3 +41,15 @@ config VIDEO_MAX96724
+> =C2=A0
+> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the modu=
+le
+> =C2=A0	=C2=A0 will be called max96724.
+> +
+> +config VIDEO_MAX9296A
+> +	tristate "Maxim MAX9296A Dual Deserializer support"
+> +	select VIDEO_MAXIM_SERDES
+> +	help
+> +	=C2=A0 This driver supports the Maxim MAX9296A, MAX96716A, MAX96792A
+> +	=C2=A0 Dual Deserializers, and the MAX96714, MAX96714F, MAX96714R
+> +	=C2=A0 Single Deserializers, which=C2=A0 convert from up to two GMSL2/3
+> +	=C2=A0 links to up to two MIPI D-PHY outputs.
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the module
+> +	=C2=A0 will be called max9296a.
+> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/=
+maxim-serdes/Makefile
+> index b6d5aebfaee1..ae306bc33bfb 100644
+> --- a/drivers/media/i2c/maxim-serdes/Makefile
+> +++ b/drivers/media/i2c/maxim-serdes/Makefile
+> @@ -3,3 +3,4 @@ max-serdes-objs :=3D max_serdes.o max_ser.o max_des.o
+> =C2=A0obj-$(CONFIG_VIDEO_MAXIM_SERDES) +=3D max-serdes.o
+> =C2=A0obj-$(CONFIG_VIDEO_MAX96717) +=3D max96717.o
+> =C2=A0obj-$(CONFIG_VIDEO_MAX96724) +=3D max96724.o
+> +obj-$(CONFIG_VIDEO_MAX9296A) +=3D max9296a.o
+> diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c b/drivers/media/i2=
+c/maxim-serdes/max9296a.c
+> new file mode 100644
+> index 000000000000..946fdc402829
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/max9296a.c
+> @@ -0,0 +1,1354 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Maxim MAX9296A Quad GMSL2 Deserializer Driver
+> + *
+> + * Copyright (C) 2025 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <media/mipi-csi2.h>
+> +
+> +#include "max_des.h"
+> +
+> +#define MAX9296A_REG0				0x0
+> +
+> +#define MAX9296A_REG1				0x1
+> +#define MAX9296A_REG1_RX_RATE_A			GENMASK(1, 0)
+> +#define MAX9296A_REG1_RX_RATE_3GBPS		0b01
+> +#define MAX9296A_REG1_RX_RATE_6GBPS		0b10
+> +#define MAX9296A_REG1_RX_RATE_12GBPS		0b11
+> +
+> +#define MAX9296A_REG2				0x2
+> +#define MAX9296A_REG2_VID_EN(p)			BIT((p) + 4)
+> +
+> +#define MAX9296A_REG4				0x4
+> +#define MAX9296A_REG4_GMSL3_X(x)		BIT((x) + 6)
+> +#define MAX9296A_REG4_RX_RATE_B			GENMASK(1, 0)
+> +
+> +#define MAX9296A_REG6				0x6
+> +#define MAX9296A_REG6_GMSL2_X(x)		BIT((x) + 6)
+> +
+> +#define MAX9296A_CTRL0				0x10
+> +#define MAX9296A_CTRL0_LINK_CFG			GENMASK(1, 0)
+> +#define MAX9296A_CTRL0_AUTO_LINK		BIT(4)
+> +#define MAX9296A_CTRL0_RESET_ONESHOT		BIT(5)
+> +#define MAX9296A_CTRL0_RESET_ALL		BIT(7)
+> +
+> +#define MAX9296A_CTRL2				0x12
+> +#define MAX9296A_CTRL2_RESET_ONESHOT_B		BIT(5)
+> +
+> +#define MAX9296A_MIPI_TX0(x)			(0x28 + (x) * 0x5000)
+> +#define MAX9296A_MIPI_TX0_RX_FEC_EN		BIT(1)
+> +
+> +#define MAX9296A_IO_CHK0			0x38
+> +#define MAX9296A_IO_CHK0_PIN_DRV_EN_0		GENMASK(1, 0)
+> +#define MAX9296A_IO_CHK0_PIN_DRV_EN_0_25MHZ	0b00
+> +#define MAX9296A_IO_CHK0_PIN_DRV_EN_0_75MHZ	0b01
+> +#define MAX9296A_IO_CHK0_PIN_DRV_EN_0_USE_PIPE	0b10
+> +
+> +#define MAX9296A_RX50(p)			(0x50 + (p))
+> +#define MAX9296A_RX50_STR_SEL			GENMASK(1, 0)
+> +
+> +#define MAX9296A_VIDEO_PIPE_EN			0x160
+> +#define MAX9296A_VIDEO_PIPE_EN_MASK(p)		BIT(p)
+> +
+> +#define MAX9296A_VIDEO_PIPE_SEL			0x161
+> +#define MAX9296A_VIDEO_PIPE_SEL_STREAM(p)	(GENMASK(1, 0) << ((p) * 3))
+> +#define MAX9296A_VIDEO_PIPE_SEL_LINK(p)		BIT(2 + (p) * 3)
+> +
+> +#define MAX9296A_VPRBS(p)			(0x1fc + (p) * 0x20)
+> +#define MAX9296A_VPRBS_VIDEO_LOCK		BIT(0)
+> +#define MAX9296A_VPRBS_PATGEN_CLK_SRC		BIT(7)
+> +#define MAX9296A_VPRBS_PATGEN_CLK_SRC_150MHZ	0b0
+> +#define MAX9296A_VPRBS_PATGEN_CLK_SRC_600MHZ	0b1
+> +
+> +#define MAX9296A_PATGEN_0			0x240
+> +#define MAX9296A_PATGEN_0_VTG_MODE		GENMASK(1, 0)
+> +#define MAX9296A_PATGEN_0_VTG_MODE_FREE_RUNNING	0b11
+> +#define MAX9296A_PATGEN_0_DE_INV		BIT(2)
+> +#define MAX9296A_PATGEN_0_HS_INV		BIT(3)
+> +#define MAX9296A_PATGEN_0_VS_INV		BIT(4)
+> +#define MAX9296A_PATGEN_0_GEN_DE		BIT(5)
+> +#define MAX9296A_PATGEN_0_GEN_HS		BIT(6)
+> +#define MAX9296A_PATGEN_0_GEN_VS		BIT(7)
+> +
+> +#define MAX9296A_PATGEN_1			0x241
+> +#define MAX9296A_PATGEN_1_PATGEN_MODE		GENMASK(5, 4)
+> +#define MAX9296A_PATGEN_1_PATGEN_MODE_DISABLED	0b00
+> +#define MAX9296A_PATGEN_1_PATGEN_MODE_CHECKER	0b11
+> +#define MAX9296A_PATGEN_1_PATGEN_MODE_GRADIENT	0b10
+> +
+> +#define MAX9296A_VS_DLY_2			0x242
+> +#define MAX9296A_VS_HIGH_2			0x245
+> +#define MAX9296A_VS_LOW_2			0x248
+> +#define MAX9296A_V2H_2				0x24b
+> +#define MAX9296A_HS_HIGH_1			0x24e
+> +#define MAX9296A_HS_LOW_1			0x250
+> +#define MAX9296A_HS_CNT_1			0x252
+> +#define MAX9296A_V2D_2				0x254
+> +#define MAX9296A_DE_HIGH_1			0x257
+> +#define MAX9296A_DE_LOW_1			0x259
+> +#define MAX9296A_DE_CNT_1			0x25b
+> +#define MAX9296A_GRAD_INCR			0x25d
+> +#define MAX9296A_CHKR_COLOR_A_L			0x25e
+> +#define MAX9296A_CHKR_COLOR_B_L			0x261
+> +#define MAX9296A_CHKR_RPT_A			0x264
+> +#define MAX9296A_CHKR_RPT_B			0x265
+> +#define MAX9296A_CHKR_ALT			0x266
+> +
+> +#define MAX9296A_BACKTOP12			0x313
+> +#define MAX9296A_BACKTOP12_CSI_OUT_EN		BIT(1)
+> +
+> +#define MAX9296A_BACKTOP21			0x31c
+> +#define MAX9296A_BACKTOP21_BPP8DBL(p)		BIT(4 + (p))
+> +
+> +#define MAX9296A_BACKTOP22(x)			(0x31d + (x) * 0x3)
+> +#define MAX9296A_BACKTOP22_PHY_CSI_TX_DPLL	GENMASK(4, 0)
+> +#define MAX9296A_BACKTOP22_PHY_CSI_TX_DPLL_EN	BIT(5)
+> +
+> +#define MAX9296A_BACKTOP24			0x31f
+> +#define MAX9296A_BACKTOP24_BPP8DBL_MODE(p)	BIT(4 + (p))
+> +
+> +#define MAX9296A_BACKTOP32			0x327
+> +#define MAX9296A_BACKTOP32_BPP10DBL(p)		BIT(p)
+> +#define MAX9296A_BACKTOP32_BPP10DBL_MODE(p)	BIT(4 + (p))
+> +
+> +#define MAX9296A_BACKTOP33			0x328
+> +#define MAX9296A_BACKTOP32_BPP12DBL(p)		BIT(p)
+> +
+> +#define MAX9296A_MIPI_PHY0			0x330
+> +#define MAX9296A_MIPI_PHY0_FORCE_CSI_OUT_EN	BIT(7)
+> +
+> +#define MAX9296A_MIPI_PHY2			0x332
+> +#define MAX9296A_MIPI_PHY2_PHY_STDBY_N(x)	(GENMASK(5, 4) << ((x) * 2))
+> +
+> +#define MAX9296A_MIPI_PHY3(x)			(0x333 + (x))
+> +#define MAX9296A_MIPI_PHY3_PHY_LANE_MAP_4	GENMASK(7, 0)
+> +
+> +#define MAX9296A_MIPI_PHY5(x)			(0x335 + (x))
+> +#define MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1	GENMASK(1, 0)
+> +#define MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3	GENMASK(4, 3)
+> +#define MAX9296A_MIPI_PHY5_PHY_POL_MAP_CLK(x)	BIT((x) =3D=3D 0 ? 5 : 2)
+> +
+> +#define MAX9296A_MIPI_PHY18			0x342
+> +#define MAX9296A_MIPI_PHY18_CSI2_TX_PKT_CNT(x)	(GENMASK(3, 0) << (4 * (x=
+)))
+> +
+> +#define MAX9296A_MIPI_PHY20(x)			(0x344 + (x))
+> +
+> +#define MAX9296A_MIPI_TX3(x)			(0x403 + (x) * 0x40)
+> +#define MAX9296A_MIPI_TX3_DESKEW_INIT_8X32K	FIELD_PREP(GENMASK(2, 0), 0b=
+001)
+> +#define MAX9296A_MIPI_TX3_DESKEW_INIT_AUTO	BIT(7)
+> +
+> +#define MAX9296A_MIPI_TX4(x)			(0x404 + (x) * 0x40)
+> +#define MAX9296A_MIPI_TX4_DESKEW_PER_2K		FIELD_PREP(GENMASK(2, 0), 0b001=
+)
+> +#define MAX9296A_MIPI_TX4_DESKEW_PER_AUTO	BIT(7)
+> +
+> +#define MAX9296A_MIPI_TX10(x)			(0x40a + (x) * 0x40)
+> +#define MAX9296A_MIPI_TX10_CSI2_LANE_CNT	GENMASK(7, 6)
+> +#define MAX9296A_MIPI_TX10_CSI2_CPHY_EN		BIT(5)
+> +
+> +#define MAX9296A_MIPI_TX11(p)			(0x40b + (p) * 0x40)
+> +#define MAX9296A_MIPI_TX12(p)			(0x40c + (p) * 0x40)
+> +
+> +#define MAX9296A_MIPI_TX13(p, x)		(0x40d + (p) * 0x40 + (x) * 0x2)
+> +#define MAX9296A_MIPI_TX13_MAP_SRC_DT		GENMASK(5, 0)
+> +#define MAX9296A_MIPI_TX13_MAP_SRC_VC		GENMASK(7, 6)
+> +
+> +#define MAX9296A_MIPI_TX14(p, x)		(0x40e + (p) * 0x40 + (x) * 0x2)
+> +#define MAX9296A_MIPI_TX14_MAP_DST_DT		GENMASK(5, 0)
+> +#define MAX9296A_MIPI_TX14_MAP_DST_VC		GENMASK(7, 6)
+> +
+> +#define MAX9296A_MIPI_TX45(p, x)		(0x42d + (p) * 0x40 + (x) / 4)
+> +#define MAX9296A_MIPI_TX45_MAP_DPHY_DEST(x)	(GENMASK(1, 0) << (2 * ((x) =
+% 4)))
+> +
+> +#define MAX9296A_MIPI_TX51(x)			(0x433 + (x) * 0x40)
+> +#define MAX9296A_MIPI_TX51_ALT_MEM_MAP_12	BIT(0)
+> +#define MAX9296A_MIPI_TX51_ALT_MEM_MAP_8	BIT(1)
+> +#define MAX9296A_MIPI_TX51_ALT_MEM_MAP_10	BIT(2)
+> +#define MAX9296A_MIPI_TX51_ALT2_MEM_MAP_8	BIT(4)
+> +
+> +#define MAX9296A_MIPI_TX52(x)			(0x434 +=C2=A0 (x) * 0x40)
+> +#define MAX9296A_MIPI_TX52_TUN_DEST		BIT(1)
+> +#define MAX9296A_MIPI_TX52_TUN_EN		BIT(0)
+> +
+> +#define MAX9296A_GMSL1_EN			0xf00
+> +#define MAX9296A_GMSL1_EN_LINK_EN		GENMASK(1, 0)
+> +
+> +#define MAX9296A_RLMS3E(x)			(0x143e + (x) * 0x100)
+> +#define MAX9296A_RLMS3F(x)			(0x143f + (x) * 0x100)
+> +#define MAX9296A_RLMS49(x)			(0x1449 + (x) * 0x100)
+> +#define MAX9296A_RLMS7E(x)			(0x147e + (x) * 0x100)
+> +#define MAX9296A_RLMS7F(x)			(0x147f + (x) * 0x100)
+> +#define MAX9296A_RLMSA3(x)			(0x14a3 + (x) * 0x100)
+> +#define MAX9296A_RLMSA5(x)			(0x14a5 + (x) * 0x100)
+> +#define MAX9296A_RLMSD8(x)			(0x14d8 + (x) * 0x100)
+> +
+> +#define MAX9296A_DPLL_0(x)			(0x1c00 + (x) * 0x100)
+> +#define MAX9296A_DPLL_0_CONFIG_SOFT_RST_N	BIT(0)
+> +
+> +#define MAX9296A_PIPES_NUM			4
+> +#define MAX9296A_PHYS_NUM			2
+> +
+> +static const struct regmap_config max9296a_i2c_regmap =3D {
+> +	.reg_bits =3D 16,
+> +	.val_bits =3D 8,
+> +};
+> +
+> +struct max9296a_priv {
+> +	struct max_des des;
+> +	const struct max9296a_chip_info *info;
+> +
+> +	struct device *dev;
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +
+> +	struct gpio_desc *gpiod_pwdn;
+> +};
+> +
+> +struct max9296a_chip_info {
+> +	const struct max_des_ops *ops;
+> +	unsigned int max_register;
+> +	unsigned int pipe_hw_ids[MAX9296A_PIPES_NUM];
+> +	unsigned int phy_hw_ids[MAX9296A_PHYS_NUM];
+> +	bool use_atr;
+> +	bool has_per_link_reset;
+> +	bool phy0_lanes_0_1_on_second_phy;
+> +	bool polarity_on_physical_lanes;
+> +	bool supports_cphy;
+> +	bool supports_phy_log;
+> +	bool adjust_rlms;
+> +};
+> +
+> +#define des_to_priv(_des) \
+> +	container_of(_des, struct max9296a_priv, des)
+> +
+> +static int max9296a_wait_for_device(struct max9296a_priv *priv)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i =3D 0; i < 10; i++) {
+> +		unsigned int val;
+> +
+> +		ret =3D regmap_read(priv->regmap, MAX9296A_REG0, &val);
+> +		if (!ret && val)
+> +			return 0;
+> +
+> +		msleep(100);
+> +
+> +		dev_err(priv->dev, "Retry %u waiting for deserializer: %d\n", i, ret);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int max9296a_reset(struct max9296a_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret =3D max9296a_wait_for_device(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_set_bits(priv->regmap, MAX9296A_CTRL0,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX9296A_CTRL0_RESET_ALL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	msleep(100);
+> +
+> +	return max9296a_wait_for_device(priv);
+> +}
+> +
+> +static unsigned int max9296a_pipe_id(struct max9296a_priv *priv,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 struct max_des_pipe *pipe)
+> +{
+> +	return priv->info->pipe_hw_ids[pipe->index];
+> +}
+> +
+> +static unsigned int max9296a_phy_id(struct max9296a_priv *priv,
+> +				=C2=A0=C2=A0=C2=A0 struct max_des_phy *phy)
+> +{
+> +	return priv->info->phy_hw_ids[phy->index];
+> +}
+> +
+> +static int max9296a_reg_read(struct max_des *des, unsigned int reg,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *val)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +
+> +	return regmap_read(priv->regmap, reg, val);
+> +}
+> +
+> +static int max9296a_reg_write(struct max_des *des, unsigned int reg,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int val)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +
+> +	return regmap_write(priv->regmap, reg, val);
+> +}
+> +
+> +static int max9626a_log_pipe_status(struct max_des *des,
+> +				=C2=A0=C2=A0=C2=A0 struct max_des_pipe *pipe)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(priv->regmap, MAX9296A_VPRBS(index), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tvideo_lock: %u\n",
+> +		 !!(val & MAX9296A_VPRBS_VIDEO_LOCK));
+> +
+> +	return 0;
+> +}
+> +
+> +static int max9296a_log_phy_status(struct max_des *des,
+> +				=C2=A0=C2=A0 struct max_des_phy *phy)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D phy->index;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!priv->info->supports_phy_log)
+> +		return 0;
+> +
+> +	ret =3D regmap_read(priv->regmap, MAX9296A_MIPI_PHY18, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tcsi2_pkt_cnt: %lu\n",
+> +		 field_get(MAX9296A_MIPI_PHY18_CSI2_TX_PKT_CNT(index), val));
+> +
+> +	ret =3D regmap_read(priv->regmap, MAX9296A_MIPI_PHY20(index), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tphy_pkt_cnt: %u\n", val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int max9296a_set_enable(struct max_des *des, bool enable)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP12,
+> +				=C2=A0 MAX9296A_BACKTOP12_CSI_OUT_EN, enable);
+> +}
+> +
+> +static int max9296a_init_tpg(struct max_des *des)
+> +{
+> +	const struct reg_sequence regs[] =3D {
+> +		{ MAX9296A_GRAD_INCR, MAX_SERDES_GRAD_INCR },
+> +		REG_SEQUENCE_3_LE(MAX9296A_CHKR_COLOR_A_L,
+> +				=C2=A0 MAX_SERDES_CHECKER_COLOR_A),
+> +		REG_SEQUENCE_3_LE(MAX9296A_CHKR_COLOR_B_L,
+> +				=C2=A0 MAX_SERDES_CHECKER_COLOR_B),
+> +		{ MAX9296A_CHKR_RPT_A, MAX_SERDES_CHECKER_SIZE },
+> +		{ MAX9296A_CHKR_RPT_B, MAX_SERDES_CHECKER_SIZE },
+> +		{ MAX9296A_CHKR_ALT, MAX_SERDES_CHECKER_SIZE },
+> +	};
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +
+> +	return regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
+> +}
+> +
+> +static int max9296a_init(struct max_des *des)
+> +{
+> +	return max9296a_init_tpg(des);
+> +}
+> +
+> +static int max9296a_init_phy(struct max_des *des, struct max_des_phy *ph=
+y)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	bool is_cphy =3D phy->bus_type =3D=3D V4L2_MBUS_CSI2_CPHY;
+> +	unsigned int num_data_lanes =3D phy->mipi.num_data_lanes;
+> +	unsigned int dpll_freq =3D phy->link_frequency * 2;
+> +	unsigned int num_hw_data_lanes;
+> +	unsigned int hw_index =3D max9296a_phy_id(priv, phy);
+> +	unsigned int index =3D phy->index;
+> +	unsigned int used_data_lanes =3D 0;
+> +	unsigned int val;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	if (is_cphy && !priv->info->supports_cphy) {
+> +		dev_err(priv->dev, "CPHY not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	num_hw_data_lanes =3D max_des_phy_hw_data_lanes(des, phy);
+> +
+> +	/*
+> +	 * MAX9296A has four PHYs, but does not support single-PHY configuratio=
+ns,
+> +	 * only double-PHY configurations, even when only using two lanes.
+> +	 * For PHY 0 + PHY 1, PHY 1 is the master PHY.
+> +	 * For PHY 2 + PHY 3, PHY 2 is the master PHY.
+> +	 * Clock is always on the master PHY.
+> +	 * For first pair of PHYs, first lanes are on the master PHY.
+> +	 * For second pair of PHYs, first lanes are on the master PHY too.
+> +	 *
+> +	 * PHY 0 + 1
+> +	 * CLK =3D PHY 1
+> +	 * PHY1 Lane 0 =3D D0
+> +	 * PHY1 Lane 1 =3D D1
+> +	 * PHY0 Lane 0 =3D D2
+> +	 * PHY0 Lane 1 =3D D3
+> +	 *
+> +	 * PHY 2 + 3
+> +	 * CLK =3D PHY 2
+> +	 * PHY2 Lane 0 =3D D0
+> +	 * PHY2 Lane 1 =3D D1
+> +	 * PHY3 Lane 0 =3D D2
+> +	 * PHY3 Lane 1 =3D D3
+> +	 *
+> +	 * MAX96714 only has two PHYs which cannot support single-PHY configura=
+tions.
+> +	 * Clock is always on the master PHY, first lanes are on PHY 0, even if
+> +	 * PHY 1 is the master PHY.
+> +	 *
+> +	 * PHY 0 + 1
+> +	 * CLK =3D PHY 1
+> +	 * PHY0 Lane 0 =3D D0
+> +	 * PHY0 Lane 1 =3D D1
+> +	 * PHY1 Lane 0 =3D D2
+> +	 * PHY1 Lane 1 =3D D3
+> +	 */
+> +
+> +	/* Configure a lane count. */
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_MIPI_TX10(hw_index),
+> +				 MAX9296A_MIPI_TX10_CSI2_LANE_CNT,
+> +				 FIELD_PREP(MAX9296A_MIPI_TX10_CSI2_LANE_CNT,
+> +					=C2=A0=C2=A0=C2=A0 num_data_lanes - 1));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX10(hw_index),
+> +				 MAX9296A_MIPI_TX10_CSI2_CPHY_EN, is_cphy);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Configure lane mapping. */
+> +	/*
+> +	 * The lane of each PHY can be mapped to physical lanes 0, 1, 2, and 3.
+> +	 * This mapping is exclusive, multiple lanes, even if unused cannot be
+> +	 * mapped to the same physical lane.
+> +	 * Each lane mapping is represented as two bits.
+> +	 */
+> +	val =3D 0;
+> +	for (i =3D 0; i < num_hw_data_lanes ; i++) {
+> +		unsigned int map;
+> +
+> +		if (i < num_data_lanes)
+> +			map =3D phy->mipi.data_lanes[i] - 1;
+> +		else
+> +			map =3D ffz(used_data_lanes);
+> +
+> +		val |=3D map << (i * 2);
+> +		used_data_lanes |=3D BIT(map);
+> +	}
+> +
+> +	if (phy->index =3D=3D 0 && priv->info->phy0_lanes_0_1_on_second_phy)
+> +		val =3D ((val & 0xf) << 4) | ((val >> 4) & 0xf);
+> +
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_MIPI_PHY3(index),
+> +				 MAX9296A_MIPI_PHY3_PHY_LANE_MAP_4,
+> +				 FIELD_PREP(MAX9296A_MIPI_PHY3_PHY_LANE_MAP_4, val));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Configure lane polarity.
+> +	 *
+> +	 * PHY 0 and 1 are on register 0x335.
+> +	 * PHY 2 and 3 are on register 0x336.
+> +	 *
+> +	 * Each PHY has 3 bits of polarity configuration.
+> +	 *
+> +	 * On MAX9296A, each bit represents the lane polarity of logical lanes.
+> +	 * Each of these lanes can be mapped to any physical lane.
+> +	 * 0th bit is for lane 0.
+> +	 * 1st bit is for lane 1.
+> +	 * 2nd bit is for clock lane.
+> +	 *
+> +	 * On MAX96714, each bit represents the lane polarity of physical lanes=
+.
+> +	 * 0th bit for physical lane 0.
+> +	 * 1st bit for physical lane 1.
+> +	 * 2nd bit for clock lane of PHY 0, the slave PHY, which is unused.
+> +	 *
+> +	 * 3rd bit for physical lane 2.
+> +	 * 4th bit for physical lane 3.
+> +	 * 5th bit for clock lane of PHY 1, the master PHY.
+> +	 */
+> +
+> +	for (i =3D 0, val =3D 0; i < num_data_lanes; i++) {
+> +		unsigned int map;
+> +
+> +		if (!phy->mipi.lane_polarities[i + 1])
+> +			continue;
+> +
+> +		/*
+> +		 * The numbers inside the data_lanes array specify the hardware
+> +		 * lane each logical lane maps to.
+> +		 * If polarity is set for the physical lanes, retrieve the
+> +		 * physical lane matching the logical lane from data_lanes.
+> +		 * Otherwise, when polarity is set for the logical lanes
+> +		 * the index of the polarity can be used.
+> +		 */
+> +
+> +		if (priv->info->polarity_on_physical_lanes)
+> +			map =3D phy->mipi.data_lanes[i] - 1;
+> +		else
+> +			map =3D i;
+> +
+> +		val |=3D BIT(map);
+> +	}
+> +
+> +	if (phy->index =3D=3D 0 && priv->info->phy0_lanes_0_1_on_second_phy)
+> +		val =3D ((val & 0x3) << 2) | ((val >> 2) & 0x3);
+> +
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_MIPI_PHY5(index),
+> +				 MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1 |
+> +				 MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3,
+> +				 FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1, val) |
+> +				 FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3, val >> 2));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_PHY5(index),
+> +				 MAX9296A_MIPI_PHY5_PHY_POL_MAP_CLK(index),
+> +				 phy->mipi.lane_polarities[0]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Put DPLL block into reset. */
+> +	ret =3D regmap_clear_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
+> +				MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set DPLL frequency. */
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_BACKTOP22(index),
+> +				 MAX9296A_BACKTOP22_PHY_CSI_TX_DPLL,
+> +				 FIELD_PREP(MAX9296A_BACKTOP22_PHY_CSI_TX_DPLL,
+> +					=C2=A0=C2=A0=C2=A0 div_u64(dpll_freq, 100000000)));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable DPLL frequency. */
+> +	ret =3D regmap_set_bits(priv->regmap, MAX9296A_BACKTOP22(index),
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX9296A_BACKTOP22_PHY_CSI_TX_DPLL_EN)=
+;
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Pull DPLL block out of reset. */
+> +	ret =3D regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (dpll_freq > 1500000000ull) {
+> +		/* Enable initial deskew with 2 x 32k UI. */
+> +		ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX3(hw_index),
+> +				=C2=A0=C2=A0 MAX9296A_MIPI_TX3_DESKEW_INIT_AUTO |
+> +				=C2=A0=C2=A0 MAX9296A_MIPI_TX3_DESKEW_INIT_8X32K);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Enable periodic deskew with 2 x 1k UI.. */
+> +		ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX4(hw_index),
+> +				=C2=A0=C2=A0 MAX9296A_MIPI_TX4_DESKEW_PER_AUTO |
+> +				=C2=A0=C2=A0 MAX9296A_MIPI_TX4_DESKEW_PER_2K);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		/* Disable initial deskew. */
+> +		ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX3(hw_index), 0x0);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Disable periodic deskew. */
+> +		ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX4(hw_index), 0x0);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max9296a_set_phy_mode(struct max_des *des, struct max_des_phy=
+ *phy,
+> +				 struct max_des_phy_mode *mode)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int phy_id =3D max9296a_phy_id(priv, phy);
+> +	int ret;
+> +
+> +	/* Set alternate memory map modes. */
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX51(phy_id),
+> +				 MAX9296A_MIPI_TX51_ALT_MEM_MAP_12,
+> +				 mode->alt_mem_map12);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX51(phy_id),
+> +				 MAX9296A_MIPI_TX51_ALT_MEM_MAP_8,
+> +				 mode->alt_mem_map8);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX51(phy_id),
+> +				 MAX9296A_MIPI_TX51_ALT_MEM_MAP_10,
+> +				 mode->alt_mem_map10);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX51(phy_id),
+> +				=C2=A0 MAX9296A_MIPI_TX51_ALT2_MEM_MAP_8,
+> +				=C2=A0 mode->alt2_mem_map8);
+> +}
+> +
+> +static int max9296a_set_phy_enable(struct max_des *des, struct max_des_p=
+hy *phy,
+> +				=C2=A0=C2=A0 bool enable)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_MIPI_PHY2,
+> +				=C2=A0 MAX9296A_MIPI_PHY2_PHY_STDBY_N(phy->index), enable);
+> +}
+> +
+> +static int max9296a_set_pipe_remap(struct max_des *des,
+> +				=C2=A0=C2=A0 struct max_des_pipe *pipe,
+> +				=C2=A0=C2=A0 unsigned int i,
+> +				=C2=A0=C2=A0 struct max_des_remap *remap)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	struct max_des_phy *phy =3D &des->phys[remap->phy];
+> +	unsigned int phy_id =3D max9296a_phy_id(priv, phy);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +	int ret;
+> +
+> +	/* Set source Data Type and Virtual Channel. */
+> +	/* TODO: implement extended Virtual Channel. */
+> +	ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX13(index, i),
+> +			=C2=A0=C2=A0 FIELD_PREP(MAX9296A_MIPI_TX13_MAP_SRC_DT,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remap->from_dt) |
+> +			=C2=A0=C2=A0 FIELD_PREP(MAX9296A_MIPI_TX13_MAP_SRC_VC,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remap->from_vc));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set destination Data Type and Virtual Channel. */
+> +	/* TODO: implement extended Virtual Channel. */
+> +	ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX14(index, i),
+> +			=C2=A0=C2=A0 FIELD_PREP(MAX9296A_MIPI_TX14_MAP_DST_DT,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remap->to_dt) |
+> +			=C2=A0=C2=A0 FIELD_PREP(MAX9296A_MIPI_TX14_MAP_DST_VC,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remap->to_vc));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set destination PHY. */
+> +	return regmap_update_bits(priv->regmap, MAX9296A_MIPI_TX45(index, i),
+> +				=C2=A0 MAX9296A_MIPI_TX45_MAP_DPHY_DEST(i),
+> +				=C2=A0 field_prep(MAX9296A_MIPI_TX45_MAP_DPHY_DEST(i),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 phy_id));
+> +}
+> +
+> +static int max9296a_set_pipe_remaps_enable(struct max_des *des,
+> +					=C2=A0=C2=A0 struct max_des_pipe *pipe,
+> +					=C2=A0=C2=A0 unsigned int mask)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +	int ret;
+> +
+> +	ret =3D regmap_write(priv->regmap, MAX9296A_MIPI_TX11(index), mask);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(priv->regmap, MAX9296A_MIPI_TX12(index), mask >> 8)=
+;
+> +}
+> +
+> +static int max9296a_set_pipe_enable(struct max_des *des, struct max_des_=
+pipe *pipe,
+> +				=C2=A0=C2=A0=C2=A0 bool enable)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_REG2,
+> +				=C2=A0 MAX9296A_REG2_VID_EN(index), enable);
+> +}
+> +
+> +static int max96714_set_pipe_enable(struct max_des *des, struct max_des_=
+pipe *pipe,
+> +				=C2=A0=C2=A0=C2=A0 bool enable)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_VIDEO_PIPE_EN,
+> +				=C2=A0 MAX9296A_VIDEO_PIPE_EN_MASK(index - 1), enable);
+> +}
+> +
+> +static int max96714_set_pipe_tunnel_enable(struct max_des *des,
+> +					=C2=A0=C2=A0 struct max_des_pipe *pipe, bool enable)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX52(index),
+> +				=C2=A0 MAX9296A_MIPI_TX52_TUN_EN, enable);
+> +}
+> +
+> +static int max9296a_set_pipe_stream_id(struct max_des *des, struct max_d=
+es_pipe *pipe,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int stream_id)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +
+> +	return regmap_update_bits(priv->regmap, MAX9296A_RX50(index), MAX9296A_=
+RX50_STR_SEL,
+> +				=C2=A0 FIELD_PREP(MAX9296A_RX50_STR_SEL, pipe->stream_id));
+> +}
+> +
+> +static int max96714_set_pipe_stream_id(struct max_des *des, struct max_d=
+es_pipe *pipe,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int stream_id)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D pipe->index;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX9296A_VIDEO_PIPE_SEL,
+> +				=C2=A0 MAX9296A_VIDEO_PIPE_SEL_STREAM(index),
+> +				=C2=A0 field_prep(MAX9296A_VIDEO_PIPE_SEL_STREAM(index),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 stream_id));
+> +}
+> +
+> +static int max96716a_set_pipe_link(struct max_des *des, struct max_des_p=
+ipe *pipe,
+> +				=C2=A0=C2=A0 struct max_des_link *link)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D pipe->index;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX9296A_VIDEO_PIPE_SEL,
+> +				=C2=A0 MAX9296A_VIDEO_PIPE_SEL_LINK(index),
+> +				=C2=A0 field_prep(MAX9296A_VIDEO_PIPE_SEL_LINK(index),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 link->index));
+> +}
+> +
+> +static int max96716a_set_pipe_tunnel_phy(struct max_des *des,
+> +					 struct max_des_pipe *pipe,
+> +					 struct max_des_phy *phy)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX52(index),
+> +				=C2=A0 MAX9296A_MIPI_TX52_TUN_DEST, phy->index);
+> +}
+> +
+> +static int max9296a_set_pipe_mode(struct max_des *des,
+> +				=C2=A0 struct max_des_pipe *pipe,
+> +				=C2=A0 struct max_des_pipe_mode *mode)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D max9296a_pipe_id(priv, pipe);
+> +	int ret;
+> +
+> +	/* Set 8bit double mode. */
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP21,
+> +				 MAX9296A_BACKTOP21_BPP8DBL(index), mode->dbl8);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP24,
+> +				 MAX9296A_BACKTOP24_BPP8DBL_MODE(index),
+> +				 mode->dbl8mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set 10bit double mode. */
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP32,
+> +				 MAX9296A_BACKTOP32_BPP10DBL(index), mode->dbl10);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP32,
+> +				 MAX9296A_BACKTOP32_BPP10DBL_MODE(index),
+> +				 mode->dbl10mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set 12bit double mode. */
+> +	/* TODO: check support for double mode on MAX96714. */
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_BACKTOP33,
+> +				=C2=A0 MAX9296A_BACKTOP32_BPP12DBL(index), mode->dbl12);
+> +}
+> +
+> +static int max9296a_reset_link(struct max9296a_priv *priv, unsigned int =
+index)
+> +{
+> +	unsigned int reg, mask;
+> +
+> +	if (index =3D=3D 0) {
+> +		reg =3D MAX9296A_CTRL0;
+> +		mask =3D MAX9296A_CTRL0_RESET_ONESHOT;
+> +	} else {
+> +		reg =3D MAX9296A_CTRL2;
+> +		mask =3D MAX9296A_CTRL2_RESET_ONESHOT_B;
+> +	}
+> +
+> +	return regmap_set_bits(priv->regmap, reg, mask);
+> +}
+> +
+> +static int max9296a_init_link_rlms(struct max9296a_priv *priv,
+> +				=C2=A0=C2=A0 struct max_des_link *link)
+> +{
+> +	unsigned int index =3D link->index;
+> +	/*
+> +	 * These register writes are described as required in MAX96714 datashee=
+t
+> +	 * Page 53, Section Register Map, to optimize link performance in 6Gbps
+> +	 * and 3Gbps links for all cable lengths.
+> +	 */
+> +	const struct reg_sequence regs[] =3D {
+> +		{ MAX9296A_RLMS3E(index), 0xfd },
+> +		{ MAX9296A_RLMS3F(index), 0x3d },
+> +		{ MAX9296A_RLMS49(index), 0xf5 },
+> +		{ MAX9296A_RLMS7E(index), 0xa8 },
+> +		{ MAX9296A_RLMS7F(index), 0x68 },
+> +		{ MAX9296A_RLMSA3(index), 0x30 },
+> +		{ MAX9296A_RLMSA5(index), 0x70 },
+> +		{ MAX9296A_RLMSD8(index), 0x07 },
+> +	};
+> +	int ret;
+> +
+> +	ret =3D regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return max9296a_reset_link(priv, link->index);
+> +}
+> +
+> +static int max9296a_init_link(struct max_des *des, struct max_des_link *=
+link)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	int ret;
+> +
+> +	if (priv->info->adjust_rlms) {
+> +		ret =3D max9296a_init_link_rlms(priv, link);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max9296a_select_links(struct max_des *des, unsigned int mask)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	int ret;
+> +
+> +	if (des->ops->num_links =3D=3D 1)
+> +		return 0;
+> +
+> +	if (!mask) {
+> +		dev_err(priv->dev, "Disable all links unsupported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_GMSL1_EN,
+> +				 MAX9296A_GMSL1_EN_LINK_EN,
+> +				 FIELD_PREP(MAX9296A_GMSL1_EN_LINK_EN, mask));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_CTRL0,
+> +				 MAX9296A_CTRL0_AUTO_LINK |
+> +				 MAX9296A_CTRL0_LINK_CFG |
+> +				 MAX9296A_CTRL0_RESET_ONESHOT,
+> +				 FIELD_PREP(MAX9296A_CTRL0_LINK_CFG, mask) |
+> +				 FIELD_PREP(MAX9296A_CTRL0_RESET_ONESHOT, 1));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (priv->info->has_per_link_reset) {
+> +		ret =3D max9296a_reset_link(priv, 1);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	msleep(200);
+> +
+> +	return 0;
+> +}
+> +
+> +static int max9296a_set_link_version(struct max_des *des,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 struct max_des_link *link,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 enum max_serdes_gmsl_version version)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	unsigned int index =3D link->index;
+> +	bool gmsl3_en =3D version =3D=3D MAX_SERDES_GMSL_3;
+> +	unsigned int reg, mask, val;
+> +	int ret;
+> +
+> +	if (des->ops->needs_single_link_version)
+> +		index =3D 0;
+> +
+> +	if (index =3D=3D 0) {
+> +		reg =3D MAX9296A_REG1;
+> +		mask =3D MAX9296A_REG1_RX_RATE_A;
+> +	} else {
+> +		reg =3D MAX9296A_REG4;
+> +		mask =3D MAX9296A_REG4_RX_RATE_B;
+> +	}
+> +
+> +	if (version =3D=3D MAX_SERDES_GMSL_3)
+> +		val =3D MAX9296A_REG1_RX_RATE_12GBPS;
+> +	else if (version =3D=3D MAX_SERDES_GMSL_2_6GBPS)
+> +		val =3D MAX9296A_REG1_RX_RATE_6GBPS;
+> +	else
+> +		val =3D MAX9296A_REG1_RX_RATE_3GBPS;
+> +
+> +	ret =3D regmap_update_bits(priv->regmap, reg, mask, field_prep(mask, va=
+l));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!(des->ops->versions & BIT(MAX_SERDES_GMSL_3)))
+> +		return 0;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_MIPI_TX0(index),
+> +				 MAX9296A_MIPI_TX0_RX_FEC_EN, gmsl3_en);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_assign_bits(priv->regmap, MAX9296A_REG6,
+> +				 MAX9296A_REG6_GMSL2_X(index), !gmsl3_en);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_REG4,
+> +				=C2=A0 MAX9296A_REG4_GMSL3_X(index), gmsl3_en);
+> +}
+> +
+> +static int max9296a_set_tpg_timings(struct max9296a_priv *priv,
+> +				=C2=A0=C2=A0=C2=A0 const struct max_serdes_tpg_timings *tm)
+> +{
+> +	const struct reg_sequence regs[] =3D {
+> +		REG_SEQUENCE_3(MAX9296A_VS_DLY_2, tm->vs_dly),
+> +		REG_SEQUENCE_3(MAX9296A_VS_HIGH_2, tm->vs_high),
+> +		REG_SEQUENCE_3(MAX9296A_VS_LOW_2, tm->vs_low),
+> +		REG_SEQUENCE_3(MAX9296A_V2H_2, tm->v2h),
+> +		REG_SEQUENCE_2(MAX9296A_HS_HIGH_1, tm->hs_high),
+> +		REG_SEQUENCE_2(MAX9296A_HS_LOW_1, tm->hs_low),
+> +		REG_SEQUENCE_2(MAX9296A_HS_CNT_1, tm->hs_cnt),
+> +		REG_SEQUENCE_3(MAX9296A_V2D_2, tm->v2d),
+> +		REG_SEQUENCE_2(MAX9296A_DE_HIGH_1, tm->de_high),
+> +		REG_SEQUENCE_2(MAX9296A_DE_LOW_1, tm->de_low),
+> +		REG_SEQUENCE_2(MAX9296A_DE_CNT_1, tm->de_cnt),
+> +	};
+> +	int ret;
+> +
+> +	ret =3D regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(priv->regmap, MAX9296A_PATGEN_0,
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_VTG_MODE,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX9296A_PATGEN_0_VTG_MODE_FREE=
+_RUNNING) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_DE_INV, tm->de_inv) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_HS_INV, tm->hs_inv) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_VS_INV, tm->vs_inv) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_GEN_DE, tm->gen_de) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_GEN_HS, tm->gen_hs) |
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(MAX9296A_PATGEN_0_GEN_VS, tm->gen_vs));
+> +}
+> +
+> +static int max9296a_set_tpg_clk(struct max9296a_priv *priv, u32 clock)
+> +{
+> +	bool patgen_clk_src =3D 0;
+> +	u8 pin_drv_en;
+> +	int ret;
+> +
+> +	switch (clock) {
+> +	case 25000000:
+> +		pin_drv_en =3D MAX9296A_IO_CHK0_PIN_DRV_EN_0_25MHZ;
+> +		break;
+> +	case 75000000:
+> +		pin_drv_en =3D MAX9296A_IO_CHK0_PIN_DRV_EN_0_75MHZ;
+> +		break;
+> +	case 150000000:
+> +		pin_drv_en =3D MAX9296A_IO_CHK0_PIN_DRV_EN_0_USE_PIPE;
+> +		patgen_clk_src =3D MAX9296A_VPRBS_PATGEN_CLK_SRC_150MHZ;
+> +		break;
+> +	case 600000000:
+> +		pin_drv_en =3D MAX9296A_IO_CHK0_PIN_DRV_EN_0_USE_PIPE;
+> +		patgen_clk_src =3D MAX9296A_VPRBS_PATGEN_CLK_SRC_600MHZ;
+> +		break;
+> +	case 0:
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * TPG data is always injected on link 0, which is always routed to
+> +	 * pipe 0.
+> +	 */
+> +	ret =3D regmap_update_bits(priv->regmap, MAX9296A_VPRBS(0),
+> +				 MAX9296A_VPRBS_PATGEN_CLK_SRC,
+> +				 FIELD_PREP(MAX9296A_VPRBS_PATGEN_CLK_SRC,
+> +					=C2=A0=C2=A0=C2=A0 patgen_clk_src));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX9296A_IO_CHK0,
+> +				=C2=A0 MAX9296A_IO_CHK0_PIN_DRV_EN_0,
+> +				=C2=A0 FIELD_PREP(MAX9296A_IO_CHK0_PIN_DRV_EN_0,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 pin_drv_en));
+> +}
+> +
+> +static int max9296a_set_tpg_mode(struct max9296a_priv *priv, bool enable=
+)
+> +{
+> +	unsigned int patgen_mode;
+> +
+> +	switch (priv->des.tpg_pattern) {
+> +	case MAX_SERDES_TPG_PATTERN_GRADIENT:
+> +		patgen_mode =3D MAX9296A_PATGEN_1_PATGEN_MODE_GRADIENT;
+> +		break;
+> +	case MAX_SERDES_TPG_PATTERN_CHECKERBOARD:
+> +		patgen_mode =3D MAX9296A_PATGEN_1_PATGEN_MODE_CHECKER;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return regmap_update_bits(priv->regmap, MAX9296A_PATGEN_1,
+> +				=C2=A0 MAX9296A_PATGEN_1_PATGEN_MODE,
+> +				=C2=A0 FIELD_PREP(MAX9296A_PATGEN_1_PATGEN_MODE,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 enable ? patgen_mode
+> +						=C2=A0=C2=A0=C2=A0 : MAX9296A_PATGEN_1_PATGEN_MODE_DISABLED));
+> +}
+> +
+> +static int max9296a_set_tpg(struct max_des *des,
+> +			=C2=A0=C2=A0=C2=A0 const struct max_serdes_tpg_entry *entry)
+> +{
+> +	struct max9296a_priv *priv =3D des_to_priv(des);
+> +	struct max_serdes_tpg_timings timings =3D { 0 };
+> +	int ret;
+> +
+> +	ret =3D max_serdes_get_tpg_timings(entry, &timings);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D max9296a_set_tpg_timings(priv, &timings);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D max9296a_set_tpg_clk(priv, timings.clock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D max9296a_set_tpg_mode(priv, entry);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX9296A_MIPI_PHY0,
+> +				=C2=A0 MAX9296A_MIPI_PHY0_FORCE_CSI_OUT_EN, !!entry);
+> +}
+> +
+> +static const struct max_serdes_tpg_entry max9296a_tpg_entries[] =3D {
+> +	MAX_TPG_ENTRY_640X480P60_RGB888,
+> +	MAX_TPG_ENTRY_1920X1080P30_RGB888,
+> +	MAX_TPG_ENTRY_1920X1080P60_RGB888,
+> +};
+> +
+> +static const struct max_des_ops max9296a_common_ops =3D {
+> +	.num_remaps_per_pipe =3D 16,
+> +	.tpg_entries =3D {
+> +		.num_entries =3D ARRAY_SIZE(max9296a_tpg_entries),
+> +		.entries =3D max9296a_tpg_entries,
+> +	},
+> +	.tpg_patterns =3D BIT(MAX_SERDES_TPG_PATTERN_CHECKERBOARD) |
+> +			BIT(MAX_SERDES_TPG_PATTERN_GRADIENT),
+#ifdef CONFIG_VIDEO_ADV_DEBUG
+> +	.reg_read =3D max9296a_reg_read,
+> +	.reg_write =3D max9296a_reg_write,
+#endif
 
-BPF_TRACE_FENTRY_MULTI
-BPF_TRACE_FEXIT_MULTI
-BPF_MODIFY_RETURN_MULTI
+To make it clear that the registers are not read or modified outside of thi=
+s file ?
 
-We reuse the testings in fentry_test.c, fexit_test.c and modify_return.c
-by attach the tracing bpf prog as tracing_multi.
-
-We add some functions to skip for tracing progs to bpf_get_ksyms(). The
-functions that in the "btf_id_deny" should be skipped. What's more, the
-kernel can't find the right function address according to the btf type id
-when duplicated function name exist. So we skip such functions that we
-meet. The list is not whole, so we still can fail during attaching the
-FENTRY_MULTI to all the kernel functions. This is something that we need
-to fix in the feature.
-
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- tools/testing/selftests/bpf/Makefile          |   2 +-
- .../selftests/bpf/prog_tests/fentry_fexit.c   |  22 +-
- .../selftests/bpf/prog_tests/fentry_test.c    |  79 +++++--
- .../selftests/bpf/prog_tests/fexit_test.c     |  79 +++++--
- .../selftests/bpf/prog_tests/modify_return.c  |  60 +++++
- .../bpf/prog_tests/tracing_multi_link.c       | 210 ++++++++++++++++++
- .../selftests/bpf/progs/fentry_multi_empty.c  |  13 ++
- .../selftests/bpf/progs/tracing_multi_test.c  | 181 +++++++++++++++
- .../selftests/bpf/test_kmods/bpf_testmod.c    |  24 ++
- tools/testing/selftests/bpf/test_progs.c      |  50 +++++
- tools/testing/selftests/bpf/test_progs.h      |   3 +
- tools/testing/selftests/bpf/trace_helpers.c   |  69 ++++++
- 12 files changed, 744 insertions(+), 48 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_multi_link.c
- create mode 100644 tools/testing/selftests/bpf/progs/fentry_multi_empty.c
- create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_test.c
-
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 4863106034df..1fa0da096262 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -496,7 +496,7 @@ LINKED_SKELS := test_static_linked.skel.h linked_funcs.skel.h		\
- 		test_subskeleton.skel.h test_subskeleton_lib.skel.h	\
- 		test_usdt.skel.h
- 
--LSKELS := fentry_test.c fexit_test.c fexit_sleep.c atomics.c 		\
-+LSKELS := fexit_sleep.c atomics.c 		\
- 	trace_printk.c trace_vprintk.c map_ptr_kern.c 			\
- 	core_kern.c core_kern_overflow.c test_ringbuf.c			\
- 	test_ringbuf_n.c test_ringbuf_map_key.c test_ringbuf_write.c
-diff --git a/tools/testing/selftests/bpf/prog_tests/fentry_fexit.c b/tools/testing/selftests/bpf/prog_tests/fentry_fexit.c
-index 130f5b82d2e6..84cc8b669684 100644
---- a/tools/testing/selftests/bpf/prog_tests/fentry_fexit.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fentry_fexit.c
-@@ -1,32 +1,32 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2019 Facebook */
- #include <test_progs.h>
--#include "fentry_test.lskel.h"
--#include "fexit_test.lskel.h"
-+#include "fentry_test.skel.h"
-+#include "fexit_test.skel.h"
- 
- void test_fentry_fexit(void)
- {
--	struct fentry_test_lskel *fentry_skel = NULL;
--	struct fexit_test_lskel *fexit_skel = NULL;
-+	struct fentry_test *fentry_skel = NULL;
-+	struct fexit_test *fexit_skel = NULL;
- 	__u64 *fentry_res, *fexit_res;
- 	int err, prog_fd, i;
- 	LIBBPF_OPTS(bpf_test_run_opts, topts);
- 
--	fentry_skel = fentry_test_lskel__open_and_load();
-+	fentry_skel = fentry_test__open_and_load();
- 	if (!ASSERT_OK_PTR(fentry_skel, "fentry_skel_load"))
- 		goto close_prog;
--	fexit_skel = fexit_test_lskel__open_and_load();
-+	fexit_skel = fexit_test__open_and_load();
- 	if (!ASSERT_OK_PTR(fexit_skel, "fexit_skel_load"))
- 		goto close_prog;
- 
--	err = fentry_test_lskel__attach(fentry_skel);
-+	err = fentry_test__attach(fentry_skel);
- 	if (!ASSERT_OK(err, "fentry_attach"))
- 		goto close_prog;
--	err = fexit_test_lskel__attach(fexit_skel);
-+	err = fexit_test__attach(fexit_skel);
- 	if (!ASSERT_OK(err, "fexit_attach"))
- 		goto close_prog;
- 
--	prog_fd = fexit_skel->progs.test1.prog_fd;
-+	prog_fd = bpf_program__fd(fexit_skel->progs.test1);
- 	err = bpf_prog_test_run_opts(prog_fd, &topts);
- 	ASSERT_OK(err, "ipv6 test_run");
- 	ASSERT_OK(topts.retval, "ipv6 test retval");
-@@ -40,6 +40,6 @@ void test_fentry_fexit(void)
- 	}
- 
- close_prog:
--	fentry_test_lskel__destroy(fentry_skel);
--	fexit_test_lskel__destroy(fexit_skel);
-+	fentry_test__destroy(fentry_skel);
-+	fexit_test__destroy(fexit_skel);
- }
-diff --git a/tools/testing/selftests/bpf/prog_tests/fentry_test.c b/tools/testing/selftests/bpf/prog_tests/fentry_test.c
-index aee1bc77a17f..9edd383feabd 100644
---- a/tools/testing/selftests/bpf/prog_tests/fentry_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fentry_test.c
-@@ -1,26 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2019 Facebook */
- #include <test_progs.h>
--#include "fentry_test.lskel.h"
-+#include "fentry_test.skel.h"
- #include "fentry_many_args.skel.h"
- 
--static int fentry_test_common(struct fentry_test_lskel *fentry_skel)
-+static int fentry_test_check(struct fentry_test *fentry_skel)
- {
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
- 	int err, prog_fd, i;
--	int link_fd;
- 	__u64 *result;
--	LIBBPF_OPTS(bpf_test_run_opts, topts);
--
--	err = fentry_test_lskel__attach(fentry_skel);
--	if (!ASSERT_OK(err, "fentry_attach"))
--		return err;
- 
--	/* Check that already linked program can't be attached again. */
--	link_fd = fentry_test_lskel__test1__attach(fentry_skel);
--	if (!ASSERT_LT(link_fd, 0, "fentry_attach_link"))
--		return -1;
--
--	prog_fd = fentry_skel->progs.test1.prog_fd;
-+	prog_fd = bpf_program__fd(fentry_skel->progs.test1);
- 	err = bpf_prog_test_run_opts(prog_fd, &topts);
- 	ASSERT_OK(err, "test_run");
- 	ASSERT_EQ(topts.retval, 0, "test_run");
-@@ -31,7 +21,28 @@ static int fentry_test_common(struct fentry_test_lskel *fentry_skel)
- 			return -1;
- 	}
- 
--	fentry_test_lskel__detach(fentry_skel);
-+	return 0;
-+}
-+
-+static int fentry_test_common(struct fentry_test *fentry_skel)
-+{
-+	struct bpf_link *link;
-+	int err;
-+
-+	err = fentry_test__attach(fentry_skel);
-+	if (!ASSERT_OK(err, "fentry_attach"))
-+		return err;
-+
-+	/* Check that already linked program can't be attached again. */
-+	link = bpf_program__attach(fentry_skel->progs.test1);
-+	if (!ASSERT_ERR_PTR(link, "fentry_attach_link"))
-+		return -1;
-+
-+	err = fentry_test_check(fentry_skel);
-+	if (!ASSERT_OK(err, "fentry_test_check"))
-+		return err;
-+
-+	fentry_test__detach(fentry_skel);
- 
- 	/* zero results for re-attach test */
- 	memset(fentry_skel->bss, 0, sizeof(*fentry_skel->bss));
-@@ -40,10 +51,10 @@ static int fentry_test_common(struct fentry_test_lskel *fentry_skel)
- 
- static void fentry_test(void)
- {
--	struct fentry_test_lskel *fentry_skel = NULL;
-+	struct fentry_test *fentry_skel = NULL;
- 	int err;
- 
--	fentry_skel = fentry_test_lskel__open_and_load();
-+	fentry_skel = fentry_test__open_and_load();
- 	if (!ASSERT_OK_PTR(fentry_skel, "fentry_skel_load"))
- 		goto cleanup;
- 
-@@ -55,7 +66,7 @@ static void fentry_test(void)
- 	ASSERT_OK(err, "fentry_second_attach");
- 
- cleanup:
--	fentry_test_lskel__destroy(fentry_skel);
-+	fentry_test__destroy(fentry_skel);
- }
- 
- static void fentry_many_args(void)
-@@ -84,10 +95,42 @@ static void fentry_many_args(void)
- 	fentry_many_args__destroy(fentry_skel);
- }
- 
-+static void fentry_multi_test(void)
-+{
-+	struct fentry_test *fentry_skel = NULL;
-+	int err, prog_cnt;
-+
-+	fentry_skel = fentry_test__open();
-+	if (!ASSERT_OK_PTR(fentry_skel, "fentry_skel_open"))
-+		goto cleanup;
-+
-+	prog_cnt = sizeof(fentry_skel->progs) / sizeof(long);
-+	err = bpf_to_tracing_multi((void *)&fentry_skel->progs, prog_cnt);
-+	if (!ASSERT_OK(err, "fentry_to_multi"))
-+		goto cleanup;
-+
-+	err = fentry_test__load(fentry_skel);
-+	if (!ASSERT_OK(err, "fentry_skel_load"))
-+		goto cleanup;
-+
-+	err = bpf_attach_as_tracing_multi((void *)&fentry_skel->progs,
-+					  prog_cnt,
-+					  (void *)&fentry_skel->links);
-+	if (!ASSERT_OK(err, "fentry_attach_multi"))
-+		goto cleanup;
-+
-+	err = fentry_test_check(fentry_skel);
-+	ASSERT_OK(err, "fentry_first_attach");
-+cleanup:
-+	fentry_test__destroy(fentry_skel);
-+}
-+
- void test_fentry_test(void)
- {
- 	if (test__start_subtest("fentry"))
- 		fentry_test();
-+	if (test__start_subtest("fentry_multi"))
-+		fentry_multi_test();
- 	if (test__start_subtest("fentry_many_args"))
- 		fentry_many_args();
- }
-diff --git a/tools/testing/selftests/bpf/prog_tests/fexit_test.c b/tools/testing/selftests/bpf/prog_tests/fexit_test.c
-index 1c13007e37dd..5652d02b3ad9 100644
---- a/tools/testing/selftests/bpf/prog_tests/fexit_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fexit_test.c
-@@ -1,26 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2019 Facebook */
- #include <test_progs.h>
--#include "fexit_test.lskel.h"
-+#include "fexit_test.skel.h"
- #include "fexit_many_args.skel.h"
- 
--static int fexit_test_common(struct fexit_test_lskel *fexit_skel)
-+static int fexit_test_check(struct fexit_test *fexit_skel)
- {
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
- 	int err, prog_fd, i;
--	int link_fd;
- 	__u64 *result;
--	LIBBPF_OPTS(bpf_test_run_opts, topts);
--
--	err = fexit_test_lskel__attach(fexit_skel);
--	if (!ASSERT_OK(err, "fexit_attach"))
--		return err;
- 
--	/* Check that already linked program can't be attached again. */
--	link_fd = fexit_test_lskel__test1__attach(fexit_skel);
--	if (!ASSERT_LT(link_fd, 0, "fexit_attach_link"))
--		return -1;
--
--	prog_fd = fexit_skel->progs.test1.prog_fd;
-+	prog_fd = bpf_program__fd(fexit_skel->progs.test1);
- 	err = bpf_prog_test_run_opts(prog_fd, &topts);
- 	ASSERT_OK(err, "test_run");
- 	ASSERT_EQ(topts.retval, 0, "test_run");
-@@ -31,7 +21,28 @@ static int fexit_test_common(struct fexit_test_lskel *fexit_skel)
- 			return -1;
- 	}
- 
--	fexit_test_lskel__detach(fexit_skel);
-+	return 0;
-+}
-+
-+static int fexit_test_common(struct fexit_test *fexit_skel)
-+{
-+	struct bpf_link *link;
-+	int err;
-+
-+	err = fexit_test__attach(fexit_skel);
-+	if (!ASSERT_OK(err, "fexit_attach"))
-+		return err;
-+
-+	/* Check that already linked program can't be attached again. */
-+	link = bpf_program__attach(fexit_skel->progs.test1);
-+	if (!ASSERT_ERR_PTR(link, "fexit_attach_link"))
-+		return -1;
-+
-+	err = fexit_test_check(fexit_skel);
-+	if (!ASSERT_OK(err, "fexit_test_check"))
-+		return err;
-+
-+	fexit_test__detach(fexit_skel);
- 
- 	/* zero results for re-attach test */
- 	memset(fexit_skel->bss, 0, sizeof(*fexit_skel->bss));
-@@ -40,10 +51,10 @@ static int fexit_test_common(struct fexit_test_lskel *fexit_skel)
- 
- static void fexit_test(void)
- {
--	struct fexit_test_lskel *fexit_skel = NULL;
-+	struct fexit_test *fexit_skel = NULL;
- 	int err;
- 
--	fexit_skel = fexit_test_lskel__open_and_load();
-+	fexit_skel = fexit_test__open_and_load();
- 	if (!ASSERT_OK_PTR(fexit_skel, "fexit_skel_load"))
- 		goto cleanup;
- 
-@@ -55,7 +66,7 @@ static void fexit_test(void)
- 	ASSERT_OK(err, "fexit_second_attach");
- 
- cleanup:
--	fexit_test_lskel__destroy(fexit_skel);
-+	fexit_test__destroy(fexit_skel);
- }
- 
- static void fexit_many_args(void)
-@@ -84,10 +95,42 @@ static void fexit_many_args(void)
- 	fexit_many_args__destroy(fexit_skel);
- }
- 
-+static void fexit_test_multi(void)
-+{
-+	struct fexit_test *fexit_skel = NULL;
-+	int err, prog_cnt;
-+
-+	fexit_skel = fexit_test__open();
-+	if (!ASSERT_OK_PTR(fexit_skel, "fexit_skel_open"))
-+		goto cleanup;
-+
-+	prog_cnt = sizeof(fexit_skel->progs) / sizeof(long);
-+	err = bpf_to_tracing_multi((void *)&fexit_skel->progs, prog_cnt);
-+	if (!ASSERT_OK(err, "fexit_to_multi"))
-+		goto cleanup;
-+
-+	err = fexit_test__load(fexit_skel);
-+	if (!ASSERT_OK(err, "fexit_skel_load"))
-+		goto cleanup;
-+
-+	err = bpf_attach_as_tracing_multi((void *)&fexit_skel->progs,
-+					  prog_cnt,
-+					  (void *)&fexit_skel->links);
-+	if (!ASSERT_OK(err, "fexit_attach_multi"))
-+		goto cleanup;
-+
-+	err = fexit_test_check(fexit_skel);
-+	ASSERT_OK(err, "fexit_first_attach");
-+cleanup:
-+	fexit_test__destroy(fexit_skel);
-+}
-+
- void test_fexit_test(void)
- {
- 	if (test__start_subtest("fexit"))
- 		fexit_test();
-+	if (test__start_subtest("fexit_multi"))
-+		fexit_test_multi();
- 	if (test__start_subtest("fexit_many_args"))
- 		fexit_many_args();
- }
-diff --git a/tools/testing/selftests/bpf/prog_tests/modify_return.c b/tools/testing/selftests/bpf/prog_tests/modify_return.c
-index a70c99c2f8c8..3ca454379e90 100644
---- a/tools/testing/selftests/bpf/prog_tests/modify_return.c
-+++ b/tools/testing/selftests/bpf/prog_tests/modify_return.c
-@@ -49,6 +49,56 @@ static void run_test(__u32 input_retval, __u16 want_side_effect, __s16 want_ret)
- 	modify_return__destroy(skel);
- }
- 
-+static void run_multi_test(__u32 input_retval, __u16 want_side_effect, __s16 want_ret)
-+{
-+	struct modify_return *skel = NULL;
-+	int err, prog_fd, prog_cnt;
-+	__u16 side_effect;
-+	__s16 ret;
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+
-+	skel = modify_return__open();
-+	if (!ASSERT_OK_PTR(skel, "skel_open"))
-+		goto cleanup;
-+
-+	/* stack function args is not supported by tracing multi-link yet,
-+	 * so we only enable the bpf progs without stack function args.
-+	 */
-+	bpf_program__set_expected_attach_type(skel->progs.fentry_test,
-+					      BPF_TRACE_FENTRY_MULTI);
-+	bpf_program__set_expected_attach_type(skel->progs.fexit_test,
-+					      BPF_TRACE_FEXIT_MULTI);
-+	bpf_program__set_expected_attach_type(skel->progs.fmod_ret_test,
-+					      BPF_MODIFY_RETURN_MULTI);
-+
-+	err = modify_return__load(skel);
-+	if (!ASSERT_OK(err, "skel_load"))
-+		goto cleanup;
-+
-+	prog_cnt = sizeof(skel->progs) / sizeof(long);
-+	err = bpf_attach_as_tracing_multi((void *)&skel->progs,
-+					  prog_cnt,
-+					  (void *)&skel->links);
-+	if (!ASSERT_OK(err, "modify_return__attach failed"))
-+		goto cleanup;
-+
-+	skel->bss->input_retval = input_retval;
-+	prog_fd = bpf_program__fd(skel->progs.fmod_ret_test);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	ASSERT_OK(err, "test_run");
-+
-+	side_effect = UPPER(topts.retval);
-+	ret = LOWER(topts.retval);
-+
-+	ASSERT_EQ(ret, want_ret, "test_run ret");
-+	ASSERT_EQ(side_effect, want_side_effect, "modify_return side_effect");
-+	ASSERT_EQ(skel->bss->fentry_result, 1, "modify_return fentry_result");
-+	ASSERT_EQ(skel->bss->fexit_result, 1, "modify_return fexit_result");
-+	ASSERT_EQ(skel->bss->fmod_ret_result, 1, "modify_return fmod_ret_result");
-+cleanup:
-+	modify_return__destroy(skel);
-+}
-+
- /* TODO: conflict with get_func_ip_test */
- void serial_test_modify_return(void)
- {
-@@ -59,3 +109,13 @@ void serial_test_modify_return(void)
- 		 0 /* want_side_effect */,
- 		 -EINVAL * 2 /* want_ret */);
- }
-+
-+void serial_test_modify_return_multi(void)
-+{
-+	run_multi_test(0 /* input_retval */,
-+		       2 /* want_side_effect */,
-+		       33 /* want_ret */);
-+	run_multi_test(-EINVAL /* input_retval */,
-+		       1 /* want_side_effect */,
-+		       -EINVAL + 29 /* want_ret */);
-+}
-diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi_link.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi_link.c
-new file mode 100644
-index 000000000000..1cbe6089472f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi_link.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 ChinaTelecom */
-+
-+#include <test_progs.h>
-+
-+#include "tracing_multi_test.skel.h"
-+#include "fentry_multi_empty.skel.h"
-+
-+static void test_run(struct tracing_multi_test *skel)
-+{
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	int err, prog_fd;
-+
-+	skel->bss->pid = getpid();
-+	prog_fd = bpf_program__fd(skel->progs.fentry_cookie_test1);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	ASSERT_OK(err, "test_run");
-+	ASSERT_EQ(topts.retval, 0, "test_run");
-+
-+	ASSERT_EQ(skel->bss->fentry_test1_result, 1, "fentry_test1_result");
-+	ASSERT_EQ(skel->bss->fentry_test2_result, 1, "fentry_test2_result");
-+	ASSERT_EQ(skel->bss->fentry_test3_result, 1, "fentry_test3_result");
-+	ASSERT_EQ(skel->bss->fentry_test4_result, 1, "fentry_test4_result");
-+	ASSERT_EQ(skel->bss->fentry_test5_result, 1, "fentry_test5_result");
-+	ASSERT_EQ(skel->bss->fentry_test6_result, 1, "fentry_test6_result");
-+	ASSERT_EQ(skel->bss->fentry_test7_result, 1, "fentry_test7_result");
-+	ASSERT_EQ(skel->bss->fentry_test8_result, 1, "fentry_test8_result");
-+}
-+
-+static void test_skel_auto_api(void)
-+{
-+	struct tracing_multi_test *skel;
-+	int err;
-+
-+	skel = tracing_multi_test__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_test__open_and_load"))
-+		return;
-+
-+	/* disable all programs that should fail */
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test1, false);
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test2, false);
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test3, false);
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test4, false);
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test5, false);
-+	bpf_program__set_autoattach(skel->progs.fentry_fail_test6, false);
-+
-+	bpf_program__set_autoattach(skel->progs.fexit_fail_test1, false);
-+	bpf_program__set_autoattach(skel->progs.fexit_fail_test2, false);
-+	bpf_program__set_autoattach(skel->progs.fexit_fail_test3, false);
-+
-+	err = tracing_multi_test__attach(skel);
-+	if (!ASSERT_OK(err, "tracing_multi_test__attach"))
-+		goto cleanup;
-+
-+	test_run(skel);
-+
-+cleanup:
-+	tracing_multi_test__destroy(skel);
-+}
-+
-+static int attach_bpf(struct bpf_program *prog, struct bpf_link **link_ptr,
-+		       bool success)
-+{
-+	struct bpf_link *link;
-+	int err;
-+
-+	link = bpf_program__attach(prog);
-+	err = libbpf_get_error(link);
-+	if (!ASSERT_OK(success ? err : !err, "attach_bpf"))
-+		return err;
-+	*link_ptr = link;
-+
-+	return 0;
-+}
-+
-+#define attach_skel_bpf(name, success) \
-+	attach_bpf(skel->progs.name, &skel->links.name, success)
-+
-+static void test_skel_manual_api(void)
-+{
-+	struct tracing_multi_test *skel;
-+
-+	skel = tracing_multi_test__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_test__open_and_load"))
-+		return;
-+
-+	if (attach_skel_bpf(fentry_success_test1, true) ||
-+	    attach_skel_bpf(fentry_success_test2, true) ||
-+	    attach_skel_bpf(fentry_success_test3, true) ||
-+	    attach_skel_bpf(fentry_success_test4, true) ||
-+	    attach_skel_bpf(fexit_success_test1, true) ||
-+	    attach_skel_bpf(fexit_success_test2, true) ||
-+	    attach_skel_bpf(fentry_fail_test1, false) ||
-+	    attach_skel_bpf(fentry_fail_test2, false) ||
-+	    attach_skel_bpf(fentry_fail_test3, false) ||
-+	    attach_skel_bpf(fentry_fail_test4, false) ||
-+	    attach_skel_bpf(fentry_fail_test5, false) ||
-+	    attach_skel_bpf(fentry_fail_test6, false) ||
-+	    attach_skel_bpf(fexit_fail_test1, false) ||
-+	    attach_skel_bpf(fexit_fail_test2, false) ||
-+	    attach_skel_bpf(fexit_fail_test3, false) ||
-+	    attach_skel_bpf(fentry_cookie_test1, true))
-+		goto cleanup;
-+
-+	test_run(skel);
-+
-+cleanup:
-+	tracing_multi_test__destroy(skel);
-+}
-+
-+static void test_attach_api(void)
-+{
-+	LIBBPF_OPTS(bpf_trace_multi_opts, opts);
-+	struct tracing_multi_test *skel;
-+	struct bpf_link *link;
-+	const char *syms[8] = {
-+		"bpf_fentry_test1",
-+		"bpf_fentry_test2",
-+		"bpf_fentry_test3",
-+		"bpf_fentry_test4",
-+		"bpf_fentry_test5",
-+		"bpf_fentry_test6",
-+		"bpf_fentry_test7",
-+		"bpf_fentry_test8",
-+	};
-+	__u64 cookies[] = {1, 7, 2, 3, 4, 5, 6, 8};
-+
-+	skel = tracing_multi_test__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_test__open_and_load"))
-+		return;
-+
-+	opts.syms = syms;
-+	opts.cookies = cookies;
-+	opts.cnt = ARRAY_SIZE(syms);
-+	link = bpf_program__attach_trace_multi_opts(skel->progs.fentry_cookie_test1,
-+						    &opts);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_trace_multi_opts"))
-+		goto cleanup;
-+	skel->links.fentry_cookie_test1 = link;
-+
-+	skel->bss->test_cookie = true;
-+	test_run(skel);
-+cleanup:
-+	tracing_multi_test__destroy(skel);
-+}
-+
-+static void test_attach_bench(bool kernel)
-+{
-+	LIBBPF_OPTS(bpf_trace_multi_opts, opts);
-+	struct fentry_multi_empty *skel;
-+	long attach_start_ns, attach_end_ns;
-+	long detach_start_ns, detach_end_ns;
-+	double attach_delta, detach_delta;
-+	struct bpf_link *link = NULL;
-+	char **syms = NULL;
-+	size_t cnt = 0;
-+
-+	if (!ASSERT_OK(bpf_get_ksyms(&syms, &cnt, kernel), "get_syms"))
-+		return;
-+
-+	skel = fentry_multi_empty__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "fentry_multi_empty__open_and_load"))
-+		goto cleanup;
-+
-+	opts.syms = (const char **) syms;
-+	opts.cnt = cnt;
-+	opts.skip_invalid = true;
-+
-+	attach_start_ns = get_time_ns();
-+	link = bpf_program__attach_trace_multi_opts(skel->progs.fentry_multi_empty,
-+						    &opts);
-+	attach_end_ns = get_time_ns();
-+
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_trace_multi_opts"))
-+		return;
-+
-+	detach_start_ns = get_time_ns();
-+	bpf_link__destroy(link);
-+	detach_end_ns = get_time_ns();
-+
-+	attach_delta = (attach_end_ns - attach_start_ns) / 1000000000.0;
-+	detach_delta = (detach_end_ns - detach_start_ns) / 1000000000.0;
-+
-+	printf("%s: found %lu functions\n", __func__, opts.cnt);
-+	printf("%s: attached in %7.3lfs\n", __func__, attach_delta);
-+	printf("%s: detached in %7.3lfs\n", __func__, detach_delta);
-+
-+cleanup:
-+	fentry_multi_empty__destroy(skel);
-+	if (syms)
-+		free(syms);
-+}
-+
-+void serial_test_tracing_multi_attach_bench(void)
-+{
-+	if (test__start_subtest("kernel"))
-+		test_attach_bench(true);
-+	if (test__start_subtest("modules"))
-+		test_attach_bench(false);
-+}
-+
-+void test_tracing_multi_attach_test(void)
-+{
-+	if (test__start_subtest("skel_auto_api"))
-+		test_skel_auto_api();
-+	if (test__start_subtest("skel_manual_api"))
-+		test_skel_manual_api();
-+	if (test__start_subtest("attach_api"))
-+		test_attach_api();
-+}
-diff --git a/tools/testing/selftests/bpf/progs/fentry_multi_empty.c b/tools/testing/selftests/bpf/progs/fentry_multi_empty.c
-new file mode 100644
-index 000000000000..a09ba216dff8
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/fentry_multi_empty.c
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 ChinaTelecom */
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+SEC("fentry.multi/bpf_fentry_test1")
-+int BPF_PROG(fentry_multi_empty)
-+{
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/bpf/progs/tracing_multi_test.c b/tools/testing/selftests/bpf/progs/tracing_multi_test.c
-new file mode 100644
-index 000000000000..fa27851896b9
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/tracing_multi_test.c
-@@ -0,0 +1,181 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 ChinaTelecom */
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+struct bpf_testmod_struct_arg_1 {
-+	int a;
-+};
-+struct bpf_testmod_struct_arg_2 {
-+	long a;
-+	long b;
-+};
-+
-+__u64 test_result = 0;
-+
-+int pid = 0;
-+int test_cookie = 0;
-+
-+__u64 fentry_test1_result = 0;
-+__u64 fentry_test2_result = 0;
-+__u64 fentry_test3_result = 0;
-+__u64 fentry_test4_result = 0;
-+__u64 fentry_test5_result = 0;
-+__u64 fentry_test6_result = 0;
-+__u64 fentry_test7_result = 0;
-+__u64 fentry_test8_result = 0;
-+
-+extern const void bpf_fentry_test1 __ksym;
-+extern const void bpf_fentry_test2 __ksym;
-+extern const void bpf_fentry_test3 __ksym;
-+extern const void bpf_fentry_test4 __ksym;
-+extern const void bpf_fentry_test5 __ksym;
-+extern const void bpf_fentry_test6 __ksym;
-+extern const void bpf_fentry_test7 __ksym;
-+extern const void bpf_fentry_test8 __ksym;
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_13")
-+int BPF_PROG2(fentry_success_test1, struct bpf_testmod_struct_arg_2, a)
-+{
-+	test_result = a.a + a.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_10")
-+int BPF_PROG2(fentry_success_test2, int, a, struct bpf_testmod_struct_arg_2, b)
-+{
-+	test_result = a + b.a + b.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_4")
-+int BPF_PROG2(fentry_success_test3, struct bpf_testmod_struct_arg_2, a, int, b,
-+	      int, c)
-+{
-+	test_result = c;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_2")
-+int BPF_PROG2(fentry_success_test4, struct bpf_testmod_struct_arg_2, a, int, b,
-+	      int, c)
-+{
-+	test_result = c;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_1")
-+int BPF_PROG2(fentry_fail_test1, struct bpf_testmod_struct_arg_2, a)
-+{
-+	test_result = a.a + a.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_2")
-+int BPF_PROG2(fentry_fail_test2, struct bpf_testmod_struct_arg_2, a)
-+{
-+	test_result = a.a + a.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_4")
-+int BPF_PROG2(fentry_fail_test3, struct bpf_testmod_struct_arg_2, a)
-+{
-+	test_result = a.a + a.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_2")
-+int BPF_PROG2(fentry_fail_test4, int, a, struct bpf_testmod_struct_arg_2, b)
-+{
-+	test_result = a + b.a + b.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_13")
-+int BPF_PROG2(fentry_fail_test5, int, a, struct bpf_testmod_struct_arg_2, b)
-+{
-+	test_result = a + b.a + b.b;
-+	return 0;
-+}
-+
-+SEC("fentry.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_12")
-+int BPF_PROG2(fentry_fail_test6, struct bpf_testmod_struct_arg_2, a, int, b,
-+	      int, c)
-+{
-+	test_result = c;
-+	return 0;
-+}
-+
-+SEC("fexit.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_3")
-+int BPF_PROG2(fexit_success_test1, struct bpf_testmod_struct_arg_2, a, int, b,
-+	      int, c, int, retval)
-+{
-+	test_result = retval;
-+	return 0;
-+}
-+
-+SEC("fexit.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_12")
-+int BPF_PROG2(fexit_success_test2, int, a, struct bpf_testmod_struct_arg_2, b,
-+	      int, c, int, retval)
-+{
-+	test_result = a + b.a + b.b + retval;
-+	return 0;
-+}
-+
-+SEC("fexit.multi/bpf_testmod_test_struct_arg_1,bpf_testmod_test_struct_arg_4")
-+int BPF_PROG2(fexit_fail_test1, struct bpf_testmod_struct_arg_2, a, int, b,
-+	      int, c, int, retval)
-+{
-+	test_result = retval;
-+	return 0;
-+}
-+
-+SEC("fexit.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_10")
-+int BPF_PROG2(fexit_fail_test2, int, a, struct bpf_testmod_struct_arg_2, b,
-+	      int, c, int, retval)
-+{
-+	test_result = a + b.a + b.b + retval;
-+	return 0;
-+}
-+
-+SEC("fexit.multi/bpf_testmod_test_struct_arg_2,bpf_testmod_test_struct_arg_11")
-+int BPF_PROG2(fexit_fail_test3, int, a, struct bpf_testmod_struct_arg_2, b,
-+	      int, c, int, retval)
-+{
-+	test_result = a + b.a + b.b + retval;
-+	return 0;
-+}
-+
-+static void tracing_multi_check_cookie(unsigned long long *ctx)
-+{
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return;
-+
-+	__u64 cookie = test_cookie ? bpf_get_attach_cookie(ctx) : 0;
-+	__u64 addr = bpf_get_func_ip(ctx);
-+
-+#define SET(__var, __addr, __cookie) ({			\
-+	if (((const void *) addr == __addr) &&		\
-+	     (!test_cookie || (cookie == __cookie)))	\
-+		__var = 1;				\
-+})
-+	SET(fentry_test1_result, &bpf_fentry_test1, 1);
-+	SET(fentry_test2_result, &bpf_fentry_test2, 7);
-+	SET(fentry_test3_result, &bpf_fentry_test3, 2);
-+	SET(fentry_test4_result, &bpf_fentry_test4, 3);
-+	SET(fentry_test5_result, &bpf_fentry_test5, 4);
-+	SET(fentry_test6_result, &bpf_fentry_test6, 5);
-+	SET(fentry_test7_result, &bpf_fentry_test7, 6);
-+	SET(fentry_test8_result, &bpf_fentry_test8, 8);
-+}
-+
-+SEC("fentry.multi/bpf_fentry_test1,bpf_fentry_test2,bpf_fentry_test3,bpf_fentry_test4,bpf_fentry_test5,bpf_fentry_test6,bpf_fentry_test7,bpf_fentry_test8")
-+int BPF_PROG(fentry_cookie_test1)
-+{
-+	tracing_multi_check_cookie(ctx);
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index e9e918cdf31f..07ea1d5d3795 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -128,6 +128,30 @@ bpf_testmod_test_struct_arg_9(u64 a, void *b, short c, int d, void *e, char f,
- 	return bpf_testmod_test_struct_arg_result;
- }
- 
-+noinline int
-+bpf_testmod_test_struct_arg_10(int a, struct bpf_testmod_struct_arg_2 b) {
-+	bpf_testmod_test_struct_arg_result = a + b.a + b.b;
-+	return bpf_testmod_test_struct_arg_result;
-+}
-+
-+noinline struct bpf_testmod_struct_arg_2 *
-+bpf_testmod_test_struct_arg_11(int a, struct bpf_testmod_struct_arg_2 b, int c) {
-+	bpf_testmod_test_struct_arg_result = a + b.a + b.b + c;
-+	return (void *)bpf_testmod_test_struct_arg_result;
-+}
-+
-+noinline int
-+bpf_testmod_test_struct_arg_12(int a, struct bpf_testmod_struct_arg_2 b, int *c) {
-+	bpf_testmod_test_struct_arg_result = a + b.a + b.b + *c;
-+	return bpf_testmod_test_struct_arg_result;
-+}
-+
-+noinline int
-+bpf_testmod_test_struct_arg_13(struct bpf_testmod_struct_arg_2 b) {
-+	bpf_testmod_test_struct_arg_result = b.a + b.b;
-+	return bpf_testmod_test_struct_arg_result;
-+}
-+
- noinline int
- bpf_testmod_test_arg_ptr_to_struct(struct bpf_testmod_struct_arg_1 *a) {
- 	bpf_testmod_test_struct_arg_result = a->a;
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 309d9d4a8ace..533b714f1ca6 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -667,6 +667,56 @@ int bpf_find_map(const char *test, struct bpf_object *obj, const char *name)
- 	return bpf_map__fd(map);
- }
- 
-+int bpf_to_tracing_multi(struct bpf_program **progs, int prog_cnt)
-+{
-+	enum bpf_attach_type type;
-+	int i, err;
-+
-+	for (i = 0; i < prog_cnt; i++) {
-+		type = bpf_program__get_expected_attach_type(progs[i]);
-+		if (type == BPF_TRACE_FENTRY)
-+			type = BPF_TRACE_FENTRY_MULTI;
-+		else if (type == BPF_TRACE_FEXIT)
-+			type = BPF_TRACE_FEXIT_MULTI;
-+		else if (type == BPF_MODIFY_RETURN)
-+			type = BPF_MODIFY_RETURN_MULTI;
-+		else
-+			continue;
-+		err = bpf_program__set_expected_attach_type(progs[i], type);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+int bpf_attach_as_tracing_multi(struct bpf_program **progs, int prog_cnt,
-+				struct bpf_link **link)
-+{
-+	struct bpf_link *__link;
-+	int err, type;
-+
-+	for (int i = 0; i < prog_cnt; i++) {
-+		LIBBPF_OPTS(bpf_trace_multi_opts, opts);
-+
-+		type = bpf_program__get_expected_attach_type(progs[i]);
-+		if (type != BPF_TRACE_FENTRY_MULTI &&
-+		    type != BPF_TRACE_FEXIT_MULTI &&
-+		    type != BPF_MODIFY_RETURN_MULTI)
-+			continue;
-+
-+		opts.attach_tracing = true;
-+		__link = bpf_program__attach_trace_multi_opts(progs[i], &opts);
-+		err = libbpf_get_error(link);
-+		if (err)
-+			return err;
-+
-+		link[i] = __link;
-+	}
-+
-+	return 0;
-+}
-+
- int compare_map_keys(int map1_fd, int map2_fd)
- {
- 	__u32 key, next_key;
-diff --git a/tools/testing/selftests/bpf/test_progs.h b/tools/testing/selftests/bpf/test_progs.h
-index df2222a1806f..7e30c6dbf35c 100644
---- a/tools/testing/selftests/bpf/test_progs.h
-+++ b/tools/testing/selftests/bpf/test_progs.h
-@@ -496,6 +496,9 @@ int trigger_module_test_write(int write_sz);
- int write_sysctl(const char *sysctl, const char *value);
- int get_bpf_max_tramp_links_from(struct btf *btf);
- int get_bpf_max_tramp_links(void);
-+int bpf_to_tracing_multi(struct bpf_program **progs, int prog_cnt);
-+int bpf_attach_as_tracing_multi(struct bpf_program **progs, int prog_cnt,
-+				struct bpf_link **link);
- 
- struct netns_obj;
- struct netns_obj *netns_new(const char *name, bool open);
-diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-index d24baf244d1f..a9e9dd3be226 100644
---- a/tools/testing/selftests/bpf/trace_helpers.c
-+++ b/tools/testing/selftests/bpf/trace_helpers.c
-@@ -559,6 +559,75 @@ static bool skip_entry(char *name)
- 	if (!strncmp(name, "__ftrace_invalid_address__",
- 		     sizeof("__ftrace_invalid_address__") - 1))
- 		return true;
-+
-+	/* skip functions in "btf_id_deny" */
-+	if (!strcmp(name, "migrate_disable"))
-+		return true;
-+	if (!strcmp(name, "migrate_enable"))
-+		return true;
-+	if (!strcmp(name, "rcu_read_unlock_strict"))
-+		return true;
-+	if (!strcmp(name, "preempt_count_add"))
-+		return true;
-+	if (!strcmp(name, "preempt_count_sub"))
-+		return true;
-+	if (!strcmp(name, "__rcu_read_lock"))
-+		return true;
-+	if (!strcmp(name, "__rcu_read_unlock"))
-+		return true;
-+
-+	/* Following symbols have multi definition in kallsyms, take
-+	 * "t_next" for example:
-+	 *
-+	 *     ffffffff813c10d0 t t_next
-+	 *     ffffffff813d31b0 t t_next
-+	 *     ffffffff813e06b0 t t_next
-+	 *     ffffffff813eb360 t t_next
-+	 *     ffffffff81613360 t t_next
-+	 *
-+	 * but only one of them have corresponding mrecord:
-+	 *     ffffffff81613364 t_next
-+	 *
-+	 * The kernel search the target function address by the symbol
-+	 * name "t_next" with kallsyms_lookup_name() during attaching
-+	 * and the function "0xffffffff813c10d0" can be matched, which
-+	 * doesn't have a corresponding mrecord. And this will make
-+	 * the attach failing. Skip the functions like this.
-+	 *
-+	 * The list maybe not whole, so we still can fail......We need a
-+	 * way to make the whole things right. Yes, we need fix it :/
-+	 */
-+	if (!strcmp(name, "kill_pid_usb_asyncio"))
-+		return true;
-+	if (!strcmp(name, "t_next"))
-+		return true;
-+	if (!strcmp(name, "t_stop"))
-+		return true;
-+	if (!strcmp(name, "t_start"))
-+		return true;
-+	if (!strcmp(name, "p_next"))
-+		return true;
-+	if (!strcmp(name, "p_stop"))
-+		return true;
-+	if (!strcmp(name, "p_start"))
-+		return true;
-+	if (!strcmp(name, "mem32_serial_out"))
-+		return true;
-+	if (!strcmp(name, "mem32_serial_in"))
-+		return true;
-+	if (!strcmp(name, "io_serial_in"))
-+		return true;
-+	if (!strcmp(name, "io_serial_out"))
-+		return true;
-+	if (!strcmp(name, "event_callback"))
-+		return true;
-+	if (!strcmp(name, "amd_pmu_init"))
-+		return true;
-+	if (!strcmp(name, "sync_regs"))
-+		return true;
-+	if (!strcmp(name, "empty"))
-+		return true;
-+
- 	return false;
- }
- 
--- 
-2.39.5
-
+> +	.log_pipe_status =3D max9626a_log_pipe_status,
+> +	.log_phy_status =3D max9296a_log_phy_status,
+> +	.set_enable =3D max9296a_set_enable,
+> +	.init =3D max9296a_init,
+> +	.init_phy =3D max9296a_init_phy,
+> +	.set_phy_mode =3D max9296a_set_phy_mode,
+> +	.set_phy_enable =3D max9296a_set_phy_enable,
+> +	.set_pipe_remap =3D max9296a_set_pipe_remap,
+> +	.set_pipe_remaps_enable =3D max9296a_set_pipe_remaps_enable,
+> +	.set_pipe_mode =3D max9296a_set_pipe_mode,
+> +	.set_tpg =3D max9296a_set_tpg,
+> +	.init_link =3D max9296a_init_link,
+> +	.select_links =3D max9296a_select_links,
+> +	.set_link_version =3D max9296a_set_link_version,
+> +};
+> +
+> +static int max9296a_probe(struct i2c_client *client)
+> +{
+> +	struct regmap_config i2c_regmap =3D max9296a_i2c_regmap;
+> +	struct device *dev =3D &client->dev;
+> +	struct max9296a_priv *priv;
+> +	struct max_des_ops *ops;
+> +	int ret;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	ops =3D devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
+> +	if (!ops)
+> +		return -ENOMEM;
+> +
+> +	priv->info =3D device_get_match_data(dev);
+> +	if (!priv->info) {
+> +		dev_err(dev, "Failed to get match data\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv->dev =3D dev;
+> +	priv->client =3D client;
+> +	i2c_set_clientdata(client, priv);
+> +
+> +	i2c_regmap.max_register =3D priv->info->max_register;
+> +	priv->regmap =3D devm_regmap_init_i2c(client, &i2c_regmap);
+> +	if (IS_ERR(priv->regmap))
+> +		return PTR_ERR(priv->regmap);
+> +
+> +	priv->gpiod_pwdn =3D devm_gpiod_get_optional(&client->dev, "powerdown",
+> +						=C2=A0=C2=A0 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(priv->gpiod_pwdn))
+> +		return PTR_ERR(priv->gpiod_pwdn);
+> +
+> +	if (priv->gpiod_pwdn) {
+> +		/* PWDN must be held for 1us for reset */
+> +		udelay(1);
+> +
+> +		gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
+> +		/* Maximum power-up time (tLOCK) 4ms */
+> +		usleep_range(4000, 5000);
+> +	}
+> +
+> +	*ops =3D max9296a_common_ops;
+> +
+> +	ops->versions =3D priv->info->ops->versions;
+> +	ops->modes =3D priv->info->ops->modes;
+> +	ops->needs_single_link_version =3D priv->info->ops->needs_single_link_v=
+ersion;
+> +	ops->needs_unique_stream_id =3D priv->info->ops->needs_unique_stream_id=
+;
+> +	ops->fix_tx_ids =3D priv->info->ops->fix_tx_ids;
+> +	ops->num_phys =3D priv->info->ops->num_phys;
+> +	ops->num_pipes =3D priv->info->ops->num_pipes;
+> +	ops->num_links =3D priv->info->ops->num_links;
+> +	ops->phys_configs =3D priv->info->ops->phys_configs;
+> +	ops->set_pipe_enable =3D priv->info->ops->set_pipe_enable;
+> +	ops->set_pipe_stream_id =3D priv->info->ops->set_pipe_stream_id;
+> +	ops->set_pipe_tunnel_phy =3D priv->info->ops->set_pipe_tunnel_phy;
+> +	ops->set_pipe_tunnel_enable =3D priv->info->ops->set_pipe_tunnel_enable=
+;
+> +	ops->use_atr =3D priv->info->ops->use_atr;
+> +	ops->tpg_mode =3D priv->info->ops->tpg_mode;
+> +	priv->des.ops =3D ops;
+> +
+> +	ret =3D max9296a_reset(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return max_des_probe(client, &priv->des);
+> +}
+> +
+> +static void max9296a_remove(struct i2c_client *client)
+> +{
+> +	struct max9296a_priv *priv =3D i2c_get_clientdata(client);
+> +
+> +	max_des_remove(&priv->des);
+> +
+> +	gpiod_set_value_cansleep(priv->gpiod_pwdn, 1);
+> +}
+> +
+> +static const struct max_serdes_phys_config max9296a_phys_configs[] =3D {
+> +	{ { 4, 4 } },
+> +};
+> +
+> +static const struct max_serdes_phys_config max96714_phys_configs[] =3D {
+> +	{ { 4 } },
+> +};
+> +
+> +static const struct max_des_ops max9296a_ops =3D {
+> +	.versions =3D BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		=C2=A0=C2=A0=C2=A0 BIT(MAX_SERDES_GMSL_2_6GBPS),
+> +	.modes =3D BIT(MAX_SERDES_GMSL_PIXEL_MODE),
+> +	.set_pipe_stream_id =3D max9296a_set_pipe_stream_id,
+> +	.set_pipe_enable =3D max9296a_set_pipe_enable,
+> +	.needs_single_link_version =3D true,
+> +	.needs_unique_stream_id =3D true,
+> +	.phys_configs =3D {
+> +		.num_configs =3D ARRAY_SIZE(max9296a_phys_configs),
+> +		.configs =3D max9296a_phys_configs,
+> +	},
+> +	.fix_tx_ids =3D true,
+> +	.num_pipes =3D 4,
+> +	.num_phys =3D 2,
+> +	.num_links =3D 2,
+> +};
+> +
+> +static const struct max9296a_chip_info max9296a_info =3D {
+> +	.ops =3D &max9296a_ops,
+> +	.max_register =3D 0x1f00,
+> +	.use_atr =3D true,
+> +	.phy0_lanes_0_1_on_second_phy =3D true,
+> +	.pipe_hw_ids =3D { 0, 1, 2, 3 },
+> +	.phy_hw_ids =3D { 1, 2 },
+> +};
+> +
+> +static const struct max_des_ops max96714_ops =3D {
+> +	.versions =3D BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		=C2=A0=C2=A0=C2=A0 BIT(MAX_SERDES_GMSL_2_6GBPS),
+> +	.modes =3D BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_stream_id =3D max96714_set_pipe_stream_id,
+> +	.set_pipe_enable =3D max96714_set_pipe_enable,
+> +	.set_pipe_tunnel_enable =3D max96714_set_pipe_tunnel_enable,
+> +	.phys_configs =3D {
+> +		.num_configs =3D ARRAY_SIZE(max96714_phys_configs),
+> +		.configs =3D max96714_phys_configs,
+> +	},
+> +	.tpg_mode =3D MAX_SERDES_GMSL_PIXEL_MODE,
+> +	.num_pipes =3D 1,
+> +	.num_phys =3D 1,
+> +	.num_links =3D 1,
+> +};
+> +
+>=20
+>=20
+static const struct reg_sequence max96714_rlms_reg_sequence[] =3D {
+		{ MAX9296A_RLMS3E(index), 0xfd },
+		{ MAX9296A_RLMS3F(index), 0x3d },
+		{ MAX9296A_RLMS49(index), 0xf5 },
+		{ MAX9296A_RLMS7E(index), 0xa8 },
+		{ MAX9296A_RLMS7F(index), 0x68 },
+		{ MAX9296A_RLMSA3(index), 0x30 },
+		{ MAX9296A_RLMSA5(index), 0x70 },
+		{ MAX9296A_RLMSD8(index), 0x07 },
+};
+> +static const struct max9296a_chip_info max96714_info =3D {
+> +	.ops =3D &max96714_ops,
+> +	.max_register =3D 0x5011,
+> +	.polarity_on_physical_lanes =3D true,
+> +	.supports_phy_log =3D true,
+> +	.adjust_rlms =3D true,
+Instead of having a boolean here and a max96714 specific reg_sequence
+in max9296a_init_link_rlms,
+then you can have
+        .rlms_adjust_sequence =3D &max96714_rlms_reg_sequence,
+> +	.pipe_hw_ids =3D { 1 },
+> +	.phy_hw_ids =3D { 1 },
+> +};
+> +
+> +static const struct max_des_ops max96714f_ops =3D {
+> +	.versions =3D BIT(MAX_SERDES_GMSL_2_3GBPS),
+> +	.modes =3D BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_stream_id =3D max96714_set_pipe_stream_id,
+> +	.set_pipe_enable =3D max96714_set_pipe_enable,
+> +	.set_pipe_tunnel_enable =3D max96714_set_pipe_tunnel_enable,
+> +	.phys_configs =3D {
+> +		.num_configs =3D ARRAY_SIZE(max96714_phys_configs),
+> +		.configs =3D max96714_phys_configs,
+> +	},
+> +	.tpg_mode =3D MAX_SERDES_GMSL_PIXEL_MODE,
+> +	.num_pipes =3D 1,
+> +	.num_phys =3D 1,
+> +	.num_links =3D 1,
+> +};
+> +
+> +static const struct max9296a_chip_info max96714f_info =3D {
+> +	.ops =3D &max96714f_ops,
+> +	.max_register =3D 0x5011,
+> +	.polarity_on_physical_lanes =3D true,
+> +	.supports_phy_log =3D true,
+> +	.adjust_rlms =3D true,
+> +	.pipe_hw_ids =3D { 1 },
+> +	.phy_hw_ids =3D { 1 },
+> +};
+> +
+> +static const struct max_des_ops max96716a_ops =3D {
+> +	.versions =3D BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		=C2=A0=C2=A0=C2=A0 BIT(MAX_SERDES_GMSL_2_6GBPS),
+> +	.modes =3D BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_stream_id =3D max96714_set_pipe_stream_id,
+> +	.set_pipe_link =3D max96716a_set_pipe_link,
+> +	.set_pipe_enable =3D max96714_set_pipe_enable,
+> +	.set_pipe_tunnel_phy =3D max96716a_set_pipe_tunnel_phy,
+> +	.set_pipe_tunnel_enable =3D max96714_set_pipe_tunnel_enable,
+> +	.use_atr =3D true,
+> +	.phys_configs =3D {
+> +		.num_configs =3D ARRAY_SIZE(max9296a_phys_configs),
+> +		.configs =3D max9296a_phys_configs,
+> +	},
+> +	.tpg_mode =3D MAX_SERDES_GMSL_PIXEL_MODE,
+> +	.num_pipes =3D 2,
+> +	.num_phys =3D 2,
+> +	.num_links =3D 2,
+> +};
+> +
+> +static const struct max9296a_chip_info max96716a_info =3D {
+> +	.ops =3D &max96716a_ops,
+> +	.max_register =3D 0x52d6,
+> +	.has_per_link_reset =3D true,
+> +	.phy0_lanes_0_1_on_second_phy =3D true,
+> +	.supports_cphy =3D true,
+> +	.supports_phy_log =3D true,
+> +	.pipe_hw_ids =3D { 1, 2 },
+> +	.phy_hw_ids =3D { 1, 2 },
+> +};
+> +
+> +static const struct max_des_ops max96792a_ops =3D {
+> +	.versions =3D BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		=C2=A0=C2=A0=C2=A0 BIT(MAX_SERDES_GMSL_2_6GBPS) |
+> +		=C2=A0=C2=A0=C2=A0 BIT(MAX_SERDES_GMSL_3),
+> +	.modes =3D BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_stream_id =3D max96714_set_pipe_stream_id,
+> +	.set_pipe_enable =3D max96714_set_pipe_enable,
+> +	.set_pipe_tunnel_phy =3D max96716a_set_pipe_tunnel_phy,
+> +	.set_pipe_tunnel_enable =3D max96714_set_pipe_tunnel_enable,
+> +	.use_atr =3D true,
+> +	.phys_configs =3D {
+> +		.num_configs =3D ARRAY_SIZE(max9296a_phys_configs),
+> +		.configs =3D max9296a_phys_configs,
+> +	},
+> +	.tpg_mode =3D MAX_SERDES_GMSL_PIXEL_MODE,
+> +	.num_pipes =3D 2,
+> +	.num_phys =3D 2,
+> +	.num_links =3D 2,
+> +};
+> +
+> +static const struct max9296a_chip_info max96792a_info =3D {
+> +	.ops =3D &max96792a_ops,
+> +	.max_register =3D 0x52d6,
+> +	.has_per_link_reset =3D true,
+> +	.phy0_lanes_0_1_on_second_phy =3D true,
+> +	.supports_cphy =3D true,
+> +	.supports_phy_log =3D true,
+> +	.pipe_hw_ids =3D { 1, 2 },
+> +	.phy_hw_ids =3D { 1, 2 },
+> +};
+> +
+> +static const struct of_device_id max9296a_of_table[] =3D {
+> +	{ .compatible =3D "maxim,max9296a", .data =3D &max9296a_info },
+> +	{ .compatible =3D "maxim,max96714", .data =3D &max96714_info },
+> +	{ .compatible =3D "maxim,max96714f", .data =3D &max96714f_info },
+> +	{ .compatible =3D "maxim,max96714r", .data =3D &max96714f_info },
+> +	{ .compatible =3D "maxim,max96716a", .data =3D &max96716a_info },
+> +	{ .compatible =3D "maxim,max96792a", .data =3D &max96792a_info },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, max9296a_of_table);
+> +
+> +static struct i2c_driver max9296a_i2c_driver =3D {
+> +	.driver	=3D {
+> +		.name =3D "max9296a",
+> +		.of_match_table	=3D max9296a_of_table,
+> +	},
+> +	.probe =3D max9296a_probe,
+> +	.remove =3D max9296a_remove,
+> +};
+> +
+> +module_i2c_driver(max9296a_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Maxim MAX9296A Quad GMSL2 Deserializer Driver");
+> +MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
+> +MODULE_LICENSE("GPL");
+Regards,
+--=20
+Julien
