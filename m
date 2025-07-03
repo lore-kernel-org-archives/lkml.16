@@ -1,110 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E50F17FAC2;
-	Thu,  3 Jul 2025 14:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C0553365;
+	Thu,  3 Jul 2025 14:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553368; cv=none; b=EZ0WtOLFIU1KTuN82Mxqgbf3yMMuKL5zeIwEaS+nri1e8FYShtLcINI+zRj0nQ8T2Nx05xZVsZ5D6d5cZH7rogHFJTUXi8p7olmbapXqecGrpfcwdwsd0avvmvsVj2Jf5xCDlQbdNSEcMMleSM+q0rd5hvqYU1vVhv1snsnB4k0=
+	t=1751553393; cv=none; b=MbChFXeFGfw74DBQ+VQ3xZncb0dfHtWgLLVjkwEo2jZq1UYbsXd9/WIRhlfnmKJVtTW/ZvxaUmNz4bQDhlyPeDxEwZL6T0bkifCPJXFVzRShrkBw7KvfAp9feijK1bxyKfkR6UiDFo8IKEy2p2ZIsReHupEFU8LD79cXg87dixo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553368; c=relaxed/simple;
-	bh=pvG7xe6BGbrfAKTfLgoDx+709pfuEK1E7qCKVSKlUn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tRVDxLivlTU5ou3HA1IeW6xdg42dGg+uxhqWsXrzqwol1d7I/O1xBCUuEFzn5U0Z8yfWcPXWHsyu7khqtFw6XK+eCKZ03CWi15s3AQqY2FeDUhLFtU4sEiyw+hWO1f/iYgyHfSy3dZGQde7MpX0Ck00+MAmwsAc1XpUbdWfrznI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ccq7GgnF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751553393; c=relaxed/simple;
+	bh=nVETv5P+aZJXZMi/j9tZ4lMlgii5uB8/cLl650IqYz4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=b9eo2+no1bXGPD/aL6/S83fwhMpqGJGQW7YAe2KrUwk/7s1uHKfwxd2LhRzPsajCvMGQGaKyzRfYLFr3t0sbvoORBE5y6aTmXuxw8hp1SEwSFrRKF+HIYoPLF17qzd7oWXbdjXfABJahLVnCrSLM48YGT/wFnXGgvVeApnU9oy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX1gEZ2M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ccq7GgnF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5564C4AF09;
-	Thu,  3 Jul 2025 14:36:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX1gEZ2M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4288FC4CEE3;
+	Thu,  3 Jul 2025 14:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751553367;
-	bh=pvG7xe6BGbrfAKTfLgoDx+709pfuEK1E7qCKVSKlUn8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ccq7GgnF0NuNYeTP/kVe4NStb8lu5PFyyKieEqXXKWkXfKqcQwBWG58NtsVofqMfv
-	 zLjYaWXNfLN5XWLHffYl8NBoVmSRIIUHzRFN1EUqEBlJz8jtBvmVC+jn9FUSklDh6g
-	 ylcZKUBEuSQ73LNXPxJJI7eiLmUA7e1voaFv9xTBGK3W7muS7H+trpX4XoM+oCxT46
-	 K6GKyEQYa+nXfhsvSl2eIym2Kxp4YvBwAEoyJN5FL5xF49BfSP0h7O0K0TX+br96Hx
-	 a9DjCxUilIvhY79jm0ayAep+zIN87Vten0v7Oa8KM6v7X4oof0tVeBAMJjoEy4+sNi
-	 X1eE8iHclIDnQ==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60d63174f05so7286eaf.0;
-        Thu, 03 Jul 2025 07:36:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWw6Zh2spd1G0/LvlnbGOnZe20gbu4JjqNiTX8wnJXif4ODgs41rQt4YbABRZ9KwTQG7W3bdOEkQtWSiyk=@vger.kernel.org, AJvYcCXweO/+Ho+Op2GyWc/rySQwbbJSUQfVBcEo484DxpB3VUf8KBEfFQLx1rbqCQbVoruRbUZEAmO9ZBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYt7Asya+K2vFDpqzSg5hGu9oapu2ZIwcgCQx2E0/3psXMyA1O
-	6t3h+XEfpVIGUupImCqkBDwmjMyu7wE2Te1ZgfR6a/GKOQv/l4sDw1c1mbqvdgL1NQ2im1+KGjj
-	9WMVEgHi/QTrQUy+b/+36CZOdpqEbmOg=
-X-Google-Smtp-Source: AGHT+IEkhvn+8jNU8o3fMR9sAH17KtdXghaVznuEOh1N6nMSzEeABnDR+qkAPL7IcARL4Hda9+wwliIPwgpysrkaXUI=
-X-Received: by 2002:a05:6820:2913:b0:613:872a:7b0b with SMTP id
- 006d021491bc7-613872a7e73mr1287331eaf.1.1751553366919; Thu, 03 Jul 2025
- 07:36:06 -0700 (PDT)
+	s=k20201202; t=1751553392;
+	bh=nVETv5P+aZJXZMi/j9tZ4lMlgii5uB8/cLl650IqYz4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZX1gEZ2MfK1BlIWOgyLEvlzdfuO2erIRE46NeqJirWqY6OZzikE6lonT111+8HmaT
+	 TCOwfMTmTOVW7Cjphh81nYEWjNn+hTkEYq93XWVE415vOdmboI1FpXLMoq6m3gfTU1
+	 IXsqCPmx6xPRGRd1TeV0CsP03HXcmjxmmkHMxCOVSXoAfYBnY3GzDHthoKnub60/Kd
+	 B6C+INru0iZXzK8g2SsLOsclpZeRr12Uw00vIgpT2UVIOIc8fPv2KFmxKYeN5D8p/T
+	 rSGCcy3dmsa9Pd9Q3tP0P2gwCW2fRz4AFJU6swTckApFni+/Dk6TyBBuyTnnKEe+M9
+	 5Yp+Kxet5QD/w==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,
+  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  stable@vger.kernel.org,  Jean-Marc Ranger
+ <jmranger@hotmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: Fix spi_nor_try_unlock_all()
+In-Reply-To: <20250701140426.2355182-1-mwalle@kernel.org>
+References: <20250701140426.2355182-1-mwalle@kernel.org>
+Date: Thu, 03 Jul 2025 16:36:30 +0200
+Message-ID: <mafs0sejd1gup.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
-In-Reply-To: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:35:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hbuQ8sRctAB7eC3JTr5TrDBnu5yjjG82HrSiJ23_99bQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwX-Q0wtKZ01ONvEW8u-19Nxyc4fwRb1remFu35TrXz9gluPQ6gcBRSo-w
-Message-ID: <CAJZ5v0hbuQ8sRctAB7eC3JTr5TrDBnu5yjjG82HrSiJ23_99bQ@mail.gmail.com>
-Subject: Re: [PATCH] PM: sleep: Drop superfluous might_sleep() calls
-To: Zhongqiu Han <quic_zhonhan@quicinc.com>
-Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
-	gregkh@linuxfoundation.org, dakr@kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Jun 17, 2025 at 10:47=E2=80=AFAM Zhongqiu Han <quic_zhonhan@quicinc=
-.com> wrote:
->
-> Drop superfluous might_sleep() calls from dpm_resume(), dpm_complete(),
-> and dpm_prepare(). These functions already invoke primitives that
-> implicitly check for sleep in atomic context:
->
-> - dpm_resume() and dpm_complete() invoke mutex_lock(), which internally
->   triggers might_sleep()
-> - dpm_prepare() calls wait_for_device_probe(), which internally uses
->   flush_work(), and thus might_sleep()
->
-> These annotations are unnecessary and can be dropped to reduce clutter.
->
-> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
-> ---
->  drivers/base/power/main.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index eebe699fdf4f..0f40c00c1401 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1095,7 +1095,6 @@ void dpm_resume(pm_message_t state)
->         ktime_t starttime =3D ktime_get();
->
->         trace_suspend_resume(TPS("dpm_resume"), state.event, true);
-> -       might_sleep();
->
->         pm_transition =3D state;
->         async_error =3D 0;
-> @@ -1198,7 +1197,6 @@ void dpm_complete(pm_message_t state)
->         struct list_head list;
->
->         trace_suspend_resume(TPS("dpm_complete"), state.event, true);
-> -       might_sleep();
->
->         INIT_LIST_HEAD(&list);
->         mutex_lock(&dpm_list_mtx);
-> @@ -2109,7 +2107,6 @@ int dpm_prepare(pm_message_t state)
->         int error =3D 0;
->
->         trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
-> -       might_sleep();
->
->         /*
->          * Give a chance for the known devices to complete their probes, =
-before
-> --
+On Tue, Jul 01 2025, Michael Walle wrote:
 
-Applied as 6.17 material, thanks!
+> Commit ff67592cbdfc ("mtd: spi-nor: Introduce spi_nor_set_mtd_info()")
+> moved all initialization of the mtd fields at the end of spi_nor_scan().
+> Normally, the mtd info is only needed for the mtd ops on the device,
+> with one exception: spi_nor_try_unlock_all(), which will also make use
+> of the mtd->size parameter. With that commit, the size will always be
+> zero because it is not initialized. Fix that by not using the size of
+> the mtd_info struct, but use the size from struct spi_nor_flash_parameter.
+
+I suppose some of this code would be cleaner if we declared a size
+variable instead of typing out nor->params->size every time, but I don't
+think it matters too much so this patch is fine too. Thanks for fixing
+this!
+
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
