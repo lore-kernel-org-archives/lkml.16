@@ -1,33 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32F72DE6E2;
-	Thu,  3 Jul 2025 11:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05D02DE6E2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541976; cv=none; b=eJDkuIWrKELhdtLAn4HCytvcEGVPLNgouVlTTtwWvf02nknt6SM5DH715VPYHJJcQsgGhX8lbwm/DNRl30S2qEBJW2/u/wxSmcXqilMW1CfLfkM9O6hJsj3mjJyFm95xbHr1qRMeUmAXB4+XSMKoSuvrIHVqjb/UsrtfS6s6BFM=
+	t=1751541988; cv=none; b=ebvu9KpVaStpMctPhqQaoqg39JxIgyONuQRkUTbVudknVNz8jSmnFQENdl10+9NiisgpVY9z6zBG/1a4gtw4EG2C9m93pQ4v+pzsASAPf6OXPtxTawfWB57EbHjunZ7KJQlBQH7GTt6i9gsLsGMsins5ufQcQg36ubPkXDjRGVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541976; c=relaxed/simple;
-	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
+	s=arc-20240116; t=1751541988; c=relaxed/simple;
+	bh=/2Un6UMtA1yBlRnnUxa6QqBYiOfpXfnouZCpUeeYD2I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e8TJReyDGVWdzyOdZO0eRWhO5xiYaBJyxCpxTEIgvksQyV3adv2QDlYZiXibilJqIknIYkvftdCG4yPSPu1WKT8tes3f2Bi2WcPKf4KYf1aaDjwOZTd7glxbhrVBaEve+IRD/AqnvkFZjVW/U1nJTA+F4jiZniDKpW8/yANnH8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrLNGPzz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=TL/q2oA/eXc7pmBqjsmdrqUqCsRVI1ZDXO8Jos/UgjPGWNDzZ/jOfOz7MVOhSdjHR0pTd2+cWJjQVyTZEf7I+cH8yG16alc5o0tmN+DwOQqtqWC37GXC5d6rVcvITQn/fcvtUiYErHKwww0Iz3kSgmHUJm8N7GueDvq4t45nSjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=0CVa7UyZ; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrLNGPzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1229FC4CEE3;
-	Thu,  3 Jul 2025 11:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751541976;
-	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RrLNGPzz9nvK+QBMAl6UI2OYdieCX8KPobdOiGL7O+MNzDJvyoqq0ebFjPPPKqXCX
-	 iU8q2CdheykGK3zQtFenmnTFgukkpGOhuVtt5+ZUvNGdOMwLBcgWgUPrZ+SwQelv0d
-	 cLIJ2ODwPwtYs3DO1KMeF1Sg9KPVay8ogNElAYU8fDP6bTzzIs8rzu1SyXhWLvuNTz
-	 Wknid0H13igBhqj0429YpLLBg9vmrs56JapXzLBMORBXQ++YTsnsfXDy8m1+FYS8d5
-	 m150E+WCWV6tb2ln6dnVkkI5/FaIePsA+LagS9FPQAME3uF+dAz2dHUQv4eOEx59Ah
-	 szYdmByRXDKsg==
-Message-ID: <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
-Date: Thu, 3 Jul 2025 13:26:11 +0200
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="0CVa7UyZ"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2349f096605so67258105ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:26:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1751541986; x=1752146786; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=99R4ldK+hAGTpWZZR4+eV3lD7rynPJ3jnvDwzipGUic=;
+        b=0CVa7UyZTM5WVZ0UtC6ZJq9ZSN6EzowwDwzwLaKSuCMkkjVPQSQeTaeSIz0RakkLpZ
+         U3DH9nn7TzEYb1Y24XSipNo5TZ05KectjxjxW9yCIfprPEGilZQb4HyptDWUl8QK9cXz
+         xoG+GaHSW2S7fflIFu0SSFh7V77Kgw7xAbV2FzkvfEioW9PZGLVPdxhgHSL6CSG1MUOC
+         RTMFzsChzCCSJwkrtpV+3yKFaDmXeI6YRj5J8xgcp+Q0Lbuddm+k2ZTJQQmSdmdQqgcn
+         5fCo3uBcRcpaqmK+MDEVNWYTo7haBO/zHv2ZoEsrDUzKlf8eg0e1tSbC5psvA9zMVECb
+         u6nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751541986; x=1752146786;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=99R4ldK+hAGTpWZZR4+eV3lD7rynPJ3jnvDwzipGUic=;
+        b=YFdmSuYuX+Tgbc5476CyYnzlXeIgQ9dWLwWov0yOh7H5WPw3dnAC7m62eb3oyulWIt
+         LROVrBTynpNgH8LT+2CBl4VzSWTev0KmgWsviHymsvWWf0IoXasbx87BwV6e3X8ox0uB
+         G1HZCuH079cKbNgktmenZDJWg2dpQSShXVlwDTBxldH5lbJx+Ad76padd089ArMQ98da
+         Dwijn7Lhu+f8daq8yhokG5nUg64yqHSkYTtvT61K/jKHZpb6He1JVA0OMNrdbdDs2xP4
+         vUHCbhSwR4jRwkA34/ig78LNMLkEiFPc9OY2V+eRYrpTMO3TCdBR4Sw4H9Btrh1EV2ll
+         2goQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpd8kdQWC3mbrXJ/jaFuv4dUMZ4mNz4tq/KDrh82NK8DLoW/PDKAI3A7Vm+VSukmQbR+wGB+3yxVBJhFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAGXcHxIh01RWfwEN/6kh2hKvz8FbVov5PF5NobRKPBAlEgTWc
+	H69H/zqHWQ7g9YWKW1dW5wPSONWlv7rpT6LXEmUO2nX3ZcH+DMNoI9wpICHKcKtXXka0ICZ4kVb
+	/duwz0Q==
+X-Gm-Gg: ASbGnctcOjoH1wHng9AOPzxZHlne47+URxSY+MQR9hMVVeyO77ptwrRoscPvRlIUO7u
+	K3PreSVKNm1kNykXwStePDCJnYg5TZ2repMEHJFL9EbB2xcxVN3O7/2QZ4nP0H3F8ER0DX0jQfw
+	4zMv7kQ9b6J9D3VUSSwvw4L43JUROjXiIP6CUqOTTHOdF8HQJ75iq1t4etdmz2z379gGy6zLlO+
+	a9WOa+4iRj8N/FjCT/I+5PaSIREgd4FeNnedpF5FHwT91YASZce1fQkkC0vrU1BlMuBF1E8hors
+	rSQuP488HceOamm69xY7nnCU/IC8tgWxjrpNfpZrRlWLxDDCnt82X6ibM+5ri5cfw0eL1X/aPi3
+	eBY5jnrq8rh2c21uDqFCwGKGN+AYwH0u/iYA7sxo=
+X-Google-Smtp-Source: AGHT+IGCAeqObZBcWQGkNr3+fCaNXerR2C6EX3Fc/6zbX8CgA4LYxU6srF98+K4BVoRiNrujQXM/7Q==
+X-Received: by 2002:a17:902:e549:b0:235:ea0d:ae10 with SMTP id d9443c01a7336-23c6e500777mr131002785ad.12.1751541986171;
+        Thu, 03 Jul 2025 04:26:26 -0700 (PDT)
+Received: from ?IPV6:2401:4900:8898:f649:249d:54ef:66f6:5638? ([2401:4900:8898:f649:249d:54ef:66f6:5638])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39c0a0sm151392315ad.122.2025.07.03.04.26.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 04:26:25 -0700 (PDT)
+Message-ID: <8859d983-f4ff-498b-bb0b-eb84206ad969@beagleboard.org>
+Date: Thu, 3 Jul 2025 16:56:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,111 +68,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top Level
- Mode Multiplexer
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
- <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
- <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
- <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
- <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC PATCH 0/3] i2c: Introduce i2c bus extensions
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ luca.ceresoli@bootlin.com, robh@kernel.org, thomas.petazzoni@bootlin.com,
+ wsa+renesas@sang-engineering.com
+References: <20250205173918.600037-1-herve.codina@bootlin.com>
+ <525877c8-6c64-45b3-b4aa-a52768e59b86@beagleboard.org>
+ <20250613093016.43230e3b@bootlin.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <20250613093016.43230e3b@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 03/07/2025 12:04, Konrad Dybcio wrote:
-> 
-> 
-> On 03-Jul-25 09:44, Luca Weiss wrote:
->> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
->>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
->>>> Document the Top Level Mode Multiplexer on the Milos Platform.
->>>
->>> What is Milos platform? Does it have some sort of model number how we
->>> usually expect? Wasn't this SM7325 or similar?
->>>
->>> The problem with such new naming that it awfully sounds like family
->>> names, so just expand the name and explain it.
+On 6/13/25 13:00, Herve Codina wrote:
+
+> Hi Ayush,
+>
+> On Thu, 12 Jun 2025 13:22:45 +0530
+> Ayush Singh <ayush@beagleboard.org> wrote:
+>
+>> I have tested this patch series for use with pocketbeagle 2 connector
+>> driver [0]. To get a better idea how it looks in real devicetree, see
+>> the base tree [1] and the overlay [2]. Since it also used gpio and pwm
+>> nexus nodes, along with providing pinmux for pins, it can provide a
+>> better picture of how the different pieces (export-symbols, nexus nodes,
+>> etc) look when combined.
+> Nice. Happy to see that I am no more alone with a system using these
+> features.
+>
 >>
->> Please go argue with Bjorn/Konrad about this, wasn't my idea.
->>
->> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
->> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
-> 
-> Milos is the "real-est" name of this silicon. All the associated
-> S[AM]|QC[MS]s are just variations of it, with different fusing.
-> 
-> You'll stumble upon it across e.g. firmware build strings, as
-> well as in any documentation pieces.
-> 
-> There are various internal reasons for the switch, but the most
-> obvious external-facing one is not to have the user buy a devkit
-> and wonder whether they should use QCS9100 or QCS9075 DTB, and
-> why there's zero drivers code for these magic numbers (they
-> include SA8775P). We can simply point them to "codename" and
-> all C code will refer to it as well.
-
-These are different SoCs, optionally with different firmware, so they
-cannot use the same top-level compatible chain. I hope you did not
-propose that.
-
-For me list like "qcs9100, sa8775p" is clear enough, but if you want
-"qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
-You just cannot use koala-bear for all of them.
+>> I also have a question for Herve. Do you already have any working
+>> patches for similar extension for SPI and UART in some private tree?
+> No, I didn't do anything related to SPI nor UART.
+>
+> On my system, no SPI nor UART are wired to my connector and so, I haven't
+> got any needs to implement extension busses for SPI an UART (serial dev bus)
+> nor any support for nexus nodes for other kind of components.
+>
+> Best regards,
+> Hervé
 
 
-Best regards,
-Krzysztof
+I have added SPI bus extension to my kernel tree [0]. Now, the techlab 
+cape (other than mikrobus port) works using export-symbols + i2c and spi 
+bus extension + eeprom auto detection.
+
+
+Here is a list of everything currently working on the tree:
+
+1. EEPROM based auto-detection.
+
+2. SPI
+
+3. I2C
+
+4. PWM
+
+5. GPIO
+
+
+Missing:
+
+1. UART (Don't have a cape that has something using the UART yet. Maybe 
+need to experiment with MikroBUS).
+
+
+Not quite sure what else to do to move things forward.
+
+
+Best Regards,
+
+Ayush Singh
+
+
+[0]: https://github.com/Ayush1325/linux/tree/beagle-cape-v1
+
