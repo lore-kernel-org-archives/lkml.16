@@ -1,166 +1,107 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AB5293C6D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D433C28DB6C;
+	Thu,  3 Jul 2025 06:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751525938; cv=none; b=PQlTnycadJ1w4G49u0nJ5+9zMPuBNTUfcSlhB+Lw4br8kNB90qVdoy/LVGlUTzsVvfA3tmj1/yb4fFn1DeSMY0VcXDFv1qlj+4MFv8Y7dMbMuCuqaj1m7iSigAFzVIC7D5/XymB+tjTTMWbFSh/f0FWJgUXO9QWy94aSVtMiijo=
+	t=1751525956; cv=none; b=CF8lO+EslgnCTiJ7ufdm3Xhn/aPLbM3j9e1N02LRyq/ggz6WK6aFRFqKaXCCZsDsBCFU6xC3SF8w4jduz+KlrgtwPgIQKd4Rm32OhTLGnsb9iJ3di4PXsmx39OmMvIJPqAcgFFKmy2ni2iG3wQ4pYDXHfzxcgJDo0jObqx49ctM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751525938; c=relaxed/simple;
-	bh=ORFK95pdE/a/p9yk/QkXLJouhq8Tba2lRrvY2NUCr5g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cO0Bcz2pQOM8Wxp2tx9cDbE28HeUfcQ1NgRUNKoTF+CBO0sIrY8xiWGwdb0t2oeXx+WUAhkbAtysWd4ctwMEciAStr0DS/ONuUQLwyGSnd5NCptbwicJKNSeDtdywwifbVBHbYF75qmgLBNjuQyRE/kUwP4P9+PwLrHAZzdBENs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EAYHu3n9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bW2LB+Tw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EAYHu3n9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bW2LB+Tw; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751525956; c=relaxed/simple;
+	bh=9yV/GBep9orpKc0yl52y3P4ZzjCjzkQ8+V4Z/2Gg+1I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZvPp5jW76S+hHuOVF5GZ2w2LyYRyX5eknWHgZnpfTaTvUYQK2WBOOAbqp5JrehUFV6/AX3mwik55Jbev+qln76mMMVSW8HViW11/5fo4ns0d9bRPgMQ7qGcHAfMTj4nhMOISiAoTRnag+UJuiUyb1ujbYvpPDuI1V9HlfeMIUYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OESMpcMC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EAYHu3n9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bW2LB+Tw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EAYHu3n9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bW2LB+Tw"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F4131F38D;
-	Thu,  3 Jul 2025 06:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751525935; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=feKfxtThbjBgMaSjHhS09nw5zr3XwlSISa7X5gVk0+0=;
-	b=EAYHu3n9YzKxuyVeU1KdYrVv4/IUwCAiNfG14WQsYl897617M5VXptV5S6ni8i5oBxqn7d
-	VzEG6q2C5IYNunQoBFmYmb+PYtS7/HGiYWZ21p3VBxWxjDtDO5NsH2Ik4TVw3VhiAYvw5A
-	h/XKUcEWslsg4xFJTd35jDoEGTMDUQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751525935;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=feKfxtThbjBgMaSjHhS09nw5zr3XwlSISa7X5gVk0+0=;
-	b=bW2LB+Tw7wBg50rxBT+vff05vehnW0/CYhOQ9U6UKnMkMQj7utbqGfnvZ3X7UwbvN/LoHC
-	Hagf9GaSqU/gcFDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EAYHu3n9;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bW2LB+Tw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751525935; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=feKfxtThbjBgMaSjHhS09nw5zr3XwlSISa7X5gVk0+0=;
-	b=EAYHu3n9YzKxuyVeU1KdYrVv4/IUwCAiNfG14WQsYl897617M5VXptV5S6ni8i5oBxqn7d
-	VzEG6q2C5IYNunQoBFmYmb+PYtS7/HGiYWZ21p3VBxWxjDtDO5NsH2Ik4TVw3VhiAYvw5A
-	h/XKUcEWslsg4xFJTd35jDoEGTMDUQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751525935;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=feKfxtThbjBgMaSjHhS09nw5zr3XwlSISa7X5gVk0+0=;
-	b=bW2LB+Tw7wBg50rxBT+vff05vehnW0/CYhOQ9U6UKnMkMQj7utbqGfnvZ3X7UwbvN/LoHC
-	Hagf9GaSqU/gcFDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B83413721;
-	Thu,  3 Jul 2025 06:58:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 10nXCC4qZmhyUQAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 03 Jul 2025 06:58:54 +0000
-Message-ID: <66bfaac0-03aa-4957-80a7-0f004bb2dc58@suse.de>
-Date: Thu, 3 Jul 2025 08:58:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OESMpcMC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A92BC4CEEB;
+	Thu,  3 Jul 2025 06:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751525956;
+	bh=9yV/GBep9orpKc0yl52y3P4ZzjCjzkQ8+V4Z/2Gg+1I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=OESMpcMCCLBcBhUEfW58LZdOJCvtrE1LX6+AtbqdldfbNiAHNKSlNsULA8iJR9nbL
+	 gbP98EtHPYP+t7dbqQZ/h/czzkTmVnDmHrQuT+RfN4FYK4ErvLlvcnrAwMlnbIkoaR
+	 41Pn7NpqptwwAimNq2wveuK0l+qC5QrEXsEaN832BIsd2Ddun1X1ql0H3Fo6O8ATDX
+	 yK4BpftZ2P6EcSp5eNEjQjjDX/T1Nfuc60HQt2qzzP+F7ZfbtlB97k5iS7/CaP47pF
+	 6VxRJBKHYOEDzWrW/Rj2albk4eNRiwx7+EGZYTbTSj8Qpqqp0k+r/UVx+ayaO1QAwA
+	 8bYTL1SKAx2/g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E0BC83030;
+	Thu,  3 Jul 2025 06:59:16 +0000 (UTC)
+From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
+Date: Thu, 03 Jul 2025 08:59:11 +0200
+Subject: [PATCH v3 1/3] dt-bindings: arm: qcom: Split HP Omnibook X14 AI in
+ SoC variants
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 09/10] blk-mq: prevent offlining hk CPUs with
- associated online isolated CPUs
-To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Aaron Tomlin <atomlin@atomlin.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin
- <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
- Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>,
- Mel Gorman <mgorman@suse.de>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
- linux-scsi@vger.kernel.org, storagedev@microchip.com,
- virtualization@lists.linux.dev, GR-QLogic-Storage-Upstream@marvell.com
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-9-557aa7eacce4@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250702-isolcpus-io-queues-v7-9-557aa7eacce4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLdd7zpc331qgmz6gw8s9zsqsb)];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 2F4131F38D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250703-hp-x14-x1p-v3-1-affe103b4356@oldschoolsolutions.biz>
+References: <20250703-hp-x14-x1p-v3-0-affe103b4356@oldschoolsolutions.biz>
+In-Reply-To: <20250703-hp-x14-x1p-v3-0-affe103b4356@oldschoolsolutions.biz>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751525956; l=1366;
+ i=jens.glathe@oldschoolsolutions.biz; s=20240919;
+ h=from:subject:message-id;
+ bh=I+3NVCg9CDtAf7okEizfDiPl0TNiRn1YyOCbDEI5Cxk=;
+ b=y96ghSpgyuSxHVblawfAr4glv4Iwdrv9fkVMVQ5pnKuPwO4sXfKqsnFlswpRuOl/uNp5ZXJ9v
+ glgDwZRrCokB0XrXahPoDGKfbH1jbBuqQe0UdFlep1uk3BUh4ZznaWb
+X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
+ pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
+X-Endpoint-Received: by B4 Relay for
+ jens.glathe@oldschoolsolutions.biz/20240919 with auth_id=216
+X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Reply-To: jens.glathe@oldschoolsolutions.biz
 
-On 7/2/25 18:33, Daniel Wagner wrote:
-> When isolcpus=io_queue is enabled, and the last housekeeping CPU for a
-> given hctx goes offline, there would be no CPU left to handle I/O. To
-> prevent I/O stalls, prevent offlining housekeeping CPUs that are still
-> serving isolated CPUs.
-> 
-> When isolcpus=io_queue is enabled and the last housekeeping CPU
-> for a given hctx goes offline, no CPU would be left to handle I/O.
-> To prevent I/O stalls, disallow offlining housekeeping CPUs that are
-> still serving isolated CPUs.
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   block/blk-mq.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 42 insertions(+)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Cheers,
+The HP Omnibook X14 AI PC is available in fe0 (Hamoa, x1e80100) and
+fe1 (Purwa, x1p42100) SKUs. Since they are not completely dtb-compatible,
+split the model strings in 2 variants:
 
-Hannes
+hp,omnibook-x14-fe0 compatible to qcom,x1e80100
+hp,omnibook-x14-fe1 compatible to cqom,x1p42100
+
+Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index ae43b35565808ed27cd8354b9a342545c4a98ed6..d114b7ae4fa7b162a83a152d9bf8d3fc2d74750a 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1148,7 +1148,7 @@ properties:
+               - asus,zenbook-a14-ux3407ra
+               - dell,xps13-9345
+               - hp,elitebook-ultra-g1q
+-              - hp,omnibook-x14
++              - hp,omnibook-x14-fe0
+               - lenovo,yoga-slim7x
+               - microsoft,romulus13
+               - microsoft,romulus15
+@@ -1159,6 +1159,7 @@ properties:
+       - items:
+           - enum:
+               - asus,zenbook-a14-ux3407qa
++              - hp,omnibook-x14-fe1
+               - qcom,x1p42100-crd
+           - const: qcom,x1p42100
+ 
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+2.48.1
+
+
