@@ -1,93 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571F71DDD1;
-	Thu,  3 Jul 2025 13:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BEB1DDD1;
+	Thu,  3 Jul 2025 13:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549315; cv=none; b=sfwPjkjTTjIvxpt4o6U+OWV7ZHWayvri4vZRmXOUvq1FAiZtM4VS0kGT2siVeJ4p0oEv4+/IMwQgXM8O7ewRvPIN8a2kYAQDlD9AslMvGl+CnfhEyDDkoLJoiq9amVuFLvYMinYtXMpdktErxJXTADbO4osSFD8p2RzktO2qjHg=
+	t=1751549324; cv=none; b=G0j+eFv0Ua5SdPxmByNYQoEdF5JrWBN/W9JqgHyEmFQydRFwpccYQ4HK+Y14bIBBn1OkKaVjdBuTX3bbvTHX3jqgukrfv6ai0PCp1fyJ5IHS3rwJcg8GJs0Mx+Ju1gFfMVoppuJKozYp6Z70/FUtSPGeO3aZ7Ldf+RKw27rOzRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549315; c=relaxed/simple;
-	bh=uO7svmE3p5aJ0qQFNv+IETH0e9rvsqr3oPE7wewnXME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mZ8OBE9ZPgT+13tsoFfYHjIWrBlDUVLkMtrYgvwhiiq7Iv13t0ILHVm5chVS79vj/EFz3IrBHnpkF9ssrpD+4WXb39zwaEsBeVwcLdJxGA0I3pHD6q7ru44TZz+rW/itzAG+dkxfy8kHR38rkUtKd21chR+DLrSNAWBXWIuEjzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojpeSv2E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751549324; c=relaxed/simple;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HZdvUswjzOFabwfKCOXPDeoFdqRA8ulop1TkMblchGw/Lw2A4sHhVfmEGMcvp7lYMxD3SkC+RccrfTfzkn+Ur+fdyJNzxAPnhUSIgaUCMC3LoEeJMW92Acu0gmSiHSZwpeBHQ2BtoTsQdegW1UVuEkkr2Com3n/qE1VwG0ZBXrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k6BnCmhr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ROnQ+kLc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojpeSv2E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC72CC4CEF2;
-	Thu,  3 Jul 2025 13:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751549314;
-	bh=uO7svmE3p5aJ0qQFNv+IETH0e9rvsqr3oPE7wewnXME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ojpeSv2EXiOCfKfSWMtzVtTyj5d89almMts8kTl59AkkUwOAGOZFXJ/X+DOt+inPU
-	 eI9jpzBec4BMZip5+QWKw/fNpJW0VQTmQj7neHXGoPdVe5+Ga4UJEHr5xENGh6l6PG
-	 wij7IDGekOg0HN8MqmW2DyfKWAhzm7ytfc6rJpnlMK7wgzvceAewNHRfKB7uNDK7gC
-	 bXDzoz14e/7o5utzyBYR1aONg0E5y3qpZNTiWcmBqiAmUNoDPB0qfLvb/QhbA8pEDo
-	 bIBvgR/ZFFUJR+usjecXEpDJ1buIk4jpkSEw4geLA482Jnm07m3uFujRTi/merFzQL
-	 OdV5AiFLOH5mA==
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-40a4bf1ebb7so3108731b6e.0;
-        Thu, 03 Jul 2025 06:28:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUlaWPyc6Haz4jGO7HkQdm8GtQ1TJN7p2fIs1Q049z77ZsyDI59ZLBEkrWcF3uQBgfV32SmWw6kKv445Gxd@vger.kernel.org, AJvYcCVJepq3fJQhDO/6jU6tP5AIg/tt2ViYyubLsHU2E3BUd9qezp0ZC4tce9WY1NWznBvPq1ZjwZQTJmkW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo6pHAnpZiNWrisM1ojZyrlIRRFg4/orDaIprENwJPNpmMKNJc
-	y5EtIG4D+LcB/ff+ihynOPa7ZLSO9AnJ9bNEVsG3AhCDkPKbWjRYccGJ7iNMFRdVAeXYcD7j09A
-	/Qkeq0+4k3LHJ93EkcYaMAYau2SaETZg=
-X-Google-Smtp-Source: AGHT+IEGCCiKDJLJCENo6kUx0hJBVCZ+uyR95fRlqylKafkB0DIx4T37LrRehxoiB6BAszat+PQ+3QAULARoETwGtaQ=
-X-Received: by 2002:a05:6808:8295:b0:40c:5b58:c9f9 with SMTP id
- 5614622812f47-40c5b58cbd0mr2167344b6e.22.1751549314163; Thu, 03 Jul 2025
- 06:28:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6BnCmhr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROnQ+kLc"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751549321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=k6BnCmhrUKnjyhGZR/aiCAsL14gYTfxPkP6AI8tNGVPzQb9xE2NLcgezU9aziYkNSCR7lX
+	nLKwosaEebR5GKTcC5jnaB0E/L9QSds/2dKXB0nvjxhftNJ9To6iW1YDZAtLnqlWiKeWC/
+	dCpTjL+384DvvxIN2NIh3uPDzwYewUEN/QckGkOFqGMnLOZZKkfODH2j0FxzxWOKDQkbEf
+	4SNtz6dBXeXH8o+50+zTeC18oWAm709Aoo8/TX34UvMIsxYFCAbsDTG56pcr8MtfCrHN24
+	S6Cp9LqqbYgwFVfm59VsbUaLI53TfnYBct+BWbUOMHczlRCxiPtPs+TxKjortg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751549321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
+	b=ROnQ+kLcAQGVWiVEwPRgZEiqBhGTKQ40YBCkpXyv+5uCrFk0aKeSlCKKNLCtKKKmfZPuvV
+	Gza6PZ2ifwfXQ1Aw==
+To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
+ Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
+ Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
+ <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
+ <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
+ Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
+ <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+ <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 11/16] PCI: xilinx-nwl: Switch to
+ msi_create_parent_irq_domain()
+In-Reply-To: <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
+Date: Thu, 03 Jul 2025 15:28:40 +0200
+Message-ID: <87ikk9v1x3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703124215.12522-1-sebott@redhat.com>
-In-Reply-To: <20250703124215.12522-1-sebott@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 15:28:23 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0huBwxiop1ZJ7reXyir42vjgm7xehn+xnhfe7RDwu9EGQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzcYgXGY6ZNRymAann1Y9vXuuLgUvTVdkLDdAJaW4gBU1eKxfhu8qmNQJY
-Message-ID: <CAJZ5v0huBwxiop1ZJ7reXyir42vjgm7xehn+xnhfe7RDwu9EGQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: processor: fix acpi_object initialization
-To: Sebastian Ott <sebott@redhat.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Jul 3, 2025 at 2:42=E2=80=AFPM Sebastian Ott <sebott@redhat.com> wr=
-ote:
->
-> Initialization of the local acpi_object in acpi_processor_get_info()
-> only sets the first 4 bytes to zero and is thus incomplete. This is
-> indicated by messages like:
->         acpi ACPI0007:be: Invalid PBLK length [166288104]
->
-> Fix this by initializing all 16 bytes of the processor member of that
-> union.
->
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> ---
->  drivers/acpi/acpi_processor.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 7cf6101cb4c7..2a99f5eb6962 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -275,7 +275,7 @@ static inline int acpi_processor_hotadd_init(struct a=
-cpi_processor *pr,
->
->  static int acpi_processor_get_info(struct acpi_device *device)
->  {
-> -       union acpi_object object =3D { 0 };
-> +       union acpi_object object =3D { .processor =3D { 0 } };
->         struct acpi_buffer buffer =3D { sizeof(union acpi_object), &objec=
-t };
->         struct acpi_processor *pr =3D acpi_driver_data(device);
->         int device_declaration =3D 0;
-> --
+On Thu, Jun 26 2025 at 16:48, Nam Cao wrote:
 
-Applied as 6.17 material, thanks!
+> Move away from the legacy MSI domain setup, switch to use
+> msi_create_parent_irq_domain().
+>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
