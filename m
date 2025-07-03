@@ -1,253 +1,302 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BD42900AA
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFD528DF12;
+	Thu,  3 Jul 2025 06:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751523860; cv=none; b=sYXx0v2N27eW8ntrHEQKJEClYM8aHiZKcDS2sGzFjVqbImIRTGtWs4YcgELW0t75vIwK7+vDjZ9h7AP61jbhz59ssIp8ydsNuTlLlRXFi0+m9iBpg8tfbgFXoQQczUB/5VLOo/PxyxSTER8TvbHesvpj8c4xxiCNHwOoEhLLIzM=
+	t=1751523871; cv=none; b=CPoIy8H3szT2fm83k3KRSzTfQAPtH3kAso20Ln+RyWl6D/GYlgP1S5SO0t4ayA7FmzibqKNPGX6mFNi+Fljv0ks32+RVn7zc9M0gIIOfEC3/h1E39ZF2JviODfL69Bdh4TSrRmKbkt6UaqrARg/N52KJqAJ8NPHtI/tmyhy5DBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751523860; c=relaxed/simple;
-	bh=dao9nTpC5C1q0JJDCBYH/D3fgkfHONt6s1hu70kqblQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pb0w6b8F/FPNUnaBkvOhg4RJb60zfjBTt4vnaBYJ9yl8Siv2aMcnXeu8Y+JzCebPDji8iBgAvI1VQefXsTF+LAU8fbFgxdY70zzW2ulN19wgsnRBwSIa8JcqITEBzJAZJXzCI+XQ6TF20t7JJ/5FsjXfULzHdXd2TgUxT2v4Cgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OwccRZ4V; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751523871; c=relaxed/simple;
+	bh=WDx4G1mEv5s9pzvFwFdSxj/fxY+z2ciiZSQE5sLQ14Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gc6d+bD1O6CwfEZZqlDIS4ebemOtPrT8r14tcceLXXgKQGVmQ3bcZv806o2Vydy2JeW5LsOHNFvvLQBfMLeJP0RNgoyVDUnYD+XqRKotK2RkHtjxvkqYgHRKBZ9FCQsHyM6nRyaZGE8PwDSiDWex0GScs4iNEain6oVVbsV39uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/isTNxa; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OwccRZ4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751523856;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oNnWJxGDTYj2oLSlWuvTf5AvF7vq7QQGZ22ViGGEQZQ=;
-	b=OwccRZ4Vxh5DvST4BMUgW1HUdqLBFGQUQZM8IJemps9xeyNn+i1bjIyLLHzIkfgc+knLrx
-	oq2I4EKT2fXGv38kcl7Iz15z3f/WDdfYF+D3jpJYaA3cBq3X//p5ODYZmnqgNQRfZhlqeu
-	GBDw58dC/CblSeyCbj+vA78Wr2TVVDE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-rszK0tyWN8OIAUTeLDfXHQ-1; Thu, 03 Jul 2025 02:24:14 -0400
-X-MC-Unique: rszK0tyWN8OIAUTeLDfXHQ-1
-X-Mimecast-MFC-AGG-ID: rszK0tyWN8OIAUTeLDfXHQ_1751523853
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so5009220f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751523853; x=1752128653;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oNnWJxGDTYj2oLSlWuvTf5AvF7vq7QQGZ22ViGGEQZQ=;
-        b=vSRGDzrvkb/3hF7Je5BqXj0oAzgmff3Y5CwB4IVHdFabIM5HO2bDymRJ+2cO1kOphQ
-         XhzNUbxP1uBhVQddrpe5gfZY5qS30pRrabNjx7W2aIB0zAhMt3NRZVw3pDSmH6q+qOug
-         PY/5FaD5a2RWtVz3kWh8A0ValnQ1k68PfmOOU8Iq1FQlbB+spp/NFKpTL4kK6T4Lxh7T
-         Vk+KhSFWRpDAOmumzHuEtLHL2E/RBeJiQn2BPQvxoqbhBuuQzWwVn9/nnKieuNh+85HG
-         eLzQ9Zgyon0+qdE3txq17vDMbZfdAJ6faSvX7OmeRdxYNGd7jhwYRwmLU4BCtq/u2HmC
-         7S1w==
-X-Gm-Message-State: AOJu0YxD2Kba6hSWQYKdYEMiqFscONWwDfSpkq6fNnurLee/bfGxogqv
-	wnTJhe2dMnuP82leFGQhRaAGh7ph3nfcuNx3OMGIlZk9WvKJhlZEVlchoZDvOnahn2CTfbnfQM4
-	l82Ns/PE+6DEYWPZjNinp2fu/55w0u1l6K319eemCcKO6DbBr8BPRIGLEZ/AyukCYyA==
-X-Gm-Gg: ASbGncudXxeC3sUN/2f13B/7Ujbq/imeyQ2+WlzZvqlsFsWL2MM4mKIS6amToMh1fRA
-	QEDX7vDifvT3dV7yPeAt+zTlL9KLruOZ4DScczTDMhsT6YKxBj3idc74g5oMugte6/IR3dqMiWY
-	onqqZZu0NntEwW3qX6T6qtaUVlPNQKWb2fCUrqKXB6TUeBYiCDfn7CKQLwEuVtgOXkZBDPsFX3D
-	EVoQfx5mt1boeAjtI1uUgow6jH+W6InDKMlOSaLZLQxAW0WTrBz3y2KVEMbn3OowBCkAJU2DbAs
-	ZWlCVr2BLkT1VPaR
-X-Received: by 2002:a05:6000:490a:b0:3b1:8db7:d1fc with SMTP id ffacd0b85a97d-3b1fe5c07d4mr4360125f8f.21.1751523853193;
-        Wed, 02 Jul 2025 23:24:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGGxmSX9oSYQVzW9zlIGbTQXs8hI4c+MXz2QtluF728gF5D2N2yEQOE0oBdUYHzNVwqbLlzgg==
-X-Received: by 2002:a05:6000:490a:b0:3b1:8db7:d1fc with SMTP id ffacd0b85a97d-3b1fe5c07d4mr4360105f8f.21.1751523852675;
-        Wed, 02 Jul 2025 23:24:12 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fb20esm18034642f8f.36.2025.07.02.23.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 23:24:12 -0700 (PDT)
-Date: Thu, 3 Jul 2025 02:24:09 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Parav Pandit <parav@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"stefanha@redhat.com" <stefanha@redhat.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-Subject: Re: [PATCH RFC v3] pci: report surprise removal event
-Message-ID: <20250703022224-mutt-send-email-mst@kernel.org>
-References: <1eac13450ade12cc98b15c5864e5bcd57f9e9882.1751440755.git.mst@redhat.com>
- <20250702132314-mutt-send-email-mst@kernel.org>
- <CY8PR12MB719502AAF4847610CD9C7286DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/isTNxa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751523870; x=1783059870;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WDx4G1mEv5s9pzvFwFdSxj/fxY+z2ciiZSQE5sLQ14Y=;
+  b=S/isTNxahhpkm7dFa5m7jWz2IgzZG90CyKOZchXYC+CpqMe4TcPcP1gJ
+   tnuyfnyXBr+XVxeuabHx8FdGkb33/XDaSgl/EqsdsKcjZqHLlTzbQ9Pih
+   7sPVRRYwHEnFgScwMaeAXpstaBCjtoDLYrCw5kpFZgBr6WwsqdvMhImYx
+   cDOoh5+EKylszts67PNVPAMwnP9ZJiWPcIfo8IBCLefqXLWV7DMPhf067
+   74QkzNhbrWoan7G9ATh6CDQt6fBll5xRTB2JCtA3nH4gfWf0Z4F9Ea/q3
+   XYYY8Q5K+1Qit3jm4WHXg8k4dTOGlLpjQhkhID6fQ70GDXrjLDNME/Tx2
+   Q==;
+X-CSE-ConnectionGUID: a4JsbILaRVWhPtSJ5jprAA==
+X-CSE-MsgGUID: kMnd7XurSeyNObVh9MDxZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53706467"
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="53706467"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 23:24:29 -0700
+X-CSE-ConnectionGUID: qVycZitCQyKKnyjT2y+KtQ==
+X-CSE-MsgGUID: WAn4lRvNS/CPpoMQ0OcL2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="158838037"
+Received: from unknown (HELO [10.238.224.237]) ([10.238.224.237])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 23:24:23 -0700
+Message-ID: <7e1d05ef-ab67-421e-b521-90331a304d27@linux.intel.com>
+Date: Thu, 3 Jul 2025 14:24:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY8PR12MB719502AAF4847610CD9C7286DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
-
-On Thu, Jul 03, 2025 at 05:02:13AM +0000, Parav Pandit wrote:
-> 
-> > From: Michael S. Tsirkin <mst@redhat.com>
-> > Sent: 02 July 2025 10:54 PM
-> > 
-> > On Wed, Jul 02, 2025 at 03:20:52AM -0400, Michael S. Tsirkin wrote:
-> > > At the moment, in case of a surprise removal, the regular remove
-> > > callback is invoked, exclusively.  This works well, because mostly,
-> > > the cleanup would be the same.
-> > >
-> > > However, there's a race: imagine device removal was initiated by a
-> > > user action, such as driver unbind, and it in turn initiated some
-> > > cleanup and is now waiting for an interrupt from the device. If the
-> > > device is now surprise-removed, that never arrives and the remove
-> > > callback hangs forever.
-> > >
-> > > For example, this was reported for virtio-blk:
-> > >
-> > > 	1. the graceful removal is ongoing in the remove() callback, where disk
-> > > 	   deletion del_gendisk() is ongoing, which waits for the requests +to
-> > > 	   complete,
-> > >
-> > > 	2. Now few requests are yet to complete, and surprise removal started.
-> > >
-> > > 	At this point, virtio block driver will not get notified by the driver
-> > > 	core layer, because it is likely serializing remove() happening by
-> > > 	+user/driver unload and PCI hotplug driver-initiated device removal.
-> > So
-> > > 	vblk driver doesn't know that device is removed, block layer is waiting
-> > > 	for requests completions to arrive which it never gets.  So
-> > > 	del_gendisk() gets stuck.
-> > >
-> > > Drivers can artificially add timeouts to handle that, but it can be
-> > > flaky.
-> > >
-> > > Instead, let's add a way for the driver to be notified about the
-> > > disconnect. It can then do any necessary cleanup, knowing that the
-> > > device is inactive.
-> > >
-> > > Since cleanups can take a long time, this takes an approach of a work
-> > > struct that the driver initiates and enables on probe, and tears down
-> > > on remove.
-> > >
-> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > ---
-> > >
-> > 
-> > Parav what do you think of this patch? 
-> The async notification part without holding the device lock is good part of this patch.
-> 
-> However, large part of the systems and use cases does not involve pci hot plug removal.
-> An average system that I came across using has 150+ pci devices, and none of them uses hotplug.
-> 
-> So increasing pci dev struct for rare hot unplug, that too for the race condition does not look the best option.
-> 
-> I believe the intent of async notification without device lock can be achieved by adding a non-blocking async notifier callback.
-> This can go in the pci ops struct.
-> 
-> Such callback scale far better being part of the ops struct instead of pci_dev struct.
-
-Sorry, I don't see a way to achieve that, as the driver can go away
-while hotunplug happens.
-
-You would be welcome to try but you mentioned you have no plans to do so.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+To: "Nirujogi, Pratap" <pnirujog@amd.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hao Yao <hao.yao@intel.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ mchehab@kernel.org, hverkuil@xs4all.nl, bryan.odonoghue@linaro.org,
+ krzk@kernel.org, dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+ jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, vengutta@amd.com, dongcheng.yan@intel.com,
+ jason.z.chen@intel.com, jimmy.su@intel.com
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <20250614225257.GO10542@pendragon.ideasonboard.com>
+ <f6d1d8f7-d953-4f86-a196-f713726bd5f8@amd.com>
+ <ec790d0e-4bdb-49b9-80ad-f44e1b700a5e@linux.intel.com>
+ <702594a4-ebc3-471e-8551-d94f0dee2982@amd.com>
+ <0d45fca3-5b6f-42e5-acec-bca2dda25f15@linux.intel.com>
+ <aGTN5PbfyHTw529O@svinhufvud> <91985c5e-fc69-4d12-b5b0-3dff0ba1b078@amd.com>
+Content-Language: en-US
+From: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
+In-Reply-To: <91985c5e-fc69-4d12-b5b0-3dff0ba1b078@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-> > This you can try using this in virtio blk to
-> > address the hang you reported?
-> >
-> The hang I reported was not the race condition between remove() and hotunplug during remove.
-> It was the simple remove() as hot-unplug issue due to commit 43bb40c5b926.
+On 7/3/2025 12:47 AM, Nirujogi, Pratap wrote:
+> Hi Sakari, Dongcheng,
 > 
-> The race condition hang is hard to reproduce as_is.
-> I can try to reproduce by adding extra sleep() etc code in remove() with v4 of this version with ops callback.
+> On 7/2/2025 2:12 AM, Sakari Ailus wrote:
+>> Caution: This message originated from an External Source. Use proper
+>> caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> Hi Dongcheng, Pratap,
+>>
+>> On Wed, Jul 02, 2025 at 02:08:26PM +0800, Yan, Dongcheng wrote:
+>>> Hi Pratap,
+>>>
+>>> On 7/1/2025 6:31 AM, Nirujogi, Pratap wrote:
+>>>> Hi Sakari, Hi Laurent,
+>>>>
+>>>> On 6/29/2025 3:40 AM, Sakari Ailus wrote:
+>>>>> Caution: This message originated from an External Source. Use proper
+>>>>> caution when opening attachments, clicking links, or responding.
+>>>>>
+>>>>>
+>>>>> Hi Pratap,
+>>>>>
+>>>>> On 6/17/25 01:33, Nirujogi, Pratap wrote:
+>>>>> ...
+>>>>>>>>>> +static const struct cci_reg_sequence ov05c10_2888x1808_regs[]
+>>>>>>>>>> = {
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x20),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x20),  0x0b },
+>>>>>>>>>> + { CCI_REG8(0xc1),  0x09 },
+>>>>>>>>>> + { CCI_REG8(0x21),  0x06 },
+>>>>>>>>>> + { CCI_REG8(0x14),  0x78 },
+>>>>>>>>>> + { CCI_REG8(0xe7),  0x03 },
+>>>>>>>>>> + { CCI_REG8(0xe7),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x21),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x01 },
+>>>>>>>>>> + { CCI_REG8(0x03),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x04),  0x06 },
+>>>>>>>>>> + { CCI_REG8(0x05),  0x07 },
+>>>>>>>>>> + { CCI_REG8(0x06),  0x44 },
+>>>>>>>>>> + { CCI_REG8(0x07),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x1b),  0x01 },
+>>>>>>>>>> + { CCI_REG8(0x24),  0xff },
+>>>>>>>>>> + { CCI_REG8(0x32),  0x03 },
+>>>>>>>>>> + { CCI_REG8(0x42),  0x5d },
+>>>>>>>>>> + { CCI_REG8(0x43),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x44),  0x81 },
+>>>>>>>>>> + { CCI_REG8(0x46),  0x5f },
+>>>>>>>>>> + { CCI_REG8(0x48),  0x18 },
+>>>>>>>>>> + { CCI_REG8(0x49),  0x04 },
+>>>>>>>>>> + { CCI_REG8(0x5c),  0x18 },
+>>>>>>>>>> + { CCI_REG8(0x5e),  0x13 },
+>>>>>>>>>> + { CCI_REG8(0x70),  0x15 },
+>>>>>>>>>> + { CCI_REG8(0x77),  0x35 },
+>>>>>>>>>> + { CCI_REG8(0x79),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x7b),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x7d),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x7e),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x7f),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x90),  0x37 },
+>>>>>>>>>> + { CCI_REG8(0x91),  0x05 },
+>>>>>>>>>> + { CCI_REG8(0x92),  0x18 },
+>>>>>>>>>> + { CCI_REG8(0x93),  0x27 },
+>>>>>>>>>> + { CCI_REG8(0x94),  0x05 },
+>>>>>>>>>> + { CCI_REG8(0x95),  0x38 },
+>>>>>>>>>> + { CCI_REG8(0x9b),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x9c),  0x06 },
+>>>>>>>>>> + { CCI_REG8(0x9d),  0x28 },
+>>>>>>>>>> + { CCI_REG8(0x9e),  0x06 },
+>>>>>>>>>> + { CCI_REG8(0xb2),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0xb3),  0x29 },
+>>>>>>>>>> + { CCI_REG8(0xbf),  0x3c },
+>>>>>>>>>> + { CCI_REG8(0xc2),  0x04 },
+>>>>>>>>>> + { CCI_REG8(0xc4),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xca),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0xcb),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0xcc),  0x28 },
+>>>>>>>>>> + { CCI_REG8(0xcd),  0x28 },
+>>>>>>>>>> + { CCI_REG8(0xce),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0xcf),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0xd0),  0x2a },
+>>>>>>>>>> + { CCI_REG8(0xd1),  0x2a },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x00),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x01),  0xa0 },
+>>>>>>>>>> + { CCI_REG8(0x02),  0x48 },
+>>>>>>>>>> + { CCI_REG8(0x07),  0x8f },
+>>>>>>>>>> + { CCI_REG8(0x08),  0x70 },
+>>>>>>>>>> + { CCI_REG8(0x09),  0x01 },
+>>>>>>>>>> + { CCI_REG8(0x0b),  0x40 },
+>>>>>>>>>> + { CCI_REG8(0x0d),  0x07 },
+>>>>>>>>>> + { CCI_REG8(0x11),  0x33 },
+>>>>>>>>>> + { CCI_REG8(0x12),  0x77 },
+>>>>>>>>>> + { CCI_REG8(0x13),  0x66 },
+>>>>>>>>>> + { CCI_REG8(0x14),  0x65 },
+>>>>>>>>>> + { CCI_REG8(0x15),  0x37 },
+>>>>>>>>>> + { CCI_REG8(0x16),  0xbf },
+>>>>>>>>>> + { CCI_REG8(0x17),  0xff },
+>>>>>>>>>> + { CCI_REG8(0x18),  0xff },
+>>>>>>>>>> + { CCI_REG8(0x19),  0x12 },
+>>>>>>>>>> + { CCI_REG8(0x1a),  0x10 },
+>>>>>>>>>> + { CCI_REG8(0x1c),  0x77 },
+>>>>>>>>>> + { CCI_REG8(0x1d),  0x77 },
+>>>>>>>>>> + { CCI_REG8(0x20),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x21),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x22),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x23),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x2b),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0x2c),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0x2d),  0x04 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x03 },
+>>>>>>>>>> + { CCI_REG8(0x9d),  0x0f },
+>>>>>>>>>> + { CCI_REG8(0x9f),  0x40 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x20),  0x1b },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x04 },
+>>>>>>>>>> + { CCI_REG8(0x19),  0x60 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x02 },
+>>>>>>>>>> + { CCI_REG8(0x75),  0x05 },
+>>>>>>>>>> + { CCI_REG8(0x7f),  0x06 },
+>>>>>>>>>> + { CCI_REG8(0x9a),  0x03 },
+>>>>>>>>>> + { CCI_REG8(0xa2),  0x07 },
+>>>>>>>>>> + { CCI_REG8(0xa3),  0x10 },
+>>>>>>>>>> + { CCI_REG8(0xa5),  0x02 },
+>>>>>>>>>> + { CCI_REG8(0xa6),  0x0b },
+>>>>>>>>>> + { CCI_REG8(0xa7),  0x48 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x07 },
+>>>>>>>>>> + { CCI_REG8(0x42),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x43),  0x80 },
+>>>>>>>>>> + { CCI_REG8(0x44),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x45),  0x80 },
+>>>>>>>>>> + { CCI_REG8(0x46),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x47),  0x80 },
+>>>>>>>>>> + { CCI_REG8(0x48),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x49),  0x80 },
+>>>>>>>>>> + { CCI_REG8(0x00),  0xf7 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xe7),  0x03 },
+>>>>>>>>>> + { CCI_REG8(0xe7),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0x93),  0x18 },
+>>>>>>>>>> + { CCI_REG8(0x94),  0xff },
+>>>>>>>>>> + { CCI_REG8(0x95),  0xbd },
+>>>>>>>>>> + { CCI_REG8(0x96),  0x1a },
+>>>>>>>>>> + { CCI_REG8(0x98),  0x04 },
+>>>>>>>>>> + { CCI_REG8(0x99),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0x9b),  0x10 },
+>>>>>>>>>> + { CCI_REG8(0x9c),  0x3f },
+>>>>>>>>>> + { CCI_REG8(0xa1),  0x05 },
+>>>>>>>>>> + { CCI_REG8(0xa4),  0x2f },
+>>>>>>>>>> + { CCI_REG8(0xc0),  0x0c },
+>>>>>>>>>> + { CCI_REG8(0xc1),  0x08 },
+>>>>>>>>>> + { CCI_REG8(0xc2),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xb6),  0x20 },
+>>>>>>>>>> + { CCI_REG8(0xbb),  0x80 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>>>>>>> + { CCI_REG8(0xa0),  0x01 },
+>>>>>>>>>> + { CCI_REG8(0xfd),  0x01 },
+>>>>>>>
+>>>>>>> Please replace these with names macros where possible. I'm sure
+>>>>>>> quite a
+>>>>>>> few of the registers configured here are documented in the
+>>>>>>> datasheet.
+>>>>>>> The registers that configure the mode (analog crop, digital crop,
+>>>>>>> binning, skipping, ...) should be computed dynamically from the
+>>>>>>> subdev
+>>>>>>> pad format and selection rectangles, not hardcoded.
+>>>>>>>
+>>>>>> I agree, but we get the sensor settings based on our requirements
+>>>>>> from
+>>>>>> the vendor, i will check if we can get some more info regarding the
+>>>>>> crop, binning, skipping etc...
+>>>>>
+>>>>> Some of this infomation should be available in the datasheet. Use at
+>>>>> least the register names that can be found, for those that can't
+>>>>> there's
+>>>>> not much that could be done.
+>>>>>
+>>>> Sorry to say that I don't have the details in this case. We have
+>>>> previously reached out to the sensor vendor, but they are not
+>>>> willing to
+>>>> disclose any of these details. We hope for your understanding of the
+>>>> constraints we're facing and truly value your support.
+>>>>
+>>>
+>>> If you have a spec of OV05C10 (I assume you do, as the developer of this
+>>> driver), it is not a issue.
+>>> Take P0:0x14 as an example, it's named as DPLL_NC_SEL in spec and set to
+>>> 0x78 in your reglist ov05c10_2888x1808_regs. If define all named
+>>> registers rather than the confusing magic hardcode, the driver code will
+>>> be more readable and easy to review.
+>>> I think this is what Sakari thought.
+>>
+>> Yes. And even if it happens that a register write slips to a wrong list,
+>> we can fix it later.
+>>
+> I agree with the suggestion on proper naming of register offsets, but
+> unfortunately we lack access to the spec.
+
+Do you mean this driver is developed without spec? Noticing that
+OV05C10_*CTL_PAGE and OV05C10_REG_* are defined quite standard, I never
+doubt it. Excuse me for being a little straightforward, I even doubt
+whether this driver can work properly.
+
+ We are completely relying on
+> the sensor vendor for these sequences, which they are not willing to
+> share the details.
 > 
-> However, that requires lot more code to be developed on top of current proposed fix [1].
+> Thanks,
+> Pratap
 > 
-> [1] https://lore.kernel.org/linux-block/20250624185622.GB5519@fedora/
+>> -- 
+>> Kind regards,
+>>
+>> Sakari Ailus
 > 
-> I need to re-arrange the hardware with hotplug resources. Will try to arrange on v4.
-> 
-> > > Compile tested only.
-> > >
-> > > Note: this minimizes core code. I considered a more elaborate API that
-> > > would be easier to use, but decided to be conservative until there are
-> > > multiple users.
-> > >
-> > > changes from v2
-> > > 	v2 was corrupted, fat fingers :(
-> > >
-> > > changes from v1:
-> > >         switched to a WQ, with APIs to enable/disable
-> > >         added motivation
-> > >
-> > >
-> > >  drivers/pci/pci.h   |  6 ++++++
-> > >  include/linux/pci.h | 27 +++++++++++++++++++++++++++
-> > >  2 files changed, 33 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h index
-> > > b81e99cd4b62..208b4cab534b 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -549,6 +549,12 @@ static inline int pci_dev_set_disconnected(struct
-> > pci_dev *dev, void *unused)
-> > >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
-> > >  	pci_doe_disconnected(dev);
-> > >
-> > > +	if (READ_ONCE(dev->disconnect_work_enable)) {
-> > > +		/* Make sure work is up to date. */
-> > > +		smp_rmb();
-> > > +		schedule_work(&dev->disconnect_work);
-> > > +	}
-> > > +
-> > >  	return 0;
-> > >  }
-> > >
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h index
-> > > 51e2bd6405cd..b2168c5d0679 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -550,6 +550,10 @@ struct pci_dev {
-> > >  	/* These methods index pci_reset_fn_methods[] */
-> > >  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
-> > >
-> > > +	/* Report disconnect events */
-> > > +	u8 disconnect_work_enable;
-> > > +	struct work_struct disconnect_work;
-> > > +
-> 
-> > >  #ifdef CONFIG_PCIE_TPH
-> > >  	u16		tph_cap;	/* TPH capability offset */
-> > >  	u8		tph_mode;	/* TPH mode */
-> > > @@ -2657,6 +2661,29 @@ static inline bool pci_is_dev_assigned(struct
-> > pci_dev *pdev)
-> > >  	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) ==
-> > > PCI_DEV_FLAGS_ASSIGNED;  }
-> > >
-> > > +/*
-> > > + * Caller must initialize @pdev->disconnect_work before invoking this.
-> > > + * Caller also must check pci_device_is_present afterwards, since
-> > > + * if device is already gone when this is called, work will not run.
-> > > + */
-> > > +static inline void pci_set_disconnect_work(struct pci_dev *pdev) {
-> > > +	/* Make sure WQ has been initialized already */
-> > > +	smp_wmb();
-> > > +
-> > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x1); }
-> > > +
-> > > +static inline void pci_clear_disconnect_work(struct pci_dev *pdev) {
-> > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
-> > > +
-> > > +	/* Make sure to stop using work from now on. */
-> > > +	smp_wmb();
-> > > +
-> > > +	cancel_work_sync(&pdev->disconnect_work);
-> > > +}
-> > > +
-> > >  /**
-> > >   * pci_ari_enabled - query ARI forwarding status
-> > >   * @bus: the PCI bus
-> > > --
-> > > MST
 
