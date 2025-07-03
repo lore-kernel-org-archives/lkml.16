@@ -1,155 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771582EBDF7;
-	Thu,  3 Jul 2025 14:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D092EBDF9;
+	Thu,  3 Jul 2025 14:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751553191; cv=none; b=foke369Bft+FS0/brO+f8uyU95SRwUOAJApKUkGIx6B+IQjIabrLUmEAQMA0ucmPcimpuMn8N70K2rEf2eVRlzbgYjwzHtqgjqBqnCK8xjA70c/McplWd0klC8HYcyeG3zYeRnNttFZHTAVUF7Q/S9jnkZRcWeSNiYjfEtkkKqs=
+	t=1751553192; cv=none; b=joGYZTGunu9fuuK4pmtCDnTwZzmkWHPxgsXy0irqwdXYgPWB1Tup4iqDd6X4v+3gqrilr2eukzkMYsPXfS+JgKg4GlVUWlvfuoKycRzX1SXYC+L6uwVxxaUS5pp4qi3kObxES39BgcfwqpAiBwsW6sQGbNN+GsJaClA8BknJbt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751553191; c=relaxed/simple;
-	bh=QDQcYemNumpJkyuG0e7AEPmXkZuj/5OH8ZkCvxJeii4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBVjFNcI0hTUrJaSU3UN95xMwh0sWrOLLp8F5Rk7aJ8hN9fTzriwSUN3zOTcnfLrjK+Mpyh/mQZFFk1B2x/5QTUORHU6Z36Aieo9qqN5RRIP19YwRsYxJXXzyAD5jUpb7LvqnttQpZYETTIqmpirwpnmGbGvXlcXIhuVavFprt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NDtlaxpl; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751553192; c=relaxed/simple;
+	bh=pbnpZTecA/emnfYuNr9pfpPVP71XL99mm/JpD31d6Bo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tW6pUmK21182jVKKjJJb06sUiqMjD80VO+qdAoY3OzA4WrcYBeSO4Y6eiyiqUvOstpaPRuoeJgShkIwi1ipikuKwaAscU70gql0IS1SRwkGBLSPbRfKckdo/uc0LEwe5Tak0mV5B9DyMrahey9RYws6/UCB2fcNxQfS34cwlfcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASEaO95Z; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NDtlaxpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751553189; x=1783089189;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=QDQcYemNumpJkyuG0e7AEPmXkZuj/5OH8ZkCvxJeii4=;
-  b=NDtlaxpljzu1q+u9ZZTCzLoMZQVHU5ODq01/+90drdWnR77uWUca4Qht
-   wPp5x+/BmEnMVTZ7Ti3F3YZNbotehziQxWi/QX0eAWGxpuI91K9YbLmXg
-   /+ozDatAqC21XErULw8qcRh3PeUdTCMdHChyxfiDhk0nOBG+7bg8ImcX9
-   Dz95/WnffRqq3aNK3nHr8jLN0tXYZG4LnyUM3gzdJXmCJb+eojsgnRkfo
-   WVmjNXM+cW8rpfPUdmVcux/wVzWq2r9ZqCzYz9VvuRdnxbKIoqJ2von1q
-   EiCkzFb2g2J25Z4yaaguJLDNefrndojXzKfMSLBGC+nqPDA+wSbL10uEE
-   Q==;
-X-CSE-ConnectionGUID: 6BE6dySyRfmprrD7756arw==
-X-CSE-MsgGUID: sXsWJYgLRHq2HfDSxK4Uww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57691494"
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="57691494"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:33:08 -0700
-X-CSE-ConnectionGUID: rD2M51rKSdi1x5PzUhceIw==
-X-CSE-MsgGUID: UEtkloWDSZmDsJUfFaYINA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="154958463"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:33:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uXKzi-0000000CED8-1unY;
-	Thu, 03 Jul 2025 17:32:58 +0300
-Date: Thu, 3 Jul 2025 17:32:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Sunil V L <sunilvl@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 21/24] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aGaUmpw1pVWNAmpb@smile.fi.intel.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-22-apatel@ventanamicro.com>
- <aGUl_S9irfhlHmy2@smile.fi.intel.com>
- <aGZhWlxxQG0Z8awP@sunil-laptop>
- <aGaLiK0eW8Mc1YC3@smile.fi.intel.com>
- <CAK9=C2VjrOvcu=hEfxqw8R6Bwc1W5n9m_ksQ8vx02Lo8232wqQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASEaO95Z"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3139027b825so37568a91.0;
+        Thu, 03 Jul 2025 07:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751553190; x=1752157990; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c6ULj4GSQdITNFr+qLBDFzv5ASstogN2mu1F9t/ePJQ=;
+        b=ASEaO95Z+SPOpEHhaEdMvpW4zM+tPmij7fMNC+/2HeErWS9MVS//qKJK6yWSNdg4Mr
+         1/29CWYxan8aAwpQrMIAbZczf2Mfq8wJVlQu9fFIkYhUTHtwWk401EXMl+YBePONbgoB
+         j1VcRNxz0Dg4oYELzfW+bic8vygVbzO9rqHmwD0nJMy/l2urCoymUFJ6Dc6BcwIAaW8j
+         HDRfc07UDpDvfk+fXir/GutVW+pfoO8lB2G2EW6PKVMeOx1Upr+apq6cZA0SLXcBQFbt
+         PyC470y/L171Eg/FAjBa+JvtPjZsejuQKAX7SO3wSFkfQLVf9Q+lKYLzmJ/2KUJnQOsP
+         GDRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751553190; x=1752157990;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c6ULj4GSQdITNFr+qLBDFzv5ASstogN2mu1F9t/ePJQ=;
+        b=f6sQ9KRl2B1lrjFZbOd6we6CjUAMQ3yy7FmRuG8Pj39ccuV0XOI3AEuaEbqAXMFPPh
+         zeOVtQ8CqGBOfqB9aZju7aXMm1jkZ2xPjuuYBsLR9Ih0nCm88RXZ8DNf3AsAPO3dIe4G
+         OJiRtdD8XjTF+GtpNGx2ByWHTMdLWZvKMS9v6sRpzesx3xIgHQBjW1CSisI0WoBO2uCp
+         dIxN+VSHiST1bxe4UctjNAbK+7IXmbcWU7AVSopXuDTgkag5aXAVH4f+ev+3dEA55Aiu
+         jM0L8knZAh0gRuvCXDLTRQLf0xL/8nYfMKyW8s7RW78vBSN2MaVf1tQnGsFVDqlQt5Ky
+         lg4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV6mZiPKduBuKW+T1f+SMOusDFmGKDUSco7kjUoLnlY7svU9L4464Vh3of0+OUzfnFAfLUxrRUy4HE/@vger.kernel.org, AJvYcCWpoDiOuCOtnPK07puDPNS0EISo4RuroRzf3ZShlZa5P5xf9QPGDi7DVtBTNGP3BGlSEJlqpuxIBe+uwxHh@vger.kernel.org, AJvYcCX8z0dMwS8QLTJYHxnmzqoMNS56drID+Z2Q9/79H7N0MlIXbYPnDJ2PVVRCui4E6ixEUg0l0z5/NALuxLex@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7qPqIV5AGv+CPQUE1YW7qbRecdccHVPnNmMU+BQHlKdMtBWSx
+	v8e4NUqUdS5bdAncHjtAgmN2jlNtGAxoitD79ZXc+O/FQJWgtRzC73Jm
+X-Gm-Gg: ASbGncs6gy8IFgKLhzmXMZloaS6ryAmMPX4dHPpkbLQoBJE+1JfD3qKjW1sIa/9qLnm
+	eCpx13OJnkkVjY5Mby55rQqlfowHFkPA9PHehOxBnZE0DYEq313Kub+bLSJs/PJK+ddHJxK6gSW
+	/NPwLxhCgwXTsw0QrBSrIWlj0WxwAUEvX4kbYiz/1v2rH99zSrNNIBOGcih2me84md28njLC5E/
+	Zza7uIu3jN3TZdrP2FuvDDdzhKNphoOLb5U7McKykuhBHHhSKRX/nQAn5cjChgn2IMRdTsBVFUH
+	Tj7W2SvV9cfQ8p186PFBPL4oaI8kKjAnf6hgBuf6UaN2iis29PuVxBfeDity7aSwPi7S61ifcWA
+	=
+X-Google-Smtp-Source: AGHT+IFw+K7j7iqmYpcjjjtR+iwrjkgRPl3+q+ppwsYlqqPKEE+ZodtA8iPQzN0yAnBxDlmUm9+6mw==
+X-Received: by 2002:a17:90b:3848:b0:315:9ac2:8700 with SMTP id 98e67ed59e1d1-31a9d5c8bcamr4442778a91.24.1751553190359;
+        Thu, 03 Jul 2025 07:33:10 -0700 (PDT)
+Received: from VM-16-24-fedora.. ([43.153.32.141])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c7c59cbb3sm14972705ad.110.2025.07.03.07.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 07:33:09 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: hch@infradead.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	brauner@kernel.org,
+	djwong@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] iomap: avoid unnecessary ifs_set_range_uptodate() with locks
+Date: Thu,  3 Jul 2025 22:33:08 +0800
+Message-ID: <20250703143308.661683-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <aGaKoDhuw72wZ9dM@infradead.org>
+References: <aGaKoDhuw72wZ9dM@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK9=C2VjrOvcu=hEfxqw8R6Bwc1W5n9m_ksQ8vx02Lo8232wqQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jul 03, 2025 at 07:56:52PM +0530, Anup Patel wrote:
-> On Thu, Jul 3, 2025 at 7:24 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Jul 03, 2025 at 04:24:18PM +0530, Sunil V L wrote:
-> > > On Wed, Jul 02, 2025 at 03:28:45PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Jul 02, 2025 at 10:43:42AM +0530, Anup Patel wrote:
-
-...
-
-> > > > > -         if (dev_of_node(dev))
-> > > > > +         if (is_of_node(fwnode)) {
-> > > > >                   of_msi_configure(dev, dev_of_node(dev));
-> > > > > +         } else if (is_acpi_device_node(fwnode)) {
-> > > > > +                 msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> > > > > +                                                       DOMAIN_BUS_PLATFORM_MSI);
-> > > > > +                 dev_set_msi_domain(dev, msi_domain);
-> > > > > +         }
-> > > >
-> > > > Actually you don't need to have the if-else-if if I am not mistaken.
-> > > > The OF does almost the same as it's done in the second branch for ACPI case.
-> > > > How many MSI parents this may have?
-> > > >
-> > > OF already has a well defined interface to configure the MSI domain. The
-> > > mechanisms existing today are different for DT vs ACPI to find out the
-> > > fwnode of the MSI controller. So, it is done differently.
-> >
-> > I don't see how. The only difference I see is that OF iterates over all listed
-> > parents, if any, ACPI tries only one.
-> >
-> > So, perhaps it's a time to have a common API somewhere for this to be agnostic?
-> > Something like fwnode_msi_configure() in somewhere of IRQ MSI core?
+On Thu, 3 Jul 2025 06:50:24 -0700, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2025 at 08:09:12PM +0800, Jinliang Zheng wrote:
+> > ltp and xfstests showed no noticeable errors caused by this patch.
 > 
-> There is an issue/gap in the DD framework which is being work-around
-> here. This issue manifest mostly in RISC-V land because in RISC-V both
-> MSI controller driver and drivers using MSI are regular platform drivers
-> while the probe ordering is ensured by dev_link support of DD framework
-> or the frameworks (like ACPI) creating the device.
-> 
-> As-per this issue, when platform devices (DT or ACPI) are created the
-> MSI domain instance is not available and hence set to NULL. The MSI
-> domain instance is only available after MSI controller driver is probed
-> so currently we explicitly do of_msi_configure() or dev_set_msi_domain()
-> in the driver using MSI as a work-around. Adding a common
-> fwnode_msi_configure() is only going to be an improvement to the
-> existing work-around which we should not have in the first place
-> hence not the right approach IMO.
-> 
-> In the long run, we need a clean fix for the above issue in the DD
-> framework such that platform drivers using MSI don't have to explicitly
-> do of_msi_configure() or dev_set_msi_domain().
+> With what block and page size?  I guess it was block size < PAGE_SIZE
+> as otherwise you wouldn't want to optimize this past, but just asking
+> in case.
 
-I see, thanks a lot for this explanation. Can you add a summary as a comment on
-top of the if-else-if in case it's not there already?
+Hahaha, I really want to try -b size=512, but I don't want to turn off
+crc, so I can only choose -b size=1024.
 
--- 
-With Best Regards,
-Andy Shevchenko
+By the way, the test was done on xfs.
 
-
+thanks,
+Jinliang Zheng. :)
