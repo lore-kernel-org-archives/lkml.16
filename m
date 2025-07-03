@@ -1,137 +1,88 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41432D0C94;
-	Thu,  3 Jul 2025 08:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B396A2882B2;
+	Thu,  3 Jul 2025 08:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531412; cv=none; b=OjUHgXG+FlMp5OxGVWkaar7OssjyMqu8eeeviibFANrkCdtYdU8ZD26BOVqat7NVMTDVzrh6Cpkd9nVMN67Jk/MFBOCNbwsCPzXUqffvUuvKnXkLKBnkRm+r45At2esvDp/0zL3cfvCQ4AJt8fFL/TdFurnxPMkUAIV7GkaWuSE=
+	t=1751531426; cv=none; b=Y9Rh9UoiPFPIyPT74ZfDA8apuihR5cOxA7cYsSkuX0LLF7oovupG5iwKgpvmiPT6/1G4J0Jgvu8iD5AfKo79pN2StaLshNjwCsXw68H9Oo85QQDQV/kh43gkt262CXVoUsibziNZw9vxqiB5I5QGEJmsTxAwOPFBh7XuVp7lP6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531412; c=relaxed/simple;
-	bh=CpZl4mdMF2Ctv/6uj/sWaWxp/0nirQHJdLY3NvBHDmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oAZIpo32iM2MfxvGF0edQ8toYr7ZwDpUF/PIoXEVU1A/Y7Y2r+k00jIcqFjPtECgpIGnHHf/by94Q3MHsvJQYtrmWYtwLh36+oW4Q7w5AyS9tIEQXtVvFEcQfU9kOeEQCKC9G6Wj8kdevTuWxurpZbYrRetBsIiBYaZ2yS/aU+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=h/IhFapT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lIvRjtSX; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1751531426; c=relaxed/simple;
+	bh=Zq7mkNnN+wAqqYQTtHUcR3ndAXwTa8o69LabGKywFfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mRuoN58H5Gxp6fLnSp1Y3EnJyUb5zFG2aRA/mCh5FCzogNFxKItD+lvocCnZw74GF32OegauS9FuG75QoNcmYikx595RCSkyZ4J6/LDawPqEkkR6nH0J+yHGEjWoiw2ujLJr304XNJlccddamUlNTGvWTFS0rFjvV2C24Xm6zYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bd4U8ATw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="h/IhFapT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lIvRjtSX"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id F02A7EC028E;
-	Thu,  3 Jul 2025 04:30:08 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Thu, 03 Jul 2025 04:30:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1751531408; x=1751617808; bh=NoARKltq1A
-	RrFEtbCmiaou5A31Cm9AxIgFmsgyxez6o=; b=h/IhFapTVKOeAU3LyvYvCrmqMm
-	NzY4CqLa9l0dVFnweUaq9cJJgTxO/Qu56rNQF/7C4KUnvNtnCAiX1byFIcjt3twt
-	FWJ2ovqGkVPCDpUqnbIw1DGWKUxGoLFfuPcey2F8jlYPndzcihPnqfEIf7hMki/+
-	Dj0KuwnxBu9a1u0cKruzKpkk6Jt+Mz/MaCSYcIO0Kn/ZxvJvqFZRXXgCN4bIb4Ob
-	5Ebq1DFHca5l6Hv73qMMlJmdaj7IoEH7Ecr1qSFA9/rwIk8jRgxgtbVp4cL+GGoJ
-	yCnmE0MRndKrFa9bLUb138GsXwTdZHtnd+5Y4yJRA7QErz46U7LEoMA2qG3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751531408; x=1751617808; bh=NoARKltq1ARrFEtbCmiaou5A31Cm9AxIgFm
-	sgyxez6o=; b=lIvRjtSXnbdVjOMai31LMuurfVTsantAudgFaUUqAksLEWY/f8m
-	r0otOTA65jlDDkLH516IV5Gy6Q8yzzzj90oSxKknpjoSdkYCULfxHzF+PAdn+hlt
-	OUwc6MLCgz1zPEDlR9S0iXIIbQd4C0YkoBMZLRUsLz0BVVXMUFUe3ENBvgdwQvga
-	ixbj6Vy5jK3/916HvcplLDGfJsap4e17GuYWjMJDizd/sKa+BMKxaqlLK4zULapE
-	bs/BiZWuZVeY0zH80plDrynaRd0eA1Q5edlbAMTA0Rz/yeWwXpaN/PR62GhRJMAq
-	OWab+aPBvgRfTk4FJuQlj1RLBukMaMMCGWA==
-X-ME-Sender: <xms:kD9maJOWwW9RpkJEfEH0EAaBPqdsERWTLdbGhVAQ6FhMjcXXr5RTaw>
-    <xme:kD9maL9KLxRPXqmcZCuyhsYulGx_yhCD46JfjBTYngUtyiV13dJ8y1UgrEgqEHd_h
-    Il7T0b3VSBkUw>
-X-ME-Received: <xmr:kD9maITFvpbawx4NDhpe9TJod0yHfVsRZe7qkDHD0O3H0konkltYey4LQ4nMxYv8tPu7SG1lNe4fM7nuSawhJzNOoIMCDrk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleektdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffj
-    uceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvvedvle
-    ejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
-    homhdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopehlihiihhhird
-    iguhesfihinhgurhhivhgvrhdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdr
-    uggvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:kD9maFsdQmcu6OByVvwLUhusJEBka5WthD0DbEwdgs2X1PmPxzk87Q>
-    <xmx:kD9maBcGrpN39_VkhZ1tdfpqhugnlPnCI3Iwjbbhw8z8fS4x5QSHBQ>
-    <xmx:kD9maB3eq0rNVkHT3_n8O2svewDOYgLkL_PDl1z9bCEXA6vyv57ykQ>
-    <xmx:kD9maN8xFZCTe85nekKl5HbULkfhRcaTPQ76bdM4uCSX0LSxmA5Xfw>
-    <xmx:kD9maI5d1_SIPJ8LYDdopKRM39DmOp_f5UxJP0atvQw5EBiPYW42bT7i>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 3 Jul 2025 04:30:07 -0400 (EDT)
-Date: Thu, 3 Jul 2025 10:30:01 +0200
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Lizhi Xu <lizhi.xu@windriver.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <2025070335-situated-sloped-bc1c@gregkh>
-References: <20250703171021.0aee1482@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bd4U8ATw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB37C4CEE3;
+	Thu,  3 Jul 2025 08:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751531426;
+	bh=Zq7mkNnN+wAqqYQTtHUcR3ndAXwTa8o69LabGKywFfU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bd4U8ATwdGAhoxexB3OVtvV46X7Btx65Bp1AYbLD//mPVJgzfBd2TsAWgJLGkRT6c
+	 tJ9qcRcnBke+HzGqyC+m3uEVUivLjmFQwwxisHeT7szrmWrTmrZynLeWtsE2XSTO7R
+	 x5AeiEyAdTkd+ijIpt4rFlhlUYIjD6uDdn/J8PbjBEO04lF5Mr0R1WkMs9iiLucBCg
+	 yvyX6gaMAUIzmCovm2XyWccRjMmwZ4KoYKWzwMHZQpD0KSXPghTWFZvjzm4GwqnTWl
+	 vH+qTPjP3MEhjYeLTFKGNjV7dXxFDoC8BEQEo9N611BLhJcBLnjwYqdTlfTgEDFJ34
+	 CTM/GvoA9YwlQ==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com
+Subject: Re: [PATCH v5 0/2] PCI: qcom: Move PERST# GPIO & phy retrieval from controller to PCIe bridge node
+Date: Thu,  3 Jul 2025 14:00:08 +0530
+Message-ID: <175153128264.8260.15058435658721595674.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
+References: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703171021.0aee1482@canb.auug.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 05:10:21PM +1000, Stephen Rothwell wrote:
-> Hi all,
+
+On Wed, 02 Jul 2025 16:50:40 +0530, Krishna Chaitanya Chundru wrote:
+> The main intention of this series is to move wake# to the root port node.
+> After this series we will come up with a patch which registers for wake IRQ
+> from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+> the host from D3cold. The driver change for wake IRQ is posted here[1].
 > 
-> After merging the char-misc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+> There are many places we agreed to move the wake and perst gpio's
+> and phy etc to the pcie root port node instead of bridge node[2] as the
+> these properties are root port specific and does not belongs to
+> bridge node.
 > 
-> In file included from include/linux/string.h:392,
->                  from include/linux/bitmap.h:13,
->                  from include/linux/cpumask.h:12,
->                  from arch/x86/include/asm/paravirt.h:21,
->                  from arch/x86/include/asm/irqflags.h:102,
->                  from include/linux/irqflags.h:18,
->                  from include/linux/spinlock.h:59,
->                  from include/linux/wait.h:9,
->                  from include/linux/wait_bit.h:8,
->                  from include/linux/fs.h:7,
->                  from include/linux/highmem.h:5,
->                  from drivers/misc/vmw_vmci/vmci_context.c:10:
-> In function 'fortify_memset_chk',
->     inlined from 'ctx_fire_notification.isra' at drivers/misc/vmw_vmci/vmci_context.c:254:3:
-> include/linux/fortify-string.h:480:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->   480 |                         __write_overflow_field(p_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> 
-> Caused by commit
-> 
->   bfb4cf9fb97e ("vmci: Prevent the dispatching of uninitialized payloads")
+> [...]
 
-Ah, nice catch!  Sorry this didn't trigger in my testing.
+Applied, thanks!
 
-Yes, it looks like both the code is correct, AND the warning is correct
-as the compiler has no idea that you can just scribble off the end of
-the structure like this.  In fact I would say the code is wrong as there
-could be padding between the two fields that the change doesn't handle
-properly (which in reality probably isn't happening).
+[1/2] dt-bindings: PCI: qcom: Move phy & reset gpio's to root port
+      commit: 77df6234668afa9c44490130e62d5c30734d6e2d
+[2/2] PCI: qcom: Add support for multi-root port
+      commit: 9e09ecef33e6f1019be921732cc2d7bd945202d8
 
-Lizhi, I'm going to revert this change now, please fix it up "properly"
-either by correctly changing the structure definition to show that the
-payload is hanging out after the header (and also you can use the
-__counted_by mark), or just properly zapping out the payload length in
-the proper way instead of doing "fun" pointer math like your change did.
+NOTE: I've made changes to the parsing logic. So please test the new version to
+make sure I didn't break anything.
 
-thanks,
-
-greg k-h
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
