@@ -1,175 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76E8293C6D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43C928D831;
+	Thu,  3 Jul 2025 08:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751530059; cv=none; b=EyNslt7Xc8GPycTaanXDnjcbrRT3ungvIwAF+HLdrFYAJtkhRDHFNZEYbPKyyukS/7ewK+zpiPeXnd1/mHK//TsTcgNQysLVFCwOTIzEWE4EGrsQ3i9duXO2wMgSSpAUWj3lEYR3zzKVBUgu24kHX4JjKiGyvgGaRV2Ij2Evk30=
+	t=1751530134; cv=none; b=hkrjqVEu17eMmDalolya/LxJ9JZoBgNZZ5cz+icJ922F5P1a0KEX9m8XIRt7Z8EYQMKEyOy6OBfk8TzszvFgMWM4LxmyFTbol8dIWkLh4FOiLMp+rjrATsXczqH467eWa59fzu9mIx8TUfSJlWFQ+GYHiCEhmu+s+D3nWD4w1rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751530059; c=relaxed/simple;
-	bh=XEutOZDpX6mO+OjsZpZ8b1EIpGfFQ9vBDyzxOYvDMnI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b48iffMSLVj7qYghopmAZZdwX5T5H+Uyl7POugwX955J+Q10YL15EcKkoImdo9h4qDcek7kq6l4zOHMBNGgvolAWDWvCJ3HsnVUoOMznHA+DT41Qk3EZ6qeIUADw8tYQQqk8flvsJssbUmveqQToukIdFGTv+nxgf8dhc8Seeko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PdEFPkFc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751530134; c=relaxed/simple;
+	bh=bm2jknTdnxhbI/Q/FCLLjjBDjk4OaS61afFuDR5COX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rCm6p9r7DkfUePjTR1SowU2R5GJKcn3TTwS8LMREDbccg0sL3Ic0jQzreM3dttqPawKqFu3oJSMT030BDFwkdiWZ2HW2AKLVZ6hwFATUaro8OK9471+LGXLhPi3eWmIXdaL/EmDVwdxk68nCH/QQQJvNYU2oVqykKSa5TPAcFQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCrZh1gZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PdEFPkFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751530056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GamMp+TyJFc30zumQdIUpdnv7sTzaVAQHgSIzM4gVf8=;
-	b=PdEFPkFcjb5QvQQysBlF/Wb5W8KXHDJHPpffx0cPOntKafrsAgGT4oM8WYofgvu024803I
-	ey3RT8SrBa8AZh0Z1I+Hq154ACKqf4d5r+RBbjV1hmdLmHgSzFsKMaHCzmm46rCTJPtMRP
-	p+k4vcHaEYupAhQb1ILpdPQtT1HnPbQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-W3Dpr-XeN0Seut0nyPnrnQ-1; Thu, 03 Jul 2025 04:07:34 -0400
-X-MC-Unique: W3Dpr-XeN0Seut0nyPnrnQ-1
-X-Mimecast-MFC-AGG-ID: W3Dpr-XeN0Seut0nyPnrnQ_1751530053
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f7ebfd00so3811418f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:07:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751530053; x=1752134853;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GamMp+TyJFc30zumQdIUpdnv7sTzaVAQHgSIzM4gVf8=;
-        b=JnJXp3JTmrlYVoiczqUuNsTUCSWUdVGIlxc6G5HinQJJLTzUvuW/VQGL9Npsth70v2
-         1KhvS0U3klhOUxhuxLep5mQWjJlDq02BFMc8EDVdWg/2xumg8uyosB1coGlSPpNzEOvK
-         TFLVVVlkTJbQF3WRy8t2VXH2tb5CiqqlZiLayagT6h+b+UzNwb/CYYcNgVx5yEcm9Ddg
-         W83nrFAkrrpnYlYJ7dEl8dp3IuUoNfT163gITz7euuMQfbe9dMpEo5H0DwX1rk64xOJ6
-         PwxW8N1DdSZbdCWsPXVjAMBiwJSPs+d6UvkTjdFVqj4DH2DSC0gpBJYp9dx2WHknrhP/
-         hcwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTuHMkh+Z0WHwbn+AB8zjh3LO1uR3PEwYHetyBP7y+AYP1Nrcuc/xf9nvoUQMOgpoR+WviT+hcC33EuwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVE/Xyg3vU3Rhdpt7QsiHQvsUZVw78G0tbtayK71T1B6SvqER
-	ZwTkMkOAZ0m0GfsfsiLtEzXkhRTQx+kZ+yht+ELbDd/knKfBP5IEyoqeNOxPZklIln6iLtibRcX
-	i96qBjfROOo6CKV6N1mEjlXkvOFApEuFE7geXr01/QDoqd2nSBKzXggcrUvJSUwCW+Q==
-X-Gm-Gg: ASbGncs/KAIt56CdugYTl2PB7ysLwwI4NKA5D20hXCLQfoEozr/w8pGCCCtD1udoVod
-	3qNBDEbrmv0WOkZPIP0Hg1FHI2v+xFB2kS4jWfdL0vCFMbaeRXkZeoE+BMMBE+vTiKnnVi3gkJF
-	ntYqg5T90Ic8XMAmLHv9BnNA1/UQusKUMku6fxe5aI50Cd7xwVRGlH0Ycj4vAj6DuqOEbGMz7XT
-	w48g6ncNVY4on9/usEbMfb78e36cNF2JaR7+mxGiHaOCyoQfmXYLUp/qB1rg++vOQtdSEp3AEd+
-	eAzDvS4lAHQBBk2APtJt06CLs9zRDvhdNBrN9JQWpwQhzArU
-X-Received: by 2002:a05:6000:21ca:b0:3a4:fc52:f5d4 with SMTP id ffacd0b85a97d-3b2005840cdmr2948557f8f.47.1751530052841;
-        Thu, 03 Jul 2025 01:07:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG05IT0UewuXSmKOoWgx9Nq04Gs+TXwgHPmEfRpAXHBlO7HuRZUAMsKy4Nw2TO9gr1qifTV4g==
-X-Received: by 2002:a05:6000:21ca:b0:3a4:fc52:f5d4 with SMTP id ffacd0b85a97d-3b2005840cdmr2948523f8f.47.1751530052307;
-        Thu, 03 Jul 2025 01:07:32 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f842sm17623149f8f.86.2025.07.03.01.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 01:07:31 -0700 (PDT)
-Message-ID: <564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: John Ogness <john.ogness@linutronix.de>, Steven Rostedt
-	 <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	 <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 03 Jul 2025 10:05:59 +0200
-In-Reply-To: <84o6uatn6i.fsf@jogness.linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-	 <20250626113520.315db641@gandalf.local.home>
-	 <20250626160459.soHxOROG@linutronix.de>
-	 <20250626123445.5b01849d@gandalf.local.home>
-	 <84o6uatn6i.fsf@jogness.linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCrZh1gZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A09C4CEE3;
+	Thu,  3 Jul 2025 08:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751530134;
+	bh=bm2jknTdnxhbI/Q/FCLLjjBDjk4OaS61afFuDR5COX4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MCrZh1gZXDj6kfFLveBXi46IBDJUAUqC0pELll+5kKwUZfHupGASilVzb1nW69pxk
+	 UCaE631VUXiG8En/UdmzXxu+6t/fK3lAMa91fElQHq/7UuxepM0caK1Wj7/c4dfboQ
+	 gXdvRZdTmNEMwdLgpgNZyh6QsJZnD163TDyUqXGq6fgywSYzkc0INwqN15myy4b/EV
+	 PVkCuOt0mk0/wE9xLRxP7iz+xGGKJzkqU9F15Pmk6YMBRBrtg+92DMHo/Hu4hGQ+BI
+	 tidht/F7pDhWQXSHY1Rw1DdzcE7ZazuRTfsgWEFD70mwCbZ1V3zbDvsyWqcs8sgFRm
+	 yXbh5iiQD/PXg==
+Message-ID: <defd70cb-4351-4b0b-b4d0-dd1ff831615c@kernel.org>
+Date: Thu, 3 Jul 2025 10:08:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: dsp: mediatek: add mt8196 dsp
+ document
+To: "hailong.fan" <hailong.fan@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20250703075632.20758-1-hailong.fan@mediatek.com>
+ <20250703075632.20758-2-hailong.fan@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703075632.20758-2-hailong.fan@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-06-26 at 19:47 +0206, John Ogness wrote:
-> Hi Steven,
->=20
-> On 2025-06-26, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > Your scenario can still happen despite the memory barrier:
-> >=20
-> > Yes, but the point isn't really to prevent the race. It's more
-> > about making
-> > the race window smaller.
-> >=20
-> > When we disable it, if something is currently using it then it may
-> > or may
-> > not get in. That's fine as this isn't critical.
-> >=20
-> > But from my understanding, without the barriers, some architectures
-> > may
-> > never see the update. That is, the write from one CPU may not get
-> > to memory
-> > for a long time and new incoming readers will still see the old
-> > data. I'm
-> > more concerned with new readers than ones that are currently racing
-> > with
-> > the updates.
->=20
-> Memory barriers do not affect visibility. They only affect ordering.
-> And
-> ordering implies that there are at least 2 pieces of data involved. A
-> memory barrier has no meaning when you are only talking about 1 piece
-> of
-> data (in this case @buffer_disabled).
->=20
-> For example, update_traceon_count() has an smp_rmb()/smp_wmb() pair
-> to
-> make sure @count updates are ordered to be after @buffer_disabled
-> updates.
->=20
-> read(count)
-> smp_rmb()
-> read(buffer_disabled)
->=20
-> write(buffer_disabled)
-> smp_wmb()
-> write(count)
->=20
-> But what exactly are the memory barriers removed in this patch
-> ordering?
->=20
+On 03/07/2025 09:56, hailong.fan wrote:
+> From: Hailong Fan <hailong.fan@mediatek.com>
+> 
+> This patch adds mt8196 dsp document. The dsp is used for Sound Open
 
-Hi all,
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-these statements made me curious: I always thought of memory barriers as a =
-way
-to order reads and writes to the same address across different CPUs (in oth=
-er
-words, for visibility).
+> Firmware driver node. It includes registers,  clocks, memory regions,
+> and mailbox for dsp.
+> 
+> Signed-off-by: Hailong Fan <hailong.fan@mediatek.com>
+> ---
+>  .../bindings/sound/mediatek,mt8196-dsp.yaml   | 95 +++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-dsp.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-dsp.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-dsp.yaml
+> new file mode 100644
+> index 000000000000..68f594f476e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-dsp.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/mediatek,mt8196-dsp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek mt8196 DSP core
+> +
+> +maintainers:
+> +  - Hailong Fan <hailong.fan@mediatek.com>
+> +
+> +description: The MediaTek mt8196 SoC mt8196 contain a DSP core used for advanced
 
-For instance I'd do something like:
+Missing blank line. Look at other bindings. Also does not look wrapped
+at 80 (see Linux coding style doc).
 
-CPU 1             CPU2
 
-write(x)
-smp_mb()
-                  <implicit paired barrier>
-                  READ_ONCE(x)
+> +  pre- and post- audio processing.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-dsp
+> +
+> +  reg:
+> +    items:
+> +      - description: DSP configuration registers
+> +      - description: DSP SRAM
+> +      - description: DSP secure registers
+> +      - description: DSP bus registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cfg
+> +      - const: sram
+> +      - const: sec
+> +      - const: bus
+> +
+> +  clocks:
+> +    items:
+> +      - description: mux for dsp clock
+> +      - description: 26M clock
+> +      - description: ADSP PLL clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: adsp_sel
 
-Now, I get there isn't much we can do if reader and writer are racing, but,=
- as
-Steve said, I'm expecting the presence of barriers to make the racing windo=
-w
-smaller.
+Isn't this called audiodsp in other bindings?
 
-Am I misinterpreting the whole thing here? Are those barriers just ordering
-reads with reads and writes with writes (hence useful only with multiple
-variables)?
+> +      - const: clk26m
 
-Thanks,
-Gabriele
+Don't use frequencies. How is the pin or input called in datasheet? How
+other devices call it?
 
+> +      - const: adsppll
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+Best regards,
+Krzysztof
