@@ -1,77 +1,98 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42E28935C;
-	Thu,  3 Jul 2025 04:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21382853E3;
+	Thu,  3 Jul 2025 04:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751515281; cv=none; b=r9uGbmkhDRiGD9hC+QmWP+I0kzWe1+0UQ8iPVygXdCMwKKHV8h+2SMdxprbBfghywpmhL2uZKw9GY4fvtnoSnjFrrj0cadPQ7dDRK6OuIXZymZayxDWaVEzSaEZ0+OVc3SwFqTZBKpIF45PFKQYjuugHu/uhbypyxmL1x0aizoQ=
+	t=1751515350; cv=none; b=obnBSs7iJkmq+hwmtt1g9CiSap7UU4uP07tHnqe937D2LYmP/h0qPtcNNOpBNftXe6aEiYwTWoke0dK1pYW+MBcaM/fqwBJou0l3i80wsUG6NlFRXy+XIQIOBQ+/b/zJFH67ToEnUmtEtE0v01cZefeAoOYLaATbGAJXAkDJTXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751515281; c=relaxed/simple;
-	bh=JpoUSlhJB82auXvu10Mi5QN6NRGkCsUApGJnLQme5SY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YNbSR7p/YN3dbQXbl4dWEsBDjQSW2HC+afAu/odlVy/4L8/aS9VNjC/T1XqR4cfG/IzeXaayXDqbLj5WmeM7JdGNm6nworqwRVVyapcUrRoXKfYy3Ptffaej3u1wEsZnEI990RQRPRJGsX/BP6ULh4kHVWw1xL/i5u+UGv/O+TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from mop.sam.mop (unknown [82.8.138.118])
+	s=arc-20240116; t=1751515350; c=relaxed/simple;
+	bh=y/gNKA96Ik9ibN6WTKSDZclUu6MbvXj7RdF/07+hqx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VZgIZprgtATtOxyCBrrJvXlV7pa5EQszZd3GDP/8lwtKa4x0RDN+1l1fMEYXXEHDrULcoPH5WLaqAIANzJxX42d+f7M8u7DC3L3lGm3CCZU297h+T0BacrqJO4lhONGv9oP+gccaTbGuLJfTh5EgMheCg8ej4zFcxt06OSpSpXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Qvt4NIff; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qvt4NIff"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751515319;
+	bh=FeqDNqBx247KctMK/8D5SjUowUGlsPzYsySN/IEDWd0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Qvt4NIffpaBmvPBs3Vn8GZzC1Wndwfh7Rg9O+37kzj3BpRHevkVuZAt6WDsEPpFbm
+	 rIfpIKWHFYABTizUqrxDV+HeW7VGCG0JQd8cWbWSxOH8AH8OD96sNG6DG5sKpWJApq
+	 UxeNqght50GUu2OvKzOidxVUWcQQfRWUCwgGBkuWx+RrA8tB5fl5MqInieqxTnOztk
+	 3ngqizRvg3/CHhEbQJmr7ly4UcUV9j41ZWbJIWglogBYXAmJfn5JoTg/MiukqQwKQw
+	 cb9rwChdjWYnnryds/XhDGLAFL8J7wPe98rH9V+pf5mQce+bzMRaudhhGzTISGq6OV
+	 +W8OeBDbUEbMw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sam)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 4559E342138;
-	Thu, 03 Jul 2025 04:01:15 +0000 (UTC)
-From: Sam James <sam@gentoo.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,  fweimer@redhat.com,
-  akpm@linux-foundation.org,  andrii@kernel.org,  axboe@kernel.dk,
-  beaub@linux.microsoft.com,  bpf@vger.kernel.org,  indu.bhagat@oracle.com,
-  jemarch@gnu.org,  jolsa@kernel.org,  jpoimboe@kernel.org,
-  jremus@linux.ibm.com,  linux-kernel@vger.kernel.org,
-  linux-trace-kernel@vger.kernel.org,  mathieu.desnoyers@efficios.com,
-  mhiramat@kernel.org,  mingo@kernel.org,  peterz@infradead.org,
-  tglx@linutronix.de,  torvalds@linux-foundation.org,  x86@kernel.org
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-In-Reply-To: <aGVo9b1xiT1Moq-P@google.com>
-Organization: Gentoo
-References: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
-	<87wm8qlsuk.fsf@gentoo.org>
-	<20250702121502.6e9d6102@batman.local.home>
-	<aGVo9b1xiT1Moq-P@google.com>
-User-Agent: mu4e 1.12.11; emacs 31.0.50
-Date: Thu, 03 Jul 2025 05:01:12 +0100
-Message-ID: <87plehkjnb.fsf@gentoo.org>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXjkt4w2rz4wbr;
+	Thu,  3 Jul 2025 14:01:58 +1000 (AEST)
+Date: Thu, 3 Jul 2025 14:01:55 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lee Jones <lee@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Subject: linux-next: manual merge of the mfd tree with the input tree
+Message-ID: <20250703140155.1e118ece@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/qL07yJSPHDDHX95pT.Z/mpr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Namhyung Kim <namhyung@kernel.org> writes:
+--Sig_/qL07yJSPHDDHX95pT.Z/mpr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Jul 02, 2025 at 12:15:02PM -0400, Steven Rostedt wrote:
->> On Wed, 02 Jul 2025 12:44:51 +0100
->> Sam James <sam@gentoo.org> wrote:
->> 
->> > In one of the commit messages in the perf series, Steven also gave
->> > `perf record -g -vv true` which was convenient for making sure it's
->> > correctly discovered deferred unwinding support.
->> 
->> Although I posted the patch, the command "perf record -g -vv true" was
->> Namhyung's idea. Just wanted to give credit where credit was due.
->
-> Yep, it's to check if perf tool ask the deferred callchain to the
-> kernel.  To check if the kernel returns the callchain properly is:
->
->   $ perf report -D | grep -A5 CALLCHAIN_DEFERRED
+Hi all,
 
-Thanks both. I'll update my notes and tinker more.
+Today's linux-next merge of the mfd tree got a conflict in:
 
->
-> Thanks,
-> Namhyung
+  drivers/input/keyboard/adp5589-keys.c
 
-sam
+between commit:
+
+  43a8440f3969 ("Input: adp5589 - use new GPIO line value setter callbacks")
+
+from the input tree and commit:
+
+  3bdbd0858df6 ("Input: adp5589: remove the driver")
+
+from the mfd tree.
+
+I fixed it up (I just removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qL07yJSPHDDHX95pT.Z/mpr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhmALMACgkQAVBC80lX
+0GwNhQgAmrZ62KE5i01Qd6GmNs1vUm90q+oa6qmO61ndTKVxoF+ZgQ7s5p6hWx9Q
+14ygQNeKjwJgBSP2CTqmKCcRphVOIeU4RnMHbeM4QtdO9XVZ/mPYC/voXZ6h22Ah
+Cu37voMGgQdku5TEmzYE1w9RKZBn2VHACt6dWOW2riqWVB0mqsRJc1MK2v52brnn
+Jw6VE+uYVOEkGn7kpubs5cmdhgVvdxJTtN1xchxq7pqwXbdV1Nd5uIJ4FmQnV4uE
+nqINY78dWa31q7y5jBjcsxId0Abq5/kdgjN5o+jL1cK7vSRoYFfkNquJpcHO87Gw
+XDCbBJCUktJiqxSL/yJGuH+ofzANrg==
+=9GZ1
+-----END PGP SIGNATURE-----
+
+--Sig_/qL07yJSPHDDHX95pT.Z/mpr--
