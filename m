@@ -1,66 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E3B2EE5F7
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B5D2E7620;
+	Thu,  3 Jul 2025 16:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558567; cv=none; b=cL3zcqhoqTBA22wgV18AG46wYsubRpAeZ3h21hBJ77+avNKqaoLp238ezvYROSyuui2LqrF7ZlygOxSX8EgyQcjUnqwRfnlgKL4j1iBh6lNe8785pfsVg0pNMyHPBNyEla1aoxOxxznZ5TS7v+My1XC5g1xzdkI9PyyRveWS0MM=
+	t=1751558568; cv=none; b=Adjtu/Pj1s31kqHzF56RPyK/GmkPcYFdXLWM/hu4+2sDKbNrNTKIxbdk/mdO9XTUzYDxW5LsBBCL1gLxFfcTPgmoZA1IKkVAfGiIlsnGxUOJ2bOi60R8st4PFmgtQKwb6a9oTH0Ccyr11yCReu9MseYMalWnJGJ3YIhmVaNXL1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558567; c=relaxed/simple;
-	bh=TY4yLMNjkRugTa/okMdIoOP1bnWENDOCYTwC6NjmULg=;
+	s=arc-20240116; t=1751558568; c=relaxed/simple;
+	bh=OzgEgyinOD2u+eSMzdaGCr7tFY0dcCCASCneanv0fW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=noNmV7n8i44H5ZzSXqXpS5Mvb9NN3p2nqY18iVuBT4l5iXRlR1fRL8WFofPjKWm8J6PrflD1oQJwW/tjsk7YijnSoiTjlo34dxF0AE7yL6S32rpYKulrlFKeihjQ3VtYNebhM9E3CxbGQZCOU6+e426BpAFIn6aKuqmmHtZgX7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IgY8o46Y; arc=none smtp.client-ip=192.198.163.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ns08c+q+9Ac2UZf1SRsocuoeO5Zl3GmxRQhennYF9gLLdSqDKNSLg/mSWXVuzMxfjC7b6czZZEjkKwkL/1Z0JHsafGSqlxorSiJBQH6bSOSeFzFCbRP9PrYfQnpJm2OZ15hF0PHSLFWHZnMsIGiMEMHdMvAE0TGS9cvDjT8/UlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hWAytJZ6; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IgY8o46Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hWAytJZ6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751558566; x=1783094566;
+  t=1751558567; x=1783094567;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=TY4yLMNjkRugTa/okMdIoOP1bnWENDOCYTwC6NjmULg=;
-  b=IgY8o46YaDEYb6N97DM2oIUTg+EFt28cpLf3AvMnJMoYjrWdHpLHQ4fC
-   kfVoWxIWC2nNULEIzTjAJyrRn3TV1e7R1F+7pjVhJ4GrfcDK589DF3+NO
-   Oja50CRqy9pbw6e6fZ/5rlJiCjuGMGn+goCne/10fea/XvYh9D7heGDw7
-   Y8uQNhF5AT3GqLyzMuUI4b7Zk+s5Ov067iVuRVEI29CHWZ1ZzS2nWhqnd
-   VsEhSXH0KGsZMFUDXOVi5PGhmhUyDD6w+3B4gYyapoSCGBnl4+Ds/5Isu
-   P/ho+vl4bhrcZeHv+v/ZuNR3nuuKZ2m0Z0l7rOzkjnYnvb0aZevzmXbPH
-   g==;
-X-CSE-ConnectionGUID: dpzLQHUgQkOeilmVDPYUGw==
-X-CSE-MsgGUID: kmNxUw4eS3SrhwNAd6elNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53117923"
+  bh=OzgEgyinOD2u+eSMzdaGCr7tFY0dcCCASCneanv0fW4=;
+  b=hWAytJZ6c69r80Quo4ULlMLQAuW6Q+DQSwfzsAYkDQyAdwEx6uZya78E
+   Swyem4hXEP1OWNjXVfduHnQGQqePFs8wvaLOhkH3W/5OZb+j1YcApVuhn
+   QxhmzNQf9LLBmHPJqnYaRGpJOu4xNziCZbuqWGDKX3LNqm5xy0CF06t5k
+   WrVf/od1kBS1NgyRYn9UPKPfiZeNZ+6VEY++s/355Ud06IyvWoFMH1FVx
+   7Kys7694lQJ/EFlVLLHahjlFjvBiQHMGIAUqXngyYA8G8YvMckT8ciV+3
+   pj511KLosVmqmpdhXkWeo1VH4LvyPE8lOqmzYo4K/e/pp1h8vYk24t+La
+   Q==;
+X-CSE-ConnectionGUID: NTfIbjZtSXmPXH/y8ozzag==
+X-CSE-MsgGUID: /GSqrALkT8ixg0ibcK8fXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57666242"
 X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="53117923"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 09:02:45 -0700
-X-CSE-ConnectionGUID: itwYFqXiTEqwrPVag3Qfzw==
-X-CSE-MsgGUID: Bg1RtVG/RPuhzHyjrcaYag==
+   d="scan'208";a="57666242"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 09:02:46 -0700
+X-CSE-ConnectionGUID: 5VJaoDJqRYODVXcNjGfdew==
+X-CSE-MsgGUID: zVWz+w0NRn+byUEnsi9U/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
-   d="scan'208";a="158679754"
+   d="scan'208";a="154532412"
 Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 03 Jul 2025 09:02:42 -0700
+  by orviesa007.jf.intel.com with ESMTP; 03 Jul 2025 09:02:43 -0700
 Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uXMOW-0002ky-0f;
+	id 1uXMOW-0002l1-0i;
 	Thu, 03 Jul 2025 16:02:40 +0000
-Date: Fri, 4 Jul 2025 00:02:23 +0800
+Date: Fri, 4 Jul 2025 00:02:12 +0800
 From: kernel test robot <lkp@intel.com>
-To: Christoph Lameter via B4 Relay <devnull+cl.gentwo.org@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, sh@gentwo.org,
-	Darren Hart <dvhart@infradead.org>,
-	"Christoph Lameter (Ampere)" <cl@gentwo.org>
-Subject: Re: [PATCH] Skew tick for systems with a large number of processors
-Message-ID: <202507032322.5jzirIYw-lkp@intel.com>
-References: <20250702-tick_skew-v1-1-ff8d73035b02@gentwo.org>
+To: Akhil R <akhilrajeev@nvidia.com>, andriy.shevchenko@linux.intel.com,
+	andi.shyti@kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
+	thierry.reding@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, akhilrajeev@nvidia.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	ldewangan@nvidia.com, robh@kernel.org
+Subject: Re: [PATCH v5 2/3] i2c: tegra: make reset an optional property
+Message-ID: <202507032359.AfHPKWEQ-lkp@intel.com>
+References: <20250702133450.64257-2-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,85 +68,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-tick_skew-v1-1-ff8d73035b02@gentwo.org>
+In-Reply-To: <20250702133450.64257-2-akhilrajeev@nvidia.com>
 
-Hi Christoph,
+Hi Akhil,
 
 kernel test robot noticed the following build errors:
 
-[auto build test ERROR on 66701750d5565c574af42bef0b789ce0203e3071]
+[auto build test ERROR on tegra/for-next]
+[also build test ERROR on andi-shyti/i2c/i2c-host linus/master v6.16-rc4 next-20250703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Lameter-via-B4-Relay/Skew-tick-for-systems-with-a-large-number-of-processors/20250703-034357
-base:   66701750d5565c574af42bef0b789ce0203e3071
-patch link:    https://lore.kernel.org/r/20250702-tick_skew-v1-1-ff8d73035b02%40gentwo.org
-patch subject: [PATCH] Skew tick for systems with a large number of processors
-config: arc-randconfig-002-20250703 (https://download.01.org/0day-ci/archive/20250703/202507032322.5jzirIYw-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250703/202507032322.5jzirIYw-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Akhil-R/i2c-tegra-make-reset-an-optional-property/20250702-214005
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250702133450.64257-2-akhilrajeev%40nvidia.com
+patch subject: [PATCH v5 2/3] i2c: tegra: make reset an optional property
+config: sh-randconfig-002-20250703 (https://download.01.org/0day-ci/archive/20250703/202507032359.AfHPKWEQ-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250703/202507032359.AfHPKWEQ-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507032322.5jzirIYw-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507032359.AfHPKWEQ-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   kernel/time/tick-sched.c: In function 'tick_setup_sched_timer':
->> kernel/time/tick-sched.c:1577:44: error: 'CONFIG_TICK_SKEW_LIMIT' undeclared (first use in this function); did you mean 'CONFIG_TICK_ONESHOT'?
-    1577 |                 if (num_possible_cpus() >= CONFIG_TICK_SKEW_LIMIT) {
-         |                                            ^~~~~~~~~~~~~~~~~~~~~~
-         |                                            CONFIG_TICK_ONESHOT
-   kernel/time/tick-sched.c:1577:44: note: each undeclared identifier is reported only once for each function it appears in
+   In file included from include/linux/build_bug.h:5,
+                    from include/linux/bits.h:22,
+                    from include/linux/ioport.h:13,
+                    from include/linux/acpi.h:12,
+                    from drivers/i2c/busses/i2c-tegra.c:9:
+   drivers/i2c/busses/i2c-tegra.c: In function 'tegra_i2c_reset':
+>> drivers/i2c/busses/i2c-tegra.c:632:23: error: implicit declaration of function 'acpi_has_method'; did you mean 'acpi_has_watchdog'? [-Wimplicit-function-declaration]
+     632 |         if (handle && acpi_has_method(handle, "_RST")) {
+         |                       ^~~~~~~~~~~~~~~
+   include/linux/compiler.h:57:52: note: in definition of macro '__trace_if_var'
+      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   drivers/i2c/busses/i2c-tegra.c:632:9: note: in expansion of macro 'if'
+     632 |         if (handle && acpi_has_method(handle, "_RST")) {
+         |         ^~
 
 
-vim +1577 kernel/time/tick-sched.c
+vim +632 drivers/i2c/busses/i2c-tegra.c
 
-  1566	
-  1567	/**
-  1568	 * tick_setup_sched_timer - setup the tick emulation timer
-  1569	 * @hrtimer: whether to use the hrtimer or not
-  1570	 */
-  1571	void tick_setup_sched_timer(bool hrtimer)
-  1572	{
-  1573		struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
-  1574	
-  1575		/* Figure out if we should skew the tick */
-  1576		if (sched_skew_tick < 0) {
-> 1577			if (num_possible_cpus() >= CONFIG_TICK_SKEW_LIMIT) {
-  1578				sched_skew_tick = 1;
-  1579				pr_info("Tick skewed mode enabled. Possible cpus %u > %u\n",
-  1580					num_possible_cpus(), CONFIG_TICK_SKEW_LIMIT);
-  1581			} else
-  1582				sched_skew_tick = 0;
-  1583		}
-  1584	
-  1585		/* Emulate tick processing via per-CPU hrtimers: */
-  1586		hrtimer_setup(&ts->sched_timer, tick_nohz_handler, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
-  1587	
-  1588		if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && hrtimer)
-  1589			tick_sched_flag_set(ts, TS_FLAG_HIGHRES);
-  1590	
-  1591		/* Get the next period (per-CPU) */
-  1592		hrtimer_set_expires(&ts->sched_timer, tick_init_jiffy_update());
-  1593	
-  1594		/* Offset the tick to avert 'jiffies_lock' contention. */
-  1595		if (sched_skew_tick) {
-  1596			u64 offset = TICK_NSEC >> 1;
-  1597			do_div(offset, num_possible_cpus());
-  1598			offset *= smp_processor_id();
-  1599			hrtimer_add_expires_ns(&ts->sched_timer, offset);
-  1600		} else
-  1601			pr_info("Tick operating in synchronized mode.\n");
-  1602	
-  1603	
-  1604		hrtimer_forward_now(&ts->sched_timer, TICK_NSEC);
-  1605		if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && hrtimer)
-  1606			hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED_HARD);
-  1607		else
-  1608			tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
-  1609		tick_nohz_activate(ts);
-  1610	}
-  1611	
+   626	
+   627	static int tegra_i2c_reset(struct tegra_i2c_dev *i2c_dev)
+   628	{
+   629		acpi_handle handle = ACPI_HANDLE(i2c_dev->dev);
+   630		int err;
+   631	
+ > 632		if (handle && acpi_has_method(handle, "_RST")) {
+   633			err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
+   634			if (ACPI_FAILURE(err))
+   635				return -EIO;
+   636	
+   637			return 0;
+   638		}
+   639	
+   640		if (i2c_dev->rst)
+   641			return reset_control_reset(i2c_dev->rst);
+   642	
+   643		return tegra_i2c_master_reset(i2c_dev);
+   644	}
+   645	
 
 -- 
 0-DAY CI Kernel Test Service
