@@ -1,229 +1,124 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851282E11DD
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066F22D7809;
+	Thu,  3 Jul 2025 10:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536983; cv=none; b=LcepjsP05VpudsuHSil9zhXdU27rRsv+D55BlKk6AO3GnK4Lm5bbGtGp+JmjD9G6ftUPYBOc3aD6EHns68A+E0Ngedd9bmlMs5w/WzfYgO/GO6AwQkVivADzFcBXGVz7QodHhrEj0n2wue2/LuKLR/sdj80jNDxIrLKAag0cz0c=
+	t=1751536994; cv=none; b=c2p07VLqZNyThNF8VxYiJSf5FRdrguxqvoEBu/sW8ll9TRpHBlFKRIbPfzX2OFdOrYlrE1ljNURnuJXIOuBub197snhufrjO+5nKn5sBmNMTVMGMMwNm8+qqJkYUqHP8+iRqBEwIpE3HWxfwlxTwvpJrFm5Y1e1EbQEIroZju8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536983; c=relaxed/simple;
-	bh=Obh6DD9vix+TIBwQQYvbpQ2RjdqyGcCDt1xJHHQRTDI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o5cbkCsuLz3qQgpAE96SFqECxYwa0ulNH8nko7GLem28da8lz+wrBYbkUDYJXoE3QYFJiBd6TJFTS7RDZoRF/Axr+UL8UTONWEokro8X+B2ygczkBOsDhzPug752/S7V0zES8D7DCi+el/SJ9hFBdei/pJLQ5RY9/qlldcmf6xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TwDpfGF/; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1751536994; c=relaxed/simple;
+	bh=7kCRXDbpJ/oqGsu45izE3VNuOcYKltui017jXi8ARqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGikQEaOmAhVcS8j6AjlWVS2lA34qxIkEkIxWAfhJCr2zvUxu7/1KjGPFA/QvtinpMfEcdnoaEXAJUWd0rUkBZd53Ywy69NY6p70pnkie34aJjcQvMN3ifTsBH1Dp/dVVk9G4Aif/JmnR1Nr0GUk+qbG1xuTMTFYDM2UVtdsk9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=IE8ca/pD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=T9oIkjUK; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TwDpfGF/"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-607c91a207dso5776414a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 03:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751536980; x=1752141780; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqGaJD9/W4j+MwX6QlvRgP3GnrOVCmaSlWQ5633fypg=;
-        b=TwDpfGF/wyk7p9LUqkLZhaZGwPPjTq+uqDNqhL0/+0ymddwFeWgvfT1kFZX0/77qtJ
-         6WFvwpiL6xNlIDs0FbwUtJLTggoltTJSjsr6/yAjCC8YEgQth2MBlA3+NYeN+PlT4Zj5
-         g/fMB32+i67k2Dzy02cuHym5/kw6WeYEGZc5PDFX/H7RiMY7jC8Un5NxErf2AEOmjk61
-         8xUITplwIc9dtN0YCk9A++WduhD+PPqthT6QevVRUBqYTTzHrxEfWO3N+CqwrGvwckjp
-         n50WaycIUuzdKJGWCMzpLRl2DsiUwMmWSwDXLo2lSxiiyTPsSa2QpZkveHCk13EP90MT
-         3Qcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751536980; x=1752141780;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqGaJD9/W4j+MwX6QlvRgP3GnrOVCmaSlWQ5633fypg=;
-        b=jMGfMsFWzH8AQ6jTbMudJuBIGpI5baN6hsLU3hhwo1KwoBJ6LziFb9C2WLT5rkLsus
-         x9Yb17sQMgQebV9Jb3T9fr76p04slqDX3SoY68ahAtXbgqm3yfLenyTeEsOfs0fdpCR9
-         ZaVBm7X+VSBUpHv47qbR7s16ZXvX7Rym3jG1GCJ4VoUeQssPA306mZbxtztAuuD3Hq2W
-         AYInV9zfvvtM4u2SNo/SZdMsnFe1N3wa+GK7RbGqHkYIHe0FTS1dBxw8a7gsh+i+xzsz
-         KnXYwazYs7qema6DG+uDJl/JyeJNseg7j4PtEG/ojOc//nq/8uLqF4iUxc5FljfDBWfs
-         OVzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfRpQPdU3v54DGTC2wg8pbPGFTE3FZaK1rC5uXWwT7ttguBgxoSgohgyoP0q5H1OJ0SG4XISi6O6qMY8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRSvming4ThPHNECZX0gTSHzQlz+oc7RDiR9JLK++U83UrPbdy
-	TYxmm3hRG9EzMyxU1JPHK88KOM/++ihne0MrG1uNHrUqC2kLWm5mnzK+/0Saut2IPaO2Sls7vMf
-	uwj+zkYLCjfyI40Nk/Q==
-X-Google-Smtp-Source: AGHT+IF2s93ihLX1PXkClG9cJiSTZ35qsjoCiFotxikRqPbGr/bigMKo3h5oYLJkMHWpg4yl3gvHTgjJVd/9b/U=
-X-Received: from edba15.prod.google.com ([2002:a50:c30f:0:b0:601:dd78:8e2f])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:b6e:b0:608:3f9c:c69d with SMTP id 4fb4d7f45d1cf-60e5350016dmr4264704a12.33.1751536979907;
- Thu, 03 Jul 2025 03:02:59 -0700 (PDT)
-Date: Thu, 3 Jul 2025 10:02:58 +0000
-In-Reply-To: <aGP6d2-jJy5rtjMK@pollux>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="IE8ca/pD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T9oIkjUK"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2241FEC0255;
+	Thu,  3 Jul 2025 06:03:10 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Thu, 03 Jul 2025 06:03:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1751536990; x=1751623390; bh=xZedJBIhB4
+	0JxUdzvrw6oQggPvy34BJ3nOEDE2aNBtA=; b=IE8ca/pDdO2e0d3YwOeACzTB8u
+	NwGvoZ5Pqmbq/CXrfW4SDkN0dm/aWxNqB9srm+M4R94uec024oLJQuMlSY+v3yLD
+	LokAXoq7z1X5nZd9VMs6N0lAZNa//Dq0hYgZNnYNDx11Ci1u1nKs7/pGSbGuj4RF
+	NiqYcAqP6kSZ9yJyQZUaKHQlc9FfUC96hC+8nv4rAAnN2Nxez6FZRSdjknq+GfAZ
+	v1F4LcY6fl1qRvJCadiXiRU1OuUl7zqLBSr1IMM3CHA2cSJ4JQGBm1foOj8VtmqI
+	Au+/m4y9WH45Erp2m8KARIkCMrdgYAxHonPrts7V16H5rl/N9GM/9Yp/27qA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1751536990; x=1751623390; bh=xZedJBIhB40JxUdzvrw6oQggPvy34BJ3nOE
+	DE2aNBtA=; b=T9oIkjUKgtbOoS/WGssDKTwouvBU+PY716u6D0R+G6aiIWI8hZY
+	AKb6w5YlTF8mo4+y6pXkNV68KEhN9izSA4zEfG/9n5aswDw83K/e5CzYD7FPetHj
+	943oJNo4vNhlSAEs4cwe/zqmld2t/0ypJIiCvAMhTO9bleys5KDdwdVD+9CMXN/1
+	y+jBI5lM+hFWwLCBdWd5ZcQ2xqgF+aeWzXCJwIM/Dow4NJJR2Rw3ahWO2EPp/7ys
+	P/bEmPJ5zgiUw/QbMtVtUiEjlXefnTPwJbCOTZ34TAjjTIDzFMMKKVSOOyYfvK4M
+	4WNlQAR0UuQG389Ie5BlFFRAGZ2d+4+mk0g==
+X-ME-Sender: <xms:XVVmaJZAgYJzZ_Hs4E8vBeTwgcnPDO1Xy1K-6M3SCd7jrgXlI4xP7w>
+    <xme:XVVmaAZgTZeHmlowLJV3l6UNo5Yi8Ef-2wkz4ScfbjbRIY6kme64PQK0xhOyjFP8u
+    _EwzEvbpDhUmA>
+X-ME-Received: <xmr:XVVmaL-eH6HyquGs0yXFPdTU5H-UevgwrgKExEZ0eYYr9cac0rtpnCvraAV_YLrzzqZZI0vKqV0udLSnvniqW48TjgP4RDM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleellecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffj
+    uceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevgeelgfeihe
+    elheejjedtfeejgfdutddtieelvdetkeduvdfhfffhkefffefgteenucffohhmrghinhep
+    fihikhhiphgvughirgdrohhrghdpuggrrhhinhhgfhhirhgvsggrlhhlrdhnvghtnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehk
+    rhhorghhrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtoheplhhiiihhihdrgihuseifihhnughrihhvvghrrdgtohhmpdhrtghpthht
+    ohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtoheprghrnhguse
+    grrhhnuggsrdguvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:XVVmaHqdDUIhJ3ggUvKDBCRj4gKLTatvGohsn0uEXXQBXwBpsfbQvw>
+    <xmx:XVVmaEptA5Clmi8j5LsTUZ2nijG5iqfW3DquJvDJ9m76_wazIIBOlg>
+    <xmx:XVVmaNSgxNK8UjKk8SP3_xvn_n3RnAFbBTCXFsbNajnvol0zllO3TQ>
+    <xmx:XVVmaMqDRPTt0pSznQC0uPg3oWKegrmzwexZVdsF9-21y4px8oYjNg>
+    <xmx:XlVmaMGvmqeT2B9nI7K1OdqG1PmWXWNfb_PlqBCUlOTVfUvH_IfzSjr7>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Jul 2025 06:03:08 -0400 (EDT)
+Date: Thu, 3 Jul 2025 12:03:07 +0200
+From: Greg KH <greg@kroah.com>
+To: "Xu, Lizhi" <Lizhi.Xu@windriver.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiDlm57lpI0=?= =?utf-8?Q?=3A?= linux-next:
+ build failure after merge of the char-misc tree
+Message-ID: <2025070301-albatross-angriness-00c1@gregkh>
+References: <20250703171021.0aee1482@canb.auug.org.au>
+ <2025070335-situated-sloped-bc1c@gregkh>
+ <BL1PR11MB5979E06DF496FA3965009DFF8643A@BL1PR11MB5979.namprd11.prod.outlook.com>
+ <2025070357-scrambled-exodus-a8a0@gregkh>
+ <BL1PR11MB59798DB1C2D7B2B2988BE2DB8643A@BL1PR11MB5979.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
- <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org> <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
- <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org> <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
- <aGLUl7ZtuQBPoCuv@pollux> <2025070131-icon-quarters-0c16@gregkh>
- <aGPtCBB6nWTNJuwK@pollux> <2025070137-tartar-juncture-fcd2@gregkh> <aGP6d2-jJy5rtjMK@pollux>
-Message-ID: <aGZVUqangIR-c4aW@google.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing for File
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Maurer <mmaurer@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, 
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL1PR11MB59798DB1C2D7B2B2988BE2DB8643A@BL1PR11MB5979.namprd11.prod.outlook.com>
 
-On Tue, Jul 01, 2025 at 05:10:47PM +0200, Danilo Krummrich wrote:
-> On Tue, Jul 01, 2025 at 04:21:56PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jul 01, 2025 at 04:13:28PM +0200, Danilo Krummrich wrote:
-> > > Instead this should just be:
-> > > 
-> > > 	struct GPU {
-> > > 	   fw: debugfs::File<Firmware>,
-> > > 	}
-> > > 
-> > > and then I would initialize it the following way:
-> > > 
-> > > 	let fw = KBox::new(Firmware::new(), GFP_KERNEL)?;
-> > > 	let file = dir.create_file("firmware", fw);
-> > > 
-> > > 	// debugfs::File<Firmware> dereferences to Firmware
-> > > 	file.do_something();
-> > > 
-> > > 	// Access to fw is prevented by the compiler, since it has been moved
-> > > 	// into file.
-> > > 
-> > > This is much better, since now I have the guarantee that my Firmare instance
-> > > can't out-live the GPU instance.
-> > 
-> > That's better, yes, but how would multiple files for the same
-> > "structure" work here?  Like a debugfs-file-per-field of a structure
-> > that we often have?
-> 
-> That is a very good question and I thought about this as well, because with only
-> the current API this would require us to have more and more dynamic allocations
-> if we want to have a more fine grained filesystem representations of structures.
-> 
-> The idea I have for this is to use pin-init, which we do in quite some other
-> places as well.
-> 
-> I think we can add an additional API like this:
-> 
-> 	impl Dir {
-> 	   pub fn create_file<T>(&self, data: impl PinInit<T>) -> impl PinInit<Self> {
-> 	      pin_init!(Self {
-> 	         data <- data,
-> 	         ...
-> 	      })
-> 	   }
-> 	}
-> 
-> This allows us to do things like:
-> 
-> 	#[pin_data]
-> 	struct Firmware {
-> 	   #[pin]
-> 	   minor: debugfs::File<u32>,
-> 	   #[pin]
-> 	   major: debugfs::File<u32>,
-> 	   #[pin]
-> 	   buffer: debugfs::File<[u8]>,
-> 	}
-> 
-> 	impl Firmware {
-> 	   pub fn new(&dir: debugfs::Dir, buffer: [u8]) -> impl PinInit<Self> {
-> 	      pin_init!(Self {
-> 	         minor <- dir.create_file("minor", 1),
-> 	         major <- dir.create_file("major", 2),
-> 	         buffer <- dir.create_file("buffer", buffer),
-> 	      })
-> 	   }
-> 	}
-> 
-> 	// This is the only allocation we need.
-> 	let fw = KBox::pin_init(Firmware::new(...), GFP_KERNEL)?;
-> 
-> With this everything is now in a single allocation and since we're using
-> pin-init, Dir::create_file() can safely store pointers of the corresponding data
-> in debugfs_create_file(), since this structure is guaranteed to be pinned in
-> memory.
-> 
-> Actually, we can also implement *only this*, since with this my previous example
-> would just become this:
-> 
-> 	struct GPU {
-> 	   fw: debugfs::File<Firmware>,
-> 	}
-> 
-> 	let file = dir.create_file("firmware", Firmware::new());
-> 	let file = KBox::pin_init(file, GFP_KERNEL)?;
-> 
-> 	// debugfs::File<Firmware> dereferences to Firmware
-> 	file.do_something();
-> 
-> Given that, I think we should change things to use pin-init right away for the
-> debugfs::File API.
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-Does this actually work in practice for anything except immutable data?
-I mean, let's take Rust Binder as an example and lets say that I want to
-expose a directory for each Process object with some of the fields
-exposed. Let's just simplify Rust Binder a bit and only include some of
-the fields:
+A: No.
+Q: Should I include quotations after my reply?
 
-#[pin_data]
-struct Process {
-    task: ARef<Task>,
-    #[pin]
-    inner: SpinLock<ProcessInner>,
-}
 
-pub(crate) struct ProcessInner {
-    threads: RBTree<i32, Arc<Thread>>,
-    nodes: RBTree<u64, DArc<Node>>,
-    requested_thread_count: u32,
-    max_threads: u32,
-    started_thread_count: u32,
-}
+http://daringfireball.net/2007/07/on_top
 
-Rust Binder already does expose some debugging data through a file
-system, though it doesn't do so using debugfs. It exposes a lot of data,
-but among them are the pid, the number of threads and nodes, as well as
-the values of requested_thread_count, started_thread_count, and
-max_threads.
+On Thu, Jul 03, 2025 at 09:44:13AM +0000, Xu, Lizhi wrote:
+> 
+> Perhaps you can focus on "struct vmci_event_ctx", whose members have already clearly defined which are the payloads.
 
-Now, we run into problem number one: pinning is not supported inside
-mutexes. But let's say we solved that and we could do this:
+I do not understand this statement at all, sorry.
 
-#[pin_data]
-struct Process {
-    task: File<ARef<Task>>, // prints the pid
-    #[pin]
-    inner: SpinLock<ProcessInner>,
-}
+> On the other hand, the purpose of the patch is to prevent the data in "struct vmci_event_ctx" from being initialized before the datagram is sent, thus preventing the uninitialized data from leaking to user space.
 
-pub(crate) struct ProcessInner {
-    threads: File<RBTree<i32, Arc<Thread>>>, // prints the count
-    nodes: File<RBTree<u64, DArc<Node>>>, // prints the count
-    requested_thread_count: File<u32>,
-    max_threads: File<u32>,
-    started_thread_count: File<u32>,
-}
+Great, then do this properly, again, you are just "guessing" that there
+is not going to be any padding between the structures.  Are you sure
+there isn't?  How?  Where is that enforced in your patch?
 
-However, this still doesn't work! Debugfs may get triggered at any time
-and need to read these fields, and there's no way for it to take the
-spinlock with the above design - it doesn't know where the spinlock is.
-For the integers I guess we could make them atomic to allow reading them
-in parallel with mutation, but that option is not available for the
-red/black trees.
+thanks,
 
-What is the intended solution in this case? If the argument is that this
-is a rare case, then keep in mind that this is a real-world example of
-debugging information that we actually expose today in a real driver.
-With Matt's current approach, it's relatively easy - just store a bunch
-of File<Arc<Process>> instances somewhere and define each one to take
-the mutex and print the relevant value.
-
-Alice
+greg k-h
