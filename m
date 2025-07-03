@@ -1,119 +1,119 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8871F2DE713
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269232DE713
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542275; cv=none; b=JMm31ZV3NO36pksJcXtLyQQNYe/k2rUu7xOXfZ41RTHD8Zgk5VD6zSRJA2N+odAxLkJpNoV46qF54Uj6iFDqxAvjpdeDDh+HfFEg7zyYtk2Joon+0Yxz8suorRfZSTusLj7xQt/Vw0XWdKKBDyFqC/eMcwnGwmMJdLUamda9BlM=
+	t=1751542286; cv=none; b=JQ+w4NevMecHOc8bHZMoOV01YXtNb7Y6njqmPAZAfpLhUAkpHuxdffvXOFNV1GZFKPk9HIPeQbxg77uRBdnkcNjEwcu7WVs+77ADtMO2nhz9NFpqvF/3yFAzSH23kDH9XceLJ6tSnJNk43K2dC3YVzlX2XkZ79LRT4LMmhvuUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542275; c=relaxed/simple;
-	bh=51fwn9UR6sLo33WSntk5b8fVMnu6/RCpawuylEc4EYg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fh1xONWnZ6mRw8jxorNN2CS69ghCepm7R8xzZXCwa0XUNrBgPZuD1/bEv9ixn/3iEIWNx8ylEI4ImQFUiXeTw1b40QSjAULiyveTZ15blbUuPco5QzaItCvHGAQKx3jECWxZAgoeZliOjFfg9c7F7W4GyxyoofRFyS0CmkXWOFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MBKS4Rke; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751542286; c=relaxed/simple;
+	bh=uP7Rr37PuYg5dHU6HWiu9xFkXLAx+9OBBp94Kf1AYzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FOFvnM2EcPH+vL3c5C5sC1JYJFDYepvei5l2tHjoHnn2MGVPrzzOeL44/nPfC1k2ECxc+9VvI14w9VP2LeAb720FHwLhX1r6UrB83U0zFebW2z4SIrOHWDwUYiLmTxJyPwXKD7U/qkvBtS9PZYqr2u/gFStjb8sa+0qW4RCLZSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GkgedwV6; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBKS4Rke"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so6506118a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GkgedwV6"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553bd56011dso520797e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:31:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751542272; x=1752147072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WcCs7vej7EmjlOgqSL2DpUmA/zZePV2jjeUjmDVA2Io=;
-        b=MBKS4Rke/iaMAIf1WMrycjRYmqOpZrRV8X3eZBS8L4Vs330zK4ns8qECwZtXsY1jjV
-         k4SgRGOGg+cjcx8p6gyi9arVaXyU87xZKCBerQzNNehHGfyolmunAYu4ne0PKcO0Ku1j
-         jeCNdLRvjpW+4Ul+TRAQlO7pLnTs/vJtpFnIjm/aJtQAdvnxXNYoFdhykVEkrD2d5Ya5
-         k8NjFdYDlhSaTA+JdEcdzGGvKJMfATEmPEaQuF6Du9SEsHgrRb56lrUdYFI9ZlGIo3mJ
-         t3/JM8lI6ZWU88MngP11Zlm70/NrvLQZbg9Ul6FGYMZUgf//nKxxTOvkTCAaBb1dpZxJ
-         KoKg==
+        d=bytedance.com; s=google; t=1751542282; x=1752147082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jPqrBVnVHFXf0pkS74FSHKy1+dZI9RB7aeR+nURK7zw=;
+        b=GkgedwV644LcSYvlVXUJHG91vPn58wD7Ml3VXIh3J3BJ5NscTcbUOU/s3UCz9C8e63
+         4R0f+9ZaStHCApBH6a70QPJPW6QHkHecf1x1KmLTQgGkyQvUQLZ07S3dxxpiyS8HKuga
+         EyBffjayeMxbgUXBpc16Hy0MExVxKwzkSmrWe7uKOtnf7CiT88B31DoI//uzGrs3Wm7a
+         zNU4L9DmAAgEOYLxs7WlS97lUJxKg1k+p0z/i/ANw2pB3C0IZTQkf/525Zp+5UWmXjMo
+         a+InZGgkuKb36kvcAJRTKsBaURQGRH9Qw0Ucpmyx6dGMIEaf6/IzdQeCgh6WVVp3Sv/L
+         FaNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542272; x=1752147072;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WcCs7vej7EmjlOgqSL2DpUmA/zZePV2jjeUjmDVA2Io=;
-        b=F0PifxmAHSHA/n8z1UE2dQ15QLQoVm5LpGc3GawHjkdPp4fmd7zNLBi7XHjS+Gq7c+
-         49H/3sUClEp09jCKL+uf/U66RGrgRZfmstQmv7MhF2TofGZoZ59wZOFP1uGBxBIvu34U
-         n2X841b/jDk1N4WOgBXmnirPe0doakevpfZZghnoMM1sQFCPdURsZVv4sv15iRMiTHMU
-         9arUA0IQNaXXZXcGGksRCqAeWPMhn6Mr7E0XAcivQTSA/YWH46XPqMJfXRWRpqoMHfQS
-         Zb6ZdpusZ0wKrKyEB+8sSYUSY7IQM05wl3ciLNfDwd+XNDyJ/u0I/OSKnR1pgtKCCKbk
-         qUlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVtAvt0+y4FfQA4mdasEvMelILtzavwv0e8XosSWaXbvODsyi9i6oJFer5mFBeYDisC43UaadIwf621Eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfJv5HmsEH+wcv965dl6hV8FEhVlAv+ON1KYZz2FbnxVWR6FMz
-	WXBlRQtm/DbEBxTnpqShbbk3r5/V439+7zf6NKuFCvpcWFmeArBz0n1t4nfPaiwgu1s=
-X-Gm-Gg: ASbGnctL4pTUnET1P3AVXDTjLcXYzIXFMMwtcj4ehvOA1KKPPilv53PNvAAXv1tngde
-	1Ynn1cMQBcUd9oNU9D/AIxCx5PYGgGAU4KSdCFLTSY3mgiCISJ1LLC5LjcpnBqOwVQpm8T1l3la
-	dxPDscOKu9hfzA9Lt24XJNhz7oX6pIifngm62fgioWDs1v1aTjfk0tRzB4g5DDediVuyR/82Ryk
-	g5avleDk2OcEKH6CRf8Z+XOfjddwXZ1IF55IWdt7zU6Fc/rtnZmdgMlddNdw8FlcBrmSYh0oUA+
-	92YNemmvb0gQtK1RCYC1vEGp1mw1ObINiBMMxvAqK7lbFQlx3YvNGIdoX/0CaAM=
-X-Google-Smtp-Source: AGHT+IFhAcA3OhH5rYHEhAy0zGIw//i/uHwlpC2u5oxSV4TXYQftB+zfMaEw/b96QQcNkfPz/Z4ybw==
-X-Received: by 2002:a17:90b:524d:b0:311:baa0:89ca with SMTP id 98e67ed59e1d1-31a9dfaaff5mr2743821a91.34.1751542271841;
-        Thu, 03 Jul 2025 04:31:11 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc65bc3sm2166551a91.14.2025.07.03.04.31.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:31:11 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>,
-	"Chen, Jian Jun" <jian.jun.chen@intel.com>,
-	Andi Shyti <andi.shyti@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-i2c@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: virtio: Avoid hang by using interruptible completion wait
-Date: Thu,  3 Jul 2025 17:01:02 +0530
-Message-Id: <b8944e9cab8eb959d888ae80add6f2a686159ba2.1751541962.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+        d=1e100.net; s=20230601; t=1751542282; x=1752147082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jPqrBVnVHFXf0pkS74FSHKy1+dZI9RB7aeR+nURK7zw=;
+        b=D1c7ppnd04toPuXfN75fay9Dg/QmofMY9snSnmrv6xx0InhsHvkmiQ+AsmEix7KBH5
+         t8jl2/egYF0PaHfgmfySv/GaPdttZ9B45z04DsjfgEBicRAwVlNerNZcJF9dcbSkNKtE
+         7XhAsTpDYQEzPZ0Et5jMNQqMslGJ0U93Ez6WXArnG995DScGSuKWRdVKGHB0N/mh1u/5
+         wY4LPsCiBpSmSjDqrpPrAtCIoM9FONxBGq4FZFpRYrD8AT87dzxpmi9PekQ9mQNBAV+a
+         TY1f/FKhG7G6z/8cIf2MoeCGnGxkdz4v/bKKrPRaa9AfZqNRFp3MxwRg+bdF7BBJ8jLk
+         sWVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbFpxLQMvLaWMwlR1K5803Th7PKprP7eGmPlcqfU5SxsjFoG3FDumbkSA1uUvUBzR/yfys4U8QXMrZFdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9Lw3HSFKVCVaXjGuhExJ9FZRQ3iStl953L1qqHz56r4TmjxCP
+	qa4zVxhnewWhnKnBcbWB9H9OrmYEdeEgzLDjUfImuHHeKLRDdijS4/ycu14x7uKmBYAFads5TSD
+	XjuiD3knKpybydyxq9ckV/MrNpUpIfZgn7OfRT/MuPQ==
+X-Gm-Gg: ASbGnctEEg8wXoi5eOs9M3aShzS0UDZ9rZ3VBs8NOBzKndAVBhvMCYnF7fF9PRX57Sb
+	bt+O86TXo4Dcio9RWZpdecy3ZL2W5q5AbknrBIzpsBM3OJmK+MhIoeMhchW6X7/N75LG+7Oo2Dv
+	QcAajsU9NMgoKwMacN6WPP03xvOfSBEv6WSRVM0Hwg9kK0V3mXWzrtVIdD
+X-Google-Smtp-Source: AGHT+IHqwZ00JzaSxoHP5Y5eGO6U1F00cLkLgLHN8uq84JwqyOmuyFj/rx7viXN7xQL8y5yojWgEcXAb4bcR3EsVmBI=
+X-Received: by 2002:a05:6512:3e1c:b0:553:cc61:172b with SMTP id
+ 2adb3069b0e04-55632c67ae6mr203802e87.3.1751542282204; Thu, 03 Jul 2025
+ 04:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250702155112.40124-1-heshuan@bytedance.com> <aGYkx4a4eJUJorYp@sunil-laptop>
+In-Reply-To: <aGYkx4a4eJUJorYp@sunil-laptop>
+From: =?UTF-8?B?5ou05L2V?= <heshuan@bytedance.com>
+Date: Thu, 3 Jul 2025 19:31:10 +0800
+X-Gm-Features: Ac12FXwmgaLHVh9stIrXQTsWM1XVkm09j05abjeG1jdXSTB5G1pTJuNhmJuU4TA
+Message-ID: <CAKmKDKksSTrT=wMBpnqGupe4WRnHosYZLunw0FdVbhW_dyym+A@mail.gmail.com>
+Subject: Re: [External] Re: [RFC 0/1] PCI: Fix pci devices double register
+ WARNING in the kernel starting process
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: bhelgaas@google.com, cuiyunhui@bytedance.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The current implementation uses wait_for_completion(), which can cause
-the caller to hang indefinitely if the transfer never completes.
+Hi Sunil,
+Thanks for your reply! (really appricate it).
+This WARNING truly occurred. Through the added debug info, I found
+that the device was registered to proc via pci_proc_init and
+acpi_pci_root_add paths respectively, which ultimately triggered
+the warning message.
+Let me try to reproduce it on qemu first. I'll keep you updated.
+Thanks again.
 
-Switch to wait_for_completion_interruptible() so that the operation can
-be interrupted by signals.
+Regards,
+Shuan
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/i2c/busses/i2c-virtio.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-virtio.c b/drivers/i2c/busses/i2c-virtio.c
-index 2a351f961b89..c8c40ff9765d 100644
---- a/drivers/i2c/busses/i2c-virtio.c
-+++ b/drivers/i2c/busses/i2c-virtio.c
-@@ -116,15 +116,16 @@ static int virtio_i2c_complete_reqs(struct virtqueue *vq,
- 	for (i = 0; i < num; i++) {
- 		struct virtio_i2c_req *req = &reqs[i];
- 
--		wait_for_completion(&req->completion);
--
--		if (!failed && req->in_hdr.status != VIRTIO_I2C_MSG_OK)
--			failed = true;
-+		if (!failed) {
-+			if (wait_for_completion_interruptible(&req->completion))
-+				failed = true;
-+			else if (req->in_hdr.status != VIRTIO_I2C_MSG_OK)
-+				failed = true;
-+			else
-+				j++;
-+		}
- 
- 		i2c_put_dma_safe_msg_buf(reqs[i].buf, &msgs[i], !failed);
--
--		if (!failed)
--			j++;
- 	}
- 
- 	return j;
--- 
-2.31.1.272.g89b43f80a514
-
+On Thu, Jul 3, 2025 at 2:36=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com>=
+ wrote:
+>
+> On Wed, Jul 02, 2025 at 11:51:11PM +0800, Shuan He wrote:
+> > Hi All.
+> > I encountered a WARNING printed out during the kernel starting process
+> > on my developing environment.
+> > (with RISC-V arch, 6.12 kernel, and Debian 13 OS).
+> >
+> > WARN Trace:
+> > [    0.518993] proc_dir_entry '000c:00/00.0' already registered
+> > [    0.519187] WARNING: CPU: 2 PID: 179 at fs/proc/generic.c:375 proc_r=
+egister+0xf6/0x180
+> > [    0.519214] [<ffffffff804055a6>] proc_register+0xf6/0x180
+> > [    0.519217] [<ffffffff80405a9e>] proc_create_data+0x3e/0x60
+> > [    0.519220] [<ffffffff80616e44>] pci_proc_attach_device+0x74/0x130
+> > [    0.509991] [<ffffffff805f1af2>] pci_bus_add_device+0x42/0x100
+> > [    0.509997] [<ffffffff805f1c76>] pci_bus_add_devices+0xc6/0x110
+> > [    0.519230] [<ffffffff8066763c>] acpi_pci_root_add+0x54c/0x810
+> > [    0.519233] [<ffffffff8065d206>] acpi_bus_attach+0x196/0x2f0
+> > [    0.519234] [<ffffffff8065d390>] acpi_scan_clear_dep_fn+0x30/0x70
+> > [    0.519236] [<ffffffff800468fa>] process_one_work+0x19a/0x390
+> > [    0.519239] [<ffffffff80047a6e>] worker_thread+0x2be/0x420
+> > [    0.519241] [<ffffffff80050dc4>] kthread+0xc4/0xf0
+> > [    0.519243] [<ffffffff80ad6ad2>] ret_from_fork+0xe/0x1c
+> >
+> This should not happen. I suspect some issue in ACPI namespace/_PRT. Can
+> you reproduce this on qemu virt machine?
+>
+> Regards
+> Sunil
+>
