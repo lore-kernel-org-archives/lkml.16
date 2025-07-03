@@ -1,215 +1,140 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815022DE716;
-	Thu,  3 Jul 2025 20:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC362BDC15;
+	Thu,  3 Jul 2025 20:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751574082; cv=none; b=vEbsR6LP9H3hXeY/xXpAaTYLxb3Zouw7E5W88xVckupTnWCJLo1MzibmfpsQBZCCmrdqB8bZXrf31l9PS7z4zi7giwTNHTqjZQ0aKoBvwvRTtkIks8z0Dsc9YueG1+ftGiLleU54bKi5+Qyex9zrVICtEiVSRhl3k0bSS4ThPQE=
+	t=1751574089; cv=none; b=JaM8siO8v+n+SVmPeTTsDvhDbDbSo0otRYBjImkEQIqatQ4epp8wDFIYbvmJcJMT2/IVFr1gf7p3V14hMvjKs8kCEOXSOMwvxDYqhfRT8Gqf7+p1kDlnGZhU/4EV6sdZy4Vh/naYTa+5WC2kf9v4aSNU2ejRYQTnpP667eGh9rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751574082; c=relaxed/simple;
-	bh=Jfr8JdW39USFVD5rVEGkztLqXwMVGiYT2JVULiNeHPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=arqG2aiD5wmO7a9ZT5pxsr0jhxZF2N7ehUE63ARIupzVb+l1mhHCHr7iWjQLqFkAifD9+RUYLZmipuij+Trl6nDByBQzG264Gc8gq7XOG+nTnrDjcE58/0XwPaUgx9XOEwn0lQneTC5TFtCHY/iPBTIyiLHkXtxojsnMP7BUJVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Iz0s078F; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751574089; c=relaxed/simple;
+	bh=nxQiQkdudWPZBcNRA9KIQ7hVUyuUQb/8xkQyaumgNEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TA/wa/Owi0AAMtIRcUR7dPc0GH82hkHN/YftZyJH4sY2znUNV71s6P8MMnz6dTlxgqlD9SW3WXxfoexCqwEq8hvNzxwFRg7+h85Xz5+alSQH7H/AClHHrXb4lOfvFhxKZe/o7H050kxxeIvWa/c0H4DBzKmJIN+MGBPvMQxE0M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FiCglh9T; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Iz0s078F"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563EofZL029218;
-	Thu, 3 Jul 2025 20:21:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mOhcQc
-	e1/REOOAGksLQLRh7WXaZMOzoFQV9AhXqsYwg=; b=Iz0s078FPXx0lWSdrfluoq
-	zaITAzAeXx65N2dMmlnN2HiyPia99bcfmWg0FpA5oJChI5WG1myhtxHvc9hkezh9
-	H1Yg9Cj2t2zLuGwLXP9B1jRRUHEQ3f//0nLpy+vNB8DDWc4V1VxYTiI6nFJuShLg
-	I2BsD1CNVv7HZGvPVc3CtteptLFu+bcfJszXuZE7KdTvgNzTtArsiMtdr78cHdP0
-	0vjiRLbgaveT2FXuDb4u6jPBKaC09INQSyx95atiBHi/MUb47gjKORpIwEIsTFJL
-	nmJjPxP+oI35E83rSP8n3lDO7R5UqCVzO6BoQrzMRLvebyB01gWqqh4OojRLMGzg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttny10-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 20:21:08 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563KKOF8013661;
-	Thu, 3 Jul 2025 20:21:08 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttny0w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 20:21:08 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563KH4E7021084;
-	Thu, 3 Jul 2025 20:21:07 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqupux5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 20:21:07 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563KL6up19661450
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Jul 2025 20:21:06 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4142858068;
-	Thu,  3 Jul 2025 20:21:06 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 865A658064;
-	Thu,  3 Jul 2025 20:21:05 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Jul 2025 20:21:05 +0000 (GMT)
-Message-ID: <be1c5bef-7c97-4173-b417-986dc90d779c@linux.ibm.com>
-Date: Thu, 3 Jul 2025 16:21:05 -0400
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FiCglh9T"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 0D95D1C00AB; Thu,  3 Jul 2025 22:12:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1751573549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZgOphpMZQaLhZ23QXn+GUqOhSFA5+GAho7L5ktP0kac=;
+	b=FiCglh9Tms8WiSo2BtH3bmVpvbGxSAA+H8ByhHyEwFc5/ma9s41tmJrEqtguzLkvlWIiF6
+	uZM/wv6OEGMQQYm2Qghymc0jY08FVc4oavnkRCYR8Y7ZzPaJpKJ8U6nNQrFrqq4huTTvjh
+	UGiCg7Qtk6C7N7wGXUrLGYvqVroZ5Zg=
+Date: Thu, 3 Jul 2025 22:12:28 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: t.antoine@uclouvain.be, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] power: supply: add support for max77759 fuel gauge
+Message-ID: <aGbkLIFkMlihbJUt@duo.ucw.cz>
+References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
+ <20250523-b4-gs101_max77759_fg-v4-2-b49904e35a34@uclouvain.be>
+ <4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzskscfvk34@guazy6wxbzfh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] tpm: Managed allocations for tpm_buf instances
-To: Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-References: <20250703181712.923302-1-jarkko@kernel.org>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20250703181712.923302-1-jarkko@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lp-aR4ky0_U7sUonk1QXmKBppoXIZM9X
-X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6866e634 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=rMIA4TsMAAAA:8 a=VnNF1IyMAAAA:8 a=zK6BKokPSosMEhBhtdYA:9 a=QEXdDO2ut3YA:10
- a=hVBJ2aql8SDTymIzffKL:22
-X-Proofpoint-ORIG-GUID: iUZRldA-a_LVj1MWDmYg5DBuych4SL60
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDE2NyBTYWx0ZWRfX7KAE7n9gTdrK IpXmGbFa/BWQrauxMkK/uhcL3O4K+eN6qrtraZ1DGtf6914KwLjRPkg5okXPWTRhEIjOBHtvA30 zLlR8DAD8NnjV6WABppRhF1kB6VtTHkGIK0Eyf/sYwJn619NzZK3bumoKpdn1xcEA4WTSY5k6uB
- 1/M76UO9tiHasyx34Zg5MfdvsI1lUYvvChczornhFIvWYM+Bd418Dw2X+HwPQzhSu5n3VsQQ1KP 5po+1ImBg1dkdNjCBCEcLc4G/RT3v5n0JUJEL7wmLzfRe/7RC96LzbK9PrQrLDzOjTWMyTaV2I8 UZWu5zuexk/sN5vqyEYiEn7UBolVo7zIvMTPJ/MHJxxqNeW5ubo3SwCGS09IfQYl0wcMsHVpXaI
- CMZkQFs5840xPMWujBrhwoqerLJger/eZjzztXlFn9Sfnmgm+IKUELLFicWpD3OI5/XzG4q5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_05,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=852
- adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030167
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eiYFnwelYqG2iU/c"
+Content-Disposition: inline
+In-Reply-To: <4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzskscfvk34@guazy6wxbzfh>
 
 
+--eiYFnwelYqG2iU/c
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/3/25 2:17 PM, Jarkko Sakkinen wrote:
-> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> 
-> Repeal and replace tpm_buf_init() and tpm_buf_init_sized() with
-> tpm_buf_alloc(), which returns a buffer of  memory with the struct tpm_buf
-> header at the beginning of the returned buffer. This leaves 4092 bytes of
-> free space for the payload.
-> 
-> Given that kfree() becomes the destructor for struct tpm_buf instances,
-> tpm_buf_destroy() is now obsolete, and can be removed.
-> 
-> The actual gist is that a struct tpm_buf instance can be declared using
-> __free(kfree) from linux/slab.h:
-> 
-> 	struct tpm_buf *buf __free(kfree) buf = tpm_buf_alloc();
-> 
-> Doing this has two-folded benefits associated with struct tpm_buf:
-> 
-> 1. New features will not introduce memory leaks.
-> 2. It addresses undiscovered memory leaks.
-> 
-> In addition, the barrier to contribute is lowered given that managing
-> memory is a factor easier.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> ---
+Hi!
 
-> @@ -374,20 +362,18 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
->    */
->   void tpm2_flush_context(struct tpm_chip *chip, u32 handle)
->   {
-> -	struct tpm_buf buf;
-> -	int rc;
-> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
- >
+> > Other differences include the lack of V_BATT register to read the batte=
+ry
+> > level. The voltage must instead be read from V_CELL, the lowest voltage=
+ of
+> > all cells. The mask to identify the chip is different. The computation =
+of
+> > the charge must also be changed to take into account TASKPERIOD, which
+> > can add a factor 2 to the result.
+> >=20
+> > Add support for the MAX77759 by taking into account all of those
+> > differences based on chip type.
+> >=20
+> > Do not advertise temp probes using the non-volatile memory as those are
+> > not available.
+> >=20
+> > The regmap was proposed by Andr=E9 Draszik in
+> >=20
+> > Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a=
+116.camel@linaro.org/
+> >=20
+> > Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
+> > ---
+> >  drivers/power/supply/max1720x_battery.c | 265 ++++++++++++++++++++++++=
+++++----
+> >  1 file changed, 238 insertions(+), 27 deletions(-)
+> >=20
+> > diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/su=
+pply/max1720x_battery.c
+> > index 68b5314ecf3a234f906ec8fe400e586855b69cd9..c9ad452ada9d0a2a51f37d0=
+4fd8c3260be522405 100644
+> > --- a/drivers/power/supply/max1720x_battery.c
+> > +++ b/drivers/power/supply/max1720x_battery.c
+> > @@ -37,6 +37,7 @@
+> >  #define MAX172XX_REPCAP			0x05	/* Average capacity */
+> >  #define MAX172XX_REPSOC			0x06	/* Percentage of charge */
+> >  #define MAX172XX_TEMP			0x08	/* Temperature */
+> > +#define MAX172XX_VCELL			0x09	/* Lowest cell voltage */
+> [...]
+> >  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> [...]
+> > +			ret =3D regmap_read(info->regmap, MAX172XX_VCELL, &reg_val);
+> > +			val->intval =3D max172xx_cell_voltage_to_ps(reg_val);
+>=20
+> I haven't reviewed this fully due to all the feedback you already
+> got from Peter Griffin and the DT binding being broken, but something
+> that catched my eye:
+>=20
+> POWER_SUPPLY_PROP_VOLTAGE_NOW provides the voltage of the whole
+> battery and not of a single cell. E.g. a typical Li-Ion battery
+> with two serial cells has a nominal voltage of roughly 7.4V while
+> each cell has just 3.7V.
 
-Remove empty line?
+Phones normally only have one cell...
 
-> -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
-> -	if (rc) {
-> +	if (!buf) {
->   		dev_warn(&chip->dev, "0x%08x was not flushed, out of memory\n",
->   			 handle);
->   		return;
->   	}
->   
-> -	tpm_buf_append_u32(&buf, handle);
-> +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
-> +	tpm_buf_append_u32(buf, handle);
->   
-> -	tpm_transmit_cmd(chip, &buf, 0, "flushing context");
-> -	tpm_buf_destroy(&buf);
-> +	tpm_transmit_cmd(chip, buf, 0, "flushing context");
->   }
->   EXPORT_SYMBOL_GPL(tpm2_flush_context);
->   
-> @@ -414,19 +400,20 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
->   			const char *desc)
->   {
->   	struct tpm2_get_cap_out *out;
-> -	struct tpm_buf buf;
->   	int rc;
->   
-> -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
-> -	if (rc)
-> -		return rc;
-> -	tpm_buf_append_u32(&buf, TPM2_CAP_TPM_PROPERTIES);
-> -	tpm_buf_append_u32(&buf, property_id);
-> -	tpm_buf_append_u32(&buf, 1);
-> -	rc = tpm_transmit_cmd(chip, &buf, 0, NULL);
-> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
-> +	tpm_buf_append_u32(buf, TPM2_CAP_TPM_PROPERTIES);
-> +	tpm_buf_append_u32(buf, property_id);
-> +	tpm_buf_append_u32(buf, 1);
-> +	rc = tpm_transmit_cmd(chip, buf, 0, NULL);
->   	if (!rc) {
->   		out = (struct tpm2_get_cap_out *)
-> -			&buf.data[TPM_HEADER_SIZE];
-> +			&buf->data[TPM_HEADER_SIZE];
->   		/*
->   		 * To prevent failing boot up of some systems, Infineon TPM2.0
->   		 * returns SUCCESS on TPM2_Startup in field upgrade mode. Also
-> @@ -438,7 +425,6 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
->   		else
->   			rc = -ENODATA;
->   	}
-> -	tpm_buf_destroy(&buf);
->   	return rc;
->   }
->   EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
-> @@ -455,15 +441,14 @@ EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
->    */
->   void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type)
->   {
-> -	struct tpm_buf buf;
-> -	int rc;
-> +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
->   
+Best regards,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
 
-Remove empty line here.
+--eiYFnwelYqG2iU/c
+Content-Type: application/pgp-signature; name="signature.asc"
 
-With this nit fixed:
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+-----BEGIN PGP SIGNATURE-----
 
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaGbkLAAKCRAw5/Bqldv6
+8sYEAKCh0wimF36YRI80R6pAVmloU8qRRgCgnXM0UWB0vtffIz/feHaS3ubBHak=
+=t4+u
+-----END PGP SIGNATURE-----
+
+--eiYFnwelYqG2iU/c--
