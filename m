@@ -1,141 +1,183 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCC42DE6F3;
-	Thu,  3 Jul 2025 01:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310F4400;
+	Thu,  3 Jul 2025 01:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751506641; cv=none; b=TNY3Kw/aQwCHt6wNfJmSkGbcLNSPTB9PYrm0mXJXSFmOTFUu3XqJlSJxTcoAXE1pB1+KSOYnY5BFgmJxIl+3xbwID4RTSvAhRBIgp4fH5IzbfDsHUyWO1rpQrrdYhbS1WlwmP+fOApz+38hAVosR2aQv6lfcC5xI0Df4K5mcAyI=
+	t=1751506758; cv=none; b=FNVUPdLAGX0WmifOG3fLZ9xlA4/KqRjkj82oGyl64Lqhm/3B888nT9YrYtqIk+T5fAkE59Si6HOOq+RH6myykrIB1BUIikhAowwoURrxBAR8GZEQ1Inwv6rQTwyc1mJUE8p/L7fOxbyeJfUDEE5KY0Twdzzxo8lxOzGjvJCpq9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751506641; c=relaxed/simple;
-	bh=kNtpBg68NV1m6BIhW0MMPbHacSAZyPBh+LVLIKosOMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Up4mB6/vCn522hj8xxxJ+M24Pl+JVy8VVPd7wxwxp+Q6SFdF5Mr5lPGDfcObnXVAcFfRnIcZeZUsGT2iTKuZ2+RXdhAhfUn+PLDpE0BERirWycMSDoNKREKxQHNE7aKFsUCZvnHI+8bdeqHV9p/ntVjlfwJNARp7KV85qvB+oHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lpWnPBU8; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751506758; c=relaxed/simple;
+	bh=Is9CT0Pk2pnhqnJf/3yGZr2STJU9K7oUXqy0zbJFcCI=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=Bu2SddXXvnxfTUogedp9CO0/OqjeEb12avRe3RV6/j7vrh6Iw7j27xJz/FcoYqgAHwo8ynB4TcnOYtSgM0eTztW50t0F2sYXkzryrGJc1e+ZyxgPlyefO4FWwrQb8Mp0Fl8FkIO7YUh9FhhYfYlbTQs2aq/ZKoTFUOypSOlmdd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b4L3lFIM; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpWnPBU8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-237e6963f63so33200965ad.2;
-        Wed, 02 Jul 2025 18:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751506639; x=1752111439; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZvCDWMLln/ahrHGmmbRxEQ1RAY121IXr+QwbBNoid08=;
-        b=lpWnPBU881+aFebuBmXYE8sI5Yf6pUZrf6rm7Lyl1AdqXaNPuBtqcDiLQ7DCbSVTNo
-         /tJYZP5LSc+4PAyoAqNWomB7UltWCNyRDAkHG9Z1LlOung0u1C/5VUmctf3700gbon7u
-         wwgoo8L45D31uyL0RZixCTDX7envsnSpx/0vdvUfB9wRzS/icitXbY1Me5USs4LT7lk5
-         TOLOjeSPWEW18cuXDk8lhXcwVglHdcr5mlh8isc2LBW2UXAiYbpmc3WEiBVgjtRhAGr2
-         zhn93tkUP45e3/pgpTdBRcU+i4J8Sc5APH/Yf7cUxChPZKgGlA7POVqZJovN6YxjJjYH
-         3lUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751506639; x=1752111439;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZvCDWMLln/ahrHGmmbRxEQ1RAY121IXr+QwbBNoid08=;
-        b=UlT66vQ9hhMUo/fHj6ZFeeuoXPN7mNJRW63qeftyGQrf7MXMVv6vMqfARlm7vC3QKX
-         Y+1NnXJIgBQaH2TmOc5UckqQwDuDhKeU66x4SQpH8NllxKrjsElLZ/4ZIM/EmjfxioJ0
-         kMj9FNId9ySFsZQdotGRhLDnwxMH+BS+j9F5UkDX/fj4A7WJaJ2viQqfzkkhewV0oHFw
-         uLkYtzRyGzIOojh5b6uph8wtbFbmZogHtWWtvubp+4Uz4rxOXjWiUJvWv+3Fy4J1cSzI
-         0qj4+2vlQDxmBoWGh2E0Dx0BT2hTTjpa5oW+PSJcowlUZRmX0agByWj0sJ0M0sJmWGGd
-         nkEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsuatO57Q0eQyREaixFo1b0MFf7gHUj1rSf/+pCM+igdTxG1xLXcEizU/R5cE7mdBkx3CWwLexfmY=@vger.kernel.org, AJvYcCXm1795a8F+6B4iEC0iAA7H1KGqRgP+/bRmJbe7Sv2QxNoZA2ssStv7STLAruiIEv2gXcai20IkFji5HwGz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj0y0hpATouDa3JqQ4acVHGHimzu4T4uLo79qIvmvDCKpcYanH
-	VkMp4T+2IKNEr8po+Q3eh/O5wbs3R+XeK3U4wZJmCced5aSA4vHVU0tb
-X-Gm-Gg: ASbGncuKN/7R7Z740vY9XQio1XNBj6SjWpZSzkDn3oNbHyRuD58oRidfOMqPL/lKbH/
-	fj9NaP4pd4hVEu+jkZPQTafdl0V4KohUgOJbSU9a4v13S+vTrQeZliKrVqtVWDjwNFSxu08Avui
-	8LCEXPnW9YgoD3mFHRHFuXqy1QBh2s37kp5zAq3ed5WwfnM1LpPWBc+r6DgkYHFAYrodDXWi+Y4
-	HF57Nb5dEiURBo1VNxSrItXGNi6uVBiPluV4AGomeI1NVYH/B2UuMggdhfHSh2Q52WPJ/dDczZW
-	CJUAU7vDwbSTDzcSLVJVYu5IxH0YEOKRFSK/rP/e2cPzr+Wl238mackdnaTgUA==
-X-Google-Smtp-Source: AGHT+IHquFt8RTXHvnm/riz/E91A3Nb+/8uDvmvkBoAtH6A8BtDLlsRrZA0Xa3exivhl3R7PCsmLGw==
-X-Received: by 2002:a17:903:17c3:b0:234:ed31:fc96 with SMTP id d9443c01a7336-23c6e54ff82mr54833455ad.26.1751506638888;
-        Wed, 02 Jul 2025 18:37:18 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bcbcsm138536385ad.134.2025.07.02.18.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 18:37:18 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 869E84206887; Thu, 03 Jul 2025 08:37:14 +0700 (WIB)
-Date: Thu, 3 Jul 2025 08:37:14 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>, kernel@collabora.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: document linked lists
-Message-ID: <aGXeyqygzKi2P-kP@archie.me>
-References: <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b4L3lFIM"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562JEAxQ003793;
+	Thu, 3 Jul 2025 01:38:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=xgpVyo
+	LPh9JdhYBwUjqBEZjWvAdIc2zVJFh7ZQkPLrQ=; b=b4L3lFIMHGyWmS95nHIWRl
+	h9DRdGUb2nGcL/94yxLei0wURBf1o8sIkM2wWKH+Sw5cpfWPMCUi/PHLXNLxC2xH
+	GBjP7tPOwggeK6mtiy2XMDP4TI9iVe3pUoZIViaZzyOOX57CVTDT+b+CoyHk6N7h
+	0FQvKDHndXCoP/gzpvoNh/FsB70oEyg2nelcqHqKf4CYYWweKNDeupcieG6y1mtn
+	Npb941m9Twm6vF/BYn8Z/VCcEiMvPERje11ZFtw0a1YQt/LSXOB7U9/rWL5EZGID
+	kABh2ml9ah7UXaVybZkhO9Sx99QVwTwFR2ANXq4r2uE0o3TX0uSV3S0NRerwCALw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dgwfs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 01:38:45 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5631YEmd000959;
+	Thu, 3 Jul 2025 01:38:44 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dgwfn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 01:38:44 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 562MZRJ6006841;
+	Thu, 3 Jul 2025 01:38:43 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jvxmj8qq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 01:38:43 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5631cgPX24511054
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Jul 2025 01:38:42 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E1B0458059;
+	Thu,  3 Jul 2025 01:38:41 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C598C58058;
+	Thu,  3 Jul 2025 01:38:39 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.102.8])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Jul 2025 01:38:39 +0000 (GMT)
+Message-ID: <eb91dcf034db28e457a4482faa397dd7632f00fd.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] integrity: Extract secure boot enquiry function out
+ of IMA
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: GONG Ruiqi <gongruiqi1@huawei.com>,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Madhavan Srinivasan	
+ <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko
+ Carstens	 <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev	 <agordeev@linux.ibm.com>
+Cc: Eric Snowberg <eric.snowberg@oracle.com>,
+        Christophe Leroy	
+ <christophe.leroy@csgroup.eu>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>, "Lee, Chun-Yi" <jlee@suse.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, Lu Jialin <lujialin4@huawei.com>,
+        Nayna Jain	
+ <nayna@linux.ibm.com>
+In-Reply-To: <20250628063251.321370-1-gongruiqi1@huawei.com>
+References: <20250628063251.321370-1-gongruiqi1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Jul 2025 21:38:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6rDAoiH4BJjp6Kfi"
-Content-Disposition: inline
-In-Reply-To: <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: AK6aKBga4oupROxNi37kIoTGk3q8-5S4
+X-Proofpoint-GUID: uDLi-sImN3F6mgsunZuJI4XJFtTsseEO
+X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=6865df25 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=i0EeH86SAAAA:8 a=S3K_XBxPWrw5AGGlcUgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDAwOCBTYWx0ZWRfXy2T4VTZGAdYP sUju6z4tCTzdEu3yCSnNzl9jOk3a4Ybp+UEyit+nsO1F3Rgn1K5leqHez3AipMUriRQ47LArP40 9BIqUj1y+Bwq3B6h56eZ8DCtsDqi+DKDsWMDAYm4+YLvPQsohUdOM06LkKYeK88Imwvhck9/FKo
+ RqhPOZlG8YHqnt9HTM0wcWpofMPCBacYx0/fzrLe8sEh0fXC8+meVu/0kh2zeoxYclYP478kWTh sK9ePhL+SfXMtDKJaKxDGBhNzTab5Y2zo9cq55R3XU88nQ8TJSh4mTASDybyMK5UU67y0xVmxwQ ESS/8ZY/oYFc2rySDpumZmdXH5mBW1Ba2NXxmGHm4qkTbGVckU9hBrIXoqf43+N17w7NMatu3TU
+ yJrPAtqTjqPi4XMtScNX9MOfw5mHsMbrSdiWPhSSMhgXCy4Rf4Z4bRb9sltJlp2H9t2Gt+qB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_01,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1011 mlxlogscore=691 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030008
 
+[CC: Nayna Jain]
 
---6rDAoiH4BJjp6Kfi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, 2025-06-28 at 14:32 +0800, GONG Ruiqi wrote:
+> Commit 92ad19559ea9 ("integrity: Do not load MOK and MOKx when secure
+> boot be disabled") utilizes arch_ima_get_secureboot() to perform a
+> secure boot status check before loading the Machine Owner Key (MOK).
+> However, only when CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT=3Dy can this
+> function be functional, while this config has nothing to do with secure
+> boot or MOK loading.
+>=20
+> Given that arch_ima_get_secureboot() is just a helper to retrieve info
+> about secure boot via EFI and doesn't necessarily be a part of IMA,
+> rename it to arch_integrity_get_secureboot(), decouple its functionality
+> from IMA and extract it to be a integrity subsystem helper, so that both
+> certificate loading and IMA can make use of it.
+>=20
+> Compile-tested on powerpc, s390 and x86, with CONFIG_IMA_ARCH_POLICY=3Dn
+> and =3Dy based on defconfig and allmodconfig.
+>=20
+> Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
 
-On Wed, Jul 02, 2025 at 10:24:47PM +0200, Nicolas Frattaroli wrote:
-> +In State 2, we've added Grock after the list head::
-> +
-> +         .--------------------.
-> +         v                    |
-> +    .--------.     .-------.  |
-> +    | clowns |---->| Grock |--'
-> +    '--------'     '-------'
+The original reason for querying the secure boot status of the system was i=
+n
+order to differentiate IMA policies.  Subsequently, the secure boot check w=
+as
+also added to safely allow loading of the certificates stored in MOK. So lo=
+ading
+IMA policies and the MOK certificates ARE dependent on the secure boot mode=
+.
+                                                                           =
+    =20
+What is your real motivation for moving the secure boot checking out of IMA=
+?   =20
+                                                                           =
+    =20
+FYI, there are a number of problems with the patch itself.  From a very hig=
+h
+level: =20
+                                                                           =
+    =20
+- The EFI secure boot check is co-located with loading the architecture spe=
+cific
+policies.  By co-locating the secure boot check with loading the architectu=
+re
+specific IMA policies, there aren't any ifdef's in C code.  Please refer to=
+ the
+"conditional compilation" section in the kernel coding-style documentation =
+on
+avoiding ifdef's in C code.
+                                                                           =
+    =20
+- Each architecture has it's own method of detecting secure boot. Originall=
+y the
+x86 code was in arch/x86, but to prevent code duplication it was moved to I=
+MA.=20
+The new file should at least be named efi_secureboot.c. =20
+                                                                           =
+    =20
+- The patch title should be about moving and renaming the secure boot check=
+.=20
+The patch description should include a valid reason for the change.
 
-Looks like the corners are a bit imbalanced (single quotes are taller than
-dots). What about using plus instead? Like:
-
----- >8 ----
-diff --git a/Documentation/core-api/list.rst b/Documentation/core-api/list.=
-rst
-index b0586056abb04d..bf92f44d7b2d06 100644
---- a/Documentation/core-api/list.rst
-+++ b/Documentation/core-api/list.rst
-@@ -148,11 +148,11 @@ clarity.
-=20
- In State 2, we've added Grock after the list head::
-=20
--         .--------------------.
-+         +--------------------+
-          v                    |
--    .--------.     .-------.  |
--    | clowns |---->| Grock |--'
--    '--------'     '-------'
-+    +--------+     +-------+  |
-+    | clowns |---->| Grock |--+
-+    +--------+     +-------+
-=20
- This diagram shows the "clowns" node pointing at a new node labeled "Grock=
-".
- The Grock node is pointing back at the "clowns" node.
-
-The docs wording looks good, though.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---6rDAoiH4BJjp6Kfi
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGXexgAKCRD2uYlJVVFO
-o4eVAP9pUgG8hSCkeS6YHXeqicCzRKmO7X1mcMvMgCanzdJBDgEA1gyL/7ua/B1t
-t4yCErU51op1KfAXfGAkAP8OLU3c2g8=
-=bUkw
------END PGP SIGNATURE-----
-
---6rDAoiH4BJjp6Kfi--
+Mimi & Nayna
