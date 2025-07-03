@@ -1,146 +1,198 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911AF13C82E;
-	Thu,  3 Jul 2025 00:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C234414A4CC;
+	Thu,  3 Jul 2025 00:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751503850; cv=none; b=WPv3C6FoU/kX3OjO7F3kbBm/i6GCWhSMKvCGqhAtJIsdN0L7MmTcvB1RqWsl9ottsRGns87jJbY2flh1POv8qBn//RTD331MUHDGvWSfERC3b24cdiizW783RXVldyzkAcw9Gi3B5wnfa+9N8gGVt0FA/qZF9yGZEvJjDl8ghH4=
+	t=1751503879; cv=none; b=UHWiD8pDZgSEdnmjI6oDqlblShxsnrqq/v+75Ixx4dax7L5Sxif6Uk89n3PxFS/iagdSH1HwfB5wuuAxdCTosMyFnN7ZuBrYw7ekOSFfOtzxHCj+d12sX7M9ZVaTly7u3fmXdQr7FZgbc0ZMhhHL9UX+tqZPJH+IlRyD44wM26o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751503850; c=relaxed/simple;
-	bh=aZglv2R1f59obVIMoI4cssPnJyx67eHAThxQR1GKJO0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=kbSPnZX8DK5GtIhWGVLEV725Un3QT/l03ckgtbXuVPaPHwKc3oj7FpDdrZ3Hi2OXoKKaHoBuoO9yiIfBz5Q7nRD+00JJQRtsOaKSvJIWMRp8BsqHp9mdiHcLLwhErAD339N9m4YAgDbBWJOjG0ICHXIZktG6V4a7Qg3j4VbuACo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQG1R1PO; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751503879; c=relaxed/simple;
+	bh=79aaVnD4tqItZ8SHXeEkYCBAgpkFHISaXgz2yNItgc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=huMgVMB61PalA+m/rdvKgZ1HlkFN2WXrKzjDCsxpcQsHOUX4xrGuohoBxY7ntxrOJeYHJ5r3gv2oHbuivovLw/hZ2yuD0KM7m5KoaD+rQvhHHioxfVXH5ThoXVnDnIkURBu4khc41XUa+92g5/v3ZDAZyvD1DoMzdo+g6swwCQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkz9TD/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQG1R1PO"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fada2dd785so66527936d6.2;
-        Wed, 02 Jul 2025 17:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751503847; x=1752108647; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/w3t0Fye+PJNVHpASDzRV4VuIFPhtiLbyHjMXLTWP0Q=;
-        b=MQG1R1POImfR8dv5JEPDBhl9+Sao+XgvpWBOJfgz1rgJsEqcmZbGTNzym9CClsZqxr
-         a8wHx3rXtWgdsvhgNnf1Q0l3e34iFDF76yKaK+hdo7o5cya9eYB4WS32ouKTs/iUNCFN
-         oOp3EV0MELEW6KgaHHya0Jhg9FVywhJFuLUUyhRZRu7Pox50I45UXwN/557knGGqHPpO
-         gqcQc4fygcTMdvGtGXF+VqwGMc4iQWYKmiMeWIX7hQpUYv6py9sZuBVKhU8bbWWxoeNs
-         Oip+7fO/xdWsats6ZvnqXj0Frdazbq5OCfRxmMGyBBjeHoIDksHzKC8CJAg2zkivXXXm
-         qckQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751503847; x=1752108647;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/w3t0Fye+PJNVHpASDzRV4VuIFPhtiLbyHjMXLTWP0Q=;
-        b=IZZ6pZrqnIoFai8aMkmTILT15/EJ0LGEEvw4yB0TPx5WApLsZKQA6ikA1CTlilRiFZ
-         O8p9bjTbi4R/uzseoeNBIRHNAKFBda4ptyVFNsX7xvqcgF+jK4IgoLRurSbNrh2NOaWj
-         vX0DM+EDrU9CxHS6oGWmjTqAc7sK4h/1YgRyXjcApuCQ9j/W3n4FguLLYlDU4P0Hilun
-         54phsTT8HNkvi554MzuZudenUMV7EMBNL0lUregVyawLpwtLAI/nXLERNaNeRP0s5CvX
-         ccfamKjqmYQjCGCpWujqbFtcbj5kSex7UUWMqCLRLnPFd9Bvc6u5pUCwEoJDT19AdXZ1
-         xnPw==
-X-Forwarded-Encrypted: i=1; AJvYcCURsnFdC0npD8LnyX1Vqrdy+tPwCPLVyj2gK3Aihn+Wi0AhpC9vsPanlFWvw7nKGm+mpN+LJjCPf4rY@vger.kernel.org, AJvYcCV1vmwkrhxCV3HLakL12AWq9am5Ba75TyJGPkKCcewfzOF19sjLquVu8NkVEE3d2ds7PYUusnFv6K/Hsg==@vger.kernel.org, AJvYcCVfRkKQtU+6Q3XoBsacznLeCjMqJjk60EYIMQfKNlSCXisP/m1zpkb12hfFQn71QvvVNnJZmnBOxSnrOdRD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjjTySTncNApRgtZi+KkWwbFk59c5KwL78YTqDzQjFvfPUoaNx
-	0HKCfnBRRbSSUacDzGUFaq1t9H6qE2AJyK0vmE5ZjbiWRBFZHXmsQeGD
-X-Gm-Gg: ASbGncsDnWbbMxefZzAZN+7dcnWc/8Jq5dbZOiRflq108pEUUAv3D3LeEmtWnkKsvc9
-	GlAJYKI8MArUPL8yONKYLAj4aTT7aPglufPwHYvNX7rGAQO18diFF49gLKRIbz8x6kezFhEe3rM
-	wEdKCOW1gwLdCFE43/G1qSw3LbBpJHGscS22hQDsIy9wH/NSSOf3wkAByfGLrCBOmOQiAS8ikJ4
-	/tXZS5S6BJxxqLgRT/Rh1rc6aohCEOjD/+QXhQEpsyPddFqqTrCByyAbpT+KUmgn+TS9OQ0kCm2
-	uhlAi+KNya0PcAQAS7S9R7ISlnSA64kaGLgCVD+m59kirudPpDqXoFFdTSA1hdHfKNGpRIprE0e
-	pT3u0DI6uG90pOR5Gu+qttJgfrEOpT1p7jA==
-X-Google-Smtp-Source: AGHT+IE/mQQ1p98yLtyrPNH48eVOtaTFbCpepSsl1LNcKap9p1Kk5AoMBq/16m+Z/G7MPKNWqtM8kw==
-X-Received: by 2002:a05:6214:46a0:b0:6fa:cb72:955a with SMTP id 6a1803df08f44-702bc89c845mr25137106d6.4.1751503847478;
-        Wed, 02 Jul 2025 17:50:47 -0700 (PDT)
-Received: from [127.0.0.1] (modemcable197.17-162-184.mc.videotron.ca. [184.162.17.197])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd773145basm108565846d6.116.2025.07.02.17.50.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 17:50:47 -0700 (PDT)
-Date: Wed, 02 Jul 2025 20:50:46 -0400
-From: =?ISO-8859-1?Q?Jean-Fran=E7ois_Lessard?= <jefflessard3@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Christian Hewitt <christianshewitt@gmail.com>
-CC: Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
- Boris Gjenero <boris.gjenero@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_4/8=5D_dt-bindings=3A_ven?=
- =?US-ASCII?Q?dor-prefixes=3A_Add_Winrise_Technology?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <5d4dfcb2-cdf5-41d6-a94f-5a116837ee25@kernel.org>
-References: <20250629130002.49842-1-jefflessard3@gmail.com> <20250629130002.49842-6-jefflessard3@gmail.com> <c6d0d856-0c49-4ad7-bc6f-1a228dcb2d9d@kernel.org> <0182CF05-6011-479C-A4A2-18A0C60F7710@gmail.com> <5d4dfcb2-cdf5-41d6-a94f-5a116837ee25@kernel.org>
-Message-ID: <4B251F88-DC21-4205-BD70-2F2A894E4428@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkz9TD/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23142C4CEE7;
+	Thu,  3 Jul 2025 00:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751503877;
+	bh=79aaVnD4tqItZ8SHXeEkYCBAgpkFHISaXgz2yNItgc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pkz9TD/vAsLJ0xpNJ8ZLq8Ty4cVX2k62BGmftOZFm5iHZXRxi/IoNuUqmK2q34GVL
+	 fVXOQnF0C8zrUDYOsSe09xodsW7Orf7R6MveFgEA12dZ1bb72FUGdpHkFMPvKbQef0
+	 Xx7vAOBPOwp4N9T42UWU+9eWvGiol9oQ9ob7S7xIB+3FyX47Nj37hdJrKbLqm5G8gY
+	 VDw33EXOhVUQeyRAFMof8ZwvR5bYBudNHc45DHbEHL0HZtmKb5dvLoSSEcYeGCTD0n
+	 ceGVAycWp3BDJcdtNLP1vs/z3SLUqMoV2/pDlSzC2Z8Xv8q3GYif7hNTz1Y+5AY5xD
+	 tFbdC66wdygzg==
+From: SeongJae Park <sj@kernel.org>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	akpm@linux-foundation.org,
+	corbet@lwn.net,
+	joshua.hahnjy@gmail.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com,
+	Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
+Subject: Re: [RFC PATCH v3 13/13] mm/damon/vaddr: Apply filters in migrate_{hot/cold}
+Date: Wed,  2 Jul 2025 17:51:15 -0700
+Message-Id: <20250703005115.57803-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250702201337.5780-14-bijan311@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Le 2 juillet 2025 16 h 14 min 34 s HAE, Krzysztof Kozlowski <krzk@kernel=2E=
-org> a =C3=A9crit=C2=A0:
->On 30/06/2025 15:51, Christian Hewitt wrote:
->>> On 30 Jun 2025, at 4:25=E2=80=AFpm, Krzysztof Kozlowski <krzk@kernel=
-=2Eorg> wrote:
->>>
->>> On 29/06/2025 14:59, Jean-Fran=C3=A7ois Lessard wrote:
->>>> Assign vendor prefix "winrise", matching their domain name=2E
->>>>
->>>> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail=2Ecom>
->>>> ---
->>>> Documentation/devicetree/bindings/vendor-prefixes=2Eyaml | 2 ++
->>>> 1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes=2Eyaml=
- b/Documentation/devicetree/bindings/vendor-prefixes=2Eyaml
->>>> index f03ab02afe=2E=2Ea3bf93e5dc 100644
->>>> --- a/Documentation/devicetree/bindings/vendor-prefixes=2Eyaml
->>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes=2Eyaml
->>>> @@ -1711,6 +1711,8 @@ patternProperties:
->>>>     description: Wingtech Technology Co=2E, Ltd=2E
->>>>   "^winlink,=2E*":
->>>>     description: WinLink Co=2E, Ltd
->>>> +  "^winrise,=2E*":
->>>> +    description: Shenzhen Winrise Technology Co=2E, Ltd=2E
->>> Hm? https://winrise=2Ecom/ redirects to https://amdaluminum=2Ecom/ for
->>> fences and other alu products=2E
->>=20
->> According to multiple Chinese chip-buying/trade websites [0],[1] and
->> the internet archive [2] their domain is winrise=2Ecn (not =2Ecom)=2E T=
-here
->> is currently no active website despite whois entries showing that the
->> domain registration is still active/alive=2E
->>=20
->> [0] http://www=2E84878=2Etradebig=2Ecom/
->> [1] https://www=2Etradeeasy=2Ecom/supplier/714703/products
->> [2] https://web=2Earchive=2Eorg/web/20160312143416/http://winrise=2Ecn/
->>=20
->> If you=E2=80=99d prefer =E2=80=9CAssign vendor prefix based on their na=
-me=E2=80=9D as the
->> patch description? we can change that for the next iteration=2E
->If commit msg says "domain name" as an argument and it turns out it is
->not matching domain name, then that other domain name least needs to be
->in commit msg=2E The rule of domain name comes from US tickers, so only
->=2Ecom should be considered=2E If there is no conflict and no =2Ecom
->manufacturer it is fine to use whatever other name, but the commit msg
->is not then correct=2E
->
->Best regards,
->Krzysztof
+On Wed,  2 Jul 2025 15:13:36 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
 
-Well noted, for v3:
-- Will update the commit message (non-ticker/=2Ecom)
-- Will avoid generic vendor prefixes (icore)
-- Will submit the 4 vendor prefix changes in one patch
+> From: Bijan Tabatabai <bijantabatab@micron.com>
+> 
+> The paddr versions of migrate_{hot/cold} filter out folios from
+> migration based on the scheme's filters. This patch does the same for
+> the vaddr versions of those schemes.
+> 
+> The filtering code is mostly the same for the paddr and vaddr versions.
+> The exception is the young filter. paddr determines if a page is young
+> by doing a folio rmap walk to find the page table entries corresponding
+> to the folio. However, vaddr schemes have easier access to the page
+> tables, so we add some logic to avoid the extra work.
+> 
+> Co-developed-by: Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
+> Signed-off-by: Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
+> Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
+> ---
+>  mm/damon/vaddr.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+> 
+> diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
+> index 5f230a427fdc..2a485bf19101 100644
+> --- a/mm/damon/vaddr.c
+> +++ b/mm/damon/vaddr.c
+> @@ -611,6 +611,62 @@ static unsigned int damon_va_check_accesses(struct damon_ctx *ctx)
+>  	return max_nr_accesses;
+>  }
+>  
+> +static bool damos_va_filter_young(struct damos_filter *filter,
+> +		struct folio *folio, struct vm_area_struct *vma,
+> +		unsigned long addr, pte_t *ptep, pmd_t *pmdp)
+> +{
+> +	bool young;
+> +
+> +	if (ptep) {
+> +		young = pte_young(*ptep);
 
-Best regards,
-Jean-Fran=C3=A7ois Lessard
+Let's use ptep_get().
+
+> +	} else if (pmdp) {
+> +		young = pmd_young(*pmdp);
+
+Let's use pmdp_get().
+
+> +	} else {
+> +		WARN_ONCE(1, "Neither ptep nor pmdp provided");
+> +		return false;
+> +	}
+
+Can this really happen?  If so, let's remove WARN_ONCE().  If not, let's drop
+the entire else case.
+
+> +
+> +	young = young || !folio_test_idle(folio) ||
+> +		mmu_notifier_test_young(vma->vm_mm, addr);
+> +
+> +	if (young && ptep)
+> +		damon_ptep_mkold(ptep, vma, addr);
+> +	else if (young && pmdp)
+> +		damon_pmdp_mkold(pmdp, vma, addr);
+> +
+> +	return young == filter->matching;
+
+I now realize this function is not returning if the folio is young, but if the
+youngness matches the filter.  Let's rename, say,
+damos_va_filter_young_match()?
+
+> +}
+> +
+> +static bool damos_va_filter_out(struct damos *scheme, struct folio *folio,
+> +		struct vm_area_struct *vma, unsigned long addr,
+> +		pte_t *ptep, pmd_t *pmdp)
+> +{
+> +	struct damos_filter *filter;
+> +	bool matched;
+> +
+> +	if (scheme->core_filters_allowed)
+> +		return false;
+> +
+> +	damos_for_each_ops_filter(filter, scheme) {
+> +		/*
+> +		 * damos_folio_filter_match checks the young filter by doing an
+> +		 * rmap on the folio to find its page table. However, being the
+> +		 * vaddr scheme, we have direct access to the page tables, so
+> +		 * use that instead.
+> +		 */
+> +		if (filter->type == DAMOS_FILTER_TYPE_YOUNG) {
+> +			matched = damos_va_filter_young(filter, folio, vma,
+> +				addr, ptep, pmdp);
+> +		} else {
+> +			matched = damos_folio_filter_match(filter, folio);
+> +		}
+
+Let's drop enclosing braces for single line if-esle statements.
+
+> +
+> +		if (matched)
+> +			return !filter->allow;
+> +	}
+> +	return scheme->ops_filters_default_reject;
+> +}
+> +
+>  struct damos_va_migrate_private {
+>  	struct list_head *migration_lists;
+>  	struct damos *scheme;
+> @@ -695,8 +751,12 @@ static int damos_va_migrate_pmd_entry(pmd_t *pmd, unsigned long addr,
+>  	if (!folio)
+>  		goto unlock;
+>  
+> +	if (damos_va_filter_out(s, folio, walk->vma, addr, NULL, pmd))
+> +		goto put_folio;
+> +
+>  	damos_va_migrate_folio(folio, walk->vma, addr, dests, migration_lists);
+>  
+> +put_folio:
+>  	folio_put(folio);
+>  unlock:
+>  	spin_unlock(ptl);
+> @@ -724,8 +784,12 @@ static int damos_va_migrate_pte_entry(pte_t *pte, unsigned long addr,
+>  	if (!folio)
+>  		return 0;
+>  
+> +	if (damos_va_filter_out(s, folio, walk->vma, addr, pte, NULL))
+> +		goto put_folio;
+> +
+>  	damos_va_migrate_folio(folio, walk->vma, addr, dests, migration_lists);
+>  
+> +put_folio:
+>  	folio_put(folio);
+>  	return 0;
+>  }
+> -- 
+> 2.43.5
+> 
+> 
+
+
+Thanks,
+SJ
