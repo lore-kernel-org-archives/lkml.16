@@ -1,144 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D282DE6E8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C461A298CC0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751531672; cv=none; b=nA3r2ULeRPp8zb3hdnffZJZMat5+lM7/MmOWIXd5Qprknp3Yw6JlaSwgIG/fXfXVNsald792Tn2UenAxyUFN6RWRBlm/UWAVHwvRSRPALNn5G5dt/z4Asn4DpOAUBlv24HOJLSkwg4K2x5T5stFjksmNLeBvc2BYaLUc4vKn2PU=
+	t=1751531706; cv=none; b=s9L2fKiRQNw+cbWvULZC9ayrGEhyCKwf064g8t5BkCFImY2S5BnEl+CenDkU6nYHFW0x/VbiCZvuw37A994VSOdRmeDFka2I4adLq4zi89IQpHtVdXK24piwIuwMbpq+O7slNgaisfBV7BojEcCuo6J6ejTuJUYCU+MZ1TZfgdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751531672; c=relaxed/simple;
-	bh=KiU0mOb5SXdM9IWDYReGvf6ZjDNAjg2kPIgG3hlcS6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zp8PefZ8rJsDlTrcHmFMxskeJoZrm4Qpprek/RVw4QhqKaInfd2TkGpcu0XRPF3lQZ7p6nw4o9DGFgpmQaCEYH0j4DBsu06QCNvH6zBLk2oEHkIKv7KgBaNsr8mZ9AaCi97q8kL1n9qYCBSDjUWhCh1K7y7Eq4ZUi4ml5l3eb94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M8xi3QBo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8xi3QBo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751531669;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=221h2gTHX6oXGMnPCILS/QRTKOojZm+JGCoLjP5IEkI=;
-	b=M8xi3QBoJWosophErrvEJKJISZRMRSwN0PWWTDtHVqV9NBGJ1/q/xKg4uh68EoDfShdOdP
-	7NvoIRAkmkK7VfVLjOkOPTRAn/BB5kXJ8IVZ0E0E9h8i74C0OmNr/sUzGd5Z6d/OzyyJ+J
-	ehrQr016MBpwSHiWI/2HM2Mi3ZY6B00=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-f8xMd7lMMKm0T5llJhRt8Q-1; Thu, 03 Jul 2025 04:34:28 -0400
-X-MC-Unique: f8xMd7lMMKm0T5llJhRt8Q-1
-X-Mimecast-MFC-AGG-ID: f8xMd7lMMKm0T5llJhRt8Q_1751531667
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ae0dffaa8aeso81694866b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:34:27 -0700 (PDT)
+	s=arc-20240116; t=1751531706; c=relaxed/simple;
+	bh=OsCZUBi2e1IuGI+M2FHcrA6rQzNLhJ8gwS87st4jqP4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uQUMXrI/xQs+bbGBVtCafr0VqK89hVfOqoYjbfzR+QmaxaS4Xz2EcbBT2P1mKvKIz3YqEZ2dqQ6wOX3LPGZ+81EYmoSkznYzANTAeT3jr79X8awICm8R9ZwnGFV98qBwo8CGNlvRCoZiQDuE0CfaUjNXVy4z+0YDWQ/NfT9PYkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-869e9667f58so1197813439f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 01:35:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751531667; x=1752136467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1751531704; x=1752136504;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=221h2gTHX6oXGMnPCILS/QRTKOojZm+JGCoLjP5IEkI=;
-        b=r/8lunvQ7CeW2cSC21LggEeosmbzWzWoxiVSQvyMCQiGgck053nTRON+7HLdjC28RO
-         AtrG9A+EofYhvkN6L5LF4Mbu4wSGXWn/UAPaYZKrnDboSSnwbXtB3XZEyzFnKQXa+9k+
-         yF19bqc9Wx2mI7AnXM0TD8meeYMFNloJnSCcLyUXgzlgm1NJiB0SXeDbU0KLJ03tdz9d
-         AG1D5pn+01INGbGfT1ghbBPysR+B/IXmauoBLPy9FsRTzc8G65B/EMRTlGbDhgZZa4m/
-         8LRv3ZvKdCzyZdaqZYiaKDWgwKy8RR8Q4oCqXFy2binm+YOVTDk//IzW1rFcZRYIrGO7
-         aNkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXO06ysQXbvUQ7MbWIvpaVVfNLrddLf4kin+i+MONXS7OYI5khViXx6TLQxnenm5MD1UkRfwsTOgkbO2Cg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnHXHLXhfyOxPc1JrUR+8IXni+d1fPehacexRRQt8R1rDtIISw
-	SquZoGPPBj/BgkcPeguhq2RplT+OaEEZtPgPgmSt24wxsMcWjaCLAGj1/jroKzyHv5xSZ4hX0sF
-	AON5nQslzh4ZrG7HX6PW8tzYh9zLjR1SML7SA5Nt6JXMO6ewaCmdk5PgU6yOu10A+JA==
-X-Gm-Gg: ASbGncuDsL3IWUpCo59fzXbH3HuhmZ2fNsgRfryvcDPdJ/+Enx6erL7eMnqa2vwXi2r
-	ZZTszDobr7QZ+RbM9e3Q/zP9u08U//Tdi4I427DYx9tjoHu3f1dW7Jd6giV0bkEwWwOUv7M2cv0
-	gcyOJp+Qaxz4KRy2HbTFZJzfZYNTZXhzcX0QbLf2VCkeNIpvR3VUt6onWt+byiNg5j843EHk2Uv
-	vG7S45KgxzzYXaFFAuXnag3zmu6nMDCsjcu3xMnpEtjZC1uz5u/9tx3WP/GoVyMI97piRHurnYT
-	PdmVMc/kyFuLdh3krkF4I0dw0BQcKI8yTVRzXS2G4pQe9O+724OiZMnkmYI1+5ZRxWt9Imchf4i
-	6mr0PqXwD789T/H8Xl727QbluwSU9rKYHAaO67cgoRYDzC4+3qLkpogUQ9hDkUXdDT9ieZkPb
-X-Received: by 2002:a17:907:3d8d:b0:ae0:a465:1c20 with SMTP id a640c23a62f3a-ae3dcc33e3dmr202629466b.14.1751531666729;
-        Thu, 03 Jul 2025 01:34:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0jetECjsFXFGgQLjZYc5QGYfQzjQBHnfhAK7F+xPPGCcJzJbtB9How+LBWAWH7EYvtz0QzQ==
-X-Received: by 2002:a17:907:3d8d:b0:ae0:a465:1c20 with SMTP id a640c23a62f3a-ae3dcc33e3dmr202620766b.14.1751531665205;
-        Thu, 03 Jul 2025 01:34:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca2ab0sm1202272966b.164.2025.07.03.01.34.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 01:34:24 -0700 (PDT)
-Message-ID: <f5fe3fe1-903a-48ca-9249-b77bc07dbc77@redhat.com>
-Date: Thu, 3 Jul 2025 10:34:23 +0200
+        bh=XIJwyqQo9Miz3Q8j9Dn1oEkTQKwHxs714rzh5sH59PA=;
+        b=sLRB5qrFolqjwd1G2xBJVxF9WPxNq4QtFwHc1AdfJhDM5Q63TfOCraWROUH6i5SZbg
+         F6MBvxiKJsrehmevJni2cShggOVatcp5Kxew7F+jfynwDMX9x+T11nHnZSLmFgdJr/zV
+         ufoqW0aHOBuc08btfeauMsgm1vbIMa7zQTMoWSvTrKvi6xdEOMMnZ/dxGZ2wH/SN1pQD
+         ziP2SnsPTdJRMuZ94T3rE1HpAAGyU9h3641XhjuRLnJUbAnb1oZ0619aN5PX8K+s+cBH
+         Z00ObhZtTtNHQgbxQMKvyfd/tfNUwd+/4dQr3ZGyA73lzfa49ZKEMyq9FeDM/1/u62Hv
+         DKIw==
+X-Gm-Message-State: AOJu0YxinngkSBQESB3QEzwRhomRR/rGe5r9ylFHdHJKhsajvXLanMtN
+	o1VY5Mz0PlU+BiJ5+4jFdu5Cp6vTudV1tWzbLf80X+OxCmHK5bS60TAZFIj1D0rbz3q2kJ66tLV
+	lOx8sH7w/qwuDJWoJl2vN6w+CVtB0jtI6qxgutY7cKY3IDzv4nKEimELcNfo=
+X-Google-Smtp-Source: AGHT+IEmePEhBLZ76Xd8RgCpASnEakVw+aItDIx54DzD7UdA3HQGUAlcrYMFob/+uI+UlgG6yxMCeyStZFoJrCeQ/yAdoqxnaUfH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk@kernel.org>, Luca Weiss <luca.weiss@fairphone.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>,
- Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
- <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
- <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
- <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
- <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
- <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
- <e534d496-6ce0-46c8-835d-94b3346446a7@redhat.com>
- <6e4253dd-cd73-4302-b9df-44c8c311eb22@kernel.org>
- <e2159868-f31d-4d35-b6b1-2cbd1a9d249b@suse.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <e2159868-f31d-4d35-b6b1-2cbd1a9d249b@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:1655:b0:876:8bf2:e4d2 with SMTP id
+ ca18e2360f4ac-876c69f23b2mr739182539f.2.1751531703790; Thu, 03 Jul 2025
+ 01:35:03 -0700 (PDT)
+Date: Thu, 03 Jul 2025 01:35:03 -0700
+In-Reply-To: <20250703011717.3952009-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686640b7.a70a0220.5d25f.085f.GAE@google.com>
+Subject: Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
+From: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Thomas,
+Hello,
 
-On 3-Jul-25 8:47 AM, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 02.07.25 um 22:43 schrieb Krzysztof Kozlowski:
->> On 30/06/2025 10:40, Hans de Goede wrote:
->>>> No one asks to drop them from the driver. I only want specific front
->>>> compatible which will list and constrain the properties. It is not
->>>> contradictory to your statements, U-boot support, driver support. I
->>>> really do not see ANY argument why this cannot follow standard DT rules.
->>> So what you are saying is that you want something like:
->>>
->>> framebuffer0: framebuffer@1d385000 {
->>>     compatible = "qcom.simple-framebuffer-sm8650-mdss", "simple-framebuffer";
->>> }
->>>
->>> and that the binding for qcom.simple-framebuffer-sm8650-mdss
->>> can then list interconnects ?
->> IMO yes (after adjusting above to coding style), but as mentioned in
->> other response you can just get an ack or opinion from Rob or Conor.
-> 
-> But does that work with *any* device that requires interconnects? The next such simple-framebuffer device should work out of the box *without* the kernel knowing anything about it. That's one of the key features of the simple-framebuffer.  If we have to maintainer per-device feature sets, it breaks that assumption.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-The driver code for this can still be generic and since the driver
-will bind to the fallback plain "simple-framebuffer" compatible
-this should also work for new platforms.
+Reported-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
+Tested-by: syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com
 
-The e.g. "qcom.simple-framebuffer-sm8650-mdss" compatible would
-purely be something in the dt-bindings to document which simplefb
-implementations will have interconnects and which ones will not.
+Tested on:
 
-The driver does not necessarily need to check these more
-precise compatibles, it can still just check for the generic
-presence of interconnects.
+commit:         50c8770a Add linux-next specific files for 20250702
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ab0c8c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=76d012e863976d4c
+dashboard link: https://syzkaller.appspot.com/bug?extid=169de184e9defe7fe709
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=105dd3d4580000
 
-Regards,
-
-Hans
-
+Note: testing is done by a robot and is best-effort only.
