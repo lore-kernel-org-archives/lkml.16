@@ -1,301 +1,164 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA942EFDB8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C91F33DF;
+	Thu,  3 Jul 2025 15:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556704; cv=none; b=GQKmFVIMNX52IL/3VxShauPqpEG687VrqYueVwp7fmxhl7rvX9FPGV0yq9BICJKLRQkxAGuYvL1Mnh8Xu5GHwiXCK26v2I5yVdGEiDo2ZskgavYu7bbw65aAHLLszqItBJMJ/WxEjB2MyDZoIoaE/9VW7OIuI2gqR7znM3qtr+U=
+	t=1751556755; cv=none; b=SpkYa7daE/Gi7KnXaqXf2Qg857XD7m2VFZRcxY7KBSa7OhXlyPgmr2YyhntkY7JAtcLAXFF7I2inazw/XJORrWxh0w8hRmwCjgHb2z6WYu87KagHCe1SVaZAhfPnyydbwWOeXmSXUxZOPjjbmnC6NpFDL7+KE3t33kpKiyWCQ0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556704; c=relaxed/simple;
-	bh=6J+m7sJfFYde+NRfy6nf+kjWVxfONpUpn9vTU0wAjGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Of18J86DlC6rSEypOHhAWehItUIxDn+wpttwpdOhEmHPdYlOHe8U5gq0/vFe2wWJDcbdPxdg7n/kzqQM62TQhWq5lCoxy2vt6tgdOzUfLsVt61j/EJVVYxK62SyfZx33JZb+9Ujd3gcNWpujkz2WHb70YiAZyczaG6U2+KRWs5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cUEgw4o+; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751556755; c=relaxed/simple;
+	bh=DVnQ3R4GAGqrM49yYZnMSfxouS6uvaIV4BLTB6didP0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AIFuBtld6e66OifLI115LQggS7wuDQk/a5v2o0ygAq/BBeVIGCgbsuRaCZshqDfLJQpNwUCENG7R9L9UCTQ5PEaev143TSRD+cK3gJi+od2CuUhxWKFPOPi/9twzSCkrab1jNXrruRP1vqRZISKwxRNHnuQqZGhsV0EwVf5Us80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TeUJR3Hi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S8hPrxeF; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cUEgw4o+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751556699;
-	bh=6J+m7sJfFYde+NRfy6nf+kjWVxfONpUpn9vTU0wAjGw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cUEgw4o+x7+TQMzUT+EEBJOHHUlpwpAGIoTOYkpgAJj1CL6CvUGHold3QYlhigRMG
-	 KGY3tzVey6WXKynmgGt0c8zeQVdGZuYMNP0npcRU3Beyr7ZANGkLh8KmD1FLRSWLqr
-	 A0WoGUE9Jl4/ZZyBPQb/D5ZuntD7iJ3NvJsqUpN/b9cug5awmQiPHvS4BDWWUvGv8U
-	 ueqeMz8wO9/juT4EbxYul6e8gLbA+11yIqP0NCnRzsg7jW6mt90EBY9AXHiHAnQNCa
-	 db3ilOjkUZFPkGJiHzseDKsvy7Z8EH0DagQlmzpIKf6fuu8cW9i32UwNgYv9dFNGWX
-	 NwFcYY4CPx28A==
-Received: from debian-rockchip-rock5b-rk3588.. (unknown [90.168.160.154])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nanokatze)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CCB2617E09C6;
-	Thu,  3 Jul 2025 17:31:38 +0200 (CEST)
-From: Caterina Shablia <caterina.shablia@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com,
-	Caterina Shablia <caterina.shablia@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] drm/panthor: Add support for repeated mappings
-Date: Thu,  3 Jul 2025 15:29:00 +0000
-Message-ID: <20250703152908.16702-9-caterina.shablia@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250703152908.16702-2-caterina.shablia@collabora.com>
-References: <20250703152908.16702-2-caterina.shablia@collabora.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TeUJR3Hi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S8hPrxeF"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2536BEC019E;
+	Thu,  3 Jul 2025 11:32:32 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Thu, 03 Jul 2025 11:32:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751556752;
+	 x=1751643152; bh=ew8V1Wt0zqQcHxxoIg5sNu57Yffvi4a5WQBGLVx8qhI=; b=
+	TeUJR3HiGddMqqjV77VC9HGBhhaZ3k03dSlU7vhZd3VsPz2D/ehXYK9ligEVLJx5
+	O3kD/7/KQbd4t0dOsPy0V56aHQcmg2TZ5nb3iKvI9WY368eyLnzQTDDqp9mh1hxE
+	dHCCqWHiASU4A9hab6pDG9cR/CaOWm5aNT+IJPYjeEwpg1KaxoeoFXmtIPvbxYGN
+	xw7fQfs008OMbtJF6izzV1omuM8Whk/Z+cetp7XFw7Pi/6sZRIxkfq9Ts7KgYLkn
+	BuPO8Ae2Fes28kW8Dihcp1uBA3B0Sy+AxjLKxfF5q3HNeyV6OIWeDYjq/RHj92+0
+	5/GU+zBGjDAzxzdLEIfrYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751556752; x=
+	1751643152; bh=ew8V1Wt0zqQcHxxoIg5sNu57Yffvi4a5WQBGLVx8qhI=; b=S
+	8hPrxeFaptSKvtsK3AQk0Jx9iOmD4i7WVRJ5Bbvv0Zyn8S83p1SiUUl82b/O6TK8
+	r1yH6B66q17XGuj2vJX1xq6+IWC1C3vdLKhk3tj9EXUsNSrpDt9azhQgqCqaO13M
+	VqOLv2ROgmvY5Ecr/HdYypsnR54Z2y3SSUneCNsmPbWJ6E92hOdAhxcHGbQk1wie
+	vQ/Jjt+PVKKXZNkcy/mUe1ronZSCmK9F6EEAsi1iomkVT0rMOEIB2oy4k6DrZt+v
+	fBYlST1sWsxbs249cTywKUlXbHktYDpdh/NjjEPfJz25CsscKQnbZ7bJ5JQw/E9G
+	PCi67Fa05R1s0UDh/88dQ==
+X-ME-Sender: <xms:jqJmaEMPSu9mK9t3v8ceuIc0c1sweaZh3Ca0np3Uc8ofDp2_Vn2MlQ>
+    <xme:jqJmaK_N-N8C0rvvppZRNNmwERMxfQaiUW7NX1Ftf2Addwu-zN5B6PjlhVCUtnTG5
+    DWhMSb_3HFkbgvlBTk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvtdeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepsggvnhejudejsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtoh
+    epthhimheitdelsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtohepphhrrggshhgr
+    khgrrhdrmhgrhhgruggvvhdqlhgrugdrrhhjsegsphdrrhgvnhgvshgrshdrtghomhdprh
+    gtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhu
+    segvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheprghlvgigsehghhhith
+    hirdhfrhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodguth
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:jqJmaLQlbzw23tZap9l8GhAs0JzBTyEQZLGWYEzulH_bmtuHYuU6RQ>
+    <xmx:jqJmaMsxBrbRxBt_iARNlMFV-BSW1qoKljFXXwWAyCmAsgvZODfH_Q>
+    <xmx:jqJmaMdZxz60y-ioFEKplQ3W7pnTqOBiDVd_N3JQr4M0DWzse6agJw>
+    <xmx:jqJmaA2g5KvNstND4KvC6COqqAnDVYaOhL7XUz7lBpHmu5Um0qzveA>
+    <xmx:kKJmaCZHI53tiVjYm_Lc0S5bbd-RiP-rukW6qgy1aeTCRVT-UkD8pZ_U>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2ECB2700065; Thu,  3 Jul 2025 11:32:30 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Te44b159e2532e323
+Date: Thu, 03 Jul 2025 17:32:08 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Conor Dooley" <conor@kernel.org>,
+ "Ben Zong-You Xie" <ben717@andestech.com>
+Cc: "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Rob Herring" <robh@kernel.org>,
+ krzk+dt@kernel.org, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, tim609@andestech.com
+Message-Id: <352681c3-88ca-4122-9ad3-0a0ef33caf7b@app.fastmail.com>
+In-Reply-To: <20250611-tapeless-arson-a6ace3c42c00@spud>
+References: <20250602060747.689824-1-ben717@andestech.com>
+ <20250606-booth-icky-b416c1827a43@spud>
+ <aEbOLztcBsKs84pn@atctrx.andestech.com>
+ <20250609-donut-oozy-4dcc8b8a292d@spud>
+ <20250609-twiddling-clamp-eaa0dd2b1cad@spud>
+ <aEmrHPd7RxUSOLAY@atctrx.andestech.com>
+ <20250611-tapeless-arson-a6ace3c42c00@spud>
+Subject: Re: [PATCH v5 0/8] add Voyager board support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+On Wed, Jun 11, 2025, at 18:21, Conor Dooley wrote:
+> On Thu, Jun 12, 2025 at 12:13:16AM +0800, Ben Zong-You Xie wrote:
+>> On Mon, Jun 09, 2025 at 05:17:50PM +0100, Conor Dooley wrote:
+>> > > > > 
+>> > > > > Ball is in your court now, after rc1 make a tree and get it in
+>> > > > > linux-next, and then send a pr to soc@kernel.org with this new content.
+>> > > > > Perhaps the defconfig should go separately, I can take that one if you
+>> > > > > want.
+>
+>> > > > Thanks for your guidance on these patches. I will send a PR to
+>> > > > soc@kernel.org as you suggested.
+>> > > > 
+>> > > > For the defconfig patch, I'm happy for you to handle it. Just let me
+>> > > > know if there's anything specific you'd like me to include.
+>> > > 
+>> > > Okay, I picked it up on the basis that you'll send this all to Arnd for
+>> > > 6.17
+>> > 
+>> > Sorry, I think that was really poorly worded. I picked it up on the
+>> > basis that you're going to send the other patches in the series to Arnd
+>> > for 6.17.
+>> 
+>> According to the SoC maintainer documentation [1], I should send a
+>> patchset (not a PR) to soc@kernel.org. Since I'm not a submaintainer yet.
+>> I think I should not sent a PR to the main SoC maintainer. Is that right?
+>
+> I think you can send a PR and not worry about it.
+>
+>> Further, I have two questions about sending a patchset:   
+>> 1. Should I send v5 or start a new patchset?
+>> 2. Should I continue excluding the defconfig patch, as we discussed
+>>    previously? I think it should be included now.
+>
+> Arnd, you okay with a defconfig in the same branch as the dts/core
+> bindings for a new platform? I'll happily drop it from by branch if it
+> can all go as one.
 
-This allows us to optimize mapping of a relatively small
-portion of a BO over and over in a large VA range, which
-is useful to support Vulkan sparse bindings in an efficient
-way.
+Sorry I missed your question earlier, I finally got to it now as
+I am going through the pull requests in patchwork.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Co-developed-by: Caterina Shablia <caterina.shablia@collabora.com>
-Signed-off-by: Caterina Shablia <caterina.shablia@collabora.com>
----
- drivers/gpu/drm/panthor/panthor_drv.c |  3 +-
- drivers/gpu/drm/panthor/panthor_mmu.c | 78 ++++++++++++++++++++++++---
- include/uapi/drm/panthor_drm.h        | 23 ++++++++
- 3 files changed, 95 insertions(+), 9 deletions(-)
+Having the defconfig, MAINTAINERS and Kconfig updates in the branch
+for a new platform is fine, in this case it makes sense to keep
+everything together.
 
-diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-index 1116f2d2826e..585c07b07c42 100644
---- a/drivers/gpu/drm/panthor/panthor_drv.c
-+++ b/drivers/gpu/drm/panthor/panthor_drv.c
-@@ -1608,6 +1608,7 @@ static void panthor_debugfs_init(struct drm_minor *minor)
-  * - 1.3 - adds DRM_PANTHOR_GROUP_STATE_INNOCENT flag
-  * - 1.4 - adds DRM_IOCTL_PANTHOR_BO_SET_LABEL ioctl
-  * - 1.5 - adds DRM_PANTHOR_SET_USER_MMIO_OFFSET ioctl
-+ * - 1.6 - adds DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT flag
-  */
- static const struct drm_driver panthor_drm_driver = {
- 	.driver_features = DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ |
-@@ -1621,7 +1622,7 @@ static const struct drm_driver panthor_drm_driver = {
- 	.name = "panthor",
- 	.desc = "Panthor DRM driver",
- 	.major = 1,
--	.minor = 5,
-+	.minor = 6,
- 
- 	.gem_create_object = panthor_gem_create_object,
- 	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table,
-diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
-index a7852485e638..adea26985c31 100644
---- a/drivers/gpu/drm/panthor/panthor_mmu.c
-+++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-@@ -202,6 +202,9 @@ struct panthor_vm_op_ctx {
- 		/** @map.bo_offset: Offset in the buffer object. */
- 		u64 bo_offset;
- 
-+		/** @bo_repeat_range: Repeated BO range. */
-+		u32 bo_repeat_range;
-+
- 		/**
- 		 * @map.sgt: sg-table pointing to pages backing the GEM object.
- 		 *
-@@ -1007,6 +1010,26 @@ panthor_vm_map_pages(struct panthor_vm *vm, u64 iova, int prot,
- 	return 0;
- }
- 
-+static int
-+panthor_vm_repeated_map_pages(struct panthor_vm *vm, u64 iova, int prot,
-+			      struct sg_table *sgt, u64 offset, u64 size,
-+			      u64 count)
-+{
-+	/* FIXME: we really need to optimize this at the io_pgtable level. */
-+	for (u64 i = 0; i < count; i++) {
-+		int ret;
-+
-+		ret = panthor_vm_map_pages(vm, iova + (size * i), prot,
-+					   sgt, offset, size);
-+		if (ret) {
-+			panthor_vm_unmap_pages(vm, iova, size * (i - 1));
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int flags_to_prot(u32 flags)
- {
- 	int prot = 0;
-@@ -1203,12 +1226,14 @@ panthor_vm_op_ctx_prealloc_vmas(struct panthor_vm_op_ctx *op_ctx)
- 	(DRM_PANTHOR_VM_BIND_OP_MAP_READONLY | \
- 	 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC | \
- 	 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED | \
-+	 DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT | \
- 	 DRM_PANTHOR_VM_BIND_OP_TYPE_MASK)
- 
- static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 					 struct panthor_vm *vm,
- 					 struct panthor_gem_object *bo,
- 					 u64 offset,
-+					 u32 repeat_range,
- 					 u64 size, u64 va,
- 					 u32 flags)
- {
-@@ -1224,9 +1249,22 @@ static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 	    (flags & DRM_PANTHOR_VM_BIND_OP_TYPE_MASK) != DRM_PANTHOR_VM_BIND_OP_TYPE_MAP)
- 		return -EINVAL;
- 
--	/* Make sure the VA and size are aligned and in-bounds. */
--	if (size > bo->base.base.size || offset > bo->base.base.size - size)
--		return -EINVAL;
-+	if (!(flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT)) {
-+		/* Make sure the VA and size are aligned and in-bounds. */
-+		if (size > bo->base.base.size || offset > bo->base.base.size - size)
-+			return -EINVAL;
-+	} else {
-+		/* Make sure the repeat_range is in-bounds. */
-+		if (repeat_range > bo->base.base.size || offset > bo->base.base.size - repeat_range)
-+			return -EINVAL;
-+
-+		/* Make sure size is a multiple of repeat_range */
-+
-+		u64 repeat_count = size;
-+
-+		if (do_div(repeat_count, repeat_range))
-+			return -EINVAL;
-+	}
- 
- 	/* If the BO has an exclusive VM attached, it can't be mapped to other VMs. */
- 	if (bo->exclusive_vm_root_gem &&
-@@ -1295,6 +1333,7 @@ static int panthor_vm_prepare_map_op_ctx(struct panthor_vm_op_ctx *op_ctx,
- 		drm_gem_shmem_unpin(&bo->base);
- 
- 	op_ctx->map.bo_offset = offset;
-+	op_ctx->map.bo_repeat_range = repeat_range;
- 
- 	/* L1, L2 and L3 page tables.
- 	 * We could optimize L3 allocation by iterating over the sgt and merging
-@@ -2112,9 +2151,22 @@ static int panthor_gpuva_sm_step_map(struct drm_gpuva_op *op, void *priv)
- 
- 	panthor_vma_init(vma, op_ctx->flags & PANTHOR_VM_MAP_FLAGS);
- 
--	ret = panthor_vm_map_pages(vm, op->map.va.addr, flags_to_prot(vma->flags),
--				   op_ctx->map.sgt, op->map.gem.offset,
--				   op->map.va.range);
-+	if (op_ctx->flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT) {
-+		u64 repeat_count = op->map.va.range;
-+
-+		do_div(repeat_count, op->map.gem.range);
-+		ret = panthor_vm_repeated_map_pages(vm, op->map.va.addr,
-+						    flags_to_prot(vma->flags),
-+						    op_ctx->map.sgt,
-+						    op->map.gem.offset,
-+						    op->map.gem.range,
-+						    repeat_count);
-+	} else {
-+		ret = panthor_vm_map_pages(vm, op->map.va.addr,
-+					   flags_to_prot(vma->flags),
-+					   op_ctx->map.sgt, op->map.gem.offset,
-+					   op->map.va.range);
-+	}
- 	if (ret)
- 		return ret;
- 
-@@ -2237,7 +2289,7 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
- 
- 	switch (op_type) {
- 	case DRM_PANTHOR_VM_BIND_OP_TYPE_MAP: {
--		const struct drm_gpuvm_map_req map_req = {
-+		struct drm_gpuvm_map_req map_req = {
- 			.va.addr = op->va.addr,
- 			.va.range = op->va.range,
- 			.gem.obj = op->map.vm_bo->obj,
-@@ -2249,6 +2301,11 @@ panthor_vm_exec_op(struct panthor_vm *vm, struct panthor_vm_op_ctx *op,
- 			break;
- 		}
- 
-+		if (op->flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT) {
-+			map_req.flags |= DRM_GPUVA_REPEAT;
-+			map_req.gem.range = op->map.bo_repeat_range;
-+		}
-+
- 		ret = drm_gpuvm_sm_map(&vm->base, vm, &map_req);
- 		break;
- 	}
-@@ -2497,6 +2554,7 @@ panthor_vm_bind_prepare_op_ctx(struct drm_file *file,
- 		ret = panthor_vm_prepare_map_op_ctx(op_ctx, vm,
- 						    gem ? to_panthor_bo(gem) : NULL,
- 						    op->bo_offset,
-+						    op->bo_repeat_range,
- 						    op->size,
- 						    op->va,
- 						    op->flags);
-@@ -2698,7 +2756,11 @@ int panthor_vm_map_bo_range(struct panthor_vm *vm, struct panthor_gem_object *bo
- 	struct panthor_vm_op_ctx op_ctx;
- 	int ret;
- 
--	ret = panthor_vm_prepare_map_op_ctx(&op_ctx, vm, bo, offset, size, va, flags);
-+	/* TODO: would be nice to replace with assert instead */
-+	if (flags & DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT)
-+		return -EINVAL;
-+
-+	ret = panthor_vm_prepare_map_op_ctx(&op_ctx, vm, bo, offset, 0, size, va, flags);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
-index e1f43deb7eca..ad278bc234b0 100644
---- a/include/uapi/drm/panthor_drm.h
-+++ b/include/uapi/drm/panthor_drm.h
-@@ -496,6 +496,17 @@ enum drm_panthor_vm_bind_op_flags {
- 	 */
- 	DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED = 1 << 2,
- 
-+	/**
-+	 * @DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT: Repeat a BO range
-+	 *
-+	 * Only valid with DRM_PANTHOR_VM_BIND_OP_TYPE_MAP.
-+	 *
-+	 * When this is set, a BO range is repeated over the VA range.
-+	 * drm_panthor_vm_bind_op::bo_repeat_range defines the size of the
-+	 * BO range to repeat.
-+	 */
-+	DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT = 1 << 3,
-+
- 	/**
- 	 * @DRM_PANTHOR_VM_BIND_OP_TYPE_MASK: Mask used to determine the type of operation.
- 	 */
-@@ -560,6 +571,18 @@ struct drm_panthor_vm_bind_op {
- 	 */
- 	struct drm_panthor_obj_array syncs;
- 
-+	/**
-+	 * @bo_repeat_range: The size of the range to be repeated.
-+	 *
-+	 * Must be zero if DRM_PANTHOR_VM_BIND_OP_MAP_REPEAT is not set in
-+	 * flags.
-+	 *
-+	 * Size must be a multiple of bo_repeat_range.
-+	 */
-+	__u32 bo_repeat_range;
-+
-+	/** @pad: Padding field. MBZ. */
-+	__u32 pad;
- };
- 
- /**
--- 
-2.47.2
+I'm also planning to have multiple new SoC targets in 6.17 and
+would put them into a separate branch that does not contain the
+dts changes for the existing SoCs.
 
+For the pull request that Ben sent, there were a couple of
+mistakes, I'll reply on that separately. It probably would made
+more sense to send the patches to soc@lists.linux.dev (note
+that the soc@kernel.org address got renamed but they still
+both work) than to send a pull request this time.
+
+     Arnd
