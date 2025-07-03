@@ -1,271 +1,111 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7172E3AFD
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2432874E1;
+	Thu,  3 Jul 2025 11:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542669; cv=none; b=D4Juw6bUKreJ90SVydMTrXU5g+8HIuu3d+hMlYZEAdqmpiatakdyWnBNFn5tvmm3H0RRy6/6+yDCcdkNfMvV7M8z2VAyMaCL3sSQnf2yKWCu1nwcO9XGibY9GCA/Eu1HGVcxzUPoNnBChrz0hErbojFcMFOmiKr48qRh+NBeT+Q=
+	t=1751542702; cv=none; b=ECb+hdWkmSt8WI6Ulh7R4rclPc8DhWgfNf1hBghMFIx9GnTgMAOnMthXOUige49felBC7mRGPeUrb/f1gWus49oFrXwf3dNyyQLMTnoYTxPjVj+TPek7dubdYV4uD2FoRFmkOY/HK2SxrIHswxJ/kkDjFi+vuXmScLBA6n2XwNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542669; c=relaxed/simple;
-	bh=evYGdWXWw+/6PRQoXuVCrMVKNTai1x93mZvTubwFAMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=rLt1ONL3+drls1GOxMu1WLjlflLO4n6uwDnmWSppRuk0UOBsZVQfd/AewIAaf89gc/hjpZWMqBFlnCujViwrHVG7zO7tRxs4yl6MVFuOSLU+0OhY5jPTH5TzRjwmbBa4mqEW24ZHyLTGJBqOKajdWqyBZkNvcD2bVTku33lJpog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fTHWtAb9; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751542702; c=relaxed/simple;
+	bh=5R6ckhkY2hESttOY9KT338PgWgQIq75EHvFlZEgFiuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mhXIyaHrX5A0fG/atiW3IZhWD1pU8jOB/woy9TYM0T0nYRbMSPLv2bPYdfAuwYNeXEBlhrVdw5TuNTWQLl4t0ExisriyEjSnDlCU2OqvPnqk0RNZGEsFSIq8ejUjglA7MhT/rMM+gxz+46HI3XEHmQ//zzRKGB+dE3VAeBURYao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ii9ZITgk; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fTHWtAb9"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250703113745euoutp02a3ab0566edced2857d32262eba3b28a2~OusYqZ7bw2882828828euoutp02H
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:37:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250703113745euoutp02a3ab0566edced2857d32262eba3b28a2~OusYqZ7bw2882828828euoutp02H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751542665;
-	bh=IaUSrP5vF7c7LGO5H4Eij7O+D07WlO1LwH0IQDoV9Z8=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=fTHWtAb9YYu5inKO0J3HoW674ZkV25N5g2HW/kyUJ50zhaNeytdMrVsog2TjpZqdG
-	 Jj0WC7gFvDyT+IEt+0PceeUd8tVS+W8U4ugRgC6jAbNCcnsF/1vOlJdsKktQ6zK0Bx
-	 CrQg+OofpOOAJosMNakVfLKwYgn6YHGLQqR8QFR8=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250703113744eucas1p157ec555de6855afe8b1d1280030fc06d~OusX8uDZc2942729427eucas1p1O;
-	Thu,  3 Jul 2025 11:37:44 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250703113743eusmtip18065c1273aae5e6af7f4987e4c46d79b~OusW4AM3g1070910709eusmtip1C;
-	Thu,  3 Jul 2025 11:37:43 +0000 (GMT)
-Message-ID: <6d9ce601-b81e-4c2a-b9c3-4cba6fa87b8b@samsung.com>
-Date: Thu, 3 Jul 2025 13:37:43 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii9ZITgk"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86a052d7897so689571839f.0;
+        Thu, 03 Jul 2025 04:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751542700; x=1752147500; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OCtxfijaVm+CdySvz4wp4lXx6NKzCfTR5tSHGOmQuhM=;
+        b=ii9ZITgk/jRJK6O+w8Q89wGZCAMNjwWsBA1fRuY8hdYxmPY1bMBMlobbypCSofOtf4
+         vqSt8NNI99ateUqeH4vTChYHwtESCL+58PDthqAxVeq7xP5C+H+qyMRXA/H5cOHPYkQk
+         THXzaLDb947yDGBiYpRa1WXBhDi0+HDOYpzTVenhAdjeMZVjNvEqYJyhQgKITfUtFT+c
+         2ByYMRkvmK97u02bFCYsK7F40hAgXkuR4GbGAz+dbS/FZ8Z8ttINbJYg6VikopBhWjnT
+         WyEorUVFTrf/rJwXMOLyGFYLtIlrqZCUbcdVsF2nYXtKNbvGNz2tTM7D/4dnPA5xGLc7
+         Hbtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751542700; x=1752147500;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OCtxfijaVm+CdySvz4wp4lXx6NKzCfTR5tSHGOmQuhM=;
+        b=sL36LOUuGtdTxt6aeOTX4VN0sGwfC8CI5MfY/aqTO/NkiW0ctCuB4ngQdWgGh4sUUA
+         /OBFubm/60A45kIOSC29bZBvylvU1zaE4wlGfQ5FdmLibbOFUKSI2Y8XcgCgKCLU2mhq
+         QSARzWTwjg547oTLpdCEr67ul3mo9wA/uGfcZ6Xao3pC0anq6962DXLtVQ/UHZF6lYXA
+         pXwseJXDa0HmJdQR/JnlIT9Nn+EJ0zDavpenjjQsfHqEPNOT9AqyRZ/tMcX/myDminms
+         xAL/MFYIWWye4XR0vDOf/h2bXmrw/0Zk0+AB2CSlsETrmvhiVnPwQ+/+eOP++y9jZNN3
+         qfiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkLZJoRt0nzEH+6Tkkk/d9xRa9YjdycrCXyXPAlaFBK4qCBRWQI9PumYlFrFzRYCoehrhqSOw3LWGe@vger.kernel.org, AJvYcCXDndjQiTese81+sH9CRt679jxDpvKav6XKNnQXCshYopaTBJBtdTMrnbQ7MjBH3bHnTFDn4qnLzIf0dQgY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznz+v/0gCJxXvXkGe5tEzd6Ygv6BA1yYR9lbiwir64eCj8RiOM
+	z/PAVj4WGaQ05fBqcTyhSMUqX2LxhdSocLeiHRYuYEnoxc26rD4KKxa98fJ2Lw==
+X-Gm-Gg: ASbGncuurD6vvC+TF0bqkGkKW4oEZRCZe1t7s9mBnjmCW+mt16Mf8rUeq52RIMxUiqI
+	u631mjOeHj4pRVdpd3iZaeCKJSco4fu5w4HntJZa9ADSbiD/O7Lrnohg2fXZznz9VhoZEkdTL13
+	Ve8XFb70wFRD4fhcCtg5y8v4g8Apg5hEzBm69VXmrsLI9gOc7HhiIpPBMSlvE4LPsq0q1YucE/d
+	o+0ZOfiS0P3Y53sYFhuRIKGigxghyr9eXPriz9H0lI0zck+g1o/EIkJcegbl32ep19idubleK7W
+	HEz3J4MTjf74H2pQ98osbN3cglPWkrfBgF5ASOTFbAA+njwqMJ2lphk80xUmK472BZGVZcs2cHL
+	wT+pPI4uV7KvzxpprUTiUxQUUl73f5mlwaJcbThjdGUsdpxI=
+X-Google-Smtp-Source: AGHT+IHog5B1MQo5B5fqSCOuRreuMqfrr3E0s/Y/+iP0IZARhEP16EmHsjUPLaXR/JQcDkES5v7T1w==
+X-Received: by 2002:a05:6602:6003:b0:876:5527:fe2a with SMTP id ca18e2360f4ac-876c6a6fd54mr836261839f.11.1751542700238;
+        Thu, 03 Jul 2025 04:38:20 -0700 (PDT)
+Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a57456sm3483544173.72.2025.07.03.04.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 04:38:19 -0700 (PDT)
+From: Adam Ford <aford173@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com,
+	Adam Ford <aford173@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/2] arm64: dts: imx8mm: Configure DMA on UART2
+Date: Thu,  3 Jul 2025 06:38:09 -0500
+Message-ID: <20250703113810.73023-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/8] rust: pwm: Add core 'Device' and 'Chip' object
- wrappers
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Drew Fustini <fustini@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aGVMnmoepIVSS0yK@pollux>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250703113744eucas1p157ec555de6855afe8b1d1280030fc06d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6
-X-EPHeader: CA
-X-CMS-RootMailID: 20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6
-References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
-	<CGME20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6@eucas1p1.samsung.com>
-	<20250702-rust-next-pwm-working-fan-for-sending-v7-3-67ef39ff1d29@samsung.com>
-	<aGVMnmoepIVSS0yK@pollux>
+Content-Transfer-Encoding: 8bit
 
+UART2 is often used as the console, so the DMA was likely left
+off on purpose, since it's recommended to not use the DMA on the
+console. Because, the driver checks to see if the UART is used for
+the console when determining if it should initialize DMA, it
+should be safe to enable DMA on UART2 for all users.
 
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+V2:  Fix spelling errors in commit message
 
-On 7/2/25 17:13, Danilo Krummrich wrote:
-> On Wed, Jul 02, 2025 at 03:45:31PM +0200, Michal Wilczynski wrote:
->> Building on the basic data types, this commit introduces the central
->> object abstractions for the PWM subsystem: Device and Chip. It also
->> includes the core trait implementations that make the Chip wrapper a
->> complete, safe, and managed object.
->>
->> The main components of this change are:
->>  - Device and Chip Structs: These structs wrap the underlying struct
->>    pwm_device and struct pwm_chip C objects, providing safe, idiomatic
->>    methods to access their fields.
->>
->>  - High-Level `Device` API: Exposes safe wrappers for the modern
->>    `waveform` API, allowing consumers to apply, read, and pre-validate
->>    hardware configurations.
->>
->>  - Core Trait Implementations for Chip:
->>     - AlwaysRefCounted: Links the Chip's lifetime to its embedded
->>       struct device reference counter. This enables automatic lifetime
->>       management via ARef.
->>     - Send and Sync: Marks the Chip wrapper as safe for use across
->>       threads. This is sound because the C core handles all necessary
->>       locking for the underlying object's state.
->>
->> These wrappers and traits form a robust foundation for building PWM
->> drivers in Rust.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> 
-> Few more comments below, with those fixed:
-> 
-> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> 
->> +/// Wrapper for a PWM device [`struct pwm_device`](srctree/include/linux/pwm.h).
->> +#[repr(transparent)]
->> +pub struct Device(Opaque<bindings::pwm_device>);
->> +
->> +impl Device {
-> 
-> <snip>
-> 
->> +    /// Gets a reference to the parent `Chip` that this device belongs to.
->> +    pub fn chip(&self) -> &Chip {
->> +        // SAFETY: `self.as_raw()` provides a valid pointer. (*self.as_raw()).chip
->> +        // is assumed to be a valid pointer to `pwm_chip` managed by the kernel.
->> +        // Chip::as_ref's safety conditions must be met.
->> +        unsafe { Chip::as_ref((*self.as_raw()).chip) }
-> 
-> I assume the C API does guarantee that a struct pwm_device *always* holds a
-> valid pointer to a struct pwm_chip?
-> 
->> +
->> +/// Wrapper for a PWM chip/controller ([`struct pwm_chip`](srctree/include/linux/pwm.h)).
->> +#[repr(transparent)]
->> +pub struct Chip(Opaque<bindings::pwm_chip>);
->> +
->> +impl Chip {
->> +    /// Creates a reference to a [`Chip`] from a valid pointer.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
->> +    /// returned [`Chip`] reference.
->> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> &'a Self {
->> +        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
->> +        // `Chip` type being transparent makes the cast ok.
->> +        unsafe { &*ptr.cast::<Self>() }
->> +    }
->> +
->> +    /// Returns a raw pointer to the underlying `pwm_chip`.
->> +    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
->> +        self.0.get()
->> +    }
->> +
->> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
->> +    pub fn npwm(&self) -> u32 {
->> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
->> +        unsafe { (*self.as_raw()).npwm }
->> +    }
->> +
->> +    /// Returns `true` if the chip supports atomic operations for configuration.
->> +    pub fn is_atomic(&self) -> bool {
->> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
->> +        unsafe { (*self.as_raw()).atomic }
->> +    }
->> +
->> +    /// Returns a reference to the embedded `struct device` abstraction.
->> +    pub fn device(&self) -> &device::Device {
->> +        // SAFETY: `self.as_raw()` provides a valid pointer to `bindings::pwm_chip`.
->> +        // The `dev` field is an instance of `bindings::device` embedded within `pwm_chip`.
->> +        // Taking a pointer to this embedded field is valid.
->> +        // `device::Device` is `#[repr(transparent)]`.
->> +        // The lifetime of the returned reference is tied to `self`.
->> +        let dev_field_ptr = unsafe { core::ptr::addr_of!((*self.as_raw()).dev) };
-> 
-> I think you can use `&raw` instead.
-> 
->> +        // SAFETY: `dev_field_ptr` is a valid pointer to `bindings::device`.
->> +        // Casting and dereferencing is safe due to `repr(transparent)` and lifetime.
->> +        unsafe { &*(dev_field_ptr.cast::<device::Device>()) }
-> 
-> Please use Device::as_ref() instead.
-> 
->> +    }
->> +
->> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
->> +    pub fn drvdata<T: 'static>(&self) -> &T {
-> 
-> You need to make the whole Chip structure generic over T, i.e.
-> Chip<T: ForeignOwnable>.
-> 
-> Otherwise the API is unsafe, since the caller can pass in any T when calling
-> `chip.drvdata()` regardless of whether you actually stored as private data
-> through Chip::new().
-
-You were right that the original drvdata<T>() method was unsafe. The
-most direct fix, making Chip generic to Chip<T>, unfortunately creates a
-significant cascade effect:
-
-- If Chip becomes Chip<T>, then anything holding it, like ARef, must
-  become ARef<Chip<T>>.
-
-- This in turn forces container structs like Registration to become
-  generic (Registration<T>).
-
-- Finally, the PwmOps trait itself needs to be aware of T, which
-  complicates the trait and all driver implementations.
-
-This chain reaction adds a lot of complexity. To avoid it, I've
-figured an alternative:
-
-The new idea keeps Chip simple and non generic but ensures type safety
-through two main improvements to the abstraction layer:
-
-1. A Thread Safe DriverData Wrapper
-
-The pwm.rs module now provides a generic pwm::DriverData<T> struct. Its
-only job is to wrap the driver's private data and provide the necessary
-unsafe impl Send + Sync.
-
-// In `rust/kernel/pwm.rs`
-// SAFETY: The contained data is guaranteed by the kernel to have
-// synchronized access during callbacks.
-pub struct DriverData<T>(T);
-unsafe impl<T: Send> Send for DriverData<T> {}
-unsafe impl<T: Sync> Sync for DriverData<T> {}
-
-// In the driver's `probe` function
-let safe_data = pwm::DriverData::new(Th1520PwmDriverData{ });
-
-2. A More Ergonomic PwmOps Trait
-
-The PwmOps trait methods now receive the driver's data directly as
-&self, which is much more intuitive. We achieve this by providing a
-default associated type for the data owner, which removes boilerplate
-from the driver.
-
-// In `rust/kernel/pwm.rs`
-pub trait PwmOps: 'static + Sized {
-    type Owner: Deref<Target = DriverData<Self>> + ForeignOwnable =
-        Pin<KBox<DriverData<Self>>>;
-    /// For now I'm getting compiler error here: `associated type defaults are unstable`
-    /// So the driver would need to specify this for now, until this feature
-    /// is stable
-
-
-    // Methods now receive `&self`, making them much cleaner to implement.
-    fn round_waveform_tohw(&self, chip: &Chip, pwm: &Device, wf: &Waveform) -> Result<...>;
-}
-
-// In the driver
-impl pwm::PwmOps for Th1520PwmDriverData {
-    type WfHw = Th1520WfHw;
-
-    fn round_waveform_tohw(&self, chip: &pwm::Chip, ...) -> Result<...> {
-        // no drvdata() call here :-)
-        let rate_hz = self.clk.rate().as_hz();
-        // ...
-    }
-}
-
-This solution seem to address to issue you've pointed (as the user of
-the API never deals with drvdata directly at this point), while making
-it easier to develop PWM drivers in Rust.
-
-Please let me know what you think.
-
-Best regards,
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index cfebaa01217e..ded89b046970 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -915,6 +915,8 @@ uart2: serial@30890000 {
+ 					clocks = <&clk IMX8MM_CLK_UART2_ROOT>,
+ 						 <&clk IMX8MM_CLK_UART2_ROOT>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma1 24 4 0>, <&sdma1 25 4 0>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+ 			};
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+2.48.1
+
