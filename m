@@ -1,2708 +1,8196 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A15230BC2;
-	Thu,  3 Jul 2025 17:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C062550A3
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 17:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751565115; cv=none; b=SSLee/SAt9qQwR3mzVdmhHmwMY6fUoKWAlsSxDe5xZ3aehOtBmJjeUtBTQL/VYXccu+zTMD96MZzdeQ8pDf9wAnFz4+4NLk7ZsW82RG8Slg87KanK0pIKidhNkHGqcVMm7uloH4PxoJb5+GzF856LUNoLZiLUyPqbqQebQ+DEpU=
+	t=1751565122; cv=none; b=jDz9W5Su8z/1wq+CSrZ1FoWsvsJpZTcvZ3zT6r1xDf/S9084CvRGLKPJpGXvmgrFexqNZSMqyaeClbHdd+1l2jV0hhAyffLkLnHwZAqCpmwFAalEolNqTX927JpvboWjF6I69TEoAyxCvEIyAZNX1zoEeYT+hSFAoo8aJ644Wnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751565115; c=relaxed/simple;
-	bh=Krzf/EUV86VedEtRYW1YxQkM0rlFJJQTskLguN+ubDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGjWNBCZAX49irmGf2CNhF22rgiid1M7K0za2HiIQkNrSaDjOZB6SbgS6fGH6Uu1WStBnb6NSU7O8PyY0oOuEZ36Rv6XbGwrxDC8um++eFkMP4ZqvFu1zL7Q3ruo6uSp8pKMK0cjtOJhCp5WR+uMKO0dKj2IqvWPYyC+74ysmoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tsEZFycH; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751565122; c=relaxed/simple;
+	bh=Qlpbld2et/GIqVQai+3EpWnDmLisrHad0meRJtE/Y4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QnYluD3U93sqzMs+i47pc/rftOh9lkLUjjLOsTvZNKDHyv19E1UZ2BMa+MEBUqLLlEwEMp/a880D9HqMYqxa6z6aoR/wYED8QpVw2eOc8sCbMbmf0UScoSW2JndodFugatCZLls6SOl5sDv1JNBukdz52rkhxzouGpHIfG1WJ4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=V55JoZ/1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tsEZFycH"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 9D9BD6DE;
-	Thu,  3 Jul 2025 19:51:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751565085;
-	bh=Krzf/EUV86VedEtRYW1YxQkM0rlFJJQTskLguN+ubDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tsEZFycHE8EKEz/wP7aVMoJojplstZPZ8X4nVATuxItXVhvk46zqR1z46gQuFc8ih
-	 bc91pKy4NaZ5jOP+EcaE7zmsXa+91LTqZGHXVlnew0+cwfaGAHBNoSllIeQ5danfMr
-	 4E+9ilWMwABDY04OikePH6LA0YZGLJx27FjMqKnQ=
-Date: Thu, 3 Jul 2025 20:51:21 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Will Whang <will@willwhang.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:SONY IMX585 SENSOR DRIVER" <linux-media@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v1 3/4] media: i2c: imx585: Add Sony IMX585 image-sensor
- driver
-Message-ID: <20250703175121.GA17709@pendragon.ideasonboard.com>
-References: <20250702063836.3984-1-will@willwhang.com>
- <20250702063836.3984-4-will@willwhang.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="V55JoZ/1"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563FZqGY032540
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Jul 2025 17:51:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=fzLn9wYDl6AKWHNfdVFevbUcVJOCM51vWGD
+	XuX6b5es=; b=V55JoZ/1zxVWi2S6aRYJwQ4irIXwtvB42WJ1Y3ZwA1qmKbB2Z/K
+	jNKPDhEz+s2ZfNBOrQW1dCAfevqHWfCKOhn04/EyJOe8BY+tmJMFVoFfCpYRqtzj
+	GLHkm6QioMh4ap8xWYvrC1XEEb24KQ1RwOI9ANNn5b6f+SisS3aZsuZ+/kix5clV
+	Q47OTlYXsWNxXUkjywd4Dp7PZfI2JUL3aIihMF6w0Bt/J6epKmoQymmWKPLeS/ve
+	ciE5JMrnozTt3GrxRpR9fac6GjLmJgei1MaQSWrcUmMOuePofn/dFrzUjcMms7Qm
+	MQRl1EwwzEu0oEW8mCKuNWPHWcIDt9gpaww==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63khk9g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 17:51:44 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-31215090074so279336a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 10:51:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751565104; x=1752169904;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fzLn9wYDl6AKWHNfdVFevbUcVJOCM51vWGDXuX6b5es=;
+        b=uFTUnqmgBfVPVremzHRtYFHc7kCFFBwUZYG7Se4EfeAdehSwLIaS3nvt4uT4AykQXS
+         s0JGOPyxVls3XdJKX0nEhzXSQ7/MAE/IZXwojsLfDAICAB5w0z/8UA038q+zXdcbvjdn
+         Mje763t/N+9cKfHwxoOgqsCnZGUzqH/GCVZu7mptG7YuoX+IwyTnfFZUb8V+HJSuZIYu
+         q0Iu2hupxk8qzhzvHIYPEHpPs+Ep5APQayTkM1kHUv8sUrVk1Yy1PAv0V3Ggglt95fXc
+         Gdt7qerSQt8q53qRFqCYwGyZ032wtL61j9PLIddWLY8+yrJNG0+3hZtei7E99sEi2fMf
+         4Rhw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6iynbh0E0AHsx2H3zyk88khDuGGcReYswcOEhcA8Jg6BXLR503EWjcDcChO7lAp4nndB1RNa9SBsqM6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygvlj8ewzsB4+eLorm30RRyeNzyTa9xXqosoptzCy38842a8Vu
+	w0YK1nxrlzfx61BlYAg4nC97oQ13aUZMF1W66nwhwrUBMca5X6ebSRKgAqFU8aSQOc4BaujSiHQ
+	6fHW/w8c4NnZ63pnEj+T2orTUT7w+hHdwBy8yMNkpOlq7gTSJh1vykG83HNhsY3Ac/5k=
+X-Gm-Gg: ASbGncv0+nX26FoS0YGb0uUTtR1fnGsOr/R9MI1xfuBERjt32KtVjCqSk/yZXVQ7gem
+	DG/Ler8chxMXVinnwvdBOyWTPzv6N8dQI91H9lHWXgGIRAbC+BO+RKUuI2ynw8tzwYRKMKLFmz0
+	xujJko0fYZhGC9sTnBnRbsWwuGXlxBwcp8cffhVDXgcG/4N3nP8GAS02nNLV9DItMNGQH0Pwlex
+	V7m3/Q8Khf0lv2DuJIoAXLbPhkhOO3P6G73SeZSBoCnv0MAAXi5vANI5U/bZiZFC58puN8oVit2
+	v0FNcXR17WLkZF+3KZLAC0OBPzUldIr+XQ==
+X-Received: by 2002:a17:90b:2752:b0:312:1b53:5e9f with SMTP id 98e67ed59e1d1-31a90bed455mr11423693a91.24.1751565102525;
+        Thu, 03 Jul 2025 10:51:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGt6KmY6nFZRSDUFFGUx/gNx5IREmhIZpGYGQaIIp7rqCD62ZCIcvT5LMd2oTpL2cyR9WG2+w==
+X-Received: by 2002:a17:90b:2752:b0:312:1b53:5e9f with SMTP id 98e67ed59e1d1-31a90bed455mr11423519a91.24.1751565100602;
+        Thu, 03 Jul 2025 10:51:40 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cd1f56bsm2845793a91.45.2025.07.03.10.51.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 10:51:39 -0700 (PDT)
+From: Rob Clark <robin.clark@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm: Update register xml
+Date: Thu,  3 Jul 2025 10:51:19 -0700
+Message-ID: <20250703175125.598687-1-robin.clark@oss.qualcomm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702063836.3984-4-will@willwhang.com>
-
-Hi Will,
-
-Thank you for the patch.
-
-Here's a first review, focussing on API usage and coding style.
-
-On Wed, Jul 02, 2025 at 07:38:35AM +0100, Will Whang wrote:
-> Implements support for:
->   * 4-lane / 2-lane CSI-2
->   * 12-bit linear, 12-bit HDR-GC and 16-bit Clear-HDR modes
->   * Mono variant switch, HCG, custom HDR controls
->   * Tested on Raspberry Pi 4/5 with 24 MHz XCLK.
-> 
-> Signed-off-by: Will Whang <will@willwhang.com>
-> ---
->  drivers/media/i2c/Kconfig  |    9 +
->  drivers/media/i2c/Makefile |    1 +
->  drivers/media/i2c/imx585.c | 2466 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 2476 insertions(+)
->  create mode 100644 drivers/media/i2c/imx585.c
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index e68202954..34eb1c19a 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -266,6 +266,15 @@ config VIDEO_IMX415
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called imx415.
->  
-> +config VIDEO_IMX585
-> +       tristate "Sony IMX585 sensor support"
-> +       help
-> +          This is a Video4Linux2 sensor driver for the Sony
-> +          IMX585 camera.
-> +
-> +          To compile this driver as a module, choose M here: the
-> +          module will be called imx585.
-> +
->  config VIDEO_MAX9271_LIB
->  	tristate
->  
-> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> index 5873d2943..887d19ca7 100644
-> --- a/drivers/media/i2c/Makefile
-> +++ b/drivers/media/i2c/Makefile
-> @@ -59,6 +59,7 @@ obj-$(CONFIG_VIDEO_IMX335) += imx335.o
->  obj-$(CONFIG_VIDEO_IMX355) += imx355.o
->  obj-$(CONFIG_VIDEO_IMX412) += imx412.o
->  obj-$(CONFIG_VIDEO_IMX415) += imx415.o
-> +obj-$(CONFIG_VIDEO_IMX585) += imx585.o
->  obj-$(CONFIG_VIDEO_IR_I2C) += ir-kbd-i2c.o
->  obj-$(CONFIG_VIDEO_ISL7998X) += isl7998x.o
->  obj-$(CONFIG_VIDEO_KS0127) += ks0127.o
-> diff --git a/drivers/media/i2c/imx585.c b/drivers/media/i2c/imx585.c
-> new file mode 100644
-> index 000000000..2c4212290
-> --- /dev/null
-> +++ b/drivers/media/i2c/imx585.c
-> @@ -0,0 +1,2466 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * A V4L2 driver for Sony imx585 cameras.
-> + *
-> + * Based on Sony imx477 camera driver
-> + * Copyright (C) 2019-2020 Raspberry Pi (Trading) Ltd
-> + * Modified by Will WHANG
-> + * Modified by sohonomura2020 in Soho Enterprise Ltd.
-> + */
-
-Please add a blank line here.
-
-
-> +#include <linux/unaligned.h>
-
-And move this lower to keep include statements sorted alphabetically.
-
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-event.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-mediabus.h>
-> +
-> +// Support for rpi kernel pre git commit 314a685
-
-We yse C-style comments only. Please update the comment style through
-the driver.
-
-> +#ifndef MEDIA_BUS_FMT_SENSOR_DATA
-> +#define MEDIA_BUS_FMT_SENSOR_DATA       0x7002
-> +#endif
-
-That's for the downstream Raspberry Pi kernel, but is not applicable to
-upstream. We're working on an upstream API for embedded data, see
-https://lore.kernel.org/linux-media/20250619115836.1946016-1-sakari.ailus@linux.intel.com/.
-
-I recommend dropping embedded data support first, as the API isn't
-available upstream yet, and adding it back as a separate patch.
-
-> +
-> +#define V4L2_CID_IMX585_HDR_DATASEL_TH   (V4L2_CID_USER_IMX585_BASE + 0)
-> +#define V4L2_CID_IMX585_HDR_DATASEL_BK   (V4L2_CID_USER_IMX585_BASE + 1)
-> +#define V4L2_CID_IMX585_HDR_GRAD_TH      (V4L2_CID_USER_IMX585_BASE + 2)
-> +#define V4L2_CID_IMX585_HDR_GRAD_COMP_L  (V4L2_CID_USER_IMX585_BASE + 3)
-> +#define V4L2_CID_IMX585_HDR_GRAD_COMP_H  (V4L2_CID_USER_IMX585_BASE + 4)
-> +#define V4L2_CID_IMX585_HDR_GAIN         (V4L2_CID_USER_IMX585_BASE + 5)
-> +#define V4L2_CID_IMX585_HCG_GAIN         (V4L2_CID_USER_IMX585_BASE + 6)
-> +
-> +/* Standby or streaming mode */
-> +#define IMX585_REG_MODE_SELECT          0x3000
-> +#define IMX585_MODE_STANDBY             0x01
-> +#define IMX585_MODE_STREAMING           0x00
-> +#define IMX585_STREAM_DELAY_US          25000
-> +#define IMX585_STREAM_DELAY_RANGE_US    1000
-> +
-> +/*
-> + * Initialisation delay between XCLR low->high and the moment when the sensor
-> + * can start capture (i.e. can leave software standby)
-> + */
-> +#define IMX585_XCLR_MIN_DELAY_US    500000
-> +#define IMX585_XCLR_DELAY_RANGE_US  1000
-> +
-> +/* Leader mode and XVS/XHS direction */
-> +#define IMX585_REG_XMSTA     0x3002
-> +#define IMX585_REG_XXS_DRV   0x30A6
-
-Please use lower-case for hex constants.
-
-> +#define IMX585_REG_EXTMODE   0x30CE
-> +#define IMX585_REG_XXS_OUTSEL 0x30A4
-> +
-> +/*XVS pulse length, 2^n H with n=0~3*/
-
-Missing space after /* and before */. Please update other locations as
-appropriate.
-
-> +#define IMX585_REG_XVSLNG    0x30CC
-> +/*XHS pulse length, 16*(2^n) Clock with n=0~3*/
-> +#define IMX585_REG_XHSLNG    0x30CD
-> +
-> +/* Clk selection */
-> +#define IMX585_INCK_SEL                 0x3014
-> +
-> +/* Link Speed */
-> +#define IMX585_DATARATE_SEL             0x3015
-> +
-> +/* BIN mode */
-> +/* 2x2 Bin mode selection, 0x01 => Mono, 0x00 => Color */
-> +#define IMX585_BIN_MODE                 0x3019
-> +
-> +/* Lane Count */
-> +#define IMX585_LANEMODE                 0x3040
-> +
-> +/* VMAX internal VBLANK*/
-> +#define IMX585_REG_VMAX                 0x3028
-> +#define IMX585_VMAX_MAX                 0xfffff
-> +#define IMX585_VMAX_DEFAULT             2250
-> +
-> +/* HMAX internal HBLANK*/
-> +#define IMX585_REG_HMAX                 0x302C
-> +#define IMX585_HMAX_MAX                 0xffff
-> +
-> +/* SHR internal */
-> +#define IMX585_REG_SHR                  0x3050
-> +#define IMX585_SHR_MIN                  8
-> +#define IMX585_SHR_MIN_HDR              10
-> +#define IMX585_SHR_MAX                  0xfffff
-> +
-> +/* Exposure control */
-> +#define IMX585_EXPOSURE_MIN             2
-> +#define IMX585_EXPOSURE_STEP            1
-> +#define IMX585_EXPOSURE_DEFAULT         1000
-> +#define IMX585_EXPOSURE_MAX             49865
-> +
-> +/* HDR threshold */
-> +#define IMX585_REG_EXP_TH_H             0x36D0
-> +#define IMX585_REG_EXP_TH_L             0x36D4
-> +#define IMX585_REG_EXP_BK               0x36E2
-> +
-> +/* Gradation compression control */
-> +#define IMX595_REG_CCMP_EN              0x36EF
-> +#define IMX585_REG_CCMP1_EXP            0x36E8
-> +#define IMX585_REG_CCMP2_EXP            0x36E4
-> +#define IMX585_REG_ACMP1_EXP            0x36EE
-> +#define IMX585_REG_ACMP2_EXP            0x36EC
-> +
-> +/* HDR Gain Adder */
-> +#define IMX585_REG_EXP_GAIN             0x3081
-> +
-> +/* Black level control */
-> +#define IMX585_REG_BLKLEVEL             0x30DC
-> +#define IMX585_BLKLEVEL_DEFAULT         50
-> +
-> +/* Digital Clamp */
-> +#define IMX585_REG_DIGITAL_CLAMP        0x3458
-> +
-> +/* Analog gain control */
-> +#define IMX585_REG_ANALOG_GAIN          0x306C
-> +#define IMX585_REG_FDG_SEL0             0x3030
-> +#define IMX585_ANA_GAIN_MIN_NORMAL      0
-> +#define IMX585_ANA_GAIN_MIN_HCG         34
-> +#define IMX585_ANA_GAIN_MAX_HDR         80
-> +#define IMX585_ANA_GAIN_MAX_NORMAL      240
-> +#define IMX585_ANA_GAIN_STEP            1
-> +#define IMX585_ANA_GAIN_DEFAULT         0
-> +
-> +/* Flip */
-> +#define IMX585_FLIP_WINMODEH            0x3020
-> +#define IMX585_FLIP_WINMODEV            0x3021
-> +
-> +/* Embedded metadata stream structure */
-> +#define IMX585_EMBEDDED_LINE_WIDTH      16384
-> +#define IMX585_NUM_EMBEDDED_LINES       1
-> +
-> +#define IMX585_PIXEL_RATE               74250000
-> +
-> +enum pad_types {
-> +	IMAGE_PAD,
-> +	METADATA_PAD,
-> +	NUM_PADS
-> +};
-> +
-> +/* imx585 native and active pixel array size. */
-> +#define IMX585_NATIVE_WIDTH         3856U
-> +#define IMX585_NATIVE_HEIGHT        2180U
-> +#define IMX585_PIXEL_ARRAY_LEFT     8U
-> +#define IMX585_PIXEL_ARRAY_TOP      8U
-> +#define IMX585_PIXEL_ARRAY_WIDTH    3840U
-> +#define IMX585_PIXEL_ARRAY_HEIGHT   2160U
-> +
-> +/* Link frequency setup */
-> +enum {
-> +	IMX585_LINK_FREQ_297MHZ,  // 594Mbps/lane
-> +	IMX585_LINK_FREQ_360MHZ,  // 720Mbps/lane
-> +	IMX585_LINK_FREQ_445MHZ,  // 891Mbps/lane
-> +	IMX585_LINK_FREQ_594MHZ,  // 1188Mbps/lane
-> +	IMX585_LINK_FREQ_720MHZ,  // 1440Mbps/lane
-> +	IMX585_LINK_FREQ_891MHZ,  // 1782Mbps/lane
-> +	IMX585_LINK_FREQ_1039MHZ, // 2079Mbps/lane
-> +	IMX585_LINK_FREQ_1188MHZ, // 2376Mbps/lane
-> +};
-> +
-> +static const u8 link_freqs_reg_value[] = {
-> +	[IMX585_LINK_FREQ_297MHZ]  = 0x07,
-> +	[IMX585_LINK_FREQ_360MHZ]  = 0x06,
-> +	[IMX585_LINK_FREQ_445MHZ]  = 0x05,
-> +	[IMX585_LINK_FREQ_594MHZ]  = 0x04,
-> +	[IMX585_LINK_FREQ_720MHZ]  = 0x03,
-> +	[IMX585_LINK_FREQ_891MHZ]  = 0x02,
-> +	[IMX585_LINK_FREQ_1039MHZ] = 0x01,
-> +	[IMX585_LINK_FREQ_1188MHZ] = 0x00,
-> +};
-> +
-> +static const u64 link_freqs[] = {
-> +	[IMX585_LINK_FREQ_297MHZ]  = 297000000,
-> +	[IMX585_LINK_FREQ_360MHZ]  = 360000000,
-> +	[IMX585_LINK_FREQ_445MHZ]  = 445500000,
-> +	[IMX585_LINK_FREQ_594MHZ]  = 594000000,
-> +	[IMX585_LINK_FREQ_720MHZ]  = 720000000,
-> +	[IMX585_LINK_FREQ_891MHZ]  = 891000000,
-> +	[IMX585_LINK_FREQ_1039MHZ] = 1039500000,
-> +	[IMX585_LINK_FREQ_1188MHZ] = 1188000000,
-> +};
-> +
-> +//min HMAX for 4-lane 4K full res mode, x2 for 2-lane, /2 for FHD
-> +static const u16 HMAX_table_4lane_4K[] = {
-> +	[IMX585_LINK_FREQ_297MHZ] = 1584,
-> +	[IMX585_LINK_FREQ_360MHZ] = 1320,
-> +	[IMX585_LINK_FREQ_445MHZ] = 1100,
-> +	[IMX585_LINK_FREQ_594MHZ] =  792,
-> +	[IMX585_LINK_FREQ_720MHZ] =  660,
-> +	[IMX585_LINK_FREQ_891MHZ] =  550,
-> +	[IMX585_LINK_FREQ_1039MHZ] = 440,
-> +	[IMX585_LINK_FREQ_1188MHZ] = 396,
-> +};
-> +
-> +struct imx585_inck_cfg {
-> +	u32 xclk_hz;   /* platform clock rate  */
-> +	u8  inck_sel;  /* value for reg        */
-> +};
-> +
-> +static const struct imx585_inck_cfg imx585_inck_table[] = {
-> +	{ 74250000, 0x00 },
-> +	{ 37125000, 0x01 },
-> +	{ 72000000, 0x02 },
-> +	{ 27000000, 0x03 },
-> +	{ 24000000, 0x04 },
-> +};
-> +
-> +static const char * const hdr_gain_adder_menu[] = {
-> +	"+0dB",
-> +	"+6dB",
-> +	"+12dB",
-> +	"+18dB",
-> +	"+24dB",
-> +	"+29.1dB",
-> +};
-> +
-> +/*Honestly I don't know why there are two 50% 50% blend
-> + * but it is in the datasheet
-> + */
-
-Multi-line comments should have the comment opening alone on the first
-line:
-
-/*
- * Honestly I don't know why there are two 50% 50% blend
- * but it is in the datasheet
- */
-
-> +static const char * const hdr_data_blender_menu[] = {
-> +	"HG 1/2, LG 1/2",
-> +	"HG 3/4, LG 1/4",
-> +	"HG 1/2, LG 1/2",
-> +	"HG 7/8, LG 1/8",
-> +	"HG 15/16, LG 1/16",
-> +	"2nd HG 1/2, LG 1/2",
-> +	"HG 1/16, LG 15/16",
-> +	"HG 1/8, LG 7/8",
-> +	"HG 1/4, LG 3/4",
-> +};
-> +
-> +static const char * const grad_compression_slope_menu[] = {
-> +	"1/1",
-> +	"1/2",
-> +	"1/4",
-> +	"1/8",
-> +	"1/16",
-> +	"1/32",
-> +	"1/64",
-> +	"1/128",
-> +	"1/256",
-> +	"1/512",
-> +	"1/1024",
-> +	"1/2048",
-> +};
-> +
-> +static const char * const sync_mode_menu[] = {
-> +	"Internal Sync Leader Mode",
-> +	"External Sync Leader Mode",
-> +	"Follower Mode",
-> +};
-> +
-> +struct imx585_reg {
-> +	u16 address;
-> +	u8 val;
-> +};
-> +
-> +struct IMX585_reg_list {
-> +	unsigned int num_of_regs;
-> +	const struct imx585_reg *regs;
-> +};
-> +
-> +/* Mode : resolution and related config&values */
-> +struct imx585_mode {
-> +	/* Frame width */
-> +	unsigned int width;
-> +
-> +	/* Frame height */
-> +	unsigned int height;
-> +
-> +	/* mode HMAX Scaling */
-> +	u8   hmax_div;
-> +
-> +	/* minimum H-timing */
-> +	u16 min_HMAX;
-> +
-> +	/* minimum V-timing */
-> +	u64 min_VMAX;
-> +
-> +	/* default H-timing */
-> +	u16 default_HMAX;
-> +
-> +	/* default V-timing */
-> +	u64 default_VMAX;
-> +
-> +	/* Analog crop rectangle. */
-> +	struct v4l2_rect crop;
-> +
-> +	/* Default register values */
-> +	struct IMX585_reg_list reg_list;
-> +};
-> +
-> +/* IMX585 Register List */
-> +/* Common Modes */
-> +static struct imx585_reg common_regs[] = {
-> +	{0x3002, 0x01},
-> +	{0x3069, 0x00},
-> +	{0x3074, 0x64},
-> +	{0x30D5, 0x04},// DIG_CLP_VSTART
-> +	{0x3030, 0x00},// FDG_SEL0 LCG, HCG:0x01
-> +	{0x30A6, 0x00},// XVS_DRV [1:0] Hi-Z
-> +	{0x3081, 0x00},// EXP_GAIN, Reset to 0
-> +	{0x3460, 0x21},// -
-> +	{0x3478, 0xA1},// -
-> +	{0x347C, 0x01},// -
-> +	{0x3480, 0x01},// -
-> +	{0x3A4E, 0x14},// -
-> +	{0x3A52, 0x14},// -
-> +	{0x3A56, 0x00},// -
-> +	{0x3A5A, 0x00},// -
-> +	{0x3A5E, 0x00},// -
-> +	{0x3A62, 0x00},// -
-> +	{0x3A6A, 0x20},// -
-> +	{0x3A6C, 0x42},// -
-> +	{0x3A6E, 0xA0},// -
-> +	{0x3B2C, 0x0C},// -
-> +	{0x3B30, 0x1C},// -
-> +	{0x3B34, 0x0C},// -
-> +	{0x3B38, 0x1C},// -
-> +	{0x3BA0, 0x0C},// -
-> +	{0x3BA4, 0x1C},// -
-> +	{0x3BA8, 0x0C},// -
-> +	{0x3BAC, 0x1C},// -
-> +	{0x3D3C, 0x11},// -
-> +	{0x3D46, 0x0B},// -
-> +	{0x3DE0, 0x3F},// -
-> +	{0x3DE1, 0x08},// -
-> +	{0x3E14, 0x87},// -
-> +	{0x3E16, 0x91},// -
-> +	{0x3E18, 0x91},// -
-> +	{0x3E1A, 0x87},// -
-> +	{0x3E1C, 0x78},// -
-> +	{0x3E1E, 0x50},// -
-> +	{0x3E20, 0x50},// -
-> +	{0x3E22, 0x50},// -
-> +	{0x3E24, 0x87},// -
-> +	{0x3E26, 0x91},// -
-> +	{0x3E28, 0x91},// -
-> +	{0x3E2A, 0x87},// -
-> +	{0x3E2C, 0x78},// -
-> +	{0x3E2E, 0x50},// -
-> +	{0x3E30, 0x50},// -
-> +	{0x3E32, 0x50},// -
-> +	{0x3E34, 0x87},// -
-> +	{0x3E36, 0x91},// -
-> +	{0x3E38, 0x91},// -
-> +	{0x3E3A, 0x87},// -
-> +	{0x3E3C, 0x78},// -
-> +	{0x3E3E, 0x50},// -
-> +	{0x3E40, 0x50},// -
-> +	{0x3E42, 0x50},// -
-> +	{0x4054, 0x64},// -
-> +	{0x4148, 0xFE},// -
-> +	{0x4149, 0x05},// -
-> +	{0x414A, 0xFF},// -
-> +	{0x414B, 0x05},// -
-> +	{0x420A, 0x03},// -
-> +	{0x4231, 0x08},// -
-> +	{0x423D, 0x9C},// -
-> +	{0x4242, 0xB4},// -
-> +	{0x4246, 0xB4},// -
-> +	{0x424E, 0xB4},// -
-> +	{0x425C, 0xB4},// -
-> +	{0x425E, 0xB6},// -
-> +	{0x426C, 0xB4},// -
-> +	{0x426E, 0xB6},// -
-> +	{0x428C, 0xB4},// -
-> +	{0x428E, 0xB6},// -
-> +	{0x4708, 0x00},// -
-> +	{0x4709, 0x00},// -
-> +	{0x470A, 0xFF},// -
-> +	{0x470B, 0x03},// -
-> +	{0x470C, 0x00},// -
-> +	{0x470D, 0x00},// -
-> +	{0x470E, 0xFF},// -
-> +	{0x470F, 0x03},// -
-> +	{0x47EB, 0x1C},// -
-> +	{0x47F0, 0xA6},// -
-> +	{0x47F2, 0xA6},// -
-> +	{0x47F4, 0xA0},// -
-> +	{0x47F6, 0x96},// -
-> +	{0x4808, 0xA6},// -
-> +	{0x480A, 0xA6},// -
-> +	{0x480C, 0xA0},// -
-> +	{0x480E, 0x96},// -
-> +	{0x492C, 0xB2},// -
-> +	{0x4930, 0x03},// -
-> +	{0x4932, 0x03},// -
-> +	{0x4936, 0x5B},// -
-> +	{0x4938, 0x82},// -
-> +	{0x493E, 0x23},// -
-> +	{0x4BA8, 0x1C},// -
-> +	{0x4BA9, 0x03},// -
-> +	{0x4BAC, 0x1C},// -
-> +	{0x4BAD, 0x1C},// -
-> +	{0x4BAE, 0x1C},// -
-> +	{0x4BAF, 0x1C},// -
-> +	{0x4BB0, 0x1C},// -
-> +	{0x4BB1, 0x1C},// -
-> +	{0x4BB2, 0x1C},// -
-> +	{0x4BB3, 0x1C},// -
-> +	{0x4BB4, 0x1C},// -
-> +	{0x4BB8, 0x03},// -
-> +	{0x4BB9, 0x03},// -
-> +	{0x4BBA, 0x03},// -
-> +	{0x4BBB, 0x03},// -
-> +	{0x4BBC, 0x03},// -
-> +	{0x4BBD, 0x03},// -
-> +	{0x4BBE, 0x03},// -
-> +	{0x4BBF, 0x03},// -
-> +	{0x4BC0, 0x03},// -
-> +	{0x4C14, 0x87},// -
-> +	{0x4C16, 0x91},// -
-> +	{0x4C18, 0x91},// -
-> +	{0x4C1A, 0x87},// -
-> +	{0x4C1C, 0x78},// -
-> +	{0x4C1E, 0x50},// -
-> +	{0x4C20, 0x50},// -
-> +	{0x4C22, 0x50},// -
-> +	{0x4C24, 0x87},// -
-> +	{0x4C26, 0x91},// -
-> +	{0x4C28, 0x91},// -
-> +	{0x4C2A, 0x87},// -
-> +	{0x4C2C, 0x78},// -
-> +	{0x4C2E, 0x50},// -
-> +	{0x4C30, 0x50},// -
-> +	{0x4C32, 0x50},// -
-> +	{0x4C34, 0x87},// -
-> +	{0x4C36, 0x91},// -
-> +	{0x4C38, 0x91},// -
-> +	{0x4C3A, 0x87},// -
-> +	{0x4C3C, 0x78},// -
-> +	{0x4C3E, 0x50},// -
-> +	{0x4C40, 0x50},// -
-> +	{0x4C42, 0x50},// -
-> +	{0x4D12, 0x1F},// -
-> +	{0x4D13, 0x1E},// -
-> +	{0x4D26, 0x33},// -
-> +	{0x4E0E, 0x59},// -
-> +	{0x4E14, 0x55},// -
-> +	{0x4E16, 0x59},// -
-> +	{0x4E1E, 0x3B},// -
-> +	{0x4E20, 0x47},// -
-> +	{0x4E22, 0x54},// -
-> +	{0x4E26, 0x81},// -
-> +	{0x4E2C, 0x7D},// -
-> +	{0x4E2E, 0x81},// -
-> +	{0x4E36, 0x63},// -
-> +	{0x4E38, 0x6F},// -
-> +	{0x4E3A, 0x7C},// -
-> +	{0x4F3A, 0x3C},// -
-> +	{0x4F3C, 0x46},// -
-> +	{0x4F3E, 0x59},// -
-> +	{0x4F42, 0x64},// -
-> +	{0x4F44, 0x6E},// -
-> +	{0x4F46, 0x81},// -
-> +	{0x4F4A, 0x82},// -
-> +	{0x4F5A, 0x81},// -
-> +	{0x4F62, 0xAA},// -
-> +	{0x4F72, 0xA9},// -
-> +	{0x4F78, 0x36},// -
-> +	{0x4F7A, 0x41},// -
-> +	{0x4F7C, 0x61},// -
-> +	{0x4F7D, 0x01},// -
-> +	{0x4F7E, 0x7C},// -
-> +	{0x4F7F, 0x01},// -
-> +	{0x4F80, 0x77},// -
-> +	{0x4F82, 0x7B},// -
-> +	{0x4F88, 0x37},// -
-> +	{0x4F8A, 0x40},// -
-> +	{0x4F8C, 0x62},// -
-> +	{0x4F8D, 0x01},// -
-> +	{0x4F8E, 0x76},// -
-> +	{0x4F8F, 0x01},// -
-> +	{0x4F90, 0x5E},// -
-> +	{0x4F91, 0x02},// -
-> +	{0x4F92, 0x69},// -
-> +	{0x4F93, 0x02},// -
-> +	{0x4F94, 0x89},// -
-> +	{0x4F95, 0x02},// -
-> +	{0x4F96, 0xA4},// -
-> +	{0x4F97, 0x02},// -
-> +	{0x4F98, 0x9F},// -
-> +	{0x4F99, 0x02},// -
-> +	{0x4F9A, 0xA3},// -
-> +	{0x4F9B, 0x02},// -
-> +	{0x4FA0, 0x5F},// -
-> +	{0x4FA1, 0x02},// -
-> +	{0x4FA2, 0x68},// -
-> +	{0x4FA3, 0x02},// -
-> +	{0x4FA4, 0x8A},// -
-> +	{0x4FA5, 0x02},// -
-> +	{0x4FA6, 0x9E},// -
-> +	{0x4FA7, 0x02},// -
-> +	{0x519E, 0x79},// -
-> +	{0x51A6, 0xA1},// -
-> +	{0x51F0, 0xAC},// -
-> +	{0x51F2, 0xAA},// -
-> +	{0x51F4, 0xA5},// -
-> +	{0x51F6, 0xA0},// -
-> +	{0x5200, 0x9B},// -
-> +	{0x5202, 0x91},// -
-> +	{0x5204, 0x87},// -
-> +	{0x5206, 0x82},// -
-> +	{0x5208, 0xAC},// -
-> +	{0x520A, 0xAA},// -
-> +	{0x520C, 0xA5},// -
-> +	{0x520E, 0xA0},// -
-> +	{0x5210, 0x9B},// -
-> +	{0x5212, 0x91},// -
-> +	{0x5214, 0x87},// -
-> +	{0x5216, 0x82},// -
-> +	{0x5218, 0xAC},// -
-> +	{0x521A, 0xAA},// -
-> +	{0x521C, 0xA5},// -
-> +	{0x521E, 0xA0},// -
-> +	{0x5220, 0x9B},// -
-> +	{0x5222, 0x91},// -
-> +	{0x5224, 0x87},// -
-> +	{0x5226, 0x82},// -
-> +};
-> +
-> +/* Common Registers for ClearHDR. */
-> +static const struct imx585_reg common_clearHDR_mode[] = {
-> +	{0x301A, 0x10}, // WDMODE: Clear HDR mode
-> +	{0x3024, 0x02}, // COMBI_EN: 0x02
-> +	{0x3069, 0x02}, // Clear HDR mode
-> +	{0x3074, 0x63}, // Clear HDR mode
-> +	{0x3930, 0xE6}, // DUR[15:8]: Clear HDR mode (12bit)
-> +	{0x3931, 0x00}, // DUR[7:0]: Clear HDR mode (12bit)
-> +	{0x3A4C, 0x61}, // WAIT_ST0[7:0]: Clear HDR mode
-> +	{0x3A4D, 0x02}, // WAIT_ST0[15:8]: Clear HDR mode
-> +	{0x3A50, 0x70}, // WAIT_ST1[7:0]: Clear HDR mode
-> +	{0x3A51, 0x02}, // WAIT_ST1[15:8]: Clear HDR mode
-> +	{0x3E10, 0x17}, // ADTHEN: Clear HDR mode
-> +	{0x493C, 0x41}, // WAIT_10_SHF AD 10-bit 0x0C disable
-> +	{0x4940, 0x41}, // WAIT_12_SHF AD 12-bit 0x41 enable
-> +	{0x3081, 0x02}, // EXP_GAIN: High gain setting +12dB default
-> +};
-> +
-> +/* Common Registers for non-ClearHDR. */
-> +static const struct imx585_reg common_normal_mode[] = {
-> +	{0x301A, 0x00}, // WDMODE: Normal mode
-> +	{0x3024, 0x00}, // COMBI_EN: 0x00
-> +	{0x3069, 0x00}, // Normal mode
-> +	{0x3074, 0x64}, // Normal mode
-> +	{0x3930, 0x0C}, // DUR[15:8]: Normal mode (12bit)
-> +	{0x3931, 0x01}, // DUR[7:0]: Normal mode (12bit)
-> +	{0x3A4C, 0x39}, // WAIT_ST0[7:0]: Normal mode
-> +	{0x3A4D, 0x01}, // WAIT_ST0[15:8]: Normal mode
-> +	{0x3A50, 0x48}, // WAIT_ST1[7:0]: Normal mode
-> +	{0x3A51, 0x01}, // WAIT_ST1[15:8]: Normal mode
-> +	{0x3E10, 0x10}, // ADTHEN: Normal mode
-> +	{0x493C, 0x23}, // WAIT_10_SHF AD 10-bit 0x23 Normal mode
-> +	{0x4940, 0x23}, // WAIT_12_SHF AD 12-bit 0x23 Normal mode
-> +};
-> +
-> +/* All pixel 4K60. 12-bit */
-> +static const struct imx585_reg mode_4k_regs_12bit[] = {
-> +	{0x301B, 0x00}, // ADDMODE non-binning
-> +	{0x3022, 0x02}, // ADBIT 12-bit
-> +	{0x3023, 0x01}, // MDBIT 12-bit
-> +	{0x30D5, 0x04}, // DIG_CLP_VSTART non-binning
-> +};
-> +
-> +/* 2x2 binned 1080p60. 12-bit */
-> +static const struct imx585_reg mode_1080_regs_12bit[] = {
-> +	{0x301B, 0x01}, // ADDMODE binning
-> +	{0x3022, 0x02}, // ADBIT 12-bit
-> +	{0x3023, 0x01}, // MDBIT 12-bit
-> +	{0x30D5, 0x02}, // DIG_CLP_VSTART binning
-> +};
-> +
-> +/* IMX585 Register List - END*/
-> +
-> +/* For Mode List:
-> + * Default:
-> + *   12Bit - FHD, 4K
-> + * ClearHDR Enabled:
-> + *   12bit + Gradation compression
-> + *   16bit - FHD, 4K
-> + *
-> + * Gradation compression is available on 12bit
-> + * With Default option, only 12bit mode is exposed
-> + * With ClearHDR enabled via parameters,
-> + *   12bit will be with Gradation compression enabled
-> + *   16bit mode exposed
-> + *
-> + * Technically, because the sensor is actually binning
-> + * in digital domain, its readout speed is the same
-> + * between 4K and FHD. However, through testing it is
-> + * possible to "overclock" the FHD mode, thus leaving the
-> + * hmax_div option for those who want to try.
-> + * Also, note that FHD and 4K mode shared the same VMAX.
-> + */
-> +
-> +/* Mode configs */
-> +struct imx585_mode supported_modes[] = {
-> +	{
-> +		/* 1080p60 2x2 binning */
-> +		.width = 1928,
-> +		.height = 1090,
-> +		.hmax_div = 1,
-> +		.min_HMAX = 366,
-> +		.min_VMAX = IMX585_VMAX_DEFAULT,
-> +		.default_HMAX = 366,
-> +		.default_VMAX = IMX585_VMAX_DEFAULT,
-> +		.crop = {
-> +			.left = IMX585_PIXEL_ARRAY_LEFT,
-> +			.top = IMX585_PIXEL_ARRAY_TOP,
-> +			.width = IMX585_PIXEL_ARRAY_WIDTH,
-> +			.height = IMX585_PIXEL_ARRAY_HEIGHT,
-> +		},
-> +		.reg_list = {
-> +			.num_of_regs = ARRAY_SIZE(mode_1080_regs_12bit),
-> +			.regs = mode_1080_regs_12bit,
-> +		},
-> +	},
-> +	{
-> +		/* 4K60 All pixel */
-> +		.width = 3856,
-> +		.height = 2180,
-> +		.min_HMAX = 550,
-> +		.min_VMAX = IMX585_VMAX_DEFAULT,
-> +		.default_HMAX = 550,
-> +		.default_VMAX = IMX585_VMAX_DEFAULT,
-> +		.hmax_div = 1,
-> +		.crop = {
-> +			.left = IMX585_PIXEL_ARRAY_LEFT,
-> +			.top = IMX585_PIXEL_ARRAY_TOP,
-> +			.width = IMX585_PIXEL_ARRAY_WIDTH,
-> +			.height = IMX585_PIXEL_ARRAY_HEIGHT,
-> +		},
-> +		.reg_list = {
-> +			.num_of_regs = ARRAY_SIZE(mode_4k_regs_12bit),
-> +			.regs = mode_4k_regs_12bit,
-> +		},
-> +	},
-> +};
-> +
-> +/*
-> + * The supported formats.
-> + * This table MUST contain 4 entries per format, to cover the various flip
-> + * combinations in the order
-> + * - no flip
-> + * - h flip
-> + * - v flip
-> + * - h&v flips
-> + */
-> +
-> +/* 12bit Only */
-> +static const u32 codes_normal[] = {
-> +	MEDIA_BUS_FMT_SRGGB12_1X12,
-> +	MEDIA_BUS_FMT_SGRBG12_1X12,
-> +	MEDIA_BUS_FMT_SGBRG12_1X12,
-> +	MEDIA_BUS_FMT_SBGGR12_1X12,
-> +};
-> +
-> +/* 12bit + 16bit for Clear HDR */
-> +static const u32 codes_clearhdr[] = {
-> +	/* 16-bit modes. */
-> +	MEDIA_BUS_FMT_SRGGB16_1X16,
-> +	MEDIA_BUS_FMT_SGRBG16_1X16,
-> +	MEDIA_BUS_FMT_SGBRG16_1X16,
-> +	MEDIA_BUS_FMT_SBGGR16_1X16,
-> +	/* 12-bit modes. */
-> +	MEDIA_BUS_FMT_SRGGB12_1X12,
-> +	MEDIA_BUS_FMT_SGRBG12_1X12,
-> +	MEDIA_BUS_FMT_SGBRG12_1X12,
-> +	MEDIA_BUS_FMT_SBGGR12_1X12,
-> +};
-> +
-> +/* Flip isn’t relevant for mono */
-> +static const u32 mono_codes[] = {
-> +	MEDIA_BUS_FMT_Y16_1X16,   /* 16-bit mono */
-> +	MEDIA_BUS_FMT_Y12_1X12,   /* 12-bit mono */
-> +};
-> +
-> +/* regulator supplies */
-> +static const char * const imx585_supply_name[] = {
-> +	/* Supplies can be enabled in any order */
-> +	"VANA",  /* Analog (3.3V) supply */
-> +	"VDIG",  /* Digital Core (1.1V) supply */
-> +	"VDDL",  /* IF (1.8V) supply */
-> +};
-> +
-> +#define imx585_NUM_SUPPLIES ARRAY_SIZE(imx585_supply_name)
-> +
-> +struct imx585 {
-> +	struct v4l2_subdev sd;
-> +	struct media_pad pad[NUM_PADS];
-> +
-> +	unsigned int fmt_code;
-
-Please use the v4l2_subdev active state API to replace this. You will
-need to call v4l2_subdev_init_finalize(), and the V4L2 framework will
-allocate a v4l2_subdev_state instance for the active state. Most subdev
-operations won't have to test for V4L2_SUBDEV_FORMAT_ACTIVE or
-V4L2_SUBDEV_FORMAT_TRY, and will simply store data in the state passed
-to the function. See commit e8a5b1df000e ("media: i2c: imx219: Use
-subdev active state") for an example.
-
-> +
-> +	struct clk *xclk;
-> +	u32 xclk_freq;
-> +
-> +	/* chosen INCK_SEL register value */
-> +	u8  inck_sel_val;
-> +
-> +	/* Link configurations */
-> +	unsigned int lane_count;
-> +	unsigned int link_freq_idx;
-> +
-> +	struct gpio_desc *reset_gpio;
-> +	struct regulator_bulk_data supplies[imx585_NUM_SUPPLIES];
-> +
-> +	struct v4l2_ctrl_handler ctrl_handler;
-> +
-> +	/* V4L2 Controls */
-> +	struct v4l2_ctrl *pixel_rate;
-> +	struct v4l2_ctrl *link_freq;
-> +	struct v4l2_ctrl *exposure;
-> +	struct v4l2_ctrl *gain;
-> +	struct v4l2_ctrl *hcg_ctrl;
-> +	struct v4l2_ctrl *vflip;
-> +	struct v4l2_ctrl *hflip;
-> +	struct v4l2_ctrl *vblank;
-> +	struct v4l2_ctrl *hblank;
-> +	struct v4l2_ctrl *blacklevel;
-> +
-> +	/* V4L2 HDR Controls */
-> +	struct v4l2_ctrl *hdr_mode;
-> +	struct v4l2_ctrl *datasel_th_ctrl;
-> +	struct v4l2_ctrl *datasel_bk_ctrl;
-> +	struct v4l2_ctrl *gdc_th_ctrl;
-> +	struct v4l2_ctrl *gdc_exp_ctrl_l;
-> +	struct v4l2_ctrl *gdc_exp_ctrl_h;
-> +	struct v4l2_ctrl *hdr_gain_ctrl;
-> +
-> +	/* V4L2 IR Cut filter switch Controls */
-> +	bool   has_ircut;
-> +	struct v4l2_ctrl   *ircut_ctrl;
-> +	struct i2c_client  *ircut_client;
-> +
-> +	/* Current mode */
-> +	const struct imx585_mode *mode;
-
-This should be dropped too, the imx585_mode instance should be lookup up
-based on the v4l2_subdev_state.
-
-> +
-> +	/* HCG enabled flag*/
-> +	bool hcg;
-> +
-> +	/* Mono mode */
-> +	bool mono;
-> +
-> +	/* Clear HDR mode */
-> +	bool clear_HDR;
-
-All variables must be lower case.
-
-> +
-> +	/* Sync Mode*/
-> +	/* 0 = Internal Sync Leader Mode
-> +	 * 1 = External Sync Leader Mode
-> +	 * 2 = Follower Mode
-> +	 * The datasheet wording is very confusing but basically:
-> +	 * Leader Mode = Sensor using internal clock to drive the sensor
-> +	 * But with external sync mode you can send a XVS input so the sensor
-> +	 * will try to align with it.
-> +	 * For Follower mode it is purely driven by external clock.
-> +	 * In this case you need to drive both XVS and XHS.
-> +	 */
-> +	u32 sync_mode;
-> +
-> +	/* Tracking sensor VMAX/HMAX value */
-> +	u16 HMAX;
-> +	u32 VMAX;
-> +
-> +	/*
-> +	 * Mutex for serialized access:
-> +	 * Protect sensor module set pad format and start/stop streaming safely.
-> +	 */
-> +	struct mutex mutex;
-
-You will be able to drop this when switching to the v4l2_subdev active
-state API.
-
-> +
-> +	/* Streaming on/off */
-> +	bool streaming;
-> +
-> +	/* Rewrite common registers on stream on? */
-> +	bool common_regs_written;
-> +};
-> +
-> +static inline struct imx585 *to_imx585(struct v4l2_subdev *_sd)
-> +{
-> +	return container_of(_sd, struct imx585, sd);
-> +}
-> +
-> +static inline void get_mode_table(struct imx585 *imx585, unsigned int code,
-> +				  const struct imx585_mode **mode_list,
-> +				  unsigned int *num_modes)
-> +{
-> +	*mode_list = NULL;
-> +	*num_modes = 0;
-> +
-> +	if (imx585->mono) {
-> +		/* --- Mono paths --- */
-> +		if (code == MEDIA_BUS_FMT_Y16_1X16 && imx585->clear_HDR) {
-> +			*mode_list = supported_modes;
-> +			*num_modes = ARRAY_SIZE(supported_modes);
-> +		}
-> +		if (code == MEDIA_BUS_FMT_Y12_1X12) {
-> +			*mode_list = supported_modes;
-> +			*num_modes = ARRAY_SIZE(supported_modes);
-> +		}
-> +	} else {
-> +		/* --- Color paths --- */
-> +		switch (code) {
-> +		/* 16-bit */
-> +		case MEDIA_BUS_FMT_SRGGB16_1X16:
-> +		case MEDIA_BUS_FMT_SGRBG16_1X16:
-> +		case MEDIA_BUS_FMT_SGBRG16_1X16:
-> +		case MEDIA_BUS_FMT_SBGGR16_1X16:
-> +		/* 12-bit */
-> +		case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		case MEDIA_BUS_FMT_SGRBG12_1X12:
-> +		case MEDIA_BUS_FMT_SGBRG12_1X12:
-> +		case MEDIA_BUS_FMT_SBGGR12_1X12:
-> +			*mode_list = supported_modes;
-> +			*num_modes = ARRAY_SIZE(supported_modes);
-> +			break;
-> +		default:
-> +			*mode_list = NULL;
-> +			*num_modes = 0;
-> +		}
-> +	}
-> +}
-> +
-> +/* ------------------------------------------------------------------
-> + * Optional IR-cut helper
-> + * ------------------------------------------------------------------
-> + */
-> +
-> +/* One-byte “command” sent to the IR-cut MCU at imx585->ircut_client   */
-
-Is that MCU integrated in the camera sensor, or in the camera module ?
-
-> +static int imx585_ircut_write(struct imx585 *imx585, u8 cmd)
-> +{
-> +	struct i2c_client *client = imx585->ircut_client;
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte(client, cmd);
-> +	if (ret < 0)
-> +		dev_err(&client->dev, "IR-cut write failed (%d)\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int imx585_ircut_set(struct imx585 *imx585, int on)
-> +{
-> +	return imx585_ircut_write(imx585, on ? 0x01 : 0x00);
-> +}
-> +
-> +/* Read registers up to 2 at a time */
-> +static int imx585_read_reg(struct imx585 *imx585, u16 reg, u32 len, u32 *val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	struct i2c_msg msgs[2];
-> +	u8 addr_buf[2] = { reg >> 8, reg & 0xff };
-> +	u8 data_buf[4] = { 0, };
-> +	int ret;
-> +
-> +	if (len > 4)
-> +		return -EINVAL;
-> +
-> +	/* Write register address */
-> +	msgs[0].addr = client->addr;
-> +	msgs[0].flags = 0;
-> +	msgs[0].len = ARRAY_SIZE(addr_buf);
-> +	msgs[0].buf = addr_buf;
-> +
-> +	/* Read data from register */
-> +	msgs[1].addr = client->addr;
-> +	msgs[1].flags = I2C_M_RD;
-> +	msgs[1].len = len;
-> +	msgs[1].buf = &data_buf[4 - len];
-> +
-> +	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> +	if (ret != ARRAY_SIZE(msgs))
-> +		return -EIO;
-> +
-> +	*val = get_unaligned_be32(data_buf);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Write registers 1 byte at a time */
-> +static int imx585_write_reg_1byte(struct imx585 *imx585, u16 reg, u8 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	u8 buf[3];
-> +	int ret;
-> +
-> +	put_unaligned_be16(reg, buf);
-> +	buf[2] = val;
-> +	ret = i2c_master_send(client, buf, 3);
-> +	if (ret != 3)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +/* Write registers 2 byte at a time */
-> +static int imx585_write_reg_2byte(struct imx585 *imx585, u16 reg, u16 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	u8 buf[4];
-> +	int ret;
-> +
-> +	put_unaligned_be16(reg, buf);
-> +	buf[2] = val;
-> +	buf[3] = val >> 8;
-> +	ret = i2c_master_send(client, buf, 4);
-> +	if (ret != 4)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +/* Write registers 3 byte at a time */
-> +static int imx585_write_reg_3byte(struct imx585 *imx585, u16 reg, u32 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	u8 buf[5];
-> +
-> +	put_unaligned_be16(reg, buf);
-> +	buf[2]  = val;
-> +	buf[3]  = val >> 8;
-> +	buf[4]  = val >> 16;
-> +	if (i2c_master_send(client, buf, 5) != 5)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-
-Please use the v4l2-cci helpers to access registers. They encode the
-register width in the register address macro, simplifying the driver and
-making it less error-prone.
-
-> +
-> +/* Write a list of 1 byte registers */
-> +static int imx585_write_regs(struct imx585 *imx585,
-> +			     const struct imx585_reg *regs, u32 len)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	for (i = 0; i < len; i++) {
-> +		ret = imx585_write_reg_1byte(imx585, regs[i].address,
-> +					     regs[i].val);
-> +		if (ret) {
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    regs[i].address, ret);
-> +
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* Hold register values until hold is disabled */
-> +static inline void imx585_register_hold(struct imx585 *imx585, bool hold)
-> +{
-> +	imx585_write_reg_1byte(imx585, 0x3001, hold ? 1 : 0);
-> +}
-> +
-> +/* Get bayer order based on flip setting. */
-> +static u32 imx585_get_format_code(struct imx585 *imx585, u32 code)
-> +{
-> +	unsigned int i;
-> +
-> +	lockdep_assert_held(&imx585->mutex);
-> +
-> +	if (imx585->mono) {
-> +		for (i = 0; i < ARRAY_SIZE(mono_codes); i++)
-> +			if (mono_codes[i] == code)
-> +				break;
-> +		return mono_codes[i];
-> +	}
-> +
-> +	if (imx585->clear_HDR) {
-> +		for (i = 0; i < ARRAY_SIZE(codes_clearhdr); i++)
-> +			if (codes_clearhdr[i] == code)
-> +				break;
-> +		return codes_clearhdr[i];
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(codes_normal); i++)
-> +		if (codes_normal[i] == code)
-> +			break;
-> +	return codes_normal[i];
-> +}
-> +
-> +static void imx585_set_default_format(struct imx585 *imx585)
-> +{
-> +	/* Set default mode to max resolution */
-> +	imx585->mode = &supported_modes[0];
-> +	if (imx585->mono)
-> +		imx585->fmt_code = MEDIA_BUS_FMT_Y12_1X12;
-> +	else
-> +		imx585->fmt_code = MEDIA_BUS_FMT_SRGGB12_1X12;
-> +}
-> +
-> +static int imx585_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-
-This should be dropped and replaced by the .init_state() operation.
-
-> +{
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +	struct v4l2_mbus_framefmt *try_fmt_img =
-> +		v4l2_subdev_state_get_format(fh->state, IMAGE_PAD);
-> +	struct v4l2_mbus_framefmt *try_fmt_meta =
-> +		v4l2_subdev_state_get_format(fh->state, METADATA_PAD);
-> +	struct v4l2_rect *try_crop;
-> +
-> +	mutex_lock(&imx585->mutex);
-> +
-> +	/* Initialize try_fmt for the image pad */
-> +	try_fmt_img->width = supported_modes[0].width;
-> +	try_fmt_img->height = supported_modes[0].height;
-> +	if (imx585->mono)
-> +		try_fmt_img->code = imx585_get_format_code(imx585, MEDIA_BUS_FMT_Y12_1X12);
-> +	else
-> +		try_fmt_img->code = imx585_get_format_code(imx585, MEDIA_BUS_FMT_SRGGB12_1X12);
-> +
-> +	try_fmt_img->field = V4L2_FIELD_NONE;
-> +
-> +	/* Initialize try_fmt for the embedded metadata pad */
-> +	try_fmt_meta->width = IMX585_EMBEDDED_LINE_WIDTH;
-> +	try_fmt_meta->height = IMX585_NUM_EMBEDDED_LINES;
-> +	try_fmt_meta->code = MEDIA_BUS_FMT_SENSOR_DATA;
-> +	try_fmt_meta->field = V4L2_FIELD_NONE;
-> +
-> +	/* Initialize try_crop */
-> +	try_crop = v4l2_subdev_state_get_crop(fh->state, IMAGE_PAD);
-> +	try_crop->left = IMX585_PIXEL_ARRAY_LEFT;
-> +	try_crop->top = IMX585_PIXEL_ARRAY_TOP;
-> +	try_crop->width = IMX585_PIXEL_ARRAY_WIDTH;
-> +	try_crop->height = IMX585_PIXEL_ARRAY_HEIGHT;
-> +
-> +	mutex_unlock(&imx585->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +/* For HDR mode, Gain is limited to 0~80 and HCG is disabled
-> + * For Normal mode, Gain is limited to 0~240
-> + */
-> +static void imx585_update_gain_limits(struct imx585 *imx585)
-> +{
-> +		bool hcg_on = imx585->hcg;
-
-Wrong indentation.
-
-> +		bool clear_hdr = imx585->clear_HDR;
-> +		u32 min = hcg_on ? IMX585_ANA_GAIN_MIN_HCG : IMX585_ANA_GAIN_MIN_NORMAL;
-> +		u32 max = clear_hdr ? IMX585_ANA_GAIN_MAX_HDR : IMX585_ANA_GAIN_MAX_NORMAL;
-> +		u32 cur = imx585->gain->val;
-> +
-> +		__v4l2_ctrl_modify_range(imx585->gain,
-> +					 min, max,
-> +					 IMX585_ANA_GAIN_STEP,
-> +					 clamp(cur, min, max));
-> +
-> +		if (cur < min || cur > max)
-> +			__v4l2_ctrl_s_ctrl(imx585->gain,
-> +					   clamp(cur, min, max));
-> +}
-> +
-> +static void imx585_update_hmax(struct imx585 *imx585)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-
-Store the struct device pointer in struct imx585 and use it instead of
-client->dev. This should drop most usages of i2c_client from the driver.
-
-> +
-> +	const u32 base_4lane = HMAX_table_4lane_4K[imx585->link_freq_idx];
-> +	const u32 lane_scale = (imx585->lane_count == 2) ? 2 : 1;
-> +	const u32 factor     = base_4lane * lane_scale;
-> +	const u32 hdr_factor = (imx585->clear_HDR) ? 2 : 1;
-> +
-> +	dev_info(&client->dev, "Upadte minimum HMAX\n");
-> +	dev_info(&client->dev, "\tbase_4lane: %d\n", base_4lane);
-> +	dev_info(&client->dev, "\tlane_scale: %d\n", lane_scale);
-> +	dev_info(&client->dev, "\tfactor: %d\n", factor);
-> +	dev_info(&client->dev, "\thdr_factor: %d\n", hdr_factor);
-
-This makes the driver way too chatty. The messages should be demoted to
-dev_dbg(), or dropped.
-
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(supported_modes); ++i) {
-> +		u32 h = factor / supported_modes[i].hmax_div;
-> +		u64 v = IMX585_VMAX_DEFAULT * hdr_factor;
-> +
-> +		supported_modes[i].min_HMAX     = h;
-> +		supported_modes[i].default_HMAX = h;
-> +		supported_modes[i].min_VMAX     = v;
-> +		supported_modes[i].default_VMAX = v;
-> +		dev_info(&client->dev, "\tvmax: %lld x hmax: %d\n", v, h);
-> +	}
-> +}
-> +
-> +static void imx585_set_framing_limits(struct imx585 *imx585)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	const struct imx585_mode *mode = imx585->mode;
-> +	u64 default_hblank, max_hblank;
-> +	u64 pixel_rate;
-> +
-> +	imx585_update_hmax(imx585);
-> +
-> +	dev_info(&client->dev, "mode: %d x %d\n", mode->width, mode->height);
-> +
-> +	imx585->VMAX = mode->default_VMAX;
-> +	imx585->HMAX = mode->default_HMAX;
-> +
-> +	pixel_rate = (u64)mode->width * IMX585_PIXEL_RATE;
-> +	/* In the case where ClearHDR is enabled, HMAX is effectly doubled */
-> +	/* So pixel rate is half with the same HMAX with ClearHDR */
-> +	do_div(pixel_rate, mode->min_HMAX);
-> +	__v4l2_ctrl_modify_range(imx585->pixel_rate, pixel_rate, pixel_rate, 1, pixel_rate);
-> +
-> +	//int default_hblank = mode->default_HMAX*IMX585_PIXEL_RATE/72000000-IMX585_NATIVE_WIDTH;
-> +	default_hblank = mode->default_HMAX * pixel_rate;
-> +	do_div(default_hblank, IMX585_PIXEL_RATE);
-> +	default_hblank = default_hblank - mode->width;
-> +
-> +	max_hblank = IMX585_HMAX_MAX * pixel_rate;
-> +	do_div(max_hblank, IMX585_PIXEL_RATE);
-> +	max_hblank = max_hblank - mode->width;
-> +
-> +	__v4l2_ctrl_modify_range(imx585->hblank, 0, max_hblank, 1, default_hblank);
-> +	__v4l2_ctrl_s_ctrl(imx585->hblank, default_hblank);
-> +
-> +	/* Update limits and set FPS to default */
-> +	__v4l2_ctrl_modify_range(imx585->vblank, mode->min_VMAX - mode->height,
-> +				 IMX585_VMAX_MAX - mode->height,
-> +				 1, mode->default_VMAX - mode->height);
-> +	__v4l2_ctrl_s_ctrl(imx585->vblank, mode->default_VMAX - mode->height);
-> +
-> +	__v4l2_ctrl_modify_range(imx585->exposure, IMX585_EXPOSURE_MIN,
-> +				 imx585->VMAX - IMX585_SHR_MIN_HDR, 1,
-> +				 IMX585_EXPOSURE_DEFAULT);
-> +	dev_info(&client->dev, "default vmax: %lld x hmax: %d\n", mode->min_VMAX, mode->min_HMAX);
-> +	dev_info(&client->dev, "Setting default HBLANK : %llu, VBLANK : %llu PixelRate: %lld\n",
-> +		 default_hblank, mode->default_VMAX - mode->height, pixel_rate);
-> +}
-> +
-> +static int imx585_set_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct imx585 *imx585 = container_of(ctrl->handler, struct imx585, ctrl_handler);
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	const struct imx585_mode *mode = imx585->mode;
-> +	const struct imx585_mode *mode_list;
-> +	unsigned int code, num_modes;
-> +
-> +	int ret = 0;
-> +	/*
-> +	 * Applying V4L2 control value that
-> +	 * doesn't need to be in streaming mode
-> +	 */
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_WIDE_DYNAMIC_RANGE:
-> +		if (imx585->clear_HDR != ctrl->val) {
-> +			imx585->clear_HDR = ctrl->val;
-> +			v4l2_ctrl_activate(imx585->datasel_th_ctrl,  imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->datasel_bk_ctrl,  imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->gdc_th_ctrl,      imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->gdc_exp_ctrl_h,   imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->gdc_exp_ctrl_l,   imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->hdr_gain_ctrl,    imx585->clear_HDR);
-> +			v4l2_ctrl_activate(imx585->hcg_ctrl,        !imx585->clear_HDR);
-> +			imx585_update_gain_limits(imx585);
-> +			if (imx585->mono)
-> +				code = imx585_get_format_code(imx585, MEDIA_BUS_FMT_Y12_1X12);
-> +			else
-> +				code = imx585_get_format_code(imx585, MEDIA_BUS_FMT_SRGGB12_1X12);
-> +			get_mode_table(imx585, code, &mode_list, &num_modes);
-> +			imx585->mode = v4l2_find_nearest_size(mode_list,
-> +							      num_modes,
-> +							      width, height,
-> +							      imx585->mode->width,
-> +							      imx585->mode->height);
-> +			imx585_set_framing_limits(imx585);
-> +		}
-> +		break;
-> +	}
-> +
-> +	/*
-> +	 * Applying V4L2 control value only happens
-> +	 * when power is up for streaming
-> +	 */
-> +	if (pm_runtime_get_if_in_use(&client->dev) == 0)
-> +		return 0;
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_EXPOSURE:
-> +		{
-> +			u32 shr;
-
-	case V4L2_CID_EXPOSURE: {
-		u32 shr;
-
-Same below.
-
-> +
-> +			shr = (imx585->VMAX - ctrl->val)  & ~1u; //Always a multiple of 2
-> +			dev_info(&client->dev, "V4L2_CID_EXPOSURE : %d\n", ctrl->val);
-> +			dev_info(&client->dev, "\tVMAX:%d, HMAX:%d\n", imx585->VMAX, imx585->HMAX);
-> +			dev_info(&client->dev, "\tSHR:%d\n", shr);
-> +
-> +			ret = imx585_write_reg_3byte(imx585, IMX585_REG_SHR, shr);
-> +			if (ret)
-> +				dev_err_ratelimited(&client->dev,
-> +						    "Failed to write reg 0x%4.4x. error = %d\n",
-> +						    IMX585_REG_SHR, ret);
-> +		break;
-> +		}
-> +	case V4L2_CID_IMX585_HCG_GAIN:
-> +		{
-> +		if (ctrl->flags & V4L2_CTRL_FLAG_INACTIVE)
-> +			break;
-> +		imx585->hcg = ctrl->val;
-> +		imx585_update_gain_limits(imx585);
-> +
-> +		// Set HCG/LCG channel
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_FDG_SEL0, ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_FDG_SEL0, ret);
-> +		dev_info(&client->dev, "V4L2_CID_HCG_ENABLE: %d\n", ctrl->val);
-> +		break;
-> +		}
-> +	case V4L2_CID_ANALOGUE_GAIN:
-> +		{
-> +		u32 gain = ctrl->val;
-> +
-> +		dev_info(&client->dev, "analogue gain = %u (%s)\n",
-> +			 gain, imx585->hcg ? "HCG" : "LCG");
-> +
-> +		ret = imx585_write_reg_2byte(imx585, IMX585_REG_ANALOG_GAIN, gain);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "ANALOG_GAIN write failed (%d)\n", ret);
-> +		break;
-> +		}
-> +	case V4L2_CID_VBLANK:
-> +		{
-> +			u32 current_exposure = imx585->exposure->cur.val;
-> +			u32 min_SHR = (imx585->clear_HDR) ? IMX585_SHR_MIN_HDR : IMX585_SHR_MIN;
-> +			/*
-> +			 * The VBLANK control may change the limits of usable exposure, so check
-> +			 * and adjust if necessary.
-> +			 */
-> +			imx585->VMAX = (mode->height + ctrl->val) & ~1u; //Always a multiple of 2
-> +
-> +			/* New maximum exposure limits,
-> +			 * modifying the range and make sure we are not exceed the new maximum.
-> +			 */
-> +			current_exposure = clamp_t(u32, current_exposure, IMX585_EXPOSURE_MIN,
-> +						   imx585->VMAX - min_SHR);
-> +			__v4l2_ctrl_modify_range(imx585->exposure, IMX585_EXPOSURE_MIN,
-> +						 imx585->VMAX - min_SHR, 1,
-> +						 current_exposure);
-> +
-> +			dev_info(&client->dev, "V4L2_CID_VBLANK : %d\n", ctrl->val);
-> +			dev_info(&client->dev, "\tVMAX:%d, HMAX:%d\n", imx585->VMAX, imx585->HMAX);
-> +			dev_info(&client->dev, "Update exposure limits: max:%d, min:%d, current:%d\n",
-> +				 imx585->VMAX - min_SHR,
-> +				 IMX585_EXPOSURE_MIN, current_exposure);
-> +
-> +			ret = imx585_write_reg_3byte(imx585, IMX585_REG_VMAX, imx585->VMAX);
-> +			if (ret)
-> +				dev_err_ratelimited(&client->dev,
-> +						    "Failed to write reg 0x%4.4x. error = %d\n",
-> +						    IMX585_REG_VMAX, ret);
-> +		break;
-> +		}
-> +	case V4L2_CID_HBLANK:
-> +		{
-> +			u64 pixel_rate;
-> +			u64 hmax;
-> +
-> +			pixel_rate = (u64)mode->width * IMX585_PIXEL_RATE;
-> +			do_div(pixel_rate, mode->min_HMAX);
-> +			hmax = (u64)(mode->width + ctrl->val) * IMX585_PIXEL_RATE;
-> +			do_div(hmax, pixel_rate);
-> +			imx585->HMAX = hmax;
-> +
-> +			dev_info(&client->dev, "V4L2_CID_HBLANK : %d\n", ctrl->val);
-> +			dev_info(&client->dev, "\tHMAX : %d\n", imx585->HMAX);
-> +
-> +			ret = imx585_write_reg_2byte(imx585, IMX585_REG_HMAX, hmax);
-> +			if (ret)
-> +				dev_err_ratelimited(&client->dev,
-> +						    "Failed to write reg 0x%4.4x. error = %d\n",
-> +						    IMX585_REG_HMAX, ret);
-> +		break;
-> +		}
-> +	case V4L2_CID_HFLIP:
-> +		dev_info(&client->dev, "V4L2_CID_HFLIP : %d\n", ctrl->val);
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_FLIP_WINMODEH, ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_FLIP_WINMODEH, ret);
-> +		break;
-> +	case V4L2_CID_VFLIP:
-> +		dev_info(&client->dev, "V4L2_CID_VFLIP : %d\n", ctrl->val);
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_FLIP_WINMODEV, ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_FLIP_WINMODEV, ret);
-> +		break;
-> +	case V4L2_CID_BRIGHTNESS:
-> +		{
-> +		u16 blacklevel = ctrl->val;
-> +
-> +		dev_info(&client->dev, "V4L2_CID_BRIGHTNESS : %d\n", ctrl->val);
-> +
-> +		if (blacklevel > 4095)
-> +			blacklevel = 4095;
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_BLKLEVEL, blacklevel);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_BLKLEVEL, ret);
-> +		break;
-> +		}
-> +	case V4L2_CID_BAND_STOP_FILTER:
-> +		if (imx585->has_ircut) {
-> +			dev_info(&client->dev, "V4L2_CID_BAND_STOP_FILTER : %d\n", ctrl->val);
-> +			imx585_ircut_set(imx585, ctrl->val);
-> +		}
-> +		break;
-> +	case V4L2_CID_IMX585_HDR_DATASEL_TH:{
-> +		const u16 *th = (const u16 *)ctrl->p_new.p;
-> +
-> +		ret = imx585_write_reg_2byte(imx585, IMX585_REG_EXP_TH_H, th[0]);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_EXP_TH_H, ret);
-> +		ret = imx585_write_reg_2byte(imx585, IMX585_REG_EXP_TH_L, th[1]);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_EXP_TH_L, ret);
-> +		dev_info(&client->dev, "V4L2_CID_IMX585_HDR_DATASEL_TH : %d, %d\n", th[0], th[1]);
-> +		break;
-> +		}
-> +	case V4L2_CID_IMX585_HDR_DATASEL_BK:
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_EXP_BK, ctrl->val);
-> +		dev_info(&client->dev, "V4L2_CID_IMX585_HDR_DATASEL_BK : %d\n", ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_EXP_BK, ret);
-> +		break;
-> +	case V4L2_CID_IMX585_HDR_GRAD_TH:{
-> +		const u32 *thr = (const u32 *)ctrl->p_new.p;
-> +
-> +		ret = imx585_write_reg_3byte(imx585, IMX585_REG_CCMP1_EXP, thr[0]);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_CCMP1_EXP, ret);
-> +		ret = imx585_write_reg_3byte(imx585, IMX585_REG_CCMP2_EXP, thr[1]);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_CCMP2_EXP, ret);
-> +		dev_info(&client->dev, "V4L2_CID_IMX585_HDR_GRAD_TH : %d, %d\n", thr[0], thr[1]);
-> +		break;
-> +		}
-> +	case V4L2_CID_IMX585_HDR_GRAD_COMP_L:{
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_ACMP1_EXP, ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_ACMP1_EXP, ret);
-> +		dev_info(&client->dev, "V4L2_CID_IMX585_HDR_GRAD_COMP_L : %d\n", ctrl->val);
-> +		break;
-> +		}
-> +	case V4L2_CID_IMX585_HDR_GRAD_COMP_H:{
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_ACMP2_EXP, ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_ACMP2_EXP, ret);
-> +		dev_info(&client->dev, "V4L2_CID_IMX585_HDR_GRAD_COMP_H : %d\n", ctrl->val);
-> +		break;
-> +		}
-> +	case V4L2_CID_IMX585_HDR_GAIN:
-> +		ret = imx585_write_reg_1byte(imx585, IMX585_REG_EXP_GAIN, ctrl->val);
-> +		dev_info(&client->dev, "IMX585_REG_EXP_GAIN : %d\n", ctrl->val);
-> +		if (ret)
-> +			dev_err_ratelimited(&client->dev,
-> +					    "Failed to write reg 0x%4.4x. error = %d\n",
-> +					    IMX585_REG_EXP_GAIN, ret);
-> +		break;
-> +	case V4L2_CID_WIDE_DYNAMIC_RANGE:
-> +		/* Already handled above. */
-> +		break;
-> +	default:
-> +		dev_info(&client->dev,
-> +			 "ctrl(id:0x%x,val:0x%x) is not handled\n",
-> +			 ctrl->id, ctrl->val);
-> +		break;
-> +	}
-> +
-> +	pm_runtime_put(&client->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct v4l2_ctrl_ops imx585_ctrl_ops = {
-> +	.s_ctrl = imx585_set_ctrl,
-> +};
-> +
-> +static const u16 hdr_thresh_def[2] = { 512, 1024 };
-> +static const struct v4l2_ctrl_config imx585_cfg_datasel_th = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_DATASEL_TH,
-> +	.name = "HDR Data selection Threshold",
-> +	.type = V4L2_CTRL_TYPE_U16,
-> +	.min = 0,
-> +	.max = 0x0FFF,
-> +	.step = 1,
-> +	.def = 0,
-> +	.dims = { 2 },
-> +	.elem_size = sizeof(u16),
-> +};
-> +
-> +static const struct v4l2_ctrl_config imx585_cfg_datasel_bk = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_DATASEL_BK,
-> +	.name = "HDR Data Blending Mode",
-> +	.type = V4L2_CTRL_TYPE_MENU,
-> +	.max = ARRAY_SIZE(hdr_data_blender_menu) - 1,
-> +	.menu_skip_mask = 0,
-> +	.def = 0,
-> +	.qmenu = hdr_data_blender_menu,
-> +};
-> +
-> +static const u32 grad_thresh_def[2] = { 500, 11500 };
-> +static const struct v4l2_ctrl_config imx585_cfg_grad_th = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_GRAD_TH,
-> +	.name = "Gradiant Compression Threshold (16bit)",
-> +	.type = V4L2_CTRL_TYPE_U32,
-> +	.min = 0,
-> +	.max = 0x1FFFF,
-> +	.step = 1,
-> +	.def = 0,
-> +	.dims = { 2 },
-> +	.elem_size = sizeof(u32),
-> +};
-> +
-> +static const struct v4l2_ctrl_config imx585_cfg_grad_exp_l = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_GRAD_COMP_L,
-> +	.name = "Gradiant Compression Ratio Low",
-> +	.type = V4L2_CTRL_TYPE_MENU,
-> +	.min = 0,
-> +	.max = ARRAY_SIZE(grad_compression_slope_menu) - 1,
-> +	.menu_skip_mask = 0,
-> +	.def = 2,
-> +	.qmenu = grad_compression_slope_menu,
-> +};
-> +
-> +static const struct v4l2_ctrl_config imx585_cfg_grad_exp_h = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_GRAD_COMP_H,
-> +	.name = "Gradiant Compression Ratio High",
-> +	.type = V4L2_CTRL_TYPE_MENU,
-> +	.min = 0,
-> +	.max = ARRAY_SIZE(grad_compression_slope_menu) - 1,
-> +	.menu_skip_mask = 0,
-> +	.def = 6,
-> +	.qmenu = grad_compression_slope_menu,
-> +};
-> +
-> +static const struct v4l2_ctrl_config imx585_cfg_hdr_gain = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HDR_GAIN,
-> +	.name = "HDR Gain Adder (dB)",
-> +	.type = V4L2_CTRL_TYPE_MENU,
-> +	.min = 0,
-> +	.max = ARRAY_SIZE(hdr_gain_adder_menu) - 1,
-> +	.menu_skip_mask = 0,
-> +	.def = 2,
-> +	.qmenu = hdr_gain_adder_menu,
-> +};
-> +
-> +static const struct v4l2_ctrl_config imx585_cfg_hcg = {
-> +	.ops = &imx585_ctrl_ops,
-> +	.id = V4L2_CID_IMX585_HCG_GAIN,
-> +	.name = "HCG Enable",
-> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
-> +	.min  = 0,
-> +	.max  = 1,
-> +	.step = 1,
-> +	.def  = 0,
-> +};
-> +
-> +static int imx585_enum_mbus_code(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_state *sd_state,
-> +				 struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +	unsigned int entries;
-> +	const u32 *tbl;
-> +
-> +	if (code->pad >= NUM_PADS)
-> +		return -EINVAL;
-> +
-> +	if (code->pad == IMAGE_PAD) {
-> +		if (imx585->mono) {
-> +			if (imx585->clear_HDR) {
-> +				if (code->index > 1)
-> +					return -EINVAL;
-> +				code->code = mono_codes[code->index];
-> +				return 0;
-> +			}
-> +			/* HDR off: expose Y12 only */
-> +			if (code->index)
-> +				return -EINVAL;
-> +
-> +			code->code = MEDIA_BUS_FMT_Y12_1X12;
-> +			return 0;
-> +		}
-> +
-> +		if (imx585->clear_HDR) {
-> +			tbl     = codes_clearhdr;  /* << 16bit + 12bit */
-> +			entries = ARRAY_SIZE(codes_clearhdr) / 4;
-> +		} else {
-> +			tbl     = codes_normal;    /* << ONLY 12bit */
-> +			entries = ARRAY_SIZE(codes_normal) / 4;
-> +		}
-> +
-> +		if (code->index >= entries)
-> +			return -EINVAL;
-> +
-> +		code->code = imx585_get_format_code(imx585, tbl[code->index * 4]);
-> +		return 0;
-> +	}
-> +	/* --- Metadata pad ------------------------------------------------- */
-> +	if (code->index)
-> +		return -EINVAL;
-> +
-> +	code->code = MEDIA_BUS_FMT_SENSOR_DATA;
-> +	return 0;
-> +}
-> +
-> +static int imx585_enum_frame_size(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_state *sd_state,
-> +				  struct v4l2_subdev_frame_size_enum *fse)
-> +{
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	if (fse->pad >= NUM_PADS)
-> +		return -EINVAL;
-> +
-> +	if (fse->pad == IMAGE_PAD) {
-> +		const struct imx585_mode *mode_list;
-> +		unsigned int num_modes;
-> +
-> +		get_mode_table(imx585, fse->code, &mode_list, &num_modes);
-> +
-> +		if (fse->index >= num_modes)
-> +			return -EINVAL;
-> +
-> +		if (fse->code != imx585_get_format_code(imx585, fse->code))
-> +			return -EINVAL;
-> +
-> +		fse->min_width = mode_list[fse->index].width;
-> +		fse->max_width = fse->min_width;
-> +		fse->min_height = mode_list[fse->index].height;
-> +		fse->max_height = fse->min_height;
-> +	} else {
-> +		if (fse->code != MEDIA_BUS_FMT_SENSOR_DATA || fse->index > 0)
-> +			return -EINVAL;
-> +
-> +		fse->min_width = IMX585_EMBEDDED_LINE_WIDTH;
-> +		fse->max_width = fse->min_width;
-> +		fse->min_height = IMX585_NUM_EMBEDDED_LINES;
-> +		fse->max_height = fse->min_height;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void imx585_reset_colorspace(const struct imx585_mode *mode, struct v4l2_mbus_framefmt *fmt)
-> +{
-> +	fmt->colorspace = V4L2_COLORSPACE_RAW;
-> +	fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->colorspace);
-> +	fmt->quantization = V4L2_MAP_QUANTIZATION_DEFAULT(true,
-> +							  fmt->colorspace,
-> +							  fmt->ycbcr_enc);
-> +	fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(fmt->colorspace);
-> +}
-> +
-> +static void imx585_update_image_pad_format(struct imx585 *imx585,
-> +					   const struct imx585_mode *mode,
-> +					   struct v4l2_subdev_format *fmt)
-> +{
-> +	fmt->format.width = mode->width;
-> +	fmt->format.height = mode->height;
-> +	fmt->format.field = V4L2_FIELD_NONE;
-> +	imx585_reset_colorspace(mode, &fmt->format);
-> +}
-> +
-> +static void imx585_update_metadata_pad_format(struct v4l2_subdev_format *fmt)
-> +{
-> +	fmt->format.width = IMX585_EMBEDDED_LINE_WIDTH;
-> +	fmt->format.height = IMX585_NUM_EMBEDDED_LINES;
-> +	fmt->format.code = MEDIA_BUS_FMT_SENSOR_DATA;
-> +	fmt->format.field = V4L2_FIELD_NONE;
-> +}
-> +
-> +static int imx585_get_pad_format(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_state *sd_state,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	if (fmt->pad >= NUM_PADS)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&imx585->mutex);
-> +
-> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> +		struct v4l2_mbus_framefmt *try_fmt =
-> +			v4l2_subdev_state_get_format(sd_state, fmt->pad);
-> +		/* update the code which could change due to vflip or hflip: */
-> +		try_fmt->code = fmt->pad == IMAGE_PAD ?
-> +				imx585_get_format_code(imx585, try_fmt->code) :
-> +				MEDIA_BUS_FMT_SENSOR_DATA;
-> +		fmt->format = *try_fmt;
-> +	} else {
-> +		if (fmt->pad == IMAGE_PAD) {
-> +			imx585_update_image_pad_format(imx585, imx585->mode, fmt);
-> +			fmt->format.code =
-> +				   imx585_get_format_code(imx585, imx585->fmt_code);
-> +		} else {
-> +			imx585_update_metadata_pad_format(fmt);
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&imx585->mutex);
-> +	return 0;
-> +}
-> +
-> +static int imx585_set_pad_format(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_state *sd_state,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct v4l2_mbus_framefmt *framefmt;
-> +	const struct imx585_mode *mode;
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	if (fmt->pad >= NUM_PADS)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&imx585->mutex);
-> +
-> +	if (fmt->pad == IMAGE_PAD) {
-> +		const struct imx585_mode *mode_list;
-> +		unsigned int num_modes;
-> +
-> +		/* Bayer order varies with flips */
-> +		fmt->format.code = imx585_get_format_code(imx585, fmt->format.code);
-> +		get_mode_table(imx585, fmt->format.code, &mode_list, &num_modes);
-> +		mode = v4l2_find_nearest_size(mode_list,
-> +					      num_modes,
-> +					      width, height,
-> +					      fmt->format.width,
-> +					      fmt->format.height);
-> +		imx585_update_image_pad_format(imx585, mode, fmt);
-> +		if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> +			framefmt = v4l2_subdev_state_get_format(sd_state, fmt->pad);
-> +			*framefmt = fmt->format;
-> +		} else if (imx585->mode != mode ||
-> +			   imx585->fmt_code != fmt->format.code) {
-> +			imx585->mode = mode;
-> +			imx585->fmt_code = fmt->format.code;
-> +			imx585_set_framing_limits(imx585);
-> +		}
-> +	} else {
-> +		if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> +			framefmt = v4l2_subdev_state_get_format(sd_state, fmt->pad);
-> +			*framefmt = fmt->format;
-> +		} else {
-> +			/* Only one embedded data mode is supported */
-> +			imx585_update_metadata_pad_format(fmt);
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&imx585->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_rect *
-> +__imx585_get_pad_crop(struct imx585 *imx585,
-> +		      struct v4l2_subdev_state *sd_state,
-> +		      unsigned int pad, enum v4l2_subdev_format_whence which)
-> +{
-> +	switch (which) {
-> +	case V4L2_SUBDEV_FORMAT_TRY:
-> +		return v4l2_subdev_state_get_crop(sd_state, IMAGE_PAD);
-> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
-> +		return &imx585->mode->crop;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +/* Start streaming */
-> +static int imx585_start_streaming(struct imx585 *imx585)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	const struct IMX585_reg_list *reg_list;
-> +	int ret;
-> +
-> +	if (!imx585->common_regs_written) {
-> +		ret = imx585_write_regs(imx585, common_regs, ARRAY_SIZE(common_regs));
-> +		if (ret) {
-> +			dev_err(&client->dev, "%s failed to set common settings\n", __func__);
-> +			return ret;
-> +		}
-> +
-> +		imx585_write_reg_1byte(imx585, IMX585_INCK_SEL, imx585->inck_sel_val);
-> +		imx585_write_reg_2byte(imx585, IMX585_REG_BLKLEVEL, IMX585_BLKLEVEL_DEFAULT);
-> +		imx585_write_reg_1byte(imx585, IMX585_DATARATE_SEL,
-> +				       link_freqs_reg_value[imx585->link_freq_idx]);
-> +
-> +		if (imx585->lane_count == 2)
-> +			imx585_write_reg_1byte(imx585, IMX585_LANEMODE, 0x01);
-> +		else
-> +			imx585_write_reg_1byte(imx585, IMX585_LANEMODE, 0x03);
-> +
-> +		if (imx585->mono)
-> +			imx585_write_reg_1byte(imx585, IMX585_BIN_MODE, 0x01);
-> +		else
-> +			imx585_write_reg_1byte(imx585, IMX585_BIN_MODE, 0x00);
-> +
-> +		if (imx585->sync_mode == 1) { //External Sync Leader Mode
-> +			dev_info(&client->dev, "External Sync Leader Mode, enable XVS input\n");
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_EXTMODE, 0x01);
-> +			// Enable XHS output, but XVS is input
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_DRV, 0x03);
-> +			// Disable XVS OUT
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_OUTSEL, 0x08);
-> +		} else if (imx585->sync_mode == 0) { //Internal Sync Leader Mode
-> +			dev_info(&client->dev, "Internal Sync Leader Mode, enable output\n");
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_EXTMODE, 0x00);
-> +			// Enable XHS and XVS output
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_DRV, 0x00);
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_OUTSEL, 0x0A);
-> +		} else {
-> +			dev_info(&client->dev, "Follower Mode, enable XVS/XHS input\n");
-> +			//For follower mode, switch both of them to input
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_DRV, 0x0F);
-> +			imx585_write_reg_1byte(imx585, IMX585_REG_XXS_OUTSEL, 0x00);
-> +		}
-> +		imx585->common_regs_written = true;
-> +		dev_info(&client->dev, "common_regs_written\n");
-> +	}
-> +
-> +	/* Apply default values of current mode */
-> +	reg_list = &imx585->mode->reg_list;
-> +	ret = imx585_write_regs(imx585, reg_list->regs, reg_list->num_of_regs);
-> +	if (ret) {
-> +		dev_err(&client->dev, "%s failed to set mode\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	if (imx585->clear_HDR) {
-> +		ret = imx585_write_regs(imx585, common_clearHDR_mode,
-> +					ARRAY_SIZE(common_clearHDR_mode));
-> +		if (ret) {
-> +			dev_err(&client->dev, "%s failed to set ClearHDR settings\n", __func__);
-> +			return ret;
-> +		}
-> +		//16bit mode is linear, 12bit mode we need to enable gradation compression
-> +		switch (imx585->fmt_code) {
-> +		/* 16-bit */
-> +		case MEDIA_BUS_FMT_SRGGB16_1X16:
-> +		case MEDIA_BUS_FMT_SGRBG16_1X16:
-> +		case MEDIA_BUS_FMT_SGBRG16_1X16:
-> +		case MEDIA_BUS_FMT_SBGGR16_1X16:
-> +		case MEDIA_BUS_FMT_Y16_1X16:
-> +			imx585_write_reg_1byte(imx585, IMX595_REG_CCMP_EN, 0);
-> +			imx585_write_reg_1byte(imx585, 0x3023, 0x03); // MDBIT 16-bit
-> +			dev_info(&client->dev, "16bit HDR written\n");
-> +			break;
-> +		/* 12-bit */
-> +		case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		case MEDIA_BUS_FMT_SGRBG12_1X12:
-> +		case MEDIA_BUS_FMT_SGBRG12_1X12:
-> +		case MEDIA_BUS_FMT_SBGGR12_1X12:
-> +		case MEDIA_BUS_FMT_Y12_1X12:
-> +			imx585_write_reg_1byte(imx585, IMX595_REG_CCMP_EN, 1);
-> +			dev_info(&client->dev, "12bit HDR written\n");
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +		dev_info(&client->dev, "ClearHDR_regs_written\n");
-> +
-> +	} else {
-> +		ret = imx585_write_regs(imx585, common_normal_mode, ARRAY_SIZE(common_normal_mode));
-> +		if (ret) {
-> +			dev_err(&client->dev, "%s failed to set Normal settings\n", __func__);
-> +			return ret;
-> +		}
-> +		dev_info(&client->dev, "normal_regs_written\n");
-> +	}
-> +
-> +	/* Disable digital clamp */
-> +	imx585_write_reg_1byte(imx585, IMX585_REG_DIGITAL_CLAMP, 0);
-> +
-> +	/* Apply customized values from user */
-> +	ret =  __v4l2_ctrl_handler_setup(imx585->sd.ctrl_handler);
-> +	if (ret) {
-> +		dev_err(&client->dev, "%s failed to apply user values\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	if (imx585->sync_mode <= 1) {
-> +		dev_info(&client->dev, "imx585 Leader mode enabled\n");
-> +		imx585_write_reg_1byte(imx585, IMX585_REG_XMSTA, 0x00);
-> +	}
-> +
-> +	/* Set stream on register */
-> +	ret = imx585_write_reg_1byte(imx585, IMX585_REG_MODE_SELECT, IMX585_MODE_STREAMING);
-> +
-> +	dev_info(&client->dev, "Start Streaming\n");
-> +	usleep_range(IMX585_STREAM_DELAY_US, IMX585_STREAM_DELAY_US + IMX585_STREAM_DELAY_RANGE_US);
-> +	return ret;
-> +}
-> +
-> +/* Stop streaming */
-> +static void imx585_stop_streaming(struct imx585 *imx585)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	int ret;
-> +
-> +	dev_info(&client->dev, "Stop Streaming\n");
-> +
-> +	/* set stream off register */
-> +	ret = imx585_write_reg_1byte(imx585, IMX585_REG_MODE_SELECT, IMX585_MODE_STANDBY);
-> +	if (ret)
-> +		dev_err(&client->dev, "%s failed to stop stream\n", __func__);
-> +}
-> +
-> +static int imx585_set_stream(struct v4l2_subdev *sd, int enable)
-> +{
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&imx585->mutex);
-> +	if (imx585->streaming == enable) {
-> +		mutex_unlock(&imx585->mutex);
-> +		return 0;
-> +	}
-> +
-> +	if (enable) {
-> +		ret = pm_runtime_get_sync(&client->dev);
-> +		if (ret < 0) {
-> +			pm_runtime_put_noidle(&client->dev);
-> +			goto err_unlock;
-> +		}
-> +
-> +		/*
-> +		 * Apply default & customized values
-> +		 * and then start streaming.
-> +		 */
-> +		ret = imx585_start_streaming(imx585);
-> +		if (ret)
-> +			goto err_rpm_put;
-> +	} else {
-> +		imx585_stop_streaming(imx585);
-> +		pm_runtime_put(&client->dev);
-> +	}
-> +
-> +	imx585->streaming = enable;
-> +
-> +	/* vflip/hflip and hdr mode cannot change during streaming */
-> +	__v4l2_ctrl_grab(imx585->vflip, enable);
-> +	__v4l2_ctrl_grab(imx585->hflip, enable);
-> +	__v4l2_ctrl_grab(imx585->hdr_mode, enable);
-> +
-> +	mutex_unlock(&imx585->mutex);
-> +
-> +	return ret;
-> +
-> +err_rpm_put:
-> +	pm_runtime_put(&client->dev);
-> +err_unlock:
-> +	mutex_unlock(&imx585->mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Power/clock management functions */
-> +static int imx585_power_on(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(imx585_NUM_SUPPLIES,
-> +				    imx585->supplies);
-> +	if (ret) {
-> +		dev_err(&client->dev, "%s: failed to enable regulators\n",
-> +			__func__);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx585->xclk);
-> +	if (ret) {
-> +		dev_err(&client->dev, "%s: failed to enable clock\n",
-> +			__func__);
-> +		goto reg_off;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(imx585->reset_gpio, 1);
-> +	usleep_range(IMX585_XCLR_MIN_DELAY_US,
-> +		     IMX585_XCLR_MIN_DELAY_US + IMX585_XCLR_DELAY_RANGE_US);
-> +
-> +	return 0;
-> +
-> +reg_off:
-> +	regulator_bulk_disable(imx585_NUM_SUPPLIES, imx585->supplies);
-> +	return ret;
-> +}
-> +
-> +static int imx585_power_off(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	gpiod_set_value_cansleep(imx585->reset_gpio, 0);
-> +	regulator_bulk_disable(imx585_NUM_SUPPLIES, imx585->supplies);
-> +	clk_disable_unprepare(imx585->xclk);
-> +
-> +	/* Force reprogramming of the common registers when powered up again. */
-> +	imx585->common_regs_written = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused imx585_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	if (imx585->streaming)
-> +		imx585_stop_streaming(imx585);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused imx585_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +	int ret;
-> +
-> +	if (imx585->streaming) {
-> +		ret = imx585_start_streaming(imx585);
-> +		if (ret)
-> +			goto error;
-> +	}
-> +
-> +	return 0;
-> +
-> +error:
-> +	imx585_stop_streaming(imx585);
-> +	imx585->streaming = 0;
-> +	return ret;
-> +}
-> +
-> +static int imx585_get_regulators(struct imx585 *imx585)
-
-Please move this function and the next just before the probe function,
-to keep all probe code grouped together.
-
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < imx585_NUM_SUPPLIES; i++)
-> +		imx585->supplies[i].supply = imx585_supply_name[i];
-> +
-> +	return devm_regulator_bulk_get(&client->dev,
-> +					   imx585_NUM_SUPPLIES,
-> +					   imx585->supplies);
-> +}
-> +
-> +/* Verify chip ID */
-> +static int imx585_check_module_exists(struct imx585 *imx585)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* We don't actually have a CHIP ID register so we try to read from BLKLEVEL instead*/
-> +	ret = imx585_read_reg(imx585, IMX585_REG_BLKLEVEL,
-> +			      1, &val);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to read chip reg, with error %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&client->dev, "Reg read success, Device found\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx585_get_selection(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_state *sd_state,
-> +				struct v4l2_subdev_selection *sel)
-> +{
-> +	switch (sel->target) {
-> +	case V4L2_SEL_TGT_CROP: {
-> +		struct imx585 *imx585 = to_imx585(sd);
-> +
-> +		mutex_lock(&imx585->mutex);
-> +		sel->r = *__imx585_get_pad_crop(imx585, sd_state, sel->pad, sel->which);
-> +		mutex_unlock(&imx585->mutex);
-> +
-> +		return 0;
-> +	}
-> +
-> +	case V4L2_SEL_TGT_NATIVE_SIZE:
-> +		sel->r.left = 0;
-> +		sel->r.top = 0;
-> +		sel->r.width = IMX585_NATIVE_WIDTH;
-> +		sel->r.height = IMX585_NATIVE_HEIGHT;
-> +		return 0;
-> +
-> +	case V4L2_SEL_TGT_CROP_DEFAULT:
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +		sel->r.left = IMX585_PIXEL_ARRAY_LEFT;
-> +		sel->r.top = IMX585_PIXEL_ARRAY_TOP;
-> +		sel->r.width = IMX585_PIXEL_ARRAY_WIDTH;
-> +		sel->r.height = IMX585_PIXEL_ARRAY_HEIGHT;
-> +		return 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct v4l2_subdev_core_ops imx585_core_ops = {
-> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-> +};
-> +
-> +static const struct v4l2_subdev_video_ops imx585_video_ops = {
-> +	.s_stream = imx585_set_stream,
-
-Please implement the .enable_streams() and .disable_streams() pad
-ops, and use v4l2_subdev_s_stream_helper here.
-
-> +};
-> +
-> +static const struct v4l2_subdev_pad_ops imx585_pad_ops = {
-> +	.enum_mbus_code = imx585_enum_mbus_code,
-> +	.get_fmt = imx585_get_pad_format,
-> +	.set_fmt = imx585_set_pad_format,
-> +	.get_selection = imx585_get_selection,
-> +	.enum_frame_size = imx585_enum_frame_size,
-> +};
-> +
-> +static const struct v4l2_subdev_ops imx585_subdev_ops = {
-> +	.core = &imx585_core_ops,
-> +	.video = &imx585_video_ops,
-> +	.pad = &imx585_pad_ops,
-> +};
-> +
-> +static const struct v4l2_subdev_internal_ops imx585_internal_ops = {
-> +	.open = imx585_open,
-> +};
-> +
-> +/* Initialize control handlers */
-> +static int imx585_init_controls(struct imx585 *imx585)
-
-Please the control-related functions just below imx585_cfg_hcg, to keep
-the data and functions grouped together.
-
-> +{
-> +	struct v4l2_ctrl_handler *ctrl_hdlr;
-> +	struct i2c_client *client = v4l2_get_subdevdata(&imx585->sd);
-> +	struct v4l2_fwnode_device_properties props;
-> +	int ret;
-> +
-> +	ctrl_hdlr = &imx585->ctrl_handler;
-> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 32);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_init(&imx585->mutex);
-> +	ctrl_hdlr->lock = &imx585->mutex;
-> +
-> +	/*
-> +	 * Create the controls here, but mode specific limits are setup
-> +	 * in the imx585_set_framing_limits() call below.
-> +	 */
-> +	/* By default, PIXEL_RATE is read only */
-> +	imx585->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					       V4L2_CID_PIXEL_RATE,
-> +					       0xffff,
-> +					       0xffff, 1,
-> +					       0xffff);
-> +
-> +	/* LINK_FREQ is also read only */
-> +	imx585->link_freq =
-> +		v4l2_ctrl_new_int_menu(ctrl_hdlr, &imx585_ctrl_ops,
-> +				       V4L2_CID_LINK_FREQ, 0, 0,
-> +				       &link_freqs[imx585->link_freq_idx]);
-> +	if (imx585->link_freq)
-> +		imx585->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> +
-> +	imx585->vblank = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					   V4L2_CID_VBLANK, 0, 0xfffff, 1, 0);
-> +	imx585->hblank = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					   V4L2_CID_HBLANK, 0, 0xffff, 1, 0);
-> +	imx585->blacklevel = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					       V4L2_CID_BRIGHTNESS, 0, 0xffff, 1,
-> +					       IMX585_BLKLEVEL_DEFAULT);
-> +
-> +	imx585->exposure = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					     V4L2_CID_EXPOSURE,
-> +					     IMX585_EXPOSURE_MIN,
-> +					     IMX585_EXPOSURE_MAX,
-> +					     IMX585_EXPOSURE_STEP,
-> +					     IMX585_EXPOSURE_DEFAULT);
-> +
-> +	imx585->gain = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops, V4L2_CID_ANALOGUE_GAIN,
-> +					 IMX585_ANA_GAIN_MIN_NORMAL, IMX585_ANA_GAIN_MAX_NORMAL,
-> +					 IMX585_ANA_GAIN_STEP, IMX585_ANA_GAIN_DEFAULT);
-> +
-> +	imx585->hflip = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops, V4L2_CID_HFLIP, 0, 1, 1, 0);
-> +	imx585->vflip = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops, V4L2_CID_VFLIP, 0, 1, 1, 0);
-> +
-> +	if (imx585->has_ircut) {
-> +		imx585->ircut_ctrl =
-> +			v4l2_ctrl_new_std(&imx585->ctrl_handler, &imx585_ctrl_ops,
-> +					  V4L2_CID_BAND_STOP_FILTER,
-> +					  0, 1, 1, 1);
-> +	}
-> +
-> +	imx585->hdr_mode = v4l2_ctrl_new_std(ctrl_hdlr, &imx585_ctrl_ops,
-> +					     V4L2_CID_WIDE_DYNAMIC_RANGE,
-> +					     0, 1, 1, 0);
-> +	imx585->datasel_th_ctrl = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_datasel_th, NULL);
-> +	imx585->datasel_bk_ctrl = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_datasel_bk, NULL);
-> +	imx585->gdc_th_ctrl     = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_grad_th, NULL);
-> +	imx585->gdc_exp_ctrl_l  = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_grad_exp_l, NULL);
-> +	imx585->gdc_exp_ctrl_h  = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_grad_exp_h, NULL);
-> +	imx585->hdr_gain_ctrl   = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_hdr_gain, NULL);
-> +	imx585->hcg_ctrl        = v4l2_ctrl_new_custom(ctrl_hdlr,
-> +						       &imx585_cfg_hcg, NULL);
-> +
-> +	v4l2_ctrl_activate(imx585->datasel_th_ctrl,  imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->datasel_bk_ctrl,  imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->gdc_th_ctrl,      imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->gdc_exp_ctrl_l,   imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->gdc_exp_ctrl_h,   imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->hdr_gain_ctrl,    imx585->clear_HDR);
-> +	v4l2_ctrl_activate(imx585->hcg_ctrl,        !imx585->clear_HDR);
-> +
-> +	if (ctrl_hdlr->error) {
-> +		ret = ctrl_hdlr->error;
-> +		dev_err(&client->dev, "%s control init failed (%d)\n",
-> +			__func__, ret);
-> +		goto error;
-> +	}
-> +
-> +	ret = v4l2_fwnode_device_parse(&client->dev, &props);
-> +	if (ret)
-> +		goto error;
-> +
-> +	ret = v4l2_ctrl_new_fwnode_properties(ctrl_hdlr, &imx585_ctrl_ops, &props);
-> +	if (ret)
-> +		goto error;
-> +
-> +	memcpy(imx585->datasel_th_ctrl->p_cur.p, hdr_thresh_def, sizeof(hdr_thresh_def));
-> +	memcpy(imx585->datasel_th_ctrl->p_new.p, hdr_thresh_def, sizeof(hdr_thresh_def));
-> +	memcpy(imx585->gdc_th_ctrl->p_cur.p, grad_thresh_def, sizeof(grad_thresh_def));
-> +	memcpy(imx585->gdc_th_ctrl->p_new.p, grad_thresh_def, sizeof(grad_thresh_def));
-> +
-> +	imx585->hdr_mode->flags |= V4L2_CTRL_FLAG_UPDATE;
-> +	imx585->hdr_mode->flags |= V4L2_CTRL_FLAG_MODIFY_LAYOUT;
-> +
-> +	imx585->sd.ctrl_handler = ctrl_hdlr;
-> +
-> +	/* Setup exposure and frame/line length limits. */
-> +	imx585_set_framing_limits(imx585);
-> +
-> +	return 0;
-> +
-> +error:
-> +	v4l2_ctrl_handler_free(ctrl_hdlr);
-> +	mutex_destroy(&imx585->mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +static void imx585_free_controls(struct imx585 *imx585)
-> +{
-> +	v4l2_ctrl_handler_free(imx585->sd.ctrl_handler);
-> +	mutex_destroy(&imx585->mutex);
-> +}
-> +
-> +static const struct of_device_id imx585_dt_ids[] = {
-> +	{ .compatible = "sony,imx585"},
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int imx585_check_hwcfg(struct device *dev, struct imx585 *imx585)
-> +{
-> +	struct fwnode_handle *endpoint;
-
-	struct fwnode_handle *endpoint __free(fwnode_handle_put) = NULL;
-
-and rop the fwnode_handle_put() call below. That will simplify error
-handling.
-
-> +	struct v4l2_fwnode_endpoint ep_cfg = {
-> +		.bus_type = V4L2_MBUS_CSI2_DPHY
-> +	};
-> +	int ret = -EINVAL;
-> +	int i;
-> +
-> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
-> +	if (!endpoint) {
-> +		dev_err(dev, "endpoint node not found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep_cfg)) {
-> +		dev_err(dev, "could not parse endpoint\n");
-> +		goto error_out;
-> +	}
-> +
-> +	/* Check the number of MIPI CSI2 data lanes */
-> +	if (ep_cfg.bus.mipi_csi2.num_data_lanes != 2 && ep_cfg.bus.mipi_csi2.num_data_lanes != 4) {
-> +		dev_err(dev, "only 2 or 4 data lanes are currently supported\n");
-> +		goto error_out;
-> +	}
-> +	imx585->lane_count = ep_cfg.bus.mipi_csi2.num_data_lanes;
-> +	dev_info(dev, "Data lanes: %d\n", imx585->lane_count);
-> +
-> +	/* Check the link frequency set in device tree */
-> +	if (!ep_cfg.nr_of_link_frequencies) {
-> +		dev_err(dev, "link-frequency property not found in DT\n");
-> +		goto error_out;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(link_freqs); i++) {
-> +		if (link_freqs[i] == ep_cfg.link_frequencies[0]) {
-> +			imx585->link_freq_idx = i;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (i == ARRAY_SIZE(link_freqs)) {
-> +		dev_err(dev, "Link frequency not supported: %lld\n",
-> +			ep_cfg.link_frequencies[0]);
-> +			ret = -EINVAL;
-> +			goto error_out;
-> +	}
-> +
-> +	dev_info(dev, "Link Speed: %lld Mhz\n", ep_cfg.link_frequencies[0]);
-> +
-> +	ret = 0;
-> +
-> +error_out:
-> +	v4l2_fwnode_endpoint_free(&ep_cfg);
-> +	fwnode_handle_put(endpoint);
-> +
-> +	return ret;
-> +}
-> +
-> +static int imx585_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct device_node  *np;
-> +	struct imx585 *imx585;
-> +	const struct of_device_id *match;
-> +	int ret, i;
-> +	u32 sync_mode;
-> +
-> +	imx585 = devm_kzalloc(&client->dev, sizeof(*imx585), GFP_KERNEL);
-> +	if (!imx585)
-> +		return -ENOMEM;
-> +
-> +	v4l2_i2c_subdev_init(&imx585->sd, client, &imx585_subdev_ops);
-> +
-> +	match = of_match_device(imx585_dt_ids, dev);
-> +	if (!match)
-> +		return -ENODEV;
-
-This doesn't seem needed.
-
-> +
-> +	dev_info(dev, "Reading dtoverlay config:\n");
-> +	imx585->mono = of_property_read_bool(dev->of_node, "mono-mode");
-
-Mono sensors should be detected based on the compatible string, not with
-a separate property.
-
-> +	if (imx585->mono)
-> +		dev_info(dev, "Mono Mode Selected, make sure you have the correct sensor variant\n");
-> +
-> +	imx585->clear_HDR = of_property_read_bool(dev->of_node, "clearHDR-mode");
-
-This doesn't seem to belong to DT, as it's a runtime option.
-
-> +	dev_info(dev, "ClearHDR: %d\n", imx585->clear_HDR);
-> +
-> +	imx585->sync_mode = 0;
-> +	ret = of_property_read_u32(dev->of_node, "sync-mode", &sync_mode);
-> +	if (!ret) {
-> +		if (sync_mode > 2) {
-> +			dev_warn(dev, "sync-mode out of range, using 0\n");
-> +			sync_mode = 0;
-> +		}
-> +		imx585->sync_mode = sync_mode;
-> +	} else if (ret != -EINVAL) {          /* property present but bad */
-> +		dev_err(dev, "sync-mode malformed (%pe)\n", ERR_PTR(ret));
-> +		return ret;
-> +	}
-> +	dev_info(dev, "Sync Mode: %s\n", sync_mode_menu[imx585->sync_mode]);
-> +
-> +	/* Check the hardware configuration in device tree */
-> +	if (imx585_check_hwcfg(dev, imx585))
-> +		return -EINVAL;
-> +
-> +	/* Get system clock (xclk) */
-> +	imx585->xclk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(imx585->xclk)) {
-> +		dev_err(dev, "failed to get xclk\n");
-> +		return PTR_ERR(imx585->xclk);
-> +	}
-> +
-> +	imx585->xclk_freq = clk_get_rate(imx585->xclk);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(imx585_inck_table); ++i) {
-> +		if (imx585_inck_table[i].xclk_hz == imx585->xclk_freq) {
-> +			imx585->inck_sel_val = imx585_inck_table[i].inck_sel;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (i == ARRAY_SIZE(imx585_inck_table)) {
-> +		dev_err(dev, "unsupported XCLK rate %u Hz\n",
-> +			imx585->xclk_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_info(dev, "XCLK %u Hz → INCK_SEL 0x%02x\n",
-> +		 imx585->xclk_freq, imx585->inck_sel_val);
-> +
-> +	ret = imx585_get_regulators(imx585);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Request optional enable pin */
-> +	imx585->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> +						     GPIOD_OUT_HIGH);
-> +
-> +	/*
-> +	 * The sensor must be powered for imx585_check_module_exists()
-> +	 * to be able to read register
-> +	 */
-> +	ret = imx585_power_on(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = imx585_check_module_exists(imx585);
-> +	if (ret)
-> +		goto error_power_off;
-> +
-> +	imx585->has_ircut     = false;
-> +	imx585->ircut_client  = NULL;
-> +
-> +	if (of_property_read_bool(dev->of_node, "ircut-mode")) {
-> +		np = of_parse_phandle(dev->of_node, "ircut-controller", 0);
-> +		if (np) {
-> +			imx585->ircut_client = of_find_i2c_device_by_node(np);
-> +			of_node_put(np);
-> +			ret = imx585_ircut_write(imx585, 0x01);
-> +			if (!ret) {
-> +				imx585->has_ircut    = true;
-> +				dev_info(dev, "IR-cut controller present at 0x%02x\n",
-> +					 imx585->ircut_client->addr);
-> +			} else {
-> +				dev_info(dev,
-> +					 "Can't communication with IR-cut control, dropping\n");
-> +			}
-> +		}
-> +	} else {
-> +		dev_info(dev, "No IR-cut controller\n");
-> +	}
-> +
-> +	/* Initialize default format */
-> +	imx585_set_default_format(imx585);
-> +
-> +	/* Enable runtime PM and turn off the device */
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	pm_runtime_idle(dev);
-
-It would be best to use PM runtime autosuspend. See the imx296 driver
-for an example.
-
-> +
-> +	/* This needs the pm runtime to be registered. */
-> +	ret = imx585_init_controls(imx585);
-> +	if (ret)
-> +		goto error_pm_runtime;
-> +
-> +	/* Initialize subdev */
-> +	imx585->sd.internal_ops = &imx585_internal_ops;
-> +	imx585->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
-> +				V4L2_SUBDEV_FL_HAS_EVENTS;
-> +	imx585->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> +
-> +	/* Initialize source pads */
-> +	imx585->pad[IMAGE_PAD].flags = MEDIA_PAD_FL_SOURCE;
-> +	imx585->pad[METADATA_PAD].flags = MEDIA_PAD_FL_SOURCE;
-> +
-> +	ret = media_entity_pads_init(&imx585->sd.entity, NUM_PADS, imx585->pad);
-> +	if (ret) {
-> +		dev_err(dev, "failed to init entity pads: %d\n", ret);
-> +		goto error_handler_free;
-> +	}
-> +
-> +	ret = v4l2_async_register_subdev_sensor(&imx585->sd);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register sensor sub-device: %d\n", ret);
-> +		goto error_media_entity;
-> +	}
-> +
-> +	return 0;
-> +
-> +error_media_entity:
-> +	media_entity_cleanup(&imx585->sd.entity);
-> +
-> +error_handler_free:
-> +	imx585_free_controls(imx585);
-> +
-> +error_pm_runtime:
-> +	pm_runtime_disable(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +
-> +error_power_off:
-> +	imx585_power_off(&client->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static void imx585_remove(struct i2c_client *client)
-> +{
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct imx585 *imx585 = to_imx585(sd);
-> +
-> +	v4l2_async_unregister_subdev(sd);
-> +	media_entity_cleanup(&sd->entity);
-> +	imx585_free_controls(imx585);
-> +
-> +	pm_runtime_disable(&client->dev);
-> +	if (!pm_runtime_status_suspended(&client->dev))
-> +		imx585_power_off(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +}
-> +
-> +MODULE_DEVICE_TABLE(of, imx585_dt_ids);
-
-This should go just below imx585_dt_ids. I would move imx585_dt_ids just
-above the MODULE_DEVICE_TABLE macro.
-
-> +
-> +static const struct dev_pm_ops imx585_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(imx585_suspend, imx585_resume)
-> +	SET_RUNTIME_PM_OPS(imx585_power_off, imx585_power_on, NULL)
-> +};
-> +
-> +static struct i2c_driver imx585_i2c_driver = {
-> +	.driver = {
-> +		.name = "imx585",
-> +		.of_match_table = imx585_dt_ids,
-> +		.pm = &imx585_pm_ops,
-> +	},
-> +	.probe = imx585_probe,
-> +	.remove = imx585_remove,
-> +};
-> +
-> +module_i2c_driver(imx585_i2c_driver);
-> +
-> +MODULE_AUTHOR("Will Whang <will@willwhang.com>");
-> +MODULE_AUTHOR("Tetsuya NOMURA <tetsuya.nomura@soho-enterprise.com>");
-> +MODULE_DESCRIPTION("Sony imx585 sensor driver");
-
-s/imx585/IMX585/
-
-> +MODULE_LICENSE("GPL");
-> 
-
+X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=6866c331 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=xqWC_Br6kY4A:10 a=Wb1JkmetP80A:10
+ a=e5mUnYsNAAAA:8 a=SSmOFEACAAAA:8 a=EUspDBNiAAAA:8 a=cEs17ToO1ggOj8NEQJUA:9
+ a=4RfQHE-psSbnnina:21 a=mQ_c8vxmzFEMiUWkPHU9:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDE0OCBTYWx0ZWRfXzSKDjukBtDPH
+ D/gvwnjOfkYt0OJxT8xUxsZUvZk9vu85xMHBzXvOkszLaxAGeuIXJaJEVrBYANzvcMN1dAd5qNq
+ rPqovdooxCeCgLG6c4Q6XVwtKoFZ3JGR6vneuR+BBNxicFU8R+F4/OpMtsH9XqLqu+m3T59yHK/
+ OYLGd1W14vIq4yiCbA8SqhsVTcdzl0PkxT6GdiVQeCgjXKGU8fK4+u+ETW2cM9TFnYLym9mbR5o
+ AKG46hoj0a0RWIIZiwvxOruyX2t9KwQu0QlJgXMRTuhKWFrdo8TUOL1v7maRZuCqV/y3pzBNMbZ
+ kOwBWMTBrzgSfLPIAbwwWvxJic/MgaRyHHZ3/hCyez+PeFAEk4uyj6BL0Ta+sczHpK8AflAQIrx
+ QMz9VoerW0ImZhioZY90XdvKn/2e+gAaF0V1qvOFXM0Q02bfobEF0oH9iE6pSRvHOEhtCI6a
+X-Proofpoint-ORIG-GUID: kWpcWJDnoB1hqevbqhTtQbLx-gxt4XzD
+X-Proofpoint-GUID: kWpcWJDnoB1hqevbqhTtQbLx-gxt4XzD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507030148
+
+Sync register xml from mesa commit eb3e0b7164a3 ("freedreno/a6xx: Split
+descriptors out into their own file").
+
+Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/Makefile                  |    5 +
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c     |    2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |    4 +
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c   |    2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h   |    2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_preempt.c     |    2 +-
+ .../drm/msm/adreno/adreno_gen7_9_0_snapshot.h |    4 +-
+ drivers/gpu/drm/msm/registers/adreno/a6xx.xml | 3582 +++--------------
+ .../msm/registers/adreno/a6xx_descriptors.xml |  198 +
+ .../drm/msm/registers/adreno/a6xx_enums.xml   |  383 ++
+ .../msm/registers/adreno/a6xx_perfcntrs.xml   |  600 +++
+ .../drm/msm/registers/adreno/a7xx_enums.xml   |  223 +
+ .../msm/registers/adreno/a7xx_perfcntrs.xml   | 1030 +++++
+ .../drm/msm/registers/adreno/adreno_pm4.xml   |  302 +-
+ 14 files changed, 3312 insertions(+), 3027 deletions(-)
+ create mode 100644 drivers/gpu/drm/msm/registers/adreno/a6xx_descriptors.xml
+ create mode 100644 drivers/gpu/drm/msm/registers/adreno/a6xx_enums.xml
+ create mode 100644 drivers/gpu/drm/msm/registers/adreno/a6xx_perfcntrs.xml
+ create mode 100644 drivers/gpu/drm/msm/registers/adreno/a7xx_enums.xml
+ create mode 100644 drivers/gpu/drm/msm/registers/adreno/a7xx_perfcntrs.xml
+
+diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+index 7e81441903a7..621863238dd7 100644
+--- a/drivers/gpu/drm/msm/Makefile
++++ b/drivers/gpu/drm/msm/Makefile
+@@ -196,6 +196,11 @@ ADRENO_HEADERS = \
+ 	generated/a4xx.xml.h \
+ 	generated/a5xx.xml.h \
+ 	generated/a6xx.xml.h \
++	generated/a6xx_descriptors.xml.h \
++	generated/a6xx_enums.xml.h \
++	generated/a6xx_perfcntrs.xml.h \
++	generated/a7xx_enums.xml.h \
++	generated/a7xx_perfcntrs.xml.h \
+ 	generated/a6xx_gmu.xml.h \
+ 	generated/adreno_common.xml.h \
+ 	generated/adreno_pm4.xml.h \
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+index 2fdaaf4372d3..00e1afd46b81 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+@@ -1335,7 +1335,7 @@ static const uint32_t a7xx_pwrup_reglist_regs[] = {
+ 	REG_A6XX_RB_NC_MODE_CNTL,
+ 	REG_A6XX_RB_CMP_DBG_ECO_CNTL,
+ 	REG_A7XX_GRAS_NC_MODE_CNTL,
+-	REG_A6XX_RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE,
++	REG_A6XX_RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE_ENABLE,
+ 	REG_A6XX_UCHE_GBIF_GX_CONFIG,
+ 	REG_A6XX_UCHE_CLIENT_PF,
+ 	REG_A6XX_TPL1_DBG_ECO_CNTL1,
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 9201a53dd341..6e71f617fc3d 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -6,6 +6,10 @@
+ 
+ 
+ #include "adreno_gpu.h"
++#include "a6xx_enums.xml.h"
++#include "a7xx_enums.xml.h"
++#include "a6xx_perfcntrs.xml.h"
++#include "a7xx_perfcntrs.xml.h"
+ #include "a6xx.xml.h"
+ 
+ #include "a6xx_gmu.h"
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+index ff06bb75b76d..faca2a0243ab 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+@@ -158,7 +158,7 @@ static int a6xx_crashdumper_run(struct msm_gpu *gpu,
+ 	/* Make sure all pending memory writes are posted */
+ 	wmb();
+ 
+-	gpu_write64(gpu, REG_A6XX_CP_CRASH_SCRIPT_BASE, dumper->iova);
++	gpu_write64(gpu, REG_A6XX_CP_CRASH_DUMP_SCRIPT_BASE, dumper->iova);
+ 
+ 	gpu_write(gpu, REG_A6XX_CP_CRASH_DUMP_CNTL, 1);
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+index e545106c70be..95d93ac6812a 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+@@ -212,7 +212,7 @@ static const struct a6xx_shader_block {
+ 	SHADER(A6XX_SP_LB_5_DATA, 0x200),
+ 	SHADER(A6XX_SP_CB_BINDLESS_DATA, 0x800),
+ 	SHADER(A6XX_SP_CB_LEGACY_DATA, 0x280),
+-	SHADER(A6XX_SP_UAV_DATA, 0x80),
++	SHADER(A6XX_SP_GFX_UAV_BASE_DATA, 0x80),
+ 	SHADER(A6XX_SP_INST_TAG, 0x80),
+ 	SHADER(A6XX_SP_CB_BINDLESS_TAG, 0x80),
+ 	SHADER(A6XX_SP_TMO_UMO_TAG, 0x80),
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_preempt.c b/drivers/gpu/drm/msm/adreno/a6xx_preempt.c
+index 9e7f2e5fb2b9..6a12a35dabff 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_preempt.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_preempt.c
+@@ -210,7 +210,7 @@ void a6xx_preempt_hw_init(struct msm_gpu *gpu)
+ 	gpu_write64(gpu, REG_A6XX_CP_CONTEXT_SWITCH_SMMU_INFO, 0);
+ 
+ 	/* Enable the GMEM save/restore feature for preemption */
+-	gpu_write(gpu, REG_A6XX_RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE, 0x1);
++	gpu_write(gpu, REG_A6XX_RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE_ENABLE, 0x1);
+ 
+ 	/* Reset the preemption state */
+ 	set_preempt_state(a6xx_gpu, PREEMPT_NONE);
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h b/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h
+index 9a327d543f27..e02cabb39f19 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h
+@@ -1311,8 +1311,8 @@ static struct a6xx_indexed_registers gen7_9_0_cp_indexed_reg_list[] = {
+ 		REG_A7XX_CP_BV_SQE_UCODE_DBG_DATA, 0x08000},
+ 	{ "CP_BV_SQE_STAT_ADDR", REG_A7XX_CP_BV_SQE_STAT_ADDR,
+ 		REG_A7XX_CP_BV_SQE_STAT_DATA, 0x00040},
+-	{ "CP_RESOURCE_TBL", REG_A7XX_CP_RESOURCE_TBL_DBG_ADDR,
+-		REG_A7XX_CP_RESOURCE_TBL_DBG_DATA, 0x04100},
++	{ "CP_RESOURCE_TBL", REG_A7XX_CP_RESOURCE_TABLE_DBG_ADDR,
++		REG_A7XX_CP_RESOURCE_TABLE_DBG_DATA, 0x04100},
+ 	{ "CP_LPAC_DRAW_STATE_ADDR", REG_A7XX_CP_LPAC_DRAW_STATE_ADDR,
+ 		REG_A7XX_CP_LPAC_DRAW_STATE_DATA, 0x00200},
+ 	{ "CP_LPAC_ROQ", REG_A7XX_CP_LPAC_ROQ_DBG_ADDR,
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a6xx.xml b/drivers/gpu/drm/msm/registers/adreno/a6xx.xml
+index 2db425abf0f3..d860fd94feae 100644
+--- a/drivers/gpu/drm/msm/registers/adreno/a6xx.xml
++++ b/drivers/gpu/drm/msm/registers/adreno/a6xx.xml
+@@ -5,6 +5,11 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ <import file="freedreno_copyright.xml"/>
+ <import file="adreno/adreno_common.xml"/>
+ <import file="adreno/adreno_pm4.xml"/>
++<import file="adreno/a6xx_enums.xml"/>
++<import file="adreno/a7xx_enums.xml"/>
++<import file="adreno/a6xx_perfcntrs.xml"/>
++<import file="adreno/a7xx_perfcntrs.xml"/>
++<import file="adreno/a6xx_descriptors.xml"/>
+ 
+ <!--
+ Each register that is actually being used by driver should have "usage" defined,
+@@ -20,2205 +25,6 @@ is either overwritten by renderpass/blit (ib2) or not used if not overwritten
+ by a particular renderpass/blit.
+ -->
+ 
+-<!-- these might be same as a5xx -->
+-<enum name="a6xx_tile_mode">
+-	<value name="TILE6_LINEAR" value="0"/>
+-	<value name="TILE6_2" value="2"/>
+-	<value name="TILE6_3" value="3"/>
+-</enum>
+-
+-<enum name="a6xx_format">
+-	<value value="0x02" name="FMT6_A8_UNORM"/>
+-	<value value="0x03" name="FMT6_8_UNORM"/>
+-	<value value="0x04" name="FMT6_8_SNORM"/>
+-	<value value="0x05" name="FMT6_8_UINT"/>
+-	<value value="0x06" name="FMT6_8_SINT"/>
+-
+-	<value value="0x08" name="FMT6_4_4_4_4_UNORM"/>
+-	<value value="0x0a" name="FMT6_5_5_5_1_UNORM"/>
+-	<value value="0x0c" name="FMT6_1_5_5_5_UNORM"/> <!-- read only -->
+-	<value value="0x0e" name="FMT6_5_6_5_UNORM"/>
+-
+-	<value value="0x0f" name="FMT6_8_8_UNORM"/>
+-	<value value="0x10" name="FMT6_8_8_SNORM"/>
+-	<value value="0x11" name="FMT6_8_8_UINT"/>
+-	<value value="0x12" name="FMT6_8_8_SINT"/>
+-	<value value="0x13" name="FMT6_L8_A8_UNORM"/>
+-
+-	<value value="0x15" name="FMT6_16_UNORM"/>
+-	<value value="0x16" name="FMT6_16_SNORM"/>
+-	<value value="0x17" name="FMT6_16_FLOAT"/>
+-	<value value="0x18" name="FMT6_16_UINT"/>
+-	<value value="0x19" name="FMT6_16_SINT"/>
+-
+-	<value value="0x21" name="FMT6_8_8_8_UNORM"/>
+-	<value value="0x22" name="FMT6_8_8_8_SNORM"/>
+-	<value value="0x23" name="FMT6_8_8_8_UINT"/>
+-	<value value="0x24" name="FMT6_8_8_8_SINT"/>
+-
+-	<value value="0x30" name="FMT6_8_8_8_8_UNORM"/>
+-	<value value="0x31" name="FMT6_8_8_8_X8_UNORM"/> <!-- samples 1 for alpha -->
+-	<value value="0x32" name="FMT6_8_8_8_8_SNORM"/>
+-	<value value="0x33" name="FMT6_8_8_8_8_UINT"/>
+-	<value value="0x34" name="FMT6_8_8_8_8_SINT"/>
+-
+-	<value value="0x35" name="FMT6_9_9_9_E5_FLOAT"/>
+-
+-	<value value="0x36" name="FMT6_10_10_10_2_UNORM"/>
+-	<value value="0x37" name="FMT6_10_10_10_2_UNORM_DEST"/>
+-	<value value="0x39" name="FMT6_10_10_10_2_SNORM"/>
+-	<value value="0x3a" name="FMT6_10_10_10_2_UINT"/>
+-	<value value="0x3b" name="FMT6_10_10_10_2_SINT"/>
+-
+-	<value value="0x42" name="FMT6_11_11_10_FLOAT"/>
+-
+-	<value value="0x43" name="FMT6_16_16_UNORM"/>
+-	<value value="0x44" name="FMT6_16_16_SNORM"/>
+-	<value value="0x45" name="FMT6_16_16_FLOAT"/>
+-	<value value="0x46" name="FMT6_16_16_UINT"/>
+-	<value value="0x47" name="FMT6_16_16_SINT"/>
+-
+-	<value value="0x48" name="FMT6_32_UNORM"/>
+-	<value value="0x49" name="FMT6_32_SNORM"/>
+-	<value value="0x4a" name="FMT6_32_FLOAT"/>
+-	<value value="0x4b" name="FMT6_32_UINT"/>
+-	<value value="0x4c" name="FMT6_32_SINT"/>
+-	<value value="0x4d" name="FMT6_32_FIXED"/>
+-
+-	<value value="0x58" name="FMT6_16_16_16_UNORM"/>
+-	<value value="0x59" name="FMT6_16_16_16_SNORM"/>
+-	<value value="0x5a" name="FMT6_16_16_16_FLOAT"/>
+-	<value value="0x5b" name="FMT6_16_16_16_UINT"/>
+-	<value value="0x5c" name="FMT6_16_16_16_SINT"/>
+-
+-	<value value="0x60" name="FMT6_16_16_16_16_UNORM"/>
+-	<value value="0x61" name="FMT6_16_16_16_16_SNORM"/>
+-	<value value="0x62" name="FMT6_16_16_16_16_FLOAT"/>
+-	<value value="0x63" name="FMT6_16_16_16_16_UINT"/>
+-	<value value="0x64" name="FMT6_16_16_16_16_SINT"/>
+-
+-	<value value="0x65" name="FMT6_32_32_UNORM"/>
+-	<value value="0x66" name="FMT6_32_32_SNORM"/>
+-	<value value="0x67" name="FMT6_32_32_FLOAT"/>
+-	<value value="0x68" name="FMT6_32_32_UINT"/>
+-	<value value="0x69" name="FMT6_32_32_SINT"/>
+-	<value value="0x6a" name="FMT6_32_32_FIXED"/>
+-
+-	<value value="0x70" name="FMT6_32_32_32_UNORM"/>
+-	<value value="0x71" name="FMT6_32_32_32_SNORM"/>
+-	<value value="0x72" name="FMT6_32_32_32_UINT"/>
+-	<value value="0x73" name="FMT6_32_32_32_SINT"/>
+-	<value value="0x74" name="FMT6_32_32_32_FLOAT"/>
+-	<value value="0x75" name="FMT6_32_32_32_FIXED"/>
+-
+-	<value value="0x80" name="FMT6_32_32_32_32_UNORM"/>
+-	<value value="0x81" name="FMT6_32_32_32_32_SNORM"/>
+-	<value value="0x82" name="FMT6_32_32_32_32_FLOAT"/>
+-	<value value="0x83" name="FMT6_32_32_32_32_UINT"/>
+-	<value value="0x84" name="FMT6_32_32_32_32_SINT"/>
+-	<value value="0x85" name="FMT6_32_32_32_32_FIXED"/>
+-
+-	<value value="0x8c" name="FMT6_G8R8B8R8_422_UNORM"/> <!-- UYVY -->
+-	<value value="0x8d" name="FMT6_R8G8R8B8_422_UNORM"/> <!-- YUYV -->
+-	<value value="0x8e" name="FMT6_R8_G8B8_2PLANE_420_UNORM"/> <!-- NV12 -->
+-	<value value="0x8f" name="FMT6_NV21"/>
+-	<value value="0x90" name="FMT6_R8_G8_B8_3PLANE_420_UNORM"/> <!-- YV12 -->
+-
+-	<value value="0x91" name="FMT6_Z24_UNORM_S8_UINT_AS_R8G8B8A8"/>
+-
+-	<!-- Note: tiling/UBWC for these may be different from equivalent formats
+-	For example FMT6_NV12_Y is not compatible with FMT6_8_UNORM
+-	-->
+-	<value value="0x94" name="FMT6_NV12_Y"/>
+-	<value value="0x95" name="FMT6_NV12_UV"/>
+-	<value value="0x96" name="FMT6_NV12_VU"/>
+-	<value value="0x97" name="FMT6_NV12_4R"/>
+-	<value value="0x98" name="FMT6_NV12_4R_Y"/>
+-	<value value="0x99" name="FMT6_NV12_4R_UV"/>
+-	<value value="0x9a" name="FMT6_P010"/>
+-	<value value="0x9b" name="FMT6_P010_Y"/>
+-	<value value="0x9c" name="FMT6_P010_UV"/>
+-	<value value="0x9d" name="FMT6_TP10"/>
+-	<value value="0x9e" name="FMT6_TP10_Y"/>
+-	<value value="0x9f" name="FMT6_TP10_UV"/>
+-
+-	<value value="0xa0" name="FMT6_Z24_UNORM_S8_UINT"/>
+-
+-	<value value="0xab" name="FMT6_ETC2_RG11_UNORM"/>
+-	<value value="0xac" name="FMT6_ETC2_RG11_SNORM"/>
+-	<value value="0xad" name="FMT6_ETC2_R11_UNORM"/>
+-	<value value="0xae" name="FMT6_ETC2_R11_SNORM"/>
+-	<value value="0xaf" name="FMT6_ETC1"/>
+-	<value value="0xb0" name="FMT6_ETC2_RGB8"/>
+-	<value value="0xb1" name="FMT6_ETC2_RGBA8"/>
+-	<value value="0xb2" name="FMT6_ETC2_RGB8A1"/>
+-	<value value="0xb3" name="FMT6_DXT1"/>
+-	<value value="0xb4" name="FMT6_DXT3"/>
+-	<value value="0xb5" name="FMT6_DXT5"/>
+-	<value value="0xb7" name="FMT6_RGTC1_UNORM"/>
+-	<value value="0xb8" name="FMT6_RGTC1_SNORM"/>
+-	<value value="0xbb" name="FMT6_RGTC2_UNORM"/>
+-	<value value="0xbc" name="FMT6_RGTC2_SNORM"/>
+-	<value value="0xbe" name="FMT6_BPTC_UFLOAT"/>
+-	<value value="0xbf" name="FMT6_BPTC_FLOAT"/>
+-	<value value="0xc0" name="FMT6_BPTC"/>
+-	<value value="0xc1" name="FMT6_ASTC_4x4"/>
+-	<value value="0xc2" name="FMT6_ASTC_5x4"/>
+-	<value value="0xc3" name="FMT6_ASTC_5x5"/>
+-	<value value="0xc4" name="FMT6_ASTC_6x5"/>
+-	<value value="0xc5" name="FMT6_ASTC_6x6"/>
+-	<value value="0xc6" name="FMT6_ASTC_8x5"/>
+-	<value value="0xc7" name="FMT6_ASTC_8x6"/>
+-	<value value="0xc8" name="FMT6_ASTC_8x8"/>
+-	<value value="0xc9" name="FMT6_ASTC_10x5"/>
+-	<value value="0xca" name="FMT6_ASTC_10x6"/>
+-	<value value="0xcb" name="FMT6_ASTC_10x8"/>
+-	<value value="0xcc" name="FMT6_ASTC_10x10"/>
+-	<value value="0xcd" name="FMT6_ASTC_12x10"/>
+-	<value value="0xce" name="FMT6_ASTC_12x12"/>
+-
+-	<!-- for sampling stencil (integer, 2nd channel), not available on a630 -->
+-	<value value="0xea" name="FMT6_Z24_UINT_S8_UINT"/>
+-
+-	<!-- Not a hw enum, used internally in driver -->
+-	<value value="0xff" name="FMT6_NONE"/>
+-
+-</enum>
+-
+-<!-- probably same as a5xx -->
+-<enum name="a6xx_polygon_mode">
+-	<value name="POLYMODE6_POINTS" value="1"/>
+-	<value name="POLYMODE6_LINES" value="2"/>
+-	<value name="POLYMODE6_TRIANGLES" value="3"/>
+-</enum>
+-
+-<enum name="a6xx_depth_format">
+-	<value name="DEPTH6_NONE" value="0"/>
+-	<value name="DEPTH6_16" value="1"/>
+-	<value name="DEPTH6_24_8" value="2"/>
+-	<value name="DEPTH6_32" value="4"/>
+-</enum>
+-
+-<bitset name="a6x_cp_protect" inline="yes">
+-	<bitfield name="BASE_ADDR" low="0" high="17"/>
+-	<bitfield name="MASK_LEN" low="18" high="30"/>
+-	<bitfield name="READ" pos="31" type="boolean"/>
+-</bitset>
+-
+-<enum name="a6xx_shader_id">
+-	<value value="0x9" name="A6XX_TP0_TMO_DATA"/>
+-	<value value="0xa" name="A6XX_TP0_SMO_DATA"/>
+-	<value value="0xb" name="A6XX_TP0_MIPMAP_BASE_DATA"/>
+-	<value value="0x19" name="A6XX_TP1_TMO_DATA"/>
+-	<value value="0x1a" name="A6XX_TP1_SMO_DATA"/>
+-	<value value="0x1b" name="A6XX_TP1_MIPMAP_BASE_DATA"/>
+-	<value value="0x29" name="A6XX_SP_INST_DATA"/>
+-	<value value="0x2a" name="A6XX_SP_LB_0_DATA"/>
+-	<value value="0x2b" name="A6XX_SP_LB_1_DATA"/>
+-	<value value="0x2c" name="A6XX_SP_LB_2_DATA"/>
+-	<value value="0x2d" name="A6XX_SP_LB_3_DATA"/>
+-	<value value="0x2e" name="A6XX_SP_LB_4_DATA"/>
+-	<value value="0x2f" name="A6XX_SP_LB_5_DATA"/>
+-	<value value="0x30" name="A6XX_SP_CB_BINDLESS_DATA"/>
+-	<value value="0x31" name="A6XX_SP_CB_LEGACY_DATA"/>
+-	<value value="0x32" name="A6XX_SP_UAV_DATA"/>
+-	<value value="0x33" name="A6XX_SP_INST_TAG"/>
+-	<value value="0x34" name="A6XX_SP_CB_BINDLESS_TAG"/>
+-	<value value="0x35" name="A6XX_SP_TMO_UMO_TAG"/>
+-	<value value="0x36" name="A6XX_SP_SMO_TAG"/>
+-	<value value="0x37" name="A6XX_SP_STATE_DATA"/>
+-	<value value="0x49" name="A6XX_HLSQ_CHUNK_CVS_RAM"/>
+-	<value value="0x4a" name="A6XX_HLSQ_CHUNK_CPS_RAM"/>
+-	<value value="0x4b" name="A6XX_HLSQ_CHUNK_CVS_RAM_TAG"/>
+-	<value value="0x4c" name="A6XX_HLSQ_CHUNK_CPS_RAM_TAG"/>
+-	<value value="0x4d" name="A6XX_HLSQ_ICB_CVS_CB_BASE_TAG"/>
+-	<value value="0x4e" name="A6XX_HLSQ_ICB_CPS_CB_BASE_TAG"/>
+-	<value value="0x50" name="A6XX_HLSQ_CVS_MISC_RAM"/>
+-	<value value="0x51" name="A6XX_HLSQ_CPS_MISC_RAM"/>
+-	<value value="0x52" name="A6XX_HLSQ_INST_RAM"/>
+-	<value value="0x53" name="A6XX_HLSQ_GFX_CVS_CONST_RAM"/>
+-	<value value="0x54" name="A6XX_HLSQ_GFX_CPS_CONST_RAM"/>
+-	<value value="0x55" name="A6XX_HLSQ_CVS_MISC_RAM_TAG"/>
+-	<value value="0x56" name="A6XX_HLSQ_CPS_MISC_RAM_TAG"/>
+-	<value value="0x57" name="A6XX_HLSQ_INST_RAM_TAG"/>
+-	<value value="0x58" name="A6XX_HLSQ_GFX_CVS_CONST_RAM_TAG"/>
+-	<value value="0x59" name="A6XX_HLSQ_GFX_CPS_CONST_RAM_TAG"/>
+-	<value value="0x5a" name="A6XX_HLSQ_PWR_REST_RAM"/>
+-	<value value="0x5b" name="A6XX_HLSQ_PWR_REST_TAG"/>
+-	<value value="0x60" name="A6XX_HLSQ_DATAPATH_META"/>
+-	<value value="0x61" name="A6XX_HLSQ_FRONTEND_META"/>
+-	<value value="0x62" name="A6XX_HLSQ_INDIRECT_META"/>
+-	<value value="0x63" name="A6XX_HLSQ_BACKEND_META"/>
+-	<value value="0x70" name="A6XX_SP_LB_6_DATA"/>
+-	<value value="0x71" name="A6XX_SP_LB_7_DATA"/>
+-	<value value="0x73" name="A6XX_HLSQ_INST_RAM_1"/>
+-</enum>
+-
+-<enum name="a7xx_statetype_id">
+-	<value value="0" name="A7XX_TP0_NCTX_REG"/>
+-	<value value="1" name="A7XX_TP0_CTX0_3D_CVS_REG"/>
+-	<value value="2" name="A7XX_TP0_CTX0_3D_CPS_REG"/>
+-	<value value="3" name="A7XX_TP0_CTX1_3D_CVS_REG"/>
+-	<value value="4" name="A7XX_TP0_CTX1_3D_CPS_REG"/>
+-	<value value="5" name="A7XX_TP0_CTX2_3D_CPS_REG"/>
+-	<value value="6" name="A7XX_TP0_CTX3_3D_CPS_REG"/>
+-	<value value="9" name="A7XX_TP0_TMO_DATA"/>
+-	<value value="10" name="A7XX_TP0_SMO_DATA"/>
+-	<value value="11" name="A7XX_TP0_MIPMAP_BASE_DATA"/>
+-	<value value="32" name="A7XX_SP_NCTX_REG"/>
+-	<value value="33" name="A7XX_SP_CTX0_3D_CVS_REG"/>
+-	<value value="34" name="A7XX_SP_CTX0_3D_CPS_REG"/>
+-	<value value="35" name="A7XX_SP_CTX1_3D_CVS_REG"/>
+-	<value value="36" name="A7XX_SP_CTX1_3D_CPS_REG"/>
+-	<value value="37" name="A7XX_SP_CTX2_3D_CPS_REG"/>
+-	<value value="38" name="A7XX_SP_CTX3_3D_CPS_REG"/>
+-	<value value="39" name="A7XX_SP_INST_DATA"/>
+-	<value value="40" name="A7XX_SP_INST_DATA_1"/>
+-	<value value="41" name="A7XX_SP_LB_0_DATA"/>
+-	<value value="42" name="A7XX_SP_LB_1_DATA"/>
+-	<value value="43" name="A7XX_SP_LB_2_DATA"/>
+-	<value value="44" name="A7XX_SP_LB_3_DATA"/>
+-	<value value="45" name="A7XX_SP_LB_4_DATA"/>
+-	<value value="46" name="A7XX_SP_LB_5_DATA"/>
+-	<value value="47" name="A7XX_SP_LB_6_DATA"/>
+-	<value value="48" name="A7XX_SP_LB_7_DATA"/>
+-	<value value="49" name="A7XX_SP_CB_RAM"/>
+-	<value value="50" name="A7XX_SP_LB_13_DATA"/>
+-	<value value="51" name="A7XX_SP_LB_14_DATA"/>
+-	<value value="52" name="A7XX_SP_INST_TAG"/>
+-	<value value="53" name="A7XX_SP_INST_DATA_2"/>
+-	<value value="54" name="A7XX_SP_TMO_TAG"/>
+-	<value value="55" name="A7XX_SP_SMO_TAG"/>
+-	<value value="56" name="A7XX_SP_STATE_DATA"/>
+-	<value value="57" name="A7XX_SP_HWAVE_RAM"/>
+-	<value value="58" name="A7XX_SP_L0_INST_BUF"/>
+-	<value value="59" name="A7XX_SP_LB_8_DATA"/>
+-	<value value="60" name="A7XX_SP_LB_9_DATA"/>
+-	<value value="61" name="A7XX_SP_LB_10_DATA"/>
+-	<value value="62" name="A7XX_SP_LB_11_DATA"/>
+-	<value value="63" name="A7XX_SP_LB_12_DATA"/>
+-	<value value="64" name="A7XX_HLSQ_DATAPATH_DSTR_META"/>
+-	<value value="67" name="A7XX_HLSQ_L2STC_TAG_RAM"/>
+-	<value value="68" name="A7XX_HLSQ_L2STC_INFO_CMD"/>
+-	<value value="69" name="A7XX_HLSQ_CVS_BE_CTXT_BUF_RAM_TAG"/>
+-	<value value="70" name="A7XX_HLSQ_CPS_BE_CTXT_BUF_RAM_TAG"/>
+-	<value value="71" name="A7XX_HLSQ_GFX_CVS_BE_CTXT_BUF_RAM"/>
+-	<value value="72" name="A7XX_HLSQ_GFX_CPS_BE_CTXT_BUF_RAM"/>
+-	<value value="73" name="A7XX_HLSQ_CHUNK_CVS_RAM"/>
+-	<value value="74" name="A7XX_HLSQ_CHUNK_CPS_RAM"/>
+-	<value value="75" name="A7XX_HLSQ_CHUNK_CVS_RAM_TAG"/>
+-	<value value="76" name="A7XX_HLSQ_CHUNK_CPS_RAM_TAG"/>
+-	<value value="77" name="A7XX_HLSQ_ICB_CVS_CB_BASE_TAG"/>
+-	<value value="78" name="A7XX_HLSQ_ICB_CPS_CB_BASE_TAG"/>
+-	<value value="79" name="A7XX_HLSQ_CVS_MISC_RAM"/>
+-	<value value="80" name="A7XX_HLSQ_CPS_MISC_RAM"/>
+-	<value value="81" name="A7XX_HLSQ_CPS_MISC_RAM_1"/>
+-	<value value="82" name="A7XX_HLSQ_INST_RAM"/>
+-	<value value="83" name="A7XX_HLSQ_GFX_CVS_CONST_RAM"/>
+-	<value value="84" name="A7XX_HLSQ_GFX_CPS_CONST_RAM"/>
+-	<value value="85" name="A7XX_HLSQ_CVS_MISC_RAM_TAG"/>
+-	<value value="86" name="A7XX_HLSQ_CPS_MISC_RAM_TAG"/>
+-	<value value="87" name="A7XX_HLSQ_INST_RAM_TAG"/>
+-	<value value="88" name="A7XX_HLSQ_GFX_CVS_CONST_RAM_TAG"/>
+-	<value value="89" name="A7XX_HLSQ_GFX_CPS_CONST_RAM_TAG"/>
+-	<value value="90" name="A7XX_HLSQ_GFX_LOCAL_MISC_RAM"/>
+-	<value value="91" name="A7XX_HLSQ_GFX_LOCAL_MISC_RAM_TAG"/>
+-	<value value="92" name="A7XX_HLSQ_INST_RAM_1"/>
+-	<value value="93" name="A7XX_HLSQ_STPROC_META"/>
+-	<value value="94" name="A7XX_HLSQ_BV_BE_META"/>
+-	<value value="95" name="A7XX_HLSQ_INST_RAM_2"/>
+-	<value value="96" name="A7XX_HLSQ_DATAPATH_META"/>
+-	<value value="97" name="A7XX_HLSQ_FRONTEND_META"/>
+-	<value value="98" name="A7XX_HLSQ_INDIRECT_META"/>
+-	<value value="99" name="A7XX_HLSQ_BACKEND_META"/>
+-</enum>
+-
+-<enum name="a6xx_debugbus_id">
+-	<value value="0x1" name="A6XX_DBGBUS_CP"/>
+-	<value value="0x2" name="A6XX_DBGBUS_RBBM"/>
+-	<value value="0x3" name="A6XX_DBGBUS_VBIF"/>
+-	<value value="0x4" name="A6XX_DBGBUS_HLSQ"/>
+-	<value value="0x5" name="A6XX_DBGBUS_UCHE"/>
+-	<value value="0x6" name="A6XX_DBGBUS_DPM"/>
+-	<value value="0x7" name="A6XX_DBGBUS_TESS"/>
+-	<value value="0x8" name="A6XX_DBGBUS_PC"/>
+-	<value value="0x9" name="A6XX_DBGBUS_VFDP"/>
+-	<value value="0xa" name="A6XX_DBGBUS_VPC"/>
+-	<value value="0xb" name="A6XX_DBGBUS_TSE"/>
+-	<value value="0xc" name="A6XX_DBGBUS_RAS"/>
+-	<value value="0xd" name="A6XX_DBGBUS_VSC"/>
+-	<value value="0xe" name="A6XX_DBGBUS_COM"/>
+-	<value value="0x10" name="A6XX_DBGBUS_LRZ"/>
+-	<value value="0x11" name="A6XX_DBGBUS_A2D"/>
+-	<value value="0x12" name="A6XX_DBGBUS_CCUFCHE"/>
+-	<value value="0x13" name="A6XX_DBGBUS_GMU_CX"/>
+-	<value value="0x14" name="A6XX_DBGBUS_RBP"/>
+-	<value value="0x15" name="A6XX_DBGBUS_DCS"/>
+-	<value value="0x16" name="A6XX_DBGBUS_DBGC"/>
+-	<value value="0x17" name="A6XX_DBGBUS_CX"/>
+-	<value value="0x18" name="A6XX_DBGBUS_GMU_GX"/>
+-	<value value="0x19" name="A6XX_DBGBUS_TPFCHE"/>
+-	<value value="0x1a" name="A6XX_DBGBUS_GBIF_GX"/>
+-	<value value="0x1d" name="A6XX_DBGBUS_GPC"/>
+-	<value value="0x1e" name="A6XX_DBGBUS_LARC"/>
+-	<value value="0x1f" name="A6XX_DBGBUS_HLSQ_SPTP"/>
+-	<value value="0x20" name="A6XX_DBGBUS_RB_0"/>
+-	<value value="0x21" name="A6XX_DBGBUS_RB_1"/>
+-	<value value="0x22" name="A6XX_DBGBUS_RB_2"/>
+-	<value value="0x24" name="A6XX_DBGBUS_UCHE_WRAPPER"/>
+-	<value value="0x28" name="A6XX_DBGBUS_CCU_0"/>
+-	<value value="0x29" name="A6XX_DBGBUS_CCU_1"/>
+-	<value value="0x2a" name="A6XX_DBGBUS_CCU_2"/>
+-	<value value="0x38" name="A6XX_DBGBUS_VFD_0"/>
+-	<value value="0x39" name="A6XX_DBGBUS_VFD_1"/>
+-	<value value="0x3a" name="A6XX_DBGBUS_VFD_2"/>
+-	<value value="0x3b" name="A6XX_DBGBUS_VFD_3"/>
+-	<value value="0x3c" name="A6XX_DBGBUS_VFD_4"/>
+-	<value value="0x3d" name="A6XX_DBGBUS_VFD_5"/>
+-	<value value="0x40" name="A6XX_DBGBUS_SP_0"/>
+-	<value value="0x41" name="A6XX_DBGBUS_SP_1"/>
+-	<value value="0x42" name="A6XX_DBGBUS_SP_2"/>
+-	<value value="0x48" name="A6XX_DBGBUS_TPL1_0"/>
+-	<value value="0x49" name="A6XX_DBGBUS_TPL1_1"/>
+-	<value value="0x4a" name="A6XX_DBGBUS_TPL1_2"/>
+-	<value value="0x4b" name="A6XX_DBGBUS_TPL1_3"/>
+-	<value value="0x4c" name="A6XX_DBGBUS_TPL1_4"/>
+-	<value value="0x4d" name="A6XX_DBGBUS_TPL1_5"/>
+-	<value value="0x58" name="A6XX_DBGBUS_SPTP_0"/>
+-	<value value="0x59" name="A6XX_DBGBUS_SPTP_1"/>
+-	<value value="0x5a" name="A6XX_DBGBUS_SPTP_2"/>
+-	<value value="0x5b" name="A6XX_DBGBUS_SPTP_3"/>
+-	<value value="0x5c" name="A6XX_DBGBUS_SPTP_4"/>
+-	<value value="0x5d" name="A6XX_DBGBUS_SPTP_5"/>
+-</enum>
+-
+-<enum name="a7xx_state_location">
+-	<value value="0" name="A7XX_HLSQ_STATE"/>
+-	<value value="1" name="A7XX_HLSQ_DP"/>
+-	<value value="2" name="A7XX_SP_TOP"/>
+-	<value value="3" name="A7XX_USPTP"/>
+-	<value value="4" name="A7XX_HLSQ_DP_STR"/>
+-</enum>
+-
+-<enum name="a7xx_pipe">
+-	<value value="0" name="A7XX_PIPE_NONE"/>
+-	<value value="1" name="A7XX_PIPE_BR"/>
+-	<value value="2" name="A7XX_PIPE_BV"/>
+-	<value value="3" name="A7XX_PIPE_LPAC"/>
+-</enum>
+-
+-<enum name="a7xx_cluster">
+-	<value value="0" name="A7XX_CLUSTER_NONE"/>
+-	<value value="1" name="A7XX_CLUSTER_FE"/>
+-	<value value="2" name="A7XX_CLUSTER_SP_VS"/>
+-	<value value="3" name="A7XX_CLUSTER_PC_VS"/>
+-	<value value="4" name="A7XX_CLUSTER_GRAS"/>
+-	<value value="5" name="A7XX_CLUSTER_SP_PS"/>
+-	<value value="6" name="A7XX_CLUSTER_VPC_PS"/>
+-	<value value="7" name="A7XX_CLUSTER_PS"/>
+-</enum>
+-
+-<enum name="a7xx_debugbus_id">
+-	<value value="1" name="A7XX_DBGBUS_CP_0_0"/>
+-	<value value="2" name="A7XX_DBGBUS_CP_0_1"/>
+-	<value value="3" name="A7XX_DBGBUS_RBBM"/>
+-	<value value="5" name="A7XX_DBGBUS_GBIF_GX"/>
+-	<value value="6" name="A7XX_DBGBUS_GBIF_CX"/>
+-	<value value="7" name="A7XX_DBGBUS_HLSQ"/>
+-	<value value="9" name="A7XX_DBGBUS_UCHE_0"/>
+-	<value value="10" name="A7XX_DBGBUS_UCHE_1"/>
+-	<value value="13" name="A7XX_DBGBUS_TESS_BR"/>
+-	<value value="14" name="A7XX_DBGBUS_TESS_BV"/>
+-	<value value="17" name="A7XX_DBGBUS_PC_BR"/>
+-	<value value="18" name="A7XX_DBGBUS_PC_BV"/>
+-	<value value="21" name="A7XX_DBGBUS_VFDP_BR"/>
+-	<value value="22" name="A7XX_DBGBUS_VFDP_BV"/>
+-	<value value="25" name="A7XX_DBGBUS_VPC_BR"/>
+-	<value value="26" name="A7XX_DBGBUS_VPC_BV"/>
+-	<value value="29" name="A7XX_DBGBUS_TSE_BR"/>
+-	<value value="30" name="A7XX_DBGBUS_TSE_BV"/>
+-	<value value="33" name="A7XX_DBGBUS_RAS_BR"/>
+-	<value value="34" name="A7XX_DBGBUS_RAS_BV"/>
+-	<value value="37" name="A7XX_DBGBUS_VSC"/>
+-	<value value="39" name="A7XX_DBGBUS_COM_0"/>
+-	<value value="43" name="A7XX_DBGBUS_LRZ_BR"/>
+-	<value value="44" name="A7XX_DBGBUS_LRZ_BV"/>
+-	<value value="47" name="A7XX_DBGBUS_UFC_0"/>
+-	<value value="48" name="A7XX_DBGBUS_UFC_1"/>
+-	<value value="55" name="A7XX_DBGBUS_GMU_GX"/>
+-	<value value="59" name="A7XX_DBGBUS_DBGC"/>
+-	<value value="60" name="A7XX_DBGBUS_CX"/>
+-	<value value="61" name="A7XX_DBGBUS_GMU_CX"/>
+-	<value value="62" name="A7XX_DBGBUS_GPC_BR"/>
+-	<value value="63" name="A7XX_DBGBUS_GPC_BV"/>
+-	<value value="66" name="A7XX_DBGBUS_LARC"/>
+-	<value value="68" name="A7XX_DBGBUS_HLSQ_SPTP"/>
+-	<value value="70" name="A7XX_DBGBUS_RB_0"/>
+-	<value value="71" name="A7XX_DBGBUS_RB_1"/>
+-	<value value="72" name="A7XX_DBGBUS_RB_2"/>
+-	<value value="73" name="A7XX_DBGBUS_RB_3"/>
+-	<value value="74" name="A7XX_DBGBUS_RB_4"/>
+-	<value value="75" name="A7XX_DBGBUS_RB_5"/>
+-	<value value="102" name="A7XX_DBGBUS_UCHE_WRAPPER"/>
+-	<value value="106" name="A7XX_DBGBUS_CCU_0"/>
+-	<value value="107" name="A7XX_DBGBUS_CCU_1"/>
+-	<value value="108" name="A7XX_DBGBUS_CCU_2"/>
+-	<value value="109" name="A7XX_DBGBUS_CCU_3"/>
+-	<value value="110" name="A7XX_DBGBUS_CCU_4"/>
+-	<value value="111" name="A7XX_DBGBUS_CCU_5"/>
+-	<value value="138" name="A7XX_DBGBUS_VFD_BR_0"/>
+-	<value value="139" name="A7XX_DBGBUS_VFD_BR_1"/>
+-	<value value="140" name="A7XX_DBGBUS_VFD_BR_2"/>
+-	<value value="141" name="A7XX_DBGBUS_VFD_BR_3"/>
+-	<value value="142" name="A7XX_DBGBUS_VFD_BR_4"/>
+-	<value value="143" name="A7XX_DBGBUS_VFD_BR_5"/>
+-	<value value="144" name="A7XX_DBGBUS_VFD_BR_6"/>
+-	<value value="145" name="A7XX_DBGBUS_VFD_BR_7"/>
+-	<value value="202" name="A7XX_DBGBUS_VFD_BV_0"/>
+-	<value value="203" name="A7XX_DBGBUS_VFD_BV_1"/>
+-	<value value="204" name="A7XX_DBGBUS_VFD_BV_2"/>
+-	<value value="205" name="A7XX_DBGBUS_VFD_BV_3"/>
+-	<value value="234" name="A7XX_DBGBUS_USP_0"/>
+-	<value value="235" name="A7XX_DBGBUS_USP_1"/>
+-	<value value="236" name="A7XX_DBGBUS_USP_2"/>
+-	<value value="237" name="A7XX_DBGBUS_USP_3"/>
+-	<value value="238" name="A7XX_DBGBUS_USP_4"/>
+-	<value value="239" name="A7XX_DBGBUS_USP_5"/>
+-	<value value="266" name="A7XX_DBGBUS_TP_0"/>
+-	<value value="267" name="A7XX_DBGBUS_TP_1"/>
+-	<value value="268" name="A7XX_DBGBUS_TP_2"/>
+-	<value value="269" name="A7XX_DBGBUS_TP_3"/>
+-	<value value="270" name="A7XX_DBGBUS_TP_4"/>
+-	<value value="271" name="A7XX_DBGBUS_TP_5"/>
+-	<value value="272" name="A7XX_DBGBUS_TP_6"/>
+-	<value value="273" name="A7XX_DBGBUS_TP_7"/>
+-	<value value="274" name="A7XX_DBGBUS_TP_8"/>
+-	<value value="275" name="A7XX_DBGBUS_TP_9"/>
+-	<value value="276" name="A7XX_DBGBUS_TP_10"/>
+-	<value value="277" name="A7XX_DBGBUS_TP_11"/>
+-	<value value="330" name="A7XX_DBGBUS_USPTP_0"/>
+-	<value value="331" name="A7XX_DBGBUS_USPTP_1"/>
+-	<value value="332" name="A7XX_DBGBUS_USPTP_2"/>
+-	<value value="333" name="A7XX_DBGBUS_USPTP_3"/>
+-	<value value="334" name="A7XX_DBGBUS_USPTP_4"/>
+-	<value value="335" name="A7XX_DBGBUS_USPTP_5"/>
+-	<value value="336" name="A7XX_DBGBUS_USPTP_6"/>
+-	<value value="337" name="A7XX_DBGBUS_USPTP_7"/>
+-	<value value="338" name="A7XX_DBGBUS_USPTP_8"/>
+-	<value value="339" name="A7XX_DBGBUS_USPTP_9"/>
+-	<value value="340" name="A7XX_DBGBUS_USPTP_10"/>
+-	<value value="341" name="A7XX_DBGBUS_USPTP_11"/>
+-	<value value="396" name="A7XX_DBGBUS_CCHE_0"/>
+-	<value value="397" name="A7XX_DBGBUS_CCHE_1"/>
+-	<value value="398" name="A7XX_DBGBUS_CCHE_2"/>
+-	<value value="408" name="A7XX_DBGBUS_VPC_DSTR_0"/>
+-	<value value="409" name="A7XX_DBGBUS_VPC_DSTR_1"/>
+-	<value value="410" name="A7XX_DBGBUS_VPC_DSTR_2"/>
+-	<value value="411" name="A7XX_DBGBUS_HLSQ_DP_STR_0"/>
+-	<value value="412" name="A7XX_DBGBUS_HLSQ_DP_STR_1"/>
+-	<value value="413" name="A7XX_DBGBUS_HLSQ_DP_STR_2"/>
+-	<value value="414" name="A7XX_DBGBUS_HLSQ_DP_STR_3"/>
+-	<value value="415" name="A7XX_DBGBUS_HLSQ_DP_STR_4"/>
+-	<value value="416" name="A7XX_DBGBUS_HLSQ_DP_STR_5"/>
+-	<value value="443" name="A7XX_DBGBUS_UFC_DSTR_0"/>
+-	<value value="444" name="A7XX_DBGBUS_UFC_DSTR_1"/>
+-	<value value="445" name="A7XX_DBGBUS_UFC_DSTR_2"/>
+-	<value value="446" name="A7XX_DBGBUS_CGC_SUBCORE"/>
+-	<value value="447" name="A7XX_DBGBUS_CGC_CORE"/>
+-</enum>
+-
+-<enum name="a6xx_cp_perfcounter_select">
+-	<value value="0" name="PERF_CP_ALWAYS_COUNT"/>
+-	<value value="1" name="PERF_CP_BUSY_GFX_CORE_IDLE"/>
+-	<value value="2" name="PERF_CP_BUSY_CYCLES"/>
+-	<value value="3" name="PERF_CP_NUM_PREEMPTIONS"/>
+-	<value value="4" name="PERF_CP_PREEMPTION_REACTION_DELAY"/>
+-	<value value="5" name="PERF_CP_PREEMPTION_SWITCH_OUT_TIME"/>
+-	<value value="6" name="PERF_CP_PREEMPTION_SWITCH_IN_TIME"/>
+-	<value value="7" name="PERF_CP_DEAD_DRAWS_IN_BIN_RENDER"/>
+-	<value value="8" name="PERF_CP_PREDICATED_DRAWS_KILLED"/>
+-	<value value="9" name="PERF_CP_MODE_SWITCH"/>
+-	<value value="10" name="PERF_CP_ZPASS_DONE"/>
+-	<value value="11" name="PERF_CP_CONTEXT_DONE"/>
+-	<value value="12" name="PERF_CP_CACHE_FLUSH"/>
+-	<value value="13" name="PERF_CP_LONG_PREEMPTIONS"/>
+-	<value value="14" name="PERF_CP_SQE_I_CACHE_STARVE"/>
+-	<value value="15" name="PERF_CP_SQE_IDLE"/>
+-	<value value="16" name="PERF_CP_SQE_PM4_STARVE_RB_IB"/>
+-	<value value="17" name="PERF_CP_SQE_PM4_STARVE_SDS"/>
+-	<value value="18" name="PERF_CP_SQE_MRB_STARVE"/>
+-	<value value="19" name="PERF_CP_SQE_RRB_STARVE"/>
+-	<value value="20" name="PERF_CP_SQE_VSD_STARVE"/>
+-	<value value="21" name="PERF_CP_VSD_DECODE_STARVE"/>
+-	<value value="22" name="PERF_CP_SQE_PIPE_OUT_STALL"/>
+-	<value value="23" name="PERF_CP_SQE_SYNC_STALL"/>
+-	<value value="24" name="PERF_CP_SQE_PM4_WFI_STALL"/>
+-	<value value="25" name="PERF_CP_SQE_SYS_WFI_STALL"/>
+-	<value value="26" name="PERF_CP_SQE_T4_EXEC"/>
+-	<value value="27" name="PERF_CP_SQE_LOAD_STATE_EXEC"/>
+-	<value value="28" name="PERF_CP_SQE_SAVE_SDS_STATE"/>
+-	<value value="29" name="PERF_CP_SQE_DRAW_EXEC"/>
+-	<value value="30" name="PERF_CP_SQE_CTXT_REG_BUNCH_EXEC"/>
+-	<value value="31" name="PERF_CP_SQE_EXEC_PROFILED"/>
+-	<value value="32" name="PERF_CP_MEMORY_POOL_EMPTY"/>
+-	<value value="33" name="PERF_CP_MEMORY_POOL_SYNC_STALL"/>
+-	<value value="34" name="PERF_CP_MEMORY_POOL_ABOVE_THRESH"/>
+-	<value value="35" name="PERF_CP_AHB_WR_STALL_PRE_DRAWS"/>
+-	<value value="36" name="PERF_CP_AHB_STALL_SQE_GMU"/>
+-	<value value="37" name="PERF_CP_AHB_STALL_SQE_WR_OTHER"/>
+-	<value value="38" name="PERF_CP_AHB_STALL_SQE_RD_OTHER"/>
+-	<value value="39" name="PERF_CP_CLUSTER0_EMPTY"/>
+-	<value value="40" name="PERF_CP_CLUSTER1_EMPTY"/>
+-	<value value="41" name="PERF_CP_CLUSTER2_EMPTY"/>
+-	<value value="42" name="PERF_CP_CLUSTER3_EMPTY"/>
+-	<value value="43" name="PERF_CP_CLUSTER4_EMPTY"/>
+-	<value value="44" name="PERF_CP_CLUSTER5_EMPTY"/>
+-	<value value="45" name="PERF_CP_PM4_DATA"/>
+-	<value value="46" name="PERF_CP_PM4_HEADERS"/>
+-	<value value="47" name="PERF_CP_VBIF_READ_BEATS"/>
+-	<value value="48" name="PERF_CP_VBIF_WRITE_BEATS"/>
+-	<value value="49" name="PERF_CP_SQE_INSTR_COUNTER"/>
+-</enum>
+-
+-<enum name="a6xx_rbbm_perfcounter_select">
+-	<value value="0" name="PERF_RBBM_ALWAYS_COUNT"/>
+-	<value value="1" name="PERF_RBBM_ALWAYS_ON"/>
+-	<value value="2" name="PERF_RBBM_TSE_BUSY"/>
+-	<value value="3" name="PERF_RBBM_RAS_BUSY"/>
+-	<value value="4" name="PERF_RBBM_PC_DCALL_BUSY"/>
+-	<value value="5" name="PERF_RBBM_PC_VSD_BUSY"/>
+-	<value value="6" name="PERF_RBBM_STATUS_MASKED"/>
+-	<value value="7" name="PERF_RBBM_COM_BUSY"/>
+-	<value value="8" name="PERF_RBBM_DCOM_BUSY"/>
+-	<value value="9" name="PERF_RBBM_VBIF_BUSY"/>
+-	<value value="10" name="PERF_RBBM_VSC_BUSY"/>
+-	<value value="11" name="PERF_RBBM_TESS_BUSY"/>
+-	<value value="12" name="PERF_RBBM_UCHE_BUSY"/>
+-	<value value="13" name="PERF_RBBM_HLSQ_BUSY"/>
+-</enum>
+-
+-<enum name="a6xx_pc_perfcounter_select">
+-	<value value="0" name="PERF_PC_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_PC_WORKING_CYCLES"/>
+-	<value value="2" name="PERF_PC_STALL_CYCLES_VFD"/>
+-	<value value="3" name="PERF_PC_STALL_CYCLES_TSE"/>
+-	<value value="4" name="PERF_PC_STALL_CYCLES_VPC"/>
+-	<value value="5" name="PERF_PC_STALL_CYCLES_UCHE"/>
+-	<value value="6" name="PERF_PC_STALL_CYCLES_TESS"/>
+-	<value value="7" name="PERF_PC_STALL_CYCLES_TSE_ONLY"/>
+-	<value value="8" name="PERF_PC_STALL_CYCLES_VPC_ONLY"/>
+-	<value value="9" name="PERF_PC_PASS1_TF_STALL_CYCLES"/>
+-	<value value="10" name="PERF_PC_STARVE_CYCLES_FOR_INDEX"/>
+-	<value value="11" name="PERF_PC_STARVE_CYCLES_FOR_TESS_FACTOR"/>
+-	<value value="12" name="PERF_PC_STARVE_CYCLES_FOR_VIZ_STREAM"/>
+-	<value value="13" name="PERF_PC_STARVE_CYCLES_FOR_POSITION"/>
+-	<value value="14" name="PERF_PC_STARVE_CYCLES_DI"/>
+-	<value value="15" name="PERF_PC_VIS_STREAMS_LOADED"/>
+-	<value value="16" name="PERF_PC_INSTANCES"/>
+-	<value value="17" name="PERF_PC_VPC_PRIMITIVES"/>
+-	<value value="18" name="PERF_PC_DEAD_PRIM"/>
+-	<value value="19" name="PERF_PC_LIVE_PRIM"/>
+-	<value value="20" name="PERF_PC_VERTEX_HITS"/>
+-	<value value="21" name="PERF_PC_IA_VERTICES"/>
+-	<value value="22" name="PERF_PC_IA_PRIMITIVES"/>
+-	<value value="23" name="PERF_PC_GS_PRIMITIVES"/>
+-	<value value="24" name="PERF_PC_HS_INVOCATIONS"/>
+-	<value value="25" name="PERF_PC_DS_INVOCATIONS"/>
+-	<value value="26" name="PERF_PC_VS_INVOCATIONS"/>
+-	<value value="27" name="PERF_PC_GS_INVOCATIONS"/>
+-	<value value="28" name="PERF_PC_DS_PRIMITIVES"/>
+-	<value value="29" name="PERF_PC_VPC_POS_DATA_TRANSACTION"/>
+-	<value value="30" name="PERF_PC_3D_DRAWCALLS"/>
+-	<value value="31" name="PERF_PC_2D_DRAWCALLS"/>
+-	<value value="32" name="PERF_PC_NON_DRAWCALL_GLOBAL_EVENTS"/>
+-	<value value="33" name="PERF_TESS_BUSY_CYCLES"/>
+-	<value value="34" name="PERF_TESS_WORKING_CYCLES"/>
+-	<value value="35" name="PERF_TESS_STALL_CYCLES_PC"/>
+-	<value value="36" name="PERF_TESS_STARVE_CYCLES_PC"/>
+-	<value value="37" name="PERF_PC_TSE_TRANSACTION"/>
+-	<value value="38" name="PERF_PC_TSE_VERTEX"/>
+-	<value value="39" name="PERF_PC_TESS_PC_UV_TRANS"/>
+-	<value value="40" name="PERF_PC_TESS_PC_UV_PATCHES"/>
+-	<value value="41" name="PERF_PC_TESS_FACTOR_TRANS"/>
+-</enum>
+-
+-<enum name="a6xx_vfd_perfcounter_select">
+-	<value value="0" name="PERF_VFD_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_VFD_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="PERF_VFD_STALL_CYCLES_VPC_ALLOC"/>
+-	<value value="3" name="PERF_VFD_STALL_CYCLES_SP_INFO"/>
+-	<value value="4" name="PERF_VFD_STALL_CYCLES_SP_ATTR"/>
+-	<value value="5" name="PERF_VFD_STARVE_CYCLES_UCHE"/>
+-	<value value="6" name="PERF_VFD_RBUFFER_FULL"/>
+-	<value value="7" name="PERF_VFD_ATTR_INFO_FIFO_FULL"/>
+-	<value value="8" name="PERF_VFD_DECODED_ATTRIBUTE_BYTES"/>
+-	<value value="9" name="PERF_VFD_NUM_ATTRIBUTES"/>
+-	<value value="10" name="PERF_VFD_UPPER_SHADER_FIBERS"/>
+-	<value value="11" name="PERF_VFD_LOWER_SHADER_FIBERS"/>
+-	<value value="12" name="PERF_VFD_MODE_0_FIBERS"/>
+-	<value value="13" name="PERF_VFD_MODE_1_FIBERS"/>
+-	<value value="14" name="PERF_VFD_MODE_2_FIBERS"/>
+-	<value value="15" name="PERF_VFD_MODE_3_FIBERS"/>
+-	<value value="16" name="PERF_VFD_MODE_4_FIBERS"/>
+-	<value value="17" name="PERF_VFD_TOTAL_VERTICES"/>
+-	<value value="18" name="PERF_VFDP_STALL_CYCLES_VFD"/>
+-	<value value="19" name="PERF_VFDP_STALL_CYCLES_VFD_INDEX"/>
+-	<value value="20" name="PERF_VFDP_STALL_CYCLES_VFD_PROG"/>
+-	<value value="21" name="PERF_VFDP_STARVE_CYCLES_PC"/>
+-	<value value="22" name="PERF_VFDP_VS_STAGE_WAVES"/>
+-</enum>
+-
+-<enum name="a6xx_hlsq_perfcounter_select">
+-	<value value="0" name="PERF_HLSQ_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_HLSQ_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="PERF_HLSQ_STALL_CYCLES_SP_STATE"/>
+-	<value value="3" name="PERF_HLSQ_STALL_CYCLES_SP_FS_STAGE"/>
+-	<value value="4" name="PERF_HLSQ_UCHE_LATENCY_CYCLES"/>
+-	<value value="5" name="PERF_HLSQ_UCHE_LATENCY_COUNT"/>
+-	<value value="6" name="PERF_HLSQ_FS_STAGE_1X_WAVES"/>
+-	<value value="7" name="PERF_HLSQ_FS_STAGE_2X_WAVES"/>
+-	<value value="8" name="PERF_HLSQ_QUADS"/>
+-	<value value="9" name="PERF_HLSQ_CS_INVOCATIONS"/>
+-	<value value="10" name="PERF_HLSQ_COMPUTE_DRAWCALLS"/>
+-	<value value="11" name="PERF_HLSQ_FS_DATA_WAIT_PROGRAMMING"/>
+-	<value value="12" name="PERF_HLSQ_DUAL_FS_PROG_ACTIVE"/>
+-	<value value="13" name="PERF_HLSQ_DUAL_VS_PROG_ACTIVE"/>
+-	<value value="14" name="PERF_HLSQ_FS_BATCH_COUNT_ZERO"/>
+-	<value value="15" name="PERF_HLSQ_VS_BATCH_COUNT_ZERO"/>
+-	<value value="16" name="PERF_HLSQ_WAVE_PENDING_NO_QUAD"/>
+-	<value value="17" name="PERF_HLSQ_WAVE_PENDING_NO_PRIM_BASE"/>
+-	<value value="18" name="PERF_HLSQ_STALL_CYCLES_VPC"/>
+-	<value value="19" name="PERF_HLSQ_PIXELS"/>
+-	<value value="20" name="PERF_HLSQ_DRAW_MODE_SWITCH_VSFS_SYNC"/>
+-</enum>
+-
+-<enum name="a6xx_vpc_perfcounter_select">
+-	<value value="0" name="PERF_VPC_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_VPC_WORKING_CYCLES"/>
+-	<value value="2" name="PERF_VPC_STALL_CYCLES_UCHE"/>
+-	<value value="3" name="PERF_VPC_STALL_CYCLES_VFD_WACK"/>
+-	<value value="4" name="PERF_VPC_STALL_CYCLES_HLSQ_PRIM_ALLOC"/>
+-	<value value="5" name="PERF_VPC_STALL_CYCLES_PC"/>
+-	<value value="6" name="PERF_VPC_STALL_CYCLES_SP_LM"/>
+-	<value value="7" name="PERF_VPC_STARVE_CYCLES_SP"/>
+-	<value value="8" name="PERF_VPC_STARVE_CYCLES_LRZ"/>
+-	<value value="9" name="PERF_VPC_PC_PRIMITIVES"/>
+-	<value value="10" name="PERF_VPC_SP_COMPONENTS"/>
+-	<value value="11" name="PERF_VPC_STALL_CYCLES_VPCRAM_POS"/>
+-	<value value="12" name="PERF_VPC_LRZ_ASSIGN_PRIMITIVES"/>
+-	<value value="13" name="PERF_VPC_RB_VISIBLE_PRIMITIVES"/>
+-	<value value="14" name="PERF_VPC_LM_TRANSACTION"/>
+-	<value value="15" name="PERF_VPC_STREAMOUT_TRANSACTION"/>
+-	<value value="16" name="PERF_VPC_VS_BUSY_CYCLES"/>
+-	<value value="17" name="PERF_VPC_PS_BUSY_CYCLES"/>
+-	<value value="18" name="PERF_VPC_VS_WORKING_CYCLES"/>
+-	<value value="19" name="PERF_VPC_PS_WORKING_CYCLES"/>
+-	<value value="20" name="PERF_VPC_STARVE_CYCLES_RB"/>
+-	<value value="21" name="PERF_VPC_NUM_VPCRAM_READ_POS"/>
+-	<value value="22" name="PERF_VPC_WIT_FULL_CYCLES"/>
+-	<value value="23" name="PERF_VPC_VPCRAM_FULL_CYCLES"/>
+-	<value value="24" name="PERF_VPC_LM_FULL_WAIT_FOR_INTP_END"/>
+-	<value value="25" name="PERF_VPC_NUM_VPCRAM_WRITE"/>
+-	<value value="26" name="PERF_VPC_NUM_VPCRAM_READ_SO"/>
+-	<value value="27" name="PERF_VPC_NUM_ATTR_REQ_LM"/>
+-</enum>
+-
+-<enum name="a6xx_tse_perfcounter_select">
+-	<value value="0" name="PERF_TSE_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_TSE_CLIPPING_CYCLES"/>
+-	<value value="2" name="PERF_TSE_STALL_CYCLES_RAS"/>
+-	<value value="3" name="PERF_TSE_STALL_CYCLES_LRZ_BARYPLANE"/>
+-	<value value="4" name="PERF_TSE_STALL_CYCLES_LRZ_ZPLANE"/>
+-	<value value="5" name="PERF_TSE_STARVE_CYCLES_PC"/>
+-	<value value="6" name="PERF_TSE_INPUT_PRIM"/>
+-	<value value="7" name="PERF_TSE_INPUT_NULL_PRIM"/>
+-	<value value="8" name="PERF_TSE_TRIVAL_REJ_PRIM"/>
+-	<value value="9" name="PERF_TSE_CLIPPED_PRIM"/>
+-	<value value="10" name="PERF_TSE_ZERO_AREA_PRIM"/>
+-	<value value="11" name="PERF_TSE_FACENESS_CULLED_PRIM"/>
+-	<value value="12" name="PERF_TSE_ZERO_PIXEL_PRIM"/>
+-	<value value="13" name="PERF_TSE_OUTPUT_NULL_PRIM"/>
+-	<value value="14" name="PERF_TSE_OUTPUT_VISIBLE_PRIM"/>
+-	<value value="15" name="PERF_TSE_CINVOCATION"/>
+-	<value value="16" name="PERF_TSE_CPRIMITIVES"/>
+-	<value value="17" name="PERF_TSE_2D_INPUT_PRIM"/>
+-	<value value="18" name="PERF_TSE_2D_ALIVE_CYCLES"/>
+-	<value value="19" name="PERF_TSE_CLIP_PLANES"/>
+-</enum>
+-
+-<enum name="a6xx_ras_perfcounter_select">
+-	<value value="0" name="PERF_RAS_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_RAS_SUPERTILE_ACTIVE_CYCLES"/>
+-	<value value="2" name="PERF_RAS_STALL_CYCLES_LRZ"/>
+-	<value value="3" name="PERF_RAS_STARVE_CYCLES_TSE"/>
+-	<value value="4" name="PERF_RAS_SUPER_TILES"/>
+-	<value value="5" name="PERF_RAS_8X4_TILES"/>
+-	<value value="6" name="PERF_RAS_MASKGEN_ACTIVE"/>
+-	<value value="7" name="PERF_RAS_FULLY_COVERED_SUPER_TILES"/>
+-	<value value="8" name="PERF_RAS_FULLY_COVERED_8X4_TILES"/>
+-	<value value="9" name="PERF_RAS_PRIM_KILLED_INVISILBE"/>
+-	<value value="10" name="PERF_RAS_SUPERTILE_GEN_ACTIVE_CYCLES"/>
+-	<value value="11" name="PERF_RAS_LRZ_INTF_WORKING_CYCLES"/>
+-	<value value="12" name="PERF_RAS_BLOCKS"/>
+-</enum>
+-
+-<enum name="a6xx_uche_perfcounter_select">
+-	<value value="0" name="PERF_UCHE_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_UCHE_STALL_CYCLES_ARBITER"/>
+-	<value value="2" name="PERF_UCHE_VBIF_LATENCY_CYCLES"/>
+-	<value value="3" name="PERF_UCHE_VBIF_LATENCY_SAMPLES"/>
+-	<value value="4" name="PERF_UCHE_VBIF_READ_BEATS_TP"/>
+-	<value value="5" name="PERF_UCHE_VBIF_READ_BEATS_VFD"/>
+-	<value value="6" name="PERF_UCHE_VBIF_READ_BEATS_HLSQ"/>
+-	<value value="7" name="PERF_UCHE_VBIF_READ_BEATS_LRZ"/>
+-	<value value="8" name="PERF_UCHE_VBIF_READ_BEATS_SP"/>
+-	<value value="9" name="PERF_UCHE_READ_REQUESTS_TP"/>
+-	<value value="10" name="PERF_UCHE_READ_REQUESTS_VFD"/>
+-	<value value="11" name="PERF_UCHE_READ_REQUESTS_HLSQ"/>
+-	<value value="12" name="PERF_UCHE_READ_REQUESTS_LRZ"/>
+-	<value value="13" name="PERF_UCHE_READ_REQUESTS_SP"/>
+-	<value value="14" name="PERF_UCHE_WRITE_REQUESTS_LRZ"/>
+-	<value value="15" name="PERF_UCHE_WRITE_REQUESTS_SP"/>
+-	<value value="16" name="PERF_UCHE_WRITE_REQUESTS_VPC"/>
+-	<value value="17" name="PERF_UCHE_WRITE_REQUESTS_VSC"/>
+-	<value value="18" name="PERF_UCHE_EVICTS"/>
+-	<value value="19" name="PERF_UCHE_BANK_REQ0"/>
+-	<value value="20" name="PERF_UCHE_BANK_REQ1"/>
+-	<value value="21" name="PERF_UCHE_BANK_REQ2"/>
+-	<value value="22" name="PERF_UCHE_BANK_REQ3"/>
+-	<value value="23" name="PERF_UCHE_BANK_REQ4"/>
+-	<value value="24" name="PERF_UCHE_BANK_REQ5"/>
+-	<value value="25" name="PERF_UCHE_BANK_REQ6"/>
+-	<value value="26" name="PERF_UCHE_BANK_REQ7"/>
+-	<value value="27" name="PERF_UCHE_VBIF_READ_BEATS_CH0"/>
+-	<value value="28" name="PERF_UCHE_VBIF_READ_BEATS_CH1"/>
+-	<value value="29" name="PERF_UCHE_GMEM_READ_BEATS"/>
+-	<value value="30" name="PERF_UCHE_TPH_REF_FULL"/>
+-	<value value="31" name="PERF_UCHE_TPH_VICTIM_FULL"/>
+-	<value value="32" name="PERF_UCHE_TPH_EXT_FULL"/>
+-	<value value="33" name="PERF_UCHE_VBIF_STALL_WRITE_DATA"/>
+-	<value value="34" name="PERF_UCHE_DCMP_LATENCY_SAMPLES"/>
+-	<value value="35" name="PERF_UCHE_DCMP_LATENCY_CYCLES"/>
+-	<value value="36" name="PERF_UCHE_VBIF_READ_BEATS_PC"/>
+-	<value value="37" name="PERF_UCHE_READ_REQUESTS_PC"/>
+-	<value value="38" name="PERF_UCHE_RAM_READ_REQ"/>
+-	<value value="39" name="PERF_UCHE_RAM_WRITE_REQ"/>
+-</enum>
+-
+-<enum name="a6xx_tp_perfcounter_select">
+-	<value value="0" name="PERF_TP_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_TP_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="PERF_TP_LATENCY_CYCLES"/>
+-	<value value="3" name="PERF_TP_LATENCY_TRANS"/>
+-	<value value="4" name="PERF_TP_FLAG_CACHE_REQUEST_SAMPLES"/>
+-	<value value="5" name="PERF_TP_FLAG_CACHE_REQUEST_LATENCY"/>
+-	<value value="6" name="PERF_TP_L1_CACHELINE_REQUESTS"/>
+-	<value value="7" name="PERF_TP_L1_CACHELINE_MISSES"/>
+-	<value value="8" name="PERF_TP_SP_TP_TRANS"/>
+-	<value value="9" name="PERF_TP_TP_SP_TRANS"/>
+-	<value value="10" name="PERF_TP_OUTPUT_PIXELS"/>
+-	<value value="11" name="PERF_TP_FILTER_WORKLOAD_16BIT"/>
+-	<value value="12" name="PERF_TP_FILTER_WORKLOAD_32BIT"/>
+-	<value value="13" name="PERF_TP_QUADS_RECEIVED"/>
+-	<value value="14" name="PERF_TP_QUADS_OFFSET"/>
+-	<value value="15" name="PERF_TP_QUADS_SHADOW"/>
+-	<value value="16" name="PERF_TP_QUADS_ARRAY"/>
+-	<value value="17" name="PERF_TP_QUADS_GRADIENT"/>
+-	<value value="18" name="PERF_TP_QUADS_1D"/>
+-	<value value="19" name="PERF_TP_QUADS_2D"/>
+-	<value value="20" name="PERF_TP_QUADS_BUFFER"/>
+-	<value value="21" name="PERF_TP_QUADS_3D"/>
+-	<value value="22" name="PERF_TP_QUADS_CUBE"/>
+-	<value value="23" name="PERF_TP_DIVERGENT_QUADS_RECEIVED"/>
+-	<value value="24" name="PERF_TP_PRT_NON_RESIDENT_EVENTS"/>
+-	<value value="25" name="PERF_TP_OUTPUT_PIXELS_POINT"/>
+-	<value value="26" name="PERF_TP_OUTPUT_PIXELS_BILINEAR"/>
+-	<value value="27" name="PERF_TP_OUTPUT_PIXELS_MIP"/>
+-	<value value="28" name="PERF_TP_OUTPUT_PIXELS_ANISO"/>
+-	<value value="29" name="PERF_TP_OUTPUT_PIXELS_ZERO_LOD"/>
+-	<value value="30" name="PERF_TP_FLAG_CACHE_REQUESTS"/>
+-	<value value="31" name="PERF_TP_FLAG_CACHE_MISSES"/>
+-	<value value="32" name="PERF_TP_L1_5_L2_REQUESTS"/>
+-	<value value="33" name="PERF_TP_2D_OUTPUT_PIXELS"/>
+-	<value value="34" name="PERF_TP_2D_OUTPUT_PIXELS_POINT"/>
+-	<value value="35" name="PERF_TP_2D_OUTPUT_PIXELS_BILINEAR"/>
+-	<value value="36" name="PERF_TP_2D_FILTER_WORKLOAD_16BIT"/>
+-	<value value="37" name="PERF_TP_2D_FILTER_WORKLOAD_32BIT"/>
+-	<value value="38" name="PERF_TP_TPA2TPC_TRANS"/>
+-	<value value="39" name="PERF_TP_L1_MISSES_ASTC_1TILE"/>
+-	<value value="40" name="PERF_TP_L1_MISSES_ASTC_2TILE"/>
+-	<value value="41" name="PERF_TP_L1_MISSES_ASTC_4TILE"/>
+-	<value value="42" name="PERF_TP_L1_5_L2_COMPRESS_REQS"/>
+-	<value value="43" name="PERF_TP_L1_5_L2_COMPRESS_MISS"/>
+-	<value value="44" name="PERF_TP_L1_BANK_CONFLICT"/>
+-	<value value="45" name="PERF_TP_L1_5_MISS_LATENCY_CYCLES"/>
+-	<value value="46" name="PERF_TP_L1_5_MISS_LATENCY_TRANS"/>
+-	<value value="47" name="PERF_TP_QUADS_CONSTANT_MULTIPLIED"/>
+-	<value value="48" name="PERF_TP_FRONTEND_WORKING_CYCLES"/>
+-	<value value="49" name="PERF_TP_L1_TAG_WORKING_CYCLES"/>
+-	<value value="50" name="PERF_TP_L1_DATA_WRITE_WORKING_CYCLES"/>
+-	<value value="51" name="PERF_TP_PRE_L1_DECOM_WORKING_CYCLES"/>
+-	<value value="52" name="PERF_TP_BACKEND_WORKING_CYCLES"/>
+-	<value value="53" name="PERF_TP_FLAG_CACHE_WORKING_CYCLES"/>
+-	<value value="54" name="PERF_TP_L1_5_CACHE_WORKING_CYCLES"/>
+-	<value value="55" name="PERF_TP_STARVE_CYCLES_SP"/>
+-	<value value="56" name="PERF_TP_STARVE_CYCLES_UCHE"/>
+-</enum>
+-
+-<enum name="a6xx_sp_perfcounter_select">
+-	<value value="0" name="PERF_SP_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_SP_ALU_WORKING_CYCLES"/>
+-	<value value="2" name="PERF_SP_EFU_WORKING_CYCLES"/>
+-	<value value="3" name="PERF_SP_STALL_CYCLES_VPC"/>
+-	<value value="4" name="PERF_SP_STALL_CYCLES_TP"/>
+-	<value value="5" name="PERF_SP_STALL_CYCLES_UCHE"/>
+-	<value value="6" name="PERF_SP_STALL_CYCLES_RB"/>
+-	<value value="7" name="PERF_SP_NON_EXECUTION_CYCLES"/>
+-	<value value="8" name="PERF_SP_WAVE_CONTEXTS"/>
+-	<value value="9" name="PERF_SP_WAVE_CONTEXT_CYCLES"/>
+-	<value value="10" name="PERF_SP_FS_STAGE_WAVE_CYCLES"/>
+-	<value value="11" name="PERF_SP_FS_STAGE_WAVE_SAMPLES"/>
+-	<value value="12" name="PERF_SP_VS_STAGE_WAVE_CYCLES"/>
+-	<value value="13" name="PERF_SP_VS_STAGE_WAVE_SAMPLES"/>
+-	<value value="14" name="PERF_SP_FS_STAGE_DURATION_CYCLES"/>
+-	<value value="15" name="PERF_SP_VS_STAGE_DURATION_CYCLES"/>
+-	<value value="16" name="PERF_SP_WAVE_CTRL_CYCLES"/>
+-	<value value="17" name="PERF_SP_WAVE_LOAD_CYCLES"/>
+-	<value value="18" name="PERF_SP_WAVE_EMIT_CYCLES"/>
+-	<value value="19" name="PERF_SP_WAVE_NOP_CYCLES"/>
+-	<value value="20" name="PERF_SP_WAVE_WAIT_CYCLES"/>
+-	<value value="21" name="PERF_SP_WAVE_FETCH_CYCLES"/>
+-	<value value="22" name="PERF_SP_WAVE_IDLE_CYCLES"/>
+-	<value value="23" name="PERF_SP_WAVE_END_CYCLES"/>
+-	<value value="24" name="PERF_SP_WAVE_LONG_SYNC_CYCLES"/>
+-	<value value="25" name="PERF_SP_WAVE_SHORT_SYNC_CYCLES"/>
+-	<value value="26" name="PERF_SP_WAVE_JOIN_CYCLES"/>
+-	<value value="27" name="PERF_SP_LM_LOAD_INSTRUCTIONS"/>
+-	<value value="28" name="PERF_SP_LM_STORE_INSTRUCTIONS"/>
+-	<value value="29" name="PERF_SP_LM_ATOMICS"/>
+-	<value value="30" name="PERF_SP_GM_LOAD_INSTRUCTIONS"/>
+-	<value value="31" name="PERF_SP_GM_STORE_INSTRUCTIONS"/>
+-	<value value="32" name="PERF_SP_GM_ATOMICS"/>
+-	<value value="33" name="PERF_SP_VS_STAGE_TEX_INSTRUCTIONS"/>
+-	<value value="34" name="PERF_SP_VS_STAGE_EFU_INSTRUCTIONS"/>
+-	<value value="35" name="PERF_SP_VS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+-	<value value="36" name="PERF_SP_VS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+-	<value value="37" name="PERF_SP_FS_STAGE_TEX_INSTRUCTIONS"/>
+-	<value value="38" name="PERF_SP_FS_STAGE_CFLOW_INSTRUCTIONS"/>
+-	<value value="39" name="PERF_SP_FS_STAGE_EFU_INSTRUCTIONS"/>
+-	<value value="40" name="PERF_SP_FS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+-	<value value="41" name="PERF_SP_FS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+-	<value value="42" name="PERF_SP_FS_STAGE_BARY_INSTRUCTIONS"/>
+-	<value value="43" name="PERF_SP_VS_INSTRUCTIONS"/>
+-	<value value="44" name="PERF_SP_FS_INSTRUCTIONS"/>
+-	<value value="45" name="PERF_SP_ADDR_LOCK_COUNT"/>
+-	<value value="46" name="PERF_SP_UCHE_READ_TRANS"/>
+-	<value value="47" name="PERF_SP_UCHE_WRITE_TRANS"/>
+-	<value value="48" name="PERF_SP_EXPORT_VPC_TRANS"/>
+-	<value value="49" name="PERF_SP_EXPORT_RB_TRANS"/>
+-	<value value="50" name="PERF_SP_PIXELS_KILLED"/>
+-	<value value="51" name="PERF_SP_ICL1_REQUESTS"/>
+-	<value value="52" name="PERF_SP_ICL1_MISSES"/>
+-	<value value="53" name="PERF_SP_HS_INSTRUCTIONS"/>
+-	<value value="54" name="PERF_SP_DS_INSTRUCTIONS"/>
+-	<value value="55" name="PERF_SP_GS_INSTRUCTIONS"/>
+-	<value value="56" name="PERF_SP_CS_INSTRUCTIONS"/>
+-	<value value="57" name="PERF_SP_GPR_READ"/>
+-	<value value="58" name="PERF_SP_GPR_WRITE"/>
+-	<value value="59" name="PERF_SP_FS_STAGE_HALF_EFU_INSTRUCTIONS"/>
+-	<value value="60" name="PERF_SP_VS_STAGE_HALF_EFU_INSTRUCTIONS"/>
+-	<value value="61" name="PERF_SP_LM_BANK_CONFLICTS"/>
+-	<value value="62" name="PERF_SP_TEX_CONTROL_WORKING_CYCLES"/>
+-	<value value="63" name="PERF_SP_LOAD_CONTROL_WORKING_CYCLES"/>
+-	<value value="64" name="PERF_SP_FLOW_CONTROL_WORKING_CYCLES"/>
+-	<value value="65" name="PERF_SP_LM_WORKING_CYCLES"/>
+-	<value value="66" name="PERF_SP_DISPATCHER_WORKING_CYCLES"/>
+-	<value value="67" name="PERF_SP_SEQUENCER_WORKING_CYCLES"/>
+-	<value value="68" name="PERF_SP_LOW_EFFICIENCY_STARVED_BY_TP"/>
+-	<value value="69" name="PERF_SP_STARVE_CYCLES_HLSQ"/>
+-	<value value="70" name="PERF_SP_NON_EXECUTION_LS_CYCLES"/>
+-	<value value="71" name="PERF_SP_WORKING_EU"/>
+-	<value value="72" name="PERF_SP_ANY_EU_WORKING"/>
+-	<value value="73" name="PERF_SP_WORKING_EU_FS_STAGE"/>
+-	<value value="74" name="PERF_SP_ANY_EU_WORKING_FS_STAGE"/>
+-	<value value="75" name="PERF_SP_WORKING_EU_VS_STAGE"/>
+-	<value value="76" name="PERF_SP_ANY_EU_WORKING_VS_STAGE"/>
+-	<value value="77" name="PERF_SP_WORKING_EU_CS_STAGE"/>
+-	<value value="78" name="PERF_SP_ANY_EU_WORKING_CS_STAGE"/>
+-	<value value="79" name="PERF_SP_GPR_READ_PREFETCH"/>
+-	<value value="80" name="PERF_SP_GPR_READ_CONFLICT"/>
+-	<value value="81" name="PERF_SP_GPR_WRITE_CONFLICT"/>
+-	<value value="82" name="PERF_SP_GM_LOAD_LATENCY_CYCLES"/>
+-	<value value="83" name="PERF_SP_GM_LOAD_LATENCY_SAMPLES"/>
+-	<value value="84" name="PERF_SP_EXECUTABLE_WAVES"/>
+-</enum>
+-
+-<enum name="a6xx_rb_perfcounter_select">
+-	<value value="0" name="PERF_RB_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_RB_STALL_CYCLES_HLSQ"/>
+-	<value value="2" name="PERF_RB_STALL_CYCLES_FIFO0_FULL"/>
+-	<value value="3" name="PERF_RB_STALL_CYCLES_FIFO1_FULL"/>
+-	<value value="4" name="PERF_RB_STALL_CYCLES_FIFO2_FULL"/>
+-	<value value="5" name="PERF_RB_STARVE_CYCLES_SP"/>
+-	<value value="6" name="PERF_RB_STARVE_CYCLES_LRZ_TILE"/>
+-	<value value="7" name="PERF_RB_STARVE_CYCLES_CCU"/>
+-	<value value="8" name="PERF_RB_STARVE_CYCLES_Z_PLANE"/>
+-	<value value="9" name="PERF_RB_STARVE_CYCLES_BARY_PLANE"/>
+-	<value value="10" name="PERF_RB_Z_WORKLOAD"/>
+-	<value value="11" name="PERF_RB_HLSQ_ACTIVE"/>
+-	<value value="12" name="PERF_RB_Z_READ"/>
+-	<value value="13" name="PERF_RB_Z_WRITE"/>
+-	<value value="14" name="PERF_RB_C_READ"/>
+-	<value value="15" name="PERF_RB_C_WRITE"/>
+-	<value value="16" name="PERF_RB_TOTAL_PASS"/>
+-	<value value="17" name="PERF_RB_Z_PASS"/>
+-	<value value="18" name="PERF_RB_Z_FAIL"/>
+-	<value value="19" name="PERF_RB_S_FAIL"/>
+-	<value value="20" name="PERF_RB_BLENDED_FXP_COMPONENTS"/>
+-	<value value="21" name="PERF_RB_BLENDED_FP16_COMPONENTS"/>
+-	<value value="22" name="PERF_RB_PS_INVOCATIONS"/>
+-	<value value="23" name="PERF_RB_2D_ALIVE_CYCLES"/>
+-	<value value="24" name="PERF_RB_2D_STALL_CYCLES_A2D"/>
+-	<value value="25" name="PERF_RB_2D_STARVE_CYCLES_SRC"/>
+-	<value value="26" name="PERF_RB_2D_STARVE_CYCLES_SP"/>
+-	<value value="27" name="PERF_RB_2D_STARVE_CYCLES_DST"/>
+-	<value value="28" name="PERF_RB_2D_VALID_PIXELS"/>
+-	<value value="29" name="PERF_RB_3D_PIXELS"/>
+-	<value value="30" name="PERF_RB_BLENDER_WORKING_CYCLES"/>
+-	<value value="31" name="PERF_RB_ZPROC_WORKING_CYCLES"/>
+-	<value value="32" name="PERF_RB_CPROC_WORKING_CYCLES"/>
+-	<value value="33" name="PERF_RB_SAMPLER_WORKING_CYCLES"/>
+-	<value value="34" name="PERF_RB_STALL_CYCLES_CCU_COLOR_READ"/>
+-	<value value="35" name="PERF_RB_STALL_CYCLES_CCU_COLOR_WRITE"/>
+-	<value value="36" name="PERF_RB_STALL_CYCLES_CCU_DEPTH_READ"/>
+-	<value value="37" name="PERF_RB_STALL_CYCLES_CCU_DEPTH_WRITE"/>
+-	<value value="38" name="PERF_RB_STALL_CYCLES_VPC"/>
+-	<value value="39" name="PERF_RB_2D_INPUT_TRANS"/>
+-	<value value="40" name="PERF_RB_2D_OUTPUT_RB_DST_TRANS"/>
+-	<value value="41" name="PERF_RB_2D_OUTPUT_RB_SRC_TRANS"/>
+-	<value value="42" name="PERF_RB_BLENDED_FP32_COMPONENTS"/>
+-	<value value="43" name="PERF_RB_COLOR_PIX_TILES"/>
+-	<value value="44" name="PERF_RB_STALL_CYCLES_CCU"/>
+-	<value value="45" name="PERF_RB_EARLY_Z_ARB3_GRANT"/>
+-	<value value="46" name="PERF_RB_LATE_Z_ARB3_GRANT"/>
+-	<value value="47" name="PERF_RB_EARLY_Z_SKIP_GRANT"/>
+-</enum>
+-
+-<enum name="a6xx_vsc_perfcounter_select">
+-	<value value="0" name="PERF_VSC_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_VSC_WORKING_CYCLES"/>
+-	<value value="2" name="PERF_VSC_STALL_CYCLES_UCHE"/>
+-	<value value="3" name="PERF_VSC_EOT_NUM"/>
+-	<value value="4" name="PERF_VSC_INPUT_TILES"/>
+-</enum>
+-
+-<enum name="a6xx_ccu_perfcounter_select">
+-	<value value="0" name="PERF_CCU_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_CCU_STALL_CYCLES_RB_DEPTH_RETURN"/>
+-	<value value="2" name="PERF_CCU_STALL_CYCLES_RB_COLOR_RETURN"/>
+-	<value value="3" name="PERF_CCU_STARVE_CYCLES_FLAG_RETURN"/>
+-	<value value="4" name="PERF_CCU_DEPTH_BLOCKS"/>
+-	<value value="5" name="PERF_CCU_COLOR_BLOCKS"/>
+-	<value value="6" name="PERF_CCU_DEPTH_BLOCK_HIT"/>
+-	<value value="7" name="PERF_CCU_COLOR_BLOCK_HIT"/>
+-	<value value="8" name="PERF_CCU_PARTIAL_BLOCK_READ"/>
+-	<value value="9" name="PERF_CCU_GMEM_READ"/>
+-	<value value="10" name="PERF_CCU_GMEM_WRITE"/>
+-	<value value="11" name="PERF_CCU_DEPTH_READ_FLAG0_COUNT"/>
+-	<value value="12" name="PERF_CCU_DEPTH_READ_FLAG1_COUNT"/>
+-	<value value="13" name="PERF_CCU_DEPTH_READ_FLAG2_COUNT"/>
+-	<value value="14" name="PERF_CCU_DEPTH_READ_FLAG3_COUNT"/>
+-	<value value="15" name="PERF_CCU_DEPTH_READ_FLAG4_COUNT"/>
+-	<value value="16" name="PERF_CCU_DEPTH_READ_FLAG5_COUNT"/>
+-	<value value="17" name="PERF_CCU_DEPTH_READ_FLAG6_COUNT"/>
+-	<value value="18" name="PERF_CCU_DEPTH_READ_FLAG8_COUNT"/>
+-	<value value="19" name="PERF_CCU_COLOR_READ_FLAG0_COUNT"/>
+-	<value value="20" name="PERF_CCU_COLOR_READ_FLAG1_COUNT"/>
+-	<value value="21" name="PERF_CCU_COLOR_READ_FLAG2_COUNT"/>
+-	<value value="22" name="PERF_CCU_COLOR_READ_FLAG3_COUNT"/>
+-	<value value="23" name="PERF_CCU_COLOR_READ_FLAG4_COUNT"/>
+-	<value value="24" name="PERF_CCU_COLOR_READ_FLAG5_COUNT"/>
+-	<value value="25" name="PERF_CCU_COLOR_READ_FLAG6_COUNT"/>
+-	<value value="26" name="PERF_CCU_COLOR_READ_FLAG8_COUNT"/>
+-	<value value="27" name="PERF_CCU_2D_RD_REQ"/>
+-	<value value="28" name="PERF_CCU_2D_WR_REQ"/>
+-</enum>
+-
+-<enum name="a6xx_lrz_perfcounter_select">
+-	<value value="0" name="PERF_LRZ_BUSY_CYCLES"/>
+-	<value value="1" name="PERF_LRZ_STARVE_CYCLES_RAS"/>
+-	<value value="2" name="PERF_LRZ_STALL_CYCLES_RB"/>
+-	<value value="3" name="PERF_LRZ_STALL_CYCLES_VSC"/>
+-	<value value="4" name="PERF_LRZ_STALL_CYCLES_VPC"/>
+-	<value value="5" name="PERF_LRZ_STALL_CYCLES_FLAG_PREFETCH"/>
+-	<value value="6" name="PERF_LRZ_STALL_CYCLES_UCHE"/>
+-	<value value="7" name="PERF_LRZ_LRZ_READ"/>
+-	<value value="8" name="PERF_LRZ_LRZ_WRITE"/>
+-	<value value="9" name="PERF_LRZ_READ_LATENCY"/>
+-	<value value="10" name="PERF_LRZ_MERGE_CACHE_UPDATING"/>
+-	<value value="11" name="PERF_LRZ_PRIM_KILLED_BY_MASKGEN"/>
+-	<value value="12" name="PERF_LRZ_PRIM_KILLED_BY_LRZ"/>
+-	<value value="13" name="PERF_LRZ_VISIBLE_PRIM_AFTER_LRZ"/>
+-	<value value="14" name="PERF_LRZ_FULL_8X8_TILES"/>
+-	<value value="15" name="PERF_LRZ_PARTIAL_8X8_TILES"/>
+-	<value value="16" name="PERF_LRZ_TILE_KILLED"/>
+-	<value value="17" name="PERF_LRZ_TOTAL_PIXEL"/>
+-	<value value="18" name="PERF_LRZ_VISIBLE_PIXEL_AFTER_LRZ"/>
+-	<value value="19" name="PERF_LRZ_FULLY_COVERED_TILES"/>
+-	<value value="20" name="PERF_LRZ_PARTIAL_COVERED_TILES"/>
+-	<value value="21" name="PERF_LRZ_FEEDBACK_ACCEPT"/>
+-	<value value="22" name="PERF_LRZ_FEEDBACK_DISCARD"/>
+-	<value value="23" name="PERF_LRZ_FEEDBACK_STALL"/>
+-	<value value="24" name="PERF_LRZ_STALL_CYCLES_RB_ZPLANE"/>
+-	<value value="25" name="PERF_LRZ_STALL_CYCLES_RB_BPLANE"/>
+-	<value value="26" name="PERF_LRZ_STALL_CYCLES_VC"/>
+-	<value value="27" name="PERF_LRZ_RAS_MASK_TRANS"/>
+-</enum>
+-
+-<enum name="a6xx_cmp_perfcounter_select">
+-	<value value="0" name="PERF_CMPDECMP_STALL_CYCLES_ARB"/>
+-	<value value="1" name="PERF_CMPDECMP_VBIF_LATENCY_CYCLES"/>
+-	<value value="2" name="PERF_CMPDECMP_VBIF_LATENCY_SAMPLES"/>
+-	<value value="3" name="PERF_CMPDECMP_VBIF_READ_DATA_CCU"/>
+-	<value value="4" name="PERF_CMPDECMP_VBIF_WRITE_DATA_CCU"/>
+-	<value value="5" name="PERF_CMPDECMP_VBIF_READ_REQUEST"/>
+-	<value value="6" name="PERF_CMPDECMP_VBIF_WRITE_REQUEST"/>
+-	<value value="7" name="PERF_CMPDECMP_VBIF_READ_DATA"/>
+-	<value value="8" name="PERF_CMPDECMP_VBIF_WRITE_DATA"/>
+-	<value value="9" name="PERF_CMPDECMP_FLAG_FETCH_CYCLES"/>
+-	<value value="10" name="PERF_CMPDECMP_FLAG_FETCH_SAMPLES"/>
+-	<value value="11" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG1_COUNT"/>
+-	<value value="12" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG2_COUNT"/>
+-	<value value="13" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG3_COUNT"/>
+-	<value value="14" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG4_COUNT"/>
+-	<value value="15" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG5_COUNT"/>
+-	<value value="16" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG6_COUNT"/>
+-	<value value="17" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG8_COUNT"/>
+-	<value value="18" name="PERF_CMPDECMP_COLOR_WRITE_FLAG1_COUNT"/>
+-	<value value="19" name="PERF_CMPDECMP_COLOR_WRITE_FLAG2_COUNT"/>
+-	<value value="20" name="PERF_CMPDECMP_COLOR_WRITE_FLAG3_COUNT"/>
+-	<value value="21" name="PERF_CMPDECMP_COLOR_WRITE_FLAG4_COUNT"/>
+-	<value value="22" name="PERF_CMPDECMP_COLOR_WRITE_FLAG5_COUNT"/>
+-	<value value="23" name="PERF_CMPDECMP_COLOR_WRITE_FLAG6_COUNT"/>
+-	<value value="24" name="PERF_CMPDECMP_COLOR_WRITE_FLAG8_COUNT"/>
+-	<value value="25" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_REQ"/>
+-	<value value="26" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_WR"/>
+-	<value value="27" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_RETURN"/>
+-	<value value="28" name="PERF_CMPDECMP_2D_RD_DATA"/>
+-	<value value="29" name="PERF_CMPDECMP_2D_WR_DATA"/>
+-	<value value="30" name="PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH0"/>
+-	<value value="31" name="PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH1"/>
+-	<value value="32" name="PERF_CMPDECMP_2D_OUTPUT_TRANS"/>
+-	<value value="33" name="PERF_CMPDECMP_VBIF_WRITE_DATA_UCHE"/>
+-	<value value="34" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG0_COUNT"/>
+-	<value value="35" name="PERF_CMPDECMP_COLOR_WRITE_FLAG0_COUNT"/>
+-	<value value="36" name="PERF_CMPDECMP_COLOR_WRITE_FLAGALPHA_COUNT"/>
+-	<value value="37" name="PERF_CMPDECMP_2D_BUSY_CYCLES"/>
+-	<value value="38" name="PERF_CMPDECMP_2D_REORDER_STARVE_CYCLES"/>
+-	<value value="39" name="PERF_CMPDECMP_2D_PIXELS"/>
+-</enum>
+-
+-<!--
+-Used in a6xx_2d_blit_cntl.. the value mostly seems to correlate to the
+-component type/size, so I think it relates to internal format used for
+-blending?  The one exception is that 16b unorm and 32b float use the
+-same value... maybe 16b unorm is uncommon enough that it was just easier
+-to upconvert to 32b float internally?
+-
+- 8b unorm:  10 (sometimes 0, is the high bit part of something else?)
+-16b unorm:   4
+-
+-32b int:     7
+-16b int:     6
+- 8b int:     5
+-
+-32b float:   4
+-16b float:   3
+- -->
+-<enum name="a6xx_2d_ifmt">
+-	<value value="0x10" name="R2D_UNORM8"/>
+-	<value value="0x7"  name="R2D_INT32"/>
+-	<value value="0x6"  name="R2D_INT16"/>
+-	<value value="0x5"  name="R2D_INT8"/>
+-	<value value="0x4"  name="R2D_FLOAT32"/>
+-	<value value="0x3"  name="R2D_FLOAT16"/>
+-	<value value="0x1"  name="R2D_UNORM8_SRGB"/>
+-	<value value="0x0"  name="R2D_RAW"/>
+-</enum>
+-
+-<enum name="a6xx_ztest_mode">
+-	<doc>Allow early z-test and early-lrz (if applicable)</doc>
+-	<value value="0x0" name="A6XX_EARLY_Z"/>
+-	<doc>Disable early z-test and early-lrz test (if applicable)</doc>
+-	<value value="0x1" name="A6XX_LATE_Z"/>
+-	<doc>
+-		A special mode that allows early-lrz test but disables
+-		early-z test.  Which might sound a bit funny, since
+-		lrz-test happens before z-test.  But as long as a couple
+-		conditions are maintained this allows using lrz-test in
+-		cases where fragment shader has kill/discard:
+-
+-		1) Disable lrz-write in cases where it is uncertain during
+-		   binning pass that a fragment will pass.  Ie.  if frag
+-		   shader has-kill, writes-z, or alpha/stencil test is
+-		   enabled.  (For correctness, lrz-write must be disabled
+-		   when blend is enabled.)  This is analogous to how a
+-		   z-prepass works.
+-
+-		2) Disable lrz-write and test if a depth-test direction
+-		   reversal is detected.  Due to condition (1), the contents
+-		   of the lrz buffer are a conservative estimation of the
+-		   depth buffer during the draw pass.  Meaning that geometry
+-		   that we know for certain will not be visible will not pass
+-		   lrz-test.  But geometry which may be (or contributes to
+-		   blend) will pass the lrz-test.
+-
+-		This allows us to keep early-lrz-test in cases where the frag
+-		shader does not write-z (ie. we know the z-value before FS)
+-		and does not have side-effects (image/ssbo writes, etc), but
+-		does have kill/discard.  Which turns out to be a common
+-		enough case that it is useful to keep early-lrz test against
+-		the conservative lrz buffer to discard fragments that we
+-		know will definitely not be visible.
+-	</doc>
+-	<value value="0x2" name="A6XX_EARLY_LRZ_LATE_Z"/>
+-	<doc>Not a real hw value, used internally by mesa</doc>
+-	<value value="0x3" name="A6XX_INVALID_ZTEST"/>
+-</enum>
+-
+-<enum name="a6xx_tess_spacing">
+-	<value value="0x0" name="TESS_EQUAL"/>
+-	<value value="0x2" name="TESS_FRACTIONAL_ODD"/>
+-	<value value="0x3" name="TESS_FRACTIONAL_EVEN"/>
+-</enum>
+-<enum name="a6xx_tess_output">
+-	<value value="0x0" name="TESS_POINTS"/>
+-	<value value="0x1" name="TESS_LINES"/>
+-	<value value="0x2" name="TESS_CW_TRIS"/>
+-	<value value="0x3" name="TESS_CCW_TRIS"/>
+-</enum>
+-
+-<enum name="a7xx_cp_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_CP_ALWAYS_COUNT"/>
+-	<value value="1" name="A7XX_PERF_CP_BUSY_GFX_CORE_IDLE"/>
+-	<value value="2" name="A7XX_PERF_CP_BUSY_CYCLES"/>
+-	<value value="3" name="A7XX_PERF_CP_NUM_PREEMPTIONS"/>
+-	<value value="4" name="A7XX_PERF_CP_PREEMPTION_REACTION_DELAY"/>
+-	<value value="5" name="A7XX_PERF_CP_PREEMPTION_SWITCH_OUT_TIME"/>
+-	<value value="6" name="A7XX_PERF_CP_PREEMPTION_SWITCH_IN_TIME"/>
+-	<value value="7" name="A7XX_PERF_CP_DEAD_DRAWS_IN_BIN_RENDER"/>
+-	<value value="8" name="A7XX_PERF_CP_PREDICATED_DRAWS_KILLED"/>
+-	<value value="9" name="A7XX_PERF_CP_MODE_SWITCH"/>
+-	<value value="10" name="A7XX_PERF_CP_ZPASS_DONE"/>
+-	<value value="11" name="A7XX_PERF_CP_CONTEXT_DONE"/>
+-	<value value="12" name="A7XX_PERF_CP_CACHE_FLUSH"/>
+-	<value value="13" name="A7XX_PERF_CP_LONG_PREEMPTIONS"/>
+-	<value value="14" name="A7XX_PERF_CP_SQE_I_CACHE_STARVE"/>
+-	<value value="15" name="A7XX_PERF_CP_SQE_IDLE"/>
+-	<value value="16" name="A7XX_PERF_CP_SQE_PM4_STARVE_RB_IB"/>
+-	<value value="17" name="A7XX_PERF_CP_SQE_PM4_STARVE_SDS"/>
+-	<value value="18" name="A7XX_PERF_CP_SQE_MRB_STARVE"/>
+-	<value value="19" name="A7XX_PERF_CP_SQE_RRB_STARVE"/>
+-	<value value="20" name="A7XX_PERF_CP_SQE_VSD_STARVE"/>
+-	<value value="21" name="A7XX_PERF_CP_VSD_DECODE_STARVE"/>
+-	<value value="22" name="A7XX_PERF_CP_SQE_PIPE_OUT_STALL"/>
+-	<value value="23" name="A7XX_PERF_CP_SQE_SYNC_STALL"/>
+-	<value value="24" name="A7XX_PERF_CP_SQE_PM4_WFI_STALL"/>
+-	<value value="25" name="A7XX_PERF_CP_SQE_SYS_WFI_STALL"/>
+-	<value value="26" name="A7XX_PERF_CP_SQE_T4_EXEC"/>
+-	<value value="27" name="A7XX_PERF_CP_SQE_LOAD_STATE_EXEC"/>
+-	<value value="28" name="A7XX_PERF_CP_SQE_SAVE_SDS_STATE"/>
+-	<value value="29" name="A7XX_PERF_CP_SQE_DRAW_EXEC"/>
+-	<value value="30" name="A7XX_PERF_CP_SQE_CTXT_REG_BUNCH_EXEC"/>
+-	<value value="31" name="A7XX_PERF_CP_SQE_EXEC_PROFILED"/>
+-	<value value="32" name="A7XX_PERF_CP_MEMORY_POOL_EMPTY"/>
+-	<value value="33" name="A7XX_PERF_CP_MEMORY_POOL_SYNC_STALL"/>
+-	<value value="34" name="A7XX_PERF_CP_MEMORY_POOL_ABOVE_THRESH"/>
+-	<value value="35" name="A7XX_PERF_CP_AHB_WR_STALL_PRE_DRAWS"/>
+-	<value value="36" name="A7XX_PERF_CP_AHB_STALL_SQE_GMU"/>
+-	<value value="37" name="A7XX_PERF_CP_AHB_STALL_SQE_WR_OTHER"/>
+-	<value value="38" name="A7XX_PERF_CP_AHB_STALL_SQE_RD_OTHER"/>
+-	<value value="39" name="A7XX_PERF_CP_CLUSTER0_EMPTY"/>
+-	<value value="40" name="A7XX_PERF_CP_CLUSTER1_EMPTY"/>
+-	<value value="41" name="A7XX_PERF_CP_CLUSTER2_EMPTY"/>
+-	<value value="42" name="A7XX_PERF_CP_CLUSTER3_EMPTY"/>
+-	<value value="43" name="A7XX_PERF_CP_CLUSTER4_EMPTY"/>
+-	<value value="44" name="A7XX_PERF_CP_CLUSTER5_EMPTY"/>
+-	<value value="45" name="A7XX_PERF_CP_PM4_DATA"/>
+-	<value value="46" name="A7XX_PERF_CP_PM4_HEADERS"/>
+-	<value value="47" name="A7XX_PERF_CP_VBIF_READ_BEATS"/>
+-	<value value="48" name="A7XX_PERF_CP_VBIF_WRITE_BEATS"/>
+-	<value value="49" name="A7XX_PERF_CP_SQE_INSTR_COUNTER"/>
+-	<value value="50" name="A7XX_PERF_CP_RESERVED_50"/>
+-	<value value="51" name="A7XX_PERF_CP_RESERVED_51"/>
+-	<value value="52" name="A7XX_PERF_CP_RESERVED_52"/>
+-	<value value="53" name="A7XX_PERF_CP_RESERVED_53"/>
+-	<value value="54" name="A7XX_PERF_CP_RESERVED_54"/>
+-	<value value="55" name="A7XX_PERF_CP_RESERVED_55"/>
+-	<value value="56" name="A7XX_PERF_CP_RESERVED_56"/>
+-	<value value="57" name="A7XX_PERF_CP_RESERVED_57"/>
+-	<value value="58" name="A7XX_PERF_CP_RESERVED_58"/>
+-	<value value="59" name="A7XX_PERF_CP_RESERVED_59"/>
+-	<value value="60" name="A7XX_PERF_CP_CLUSTER0_FULL"/>
+-	<value value="61" name="A7XX_PERF_CP_CLUSTER1_FULL"/>
+-	<value value="62" name="A7XX_PERF_CP_CLUSTER2_FULL"/>
+-	<value value="63" name="A7XX_PERF_CP_CLUSTER3_FULL"/>
+-	<value value="64" name="A7XX_PERF_CP_CLUSTER4_FULL"/>
+-	<value value="65" name="A7XX_PERF_CP_CLUSTER5_FULL"/>
+-	<value value="66" name="A7XX_PERF_CP_CLUSTER6_FULL"/>
+-	<value value="67" name="A7XX_PERF_CP_CLUSTER6_EMPTY"/>
+-	<value value="68" name="A7XX_PERF_CP_ICACHE_MISSES"/>
+-	<value value="69" name="A7XX_PERF_CP_ICACHE_HITS"/>
+-	<value value="70" name="A7XX_PERF_CP_ICACHE_STALL"/>
+-	<value value="71" name="A7XX_PERF_CP_DCACHE_MISSES"/>
+-	<value value="72" name="A7XX_PERF_CP_DCACHE_HITS"/>
+-	<value value="73" name="A7XX_PERF_CP_DCACHE_STALLS"/>
+-	<value value="74" name="A7XX_PERF_CP_AQE_SQE_STALL"/>
+-	<value value="75" name="A7XX_PERF_CP_SQE_AQE_STARVE"/>
+-	<value value="76" name="A7XX_PERF_CP_PREEMPT_LATENCY"/>
+-	<value value="77" name="A7XX_PERF_CP_SQE_MD8_STALL_CYCLES"/>
+-	<value value="78" name="A7XX_PERF_CP_SQE_MESH_EXEC_CYCLES"/>
+-	<value value="79" name="A7XX_PERF_CP_AQE_NUM_AS_CHUNKS"/>
+-	<value value="80" name="A7XX_PERF_CP_AQE_NUM_MS_CHUNKS"/>
+-</enum>
+-
+-<enum name="a7xx_rbbm_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_RBBM_ALWAYS_COUNT"/>
+-	<value value="1" name="A7XX_PERF_RBBM_ALWAYS_ON"/>
+-	<value value="2" name="A7XX_PERF_RBBM_TSE_BUSY"/>
+-	<value value="3" name="A7XX_PERF_RBBM_RAS_BUSY"/>
+-	<value value="4" name="A7XX_PERF_RBBM_PC_DCALL_BUSY"/>
+-	<value value="5" name="A7XX_PERF_RBBM_PC_VSD_BUSY"/>
+-	<value value="6" name="A7XX_PERF_RBBM_STATUS_MASKED"/>
+-	<value value="7" name="A7XX_PERF_RBBM_COM_BUSY"/>
+-	<value value="8" name="A7XX_PERF_RBBM_DCOM_BUSY"/>
+-	<value value="9" name="A7XX_PERF_RBBM_VBIF_BUSY"/>
+-	<value value="10" name="A7XX_PERF_RBBM_VSC_BUSY"/>
+-	<value value="11" name="A7XX_PERF_RBBM_TESS_BUSY"/>
+-	<value value="12" name="A7XX_PERF_RBBM_UCHE_BUSY"/>
+-	<value value="13" name="A7XX_PERF_RBBM_HLSQ_BUSY"/>
+-</enum>
+-
+-<enum name="a7xx_pc_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_PC_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_PC_WORKING_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_PC_STALL_CYCLES_VFD"/>
+-	<value value="3" name="A7XX_PERF_PC_RESERVED"/>
+-	<value value="4" name="A7XX_PERF_PC_STALL_CYCLES_VPC"/>
+-	<value value="5" name="A7XX_PERF_PC_STALL_CYCLES_UCHE"/>
+-	<value value="6" name="A7XX_PERF_PC_STALL_CYCLES_TESS"/>
+-	<value value="7" name="A7XX_PERF_PC_STALL_CYCLES_VFD_ONLY"/>
+-	<value value="8" name="A7XX_PERF_PC_STALL_CYCLES_VPC_ONLY"/>
+-	<value value="9" name="A7XX_PERF_PC_PASS1_TF_STALL_CYCLES"/>
+-	<value value="10" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_INDEX"/>
+-	<value value="11" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_TESS_FACTOR"/>
+-	<value value="12" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_VIZ_STREAM"/>
+-	<value value="13" name="A7XX_PERF_PC_STARVE_CYCLES_DI"/>
+-	<value value="14" name="A7XX_PERF_PC_VIS_STREAMS_LOADED"/>
+-	<value value="15" name="A7XX_PERF_PC_INSTANCES"/>
+-	<value value="16" name="A7XX_PERF_PC_VPC_PRIMITIVES"/>
+-	<value value="17" name="A7XX_PERF_PC_DEAD_PRIM"/>
+-	<value value="18" name="A7XX_PERF_PC_LIVE_PRIM"/>
+-	<value value="19" name="A7XX_PERF_PC_VERTEX_HITS"/>
+-	<value value="20" name="A7XX_PERF_PC_IA_VERTICES"/>
+-	<value value="21" name="A7XX_PERF_PC_IA_PRIMITIVES"/>
+-	<value value="22" name="A7XX_PERF_PC_RESERVED_22"/>
+-	<value value="23" name="A7XX_PERF_PC_HS_INVOCATIONS"/>
+-	<value value="24" name="A7XX_PERF_PC_DS_INVOCATIONS"/>
+-	<value value="25" name="A7XX_PERF_PC_VS_INVOCATIONS"/>
+-	<value value="26" name="A7XX_PERF_PC_GS_INVOCATIONS"/>
+-	<value value="27" name="A7XX_PERF_PC_DS_PRIMITIVES"/>
+-	<value value="28" name="A7XX_PERF_PC_3D_DRAWCALLS"/>
+-	<value value="29" name="A7XX_PERF_PC_2D_DRAWCALLS"/>
+-	<value value="30" name="A7XX_PERF_PC_NON_DRAWCALL_GLOBAL_EVENTS"/>
+-	<value value="31" name="A7XX_PERF_PC_TESS_BUSY_CYCLES"/>
+-	<value value="32" name="A7XX_PERF_PC_TESS_WORKING_CYCLES"/>
+-	<value value="33" name="A7XX_PERF_PC_TESS_STALL_CYCLES_PC"/>
+-	<value value="34" name="A7XX_PERF_PC_TESS_STARVE_CYCLES_PC"/>
+-	<value value="35" name="A7XX_PERF_PC_TESS_SINGLE_PRIM_CYCLES"/>
+-	<value value="36" name="A7XX_PERF_PC_TESS_PC_UV_TRANS"/>
+-	<value value="37" name="A7XX_PERF_PC_TESS_PC_UV_PATCHES"/>
+-	<value value="38" name="A7XX_PERF_PC_TESS_FACTOR_TRANS"/>
+-	<value value="39" name="A7XX_PERF_PC_TAG_CHECKED_VERTICES"/>
+-	<value value="40" name="A7XX_PERF_PC_MESH_VS_WAVES"/>
+-	<value value="41" name="A7XX_PERF_PC_MESH_DRAWS"/>
+-	<value value="42" name="A7XX_PERF_PC_MESH_DEAD_DRAWS"/>
+-	<value value="43" name="A7XX_PERF_PC_MESH_MVIS_EN_DRAWS"/>
+-	<value value="44" name="A7XX_PERF_PC_MESH_DEAD_PRIM"/>
+-	<value value="45" name="A7XX_PERF_PC_MESH_LIVE_PRIM"/>
+-	<value value="46" name="A7XX_PERF_PC_MESH_PA_EN_PRIM"/>
+-	<value value="47" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_MVIS_STREAM"/>
+-	<value value="48" name="A7XX_PERF_PC_STARVE_CYCLES_PREDRAW"/>
+-	<value value="49" name="A7XX_PERF_PC_STALL_CYCLES_COMPUTE_GFX"/>
+-	<value value="50" name="A7XX_PERF_PC_STALL_CYCLES_GFX_COMPUTE"/>
+-	<value value="51" name="A7XX_PERF_PC_TESS_PC_MULTI_PATCH_TRANS"/>
+-</enum>
+-
+-<enum name="a7xx_vfd_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_VFD_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_VFD_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="A7XX_PERF_VFD_STALL_CYCLES_VPC_ALLOC"/>
+-	<value value="3" name="A7XX_PERF_VFD_STALL_CYCLES_SP_INFO"/>
+-	<value value="4" name="A7XX_PERF_VFD_STALL_CYCLES_SP_ATTR"/>
+-	<value value="5" name="A7XX_PERF_VFD_STARVE_CYCLES_UCHE"/>
+-	<value value="6" name="A7XX_PERF_VFD_RBUFFER_FULL"/>
+-	<value value="7" name="A7XX_PERF_VFD_ATTR_INFO_FIFO_FULL"/>
+-	<value value="8" name="A7XX_PERF_VFD_DECODED_ATTRIBUTE_BYTES"/>
+-	<value value="9" name="A7XX_PERF_VFD_NUM_ATTRIBUTES"/>
+-	<value value="10" name="A7XX_PERF_VFD_UPPER_SHADER_FIBERS"/>
+-	<value value="11" name="A7XX_PERF_VFD_LOWER_SHADER_FIBERS"/>
+-	<value value="12" name="A7XX_PERF_VFD_MODE_0_FIBERS"/>
+-	<value value="13" name="A7XX_PERF_VFD_MODE_1_FIBERS"/>
+-	<value value="14" name="A7XX_PERF_VFD_MODE_2_FIBERS"/>
+-	<value value="15" name="A7XX_PERF_VFD_MODE_3_FIBERS"/>
+-	<value value="16" name="A7XX_PERF_VFD_MODE_4_FIBERS"/>
+-	<value value="17" name="A7XX_PERF_VFD_TOTAL_VERTICES"/>
+-	<value value="18" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD"/>
+-	<value value="19" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD_INDEX"/>
+-	<value value="20" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD_PROG"/>
+-	<value value="21" name="A7XX_PERF_VFDP_STARVE_CYCLES_PC"/>
+-	<value value="22" name="A7XX_PERF_VFDP_VS_STAGE_WAVES"/>
+-	<value value="23" name="A7XX_PERF_VFD_STALL_CYCLES_PRG_END_FE"/>
+-	<value value="24" name="A7XX_PERF_VFD_STALL_CYCLES_CBSYNC"/>
+-</enum>
+-
+-<enum name="a7xx_hlsq_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_HLSQ_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_HLSQ_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="A7XX_PERF_HLSQ_STALL_CYCLES_SP_STATE"/>
+-	<value value="3" name="A7XX_PERF_HLSQ_STALL_CYCLES_SP_FS_STAGE"/>
+-	<value value="4" name="A7XX_PERF_HLSQ_UCHE_LATENCY_CYCLES"/>
+-	<value value="5" name="A7XX_PERF_HLSQ_UCHE_LATENCY_COUNT"/>
+-	<value value="6" name="A7XX_PERF_HLSQ_RESERVED_6"/>
+-	<value value="7" name="A7XX_PERF_HLSQ_RESERVED_7"/>
+-	<value value="8" name="A7XX_PERF_HLSQ_RESERVED_8"/>
+-	<value value="9" name="A7XX_PERF_HLSQ_RESERVED_9"/>
+-	<value value="10" name="A7XX_PERF_HLSQ_COMPUTE_DRAWCALLS"/>
+-	<value value="11" name="A7XX_PERF_HLSQ_FS_DATA_WAIT_PROGRAMMING"/>
+-	<value value="12" name="A7XX_PERF_HLSQ_DUAL_FS_PROG_ACTIVE"/>
+-	<value value="13" name="A7XX_PERF_HLSQ_DUAL_VS_PROG_ACTIVE"/>
+-	<value value="14" name="A7XX_PERF_HLSQ_FS_BATCH_COUNT_ZERO"/>
+-	<value value="15" name="A7XX_PERF_HLSQ_VS_BATCH_COUNT_ZERO"/>
+-	<value value="16" name="A7XX_PERF_HLSQ_WAVE_PENDING_NO_QUAD"/>
+-	<value value="17" name="A7XX_PERF_HLSQ_WAVE_PENDING_NO_PRIM_BASE"/>
+-	<value value="18" name="A7XX_PERF_HLSQ_STALL_CYCLES_VPC"/>
+-	<value value="19" name="A7XX_PERF_HLSQ_RESERVED_19"/>
+-	<value value="20" name="A7XX_PERF_HLSQ_DRAW_MODE_SWITCH_VSFS_SYNC"/>
+-	<value value="21" name="A7XX_PERF_HLSQ_VSBR_STALL_CYCLES"/>
+-	<value value="22" name="A7XX_PERF_HLSQ_FS_STALL_CYCLES"/>
+-	<value value="23" name="A7XX_PERF_HLSQ_LPAC_STALL_CYCLES"/>
+-	<value value="24" name="A7XX_PERF_HLSQ_BV_STALL_CYCLES"/>
+-	<value value="25" name="A7XX_PERF_HLSQ_VSBR_DEREF_CYCLES"/>
+-	<value value="26" name="A7XX_PERF_HLSQ_FS_DEREF_CYCLES"/>
+-	<value value="27" name="A7XX_PERF_HLSQ_LPAC_DEREF_CYCLES"/>
+-	<value value="28" name="A7XX_PERF_HLSQ_BV_DEREF_CYCLES"/>
+-	<value value="29" name="A7XX_PERF_HLSQ_VSBR_S2W_CYCLES"/>
+-	<value value="30" name="A7XX_PERF_HLSQ_FS_S2W_CYCLES"/>
+-	<value value="31" name="A7XX_PERF_HLSQ_LPAC_S2W_CYCLES"/>
+-	<value value="32" name="A7XX_PERF_HLSQ_BV_S2W_CYCLES"/>
+-	<value value="33" name="A7XX_PERF_HLSQ_VSBR_WAIT_FS_S2W"/>
+-	<value value="34" name="A7XX_PERF_HLSQ_FS_WAIT_VS_S2W"/>
+-	<value value="35" name="A7XX_PERF_HLSQ_LPAC_WAIT_VS_S2W"/>
+-	<value value="36" name="A7XX_PERF_HLSQ_BV_WAIT_FS_S2W"/>
+-	<value value="37" name="A7XX_PERF_HLSQ_VS_WAIT_CONST_RESOURCE"/>
+-	<value value="38" name="A7XX_PERF_HLSQ_FS_WAIT_SAME_VS_S2W"/>
+-	<value value="39" name="A7XX_PERF_HLSQ_FS_STARVING_SP"/>
+-	<value value="40" name="A7XX_PERF_HLSQ_VS_DATA_WAIT_PROGRAMMING"/>
+-	<value value="41" name="A7XX_PERF_HLSQ_BV_DATA_WAIT_PROGRAMMING"/>
+-	<value value="42" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_VS"/>
+-	<value value="43" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_VS"/>
+-	<value value="44" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_FS"/>
+-	<value value="45" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_FS"/>
+-	<value value="46" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_BV"/>
+-	<value value="47" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_BV"/>
+-	<value value="48" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_LPAC"/>
+-	<value value="49" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_LPAC"/>
+-	<value value="50" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_VS"/>
+-	<value value="51" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_FS"/>
+-	<value value="52" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_BV"/>
+-	<value value="53" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_LPAC"/>
+-	<value value="54" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_VS"/>
+-	<value value="55" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_FS"/>
+-	<value value="56" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_BV"/>
+-	<value value="57" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_LPAC"/>
+-</enum>
+-
+-<enum name="a7xx_vpc_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_VPC_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_VPC_WORKING_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_VPC_STALL_CYCLES_UCHE"/>
+-	<value value="3" name="A7XX_PERF_VPC_STALL_CYCLES_VFD_WACK"/>
+-	<value value="4" name="A7XX_PERF_VPC_STALL_CYCLES_HLSQ_PRIM_ALLOC"/>
+-	<value value="5" name="A7XX_PERF_VPC_RESERVED_5"/>
+-	<value value="6" name="A7XX_PERF_VPC_STALL_CYCLES_SP_LM"/>
+-	<value value="7" name="A7XX_PERF_VPC_STARVE_CYCLES_SP"/>
+-	<value value="8" name="A7XX_PERF_VPC_STARVE_CYCLES_LRZ"/>
+-	<value value="9" name="A7XX_PERF_VPC_PC_PRIMITIVES"/>
+-	<value value="10" name="A7XX_PERF_VPC_SP_COMPONENTS"/>
+-	<value value="11" name="A7XX_PERF_VPC_STALL_CYCLES_VPCRAM_POS"/>
+-	<value value="12" name="A7XX_PERF_VPC_LRZ_ASSIGN_PRIMITIVES"/>
+-	<value value="13" name="A7XX_PERF_VPC_RB_VISIBLE_PRIMITIVES"/>
+-	<value value="14" name="A7XX_PERF_VPC_LM_TRANSACTION"/>
+-	<value value="15" name="A7XX_PERF_VPC_STREAMOUT_TRANSACTION"/>
+-	<value value="16" name="A7XX_PERF_VPC_VS_BUSY_CYCLES"/>
+-	<value value="17" name="A7XX_PERF_VPC_PS_BUSY_CYCLES"/>
+-	<value value="18" name="A7XX_PERF_VPC_VS_WORKING_CYCLES"/>
+-	<value value="19" name="A7XX_PERF_VPC_PS_WORKING_CYCLES"/>
+-	<value value="20" name="A7XX_PERF_VPC_STARVE_CYCLES_RB"/>
+-	<value value="21" name="A7XX_PERF_VPC_NUM_VPCRAM_READ_POS"/>
+-	<value value="22" name="A7XX_PERF_VPC_WIT_FULL_CYCLES"/>
+-	<value value="23" name="A7XX_PERF_VPC_VPCRAM_FULL_CYCLES"/>
+-	<value value="24" name="A7XX_PERF_VPC_LM_FULL_WAIT_FOR_INTP_END"/>
+-	<value value="25" name="A7XX_PERF_VPC_NUM_VPCRAM_WRITE"/>
+-	<value value="26" name="A7XX_PERF_VPC_NUM_VPCRAM_READ_SO"/>
+-	<value value="27" name="A7XX_PERF_VPC_NUM_ATTR_REQ_LM"/>
+-	<value value="28" name="A7XX_PERF_VPC_STALL_CYCLE_TSE"/>
+-	<value value="29" name="A7XX_PERF_VPC_TSE_PRIMITIVES"/>
+-	<value value="30" name="A7XX_PERF_VPC_GS_PRIMITIVES"/>
+-	<value value="31" name="A7XX_PERF_VPC_TSE_TRANSACTIONS"/>
+-	<value value="32" name="A7XX_PERF_VPC_STALL_CYCLES_CCU"/>
+-	<value value="33" name="A7XX_PERF_VPC_NUM_WM_HIT"/>
+-	<value value="34" name="A7XX_PERF_VPC_STALL_DQ_WACK"/>
+-	<value value="35" name="A7XX_PERF_VPC_STALL_CYCLES_CCHE"/>
+-	<value value="36" name="A7XX_PERF_VPC_STARVE_CYCLES_CCHE"/>
+-	<value value="37" name="A7XX_PERF_VPC_NUM_PA_REQ"/>
+-	<value value="38" name="A7XX_PERF_VPC_NUM_LM_REQ_HIT"/>
+-	<value value="39" name="A7XX_PERF_VPC_CCHE_REQBUF_FULL"/>
+-	<value value="40" name="A7XX_PERF_VPC_STALL_CYCLES_LM_ACK"/>
+-	<value value="41" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_FE"/>
+-	<value value="42" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_PCVS"/>
+-	<value value="43" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_VPCPS"/>
+-</enum>
+-
+-<enum name="a7xx_tse_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_TSE_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_TSE_CLIPPING_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_TSE_STALL_CYCLES_RAS"/>
+-	<value value="3" name="A7XX_PERF_TSE_STALL_CYCLES_LRZ_BARYPLANE"/>
+-	<value value="4" name="A7XX_PERF_TSE_STALL_CYCLES_LRZ_ZPLANE"/>
+-	<value value="5" name="A7XX_PERF_TSE_STARVE_CYCLES_PC"/>
+-	<value value="6" name="A7XX_PERF_TSE_INPUT_PRIM"/>
+-	<value value="7" name="A7XX_PERF_TSE_INPUT_NULL_PRIM"/>
+-	<value value="8" name="A7XX_PERF_TSE_TRIVAL_REJ_PRIM"/>
+-	<value value="9" name="A7XX_PERF_TSE_CLIPPED_PRIM"/>
+-	<value value="10" name="A7XX_PERF_TSE_ZERO_AREA_PRIM"/>
+-	<value value="11" name="A7XX_PERF_TSE_FACENESS_CULLED_PRIM"/>
+-	<value value="12" name="A7XX_PERF_TSE_ZERO_PIXEL_PRIM"/>
+-	<value value="13" name="A7XX_PERF_TSE_OUTPUT_NULL_PRIM"/>
+-	<value value="14" name="A7XX_PERF_TSE_OUTPUT_VISIBLE_PRIM"/>
+-	<value value="15" name="A7XX_PERF_TSE_CINVOCATION"/>
+-	<value value="16" name="A7XX_PERF_TSE_CPRIMITIVES"/>
+-	<value value="17" name="A7XX_PERF_TSE_2D_INPUT_PRIM"/>
+-	<value value="18" name="A7XX_PERF_TSE_2D_ALIVE_CYCLES"/>
+-	<value value="19" name="A7XX_PERF_TSE_CLIP_PLANES"/>
+-</enum>
+-
+-<enum name="a7xx_ras_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_RAS_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_RAS_SUPERTILE_ACTIVE_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_RAS_STALL_CYCLES_LRZ"/>
+-	<value value="3" name="A7XX_PERF_RAS_STARVE_CYCLES_TSE"/>
+-	<value value="4" name="A7XX_PERF_RAS_SUPER_TILES"/>
+-	<value value="5" name="A7XX_PERF_RAS_8X4_TILES"/>
+-	<value value="6" name="A7XX_PERF_RAS_MASKGEN_ACTIVE"/>
+-	<value value="7" name="A7XX_PERF_RAS_FULLY_COVERED_SUPER_TILES"/>
+-	<value value="8" name="A7XX_PERF_RAS_FULLY_COVERED_8X4_TILES"/>
+-	<value value="9" name="A7XX_PERF_RAS_PRIM_KILLED_INVISILBE"/>
+-	<value value="10" name="A7XX_PERF_RAS_SUPERTILE_GEN_ACTIVE_CYCLES"/>
+-	<value value="11" name="A7XX_PERF_RAS_LRZ_INTF_WORKING_CYCLES"/>
+-	<value value="12" name="A7XX_PERF_RAS_BLOCKS"/>
+-	<value value="13" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_0_WORKING_CC_l2"/>
+-	<value value="14" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_1_WORKING_CC_l2"/>
+-	<value value="15" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_2_WORKING_CC_l2"/>
+-	<value value="16" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_3_WORKING_CC_l2"/>
+-	<value value="17" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_4_WORKING_CC_l2"/>
+-	<value value="18" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_5_WORKING_CC_l2"/>
+-	<value value="19" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_6_WORKING_CC_l2"/>
+-	<value value="20" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_7_WORKING_CC_l2"/>
+-	<value value="21" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_8_WORKING_CC_l2"/>
+-	<value value="22" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_9_WORKING_CC_l2"/>
+-	<value value="23" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_10_WORKING_CC_l2"/>
+-	<value value="24" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_11_WORKING_CC_l2"/>
+-	<value value="25" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_12_WORKING_CC_l2"/>
+-	<value value="26" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_13_WORKING_CC_l2"/>
+-	<value value="27" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_14_WORKING_CC_l2"/>
+-	<value value="28" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_15_WORKING_CC_l2"/>
+-	<value value="29" name="A7XX_PERF_RAS_FALSE_PARTIAL_STILE"/>
+-
+-</enum>
+-
+-<enum name="a7xx_uche_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_UCHE_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_UCHE_STALL_CYCLES_ARBITER"/>
+-	<value value="2" name="A7XX_PERF_UCHE_VBIF_LATENCY_CYCLES"/>
+-	<value value="3" name="A7XX_PERF_UCHE_VBIF_LATENCY_SAMPLES"/>
+-	<value value="4" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_TP"/>
+-	<value value="5" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_VFD"/>
+-	<value value="6" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_HLSQ"/>
+-	<value value="7" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_LRZ"/>
+-	<value value="8" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_SP"/>
+-	<value value="9" name="A7XX_PERF_UCHE_READ_REQUESTS_TP"/>
+-	<value value="10" name="A7XX_PERF_UCHE_READ_REQUESTS_VFD"/>
+-	<value value="11" name="A7XX_PERF_UCHE_READ_REQUESTS_HLSQ"/>
+-	<value value="12" name="A7XX_PERF_UCHE_READ_REQUESTS_LRZ"/>
+-	<value value="13" name="A7XX_PERF_UCHE_READ_REQUESTS_SP"/>
+-	<value value="14" name="A7XX_PERF_UCHE_WRITE_REQUESTS_LRZ"/>
+-	<value value="15" name="A7XX_PERF_UCHE_WRITE_REQUESTS_SP"/>
+-	<value value="16" name="A7XX_PERF_UCHE_WRITE_REQUESTS_VPC"/>
+-	<value value="17" name="A7XX_PERF_UCHE_WRITE_REQUESTS_VSC"/>
+-	<value value="18" name="A7XX_PERF_UCHE_EVICTS"/>
+-	<value value="19" name="A7XX_PERF_UCHE_BANK_REQ0"/>
+-	<value value="20" name="A7XX_PERF_UCHE_BANK_REQ1"/>
+-	<value value="21" name="A7XX_PERF_UCHE_BANK_REQ2"/>
+-	<value value="22" name="A7XX_PERF_UCHE_BANK_REQ3"/>
+-	<value value="23" name="A7XX_PERF_UCHE_BANK_REQ4"/>
+-	<value value="24" name="A7XX_PERF_UCHE_BANK_REQ5"/>
+-	<value value="25" name="A7XX_PERF_UCHE_BANK_REQ6"/>
+-	<value value="26" name="A7XX_PERF_UCHE_BANK_REQ7"/>
+-	<value value="27" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_CH0"/>
+-	<value value="28" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_CH1"/>
+-	<value value="29" name="A7XX_PERF_UCHE_GMEM_READ_BEATS"/>
+-	<value value="30" name="A7XX_PERF_UCHE_TPH_REF_FULL"/>
+-	<value value="31" name="A7XX_PERF_UCHE_TPH_VICTIM_FULL"/>
+-	<value value="32" name="A7XX_PERF_UCHE_TPH_EXT_FULL"/>
+-	<value value="33" name="A7XX_PERF_UCHE_VBIF_STALL_WRITE_DATA"/>
+-	<value value="34" name="A7XX_PERF_UCHE_DCMP_LATENCY_SAMPLES"/>
+-	<value value="35" name="A7XX_PERF_UCHE_DCMP_LATENCY_CYCLES"/>
+-	<value value="36" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_PC"/>
+-	<value value="37" name="A7XX_PERF_UCHE_READ_REQUESTS_PC"/>
+-	<value value="38" name="A7XX_PERF_UCHE_RAM_READ_REQ"/>
+-	<value value="39" name="A7XX_PERF_UCHE_RAM_WRITE_REQ"/>
+-	<value value="40" name="A7XX_PERF_UCHE_STARVED_CYCLES_VBIF_DECMP"/>
+-	<value value="41" name="A7XX_PERF_UCHE_STALL_CYCLES_DECMP"/>
+-	<value value="42" name="A7XX_PERF_UCHE_ARBITER_STALL_CYCLES_VBIF"/>
+-	<value value="43" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_UBWC"/>
+-	<value value="44" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_NONUBWC"/>
+-	<value value="45" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_GMEM"/>
+-	<value value="46" name="A7XX_PERF_UCHE_LONG_LINE_ALL_EVICTS_KAILUA"/>
+-	<value value="47" name="A7XX_PERF_UCHE_LONG_LINE_PARTIAL_EVICTS_KAILUA"/>
+-	<value value="48" name="A7XX_PERF_UCHE_TPH_CONFLICT_CL_CCHE"/>
+-	<value value="49" name="A7XX_PERF_UCHE_TPH_CONFLICT_CL_OTHER_KAILUA"/>
+-	<value value="50" name="A7XX_PERF_UCHE_DBANK_CONFLICT_CL_CCHE"/>
+-	<value value="51" name="A7XX_PERF_UCHE_DBANK_CONFLICT_CL_OTHER_CLIENTS"/>
+-	<value value="52" name="A7XX_PERF_UCHE_VBIF_WRITE_BEATS_CH0"/>
+-	<value value="53" name="A7XX_PERF_UCHE_VBIF_WRITE_BEATS_CH1"/>
+-	<value value="54" name="A7XX_PERF_UCHE_CCHE_TPH_QUEUE_FULL"/>
+-	<value value="55" name="A7XX_PERF_UCHE_CCHE_DPH_QUEUE_FULL"/>
+-	<value value="56" name="A7XX_PERF_UCHE_GMEM_WRITE_BEATS"/>
+-	<value value="57" name="A7XX_PERF_UCHE_UBWC_READ_BEATS"/>
+-	<value value="58" name="A7XX_PERF_UCHE_UBWC_WRITE_BEATS"/>
+-</enum>
+-
+-<enum name="a7xx_tp_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_TP_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_TP_STALL_CYCLES_UCHE"/>
+-	<value value="2" name="A7XX_PERF_TP_LATENCY_CYCLES"/>
+-	<value value="3" name="A7XX_PERF_TP_LATENCY_TRANS"/>
+-	<value value="4" name="A7XX_PERF_TP_FLAG_FIFO_DELAY_SAMPLES"/>
+-	<value value="5" name="A7XX_PERF_TP_FLAG_FIFO_DELAY_CYCLES"/>
+-	<value value="6" name="A7XX_PERF_TP_L1_CACHELINE_REQUESTS"/>
+-	<value value="7" name="A7XX_PERF_TP_L1_CACHELINE_MISSES"/>
+-	<value value="8" name="A7XX_PERF_TP_SP_TP_TRANS"/>
+-	<value value="9" name="A7XX_PERF_TP_TP_SP_TRANS"/>
+-	<value value="10" name="A7XX_PERF_TP_OUTPUT_PIXELS"/>
+-	<value value="11" name="A7XX_PERF_TP_FILTER_WORKLOAD_16BIT"/>
+-	<value value="12" name="A7XX_PERF_TP_FILTER_WORKLOAD_32BIT"/>
+-	<value value="13" name="A7XX_PERF_TP_QUADS_RECEIVED"/>
+-	<value value="14" name="A7XX_PERF_TP_QUADS_OFFSET"/>
+-	<value value="15" name="A7XX_PERF_TP_QUADS_SHADOW"/>
+-	<value value="16" name="A7XX_PERF_TP_QUADS_ARRAY"/>
+-	<value value="17" name="A7XX_PERF_TP_QUADS_GRADIENT"/>
+-	<value value="18" name="A7XX_PERF_TP_QUADS_1D"/>
+-	<value value="19" name="A7XX_PERF_TP_QUADS_2D"/>
+-	<value value="20" name="A7XX_PERF_TP_QUADS_BUFFER"/>
+-	<value value="21" name="A7XX_PERF_TP_QUADS_3D"/>
+-	<value value="22" name="A7XX_PERF_TP_QUADS_CUBE"/>
+-	<value value="23" name="A7XX_PERF_TP_DIVERGENT_QUADS_RECEIVED"/>
+-	<value value="24" name="A7XX_PERF_TP_PRT_NON_RESIDENT_EVENTS"/>
+-	<value value="25" name="A7XX_PERF_TP_OUTPUT_PIXELS_POINT"/>
+-	<value value="26" name="A7XX_PERF_TP_OUTPUT_PIXELS_BILINEAR"/>
+-	<value value="27" name="A7XX_PERF_TP_OUTPUT_PIXELS_MIP"/>
+-	<value value="28" name="A7XX_PERF_TP_OUTPUT_PIXELS_ANISO"/>
+-	<value value="29" name="A7XX_PERF_TP_OUTPUT_PIXELS_ZERO_LOD"/>
+-	<value value="30" name="A7XX_PERF_TP_FLAG_CACHE_REQUESTS"/>
+-	<value value="31" name="A7XX_PERF_TP_FLAG_CACHE_MISSES"/>
+-	<value value="32" name="A7XX_PERF_TP_L1_5_L2_REQUESTS"/>
+-	<value value="33" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS"/>
+-	<value value="34" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS_POINT"/>
+-	<value value="35" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS_BILINEAR"/>
+-	<value value="36" name="A7XX_PERF_TP_2D_FILTER_WORKLOAD_16BIT"/>
+-	<value value="37" name="A7XX_PERF_TP_2D_FILTER_WORKLOAD_32BIT"/>
+-	<value value="38" name="A7XX_PERF_TP_TPA2TPC_TRANS"/>
+-	<value value="39" name="A7XX_PERF_TP_L1_MISSES_ASTC_1TILE"/>
+-	<value value="40" name="A7XX_PERF_TP_L1_MISSES_ASTC_2TILE"/>
+-	<value value="41" name="A7XX_PERF_TP_L1_MISSES_ASTC_4TILE"/>
+-	<value value="42" name="A7XX_PERF_TP_L1_5_COMPRESS_REQS"/>
+-	<value value="43" name="A7XX_PERF_TP_L1_5_L2_COMPRESS_MISS"/>
+-	<value value="44" name="A7XX_PERF_TP_L1_BANK_CONFLICT"/>
+-	<value value="45" name="A7XX_PERF_TP_L1_5_MISS_LATENCY_CYCLES"/>
+-	<value value="46" name="A7XX_PERF_TP_L1_5_MISS_LATENCY_TRANS"/>
+-	<value value="47" name="A7XX_PERF_TP_QUADS_CONSTANT_MULTIPLIED"/>
+-	<value value="48" name="A7XX_PERF_TP_FRONTEND_WORKING_CYCLES"/>
+-	<value value="49" name="A7XX_PERF_TP_L1_TAG_WORKING_CYCLES"/>
+-	<value value="50" name="A7XX_PERF_TP_L1_DATA_WRITE_WORKING_CYCLES"/>
+-	<value value="51" name="A7XX_PERF_TP_PRE_L1_DECOM_WORKING_CYCLES"/>
+-	<value value="52" name="A7XX_PERF_TP_BACKEND_WORKING_CYCLES"/>
+-	<value value="53" name="A7XX_PERF_TP_L1_5_CACHE_WORKING_CYCLES"/>
+-	<value value="54" name="A7XX_PERF_TP_STARVE_CYCLES_SP"/>
+-	<value value="55" name="A7XX_PERF_TP_STARVE_CYCLES_UCHE"/>
+-	<value value="56" name="A7XX_PERF_TP_STALL_CYCLES_UFC"/>
+-	<value value="57" name="A7XX_PERF_TP_FORMAT_DECOMP"/>
+-	<value value="58" name="A7XX_PERF_TP_FILTER_POINT_FP16"/>
+-	<value value="59" name="A7XX_PERF_TP_FILTER_POINT_FP32"/>
+-	<value value="60" name="A7XX_PERF_TP_LATENCY_FIFO_FULL"/>
+-	<value value="61" name="A7XX_PERF_TP_RESERVED_61"/>
+-	<value value="62" name="A7XX_PERF_TP_RESERVED_62"/>
+-	<value value="63" name="A7XX_PERF_TP_RESERVED_63"/>
+-	<value value="64" name="A7XX_PERF_TP_RESERVED_64"/>
+-	<value value="65" name="A7XX_PERF_TP_RESERVED_65"/>
+-	<value value="66" name="A7XX_PERF_TP_RESERVED_66"/>
+-	<value value="67" name="A7XX_PERF_TP_RESERVED_67"/>
+-	<value value="68" name="A7XX_PERF_TP_RESERVED_68"/>
+-	<value value="69" name="A7XX_PERF_TP_RESERVED_69"/>
+-	<value value="70" name="A7XX_PERF_TP_RESERVED_70"/>
+-	<value value="71" name="A7XX_PERF_TP_RESERVED_71"/>
+-	<value value="72" name="A7XX_PERF_TP_RESERVED_72"/>
+-	<value value="73" name="A7XX_PERF_TP_RESERVED_73"/>
+-	<value value="74" name="A7XX_PERF_TP_RESERVED_74"/>
+-	<value value="75" name="A7XX_PERF_TP_RESERVED_75"/>
+-	<value value="76" name="A7XX_PERF_TP_RESERVED_76"/>
+-	<value value="77" name="A7XX_PERF_TP_RESERVED_77"/>
+-	<value value="78" name="A7XX_PERF_TP_RESERVED_78"/>
+-	<value value="79" name="A7XX_PERF_TP_RESERVED_79"/>
+-	<value value="80" name="A7XX_PERF_TP_RESERVED_80"/>
+-	<value value="81" name="A7XX_PERF_TP_RESERVED_81"/>
+-	<value value="82" name="A7XX_PERF_TP_RESERVED_82"/>
+-	<value value="83" name="A7XX_PERF_TP_RESERVED_83"/>
+-	<value value="84" name="A7XX_PERF_TP_RESERVED_84"/>
+-	<value value="85" name="A7XX_PERF_TP_RESERVED_85"/>
+-	<value value="86" name="A7XX_PERF_TP_RESERVED_86"/>
+-	<value value="87" name="A7XX_PERF_TP_RESERVED_87"/>
+-	<value value="88" name="A7XX_PERF_TP_RESERVED_88"/>
+-	<value value="89" name="A7XX_PERF_TP_RESERVED_89"/>
+-	<value value="90" name="A7XX_PERF_TP_RESERVED_90"/>
+-	<value value="91" name="A7XX_PERF_TP_RESERVED_91"/>
+-	<value value="92" name="A7XX_PERF_TP_RESERVED_92"/>
+-	<value value="93" name="A7XX_PERF_TP_RESERVED_93"/>
+-	<value value="94" name="A7XX_PERF_TP_RESERVED_94"/>
+-	<value value="95" name="A7XX_PERF_TP_RESERVED_95"/>
+-	<value value="96" name="A7XX_PERF_TP_RESERVED_96"/>
+-	<value value="97" name="A7XX_PERF_TP_RESERVED_97"/>
+-	<value value="98" name="A7XX_PERF_TP_RESERVED_98"/>
+-	<value value="99" name="A7XX_PERF_TP_RESERVED_99"/>
+-	<value value="100" name="A7XX_PERF_TP_RESERVED_100"/>
+-	<value value="101" name="A7XX_PERF_TP_RESERVED_101"/>
+-	<value value="102" name="A7XX_PERF_TP_RESERVED_102"/>
+-	<value value="103" name="A7XX_PERF_TP_RESERVED_103"/>
+-	<value value="104" name="A7XX_PERF_TP_RESERVED_104"/>
+-	<value value="105" name="A7XX_PERF_TP_RESERVED_105"/>
+-	<value value="106" name="A7XX_PERF_TP_RESERVED_106"/>
+-	<value value="107" name="A7XX_PERF_TP_RESERVED_107"/>
+-	<value value="108" name="A7XX_PERF_TP_RESERVED_108"/>
+-	<value value="109" name="A7XX_PERF_TP_RESERVED_109"/>
+-	<value value="110" name="A7XX_PERF_TP_RESERVED_110"/>
+-	<value value="111" name="A7XX_PERF_TP_RESERVED_111"/>
+-	<value value="112" name="A7XX_PERF_TP_RESERVED_112"/>
+-	<value value="113" name="A7XX_PERF_TP_RESERVED_113"/>
+-	<value value="114" name="A7XX_PERF_TP_RESERVED_114"/>
+-	<value value="115" name="A7XX_PERF_TP_RESERVED_115"/>
+-	<value value="116" name="A7XX_PERF_TP_RESERVED_116"/>
+-	<value value="117" name="A7XX_PERF_TP_RESERVED_117"/>
+-	<value value="118" name="A7XX_PERF_TP_RESERVED_118"/>
+-	<value value="119" name="A7XX_PERF_TP_RESERVED_119"/>
+-	<value value="120" name="A7XX_PERF_TP_RESERVED_120"/>
+-	<value value="121" name="A7XX_PERF_TP_RESERVED_121"/>
+-	<value value="122" name="A7XX_PERF_TP_RESERVED_122"/>
+-	<value value="123" name="A7XX_PERF_TP_RESERVED_123"/>
+-	<value value="124" name="A7XX_PERF_TP_RESERVED_124"/>
+-	<value value="125" name="A7XX_PERF_TP_RESERVED_125"/>
+-	<value value="126" name="A7XX_PERF_TP_RESERVED_126"/>
+-	<value value="127" name="A7XX_PERF_TP_RESERVED_127"/>
+-	<value value="128" name="A7XX_PERF_TP_FORMAT_DECOMP_BILINEAR"/>
+-	<value value="129" name="A7XX_PERF_TP_PACKED_POINT_BOTH_VALID_FP16"/>
+-	<value value="130" name="A7XX_PERF_TP_PACKED_POINT_SINGLE_VALID_FP16"/>
+-	<value value="131" name="A7XX_PERF_TP_PACKED_POINT_BOTH_VALID_FP32"/>
+-	<value value="132" name="A7XX_PERF_TP_PACKED_POINT_SINGLE_VALID_FP32"/>
+-</enum>
+-
+-<enum name="a7xx_sp_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_SP_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_SP_ALU_WORKING_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_SP_EFU_WORKING_CYCLES"/>
+-	<value value="3" name="A7XX_PERF_SP_STALL_CYCLES_VPC"/>
+-	<value value="4" name="A7XX_PERF_SP_STALL_CYCLES_TP"/>
+-	<value value="5" name="A7XX_PERF_SP_STALL_CYCLES_UCHE"/>
+-	<value value="6" name="A7XX_PERF_SP_STALL_CYCLES_RB"/>
+-	<value value="7" name="A7XX_PERF_SP_NON_EXECUTION_CYCLES"/>
+-	<value value="8" name="A7XX_PERF_SP_WAVE_CONTEXTS"/>
+-	<value value="9" name="A7XX_PERF_SP_WAVE_CONTEXT_CYCLES"/>
+-	<value value="10" name="A7XX_PERF_SP_STAGE_WAVE_CYCLES"/>
+-	<value value="11" name="A7XX_PERF_SP_STAGE_WAVE_SAMPLES"/>
+-	<value value="12" name="A7XX_PERF_SP_VS_STAGE_WAVE_CYCLES"/>
+-	<value value="13" name="A7XX_PERF_SP_VS_STAGE_WAVE_SAMPLES"/>
+-	<value value="14" name="A7XX_PERF_SP_FS_STAGE_DURATION_CYCLES"/>
+-	<value value="15" name="A7XX_PERF_SP_VS_STAGE_DURATION_CYCLES"/>
+-	<value value="16" name="A7XX_PERF_SP_WAVE_CTRL_CYCLES"/>
+-	<value value="17" name="A7XX_PERF_SP_WAVE_LOAD_CYCLES"/>
+-	<value value="18" name="A7XX_PERF_SP_WAVE_EMIT_CYCLES"/>
+-	<value value="19" name="A7XX_PERF_SP_WAVE_NOP_CYCLES"/>
+-	<value value="20" name="A7XX_PERF_SP_WAVE_WAIT_CYCLES"/>
+-	<value value="21" name="A7XX_PERF_SP_WAVE_FETCH_CYCLES"/>
+-	<value value="22" name="A7XX_PERF_SP_WAVE_IDLE_CYCLES"/>
+-	<value value="23" name="A7XX_PERF_SP_WAVE_END_CYCLES"/>
+-	<value value="24" name="A7XX_PERF_SP_WAVE_LONG_SYNC_CYCLES"/>
+-	<value value="25" name="A7XX_PERF_SP_WAVE_SHORT_SYNC_CYCLES"/>
+-	<value value="26" name="A7XX_PERF_SP_WAVE_JOIN_CYCLES"/>
+-	<value value="27" name="A7XX_PERF_SP_LM_LOAD_INSTRUCTIONS"/>
+-	<value value="28" name="A7XX_PERF_SP_LM_STORE_INSTRUCTIONS"/>
+-	<value value="29" name="A7XX_PERF_SP_LM_ATOMICS"/>
+-	<value value="30" name="A7XX_PERF_SP_GM_LOAD_INSTRUCTIONS"/>
+-	<value value="31" name="A7XX_PERF_SP_GM_STORE_INSTRUCTIONS"/>
+-	<value value="32" name="A7XX_PERF_SP_GM_ATOMICS"/>
+-	<value value="33" name="A7XX_PERF_SP_VS_STAGE_TEX_INSTRUCTIONS"/>
+-	<value value="34" name="A7XX_PERF_SP_VS_STAGE_EFU_INSTRUCTIONS"/>
+-	<value value="35" name="A7XX_PERF_SP_VS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+-	<value value="36" name="A7XX_PERF_SP_VS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+-	<value value="37" name="A7XX_PERF_SP_FS_STAGE_TEX_INSTRUCTIONS"/>
+-	<value value="38" name="A7XX_PERF_SP_FS_STAGE_CFLOW_INSTRUCTIONS"/>
+-	<value value="39" name="A7XX_PERF_SP_FS_STAGE_EFU_INSTRUCTIONS"/>
+-	<value value="40" name="A7XX_PERF_SP_FS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+-	<value value="41" name="A7XX_PERF_SP_FS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+-	<value value="42" name="A7XX_PERF_SP_FS_STAGE_BARY_INSTRUCTIONS"/>
+-	<value value="43" name="A7XX_PERF_SP_VS_INSTRUCTIONS"/>
+-	<value value="44" name="A7XX_PERF_SP_FS_INSTRUCTIONS"/>
+-	<value value="45" name="A7XX_PERF_SP_ADDR_LOCK_COUNT"/>
+-	<value value="46" name="A7XX_PERF_SP_UCHE_READ_TRANS"/>
+-	<value value="47" name="A7XX_PERF_SP_UCHE_WRITE_TRANS"/>
+-	<value value="48" name="A7XX_PERF_SP_EXPORT_VPC_TRANS"/>
+-	<value value="49" name="A7XX_PERF_SP_EXPORT_RB_TRANS"/>
+-	<value value="50" name="A7XX_PERF_SP_PIXELS_KILLED"/>
+-	<value value="51" name="A7XX_PERF_SP_ICL1_REQUESTS"/>
+-	<value value="52" name="A7XX_PERF_SP_ICL1_MISSES"/>
+-	<value value="53" name="A7XX_PERF_SP_HS_INSTRUCTIONS"/>
+-	<value value="54" name="A7XX_PERF_SP_DS_INSTRUCTIONS"/>
+-	<value value="55" name="A7XX_PERF_SP_GS_INSTRUCTIONS"/>
+-	<value value="56" name="A7XX_PERF_SP_CS_INSTRUCTIONS"/>
+-	<value value="57" name="A7XX_PERF_SP_GPR_READ"/>
+-	<value value="58" name="A7XX_PERF_SP_GPR_WRITE"/>
+-	<value value="59" name="A7XX_PERF_SP_FS_STAGE_HALF_EFU_INSTRUCTIONS"/>
+-	<value value="60" name="A7XX_PERF_SP_VS_STAGE_HALF_EFU_INSTRUCTIONS"/>
+-	<value value="61" name="A7XX_PERF_SP_LM_BANK_CONFLICTS"/>
+-	<value value="62" name="A7XX_PERF_SP_TEX_CONTROL_WORKING_CYCLES"/>
+-	<value value="63" name="A7XX_PERF_SP_LOAD_CONTROL_WORKING_CYCLES"/>
+-	<value value="64" name="A7XX_PERF_SP_FLOW_CONTROL_WORKING_CYCLES"/>
+-	<value value="65" name="A7XX_PERF_SP_LM_WORKING_CYCLES"/>
+-	<value value="66" name="A7XX_PERF_SP_DISPATCHER_WORKING_CYCLES"/>
+-	<value value="67" name="A7XX_PERF_SP_SEQUENCER_WORKING_CYCLES"/>
+-	<value value="68" name="A7XX_PERF_SP_LOW_EFFICIENCY_STARVED_BY_TP"/>
+-	<value value="69" name="A7XX_PERF_SP_STARVE_CYCLES_HLSQ"/>
+-	<value value="70" name="A7XX_PERF_SP_NON_EXECUTION_LS_CYCLES"/>
+-	<value value="71" name="A7XX_PERF_SP_WORKING_EU"/>
+-	<value value="72" name="A7XX_PERF_SP_ANY_EU_WORKING"/>
+-	<value value="73" name="A7XX_PERF_SP_WORKING_EU_FS_STAGE"/>
+-	<value value="74" name="A7XX_PERF_SP_ANY_EU_WORKING_FS_STAGE"/>
+-	<value value="75" name="A7XX_PERF_SP_WORKING_EU_VS_STAGE"/>
+-	<value value="76" name="A7XX_PERF_SP_ANY_EU_WORKING_VS_STAGE"/>
+-	<value value="77" name="A7XX_PERF_SP_WORKING_EU_CS_STAGE"/>
+-	<value value="78" name="A7XX_PERF_SP_ANY_EU_WORKING_CS_STAGE"/>
+-	<value value="79" name="A7XX_PERF_SP_GPR_READ_PREFETCH"/>
+-	<value value="80" name="A7XX_PERF_SP_GPR_READ_CONFLICT"/>
+-	<value value="81" name="A7XX_PERF_SP_GPR_WRITE_CONFLICT"/>
+-	<value value="82" name="A7XX_PERF_SP_GM_LOAD_LATENCY_CYCLES"/>
+-	<value value="83" name="A7XX_PERF_SP_GM_LOAD_LATENCY_SAMPLES"/>
+-	<value value="84" name="A7XX_PERF_SP_EXECUTABLE_WAVES"/>
+-	<value value="85" name="A7XX_PERF_SP_ICL1_MISS_FETCH_CYCLES"/>
+-	<value value="86" name="A7XX_PERF_SP_WORKING_EU_LPAC"/>
+-	<value value="87" name="A7XX_PERF_SP_BYPASS_BUSY_CYCLES"/>
+-	<value value="88" name="A7XX_PERF_SP_ANY_EU_WORKING_LPAC"/>
+-	<value value="89" name="A7XX_PERF_SP_WAVE_ALU_CYCLES"/>
+-	<value value="90" name="A7XX_PERF_SP_WAVE_EFU_CYCLES"/>
+-	<value value="91" name="A7XX_PERF_SP_WAVE_INT_CYCLES"/>
+-	<value value="92" name="A7XX_PERF_SP_WAVE_CSP_CYCLES"/>
+-	<value value="93" name="A7XX_PERF_SP_EWAVE_CONTEXTS"/>
+-	<value value="94" name="A7XX_PERF_SP_EWAVE_CONTEXT_CYCLES"/>
+-	<value value="95" name="A7XX_PERF_SP_LPAC_BUSY_CYCLES"/>
+-	<value value="96" name="A7XX_PERF_SP_LPAC_INSTRUCTIONS"/>
+-	<value value="97" name="A7XX_PERF_SP_FS_STAGE_1X_WAVES"/>
+-	<value value="98" name="A7XX_PERF_SP_FS_STAGE_2X_WAVES"/>
+-	<value value="99" name="A7XX_PERF_SP_QUADS"/>
+-	<value value="100" name="A7XX_PERF_SP_CS_INVOCATIONS"/>
+-	<value value="101" name="A7XX_PERF_SP_PIXELS"/>
+-	<value value="102" name="A7XX_PERF_SP_LPAC_DRAWCALLS"/>
+-	<value value="103" name="A7XX_PERF_SP_PI_WORKING_CYCLES"/>
+-	<value value="104" name="A7XX_PERF_SP_WAVE_INPUT_CYCLES"/>
+-	<value value="105" name="A7XX_PERF_SP_WAVE_OUTPUT_CYCLES"/>
+-	<value value="106" name="A7XX_PERF_SP_WAVE_HWAVE_WAIT_CYCLES"/>
+-	<value value="107" name="A7XX_PERF_SP_WAVE_HWAVE_SYNC"/>
+-	<value value="108" name="A7XX_PERF_SP_OUTPUT_3D_PIXELS"/>
+-	<value value="109" name="A7XX_PERF_SP_FULL_ALU_MAD_INSTRUCTIONS"/>
+-	<value value="110" name="A7XX_PERF_SP_HALF_ALU_MAD_INSTRUCTIONS"/>
+-	<value value="111" name="A7XX_PERF_SP_FULL_ALU_MUL_INSTRUCTIONS"/>
+-	<value value="112" name="A7XX_PERF_SP_HALF_ALU_MUL_INSTRUCTIONS"/>
+-	<value value="113" name="A7XX_PERF_SP_FULL_ALU_ADD_INSTRUCTIONS"/>
+-	<value value="114" name="A7XX_PERF_SP_HALF_ALU_ADD_INSTRUCTIONS"/>
+-	<value value="115" name="A7XX_PERF_SP_BARY_FP32_INSTRUCTIONS"/>
+-	<value value="116" name="A7XX_PERF_SP_ALU_GPR_READ_CYCLES"/>
+-	<value value="117" name="A7XX_PERF_SP_ALU_DATA_FORWARDING_CYCLES"/>
+-	<value value="118" name="A7XX_PERF_SP_LM_FULL_CYCLES"/>
+-	<value value="119" name="A7XX_PERF_SP_TEXTURE_FETCH_LATENCY_CYCLES"/>
+-	<value value="120" name="A7XX_PERF_SP_TEXTURE_FETCH_LATENCY_SAMPLES"/>
+-	<value value="121" name="A7XX_PERF_SP_FS_STAGE_PI_TEX_INSTRUCTION"/>
+-	<value value="122" name="A7XX_PERF_SP_RAY_QUERY_INSTRUCTIONS"/>
+-	<value value="123" name="A7XX_PERF_SP_RBRT_KICKOFF_FIBERS"/>
+-	<value value="124" name="A7XX_PERF_SP_RBRT_KICKOFF_DQUADS"/>
+-	<value value="125" name="A7XX_PERF_SP_RTU_BUSY_CYCLES"/>
+-	<value value="126" name="A7XX_PERF_SP_RTU_L0_HITS"/>
+-	<value value="127" name="A7XX_PERF_SP_RTU_L0_MISSES"/>
+-	<value value="128" name="A7XX_PERF_SP_RTU_L0_HIT_ON_MISS"/>
+-	<value value="129" name="A7XX_PERF_SP_RTU_STALL_CYCLES_WAVE_QUEUE"/>
+-	<value value="130" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0_HIT_QUEUE"/>
+-	<value value="131" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0_MISS_QUEUE"/>
+-	<value value="132" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0D_IDX_QUEUE"/>
+-	<value value="133" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0DATA"/>
+-	<value value="134" name="A7XX_PERF_SP_RTU_STALL_CYCLES_REPLACE_CNT"/>
+-	<value value="135" name="A7XX_PERF_SP_RTU_STALL_CYCLES_MRG_CNT"/>
+-	<value value="136" name="A7XX_PERF_SP_RTU_STALL_CYCLES_UCHE"/>
+-	<value value="137" name="A7XX_PERF_SP_RTU_OPERAND_FETCH_STALL_CYCLES_L0"/>
+-	<value value="138" name="A7XX_PERF_SP_RTU_OPERAND_FETCH_STALL_CYCLES_INS_FIFO"/>
+-	<value value="139" name="A7XX_PERF_SP_RTU_BVH_FETCH_LATENCY_CYCLES"/>
+-	<value value="140" name="A7XX_PERF_SP_RTU_BVH_FETCH_LATENCY_SAMPLES"/>
+-	<value value="141" name="A7XX_PERF_SP_STCHE_MISS_INC_VS"/>
+-	<value value="142" name="A7XX_PERF_SP_STCHE_MISS_INC_FS"/>
+-	<value value="143" name="A7XX_PERF_SP_STCHE_MISS_INC_BV"/>
+-	<value value="144" name="A7XX_PERF_SP_STCHE_MISS_INC_LPAC"/>
+-	<value value="145" name="A7XX_PERF_SP_VGPR_ACTIVE_CONTEXTS"/>
+-	<value value="146" name="A7XX_PERF_SP_PGPR_ALLOC_CONTEXTS"/>
+-	<value value="147" name="A7XX_PERF_SP_VGPR_ALLOC_CONTEXTS"/>
+-	<value value="148" name="A7XX_PERF_SP_RTU_RAY_BOX_INTERSECTIONS"/>
+-	<value value="149" name="A7XX_PERF_SP_RTU_RAY_TRIANGLE_INTERSECTIONS"/>
+-	<value value="150" name="A7XX_PERF_SP_SCH_STALL_CYCLES_RTU"/>
+-</enum>
+-
+-<enum name="a7xx_rb_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_RB_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_RB_STALL_CYCLES_HLSQ"/>
+-	<value value="2" name="A7XX_PERF_RB_STALL_CYCLES_FIFO0_FULL"/>
+-	<value value="3" name="A7XX_PERF_RB_STALL_CYCLES_FIFO1_FULL"/>
+-	<value value="4" name="A7XX_PERF_RB_STALL_CYCLES_FIFO2_FULL"/>
+-	<value value="5" name="A7XX_PERF_RB_STARVE_CYCLES_SP"/>
+-	<value value="6" name="A7XX_PERF_RB_STARVE_CYCLES_LRZ_TILE"/>
+-	<value value="7" name="A7XX_PERF_RB_STARVE_CYCLES_CCU"/>
+-	<value value="8" name="A7XX_PERF_RB_STARVE_CYCLES_Z_PLANE"/>
+-	<value value="9" name="A7XX_PERF_RB_STARVE_CYCLES_BARY_PLANE"/>
+-	<value value="10" name="A7XX_PERF_RB_Z_WORKLOAD"/>
+-	<value value="11" name="A7XX_PERF_RB_HLSQ_ACTIVE"/>
+-	<value value="12" name="A7XX_PERF_RB_Z_READ"/>
+-	<value value="13" name="A7XX_PERF_RB_Z_WRITE"/>
+-	<value value="14" name="A7XX_PERF_RB_C_READ"/>
+-	<value value="15" name="A7XX_PERF_RB_C_WRITE"/>
+-	<value value="16" name="A7XX_PERF_RB_TOTAL_PASS"/>
+-	<value value="17" name="A7XX_PERF_RB_Z_PASS"/>
+-	<value value="18" name="A7XX_PERF_RB_Z_FAIL"/>
+-	<value value="19" name="A7XX_PERF_RB_S_FAIL"/>
+-	<value value="20" name="A7XX_PERF_RB_BLENDED_FXP_COMPONENTS"/>
+-	<value value="21" name="A7XX_PERF_RB_BLENDED_FP16_COMPONENTS"/>
+-	<value value="22" name="A7XX_PERF_RB_PS_INVOCATIONS"/>
+-	<value value="23" name="A7XX_PERF_RB_2D_ALIVE_CYCLES"/>
+-	<value value="24" name="A7XX_PERF_RB_2D_STALL_CYCLES_A2D"/>
+-	<value value="25" name="A7XX_PERF_RB_2D_STARVE_CYCLES_SRC"/>
+-	<value value="26" name="A7XX_PERF_RB_2D_STARVE_CYCLES_SP"/>
+-	<value value="27" name="A7XX_PERF_RB_2D_STARVE_CYCLES_DST"/>
+-	<value value="28" name="A7XX_PERF_RB_2D_VALID_PIXELS"/>
+-	<value value="29" name="A7XX_PERF_RB_3D_PIXELS"/>
+-	<value value="30" name="A7XX_PERF_RB_BLENDER_WORKING_CYCLES"/>
+-	<value value="31" name="A7XX_PERF_RB_ZPROC_WORKING_CYCLES"/>
+-	<value value="32" name="A7XX_PERF_RB_CPROC_WORKING_CYCLES"/>
+-	<value value="33" name="A7XX_PERF_RB_SAMPLER_WORKING_CYCLES"/>
+-	<value value="34" name="A7XX_PERF_RB_STALL_CYCLES_CCU_COLOR_READ"/>
+-	<value value="35" name="A7XX_PERF_RB_STALL_CYCLES_CCU_COLOR_WRITE"/>
+-	<value value="36" name="A7XX_PERF_RB_STALL_CYCLES_CCU_DEPTH_READ"/>
+-	<value value="37" name="A7XX_PERF_RB_STALL_CYCLES_CCU_DEPTH_WRITE"/>
+-	<value value="38" name="A7XX_PERF_RB_STALL_CYCLES_VPC"/>
+-	<value value="39" name="A7XX_PERF_RB_2D_INPUT_TRANS"/>
+-	<value value="40" name="A7XX_PERF_RB_2D_OUTPUT_RB_DST_TRANS"/>
+-	<value value="41" name="A7XX_PERF_RB_2D_OUTPUT_RB_SRC_TRANS"/>
+-	<value value="42" name="A7XX_PERF_RB_BLENDED_FP32_COMPONENTS"/>
+-	<value value="43" name="A7XX_PERF_RB_COLOR_PIX_TILES"/>
+-	<value value="44" name="A7XX_PERF_RB_STALL_CYCLES_CCU"/>
+-	<value value="45" name="A7XX_PERF_RB_EARLY_Z_ARB3_GRANT"/>
+-	<value value="46" name="A7XX_PERF_RB_LATE_Z_ARB3_GRANT"/>
+-	<value value="47" name="A7XX_PERF_RB_EARLY_Z_SKIP_GRANT"/>
+-	<value value="48" name="A7XX_PERF_RB_VRS_1x1_QUADS"/>
+-	<value value="49" name="A7XX_PERF_RB_VRS_2x1_QUADS"/>
+-	<value value="50" name="A7XX_PERF_RB_VRS_1x2_QUADS"/>
+-	<value value="51" name="A7XX_PERF_RB_VRS_2x2_QUADS"/>
+-	<value value="52" name="A7XX_PERF_RB_VRS_4x2_QUADS"/>
+-	<value value="53" name="A7XX_PERF_RB_VRS_4x4_QUADS"/>
+-</enum>
+-
+-<enum name="a7xx_vsc_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_VSC_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_VSC_WORKING_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_VSC_STALL_CYCLES_UCHE"/>
+-	<value value="3" name="A7XX_PERF_VSC_EOT_NUM"/>
+-	<value value="4" name="A7XX_PERF_VSC_INPUT_TILES"/>
+-</enum>
+-
+-<enum name="a7xx_ccu_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_CCU_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_CCU_STALL_CYCLES_RB_DEPTH_RETURN"/>
+-	<value value="2" name="A7XX_PERF_CCU_STALL_CYCLES_RB_COLOR_RETURN"/>
+-	<value value="3" name="A7XX_PERF_CCU_DEPTH_BLOCKS"/>
+-	<value value="4" name="A7XX_PERF_CCU_COLOR_BLOCKS"/>
+-	<value value="5" name="A7XX_PERF_CCU_DEPTH_BLOCK_HIT"/>
+-	<value value="6" name="A7XX_PERF_CCU_COLOR_BLOCK_HIT"/>
+-	<value value="7" name="A7XX_PERF_CCU_PARTIAL_BLOCK_READ"/>
+-	<value value="8" name="A7XX_PERF_CCU_GMEM_READ"/>
+-	<value value="9" name="A7XX_PERF_CCU_GMEM_WRITE"/>
+-	<value value="10" name="A7XX_PERF_CCU_2D_RD_REQ"/>
+-	<value value="11" name="A7XX_PERF_CCU_2D_WR_REQ"/>
+-	<value value="12" name="A7XX_PERF_CCU_UBWC_COLOR_BLOCKS_CONCURRENT"/>
+-	<value value="13" name="A7XX_PERF_CCU_UBWC_DEPTH_BLOCKS_CONCURRENT"/>
+-	<value value="14" name="A7XX_PERF_CCU_COLOR_RESOLVE_DROPPED"/>
+-	<value value="15" name="A7XX_PERF_CCU_DEPTH_RESOLVE_DROPPED"/>
+-	<value value="16" name="A7XX_PERF_CCU_COLOR_RENDER_CONCURRENT"/>
+-	<value value="17" name="A7XX_PERF_CCU_DEPTH_RENDER_CONCURRENT"/>
+-	<value value="18" name="A7XX_PERF_CCU_COLOR_RESOLVE_AFTER_RENDER"/>
+-	<value value="19" name="A7XX_PERF_CCU_DEPTH_RESOLVE_AFTER_RENDER"/>
+-	<value value="20" name="A7XX_PERF_CCU_GMEM_EXTRA_DEPTH_READ"/>
+-	<value value="21" name="A7XX_PERF_CCU_GMEM_COLOR_READ_4AA"/>
+-	<value value="22" name="A7XX_PERF_CCU_GMEM_COLOR_READ_4AA_FULL"/>
+-</enum>
+-
+-<enum name="a7xx_lrz_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_LRZ_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_LRZ_STARVE_CYCLES_RAS"/>
+-	<value value="2" name="A7XX_PERF_LRZ_STALL_CYCLES_RB"/>
+-	<value value="3" name="A7XX_PERF_LRZ_STALL_CYCLES_VSC"/>
+-	<value value="4" name="A7XX_PERF_LRZ_STALL_CYCLES_VPC"/>
+-	<value value="5" name="A7XX_PERF_LRZ_STALL_CYCLES_FLAG_PREFETCH"/>
+-	<value value="6" name="A7XX_PERF_LRZ_STALL_CYCLES_UCHE"/>
+-	<value value="7" name="A7XX_PERF_LRZ_LRZ_READ"/>
+-	<value value="8" name="A7XX_PERF_LRZ_LRZ_WRITE"/>
+-	<value value="9" name="A7XX_PERF_LRZ_READ_LATENCY"/>
+-	<value value="10" name="A7XX_PERF_LRZ_MERGE_CACHE_UPDATING"/>
+-	<value value="11" name="A7XX_PERF_LRZ_PRIM_KILLED_BY_MASKGEN"/>
+-	<value value="12" name="A7XX_PERF_LRZ_PRIM_KILLED_BY_LRZ"/>
+-	<value value="13" name="A7XX_PERF_LRZ_VISIBLE_PRIM_AFTER_LRZ"/>
+-	<value value="14" name="A7XX_PERF_LRZ_FULL_8X8_TILES"/>
+-	<value value="15" name="A7XX_PERF_LRZ_PARTIAL_8X8_TILES"/>
+-	<value value="16" name="A7XX_PERF_LRZ_TILE_KILLED"/>
+-	<value value="17" name="A7XX_PERF_LRZ_TOTAL_PIXEL"/>
+-	<value value="18" name="A7XX_PERF_LRZ_VISIBLE_PIXEL_AFTER_LRZ"/>
+-	<value value="19" name="A7XX_PERF_LRZ_FEEDBACK_ACCEPT"/>
+-	<value value="20" name="A7XX_PERF_LRZ_FEEDBACK_DISCARD"/>
+-	<value value="21" name="A7XX_PERF_LRZ_FEEDBACK_STALL"/>
+-	<value value="22" name="A7XX_PERF_LRZ_STALL_CYCLES_RB_ZPLANE"/>
+-	<value value="23" name="A7XX_PERF_LRZ_STALL_CYCLES_RB_BPLANE"/>
+-	<value value="24" name="A7XX_PERF_LRZ_RAS_MASK_TRANS"/>
+-	<value value="25" name="A7XX_PERF_LRZ_STALL_CYCLES_MVC"/>
+-	<value value="26" name="A7XX_PERF_LRZ_TILE_KILLED_BY_IMAGE_VRS"/>
+-	<value value="27" name="A7XX_PERF_LRZ_TILE_KILLED_BY_Z"/>
+-</enum>
+-
+-<enum name="a7xx_cmp_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_CMPDECMP_STALL_CYCLES_ARB"/>
+-	<value value="1" name="A7XX_PERF_CMPDECMP_VBIF_LATENCY_CYCLES"/>
+-	<value value="2" name="A7XX_PERF_CMPDECMP_VBIF_LATENCY_SAMPLES"/>
+-	<value value="3" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_CCU"/>
+-	<value value="4" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA_CCU"/>
+-	<value value="5" name="A7XX_PERF_CMPDECMP_VBIF_READ_REQUEST"/>
+-	<value value="6" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_REQUEST"/>
+-	<value value="7" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA"/>
+-	<value value="8" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA"/>
+-	<value value="9" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG1_COUNT"/>
+-	<value value="10" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG2_COUNT"/>
+-	<value value="11" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG3_COUNT"/>
+-	<value value="12" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG4_COUNT"/>
+-	<value value="13" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG5_COUNT"/>
+-	<value value="14" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG6_COUNT"/>
+-	<value value="15" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG8_COUNT"/>
+-	<value value="16" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG1_COUNT"/>
+-	<value value="17" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG2_COUNT"/>
+-	<value value="18" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG3_COUNT"/>
+-	<value value="19" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG4_COUNT"/>
+-	<value value="20" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG5_COUNT"/>
+-	<value value="21" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG6_COUNT"/>
+-	<value value="22" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG8_COUNT"/>
+-	<value value="23" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH0"/>
+-	<value value="24" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH1"/>
+-	<value value="25" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA_UCHE"/>
+-	<value value="26" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG0_COUNT"/>
+-	<value value="27" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG0_COUNT"/>
+-	<value value="28" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAGALPHA_COUNT"/>
+-	<value value="29" name="A7XX_PERF_CMPDECMP_RESOLVE_EVENTS"/>
+-	<value value="30" name="A7XX_PERF_CMPDECMP_CONCURRENT_RESOLVE_EVENTS"/>
+-	<value value="31" name="A7XX_PERF_CMPDECMP_DROPPED_CLEAR_EVENTS"/>
+-	<value value="32" name="A7XX_PERF_CMPDECMP_ST_BLOCKS_CONCURRENT"/>
+-	<value value="33" name="A7XX_PERF_CMPDECMP_LRZ_ST_BLOCKS_CONCURRENT"/>
+-	<value value="34" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG0_COUNT"/>
+-	<value value="35" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG1_COUNT"/>
+-	<value value="36" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG2_COUNT"/>
+-	<value value="37" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG3_COUNT"/>
+-	<value value="38" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG4_COUNT"/>
+-	<value value="39" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG5_COUNT"/>
+-	<value value="40" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG6_COUNT"/>
+-	<value value="41" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG8_COUNT"/>
+-	<value value="42" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG0_COUNT"/>
+-	<value value="43" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG1_COUNT"/>
+-	<value value="44" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG2_COUNT"/>
+-	<value value="45" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG3_COUNT"/>
+-	<value value="46" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG4_COUNT"/>
+-	<value value="47" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG5_COUNT"/>
+-	<value value="48" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG6_COUNT"/>
+-	<value value="49" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG8_COUNT"/>
+-</enum>
+-
+-<enum name="a7xx_gbif_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_GBIF_RESERVED_0"/>
+-	<value value="1" name="A7XX_PERF_GBIF_RESERVED_1"/>
+-	<value value="2" name="A7XX_PERF_GBIF_RESERVED_2"/>
+-	<value value="3" name="A7XX_PERF_GBIF_RESERVED_3"/>
+-	<value value="4" name="A7XX_PERF_GBIF_RESERVED_4"/>
+-	<value value="5" name="A7XX_PERF_GBIF_RESERVED_5"/>
+-	<value value="6" name="A7XX_PERF_GBIF_RESERVED_6"/>
+-	<value value="7" name="A7XX_PERF_GBIF_RESERVED_7"/>
+-	<value value="8" name="A7XX_PERF_GBIF_RESERVED_8"/>
+-	<value value="9" name="A7XX_PERF_GBIF_RESERVED_9"/>
+-	<value value="10" name="A7XX_PERF_GBIF_AXI0_READ_REQUESTS_TOTAL"/>
+-	<value value="11" name="A7XX_PERF_GBIF_AXI1_READ_REQUESTS_TOTAL"/>
+-	<value value="12" name="A7XX_PERF_GBIF_RESERVED_12"/>
+-	<value value="13" name="A7XX_PERF_GBIF_RESERVED_13"/>
+-	<value value="14" name="A7XX_PERF_GBIF_RESERVED_14"/>
+-	<value value="15" name="A7XX_PERF_GBIF_RESERVED_15"/>
+-	<value value="16" name="A7XX_PERF_GBIF_RESERVED_16"/>
+-	<value value="17" name="A7XX_PERF_GBIF_RESERVED_17"/>
+-	<value value="18" name="A7XX_PERF_GBIF_RESERVED_18"/>
+-	<value value="19" name="A7XX_PERF_GBIF_RESERVED_19"/>
+-	<value value="20" name="A7XX_PERF_GBIF_RESERVED_20"/>
+-	<value value="21" name="A7XX_PERF_GBIF_RESERVED_21"/>
+-	<value value="22" name="A7XX_PERF_GBIF_AXI0_WRITE_REQUESTS_TOTAL"/>
+-	<value value="23" name="A7XX_PERF_GBIF_AXI1_WRITE_REQUESTS_TOTAL"/>
+-	<value value="24" name="A7XX_PERF_GBIF_RESERVED_24"/>
+-	<value value="25" name="A7XX_PERF_GBIF_RESERVED_25"/>
+-	<value value="26" name="A7XX_PERF_GBIF_RESERVED_26"/>
+-	<value value="27" name="A7XX_PERF_GBIF_RESERVED_27"/>
+-	<value value="28" name="A7XX_PERF_GBIF_RESERVED_28"/>
+-	<value value="29" name="A7XX_PERF_GBIF_RESERVED_29"/>
+-	<value value="30" name="A7XX_PERF_GBIF_RESERVED_30"/>
+-	<value value="31" name="A7XX_PERF_GBIF_RESERVED_31"/>
+-	<value value="32" name="A7XX_PERF_GBIF_RESERVED_32"/>
+-	<value value="33" name="A7XX_PERF_GBIF_RESERVED_33"/>
+-	<value value="34" name="A7XX_PERF_GBIF_AXI0_READ_DATA_BEATS_TOTAL"/>
+-	<value value="35" name="A7XX_PERF_GBIF_AXI1_READ_DATA_BEATS_TOTAL"/>
+-	<value value="36" name="A7XX_PERF_GBIF_RESERVED_36"/>
+-	<value value="37" name="A7XX_PERF_GBIF_RESERVED_37"/>
+-	<value value="38" name="A7XX_PERF_GBIF_RESERVED_38"/>
+-	<value value="39" name="A7XX_PERF_GBIF_RESERVED_39"/>
+-	<value value="40" name="A7XX_PERF_GBIF_RESERVED_40"/>
+-	<value value="41" name="A7XX_PERF_GBIF_RESERVED_41"/>
+-	<value value="42" name="A7XX_PERF_GBIF_RESERVED_42"/>
+-	<value value="43" name="A7XX_PERF_GBIF_RESERVED_43"/>
+-	<value value="44" name="A7XX_PERF_GBIF_RESERVED_44"/>
+-	<value value="45" name="A7XX_PERF_GBIF_RESERVED_45"/>
+-	<value value="46" name="A7XX_PERF_GBIF_AXI0_WRITE_DATA_BEATS_TOTAL"/>
+-	<value value="47" name="A7XX_PERF_GBIF_AXI1_WRITE_DATA_BEATS_TOTAL"/>
+-	<value value="48" name="A7XX_PERF_GBIF_RESERVED_48"/>
+-	<value value="49" name="A7XX_PERF_GBIF_RESERVED_49"/>
+-	<value value="50" name="A7XX_PERF_GBIF_RESERVED_50"/>
+-	<value value="51" name="A7XX_PERF_GBIF_RESERVED_51"/>
+-	<value value="52" name="A7XX_PERF_GBIF_RESERVED_52"/>
+-	<value value="53" name="A7XX_PERF_GBIF_RESERVED_53"/>
+-	<value value="54" name="A7XX_PERF_GBIF_RESERVED_54"/>
+-	<value value="55" name="A7XX_PERF_GBIF_RESERVED_55"/>
+-	<value value="56" name="A7XX_PERF_GBIF_RESERVED_56"/>
+-	<value value="57" name="A7XX_PERF_GBIF_RESERVED_57"/>
+-	<value value="58" name="A7XX_PERF_GBIF_RESERVED_58"/>
+-	<value value="59" name="A7XX_PERF_GBIF_RESERVED_59"/>
+-	<value value="60" name="A7XX_PERF_GBIF_RESERVED_60"/>
+-	<value value="61" name="A7XX_PERF_GBIF_RESERVED_61"/>
+-	<value value="62" name="A7XX_PERF_GBIF_RESERVED_62"/>
+-	<value value="63" name="A7XX_PERF_GBIF_RESERVED_63"/>
+-	<value value="64" name="A7XX_PERF_GBIF_RESERVED_64"/>
+-	<value value="65" name="A7XX_PERF_GBIF_RESERVED_65"/>
+-	<value value="66" name="A7XX_PERF_GBIF_RESERVED_66"/>
+-	<value value="67" name="A7XX_PERF_GBIF_RESERVED_67"/>
+-	<value value="68" name="A7XX_PERF_GBIF_CYCLES_CH0_HELD_OFF_RD_ALL"/>
+-	<value value="69" name="A7XX_PERF_GBIF_CYCLES_CH1_HELD_OFF_RD_ALL"/>
+-	<value value="70" name="A7XX_PERF_GBIF_CYCLES_CH0_HELD_OFF_WR_ALL"/>
+-	<value value="71" name="A7XX_PERF_GBIF_CYCLES_CH1_HELD_OFF_WR_ALL"/>
+-	<value value="72" name="A7XX_PERF_GBIF_AXI_CH0_REQUEST_HELD_OFF"/>
+-	<value value="73" name="A7XX_PERF_GBIF_AXI_CH1_REQUEST_HELD_OFF"/>
+-	<value value="74" name="A7XX_PERF_GBIF_AXI_REQUEST_HELD_OFF"/>
+-	<value value="75" name="A7XX_PERF_GBIF_AXI_CH0_WRITE_DATA_HELD_OFF"/>
+-	<value value="76" name="A7XX_PERF_GBIF_AXI_CH1_WRITE_DATA_HELD_OFF"/>
+-	<value value="77" name="A7XX_PERF_GBIF_AXI_ALL_WRITE_DATA_HELD_OFF"/>
+-	<value value="78" name="A7XX_PERF_GBIF_AXI_ALL_READ_BEATS"/>
+-	<value value="79" name="A7XX_PERF_GBIF_AXI_ALL_WRITE_BEATS"/>
+-	<value value="80" name="A7XX_PERF_GBIF_AXI_ALL_BEATS"/>
+-</enum>
+-
+-<enum name="a7xx_ufc_perfcounter_select">
+-	<value value="0" name="A7XX_PERF_UFC_BUSY_CYCLES"/>
+-	<value value="1" name="A7XX_PERF_UFC_READ_DATA_VBIF"/>
+-	<value value="2" name="A7XX_PERF_UFC_WRITE_DATA_VBIF"/>
+-	<value value="3" name="A7XX_PERF_UFC_READ_REQUEST_VBIF"/>
+-	<value value="4" name="A7XX_PERF_UFC_WRITE_REQUEST_VBIF"/>
+-	<value value="5" name="A7XX_PERF_UFC_LRZ_FILTER_HIT"/>
+-	<value value="6" name="A7XX_PERF_UFC_LRZ_FILTER_MISS"/>
+-	<value value="7" name="A7XX_PERF_UFC_CRE_FILTER_HIT"/>
+-	<value value="8" name="A7XX_PERF_UFC_CRE_FILTER_MISS"/>
+-	<value value="9" name="A7XX_PERF_UFC_SP_FILTER_HIT"/>
+-	<value value="10" name="A7XX_PERF_UFC_SP_FILTER_MISS"/>
+-	<value value="11" name="A7XX_PERF_UFC_SP_REQUESTS"/>
+-	<value value="12" name="A7XX_PERF_UFC_TP_FILTER_HIT"/>
+-	<value value="13" name="A7XX_PERF_UFC_TP_FILTER_MISS"/>
+-	<value value="14" name="A7XX_PERF_UFC_TP_REQUESTS"/>
+-	<value value="15" name="A7XX_PERF_UFC_MAIN_HIT_LRZ_PREFETCH"/>
+-	<value value="16" name="A7XX_PERF_UFC_MAIN_HIT_CRE_PREFETCH"/>
+-	<value value="17" name="A7XX_PERF_UFC_MAIN_HIT_SP_PREFETCH"/>
+-	<value value="18" name="A7XX_PERF_UFC_MAIN_HIT_TP_PREFETCH"/>
+-	<value value="19" name="A7XX_PERF_UFC_MAIN_HIT_UBWC_READ"/>
+-	<value value="20" name="A7XX_PERF_UFC_MAIN_HIT_UBWC_WRITE"/>
+-	<value value="21" name="A7XX_PERF_UFC_MAIN_MISS_LRZ_PREFETCH"/>
+-	<value value="22" name="A7XX_PERF_UFC_MAIN_MISS_CRE_PREFETCH"/>
+-	<value value="23" name="A7XX_PERF_UFC_MAIN_MISS_SP_PREFETCH"/>
+-	<value value="24" name="A7XX_PERF_UFC_MAIN_MISS_TP_PREFETCH"/>
+-	<value value="25" name="A7XX_PERF_UFC_MAIN_MISS_UBWC_READ"/>
+-	<value value="26" name="A7XX_PERF_UFC_MAIN_MISS_UBWC_WRITE"/>
+-	<value value="27" name="A7XX_PERF_UFC_UBWC_READ_UFC_TRANS"/>
+-	<value value="28" name="A7XX_PERF_UFC_UBWC_WRITE_UFC_TRANS"/>
+-	<value value="29" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_CMD"/>
+-	<value value="30" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_RDATA"/>
+-	<value value="31" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_WDATA"/>
+-	<value value="32" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_WR_FLAG"/>
+-	<value value="33" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_FLAG_RTN"/>
+-	<value value="34" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_EVENT"/>
+-	<value value="35" name="A7XX_PERF_UFC_LRZ_PREFETCH_STALLED_CYCLES"/>
+-	<value value="36" name="A7XX_PERF_UFC_CRE_PREFETCH_STALLED_CYCLES"/>
+-	<value value="37" name="A7XX_PERF_UFC_SPTP_PREFETCH_STALLED_CYCLES"/>
+-	<value value="38" name="A7XX_PERF_UFC_UBWC_RD_STALLED_CYCLES"/>
+-	<value value="39" name="A7XX_PERF_UFC_UBWC_WR_STALLED_CYCLES"/>
+-	<value value="40" name="A7XX_PERF_UFC_PREFETCH_STALLED_CYCLES"/>
+-	<value value="41" name="A7XX_PERF_UFC_EVICTION_STALLED_CYCLES"/>
+-	<value value="42" name="A7XX_PERF_UFC_LOCK_STALLED_CYCLES"/>
+-	<value value="43" name="A7XX_PERF_UFC_MISS_LATENCY_CYCLES"/>
+-	<value value="44" name="A7XX_PERF_UFC_MISS_LATENCY_SAMPLES"/>
+-	<value value="45" name="A7XX_PERF_UFC_UBWC_REQ_STALLED_CYCLES"/>
+-	<value value="46" name="A7XX_PERF_UFC_TP_HINT_TAG_MISS"/>
+-	<value value="47" name="A7XX_PERF_UFC_TP_HINT_TAG_HIT_RDY"/>
+-	<value value="48" name="A7XX_PERF_UFC_TP_HINT_TAG_HIT_NRDY"/>
+-	<value value="49" name="A7XX_PERF_UFC_TP_HINT_IS_FCLEAR"/>
+-	<value value="50" name="A7XX_PERF_UFC_TP_HINT_IS_ALPHA0"/>
+-	<value value="51" name="A7XX_PERF_UFC_SP_L1_FILTER_HIT"/>
+-	<value value="52" name="A7XX_PERF_UFC_SP_L1_FILTER_MISS"/>
+-	<value value="53" name="A7XX_PERF_UFC_SP_L1_FILTER_REQUESTS"/>
+-	<value value="54" name="A7XX_PERF_UFC_TP_L1_TAG_HIT_RDY"/>
+-	<value value="55" name="A7XX_PERF_UFC_TP_L1_TAG_HIT_NRDY"/>
+-	<value value="56" name="A7XX_PERF_UFC_TP_L1_TAG_MISS"/>
+-	<value value="57" name="A7XX_PERF_UFC_TP_L1_FILTER_REQUESTS"/>
+-</enum>
+-
+ <domain name="A6XX" width="32" prefix="variant" varset="chip">
+ 	<bitset name="A6XX_RBBM_INT_0_MASK" inline="no" varset="chip">
+ 		<bitfield name="RBBM_GPU_IDLE" pos="0" type="boolean"/>
+@@ -2371,7 +177,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x08ab" name="CP_CONTEXT_SWITCH_LEVEL_STATUS" variants="A7XX-"/>
+ 	<array offset="0x08D0" name="CP_PERFCTR_CP_SEL" stride="1" length="14"/>
+ 	<array offset="0x08e0" name="CP_BV_PERFCTR_CP_SEL" stride="1" length="7" variants="A7XX-"/>
+-	<reg64 offset="0x0900" name="CP_CRASH_SCRIPT_BASE"/>
++	<reg64 offset="0x0900" name="CP_CRASH_DUMP_SCRIPT_BASE"/>
+ 	<reg32 offset="0x0902" name="CP_CRASH_DUMP_CNTL"/>
+ 	<reg32 offset="0x0903" name="CP_CRASH_DUMP_STATUS"/>
+ 	<reg32 offset="0x0908" name="CP_SQE_STAT_ADDR"/>
+@@ -2400,22 +206,22 @@ to upconvert to 32b float internally?
+ 	-->
+ 	<reg64 offset="0x0934" name="CP_VSD_BASE"/>
+ 
+-	<bitset name="a6xx_roq_stat" inline="yes">
++	<bitset name="a6xx_roq_status" inline="yes">
+ 		<bitfield name="RPTR" low="0" high="9"/>
+ 		<bitfield name="WPTR" low="16" high="25"/>
+ 	</bitset>
+-	<reg32 offset="0x0939" name="CP_ROQ_RB_STAT" type="a6xx_roq_stat"/>
+-	<reg32 offset="0x093a" name="CP_ROQ_IB1_STAT" type="a6xx_roq_stat"/>
+-	<reg32 offset="0x093b" name="CP_ROQ_IB2_STAT" type="a6xx_roq_stat"/>
+-	<reg32 offset="0x093c" name="CP_ROQ_SDS_STAT" type="a6xx_roq_stat"/>
+-	<reg32 offset="0x093d" name="CP_ROQ_MRB_STAT" type="a6xx_roq_stat"/>
+-	<reg32 offset="0x093e" name="CP_ROQ_VSD_STAT" type="a6xx_roq_stat"/>
+-
+-	<reg32 offset="0x0943" name="CP_IB1_DWORDS"/>
+-	<reg32 offset="0x0944" name="CP_IB2_DWORDS"/>
+-	<reg32 offset="0x0945" name="CP_SDS_DWORDS"/>
+-	<reg32 offset="0x0946" name="CP_MRB_DWORDS"/>
+-	<reg32 offset="0x0947" name="CP_VSD_DWORDS"/>
++	<reg32 offset="0x0939" name="CP_ROQ_RB_STATUS" type="a6xx_roq_status"/>
++	<reg32 offset="0x093a" name="CP_ROQ_IB1_STATUS" type="a6xx_roq_status"/>
++	<reg32 offset="0x093b" name="CP_ROQ_IB2_STATUS" type="a6xx_roq_status"/>
++	<reg32 offset="0x093c" name="CP_ROQ_SDS_STATUS" type="a6xx_roq_status"/>
++	<reg32 offset="0x093d" name="CP_ROQ_MRB_STATUS" type="a6xx_roq_status"/>
++	<reg32 offset="0x093e" name="CP_ROQ_VSD_STATUS" type="a6xx_roq_status"/>
++
++	<reg32 offset="0x0943" name="CP_IB1_INIT_SIZE"/>
++	<reg32 offset="0x0944" name="CP_IB2_INIT_SIZE"/>
++	<reg32 offset="0x0945" name="CP_SDS_INIT_SIZE"/>
++	<reg32 offset="0x0946" name="CP_MRB_INIT_SIZE"/>
++	<reg32 offset="0x0947" name="CP_VSD_INIT_SIZE"/>
+ 
+ 	<reg32 offset="0x0948" name="CP_ROQ_AVAIL_RB">
+ 		<doc>number of remaining dwords incl current dword being consumed?</doc>
+@@ -2451,6 +257,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x098D" name="CP_AHB_CNTL"/>
+ 	<reg32 offset="0x0A00" name="CP_APERTURE_CNTL_HOST" variants="A6XX"/>
+ 	<reg32 offset="0x0A00" name="CP_APERTURE_CNTL_HOST" type="a7xx_aperture_cntl" variants="A7XX-"/>
++	<reg32 offset="0x0A01" name="CP_APERTURE_CNTL_SQE" variants="A6XX"/>
+ 	<reg32 offset="0x0A03" name="CP_APERTURE_CNTL_CD" variants="A6XX"/>
+ 	<reg32 offset="0x0A03" name="CP_APERTURE_CNTL_CD" type="a7xx_aperture_cntl" variants="A7XX-"/>
+ 
+@@ -2468,8 +275,8 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x0a97" name="CP_BV_MEM_POOL_DBG_DATA" variants="A7XX-"/>
+ 	<reg64 offset="0x0a98" name="CP_BV_RB_RPTR_ADDR" variants="A7XX-"/>
+ 
+-	<reg32 offset="0x0a9a" name="CP_RESOURCE_TBL_DBG_ADDR" variants="A7XX-"/>
+-	<reg32 offset="0x0a9b" name="CP_RESOURCE_TBL_DBG_DATA" variants="A7XX-"/>
++	<reg32 offset="0x0a9a" name="CP_RESOURCE_TABLE_DBG_ADDR" variants="A7XX-"/>
++	<reg32 offset="0x0a9b" name="CP_RESOURCE_TABLE_DBG_DATA" variants="A7XX-"/>
+ 	<reg32 offset="0x0ad0" name="CP_BV_APRIV_CNTL" variants="A7XX-"/>
+ 	<reg32 offset="0x0ada" name="CP_BV_CHICKEN_DBG" variants="A7XX-"/>
+ 
+@@ -2619,28 +426,17 @@ to upconvert to 32b float internally?
+ 	    vertices in, number of primnitives assembled etc.
+ 	-->
+ 
+-	<reg32 offset="0x0540" name="RBBM_PRIMCTR_0_LO"/>  <!-- vs vertices in -->
+-	<reg32 offset="0x0541" name="RBBM_PRIMCTR_0_HI"/>
+-	<reg32 offset="0x0542" name="RBBM_PRIMCTR_1_LO"/>  <!-- vs primitives out -->
+-	<reg32 offset="0x0543" name="RBBM_PRIMCTR_1_HI"/>
+-	<reg32 offset="0x0544" name="RBBM_PRIMCTR_2_LO"/>  <!-- hs vertices in -->
+-	<reg32 offset="0x0545" name="RBBM_PRIMCTR_2_HI"/>
+-	<reg32 offset="0x0546" name="RBBM_PRIMCTR_3_LO"/>  <!-- hs patches out -->
+-	<reg32 offset="0x0547" name="RBBM_PRIMCTR_3_HI"/>
+-	<reg32 offset="0x0548" name="RBBM_PRIMCTR_4_LO"/>  <!-- dss vertices in -->
+-	<reg32 offset="0x0549" name="RBBM_PRIMCTR_4_HI"/>
+-	<reg32 offset="0x054a" name="RBBM_PRIMCTR_5_LO"/>  <!-- ds primitives out -->
+-	<reg32 offset="0x054b" name="RBBM_PRIMCTR_5_HI"/>
+-	<reg32 offset="0x054c" name="RBBM_PRIMCTR_6_LO"/>  <!-- gs primitives in -->
+-	<reg32 offset="0x054d" name="RBBM_PRIMCTR_6_HI"/>
+-	<reg32 offset="0x054e" name="RBBM_PRIMCTR_7_LO"/>  <!-- gs primitives out -->
+-	<reg32 offset="0x054f" name="RBBM_PRIMCTR_7_HI"/>
+-	<reg32 offset="0x0550" name="RBBM_PRIMCTR_8_LO"/>  <!-- gs primitives out -->
+-	<reg32 offset="0x0551" name="RBBM_PRIMCTR_8_HI"/>
+-	<reg32 offset="0x0552" name="RBBM_PRIMCTR_9_LO"/>  <!-- raster primitives in -->
+-	<reg32 offset="0x0553" name="RBBM_PRIMCTR_9_HI"/>
+-	<reg32 offset="0x0554" name="RBBM_PRIMCTR_10_LO"/>
+-	<reg32 offset="0x0555" name="RBBM_PRIMCTR_10_HI"/>
++	<reg64 offset="0x0540" name="RBBM_PIPESTAT_IAVERTICES"/>
++	<reg64 offset="0x0542" name="RBBM_PIPESTAT_IAPRIMITIVES"/>
++	<reg64 offset="0x0544" name="RBBM_PIPESTAT_VSINVOCATIONS"/>
++	<reg64 offset="0x0546" name="RBBM_PIPESTAT_HSINVOCATIONS"/>
++	<reg64 offset="0x0548" name="RBBM_PIPESTAT_DSINVOCATIONS"/>
++	<reg64 offset="0x054a" name="RBBM_PIPESTAT_GSINVOCATIONS"/>
++	<reg64 offset="0x054c" name="RBBM_PIPESTAT_GSPRIMITIVES"/>
++	<reg64 offset="0x054e" name="RBBM_PIPESTAT_CINVOCATIONS"/>
++	<reg64 offset="0x0550" name="RBBM_PIPESTAT_CPRIMITIVES"/>
++	<reg64 offset="0x0552" name="RBBM_PIPESTAT_PSINVOCATIONS"/>
++	<reg64 offset="0x0554" name="RBBM_PIPESTAT_CSINVOCATIONS"/>
+ 
+ 	<reg32 offset="0xF400" name="RBBM_SECVID_TRUST_CNTL"/>
+ 	<reg64 offset="0xF800" name="RBBM_SECVID_TSB_TRUSTED_BASE"/>
+@@ -2779,7 +575,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x0011f" name="RBBM_CGC_P2S_TRIG_CMD" variants="A7XX-"/>
+ 	<reg32 offset="0x00120" name="RBBM_CLOCK_CNTL_TEX_FCHE"/>
+ 	<reg32 offset="0x00121" name="RBBM_CLOCK_DELAY_TEX_FCHE"/>
+-	<reg32 offset="0x00122" name="RBBM_CLOCK_HYST_TEX_FCHE"/>
++	<reg32 offset="0x00122" name="RBBM_CLOCK_HYST_TEX_FCHE" variants="A6XX"/>
+ 	<reg32 offset="0x00122" name="RBBM_CGC_P2S_STATUS" variants="A7XX-">
+ 		<bitfield name="TXDONE" pos="0" type="boolean"/>
+ 	</reg32>
+@@ -2840,7 +636,7 @@ to upconvert to 32b float internally?
+ 	</reg32>
+ 	<reg32 offset="0x062f" name="DBGC_CFG_DBGBUS_TRACE_BUF1"/>
+ 	<reg32 offset="0x0630" name="DBGC_CFG_DBGBUS_TRACE_BUF2"/>
+-	<array offset="0x0CD8" name="VSC_PERFCTR_VSC_SEL" stride="1" length="2"/>
++	<array offset="0x0CD8" name="VSC_PERFCTR_VSC_SEL" stride="1" length="2" variants="A6XX"/>
+ 	<reg32 offset="0x0CD8" name="VSC_UNKNOWN_0CD8" variants="A7XX">
+ 		<doc>
+ 			Set to true when binning, isn't changed afterwards
+@@ -2936,8 +732,8 @@ to upconvert to 32b float internally?
+ 		<bitfield name="WIDTH" low="0" high="7" shr="5" type="uint"/>
+ 		<bitfield name="HEIGHT" low="8" high="16" shr="4" type="uint"/>
+ 	</reg32>
+-	<reg64 offset="0x0c03" name="VSC_DRAW_STRM_SIZE_ADDRESS" type="waddress" usage="cmd"/>
+-	<reg32 offset="0x0c06" name="VSC_BIN_COUNT" usage="rp_blit">
++	<reg64 offset="0x0c03" name="VSC_SIZE_BASE" type="waddress" usage="cmd"/>
++	<reg32 offset="0x0c06" name="VSC_EXPANDED_BIN_CNTL" usage="rp_blit">
+ 		<bitfield name="NX" low="1" high="10" type="uint"/>
+ 		<bitfield name="NY" low="11" high="20" type="uint"/>
+ 	</reg32>
+@@ -2967,14 +763,14 @@ to upconvert to 32b float internally?
+ 
+ 	LIMIT is set to PITCH - 64, to make room for a bit of overflow
+ 	 -->
+-	<reg64 offset="0x0c30" name="VSC_PRIM_STRM_ADDRESS" type="waddress" usage="cmd"/>
+-	<reg32 offset="0x0c32" name="VSC_PRIM_STRM_PITCH" usage="cmd"/>
+-	<reg32 offset="0x0c33" name="VSC_PRIM_STRM_LIMIT" usage="cmd"/>
+-	<reg64 offset="0x0c34" name="VSC_DRAW_STRM_ADDRESS" type="waddress" usage="cmd"/>
+-	<reg32 offset="0x0c36" name="VSC_DRAW_STRM_PITCH" usage="cmd"/>
+-	<reg32 offset="0x0c37" name="VSC_DRAW_STRM_LIMIT" usage="cmd"/>
+-
+-	<array offset="0x0c38" name="VSC_STATE" stride="1" length="32" usage="rp_blit">
++	<reg64 offset="0x0c30" name="VSC_PIPE_DATA_PRIM_BASE" type="waddress" usage="cmd"/>
++	<reg32 offset="0x0c32" name="VSC_PIPE_DATA_PRIM_STRIDE" usage="cmd"/>
++	<reg32 offset="0x0c33" name="VSC_PIPE_DATA_PRIM_LENGTH" usage="cmd"/>
++	<reg64 offset="0x0c34" name="VSC_PIPE_DATA_DRAW_BASE" type="waddress" usage="cmd"/>
++	<reg32 offset="0x0c36" name="VSC_PIPE_DATA_DRAW_STRIDE" usage="cmd"/>
++	<reg32 offset="0x0c37" name="VSC_PIPE_DATA_DRAW_LENGTH" usage="cmd"/>
++
++	<array offset="0x0c38" name="VSC_CHANNEL_VISIBILITY" stride="1" length="32" usage="rp_blit">
+ 		<doc>
+ 			Seems to be a bitmap of which tiles mapped to the VSC
+ 			pipe contain geometry.
+@@ -2985,7 +781,7 @@ to upconvert to 32b float internally?
+ 		<reg32 offset="0x0" name="REG"/>
+ 	</array>
+ 
+-	<array offset="0x0c58" name="VSC_PRIM_STRM_SIZE" stride="1" length="32" variants="A6XX" usage="rp_blit">
++	<array offset="0x0c58" name="VSC_PIPE_DATA_PRIM_SIZE" stride="1" length="32" variants="A6XX" usage="rp_blit">
+ 		<doc>
+ 			Has the size of data written to corresponding VSC_PRIM_STRM
+ 			buffer.
+@@ -2993,10 +789,10 @@ to upconvert to 32b float internally?
+ 		<reg32 offset="0x0" name="REG"/>
+ 	</array>
+ 
+-	<array offset="0x0c78" name="VSC_DRAW_STRM_SIZE" stride="1" length="32" variants="A6XX" usage="rp_blit">
++	<array offset="0x0c78" name="VSC_PIPE_DATA_DRAW_SIZE" stride="1" length="32" variants="A6XX" usage="rp_blit">
+ 		<doc>
+ 			Has the size of data written to corresponding VSC pipe, ie.
+-			same thing that is written out to VSC_DRAW_STRM_SIZE_ADDRESS_LO/HI
++			same thing that is written out to VSC_SIZE_BASE
+ 		</doc>
+ 		<reg32 offset="0x0" name="REG"/>
+ 	</array>
+@@ -3028,17 +824,17 @@ to upconvert to 32b float internally?
+ 		<bitfield name="PERSP_DIVISION_DISABLE" pos="9" type="boolean"/>
+ 	</reg32>
+ 
+-	<bitset name="a6xx_gras_xs_cl_cntl" inline="yes">
++	<bitset name="a6xx_gras_xs_clip_cull_distance" inline="yes">
+ 		<bitfield name="CLIP_MASK" low="0" high="7"/>
+ 		<bitfield name="CULL_MASK" low="8" high="15"/>
+ 	</bitset>
+-	<reg32 offset="0x8001" name="GRAS_VS_CL_CNTL" type="a6xx_gras_xs_cl_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x8002" name="GRAS_DS_CL_CNTL" type="a6xx_gras_xs_cl_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x8003" name="GRAS_GS_CL_CNTL" type="a6xx_gras_xs_cl_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x8004" name="GRAS_MAX_LAYER_INDEX" low="0" high="10" type="uint" usage="rp_blit"/>
++	<reg32 offset="0x8001" name="GRAS_CL_VS_CLIP_CULL_DISTANCE" type="a6xx_gras_xs_clip_cull_distance" usage="rp_blit"/>
++	<reg32 offset="0x8002" name="GRAS_CL_DS_CLIP_CULL_DISTANCE" type="a6xx_gras_xs_clip_cull_distance" usage="rp_blit"/>
++	<reg32 offset="0x8003" name="GRAS_CL_GS_CLIP_CULL_DISTANCE" type="a6xx_gras_xs_clip_cull_distance" usage="rp_blit"/>
++	<reg32 offset="0x8004" name="GRAS_CL_ARRAY_SIZE" low="0" high="10" type="uint" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x8005" name="GRAS_CNTL" usage="rp_blit">
+-		<!-- see also RB_RENDER_CONTROL0 -->
++	<reg32 offset="0x8005" name="GRAS_CL_INTERP_CNTL" usage="rp_blit">
++		<!-- see also RB_INTERP_CNTL -->
+ 		<bitfield name="IJ_PERSP_PIXEL" pos="0" type="boolean"/>
+ 		<bitfield name="IJ_PERSP_CENTROID" pos="1" type="boolean"/>
+ 		<bitfield name="IJ_PERSP_SAMPLE" pos="2" type="boolean"/>
+@@ -3067,7 +863,7 @@ to upconvert to 32b float internally?
+ 	<!-- <reg32 offset="0x80f0" name="GRAS_UNKNOWN_80F0" type="a6xx_reg_xy"/> -->
+ 
+ 	<!-- 0x8006-0x800f invalid -->
+-	<array offset="0x8010" name="GRAS_CL_VPORT" stride="6" length="16" usage="rp_blit">
++	<array offset="0x8010" name="GRAS_CL_VIEWPORT" stride="6" length="16" usage="rp_blit">
+ 		<reg32 offset="0" name="XOFFSET" type="float"/>
+ 		<reg32 offset="1" name="XSCALE" type="float"/>
+ 		<reg32 offset="2" name="YOFFSET" type="float"/>
+@@ -3075,7 +871,7 @@ to upconvert to 32b float internally?
+ 		<reg32 offset="4" name="ZOFFSET" type="float"/>
+ 		<reg32 offset="5" name="ZSCALE" type="float"/>
+ 	</array>
+-	<array offset="0x8070" name="GRAS_CL_Z_CLAMP" stride="2" length="16" usage="rp_blit">
++	<array offset="0x8070" name="GRAS_CL_VIEWPORT_ZCLAMP" stride="2" length="16" usage="rp_blit">
+ 		<reg32 offset="0" name="MIN" type="float"/>
+ 		<reg32 offset="1" name="MAX" type="float"/>
+ 	</array>
+@@ -3124,7 +920,12 @@ to upconvert to 32b float internally?
+ 
+ 	<reg32 offset="0x8099" name="GRAS_SU_CONSERVATIVE_RAS_CNTL" usage="cmd">
+ 		<bitfield name="CONSERVATIVERASEN" pos="0" type="boolean"/>
+-		<bitfield name="SHIFTAMOUNT" low="1" high="2"/>
++		<enum name="a6xx_shift_amount">
++			<value value="0" name="NO_SHIFT"/>
++			<value value="1" name="HALF_PIXEL_SHIFT"/>
++			<value value="2" name="FULL_PIXEL_SHIFT"/>
++		</enum>
++		<bitfield name="SHIFTAMOUNT" low="1" high="2" type="a6xx_shift_amount"/>
+ 		<bitfield name="INNERCONSERVATIVERASEN" pos="3" type="boolean"/>
+ 		<bitfield name="UNK4" low="4" high="5"/>
+ 	</reg32>
+@@ -3133,13 +934,13 @@ to upconvert to 32b float internally?
+ 		<bitfield name="LINELENGTHEN" pos="1" type="boolean"/>
+ 	</reg32>
+ 
+-	<bitset name="a6xx_gras_layer_cntl" inline="yes">
++	<bitset name="a6xx_gras_us_xs_siv_cntl" inline="yes">
+ 		<bitfield name="WRITES_LAYER" pos="0" type="boolean"/>
+ 		<bitfield name="WRITES_VIEW" pos="1" type="boolean"/>
+ 	</bitset>
+-	<reg32 offset="0x809b" name="GRAS_VS_LAYER_CNTL" type="a6xx_gras_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x809c" name="GRAS_GS_LAYER_CNTL" type="a6xx_gras_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x809d" name="GRAS_DS_LAYER_CNTL" type="a6xx_gras_layer_cntl" usage="rp_blit"/>
++	<reg32 offset="0x809b" name="GRAS_SU_VS_SIV_CNTL" type="a6xx_gras_us_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x809c" name="GRAS_SU_GS_SIV_CNTL" type="a6xx_gras_us_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x809d" name="GRAS_SU_DS_SIV_CNTL" type="a6xx_gras_us_xs_siv_cntl" usage="rp_blit"/>
+ 	<!-- 0x809e/0x809f invalid -->
+ 
+ 	<enum name="a6xx_sequenced_thread_dist">
+@@ -3213,13 +1014,13 @@ to upconvert to 32b float internally?
+ 	<enum name="a6xx_lrz_feedback_mask">
+ 		<value value="0x0" name="LRZ_FEEDBACK_NONE"/>
+ 		<value value="0x1" name="LRZ_FEEDBACK_EARLY_Z"/>
+-		<value value="0x2" name="LRZ_FEEDBACK_EARLY_LRZ_LATE_Z"/>
++		<value value="0x2" name="LRZ_FEEDBACK_EARLY_Z_LATE_Z"/>
+ 		<!-- We don't have a flag type and this flags combination is often used -->
+-		<value value="0x3" name="LRZ_FEEDBACK_EARLY_Z_OR_EARLY_LRZ_LATE_Z"/>
++		<value value="0x3" name="LRZ_FEEDBACK_EARLY_Z_OR_EARLY_Z_LATE_Z"/>
+ 		<value value="0x4" name="LRZ_FEEDBACK_LATE_Z"/>
+ 	</enum>
+ 
+-	<reg32 offset="0x80a1" name="GRAS_BIN_CONTROL" usage="rp_blit">
++	<reg32 offset="0x80a1" name="GRAS_SC_BIN_CNTL" usage="rp_blit">
+ 		<bitfield name="BINW" low="0" high="5" shr="5" type="uint"/>
+ 		<bitfield name="BINH" low="8" high="14" shr="4" type="uint"/>
+ 		<bitfield name="RENDER_MODE" low="18" high="20" type="a6xx_render_mode"/>
+@@ -3235,22 +1036,22 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK27" pos="27"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x80a2" name="GRAS_RAS_MSAA_CNTL" usage="rp_blit">
++	<reg32 offset="0x80a2" name="GRAS_SC_RAS_MSAA_CNTL" usage="rp_blit">
+ 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+ 		<bitfield name="UNK2" pos="2"/>
+ 		<bitfield name="UNK3" pos="3"/>
+ 	</reg32>
+-	<reg32 offset="0x80a3" name="GRAS_DEST_MSAA_CNTL" usage="rp_blit">
++	<reg32 offset="0x80a3" name="GRAS_SC_DEST_MSAA_CNTL" usage="rp_blit">
+ 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+ 		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+ 	</reg32>
+ 
+-	<bitset name="a6xx_sample_config" inline="yes">
++	<bitset name="a6xx_msaa_sample_pos_cntl" inline="yes">
+ 		<bitfield name="UNK0" pos="0"/>
+ 		<bitfield name="LOCATION_ENABLE" pos="1" type="boolean"/>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_sample_locations" inline="yes">
++	<bitset name="a6xx_programmable_msaa_pos" inline="yes">
+ 		<bitfield name="SAMPLE_0_X" low="0" high="3" radix="4" type="fixed"/>
+ 		<bitfield name="SAMPLE_0_Y" low="4" high="7" radix="4" type="fixed"/>
+ 		<bitfield name="SAMPLE_1_X" low="8" high="11" radix="4" type="fixed"/>
+@@ -3261,9 +1062,9 @@ to upconvert to 32b float internally?
+ 		<bitfield name="SAMPLE_3_Y" low="28" high="31" radix="4" type="fixed"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0x80a4" name="GRAS_SAMPLE_CONFIG" type="a6xx_sample_config" usage="rp_blit"/>
+-	<reg32 offset="0x80a5" name="GRAS_SAMPLE_LOCATION_0" type="a6xx_sample_locations" usage="rp_blit"/>
+-	<reg32 offset="0x80a6" name="GRAS_SAMPLE_LOCATION_1" type="a6xx_sample_locations" usage="rp_blit"/>
++	<reg32 offset="0x80a4" name="GRAS_SC_MSAA_SAMPLE_POS_CNTL" type="a6xx_msaa_sample_pos_cntl" usage="rp_blit"/>
++	<reg32 offset="0x80a5" name="GRAS_SC_PROGRAMMABLE_MSAA_POS_0" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
++	<reg32 offset="0x80a6" name="GRAS_SC_PROGRAMMABLE_MSAA_POS_1" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0x80a7" name="GRAS_UNKNOWN_80A7" variants="A7XX-" usage="cmd"/>
+ 
+@@ -3286,13 +1087,36 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x80f0" name="GRAS_SC_WINDOW_SCISSOR_TL" type="a6xx_reg_xy" usage="rp_blit"/>
+ 	<reg32 offset="0x80f1" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a6xx_reg_xy" usage="rp_blit"/>
+ 
+-	<!-- 0x80f4 - 0x80fa are used for VK_KHR_fragment_shading_rate -->
+-	<reg64 offset="0x80f4" name="GRAS_UNKNOWN_80F4" variants="A7XX-" usage="cmd"/>
+-	<reg64 offset="0x80f5" name="GRAS_UNKNOWN_80F5" variants="A7XX-" usage="cmd"/>
+-	<reg64 offset="0x80f6" name="GRAS_UNKNOWN_80F6" variants="A7XX-" usage="cmd"/>
+-	<reg64 offset="0x80f8" name="GRAS_UNKNOWN_80F8" variants="A7XX-" usage="cmd"/>
+-	<reg64 offset="0x80f9" name="GRAS_UNKNOWN_80F9" variants="A7XX-" usage="cmd"/>
+-	<reg64 offset="0x80fa" name="GRAS_UNKNOWN_80FA" variants="A7XX-" usage="cmd"/>
++	<enum name="a6xx_fsr_combiner">
++		<value value="0" name="FSR_COMBINER_OP_KEEP"/>
++		<value value="1" name="FSR_COMBINER_OP_REPLACE"/>
++		<value value="2" name="FSR_COMBINER_OP_MIN"/>
++		<value value="3" name="FSR_COMBINER_OP_MAX"/>
++		<value value="4" name="FSR_COMBINER_OP_MUL"/>
++	</enum>
++
++	<reg32 offset="0x80f4" name="GRAS_VRS_CONFIG" variants="A7XX-" usage="rp_blit">
++		<bitfield name="PIPELINE_FSR_ENABLE" pos="0" type="boolean"/>
++		<bitfield name="FRAG_SIZE_X" low="1" high="2" type="uint"/>
++		<bitfield name="FRAG_SIZE_Y" low="3" high="4" type="uint"/>
++		<bitfield name="COMBINER_OP_1" low="5" high="7" type="a6xx_fsr_combiner"/>
++		<bitfield name="COMBINER_OP_2" low="8" high="10" type="a6xx_fsr_combiner"/>
++		<bitfield name="ATTACHMENT_FSR_ENABLE" pos="13" type="boolean"/>
++		<bitfield name="PRIMITIVE_FSR_ENABLE" pos="20" type="boolean"/>
++	</reg32>
++	<reg32 offset="0x80f5" name="GRAS_QUALITY_BUFFER_INFO" variants="A7XX-" usage="rp_blit">
++		<bitfield name="LAYERED" pos="0" type="boolean"/>
++		<bitfield name="TILE_MODE" low="1" high="2" type="a6xx_tile_mode"/>
++	</reg32>
++	<reg32 offset="0x80f6" name="GRAS_QUALITY_BUFFER_DIMENSION" variants="A7XX-" usage="rp_blit">
++		<bitfield name="WIDTH" low="0" high="15" type="uint"/>
++		<bitfield name="HEIGHT" low="16" high="31" type="uint"/>
++	</reg32>
++	<reg64 offset="0x80f8" name="GRAS_QUALITY_BUFFER_BASE" variants="A7XX-" type="waddress" usage="rp_blit"/>
++	<reg32 offset="0x80fa" name="GRAS_QUALITY_BUFFER_PITCH" variants="A7XX-" usage="rp_blit">
++		<bitfield name="PITCH" shr="6" low="0" high="7" type="uint"/>
++		<bitfield name="ARRAY_PITCH" shr="6" low="10" high="28" type="uint"/>
++	</reg32>
+ 
+ 	<enum name="a6xx_lrz_dir_status">
+ 		<value value="0x1" name="LRZ_DIR_LE"/>
+@@ -3313,7 +1137,7 @@ to upconvert to 32b float internally?
+ 		</doc>
+ 		<bitfield name="FC_ENABLE" pos="3" type="boolean" variants="A6XX"/>
+ 		<!-- set when depth-test + depth-write enabled -->
+-		<bitfield name="Z_TEST_ENABLE" pos="4" type="boolean"/>
++		<bitfield name="Z_WRITE_ENABLE" pos="4" type="boolean"/>
+ 		<bitfield name="Z_BOUNDS_ENABLE" pos="5" type="boolean"/>
+ 		<bitfield name="DIR" low="6" high="7" type="a6xx_lrz_dir_status"/>
+ 		<doc>
+@@ -3339,14 +1163,13 @@ to upconvert to 32b float internally?
+ 		<bitfield name="FRAGCOORDSAMPLEMODE" low="1" high="2" type="a6xx_fragcoord_sample_mode"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x8102" name="GRAS_LRZ_MRT_BUF_INFO_0" usage="rp_blit">
++	<reg32 offset="0x8102" name="GRAS_LRZ_MRT_BUFFER_INFO_0" usage="rp_blit">
+ 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_format"/>
+ 	</reg32>
+ 	<reg64 offset="0x8103" name="GRAS_LRZ_BUFFER_BASE" align="256" type="waddress" usage="rp_blit"/>
+ 	<reg32 offset="0x8105" name="GRAS_LRZ_BUFFER_PITCH" usage="rp_blit">
+-		<!-- TODO: fix the shr fields -->
+ 		<bitfield name="PITCH" low="0" high="7" shr="5" type="uint"/>
+-		<bitfield name="ARRAY_PITCH" low="10" high="28" shr="4" type="uint"/>
++		<bitfield name="ARRAY_PITCH" low="10" high="28" shr="8" type="uint"/>
+ 	</reg32>
+ 
+ 	<!--
+@@ -3381,18 +1204,18 @@ to upconvert to 32b float internally?
+ 	 -->
+ 	<reg64 offset="0x8106" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE" align="64" type="waddress" usage="rp_blit"/>
+ 	<!-- 0x8108 invalid -->
+-	<reg32 offset="0x8109" name="GRAS_SAMPLE_CNTL" usage="rp_blit">
++	<reg32 offset="0x8109" name="GRAS_LRZ_PS_SAMPLEFREQ_CNTL" usage="rp_blit">
+ 		<bitfield name="PER_SAMP_MODE" pos="0" type="boolean"/>
+ 	</reg32>
+ 	<!--
+ 	LRZ buffer represents a single array layer + mip level, and there is
+ 	a single buffer per depth image. Thus to reuse LRZ between renderpasses
+ 	it is necessary to track the depth view used in the past renderpass, which
+-	GRAS_LRZ_DEPTH_VIEW is for.
+-	GRAS_LRZ_CNTL checks if current value of GRAS_LRZ_DEPTH_VIEW is equal to
++	GRAS_LRZ_VIEW_INFO is for.
++	GRAS_LRZ_CNTL checks if current value of GRAS_LRZ_VIEW_INFO is equal to
+ 	the value stored in the LRZ buffer, if not - LRZ is disabled.
+ 	-->
+-	<reg32 offset="0x810a" name="GRAS_LRZ_DEPTH_VIEW" usage="cmd">
++	<reg32 offset="0x810a" name="GRAS_LRZ_VIEW_INFO" usage="cmd">
+ 		<bitfield name="BASE_LAYER" low="0" high="10" type="uint"/>
+ 		<bitfield name="LAYER_COUNT" low="16" high="26" type="uint"/>
+ 		<bitfield name="BASE_MIP_LEVEL" low="28" high="31" type="uint"/>
+@@ -3408,7 +1231,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110" low="0" high="1" usage="cmd"/>
+ 
+ 	<!-- A bit tentative but it's a color and it is followed by LRZ_CLEAR -->
+-	<reg32 offset="0x8111" name="GRAS_LRZ_CLEAR_DEPTH_F32" type="float" variants="A7XX-"/>
++	<reg32 offset="0x8111" name="GRAS_LRZ_DEPTH_CLEAR" type="float" variants="A7XX-"/>
+ 
+ 	<reg32 offset="0x8113" name="GRAS_LRZ_DEPTH_BUFFER_INFO" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="DEPTH_FORMAT" low="0" high="2" type="a6xx_depth_format"/>
+@@ -3430,7 +1253,7 @@ to upconvert to 32b float internally?
+ 		<value value="0x5" name="ROTATE_VFLIP"/>
+ 	</enum>
+ 
+-	<bitset name="a6xx_2d_blit_cntl" inline="yes">
++	<bitset name="a6xx_a2d_bit_cntl" inline="yes">
+ 		<bitfield name="ROTATE" low="0" high="2" type="a6xx_rotation"/>
+ 		<bitfield name="OVERWRITEEN" pos="3" type="boolean"/>
+ 		<bitfield name="UNK4" low="4" high="6"/>
+@@ -3447,22 +1270,22 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK30" pos="30" type="boolean" variants="A7XX-"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0x8400" name="GRAS_2D_BLIT_CNTL" type="a6xx_2d_blit_cntl" usage="rp_blit"/>
++	<reg32 offset="0x8400" name="GRAS_A2D_BLT_CNTL" type="a6xx_a2d_bit_cntl" usage="rp_blit"/>
+ 	<!-- note: the low 8 bits for src coords are valid, probably fixed point
+ 	     it would be a bit weird though, since we subtract 1 from BR coords
+ 	     apparently signed, gallium driver uses negative coords and it works?
+ 	 -->
+-	<reg32 offset="0x8401" name="GRAS_2D_SRC_TL_X" low="8" high="24" type="int" usage="rp_blit"/>
+-	<reg32 offset="0x8402" name="GRAS_2D_SRC_BR_X" low="8" high="24" type="int" usage="rp_blit"/>
+-	<reg32 offset="0x8403" name="GRAS_2D_SRC_TL_Y" low="8" high="24" type="int" usage="rp_blit"/>
+-	<reg32 offset="0x8404" name="GRAS_2D_SRC_BR_Y" low="8" high="24" type="int" usage="rp_blit"/>
+-	<reg32 offset="0x8405" name="GRAS_2D_DST_TL" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0x8406" name="GRAS_2D_DST_BR" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x8401" name="GRAS_A2D_SRC_XMIN" low="8" high="24" type="int" usage="rp_blit"/>
++	<reg32 offset="0x8402" name="GRAS_A2D_SRC_XMAX" low="8" high="24" type="int" usage="rp_blit"/>
++	<reg32 offset="0x8403" name="GRAS_A2D_SRC_YMIN" low="8" high="24" type="int" usage="rp_blit"/>
++	<reg32 offset="0x8404" name="GRAS_A2D_SRC_YMAX" low="8" high="24" type="int" usage="rp_blit"/>
++	<reg32 offset="0x8405" name="GRAS_A2D_DEST_TL" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x8406" name="GRAS_A2D_DEST_BR" type="a6xx_reg_xy" usage="rp_blit"/>
+ 	<reg32 offset="0x8407" name="GRAS_2D_UNKNOWN_8407" low="0" high="31"/>
+ 	<reg32 offset="0x8408" name="GRAS_2D_UNKNOWN_8408" low="0" high="31"/>
+ 	<reg32 offset="0x8409" name="GRAS_2D_UNKNOWN_8409" low="0" high="31"/>
+-	<reg32 offset="0x840a" name="GRAS_2D_RESOLVE_CNTL_1" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0x840b" name="GRAS_2D_RESOLVE_CNTL_2" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x840a" name="GRAS_A2D_SCISSOR_TL" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x840b" name="GRAS_A2D_SCISSOR_BR" type="a6xx_reg_xy" usage="rp_blit"/>
+ 	<!-- 0x840c-0x85ff invalid -->
+ 
+ 	<!-- always 0x880 ? (and 0 in a640/a650 traces?) -->
+@@ -3481,7 +1304,7 @@ to upconvert to 32b float internally?
+ 	-->
+ 
+ 	<!-- same as GRAS_BIN_CONTROL, but without bit 27: -->
+-	<reg32 offset="0x8800" name="RB_BIN_CONTROL" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0x8800" name="RB_CNTL" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="BINW" low="0" high="5" shr="5" type="uint"/>
+ 		<bitfield name="BINH" low="8" high="14" shr="4" type="uint"/>
+ 		<bitfield name="RENDER_MODE" low="18" high="20" type="a6xx_render_mode"/>
+@@ -3490,7 +1313,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="LRZ_FEEDBACK_ZMODE_MASK" low="24" high="26" type="a6xx_lrz_feedback_mask"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x8800" name="RB_BIN_CONTROL" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x8800" name="RB_CNTL" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="BINW" low="0" high="5" shr="5" type="uint"/>
+ 		<bitfield name="BINH" low="8" high="14" shr="4" type="uint"/>
+ 		<bitfield name="RENDER_MODE" low="18" high="20" type="a6xx_render_mode"/>
+@@ -3501,8 +1324,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8801" name="RB_RENDER_CNTL" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="CCUSINGLECACHELINESIZE" low="3" high="5"/>
+ 		<bitfield name="EARLYVIZOUTEN" pos="6" type="boolean"/>
+-		<!-- set during binning pass: -->
+-		<bitfield name="BINNING" pos="7" type="boolean"/>
++		<bitfield name="FS_DISABLE" pos="7" type="boolean"/>
+ 		<bitfield name="UNK8" low="8" high="10"/>
+ 		<bitfield name="RASTER_MODE" pos="8" type="a6xx_raster_mode"/>
+ 		<bitfield name="RASTER_DIRECTION" low="9" high="10" type="a6xx_raster_direction"/>
+@@ -3515,15 +1337,14 @@ to upconvert to 32b float internally?
+ 	</reg32>
+ 	<reg32 offset="0x8801" name="RB_RENDER_CNTL" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="EARLYVIZOUTEN" pos="6" type="boolean"/>
+-		<!-- set during binning pass: -->
+-		<bitfield name="BINNING" pos="7" type="boolean"/>
++		<bitfield name="FS_DISABLE" pos="7" type="boolean"/>
+ 		<bitfield name="RASTER_MODE" pos="8" type="a6xx_raster_mode"/>
+ 		<bitfield name="RASTER_DIRECTION" low="9" high="10" type="a6xx_raster_direction"/>
+ 		<bitfield name="CONSERVATIVERASEN" pos="11" type="boolean"/>
+ 		<bitfield name="INNERCONSERVATIVERASEN" pos="12" type="boolean"/>
+ 	</reg32>
+ 	<reg32 offset="0x8116" name="GRAS_SU_RENDER_CNTL" variants="A7XX-" usage="rp_blit">
+-		<bitfield name="BINNING" pos="7" type="boolean"/>
++		<bitfield name="FS_DISABLE" pos="7" type="boolean"/>
+ 	</reg32>
+ 
+ 	<reg32 offset="0x8802" name="RB_RAS_MSAA_CNTL" usage="rp_blit">
+@@ -3536,16 +1357,16 @@ to upconvert to 32b float internally?
+ 		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x8804" name="RB_SAMPLE_CONFIG" type="a6xx_sample_config" usage="rp_blit"/>
+-	<reg32 offset="0x8805" name="RB_SAMPLE_LOCATION_0" type="a6xx_sample_locations" usage="rp_blit"/>
+-	<reg32 offset="0x8806" name="RB_SAMPLE_LOCATION_1" type="a6xx_sample_locations" usage="rp_blit"/>
++	<reg32 offset="0x8804" name="RB_MSAA_SAMPLE_POS_CNTL" type="a6xx_msaa_sample_pos_cntl" usage="rp_blit"/>
++	<reg32 offset="0x8805" name="RB_PROGRAMMABLE_MSAA_POS_0" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
++	<reg32 offset="0x8806" name="RB_PROGRAMMABLE_MSAA_POS_1" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
+ 	<!-- 0x8807-0x8808 invalid -->
+ 	<!--
+ 	note: maybe not actually called RB_RENDER_CONTROLn (since RB_RENDER_CNTL
+ 	name comes from kernel and is probably right)
+ 	 -->
+-	<reg32 offset="0x8809" name="RB_RENDER_CONTROL0" usage="rp_blit">
+-		<!-- see also GRAS_CNTL -->
++	<reg32 offset="0x8809" name="RB_INTERP_CNTL" usage="rp_blit">
++		<!-- see also GRAS_CL_INTERP_CNTL -->
+ 		<bitfield name="IJ_PERSP_PIXEL" pos="0" type="boolean"/>
+ 		<bitfield name="IJ_PERSP_CENTROID" pos="1" type="boolean"/>
+ 		<bitfield name="IJ_PERSP_SAMPLE" pos="2" type="boolean"/>
+@@ -3555,7 +1376,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="COORD_MASK" low="6" high="9" type="hex"/>
+ 		<bitfield name="UNK10" pos="10" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x880a" name="RB_RENDER_CONTROL1" usage="rp_blit">
++	<reg32 offset="0x880a" name="RB_PS_INPUT_CNTL" usage="rp_blit">
+ 		<!-- enable bits for various FS sysvalue regs: -->
+ 		<bitfield name="SAMPLEMASK" pos="0" type="boolean"/>
+ 		<bitfield name="POSTDEPTHCOVERAGE" pos="1" type="boolean"/>
+@@ -3567,16 +1388,16 @@ to upconvert to 32b float internally?
+ 		<bitfield name="FOVEATION" pos="8" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x880b" name="RB_FS_OUTPUT_CNTL0" usage="rp_blit">
++	<reg32 offset="0x880b" name="RB_PS_OUTPUT_CNTL" usage="rp_blit">
+ 		<bitfield name="DUAL_COLOR_IN_ENABLE" pos="0" type="boolean"/>
+ 		<bitfield name="FRAG_WRITES_Z" pos="1" type="boolean"/>
+ 		<bitfield name="FRAG_WRITES_SAMPMASK" pos="2" type="boolean"/>
+ 		<bitfield name="FRAG_WRITES_STENCILREF" pos="3" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x880c" name="RB_FS_OUTPUT_CNTL1" usage="rp_blit">
++	<reg32 offset="0x880c" name="RB_PS_MRT_CNTL" usage="rp_blit">
+ 		<bitfield name="MRT" low="0" high="3" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0x880d" name="RB_RENDER_COMPONENTS" usage="rp_blit">
++	<reg32 offset="0x880d" name="RB_PS_OUTPUT_MASK" usage="rp_blit">
+ 		<bitfield name="RT0" low="0" high="3"/>
+ 		<bitfield name="RT1" low="4" high="7"/>
+ 		<bitfield name="RT2" low="8" high="11"/>
+@@ -3608,7 +1429,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="SRGB_MRT7" pos="7" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x8810" name="RB_SAMPLE_CNTL" usage="rp_blit">
++	<reg32 offset="0x8810" name="RB_PS_SAMPLEFREQ_CNTL" usage="rp_blit">
+ 		<bitfield name="PER_SAMP_MODE" pos="0" type="boolean"/>
+ 	</reg32>
+ 	<reg32 offset="0x8811" name="RB_UNKNOWN_8811" low="4" high="6" usage="cmd"/>
+@@ -3672,18 +1493,18 @@ to upconvert to 32b float internally?
+ 		<reg32 offset="0x7" name="BASE_GMEM" low="12" high="31" shr="12"/>
+ 	</array>
+ 
+-	<reg32 offset="0x8860" name="RB_BLEND_RED_F32" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x8861" name="RB_BLEND_GREEN_F32" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x8862" name="RB_BLEND_BLUE_F32" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x8863" name="RB_BLEND_ALPHA_F32" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x8864" name="RB_ALPHA_CONTROL" usage="cmd">
++	<reg32 offset="0x8860" name="RB_BLEND_CONSTANT_RED_FP32" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8861" name="RB_BLEND_CONSTANT_GREEN_FP32" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8862" name="RB_BLEND_CONSTANT_BLUE_FP32" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8863" name="RB_BLEND_CONSTANT_ALPHA_FP32" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8864" name="RB_ALPHA_TEST_CNTL" usage="cmd">
+ 		<bitfield name="ALPHA_REF" low="0" high="7" type="hex"/>
+ 		<bitfield name="ALPHA_TEST" pos="8" type="boolean"/>
+ 		<bitfield name="ALPHA_TEST_FUNC" low="9" high="11" type="adreno_compare_func"/>
+ 	</reg32>
+ 	<reg32 offset="0x8865" name="RB_BLEND_CNTL" usage="rp_blit">
+ 		<!-- per-mrt enable bit -->
+-		<bitfield name="ENABLE_BLEND" low="0" high="7"/>
++		<bitfield name="BLEND_READS_DEST" low="0" high="7"/>
+ 		<bitfield name="INDEPENDENT_BLEND" pos="8" type="boolean"/>
+ 		<bitfield name="DUAL_COLOR_IN_ENABLE" pos="9" type="boolean"/>
+ 		<bitfield name="ALPHA_TO_COVERAGE" pos="10" type="boolean"/>
+@@ -3726,12 +1547,12 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8873" name="RB_DEPTH_BUFFER_PITCH" low="0" high="13" shr="6" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0x8874" name="RB_DEPTH_BUFFER_ARRAY_PITCH" low="0" high="27" shr="6" type="uint" usage="rp_blit"/>
+ 	<reg64 offset="0x8875" name="RB_DEPTH_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8877" name="RB_DEPTH_BUFFER_BASE_GMEM" low="12" high="31" shr="12" usage="rp_blit"/>
++	<reg32 offset="0x8877" name="RB_DEPTH_GMEM_BASE" low="12" high="31" shr="12" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x8878" name="RB_Z_BOUNDS_MIN" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x8879" name="RB_Z_BOUNDS_MAX" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8878" name="RB_DEPTH_BOUND_MIN" type="float" usage="rp_blit"/>
++	<reg32 offset="0x8879" name="RB_DEPTH_BOUND_MAX" type="float" usage="rp_blit"/>
+ 	<!-- 0x887a-0x887f invalid -->
+-	<reg32 offset="0x8880" name="RB_STENCIL_CONTROL" usage="rp_blit">
++	<reg32 offset="0x8880" name="RB_STENCIL_CNTL" usage="rp_blit">
+ 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+ 		<bitfield name="STENCIL_ENABLE_BF" pos="1" type="boolean"/>
+ 		<!--
+@@ -3753,11 +1574,11 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8115" name="GRAS_SU_STENCIL_CNTL" usage="rp_blit">
+ 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x8881" name="RB_STENCIL_INFO" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0x8881" name="RB_STENCIL_BUFFER_INFO" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="SEPARATE_STENCIL" pos="0" type="boolean"/>
+ 		<bitfield name="UNK1" pos="1" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x8881" name="RB_STENCIL_INFO" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x8881" name="RB_STENCIL_BUFFER_INFO" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="SEPARATE_STENCIL" pos="0" type="boolean"/>
+ 		<bitfield name="UNK1" pos="1" type="boolean"/>
+ 		<bitfield name="TILEMODE" low="2" high="3" type="a6xx_tile_mode"/>
+@@ -3765,22 +1586,22 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8882" name="RB_STENCIL_BUFFER_PITCH" low="0" high="11" shr="6" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0x8883" name="RB_STENCIL_BUFFER_ARRAY_PITCH" low="0" high="23" shr="6" type="uint" usage="rp_blit"/>
+ 	<reg64 offset="0x8884" name="RB_STENCIL_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8886" name="RB_STENCIL_BUFFER_BASE_GMEM" low="12" high="31" shr="12" usage="rp_blit"/>
+-	<reg32 offset="0x8887" name="RB_STENCILREF" usage="rp_blit">
++	<reg32 offset="0x8886" name="RB_STENCIL_GMEM_BASE" low="12" high="31" shr="12" usage="rp_blit"/>
++	<reg32 offset="0x8887" name="RB_STENCIL_REF_CNTL" usage="rp_blit">
+ 		<bitfield name="REF" low="0" high="7"/>
+ 		<bitfield name="BFREF" low="8" high="15"/>
+ 	</reg32>
+-	<reg32 offset="0x8888" name="RB_STENCILMASK" usage="rp_blit">
++	<reg32 offset="0x8888" name="RB_STENCIL_MASK" usage="rp_blit">
+ 		<bitfield name="MASK" low="0" high="7"/>
+ 		<bitfield name="BFMASK" low="8" high="15"/>
+ 	</reg32>
+-	<reg32 offset="0x8889" name="RB_STENCILWRMASK" usage="rp_blit">
++	<reg32 offset="0x8889" name="RB_STENCIL_WRITE_MASK" usage="rp_blit">
+ 		<bitfield name="WRMASK" low="0" high="7"/>
+ 		<bitfield name="BFWRMASK" low="8" high="15"/>
+ 	</reg32>
+ 	<!-- 0x888a-0x888f invalid -->
+ 	<reg32 offset="0x8890" name="RB_WINDOW_OFFSET" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0x8891" name="RB_SAMPLE_COUNT_CONTROL" usage="cmd">
++	<reg32 offset="0x8891" name="RB_SAMPLE_COUNTER_CNTL" usage="cmd">
+ 		<bitfield name="DISABLE" pos="0" type="boolean"/>
+ 		<bitfield name="COPY" pos="1" type="boolean"/>
+ 	</reg32>
+@@ -3791,27 +1612,27 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8899" name="RB_UNKNOWN_8899" variants="A7XX-" usage="cmd"/>
+ 	<!-- 0x8899-0x88bf invalid -->
+ 	<!-- clamps depth value for depth test/write -->
+-	<reg32 offset="0x88c0" name="RB_Z_CLAMP_MIN" type="float" usage="rp_blit"/>
+-	<reg32 offset="0x88c1" name="RB_Z_CLAMP_MAX" type="float" usage="rp_blit"/>
++	<reg32 offset="0x88c0" name="RB_VIEWPORT_ZCLAMP_MIN" type="float" usage="rp_blit"/>
++	<reg32 offset="0x88c1" name="RB_VIEWPORT_ZCLAMP_MAX" type="float" usage="rp_blit"/>
+ 	<!-- 0x88c2-0x88cf invalid-->
+-	<reg32 offset="0x88d0" name="RB_UNKNOWN_88D0" usage="rp_blit">
++	<reg32 offset="0x88d0" name="RB_RESOLVE_CNTL_0" usage="rp_blit">
+ 		<bitfield name="UNK0" low="0" high="12"/>
+ 		<bitfield name="UNK16" low="16" high="26"/>
+ 	</reg32>
+-	<reg32 offset="0x88d1" name="RB_BLIT_SCISSOR_TL" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0x88d2" name="RB_BLIT_SCISSOR_BR" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x88d1" name="RB_RESOLVE_CNTL_1" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x88d2" name="RB_RESOLVE_CNTL_2" type="a6xx_reg_xy" usage="rp_blit"/>
+ 	<!-- weird to duplicate other regs from same block?? -->
+-	<reg32 offset="0x88d3" name="RB_BIN_CONTROL2" usage="rp_blit">
++	<reg32 offset="0x88d3" name="RB_RESOLVE_CNTL_3" usage="rp_blit">
+ 		<bitfield name="BINW" low="0" high="5" shr="5" type="uint"/>
+ 		<bitfield name="BINH" low="8" high="14" shr="4" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0x88d4" name="RB_WINDOW_OFFSET2" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0x88d5" name="RB_BLIT_GMEM_MSAA_CNTL" usage="rp_blit">
++	<reg32 offset="0x88d4" name="RB_RESOLVE_WINDOW_OFFSET" type="a6xx_reg_xy" usage="rp_blit"/>
++	<reg32 offset="0x88d5" name="RB_RESOLVE_GMEM_BUFFER_INFO" usage="rp_blit">
+ 		<bitfield name="SAMPLES" low="3" high="4" type="a3xx_msaa_samples"/>
+ 	</reg32>
+-	<reg32 offset="0x88d6" name="RB_BLIT_BASE_GMEM" low="12" high="31" shr="12" usage="rp_blit"/>
++	<reg32 offset="0x88d6" name="RB_RESOLVE_GMEM_BUFFER_BASE" low="12" high="31" shr="12" usage="rp_blit"/>
+ 	<!-- s/DST_FORMAT/DST_INFO/ probably: -->
+-	<reg32 offset="0x88d7" name="RB_BLIT_DST_INFO" usage="rp_blit">
++	<reg32 offset="0x88d7" name="RB_RESOLVE_SYSTEM_BUFFER_INFO" usage="rp_blit">
+ 		<bitfield name="TILE_MODE" low="0" high="1" type="a6xx_tile_mode"/>
+ 		<bitfield name="FLAGS" pos="2" type="boolean"/>
+ 		<bitfield name="SAMPLES" low="3" high="4" type="a3xx_msaa_samples"/>
+@@ -3820,25 +1641,31 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK15" pos="15" type="boolean"/>
+ 		<bitfield name="MUTABLEEN" pos="16" type="boolean" variants="A7XX-"/>
+ 	</reg32>
+-	<reg64 offset="0x88d8" name="RB_BLIT_DST" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x88da" name="RB_BLIT_DST_PITCH" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
++	<reg64 offset="0x88d8" name="RB_RESOLVE_SYSTEM_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x88da" name="RB_RESOLVE_SYSTEM_BUFFER_PITCH" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
+ 	<!-- array-pitch is size of layer -->
+-	<reg32 offset="0x88db" name="RB_BLIT_DST_ARRAY_PITCH" low="0" high="28" shr="6" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0x88dc" name="RB_BLIT_FLAG_DST" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x88de" name="RB_BLIT_FLAG_DST_PITCH" usage="rp_blit">
++	<reg32 offset="0x88db" name="RB_RESOLVE_SYSTEM_BUFFER_ARRAY_PITCH" low="0" high="28" shr="6" type="uint" usage="rp_blit"/>
++	<reg64 offset="0x88dc" name="RB_RESOLVE_SYSTEM_FLAG_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x88de" name="RB_RESOLVE_SYSTEM_FLAG_BUFFER_PITCH" usage="rp_blit">
+ 		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+ 		<bitfield name="ARRAY_PITCH" low="11" high="27" shr="7" type="uint"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x88df" name="RB_BLIT_CLEAR_COLOR_DW0" usage="rp_blit"/>
+-	<reg32 offset="0x88e0" name="RB_BLIT_CLEAR_COLOR_DW1" usage="rp_blit"/>
+-	<reg32 offset="0x88e1" name="RB_BLIT_CLEAR_COLOR_DW2" usage="rp_blit"/>
+-	<reg32 offset="0x88e2" name="RB_BLIT_CLEAR_COLOR_DW3" usage="rp_blit"/>
++	<reg32 offset="0x88df" name="RB_RESOLVE_CLEAR_COLOR_DW0" usage="rp_blit"/>
++	<reg32 offset="0x88e0" name="RB_RESOLVE_CLEAR_COLOR_DW1" usage="rp_blit"/>
++	<reg32 offset="0x88e1" name="RB_RESOLVE_CLEAR_COLOR_DW2" usage="rp_blit"/>
++	<reg32 offset="0x88e2" name="RB_RESOLVE_CLEAR_COLOR_DW3" usage="rp_blit"/>
++
++	<enum name="a6xx_blit_event_type">
++		<value value="0x0" name="BLIT_EVENT_STORE"/>
++		<value value="0x1" name="BLIT_EVENT_STORE_AND_CLEAR"/>
++		<value value="0x2" name="BLIT_EVENT_CLEAR"/>
++		<value value="0x3" name="BLIT_EVENT_LOAD"/>
++	</enum>
+ 
+ 	<!-- seems somewhat similar to what we called RB_CLEAR_CNTL on a5xx: -->
+-	<reg32 offset="0x88e3" name="RB_BLIT_INFO" usage="rp_blit">
+-		<bitfield name="UNK0" pos="0" type="boolean"/> <!-- s8 stencil restore/clear?  But also color restore? -->
+-		<bitfield name="GMEM" pos="1" type="boolean"/> <!-- set for restore and clear to gmem? -->
++	<reg32 offset="0x88e3" name="RB_RESOLVE_OPERATION" usage="rp_blit">
++		<bitfield name="TYPE" low="0" high="1" type="a6xx_blit_event_type"/>
+ 		<bitfield name="SAMPLE_0" pos="2" type="boolean"/> <!-- takes sample 0 instead of averaging -->
+ 		<bitfield name="DEPTH" pos="3" type="boolean"/> <!-- z16/z32/z24s8/x24x8 clear or resolve? -->
+ 		<doc>
+@@ -3853,16 +1680,20 @@ to upconvert to 32b float internally?
+ 		<!-- set when this is the last resolve on a650+ -->
+ 		<bitfield name="LAST" low="8" high="9"/>
+ 		<!--
+-			a618 GLES: color render target number being resolved for RM6_RESOLVE, 0x8 for depth, 0x9 for separate stencil.
+-			a618 VK: 0x8 for depth RM6_RESOLVE, 0x9 for separate stencil, 0 otherwise.
+-
+-			We believe this is related to concurrent resolves
++			a618 GLES: color render target number being resolved for CCU_RESOLVE, 0x8 for depth, 0x9 for separate stencil.
++			a618 VK: 0x8 for depth CCU_RESOLVE, 0x9 for separate stencil, 0 otherwise.
++			a7xx VK: 0x8 for depth, 0x9 for separate stencil, 0x0 to 0x7 used for concurrent resolves of color render
++			targets inside a given resolve group.
+ 		 -->
+ 		<bitfield name="BUFFER_ID" low="12" high="15"/>
+ 	</reg32>
+-	<reg32 offset="0x88e4" name="RB_UNKNOWN_88E4" variants="A7XX-" usage="rp_blit">
+-		<!-- Value conditioned based on predicate, changed before blits -->
+-		<bitfield name="UNK0" pos="0" type="boolean"/>
++
++	<enum name="a7xx_blit_clear_mode">
++		<value value="0x0" name="CLEAR_MODE_SYSMEM"/>
++		<value value="0x1" name="CLEAR_MODE_GMEM"/>
++	</enum>
++	<reg32 offset="0x88e4" name="RB_CLEAR_TARGET" variants="A7XX-" usage="rp_blit">
++			<bitfield name="CLEAR_MODE" pos="0" type="a7xx_blit_clear_mode"/>
+ 	</reg32>
+ 
+ 	<enum name="a6xx_ccu_cache_size">
+@@ -3871,7 +1702,7 @@ to upconvert to 32b float internally?
+ 		<value value="0x2" name="CCU_CACHE_SIZE_QUARTER"/>
+ 		<value value="0x3" name="CCU_CACHE_SIZE_EIGHTH"/>
+ 	</enum>
+-	<reg32 offset="0x88e5" name="RB_CCU_CNTL2" variants="A7XX-" usage="cmd">
++	<reg32 offset="0x88e5" name="RB_CCU_CACHE_CNTL" variants="A7XX-" usage="cmd">
+ 		<bitfield name="DEPTH_OFFSET_HI" pos="0" type="hex"/>
+ 		<bitfield name="COLOR_OFFSET_HI" pos="2" type="hex"/>
+ 		<bitfield name="DEPTH_CACHE_SIZE" low="10" high="11" type="a6xx_ccu_cache_size"/>
+@@ -3895,7 +1726,13 @@ to upconvert to 32b float internally?
+ 		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+ 		<bitfield name="ARRAY_PITCH" low="11" high="23" shr="7" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0x88f4" name="RB_UNKNOWN_88F4" low="0" high="2"/>
++
++	<reg32 offset="0x88f4" name="RB_VRS_CONFIG" usage="rp_blit">
++		<bitfield name="UNK2" pos="2" type="boolean"/>
++		<bitfield name="PIPELINE_FSR_ENABLE" pos="4" type="boolean"/>
++		<bitfield name="ATTACHMENT_FSR_ENABLE" pos="5" type="boolean"/>
++		<bitfield name="PRIMITIVE_FSR_ENABLE" pos="18" type="boolean"/>
++	</reg32>
+ 	<!-- Connected to VK_EXT_fragment_density_map? -->
+ 	<reg32 offset="0x88f5" name="RB_UNKNOWN_88F5" variants="A7XX-"/>
+ 	<!-- 0x88f6-0x88ff invalid -->
+@@ -3906,7 +1743,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK8" low="8" high="10"/>
+ 		<bitfield name="ARRAY_PITCH" low="11" high="27" shr="7" type="uint"/>
+ 	</reg32>
+-	<array offset="0x8903" name="RB_MRT_FLAG_BUFFER" stride="3" length="8" usage="rp_blit">
++	<array offset="0x8903" name="RB_COLOR_FLAG_BUFFER" stride="3" length="8" usage="rp_blit">
+ 		<reg64 offset="0" name="ADDR" type="waddress" align="64"/>
+ 		<reg32 offset="2" name="PITCH">
+ 			<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+@@ -3915,10 +1752,10 @@ to upconvert to 32b float internally?
+ 	</array>
+ 	<!-- 0x891b-0x8926 invalid -->
+ 	<doc>
+-		RB_SAMPLE_COUNT_ADDR register is used up to (and including) a730. After that
++		RB_SAMPLE_COUNTER_BASE register is used up to (and including) a730. After that
+ 		the address is specified through CP_EVENT_WRITE7::WRITE_SAMPLE_COUNT.
+ 	</doc>
+-	<reg64 offset="0x8927" name="RB_SAMPLE_COUNT_ADDR" type="waddress" align="16" usage="cmd"/>
++	<reg64 offset="0x8927" name="RB_SAMPLE_COUNTER_BASE" type="waddress" align="16" usage="cmd"/>
+ 	<!-- 0x8929-0x89ff invalid -->
+ 
+ 	<!-- TODO: there are some registers in the 0x8a00-0x8bff range -->
+@@ -3932,10 +1769,10 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8a20" name="RB_UNKNOWN_8A20" variants="A6XX" usage="rp_blit"/>
+ 	<reg32 offset="0x8a30" name="RB_UNKNOWN_8A30" variants="A6XX" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x8c00" name="RB_2D_BLIT_CNTL" type="a6xx_2d_blit_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x8c01" name="RB_2D_UNKNOWN_8C01" low="0" high="31" usage="rp_blit"/>
++	<reg32 offset="0x8c00" name="RB_A2D_BLT_CNTL" type="a6xx_a2d_bit_cntl" usage="rp_blit"/>
++	<reg32 offset="0x8c01" name="RB_A2D_PIXEL_CNTL" low="0" high="31" usage="rp_blit"/>
+ 
+-	<bitset name="a6xx_2d_src_surf_info" inline="yes">
++	<bitset name="a6xx_a2d_src_texture_info" inline="yes">
+ 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_format"/>
+ 		<bitfield name="TILE_MODE" low="8" high="9" type="a6xx_tile_mode"/>
+ 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+@@ -3954,7 +1791,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="MUTABLEEN" pos="29" type="boolean" variants="A7XX-"/>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_2d_dst_surf_info" inline="yes">
++	<bitset name="a6xx_a2d_dest_buffer_info" inline="yes">
+ 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_format"/>
+ 		<bitfield name="TILE_MODE" low="8" high="9" type="a6xx_tile_mode"/>
+ 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+@@ -3965,26 +1802,26 @@ to upconvert to 32b float internally?
+ 	</bitset>
+ 
+ 	<!-- 0x8c02-0x8c16 invalid -->
+-	<reg32 offset="0x8c17" name="RB_2D_DST_INFO" type="a6xx_2d_dst_surf_info" usage="rp_blit"/>
+-	<reg64 offset="0x8c18" name="RB_2D_DST" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8c1a" name="RB_2D_DST_PITCH" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
++	<reg32 offset="0x8c17" name="RB_A2D_DEST_BUFFER_INFO" type="a6xx_a2d_dest_buffer_info" usage="rp_blit"/>
++	<reg64 offset="0x8c18" name="RB_A2D_DEST_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x8c1a" name="RB_A2D_DEST_BUFFER_PITCH" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
+ 	<!-- this is a guess but seems likely (for NV12/IYUV): -->
+-	<reg64 offset="0x8c1b" name="RB_2D_DST_PLANE1" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8c1d" name="RB_2D_DST_PLANE_PITCH" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0x8c1e" name="RB_2D_DST_PLANE2" type="waddress" align="64" usage="rp_blit"/>
++	<reg64 offset="0x8c1b" name="RB_A2D_DEST_BUFFER_BASE_1" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x8c1d" name="RB_A2D_DEST_BUFFER_PITCH_1" low="0" high="15" shr="6" type="uint" usage="rp_blit"/>
++	<reg64 offset="0x8c1e" name="RB_A2D_DEST_BUFFER_BASE_2" type="waddress" align="64" usage="rp_blit"/>
+ 
+-	<reg64 offset="0x8c20" name="RB_2D_DST_FLAGS" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8c22" name="RB_2D_DST_FLAGS_PITCH" low="0" high="7" shr="6" type="uint" usage="rp_blit"/>
++	<reg64 offset="0x8c20" name="RB_A2D_DEST_FLAG_BUFFER_BASE" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x8c22" name="RB_A2D_DEST_FLAG_BUFFER_PITCH" low="0" high="7" shr="6" type="uint" usage="rp_blit"/>
+ 	<!-- this is a guess but seems likely (for NV12 with UBWC): -->
+-	<reg64 offset="0x8c23" name="RB_2D_DST_FLAGS_PLANE" type="waddress" align="64" usage="rp_blit"/>
+-	<reg32 offset="0x8c25" name="RB_2D_DST_FLAGS_PLANE_PITCH" low="0" high="7" shr="6" type="uint" usage="rp_blit"/>
++	<reg64 offset="0x8c23" name="RB_A2D_DEST_FLAG_BUFFER_BASE_1" type="waddress" align="64" usage="rp_blit"/>
++	<reg32 offset="0x8c25" name="RB_A2D_DEST_FLAG_BUFFER_PITCH_1" low="0" high="7" shr="6" type="uint" usage="rp_blit"/>
+ 
+ 	<!-- TODO: 0x8c26-0x8c33 are all full 32-bit registers -->
+ 	<!-- unlike a5xx, these are per channel values rather than packed -->
+-	<reg32 offset="0x8c2c" name="RB_2D_SRC_SOLID_C0" usage="rp_blit"/>
+-	<reg32 offset="0x8c2d" name="RB_2D_SRC_SOLID_C1" usage="rp_blit"/>
+-	<reg32 offset="0x8c2e" name="RB_2D_SRC_SOLID_C2" usage="rp_blit"/>
+-	<reg32 offset="0x8c2f" name="RB_2D_SRC_SOLID_C3" usage="rp_blit"/>
++	<reg32 offset="0x8c2c" name="RB_A2D_CLEAR_COLOR_DW0" usage="rp_blit"/>
++	<reg32 offset="0x8c2d" name="RB_A2D_CLEAR_COLOR_DW1" usage="rp_blit"/>
++	<reg32 offset="0x8c2e" name="RB_A2D_CLEAR_COLOR_DW2" usage="rp_blit"/>
++	<reg32 offset="0x8c2f" name="RB_A2D_CLEAR_COLOR_DW3" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0x8c34" name="RB_UNKNOWN_8C34" variants="A7XX-" usage="cmd"/>
+ 
+@@ -3996,7 +1833,7 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8e04" name="RB_DBG_ECO_CNTL" usage="cmd"/> <!-- TODO: valid mask 0xfffffeff -->
+ 	<reg32 offset="0x8e05" name="RB_ADDR_MODE_CNTL" pos="0" type="a5xx_address_mode"/>
+ 	<!-- 0x02080000 in GMEM, zero otherwise?  -->
+-	<reg32 offset="0x8e06" name="RB_UNKNOWN_8E06" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0x8e06" name="RB_CCU_DBG_ECO_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+ 	<reg32 offset="0x8e07" name="RB_CCU_CNTL" usage="cmd" variants="A6XX">
+ 		<bitfield name="GMEM_FAST_CLEAR_DISABLE" pos="0" type="boolean"/>
+@@ -4017,10 +1854,21 @@ to upconvert to 32b float internally?
+ 		<bitfield name="COLOR_OFFSET" low="23" high="31" shr="12" type="hex"/>
+ 		<!--TODO: valid mask 0xfffffc1f -->
+ 	</reg32>
++	<enum name="a7xx_concurrent_resolve_mode">
++		<value value="0x0" name="CONCURRENT_RESOLVE_MODE_DISABLED"/>
++		<value value="0x1" name="CONCURRENT_RESOLVE_MODE_1"/>
++		<value value="0x2" name="CONCURRENT_RESOLVE_MODE_2"/>
++	</enum>
++	<enum name="a7xx_concurrent_unresolve_mode">
++		<value value="0x0" name="CONCURRENT_UNRESOLVE_MODE_DISABLED"/>
++		<value value="0x1" name="CONCURRENT_UNRESOLVE_MODE_PARTIAL"/>
++		<value value="0x3" name="CONCURRENT_UNRESOLVE_MODE_FULL"/>
++	</enum>
+ 	<reg32 offset="0x8e07" name="RB_CCU_CNTL" usage="cmd" variants="A7XX-">
+ 		<bitfield name="GMEM_FAST_CLEAR_DISABLE" pos="0" type="boolean"/>
+-		<bitfield name="CONCURRENT_RESOLVE" pos="2" type="boolean"/>
+-		<!-- rest of the bits were moved to RB_CCU_CNTL2 -->
++		<bitfield name="CONCURRENT_RESOLVE_MODE" low="2" high="3" type="a7xx_concurrent_resolve_mode"/>
++		<bitfield name="CONCURRENT_UNRESOLVE_MODE" low="5" high="6" type="a7xx_concurrent_unresolve_mode"/>
++		<!-- rest of the bits were moved to RB_CCU_CACHE_CNTL -->
+ 	</reg32>
+ 	<reg32 offset="0x8e08" name="RB_NC_MODE_CNTL">
+ 		<bitfield name="MODE" pos="0" type="boolean"/>
+@@ -4046,9 +1894,9 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8e3d" name="RB_RB_SUB_BLOCK_SEL_CNTL_CD"/>
+ 	<!-- 0x8e3e-0x8e4f invalid -->
+ 	<!-- GMEM save/restore for preemption: -->
+-	<reg32 offset="0x8e50" name="RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE" pos="0" type="boolean"/>
++	<reg32 offset="0x8e50" name="RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE_ENABLE" pos="0" type="boolean"/>
+ 	<!-- address for GMEM save/restore? -->
+-	<reg32 offset="0x8e51" name="RB_UNKNOWN_8E51" type="waddress" align="1"/>
++	<reg32 offset="0x8e51" name="RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE_ADDR" type="waddress" align="1"/>
+ 	<!-- 0x8e53-0x8e7f invalid -->
+ 	<reg32 offset="0x8e79" name="RB_UNKNOWN_8E79" variants="A7XX-" usage="cmd"/>
+ 	<!-- 0x8e80-0x8e83 are valid -->
+@@ -4069,38 +1917,38 @@ to upconvert to 32b float internally?
+ 		<bitfield name="CLIP_DIST_03_LOC" low="8" high="15" type="uint"/>
+ 		<bitfield name="CLIP_DIST_47_LOC" low="16" high="23" type="uint"/>
+ 	</bitset>
+-	<reg32 offset="0x9101" name="VPC_VS_CLIP_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9102" name="VPC_GS_CLIP_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9103" name="VPC_DS_CLIP_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9101" name="VPC_VS_CLIP_CULL_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9102" name="VPC_GS_CLIP_CULL_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9103" name="VPC_DS_CLIP_CULL_CNTL" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x9311" name="VPC_VS_CLIP_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9312" name="VPC_GS_CLIP_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9313" name="VPC_DS_CLIP_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9311" name="VPC_VS_CLIP_CULL_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9312" name="VPC_GS_CLIP_CULL_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9313" name="VPC_DS_CLIP_CULL_CNTL_V2" type="a6xx_vpc_xs_clip_cntl" usage="rp_blit"/>
+ 
+-	<bitset name="a6xx_vpc_xs_layer_cntl" inline="yes">
++	<bitset name="a6xx_vpc_xs_siv_cntl" inline="yes">
+ 		<bitfield name="LAYERLOC" low="0" high="7" type="uint"/>
+ 		<bitfield name="VIEWLOC" low="8" high="15" type="uint"/>
+ 		<bitfield name="SHADINGRATELOC" low="16" high="23" type="uint" variants="A7XX-"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0x9104" name="VPC_VS_LAYER_CNTL" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9105" name="VPC_GS_LAYER_CNTL" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9106" name="VPC_DS_LAYER_CNTL" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9104" name="VPC_VS_SIV_CNTL" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9105" name="VPC_GS_SIV_CNTL" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9106" name="VPC_DS_SIV_CNTL" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x9314" name="VPC_VS_LAYER_CNTL_V2" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9315" name="VPC_GS_LAYER_CNTL_V2" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9316" name="VPC_DS_LAYER_CNTL_V2" type="a6xx_vpc_xs_layer_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9314" name="VPC_VS_SIV_CNTL_V2" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9315" name="VPC_GS_SIV_CNTL_V2" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9316" name="VPC_DS_SIV_CNTL_V2" type="a6xx_vpc_xs_siv_cntl" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0x9107" name="VPC_UNKNOWN_9107" variants="A6XX" usage="rp_blit">
+-		<!-- this mirrors PC_RASTER_CNTL::DISCARD, although it seems it's unused -->
++		<!-- this mirrors VPC_RAST_STREAM_CNTL::DISCARD, although it seems it's unused -->
+ 		<bitfield name="RASTER_DISCARD" pos="0" type="boolean"/>
+ 		<bitfield name="UNK2" pos="2" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x9108" name="VPC_POLYGON_MODE" usage="rp_blit">
++	<reg32 offset="0x9108" name="VPC_RAST_CNTL" usage="rp_blit">
+ 		<bitfield name="MODE" low="0" high="1" type="a6xx_polygon_mode"/>
+ 	</reg32>
+ 
+-	<bitset name="a6xx_primitive_cntl_0" inline="yes">
++	<bitset name="a6xx_pc_cntl" inline="yes">
+ 		<bitfield name="PRIMITIVE_RESTART" pos="0" type="boolean"/>
+ 		<bitfield name="PROVOKING_VTX_LAST" pos="1" type="boolean"/>
+ 		<bitfield name="D3D_VERTEX_ORDERING" pos="2" type="boolean">
+@@ -4113,7 +1961,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK3" pos="3" type="boolean"/>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_primitive_cntl_5" inline="yes">
++	<bitset name="a6xx_gs_param_0" inline="yes">
+ 		<doc>
+ 		  geometry shader
+ 		</doc>
+@@ -4125,7 +1973,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="UNK18" pos="18"/>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_multiview_cntl" inline="yes">
++	<bitset name="a6xx_stereo_rendering_cntl" inline="yes">
+ 		<bitfield name="ENABLE" pos="0" type="boolean"/>
+ 		<bitfield name="DISABLEMULTIPOS" pos="1" type="boolean">
+ 			<doc>
+@@ -4139,10 +1987,10 @@ to upconvert to 32b float internally?
+ 		<bitfield name="VIEWS" low="2" high="6" type="uint"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0x9109" name="VPC_PRIMITIVE_CNTL_0" type="a6xx_primitive_cntl_0" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0x910a" name="VPC_PRIMITIVE_CNTL_5" type="a6xx_primitive_cntl_5" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0x910b" name="VPC_MULTIVIEW_MASK" type="hex" low="0" high="15" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0x910c" name="VPC_MULTIVIEW_CNTL" type="a6xx_multiview_cntl" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0x9109" name="VPC_PC_CNTL" type="a6xx_pc_cntl" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0x910a" name="VPC_GS_PARAM_0" type="a6xx_gs_param_0" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0x910b" name="VPC_STEREO_RENDERING_VIEWMASK" type="hex" low="0" high="15" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0x910c" name="VPC_STEREO_RENDERING_CNTL" type="a6xx_stereo_rendering_cntl" variants="A7XX-" usage="rp_blit"/>
+ 
+ 	<enum name="a6xx_varying_interp_mode">
+ 		<value value="0" name="INTERP_SMOOTH"/>
+@@ -4159,11 +2007,11 @@ to upconvert to 32b float internally?
+ 	</enum>
+ 
+ 	<!-- 0x9109-0x91ff invalid -->
+-	<array offset="0x9200" name="VPC_VARYING_INTERP" stride="1" length="8" usage="rp_blit">
++	<array offset="0x9200" name="VPC_VARYING_INTERP_MODE" stride="1" length="8" usage="rp_blit">
+ 		<doc>Packed array of a6xx_varying_interp_mode</doc>
+ 		<reg32 offset="0x0" name="MODE"/>
+ 	</array>
+-	<array offset="0x9208" name="VPC_VARYING_PS_REPL" stride="1" length="8" usage="rp_blit">
++	<array offset="0x9208" name="VPC_VARYING_REPLACE_MODE_0" stride="1" length="8" usage="rp_blit">
+ 		<doc>Packed array of a6xx_varying_ps_repl_mode</doc>
+ 		<reg32 offset="0x0" name="MODE"/>
+ 	</array>
+@@ -4172,12 +2020,12 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x9210" name="VPC_UNKNOWN_9210" low="0" high="31" variants="A6XX" usage="cmd"/>
+ 	<reg32 offset="0x9211" name="VPC_UNKNOWN_9211" low="0" high="31" variants="A6XX" usage="cmd"/>
+ 
+-	<array offset="0x9212" name="VPC_VAR" stride="1" length="4" usage="rp_blit">
++	<array offset="0x9212" name="VPC_VARYING_LM_TRANSFER_CNTL_0" stride="1" length="4" usage="rp_blit">
+ 		<!-- one bit per varying component: -->
+ 		<reg32 offset="0" name="DISABLE"/>
+ 	</array>
+ 
+-	<reg32 offset="0x9216" name="VPC_SO_CNTL" usage="rp_blit">
++	<reg32 offset="0x9216" name="VPC_SO_MAPPING_WPTR" usage="rp_blit">
+ 		<!--
+ 			Choose which DWORD to write to. There is an array of
+ 			(4 * 64) DWORD's, dumped in the devcoredump at
+@@ -4198,7 +2046,7 @@ to upconvert to 32b float internally?
+ 			When EmitStreamVertex(N) happens, the HW goes to DWORD
+ 			64 * N and then "executes" the next 64 DWORD's.
+ 
+-			This field is auto-incremented when VPC_SO_PROG is
++			This field is auto-incremented when VPC_SO_MAPPING_PORT is
+ 			written to.
+ 		-->
+ 		<bitfield name="ADDR" low="0" high="7" type="hex"/>
+@@ -4206,7 +2054,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="RESET" pos="16" type="boolean"/>
+ 	</reg32>
+ 	<!-- special register, write multiple times to load SO program (not readable) -->
+-	<reg32 offset="0x9217" name="VPC_SO_PROG" usage="rp_blit">
++	<reg32 offset="0x9217" name="VPC_SO_MAPPING_PORT" usage="rp_blit">
+ 		<bitfield name="A_BUF" low="0" high="1" type="uint"/>
+ 		<bitfield name="A_OFF" low="2" high="10" shr="2" type="uint"/>
+ 		<bitfield name="A_EN" pos="11" type="boolean"/>
+@@ -4215,7 +2063,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="B_EN" pos="23" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg64 offset="0x9218" name="VPC_SO_STREAM_COUNTS" type="waddress" align="32" usage="cmd"/>
++	<reg64 offset="0x9218" name="VPC_SO_QUERY_BASE" type="waddress" align="32" usage="cmd"/>
+ 
+ 	<array offset="0x921a" name="VPC_SO" stride="7" length="4" usage="cmd">
+ 		<reg64 offset="0" name="BUFFER_BASE" type="waddress" align="32"/>
+@@ -4225,14 +2073,14 @@ to upconvert to 32b float internally?
+ 		<reg64 offset="5" name="FLUSH_BASE" type="waddress" align="32"/>
+ 	</array>
+ 
+-	<reg32 offset="0x9236" name="VPC_POINT_COORD_INVERT" usage="cmd">
++	<reg32 offset="0x9236" name="VPC_REPLACE_MODE_CNTL" usage="cmd">
+ 		<bitfield name="INVERT" pos="0" type="boolean"/>
+ 	</reg32>
+ 	<!-- 0x9237-0x92ff invalid -->
+ 	<!-- always 0x0 ? -->
+ 	<reg32 offset="0x9300" name="VPC_UNKNOWN_9300" low="0" high="2" usage="cmd"/>
+ 
+-	<bitset name="a6xx_vpc_xs_pack" inline="yes">
++	<bitset name="a6xx_vpc_xs_cntl" inline="yes">
+ 		<doc>
+ 			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+ 			plus # of transform-feedback (streamout) varyings if using the
+@@ -4249,11 +2097,11 @@ to upconvert to 32b float internally?
+ 			</doc>
+ 		</bitfield>
+ 	</bitset>
+-	<reg32 offset="0x9301" name="VPC_VS_PACK" type="a6xx_vpc_xs_pack" usage="rp_blit"/>
+-	<reg32 offset="0x9302" name="VPC_GS_PACK" type="a6xx_vpc_xs_pack" usage="rp_blit"/>
+-	<reg32 offset="0x9303" name="VPC_DS_PACK" type="a6xx_vpc_xs_pack" usage="rp_blit"/>
++	<reg32 offset="0x9301" name="VPC_VS_CNTL" type="a6xx_vpc_xs_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9302" name="VPC_GS_CNTL" type="a6xx_vpc_xs_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9303" name="VPC_DS_CNTL" type="a6xx_vpc_xs_cntl" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x9304" name="VPC_CNTL_0" usage="rp_blit">
++	<reg32 offset="0x9304" name="VPC_PS_CNTL" usage="rp_blit">
+ 		<bitfield name="NUMNONPOSVAR" low="0" high="7" type="uint"/>
+ 		<!-- for fixed-function (i.e. no GS) gl_PrimitiveID in FS -->
+ 		<bitfield name="PRIMIDLOC" low="8" high="15" type="uint"/>
+@@ -4272,7 +2120,7 @@ to upconvert to 32b float internally?
+ 		</bitfield>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9305" name="VPC_SO_STREAM_CNTL" usage="rp_blit">
++	<reg32 offset="0x9305" name="VPC_SO_CNTL" usage="rp_blit">
+ 		<!--
+ 		It's offset by 1, and 0 means "disabled"
+ 		-->
+@@ -4282,19 +2130,19 @@ to upconvert to 32b float internally?
+ 		<bitfield name="BUF3_STREAM" low="9" high="11" type="uint"/>
+ 		<bitfield name="STREAM_ENABLE" low="15" high="18" type="hex"/>
+ 	</reg32>
+-	<reg32 offset="0x9306" name="VPC_SO_DISABLE" usage="rp_blit">
++	<reg32 offset="0x9306" name="VPC_SO_OVERRIDE" usage="rp_blit">
+ 		<bitfield name="DISABLE" pos="0" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x9307" name="VPC_POLYGON_MODE2" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9307" name="VPC_PS_RAST_CNTL" variants="A6XX-" usage="rp_blit"> <!-- A702 + A7xx -->
+ 		<bitfield name="MODE" low="0" high="1" type="a6xx_polygon_mode"/>
+ 	</reg32>
+-	<reg32 offset="0x9308" name="VPC_ATTR_BUF_SIZE_GMEM" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9308" name="VPC_ATTR_BUF_GMEM_SIZE" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="SIZE_GMEM" low="0" high="31"/>
+ 	</reg32>
+-	<reg32 offset="0x9309" name="VPC_ATTR_BUF_BASE_GMEM" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9309" name="VPC_ATTR_BUF_GMEM_BASE" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="BASE_GMEM" low="0" high="31"/>
+ 	</reg32>
+-	<reg32 offset="0x9b09" name="PC_ATTR_BUF_SIZE_GMEM" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9b09" name="PC_ATTR_BUF_GMEM_SIZE" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="SIZE_GMEM" low="0" high="31"/>
+ 	</reg32>
+ 
+@@ -4311,15 +2159,15 @@ to upconvert to 32b float internally?
+ 	<!-- TODO: regs from 0x9624-0x963a -->
+ 	<!-- 0x963b-0x97ff invalid -->
+ 
+-	<reg32 offset="0x9800" name="PC_TESS_NUM_VERTEX" low="0" high="5" type="uint" usage="rp_blit"/>
++	<reg32 offset="0x9800" name="PC_HS_PARAM_0" low="0" high="5" type="uint" usage="rp_blit"/>
+ 
+ 	<!-- always 0x0 ? -->
+-	<reg32 offset="0x9801" name="PC_HS_INPUT_SIZE" usage="rp_blit">
++	<reg32 offset="0x9801" name="PC_HS_PARAM_1" usage="rp_blit">
+ 		<bitfield name="SIZE" low="0" high="10" type="uint"/>
+ 		<bitfield name="UNK13" pos="13"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9802" name="PC_TESS_CNTL" usage="rp_blit">
++	<reg32 offset="0x9802" name="PC_DS_PARAM" usage="rp_blit">
+ 		<bitfield name="SPACING" low="0" high="1" type="a6xx_tess_spacing"/>
+ 		<bitfield name="OUTPUT" low="2" high="3" type="a6xx_tess_output"/>
+ 	</reg32>
+@@ -4334,7 +2182,7 @@ to upconvert to 32b float internally?
+ 	</reg32>
+ 
+ 	<!-- New in a6xx gen3+ -->
+-	<reg32 offset="0x9808" name="PC_SO_STREAM_CNTL" usage="rp_blit">
++	<reg32 offset="0x9808" name="PC_DGEN_SO_CNTL" usage="rp_blit">
+ 		<bitfield name="STREAM_ENABLE" low="15" high="18" type="hex"/>
+ 	</reg32>
+ 
+@@ -4344,15 +2192,15 @@ to upconvert to 32b float internally?
+ 	<!-- 0x980b-0x983f invalid -->
+ 
+ 	<!-- 0x9840 - 0x9842 are not readable -->
+-	<reg32 offset="0x9840" name="PC_DRAW_CMD">
++	<reg32 offset="0x9840" name="PC_DRAW_INITIATOR">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9841" name="PC_DISPATCH_CMD">
++	<reg32 offset="0x9841" name="PC_KERNEL_INITIATOR">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9842" name="PC_EVENT_CMD">
++	<reg32 offset="0x9842" name="PC_EVENT_INITIATOR">
+ 		<!-- I think only the low bit is actually used? -->
+ 		<bitfield name="STATE_ID" low="16" high="23"/>
+ 		<bitfield name="EVENT" low="0" high="6" type="vgt_event_type"/>
+@@ -4367,27 +2215,27 @@ to upconvert to 32b float internally?
+ 
+ 	<!-- 0x9843-0x997f invalid -->
+ 
+-	<reg32 offset="0x9981" name="PC_POLYGON_MODE" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0x9981" name="PC_DGEN_RAST_CNTL" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="MODE" low="0" high="1" type="a6xx_polygon_mode"/>
+ 	</reg32>
+-	<reg32 offset="0x9809" name="PC_POLYGON_MODE" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9809" name="PC_DGEN_RAST_CNTL" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="MODE" low="0" high="1" type="a6xx_polygon_mode"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9980" name="PC_RASTER_CNTL" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0x9980" name="VPC_RAST_STREAM_CNTL" variants="A6XX" usage="rp_blit">
+ 		<!-- which stream to send to GRAS -->
+ 		<bitfield name="STREAM" low="0" high="1" type="uint"/>
+ 		<!-- discard primitives before rasterization -->
+ 		<bitfield name="DISCARD" pos="2" type="boolean"/>
+ 	</reg32>
+-	<!-- VPC_RASTER_CNTL -->
+-	<reg32 offset="0x9107" name="PC_RASTER_CNTL" variants="A7XX-" usage="rp_blit">
++	<!-- VPC_RAST_STREAM_CNTL -->
++	<reg32 offset="0x9107" name="VPC_RAST_STREAM_CNTL" variants="A7XX-" usage="rp_blit">
+ 		<!-- which stream to send to GRAS -->
+ 		<bitfield name="STREAM" low="0" high="1" type="uint"/>
+ 		<!-- discard primitives before rasterization -->
+ 		<bitfield name="DISCARD" pos="2" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0x9317" name="PC_RASTER_CNTL_V2" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0x9317" name="VPC_RAST_STREAM_CNTL_V2" variants="A7XX-" usage="rp_blit">
+ 		<!-- which stream to send to GRAS -->
+ 		<bitfield name="STREAM" low="0" high="1" type="uint"/>
+ 		<!-- discard primitives before rasterization -->
+@@ -4397,17 +2245,17 @@ to upconvert to 32b float internally?
+ 	<!-- Both are a750+.
+ 	     Probably needed to correctly overlap execution of several draws.
+ 	-->
+-	<reg32 offset="0x9885" name="PC_TESS_PARAM_SIZE" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0x9885" name="PC_HS_BUFFER_SIZE" variants="A7XX-" usage="cmd"/>
+ 	<!-- Blob adds a bit more space {0x10, 0x20, 0x30, 0x40} bytes, but the meaning of
+ 	     this additional space is not known.
+ 	-->
+-	<reg32 offset="0x9886" name="PC_TESS_FACTOR_SIZE" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0x9886" name="PC_TF_BUFFER_SIZE" variants="A7XX-" usage="cmd"/>
+ 
+ 	<!-- 0x9982-0x9aff invalid -->
+ 
+-	<reg32 offset="0x9b00" name="PC_PRIMITIVE_CNTL_0" type="a6xx_primitive_cntl_0" usage="rp_blit"/>
++	<reg32 offset="0x9b00" name="PC_CNTL" type="a6xx_pc_cntl" usage="rp_blit"/>
+ 
+-	<bitset name="a6xx_xs_out_cntl" inline="yes">
++	<bitset name="a6xx_pc_xs_cntl" inline="yes">
+ 		<doc>
+ 			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+ 			plus # of transform-feedback (streamout) varyings if using the
+@@ -4417,19 +2265,19 @@ to upconvert to 32b float internally?
+ 		<bitfield name="PSIZE" pos="8" type="boolean"/>
+ 		<bitfield name="LAYER" pos="9" type="boolean"/>
+ 		<bitfield name="VIEW" pos="10" type="boolean"/>
+-		<!-- note: PC_VS_OUT_CNTL doesn't have the PRIMITIVE_ID bit -->
++		<!-- note: PC_VS_CNTL doesn't have the PRIMITIVE_ID bit -->
+ 		<bitfield name="PRIMITIVE_ID" pos="11" type="boolean"/>
+ 		<bitfield name="CLIP_MASK" low="16" high="23" type="uint"/>
+ 		<bitfield name="SHADINGRATE" pos="24" type="boolean" variants="A7XX-"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0x9b01" name="PC_VS_OUT_CNTL" type="a6xx_xs_out_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9b02" name="PC_GS_OUT_CNTL" type="a6xx_xs_out_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9b01" name="PC_VS_CNTL" type="a6xx_pc_xs_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9b02" name="PC_GS_CNTL" type="a6xx_pc_xs_cntl" usage="rp_blit"/>
+ 	<!-- since HS can't output anything, only PRIMITIVE_ID is valid -->
+-	<reg32 offset="0x9b03" name="PC_HS_OUT_CNTL" type="a6xx_xs_out_cntl" usage="rp_blit"/>
+-	<reg32 offset="0x9b04" name="PC_DS_OUT_CNTL" type="a6xx_xs_out_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9b03" name="PC_HS_CNTL" type="a6xx_pc_xs_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9b04" name="PC_DS_CNTL" type="a6xx_pc_xs_cntl" usage="rp_blit"/>
+ 
+-	<reg32 offset="0x9b05" name="PC_PRIMITIVE_CNTL_5" type="a6xx_primitive_cntl_5" usage="rp_blit"/>
++	<reg32 offset="0x9b05" name="PC_GS_PARAM_0" type="a6xx_gs_param_0" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0x9b06" name="PC_PRIMITIVE_CNTL_6" variants="A6XX" usage="rp_blit">
+ 		<doc>
+@@ -4438,9 +2286,9 @@ to upconvert to 32b float internally?
+ 		<bitfield name="STRIDE_IN_VPC" low="0" high="10" type="uint"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0x9b07" name="PC_MULTIVIEW_CNTL" type="a6xx_multiview_cntl" usage="rp_blit"/>
++	<reg32 offset="0x9b07" name="PC_STEREO_RENDERING_CNTL" type="a6xx_stereo_rendering_cntl" usage="rp_blit"/>
+ 	<!-- mask of enabled views, doesn't exist on A630 -->
+-	<reg32 offset="0x9b08" name="PC_MULTIVIEW_MASK" type="hex" low="0" high="15" usage="rp_blit"/>
++	<reg32 offset="0x9b08" name="PC_STEREO_RENDERING_VIEWMASK" type="hex" low="0" high="15" usage="rp_blit"/>
+ 	<!-- 0x9b09-0x9bff invalid -->
+ 	<reg32 offset="0x9c00" name="PC_2D_EVENT_CMD">
+ 		<!-- special register (but note first 8 bits can be written/read) -->
+@@ -4451,31 +2299,31 @@ to upconvert to 32b float internally?
+ 	<!-- TODO: 0x9e00-0xa000 range incomplete -->
+ 	<reg32 offset="0x9e00" name="PC_DBG_ECO_CNTL"/>
+ 	<reg32 offset="0x9e01" name="PC_ADDR_MODE_CNTL" type="a5xx_address_mode"/>
+-	<reg64 offset="0x9e04" name="PC_DRAW_INDX_BASE"/>
+-	<reg32 offset="0x9e06" name="PC_DRAW_FIRST_INDX" type="uint"/>
+-	<reg32 offset="0x9e07" name="PC_DRAW_MAX_INDICES" type="uint"/>
+-	<reg64 offset="0x9e08" name="PC_TESSFACTOR_ADDR" variants="A6XX" type="waddress" align="32" usage="cmd"/>
+-	<reg64 offset="0x9810" name="PC_TESSFACTOR_ADDR" variants="A7XX-" type="waddress" align="32" usage="cmd"/>
++	<reg64 offset="0x9e04" name="PC_DMA_BASE"/>
++	<reg32 offset="0x9e06" name="PC_DMA_OFFSET" type="uint"/>
++	<reg32 offset="0x9e07" name="PC_DMA_SIZE" type="uint"/>
++	<reg64 offset="0x9e08" name="PC_TESS_BASE" variants="A6XX" type="waddress" align="32" usage="cmd"/>
++	<reg64 offset="0x9810" name="PC_TESS_BASE" variants="A7XX-" type="waddress" align="32" usage="cmd"/>
+ 
+-	<reg32 offset="0x9e0b" name="PC_DRAW_INITIATOR" type="vgt_draw_initiator_a4xx">
++	<reg32 offset="0x9e0b" name="PC_DRAWCALL_CNTL" type="vgt_draw_initiator_a4xx">
+ 		<doc>
+ 			Possibly not really "initiating" the draw but the layout is similar
+ 			to VGT_DRAW_INITIATOR on older gens
+ 		</doc>
+ 	</reg32>
+-	<reg32 offset="0x9e0c" name="PC_DRAW_NUM_INSTANCES" type="uint"/>
+-	<reg32 offset="0x9e0d" name="PC_DRAW_NUM_INDICES" type="uint"/>
++	<reg32 offset="0x9e0c" name="PC_DRAWCALL_INSTANCE_NUM" type="uint"/>
++	<reg32 offset="0x9e0d" name="PC_DRAWCALL_SIZE" type="uint"/>
+ 
+ 	<!-- These match the contents of CP_SET_BIN_DATA (not written directly) -->
+-	<reg32 offset="0x9e11" name="PC_VSTREAM_CONTROL">
++	<reg32 offset="0x9e11" name="PC_VIS_STREAM_CNTL">
+ 		<bitfield name="UNK0" low="0" high="15"/>
+ 		<bitfield name="VSC_SIZE" low="16" high="21" type="uint"/>
+ 		<bitfield name="VSC_N" low="22" high="26" type="uint"/>
+ 	</reg32>
+-	<reg64 offset="0x9e12" name="PC_BIN_PRIM_STRM" type="waddress" align="32"/>
+-	<reg64 offset="0x9e14" name="PC_BIN_DRAW_STRM" type="waddress" align="32"/>
++	<reg64 offset="0x9e12" name="PC_PVIS_STREAM_BIN_BASE" type="waddress" align="32"/>
++	<reg64 offset="0x9e14" name="PC_DVIS_STREAM_BIN_BASE" type="waddress" align="32"/>
+ 
+-	<reg32 offset="0x9e1c" name="PC_VISIBILITY_OVERRIDE">
++	<reg32 offset="0x9e1c" name="PC_DRAWCALL_CNTL_OVERRIDE">
+ 		<doc>Written by CP_SET_VISIBILITY_OVERRIDE handler</doc>
+ 		<bitfield name="OVERRIDE" pos="0" type="boolean"/>
+ 	</reg32>
+@@ -4488,18 +2336,18 @@ to upconvert to 32b float internally?
+ 	<!-- always 0x0 -->
+ 	<reg32 offset="0x9e72" name="PC_UNKNOWN_9E72" usage="cmd"/>
+ 
+-	<reg32 offset="0xa000" name="VFD_CONTROL_0" usage="rp_blit">
++	<reg32 offset="0xa000" name="VFD_CNTL_0" usage="rp_blit">
+ 		<bitfield name="FETCH_CNT" low="0" high="5" type="uint"/>
+ 		<bitfield name="DECODE_CNT" low="8" high="13" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa001" name="VFD_CONTROL_1" usage="rp_blit">
++	<reg32 offset="0xa001" name="VFD_CNTL_1" usage="rp_blit">
+ 		<bitfield name="REGID4VTX" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="REGID4INST" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="REGID4PRIMID" low="16" high="23" type="a3xx_regid"/>
+ 		<!-- only used for VS in non-multi-position-output case -->
+ 		<bitfield name="REGID4VIEWID" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa002" name="VFD_CONTROL_2" usage="rp_blit">
++	<reg32 offset="0xa002" name="VFD_CNTL_2" usage="rp_blit">
+ 		<bitfield name="REGID_HSRELPATCHID" low="0" high="7" type="a3xx_regid">
+ 			<doc>
+ 				This is the ID of the current patch within the
+@@ -4512,32 +2360,32 @@ to upconvert to 32b float internally?
+ 		</bitfield>
+ 		<bitfield name="REGID_INVOCATIONID" low="8" high="15" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa003" name="VFD_CONTROL_3" usage="rp_blit">
++	<reg32 offset="0xa003" name="VFD_CNTL_3" usage="rp_blit">
+ 		<bitfield name="REGID_DSPRIMID" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="REGID_DSRELPATCHID" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="REGID_TESSX" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="REGID_TESSY" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa004" name="VFD_CONTROL_4" usage="rp_blit">
++	<reg32 offset="0xa004" name="VFD_CNTL_4" usage="rp_blit">
+ 		<bitfield name="UNK0" low="0" high="7" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa005" name="VFD_CONTROL_5" usage="rp_blit">
++	<reg32 offset="0xa005" name="VFD_CNTL_5" usage="rp_blit">
+ 		<bitfield name="REGID_GSHEADER" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="UNK8" low="8" high="15" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa006" name="VFD_CONTROL_6" usage="rp_blit">
++	<reg32 offset="0xa006" name="VFD_CNTL_6" usage="rp_blit">
+ 		<!--
+ 			True if gl_PrimitiveID is read via the FS
+ 		-->
+ 		<bitfield name="PRIMID4PSEN" pos="0" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xa007" name="VFD_MODE_CNTL" usage="cmd">
++	<reg32 offset="0xa007" name="VFD_RENDER_MODE" usage="cmd">
+ 		<bitfield name="RENDER_MODE" low="0" high="2" type="a6xx_render_mode"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xa008" name="VFD_MULTIVIEW_CNTL" type="a6xx_multiview_cntl" usage="rp_blit"/>
+-	<reg32 offset="0xa009" name="VFD_ADD_OFFSET" usage="cmd">
++	<reg32 offset="0xa008" name="VFD_STEREO_RENDERING_CNTL" type="a6xx_stereo_rendering_cntl" usage="rp_blit"/>
++	<reg32 offset="0xa009" name="VFD_MODE_CNTL" usage="cmd">
+ 		<!-- add VFD_INDEX_OFFSET to REGID4VTX -->
+ 		<bitfield name="VERTEX" pos="0" type="boolean"/>
+ 		<!-- add VFD_INSTANCE_START_OFFSET to REGID4INST -->
+@@ -4546,14 +2394,14 @@ to upconvert to 32b float internally?
+ 
+ 	<reg32 offset="0xa00e" name="VFD_INDEX_OFFSET" usage="rp_blit"/>
+ 	<reg32 offset="0xa00f" name="VFD_INSTANCE_START_OFFSET" usage="rp_blit"/>
+-	<array offset="0xa010" name="VFD_FETCH" stride="4" length="32" usage="rp_blit">
++	<array offset="0xa010" name="VFD_VERTEX_BUFFER" stride="4" length="32" usage="rp_blit">
+ 		<reg64 offset="0x0" name="BASE" type="address" align="1"/>
+ 		<reg32 offset="0x2" name="SIZE" type="uint"/>
+ 		<reg32 offset="0x3" name="STRIDE" low="0" high="11" type="uint"/>
+ 	</array>
+-	<array offset="0xa090" name="VFD_DECODE" stride="2" length="32" usage="rp_blit">
++	<array offset="0xa090" name="VFD_FETCH_INSTR" stride="2" length="32" usage="rp_blit">
+ 		<reg32 offset="0x0" name="INSTR">
+-			<!-- IDX and byte OFFSET into VFD_FETCH -->
++			<!-- IDX and byte OFFSET into VFD_VERTEX_BUFFER -->
+ 			<bitfield name="IDX" low="0" high="4" type="uint"/>
+ 			<bitfield name="OFFSET" low="5" high="16"/>
+ 			<bitfield name="INSTANCED" pos="17" type="boolean"/>
+@@ -4573,7 +2421,7 @@ to upconvert to 32b float internally?
+ 
+ 	<reg32 offset="0xa0f8" name="VFD_POWER_CNTL" low="0" high="2" usage="rp_blit"/>
+ 
+-	<reg32 offset="0xa600" name="VFD_UNKNOWN_A600" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa600" name="VFD_DBG_ECO_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+ 	<reg32 offset="0xa601" name="VFD_ADDR_MODE_CNTL" type="a5xx_address_mode"/>
+ 	<array offset="0xa610" name="VFD_PERFCTR_VFD_SEL" stride="1" length="8" variants="A6XX"/>
+@@ -4588,7 +2436,7 @@ to upconvert to 32b float internally?
+ 		<value value="1" name="THREAD128"/>
+ 	</enum>
+ 
+-	<bitset name="a6xx_sp_xs_ctrl_reg0" inline="yes">
++	<bitset name="a6xx_sp_xs_cntl_0" inline="yes">
+ 		<!-- if set to SINGLE, only use 1 concurrent wave on each SP -->
+ 		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
+ 		<!--
+@@ -4620,7 +2468,7 @@ to upconvert to 32b float internally?
+ 		-->
+ 		<bitfield name="BINDLESS_TEX" pos="0" type="boolean"/>
+ 		<bitfield name="BINDLESS_SAMP" pos="1" type="boolean"/>
+-		<bitfield name="BINDLESS_IBO" pos="2" type="boolean"/>
++		<bitfield name="BINDLESS_UAV" pos="2" type="boolean"/>
+ 		<bitfield name="BINDLESS_UBO" pos="3" type="boolean"/>
+ 
+ 		<bitfield name="ENABLED" pos="8" type="boolean"/>
+@@ -4630,17 +2478,17 @@ to upconvert to 32b float internally?
+ 		 -->
+ 		<bitfield name="NTEX" low="9" high="16" type="uint"/>
+ 		<bitfield name="NSAMP" low="17" high="21" type="uint"/>
+-		<bitfield name="NIBO" low="22" high="28" type="uint"/>
++		<bitfield name="NUAV" low="22" high="28" type="uint"/>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_sp_xs_prim_cntl" inline="yes">
++	<bitset name="a6xx_sp_xs_output_cntl" inline="yes">
+ 		<!-- # of VS outputs including pos/psize -->
+ 		<bitfield name="OUT" low="0" high="5" type="uint"/>
+ 		<!-- FLAGS_REGID only for GS -->
+ 		<bitfield name="FLAGS_REGID" low="6" high="13" type="a3xx_regid"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0xa800" name="SP_VS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="rp_blit">
++	<reg32 offset="0xa800" name="SP_VS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="rp_blit">
+ 		<!--
+ 		This field actually controls all geometry stages. TCS, TES, and
+ 		GS must have the same mergedregs setting as VS.
+@@ -4665,10 +2513,10 @@ to upconvert to 32b float internally?
+ 	</reg32>
+ 	<!-- bitmask of true/false conditions for VS brac.N instructions,
+ 	     bit N corresponds to brac.N -->
+-	<reg32 offset="0xa801" name="SP_VS_BRANCH_COND" type="hex"/>
++	<reg32 offset="0xa801" name="SP_VS_BOOLEAN_CF_MASK" type="hex"/>
+ 	<!-- # of VS outputs including pos/psize -->
+-	<reg32 offset="0xa802" name="SP_VS_PRIMITIVE_CNTL" type="a6xx_sp_xs_prim_cntl" usage="rp_blit"/>
+-	<array offset="0xa803" name="SP_VS_OUT" stride="1" length="16" usage="rp_blit">
++	<reg32 offset="0xa802" name="SP_VS_OUTPUT_CNTL" type="a6xx_sp_xs_output_cntl" usage="rp_blit"/>
++	<array offset="0xa803" name="SP_VS_OUTPUT" stride="1" length="16" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
+ 			<bitfield name="A_COMPMASK" low="8" high="11" type="hex"/>
+@@ -4678,12 +2526,12 @@ to upconvert to 32b float internally?
+ 	</array>
+ 	<!--
+ 	Starting with a5xx, position/psize outputs from shader end up in the
+-	SP_VS_OUT map, with highest OUTLOCn position.  (Generally they are
++	SP_VS_OUTPUT map, with highest OUTLOCn position.  (Generally they are
+ 	the last entries too, except when gl_PointCoord is used, blob inserts
+ 	an extra varying after, but with a lower OUTLOC position.  If present,
+ 	psize is last, preceded by position.
+ 	 -->
+-	<array offset="0xa813" name="SP_VS_VPC_DST" stride="1" length="8" usage="rp_blit">
++	<array offset="0xa813" name="SP_VS_VPC_DEST" stride="1" length="8" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+ 			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+@@ -4752,7 +2600,7 @@ to upconvert to 32b float internally?
+ 		</bitfield>
+ 	</bitset>
+ 
+-	<bitset name="a6xx_sp_xs_pvt_mem_hw_stack_offset" inline="yes">
++	<bitset name="a6xx_sp_xs_pvt_mem_stack_offset" inline="yes">
+ 		<doc>
+ 			This seems to be be the equivalent of HWSTACKOFFSET in
+ 			a3xx. The ldp/stp offset formula above isn't affected by
+@@ -4763,18 +2611,18 @@ to upconvert to 32b float internally?
+ 		<bitfield name="OFFSET" low="0" high="18" shr="11"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0xa81b" name="SP_VS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0xa81c" name="SP_VS_OBJ_START" type="address" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa81b" name="SP_VS_PROGRAM_COUNTER_OFFSET" type="uint" usage="rp_blit"/>
++	<reg64 offset="0xa81c" name="SP_VS_BASE" type="address" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa81e" name="SP_VS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
+-	<reg64 offset="0xa81f" name="SP_VS_PVT_MEM_ADDR" type="waddress" align="32" usage="rp_blit"/>
++	<reg64 offset="0xa81f" name="SP_VS_PVT_MEM_BASE" type="waddress" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa821" name="SP_VS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
+-	<reg32 offset="0xa822" name="SP_VS_TEX_COUNT" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa822" name="SP_VS_TSIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0xa823" name="SP_VS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
+-	<reg32 offset="0xa824" name="SP_VS_INSTRLEN" low="0" high="27" type="uint" usage="rp_blit"/>
+-	<reg32 offset="0xa825" name="SP_VS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="rp_blit"/>
+-	<reg32 offset="0xa82d" name="SP_VS_VGPR_CONFIG" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa824" name="SP_VS_INSTR_SIZE" low="0" high="27" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa825" name="SP_VS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa82d" name="SP_VS_VGS_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xa830" name="SP_HS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="rp_blit">
++	<reg32 offset="0xa830" name="SP_HS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="rp_blit">
+ 		<!-- There is no mergedregs bit, that comes from the VS. -->
+ 		<bitfield name="EARLYPREAMBLE" pos="20" type="boolean"/>
+ 	</reg32>
+@@ -4782,32 +2630,32 @@ to upconvert to 32b float internally?
+ 	Total size of local storage in dwords divided by the wave size.
+ 	The maximum value is 64. With the wave size being always 64 for HS,
+ 	the maximum size of local storage should be:
+-	 64 (wavesize) * 64 (SP_HS_WAVE_INPUT_SIZE) * 4 = 16k
++	 64 (wavesize) * 64 (SP_HS_CNTL_1) * 4 = 16k
+ 	-->
+-	<reg32 offset="0xa831" name="SP_HS_WAVE_INPUT_SIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+-	<reg32 offset="0xa832" name="SP_HS_BRANCH_COND" type="hex" usage="rp_blit"/>
++	<reg32 offset="0xa831" name="SP_HS_CNTL_1" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa832" name="SP_HS_BOOLEAN_CF_MASK" type="hex" usage="rp_blit"/>
+ 
+ 	<!-- TODO: exact same layout as 0xa81b-0xa825 -->
+-	<reg32 offset="0xa833" name="SP_HS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0xa834" name="SP_HS_OBJ_START" type="address" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa833" name="SP_HS_PROGRAM_COUNTER_OFFSET" type="uint" usage="rp_blit"/>
++	<reg64 offset="0xa834" name="SP_HS_BASE" type="address" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa836" name="SP_HS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
+-	<reg64 offset="0xa837" name="SP_HS_PVT_MEM_ADDR" type="waddress" align="32" usage="rp_blit"/>
++	<reg64 offset="0xa837" name="SP_HS_PVT_MEM_BASE" type="waddress" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa839" name="SP_HS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
+-	<reg32 offset="0xa83a" name="SP_HS_TEX_COUNT" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa83a" name="SP_HS_TSIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0xa83b" name="SP_HS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
+-	<reg32 offset="0xa83c" name="SP_HS_INSTRLEN" low="0" high="27" type="uint" usage="rp_blit"/>
+-	<reg32 offset="0xa83d" name="SP_HS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="rp_blit"/>
+-	<reg32 offset="0xa82f" name="SP_HS_VGPR_CONFIG" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa83c" name="SP_HS_INSTR_SIZE" low="0" high="27" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa83d" name="SP_HS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa82f" name="SP_HS_VGS_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xa840" name="SP_DS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="rp_blit">
++	<reg32 offset="0xa840" name="SP_DS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="rp_blit">
+ 		<!-- There is no mergedregs bit, that comes from the VS. -->
+ 		<bitfield name="EARLYPREAMBLE" pos="20" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0xa841" name="SP_DS_BRANCH_COND" type="hex"/>
++	<reg32 offset="0xa841" name="SP_DS_BOOLEAN_CF_MASK" type="hex"/>
+ 
+ 	<!-- TODO: exact same layout as 0xa802-0xa81a -->
+-	<reg32 offset="0xa842" name="SP_DS_PRIMITIVE_CNTL" type="a6xx_sp_xs_prim_cntl" usage="rp_blit"/>
+-	<array offset="0xa843" name="SP_DS_OUT" stride="1" length="16" usage="rp_blit">
++	<reg32 offset="0xa842" name="SP_DS_OUTPUT_CNTL" type="a6xx_sp_xs_output_cntl" usage="rp_blit"/>
++	<array offset="0xa843" name="SP_DS_OUTPUT" stride="1" length="16" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
+ 			<bitfield name="A_COMPMASK" low="8" high="11" type="hex"/>
+@@ -4815,7 +2663,7 @@ to upconvert to 32b float internally?
+ 			<bitfield name="B_COMPMASK" low="24" high="27" type="hex"/>
+ 		</reg32>
+ 	</array>
+-	<array offset="0xa853" name="SP_DS_VPC_DST" stride="1" length="8" usage="rp_blit">
++	<array offset="0xa853" name="SP_DS_VPC_DEST" stride="1" length="8" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+ 			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+@@ -4825,22 +2673,22 @@ to upconvert to 32b float internally?
+ 	</array>
+ 
+ 	<!-- TODO: exact same layout as 0xa81b-0xa825 -->
+-	<reg32 offset="0xa85b" name="SP_DS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0xa85c" name="SP_DS_OBJ_START" type="address" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa85b" name="SP_DS_PROGRAM_COUNTER_OFFSET" type="uint" usage="rp_blit"/>
++	<reg64 offset="0xa85c" name="SP_DS_BASE" type="address" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa85e" name="SP_DS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
+-	<reg64 offset="0xa85f" name="SP_DS_PVT_MEM_ADDR" type="waddress" align="32" usage="rp_blit"/>
++	<reg64 offset="0xa85f" name="SP_DS_PVT_MEM_BASE" type="waddress" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa861" name="SP_DS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
+-	<reg32 offset="0xa862" name="SP_DS_TEX_COUNT" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa862" name="SP_DS_TSIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0xa863" name="SP_DS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
+-	<reg32 offset="0xa864" name="SP_DS_INSTRLEN" low="0" high="27" type="uint" usage="rp_blit"/>
+-	<reg32 offset="0xa865" name="SP_DS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="rp_blit"/>
+-	<reg32 offset="0xa868" name="SP_DS_VGPR_CONFIG" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa864" name="SP_DS_INSTR_SIZE" low="0" high="27" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa865" name="SP_DS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa868" name="SP_DS_VGS_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xa870" name="SP_GS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="rp_blit">
++	<reg32 offset="0xa870" name="SP_GS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="rp_blit">
+ 		<!-- There is no mergedregs bit, that comes from the VS. -->
+ 		<bitfield name="EARLYPREAMBLE" pos="20" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0xa871" name="SP_GS_PRIM_SIZE" low="0" high="7" type="uint" usage="rp_blit">
++	<reg32 offset="0xa871" name="SP_GS_CNTL_1" low="0" high="7" type="uint" usage="rp_blit">
+ 		<doc>
+ 			Normally the size of the output of the last stage in
+ 			dwords. It should be programmed as follows:
+@@ -4854,11 +2702,11 @@ to upconvert to 32b float internally?
+ 			doesn't matter in practice.
+ 		</doc>
+ 	</reg32>
+-	<reg32 offset="0xa872" name="SP_GS_BRANCH_COND" type="hex" usage="rp_blit"/>
++	<reg32 offset="0xa872" name="SP_GS_BOOLEAN_CF_MASK" type="hex" usage="rp_blit"/>
+ 
+ 	<!-- TODO: exact same layout as 0xa802-0xa81a -->
+-	<reg32 offset="0xa873" name="SP_GS_PRIMITIVE_CNTL" type="a6xx_sp_xs_prim_cntl" usage="rp_blit"/>
+-	<array offset="0xa874" name="SP_GS_OUT" stride="1" length="16" usage="rp_blit">
++	<reg32 offset="0xa873" name="SP_GS_OUTPUT_CNTL" type="a6xx_sp_xs_output_cntl" usage="rp_blit"/>
++	<array offset="0xa874" name="SP_GS_OUTPUT" stride="1" length="16" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
+ 			<bitfield name="A_COMPMASK" low="8" high="11" type="hex"/>
+@@ -4867,7 +2715,7 @@ to upconvert to 32b float internally?
+ 		</reg32>
+ 	</array>
+ 
+-	<array offset="0xa884" name="SP_GS_VPC_DST" stride="1" length="8" usage="rp_blit">
++	<array offset="0xa884" name="SP_GS_VPC_DEST" stride="1" length="8" usage="rp_blit">
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+ 			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+@@ -4877,29 +2725,29 @@ to upconvert to 32b float internally?
+ 	</array>
+ 
+ 	<!-- TODO: exact same layout as 0xa81b-0xa825 -->
+-	<reg32 offset="0xa88c" name="SP_GS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0xa88d" name="SP_GS_OBJ_START" type="address" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa88c" name="SP_GS_PROGRAM_COUNTER_OFFSET" type="uint" usage="rp_blit"/>
++	<reg64 offset="0xa88d" name="SP_GS_BASE" type="address" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa88f" name="SP_GS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
+-	<reg64 offset="0xa890" name="SP_GS_PVT_MEM_ADDR" type="waddress" align="32" usage="rp_blit"/>
++	<reg64 offset="0xa890" name="SP_GS_PVT_MEM_BASE" type="waddress" align="32" usage="rp_blit"/>
+ 	<reg32 offset="0xa892" name="SP_GS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
+-	<reg32 offset="0xa893" name="SP_GS_TEX_COUNT" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa893" name="SP_GS_TSIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0xa894" name="SP_GS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
+-	<reg32 offset="0xa895" name="SP_GS_INSTRLEN" low="0" high="27" type="uint" usage="rp_blit"/>
+-	<reg32 offset="0xa896" name="SP_GS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="rp_blit"/>
+-	<reg32 offset="0xa899" name="SP_GS_VGPR_CONFIG" variants="A7XX-" usage="cmd"/>
+-
+-	<reg64 offset="0xa8a0" name="SP_VS_TEX_SAMP" type="address" align="16" usage="cmd"/>
+-	<reg64 offset="0xa8a2" name="SP_HS_TEX_SAMP" type="address" align="16" usage="cmd"/>
+-	<reg64 offset="0xa8a4" name="SP_DS_TEX_SAMP" type="address" align="16" usage="cmd"/>
+-	<reg64 offset="0xa8a6" name="SP_GS_TEX_SAMP" type="address" align="16" usage="cmd"/>
+-	<reg64 offset="0xa8a8" name="SP_VS_TEX_CONST" type="address" align="64" usage="cmd"/>
+-	<reg64 offset="0xa8aa" name="SP_HS_TEX_CONST" type="address" align="64" usage="cmd"/>
+-	<reg64 offset="0xa8ac" name="SP_DS_TEX_CONST" type="address" align="64" usage="cmd"/>
+-	<reg64 offset="0xa8ae" name="SP_GS_TEX_CONST" type="address" align="64" usage="cmd"/>
++	<reg32 offset="0xa895" name="SP_GS_INSTR_SIZE" low="0" high="27" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa896" name="SP_GS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa899" name="SP_GS_VGS_CNTL" variants="A7XX-" usage="cmd"/>
++
++	<reg64 offset="0xa8a0" name="SP_VS_SAMPLER_BASE" type="address" align="16" usage="cmd"/>
++	<reg64 offset="0xa8a2" name="SP_HS_SAMPLER_BASE" type="address" align="16" usage="cmd"/>
++	<reg64 offset="0xa8a4" name="SP_DS_SAMPLER_BASE" type="address" align="16" usage="cmd"/>
++	<reg64 offset="0xa8a6" name="SP_GS_SAMPLER_BASE" type="address" align="16" usage="cmd"/>
++	<reg64 offset="0xa8a8" name="SP_VS_TEXMEMOBJ_BASE" type="address" align="64" usage="cmd"/>
++	<reg64 offset="0xa8aa" name="SP_HS_TEXMEMOBJ_BASE" type="address" align="64" usage="cmd"/>
++	<reg64 offset="0xa8ac" name="SP_DS_TEXMEMOBJ_BASE" type="address" align="64" usage="cmd"/>
++	<reg64 offset="0xa8ae" name="SP_GS_TEXMEMOBJ_BASE" type="address" align="64" usage="cmd"/>
+ 
+ 	<!-- TODO: 4 unknown bool registers 0xa8c0-0xa8c3 -->
+ 
+-	<reg32 offset="0xa980" name="SP_FS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="rp_blit">
++	<reg32 offset="0xa980" name="SP_PS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="rp_blit">
+ 		<bitfield name="THREADSIZE" pos="20" type="a6xx_threadsize"/>
+ 		<bitfield name="UNK21" pos="21" type="boolean"/>
+ 		<bitfield name="VARYING" pos="22" type="boolean"/>
+@@ -4909,8 +2757,7 @@ to upconvert to 32b float internally?
+ 				fine derivatives and quad subgroup ops.
+ 			</doc>
+ 		</bitfield>
+-		<!-- note: vk blob uses bit24 -->
+-		<bitfield name="UNK24" pos="24" type="boolean"/>
++		<bitfield name="INOUTREGOVERLAP" pos="24" type="boolean"/>
+ 		<bitfield name="UNK25" pos="25" type="boolean"/>
+ 		<bitfield name="PIXLODENABLE" pos="26" type="boolean">
+ 			<doc>
+@@ -4923,12 +2770,12 @@ to upconvert to 32b float internally?
+ 		<bitfield name="EARLYPREAMBLE" pos="28" type="boolean"/>
+ 		<bitfield name="MERGEDREGS" pos="31" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0xa981" name="SP_FS_BRANCH_COND" type="hex"/>
+-	<reg32 offset="0xa982" name="SP_FS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="rp_blit"/>
+-	<reg64 offset="0xa983" name="SP_FS_OBJ_START" type="address" align="32" usage="rp_blit"/>
+-	<reg32 offset="0xa985" name="SP_FS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
+-	<reg64 offset="0xa986" name="SP_FS_PVT_MEM_ADDR" type="waddress" align="32" usage="rp_blit"/>
+-	<reg32 offset="0xa988" name="SP_FS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
++	<reg32 offset="0xa981" name="SP_PS_BOOLEAN_CF_MASK" type="hex"/>
++	<reg32 offset="0xa982" name="SP_PS_PROGRAM_COUNTER_OFFSET" type="uint" usage="rp_blit"/>
++	<reg64 offset="0xa983" name="SP_PS_BASE" type="address" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa985" name="SP_PS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="rp_blit"/>
++	<reg64 offset="0xa986" name="SP_PS_PVT_MEM_BASE" type="waddress" align="32" usage="rp_blit"/>
++	<reg32 offset="0xa988" name="SP_PS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0xa989" name="SP_BLEND_CNTL" usage="rp_blit">
+ 		<!-- per-mrt enable bit -->
+@@ -4948,7 +2795,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="SRGB_MRT6" pos="6" type="boolean"/>
+ 		<bitfield name="SRGB_MRT7" pos="7" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0xa98b" name="SP_FS_RENDER_COMPONENTS" usage="rp_blit">
++	<reg32 offset="0xa98b" name="SP_PS_OUTPUT_MASK" usage="rp_blit">
+ 		<bitfield name="RT0" low="0" high="3"/>
+ 		<bitfield name="RT1" low="4" high="7"/>
+ 		<bitfield name="RT2" low="8" high="11"/>
+@@ -4958,17 +2805,17 @@ to upconvert to 32b float internally?
+ 		<bitfield name="RT6" low="24" high="27"/>
+ 		<bitfield name="RT7" low="28" high="31"/>
+ 	</reg32>
+-	<reg32 offset="0xa98c" name="SP_FS_OUTPUT_CNTL0" usage="rp_blit">
++	<reg32 offset="0xa98c" name="SP_PS_OUTPUT_CNTL" usage="rp_blit">
+ 		<bitfield name="DUAL_COLOR_IN_ENABLE" pos="0" type="boolean"/>
+ 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="SAMPMASK_REGID" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="STENCILREF_REGID" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa98d" name="SP_FS_OUTPUT_CNTL1" usage="rp_blit">
++	<reg32 offset="0xa98d" name="SP_PS_MRT_CNTL" usage="rp_blit">
+ 		<bitfield name="MRT" low="0" high="3" type="uint"/>
+ 	</reg32>
+ 
+-	<array offset="0xa98e" name="SP_FS_OUTPUT" stride="1" length="8" usage="rp_blit">
++	<array offset="0xa98e" name="SP_PS_OUTPUT" stride="1" length="8" usage="rp_blit">
+ 		<doc>per MRT</doc>
+ 		<reg32 offset="0x0" name="REG">
+ 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+@@ -4976,7 +2823,7 @@ to upconvert to 32b float internally?
+ 		</reg32>
+ 	</array>
+ 
+-	<array offset="0xa996" name="SP_FS_MRT" stride="1" length="8" usage="rp_blit">
++	<array offset="0xa996" name="SP_PS_MRT" stride="1" length="8" usage="rp_blit">
+ 		<reg32 offset="0" name="REG">
+ 			<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_format"/>
+ 			<bitfield name="COLOR_SINT" pos="8" type="boolean"/>
+@@ -4985,7 +2832,7 @@ to upconvert to 32b float internally?
+ 		</reg32>
+ 	</array>
+ 
+-	<reg32 offset="0xa99e" name="SP_FS_PREFETCH_CNTL" usage="rp_blit">
++	<reg32 offset="0xa99e" name="SP_PS_INITIAL_TEX_LOAD_CNTL" usage="rp_blit">
+ 		<bitfield name="COUNT" low="0" high="2" type="uint"/>
+ 		<bitfield name="IJ_WRITE_DISABLE" pos="3" type="boolean"/>
+ 		<doc>
+@@ -5002,7 +2849,7 @@ to upconvert to 32b float internally?
+ 		<!-- Blob never uses it -->
+ 		<bitfield name="CONSTSLOTID4COORD" low="16" high="24" type="uint" variants="A7XX-"/>
+ 	</reg32>
+-	<array offset="0xa99f" name="SP_FS_PREFETCH" stride="1" length="4" variants="A6XX" usage="rp_blit">
++	<array offset="0xa99f" name="SP_PS_INITIAL_TEX_LOAD" stride="1" length="4" variants="A6XX" usage="rp_blit">
+ 		<reg32 offset="0" name="CMD" variants="A6XX">
+ 			<bitfield name="SRC" low="0" high="6" type="uint"/>
+ 			<bitfield name="SAMP_ID" low="7" high="10" type="uint"/>
+@@ -5016,7 +2863,7 @@ to upconvert to 32b float internally?
+ 			<bitfield name="CMD" low="29" high="31" type="a6xx_tex_prefetch_cmd"/>
+ 		</reg32>
+ 	</array>
+-	<array offset="0xa99f" name="SP_FS_PREFETCH" stride="1" length="4" variants="A7XX-" usage="rp_blit">
++	<array offset="0xa99f" name="SP_PS_INITIAL_TEX_LOAD" stride="1" length="4" variants="A7XX-" usage="rp_blit">
+ 		<reg32 offset="0" name="CMD" variants="A7XX-">
+ 			<bitfield name="SRC" low="0" high="6" type="uint"/>
+ 			<bitfield name="SAMP_ID" low="7" high="9" type="uint"/>
+@@ -5028,22 +2875,23 @@ to upconvert to 32b float internally?
+ 			<bitfield name="CMD" low="26" high="29" type="a6xx_tex_prefetch_cmd"/>
+ 		</reg32>
+ 	</array>
+-	<array offset="0xa9a3" name="SP_FS_BINDLESS_PREFETCH" stride="1" length="4" usage="rp_blit">
++	<array offset="0xa9a3" name="SP_PS_INITIAL_TEX_INDEX" stride="1" length="4" usage="rp_blit">
+ 		<reg32 offset="0" name="CMD">
+ 			<bitfield name="SAMP_ID" low="0" high="15" type="uint"/>
+ 			<bitfield name="TEX_ID" low="16" high="31" type="uint"/>
+ 		</reg32>
+ 	</array>
+-	<reg32 offset="0xa9a7" name="SP_FS_TEX_COUNT" low="0" high="7" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xa9a7" name="SP_PS_TSIZE" low="0" high="7" type="uint" usage="rp_blit"/>
+ 	<reg32 offset="0xa9a8" name="SP_UNKNOWN_A9A8" low="0" high="16" usage="cmd"/> <!-- always 0x0 ? -->
+-	<reg32 offset="0xa9a9" name="SP_FS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa9a9" name="SP_PS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="rp_blit"/>
++	<reg32 offset="0xa9ab" name="SP_PS_UNKNOWN_A9AB" variants="A7XX-" usage="cmd"/>
+ 
+ 	<!-- TODO: unknown bool register at 0xa9aa, likely same as 0xa8c0-0xa8c3 but for FS -->
+ 
+ 
+ 
+ 
+-	<reg32 offset="0xa9b0" name="SP_CS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0" usage="cmd">
++	<reg32 offset="0xa9b0" name="SP_CS_CNTL_0" type="a6xx_sp_xs_cntl_0" usage="cmd">
+ 		<bitfield name="THREADSIZE" pos="20" type="a6xx_threadsize"/>
+ 		<!-- seems to make SP use less concurrent threads when possible? -->
+ 		<bitfield name="UNK21" pos="21" type="boolean"/>
+@@ -5053,8 +2901,15 @@ to upconvert to 32b float internally?
+ 		<bitfield name="MERGEDREGS" pos="31" type="boolean"/>
+ 	</reg32>
+ 
++	<enum name="a6xx_const_ram_mode">
++		<value value="0x0" name="CONSTLEN_128"/>
++		<value value="0x1" name="CONSTLEN_192"/>
++		<value value="0x2" name="CONSTLEN_256"/>
++		<value value="0x3" name="CONSTLEN_512"/> <!-- a7xx only -->
++	</enum>
++
+ 	<!-- set for compute shaders -->
+-	<reg32 offset="0xa9b1" name="SP_CS_UNKNOWN_A9B1" usage="cmd">
++	<reg32 offset="0xa9b1" name="SP_CS_CNTL_1" usage="cmd">
+ 		<bitfield name="SHARED_SIZE" low="0" high="4" type="uint">
+ 			<doc>
+ 				If 0 - all 32k of shared storage is enabled, otherwise
+@@ -5065,32 +2920,36 @@ to upconvert to 32b float internally?
+ 				always return 0)
+ 			</doc>
+ 		</bitfield>
+-		<bitfield name="UNK5" pos="5" type="boolean"/>
+-		<!-- always 1 ? -->
+-		<bitfield name="UNK6" pos="6" type="boolean"/>
++		<bitfield name="CONSTANTRAMMODE" low="5" high="6" type="a6xx_const_ram_mode">
++			<doc>
++				This defines the split between consts and local
++				memory in the Local Buffer. The programmed value
++				must be at least the actual CONSTLEN.
++			</doc>
++		</bitfield>
+ 	</reg32>
+-	<reg32 offset="0xa9b2" name="SP_CS_BRANCH_COND" type="hex" usage="cmd"/>
+-	<reg32 offset="0xa9b3" name="SP_CS_OBJ_FIRST_EXEC_OFFSET" type="uint" usage="cmd"/>
+-	<reg64 offset="0xa9b4" name="SP_CS_OBJ_START" type="address" align="32" usage="cmd"/>
++	<reg32 offset="0xa9b2" name="SP_CS_BOOLEAN_CF_MASK" type="hex" usage="cmd"/>
++	<reg32 offset="0xa9b3" name="SP_CS_PROGRAM_COUNTER_OFFSET" type="uint" usage="cmd"/>
++	<reg64 offset="0xa9b4" name="SP_CS_BASE" type="address" align="32" usage="cmd"/>
+ 	<reg32 offset="0xa9b6" name="SP_CS_PVT_MEM_PARAM" type="a6xx_sp_xs_pvt_mem_param" usage="cmd"/>
+-	<reg64 offset="0xa9b7" name="SP_CS_PVT_MEM_ADDR" align="32" usage="cmd"/>
++	<reg64 offset="0xa9b7" name="SP_CS_PVT_MEM_BASE" align="32" usage="cmd"/>
+ 	<reg32 offset="0xa9b9" name="SP_CS_PVT_MEM_SIZE" type="a6xx_sp_xs_pvt_mem_size" usage="cmd"/>
+-	<reg32 offset="0xa9ba" name="SP_CS_TEX_COUNT" low="0" high="7" type="uint" usage="cmd"/>
++	<reg32 offset="0xa9ba" name="SP_CS_TSIZE" low="0" high="7" type="uint" usage="cmd"/>
+ 	<reg32 offset="0xa9bb" name="SP_CS_CONFIG" type="a6xx_sp_xs_config" usage="cmd"/>
+-	<reg32 offset="0xa9bc" name="SP_CS_INSTRLEN" low="0" high="27" type="uint" usage="cmd"/>
+-	<reg32 offset="0xa9bd" name="SP_CS_PVT_MEM_HW_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_hw_stack_offset" usage="cmd"/>
++	<reg32 offset="0xa9bc" name="SP_CS_INSTR_SIZE" low="0" high="27" type="uint" usage="cmd"/>
++	<reg32 offset="0xa9bd" name="SP_CS_PVT_MEM_STACK_OFFSET" type="a6xx_sp_xs_pvt_mem_stack_offset" usage="cmd"/>
+ 	<reg32 offset="0xa9be" name="SP_CS_UNKNOWN_A9BE" variants="A7XX-" usage="cmd"/>
+-	<reg32 offset="0xa9c5" name="SP_CS_VGPR_CONFIG" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa9c5" name="SP_CS_VGS_CNTL" variants="A7XX-" usage="cmd"/>
+ 
+-	<!-- new in a6xx gen4, matches HLSQ_CS_CNTL_0 -->
+-	<reg32 offset="0xa9c2" name="SP_CS_CNTL_0" usage="cmd">
++	<!-- new in a6xx gen4, matches SP_CS_CONST_CONFIG_0 -->
++	<reg32 offset="0xa9c2" name="SP_CS_WIE_CNTL_0" usage="cmd">
+ 		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="WGSIZECONSTID" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="WGOFFSETCONSTID" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<!-- new in a6xx gen4, matches HLSQ_CS_CNTL_1 -->
+-	<reg32 offset="0xa9c3" name="SP_CS_CNTL_1" variants="A6XX" usage="cmd">
++	<!-- new in a6xx gen4, matches SP_CS_WGE_CNTL -->
++	<reg32 offset="0xa9c3" name="SP_CS_WIE_CNTL_1" variants="A6XX" usage="cmd">
+ 		<!-- gl_LocalInvocationIndex -->
+ 		<bitfield name="LINEARLOCALIDREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- a650 has 6 "SP cores" (but 3 "SP"). this makes it use only
+@@ -5102,7 +2961,18 @@ to upconvert to 32b float internally?
+ 		<bitfield name="THREADSIZE_SCALAR" pos="10" type="boolean"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xa9c3" name="SP_CS_CNTL_1" variants="A7XX-" usage="cmd">
++	<enum name="a7xx_workitem_rast_order">
++		<value value="0x0" name="WORKITEMRASTORDER_LINEAR"/>
++		<doc>
++			This is a fixed tiling, with 4x4 invocation outer tiles
++			containing 2x2 invocation inner tiles. The intent is to
++			improve cache locality with textures and images accessed
++			using gl_LocalInvocationID.
++		</doc>
++		<value value="0x1" name="WORKITEMRASTORDER_TILED"/>
++	</enum>
++
++	<reg32 offset="0xa9c3" name="SP_CS_WIE_CNTL_1" variants="A7XX-" usage="cmd">
+ 		<!-- gl_LocalInvocationIndex -->
+ 		<bitfield name="LINEARLOCALIDREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- Must match SP_CS_CTRL -->
+@@ -5110,18 +2980,16 @@ to upconvert to 32b float internally?
+ 		<!-- 1 thread per wave (would hang if THREAD128 is also set) -->
+ 		<bitfield name="THREADSIZE_SCALAR" pos="9" type="boolean"/>
+ 
+-		<!-- Affects getone. If enabled, getone sometimes executed 1? less times
+-		     than there are subgroups.
+-		 -->
+-		<bitfield name="UNK15" pos="15" type="boolean"/>
++		<doc>How invocations/fibers within a workgroup are tiled.</doc>
++		<bitfield name="WORKITEMRASTORDER" pos="15" type="a7xx_workitem_rast_order"/>
+ 	</reg32>
+ 
+ 	<!-- TODO: two 64kb aligned addresses at a9d0/a9d2 -->
+ 
+-	<reg64 offset="0xa9e0" name="SP_FS_TEX_SAMP" type="address" align="16" usage="rp_blit"/>
+-	<reg64 offset="0xa9e2" name="SP_CS_TEX_SAMP" type="address" align="16" usage="cmd"/>
+-	<reg64 offset="0xa9e4" name="SP_FS_TEX_CONST" type="address" align="64" usage="rp_blit"/>
+-	<reg64 offset="0xa9e6" name="SP_CS_TEX_CONST" type="address" align="64" usage="cmd"/>
++	<reg64 offset="0xa9e0" name="SP_PS_SAMPLER_BASE" type="address" align="16" usage="rp_blit"/>
++	<reg64 offset="0xa9e2" name="SP_CS_SAMPLER_BASE" type="address" align="16" usage="cmd"/>
++	<reg64 offset="0xa9e4" name="SP_PS_TEXMEMOBJ_BASE" type="address" align="64" usage="rp_blit"/>
++	<reg64 offset="0xa9e6" name="SP_CS_TEXMEMOBJ_BASE" type="address" align="64" usage="cmd"/>
+ 
+ 	<enum name="a6xx_bindless_descriptor_size">
+ 		<doc>
+@@ -5146,18 +3014,19 @@ to upconvert to 32b float internally?
+ 	</array>
+ 
+ 	<!--
+-	IBO state for compute shader:
++	UAV state for compute shader:
+ 	 -->
+-	<reg64 offset="0xa9f2" name="SP_CS_IBO" type="address" align="16"/>
+-	<reg32 offset="0xaa00" name="SP_CS_IBO_COUNT" low="0" high="6" type="uint"/>
++	<reg64 offset="0xa9f2" name="SP_CS_UAV_BASE" type="address" align="16" variants="A6XX"/>
++	<reg64 offset="0xa9f8" name="SP_CS_UAV_BASE" type="address" align="16" variants="A7XX"/>
++	<reg32 offset="0xaa00" name="SP_CS_USIZE" low="0" high="6" type="uint"/>
+ 
+ 	<!-- Correlated with avgs/uvgs usage in FS -->
+-	<reg32 offset="0xaa01" name="SP_FS_VGPR_CONFIG" type="uint" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xaa01" name="SP_PS_VGS_CNTL" type="uint" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xaa02" name="SP_PS_ALIASED_COMPONENTS_CONTROL" variants="A7XX-" usage="cmd">
++	<reg32 offset="0xaa02" name="SP_PS_OUTPUT_CONST_CNTL" variants="A7XX-" usage="cmd">
+ 		<bitfield name="ENABLED" pos="0" type="boolean"/>
+ 	</reg32>
+-	<reg32 offset="0xaa03" name="SP_PS_ALIASED_COMPONENTS" variants="A7XX-" usage="cmd">
++	<reg32 offset="0xaa03" name="SP_PS_OUTPUT_CONST_MASK" variants="A7XX-" usage="cmd">
+ 		<doc>
+ 			Specify for which components the output color should be read
+ 			from alias, e.g. for:
+@@ -5167,7 +3036,7 @@ to upconvert to 32b float internally?
+ 				alias.1.b32.0 r1.x, c4.x
+ 				alias.1.b32.0 r0.x, c0.x
+ 
+-			the SP_PS_ALIASED_COMPONENTS would be 0x00001111
++			the SP_PS_OUTPUT_CONST_MASK would be 0x00001111
+ 		</doc>
+ 
+ 		<bitfield name="RT0" low="0" high="3"/>
+@@ -5193,7 +3062,7 @@ to upconvert to 32b float internally?
+ 		<value value="0x2" name="ISAMMODE_GL"/>
+ 	</enum>
+ 
+-	<reg32 offset="0xab00" name="SP_MODE_CONTROL" usage="rp_blit">
++	<reg32 offset="0xab00" name="SP_MODE_CNTL" usage="rp_blit">
+ 	  <!--
+ 	  When set, half register loads from the constant file will
+ 	  load a 32-bit value (so hc0.y loads the same value as c0.y)
+@@ -5210,16 +3079,16 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0xab01" name="SP_UNKNOWN_AB01" variants="A7XX-" usage="cmd"/>
+ 	<reg32 offset="0xab02" name="SP_UNKNOWN_AB02" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xab04" name="SP_FS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
+-	<reg32 offset="0xab05" name="SP_FS_INSTRLEN" low="0" high="27" type="uint" usage="rp_blit"/>
++	<reg32 offset="0xab04" name="SP_PS_CONFIG" type="a6xx_sp_xs_config" usage="rp_blit"/>
++	<reg32 offset="0xab05" name="SP_PS_INSTR_SIZE" low="0" high="27" type="uint" usage="rp_blit"/>
+ 
+-	<array offset="0xab10" name="SP_BINDLESS_BASE" stride="2" length="5" variants="A6XX" usage="rp_blit">
++	<array offset="0xab10" name="SP_GFX_BINDLESS_BASE" stride="2" length="5" variants="A6XX" usage="rp_blit">
+ 		<reg64 offset="0" name="DESCRIPTOR" variants="A6XX">
+ 			<bitfield name="DESC_SIZE" low="0" high="1" type="a6xx_bindless_descriptor_size"/>
+ 			<bitfield name="ADDR" low="2" high="63" shr="2" type="address"/>
+ 		</reg64>
+ 	</array>
+-	<array offset="0xab0a" name="SP_BINDLESS_BASE" stride="2" length="8" variants="A7XX-" usage="rp_blit">
++	<array offset="0xab0a" name="SP_GFX_BINDLESS_BASE" stride="2" length="8" variants="A7XX-" usage="rp_blit">
+ 		<reg64 offset="0" name="DESCRIPTOR" variants="A7XX-">
+ 			<bitfield name="DESC_SIZE" low="0" high="1" type="a6xx_bindless_descriptor_size"/>
+ 			<bitfield name="ADDR" low="2" high="63" shr="2" type="address"/>
+@@ -5227,15 +3096,15 @@ to upconvert to 32b float internally?
+ 	</array>
+ 
+ 	<!--
+-	Combined IBO state for 3d pipe, used for Image and SSBO write/atomic
+-	instructions VS/HS/DS/GS/FS.  See SP_CS_IBO_* for compute shaders.
++	Combined UAV state for 3d pipe, used for Image and SSBO write/atomic
++	instructions VS/HS/DS/GS/FS.  See SP_CS_UAV_BASE_* for compute shaders.
+ 	 -->
+-	<reg64 offset="0xab1a" name="SP_IBO" type="address" align="16" usage="cmd"/>
+-	<reg32 offset="0xab20" name="SP_IBO_COUNT" low="0" high="6" type="uint" usage="cmd"/>
++	<reg64 offset="0xab1a" name="SP_GFX_UAV_BASE" type="address" align="16" usage="cmd"/>
++	<reg32 offset="0xab20" name="SP_GFX_USIZE" low="0" high="6" type="uint" usage="cmd"/>
+ 
+ 	<reg32 offset="0xab22" name="SP_UNKNOWN_AB22" variants="A7XX-" usage="cmd"/>
+ 
+-	<bitset name="a6xx_sp_2d_dst_format" inline="yes">
++	<bitset name="a6xx_sp_a2d_output_info" inline="yes">
+ 		<bitfield name="NORM" pos="0" type="boolean"/>
+ 		<bitfield name="SINT" pos="1" type="boolean"/>
+ 		<bitfield name="UINT" pos="2" type="boolean"/>
+@@ -5248,8 +3117,8 @@ to upconvert to 32b float internally?
+ 		<bitfield name="MASK" low="12" high="15"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0xacc0" name="SP_2D_DST_FORMAT" type="a6xx_sp_2d_dst_format" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xa9bf" name="SP_2D_DST_FORMAT" type="a6xx_sp_2d_dst_format" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xacc0" name="SP_A2D_OUTPUT_INFO" type="a6xx_sp_a2d_output_info" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xa9bf" name="SP_A2D_OUTPUT_INFO" type="a6xx_sp_a2d_output_info" variants="A7XX-" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0xae00" name="SP_DBG_ECO_CNTL" usage="cmd"/>
+ 	<reg32 offset="0xae01" name="SP_ADDR_MODE_CNTL" pos="0" type="a5xx_address_mode"/>
+@@ -5257,16 +3126,16 @@ to upconvert to 32b float internally?
+ 		<!-- TODO: valid bits 0x3c3f, see kernel -->
+ 	</reg32>
+ 	<reg32 offset="0xae03" name="SP_CHICKEN_BITS" usage="cmd"/>
+-	<reg32 offset="0xae04" name="SP_FLOAT_CNTL" usage="cmd">
++	<reg32 offset="0xae04" name="SP_NC_MODE_CNTL_2" usage="cmd">
+ 		<bitfield name="F16_NO_INF" pos="3" type="boolean"/>
+ 	</reg32>
+ 
+ 	<reg32 offset="0xae06" name="SP_UNKNOWN_AE06" variants="A7XX-" usage="cmd"/>
+-	<reg32 offset="0xae08" name="SP_UNKNOWN_AE08" variants="A7XX-" usage="cmd"/>
+-	<reg32 offset="0xae09" name="SP_UNKNOWN_AE09" variants="A7XX-" usage="cmd"/>
+-	<reg32 offset="0xae0a" name="SP_UNKNOWN_AE0A" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xae08" name="SP_CHICKEN_BITS_1" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xae09" name="SP_CHICKEN_BITS_2" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xae0a" name="SP_CHICKEN_BITS_3" variants="A7XX-" usage="cmd"/>
+ 
+-	<reg32 offset="0xae0f" name="SP_PERFCTR_ENABLE" usage="cmd">
++	<reg32 offset="0xae0f" name="SP_PERFCTR_SHADER_MASK" usage="cmd">
+ 		<!-- some perfcntrs are affected by a per-stage enable bit
+ 		     (PERF_SP_ALU_WORKING_CYCLES for example)
+ 		     TODO: verify position of HS/DS/GS bits -->
+@@ -5281,7 +3150,7 @@ to upconvert to 32b float internally?
+ 	<array offset="0xae60" name="SP_PERFCTR_HLSQ_SEL" stride="1" length="6" variants="A7XX-"/>
+ 	<reg32 offset="0xae6a" name="SP_UNKNOWN_AE6A" variants="A7XX-" usage="cmd"/>
+ 	<reg32 offset="0xae6b" name="SP_UNKNOWN_AE6B" variants="A7XX-" usage="cmd"/>
+-	<reg32 offset="0xae6c" name="SP_UNKNOWN_AE6C" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xae6c" name="SP_HLSQ_DBG_ECO_CNTL" variants="A7XX-" usage="cmd"/>
+ 	<reg32 offset="0xae6d" name="SP_READ_SEL" variants="A7XX-">
+ 		<bitfield name="LOCATION" low="18" high="19" type="a7xx_state_location"/>
+ 		<bitfield name="PIPE" low="16" high="17" type="a7xx_pipe"/>
+@@ -5301,33 +3170,44 @@ to upconvert to 32b float internally?
+ 	"a6xx_sp_ps_tp_cluster" but this actually specifies the border
+ 	color base for compute shaders.
+ 	-->
+-	<reg64 offset="0xb180" name="SP_PS_TP_BORDER_COLOR_BASE_ADDR" type="address" align="128" usage="cmd"/>
++	<reg64 offset="0xb180" name="TPL1_CS_BORDER_COLOR_BASE" type="address" align="128" usage="cmd"/>
+ 	<reg32 offset="0xb182" name="SP_UNKNOWN_B182" low="0" high="2" usage="cmd"/>
+ 	<reg32 offset="0xb183" name="SP_UNKNOWN_B183" low="0" high="23" usage="cmd"/>
+ 
+ 	<reg32 offset="0xb190" name="SP_UNKNOWN_B190"/>
+ 	<reg32 offset="0xb191" name="SP_UNKNOWN_B191"/>
+ 
+-	<!-- could be all the stuff below here is actually TPL1?? -->
+-
+-	<reg32 offset="0xb300" name="SP_TP_RAS_MSAA_CNTL" usage="rp_blit">
++	<reg32 offset="0xb300" name="TPL1_RAS_MSAA_CNTL" usage="rp_blit">
+ 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+ 		<bitfield name="UNK2" low="2" high="3"/>
+ 	</reg32>
+-	<reg32 offset="0xb301" name="SP_TP_DEST_MSAA_CNTL" usage="rp_blit">
++	<reg32 offset="0xb301" name="TPL1_DEST_MSAA_CNTL" usage="rp_blit">
+ 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+ 		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+ 	</reg32>
+ 
+ 	<!-- looks to work in the same way as a5xx: -->
+-	<reg64 offset="0xb302" name="SP_TP_BORDER_COLOR_BASE_ADDR" type="address" align="128" usage="cmd"/>
+-	<reg32 offset="0xb304" name="SP_TP_SAMPLE_CONFIG" type="a6xx_sample_config" usage="rp_blit"/>
+-	<reg32 offset="0xb305" name="SP_TP_SAMPLE_LOCATION_0" type="a6xx_sample_locations" usage="rp_blit"/>
+-	<reg32 offset="0xb306" name="SP_TP_SAMPLE_LOCATION_1" type="a6xx_sample_locations" usage="rp_blit"/>
+-	<reg32 offset="0xb307" name="SP_TP_WINDOW_OFFSET" type="a6xx_reg_xy" usage="rp_blit"/>
+-	<reg32 offset="0xb309" name="SP_TP_MODE_CNTL" usage="cmd">
++	<reg64 offset="0xb302" name="TPL1_GFX_BORDER_COLOR_BASE" type="address" align="128" usage="cmd"/>
++	<reg32 offset="0xb304" name="TPL1_MSAA_SAMPLE_POS_CNTL" type="a6xx_msaa_sample_pos_cntl" usage="rp_blit"/>
++	<reg32 offset="0xb305" name="TPL1_PROGRAMMABLE_MSAA_POS_0" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
++	<reg32 offset="0xb306" name="TPL1_PROGRAMMABLE_MSAA_POS_1" type="a6xx_programmable_msaa_pos" usage="rp_blit"/>
++	<reg32 offset="0xb307" name="TPL1_WINDOW_OFFSET" type="a6xx_reg_xy" usage="rp_blit"/>
++
++	<enum name="a6xx_coord_round">
++		<value value="0" name="COORD_TRUNCATE"/>
++		<value value="1" name="COORD_ROUND_NEAREST_EVEN"/>
++	</enum>
++
++	<enum name="a6xx_nearest_mode">
++		<value value="0" name="ROUND_CLAMP_TRUNCATE"/>
++		<value value="1" name="CLAMP_ROUND_TRUNCATE"/>
++	</enum>
++
++	<reg32 offset="0xb309" name="TPL1_MODE_CNTL" usage="cmd">
+ 		<bitfield name="ISAMMODE" low="0" high="1" type="a6xx_isam_mode"/>
+-		<bitfield name="UNK3" low="2" high="7"/>
++		<bitfield name="TEXCOORDROUNDMODE" pos="2" type="a6xx_coord_round"/>
++		<bitfield name="NEARESTMIPSNAP" pos="5" type="a6xx_nearest_mode"/>
++		<bitfield name="DESTDATATYPEOVERRIDE" pos="7" type="boolean"/>
+ 	</reg32>
+ 	<reg32 offset="0xb310" name="SP_UNKNOWN_B310" variants="A7XX-" usage="cmd"/>
+ 
+@@ -5336,42 +3216,45 @@ to upconvert to 32b float internally?
+ 	badly named or the functionality moved in a6xx.  But downstream kernel
+ 	calls this "a6xx_sp_ps_tp_2d_cluster"
+ 	 -->
+-	<reg32 offset="0xb4c0" name="SP_PS_2D_SRC_INFO" type="a6xx_2d_src_surf_info" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb4c1" name="SP_PS_2D_SRC_SIZE" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb4c0" name="TPL1_A2D_SRC_TEXTURE_INFO" type="a6xx_a2d_src_texture_info" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb4c1" name="TPL1_A2D_SRC_TEXTURE_SIZE" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
+ 		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
+ 	</reg32>
+-	<reg64 offset="0xb4c2" name="SP_PS_2D_SRC" type="address" align="16" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb4c4" name="SP_PS_2D_SRC_PITCH" variants="A6XX" usage="rp_blit">
++	<reg64 offset="0xb4c2" name="TPL1_A2D_SRC_TEXTURE_BASE" type="address" align="16" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb4c4" name="TPL1_A2D_SRC_TEXTURE_PITCH" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="UNK0" low="0" high="8"/>
+ 		<bitfield name="PITCH" low="9" high="23" shr="6" type="uint"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xb2c0" name="SP_PS_2D_SRC_INFO" type="a6xx_2d_src_surf_info" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xb2c1" name="SP_PS_2D_SRC_SIZE" variants="A7XX">
++	<reg32 offset="0xb2c0" name="TPL1_A2D_SRC_TEXTURE_INFO" type="a6xx_a2d_src_texture_info" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xb2c1" name="TPL1_A2D_SRC_TEXTURE_SIZE" variants="A7XX">
+ 		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
+ 		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
+ 	</reg32>
+-	<reg64 offset="0xb2c2" name="SP_PS_2D_SRC" type="address" align="16" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xb2c4" name="SP_PS_2D_SRC_PITCH" variants="A7XX">
+-		<bitfield name="UNK0" low="0" high="8"/>
+-		<bitfield name="PITCH" low="9" high="23" shr="6" type="uint"/>
++	<reg64 offset="0xb2c2" name="TPL1_A2D_SRC_TEXTURE_BASE" type="address" align="16" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xb2c4" name="TPL1_A2D_SRC_TEXTURE_PITCH" variants="A7XX">
++		<!--
++		Bits from 3..9 must be zero unless 'TPL1_A2D_BLT_CNTL::TYPE'
++		is A6XX_TEX_IMG_BUFFER, which allows for lower alignment.
++		 -->
++		<bitfield name="PITCH" low="3" high="23" type="uint"/>
+ 	</reg32>
+ 
+ 	<!-- planes for NV12, etc. (TODO: not tested) -->
+-	<reg64 offset="0xb4c5" name="SP_PS_2D_SRC_PLANE1" type="address" align="16" variants="A6XX"/>
+-	<reg32 offset="0xb4c7" name="SP_PS_2D_SRC_PLANE_PITCH" low="0" high="11" shr="6" type="uint" variants="A6XX"/>
+-	<reg64 offset="0xb4c8" name="SP_PS_2D_SRC_PLANE2" type="address" align="16" variants="A6XX"/>
++	<reg64 offset="0xb4c5" name="TPL1_A2D_SRC_TEXTURE_BASE_1" type="address" align="16" variants="A6XX"/>
++	<reg32 offset="0xb4c7" name="TPL1_A2D_SRC_TEXTURE_PITCH_1" low="0" high="11" shr="6" type="uint" variants="A6XX"/>
++	<reg64 offset="0xb4c8" name="TPL1_A2D_SRC_TEXTURE_BASE_2" type="address" align="16" variants="A6XX"/>
+ 
+-	<reg64 offset="0xb2c5" name="SP_PS_2D_SRC_PLANE1" type="address" align="16" variants="A7XX-"/>
+-	<reg32 offset="0xb2c7" name="SP_PS_2D_SRC_PLANE_PITCH" low="0" high="11" shr="6" type="uint" variants="A7XX-"/>
+-	<reg64 offset="0xb2c8" name="SP_PS_2D_SRC_PLANE2" type="address" align="16" variants="A7XX-"/>
++	<reg64 offset="0xb2c5" name="TPL1_A2D_SRC_TEXTURE_BASE_1" type="address" align="16" variants="A7XX-"/>
++	<reg32 offset="0xb2c7" name="TPL1_A2D_SRC_TEXTURE_PITCH_1" low="0" high="11" shr="6" type="uint" variants="A7XX-"/>
++	<reg64 offset="0xb2c8" name="TPL1_A2D_SRC_TEXTURE_BASE_2" type="address" align="16" variants="A7XX-"/>
+ 
+-	<reg64 offset="0xb4ca" name="SP_PS_2D_SRC_FLAGS" type="address" align="16" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb4cc" name="SP_PS_2D_SRC_FLAGS_PITCH" low="0" high="7" shr="6" type="uint" variants="A6XX" usage="rp_blit"/>
++	<reg64 offset="0xb4ca" name="TPL1_A2D_SRC_TEXTURE_FLAG_BASE" type="address" align="16" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb4cc" name="TPL1_A2D_SRC_TEXTURE_FLAG_PITCH" low="0" high="7" shr="6" type="uint" variants="A6XX" usage="rp_blit"/>
+ 
+-	<reg64 offset="0xb2ca" name="SP_PS_2D_SRC_FLAGS" type="address" align="16" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xb2cc" name="SP_PS_2D_SRC_FLAGS_PITCH" low="0" high="7" shr="6" type="uint" variants="A7XX-" usage="rp_blit"/>
++	<reg64 offset="0xb2ca" name="TPL1_A2D_SRC_TEXTURE_FLAG_BASE" type="address" align="16" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xb2cc" name="TPL1_A2D_SRC_TEXTURE_FLAG_PITCH" low="0" high="7" shr="6" type="uint" variants="A7XX-" usage="rp_blit"/>
+ 
+ 	<reg32 offset="0xb4cd" name="SP_PS_UNKNOWN_B4CD" low="6" high="31" variants="A6XX"/>
+ 	<reg32 offset="0xb4ce" name="SP_PS_UNKNOWN_B4CE" low="0" high="31" variants="A6XX"/>
+@@ -5383,8 +3266,12 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0xb2ce" name="SP_PS_UNKNOWN_B4CE" low="0" high="31" variants="A7XX"/>
+ 	<reg32 offset="0xb2cf" name="SP_PS_UNKNOWN_B4CF" low="0" high="30" variants="A7XX"/>
+ 	<reg32 offset="0xb2d0" name="SP_PS_UNKNOWN_B4D0" low="0" high="29" variants="A7XX"/>
+-	<reg32 offset="0xb2d1" name="SP_PS_2D_WINDOW_OFFSET" type="a6xx_reg_xy" variants="A7XX"/>
+-	<reg32 offset="0xb2d2" name="SP_PS_UNKNOWN_B2D2" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xb2d1" name="TPL1_A2D_WINDOW_OFFSET" type="a6xx_reg_xy" variants="A7XX"/>
++	<reg32 offset="0xb2d2" name="TPL1_A2D_BLT_CNTL" variants="A7XX-" usage="rp_blit">
++		<bitfield name="RAW_COPY" pos="0" type="boolean"/>
++		<bitfield name="START_OFFSET_TEXELS" low="16" high="21"/>
++		<bitfield name="TYPE" low="29" high="31" type="a6xx_tex_type"/>
++	</reg32>
+ 	<reg32 offset="0xab21" name="SP_WINDOW_OFFSET" type="a6xx_reg_xy" variants="A7XX-" usage="rp_blit"/>
+ 
+ 	<!-- always 0x100000 or 0x1000000? -->
+@@ -5422,34 +3309,44 @@ to upconvert to 32b float internally?
+ 
+ 	<!-- TODO: 4 more perfcntr sel at 0xb620 ? -->
+ 
+-	<bitset name="a6xx_hlsq_xs_cntl" inline="yes">
++	<bitset name="a6xx_xs_const_config" inline="yes">
+ 		<bitfield name="CONSTLEN" low="0" high="7" shr="2" type="uint"/>
+ 		<bitfield name="ENABLED" pos="8" type="boolean"/>
+ 		<bitfield name="READ_IMM_SHARED_CONSTS" pos="9" type="boolean" variants="A7XX-"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0xb800" name="HLSQ_VS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb801" name="HLSQ_HS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb802" name="HLSQ_DS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb803" name="HLSQ_GS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb800" name="SP_VS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb801" name="SP_HS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb802" name="SP_DS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb803" name="SP_GS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="rp_blit"/>
+ 
+-	<reg32 offset="0xa827" name="HLSQ_VS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa83f" name="HLSQ_HS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa867" name="HLSQ_DS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa898" name="HLSQ_GS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa827" name="SP_VS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa83f" name="SP_HS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa867" name="SP_DS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa898" name="SP_GS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="rp_blit"/>
+ 
+-	<reg32 offset="0xa9aa" name="HLSQ_FS_UNKNOWN_A9AA" variants="A7XX-" usage="rp_blit">
+-		<!-- Tentatively named, appears to disable consts being loaded via CP_LOAD_STATE6_FRAG -->
+-		<bitfield name="CONSTS_LOAD_DISABLE" pos="0" type="boolean"/>
++	<reg32 offset="0xa9aa" name="SP_RENDER_CNTL" variants="A7XX-" usage="rp_blit">
++		<bitfield name="FS_DISABLE" pos="0" type="boolean"/>
+ 	</reg32>
+ 
+-	<!-- Always 0 -->
+-	<reg32 offset="0xa9ac" name="HLSQ_UNKNOWN_A9AC" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa9ac" name="SP_DITHER_CNTL" variants="A7XX-" usage="cmd">
++		<bitfield name="DITHER_MODE_MRT0" low="0"  high="1"  type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT1" low="2"  high="3"  type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT2" low="4"  high="5"  type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT3" low="6"  high="7"  type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT4" low="8"  high="9"  type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT5" low="10" high="11" type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT6" low="12" high="13" type="adreno_rb_dither_mode"/>
++		<bitfield name="DITHER_MODE_MRT7" low="14" high="15" type="adreno_rb_dither_mode"/>
++	</reg32>
+ 
+-	<!-- Used in VK_KHR_fragment_shading_rate -->
+-	<reg32 offset="0xa9ad" name="HLSQ_UNKNOWN_A9AD" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa9ad" name="SP_VRS_CONFIG" variants="A7XX-" usage="rp_blit">
++		<bitfield name="PIPELINE_FSR_ENABLE" pos="0" type="boolean"/>
++		<bitfield name="ATTACHMENT_FSR_ENABLE" pos="1" type="boolean"/>
++		<bitfield name="PRIMITIVE_FSR_ENABLE" pos="3" type="boolean"/>
++	</reg32>
+ 
+-	<reg32 offset="0xa9ae" name="HLSQ_UNKNOWN_A9AE" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9ae" name="SP_PS_CNTL_1" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="SYSVAL_REGS_COUNT" low="0" high="7" type="uint"/>
+ 		<!-- UNK8 is set on a730/a740 -->
+ 		<bitfield name="UNK8" pos="8" type="boolean"/>
+@@ -5462,94 +3359,94 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0xb823" name="HLSQ_LOAD_STATE_GEOM_DATA"/>
+ 
+ 
+-	<bitset name="a6xx_hlsq_fs_cntl_0" inline="yes">
++	<bitset name="a6xx_sp_ps_wave_cntl" inline="yes">
+ 		<!-- must match SP_FS_CTRL -->
+ 		<bitfield name="THREADSIZE" pos="0" type="a6xx_threadsize"/>
+ 		<bitfield name="VARYINGS" pos="1" type="boolean"/>
+ 		<bitfield name="UNK2" low="2" high="11"/>
+ 	</bitset>
+-	<bitset name="a6xx_hlsq_control_3_reg" inline="yes">
++	<bitset name="a6xx_sp_reg_prog_id_1" inline="yes">
+ 		<!-- register loaded with position (bary.f) -->
+ 		<bitfield name="IJ_PERSP_PIXEL" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="IJ_LINEAR_PIXEL" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="IJ_PERSP_CENTROID" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="IJ_LINEAR_CENTROID" low="24" high="31" type="a3xx_regid"/>
+ 	</bitset>
+-	<bitset name="a6xx_hlsq_control_4_reg" inline="yes">
++	<bitset name="a6xx_sp_reg_prog_id_2" inline="yes">
+ 		<bitfield name="IJ_PERSP_SAMPLE" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="IJ_LINEAR_SAMPLE" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="XYCOORDREGID" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="ZWCOORDREGID" low="24" high="31" type="a3xx_regid"/>
+ 	</bitset>
+-	<bitset name="a6xx_hlsq_control_5_reg" inline="yes">
++	<bitset name="a6xx_sp_reg_prog_id_3" inline="yes">
+ 		<bitfield name="LINELENGTHREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<bitfield name="FOVEATIONQUALITYREGID" low="8" high="15" type="a3xx_regid"/>
+ 	</bitset>
+ 
+-	<reg32 offset="0xb980" type="a6xx_hlsq_fs_cntl_0" name="HLSQ_FS_CNTL_0" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb980" type="a6xx_sp_ps_wave_cntl" name="SP_PS_WAVE_CNTL" variants="A6XX" usage="rp_blit"/>
+ 	<reg32 offset="0xb981" name="HLSQ_UNKNOWN_B981" pos="0" type="boolean" variants="A6XX"/> <!-- never used by blob -->
+-	<reg32 offset="0xb982" name="HLSQ_CONTROL_1_REG" low="0" high="2" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb982" name="SP_LB_PARAM_LIMIT" low="0" high="2" variants="A6XX" usage="rp_blit">
+ 		<!-- Sets the maximum number of primitives allowed in one FS wave minus one, similarly to the
+ 				 A3xx field, except that it's not necessary to set it to anything but the maximum, since
+ 				 the hardware will simply emit smaller waves when it runs out of space.	-->
+ 		<bitfield name="PRIMALLOCTHRESHOLD" low="0" high="2" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb983" name="HLSQ_CONTROL_2_REG" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb983" name="SP_REG_PROG_ID_0" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="FACEREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- SAMPLEID is loaded into a half-precision register: -->
+ 		<bitfield name="SAMPLEID" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="SAMPLEMASK" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="CENTERRHW" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xb984" type="a6xx_hlsq_control_3_reg" name="HLSQ_CONTROL_3_REG" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb985" type="a6xx_hlsq_control_4_reg" name="HLSQ_CONTROL_4_REG" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb986" type="a6xx_hlsq_control_5_reg" name="HLSQ_CONTROL_5_REG" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb987" name="HLSQ_CS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="cmd"/>
+-	<reg32 offset="0xa9c6" type="a6xx_hlsq_fs_cntl_0" name="HLSQ_FS_CNTL_0" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9c7" name="HLSQ_CONTROL_1_REG" low="0" high="2" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xb984" type="a6xx_sp_reg_prog_id_1" name="SP_REG_PROG_ID_1" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb985" type="a6xx_sp_reg_prog_id_2" name="SP_REG_PROG_ID_2" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb986" type="a6xx_sp_reg_prog_id_3" name="SP_REG_PROG_ID_3" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb987" name="SP_CS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="cmd"/>
++	<reg32 offset="0xa9c6" type="a6xx_sp_ps_wave_cntl" name="SP_PS_WAVE_CNTL" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9c7" name="SP_LB_PARAM_LIMIT" low="0" high="2" variants="A7XX-" usage="rp_blit">
+ 			<bitfield name="PRIMALLOCTHRESHOLD" low="0" high="2" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9c8" name="HLSQ_CONTROL_2_REG" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9c8" name="SP_REG_PROG_ID_0" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="FACEREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- SAMPLEID is loaded into a half-precision register: -->
+ 		<bitfield name="SAMPLEID" low="8" high="15" type="a3xx_regid"/>
+ 		<bitfield name="SAMPLEMASK" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="CENTERRHW" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xa9c9" type="a6xx_hlsq_control_3_reg" name="HLSQ_CONTROL_3_REG" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9ca" type="a6xx_hlsq_control_4_reg" name="HLSQ_CONTROL_4_REG" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9cb" type="a6xx_hlsq_control_5_reg" name="HLSQ_CONTROL_5_REG" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9cd" name="HLSQ_CS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="cmd"/>
++	<reg32 offset="0xa9c9" type="a6xx_sp_reg_prog_id_1" name="SP_REG_PROG_ID_1" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9ca" type="a6xx_sp_reg_prog_id_2" name="SP_REG_PROG_ID_2" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9cb" type="a6xx_sp_reg_prog_id_3" name="SP_REG_PROG_ID_3" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9cd" name="SP_CS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="cmd"/>
+ 
+ 	<!-- TODO: what does KERNELDIM do exactly (blob sets it differently from turnip) -->
+-	<reg32 offset="0xb990" name="HLSQ_CS_NDRANGE_0" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb990" name="SP_CS_NDRANGE_0" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
+ 		<!-- localsize is value minus one: -->
+ 		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+ 		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+ 		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb991" name="HLSQ_CS_NDRANGE_1" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb991" name="SP_CS_NDRANGE_1" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_X" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb992" name="HLSQ_CS_NDRANGE_2" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb992" name="SP_CS_NDRANGE_2" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_X" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb993" name="HLSQ_CS_NDRANGE_3" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb993" name="SP_CS_NDRANGE_3" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_Y" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb994" name="HLSQ_CS_NDRANGE_4" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb994" name="SP_CS_NDRANGE_4" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_Y" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb995" name="HLSQ_CS_NDRANGE_5" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb995" name="SP_CS_NDRANGE_5" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_Z" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb996" name="HLSQ_CS_NDRANGE_6" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb996" name="SP_CS_NDRANGE_6" variants="A6XX" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_Z" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xb997" name="HLSQ_CS_CNTL_0" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb997" name="SP_CS_CONST_CONFIG_0" variants="A6XX" usage="rp_blit">
+ 		<!-- these are all vec3. first 3 need to be high regs
+-		     WGSIZECONSTID is the local size (from HLSQ_CS_NDRANGE_0)
++		     WGSIZECONSTID is the local size (from SP_CS_NDRANGE_0)
+ 		     WGOFFSETCONSTID is WGIDCONSTID*WGSIZECONSTID
+ 		-->
+ 		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
+@@ -5557,7 +3454,7 @@ to upconvert to 32b float internally?
+ 		<bitfield name="WGOFFSETCONSTID" low="16" high="23" type="a3xx_regid"/>
+ 		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
+ 	</reg32>
+-	<reg32 offset="0xb998" name="HLSQ_CS_CNTL_1" variants="A6XX" usage="rp_blit">
++	<reg32 offset="0xb998" name="SP_CS_WGE_CNTL" variants="A6XX" usage="rp_blit">
+ 		<!-- gl_LocalInvocationIndex -->
+ 		<bitfield name="LINEARLOCALIDREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- a650 has 6 "SP cores" (but 3 "SP"). this makes it use only
+@@ -5569,40 +3466,40 @@ to upconvert to 32b float internally?
+ 		<bitfield name="THREADSIZE_SCALAR" pos="10" type="boolean"/>
+ 	</reg32>
+ 	<!--note: vulkan blob doesn't use these -->
+-	<reg32 offset="0xb999" name="HLSQ_CS_KERNEL_GROUP_X" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb99a" name="HLSQ_CS_KERNEL_GROUP_Y" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xb99b" name="HLSQ_CS_KERNEL_GROUP_Z" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb999" name="SP_CS_KERNEL_GROUP_X" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb99a" name="SP_CS_KERNEL_GROUP_Y" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xb99b" name="SP_CS_KERNEL_GROUP_Z" variants="A6XX" usage="rp_blit"/>
+ 
+ 	<!-- TODO: what does KERNELDIM do exactly (blob sets it differently from turnip) -->
+-	<reg32 offset="0xa9d4" name="HLSQ_CS_NDRANGE_0" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d4" name="SP_CS_NDRANGE_0" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
+ 		<!-- localsize is value minus one: -->
+ 		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+ 		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+ 		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9d5" name="HLSQ_CS_NDRANGE_1" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d5" name="SP_CS_NDRANGE_1" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_X" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9d6" name="HLSQ_CS_NDRANGE_2" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d6" name="SP_CS_NDRANGE_2" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_X" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9d7" name="HLSQ_CS_NDRANGE_3" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d7" name="SP_CS_NDRANGE_3" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_Y" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9d8" name="HLSQ_CS_NDRANGE_4" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d8" name="SP_CS_NDRANGE_4" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_Y" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9d9" name="HLSQ_CS_NDRANGE_5" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9d9" name="SP_CS_NDRANGE_5" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALSIZE_Z" low="0" high="31" type="uint"/>
+ 	</reg32>
+-	<reg32 offset="0xa9da" name="HLSQ_CS_NDRANGE_6" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9da" name="SP_CS_NDRANGE_6" variants="A7XX-" usage="rp_blit">
+ 		<bitfield name="GLOBALOFF_Z" low="0" high="31" type="uint"/>
+ 	</reg32>
+ 	<!--note: vulkan blob doesn't use these -->
+-	<reg32 offset="0xa9dc" name="HLSQ_CS_KERNEL_GROUP_X" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9dd" name="HLSQ_CS_KERNEL_GROUP_Y" variants="A7XX-" usage="rp_blit"/>
+-	<reg32 offset="0xa9de" name="HLSQ_CS_KERNEL_GROUP_Z" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9dc" name="SP_CS_KERNEL_GROUP_X" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9dd" name="SP_CS_KERNEL_GROUP_Y" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xa9de" name="SP_CS_KERNEL_GROUP_Z" variants="A7XX-" usage="rp_blit"/>
+ 
+ 	<enum name="a7xx_cs_yalign">
+ 		<value name="CS_YALIGN_1" value="8"/>
+@@ -5611,19 +3508,29 @@ to upconvert to 32b float internally?
+ 		<value name="CS_YALIGN_8" value="1"/>
+ 	</enum>
+ 
+-	<reg32 offset="0xa9db" name="HLSQ_CS_CNTL_1" variants="A7XX-" usage="rp_blit">
++	<reg32 offset="0xa9db" name="SP_CS_WGE_CNTL" variants="A7XX-" usage="rp_blit">
+ 		<!-- gl_LocalInvocationIndex -->
+ 		<bitfield name="LINEARLOCALIDREGID" low="0" high="7" type="a3xx_regid"/>
+ 		<!-- Must match SP_CS_CTRL -->
+ 		<bitfield name="THREADSIZE" pos="9" type="a6xx_threadsize"/>
+-		<bitfield name="UNK11" pos="11" type="boolean"/>
+-		<bitfield name="UNK22" pos="22" type="boolean"/>
+-		<bitfield name="UNK26" pos="26" type="boolean"/>
+-		<bitfield name="YALIGN" low="27" high="30" type="a7xx_cs_yalign"/>
++		<doc>
++			When this bit is enabled, the dispatch order interleaves
++			the z coordinate instead of launching all workgroups
++			with z=0, then all with z=1 and so on.
++		</doc>
++		<bitfield name="WORKGROUPRASTORDERZFIRSTEN" pos="11" type="boolean"/>
++		<doc>
++			When both fields are non-0 then the dispatcher uses
++			these tile sizes to launch workgroups in a tiled manner
++			when the x and y workgroup counts are
++			both more than 1.
++		</doc>
++		<bitfield name="WGTILEWIDTH" low="20" high="25"/>
++		<bitfield name="WGTILEHEIGHT" low="26" high="31"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xa9df" name="HLSQ_CS_LOCAL_SIZE" variants="A7XX-" usage="cmd">
+-		<!-- localsize is value minus one: -->
++	<reg32 offset="0xa9df" name="SP_CS_NDRANGE_7" variants="A7XX-" usage="cmd">
++		<!-- The size of the last workgroup. localsize is value minus one: -->
+ 		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+ 		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+ 		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+@@ -5641,29 +3548,27 @@ to upconvert to 32b float internally?
+ 		</reg64>
+ 	</array>
+ 
+-	<!-- new in a6xx gen4, mirror of SP_CS_UNKNOWN_A9B1? -->
+-	<reg32 offset="0xb9d0" name="HLSQ_CS_UNKNOWN_B9D0" variants="A6XX" usage="cmd">
++	<!-- new in a6xx gen4, mirror of SP_CS_CNTL_1? -->
++	<reg32 offset="0xb9d0" name="HLSQ_CS_CTRL_REG1" variants="A6XX" usage="cmd">
+ 		<bitfield name="SHARED_SIZE" low="0" high="4" type="uint"/>
+-		<bitfield name="UNK5" pos="5" type="boolean"/>
+-		<!-- always 1 ? -->
+-		<bitfield name="UNK6" pos="6" type="boolean"/>
++		<bitfield name="CONSTANTRAMMODE" low="5" high="6" type="a6xx_const_ram_mode"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xbb00" name="HLSQ_DRAW_CMD" variants="A6XX">
++	<reg32 offset="0xbb00" name="SP_DRAW_INITIATOR" variants="A6XX">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xbb01" name="HLSQ_DISPATCH_CMD" variants="A6XX">
++	<reg32 offset="0xbb01" name="SP_KERNEL_INITIATOR" variants="A6XX">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xbb02" name="HLSQ_EVENT_CMD" variants="A6XX">
++	<reg32 offset="0xbb02" name="SP_EVENT_INITIATOR" variants="A6XX">
+ 		<!-- I think only the low bit is actually used? -->
+ 		<bitfield name="STATE_ID" low="16" high="23"/>
+ 		<bitfield name="EVENT" low="0" high="6" type="vgt_event_type"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xbb08" name="HLSQ_INVALIDATE_CMD" variants="A6XX" usage="cmd">
++	<reg32 offset="0xbb08" name="SP_UPDATE_CNTL" variants="A6XX" usage="cmd">
+ 		<doc>
+ 			This register clears pending loads queued up by
+ 			CP_LOAD_STATE6. Each bit resets a particular kind(s) of
+@@ -5678,8 +3583,8 @@ to upconvert to 32b float internally?
+ 		<bitfield name="FS_STATE" pos="4" type="boolean"/>
+ 		<bitfield name="CS_STATE" pos="5" type="boolean"/>
+ 
+-		<bitfield name="CS_IBO" pos="6" type="boolean"/>
+-		<bitfield name="GFX_IBO" pos="7" type="boolean"/>
++		<bitfield name="CS_UAV" pos="6" type="boolean"/>
++		<bitfield name="GFX_UAV" pos="7" type="boolean"/>
+ 
+ 		<!-- Note: these only do something when HLSQ_SHARED_CONSTS is set to 1 -->
+ 		<bitfield name="CS_SHARED_CONST" pos="19" type="boolean"/>
+@@ -5690,20 +3595,20 @@ to upconvert to 32b float internally?
+ 		<bitfield name="GFX_BINDLESS" low="14" high="18" type="hex"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xab1c" name="HLSQ_DRAW_CMD" variants="A7XX-">
++	<reg32 offset="0xab1c" name="SP_DRAW_INITIATOR" variants="A7XX-">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xab1d" name="HLSQ_DISPATCH_CMD" variants="A7XX-">
++	<reg32 offset="0xab1d" name="SP_KERNEL_INITIATOR" variants="A7XX-">
+ 		<bitfield name="STATE_ID" low="0" high="7"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xab1e" name="HLSQ_EVENT_CMD" variants="A7XX-">
++	<reg32 offset="0xab1e" name="SP_EVENT_INITIATOR" variants="A7XX-">
+ 		<bitfield name="STATE_ID" low="16" high="23"/>
+ 		<bitfield name="EVENT" low="0" high="6" type="vgt_event_type"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xab1f" name="HLSQ_INVALIDATE_CMD" variants="A7XX-" usage="cmd">
++	<reg32 offset="0xab1f" name="SP_UPDATE_CNTL" variants="A7XX-" usage="cmd">
+ 		<doc>
+ 			This register clears pending loads queued up by
+ 			CP_LOAD_STATE6. Each bit resets a particular kind(s) of
+@@ -5718,18 +3623,18 @@ to upconvert to 32b float internally?
+ 		<bitfield name="FS_STATE" pos="4" type="boolean"/>
+ 		<bitfield name="CS_STATE" pos="5" type="boolean"/>
+ 
+-		<bitfield name="CS_IBO" pos="6" type="boolean"/>
+-		<bitfield name="GFX_IBO" pos="7" type="boolean"/>
++		<bitfield name="CS_UAV" pos="6" type="boolean"/>
++		<bitfield name="GFX_UAV" pos="7" type="boolean"/>
+ 
+ 		<!-- SS6_BINDLESS: one bit per bindless base -->
+ 		<bitfield name="CS_BINDLESS" low="9" high="16" type="hex"/>
+ 		<bitfield name="GFX_BINDLESS" low="17" high="24" type="hex"/>
+ 	</reg32>
+ 
+-	<reg32 offset="0xbb10" name="HLSQ_FS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A6XX" usage="rp_blit"/>
+-	<reg32 offset="0xab03" name="HLSQ_FS_CNTL" type="a6xx_hlsq_xs_cntl" variants="A7XX-" usage="rp_blit"/>
++	<reg32 offset="0xbb10" name="SP_PS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A6XX" usage="rp_blit"/>
++	<reg32 offset="0xab03" name="SP_PS_CONST_CONFIG" type="a6xx_xs_const_config" variants="A7XX-" usage="rp_blit"/>
+ 
+-	<array offset="0xab40" name="HLSQ_SHARED_CONSTS_IMM" stride="1" length="64" variants="A7XX-"/>
++	<array offset="0xab40" name="SP_SHARED_CONSTANT_GFX_0" stride="1" length="64" variants="A7XX-"/>
+ 
+ 	<reg32 offset="0xbb11" name="HLSQ_SHARED_CONSTS" variants="A6XX" usage="cmd">
+ 		<doc>
+@@ -5738,7 +3643,7 @@ to upconvert to 32b float internally?
+ 			const pool and 16 in the geometry const pool although
+ 			only 8 are actually used (why?) and they are mapped to
+ 			c504-c511 in each stage. Both VS and FS shared consts
+-			are written using ST6_CONSTANTS/SB6_IBO, so that both
++			are written using ST6_CONSTANTS/SB6_UAV, so that both
+ 			the geometry and FS shared consts can be written at once
+ 			by using CP_LOAD_STATE6 rather than
+ 			CP_LOAD_STATE6_FRAG/CP_LOAD_STATE6_GEOM. In addition
+@@ -5747,13 +3652,13 @@ to upconvert to 32b float internally?
+ 
+ 			There is also a separate shared constant pool for CS,
+ 			which is loaded through CP_LOAD_STATE6_FRAG with
+-			ST6_UBO/ST6_IBO. However the only real difference for CS
++			ST6_UBO/ST6_UAV. However the only real difference for CS
+ 			is the dword units.
+ 		</doc>
+ 		<bitfield name="ENABLE" pos="0" type="boolean"/>
+ 	</reg32>
+ 
+-	<!-- mirror of SP_BINDLESS_BASE -->
++	<!-- mirror of SP_GFX_BINDLESS_BASE -->
+ 	<array offset="0xbb20" name="HLSQ_BINDLESS_BASE" stride="2" length="5" variants="A6XX" usage="cmd">
+ 		<reg64 offset="0" name="DESCRIPTOR">
+ 			<bitfield name="DESC_SIZE" low="0" high="1" type="a6xx_bindless_descriptor_size"/>
+@@ -5788,10 +3693,10 @@ to upconvert to 32b float internally?
+ 		sequence. The sequence used internally for an event looks like:
+ 		- write EVENT_CMD pipe register
+ 		- write CP_EVENT_START
+-		- write HLSQ_EVENT_CMD with event or HLSQ_DRAW_CMD
+-		- write PC_EVENT_CMD with event or PC_DRAW_CMD
+-		- write HLSQ_EVENT_CMD(CONTEXT_DONE)
+-		- write PC_EVENT_CMD(CONTEXT_DONE)
++		- write SP_EVENT_INITIATOR with event or SP_DRAW_INITIATOR
++		- write PC_EVENT_INITIATOR with event or PC_DRAW_INITIATOR
++		- write SP_EVENT_INITIATOR(CONTEXT_DONE)
++		- write PC_EVENT_INITIATOR(CONTEXT_DONE)
+ 		- write CP_EVENT_END
+ 		Writing to CP_EVENT_END seems to actually trigger the context roll
+ 	-->
+@@ -5809,193 +3714,6 @@ to upconvert to 32b float internally?
+ 	</reg32>
+ </domain>
+ 
+-<!-- Seems basically the same as a5xx, maybe move to common.xml.. -->
+-<domain name="A6XX_TEX_SAMP" width="32">
+-	<doc>Texture sampler dwords</doc>
+-	<enum name="a6xx_tex_filter"> <!-- same as a4xx? -->
+-		<value name="A6XX_TEX_NEAREST" value="0"/>
+-		<value name="A6XX_TEX_LINEAR" value="1"/>
+-		<value name="A6XX_TEX_ANISO" value="2"/>
+-		<value name="A6XX_TEX_CUBIC" value="3"/> <!-- a650 only -->
+-	</enum>
+-	<enum name="a6xx_tex_clamp"> <!-- same as a4xx? -->
+-		<value name="A6XX_TEX_REPEAT" value="0"/>
+-		<value name="A6XX_TEX_CLAMP_TO_EDGE" value="1"/>
+-		<value name="A6XX_TEX_MIRROR_REPEAT" value="2"/>
+-		<value name="A6XX_TEX_CLAMP_TO_BORDER" value="3"/>
+-		<value name="A6XX_TEX_MIRROR_CLAMP" value="4"/>
+-	</enum>
+-	<enum name="a6xx_tex_aniso"> <!-- same as a4xx? -->
+-		<value name="A6XX_TEX_ANISO_1" value="0"/>
+-		<value name="A6XX_TEX_ANISO_2" value="1"/>
+-		<value name="A6XX_TEX_ANISO_4" value="2"/>
+-		<value name="A6XX_TEX_ANISO_8" value="3"/>
+-		<value name="A6XX_TEX_ANISO_16" value="4"/>
+-	</enum>
+-	<enum name="a6xx_reduction_mode">
+-		<value name="A6XX_REDUCTION_MODE_AVERAGE" value="0"/>
+-		<value name="A6XX_REDUCTION_MODE_MIN" value="1"/>
+-		<value name="A6XX_REDUCTION_MODE_MAX" value="2"/>
+-	</enum>
+-
+-	<reg32 offset="0" name="0">
+-		<bitfield name="MIPFILTER_LINEAR_NEAR" pos="0" type="boolean"/>
+-		<bitfield name="XY_MAG" low="1" high="2" type="a6xx_tex_filter"/>
+-		<bitfield name="XY_MIN" low="3" high="4" type="a6xx_tex_filter"/>
+-		<bitfield name="WRAP_S" low="5" high="7" type="a6xx_tex_clamp"/>
+-		<bitfield name="WRAP_T" low="8" high="10" type="a6xx_tex_clamp"/>
+-		<bitfield name="WRAP_R" low="11" high="13" type="a6xx_tex_clamp"/>
+-		<bitfield name="ANISO" low="14" high="16" type="a6xx_tex_aniso"/>
+-		<bitfield name="LOD_BIAS" low="19" high="31" type="fixed" radix="8"/><!-- no idea how many bits for real -->
+-	</reg32>
+-	<reg32 offset="1" name="1">
+-		<bitfield name="CLAMPENABLE" pos="0" type="boolean">
+-			<doc>
+-				clamp result to [0, 1] if the format is unorm or
+-				[-1, 1] if the format is snorm, *after*
+-				filtering. Has no effect for other formats.
+-			</doc>
+-		</bitfield>
+-		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
+-		<bitfield name="CUBEMAPSEAMLESSFILTOFF" pos="4" type="boolean"/>
+-		<bitfield name="UNNORM_COORDS" pos="5" type="boolean"/>
+-		<bitfield name="MIPFILTER_LINEAR_FAR" pos="6" type="boolean"/>
+-		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="8"/>
+-		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="8"/>
+-	</reg32>
+-	<reg32 offset="2" name="2">
+-		<bitfield name="REDUCTION_MODE" low="0" high="1" type="a6xx_reduction_mode"/>
+-		<bitfield name="CHROMA_LINEAR" pos="5" type="boolean"/>
+-		<bitfield name="BCOLOR" low="7" high="31"/>
+-	</reg32>
+-	<reg32 offset="3" name="3"/>
+-</domain>
+-
+-<domain name="A6XX_TEX_CONST" width="32" varset="chip">
+-	<doc>Texture constant dwords</doc>
+-	<enum name="a6xx_tex_swiz"> <!-- same as a4xx? -->
+-		<value name="A6XX_TEX_X" value="0"/>
+-		<value name="A6XX_TEX_Y" value="1"/>
+-		<value name="A6XX_TEX_Z" value="2"/>
+-		<value name="A6XX_TEX_W" value="3"/>
+-		<value name="A6XX_TEX_ZERO" value="4"/>
+-		<value name="A6XX_TEX_ONE" value="5"/>
+-	</enum>
+-	<enum name="a6xx_tex_type"> <!-- same as a4xx? -->
+-		<value name="A6XX_TEX_1D" value="0"/>
+-		<value name="A6XX_TEX_2D" value="1"/>
+-		<value name="A6XX_TEX_CUBE" value="2"/>
+-		<value name="A6XX_TEX_3D" value="3"/>
+-		<value name="A6XX_TEX_BUFFER" value="4"/>
+-	</enum>
+-	<reg32 offset="0" name="0">
+-		<bitfield name="TILE_MODE" low="0" high="1" type="a6xx_tile_mode"/>
+-		<bitfield name="SRGB" pos="2" type="boolean"/>
+-		<bitfield name="SWIZ_X" low="4" high="6" type="a6xx_tex_swiz"/>
+-		<bitfield name="SWIZ_Y" low="7" high="9" type="a6xx_tex_swiz"/>
+-		<bitfield name="SWIZ_Z" low="10" high="12" type="a6xx_tex_swiz"/>
+-		<bitfield name="SWIZ_W" low="13" high="15" type="a6xx_tex_swiz"/>
+-		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
+-		<!-- overlaps with MIPLVLS -->
+-		<bitfield name="CHROMA_MIDPOINT_X" pos="16" type="boolean"/>
+-		<bitfield name="CHROMA_MIDPOINT_Y" pos="18" type="boolean"/>
+-		<bitfield name="SAMPLES" low="20" high="21" type="a3xx_msaa_samples"/>
+-		<bitfield name="FMT" low="22" high="29" type="a6xx_format"/>
+-		<!--
+-			Why is the swap needed in addition to SWIZ_*? The swap
+-			is performed before border color replacement, while the
+-			swizzle is applied after after it.
+-		-->
+-		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
+-	</reg32>
+-	<reg32 offset="1" name="1">
+-		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
+-		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
+-		<bitfield name="MUTABLEEN" pos="31" type="boolean" variants="A7XX-"/>
+-	</reg32>
+-	<reg32 offset="2" name="2">
+-		<!--
+-			These fields overlap PITCH, and are used instead of
+-			PITCH/PITCHALIGN when TYPE is A6XX_TEX_BUFFER.
+-		 -->
+-		<doc> probably for D3D structured UAVs, normally set to 1 </doc>
+-		<bitfield name="STRUCTSIZETEXELS" low="4" high="15" type="uint"/>
+-		<bitfield name="STARTOFFSETTEXELS" low="16" high="21" type="uint"/>
+-
+-		<!-- minimum pitch (for mipmap levels): log2(pitchalign / 64) -->
+-		<bitfield name="PITCHALIGN" low="0" high="3" type="uint"/>
+-		<doc>Pitch in bytes (so actually stride)</doc>
+-		<bitfield name="PITCH" low="7" high="28" type="uint"/>
+-		<bitfield name="TYPE" low="29" high="31" type="a6xx_tex_type"/>
+-	</reg32>
+-	<reg32 offset="3" name="3">
+-		<!--
+-		ARRAY_PITCH is basically LAYERSZ for the first mipmap level, and
+-		for 3d textures (laid out mipmap level first) MIN_LAYERSZ is the
+-		layer size at the point that it stops being reduced moving to
+-		higher (smaller) mipmap levels
+-		 -->
+-		<bitfield name="ARRAY_PITCH" low="0" high="22" shr="12" type="uint"/>
+-		<bitfield name="MIN_LAYERSZ" low="23" high="26" shr="12"/>
+-		<!--
+-		by default levels with w < 16 are linear
+-		TILE_ALL makes all levels have tiling
+-		seems required when using UBWC, since all levels have UBWC (can possibly be disabled?)
+-		 -->
+-		<bitfield name="TILE_ALL" pos="27" type="boolean"/>
+-		<bitfield name="FLAG" pos="28" type="boolean"/>
+-	</reg32>
+-	<!-- for 2-3 plane format, BASE is flag buffer address (if enabled)
+-	     the address of the non-flag base buffer is determined automatically,
+-	     and must follow the flag buffer
+-	 -->
+-	<reg32 offset="4" name="4">
+-		<bitfield name="BASE_LO" low="5" high="31" shr="5"/>
+-	</reg32>
+-	<reg32 offset="5" name="5">
+-		<bitfield name="BASE_HI" low="0" high="16"/>
+-		<bitfield name="DEPTH" low="17" high="29" type="uint"/>
+-	</reg32>
+-	<reg32 offset="6" name="6">
+-		<!-- overlaps with PLANE_PITCH -->
+-		<bitfield name="MIN_LOD_CLAMP" low="0" high="11" type="ufixed" radix="8"/>
+-		<!-- pitch for plane 2 / plane 3 -->
+-		<bitfield name="PLANE_PITCH" low="8" high="31" type="uint"/>
+-	</reg32>
+-	<!-- 7/8 is plane 2 address for planar formats -->
+-	<reg32 offset="7" name="7">
+-		<bitfield name="FLAG_LO" low="5" high="31" shr="5"/>
+-	</reg32>
+-	<reg32 offset="8" name="8">
+-		<bitfield name="FLAG_HI" low="0" high="16"/>
+-	</reg32>
+-	<!-- 9/10 is plane 3 address for planar formats -->
+-	<reg32 offset="9" name="9">
+-		<bitfield name="FLAG_BUFFER_ARRAY_PITCH" low="0" high="16" shr="4" type="uint"/>
+-	</reg32>
+-	<reg32 offset="10" name="10">
+-		<bitfield name="FLAG_BUFFER_PITCH" low="0" high="6" shr="6" type="uint"/>
+-		<!-- log2 size of the first level, required for mipmapping -->
+-		<bitfield name="FLAG_BUFFER_LOGW" low="8" high="11" type="uint"/>
+-		<bitfield name="FLAG_BUFFER_LOGH" low="12" high="15" type="uint"/>
+-	</reg32>
+-	<reg32 offset="11" name="11"/>
+-	<reg32 offset="12" name="12"/>
+-	<reg32 offset="13" name="13"/>
+-	<reg32 offset="14" name="14"/>
+-	<reg32 offset="15" name="15"/>
+-</domain>
+-
+-<domain name="A6XX_UBO" width="32">
+-	<reg32 offset="0" name="0">
+-		<bitfield name="BASE_LO" low="0" high="31"/>
+-	</reg32>
+-	<reg32 offset="1" name="1">
+-		<bitfield name="BASE_HI" low="0" high="16"/>
+-		<bitfield name="SIZE" low="17" high="31"/> <!-- size in vec4 (4xDWORD) units -->
+-	</reg32>
+-</domain>
+-
+ <domain name="A6XX_PDC" width="32">
+ 	<reg32 offset="0x1140" name="GPU_ENABLE_PDC"/>
+ 	<reg32 offset="0x1148" name="GPU_SEQ_START_ADDR"/>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a6xx_descriptors.xml b/drivers/gpu/drm/msm/registers/adreno/a6xx_descriptors.xml
+new file mode 100644
+index 000000000000..307d43dda8a2
+--- /dev/null
++++ b/drivers/gpu/drm/msm/registers/adreno/a6xx_descriptors.xml
+@@ -0,0 +1,198 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<database xmlns="http://nouveau.freedesktop.org/"
++xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
++<import file="freedreno_copyright.xml"/>
++<import file="adreno/adreno_common.xml"/>
++<import file="adreno/adreno_pm4.xml"/>
++<import file="adreno/a6xx_enums.xml"/>
++
++<domain name="A6XX_TEX_SAMP" width="32">
++	<doc>Texture sampler dwords</doc>
++	<enum name="a6xx_tex_filter"> <!-- same as a4xx? -->
++		<value name="A6XX_TEX_NEAREST" value="0"/>
++		<value name="A6XX_TEX_LINEAR" value="1"/>
++		<value name="A6XX_TEX_ANISO" value="2"/>
++		<value name="A6XX_TEX_CUBIC" value="3"/> <!-- a650 only -->
++	</enum>
++	<enum name="a6xx_tex_clamp"> <!-- same as a4xx? -->
++		<value name="A6XX_TEX_REPEAT" value="0"/>
++		<value name="A6XX_TEX_CLAMP_TO_EDGE" value="1"/>
++		<value name="A6XX_TEX_MIRROR_REPEAT" value="2"/>
++		<value name="A6XX_TEX_CLAMP_TO_BORDER" value="3"/>
++		<value name="A6XX_TEX_MIRROR_CLAMP" value="4"/>
++	</enum>
++	<enum name="a6xx_tex_aniso"> <!-- same as a4xx? -->
++		<value name="A6XX_TEX_ANISO_1" value="0"/>
++		<value name="A6XX_TEX_ANISO_2" value="1"/>
++		<value name="A6XX_TEX_ANISO_4" value="2"/>
++		<value name="A6XX_TEX_ANISO_8" value="3"/>
++		<value name="A6XX_TEX_ANISO_16" value="4"/>
++	</enum>
++	<enum name="a6xx_reduction_mode">
++		<value name="A6XX_REDUCTION_MODE_AVERAGE" value="0"/>
++		<value name="A6XX_REDUCTION_MODE_MIN" value="1"/>
++		<value name="A6XX_REDUCTION_MODE_MAX" value="2"/>
++	</enum>
++	<enum name="a6xx_fast_border_color">
++		<!--                           R B G A -->
++		<value name="A6XX_BORDER_COLOR_0_0_0_0" value="0"/>
++		<value name="A6XX_BORDER_COLOR_0_0_0_1" value="1"/>
++		<value name="A6XX_BORDER_COLOR_1_1_1_0" value="2"/>
++		<value name="A6XX_BORDER_COLOR_1_1_1_1" value="3"/>
++	</enum>
++
++	<reg32 offset="0" name="0">
++		<bitfield name="MIPFILTER_LINEAR_NEAR" pos="0" type="boolean"/>
++		<bitfield name="XY_MAG" low="1" high="2" type="a6xx_tex_filter"/>
++		<bitfield name="XY_MIN" low="3" high="4" type="a6xx_tex_filter"/>
++		<bitfield name="WRAP_S" low="5" high="7" type="a6xx_tex_clamp"/>
++		<bitfield name="WRAP_T" low="8" high="10" type="a6xx_tex_clamp"/>
++		<bitfield name="WRAP_R" low="11" high="13" type="a6xx_tex_clamp"/>
++		<bitfield name="ANISO" low="14" high="16" type="a6xx_tex_aniso"/>
++		<bitfield name="LOD_BIAS" low="19" high="31" type="fixed" radix="8"/><!-- no idea how many bits for real -->
++	</reg32>
++	<reg32 offset="1" name="1">
++		<bitfield name="CLAMPENABLE" pos="0" type="boolean">
++			<doc>
++				clamp result to [0, 1] if the format is unorm or
++				[-1, 1] if the format is snorm, *after*
++				filtering. Has no effect for other formats.
++			</doc>
++		</bitfield>
++		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
++		<bitfield name="CUBEMAPSEAMLESSFILTOFF" pos="4" type="boolean"/>
++		<bitfield name="UNNORM_COORDS" pos="5" type="boolean"/>
++		<bitfield name="MIPFILTER_LINEAR_FAR" pos="6" type="boolean"/>
++		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="8"/>
++		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="8"/>
++	</reg32>
++	<reg32 offset="2" name="2">
++		<bitfield name="REDUCTION_MODE" low="0" high="1" type="a6xx_reduction_mode"/>
++		<bitfield name="FASTBORDERCOLOR" low="2" high="3" type="a6xx_fast_border_color"/>
++		<bitfield name="FASTBORDERCOLOREN" pos="4" type="boolean"/>
++		<bitfield name="CHROMA_LINEAR" pos="5" type="boolean"/>
++		<bitfield name="BCOLOR" low="7" high="31"/>
++	</reg32>
++	<reg32 offset="3" name="3"/>
++</domain>
++
++<domain name="A6XX_TEX_CONST" width="32" varset="chip">
++	<doc>Texture constant dwords</doc>
++	<enum name="a6xx_tex_swiz"> <!-- same as a4xx? -->
++		<value name="A6XX_TEX_X" value="0"/>
++		<value name="A6XX_TEX_Y" value="1"/>
++		<value name="A6XX_TEX_Z" value="2"/>
++		<value name="A6XX_TEX_W" value="3"/>
++		<value name="A6XX_TEX_ZERO" value="4"/>
++		<value name="A6XX_TEX_ONE" value="5"/>
++	</enum>
++	<reg32 offset="0" name="0">
++		<bitfield name="TILE_MODE" low="0" high="1" type="a6xx_tile_mode"/>
++		<bitfield name="SRGB" pos="2" type="boolean"/>
++		<bitfield name="SWIZ_X" low="4" high="6" type="a6xx_tex_swiz"/>
++		<bitfield name="SWIZ_Y" low="7" high="9" type="a6xx_tex_swiz"/>
++		<bitfield name="SWIZ_Z" low="10" high="12" type="a6xx_tex_swiz"/>
++		<bitfield name="SWIZ_W" low="13" high="15" type="a6xx_tex_swiz"/>
++		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
++		<!-- overlaps with MIPLVLS -->
++		<bitfield name="CHROMA_MIDPOINT_X" pos="16" type="boolean"/>
++		<bitfield name="CHROMA_MIDPOINT_Y" pos="18" type="boolean"/>
++		<bitfield name="SAMPLES" low="20" high="21" type="a3xx_msaa_samples"/>
++		<bitfield name="FMT" low="22" high="29" type="a6xx_format"/>
++		<!--
++			Why is the swap needed in addition to SWIZ_*? The swap
++			is performed before border color replacement, while the
++			swizzle is applied after after it.
++		-->
++		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
++	</reg32>
++	<reg32 offset="1" name="1">
++		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
++		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
++		<bitfield name="MUTABLEEN" pos="31" type="boolean" variants="A7XX-"/>
++	</reg32>
++	<reg32 offset="2" name="2">
++		<!--
++			These fields overlap PITCH, and are used instead of
++			PITCH/PITCHALIGN when TYPE is A6XX_TEX_BUFFER.
++		 -->
++		<doc> probably for D3D structured UAVs, normally set to 1 </doc>
++		<bitfield name="STRUCTSIZETEXELS" low="4" high="15" type="uint"/>
++		<bitfield name="STARTOFFSETTEXELS" low="16" high="21" type="uint"/>
++
++		<!-- minimum pitch (for mipmap levels): log2(pitchalign / 64) -->
++		<bitfield name="PITCHALIGN" low="0" high="3" type="uint"/>
++		<doc>Pitch in bytes (so actually stride)</doc>
++		<bitfield name="PITCH" low="7" high="28" type="uint"/>
++		<bitfield name="TYPE" low="29" high="31" type="a6xx_tex_type"/>
++	</reg32>
++	<reg32 offset="3" name="3">
++		<!--
++		ARRAY_PITCH is basically LAYERSZ for the first mipmap level, and
++		for 3d textures (laid out mipmap level first) MIN_LAYERSZ is the
++		layer size at the point that it stops being reduced moving to
++		higher (smaller) mipmap levels
++		 -->
++		<bitfield name="ARRAY_PITCH" low="0" high="22" shr="12" type="uint"/>
++		<bitfield name="MIN_LAYERSZ" low="23" high="26" shr="12"/>
++		<!--
++		by default levels with w < 16 are linear
++		TILE_ALL makes all levels have tiling
++		seems required when using UBWC, since all levels have UBWC (can possibly be disabled?)
++		 -->
++		<bitfield name="TILE_ALL" pos="27" type="boolean"/>
++		<bitfield name="FLAG" pos="28" type="boolean"/>
++	</reg32>
++	<!-- for 2-3 plane format, BASE is flag buffer address (if enabled)
++	     the address of the non-flag base buffer is determined automatically,
++	     and must follow the flag buffer
++	 -->
++	<reg32 offset="4" name="4">
++		<bitfield name="BASE_LO" low="5" high="31" shr="5"/>
++	</reg32>
++	<reg32 offset="5" name="5">
++		<bitfield name="BASE_HI" low="0" high="16"/>
++		<bitfield name="DEPTH" low="17" high="29" type="uint"/>
++	</reg32>
++	<reg32 offset="6" name="6">
++		<!-- overlaps with PLANE_PITCH -->
++		<bitfield name="MIN_LOD_CLAMP" low="0" high="11" type="ufixed" radix="8"/>
++		<!-- pitch for plane 2 / plane 3 -->
++		<bitfield name="PLANE_PITCH" low="8" high="31" type="uint"/>
++	</reg32>
++	<!-- 7/8 is plane 2 address for planar formats -->
++	<reg32 offset="7" name="7">
++		<bitfield name="FLAG_LO" low="5" high="31" shr="5"/>
++	</reg32>
++	<reg32 offset="8" name="8">
++		<bitfield name="FLAG_HI" low="0" high="16"/>
++	</reg32>
++	<!-- 9/10 is plane 3 address for planar formats -->
++	<reg32 offset="9" name="9">
++		<bitfield name="FLAG_BUFFER_ARRAY_PITCH" low="0" high="16" shr="4" type="uint"/>
++	</reg32>
++	<reg32 offset="10" name="10">
++		<bitfield name="FLAG_BUFFER_PITCH" low="0" high="6" shr="6" type="uint"/>
++		<!-- log2 size of the first level, required for mipmapping -->
++		<bitfield name="FLAG_BUFFER_LOGW" low="8" high="11" type="uint"/>
++		<bitfield name="FLAG_BUFFER_LOGH" low="12" high="15" type="uint"/>
++	</reg32>
++	<reg32 offset="11" name="11"/>
++	<reg32 offset="12" name="12"/>
++	<reg32 offset="13" name="13"/>
++	<reg32 offset="14" name="14"/>
++	<reg32 offset="15" name="15"/>
++</domain>
++
++<domain name="A6XX_UBO" width="32">
++	<reg32 offset="0" name="0">
++		<bitfield name="BASE_LO" low="0" high="31"/>
++	</reg32>
++	<reg32 offset="1" name="1">
++		<bitfield name="BASE_HI" low="0" high="16"/>
++		<bitfield name="SIZE" low="17" high="31"/> <!-- size in vec4 (4xDWORD) units -->
++	</reg32>
++</domain>
++
++</database>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a6xx_enums.xml b/drivers/gpu/drm/msm/registers/adreno/a6xx_enums.xml
+new file mode 100644
+index 000000000000..665539b098c6
+--- /dev/null
++++ b/drivers/gpu/drm/msm/registers/adreno/a6xx_enums.xml
+@@ -0,0 +1,383 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<database xmlns="http://nouveau.freedesktop.org/"
++xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
++<import file="freedreno_copyright.xml"/>
++<import file="adreno/adreno_common.xml"/>
++<import file="adreno/adreno_pm4.xml"/>
++
++<enum name="a6xx_tile_mode">
++	<value name="TILE6_LINEAR" value="0"/>
++	<value name="TILE6_2" value="2"/>
++	<value name="TILE6_3" value="3"/>
++</enum>
++
++<enum name="a6xx_format">
++	<value value="0x02" name="FMT6_A8_UNORM"/>
++	<value value="0x03" name="FMT6_8_UNORM"/>
++	<value value="0x04" name="FMT6_8_SNORM"/>
++	<value value="0x05" name="FMT6_8_UINT"/>
++	<value value="0x06" name="FMT6_8_SINT"/>
++
++	<value value="0x08" name="FMT6_4_4_4_4_UNORM"/>
++	<value value="0x0a" name="FMT6_5_5_5_1_UNORM"/>
++	<value value="0x0c" name="FMT6_1_5_5_5_UNORM"/> <!-- read only -->
++	<value value="0x0e" name="FMT6_5_6_5_UNORM"/>
++
++	<value value="0x0f" name="FMT6_8_8_UNORM"/>
++	<value value="0x10" name="FMT6_8_8_SNORM"/>
++	<value value="0x11" name="FMT6_8_8_UINT"/>
++	<value value="0x12" name="FMT6_8_8_SINT"/>
++	<value value="0x13" name="FMT6_L8_A8_UNORM"/>
++
++	<value value="0x15" name="FMT6_16_UNORM"/>
++	<value value="0x16" name="FMT6_16_SNORM"/>
++	<value value="0x17" name="FMT6_16_FLOAT"/>
++	<value value="0x18" name="FMT6_16_UINT"/>
++	<value value="0x19" name="FMT6_16_SINT"/>
++
++	<value value="0x21" name="FMT6_8_8_8_UNORM"/>
++	<value value="0x22" name="FMT6_8_8_8_SNORM"/>
++	<value value="0x23" name="FMT6_8_8_8_UINT"/>
++	<value value="0x24" name="FMT6_8_8_8_SINT"/>
++
++	<value value="0x30" name="FMT6_8_8_8_8_UNORM"/>
++	<value value="0x31" name="FMT6_8_8_8_X8_UNORM"/> <!-- samples 1 for alpha -->
++	<value value="0x32" name="FMT6_8_8_8_8_SNORM"/>
++	<value value="0x33" name="FMT6_8_8_8_8_UINT"/>
++	<value value="0x34" name="FMT6_8_8_8_8_SINT"/>
++
++	<value value="0x35" name="FMT6_9_9_9_E5_FLOAT"/>
++
++	<value value="0x36" name="FMT6_10_10_10_2_UNORM"/>
++	<value value="0x37" name="FMT6_10_10_10_2_UNORM_DEST"/>
++	<value value="0x39" name="FMT6_10_10_10_2_SNORM"/>
++	<value value="0x3a" name="FMT6_10_10_10_2_UINT"/>
++	<value value="0x3b" name="FMT6_10_10_10_2_SINT"/>
++
++	<value value="0x42" name="FMT6_11_11_10_FLOAT"/>
++
++	<value value="0x43" name="FMT6_16_16_UNORM"/>
++	<value value="0x44" name="FMT6_16_16_SNORM"/>
++	<value value="0x45" name="FMT6_16_16_FLOAT"/>
++	<value value="0x46" name="FMT6_16_16_UINT"/>
++	<value value="0x47" name="FMT6_16_16_SINT"/>
++
++	<value value="0x48" name="FMT6_32_UNORM"/>
++	<value value="0x49" name="FMT6_32_SNORM"/>
++	<value value="0x4a" name="FMT6_32_FLOAT"/>
++	<value value="0x4b" name="FMT6_32_UINT"/>
++	<value value="0x4c" name="FMT6_32_SINT"/>
++	<value value="0x4d" name="FMT6_32_FIXED"/>
++
++	<value value="0x58" name="FMT6_16_16_16_UNORM"/>
++	<value value="0x59" name="FMT6_16_16_16_SNORM"/>
++	<value value="0x5a" name="FMT6_16_16_16_FLOAT"/>
++	<value value="0x5b" name="FMT6_16_16_16_UINT"/>
++	<value value="0x5c" name="FMT6_16_16_16_SINT"/>
++
++	<value value="0x60" name="FMT6_16_16_16_16_UNORM"/>
++	<value value="0x61" name="FMT6_16_16_16_16_SNORM"/>
++	<value value="0x62" name="FMT6_16_16_16_16_FLOAT"/>
++	<value value="0x63" name="FMT6_16_16_16_16_UINT"/>
++	<value value="0x64" name="FMT6_16_16_16_16_SINT"/>
++
++	<value value="0x65" name="FMT6_32_32_UNORM"/>
++	<value value="0x66" name="FMT6_32_32_SNORM"/>
++	<value value="0x67" name="FMT6_32_32_FLOAT"/>
++	<value value="0x68" name="FMT6_32_32_UINT"/>
++	<value value="0x69" name="FMT6_32_32_SINT"/>
++	<value value="0x6a" name="FMT6_32_32_FIXED"/>
++
++	<value value="0x70" name="FMT6_32_32_32_UNORM"/>
++	<value value="0x71" name="FMT6_32_32_32_SNORM"/>
++	<value value="0x72" name="FMT6_32_32_32_UINT"/>
++	<value value="0x73" name="FMT6_32_32_32_SINT"/>
++	<value value="0x74" name="FMT6_32_32_32_FLOAT"/>
++	<value value="0x75" name="FMT6_32_32_32_FIXED"/>
++
++	<value value="0x80" name="FMT6_32_32_32_32_UNORM"/>
++	<value value="0x81" name="FMT6_32_32_32_32_SNORM"/>
++	<value value="0x82" name="FMT6_32_32_32_32_FLOAT"/>
++	<value value="0x83" name="FMT6_32_32_32_32_UINT"/>
++	<value value="0x84" name="FMT6_32_32_32_32_SINT"/>
++	<value value="0x85" name="FMT6_32_32_32_32_FIXED"/>
++
++	<value value="0x8c" name="FMT6_G8R8B8R8_422_UNORM"/> <!-- UYVY -->
++	<value value="0x8d" name="FMT6_R8G8R8B8_422_UNORM"/> <!-- YUYV -->
++	<value value="0x8e" name="FMT6_R8_G8B8_2PLANE_420_UNORM"/> <!-- NV12 -->
++	<value value="0x8f" name="FMT6_NV21"/>
++	<value value="0x90" name="FMT6_R8_G8_B8_3PLANE_420_UNORM"/> <!-- YV12 -->
++
++	<value value="0x91" name="FMT6_Z24_UNORM_S8_UINT_AS_R8G8B8A8"/>
++
++	<!-- Note: tiling/UBWC for these may be different from equivalent formats
++	For example FMT6_NV12_Y is not compatible with FMT6_8_UNORM
++	-->
++	<value value="0x94" name="FMT6_NV12_Y"/>
++	<value value="0x95" name="FMT6_NV12_UV"/>
++	<value value="0x96" name="FMT6_NV12_VU"/>
++	<value value="0x97" name="FMT6_NV12_4R"/>
++	<value value="0x98" name="FMT6_NV12_4R_Y"/>
++	<value value="0x99" name="FMT6_NV12_4R_UV"/>
++	<value value="0x9a" name="FMT6_P010"/>
++	<value value="0x9b" name="FMT6_P010_Y"/>
++	<value value="0x9c" name="FMT6_P010_UV"/>
++	<value value="0x9d" name="FMT6_TP10"/>
++	<value value="0x9e" name="FMT6_TP10_Y"/>
++	<value value="0x9f" name="FMT6_TP10_UV"/>
++
++	<value value="0xa0" name="FMT6_Z24_UNORM_S8_UINT"/>
++
++	<value value="0xab" name="FMT6_ETC2_RG11_UNORM"/>
++	<value value="0xac" name="FMT6_ETC2_RG11_SNORM"/>
++	<value value="0xad" name="FMT6_ETC2_R11_UNORM"/>
++	<value value="0xae" name="FMT6_ETC2_R11_SNORM"/>
++	<value value="0xaf" name="FMT6_ETC1"/>
++	<value value="0xb0" name="FMT6_ETC2_RGB8"/>
++	<value value="0xb1" name="FMT6_ETC2_RGBA8"/>
++	<value value="0xb2" name="FMT6_ETC2_RGB8A1"/>
++	<value value="0xb3" name="FMT6_DXT1"/>
++	<value value="0xb4" name="FMT6_DXT3"/>
++	<value value="0xb5" name="FMT6_DXT5"/>
++	<value value="0xb6" name="FMT6_RGTC1_UNORM"/>
++	<value value="0xb7" name="FMT6_RGTC1_UNORM_FAST"/>
++	<value value="0xb8" name="FMT6_RGTC1_SNORM"/>
++	<value value="0xb9" name="FMT6_RGTC1_SNORM_FAST"/>
++	<value value="0xba" name="FMT6_RGTC2_UNORM"/>
++	<value value="0xbb" name="FMT6_RGTC2_UNORM_FAST"/>
++	<value value="0xbc" name="FMT6_RGTC2_SNORM"/>
++	<value value="0xbd" name="FMT6_RGTC2_SNORM_FAST"/>
++	<value value="0xbe" name="FMT6_BPTC_UFLOAT"/>
++	<value value="0xbf" name="FMT6_BPTC_FLOAT"/>
++	<value value="0xc0" name="FMT6_BPTC"/>
++	<value value="0xc1" name="FMT6_ASTC_4x4"/>
++	<value value="0xc2" name="FMT6_ASTC_5x4"/>
++	<value value="0xc3" name="FMT6_ASTC_5x5"/>
++	<value value="0xc4" name="FMT6_ASTC_6x5"/>
++	<value value="0xc5" name="FMT6_ASTC_6x6"/>
++	<value value="0xc6" name="FMT6_ASTC_8x5"/>
++	<value value="0xc7" name="FMT6_ASTC_8x6"/>
++	<value value="0xc8" name="FMT6_ASTC_8x8"/>
++	<value value="0xc9" name="FMT6_ASTC_10x5"/>
++	<value value="0xca" name="FMT6_ASTC_10x6"/>
++	<value value="0xcb" name="FMT6_ASTC_10x8"/>
++	<value value="0xcc" name="FMT6_ASTC_10x10"/>
++	<value value="0xcd" name="FMT6_ASTC_12x10"/>
++	<value value="0xce" name="FMT6_ASTC_12x12"/>
++
++	<!-- for sampling stencil (integer, 2nd channel), not available on a630 -->
++	<value value="0xea" name="FMT6_Z24_UINT_S8_UINT"/>
++
++	<!-- Not a hw enum, used internally in driver -->
++	<value value="0xff" name="FMT6_NONE"/>
++
++</enum>
++
++<!-- probably same as a5xx -->
++<enum name="a6xx_polygon_mode">
++	<value name="POLYMODE6_POINTS" value="1"/>
++	<value name="POLYMODE6_LINES" value="2"/>
++	<value name="POLYMODE6_TRIANGLES" value="3"/>
++</enum>
++
++<enum name="a6xx_depth_format">
++	<value name="DEPTH6_NONE" value="0"/>
++	<value name="DEPTH6_16" value="1"/>
++	<value name="DEPTH6_24_8" value="2"/>
++	<value name="DEPTH6_32" value="4"/>
++</enum>
++
++<bitset name="a6x_cp_protect" inline="yes">
++	<bitfield name="BASE_ADDR" low="0" high="17"/>
++	<bitfield name="MASK_LEN" low="18" high="30"/>
++	<bitfield name="READ" pos="31" type="boolean"/>
++</bitset>
++
++<enum name="a6xx_shader_id">
++	<value value="0x9" name="A6XX_TP0_TMO_DATA"/>
++	<value value="0xa" name="A6XX_TP0_SMO_DATA"/>
++	<value value="0xb" name="A6XX_TP0_MIPMAP_BASE_DATA"/>
++	<value value="0x19" name="A6XX_TP1_TMO_DATA"/>
++	<value value="0x1a" name="A6XX_TP1_SMO_DATA"/>
++	<value value="0x1b" name="A6XX_TP1_MIPMAP_BASE_DATA"/>
++	<value value="0x29" name="A6XX_SP_INST_DATA"/>
++	<value value="0x2a" name="A6XX_SP_LB_0_DATA"/>
++	<value value="0x2b" name="A6XX_SP_LB_1_DATA"/>
++	<value value="0x2c" name="A6XX_SP_LB_2_DATA"/>
++	<value value="0x2d" name="A6XX_SP_LB_3_DATA"/>
++	<value value="0x2e" name="A6XX_SP_LB_4_DATA"/>
++	<value value="0x2f" name="A6XX_SP_LB_5_DATA"/>
++	<value value="0x30" name="A6XX_SP_CB_BINDLESS_DATA"/>
++	<value value="0x31" name="A6XX_SP_CB_LEGACY_DATA"/>
++	<value value="0x32" name="A6XX_SP_GFX_UAV_BASE_DATA"/>
++	<value value="0x33" name="A6XX_SP_INST_TAG"/>
++	<value value="0x34" name="A6XX_SP_CB_BINDLESS_TAG"/>
++	<value value="0x35" name="A6XX_SP_TMO_UMO_TAG"/>
++	<value value="0x36" name="A6XX_SP_SMO_TAG"/>
++	<value value="0x37" name="A6XX_SP_STATE_DATA"/>
++	<value value="0x49" name="A6XX_HLSQ_CHUNK_CVS_RAM"/>
++	<value value="0x4a" name="A6XX_HLSQ_CHUNK_CPS_RAM"/>
++	<value value="0x4b" name="A6XX_HLSQ_CHUNK_CVS_RAM_TAG"/>
++	<value value="0x4c" name="A6XX_HLSQ_CHUNK_CPS_RAM_TAG"/>
++	<value value="0x4d" name="A6XX_HLSQ_ICB_CVS_CB_BASE_TAG"/>
++	<value value="0x4e" name="A6XX_HLSQ_ICB_CPS_CB_BASE_TAG"/>
++	<value value="0x50" name="A6XX_HLSQ_CVS_MISC_RAM"/>
++	<value value="0x51" name="A6XX_HLSQ_CPS_MISC_RAM"/>
++	<value value="0x52" name="A6XX_HLSQ_INST_RAM"/>
++	<value value="0x53" name="A6XX_HLSQ_GFX_CVS_CONST_RAM"/>
++	<value value="0x54" name="A6XX_HLSQ_GFX_CPS_CONST_RAM"/>
++	<value value="0x55" name="A6XX_HLSQ_CVS_MISC_RAM_TAG"/>
++	<value value="0x56" name="A6XX_HLSQ_CPS_MISC_RAM_TAG"/>
++	<value value="0x57" name="A6XX_HLSQ_INST_RAM_TAG"/>
++	<value value="0x58" name="A6XX_HLSQ_GFX_CVS_CONST_RAM_TAG"/>
++	<value value="0x59" name="A6XX_HLSQ_GFX_CPS_CONST_RAM_TAG"/>
++	<value value="0x5a" name="A6XX_HLSQ_PWR_REST_RAM"/>
++	<value value="0x5b" name="A6XX_HLSQ_PWR_REST_TAG"/>
++	<value value="0x60" name="A6XX_HLSQ_DATAPATH_META"/>
++	<value value="0x61" name="A6XX_HLSQ_FRONTEND_META"/>
++	<value value="0x62" name="A6XX_HLSQ_INDIRECT_META"/>
++	<value value="0x63" name="A6XX_HLSQ_BACKEND_META"/>
++	<value value="0x70" name="A6XX_SP_LB_6_DATA"/>
++	<value value="0x71" name="A6XX_SP_LB_7_DATA"/>
++	<value value="0x73" name="A6XX_HLSQ_INST_RAM_1"/>
++</enum>
++
++<enum name="a6xx_debugbus_id">
++	<value value="0x1" name="A6XX_DBGBUS_CP"/>
++	<value value="0x2" name="A6XX_DBGBUS_RBBM"/>
++	<value value="0x3" name="A6XX_DBGBUS_VBIF"/>
++	<value value="0x4" name="A6XX_DBGBUS_HLSQ"/>
++	<value value="0x5" name="A6XX_DBGBUS_UCHE"/>
++	<value value="0x6" name="A6XX_DBGBUS_DPM"/>
++	<value value="0x7" name="A6XX_DBGBUS_TESS"/>
++	<value value="0x8" name="A6XX_DBGBUS_PC"/>
++	<value value="0x9" name="A6XX_DBGBUS_VFDP"/>
++	<value value="0xa" name="A6XX_DBGBUS_VPC"/>
++	<value value="0xb" name="A6XX_DBGBUS_TSE"/>
++	<value value="0xc" name="A6XX_DBGBUS_RAS"/>
++	<value value="0xd" name="A6XX_DBGBUS_VSC"/>
++	<value value="0xe" name="A6XX_DBGBUS_COM"/>
++	<value value="0x10" name="A6XX_DBGBUS_LRZ"/>
++	<value value="0x11" name="A6XX_DBGBUS_A2D"/>
++	<value value="0x12" name="A6XX_DBGBUS_CCUFCHE"/>
++	<value value="0x13" name="A6XX_DBGBUS_GMU_CX"/>
++	<value value="0x14" name="A6XX_DBGBUS_RBP"/>
++	<value value="0x15" name="A6XX_DBGBUS_DCS"/>
++	<value value="0x16" name="A6XX_DBGBUS_DBGC"/>
++	<value value="0x17" name="A6XX_DBGBUS_CX"/>
++	<value value="0x18" name="A6XX_DBGBUS_GMU_GX"/>
++	<value value="0x19" name="A6XX_DBGBUS_TPFCHE"/>
++	<value value="0x1a" name="A6XX_DBGBUS_GBIF_GX"/>
++	<value value="0x1d" name="A6XX_DBGBUS_GPC"/>
++	<value value="0x1e" name="A6XX_DBGBUS_LARC"/>
++	<value value="0x1f" name="A6XX_DBGBUS_HLSQ_SPTP"/>
++	<value value="0x20" name="A6XX_DBGBUS_RB_0"/>
++	<value value="0x21" name="A6XX_DBGBUS_RB_1"/>
++	<value value="0x22" name="A6XX_DBGBUS_RB_2"/>
++	<value value="0x24" name="A6XX_DBGBUS_UCHE_WRAPPER"/>
++	<value value="0x28" name="A6XX_DBGBUS_CCU_0"/>
++	<value value="0x29" name="A6XX_DBGBUS_CCU_1"/>
++	<value value="0x2a" name="A6XX_DBGBUS_CCU_2"/>
++	<value value="0x38" name="A6XX_DBGBUS_VFD_0"/>
++	<value value="0x39" name="A6XX_DBGBUS_VFD_1"/>
++	<value value="0x3a" name="A6XX_DBGBUS_VFD_2"/>
++	<value value="0x3b" name="A6XX_DBGBUS_VFD_3"/>
++	<value value="0x3c" name="A6XX_DBGBUS_VFD_4"/>
++	<value value="0x3d" name="A6XX_DBGBUS_VFD_5"/>
++	<value value="0x40" name="A6XX_DBGBUS_SP_0"/>
++	<value value="0x41" name="A6XX_DBGBUS_SP_1"/>
++	<value value="0x42" name="A6XX_DBGBUS_SP_2"/>
++	<value value="0x48" name="A6XX_DBGBUS_TPL1_0"/>
++	<value value="0x49" name="A6XX_DBGBUS_TPL1_1"/>
++	<value value="0x4a" name="A6XX_DBGBUS_TPL1_2"/>
++	<value value="0x4b" name="A6XX_DBGBUS_TPL1_3"/>
++	<value value="0x4c" name="A6XX_DBGBUS_TPL1_4"/>
++	<value value="0x4d" name="A6XX_DBGBUS_TPL1_5"/>
++	<value value="0x58" name="A6XX_DBGBUS_SPTP_0"/>
++	<value value="0x59" name="A6XX_DBGBUS_SPTP_1"/>
++	<value value="0x5a" name="A6XX_DBGBUS_SPTP_2"/>
++	<value value="0x5b" name="A6XX_DBGBUS_SPTP_3"/>
++	<value value="0x5c" name="A6XX_DBGBUS_SPTP_4"/>
++	<value value="0x5d" name="A6XX_DBGBUS_SPTP_5"/>
++</enum>
++
++<!--
++Used in a6xx_a2d_bit_cntl.. the value mostly seems to correlate to the
++component type/size, so I think it relates to internal format used for
++blending?  The one exception is that 16b unorm and 32b float use the
++same value... maybe 16b unorm is uncommon enough that it was just easier
++to upconvert to 32b float internally?
++
++ 8b unorm:  10 (sometimes 0, is the high bit part of something else?)
++16b unorm:   4
++
++32b int:     7
++16b int:     6
++ 8b int:     5
++
++32b float:   4
++16b float:   3
++ -->
++<enum name="a6xx_2d_ifmt">
++	<value value="0x10" name="R2D_UNORM8"/>
++	<value value="0x7"  name="R2D_INT32"/>
++	<value value="0x6"  name="R2D_INT16"/>
++	<value value="0x5"  name="R2D_INT8"/>
++	<value value="0x4"  name="R2D_FLOAT32"/>
++	<value value="0x3"  name="R2D_FLOAT16"/>
++	<value value="0x1"  name="R2D_UNORM8_SRGB"/>
++	<value value="0x0"  name="R2D_RAW"/>
++</enum>
++
++<enum name="a6xx_tex_type">
++	<value name="A6XX_TEX_1D" value="0"/>
++	<value name="A6XX_TEX_2D" value="1"/>
++	<value name="A6XX_TEX_CUBE" value="2"/>
++	<value name="A6XX_TEX_3D" value="3"/>
++	<value name="A6XX_TEX_BUFFER" value="4"/>
++	<doc>
++		A special buffer type for usage as the source for buffer
++		to image copies with lower alignment requirements than
++		A6XX_TEX_2D, available since A7XX.
++	</doc>
++	<value name="A6XX_TEX_IMG_BUFFER" value="5"/>
++</enum>
++
++<enum name="a6xx_ztest_mode">
++	<doc>Allow early z-test and early-lrz (if applicable)</doc>
++	<value value="0x0" name="A6XX_EARLY_Z"/>
++	<doc>Disable early z-test and early-lrz test (if applicable)</doc>
++	<value value="0x1" name="A6XX_LATE_Z"/>
++	<doc>
++		A special mode that allows early-lrz (if applicable) or early-z
++		tests, but also does late-z tests at which point it writes depth.
++
++		This mode is used when fragment can be killed (via discard or
++		sample mask) after early-z tests and it writes depth. In such case
++		depth can be written only at late-z stage, but it's ok to use
++		early-z to discard fragments.
++
++		However this mode is not compatible with:
++		- Lack of D/S attachment
++		- Stencil writes on stencil or depth test failures
++		- Per-sample shading
++	</doc>
++	<value value="0x2" name="A6XX_EARLY_Z_LATE_Z"/>
++	<doc>Not a real hw value, used internally by mesa</doc>
++	<value value="0x3" name="A6XX_INVALID_ZTEST"/>
++</enum>
++
++<enum name="a6xx_tess_spacing">
++	<value value="0x0" name="TESS_EQUAL"/>
++	<value value="0x2" name="TESS_FRACTIONAL_ODD"/>
++	<value value="0x3" name="TESS_FRACTIONAL_EVEN"/>
++</enum>
++<enum name="a6xx_tess_output">
++	<value value="0x0" name="TESS_POINTS"/>
++	<value value="0x1" name="TESS_LINES"/>
++	<value value="0x2" name="TESS_CW_TRIS"/>
++	<value value="0x3" name="TESS_CCW_TRIS"/>
++</enum>
++
++</database>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a6xx_perfcntrs.xml b/drivers/gpu/drm/msm/registers/adreno/a6xx_perfcntrs.xml
+new file mode 100644
+index 000000000000..c446a2eb1120
+--- /dev/null
++++ b/drivers/gpu/drm/msm/registers/adreno/a6xx_perfcntrs.xml
+@@ -0,0 +1,600 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<database xmlns="http://nouveau.freedesktop.org/"
++xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
++<import file="freedreno_copyright.xml"/>
++<import file="adreno/adreno_common.xml"/>
++<import file="adreno/adreno_pm4.xml"/>
++
++<enum name="a6xx_cp_perfcounter_select">
++	<value value="0" name="PERF_CP_ALWAYS_COUNT"/>
++	<value value="1" name="PERF_CP_BUSY_GFX_CORE_IDLE"/>
++	<value value="2" name="PERF_CP_BUSY_CYCLES"/>
++	<value value="3" name="PERF_CP_NUM_PREEMPTIONS"/>
++	<value value="4" name="PERF_CP_PREEMPTION_REACTION_DELAY"/>
++	<value value="5" name="PERF_CP_PREEMPTION_SWITCH_OUT_TIME"/>
++	<value value="6" name="PERF_CP_PREEMPTION_SWITCH_IN_TIME"/>
++	<value value="7" name="PERF_CP_DEAD_DRAWS_IN_BIN_RENDER"/>
++	<value value="8" name="PERF_CP_PREDICATED_DRAWS_KILLED"/>
++	<value value="9" name="PERF_CP_MODE_SWITCH"/>
++	<value value="10" name="PERF_CP_ZPASS_DONE"/>
++	<value value="11" name="PERF_CP_CONTEXT_DONE"/>
++	<value value="12" name="PERF_CP_CACHE_FLUSH"/>
++	<value value="13" name="PERF_CP_LONG_PREEMPTIONS"/>
++	<value value="14" name="PERF_CP_SQE_I_CACHE_STARVE"/>
++	<value value="15" name="PERF_CP_SQE_IDLE"/>
++	<value value="16" name="PERF_CP_SQE_PM4_STARVE_RB_IB"/>
++	<value value="17" name="PERF_CP_SQE_PM4_STARVE_SDS"/>
++	<value value="18" name="PERF_CP_SQE_MRB_STARVE"/>
++	<value value="19" name="PERF_CP_SQE_RRB_STARVE"/>
++	<value value="20" name="PERF_CP_SQE_VSD_STARVE"/>
++	<value value="21" name="PERF_CP_VSD_DECODE_STARVE"/>
++	<value value="22" name="PERF_CP_SQE_PIPE_OUT_STALL"/>
++	<value value="23" name="PERF_CP_SQE_SYNC_STALL"/>
++	<value value="24" name="PERF_CP_SQE_PM4_WFI_STALL"/>
++	<value value="25" name="PERF_CP_SQE_SYS_WFI_STALL"/>
++	<value value="26" name="PERF_CP_SQE_T4_EXEC"/>
++	<value value="27" name="PERF_CP_SQE_LOAD_STATE_EXEC"/>
++	<value value="28" name="PERF_CP_SQE_SAVE_SDS_STATE"/>
++	<value value="29" name="PERF_CP_SQE_DRAW_EXEC"/>
++	<value value="30" name="PERF_CP_SQE_CTXT_REG_BUNCH_EXEC"/>
++	<value value="31" name="PERF_CP_SQE_EXEC_PROFILED"/>
++	<value value="32" name="PERF_CP_MEMORY_POOL_EMPTY"/>
++	<value value="33" name="PERF_CP_MEMORY_POOL_SYNC_STALL"/>
++	<value value="34" name="PERF_CP_MEMORY_POOL_ABOVE_THRESH"/>
++	<value value="35" name="PERF_CP_AHB_WR_STALL_PRE_DRAWS"/>
++	<value value="36" name="PERF_CP_AHB_STALL_SQE_GMU"/>
++	<value value="37" name="PERF_CP_AHB_STALL_SQE_WR_OTHER"/>
++	<value value="38" name="PERF_CP_AHB_STALL_SQE_RD_OTHER"/>
++	<value value="39" name="PERF_CP_CLUSTER0_EMPTY"/>
++	<value value="40" name="PERF_CP_CLUSTER1_EMPTY"/>
++	<value value="41" name="PERF_CP_CLUSTER2_EMPTY"/>
++	<value value="42" name="PERF_CP_CLUSTER3_EMPTY"/>
++	<value value="43" name="PERF_CP_CLUSTER4_EMPTY"/>
++	<value value="44" name="PERF_CP_CLUSTER5_EMPTY"/>
++	<value value="45" name="PERF_CP_PM4_DATA"/>
++	<value value="46" name="PERF_CP_PM4_HEADERS"/>
++	<value value="47" name="PERF_CP_VBIF_READ_BEATS"/>
++	<value value="48" name="PERF_CP_VBIF_WRITE_BEATS"/>
++	<value value="49" name="PERF_CP_SQE_INSTR_COUNTER"/>
++</enum>
++
++<enum name="a6xx_rbbm_perfcounter_select">
++	<value value="0" name="PERF_RBBM_ALWAYS_COUNT"/>
++	<value value="1" name="PERF_RBBM_ALWAYS_ON"/>
++	<value value="2" name="PERF_RBBM_TSE_BUSY"/>
++	<value value="3" name="PERF_RBBM_RAS_BUSY"/>
++	<value value="4" name="PERF_RBBM_PC_DCALL_BUSY"/>
++	<value value="5" name="PERF_RBBM_PC_VSD_BUSY"/>
++	<value value="6" name="PERF_RBBM_STATUS_MASKED"/>
++	<value value="7" name="PERF_RBBM_COM_BUSY"/>
++	<value value="8" name="PERF_RBBM_DCOM_BUSY"/>
++	<value value="9" name="PERF_RBBM_VBIF_BUSY"/>
++	<value value="10" name="PERF_RBBM_VSC_BUSY"/>
++	<value value="11" name="PERF_RBBM_TESS_BUSY"/>
++	<value value="12" name="PERF_RBBM_UCHE_BUSY"/>
++	<value value="13" name="PERF_RBBM_HLSQ_BUSY"/>
++</enum>
++
++<enum name="a6xx_pc_perfcounter_select">
++	<value value="0" name="PERF_PC_BUSY_CYCLES"/>
++	<value value="1" name="PERF_PC_WORKING_CYCLES"/>
++	<value value="2" name="PERF_PC_STALL_CYCLES_VFD"/>
++	<value value="3" name="PERF_PC_STALL_CYCLES_TSE"/>
++	<value value="4" name="PERF_PC_STALL_CYCLES_VPC"/>
++	<value value="5" name="PERF_PC_STALL_CYCLES_UCHE"/>
++	<value value="6" name="PERF_PC_STALL_CYCLES_TESS"/>
++	<value value="7" name="PERF_PC_STALL_CYCLES_TSE_ONLY"/>
++	<value value="8" name="PERF_PC_STALL_CYCLES_VPC_ONLY"/>
++	<value value="9" name="PERF_PC_PASS1_TF_STALL_CYCLES"/>
++	<value value="10" name="PERF_PC_STARVE_CYCLES_FOR_INDEX"/>
++	<value value="11" name="PERF_PC_STARVE_CYCLES_FOR_TESS_FACTOR"/>
++	<value value="12" name="PERF_PC_STARVE_CYCLES_FOR_VIZ_STREAM"/>
++	<value value="13" name="PERF_PC_STARVE_CYCLES_FOR_POSITION"/>
++	<value value="14" name="PERF_PC_STARVE_CYCLES_DI"/>
++	<value value="15" name="PERF_PC_VIS_STREAMS_LOADED"/>
++	<value value="16" name="PERF_PC_INSTANCES"/>
++	<value value="17" name="PERF_PC_VPC_PRIMITIVES"/>
++	<value value="18" name="PERF_PC_DEAD_PRIM"/>
++	<value value="19" name="PERF_PC_LIVE_PRIM"/>
++	<value value="20" name="PERF_PC_VERTEX_HITS"/>
++	<value value="21" name="PERF_PC_IA_VERTICES"/>
++	<value value="22" name="PERF_PC_IA_PRIMITIVES"/>
++	<value value="23" name="PERF_PC_GS_PRIMITIVES"/>
++	<value value="24" name="PERF_PC_HS_INVOCATIONS"/>
++	<value value="25" name="PERF_PC_DS_INVOCATIONS"/>
++	<value value="26" name="PERF_PC_VS_INVOCATIONS"/>
++	<value value="27" name="PERF_PC_GS_INVOCATIONS"/>
++	<value value="28" name="PERF_PC_DS_PRIMITIVES"/>
++	<value value="29" name="PERF_PC_VPC_POS_DATA_TRANSACTION"/>
++	<value value="30" name="PERF_PC_3D_DRAWCALLS"/>
++	<value value="31" name="PERF_PC_2D_DRAWCALLS"/>
++	<value value="32" name="PERF_PC_NON_DRAWCALL_GLOBAL_EVENTS"/>
++	<value value="33" name="PERF_TESS_BUSY_CYCLES"/>
++	<value value="34" name="PERF_TESS_WORKING_CYCLES"/>
++	<value value="35" name="PERF_TESS_STALL_CYCLES_PC"/>
++	<value value="36" name="PERF_TESS_STARVE_CYCLES_PC"/>
++	<value value="37" name="PERF_PC_TSE_TRANSACTION"/>
++	<value value="38" name="PERF_PC_TSE_VERTEX"/>
++	<value value="39" name="PERF_PC_TESS_PC_UV_TRANS"/>
++	<value value="40" name="PERF_PC_TESS_PC_UV_PATCHES"/>
++	<value value="41" name="PERF_PC_TESS_FACTOR_TRANS"/>
++</enum>
++
++<enum name="a6xx_vfd_perfcounter_select">
++	<value value="0" name="PERF_VFD_BUSY_CYCLES"/>
++	<value value="1" name="PERF_VFD_STALL_CYCLES_UCHE"/>
++	<value value="2" name="PERF_VFD_STALL_CYCLES_VPC_ALLOC"/>
++	<value value="3" name="PERF_VFD_STALL_CYCLES_SP_INFO"/>
++	<value value="4" name="PERF_VFD_STALL_CYCLES_SP_ATTR"/>
++	<value value="5" name="PERF_VFD_STARVE_CYCLES_UCHE"/>
++	<value value="6" name="PERF_VFD_RBUFFER_FULL"/>
++	<value value="7" name="PERF_VFD_ATTR_INFO_FIFO_FULL"/>
++	<value value="8" name="PERF_VFD_DECODED_ATTRIBUTE_BYTES"/>
++	<value value="9" name="PERF_VFD_NUM_ATTRIBUTES"/>
++	<value value="10" name="PERF_VFD_UPPER_SHADER_FIBERS"/>
++	<value value="11" name="PERF_VFD_LOWER_SHADER_FIBERS"/>
++	<value value="12" name="PERF_VFD_MODE_0_FIBERS"/>
++	<value value="13" name="PERF_VFD_MODE_1_FIBERS"/>
++	<value value="14" name="PERF_VFD_MODE_2_FIBERS"/>
++	<value value="15" name="PERF_VFD_MODE_3_FIBERS"/>
++	<value value="16" name="PERF_VFD_MODE_4_FIBERS"/>
++	<value value="17" name="PERF_VFD_TOTAL_VERTICES"/>
++	<value value="18" name="PERF_VFDP_STALL_CYCLES_VFD"/>
++	<value value="19" name="PERF_VFDP_STALL_CYCLES_VFD_INDEX"/>
++	<value value="20" name="PERF_VFDP_STALL_CYCLES_VFD_PROG"/>
++	<value value="21" name="PERF_VFDP_STARVE_CYCLES_PC"/>
++	<value value="22" name="PERF_VFDP_VS_STAGE_WAVES"/>
++</enum>
++
++<enum name="a6xx_hlsq_perfcounter_select">
++	<value value="0" name="PERF_HLSQ_BUSY_CYCLES"/>
++	<value value="1" name="PERF_HLSQ_STALL_CYCLES_UCHE"/>
++	<value value="2" name="PERF_HLSQ_STALL_CYCLES_SP_STATE"/>
++	<value value="3" name="PERF_HLSQ_STALL_CYCLES_SP_FS_STAGE"/>
++	<value value="4" name="PERF_HLSQ_UCHE_LATENCY_CYCLES"/>
++	<value value="5" name="PERF_HLSQ_UCHE_LATENCY_COUNT"/>
++	<value value="6" name="PERF_HLSQ_FS_STAGE_1X_WAVES"/>
++	<value value="7" name="PERF_HLSQ_FS_STAGE_2X_WAVES"/>
++	<value value="8" name="PERF_HLSQ_QUADS"/>
++	<value value="9" name="PERF_HLSQ_CS_INVOCATIONS"/>
++	<value value="10" name="PERF_HLSQ_COMPUTE_DRAWCALLS"/>
++	<value value="11" name="PERF_HLSQ_FS_DATA_WAIT_PROGRAMMING"/>
++	<value value="12" name="PERF_HLSQ_DUAL_FS_PROG_ACTIVE"/>
++	<value value="13" name="PERF_HLSQ_DUAL_VS_PROG_ACTIVE"/>
++	<value value="14" name="PERF_HLSQ_FS_BATCH_COUNT_ZERO"/>
++	<value value="15" name="PERF_HLSQ_VS_BATCH_COUNT_ZERO"/>
++	<value value="16" name="PERF_HLSQ_WAVE_PENDING_NO_QUAD"/>
++	<value value="17" name="PERF_HLSQ_WAVE_PENDING_NO_PRIM_BASE"/>
++	<value value="18" name="PERF_HLSQ_STALL_CYCLES_VPC"/>
++	<value value="19" name="PERF_HLSQ_PIXELS"/>
++	<value value="20" name="PERF_HLSQ_DRAW_MODE_SWITCH_VSFS_SYNC"/>
++</enum>
++
++<enum name="a6xx_vpc_perfcounter_select">
++	<value value="0" name="PERF_VPC_BUSY_CYCLES"/>
++	<value value="1" name="PERF_VPC_WORKING_CYCLES"/>
++	<value value="2" name="PERF_VPC_STALL_CYCLES_UCHE"/>
++	<value value="3" name="PERF_VPC_STALL_CYCLES_VFD_WACK"/>
++	<value value="4" name="PERF_VPC_STALL_CYCLES_HLSQ_PRIM_ALLOC"/>
++	<value value="5" name="PERF_VPC_STALL_CYCLES_PC"/>
++	<value value="6" name="PERF_VPC_STALL_CYCLES_SP_LM"/>
++	<value value="7" name="PERF_VPC_STARVE_CYCLES_SP"/>
++	<value value="8" name="PERF_VPC_STARVE_CYCLES_LRZ"/>
++	<value value="9" name="PERF_VPC_PC_PRIMITIVES"/>
++	<value value="10" name="PERF_VPC_SP_COMPONENTS"/>
++	<value value="11" name="PERF_VPC_STALL_CYCLES_VPCRAM_POS"/>
++	<value value="12" name="PERF_VPC_LRZ_ASSIGN_PRIMITIVES"/>
++	<value value="13" name="PERF_VPC_RB_VISIBLE_PRIMITIVES"/>
++	<value value="14" name="PERF_VPC_LM_TRANSACTION"/>
++	<value value="15" name="PERF_VPC_STREAMOUT_TRANSACTION"/>
++	<value value="16" name="PERF_VPC_VS_BUSY_CYCLES"/>
++	<value value="17" name="PERF_VPC_PS_BUSY_CYCLES"/>
++	<value value="18" name="PERF_VPC_VS_WORKING_CYCLES"/>
++	<value value="19" name="PERF_VPC_PS_WORKING_CYCLES"/>
++	<value value="20" name="PERF_VPC_STARVE_CYCLES_RB"/>
++	<value value="21" name="PERF_VPC_NUM_VPCRAM_READ_POS"/>
++	<value value="22" name="PERF_VPC_WIT_FULL_CYCLES"/>
++	<value value="23" name="PERF_VPC_VPCRAM_FULL_CYCLES"/>
++	<value value="24" name="PERF_VPC_LM_FULL_WAIT_FOR_INTP_END"/>
++	<value value="25" name="PERF_VPC_NUM_VPCRAM_WRITE"/>
++	<value value="26" name="PERF_VPC_NUM_VPCRAM_READ_SO"/>
++	<value value="27" name="PERF_VPC_NUM_ATTR_REQ_LM"/>
++</enum>
++
++<enum name="a6xx_tse_perfcounter_select">
++	<value value="0" name="PERF_TSE_BUSY_CYCLES"/>
++	<value value="1" name="PERF_TSE_CLIPPING_CYCLES"/>
++	<value value="2" name="PERF_TSE_STALL_CYCLES_RAS"/>
++	<value value="3" name="PERF_TSE_STALL_CYCLES_LRZ_BARYPLANE"/>
++	<value value="4" name="PERF_TSE_STALL_CYCLES_LRZ_ZPLANE"/>
++	<value value="5" name="PERF_TSE_STARVE_CYCLES_PC"/>
++	<value value="6" name="PERF_TSE_INPUT_PRIM"/>
++	<value value="7" name="PERF_TSE_INPUT_NULL_PRIM"/>
++	<value value="8" name="PERF_TSE_TRIVAL_REJ_PRIM"/>
++	<value value="9" name="PERF_TSE_CLIPPED_PRIM"/>
++	<value value="10" name="PERF_TSE_ZERO_AREA_PRIM"/>
++	<value value="11" name="PERF_TSE_FACENESS_CULLED_PRIM"/>
++	<value value="12" name="PERF_TSE_ZERO_PIXEL_PRIM"/>
++	<value value="13" name="PERF_TSE_OUTPUT_NULL_PRIM"/>
++	<value value="14" name="PERF_TSE_OUTPUT_VISIBLE_PRIM"/>
++	<value value="15" name="PERF_TSE_CINVOCATION"/>
++	<value value="16" name="PERF_TSE_CPRIMITIVES"/>
++	<value value="17" name="PERF_TSE_2D_INPUT_PRIM"/>
++	<value value="18" name="PERF_TSE_2D_ALIVE_CYCLES"/>
++	<value value="19" name="PERF_TSE_CLIP_PLANES"/>
++</enum>
++
++<enum name="a6xx_ras_perfcounter_select">
++	<value value="0" name="PERF_RAS_BUSY_CYCLES"/>
++	<value value="1" name="PERF_RAS_SUPERTILE_ACTIVE_CYCLES"/>
++	<value value="2" name="PERF_RAS_STALL_CYCLES_LRZ"/>
++	<value value="3" name="PERF_RAS_STARVE_CYCLES_TSE"/>
++	<value value="4" name="PERF_RAS_SUPER_TILES"/>
++	<value value="5" name="PERF_RAS_8X4_TILES"/>
++	<value value="6" name="PERF_RAS_MASKGEN_ACTIVE"/>
++	<value value="7" name="PERF_RAS_FULLY_COVERED_SUPER_TILES"/>
++	<value value="8" name="PERF_RAS_FULLY_COVERED_8X4_TILES"/>
++	<value value="9" name="PERF_RAS_PRIM_KILLED_INVISILBE"/>
++	<value value="10" name="PERF_RAS_SUPERTILE_GEN_ACTIVE_CYCLES"/>
++	<value value="11" name="PERF_RAS_LRZ_INTF_WORKING_CYCLES"/>
++	<value value="12" name="PERF_RAS_BLOCKS"/>
++</enum>
++
++<enum name="a6xx_uche_perfcounter_select">
++	<value value="0" name="PERF_UCHE_BUSY_CYCLES"/>
++	<value value="1" name="PERF_UCHE_STALL_CYCLES_ARBITER"/>
++	<value value="2" name="PERF_UCHE_VBIF_LATENCY_CYCLES"/>
++	<value value="3" name="PERF_UCHE_VBIF_LATENCY_SAMPLES"/>
++	<value value="4" name="PERF_UCHE_VBIF_READ_BEATS_TP"/>
++	<value value="5" name="PERF_UCHE_VBIF_READ_BEATS_VFD"/>
++	<value value="6" name="PERF_UCHE_VBIF_READ_BEATS_HLSQ"/>
++	<value value="7" name="PERF_UCHE_VBIF_READ_BEATS_LRZ"/>
++	<value value="8" name="PERF_UCHE_VBIF_READ_BEATS_SP"/>
++	<value value="9" name="PERF_UCHE_READ_REQUESTS_TP"/>
++	<value value="10" name="PERF_UCHE_READ_REQUESTS_VFD"/>
++	<value value="11" name="PERF_UCHE_READ_REQUESTS_HLSQ"/>
++	<value value="12" name="PERF_UCHE_READ_REQUESTS_LRZ"/>
++	<value value="13" name="PERF_UCHE_READ_REQUESTS_SP"/>
++	<value value="14" name="PERF_UCHE_WRITE_REQUESTS_LRZ"/>
++	<value value="15" name="PERF_UCHE_WRITE_REQUESTS_SP"/>
++	<value value="16" name="PERF_UCHE_WRITE_REQUESTS_VPC"/>
++	<value value="17" name="PERF_UCHE_WRITE_REQUESTS_VSC"/>
++	<value value="18" name="PERF_UCHE_EVICTS"/>
++	<value value="19" name="PERF_UCHE_BANK_REQ0"/>
++	<value value="20" name="PERF_UCHE_BANK_REQ1"/>
++	<value value="21" name="PERF_UCHE_BANK_REQ2"/>
++	<value value="22" name="PERF_UCHE_BANK_REQ3"/>
++	<value value="23" name="PERF_UCHE_BANK_REQ4"/>
++	<value value="24" name="PERF_UCHE_BANK_REQ5"/>
++	<value value="25" name="PERF_UCHE_BANK_REQ6"/>
++	<value value="26" name="PERF_UCHE_BANK_REQ7"/>
++	<value value="27" name="PERF_UCHE_VBIF_READ_BEATS_CH0"/>
++	<value value="28" name="PERF_UCHE_VBIF_READ_BEATS_CH1"/>
++	<value value="29" name="PERF_UCHE_GMEM_READ_BEATS"/>
++	<value value="30" name="PERF_UCHE_TPH_REF_FULL"/>
++	<value value="31" name="PERF_UCHE_TPH_VICTIM_FULL"/>
++	<value value="32" name="PERF_UCHE_TPH_EXT_FULL"/>
++	<value value="33" name="PERF_UCHE_VBIF_STALL_WRITE_DATA"/>
++	<value value="34" name="PERF_UCHE_DCMP_LATENCY_SAMPLES"/>
++	<value value="35" name="PERF_UCHE_DCMP_LATENCY_CYCLES"/>
++	<value value="36" name="PERF_UCHE_VBIF_READ_BEATS_PC"/>
++	<value value="37" name="PERF_UCHE_READ_REQUESTS_PC"/>
++	<value value="38" name="PERF_UCHE_RAM_READ_REQ"/>
++	<value value="39" name="PERF_UCHE_RAM_WRITE_REQ"/>
++</enum>
++
++<enum name="a6xx_tp_perfcounter_select">
++	<value value="0" name="PERF_TP_BUSY_CYCLES"/>
++	<value value="1" name="PERF_TP_STALL_CYCLES_UCHE"/>
++	<value value="2" name="PERF_TP_LATENCY_CYCLES"/>
++	<value value="3" name="PERF_TP_LATENCY_TRANS"/>
++	<value value="4" name="PERF_TP_FLAG_CACHE_REQUEST_SAMPLES"/>
++	<value value="5" name="PERF_TP_FLAG_CACHE_REQUEST_LATENCY"/>
++	<value value="6" name="PERF_TP_L1_CACHELINE_REQUESTS"/>
++	<value value="7" name="PERF_TP_L1_CACHELINE_MISSES"/>
++	<value value="8" name="PERF_TP_SP_TP_TRANS"/>
++	<value value="9" name="PERF_TP_TP_SP_TRANS"/>
++	<value value="10" name="PERF_TP_OUTPUT_PIXELS"/>
++	<value value="11" name="PERF_TP_FILTER_WORKLOAD_16BIT"/>
++	<value value="12" name="PERF_TP_FILTER_WORKLOAD_32BIT"/>
++	<value value="13" name="PERF_TP_QUADS_RECEIVED"/>
++	<value value="14" name="PERF_TP_QUADS_OFFSET"/>
++	<value value="15" name="PERF_TP_QUADS_SHADOW"/>
++	<value value="16" name="PERF_TP_QUADS_ARRAY"/>
++	<value value="17" name="PERF_TP_QUADS_GRADIENT"/>
++	<value value="18" name="PERF_TP_QUADS_1D"/>
++	<value value="19" name="PERF_TP_QUADS_2D"/>
++	<value value="20" name="PERF_TP_QUADS_BUFFER"/>
++	<value value="21" name="PERF_TP_QUADS_3D"/>
++	<value value="22" name="PERF_TP_QUADS_CUBE"/>
++	<value value="23" name="PERF_TP_DIVERGENT_QUADS_RECEIVED"/>
++	<value value="24" name="PERF_TP_PRT_NON_RESIDENT_EVENTS"/>
++	<value value="25" name="PERF_TP_OUTPUT_PIXELS_POINT"/>
++	<value value="26" name="PERF_TP_OUTPUT_PIXELS_BILINEAR"/>
++	<value value="27" name="PERF_TP_OUTPUT_PIXELS_MIP"/>
++	<value value="28" name="PERF_TP_OUTPUT_PIXELS_ANISO"/>
++	<value value="29" name="PERF_TP_OUTPUT_PIXELS_ZERO_LOD"/>
++	<value value="30" name="PERF_TP_FLAG_CACHE_REQUESTS"/>
++	<value value="31" name="PERF_TP_FLAG_CACHE_MISSES"/>
++	<value value="32" name="PERF_TP_L1_5_L2_REQUESTS"/>
++	<value value="33" name="PERF_TP_2D_OUTPUT_PIXELS"/>
++	<value value="34" name="PERF_TP_2D_OUTPUT_PIXELS_POINT"/>
++	<value value="35" name="PERF_TP_2D_OUTPUT_PIXELS_BILINEAR"/>
++	<value value="36" name="PERF_TP_2D_FILTER_WORKLOAD_16BIT"/>
++	<value value="37" name="PERF_TP_2D_FILTER_WORKLOAD_32BIT"/>
++	<value value="38" name="PERF_TP_TPA2TPC_TRANS"/>
++	<value value="39" name="PERF_TP_L1_MISSES_ASTC_1TILE"/>
++	<value value="40" name="PERF_TP_L1_MISSES_ASTC_2TILE"/>
++	<value value="41" name="PERF_TP_L1_MISSES_ASTC_4TILE"/>
++	<value value="42" name="PERF_TP_L1_5_L2_COMPRESS_REQS"/>
++	<value value="43" name="PERF_TP_L1_5_L2_COMPRESS_MISS"/>
++	<value value="44" name="PERF_TP_L1_BANK_CONFLICT"/>
++	<value value="45" name="PERF_TP_L1_5_MISS_LATENCY_CYCLES"/>
++	<value value="46" name="PERF_TP_L1_5_MISS_LATENCY_TRANS"/>
++	<value value="47" name="PERF_TP_QUADS_CONSTANT_MULTIPLIED"/>
++	<value value="48" name="PERF_TP_FRONTEND_WORKING_CYCLES"/>
++	<value value="49" name="PERF_TP_L1_TAG_WORKING_CYCLES"/>
++	<value value="50" name="PERF_TP_L1_DATA_WRITE_WORKING_CYCLES"/>
++	<value value="51" name="PERF_TP_PRE_L1_DECOM_WORKING_CYCLES"/>
++	<value value="52" name="PERF_TP_BACKEND_WORKING_CYCLES"/>
++	<value value="53" name="PERF_TP_FLAG_CACHE_WORKING_CYCLES"/>
++	<value value="54" name="PERF_TP_L1_5_CACHE_WORKING_CYCLES"/>
++	<value value="55" name="PERF_TP_STARVE_CYCLES_SP"/>
++	<value value="56" name="PERF_TP_STARVE_CYCLES_UCHE"/>
++</enum>
++
++<enum name="a6xx_sp_perfcounter_select">
++	<value value="0" name="PERF_SP_BUSY_CYCLES"/>
++	<value value="1" name="PERF_SP_ALU_WORKING_CYCLES"/>
++	<value value="2" name="PERF_SP_EFU_WORKING_CYCLES"/>
++	<value value="3" name="PERF_SP_STALL_CYCLES_VPC"/>
++	<value value="4" name="PERF_SP_STALL_CYCLES_TP"/>
++	<value value="5" name="PERF_SP_STALL_CYCLES_UCHE"/>
++	<value value="6" name="PERF_SP_STALL_CYCLES_RB"/>
++	<value value="7" name="PERF_SP_NON_EXECUTION_CYCLES"/>
++	<value value="8" name="PERF_SP_WAVE_CONTEXTS"/>
++	<value value="9" name="PERF_SP_WAVE_CONTEXT_CYCLES"/>
++	<value value="10" name="PERF_SP_FS_STAGE_WAVE_CYCLES"/>
++	<value value="11" name="PERF_SP_FS_STAGE_WAVE_SAMPLES"/>
++	<value value="12" name="PERF_SP_VS_STAGE_WAVE_CYCLES"/>
++	<value value="13" name="PERF_SP_VS_STAGE_WAVE_SAMPLES"/>
++	<value value="14" name="PERF_SP_FS_STAGE_DURATION_CYCLES"/>
++	<value value="15" name="PERF_SP_VS_STAGE_DURATION_CYCLES"/>
++	<value value="16" name="PERF_SP_WAVE_CTRL_CYCLES"/>
++	<value value="17" name="PERF_SP_WAVE_LOAD_CYCLES"/>
++	<value value="18" name="PERF_SP_WAVE_EMIT_CYCLES"/>
++	<value value="19" name="PERF_SP_WAVE_NOP_CYCLES"/>
++	<value value="20" name="PERF_SP_WAVE_WAIT_CYCLES"/>
++	<value value="21" name="PERF_SP_WAVE_FETCH_CYCLES"/>
++	<value value="22" name="PERF_SP_WAVE_IDLE_CYCLES"/>
++	<value value="23" name="PERF_SP_WAVE_END_CYCLES"/>
++	<value value="24" name="PERF_SP_WAVE_LONG_SYNC_CYCLES"/>
++	<value value="25" name="PERF_SP_WAVE_SHORT_SYNC_CYCLES"/>
++	<value value="26" name="PERF_SP_WAVE_JOIN_CYCLES"/>
++	<value value="27" name="PERF_SP_LM_LOAD_INSTRUCTIONS"/>
++	<value value="28" name="PERF_SP_LM_STORE_INSTRUCTIONS"/>
++	<value value="29" name="PERF_SP_LM_ATOMICS"/>
++	<value value="30" name="PERF_SP_GM_LOAD_INSTRUCTIONS"/>
++	<value value="31" name="PERF_SP_GM_STORE_INSTRUCTIONS"/>
++	<value value="32" name="PERF_SP_GM_ATOMICS"/>
++	<value value="33" name="PERF_SP_VS_STAGE_TEX_INSTRUCTIONS"/>
++	<value value="34" name="PERF_SP_VS_STAGE_EFU_INSTRUCTIONS"/>
++	<value value="35" name="PERF_SP_VS_STAGE_FULL_ALU_INSTRUCTIONS"/>
++	<value value="36" name="PERF_SP_VS_STAGE_HALF_ALU_INSTRUCTIONS"/>
++	<value value="37" name="PERF_SP_FS_STAGE_TEX_INSTRUCTIONS"/>
++	<value value="38" name="PERF_SP_FS_STAGE_CFLOW_INSTRUCTIONS"/>
++	<value value="39" name="PERF_SP_FS_STAGE_EFU_INSTRUCTIONS"/>
++	<value value="40" name="PERF_SP_FS_STAGE_FULL_ALU_INSTRUCTIONS"/>
++	<value value="41" name="PERF_SP_FS_STAGE_HALF_ALU_INSTRUCTIONS"/>
++	<value value="42" name="PERF_SP_FS_STAGE_BARY_INSTRUCTIONS"/>
++	<value value="43" name="PERF_SP_VS_INSTRUCTIONS"/>
++	<value value="44" name="PERF_SP_FS_INSTRUCTIONS"/>
++	<value value="45" name="PERF_SP_ADDR_LOCK_COUNT"/>
++	<value value="46" name="PERF_SP_UCHE_READ_TRANS"/>
++	<value value="47" name="PERF_SP_UCHE_WRITE_TRANS"/>
++	<value value="48" name="PERF_SP_EXPORT_VPC_TRANS"/>
++	<value value="49" name="PERF_SP_EXPORT_RB_TRANS"/>
++	<value value="50" name="PERF_SP_PIXELS_KILLED"/>
++	<value value="51" name="PERF_SP_ICL1_REQUESTS"/>
++	<value value="52" name="PERF_SP_ICL1_MISSES"/>
++	<value value="53" name="PERF_SP_HS_INSTRUCTIONS"/>
++	<value value="54" name="PERF_SP_DS_INSTRUCTIONS"/>
++	<value value="55" name="PERF_SP_GS_INSTRUCTIONS"/>
++	<value value="56" name="PERF_SP_CS_INSTRUCTIONS"/>
++	<value value="57" name="PERF_SP_GPR_READ"/>
++	<value value="58" name="PERF_SP_GPR_WRITE"/>
++	<value value="59" name="PERF_SP_FS_STAGE_HALF_EFU_INSTRUCTIONS"/>
++	<value value="60" name="PERF_SP_VS_STAGE_HALF_EFU_INSTRUCTIONS"/>
++	<value value="61" name="PERF_SP_LM_BANK_CONFLICTS"/>
++	<value value="62" name="PERF_SP_TEX_CONTROL_WORKING_CYCLES"/>
++	<value value="63" name="PERF_SP_LOAD_CONTROL_WORKING_CYCLES"/>
++	<value value="64" name="PERF_SP_FLOW_CONTROL_WORKING_CYCLES"/>
++	<value value="65" name="PERF_SP_LM_WORKING_CYCLES"/>
++	<value value="66" name="PERF_SP_DISPATCHER_WORKING_CYCLES"/>
++	<value value="67" name="PERF_SP_SEQUENCER_WORKING_CYCLES"/>
++	<value value="68" name="PERF_SP_LOW_EFFICIENCY_STARVED_BY_TP"/>
++	<value value="69" name="PERF_SP_STARVE_CYCLES_HLSQ"/>
++	<value value="70" name="PERF_SP_NON_EXECUTION_LS_CYCLES"/>
++	<value value="71" name="PERF_SP_WORKING_EU"/>
++	<value value="72" name="PERF_SP_ANY_EU_WORKING"/>
++	<value value="73" name="PERF_SP_WORKING_EU_FS_STAGE"/>
++	<value value="74" name="PERF_SP_ANY_EU_WORKING_FS_STAGE"/>
++	<value value="75" name="PERF_SP_WORKING_EU_VS_STAGE"/>
++	<value value="76" name="PERF_SP_ANY_EU_WORKING_VS_STAGE"/>
++	<value value="77" name="PERF_SP_WORKING_EU_CS_STAGE"/>
++	<value value="78" name="PERF_SP_ANY_EU_WORKING_CS_STAGE"/>
++	<value value="79" name="PERF_SP_GPR_READ_PREFETCH"/>
++	<value value="80" name="PERF_SP_GPR_READ_CONFLICT"/>
++	<value value="81" name="PERF_SP_GPR_WRITE_CONFLICT"/>
++	<value value="82" name="PERF_SP_GM_LOAD_LATENCY_CYCLES"/>
++	<value value="83" name="PERF_SP_GM_LOAD_LATENCY_SAMPLES"/>
++	<value value="84" name="PERF_SP_EXECUTABLE_WAVES"/>
++</enum>
++
++<enum name="a6xx_rb_perfcounter_select">
++	<value value="0" name="PERF_RB_BUSY_CYCLES"/>
++	<value value="1" name="PERF_RB_STALL_CYCLES_HLSQ"/>
++	<value value="2" name="PERF_RB_STALL_CYCLES_FIFO0_FULL"/>
++	<value value="3" name="PERF_RB_STALL_CYCLES_FIFO1_FULL"/>
++	<value value="4" name="PERF_RB_STALL_CYCLES_FIFO2_FULL"/>
++	<value value="5" name="PERF_RB_STARVE_CYCLES_SP"/>
++	<value value="6" name="PERF_RB_STARVE_CYCLES_LRZ_TILE"/>
++	<value value="7" name="PERF_RB_STARVE_CYCLES_CCU"/>
++	<value value="8" name="PERF_RB_STARVE_CYCLES_Z_PLANE"/>
++	<value value="9" name="PERF_RB_STARVE_CYCLES_BARY_PLANE"/>
++	<value value="10" name="PERF_RB_Z_WORKLOAD"/>
++	<value value="11" name="PERF_RB_HLSQ_ACTIVE"/>
++	<value value="12" name="PERF_RB_Z_READ"/>
++	<value value="13" name="PERF_RB_Z_WRITE"/>
++	<value value="14" name="PERF_RB_C_READ"/>
++	<value value="15" name="PERF_RB_C_WRITE"/>
++	<value value="16" name="PERF_RB_TOTAL_PASS"/>
++	<value value="17" name="PERF_RB_Z_PASS"/>
++	<value value="18" name="PERF_RB_Z_FAIL"/>
++	<value value="19" name="PERF_RB_S_FAIL"/>
++	<value value="20" name="PERF_RB_BLENDED_FXP_COMPONENTS"/>
++	<value value="21" name="PERF_RB_BLENDED_FP16_COMPONENTS"/>
++	<value value="22" name="PERF_RB_PS_INVOCATIONS"/>
++	<value value="23" name="PERF_RB_2D_ALIVE_CYCLES"/>
++	<value value="24" name="PERF_RB_2D_STALL_CYCLES_A2D"/>
++	<value value="25" name="PERF_RB_2D_STARVE_CYCLES_SRC"/>
++	<value value="26" name="PERF_RB_2D_STARVE_CYCLES_SP"/>
++	<value value="27" name="PERF_RB_2D_STARVE_CYCLES_DST"/>
++	<value value="28" name="PERF_RB_2D_VALID_PIXELS"/>
++	<value value="29" name="PERF_RB_3D_PIXELS"/>
++	<value value="30" name="PERF_RB_BLENDER_WORKING_CYCLES"/>
++	<value value="31" name="PERF_RB_ZPROC_WORKING_CYCLES"/>
++	<value value="32" name="PERF_RB_CPROC_WORKING_CYCLES"/>
++	<value value="33" name="PERF_RB_SAMPLER_WORKING_CYCLES"/>
++	<value value="34" name="PERF_RB_STALL_CYCLES_CCU_COLOR_READ"/>
++	<value value="35" name="PERF_RB_STALL_CYCLES_CCU_COLOR_WRITE"/>
++	<value value="36" name="PERF_RB_STALL_CYCLES_CCU_DEPTH_READ"/>
++	<value value="37" name="PERF_RB_STALL_CYCLES_CCU_DEPTH_WRITE"/>
++	<value value="38" name="PERF_RB_STALL_CYCLES_VPC"/>
++	<value value="39" name="PERF_RB_2D_INPUT_TRANS"/>
++	<value value="40" name="PERF_RB_2D_OUTPUT_RB_DST_TRANS"/>
++	<value value="41" name="PERF_RB_2D_OUTPUT_RB_SRC_TRANS"/>
++	<value value="42" name="PERF_RB_BLENDED_FP32_COMPONENTS"/>
++	<value value="43" name="PERF_RB_COLOR_PIX_TILES"/>
++	<value value="44" name="PERF_RB_STALL_CYCLES_CCU"/>
++	<value value="45" name="PERF_RB_EARLY_Z_ARB3_GRANT"/>
++	<value value="46" name="PERF_RB_LATE_Z_ARB3_GRANT"/>
++	<value value="47" name="PERF_RB_EARLY_Z_SKIP_GRANT"/>
++</enum>
++
++<enum name="a6xx_vsc_perfcounter_select">
++	<value value="0" name="PERF_VSC_BUSY_CYCLES"/>
++	<value value="1" name="PERF_VSC_WORKING_CYCLES"/>
++	<value value="2" name="PERF_VSC_STALL_CYCLES_UCHE"/>
++	<value value="3" name="PERF_VSC_EOT_NUM"/>
++	<value value="4" name="PERF_VSC_INPUT_TILES"/>
++</enum>
++
++<enum name="a6xx_ccu_perfcounter_select">
++	<value value="0" name="PERF_CCU_BUSY_CYCLES"/>
++	<value value="1" name="PERF_CCU_STALL_CYCLES_RB_DEPTH_RETURN"/>
++	<value value="2" name="PERF_CCU_STALL_CYCLES_RB_COLOR_RETURN"/>
++	<value value="3" name="PERF_CCU_STARVE_CYCLES_FLAG_RETURN"/>
++	<value value="4" name="PERF_CCU_DEPTH_BLOCKS"/>
++	<value value="5" name="PERF_CCU_COLOR_BLOCKS"/>
++	<value value="6" name="PERF_CCU_DEPTH_BLOCK_HIT"/>
++	<value value="7" name="PERF_CCU_COLOR_BLOCK_HIT"/>
++	<value value="8" name="PERF_CCU_PARTIAL_BLOCK_READ"/>
++	<value value="9" name="PERF_CCU_GMEM_READ"/>
++	<value value="10" name="PERF_CCU_GMEM_WRITE"/>
++	<value value="11" name="PERF_CCU_DEPTH_READ_FLAG0_COUNT"/>
++	<value value="12" name="PERF_CCU_DEPTH_READ_FLAG1_COUNT"/>
++	<value value="13" name="PERF_CCU_DEPTH_READ_FLAG2_COUNT"/>
++	<value value="14" name="PERF_CCU_DEPTH_READ_FLAG3_COUNT"/>
++	<value value="15" name="PERF_CCU_DEPTH_READ_FLAG4_COUNT"/>
++	<value value="16" name="PERF_CCU_DEPTH_READ_FLAG5_COUNT"/>
++	<value value="17" name="PERF_CCU_DEPTH_READ_FLAG6_COUNT"/>
++	<value value="18" name="PERF_CCU_DEPTH_READ_FLAG8_COUNT"/>
++	<value value="19" name="PERF_CCU_COLOR_READ_FLAG0_COUNT"/>
++	<value value="20" name="PERF_CCU_COLOR_READ_FLAG1_COUNT"/>
++	<value value="21" name="PERF_CCU_COLOR_READ_FLAG2_COUNT"/>
++	<value value="22" name="PERF_CCU_COLOR_READ_FLAG3_COUNT"/>
++	<value value="23" name="PERF_CCU_COLOR_READ_FLAG4_COUNT"/>
++	<value value="24" name="PERF_CCU_COLOR_READ_FLAG5_COUNT"/>
++	<value value="25" name="PERF_CCU_COLOR_READ_FLAG6_COUNT"/>
++	<value value="26" name="PERF_CCU_COLOR_READ_FLAG8_COUNT"/>
++	<value value="27" name="PERF_CCU_2D_RD_REQ"/>
++	<value value="28" name="PERF_CCU_2D_WR_REQ"/>
++</enum>
++
++<enum name="a6xx_lrz_perfcounter_select">
++	<value value="0" name="PERF_LRZ_BUSY_CYCLES"/>
++	<value value="1" name="PERF_LRZ_STARVE_CYCLES_RAS"/>
++	<value value="2" name="PERF_LRZ_STALL_CYCLES_RB"/>
++	<value value="3" name="PERF_LRZ_STALL_CYCLES_VSC"/>
++	<value value="4" name="PERF_LRZ_STALL_CYCLES_VPC"/>
++	<value value="5" name="PERF_LRZ_STALL_CYCLES_FLAG_PREFETCH"/>
++	<value value="6" name="PERF_LRZ_STALL_CYCLES_UCHE"/>
++	<value value="7" name="PERF_LRZ_LRZ_READ"/>
++	<value value="8" name="PERF_LRZ_LRZ_WRITE"/>
++	<value value="9" name="PERF_LRZ_READ_LATENCY"/>
++	<value value="10" name="PERF_LRZ_MERGE_CACHE_UPDATING"/>
++	<value value="11" name="PERF_LRZ_PRIM_KILLED_BY_MASKGEN"/>
++	<value value="12" name="PERF_LRZ_PRIM_KILLED_BY_LRZ"/>
++	<value value="13" name="PERF_LRZ_VISIBLE_PRIM_AFTER_LRZ"/>
++	<value value="14" name="PERF_LRZ_FULL_8X8_TILES"/>
++	<value value="15" name="PERF_LRZ_PARTIAL_8X8_TILES"/>
++	<value value="16" name="PERF_LRZ_TILE_KILLED"/>
++	<value value="17" name="PERF_LRZ_TOTAL_PIXEL"/>
++	<value value="18" name="PERF_LRZ_VISIBLE_PIXEL_AFTER_LRZ"/>
++	<value value="19" name="PERF_LRZ_FULLY_COVERED_TILES"/>
++	<value value="20" name="PERF_LRZ_PARTIAL_COVERED_TILES"/>
++	<value value="21" name="PERF_LRZ_FEEDBACK_ACCEPT"/>
++	<value value="22" name="PERF_LRZ_FEEDBACK_DISCARD"/>
++	<value value="23" name="PERF_LRZ_FEEDBACK_STALL"/>
++	<value value="24" name="PERF_LRZ_STALL_CYCLES_RB_ZPLANE"/>
++	<value value="25" name="PERF_LRZ_STALL_CYCLES_RB_BPLANE"/>
++	<value value="26" name="PERF_LRZ_STALL_CYCLES_VC"/>
++	<value value="27" name="PERF_LRZ_RAS_MASK_TRANS"/>
++</enum>
++
++<enum name="a6xx_cmp_perfcounter_select">
++	<value value="0" name="PERF_CMPDECMP_STALL_CYCLES_ARB"/>
++	<value value="1" name="PERF_CMPDECMP_VBIF_LATENCY_CYCLES"/>
++	<value value="2" name="PERF_CMPDECMP_VBIF_LATENCY_SAMPLES"/>
++	<value value="3" name="PERF_CMPDECMP_VBIF_READ_DATA_CCU"/>
++	<value value="4" name="PERF_CMPDECMP_VBIF_WRITE_DATA_CCU"/>
++	<value value="5" name="PERF_CMPDECMP_VBIF_READ_REQUEST"/>
++	<value value="6" name="PERF_CMPDECMP_VBIF_WRITE_REQUEST"/>
++	<value value="7" name="PERF_CMPDECMP_VBIF_READ_DATA"/>
++	<value value="8" name="PERF_CMPDECMP_VBIF_WRITE_DATA"/>
++	<value value="9" name="PERF_CMPDECMP_FLAG_FETCH_CYCLES"/>
++	<value value="10" name="PERF_CMPDECMP_FLAG_FETCH_SAMPLES"/>
++	<value value="11" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG1_COUNT"/>
++	<value value="12" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG2_COUNT"/>
++	<value value="13" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG3_COUNT"/>
++	<value value="14" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG4_COUNT"/>
++	<value value="15" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG5_COUNT"/>
++	<value value="16" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG6_COUNT"/>
++	<value value="17" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG8_COUNT"/>
++	<value value="18" name="PERF_CMPDECMP_COLOR_WRITE_FLAG1_COUNT"/>
++	<value value="19" name="PERF_CMPDECMP_COLOR_WRITE_FLAG2_COUNT"/>
++	<value value="20" name="PERF_CMPDECMP_COLOR_WRITE_FLAG3_COUNT"/>
++	<value value="21" name="PERF_CMPDECMP_COLOR_WRITE_FLAG4_COUNT"/>
++	<value value="22" name="PERF_CMPDECMP_COLOR_WRITE_FLAG5_COUNT"/>
++	<value value="23" name="PERF_CMPDECMP_COLOR_WRITE_FLAG6_COUNT"/>
++	<value value="24" name="PERF_CMPDECMP_COLOR_WRITE_FLAG8_COUNT"/>
++	<value value="25" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_REQ"/>
++	<value value="26" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_WR"/>
++	<value value="27" name="PERF_CMPDECMP_2D_STALL_CYCLES_VBIF_RETURN"/>
++	<value value="28" name="PERF_CMPDECMP_2D_RD_DATA"/>
++	<value value="29" name="PERF_CMPDECMP_2D_WR_DATA"/>
++	<value value="30" name="PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH0"/>
++	<value value="31" name="PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH1"/>
++	<value value="32" name="PERF_CMPDECMP_2D_OUTPUT_TRANS"/>
++	<value value="33" name="PERF_CMPDECMP_VBIF_WRITE_DATA_UCHE"/>
++	<value value="34" name="PERF_CMPDECMP_DEPTH_WRITE_FLAG0_COUNT"/>
++	<value value="35" name="PERF_CMPDECMP_COLOR_WRITE_FLAG0_COUNT"/>
++	<value value="36" name="PERF_CMPDECMP_COLOR_WRITE_FLAGALPHA_COUNT"/>
++	<value value="37" name="PERF_CMPDECMP_2D_BUSY_CYCLES"/>
++	<value value="38" name="PERF_CMPDECMP_2D_REORDER_STARVE_CYCLES"/>
++	<value value="39" name="PERF_CMPDECMP_2D_PIXELS"/>
++</enum>
++
++</database>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a7xx_enums.xml b/drivers/gpu/drm/msm/registers/adreno/a7xx_enums.xml
+new file mode 100644
+index 000000000000..661b0dd0f675
+--- /dev/null
++++ b/drivers/gpu/drm/msm/registers/adreno/a7xx_enums.xml
+@@ -0,0 +1,223 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<database xmlns="http://nouveau.freedesktop.org/"
++xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
++<import file="freedreno_copyright.xml"/>
++<import file="adreno/adreno_common.xml"/>
++<import file="adreno/adreno_pm4.xml"/>
++
++<enum name="a7xx_statetype_id">
++	<value value="0" name="A7XX_TP0_NCTX_REG"/>
++	<value value="1" name="A7XX_TP0_CTX0_3D_CVS_REG"/>
++	<value value="2" name="A7XX_TP0_CTX0_3D_CPS_REG"/>
++	<value value="3" name="A7XX_TP0_CTX1_3D_CVS_REG"/>
++	<value value="4" name="A7XX_TP0_CTX1_3D_CPS_REG"/>
++	<value value="5" name="A7XX_TP0_CTX2_3D_CPS_REG"/>
++	<value value="6" name="A7XX_TP0_CTX3_3D_CPS_REG"/>
++	<value value="9" name="A7XX_TP0_TMO_DATA"/>
++	<value value="10" name="A7XX_TP0_SMO_DATA"/>
++	<value value="11" name="A7XX_TP0_MIPMAP_BASE_DATA"/>
++	<value value="32" name="A7XX_SP_NCTX_REG"/>
++	<value value="33" name="A7XX_SP_CTX0_3D_CVS_REG"/>
++	<value value="34" name="A7XX_SP_CTX0_3D_CPS_REG"/>
++	<value value="35" name="A7XX_SP_CTX1_3D_CVS_REG"/>
++	<value value="36" name="A7XX_SP_CTX1_3D_CPS_REG"/>
++	<value value="37" name="A7XX_SP_CTX2_3D_CPS_REG"/>
++	<value value="38" name="A7XX_SP_CTX3_3D_CPS_REG"/>
++	<value value="39" name="A7XX_SP_INST_DATA"/>
++	<value value="40" name="A7XX_SP_INST_DATA_1"/>
++	<value value="41" name="A7XX_SP_LB_0_DATA"/>
++	<value value="42" name="A7XX_SP_LB_1_DATA"/>
++	<value value="43" name="A7XX_SP_LB_2_DATA"/>
++	<value value="44" name="A7XX_SP_LB_3_DATA"/>
++	<value value="45" name="A7XX_SP_LB_4_DATA"/>
++	<value value="46" name="A7XX_SP_LB_5_DATA"/>
++	<value value="47" name="A7XX_SP_LB_6_DATA"/>
++	<value value="48" name="A7XX_SP_LB_7_DATA"/>
++	<value value="49" name="A7XX_SP_CB_RAM"/>
++	<value value="50" name="A7XX_SP_LB_13_DATA"/>
++	<value value="51" name="A7XX_SP_LB_14_DATA"/>
++	<value value="52" name="A7XX_SP_INST_TAG"/>
++	<value value="53" name="A7XX_SP_INST_DATA_2"/>
++	<value value="54" name="A7XX_SP_TMO_TAG"/>
++	<value value="55" name="A7XX_SP_SMO_TAG"/>
++	<value value="56" name="A7XX_SP_STATE_DATA"/>
++	<value value="57" name="A7XX_SP_HWAVE_RAM"/>
++	<value value="58" name="A7XX_SP_L0_INST_BUF"/>
++	<value value="59" name="A7XX_SP_LB_8_DATA"/>
++	<value value="60" name="A7XX_SP_LB_9_DATA"/>
++	<value value="61" name="A7XX_SP_LB_10_DATA"/>
++	<value value="62" name="A7XX_SP_LB_11_DATA"/>
++	<value value="63" name="A7XX_SP_LB_12_DATA"/>
++	<value value="64" name="A7XX_HLSQ_DATAPATH_DSTR_META"/>
++	<value value="67" name="A7XX_HLSQ_L2STC_TAG_RAM"/>
++	<value value="68" name="A7XX_HLSQ_L2STC_INFO_CMD"/>
++	<value value="69" name="A7XX_HLSQ_CVS_BE_CTXT_BUF_RAM_TAG"/>
++	<value value="70" name="A7XX_HLSQ_CPS_BE_CTXT_BUF_RAM_TAG"/>
++	<value value="71" name="A7XX_HLSQ_GFX_CVS_BE_CTXT_BUF_RAM"/>
++	<value value="72" name="A7XX_HLSQ_GFX_CPS_BE_CTXT_BUF_RAM"/>
++	<value value="73" name="A7XX_HLSQ_CHUNK_CVS_RAM"/>
++	<value value="74" name="A7XX_HLSQ_CHUNK_CPS_RAM"/>
++	<value value="75" name="A7XX_HLSQ_CHUNK_CVS_RAM_TAG"/>
++	<value value="76" name="A7XX_HLSQ_CHUNK_CPS_RAM_TAG"/>
++	<value value="77" name="A7XX_HLSQ_ICB_CVS_CB_BASE_TAG"/>
++	<value value="78" name="A7XX_HLSQ_ICB_CPS_CB_BASE_TAG"/>
++	<value value="79" name="A7XX_HLSQ_CVS_MISC_RAM"/>
++	<value value="80" name="A7XX_HLSQ_CPS_MISC_RAM"/>
++	<value value="81" name="A7XX_HLSQ_CPS_MISC_RAM_1"/>
++	<value value="82" name="A7XX_HLSQ_INST_RAM"/>
++	<value value="83" name="A7XX_HLSQ_GFX_CVS_CONST_RAM"/>
++	<value value="84" name="A7XX_HLSQ_GFX_CPS_CONST_RAM"/>
++	<value value="85" name="A7XX_HLSQ_CVS_MISC_RAM_TAG"/>
++	<value value="86" name="A7XX_HLSQ_CPS_MISC_RAM_TAG"/>
++	<value value="87" name="A7XX_HLSQ_INST_RAM_TAG"/>
++	<value value="88" name="A7XX_HLSQ_GFX_CVS_CONST_RAM_TAG"/>
++	<value value="89" name="A7XX_HLSQ_GFX_CPS_CONST_RAM_TAG"/>
++	<value value="90" name="A7XX_HLSQ_GFX_LOCAL_MISC_RAM"/>
++	<value value="91" name="A7XX_HLSQ_GFX_LOCAL_MISC_RAM_TAG"/>
++	<value value="92" name="A7XX_HLSQ_INST_RAM_1"/>
++	<value value="93" name="A7XX_HLSQ_STPROC_META"/>
++	<value value="94" name="A7XX_HLSQ_BV_BE_META"/>
++	<value value="95" name="A7XX_HLSQ_INST_RAM_2"/>
++	<value value="96" name="A7XX_HLSQ_DATAPATH_META"/>
++	<value value="97" name="A7XX_HLSQ_FRONTEND_META"/>
++	<value value="98" name="A7XX_HLSQ_INDIRECT_META"/>
++	<value value="99" name="A7XX_HLSQ_BACKEND_META"/>
++</enum>
++
++<enum name="a7xx_state_location">
++	<value value="0" name="A7XX_HLSQ_STATE"/>
++	<value value="1" name="A7XX_HLSQ_DP"/>
++	<value value="2" name="A7XX_SP_TOP"/>
++	<value value="3" name="A7XX_USPTP"/>
++	<value value="4" name="A7XX_HLSQ_DP_STR"/>
++</enum>
++
++<enum name="a7xx_pipe">
++	<value value="0" name="A7XX_PIPE_NONE"/>
++	<value value="1" name="A7XX_PIPE_BR"/>
++	<value value="2" name="A7XX_PIPE_BV"/>
++	<value value="3" name="A7XX_PIPE_LPAC"/>
++</enum>
++
++<enum name="a7xx_cluster">
++	<value value="0" name="A7XX_CLUSTER_NONE"/>
++	<value value="1" name="A7XX_CLUSTER_FE"/>
++	<value value="2" name="A7XX_CLUSTER_SP_VS"/>
++	<value value="3" name="A7XX_CLUSTER_PC_VS"/>
++	<value value="4" name="A7XX_CLUSTER_GRAS"/>
++	<value value="5" name="A7XX_CLUSTER_SP_PS"/>
++	<value value="6" name="A7XX_CLUSTER_VPC_PS"/>
++	<value value="7" name="A7XX_CLUSTER_PS"/>
++</enum>
++
++<enum name="a7xx_debugbus_id">
++	<value value="1" name="A7XX_DBGBUS_CP_0_0"/>
++	<value value="2" name="A7XX_DBGBUS_CP_0_1"/>
++	<value value="3" name="A7XX_DBGBUS_RBBM"/>
++	<value value="5" name="A7XX_DBGBUS_GBIF_GX"/>
++	<value value="6" name="A7XX_DBGBUS_GBIF_CX"/>
++	<value value="7" name="A7XX_DBGBUS_HLSQ"/>
++	<value value="9" name="A7XX_DBGBUS_UCHE_0"/>
++	<value value="10" name="A7XX_DBGBUS_UCHE_1"/>
++	<value value="13" name="A7XX_DBGBUS_TESS_BR"/>
++	<value value="14" name="A7XX_DBGBUS_TESS_BV"/>
++	<value value="17" name="A7XX_DBGBUS_PC_BR"/>
++	<value value="18" name="A7XX_DBGBUS_PC_BV"/>
++	<value value="21" name="A7XX_DBGBUS_VFDP_BR"/>
++	<value value="22" name="A7XX_DBGBUS_VFDP_BV"/>
++	<value value="25" name="A7XX_DBGBUS_VPC_BR"/>
++	<value value="26" name="A7XX_DBGBUS_VPC_BV"/>
++	<value value="29" name="A7XX_DBGBUS_TSE_BR"/>
++	<value value="30" name="A7XX_DBGBUS_TSE_BV"/>
++	<value value="33" name="A7XX_DBGBUS_RAS_BR"/>
++	<value value="34" name="A7XX_DBGBUS_RAS_BV"/>
++	<value value="37" name="A7XX_DBGBUS_VSC"/>
++	<value value="39" name="A7XX_DBGBUS_COM_0"/>
++	<value value="43" name="A7XX_DBGBUS_LRZ_BR"/>
++	<value value="44" name="A7XX_DBGBUS_LRZ_BV"/>
++	<value value="47" name="A7XX_DBGBUS_UFC_0"/>
++	<value value="48" name="A7XX_DBGBUS_UFC_1"/>
++	<value value="55" name="A7XX_DBGBUS_GMU_GX"/>
++	<value value="59" name="A7XX_DBGBUS_DBGC"/>
++	<value value="60" name="A7XX_DBGBUS_CX"/>
++	<value value="61" name="A7XX_DBGBUS_GMU_CX"/>
++	<value value="62" name="A7XX_DBGBUS_GPC_BR"/>
++	<value value="63" name="A7XX_DBGBUS_GPC_BV"/>
++	<value value="66" name="A7XX_DBGBUS_LARC"/>
++	<value value="68" name="A7XX_DBGBUS_HLSQ_SPTP"/>
++	<value value="70" name="A7XX_DBGBUS_RB_0"/>
++	<value value="71" name="A7XX_DBGBUS_RB_1"/>
++	<value value="72" name="A7XX_DBGBUS_RB_2"/>
++	<value value="73" name="A7XX_DBGBUS_RB_3"/>
++	<value value="74" name="A7XX_DBGBUS_RB_4"/>
++	<value value="75" name="A7XX_DBGBUS_RB_5"/>
++	<value value="102" name="A7XX_DBGBUS_UCHE_WRAPPER"/>
++	<value value="106" name="A7XX_DBGBUS_CCU_0"/>
++	<value value="107" name="A7XX_DBGBUS_CCU_1"/>
++	<value value="108" name="A7XX_DBGBUS_CCU_2"/>
++	<value value="109" name="A7XX_DBGBUS_CCU_3"/>
++	<value value="110" name="A7XX_DBGBUS_CCU_4"/>
++	<value value="111" name="A7XX_DBGBUS_CCU_5"/>
++	<value value="138" name="A7XX_DBGBUS_VFD_BR_0"/>
++	<value value="139" name="A7XX_DBGBUS_VFD_BR_1"/>
++	<value value="140" name="A7XX_DBGBUS_VFD_BR_2"/>
++	<value value="141" name="A7XX_DBGBUS_VFD_BR_3"/>
++	<value value="142" name="A7XX_DBGBUS_VFD_BR_4"/>
++	<value value="143" name="A7XX_DBGBUS_VFD_BR_5"/>
++	<value value="144" name="A7XX_DBGBUS_VFD_BR_6"/>
++	<value value="145" name="A7XX_DBGBUS_VFD_BR_7"/>
++	<value value="202" name="A7XX_DBGBUS_VFD_BV_0"/>
++	<value value="203" name="A7XX_DBGBUS_VFD_BV_1"/>
++	<value value="204" name="A7XX_DBGBUS_VFD_BV_2"/>
++	<value value="205" name="A7XX_DBGBUS_VFD_BV_3"/>
++	<value value="234" name="A7XX_DBGBUS_USP_0"/>
++	<value value="235" name="A7XX_DBGBUS_USP_1"/>
++	<value value="236" name="A7XX_DBGBUS_USP_2"/>
++	<value value="237" name="A7XX_DBGBUS_USP_3"/>
++	<value value="238" name="A7XX_DBGBUS_USP_4"/>
++	<value value="239" name="A7XX_DBGBUS_USP_5"/>
++	<value value="266" name="A7XX_DBGBUS_TP_0"/>
++	<value value="267" name="A7XX_DBGBUS_TP_1"/>
++	<value value="268" name="A7XX_DBGBUS_TP_2"/>
++	<value value="269" name="A7XX_DBGBUS_TP_3"/>
++	<value value="270" name="A7XX_DBGBUS_TP_4"/>
++	<value value="271" name="A7XX_DBGBUS_TP_5"/>
++	<value value="272" name="A7XX_DBGBUS_TP_6"/>
++	<value value="273" name="A7XX_DBGBUS_TP_7"/>
++	<value value="274" name="A7XX_DBGBUS_TP_8"/>
++	<value value="275" name="A7XX_DBGBUS_TP_9"/>
++	<value value="276" name="A7XX_DBGBUS_TP_10"/>
++	<value value="277" name="A7XX_DBGBUS_TP_11"/>
++	<value value="330" name="A7XX_DBGBUS_USPTP_0"/>
++	<value value="331" name="A7XX_DBGBUS_USPTP_1"/>
++	<value value="332" name="A7XX_DBGBUS_USPTP_2"/>
++	<value value="333" name="A7XX_DBGBUS_USPTP_3"/>
++	<value value="334" name="A7XX_DBGBUS_USPTP_4"/>
++	<value value="335" name="A7XX_DBGBUS_USPTP_5"/>
++	<value value="336" name="A7XX_DBGBUS_USPTP_6"/>
++	<value value="337" name="A7XX_DBGBUS_USPTP_7"/>
++	<value value="338" name="A7XX_DBGBUS_USPTP_8"/>
++	<value value="339" name="A7XX_DBGBUS_USPTP_9"/>
++	<value value="340" name="A7XX_DBGBUS_USPTP_10"/>
++	<value value="341" name="A7XX_DBGBUS_USPTP_11"/>
++	<value value="396" name="A7XX_DBGBUS_CCHE_0"/>
++	<value value="397" name="A7XX_DBGBUS_CCHE_1"/>
++	<value value="398" name="A7XX_DBGBUS_CCHE_2"/>
++	<value value="408" name="A7XX_DBGBUS_VPC_DSTR_0"/>
++	<value value="409" name="A7XX_DBGBUS_VPC_DSTR_1"/>
++	<value value="410" name="A7XX_DBGBUS_VPC_DSTR_2"/>
++	<value value="411" name="A7XX_DBGBUS_HLSQ_DP_STR_0"/>
++	<value value="412" name="A7XX_DBGBUS_HLSQ_DP_STR_1"/>
++	<value value="413" name="A7XX_DBGBUS_HLSQ_DP_STR_2"/>
++	<value value="414" name="A7XX_DBGBUS_HLSQ_DP_STR_3"/>
++	<value value="415" name="A7XX_DBGBUS_HLSQ_DP_STR_4"/>
++	<value value="416" name="A7XX_DBGBUS_HLSQ_DP_STR_5"/>
++	<value value="443" name="A7XX_DBGBUS_UFC_DSTR_0"/>
++	<value value="444" name="A7XX_DBGBUS_UFC_DSTR_1"/>
++	<value value="445" name="A7XX_DBGBUS_UFC_DSTR_2"/>
++	<value value="446" name="A7XX_DBGBUS_CGC_SUBCORE"/>
++	<value value="447" name="A7XX_DBGBUS_CGC_CORE"/>
++</enum>
++
++</database>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/a7xx_perfcntrs.xml b/drivers/gpu/drm/msm/registers/adreno/a7xx_perfcntrs.xml
+new file mode 100644
+index 000000000000..9bf78b0a854b
+--- /dev/null
++++ b/drivers/gpu/drm/msm/registers/adreno/a7xx_perfcntrs.xml
+@@ -0,0 +1,1030 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<database xmlns="http://nouveau.freedesktop.org/"
++xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
++<import file="freedreno_copyright.xml"/>
++<import file="adreno/adreno_common.xml"/>
++<import file="adreno/adreno_pm4.xml"/>
++
++<enum name="a7xx_cp_perfcounter_select">
++	<value value="0" name="A7XX_PERF_CP_ALWAYS_COUNT"/>
++	<value value="1" name="A7XX_PERF_CP_BUSY_GFX_CORE_IDLE"/>
++	<value value="2" name="A7XX_PERF_CP_BUSY_CYCLES"/>
++	<value value="3" name="A7XX_PERF_CP_NUM_PREEMPTIONS"/>
++	<value value="4" name="A7XX_PERF_CP_PREEMPTION_REACTION_DELAY"/>
++	<value value="5" name="A7XX_PERF_CP_PREEMPTION_SWITCH_OUT_TIME"/>
++	<value value="6" name="A7XX_PERF_CP_PREEMPTION_SWITCH_IN_TIME"/>
++	<value value="7" name="A7XX_PERF_CP_DEAD_DRAWS_IN_BIN_RENDER"/>
++	<value value="8" name="A7XX_PERF_CP_PREDICATED_DRAWS_KILLED"/>
++	<value value="9" name="A7XX_PERF_CP_MODE_SWITCH"/>
++	<value value="10" name="A7XX_PERF_CP_ZPASS_DONE"/>
++	<value value="11" name="A7XX_PERF_CP_CONTEXT_DONE"/>
++	<value value="12" name="A7XX_PERF_CP_CACHE_FLUSH"/>
++	<value value="13" name="A7XX_PERF_CP_LONG_PREEMPTIONS"/>
++	<value value="14" name="A7XX_PERF_CP_SQE_I_CACHE_STARVE"/>
++	<value value="15" name="A7XX_PERF_CP_SQE_IDLE"/>
++	<value value="16" name="A7XX_PERF_CP_SQE_PM4_STARVE_RB_IB"/>
++	<value value="17" name="A7XX_PERF_CP_SQE_PM4_STARVE_SDS"/>
++	<value value="18" name="A7XX_PERF_CP_SQE_MRB_STARVE"/>
++	<value value="19" name="A7XX_PERF_CP_SQE_RRB_STARVE"/>
++	<value value="20" name="A7XX_PERF_CP_SQE_VSD_STARVE"/>
++	<value value="21" name="A7XX_PERF_CP_VSD_DECODE_STARVE"/>
++	<value value="22" name="A7XX_PERF_CP_SQE_PIPE_OUT_STALL"/>
++	<value value="23" name="A7XX_PERF_CP_SQE_SYNC_STALL"/>
++	<value value="24" name="A7XX_PERF_CP_SQE_PM4_WFI_STALL"/>
++	<value value="25" name="A7XX_PERF_CP_SQE_SYS_WFI_STALL"/>
++	<value value="26" name="A7XX_PERF_CP_SQE_T4_EXEC"/>
++	<value value="27" name="A7XX_PERF_CP_SQE_LOAD_STATE_EXEC"/>
++	<value value="28" name="A7XX_PERF_CP_SQE_SAVE_SDS_STATE"/>
++	<value value="29" name="A7XX_PERF_CP_SQE_DRAW_EXEC"/>
++	<value value="30" name="A7XX_PERF_CP_SQE_CTXT_REG_BUNCH_EXEC"/>
++	<value value="31" name="A7XX_PERF_CP_SQE_EXEC_PROFILED"/>
++	<value value="32" name="A7XX_PERF_CP_MEMORY_POOL_EMPTY"/>
++	<value value="33" name="A7XX_PERF_CP_MEMORY_POOL_SYNC_STALL"/>
++	<value value="34" name="A7XX_PERF_CP_MEMORY_POOL_ABOVE_THRESH"/>
++	<value value="35" name="A7XX_PERF_CP_AHB_WR_STALL_PRE_DRAWS"/>
++	<value value="36" name="A7XX_PERF_CP_AHB_STALL_SQE_GMU"/>
++	<value value="37" name="A7XX_PERF_CP_AHB_STALL_SQE_WR_OTHER"/>
++	<value value="38" name="A7XX_PERF_CP_AHB_STALL_SQE_RD_OTHER"/>
++	<value value="39" name="A7XX_PERF_CP_CLUSTER0_EMPTY"/>
++	<value value="40" name="A7XX_PERF_CP_CLUSTER1_EMPTY"/>
++	<value value="41" name="A7XX_PERF_CP_CLUSTER2_EMPTY"/>
++	<value value="42" name="A7XX_PERF_CP_CLUSTER3_EMPTY"/>
++	<value value="43" name="A7XX_PERF_CP_CLUSTER4_EMPTY"/>
++	<value value="44" name="A7XX_PERF_CP_CLUSTER5_EMPTY"/>
++	<value value="45" name="A7XX_PERF_CP_PM4_DATA"/>
++	<value value="46" name="A7XX_PERF_CP_PM4_HEADERS"/>
++	<value value="47" name="A7XX_PERF_CP_VBIF_READ_BEATS"/>
++	<value value="48" name="A7XX_PERF_CP_VBIF_WRITE_BEATS"/>
++	<value value="49" name="A7XX_PERF_CP_SQE_INSTR_COUNTER"/>
++	<value value="50" name="A7XX_PERF_CP_RESERVED_50"/>
++	<value value="51" name="A7XX_PERF_CP_RESERVED_51"/>
++	<value value="52" name="A7XX_PERF_CP_RESERVED_52"/>
++	<value value="53" name="A7XX_PERF_CP_RESERVED_53"/>
++	<value value="54" name="A7XX_PERF_CP_RESERVED_54"/>
++	<value value="55" name="A7XX_PERF_CP_RESERVED_55"/>
++	<value value="56" name="A7XX_PERF_CP_RESERVED_56"/>
++	<value value="57" name="A7XX_PERF_CP_RESERVED_57"/>
++	<value value="58" name="A7XX_PERF_CP_RESERVED_58"/>
++	<value value="59" name="A7XX_PERF_CP_RESERVED_59"/>
++	<value value="60" name="A7XX_PERF_CP_CLUSTER0_FULL"/>
++	<value value="61" name="A7XX_PERF_CP_CLUSTER1_FULL"/>
++	<value value="62" name="A7XX_PERF_CP_CLUSTER2_FULL"/>
++	<value value="63" name="A7XX_PERF_CP_CLUSTER3_FULL"/>
++	<value value="64" name="A7XX_PERF_CP_CLUSTER4_FULL"/>
++	<value value="65" name="A7XX_PERF_CP_CLUSTER5_FULL"/>
++	<value value="66" name="A7XX_PERF_CP_CLUSTER6_FULL"/>
++	<value value="67" name="A7XX_PERF_CP_CLUSTER6_EMPTY"/>
++	<value value="68" name="A7XX_PERF_CP_ICACHE_MISSES"/>
++	<value value="69" name="A7XX_PERF_CP_ICACHE_HITS"/>
++	<value value="70" name="A7XX_PERF_CP_ICACHE_STALL"/>
++	<value value="71" name="A7XX_PERF_CP_DCACHE_MISSES"/>
++	<value value="72" name="A7XX_PERF_CP_DCACHE_HITS"/>
++	<value value="73" name="A7XX_PERF_CP_DCACHE_STALLS"/>
++	<value value="74" name="A7XX_PERF_CP_AQE_SQE_STALL"/>
++	<value value="75" name="A7XX_PERF_CP_SQE_AQE_STARVE"/>
++	<value value="76" name="A7XX_PERF_CP_PREEMPT_LATENCY"/>
++	<value value="77" name="A7XX_PERF_CP_SQE_MD8_STALL_CYCLES"/>
++	<value value="78" name="A7XX_PERF_CP_SQE_MESH_EXEC_CYCLES"/>
++	<value value="79" name="A7XX_PERF_CP_AQE_NUM_AS_CHUNKS"/>
++	<value value="80" name="A7XX_PERF_CP_AQE_NUM_MS_CHUNKS"/>
++</enum>
++
++<enum name="a7xx_rbbm_perfcounter_select">
++	<value value="0" name="A7XX_PERF_RBBM_ALWAYS_COUNT"/>
++	<value value="1" name="A7XX_PERF_RBBM_ALWAYS_ON"/>
++	<value value="2" name="A7XX_PERF_RBBM_TSE_BUSY"/>
++	<value value="3" name="A7XX_PERF_RBBM_RAS_BUSY"/>
++	<value value="4" name="A7XX_PERF_RBBM_PC_DCALL_BUSY"/>
++	<value value="5" name="A7XX_PERF_RBBM_PC_VSD_BUSY"/>
++	<value value="6" name="A7XX_PERF_RBBM_STATUS_MASKED"/>
++	<value value="7" name="A7XX_PERF_RBBM_COM_BUSY"/>
++	<value value="8" name="A7XX_PERF_RBBM_DCOM_BUSY"/>
++	<value value="9" name="A7XX_PERF_RBBM_VBIF_BUSY"/>
++	<value value="10" name="A7XX_PERF_RBBM_VSC_BUSY"/>
++	<value value="11" name="A7XX_PERF_RBBM_TESS_BUSY"/>
++	<value value="12" name="A7XX_PERF_RBBM_UCHE_BUSY"/>
++	<value value="13" name="A7XX_PERF_RBBM_HLSQ_BUSY"/>
++</enum>
++
++<enum name="a7xx_pc_perfcounter_select">
++	<value value="0" name="A7XX_PERF_PC_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_PC_WORKING_CYCLES"/>
++	<value value="2" name="A7XX_PERF_PC_STALL_CYCLES_VFD"/>
++	<value value="3" name="A7XX_PERF_PC_RESERVED"/>
++	<value value="4" name="A7XX_PERF_PC_STALL_CYCLES_VPC"/>
++	<value value="5" name="A7XX_PERF_PC_STALL_CYCLES_UCHE"/>
++	<value value="6" name="A7XX_PERF_PC_STALL_CYCLES_TESS"/>
++	<value value="7" name="A7XX_PERF_PC_STALL_CYCLES_VFD_ONLY"/>
++	<value value="8" name="A7XX_PERF_PC_STALL_CYCLES_VPC_ONLY"/>
++	<value value="9" name="A7XX_PERF_PC_PASS1_TF_STALL_CYCLES"/>
++	<value value="10" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_INDEX"/>
++	<value value="11" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_TESS_FACTOR"/>
++	<value value="12" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_VIZ_STREAM"/>
++	<value value="13" name="A7XX_PERF_PC_STARVE_CYCLES_DI"/>
++	<value value="14" name="A7XX_PERF_PC_VIS_STREAMS_LOADED"/>
++	<value value="15" name="A7XX_PERF_PC_INSTANCES"/>
++	<value value="16" name="A7XX_PERF_PC_VPC_PRIMITIVES"/>
++	<value value="17" name="A7XX_PERF_PC_DEAD_PRIM"/>
++	<value value="18" name="A7XX_PERF_PC_LIVE_PRIM"/>
++	<value value="19" name="A7XX_PERF_PC_VERTEX_HITS"/>
++	<value value="20" name="A7XX_PERF_PC_IA_VERTICES"/>
++	<value value="21" name="A7XX_PERF_PC_IA_PRIMITIVES"/>
++	<value value="22" name="A7XX_PERF_PC_RESERVED_22"/>
++	<value value="23" name="A7XX_PERF_PC_HS_INVOCATIONS"/>
++	<value value="24" name="A7XX_PERF_PC_DS_INVOCATIONS"/>
++	<value value="25" name="A7XX_PERF_PC_VS_INVOCATIONS"/>
++	<value value="26" name="A7XX_PERF_PC_GS_INVOCATIONS"/>
++	<value value="27" name="A7XX_PERF_PC_DS_PRIMITIVES"/>
++	<value value="28" name="A7XX_PERF_PC_3D_DRAWCALLS"/>
++	<value value="29" name="A7XX_PERF_PC_2D_DRAWCALLS"/>
++	<value value="30" name="A7XX_PERF_PC_NON_DRAWCALL_GLOBAL_EVENTS"/>
++	<value value="31" name="A7XX_PERF_PC_TESS_BUSY_CYCLES"/>
++	<value value="32" name="A7XX_PERF_PC_TESS_WORKING_CYCLES"/>
++	<value value="33" name="A7XX_PERF_PC_TESS_STALL_CYCLES_PC"/>
++	<value value="34" name="A7XX_PERF_PC_TESS_STARVE_CYCLES_PC"/>
++	<value value="35" name="A7XX_PERF_PC_TESS_SINGLE_PRIM_CYCLES"/>
++	<value value="36" name="A7XX_PERF_PC_TESS_PC_UV_TRANS"/>
++	<value value="37" name="A7XX_PERF_PC_TESS_PC_UV_PATCHES"/>
++	<value value="38" name="A7XX_PERF_PC_TESS_FACTOR_TRANS"/>
++	<value value="39" name="A7XX_PERF_PC_TAG_CHECKED_VERTICES"/>
++	<value value="40" name="A7XX_PERF_PC_MESH_VS_WAVES"/>
++	<value value="41" name="A7XX_PERF_PC_MESH_DRAWS"/>
++	<value value="42" name="A7XX_PERF_PC_MESH_DEAD_DRAWS"/>
++	<value value="43" name="A7XX_PERF_PC_MESH_MVIS_EN_DRAWS"/>
++	<value value="44" name="A7XX_PERF_PC_MESH_DEAD_PRIM"/>
++	<value value="45" name="A7XX_PERF_PC_MESH_LIVE_PRIM"/>
++	<value value="46" name="A7XX_PERF_PC_MESH_PA_EN_PRIM"/>
++	<value value="47" name="A7XX_PERF_PC_STARVE_CYCLES_FOR_MVIS_STREAM"/>
++	<value value="48" name="A7XX_PERF_PC_STARVE_CYCLES_PREDRAW"/>
++	<value value="49" name="A7XX_PERF_PC_STALL_CYCLES_COMPUTE_GFX"/>
++	<value value="50" name="A7XX_PERF_PC_STALL_CYCLES_GFX_COMPUTE"/>
++	<value value="51" name="A7XX_PERF_PC_TESS_PC_MULTI_PATCH_TRANS"/>
++</enum>
++
++<enum name="a7xx_vfd_perfcounter_select">
++	<value value="0" name="A7XX_PERF_VFD_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_VFD_STALL_CYCLES_UCHE"/>
++	<value value="2" name="A7XX_PERF_VFD_STALL_CYCLES_VPC_ALLOC"/>
++	<value value="3" name="A7XX_PERF_VFD_STALL_CYCLES_SP_INFO"/>
++	<value value="4" name="A7XX_PERF_VFD_STALL_CYCLES_SP_ATTR"/>
++	<value value="5" name="A7XX_PERF_VFD_STARVE_CYCLES_UCHE"/>
++	<value value="6" name="A7XX_PERF_VFD_RBUFFER_FULL"/>
++	<value value="7" name="A7XX_PERF_VFD_ATTR_INFO_FIFO_FULL"/>
++	<value value="8" name="A7XX_PERF_VFD_DECODED_ATTRIBUTE_BYTES"/>
++	<value value="9" name="A7XX_PERF_VFD_NUM_ATTRIBUTES"/>
++	<value value="10" name="A7XX_PERF_VFD_UPPER_SHADER_FIBERS"/>
++	<value value="11" name="A7XX_PERF_VFD_LOWER_SHADER_FIBERS"/>
++	<value value="12" name="A7XX_PERF_VFD_MODE_0_FIBERS"/>
++	<value value="13" name="A7XX_PERF_VFD_MODE_1_FIBERS"/>
++	<value value="14" name="A7XX_PERF_VFD_MODE_2_FIBERS"/>
++	<value value="15" name="A7XX_PERF_VFD_MODE_3_FIBERS"/>
++	<value value="16" name="A7XX_PERF_VFD_MODE_4_FIBERS"/>
++	<value value="17" name="A7XX_PERF_VFD_TOTAL_VERTICES"/>
++	<value value="18" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD"/>
++	<value value="19" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD_INDEX"/>
++	<value value="20" name="A7XX_PERF_VFDP_STALL_CYCLES_VFD_PROG"/>
++	<value value="21" name="A7XX_PERF_VFDP_STARVE_CYCLES_PC"/>
++	<value value="22" name="A7XX_PERF_VFDP_VS_STAGE_WAVES"/>
++	<value value="23" name="A7XX_PERF_VFD_STALL_CYCLES_PRG_END_FE"/>
++	<value value="24" name="A7XX_PERF_VFD_STALL_CYCLES_CBSYNC"/>
++</enum>
++
++<enum name="a7xx_hlsq_perfcounter_select">
++	<value value="0" name="A7XX_PERF_HLSQ_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_HLSQ_STALL_CYCLES_UCHE"/>
++	<value value="2" name="A7XX_PERF_HLSQ_STALL_CYCLES_SP_STATE"/>
++	<value value="3" name="A7XX_PERF_HLSQ_STALL_CYCLES_SP_FS_STAGE"/>
++	<value value="4" name="A7XX_PERF_HLSQ_UCHE_LATENCY_CYCLES"/>
++	<value value="5" name="A7XX_PERF_HLSQ_UCHE_LATENCY_COUNT"/>
++	<value value="6" name="A7XX_PERF_HLSQ_RESERVED_6"/>
++	<value value="7" name="A7XX_PERF_HLSQ_RESERVED_7"/>
++	<value value="8" name="A7XX_PERF_HLSQ_RESERVED_8"/>
++	<value value="9" name="A7XX_PERF_HLSQ_RESERVED_9"/>
++	<value value="10" name="A7XX_PERF_HLSQ_COMPUTE_DRAWCALLS"/>
++	<value value="11" name="A7XX_PERF_HLSQ_FS_DATA_WAIT_PROGRAMMING"/>
++	<value value="12" name="A7XX_PERF_HLSQ_DUAL_FS_PROG_ACTIVE"/>
++	<value value="13" name="A7XX_PERF_HLSQ_DUAL_VS_PROG_ACTIVE"/>
++	<value value="14" name="A7XX_PERF_HLSQ_FS_BATCH_COUNT_ZERO"/>
++	<value value="15" name="A7XX_PERF_HLSQ_VS_BATCH_COUNT_ZERO"/>
++	<value value="16" name="A7XX_PERF_HLSQ_WAVE_PENDING_NO_QUAD"/>
++	<value value="17" name="A7XX_PERF_HLSQ_WAVE_PENDING_NO_PRIM_BASE"/>
++	<value value="18" name="A7XX_PERF_HLSQ_STALL_CYCLES_VPC"/>
++	<value value="19" name="A7XX_PERF_HLSQ_RESERVED_19"/>
++	<value value="20" name="A7XX_PERF_HLSQ_DRAW_MODE_SWITCH_VSFS_SYNC"/>
++	<value value="21" name="A7XX_PERF_HLSQ_VSBR_STALL_CYCLES"/>
++	<value value="22" name="A7XX_PERF_HLSQ_FS_STALL_CYCLES"/>
++	<value value="23" name="A7XX_PERF_HLSQ_LPAC_STALL_CYCLES"/>
++	<value value="24" name="A7XX_PERF_HLSQ_BV_STALL_CYCLES"/>
++	<value value="25" name="A7XX_PERF_HLSQ_VSBR_DEREF_CYCLES"/>
++	<value value="26" name="A7XX_PERF_HLSQ_FS_DEREF_CYCLES"/>
++	<value value="27" name="A7XX_PERF_HLSQ_LPAC_DEREF_CYCLES"/>
++	<value value="28" name="A7XX_PERF_HLSQ_BV_DEREF_CYCLES"/>
++	<value value="29" name="A7XX_PERF_HLSQ_VSBR_S2W_CYCLES"/>
++	<value value="30" name="A7XX_PERF_HLSQ_FS_S2W_CYCLES"/>
++	<value value="31" name="A7XX_PERF_HLSQ_LPAC_S2W_CYCLES"/>
++	<value value="32" name="A7XX_PERF_HLSQ_BV_S2W_CYCLES"/>
++	<value value="33" name="A7XX_PERF_HLSQ_VSBR_WAIT_FS_S2W"/>
++	<value value="34" name="A7XX_PERF_HLSQ_FS_WAIT_VS_S2W"/>
++	<value value="35" name="A7XX_PERF_HLSQ_LPAC_WAIT_VS_S2W"/>
++	<value value="36" name="A7XX_PERF_HLSQ_BV_WAIT_FS_S2W"/>
++	<value value="37" name="A7XX_PERF_HLSQ_VS_WAIT_CONST_RESOURCE"/>
++	<value value="38" name="A7XX_PERF_HLSQ_FS_WAIT_SAME_VS_S2W"/>
++	<value value="39" name="A7XX_PERF_HLSQ_FS_STARVING_SP"/>
++	<value value="40" name="A7XX_PERF_HLSQ_VS_DATA_WAIT_PROGRAMMING"/>
++	<value value="41" name="A7XX_PERF_HLSQ_BV_DATA_WAIT_PROGRAMMING"/>
++	<value value="42" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_VS"/>
++	<value value="43" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_VS"/>
++	<value value="44" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_FS"/>
++	<value value="45" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_FS"/>
++	<value value="46" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_BV"/>
++	<value value="47" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_BV"/>
++	<value value="48" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXTS_LPAC"/>
++	<value value="49" name="A7XX_PERF_HLSQ_STPROC_WAVE_CONTEXT_CYCLES_LPAC"/>
++	<value value="50" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_VS"/>
++	<value value="51" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_FS"/>
++	<value value="52" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_BV"/>
++	<value value="53" name="A7XX_PERF_HLSQ_SPTROC_STCHE_WARMUP_INC_LPAC"/>
++	<value value="54" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_VS"/>
++	<value value="55" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_FS"/>
++	<value value="56" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_BV"/>
++	<value value="57" name="A7XX_PERF_HLSQ_SPTROC_STCHE_MISS_INC_LPAC"/>
++</enum>
++
++<enum name="a7xx_vpc_perfcounter_select">
++	<value value="0" name="A7XX_PERF_VPC_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_VPC_WORKING_CYCLES"/>
++	<value value="2" name="A7XX_PERF_VPC_STALL_CYCLES_UCHE"/>
++	<value value="3" name="A7XX_PERF_VPC_STALL_CYCLES_VFD_WACK"/>
++	<value value="4" name="A7XX_PERF_VPC_STALL_CYCLES_HLSQ_PRIM_ALLOC"/>
++	<value value="5" name="A7XX_PERF_VPC_RESERVED_5"/>
++	<value value="6" name="A7XX_PERF_VPC_STALL_CYCLES_SP_LM"/>
++	<value value="7" name="A7XX_PERF_VPC_STARVE_CYCLES_SP"/>
++	<value value="8" name="A7XX_PERF_VPC_STARVE_CYCLES_LRZ"/>
++	<value value="9" name="A7XX_PERF_VPC_PC_PRIMITIVES"/>
++	<value value="10" name="A7XX_PERF_VPC_SP_COMPONENTS"/>
++	<value value="11" name="A7XX_PERF_VPC_STALL_CYCLES_VPCRAM_POS"/>
++	<value value="12" name="A7XX_PERF_VPC_LRZ_ASSIGN_PRIMITIVES"/>
++	<value value="13" name="A7XX_PERF_VPC_RB_VISIBLE_PRIMITIVES"/>
++	<value value="14" name="A7XX_PERF_VPC_LM_TRANSACTION"/>
++	<value value="15" name="A7XX_PERF_VPC_STREAMOUT_TRANSACTION"/>
++	<value value="16" name="A7XX_PERF_VPC_VS_BUSY_CYCLES"/>
++	<value value="17" name="A7XX_PERF_VPC_PS_BUSY_CYCLES"/>
++	<value value="18" name="A7XX_PERF_VPC_VS_WORKING_CYCLES"/>
++	<value value="19" name="A7XX_PERF_VPC_PS_WORKING_CYCLES"/>
++	<value value="20" name="A7XX_PERF_VPC_STARVE_CYCLES_RB"/>
++	<value value="21" name="A7XX_PERF_VPC_NUM_VPCRAM_READ_POS"/>
++	<value value="22" name="A7XX_PERF_VPC_WIT_FULL_CYCLES"/>
++	<value value="23" name="A7XX_PERF_VPC_VPCRAM_FULL_CYCLES"/>
++	<value value="24" name="A7XX_PERF_VPC_LM_FULL_WAIT_FOR_INTP_END"/>
++	<value value="25" name="A7XX_PERF_VPC_NUM_VPCRAM_WRITE"/>
++	<value value="26" name="A7XX_PERF_VPC_NUM_VPCRAM_READ_SO"/>
++	<value value="27" name="A7XX_PERF_VPC_NUM_ATTR_REQ_LM"/>
++	<value value="28" name="A7XX_PERF_VPC_STALL_CYCLE_TSE"/>
++	<value value="29" name="A7XX_PERF_VPC_TSE_PRIMITIVES"/>
++	<value value="30" name="A7XX_PERF_VPC_GS_PRIMITIVES"/>
++	<value value="31" name="A7XX_PERF_VPC_TSE_TRANSACTIONS"/>
++	<value value="32" name="A7XX_PERF_VPC_STALL_CYCLES_CCU"/>
++	<value value="33" name="A7XX_PERF_VPC_NUM_WM_HIT"/>
++	<value value="34" name="A7XX_PERF_VPC_STALL_DQ_WACK"/>
++	<value value="35" name="A7XX_PERF_VPC_STALL_CYCLES_CCHE"/>
++	<value value="36" name="A7XX_PERF_VPC_STARVE_CYCLES_CCHE"/>
++	<value value="37" name="A7XX_PERF_VPC_NUM_PA_REQ"/>
++	<value value="38" name="A7XX_PERF_VPC_NUM_LM_REQ_HIT"/>
++	<value value="39" name="A7XX_PERF_VPC_CCHE_REQBUF_FULL"/>
++	<value value="40" name="A7XX_PERF_VPC_STALL_CYCLES_LM_ACK"/>
++	<value value="41" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_FE"/>
++	<value value="42" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_PCVS"/>
++	<value value="43" name="A7XX_PERF_VPC_STALL_CYCLES_PRG_END_VPCPS"/>
++</enum>
++
++<enum name="a7xx_tse_perfcounter_select">
++	<value value="0" name="A7XX_PERF_TSE_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_TSE_CLIPPING_CYCLES"/>
++	<value value="2" name="A7XX_PERF_TSE_STALL_CYCLES_RAS"/>
++	<value value="3" name="A7XX_PERF_TSE_STALL_CYCLES_LRZ_BARYPLANE"/>
++	<value value="4" name="A7XX_PERF_TSE_STALL_CYCLES_LRZ_ZPLANE"/>
++	<value value="5" name="A7XX_PERF_TSE_STARVE_CYCLES_PC"/>
++	<value value="6" name="A7XX_PERF_TSE_INPUT_PRIM"/>
++	<value value="7" name="A7XX_PERF_TSE_INPUT_NULL_PRIM"/>
++	<value value="8" name="A7XX_PERF_TSE_TRIVAL_REJ_PRIM"/>
++	<value value="9" name="A7XX_PERF_TSE_CLIPPED_PRIM"/>
++	<value value="10" name="A7XX_PERF_TSE_ZERO_AREA_PRIM"/>
++	<value value="11" name="A7XX_PERF_TSE_FACENESS_CULLED_PRIM"/>
++	<value value="12" name="A7XX_PERF_TSE_ZERO_PIXEL_PRIM"/>
++	<value value="13" name="A7XX_PERF_TSE_OUTPUT_NULL_PRIM"/>
++	<value value="14" name="A7XX_PERF_TSE_OUTPUT_VISIBLE_PRIM"/>
++	<value value="15" name="A7XX_PERF_TSE_CINVOCATION"/>
++	<value value="16" name="A7XX_PERF_TSE_CPRIMITIVES"/>
++	<value value="17" name="A7XX_PERF_TSE_2D_INPUT_PRIM"/>
++	<value value="18" name="A7XX_PERF_TSE_2D_ALIVE_CYCLES"/>
++	<value value="19" name="A7XX_PERF_TSE_CLIP_PLANES"/>
++</enum>
++
++<enum name="a7xx_ras_perfcounter_select">
++	<value value="0" name="A7XX_PERF_RAS_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_RAS_SUPERTILE_ACTIVE_CYCLES"/>
++	<value value="2" name="A7XX_PERF_RAS_STALL_CYCLES_LRZ"/>
++	<value value="3" name="A7XX_PERF_RAS_STARVE_CYCLES_TSE"/>
++	<value value="4" name="A7XX_PERF_RAS_SUPER_TILES"/>
++	<value value="5" name="A7XX_PERF_RAS_8X4_TILES"/>
++	<value value="6" name="A7XX_PERF_RAS_MASKGEN_ACTIVE"/>
++	<value value="7" name="A7XX_PERF_RAS_FULLY_COVERED_SUPER_TILES"/>
++	<value value="8" name="A7XX_PERF_RAS_FULLY_COVERED_8X4_TILES"/>
++	<value value="9" name="A7XX_PERF_RAS_PRIM_KILLED_INVISILBE"/>
++	<value value="10" name="A7XX_PERF_RAS_SUPERTILE_GEN_ACTIVE_CYCLES"/>
++	<value value="11" name="A7XX_PERF_RAS_LRZ_INTF_WORKING_CYCLES"/>
++	<value value="12" name="A7XX_PERF_RAS_BLOCKS"/>
++	<value value="13" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_0_WORKING_CC_l2"/>
++	<value value="14" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_1_WORKING_CC_l2"/>
++	<value value="15" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_2_WORKING_CC_l2"/>
++	<value value="16" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_3_WORKING_CC_l2"/>
++	<value value="17" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_4_WORKING_CC_l2"/>
++	<value value="18" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_5_WORKING_CC_l2"/>
++	<value value="19" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_6_WORKING_CC_l2"/>
++	<value value="20" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_7_WORKING_CC_l2"/>
++	<value value="21" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_8_WORKING_CC_l2"/>
++	<value value="22" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_9_WORKING_CC_l2"/>
++	<value value="23" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_10_WORKING_CC_l2"/>
++	<value value="24" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_11_WORKING_CC_l2"/>
++	<value value="25" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_12_WORKING_CC_l2"/>
++	<value value="26" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_13_WORKING_CC_l2"/>
++	<value value="27" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_14_WORKING_CC_l2"/>
++	<value value="28" name="A7XX_PERF_RAS_SAMPLE_MASK_GEN_LANE_15_WORKING_CC_l2"/>
++	<value value="29" name="A7XX_PERF_RAS_FALSE_PARTIAL_STILE"/>
++
++</enum>
++
++<enum name="a7xx_uche_perfcounter_select">
++	<value value="0" name="A7XX_PERF_UCHE_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_UCHE_STALL_CYCLES_ARBITER"/>
++	<value value="2" name="A7XX_PERF_UCHE_VBIF_LATENCY_CYCLES"/>
++	<value value="3" name="A7XX_PERF_UCHE_VBIF_LATENCY_SAMPLES"/>
++	<value value="4" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_TP"/>
++	<value value="5" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_VFD"/>
++	<value value="6" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_HLSQ"/>
++	<value value="7" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_LRZ"/>
++	<value value="8" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_SP"/>
++	<value value="9" name="A7XX_PERF_UCHE_READ_REQUESTS_TP"/>
++	<value value="10" name="A7XX_PERF_UCHE_READ_REQUESTS_VFD"/>
++	<value value="11" name="A7XX_PERF_UCHE_READ_REQUESTS_HLSQ"/>
++	<value value="12" name="A7XX_PERF_UCHE_READ_REQUESTS_LRZ"/>
++	<value value="13" name="A7XX_PERF_UCHE_READ_REQUESTS_SP"/>
++	<value value="14" name="A7XX_PERF_UCHE_WRITE_REQUESTS_LRZ"/>
++	<value value="15" name="A7XX_PERF_UCHE_WRITE_REQUESTS_SP"/>
++	<value value="16" name="A7XX_PERF_UCHE_WRITE_REQUESTS_VPC"/>
++	<value value="17" name="A7XX_PERF_UCHE_WRITE_REQUESTS_VSC"/>
++	<value value="18" name="A7XX_PERF_UCHE_EVICTS"/>
++	<value value="19" name="A7XX_PERF_UCHE_BANK_REQ0"/>
++	<value value="20" name="A7XX_PERF_UCHE_BANK_REQ1"/>
++	<value value="21" name="A7XX_PERF_UCHE_BANK_REQ2"/>
++	<value value="22" name="A7XX_PERF_UCHE_BANK_REQ3"/>
++	<value value="23" name="A7XX_PERF_UCHE_BANK_REQ4"/>
++	<value value="24" name="A7XX_PERF_UCHE_BANK_REQ5"/>
++	<value value="25" name="A7XX_PERF_UCHE_BANK_REQ6"/>
++	<value value="26" name="A7XX_PERF_UCHE_BANK_REQ7"/>
++	<value value="27" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_CH0"/>
++	<value value="28" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_CH1"/>
++	<value value="29" name="A7XX_PERF_UCHE_GMEM_READ_BEATS"/>
++	<value value="30" name="A7XX_PERF_UCHE_TPH_REF_FULL"/>
++	<value value="31" name="A7XX_PERF_UCHE_TPH_VICTIM_FULL"/>
++	<value value="32" name="A7XX_PERF_UCHE_TPH_EXT_FULL"/>
++	<value value="33" name="A7XX_PERF_UCHE_VBIF_STALL_WRITE_DATA"/>
++	<value value="34" name="A7XX_PERF_UCHE_DCMP_LATENCY_SAMPLES"/>
++	<value value="35" name="A7XX_PERF_UCHE_DCMP_LATENCY_CYCLES"/>
++	<value value="36" name="A7XX_PERF_UCHE_VBIF_READ_BEATS_PC"/>
++	<value value="37" name="A7XX_PERF_UCHE_READ_REQUESTS_PC"/>
++	<value value="38" name="A7XX_PERF_UCHE_RAM_READ_REQ"/>
++	<value value="39" name="A7XX_PERF_UCHE_RAM_WRITE_REQ"/>
++	<value value="40" name="A7XX_PERF_UCHE_STARVED_CYCLES_VBIF_DECMP"/>
++	<value value="41" name="A7XX_PERF_UCHE_STALL_CYCLES_DECMP"/>
++	<value value="42" name="A7XX_PERF_UCHE_ARBITER_STALL_CYCLES_VBIF"/>
++	<value value="43" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_UBWC"/>
++	<value value="44" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_NONUBWC"/>
++	<value value="45" name="A7XX_PERF_UCHE_READ_REQUESTS_TP_GMEM"/>
++	<value value="46" name="A7XX_PERF_UCHE_LONG_LINE_ALL_EVICTS_KAILUA"/>
++	<value value="47" name="A7XX_PERF_UCHE_LONG_LINE_PARTIAL_EVICTS_KAILUA"/>
++	<value value="48" name="A7XX_PERF_UCHE_TPH_CONFLICT_CL_CCHE"/>
++	<value value="49" name="A7XX_PERF_UCHE_TPH_CONFLICT_CL_OTHER_KAILUA"/>
++	<value value="50" name="A7XX_PERF_UCHE_DBANK_CONFLICT_CL_CCHE"/>
++	<value value="51" name="A7XX_PERF_UCHE_DBANK_CONFLICT_CL_OTHER_CLIENTS"/>
++	<value value="52" name="A7XX_PERF_UCHE_VBIF_WRITE_BEATS_CH0"/>
++	<value value="53" name="A7XX_PERF_UCHE_VBIF_WRITE_BEATS_CH1"/>
++	<value value="54" name="A7XX_PERF_UCHE_CCHE_TPH_QUEUE_FULL"/>
++	<value value="55" name="A7XX_PERF_UCHE_CCHE_DPH_QUEUE_FULL"/>
++	<value value="56" name="A7XX_PERF_UCHE_GMEM_WRITE_BEATS"/>
++	<value value="57" name="A7XX_PERF_UCHE_UBWC_READ_BEATS"/>
++	<value value="58" name="A7XX_PERF_UCHE_UBWC_WRITE_BEATS"/>
++</enum>
++
++<enum name="a7xx_tp_perfcounter_select">
++	<value value="0" name="A7XX_PERF_TP_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_TP_STALL_CYCLES_UCHE"/>
++	<value value="2" name="A7XX_PERF_TP_LATENCY_CYCLES"/>
++	<value value="3" name="A7XX_PERF_TP_LATENCY_TRANS"/>
++	<value value="4" name="A7XX_PERF_TP_FLAG_FIFO_DELAY_SAMPLES"/>
++	<value value="5" name="A7XX_PERF_TP_FLAG_FIFO_DELAY_CYCLES"/>
++	<value value="6" name="A7XX_PERF_TP_L1_CACHELINE_REQUESTS"/>
++	<value value="7" name="A7XX_PERF_TP_L1_CACHELINE_MISSES"/>
++	<value value="8" name="A7XX_PERF_TP_SP_TP_TRANS"/>
++	<value value="9" name="A7XX_PERF_TP_TP_SP_TRANS"/>
++	<value value="10" name="A7XX_PERF_TP_OUTPUT_PIXELS"/>
++	<value value="11" name="A7XX_PERF_TP_FILTER_WORKLOAD_16BIT"/>
++	<value value="12" name="A7XX_PERF_TP_FILTER_WORKLOAD_32BIT"/>
++	<value value="13" name="A7XX_PERF_TP_QUADS_RECEIVED"/>
++	<value value="14" name="A7XX_PERF_TP_QUADS_OFFSET"/>
++	<value value="15" name="A7XX_PERF_TP_QUADS_SHADOW"/>
++	<value value="16" name="A7XX_PERF_TP_QUADS_ARRAY"/>
++	<value value="17" name="A7XX_PERF_TP_QUADS_GRADIENT"/>
++	<value value="18" name="A7XX_PERF_TP_QUADS_1D"/>
++	<value value="19" name="A7XX_PERF_TP_QUADS_2D"/>
++	<value value="20" name="A7XX_PERF_TP_QUADS_BUFFER"/>
++	<value value="21" name="A7XX_PERF_TP_QUADS_3D"/>
++	<value value="22" name="A7XX_PERF_TP_QUADS_CUBE"/>
++	<value value="23" name="A7XX_PERF_TP_DIVERGENT_QUADS_RECEIVED"/>
++	<value value="24" name="A7XX_PERF_TP_PRT_NON_RESIDENT_EVENTS"/>
++	<value value="25" name="A7XX_PERF_TP_OUTPUT_PIXELS_POINT"/>
++	<value value="26" name="A7XX_PERF_TP_OUTPUT_PIXELS_BILINEAR"/>
++	<value value="27" name="A7XX_PERF_TP_OUTPUT_PIXELS_MIP"/>
++	<value value="28" name="A7XX_PERF_TP_OUTPUT_PIXELS_ANISO"/>
++	<value value="29" name="A7XX_PERF_TP_OUTPUT_PIXELS_ZERO_LOD"/>
++	<value value="30" name="A7XX_PERF_TP_FLAG_CACHE_REQUESTS"/>
++	<value value="31" name="A7XX_PERF_TP_FLAG_CACHE_MISSES"/>
++	<value value="32" name="A7XX_PERF_TP_L1_5_L2_REQUESTS"/>
++	<value value="33" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS"/>
++	<value value="34" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS_POINT"/>
++	<value value="35" name="A7XX_PERF_TP_2D_OUTPUT_PIXELS_BILINEAR"/>
++	<value value="36" name="A7XX_PERF_TP_2D_FILTER_WORKLOAD_16BIT"/>
++	<value value="37" name="A7XX_PERF_TP_2D_FILTER_WORKLOAD_32BIT"/>
++	<value value="38" name="A7XX_PERF_TP_TPA2TPC_TRANS"/>
++	<value value="39" name="A7XX_PERF_TP_L1_MISSES_ASTC_1TILE"/>
++	<value value="40" name="A7XX_PERF_TP_L1_MISSES_ASTC_2TILE"/>
++	<value value="41" name="A7XX_PERF_TP_L1_MISSES_ASTC_4TILE"/>
++	<value value="42" name="A7XX_PERF_TP_L1_5_COMPRESS_REQS"/>
++	<value value="43" name="A7XX_PERF_TP_L1_5_L2_COMPRESS_MISS"/>
++	<value value="44" name="A7XX_PERF_TP_L1_BANK_CONFLICT"/>
++	<value value="45" name="A7XX_PERF_TP_L1_5_MISS_LATENCY_CYCLES"/>
++	<value value="46" name="A7XX_PERF_TP_L1_5_MISS_LATENCY_TRANS"/>
++	<value value="47" name="A7XX_PERF_TP_QUADS_CONSTANT_MULTIPLIED"/>
++	<value value="48" name="A7XX_PERF_TP_FRONTEND_WORKING_CYCLES"/>
++	<value value="49" name="A7XX_PERF_TP_L1_TAG_WORKING_CYCLES"/>
++	<value value="50" name="A7XX_PERF_TP_L1_DATA_WRITE_WORKING_CYCLES"/>
++	<value value="51" name="A7XX_PERF_TP_PRE_L1_DECOM_WORKING_CYCLES"/>
++	<value value="52" name="A7XX_PERF_TP_BACKEND_WORKING_CYCLES"/>
++	<value value="53" name="A7XX_PERF_TP_L1_5_CACHE_WORKING_CYCLES"/>
++	<value value="54" name="A7XX_PERF_TP_STARVE_CYCLES_SP"/>
++	<value value="55" name="A7XX_PERF_TP_STARVE_CYCLES_UCHE"/>
++	<value value="56" name="A7XX_PERF_TP_STALL_CYCLES_UFC"/>
++	<value value="57" name="A7XX_PERF_TP_FORMAT_DECOMP"/>
++	<value value="58" name="A7XX_PERF_TP_FILTER_POINT_FP16"/>
++	<value value="59" name="A7XX_PERF_TP_FILTER_POINT_FP32"/>
++	<value value="60" name="A7XX_PERF_TP_LATENCY_FIFO_FULL"/>
++	<value value="61" name="A7XX_PERF_TP_RESERVED_61"/>
++	<value value="62" name="A7XX_PERF_TP_RESERVED_62"/>
++	<value value="63" name="A7XX_PERF_TP_RESERVED_63"/>
++	<value value="64" name="A7XX_PERF_TP_RESERVED_64"/>
++	<value value="65" name="A7XX_PERF_TP_RESERVED_65"/>
++	<value value="66" name="A7XX_PERF_TP_RESERVED_66"/>
++	<value value="67" name="A7XX_PERF_TP_RESERVED_67"/>
++	<value value="68" name="A7XX_PERF_TP_RESERVED_68"/>
++	<value value="69" name="A7XX_PERF_TP_RESERVED_69"/>
++	<value value="70" name="A7XX_PERF_TP_RESERVED_70"/>
++	<value value="71" name="A7XX_PERF_TP_RESERVED_71"/>
++	<value value="72" name="A7XX_PERF_TP_RESERVED_72"/>
++	<value value="73" name="A7XX_PERF_TP_RESERVED_73"/>
++	<value value="74" name="A7XX_PERF_TP_RESERVED_74"/>
++	<value value="75" name="A7XX_PERF_TP_RESERVED_75"/>
++	<value value="76" name="A7XX_PERF_TP_RESERVED_76"/>
++	<value value="77" name="A7XX_PERF_TP_RESERVED_77"/>
++	<value value="78" name="A7XX_PERF_TP_RESERVED_78"/>
++	<value value="79" name="A7XX_PERF_TP_RESERVED_79"/>
++	<value value="80" name="A7XX_PERF_TP_RESERVED_80"/>
++	<value value="81" name="A7XX_PERF_TP_RESERVED_81"/>
++	<value value="82" name="A7XX_PERF_TP_RESERVED_82"/>
++	<value value="83" name="A7XX_PERF_TP_RESERVED_83"/>
++	<value value="84" name="A7XX_PERF_TP_RESERVED_84"/>
++	<value value="85" name="A7XX_PERF_TP_RESERVED_85"/>
++	<value value="86" name="A7XX_PERF_TP_RESERVED_86"/>
++	<value value="87" name="A7XX_PERF_TP_RESERVED_87"/>
++	<value value="88" name="A7XX_PERF_TP_RESERVED_88"/>
++	<value value="89" name="A7XX_PERF_TP_RESERVED_89"/>
++	<value value="90" name="A7XX_PERF_TP_RESERVED_90"/>
++	<value value="91" name="A7XX_PERF_TP_RESERVED_91"/>
++	<value value="92" name="A7XX_PERF_TP_RESERVED_92"/>
++	<value value="93" name="A7XX_PERF_TP_RESERVED_93"/>
++	<value value="94" name="A7XX_PERF_TP_RESERVED_94"/>
++	<value value="95" name="A7XX_PERF_TP_RESERVED_95"/>
++	<value value="96" name="A7XX_PERF_TP_RESERVED_96"/>
++	<value value="97" name="A7XX_PERF_TP_RESERVED_97"/>
++	<value value="98" name="A7XX_PERF_TP_RESERVED_98"/>
++	<value value="99" name="A7XX_PERF_TP_RESERVED_99"/>
++	<value value="100" name="A7XX_PERF_TP_RESERVED_100"/>
++	<value value="101" name="A7XX_PERF_TP_RESERVED_101"/>
++	<value value="102" name="A7XX_PERF_TP_RESERVED_102"/>
++	<value value="103" name="A7XX_PERF_TP_RESERVED_103"/>
++	<value value="104" name="A7XX_PERF_TP_RESERVED_104"/>
++	<value value="105" name="A7XX_PERF_TP_RESERVED_105"/>
++	<value value="106" name="A7XX_PERF_TP_RESERVED_106"/>
++	<value value="107" name="A7XX_PERF_TP_RESERVED_107"/>
++	<value value="108" name="A7XX_PERF_TP_RESERVED_108"/>
++	<value value="109" name="A7XX_PERF_TP_RESERVED_109"/>
++	<value value="110" name="A7XX_PERF_TP_RESERVED_110"/>
++	<value value="111" name="A7XX_PERF_TP_RESERVED_111"/>
++	<value value="112" name="A7XX_PERF_TP_RESERVED_112"/>
++	<value value="113" name="A7XX_PERF_TP_RESERVED_113"/>
++	<value value="114" name="A7XX_PERF_TP_RESERVED_114"/>
++	<value value="115" name="A7XX_PERF_TP_RESERVED_115"/>
++	<value value="116" name="A7XX_PERF_TP_RESERVED_116"/>
++	<value value="117" name="A7XX_PERF_TP_RESERVED_117"/>
++	<value value="118" name="A7XX_PERF_TP_RESERVED_118"/>
++	<value value="119" name="A7XX_PERF_TP_RESERVED_119"/>
++	<value value="120" name="A7XX_PERF_TP_RESERVED_120"/>
++	<value value="121" name="A7XX_PERF_TP_RESERVED_121"/>
++	<value value="122" name="A7XX_PERF_TP_RESERVED_122"/>
++	<value value="123" name="A7XX_PERF_TP_RESERVED_123"/>
++	<value value="124" name="A7XX_PERF_TP_RESERVED_124"/>
++	<value value="125" name="A7XX_PERF_TP_RESERVED_125"/>
++	<value value="126" name="A7XX_PERF_TP_RESERVED_126"/>
++	<value value="127" name="A7XX_PERF_TP_RESERVED_127"/>
++	<value value="128" name="A7XX_PERF_TP_FORMAT_DECOMP_BILINEAR"/>
++	<value value="129" name="A7XX_PERF_TP_PACKED_POINT_BOTH_VALID_FP16"/>
++	<value value="130" name="A7XX_PERF_TP_PACKED_POINT_SINGLE_VALID_FP16"/>
++	<value value="131" name="A7XX_PERF_TP_PACKED_POINT_BOTH_VALID_FP32"/>
++	<value value="132" name="A7XX_PERF_TP_PACKED_POINT_SINGLE_VALID_FP32"/>
++</enum>
++
++<enum name="a7xx_sp_perfcounter_select">
++	<value value="0" name="A7XX_PERF_SP_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_SP_ALU_WORKING_CYCLES"/>
++	<value value="2" name="A7XX_PERF_SP_EFU_WORKING_CYCLES"/>
++	<value value="3" name="A7XX_PERF_SP_STALL_CYCLES_VPC"/>
++	<value value="4" name="A7XX_PERF_SP_STALL_CYCLES_TP"/>
++	<value value="5" name="A7XX_PERF_SP_STALL_CYCLES_UCHE"/>
++	<value value="6" name="A7XX_PERF_SP_STALL_CYCLES_RB"/>
++	<value value="7" name="A7XX_PERF_SP_NON_EXECUTION_CYCLES"/>
++	<value value="8" name="A7XX_PERF_SP_WAVE_CONTEXTS"/>
++	<value value="9" name="A7XX_PERF_SP_WAVE_CONTEXT_CYCLES"/>
++	<value value="10" name="A7XX_PERF_SP_STAGE_WAVE_CYCLES"/>
++	<value value="11" name="A7XX_PERF_SP_STAGE_WAVE_SAMPLES"/>
++	<value value="12" name="A7XX_PERF_SP_VS_STAGE_WAVE_CYCLES"/>
++	<value value="13" name="A7XX_PERF_SP_VS_STAGE_WAVE_SAMPLES"/>
++	<value value="14" name="A7XX_PERF_SP_FS_STAGE_DURATION_CYCLES"/>
++	<value value="15" name="A7XX_PERF_SP_VS_STAGE_DURATION_CYCLES"/>
++	<value value="16" name="A7XX_PERF_SP_WAVE_CTRL_CYCLES"/>
++	<value value="17" name="A7XX_PERF_SP_WAVE_LOAD_CYCLES"/>
++	<value value="18" name="A7XX_PERF_SP_WAVE_EMIT_CYCLES"/>
++	<value value="19" name="A7XX_PERF_SP_WAVE_NOP_CYCLES"/>
++	<value value="20" name="A7XX_PERF_SP_WAVE_WAIT_CYCLES"/>
++	<value value="21" name="A7XX_PERF_SP_WAVE_FETCH_CYCLES"/>
++	<value value="22" name="A7XX_PERF_SP_WAVE_IDLE_CYCLES"/>
++	<value value="23" name="A7XX_PERF_SP_WAVE_END_CYCLES"/>
++	<value value="24" name="A7XX_PERF_SP_WAVE_LONG_SYNC_CYCLES"/>
++	<value value="25" name="A7XX_PERF_SP_WAVE_SHORT_SYNC_CYCLES"/>
++	<value value="26" name="A7XX_PERF_SP_WAVE_JOIN_CYCLES"/>
++	<value value="27" name="A7XX_PERF_SP_LM_LOAD_INSTRUCTIONS"/>
++	<value value="28" name="A7XX_PERF_SP_LM_STORE_INSTRUCTIONS"/>
++	<value value="29" name="A7XX_PERF_SP_LM_ATOMICS"/>
++	<value value="30" name="A7XX_PERF_SP_GM_LOAD_INSTRUCTIONS"/>
++	<value value="31" name="A7XX_PERF_SP_GM_STORE_INSTRUCTIONS"/>
++	<value value="32" name="A7XX_PERF_SP_GM_ATOMICS"/>
++	<value value="33" name="A7XX_PERF_SP_VS_STAGE_TEX_INSTRUCTIONS"/>
++	<value value="34" name="A7XX_PERF_SP_VS_STAGE_EFU_INSTRUCTIONS"/>
++	<value value="35" name="A7XX_PERF_SP_VS_STAGE_FULL_ALU_INSTRUCTIONS"/>
++	<value value="36" name="A7XX_PERF_SP_VS_STAGE_HALF_ALU_INSTRUCTIONS"/>
++	<value value="37" name="A7XX_PERF_SP_FS_STAGE_TEX_INSTRUCTIONS"/>
++	<value value="38" name="A7XX_PERF_SP_FS_STAGE_CFLOW_INSTRUCTIONS"/>
++	<value value="39" name="A7XX_PERF_SP_FS_STAGE_EFU_INSTRUCTIONS"/>
++	<value value="40" name="A7XX_PERF_SP_FS_STAGE_FULL_ALU_INSTRUCTIONS"/>
++	<value value="41" name="A7XX_PERF_SP_FS_STAGE_HALF_ALU_INSTRUCTIONS"/>
++	<value value="42" name="A7XX_PERF_SP_FS_STAGE_BARY_INSTRUCTIONS"/>
++	<value value="43" name="A7XX_PERF_SP_VS_INSTRUCTIONS"/>
++	<value value="44" name="A7XX_PERF_SP_FS_INSTRUCTIONS"/>
++	<value value="45" name="A7XX_PERF_SP_ADDR_LOCK_COUNT"/>
++	<value value="46" name="A7XX_PERF_SP_UCHE_READ_TRANS"/>
++	<value value="47" name="A7XX_PERF_SP_UCHE_WRITE_TRANS"/>
++	<value value="48" name="A7XX_PERF_SP_EXPORT_VPC_TRANS"/>
++	<value value="49" name="A7XX_PERF_SP_EXPORT_RB_TRANS"/>
++	<value value="50" name="A7XX_PERF_SP_PIXELS_KILLED"/>
++	<value value="51" name="A7XX_PERF_SP_ICL1_REQUESTS"/>
++	<value value="52" name="A7XX_PERF_SP_ICL1_MISSES"/>
++	<value value="53" name="A7XX_PERF_SP_HS_INSTRUCTIONS"/>
++	<value value="54" name="A7XX_PERF_SP_DS_INSTRUCTIONS"/>
++	<value value="55" name="A7XX_PERF_SP_GS_INSTRUCTIONS"/>
++	<value value="56" name="A7XX_PERF_SP_CS_INSTRUCTIONS"/>
++	<value value="57" name="A7XX_PERF_SP_GPR_READ"/>
++	<value value="58" name="A7XX_PERF_SP_GPR_WRITE"/>
++	<value value="59" name="A7XX_PERF_SP_FS_STAGE_HALF_EFU_INSTRUCTIONS"/>
++	<value value="60" name="A7XX_PERF_SP_VS_STAGE_HALF_EFU_INSTRUCTIONS"/>
++	<value value="61" name="A7XX_PERF_SP_LM_BANK_CONFLICTS"/>
++	<value value="62" name="A7XX_PERF_SP_TEX_CONTROL_WORKING_CYCLES"/>
++	<value value="63" name="A7XX_PERF_SP_LOAD_CONTROL_WORKING_CYCLES"/>
++	<value value="64" name="A7XX_PERF_SP_FLOW_CONTROL_WORKING_CYCLES"/>
++	<value value="65" name="A7XX_PERF_SP_LM_WORKING_CYCLES"/>
++	<value value="66" name="A7XX_PERF_SP_DISPATCHER_WORKING_CYCLES"/>
++	<value value="67" name="A7XX_PERF_SP_SEQUENCER_WORKING_CYCLES"/>
++	<value value="68" name="A7XX_PERF_SP_LOW_EFFICIENCY_STARVED_BY_TP"/>
++	<value value="69" name="A7XX_PERF_SP_STARVE_CYCLES_HLSQ"/>
++	<value value="70" name="A7XX_PERF_SP_NON_EXECUTION_LS_CYCLES"/>
++	<value value="71" name="A7XX_PERF_SP_WORKING_EU"/>
++	<value value="72" name="A7XX_PERF_SP_ANY_EU_WORKING"/>
++	<value value="73" name="A7XX_PERF_SP_WORKING_EU_FS_STAGE"/>
++	<value value="74" name="A7XX_PERF_SP_ANY_EU_WORKING_FS_STAGE"/>
++	<value value="75" name="A7XX_PERF_SP_WORKING_EU_VS_STAGE"/>
++	<value value="76" name="A7XX_PERF_SP_ANY_EU_WORKING_VS_STAGE"/>
++	<value value="77" name="A7XX_PERF_SP_WORKING_EU_CS_STAGE"/>
++	<value value="78" name="A7XX_PERF_SP_ANY_EU_WORKING_CS_STAGE"/>
++	<value value="79" name="A7XX_PERF_SP_GPR_READ_PREFETCH"/>
++	<value value="80" name="A7XX_PERF_SP_GPR_READ_CONFLICT"/>
++	<value value="81" name="A7XX_PERF_SP_GPR_WRITE_CONFLICT"/>
++	<value value="82" name="A7XX_PERF_SP_GM_LOAD_LATENCY_CYCLES"/>
++	<value value="83" name="A7XX_PERF_SP_GM_LOAD_LATENCY_SAMPLES"/>
++	<value value="84" name="A7XX_PERF_SP_EXECUTABLE_WAVES"/>
++	<value value="85" name="A7XX_PERF_SP_ICL1_MISS_FETCH_CYCLES"/>
++	<value value="86" name="A7XX_PERF_SP_WORKING_EU_LPAC"/>
++	<value value="87" name="A7XX_PERF_SP_BYPASS_BUSY_CYCLES"/>
++	<value value="88" name="A7XX_PERF_SP_ANY_EU_WORKING_LPAC"/>
++	<value value="89" name="A7XX_PERF_SP_WAVE_ALU_CYCLES"/>
++	<value value="90" name="A7XX_PERF_SP_WAVE_EFU_CYCLES"/>
++	<value value="91" name="A7XX_PERF_SP_WAVE_INT_CYCLES"/>
++	<value value="92" name="A7XX_PERF_SP_WAVE_CSP_CYCLES"/>
++	<value value="93" name="A7XX_PERF_SP_EWAVE_CONTEXTS"/>
++	<value value="94" name="A7XX_PERF_SP_EWAVE_CONTEXT_CYCLES"/>
++	<value value="95" name="A7XX_PERF_SP_LPAC_BUSY_CYCLES"/>
++	<value value="96" name="A7XX_PERF_SP_LPAC_INSTRUCTIONS"/>
++	<value value="97" name="A7XX_PERF_SP_FS_STAGE_1X_WAVES"/>
++	<value value="98" name="A7XX_PERF_SP_FS_STAGE_2X_WAVES"/>
++	<value value="99" name="A7XX_PERF_SP_QUADS"/>
++	<value value="100" name="A7XX_PERF_SP_CS_INVOCATIONS"/>
++	<value value="101" name="A7XX_PERF_SP_PIXELS"/>
++	<value value="102" name="A7XX_PERF_SP_LPAC_DRAWCALLS"/>
++	<value value="103" name="A7XX_PERF_SP_PI_WORKING_CYCLES"/>
++	<value value="104" name="A7XX_PERF_SP_WAVE_INPUT_CYCLES"/>
++	<value value="105" name="A7XX_PERF_SP_WAVE_OUTPUT_CYCLES"/>
++	<value value="106" name="A7XX_PERF_SP_WAVE_HWAVE_WAIT_CYCLES"/>
++	<value value="107" name="A7XX_PERF_SP_WAVE_HWAVE_SYNC"/>
++	<value value="108" name="A7XX_PERF_SP_OUTPUT_3D_PIXELS"/>
++	<value value="109" name="A7XX_PERF_SP_FULL_ALU_MAD_INSTRUCTIONS"/>
++	<value value="110" name="A7XX_PERF_SP_HALF_ALU_MAD_INSTRUCTIONS"/>
++	<value value="111" name="A7XX_PERF_SP_FULL_ALU_MUL_INSTRUCTIONS"/>
++	<value value="112" name="A7XX_PERF_SP_HALF_ALU_MUL_INSTRUCTIONS"/>
++	<value value="113" name="A7XX_PERF_SP_FULL_ALU_ADD_INSTRUCTIONS"/>
++	<value value="114" name="A7XX_PERF_SP_HALF_ALU_ADD_INSTRUCTIONS"/>
++	<value value="115" name="A7XX_PERF_SP_BARY_FP32_INSTRUCTIONS"/>
++	<value value="116" name="A7XX_PERF_SP_ALU_GPR_READ_CYCLES"/>
++	<value value="117" name="A7XX_PERF_SP_ALU_DATA_FORWARDING_CYCLES"/>
++	<value value="118" name="A7XX_PERF_SP_LM_FULL_CYCLES"/>
++	<value value="119" name="A7XX_PERF_SP_TEXTURE_FETCH_LATENCY_CYCLES"/>
++	<value value="120" name="A7XX_PERF_SP_TEXTURE_FETCH_LATENCY_SAMPLES"/>
++	<value value="121" name="A7XX_PERF_SP_FS_STAGE_PI_TEX_INSTRUCTION"/>
++	<value value="122" name="A7XX_PERF_SP_RAY_QUERY_INSTRUCTIONS"/>
++	<value value="123" name="A7XX_PERF_SP_RBRT_KICKOFF_FIBERS"/>
++	<value value="124" name="A7XX_PERF_SP_RBRT_KICKOFF_DQUADS"/>
++	<value value="125" name="A7XX_PERF_SP_RTU_BUSY_CYCLES"/>
++	<value value="126" name="A7XX_PERF_SP_RTU_L0_HITS"/>
++	<value value="127" name="A7XX_PERF_SP_RTU_L0_MISSES"/>
++	<value value="128" name="A7XX_PERF_SP_RTU_L0_HIT_ON_MISS"/>
++	<value value="129" name="A7XX_PERF_SP_RTU_STALL_CYCLES_WAVE_QUEUE"/>
++	<value value="130" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0_HIT_QUEUE"/>
++	<value value="131" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0_MISS_QUEUE"/>
++	<value value="132" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0D_IDX_QUEUE"/>
++	<value value="133" name="A7XX_PERF_SP_RTU_STALL_CYCLES_L0DATA"/>
++	<value value="134" name="A7XX_PERF_SP_RTU_STALL_CYCLES_REPLACE_CNT"/>
++	<value value="135" name="A7XX_PERF_SP_RTU_STALL_CYCLES_MRG_CNT"/>
++	<value value="136" name="A7XX_PERF_SP_RTU_STALL_CYCLES_UCHE"/>
++	<value value="137" name="A7XX_PERF_SP_RTU_OPERAND_FETCH_STALL_CYCLES_L0"/>
++	<value value="138" name="A7XX_PERF_SP_RTU_OPERAND_FETCH_STALL_CYCLES_INS_FIFO"/>
++	<value value="139" name="A7XX_PERF_SP_RTU_BVH_FETCH_LATENCY_CYCLES"/>
++	<value value="140" name="A7XX_PERF_SP_RTU_BVH_FETCH_LATENCY_SAMPLES"/>
++	<value value="141" name="A7XX_PERF_SP_STCHE_MISS_INC_VS"/>
++	<value value="142" name="A7XX_PERF_SP_STCHE_MISS_INC_FS"/>
++	<value value="143" name="A7XX_PERF_SP_STCHE_MISS_INC_BV"/>
++	<value value="144" name="A7XX_PERF_SP_STCHE_MISS_INC_LPAC"/>
++	<value value="145" name="A7XX_PERF_SP_VGPR_ACTIVE_CONTEXTS"/>
++	<value value="146" name="A7XX_PERF_SP_PGPR_ALLOC_CONTEXTS"/>
++	<value value="147" name="A7XX_PERF_SP_VGPR_ALLOC_CONTEXTS"/>
++	<value value="148" name="A7XX_PERF_SP_RTU_RAY_BOX_INTERSECTIONS"/>
++	<value value="149" name="A7XX_PERF_SP_RTU_RAY_TRIANGLE_INTERSECTIONS"/>
++	<value value="150" name="A7XX_PERF_SP_SCH_STALL_CYCLES_RTU"/>
++</enum>
++
++<enum name="a7xx_rb_perfcounter_select">
++	<value value="0" name="A7XX_PERF_RB_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_RB_STALL_CYCLES_HLSQ"/>
++	<value value="2" name="A7XX_PERF_RB_STALL_CYCLES_FIFO0_FULL"/>
++	<value value="3" name="A7XX_PERF_RB_STALL_CYCLES_FIFO1_FULL"/>
++	<value value="4" name="A7XX_PERF_RB_STALL_CYCLES_FIFO2_FULL"/>
++	<value value="5" name="A7XX_PERF_RB_STARVE_CYCLES_SP"/>
++	<value value="6" name="A7XX_PERF_RB_STARVE_CYCLES_LRZ_TILE"/>
++	<value value="7" name="A7XX_PERF_RB_STARVE_CYCLES_CCU"/>
++	<value value="8" name="A7XX_PERF_RB_STARVE_CYCLES_Z_PLANE"/>
++	<value value="9" name="A7XX_PERF_RB_STARVE_CYCLES_BARY_PLANE"/>
++	<value value="10" name="A7XX_PERF_RB_Z_WORKLOAD"/>
++	<value value="11" name="A7XX_PERF_RB_HLSQ_ACTIVE"/>
++	<value value="12" name="A7XX_PERF_RB_Z_READ"/>
++	<value value="13" name="A7XX_PERF_RB_Z_WRITE"/>
++	<value value="14" name="A7XX_PERF_RB_C_READ"/>
++	<value value="15" name="A7XX_PERF_RB_C_WRITE"/>
++	<value value="16" name="A7XX_PERF_RB_TOTAL_PASS"/>
++	<value value="17" name="A7XX_PERF_RB_Z_PASS"/>
++	<value value="18" name="A7XX_PERF_RB_Z_FAIL"/>
++	<value value="19" name="A7XX_PERF_RB_S_FAIL"/>
++	<value value="20" name="A7XX_PERF_RB_BLENDED_FXP_COMPONENTS"/>
++	<value value="21" name="A7XX_PERF_RB_BLENDED_FP16_COMPONENTS"/>
++	<value value="22" name="A7XX_PERF_RB_PS_INVOCATIONS"/>
++	<value value="23" name="A7XX_PERF_RB_2D_ALIVE_CYCLES"/>
++	<value value="24" name="A7XX_PERF_RB_2D_STALL_CYCLES_A2D"/>
++	<value value="25" name="A7XX_PERF_RB_2D_STARVE_CYCLES_SRC"/>
++	<value value="26" name="A7XX_PERF_RB_2D_STARVE_CYCLES_SP"/>
++	<value value="27" name="A7XX_PERF_RB_2D_STARVE_CYCLES_DST"/>
++	<value value="28" name="A7XX_PERF_RB_2D_VALID_PIXELS"/>
++	<value value="29" name="A7XX_PERF_RB_3D_PIXELS"/>
++	<value value="30" name="A7XX_PERF_RB_BLENDER_WORKING_CYCLES"/>
++	<value value="31" name="A7XX_PERF_RB_ZPROC_WORKING_CYCLES"/>
++	<value value="32" name="A7XX_PERF_RB_CPROC_WORKING_CYCLES"/>
++	<value value="33" name="A7XX_PERF_RB_SAMPLER_WORKING_CYCLES"/>
++	<value value="34" name="A7XX_PERF_RB_STALL_CYCLES_CCU_COLOR_READ"/>
++	<value value="35" name="A7XX_PERF_RB_STALL_CYCLES_CCU_COLOR_WRITE"/>
++	<value value="36" name="A7XX_PERF_RB_STALL_CYCLES_CCU_DEPTH_READ"/>
++	<value value="37" name="A7XX_PERF_RB_STALL_CYCLES_CCU_DEPTH_WRITE"/>
++	<value value="38" name="A7XX_PERF_RB_STALL_CYCLES_VPC"/>
++	<value value="39" name="A7XX_PERF_RB_2D_INPUT_TRANS"/>
++	<value value="40" name="A7XX_PERF_RB_2D_OUTPUT_RB_DST_TRANS"/>
++	<value value="41" name="A7XX_PERF_RB_2D_OUTPUT_RB_SRC_TRANS"/>
++	<value value="42" name="A7XX_PERF_RB_BLENDED_FP32_COMPONENTS"/>
++	<value value="43" name="A7XX_PERF_RB_COLOR_PIX_TILES"/>
++	<value value="44" name="A7XX_PERF_RB_STALL_CYCLES_CCU"/>
++	<value value="45" name="A7XX_PERF_RB_EARLY_Z_ARB3_GRANT"/>
++	<value value="46" name="A7XX_PERF_RB_LATE_Z_ARB3_GRANT"/>
++	<value value="47" name="A7XX_PERF_RB_EARLY_Z_SKIP_GRANT"/>
++	<value value="48" name="A7XX_PERF_RB_VRS_1x1_QUADS"/>
++	<value value="49" name="A7XX_PERF_RB_VRS_2x1_QUADS"/>
++	<value value="50" name="A7XX_PERF_RB_VRS_1x2_QUADS"/>
++	<value value="51" name="A7XX_PERF_RB_VRS_2x2_QUADS"/>
++	<value value="52" name="A7XX_PERF_RB_VRS_4x2_QUADS"/>
++	<value value="53" name="A7XX_PERF_RB_VRS_4x4_QUADS"/>
++</enum>
++
++<enum name="a7xx_vsc_perfcounter_select">
++	<value value="0" name="A7XX_PERF_VSC_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_VSC_WORKING_CYCLES"/>
++	<value value="2" name="A7XX_PERF_VSC_STALL_CYCLES_UCHE"/>
++	<value value="3" name="A7XX_PERF_VSC_EOT_NUM"/>
++	<value value="4" name="A7XX_PERF_VSC_INPUT_TILES"/>
++</enum>
++
++<enum name="a7xx_ccu_perfcounter_select">
++	<value value="0" name="A7XX_PERF_CCU_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_CCU_STALL_CYCLES_RB_DEPTH_RETURN"/>
++	<value value="2" name="A7XX_PERF_CCU_STALL_CYCLES_RB_COLOR_RETURN"/>
++	<value value="3" name="A7XX_PERF_CCU_DEPTH_BLOCKS"/>
++	<value value="4" name="A7XX_PERF_CCU_COLOR_BLOCKS"/>
++	<value value="5" name="A7XX_PERF_CCU_DEPTH_BLOCK_HIT"/>
++	<value value="6" name="A7XX_PERF_CCU_COLOR_BLOCK_HIT"/>
++	<value value="7" name="A7XX_PERF_CCU_PARTIAL_BLOCK_READ"/>
++	<value value="8" name="A7XX_PERF_CCU_GMEM_READ"/>
++	<value value="9" name="A7XX_PERF_CCU_GMEM_WRITE"/>
++	<value value="10" name="A7XX_PERF_CCU_2D_RD_REQ"/>
++	<value value="11" name="A7XX_PERF_CCU_2D_WR_REQ"/>
++	<value value="12" name="A7XX_PERF_CCU_UBWC_COLOR_BLOCKS_CONCURRENT"/>
++	<value value="13" name="A7XX_PERF_CCU_UBWC_DEPTH_BLOCKS_CONCURRENT"/>
++	<value value="14" name="A7XX_PERF_CCU_COLOR_RESOLVE_DROPPED"/>
++	<value value="15" name="A7XX_PERF_CCU_DEPTH_RESOLVE_DROPPED"/>
++	<value value="16" name="A7XX_PERF_CCU_COLOR_RENDER_CONCURRENT"/>
++	<value value="17" name="A7XX_PERF_CCU_DEPTH_RENDER_CONCURRENT"/>
++	<value value="18" name="A7XX_PERF_CCU_COLOR_RESOLVE_AFTER_RENDER"/>
++	<value value="19" name="A7XX_PERF_CCU_DEPTH_RESOLVE_AFTER_RENDER"/>
++	<value value="20" name="A7XX_PERF_CCU_GMEM_EXTRA_DEPTH_READ"/>
++	<value value="21" name="A7XX_PERF_CCU_GMEM_COLOR_READ_4AA"/>
++	<value value="22" name="A7XX_PERF_CCU_GMEM_COLOR_READ_4AA_FULL"/>
++</enum>
++
++<enum name="a7xx_lrz_perfcounter_select">
++	<value value="0" name="A7XX_PERF_LRZ_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_LRZ_STARVE_CYCLES_RAS"/>
++	<value value="2" name="A7XX_PERF_LRZ_STALL_CYCLES_RB"/>
++	<value value="3" name="A7XX_PERF_LRZ_STALL_CYCLES_VSC"/>
++	<value value="4" name="A7XX_PERF_LRZ_STALL_CYCLES_VPC"/>
++	<value value="5" name="A7XX_PERF_LRZ_STALL_CYCLES_FLAG_PREFETCH"/>
++	<value value="6" name="A7XX_PERF_LRZ_STALL_CYCLES_UCHE"/>
++	<value value="7" name="A7XX_PERF_LRZ_LRZ_READ"/>
++	<value value="8" name="A7XX_PERF_LRZ_LRZ_WRITE"/>
++	<value value="9" name="A7XX_PERF_LRZ_READ_LATENCY"/>
++	<value value="10" name="A7XX_PERF_LRZ_MERGE_CACHE_UPDATING"/>
++	<value value="11" name="A7XX_PERF_LRZ_PRIM_KILLED_BY_MASKGEN"/>
++	<value value="12" name="A7XX_PERF_LRZ_PRIM_KILLED_BY_LRZ"/>
++	<value value="13" name="A7XX_PERF_LRZ_VISIBLE_PRIM_AFTER_LRZ"/>
++	<value value="14" name="A7XX_PERF_LRZ_FULL_8X8_TILES"/>
++	<value value="15" name="A7XX_PERF_LRZ_PARTIAL_8X8_TILES"/>
++	<value value="16" name="A7XX_PERF_LRZ_TILE_KILLED"/>
++	<value value="17" name="A7XX_PERF_LRZ_TOTAL_PIXEL"/>
++	<value value="18" name="A7XX_PERF_LRZ_VISIBLE_PIXEL_AFTER_LRZ"/>
++	<value value="19" name="A7XX_PERF_LRZ_FEEDBACK_ACCEPT"/>
++	<value value="20" name="A7XX_PERF_LRZ_FEEDBACK_DISCARD"/>
++	<value value="21" name="A7XX_PERF_LRZ_FEEDBACK_STALL"/>
++	<value value="22" name="A7XX_PERF_LRZ_STALL_CYCLES_RB_ZPLANE"/>
++	<value value="23" name="A7XX_PERF_LRZ_STALL_CYCLES_RB_BPLANE"/>
++	<value value="24" name="A7XX_PERF_LRZ_RAS_MASK_TRANS"/>
++	<value value="25" name="A7XX_PERF_LRZ_STALL_CYCLES_MVC"/>
++	<value value="26" name="A7XX_PERF_LRZ_TILE_KILLED_BY_IMAGE_VRS"/>
++	<value value="27" name="A7XX_PERF_LRZ_TILE_KILLED_BY_Z"/>
++</enum>
++
++<enum name="a7xx_cmp_perfcounter_select">
++	<value value="0" name="A7XX_PERF_CMPDECMP_STALL_CYCLES_ARB"/>
++	<value value="1" name="A7XX_PERF_CMPDECMP_VBIF_LATENCY_CYCLES"/>
++	<value value="2" name="A7XX_PERF_CMPDECMP_VBIF_LATENCY_SAMPLES"/>
++	<value value="3" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_CCU"/>
++	<value value="4" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA_CCU"/>
++	<value value="5" name="A7XX_PERF_CMPDECMP_VBIF_READ_REQUEST"/>
++	<value value="6" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_REQUEST"/>
++	<value value="7" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA"/>
++	<value value="8" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA"/>
++	<value value="9" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG1_COUNT"/>
++	<value value="10" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG2_COUNT"/>
++	<value value="11" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG3_COUNT"/>
++	<value value="12" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG4_COUNT"/>
++	<value value="13" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG5_COUNT"/>
++	<value value="14" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG6_COUNT"/>
++	<value value="15" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG8_COUNT"/>
++	<value value="16" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG1_COUNT"/>
++	<value value="17" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG2_COUNT"/>
++	<value value="18" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG3_COUNT"/>
++	<value value="19" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG4_COUNT"/>
++	<value value="20" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG5_COUNT"/>
++	<value value="21" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG6_COUNT"/>
++	<value value="22" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG8_COUNT"/>
++	<value value="23" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH0"/>
++	<value value="24" name="A7XX_PERF_CMPDECMP_VBIF_READ_DATA_UCHE_CH1"/>
++	<value value="25" name="A7XX_PERF_CMPDECMP_VBIF_WRITE_DATA_UCHE"/>
++	<value value="26" name="A7XX_PERF_CMPDECMP_DEPTH_WRITE_FLAG0_COUNT"/>
++	<value value="27" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAG0_COUNT"/>
++	<value value="28" name="A7XX_PERF_CMPDECMP_COLOR_WRITE_FLAGALPHA_COUNT"/>
++	<value value="29" name="A7XX_PERF_CMPDECMP_RESOLVE_EVENTS"/>
++	<value value="30" name="A7XX_PERF_CMPDECMP_CONCURRENT_RESOLVE_EVENTS"/>
++	<value value="31" name="A7XX_PERF_CMPDECMP_DROPPED_CLEAR_EVENTS"/>
++	<value value="32" name="A7XX_PERF_CMPDECMP_ST_BLOCKS_CONCURRENT"/>
++	<value value="33" name="A7XX_PERF_CMPDECMP_LRZ_ST_BLOCKS_CONCURRENT"/>
++	<value value="34" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG0_COUNT"/>
++	<value value="35" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG1_COUNT"/>
++	<value value="36" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG2_COUNT"/>
++	<value value="37" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG3_COUNT"/>
++	<value value="38" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG4_COUNT"/>
++	<value value="39" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG5_COUNT"/>
++	<value value="40" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG6_COUNT"/>
++	<value value="41" name="A7XX_PERF_CMPDECMP_DEPTH_READ_FLAG8_COUNT"/>
++	<value value="42" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG0_COUNT"/>
++	<value value="43" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG1_COUNT"/>
++	<value value="44" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG2_COUNT"/>
++	<value value="45" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG3_COUNT"/>
++	<value value="46" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG4_COUNT"/>
++	<value value="47" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG5_COUNT"/>
++	<value value="48" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG6_COUNT"/>
++	<value value="49" name="A7XX_PERF_CMPDECMP_COLOR_READ_FLAG8_COUNT"/>
++</enum>
++
++<enum name="a7xx_gbif_perfcounter_select">
++	<value value="0" name="A7XX_PERF_GBIF_RESERVED_0"/>
++	<value value="1" name="A7XX_PERF_GBIF_RESERVED_1"/>
++	<value value="2" name="A7XX_PERF_GBIF_RESERVED_2"/>
++	<value value="3" name="A7XX_PERF_GBIF_RESERVED_3"/>
++	<value value="4" name="A7XX_PERF_GBIF_RESERVED_4"/>
++	<value value="5" name="A7XX_PERF_GBIF_RESERVED_5"/>
++	<value value="6" name="A7XX_PERF_GBIF_RESERVED_6"/>
++	<value value="7" name="A7XX_PERF_GBIF_RESERVED_7"/>
++	<value value="8" name="A7XX_PERF_GBIF_RESERVED_8"/>
++	<value value="9" name="A7XX_PERF_GBIF_RESERVED_9"/>
++	<value value="10" name="A7XX_PERF_GBIF_AXI0_READ_REQUESTS_TOTAL"/>
++	<value value="11" name="A7XX_PERF_GBIF_AXI1_READ_REQUESTS_TOTAL"/>
++	<value value="12" name="A7XX_PERF_GBIF_RESERVED_12"/>
++	<value value="13" name="A7XX_PERF_GBIF_RESERVED_13"/>
++	<value value="14" name="A7XX_PERF_GBIF_RESERVED_14"/>
++	<value value="15" name="A7XX_PERF_GBIF_RESERVED_15"/>
++	<value value="16" name="A7XX_PERF_GBIF_RESERVED_16"/>
++	<value value="17" name="A7XX_PERF_GBIF_RESERVED_17"/>
++	<value value="18" name="A7XX_PERF_GBIF_RESERVED_18"/>
++	<value value="19" name="A7XX_PERF_GBIF_RESERVED_19"/>
++	<value value="20" name="A7XX_PERF_GBIF_RESERVED_20"/>
++	<value value="21" name="A7XX_PERF_GBIF_RESERVED_21"/>
++	<value value="22" name="A7XX_PERF_GBIF_AXI0_WRITE_REQUESTS_TOTAL"/>
++	<value value="23" name="A7XX_PERF_GBIF_AXI1_WRITE_REQUESTS_TOTAL"/>
++	<value value="24" name="A7XX_PERF_GBIF_RESERVED_24"/>
++	<value value="25" name="A7XX_PERF_GBIF_RESERVED_25"/>
++	<value value="26" name="A7XX_PERF_GBIF_RESERVED_26"/>
++	<value value="27" name="A7XX_PERF_GBIF_RESERVED_27"/>
++	<value value="28" name="A7XX_PERF_GBIF_RESERVED_28"/>
++	<value value="29" name="A7XX_PERF_GBIF_RESERVED_29"/>
++	<value value="30" name="A7XX_PERF_GBIF_RESERVED_30"/>
++	<value value="31" name="A7XX_PERF_GBIF_RESERVED_31"/>
++	<value value="32" name="A7XX_PERF_GBIF_RESERVED_32"/>
++	<value value="33" name="A7XX_PERF_GBIF_RESERVED_33"/>
++	<value value="34" name="A7XX_PERF_GBIF_AXI0_READ_DATA_BEATS_TOTAL"/>
++	<value value="35" name="A7XX_PERF_GBIF_AXI1_READ_DATA_BEATS_TOTAL"/>
++	<value value="36" name="A7XX_PERF_GBIF_RESERVED_36"/>
++	<value value="37" name="A7XX_PERF_GBIF_RESERVED_37"/>
++	<value value="38" name="A7XX_PERF_GBIF_RESERVED_38"/>
++	<value value="39" name="A7XX_PERF_GBIF_RESERVED_39"/>
++	<value value="40" name="A7XX_PERF_GBIF_RESERVED_40"/>
++	<value value="41" name="A7XX_PERF_GBIF_RESERVED_41"/>
++	<value value="42" name="A7XX_PERF_GBIF_RESERVED_42"/>
++	<value value="43" name="A7XX_PERF_GBIF_RESERVED_43"/>
++	<value value="44" name="A7XX_PERF_GBIF_RESERVED_44"/>
++	<value value="45" name="A7XX_PERF_GBIF_RESERVED_45"/>
++	<value value="46" name="A7XX_PERF_GBIF_AXI0_WRITE_DATA_BEATS_TOTAL"/>
++	<value value="47" name="A7XX_PERF_GBIF_AXI1_WRITE_DATA_BEATS_TOTAL"/>
++	<value value="48" name="A7XX_PERF_GBIF_RESERVED_48"/>
++	<value value="49" name="A7XX_PERF_GBIF_RESERVED_49"/>
++	<value value="50" name="A7XX_PERF_GBIF_RESERVED_50"/>
++	<value value="51" name="A7XX_PERF_GBIF_RESERVED_51"/>
++	<value value="52" name="A7XX_PERF_GBIF_RESERVED_52"/>
++	<value value="53" name="A7XX_PERF_GBIF_RESERVED_53"/>
++	<value value="54" name="A7XX_PERF_GBIF_RESERVED_54"/>
++	<value value="55" name="A7XX_PERF_GBIF_RESERVED_55"/>
++	<value value="56" name="A7XX_PERF_GBIF_RESERVED_56"/>
++	<value value="57" name="A7XX_PERF_GBIF_RESERVED_57"/>
++	<value value="58" name="A7XX_PERF_GBIF_RESERVED_58"/>
++	<value value="59" name="A7XX_PERF_GBIF_RESERVED_59"/>
++	<value value="60" name="A7XX_PERF_GBIF_RESERVED_60"/>
++	<value value="61" name="A7XX_PERF_GBIF_RESERVED_61"/>
++	<value value="62" name="A7XX_PERF_GBIF_RESERVED_62"/>
++	<value value="63" name="A7XX_PERF_GBIF_RESERVED_63"/>
++	<value value="64" name="A7XX_PERF_GBIF_RESERVED_64"/>
++	<value value="65" name="A7XX_PERF_GBIF_RESERVED_65"/>
++	<value value="66" name="A7XX_PERF_GBIF_RESERVED_66"/>
++	<value value="67" name="A7XX_PERF_GBIF_RESERVED_67"/>
++	<value value="68" name="A7XX_PERF_GBIF_CYCLES_CH0_HELD_OFF_RD_ALL"/>
++	<value value="69" name="A7XX_PERF_GBIF_CYCLES_CH1_HELD_OFF_RD_ALL"/>
++	<value value="70" name="A7XX_PERF_GBIF_CYCLES_CH0_HELD_OFF_WR_ALL"/>
++	<value value="71" name="A7XX_PERF_GBIF_CYCLES_CH1_HELD_OFF_WR_ALL"/>
++	<value value="72" name="A7XX_PERF_GBIF_AXI_CH0_REQUEST_HELD_OFF"/>
++	<value value="73" name="A7XX_PERF_GBIF_AXI_CH1_REQUEST_HELD_OFF"/>
++	<value value="74" name="A7XX_PERF_GBIF_AXI_REQUEST_HELD_OFF"/>
++	<value value="75" name="A7XX_PERF_GBIF_AXI_CH0_WRITE_DATA_HELD_OFF"/>
++	<value value="76" name="A7XX_PERF_GBIF_AXI_CH1_WRITE_DATA_HELD_OFF"/>
++	<value value="77" name="A7XX_PERF_GBIF_AXI_ALL_WRITE_DATA_HELD_OFF"/>
++	<value value="78" name="A7XX_PERF_GBIF_AXI_ALL_READ_BEATS"/>
++	<value value="79" name="A7XX_PERF_GBIF_AXI_ALL_WRITE_BEATS"/>
++	<value value="80" name="A7XX_PERF_GBIF_AXI_ALL_BEATS"/>
++</enum>
++
++<enum name="a7xx_ufc_perfcounter_select">
++	<value value="0" name="A7XX_PERF_UFC_BUSY_CYCLES"/>
++	<value value="1" name="A7XX_PERF_UFC_READ_DATA_VBIF"/>
++	<value value="2" name="A7XX_PERF_UFC_WRITE_DATA_VBIF"/>
++	<value value="3" name="A7XX_PERF_UFC_READ_REQUEST_VBIF"/>
++	<value value="4" name="A7XX_PERF_UFC_WRITE_REQUEST_VBIF"/>
++	<value value="5" name="A7XX_PERF_UFC_LRZ_FILTER_HIT"/>
++	<value value="6" name="A7XX_PERF_UFC_LRZ_FILTER_MISS"/>
++	<value value="7" name="A7XX_PERF_UFC_CRE_FILTER_HIT"/>
++	<value value="8" name="A7XX_PERF_UFC_CRE_FILTER_MISS"/>
++	<value value="9" name="A7XX_PERF_UFC_SP_FILTER_HIT"/>
++	<value value="10" name="A7XX_PERF_UFC_SP_FILTER_MISS"/>
++	<value value="11" name="A7XX_PERF_UFC_SP_REQUESTS"/>
++	<value value="12" name="A7XX_PERF_UFC_TP_FILTER_HIT"/>
++	<value value="13" name="A7XX_PERF_UFC_TP_FILTER_MISS"/>
++	<value value="14" name="A7XX_PERF_UFC_TP_REQUESTS"/>
++	<value value="15" name="A7XX_PERF_UFC_MAIN_HIT_LRZ_PREFETCH"/>
++	<value value="16" name="A7XX_PERF_UFC_MAIN_HIT_CRE_PREFETCH"/>
++	<value value="17" name="A7XX_PERF_UFC_MAIN_HIT_SP_PREFETCH"/>
++	<value value="18" name="A7XX_PERF_UFC_MAIN_HIT_TP_PREFETCH"/>
++	<value value="19" name="A7XX_PERF_UFC_MAIN_HIT_UBWC_READ"/>
++	<value value="20" name="A7XX_PERF_UFC_MAIN_HIT_UBWC_WRITE"/>
++	<value value="21" name="A7XX_PERF_UFC_MAIN_MISS_LRZ_PREFETCH"/>
++	<value value="22" name="A7XX_PERF_UFC_MAIN_MISS_CRE_PREFETCH"/>
++	<value value="23" name="A7XX_PERF_UFC_MAIN_MISS_SP_PREFETCH"/>
++	<value value="24" name="A7XX_PERF_UFC_MAIN_MISS_TP_PREFETCH"/>
++	<value value="25" name="A7XX_PERF_UFC_MAIN_MISS_UBWC_READ"/>
++	<value value="26" name="A7XX_PERF_UFC_MAIN_MISS_UBWC_WRITE"/>
++	<value value="27" name="A7XX_PERF_UFC_UBWC_READ_UFC_TRANS"/>
++	<value value="28" name="A7XX_PERF_UFC_UBWC_WRITE_UFC_TRANS"/>
++	<value value="29" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_CMD"/>
++	<value value="30" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_RDATA"/>
++	<value value="31" name="A7XX_PERF_UFC_STALL_CYCLES_GBIF_WDATA"/>
++	<value value="32" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_WR_FLAG"/>
++	<value value="33" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_FLAG_RTN"/>
++	<value value="34" name="A7XX_PERF_UFC_STALL_CYCLES_UBWC_EVENT"/>
++	<value value="35" name="A7XX_PERF_UFC_LRZ_PREFETCH_STALLED_CYCLES"/>
++	<value value="36" name="A7XX_PERF_UFC_CRE_PREFETCH_STALLED_CYCLES"/>
++	<value value="37" name="A7XX_PERF_UFC_SPTP_PREFETCH_STALLED_CYCLES"/>
++	<value value="38" name="A7XX_PERF_UFC_UBWC_RD_STALLED_CYCLES"/>
++	<value value="39" name="A7XX_PERF_UFC_UBWC_WR_STALLED_CYCLES"/>
++	<value value="40" name="A7XX_PERF_UFC_PREFETCH_STALLED_CYCLES"/>
++	<value value="41" name="A7XX_PERF_UFC_EVICTION_STALLED_CYCLES"/>
++	<value value="42" name="A7XX_PERF_UFC_LOCK_STALLED_CYCLES"/>
++	<value value="43" name="A7XX_PERF_UFC_MISS_LATENCY_CYCLES"/>
++	<value value="44" name="A7XX_PERF_UFC_MISS_LATENCY_SAMPLES"/>
++	<value value="45" name="A7XX_PERF_UFC_UBWC_REQ_STALLED_CYCLES"/>
++	<value value="46" name="A7XX_PERF_UFC_TP_HINT_TAG_MISS"/>
++	<value value="47" name="A7XX_PERF_UFC_TP_HINT_TAG_HIT_RDY"/>
++	<value value="48" name="A7XX_PERF_UFC_TP_HINT_TAG_HIT_NRDY"/>
++	<value value="49" name="A7XX_PERF_UFC_TP_HINT_IS_FCLEAR"/>
++	<value value="50" name="A7XX_PERF_UFC_TP_HINT_IS_ALPHA0"/>
++	<value value="51" name="A7XX_PERF_UFC_SP_L1_FILTER_HIT"/>
++	<value value="52" name="A7XX_PERF_UFC_SP_L1_FILTER_MISS"/>
++	<value value="53" name="A7XX_PERF_UFC_SP_L1_FILTER_REQUESTS"/>
++	<value value="54" name="A7XX_PERF_UFC_TP_L1_TAG_HIT_RDY"/>
++	<value value="55" name="A7XX_PERF_UFC_TP_L1_TAG_HIT_NRDY"/>
++	<value value="56" name="A7XX_PERF_UFC_TP_L1_TAG_MISS"/>
++	<value value="57" name="A7XX_PERF_UFC_TP_L1_FILTER_REQUESTS"/>
++</enum>
++
++</database>
+diff --git a/drivers/gpu/drm/msm/registers/adreno/adreno_pm4.xml b/drivers/gpu/drm/msm/registers/adreno/adreno_pm4.xml
+index 462713401622..7abc08635495 100644
+--- a/drivers/gpu/drm/msm/registers/adreno/adreno_pm4.xml
++++ b/drivers/gpu/drm/msm/registers/adreno/adreno_pm4.xml
+@@ -21,9 +21,9 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="HLSQ_FLUSH" value="7" variants="A3XX-A4XX"/>
+ 	<value name="VIZQUERY_END" value="8" variants="A2XX"/>
+ 	<value name="SC_WAIT_WC" value="9" variants="A2XX"/>
+-	<value name="WRITE_PRIMITIVE_COUNTS" value="9" variants="A6XX"/>
+-	<value name="START_PRIMITIVE_CTRS" value="11" variants="A6XX"/>
+-	<value name="STOP_PRIMITIVE_CTRS" value="12" variants="A6XX"/>
++	<value name="WRITE_PRIMITIVE_COUNTS" value="9" variants="A6XX-"/>
++	<value name="START_PRIMITIVE_CTRS" value="11" variants="A6XX-"/>
++	<value name="STOP_PRIMITIVE_CTRS" value="12" variants="A6XX-"/>
+ 	<!-- Not sure that these 4 events don't have the same meaning as on A5XX+ -->
+ 	<value name="RST_PIX_CNT" value="13" variants="A2XX-A4XX"/>
+ 	<value name="RST_VTX_CNT" value="14" variants="A2XX-A4XX"/>
+@@ -31,8 +31,8 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="STAT_EVENT" value="16" variants="A2XX-A4XX"/>
+ 	<value name="CACHE_FLUSH_AND_INV_TS_EVENT" value="20" variants="A2XX-A4XX"/>
+ 	<doc>
+-		If A6XX_RB_SAMPLE_COUNT_CONTROL.copy is true, writes OQ Z passed
+-		sample counts to RB_SAMPLE_COUNT_ADDR.  This writes to main
++		If A6XX_RB_SAMPLE_COUNTER_CNTL.copy is true, writes OQ Z passed
++		sample counts to RB_SAMPLE_COUNTER_BASE.  This writes to main
+ 		memory, skipping UCHE.
+ 	</doc>
+ 	<value name="ZPASS_DONE" value="21"/>
+@@ -97,6 +97,13 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	</doc>
+ 	<value name="BLIT" value="30" variants="A5XX-"/>
+ 
++	<doc>
++	Flip between the primary and secondary LRZ buffers. This is used
++	for concurrent binning, so that BV can write to one buffer while
++	BR reads from the other.
++	</doc>
++	<value name="LRZ_FLIP_BUFFER" value="36" variants="A7XX"/>
++
+ 	<doc>
+ 		Clears based on GRAS_LRZ_CNTL configuration, could clear
+ 		fast-clear buffer or LRZ direction.
+@@ -114,6 +121,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="BLIT_OP_FILL_2D" value="39" variants="A5XX-"/>
+ 	<value name="BLIT_OP_COPY_2D" value="40" variants="A5XX-A6XX"/>
+ 	<value name="UNK_40" value="40" variants="A7XX"/>
++	<value name="LRZ_Q_CACHE_INVALIDATE" value="41" variants="A7XX"/>
+ 	<value name="BLIT_OP_SCALE_2D" value="42" variants="A5XX-"/>
+ 	<value name="CONTEXT_DONE_2D" value="43" variants="A5XX-"/>
+ 	<value name="UNK_2C" value="44" variants="A5XX-"/>
+@@ -372,7 +380,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="CP_LOAD_STATE" value="0x30" variants="A3XX"/>
+ 	<value name="CP_LOAD_STATE4" value="0x30" variants="A4XX-A5XX"/>
+ 	<doc>Conditionally load a IB based on a flag, prefetch enabled</doc>
+-	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3a"/>
++	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3a" variants="A3XX-A5XX"/>
+ 	<doc>Conditionally load a IB based on a flag, prefetch disabled</doc>
+ 	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32" variants="A3XX"/>
+ 	<doc>Load a buffer with pre-fetch enabled</doc>
+@@ -538,7 +546,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="CP_LOAD_STATE6_GEOM" value="0x32" variants="A6XX-"/>
+ 	<value name="CP_LOAD_STATE6_FRAG" value="0x34" variants="A6XX-"/>
+ 	<!--
+-	Note: For IBO state (Image/SSBOs) which have shared state across
++	Note: For UAV state (Image/SSBOs) which have shared state across
+ 	shader stages, for 3d pipeline CP_LOAD_STATE6 is used.  But for
+ 	compute shaders, CP_LOAD_STATE6_FRAG is used.  Possibly they are
+ 	interchangable.
+@@ -567,7 +575,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<value name="IN_PREEMPT" value="0x0f" variants="A6XX-"/>
+ 
+ 	<!-- TODO do these exist on A5xx? -->
+-	<value name="CP_SCRATCH_WRITE" value="0x4c" variants="A6XX"/>
++	<value name="CP_SCRATCH_WRITE" value="0x4c" variants="A6XX-"/>
+ 	<value name="CP_REG_TO_MEM_OFFSET_MEM" value="0x74" variants="A6XX-"/>
+ 	<value name="CP_REG_TO_MEM_OFFSET_REG" value="0x72" variants="A6XX-"/>
+ 	<value name="CP_WAIT_MEM_GTE" value="0x14" variants="A6XX"/>
+@@ -650,6 +658,11 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 
+ 	<doc>Reset various on-chip state used for synchronization</doc>
+ 	<value name="CP_RESET_CONTEXT_STATE" value="0x1f" variants="A7XX-"/>
++
++	<doc>Invalidates the "CCHE" introduced on a740</doc>
++	<value name="CP_CCHE_INVALIDATE" value="0x3a" variants="A7XX-"/>
++
++	<value name="CP_SCOPE_CNTL" value="0x6c" variants="A7XX-"/>
+ </enum>
+ 
+ 
+@@ -792,14 +805,14 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		<value name="SB6_GS_SHADER" value="0xb"/>
+ 		<value name="SB6_FS_SHADER" value="0xc"/>
+ 		<value name="SB6_CS_SHADER" value="0xd"/>
+-		<value name="SB6_IBO"       value="0xe"/>
+-		<value name="SB6_CS_IBO"    value="0xf"/>
++		<value name="SB6_UAV"       value="0xe"/>
++		<value name="SB6_CS_UAV"    value="0xf"/>
+ 	</enum>
+ 	<enum name="a6xx_state_type">
+ 		<value name="ST6_SHADER" value="0"/>
+ 		<value name="ST6_CONSTANTS" value="1"/>
+ 		<value name="ST6_UBO" value="2"/>
+-		<value name="ST6_IBO" value="3"/>
++		<value name="ST6_UAV" value="3"/>
+ 	</enum>
+ 	<enum name="a6xx_state_src">
+ 		<value name="SS6_DIRECT" value="0"/>
+@@ -1121,39 +1134,93 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 	</reg32>
+ </domain>
+ 
++<enum name="a7xx_abs_mask_mode">
++	<value name="ABS_MASK" value="0x1"/>
++	<value name="NO_ABS_MASK" value="0x0"/>
++</enum>
++
+ <domain name="CP_SET_BIN_DATA5" width="32">
+ 	<reg32 offset="0" name="0">
++		<bitfield name="VSC_MASK" low="0" high="15" type="hex">
++			<doc>
++				A mask of bins, starting at VSC_N, whose
++				visibility is OR'd together. A value of 0 is
++				interpreted as 1 (i.e. just use VSC_N for
++				visbility) for backwards compatibility. Only
++				exists on a7xx.
++			</doc>
++		</bitfield>
+ 		<!-- equiv to PC_VSTREAM_CONTROL.SIZE on a3xx/a4xx: -->
+ 		<bitfield name="VSC_SIZE" low="16" high="21" type="uint"/>
+ 		<!-- equiv to PC_VSTREAM_CONTROL.N on a3xx/a4xx: -->
+ 		<bitfield name="VSC_N" low="22" high="26" type="uint"/>
++		<bitfield name="ABS_MASK" pos="28" type="a7xx_abs_mask_mode" addvariant="yes">
++			<doc>
++				If this field is 1, VSC_MASK and VSC_N are
++				ignored and instead a new ordinal immediately
++				after specifies the full 32-bit mask of bins
++				to use. The mask is "absolute" instead of
++				relative to VSC_N.
++			</doc>
++		</bitfield>
+ 	</reg32>
+-	<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
+-	<reg32 offset="1" name="1">
+-		<bitfield name="BIN_DATA_ADDR_LO" low="0" high="31" type="hex"/>
+-	</reg32>
+-	<reg32 offset="2" name="2">
+-		<bitfield name="BIN_DATA_ADDR_HI" low="0" high="31" type="hex"/>
+-	</reg32>
+-	<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
+-	<reg32 offset="3" name="3">
+-		<bitfield name="BIN_SIZE_ADDRESS_LO" low="0" high="31"/>
+-	</reg32>
+-	<reg32 offset="4" name="4">
+-		<bitfield name="BIN_SIZE_ADDRESS_HI" low="0" high="31"/>
+-	</reg32>
+-	<!-- new on a6xx, where BIN_DATA_ADDR is the DRAW_STRM: -->
+-	<reg32 offset="5" name="5">
+-		<bitfield name="BIN_PRIM_STRM_LO" low="0" high="31"/>
+-	</reg32>
+-	<reg32 offset="6" name="6">
+-		<bitfield name="BIN_PRIM_STRM_HI" low="0" high="31"/>
+-	</reg32>
+-	<!--
+-		a7xx adds a few more addresses to the end of the pkt
+-	 -->
+-	<reg64 offset="7" name="7"/>
+-	<reg64 offset="9" name="9"/>
++	<stripe varset="a7xx_abs_mask_mode" variants="NO_ABS_MASK">
++		<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
++		<reg32 offset="1" name="1">
++			<bitfield name="BIN_DATA_ADDR_LO" low="0" high="31" type="hex"/>
++		</reg32>
++		<reg32 offset="2" name="2">
++			<bitfield name="BIN_DATA_ADDR_HI" low="0" high="31" type="hex"/>
++		</reg32>
++		<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
++		<reg32 offset="3" name="3">
++			<bitfield name="BIN_SIZE_ADDRESS_LO" low="0" high="31"/>
++		</reg32>
++		<reg32 offset="4" name="4">
++			<bitfield name="BIN_SIZE_ADDRESS_HI" low="0" high="31"/>
++		</reg32>
++		<!-- new on a6xx, where BIN_DATA_ADDR is the DRAW_STRM: -->
++		<reg32 offset="5" name="5">
++			<bitfield name="BIN_PRIM_STRM_LO" low="0" high="31"/>
++		</reg32>
++		<reg32 offset="6" name="6">
++			<bitfield name="BIN_PRIM_STRM_HI" low="0" high="31"/>
++		</reg32>
++		<!--
++			a7xx adds a few more addresses to the end of the pkt
++		 -->
++		<reg64 offset="7" name="7"/>
++		<reg64 offset="9" name="9"/>
++	</stripe>
++	<stripe varset="a7xx_abs_mask_mode" variants="ABS_MASK">
++		<reg32 offset="1" name="ABS_MASK"/>
++		<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
++		<reg32 offset="2" name="2">
++			<bitfield name="BIN_DATA_ADDR_LO" low="0" high="31" type="hex"/>
++		</reg32>
++		<reg32 offset="3" name="3">
++			<bitfield name="BIN_DATA_ADDR_HI" low="0" high="31" type="hex"/>
++		</reg32>
++		<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
++		<reg32 offset="4" name="4">
++			<bitfield name="BIN_SIZE_ADDRESS_LO" low="0" high="31"/>
++		</reg32>
++		<reg32 offset="5" name="5">
++			<bitfield name="BIN_SIZE_ADDRESS_HI" low="0" high="31"/>
++		</reg32>
++		<!-- new on a6xx, where BIN_DATA_ADDR is the DRAW_STRM: -->
++		<reg32 offset="6" name="6">
++			<bitfield name="BIN_PRIM_STRM_LO" low="0" high="31"/>
++		</reg32>
++		<reg32 offset="7" name="7">
++			<bitfield name="BIN_PRIM_STRM_HI" low="0" high="31"/>
++		</reg32>
++		<!--
++			a7xx adds a few more addresses to the end of the pkt
++		 -->
++		<reg64 offset="8" name="8"/>
++		<reg64 offset="10" name="10"/>
++	</stripe>
+ </domain>
+ 
+ <domain name="CP_SET_BIN_DATA5_OFFSET" width="32">
+@@ -1164,23 +1231,42 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+                 stream is recorded.
+ 	</doc>
+ 	<reg32 offset="0" name="0">
++		<bitfield name="VSC_MASK" low="0" high="15" type="hex"/>
+ 		<!-- equiv to PC_VSTREAM_CONTROL.SIZE on a3xx/a4xx: -->
+ 		<bitfield name="VSC_SIZE" low="16" high="21" type="uint"/>
+ 		<!-- equiv to PC_VSTREAM_CONTROL.N on a3xx/a4xx: -->
+ 		<bitfield name="VSC_N" low="22" high="26" type="uint"/>
++		<bitfield name="ABS_MASK" pos="28" type="a7xx_abs_mask_mode" addvariant="yes"/>
+ 	</reg32>
+-	<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
+-	<reg32 offset="1" name="1">
+-		<bitfield name="BIN_DATA_OFFSET" low="0" high="31" type="uint"/>
+-	</reg32>
+-	<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
+-	<reg32 offset="2" name="2">
+-		<bitfield name="BIN_SIZE_OFFSET" low="0" high="31" type="uint"/>
+-	</reg32>
+-	<!-- BIN_DATA2_ADDR -> VSC_PIPE[p].DATA2_ADDRESS -->
+-	<reg32 offset="3" name="3">
+-		<bitfield name="BIN_DATA2_OFFSET" low="0" high="31" type="uint"/>
+-	</reg32>
++	<stripe varset="a7xx_abs_mask_mode" variants="NO_ABS_MASK">
++		<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
++		<reg32 offset="1" name="1">
++			<bitfield name="BIN_DATA_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++		<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
++		<reg32 offset="2" name="2">
++			<bitfield name="BIN_SIZE_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++		<!-- BIN_DATA2_ADDR -> VSC_PIPE[p].DATA2_ADDRESS -->
++		<reg32 offset="3" name="3">
++			<bitfield name="BIN_DATA2_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++	</stripe>
++	<stripe varset="a7xx_abs_mask_mode" variants="ABS_MASK">
++		<reg32 offset="1" name="ABS_MASK"/>
++		<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
++		<reg32 offset="2" name="2">
++			<bitfield name="BIN_DATA_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++		<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
++		<reg32 offset="3" name="3">
++			<bitfield name="BIN_SIZE_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++		<!-- BIN_DATA2_ADDR -> VSC_PIPE[p].DATA2_ADDRESS -->
++		<reg32 offset="4" name="4">
++			<bitfield name="BIN_DATA2_OFFSET" low="0" high="31" type="uint"/>
++		</reg32>
++	</stripe>
+ </domain>
+ 
+ <domain name="CP_REG_RMW" width="32">
+@@ -1198,6 +1284,9 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 	</doc>
+ 	<reg32 offset="0" name="0">
+ 		<bitfield name="DST_REG" low="0" high="17" type="hex"/>
++		<bitfield name="DST_SCRATCH" pos="19" type="boolean" varset="chip" variants="A7XX-"/>
++		<!-- skip implied CP_WAIT_FOR_IDLE + CP_WAIT_FOR_ME -->
++		<bitfield name="SKIP_WAIT_FOR_ME" pos="23" type="boolean" varset="chip" variants="A7XX-"/>
+ 		<bitfield name="ROTATE" low="24" high="28" type="uint"/>
+ 		<bitfield name="SRC1_ADD" pos="29" type="boolean"/>
+ 		<bitfield name="SRC1_IS_REG" pos="30" type="boolean"/>
+@@ -1348,6 +1437,8 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		<bitfield name="SCRATCH" low="20" high="22" type="uint"/>
+ 		<!-- number of registers/dwords copied is CNT + 1. -->
+ 		<bitfield name="CNT" low="24" high="26" type="uint"/>
++		<!-- skip implied CP_WAIT_FOR_IDLE + CP_WAIT_FOR_ME -->
++		<bitfield name="SKIP_WAIT_FOR_ME" pos="27" type="boolean" varset="chip" variants="A7XX-"/>
+ 	</reg32>
+ </domain>
+ 
+@@ -1655,8 +1746,8 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		<bitfield name="WRITE_SAMPLE_COUNT" pos="12" type="boolean"/>
+ 		<!-- Write sample count at (iova + 16) -->
+ 		<bitfield name="SAMPLE_COUNT_END_OFFSET" pos="13" type="boolean"/>
+-		<!-- *(iova + 8) = *(iova + 16) - *iova -->
+-		<bitfield name="WRITE_SAMPLE_COUNT_DIFF" pos="14" type="boolean"/>
++		<!-- *(iova + 8) += *(iova + 16) - *iova -->
++		<bitfield name="WRITE_ACCUM_SAMPLE_COUNT_DIFF" pos="14" type="boolean"/>
+ 
+ 		<!-- Next 4 flags are valid to set only when concurrent binning is enabled -->
+ 		<!-- Increment 16b BV counter. Valid only in BV pipe -->
+@@ -1670,15 +1761,11 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		<bitfield name="WRITE_DST" pos="24" type="event_write_dst" addvariant="yes"/>
+ 		<!-- Writes into WRITE_DST from WRITE_SRC. RB_DONE_TS requires WRITE_ENABLED. -->
+ 		<bitfield name="WRITE_ENABLED" pos="27" type="boolean"/>
++		<bitfield name="IRQ" pos="31" type="boolean"/>
+ 	</reg32>
+ 
+ 	<stripe varset="event_write_dst" variants="EV_DST_RAM">
+-		<reg32 offset="1" name="1">
+-			<bitfield name="ADDR_0_LO" low="0" high="31"/>
+-		</reg32>
+-		<reg32 offset="2" name="2">
+-			<bitfield name="ADDR_0_HI" low="0" high="31"/>
+-		</reg32>
++		<reg64 offset="1" name="1" type="waddress"/>
+ 		<reg32 offset="3" name="3">
+ 			<bitfield name="PAYLOAD_0" low="0" high="31"/>
+ 		</reg32>
+@@ -1773,13 +1860,23 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 
+ <domain name="CP_SET_MARKER" width="32" varset="chip" prefix="chip" variants="A6XX-">
+ 	<doc>Tell CP the current operation mode, indicates save and restore procedure</doc>
++	<enum name="set_marker_mode">
++		<value value="0" name="SET_RENDER_MODE"/>
++		<!-- IFPC - inter-frame power collapse -->
++		<value value="1" name="SET_IFPC_MODE"/>
++	</enum>
++	<enum name="a6xx_ifpc_mode">
++		<value value="0" name="IFPC_ENABLE"/>
++		<value value="1" name="IFPC_DISABLE"/>
++	</enum>
+ 	<enum name="a6xx_marker">
+-		<value value="1" name="RM6_BYPASS"/>
+-		<value value="2" name="RM6_BINNING"/>
+-		<value value="4" name="RM6_GMEM"/>
+-		<value value="5" name="RM6_ENDVIS"/>
+-		<value value="6" name="RM6_RESOLVE"/>
+-		<value value="7" name="RM6_YIELD"/>
++		<value value="1" name="RM6_DIRECT_RENDER"/>
++		<value value="2" name="RM6_BIN_VISIBILITY"/>
++		<value value="3" name="RM6_BIN_DIRECT"/>
++		<value value="4" name="RM6_BIN_RENDER_START"/>
++		<value value="5" name="RM6_BIN_END_OF_DRAWS"/>
++		<value value="6" name="RM6_BIN_RESOLVE"/>
++		<value value="7" name="RM6_BIN_RENDER_END"/>
+ 		<value value="8" name="RM6_COMPUTE"/>
+ 		<value value="0xc" name="RM6_BLIT2DSCALE"/>  <!-- no-op (at least on current sqe fw) -->
+ 
+@@ -1789,23 +1886,40 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		-->
+ 		<value value="0xd" name="RM6_IB1LIST_START"/>
+ 		<value value="0xe" name="RM6_IB1LIST_END"/>
+-		<!-- IFPC - inter-frame power collapse -->
+-		<value value="0x100" name="RM6_IFPC_ENABLE"/>
+-		<value value="0x101" name="RM6_IFPC_DISABLE"/>
+ 	</enum>
+ 	<reg32 offset="0" name="0">
++		<!-- if b8 is set, the low bits are interpreted differently (and b4 ignored) -->
++		<bitfield name="MARKER_MODE" pos="8" type="set_marker_mode" addvariant="yes"/>
++
++		<bitfield name="MODE" low="0" high="3" type="a6xx_marker" varset="set_marker_mode" variants="SET_RENDER_MODE"/>
++		<!-- used by preemption to determine if GMEM needs to be saved or not -->
++		<bitfield name="USES_GMEM" pos="4" type="boolean" varset="set_marker_mode" variants="SET_RENDER_MODE"/>
++
++		<bitfield name="IFPC_MODE" pos="0" type="a6xx_ifpc_mode" varset="set_marker_mode" variants="SET_IFPC_MODE"/>
++
+ 		<!--
+-			NOTE: blob driver and some versions of freedreno/turnip set
+-			b4, which is unused (at least by current sqe fw), but interferes
+-			with parsing if we extend the size of the bitfield to include
+-			b8 (only sent by kernel mode driver).  Really, the way the
+-			parsing works in the firmware, only b0-b3 are considered, but
+-			if b8 is set, the low bits are interpreted differently.  To
+-			model this, without getting confused by spurious b4, this is
+-			described as two overlapping bitfields:
+-		 -->
+-		<bitfield name="MODE" low="0" high="8" type="a6xx_marker"/>
+-		<bitfield name="MARKER" low="0" high="3" type="a6xx_marker"/>
++			CP_SET_MARKER is used with these bits to create a
++			critical section around a workaround for ray tracing.
++			The workaround happens after BVH building, and appears
++			to invalidate the RTU's BVH node cache. It makes sure
++			that only one of BR/BV/LPAC is executing the
++			workaround at a time, and no draws using RT on BV/LPAC
++			are executing while the workaround is executed on BR (or
++			vice versa, that no draws on BV/BR using RT are executed
++			while the workaround executes on LPAC), by
++			hooking subsequent CP_EVENT_WRITE/CP_DRAW_*/CP_EXEC_CS.
++			The blob usage is:
++
++			CP_SET_MARKER(RT_WA_START)
++			... workaround here ...
++			CP_SET_MARKER(RT_WA_END)
++			...
++			CP_SET_MARKER(SHADER_USES_RT)
++			CP_DRAW_INDX(...) or CP_EXEC_CS(...)
++		-->
++		<bitfield name="SHADER_USES_RT" pos="9" type="boolean" variants="A7XX-"/>
++		<bitfield name="RT_WA_START" pos="10" type="boolean" variants="A7XX-"/>
++		<bitfield name="RT_WA_END" pos="11" type="boolean" variants="A7XX-"/>
+ 	</reg32>
+ </domain>
+ 
+@@ -1832,9 +1946,9 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 			If concurrent binning is disabled then BR also does binning so it will also
+ 			write the "real" registers in BR.
+ 		-->
+-		<value value="8" name="DRAW_STRM_ADDRESS"/>
+-		<value value="9" name="DRAW_STRM_SIZE_ADDRESS"/>
+-		<value value="10" name="PRIM_STRM_ADDRESS"/>
++		<value value="8" name="VSC_PIPE_DATA_DRAW_BASE"/>
++		<value value="9" name="VSC_SIZE_BASE"/>
++		<value value="10" name="VSC_PIPE_DATA_PRIM_BASE"/>
+ 		<value value="11" name="UNK_STRM_ADDRESS"/>
+ 		<value value="12" name="UNK_STRM_SIZE_ADDRESS"/>
+ 
+@@ -1935,11 +2049,11 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 			a bitmask of which modes pass the test.
+ 		-->
+ 
+-		<!-- RM6_BINNING -->
++		<!-- RM6_BIN_VISIBILITY -->
+ 		<bitfield name="BINNING" pos="25" variants="RENDER_MODE" type="boolean"/>
+ 		<!-- all others -->
+ 		<bitfield name="GMEM" pos="26" variants="RENDER_MODE" type="boolean"/>
+-		<!-- RM6_BYPASS -->
++		<!-- RM6_DIRECT_RENDER -->
+ 		<bitfield name="SYSMEM" pos="27" variants="RENDER_MODE" type="boolean"/>
+ 
+ 		<bitfield name="BV" pos="25" variants="THREAD_MODE" type="boolean"/>
+@@ -2014,10 +2128,10 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 
+ <domain name="CP_SET_AMBLE" width="32">
+ 	<doc>
+-                Used by the userspace and kernel drivers to set various IB's
+-                which are executed during context save/restore for handling
+-                state that isn't restored by the context switch routine itself.
+-  </doc>
++		Used by the userspace and kernel drivers to set various IB's
++		which are executed during context save/restore for handling
++		state that isn't restored by the context switch routine itself.
++	</doc>
+ 	<enum name="amble_type">
+ 		<value name="PREAMBLE_AMBLE_TYPE" value="0">
+ 			<doc>Executed unconditionally when switching back to the context.</doc>
+@@ -2087,12 +2201,12 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 		<value name="UNK_EVENT_WRITE" value="0x4"/>
+ 		<doc>
+ 			Tracks GRAS_LRZ_CNTL::GREATER, GRAS_LRZ_CNTL::DIR, and
+-			GRAS_LRZ_DEPTH_VIEW with previous values, and if one of
++			GRAS_LRZ_VIEW_INFO with previous values, and if one of
+ 			the following is true:
+ 			- GRAS_LRZ_CNTL::GREATER has changed
+ 			- GRAS_LRZ_CNTL::DIR has changed, the old value is not
+ 			  CUR_DIR_GE, and the new value is not CUR_DIR_DISABLED
+-			- GRAS_LRZ_DEPTH_VIEW has changed
++			- GRAS_LRZ_VIEW_INFO has changed
+ 			then it does a LRZ_FLUSH with GRAS_LRZ_CNTL::ENABLE
+ 			forced to 1.
+ 			Only exists in a650_sqe.fw.
+@@ -2207,7 +2321,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 
+ <domain name="CP_MEM_TO_SCRATCH_MEM" width="32">
+ 	<doc>
+-		Best guess is that it is a faster way to fetch all the VSC_STATE registers
++		Best guess is that it is a faster way to fetch all the VSC_CHANNEL_VISIBILITY registers
+ 		and keep them in a local scratch memory instead of fetching every time
+ 		when skipping IBs.
+ 	</doc>
+@@ -2260,6 +2374,16 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
+ 	</reg32>
+ </domain>
+ 
++<domain name="CP_SCOPE_CNTL" width="32">
++	<enum name="cp_scope">
++		<value value="0" name="INTERRUPTS"/>
++	</enum>
++	<reg32 offset="0" name="0">
++		<bitfield name="DISABLE_PREEMPTION" pos="0" type="boolean"/>
++		<bitfield low="28" high="31" name="SCOPE" type="cp_scope"/>
++	</reg32>
++</domain>
++
+ <domain name="CP_INDIRECT_BUFFER" width="32" varset="chip" prefix="chip" variants="A5XX-">
+ 	<reg64 offset="0" name="IB_BASE" type="address"/>
+ 	<reg32 offset="2" name="2">
 -- 
-Regards,
+2.50.0
 
-Laurent Pinchart
