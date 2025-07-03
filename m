@@ -1,111 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810346AA7;
-	Thu,  3 Jul 2025 07:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5BA6AA7;
+	Thu,  3 Jul 2025 07:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751526604; cv=none; b=t50HNnrf5hOoBtYjBzbyG0Sv7n9Aebx6pnVmoIZtlkRLDCE5aquufAiNgNvWxuluj0HAZQlsHVXckNjPF9UlcKQakZoxrVwGXAEnGSo7Kd8fwivUQVlT49OVrXLQU6Su6Sr7rq+jeE3vxhX9MXItPLJHGkY2exGdPxs9JaZslyM=
+	t=1751526632; cv=none; b=IVg++JTrLTOwlFtrUcz6SeRmBQ7Q11DgJGo9Ll45z+nucJ28M2ZvpM6nRc6jfeCkcqxF6AOE205Olurg1PzGcKDQLmvP+YUZZ7raZNHIOmV7u6F5as7Ln8/i6ZL5Lkdf3QdsRtB4jRhyXLQJGMwddhHZe9716kmYchiNFbYmH3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751526604; c=relaxed/simple;
-	bh=ZflEK9KtQZx3NVCipSsftVLgwQk1kFMu6bPbpdMFjTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O/Goo1QYJcuHZ/QFu1t6y+BkfZ2cL0a3d613kNcoQmuw9MsFaoWyinqSsoDpmauhVbRj7yP43RBL28w6+Ha0JusUEwP14Sqzq85wq1coe4ANqj84p6e0QqyxFFtfln0K0C7z8Q6Vh6wO8+T954ieWjlJo7Bx8CCcnmrMsyxxjWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kanyamu+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751526632; c=relaxed/simple;
+	bh=wEvSWZ7JzGMu8CHv0gVajuf+bhWIc4Vi10R59vRcnxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s7TPDzIMM8nHG5BCYTEEzG+QUkSIKto5jnkm+QfoVE0EbyTxJhyH7yp+Z/Jtg8DTIUNxw+uOArmzQCygCiIGHF0IGkPkYaBDPKSrBPkq3BTC4oLOHz22NMlSVnf0BjUSyT7JmPOb9Ghi3xpU87d6fFXqFGEmhXPuBBinkmtTlnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sfptmzrc; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kanyamu+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE8AC4CEE3;
-	Thu,  3 Jul 2025 07:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751526604;
-	bh=ZflEK9KtQZx3NVCipSsftVLgwQk1kFMu6bPbpdMFjTU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kanyamu+zhnxOsIVQVxUxBx5F6obS30Pwb4RSLoTw03An+ussNjvYLDrqMM1iTVyt
-	 hNoTstqHwJv5JT8kF+UKEexP6/7QMHPELWcLvf7xfZ4bGhSY/60srd+l2939Jljykv
-	 DBtgKSFXEXhoR0VSXYaR1MCi/4TSHxRYsMWLEb6/6qH44R/pbwPwLI195Evl9P/l4R
-	 sg7UoWujRvylZ2DSLTKTg9BeyiDtxR1cs7WoubZ2cHiJiK0tVtRmTpstbTDzxnh575
-	 BVUCAH3S7zmYD/Shxad9pnSM8Lt/zV7c807dG3ZsEq/7So2AgXASwnSCieBybCoHp9
-	 VJBbQl/CvYOuw==
-Message-ID: <144df658-262f-423b-b099-8e36679ae761@kernel.org>
-Date: Thu, 3 Jul 2025 09:10:00 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sfptmzrc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751526603;
+	bh=29BaWEnnxhvgKvXxEIkvRDdXYqd3nlHanBa1Fx/1ZvU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sfptmzrcLb0gBs9vqlcts8HbtkxdAz9qLPwiKNnfIXp0eINwMwNDjGO4bGRACp3qh
+	 PAnFu0b+Du5mvr+YxK3odsEZAP2OytnWUE18QiEXNXs0IdvZmw1U9RjsZ2gbR+p8og
+	 CV1rlagcgVlrDJCINKkm4cziw0xgSQH1vQg6QP20NHLd3ZRbaAjSXM4UkysNKGak7s
+	 FBd80m2a4h1gWH0cxIob5lhqWuunyvsWJtSC0mgWkkScDmm0yhXjhiSbtdiWL5ulaF
+	 m094xNtiVv+QyIIRTMx9Mcaq91z4Sta0DBCtqCVM4o/9GQ6FacBXUNnC+YCHmHfdBs
+	 oQQk5smeOmjvA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXnvr3gP0z4wbX;
+	Thu,  3 Jul 2025 17:10:00 +1000 (AEST)
+Date: Thu, 3 Jul 2025 17:10:21 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lizhi Xu
+ <lizhi.xu@windriver.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20250703171021.0aee1482@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] dt-bindings: leds: pwm: Add enable-gpios property
-To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>, lee@kernel.org,
- pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: bsp-development.geo@leica-geosystems.com
-References: <20250703035256.225289-1-Qing-wu.Li@leica-geosystems.com.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250703035256.225289-1-Qing-wu.Li@leica-geosystems.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/71H9A/CjLxqDomEHXUxuwYG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 03/07/2025 05:52, LI Qingwu wrote:
-> Some PWM LED chips have a dedicated enable GPIO.
-> This commit adds the support to specify such GPIO.
+--Sig_/71H9A/CjLxqDomEHXUxuwYG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+After merging the char-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-"Add a dedicated enable GPIO, because some PWM LED chips (e.g. foo bar
-models from baz boo) ..."
+In file included from include/linux/string.h:392,
+                 from include/linux/bitmap.h:13,
+                 from include/linux/cpumask.h:12,
+                 from arch/x86/include/asm/paravirt.h:21,
+                 from arch/x86/include/asm/irqflags.h:102,
+                 from include/linux/irqflags.h:18,
+                 from include/linux/spinlock.h:59,
+                 from include/linux/wait.h:9,
+                 from include/linux/wait_bit.h:8,
+                 from include/linux/fs.h:7,
+                 from include/linux/highmem.h:5,
+                 from drivers/misc/vmw_vmci/vmci_context.c:10:
+In function 'fortify_memset_chk',
+    inlined from 'ctx_fire_notification.isra' at drivers/misc/vmw_vmci/vmci=
+_context.c:254:3:
+include/linux/fortify-string.h:480:25: error: call to '__write_overflow_fie=
+ld' declared with attribute warning: detected write beyond size of field (1=
+st parameter); maybe use struct_group()? [-Werror=3Dattribute-warning]
+  480 |                         __write_overflow_field(p_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-Give us concrete, verifiable example where this is present. You can also
-upstream your DTS as a proof, works for me.
+Caused by commit
 
+  bfb4cf9fb97e ("vmci: Prevent the dispatching of uninitialized payloads")
 
-Best regards,
-Krzysztof
+I have used the char-misc tree from next-20250702 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/71H9A/CjLxqDomEHXUxuwYG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhmLN0ACgkQAVBC80lX
+0GwgZwgAh5gmEHbXMtRGa6eihN9LHWxtJBnX197tnv3XNC2CEO9cYCXEOZZvTS9F
+beaA2EERoYWGhzNzjiUf6lDoIwydkVdGv1+8UuBp/zS3lAnx5d/w8UoGdcb4geiu
+WPqKVcdTOlnmOtapajRsBbWSf+J3vPpVR7nmkLX96XHH7u5vQqvLX9/2uCwYyi+k
+3tdT8FptKtSWXv/Z44fDfQR9b0ekjz/QnmhvuXttJFk9YopEqBitzPoTvTAu2/cS
+Fzc5biZQGMxUSlinBg8QsdbHwdbMUCUm5BPOSwwArWBB8/6xENVamV61KRgpGPY8
+Jyobo25gRs2KNAE+5fUMxWQFzSk2nw==
+=bKPw
+-----END PGP SIGNATURE-----
+
+--Sig_/71H9A/CjLxqDomEHXUxuwYG--
