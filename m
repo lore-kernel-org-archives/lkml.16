@@ -1,109 +1,390 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03187296147
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECB293B72;
+	Thu,  3 Jul 2025 06:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524203; cv=none; b=Ru3x3y9rVC4S5wKpVDJr2JoRHg36vk5gS4CoJaPPnggXJXm5RoGjAQbwSijbOH0aT9/LinW53aIoZsa995A7ZbYlH5XYxXSEVvUvCbalgUYRNl4uUhgJ+qPqbksPlmklqK0nsH2+yFqLrRKgqduqb/wvejSQ11LdlgCA0G1Pbp4=
+	t=1751524214; cv=none; b=QbwcNjlCAs3ne4FURh48ZB0rtvSI3R00/mLOUxic05pDPIGN+ISKudHvYn8SyoTSrmM6li7d4SwjzuyhsdiJax460P+WRI6fguf6zJs8WQPkRKwXLw3llLP/XRkwcj7ZQUddK3WmGHMmNXfEYA0B+bgi09QtHahOU7IPmEv9Oa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524203; c=relaxed/simple;
-	bh=igRhDsuiSuXQRzp+0eQ1JsrZSJ5AY9mIOhpTpRULOVE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Z4dejoZMGRFqkT2GCRCREfVvs6hrEkdCpKm7030ck4dZeRTE4SDz2LlVuCPWbk815IENTSdxklvVDnhWhbYIEazF2bh09w+pOG9dikiPDBPIZQrLKejTmozBIVnoeNkxt+fqFixmUsCuU6LB3DJ9mKc/apaBvrn1yaT8iudoE4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=13.76.142.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from zju.edu.cn (unknown [115.197.243.13])
-	by mtasvr (Coremail) with SMTP id _____wAXEExVI2ZoJKfaAw--.10212S3;
-	Thu, 03 Jul 2025 14:29:42 +0800 (CST)
-Received: from linma$zju.edu.cn ( [115.197.243.13] ) by
- ajax-webmail-mail-app2 (Coremail) ; Thu, 3 Jul 2025 14:29:40 +0800
- (GMT+08:00)
-Date: Thu, 3 Jul 2025 14:29:40 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: "Greg KH" <gregkh@linuxfoundation.org>
-Cc: wkang77@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [PATCH v1 1/2] staging: gdm724x: fix type confusion in
- gdm_lte_event_rcv()
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
- 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
-In-Reply-To: <2025070343-halves-prison-c40f@gregkh>
-References: <20250703052723.14616-1-linma@zju.edu.cn>
- <2025070343-halves-prison-c40f@gregkh>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1751524214; c=relaxed/simple;
+	bh=eSXkixHs/0cyzFWPQ0oEqTRjQdv550guFtTqjdoVWBk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Q/g72YLEKzE62SUe0Jef8fcPQ37eIlMYD4KRobCq+lENQjtQealdDFb/egUfEq/V/a08MXqrH89ji6Mqc/M4CunveZT5zakSgKSBoZF9unrhsuERS3WgyHH2Me1D5UXT6052VzIEHrKiNvrjVpcdInpRNnyutjzQmdfOW1d8dCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=rojlmlop; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="rojlmlop"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 01429A01EB;
+	Thu,  3 Jul 2025 08:30:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=HV2KoaCWlJPbq6mOG4DYoW84XpdHe7KC1QwY8y5uXjs=; b=
+	rojlmlop1aAPybiJ+PsbhaQIeiIfZ4H5wvMyhkf6QEnaxRKaCtNriUsbRHlal7F8
+	B+hlvIlphrXNKCeBvs3cbWcspra2hF83D1CLNmKoEvp3i7fwGFaupE2rKWFl6aQU
+	biBbNR9WEEu1kFYFl1nhV1cCcqrjlBx6uY0ri0/6Hx4jGl0gl+EqoUTadBrM4HOK
+	vsrDPHaij1FcfOGDImaquum/ePawbuA/dPEmSU8EuwNPdJhGbJkMQUJJEFd9zwsk
+	2DljS5fVgPCeVsnzPRgkYM6fHavuhaaw58Iwtb4QSnSwrSkdSV1xbWbeSG0mbhBX
+	E1oLHimbJ6iog8c9nrsZgcd7hw+ErUT9hm9kPdCgEJQkD4p5B0PR7G+hOjCZks1N
+	Pmrq5o8nCLU7HIssn5YFB2gVrjWKylBiMcwMxar4zbVOSYxO1mC8PjjSgDeXYLnb
+	q+7HugJv4gknbcyI+k8mHcTj3v2mGOnLCYqOWNaSbe6Q0Hq8I046gJUfxs45hDp7
+	mw7ONLgCJ0CET6QGZYLCdDLwIDa2riKzudvM1u5W0Fm68rX0gLjqIyI8e4koyRhL
+	Hpm/X71OL2Y6LpTQHcS0tV4CPSFacAxitmzWhFLVSeCNaCm9VvmKGZcybUbUw+jE
+	Go9YDVqHP3ZdHyhyU3NC7Rt42/fFWn/vbTwdSdz7aoU=
+From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Date: Thu, 3 Jul 2025 08:30:07 +0200
+Subject: [PATCH v2] ARM: dts: imx6-sr-som: Replace license text comment
+ with SPDX identifier
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <97e5af3.9183.197cefa02cc.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:zC_KCgAnToVUI2ZowvxZAA--.11651W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwEQEmhlCw4LqQAAsq
-X-CM-DELIVERINFO: =?B?9E9y5AXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
-	APHlVyJpD759Nt3m89ewvKkHS2l85V1JX4pgBxrPTgKXn82pmPe1xoh9OFE5HRk2gjSVLO
-	fm3FMTiIbenwKZIMugowJ7SMZAUJS1HMGBlyRbnUeJ8zLClqYtuHwjweEWzeCw==
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF4Dury8GF4fJryxWFWrXrc_yoW8uw4rpa
-	y5uayrtrW8XF97Wan5GFW2gF42gr1xK348C3s3ta45Wr1DXay8JFyrKrW5A3s8AF95AryS
-	v3WUZ3y3Kw17uagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
-	AKI48G6xCjnVAKz4kxM4xvF2IEb7IF0Fy264kE64k0F24lFcxC0VAYjxAxZF0Ex2IqxwCF
-	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
-	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMVCEFcxC0VAYjxAxZFUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU8CJm5UUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250703-sr-som-dts-lic-v2-1-0395c9b776d9@prolan.hu>
+X-B4-Tracking: v=1; b=H4sIAG4jZmgC/3WNyw6CMBBFf4V07Zi2yiOu+A/Doi2DbQItmUGiI
+ fy7hb3Lk5x77iYYKSCLR7EJwjVwSDGDvhTCeRNfCKHPLLTUpaylBibgNEG/MIzBgVXV4OpKls5
+ qkUcz4RA+Z/DZZbaGESyZ6PyRmQwvSIfoAy+Jvufxqg7978eqQIHGpmzuWLnmVrczpdHEq3+Lb
+ t/3Hxw8LY/FAAAA
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+	<festevam@gmail.com>
+CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+X-Mailer: b4 0.13.0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751524207;VERSION=7994;MC=1480077994;ID=225091;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A296767155D6C726A
 
-SGVsbG8gR3JlZywKCj4gPiBAQCAtNTIyLDYgKzUyMiw5IEBAIHN0YXRpYyB2b2lkIGdkbV9sdGVf
-ZXZlbnRfcmN2KHN0cnVjdCBuZXRfZGV2aWNlICpkZXYsIHUxNiB0eXBlLAo+ID4gIHsKPiA+ICAJ
-c3RydWN0IG5pYyAqbmljID0gbmV0ZGV2X3ByaXYoZGV2KTsKPiA+ICAKPiA+ICsJaWYgKGRldi0+
-bmV0ZGV2X29wcy0+bmRvX29wZW4gIT0gZ2RtX2x0ZV9vcGVuKQo+ID4gKwkJcmV0dXJuOwo+IAo+
-IFdoeSBzaG91bGQgYSBkcml2ZXIgYmUgcG9raW5nIGFyb3VuZCBpbiBuZXRkZXZfb3BzPyAgVGhh
-dCBmZWVscyB3cm9uZywKPiB3aGF0IHdvdWxkIGV2ZXIgY2hhbmdlIHRoaXM/ICBXaHkgbm90IGZp
-eCB0aGF0IGluc3RlYWQ/Cj4gCj4gdGhhbmtzLAo+IAo+IGdyZWcgay1oCgpZZXMsIGl0IHNlZW1z
-IHRoYXQgY29tcGFyaW5nIG9wcyBpcyBxdWl0ZSBhbWJpZ3VvdXMgYW5kIHdlaXJkLiBIb3dldmVy
-LCBpbnZlc3RpZ2F0aW9uIG9uCmNvZGUgc2hvd3MgdmFyaW91cyBjaGVja3MgYWdhaW5zdCBuZXRf
-ZGV2aWNlLgoKLSBieSBgZGV2LT5wcml2X2ZsYWdzYC4gU2VlIGlzX3ZsYW5fZGV2KCkKYGBgCnN0
-YXRpYyBpbmxpbmUgYm9vbCBpc192bGFuX2Rldihjb25zdCBzdHJ1Y3QgbmV0X2RldmljZSAqZGV2
-KQp7CiAgICAgICAgcmV0dXJuIGRldi0+cHJpdl9mbGFncyAmIElGRl84MDJfMVFfVkxBTjsKfQpg
-YGAKCi0gYnkgYGRldi0+cnRubF9saW5rX29wcy0+a2luZGAuIFNlZSBsb29rdXBfaW50ZXJmYWNl
-KCkKYGBgCnN0YXRpYyBzdHJ1Y3Qgd2dfZGV2aWNlICpsb29rdXBfaW50ZXJmYWNlKHN0cnVjdCBu
-bGF0dHIgKiphdHRycywKICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBza19idWZmICpza2Ip
-CnsKICAgIGRldiA9IGRldl9nZXRfYnlfaW5kZXgoc29ja19uZXQoc2tiLT5zayksCiAgICAgICAg
-ICAgICAgICAgICAgICAgbmxhX2dldF91MzIoYXR0cnNbV0dERVZJQ0VfQV9JRklOREVYXSkpOwog
-ICAgLi4uCiAgICBpZiAoIWRldi0+cnRubF9saW5rX29wcyB8fCAhZGV2LT5ydG5sX2xpbmtfb3Bz
-LT5raW5kIHx8CiAgICAgICAgc3RyY21wKGRldi0+cnRubF9saW5rX29wcy0+a2luZCwgS0JVSUxE
-X01PRE5BTUUpKSB7CiAgICAuLi4KfQpgYGAKCi0gYnkgYGRldi0+dHlwZWAuIFNlZSBheDI1X2Rl
-dmljZV9ldmVudCgpCmBgYApzdGF0aWMgaW50IGF4MjVfZGV2aWNlX2V2ZW50KHN0cnVjdCBub3Rp
-Zmllcl9ibG9jayAqdGhpcywgdW5zaWduZWQgbG9uZyBldmVudCwKICAgICAgICAgICAgICAgICB2
-b2lkICpwdHIpCnsKICAgIHN0cnVjdCBuZXRfZGV2aWNlICpkZXYgPSBuZXRkZXZfbm90aWZpZXJf
-aW5mb190b19kZXYocHRyKTsKCiAgICAuLi4uLi4KCiAgICAvKiBSZWplY3Qgbm9uIEFYLjI1IGRl
-dmljZXMgKi8KICAgIGlmIChkZXYtPnR5cGUgIT0gQVJQSFJEX0FYMjUpCiAgICAgICAgcmV0dXJu
-IE5PVElGWV9ET05FOwpgYGAKCkFzIGZvciBwb2tpbmcgYXJvdW5kIGluIG5ldGRldl9vcHMsIHdl
-IGRpZG4ndCBrbm93IGlmIGl0IGlzIHRoZSBiZXN0IHNvbHV0aW9uLApqdXN0IGJlY2F1c2Ugc29t
-ZSBjb2RlIGRpZCBzaW1pbGFyIGNoZWNrcywgZS5nLgoKYGBgCnN0YXRpYyBzdHJ1Y3QgdGVhbSAq
-dGVhbV9ubF90ZWFtX2dldChzdHJ1Y3QgZ2VubF9pbmZvICppbmZvKQp7CiAgICBkZXYgPSBkZXZf
-Z2V0X2J5X2luZGV4KG5ldCwgaWZpbmRleCk7CiAgICBpZiAoIWRldiB8fCBkZXYtPm5ldGRldl9v
-cHMgIT0gJnRlYW1fbmV0ZGV2X29wcykgewogICAgICAgIC4uLiAKICAgIH0KfQpgYGAKCmFuZAoK
-YGBgCnN0YXRpYyBpbnQgbWx4NWVfc2V0X3ZmX3R1bm5lbCguLi4pCnsKICAgIHJvdXRlX2RldiA9
-IGRldl9nZXRfYnlfaW5kZXgoZGV2X25ldChvdXRfZGV2KSwgcm91dGVfZGV2X2lmaW5kZXgpOwoK
-ICAgIGlmICghcm91dGVfZGV2IHx8IHJvdXRlX2Rldi0+bmV0ZGV2X29wcyAhPSAmbWx4NWVfbmV0
-ZGV2X29wcyB8fCAuLi4gKSB7CiAgICAgICAgLi4uCiAgICB9Cn0KYGBgCgpGcm9tIG15IHBvaW50
-IG9mIHZpZXcsIHVzaW5nIGBkZXYtPnR5cGUvZmxhZ3MvcHJpdl9mbGFnc2AgY291bGQgYmUgYSBi
-ZXR0ZXIKY2hvaWNlIGlmIGl0J3Mgb2theSB0byBpbnRyb2R1Y2UgbW9yZSBkZWZpbml0aW9ucy4K
-ClVzaW5nIG5ldGRldl9vcHMgaXMgbW9yZSBzdHJhaWdodGZvcndhcmQuIE9yIG1heWJlIEkgc2hv
-dWxkIGp1c3QgY29tcGFyZSB0aGUKYC0+bmV0ZGV2X29wc2AgaW5zdGVhZCBvZiB0aGUgYC0+bmV0
-ZGV2X29wcy0+bmRvX29wZW5gPwoKCgpUaGFuc2sKTGlu
+Replace verbatim license text with a `SPDX-License-Identifier`.
+
+The comment heades mis-attributes this license to be "X11", but the
+license text does not include the last line "Except as contained in this
+notice, the name of the X Consortium shall not be used in advertising or
+otherwise to promote the sale, use or other dealings in this Software
+without prior written authorization from the X Consortium.". Therefore,
+this license is actually equivalent to the SPDX "MIT" license (confirmed
+by text diffing).
+
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+Changes in v2:
+- fix message tags
+- also patch solidsense files
+- Link to v1: https://lore.kernel.org/r/20250702-sr-som-dts-lic-v1-1-2e8584e6c837@prolan.hu
+---
+ arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts     | 38 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6qdl-solidsense.dtsi  | 38 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-brcm.dtsi | 38 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-emmc.dtsi | 38 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-ti.dtsi   | 38 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som.dtsi      | 38 +---------------------
+ 6 files changed, 6 insertions(+), 222 deletions(-)
+
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts b/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
+index 0e6a325df363..d929f131ff41 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
+@@ -1,43 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on dt work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-solidsense.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-solidsense.dtsi
+index 60e446ba8f52..d29a60225afc 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-solidsense.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-solidsense.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2021 Russell King <rmk@armlinux.org.uk>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/leds/common.h>
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-brcm.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-brcm.dtsi
+index e491f5c9d455..0d7e14a94305 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-brcm.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-brcm.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2013,2014 Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/gpio/gpio.h>
+ / {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-emmc.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-emmc.dtsi
+index ddca24414d26..3053a28c42cd 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-emmc.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-emmc.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2013,2014 Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ &iomuxc {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-ti.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-ti.dtsi
+index cd1e682f11ad..5a35436bb30a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-ti.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som-ti.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2013,2014 Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/gpio/gpio.h>
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som.dtsi
+index 7af74b203e39..6aea7bf06e7a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sr-som.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2013,2014 Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/gpio/gpio.h>
+ 
+
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250702-sr-som-dts-lic-b16fc7605cb2
+
+Best regards,
+-- 
+Bence Csókás <csokas.bence@prolan.hu>
+
 
