@@ -1,81 +1,100 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91662DE6F8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 15:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8145A86348;
+	Thu,  3 Jul 2025 15:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556294; cv=none; b=jBiU9t0nKfa+at12a4vGH8PMnaw8JziXZp6bf5nPCAGaMqp7xDZeNRK8yioPJVEKJJ+mt3CsCvGfYxzBpU5tLoda1yEmGSIwOHENJ6m4ejy8NgwQvbya7j6UeVPgIR1XMzmUrbHRgFkJRbQwBttRFhWP6gBIlmBAESHcFYTFt9I=
+	t=1751556315; cv=none; b=bzMOLdITlk2W3GUlusCn3NBFY9XudjKssC+WVISuXInydOBbCEg3d4o9m+yQfSjIYHbI9AxGZIAs8PTZqNG1rVLqHSYSJSTEOShE/U/98Q3bajnlvqGNIuJOslduGCm2v9a4Ymd6lJkM+U/x4PoI7l+FyCyv79mpMTOHfl5bcPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556294; c=relaxed/simple;
-	bh=nimh2wrjzwUAubhNUrY5HI4y+sVu3X6UHelg6hWX5Iw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TlHEgWiaYEIzYIZPPm2fbhtGyUYDMOAkDqhjy073VOw3H8wQ04xPG/jXfrs7dygcsJEV22jj0LptIpFfwJYrjzH1QqkB1cVwtBYlOlL2s5qxmSbaId0/dF5c7zRqXMDnNkfDDb3h88sqb9xOfkxv/nCPA+uIY/5sx/yvCzqGVgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FO7Aq2Cl; arc=none smtp.client-ip=158.69.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1751556315; c=relaxed/simple;
+	bh=r3+Unlqo2FtzbE9Z6aBKdXpwRkXeNoUleR1F70t0b7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Abfsn1Fz28TJzV2HIfeo2HPDY6I3GlmEmqDnSv9hUMwQnxmL9a9Hooi+xTmCGz5G8OUW9FZwMl50M0D8VYPtLwl5K3/kAOBEMvVULRABdonrEeT/8x6H3vRvCk1LX/N5oKJ+RzGDWh7A0x+o83+irq1+xLyxSvWm6dhR2Bkqf+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TEuT0pQ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FO7Aq2Cl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1751555897;
-	bh=nimh2wrjzwUAubhNUrY5HI4y+sVu3X6UHelg6hWX5Iw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FO7Aq2ClsUX1EoSVIZCdxcOBGyeAP0Q8vbYOBVli0RT+wf3JQSe8U+kVT3Q0HoDmQ
-	 Pp4lPVGsJYT5CM9ZpogZHN9j5gyw5Bh+EXs+NuKPaNZhiYMSxxzJqgjBpQgrlVf2hZ
-	 VIJM4iPRuu1zWClibnKE6m1Ew7NZ5KE+3t5FTtLfA1hEHneKXim9m1yfU9F7il7Tu4
-	 0wooZEVwet5xwEYt5KVP9HfxS4e4X6t1Deivm4bnmkviPNq7GOb65BhgjQ00JBnanE
-	 0XKCVz9vklRpkVByfo9h6QsG0qor6Ny1pBmTHGU4in6FfSipr1RhfsLF//Z6k6iTeC
-	 DJZFJHZq8WJeA==
-Received: from thinkos.internal.efficios.com (192-222-132-26.qc.cable.ebox.net [192.222.132.26])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4bY0lF4Lhhz1Mhg;
-	Thu,  3 Jul 2025 11:18:17 -0400 (EDT)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: 
-Date: Thu,  3 Jul 2025 11:18:14 -0400
-Message-Id: <20250703151816.9786-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TEuT0pQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69E4C4CEE3;
+	Thu,  3 Jul 2025 15:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751556315;
+	bh=r3+Unlqo2FtzbE9Z6aBKdXpwRkXeNoUleR1F70t0b7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TEuT0pQ/nkhZ5IFItc02fEx4881lwOelxh8aCbk992r235dN5Anqp5Pe7kz6Y6wcL
+	 EzY8/nupp35GIB9dtm1jztrcDuSES/YrUKzMAQziOtXjrjRXPDPB8jjGpSeQYv0H5U
+	 GUY+JqOIJAIWGIwNy83CipdZd8b6ZPeGXYVZ4fzI=
+Date: Thu, 3 Jul 2025 17:06:44 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/8] rust: device: introduce device::Internal
+Message-ID: <2025070329-ream-arrogance-0737@gregkh>
+References: <20250621195118.124245-1-dakr@kernel.org>
+ <20250621195118.124245-2-dakr@kernel.org>
+ <2025070110-renounce-blinks-b28f@gregkh>
+ <aGO7a3dsRdcjdBnb@pollux>
+ <aGPVcMEOImBA8RLB@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGPVcMEOImBA8RLB@pollux>
 
-From 8b020924c24dd1d0914ab04961b15ac040e59b70 Mon Sep 17 00:00:00 2001
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Date: Thu, 3 Jul 2025 11:14:45 -0400
-Subject: [RFC PATCH v4 0/2] mm: Fix OOM killer inaccuracy on large many-core systems
+On Tue, Jul 01, 2025 at 02:32:48PM +0200, Danilo Krummrich wrote:
+> On Tue, Jul 01, 2025 at 12:41:53PM +0200, Danilo Krummrich wrote:
+> > On Tue, Jul 01, 2025 at 11:26:47AM +0200, Greg KH wrote:
+> > > On Sat, Jun 21, 2025 at 09:43:27PM +0200, Danilo Krummrich wrote:
+> > > > Introduce an internal device context, which is semantically equivalent
+> > > > to the Core device context, but reserved for bus abstractions.
+> > > > 
+> > > > This allows implementing methods for the Device type, which are limited
+> > > > to be used within the core context of bus abstractions, i.e. restrict
+> > > > the availability for drivers.
+> > > > 
+> > > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > > > ---
+> > > >  rust/kernel/device.rs | 14 ++++++++++++++
+> > > >  1 file changed, 14 insertions(+)
+> > > > 
+> > > > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> > > > index 665f5ceadecc..e9094d8322d5 100644
+> > > > --- a/rust/kernel/device.rs
+> > > > +++ b/rust/kernel/device.rs
+> > > > @@ -261,6 +261,10 @@ pub trait DeviceContext: private::Sealed {}
+> > > >  /// any of the bus callbacks, such as `probe()`.
+> > > >  pub struct Core;
+> > > >  
+> > > > +/// Semantically the same as [`Core`] but reserved for internal usage of the corresponding bus
+> > > > +/// abstraction.
+> > > > +pub struct Internal;
+> > > 
+> > > Naming is hard :)
+> > > 
+> > > As this is ONLY for the bus code to touch, why not call it Bus_Internal?
+> > 
+> > BusInternal is better indeed!
+> 
+> I now remember that I first wanted to go for CoreInternal, but then went for
+> just Internal, since it thought it was unnecessary to be more specific. But I
+> now think CoreInternal would have been the correct pick.
 
-Introduce hierarchical per-cpu counters and use them for rss tracking to
-fix the per-mm RSS tracking which has become too inaccurate for OOM
-killer purposes on large many-core systems.
+Thanks for the long explainations that helped out a lot.  As I said on
+chat earlier, I agree with you now.  Can you respin this with
+CoreInternal and we can queue it up?
 
-The approach proposed here is to replace this by the hierarchical
-per-cpu counters, which bounds the inaccuracy based on the system
-topology with O(N*logN).
+Worst thing that happens is the api doesn't work out and we rework it
+based on real users :)
 
-Testing and feedback are welcome!
+thanks,
 
-Thanks,
-
-Mathieu
-
-Mathieu Desnoyers (2):
-  lib: Introduce hierarchical per-cpu counters
-  mm: Fix OOM killer inaccuracy on large many-core systems
-
- include/linux/mm.h                  |   8 +-
- include/linux/mm_types.h            |   4 +-
- include/linux/percpu_counter_tree.h | 108 ++++++++
- include/trace/events/kmem.h         |   2 +-
- kernel/fork.c                       |  31 ++-
- lib/Makefile                        |   1 +
- lib/percpu_counter_tree.c           | 393 ++++++++++++++++++++++++++++
- 7 files changed, 530 insertions(+), 17 deletions(-)
- create mode 100644 include/linux/percpu_counter_tree.h
- create mode 100644 lib/percpu_counter_tree.c
-
--- 
-2.39.5
+greg k-h
