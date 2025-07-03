@@ -1,252 +1,229 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3111A2E6115
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACC6264606
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542076; cv=none; b=oqr7heCx1YU25emDOBFoJfv8GXs3CbfaVTRXJuhvwyJ/20OU3upaLoB0b+CyX2NZyzxbG116EkBGByRwbvOyRcb2OmGAUTvGK8JP1sUJHgxnbH0x7DnPTz+6IDMxttdrTTMvTh1G7fEFtIrUCJtP/IoxPWpNLH6tE9VGq1J5omg=
+	t=1751542205; cv=none; b=WQuvkyDQF2dyVjBL4D065wU18YYlf3v1inXo110eXEVPeT+BnAbOV2xWeJwrqoq7wfcIwDUc00CPIb6vrKTqm1OFNw9dtaPNs+/aEo29C49SMs5XDiKL7g3ZZFJvv5g1iNY4xfxGrkfYV1vhQ6WUBjkKYj0rFPTwkznHlCM5hwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542076; c=relaxed/simple;
-	bh=dKp9sNBVKhCMWq2ozbMkBemUSa+iPERmFu+4dZggoQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qnoqtqOpzwcraTeiQ3/ER12EiV5XwljlY9jrdp8MvtMo9HQ+hSuXguEJRsVsO3ACAagWZE1fivWr2U/w1xKC/3qYMu3XKPhkHRLeP3sd1ksreeLVUTC9badKt9DJuqkqIBGQohoPYL6lRBfdgTx213K1u0QTLtpKnI3c7QbnuKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=cxqeRkAm; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1751542205; c=relaxed/simple;
+	bh=4rezQ5xvhatNmBndtj5h/WkqxFzjVMWMPkWaOIY9VU8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UlIwpRvqY8TGmQiItw/Qvb20JAc6I0Ia3R+m/l7pucseXtPDIYO0uBw53FIKtgQdkDJIHrE0RPTMeD0H/SJkGEmD9DwO7fKqeN3fMdrmBgH06a6b75YK8Wtv2hofB+nfHNC9OK4NvLZNzYgFOt6EcIgPaXKJ0+t1glt4bMDdloY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e3303z5P; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="cxqeRkAm"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0bde4d5c9so1444871566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:27:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e3303z5P"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-711d4689084so85828217b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1751542072; x=1752146872; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1751542202; x=1752147002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=amy1aSEWJFLjdFKle4TRafGT1dI6FK2dRgoWrJhpEoE=;
-        b=cxqeRkAmo+uhAkoMMQwvBP/akaaA+fW/9V9vZNVm2+J3NsvGJPkfzEQDkhNz6BvmOh
-         3sy7SDwTPiykFPgHxFKqPDV70lgxb9VitxB2zID8UhJEFqbjSr6/beF1A+paHxzJLbV2
-         fCsPFX0X2dXVHFISOIdTo8bHJzzw2i/2PWJU1fYLb+tV1f0mIKR8nnHFEOgX2m69aacR
-         NgtAX6hIBrFtiKatkSlnHgVieJORSNq7h/WbY5fRfJUzCPYMt6OG0G9qmrBkr2OuIoFH
-         BjAsSdZRFHbIo+yxKwu60qLSEiRdqqKoSmqYbWC/MXA7Fwv6q3tItqmJmsLAJS2Nzb1K
-         iL3w==
+        bh=wZmXyGV2GnPjrvT+9+iiIPALoR0f06UEdAlM9BOBaW4=;
+        b=e3303z5PTKUVlfdvOvCLVR4wZEX24DtBVDZjvqTmrB+i/CwENOvePw2AbMNhtTvLpd
+         RidbYIP13sxOWnh2yhZfqTS0rcPDwH7D0nNSQq42zUeA7vDwnhzV7OGUZ+eO3Uvl/H/m
+         TlGdMA6PyBggTUtaGODZVCEVxezNagdBUOtHjI4mbMmRdbB3m8jvmlxm0oKGwL9uCRAQ
+         dtKnQEUPeYKN1s/cfDVY3B3+3ZPu+tvpMrf/Br6wmStSO2+nap2IlSiKf89UTpfA5foj
+         KNjohHsfThzdOV+yXynMeQnwKWr+4+lh3r1szvMYHU3b1EumYIcwAchfTnlB/Q28XZqJ
+         ib0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542072; x=1752146872;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751542202; x=1752147002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=amy1aSEWJFLjdFKle4TRafGT1dI6FK2dRgoWrJhpEoE=;
-        b=AgCLWEErd6oRf+NPejpyBa7x42zpbi5AhwcyP5kCGu3jLs73gHRyRs3HpwhFFFos6E
-         GqneWtC8WB63Eo59i5pdqvmAnqzuRR8CWOaBCXKahRNjSshgNamcfv9cFqrtl5ZY4NLE
-         KNMZdukaSeotOPlc5qlqRxjhlaWSbCW8zAKXiEZiLkzMaNzWB63U3Ccc/dwM3F7ZpReA
-         90ICoP6QYqbjoNzAMjexWj+HOMqR8dQZYSB3P2znWIPwEHR9ioO394AF6tJZqXCCVAJX
-         aNDBldn6r3SJ8v0pK3/WBVkhqH2B+iahvsKnC8QAnfjgqH7/A7rbcwrBZAJ5dJTEy5AI
-         rYnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIcpkfMqSiOv9eEq95pNmkJC0SltSXCksT1OAuUsfZvGAh/fMgZxFWJa7RAX/Jd7PUXvNieudTNEDjaUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwuG4eXpV+G57O+0bOB6z+Fl3HZabHEvd1rH3AbjRm7DbXtij1
-	FXtlPh+MrZ18TIJSLhMa4ZjlYHiK7eSZ5RioDTMmOeRjTpcBLifN8VRB3hqVFnpqkPs=
-X-Gm-Gg: ASbGncupUGptYNKyuezO/ld8/KzZYPDD9ugunM/4dnP9dG3/eylzL7WQJHbjAw/arFK
-	OYnlk4jINnn2MipMMi3fGSd+RMEpwnUkEt4lECvFLqdfpKT1Kx0uSWwSKng/mA6SMa7vMYHWF3R
-	NSH8RDizf50P3PqxuKoPRfrU4ArEtwe02BlEjGoqyShyrU0pCDPtgwh+VIZUvXL9X0oXZyTozq3
-	TZq49aIZTQKGEohHa1M0PmLl6kBQUAyG6R+CdRPZkoQoBru07vS826JvEO1SEA/wd+DA1FnWn4p
-	3UoGFKivbcPcoR6o87hX6aPoKyFZhxxlHGDR8dNXZvuwPUzxuCeN/q0T9B1dOB2eUjK1BpSlfKH
-	oYSqztolQVBCf8cU=
-X-Google-Smtp-Source: AGHT+IGtvsJyDMQsLfUDl9utWzUCxFT2n50ILIV0XhgAq1dND93ylmRMS+yE9TxwtIdCeTyEpsNdFg==
-X-Received: by 2002:a17:907:d644:b0:ae3:cd73:efde with SMTP id a640c23a62f3a-ae3d8b1b1d4mr273821366b.44.1751542072208;
-        Thu, 03 Jul 2025 04:27:52 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a75fsm1247016966b.67.2025.07.03.04.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:27:51 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: linux@armlinux.org.uk,
-	gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	andersson@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	wsa+renesas@sang-engineering.com,
-	ulf.hansson@linaro.org,
-	mathieu.poirier@linaro.org,
-	vkoul@kernel.org,
-	yung-chuan.liao@linux.intel.com,
-	pierre-louis.bossart@linux.dev,
-	broonie@kernel.org,
-	robh@kernel.org,
-	jirislaby@kernel.org,
-	saravanak@google.com,
-	jic23@kernel.org,
-	dmitry.torokhov@gmail.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	bhelgaas@google.com,
-	geert@linux-m68k.org,
-	linux-iio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	fabrizio.castro.jz@renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v5 3/3] driver core: platform: Drop dev_pm_domain_detach() call
-Date: Thu,  3 Jul 2025 14:27:08 +0300
-Message-ID: <20250703112708.1621607-4-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com>
+        bh=wZmXyGV2GnPjrvT+9+iiIPALoR0f06UEdAlM9BOBaW4=;
+        b=IOCKVZoS9WI66ZAj9DEn4eiqFSu2DwYL3xxtnuseZT1eua6LFGGKFmLkBvW8CNr53/
+         knm+euWBqkHMtEe3qsD5moneJvQ4oGkmYfGA57pN2fu0kUbgKqQ37/t6+p9PezZmAnB2
+         1BduaF4QSDsWO6XoTZFDx4c2uo6zbp9Zw9uxPz551F8iqxSBLHFgSoFuHR10Rsj+hY45
+         ugZDLOsXFRYooqGxertwXxW952C6uUlHIq0nqZMA4I1mPf3A1BdzyuGOuZw5OWvIfMw4
+         tabEe6hWBsekUU4qDmyO12KwFgr8MOoyejehzTFyi+37IkabbZwuQ7wCPkJxOrjA0t+v
+         x7+g==
+X-Forwarded-Encrypted: i=1; AJvYcCW0VDjsSBl8+w68AKVVzky1fxYUFTrTcKwhQYP8hy3QYmH0rnoboZEOgqsesNGqWbzE2muKVluGRePnqgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRDlJYCrtCFJvwT5LtiNZUBXAcGJER7aVRhEOH5O3AUFeUN9Fk
+	MJkLHd+z/gxl/Xw8fyAIKSIjVmIdx8K/dFeFsjTpJ10T9bIVqYBt+0b+r/Aywdv+bwkfNYTpLBa
+	NAVhjPWYmzXeCjn7ODtiXQ+PFctbwTc0XEohyoc8vFQ==
+X-Gm-Gg: ASbGnctU5Uc0nHuk9mX2zDRpX3AnoQ7SRK1yYcblQgM/lUOa9XylcgZ5QJdH7tTVCMg
+	AekQ03+LXZgwHbsjVN1RPN8cy0JpgkgDuMNzOAhmMjEM7K6MFTvhBC9kQmJo+sjgJdiA/2R9/+i
+	nadYV+HB5LbVC70zfQ6bPIZANdJ+MXQOOmiDpF6p8cg3+u
+X-Google-Smtp-Source: AGHT+IG6OfLZXa8uznpOhK3VFg2Dni19BCh2d0WU1ZI2OOuaAG3B7tP6RIZi0qM5DF0QSon7SQc8focX3HYudW0t/AM=
+X-Received: by 2002:a05:690c:386:b0:710:e4c4:a92f with SMTP id
+ 00721157ae682-7164d305daemr79996497b3.5.1751542202281; Thu, 03 Jul 2025
+ 04:30:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1750943549.git.benoit.monin@bootlin.com> <2a43386ffef4012530ca2421ad81ad21c36c8a25.1750943549.git.benoit.monin@bootlin.com>
+In-Reply-To: <2a43386ffef4012530ca2421ad81ad21c36c8a25.1750943549.git.benoit.monin@bootlin.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 3 Jul 2025 13:29:26 +0200
+X-Gm-Features: Ac12FXyN0y_TiN8FVImkIhaYASrLJPPgJpXiPzCWiGCMjeDhQ7YGCgW8xXzMr1U
+Message-ID: <CAPDyKFpxfn+kh8r39Fwoseh=k7rtwWYJr-A9FqMLK4OSiGBGZw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: sdhci-cadence: tune multi-block read gap
+To: =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	=?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, 26 Jun 2025 at 16:44, Beno=C3=AEt Monin <benoit.monin@bootlin.com> =
+wrote:
+>
+> From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+>
+> Additional tuning required for multi-block read command.
+> Implement it accordingly to Cadence recommendation.
+>
+> 2 registers used: HRS37 and HRS38. To HRS37, SD interface mode programmed=
+,
+> this selects HRS38 slot - there is separate slot for every SD interface
+> mode. HRS38 contains gap parameter,
+> it is selected by starting with gap=3D0 and sending multi-block read comm=
+and.
+> gap incremented until multi-block read succeeds.
+>
+> As of now, this tuning executed for HS200 only
+>
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+> Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
+> ---
+>  drivers/mmc/host/sdhci-cadence.c | 142 ++++++++++++++++++++++++++++++-
+>  1 file changed, 141 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-ca=
+dence.c
+> index 27bd2eb29948..6dcf7ae0c99d 100644
+> --- a/drivers/mmc/host/sdhci-cadence.c
+> +++ b/drivers/mmc/host/sdhci-cadence.c
+> @@ -36,6 +36,23 @@
+>  #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400      0x5
+>  #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400ES    0x6
+>
+> +/* Read block gap */
+> +#define SDHCI_CDNS_HRS37               0x94    /* interface mode select =
+*/
+> +#define   SDHCI_CDNS_HRS37_MODE_DS             0x0
+> +#define   SDHCI_CDNS_HRS37_MODE_HS             0x1
+> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR12      0x8
+> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR25      0x9
+> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR50      0xa
+> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR104     0xb
+> +#define   SDHCI_CDNS_HRS37_MODE_UDS_DDR50      0xc
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_LEGACY     0x20
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_SDR                0x21
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_DDR                0x22
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS200      0x23
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400      0x24
+> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400ES    0x25
+> +#define SDHCI_CDNS_HRS38               0x98    /* Read block gap coeffic=
+ient */
+> +#define   SDHCI_CDNS_HRS38_BLKGAP_MAX          0xf
+>  /* SRS - Slot Register Set (SDHCI-compatible) */
+>  #define SDHCI_CDNS_SRS_BASE            0x200
+>
+> @@ -251,6 +268,123 @@ static int sdhci_cdns_set_tune_val(struct sdhci_hos=
+t *host, unsigned int val)
+>         return 0;
+>  }
+>
+> +/**
+> + * mmc_send_mb_read() - send multi-block read command
+> + * @host: MMC host
+> + *
+> + * Sends multi-block read command, CMD23/CMD18/CMD12, ignore read data
+> + *
+> + * Return: error code
+> + */
+> +static int mmc_send_mb_read(struct mmc_host *host)
+> +{
+> +       const int blksz =3D 512;
+> +       const int blocks =3D 32;
+> +       struct scatterlist sg;
+> +       struct mmc_command sbc =3D {
+> +               .opcode =3D MMC_SET_BLOCK_COUNT,
+> +               .arg =3D blocks,
+> +               .flags =3D MMC_RSP_R1 | MMC_CMD_AC,
+> +       };
+> +       struct mmc_command cmd =3D {
+> +               .opcode =3D MMC_READ_MULTIPLE_BLOCK,
+> +               .arg =3D 0,
+> +               .flags =3D MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC,
+> +       };
+> +       struct mmc_command stop =3D {
+> +               .opcode =3D MMC_STOP_TRANSMISSION,
+> +               .arg =3D 0,
+> +               .flags =3D MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC,
+> +       };
+> +       struct mmc_data data =3D {
+> +               .flags =3D MMC_DATA_READ,
+> +               .blksz =3D blksz,
+> +               .blocks =3D blocks,
+> +               .blk_addr =3D 0,
+> +               .timeout_ns =3D  800000000,       /* 800ms */
+> +               .timeout_clks =3D 1000,
+> +               .sg =3D &sg,
+> +               .sg_len =3D 1,
+> +       };
+> +       struct mmc_request mrq =3D {
+> +               .sbc =3D &sbc,
+> +               .cmd =3D &cmd,
+> +               .data =3D &data,
+> +               .stop =3D &stop,
+> +       };
+> +       int size =3D blksz * blocks, err =3D 0;
+> +       u8 *data_buf;
+> +
+> +       data_buf =3D kzalloc(size, GFP_KERNEL);
+> +       if (!data_buf)
+> +               return -ENOMEM;
+> +
+> +       sg_init_one(&sg, data_buf, size);
+> +
+> +       mmc_wait_for_req(host, &mrq);
+> +
+> +       if (sbc.error) {
+> +               err =3D sbc.error;
+> +               goto out;
+> +       }
+> +
+> +       if (cmd.error) {
+> +               err =3D cmd.error;
+> +               goto out;
+> +       }
+> +
+> +       if (data.error) {
+> +               err =3D data.error;
+> +               goto out;
+> +       }
+> +
+> +out:
+> +       kfree(data_buf);
+> +       return err;
+> +}
 
-On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
-clocks are managed through PM domains. These PM domains, registered on
-behalf of the clock controller driver, are configured with
-GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
-clocks are enabled/disabled using runtime PM APIs. The power domains may
-also have power_on/power_off support implemented. After the device PM
-domain is powered off any CPU accesses to these domains leads to system
-aborts.
+The above function does not belong in a host driver. It's the core's
+responsibility to create and manage requests/commands.
 
-During probe, devices are attached to the PM domain controlling their
-clocks and power. Similarly, during removal, devices are detached from the
-PM domain.
+That said, I wonder if we really need a multiple-block-read - or if we
+can just read the ext-CSD from the eMMC, as it also allows us to
+exercise the DATA lines?
 
-The detachment call stack is as follows:
+If reading ext CSD is okay, we already have mmc_get_ext_csd() being
+exported and available for host drivers to use. In fact mtk-sd is
+already using it for the similar reason.
 
-device_driver_detach() ->
-  device_release_driver_internal() ->
-    __device_release_driver() ->
-      device_remove() ->
-        platform_remove() ->
-          dev_pm_domain_detach()
+[...]
 
-During driver unbind, after the device is detached from its PM domain,
-the device_unbind_cleanup() function is called, which subsequently invokes
-devres_release_all(). This function handles devres resource cleanup.
-
-If runtime PM is enabled in driver probe via devm_pm_runtime_enable(), the
-cleanup process triggers the action or reset function for disabling runtime
-PM. This function is pm_runtime_disable_action(), which leads to the
-following call stack of interest when called:
-
-pm_runtime_disable_action() ->
-  pm_runtime_dont_use_autosuspend() ->
-    __pm_runtime_use_autosuspend() ->
-      update_autosuspend() ->
-        rpm_idle()
-
-The rpm_idle() function attempts to resume the device at runtime. However,
-at the point it is called, the device is no longer part of a PM domain
-(which manages clocks and power states). If the driver implements its own
-runtime PM APIs for specific functionalities - such as the rzg2l_adc
-driver - while also relying on the power domain subsystem for power
-management, rpm_idle() will invoke the driver's runtime PM API. However,
-since the device is no longer part of a PM domain at this point, the PM
-domain's runtime PM APIs will not be called. This leads to system aborts on
-Renesas SoCs.
-
-Another identified case is when a subsystem performs various cleanups
-using device_unbind_cleanup(), calling driver-specific APIs in the process.
-A known example is the thermal subsystem, which may call driver-specific
-APIs to disable the thermal device. The relevant call stack in this case
-is:
-
-device_driver_detach() ->
-  device_release_driver_internal() ->
-    device_unbind_cleanup() ->
-      devres_release_all() ->
-        devm_thermal_of_zone_release() ->
-          thermal_zone_device_disable() ->
-            thermal_zone_device_set_mode() ->
-              struct thermal_zone_device_ops::change_mode()
-
-At the moment the driver-specific change_mode() API is called, the device
-is no longer part of its PM domain. Accessing its registers without proper
-power management leads to system aborts.
-
-Drop the call to dev_pm_domain_detach() from the platform bus remove
-function and rely on the newly introduced call in device_unbind_cleanup().
-This ensures the same effect, but the call now occurs after all
-driver-specific devres resources have been freed.
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v5:
-- dropped tab in the call traces from patch description
-- used PD_FLAG_ATTACH_POWER_ON, PD_FLAG_DETACH_POWER_OFF
-
-Changes in v4:
-- dropped devm_pm_domain_attach() approach
-- adjusted patch description to reflect this
-
-Changes in v3:
-- adjusted the call to devm_pm_domain_attach() as it now gets
-  2 parameters
-
-Changes in v2:
-- dropped the devres group open/close approach and use
-  devm_pm_domain_attach()
-- adjusted patch description to reflect the new approach
-
- drivers/base/platform.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index df1ec34fdf56..09450349cf32 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1396,15 +1396,13 @@ static int platform_probe(struct device *_dev)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = dev_pm_domain_attach(_dev, PD_FLAG_ATTACH_POWER_ON);
-+	ret = dev_pm_domain_attach(_dev, PD_FLAG_ATTACH_POWER_ON |
-+					 PD_FLAG_DETACH_POWER_OFF);
- 	if (ret)
- 		goto out;
- 
--	if (drv->probe) {
-+	if (drv->probe)
- 		ret = drv->probe(dev);
--		if (ret)
--			dev_pm_domain_detach(_dev, true);
--	}
- 
- out:
- 	if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
-@@ -1422,7 +1420,6 @@ static void platform_remove(struct device *_dev)
- 
- 	if (drv->remove)
- 		drv->remove(dev);
--	dev_pm_domain_detach(_dev, true);
- }
- 
- static void platform_shutdown(struct device *_dev)
--- 
-2.43.0
-
+Kind regards
+Uffe
