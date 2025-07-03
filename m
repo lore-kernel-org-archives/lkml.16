@@ -1,201 +1,184 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC819288C15
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3C7242D80
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535053; cv=none; b=BAkqVkaCKrn7RDLffiQThCagRawyzmC68hx9xd2cRqqkedY3LG1MtUQsoNcZvQBau/MjwV3pXxgTNvGxbydEAa8QA3Q+uzN0Apvabk5oFN1VjVYyaPLz0+ans8zA9BmSAPALAV7azBqpfdbVE69BAkxQsgdfz+tqOibnMaSobww=
+	t=1751535078; cv=none; b=J38H5xlh1l2sM0sHidfR2SITv0bXz6/RxCpngxXtRJUSFtmzjpyOVznXsqJYObGTUVUxemumARDRLFhDVj7W/vCWs0asSFXK2zwlhQmwKOil61+TlztSsFiWXvjKD/iIDAs5q01RiNiMh/keTpTudgfm3tJVHxvr18YHbjI/BFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535053; c=relaxed/simple;
-	bh=5dEuxX6YNR/26yYDBwOG+R9/sOuOWGvFuUFdmXGa/us=;
+	s=arc-20240116; t=1751535078; c=relaxed/simple;
+	bh=TuOOe17TTK0GmQ0tDt79qSc+86xnI17yc0LFNt1uwAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cfMtV7wX1bb+K9YrWUibl0oUxOwIx7YqFeKOciCckKjwLJflABOOrIQbPGrJpvkINBFnJHs0EUtXICS/0pNmiYpSvL/aHq1QFID5RAZG/8l6BRaxiJMTvy9QoN6/IKlTH2Cf5UfHu4l1j64NTVTs7yBLsdWHFfM3+vvQkKRgCVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 880E668C4E; Thu,  3 Jul 2025 11:30:43 +0200 (CEST)
-Date: Thu, 3 Jul 2025 11:30:42 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Ben Copeland <ben.copeland@linaro.org>,
-	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org,
-	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
-	sagi@grimberg.me, iommu@lists.linux.dev,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <20250703093042.GA7387@lst.de>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com> <20250630133343.GA26040@lst.de> <aGLyswGYD6Zai_sI@kbusch-mbp> <20250701132936.GA18807@lst.de> <aGRMilWhgF4z0WOf@kbusch-mbp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1pRdCa7VufEpd/YJwh+DOWprBK5gXVFqy1aFToGSdaDDFjI0mP3IZp0AfuIGpDg5jsXUnsJghQT0ED/xDuovkf3XXfzGmSKFx3nGWvhS7d7BDAFhbHRoVFKXUSyxNn6/+0cpeu6UNCyrTBo7a7l8KiG2OjzzopQqjghf3ZTpKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZJ0QpDZU; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZJ0QpDZU"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235ef62066eso101021835ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751535076; x=1752139876; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KYfn57qzkkmG/aFpndf/jcsizGLt8T7mJq7PMwyO3ks=;
+        b=ZJ0QpDZU0gZw+/ekmPbtcgxXuNpf2zz0Rx+6g8GJIrKPOqQzRd4uBc5Gb1GVg9Wkof
+         Syn2vpGr8bgHmi0PZWyaS7y+8x0OuobhmNzhE+fQDxEf1AI3b+MMDnFaszevYi4CuhRE
+         TZDAUKySD90MyFkJMNzI0bSjoduBOh6G8u5+wVswIB75rtEqdlc2QS8c/23zvWVmMala
+         P37UuXzFj1DpwHFnIcCPylCEBDid9nyuOZwXsfz9iCUa3JlXu0zpJ4h1xD67atgoOpiT
+         QbxqQwNDJsA42+6V6u9f6yoglM8kWLpOMYh1sxRvucVmp1E14hIGE7UjhXDuFsrTe/Rx
+         zWUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751535076; x=1752139876;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KYfn57qzkkmG/aFpndf/jcsizGLt8T7mJq7PMwyO3ks=;
+        b=urdC8h5zamGMlGzb9PTIk3VclfICmDJyLqVDR/OIpow5XtFnjzeI9YpNOyLy1oHWPE
+         w+UlPEre5EslzNv0do3GpZOH7JtFslUqowZcg+sTdfDfnhwjs8aKsnGo8IFgFNyzd7qz
+         4hTMrhAHPEbeaGAx+k6t5Q41KmQKrFAiaP/UR0yWOOVen5YaY7nbugP56OxVejwS9zNG
+         GkK61QTO1g7yKzgmW9ozJwCJiYsh9pDJb8snhgU6mOurKYsorbTYDLTOwGHXnJliD9On
+         gC/Tz91ZFsYTTqgQk63beq5qfYmT8Tf/rpBvQ2f2B3ksPMapHj37TzMitzuqsQZzqi9v
+         yCuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUV9IS5fMAM5rYy0EZ5QenFB83GdSr3u23Q+sNcMk/QIBteW5FZNVwcIikYQkqw6asCHVDpwMYfrbSKyN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7QykMdOuH3s21Dy5GwGMvQ9zN/Ar85FRltkPH5EW9p90oNHgy
+	b8oL7Zhjkegzrl8pFGapsZfnPYT6rN33DNpw511FjGQMHy6NaPs0Sh5wDeMUQFrzXD8=
+X-Gm-Gg: ASbGncvdo5Cxv28MPr3cpagMrEoW3RQ9zICBUlAYs5cWLIt9mSLyaU54Q1qIVvOya4C
+	QzN1STq+HshGlJ+Fx/QH/eDCPRmhqI7VhEVNNBXbCGdeB0cjXXI4m1EXXW62UlQB26c5gi0/IBn
+	JY1W0P52ZaRFmSd3c/6nkJ0CIwDoXJl1qgNrMrxJBA5nLGqbKa4K6w+bQM6uEk5OBu0EfLFISqg
+	MNWHSn4inly9Mu/vED+QGgfaQQzgcYWPb/4MTq11XM/5uJ1UvC83Li1259dHSECkKujVmdTGaDt
+	Z76PBfGrD8qqMcq1mpS05yXM0U2y4qkRedK3SaHSTrHe+01t/7fe+0UcZpP3kZdjpThM8w==
+X-Google-Smtp-Source: AGHT+IHQ535n0QA2COW4KxgJhYDC5l8yNht6HeovLAUQ6LzoicprfT4zy9/VUUX2qQcf/7mXsoAJng==
+X-Received: by 2002:a17:903:19e7:b0:234:d292:be7a with SMTP id d9443c01a7336-23c6e4e4c8fmr85926675ad.1.1751535076424;
+        Thu, 03 Jul 2025 02:31:16 -0700 (PDT)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f0babsm158604535ad.58.2025.07.03.02.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 02:31:15 -0700 (PDT)
+Date: Thu, 3 Jul 2025 15:01:00 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
+Message-ID: <aGZN1HzGk1nBWEHw@sunil-laptop>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-16-apatel@ventanamicro.com>
+ <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
+ <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
+ <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
+ <aGVK7NxRdDIGRzNR@sunil-laptop>
+ <CAJZ5v0hTzrxqfejxSxqh9igiDp=8LkBw+FGSf9CJ7j3RyTJLBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aGRMilWhgF4z0WOf@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hTzrxqfejxSxqh9igiDp=8LkBw+FGSf9CJ7j3RyTJLBQ@mail.gmail.com>
 
-On Tue, Jul 01, 2025 at 05:00:58PM -0400, Keith Busch wrote:
-> On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
-> > Yes, that's broken, and I remember fixing it before.  A little digging
-> > shows that my fixes disappeared between the oct 30 version of Leon's
-> > dma-split branch and the latest one somewhere.  Below is what should
-> > restore it, but at least when forcing my Intel IOMMU down this path it
-> > still has issues with VPTEs already set.  So maybe Bob should not try
-> > it quite yet.  I'll try to get to it, but my availability today and
-> > tomorrow is a bit limited.
+On Wed, Jul 02, 2025 at 06:56:48PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jul 2, 2025 at 5:06 PM Sunil V L <sunilvl@ventanamicro.com> wrote:
+> >
+> > On Wed, Jul 02, 2025 at 02:39:30PM +0200, Rafael J. Wysocki wrote:
+> > > On Wed, Jul 2, 2025 at 1:38 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Wed, Jul 2, 2025 at 7:16 AM Anup Patel <apatel@ventanamicro.com> wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
+> > > > > >                                           const char *propname, const char *nargs_prop,
+> > > > > >                                           unsigned int args_count, unsigned int index,
+> > > >
+> > > > > >         const struct acpi_device_data *data;
+> > > > > >         struct fwnode_handle *ref_fwnode;
+> > > > > >         struct acpi_device *device;
+> > > > > > +       unsigned int nargs_count;
+> > > > > >         int ret, idx = 0;
+> > > >
+> > > > > > +                       nargs_count = acpi_fwnode_get_args_count(device, nargs_prop);
+> > > > >
+> > > > > I think it should work the same way as it used to for the callers that
+> > > > > pass args_count, so maybe
+> > > > >
+> > > > > if (!args_count)
+> > > > >         args_count = acpi_fwnode_get_args_count(device, nargs_prop);
+> > > >
+> > > > But this is different variable.
+> > >
+> > > Of course it is different.  It is an acpi_fwnode_get_reference_args() parameter.
+> > >
+> > > > > >                         element++;
+> > > > > > -
+> > > > > >                         ret = acpi_get_ref_args(idx == index ? args : NULL,
+> > > > > >                                                 acpi_fwnode_handle(device),
+> > > > > > -                                               &element, end, args_count);
+> > > > > > +                                               &element, end,
+> > > > > > +                                               nargs_count ? nargs_count : args_count);
+> > > > >
+> > > > > And this change would not be necessary?
+> > > >
+> > > > This is not the same check as proposed above.
+> > >
+> > > No, it is not.
+> > >
+> > > It just makes the function work the same way it did before the change
+> > > for the callers who passed nozero args_count and so they might be
+> > > forgiven expecting that it would be taken into account.
+> >
+> > But if we do like this, the expectation of
+> > fwnode_property_get_reference_args() will differ for DT and ACPI, right?
+> > I mean nargs_prop should take higher precedence than nargs.
 > 
-> Let's say we're using ARM64 SMMU configured with 64k granularity like I
-> showed earlier.
+> So you basically want acpi_fwnode_get_reference_args() to take
+> nargs_prop into account (which could be explained much cleaner in the
+> patch changelogs).
 > 
-> Now let's send a read command with 128k transfer, and let's assume the
-> payload is two 64k aligned physical segments, so we have 2 bvecs.
+Sure. Let me improve the commit message in the next version.
+.
+> Also, your changes don't modify the behavior of
+> __acpi_node_get_property_reference() AFAICS, so this is OK.
 > 
-> Since nvme's virtual boundary is smaller than the iommu's granule, we
-> won't attempt to coalesce. We instead iommu map each bvec segment
-> individually.
-> 
-> And let's say each segment just so happens to get consecutive IOVA's.
-> The mapping side had done each segment individually, but your proposal
-> here will assume the contiguous dma_addr ranges were done as a single
-> larger mapping. Is that okay?
+That's correct.
 
-Not on the DMA API level, and depending on the implementation also
-not in practice.
+> Never mind then, but you could pass nargs_prop along with the
+> additional device parameter to acpi_get_ref_args() and make that
+> function obtain the nargs_prop value.  In the patch, you need to get
+> the nargs_prop value before calling it anyway in both places in which
+> it is used.
+That's better. Let me update acpi_get_ref_args() itself in the next
+version.
 
-I think the idea to reconstruct the dma addresses from PRPs should
-be considered a failure by now.  It works fine for SGLs, but for
-PRPs we're better off just stashing them away.  Bob, can you try
-something like the patch below?  To be fully safe it needs a mempool,
-and it could use some cleanups, but it does pass testing on my setup
-here, so I'd love to see if if fixes your issue.
+Thanks!
+Sunil
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f5cf90ddc3e9..f1242e321a58 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -262,6 +262,11 @@ enum nvme_iod_flags {
- 	IOD_SINGLE_SEGMENT	= 1U << 2,
- };
- 
-+struct dma_vec {
-+	dma_addr_t addr;
-+	unsigned int len;
-+};
-+
- /*
-  * The nvme_iod describes the data in an I/O.
-  */
-@@ -274,6 +279,8 @@ struct nvme_iod {
- 	unsigned int total_len;
- 	struct dma_iova_state dma_state;
- 	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
-+	struct dma_vec *dma_vecs;
-+	unsigned int nr_dma_vecs;
- 
- 	dma_addr_t meta_dma;
- 	struct sg_table meta_sgt;
-@@ -676,42 +683,12 @@ static void nvme_free_prps(struct request *req)
- 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
- 	struct device *dma_dev = nvmeq->dev->dev;
- 	enum dma_data_direction dir = rq_dma_dir(req);
--	int length = iod->total_len;
--	dma_addr_t dma_addr;
--	int i, desc;
--	__le64 *prp_list;
--	u32 dma_len;
--
--	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
--	dma_len = min_t(u32, length,
--		NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
--	length -= dma_len;
--	if (!length) {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		return;
--	}
--
--	if (length <= NVME_CTRL_PAGE_SIZE) {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
--		dma_unmap_page(dma_dev, dma_addr, length, dir);
--		return;
--	}
--
--	i = 0;
--	desc = 0;
--	prp_list = iod->descriptors[desc];
--	do {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
--			prp_list = iod->descriptors[++desc];
--			i = 0;
--		}
-+	unsigned int i;
- 
--		dma_addr = le64_to_cpu(prp_list[i++]);
--		dma_len = min(length, NVME_CTRL_PAGE_SIZE);
--		length -= dma_len;
--	} while (length);
-+	for (i = 0; i < iod->nr_dma_vecs; i++)
-+		dma_unmap_page(dma_dev, iod->dma_vecs[i].addr,
-+				iod->dma_vecs[i].len, dir);
-+	kfree(iod->dma_vecs);
- }
- 
- static void nvme_free_sgls(struct request *req)
-@@ -770,6 +747,17 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 	unsigned int prp_len, i;
- 	__le64 *prp_list;
- 
-+	if (dma_need_unmap(nvmeq->dev->dev)) {
-+		/* XXX: use mempool */
-+		iod->dma_vecs = kmalloc_array(blk_rq_nr_phys_segments(req),
-+				sizeof(struct dma_vec), GFP_NOIO);
-+		if (!iod->dma_vecs)
-+			return BLK_STS_RESOURCE;
-+		iod->dma_vecs[0].addr = iter->addr;
-+		iod->dma_vecs[0].len = iter->len;
-+		iod->nr_dma_vecs++;
-+	}
-+
- 	/*
- 	 * PRP1 always points to the start of the DMA transfers.
- 	 *
-@@ -793,6 +781,11 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 				goto bad_sgl;
- 			goto done;
- 		}
-+		if (dma_need_unmap(nvmeq->dev->dev)) {
-+			iod->dma_vecs[iod->nr_dma_vecs].addr = iter->addr;
-+			iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
-+			iod->nr_dma_vecs++;
-+		}
- 	}
- 
- 	/*
-@@ -838,6 +831,12 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 					goto bad_sgl;
- 				goto done;
- 			}
-+			if (dma_need_unmap(nvmeq->dev->dev)) {
-+				iod->dma_vecs[iod->nr_dma_vecs].addr =
-+					iter->addr;
-+				iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
-+				iod->nr_dma_vecs++;
-+			}
- 		}
- 
- 		/*
-@@ -1108,6 +1107,7 @@ static blk_status_t nvme_prep_rq(struct request *req)
- 	iod->nr_descriptors = 0;
- 	iod->total_len = 0;
- 	iod->meta_sgt.nents = 0;
-+	iod->nr_dma_vecs = 0;
- 
- 	ret = nvme_setup_cmd(req->q->queuedata, req);
- 	if (ret)
+
