@@ -1,30 +1,50 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A082D5418;
-	Thu,  3 Jul 2025 14:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0622E7BB6;
+	Thu,  3 Jul 2025 14:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552040; cv=none; b=Y6nlH8J/OBkXzshUYWBf34iX2m734KEJ5pgAARtT3z7dWTnTy8cYVbyXDH6X5dZCV4ueZux66SEM1PZiNWQXkUSa73PJHXO9hhbERzDbBhBWLqVyGxv8PI4wAlqCNFdbIGNMXhN2QL6G67Z+/05se8rUHf0V3/UO1JoLRJeVMng=
+	t=1751552076; cv=none; b=Un3Muo2OTLMtfCgXQiL5SnBB3TC8XrdqXN6UDepPypCsnnrX8egEkhy9j1nzyObcCqoJijB0oZTzkY4+/P1xRnh7NncrW27xYXM8JpQ2mtHlJXtNgfFqwPcCns/uqeIpbRcgVkLl3j60YTSHvQy9r5jSlgjU3jEKizEDNMBkyxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552040; c=relaxed/simple;
-	bh=jYa0ElrOwg3E30m7l7Nw6tKSbtT2mPC05vfYnMLOo4s=;
+	s=arc-20240116; t=1751552076; c=relaxed/simple;
+	bh=mOIrJEcXWYdJy7sVFGi8rv/IpG7B8f1U9B2nnvb7414=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dyVqQV4td19MX6b3V4SclwLedlszhobjetCacf3in47A7NfXYVrOK4g9YFAtE1jW1M3nhHwzxqIIeBhecWAPqKIZcVNCsjrXdPoSXmV3TIH32+Eg6EHKDOt/JWxte8n57jD+DPIEtdQDwzKMH/LY3BGwMvW8wIA3s9ufcdm/qLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bXzJz0DsgzYQtrH;
-	Thu,  3 Jul 2025 22:13:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id D8C491A108E;
-	Thu,  3 Jul 2025 22:13:53 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHaCUfkGZoidghAg--.13097S3;
-	Thu, 03 Jul 2025 22:13:53 +0800 (CST)
-Message-ID: <a6225180-9983-4a0a-8898-435b014b8ebe@huaweicloud.com>
-Date: Thu, 3 Jul 2025 22:13:51 +0800
+	 In-Reply-To:Content-Type; b=c+92GE7mD3iDYlz4U9qoYS9wdKmi3Xw0V3I6mZ8oOBAZ71RlvRDfnkIJxyKm5QwINuTYLhB8wMBqekTfIjgnmxD/Qjw1vh5t8Kh87GFzUrEGngU7Bkd3fZ8OEG2mZPb3IDJPnkZLB/7vEyhVvVrFDAc+SWe5tQ5AKhg8fVBVAqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hKlbDnAm; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hKlbDnAm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751552075; x=1783088075;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mOIrJEcXWYdJy7sVFGi8rv/IpG7B8f1U9B2nnvb7414=;
+  b=hKlbDnAmh/PFeHFKzIu1jjcLZvr8QbYd0XVfn8O5AVr9qNBkWMgmKDjg
+   pp36qXl3eV9p5XOzvP/rVKwKvJ0sUZR5UAFeaWZNmzYSlDZL1LGKRfIew
+   NDm4uVjGLM4LTtsirUVokrUy52rwDqEZUu8rga5Cs85FgHcBHNnfMLRc5
+   OhdIwDDmFI4KY4SGaseXLiQAyM3mCSDB8dU+bC40ZsMd6WTAbpV1nFppQ
+   GFv3mSe2WMQDaZqGi8PAEZtEQjW06yluQwlpH7ssx/KfBxIRYZq+5WVSi
+   1h63aLlLpJRt9WjdjJAwafMKemSf+KJrJpa/ojV21swhRgPjM7mvXGoRh
+   g==;
+X-CSE-ConnectionGUID: XzJI5om4RlGy81Xe0vzK3w==
+X-CSE-MsgGUID: 0bvpyMsuQS6gsCDJ7Bd7ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53598262"
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="53598262"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:14:29 -0700
+X-CSE-ConnectionGUID: C+xbG0rkSyKlsjwsHrUSjQ==
+X-CSE-MsgGUID: T3qHC/SFQxOwGWP27t156w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,284,1744095600"; 
+   d="scan'208";a="154873179"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.13]) ([10.125.110.13])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 07:14:28 -0700
+Message-ID: <a0d5b60d-ea40-4f99-aed7-003102517248@intel.com>
+Date: Thu, 3 Jul 2025 07:14:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,108 +52,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] ext4: enable large folio for regular file
-To: Theodore Ts'o <tytso@mit.edu>, "D, Suneeth" <Suneeth.D@amd.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, adilger.kernel@dilger.ca,
- jack@suse.cz, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com,
- yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-9-yi.zhang@huaweicloud.com>
- <f59ef632-0d11-4ae7-bdad-d552fe1f1d78@amd.com>
- <94de227e-23c1-4089-b99c-e8fc0beae5da@huaweicloud.com>
- <20250626145647.GA217371@mit.edu>
+Subject: Re: [PATCH 1/2] x86/tdx: Eliminate duplicate code in tdx_clear_page()
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com,
+ seanjc@google.com, vannapurve@google.com
+Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ x86@kernel.org, H Peter Anvin <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
+ kirill.shutemov@linux.intel.com, kai.huang@intel.com,
+ reinette.chatre@intel.com, xiaoyao.li@intel.com,
+ tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+References: <20250703114038.99270-1-adrian.hunter@intel.com>
+ <20250703114038.99270-2-adrian.hunter@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250626145647.GA217371@mit.edu>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250703114038.99270-2-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgAHaCUfkGZoidghAg--.13097S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr17uFWkWFyDGr4rJw4DXFb_yoW5XFyxpF
-	WakFn7AFnxXw4xAwn7Gw1kZr9Iy3s5XFW3G3Z5GryjvwnxGF4S9FW0qas5uFW7GrWUX3WI
-	qw4jv343Z3W5XFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 2025/6/26 22:56, Theodore Ts'o wrote:
-> On Thu, Jun 26, 2025 at 09:26:41PM +0800, Zhang Yi wrote:
->>
->> Thanks for the report, I will try to reproduce this performance regression on
->> my machine and find out what caused this regression.
-> 
-> I took a quick look at this, and I *think* it's because lmbench is
-> measuring the latency of mmap read's --- I'm going to guess 4k random
-> page faults, but I'm not sure.  If that's the case, this may just be a
-> natural result of using large folios, and the tradeoff of optimizing
-> for large reads versus small page faults.
-> 
-> But if you could take a closer look, that would be great, thanks!
-> 
+On 7/3/25 04:40, Adrian Hunter wrote:
+> tdx_clear_page() and reset_tdx_pages() duplicate the TDX page clearing
+> logic.  Keep the tdx_clear_page() prototype but call reset_tdx_pages() for
+> the implementation.
 
-After analyzing what the lmbench mmap test actually does, I found that
-the regression is related to the mmap writes, not mmap reads. In other
-words, the latency increases in ext4_page_mkwrite() after we enable
-large folios.
+Why keep the old prototype?
 
-The lmbench mmap test performed the following two tests:
-1. mmap a range with PROT_READ|PROT_WRITE and MAP_SHARED, and then
-   write one byte every 16KB sequentially.
-2. mmap a range with PROT_READ and MAP_SHARED, and then read byte
-   one by one sequentially.
-
-For the mmap read test, the average page fault latency on my machine
-can be improved from 3,634 ns to 2,005 ns. This improvement is due to
-the ability to save the folio readahead loop in page_cache_async_ra()
-and the set PTE loop in filemap_map_pages() after implementing support
-for large folios.
-
-For the mmap write test, the number of page faults does not decrease
-due to the large folio (the maximum order is 5), each page still
-incurs one page fault. However, the ext4_page_mkwrite() does multiple
-iterations through buffer_head in the folio, so the time consumption
-will increase. The latency of ext4_page_mkwrite() can be increased
-from 958ns to 1596ns.
-
-After looking at the comments in finish_fault() and 43e027e414232
-("mm: memory: extend finish_fault() to support large folio").
-
-vm_fault_t finish_fault(struct vm_fault *vmf)
-{
-	...
-	nr_pages = folio_nr_pages(folio);
-
-	/*
-	 * Using per-page fault to maintain the uffd semantics, and same
-	 * approach also applies to non-anonymous-shmem faults to avoid
-	 * inflating the RSS of the process.
-	 */
-	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
-	    unlikely(needs_fallback)) {
-		nr_pages = 1;
-	...
-	set_pte_range(vmf, folio, page, nr_pages, addr);
-}
-
-I believe this regression can be resolved if the finish_fault()
-supports file-based large folios, but I'm not sure if we are planning
-to implement this.
-
-As for ext4_page_mkwrite(), I think it can also be optimized by reducing
-the number of the folio iterations, but this would make it impossible to
-use existing generic helpers and could make the code very messy.
-
-Best regards,
-Yi.
 
