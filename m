@@ -1,163 +1,105 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7842E3B06
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0E72E5417;
+	Thu,  3 Jul 2025 11:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751543930; cv=none; b=S70jCx8s3hZUnMF52rgC2MA3ykNXqW1M+ZuUufCIK8RzYPnEzqPdjdJi12oYmY85WK78wWaiWw6dA3geN1uhtgBQl3vc7dPkfAC8QJUVZUqX6Yk9PnAcCYqB2VEX4TsA5GnrxHKwvGSmq0hY5XUeDi2bvzVMpcKkfTeoEKtIdYg=
+	t=1751543931; cv=none; b=arYqTcI/9oyiwKTImO3fzQiHaIlOz0//UPJMS9fZLO3LG1cFcMFgK+AHWaudkF73ZDOgRxCzBcGzZ13UARH7KUYXSM5fmF+14a5hAEDRxROIkXl54CgAy8oZJr0WYrh9ABFp4bUBg9OQqlmCla5xueHl1AxyLNCE9s3wEqguefE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751543930; c=relaxed/simple;
-	bh=KVnqP49xtAT/39pjm4SB9D/z0i6aE60n2/FV7cQXGhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mfkFMwMZ/L1GXAqFt3vMqTDNEfPxtJBW5PHh75Dbtk5Sib+yuL7oUuRw1+D4jgQPWxgfmuLanjYz60zKJng4z4QVPZ9YH5wCLk9E04+4ClRBB9mrYHNCcU0oQuQ9VGOPr6+PyodMQRSWNA3dGFRCTML+QjGQJ6op0JmRLdV+VdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Px7qolil; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751543931; c=relaxed/simple;
+	bh=t9HODM5Y2GDbH0AxGuEt+4umoitypeYCGG0NoQDFuM8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BGQW2vbhlV3E1T7XI65K2QDEYUpD/HKNVSEdiY5mjhN7BXLnvlD2hvoDk5M2Nh8JCNz+V5cuXEN3LHH0y39rQeeDQkrg1P5i6K6GK+EYIKM3cxbWtWoUUAvCoNnM2JayyZMAheLi1t2sKU4ZZvDpfu1NRlQtqDNmm3E4R7PMw94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ysp8eiNB; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Px7qolil"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45310223677so38774985e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751543926; x=1752148726; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FEy1REQsSnGLpJgUJbCYOfsqXwvfobdRMduB/tZDIyg=;
-        b=Px7qolilG0WfQoeFjc1mS8RaxY9VEdTeUiX9N+T1IzUGREecADWCG+5vVSIkaCBY+H
-         3h23kG1+yfEfc52JwDa/Gyr4cF06QjPP3o0GSw/8zTtLq0f7BvYvJY5+n1yRWi+7wy7/
-         0wMsB61OeUWqUbig4hNgZWBHt9g4ofjq7lvIdnmetzZxWJ1/ezJruzVLs6Tl7nhBaeHt
-         nkwCrzBpoEdt66fmgucPKr5YJ6ZLm2Fq7yVFeUjVVjZrBG9IDNb2tcatjWqQCKPQdQgs
-         V7EqfkHHIWaWLoUxuY2oWiye+Msv4SY4UxX2dIRv6OSxiUJiT3BMZjTuFW2PWH4wEVIn
-         h7cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751543926; x=1752148726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FEy1REQsSnGLpJgUJbCYOfsqXwvfobdRMduB/tZDIyg=;
-        b=H5Obq3a5wa9onZYNwfGRDz0IZBpI8Wz38RKLbhNx52GgkGtNgzSB+Oh29dRJsL4NDX
-         YBSRudAnmUIk5joxW9GYCuy5Fio/WcuLa8s7q2OyF1RqJ4Zhfdl+Gt2dL8ZYSGL48tJL
-         pZ0l3Oi//kmXvHssQqnhrcmQv+AuudmtLJRjTWG+VodvTENvcdHMyWbkkU4fCptgHPZu
-         EwYBoxg8Sh9+bknl8fodYOPUv2lXAPTS7NZS719p8wW5CAKlGE52cDWcRLstmhAs4rgN
-         f4oI1u18ZipBJNY8OlWkq2iR0Bpnv0KQPMBk7DPBeEs2sH2vW/uzIfZGsLOxgXuwvKmX
-         rnJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiHY8Avg58c7TbAi5sKDUknrZ1Au68g8y2dBjeDOlq31WYeeqRTXb5LI/qNZ42VFgvc1D9CAyLPdmdAv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1BBSXWfGJYEW3dwyXBdKvsQWepZTHMVhSMWljkO+sd8P4YbRJ
-	2TOah/QrXPASc3CqQA3ZSs16Tn7cJOFpbcnVdNCQVuwXEOMCtf+XveKfOoj8h31Cmg==
-X-Gm-Gg: ASbGncuytUXYJ3rNYGOpbneYdmiyQnWSIEgmcuj+Jn4uWnt7WYA5m9lYXggLUGXHyct
-	a6ktxTRNNmqGkEOEd1LE7lU7c3GHSn1Dqd4oXjnUGq4VRMMhb4B1XbVvMh1/XBvmpEdr0+/3KPM
-	17qwpI4lVb+RGbrmuJdsBnMxuqAHtnkMyeCkaC/Kjd4WYIK5prVDpqEjWNe4HiOEUdrfcHCBVCe
-	2qcoYezbitl51Mr2EjtNgb4LMUS0aX0LFwjMOO0IyXaPRGgSDBZvL/421TwfrqHiVutfNPHOs2V
-	VzMUvhW1u27Fb3yQmVfVtCg1LFoCp+0K1orTpHzer0fAlH4nQhzagrcDbzwnoQ==
-X-Google-Smtp-Source: AGHT+IGmOASa0oMFT6hRpNe8aWb1lP5feRf8X2l4wmfd55rNGbp6qVKK1A5kadBg5n8uLklMz596vA==
-X-Received: by 2002:a05:6000:4282:b0:3a5:2694:d75f with SMTP id ffacd0b85a97d-3b201c97157mr5254542f8f.52.1751543926246;
-        Thu, 03 Jul 2025 04:58:46 -0700 (PDT)
-Received: from MiWiFi-CR6608-srv ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f218esm161233325ad.78.2025.07.03.04.58.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:58:45 -0700 (PDT)
-Date: Thu, 3 Jul 2025 19:58:06 -0400
-From: Wei Gao <wegao@suse.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Terry Tritton <terry.tritton@linaro.org>, Shuah Khan <shuah@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	ttritton@google.com, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-Message-ID: <aGcZDjYh6OLWRFkc@MiWiFi-CR6608-srv>
-References: <20250702102157.5222-1-terry.tritton@linaro.org>
- <87y0t6jqnp.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ysp8eiNB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751543927;
+	bh=t9HODM5Y2GDbH0AxGuEt+4umoitypeYCGG0NoQDFuM8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ysp8eiNBIz86UIZ8qfWnK0XnxCnYRoGybBrPmQ5gs/AhZDOGDfh7THBFFeFq1tdW1
+	 1tM6/u3fq3VRAbyzXEFFtLteuB50YawgKA8UZnPqZK1vhDXIVRJhu0+B+UK909zoKw
+	 rKexJxpxybrszcvwA7a2OhnHMKvce7hc2am4SO8FtC61Fw4BGiJgJSHqsQrKSGk7Ok
+	 Kxz+FvmJJIJnvb5wpqpWWVl6B9kzbprfpluw2twAwggFasaZdgd9CZWICVl1x/xUnY
+	 +ABqMYUOhi6Xe+6Vfepp6yanr1HrpJJWpllVS+n8z0bBSrSMnTZsk+enJPeIMdPV2B
+	 G+ZxgDZxEg86A==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0F26117E09C6;
+	Thu,  3 Jul 2025 13:58:47 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: sboyd@kernel.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	hsin-hsiung.wang@mediatek.com,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
+Subject: [PATCH v2 5/5] spmi: mtk-pmif: Add support for MT8196 SPMI Controller
+Date: Thu,  3 Jul 2025 13:58:28 +0200
+Message-ID: <20250703115828.118425-6-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250703115828.118425-1-angelogioacchino.delregno@collabora.com>
+References: <20250703115828.118425-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y0t6jqnp.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 10:15:06PM +0200, Thomas Gleixner wrote:
-> On Wed, Jul 02 2025 at 11:21, Terry Tritton wrote:
-> 
-> > Futex_waitv can not accept old_timespec32 struct, so userspace should
-> 
-> sys_futex_wait()
-> 
-> > convert it from 32bit to 64bit before syscall in 32bit compatible mode.
-> >
-> > This fix is based off [1]
-> >
-> > Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
-> >
-> > Originally-by: Wei Gao <wegao@suse.com>
-> > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
-> > ---
-> > Changes in v3:
-> > - Fix signed-off-by chain but for real this time
-> >
-> > Changes in v2:
-> > - Fix signed-off-by chain
-> >
-> >  .../testing/selftests/futex/include/futex2test.h  | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
-> > index ea79662405bc..6780e51eb2d6 100644
-> > --- a/tools/testing/selftests/futex/include/futex2test.h
-> > +++ b/tools/testing/selftests/futex/include/futex2test.h
-> > @@ -55,6 +55,13 @@ struct futex32_numa {
-> >  	futex_t numa;
-> >  };
-> >  
-> > +#if !defined(__LP64__)
-> > +struct timespec64 {
-> > +	int64_t tv_sec;
-> > +	int64_t tv_nsec;
-> > +};
-> > +#endif
-> 
-> Why not use __kernel_timespec which is the actual data type that syscall
-> requests?
-> 
-> > +
-> >  /**
-> >   * futex_waitv - Wait at multiple futexes, wake on any
-> >   * @waiters:    Array of waiters
-> > @@ -65,7 +72,15 @@ struct futex32_numa {
-> >  static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
-> >  			      unsigned long flags, struct timespec *timo, clockid_t clockid)
-> >  {
-> > +#if !defined(__LP64__)
-> > +	struct timespec64 timo64 = {0};
-> > +
-> > +	timo64.tv_sec = timo->tv_sec;
-> > +	timo64.tv_nsec = timo->tv_nsec;
-> > +	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &timo64, clockid);
-> > +#else
-> >  	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
-> > +#endif
-> 
-> You simply can do
-> 
->         struct __kernel_timespec ts = {
->         	.tv_sec = timo->tv_sec,
->                 .tv_nsec = timo->tv_nsec,
->         };
-> 
->   	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &ts, clockid);
->         
-> unconditionally. No?
-Thanks for your valuable comments.
-Your change has more directly interacts with system calls and simplifies the code without
-conditional compilation. 
-Only concern from my side is test on very old kernel(But i think this is not problem for kself test)
-> 
-> Thanks,
-> 
->         tglx
+Add support for the SPMI controller found in the MT8196 SoC:
+this supports SPMI 2.0 and features two SPMI buses.
+
+Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/spmi/spmi-mtk-pmif.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/spmi/spmi-mtk-pmif.c b/drivers/spmi/spmi-mtk-pmif.c
+index ad7b0cc9cdaa..719753651234 100644
+--- a/drivers/spmi/spmi-mtk-pmif.c
++++ b/drivers/spmi/spmi-mtk-pmif.c
+@@ -636,6 +636,14 @@ static const struct pmif_data mt8195_pmif_arb = {
+ 	.soc_chan = 2,
+ };
+ 
++static const struct pmif_data mt8196_pmif_arb = {
++	.regs = mt8195_regs,
++	.spmimst_regs = mt8195_spmi_regs,
++	.soc_chan = 2,
++	.spmi_ver = 2,
++	.num_spmi_buses = 2,
++};
++
+ static int mtk_spmi_irq_init(struct device_node *node,
+ 			     const struct pmif_data *pdata,
+ 			     struct pmif_bus *pbus)
+@@ -834,6 +842,9 @@ static const struct of_device_id mtk_spmi_match_table[] = {
+ 	}, {
+ 		.compatible = "mediatek,mt8195-spmi",
+ 		.data = &mt8195_pmif_arb,
++	}, {
++		.compatible = "mediatek,mt8196-spmi",
++		.data = &mt8196_pmif_arb,
+ 	}, {
+ 		/* sentinel */
+ 	},
+-- 
+2.49.0
+
