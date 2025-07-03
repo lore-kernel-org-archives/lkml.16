@@ -1,85 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5426F29C351;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541F9239E87;
 	Thu,  3 Jul 2025 22:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751581757; cv=none; b=ggEhS2HtDNdcqhFTnCLqY1iagsBtWtoZ1RTC4SVuLX3bC1Ch7GqW+VWhTKcsRmsKiHWT1cFkgNp4pq5Jy6v9Tgn5BeemZEqLYzBcEPGql4H17kmShP/L5AuBRBEjUNCJT1A+9crHF/UbIeQOAvvMhSsX7jfxpcjQQ+e0dVqJ5dU=
+	t=1751581757; cv=none; b=KU1NAUuGOhqC3vcWpEoYGUm9ECqYaDznPBYRL53mUpUGYXg4cEkBa23ec6+alIwElCPjn/q3geMJGY4nPAvnoX/iBo6RC41hz2VjnTxGyWpADDdtSQk9Fii2X4YFH2R8YHBnlY3J8IaXboC/ATn856t3uXOg5jLFCBnlp7nRRWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751581757; c=relaxed/simple;
-	bh=KG/xX9bya8lwgakjA1rYvT7ciNyxTZH4eiJUApOm8og=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aicw3mOpt653fk1xXQpbYP+d+kRJH3m2G0adMoMZBjNp6a+yQT78ajczkqmOgAlgn3SQm2f1A+NHy2OwcyJ4c/rPH4G3do/EspYbOABuUG/FgTI1UoV6mYiM21E1ZYo3eXXnjsdoh9tFNH9+vniejA37FxZCPUt65S/w8/1RbAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUIY1Ghs; arc=none smtp.client-ip=10.30.226.201
+	bh=XJVEb1yF5sFUaYCLLq3nTetyfMZ6c3HU7Msa9fSlfrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O4e62A67GI4GcWofw/pYnrsXMgkMV2xPWX1LfyKVurOpQ1ikHg0XSa8seMkQkTV3AzIrPbzntvJ+q2NIxbvBkG6UgBckfZiSlIRHJCwWu6wlhy6Op8OxJP6Lhk5x5Ai+iAjXiPJw9UP9UoOuDGiZ8AbuKaxO7XkfbNBxjKL/Btk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WaLlLqgR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUIY1Ghs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E633EC4CEE3;
-	Thu,  3 Jul 2025 22:29:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaLlLqgR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77D5C4CEED;
+	Thu,  3 Jul 2025 22:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751581757;
-	bh=KG/xX9bya8lwgakjA1rYvT7ciNyxTZH4eiJUApOm8og=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LUIY1GhsLqdNfhyUnSs5yrzXMitmiCeabCJ4CLM2w7s14SNOwQDOEXWtx/TjrUymg
-	 WqabMDemAtfZ3WaGwraTU1rwsIwGjXUegXzmudqvgQVK7dhM+JjizJr1OUrlpauos3
-	 5NFPyvZ2+riCVRubpduvKIJ3MesQrvPP5EAbswqqt2oFGKbUb4CYWKy4iEPJhImXM6
-	 UYUmneR/f9pZf3KI5n7vnnHwVk0pGzBssQHMmfJUTT+95qsQSxAUGoblR+UgtkROpL
-	 ns1mqM7DZeMQFLfMt6bN3bGFQL/guX2UPBdhKDnAt3nzkpUaUlVuXsCElGNej2nJwM
-	 aXtIcyKrVg55w==
-Date: Fri, 4 Jul 2025 00:29:13 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
- <akiyks@gmail.com>
-Subject: Re: [PATCH 7/7] docs: kdoc: pretty up dump_enum()
-Message-ID: <20250704002913.13ce8fcf@foz.lan>
-In-Reply-To: <874ivtkuk9.fsf@trenco.lwn.net>
-References: <20250701205730.146687-1-corbet@lwn.net>
-	<20250701205730.146687-8-corbet@lwn.net>
-	<20250703175731.1a4871e3@sal.lan>
-	<874ivtkuk9.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	bh=XJVEb1yF5sFUaYCLLq3nTetyfMZ6c3HU7Msa9fSlfrc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=WaLlLqgR++apx0cyR91VqHO24UiPOOt2Ihj/uEFSLXCopmm3u0F8NP0H3Ibs4lmUO
+	 IcoVF+JeO8g8yBPMPZa6DcGTbMqbimCp1JaCU7MWBQNHAKwGHr/pngjMJSGdBpV+wi
+	 rgRYO5Em/QqUXvPWkP72lCVOl1pOsEoU/NEkAM9gtK8q6KqMop92GBXMFzbpgkPstB
+	 E2g5D1Nm1GitciHcaeDzSDFqsPvHwc0CAMiQ4IkE/Y0g8uKCO9kysvF+85gM1iRfuJ
+	 Uj2YUerShddPClB7rFdtiuhx4x3RUI73mAcumHgNenK4KpA0Yv035sy383g8BBEbnH
+	 76bhvlQadCzUw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 90E27CE0C97; Thu,  3 Jul 2025 15:29:16 -0700 (PDT)
+Date: Thu, 3 Jul 2025 15:29:16 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	JP Kobryn <inwardvessel@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
+Message-ID: <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
+ <20250703200012.3734798-2-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703200012.3734798-2-shakeel.butt@linux.dev>
 
-Em Thu, 03 Jul 2025 12:17:42 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Thu, Jul 03, 2025 at 01:00:12PM -0700, Shakeel Butt wrote:
+> Currently the rstat updater and the flusher can race and cause a
+> scenario where the stats updater skips adding the css to the lockless
+> list but the flusher might not see those updates done by the skipped
+> updater. This is benign race and the subsequent flusher will flush those
+> stats and at the moment there aren't any rstat users which are not fine
+> with this kind of race. However some future user might want more
+> stricter guarantee, so let's add appropriate comments and data_race()
+> tags to ease the job of future users.
 > 
-> > Em Tue,  1 Jul 2025 14:57:30 -0600
-> > Jonathan Corbet <corbet@lwn.net> escreveu:
-> >  
-> >>                  self.emit_msg(ln,
-> >> -                              f"expecting prototype for enum {self.entry.identifier}. Prototype was for enum {declaration_name} instead")
-> >> +                              f"expecting prototype for enum {self.entry.identifier}. "
-> >> +                              f"Prototype was for enum {declaration_name} instead")  
-> >
-> > Even being a big one, my personal preference would be to break the long
-> > string here, as keeping together is easier for grep, but yeah, I also
-> > considered breaking it ;-)  
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> ---
+>  kernel/cgroup/rstat.c | 32 +++++++++++++++++++++++++++++---
+>  1 file changed, 29 insertions(+), 3 deletions(-)
 > 
-> Did you mean your preference would be to *not* break it?
+> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+> index c8a48cf83878..b98c03b1af25 100644
+> --- a/kernel/cgroup/rstat.c
+> +++ b/kernel/cgroup/rstat.c
+> @@ -60,6 +60,12 @@ static inline struct llist_head *ss_lhead_cpu(struct cgroup_subsys *ss, int cpu)
+>   * Atomically inserts the css in the ss's llist for the given cpu. This is
+>   * reentrant safe i.e. safe against softirq, hardirq and nmi. The ss's llist
+>   * will be processed at the flush time to create the update tree.
+> + *
+> + * NOTE: if the user needs the guarantee that the updater either add itself in
+> + * the lockless list or the concurrent flusher flushes its updated stats, a
+> + * memory barrier is needed before the call to css_rstat_updated() i.e. a
+> + * barrier after updating the per-cpu stats and before calling
+> + * css_rstat_updated().
+>   */
+>  __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
+>  {
+> @@ -86,8 +92,13 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
+>  		return;
+>  
+>  	rstatc = css_rstat_cpu(css, cpu);
+> -	/* If already on list return. */
+> -	if (llist_on_list(&rstatc->lnode))
+> +	/*
+> +	 * If already on list return. This check is racy and smp_mb() is needed
+> +	 * to pair it with the smp_mb() in css_process_update_tree() if the
+> +	 * guarantee that the updated stats are visible to concurrent flusher is
+> +	 * needed.
+> +	 */
+> +	if (data_race(llist_on_list(&rstatc->lnode)))
 
-What I meant is that I was in doubt myself of breaking long lines or
-not... I opted to not break.
+OK, I will bite...
 
-Yet, if you feel it looks better breaking it, go for it ;-)
+Why is this needed given the READ_ONCE() that the earlier patch added to
+llist_on_list()?
 
-> There's a non-greppable piece at the break point anyway, so I wasn't
-> anticipating making life harder for anybody there.
+>  		return;
+>  
+>  	/*
+> @@ -145,9 +156,24 @@ static void css_process_update_tree(struct cgroup_subsys *ss, int cpu)
+>  	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
+>  	struct llist_node *lnode;
+>  
+> -	while ((lnode = llist_del_first_init(lhead))) {
+> +	while ((lnode = data_race(llist_del_first_init(lhead)))) {
+
+And for this one, why not make init_llist_node(), which is invoked from
+llist_del_first_init(), do a WRITE_ONCE()?
+
+							Thanx, Paul
+
+>  		struct css_rstat_cpu *rstatc;
+>  
+> +		/*
+> +		 * smp_mb() is needed here (more specifically in between
+> +		 * init_llist_node() and per-cpu stats flushing) if the
+> +		 * guarantee is required by a rstat user where etiher the
+> +		 * updater should add itself on the lockless list or the
+> +		 * flusher flush the stats updated by the updater who have
+> +		 * observed that they are already on the list. The
+> +		 * corresponding barrier pair for this one should be before
+> +		 * css_rstat_updated() by the user.
+> +		 *
+> +		 * For now, there aren't any such user, so not adding the
+> +		 * barrier here but if such a use-case arise, please add
+> +		 * smp_mb() here.
+> +		 */
+> +
+>  		rstatc = container_of(lnode, struct css_rstat_cpu, lnode);
+>  		__css_process_update_tree(rstatc->owner, cpu);
+>  	}
+> -- 
+> 2.47.1
 > 
-> Thanks,
-> 
-> jon
-
-
-
-Thanks,
-Mauro
