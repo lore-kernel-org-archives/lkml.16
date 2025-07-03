@@ -1,88 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B33C1DDD1;
-	Thu,  3 Jul 2025 13:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0951DDD1;
+	Thu,  3 Jul 2025 13:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548779; cv=none; b=QARvJg4Sc+MFOspYeb+gfdGu8IJd4dRxc3CannYstUilpdqrPITbY7k/12QzqLLNM+NChMZDEI5Morl70jNbhWehDTdQdxECEkNtw0humXZNp28laJyYIyooyXDkWZcyu+rBkrmYR1dKm7Qa6GpQ9ynuMQaVyxzhj+gawTXPey0=
+	t=1751548841; cv=none; b=B6mRx+Qg9Lj0OD2tlEbBZqxU2H97xhW3E8wShxEHYkt3cLn3W1HxC5FT3R19XpriSW1O8QSvwd3EL/UsmOp41XBGuXFTwd165inSe4boy2UzJnBfftjAYZzN9hf1RIzc1H+cqE9rrnC9oRxA5ZsQwt3AaXp/fX8V7xSyeC1n6L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548779; c=relaxed/simple;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iXBC385RjWZiF1xSAEOeU99t3uLfhQjYFMvIY8OalqYcVJiZ4eTn8dRWyY3edHS/W1ZM5HWeHIRZ06WQE1KRyOQPS9DjMOddhnfMFoUGmBZYfhodhpK21QZS6/r9xoU9HARwpXHMHwnarmUdH3raUPqzwGj3A2Wcoi687ukJ9zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OUCym8ps; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CmdzbFLs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751548841; c=relaxed/simple;
+	bh=dU8LWmDWZTXWT/eBobaJweK43xARH/rNd+sTP8jr5S0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dP9Quu3vWNhiGYEnPrC8cHNxAo78TMEdF13EzFwiZeKqlqsehjf6v/xD4jHTtiUc6HI4/aw91uxYTN0GGgNIs9QLEX7BorhyHxGylLzD0hmOTQm+Lj4YzJgPIVYBI5oBHX7i5wcOhxygn2G1bmTbB+9QBR23+z4ZistIWHyExoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBplZHlT; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OUCym8ps";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CmdzbFLs"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751548776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	b=OUCym8psmnaL3rl7otrsXt5ULO8qXzrLiQ2XunZuiGEJq9q2a4WUYJSjC6A4s33xS2xAVN
-	FgAoF0zHaD+LNFcblvIQ1agcGyghfjtYU+CFy68EU28fBzWxytM32qAyBZJ5EeUya6OzqA
-	e51c7FR9heFylKmcRWsPQ9Xzp8eIVrA3emNX793lhLDdEqqm1TmjeiV5nNLnjE0D/f7zqg
-	k+AP+lmNNiEmVsAfPKzEcTY7WWpww4Jvc9KUWdTW4xuDVJQXVCtZP4wMBMzO1yvQnXDVFD
-	hV8UNztJ957RNiqaG7wzbYmreAFoYSQ2ah+/xKFywzjtxBJ7vZz8/uVTGPJVOw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751548776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4kcJobrOnoamaBnANOlfQkU1M63AHPCa2YelSe1E0P8=;
-	b=CmdzbFLseNS5InsZhBs47LmqjKB+MqkBz9WBhsq8OOSzG0EHoDlJHN0OSyJU/fl/RhFFSj
-	zFhtLTQc7mvGzEBQ==
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Karthikeyan
- Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang
- <Zhiqiang.Hou@nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, "K . Y . Srinivasan"
- <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim
- Quinlan <jim2101024@gmail.com>, Nicolas Saenz Julienne
- <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
- <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>, Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH 01/16] PCI: dwc: Switch to msi_create_parent_irq_domain()
-In-Reply-To: <04d4a96046490e50139826c16423954e033cdf89.1750858083.git.namcao@linutronix.de>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <04d4a96046490e50139826c16423954e033cdf89.1750858083.git.namcao@linutronix.de>
-Date: Thu, 03 Jul 2025 15:19:35 +0200
-Message-ID: <87bjq1wgwo.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBplZHlT"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4537deebb01so29817265e9.0;
+        Thu, 03 Jul 2025 06:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751548838; x=1752153638; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MqGlLiGt9QoJKvCwgT5f7sBNld7aejdtjuAgeDdmuJ4=;
+        b=hBplZHlTXlarfZTec12BTr3COSvRN/JmpBpCzCccfSWDD7VCsURoqehq1Qi7AyGhUI
+         DSzHnsedJlaogPUgZzimqExeMx7cCQuY32A00XT+mN1kdK7lfdL0IZLz54YqRWzkT7e1
+         vTzv5+InuJR/aCwrngRdI667+hHbzORQtKGEvP+jh0tuNpympElEvgrohswlr7KFZyLC
+         Ad36VmviuNa9X0xJwuh9QxzF5Lm+vb6oOxpKjNxPu86/n1RhtT/ogXi3OoF1kdRlRSZy
+         02uaz2kugENbnHqq+CMjgXQQI/fKn0GbEi5U2pttooGnwrQrHW5SJr14IS5s6kY/YNul
+         UXGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751548838; x=1752153638;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MqGlLiGt9QoJKvCwgT5f7sBNld7aejdtjuAgeDdmuJ4=;
+        b=BX88wbHDcXQo0yG6R6D6EfIwd7MZbRS+NAPzp2RB3KCwuqSarBHt/iSe6bu3Hfjyl+
+         3YoDg/tsL55Dr6QB0Jnzw4LVVFY6bzoY8S0AoYkCtYNDImVuOrwq9GPCAJKC70WWpZ3u
+         CnzGVT17xf5PTA1tKKVMjWM6lgZjBRdM9wcEzbGQcaRSPLsAaIMtem9aM7VywZ1URpN7
+         h303W6OhGzof3uRZk9bijbW57wqOmo/l7Ehhdan22zW0f4+utzJ5EJcYBKF6LD1YlH2I
+         0i1pMU8cK0yKPoS+jAB+3JudnqKDm7ejKi05JGs9CH4qfuVoXNrew2zpr6hvOryEW+kc
+         O7lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKbdd3rHD9pMqTidt8MHp4AYr0cpfL42hQ2Y6+yJ79GvRHnJbGZYikSxrNpwgvt1sSHsehwvyhD3RyGwU=@vger.kernel.org, AJvYcCUm04Pn67WE8CzODoG5nHS9rqihJ1FJkTM4hrogvXgq8TkGFlYvV4/qsZVAbZocfrnu+GQOCw40WsUz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb0DxJvLcV1cjxdn+8PsqHbbDu8V36Duzzadqu31U+UY3iwNI0
+	eHQhJUTB95gMFtsDGd7yMDcEBA8qqaGQeDYfnemZ9rIgWWAF2eXNeoyxxSYkbXz0Qz8=
+X-Gm-Gg: ASbGncshT2d/w/Zgkow7bU3a+gQ6VbvylZWCqsCiE9r5XAclP5Yu8Zx89R5KQa4pUeF
+	FWgNdOdsDVjIH8r/I22E7CO8q6bBI5Boc9VEbbN0Z3rlOj4JR+JVsCnrXoNgXLHbvDU3zZf1m/z
+	p6qcbVXYEiyHaoGWMBt1GdgVtIuL3tEsv6G8qTq2sn14aH+FxlhTKT0gWrLjUf29JB20b3+OX2W
+	H6J8+wGbS6A3ltTUvLbdxrfURkxMj6Q1ul5CJVRJhaafMZ0Y5C+wMJeB0BHlX5Ho3p12CrOywY/
+	Q1p09rq8um9s/oj5JUaRk7sRpfUoAuHHxLzQYxjyYv8rAYOQMTKkfW3WTH/wtCaatFsSMhWjbFO
+	9NztqQGbhrA==
+X-Google-Smtp-Source: AGHT+IGdbVBsdjaXGKnWJL6/Me2LFoH8Pz92HGIJbguP4AOhBwLes9ljeQqgXg8uDTeaavxwfW2MVA==
+X-Received: by 2002:a05:600c:3f0e:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-454a3728d1dmr63080385e9.25.1751548838184;
+        Thu, 03 Jul 2025 06:20:38 -0700 (PDT)
+Received: from ernest.hoecke-nb ([89.207.175.50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcebf7sm27340905e9.21.2025.07.03.06.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 06:20:37 -0700 (PDT)
+Date: Thu, 3 Jul 2025 15:20:33 +0200
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Roger Quadros <rogerq@kernel.org>, Nishanth Menon <nm@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Chance Yang <chance.yang@kneron.us>, Prashanth K <prashanth.k@oss.qualcomm.com>, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: dwc3-am62/usb-conn-gpio: USB gadget not added when booting in
+ host mode
+Message-ID: <jhlqcoxnvpw5tndmty322y64n4d2me7mkp45nikos6fzamcs3u@kwahmdbv2zgx>
+References: <taw2mvbj6a2lqwy5h3tuqeifqy2w4gt4pzh4uahxuw27yw64q2@koxg54wgp2a2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <taw2mvbj6a2lqwy5h3tuqeifqy2w4gt4pzh4uahxuw27yw64q2@koxg54wgp2a2>
 
-On Thu, Jun 26 2025 at 16:47, Nam Cao wrote:
-
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
+On Tue, Jun 24, 2025 at 05:08:32PM +0200, Ernest Van Hoecke wrote:
+> On the TI AM62 when using a USB OTG port, I found some unexpected
+> behaviour when booting with this port in host mode.
 >
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> This happens, for example, when booting with a USB pen drive inserted
+> When the pen drive is later removed, the OTG port correctly switches
+> to "device" mode instead of "host" mode, but the related USB gadget
+> does not come up (in my case, a CDC NCM configuration).
+>
+> This issue only occurs when CONFIG_USB_CONN_GPIO and
+> CONFIG_USB_DWC3_AM62 are set to m and not when these modules are
+> built-in.
+>
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Hi all,
+
+This turned out not to be a kernel issue. For future reference and
+anyone else running into this I'll document what our problem was
+below.
+
+The systemd target `usb-gadget.target` is triggered by udev when a UDC
+first comes up. It can happen that by the time gadget-start runs, this
+UDC has been removed from the system again.
+
+For example, we saw such a situation using the DWC3 USB controller and
+usb-conn-gpio kernel modules as loadables. By the time of the DWC3 init,
+udev was active, and during init DWC3 started the USB OTG port in device
+mode. If a pen drive was plugged in at boot, it would quickly switch to
+host mode right after initialisation, emitting another udev event for
+the removal of the UDC. The systemd target was thus reached, but by the
+time gadget-start ran, the UDC was gone.
+
+  dwc3 init       usb-conn-gpio role switch
+      │                       │
+      ▼                       ▼
+udev: add UDC─┐         udev: del UDC─────►/sys/class/udc empty
+              │                                         │
+              │                                         x
+              │                                         │
+              │                                         ▼
+              └────────────►usb-gadget.target─────►gadget-start
+
+For us the solution was to add a udev rule to bind the gadget every
+time the UDC comes up, so the situation can resolve itself.
+
+Kind regards,
+Ernest
