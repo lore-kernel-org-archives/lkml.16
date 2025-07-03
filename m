@@ -1,124 +1,108 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF7C2E2EFC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1D1B95B;
+	Thu,  3 Jul 2025 10:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538108; cv=none; b=NeEO7l+UYdwzHpvTLF5e+5j4dlP2fhlz5W5mXepOLc8PXEDCFkpqZPNqocB2IOJX8aXE2bnorwn5eDos84sZHQv4PgDQz2UtcogZDuS/Q0KIBBSYqRb+VIMPzpNasktp03vg3Xz28FYSMOJAp1vHTacty1HiRd1Y/fWZTeLarIQ=
+	t=1751538169; cv=none; b=RJDCvJEg2p7ggSPU7SwSGQONt+If8jg86pZ2YnZZjDPFAsd/PGJleZdALEidJgvoi5RCXl/AqiwyHaohTlaaa29jdRmc5bh6v6kXmFTJOKPDf2mPYLCdeikEUgGLOsUYHiIMDlihBq8vOiSp2d39RGRbNEigfPcfxzI+JRJEpzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538108; c=relaxed/simple;
-	bh=XexxHMorXGwQYFT4LewShysFN8Ru8ThU14NlLP6LrT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=tvsxe7wW6d6cwCh9N6W4arkKl0f1k03WLHheSpDRv8tWFM8i+iajElAFhWIt4GNEwwmSvnmxHdVJ5XadfDlTo4vKbiE6Gq+SRrnDVQcDMdXJ5MLnWqb4pUW8w9kRvtyQg0Ejd0aCWFtA4JZVaF7LNxi+596b+s7G/zxI9GEPuoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UMvZTPf5; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751538169; c=relaxed/simple;
+	bh=MIb4mxnyzw0FyX4juSZYNLVctI/6u3UOGdOyvRwMQBo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R0iKKiS/IhSYOqY56Lk6H0Uoq4G82Xw5FkhUlRzcyOwErbqjSi9NzRQD45RdXepSrS8GkyAY0p3t6Pb487c1kNH4crEQgvcaTcdFeX7m7Tfu93FzqWSlAc3LfUGbMNSeIkzBGht8JQI6x8lf2oOuG8K3DQK+tBVW0Md1zU6SORo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRp0noeF; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UMvZTPf5"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250703102143euoutp013321df8b592fd44e4c3dc43db6154113~OtqATxe2A1939719397euoutp01P
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 10:21:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250703102143euoutp013321df8b592fd44e4c3dc43db6154113~OtqATxe2A1939719397euoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751538103;
-	bh=nS7gGLPcYu431wACYDIpnQCjfgmdMYV2m+06WEOimxI=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=UMvZTPf5MFlYbVthTszDlaAh2NyGedz2J80TIqan8EPLEip18Xoe//ExhI+DzeMZ7
-	 Y414rsSATVtoYPH/HyaGIRHkKHOIJbBL0jjLdx0Ln3JoUL8WtRta+WIHlpziSIfn4m
-	 j5SnuJeiSMBtJPx9MMOL0WQSQXWRykSbsz9ilvEw=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250703102143eucas1p273c64519df9ebb05e9b3a7d9a38ad341~Otp-qSogJ1836718367eucas1p2p;
-	Thu,  3 Jul 2025 10:21:43 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250703102141eusmtip2ab7c1f9865f3ac73941aa40cc36a67b8~Otp_moHuq2747427474eusmtip20;
-	Thu,  3 Jul 2025 10:21:41 +0000 (GMT)
-Message-ID: <fa235fa1-d5ad-44b7-bf52-068ea41fc9ea@samsung.com>
-Date: Thu, 3 Jul 2025 12:21:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRp0noeF"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a582e09144so3838511f8f.1;
+        Thu, 03 Jul 2025 03:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751538166; x=1752142966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xVW/TWU56BTmNKF84fv0OAX16cBot7rYW8ArRsg5mkE=;
+        b=KRp0noeFUuI1QV2Sft8b4x4s2aCLLGOEaLkRbUd6OJSBWNqACY0slzH2VZ+L28vCpH
+         /9qusGMC2J28ztXhOzCYAp4MVFaup8gtY3967A+pgtPpsikaSnxdGOwZVztLJO2ZZWVs
+         QKkYEgP01iICpFlzaBgQiCQmO5KpC2uOn3Y5W6xlL7CGrwkYE11FZGFBEG+uYA7nTNof
+         18d+bsSOw1LBKmhGKTYDTqgcgCkWHQ8noq3PuIolgJrHZAyWbWcmbadAcCG7zGVLkXSf
+         P9xcz0WJWwjfrjfnN8Bp50zF3n4pA1/Bt2/v3jcIh85MHmTXuTnDL1azOLOmjg1ISP+t
+         g40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751538166; x=1752142966;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xVW/TWU56BTmNKF84fv0OAX16cBot7rYW8ArRsg5mkE=;
+        b=nYhf2ugMt2Hhqk7WPBuIVH2fec0LPbqag8IzxiHxBttbOizQkN2WO8CVwaAI0SZrvy
+         M0SJ0eKtTaYOxOZr7KL9npCyJiEqJVT88EFvLl/UlqTDYFtSqIga6pyqkQhe3/lo2+Ub
+         Td3UlF9GuYrOFPUEbsqAAF5X10PK8k64tvTS4wAR+IXOV75KHW3erUis78ZirbC8+yex
+         zV2zPrW0HVzTlKaYlJmsA59823PAU2JQ7739Sv42p8M7mMPMS5yx+m/jL9c6CZwVzQBK
+         OBT5KkXhABJnq3ZILCJbNeTwP/c3em1M4YWtHyPHzYOEzS4R0bwNj6RyVySU/XwcZkkw
+         xMjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVndsh2TzlpRDgqwTN4MIpGPGmb472+JF/DNx2Y+6PGEzb5WD3NQLVpruh/CVclaMrMSVQCjb4BRg2/+Xo=@vger.kernel.org, AJvYcCXXJli20xyi6aTTDrgjEOSbPbE9/5qD65AUy1FEcuvTAHOIbMLrkcNCEx8H/ZcUStUZj4/7M110@vger.kernel.org, AJvYcCXdAPCqq+Rcj4rvA4EFvxajK/45dbOvNeY/24nbNkQuclMBINt0Mtuj5WkBB1XD+GeU70DtcHUECh16jw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHqpD1I9Gr24i/3gppp8EJ2cK8CQTPNfW3cXppKJjjhdysTnqP
+	BI1H4T225L+z21D/CdI8bOQe5F5JBpnetB6P8WUuqKqyK148F2yAJvpO
+X-Gm-Gg: ASbGnctU7ZyPRUpUERpDDYm0+QxDs4gmVbo2IBeYVAIh8u1CK8pTP5+zwasf/xT1WF6
+	qN3xugRkVbEacLeAhqICcq+KTXeyo64TQfKHvA7jIYDtd2VX6F09m0E+aQAmyT11f5Z0e2mpkb7
+	S+zz9JxtSiNzzth9SqZWQi3KEecdDyyMQZCz6uPSWnOwSAbaD7IO+4POmwngpFgFVAhDlGFQbwg
+	P3LtAZdxO+UbUwwn2XsSro9l0QqNETU+SFLopLVsnojECcylbf4mA6p1FKy4tbejSNuJs3k9Sez
+	wmjrZd9c2APuypykb5Q9XSXOn03isYMSHf+tGR6Rhv07SewQWePnGqIPohH3
+X-Google-Smtp-Source: AGHT+IHx9K8dEssVjiGHPZZBWT06I6nJjqhfdZoFmqrLy6ZGIu7Jpn6N6Q2DksWjUHr6xHIQrbgIzQ==
+X-Received: by 2002:a05:6000:4028:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3b201016931mr4974051f8f.42.1751538166292;
+        Thu, 03 Jul 2025 03:22:46 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e595d1sm18456831f8f.71.2025.07.03.03.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 03:22:45 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Carolina Jubran <cjubran@nvidia.com>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net/mlx5: Fix spelling mistake "disabliing" -> "disabling"
+Date: Thu,  3 Jul 2025 11:22:19 +0100
+Message-ID: <20250703102219.1248399-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] drm/imagination: Use pwrseq for TH1520 GPU power
- management
-To: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
-	<matt.coster@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>, Drew Fustini <fustini@kernel.org>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20250626-apr_14_for_sending-v7-1-6593722e0217@samsung.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250703102143eucas1p273c64519df9ebb05e9b3a7d9a38ad341
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250626093356eucas1p1adfcd565173d939f82e15252189c316f
-X-EPHeader: CA
-X-CMS-RootMailID: 20250626093356eucas1p1adfcd565173d939f82e15252189c316f
-References: <20250626-apr_14_for_sending-v7-0-6593722e0217@samsung.com>
-	<CGME20250626093356eucas1p1adfcd565173d939f82e15252189c316f@eucas1p1.samsung.com>
-	<20250626-apr_14_for_sending-v7-1-6593722e0217@samsung.com>
+Content-Transfer-Encoding: 8bit
 
+There is a spelling mistake in a NL_SET_ERR_MSG_MOD message. Fix it.
 
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 6/26/25 11:33, Michal Wilczynski wrote:
-> Update the Imagination PVR DRM driver to leverage the pwrseq framework
-> for managing the complex power sequence of the GPU on the T-HEAD TH1520
-> SoC.
-> 
-> To cleanly separate platform specific logic from the generic driver,
-> this patch introduces a `pwr_power_sequence_ops` struct containing
-> function pointers for power_on and power_off operations. This allows for
-> different power management strategies to be selected at probe time based
-> on the device's compatible string.
-> 
-> A `pvr_device_data` struct, associated with each compatible in the
-> of_device_id table, points to the appropriate ops table (manual or
-> pwrseq).
-> 
-> At probe time, the driver inspects the assigned ops struct. If the
-> pwrseq variant is detected, the driver calls
-> devm_pwrseq_get("gpu-power"), deferring probe if the sequencer is not
-> yet available. Otherwise, it falls back to the existing manual clock and
-> reset handling. The runtime PM callbacks now call the appropriate
-> functions via the ops table.
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  drivers/gpu/drm/imagination/pvr_device.c |  36 +++++++-
->  drivers/gpu/drm/imagination/pvr_device.h |  17 ++++
->  drivers/gpu/drm/imagination/pvr_drv.c    |  27 +++++-
->  drivers/gpu/drm/imagination/pvr_power.c  | 139 ++++++++++++++++++++++---------
->  drivers/gpu/drm/imagination/pvr_power.h  |  13 +++
->  5 files changed, 185 insertions(+), 47 deletions(-)
-> 
-
-Hi,
-
-I'm checking in on the status of my pwrseq patch above. Is this on track
-for the next merge window?
-
-Please let me know if there's anything else needed from my end to help
-get it ready.
-
-Best regards,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c b/drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c
+index 154bbb17ec0e..7ca6bba24001 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c
+@@ -1353,7 +1353,7 @@ static int esw_qos_switch_tc_arbiter_node_to_vports(
+ 					     &node->ix);
+ 	if (err) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+-				   "Failed to create scheduling element for vports node when disabliing vports TC QoS");
++				   "Failed to create scheduling element for vports node when disabling vports TC QoS");
+ 		return err;
+ 	}
+ 
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+2.50.0
+
