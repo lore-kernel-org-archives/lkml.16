@@ -1,117 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E0722538F;
-	Thu,  3 Jul 2025 08:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFE92BD593;
+	Thu,  3 Jul 2025 08:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751529832; cv=none; b=WUwPT6uyM+2ZnYSXrAO7x49ijm6HUGXBXGhWMXEu7/BqWs+uVR283o+d923qOPPVTosduKJHtETEGYvVz7E4wqAaIZ6qtmAj4HV058ND+fw/UAdInKS3rcKtWQsJ0uPg8xjsPPU6lNBffYKC1vd5Ohm61okc9FPxtYslJXe/U5Q=
+	t=1751529860; cv=none; b=TZH61rbP75C/8aLiunBVKo75qhjotQZLUl7OvxraX9WGjZDEqBsirVGcJyo+k85m4mcfeDY5bZygnE9E2uwm25kh52l2Lyc3PSE35LKpUyNYZEaJ0nxJ2fEfKikmNlcU8nt7yLz5+Mze+5SeatMl6EG5plzmxz1Sp93P4bDjGfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751529832; c=relaxed/simple;
-	bh=8dt959W9DWr4IWf1oCIoifPgEicuXF+5YbkemiFCmXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EobbGI0v2oXKlOpj4qHgGDteS0sYegBGwn6kT4v2Jj+y5gzvAPWede/TfxE2OnOoSbFR6GGbLkRaW43tDkja/bN64n0IbF4g4u1tfeo1kg1m/IZ+YHLBOehVB8+UVhXybc6WL6x5R1SLFD74t1Q2T9MOJIjZjV45pwwX9ITKDhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7vcIRN+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751529860; c=relaxed/simple;
+	bh=qck+zoSNbDS+1fzZEFSAxmGXpteaQLljB30Wp0QvAnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QjAGUGEeM5Vg/MzJ1SNyIzbupscSdMSl08Bv9sSrTE7/SkC43DCgAjMvKYQ7TXHa1jcYle6IuPiZKmuZbCi6LvTttQ8J+6YquWG/+qSt6RtbaTZ+IOfEhq3jRpbFpROV4IymZM3br77OUS3bnfFNw7mQQ2h+bnareME3Q31hHLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=m+X8rmO7; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7vcIRN+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADFD4C4CEEE;
-	Thu,  3 Jul 2025 08:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751529832;
-	bh=8dt959W9DWr4IWf1oCIoifPgEicuXF+5YbkemiFCmXU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n7vcIRN+L9GF0pU06pjFH+uudjzn04CWC4O+B45UvHhx4D2GcMMvaAFF0rlz9x4qr
-	 X7cn7ebW0UTP3oIa2lhzJN/NWypJ+BKuWWVuQt4V/cyOL6RFipUcBtP0tp2rnfX5t5
-	 toO2s0ns3Zi98FpC/l1jBibgmd/ucRpqKM7lWv1z9xi2Nk9O7o7vKXCgg9cKGZKEpe
-	 DvuEFIQRZomLAjFEVYydGcSJGllhPXT6u0nfFbuskOnhKaJQp6pBT/hllyZYJm9v5T
-	 C9qnt2PE5LX8t8Hv1M7NOVbRPUO71ySR0KSC/Z3lzmdegn0Aw8JSIsq31spKJ2+IHn
-	 7T6cq2LCm56pw==
-Message-ID: <1e08ec21-e863-4720-8604-df0640624a83@kernel.org>
-Date: Thu, 3 Jul 2025 10:03:44 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="m+X8rmO7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=iurUCQkQ6NU0bD6+V+iw118TmNVywv06hQqDSqml8f4=; b=m+X8rmO7ABcAgVme6uM4LHj+d1
+	WYzvhrViBMOPIoPNblfxEgNGO1uvQRItO3AdLJWOPy/k531y5YFuyWth71nC4/ByK1iCWgfsXPQDo
+	neP4KP+lu27yO8zDeTTWNAVX9bc+j7qY2mq0JEfsLBNbTdoggQOvaV8QBLyLBkb9epgEpsTT06H+u
+	qs9ZlY+I2wofvcd3cJkxEYiTH/fsjrQ1NzuDfyGbRhKaoszL0GPVYwyjZ1wJVKrHgYOjUNoS4bozz
+	PtmhstF51mhw2k+kO4PEAA4il2AJFsIrVErP5Q7YN5KViW1Fl6oO5MQo8e+tn0DhuIURCSvJ9lQwD
+	BUwEH+bQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56566)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uXEvK-0000MI-0j;
+	Thu, 03 Jul 2025 09:04:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uXEvI-0004vN-04;
+	Thu, 03 Jul 2025 09:04:00 +0100
+Date: Thu, 3 Jul 2025 09:03:59 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm: DT: imx6-sr-som: Replace license text comment with
+ SPDX identifier
+Message-ID: <aGY5bx1Qpx_7Dqea@shell.armlinux.org.uk>
+References: <20250702-sr-som-dts-lic-v1-1-2e8584e6c837@prolan.hu>
+ <aGWqIzNvSVw4olz5@shell.armlinux.org.uk>
+ <2f628251-5b67-47e0-8038-6c1aeee1ef91@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next 2/3] ASoC: tas2781: fix reset-gpio polarity
-To: Catalin Popescu <catalin.popescu@leica-geosystems.com>,
- lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, shenghao-ding@ti.com,
- kevin-lu@ti.com, baojun.xu@ti.com, perex@perex.cz, tiwai@suse.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, m.felsch@pengutronix.de,
- bsp-development.geo@leica-geosystems.com
-References: <20250703075037.2558549-1-catalin.popescu@leica-geosystems.com>
- <20250703075037.2558549-2-catalin.popescu@leica-geosystems.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250703075037.2558549-2-catalin.popescu@leica-geosystems.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2f628251-5b67-47e0-8038-6c1aeee1ef91@prolan.hu>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 03/07/2025 09:50, Catalin Popescu wrote:
-> Both TAS2563 & TAS2781 have an active low reset, yet the driver assumes
-> an active high reset. Hence, in order to get the chip out of reset we
-> need to lie to the devicetree about the reset polarity. The patch fixes
-> the driver so it could work no matter the polarity and leaves it to the
-> devicetree to define the correct polarity.
+On Wed, Jul 02, 2025 at 11:56:20PM +0200, Csókás Bence wrote:
+> Hi,
 > 
-> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+> On 2025. 07. 02. 23:52, Russell King (Oracle) wrote:
+> > On Wed, Jul 02, 2025 at 11:41:54PM +0200, Bence Csókás wrote:
+> > > Replace verbatim license text with a `SPDX-License-Identifier`.
+> > > 
+> > > The comment heades mis-attributes this license to be "X11", but the
+> > > license text does not include the last line "Except as contained in this
+> > > notice, the name of the X Consortium shall not be used in advertising or
+> > > otherwise to promote the sale, use or other dealings in this Software
+> > > without prior written authorization from the X Consortium.". Therefore,
+> > > this license is actually equivalent to the SPDX "MIT" license (confirmed
+> > > by text diffing).
+> > > 
+> > > Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> > 
+> > As Florian has already mentioned, the preferred format for the summary
+> > for arch/arm is "ARM: ... " and by extension for arch/arm/boot/dts,
+> > it's "ARM: dts: ...", not "arm: DT: ..."
+> 
+> Ohh, I misread it, I thought it was just about `imx6: board:` ->
+> `imx6-board:`... Ok, I will re-format it for v2.
 
+Note that it applies to _all_ patches to arch/arm/boot/dts.
 
-This breaks all existing in-tree and out-tree users.
-
-DTS patches are independent, so you cannot fix in-tree that way. Anyway,
-you cannot fix other users, so sorry, you are stuck with this or you
-need some tricks (I once did for a qcom codec, but I don't know if this
-is really the solution and my case was easier about the users).
-
-Best regards,
-Krzysztof
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
