@@ -1,152 +1,153 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A7228D8F1;
-	Thu,  3 Jul 2025 13:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E592AF19;
+	Thu,  3 Jul 2025 13:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751547855; cv=none; b=twfLOGDolGpYBaJyZ2iVTAlaqlyAbq6anJcbbVgP1A+SKi/C5/54PhnbwYzn1kjMQnQCDpRn/8hTaR8uA+CLFsAzxfhuucQ7ohXAuGx2nLvKmjvj6U7t/SSkBj4OpQiRvB+0XIkJ4hngwEPAQMy3mhgAeR82CH4iqjnAiHoKBks=
+	t=1751547932; cv=none; b=jMACQYpKwFgSoBjmrpAWKjnPthhJN7SHy3Ig4kFp/5wVns+YXRurlumchom4EFg/+vKpv9ViiyKCiSOxSD2It0V8jOZSkVBoWRC5yqxknbZW2AtBzqc/Fu7xDkTnH/BPTjHGLsiyi3mXFhoAJvBuNRIKFknH7PUUGW4MiI4MV+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751547855; c=relaxed/simple;
-	bh=1sv+eWZirka/W7c2+072tNVMXGRP+e/3BDtJucLxipU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Em8adUtvuev0FvFZjwZvxqfiGegdf2YYa9dyd8frg8iNSldm96qd4A59EbBmhTbHQ20DALLl9pXxxrL7ztUldJp531rVFhERyhLZP6n5PT9IEbchMKVdWkk4KTIl1/Yw+aMoGR/8/Q2zk6KLWKHpu9StvpBLE9f7q7jk+YTSQ+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [85.214.157.71])
-	by gardel.0pointer.net (Postfix) with ESMTP id 9F738E81788;
-	Thu,  3 Jul 2025 15:04:08 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id 38A1616005E; Thu,  3 Jul 2025 15:04:07 +0200 (CEST)
-Date: Thu, 3 Jul 2025 15:04:07 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when secure
- boot be disabled"
-Message-ID: <aGZ_x8Ar6iwzt2zV@gardel-login>
-References: <Z9wDxeRQPhTi1EIS@gardel-login>
- <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
- <aGYurikYK1ManAp3@gardel-login>
- <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
+	s=arc-20240116; t=1751547932; c=relaxed/simple;
+	bh=sm3m+p6kC3+00ejw98SpOUZjuVAOus0moJ9LDsSFris=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WLZt3ai33kAsoJPz8V2ZrEZ0dCuJttvt1jTANAfJJ3gN4bKDrHjGSjRRHQdGTIKja1oq2uG5a5Bl1pQX1d9NVKjTg7KDBRw6WiAXQ1+8J+xDT4yzQRuB5GcvwcNs+EHg87O7oXcTDe7PVSpQ6ikzHL+jH1WpZRCwbIncaUqaU7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BEPjVVzG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BEPjVVzG"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563CxU8R022911;
+	Thu, 3 Jul 2025 13:05:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=yZXE37DVoxiXxny10g4j6TmPnRi4VrKuMBShdSrCbIo=; b=BE
+	PjVVzGAibofbtMKs+bP5oKZURF9V5i0L05Dq+BvheVrfeAKmevbig0jRFLs8Z66M
+	DuqqPFXJqacCRj2lJVvGfAphia4B9knp9C+DmnwPhxK00wZRAe9nQt+fu27FQjC9
+	3Spm20w1NexHJE7ps/u1ElLQuXm9i9Pj+6tcicgmwcEYo5LUrRQGiw0JpYdzBr8D
+	c6y7ivve0uIAzDb6elZx6rKMk9cspypRf+smZWUaB3Z8aJT53yjW9YxX7NAY8aHy
+	nDyNgsva8geo+I1hWP+Wb+qN13nVTcO5S1qCOsVgi3aFfZlE3esZauGWcctEZMoy
+	g98XuBqNcqGZnPvDuSpw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn77hc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 13:05:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563D5DwC014391
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Jul 2025 13:05:13 GMT
+Received: from jinlmao-gv.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 3 Jul 2025 06:05:09 -0700
+From: Mao Jinlong <quic_jinlmao@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v8 0/2] coresight: Add label sysfs node support
+Date: Thu, 3 Jul 2025 21:04:51 +0800
+Message-ID: <20250703130453.4265-1-quic_jinlmao@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDExMCBTYWx0ZWRfX1U+HfRhzbHIA
+ 3sbfWc71VoOW2b7fN/Exd84W5kQUfgo8/+kMhE6JmGcWWuH1w5QIWQRe2aocMNhLRUoa+SxtHuh
+ 5Ty9wZl+2VHkQBdg0L1cCIo0AjZ1DAxoWA28wu5SK8LNXff8cAxVgd6RPCSYa80ILnbqZLyC0lE
+ HzyuSOTFy2pI7/jh+FFo7PlfadO04Vkj/SkaYj8uvvmfD1P0hnOvqtLxS51L3Vvd5kibHZxSpSz
+ /LyWrAEnzdPBVA6WkpBzERT+OrI0ejCvW4ua8/NT6PtOraFYkr7vE2qV7+2QGVP0MjiyT9q542R
+ ilERgGNkpBRfYn8VndftXuzu7ilHCJfq88i4IOKcBEU0/5HF8VeAMtLn1oQdGORUq3tJoC3+1Sp
+ tBMcRVsEi6TE3RC2uj7qpCuiPuDu1SibOTQ4ZAXu+WWfTktH1MeBLoFYL//KQZsrK0v0KwfZ
+X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68668010 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=3Jbm9Zxj_fdaoH2CIgQA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: hlxxP5mOk5OJ1bvOh0o7duiDq9Ddq3xv
+X-Proofpoint-GUID: hlxxP5mOk5OJ1bvOh0o7duiDq9Ddq3xv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 clxscore=1011 bulkscore=0 impostorscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507030110
 
-On Do, 03.07.25 07:23, Mimi Zohar (zohar@linux.ibm.com) wrote:
+Change since V7:
+1. Update the conflict when apply to coresight next.
+2. Update the Date and version in ABI file.
+V7 link: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250226121926.2687497-3-quic_jinlmao@quicinc.com/
 
-> > > The ability of loading MOK keys onto the .machine keyring and linked to the
-> > > .secondary_trusted_keys keyring is an exception based on the assumption that
-> > > that there is a secure boot chain of trust.  Allowing untrusted keys onto or
-> > > linked to the .secondary_trusted_keys keyring, would potentially allow loading
-> > > code signing keys onto the IMA keyring signed by untrusted MOK keys.
-> > >
-> > > I was really hesitant to allow this exception of loading MOK keys onto the
-> > > .machine keyring in the first place.  I'm now even more concerned.
-> > >
-> > > This is not just an issue of being more or less restrictive, but of adding a new
-> > > integrity gap when one didn't exist previously.
-> >
-> > But we are talking of the case here where SecureBoot is *off*,
->
-> Exactly, so there is no trust in any keys other than those built into the
-> kernel.
+Change since V6:
+1. Update the date and verison in ABI file.
 
-No! There *is* *no *trust* in this case where SB is off, not in those
-keys built into the kernel nor in any other. Believing there was is
-just a really broken security model!
+Change since V5:
+1. Update the kernel version of ABI files.
+2. Add link of different patch versions.
+V5 link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20241210122253.31926-1-quic_jinlmao@quicinc.com/
 
-> True that is of course dependent on trusting the kernel.  In the case of
-> MOK, trusting additional keys requires at minimum a "safe" secure boot
-> environment and other things to prevent its abuse.
+Change since V4:
+1. Add label in DT and add label sysfs node for each coresight device.
+V4 link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240703122340.26864-1-quic_jinlmao@quicinc.com/
 
-The thing is that if SB is off, then all bets are off, it's really
-pointless in assuming the kernel image had any trust left you'd need
-to protect. That's just *not* the case. Where do you think that trust
-should come from?
+Change since V3:
+1. Change device-name to arm,cs-dev-name.
+2. Add arm,cs-dev-name to only CTI and sources' dt-binding.
+V3 link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240131082628.6288-1-quic_jinlmao@quicinc.com/
 
-If SB is off, then anything that got loaded early enough could just
-patch arbitrary keys into the ELF image of the kernel before starting
-it, and everything will look perfect later on, because the image is
-not authenticated after all via SB. So there *already* is a way into
-the kernel keyring with this – it's just really messy to parse and
-patch ELF at runtime like this from the bootloader. My hope with just
-relaxing the rules on MOK keys when SB is off is to just make this
-stuff cleaner and more elegant (and also to leave the ELF image intact
-so that we get clean measurements, both of the kernel and of the keys
-we add).
+Change since V2:
+1. Fix the error in coresight core.
+drivers/hwtracing/coresight/coresight-core.c:1775:7: error: assigning to 'char *' from 'const char *' discards qualifiers
 
-> > i.e. there is a concious decision in place that there is no trust
-> > chain, and that the firmware *happily* *already* accepts unsigned boot
-> > loaders/kernels and just runs with them. If SecureBoot is already off,
-> > then an attacker can patch around in the kernel invoked at boot
-> > completely freely anyway, there is *no* authentication done. Hence
-> > it's really weird to then insist that the path into the kernel keyring
-> > via mok keys is off in *only* this case, because an attacker can get
-> > into that anyway in this case, it's just a lot more cumbersome.
-> >
-> > It's really strange that currently when people ask for tight security
-> > (i.e. SB on) the linux kernel is super relaxed and allows any keys to
-> > be inserted, but if people ask for security checks to be off (i.e. SB
-> > off) the kernel starts being super strict and doesn't allow any keys
-> > to propagate into mok. That's really confusing and contradictory, no?
->
-> That all may be true, but you're ignoring what I said about only "trusting" MOK
-> in certain situations.  If you have another safer, better mechanism for
-> establishing a new root of trust for keys (e.g. TPM), then by all means share it
-> and we can make additional exceptions.
+2. Fix the warning when run dtbinding check.
+Documentation/devicetree/bindings/arm/arm,coresight-cpu-debug.yaml: device-name: missing type definition
+V2 link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240115164252.26510-1-quic_jinlmao@quicinc.com/
 
-Yes, we have that in systemd: there's local attestation in place
-already in systemd via the "systemd-pcrlock" feature. i.e. the idea is
-that the disk encryption keys are only released to the OS if the
-measurements of the boot phase match some golden measurements. This is
-in a way a reasonable alternative (or addition) to SecureBoot: instead of
-prohibiting code to run if it doesn't carry a signature of some
-trusted key, you let it all run, but then later on you refuse to give
-it the disk encryptions keys – the keys to the kingdom – unless the
-measurements all along the way match what you expect them to be. This
-protects the OS quite nicely, and makes SB to some level optional, as
-we basically enforce security "a-posteriori" rather than "a-priori" – by
-means of the TPM's key policies.
+Change since V1:
+1. Change coresight-name to device name.
+2. Add the device-name in coresight dt bindings.
+V1 link: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20230208110716.18321-1-quic_jinlmao@quicinc.com/#25231737
 
-Now you might wonder: if we have such local attestation policies, why
-do we *also* want to get keys into the kernel keyring? That's because
-the attestation policies are checked (primarily) when FDE is unlocked,
-so that's our security boundary, our milestone where eveything
-*before* is protected via attestation, but which cannot protect
-anything *after*. In my model we then want to protect
-any further resources via the kernel keyring then. hence it matters to
-us to have a clean, elegant way, to insert keys *before* that
-milestone that then can protect resources comeing *after* it.
+Mao Jinlong (2):
+  dt-bindings: arm: Add label in the coresight components
+  coresight: Add label sysfs node support
 
-Why do I want to avoid SB at all for these setups? Mostly, because
-it's a bureacractic effort to get your keys intot he Microsoft
-keyring, and if you do get them there, then their security value is
-kinda weak anyway, because the allowlist that the keyring is is such
-an extremely wide net, it's at best a denylist of bad stuff rather
-than an allowlist of good stuff at this point. It's kinda undemocratic
-too. But anyway, the pros and cons of SB are another discussion. I am
-primarily interested in making it optional, so that you can get
-security with SB and without SB, because you always have someting to
-protect the boot, and always something that protects the rest.
+ .../testing/sysfs-bus-coresight-devices-cti   |  6 ++++
+ .../sysfs-bus-coresight-devices-funnel        |  6 ++++
+ .../testing/sysfs-bus-coresight-devices-tpdm  |  6 ++++
+ .../bindings/arm/arm,coresight-cti.yaml       |  6 ++++
+ .../arm/arm,coresight-dummy-sink.yaml         |  6 ++++
+ .../arm/arm,coresight-dummy-source.yaml       |  6 ++++
+ .../arm/arm,coresight-dynamic-funnel.yaml     |  6 ++++
+ .../arm/arm,coresight-dynamic-replicator.yaml |  6 ++++
+ .../arm/arm,coresight-static-funnel.yaml      |  6 ++++
+ .../arm/arm,coresight-static-replicator.yaml  |  6 ++++
+ .../bindings/arm/arm,coresight-tmc.yaml       |  6 ++++
+ .../bindings/arm/qcom,coresight-tpda.yaml     |  6 ++++
+ .../bindings/arm/qcom,coresight-tpdm.yaml     |  6 ++++
+ drivers/hwtracing/coresight/coresight-sysfs.c | 32 +++++++++++++++++++
+ 14 files changed, 110 insertions(+)
 
-Lennart
+-- 
+2.17.1
 
---
-Lennart Poettering, Berlin
