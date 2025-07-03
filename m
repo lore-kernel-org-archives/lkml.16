@@ -1,87 +1,198 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25B2F29;
-	Thu,  3 Jul 2025 00:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437E725634;
+	Thu,  3 Jul 2025 00:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751503122; cv=none; b=GxKbWNj6HMLO+NBtQhVFu1mNI+5R/5GqQ7kjBUvim5u+iM+awXxc7pv072pty9uruz4NO5QzE0XZkp/sWM8mVvnJtDHdpiLwMXrByXEMm6MFnk5YoO3ONrF0B2r3uovdoxD/w/hElz7Qx0sfZ63VNPBGg8tGEHUsqIaREBwuoKo=
+	t=1751503151; cv=none; b=MMBThITtN3L+t0LJ4hnuRSqJXyEy301IkvqnidadMikMPSBJbv0Xeixa6dAp98kZy7MSkWb94GFe1yDn7o8sGpxsZvyg9bJzsPguxfN66Uf5srz1E/a3hSIn1aU03ccqCTbnBbKO+1uEprSmpjv2YalS3fFZuo8L/6K/hcSYUI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751503122; c=relaxed/simple;
-	bh=g9Me9kmoPTzT0HnHlWcgqhB/Q5G0RngRw+bx7+XrqVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/P38QfBhJGgJEjET44zt2ZSZT6H+7a5YXvKVUmOFeeEpxuiikO0DkEche/PqNbOLSI0MTwdUKTenCCY7cTYY40SPzZBEkQnKj36sA3v/sFLWbIYUGWp+ivTJIsg3m7k/pJCGO1t+C2UPfLaAQPH1WAt4+ilofvhZgMOEO11+sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=Vh89Nxq6; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	s=arc-20240116; t=1751503151; c=relaxed/simple;
+	bh=1mGmSZ6Q4EQzklWyd+gvDml6HLnkHJsU6FL1hGLgGuI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kTOpA0i9iUC3+548xzW7zZRg3S97sEkwffKJ4Z7h+U0Bo+e9O2lmj3P8mjfAhykO330XKaBwjSPKexwB3N3jx1GUDMGXi0kJ/ers+Nl+So2DLMihb8h56nZ5Fu1saoNNm0uk+GqvkHV70EAdWgs7EqZ8HIijPF/yaxmIPTp1w70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXbOagx+; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="Vh89Nxq6"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bXdDD4nMKz9tc3;
-	Thu,  3 Jul 2025 02:38:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1751503116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PoB/Y9BQu84C/gSWrL3uiOGDePV7Lkp3Z6VQaSyvfV0=;
-	b=Vh89Nxq6By/fLoaWcBiM6Z/uO1OB2vC06SSZd7oNyrWWtXILt8urquz8n36GhHmX48F0rs
-	XsYKonuvgE/snaIQLZR0Pg1YNf3mxEO+8A7PDS9bUwiLZjFrWmWx2nWeJgJvMcJfq9fGSg
-	aRm8Zr/G2096YSVWyMz8rYu6SIDXdTa7SpSW1fIr27U2F1gKjtebmZdf3leJ4Idf4dnRZb
-	esNp8Jp9l1fdJNcjQV9CmrKPyOsYCDAVpbIUP5iGj3spu+5YrUQ4PHMrPaEvAPr9Hm/bPk
-	PKZo/lwUQhWcduRws0IA1xiIVMNETnUhsuyPZ+obOKQ15yMrkQGOCOykXoCpgA==
-Date: Thu, 3 Jul 2025 06:08:24 +0530
-From: Brahmajit Das <listout@listout.xyz>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	kees@kernel.org, ailiop@suse.com, mark@harmstone.com, 
-	David Sterba <dsterba@suse.cz>, Brahmajit Das <bdas@suse.de>
-Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <25hcimtuueppt4w3ccvid3d7c3eots7nat4qspdr6t6minxfa2@zb4fmwz7qsyp>
-References: <20250620164957.14922-1-listout@listout.xyz>
- <20250702182712.GA3453770@ax162>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXbOagx+"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74b54af901bso854419b3a.2;
+        Wed, 02 Jul 2025 17:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751503149; x=1752107949; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zp6SVLQWv+yq/FCUnVZXe5xSnWGW/xX2hl0tN5GjdNg=;
+        b=MXbOagx+5B4OBiQLi1VNEqJDy1HH5SEe3aAhRXnyoon90mKBc0QHwEgSa1KMfsNFJ+
+         1dnMVqmOfcK/F6R1mR0VHiIJfXHe8goz5e6RccUVj0CTwf0mwT/xJhsvDM9LlkH67ZFC
+         Ob4cZVzVVOOY9zKshIT4Yus1PysFjXUAkjKWQop408uNf3SudiUvsugXYAmQs/DaLAlt
+         63xkdvixnTAO12gQc1Hm3flb7aby2e4KYgfJGFp0ABw3CAw7toUE1eA5mSljuxiTB1ef
+         +r2P1Ofybk+6ePyQz4wc6d9P1B05hxAaP2T0/kAQ/Gg2NfGnIQXDL/dLAc8Gk8YXaHpG
+         dg9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751503149; x=1752107949;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zp6SVLQWv+yq/FCUnVZXe5xSnWGW/xX2hl0tN5GjdNg=;
+        b=RNsYeKvPeJ5Er0XoaMhH94pWxaM/JNwdwKTvOL0RQTfa05sGjkeAxT54qYbmXhT5Cb
+         iGHASky1P1c65zX81Jvyr1sQfnRc+IxS+mfkGMphCIL+FrC3jH5COpxEu/lH3hksdry+
+         uaoUcVJn7E5C+L4vaqtbzeFboccl6zanxmC33dfuKj8SGyrce4CJWyVh42LwAUzGC16C
+         ipwNoZaH4vvpQ2Zn7E6h3c/GosX0rrKxuKCtgd+iw/8GAwBlKh7vWIseddW98Axwr4hp
+         h2ra6piUaMIdEy5xQbjb/qCMx0bdSiltl9So9ctgUIZfNQ01elFsLyoCE69tQWrWJ9TO
+         5sMg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4/LsQD9jZyngAc+txA65kIc6V2mdUL/g+BnUPbqjydL59ybWSqArZyUFyhjwj1ghyc8uCvKO7RDfDI7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2YUYLzb+YA6ycUl0Ep54paZQpSO/JvHWwKwueg3/nXH3VgGAC
+	BYf2HGfm0JFZ87IhW32Ckjz5YaGxal+wDk+4gQ5Gd4CjoIRigLv3jTCj
+X-Gm-Gg: ASbGncsn6S3P86TsT2Ewwow6dHHJNkL0vpvnd3JjjAO1iWS65/tELwEmHhvKdmX5xMa
+	0l0wP3UFd4FIdi5qa5aY4Sz6CXm6xNT/89wPDWWwK5YTxjq4TVy3Q0vO+wFPnK5yh07dsFm8k82
+	HnsdYw6DAtXJigKWbG3azawn0q523JWwO4xFuNrijtYXdRqu8IkqNqbfdgR+fzRWNlg6pMF/MZF
+	nzeVZBuGaKa8bPtKo7BBMEsFX8zCx98lPhue/Fp7IGziupgnuxMbmaWlVES3hGqTbo1FUQ2RbQP
+	Y02Qi06o71Ho/q/G/3sFGNfeHST/avxoOYZffSDKIS8SLmVaH9su2DtRPxQOyobaprjDqT2h
+X-Google-Smtp-Source: AGHT+IE6EjPWTP12xSibuAaTHAAp7XhOTvQoc548Zur0R4Hz0WB245X9+rq3l6A2vL6aDv6YxuH4PQ==
+X-Received: by 2002:a05:6a21:9988:b0:21a:de8e:5cc3 with SMTP id adf61e73a8af0-222d7dcf2e0mr8369054637.4.1751503149400;
+        Wed, 02 Jul 2025 17:39:09 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af541e8fasm15585369b3a.67.2025.07.02.17.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 17:39:09 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH] riscv: dts: sophgo: sg2044: add pmu configuration
+Date: Thu,  3 Jul 2025 08:38:43 +0800
+Message-ID: <20250703003844.84617-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250702182712.GA3453770@ax162>
+Content-Transfer-Encoding: 8bit
 
-On 02.07.2025 11:27, Nathan Chancellor wrote:
-> Hi Brahmajit,
-> 
-> On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
-...
-> 
-> This change is now in -next as commit d282edfe8850 ("btrfs: replace
-> strcpy() with strscpy()"), where this hunk appears to causes a slew of
-> warnings on my arm64 systems along the lines of:
-> 
-...
-> 
-> It looks like the offset_in_page(buf) part of the WARN() in
-> sysfs_emit() gets triggered with this, presumably because kmalloc()
-> returns something that is not page aligned like sysfs_emit() requires?
-> 
-> Cheers,
-> Nathan
+Add PMU configuration for the cpu of sg2044, which is the V2
+version of C920.
 
-Nathan, can you help me with providing a bit more info to debug this. I
-set up qemu aarch64 env with btrfs but couldn't reproduce this issue by
-boot test. Basically trying to understand what workflow triggered this.
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
+ arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi | 91 +++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-You can find my kernel config, dmesg log and boot logs here:
-https://gist.github.com/listout/de8b6efa6ddb02805b5886f35c3f73d4
-
-Not to mention I'm very much open to suggestion from other btrfs
-developers as well.
+diff --git a/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
+index 6a35ed8f253c..2d21b2881ab8 100644
+--- a/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
++++ b/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
+@@ -2778,6 +2778,97 @@ l3_cache: cache-controller-16 {
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "riscv,pmu";
++		riscv,event-to-mhpmevent =
++			<0x00003 0x00000000 0x00000010>,
++			<0x00004 0x00000000 0x00000011>,
++			<0x00005 0x00000000 0x00000007>,
++			<0x00006 0x00000000 0x00000006>,
++			<0x00008 0x00000000 0x00000027>,
++			<0x00009 0x00000000 0x00000028>,
++			<0x10000 0x00000000 0x0000000c>,
++			<0x10001 0x00000000 0x0000000d>,
++			<0x10002 0x00000000 0x0000000e>,
++			<0x10003 0x00000000 0x0000000f>,
++			<0x10008 0x00000000 0x00000001>,
++			<0x10009 0x00000000 0x00000002>,
++			<0x10010 0x00000000 0x00000010>,
++			<0x10011 0x00000000 0x00000011>,
++			<0x10012 0x00000000 0x00000012>,
++			<0x10013 0x00000000 0x00000013>,
++			<0x10019 0x00000000 0x00000004>,
++			<0x10021 0x00000000 0x00000003>,
++			<0x10030 0x00000000 0x0000001c>,
++			<0x10031 0x00000000 0x0000001b>;
++		riscv,event-to-mhpmcounters =
++			<0x00003 0x00003 0xfffffff8>,
++			<0x00004 0x00004 0xfffffff8>,
++			<0x00005 0x00005 0xfffffff8>,
++			<0x00006 0x00006 0xfffffff8>,
++			<0x00007 0x00007 0xfffffff8>,
++			<0x00008 0x00008 0xfffffff8>,
++			<0x00009 0x00009 0xfffffff8>,
++			<0x0000a 0x0000a 0xfffffff8>,
++			<0x10000 0x10000 0xfffffff8>,
++			<0x10001 0x10001 0xfffffff8>,
++			<0x10002 0x10002 0xfffffff8>,
++			<0x10003 0x10003 0xfffffff8>,
++			<0x10008 0x10008 0xfffffff8>,
++			<0x10009 0x10009 0xfffffff8>,
++			<0x10010 0x10010 0xfffffff8>,
++			<0x10011 0x10011 0xfffffff8>,
++			<0x10012 0x10012 0xfffffff8>,
++			<0x10013 0x10013 0xfffffff8>,
++			<0x10019 0x10019 0xfffffff8>,
++			<0x10021 0x10021 0xfffffff8>,
++			<0x10030 0x10030 0xfffffff8>,
++			<0x10031 0x10031 0xfffffff8>;
++		riscv,raw-event-to-mhpmcounters =
++			<0x00000000 0x00000001 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000002 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000003 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000004 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000005 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000006 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000007 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000008 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000009 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000a 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000b 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000c 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000d 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000e 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000000f 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000010 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000011 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000012 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000013 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000014 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000015 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000016 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000017 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000018 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000019 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001a 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001b 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001c 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001d 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001e 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000001f 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000020 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000021 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000022 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000023 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000024 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000025 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000026 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000027 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000028 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x00000029 0xffffffff 0xffffffff 0xfffffff8>,
++			<0x00000000 0x0000002a 0xffffffff 0xffffffff 0xfffffff8>;
++	};
++
+ 	soc {
+ 		intc: interrupt-controller@6d40000000 {
+ 			compatible = "sophgo,sg2044-plic", "thead,c900-plic";
 -- 
-Regards,
-listout
+2.50.0
+
