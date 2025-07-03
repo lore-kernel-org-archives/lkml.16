@@ -1,72 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2AB2E6114
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37BD2E3B1E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 12:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546379; cv=none; b=TwQUYjQ+fiYo9txM1WiqrgrymHTCe+7JW7GmxBqMz45sMsk/hmsnvgv/xl/d4cW5mMvd4816VjajCnqNdSZDmLa71IB73DuxaDInZl0z7MVfNtmjaRsEMTuVIeuIi0tj2xcUE37HbSi7WkanmgK5fEDOm8ZAG82ABZnowlzDYQ8=
+	t=1751546528; cv=none; b=I8QIAgN4Eu3Z3g+wmkkp1cmyEjdiRfqv7v/uEDKJMc6MaMkYMoQqJWgXWxpebHBl94qNxNXaI4dJM8OPqBtivXZh0Mk5zV1S+HncKU/0bslFfvHN+H2TX5jJk/crZFxq/o4YH4NkrL7lAxR55NtKjxG5TTMpTVyxInpxTZIepDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546379; c=relaxed/simple;
-	bh=jZQnj2z/DOc1XgDzZQWNW56cMJAgY58Qfkyd+rsZzYw=;
+	s=arc-20240116; t=1751546528; c=relaxed/simple;
+	bh=0l0g609HVyh2VkxVYU15QrjPHSnVsY35u7bAI8jISDQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GjHi7EZbbdvi4I8ZG6Z2ctN80aoTwvwNPnUG4cWotqC4qghuI8CaDMBQY7ApTJZZ7M68t03h+wpD1aQWRzIb0fVh4p/6BIVQgFAvF5xH/S65sAxL9uqWeMCIJ5FYj6dY0Hd3n4RNJAnJjpA1XhA66C2E+IT8R2LqKWf65qa8Kn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xp8gGQoH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=cFy2sp4C39PduBmqKxVTpQvfix3uv92ZiAw9z4mizYmFZy7xngf0ndeCuf3h91V34kYhJE0ASmw5W1YBmwy3Eo7WEa88g3tGc/Y4z808asHEZgXx18B6RXGjWcqC1OQzgsaQhU+lJAeVLtriGENJY+DqSnx3RBygozdvCEYB56A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NupuFHo8; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xp8gGQoH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751546376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Oi7wV4GKMcMHM1v/VB7INbDIKNe9eVceq3H9f21UYs0=;
-	b=Xp8gGQoHIhNAQjVECH4A7WZ/BxXgQxb3YIrN6oYuSZ6NU59c6TJ8qco5aVBcIR2xbrOxyd
-	qp6CzCu+eudTYVThJlb17b+jkYgObE7VP9IPH6cZk7cC29XZTe+WEt75u07ne4lDkCg1xh
-	gpsGV/uHX5o6tYYAqWmeeIrTq0zJXJE=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-WmKRaaXoN8OWJron7KWNYw-1; Thu, 03 Jul 2025 08:39:35 -0400
-X-MC-Unique: WmKRaaXoN8OWJron7KWNYw-1
-X-Mimecast-MFC-AGG-ID: WmKRaaXoN8OWJron7KWNYw_1751546375
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ade81d27cddso775408466b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:39:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NupuFHo8"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453398e90e9so45521335e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 05:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751546525; x=1752151325; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5p9HSXMAZ0v2wNzjZpRgTRLF0wQRlJMdXlU+Zo+kCWg=;
+        b=NupuFHo8xkvLzI6hU9QX8Fc2vCx2KitcSTFwk2GbciPWyn46QgzMbcm+s5DvDeZMDz
+         c9mg5GliHC7tI80BfOoZGysHB32dga+PcJjYHTFl9uUUBOFx4FauLG63DnYSsuIhLitD
+         d9XceErksyUEiMnzdkg8dqKXFV+D/Z3qZ6W/rR6EK0TkNMO7z2FhaKpOGW07VlYZwMt2
+         MI8ApXkQBQg4va/Ho0R3xr+gdNDTd1ooAnRIR8CXBD9nJAboDNeaeSdXYCk7wGYYgDaq
+         hQ0WUYwTb7qXErx0+xA0C5DC4UMnUyxsPR7TTqq1TYTwKSFBfn9CGIaZxV27cW5AXarK
+         k6mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751546374; x=1752151174;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Oi7wV4GKMcMHM1v/VB7INbDIKNe9eVceq3H9f21UYs0=;
-        b=PWPBFYjVGPl/veLrVOI5yQVWhiNDis8iHBeqhig9vafKKMgZ1ElwxNzTLv+HajTK3e
-         AAHX4vjcSmdh+ULoUA6lyNxLwcXF9WeWOg8pjnzwLCU2O4AupbJkB5qzxZ17lgkHwLfl
-         3dNQgLmsmbESzXKdZnITdHoA5Vw1i7jM1nrtsWjI0blkUOhKtfrjFFwn2FZbSeu7mnba
-         7LS59eI3wCs549lEFgwZrr2fDAQ/QGSW0C+A3Z7akwk+nQrqovaUdNQVoAM9dlV1Kyrb
-         85QBBeHAXdSxh46WzudFHYFSkaMIiCv7PewrWrfaaT468T5/ZQnDU1ubRZRcuz80g1Fj
-         h01g==
-X-Forwarded-Encrypted: i=1; AJvYcCVN/P8F3T6F0t5sj10XjXy+Vl3X2Pl3kEgAu6Czhu0xlhjj98rcqIgbIepbcKo+fFWE/xPEzeafn7rVryo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW+wsRHqDXYsDxCBFy9+8NrK/qISH9VuYqyJRDlEeufaNC/+Gx
-	/TeDpeSQO/9Yn7vX8opS5A+W9xuOMSBeq0T+K4EV7xhep/i/mAQ22AHfGKEgOxi9wUhu7CSlY2C
-	cr3M5guc+jXaQO9UNvTVxShl+X3YKM86js8HnmWdjLn3rMWD1X6K4JqLGwBntv7O7UQ==
-X-Gm-Gg: ASbGncsOh9+Q+lvxhZG+dgtBScifxEUpuVPgGyvQjxLwv1AbxRpJFHZ/NbivNk43nid
-	M1pLHYnIQGY28FbLi+NlLag0GtS9/lFwXSxTH4Q6RbZFy5P4+Vd7XWNGuTeV4XLqCxANLWTZs9x
-	Tn/rXD1MMQTDd0xMU8kgwKJM6LKsllVk6mSXCt7edJC/1U7CCmxrENL/cA/ii5BBLInMw25uOwH
-	FTVff2L7rFyLRFoBuFWQIXGGzTdbNihExlgZLrH2v98SntLVzq4ti7dL5bpYq9QpD83ol7Nzus8
-	en8jnncd5nds9XDRdG62HLWHad6+VTPbTsvfNnsxICUy
-X-Received: by 2002:a17:906:eecd:b0:ad8:9b5d:2c1e with SMTP id a640c23a62f3a-ae3d8c9dcb1mr329383166b.29.1751546374401;
-        Thu, 03 Jul 2025 05:39:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvAzLYe4u7bVgIF4rIZO0Kh3Dh5wNxg2vLubpdGWNR3UdIrBCXy0Ue3tb6YegI5ciU5tlGPQ==
-X-Received: by 2002:a17:906:eecd:b0:ad8:9b5d:2c1e with SMTP id a640c23a62f3a-ae3d8c9dcb1mr329377766b.29.1751546373856;
-        Thu, 03 Jul 2025 05:39:33 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c0136asm1283943666b.90.2025.07.03.05.39.32
+        d=1e100.net; s=20230601; t=1751546525; x=1752151325;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5p9HSXMAZ0v2wNzjZpRgTRLF0wQRlJMdXlU+Zo+kCWg=;
+        b=VAXRqOaexm6mHP0ftRcxAUAh+5Rd8ehjx+edXQUt0HhXqcFshVAXHWk7Tx3CqBrQhr
+         fnk2znjDK/6s93uUMp1Vq9HYijTK0BxS+KHQ01DOEbq+p8tXC+jBmDIR+4UiAtXyLPVY
+         O8wBRzxjJPg+j9OdmxnnWfngBJ92TZNvewZASdMuQbKucw9/MIjfd6xzeq44Us3htgaf
+         J+SwKJ/NMurRH5y2HU7IgiBMTgkvUZODiR4ZDTJSnMwJFSdZF84w2azIrGrji+Sh9ysK
+         tzTm03AtgTDKZ9ZFQJyzGJte+753rdSq8FIu127icJ8UQjEU0f/lNAqgoRinFRPElWj7
+         zKIg==
+X-Forwarded-Encrypted: i=1; AJvYcCURliD/PyjhJdpL+2tC9/DBZg1UY5BS7QjSjIrh2ia2EzH2yuIw1DzlWjJ0+FWLqkoOF6DsTHOTG0+m2CU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/SGhf/brVa8RLtxP9uu1yaH4aCitGrwqFxw7p2adnvD8/1lDv
+	24TMH89XyxihzhKe5T9q30tm92RMaDaQFOAC4s2sm8PQKhO9y+/3odYWmQIiIGjEOiQ=
+X-Gm-Gg: ASbGnctEWFpTmvxif04gySp20JEg2DnfOi1EwTPoM/+Z6keE8NDryWCC50hGqNve+rL
+	vucanW+OC4kpc+o5YiiINI02reJDBJv2QMxEY/VzQBB/I6vwq3wrmO1iipKY9dBzeGc+OkyRLgo
+	p0ePmq55k2r6DEouyK61JseWnyF3Y9a/px+rYxRuhngWZ0RDti0iVr+1lJRZsdEWMgCJzPmq0fn
+	DcFGDQKHg9WQoN7/Gj2lqUOHmc2+CDRSPRPoQeNytk9CS3iqWY50E1Ej+asJrN8LdbXATj8reNY
+	G8tJvn204XPQYtE+5rbjXJ1XlpHvYXCHVaXee9PG7g7sGBJtlQPMdhkiL+F7qE9QNaMSVb43U8+
+	003GPRLy6e/JCSQm4VQX99QVR0g==
+X-Google-Smtp-Source: AGHT+IFkwCUP2Or9pxGcJZO0ugBdGvWqQnDw6EDu/auVXc2pvANU2o3HxgEpV11kUFoe/iQLZyFidw==
+X-Received: by 2002:a05:600c:1383:b0:43c:ea1a:720a with SMTP id 5b1f17b1804b1-454a9c62561mr32788245e9.1.1751546524956;
+        Thu, 03 Jul 2025 05:42:04 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-454a9beae81sm26706105e9.40.2025.07.03.05.42.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 05:39:33 -0700 (PDT)
-Message-ID: <5e5e8d79-61b1-465d-ab5a-4fa82d401215@redhat.com>
-Date: Thu, 3 Jul 2025 14:39:32 +0200
+        Thu, 03 Jul 2025 05:42:04 -0700 (PDT)
+Message-ID: <42399fd9-0fad-4770-abea-90511a72e0e1@linaro.org>
+Date: Thu, 3 Jul 2025 14:42:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,142 +67,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
- in vm_normal_page()
-To: Lance Yang <ioworker0@gmail.com>
-Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Dan Williams <dan.j.williams@intel.com>, Alistair Popple
- <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-2-david@redhat.com>
- <aFVZCvOpIpBGAf9w@localhost.localdomain>
- <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
- <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] clocksource/drivers/timer-tegra186: Avoid 64-bit
+ divide operation
+To: Jon Hunter <jonathanh@nvidia.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-tegra@vger.kernel.org, Pohsun Su <pohsuns@nvidia.com>,
+ Robert Lin <robelin@nvidia.com>, Arnd Bergmann <arnd@arndb.de>
+References: <20250614175556.922159-1-linux@roeck-us.net>
+ <aFq29Fr5c2TAZOYO@mai.linaro.org>
+ <b77c900b-3b54-4cb6-8057-e5b7ca0fdfa8@nvidia.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <b77c900b-3b54-4cb6-8057-e5b7ca0fdfa8@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 03.07.25 14:34, Lance Yang wrote:
-> On Mon, Jun 23, 2025 at 10:04 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 20.06.25 14:50, Oscar Salvador wrote:
->>> On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
->>>> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
->>>> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
->>>> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
->>>> readily available.
->>>>
->>>> Nowadays, this is the last remaining highest_memmap_pfn user, and this
->>>> sanity check is not really triggering ... frequently.
->>>>
->>>> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
->>>> simplify and get rid of highest_memmap_pfn. Checking for
->>>> pfn_to_online_page() might be even better, but it would not handle
->>>> ZONE_DEVICE properly.
->>>>
->>>> Do the same in vm_normal_page_pmd(), where we don't even report a
->>>> problem at all ...
->>>>
->>>> What might be better in the future is having a runtime option like
->>>> page-table-check to enable such checks dynamically on-demand. Something
->>>> for the future.
->>>>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+On 03/07/2025 14:34, Jon Hunter wrote:
+> Hi Daniel,
+> 
+> On 24/06/2025 15:32, Daniel Lezcano wrote:
+>> On Sat, Jun 14, 2025 at 10:55:55AM -0700, Guenter Roeck wrote:
+>>> Building the driver on xtensa fails with
+>>>
+>>> tensa-linux-ld: drivers/clocksource/timer-tegra186.o:
+>>>     in function `tegra186_timer_remove':
+>>> timer-tegra186.c:(.text+0x350):
+>>>     undefined reference to `__udivdi3'
+>>>
+>>> Avoid the problem by rearranging the offending code to avoid the 64-bit
+>>> divide operation.
 >>>
 >>
->> Hi Oscar,
+>> Hi Guenter,
 >>
->>> I'm confused, I'm missing something here.
->>> Before this change we would return NULL if e.g: pfn > highest_memmap_pfn, but
->>> now we just print the warning and call pfn_to_page() anyway.
->>> AFAIK, pfn_to_page() doesn't return NULL?
+>> Arnd posted a version which seems more complete.
 >>
->> You're missing that vm_normal_page_pmd() was created as a copy from
->> vm_normal_page() [history of the sanity check above], but as we don't
->> have (and shouldn't have ...) print_bad_pmd(), we made the code look
->> like this would be something that can just happen.
->>
->> "
->> Do the same in vm_normal_page_pmd(), where we don't even report a
->> problem at all ...
->> "
->>
->> So we made something that should never happen a runtime sanity check
->> without ever reporting a problem ...
+>> https://lore.kernel.org/all/20250620111939.3395525-1-arnd@kernel.org/
 > 
-> IIUC, the reasoning is that because this case should never happen, we can
-> change the behavior from returning NULL to a "warn and continue" model?
+> Actually Arnd responded here saying this version looks better :-)
+> 
+> https://lore.kernel.org/all/5a571236-7de0-42bc- 
+> bfb2-52a57e210852@app.fastmail.com/
+> 
+> OK, to pick up this series now?
 
-Well, yes. Point is, that check should have never been copy-pasted that 
-way, while dropping the actual warning :)
+Yes, I'm ok.
 
-It's a sanity check for something that should never happen, turned into 
-something that looks like it must be handled and would be valid to 
-encounter.
+May be Thomas can pick them up for the next -rc ?
 
 -- 
-Cheers,
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-David / dhildenb
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
