@@ -1,127 +1,177 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1422C15B8;
-	Thu,  3 Jul 2025 08:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F2D29B8C3
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 08:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751530267; cv=none; b=cCPnA8O/0zBAV5ruXRrXqklXzEWYUDXAALS7me6XPTVGNvVpt9MonJ1dOfZTMFEODtUTRFQfrHOLC5h4YC8R4QdLb3XghVj08a3iIT710K29dD/O4m5hVdf9iSeWx16BFFOr+VKb/lFZ143jB6ll7VwBRyqoOytM5t+0TLtXPAI=
+	t=1751530328; cv=none; b=VUdFWz3lRe4sAlliB7GWtgAdNn5Fpx4p2tEHAB9HiC9ZiADYNwLJ/uTFLWtT2SwUluMb2Zfu6bYpwRTZ3iCATr52MXNljz66E1gDLuSW2MAs5SQffQm41VjiRMoyIyOjUUJ5otcvGFLU+wl7GA4m7gomwcbBAXZ4vPQgpW5U1kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751530267; c=relaxed/simple;
-	bh=VJxDMDcvuNiGqPzWy8ueJi3tfdG9/R3VPQDmQXZ2D0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c8RMIpB6RaWOomHDQ0Rwo/NuF2mY8Chyfs9xwp5x9f/oc229ntqJoR0oUinzJ52xFLIUhXDLe046B0ongJXs+2x0FMIdZEmQVBdqxZytu/P8IPBXWVlFq7gt7uL1nlEZHYUye7IylFgZBVxkd1dyp3H2YpZHajzihY625DAPS7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GSWLBGNi; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GSWLBGNi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 436CD44386;
-	Thu,  3 Jul 2025 08:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751530262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LAI1mLd80Uu/qyT+cT0jcdFKQzyXKg/JSwW4hvNefdw=;
-	b=GSWLBGNiFskz3pPr5ysMh8m1slrvPREt+nJA5jB3928KCzs35bf7DaMYR36LU0hmj+ZrFe
-	F9+odOPUcBJU3EBWmgMatI+v7VS3qWTCAUmbU0wfbiqk1cGk0ZtBucHP+YzTk/Brygtscm
-	foQqGflkGwK79xENMpRHwxR/Utj3dBgU8mUgxW/OhixYGpR4Aw7cH3zK+8Ap4ry0sXwAms
-	JC17SVHo+z0ed5KiUmRefW0pNYnBbfO9kWUimNasF9qSxKQ/cIkxJBvExaQLj/XSqoHJbv
-	HOYtjqyBNzGSyGAQGPqEdRc+f+dwPc7oHl426XP5m+Kd1R3AepOl02VFEl83Mw==
-Date: Thu, 3 Jul 2025 10:10:58 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
- wrapper to get_device_from_fwnode()
-Message-ID: <20250703101058.225e296f@bootlin.com>
-In-Reply-To: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-3-herve.codina@bootlin.com>
-	<CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1751530328; c=relaxed/simple;
+	bh=lDphxl+Sg2RIqYjkShGwzirhgk/K0xRM7vcy+iIsA24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TvTwQoMJckRhNYNCfY1x1wGPmDRMgOWPC1IOapDQAfj0pFaBsgL3oX6xQ3ZnDx0sIj7KVYD/owmuM2rbOury68wcbmQykaU+J/OiPfMqMplmyUeRVKvcOWFeIcE2xrP47woRpwCru1vdG/WhPsOHWaNx/NOZmbRdn9Ao3ZK1iUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uXF2q-0006JI-3y; Thu, 03 Jul 2025 10:11:48 +0200
+Message-ID: <3615415b-7ebd-45e5-8d7b-8a1b26ac7130@pengutronix.de>
+Date: Thu, 3 Jul 2025 10:11:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/6] imx8mp: add support for the IMX AIPSTZ bridge
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+ Marco Felsch <m.felsch@pengutronix.de>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpt
- hhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, 2 Jul 2025 20:17:15 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+Hello Laurentiu,
 
-> On Fri, Jun 13, 2025 at 3:48 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > get_dev_from_fwnode() calls get_device() and so it acquires a reference
-> > on the device returned.
-> >
-> > In order to be more obvious that this wrapper is a get_device() variant,
-> > rename it to get_device_from_fwnode().
-> >
-> > Suggested-by: Mark Brown <broonie@kernel.org>
-> > Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Saravana Kannan <saravanak@google.com>
-> > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > ---
-> >  drivers/base/core.c | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> >
+On 10.06.25 18:01, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> 
+> The AIPSTZ bridge offers some security-related configurations which can
+> be used to restrict master access to certain peripherals on the bridge.
+> 
+> Normally, this could be done from a secure environment such as ATF before
+> Linux boots but the configuration of AIPSTZ5 is lost each time the power
+> domain is powered off and then powered on. Because of this, it has to be
+> configured each time the power domain is turned on and before any master
+> tries to access the peripherals (e.g: AP, CM7, DSP, on i.MX8MP).
 
-...
+Sorry if this has been asked before, but I hoped the cover letter or patch
+3/6 would explain if it were.
+
+What is the default configuration for the AIPSTZ before this series?
+I assume the SAIs under AIPS5 can be accessed by SDMA already, so why was
+changing the AIPSTZ settings needed for the DSP to work?
+
+Thanks,
+Ahmad
 
 > 
-> There are patches in flight that add new users of get_dev_from_fwnode(), see
+> The child-parent relationship between the bridge and its peripherals
+> should guarantee that the bridge is configured before the AP attempts
+> to access the IPs.
 > 
-> https://lore.kernel.org/linux-pm/20250701114733.636510-1-ulf.hansson@linaro.org/T/#mc45a73769821cc520c35d8eb92d4bac75412bb7c
+> Other masters should use the 'access-controllers' property to enforce
+> a dependency between their device and the bridge device (see the DSP,
+> for example).
+> 
+> The initial version of the series can be found at [1]. The new version
+> should provide better management of the device dependencies.
+> 
+> [1]: https://lore.kernel.org/linux-arm-kernel/20241119130726.2761726-1-daniel.baluta@nxp.com/
+> 
+> ---
+> Changes in v7:
+> * fix merge conflit caused by addition of the reset-related properties to the
+> dsp node.
+> * align values for the macros defined in "imx8mp-aipstz.h" as per Shawn's
+> comment.
+> * encapsulate the default configuration and base address in a
+> "struct imx_aipstz_data" to make the driver more future-proof as per
+> Shawn's comment.
+> * link to v6: https://lore.kernel.org/lkml/20250415171919.5623-1-laurentiumihalcea111@gmail.com/
+> 
+> Changes in v6:
+> * drop the 'IMX8MP_AIPSTZ_HIFI4_T_RW_PL' macro. Its whole point was to
+> help with making the DTS more readable but if it makes it look worse
+> then there's no point in keeping it.
+> * use consumer ID as first AC cell and consumer type as the second cell.
+> Better to go with a format that more people are used to as long as it
+> still makes sense.
+> * pick up Rob's R-b
+> * link to v5: https://lore.kernel.org/lkml/20250408154236.49421-1-laurentiumihalcea111@gmail.com/
+> 
+> Changes in v5:
+> * merge imx-aipstz.h into imx8mp-aipstz.h. imx-aipstz.h is
+> currently only used in the DTS so it can't be added as a binding.
+> * place 'ranges' property just after 'reg' in the binding DT example
+> as Frank suggested.
+> * use the  (1 << x) notation for the configuration bits. Previously,
+> hex values were used which didn't make it very clear that the
+> configuration options are bits.
+> * shorten the description of the bridge's AC cells.
+> * shorten the message of the commit introducing the bridge's binding.
+> * pick up some more R-b's on patches that remained untouched since V4.
+> * link to v4: https://lore.kernel.org/lkml/20250401154404.45932-1-laurentiumihalcea111@gmail.com/
+> 
+> Changes in v4:
+> * AIPS5 node now only contains a single memory region: that of the AC
+> (just like in V2). 'reg-names' property is dropped.
+> * AIPS5 node now uses 'ranges' property to restrict the size of the bus
+> (1:1 mapping)
+> * change the number of AC cells from 0 to 3
+> * add binding headers
+> * link to v3: https://lore.kernel.org/lkml/20250324162556.30972-1-laurentiumihalcea111@gmail.com/
+> 
+> Changes in v3:
+> * make '#address-cells' and '#size-cells' constants and equal to 1 in the
+> binding. The bus is 32-bit.
+> * add child node in the example DT snippet.
+> * the 'aips5' DT node now contains 2 memory regions: that of the
+> peripherals accessible via this bridge and that of the access controller.
+> * link to v2: https://lore.kernel.org/lkml/20250226165314.34205-1-laurentiumihalcea111@gmail.com/
+> 
+> Changes in v2:
+> * adress Frank Li's comments
+> * pick up some A-b/R-b's
+> * don't use "simple-bus" as the second compatible. As per Krzysztof's
+> comment, AIPSTZ is not a "simple-bus".
+> * link to v1: https://lore.kernel.org/lkml/20250221191909.31874-1-laurentiumihalcea111@gmail.com/
+> ---
+> 
+> Laurentiu Mihalcea (6):
+>   dt-bindings: bus: document the IMX AIPSTZ bridge
+>   dt-bindings: dsp: fsl,dsp: document 'access-controllers' property
+>   bus: add driver for IMX AIPSTZ bridge
+>   arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+>   arm64: dts: imx8mp: add aipstz-related definitions
+>   arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
+> 
+>  .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 104 ++++++++++++++++++
+>  .../devicetree/bindings/dsp/fsl,dsp.yaml      |   3 +
+>  arch/arm64/boot/dts/freescale/imx8mp-aipstz.h |  33 ++++++
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  16 ++-
+>  drivers/bus/Kconfig                           |   6 +
+>  drivers/bus/Makefile                          |   1 +
+>  drivers/bus/imx-aipstz.c                      |  96 ++++++++++++++++
+>  7 files changed, 255 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+>  create mode 100644 drivers/bus/imx-aipstz.c
+> 
 
-Thanks for pointing out.
 
-I will monitor the series you pointed out.
-
-Once it is applied, I will update my modifications but I will probably send other
-iterations in the meantime in order to move forward on the other topic without
-waiting for the Ulf's series.
-
-In my other iterations I will point the dependency in patches impacted i.e
-patches 2 and 3.
-
-Best regards,
-Hervé
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
