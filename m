@@ -1,245 +1,213 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F89C1DF248
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 16:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFCC33DF;
+	Thu,  3 Jul 2025 16:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751561503; cv=none; b=OL7YIoMiHnl4V1pIKVBn1b8AtIwVrPGMB/+MUw5mZSTEaFIvioIMPOTV6aHcrBv2p6MgH0LbWZ0BCZeXr58r0lRD94OyGov1pyXTFILh+qhB5imqcty6MRufgDZ27iRqY9nDewrjK6Qg3wjU89A87qmT8DzqJulyFirKw1o1yYk=
+	t=1751561547; cv=none; b=f2GQ0jt2qqcTgGIxGXrt0geriXn897yH4knn3jDBIIspW21eUij07dASjXYRz4L3y67JoWZdN66d8KOpprre4sOu24z3fFECks+dm9nY1JtsTPkGOXLF1n1FfALy0CbshzmGUWOrSA+laBIu3G1WuPyZme/HbRBlvfrTncmkBZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751561503; c=relaxed/simple;
-	bh=Bl4U2736cbdaIaL7r32DIiKWiFNjDYw4P426GZbKXHI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LtUMNNXEhofrj/bH7ObdmgrnNEB4GtAcU/8bg6wP8z4PoZ2Hy8+TIVAYnl7LSxZgvlj+fcMcPM57zfAEyIooB1OLCROpq4T6ccnu63wgC9VD2CLbTNGQymNfrvacFBZnit8la+YAxkSfB+5S3UteECaVU04GBaGrtjjSxy/ytzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcTlpW7j; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751561547; c=relaxed/simple;
+	bh=xwBMBkFLX4i0vBFJ5CXmoivb9NgZ0GfHuzL8WvJiKvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jyIDtnO2sbRKTqpxylkq5XISGkyOb75ZtUKimlMmbBt4jiDf6iRglLlp4+h94AHs478E7RjVv/EGUgNBDbmwWiE5Wbhugd0AB4sUxhEs5dZ+deTOtm5HfBUR2PQvAhL4tqa+fIlH+WkegyUlYeABWWIRYUkhoLAENfvBMybC3Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjUAe6RA; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcTlpW7j"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e389599fso231695ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 09:51:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjUAe6RA"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso16250f8f.1;
+        Thu, 03 Jul 2025 09:52:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751561501; x=1752166301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751561544; x=1752166344; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K2Pypm8A2hrX0Dg/6qTKb5Bh6OJzo+0bDjJzK3OFgt4=;
-        b=jcTlpW7ju09gWPuru5zpZ/owkYwmZ4TSQJzNFOLE8PhejHe79jwF7zU77pp6Si9iru
-         WbSnwL0UZ6jH7M+mupTuWr1k2fF//WjsoJYjZFiKjmLyorvoE8Z/tgDdSmGoHS9Nkq28
-         o/vuDXdBIvPiaaBxpcrQc8FCfd24NH3jfrKzIIcUPmN9wwJEHS6+hFUT4v4sEhMtfTx9
-         int7G6hLG0h40S2D9dWzDYtc1jzxHtF9/iiAhIoTzD2WDaJxGuD7JjTdD4Xgernot0sY
-         fFVLb7h7J8p4FGRDaucvaOysHc/cCLZr2y2qCCBsGAFtqFoEZZCbO6TaVBSpM4e1h3HT
-         jO8Q==
+        bh=dw94v4+dm+2EAGEsktndj6wIkAF7S3MInrEzqbxbZ14=;
+        b=RjUAe6RAsRYe8aqOxlvkL1kRrHpYAUjXL0jEn9UxblCrCuyXAfMf/YDtx+NPfwzINV
+         4B6X2Y31MjzH0WJlfrbEGTb4LL0uJl6ylwzh9wMnaWZ7flfdr1FTj/MBlu4EmRKsotkU
+         oIajDo9Vt4tUK4H5nelXoxXjQ+LqO7GmidGM1IeUiMwuPkycl9bYW3mxAcaiuYOusNyR
+         JdGzmbAYOqpmoMyqlsA5oxxWQWwDWCNBC1Rv9Ibe51BSiEe/vWPTxBVI9L7BmoiKrJon
+         Kce2nyymf4WvuYn7kHtIfPng1vh1DVCpSW0joJcFgmKRr3sN/Adm25YKU321BcdQZ+j1
+         8afw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751561501; x=1752166301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751561544; x=1752166344;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K2Pypm8A2hrX0Dg/6qTKb5Bh6OJzo+0bDjJzK3OFgt4=;
-        b=l0se7UCtfxUt6wbHCuUG4vJ5F29Y3/Q4+z25p0gqY3DGRbTX7nhVmbTPaFbvRKQCw7
-         Fv2y09OLEQuNJLP6eWM9cKABIVO4vfMCveQReipRCO4kcaJ3bgcGUhZEhZBPiparFVCF
-         gLWsBbdm7ziifGwfT5CZ9hCeveN9An7oYxWCvffjwTVpGPm7gHH0aAWKI1wVsXDah60+
-         lQ4CP/3AQKp0aBE/K4bdafi12xWIk6uMj/xNGiWfiqIWstQ4E8tb1/7XZckrWQ4FJ7SB
-         KnuPqLR04LLmFqlYLQavHHeints4pkib6dY8xJ89Xpb7eJ/oJob8MUBh52Ax+oH4SS6/
-         sCDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaTGqFogHVi0B/2gXUmlEfeCfSqhcO22RbMrYbY1HkQTs3V+dWuO3Btzf6xjv28DcTUOG2sJOwlhLivks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNAX2xloON6ytuaqSHFDwIro1OmCuN3TBbzkN5HZkzgNLnca0b
-	/NGy6j2tK6g1LFN9oyPSqHt2T7+Sdm17/HU+YKBSQ7ePPylAIUg2WhEmDB5EwzZuN9j/x4Awbq1
-	mR5NAv8FrqtD+m9LPs2Y8QGS6nms7u/a84DDoUffh
-X-Gm-Gg: ASbGncskB3BeUX5Hr00OMw1ZjNPtE7U+fVYLzCIGNMS9Y8lHRRt4DTKvuztCFgNcVGn
-	eMRdEXPFrR4WHoz+TrPdAvQRTL4SNlgwX9flacyZmg0mL6QcoqBXBOFXHi6Be6CEEamtXqOEP8v
-	r6PUkeXz5QVdPLC3EiB2PmtYDKXTHDLZWvCf38zwC/R7lgy727gRjM0TuhEDFAu0aAmjD79pRvd
-	EA8j0BvlPRfKT0=
-X-Google-Smtp-Source: AGHT+IGXcFD7sYmA1iSdOQUEhyKPfILxX4bu/LO4qd9k2V427lZTYaQxOB0mfeyfOyKYZF5kwyRLF/xzM5IIEUmGxJg=
-X-Received: by 2002:a17:902:c942:b0:234:13ad:7f9f with SMTP id
- d9443c01a7336-23c79c4f79bmr3137735ad.22.1751561500326; Thu, 03 Jul 2025
- 09:51:40 -0700 (PDT)
+        bh=dw94v4+dm+2EAGEsktndj6wIkAF7S3MInrEzqbxbZ14=;
+        b=IC8JdxqJLdNBY2jOfXtU88mLHRyrkkyX934M80W9TDIItkRAVLZ2pAAwLgMZCyop0N
+         s13rqH+Kycz6z7NKxOaoCK3OJInxRGXNe/DR3nZ4B5gpZzg6rxup47UrFPS6Nnm0DuMH
+         ytngwbVu6XwjAE7w7/mLmBfWR4crwkJrFM27JAPB9lD27Hk/Dthh6gXRRDqIjlSBspd9
+         l8OGznhXmEd5eovJZ4PdYt0FbeOKnFk3xVUDbjceRDiot7DrbLHf4af7mwBlP2A0UvPq
+         Ri/tFOTWg0028R2C6rRf4/KA6J0cNULNqWbHjE5tOclD6FQ/Ez/EtFEfbHsV1QaXwd/f
+         iK4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUwbCCFb0VhzOoCw77aBBp6kkGT240H2KTUxV7kc/EfnJwFGeQJDgzM7AiT8k5Viq1Zyro+al8EVOBBvCiW@vger.kernel.org, AJvYcCVDfshpi2FQ4Fc+dw/Fb1JMrho6dilCNwDNIKjTvbzfaF/fXilw9UwP/QKDAW1nOG6gzil9frzWgzxB@vger.kernel.org, AJvYcCWaQHOTRvXtXmH2kmHbkPQvU8G+3bXEOPb5iHC5qn1FeJkXJo+PKO2ViLQGB/AJtBxpUXVjF5gXarM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvNvXroi6Toaog9osvKjGkpuRUMR10jhGTXoBQ6tujAb0IK81J
+	8f8V+1UuE8jXMAdOs0YuwMJwWhmR+3ATo4EXiVJoiTrmNIQ5gzOMMgBh
+X-Gm-Gg: ASbGnctFXKq53nRrpYm8LJr23sX8e0LzpRt6jDEbcyJ7MVhDPTj6I4fZPHMMbPpw+Fw
+	Wa7BbTQ4sXO7xvMuREJBEnEXqGB4d2+v5OIPUsGzKypia7PCnjOsmUUYeeLrCmrsNCSa8+3u0lD
+	EfIjhgn24uLJUhHCz1wX9AZHw4Yz8YCeW2ckz+dZy24mBkfzB5Rt8HzdFWpHVhDNeiPuF7mhCx+
+	DqzT3BvonBX3w+Skf7Ps06ZBvdtkPTBfn8aQ7Y1+R2QtHGFnkYETrBVkLdlN2ig5OIiWJ6RIHMb
+	e4U7NbHUcUcZSjPzHF85PA+lqXbTUP1HdiVa77W/dYMRAaDOhXEpplNrdQrnxQuCrffFeI54BRS
+	Mu262VhLV1i4WZfe2Bg==
+X-Google-Smtp-Source: AGHT+IEwxwpPMNgiW5OZzNxrC0UFXM2KJ10ptvxCCiTuN7vhdgd4/rcD6AlW0fW1gF7+O5XydxM1/A==
+X-Received: by 2002:a05:6000:2f85:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3b1fe6b72c6mr7061097f8f.18.1751561543434;
+        Thu, 03 Jul 2025 09:52:23 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030cdf5sm254497f8f.1.2025.07.03.09.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 09:52:23 -0700 (PDT)
+Date: Thu, 3 Jul 2025 17:52:20 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Vegard Nossum <vegard.nossum@oracle.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel
+ <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, Xin Li
+ <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh
+ <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, Tony Luck
+ <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jonathan Corbet
+ <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel
+ Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, Rick
+ Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov
+ <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross
+ <jgross@suse.com>, Kees Cook <kees@kernel.org>, Eric Biggers
+ <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu
+ (Google)" <mhiramat@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du
+ <changbin.du@huawei.com>, Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Namhyung Kim
+ <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
+Message-ID: <20250703175220.1cb05c1b@pumpkin>
+In-Reply-To: <78aab15e-5bc2-47cc-ac1c-5a348bff0e17@oracle.com>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+	<20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
+	<20250703094417.165e5893@pumpkin>
+	<uvvh6qfpan6f56fdvuch67nss2h5nqxbmocztf6v2lfbvnihbg@vtzbr6anzqnl>
+	<20250703131552.32adf6b8@pumpkin>
+	<78aab15e-5bc2-47cc-ac1c-5a348bff0e17@oracle.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703062641.3247-1-yan.y.zhao@intel.com>
-In-Reply-To: <20250703062641.3247-1-yan.y.zhao@intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Thu, 3 Jul 2025 09:51:28 -0700
-X-Gm-Features: Ac12FXxb-01x2wcZYGaOot8b0VKW1HfuaPXyOLk1ZcRUX_G1vyGSA7jaP9CX_w0
-Message-ID: <CAGtprH-Hb3B-sG_0ockS++bP==Zyn2f4dvWpwC73+ksVt7YqJg@mail.gmail.com>
-Subject: Re: [RFC PATCH] KVM: TDX: Decouple TDX init mem region from kvm_gmem_populate()
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rick.p.edgecombe@intel.com, kai.huang@intel.com, 
-	adrian.hunter@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@intel.com, binbin.wu@linux.intel.com, dmatlack@google.com, 
-	isaku.yamahata@intel.com, ira.weiny@intel.com, michael.roth@amd.com, 
-	david@redhat.com, ackerleytng@google.com, tabba@google.com, 
-	chao.p.peng@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 2, 2025 at 11:29=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
-te:
->
-> Rather than invoking kvm_gmem_populate(), allow tdx_vcpu_init_mem_region(=
-)
-> to use open code to populate the initial memory region into the mirror pa=
-ge
-> table, and add the region to S-EPT.
->
-> Background
-> =3D=3D=3D
-> Sean initially suggested TDX to populate initial memory region in a 4-ste=
-p
-> way [1]. Paolo refactored guest_memfd and introduced kvm_gmem_populate()
-> interface [2] to help TDX populate init memory region.
->
-> tdx_vcpu_init_mem_region
->     guard(mutex)(&kvm->slots_lock)
->     kvm_gmem_populate
->         filemap_invalidate_lock(file->f_mapping)
->             __kvm_gmem_get_pfn      //1. get private PFN
->             post_populate           //tdx_gmem_post_populate
->                 get_user_pages_fast //2. get source page
->                 kvm_tdp_map_page    //3. map private PFN to mirror root
->                 tdh_mem_page_add    //4. add private PFN to S-EPT and cop=
-y
->                                          source page to it.
->
-> kvm_gmem_populate() helps TDX to "get private PFN" in step 1. Its file
-> invalidate lock also helps ensure the private PFN remains valid when
-> tdh_mem_page_add() is invoked in TDX's post_populate hook.
->
-> Though TDX does not need the folio prepration code, kvm_gmem_populate()
-> helps on sharing common code between SEV-SNP and TDX.
->
-> Problem
-> =3D=3D=3D
-> (1)
-> In Michael's series "KVM: gmem: 2MB THP support and preparedness tracking
-> changes" [4], kvm_gmem_get_pfn() was modified to rely on the filemap
-> invalidation lock for protecting its preparedness tracking. Similarly, th=
-e
-> in-place conversion version of guest_memfd series by Ackerly also require=
-s
-> kvm_gmem_get_pfn() to acquire filemap invalidation lock [5].
->
-> kvm_gmem_get_pfn
->     filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
->
-> However, since kvm_gmem_get_pfn() is called by kvm_tdp_map_page(), which =
-is
-> in turn invoked within kvm_gmem_populate() in TDX, a deadlock occurs on t=
-he
-> filemap invalidation lock.
->
-> (2)
-> Moreover, in step 2, get_user_pages_fast() may acquire mm->mmap_lock,
-> resulting in the following lock sequence in tdx_vcpu_init_mem_region():
-> - filemap invalidation lock --> mm->mmap_lock
->
-> However, in future code, the shared filemap invalidation lock will be hel=
-d
-> in kvm_gmem_fault_shared() (see [6]), leading to the lock sequence:
-> - mm->mmap_lock --> filemap invalidation lock
->
-> This creates an AB-BA deadlock issue.
->
-> These two issues should still present in Michael Roth's code [7], [8].
->
-> Proposal
-> =3D=3D=3D
-> To prevent deadlock and the AB-BA issue, this patch enables TDX to popula=
-te
-> the initial memory region independently of kvm_gmem_populate(). The revis=
-ed
-> sequence in tdx_vcpu_init_mem_region() is as follows:
->
-> tdx_vcpu_init_mem_region
->     guard(mutex)(&kvm->slots_lock)
->     tdx_init_mem_populate
->         get_user_pages_fast //1. get source page
->         kvm_tdp_map_page    //2. map private PFN to mirror root
->         read_lock(&kvm->mmu_lock);
->         kvm_tdp_mmu_gpa_is_mapped // 3. check if the gpa is mapped in the
->                                         mirror root and return the mapped
->                                         private PFN.
->         tdh_mem_page_add    //4. add private PFN to S-EPT and copy source
->                                  page to it
->         read_unlock(&kvm->mmu_lock);
->
-> The original step 1 "get private PFN" is now integrated in the new step 3
-> "check if the gpa is mapped in the mirror root and return the mapped
-> private PFN".
->
-> With the protection of slots_lock, the read mmu_lock ensures the private
-> PFN added by tdh_mem_page_add() is the same one mapped in the mirror page
-> table. Addiontionally, before the TD state becomes TD_STATE_RUNNABLE, the
-> only permitted map level is 4KB, preventing any potential merging or
-> splitting in the mirror root under the read mmu_lock.
->
-> So, this approach should work for TDX. It still follows the spirit in
-> Sean's suggestion [1], where mapping the private PFN to mirror root and
-> adding it to the S-EPT with initial content from the source page are
-> executed in separate steps.
->
-> Discussions
-> =3D=3D=3D
-> The introduction of kvm_gmem_populate() was intended to make it usable by
-> both TDX and SEV-SNP [3], which is why Paolo provided the vendor hook
-> post_populate for both.
->
-> a) TDX keeps using kvm_gmem_populate().
->    Pros: - keep the status quo
->          - share common code between SEV-SNP and TDX, though TDX does not
->            need to prepare folios.
->    Cons: - we need to explore solutions to the locking issues, e.g. the
->            proposal at [11].
->          - PFN is faulted in twice for each GFN:
->            one in __kvm_gmem_get_pfn(), another in kvm_gmem_get_pfn().
->
-> b) Michael suggested introducing some variant of
->    kvm_tdp_map_page()/kvm_mmu_do_page_fault() to avoid invoking
->    kvm_gmem_get_pfn() in the kvm_gmem_populate() path. [10].
->    Pro:  - TDX can still invoke kvm_gmem_populate().
->            can share common code between SEV-SNP and TDX.
->    Cons: - only TDX needs this variant.
->          - can't fix the 2nd AB-BA lock issue.
->
-> c) Change in this patch
->    Pro: greater flexibility. Simplify the implementation for both SEV-SNP
->         and TDX.
->    Con: undermine the purpose of sharing common code.
->         kvm_gmem_populate() may only be usable by SEV-SNP in future.
->
-> Link: https://lore.kernel.org/kvm/Ze-TJh0BBOWm9spT@google.com [1]
-> Link: https://lore.kernel.org/lkml/20240404185034.3184582-10-pbonzini@red=
-hat.com [2]
-> Link: https://lore.kernel.org/lkml/20240404185034.3184582-1-pbonzini@redh=
-at.com [3]
-> Link: https://lore.kernel.org/lkml/20241212063635.712877-4-michael.roth@a=
-md.com [4]
-> Link: https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc5=
-1.1747264138.git.ackerleytng@google.com [5]
-> Link: https://lore.kernel.org/all/20250430165655.605595-9-tabba@google.co=
-m [6]
-> Link: https://github.com/mdroth/linux/commits/mmap-swprot-v10-snp0-wip2 [=
-7]
-> Link: https://lore.kernel.org/kvm/20250613005400.3694904-1-michael.roth@a=
-md.com [8]
-> Link: https://lore.kernel.org/lkml/20250613151939.z5ztzrtibr6xatql@amd.co=
-m [9]
-> Link: https://lore.kernel.org/lkml/20250613180418.bo4vqveigxsq2ouu@amd.co=
-m [10]
-> Link: https://lore.kernel.org/lkml/aErK25Oo5VJna40z@yzhao56-desk.sh.intel=
-.com [11]
->
-> Suggested-by: Vishal Annapurve <vannapurve@google.com>
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
+On Thu, 3 Jul 2025 15:33:16 +0200
+Vegard Nossum <vegard.nossum@oracle.com> wrote:
 
-Thanks Yan for revisiting the initial memory population for TDX VMs.
-This implementation seems much cleaner to me.
+> On 03/07/2025 14:15, David Laight wrote:
+> > On Thu, 3 Jul 2025 13:39:57 +0300
+> > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:  
+> >> On Thu, Jul 03, 2025 at 09:44:17AM +0100, David Laight wrote:  
+> >>> On Tue,  1 Jul 2025 12:58:31 +0300
+> >>> "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:  
+> >>>> diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
+> >>>> index a508e4a8c66a..47b613690f84 100644
+> >>>> --- a/arch/x86/lib/clear_page_64.S
+> >>>> +++ b/arch/x86/lib/clear_page_64.S
+> >>>> @@ -55,17 +55,26 @@ SYM_FUNC_END(clear_page_erms)
+> >>>>   EXPORT_SYMBOL_GPL(clear_page_erms)
+> >>>>   
+> >>>>   /*
+> >>>> - * Default clear user-space.
+> >>>> + * Default memset.
+> >>>>    * Input:
+> >>>>    * rdi destination
+> >>>> + * rsi scratch
+> >>>>    * rcx count
+> >>>> - * rax is zero
+> >>>> + * al is value
+> >>>>    *
+> >>>>    * Output:
+> >>>>    * rcx: uncleared bytes or 0 if successful.
+> >>>> + * rdx: clobbered
+> >>>>    */
+> >>>>   SYM_FUNC_START(rep_stos_alternative)
+> >>>>   	ANNOTATE_NOENDBR
+> >>>> +
+> >>>> +	movzbq %al, %rsi
+> >>>> +	movabs $0x0101010101010101, %rax
+> >>>> +
+> >>>> +	/* RDX:RAX = RAX * RSI */
+> >>>> +	mulq %rsi  
+> >>>
+> >>> NAK - you can't do that here.
+> >>> Neither %rsi nor %rdx can be trashed.
+> >>> The function has a very explicit calling convention.  
+> 
+> That's why we have the clobbers... see below
+> 
+> >> What calling convention? We change the only caller to confirm to this.  
+> > 
+> > The one that is implicit in:
+> >   
+> >>>> +	asm volatile("1:\n\t"
+> >>>> +		     ALT_64("rep stosb",
+> >>>> +			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRM))
+> >>>> +		     "2:\n\t"
+> >>>> +		     _ASM_EXTABLE_UA(1b, 2b)
+> >>>> +		     : "+c" (len), "+D" (addr), ASM_CALL_CONSTRAINT
+> >>>> +		     : "a" ((uint8_t)v)  
+> > 
+> > The called function is only allowed to change the registers that
+> > 'rep stosb' uses - except it can access (but not change)
+> > all of %rax - not just %al.
+> > 
+> > See: https://godbolt.org/z/3fnrT3x9r
+> > In particular note that 'do_mset' must not change %rax.
+> > 
+> > This is very specific and is done so that the compiler can use
+> > all the registers.  
+> 
+> I feel like you trimmed off the clobbers from the asm() in the context
+> above. For reference, it is:
+> 
+> +		     : "memory", _ASM_SI, _ASM_DX);
 
-Acked-by: Vishal Annapurve <vannapurve@google.com>
-Tested-by: Vishal Annapurve <vannapurve@google.com>
+I'm sure they weren't there...
+
+Enough clobbers will 'un-break' it - but that isn't the point.
+Linux will reject the patch if he reads it.
+The whole point about the function is that it is as direct a replacement
+for 'rep stos/movsb' as possible.  
+
+> 
+> I'm not saying this can't be optimized, but that doesn't seem to be your
+> complaint -- you say "the called function is only allowed to change
+> ...", but this is not true when we have the clobbers, right?
+
+You can't change %rax either - not without a clobber.
+
+Oh, and even with your version you only clobbers for %rax and %rdx.
+There is no need to use both %rsi and %rdx.
+
+The performance is a different problem.
+And the extra clobbers are likely to matter.
+x86 really doesn't have many registers.
+
+	David
+
+> 
+> This is exactly what I fixed with my v7 fixlet to this patch:
+> 
+> https://lore.kernel.org/all/1b96b0ca-5c14-4271-86c1-c305bf052b16@oracle.com/
+> 
+> 
+> Vegard
+
