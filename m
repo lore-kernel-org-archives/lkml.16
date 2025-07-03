@@ -1,154 +1,136 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F29239E65;
-	Thu,  3 Jul 2025 22:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7BF2D0C77;
+	Thu,  3 Jul 2025 22:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751582754; cv=none; b=miMxLZBcVWa3AAaaylk19VralqiDBVTg1ijrenAxbbbrPCbx0UkN4iRthJBdTWHNkEr5eYwV1fURSY75ieQE5bV1VAbXgngRYCpc5xl8quTFppi9Hcf2koGL6KCuUFL3O9DeKXKtIGwFQPRSUpC9Rqcq/iKf2It1WGIxcd+eC14=
+	t=1751582792; cv=none; b=Q9ATPtviFBYsw421oo9hWZBMjOGiYnVMvV3MQLf5rlnCJ+cugTGKUTP6+SOR5rsL17kWQsuHtXGz/YUN6cbHh9CuNUB5bZC6mD775SyhaRJ2UBjiBF8q152wIKMK3kqM6tQLpRLDo5WeMghMKU5wBx1YgXyG3T0MN1cfPWPFsgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751582754; c=relaxed/simple;
-	bh=HPiHsjtsNUgZ0EFVulpD9xRBLiID8ZLRDhdfVW3IdsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1TvvoHGE80OzhPjheOnTJ3lYp36HfwJ6ZEfEl8O/hs3l2ee1GLvqWftD/+J20jGvXNqwvm0vcYGG/hFkknEG5RyrDFAmJu3MEbIdc1x+HrYK8Wn1nBytK4s8cumN60bBXj5BMxsu8n8Cl0C+tMRSuDPcwsSRufNkQOy9YuiEUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvdkEn3U; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+	s=arc-20240116; t=1751582792; c=relaxed/simple;
+	bh=YQ89OCdtlbGh5+E9e/L5GelOcn+S1I4YLQnLaEx1cYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qjAKtVlYpb6RpPXkZ3gXAlcx4sSbHmO1YCqz1KSFSb/w4Li5MzGdQ56V5ocxV9W3ShEKs7/BlpBu2VjvDtqH4Cw6+aYFFqTwPR807M+a3TCC7drfWjuR7QL7L0b8fFzG7GmeXZZhx1JYSRqpaAqR+ArV7sigq+e7E6nyxSsHjx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfDhqPkk; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvdkEn3U"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-73b1fbe64a6so142015a34.1;
-        Thu, 03 Jul 2025 15:45:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfDhqPkk"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32ce252c3acso2256161fa.1;
+        Thu, 03 Jul 2025 15:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751582751; x=1752187551; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/YPfgimj3TTDyL48vSPqdxv4VejexqVlnC8mgGOjy00=;
-        b=UvdkEn3U3hv60QoHKFN6gVJq+mcJwFG08bBw4VpT/z2xIfpTe3CugfPNFkv2gAJ3mE
-         xDIhPPYvZQDHjnvcCjwZclLkqShxNDHo5EehkCh4gFIsNfE6UHuS1DCpolaOym0Y1Fud
-         kgCBJJSursGSVmc190ZMmzeGHctQ5O44atZr3KjbJGxfaTCjP3SHrDhg3F8TZ3POS4Ue
-         Bt3ZTZyIJc15yPmdhu8SsdGjLuxvMZPBiAlvWfMp6NR2Wd6H8H0KOpZzsdLcQLQMHe8r
-         VdF+Y/6I1C96fx1fHheF9HiULnbTJXJ3J71PMqrXnVjhxzuenYhcH1o4Rw1UgOVhypR1
-         DzRg==
+        d=gmail.com; s=20230601; t=1751582789; x=1752187589; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YQ89OCdtlbGh5+E9e/L5GelOcn+S1I4YLQnLaEx1cYY=;
+        b=XfDhqPkkP25VOnku3St9rxVzchn3Tr5+C0aH9RpYkAA5V3ZqUBKB7/u9yxc4KFb1rf
+         2TXViABUWrFs02FC+XK9oSevXSy3D9qHShIQAa82XT2sqhYfVuKi+zpqkqfTDOLhCmTx
+         IX34cgjJ+YlUVap7wWY0LstMuDr02xWQUTHu7ndLEm0uKYZwRPso49A5iW+FNLUAElDt
+         SO5WVCNcj63o8z1M/5ODMES1RaMm467y8PMqkCm5UxLBdyt/eXA8S1uOgaT1CYLRsaGf
+         WFqBKD7py+yVcBk2sXMu5kvMoSfuO7XfuLFzyWkVgCbM9vLbM7FXpo5tE3ohyRzsywV5
+         U9fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751582751; x=1752187551;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751582789; x=1752187589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/YPfgimj3TTDyL48vSPqdxv4VejexqVlnC8mgGOjy00=;
-        b=j8W0uxkGIrjIJnpx8fBgNEk+I41KXV+6CaSr7rAEtRwU/yFsMmYOlwIb0dUqZmxtaO
-         iweFRmDG+dz1uhkBMj20c5lzfd5k6FmDvMIxCQ1y6b2zvGccK1XVMsiTLv6wqIQLNPv4
-         O5+/PKatRqBDvCO4GvhDV3Ha/K4wiEzkq+DQuv1AocIGDA/GL0F0PIE2fAXYS4o7joyH
-         RTxPwcrTKu4aVW/vH86DWxX39DeR6sEFqFnLQ3MBc27SOZnmu3mrqjK1+TktMOJvvFw6
-         B3T63jf9bU7ll7+Qa1ifJyzE2eWzl4N57EzqYZlZql8JyqoxL1zbQaivpT/I02oyXdpB
-         qLDA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Ns5kGxkSQyvdXAeoo7Xju8at84HhJt0rlHTJkeC9BCPXBR5Ia23F58lx0J+vBOJTK4QKy03EVt0=@vger.kernel.org, AJvYcCUv3TgFbLSNZkwelLbp7U4qAK/d6eiAfYco+21caGe84CctdutCe9Ju8+dOVxmjBSER4a3VgKgvkYgx4Kes@vger.kernel.org, AJvYcCWplqpz8Rv1pIAk7xKfgZKD32uRPXi08Fb+ZTPLmOuHF2BmNHra0MU9aH/SUmbj4P44Z8Rs7MRfVSic@vger.kernel.org, AJvYcCXpN4KBIRzm9JAuUy/23UPsx9SPyhCQSl1d6+++0AasqKOoWZN3J/Prfzw4RXkzPm19azRrWDrx6IOGEBl8mQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnx3tdmZobwdLdbFmuVR4qwcCBhC10BjUVGkq5I/z0P+lDaVMg
-	kaxfC/8HhARVpJhFPQG9GxV8ntpGv5D5l8AoOAKU/c8kXRZPZGSuhiRIvtzVrvc2
-X-Gm-Gg: ASbGncvHYD/6+nsFtiNxKhJe/sRGZaqL/gzLzyoRsx4HhLsi4l5d3WIIeRJceQ8cYJp
-	8/9ba69fMrQDB9PrX1/OvjU79QYudZtraiYJNvLWcQtOXS5ZQ/oZz/Cfcig9w7SyacIJiWi9ckW
-	27GVZ2/xRczRWeuwXKYa1GMU2FV6ZOFFq+3rlJldKTFqDdOXaHReZ1jmnVhuFnQye/B9CmZQQFE
-	IX64DPZvpUOo3zRF5wD4PBVg1nKqN6k8/nlddHZrdnjJBYP2rVAOBLQwTIt2CPMGE196YW6WQDt
-	6Cb7k2InpgPABO8MXg5MRk4GJpIdxJeah23EynroJ/UAJ7/6IH2WAVf70FcDUVhAKw5bJpFXbRe
-	MrdJJA8dp9A==
-X-Google-Smtp-Source: AGHT+IHgGLtiiEgL7LDQ1Ih8w/gzruS2hdwVBLtgvJrCpoHNfH4Jij5JOMCtHWIqD9KxgQY4KtoqHA==
-X-Received: by 2002:a05:6830:2d81:b0:72b:89ca:5120 with SMTP id 46e09a7af769-73ca124817bmr592721a34.8.1751582750775;
-        Thu, 03 Jul 2025 15:45:50 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:cd4:2776:8c4a:3597])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f75356fsm159877a34.26.2025.07.03.15.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 15:45:50 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 3 Jul 2025 17:45:48 -0500
-From: John Groves <John@groves.net>
-To: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
- famfs
-Message-ID: <aimijj4mxtklldc3w6xpuwaaneoa7ekv5cnjj7rva3xmzoslgx@x4cwlmwb7dpm>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-11-john@groves.net>
+        bh=YQ89OCdtlbGh5+E9e/L5GelOcn+S1I4YLQnLaEx1cYY=;
+        b=VEb5Yw3JBjay6KoZaToEtzlCG91Z2P3yfZQZxFWUPlIngRUH8TctnN2zMLcnwP8pu+
+         vMYmFJJ1/oyRlZ8FIIQwIeDHAnixjKBbNggbOz59UQ7JmUdLbzn+AQ2qAnMaVKNis18P
+         54XYpEYmwOfm1uzQZXlqB1Af6viKDdMmeChyTZwczM4PpcGoUNxrB2D3L2201lM+10tQ
+         1+6qvwj9Bq6EEjR3mUb4N5kKmXnmiKWlSJv322mY779g7agmf5sJr1sRfOVY4N6Kb14M
+         jOitsObTfe9jkMniACEkNhnXv+pyvgrrOpgd13QK7gPoktH5q5zTHGKcdC6bScFXaz3Q
+         Gdfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1HZObTiacQMLNYRKwfKwFgpDJFprmQJK8ZvL4eTXoyuQnQWp5zhhypfrpJLG/p8+UCFam2slzXEKxuYQj@vger.kernel.org, AJvYcCU7Mn/cxKdoOA9f3nn2urxQl4yo8nzolHbPl1SQ1aVLDBZR32ANsqWYiDAwXMnrq1Wq+huf17KC2ng=@vger.kernel.org, AJvYcCUDLMbCjVjYofoHPHTIkrGlxyXNYngmInS5XROqxwCTdZINcYEEYgFe5pd7ehNMPxLLEZJ0shaGBrMjtTgtDpg=@vger.kernel.org, AJvYcCUEMZydo2sWsWhg36WvOuLCmCRCxw/GRwyz/K1FpE7wreEMmQeeyN5fXGiMo2ztdg3kEJww/L6ZRutQ@vger.kernel.org, AJvYcCVMyQYyVT2TQC5WkqpqPS4iefJwxqbeHbI2EZ4hxpNoRNoPlADLk6JEinZ71rRatzK9Lgnea0nr3viJlkJsP9Um@vger.kernel.org, AJvYcCVkMmUHn3xbahXlRQUiBYH85qJlFbyCGoV0s/Ct9bYLXO6Zzf1VPSYjvfGnqKFNn/K4xohO4IQI@vger.kernel.org, AJvYcCX7nkZSm8GeD4C2lCdmwXme22gqwY06AwKbEPkZvuPEvaPiF8Vs0CWB0rxSKKAByi24lcF8aFO2MsN7/Yc=@vger.kernel.org, AJvYcCXLqMKmunCiQEopN1CqEndLYqzwzfgJPBQWfLGEPBDKY/RfSb8NjalHyrF3lIGMSepng/w4qtIIlEMv@vger.kernel.org, AJvYcCXyh0YUPsLu2KZB7JiX7RbJpR6Jw+AKr6znHQ2xRwkj0WezgHnPcYKTduSgULB6cjSnd8ODj8oVH4kE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx45c8EOtHbZfCO33l7Y9dYS08ofE0ZVQAqXeYTSP9q1xtAIYTi
+	e6imCqE2adhzNTZTn1E4BNQReeBwthU/wp46/leHuqncGprk+1HR8skasFUSYZ9hfmPfe5FtFta
+	4JHKYvpphQ2dswFdusTaAPcPZ5LF1/yI=
+X-Gm-Gg: ASbGncs/+IiN0PZBAIlVUnQvSh5yqIqi4lCJU02/2yKA1YJT4maatnQPZqROijrfXJ2
+	ooGaL8KRa8Rh1rTEunMmOf2R1c5TPCx2gAPiNdXRHxojy0nI1bxWt7YFi9ILvuQ6wcy0+r+ko2y
+	fdsP9J9mDbFTBDJwZY7WAkV+xqS1rORHUfqytoLJFE4+WkPWkMOB4WhcsPSGdJwUf7dL25Fr9h3
+	8CMXw==
+X-Google-Smtp-Source: AGHT+IEl+sPP1B8mCxMl52InEsjqgDrQhGFgZ4gKQQCtMPmYktkmfkeMhqG8tc4KCe8e7E7L2nh/1DkqsMZO1oU3bHY=
+X-Received: by 2002:a05:651c:4013:b0:32a:7856:7412 with SMTP id
+ 38308e7fff4ca-32e5f617942mr529651fa.27.1751582788733; Thu, 03 Jul 2025
+ 15:46:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703185032.46568-11-john@groves.net>
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com> <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org> <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <34c00dfa-8302-45ee-8d80-58b97a08e52e@lunn.ch> <CANiq72ksOG10vc36UDdBytsM-LT7PdgjcZ9B0dkqSETH6a0ezA@mail.gmail.com>
+In-Reply-To: <CANiq72ksOG10vc36UDdBytsM-LT7PdgjcZ9B0dkqSETH6a0ezA@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 3 Jul 2025 18:45:52 -0400
+X-Gm-Features: Ac12FXzLoSh37LekSqc1NAd_zq6FaEAH_wUVbUZ0bDWsTpL5vqgS5iCX-O9_oZo
+Message-ID: <CAJ-ks9mkC3ncTeTiJo54p2nAgoBgTKdRsAwEEwZE2CtwbAS7BA@mail.gmail.com>
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Benno Lossin <lossin@kernel.org>, 
+	Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/07/03 01:50PM, John Groves wrote:
-> * FUSE_DAX_FMAP flag in INIT request/reply
-> 
-> * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
->   famfs-enabled connection
-> 
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  fs/fuse/fuse_i.h          |  3 +++
->  fs/fuse/inode.c           | 14 ++++++++++++++
->  include/uapi/linux/fuse.h |  4 ++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 9d87ac48d724..a592c1002861 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -873,6 +873,9 @@ struct fuse_conn {
->  	/* Use io_uring for communication */
->  	unsigned int io_uring;
->  
-> +	/* dev_dax_iomap support for famfs */
-> +	unsigned int famfs_iomap:1;
-> +
->  	/** Maximum stack depth for passthrough backing files */
->  	int max_stack_depth;
->  
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index 29147657a99f..e48e11c3f9f3 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
->  			}
->  			if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
->  				fc->io_uring = 1;
-> +			if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> +			    flags & FUSE_DAX_FMAP) {
-> +				/* XXX: Should also check that fuse server
-> +				 * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
-> +				 * since it is directing the kernel to access
-> +				 * dax memory directly - but this function
-> +				 * appears not to be called in fuse server
-> +				 * process context (b/c even if it drops
-> +				 * those capabilities, they are held here).
-> +				 */
-> +				fc->famfs_iomap = 1;
+On Thu, Jul 3, 2025 at 5:38=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Thu, Jul 3, 2025 at 11:28=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrot=
+e:
+> >
+> > A small patch tends to be more obviously correct than a big patch. The
+> > commit message is more focused and helpful because it refers to a
+> > small chunk of code. Because the commit message is more focused, it
+> > can answer questions reviewers might ask, before they ask them. If i
+>
+> Yeah, also better for smaller reverts, as well as typically easier to
+> backport if needed, etc.
 
-I think there should be a check here that the fuse server is 
-capable(CAP_SYS_RAWIO) (or maybe CAP_SYS_ADMIN), but this function doesn't 
-run in fuse server context. A famfs fuse server is providing fmaps, which 
-map files to devdax memory, which should not be an unprivileged operation.
+I appreciate that this advice is well-intentioned, thank you. I agree
+that all things being equal, small changes are better. In this
+particular case, there are specific downsides to splitting for its own
+sake which I tried to explain in previous replies: splitting the proc
+macro from the rest of the machinery risks forcing a reviewer to
+assess a chunk of code without seeing how it is used; in my experience
+this limits the scope of the review. Splitting by subsystem has other
+downsides, which I attempted to enumerate in my reply to Benno in the
+other fork of this discussion (let's discuss those there, please).
 
-1) Does fs/fuse already store the capabilities of the fuse server?
-2) If not, where do you suggest I do that, and where do you suggest I store
-that info? The only dead-obvious place (to me) that fs/fuse runs in server
-context is in fuse_dev_open(), but it doesn't store anything...
-
-@Miklos, I'd appreciate your advice here.
-
-Thanks!
-John
-
+There's also a tactical question about splitting by subsystem: are
+there any tools that would assist in doing this, or is it a matter of
+manually consulting MAINTAINERS to figure out file groupings?
