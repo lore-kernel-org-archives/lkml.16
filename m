@@ -1,104 +1,135 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6B672632
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97962D12F1;
+	Thu,  3 Jul 2025 11:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541140; cv=none; b=Thx+mtdgGI4bMK+iI98PailYu2WHds4fHmcGxfqACz1xCDQRslwWL04QFwM8HuRbsDpBGe7sFYxYo1TiSYY4NcNxEeK9Tb8h7dx9EwF8xgzYsZw1hWp4VFo4Q6hxX4tH6r/e+7F7y+2a4o5ukeL28bLEC1pvC9yvvxhJWLGsS1M=
+	t=1751541151; cv=none; b=e6zCIIsxg8GUSMElAYiDUKFmcYVc5+n2WfvfaqcuYRfdFfosE+KHKaFenIRvLGvd9cF+sJRPyhhmCrhiWC87/WbffxXnLaFAyX0CEeK38+xTqlFCGEOmYW7Bb0PauHbnVXXvyQcH/qSVkKZSUoVLTxVlPL277EWzDyvyo+VurUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541140; c=relaxed/simple;
-	bh=bihF1qMOyKgYkmhiJ1U6KBKy1pzwOukLKYEfDly5ihw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H/x94O7AelAQxc2nL8eAHOA6cq9aNP6p2PQC7ZyFdF2UQHDNmZ43/MVANl4j4pzwUP/eIwLHL7bSAc2Y/vntIPK8uuzYCm+25jZXqtm9+tl8SvR6g1bxupkgZ709V0FYBSxQU+xjJXbEK+wFR6fqe3GAC6H+BkNac+7CqikDObg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ZpEgArdw; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1751541151; c=relaxed/simple;
+	bh=H2eJWmCk2lXnWMtMkSOrRf2uJVt39KVC0MJOU0u/Lng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=V8ucGNWF84DB3ecfahtT/obmdqaYpdxbZCDGyQkJN8k0irD5H3emD6c5YpSdqkZkYgeHVlCC83MVxFdDUO5kxEFHlnm8Uu8TR4zYXOSCEmsHC1zzRZO2XRaPhJcMYnnQnRJACDGs/UFtMb93jxA9M5sJmyQn0jPEwJczY9e4638=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dR86CbiP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZpEgArdw"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-236377f00easo66747975ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1751541138; x=1752145938; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Bi07Xa1ZYxOiNG8G/e9FKN2IkTvUaWt67C3ZOXAsBA=;
-        b=ZpEgArdwt7zC2F+yjkdSrFD1Uxdt/qh959K4vEs2PDnvEN0U19pNUm6mK0Cxwb1bFB
-         TYUAZemqrKId/G71GCfxFqWnE+dI5F9SA3nGsfGo8DoWqlDTw7rkfVAReod9eabZ+xEo
-         7XEkane57y53YtG3Lsc28YVr5bAXXG4f48t2E/ueDXcdJpBolOXZcaI5mUpKykJdo6H+
-         IhonqZAv5a9nKBBEZbJCQbqW0Cts5Vmld31Li0UAa42USYoonVtF9ixUbrXUVJbHXbLb
-         LCa0XlApRwX7DYTH+QI1i/d4/SqwdI8AzantOBmeZqOcVSoppA3Hj7YYaByeEC3Wb10Q
-         4Knw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751541138; x=1752145938;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Bi07Xa1ZYxOiNG8G/e9FKN2IkTvUaWt67C3ZOXAsBA=;
-        b=WugdDwJrjYPJciBsFzvn0MeeGv/XY0i2g4PdrYhk8FFCbXEstVdQgPn3dsE4KcPZiO
-         HlZzAD9qd5zq1wX4F2N8fIftXZcVi8wQhP9oByljdvMTW4UJel3PLDCpc7Gxo/8Y8pH8
-         OF/QgPehQmeYA/jnum6YF9mLDmYOo0ly4GuFBnLIc9U+FbHo8GAV+L3n303T3KmOvl0c
-         5Pwzrn9Pvo8OSo0kK8q81gm0tAvaa1wVgQcyEaBDp8VCbsPyiqh7dhpt+caAsf7U1xOg
-         5MYDn0h6RTW8rUQ2erShbE5IHYpb8PBXhDdjPHj81d57OTBZwPOdtwcZwT5WJ4Mu3Qqf
-         6LJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUJrzYtwKTYJHS7qEivb2qQ2qLvS8E3UIAt1AlBA5UaIgg65RipnIMfI52NH3eFuJJItmEOMNo4WdU3DU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdaFw8//F7bCJtmasI2DRYmkBgRvvlv0QAfVIt7+npcw+IBrlu
-	vm5643PD/KQwiQI9C2kggcfVBVDwFjh6dbkmu43vDmlloxGj+AnfkNVR94Bf9m1L1s8=
-X-Gm-Gg: ASbGncuZJzd1kZZqTCI+WaeeqF57euf+wFnGxCc3apJuLlKWGqpHEfl0iIGo2kW+eZo
-	+FwbV0+UzsMgAdx9jWjVLWJ4yk1rylMVGhNNJUrj9RadQS5mZPpT+JY2TpP56x3zyiewWOY9NCD
-	Z7ROup1mec1vNfwQTHzoxhZG+gbCoNj2pv9GSe9ZOkWG4mblJVTVKKNlOILQcUJgOtiiq1yUEmH
-	oKwl3NzI3jl8CLeiUkrdyiBNkG5cZydKDjBK9nQw4TZkDwpcFZC66glcA2QxsF88kcuskmpA394
-	YpSL9G/+/vPbpkckS//2hCa/H8+3bG+7DBJm
-X-Google-Smtp-Source: AGHT+IGu+iz//6ptjIiTWMElugg1B4roY1I/9EYRDfQHICQLOGN2lg2bGldKdCyM/eDynJL6WK36Bg==
-X-Received: by 2002:a17:903:1a67:b0:235:a9b:21e0 with SMTP id d9443c01a7336-23c795742fbmr47326015ad.0.1751541137726;
-        Thu, 03 Jul 2025 04:12:17 -0700 (PDT)
-Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f1814sm147706655ad.57.2025.07.03.04.12.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 04:12:17 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uXHrU-00000005CEV-151S;
-	Thu, 03 Jul 2025 08:12:16 -0300
-Date: Thu, 3 Jul 2025 08:12:16 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: David Hildenbrand <david@redhat.com>
-Cc: lizhe.67@bytedance.com, alex.williamson@redhat.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, peterx@redhat.com
-Subject: Re: [PATCH 0/4] vfio/type1: optimize vfio_pin_pages_remote() and
- vfio_unpin_pages_remote() for large folio
-Message-ID: <20250703111216.GG904431@ziepe.ca>
-References: <c1144447-6b67-48d3-b37c-5f1ca6a9b4a7@redhat.com>
- <20250703035425.36124-1-lizhe.67@bytedance.com>
- <664e5604-fe7c-449f-bb2a-48c9543fecf4@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dR86CbiP"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5638LES7032540;
+	Thu, 3 Jul 2025 11:12:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/pXxxWAE4uu6DN1xz7bTHYkOJ7kt/M1Gthz7B060FP0=; b=dR86CbiPX8S7kMno
+	iTPWIH+FbvUBdxpc/WJdM/4juos7ftZCNLJ9fPbzzaupUd8UElRf/8T0IqZJXKDX
+	j/tvKakUzfoKexhiho35pK0hwL3pOzDtRebf56n2AjbZjK5dSI8HF8uUVlqsro0S
+	TZXOORlLaU+K1J9F8oLPo3p51KsNbHVEopZTXPpuLjXxEKuyQ1kckJ0yeTI0IJ6x
+	srsgCRpDy0m22gNi+mHhmv9JEtFaW5IaE2hNt7sf0p0jYGI7FYNBgD8GcX07kfRS
+	3amj6Pw3WvClF/Kti5E8meR5p3Wvd07uMlCTv8XJaJUL0jv0iCUFwiT7HtOw0cV3
+	ZrphOg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kgf4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Jul 2025 11:12:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 563BCMtW027979
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Jul 2025 11:12:22 GMT
+Received: from [10.219.49.219] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
+ 2025 04:12:17 -0700
+Message-ID: <e924a97b-02d4-4f99-833c-3f3297bbfc5e@quicinc.com>
+Date: Thu, 3 Jul 2025 16:42:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <664e5604-fe7c-449f-bb2a-48c9543fecf4@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/9] dt-bindings: pinctrl:
+ qcom,sc7280-lpass-lpi-pinctrl: Document the clock property
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250625082927.31038-1-quic_pkumpatl@quicinc.com>
+ <20250625082927.31038-3-quic_pkumpatl@quicinc.com>
+ <46f3ca15-b638-4a05-ad61-88e8bb025915@kernel.org>
+Content-Language: en-US
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <46f3ca15-b638-4a05-ad61-88e8bb025915@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=68666597 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=_2Pm6FfrxIRCaX_8azEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA5MiBTYWx0ZWRfXwy6Gcke2NU+T
+ PUipZlSlvIIvfqL+FA2wjxoUTGzzbSHYJ8yuH8uV++MTZHZ69vndvuk2JxGAWWkJPDdSK8pFPIY
+ cJwGN7hYVccu6l7ckB/0VO+67ULk4BlQpw4bfkmp0E2iFCG+cY65IPvliTULzIWxgRhdtQ0nInz
+ xr/mGnAJNSjQ22uUpNBkoxk+eBXZYvLLAMBd3DvqLMsMAl6C4IFPKihHm71Cs1RxwJ0WyYZSofs
+ 8TFgXGMwKjv+i6d2E+A34f0OVW8irJYGWaBlm1HeR3LWAIZ6U1PAkzUvd6AkfSfE8rkF2kI6pGE
+ s5VdWQDEE7ZRRlI08aC5wPnMZH1Y4bHSW6w1p5wVqOPlcorB/bWgD7E/1QuYKwosrYPuKfOV5cq
+ q4KbMhqxRkW83LgXoHE1fwkFaDyH8kb4427RCvYFymTTHTmYKm9IoZ07DIPMQqW9ENqx/6F/
+X-Proofpoint-ORIG-GUID: 9lfPPEPyLMRxkwz3nyKYz2k3aSKw5HRj
+X-Proofpoint-GUID: 9lfPPEPyLMRxkwz3nyKYz2k3aSKw5HRj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 mlxlogscore=986 spamscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507030092
 
-On Thu, Jul 03, 2025 at 01:06:26PM +0200, David Hildenbrand wrote:
-> > +{
-> > +	struct page *first_page = pages[0];
-> > +	unsigned long i;
-> > +
-> > +	for (i = 1; i < size; i++)
-> > +		if (pages[i] != nth_page(first_page, i))
-> > +			break;
-> > +	return i;
-> > +}
+
+
+On 6/25/2025 2:16 PM, Krzysztof Kozlowski wrote:
+> On 25/06/2025 10:29, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>>
+>> Document the clock property for sc7280-lpass-lpi-pinctrl driver.
 > 
-> LGTM.
+> Describe the hardware, not drivers.
+
+Ack, Will update commit message.
+
+Thanks,
+Prasad
+
 > 
-> I wonder if we can find a better function name, especially when moving this
-> to some header where it can be reused.
+>> Clock settings required for Audioreach solution.
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> ---
+>>   .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml   | 16 ++++++++++++++++
+> 
+> 
+> Best regards,
+> Krzysztof
 
-It should be a common function:
-
-  unsigned long num_pages_contiguous(struct page *list, size_t nelms);
-
-Jason
