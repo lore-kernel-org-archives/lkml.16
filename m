@@ -1,114 +1,210 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E662E03E6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 09:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE4428E579;
+	Thu,  3 Jul 2025 09:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536296; cv=none; b=u7uUJCHAGNnP4fgF4zl18gbpo1pmy51f8HnubVYsvDfcmeBcAoym2U3EW0NwSdCO464ISY0IGMPikvbEs+k8+RoHBCOFom0InJIBQf9FZ6EGEOzZ3Ni6f8mBzhUGlZVYA/XdhSvmPEibu/XM1Q+70BRezNPPVgZkTjLFzLQ2n5s=
+	t=1751536317; cv=none; b=Gg78Twp+71QKi7k8gp9qS+NQxOjI5W1owrlgUGg08rSqMsbz+Fm++E4bGNcbbGXBfyNi12YIoKXlC7XNj6yAD7SZaFEl/oXVEJ+Kv9Pfv2DH43Hm9ex+rGfDLEeX0twTpoIHGAPE2mSD9YUtpxplsiUXVAQZhr7QiZM+q5mxe2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536296; c=relaxed/simple;
-	bh=YpTyljxwyw07U4P0gHb4gnrakvNkh+/hIrM+ABJ+fj0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qb7koBwEXRHHOrIa+aZNmYKz+Hg5bPncyPD5Qz30CVk4NbaimS+8uRu2j9KSKtLnK/DaYgOK7izl3cVjOqZGpH39LCVU4pd9SMPJ3JomOMckUrlUwSN9mrO9HG7IU4bUpyX20NZt/PQ3FzfmoOgYf8DPIvCucJCVyKFwt4uoFpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2xRyu5kp; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751536317; c=relaxed/simple;
+	bh=2ntYrlK1cqffKZY1IjFAi1d0w6hK+W+A95jFi0JZ1sM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RiwRwe/5YT/V7YjsNnYx3f4QD4JDWjWkgXDOCXm3lv81Fo7vQ+IvfOZIoILX8aAtJeThDEQz3FFFZdpPn6uQxxvaHsz+Cu7AxeyO50g1KCuRlEA33Vt/Fpjphl/MBXAXTnUkByvYtrexz3/KPcAG16vceD+POW4sNik/MdzoIeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elZhqrVw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2xRyu5kp"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5551a770828so4688494e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 02:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751536292; x=1752141092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fm9C4xWfuuIKIxeM1FG7nAWF3Huvmfev7MnDCCzIEeo=;
-        b=2xRyu5kpBk32c8BFiGQ2GK2WOFFJHt38z+jgrUYl5ctvpo/ZGXTPEpt3mUnkXwlSnc
-         ONmpIfLJPriVZ9pppbTFbxn7Bc1ccQb9CZLX/d7Mjy2wWBuYacI19cLhdswRa8suDeHC
-         Vwviu3AzO0wopJY+YB5NtxbVIwQ/cVE+thlICj84t5BUg5Z8kqEmrKM1+v1f010xkmxv
-         NnIQb9F7JWSyn/L+jNjaRL7mmLCiyJVqYn+cdC62FTCgB8JEyC7R3FkHBv+2O+T9lGzb
-         ZuFcLFr9a2gSr6sX7eyaDB7hKh5bPq4zJ/PQrGpiP/8OUcnWtSKVy00b5dbaJbphxqJQ
-         Hgdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751536292; x=1752141092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fm9C4xWfuuIKIxeM1FG7nAWF3Huvmfev7MnDCCzIEeo=;
-        b=JIHaKi7MkauIN/R+ZKIRsrm7U+lZpiIJ4hzu7gKeskDwhTu5mp5lb8ml46Ai0HgwfO
-         bMIdcNEQioG34GekrFQ9cdmKXUCyV0Oyijbgav1VfYRRwCECGapwVd3QOWV2g0dlStg8
-         pM+VbnNBOGquJ9fMyYwao7hAP2dTios9psUvzyo8qxAcixSkP/Z0TwWjla9yY0h0DGiQ
-         aL69OUHtafyB7HRHV0rMCL6HOWRWovmuXqnRoy1zeUUumeQcjoc417N7xZqJmCv9T7Gg
-         Dck5ebap/r6svaKLM0uIcnW0mjdmolhAT6S2o4T2+P4i3baVfi99fccLrzCCCY8cz7Me
-         qhdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUh4vuMxbK2uSsBxPC+h0r3aO8AR0easNM4RMPbIdc5n8p7t8FixJUoFApa/hjEiaSF4gR8TlgGCJSMZgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx50Bk07foICKuKTmEBHfPKOSPF1vio+BiITfXpHFcbXWcn1Fbf
-	vSgMgEPk66dJxQbpx5blo/TXxp+LZJD/AcQv9JBv9Sa1igZy1e1D9O8E85DHu/gg0wAhepjYVIn
-	A5Xhwr6FghSh+qsm35Aq+Yxdc94Q8/bOI3IX3BtTIDg==
-X-Gm-Gg: ASbGncvFns2+Jgy3+TaOZejI6A7qFJfL/0CC8uVJPY/X3j83V8KNo6GUiypi/0cdwua
-	n5XUIpcV4B8m9MM0Cg+7HXOSkCfgoOboizN/qZfxY2ekyygZAisR91FyiopXp06LDAFEV++Ra6o
-	sx6GhL3JuUUuz6EpkbSHaVP5khxAoVfFPhyshKzeDgvFUOefX5Vr2UliPycSyxaqdSuQ5o5btYt
-	g==
-X-Google-Smtp-Source: AGHT+IFNLwhbBpukbVu0dvBLmLJ9QPZOvXagKslA4IQMG8t7aHrgsvuCJVnQ/Jp0X0+rUTcLV0jdkLs/XNf8N29ZrsA=
-X-Received: by 2002:a05:6512:3b29:b0:553:36b7:7b14 with SMTP id
- 2adb3069b0e04-5562828523bmr2206635e87.37.1751536292037; Thu, 03 Jul 2025
- 02:51:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elZhqrVw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D2B0C4CEE3;
+	Thu,  3 Jul 2025 09:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751536316;
+	bh=2ntYrlK1cqffKZY1IjFAi1d0w6hK+W+A95jFi0JZ1sM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=elZhqrVwFWec9SPbr8X4Ggmzt+owTzcEiF8B2LpTjJGI/2DwjK/pH8WqCcI8vqytD
+	 n/Wz5F5a4piDtE/bAF14ppZV0MnsXLmouknbPvR83puKGR5aRGZhDi8CZfIqv+Q4PD
+	 B46c7Q+mZ0RY7j4hTOFSzYly44gi08CaZM+tpzbwpiBtbKy5KHr0pOfx18m8qEMzFZ
+	 TUm2lkq2cVDpJTlHbHzevOWz+AQs6xydYAmkEABNzUWhO2vBSmoDS9Fp0ZmYe/SwYh
+	 meR5vsuiEee3rHuwPb634sL2FH/9m0NdkL2C3W2O8AP9wPegnUp5a7BtYNJ1fLuw6l
+	 02UbmdXUENMQg==
+Message-ID: <9316adcb-4626-4ff8-a308-725c6ab34eba@kernel.org>
+Date: Thu, 3 Jul 2025 11:51:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702164926.2990958-1-s-ramamoorthy@ti.com> <20250702164926.2990958-2-s-ramamoorthy@ti.com>
-In-Reply-To: <20250702164926.2990958-2-s-ramamoorthy@ti.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Jul 2025 11:51:20 +0200
-X-Gm-Features: Ac12FXyCwoICVUr3Z51apCKRhZU7x6W4kGidAOB345u_C9-RSlabdFl5B5KxSls
-Message-ID: <CAMRc=Mdg8_Tq1PWAaOSzzPGUMu6-_3SvOy6F+n_Qv90arVyeLg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
-	jcormier@criticallink.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: ethernet: eswin: Document for EIC7700
+ SoC
+To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ rmk+kernel@armlinux.org.uk, yong.liang.choong@linux.intel.com,
+ vladimir.oltean@nxp.com, jszhang@kernel.org, jan.petrous@oss.nxp.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
+ boon.khai.ng@altera.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ lizhi2@eswincomputing.com
+References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
+ <20250703091947.1148-1-weishangjuan@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703091947.1148-1-weishangjuan@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 2, 2025 at 6:51=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@ti.=
-com> wrote:
->
-> TPS65215 and TPS65219 are overlapping PMIC devices. While their regulator
-> features differe, the GPIO features are the same. In the TPS65219 MFD
-> driver, the 2 PMICs share the same "tps65219-gpio" compatible string to
-> limit support for TPS65215 in this GPIO driver to comments.
->
-> The TPS6521X_GPIO0_IDX and TPS6521X_GPIO0_OFFSET macro name prefixes are
-> updated to indicate these macros apply to both PMICs.
->
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-> Reviewed-by: Roger Quadros <rogerq@kernel.org>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 03/07/2025 11:19, weishangjuan@eswincomputing.com wrote:
+> From: Shangjuan Wei <weishangjuan@eswincomputing.com>
+> 
+> Add ESWIN EIC7700 Ethernet controller, supporting clock
+> configuration, delay adjustment and speed adaptive functions.
+> 
+> Signed-off-by: Zhi Li <lizhi2@eswincomputing.com>
+> Signed-off-by: Shangjuan Wei <weishangjuan@eswincomputing.com>
 > ---
->  drivers/gpio/gpio-tps65219.c | 27 +++++++++++++++++----------
->  1 file changed, 17 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
-> index 526640c39a11..3c762103babc 100644
-> --- a/drivers/gpio/gpio-tps65219.c
-> +++ b/drivers/gpio/gpio-tps65219.c
-> @@ -1,8 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * GPIO driver for TI TPS65219 PMICs
-> + * GPIO driver for TI TPS65215/TPS65219 PMICs
->   *
-> - * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com=
-/
-> + * Copyright (C) 2025 Texas Instruments Incorporated - http://www.ti.com=
-/
+>  .../bindings/net/eswin,eic7700-eth.yaml       | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> new file mode 100644
+> index 000000000000..04b4c7bfbb5b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> @@ -0,0 +1,175 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/eswin,eic7700-eth.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Eswin EIC7700 SOC Eth Controller
+> +
+> +maintainers:
+> +  - Shuang Liang <liangshuang@eswincomputing.com>
+> +  - Zhi Li <lizhi2@eswincomputing.com>
+> +  - Shangjuan Wei <weishangjuan@eswincomputing.com>
+> +
+> +description:
+> +  The eth controller registers are part of the syscrg block on
+> +  the EIC7700 SoC.
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - eswin,eic7700-qos-eth
+> +  required:
+> +    - compatible
+> +
+> +allOf:
+> +  - $ref: snps,dwmac.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: eswin,eic7700-qos-eth
+> +      - const: snps,dwmac-5.20
+> +
+> +  reg:
+> +    minItems: 1
 
-Should be 2022,2025.
+Nope. Changelog does not explain that, it is not correct and no one ever
+requested something like that. See also writing bindings about constraints.
 
-Bart
+> +
+> +  interrupt-names:
+> +    const: macirq
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  phy-mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum:
+> +      - rgmii
+> +      - rgmii-rxid
+> +      - rgmii-txid
+> +      - rgmii-id
+> +
+> +  phy-handle:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Reference to the PHY device
+> +
+> +  clocks:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 2
+> +    maxItems: 2
+> +    contains:
+> +      enum:
+> +        - stmmaceth
+> +        - tx
+
+Not much changed, nothing explained in the changelog in cover letter.
+
+You got already feedback that you keep pushing same code without fixing
+anything. You don't respond to feedback. You don't address it.
+
+What is left for me? Start treating us seriously. I am not going to
+review the rest.
+
+Respond to previous feedback with acknowledging that you understood it
+or further questions if you did not understand it, but you made thorough
+research on other bindings and example schema how to do it.
+
+NAK
+
+Best regards,
+Krzysztof
