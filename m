@@ -1,115 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE513093DD;
-	Fri,  4 Jul 2025 13:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042743093DF;
+	Fri,  4 Jul 2025 13:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637037; cv=none; b=Fl06bo51Ru7ALO8rA2GFnInHBkskmnqDa7YRn08yz4PIBLxLl75yYilth/Elcc9rvTtgPFVxTXCT1/iPpC3rLjJcUQbSp3MNXjoF3RCS/E2mzH+edMClqMXoVwLpOrEEYrid0h6VcIGrQdDGLpc+tU9ojJ9UOpB9HhsJ4bt6/aw=
+	t=1751637044; cv=none; b=ePplMWJbHfMtizn9bCb1tDjx7P5uuA2SkW79QgBf/pFmZ8oZbC+G3rEktaQ7ivZoKIoYD0ZJhFahrYtxsnVfmudfd2GMEjr/7xQG/KdAKOTZI5Z3EpIJ92me2q0K3t8+E17WdzEsFBE3Hhr0tuXBX+IiiYrt6oDi5hskQDES7Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637037; c=relaxed/simple;
-	bh=N93fx/HWGQ9/7LBI0Q5dx377OnCZ8CrZ/OhiD9v/Z/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JY6Nba9gmq/LFHKeOVjC5qwxO/c+rf+4nTTckwPVGCnTKOLZLkau3XIWYuRQZroS2zC6s42tFt8PoGmLzuvMvbxESJz7P/RMwGiRpBU9S8MSh+7uRyIXTuIpG4ODc9ucun/LAguDlD3jaBXXr+WO3NgxQVMW2TKp0Eqb4o5K01A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IafJ5zhz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751637044; c=relaxed/simple;
+	bh=03hm6Sl4iIRxFgfLxGYiEA4dHv+1WF4qqCJ3ZpbG5QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EDF5a0bRFEo/6Ae/ApDumBf7hrdALreCe6cuyhIOVwPiWLyfvLD1lBdtDR+l+e0JOcxWrd0fTBM9K1kzXBWgkR//t4h6fxLcSgq1V9lqcXj1SoMG2s/NqUl9X+AmS58Er8ZeHMmK7hDkf+BQTT9xZ4CYWf+TmNFIytElW8g2RII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAmjcb7v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IafJ5zhz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716F3C4CEEB;
-	Fri,  4 Jul 2025 13:50:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAmjcb7v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AF1C4CEEB;
+	Fri,  4 Jul 2025 13:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637036;
-	bh=N93fx/HWGQ9/7LBI0Q5dx377OnCZ8CrZ/OhiD9v/Z/8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IafJ5zhzJJMzQ5RvGFz9jHElZlpQS/cEpbHiJxGptp5RZk2uaNXSUmlxru9vxG0Kb
-	 my6sw81V2pUOKJO1VNXbXkyX54FcpSGrYkNlcQ/zC2JzREUevQHixwULxSwoZP/0Ao
-	 L57ARhp2EwtWbNo4JI2cnYce4L0oAVLtG4KnJPruYzna/Ruxpq+TTi3Xed2SikeQCx
-	 G0QZsiDA0BAqUNC0WiLG5StfJgJ7NHGRRJSNizFGe+xDAEuQrswFi0JvogCPgcbwwV
-	 53cCDyXsz+5McRnjUaaNiAgEigDmHz7JsdAkKoJqHfzCVV1vqibVOyCx3Q6UJM33Dm
-	 j1LzYJybqnstw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH 8/8] x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations
-Date: Fri,  4 Jul 2025 16:49:43 +0300
-Message-ID: <20250704134943.3524829-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
-References: <20250704134943.3524829-1-rppt@kernel.org>
+	s=k20201202; t=1751637043;
+	bh=03hm6Sl4iIRxFgfLxGYiEA4dHv+1WF4qqCJ3ZpbG5QU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZAmjcb7vcyf0JwZjTkhsVpbsZSDya2mTo0kEtu7csJo60VFvT0vzK3DQ6LxRg+x6Z
+	 6Vt+kxEEuw0nJeqnxsJBkyOq8KhzQ0t6loPAAT7aDPyexZH9xYdi2xhAV8ybWNFnX1
+	 9ZMNOQW/XA/Je0ezzXOjP8tP3ovAGvhOADSLfLy31zb+rPJaRRPAHY/LTU2yXQTiLz
+	 BV0OI195bUmSDgSmvKnlueuxWxW1RRPJK9ci5kj/jA87zra2u3bkfM9mWuDMk9V+o9
+	 nCvR4zlt9gLV2EBHtyyR8Dw+CDmU05p8w/UYauSGyvcNAY5MNj2GwH7GH6Ws7YhVGa
+	 uvFgFEE7NFrAA==
+Date: Fri, 4 Jul 2025 14:50:38 +0100
+From: Simon Horman <horms@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next v2 3/7] netpoll: factor out IPv6 header setup
+ into push_ipv6() helper
+Message-ID: <20250704135038.GQ41770@horms.kernel.org>
+References: <20250702-netpoll_untagle_ip-v2-0-13cf3db24e2b@debian.org>
+ <20250702-netpoll_untagle_ip-v2-3-13cf3db24e2b@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-netpoll_untagle_ip-v2-3-13cf3db24e2b@debian.org>
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Wed, Jul 02, 2025 at 03:06:35AM -0700, Breno Leitao wrote:
+> Move IPv6 header construction from netpoll_send_udp() into a new
+> static helper function, push_ipv6(). This refactoring reduces code
+> duplication and improves readability in netpoll_send_udp().
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-For the most part ftrace uses text poking and can handle ROX memory.
-The only place that requires writable memory is create_trampoline() that
-updates the allocated memory and in the end makes it ROX.
-
-Use execmem_alloc_rw() in x86::ftrace::alloc_tramp() and enable ROX cache
-for EXECMEM_FTRACE when configuration and CPU features allow that.
-
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/kernel/ftrace.c | 2 +-
- arch/x86/mm/init.c       | 9 ++++++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 252e82bcfd2f..4450acec9390 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -263,7 +263,7 @@ void arch_ftrace_update_code(int command)
- 
- static inline void *alloc_tramp(unsigned long size)
- {
--	return execmem_alloc(EXECMEM_FTRACE, size);
-+	return execmem_alloc_rw(EXECMEM_FTRACE, size);
- }
- static inline void tramp_free(void *tramp)
- {
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 442fafd8ff52..bb57e93b4caf 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1105,7 +1105,14 @@ struct execmem_info __init *execmem_arch_setup(void)
- 				.pgprot	= PAGE_KERNEL_ROX,
- 				.alignment = MODULE_ALIGN,
- 			},
--			[EXECMEM_FTRACE ... EXECMEM_BPF] = {
-+			[EXECMEM_FTRACE] = {
-+				.flags	= flags,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= pgprot,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_BPF] = {
- 				.flags	= EXECMEM_KASAN_SHADOW,
- 				.start	= start,
- 				.end	= MODULES_END,
--- 
-2.47.2
+Reviewed-by: Simon Horman <horms@kernel.org>
 
