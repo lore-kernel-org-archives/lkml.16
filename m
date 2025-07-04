@@ -1,127 +1,123 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADF4137923;
-	Fri,  4 Jul 2025 17:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF6F288CB7;
+	Fri,  4 Jul 2025 17:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651239; cv=none; b=Z7Rv/lRgoMJa6IT3/SnvJqQyz0sF7PoMYVj6YM8GnG9GQqA+EaAH1/4czTh5hTW0CoCMavjpYu79txo0+mgvll+tD4Y1pif3kKNNzoyA+Mz2RvAbMliwhfICFGiNooalH/Qx9mIKve/reBwqUk0Yc05YvWMq9hOH8AURHh4NBa4=
+	t=1751651334; cv=none; b=XEx5OAQMYJeDi+rSNWeBaB/ebpWrG/KVnTDJSxrV+XRdC0wJNRE0+G2TNWFhy7IPRuRjUp0hBFgAFyFjuOlJd4Lwli5J4TDpb6mcXrriEKao/jAEzkRP76XvvY7133Uv6lBrWQh2qcTVQkhTej6a1BIbu+DyYA+kBYDPdQcQYvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751651239; c=relaxed/simple;
-	bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RAmxsOxTCvb0np5Aewq7aq3mfTKL2n9UatM7s/6v0IbCbprOQy+X4wNscy1GmD863UH1bJ/oea2KuYhh6ZhA3XDIOifNB7lVboa3TmA1UBMMaMBO+FET+QLhb1kPAWBlYsyf3m/k5nXea0+J3PeQ54FJfUMLwL5f3uBvkROgu58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=0WGuHz4/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bQURtbnH; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1751651334; c=relaxed/simple;
+	bh=pH2alqUfQKKZd/5SMroJOan/R7rRGQmDaLvmIoSTLsI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SiR42WvNX4136n/NBSqPS9mEa2neAIxN3Pm5iq9oMp3Z9ILhonHbDeFMrm/nJWMJspLbPr5LiEOGrww98qy7jssOuLnmMJ3L4M62F1I5fnlgLA49THk0O1z6mmX6S8W6DjLOcq8BvyDSxiZDFcMPPH8fdrjOi8rfTnsMxPm/PCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AYeaM9Bc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="0WGuHz4/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bQURtbnH"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CAEF31400219;
-	Fri,  4 Jul 2025 13:47:15 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 13:47:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1751651235;
-	 x=1751737635; bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=; b=
-	0WGuHz4/qcJupUnsLtWmCBRIoVdHILLaMUv6eUjsGaIhCwPiQAEy0VXb6D1FmicX
-	hYpERKdueINSQFFYuWyIkZ1/mwQyk9vw58RvshmHHp5X++uhkpfePC4hYAB3iov2
-	BARI1KwI6q5gjPX4Xu6xtyx08jWcRYF9P0b7F89vzsTAbuFmUiDI3qikLBEDXmx/
-	4fjx4CPCH4g0wmOQ8IVzeffeeQvD+BZfTmDZYlacS04lHJhZZfbUEBBcIE3E53cM
-	Ss9uF+tmfqpbTEFLY5ZN1CU6HHL55+TFPDnXsUAuGW9bAvcixRBt8CdmqLF83ZEw
-	ekVGlHODJXA7Ly6/3SVAHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751651235; x=
-	1751737635; bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=; b=b
-	QURtbnHWgP8Ff2gjGAKJpFFkyk29f4Q5x01F79rmU7KpwplqosofgBEkdHJpjwBt
-	128ZXtXwnMY2OaddmBRACSMq5RcFpHg0B427SAs8Cb6B+//NlrgigPYYM44Obncg
-	kV57HqpivRqVyjpwZFlldoP8Uz2EO6go8nvwfsqJqv9v2i8TNUMqnfJLv2AVq3Yt
-	c2zurxSnoGWMcC7+rCu7kMqvsaM35CintLN1IF3GQNkOzoqVJZcR8HlJc9umJz/A
-	OgReeFqXCEh05MPC0EfrnzQJnLDXPnZMLVFt65Xp3lKHVkk5292dhwN+k3kiWyKw
-	ug0KDNQ6ZAk1mrh6H/odQ==
-X-ME-Sender: <xms:oxNoaA4-DfppxZvDqFYL8v7qzmtW7fjYD_ZFRwWxHcsbpGOt15doDg>
-    <xme:oxNoaB4cQv7Cq_2hQFFi5DBUV3q5OqArVqTTkVDL57Uo673-jU8TWRWCXw9RDZ1J7
-    XWy3HiC_s2k-E3CG64>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeejlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
-    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
-    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
-    thhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrg
-    hlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepghhrvghgohhrhidrtghlvghm
-    vghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnse
-    gsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhi
-    segsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmh
-    hosghilhgvhigvrdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdhkohhnughrrght
-    ihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhiphhs
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:oxNoaPdEcY7HfZh8GU7T0k8f54kTuG2aH9-D-DC8z1Z_tscz3QMbPg>
-    <xmx:oxNoaFKzx3QsvwpBNNZrFSg2NcbneGGloU81w8WhXyJ3waMWlNVsYQ>
-    <xmx:oxNoaELK_ssVUEi798Gm4hYZi3ulrxUlsvuMuPi0DmnaspzV0y2RPQ>
-    <xmx:oxNoaGwG8vb76jYBGs3qJkPXUit-hN7nZ8emAPNzj4drg7VIRvegJw>
-    <xmx:oxNoaPxy0M11ia_oCNHTWpAZ75az73n9KyWS-eo3VoZw7agaruSNcZSv>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 196252CE0071; Fri,  4 Jul 2025 13:47:15 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AYeaM9Bc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751651328;
+	bh=pH2alqUfQKKZd/5SMroJOan/R7rRGQmDaLvmIoSTLsI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=AYeaM9BcxjKbB63KwRW18vWpq5SeLLhcVlmXO10GmD5fovYQaHqxFPgk7A+z8NZ8B
+	 sK78U9d8euY2gdcABJ9BU8EusJ9imK4WaWcd1IRwrdQpAFimvo/KqjIweoC4oKwel/
+	 yGL+JnvkqVzmlZoIF+Ts+2Llt3sJzdol304UUOk/CZNCkKfhnmDEakJ4D9BJtvX1Bh
+	 8RxrY1+alh8kBwwgEPMyAWwtIpjTVC1zuWbGMYd0FRkixCtmWHzk5q/KnHCfP3pHJX
+	 qAl5lpeiD2eZbAVsA69jroRJpAyrYEDVKPsBlivfQ5AewQQE6dpDSoZMUbZmW8rKxa
+	 Oc5eAugFKDp4A==
+Received: from jupiter.universe (dyndsl-091-248-191-229.ewe-ip-backbone.de [91.248.191.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 16F4F17E0202;
+	Fri,  4 Jul 2025 19:48:48 +0200 (CEST)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id CAF90480039; Fri, 04 Jul 2025 19:48:47 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Fri, 04 Jul 2025 19:48:44 +0200
+Subject: [PATCH net] net: phy: realtek: Reset after clock enable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T39b5c23212bbd78d
-Date: Fri, 04 Jul 2025 18:46:54 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Gregory CLEMENT" <gregory.clement@bootlin.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- "Tawfik Bayouk" <tawfik.bayouk@mobileye.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <0eaf6e01-a690-40de-b858-4e23752486b5@app.fastmail.com>
-In-Reply-To: <20250704-smp_calib-v2-3-bade7e9c0463@bootlin.com>
-References: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
- <20250704-smp_calib-v2-3-bade7e9c0463@bootlin.com>
-Subject: Re: [PATCH v2 3/3] MIPS: CPS: Optimise delay CPU calibration for SMP
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-phy-realtek-clock-fix-v1-1-63b33d204537@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAPsTaGgC/x2MzQqDMBAGX0X27EKMtv68iniI69e6KFESkRbx3
+ Rt6nIGZiyKCIlKXXRRwatTNJyjyjGR2/g3WKTFZYx+mNhXv85cD3HpgYVk3WfilH37KVLYlGhm
+ to9TuAUn/vz15HDTc9w8SF9PlbAAAAA==
+X-Change-ID: 20250704-phy-realtek-clock-fix-6cd393e8cb2a
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1777; i=sre@kernel.org;
+ h=from:subject:message-id; bh=pH2alqUfQKKZd/5SMroJOan/R7rRGQmDaLvmIoSTLsI=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGhoE/9kuhThZC9uUhc+SydJjXTClkWudj+jr
+ 3uQCDIFPdFexokCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJoaBP/AAoJENju1/PI
+ O/qarbYP/RqARAqGLaY+U7cYZ1YCCysuO2LWxXRBBGlzTEEswJ/vb9XBuRwHBQdTi1zyB7W3jku
+ szYC/2eO3msYEs4djDxR0dPsdgZh0Hy5m952mEzlAopjBOdUP60BMcxjOcffC/GmHL2/NGLPlUB
+ GOD7wwhp/MTDHX0H4BniY+ychaZJncGQquadHp4s3WDZbGFSy8geu89r5yOMCBgymKKjgSW7UB3
+ TYkxo2RD+FvJKZb0qIKEFl9nHVtogfBPxJN4quwmZtXewil3kN9cus0MrsBYvamtvRNnHhMBfYN
+ 90V/1B00xRJAnZ7Vf5CInCBNPLCD5DYy+RUK0E67Yp68PZksCsmxWft/FBJcmbVUMc+apQjahCv
+ fUBTOVshcHUJo8SExCb+P9xLOr5P1lnfZjcU368m0RBYOUou/ADj76r1/ICMUcBzijwozoiW/oS
+ tgkD+59egWcPd7/w7S5HV/f3fjN8Fl9rJz5mAa4xg8c8yY6XbA66eigqRzIQfmr0o3am/HkbIe2
+ T9aQamq73Fj5r1t57kZ4SlT3lHVwpjahk1jx2TTdKiLcFjNPHBHTpUtvIinEFaX48+KsnP41TAh
+ VwS0RCqUIg39HMs7TvxMyLR69qphywXs4Po5ygJILNZxmxLmee9OJBgrlv5pGop+DazUcACiBn7
+ 1lvMIqCx/xlp58cavX5UoWw==
+X-Developer-Key: i=sre@kernel.org; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
+On Radxa ROCK 4D boards we are seeing some issues with PHY detection and
+stability (e.g. link loss, or not capable of transceiving packages)
+after new board revisions switched from a dedicated crystal to providing
+the 25 MHz PHY input clock from the SoC instead.
 
+This board is using a RTL8211F PHY, which is connected to an always-on
+regulator. Unfortunately the datasheet does not explicitly mention the
+power-up sequence regarding the clock, but it seems to assume that the
+clock is always-on (i.e. dedicated crystal).
 
-=E5=9C=A82025=E5=B9=B47=E6=9C=884=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=
-=8D=884:13=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
-> On MIPS architecture with CPS-based SMP support, all CPU cores in the
-> same cluster run at the same frequency since they share the same L2
-> cache, requiring a fixed CPU/L2 cache ratio.
->
-> This allows to implement calibrate_delay_is_known(), which will return
-> 0 (triggering calibration) only for the primary CPU of each
-> cluster. For other CPUs, we can simply reuse the value from their
-> cluster's primary CPU core.
->
-> With the introduction of this patch, a configuration running 32 cores
-> spread across two clusters sees a significant reduction in boot time
-> by approximately 600 milliseconds.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+By doing an explicit reset after enabling the clock, the issue on the
+boards could no longer be observed.
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: stable@vger.kernel.org
+Fixes: 7300c9b574cc ("net: phy: realtek: Add optional external PHY clock")
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/net/phy/realtek/realtek_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks!
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index c3dcb62574303374666b46a454cd4e10de455d24..3a783f0c3b4f2a4f6aa63a16ad309e3471b0932a 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -231,6 +231,10 @@ static int rtl821x_probe(struct phy_device *phydev)
+ 		return dev_err_probe(dev, PTR_ERR(priv->clk),
+ 				     "failed to get phy clock\n");
+ 
++	/* enabling the clock might produce glitches, so hard-reset the PHY */
++	phy_device_reset(phydev, 1);
++	phy_device_reset(phydev, 0);
++
+ 	ret = phy_read_paged(phydev, RTL8211F_PHYCR_PAGE, RTL8211F_PHYCR1);
+ 	if (ret < 0)
+ 		return ret;
 
---=20
-- Jiaxun
+---
+base-commit: 4c06e63b92038fadb566b652ec3ec04e228931e8
+change-id: 20250704-phy-realtek-clock-fix-6cd393e8cb2a
+
+Best regards,
+-- 
+Sebastian Reichel <sre@kernel.org>
+
