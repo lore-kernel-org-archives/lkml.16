@@ -1,89 +1,108 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC81A2AD25;
-	Fri,  4 Jul 2025 22:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7491547C9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 22:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751667367; cv=none; b=B3seBEjCL4+jSx03h5Ur3nDrTIx7UDm8nvOinMl7LRuLd02An/braldBlUbFT8Y2HyzyuKDPcVpu21WAE2sX213kBplYe55Y3FUF1rN34EjDAr8Us8bBe547aZa3fYWTgEkcHLT4mQAbNtfEgXnLAlapQMjQpPvqPQoG0EaEccE=
+	t=1751667540; cv=none; b=YMbB2bi5WqLWCYMaHgGxJygXaIEMdqq3Ua/RZAa8IionU/FK6GhWoYiJwfN8O9XSsPbGHUaWCnPo78U8gzPRKRfm9xznt1dY4p+j88U0N88Y9EG7cnxViCDguOnu1+25MffmX/EdED4c/Ngkp47ZcvdoEInFE7eCQB6NBRano0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751667367; c=relaxed/simple;
-	bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=obNiET3Ot7pzjJqnBDd415HIHVXjj6/J926kLNV+3XeTHh2jLw0GRk2kEoXtR0VhXiIzUOvZW3B7RF89rYhA6VkIFJBF/9G41SPm27Vi+WqKJ25UZ2snXsqe1WUWTgm4fCxy6NyLj9sVL5iSwDEb2WNXBOdo2M3XBRjiPpVcr0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2cnkQhQ; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751667540; c=relaxed/simple;
+	bh=FMf4yoXOBgzhcwgHrVEBf0biqD0n/qMzJWPz1SWijcM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cyPq+55A6EN3QN2w0oaHqUae1lLWw7GxteSgRSuglGS3BI1pZF89aIkFjj7ouCiB0L2oGi/E5Egw8U0vXd8QVnq4SOxyo12r7UMXXKwByodd4yZYDXR2xTb6wqudoijXA2tBkMc4rmbqWunmfxrqkFA1zdFpmGv0gJ+yzz7CgSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XrI+4HPR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2cnkQhQ"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b34dde96cbfso63803a12.2;
-        Fri, 04 Jul 2025 15:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751667365; x=1752272165; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
-        b=C2cnkQhQrF2B4IGqgxHs+pkrlegR0GmEDVtv5OzXeiv/X/+ntaecZ/q5AbT7n+ocm4
-         YjnlxDkFu+EWMzi97zHFm1pVURnG6H1y2hNiDDl4yEmCT1XD6lYI1SUlblaejduUtYkr
-         s5WNPpztlSVwm+idRD0V+ketjz7+hdSn1uGdQr6LxD54y1TWN3GKgdgpWmiKM0+yR/F2
-         ZXwXgV288lGUP/jVPDhcNy7YnwzWY9CWnFmsodJCBVDePnenpKWVYY1g29v6ZBSqD+Wn
-         cv5F7jZ2xYEXzWnC3uS8fCCaSJYD3Bv3oEDgro89BG5Jdkyt45ji3MWjqYgob+naCnl9
-         VhMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751667365; x=1752272165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
-        b=GXaOADtXtKT+59m324l1jdap+PlCc2GYEd+VzhixBHVp60HNlq1zpISgUbRng6SkDc
-         5pPE+1zLfc9CGeiuMQlktS20RhvGeTfNtdAGV+rIiy9wRHl15bmLwXaiF0nUuF8vCpt+
-         M5TtpVy/LorZ910zKsTfyhAJYpEW3oWJPKDEZoGIDvWs3xFWyJtO9VBrrHvfCkg0vEXk
-         uzOJ5LczgLG/y0blOlbvb/JZ7SfzHClhsHHZUr4uxH24mRdzrp1dr7MjG605WwW24hrB
-         urTD7Va8s5oJLELQ5OLbwR7W5xXK+bKnL5cHdun/4qfy25f5oTHIbGbi1+1DEszf8ehv
-         WG6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW0zh0+/E37iZbk9HxuWzSrSQlCTZuR4h675VaF0KyfhZ2Pkpnf762KCzXaCaW2NFHQ3fWy+O3TLJAS0scgI0c=@vger.kernel.org, AJvYcCXTR8WI8F7BKuC3i0OsSdE8ausesG+3+4OuEoUI0zgG86OqXnxwMPuKEHoxifsYTyKtxtYcdfIvkcIQimM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNokDkXAbd3kOLJyUvgQU2UwHwGuRhjxJA2M7iCEQFqZN5qcDK
-	EJsPcH40VvgBTx61imtuATFsJyDxZ49IlxOXPum8AvYLSOnmo2OB3LJyl51w4gK2hfVUhvW//PE
-	UNl3B4I7cyn+zjgO27m8QsYrALDKt0dQ=
-X-Gm-Gg: ASbGncucB7lCisd1KeXJKt9Ys5jWHnzTZP2bpKXXmshX5mIQ+lYV07a0UpcqRIvW4fr
-	t7ZC/5fMydF1/4cINz/INJsPqKfOQXsFZGtkFGrFVIg7cqVmeLYOkqQN/DY1KZmnYRwn1eBUYVK
-	ZXKoh2+xNcvtDrKRsyuFtRLLPveIpRPMF8msNEypK944dG
-X-Google-Smtp-Source: AGHT+IGmQH4dNb8TFmji3Oa7QAVqdfXqa1PncIaNrishd7qZsoqjrndooJiEnVDz8dB5O53zOlOlnb49LuuEEbVUUiQ=
-X-Received: by 2002:a17:90b:17d0:b0:312:e9d:3fff with SMTP id
- 98e67ed59e1d1-31aacb4118emr2011549a91.1.1751667365131; Fri, 04 Jul 2025
- 15:16:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XrI+4HPR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2857C4CEE3;
+	Fri,  4 Jul 2025 22:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751667539;
+	bh=FMf4yoXOBgzhcwgHrVEBf0biqD0n/qMzJWPz1SWijcM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XrI+4HPRJ+623pMTvyGIRoDkX71TJvvxw94bykMcExYog7ze9ggr/OLSpIWVmOVC/
+	 83ZVmDRZHZam9gt62/LjxrT1fZbSdxylewDmDLQkqfgP7FeIYcbuFve0H6ojzuIBfB
+	 /Bax2u4lKcyPwqxhqwg6N1ZmV2nOIzPf1JFoduCU=
+Date: Fri, 4 Jul 2025 15:18:58 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: hughd@google.com, david@redhat.com, ziy@nvidia.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: fault in complete folios instead of individual
+ pages for tmpfs
+Message-Id: <20250704151858.73d35a24b4c2f53bdb0c1b85@linux-foundation.org>
+In-Reply-To: <440940e78aeb7430c5cc8b6d2088ae98265b9809.1751599072.git.baolin.wang@linux.alibaba.com>
+References: <440940e78aeb7430c5cc8b6d2088ae98265b9809.1751599072.git.baolin.wang@linux.alibaba.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250704054539.7715-1-work@onurozkan.dev> <aGeEcOEYXiLju-Lj@google.com>
- <20250704181419.0a6a4d97@nimda.home>
-In-Reply-To: <20250704181419.0a6a4d97@nimda.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 5 Jul 2025 00:15:50 +0200
-X-Gm-Features: Ac12FXwbkOCrJSpH8WT1tsVCnsqS0WBQLMbDsWpwwUfk0ggJcHa4tKtAPJTEIKY
-Message-ID: <CANiq72mj1AEH6S+kZ12D2+ib3jVPJHo01L6D1qhHz_9_FzwA_A@mail.gmail.com>
-Subject: Re: [PATCH] rust: rbtree: simplify finding `current` in `remove_current`
-To: Onur <work@onurozkan.dev>
-Cc: Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
-	mattgilbride@google.com, wedsonaf@gmail.com, daniel@sedlak.dev, 
-	tamird@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 4, 2025 at 5:14=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
->
-> Looks nice. Do you want me to send v2 right away, or wait couple of days
-> to give sometime to other reviewers?
+On Fri,  4 Jul 2025 11:19:26 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
 
-Unless there is a particular reason (e.g. it needs to land quickly),
-in general it is best to wait at least a few days.
+> After commit acd7ccb284b8 ("mm: shmem: add large folio support for tmpfs"),
+> tmpfs can also support large folio allocation (not just PMD-sized large
+> folios).
+> 
+> However, when accessing tmpfs via mmap(), although tmpfs supports large folios,
+> we still establish mappings at the base page granularity, which is unreasonable.
+> 
+> We can map multiple consecutive pages of a tmpfs folios at once according to
+> the size of the large folio. On one hand, this can reduce the overhead of page
+> faults; on the other hand, it can leverage hardware architecture optimizations
+> to reduce TLB misses, such as contiguous PTEs on the ARM architecture.
+> 
+> Moreover, tmpfs mount will use the 'huge=' option to control large folio
+> allocation explicitly. So it can be understood that the process's RSS statistics
+> might increase, and I think this will not cause any obvious effects for users.
+> 
+> Performance test:
+> I created a 1G tmpfs file, populated with 64K large folios, and write-accessed it
+> sequentially via mmap(). I observed a significant performance improvement:
 
-Cheers,
-Miguel
+That doesn't sound like a crazy thing to do.
+
+> Before the patch:
+> real	0m0.158s
+> user	0m0.008s
+> sys	0m0.150s
+> 
+> After the patch:
+> real	0m0.021s
+> user	0m0.004s
+> sys	0m0.017s
+
+And look at that.
+
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 0f9b32a20e5b..9944380e947d 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5383,10 +5383,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>  
+>  	/*
+>  	 * Using per-page fault to maintain the uffd semantics, and same
+> -	 * approach also applies to non-anonymous-shmem faults to avoid
+> +	 * approach also applies to non shmem/tmpfs faults to avoid
+>  	 * inflating the RSS of the process.
+>  	 */
+> -	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
+> +	if (!vma_is_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
+>  	    unlikely(needs_fallback)) {
+>  		nr_pages = 1;
+>  	} else if (nr_pages > 1) {
+
+and that's it?
+
+I'm itching to get this into -stable, really.  What LTS user wouldn't
+want this?  Could it be viewed as correcting an oversight in
+acd7ccb284b8?
+
