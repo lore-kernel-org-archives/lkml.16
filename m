@@ -1,172 +1,115 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A905285C9F;
-	Fri,  4 Jul 2025 11:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FA3258CC0;
+	Fri,  4 Jul 2025 11:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751627787; cv=none; b=OyNnTNFmrW/F1Lly383DAcdWrEeDEXY0QjrpySFGNIx0eDDJISC4dz83cxzM19W0l5O4vLEDoLbaddJN2qb4GWY9bNjxa4S/cnXSshXl6lf7A0nu5V3Xka+wb0yRtH1NqOscCKVlIt2o6fgR9o/k7Dt57irqNtJlSjv/eqg6auY=
+	t=1751628024; cv=none; b=LoyKSliXiR8vrHk3SH+RQAu9Zz9PXva4NbAUgN+kwfndz+vTJlmb4wZfs2NvjrvskxoQ3kneS/DvPJTcHJN4MbeEDzLyzEjBBXY2l23ySlRsPuOKquDk6OmrsK+90Qo8cwp2bML5NKTEnB1rcwvXOm4mlaGaZj5IOny701FSmN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751627787; c=relaxed/simple;
-	bh=QkzF9v0JtK+J9zdf0mskE+qnDwEhUeZEuDR6yZ7/7bw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HbjgmgoDcWroETvxDEdS9L1xxElr+m4B0+Uvu2/V6h1rk1OqO0nlkQrulXGORSTXcF+enXGSZv+Y7wq9y8UkwBlIcsb3qvAFaTue14bI9rtCjsOjhuHg149wp1WaCbfBfPJXF51TzYTsxRKZI5Ill06jlp9bZxhfKLahmEFk9Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=SUOYCk86; arc=none smtp.client-ip=93.188.205.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+	s=arc-20240116; t=1751628024; c=relaxed/simple;
+	bh=an+9EeNhe+f7NnClXdzy3GT6wr5ZBU9/N4Xn0aJS5Mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HugWJH2wU4qW+imBpLuMhLAsnLoQWVbp4Y9NLpQRG/CB336dfQJ5V1ZTkQ/rL3IFG7/m7ceNfP+3DWxMnu2u1jSxFchoHbcipopMcYpkoThiwn2bULmKndlZbmj0QpnlEaMx3bd+7CVFonmR7Li6ppe1TN3n4vOlFo7rCzmHHa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Pg+ub1sc; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="SUOYCk86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
-	s=mail; t=1751627778;
-	bh=QkzF9v0JtK+J9zdf0mskE+qnDwEhUeZEuDR6yZ7/7bw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SUOYCk86TCIBqp9OXBNKVEMf08UiN7a2feyK37rbVIq3KuYP4/2Kj3If3+4oiLeLG
-	 Lv9HuWOrkSFFsViuQrJMtieb5SV2+Fv6hQNoz6JPnZzJV5kmulF9HfBQIAeskcBbbr
-	 QCG8sJW7M/RGRXkezuHGSPLBc7gmIpQ3bbW2lYzDOhhq5wnn5zk2DY4oY5kWbJRFk5
-	 wk3YQ3dMt9+jRjpLLMEEeMnpQ+xlyPz5YAiZbVY7zgHM/I4XPDY1F5l0tlVfAwcFJt
-	 /G0TcBCL4Rc78+cFUqk/ySOVhozlZR4SU8bPMUzUZmmGMOBLj8X5A5pzIk01Ad4AAW
-	 nB0bQF5Caqhvw==
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 169141F98F;
-	Fri,  4 Jul 2025 14:16:18 +0300 (MSK)
-Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Pg+ub1sc"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E6CA940E021F;
+	Fri,  4 Jul 2025 11:20:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ImRrZ82OTgD8; Fri,  4 Jul 2025 11:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751628016; bh=PbxPRHfo8N4/KU51gmHKmbPHvzNy62/CXTuO33u0tnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pg+ub1scvKldoKC9Ddw71bhRdkqL0oPyDEOyxXt/tLUSxq0lLyLLq4kuuENHD2X44
+	 tmxZW9IeFIRwHFUHvv1IVUePmve4vx9evHRDQkSOr0N0LC0l5VSwgKQtUfhZbbDnN9
+	 WioZ5lVAouTwMkBi8u1LkoxmtGVGGYwlTTeamzsT1LUux57EaKd9ln7HM3P90gYMWa
+	 WhxVOYHVSDFp5FBsbWClz7LjPSQy2B/xQ0iA0jQbTtDmduCnSr4MDuuK6rrYO61KiH
+	 99b0nZpXqWmsCMpfkBBU/4PuLz3KrjpxP6uUp34w0Lw6N1b4pCtSZ1tK9LeG9qdoUl
+	 RdVmNfVfp/jWXAlfILdT24bluuiFejdLSFDBE6Vh2eQhkVIadmmtoukGGTgNZpaElX
+	 2vUYNb79OXqmVFcPtFrbV7lf5je6N/abM4wf3Ka/NQwExEi0B2fKv8tyhQHe8TK+jW
+	 iKfLfjh1rtc8TOADC+64EGNYMgrY63fWzQ8Uhea8Ds92V2OcoX5lO5dBdgMaLZ/aH1
+	 j0evWwTP+yr/fuQv5h523cVSL612AyNBQ/NaA6jBE62avucrRo+4/wJMlmcXvNNtzG
+	 dfKyyun2NRGQACwd7lp8x30EG6ho2IiUrK9aGkc8cStkxmG3yvQqiOCfvmZqexU/kO
+	 ufm/8IhY1dxTkUA8dezDqfww=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Fri,  4 Jul 2025 14:16:16 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.198.20.23])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bYWJv6p1Vz16Hnq;
-	Fri,  4 Jul 2025 14:15:43 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	"Greg Kroah-Hartman ." <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Petar Penkov <ppenkov@google.com>,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Hao Sun <sunhao.th@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10] bpf: Reject variable offset alu on PTR_TO_FLOW_KEYS
-Date: Fri,  4 Jul 2025 14:15:33 +0300
-Message-ID: <20250704111535.34760-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.47.0
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7914C40E021E;
+	Fri,  4 Jul 2025 11:20:00 +0000 (UTC)
+Date: Fri, 4 Jul 2025 13:19:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Breno Leitao <leitao@debian.org>
+Cc: Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, tony.luck@intel.com,
+	rafael@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	kbusch@kernel.org, rmikey@meta.com, kuba@kernel.org,
+	linux-edac@vger.kernel.org, mchehab@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 0/2] panic: taint flag for recoverable hardware errors
+Message-ID: <20250704111954.GBaGe42gY5_xADb17Z@fat_crate.local>
+References: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/07/04 10:48:00
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;astralinux.ru:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 194551 [Jul 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/04 07:50:00 #27617035
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/07/04 10:48:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
 
-From: Hao Sun <sunhao.th@gmail.com>
+On Fri, Jul 04, 2025 at 03:55:18AM -0700, Breno Leitao wrote:
+> Add a new taint flag to the kernel (HW_ERROR_RECOVERED - for the lack of
+> a better name) that gets set whenever the kernel detects and recovers
+> from hardware errors.
+> 
+> The taint provides additional context during crash investigation *without*
+> implying that crashes are necessarily caused by hardware failures
+> (similar to how PROPRIETARY_MODULE taint works). It is just an extra
+> information that will provide more context about that machine.
 
-[ Upstream commit 22c7fa171a02d310e3a3f6ed46a698ca8a0060ed ]
+Dunno, looks like a hack to me to serve your purpose only.
 
-For PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off
-for validation. However, variable offset ptr alu is not prohibited
-for this ptr kind. So the variable offset is not checked.
+Because when this goes up, then people will start wanting to taint the kernel
+for *every* *single* correctable error.
 
-The following prog is accepted:
+So even if an error got corrected, the kernel will be tainted.
 
-  func#0 @0
-  0: R1=ctx() R10=fp0
-  0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()
-  1: (79) r7 = *(u64 *)(r6 +144)        ; R6_w=ctx() R7_w=flow_keys()
-  2: (b7) r8 = 1024                     ; R8_w=1024
-  3: (37) r8 /= 1                       ; R8_w=scalar()
-  4: (57) r8 &= 1024                    ; R8_w=scalar(smin=smin32=0,
-  smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400))
-  5: (0f) r7 += r8
-  mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1
-  mark_precise: frame0: regs=r8 stack= before 4: (57) r8 &= 1024
-  mark_precise: frame0: regs=r8 stack= before 3: (37) r8 /= 1
-  mark_precise: frame0: regs=r8 stack= before 2: (b7) r8 = 1024
-  6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off
-  =(0x0; 0x400)) R8_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=1024,
-  var_off=(0x0; 0x400))
-  6: (79) r0 = *(u64 *)(r7 +0)          ; R0_w=scalar()
-  7: (95) exit
+Then users will say, oh oh, my kernel is tainted, I need to replace my hw
+because broken. Even if it isn't broken in the very least.
 
-This prog loads flow_keys to r7, and adds the variable offset r8
-to r7, and finally causes out-of-bounds access:
+Basically what we're doing with drivers/ras/cec.c will be undone.
 
-  BUG: unable to handle page fault for address: ffffc90014c80038
-  [...]
-  Call Trace:
-   <TASK>
-   bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]
-   __bpf_prog_run include/linux/filter.h:651 [inline]
-   bpf_prog_run include/linux/filter.h:658 [inline]
-   bpf_prog_run_pin_on_cpu include/linux/filter.h:675 [inline]
-   bpf_flow_dissect+0x15f/0x350 net/core/flow_dissector.c:991
-   bpf_prog_test_run_flow_dissector+0x39d/0x620 net/bpf/test_run.c:1359
-   bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]
-   __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475
-   __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]
-   __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]
-   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:5559
-   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-   do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83
-   entry_SYSCALL_64_after_hwframe+0x63/0x6b
+All because you want to put a bit of information somewhere that the machine
+had a recoverable error.
 
-Fix this by rejecting ptr alu with variable offset on flow_keys.
-Applying the patch rejects the program with "R7 pointer arithmetic
-on flow_keys prohibited".
+Well, that bit of information is in your own RAS logs, no? I presume you log
+hw errors in a big fleet and then you analyze those logs when the machine
+bombs. So a mere look at those logs will tell you that you had hw errors.
 
-Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
-Signed-off-by: Hao Sun <sunhao.th@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Link: https://lore.kernel.org/bpf/20240115082028.9992-1-sunhao.th@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
----
-Backport fix for CVE-2024-26589
- kernel/bpf/verifier.c | 4 ++++
- 1 file changed, 4 insertions(+)
+And mind you, that proposed solution does not help people who want to know
+what the errors were: "Oh look, my kernel got tainted because of hw errors. Now
+where are those errors?"
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 75251870430e..2a3b5e4276ba 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6280,6 +6280,10 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
- 		verbose(env, "R%d pointer arithmetic on %s prohibited, null-check it first\n",
- 			dst, reg_type_str[ptr_reg->type]);
- 		return -EACCES;
-+	case PTR_TO_FLOW_KEYS:
-+		if (known)
-+			break;
-+		fallthrough;
- 	case CONST_PTR_TO_MAP:
- 		/* smin_val represents the known value */
- 		if (known && smin_val == 0 && opcode == BPF_ADD)
+So I think this is just adding redundant information which we already have
+somewhere else and also actively can mislead users.
+
+IOW, no need to taint - you want to simply put a bit of info in the kdump blob
+which gets dumped by the second kernel that the first kernel experienced hw
+errors. That is, if you don't log hw errors. But you should...!
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
