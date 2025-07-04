@@ -1,154 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C65D261595
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7585260571;
+	Fri,  4 Jul 2025 06:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751611287; cv=none; b=RFLbZBAIBN5hKJfDLl6UhdqpLGCpD+UubdiFF06MR4IYRjQNUTASw/4pl9hO2vauOFjPJkwLGiN4S4lx76/xN6xQS3gh0BfMKVTFeOcB1EfQP66Mug+0v0cIlzhr1GWOOq0rwKt9tShqnjh6QE31TIgS4f6i6vSDAwlyYc60dBY=
+	t=1751611342; cv=none; b=k5k2/Nc7gVMHg9XBIMUxgLudZE4K1EDRIGz6w9meCsEsfplOZxuOom/uJmrA5GZ2Nj3eWXYs3AVAWX9yQuAF5pAGwai6gTN7twJHK1z6n1tGqxnDzdeyU9jQZYCCmnUwNm2boJD9ZFFb/WMBUUoPTzjqxy1f7yldpBToqEeqQfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751611287; c=relaxed/simple;
-	bh=zsNDOxtssyyXKwrA/Xqhu6xlTQfQcZiumpCvpHLeiVE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TBTKZdxCnjJ/QH/MF9u9clainQC0PG8moX0aAHobfsa/LPbQz8HrAyCKcgDYaP5U8sUjgtvktGBvm2O8zsprwq9WvTUqsWaSlKsVbzaY7Vh7nVCBqykvlzbN7JK/eI2Q5dK8ktZZnXhEpdd2L97T1hcXBurERdX0GpQIANYbFhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ODjua/nM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751611342; c=relaxed/simple;
+	bh=ViSAA+jIXsu3GgiaEzSROieoqkCVPTUAZ8LCHBhP4lM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hlzPzMjGRifIp0GQbQssh5h6LQrTgJuSBpegTe5frLQBXBDk864ENNA6D63Qzz6Xtb5M8jIY23VDWdManvd9ldQLsoPUeTk0YnU8pcgWuX9mFobdr6L52vHLY+7gFg6Bk00SNwB5OuUxsoERExyNddKfoRfcXsdkgW51jj1FNdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYoT74p7; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ODjua/nM"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5640pjZu021088
-	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 06:41:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K9lCHtaEWJJtL5rVllaD+CR/7jxFq0pVmlc9VCIqSOw=; b=ODjua/nMk1mCMUfz
-	w9Mf/0KBHIHfm3OM11HtyyGJpeGKm2xlcyF2Ifqovc2IzbiLt3wHF4noe3HfeEgL
-	sYLsDb+TNMemYBFpgWq+gHEj3Ar1Z7h9B5HwESBHWWsqJ1aZnrPm4JdZBLb6tW1s
-	39uO6QR5NjqRoSpxH/hOdcQPggc6R0zYdc9qHAzh6PhKYKHs7lC3bSIXNrlpvT0F
-	4WS8Gf13UEhX7kzBQYG1iIHnp5+beCZilG3wuGCzAy3fiuuSy+m4KQnsnjaEERoN
-	L03lrcIA0NRy7czInsgm97zWopU1sd5qzWPoHsmxpJ1mNBdqXPoOT/XmG7u0mATu
-	PNVGnw==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn9ehy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:41:24 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-313f702d37fso669601a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:41:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYoT74p7"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3138e64fc73so131479a91.2;
+        Thu, 03 Jul 2025 23:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751611340; x=1752216140; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ViSAA+jIXsu3GgiaEzSROieoqkCVPTUAZ8LCHBhP4lM=;
+        b=SYoT74p7ZFFXW/oGErllU4KQN0ztsuRYECflyoZaBt+vtj6Dui9EGO+K0gngGX1x2c
+         K7pFP7I4o3wa1i0Q/SKCle+M8niXtgA1drCgaraMVhv+7v4HjG2y+lFmejAWW3JEO0Dm
+         EPAcw5dTvd+xC3+g5HC1VjukWy9VCc9vrncVsVm/Q+2u6PXwZoYm0ajv+5RRaAINQ0F3
+         NmpKaYPnmgq5UNExHCY52sKmuA4i4bosoIQQlxGak93jDIJ6HF8FQ6Pd5yCVm1nzOFZA
+         +YZv5+IJLeyCet3IN76by9q5qgSaITZWhRk4C1HYHzxu2Krn2AnqHNTvi66x3Ub0hIOK
+         F+8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751611283; x=1752216083;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751611340; x=1752216140;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K9lCHtaEWJJtL5rVllaD+CR/7jxFq0pVmlc9VCIqSOw=;
-        b=sW8ACj4w7xH0uSG4ZNrdoMmPJk8aAJ0bLAWnEWgVtbusFo7O6YKNoH+FcIszIeYWu8
-         Bj0GORgfN6kFfD2rvHKP2JK6lpLlBA3+aPtZQVVQkx68ywqkC/EXGP5VZ35lfjNgS2lZ
-         saXAo4zArXGnfOw/7+MjaZ0Vyfy6SFT1qE1uCqYYAbgDChARNtRL4u9HeT6VZbIskl7j
-         MD1CR/wBXaNVbMNzmg9kuVuWx6keMoadFaXLcJKJKfCFvqGVzVlH2ja69gj6W5lapg4j
-         WlTBeBd9BWMCq/lry5XrF9xx4d4xXYyjPsiz9fo77xsDws6PeP1LPpwZn0T8zb0qD8ZP
-         +4sA==
-X-Forwarded-Encrypted: i=1; AJvYcCXq1ahu9MUQiu/ty7szHtBCJj3QC2ShpHAdhdZETEnUk9KbNtNio2gSsotVVBGKv0AATFQCb0DCbl7xumo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysIQs3J03Y5W/qOfXfpOcixBpKt506OiBv+ZDcsc9bi6MBtW9A
-	kfBR2jCw5YvJeKoj4qc0bJ+IabeStFdFG/BVwfTEs2eEr9l8iCHhcK0kbh3IHR6PZ0CkaiMCaMm
-	DIjz7snkvZ/H8qA3omdps4tJQe0NMHm73M09zD6mPAvJckZI3O2gMof234oij7GxoULc=
-X-Gm-Gg: ASbGncv1wuvSXCvkb7ApoGM3r7AqhIqOgm9g8bSBqlh6Xkw9kb3Y9NgAhc0LPtb0Nz4
-	ZJ+3XGOLcMFFrjLu7kvR6Fzagx0wZm3izpzj14nTFFYTqr/8N8G7jgQVhugpMFbtoDSjo4Gq+hU
-	Sd34sc8d52N8Dzx50aOWCHgh2IBXaIU4OUQlPS4dAEPwUBm+LQu/Zprf1bZryxIDgxyadJfQJno
-	kkQU36AHOdYpFfw+8yJgiOZgoJ/gojzrmxWRZTNmCpKef5srWo7ZH3fKECUaunyhRivdURj9Xk/
-	YpzPhw6TREgf8lB0xROhOV5c4RifXat3ffJeJT3R8nQinAURf3is2loYc0mPYUwNBgT5FWs8BL2
-	xucuIOnuN7Q==
-X-Received: by 2002:a17:90b:3c08:b0:313:287c:74bd with SMTP id 98e67ed59e1d1-31aaddb82f4mr1563530a91.33.1751611283385;
-        Thu, 03 Jul 2025 23:41:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAKATJXf4IBf4ljh/+e7f0jLnuHlOXrFp416Nbsw5C1SbYqDCEGjEjACcmx0lg1dclD5I75w==
-X-Received: by 2002:a17:90b:3c08:b0:313:287c:74bd with SMTP id 98e67ed59e1d1-31aaddb82f4mr1563498a91.33.1751611282945;
-        Thu, 03 Jul 2025 23:41:22 -0700 (PDT)
-Received: from yuzha-gv.ap.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae6b6casm1304746a91.18.2025.07.03.23.41.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 23:41:22 -0700 (PDT)
-From: "Yu Zhang(Yuriy)" <yu.zhang@oss.qualcomm.com>
-Date: Fri, 04 Jul 2025 14:41:10 +0800
-Subject: [PATCH v3 1/2] arm64: dts: qcom: qcs615: add a PCIe port for WLAN
+        bh=ViSAA+jIXsu3GgiaEzSROieoqkCVPTUAZ8LCHBhP4lM=;
+        b=tGkKtEb0BXNnePaPt3+ZgMAeg8m5Zco9vUed1wzJEFNSVFCUAJZKfXyEliM+Z3/Ny5
+         QZodFwrSjJXGx37dGxhn97HtLbnIWsfJVt39kNlOWaWju8PNxB+eWTvyaJRjZwQY4aR0
+         br7Z8wjPpPkBbQ9fPCd5SF7HI4WPYtl1ACR14YlklSLws7uJzOSohVYpRQkw8FNv+xgm
+         Nx6FnLDEEso7iqtgeEV70e/xGrah8BY1eO/esNsc9bw2oO30b/CSju0sixFRKQOsXrVm
+         Fby1l2MvJz2j0L+fpKrDjTiXFsq2y3ER8VKr7Rzj+GUkDUQrPj+LieWvq+vNVay6zmxT
+         gFUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD8efjYEKgnoL0QhPV4SUGl1GzNoO9ZxgrRL1qzFdL1VznFvx9FG+O3hCVi07KqcplXHUqU6V2thXlyIIpvik=@vger.kernel.org, AJvYcCUHRBtMIv1fog5Px2V+CF7QkchRN+M7X738UZPD4pFJNLHrMAx/sgA2KpxP3x5gqb68O71TXNeuPYgacAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJh1hQQCeesLT4EDmmIjE5n2+rs1cDM00CkOt1f+bndXoO2ci4
+	DXoEuLbvxSmufN5EFPIu8aZy/lSyVT3iaQ27h/vU5ipgZ0U41GcFfNVA6cV4ppvwmJzPfW3unmT
+	YeSouYRRf4oYalcpK3AYaCrjyTpISF4w=
+X-Gm-Gg: ASbGncvijZV8/eyeSJB7JrLj4Sqqbo6svDe5l1/kxsgjZWEW4AZGLs/nBSiXJhjH+UH
+	q/x6j4FLldPEZwLRhyfnXG6sr5sa1FJuTlL6aaxeLonecDHnqykoIENcf/xnfwCfx+gtbiwmMdI
+	QPivbIZXY4NXUPiVk1aG/U6ImdY99niPUJ74hKH7LzIVc=
+X-Google-Smtp-Source: AGHT+IFflxlDHNrJiLaP0pOFaF5MZ6UmoLwnCtBsjbPI2tWqFOHHZtyQffMIjGTdaBjn/nSJ7GrpiGc8bV40j2OMyj8=
+X-Received: by 2002:a17:90b:562e:b0:312:639:a06d with SMTP id
+ 98e67ed59e1d1-31aaccc1da6mr846527a91.5.1751611340001; Thu, 03 Jul 2025
+ 23:42:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-615-v3-1-c5f6b739705c@oss.qualcomm.com>
-References: <20250704-615-v3-0-c5f6b739705c@oss.qualcomm.com>
-In-Reply-To: <20250704-615-v3-0-c5f6b739705c@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Yu Zhang (Yuriy)" <yu.zhang@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751611278; l=943;
- i=yu.zhang@oss.qualcomm.com; s=20250625; h=from:subject:message-id;
- bh=zsNDOxtssyyXKwrA/Xqhu6xlTQfQcZiumpCvpHLeiVE=;
- b=O9iCxy+leDK3wN7Fx0+x8rQSsKZkO+0GO8Ym1zoQNkQh6H5xqsr35kYmNLZHE8SzQMfJ6MV1N
- AWPanESNPxvA+df54Ls+NO9/dxCUVbjlrynusSC4qNNjreIIMCvNNCc
-X-Developer-Key: i=yu.zhang@oss.qualcomm.com; a=ed25519;
- pk=ZS+pKT1eEx1+Yb0k2iKe8mk1Rk+MUki89iurrz9iucA=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA1MCBTYWx0ZWRfX+lYfL4LHQSVD
- p3ZvHNdGQFQhUnVE8+38HRfNflbjdomcpY8++yAcmSLvMoMnsIbnlnEIp+PehchOVAt2MkRmpWK
- ObKLvbMXpUYlmP0SCqkJiLpaP/pui3iEQq5OASuQ+KGPip3uC6XSNuercWTaFdkTJKHwb+BvV8K
- 935fkIIpljvzfi/w2HY3Vuujv7157ic1qcCv5vOXq40TJ2gVJ7iQI/DIcgJMJ2L+SStc6ta0QYp
- iE1ydeEwewg/0s7xO2P4tURwo3CTmqeEvhJzHhqmIPbXZgx58DaBwjXLRLpEOyCJQdgaTWxyh5I
- gJHE/+ttYgAiL9ahu1YYzGxyw4rMjVYDTadq9PKH7ZmJ3WiKu3F2081T+KTMqyX7BrYAOLPdtNH
- zZOSR/5oS/y2GnefnOj2v/N5de6NnD0ZH3OcrYFoJ9cfvCt7HZ5fu7fzw0quabKDdgEugSyb
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68677794 cx=c_pps
- a=RP+M6JBNLl+fLTcSJhASfg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=dI-8CA4c5Xf8_vBnWYsA:9
- a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-ORIG-GUID: udcfT2KI6tmzOL3cNVrGprofH72i1nkR
-X-Proofpoint-GUID: udcfT2KI6tmzOL3cNVrGprofH72i1nkR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_02,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=969 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040050
+References: <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+ <87sejfuf3n.fsf@kernel.org> <CAH5fLgjdpso4waCrP6iVaMEOpYLUmqCz8PxqXuSbQBMaxxCHBw@mail.gmail.com>
+ <20250704.090751.571327900479764851.fujita.tomonori@gmail.com>
+In-Reply-To: <20250704.090751.571327900479764851.fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 4 Jul 2025 08:42:07 +0200
+X-Gm-Features: Ac12FXwJ0HlfbWLg_t1Axh-UIkOoLQooLeToRwISrwau9tExpdnnh5hh6PUGWjA
+Message-ID: <CANiq72m886R2ZOLSSzehU8aTXzYtPmTyyrSxpOQCr7GX_Bcghg@mail.gmail.com>
+Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: aliceryhl@google.com, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
+	ojeda@kernel.org, boqun.feng@gmail.com, anna-maria@linutronix.de, 
+	bjorn3_gh@protonmail.com, dakr@kernel.org, frederic@kernel.org, 
+	gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org, 
+	lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org, 
+	sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add an original PCIe port for WLAN. This port will be referenced and
-supplemented by specific WLAN devices.
+On Fri, Jul 4, 2025 at 2:08=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> I had a quick look at the official Rust documentation, and I think I
+> agree with this opinion.
 
-Signed-off-by: Yu Zhang (Yuriy) <yu.zhang@oss.qualcomm.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+My personal take: I agree that having both English and something else
+is a bit redundant -- some redundancy is good when something (like a
+notation) may be non-obvious, but I think a math integer interval or a
+Rust range or a condition like 0 <=3D v <=3D `KTIME_MAX` are all
+understandable in this context.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index f4b51cca17de5518aad4332330340a59edfdc7ec..b4fbed517cde18e088096d182fe6b482363e403d 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -1173,6 +1173,15 @@ opp-5000000 {
- 					opp-peak-kBps = <500000 1>;
- 				};
- 			};
-+
-+			pcie_port0: pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+				bus-range = <0x01 0xff>;
-+			};
- 		};
- 
- 		pcie_phy: phy@1c0e000 {
+Now, whether to use English or any of the other options, it is hard to
+say what is best for most readers. Personally, I prefer to just see
+one of the expressions, which makes it also closer to other forms,
+e.g. a debug assert somewhere, or a contract, or other tooling or
+formalization efforts.
 
--- 
-2.34.1
-
+Cheers,
+Miguel
