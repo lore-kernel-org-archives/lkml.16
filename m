@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896692D8397;
-	Fri,  4 Jul 2025 17:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F432DEA9D
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651071; cv=none; b=SdkQQcTP9VaO6PtXL1KYKW/7+UJNu0e/buRmKVE6zrUDfc6qL62S76NG4ADJJt7fkSnn2JZ4NFfpZWL9UkuRiajOuBoITLqOiqmyN2R+usqGmNw9gTxSSchW5NRLJPmMQExAhIKaAgsCBkuXaVmNlunk0KJwZPeDdv4K8hvqt2U=
+	t=1751651073; cv=none; b=c01ZntyVyQLHkDkwyQ8HpOr3EPFY2MBhMtYS/zWZQes7DnlJYZG8KnjFP6NOJ9T7dpHXFbXzIKM5Bt+RA1ZYxcY9sObUXDhA85pZ9zEPSDSJw8iXBtXxOvw3EFRw9G77S8x5xAuAusUzrQv3XmWcdSU2nMDbdq2XhQ05X52p1dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751651071; c=relaxed/simple;
-	bh=iQPCag/CMmrdNN8jXkXcdi2pgaLZRiU1dC347/6lGyY=;
+	s=arc-20240116; t=1751651073; c=relaxed/simple;
+	bh=t8gZ0I2H2j7NE5/aw95KdzO89PPAZr+qiLvmu9O/e1g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OllxxTLeebsa6EVeQ2V4IFC3In48oKCVxmdXxyr8LXSOjZU51z0LLHzj5stngXEIiO7cQgD1CGDxLLJ+612gN2jOZGVxrGn0gNQilyAUeRE3b4xTjvb9TcXoubaSj7tbzFzUdsXeG8tqSpWIAco1bWvKmSn87lAH+QizX3YRFsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KiOO0OYD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=o/Zt1ZRRovbmcM56icuHIGcFCStI/alUcD0kBrcHSzduwjmWa8eB0z6EaEevE27N0Q+KQ4gv1JphUU/t2vQ8JDxpoxVFUwK2OtuDrD10cJqHKuv/hE87+p2xWcQ16D1+0bfiJ/AZ8E6Lcxf9KDhRc2ZM20jDg3cC7n6U1P7jU4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DgfzOjS0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KiOO0OYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C00C4CEE3;
-	Fri,  4 Jul 2025 17:44:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgfzOjS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B72C4CEE3;
+	Fri,  4 Jul 2025 17:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751651071;
-	bh=iQPCag/CMmrdNN8jXkXcdi2pgaLZRiU1dC347/6lGyY=;
+	s=k20201202; t=1751651073;
+	bh=t8gZ0I2H2j7NE5/aw95KdzO89PPAZr+qiLvmu9O/e1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KiOO0OYDfD/dMXIc9qXQXmd9E49UqynbdXyiwZpN6JIZW9Y6TCi2xZtoinpXAkEu7
-	 i57ljCLpi0Z5d7grd73b+sBnzu8IQ3GrUROu8nxThQnAvQdEt5jYd4UJDfmRDMmfG5
-	 UVIeXIQi5TbJjhdCoiJDEJsWJEAeeCjO8u9zHCVx4EMzO7S9jM+C3EUv4Yz10hmUqU
-	 b1KVXxC+CyjrpxuMQFRcdqM0ed+MaHdqiQUiZgZWin6pi/DKmQbDJ7zWlw+/M/pgno
-	 74FAsH0+nCIgCHQBfU+2Xlb6ihVj/NizjbkrfL0adDtMvebLZ0zPr8B25RV0/7qOUx
-	 3NDwxPCoPj8XA==
+	b=DgfzOjS0Sb/X4u3b/U6E+zKnhYCm/h2cO5zpn5tE6juDMQnWnqzHR7DjAJAiPRpUA
+	 A7V4btQreHo7Nkxw1/bprfqaT6mkS+m0zQ48KVbCkPp+x2tWE0gbdHvjqHIiViZ95v
+	 9B+1qEEfbUffHbvL6xdegFbiF7d9/Spvo1peQVpYSerGSeV9T0QRxQc9xLCOrZhVQ2
+	 19cHxYjY3Qy8a74ej54rNp+mT1N99nglX7Zdp4BuaI1BxSJQB6FWx+C/PB60XKEPrf
+	 ownSO63aiPgkXEpW8O21MiZ5/xlDER5vMB2xv8FFZDdN5CXMqnhAMt9yxVwdhLzaJ+
+	 i3sRE/Ohuw8nQ==
 From: Will Deacon <will@kernel.org>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Mark Brown <broonie@kernel.org>
 Cc: kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yury Khrustalev <yury.khrustalev@arm.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: Filter out SME hwcaps when FEAT_SME isn't implemented
-Date: Fri,  4 Jul 2025 18:44:10 +0100
-Message-Id: <175164333073.1188085.16117765198083829346.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/gcs: Don't try to access GCS registers if arm64.nogcs is enabled
+Date: Fri,  4 Jul 2025 18:44:11 +0100
+Message-Id: <175164295299.1186581.5911372267444093930.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250620-arm64-sme-filter-hwcaps-v1-1-02b9d3c2d8ef@kernel.org>
-References: <20250620-arm64-sme-filter-hwcaps-v1-1-02b9d3c2d8ef@kernel.org>
+In-Reply-To: <20250619-arm64-fix-nogcs-v1-1-febf2973672e@kernel.org>
+References: <20250619-arm64-fix-nogcs-v1-1-febf2973672e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,22 +48,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Jun 2025 12:28:48 +0100, Mark Brown wrote:
-> We have a number of hwcaps for various SME subfeatures enumerated via
-> ID_AA64SMFR0_EL1. Currently we advertise these without cross checking
-> against the main SME feature, advertised in ID_AA64PFR1_EL1.SME which
-> means that if the two are out of sync userspace can see a confusing
-> situation where SME subfeatures are advertised without the base SME
-> hwcap. This can be readily triggered by using the arm64.nosme override
-> which only masks out ID_AA64PFR1_EL1.SME, and there have also been
-> reports of VMMs which do the same thing.
+On Thu, 19 Jun 2025 22:15:41 +0100, Mark Brown wrote:
+> During EL2 setup if GCS is advertised in the ID registers we will reset the
+> GCS control registers GCSCR_EL1 and GCSCRE0_EL1 to known values in order to
+> ensure it is disabled. This is done without taking into account overrides
+> supplied on the command line, meaning that if the user has configured
+> arm64.nogcs we will still access these GCS specific registers. If this was
+> done because EL3 does not enable GCS this results in traps to EL3 and a
+> failed boot which is not what users would expect from having set that
+> parameter.
 > 
 > [...]
 
 Applied to arm64 (for-next/fixes), thanks!
 
-[1/1] arm64: Filter out SME hwcaps when FEAT_SME isn't implemented
-      https://git.kernel.org/arm64/c/a75ad2fc76a2
+[1/1] arm64/gcs: Don't try to access GCS registers if arm64.nogcs is enabled
+      https://git.kernel.org/arm64/c/0d1c86b84096
 
 Cheers,
 -- 
