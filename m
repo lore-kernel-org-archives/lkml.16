@@ -1,132 +1,137 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E87085626;
-	Fri,  4 Jul 2025 13:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E60C7FBA2;
+	Fri,  4 Jul 2025 13:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636213; cv=none; b=W0HqVGnvh/ROJvtmZUcABtlJOMIeqQQSu/OPC9F4Zji6dW5tNainbrZeaCjSWpX0PBQp//d/xU97Tn+B4nNHuGH285AA7XWVr5hYYcklu7sZi3FiZOU9SPUSTtUYRDqWwW/5vj7d8ZEYpUuhEbKCEliL8ijrZmyhWVG9vmTwQT8=
+	t=1751636263; cv=none; b=kaSGIs47EtPSBp5vbNn0NTUe6YZ6frcDQ7fC9X4eZs5y2B3Kvb1JFdRPN4NRC9MP865xl1c3MM0swq6aYca6M6LA1tekRBWrScoOx/a61ATIl92uZecBXFfJPGLiz5torAxtFjr+jgCy0uQbGagN91esHf45s+Hk98/KPxspcWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636213; c=relaxed/simple;
-	bh=Q9UkrFl51j4x9O2AKzGaYg7j7Qe2rlKFHMgNrDtlZaQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=CT++2CRXxRTgyuXuNiy323Yn/k5rnGlK9BbqqxqIysoudIqEKe/9MGFgWkH5nxZWNXHhN5jGoRGk7BNsvo3pjaMXLnXmy00tQDkgGHj3DP7dnVa1UatmXxKXdhTKhTSGo47gMlgy2iN8Nrpj4bD2sp2QSYLuEaX/nrM6Ru5x8OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ierk354A; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MvfGxD45; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1751636263; c=relaxed/simple;
+	bh=HKYQfTfq82gpnvKOee0ZGNWnbiOHEHL+EOj2rgjNOy4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWAwu5rsgetgQFKfs6IA1aBLagclkhkw/xAnf6XKDsjPQbtCRTs7c5MyaUestVhmS1D9LJQTuMXddhW/t2KiPXJJsfZXf6SPUkov9K9sCNxj1xhtdQMIq13EZALC6rZGMngoZXtUti2zhzvsoWmNpQBi48cRfo3otG7kYxQVFIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpZqH8sE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ierk354A";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MvfGxD45"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BC7311400239;
-	Fri,  4 Jul 2025 09:36:50 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 09:36:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751636210;
-	 x=1751722610; bh=4WAwqvw8g3t1MUCHlAIadPbHEDivdqOU5oF5ZelV4ww=; b=
-	Ierk354AvF659FFpEBGZTnHYIKg5Cftf2qg+x1+moeY0eQH0V5tIDArd0R1asTWH
-	3Ph/Zhxo4uqzR23mbt1uqpOiQFdzI4DmS2+a7Lj3VE8+rNZgSe6195p1FXRNKvT3
-	dDttZYTVyarpE7xl5fG3tnObnDl3IJZu5qn2B8wuYvLUwD4BQRazzHfETlb1e7zr
-	C/OIPEWYQNN1ZB+Un9zrdBdTZrZcx7r0loYfP3TGNZPfTdRuZUoAbeI6HhxOYX1e
-	9laI7rCkUK0SZI4cF9RKRtwO3HpZrdx2qh/m2P6L4wbIfHRWuxhppW0A2/n7bq7H
-	0h2eHRd8WRBgoPKvpdKYpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751636210; x=
-	1751722610; bh=4WAwqvw8g3t1MUCHlAIadPbHEDivdqOU5oF5ZelV4ww=; b=M
-	vfGxD45kzCPWcC1qgDw6pQLWiTjnNSo9fflkxfhmwu00u4MLErLDWnnQdkbMYPUO
-	ep7W9iUaPExx49n1CZGeWZnp4dSbkablwgofEldRzt8PObUUAaBB4SJROM3EZDQs
-	EeeQ3KSgbi+98NIXPg1nrjaYrS0bGMNrVeRtAhEQV0JVzlOXJs/DjBIidzK6tgEm
-	CyDVMHynVKycn07PBvZo63tH2bvSK3xQuPpyCkgFaNQNyu7fXHuWxo364m00Cqja
-	L2uRNuo1C38lM/eKZ5mJskKA7Ym+q2lR6M15+cb7BgUDN4Nls3Sdzw1BRjuPdaE/
-	SwPLNckhUFyNtlbdWSsMg==
-X-ME-Sender: <xms:8NhnaAT2fbqff4v-deXXDh6h9sFJZglSsRMzCTnlLYYXIqLcyXMNCQ>
-    <xme:8NhnaNxzTx6SQttAoJ9N7sO1iylqVB5hrKBqO2l1Gf6q9fOpwAf1pb20QJOlP30ud
-    9QSXzURHGpthyNlHo0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfedvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepsggvnhejudejsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtoh
-    epthhimheitdelsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtohepphhrrggshhgr
-    khgrrhdrmhgrhhgruggvvhdqlhgrugdrrhhjsegsphdrrhgvnhgvshgrshdrtghomhdprh
-    gtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhu
-    segvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheprghlvgigsehghhhith
-    hirdhfrhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkse
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:8NhnaN1UHNjfOf7_aLGGRl33HPK20Q_iXfXrFxorL-owGRn9rW3zmQ>
-    <xmx:8NhnaEAc7p7ywTmYFbhVKVxdggyzX7XfvU1RiYBdW19WFZgvM7Ev-Q>
-    <xmx:8NhnaJhLB2CpJT0d2RainLbBsUwZub8QX27CVdSLtt9ZHwwtxI2eEw>
-    <xmx:8NhnaApcDHKDpiu1GnI_oTHKrXxpAT8Aar_UyIb5hM8NUcDqVqjbYw>
-    <xmx:8thnaIl4lmGLlojO5Dj9VTiwT59P03yJXEJ-mx7s2PP4RHLxjwbmb9qI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F2AFD700065; Fri,  4 Jul 2025 09:36:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpZqH8sE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE290C4CEE3;
+	Fri,  4 Jul 2025 13:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751636262;
+	bh=HKYQfTfq82gpnvKOee0ZGNWnbiOHEHL+EOj2rgjNOy4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OpZqH8sEMjFcs/Db+OSNHWewJXGZQhKN1+mxAeGFZyRv0FI9m85RpZmWKU/BKQlOn
+	 rW40FGefFdS5KAaavUps6QEgjXz/PY8803+bv59LL92D9f1lv2ygYHXVGsFEuOdxaS
+	 2i6JVlU0L0sjNaVYQp73Mg3EoDt2B1mVRI+QDOekolIWDKJJSTXS/LrDaTT6uxtOlT
+	 wUdF+LK1evI/TZJuODoeJBpESZ8MKcgC7Ywnt418Hm0u3xlzmwbwtNtfUFlljRE9y2
+	 SuvBwoZ7hADq9aeo7DXH+NCDPhWNrdOwSjZq/7FbIPFYP+plLXd/BjxZcbV/QtL4sO
+	 x6DtJ9Oj3miew==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d98aa5981so1332035e87.0;
+        Fri, 04 Jul 2025 06:37:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWWJTBLHK/NNl4WpuhxMuDLANIC34ROV38/vzibB89BwUC1pS71EksXwkPigWvey5N6lqVvD8VyzvM+w7UU@vger.kernel.org, AJvYcCWxzgbeTifW1TdBDiElsLlYRkl6T2q4WR7Dabni+RgpdCQqE+dgH9ekxZNZmjIs8m5T78GFyGQDJb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlUsXLfR+OpGx+qEHYPI68d2VBkEYTaqQ9ntwD/Zc7ELshBRrD
+	mMG2ooVGJf21HS9y4CbJf8ETyqBMLe9vdl6o+vBUxJ3FxnquJjbZdmyzilQhyCJl8pLjdMr6zpH
+	FGRiYzN6nkzVIM1EaNfZY1npnnT68mMM=
+X-Google-Smtp-Source: AGHT+IGhZi79Wa4TZUOknDyO3OQuq/IrL0An6lSKg98ZUJaFoX2kye6ZyCvKSzgo+2AwS+cWqhXZsfqu2IVPO0+7k20=
+X-Received: by 2002:a05:6512:1050:b0:553:252f:addf with SMTP id
+ 2adb3069b0e04-557a1235e66mr609612e87.10.1751636261192; Fri, 04 Jul 2025
+ 06:37:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T286e4b5afb74591b
-Date: Fri, 04 Jul 2025 15:36:17 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ben Zong-You Xie" <ben717@andestech.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Rob Herring" <robh@kernel.org>,
- krzk+dt@kernel.org, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, soc@lists.linux.dev, tim609@andestech.com
-Message-Id: <ebbaa7c9-156a-4205-94d9-d9e4a683840c@app.fastmail.com>
-In-Reply-To: <aGfR+Vx0dseqgmKW@atctrx.andestech.com>
-References: <20250704081451.2011407-1-ben717@andestech.com>
- <cb8891d4-de4e-493c-9914-0391b3baf212@kernel.org>
- <aGfR+Vx0dseqgmKW@atctrx.andestech.com>
-Subject: Re: [PATCH 0/8] add Voyager board support
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org>
+ <aGaxZHLnDQc_kSur@arm.com> <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
+ <aGfK2N6po39zyVIp@gmail.com> <aGfYL8eXjTA9puQr@willie-the-truck>
+In-Reply-To: <aGfYL8eXjTA9puQr@willie-the-truck>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 4 Jul 2025 15:37:29 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFUjJmJjR3b2S8pZeEheKojJGCYjRWRQDS0EbDYhGEUVw@mail.gmail.com>
+X-Gm-Features: Ac12FXxDoYAyne6f9LFfkIyFnAPNWAnIdZPy1iEe6SjskHRpB5hKeukxa0EcUu8
+Message-ID: <CAMj1kXFUjJmJjR3b2S8pZeEheKojJGCYjRWRQDS0EbDYhGEUVw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: efi: Fix KASAN false positive for EFI runtime stack
+To: Will Deacon <will@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Catalin Marinas <catalin.marinas@arm.com>, usamaarif642@gmail.com, 
+	rmikey@meta.com, andreyknvl@gmail.com, kasan-dev@googlegroups.com, 
+	linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 4, 2025, at 15:07, Ben Zong-You Xie wrote:
-> On Fri, Jul 04, 2025 at 11:15:43AM +0200, Krzysztof Kozlowski wrote:
->> > Also, there is a patch dependency in this patchset:
->> > Patch 2 <- Patch 4 <- Patch 5 <- Patch 6
->> 
->> How? These are bindings. How DTS can depend on the binding? Do you have
->> akcs from their subsystem maintainers that you are sending it here?
->>
->> Sorry, but no, this should go via their maintainers, unless they did not
->> want to pick it up. Is this the case here?
+On Fri, 4 Jul 2025 at 15:33, Will Deacon <will@kernel.org> wrote:
 >
-> The dependency chain arises because each of these patches introduces a new file,
-> requiring a corresponding update to the MAINTAINERS file.
+> On Fri, Jul 04, 2025 at 01:36:40PM +0100, Breno Leitao wrote:
+> > On Fri, Jul 04, 2025 at 10:26:37AM +0200, Ard Biesheuvel wrote:
+> > > On Thu, 3 Jul 2025 at 18:35, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > On Tue, Jun 24, 2025 at 05:55:53AM -0700, Breno Leitao wrote:
+> > ...
+> > > > >  arch/arm64/kernel/efi.c | 9 ++++++---
+> > ...
+> > > > >  static bool region_is_misaligned(const efi_memory_desc_t *md)
+> > > > >  {
+> > > > > @@ -214,9 +215,11 @@ static int __init arm64_efi_rt_init(void)
+> > > > >       if (!efi_enabled(EFI_RUNTIME_SERVICES))
+> > > > >               return 0;
+> > > > >
+> > > > > -     p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
+> > > > > -                        NUMA_NO_NODE, &&l);
+> > > > > -l:   if (!p) {
+> > > > > +     if (!IS_ENABLED(CONFIG_VMAP_STACK))
+> > > > > +             return -ENOMEM;
+> > > >
+> > > > Mark Rutland pointed out in a private chat that this should probably
+> > > > clear the EFI_RUNTIME_SERVICES flag as well.
+> > > >
+> > >
+> > > If VMAP_STACK is a hard requirement, should we make CONFIG_EFI depend
+> > > on it for arm64?
+> >
+> > What about if we make CONFIG_EFI select VMAP_STACK? I think it is more
+> > straight forward from a configuration perspective.
+> >
+> > I thought about the following. What do you think?
+> >
+> >       arm64: EFI selects VMAP_STACK
+> >
+> >       Modify the ARM64 Kconfig to make the CONFIG_EFI configuration option
+> >       automatically select CONFIG_VMAP_STACK.
+> >
+> >       The motivation is that arm64_efi_rt_init() will fail at runtime if
+> >       CONFIG_VMAP_STACK is not set, so the patch ensures that enabling EFI
+> >       will always enable VMAP_STACK as well, and avoid having EFI disabled in
+> >       case the user didn't set VMAP_STACK.
+> >
+> >       Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> >       Signed-off-by: Breno Leitao <leitao@debian.org>
+> >
+> >       diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> >       index 55fc331af3371..cc2585143f511 100644
+> >       --- a/arch/arm64/Kconfig
+> >       +++ b/arch/arm64/Kconfig
+> >       @@ -2437,6 +2437,7 @@ config EFI
+> >               select EFI_RUNTIME_WRAPPERS
+> >               select EFI_STUB
+> >               select EFI_GENERIC_STUB
+> >       +       select VMAP_STACK
+> >               imply IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >               default y
+> >               help
 >
-> In v4 [1], Rob and Daniel attempted to merge Patch 4 and Patch 5, respectively,
-> but encountered conflicts in the MAINTAINERS file. That's why I specified the
-> patch dependencies in v5 and this patchset.
+> I would actually like to select VMAP_STACK unconditionally for arm64.
+> Historically, we were held back waiting for all the various KASAN modes
+> to support vmalloc properly, but I _think_ that's fixed now...
 >
-> Now, I understand that binding patches are typically handled by subsystem
-> maintainers. To prevent the conflicts again, I think I should gather all
-> MAINTAINERS file changes into a single patch. Is that right?
+> The VMAP_STACK dependency is:
+>
+>         depends on !KASAN || KASAN_HW_TAGS || KASAN_VMALLOC
+>
+> and in arm64 we have:
+>
+>         select KASAN_VMALLOC if KASAN
+>
+> so it should be fine to select it afaict.
+>
 
-Don't overthink that part, the MAINTAINERS file doesn't have to cleanly
-bisect, so I'd just create the full entry there in the same patch
-that adds the arch/riscv/Kconfig entry.
-
-     Arnd
+I agree - we have plenty of vmalloc space, and the memory footprint is
+the same so we should just turn this on unconditionally.
