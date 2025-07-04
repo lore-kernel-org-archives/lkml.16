@@ -1,95 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D506288526;
-	Fri,  4 Jul 2025 09:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D822F3624;
+	Fri,  4 Jul 2025 09:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620595; cv=none; b=ijOgkS1CSQJ1/kcLhR78juBCxSvGOXg8LRi3uEJKAXGCuzU+Iq3Gpdbe2mf9i1jTmkdxiuS72KUW1AP+Ckj/BcmrZ0jfrvIdTzKsDEOQh0IWibWALzEC/nLwb/57CN+igQAfq3v5efz81FnUIWGJfxaBW3uHUKGwHqTD16nLa+0=
+	t=1751620602; cv=none; b=ffpDrUkCQh2A1OjRZhQm/EvRYR2IbtrdryXBv8irQwwTxviUxhw+jB3SeoKmvw4V1duBKj1UZ40I1VLjiww8h28xtMg3kewEEmrTNtlkL2vTSwMZaYHUstKIbGyvFufOwv73vICiQdl9Mlia7msGbM3sTes57+YeHbX6uFiUkDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620595; c=relaxed/simple;
-	bh=AkRYvE+iRYD9m1Wwp6Jy8xhOGndE4ScJG+8190VCBdY=;
+	s=arc-20240116; t=1751620602; c=relaxed/simple;
+	bh=oJ+/1u1U6P/KFUf3Qku17DfC4EhBFRWU71oy+m0Mi20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bvTYdiD5Fnrx1ooKPmkygqwb0edOoWI+7hc2dwi1F3wkpfNTmaRl+AwLV2P/hp21zWKjx5EWbWVOW8HMuDh9nTby7m+ce6URb2o9HjRv/OFJrIwRvqDBi17xLD3ge1VseZHNSs/R34ZTEC90GSwgOcr7JGarpWyhQK7fSfuXj1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ydu/QZE0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IXwMvVnPPOgKbD/eTAHTZyvTm7Tzvi1Qo2ErdTHDiNohC+8ZshwPgnjbWmL4DLfeXikuoB+AbtFiMiQoZIE/xgnikHzF/8U1YXOXS8KCEhVlkVJuwX0BKUGKGFifJcxMlnwTHNw/zBzZLoWVozNtsHM3DvG27QuZODNMOMdcq0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ww80NC6e; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ydu/QZE0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751620594; x=1783156594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AkRYvE+iRYD9m1Wwp6Jy8xhOGndE4ScJG+8190VCBdY=;
-  b=Ydu/QZE0DMqV5aKFHLPElTFOl4GtzfmBZjyxKwyM9w5H5zEa65tYoYyd
-   aytr8k084YXjOIxrGCL12tZA+Jk3UNz+IWk5g4T5uyvxLVe/YxQa3gPVy
-   Y96uZ9uYeDeB2347JMnhCTviOPBq/eOvP8x/fbiVahwg1qrxXgjPJ3nNe
-   rxk9C1+rHB73678OBZ+LGXYqhldbBf5Jq5w69QjzuA7cOr+IZNNUO8VEU
-   kSZue3aOtXNbqixaShVYMe6fmS+jmW5xjuUEBSyPYVKxatlD2WR/8+y8D
-   tTnGIZAilmiRcVx4UnScpIsQavzVbArEsqLC/a4zxWxcRdRX0AoCCyv5F
-   g==;
-X-CSE-ConnectionGUID: ui3M3KoiTeaBYIiH8Wpl5w==
-X-CSE-MsgGUID: 1K7aQcqsTFGeuYJhkVlizw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57763093"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="57763093"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 02:16:33 -0700
-X-CSE-ConnectionGUID: 7OgdyKb4TLujesp+0RKKLA==
-X-CSE-MsgGUID: YIr1wxvYRqOmp50GpF9Aew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="154011509"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 04 Jul 2025 02:16:31 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXcWy-0003XX-2I;
-	Fri, 04 Jul 2025 09:16:28 +0000
-Date: Fri, 4 Jul 2025 17:15:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vivek.Pernamitta@quicinc.com, Manivannan Sadhasivam <mani@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Vivek Pernamitta <quic_vpernami@quicinc.com>
-Subject: Re: [PATCH 4/5] bus: mhi: host: pci_generic: Remove MHI driver and
- ensure graceful device recovery
-Message-ID: <202507041755.evB3U2Ju-lkp@intel.com>
-References: <20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ww80NC6e"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf214200so5387545e9.1;
+        Fri, 04 Jul 2025 02:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751620598; x=1752225398; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FrASRedBj3qOuU4Lr3oIf/QtQ7Obhd71IuXJYVppfjo=;
+        b=Ww80NC6ezPXVC/ckq2+5b5ncV4nI6QdHr14YobZtpzqHdYvItkCkVGWamKTfQkgHj6
+         RVgNhXkfERuvANMfMJHx8s8MRaWNI5NdwD6CY8DMp0BbhKUs9s/5n7hAs5Tzv0c0pADz
+         a1MKSXvBXxNVIHCFH2ev7jfkVh1fog5OQbwUKD8Y55qSkbR2b+wWBJDQKHUg/ybuLQiN
+         sCY0xJ/0zTZ5S1OPuNzm3Ztz1eIp0ya2+dvuTb6CNkkb7/71mQvDSyDDjoQTiEnN5ne0
+         HIzadfEyU4PpopgIeLAgsKSGJGxCoPUOvzQcBYoyPNQKBT23mFa29iFGzPHfjZ7Et94O
+         6oxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751620598; x=1752225398;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FrASRedBj3qOuU4Lr3oIf/QtQ7Obhd71IuXJYVppfjo=;
+        b=uXo2/1hmARokGtsaCkFAe8q9/I+PTn4/8CS8eA2+YyuvKMAKAGf2Vvu2k0kh9uG8cz
+         Jrz/y/zpdUJiQTGAMbXVKv8cMglB3P7BBiqK1E7zXDjnSNSgfmzghtTEfJWd3p/kAptk
+         tLlnOYszMpxRuYlxMHlYVeNCDnRXVTxK9fvg/eluTdN5/Wdgh5jWPjsqWrvIRB50PfoP
+         YrFS4uZAhwwMty5lpxT+Wyniw7wN1LCd3/3EzN8jT9FUXxuuemMPIISak47lBb9LxJV0
+         QagULfRjDTeQtN7KoO9i3RXaY6Fp9+g/1n90QBkys9BedU4rNEr87dMbE4lQuvFu/PwZ
+         PPJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKAT7h/ZAceBbiHf1woPE1Z+4wODvyVurjAjLB+NbeaeOqr9Vtxczn69/NkbLGMSWO/G1ewyNUb9uIG0s=@vger.kernel.org, AJvYcCVoODygiHVWNXZGjKvnFg11c9G6xqHv6Z/+b2lqgp/jnZzzQcLvTt2n/gxX2OxG7GtO/cFkyQITTh3l6hE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5GpR6LlMSA4sqbtkYmwQPT2rhz1qaAquMPehSe9LGF1jpk+h0
+	qwcDFkwVxU/07SWVUPhqd8l3PxkDplaS1lSFYEBcxLjmlYRgWeX0pP6c
+X-Gm-Gg: ASbGncvFpJABqvY0dPkSZyLy9r17l95xcSWxEh5ndlkobN323FesqeRzj5hkFgmiKwI
+	u/Xl5juImOUB+mBtTEQAvVQ17lxWxj5EIFGJ1IIU7juU5y/g1QYIkIkrJ6JqE5XMdynBA2QXwSo
+	0zaOZ/KTv2Eh40lkdmndzgn80P9kEOQDjnb/rTUj2EWRl7vxSOMOU8SsF8ran2zvF1FCEb85iOv
+	DGnCiOx4vZu4H/YImcJQSOapiP/IPmIcluBBodTzykQOpwRHpaaKHzHNyGQWLk/uaKfI866wuZV
+	WFoQuf1o4rbYq9ri+uFCS/mbEY7vFOrLaCueD1M0ZwzrJr2fDyxb/CQZn/IOZCUe1OqOfmzY8nN
+	h0aTP5MXTbd7o5pDKqeIgoB6d7yQuv+AAZXsz1KZHw4JFkU1P
+X-Google-Smtp-Source: AGHT+IExoSHUzRhz86JAP7f5Iv8dXYAnNcjUlnz4mnvSpomXoY2GDkuUNMtNR/YNZ30kfGG/xqsY0Q==
+X-Received: by 2002:a05:6000:2dc7:b0:3a5:75a6:73b9 with SMTP id ffacd0b85a97d-3b4964f4d95mr1407226f8f.11.1751620598375;
+        Fri, 04 Jul 2025 02:16:38 -0700 (PDT)
+Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030bd42sm1945202f8f.5.2025.07.04.02.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 02:16:37 -0700 (PDT)
+Date: Fri, 4 Jul 2025 11:16:35 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
+Subject: Re: [PATCH] drm/tegra: nvdec: Fix dma_alloc_coherent error check
+Message-ID: <xjtnrvbh3dowjhmgrtduo4dqiah35oekbgqc35bdzexug5lmue@kqh6ikyesurj>
+References: <20250702-nvdec-dma-error-check-v1-1-c388b402c53a@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5jbhrvx5g2niyo7s"
 Content-Disposition: inline
-In-Reply-To: <20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3@quicinc.com>
+In-Reply-To: <20250702-nvdec-dma-error-check-v1-1-c388b402c53a@nvidia.com>
 
-Hi,
 
-kernel test robot noticed the following build warnings:
+--5jbhrvx5g2niyo7s
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm/tegra: nvdec: Fix dma_alloc_coherent error check
+MIME-Version: 1.0
 
-[auto build test WARNING on 1343433ed38923a21425c602e92120a1f1db5f7a]
+On Wed, Jul 02, 2025 at 11:08:07AM +0900, Mikko Perttunen wrote:
+> From: Mikko Perttunen <mperttunen@nvidia.com>
+>=20
+> Check for NULL return value with dma_alloc_coherent, in line with
+> Robin's fix for vic.c in 'drm/tegra: vic: Fix DMA API misuse'.
+>=20
+> Fixes: 46f226c93d35 ("drm/tegra: Add NVDEC driver")
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/nvdec.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vivek-Pernamitta-quicinc-com/bus-mhi-host-pci_generic-Add-SRIOV-support-for-PCIe-device/20250703-231724
-base:   1343433ed38923a21425c602e92120a1f1db5f7a
-patch link:    https://lore.kernel.org/r/20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3%40quicinc.com
-patch subject: [PATCH 4/5] bus: mhi: host: pci_generic: Remove MHI driver and ensure graceful device recovery
-config: i386-buildonly-randconfig-001-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041755.evB3U2Ju-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041755.evB3U2Ju-lkp@intel.com/reproduce)
+Applied to drm-misc-fixes.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507041755.evB3U2Ju-lkp@intel.com/
+Thanks,
+Thierry
 
-All warnings (new ones prefixed by >>):
+--5jbhrvx5g2niyo7s
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> Warning: drivers/bus/mhi/host/pci_generic.c:63 struct member 'reset_on_driver_unbind' not described in 'mhi_pci_dev_info'
+-----BEGIN PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhnm/MACgkQ3SOs138+
+s6ETEBAAmR4QvTrOlFKPrmVwr3KPiG9rXswxyZZWFh57ku8z0WkowahCyrAe4sTn
+7Q6yHWTW2uCmnbrXx+BFXIl9Uas2RjUtAGxRSzLtKyyIuNFi74wWcTV9NwWFib2Y
+2ibHxnqBqM6ZxZWqM/0s2Poz3J8Wac8BF+BTCx9xx1pOF3piaweNmxG2HShVajnu
+jSr08e7j22E8/zbTtcPHklkEzG8/nDBiPm32vEqrZz8guJ11MW2FNV+wOYxUN611
+2/VN6iz8R2L/EYY4g1bn38PpuOtBKWLdI/F2ryjXaWCK4gLMo/1DRf8adFxAY1z9
+/rc11VutI8m06p5q75Lwl/0TsJ09Sm1zS/Gj52l9SAcd/QtFSyfL5sbP/HahrjpB
+VntCOz7l0wpTxS1koodPxtgvg5ifaQzmjnaVhJgETaYhY4grWG2jBXqiRlZUh2hC
+ylhC4aoPs3ypiQB+lPlx+ZFM5To0B3B19WRArnQw8QBYJhSnJafg7EK6ziK5NcBd
+RS4sksEEBoIExoZF6WjpwQzDWn7fxcwYsl8EyGWRDarKi3WXslL6u+DvJO/mHYso
+t+0Utjz5lf+LmwWD5iECFPqBFMyg02GyGpM+qZ4FWz1NhtsSZOVquD0waNNzOGmB
+dCILQdmvlzwm0liPxZ+/47TdjOc/Q+xQCcW6qo/RseIxvfqg0U0=
+=a2V8
+-----END PGP SIGNATURE-----
+
+--5jbhrvx5g2niyo7s--
