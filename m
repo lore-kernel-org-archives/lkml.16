@@ -1,77 +1,48 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from r3-20.sinamail.sina.com.cn (r3-20.sinamail.sina.com.cn [202.108.3.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E78A262A6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 02:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD5B262A6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 02:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751595633; cv=none; b=fdhLYx83PhcDBn8VyhaQ5xG/yUUw5IMb5QLOdltLnyg3K2eJcF3yeb+/JQJ2MReBbonIxfghKToG3gGBiKKGgE6p2+eV/8QJB+M8D/OD9sHWy1WrRub+IFwYDFOyEXK/UoKxuRbqEdA5Qo33In6aqvoqMvjsz/vJ5fGsjhqUU2I=
+	t=1751595642; cv=none; b=R8f7J2l1eO3UgDbGujQS/XeV22f8D8yHpPtDl2AFmBgVOlzkX8JEZQM6oaFCvTdc+rMUkD70sAs2ir3xoz0/eZOP+TjB1G/1PiUKSDxh/SaP6SAh693tmU8BxOoFT50W+px0+S1aSp3PA+aZWXaIAoNp1zLALFuiXRXNNnyCI+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751595633; c=relaxed/simple;
-	bh=ycIHSnGYILJIPVpfKHa7ftGdGsIB8TwD8cX2/vQx/UY=;
+	s=arc-20240116; t=1751595642; c=relaxed/simple;
+	bh=QtQjXCn66KB/7/WbIl4tuNfD4pDLMmm/kAJ9vxCZpxE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+wrpZWhfMNuV26gqGTbzlK6wkxzJkQ5Mb50wM15Phyq4cBV17SvXWXN6eRT+KgtVfeWgpmZTQJ1n6HZkjMr0iAAY71qyu+C8Qs8ctjGCz0N+KIvmt++dR0omJrjJvpKPbibOuMF1aEt63XWRkExsjy3pkIOj4BAU9Cesvzv6CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=j1J9cO7a; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 MIME-Version; b=C/Elneh58hbXZM/uFXnRNxGZu13/MIDPi3X5WgE6xH9UkK8qt+CJa3NXPrieHgz/imBCAu8KY7BlyJnmqoasWJRFEjtlb39wwNbpsJyjqDJzb2yhNmaERQeKr0ouTbWx0sAkei9H77hohBRbqV4D5TydrYMj9897M6ADnsl+M2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=lkTQTM8Z; arc=none smtp.client-ip=202.108.3.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="j1J9cO7a"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso624340b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 19:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751595631; x=1752200431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nB2mhHfPsdN/BAHed7HqkYTpkP4d7ANXryStYAUTRgU=;
-        b=j1J9cO7aMDyQmkhusxG8aMeLib4pH2ViQfhYNhQjK2l7KpX3P3V6sZs0WOGgf81Tdk
-         6mw5r72IRloqSqxM9cZC1jux+4WOnA98YcT5pNpn9wu5SZoKZJ0RWq1s6I0KKQkOlUi5
-         yyA9izam0GT9ilPkO6FbOVCjkuOFKofjwhZMzm0GRbxiIsGiKc1HIvJVO72qudLjEP9/
-         fSIr8FFGgBzwkpVB2uDvvkabXc1hOTWuXrvBadyhzEsgTOZeaBWH1Xq47UGhjnNSloNh
-         Wkpyx16gp/c7sD4TtKAkBoEyTi0Zlah+ywfq0KKgPT3Rp24NqwQYA5PfeNKp14mNSrvz
-         Zv8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751595631; x=1752200431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nB2mhHfPsdN/BAHed7HqkYTpkP4d7ANXryStYAUTRgU=;
-        b=RTFoanRTDzYBnLHlSG2WKiRiJgiFTqAM1nouhRFxJ5GFEXDMFn2GjJvyX5S9Z2QKd/
-         cuinZyTbIsGrULU37Udkd8KgZIPBrjKrDOMhLANQ6GynHZ6tA5wSBFLUlR7J+ac2Krm8
-         l7xz/Tq0BwqQcloqGM+rRm3FQBzSbma7zgqSuR/vF5BLn1flhNDUMKuKYGrsxiVyT8ha
-         aBZEgbrLgzDXRTqt0OYExPLO7DBgzxztD8sQtuifpIb/WtXYauP/MPWUsS714YsxgPR5
-         8lhx4UJJADGCNBpMYtgM+17Q78h+3xzHnBE6GEkDsVTOBYFU3pA+k7Ih7wmzjK/U6/Jf
-         OUfg==
-X-Forwarded-Encrypted: i=1; AJvYcCViU2ApD5q6lzXAQ6dWURmtlDJBMlCcZJ+Wson79tuoQxXH1aCN8vDV4weugd0I+NcjfRBlAan4inrmNgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxaY78+NYMxyDgpz5C+d9DSlut8QIbAHhHfgyYdgk7j16Xl+wl
-	3Qj13jpOmVHJJOxTFAova63lHbeooMR/z19Szg3aUjRsgf+G/Ed5e26b2TDz23Fkk14=
-X-Gm-Gg: ASbGncs13J9VR8b6zZfJec5hbLA+eyZg7jZ5RKmkJTD2u0kof5yAsbGw5d6++4F83B3
-	ocoRTQrZBVgCiLYNKK5NW6O4OGslAqmmPvw872imJYCJ+9rgha8p4dv1nbjd5AMOsAy+6F3u8C9
-	S2sBsKEUlH36tBoURJisqX9ZMBDhcrT4joWOWnq9Ro7MxhCcf+wcipt7O/QhoQTy+eZg4UkjSa7
-	d9SicyLFe3vpmHlRCjUpi+DLhKdr35UsCa1foVsQyDPW/VFWGKshQWpQTN1YioRIqPxUXY0C6Qk
-	JCyUzatL/c1xiJ+ZRKYsM5uWjEgTCPHWLQBE13MMcvis2OXcvTqM7xdnjI0NLIsEFhKT0/8xtE7
-	Embk2ivOVpjFFzm5iq3IqYb5h
-X-Google-Smtp-Source: AGHT+IF5FgaG48Lz7SQabgqQ96oyxCzyELFi6hJD/bR45TR94ijLKiZUWTQ6L0DOK/RO4NSLyKHLaQ==
-X-Received: by 2002:a05:6a00:3e21:b0:749:8c3:873e with SMTP id d2e1a72fcca58-74ce8ad900emr652873b3a.24.1751595630812;
-        Thu, 03 Jul 2025 19:20:30 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cc722sm799335b3a.49.2025.07.03.19.20.27
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Jul 2025 19:20:30 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: jgg@nvidia.com
-Cc: alex.williamson@redhat.com,
-	david@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	peterx@redhat.com
-Subject: Re: [PATCH 2/4] vfio/type1: batch vfio_find_vpfn() in function vfio_unpin_pages_remote()
-Date: Fri,  4 Jul 2025 10:20:24 +0800
-Message-ID: <20250704022024.14481-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250703122756.GB1209783@nvidia.com>
-References: <20250703122756.GB1209783@nvidia.com>
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="lkTQTM8Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751595637;
+	bh=CKiHizGqfZamsWMiJc9P6C+Es1AWkQ+6Oq1Vcx61/sU=;
+	h=From:Subject:Date:Message-ID;
+	b=lkTQTM8ZNiVy17Tc7/3BOqbuEh+VvPry+FEls8L/vhebcAq5DyHnUhkgmLuTmpYo+
+	 WY5TgY9cpHm+BA/14klp3MsOgDPmZqnwGVaLro4BRHy2i4NLlPMiRezExkA4drl5Rn
+	 IJRSwDVYW8urDKtqMeD0eWkIbNDvYwO1IRiMqhgU=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 68673A6B00003224; Fri, 4 Jul 2025 10:20:28 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 9208964456965
+X-SMAIL-UIID: C7D23E55E0764BD49030169482AFB311-20250704-102028-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+263f159eb37a1c4c67a4@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] kernel BUG in filemap_fault (2)
+Date: Fri,  4 Jul 2025 10:20:15 +0800
+Message-ID: <20250704022016.2331-1-hdanton@sina.com>
+In-Reply-To: <6866b332.a00a0220.c7b3.0005.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,53 +51,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Jul 2025 09:27:56 -0300, jgg@nvidia.com wrote:
-
-> On Thu, Jul 03, 2025 at 12:18:22PM +0800, lizhe.67@bytedance.com wrote:
-> > On Wed, 2 Jul 2025 15:27:59 -0300, jgg@ziepe.ca wrote:
-> > 
-> > > On Mon, Jun 30, 2025 at 03:25:16PM +0800, lizhe.67@bytedance.com wrote:
-> > > > From: Li Zhe <lizhe.67@bytedance.com>
-> > > > 
-> > > > The function vpfn_pages() can help us determine the number of vpfn
-> > > > nodes on the vpfn rb tree within a specified range. This allows us
-> > > > to avoid searching for each vpfn individually in the function
-> > > > vfio_unpin_pages_remote(). This patch batches the vfio_find_vpfn()
-> > > > calls in function vfio_unpin_pages_remote().
-> > > > 
-> > > > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> > > > ---
-> > > >  drivers/vfio/vfio_iommu_type1.c | 10 +++-------
-> > > >  1 file changed, 3 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > > > index a2d7abd4f2c2..330fff4fe96d 100644
-> > > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > > @@ -804,16 +804,12 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
-> > > >  				    unsigned long pfn, unsigned long npage,
-> > > >  				    bool do_accounting)
-> > > >  {
-> > > > -	long unlocked = 0, locked = 0;
-> > > > +	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
-> > > >  	long i;
-> > > 
-> > > The logic in vpfn_pages?() doesn't seem quite right? Don't we want  to
-> > > count the number of pages within the range that fall within the rb
-> > > tree?
-> > > 
-> > > vpfn_pages() looks like it is only counting the number of RB tree
-> > > nodes within the range?
-> > 
-> > As I understand it, a vfio_pfn corresponds to a single page, am I right?
+> Date: Thu, 03 Jul 2025 09:43:30 -0700
+> syzbot has found a reproducer for the following issue on:
 > 
-> It does look that way, it is not what I was expecting iommufd holds
-> ranges for this job..
-> 
-> So this is OK then
+> HEAD commit:    b4911fb0b060 Merge tag 'mmc-v6.16-rc1' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16568c8c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6ddf055b5c86f8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=263f159eb37a1c4c67a4
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=157cf48c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=146a948c580000
 
-Thank you. It seems that we have reached a consensus on all the comments.
-I will send out a v2 patchset soon.
+#syz test
 
-Thanks,
-Zhe
+--- x/mm/filemap.c
++++ y/mm/filemap.c
+@@ -3439,7 +3439,6 @@ retry_find:
+ 		folio_put(folio);
+ 		goto retry_find;
+ 	}
+-	VM_BUG_ON_FOLIO(!folio_contains(folio, index), folio);
+ 
+ 	/*
+ 	 * We have a locked folio in the page cache, now we need to check
+@@ -3490,6 +3489,7 @@ retry_find:
+ 		return VM_FAULT_SIGBUS;
+ 	}
+ 
++	VM_BUG_ON_FOLIO(!folio_contains(folio, index), folio);
+ 	vmf->page = folio_file_page(folio, index);
+ 	return ret | VM_FAULT_LOCKED;
+ 
+--
