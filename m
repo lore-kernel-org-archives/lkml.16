@@ -1,162 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031E11F419B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E7429C33F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751626674; cv=none; b=EvIxyuVcDccTsPOuMTokt3IBfYvmSJUbEVMaNe9OF2RhN0s+8atBW9iky74fdpN7qSM4y0A+gbqFRKfvghCID5UdkeGbqFX3+THgAtJX511jx/Bu8Wqt+vn+3bPAx5JfDoJ/jZRB7da6av8QP9pXYBuwI3xwWxGMDlu1Hg89NDs=
+	t=1751627180; cv=none; b=E5/muo+XG/PsBv030USb0YEv7kuSUqRVwAbDBf+5B2vucPwc+37ugIreqLkVC9GelBcoto0mOrQ8WxZR2RKBjU6OKVcepxqEKtMH4mJI5zLI8q+wQZjnLnlmODSq3OZmOCTKzx5vuYrXvqbaRyFszuIat8gIvG1TKVNC4Cs3pvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751626674; c=relaxed/simple;
-	bh=1cxKkZFvCDOhTzY2nmvDiN/WHQTDMZaVAEL8yNSOdDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fBRK+W0WnCI8v1AC+SvvxY3rzwygnRA+nfppKLcb2u6nyml+wqMpB0c5KyK7kJzg9bpRD6HCiAw3qBmZePQRLC7br1gyVzGqkQgzq+lOJMot0C5rULSlS23JE5MTTGF6qgBWeip7oE4P3pNidTP7rif0PCJJAvBsgsjNdp3+e98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZeHmfD2Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751627180; c=relaxed/simple;
+	bh=k3yRpHVV4mG8PD+9jKn9SDf4cJFDmVdprG2GMo1cjKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1RnGZR42Kp2ZEFxwWLuyM1Ikw9z5DS+1aTK2/1hI7DBatO7TxZ2TqxT1bpACBWvYBg06k8WFDTQpFGrsqh8MAFAxNMuUU0H0AToXRi7r8pnBc58AO45GerF87UOSs6bVbaFQYqyFfsdckMRt6FLB6zfjevwCt0O1FAw016AX+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KEOiVfWe; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZeHmfD2Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751626668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CrvE7HgkF0Duv49KG//QWMSmUEkIXLGid+oDz5Nnx5A=;
-	b=ZeHmfD2QyxqLtYDsLqiDPPY5mLg9vMPAcc+tz60ngUtopHJSb4VxRj0dFie0YrCtRY+kti
-	8XFovyc7u0s7mg2LDRJLtcu0/nOGsvLBL7fz237OA4cVO+ujUkrGyTOvj96Hxc1Rdsw736
-	tpIJvhEKMF2WspN5uU3SsRaYWT4442U=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-266-LwFcj-JUOVubF5s1AKlR7g-1; Fri, 04 Jul 2025 06:57:47 -0400
-X-MC-Unique: LwFcj-JUOVubF5s1AKlR7g-1
-X-Mimecast-MFC-AGG-ID: LwFcj-JUOVubF5s1AKlR7g_1751626667
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-6076ad0b2f1so742194a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:57:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KEOiVfWe"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56463mho018851
+	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 11:06:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2XxqMM/RSUTF2mZkG2gocViLCUQzGXcwFWZuP+ol460=; b=KEOiVfWeA44SOaKc
+	6xYZn8C2V3e+4xKSoxAAbHrk58XEX9tJJOKUl8s64JK5RUgE/AAqRWONcvhPBOdQ
+	hmrMgLROzm4Mv6Ca4LCOkWwop1V3Oyf0WV5lJl73s7yHeFcM/3AReTWNYk6qHqgQ
+	TeFALwk5GfIJpbaK/QB392LjbHHSVISiCk6T1V+61HoBPTUwCa6isi2WVSMGf8oF
+	UezQGSf17DhbDnaSq8vJnL/WbdIdYcMyYMHUXywvMRbQLuJNCOeSh8JB74nUEgy3
+	c40wF1Y83sy88TSPyckG9u6irCEUJi0B5O1TGop/4hm5ZnhULOXxnkRQRgvP61wf
+	d76bSA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8fxus7f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:06:16 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a5ae436badso1609491cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 04:06:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751626667; x=1752231467;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CrvE7HgkF0Duv49KG//QWMSmUEkIXLGid+oDz5Nnx5A=;
-        b=iVowc58jgNcqNI7DlM5hUZIBchN4dOCJWg7uVzMDOAAuh5LeFAebnLusHLl/4WMLsN
-         wOz4RN2tVih6zNW14ZWn9l8yF0Om5DwjjmftWRqoV7sB00Jm52KmuhGt6MrL/08X/iY7
-         74VPFRB0IkCk91YSLL3mvx09Tzv5gtI98YyXNgYTHDQhYPGmSJDWMAPBTMy7xNqA2cLY
-         9KFF9tadNPhd+I8GA4Qs+W2D1kCJxmtXiJi1krSJKRcdWNWK3MHia751oBcge2FCs/50
-         z8F/QfXGJigjuVMsy79fuElKiKY1lwJpFSAhZ6cRahvz4pElKmNbQZ+UCFY5VsvTFFBS
-         js9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVyKtjQReDUx3gy1VbjYjYsWSyKwjRk/Ki2ZAfqNzp0dc6x22smouf5QJjA1VWq5AZUTmnvpxUYU40gxfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGCk6GaIBEX+FleH9+EjLD9omLqnmQ3MCpgcwktWtaFrBXarU7
-	RzzK2CJEJI72tmK4K+0jUHv3VlT7L8VtF5FCvebgnii9PYiL/osVEBlH+dZh5he+YROVih8bDys
-	JGUY/U6uKv7DlhAdN91oG2JkHsc7nBjQiW4ZhF5o9v628lERTtDNEicEG3pRQPyvqUA==
-X-Gm-Gg: ASbGnct4gTQ1zowPRbfjzeWJNRW/M3toaQqkfx6N28RRcx9CQNmsIzZRMRMfsamxZ3h
-	W8A8vzOuwEDhvi03LpmgF/Dquy1Hl/ry4rFwjh0OoT+JoSdk71Xdv/hoyMaNGMQn+GUIw2LqwhJ
-	Sz4Lw3N+7dscJ5RvkxL/YfRqm5Uc5BJpkRcMkzzM2JU20lPhXCbbJgNs6u0PImKNqRYAUna6v2T
-	XQ4QrooWFNb4yIQM20ARXYFl/h3edktMqisNcOehpLV1udP2hYLgTuUk0Qt0oPQC9BfUGyttili
-	FvMjEsLqfyqY+tNnnEZ3jDoyenewzEy9sZT7jHVoafTwJD1B0SKwT3cyQgNf5rf8OoqQ
-X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id 4fb4d7f45d1cf-60fd3491e75mr1660545a12.24.1751626666597;
-        Fri, 04 Jul 2025 03:57:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcyEXrT1z/JTIyDwlwHTVjdjScy5iO7EyP/8wawH2bxWvrpwpkH9Px/UxRdIe8p7HXgydn3w==
-X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id 4fb4d7f45d1cf-60fd3491e75mr1660526a12.24.1751626666058;
-        Fri, 04 Jul 2025 03:57:46 -0700 (PDT)
-Received: from [10.45.225.135] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fca6641fbsm1164917a12.3.2025.07.04.03.57.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Jul 2025 03:57:45 -0700 (PDT)
-From: Eelco Chaudron <echaudro@redhat.com>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- dev@openvswitch.org, linux-kernel@vger.kernel.org,
- Aaron Conole <aconole@redhat.com>
-Subject: Re: [PATCH net-next v2] net: openvswitch: allow providing upcall pid
- for the 'execute' command
-Date: Fri, 04 Jul 2025 12:57:44 +0200
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <0DF63EA6-305E-4F76-A88C-F2520198702B@redhat.com>
-In-Reply-To: <20250702155043.2331772-1-i.maximets@ovn.org>
-References: <20250702155043.2331772-1-i.maximets@ovn.org>
+        d=1e100.net; s=20230601; t=1751627176; x=1752231976;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2XxqMM/RSUTF2mZkG2gocViLCUQzGXcwFWZuP+ol460=;
+        b=hfJ6BNtq4cz/IvyO1QsTtVUHlSL9eac4JVMrvFzAtzTmtcL8hDpD/qQ0Z9gfoT0cjw
+         qIRqvJnxV8WsaE4BEVemRy7TWi0ZgCxQZxncOjEFTHVdU/KezpCproBjSwt+SJxCGSmz
+         bl0Bb8fxWKdC7fqj2wdleuewuLyFf/lNt2QmL9Nnzl1jXmio07kwnzGsAf8lO6h2eiuD
+         mb497W1LZpWbSprDEdMjp1TyOwagy4O6sgkfVRTFoNPid1PQnS+8iTLvcDG4E0QcZznB
+         d8rX6/3Cp1r9ByfXOTORq87SL5MgKisKgnoXlYsniN7FRjhaIQp52LQw5n8chutMiudT
+         qBPA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6QJAfJcY1qX+pmu/OBMtX09DbBoizw5jcFCzoyU19A//zqjQe7B0lYgP3IhY3q8FY/jsM1FLi5csMhi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzjf1fFGvtwYdTIMiGGWP95X7sxaYov7sqRI6NLi3Ev0zr4K4sn
+	gvD/ZyFXxNnH0d60IxSd2zav8Pr95n7KnSFkiiqc0/MWEcUGefIF4xW62ZU4mT3+Scfjp/f0bsc
+	klgjB7qUtMJMz8TyFTGpFk4CGnOXb9JfQIWiIBswqcRshgm5QxshtNDrV391JH6cTwUU=
+X-Gm-Gg: ASbGncuI2CHXbccsv73Rjt3E7oxUKPigeRC6Q4VBbD096F2cl+NSobc4aOPlto9A7a6
+	K66XlWrTbXQK+1AEJDu4QUsv0x/nYt7PwyORlVZjt5B/i/BghKc8QrFl9jcRKeMYvqHVLPCrm4O
+	86jrlBXFjAolURTHCPbOmNcjldoMT/d0m30Xt0GWEFJwZDXFhtlM7wbmgSJ+Fm9yG5hD5jcvaF5
+	hWnm3Aw5uEJF87ykPWpaMYGQUNPkxtXAQ9FUkKVf9Vd/d1ZT6APir/r34GVqMfxIALRzidys0+i
+	TFhlvGPG4F/iAlAgn37TH1A4dDVSQNjsUAEkmkdIT860eg4pgfDniBqvOzLl9yeclZf+c1UZOC/
+	srZZ0ig==
+X-Received: by 2002:ac8:5fd0:0:b0:4a7:bed9:524c with SMTP id d75a77b69052e-4a9975cf1eemr9429561cf.11.1751627175928;
+        Fri, 04 Jul 2025 04:06:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEL00AfasMKdltGMxGM974NBZd0imq6S1Dc9fbvd0ZKYoSfNqzbgVRMjgXDHONPutQiSOAFdQ==
+X-Received: by 2002:ac8:5fd0:0:b0:4a7:bed9:524c with SMTP id d75a77b69052e-4a9975cf1eemr9429321cf.11.1751627175516;
+        Fri, 04 Jul 2025 04:06:15 -0700 (PDT)
+Received: from [192.168.1.106] (83.9.29.45.neoplus.adsl.tpnet.pl. [83.9.29.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b02a23sm152666366b.112.2025.07.04.04.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 04:06:14 -0700 (PDT)
+Message-ID: <0e13833f-fc0c-4bb1-a1e4-fdba07c50768@oss.qualcomm.com>
+Date: Fri, 4 Jul 2025 13:06:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/11] clk: qcom: common: Add support to register rcg
+ dfs in qcom_cc_really_probe
+To: Luca Weiss <luca.weiss@fairphone.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250704-sm7635-clocks-v2-0-9e47a7c0d47f@fairphone.com>
+ <20250704-sm7635-clocks-v2-1-9e47a7c0d47f@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250704-sm7635-clocks-v2-1-9e47a7c0d47f@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA4NSBTYWx0ZWRfX/61NpnxB31xg
+ +9lIRHajhB4X3gjpXgfJxmbfUVL8fGLwZkwXj9/skJOZKXM8Y5Dbe60x2QmOHcnvsQJYJZJkeh6
+ Ai8NyMWnwHWI/NCbxi/DNRIROsl1YdqjFLyM3TDmQfOtObHPHwTjB0eB8aFFqB9arvMEB+47JZu
+ TnGFd1yKpcaDq6Ze8Oa8ZtCT+j447+M0DLFr5TbQDrA+gAYiDtY2DFT190TdSEyIubefBfbSer5
+ lI3Lan1TWgusJ3B39k+1ue0eZcyEoYJC8hLZ/uA6BkyZITWesFQyhu4Vc5hQOQB31tYsAxuN0KW
+ kluNgQsBSrKdjfjJZpqAgAn+1iIwygjnDhwImHQ9fUmMOZL+QiqVWjxIi2wWsxwYhpI6Re+5mpD
+ rI424ItVxPfVgEkO9wG/qdXqorivl4MXetlF3huC5tRhwd00utDYEshdX700ydqS3Fujbyxg
+X-Proofpoint-GUID: 9bufP7if1fJQWLKKfqzFkTOq_ZAPkYx9
+X-Proofpoint-ORIG-GUID: 9bufP7if1fJQWLKKfqzFkTOq_ZAPkYx9
+X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=6867b5a8 cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=qmfFy4ndMtQ753Zl/n/b/A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=oQRPDSM0WpIYGLKzx8wA:9 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+ a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 mlxlogscore=954 suspectscore=0 adultscore=0
+ phishscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040085
 
 
 
-On 2 Jul 2025, at 17:50, Ilya Maximets wrote:
+On 04-Jul-25 09:16, Luca Weiss wrote:
+> Add support to register the rcg dfs in qcom_cc_really_probe(). This
+> allows users to move the call from the probe function to static
+> properties.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-> When a packet enters OVS datapath and there is no flow to handle it,
-> packet goes to userspace through a MISS upcall.  With per-CPU upcall
-> dispatch mechanism, we're using the current CPU id to select the
-> Netlink PID on which to send this packet.  This allows us to send
-> packets from the same traffic flow through the same handler.
->
-> The handler will process the packet, install required flow into the
-> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
->
-> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
-> recirculation action that will pass the (likely modified) packet
-> through the flow lookup again.  And if the flow is not found, the
-> packet will be sent to userspace again through another MISS upcall.
->
-> However, the handler thread in userspace is likely running on a
-> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
-> in the syscall context of that thread.  So, when the time comes to
-> send the packet through another upcall, the per-CPU dispatch will
-> choose a different Netlink PID, and this packet will end up processed
-> by a different handler thread on a different CPU.
->
-> The process continues as long as there are new recirculations, each
-> time the packet goes to a different handler thread before it is sent
-> out of the OVS datapath to the destination port.  In real setups the
-> number of recirculations can go up to 4 or 5, sometimes more.
->
-> There is always a chance to re-order packets while processing upcalls,
-> because userspace will first install the flow and then re-inject the
-> original packet.  So, there is a race window when the flow is already
-> installed and the second packet can match it and be forwarded to the
-> destination before the first packet is re-injected.  But the fact that
-> packets are going through multiple upcalls handled by different
-> userspace threads makes the reordering noticeably more likely, because
-> we not only have a race between the kernel and a userspace handler
-> (which is hard to avoid), but also between multiple userspace handlers.
->
-> For example, let's assume that 10 packets got enqueued through a MISS
-> upcall for handler-1, it will start processing them, will install the
-> flow into the kernel and start re-injecting packets back, from where
-> they will go through another MISS to handler-2.  Handler-2 will install
-> the flow into the kernel and start re-injecting the packets, while
-> handler-1 continues to re-inject the last of the 10 packets, they will
-> hit the flow installed by handler-2 and be forwarded without going to
-> the handler-2, while handler-2 still re-injects the first of these 10
-> packets.  Given multiple recirculations and misses, these 10 packets
-> may end up completely mixed up on the output from the datapath.
->
-> Let's allow userspace to specify on which Netlink PID the packets
-> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
-> This makes it possible to ensure that all the packets are processed
-> by the same handler thread in the userspace even with them being
-> upcalled multiple times in the process.  Packets will remain in order
-> since they will be enqueued to the same socket and re-injected in the
-> same order.  This doesn't eliminate re-ordering as stated above, since
-> we still have a race between kernel and the userspace thread, but it
-> allows to eliminate races between multiple userspace threads.
->
-> Userspace knows the PID of the socket on which the original upcall is
-> received, so there is no need to send it up from the kernel.
->
-> Solution requires storing the value somewhere for the duration of the
-> packet processing.  There are two potential places for this: our skb
-> extension or the per-CPU storage.  It's not clear which is better,
-> so just following currently used scheme of storing this kind of things
-> along the skb.  We still have a decent amount of space in the cb.
->
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Thanks for working on fixing this, and for the detailed explanation!
-
-Acked-by: Eelco Chaudron <echaudro@redhat.com>
-
+Konrad
