@@ -1,136 +1,302 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE98D252906;
-	Fri,  4 Jul 2025 04:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F22248880;
+	Fri,  4 Jul 2025 04:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751603025; cv=none; b=dZq99vBxXm5yjaKCzuSK6Z/SxZPgucgJWEN07jajBIKTZ7+Fo4a6AdSK2N2UlLBPYDruxsCTvUjkkFuFAnh/ko9jHJ3anzO5aqNcpTDvRYcSxzxsBjYLluNSxtiwV6llTLBiK0L3HTnDJchTVWDaSc9LC74axiCJ9Tu3vDQdCdI=
+	t=1751603026; cv=none; b=DRBnEaC1SSoVHVB52QozWHC1VyBbqj7COUxNwEUqKHy93L8rxWtn3vZAFCbGpU/2222dvCO3vT+LjcITB/gr4LE5EGRwWXuqs0nZr1m95PbboS2t/ifbPxAlWFhRNkDcMbisYQMah/mz5D8ZA7uq4jkvAlg7TN4J6Z77AVJZyxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751603025; c=relaxed/simple;
-	bh=OvxNdnQ74uQ8nHm62YANOFxLGZf31u+IHThS/kjFuPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t0NHVeX+OprMzYmLOs1VXDfGchJqSvwR7YanGPFKfZlczipua2tfqOO7Fa7Np8HNDeCmIWA4jDGCJd2jPgiuZ7Kp3c1j5i4TlzJnyLY/9R2jE+APPG3c2pesyck07R43k2xqUYZQ6ToqHduBqyUFt/MVW1eU49+VIjZZAWELOFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BHwWAbh/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751603026; c=relaxed/simple;
+	bh=7hLKbUN5kQeQK56uPMIyZTaySLLTjyeQiMgA6j/1jP8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RHD04ry8Z5C9o2ilFVnGSi3NLciYOE+80QYc9e9H3JBa6WhxQtzeA/OpAl/Wb4OoDrFH7DK0pMXC23xtxgfiAGa/lBj66d+Ykd/5tveB/KD0SsMBKJBuIAGq8VrYW9mPzn9SEsRNa5ICJo/Bmk9b1EIHjyI600Caog2WC9nLnGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fVNmpjXb; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BHwWAbh/"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563HC8Ol032128;
-	Fri, 4 Jul 2025 04:23:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s0445/eYFRFumWInKkw8yHbZRIG87CvsShAGp/8DDfM=; b=BHwWAbh/GnAh1N3r
-	pYeRrs24JxXmThQAVOIb/3QJKh0s9o2mq8p0wBl72lny316AGfDvK4jFF7ICriru
-	ehDFxdpzrBYH0YIuHF27Nl2aHnI16bbQ38zCjJvE3MTZwewYqUOQaJFOU+925nHr
-	MzuYfVoUn57pOoLT/zrIc0drSJc7sQm+NroHNNn8Qqv87YgX6XLJAxY6dcHrW6ge
-	GPWYWMIwKWwnnfhZAlMYcKyLAs0Qcn1wobqhe3PZb/UVZZFhsWfio6bZTNCrjdZV
-	b/1YK1y+VoI1ONex46XReZde2e28PL5ISwXEAxV9Z8HG29iLxhJpmZd4Rh4j8K+O
-	VP33KQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kjspr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 04:23:17 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5644NGBL014989
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 04:23:16 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
- 2025 21:23:13 -0700
-Message-ID: <8e82f971-8a1f-45c9-8f8a-9ef17f8c1a70@quicinc.com>
-Date: Fri, 4 Jul 2025 09:52:45 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fVNmpjXb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751603023; x=1783139023;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7hLKbUN5kQeQK56uPMIyZTaySLLTjyeQiMgA6j/1jP8=;
+  b=fVNmpjXbv68Vm8Z+ocj5BlFZKdP4/0MV2FZSRIUbvkW7+Q96Zuq0G9Tt
+   7RxA0fRKX1JUGOyRGRz41wm08RQOnxnEF3w2THLqMRBif2gkkcnhVu/jp
+   eEp4prZxOfJFXR1QPzs8RLzab/zjh+qLm4TyfiMeHo4WVnBhuHMx9suY3
+   Sew3Pol64XUx77p2ZwhB/i8MmJs44DNE7fI1a7CUiaDadj1QhWaqaP++k
+   LcI5mcAmvj0zgL0woJPG4j5UtybEG6yIIqMGjUjmgtDwY/v3wQtiXRtMa
+   xT2j44pEobXIfL0mUglUBrDK79qYksI6CZIQrEXOEJ4wHWZtRJUh/PuEm
+   A==;
+X-CSE-ConnectionGUID: IA72LfnOQqua9GMmW3WZoA==
+X-CSE-MsgGUID: /IUcJfU+SRyx5GMSxhCCyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53909210"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="53909210"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 21:23:27 -0700
+X-CSE-ConnectionGUID: GjbEcBklR36CThGPEXY4DQ==
+X-CSE-MsgGUID: VbYWktfqQmWWPuf0NL91CA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="153968721"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by orviesa006.jf.intel.com with ESMTP; 03 Jul 2025 21:23:27 -0700
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	senozhatsky@chromium.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com,
+	vinicius.gomes@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v10 20/25] mm: zswap: Move the CPU hotplug procedures under "pool functions".
+Date: Thu,  3 Jul 2025 21:23:18 -0700
+Message-Id: <20250704042323.10318-21-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250704042323.10318-1-kanchana.p.sridhar@intel.com>
+References: <20250704042323.10318-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 2/2] scsi: ufs: qcom: Enable QUnipro Internal Clock
- Gating
-To: Avri Altman <Avri.Altman@sandisk.com>,
-        "mani@kernel.org"
-	<mani@kernel.org>,
-        "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>,
-        "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
-        "konrad.dybcio@oss.qualcomm.com" <konrad.dybcio@oss.qualcomm.com>
-CC: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-References: <20250702151441.8061-1-quic_nitirawa@quicinc.com>
- <20250702151441.8061-3-quic_nitirawa@quicinc.com>
- <PH7PR16MB61965FA0A8DFB0877CE51690E543A@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <PH7PR16MB61965FA0A8DFB0877CE51690E543A@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=68675735 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
- a=_CqmqpiUMaDpWP_MQkcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDAzMCBTYWx0ZWRfX1rVDcQz/8tkk
- t2bHvTp1GVrWqn612/I6Wwc/hSj9281TBi+8HkNODnfutSOVcnoVFVlLAOzpyZNc4jxWBJZdrtY
- i0DQiWc2qUP0heQQt+slcFNc+VdW0mjMsANIPt6CsBt1eQ6Mly7JnnFg6plSehF4RmaEl7Kdy35
- HjnsysDE474Zq853hOsk/OIwaU1nLoE3EXlZVo8J6M5d6Dbc6SVnweaIfl2U3eGuasGiJYn1S+q
- ZvqKpnZo6yxLjyWN/xtwMHiGswG+f4bWomxfyNqsZ7lCqH7aer0Hvwc7RuElvhqTr5VtQvatUri
- cpHESqj10qZA93MbXSWwKq+ctZzuJSey4Z+I7NodxYqrJHNGGsIvms7jac3Z6xDaGqg9Ndi0eIE
- O4qXW3GFPTs+AVuaghUcR+S0L8OJgm94XcpVtxZRItFCQIpsUgbCK0cYji6C020VoPCQiziZ
-X-Proofpoint-ORIG-GUID: Bu5w3aQGuQdg0GM0yBlkBtd4UbhL-wkU
-X-Proofpoint-GUID: Bu5w3aQGuQdg0GM0yBlkBtd4UbhL-wkU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_01,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 clxscore=1011 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040030
+Content-Transfer-Encoding: 8bit
 
+This patch merely moves zswap_cpu_comp_prepare() and
+zswap_cpu_comp_dead() to be in the "pool functions" section because
+these functions are invoked upon pool creation/deletion.
 
+Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+---
+ mm/zswap.c | 188 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 94 insertions(+), 94 deletions(-)
 
-On 7/3/2025 12:13 PM, Avri Altman wrote:
->> +/**
->> + * ufshcd_dme_rmw - get modify set a dme attribute
->> + * @hba - per adapter instance
->> + * @mask - mask to apply on read value
->> + * @val - actual value to write
->> + * @attr - dme attribute
->> + */
->> +static inline int ufshcd_dme_rmw(struct ufs_hba *hba, u32 mask,
->> +                                u32 val, u32 attr) {
->> +       u32 cfg = 0;
->> +       int err = 0;
->> +
->> +       err = ufshcd_dme_get(hba, UIC_ARG_MIB(attr), &cfg);
->> +       if (err)
->> +               goto out;
->> +
->> +       cfg &= ~mask;
->> +       cfg |= (val & mask);
->> +
->> +       err = ufshcd_dme_set(hba, UIC_ARG_MIB(attr), cfg);
->> +
->> +out:
->> +       return err;
->> +}
-> Might be useful to share this with other vendors as well. Maybe in ufshcd-priv.h ?
-Sure Avri, I'll move this to ufshcd-priv.h
-
-> 
-> Thanks,
-> Avri
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 3c0fd8a137182..3538ecaed5e16 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -248,6 +248,100 @@ static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
+ **********************************/
+ static void __zswap_pool_empty(struct percpu_ref *ref);
+ 
++static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
++{
++	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
++	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++	struct crypto_acomp *acomp = NULL;
++	struct acomp_req *req = NULL;
++	u8 *buffer = NULL;
++	int ret;
++
++	buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
++	if (!buffer) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
++	if (IS_ERR(acomp)) {
++		pr_err("could not alloc crypto acomp %s : %ld\n",
++				pool->tfm_name, PTR_ERR(acomp));
++		ret = PTR_ERR(acomp);
++		goto fail;
++	}
++
++	req = acomp_request_alloc(acomp);
++	if (!req) {
++		pr_err("could not alloc crypto acomp_request %s\n",
++		       pool->tfm_name);
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	/*
++	 * Only hold the mutex after completing allocations, otherwise we may
++	 * recurse into zswap through reclaim and attempt to hold the mutex
++	 * again resulting in a deadlock.
++	 */
++	mutex_lock(&acomp_ctx->mutex);
++	crypto_init_wait(&acomp_ctx->wait);
++
++	/*
++	 * if the backend of acomp is async zip, crypto_req_done() will wakeup
++	 * crypto_wait_req(); if the backend of acomp is scomp, the callback
++	 * won't be called, crypto_wait_req() will return without blocking.
++	 */
++	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				   crypto_req_done, &acomp_ctx->wait);
++
++	acomp_ctx->buffer = buffer;
++	acomp_ctx->acomp = acomp;
++	acomp_ctx->is_sleepable = acomp_is_async(acomp);
++	acomp_ctx->req = req;
++	mutex_unlock(&acomp_ctx->mutex);
++	return 0;
++
++fail:
++	if (acomp)
++		crypto_free_acomp(acomp);
++	kfree(buffer);
++	return ret;
++}
++
++static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
++{
++	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
++	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++	struct acomp_req *req;
++	struct crypto_acomp *acomp;
++	u8 *buffer;
++
++	if (IS_ERR_OR_NULL(acomp_ctx))
++		return 0;
++
++	mutex_lock(&acomp_ctx->mutex);
++	req = acomp_ctx->req;
++	acomp = acomp_ctx->acomp;
++	buffer = acomp_ctx->buffer;
++	acomp_ctx->req = NULL;
++	acomp_ctx->acomp = NULL;
++	acomp_ctx->buffer = NULL;
++	mutex_unlock(&acomp_ctx->mutex);
++
++	/*
++	 * Do the actual freeing after releasing the mutex to avoid subtle
++	 * locking dependencies causing deadlocks.
++	 */
++	if (!IS_ERR_OR_NULL(req))
++		acomp_request_free(req);
++	if (!IS_ERR_OR_NULL(acomp))
++		crypto_free_acomp(acomp);
++	kfree(buffer);
++
++	return 0;
++}
++
+ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ {
+ 	struct zswap_pool *pool;
+@@ -818,100 +912,6 @@ static void zswap_entry_free(struct zswap_entry *entry)
+ /*********************************
+ * compressed storage functions
+ **********************************/
+-static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+-{
+-	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
+-	struct crypto_acomp *acomp = NULL;
+-	struct acomp_req *req = NULL;
+-	u8 *buffer = NULL;
+-	int ret;
+-
+-	buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
+-	if (!buffer) {
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
+-
+-	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
+-	if (IS_ERR(acomp)) {
+-		pr_err("could not alloc crypto acomp %s : %ld\n",
+-				pool->tfm_name, PTR_ERR(acomp));
+-		ret = PTR_ERR(acomp);
+-		goto fail;
+-	}
+-
+-	req = acomp_request_alloc(acomp);
+-	if (!req) {
+-		pr_err("could not alloc crypto acomp_request %s\n",
+-		       pool->tfm_name);
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
+-
+-	/*
+-	 * Only hold the mutex after completing allocations, otherwise we may
+-	 * recurse into zswap through reclaim and attempt to hold the mutex
+-	 * again resulting in a deadlock.
+-	 */
+-	mutex_lock(&acomp_ctx->mutex);
+-	crypto_init_wait(&acomp_ctx->wait);
+-
+-	/*
+-	 * if the backend of acomp is async zip, crypto_req_done() will wakeup
+-	 * crypto_wait_req(); if the backend of acomp is scomp, the callback
+-	 * won't be called, crypto_wait_req() will return without blocking.
+-	 */
+-	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+-				   crypto_req_done, &acomp_ctx->wait);
+-
+-	acomp_ctx->buffer = buffer;
+-	acomp_ctx->acomp = acomp;
+-	acomp_ctx->is_sleepable = acomp_is_async(acomp);
+-	acomp_ctx->req = req;
+-	mutex_unlock(&acomp_ctx->mutex);
+-	return 0;
+-
+-fail:
+-	if (acomp)
+-		crypto_free_acomp(acomp);
+-	kfree(buffer);
+-	return ret;
+-}
+-
+-static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
+-{
+-	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
+-	struct acomp_req *req;
+-	struct crypto_acomp *acomp;
+-	u8 *buffer;
+-
+-	if (IS_ERR_OR_NULL(acomp_ctx))
+-		return 0;
+-
+-	mutex_lock(&acomp_ctx->mutex);
+-	req = acomp_ctx->req;
+-	acomp = acomp_ctx->acomp;
+-	buffer = acomp_ctx->buffer;
+-	acomp_ctx->req = NULL;
+-	acomp_ctx->acomp = NULL;
+-	acomp_ctx->buffer = NULL;
+-	mutex_unlock(&acomp_ctx->mutex);
+-
+-	/*
+-	 * Do the actual freeing after releasing the mutex to avoid subtle
+-	 * locking dependencies causing deadlocks.
+-	 */
+-	if (!IS_ERR_OR_NULL(req))
+-		acomp_request_free(req);
+-	if (!IS_ERR_OR_NULL(acomp))
+-		crypto_free_acomp(acomp);
+-	kfree(buffer);
+-
+-	return 0;
+-}
+-
+ static struct crypto_acomp_ctx *acomp_ctx_get_cpu_lock(struct zswap_pool *pool)
+ {
+ 	struct crypto_acomp_ctx *acomp_ctx;
+-- 
+2.27.0
 
