@@ -1,112 +1,263 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F61309DCE;
-	Fri,  4 Jul 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF90C30E857;
+	Fri,  4 Jul 2025 16:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751645442; cv=none; b=lM9SeU1a9sMx4UheZmddbYJMTA4SJgsSIlYstwR+2rQNqZZzzxQNVbjGel59BtQmqxcdoP6YTVB6XuFKZ9316/pUTE796iVYZke/o1pZGCS1wuOltV7lwskWggihPsZTnCoTba8yH2+4fLSDWwMX8MDELDBY0t3XICLysHhp5I0=
+	t=1751645461; cv=none; b=fB1j/z9BCd6qjF/v1CM9hb77hn8oRgQb5bnCTF4RpkYP+TF+zYVkN61C+RqfXME78jWn2GzDXRU/ZhaVBWrLAYcJVbAmyyZ3pu8+UhYZoYthLS1wjHhxpFrl0VU/lG9wbTl1xFnAan2IeuU75CwAvU93DH89hQ3969zl+gaFX3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751645442; c=relaxed/simple;
-	bh=zde6HvegWQmvNgresB64/ug3JS71JPrGTApPR2NkE/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ep3sbiXE2h+s6cVd33OYHZccrmkv2dwl8Iz3z7FBVq71SDlYCCZ8GKp00wIIgRDVSs/OR1VPlIQOG+734xjdK2WzFQ5umjpCHcNXng15Hwzoq06b1AJaTNFl240BDuBtPULCkakiiPFByrJjUPAorrXEjOKXThbTZH1HnbloK8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bSRtQBSq; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
+	s=arc-20240116; t=1751645461; c=relaxed/simple;
+	bh=cwdZtGz3IXQ1EG/p34K3KVA9kUdd0ZAHJagpVOIanHA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VGYHwMPGFZl0og21crruIXT+By+fjiuPYm+CmhFOK1MHcaJm/uv5vMRHNuyaYSNFfCnzL1XAbSakxvzVqOqmP8GoPmIwq5HeXFK/YJHiYOqnAnW/iabKzyiYqQBckGrv67/gC/ArMsGa4LaGvyWsoNJWjY697DK3giIQ0csmnvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2CTRHV3; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bSRtQBSq"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 2F61B1400380;
-	Fri,  4 Jul 2025 12:10:40 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Fri, 04 Jul 2025 12:10:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751645440; x=1751731840; bh=89R2ywVdq4YId9PTX8Syu2nc1CBcPDy/wRG
-	poeflJto=; b=bSRtQBSqvZ/yCBLMKs9JNvF+XuW3xiTSLQpVPladobN53QFT6QA
-	nMk/x1HfLGJYOE9065AQCNIKzmTOmevZmcjpg0jpwJqlZcGNgzvqLGeOUyKk+EBW
-	vPmSPyaJ8F/J7kdRxIHWxlxOL7gkMKgePFDTXxgmjQzRGlA/+N7tnNydwGPnL6n9
-	onnC9E6acteBSqGunS3SusCXZFbLxNoaggAc9yqpYqb3q3bibB32F3FIC0ajLg/3
-	PYNjKV1N9j0GT4YE6kPanXcB1UtZlmGph9havX3NAQhKpvOvZ7tFYlp7Y2RSkSIJ
-	xKKQLPYuhiOTnm+yw0N4fvf8Xp/v6pbuCbA==
-X-ME-Sender: <xms:__xnaAE7hDwZ0u9-eQeMtGmKTFkqDrqlrW4INhv2kCjwH0It4GvA1Q>
-    <xme:__xnaJUhMhwik_H73ieBv78yRoN9uiXxq2w_FZ9RY2hk_gvSzogL9Qtq-FTtE-L7g
-    mW2NX9kr3QC1cM>
-X-ME-Received: <xmr:__xnaKKCQC7HNJvKp8iw6PrbLUgjRnyVtPIouIY_8PUhFRk2y111393RDL5m1DBt3PaOjwJ00GFFd9ByZUzEkB9ZAKJZPg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeeitdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfutghh
-    ihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtthgvrh
-    hnpedvudefveekheeugeeftddvveefgfduieefudeifefgleekheegleegjeejgeeghfen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughosh
-    gthhesihguohhstghhrdhorhhgpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhht
-    phhouhhtpdhrtghpthhtohepfigrnhhglhhirghnghejgeeshhhurgifvghirdgtohhmpd
-    hrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegv
-    ughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghp
-    thhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdgrrh
-    hinhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepughsrghhvghrnheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohephihuvghhrghisghinhhgsehhuhgrfigvihdrtghomh
-X-ME-Proxy: <xmx:__xnaCGXENXOf1mctvSOHpUaNJtbsTTFlneLjYwJT8OeMVsrlMRTjw>
-    <xmx:__xnaGXDh8wBIioG3yLGF5eg-f4rKV2Tmc4_tL26sg4mqzYuTIvSAw>
-    <xmx:__xnaFOMXUfN_gcaLJshy_GWFpkuDD1mU8SKlKwvStupbhvPxG9T_w>
-    <xmx:__xnaN3iCDiLTs6ZTkvvAWsK3rP4W5BNjs_KAo4CzLRVL4YUd482gQ>
-    <xmx:AP1naO4svtiqx9phyOUUPjB8XlOUBwScG8tDDyoNeDo4hZ9hserUIBPb>
-Feedback-ID: i494840e7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Jul 2025 12:10:39 -0400 (EDT)
-Date: Fri, 4 Jul 2025 19:10:37 +0300
-From: Ido Schimmel <idosch@idosch.org>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, alex.aring@gmail.com,
-	dsahern@kernel.org, yuehaibing@huawei.com,
-	zhangchangzhong@huawei.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-wpan@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: replace ND_PRINTK with dynamic debug
-Message-ID: <aGf8_dnXpnzCutA7@shredder>
-References: <20250701081114.1378895-1-wangliang74@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2CTRHV3"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae0bf1616b9so20265366b.0;
+        Fri, 04 Jul 2025 09:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751645458; x=1752250258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TWKv6PM/BcPQ/i8arO/1LhjBpgoq9M2qMlX7Y0R2Fpg=;
+        b=L2CTRHV3nvPBMngPfEFbjLg1w6ft5rG2kAth2sR/RMVypRS1Q8UNj7Wwqw85zQNkn2
+         0/gWoXyRxKG+SHIM+edn29FaCW94r+zsb4L7OZHHgYx3G+7zMVd8bQab2kcNERZUjD+U
+         tMpI2EW7o33jaRyMUBg7Pn/VHjqq9rdyDkaWSZR/th0OTOCPMm4lbX88VDwkDeg3Bdke
+         /OyNOASVZo2B+ZEZXUOswfDssvQlPrzha16gJWeEsXLGrzfX8wfFISb4JHvTlEw3u4g7
+         aOqESNeB0wU6y/IZpa2IlaNcId3LMOLGbkCx99ANJYxufzuCnYLa3yNxiBJL6oxtoipS
+         QIiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751645458; x=1752250258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TWKv6PM/BcPQ/i8arO/1LhjBpgoq9M2qMlX7Y0R2Fpg=;
+        b=gWb338Q8qsUO/Z9Fy9CPzH+ALrK4gCv37viNFmI6xTcWe0PYjRVRHlecWX5oimg7tW
+         qdqhqlTcNd+xsQChVT828WEFpCCn5vfL+NWCpXVcSajXwtcz/kIFsSQMcaSQC7LMQFiX
+         YsvtlT+aRKBP/+iniSms/DUgqItWuGwBiuuU48uYHnGvXnFiuGFF9JZHaY0m2VZbn0kz
+         t+PzaDcs+wMRHLAhRka5AkD31xLMOxQonexkYstO00yr/XoPuLk8bVav69/yy0fcMI6D
+         TKBSJ+CNj0FCfyQJynrUQK/2rRRQjyrKFTFp2N06MI1nPMr3Fw6fWnNsH7S4fKB11KP4
+         W9qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9KFgDd+hWFPem9wgk+VjgjpfLdlTu81D4kZe8IOprGWIcewOah2RjOxDd8Lh0lUYSfbjEnkYXxplDKq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYky1WyWjDjSv+TX4cCsXoLAJy+jPiBrWcA/dCxo3agQAdoEVE
+	xISW70znWGtIb8UGkW7zzSMrrfD+m1+vbZ3aQW5AyjdVHJo1bWhhYYAo
+X-Gm-Gg: ASbGncuvssHQ51q7ZtqT0syfPePvAieWphXWgAOMFuNmwX1KByaOBRLZm7q7FtVx+FN
+	N+o68md989VXA8KreWCkUDVAi6wyB+MSkBsLsVFzidRHXk11crf4xmshIo6zbpMw2uDAU1lYtAI
+	9cdwZyW8Z+txXrvllXOLlSRUk3XdBel6z+2kZSv6CNTnN6+usmN5mNhnYvbenDaZl+tTRiXEO3v
+	bgK6n01Z/Eogi4SxNXpVBsH88ayTAkJHVp5Rb6lyQKWK3rd7lPFu3iQGFwloiAh7nH0XSZH1sse
+	qnsnCPFgTWzC7lzp0n11fhmhIAFXr9HhrDFkKkIWvavW106IUcsMPzqNFVdJ/6zGsOgwax8GQlW
+	07LVq+bpeJhZjx61SZXi2GO/qjWVR2bdn
+X-Google-Smtp-Source: AGHT+IEi7/w7Pg0qVqgIrY+90Z1GOtJ0vUjMDQm+fZE47PMuaudthmL0Fjysm83XElDu8wKctqr5kA==
+X-Received: by 2002:a17:906:f583:b0:ade:40ed:9f3e with SMTP id a640c23a62f3a-ae3fbe6027amr111119666b.0.1751645457649;
+        Fri, 04 Jul 2025 09:10:57 -0700 (PDT)
+Received: from localhost.localdomain ([41.37.222.172])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b04d30sm192940066b.133.2025.07.04.09.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 09:10:57 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	andy@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	dan.carpenter@linaro.org,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v3] staging: media: atomisp: Remove custom sysfs attributes from atomisp_drvfs.c
+Date: Fri,  4 Jul 2025 19:10:51 +0300
+Message-Id: <20250704161051.16733-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701081114.1378895-1-wangliang74@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 04:11:14PM +0800, Wang Liang wrote:
-> ND_PRINTK with val > 1 only works when the ND_DEBUG was set in compilation
-> phase. Replace it with dynamic debug. Convert ND_PRINTK with val <= 1 to
-> net_{err,warn}_ratelimited, and convert the rest to net_dbg_ratelimited.
+Continue the cleanup of the AtomISP driver as discussed with Hans and Andy
+in [1].
 
-One small comment below
+Tackle TODO item: "Remove custom sysfs files created by atomisp_drvfs.c":
+- Remove the sysfs attributes `dbglvl`, `dbgfun`, and `dbgopt`.
+- Delete their associated show/store handler functions.
+- Remove the corresponding attribute group definitions.
+- Keep `dbg_attr_groups[]` as an empty array to preserve compatibility.
 
-[...]
+Link: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org/ [1]
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+v3:
+- fix style warning
+v2:
+- modify the reference link line.
 
-> @@ -751,9 +747,8 @@ static void ndisc_solicit(struct neighbour *neigh, struct sk_buff *skb)
->  	probes -= NEIGH_VAR(neigh->parms, UCAST_PROBES);
->  	if (probes < 0) {
->  		if (!(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
-> -			ND_PRINTK(1, dbg,
-> -				  "%s: trying to ucast probe in NUD_INVALID: %pI6\n",
-> -				  __func__, target);
-> +			net_warn_ratelimited("%s: trying to ucast probe in NUD_INVALID: %pI6\n",
-> +					     __func__, target);
+ .../staging/media/atomisp/pci/atomisp_drvfs.c | 138 ------------------
+ 1 file changed, 138 deletions(-)
 
-Without getting into a philosophical discussion about the appropriate
-log level for this message, the purpose of this patch is to move
-ND_PRINTK(val > 1, ...) to net_dbg_ratelimited(), but for some reason
-this hunk promotes an existing net_dbg_ratelimited() to
-net_warn_ratelimited(). Why not keep it as net_dbg_ratelimited()?
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+index 31c82c3c0d33..c25fd3ff003d 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+@@ -1,9 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Support for atomisp driver sysfs interface
+- *
+- * Copyright (c) 2014 Intel Corporation. All Rights Reserved.
+- */
 
->  		}
->  		ndisc_send_ns(dev, target, target, saddr, 0);
->  	} else if ((probes -= NEIGH_VAR(neigh->parms, APP_PROBES)) < 0) {
+ #include <linux/device.h>
+ #include <linux/err.h>
+@@ -16,140 +11,7 @@
+ #include "hmm/hmm.h"
+ #include "ia_css_debug.h"
+
+-#define OPTION_BIN_LIST			BIT(0)
+-#define OPTION_BIN_RUN			BIT(1)
+-#define OPTION_VALID			(OPTION_BIN_LIST | OPTION_BIN_RUN)
+-
+-/*
+- * dbgopt: iunit debug option:
+- *        bit 0: binary list
+- *        bit 1: running binary
+- *        bit 2: memory statistic
+- */
+-static unsigned int dbgopt = OPTION_BIN_LIST;
+-
+-static inline int iunit_dump_dbgopt(struct atomisp_device *isp,
+-				    unsigned int opt)
+-{
+-	int ret = 0;
+-
+-	if (opt & OPTION_VALID) {
+-		if (opt & OPTION_BIN_LIST) {
+-			ret = atomisp_css_dump_blob_infor(isp);
+-			if (ret) {
+-				dev_err(isp->dev, "%s dump blob infor err[ret:%d]\n",
+-					__func__, ret);
+-				goto opt_err;
+-			}
+-		}
+-
+-		if (opt & OPTION_BIN_RUN) {
+-			if (isp->asd.streaming) {
+-				atomisp_css_dump_sp_raw_copy_linecount(true);
+-				atomisp_css_debug_dump_isp_binary();
+-			} else {
+-				ret = -EPERM;
+-				dev_err(isp->dev, "%s dump running bin err[ret:%d]\n",
+-					__func__, ret);
+-				goto opt_err;
+-			}
+-		}
+-	} else {
+-		ret = -EINVAL;
+-		dev_err(isp->dev, "%s dump nothing[ret=%d]\n", __func__, ret);
+-	}
+-
+-opt_err:
+-	return ret;
+-}
+-
+-static ssize_t dbglvl_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	unsigned int dbglvl = ia_css_debug_get_dtrace_level();
+-
+-	return sysfs_emit(buf, "dtrace level:%u\n", dbglvl);
+-}
+-
+-static ssize_t dbglvl_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	unsigned int dbglvl;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &dbglvl);
+-	if (ret)
+-		return ret;
+-
+-	if (dbglvl < 1 || dbglvl > 9)
+-		return -ERANGE;
+-
+-	ia_css_debug_set_dtrace_level(dbglvl);
+-	return size;
+-}
+-static DEVICE_ATTR_RW(dbglvl);
+-
+-static ssize_t dbgfun_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	unsigned int dbgfun = atomisp_get_css_dbgfunc();
+-
+-	return sysfs_emit(buf, "dbgfun opt:%u\n", dbgfun);
+-}
+-
+-static ssize_t dbgfun_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	struct atomisp_device *isp = dev_get_drvdata(dev);
+-	unsigned int opt;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &opt);
+-	if (ret)
+-		return ret;
+-
+-	return atomisp_set_css_dbgfunc(isp, opt);
+-}
+-static DEVICE_ATTR_RW(dbgfun);
+-
+-static ssize_t dbgopt_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	return sysfs_emit(buf, "option:0x%x\n", dbgopt);
+-}
+-
+-static ssize_t dbgopt_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	struct atomisp_device *isp = dev_get_drvdata(dev);
+-	unsigned int opt;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &opt);
+-	if (ret)
+-		return ret;
+-
+-	dbgopt = opt;
+-	ret = iunit_dump_dbgopt(isp, dbgopt);
+-	if (ret)
+-		return ret;
+-
+-	return size;
+-}
+-static DEVICE_ATTR_RW(dbgopt);
+-
+-static struct attribute *dbg_attrs[] = {
+-	&dev_attr_dbglvl.attr,
+-	&dev_attr_dbgfun.attr,
+-	&dev_attr_dbgopt.attr,
+-	NULL
+-};
+-
+-static const struct attribute_group dbg_attr_group = {
+-	.attrs = dbg_attrs,
+-};
+
+ const struct attribute_group *dbg_attr_groups[] = {
+-	&dbg_attr_group,
+ 	NULL
+ };
+--
+2.25.1
+
