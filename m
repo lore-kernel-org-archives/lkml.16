@@ -1,72 +1,139 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF6D1E47AD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C161FC8;
+	Fri,  4 Jul 2025 03:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751598006; cv=none; b=Px413mmjD7lKQ6ahVlXUM9EYb8brjrOaup00Cmmgx/CBKMYFWsK/px+e79QtBnyGnerFzgJEcT4yezwIC9wEtHZ8SSdPnViiP13AYXEzrpSx1drXbI3XGHTM7iLYj2QqAZWXOLymrSYpOQnSoM6TyVGuxgIpYzM4WuVdxR6MxoE=
+	t=1751598185; cv=none; b=NC0eWgNIUCyOLVksaeYmECtmewpbTDM9/2EDUx1reIz/MUw1NJSZCLIaVFuNmSV/efnU5cUIyr9PISLr9dTjwD6aZEe68D2qumMryO27+l8zgV0Fkq3jLxDDUSiDelA787AdQ1PaV7u0gbD2+k8WHgKnuwKbGhpLsthaLuAeS5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751598006; c=relaxed/simple;
-	bh=P7iuf6Vuzs0HqVct7rJvJNd10fBlI2CBO3FneganoLI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=shtls8+hAzc4YfoVZpxNmIooYWLLHKmzgSN7xFUGeltrXjsuuMBQ60bMeTKapMt8UY/ZVpaLtO9A7oZUa9+1+lIwN5OP5iJ9GiYaaE/QMFQgs6PUm2TkZTxTq57Yr1Vy+ZUS81AgblxqBOzmJ3wG0YnYEiIN7RAnkJA5E3u8LZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3de0dc57859so6902735ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 20:00:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751598003; x=1752202803;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yyLvbnbjvJWW3fNc+1CjVEn67gFNLn2pGzW7dRoqy7s=;
-        b=w1ibI1TqwbtI6liT09T3K6VRZJFSAXx88zwNWL72ChUOpSAnUZVQio7w5IxnjkjcxG
-         3Rzxz89ax+VSHkQo1Knl9mnL9Kj0cTgTGSgi7XgM8YL587Vim3HMoAeJ5jTpZFZmFNNa
-         dbJE7IIJJJYeV4NrUmQeqmHTDCBVa4Z4wcWG9wFbouUuAmTvZzF2jjpI5qVGPxn4sqWT
-         +bRzfQVEC2lvLMB9b2e1qzwGn2o6h9aDiUo1eUjGzsvHMEWMeBSR5BX3MYu6Ncyictw4
-         lKPTIIJXzt0S4g3g1ldHgr++1e3DTu2l1BDqF4in6tx4idvhxJevLeO1vIR+hhH+kF3/
-         oahQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbDseLxc4B6wpTPVCiesbJeFAlHcoQPYOG55nCTeqreqfHtAIQ27/xMnHdhXhrGSV7VB8nVkrjJ2ve9/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymSmgdMJCfir8N4W5smf6k1MqMNwnMsiOfIQCdDwkH8zYV82Ao
-	PlBFzjSzc6I0gzRw6QX0dqSNYkIO8FWAm//EWivX/qlU1hBI240cV+sPk5kijdKJ0/c1Ajbo4J3
-	76YUknNhJBAAe29A/RQ312B3pwSqp1oFRb+CueFMXYlp4kII2O4HR6WMY9GI=
-X-Google-Smtp-Source: AGHT+IEv6EdNRkjU9TwfOY2EM4PWCKqWakIue/0+Ods3XdaEfCecpi5QU10Wg9C+io/RnY00FFtQXMl17UkawHx+9LyuoFVzJdvF
+	s=arc-20240116; t=1751598185; c=relaxed/simple;
+	bh=ZgHTbRTeGiZ8EpW6hO1ZtyTKBA/nk9NpvvOOIBJgvys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bybABHj/6k5UJIHu+q3uknCsENpMMt+Fee2VPiojXTaONdgLIkBag82mmf99jJcVZb+VO+Y/fEQvVEKJ/uPdwkwKx96jFwUJaY2+ofhtfHUTqU7alXt3rI+dSpcIBA4cTvx+Eavc6WLxKzZOMGCulAyiHWftSC7YG/2UQTujR/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bYJNH3pqTzKHMg5;
+	Fri,  4 Jul 2025 11:02:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id ECD851A0BA8;
+	Fri,  4 Jul 2025 11:02:53 +0800 (CST)
+Received: from [10.67.109.79] (unknown [10.67.109.79])
+	by APP3 (Coremail) with SMTP id _Ch0CgCnBiRcRGdobx9aAg--.19058S2;
+	Fri, 04 Jul 2025 11:02:53 +0800 (CST)
+Message-ID: <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
+Date: Fri, 4 Jul 2025 11:02:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1f12:b0:3df:3ab2:cc7c with SMTP id
- e9e14a558f8ab-3e1355658bemr7546895ab.13.1751598003541; Thu, 03 Jul 2025
- 20:00:03 -0700 (PDT)
-Date: Thu, 03 Jul 2025 20:00:03 -0700
-In-Reply-To: <20250704022016.2331-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686743b3.a70a0220.29cf51.000e.GAE@google.com>
-Subject: Re: [syzbot] [net?] kernel BUG in filemap_fault (2)
-From: syzbot <syzbot+263f159eb37a1c4c67a4@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
+ frozen
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: peterz@infradead.org, rafael@kernel.org, pavel@kernel.org,
+ timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
+References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
+ <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCnBiRcRGdobx9aAg--.19058S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1fZw47Aw4UJryxWw1fCrg_yoW8trWDpr
+	WrWrWUG3Z7trs2yrnrXw4vvws8K392vF4UGrykCrWxJa1YqasIgr4Iy3yY9F1jvryxJrnF
+	qa1Yv3s3Aa1UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-by: syzbot+263f159eb37a1c4c67a4@syzkaller.appspotmail.com
-Tested-by: syzbot+263f159eb37a1c4c67a4@syzkaller.appspotmail.com
+On 2025/7/4 1:01, Michal Koutný wrote:
+> Hello Ridong.
+> 
+> On Thu, Jul 03, 2025 at 01:34:27PM +0000, Chen Ridong <chenridong@huaweicloud.com> wrote:
+>> 2. The cgroup freezer state changes to FROZEN (Can be triggered by reading
+>>    freezer.state).
+> /o\
+> 
+>> 3. freezing() is called and returns false.
+> 
+> I can see how this can happen because freezer_lock != freezer_mutex.
+> 
+>> As a result, the task may escape being frozen when it should be.
+>>
+>> To fix this, move the setting of the FROZEN flag to occur just before
+>> schedule(). This ensures the flag is only set when we're certain the
+>> task must be switched out.
+> 
+> Is it sufficient? (If the task is spuriously woken up, the next
+> iteration in that refrigerator loop would be subject to same race, no?)
+> 
+> Thanks,
+> Michal
 
-Tested on:
+Hi, Michal:
 
-commit:         4c06e63b Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13768582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6ddf055b5c86f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=263f159eb37a1c4c67a4
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=169df770580000
+Regarding your question: Did you mean that the task was frozen, received
+another signal to wake up, but should have remained frozen instead of
+entering the running state?
 
-Note: testing is done by a robot and is best-effort only.
+For this scenario, the solution I've found is that the task can only
+break out of the frozen state when its cgroup is thawed. The code
+modification would look like the following, and we'll need to add the
+cgroup_thawed(p) function:
+
+--- a/kernel/freezer.c
++++ b/kernel/freezer.c
+@@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
+        for (;;) {
+                bool freeze;
+
+-               raw_spin_lock_irq(&current->pi_lock);
+-               WRITE_ONCE(current->__state, TASK_FROZEN);
+-               /* unstale saved_state so that __thaw_task() will wake
+us up */
+-               current->saved_state = TASK_RUNNING;
+-               raw_spin_unlock_irq(&current->pi_lock);
+-
+                spin_lock_irq(&freezer_lock);
+-               freeze = freezing(current) && !(check_kthr_stop &&
+kthread_should_stop());
++               freeze = (freezing(current) && !cgroup_thawed(current))
++                        && !(check_kthr_stop && kthread_should_stop());
+                spin_unlock_irq(&freezer_lock);
+
+                if (!freeze)
+                        break;
+
++               raw_spin_lock_irq(&current->pi_lock);
++               WRITE_ONCE(current->__state, TASK_FROZEN);
++               /* unstale saved_state so that __thaw_task() will wake
+us up */
++               current->saved_state = TASK_RUNNING;
++               raw_spin_unlock_irq(&current->pi_lock);
++
+
+I'd welcome any suggestions for better solutions to this problem.
+
+Best regards,
+Ridong
+
