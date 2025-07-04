@@ -1,136 +1,128 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE672D9783
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DC32D9EED
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632515; cv=none; b=YBca9mqvqDRn4pXLHGnT6s15tjVMUx8YSOugpnfxgeKqYusrQHHOyQ4VVe9HPZ/SePoiATRKQZxjk3d+UiHhluqWh/HfnqGMGvN1S2r8l1A7BWkquOmy0udIUkl42dP91kwc8kpCYyml8UpuwgXNAayAy8HslRRXC+7YIQF4A6g=
+	t=1751632522; cv=none; b=ix1QJNMrQr+KimVGMPwqLP/B4w776qaeTO3620aj/22S24B6BwRxQg2TPVE1L2VeVLTdmnmQ/J2wosA7dcspm7wXtnqlG6F6FTNPDr7VyelrBO4RAzGNe+RBfvcnhlxeAObfnFCLXzMqnNyYVaa0WT/XycDmemYAkwGWJE+kAAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632515; c=relaxed/simple;
-	bh=1EEsk3CakOIK6uLy9xJ0+8ZrzcRqWqydDglc717WYjg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QZp6nMQAOxWgBW45OZUnZ6nE1obCdCa5DW1HS3YP1oh+wlxYGkP20PIZ3jwaAyMxUh6yQhDvrxQKNWnuEd7LnTI7obwHnqEADRx11kjYU9es7u4azdEBcZcU21Iew3rysHr7G/InZaKKZG7tC+mfqIOu8rWhH0SMMqSPSw0xe2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sb3dBoLN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S4duA70Q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751632522; c=relaxed/simple;
+	bh=OH/S5Xf/akubkTB/M7c41buZiBN/xKiF0+A68b+UFO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l37Djs4Bp/7wSRflt1t8U5goKM01dCiD/nDhWfsiyWr3NPBrHr9qADvc/ypDqJ00b8lJ9PxU/8iXwxrZ/A51KGVXMWwraaHwdUlnGttTaqe0uXZHBymgEphXT09Zwrr8ojopsANz9nG2IOTHd15/vUTK/OsTIGpxD1STOdhszXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MiKl8KFx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sb3dBoLN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S4duA70Q"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751632511;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiKl8KFx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751632518;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MQ8S2P6tr58+gxioMqiPvqUsLz1lP2Wb0NQnRQjJAB8=;
-	b=Sb3dBoLNnSkyajIhodo7cj/Di50cmVQJQ6QziMvNOtfU4fjiN2J3auhKj3Taq8Ab1bYFDL
-	lVZJL6QeCpwvKZDMOnRHODSVICPS5MXo8WpX0IoK+H9pmonNPvj1JB9BzevTq3ORgSHmba
-	r1KAI7GDu1G9yh9D/lzTqmTfKPvAFiVd8cvBLP/XGTDWIqY+KqD4yPQgsoyCl4l9hP5ukf
-	wz99pIa0ZLC4dTHJYDSarIs4nEIqTViJMpGfsDQLTyGauvelgntWjjFygOLricvKifAJAG
-	NO8+RL1VU5JaqBrYo/XP3zj/flThqccCypUuGKBA96/jOHwsyO59Pe/m3+4mcg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751632511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MQ8S2P6tr58+gxioMqiPvqUsLz1lP2Wb0NQnRQjJAB8=;
-	b=S4duA70QNhQb/AOlTDxvtZ36FBu7BcQF9mVE8vZZtFhBz6yi98lXkm4DArhqMekcQRpxHI
-	cVP3cfIZpURydDDQ==
-Date: Fri, 04 Jul 2025 14:34:47 +0200
-Subject: [PATCH] um: Re-evaluate thread flags repeatedly
+	 in-reply-to:in-reply-to:references:references;
+	bh=YxNoGfTOaVX6gH5YqJOrBHs93Ad4uVvroRXTooz5cq8=;
+	b=MiKl8KFx78qiqecuXiTEfqtJmJNw50M8THHWbuIqGcwNYuxnORuxDpQKJyG2+tX8yyjTF4
+	i7y19AxjdGOwJnrXSICUcCv5idQZZZBGJg5aKro7xNpGdwQUncIpH5rs1UKNDKiFObzctN
+	JWceP7xgKkCGgUC9zgD5X7RkRhje+mk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-481-krD5i7NPMle7W_KR2lcLfQ-1; Fri,
+ 04 Jul 2025 08:35:16 -0400
+X-MC-Unique: krD5i7NPMle7W_KR2lcLfQ-1
+X-Mimecast-MFC-AGG-ID: krD5i7NPMle7W_KR2lcLfQ_1751632515
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 32D6B180136B;
+	Fri,  4 Jul 2025 12:35:15 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.42])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD18E3000218;
+	Fri,  4 Jul 2025 12:35:09 +0000 (UTC)
+Date: Fri, 4 Jul 2025 20:35:03 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ublk: speed up ublk server exit handling
+Message-ID: <aGfKd9CwU97kLyTM@fedora>
+References: <20250703-ublk_too_many_quiesce-v2-0-3527b5339eeb@purestorage.com>
+ <20250703-ublk_too_many_quiesce-v2-1-3527b5339eeb@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250704-uml-thread_flags-v1-1-0e293fd8d627@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAGbKZ2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDcwNj3dLcHN2SjKLUxJT4tJzE9GLdlDRDCxNTY9Mks2RzJaC2gqLUtMw
- KsJHRsbW1ANeAsBBiAAAA
-X-Change-ID: 20250703-uml-thread_flags-df184535b6c7
-To: Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Nam Cao <namcao@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751632510; l=2500;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=1EEsk3CakOIK6uLy9xJ0+8ZrzcRqWqydDglc717WYjg=;
- b=Ncey8gWeakla09DCNmGT3PSI/G9tKWkGd/DZxzcF5ZZH1bZxFJDEx048UdBMeaa0DqoGYlR1t
- ct4Kep8B/9eASY5WMF/EJkgJgvAHZBnfvjcn7P6Hmx4XQCrxM5QjLzg
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703-ublk_too_many_quiesce-v2-1-3527b5339eeb@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-The thread flags may change during their processing.
-For example a task_work can queue a new signal to be sent.
-This signal should be delivered before returning to usespace again.
+On Thu, Jul 03, 2025 at 11:41:07PM -0600, Uday Shankar wrote:
+> Recently, we've observed a few cases where a ublk server is able to
+> complete restart more quickly than the driver can process the exit of
+> the previous ublk server. The new ublk server comes up, attempts
+> recovery of the preexisting ublk devices, and observes them still in
+> state UBLK_S_DEV_LIVE. While this is possible due to the asynchronous
+> nature of io_uring cleanup and should therefore be handled properly in
+> the ublk server, it is still preferable to make ublk server exit
+> handling faster if possible, as we should strive for it to not be a
+> limiting factor in how fast a ublk server can restart and provide
+> service again.
+> 
+> Analysis of the issue showed that the vast majority of the time spent in
+> handling the ublk server exit was in calls to blk_mq_quiesce_queue,
+> which is essentially just a (relatively expensive) call to
+> synchronize_rcu. The ublk server exit path currently issues an
+> unnecessarily large number of calls to blk_mq_quiesce_queue, for two
+> reasons:
+> 
+> 1. It tries to call blk_mq_quiesce_queue once per ublk_queue. However,
+>    blk_mq_quiesce_queue targets the request_queue of the underlying ublk
+>    device, of which there is only one. So the number of calls is larger
+>    than necessary by a factor of nr_hw_queues.
+> 2. In practice, it calls blk_mq_quiesce_queue _more_ than once per
+>    ublk_queue. This is because of a data race where we read
+>    ubq->canceling without any locking when deciding if we should call
+>    ublk_start_cancel. It is thus possible for two calls to
+>    ublk_uring_cmd_cancel_fn against the same ublk_queue to both call
+>    ublk_start_cancel against the same ublk_queue.
+> 
+> Fix this by making the "canceling" flag a per-device state. This
+> actually matches the existing code better, as there are several places
+> where the flag is set or cleared for all queues simultaneously, and
+> there is the general expectation that cancellation corresponds with ublk
+> server exit. This per-device canceling flag is then checked under a
+> (new) lock (addressing the data race (2) above), and the queue is only
+> quiesced if it is cleared (addressing (1) above). The result is just one
+> call to blk_mq_quiesce_queue per ublk device.
+> 
+> To minimize the number of cache lines that are accessed in the hot path,
+> the per-queue canceling flag is kept. The values of the per-device
+> canceling flag and all per-queue canceling flags should always match.
+> 
+> In our setup, where one ublk server handles I/O for 128 ublk devices,
+> each having 24 hardware queues of depth 4096, here are the results
+> before and after this patch, where teardown time is measured from the
+> first call to io_ring_ctx_wait_and_kill to the return from the last
+> ublk_ch_release:
+> 
+> 						before		after
+> number of calls to blk_mq_quiesce_queue:	6469		256
+> teardown time:					11.14s		2.44s
+> 
+> There are still some potential optimizations here, but this takes care
+> of a big chunk of the ublk server exit handling delay.
+> 
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 
-Evaluate the flags repeatedly similar to other architectures.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Nam Cao <namcao@linutronix.de>
----
- arch/um/include/asm/thread_info.h |  4 ++++
- arch/um/kernel/process.c          | 20 ++++++++++++--------
- 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/um/include/asm/thread_info.h b/arch/um/include/asm/thread_info.h
-index f9ad06fcc991a2b10e2aa6059880b993e3d60a2d..eb9b3a6d99e84751a0b48ba516aaf25752e90873 100644
---- a/arch/um/include/asm/thread_info.h
-+++ b/arch/um/include/asm/thread_info.h
-@@ -50,7 +50,11 @@ struct thread_info {
- #define _TIF_NOTIFY_SIGNAL	(1 << TIF_NOTIFY_SIGNAL)
- #define _TIF_MEMDIE		(1 << TIF_MEMDIE)
- #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
-+#define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
- #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
- 
-+#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL | \
-+				 _TIF_NOTIFY_RESUME)
-+
- #endif
-diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index 0cd6fad3d908d43e84ebc821676e05377ec641e9..1be644de9e41ecdb94d379760ee8790c1d0657c6 100644
---- a/arch/um/kernel/process.c
-+++ b/arch/um/kernel/process.c
-@@ -82,14 +82,18 @@ struct task_struct *__switch_to(struct task_struct *from, struct task_struct *to
- void interrupt_end(void)
- {
- 	struct pt_regs *regs = &current->thread.regs;
--
--	if (need_resched())
--		schedule();
--	if (test_thread_flag(TIF_SIGPENDING) ||
--	    test_thread_flag(TIF_NOTIFY_SIGNAL))
--		do_signal(regs);
--	if (test_thread_flag(TIF_NOTIFY_RESUME))
--		resume_user_mode_work(regs);
-+	unsigned long thread_flags;
-+
-+	thread_flags = read_thread_flags();
-+	while (thread_flags & _TIF_WORK_MASK) {
-+		if (thread_flags & _TIF_NEED_RESCHED)
-+			schedule();
-+		if (thread_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
-+			do_signal(regs);
-+		if (thread_flags & _TIF_NOTIFY_RESUME)
-+			resume_user_mode_work(regs);
-+		thread_flags = read_thread_flags();
-+	}
- }
- 
- int get_current_pid(void)
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250703-uml-thread_flags-df184535b6c7
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+thanks,
+Ming
 
