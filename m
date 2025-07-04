@@ -1,358 +1,200 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407B32BEC28;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17482D9ECD;
 	Fri,  4 Jul 2025 15:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643679; cv=none; b=UlZIIaDSI1QCGaLF1z28nMFfmbDTp5pEz4UZ4Muh2PY/wBimh8U62whM+sh3pGCbBgyxHlvwHvtfhxcwTm7MnkD8iYsT0F5UknUcXVhsQdKkVGo5rNBj2dWN+SkDGYv1cQDK0gUp/UVMs43DMMZsVfYTbUDwvCQa2NLE+o7aUmE=
+	t=1751643680; cv=none; b=NNkJoRw5UGkgnYT0BdaeSgZv9wNFWNjpCu2sTxIeuVjXSi4u3spnWcrYc69e93cdEpRn0pHIygf5tjtGoMSFZcczJBI4mgiQly2Diumojz2HWnJEewKgUZsj5xztyhSrx/3XjWwOAVBg9GMuGzoCA2Dat4NQdD2TKIPKhE7/goA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643679; c=relaxed/simple;
-	bh=hLipmzu4F8mg8qXXCFM8HYZaEPjr8KBLcqkXB0ZttpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kn9/F0Ca3iH4kTkpmsJl8q9JG6oj9UyW8VmPFlUcDXa/M60FIrnj3FJCKav9nAS11dyBxR7V1nkF+v7mu4a4QObHQR42/16rMLMijBvOmxY2lVb1TBy3/Okxjeh5F2m5ybD7adajFDOtTUEsb76MdShotQvDYIS1XTmmr36/GRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XasEArNN; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1751643680; c=relaxed/simple;
+	bh=3O23PovrqC+Eqola7rZwzAQ/Qycsqf0zMsQd7QF+gy4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aUcRshWjkWOpeL13Z3XTAEGd/QLxIW3wkqTJWeCoKxxgxTwuVYWQ8viKlwv9Gs8hNmo6uFteE1VNxB4HA0Nk62tL9n9Ildneoz0TBSJ9SIuL5hRj9cy6l4fR+ZHrUjQwdyVwTxsIYUthWqRwVoE2clXV2nsXqE9KK6tesz25rZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMvIconC; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XasEArNN"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a54700a463so632021f8f.1;
-        Fri, 04 Jul 2025 08:41:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMvIconC"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234fcadde3eso15819545ad.0;
+        Fri, 04 Jul 2025 08:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751643675; x=1752248475; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZehQDJ7GYI16BJFe1KA565rbeqzvhJ2ipoQj8wKA4GA=;
-        b=XasEArNN5BsKuecOYaiJPD5eWfC6w/jlEbL+7mPhyHSem4Gc9YwV/SsPkPKRtap4wT
-         BPhm7cUiw0yLuOGo4IOVXVghwxgiS8c3iaYRSlyM5YJefByTMpmbJ6YVkdxNNXsPJSyB
-         NHhzd4TY0vdQ0PQ+L8g5QucgyTpRJrqQA16B9832qhxWZQ2RzNCOIfZFqdC2Y+d6oqwA
-         9ctqyFcZ0jEu/TymQNnwf7l28fKYvJ6MMliXAxdTFibwJaY0epe04ek/nDVu9jXUJfUQ
-         2lRRhAeORzSV9NWAvd0tKqUKdwSBoyDUdXV6Qj1rnQSahLtKVkjAJFiglOaINT7kFzyw
-         5z8Q==
+        d=gmail.com; s=20230601; t=1751643677; x=1752248477; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bwu9r1p26KTOzo+HYJ23OLsAkP90JLIljNiM101BJZc=;
+        b=HMvIconCuNGcWo0NNXiBWqf4D8firA6ueUtE7XHmv21WBnV4C8F3ootPqIM5/LVQPB
+         npgNmT2He5XQjFfH25jGEOCH5zkSjxXrX4PzB6spmrwT91JB/ti9WPdW1zcAwuKbqIi1
+         Yo54FsoImJB3LVqonLMQYYi5CQ/9KbalV/bvnOzBNEDDtFmWa/FKF4gdjOHnq2SotriG
+         06YvugGgpHiIRTuPdkkQYpKz/QPjgwlwVVZijehcWXgLSzeIy9YBsOYqJo2TpHEjN+1Z
+         F+LwLuSy03GtqONs9TreJRP7fXj5dTOeLmkMvsQJSfmmoW+FgiWt5dEyerd1pjy6vHjY
+         mXig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751643675; x=1752248475;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZehQDJ7GYI16BJFe1KA565rbeqzvhJ2ipoQj8wKA4GA=;
-        b=enBS3hgGcngxSB2KYzZMSkw4CAis8udpajem6J2wTm78TOe6VY7K3ALUzJNR680y8u
-         /eBPVTClXtrdFa8qODKvF04x+Tz27Nw1xTuCnGoVZZ5Ud9y+XtQJRo8JbZLj8kotZlLu
-         rgAB9Wc6pgmEp6hqLy6CNoYpPqbpkG450Sx5CT2N25XLr+G1hd55gaJkuwx+BxsDKFQT
-         v3SzdX6xoOmVxAHhJFm56/s/NuSkN8RJdH+V/yqxFRZsaMedLATYCRr3q4zi9p6LygpW
-         MVNaWP9Tk4Ob9Tu/lPaF6zFVb2+fSpJWhGpuxpw9/tWJI99WLP6EHiwvVoCAGQjmvkyN
-         at4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUq7GwxKEO2hL6HxFqbG7QsHIzZkzN9j/rEmm3Je5SLazjSSZNLHZiKooox2hQL4wqjNYX5x8vUqJnWB5f@vger.kernel.org, AJvYcCVVSk2cZw8+FBDOUcH/w7lODnyLNETnK2W+a8O08TVlr9MBGUM0cMOHah1q7k1J1zQlhQDFJgET0ag=@vger.kernel.org, AJvYcCVeEcAe8jxBy7uAUkihK8ZFQ8Tc0SjgF5P07W9NkRW7ZJANUErebHV4k9Y1kWJaDr1rb8RNvHMMGCT71rCxyuY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQrgB4gM4cL4XvCNjIeGMjSVq5tEDhEkRFDTZDJAfEkdLak5c+
-	8rupCK8OnIQlfmWqz58iOF3d4CIEm6arOuMMWjtAfOJnYppnwlz7vEEE
-X-Gm-Gg: ASbGncvX61nslwcvELm7ldHd5gc/dYav5MQVgNl5qeVP+XIdjNM9vtuFdCCceBAcBO6
-	r3iTOVcGr1VydjGL9ihXFfLEWIMu25CpoPwiekuvkK5alpUNcFo3Ql/QjlYEET/9f6DVpDlK3cT
-	MQpPm82O6IGmkOKOoNE+dV2cJtZu61k9xLQEenmngOgHMYKaKk/3oluPVMvWPRJ90h9Lnz7IDan
-	BwvMSgZmSKsUGbPDCXfi8MRGwSnVZl+dSXz75VgUHzRIUzaAAis/YWFqI835kmEtKU377ntQWUP
-	hjgJ4Ld1hDMszM3fFi8j4xERWb/AdAMsjVjzipQX8zsAvMvJ32SekKpzo2LjBlefvyW/4otXTkW
-	n7bX13Hgc8taJLkt9BCxwxb/zCKJ4sChE685VZmcL8jKWa58G5A==
-X-Google-Smtp-Source: AGHT+IERyK/7kX7kvDPfsA3GitiUXco1hNZ9Yv7C25VPQUc9/JklVrs18eYYPX/AUpNMA9WYXUYxoQ==
-X-Received: by 2002:a05:6000:230c:b0:3a5:23c6:eeee with SMTP id ffacd0b85a97d-3b495cbcb56mr3859110f8f.21.1751643675108;
-        Fri, 04 Jul 2025 08:41:15 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47285bdf8sm2728308f8f.87.2025.07.04.08.41.14
+        d=1e100.net; s=20230601; t=1751643677; x=1752248477;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bwu9r1p26KTOzo+HYJ23OLsAkP90JLIljNiM101BJZc=;
+        b=h38vMCEwsWiiQjK6E/BJbDKKQ6bjIebOXPkCc+GVetDLfv6OF4Ee70hHpO1UIfdJMD
+         Ip2bBKe7pNPw00eCKJZR0tktyAqTAYYhc+Yoq4WuYj2Xpb3QTlDwGfCIYhMNs/+f44LE
+         5skW6MlRh2iBHIxQgmM0as+ZfyONBDEm2TF2K7KCNCMvwNjlt2gIgyKDNB1tn0G95Jem
+         qpBhSYMmmZuPVdAFdcabV0kT8BU4Lw2tUEcU3XTSZuNQDNRBxQG+tsWk1ZpjOy9+fHD7
+         AFFfMBYUCBp3Wx6gdaJzCErwgxYHjCijzR9uWv76e03+8VIbx+1J2t8Y3wtp6xhOqyV4
+         TY7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXqNgQcwvHPw5Ypje3SOiED0COO2x94yuYwpEMT0i5Bar0mkJaYfSmtqnleUtLoS/VyFTAtYAR/Ti84suY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFg/do01ffjcKfl8N7VjQKIn0JxFfmk0PIYKsrYpFl8dcQeOqp
+	rpkuyRg5N6ioley+IZsWKgw1p8Ln0TPeTPWm+BfoP/QkqjYkYomqRvTu
+X-Gm-Gg: ASbGncvAIS9FqVhV677JVAlrrRdCm3lIAIUW96d/Y0fpjBscPYreUGxs8WF28PaS2zw
+	1Wcr76sxHQXeoUtmYcepmoOaTzTUlitQaB7g8J7VIjNQm48ifJT3qd7aK054IOE514l7Lq/DnGi
+	TDg7FfO1jMgLmxRfqX4d7UXjFjVo5UvAuCvmB7uMDWmBybC/VoKmpk1E296QRmIxsNd9Zd+T1y6
+	Gfx9GUz726m0TCjaIz69SMUHQUB4egVLMQ12pG7MBlD7Bqjx/OrJZwrTY3Zf+/B8K/Y9GZnaviM
+	mT/QZN+qudMXM6PwAZlfeJOEywEtnYel0+huLuTNRgFaYrrmuI/KlWVmsazN13E3zFY4ZiPGZQB
+	uiDimMbxNYuq57HCKycRSFa9GLfJxiQcgfIwEhmrHfSECs+mzmQ==
+X-Google-Smtp-Source: AGHT+IHRLGL6bFK40PS5q8sdOtdC/6UZeqO1blXqQ9ve3eUIkRtlKPo2QyPqLuUTF53vj/rKWQe8rA==
+X-Received: by 2002:a17:902:f611:b0:234:a139:1216 with SMTP id d9443c01a7336-23c875b0929mr45400045ad.44.1751643677091;
+        Fri, 04 Jul 2025 08:41:17 -0700 (PDT)
+Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8431a4b6sm21912375ad.29.2025.07.04.08.41.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:41:14 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Asahi Lina <lina+kernel@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v2 2/4] rust: i2c: add manual I2C device creation abstractions
-Date: Fri,  4 Jul 2025 16:39:12 +0100
-Message-ID: <20250704153912.1197034-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
-References: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
+        Fri, 04 Jul 2025 08:41:16 -0700 (PDT)
+From: LiangCheng Wang <zaq14760@gmail.com>
+Date: Fri, 04 Jul 2025 23:40:54 +0800
+Subject: [PATCH v8 3/3] staging: media: atomisp: fix indentation in bh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-new_atomisp-v8-3-2a8560cbd9be@gmail.com>
+References: <20250704-new_atomisp-v8-0-2a8560cbd9be@gmail.com>
+In-Reply-To: <20250704-new_atomisp-v8-0-2a8560cbd9be@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751643666; l=4413;
+ i=zaq14760@gmail.com; h=from:subject:message-id;
+ bh=3O23PovrqC+Eqola7rZwzAQ/Qycsqf0zMsQd7QF+gy4=;
+ b=jsooQGeH4Oti43sdbaM7xkpUZi/H5mJGJo1rmUlAOD+cqljrTCu2kpqrh1QIeyRUN2JYRgOSe
+ Lt0OZfYBTPtDcX9kFVYBDJvkH7Q13HHfO6cWW7Ofxe5I+6IY67SeBD6
+X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
+ pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
 
-In addition to the basic I2C device support, added rust abstractions
-upon `i2c_new_client_device`/`i2c_unregister_device` C functions.
+This patch fixes tab/space indentation issues in bh
+following kernel coding style guidelines.
 
-Implement additional generic parameter for i2c::Device that shows if
-the i2c::Device is abstraction on top of "borrowed" i2c_client struct,
-or it is manually created device which is "owned" by a caller.
+No functional logic changes were made.
 
-Implement the core abstractions needed for owned I2C devices, including:
-
- * `i2c::state` — a generic parameter type for i2c::Device
-
- * `i2c::DeviceOwned` — a wrapper around
-                       `i2c::Device<Ctx, i2c::state::Owned>`
-
- * `i2c::I2cAdapterRef` — a safe reference around `struct i2c_adapter`
-
- * `i2c::I2cBoardInfo` — a safe wrapper around `struct i2c_board_info`
-
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Link: https://lore.kernel.org/all/CAHp75VcPzq9XrFD29+uZ1rbFcDxb4UbXNkv_QZ=3iyVm3dxyPg@mail.gmail.com/
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Link: https://lore.kernel.org/all/e201c4b0-4fcc-4d98-9d76-0e9c41dc4d9f@kernel.org/
+Signed-off-by: LiangCheng Wang<zaq14760@gmail.com>
 ---
- rust/kernel/i2c.rs | 184 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 179 insertions(+), 5 deletions(-)
+ .../atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.c   | 18 ++++++++----------
+ .../atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.h   | 12 +++++-------
+ .../atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh_types.h  | 14 +++++++-------
+ 3 files changed, 20 insertions(+), 24 deletions(-)
 
-diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
-index 4f2f3c378153..43487fdd8597 100644
---- a/rust/kernel/i2c.rs
-+++ b/rust/kernel/i2c.rs
-@@ -10,7 +10,7 @@
-     error::*,
-     of,
-     prelude::*,
--    types::{ForeignOwnable, Opaque},
-+    types::{ARef, ForeignOwnable, Opaque},
- };
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.c
+index 69c87e53f3c22fade6c4c7914d1550f68dd8f5c2..c120ecb178b2c60a3512725327779819d1888268 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.c
+@@ -13,9 +13,8 @@
+ #include "ia_css_bh.host.h"
  
- use core::{
-@@ -312,6 +312,102 @@ fn shutdown(dev: &Device<device::Core>) {
-     }
+ void
+-ia_css_bh_hmem_decode(
+-    struct ia_css_3a_rgby_output *out_ptr,
+-    const struct ia_css_bh_table *hmem_buf)
++ia_css_bh_hmem_decode(struct ia_css_3a_rgby_output *out_ptr,
++		      const struct ia_css_bh_table *hmem_buf)
+ {
+ 	int i;
+ 
+@@ -38,18 +37,17 @@ ia_css_bh_hmem_decode(
  }
  
-+/// The i2c adapter reference
-+///
-+/// This represents the Rust abstraction for a reference to an existing
-+/// C `struct i2c_adapter`.
-+///
-+/// # Invariants
-+///
-+/// A [`I2cAdapterRef`] instance represents a valid `struct i2c_adapter` created by the C portion of
-+/// the kernel.
-+#[repr(transparent)]
-+pub struct I2cAdapterRef(NonNull<bindings::i2c_adapter>);
-+
-+impl I2cAdapterRef {
-+    fn as_raw(&self) -> *mut bindings::i2c_adapter {
-+        self.0.as_ptr()
-+    }
-+
-+    /// Gets pointer to an `i2c_adapter` by index.
-+    pub fn get(index: i32) -> Option<Self> {
-+        // SAFETY: `index` must refer to a valid I²C adapter; the kernel
-+        // guarantees that `i2c_get_adapter(index)` returns either a valid
-+        // pointer or NULL. `NonNull::new` guarantees the correct check.
-+        let adapter = NonNull::new(unsafe { bindings::i2c_get_adapter(index) })?;
-+        Some(Self(adapter))
-+    }
-+}
-+
-+impl Drop for I2cAdapterRef {
-+    fn drop(&mut self) {
-+        // SAFETY: This `I2cAdapterRef` was obtained from `i2c_get_adapter`,
-+        // and calling `i2c_put_adapter` exactly once will correctly release
-+        // the reference count in the I²C core. It is safe to call from any context
-+        unsafe { bindings::i2c_put_adapter(self.as_raw()) }
-+    }
-+}
-+
-+/// The i2c board info representation
-+///
-+/// This structure represents the Rust abstraction for a C `struct i2c_board_info` structure,
-+/// which is used for manual I2C client creation.
-+#[repr(transparent)]
-+pub struct I2cBoardInfo(bindings::i2c_board_info);
-+
-+impl I2cBoardInfo {
-+    const I2C_TYPE_SIZE: usize = 20;
-+    /// Create a new board‐info for a kernel driver.
-+    #[inline(always)]
-+    pub const fn new(type_: &'static CStr, addr: u16) -> Self {
-+        build_assert!(
-+            type_.len_with_nul() <= Self::I2C_TYPE_SIZE,
-+            "Type exceeds 20 bytes"
-+        );
-+        let src = type_.as_bytes_with_nul();
-+        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
-+        // SAFETY: FFI type is valid to be zero-initialized.
-+        let mut i2c_board_info: bindings::i2c_board_info = unsafe { core::mem::zeroed() };
-+        let mut i: usize = 0;
-+        while i < src.len() {
-+            i2c_board_info.type_[i] = src[i];
-+            i += 1;
-+        }
-+
-+        i2c_board_info.addr = addr;
-+        Self(i2c_board_info)
-+    }
-+
-+    fn as_raw(&self) -> *const bindings::i2c_board_info {
-+        &self.0 as *const _
-+    }
-+}
-+
-+/// Marker trait for the state of a bus specific device.
-+pub trait DeviceState: private::Sealed {}
-+
-+/// State module which aggregates existing Device States.
-+pub mod state {
-+    /// The [`Borrowed`] state is the state of a bus specific device when it was not
-+    /// manually created using `DeviceOwned::new`
-+    pub struct Borrowed;
-+
-+    /// The [`Owned`] state is the state of a bus specific device when it was
-+    /// manually created using `DeviceOwned::new` and thus will be automatically
-+    /// unregistered when the corresponding `DeviceOwned` is dropped
-+    pub struct Owned;
-+}
-+
-+mod private {
-+    pub trait Sealed {}
-+
-+    impl Sealed for super::state::Borrowed {}
-+    impl Sealed for super::state::Owned {}
-+}
-+
-+impl DeviceState for state::Borrowed {}
-+impl DeviceState for state::Owned {}
-+
- /// The i2c client representation.
- ///
- /// This structure represents the Rust abstraction for a C `struct i2c_client`. The
-@@ -323,15 +419,19 @@ fn shutdown(dev: &Device<device::Core>) {
- /// A [`Device`] instance represents a valid `struct i2c_client` created by the C portion of
- /// the kernel.
- #[repr(transparent)]
--pub struct Device<Ctx: device::DeviceContext = device::Normal>(
-+pub struct Device<Ctx: device::DeviceContext = device::Normal, State: DeviceState = state::Borrowed>(
-     Opaque<bindings::i2c_client>,
-     PhantomData<Ctx>,
-+    PhantomData<State>,
- );
- 
--impl<Ctx: device::DeviceContext> Device<Ctx> {
-+impl<Ctx: device::DeviceContext, State: DeviceState> Device<Ctx, State> {
-     fn as_raw(&self) -> *mut bindings::i2c_client {
-         self.0.get()
-     }
-+    fn from_raw(raw: *mut bindings::i2c_client) -> &'static Self {
-+        unsafe { &*raw.cast::<Device<Ctx, State>>() }
-+    }
+ void
+-ia_css_bh_encode(
+-    struct sh_css_isp_bh_params *to,
+-    const struct ia_css_3a_config *from,
+-    unsigned int size)
++ia_css_bh_encode(struct sh_css_isp_bh_params *to,
++		 const struct ia_css_3a_config *from,
++		 unsigned int size)
+ {
+ 	(void)size;
+ 	/* coefficients to calculate Y */
+ 	to->y_coef_r =
+-	    uDIGIT_FITTING(from->ae_y_coef_r, 16, SH_CSS_AE_YCOEF_SHIFT);
++		uDIGIT_FITTING(from->ae_y_coef_r, 16, SH_CSS_AE_YCOEF_SHIFT);
+ 	to->y_coef_g =
+-	    uDIGIT_FITTING(from->ae_y_coef_g, 16, SH_CSS_AE_YCOEF_SHIFT);
++		uDIGIT_FITTING(from->ae_y_coef_g, 16, SH_CSS_AE_YCOEF_SHIFT);
+ 	to->y_coef_b =
+-	    uDIGIT_FITTING(from->ae_y_coef_b, 16, SH_CSS_AE_YCOEF_SHIFT);
++		uDIGIT_FITTING(from->ae_y_coef_b, 16, SH_CSS_AE_YCOEF_SHIFT);
  }
  
- // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
-@@ -340,7 +440,9 @@ fn as_raw(&self) -> *mut bindings::i2c_client {
- kernel::impl_device_context_into_aref!(Device);
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.h b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.h
+index 36b360cfe62e65037522e0037cf51fca0fabdfba..9912dfea06074c6ecdbb1afb8de771b54b45aebf 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.h
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh.host.h
+@@ -11,14 +11,12 @@
+ #include "s3a/s3a_1.0/ia_css_s3a_types.h"
  
- // SAFETY: Instances of `Device` are always reference-counted.
--unsafe impl crate::types::AlwaysRefCounted for Device {
-+unsafe impl<Ctx: device::DeviceContext, State: DeviceState> crate::types::AlwaysRefCounted
-+    for Device<Ctx, State>
-+{
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
-         unsafe { bindings::get_device(self.as_ref().as_raw()) };
-@@ -352,7 +454,9 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
-     }
- }
+ void
+-ia_css_bh_hmem_decode(
+-    struct ia_css_3a_rgby_output *out_ptr,
+-    const struct ia_css_bh_table *hmem_buf);
++ia_css_bh_hmem_decode(struct ia_css_3a_rgby_output *out_ptr,
++		      const struct ia_css_bh_table *hmem_buf);
  
--impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
-+impl<Ctx: device::DeviceContext, State: DeviceState> AsRef<device::Device<Ctx>>
-+    for Device<Ctx, State>
-+{
-     fn as_ref(&self) -> &device::Device<Ctx> {
-         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
-         // `struct i2c_client`.
-@@ -389,3 +493,73 @@ unsafe impl Send for Device {}
- // SAFETY: `Device` can be shared among threads because all methods of `Device`
- // (i.e. `Device<Normal>) are thread safe.
- unsafe impl Sync for Device {}
-+
-+/// The representation of reference counted pointer to a manually created i2c client.
-+///
-+/// This structure represents the Rust wrapper upon i2c::Device with the i2c::state::Owned state
-+#[repr(transparent)]
-+pub struct DeviceOwned<Ctx: device::DeviceContext + 'static = device::Normal>(
-+    ARef<Device<Ctx, state::Owned>>,
-+);
-+
-+/// The main purpose of the DeviceOwned wrapper is to automatically
-+/// take care of i2c client created by i2c_new_client_device.
-+///
-+/// The example of usage:
-+///
-+/// ```
-+/// use kernel::{c_str, device::Core, i2c, prelude::*};
-+///
-+/// struct Context {
-+///     _owned: i2c::DeviceOwned<Core>,
-+/// }
-+///
-+/// const BOARD_INFO: i2c::I2cBoardInfo = i2c::I2cBoardInfo::new(c_str!("rust_driver_i2c"), 0x30);
-+///
-+/// impl Context {
-+///     fn init(_module: &'static ThisModule) -> Result<Self> {
-+///
-+///         let adapter = i2c::I2cAdapterRef::get(0)
-+///             .ok_or(EINVAL)?;
-+///
-+///         let device = i2c::DeviceOwned::<Core>::new(&adapter, &BOARD_INFO)
-+///             .ok_or(EINVAL)?;
-+///
-+///         Ok(Self { _owned: device })
-+///     }
-+/// }
-+///
-+/// impl Drop for Context {
-+///     fn drop(&mut self) {
-+///
-+///     }
-+/// }
-+///
-+/// ```
-+impl<Ctx: device::DeviceContext> DeviceOwned<Ctx> {
-+    fn as_raw_client(&self) -> *mut bindings::i2c_client {
-+        self.0.as_raw()
-+    }
-+
-+    /// The C `i2c_new_client_device` function wrapper for manual I2C client creation.
-+    pub fn new(i2c_adapter: &I2cAdapterRef, i2c_board_info: &I2cBoardInfo) -> Option<Self> {
-+        // SAFETY: the kernel guarantees that `i2c_new_client_device()` returns either a valid
-+        // pointer or NULL. `NonNull::new` guarantees the correct check.
-+        let raw_dev = NonNull::new(unsafe {
-+            bindings::i2c_new_client_device(i2c_adapter.as_raw(), i2c_board_info.as_raw())
-+        })?;
-+
-+        let dev = Device::<Ctx, state::Owned>::from_raw(raw_dev.as_ptr());
-+
-+        Some(Self(dev.into()))
-+    }
-+}
-+
-+impl<Ctx: device::DeviceContext> Drop for DeviceOwned<Ctx> {
-+    fn drop(&mut self) {
-+        unsafe { bindings::i2c_unregister_device(self.as_raw_client()) }
-+    }
-+}
-+
-+// SAFETY: A `Device` is always reference-counted and can be released from any thread.
-+unsafe impl<Ctx: device::DeviceContext> Send for DeviceOwned<Ctx> {}
+ void
+-ia_css_bh_encode(
+-    struct sh_css_isp_bh_params *to,
+-    const struct ia_css_3a_config *from,
+-    unsigned int size);
++ia_css_bh_encode(struct sh_css_isp_bh_params *to,
++		 const struct ia_css_3a_config *from,
++		 unsigned int size);
+ 
+ #endif /* __IA_CSS_BH_HOST_H */
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh_types.h b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh_types.h
+index c717c636f666b984665f9d11c494843b55ee8c92..d62cb05d201dc8c9cabda03256f1d16103c5161a 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh_types.h
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/bh/bh_2/ia_css_bh_types.h
+@@ -10,14 +10,14 @@
+ /* Number of elements in the BH table.
+   * Should be consistent with hmem.h
+   */
+-#define IA_CSS_HMEM_BH_TABLE_SIZE	ISP_HIST_DEPTH
+-#define IA_CSS_HMEM_BH_UNIT_SIZE	(ISP_HIST_DEPTH / ISP_HIST_COMPONENTS)
++#define IA_CSS_HMEM_BH_TABLE_SIZE ISP_HIST_DEPTH
++#define IA_CSS_HMEM_BH_UNIT_SIZE (ISP_HIST_DEPTH / ISP_HIST_COMPONENTS)
+ 
+-#define BH_COLOR_R	(0)
+-#define BH_COLOR_G	(1)
+-#define BH_COLOR_B	(2)
+-#define BH_COLOR_Y	(3)
+-#define BH_COLOR_NUM	(4)
++#define BH_COLOR_R (0)
++#define BH_COLOR_G (1)
++#define BH_COLOR_B (2)
++#define BH_COLOR_Y (3)
++#define BH_COLOR_NUM (4)
+ 
+ /* BH table */
+ struct ia_css_bh_table {
+
 -- 
 2.43.0
 
