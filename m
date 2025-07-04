@@ -1,493 +1,394 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3050E28507C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543152857EA
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615516; cv=none; b=eyV3CrySHdiArmNVjHJhwVj4V63gfwG1Xsu0S2gFP4pZ81dvRDtD/a/8RT/+h+6HjwYqQXAOedzLFiKNLTuNWe+bmtPMwlJCe8O3IqC+jF5EcjPDs39ajNwHVwBrMULTotcEaTAqLkIHoD2SOSvW5GzoaTlkgKcnM83vNFa3zJ0=
+	t=1751615521; cv=none; b=k6RM3jOQtleM6tNLliDhgk6yWOgGg2pezxEEFXFmIHoJBvgS3rCLythsFxAti/1//6QPsxPEQh55yPFZ1Tim7R+uGxxJKg6HhrDxDwbzKsECof20GfVlzSvOkmPdgb4pzH/jJiBXXNiGjhZUe0OMR4+DP66/9vGTo/VZK8RrCGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615516; c=relaxed/simple;
-	bh=8+mt/NRCGieFtgq24xNxPLs2g7P52FR6xUWjy4SKTTo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kVEZjk4rOZUsSxodNhWRaUdJKE0v3TqTtHfIfXfFnzal18x+QR7nmMEe+8SpVSDe8yRj3BlqCgW5r44UEmzpnZNKklWbi5Gf1NxqmnLbr47JITonAOFAQ+NKLkzGzj/ANp70pB7m0J/lIYnmDeC6fcT//ddtX8iIpu8Zy0S3fn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SQCMCuOl; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1751615521; c=relaxed/simple;
+	bh=w+bLQvm1pTacVqdPv0Cn05qPvO/ra9ExbhnOdwpPAfU=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=Nx90X+1iUZMPBD1AZ3xv27mPjLOuRKFYogxp81zuqTLrZzBbBh2uiv37KGgDq8s2GzL5qfmVPxVO4EA15UgzgIDFKKtPuQAE0r4cUf0YK17GTfd9hFy8aEyHvckun0WtJbG/x0RLdUZ7VhgCaSmhtEKNDWiUtjDUl9Hv5LSF0c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2KF5WawH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c8dHELdR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2KF5WawH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c8dHELdR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SQCMCuOl"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4538f375e86so4779615e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751615512; x=1752220312; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RKd8eptZkL7OKudvPnYzWX9vn9Ebsbo7yAT0QhSXSz8=;
-        b=SQCMCuOlkfHpw970b1ipkaE7OMoTqKp2pq2MrInXE28nAKykOJK3Rz8ouJoOImjvd6
-         w7gSJd68IRXkV3mJDKNDBwGz/PPJ5BOFNLTUX6K3prgHbd9Tv0Lw9Tp2PW0CaGtGap/f
-         aoXEGIbwxfy10990NKQVjyU97sFg8FsvUS/S7WjkirVoToVwxWf3JmyPtwEHoQOniNP2
-         ylcfWTBy+stDy23uOFJ691jlYSTZbER+UNEhfxDU04phDTKhoMIkupF1+fZcwEapmu+F
-         Avq0RLLT3KnBKxj49oD0sCBezTo2CZPKJQ2cHSX7ZyzCDPwJewTT/jlcK22TXS6VBHy7
-         0BRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751615512; x=1752220312;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RKd8eptZkL7OKudvPnYzWX9vn9Ebsbo7yAT0QhSXSz8=;
-        b=Mq8wZ3Gb5tZ06nv2PagoS4m/Noy1ghoTdPnKhCG8RfAXoUPcUKS8TN/097qYf5ryps
-         6qPL1HJVJzEwAmOINVtoDH5zD/aRgU80y+BYJPNLLMBfiAYPD+Bc8is+3piB6B0eSPuz
-         eoW58DehjduGdd1nQz+wjBDshh1ddI14S0uISQZecv7A8Dccu7/Fns3EDWDEQU36NPJ9
-         obSB3h/lBZIHhtildU9dVq/IGuI+5FW94KBJ/KH/06TougWOodHHJcFp1HY6zKRyoCZq
-         ZfdCihjkg0kFTFldqMG2TOtJLYmnIcLb5Zb+NrRt7XS7aaAuXfREUZ62UBOGsBBq9oEm
-         TDRw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5q4fvAlZv76dqYaOgcY5kyusYAdo7td2inWRT1GHcrkqxNORsrB31/8ETQS2umJIWcQhsT0eEZjw7pbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEi6rrOY1wQZmyZnwWKkPAN3uEfXgnrsHmdIyf85R0fjipGgZ0
-	mVOGe9ONtte4mJvmADWHvzANInSaxJY+i0mY4Dq71IwFwRJoCtTbF6AXspoLKKpV37Km4AtIMi4
-	X7eOcaFSjI0FzbbUxcw==
-X-Google-Smtp-Source: AGHT+IGXIQtapukJNLVd7QRtePhoB+p5QaPHUkrQNoQrbP3dt3oSHYBdXQZPDochTkCC+Wey+/9E7O2aR+gUfhI=
-X-Received: from wmbek10.prod.google.com ([2002:a05:600c:3eca:b0:44a:b793:9e40])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b26:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-454b311551cmr13000885e9.32.1751615512505;
- Fri, 04 Jul 2025 00:51:52 -0700 (PDT)
-Date: Fri, 4 Jul 2025 07:51:51 +0000
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2KF5WawH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c8dHELdR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2KF5WawH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c8dHELdR"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6C85C211A2;
+	Fri,  4 Jul 2025 07:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751615516; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUlZ36YsDhKq7mDzuDyX5jtj2B4kiOmR23xqDVOpS4=;
+	b=2KF5WawHR4u8VNX9bcLLuQwYDlOuBiR9R7ltDkh+xNct8peOa3GIJc2iAdc3e/iPyYtC+V
+	S2O3uGz9/2Gcr3EkEF4uziVwcGD6nJoxh6pXAF3BdnYJCZYYpRoS8IgiKpFXEAi6IHQpiY
+	QkSr7KoJ5dl73jBp1WLN4vNFkAGFYJQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751615516;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUlZ36YsDhKq7mDzuDyX5jtj2B4kiOmR23xqDVOpS4=;
+	b=c8dHELdRPdLP9/LtWRl6fyfncB999oEEg488ShNYkCkaTMbf5q5Rvd3Xb7riMT0mtp9uoo
+	9E/ILzVdzzUVPvAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751615516; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUlZ36YsDhKq7mDzuDyX5jtj2B4kiOmR23xqDVOpS4=;
+	b=2KF5WawHR4u8VNX9bcLLuQwYDlOuBiR9R7ltDkh+xNct8peOa3GIJc2iAdc3e/iPyYtC+V
+	S2O3uGz9/2Gcr3EkEF4uziVwcGD6nJoxh6pXAF3BdnYJCZYYpRoS8IgiKpFXEAi6IHQpiY
+	QkSr7KoJ5dl73jBp1WLN4vNFkAGFYJQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751615516;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUlZ36YsDhKq7mDzuDyX5jtj2B4kiOmR23xqDVOpS4=;
+	b=c8dHELdRPdLP9/LtWRl6fyfncB999oEEg488ShNYkCkaTMbf5q5Rvd3Xb7riMT0mtp9uoo
+	9E/ILzVdzzUVPvAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1184713757;
+	Fri,  4 Jul 2025 07:51:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PIgZAxyIZ2jUBgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 04 Jul 2025 07:51:56 +0000
+Content-Type: multipart/mixed; boundary="------------11RFMZbGSSYjgpckF9EsFQzo"
+Message-ID: <c17428b3-6f04-4eb7-9140-92c7f27eae4f@suse.de>
+Date: Fri, 4 Jul 2025 09:51:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
-Message-ID: <aGeIF_LcesUM9DHk@google.com>
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and handlers
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Warnings in next-20250703 caused by commit 582111e630f5
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+ Anusha Srivatsa <asrivats@redhat.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
+References: <20250703115915.3096-1-spasswolf@web.de>
+ <75abf5c1-aa1a-4405-aae4-a2efccbc3bcb@suse.de>
+ <7a56d95dc2b15fa2dac0c8a4dd20f0e253bf414f.camel@web.de>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <7a56d95dc2b15fa2dac0c8a4dd20f0e253bf414f.camel@web.de>
+X-Spamd-Result: default: False [-3.20 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	MIME_BASE64_TEXT(0.10)[];
+	FREEMAIL_TO(0.00)[web.de];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[web.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	HAS_ATTACHMENT(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -3.20
 
-On Thu, Jul 03, 2025 at 04:30:01PM -0300, Daniel Almeida wrote:
-> This patch adds support for non-threaded IRQs and handlers through
-> irq::Registration and the irq::Handler trait.
->=20
-> Registering an irq is dependent upon having a IrqRequest that was
-> previously allocated by a given device. This will be introduced in
-> subsequent patches.
->=20
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/helpers.c          |   1 +
->  rust/helpers/irq.c              |   9 ++
->  rust/kernel/irq.rs              |   5 +
->  rust/kernel/irq/request.rs      | 273 ++++++++++++++++++++++++++++++++++=
-++++++
->  5 files changed, 289 insertions(+)
->=20
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
-per.h
-> index 8cbb660e2ec218021d16e6e0144acf6f4d7cca13..da0bd23fad59a2373bd873d12=
-ad69c55208aaa38 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -51,6 +51,7 @@
->  #include <linux/ethtool.h>
->  #include <linux/file.h>
->  #include <linux/firmware.h>
-> +#include <linux/interrupt.h>
->  #include <linux/fs.h>
->  #include <linux/jiffies.h>
->  #include <linux/jump_label.h>
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 393ad201befb80a9ae39866a725744ab88620fbb..e3579fc7e1cfc30c913207a4a=
-78b790259d7ae7a 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -22,6 +22,7 @@
->  #include "dma.c"
->  #include "drm.c"
->  #include "err.c"
-> +#include "irq.c"
->  #include "fs.c"
->  #include "io.c"
->  #include "jump_label.c"
-> diff --git a/rust/helpers/irq.c b/rust/helpers/irq.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..1faca428e2c047a656dec3171=
-855c1508d67e60b
-> --- /dev/null
-> +++ b/rust/helpers/irq.c
-> @@ -0,0 +1,9 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/interrupt.h>
-> +
-> +int rust_helper_request_irq(unsigned int irq, irq_handler_t handler,
-> +			    unsigned long flags, const char *name, void *dev)
-> +{
-> +	return request_irq(irq, handler, flags, name, dev);
-> +}
-> diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
-> index 9abd9a6dc36f3e3ecc1f92ad7b0040176b56a079..01bd08884b72c2a3a9460897b=
-ce751c732a19794 100644
-> --- a/rust/kernel/irq.rs
-> +++ b/rust/kernel/irq.rs
-> @@ -12,3 +12,8 @@
-> =20
->  /// Flags to be used when registering IRQ handlers.
->  pub mod flags;
-> +
-> +/// IRQ allocation and handling.
-> +pub mod request;
-> +
-> +pub use request::{Handler, IrqRequest, IrqReturn, Registration};
-> diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..4f4beaa3c7887660440b9ddc5=
-2414020a0d165ac
-> --- /dev/null
-> +++ b/rust/kernel/irq/request.rs
-> @@ -0,0 +1,273 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-> +
-> +//! This module provides types like [`Registration`] which allow users t=
-o
-> +//! register handlers for a given IRQ line.
-> +
-> +use core::marker::PhantomPinned;
-> +
-> +use crate::alloc::Allocator;
-> +use crate::device::Bound;
-> +use crate::device::Device;
-> +use crate::devres::Devres;
-> +use crate::error::to_result;
-> +use crate::irq::flags::Flags;
-> +use crate::prelude::*;
-> +use crate::str::CStr;
-> +use crate::sync::Arc;
-> +
-> +/// The value that can be returned from an IrqHandler or a ThreadedIrqHa=
-ndler.
-> +pub enum IrqReturn {
-> +    /// The interrupt was not from this device or was not handled.
-> +    None,
-> +
-> +    /// The interrupt was handled by this device.
-> +    Handled,
-> +}
-> +
-> +impl IrqReturn {
-> +    fn into_inner(self) -> u32 {
-> +        match self {
-> +            IrqReturn::None =3D> bindings::irqreturn_IRQ_NONE,
-> +            IrqReturn::Handled =3D> bindings::irqreturn_IRQ_HANDLED,
+This is a multi-part message in MIME format.
+--------------11RFMZbGSSYjgpckF9EsFQzo
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-One option is to specify these in the enum:
+Hi
 
-/// The value that can be returned from an IrqHandler or a ThreadedIrqHandl=
-er.
-pub enum IrqReturn {
-    /// The interrupt was not from this device or was not handled.
-    None =3D bindings::irqreturn_IRQ_NONE,
+Am 03.07.25 um 19:23 schrieb Bert Karwatzki:
+> Am Donnerstag, dem 03.07.2025 um 18:09 +0200 schrieb Thomas Zimmermann:
+>> Hi,
+>>
+>> before I give up on the issue, could you please test the attached patch?
+>>
+>> Best regards
+>> Thomas
+>>
+>>
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+> I applied the patch on top of next-20250703
+>
+> $ git log --oneline
+> 18ee3ed3cb60 (HEAD -> drm_gem_object_handle_put) drm/amdgpu: Provide custom framebuffer destroy function
+> 8d6c58332c7a (tag: next-20250703, origin/master, origin/HEAD, master) Add linux-next specific files for 20250703
+>
+> and it solves the issue for me (i.e. no warnings).
 
-    /// The interrupt was handled by this device.
-    Handled =3D bindings::irqreturn_IRQ_HANDLED,
-}
+Great, thanks for testing. If nothing else, that's the minimal workaround.
 
-impl IrqReturn {
-    fn into_inner(self) -> c_uint {
-        self as c_uint
-    }
-}
+Here's another patch, which should solve the problem for all drivers. 
+Could you please revert the old fix and apply the new one and test again?
 
-> +
-> +/// Callbacks for an IRQ handler.
-> +pub trait Handler: Sync {
-> +    /// The hard IRQ handler.
-> +    ///
-> +    /// This is executed in interrupt context, hence all corresponding
-> +    /// limitations do apply.
-> +    ///
-> +    /// All work that does not necessarily need to be executed from
-> +    /// interrupt context, should be deferred to a threaded handler.
-> +    /// See also [`ThreadedRegistration`].
-> +    fn handle(&self) -> IrqReturn;
-> +}
-> +
-> +impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
-> +    fn handle(&self) -> IrqReturn {
-> +        T::handle(self)
-> +    }
-> +}
-> +
-> +impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
-> +    fn handle(&self) -> IrqReturn {
-> +        T::handle(self)
-> +    }
-> +}
-> +
-> +/// # Invariants
-> +///
-> +/// - `self.irq` is the same as the one passed to `request_{threaded}_ir=
-q`.
-> +/// - `cookie` was passed to `request_{threaded}_irq` as the cookie. It
-> +/// is guaranteed to be unique by the type system, since each call to
-> +/// `new` will return a different instance of `Registration`.
+Best regards
+Thomas
 
-I recall there being a clippy lint about the indentation here. Did it
-not trigger?
 
-/// - `cookie` was passed to `request_{threaded}_irq` as the cookie. It
-///   is guaranteed to be unique by the type system, since each call to
-///   `new` will return a different instance of `Registration`.
+>
+> Bert Karwatzki
 
-> +#[pin_data(PinnedDrop)]
-> +struct RegistrationInner {
-> +    irq: u32,
-> +    cookie: *mut kernel::ffi::c_void,
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-The c_void type is in the prelude.
+--------------11RFMZbGSSYjgpckF9EsFQzo
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-drm-framebuffer-Acquire-internal-references-on-GEM-h.patch"
+Content-Disposition: attachment;
+ filename*0="0001-drm-framebuffer-Acquire-internal-references-on-GEM-h.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
 
-> +}
-> +
-> +impl RegistrationInner {
-> +    fn synchronize(&self) {
-> +        // SAFETY: safe as per the invariants of `RegistrationInner`
-> +        unsafe { bindings::synchronize_irq(self.irq) };
-> +    }
-> +}
-> +
-> +#[pinned_drop]
-> +impl PinnedDrop for RegistrationInner {
-> +    fn drop(self: Pin<&mut Self>) {
-> +        // SAFETY:
-> +        //
-> +        // Safe as per the invariants of `RegistrationInner` and:
-> +        //
-> +        // - The containing struct is `!Unpin` and was initialized using
-> +        // pin-init, so it occupied the same memory location for the ent=
-irety of
-> +        // its lifetime.
-> +        //
-> +        // Notice that this will block until all handlers finish executi=
-ng,
-> +        // i.e.: at no point will &self be invalid while the handler is =
-running.
-> +        unsafe { bindings::free_irq(self.irq, self.cookie) };
-> +    }
-> +}
-> +
-> +// SAFETY: We only use `inner` on drop, which called at most once with n=
-o
-> +// concurrent access.
-> +unsafe impl Sync for RegistrationInner {}
-> +
-> +// SAFETY: It is safe to send `RegistrationInner` across threads.
-> +unsafe impl Send for RegistrationInner {}
-> +
-> +/// A request for an IRQ line for a given device.
-> +///
-> +/// # Invariants
-> +///
-> +/// - `=C3=ACrq` is the number of an interrupt source of `dev`.
-> +/// - `irq` has not been registered yet.
-> +pub struct IrqRequest<'a> {
-> +    dev: &'a Device<Bound>,
-> +    irq: u32,
-> +}
-> +
-> +impl<'a> IrqRequest<'a> {
-> +    /// Creates a new IRQ request for the given device and IRQ number.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// - `irq` should be a valid IRQ number for `dev`.
-> +    pub(crate) unsafe fn new(dev: &'a Device<Bound>, irq: u32) -> Self {
-> +        IrqRequest { dev, irq }
-> +    }
-> +}
-> +
-> +/// A registration of an IRQ handler for a given IRQ line.
-> +///
-> +/// # Examples
-> +///
-> +/// The following is an example of using `Registration`. It uses a
-> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutabil=
-ity.
-> +///
-> +/// ```
-> +/// use core::sync::atomic::AtomicU32;
-> +/// use core::sync::atomic::Ordering;
-> +///
-> +/// use kernel::prelude::*;
-> +/// use kernel::device::Bound;
-> +/// use kernel::irq::flags;
-> +/// use kernel::irq::Registration;
-> +/// use kernel::irq::IrqRequest;
-> +/// use kernel::irq::IrqReturn;
-> +/// use kernel::sync::Arc;
-> +/// use kernel::c_str;
-> +/// use kernel::alloc::flags::GFP_KERNEL;
-> +///
-> +/// // Declare a struct that will be passed in when the interrupt fires.=
- The u32
-> +/// // merely serves as an example of some internal data.
-> +/// struct Data(AtomicU32);
-> +///
-> +/// // [`kernel::irq::request::Handler::handle`] takes `&self`. This exa=
-mple
-> +/// // illustrates how interior mutability can be used when sharing the =
-data
-> +/// // between process context and IRQ context.
-> +///
-> +/// type Handler =3D Data;
-> +///
-> +/// impl kernel::irq::request::Handler for Handler {
-> +///     // This is executing in IRQ context in some CPU. Other CPUs can =
-still
-> +///     // try to access to data.
-> +///     fn handle(&self) -> IrqReturn {
-> +///         self.0.fetch_add(1, Ordering::Relaxed);
-> +///
-> +///         IrqReturn::Handled
-> +///     }
-> +/// }
-> +///
-> +/// // Registers an IRQ handler for the given IrqRequest.
-> +/// //
-> +/// // This is executing in process context and assumes that `request` w=
-as
-> +/// // previously acquired from a device.
-> +/// fn register_irq(handler: Handler, request: IrqRequest<'_>) -> Result=
-<Arc<Registration<Handler>>> {
-> +///     let registration =3D Registration::new(request, flags::SHARED, c=
-_str!("my_device"), handler);
-> +///
-> +///     let registration =3D Arc::pin_init(registration, GFP_KERNEL)?;
-> +///
-> +///     // The data can be accessed from process context too.
-> +///     registration.handler().0.fetch_add(1, Ordering::Relaxed);
-> +///
-> +///     Ok(registration)
-> +/// }
-> +/// # Ok::<(), Error>(())
-> +/// ```
-> +///
-> +/// # Invariants
-> +///
-> +/// * We own an irq handler using `&self.handler` as its private data.
-> +///
-> +#[pin_data]
-> +pub struct Registration<T: Handler + 'static> {
-> +    #[pin]
-> +    inner: Devres<RegistrationInner>,
-> +
-> +    #[pin]
-> +    handler: T,
-> +
-> +    /// Pinned because we need address stability so that we can pass a p=
-ointer
-> +    /// to the callback.
-> +    #[pin]
-> +    _pin: PhantomPinned,
-> +}
-> +
-> +impl<T: Handler + 'static> Registration<T> {
-> +    /// Registers the IRQ handler with the system for the given IRQ numb=
-er.
-> +    pub fn new<'a>(
-> +        request: IrqRequest<'a>,
-> +        flags: Flags,
-> +        name: &'static CStr,
-> +        handler: T,
-> +    ) -> impl PinInit<Self, Error> + 'a {
-> +        try_pin_init!(&this in Self {
-> +            handler,
-> +            inner <- Devres::new(
-> +                request.dev,
-> +                try_pin_init!(RegistrationInner {
-> +                    // SAFETY: `this` is a valid pointer to the `Registr=
-ation` instance
-> +                    cookie: unsafe { &raw mut (*this.as_ptr()).handler }=
-.cast(),
-> +                    irq: {
-> +                        // SAFETY:
-> +                        // - The callbacks are valid for use with reques=
-t_irq.
-> +                        // - If this succeeds, the slot is guaranteed to=
- be valid until the
-> +                        // destructor of Self runs, which will deregiste=
-r the callbacks
-> +                        // before the memory location becomes invalid.
-> +                        to_result(unsafe {
-> +                            bindings::request_irq(
-> +                                request.irq,
-> +                                Some(handle_irq_callback::<T>),
-> +                                flags.into_inner() as usize,
-> +                                name.as_char_ptr(),
-> +                                (&raw mut (*this.as_ptr()).handler).cast=
-(),
-> +                            )
-> +                        })?;
-> +                        request.irq
-> +                    }
-> +                })
-> +            ),
-> +            _pin: PhantomPinned,
-> +        })
-> +    }
-> +
-> +    /// Returns a reference to the handler that was registered with the =
-system.
-> +    pub fn handler(&self) -> &T {
-> +        &self.handler
-> +    }
-> +
-> +    /// Wait for pending IRQ handlers on other CPUs.
-> +    ///
-> +    /// This will attempt to access the inner [`Devres`] container.
-> +    pub fn try_synchronize(&self) -> Result {
-> +        let inner =3D self.inner.try_access().ok_or(ENODEV)?;
-> +        inner.synchronize();
-> +        Ok(())
-> +    }
-> +
-> +    /// Wait for pending IRQ handlers on other CPUs.
-> +    pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
-> +        let inner =3D self.inner.access(dev)?;
-> +        inner.synchronize();
-> +        Ok(())
-> +    }
-> +}
-> +
-> +/// # Safety
-> +///
-> +/// This function should be only used as the callback in `request_irq`.
-> +unsafe extern "C" fn handle_irq_callback<T: Handler>(
-> +    _irq: i32,
-> +    ptr: *mut core::ffi::c_void,
-> +) -> core::ffi::c_uint {
+RnJvbSBmODYwOWQ0OTAzZGU4YzA0MDYyNzE0ODEyODlkODQwOGU5YzgyNzhhIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogRnJpLCA0IEp1bCAyMDI1IDA4OjMzOjI1ICswMjAwClN1YmplY3Q6
+IFtQQVRDSF0gZHJtL2ZyYW1lYnVmZmVyOiBBY3F1aXJlIGludGVybmFsIHJlZmVyZW5jZXMg
+b24gR0VNIGhhbmRsZXMKCkFjcXVpcmUgR0VNIGhhbmRsZXMgaW4gZHJtX2ZyYW1lYnVmZmVy
+X2luaXQoKSBhbmQgcmVsZWFzZSB0aGVtIGluCnRoZSBjb3JyZXNwb25kaW5nIGRybV9mcmFt
+ZWJ1ZmZlcl9jbGVhbnVwKCkuIFRpZXMgdGhlIGhhbmRsZSdzCmxpZmV0aW1lIHRvIHRoZSBm
+cmFtZWJ1ZmZlci4gTm90IGFsbCBHRU0gYnVmZmVyIG9iamVjdHMgaGF2ZSBHRU0KaGFuZGxl
+cy4gSWYgbm90IHNldCwgbm8gcmVmY291bnRpbmcgdGFrZXMgcGxhY2UuIFRoaXMgaXMgdGhl
+IGNhc2UKZm9yIHNvbWUgZmJkZXYgZW11bGF0aW9uLiBUaGlzIGlzIG5vdCBhIHByb2JsZW0g
+YXMgdGhlc2UgR0VNIG9iamVjdHMKZG8gbm90IHVzZSBkbWEtYnVmcyBhbmQgZHJpdmVycyB3
+aWxsIG5vdCByZWxlYXNlIHRoZW0gd2hpbGUgZmJkZXYKZW11bGF0aW9uIGlzIHJ1bm5pbmcu
+CgpJbiB0aGUgR0VNIGZyYW1lYnVmZmVyIGhlbHBlcnMsIHJlc3RvcmUgdGhlIG9yaWdpbmFs
+IHJlZiBjb3VudGluZwpvbiBidWZmZXIgb2JqZWN0cy4gQXMgdGhlIGhlbHBlcnMgZm9yIGhh
+bmRsZSByZWZjb3VudGluZyBhcmUgbm93Cm5vIGxvbmdlciBjYWxsZWQgZnJvbSBvdXRzaWRl
+IHRoZSBEUk0gY29yZSwgdW5leHBvcnQgdGhlIHN5bWJvbHMuCgpHbWE1MDAgKHVubmVjZXNz
+YXJpbHkpIGNsZWFycyB0aGUgZnJhbWVidWZmZXIncyBHRU0tb2JqZWN0IHBvaW50ZXIKYmVm
+b3JlIGNhbGxpbmcgZHJtX2ZyYW1lYnVmZmVyX2NsZWFudXAoKS4gUmVtb3ZlIHRoZXNlIGxp
+bmVzIHRvCm1ha2UgaXQgY29uc2lzdGVudCB3aXRoIHRoZSByZXN0IG9mIHRoZSBkcml2ZXJz
+LiBJdCdzIG9uZSBvZiB0aGUKZmJkZXYgZW11bGF0aW9ucyB3aXRoIG5vIEdFTSBoYW5kbGUg
+b24gdGhlaXIgYnVmZmVycy4gVGhlIGNoYW5nZQp0byBnbWE1MDAgaXMgdGhlcmVmb3JlIHJh
+dGhlciBjb3NtZXRpYy4KClNpZ25lZC1vZmYtYnk6IFRob21hcyBaaW1tZXJtYW5uIDx0emlt
+bWVybWFubkBzdXNlLmRlPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fZnJhbWVidWZmZXIu
+YyAgICAgICAgICAgIHwgMjMgKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fZ2VtLmMg
+ICAgICAgICAgICAgICAgICAgIHwgNTkgKysrKysrKysrKysrKy0tLS0tLS0KIGRyaXZlcnMv
+Z3B1L2RybS9kcm1fZ2VtX2ZyYW1lYnVmZmVyX2hlbHBlci5jIHwgMTYgKysrLS0tCiBkcml2
+ZXJzL2dwdS9kcm0vZHJtX2ludGVybmFsLmggICAgICAgICAgICAgICB8ICA0ICstCiBkcml2
+ZXJzL2dwdS9kcm0vZ21hNTAwL2ZiZGV2LmMgICAgICAgICAgICAgICB8ICAyIC0KIDUgZmls
+ZXMgY2hhbmdlZCwgNjkgaW5zZXJ0aW9ucygrKSwgMzUgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9mcmFtZWJ1ZmZlci5jIGIvZHJpdmVycy9ncHUv
+ZHJtL2RybV9mcmFtZWJ1ZmZlci5jCmluZGV4IGI3ODE2MDE5NDZkYi4uZTRhMTBkZDA1M2Zj
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2ZyYW1lYnVmZmVyLmMKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2RybV9mcmFtZWJ1ZmZlci5jCkBAIC04NjIsMTEgKzg2MiwxNyBA
+QCBFWFBPUlRfU1lNQk9MX0ZPUl9URVNUU19PTkxZKGRybV9mcmFtZWJ1ZmZlcl9mcmVlKTsK
+IGludCBkcm1fZnJhbWVidWZmZXJfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBzdHJ1
+Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYiwKIAkJCSBjb25zdCBzdHJ1Y3QgZHJtX2ZyYW1lYnVm
+ZmVyX2Z1bmNzICpmdW5jcykKIHsKKwl1bnNpZ25lZCBpbnQgaTsKIAlpbnQgcmV0OwogCiAJ
+aWYgKFdBUk5fT05fT05DRShmYi0+ZGV2ICE9IGRldiB8fCAhZmItPmZvcm1hdCkpCiAJCXJl
+dHVybiAtRUlOVkFMOwogCisJZm9yIChpID0gMDsgaSA8IGZiLT5mb3JtYXQtPm51bV9wbGFu
+ZXM7IGkrKykgeworCQlpZiAoZmItPm9ialtpXSkKKwkJCWRybV9nZW1fb2JqZWN0X2hhbmRs
+ZV9nZXRfaWZfZXhpc3RzX3VubG9ja2VkKGZiLT5vYmpbaV0pOworCX0KKwogCUlOSVRfTElT
+VF9IRUFEKCZmYi0+ZmlscF9oZWFkKTsKIAogCWZiLT5mdW5jcyA9IGZ1bmNzOwpAQCAtODc1
+LDcgKzg4MSw3IEBAIGludCBkcm1fZnJhbWVidWZmZXJfaW5pdChzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZGV2LCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYiwKIAlyZXQgPSBfX2RybV9tb2Rl
+X29iamVjdF9hZGQoZGV2LCAmZmItPmJhc2UsIERSTV9NT0RFX09CSkVDVF9GQiwKIAkJCQkg
+ICAgZmFsc2UsIGRybV9mcmFtZWJ1ZmZlcl9mcmVlKTsKIAlpZiAocmV0KQotCQlnb3RvIG91
+dDsKKwkJZ290byBlcnI7CiAKIAltdXRleF9sb2NrKCZkZXYtPm1vZGVfY29uZmlnLmZiX2xv
+Y2spOwogCWRldi0+bW9kZV9jb25maWcubnVtX2ZiKys7CkBAIC04ODMsNyArODg5LDE0IEBA
+IGludCBkcm1fZnJhbWVidWZmZXJfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBzdHJ1
+Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYiwKIAltdXRleF91bmxvY2soJmRldi0+bW9kZV9jb25m
+aWcuZmJfbG9jayk7CiAKIAlkcm1fbW9kZV9vYmplY3RfcmVnaXN0ZXIoZGV2LCAmZmItPmJh
+c2UpOwotb3V0OgorCisJcmV0dXJuIDA7CisKK2VycjoKKwlmb3IgKGkgPSAwOyBpIDwgZmIt
+PmZvcm1hdC0+bnVtX3BsYW5lczsgaSsrKSB7CisJCWlmIChmYi0+b2JqW2ldKQorCQkJZHJt
+X2dlbV9vYmplY3RfaGFuZGxlX3B1dF9pZl9leGlzdHNfdW5sb2NrZWQoZmItPm9ialtpXSk7
+CisJfQogCXJldHVybiByZXQ7CiB9CiBFWFBPUlRfU1lNQk9MKGRybV9mcmFtZWJ1ZmZlcl9p
+bml0KTsKQEAgLTk2MCw2ICs5NzMsMTIgQEAgRVhQT1JUX1NZTUJPTChkcm1fZnJhbWVidWZm
+ZXJfdW5yZWdpc3Rlcl9wcml2YXRlKTsKIHZvaWQgZHJtX2ZyYW1lYnVmZmVyX2NsZWFudXAo
+c3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIpCiB7CiAJc3RydWN0IGRybV9kZXZpY2UgKmRl
+diA9IGZiLT5kZXY7CisJdW5zaWduZWQgaW50IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwgZmIt
+PmZvcm1hdC0+bnVtX3BsYW5lczsgaSsrKSB7CisJCWlmIChmYi0+b2JqW2ldKQorCQkJZHJt
+X2dlbV9vYmplY3RfaGFuZGxlX3B1dF9pZl9leGlzdHNfdW5sb2NrZWQoZmItPm9ialtpXSk7
+CisJfQogCiAJbXV0ZXhfbG9jaygmZGV2LT5tb2RlX2NvbmZpZy5mYl9sb2NrKTsKIAlsaXN0
+X2RlbCgmZmItPmhlYWQpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9nZW0u
+YyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZ2VtLmMKaW5kZXggYmM1MDVkOTM4YjNlLi45ZDhi
+OWU2YjdkMjUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZ2VtLmMKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2RybV9nZW0uYwpAQCAtMjI0LDIzICsyMjQsMjcgQEAgc3RhdGlj
+IHZvaWQgZHJtX2dlbV9vYmplY3RfaGFuZGxlX2dldChzdHJ1Y3QgZHJtX2dlbV9vYmplY3Qg
+Km9iaikKIH0KIAogLyoqCi0gKiBkcm1fZ2VtX29iamVjdF9oYW5kbGVfZ2V0X3VubG9ja2Vk
+IC0gYWNxdWlyZSByZWZlcmVuY2Ugb24gdXNlci1zcGFjZSBoYW5kbGVzCisgKiBkcm1fZ2Vt
+X29iamVjdF9oYW5kbGVfZ2V0X2lmX2V4aXN0c191bmxvY2tlZCAtIGFjcXVpcmUgcmVmZXJl
+bmNlIG9uIHVzZXItc3BhY2UgaGFuZGxlLCBpZiBhbnkKICAqIEBvYmo6IEdFTSBvYmplY3QK
+ICAqCi0gKiBBY3F1aXJlcyBhIHJlZmVyZW5jZSBvbiB0aGUgR0VNIGJ1ZmZlciBvYmplY3Qn
+cyBoYW5kbGUuIFJlcXVpcmVkCi0gKiB0byBrZWVwIHRoZSBHRU0gb2JqZWN0IGFsaXZlLiBD
+YWxsIGRybV9nZW1fb2JqZWN0X2hhbmRsZV9wdXRfdW5sb2NrZWQoKQotICogdG8gcmVsZWFz
+ZSB0aGUgcmVmZXJlbmNlLgorICogQWNxdWlyZXMgYSByZWZlcmVuY2Ugb24gdGhlIEdFTSBi
+dWZmZXIgb2JqZWN0J3MgaGFuZGxlLiBSZXF1aXJlZCB0byBrZWVwCisgKiB0aGUgR0VNIG9i
+amVjdCBhbGl2ZS4gQ2FsbCBkcm1fZ2VtX29iamVjdF9oYW5kbGVfcHV0X2lmX2V4aXN0c191
+bmxvY2tlZCgpCisgKiB0byByZWxlYXNlIHRoZSByZWZlcmVuY2UuIERvZXMgbm90aGluZyBp
+ZiB0aGUgYnVmZmVyIG9iamVjdCBoYXMgbm8gaGFuZGxlLgogICovCi12b2lkIGRybV9nZW1f
+b2JqZWN0X2hhbmRsZV9nZXRfdW5sb2NrZWQoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmop
+Cit2b2lkIGRybV9nZW1fb2JqZWN0X2hhbmRsZV9nZXRfaWZfZXhpc3RzX3VubG9ja2VkKHN0
+cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKQogewogCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYg
+PSBvYmotPmRldjsKIAogCWd1YXJkKG11dGV4KSgmZGV2LT5vYmplY3RfbmFtZV9sb2NrKTsK
+IAotCWRybV9XQVJOX09OKGRldiwgIW9iai0+aGFuZGxlX2NvdW50KTsgLyogZmlyc3QgcmVm
+IHRha2VuIGluIGNyZWF0ZS10YWlsIGhlbHBlciAqLwotCWRybV9nZW1fb2JqZWN0X2hhbmRs
+ZV9nZXQob2JqKTsKKwkvKgorCSAqIEZpcnN0IHJlZiB0YWtlbiBkdXJpbmcgR0VNIG9iamVj
+dCBjcmVhdGlvbiwgaWYgYW55LiBTb21lCisJICogZHJpdmVycyBzZXQgdXAgaW50ZXJuYWwg
+ZnJhbWVidWZmZXJzIHdpdGggR0VNIG9iamVjdHMgdGhhdAorCSAqIGRvIG5vdCBoYXZlIGEg
+R0VNIGhhbmRsZS4gSGVuY2UsIHRoaXMgY291bnRlciBjYW4gYmUgemVyby4KKwkgKi8KKwlp
+ZiAob2JqLT5oYW5kbGVfY291bnQpCisJCWRybV9nZW1fb2JqZWN0X2hhbmRsZV9nZXQob2Jq
+KTsKIH0KLUVYUE9SVF9TWU1CT0woZHJtX2dlbV9vYmplY3RfaGFuZGxlX2dldF91bmxvY2tl
+ZCk7CiAKIC8qKgogICogZHJtX2dlbV9vYmplY3RfaGFuZGxlX2ZyZWUgLSByZWxlYXNlIHJl
+c291cmNlcyBib3VuZCB0byB1c2Vyc3BhY2UgaGFuZGxlcwpAQCAtMjcyLDIxICsyNzYsMTEg
+QEAgc3RhdGljIHZvaWQgZHJtX2dlbV9vYmplY3RfZXhwb3J0ZWRfZG1hX2J1Zl9mcmVlKHN0
+cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKQogCX0KIH0KIAotLyoqCi0gKiBkcm1fZ2VtX29i
+amVjdF9oYW5kbGVfcHV0X3VubG9ja2VkIC0gcmVsZWFzZXMgcmVmZXJlbmNlIG9uIHVzZXIt
+c3BhY2UgaGFuZGxlcwotICogQG9iajogR0VNIG9iamVjdAotICoKLSAqIFJlbGVhc2VzIGEg
+cmVmZXJlbmNlIG9uIHRoZSBHRU0gYnVmZmVyIG9iamVjdCdzIGhhbmRsZS4gUG9zc2libHkg
+cmVsZWFzZXMKLSAqIHRoZSBHRU0gYnVmZmVyIG9iamVjdCBhbmQgYXNzb2NpYXRlZCBkbWEt
+YnVmIG9iamVjdHMuCi0gKi8KLXZvaWQgZHJtX2dlbV9vYmplY3RfaGFuZGxlX3B1dF91bmxv
+Y2tlZChzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaikKK3N0YXRpYyB2b2lkIGRybV9nZW1f
+b2JqZWN0X2hhbmRsZV9wdXRfdW5sb2NrZWRfdGFpbChzdHJ1Y3QgZHJtX2dlbV9vYmplY3Qg
+Km9iaikKIHsKIAlzdHJ1Y3QgZHJtX2RldmljZSAqZGV2ID0gb2JqLT5kZXY7CiAJYm9vbCBm
+aW5hbCA9IGZhbHNlOwogCi0JaWYgKFdBUk5fT04oUkVBRF9PTkNFKG9iai0+aGFuZGxlX2Nv
+dW50KSA9PSAwKSkKLQkJcmV0dXJuOwotCiAJLyoKIAkqIE11c3QgYnVtcCBoYW5kbGUgY291
+bnQgZmlyc3QgYXMgdGhpcyBtYXkgYmUgdGhlIGxhc3QKIAkqIHJlZiwgaW4gd2hpY2ggY2Fz
+ZSB0aGUgb2JqZWN0IHdvdWxkIGRpc2FwcGVhciBiZWZvcmUgd2UKQEAgLTMwNCw3ICsyOTgs
+MzIgQEAgdm9pZCBkcm1fZ2VtX29iamVjdF9oYW5kbGVfcHV0X3VubG9ja2VkKHN0cnVjdCBk
+cm1fZ2VtX29iamVjdCAqb2JqKQogCWlmIChmaW5hbCkKIAkJZHJtX2dlbV9vYmplY3RfcHV0
+KG9iaik7CiB9Ci1FWFBPUlRfU1lNQk9MKGRybV9nZW1fb2JqZWN0X2hhbmRsZV9wdXRfdW5s
+b2NrZWQpOworCitzdGF0aWMgdm9pZCBkcm1fZ2VtX29iamVjdF9oYW5kbGVfcHV0X3VubG9j
+a2VkKHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKQoreworCXN0cnVjdCBkcm1fZGV2aWNl
+ICpkZXYgPSBvYmotPmRldjsKKworCWlmIChkcm1fV0FSTl9PTihkZXYsIFJFQURfT05DRShv
+YmotPmhhbmRsZV9jb3VudCkgPT0gMCkpCisJCXJldHVybjsKKworCWRybV9nZW1fb2JqZWN0
+X2hhbmRsZV9wdXRfdW5sb2NrZWRfdGFpbChvYmopOworfQorCisvKioKKyAqIGRybV9nZW1f
+b2JqZWN0X2hhbmRsZV9wdXRfaWZfZXhpc3RzX3VubG9ja2VkIC0gcmVsZWFzZXMgcmVmZXJl
+bmNlIG9uIHVzZXItc3BhY2UgaGFuZGxlLCBpZiBhbnkKKyAqIEBvYmo6IEdFTSBvYmplY3QK
+KyAqCisgKiBSZWxlYXNlcyBhIHJlZmVyZW5jZSBvbiB0aGUgR0VNIGJ1ZmZlciBvYmplY3Qn
+cyBoYW5kbGUuIFBvc3NpYmx5IHJlbGVhc2VzCisgKiB0aGUgR0VNIGJ1ZmZlciBvYmplY3Qg
+YW5kIGFzc29jaWF0ZWQgZG1hLWJ1ZiBvYmplY3RzLiBEb2VzIG5vdGhpbmcgaWYgdGhlCisg
+KiBidWZmZXIgb2JqZWN0IGhhcyBubyBoYW5kbGUuCisgKi8KK3ZvaWQgZHJtX2dlbV9vYmpl
+Y3RfaGFuZGxlX3B1dF9pZl9leGlzdHNfdW5sb2NrZWQoc3RydWN0IGRybV9nZW1fb2JqZWN0
+ICpvYmopCit7CisJaWYgKCFvYmotPmhhbmRsZV9jb3VudCkKKwkJcmV0dXJuOworCisJZHJt
+X2dlbV9vYmplY3RfaGFuZGxlX3B1dF91bmxvY2tlZF90YWlsKG9iaik7Cit9CiAKIC8qCiAg
+KiBDYWxsZWQgYXQgZGV2aWNlIG9yIG9iamVjdCBjbG9zZSB0byByZWxlYXNlIHRoZSBmaWxl
+J3MKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZ2VtX2ZyYW1lYnVmZmVyX2hl
+bHBlci5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9nZW1fZnJhbWVidWZmZXJfaGVscGVyLmMK
+aW5kZXggYzYwZDAwNDRkMDM2Li42MThjZTcyNWNkNzUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9kcm1fZ2VtX2ZyYW1lYnVmZmVyX2hlbHBlci5jCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9kcm1fZ2VtX2ZyYW1lYnVmZmVyX2hlbHBlci5jCkBAIC0xMDAsNyArMTAwLDcgQEAg
+dm9pZCBkcm1fZ2VtX2ZiX2Rlc3Ryb3koc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIpCiAJ
+dW5zaWduZWQgaW50IGk7CiAKIAlmb3IgKGkgPSAwOyBpIDwgZmItPmZvcm1hdC0+bnVtX3Bs
+YW5lczsgaSsrKQotCQlkcm1fZ2VtX29iamVjdF9oYW5kbGVfcHV0X3VubG9ja2VkKGZiLT5v
+YmpbaV0pOworCQlkcm1fZ2VtX29iamVjdF9wdXQoZmItPm9ialtpXSk7CiAKIAlkcm1fZnJh
+bWVidWZmZXJfY2xlYW51cChmYik7CiAJa2ZyZWUoZmIpOwpAQCAtMTgzLDEwICsxODMsOCBA
+QCBpbnQgZHJtX2dlbV9mYl9pbml0X3dpdGhfZnVuY3Moc3RydWN0IGRybV9kZXZpY2UgKmRl
+diwKIAkJaWYgKCFvYmpzW2ldKSB7CiAJCQlkcm1fZGJnX2ttcyhkZXYsICJGYWlsZWQgdG8g
+bG9va3VwIEdFTSBvYmplY3RcbiIpOwogCQkJcmV0ID0gLUVOT0VOVDsKLQkJCWdvdG8gZXJy
+X2dlbV9vYmplY3RfaGFuZGxlX3B1dF91bmxvY2tlZDsKKwkJCWdvdG8gZXJyX2dlbV9vYmpl
+Y3RfcHV0OwogCQl9Ci0JCWRybV9nZW1fb2JqZWN0X2hhbmRsZV9nZXRfdW5sb2NrZWQob2Jq
+c1tpXSk7Ci0JCWRybV9nZW1fb2JqZWN0X3B1dChvYmpzW2ldKTsKIAogCQltaW5fc2l6ZSA9
+IChoZWlnaHQgLSAxKSAqIG1vZGVfY21kLT5waXRjaGVzW2ldCiAJCQkgKyBkcm1fZm9ybWF0
+X2luZm9fbWluX3BpdGNoKGluZm8sIGksIHdpZHRoKQpAQCAtMTk2LDIyICsxOTQsMjIgQEAg
+aW50IGRybV9nZW1fZmJfaW5pdF93aXRoX2Z1bmNzKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYs
+CiAJCQlkcm1fZGJnX2ttcyhkZXYsCiAJCQkJICAgICJHRU0gb2JqZWN0IHNpemUgKCV6dSkg
+c21hbGxlciB0aGFuIG1pbmltdW0gc2l6ZSAoJXUpIGZvciBwbGFuZSAlZFxuIiwKIAkJCQkg
+ICAgb2Jqc1tpXS0+c2l6ZSwgbWluX3NpemUsIGkpOwotCQkJZHJtX2dlbV9vYmplY3RfaGFu
+ZGxlX3B1dF91bmxvY2tlZChvYmpzW2ldKTsKKwkJCWRybV9nZW1fb2JqZWN0X3B1dChvYmpz
+W2ldKTsKIAkJCXJldCA9IC1FSU5WQUw7Ci0JCQlnb3RvIGVycl9nZW1fb2JqZWN0X2hhbmRs
+ZV9wdXRfdW5sb2NrZWQ7CisJCQlnb3RvIGVycl9nZW1fb2JqZWN0X3B1dDsKIAkJfQogCX0K
+IAogCXJldCA9IGRybV9nZW1fZmJfaW5pdChkZXYsIGZiLCBtb2RlX2NtZCwgb2JqcywgaSwg
+ZnVuY3MpOwogCWlmIChyZXQpCi0JCWdvdG8gZXJyX2dlbV9vYmplY3RfaGFuZGxlX3B1dF91
+bmxvY2tlZDsKKwkJZ290byBlcnJfZ2VtX29iamVjdF9wdXQ7CiAKIAlyZXR1cm4gMDsKIAot
+ZXJyX2dlbV9vYmplY3RfaGFuZGxlX3B1dF91bmxvY2tlZDoKK2Vycl9nZW1fb2JqZWN0X3B1
+dDoKIAl3aGlsZSAoaSA+IDApIHsKIAkJLS1pOwotCQlkcm1fZ2VtX29iamVjdF9oYW5kbGVf
+cHV0X3VubG9ja2VkKG9ianNbaV0pOworCQlkcm1fZ2VtX29iamVjdF9wdXQob2Jqc1tpXSk7
+CiAJfQogCXJldHVybiByZXQ7CiB9CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJt
+X2ludGVybmFsLmggYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2ludGVybmFsLmgKaW5kZXggZjdi
+NDE0YTgxM2FlLi45MjMzMDE5ZjU0YTggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9k
+cm1faW50ZXJuYWwuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2ludGVybmFsLmgKQEAg
+LTE2MSw4ICsxNjEsOCBAQCB2b2lkIGRybV9zeXNmc19sZWFzZV9ldmVudChzdHJ1Y3QgZHJt
+X2RldmljZSAqZGV2KTsKIAogLyogZHJtX2dlbS5jICovCiBpbnQgZHJtX2dlbV9pbml0KHN0
+cnVjdCBkcm1fZGV2aWNlICpkZXYpOwotdm9pZCBkcm1fZ2VtX29iamVjdF9oYW5kbGVfZ2V0
+X3VubG9ja2VkKHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKTsKLXZvaWQgZHJtX2dlbV9v
+YmplY3RfaGFuZGxlX3B1dF91bmxvY2tlZChzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaik7
+Cit2b2lkIGRybV9nZW1fb2JqZWN0X2hhbmRsZV9nZXRfaWZfZXhpc3RzX3VubG9ja2VkKHN0
+cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKTsKK3ZvaWQgZHJtX2dlbV9vYmplY3RfaGFuZGxl
+X3B1dF9pZl9leGlzdHNfdW5sb2NrZWQoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmopOwog
+aW50IGRybV9nZW1faGFuZGxlX2NyZWF0ZV90YWlsKHN0cnVjdCBkcm1fZmlsZSAqZmlsZV9w
+cml2LAogCQkJICAgICAgIHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqLAogCQkJICAgICAg
+IHUzMiAqaGFuZGxlcCk7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZ21hNTAwL2Zi
+ZGV2LmMgYi9kcml2ZXJzL2dwdS9kcm0vZ21hNTAwL2ZiZGV2LmMKaW5kZXggOGVkZWZlYTJl
+ZjU5Li5hZmQyNTIxMDhjZmEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9nbWE1MDAv
+ZmJkZXYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZ21hNTAwL2ZiZGV2LmMKQEAgLTEyMSw3
+ICsxMjEsNiBAQCBzdGF0aWMgdm9pZCBwc2JfZmJkZXZfZmJfZGVzdHJveShzdHJ1Y3QgZmJf
+aW5mbyAqaW5mbykKIAlkcm1fZmJfaGVscGVyX2ZpbmkoZmJfaGVscGVyKTsKIAogCWRybV9m
+cmFtZWJ1ZmZlcl91bnJlZ2lzdGVyX3ByaXZhdGUoZmIpOwotCWZiLT5vYmpbMF0gPSBOVUxM
+OwogCWRybV9mcmFtZWJ1ZmZlcl9jbGVhbnVwKGZiKTsKIAlrZnJlZShmYik7CiAKQEAgLTI0
+Myw3ICsyNDIsNiBAQCBpbnQgcHNiX2ZiZGV2X2RyaXZlcl9mYmRldl9wcm9iZShzdHJ1Y3Qg
+ZHJtX2ZiX2hlbHBlciAqZmJfaGVscGVyLAogCiBlcnJfZHJtX2ZyYW1lYnVmZmVyX3VucmVn
+aXN0ZXJfcHJpdmF0ZToKIAlkcm1fZnJhbWVidWZmZXJfdW5yZWdpc3Rlcl9wcml2YXRlKGZi
+KTsKLQlmYi0+b2JqWzBdID0gTlVMTDsKIAlkcm1fZnJhbWVidWZmZXJfY2xlYW51cChmYik7
+CiAJa2ZyZWUoZmIpOwogZXJyX2RybV9nZW1fb2JqZWN0X3B1dDoKLS0gCjIuNTAuMAoK
 
-You should just use `c_uint` without the prefix. This way you get it
-from `kernel::prelude::*` which has the correct typedefs rather than
-`core::ffi`.
-
-> +    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
-> +    let handler =3D unsafe { &*(ptr as *const T) };
-> +    T::handle(handler).into_inner()
-> +}
->=20
-> --=20
-> 2.50.0
->=20
+--------------11RFMZbGSSYjgpckF9EsFQzo--
