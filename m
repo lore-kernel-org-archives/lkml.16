@@ -1,61 +1,62 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9C81EF38C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076D2214A97;
+	Fri,  4 Jul 2025 18:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653081; cv=none; b=eLLdzOiQCP8R4ZFXXDAlvWnXi/N8WSNDh3+v1KKZc/3UUSsOb4cOm+NiyZseW20ayUTPEsx+eECtTfBXPEk0f5jErD1U/6MItwubOsEPIdvX1gBV3cu4WzjK0jXc8DnMvYMkRbQIQgQhZ1TrCICA/nfvEbRW1FpPh4OwhH3nj4w=
+	t=1751653085; cv=none; b=NK4X1Y5Be9q+Vv/uw4ZAiQ5ecZky5BIdcogZ1bftrhRF3eDJ8SqqE7nwtQmIn+EOmFAmtNxh2uc+JEK6qEapYPZVeGIXe2ye1JdrJc12TsoXC/PqxMJ+++8U/ZCPkeOzWRUdIjf/d1RqBdscmzNqLAoq8Ip7dGfCTX0I8Fk+ASc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751653081; c=relaxed/simple;
-	bh=nPhNVoV6+80LSeMROMisZWqk/CFBUupRJ0n6PMLQ7/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MFDHQOG49J0PL2qVMIPfRBn6koj/lERX61Z64dPVsR9Ypn/cqhNTKpLTuB/Mt56PnGOZhE652ub/xracsqA8YsyZfXP6zUMK3mNFpXCYl931wHM2FFdrK/FpFH9i+GDBbqRn3SgpHXDHb51OWwyrWmNoKddxHdqMr4BUDgCU4UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hr1NaeVR; arc=none smtp.client-ip=209.85.222.179
+	s=arc-20240116; t=1751653085; c=relaxed/simple;
+	bh=aHEKVPEcG65zMssaVDheCdyA1eEbVFSOQxSEcrZfmqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ObtVTqt5tAzIlLDxuoQwgiup50XBC4Fu48YcG2fKRIUnXtJROGDGbipSZMibU7aA/65Od8q2hkI3GWwkbhLMBs6f/HgxX4ALrk4voPHabcS5V93O2EXOub9Bya8PSu/ZEuGav3+ZF2iuTso0Bf8UhGppgBKcEiaoYliZ/b4trKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgI6j4j8; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hr1NaeVR"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d5d0ea6c8dso86445085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:17:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgI6j4j8"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d219896edeso142827885a.1;
+        Fri, 04 Jul 2025 11:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751653078; x=1752257878; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=19gtuz8pyibEGno6XM6sOP9Gh4Tb0Vhhx5W2BjE5J9g=;
-        b=Hr1NaeVRpTuikIbowZjmyY8z/hyz7LtlhgmZOxysugjFxb0CyTH8nL/YLMfOXTHqgO
-         10hfe+LBxV/PpXUhvW2aa5OYF6xjVCvAF8WknFROELZzDXRMK5szx1ZDnDalk3O71jtB
-         rwoRUjSulGVWrxww/jvtu55uTQzJS+j6WXxPydeOeckjXupZyF2t2Z2m1Woax/8IDFQ6
-         nuKTiLlpEmPzrkpvprZSnWzqETURYWDQhjHwnqpnHbnRiFJgCULl3x0CVH/kCYWfWwU6
-         MjUoId1i84wWHuK7YA758C2wA3E0H8857HVApw46YKp7sjzCiB5szof59sZ1fo/mntXB
-         Zsmg==
+        d=gmail.com; s=20230601; t=1751653083; x=1752257883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bl/mZF3g2hMilPsP1iGl5oIVwOLv3WwEcuUx0SZOALE=;
+        b=TgI6j4j8NvQ1RSc38+62ty64bMoKYVUKba44sKW1/C5mCIy4gMhV55Qoy5JpxU9YVm
+         XRXQyEKwc2DsNCOKve3DDjE16B+UAs7WAobl0tKRJ7HNreY7UBsnP2+VlmwRcz/Iq2jp
+         Jty1yGuBZDUGto66R6UVes/A2695Yi6AGmt7Q5leH8h9Km3HavorJk9MgQN/TnEwiQeu
+         U8D5D9z3hKvPI9TKgyqVLt1G+NLcHe2PF1acAy7m+odBzkbaSnL6RSoZMDTddadaTJQV
+         TYwio411vvxY2b0NbK6dsGd5RKCDz1rJQHRHskuWWVnbGon85cNvGNC30EnTBH4ShkSa
+         h50g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751653078; x=1752257878;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=19gtuz8pyibEGno6XM6sOP9Gh4Tb0Vhhx5W2BjE5J9g=;
-        b=on7vsCvngnIIYHYWV7UXWs1zb9P27hMK1vhW6mfmLcBafDldLL0aaRZvc6+malyA6b
-         xcl1NQRZjgbbEfg/hx6YxYXKodp2RBl0+eSo93v1XRqEYiTxxu7ZG3Z6Baoy5SzI9BZe
-         3xqZYenMvitxpaFN3iKAst45Iml9CeKmfj9GBDGPxtZkkTUBw/amzpglCfNSOVH7kvYR
-         zWa2L9JFy+l/GyNQVPFZtosfX9REjnVKactToZGIgTEZS9aIrMc1R9SLFcUqMnTeHJQe
-         gXFnmbh+2GdaeRWEhHfkhtb/rgZMk/6MCZ/zkzUsbNhBvIF3pmdjAmICCs1l/hxhczHI
-         QF5A==
-X-Forwarded-Encrypted: i=1; AJvYcCURIuW+Ulau4blbRlxv4QEbhHSzT7B63HSszStZSROsohKRxPkKDSyjeN90hUIpclFH6EBxRDpNx9JpAMc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAsFZdV56DKsq2BJoLbdiPH9dhxMtdpEtiNV4E30aGjf7xI012
-	2kMsukd144leM+XSW/J33BzXDfRV+c2khUGFOdRrY5PyVxwptvejGcaL
-X-Gm-Gg: ASbGnctzTV74djMP8sVAzW6PfRYQNKVVostMl8MXASoiwD/Mxkn3+Ub4+rNWS7E0ktU
-	6vUtIz436FX3DhMCLosbv4ykSDEHT5BT6qFIZTPBh3JOnKrFrKXGKpWP6NnXd5GIsd94HiJIRRm
-	1dBKkOF8z3jzSlfO01fIAEC70zELHNgtJIwe5cygoa2mxIRTkWQ4HCowdYrnG40mzSbJ9SVWCaZ
-	/pRt2frBU7DUuRV71JJFdEkN8hmoRXifG5nHFu4T4T7rMQlZjKXIQDm3ql6ZiF/0IWy1tXHg1+D
-	mjYp+j6BxmS/xmXE2FhgkmoIwQKZdj0tooiYhabiyqKuRW4YGRxPzxA0wjw92eGvkbuRgAWu+T7
-	htg==
-X-Google-Smtp-Source: AGHT+IETRsUHYAYc8lzzi3bO80ku17RkglPp6be9hVQZnrswNO8fKXEdte/rmYzGhfcYJimIPz8Pzg==
-X-Received: by 2002:a05:620a:708e:b0:7d3:c68e:fcf6 with SMTP id af79cd13be357-7d5df10927emr412754585a.9.1751653077920;
-        Fri, 04 Jul 2025 11:17:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751653083; x=1752257883;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bl/mZF3g2hMilPsP1iGl5oIVwOLv3WwEcuUx0SZOALE=;
+        b=ghr68InYzthW+GB5aQFZxQjI3FfiaxE6veKfqv53flEKmn8oXQ4UmXeJmD7JcRZbZT
+         AKVxf2Azq3ur+2QG9+r+5e9BZ1LOVa1UjtfbADMtL/vaf5gN8aXwoLhV+rjBAvx59iod
+         HGfgvSQsF63/tHmVexLq0NenC8iGHU+SyEjVIRNudmWeu3C/k/lL6UyOy/4eQsHxmkWg
+         MhFGng8QQ9v7k1h/QrG3JnSaiuMWyXYltKPWWfWqHWbtFLhwhqN1Z3j+nPk/hGnnMI5H
+         sM5B1RWAK+v/Pn2MAk2trhahvrJmCuEdd+S/0wjE1bcdiIx4/kufqDCYyPo/Wha2TYbt
+         nDSA==
+X-Forwarded-Encrypted: i=1; AJvYcCU07E9VqsOp0vNbaZ+yMIui9zy65L2piOnwdWp8LURdT1Y4Ajesl6G8KTuljmF1dVroyhkhUV3P@vger.kernel.org, AJvYcCU7tfT87ZADPY/Uo4jZGfdBZ8vjzS8NWZinn+MGy1rHjlxFV82AC18v2+ffDw5/jmCoA5HxIM4YZScQeMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT8hpKPbdJ6xrEx9LeI9CgD0V7sjvApWv2dk7IB5nBr3xIAIEo
+	hDCWs2Gk+SMYhFYu37qGc5XSVCFtD4g0SqncZpOjvK7siZlCQBCIBPcK
+X-Gm-Gg: ASbGncvSOUuVKbzWxQa1LVC9nbjMhzzsLfbO2WD6sBx1bYojAfampBzufiUDCjrbmGQ
+	7dH9P/DfcGPTl8kG1fIuqrTqZ7IvKwVjEkXbotDeLXwyoHs2gS2vSMVmnOaiuDDU+WZKCqnDlBA
+	cfIgd4R+J89w7aRkmXCNh0Pq5b22MMVZe51OEGJxEnFJfy18HJv6Nsqv1Kjwqx+gd3axgY9pdJL
+	xT17MlKduif307Os7Op+1C5RMns0eh2fBqoqz1QR5tqkqgRI6qTibtKr05XCZHkPGsaJuqZm+SB
+	psmOnkqzOOn6sMH0mHIAFsAdsE2ehQxt2k1NWWzHOBdJrIK292amU5Z/LQSP/AuktHA=
+X-Google-Smtp-Source: AGHT+IFy3tLLLYtnh/8YAuJviyCcHo1jFc1c5QzCjrQPfcPthvfTb7Ko7B/LTrElXNHWG9aZmoeYiQ==
+X-Received: by 2002:a05:620a:4147:b0:7d3:a580:c197 with SMTP id af79cd13be357-7d5ddc2f78fmr380974585a.31.1751653082750;
+        Fri, 04 Jul 2025 11:18:02 -0700 (PDT)
 Received: from KASONG-MC4 ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbe7c188sm183300585a.59.2025.07.04.11.17.53
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbe7c188sm183300585a.59.2025.07.04.11.17.58
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 04 Jul 2025 11:17:57 -0700 (PDT)
+        Fri, 04 Jul 2025 11:18:02 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -68,11 +69,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>,
 	Barry Song <baohua@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v4 0/9] mm/shmem, swap: bugfix and improvement of mTHP swap-in
-Date: Sat,  5 Jul 2025 02:17:39 +0800
-Message-ID: <20250704181748.63181-1-ryncsn@gmail.com>
+	Kairui Song <kasong@tencent.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v4 1/9] mm/shmem, swap: improve cached mTHP handling and fix potential hung
+Date: Sat,  5 Jul 2025 02:17:40 +0800
+Message-ID: <20250704181748.63181-2-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250704181748.63181-1-ryncsn@gmail.com>
+References: <20250704181748.63181-1-ryncsn@gmail.com>
 Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -84,98 +88,136 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-The current mTHP swapin path have several problems. It may potentially
-hang, may cause redundant faults due to false positive swap cache lookup,
-and it will involve at least 4 Xarray tree walks (get order, get order
-again, confirm swap, insert folio). And for !CONFIG_TRANSPARENT_HUGEPAGE
-builds, it will performs some mTHP related checks.
+The current swap-in code assumes that, when a swap entry in shmem mapping
+is order 0, its cached folios (if present) must be order 0 too, which
+turns out not always correct.
 
-This series fixes all of the mentioned issues, and the code should be more
-robust and prepared for the swap table series. Now tree walks is reduced
-to twice (get order & confirm, insert folio), !CONFIG_TRANSPARENT_HUGEPAGE
-build overhead is also minimized, and comes with a sanity check now.
+The problem is shmem_split_large_entry is called before verifying the
+folio will eventually be swapped in, one possible race is:
 
-The performance is slightly better after this series, sequential swap in of
-24G data from ZRAM, using transparent_hugepage_tmpfs=always (24 samples each):
+    CPU1                          CPU2
+shmem_swapin_folio
+/* swap in of order > 0 swap entry S1 */
+  folio = swap_cache_get_folio
+  /* folio = NULL */
+  order = xa_get_order
+  /* order > 0 */
+  folio = shmem_swap_alloc_folio
+  /* mTHP alloc failure, folio = NULL */
+  <... Interrupted ...>
+                                 shmem_swapin_folio
+                                 /* S1 is swapped in */
+                                 shmem_writeout
+                                 /* S1 is swapped out, folio cached */
+  shmem_split_large_entry(..., S1)
+  /* S1 is split, but the folio covering it has order > 0 now */
 
-Before:        11.02,  stddev: 0.06
-After patch 1: 10.74,  stddev: 0.03
-After patch 2: 10.72,  stddev: 0.01
-After patch 3: 10.73,  stddev: 0.04
-After patch 4: 10.72,  stddev: 0.02
-After patch 5: 10.74,  stddev: 0.01
-After patch 6: 10.13,  stddev: 0.09
-After patch 7: 9.95,   stddev: 0.02
-After patch 8: 9.88,   stddev: 0.04
+Now any following swapin of S1 will hang: `xa_get_order` returns 0, and
+folio lookup will return a folio with order > 0.  The
+`xa_get_order(&mapping->i_pages, index) != folio_order(folio)` will always
+return false causing swap-in to return -EEXIST.
 
-Each patch improves the performance by a little, which is about ~10%
-faster in total.
+And this looks fragile.  So fix this up by allowing seeing a larger folio
+in swap cache, and check the whole shmem mapping range covered by the
+swapin have the right swap value upon inserting the folio.  And drop the
+redundant tree walks before the insertion.
 
-Build kernel test showed very slightly improvement, testing with make -j24
-with defconfig in a 256M memcg also using ZRAM as swap, and
-transparent_hugepage_tmpfs=always (6 test runs):
+This will actually improve performance, as it avoids two redundant Xarray
+tree walks in the hot path, and the only side effect is that in the
+failure path, shmem may redundantly reallocate a few folios causing
+temporary slight memory pressure.
 
-Before:      system time avg: 3911.80s
-After:       system time avg: 3863.76s
+And worth noting, it may seems the order and value check before inserting
+might help reducing the lock contention, which is not true.  The swap
+cache layer ensures raced swapin will either see a swap cache folio or
+failed to do a swapin (we have SWAP_HAS_CACHE bit even if swap cache is
+bypassed), so holding the folio lock and checking the folio flag is
+already good enough for avoiding the lock contention.  The chance that a
+folio passes the swap entry value check but the shmem mapping slot has
+changed should be very low.
 
---
+Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Reviewed-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: <stable@vger.kernel.org>
+---
+ mm/shmem.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-V3: https://lore.kernel.org/linux-mm/20250627062020.534-1-ryncsn@gmail.com/
-Updates:
-- Split and reorganize a few intermediate patches [ Baolin Wang ]
-- Fix a duplicated fault issue that may occur in one intermediate patch
-  [ Baolin Wang ]
-- Improve variable naming [ Baolin Wang ]
-- Fix a wrong error value problem, return proper error value when
-  swapin failed.
-- No major code change from V3.
-
-V2: https://lore.kernel.org/linux-mm/20250619175538.15799-1-ryncsn@gmail.com/
-Updates:
-- Split the clean up patch into 3 individual patches [ Baolin Wang ]
-- Fix a code error in the first patch [ Baolin Wang ]
-- I found there are some other remaining issue that can be fixed after
-  the clean up so includes these too: fix major fault counter, and clean
-  up the goto labels.
-
-V1: https://lore.kernel.org/linux-mm/20250617183503.10527-1-ryncsn@gmail.com/
-Updates:
-- Improve of funtion name and variable names, also commit message [ Kemeng Shi,
-  Dev Jain ]
-- Correct Fixes: tag [ Andrew Morton ]
-- Collect Reviewed-by.
-
-Two of the patches in this series comes from the swap table series [1],
-and worth noting that the performance gain of this series is independent
-to the swap table series, we'll see another bigger performance gain and
-reduce of memory usage after the swap table series.
-
-I found these issues while trying to split the shmem changes out of the
-swap table series for easier reviewing, and found several more issues
-while doing stress tests for performance comparision. Barry also mentioned
-that CONFIG_TRANSPARENT_HUGEPAGE may have redundant checks [2] and I
-managed to clean them up properly too.
-
-No issue is found with a few days of stress testing.
-
-Link: https://lore.kernel.org/linux-mm/20250514201729.48420-1-ryncsn@gmail.com/ [1]
-Link: https://lore.kernel.org/linux-mm/CAMgjq7AsKFz7UN+seR5atznE_RBTDC9qjDmwN5saMe+KL3b1mQ@mail.gmail.com/ [2]
-Kairui Song (9):
-  mm/shmem, swap: improve cached mTHP handling and fix potential hung
-  mm/shmem, swap: avoid redundant Xarray lookup during swapin
-  mm/shmem, swap: tidy up THP swapin checks
-  mm/shmem, swap: tidy up swap entry splitting
-  mm/shmem, swap: avoid false positive swap cache lookup
-  mm/shmem, swap: never use swap cache and readahead for
-    SWP_SYNCHRONOUS_IO
-  mm/shmem, swap: simplify swapin path and result handling
-  mm/shmem, swap: simplify swap entry and index calculation of large
-    swapin
-  mm/shmem, swap: fix major fault counting
-
- mm/shmem.c | 273 ++++++++++++++++++++++++++++-------------------------
- 1 file changed, 147 insertions(+), 126 deletions(-)
-
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 334b7b4a61a0..e3c9a1365ff4 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -884,7 +884,9 @@ static int shmem_add_to_page_cache(struct folio *folio,
+ 				   pgoff_t index, void *expected, gfp_t gfp)
+ {
+ 	XA_STATE_ORDER(xas, &mapping->i_pages, index, folio_order(folio));
+-	long nr = folio_nr_pages(folio);
++	unsigned long nr = folio_nr_pages(folio);
++	swp_entry_t iter, swap;
++	void *entry;
+ 
+ 	VM_BUG_ON_FOLIO(index != round_down(index, nr), folio);
+ 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+@@ -896,14 +898,24 @@ static int shmem_add_to_page_cache(struct folio *folio,
+ 
+ 	gfp &= GFP_RECLAIM_MASK;
+ 	folio_throttle_swaprate(folio, gfp);
++	swap = iter = radix_to_swp_entry(expected);
+ 
+ 	do {
+ 		xas_lock_irq(&xas);
+-		if (expected != xas_find_conflict(&xas)) {
+-			xas_set_err(&xas, -EEXIST);
+-			goto unlock;
++		xas_for_each_conflict(&xas, entry) {
++			/*
++			 * The range must either be empty, or filled with
++			 * expected swap entries. Shmem swap entries are never
++			 * partially freed without split of both entry and
++			 * folio, so there shouldn't be any holes.
++			 */
++			if (!expected || entry != swp_to_radix_entry(iter)) {
++				xas_set_err(&xas, -EEXIST);
++				goto unlock;
++			}
++			iter.val += 1 << xas_get_order(&xas);
+ 		}
+-		if (expected && xas_find_conflict(&xas)) {
++		if (expected && iter.val - nr != swap.val) {
+ 			xas_set_err(&xas, -EEXIST);
+ 			goto unlock;
+ 		}
+@@ -2323,7 +2335,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 			error = -ENOMEM;
+ 			goto failed;
+ 		}
+-	} else if (order != folio_order(folio)) {
++	} else if (order > folio_order(folio)) {
+ 		/*
+ 		 * Swap readahead may swap in order 0 folios into swapcache
+ 		 * asynchronously, while the shmem mapping can still stores
+@@ -2348,15 +2360,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 
+ 			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+ 		}
++	} else if (order < folio_order(folio)) {
++		swap.val = round_down(swap.val, 1 << folio_order(folio));
+ 	}
+ 
+ alloced:
+ 	/* We have to do this with folio locked to prevent races */
+ 	folio_lock(folio);
+ 	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+-	    folio->swap.val != swap.val ||
+-	    !shmem_confirm_swap(mapping, index, swap) ||
+-	    xa_get_order(&mapping->i_pages, index) != folio_order(folio)) {
++	    folio->swap.val != swap.val) {
+ 		error = -EEXIST;
+ 		goto unlock;
+ 	}
 -- 
 2.50.0
 
