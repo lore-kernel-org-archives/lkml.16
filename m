@@ -1,97 +1,140 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98C127F759;
-	Fri,  4 Jul 2025 07:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5495A27FD51;
+	Fri,  4 Jul 2025 07:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614059; cv=none; b=nPyCIzPdC9IV/9rs9pE2v7Jd741Nk79c3dMjTwRhQdbxfUgVmh6bkTGRa4Qkv0KDCmzfSPJAvsW/yaak0RihtLudFHwcFQwUkVDq/MhGq3I6RZ4DfMBGtCf5s+xXYaRxyZ9Mqfue5WCnuzUUzSHY+X2Bm9lX7WUmKPDXdqTHhtI=
+	t=1751614108; cv=none; b=KWD8kKrfF7KkHaPjDlcFa87Pp0gVbu3NTmubb/w5+5h123hWp4zmsBupI5b+H6hNvE2VgE2f03KBrAhSu60poUT3I8IK4Ih8vQetOxpdoQ5u4uwYM6HU5APcfdq7eyvCoMJkAOrbfDP5g2xsIv79nw/LWXPrYv22EImGDzUb+Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614059; c=relaxed/simple;
-	bh=yVFYo6Kk/6Zc9eHOlHEVJQtvOkaea4d9X8jdBYc1rs8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=J6Gyxw+SBu/c6FzF+5JUg+IrYo2EYMJuzGYoclSJo459lRh+0/K2mC4PumyTPjSsUgw4AuDIjDZu5yRfHuZBtm/5O790WZbN6c7n3H1UsAR2VYD4Aw44NzzUX+YsBItMlK2G7oECYiDvy7AfWXsacP6sWeqDur7gFwB2P76ghjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bYQ6R5g88zCh12;
-	Fri,  4 Jul 2025 15:21:19 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4bYQ6H6fKFzBRHKj;
-	Fri,  4 Jul 2025 15:21:11 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bYQ644Mftz8R044;
-	Fri,  4 Jul 2025 15:21:00 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl1.zte.com.cn with SMTP id 5647KiW8090359;
-	Fri, 4 Jul 2025 15:20:44 +0800 (+08)
-	(envelope-from jiang.peng9@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Fri, 4 Jul 2025 15:20:47 +0800 (CST)
-Date: Fri, 4 Jul 2025 15:20:47 +0800 (CST)
-X-Zmail-TransId: 2af9686780cf5ce-2beb8
-X-Mailer: Zmail v1.0
-Message-ID: <20250704152047205U11FdEih1MxrmcmAz0Xpp@zte.com.cn>
+	s=arc-20240116; t=1751614108; c=relaxed/simple;
+	bh=6n2PP2ZTzA/18ZM9VFBi3CenEPC3w/cFzHPouHpkZ6I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZsJ0dQ69lDNbsIKg+ijqsfiKXfB67dyjORiSBKJYg5XV0vDmR2U+K7BBNAXQpuEHwy6JF2Y6rRGCUmhIHUJlhFFtsdsPwKu+L+vx0JDspJLa5TzaioWfWm4jhCPO5JAm5rNOPh0NEEACf2waxudtXs/+hDCJZ5TwD2dYIAN4cH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLtQdvhB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLtQdvhB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D41EC4CEE3;
+	Fri,  4 Jul 2025 07:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751614107;
+	bh=6n2PP2ZTzA/18ZM9VFBi3CenEPC3w/cFzHPouHpkZ6I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=uLtQdvhBa4dSklEu4ZemUybDjklMSlAq7Ga67ZmlGnmLzg7K8zYKPKlme2aF8QcH7
+	 wvsY2aAUKAto7dtaO4EpDLR7L+iFK6s81BDf2C8kROL4iu3ryvQ/94ynLBxc4xBeiK
+	 oWZg1ukaYUOczbbOlLBZcG+bwGd05N5Q5g8c1BlpBw/44JpIXNfDcsvAEwf457trds
+	 qJphFmhRN2LZMZwDBbO6nT03/4A2g1RxFsXsYa7/p9FfslC1yQWi1uh/lapOxRZ+TZ
+	 tToflbqikoSS/HWwkUkvBljBsxuIHc4DPqzKjQZTy0JTc3gCyOCm5E1R56qIV2gCZe
+	 5CvLkVDPhIT7w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <miguel.ojeda.sandonis@gmail.com>,  <alex.gaynor@gmail.com>,
+  <ojeda@kernel.org>,  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
+  <bjorn3_gh@protonmail.com>,  <boqun.feng@gmail.com>,  <dakr@kernel.org>,
+  <frederic@kernel.org>,  <gary@garyguo.net>,  <jstultz@google.com>,
+  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
+  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
+  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
+Subject: Re: [PATCH v1] rust: time: Add examples with doctest for Delta
+In-Reply-To: <20250704.093618.1554080777023438310.fujita.tomonori@gmail.com>
+	(FUJITA Tomonori's message of "Fri, 04 Jul 2025 09:36:18 +0900")
+References: <20250701001809.496389-1-fujita.tomonori@gmail.com>
+	<874ivvvvjw.fsf@kernel.org>
+	<CANiq72ntFkvN983N3x=AKMd6fW2yXb8d0LB1LT3c20oYmPCiGg@mail.gmail.com>
+	<RnAWsCMnf4ZwlMnwtZY9XC95vcJ6S0QUiRGwx_H7juiXpbSze8NUfbrPDSkLdd_CZxXuxs2jykc_ZDes95SV5A==@protonmail.internalid>
+	<20250704.093618.1554080777023438310.fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Fri, 04 Jul 2025 09:28:16 +0200
+Message-ID: <87bjq0tnxr.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.peng9@zte.com.cn>
-To: <jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>
-Cc: <mst@redhat.com>, <eperezma@redhat.com>, <sumit.semwal@linaro.org>,
-        <christian.koenig@amd.com>, <virtualization@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSB2aXJ0aW86IEFkZCBtaXNzaW5nIGtlcm5lbGRvYyBmb3IgdmlydGlvX2RtYV9idWZfYXR0YWNo?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 5647KiW8090359
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 686780EE.000/4bYQ6R5g88zCh12
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Peng Jiang <jiang.peng9@zte.com.cn>
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 
-Add kerneldoc for 'virtio_dma_buf_attach' function to fix W=1 warnings:
+> On Wed, 2 Jul 2025 14:22:48 +0200
+> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+>
+>> On Wed, Jul 2, 2025 at 10:36=E2=80=AFAM Andreas Hindborg <a.hindborg@ker=
+nel.org> wrote:
+>>>
+>>> I think this kind of test would be better suited for the new `#[test]`
+>>> macro. Would you agree?
+>>
+>> I don't mind seeing the edge cases, since the behavior is mentioned in
+>> the docs, just like sometimes we show e.g. the `Err`/`None` cases in
+>> other functions etc., and it may help to further highlight that this
+>> can actually return possibly unexpected values.
+>>
+>> It is also what the standard library does, at least in some similar case=
+s, e.g.
+>>
+>>     https://doc.rust-lang.org/std/primitive.i64.html#method.saturating_a=
+dd
+>>
+>> Maybe instead we can help making it a bit more readable, e.g. avoiding
+>> the intermediate variable to have a single line plus using a `# use
+>> Delta` to further reduce the line length?
+>>
+>> Also adding a newline between the "normal" case and the saturation
+>> cases would probably help too.
+>
+> I've updated from_micros() based on the above suggestion - looks
+> better to me. What do you think?
+>
+> /// # Examples
+> ///
+> /// ```
+> /// use kernel::time::Delta;
+> ///
+> /// assert_eq!(Delta::from_micros(5).as_nanos(), 5_000);
+> /// assert_eq!(Delta::from_micros(9_223_372_036_854_775).as_nanos(), 9_22=
+3_372_036_854_775_000);
+> /// assert_eq!(Delta::from_micros(-9_223_372_036_854_775).as_nanos(), -9_=
+223_372_036_854_775_000);
+> ///
+> /// assert_eq!(Delta::from_micros(9_223_372_036_854_776).as_nanos(), i64:=
+:MAX);
+> /// assert_eq!(Delta::from_micros(-9_223_372_036_854_776).as_nanos(), i64=
+::MIN);
+> /// ```
+> #[inline]
+> pub const fn from_micros(micros: i64) -> Self {
+>     Self {
+>         nanos: micros.saturating_mul(NSEC_PER_USEC),
+>     }
+> }
 
-drivers/virtio/virtio_dma_buf.c:41 function parameter 'dma_buf' not described in 'virtio_dma_buf_attach'
-drivers/virtio/virtio_dma_buf.c:41 function parameter 'attach' not described in 'virtio_dma_buf_attach'
+From my point of view, I would like to see
 
-Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
----
- drivers/virtio/virtio_dma_buf.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+  assert_eq!(Delta::from_micros(9_223_372_036_854_775).as_nanos(), 9_223_37=
+2_036_854_775_000);
+  assert_eq!(Delta::from_micros(-9_223_372_036_854_775).as_nanos(), -9_223_=
+372_036_854_775_000);
 
-diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
-index 3fe1d03b0645..18d261ba5197 100644
---- a/drivers/virtio/virtio_dma_buf.c
-+++ b/drivers/virtio/virtio_dma_buf.c
-@@ -35,7 +35,16 @@ struct dma_buf *virtio_dma_buf_export
- EXPORT_SYMBOL(virtio_dma_buf_export);
+  assert_eq!(Delta::from_micros(9_223_372_036_854_776).as_nanos(), i64::MAX=
+);
+  assert_eq!(Delta::from_micros(-9_223_372_036_854_776).as_nanos(), i64::MI=
+N);
 
- /**
-- * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
-+ * virtio_dma_buf_attach - Mandatory attach callback for virtio dma-bufs
-+ * @dma_buf: Pointer to the shared dma-buf structure
-+ * @attach: Pointer to the newly created attachment metadata
-+ *
-+ * Description: Implements the standard dma-buf attach operation for virtio devices.
-+ *              Retrieves virtio-specific operations through container_of macro,
-+ *              then invokes device-specific attach callback if present.
-+ *              This enables virtio devices to participate in dma-buf sharing.
-+ *
-+ * Return: 0 on success, error code on failure
-  */
- int virtio_dma_buf_attach(struct dma_buf *dma_buf,
-                          struct dma_buf_attachment *attach)
--- 
-2.25.1
+moved to a `#[test]` block. They do not provide value for me when
+reading the docs. I don't know what the very large constants are and
+what I am supposed to learn from those asserts. Maybe if the constants
+had a name, or were expressed relative to another constant?
+
+I think this one:
+
+  /// assert_eq!(Delta::from_micros(5).as_nanos(), 5_000);
+
+is fine in the documentation block.
+
+
+Best regards,
+Andreas Hindborg
+
+
