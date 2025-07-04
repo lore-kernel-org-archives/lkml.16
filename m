@@ -1,161 +1,375 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E3E72625
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 04:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8926A1624D5;
+	Fri,  4 Jul 2025 04:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602838; cv=none; b=aNtH1JCrPyY37uF9Jerj/CLvVtEcglky4PZtoeF746HXSK5++x+MhV3M4mcmXd75SdS92aasrlbmEFXAvcVveIAlFWz54hehn30pjqS19Wt0PH47SXbLql5VgOWABoA2DUUV8j5BR+ZqLl3uGxmTtet4jD8EPUvTBwlC4/VugBY=
+	t=1751603011; cv=none; b=Y4zkw2GJ+SAOSVtQ2GVuR+37IaJpI5kdiZD0gZypu3euzbCck4mpMI0GH+dm9hn//HAw3+dll0q1M2F6w1EWIgmwTW7GVfpzR7hGnhe1iYLp3BotrMxEsRDdUdTaiOF1Z9zX/EmVxZ8Cpvx9ACHaBShQ7xrg73g/orJp03G70pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602838; c=relaxed/simple;
-	bh=NoT+4FNbSjwBg9rFgnrMI3Kmfnm6Tizyg7BbQeMGDT4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gJGeiut3s1L9Xy4JHZ/MRlSP4phMEHgRAWbMucc6jHlMI/lZB9w6FookXcC6RuaZfWt96Ot8i+CC23nITLit1t4LlzFZG8P6Tx4p/jzYj/yoO0uWc7TVir4Rum9if/kxdTdwTpK3vTPT86cQQmXEF7deC0453Vq5bEUMCxShRC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ev5lxQhz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751603011; c=relaxed/simple;
+	bh=ShOvEWRCd+p8VDxOlgth3WUY6pvwjUQDr5CqGRZJcVY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RaLLdm/ZGR5rxJT6xQhReaG9fRYfGpDRH+AXaISSxJna0qRloQH9cUZlSlJ9FebxQr2XzCWyj27DDCeUmiIvoKGe/lpSb5ohp02EEE8MIvzp5gTyqNwHQvrsvmHE/Nz0a0RGbo7x+jU4ufkrmN0zVzitN5CZt5Dx7kn42jhwwvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=doIj5dG7; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ev5lxQhz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751602835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JYMNYv3akYsSWq5hIrlEh3zSlZe35V5o/c+Z5lpwL/g=;
-	b=Ev5lxQhz0MoD6RkGzWqAtYxmvxemjT/EGlUvoPPHgsDIZ+FCvAiHUkcDlHXG3NRfNLgejy
-	Hn+J3ThGDUWi7gflTS58DERNBkKyaqlLqKLRyyA3tYoOcDALmLYqBwiqlZ+cxf5xA0Hnq5
-	VrEQN5prR+Nn4KmSBuXUXYK8odxSJP8=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-Kebale65MZyjSbf_I430Bg-1; Fri, 04 Jul 2025 00:20:28 -0400
-X-MC-Unique: Kebale65MZyjSbf_I430Bg-1
-X-Mimecast-MFC-AGG-ID: Kebale65MZyjSbf_I430Bg_1751602828
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70e2d495194so6070067b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 21:20:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751602828; x=1752207628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JYMNYv3akYsSWq5hIrlEh3zSlZe35V5o/c+Z5lpwL/g=;
-        b=JVSxZrpIDosLBi+08U2KAr4XDN0I/uWQ7HC6gkuuQYPFbmbSZx5fUhNB/YSrE+f/Gy
-         WA+ZnJgecn0xnuNY5Lwo3UyxjcDTeeOUOV3eFrWkH9y4Sd7OtGY5fi6WglEFQci1/d9L
-         0IwQ3rHNCgOreW7TdVonH10WuWlfRDTX9TWRaTIjPZYlLSJ26zVZf4Ppkb+If3PQn1yL
-         mAciDOlpyyCFw9GrJV6i/ebhJXR9lenTSntq1BFnr7qYkXDaQ3Qdrw+MoW7gecjgjdzy
-         bI72y8IFnhaqCP7s4kJ1ugS45kZqyOQJQXwV75ML16yKg1Xh++Nejs4q7eIhc7Cch9Ts
-         pksw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaWMXpDmk3fi2c1iEjedO5NyuEGEMm3XlCOqk11LPHEkVdEH7JmLRSUUU83rWqf/hZL6uBQLvXcXz+V60=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8W+AYAiUgberhbHFGR8FxmB0P/y8nnexCL3E+asmwuajI1BDY
-	s+mvY2IZ5muW7tsxw7EDSYy6szCdqszfuBar4frjVt0vLAcKguNiFj2Ckb9/VdhCb07gULqpIlF
-	ACi9UCpEVegxoOeJ1F47K8toIAfh7EiJMOFpT3eUW4QONxU1CYTmWCvWC1tVqZP44WSFzUbUBvs
-	Zxxk/GK923ywmVl16/3/A0klLko2A7ga7xRc7gf5/q
-X-Gm-Gg: ASbGncshSHHWkRRiZzmmNj37Wux7Tne5ociNQPY0NtWn67XOAaHCYjSaPt80vCz1W2j
-	Gu3XBKHotwdZZSo+LDBhV2v44bh7B1aA7JRe381ECRaLRRH6zhr3tGjavwwEBDJCeQjcl/gcF5T
-	KxlUwg/A==
-X-Received: by 2002:a05:690c:315:b0:70e:7ff6:9ff3 with SMTP id 00721157ae682-71668d48d52mr14813497b3.35.1751602827880;
-        Thu, 03 Jul 2025 21:20:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpWlttfaGVsemdXIFRiuyrfeV4wU2Oua20HKATYd8vQpxrAJPi7JNRE9ipCBD5L0WC9KAT+/YYm56OkcAzJRs=
-X-Received: by 2002:a05:690c:315:b0:70e:7ff6:9ff3 with SMTP id
- 00721157ae682-71668d48d52mr14813187b3.35.1751602827474; Thu, 03 Jul 2025
- 21:20:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="doIj5dG7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751603010; x=1783139010;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ShOvEWRCd+p8VDxOlgth3WUY6pvwjUQDr5CqGRZJcVY=;
+  b=doIj5dG7cMDL43lVwWN40gb6yGF3FYy9+DBTWMz7gHrC4Be9hrSPf6OU
+   fetbjzS+tA3IAp0gXY0A9tJjl/7dFLmtptNmdXhlU823C5D2zY66pVcBR
+   j+udvScA1vQqJqQX5Nj6HJDHcBk5bIruvU/2kNxVj6qaqETlXBHvCcHi6
+   x5z/OwjK/7vMaFT+ArJXQ5TKYvqR+spIYGYob+APXTmmLGNW3dHMHybrj
+   kArmOmR7mUDaSSH6htAfUaXN++7kJkFyDjohPA4+8Zunr/jnFDe8OMzne
+   bwzD3tt4yX5KegNcGahNUqzfXXUU2gzwLCFC+XtZaOjj9Dee7H7myhA/W
+   Q==;
+X-CSE-ConnectionGUID: gkBxEtTwS3SXCJwnZ8iuCA==
+X-CSE-MsgGUID: 3hUpJrVbQ9aFo/csnylBnw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53908983"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="53908983"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 21:23:25 -0700
+X-CSE-ConnectionGUID: PKNAqiECRR+W4nkblIC0Sg==
+X-CSE-MsgGUID: +B70Ot+7R5CFn1hhOy8LUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="153968667"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by orviesa006.jf.intel.com with ESMTP; 03 Jul 2025 21:23:24 -0700
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	senozhatsky@chromium.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com,
+	vinicius.gomes@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v10 03/25] crypto: iaa - Simplify, consistency of function parameters, minor stats bug fix.
+Date: Thu,  3 Jul 2025 21:23:01 -0700
+Message-Id: <20250704042323.10318-4-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250704042323.10318-1-kanchana.p.sridhar@intel.com>
+References: <20250704042323.10318-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702055742.102808-1-npache@redhat.com> <20250702055742.102808-3-npache@redhat.com>
- <ca0d8c87-2998-48f8-bef6-3e99a92f28e4@linux.alibaba.com>
-In-Reply-To: <ca0d8c87-2998-48f8-bef6-3e99a92f28e4@linux.alibaba.com>
-From: Nico Pache <npache@redhat.com>
-Date: Thu, 3 Jul 2025 22:20:01 -0600
-X-Gm-Features: Ac12FXx0uN0QDJdFTa4DutceQ0LVRzGL8hH9npRx5BwNbhAuyhn2wB7v9-pBvwk
-Message-ID: <CAA1CXcDH5xTSGHJu13Gb3EfNnntKwQn6Oq6rhS5uFoyLwid0Jw@mail.gmail.com>
-Subject: Re: [PATCH v8 02/15] introduce khugepaged_collapse_single_pmd to
- unify khugepaged and madvise_collapse
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, baohua@kernel.org, willy@infradead.org, 
-	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
-	sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 3, 2025 at 9:51=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 2025/7/2 13:57, Nico Pache wrote:
-> > The khugepaged daemon and madvise_collapse have two different
-> > implementations that do almost the same thing.
-> >
-> > Create khugepaged_collapse_single_pmd to increase code reuse and create=
- an
-> > entry point these two users.
-> >
-> > Refactor madvise_collapse and khugepaged_scan_mm_slot to use the new
-> > khugepaged_collapse_single_pmd function. This introduces a minor
-> > behavioral change that is most likely an undiscovered bug. The current
-> > implementation of khugepaged tests khugepaged_test_exit_or_disable
-> > before calling khugepaged_pte_mapped_thp, but we weren't doing it in th=
-e
-> > madvise_collapse case. By unifying these two callers madvise_collapse
-> > now also performs this check.
-> >
-> > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   mm/khugepaged.c | 95 +++++++++++++++++++++++++-----------------------=
+This patch further simplifies the code in some places and makes it more
+consistent and readable:
+
+1) Change iaa_compress_verify() @dlen parameter to be a value instead of
+   a pointer, because @dlen's value is only read, not modified by this
+   procedure.
+
+2) Simplify the success/error return paths in iaa_compress(),
+   iaa_decompress() and iaa_compress_verify().
+
+3) Delete dev_dbg() statements to make the code more readable.
+
+4) Change return value from descriptor allocation failures to be
+   -ENODEV, for better maintainability.
+
+5) Fix a minor statistics bug in iaa_decompress(), with the
+   decomp_bytes getting updated in case of errors.
+
+Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+---
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 107 +++++----------------
+ 1 file changed, 22 insertions(+), 85 deletions(-)
+
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index 08dc8e108fa2e..da8059de6ad61 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -1590,7 +1590,7 @@ static int iaa_remap_for_verify(struct device *dev, struct iaa_wq *iaa_wq,
+ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 			       struct idxd_wq *wq,
+ 			       dma_addr_t src_addr, unsigned int slen,
+-			       dma_addr_t dst_addr, unsigned int *dlen)
++			       dma_addr_t dst_addr, unsigned int dlen)
+ {
+ 	struct iaa_device_compression_mode *active_compression_mode;
+ 	struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
+@@ -1614,10 +1614,8 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 
+ 	idxd_desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
+ 	if (IS_ERR(idxd_desc)) {
+-		dev_dbg(dev, "idxd descriptor allocation failed\n");
+-		dev_dbg(dev, "iaa compress failed: ret=%ld\n",
+-			PTR_ERR(idxd_desc));
+-		return PTR_ERR(idxd_desc);
++		dev_dbg(dev, "iaa compress_verify failed: idxd descriptor allocation failure: ret=%ld\n", PTR_ERR(idxd_desc));
++		return -ENODEV;
+ 	}
+ 	desc = idxd_desc->iax_hw;
+ 
+@@ -1629,19 +1627,11 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 	desc->priv = 0;
+ 
+ 	desc->src1_addr = (u64)dst_addr;
+-	desc->src1_size = *dlen;
++	desc->src1_size = dlen;
+ 	desc->dst_addr = (u64)src_addr;
+ 	desc->max_dst_size = slen;
+ 	desc->completion_addr = idxd_desc->compl_dma;
+ 
+-	dev_dbg(dev, "(verify) compression mode %s,"
+-		" desc->src1_addr %llx, desc->src1_size %d,"
+-		" desc->dst_addr %llx, desc->max_dst_size %d,"
+-		" desc->src2_addr %llx, desc->src2_size %d\n",
+-		active_compression_mode->name,
+-		desc->src1_addr, desc->src1_size, desc->dst_addr,
+-		desc->max_dst_size, desc->src2_addr, desc->src2_size);
 -
-> >   1 file changed, 49 insertions(+), 46 deletions(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index f27fe7ca9b86..bf69e81a3d82 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -2354,6 +2354,50 @@ static int khugepaged_scan_file(struct mm_struct=
- *mm, unsigned long addr,
-> >       return result;
-> >   }
-> >
-> > +/*
-> > + * Try to collapse a single PMD starting at a PMD aligned addr, and re=
-turn
-> > + * the results.
-> > + */
-> > +static int khugepaged_collapse_single_pmd(unsigned long addr,
-> > +                                struct vm_area_struct *vma, bool *mmap=
-_locked,
-> > +                                struct collapse_control *cc)
-> > +{
-> > +     int result =3D SCAN_FAIL;
-> > +     struct mm_struct *mm =3D vma->vm_mm;
-> > +
-> > +     if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
->
-> Seems you still forgot to drop 'IS_ENABLED(CONFIG_SHMEM)' :)
-Hi Baolin,
-
-You had me questioning my sanity for a moment because I SWEAR I did do
-this! but now I see the issue, I accidentally merged the fixup into
-patch 6 (not entirely sure how or why I would have done that given my
-notes say it belongs in this patch...)
-
-I'm sorry about that :< I'll see if I can work with Andrew to get some
-fixups into mm-new (this was merged a few hours ago) for this patch
-and patch 6.
->
+ 	ret = idxd_submit_desc(wq, idxd_desc);
+ 	if (ret) {
+ 		dev_dbg(dev, "submit_desc (verify) failed ret=%d\n", ret);
+@@ -1664,14 +1654,10 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		goto err;
+ 	}
+ 
+-	idxd_free_desc(wq, idxd_desc);
+-out:
+-	return ret;
+ err:
+ 	idxd_free_desc(wq, idxd_desc);
+-	dev_dbg(dev, "iaa compress failed: ret=%d\n", ret);
+ 
+-	goto out;
++	return ret;
+ }
+ 
+ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+@@ -1751,7 +1737,7 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+ 		}
+ 
+ 		ret = iaa_compress_verify(ctx->tfm, ctx->req, iaa_wq->wq, src_addr,
+-					  ctx->req->slen, dst_addr, &ctx->req->dlen);
++					  ctx->req->slen, dst_addr, ctx->req->dlen);
+ 		if (ret) {
+ 			dev_dbg(dev, "%s: compress verify failed ret=%d\n", __func__, ret);
+ 			err = -EIO;
+@@ -1777,7 +1763,7 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+ 	iaa_wq_put(idxd_desc->wq);
+ }
+ 
+-static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
++static int iaa_compress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 			struct idxd_wq *wq,
+ 			dma_addr_t src_addr, unsigned int slen,
+ 			dma_addr_t dst_addr, unsigned int *dlen)
+@@ -1804,9 +1790,9 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 
+ 	idxd_desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
+ 	if (IS_ERR(idxd_desc)) {
+-		dev_dbg(dev, "idxd descriptor allocation failed\n");
+-		dev_dbg(dev, "iaa compress failed: ret=%ld\n", PTR_ERR(idxd_desc));
+-		return PTR_ERR(idxd_desc);
++		dev_dbg(dev, "iaa compress failed: idxd descriptor allocation failure: ret=%ld\n",
++			PTR_ERR(idxd_desc));
++		return -ENODEV;
+ 	}
+ 	desc = idxd_desc->iax_hw;
+ 
+@@ -1832,21 +1818,8 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 		idxd_desc->crypto.src_addr = src_addr;
+ 		idxd_desc->crypto.dst_addr = dst_addr;
+ 		idxd_desc->crypto.compress = true;
+-
+-		dev_dbg(dev, "%s use_async_irq: compression mode %s,"
+-			" src_addr %llx, dst_addr %llx\n", __func__,
+-			active_compression_mode->name,
+-			src_addr, dst_addr);
+ 	}
+ 
+-	dev_dbg(dev, "%s: compression mode %s,"
+-		" desc->src1_addr %llx, desc->src1_size %d,"
+-		" desc->dst_addr %llx, desc->max_dst_size %d,"
+-		" desc->src2_addr %llx, desc->src2_size %d\n", __func__,
+-		active_compression_mode->name,
+-		desc->src1_addr, desc->src1_size, desc->dst_addr,
+-		desc->max_dst_size, desc->src2_addr, desc->src2_size);
+-
+ 	ret = idxd_submit_desc(wq, idxd_desc);
+ 	if (ret) {
+ 		dev_dbg(dev, "submit_desc failed ret=%d\n", ret);
+@@ -1859,7 +1832,6 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 
+ 	if (ctx->async_mode) {
+ 		ret = -EINPROGRESS;
+-		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
+ 		goto out;
+ 	}
+ 
+@@ -1877,15 +1849,10 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 
+ 	*compression_crc = idxd_desc->iax_completion->crc;
+ 
+-	if (!ctx->async_mode)
+-		idxd_free_desc(wq, idxd_desc);
+-out:
+-	return ret;
+ err:
+ 	idxd_free_desc(wq, idxd_desc);
+-	dev_dbg(dev, "iaa compress failed: ret=%d\n", ret);
+-
+-	goto out;
++out:
++	return ret;
+ }
+ 
+ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+@@ -1914,10 +1881,10 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 
+ 	idxd_desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
+ 	if (IS_ERR(idxd_desc)) {
+-		dev_dbg(dev, "idxd descriptor allocation failed\n");
+-		dev_dbg(dev, "iaa decompress failed: ret=%ld\n",
++		ret = -ENODEV;
++		dev_dbg(dev, "%s: idxd descriptor allocation failed: ret=%ld\n", __func__,
+ 			PTR_ERR(idxd_desc));
+-		return PTR_ERR(idxd_desc);
++		return ret;
+ 	}
+ 	desc = idxd_desc->iax_hw;
+ 
+@@ -1941,21 +1908,8 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		idxd_desc->crypto.src_addr = src_addr;
+ 		idxd_desc->crypto.dst_addr = dst_addr;
+ 		idxd_desc->crypto.compress = false;
+-
+-		dev_dbg(dev, "%s: use_async_irq compression mode %s,"
+-			" src_addr %llx, dst_addr %llx\n", __func__,
+-			active_compression_mode->name,
+-			src_addr, dst_addr);
+ 	}
+ 
+-	dev_dbg(dev, "%s: decompression mode %s,"
+-		" desc->src1_addr %llx, desc->src1_size %d,"
+-		" desc->dst_addr %llx, desc->max_dst_size %d,"
+-		" desc->src2_addr %llx, desc->src2_size %d\n", __func__,
+-		active_compression_mode->name,
+-		desc->src1_addr, desc->src1_size, desc->dst_addr,
+-		desc->max_dst_size, desc->src2_addr, desc->src2_size);
+-
+ 	ret = idxd_submit_desc(wq, idxd_desc);
+ 	if (ret) {
+ 		dev_dbg(dev, "submit_desc failed ret=%d\n", ret);
+@@ -1968,7 +1922,6 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 
+ 	if (ctx->async_mode) {
+ 		ret = -EINPROGRESS;
+-		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
+ 		goto out;
+ 	}
+ 
+@@ -1990,23 +1943,19 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		}
+ 	} else {
+ 		req->dlen = idxd_desc->iax_completion->output_size;
++
++		/* Update stats */
++		update_total_decomp_bytes_in(slen);
++		update_wq_decomp_bytes(wq, slen);
+ 	}
+ 
+ 	*dlen = req->dlen;
+ 
+-	if (!ctx->async_mode)
++err:
++	if (idxd_desc)
+ 		idxd_free_desc(wq, idxd_desc);
+-
+-	/* Update stats */
+-	update_total_decomp_bytes_in(slen);
+-	update_wq_decomp_bytes(wq, slen);
+ out:
+ 	return ret;
+-err:
+-	idxd_free_desc(wq, idxd_desc);
+-	dev_dbg(dev, "iaa decompress failed: ret=%d\n", ret);
+-
+-	goto out;
+ }
+ 
+ static int iaa_comp_acompress(struct acomp_req *req)
+@@ -2053,9 +2002,6 @@ static int iaa_comp_acompress(struct acomp_req *req)
+ 		goto out;
+ 	}
+ 	src_addr = sg_dma_address(req->src);
+-	dev_dbg(dev, "dma_map_sg, src_addr %llx, nr_sgs %d, req->src %p,"
+-		" req->slen %d, sg_dma_len(sg) %d\n", src_addr, nr_sgs,
+-		req->src, req->slen, sg_dma_len(req->src));
+ 
+ 	nr_sgs = dma_map_sg(dev, req->dst, sg_nents(req->dst), DMA_FROM_DEVICE);
+ 	if (nr_sgs <= 0 || nr_sgs > 1) {
+@@ -2066,9 +2012,6 @@ static int iaa_comp_acompress(struct acomp_req *req)
+ 		goto err_map_dst;
+ 	}
+ 	dst_addr = sg_dma_address(req->dst);
+-	dev_dbg(dev, "dma_map_sg, dst_addr %llx, nr_sgs %d, req->dst %p,"
+-		" req->dlen %d, sg_dma_len(sg) %d\n", dst_addr, nr_sgs,
+-		req->dst, req->dlen, sg_dma_len(req->dst));
+ 
+ 	ret = iaa_compress(tfm, req, wq, src_addr, req->slen, dst_addr,
+ 			   &req->dlen);
+@@ -2083,7 +2026,7 @@ static int iaa_comp_acompress(struct acomp_req *req)
+ 		}
+ 
+ 		ret = iaa_compress_verify(tfm, req, wq, src_addr, req->slen,
+-					  dst_addr, &req->dlen);
++					  dst_addr, req->dlen);
+ 		if (ret)
+ 			dev_dbg(dev, "asynchronous compress verification failed ret=%d\n", ret);
+ 
+@@ -2146,9 +2089,6 @@ static int iaa_comp_adecompress(struct acomp_req *req)
+ 		goto out;
+ 	}
+ 	src_addr = sg_dma_address(req->src);
+-	dev_dbg(dev, "dma_map_sg, src_addr %llx, nr_sgs %d, req->src %p,"
+-		" req->slen %d, sg_dma_len(sg) %d\n", src_addr, nr_sgs,
+-		req->src, req->slen, sg_dma_len(req->src));
+ 
+ 	nr_sgs = dma_map_sg(dev, req->dst, sg_nents(req->dst), DMA_FROM_DEVICE);
+ 	if (nr_sgs <= 0 || nr_sgs > 1) {
+@@ -2159,9 +2099,6 @@ static int iaa_comp_adecompress(struct acomp_req *req)
+ 		goto err_map_dst;
+ 	}
+ 	dst_addr = sg_dma_address(req->dst);
+-	dev_dbg(dev, "dma_map_sg, dst_addr %llx, nr_sgs %d, req->dst %p,"
+-		" req->dlen %d, sg_dma_len(sg) %d\n", dst_addr, nr_sgs,
+-		req->dst, req->dlen, sg_dma_len(req->dst));
+ 
+ 	ret = iaa_decompress(tfm, req, wq, src_addr, req->slen,
+ 			     dst_addr, &req->dlen);
+-- 
+2.27.0
 
