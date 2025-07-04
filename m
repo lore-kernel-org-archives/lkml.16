@@ -1,194 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0A22F5C2C;
-	Fri,  4 Jul 2025 08:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777FB2D9482
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619521; cv=none; b=BRf30rD8gP4eQPZTChBWV2BXFM/+LzmZqVBrc0iwUlgqGVknGOL4a2j/LbDyUTZ8pJfldIMTczoIPbLMMJUxKlKtE+nFxVhg1JLWetiJZRs3hfWcnssQ1Z8isUkn0bE7RYATxLxZV0tsajE+QzHs9u2kIdsl8FRepg6BAXc+kp8=
+	t=1751619561; cv=none; b=Ft478+eNfri5Dw6tetd8ZXCe8qwCj3FQ3rHUwdmka0jw+i6qc8frhsP0yhfK9wqz3ejVMZTSQFCFqixqs95qAba2MGK2qOnozfODw36VquEvWyOSP0TixiEEGNJp3pIakHrIWYByeBJUSXiokzxmGOEvDLCDJ1HBOfYn33SotMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619521; c=relaxed/simple;
-	bh=d+Wl1jZE/I9B8bdRNnQe1es6PtluF9HhWnQefqznmbA=;
+	s=arc-20240116; t=1751619561; c=relaxed/simple;
+	bh=RtBX/y+Ve5mo6ucrAlWB0PpuZcZ3vU5B/8m0+PvvwUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LS0f8radpzHIYSxMopx684edewlET7QuF4BDceWnYbL7YfiwQZnkFe1toaG+OgvIc7ZnWVxRzaN3TDE7kRjQfDpZMyGlUqp4OfRTxuRzWvy6H1PtcIVTH7GA3mv4KsgO+43MXzGmz0Xjv+0wd7TC5llZIRPL+0v2DAFP2MKDmlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tD5RKFLM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NJvXPQlDK6+MVdLdlTkOuNNFmG3C4mWg8kPLqoE5aQl8Ol78Qa1Kixe8OvKLvjqs94BHQsku+MKtii0a0XjAZlTKCRJMePot+8cnfc89pOaTbaNOYiszbefBnKl+giL+1SD8sSWR3Jd5l66WHy3Hdk31YldEV2LGzazMa98N59k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=C/9UCwZR; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tD5RKFLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B009BC4CEE3;
-	Fri,  4 Jul 2025 08:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751619521;
-	bh=d+Wl1jZE/I9B8bdRNnQe1es6PtluF9HhWnQefqznmbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tD5RKFLMS/H+cinxfjavqH73neq7XUI9RRZyaKOIUC3430nh5tqWQXIAsy9K5qrYj
-	 pwV41HGE4Lbwwrxf0MT2/kwLbqGqAmQSRzf1BnB/so0L8kUAYd2TpE7+pvdNKpxCW1
-	 hIvabZr4gtOqQnK1jVQRCAzan/pfN6qjWfFGZrLY=
-Date: Fri, 4 Jul 2025 10:58:38 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Cc: srini@kernel.org, linux-arm-msm@vger.kernel.org,
-	quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
-	quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
-	arnd@arndb.de, dmitry.baryshkov@oss.qualcomm.com
-Subject: Re: [PATCH v1] misc: fastrpc: Add support for userspace allocated
- buffers
-Message-ID: <2025070443-impatient-essay-23ab@gregkh>
-References: <20250704083726.1901705-1-ekansh.gupta@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="C/9UCwZR"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4539cd7990cso4123065e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751619558; x=1752224358; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RtBX/y+Ve5mo6ucrAlWB0PpuZcZ3vU5B/8m0+PvvwUY=;
+        b=C/9UCwZRhzh2h9VFjukR1sGrscYv6RT4DFoWoL++PXX0vgS0tW33fL9R8hQt2yq7Pa
+         GVF+vNUeKlWZVuqQ2gsrEIR/cK2UP1iWK6tx8kBGzzLpElOkkck+vw8bkiVL40kCUKmu
+         dfgBKO0kNnlsWsCFu9IGmGmjMJiJFB9PWUwlpbZqMsfkBkbIEdFNy5XwFyPPqnOHjWVT
+         dSEQVGQyc8VrOO7/38SK373J5snJs+0Lc/C0NowLXLg/0yq/oZ1hr7zKuuDoiiXHzr0P
+         sU2nbv/XEO/g/rPnsa1NpOaDr9f4Vs/KmikF30l9RS/aF2Vin225xHS1Jx3CYs9adoTj
+         6Y4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751619558; x=1752224358;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RtBX/y+Ve5mo6ucrAlWB0PpuZcZ3vU5B/8m0+PvvwUY=;
+        b=nudyOvFtFogkMuGjty2ARpJaXk37sVA7asafL8w0dGUHRWb+zzpBCNvQ5VdN4K+VLf
+         rjQ3jYzsZrliq/UltStHQ8NhPlgZ+KF39gbpJhb7yID26apsPo/M0o6DEzV/EamFnjGR
+         hfJVDOlg+jmbCS5d7XulahTau49BWX00Gda87/wewm36Dzr1XcvOgbsNPFQrsfwMTR4o
+         yYNkHFs/38KieHE+LSLtE8O7NVb0VI9ne1sZWcp2KgmZkEt3bKmK72QpFuZ4GHx0+a8B
+         IQx2QoY+njnaWQsIotTZTXj6wUCWk0wCrM1ZYdVKCc4EtfcQABGqbpSz7heIx0s2ZP0L
+         i7Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVeRteOm72FxEegXFMrXqB/Xpfizfo2TUfTxk5imxnAQB2QfEbpEE8tvuM/+fngujSK8A9kVK8z47qWauk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy07jfRybKgKW8Ocdqx9HpmyGO7K9i8uoHwAkEffFVh348vajov
+	uaYNodU/b5GryiS/N7kjrUnCtPxxDA4Ak1nIpemH1NckcKxsvNEx+2bsR9h7WaUOnr4=
+X-Gm-Gg: ASbGncsgTvMg/+vUygaviPOE6IjSbYJQNQi39/katE9YAqW2oDg0CzQzldUSl/pA9/F
+	QWwMkYoch6+2jlQLdk2hbjUctcMVCodVQO1vXFgT+8lVVtWQ99ueuxjkYjBDmT/pH5g9A22EDW5
+	zirMHpiFVhjwhH/9FMj6l2UuHoQEPgpUrhol5h2uobDEqe3YzmUjf0X1XjPNGUpreuGRQOSFaiH
+	G70tDko0zbA8FHA3ktc4bFb90jB04i1sOj9Al2BNOvuOzpWuUge+shNoKzb+42zPjCXU+jBdxmo
+	rI8hTRfke1NFFq9BRg3ezebT+Ep3lErrcwjZbYe30Ia+bV9FCAGuJZ46WAsySHnM
+X-Google-Smtp-Source: AGHT+IHk+/ZtizhuGIV28UjPzSfcidKD4/ilLS1E945vX5eRGKp0+eSorZPrB0dr5aqNr1TTDTMsJA==
+X-Received: by 2002:a05:600c:c173:b0:451:df07:d8e0 with SMTP id 5b1f17b1804b1-454b26d5305mr20631295e9.11.1751619557692;
+        Fri, 04 Jul 2025 01:59:17 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b168664bsm20865265e9.20.2025.07.04.01.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 01:59:17 -0700 (PDT)
+Date: Fri, 4 Jul 2025 10:59:15 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
+ tests
+Message-ID: <wnoymxwdikh6iawrcvhewq6er4si75oqzjdbibhl6n57swq3ff@glkzfmbaots7>
+References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
+ <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
+ <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
+ <aGcf0Prl-hVX2j4Q@JPC00244420>
+ <aGd5lrUvm9Bhh-b8@JPC00244420>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cgb7i3ddllgbyu6p"
 Content-Disposition: inline
-In-Reply-To: <20250704083726.1901705-1-ekansh.gupta@oss.qualcomm.com>
+In-Reply-To: <aGd5lrUvm9Bhh-b8@JPC00244420>
 
-On Fri, Jul 04, 2025 at 02:07:26PM +0530, Ekansh Gupta wrote:
-> Support mapping userspace allocated buffers. If userspace allocates a
-> buffer using rpcmem or DMABUF and sends it via a map request, fastrpc
-> will map it to SMMU and DSP. Add support for both map and unmap
-> requests.
-> 
-> Signed-off-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-> ---
->  drivers/misc/fastrpc.c | 188 ++++++++++++++++++++++++++++++++---------
->  1 file changed, 150 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> index 378923594f02..3c88c8e9ba51 100644
-> --- a/drivers/misc/fastrpc.c
-> +++ b/drivers/misc/fastrpc.c
-> @@ -1797,17 +1797,16 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
->  	return 0;
->  }
->  
-> -static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
-> +static int fastrpc_req_munmap_dsp(struct fastrpc_user *fl, uintptr_t raddr, u64 size)
 
-uintptr_t is not a valid kernel type, please use our real ones :)
+--cgb7i3ddllgbyu6p
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
+ tests
+MIME-Version: 1.0
 
-"*u64"?
+On Fri, Jul 04, 2025 at 03:49:58PM +0900, Shashank Balaji <shashank.mahadas=
+yam@sony.com> wrote:
+> > 1. We don't need to separately check user_usec because it'll always be
+> > less than user_usec^W usage_usec, and usage_usec is what's directly
+> > affected by throttling.
 
->  {
->  	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
->  	struct fastrpc_munmap_req_msg req_msg;
-> -	struct device *dev = fl->sctx->dev;
->  	int err;
->  	u32 sc;
->  
->  	req_msg.client_id = fl->client_id;
-> -	req_msg.size = buf->size;
-> -	req_msg.vaddr = buf->raddr;
-> +	req_msg.size = size;
-> +	req_msg.vaddr = raddr;
->  
->  	args[0].ptr = (u64) (uintptr_t) &req_msg;
->  	args[0].length = sizeof(req_msg);
-> @@ -1815,6 +1814,16 @@ static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *
->  	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_MUNMAP, 1, 0);
->  	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE, sc,
->  				      &args[0]);
-> +
-> +	return err;
-> +}
-> +
-> +static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
-> +{
-> +	struct device *dev = fl->sctx->dev;
-> +	int err;
-> +
-> +	err = fastrpc_req_munmap_dsp(fl, buf->raddr, buf->size);
->  	if (!err) {
->  		dev_dbg(dev, "unmmap\tpt 0x%09lx OK\n", buf->raddr);
->  		spin_lock(&fl->lock);
-> @@ -1831,8 +1840,10 @@ static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *
->  static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
->  {
->  	struct fastrpc_buf *buf = NULL, *iter, *b;
-> +	struct fastrpc_map *map = NULL, *iterm, *m;
->  	struct fastrpc_req_munmap req;
->  	struct device *dev = fl->sctx->dev;
-> +	int err;
->  
->  	if (copy_from_user(&req, argp, sizeof(req)))
->  		return -EFAULT;
-> @@ -1846,35 +1857,91 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
->  	}
->  	spin_unlock(&fl->lock);
->  
-> -	if (!buf) {
-> -		dev_err(dev, "mmap\t\tpt 0x%09llx [len 0x%08llx] not in list\n",
-> +	if (buf) {
-> +		err = fastrpc_req_munmap_impl(fl, buf);
-> +		if (err) {
-> +			spin_lock(&fl->lock);
-> +			list_add_tail(&buf->node, &fl->mmaps);
-> +			spin_unlock(&fl->lock);
-> +		}
-> +		return err;
-> +	}
-> +
-> +	spin_lock(&fl->lock);
-> +	list_for_each_entry_safe(iterm, m, &fl->maps, node) {
-> +		if (iterm->raddr == req.vaddrout) {
-> +			map = iterm;
-> +			list_del(&iterm->node);
-> +			break;
-> +		}
-> +	}
-> +	spin_unlock(&fl->lock);
-> +	if (!map) {
-> +		dev_dbg(dev, "buffer/map not found addr 0x%09llx, len 0x%08llx\n",
->  			req.vaddrout, req.size);
->  		return -EINVAL;
->  	}
->  
-> -	return fastrpc_req_munmap_impl(fl, buf);
-> +	err = fastrpc_req_munmap_dsp(fl, map->raddr, map->size);
-> +	if (err) {
-> +		dev_dbg(dev, "unmmap\tpt fd = %d, 0x%09llx error\n",  map->fd, map->raddr);
-> +		spin_lock(&fl->lock);
-> +		list_add_tail(&map->node, &fl->maps);
-> +		spin_unlock(&fl->lock);
-> +	} else {
-> +		fastrpc_map_put(map);
-> +	}
-> +	return err;
->  }
->  
-> -static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
-> +static int fastrpc_req_map_dsp(struct fastrpc_user *fl, u64 phys,
-> +			       u64 size, u32 flag, uintptr_t vaddrin,
-> +			       u64 *raddr)
->  {
->  	struct fastrpc_invoke_args args[3] = { [0 ... 2] = { 0 } };
-> -	struct fastrpc_buf *buf = NULL;
->  	struct fastrpc_mmap_req_msg req_msg;
->  	struct fastrpc_mmap_rsp_msg rsp_msg;
->  	struct fastrpc_phy_page pages;
-> -	struct fastrpc_req_mmap req;
-> -	struct device *dev = fl->sctx->dev;
->  	int err;
->  	u32 sc;
->  
-> -	if (copy_from_user(&req, argp, sizeof(req)))
-> -		return -EFAULT;
-> +	req_msg.client_id = fl->client_id;
-> +	req_msg.flags = flag;
-> +	req_msg.vaddr = vaddrin;
-> +	req_msg.num = sizeof(pages);
+When kernel is not preemptible, I'd expect the system time may more
+easily excess the quota, so I considered the user_usage check less prone
+to false results. But...
 
-No validation of these user-provided values?  Or did I miss where that
-happens?
+> > 2. I changed the >=3D to > because, not that it'll ever happen, but we =
+can
+> > let usage_usec =3D expected_usage_usec pass. Afterall, it's called
+> > "expected" for a reason.
+>=20
+> Hmm, here is something interesting. The following patch adds printfs to t=
+he
+> existing code to see what user_usec, usage_usec, the expected_usage_usec =
+used in
+> the code, and the theoretical expected_usage_usec are. On running the mod=
+ified test
+> a couple of times, here is the output:
 
->  
-> -	if (req.flags != ADSP_MMAP_ADD_PAGES && req.flags != ADSP_MMAP_REMOTE_HEAP_ADDR) {
-> -		dev_err(dev, "flag not supported 0x%x\n", req.flags);
-> +	args[0].ptr = (u64)(uintptr_t)&req_msg;
+=2E..thanks for checking. I was misled by the previous test implementation
+(the expected_usage_usec had no relation to actual throttled usage in
+there). What you observe is thus likely explained by the default
+sched_cfs_bandwidth_slice (5 times the tested quota) and CONFIG_HZ.
 
-Again, "uintptr_t" isn't for the kernel please.
+So I'd say keep only the two-sided tolerant check. (I want to avoid the
+test to randomly fail when there's no gaping issue.)
 
-thanks,
+Thanks,
+Michal
 
-greg k-h
+--cgb7i3ddllgbyu6p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGeX1wAKCRB+PQLnlNv4
+CDdMAQD0QmAwbde3igaQ/8POl0VsZg2u5gJzrJWD6ze4/rwyjgD+IVyNr8dbp46k
+jKAf0PBvwEitji6q94unBh1qxC0ZgAw=
+=Aigg
+-----END PGP SIGNATURE-----
+
+--cgb7i3ddllgbyu6p--
