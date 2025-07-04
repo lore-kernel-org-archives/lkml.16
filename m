@@ -1,93 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58584283FE7
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258B0328AE2;
+	Fri,  4 Jul 2025 08:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617141; cv=none; b=IYiEveJ2fdnbE/Aw9myf9mXLUefb/Nqh36nIHEqNIuBYdoPayB/TCwNf4ld0j3foQ/jeexesJkSiJOs8ktX1LVoC8wgOtBYYCjmP7gZlssKe0YONmSRggbn0AKYNQmTXCebP2eRIjO6WekS088BYL0QPt0XPLqhdX4aPKX+J8Mg=
+	t=1751617188; cv=none; b=uba/m+SNs7C8/eSeYdolzJq4VOuvqBdNcBlghHA47gyvVt8FkmayO92ArVzFdAuv7wVLzQFUtpYYF/2rJHjizSUH9DMjHSmHOjMQf6vg7B6RG9Z4MMOmaxvzYEiYXSY7dpI6eMdPVNdyEP46kuGvKgpTiXX7acDpvg0iASRHxHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617141; c=relaxed/simple;
-	bh=P7yLgPJNlBMj21AI8RI7eojWFQsYmlMVychtbIbI/5Q=;
+	s=arc-20240116; t=1751617188; c=relaxed/simple;
+	bh=VHIyHPlNOQeT6o0Q7/lTbW2qpwThrxju/2z1cp6yEp0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTNnvkq6dklwVngwXAe5/oNCEJF9Hej6XsnolGs7J4ZKPvNWp7rfgRg6qxideLiQ2XhfDv2bLLLu4bgqg6lZqb7jWKASrT6ZyYdkG3UGRrLRk9t+VKHJeLiR3r98ELqJVviOFgTqASj7/e12oA9eqMjFJEUjnSuBgowXWgVjbeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LgzJe13Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=42H/Z7jv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LgzJe13Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=42H/Z7jv; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=foKT6Wbc+jVry/bkD6VDgAyuPT2/Q/07C6V4rTTT5eJsxiP7FEG/npAqUy2ZZY48CEyU/NhTJiwZi7sB+mC6cCzZ0zjcLTyvCzzGE8kr9EqsojoPT1c+kLX9ZPHyVFhvS0VJZvk3/FlRWnf1jiOFmoGNt4uF6p/YFusPcQYED/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cp/Izux0; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LgzJe13Q";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="42H/Z7jv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LgzJe13Q";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="42H/Z7jv"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6CB8C21189;
-	Fri,  4 Jul 2025 08:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751617137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tSyS+GilUNJCsoFZxlRDs2Pb00v1l/BsjS8N0kiKooo=;
-	b=LgzJe13QM7+5M7QEQcVCUQrrJ0eztjJ/4IVhm0PIXcLZBihHD8hrgC89C76E7YIsETLnXI
-	2HBAnJt2AZNArE8fn8frsJEqk8Q4WUHG4e03aIgkSenOeCcCSPZUhwYz9rGzTShVHaDk2h
-	0WzJ+UMccFMdMdsDaFaWeeEAoVnnpQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751617137;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tSyS+GilUNJCsoFZxlRDs2Pb00v1l/BsjS8N0kiKooo=;
-	b=42H/Z7jvA0vSM0oH49QvD/Ks7lMDBO9PWfBWaGoXqrJ1muXP9dS8xR6YoBUO5IJNdEKkD9
-	zGcXyQlR8NckHKCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LgzJe13Q;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="42H/Z7jv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751617137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tSyS+GilUNJCsoFZxlRDs2Pb00v1l/BsjS8N0kiKooo=;
-	b=LgzJe13QM7+5M7QEQcVCUQrrJ0eztjJ/4IVhm0PIXcLZBihHD8hrgC89C76E7YIsETLnXI
-	2HBAnJt2AZNArE8fn8frsJEqk8Q4WUHG4e03aIgkSenOeCcCSPZUhwYz9rGzTShVHaDk2h
-	0WzJ+UMccFMdMdsDaFaWeeEAoVnnpQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751617137;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tSyS+GilUNJCsoFZxlRDs2Pb00v1l/BsjS8N0kiKooo=;
-	b=42H/Z7jvA0vSM0oH49QvD/Ks7lMDBO9PWfBWaGoXqrJ1muXP9dS8xR6YoBUO5IJNdEKkD9
-	zGcXyQlR8NckHKCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 488E413A71;
-	Fri,  4 Jul 2025 08:18:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XPCvEXGOZ2j7DwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 04 Jul 2025 08:18:57 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DEAD2A0A31; Fri,  4 Jul 2025 10:18:56 +0200 (CEST)
-Date: Fri, 4 Jul 2025 10:18:56 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, 
-	libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v3 05/10] ext4: restart handle if credits are
- insufficient during allocating blocks
-Message-ID: <mk5f4g4rwp37ob6qmd7asocumeepjcnufqzjvazr3yukbyzq3y@6gp6x6zvxf7r>
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-6-yi.zhang@huaweicloud.com>
- <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
- <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
- <zqrcmug26tnhhjombztjjqwcorbnk4elqg2dqayhtfo2gkx3e3@wvzykthigny6>
- <f73b6973-3f7c-4e0e-9908-3a3f151715b5@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cp/Izux0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SqogGBv3noXgQBHxR8ZXgnX75dr040YudpVBo7oMuJA=; b=cp/Izux0mgOZm7QOhcJ0Wf/ZoP
+	GBaSdVbzfJVCO1fp90vBFkoXwQltZ3ygZDenVmeERDV1/fWrchohnYvnzr8HgXV7Ouz+OZsuNr/Ww
+	1jekU1qF1WQunz+hgPGwBjViGt7xLCOxtaNiQCvmkiRAJSQLgyXy2Xgt4neHGdiAW5sZ0Uxg/lBRa
+	KyF85BMe2kvnUGNSVNqobSLXWiAgjZEYYst2KlGCygU+v2MtHAztv7G/5EaONxpyrha4RPo3+B1Nr
+	uKUfj4SoonlkLqCMfmu/BOTguzSHQufyna5sA3GswxfBGCOvMWHbvPGGPXzFcSNTlsHeXoYsv9sYD
+	JF/FLVog==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXbe1-00000007qxR-3QaJ;
+	Fri, 04 Jul 2025 08:19:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5F08A300212; Fri, 04 Jul 2025 10:19:41 +0200 (CEST)
+Date: Fri, 4 Jul 2025 10:19:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Zihuan Zhang <zhangzihuan@kylinos.cn>, pavel@kernel.org,
+	len.brown@intel.com, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
+Message-ID: <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
+References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
+ <20250611101247.15522-2-zhangzihuan@kylinos.cn>
+ <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
+ <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
+ <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,109 +53,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f73b6973-3f7c-4e0e-9908-3a3f151715b5@huaweicloud.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 6CB8C21189
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_THREE(0.00)[3];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
+In-Reply-To: <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
 
-On Fri 04-07-25 09:40:23, Zhang Yi wrote:
-> On 2025/7/4 0:27, Jan Kara wrote:
-> > On Thu 03-07-25 10:13:07, Zhang Yi wrote:
-> >> On 2025/7/2 22:18, Jan Kara wrote:
-> >>> On Tue 01-07-25 21:06:30, Zhang Yi wrote:
-> >>>> From: Zhang Yi <yi.zhang@huawei.com>
-> >>>>
-> >>>> After large folios are supported on ext4, writing back a sufficiently
-> >>>> large and discontinuous folio may consume a significant number of
-> >>>> journal credits, placing considerable strain on the journal. For
-> >>>> example, in a 20GB filesystem with 1K block size and 1MB journal size,
-> >>>> writing back a 2MB folio could require thousands of credits in the
-> >>>> worst-case scenario (when each block is discontinuous and distributed
-> >>>> across different block groups), potentially exceeding the journal size.
-> >>>> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
-> >>>> when delalloc is not enabled.
-> >>>>
-> >>>> Fix this by ensuring that there are sufficient journal credits before
-> >>>> allocating an extent in mpage_map_one_extent() and
-> >>>> ext4_block_write_begin(). If there are not enough credits, return
-> >>>> -EAGAIN, exit the current mapping loop, restart a new handle and a new
-> >>>> transaction, and allocating blocks on this folio again in the next
-> >>>> iteration.
-> >>>>
-> >>>> Suggested-by: Jan Kara <jack@suse.cz>
-> >>>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> >>>
-> >>> Very nice. Feel free to add:
-> >>>
-> >>> Reviewed-by: Jan Kara <jack@suse.cz>
-> >>>
-> >>> One small comment below:
-> >>>
-> >>>> +/*
-> >>>> + * Make sure that the current journal transaction has enough credits to map
-> >>>> + * one extent. Return -EAGAIN if it cannot extend the current running
-> >>>> + * transaction.
-> >>>> + */
-> >>>> +static inline int ext4_journal_ensure_extent_credits(handle_t *handle,
-> >>>> +						     struct inode *inode)
-> >>>> +{
-> >>>> +	int credits;
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	if (!handle)
-> >>>
-> >>> Shouldn't this rather be ext4_handle_valid(handle) to catch nojournal mode
-> >>> properly?
-> >>>
-> >> __ext4_journal_ensure_credits() already calls ext4_handle_valid() to handle
-> >> nojournal mode, and the '!handle' check here is to handle the case where
-> >> ext4_block_write_begin() passes in a NULL 'handle'.
-> > 
-> > Ah, right. But then you don't need the test at all, do you? Anyway,
-> > whatever you decide to do with this (or nothing) is fine by me.
-> > 
+On Thu, Jul 03, 2025 at 07:15:23PM +0200, Rafael J. Wysocki wrote:
+
+> > How realistic is it to have a significant amount of zombies when
+> > freezing? This seems like an artificial corner case at best.
+> >
+> > Zombie tasks are stuck waiting on their parent to consume their exit
+> > state or something, right? And those parents being frozen, they pretty
+> > much stay there.
+> >
+> > So I suppose the logic holds, but urgh, do we really need this?
 > 
-> Yeah, remove this test is fine with me. I added this one is because the
-> comments in ext4_handle_valid() said "Do not use this for NULL handles."
-> I think it is best to follow this rule. :)
+> Unlikely in practice, but the code change is small and it would be
+> prudent to get this addressed IMV (at least so we don't need to
+> revisit it).
+> 
+> But I would ask for a comment above this check to explain that zombies
+> need not be frozen.
 
-Right, I didn't read that comment :) So maybe the best fix will be just
-adding a comment before the test like:
+Depending on where they wait (I can't seem to find in a hurry) it might
+make sense to make that wait FREEZABLE anyway.
 
-	/* Called from ext4_da_write_begin() which has no handle started? */
-	if (!handle)
-		return 0;
+For example, AFAICT it wouldn't hurt, and might even help some, to make
+kernel/exit.c:do_wait() TASK_FREEZABLE.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+So where do ZOMBIEs sleep? Don't they simply pass through do_task_dead()
+and never get scheduled again? Notably, do_task_dead() already marks the
+tasks as PF_NOFREEZE.
+
+Anyway, yes, the condition it adds is relatively simple, but I really
+don't see why we should complicate things *at*all*.
