@@ -1,120 +1,121 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3059101FF;
-	Fri,  4 Jul 2025 00:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B8F101FF
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 00:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751590191; cv=none; b=DjVvrVFWnheR4AjHRJgDEJyV2efwnL4PTHEBxX4tuLym5Y/qAQ0mHsSgjzvWpBJLsl8nJwK2R4HNW4zJRaz+TFPG57Uqqx+OWsOJpaL3k61sqv+tlPWh/1Mh1ieRymJrwsyIETaUoYeDVwNZpmLI50DC+EttczfaERxpADxRxa0=
+	t=1751590401; cv=none; b=uGDelnaaWb2zlf0u1PK5RLvMndbetN+9e8+Y9J6LnJzDFIYnJU3U+GjPumnt3DbKr/3Bo7hj6X3Qfl2VC8y+oQKzRlhberJnfPE96CioxraRyEc85XCxJetsAdrv16h8sqB9eTuM0sUqnn8FJo2tjEAf19Vktk6ZUxGc4U7DFdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751590191; c=relaxed/simple;
-	bh=5F907ZyFEux2K1To8HaYnR98NR61E4isDCST+c/aslE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gb8nBLv78gx/oDVHkZODVs/Zh70mqeCHxi8G/frWKyFx2a+RBrDYrCVSmKt8E67BJUeY6hyuqwtWyaGTnS6iN3d4FCZV7I50afIZ9DoJ5vNJfCByu9mBSJ4fkYPNQ9U/rwelXb2jC0xYW46agZAQGIOHfRW7qff4SJ8TKeMJnh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c5460f3e587011f0b29709d653e92f7d-20250704
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:af34f8ec-cead-4cff-8f15-48635f4ddbbb,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:ff0f69d7ae8fb705f0c75159692fc8d1,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c5460f3e587011f0b29709d653e92f7d-20250704
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1353150857; Fri, 04 Jul 2025 08:49:41 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 919F3E008FA2;
-	Fri,  4 Jul 2025 08:49:41 +0800 (CST)
-X-ns-mid: postfix-68672525-50253432
-Received: from [172.25.120.24] (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id D3C93E008FA1;
-	Fri,  4 Jul 2025 08:49:40 +0800 (CST)
-Message-ID: <7f6b7ea9-8fb5-466c-b92b-fe2c20e64b0b@kylinos.cn>
-Date: Fri, 4 Jul 2025 08:49:40 +0800
+	s=arc-20240116; t=1751590401; c=relaxed/simple;
+	bh=/uh/kY9f63FFoWCRFO7wD3jUeZn7lzI7W8ly2efSafw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=naWYJg+P2yhRBIoXrCTXvx73owcdY0i+DyBnebekE+Qfj7OI1X/MoyWfwFew2kkv3F4p2dTJvkUDYefmahoFz8/bSC1Tt9indfR6g17mURasJAonKDpTMmoJ5RECu9LpO4VLCxKM9uZ9Atr0hmJGDXyFbL4L1sZ4Emdt4B7C3ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DLVJZSW/; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DLVJZSW/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751590396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JSu8rsxK4BAk8jXC2ShdBMCyiCvqbyzaWdfyeOxP/PI=;
+	b=DLVJZSW/tNUGvpDdRHirTPp4JjnoQHm1KdSBttHwjJwLwiWZbh8LoqHUlDp/LidCyrrsbd
+	6AgHSibkSpKt2Hh73Q0uRA85JZyynAMBzbn89h6urOV0Cxaklrr8WUQUbc+uhWFEo1lWZg
+	cvESIbuoAVVHoCF1V6V6oqmMyrYLxUg=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: netdev@vger.kernel.org
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3] tcp: Correct signedness in skb remaining spac calculation
+Date: Fri,  4 Jul 2025 08:52:52 +0800
+Message-ID: <20250704005252.21744-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] PM: freezer: Print tasks stuck in D-state during
- freeze
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: pavel@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250619035355.33402-1-zhangzihuan@kylinos.cn>
- <20250619035355.33402-3-zhangzihuan@kylinos.cn>
- <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-In-Reply-To: <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Rafael,
+Syzkaller reported a bug [1] where sk->sk_forward_alloc can overflow.
 
-=E5=9C=A8 2025/7/3 22:40, Rafael J. Wysocki =E5=86=99=E9=81=93:
-> On Thu, Jun 19, 2025 at 5:54=E2=80=AFAM Zihuan Zhang <zhangzihuan@kylin=
-os.cn> wrote:
->> To help diagnose freezing delays caused by tasks stuck in D-state, thi=
-s
->> patch adds logging for tasks that are stuck in D-state during each ret=
-ry
->> of the freezer loop.  Such tasks are not killable and cannot be frozen=
-,
->> which can cause the system suspend process to retry many times
->> before aborting.  This message can help developers identify which
->> user-space or kernel tasks are blocking the freeze process.
->>
->> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
->> ---
->>   kernel/power/process.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/kernel/power/process.c b/kernel/power/process.c
->> index 87616ca710ac..4007f621c2ad 100644
->> --- a/kernel/power/process.c
->> +++ b/kernel/power/process.c
->> @@ -55,6 +55,9 @@ static int try_to_freeze_tasks(bool user_only)
->>                          if (p =3D=3D current || !freeze_task(p))
->>                                  continue;
->>
->> +                       if (retry > 1 && READ_ONCE(p->__state) =3D=3D =
-TASK_UNINTERRUPTIBLE)
->> +                               sched_show_task(p);
->> +
-> This is going to be too noisy IMV.  Any chance to rate limit it somehow=
-?
-Thanks for pointing this out.
+When we send data, if an skb exists at the tail of the write queue, the
+kernel will attempt to append the new data to that skb. However, the code
+that checks for available space in the skb is flawed:
+'''
+copy = size_goal - skb->len
+'''
 
-To avoid excessive verbosity, I=E2=80=99ll make the D-state task logging=20
-conditional on pm_debug_messages_on() being true. Additionally, I=E2=80=99=
-ll=20
-limit the logging to only occur during retry rounds 1=E2=80=94 that shoul=
-d be=20
-enough to catch problematic tasks early without spamming the logs in=20
-prolonged freeze attempts.
+The types of the variables involved are:
+'''
+copy: ssize_t (s64 on 64-bit systems)
+size_goal: int
+skb->len: unsigned int
+'''
 
-+                       if (pm_debug_messages_on && retry =3D=3D 1 && REA=
-D_ONCE(p->__state) =3D=3D TASK_UNINTERRUPTIBLE)
-+                               sched_show_task(p);
-+
+Due to C's type promotion rules, the signed size_goal is converted to an
+unsigned int to match skb->len before the subtraction. The result is an
+unsigned int.
 
+When this unsigned int result is then assigned to the s64 copy variable,
+it is zero-extended, preserving its non-negative value. Consequently, copy
+is always >= 0.
 
->>                          todo++;
->>                  }
->>                  read_unlock(&tasklist_lock);
->> --
->> 2.25.1
->>
-Best regards,
-Zihuan Zhang
+Assume we are sending 2GB of data and size_goal has been adjusted to a
+value smaller than skb->len. The subtraction will result in copy holding a
+very large positive integer. In the subsequent logic, this large value is
+used to update sk->sk_forward_alloc, which can easily cause it to overflow.
+
+The syzkaller reproducer uses TCP_REPAIR to reliably create this
+condition. However, this can also occur in real-world scenarios. The
+tcp_bound_to_half_wnd() function can also reduce size_goal to a small
+value. This would cause the subsequent tcp_wmem_schedule() to set
+sk->sk_forward_alloc to a value close to INT_MAX. Further memory
+allocation requests would then cause sk_forward_alloc to wrap around and
+become negative.
+
+[1]: https://syzkaller.appspot.com/bug?extid=de6565462ab540f50e47
+
+Reported-by: syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com
+Fixes: 270a1c3de47e ("tcp: Support MSG_SPLICE_PAGES")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+
+---
+v2 -> v3: Use correct syzkaller link
+v1 -> v2: Added more commit message
+https://lore.kernel.org/netdev/20250702110039.15038-1-jiayuan.chen@linux.dev/
+---
+ net/ipv4/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 8a3c99246d2e..803a419f4ea0 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1176,7 +1176,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 		goto do_error;
+ 
+ 	while (msg_data_left(msg)) {
+-		ssize_t copy = 0;
++		int copy = 0;
+ 
+ 		skb = tcp_write_queue_tail(sk);
+ 		if (skb)
+-- 
+2.47.1
+
