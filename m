@@ -1,126 +1,291 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1843342A83
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079E21C84C7;
+	Fri,  4 Jul 2025 14:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751639927; cv=none; b=AzXrWfa+QQOzowGqv0HkgjCW2A7c1kLvA2GKNVXs50p0jLiNF2D1yDO+/xuuNkgNyKqfzkByHwj4NJPY3SSQZZDarBVh4B9ssyv/A8T1ldqs+CSKosLOMqzmN6ZHW1MA13Ak6xe9uHgSCOBUhgVCSinaGjCbYCTJ+aqhdGfzwzM=
+	t=1751639971; cv=none; b=nP0TopR+r9sdvMnzp0BKF/RF102MVG84taW+LRkdorRnSWDt2U/p3034G3nXG8bMwz78itTMeRB9LNutVZ26RxVMJxG/G2tKcyRx5DYrsAek2pNOfj11mdjUgoEsPkM6UV5inuC67tKSkqvGbG3Eic70FEY/5D8jPgaUg9UEoE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751639927; c=relaxed/simple;
-	bh=iLbbOTLfkvUfmCzjDPHH4bf50VvRKTvBJNmvK5fCEuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vCZ+ILKbmCk8FLcHCtJcFrQ8HPKLRDgzh+bhxIdGbUT8Bf8yDJphLMCajA+PL/fSsPP5ehJ5T9O54s3HlBi5OYIx5xzQRybQww3jTj+I8wJFkgpxE56B/m8rGs5vb2EqCLDvkHa6JJH6bRT5igQtcasn+Wl/1AmDmJyVgATww4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=2lfwxlto; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751639971; c=relaxed/simple;
+	bh=15CM4LWYK7Wpl5txdeYXrBWZ994P2uRFaj8WRUUK88c=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=A28EDaMc/TyGJ1yyCzOWy8E9Eu0SoJB0XjIHZFJnOUew4mPaRJkgTMZMeTjKpy8h54Q4krqVaQqC0f5nuDSZb2uSlBWqbGmEEJ8rBCMTpuZAXMrVFg93oen5V4+uPIVBm/ztZ7Y1HCR68jwjvMM0b/EuUqzaVfSbwRNFpAE8jj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HkFYfXwo; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="2lfwxlto"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=LpqvI8aigKp1KLyHhO2hfOZECoifhbc86pqy6YCw2lQ=; b=2lfwxlto3SF5a3d7vDXVd1azEr
-	+93Z5oQ4/69wdHjHFNUj1jBQrzMaWIdTVOx4TS1MT1G2z/iAviRg0XeaT56eDc+ap85tpgn98obyG
-	reR+utLFCUeDMht4w7WyoSqLnZ0Ug9ZzDSHplMF/WwedHZMVWhDJk+ct3NRkFBv8VIowlze1/H588
-	ZS65o9feEqQ1hzjqI/1NHCtQ2sg5iwcapWHMb+Rnf4pSf8PGD3n7MPFe3M98zvR69mIZ+dj0IZs/M
-	wLvbRzeTwvt0bA42B+rUM3SXJtNloppdwgw+1in2J5IOwzgi4CSTQupuuVXVK9uRIBArsCM16udSu
-	8MBqpjQw==;
-Received: from i53875b79.versanet.de ([83.135.91.121] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uXhY2-0006HW-Qj; Fri, 04 Jul 2025 16:37:54 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 1/5] drm/rockchip: dw_hdmi_qp: Provide CEC IRQ in
- dw_hdmi_qp_plat_data
-Date: Fri, 04 Jul 2025 16:37:53 +0200
-Message-ID: <13504186.5MRjnR8RnV@diego>
-In-Reply-To: <20250704-rk3588-hdmi-cec-v1-1-2bd8de8700cd@collabora.com>
-References:
- <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
- <20250704-rk3588-hdmi-cec-v1-1-2bd8de8700cd@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HkFYfXwo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751639970; x=1783175970;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=15CM4LWYK7Wpl5txdeYXrBWZ994P2uRFaj8WRUUK88c=;
+  b=HkFYfXwoFi34CAx1vtfL5Ja2v2I1hObsWan2p5vP3YnYRxPJiPfivXKg
+   ShMijX6TG8eAlKrHzvuKrlxKfyUs0YdQv7oDxhwz89HACEezwrZzbL7WN
+   SnVQMnzdXlZaw9iHZBV8v/qkXKvy8ba4W2DHTKUSqRoBW3ifUSqmaxYvq
+   L1u30rpCNo4hHJIIbk8OJQvojKxue6T+duA2ExwLWqSEA4t/JICH/oMrj
+   VQd+/TPDqVYRD0dXSDdWLFd1RqKe8j2UPQOyUXKtboRUkS/vUyN7nSiay
+   60fI5LOjtVykE+uTfPBykBk5Gxa2n8r41rtsbs54csjF1z48ltqV8M713
+   A==;
+X-CSE-ConnectionGUID: ivJrvhTOT/iOgV2mLy5oNw==
+X-CSE-MsgGUID: YwxnKhjgQnCBxDLHoSh0qg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="41601256"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="41601256"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 07:39:29 -0700
+X-CSE-ConnectionGUID: mQiG27VQRlCLmhH1k/HDIQ==
+X-CSE-MsgGUID: E2DPk0xJQKCYgOZ9lqVFpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="155140410"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.74])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 07:39:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 04 Jul 2025 17:26:33 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.16-3
+Message-ID: <pdx86-pr-20250704172633-53246370@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Cristian,
+Hi Linus,
 
-Am Freitag, 4. Juli 2025, 16:23:22 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Cristian Ciocaltea:
-> In preparation to support the CEC interface of the DesignWare HDMI QP IP
-> block, extend the platform data to provide the required IRQ number.
->=20
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
->  drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c | 4 ++++
->  include/drm/bridge/dw_hdmi_qp.h                | 1 +
->  2 files changed, 5 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu=
-/drm/rockchip/dw_hdmi_qp-rockchip.c
-> index 7d531b6f4c098c6c548788dad487ce4613a2f32b..126e556025961e8645f3567b4=
-d7a1c73cc2f2e7f 100644
-> --- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> +++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> @@ -539,6 +539,10 @@ static int dw_hdmi_qp_rockchip_bind(struct device *d=
-ev, struct device *master,
->  	if (plat_data.main_irq < 0)
->  		return plat_data.main_irq;
-> =20
-> +	plat_data.cec_irq =3D platform_get_irq_byname(pdev, "cec");
-> +	if (plat_data.cec_irq < 0)
-> +		return plat_data.cec_irq;
-> +
->  	irq =3D platform_get_irq_byname(pdev, "hpd");
->  	if (irq < 0)
->  		return irq;
-> diff --git a/include/drm/bridge/dw_hdmi_qp.h b/include/drm/bridge/dw_hdmi=
-_qp.h
-> index e9be6d507ad9cdc55f5c7d6d3ef37eba41f1ce74..b4a9b739734ec7b67013b683f=
-e6017551aa19172 100644
-> --- a/include/drm/bridge/dw_hdmi_qp.h
-> +++ b/include/drm/bridge/dw_hdmi_qp.h
-> @@ -23,6 +23,7 @@ struct dw_hdmi_qp_plat_data {
->  	const struct dw_hdmi_qp_phy_ops *phy_ops;
->  	void *phy_data;
->  	int main_irq;
-> +	int cec_irq;
->  };
+Here is a platform-drivers-x86 fixes PR for v6.16.
 
-from a structure point-of-view, I'd expect the series to be something like:
+Mostly a few lines fixed here and there except amd/isp4 which improves
+swnodes relationships but that is a new driver not in any stable kernels
+yet. The think-lmi driver changes also look relatively large but there
+are just many fixes to it.
 
-(1) drm/bridge: dw-hdmi-qp: Add CEC support
-    -> including adding the cec_irq to dw_hdmi_qp_plat_data
-(2) drm/bridge: dw-hdmi-qp: Fixup timer base setup
-    -> including adding the ref_clk_rate to dw_hdmi_qp_plat_data
-(3) drm/rockchip: dw_hdmi_qp: Provide CEC IRQ in dw_hdmi_qp_plat_data
-(4) drm/rockchip: dw_hdmi_qp: Provide ref clock rate in dw_hdmi_qp_plat_data
-(5) arm64: defconfig: Enable DW HDMI QP CEC support
-
-The patches adding the generic functionality to the bridge should also
-include the needed elements and not depend on platform-specific patches.
+The i2c/piix4 change is a effectively a revert of the commit 7e173eb82ae9
+("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86") but that
+required moving the header out from arch/x86 under
+include/linux/platform_data/.
 
 
-Heiko
+Fixes and New HW Support
+
+- amd/isp4: Improve swnode graph (new driver exception)
+
+- asus-nb-wmi: Use duo keyboard quirk for Zenbook Duo UX8406CA
+
+- dell-lis3lv02d: Add Latitude 5500 accelerometer address
+
+- dell-wmi-sysman: Fix WMI data block retrieval and class dev unreg
+
+- hp-bioscfg: Fix class device unregistration
+
+- i2c: piix4: Re-enable on non-x86 + move FCH header under platform_data/
+
+- intel/hid: Wildcat Lake support
+
+- mellanox:
+
+  - mlxbf-pmc: Fix duplicate event ID
+
+  - mlxbf-tmfifo: Fix vring_desc.len assignment
+
+  - mlxreg-lc: Fix bit-not-set logic check
+
+  - nvsw-sn2201: Fix bus number in error message & spelling errors
+
+- portwell-ec: Move watchdog device under correct platform hierarchy
+
+- think-lmi: Error handling fixes (sysfs, kset, kobject, class dev unreg)
+
+- thinkpad_acpi: Handle HKEY 0x1402 event (2025 Thinkpads)
+
+- wmi: Fix WMI event enablement
+
+Regards, i.
 
 
+The following changes since commit e2468dc700743683e1d1793bbd855e2536fd3de2:
+
+  Revert "platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1" (2025-06-13 15:09:02 +0300)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-3
+
+for you to fetch changes up to 4f30f946f27b7f044cf8f3f1f353dee1dcd3517a:
+
+  platform/x86: think-lmi: Fix sysfs group cleanup (2025-07-02 12:01:25 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.16-3
+
+Fixes and New HW Support
+
+- amd/isp4: Improve swnode graph (new driver exception)
+
+- asus-nb-wmi: Use duo keyboard quirk for Zenbook Duo UX8406CA
+
+- dell-lis3lv02d: Add Latitude 5500 accelerometer address
+
+- dell-wmi-sysman: Fix WMI data block retrieval and class dev unreg
+
+- hp-bioscfg: Fix class device unregistration
+
+- i2c: piix4: Re-enable on non-x86 + move FCH header under platform_data/
+
+- intel/hid: Wildcat Lake support
+
+- mellanox:
+
+  - mlxbf-pmc: Fix duplicate event ID
+
+  - mlxbf-tmfifo: Fix vring_desc.len assignment
+
+  - mlxreg-lc: Fix bit-not-set logic check
+
+  - nvsw-sn2201: Fix bus number in error message & spelling errors
+
+- portwell-ec: Move watchdog device under correct platform hierarchy
+
+- think-lmi: Error handling fixes (sysfs, kset, kobject, class dev unreg)
+
+- thinkpad_acpi: Handle HKEY 0x1402 event (2025 Thinkpads)
+
+- wmi: Fix WMI event enablement
+
+The following is an automated shortlog grouped by driver:
+
+asus-nb-wmi:
+ -  add DMI quirk for ASUS Zenbook Duo UX8406CA
+
+dell-lis3lv02d:
+ -  Add Latitude 5500
+
+dell-wmi-sysman:
+ -  Fix class device unregistration
+ -  Fix WMI data block retrieval in sysfs callbacks
+
+hp-bioscfg:
+ -  Fix class device unregistration
+
+i2c:
+ -  Re-enable piix4 driver on non-x86
+
+intel/hid:
+ -  Add Wildcat Lake support
+
+mellanox:
+ -  Fix spelling and comment clarity in Mellanox drivers
+
+mlxbf-pmc:
+ -  Fix duplicate event ID for CACHE_DATA1
+
+mlxbf-tmfifo:
+ -  fix vring_desc.len assignment
+
+mlxreg-lc:
+ -  Fix logic error in power state check
+
+Move FCH header to a location accessible by all archs:
+ - Move FCH header to a location accessible by all archs
+
+nvsw-sn2201:
+ -  Fix bus number in adapter error message
+
+portwell-ec:
+ -  Move watchdog device under correct platform hierarchy
+
+think-lmi:
+ -  Create ksets consecutively
+ -  Fix class device unregistration
+ -  Fix kobject cleanup
+ -  Fix sysfs group cleanup
+
+thinkpad_acpi:
+ -  handle HKEY 0x1402 event
+
+Update swnode graph for amd isp4:
+ - Update swnode graph for amd isp4
+
+wmi:
+ -  Fix WMI event enablement
+ -  Update documentation of WCxx/WExx ACPI methods
+
+----------------------------------------------------------------
+Alok Tiwari (4):
+      platform/mellanox: mlxbf-pmc: Fix duplicate event ID for CACHE_DATA1
+      platform/mellanox: Fix spelling and comment clarity in Mellanox drivers
+      platform/mellanox: nvsw-sn2201: Fix bus number in adapter error message
+      platform/mellanox: mlxreg-lc: Fix logic error in power state check
+
+Armin Wolf (2):
+      platform/x86: wmi: Fix WMI event enablement
+      platform/x86: wmi: Update documentation of WCxx/WExx ACPI methods
+
+David Thompson (1):
+      platform/mellanox: mlxbf-tmfifo: fix vring_desc.len assignment
+
+Ivan Hu (1):
+      platform/x86: portwell-ec: Move watchdog device under correct platform hierarchy
+
+Kurt Borja (7):
+      platform/x86: dell-wmi-sysman: Fix WMI data block retrieval in sysfs callbacks
+      platform/x86: hp-bioscfg: Fix class device unregistration
+      platform/x86: think-lmi: Fix class device unregistration
+      platform/x86: dell-wmi-sysman: Fix class device unregistration
+      platform/x86: think-lmi: Create ksets consecutively
+      platform/x86: think-lmi: Fix kobject cleanup
+      platform/x86: think-lmi: Fix sysfs group cleanup
+
+Mario Limonciello (2):
+      Move FCH header to a location accessible by all archs
+      i2c: Re-enable piix4 driver on non-x86
+
+Mark Pearson (1):
+      platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+
+Paul Menzel (1):
+      platform/x86: dell-lis3lv02d: Add Latitude 5500
+
+Pratap Nirujogi (1):
+      platform/x86: Update swnode graph for amd isp4
+
+Rahul Chandra (1):
+      platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8406CA
+
+Srinivas Pandruvada (1):
+      platform/x86/intel/hid: Add Wildcat Lake support
+
+ Documentation/wmi/acpi-interface.rst               |  14 +-
+ arch/x86/kernel/cpu/amd.c                          |   2 +-
+ drivers/i2c/busses/Kconfig                         |   2 +-
+ drivers/i2c/busses/i2c-piix4.c                     |   2 +-
+ drivers/platform/mellanox/mlxbf-pmc.c              |   2 +-
+ drivers/platform/mellanox/mlxbf-tmfifo.c           |   5 +-
+ drivers/platform/mellanox/mlxreg-dpu.c             |   2 +-
+ drivers/platform/mellanox/mlxreg-lc.c              |  12 +-
+ drivers/platform/mellanox/nvsw-sn2201.c            |   2 +-
+ drivers/platform/x86/amd/amd_isp4.c                | 181 ++++++++++++++++-----
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |   2 +-
+ drivers/platform/x86/asus-nb-wmi.c                 |   9 +
+ drivers/platform/x86/dell/dell-lis3lv02d.c         |   1 +
+ .../x86/dell/dell-wmi-sysman/dell-wmi-sysman.h     |   5 +
+ .../x86/dell/dell-wmi-sysman/enum-attributes.c     |   5 +-
+ .../x86/dell/dell-wmi-sysman/int-attributes.c      |   5 +-
+ .../x86/dell/dell-wmi-sysman/passobj-attributes.c  |   5 +-
+ .../x86/dell/dell-wmi-sysman/string-attributes.c   |   5 +-
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c |  12 +-
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       |   4 +-
+ drivers/platform/x86/intel/hid.c                   |   1 +
+ drivers/platform/x86/portwell-ec.c                 |   1 +
+ drivers/platform/x86/think-lmi.c                   |  94 ++++-------
+ drivers/platform/x86/thinkpad_acpi.c               |   1 +
+ drivers/platform/x86/wmi.c                         |  16 +-
+ .../linux/platform_data/x86/amd-fch.h              |   0
+ 26 files changed, 250 insertions(+), 140 deletions(-)
+ rename arch/x86/include/asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h (100%)
