@@ -1,120 +1,203 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DC61F4615;
-	Fri,  4 Jul 2025 09:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044E12882BF
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620831; cv=none; b=ZV+VxcSiu3PuulzsltSFPb/l5Lf7zsxu/bpohRoXUbkZWVg7INAaP9FuZDA9x9ddcDCsF6Ho4HF7ltiUCWehKxF6eJ4XbBeGdv0c5wrWJtFjTExvnYs0jq5i9RxOtTutbbuLsxPGnkMejaMA4FINv8eORuCvDpfYDCWF0+lglps=
+	t=1751620904; cv=none; b=hBKU3pX2+OiNwqnvfj4SKLf1xSYgI/Srf00JEOg6oIwskLJHX6P2igfjSPXdrOvTVtJ9BY+/vOelY2IAeV8RkJ0tDrTONGZIBIcMojiJRYqalDngR1x9ZDEc9kjtAiffE2XQFaRCrQAS7oCohTg1OXmBLS0HqaOukk2PfpeK7ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620831; c=relaxed/simple;
-	bh=M4kyxHF27eymEVDJwIeVmNTutyHMh9udlF6lQLdU9Gc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SLFxrjL7yptDv2PMp9pDXp1rGcgwt+/TKuP9vXbHFlajHdmPDikSdKNBPPXfeXSnMkb45a3KGXnKwuYJBGY9jg348ve6MMzp4+6f6tr0NWUozQdgRWWpFVod4i4GUwI43h5IjXvkSfkaxqeL1ZCPBBmYdAnYNTZcmInS369qXxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Es+woNO6; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Es+woNO6"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a54700a463so411603f8f.1;
-        Fri, 04 Jul 2025 02:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751620828; x=1752225628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u+Ik9FB2BHF2LFVVV6mpBekWZ6EW7mXHVXys5mfnlr0=;
-        b=Es+woNO6tQpICoQbnhYpe59Qe81Z3PG4yOB3pKuvcIwMwKwkhYBxeoDm69VXY3bLJR
-         FXducSH9xq9W5wPjkNM13J2Bj1wIbs5ggw3JXRGyUI9aysCwiT3oJwyuFW+/dXCRvk1P
-         FNnVA0BQVr1W4wvxKuGIxnJGirzrSdiYidaDlPpg14lo4yGMTNwC4PNRy/AHJD5tUunA
-         46H9IrUSLP2+PM78gorOoCoHr10X7HUofLIHsvUusxTJjhe+tfdVq6KakikreDdoMqsH
-         fijjacw5Rjjx3rqAPsJmsqBx+FkLLFMPqpp7huzKLxjlUaNy3jehHx9g4umYa2BapWej
-         Twxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751620828; x=1752225628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u+Ik9FB2BHF2LFVVV6mpBekWZ6EW7mXHVXys5mfnlr0=;
-        b=G70TNj8YtYgKWrtOAsOhU8zRaoWPARVaiMoly4TkmVLFsv6QJrQpZxBteF0tNVqUPB
-         1zU/UZk1yZgyXExeCqlTlcsEiJCG7MQh3QyHehXc8JfigauL7Iq5336mhVHc+XWs/cuX
-         NAcR04pJK0QoNuJKxtLdjJTyGogkWJKa3/z3UAumUCLOuz5YpZeXkpgSMzI8WFfKaP48
-         jBHSzcO5KrhkRCuBvdt0U4/7R8QMN3liPYelvbrIl4AFBwPfvnmgXgEkJGQOaErvQ7jZ
-         NnXn0OoY88OHr4ohv7FzL9Uqp7D1+uJobJwg4YxHlSCXnsi3GTyhWuhtAadpInQywXk9
-         Rkpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjAWvksgnoRYiPmo1rYaL+Pi6I1p46NKIENe8tTLoMgVbos31s7CHQRzgiYl2vHIdBFe46KAGPQOgvWKc=@vger.kernel.org, AJvYcCXcuy6Vt/5RZ9j0N8nYy2/hiC2aTyt6JAt1XN8he6Tr/YCCUJqddwSNygNZclr1DpxaN0guqS3iEaPBpQ3SMLcLEw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxjFcnnnbd3q8k9fCBmVPTySN/v2lawQiHksDtOQOCCuoFc9q5
-	/d1PV9V+J1y23nAX4HrzrS1gpKc9jxNm78je50YY+3bIL4Xoxag9m5xJ
-X-Gm-Gg: ASbGncu7HXkr34jvCEn0L1BlO6qntSMs7rgJY9e8/M5aa/190rknYV8d2gqNnN5PP6a
-	2jhYHU/JfebBiEu3RQyWiTkya+Ga48x8/gY5yxSr3JbjiG1brnuT2sWt0gScJakrDBSUPI+ldRZ
-	45aOeYxlihpnaBuvZfpDv2CrnShlIgYm6IYL1CbaZYKSBB2724quco0TQAerJUiFMrEQjJdyjBF
-	hz/DtHMCluaZcUFSKKZ61Hq8N6/V9su8Z/YTE1vavN/+v8GjjwCK3TYJdPSkqPnP36pcxfD7uhQ
-	j7AR4/8RVRgGlRgn47CnjLk1TQ8MwG++ItUNToUs3vm1U8CTlzGLTd4MTPLVH/E/JckPnCToW+y
-	FhYt21fxesLdR/xHyTQ==
-X-Google-Smtp-Source: AGHT+IFrlNc7sZqyAZg5GPKF/fl2jdn72qDl3Dccv12xQ9nx91zaIVbtMctI2uw/u5xVcuxpGQSwcw==
-X-Received: by 2002:a05:6000:4601:b0:3a3:64b9:773 with SMTP id ffacd0b85a97d-3b495b9442fmr1765994f8f.10.1751620827681;
-        Fri, 04 Jul 2025 02:20:27 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47285c4f9sm1945049f8f.88.2025.07.04.02.20.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 02:20:27 -0700 (PDT)
-Date: Fri, 4 Jul 2025 10:20:07 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Usman Akinyemi <usmanakinyemi202@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor
- string
-Message-ID: <20250704102007.6354ce9f@pumpkin>
-In-Reply-To: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1751620904; c=relaxed/simple;
+	bh=HCJ1JhHK2fE04lwNglZ4+F99ZO4+HoM5uxWQBbcNcLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wx6+0uvdrsuCtb5ykADkRxJMXLQoGrTfOGtFLa88F8DpCBrqR2EFTSUg2KBGwBQSNHutzkeJk3dmIEkJOajA246GCxdzWnDVK8fL/bTbroyCEHAL6rwGMab+5qxyZY5uhn70jt/qxiqQoIGWhjfImfe5h3wC48gLOb4e3vCmBAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8AxGHEdnWdovFAiAQ--.12035S3;
+	Fri, 04 Jul 2025 17:21:33 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowJAxT+YTnWdobxoJAA--.53746S2;
+	Fri, 04 Jul 2025 17:21:25 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v7 0/3] LoongArch: Add Loongson-2K BMC support
+Date: Fri,  4 Jul 2025 17:21:10 +0800
+Message-ID: <cover.1751617911.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxT+YTnWdobxoJAA--.53746S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF13CF1fuw1DKFW3Kw1kXrc_yoWrKr1Dpa
+	15urs8Crn8KF17J393Cw1fuFyYqa95Ja4Sgr17Aw15uF4UCa4jyrWrKa13XFyUAF4kKryI
+	qrsayr1fKa45Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Gii3UUUUU==
 
-On Thu, 19 Jun 2025 03:28:43 +0530
-Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
+Hi all:
 
-> strncpy() is unsafe for fixed-size binary data as
-> it may not NUL-terminate and is deprecated for such
-> usage. Since we're copying raw CPUID register values,
-> memcpy() is the correct and safe choice.
-> 
-> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
-> ---
->  tools/perf/arch/x86/util/header.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-> index 412977f8aa83..43ba55627817 100644
-> --- a/tools/perf/arch/x86/util/header.c
-> +++ b/tools/perf/arch/x86/util/header.c
-> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
->  	unsigned int b, c, d;
->  
->  	cpuid(0, 0, lvl, &b, &c, &d);
-> -	strncpy(&vendor[0], (char *)(&b), 4);
-> -	strncpy(&vendor[4], (char *)(&d), 4);
-> -	strncpy(&vendor[8], (char *)(&c), 4);
-> +	memcpy(&vendor[0], (char *)(&b), 4);
-> +	memcpy(&vendor[4], (char *)(&d), 4);
-> +	memcpy(&vendor[8], (char *)(&c), 4);
+This patch set introduces the Loongson-2K BMC.
 
-Why not:
-	cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(vendor + 4));
+It is a PCIe device present on servers similar to the Loongson-3 CPUs.
+And it is a multifunctional device (MFD), such as display as a sub-function
+of it.
+
+For IPMI, according to the existing design, we use software simulation to
+implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+
+Also since both host side and BMC side read and write kcs status, we use
+fifo pointer to ensure data consistency.
+
+For the display, based on simpledrm, the resolution is read from a fixed
+position in the BMC since the hardware does not support auto-detection
+of the resolution. Of course, we will try to support multiple
+resolutions later, through a vbios-like approach.
+
+Especially, for the BMC reset function, since the display will be
+disconnected when BMC reset, we made a special treatment of re-push.
+
+Based on this, I will present it in four patches:
+patch-1: BMC basic function support, such as display with simpledrm;
+patch-2: BMC reset function support;
+patch-3: IPMI implementation.
+
+Thanks.
+
+-------
+V7:
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on ACPI_GENERIC_GSI
+    - https://lore.kernel.org/all/202507021011.sDAHGinj-lkp@intel.com/
+
+Link to V6:
+https://lore.kernel.org/all/cover.1750939357.git.zhoubinbin@loongson.cn/
+
+V6:
+- Add Acked-by tag from Corey, thanks;
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on PCI
+    - https://lore.kernel.org/all/202506210204.LVZc2VG2-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210231.ZWWNhofU-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210652.ipUFDU5B-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210343.XCHkzorp-lkp@intel.com/
+
+Link to V5:
+https://lore.kernel.org/all/cover.1750301674.git.zhoubinbin@loongson.cn/
+
+V5:
+Patch (1/3):
+ - Rename ls2kbmc-mfd.c to ls2k-bmc-core.c;
+ - Rename MFD_LS2K_BMC to MFD_LS2K_BMC_CORE and update its help text.
+Patch (3/3):
+ - Add an IPMI_LS2K config in the IPMI section that enables the IPMI
+   interface and selects MFD_LS2K_BMC_CORE.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1749731531.git.zhoubinbin@loongson.cn/
+
+V4:
+- Add Reviewed-by tag;
+- Change the order of the patches.
+Patch (1/3):
+  - Fix build warning by lkp: Kconfig tristate -> bool
+    - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
+ - Update commit message;
+ - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
+   Makefile.
+Patch (2/3):
+  - Remove unnecessary newlines;
+  - Rename ls2k_bmc_check_pcie_connected() to
+    ls2k_bmc_pcie_is_connected();
+  - Update comment message.
+Patch (3/3):
+  - Remove unnecessary newlines.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (1/3):
+ - Drop "MFD" in title and comment;
+ - Fromatting code;
+ - Add clearer comments.
+Patch (2/3):
+ - Rebase linux-ipmi/next tree;
+ - Use readx()/writex() to read and write IPMI data instead of structure
+   pointer references;
+ - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
+ - Drop unused output.
+Patch (3/3):
+ - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
+ - Add clearer comments.
+ - Use proper multi-line commentary as per the Coding Style documentation;
+ - Define all magic numbers.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
+
+V2:
+- Drop ls2kdrm, use simpledrm instead.
+Patch (1/3):
+ - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+ - Add resolution fetching due to replacing the original display
+   solution with simpledrm; 
+ - Add aperture_remove_conflicting_devices() to avoid efifb
+   conflict with simpledrm.
+Patch (3/3):
+ - This part of the function, moved from the original ls2kdrm to mfd;
+ - Use set_console to implement the Re-push display function.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (3):
+  mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+  mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+  ipmi: Add Loongson-2K BMC support
+
+ MAINTAINERS                      |   7 +
+ drivers/char/ipmi/Kconfig        |   7 +
+ drivers/char/ipmi/Makefile       |   1 +
+ drivers/char/ipmi/ipmi_si.h      |   7 +
+ drivers/char/ipmi/ipmi_si_intf.c |   4 +
+ drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
+ drivers/mfd/Kconfig              |  13 +
+ drivers/mfd/Makefile             |   2 +
+ drivers/mfd/ls2k-bmc-core.c      | 484 +++++++++++++++++++++++++++++++
+ 9 files changed, 714 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+ create mode 100644 drivers/mfd/ls2k-bmc-core.c
 
 
->  	vendor[12] = '\0';
->  }
->  
+base-commit: 2e8185c0f214d45cdbc20ee4e6796c561ba66c55
+-- 
+2.47.1
 
