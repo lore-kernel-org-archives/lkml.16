@@ -1,73 +1,127 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2261FDA97
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADF4137923;
+	Fri,  4 Jul 2025 17:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651145; cv=none; b=XMCxRBANOLVYWAdocBE6TfD66L1bnlVc5eEMTD90f9whttq2M134kwwi+xQiEBDzX3fuSX+N00h9UsYP07vkkTkDLJFZZ13qdw+P1mCF3s1EYW6s8Vm907uHMOKwaAjOHh8L7Hh85Ik0mVFDO2ORaZoSRPi7SIO3FWJ9DXquiuo=
+	t=1751651239; cv=none; b=Z7Rv/lRgoMJa6IT3/SnvJqQyz0sF7PoMYVj6YM8GnG9GQqA+EaAH1/4czTh5hTW0CoCMavjpYu79txo0+mgvll+tD4Y1pif3kKNNzoyA+Mz2RvAbMliwhfICFGiNooalH/Qx9mIKve/reBwqUk0Yc05YvWMq9hOH8AURHh4NBa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751651145; c=relaxed/simple;
-	bh=8vPUhSXPelKn26TK9gtb7UrYo8Gk0tjL+OPwnLrRbI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iE8jPl/EsZSpN+hsoeDlN544ywFicyC1shxvAnvyKnVqqQC4NgBAzrN+eFdL96M5T31i/Vwn/uhpFuRkYDqJWOsZ3aZRL5DWao/ICGuG2tQX0Uvidthg7dlL5q7bnXsTru5d2TR234ykANwUHeLposXUc5kbujyAJ8P9DwyQF9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IZC9S11P; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751651239; c=relaxed/simple;
+	bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RAmxsOxTCvb0np5Aewq7aq3mfTKL2n9UatM7s/6v0IbCbprOQy+X4wNscy1GmD863UH1bJ/oea2KuYhh6ZhA3XDIOifNB7lVboa3TmA1UBMMaMBO+FET+QLhb1kPAWBlYsyf3m/k5nXea0+J3PeQ54FJfUMLwL5f3uBvkROgu58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=0WGuHz4/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bQURtbnH; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IZC9S11P"
-Date: Fri, 4 Jul 2025 10:45:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751651132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MaDn6SelIXcOlzjJrgBEMydXIUt+Gwx/T0S+5DVJELc=;
-	b=IZC9S11P2XdARLncSFnnb/REFrgQMKWLolXvqM87bpMZzsUPgw7lPqRk16eQsCHXnwwNb8
-	I//dmFRKUx0PDAEUtxMbeL6rY+gHadt3bQK7G3UKLkyOdaTHnxPlNF+SirVNPYYvuyPyxp
-	k8qoqDz/Z82+B+dz7tr+XKApM+0gkqg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	JP Kobryn <inwardvessel@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Ying Huang <huang.ying.caritas@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
-Message-ID: <edyai2zhaommoe6bqj6tggpp3eu5c6b4trv77vqmktjczkzcrd@ad55qjptzkd6>
-References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
- <20250703200012.3734798-2-shakeel.butt@linux.dev>
- <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
- <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t>
- <f6900de7-bfab-47da-b29d-138c75c172fd@paulmck-laptop>
- <CAGj-7pUdbtumOmfmW52F3aHJfkd5F+nGeH5LAf5muKqYR+xV-w@mail.gmail.com>
- <da934450-db48-4ef9-ac1b-6b3fbb412862@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="0WGuHz4/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bQURtbnH"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CAEF31400219;
+	Fri,  4 Jul 2025 13:47:15 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 13:47:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1751651235;
+	 x=1751737635; bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=; b=
+	0WGuHz4/qcJupUnsLtWmCBRIoVdHILLaMUv6eUjsGaIhCwPiQAEy0VXb6D1FmicX
+	hYpERKdueINSQFFYuWyIkZ1/mwQyk9vw58RvshmHHp5X++uhkpfePC4hYAB3iov2
+	BARI1KwI6q5gjPX4Xu6xtyx08jWcRYF9P0b7F89vzsTAbuFmUiDI3qikLBEDXmx/
+	4fjx4CPCH4g0wmOQ8IVzeffeeQvD+BZfTmDZYlacS04lHJhZZfbUEBBcIE3E53cM
+	Ss9uF+tmfqpbTEFLY5ZN1CU6HHL55+TFPDnXsUAuGW9bAvcixRBt8CdmqLF83ZEw
+	ekVGlHODJXA7Ly6/3SVAHw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751651235; x=
+	1751737635; bh=4bDRDyMVduyjGC1QQC+nquvNjod0Ndp9PuAXL+SgjjU=; b=b
+	QURtbnHWgP8Ff2gjGAKJpFFkyk29f4Q5x01F79rmU7KpwplqosofgBEkdHJpjwBt
+	128ZXtXwnMY2OaddmBRACSMq5RcFpHg0B427SAs8Cb6B+//NlrgigPYYM44Obncg
+	kV57HqpivRqVyjpwZFlldoP8Uz2EO6go8nvwfsqJqv9v2i8TNUMqnfJLv2AVq3Yt
+	c2zurxSnoGWMcC7+rCu7kMqvsaM35CintLN1IF3GQNkOzoqVJZcR8HlJc9umJz/A
+	OgReeFqXCEh05MPC0EfrnzQJnLDXPnZMLVFt65Xp3lKHVkk5292dhwN+k3kiWyKw
+	ug0KDNQ6ZAk1mrh6H/odQ==
+X-ME-Sender: <xms:oxNoaA4-DfppxZvDqFYL8v7qzmtW7fjYD_ZFRwWxHcsbpGOt15doDg>
+    <xme:oxNoaB4cQv7Cq_2hQFFi5DBUV3q5OqArVqTTkVDL57Uo673-jU8TWRWCXw9RDZ1J7
+    XWy3HiC_s2k-E3CG64>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeejlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
+    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
+    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
+    thhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrg
+    hlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepghhrvghgohhrhidrtghlvghm
+    vghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnse
+    gsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhi
+    segsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmh
+    hosghilhgvhigvrdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdhkohhnughrrght
+    ihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhiphhs
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:oxNoaPdEcY7HfZh8GU7T0k8f54kTuG2aH9-D-DC8z1Z_tscz3QMbPg>
+    <xmx:oxNoaFKzx3QsvwpBNNZrFSg2NcbneGGloU81w8WhXyJ3waMWlNVsYQ>
+    <xmx:oxNoaELK_ssVUEi798Gm4hYZi3ulrxUlsvuMuPi0DmnaspzV0y2RPQ>
+    <xmx:oxNoaGwG8vb76jYBGs3qJkPXUit-hN7nZ8emAPNzj4drg7VIRvegJw>
+    <xmx:oxNoaPxy0M11ia_oCNHTWpAZ75az73n9KyWS-eo3VoZw7agaruSNcZSv>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 196252CE0071; Fri,  4 Jul 2025 13:47:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da934450-db48-4ef9-ac1b-6b3fbb412862@paulmck-laptop>
-X-Migadu-Flow: FLOW_OUT
+X-ThreadId: T39b5c23212bbd78d
+Date: Fri, 04 Jul 2025 18:46:54 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Gregory CLEMENT" <gregory.clement@bootlin.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ "Tawfik Bayouk" <tawfik.bayouk@mobileye.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <0eaf6e01-a690-40de-b858-4e23752486b5@app.fastmail.com>
+In-Reply-To: <20250704-smp_calib-v2-3-bade7e9c0463@bootlin.com>
+References: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
+ <20250704-smp_calib-v2-3-bade7e9c0463@bootlin.com>
+Subject: Re: [PATCH v2 3/3] MIPS: CPS: Optimise delay CPU calibration for SMP
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 09:44:58PM -0700, Paul E. McKenney wrote:
-[...]
-> > 
-> > Thanks a lot Paul for the awesome explanation. Do you think keeping
-> > data_race() here would be harmful in a sense that it might cause
-> > confusion in future?
-> 
-> Yes, plus it might incorrectly suppress a KCSAN warning for a very
-> real bug.  So I strongly recommend removing the data_race() in this case.
-> 
 
-I will remove data_race() tags but keep the comments and squash into the
-first one. I will keep your reviewed-by tag unless you disagree.
 
-thanks,
-Shakeel
+=E5=9C=A82025=E5=B9=B47=E6=9C=884=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=
+=8D=884:13=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+> On MIPS architecture with CPS-based SMP support, all CPU cores in the
+> same cluster run at the same frequency since they share the same L2
+> cache, requiring a fixed CPU/L2 cache ratio.
+>
+> This allows to implement calibrate_delay_is_known(), which will return
+> 0 (triggering calibration) only for the primary CPU of each
+> cluster. For other CPUs, we can simply reuse the value from their
+> cluster's primary CPU core.
+>
+> With the introduction of this patch, a configuration running 32 cores
+> spread across two clusters sees a significant reduction in boot time
+> by approximately 600 milliseconds.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+Thanks!
+
+--=20
+- Jiaxun
