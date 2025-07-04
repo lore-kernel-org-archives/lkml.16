@@ -1,98 +1,378 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6752A2E8E03;
-	Fri,  4 Jul 2025 09:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6DC32EA468
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620912; cv=none; b=OxGrpGihiFeBw9qlKkd2s3O2mOBhDjhOujnrSBCwlA+8KZYxiKXed6NkO3DvN87zkgLUVuIXeEGKUL2yhZvXuCcRGlQZd4XwCzkN4jPfftiQkyAbZMIBVSUewqPDtbWDWs4UUhbG0RosQHEv0o4J3jyFgRUjfblE/jNjDEPBFLg=
+	t=1751620914; cv=none; b=EUyj/SL1N32W9fmuTmUFdvImTNhhOE3sBN3OxVai/MU25BpsW5NuMj1CTPvyQqcNGSmh6ET/D/5O0M/3Ru1MKk3yiBorFkjO+mhPpdirgMpLQpiAlpYFLV7Q17wNlr65N+u8PZ2qo749A6ugAbsa/L3/2E8a0kbzffnKKSfJcrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620912; c=relaxed/simple;
-	bh=5fQ2aJ1Vlww6hWXndwKGXGvH3xXglf+mXhPexqO8tT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sNXe+qkyzV++UE+OP5JQ0haVkn/OQZfxteXlvG3zMxW5TvA0wfnjYwm5G+sjhgpktCaaLnqM4E0dMabDBM4Lko/On2A+VQYQ5XRtDBZXS0MdX4kGkVyzm0gfHWqgakIoz7FRNB8tVS25wo+WPYJZi34niXUJxLL24XuFm9YX/jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B4Ihd6tS; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B4Ihd6tS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3SFTAh+HHF7FmDoKMgoLwPkFCo2t6Gk4A/qXJ6c1fak=; b=B4Ihd6tSv/vfplUG9x5JCVXAlC
-	RWWQO3uBKWfScdqwOWwFfptl7+B+Iu8oKw4Ifq7XBKY4oXCZ0pHi+C2dKB+b5S3jZ33q7Rokcq5QV
-	SoyGEC5M98dWxQpta9gQlOCcSJwJge8RbEQlhcitU46IOSoe+hUhludaurJGrOo1Mv0Zw3cKMqmg/
-	IUO/AVD6Zha8HhANF1MmOs48mxkhMq6MDDIX/YBxe84WOfJhbVu58zNFTgR58DcCYqnVRvrwhvl90
-	pwmf91fy1ZvpKc4BY+3n9xDcyQ/l+o7stGkWhe1jM3Jn9L9Vs+ekygaA7kIjlZsBNJzSII1sAICRV
-	yxKimoNQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXcc5-00000007u6P-2Qhu;
-	Fri, 04 Jul 2025 09:21:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1DC04300212; Fri, 04 Jul 2025 11:21:45 +0200 (CEST)
-Date: Fri, 4 Jul 2025 11:21:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, pavel@kernel.org,
-	len.brown@intel.com, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
-Message-ID: <20250704092144.GH2001818@noisy.programming.kicks-ass.net>
-References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
- <20250611101247.15522-2-zhangzihuan@kylinos.cn>
- <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
- <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
- <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
- <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
- <67997bdd-d00a-413a-a565-188c4b06f385@kylinos.cn>
+	s=arc-20240116; t=1751620914; c=relaxed/simple;
+	bh=h+mgeKzEYz1YYdBzvwjF5sd/PP+Fm6NrjzWVqrceoVA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Jb1/IYASv2hA8TkJhSuOIo6oq5atFtzybKAxdq6me5MMXiVuSFwrkuZaRrz0PBz804OkFpNk0KGkigeW56GmbUbZoWsIgSi9BMq3l9r1+rIoTE6M+VPibzSvEUHa+0x1APTorMgxrF9dDEfXGg7yRz0o6nJSgg6DIwgvNlvcV3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8BxnmsqnWdo4lAiAQ--.33771S3;
+	Fri, 04 Jul 2025 17:21:46 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowJAxT+YTnWdobxoJAA--.53746S5;
+	Fri, 04 Jul 2025 17:21:38 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Chong Qiao <qiaochong@loongson.cn>,
+	Corey Minyard <corey@minyard.net>
+Subject: [PATCH v7 3/3] ipmi: Add Loongson-2K BMC support
+Date: Fri,  4 Jul 2025 17:21:13 +0800
+Message-ID: <cf11cc2f3881de2b769a022ba6c504a252d87ffd.1751617911.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1751617911.git.zhoubinbin@loongson.cn>
+References: <cover.1751617911.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67997bdd-d00a-413a-a565-188c4b06f385@kylinos.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxT+YTnWdobxoJAA--.53746S5
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ar17WF17Gr17GrWkWw4rJFc_yoWfur47pa
+	1aya43Cr48tF47G397ZryDWFyrAwnxWa4rtF47W34ruFWj934vgr1vya4fAry7tFyvqrW3
+	JrZ8ArW3WF13JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0XdjtUUUUU==
 
-On Fri, Jul 04, 2025 at 04:48:20PM +0800, Zihuan Zhang wrote:
-> Hi Peter,
-> 
-> Thanks for the feedback.
-> 
-> ??? 2025/7/4 16:19, Peter Zijlstra ??????:
-> > ????????? ??? ??? ?????? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??????
-> > Depending on where they wait (I can't seem to find in a hurry) it might
-> > make sense to make that wait FREEZABLE anyway.
-> > 
-> > For example, AFAICT it wouldn't hurt, and might even help some, to make
-> > kernel/exit.c:do_wait() TASK_FREEZABLE.
-> > 
-> > So where do ZOMBIEs sleep? Don't they simply pass through do_task_dead()
-> > and never get scheduled again? Notably, do_task_dead() already marks the
-> > tasks as PF_NOFREEZE.
-> > 
-> > Anyway, yes, the condition it adds is relatively simple, but I really
-> > don't see why we should complicate things *at*all*.
-> 
-> You???re absolutely right ??? zombie processes won???t be frozen in
-> practice, since PF_NOFREEZE is already set in do_task_dead(). However, if we
-> don???t explicitly skip them early in try_to_freeze_task(), they still go
-> through the freezer logic path, including calls like freeze_task() ???
-> freezing() before eventually returning without freezing.
-> 
-> This not only introduces unnecessary code path traversal, but also involves
-> locking (e.g., spin_lock_irqsave/restore()), which could be avoided
-> altogether if we bail out earlier.
-> 
-> Additionally, skipping zombies directly helps reduce the list traversal
-> overhead in freeze_processes(), especially on systems with a large number of
-> tasks, where zombies can account for a non-trivial fraction.
-> 
-> So while the practical effect might be small, the gain is low-risk and helps
-> streamline the freezer logic a bit more.
+This patch adds Loongson-2K BMC IPMI support.
 
-You're missing the obvious. How about we 'fix' the PF_NOFREEZE handling
-and help all cases that set that and not only zombies?
+According to the existing design, we use software simulation to
+implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+
+Also since both host side and BMC side read and write kcs status, fifo flag
+is used to ensure data consistency.
+
+The single KCS message block is as follows:
+
++-------------------------------------------------------------------------+
+|FIFO flags| KCS register data | CMD data | KCS version | WR REQ | WR ACK |
++-------------------------------------------------------------------------+
+
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Acked-by: Corey Minyard <corey@minyard.net>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ MAINTAINERS                      |   1 +
+ drivers/char/ipmi/Kconfig        |   7 ++
+ drivers/char/ipmi/Makefile       |   1 +
+ drivers/char/ipmi/ipmi_si.h      |   7 ++
+ drivers/char/ipmi/ipmi_si_intf.c |   4 +
+ drivers/char/ipmi/ipmi_si_ls2k.c | 189 +++++++++++++++++++++++++++++++
+ 6 files changed, 209 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4eb0f7b69d35..a585a35aaa73 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14203,6 +14203,7 @@ LOONGSON-2K Board Management Controller (BMC) DRIVER
+ M:	Binbin Zhou <zhoubinbin@loongson.cn>
+ M:	Chong Qiao <qiaochong@loongson.cn>
+ S:	Maintained
++F:	drivers/char/ipmi/ipmi_si_ls2k.c
+ F:	drivers/mfd/ls2k-bmc-core.c
+ 
+ LOONGSON EDAC DRIVER
+diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
+index f4adc6feb3b2..92bed266d07c 100644
+--- a/drivers/char/ipmi/Kconfig
++++ b/drivers/char/ipmi/Kconfig
+@@ -84,6 +84,13 @@ config IPMI_IPMB
+ 	  bus, and it also supports direct messaging on the bus using
+ 	  IPMB direct messages.  This module requires I2C support.
+ 
++config IPMI_LS2K
++	bool 'Loongson-2K IPMI interface'
++	depends on LOONGARCH
++	select MFD_LS2K_BMC_CORE
++	help
++	  Provides a driver for Loongson-2K IPMI interfaces.
++
+ config IPMI_POWERNV
+ 	depends on PPC_POWERNV
+ 	tristate 'POWERNV (OPAL firmware) IPMI interface'
+diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
+index e0944547c9d0..4ea450a82242 100644
+--- a/drivers/char/ipmi/Makefile
++++ b/drivers/char/ipmi/Makefile
+@@ -8,6 +8,7 @@ ipmi_si-y := ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.o ipmi_bt_sm.o \
+ 	ipmi_si_mem_io.o
+ ipmi_si-$(CONFIG_HAS_IOPORT) += ipmi_si_port_io.o
+ ipmi_si-$(CONFIG_PCI) += ipmi_si_pci.o
++ipmi_si-$(CONFIG_IPMI_LS2K) += ipmi_si_ls2k.o
+ ipmi_si-$(CONFIG_PARISC) += ipmi_si_parisc.o
+ 
+ obj-$(CONFIG_IPMI_HANDLER) += ipmi_msghandler.o
+diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
+index 508c3fd45877..687835b53da5 100644
+--- a/drivers/char/ipmi/ipmi_si.h
++++ b/drivers/char/ipmi/ipmi_si.h
+@@ -101,6 +101,13 @@ void ipmi_si_pci_shutdown(void);
+ static inline void ipmi_si_pci_init(void) { }
+ static inline void ipmi_si_pci_shutdown(void) { }
+ #endif
++#ifdef CONFIG_IPMI_LS2K
++void ipmi_si_ls2k_init(void);
++void ipmi_si_ls2k_shutdown(void);
++#else
++static inline void ipmi_si_ls2k_init(void) { }
++static inline void ipmi_si_ls2k_shutdown(void) { }
++#endif
+ #ifdef CONFIG_PARISC
+ void ipmi_si_parisc_init(void);
+ void ipmi_si_parisc_shutdown(void);
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index bb42dfe1c6a8..9c38aca16fd0 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -2121,6 +2121,8 @@ static int __init init_ipmi_si(void)
+ 
+ 	ipmi_si_pci_init();
+ 
++	ipmi_si_ls2k_init();
++
+ 	ipmi_si_parisc_init();
+ 
+ 	mutex_lock(&smi_infos_lock);
+@@ -2335,6 +2337,8 @@ static void cleanup_ipmi_si(void)
+ 
+ 	ipmi_si_pci_shutdown();
+ 
++	ipmi_si_ls2k_shutdown();
++
+ 	ipmi_si_parisc_shutdown();
+ 
+ 	ipmi_si_platform_shutdown();
+diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si_ls2k.c
+new file mode 100644
+index 000000000000..45442c257efd
+--- /dev/null
++++ b/drivers/char/ipmi/ipmi_si_ls2k.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for Loongson-2K BMC IPMI interface
++ *
++ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
++ *
++ * Authors:
++ *	Chong Qiao <qiaochong@loongson.cn>
++ *	Binbin Zhou <zhoubinbin@loongson.cn>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/ioport.h>
++#include <linux/module.h>
++#include <linux/types.h>
++
++#include "ipmi_si.h"
++
++#define LS2K_KCS_FIFO_IBFH	0x0
++#define LS2K_KCS_FIFO_IBFT	0x1
++#define LS2K_KCS_FIFO_OBFH	0x2
++#define LS2K_KCS_FIFO_OBFT	0x3
++
++/* KCS registers */
++#define LS2K_KCS_REG_STS	0x4
++#define LS2K_KCS_REG_DATA_OUT	0x5
++#define LS2K_KCS_REG_DATA_IN	0x6
++#define LS2K_KCS_REG_CMD	0x8
++
++#define LS2K_KCS_CMD_DATA	0xa
++#define LS2K_KCS_VERSION	0xb
++#define LS2K_KCS_WR_REQ		0xc
++#define LS2K_KCS_WR_ACK		0x10
++
++#define LS2K_KCS_STS_OBF	BIT(0)
++#define LS2K_KCS_STS_IBF	BIT(1)
++#define LS2K_KCS_STS_SMS_ATN	BIT(2)
++#define LS2K_KCS_STS_CMD	BIT(3)
++
++#define LS2K_KCS_DATA_MASK	(LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS2K_KCS_STS_CMD)
++
++static bool ls2k_registered;
++
++static unsigned char ls2k_mem_inb_v0(const struct si_sm_io *io, unsigned int offset)
++{
++	void __iomem *addr = io->addr;
++	int reg_offset;
++
++	if (offset & BIT(0)) {
++		reg_offset = LS2K_KCS_REG_STS;
++	} else {
++		writeb(readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_STS_OBF, addr + LS2K_KCS_REG_STS);
++		reg_offset = LS2K_KCS_REG_DATA_OUT;
++	}
++
++	return readb(addr + reg_offset);
++}
++
++static unsigned char ls2k_mem_inb_v1(const struct si_sm_io *io, unsigned int offset)
++{
++	void __iomem *addr = io->addr;
++	unsigned char inb = 0, cmd;
++	bool obf, ibf;
++
++	obf = readb(addr + LS2K_KCS_FIFO_OBFH) ^ readb(addr + LS2K_KCS_FIFO_OBFT);
++	ibf = readb(addr + LS2K_KCS_FIFO_IBFH) ^ readb(addr + LS2K_KCS_FIFO_IBFT);
++	cmd = readb(addr + LS2K_KCS_CMD_DATA);
++
++	if (offset & BIT(0)) {
++		inb = readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_DATA_MASK;
++		inb |= FIELD_PREP(LS2K_KCS_STS_OBF, obf)
++		    | FIELD_PREP(LS2K_KCS_STS_IBF, ibf)
++		    | FIELD_PREP(LS2K_KCS_STS_CMD, cmd);
++	} else {
++		inb = readb(addr + LS2K_KCS_REG_DATA_OUT);
++		writeb(readb(addr + LS2K_KCS_FIFO_OBFH), addr + LS2K_KCS_FIFO_OBFT);
++	}
++
++	return inb;
++}
++
++static void ls2k_mem_outb_v0(const struct si_sm_io *io, unsigned int offset,
++			     unsigned char val)
++{
++	void __iomem *addr = io->addr;
++	unsigned char sts = readb(addr + LS2K_KCS_REG_STS);
++	int reg_offset;
++
++	if (sts & LS2K_KCS_STS_IBF)
++		return;
++
++	if (offset & BIT(0)) {
++		reg_offset = LS2K_KCS_REG_CMD;
++		sts |= LS2K_KCS_STS_CMD;
++	} else {
++		reg_offset = LS2K_KCS_REG_DATA_IN;
++		sts &= ~LS2K_KCS_STS_CMD;
++	}
++
++	writew(val, addr + reg_offset);
++	writeb(sts | LS2K_KCS_STS_IBF, addr + LS2K_KCS_REG_STS);
++	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
++}
++
++static void ls2k_mem_outb_v1(const struct si_sm_io *io, unsigned int offset,
++			     unsigned char val)
++{
++	void __iomem *addr = io->addr;
++	unsigned char ibfh, ibft;
++	int reg_offset;
++
++	ibfh = readb(addr + LS2K_KCS_FIFO_IBFH);
++	ibft = readb(addr + LS2K_KCS_FIFO_IBFT);
++
++	if (ibfh ^ ibft)
++		return;
++
++	reg_offset = (offset & BIT(0)) ? LS2K_KCS_REG_CMD : LS2K_KCS_REG_DATA_IN;
++	writew(val, addr + reg_offset);
++
++	writeb(offset & BIT(0), addr + LS2K_KCS_CMD_DATA);
++	writeb(!ibft, addr + LS2K_KCS_FIFO_IBFH);
++	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
++}
++
++static void ls2k_mem_cleanup(struct si_sm_io *io)
++{
++	if (io->addr)
++		iounmap(io->addr);
++}
++
++static int ipmi_ls2k_mem_setup(struct si_sm_io *io)
++{
++	unsigned char version;
++
++	io->addr = ioremap(io->addr_data, io->regspacing);
++	if (!io->addr)
++		return -EIO;
++
++	version = readb(io->addr + LS2K_KCS_VERSION);
++
++	io->inputb = version ? ls2k_mem_inb_v1 : ls2k_mem_inb_v0;
++	io->outputb = version ? ls2k_mem_outb_v1 : ls2k_mem_outb_v0;
++	io->io_cleanup = ls2k_mem_cleanup;
++
++	return 0;
++}
++
++static int ipmi_ls2k_probe(struct platform_device *pdev)
++{
++	struct si_sm_io io;
++
++	memset(&io, 0, sizeof(io));
++
++	io.si_info	= &ipmi_kcs_si_info;
++	io.io_setup	= ipmi_ls2k_mem_setup;
++	io.addr_data	= pdev->resource[0].start;
++	io.regspacing	= resource_size(&pdev->resource[0]);
++	io.dev		= &pdev->dev;
++
++	dev_dbg(&pdev->dev, "addr 0x%lx, spacing %d.\n", io.addr_data, io.regspacing);
++
++	return ipmi_si_add_smi(&io);
++}
++
++static void ipmi_ls2k_remove(struct platform_device *pdev)
++{
++	ipmi_si_remove_by_dev(&pdev->dev);
++}
++
++struct platform_driver ipmi_ls2k_platform_driver = {
++	.driver = {
++		.name = "ls2k-ipmi-si",
++	},
++	.probe	= ipmi_ls2k_probe,
++	.remove	= ipmi_ls2k_remove,
++};
++
++void ipmi_si_ls2k_init(void)
++{
++	platform_driver_register(&ipmi_ls2k_platform_driver);
++	ls2k_registered = true;
++}
++
++void ipmi_si_ls2k_shutdown(void)
++{
++	if (ls2k_registered)
++		platform_driver_unregister(&ipmi_ls2k_platform_driver);
++}
+-- 
+2.47.1
+
