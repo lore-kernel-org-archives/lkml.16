@@ -1,154 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4003F2E36E4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954AD2E36E0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647423; cv=none; b=FB8GTxh854ySEpeHwoAKEfaGWDSgCBzRBY4ekfhbyT8l/yeDXoOOFfKhDlNqI2m9Tf95vOOr+ftdqPpT4c+k7+IhmxkkpSj8O5OMfoNxe+KpTliaqIB4bwMaN2W0ya/goxFRvcjxMunr8G6IXO5PKrpiwGyj9GLsYcuTM2rmNtQ=
+	t=1751647456; cv=none; b=eS5l5x9bmpGSgODIGScZXe2oMxX+Pyjvn8WxiHdS4+C4vpth/crjP4ghgqTASHF6K6B3m1kc3tGuYk5zjv8Kr1cub9U2vVP8bUVFOdiJaPnLvbpRlKqZ/NJaoaqi2oms4XnTDWo6EeCwQLE7Yc0BHIRdXqgsLG3EnQQflWLJXaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647423; c=relaxed/simple;
-	bh=ck2xsriSsrklYZzoHY7Zb+J9xczZc3apVan0Zg+t6Gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OS3gDQK6ffHT3kOnf/lzsRqWs8OfRAWwuUQtV1qMjbedXDDcl64iUUiyZurSr+jihntFiOcUU9ZHOpkDUw4wX9M4vx2uZf59DiacJ1RR1SIRAUg1EtqKetd8NGrKMtmNIqGK11j4T1NB7NW3KKIDFN3c+4ZFf5yGC7QF7cxJYGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=loA/tJUs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751647456; c=relaxed/simple;
+	bh=IiVhvvIUKL154sHh0mv375cULp9fD050+oT9Rck//OI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i+0cEr0pPnFhXDJ7eA5UCzT2mU2TQQl1n4+RhKVvXPMR2PGSM693zsHmQN60F2OOt7akxszmw0h/HN4msQRXn2E9RX9aVEA18I8RTl/jF04llA2MG2vwJoCf9uUJWlhArOGQuhDzSt18sSjd0yTnsmuExVtibX8927SkJbpf4D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RcWspLcB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BX5TyJQ0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RcWspLcB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BX5TyJQ0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="loA/tJUs"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564GYa58025201
-	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 16:43:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=fF/OuQJ8xsB/HKG8mieUfGiQ
-	XUFgzhYQV4ZPFUXGWjQ=; b=loA/tJUsZQbHc14ZAa44WDNXTjnMbjZl4jDEy+Uq
-	bnVEwShlrB1N9uE+pUMz702LNPAA2L4C/R8A5aVrosKR2q03BI7mvNdd3/W7ULyy
-	pSFoDpLTqARBo3lZXEa9f20rWkirhS71/ZrbExn0PAFjiwlF4j1JHR+flz2327VW
-	GhQ7uNfqWYvFs1DtYUHaua6VrbySQLdQuPtin5Dw/eDlpueiPMDe6tkHkRdnDQNu
-	2L57hHyDzVhR/Yn+IRuyzZwBwGBXruk68snCYDj6VEaK69vael8eEUCE7MT44jQ1
-	mmGu2T0agZUh6z6RkD6pW0TcHKoN30AOok2nOdL49bWH6g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd651jqt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 16:43:41 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d5077ef51bso137243685a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:43:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751647420; x=1752252220;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fF/OuQJ8xsB/HKG8mieUfGiQXUFgzhYQV4ZPFUXGWjQ=;
-        b=CqLfR+TOrOfB/7wQN3ciKb090/ctjaaAJlNAcc0h6G7Lfhz07iEHin6CHknHe+AZPJ
-         fVvAuoT6TXJxIIrLMEzvAWNIRgDThnI/vomlKFO3owcA68mWFbZq9s3WsoB1d4ReCXGi
-         8C2h/11zL1H0W4fso0E2DG7erCW6wJFpKVqACwg3iY5FlcMc6CkWUnGviuuxnb0XT8jv
-         pbpyTzeM5G+xXkdK1KCW2SwpWjvEaoFvMmwSB1cleULe00cSPDKZxCMPTc9yXEZbNU43
-         4VZjaQD9ihqvHrY75erFgQRZio5K+TyTxBsa8pk4uAP1o+BSlLKjhx6/uAS2mNuXSJGn
-         ZyOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMlehWcCn5vaswdjgJ1OsrkaWfvCUBF1wKw9G73+b2kGwdlhRljRbTn9GRLWInPFMnzePysgjerNx3RZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc8bVUtMlROr1gOeH33BxYE3BjNV81sRlWv6ufAAjjtWD4tSDk
-	ITCtGHMVbYkTvVrgYN1vkAi183PZQlCH7OW0HoEvO3V6mRqM3nN+X8uWvUxXnv/5DIdl81ogZev
-	kuELBVQOzF19Oys+8kKt/aEgllBDLDq9kNlD19qjvp4wdkq3FavWZszRpXma1X00P88k=
-X-Gm-Gg: ASbGncthuVNMkTcfe9xukBRzB8nwavD0FG5+RZOcg/nBDUcUMGkhSx+m4i5mFvMKtUA
-	G1n/WhXi16bfRq+QHDyrpHo6pYwsnula84uwXHl3w1jDiQ1jz+GzUR9k2i1qtUv/lEmEw1YLry+
-	rgdpd7cTLAsp+DyMN9IBaOUOuuw4RwwyFonhybiVrtlUakexhNzD/Y/UuYK8Shan2SFE1IO29qg
-	kqW2GeArbZBZN1SsIH/CyLuwnC8zN5/7wshZbbLwYNjfI57a7e1qnmFdz/16FKbICebJ8wG8bi6
-	3dkoi/ng/aIjRzD0TZzs5s33V0FuhYzMEkZXs/R7wOl/H+rVhWecLMHz7Z1Z0SdpsUM5LoJ2gF9
-	iI4mNi89MRSnx5/2WQW1WmDfjksJRVMwxhcM=
-X-Received: by 2002:a05:620a:4412:b0:7d4:ca4:addd with SMTP id af79cd13be357-7d5ddb727c7mr373956385a.19.1751647420434;
-        Fri, 04 Jul 2025 09:43:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHn1PXyp0jkn2V0mI4Lk6POEXOcB3kI33BgARnqMb46tOWnip7KD7hHFCPDubKk5Pz6nWtPQ==
-X-Received: by 2002:a05:620a:4412:b0:7d4:ca4:addd with SMTP id af79cd13be357-7d5ddb727c7mr373952085a.19.1751647419945;
-        Fri, 04 Jul 2025 09:43:39 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556383badaasm294708e87.1.2025.07.04.09.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:43:39 -0700 (PDT)
-Date: Fri, 4 Jul 2025 19:43:36 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Shuai Zhang <quic_shuaz@quicinc.com>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>,
-        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] MAINTAINERS: add a sub-entry for the Qualcomm bluetooth
- driver
-Message-ID: <ubypcytljeytit6pkis6ailue2wje6cth6yd5zjuo7h2h4e5r3@lq3hr6a2b5rv>
-References: <20250704144724.63449-1-brgl@bgdev.pl>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RcWspLcB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BX5TyJQ0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RcWspLcB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BX5TyJQ0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A40F7211BA;
+	Fri,  4 Jul 2025 16:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751647452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qxQHpdBMzlCPDXHMm1ORYDxLqtE7pehFuUdHE7/n4Vo=;
+	b=RcWspLcB3YBLz305W0/E2X3o2YDattPqn7XJh+U1iJ4jVh1XmbEzQtiDD/yXmUyz0hdcTa
+	CtxsYq8d0mKgOvWWg0wEK8ORFnD0uC3R1YHtPZBmXSTqdQQ7NU46NDqbzyXPg+6Wu/wrNJ
+	CxOYlhSxiOd5BjKeGyvSGg/mQmJpLmE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751647452;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qxQHpdBMzlCPDXHMm1ORYDxLqtE7pehFuUdHE7/n4Vo=;
+	b=BX5TyJQ0SJEeI7nPi09seMV2vHO8EfK3VDsOUju91z3BoNPwcqgZow/prMeNGGI5irC7NZ
+	vTn6sb+54PzS5ZAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751647452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qxQHpdBMzlCPDXHMm1ORYDxLqtE7pehFuUdHE7/n4Vo=;
+	b=RcWspLcB3YBLz305W0/E2X3o2YDattPqn7XJh+U1iJ4jVh1XmbEzQtiDD/yXmUyz0hdcTa
+	CtxsYq8d0mKgOvWWg0wEK8ORFnD0uC3R1YHtPZBmXSTqdQQ7NU46NDqbzyXPg+6Wu/wrNJ
+	CxOYlhSxiOd5BjKeGyvSGg/mQmJpLmE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751647452;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qxQHpdBMzlCPDXHMm1ORYDxLqtE7pehFuUdHE7/n4Vo=;
+	b=BX5TyJQ0SJEeI7nPi09seMV2vHO8EfK3VDsOUju91z3BoNPwcqgZow/prMeNGGI5irC7NZ
+	vTn6sb+54PzS5ZAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 32D3113757;
+	Fri,  4 Jul 2025 16:44:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BiWQCdwEaGj+HwAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Fri, 04 Jul 2025 16:44:12 +0000
+Date: Fri, 4 Jul 2025 18:44:08 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, Henry
+ Martin <bsdhenrymartin@gmail.com>, Patrick Rudolph
+ <patrick.rudolph@9elements.com>, Andrew Geissler <geissonator@yahoo.com>,
+ Ninad Palsule <ninad@linux.ibm.com>, Patrick Venture <venture@google.com>,
+ Robert Lippert <roblip@gmail.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] soc: aspeed: lpc-snoop: Constrain parameters
+ in channel paths
+Message-ID: <20250704184408.32227305@endymion>
+In-Reply-To: <20250616-aspeed-lpc-snoop-fixes-v2-4-3cdd59c934d3@codeconstruct.com.au>
+References: <20250616-aspeed-lpc-snoop-fixes-v2-0-3cdd59c934d3@codeconstruct.com.au>
+	<20250616-aspeed-lpc-snoop-fixes-v2-4-3cdd59c934d3@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704144724.63449-1-brgl@bgdev.pl>
-X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=686804bd cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=rHvIfiyz_3d-7KI9RAUA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDEyNiBTYWx0ZWRfX9gFNfArJYlCH
- z59B87/6rnobd4F7zqLmEwb+qK8fujK2zKCXESLJf/kdHwkayacMxUo2X0P7JAtMGynuIZZyNQ2
- WdEWtBAvHWvSTrGRRgcGLxtfZlwUmf6km9CTDQhAr1p1aMFG/jr2jVUn0yB9m9DuYC3IWOWhrHG
- SKMrPoBpHyNvTYupKf88c6INvXtK3RwO+Q/S680lP0a/GHsco73EPajQhyYRiTRMM9LaIt2RYRY
- raxZWT36qUNml50w8wlFRJ68rJSH7O1My4Erd8vl2Jv7xex2GVHhZAiBWcuL0lU8e8dpFtq3nIF
- ySKX9phOmhvVVbi2PJE/ZMaMrylrBQTybQ4b+mm9d/qOdJysGmMRTgd17Y5hBWSqlrp25s1Am3C
- VDKNj/bhXFpEOnCIPYDd3/55SY1EqTcuVVL39xsrh+vzf+frJ9REKjWrVbVWYUZ9S5JRMBSx
-X-Proofpoint-GUID: -4AwBuiilMcZGinHlHKzXaHWm9aCsWVn
-X-Proofpoint-ORIG-GUID: -4AwBuiilMcZGinHlHKzXaHWm9aCsWVn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_06,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040126
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lists.ozlabs.org,jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,lists.infradead.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[codeconstruct.com.au:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -3.80
 
-On Fri, Jul 04, 2025 at 04:47:24PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, 16 Jun 2025 22:43:41 +0930, Andrew Jeffery wrote:
+> Ensure pointers and the channel index are valid before use.
 > 
-> Patches modifying drivers/bluetooth/hci_qca.c should be Cc'ed to the
-> linux-arm-msm mailing list so that Qualcomm maintainers and reviewers
-> can get notified about proposed changes to it. Add a sub-entry that adds
-> the mailing list to the list of addresses returned by get_maintainer.pl.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 > ---
->  MAINTAINERS | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fcc77c93f8db..7fee3d38baf8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20441,6 +20441,11 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
->  F:	drivers/net/wwan/qcom_bam_dmux.c
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index ca7536213e0986f737606a52996ffea620df2a7a..804c6ed9c4c671da73a6c66c1de41c59922c82dc 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -25,7 +25,6 @@
 >  
-> +QUALCOMM BLUETOOTH DRIVER
-> +L:	linux-arm-msm@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/bluetooth/hci_qca.c
+>  #define DEVICE_NAME	"aspeed-lpc-snoop"
+>  
+> -#define NUM_SNOOP_CHANNELS 2
+>  #define SNOOP_FIFO_SIZE 2048
+>  
+>  #define HICR5	0x80
+> @@ -57,6 +56,12 @@ struct aspeed_lpc_snoop_model_data {
+>  	unsigned int has_hicrb_ensnp;
+>  };
+>  
+> +enum aspeed_lpc_snoop_index {
+> +	ASPEED_LPC_SNOOP_INDEX_0 = 0,
+> +	ASPEED_LPC_SNOOP_INDEX_1 = 1,
+> +	ASPEED_LPC_SNOOP_INDEX_MAX = ASPEED_LPC_SNOOP_INDEX_1,
+> +};
 
-If you are adding an entry, then please also include:
-- drivers/bluetooth/btqca.[ch]
-- drivers/bluetooth/btqcomsmd.c
-
-> +
->  QUALCOMM CAMERA SUBSYSTEM DRIVER
->  M:	Robert Foss <rfoss@kernel.org>
->  M:	Todor Tomov <todor.too@gmail.com>
-> -- 
-> 2.48.1
-> 
+I don't have a strong opinion on this (again, I'm neither the driver
+maintainer nor the subsystem maintainer so my opinion has little
+value), but IMHO the main value of introducing an enum here was to make
+it possible to get rid of the default statement in the switch
+constructs. With switch constructs being gone in patch 10/10 (soc:
+aspeed: lpc-snoop: Lift channel config to const structs), the value of
+this enum seems pretty low now. You could use NUM_SNOOP_CHANNELS
+instead of ASPEED_LPC_SNOOP_INDEX_MAX + 1 and 0 and 1 instead of
+ASPEED_LPC_SNOOP_INDEX_0 and ASPEED_LPC_SNOOP_INDEX_1, respectively,
+and the code would work just the same, while being more simple, with no
+downside that I can see.
 
 -- 
-With best wishes
-Dmitry
+Jean Delvare
+SUSE L3 Support
