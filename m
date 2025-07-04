@@ -1,378 +1,215 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6DC32EA468
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21132EBDE0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620914; cv=none; b=EUyj/SL1N32W9fmuTmUFdvImTNhhOE3sBN3OxVai/MU25BpsW5NuMj1CTPvyQqcNGSmh6ET/D/5O0M/3Ru1MKk3yiBorFkjO+mhPpdirgMpLQpiAlpYFLV7Q17wNlr65N+u8PZ2qo749A6ugAbsa/L3/2E8a0kbzffnKKSfJcrQ=
+	t=1751620918; cv=none; b=p9e+PBOvICSWCGuVu9xuGkQ2X4+Lx5d6sjwRROQDpLzIfjO885KnP9jGSPu0BnlRSb2ErYfpq64hsTfrc0T//qkGClxZ996M3eYkakGFBqLeiOnf76tZrx8nchWvLGtygtVaBZj3fnn574C1arpYFNZ4OGXO7jpG2lQb4iHAPW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620914; c=relaxed/simple;
-	bh=h+mgeKzEYz1YYdBzvwjF5sd/PP+Fm6NrjzWVqrceoVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jb1/IYASv2hA8TkJhSuOIo6oq5atFtzybKAxdq6me5MMXiVuSFwrkuZaRrz0PBz804OkFpNk0KGkigeW56GmbUbZoWsIgSi9BMq3l9r1+rIoTE6M+VPibzSvEUHa+0x1APTorMgxrF9dDEfXGg7yRz0o6nJSgg6DIwgvNlvcV3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8BxnmsqnWdo4lAiAQ--.33771S3;
-	Fri, 04 Jul 2025 17:21:46 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowJAxT+YTnWdobxoJAA--.53746S5;
-	Fri, 04 Jul 2025 17:21:38 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	wangyao@lemote.com,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Chong Qiao <qiaochong@loongson.cn>,
-	Corey Minyard <corey@minyard.net>
-Subject: [PATCH v7 3/3] ipmi: Add Loongson-2K BMC support
-Date: Fri,  4 Jul 2025 17:21:13 +0800
-Message-ID: <cf11cc2f3881de2b769a022ba6c504a252d87ffd.1751617911.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1751617911.git.zhoubinbin@loongson.cn>
-References: <cover.1751617911.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1751620918; c=relaxed/simple;
+	bh=BCScqBO8AgTY7tekDwIiw7dj8X+T4EurNxV4DWxYGGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLuQuIIT9wiOfdSOgOeGWJ/I08NoKQ0pYzKhxc98gdIMOS3jAEglbmXBz4eVmRNDsJoJjw60QekAyhrlln7yzW5djsn1CQVcl6nQqryavRSXhETXwFFqmV5p4VlBzxsq1K8AIOw8XVYrkgW85Szy/yMGe+Hel50S7j/Q9SDhSUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EmN0pxRp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=n2F5+5fc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R+MyKEol; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7j4T0NGp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EmN0pxRp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="n2F5+5fc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R+MyKEol";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7j4T0NGp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BCE311F38A;
+	Fri,  4 Jul 2025 09:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751620915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5woB+8MxyV3T68ceBaY+75z4ul70wqMhMKbKCDmKZjU=;
+	b=EmN0pxRpVaMhBUAUzucq+7X8P5sBGednjqHNm/DekL6I4UTrQUWZqrXtT+YRZBIE9Patk3
+	97gTEQQGn9T0Nt+aFuQi1ufCDZtdg0r7YwNLTmGdEZ71zzdSJ5yxG4brG5wCizsg6KrdwG
+	+hOjEgp4+xVFcHEczQMddymwrvWFlbU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751620915;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5woB+8MxyV3T68ceBaY+75z4ul70wqMhMKbKCDmKZjU=;
+	b=n2F5+5fcHOhQjLZpkaEFHKb4ePyf0CSogZTYDmloS5tzHhbF+ezlzohMClPPfi+TpHwAHq
+	2clJgihwaiTFD7BA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=R+MyKEol;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7j4T0NGp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751620914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5woB+8MxyV3T68ceBaY+75z4ul70wqMhMKbKCDmKZjU=;
+	b=R+MyKEolL2LbDXKCXiZ9deuHSz+B1/cUbwJSF54ooogriCF0jUt4L2fiVpNQAwJJSi5Pne
+	3DA7yJ1VPgfqpJzyY4nceHitGg7mJ+Yz617XJTxDSqTPMhbxeLc7WdPIzLjt6+dDwRILZ5
+	qstDfAAzHm/7vhb5vfuOHmAUGsMVaNw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751620914;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5woB+8MxyV3T68ceBaY+75z4ul70wqMhMKbKCDmKZjU=;
+	b=7j4T0NGp7d7ugWNlrR0LYzq/FmEk3EP0/J6G+zNKlNcRDyyBajNb484cY4vyWkysycIygm
+	WZAyCIvA0IAqtwBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9471F13757;
+	Fri,  4 Jul 2025 09:21:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ooQ9JDKdZ2gbJAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 04 Jul 2025 09:21:54 +0000
+Date: Fri, 4 Jul 2025 11:21:49 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Aaron Tomlin <atomlin@atomlin.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	storagedev@microchip.com, virtualization@lists.linux.dev, 
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v7 08/10] blk-mq: use hk cpus only when isolcpus=io_queue
+ is enabled
+Message-ID: <e2e62f99-164d-4e80-be1e-9affa724efd0@flourine.local>
+References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
+ <20250702-isolcpus-io-queues-v7-8-557aa7eacce4@kernel.org>
+ <9025c412-9b6f-4714-a880-e8e6084e1b4c@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxT+YTnWdobxoJAA--.53746S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ar17WF17Gr17GrWkWw4rJFc_yoWfur47pa
-	1aya43Cr48tF47G397ZryDWFyrAwnxWa4rtF47W34ruFWj934vgr1vya4fAry7tFyvqrW3
-	JrZ8ArW3WF13JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0XdjtUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9025c412-9b6f-4714-a880-e8e6084e1b4c@suse.de>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: BCE311F38A
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	TO_DN_SOME(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL71uuc3g3e76oxfn4mu5aogan)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,flourine.local:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
 
-This patch adds Loongson-2K BMC IPMI support.
+On Thu, Jul 03, 2025 at 08:58:02AM +0200, Hannes Reinecke wrote:
+> > +	for (queue = 0; queue < qmap->nr_queues; queue++) {
+> > +		unsigned int idx = (qmap->queue_offset + queue) % nr_masks;
+> > +
+> > +		for_each_cpu(cpu, &hk_masks[idx]) {
+> > +			qmap->mq_map[cpu] = idx;
+> > +
+> > +			if (cpu_online(cpu))
+> > +				cpumask_set_cpu(qmap->mq_map[cpu], active_hctx);
+> 
+> Why cpu_online? Up until this point it really didn't matter if the affinity
+> mask was set to 'online' or 'possible' cpus, but here you
+> require CPUs to be online...
 
-According to the existing design, we use software simulation to
-implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+This part here tracks if the a hardware context has at least one
+housekeeping CPU online. It is possible to provide configuration where
+we end up with hardware context which have offline housekeeping CPUs and
+online isolcpus. active_hctx tracks which of the hardware contexts is
+usable which is used in the next step...
 
-Also since both host side and BMC side read and write kcs status, fifo flag
-is used to ensure data consistency.
+> > +		}
+> > +	}
+> > +
+> > +	/* Map isolcpus to hardware context */
+> > +	queue = cpumask_first(active_hctx);
+> > +	for_each_cpu_andnot(cpu, cpu_possible_mask, mask) {
+> > +		qmap->mq_map[cpu] = (qmap->queue_offset + queue) % nr_masks;
+> > +		queue = cpumask_next_wrap(queue, active_hctx);
+> > +	}
+> 
+> Really? Doesn't this map _all_ cpus, and not just the isolcpus?
 
-The single KCS message block is as follows:
+for_each_cpu iterates over is all CPUs which are not houskeeping CPUs
+(mask is the housekeeping mask), thus these are all isol CPU. Note the
+'andnot' part.
 
-+-------------------------------------------------------------------------+
-|FIFO flags| KCS register data | CMD data | KCS version | WR REQ | WR ACK |
-+-------------------------------------------------------------------------+
+The cpumask_first/cpumask_next_wrap returns only hardware context which
+have at least one housekeeping CPU which is online. Yes, it possible to
+make this a bit smarter, so that we keep the grouping of the offline
+CPUs intact, though I am not sure if it is worth to add complexity for a
+corner case at least not yet.
 
-Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Acked-by: Corey Minyard <corey@minyard.net>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS                      |   1 +
- drivers/char/ipmi/Kconfig        |   7 ++
- drivers/char/ipmi/Makefile       |   1 +
- drivers/char/ipmi/ipmi_si.h      |   7 ++
- drivers/char/ipmi/ipmi_si_intf.c |   4 +
- drivers/char/ipmi/ipmi_si_ls2k.c | 189 +++++++++++++++++++++++++++++++
- 6 files changed, 209 insertions(+)
- create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+> > +fallback:
+> > +	/*
+> > +	 * Map all CPUs to the first hctx to ensure at least one online
+> > +	 * housekeeping CPU is serving it.
+> > +	 */
+> > +	for_each_possible_cpu(cpu)
+> > +		qmap->mq_map[cpu] = 0;
+> 
+> I think you need to map all hctx, no?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4eb0f7b69d35..a585a35aaa73 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14203,6 +14203,7 @@ LOONGSON-2K Board Management Controller (BMC) DRIVER
- M:	Binbin Zhou <zhoubinbin@loongson.cn>
- M:	Chong Qiao <qiaochong@loongson.cn>
- S:	Maintained
-+F:	drivers/char/ipmi/ipmi_si_ls2k.c
- F:	drivers/mfd/ls2k-bmc-core.c
- 
- LOONGSON EDAC DRIVER
-diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
-index f4adc6feb3b2..92bed266d07c 100644
---- a/drivers/char/ipmi/Kconfig
-+++ b/drivers/char/ipmi/Kconfig
-@@ -84,6 +84,13 @@ config IPMI_IPMB
- 	  bus, and it also supports direct messaging on the bus using
- 	  IPMB direct messages.  This module requires I2C support.
- 
-+config IPMI_LS2K
-+	bool 'Loongson-2K IPMI interface'
-+	depends on LOONGARCH
-+	select MFD_LS2K_BMC_CORE
-+	help
-+	  Provides a driver for Loongson-2K IPMI interfaces.
-+
- config IPMI_POWERNV
- 	depends on PPC_POWERNV
- 	tristate 'POWERNV (OPAL firmware) IPMI interface'
-diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-index e0944547c9d0..4ea450a82242 100644
---- a/drivers/char/ipmi/Makefile
-+++ b/drivers/char/ipmi/Makefile
-@@ -8,6 +8,7 @@ ipmi_si-y := ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.o ipmi_bt_sm.o \
- 	ipmi_si_mem_io.o
- ipmi_si-$(CONFIG_HAS_IOPORT) += ipmi_si_port_io.o
- ipmi_si-$(CONFIG_PCI) += ipmi_si_pci.o
-+ipmi_si-$(CONFIG_IPMI_LS2K) += ipmi_si_ls2k.o
- ipmi_si-$(CONFIG_PARISC) += ipmi_si_parisc.o
- 
- obj-$(CONFIG_IPMI_HANDLER) += ipmi_msghandler.o
-diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
-index 508c3fd45877..687835b53da5 100644
---- a/drivers/char/ipmi/ipmi_si.h
-+++ b/drivers/char/ipmi/ipmi_si.h
-@@ -101,6 +101,13 @@ void ipmi_si_pci_shutdown(void);
- static inline void ipmi_si_pci_init(void) { }
- static inline void ipmi_si_pci_shutdown(void) { }
- #endif
-+#ifdef CONFIG_IPMI_LS2K
-+void ipmi_si_ls2k_init(void);
-+void ipmi_si_ls2k_shutdown(void);
-+#else
-+static inline void ipmi_si_ls2k_init(void) { }
-+static inline void ipmi_si_ls2k_shutdown(void) { }
-+#endif
- #ifdef CONFIG_PARISC
- void ipmi_si_parisc_init(void);
- void ipmi_si_parisc_shutdown(void);
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index bb42dfe1c6a8..9c38aca16fd0 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2121,6 +2121,8 @@ static int __init init_ipmi_si(void)
- 
- 	ipmi_si_pci_init();
- 
-+	ipmi_si_ls2k_init();
-+
- 	ipmi_si_parisc_init();
- 
- 	mutex_lock(&smi_infos_lock);
-@@ -2335,6 +2337,8 @@ static void cleanup_ipmi_si(void)
- 
- 	ipmi_si_pci_shutdown();
- 
-+	ipmi_si_ls2k_shutdown();
-+
- 	ipmi_si_parisc_shutdown();
- 
- 	ipmi_si_platform_shutdown();
-diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si_ls2k.c
-new file mode 100644
-index 000000000000..45442c257efd
---- /dev/null
-+++ b/drivers/char/ipmi/ipmi_si_ls2k.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for Loongson-2K BMC IPMI interface
-+ *
-+ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-+ *
-+ * Authors:
-+ *	Chong Qiao <qiaochong@loongson.cn>
-+ *	Binbin Zhou <zhoubinbin@loongson.cn>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+
-+#include "ipmi_si.h"
-+
-+#define LS2K_KCS_FIFO_IBFH	0x0
-+#define LS2K_KCS_FIFO_IBFT	0x1
-+#define LS2K_KCS_FIFO_OBFH	0x2
-+#define LS2K_KCS_FIFO_OBFT	0x3
-+
-+/* KCS registers */
-+#define LS2K_KCS_REG_STS	0x4
-+#define LS2K_KCS_REG_DATA_OUT	0x5
-+#define LS2K_KCS_REG_DATA_IN	0x6
-+#define LS2K_KCS_REG_CMD	0x8
-+
-+#define LS2K_KCS_CMD_DATA	0xa
-+#define LS2K_KCS_VERSION	0xb
-+#define LS2K_KCS_WR_REQ		0xc
-+#define LS2K_KCS_WR_ACK		0x10
-+
-+#define LS2K_KCS_STS_OBF	BIT(0)
-+#define LS2K_KCS_STS_IBF	BIT(1)
-+#define LS2K_KCS_STS_SMS_ATN	BIT(2)
-+#define LS2K_KCS_STS_CMD	BIT(3)
-+
-+#define LS2K_KCS_DATA_MASK	(LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS2K_KCS_STS_CMD)
-+
-+static bool ls2k_registered;
-+
-+static unsigned char ls2k_mem_inb_v0(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	int reg_offset;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_STS;
-+	} else {
-+		writeb(readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_STS_OBF, addr + LS2K_KCS_REG_STS);
-+		reg_offset = LS2K_KCS_REG_DATA_OUT;
-+	}
-+
-+	return readb(addr + reg_offset);
-+}
-+
-+static unsigned char ls2k_mem_inb_v1(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char inb = 0, cmd;
-+	bool obf, ibf;
-+
-+	obf = readb(addr + LS2K_KCS_FIFO_OBFH) ^ readb(addr + LS2K_KCS_FIFO_OBFT);
-+	ibf = readb(addr + LS2K_KCS_FIFO_IBFH) ^ readb(addr + LS2K_KCS_FIFO_IBFT);
-+	cmd = readb(addr + LS2K_KCS_CMD_DATA);
-+
-+	if (offset & BIT(0)) {
-+		inb = readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_DATA_MASK;
-+		inb |= FIELD_PREP(LS2K_KCS_STS_OBF, obf)
-+		    | FIELD_PREP(LS2K_KCS_STS_IBF, ibf)
-+		    | FIELD_PREP(LS2K_KCS_STS_CMD, cmd);
-+	} else {
-+		inb = readb(addr + LS2K_KCS_REG_DATA_OUT);
-+		writeb(readb(addr + LS2K_KCS_FIFO_OBFH), addr + LS2K_KCS_FIFO_OBFT);
-+	}
-+
-+	return inb;
-+}
-+
-+static void ls2k_mem_outb_v0(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char sts = readb(addr + LS2K_KCS_REG_STS);
-+	int reg_offset;
-+
-+	if (sts & LS2K_KCS_STS_IBF)
-+		return;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_CMD;
-+		sts |= LS2K_KCS_STS_CMD;
-+	} else {
-+		reg_offset = LS2K_KCS_REG_DATA_IN;
-+		sts &= ~LS2K_KCS_STS_CMD;
-+	}
-+
-+	writew(val, addr + reg_offset);
-+	writeb(sts | LS2K_KCS_STS_IBF, addr + LS2K_KCS_REG_STS);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_outb_v1(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char ibfh, ibft;
-+	int reg_offset;
-+
-+	ibfh = readb(addr + LS2K_KCS_FIFO_IBFH);
-+	ibft = readb(addr + LS2K_KCS_FIFO_IBFT);
-+
-+	if (ibfh ^ ibft)
-+		return;
-+
-+	reg_offset = (offset & BIT(0)) ? LS2K_KCS_REG_CMD : LS2K_KCS_REG_DATA_IN;
-+	writew(val, addr + reg_offset);
-+
-+	writeb(offset & BIT(0), addr + LS2K_KCS_CMD_DATA);
-+	writeb(!ibft, addr + LS2K_KCS_FIFO_IBFH);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_cleanup(struct si_sm_io *io)
-+{
-+	if (io->addr)
-+		iounmap(io->addr);
-+}
-+
-+static int ipmi_ls2k_mem_setup(struct si_sm_io *io)
-+{
-+	unsigned char version;
-+
-+	io->addr = ioremap(io->addr_data, io->regspacing);
-+	if (!io->addr)
-+		return -EIO;
-+
-+	version = readb(io->addr + LS2K_KCS_VERSION);
-+
-+	io->inputb = version ? ls2k_mem_inb_v1 : ls2k_mem_inb_v0;
-+	io->outputb = version ? ls2k_mem_outb_v1 : ls2k_mem_outb_v0;
-+	io->io_cleanup = ls2k_mem_cleanup;
-+
-+	return 0;
-+}
-+
-+static int ipmi_ls2k_probe(struct platform_device *pdev)
-+{
-+	struct si_sm_io io;
-+
-+	memset(&io, 0, sizeof(io));
-+
-+	io.si_info	= &ipmi_kcs_si_info;
-+	io.io_setup	= ipmi_ls2k_mem_setup;
-+	io.addr_data	= pdev->resource[0].start;
-+	io.regspacing	= resource_size(&pdev->resource[0]);
-+	io.dev		= &pdev->dev;
-+
-+	dev_dbg(&pdev->dev, "addr 0x%lx, spacing %d.\n", io.addr_data, io.regspacing);
-+
-+	return ipmi_si_add_smi(&io);
-+}
-+
-+static void ipmi_ls2k_remove(struct platform_device *pdev)
-+{
-+	ipmi_si_remove_by_dev(&pdev->dev);
-+}
-+
-+struct platform_driver ipmi_ls2k_platform_driver = {
-+	.driver = {
-+		.name = "ls2k-ipmi-si",
-+	},
-+	.probe	= ipmi_ls2k_probe,
-+	.remove	= ipmi_ls2k_remove,
-+};
-+
-+void ipmi_si_ls2k_init(void)
-+{
-+	platform_driver_register(&ipmi_ls2k_platform_driver);
-+	ls2k_registered = true;
-+}
-+
-+void ipmi_si_ls2k_shutdown(void)
-+{
-+	if (ls2k_registered)
-+		platform_driver_unregister(&ipmi_ls2k_platform_driver);
-+}
--- 
-2.47.1
+The block layer is filtering out hctx which have no CPU assigned to it
+when selecting a queue. This is really a failsafe mode, it just makes
+sure the system boots.
 
+> > +	/* Map housekeeping CPUs to a hctx */
+> > +	for (queue = 0; queue < qmap->nr_queues; queue++) {
+> > +		for_each_cpu(cpu, dev->bus->irq_get_affinity(dev, offset + queue)) {
+> > +			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+> > +
+> > +			cpumask_set_cpu(cpu, mask);
+> > +			if (cpu_online(cpu))
+> > +				cpumask_set_cpu(qmap->mq_map[cpu], active_hctx);
+> 
+> Now that is really curious. You pick up the interrupt affinity from the
+> 'bus', which, I assume, is the PCI bus. And this would imply that the
+> bus can (or already is) programmed for this interrupt affinity.
+
+Yes, this is the case. irq_create_affinity_masks which use
+group_cpu_evenly/group_mask_cpu_evenly for the number of requested IRQs.
+The number of IRQs can be higher than the number of requested queues
+here. It's necessary to use the affinity mask created by
+irq_create_affinity_mask as input.
+
+> Which would imply that this is a usable interrupt affinity from the
+> hardware perspective, irrespective on whether the cpu is online or
+> not. So why the check to cpu_online()? Can't we simply take the existing affinity
+> and rely on the hardware to do the right thing?
+
+Again, this is tracking if a htcx has online housekeeping CPU.
