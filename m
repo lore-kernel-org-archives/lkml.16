@@ -1,90 +1,114 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DFE1EEE6;
-	Fri,  4 Jul 2025 03:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509B733DF
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751599023; cv=none; b=Qz72Or8i4Bh1BfMpp/Ru2gkRCR97FeBue0uKVCZLJH2QTJFaw4Z2ls9BFRFJSmuCHe4B1YG1X0cfFeQzHdG7u00U6WxUqsEd2MqMBiQKYk0FsCMp2wOK6G/I4aJmGdm03t/gdl3YOANZtz2VWbYG7XAPOAzgG7bAN4fFU2r75sM=
+	t=1751599188; cv=none; b=CVMwk5pUu+G7K8BvIG93VXIybIY/7KPXYzymmJMl0fjEOrfL+6T6NY1LdvcZNOsyQI3wH0Z/bZTTdd9nCHOczGM62jVemtMuFV/Nivq+SR76C1dbPiHTekpQ8D3NVUYcO2WUkXNj4NuyS7zet98VMa0yfljOJJ6fqiOlz3S1lvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751599023; c=relaxed/simple;
-	bh=0tFcrfxkKL9ySeRCFB1ujQs+X0xxH4vdkOtO9MuupoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INK73hjvT5NDSJQG5CxSbyVhYxHWh2yCetONB0C7i8NLfKL26ZnzlfEME3JG/KW4MePjqd8rKbsp9ObhIdUouHw+FzPPPm/b28VHeRYpu7H31ZVVltrDO2AYFKUS6IvhOyztY95n14eabgIEO32SfALePL1w+S/zUKBlt0lIyeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from localhost (gy-adaptive-ssl-proxy-4-entmail-virt151.gy.ntes [114.94.8.21])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1adedd589;
-	Fri, 4 Jul 2025 10:41:31 +0800 (GMT+08:00)
-Date: Fri, 4 Jul 2025 10:41:31 +0800
-From: Ze Huang <huangze@whut.edu.cn>
-To: Frank Li <Frank.li@nxp.com>, Ze Huang <huangze@whut.edu.cn>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"spacemit@lists.linux.dev" <spacemit@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] usb: dwc3: add generic driver to support
- flattened DT
-Message-ID: <aGc_W5Gfyiw8deYK@cse-cd03-lnx.ap.qualcomm.com>
-References: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
- <20250526-b4-k1-dwc3-v3-v4-3-63e4e525e5cb@whut.edu.cn>
- <20250603012029.4agja77rdoneeyrl@synopsys.com>
- <aD5jL5DK6S8ii-DT@jean.localdomain>
- <aGc4EibLNTEj/H11@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1751599188; c=relaxed/simple;
+	bh=6e4VTmTJdsws+QP6XDBXrh/C79q76yq34yJ5EKMLvqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gRVEW8J4/9Ie/xlNAnXzR6F/iCYRB+iy8yK55XQacuDlHmG2HGxlCcMfPrxCcso9kxM/N8rzW8KydKw0dwVgCrHFyq23oJ41gJ4dGHwS2q36Ar0zFakcJU5AfEyAmg2MWOERk8HbpcsjiLNZd5u1G4LchtRr570Ga/MthbLH1pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sd4K9uOT; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sd4K9uOT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751599178; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=kNobNAICq8OI6ZolSBIkSCMUrxwEO4uU25FQrzVKD+g=;
+	b=sd4K9uOTOkcrycI8kvfBmdUZOzBiWU5fJDdBLD0nwvsnrjNvkAwYiUzWO4AXRzCe7BpMmrDg91WZDTtuZ4tfmYzpyQkUum7BitWxJiF+gpd6wdw5tH1Wphh+h8lV4bIBisVVQe6GzKukLhlbqyNJgPwyplGHRwUEQrfcHxUzKRo=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wh93g4-_1751599175 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 04 Jul 2025 11:19:36 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com,
+	david@redhat.com
+Cc: ziy@nvidia.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	baohua@kernel.org,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm: fault in complete folios instead of individual pages for tmpfs
+Date: Fri,  4 Jul 2025 11:19:26 +0800
+Message-ID: <440940e78aeb7430c5cc8b6d2088ae98265b9809.1751599072.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGc4EibLNTEj/H11@lizhi-Precision-Tower-5810>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCS0hJVkhKH08YHk9JSx4YQlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSk9VQk9VQ1VJSllXWRYaDxIVHRRZQVlPS0hVSktJQk1LSlVKS0tVS1kG
-X-HM-Tid: 0a97d34f7e8b03a1kunm074d1ad6206a3a
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P0k6DQw5VjEyATkZFEMRMDwM
-	LU0aCjBVSlVKTE5KTkJNQ0JISk1PVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlK
-	Sk9VQk9VQ1VJSllXWQgBWUFJT01DNwY+
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 10:10:26PM -0400, Frank Li wrote:
-> On Tue, Jun 03, 2025 at 10:51:27AM +0800, Ze Huang wrote:
-> > On Tue, Jun 03, 2025 at 01:20:35AM +0000, Thinh Nguyen wrote:
-> > > On Mon, May 26, 2025, Ze Huang wrote:
-> > > > To support flattened dwc3 dt model and drop the glue layer, introduce the
-> > > > `dwc3-generic` driver. This enables direct binding of the DWC3 core driver
-> > > > and offers an alternative to the existing glue driver `dwc3-of-simple`.
-> > > >
-> > > > Signed-off-by: Ze Huang <huangze@whut.edu.cn>
-> > > > ---
-> 
-> Any progress on this patch? If you have not time, I can continue work on
-> this one.
+After commit acd7ccb284b8 ("mm: shmem: add large folio support for tmpfs"),
+tmpfs can also support large folio allocation (not just PMD-sized large
+folios).
 
-Hi Frank,
+However, when accessing tmpfs via mmap(), although tmpfs supports large folios,
+we still establish mappings at the base page granularity, which is unreasonable.
 
-I was planning to submit everything together for full functionality, but since
-Alex's PHY work[1] is almost done, I'll send out the USB generic driver part
-separately first.
+We can map multiple consecutive pages of a tmpfs folios at once according to
+the size of the large folio. On one hand, this can reduce the overhead of page
+faults; on the other hand, it can leverage hardware architecture optimizations
+to reduce TLB misses, such as contiguous PTEs on the ARM architecture.
 
-Link: https://lore.kernel.org/all/5084a99a-9140-4c4f-9873-f5478f48a49d@ieee.org/ [1]
+Moreover, tmpfs mount will use the 'huge=' option to control large folio
+allocation explicitly. So it can be understood that the process's RSS statistics
+might increase, and I think this will not cause any obvious effects for users.
 
-> 
-> Frank Li
->
+Performance test:
+I created a 1G tmpfs file, populated with 64K large folios, and write-accessed it
+sequentially via mmap(). I observed a significant performance improvement:
 
-Thanks,
-Ze
+Before the patch:
+real	0m0.158s
+user	0m0.008s
+sys	0m0.150s
+
+After the patch:
+real	0m0.021s
+user	0m0.004s
+sys	0m0.017s
+
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+Changes from v1:
+ - Drop the unnecessary IS_ALIGNED() check, per David.
+ - Update the commit message, per David.
+---
+ mm/memory.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 0f9b32a20e5b..9944380e947d 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5383,10 +5383,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+ 
+ 	/*
+ 	 * Using per-page fault to maintain the uffd semantics, and same
+-	 * approach also applies to non-anonymous-shmem faults to avoid
++	 * approach also applies to non shmem/tmpfs faults to avoid
+ 	 * inflating the RSS of the process.
+ 	 */
+-	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
++	if (!vma_is_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
+ 	    unlikely(needs_fallback)) {
+ 		nr_pages = 1;
+ 	} else if (nr_pages > 1) {
+-- 
+2.43.5
+
