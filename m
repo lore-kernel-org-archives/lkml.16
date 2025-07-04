@@ -1,137 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEAA2AE96;
-	Fri,  4 Jul 2025 04:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673171DF26B;
+	Fri,  4 Jul 2025 04:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751604300; cv=none; b=g4LtH81r2jEN6sH4aLSoH5l56EXMTU1bhn0MJjDO8H4kJRbHOW60WtW4oSBobWQ4yrcL08NRI6WvDwaGSrspp+gIDpg0/fkOKYbrEw+G9lgbCb6Nu035yvFxvuDEfh1iv//F3MlV/S6+GnSIZ345pwVmqUD4TShjh6+ap17Sld0=
+	t=1751604349; cv=none; b=bq7aEbiUvOtt7kZzSUGzIE+5k0JI6tdmDYi1UOEbbxUQYFfoB1tlkJLE2vGHTrbF58fAJp3B7u/OyC4uDe6dZFIqqHc3j2tqZv3G8G10e0ghMBjMgbOidSyg+5Z1BPhgkxv4/+MZDc/ZdwQ/SSgTSs7MQzfL7fLKchbHp8o/nP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751604300; c=relaxed/simple;
-	bh=8LL5dfM4+fApXtGjqf/V6JOtfextTXNNY3ao2nJLhgI=;
+	s=arc-20240116; t=1751604349; c=relaxed/simple;
+	bh=CKP5uRYNVSYBRlVHhDqtjsaI9DEjKWDdEjiU0/9YFGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YeGI1zR0lpMjrCrp0Wlw+3s8xFIOIhXqwDtZpike4ZO5jwZBQC6myyTNImn9aniXR1wNvskPG8W2Dd0ahzUfy83/eUsEJDIKf7lcl7tj1qIHyitMMpYgjOAVjWYRgTxIMo2zD8KmY2+Whx6pNO2gvQC6nNCNJzmA3d91sms19B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNT2sAA9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mj26sRuiQLpoHqoO30SlVUUu03rJ06kT221rTAMmuV0nQo0Gk/gT5YxZCO/SbgPS9v0zMUc9j50xnSP8ZwFgfxRMA49Kjy9E4to2yg4YcPU4Dq2pVvLzW0YUK0SBmyUuPz7mOm1vfPJuV06qo1Yr/SrVzojx//fUXzsH61Da6wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvcUe5pI; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNT2sAA9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520A6C4CEE3;
-	Fri,  4 Jul 2025 04:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751604299;
-	bh=8LL5dfM4+fApXtGjqf/V6JOtfextTXNNY3ao2nJLhgI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=QNT2sAA9S6skXbsMPwoX70+PnJmgNecblMkkgk7iB9K5OUglNMjplv+Sjd5JGKGtZ
-	 MBnP9FcS1HflpNA2loUWJZszkknB7LUlYJ4YpPasZL1piFHrZSdm2qzwijxFeBOQTD
-	 BxqAbmx5eCaRkIn41Jw6Je3dh96dPZwV2VTQxYAAE9lQ4wFct3iB5DLmo5TkPzxOYM
-	 JokDdLbmWKiQYvklkPVK4+5RfIvl07RnDQlp5e0sIGVQi249xXB8O1n8EZGvMsNpdN
-	 z14Yx542Xq01u+jKKrbTqDVU7QVNYc4fyXc6rAdhj/nkzz+tXM0WhfipDW2YUGN33L
-	 LMMTHNVAsBfBA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id DAFEFCE0D3B; Thu,  3 Jul 2025 21:44:58 -0700 (PDT)
-Date: Thu, 3 Jul 2025 21:44:58 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
-Message-ID: <da934450-db48-4ef9-ac1b-6b3fbb412862@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
- <20250703200012.3734798-2-shakeel.butt@linux.dev>
- <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
- <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t>
- <f6900de7-bfab-47da-b29d-138c75c172fd@paulmck-laptop>
- <CAGj-7pUdbtumOmfmW52F3aHJfkd5F+nGeH5LAf5muKqYR+xV-w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvcUe5pI"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2353a2bc210so6078995ad.2;
+        Thu, 03 Jul 2025 21:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751604348; x=1752209148; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cG3nGFKHy1r5C+lPIaBzR6QdGIwuCZhkFG9bY42b6Jw=;
+        b=FvcUe5pIEOZejOMCEenvkrUWpbOkZ6p5g3D87RJiwUvGy2nPVn9E/vsd/G104gdV9u
+         GzPyO3VWcg+6nxhpmVCP7NaypsLf8xOgEVSQUb1UqgxKqrAgribcs6t8XxUkwkdPrwHg
+         kLXgWFGQ6rs5EKpA2RR/xtz+wB9p/bZXfsHw1bNlPor1zn1rvnDttUHBk15/HDOkQWIn
+         nvrwOevoClbe3FgJEznJNw9dg7TME17brdjHBE4/4c9y4oPzqj5JBok/Y9l3iq0QAWAq
+         s6+Fw89e885EEKTmgg3bXhfG4srFdeLQC7cSyhgfQZis93JphvIwImVUUjL7qbLNXVd5
+         WgiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751604348; x=1752209148;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cG3nGFKHy1r5C+lPIaBzR6QdGIwuCZhkFG9bY42b6Jw=;
+        b=OOFfy5X7Dqvu73lEJ+1asddJzbRnqYaosP1s8a/uzLlHejWl60vSAFg5GoAKS+dfvU
+         A7XWl2J/nt4cvcxiDPm41qHA1v8Q1b74td/j0tEr+im87b5gCJ6tESy+c4gJI/mVrTQu
+         dKIN/lgGSjEmsiCrtqLAHYKidVbKdVTRVmx++l/QK0CyVXfAx33FfU8urnaxi/4ePTbh
+         4RKW5xByGSSjkjeosP9+pNZF7Zcpv8KmlWJpmHbiSNfZ9QFKPrAsTlJdHObg4DqQKGYY
+         gHPW0sa/kBeSL6taUh1wgzO0CgzldhUKTr+vmSFsLyz16U0OELc1nY0RkP34SzC+VzSh
+         ZDYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrbcK+j5VglFQ7w+Qt7qV4ZslKvY47Ml/IW4eGMd2Y3kFwATLTxpNym1aqDKr5M3CH3x/3uUE22VjOB8Tt@vger.kernel.org, AJvYcCXfzB9R0vk5Xp2zbB+/MOrab8x1SvA/vHOjGRC5s9gT3Wroz24SoiNKHJtEIA+jeEWWmEPdg8sZmaee@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBXbHc/hPwtYBy3f2o7F6bnqKQ4zet05chgS8uitHihiZlE7zh
+	PMRFqXsS+yuy0MxDsz76Vj460/o7Zv62JRh3KdHkq8kvIJTdGzjOpV2K
+X-Gm-Gg: ASbGncvTbFskoSOTlKiRWZ5n2ZAojzG+ammNLzVX56EMOO0Fb8XYhyySmss7Vnzpr3E
+	a2Y58vOqHGuWSpS7sLzcb9r9DptwM4OLWj2XfwPhVZLC3pDeyIeCS7rJf3imtzJknr50wWxcnvj
+	XfYfFFd9GP8bOTABCPEf8EwbyWvXAS2GNpDR3Nf2RKAooQ4p0qDCXj0kFPiPb9MWkzS7qoZCy1z
+	7M8JGXw69R6XH0bNvZgEqkPkkx4TkvTjDn/UmKrfbTeSw4t5eKu2+2mVHTv4+Khhr9TaAfPDGeB
+	yasTvBcO1E6TD+pSk8A7brtlfUrbNyLOkWd0Pn8mHlvsI+BHxsEM6vlpoxhMMc2pzqSGA87zAhZ
+	XutKd9enneM2OFyLSNtYAmFytJ//A55NqumYmH24=
+X-Google-Smtp-Source: AGHT+IF0o3ITf8BCpP5P9I2hnMwefUgNCwsqn4QO6uhOxBG7wPoKctcKA38mvJ7HISgAzRZvMAgLmA==
+X-Received: by 2002:a17:902:c404:b0:234:a139:1203 with SMTP id d9443c01a7336-23c85e7459amr19740725ad.32.1751604347591;
+        Thu, 03 Jul 2025 21:45:47 -0700 (PDT)
+Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8455ba98sm9751345ad.135.2025.07.03.21.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 21:45:47 -0700 (PDT)
+Date: Thu, 3 Jul 2025 21:45:44 -0700
+From: Tao Ren <rentao.bupt@gmail.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	Tao Ren <taoren@meta.com>
+Subject: Re: [PATCH 1/5] ARM: dts: aspeed: Expand data0 partition in
+ facebook-bmc-flash-layout-128.dtsi
+Message-ID: <aGdceHVCEaWxo5QG@localhost.localdomain>
+References: <20250702050421.13729-1-rentao.bupt@gmail.com>
+ <20250702050421.13729-2-rentao.bupt@gmail.com>
+ <78f9fcbc58261064f248e95eb7740549e338bc78.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGj-7pUdbtumOmfmW52F3aHJfkd5F+nGeH5LAf5muKqYR+xV-w@mail.gmail.com>
+In-Reply-To: <78f9fcbc58261064f248e95eb7740549e338bc78.camel@codeconstruct.com.au>
 
-On Thu, Jul 03, 2025 at 06:54:02PM -0700, Shakeel Butt wrote:
-> On Thu, Jul 3, 2025 at 4:53â€¯PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Thu, Jul 03, 2025 at 03:46:07PM -0700, Shakeel Butt wrote:
-> [...]
-> > > Let me answer this one first. The previous patch actually made
-> > > init_llist_node() do WRITE_ONCE().
-> > >
-> > > So the actual question is why do we need
-> > > data_race([READ|WRITE]_ONCE()) instead of just [READ|WRITE]_ONCE()?
-> >
-> > You should *almost* always use [READ|WRITE]_ONCE() instead of data_race().
-> >
-> > > Actually I had the similar question myself and found the following
-> > > comment in include/linux/compiler.h:
-> > >
-> > > /**
-> > >  * data_race - mark an expression as containing intentional data races
-> > >  *
-> > >  * This data_race() macro is useful for situations in which data races
-> > >  * should be forgiven.  One example is diagnostic code that accesses
-> > >  * shared variables but is not a part of the core synchronization design.
-> > >  * For example, if accesses to a given variable are protected by a lock,
-> > >  * except for diagnostic code, then the accesses under the lock should
-> > >  * be plain C-language accesses and those in the diagnostic code should
-> > >  * use data_race().  This way, KCSAN will complain if buggy lockless
-> > >  * accesses to that variable are introduced, even if the buggy accesses
-> > >  * are protected by READ_ONCE() or WRITE_ONCE().
-> > >  *
-> > >  * This macro *does not* affect normal code generation, but is a hint
-> > >  * to tooling that data races here are to be ignored.  If the access must
-> > >  * be atomic *and* KCSAN should ignore the access, use both data_race()
-> > >  * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
-> > >  */
-> > >
-> > > IIUC correctly, I need to protect llist_node against tearing and as well
-> > > as tell KCSAN to ignore the access for race then I should use both.
-> > > Though I think KCSAN treat [READ|WRITE]_ONCE similar to data_race(), so
-> > > it kind of seem redundant but I think at least I want to convey that we
-> > > need protection against tearing and ignore KCSAN and using both conveys
-> > > that. Let me know if you think otherwise.
-> > >
-> > > thanks a lot for taking a look.
-> >
-> > The thing to remember is that data_race() does not affect the
-> > generated code (except of course when running KCSAN), and thus does
-> > absolutely nothing to prevent load/store tearing.  You need things like
-> > [READ|WRITE]_ONCE() to prevent tearing.
-> >
-> > So if it does not affect the generated code, what is the point of
-> > data_race()?
-> >
-> > One answer to this question is for diagnostics where you want KCSAN
-> > to check the main algorithm, but you don't want KCSAN to be confused
-> > by the diagnostic accesses.  For example, you might use something like
-> > ASSERT_EXCLUSIVE_ACCESS() as in __list_splice_init_rcu(), and not want
-> > your diagnostic accesses to result in false-positive KCSAN reports
-> > due to interactions with ASSERT_EXCLUSIVE_ACCESS() on some particular
-> > memory location.  And if you were to use READ_ONCE() to access that same
-> > memory location in your diagnostics, KCSAN would complain if they ran
-> > concurrently with that ASSERT_EXCLUSIVE_ACCESS().  So you would instead
-> > use data_race() to suppress such complaints.
-> >
-> > Does that make sense?
+On Fri, Jul 04, 2025 at 09:36:29AM +0930, Andrew Jeffery wrote:
+> On Tue, 2025-07-01 at 22:04 -0700, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > Expand data0 partition to 64MB in facebook-bmc-flash-layout-128.dtsi for
+> > larger persistent storage.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  .../boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi b/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
+> > index 7f3652dea550..efd92232cda2 100644
+> > --- a/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
+> > +++ b/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
+> > @@ -32,19 +32,19 @@ image-meta@f0000 {
+> >         };
+> >  
+> >         /*
+> > -        * FIT image: 119 MB.
+> > +        * FIT image: 63 MB.
+> >          */
+> >         fit@100000 {
+> > -               reg = <0x100000 0x7700000>;
+> > +               reg = <0x100000 0x3f00000>;
+> >                 label = "fit";
+> >         };
+> >  
+> >         /*
+> > -        * "data0" partition (8MB) is used by Facebook BMC platforms as
+> > +        * "data0" partition (64MB) is used by Facebook BMC platforms as
+> >          * persistent data store.
+> >          */
+> > -       data0@7800000 {
+> > -               reg = <0x7800000 0x800000>;
+> > +       data0@4000000 {
+> > +               reg = <0x4000000 0x4000000>;
+> >                 label = "data0";
+> >         };
+> >  
 > 
-> Thanks a lot Paul for the awesome explanation. Do you think keeping
-> data_race() here would be harmful in a sense that it might cause
-> confusion in future?
+> Two existing systems use this dtsi:
+> 
+>    > git grep facebook-bmc-flash-layout-128.dtsi
+>    arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts:#include "facebook-bmc-flash-layout-128.dtsi"
+>    arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi:#include "facebook-bmc-flash-layout-128.dtsi"
+> 
+> This change requires a full reflash of those devices, which is pretty
+> disruptive.
+> 
+> It seems more appropriate to me to create a separate dtsi for the new
+> flash layout to use in new systems.
+> 
+> Andrew
 
-Yes, plus it might incorrectly suppress a KCSAN warning for a very
-real bug.  So I strongly recommend removing the data_race() in this case.
+Hi Andrew,
 
-							Thanx, Paul
+I agree it's better to create a new layout, and I will take care of it
+in v2. The migration is already done for all the network BMC platforms
+except elbert/darwin, and having separate layouts will make my life
+easier :)
+
+Any suggestions about the file name of the new layout?
+
+
+Thanks,
+
+Tao
