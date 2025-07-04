@@ -1,91 +1,116 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2747628750C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675CA28A726;
+	Fri,  4 Jul 2025 08:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618769; cv=none; b=d5Ys0FuNa9ka7yDdKhWUVXsjSQqRrfkUsa7MOfgY7vzIAcNdyhGsSefm0zwewPsBF/ieTv93uzwFa+D2PVL5/bAeJpAnudn3Pi3oTFKlRb/qbUrtrCW37srWqXslqVO/2q7+DdmQlzldWumSEE0B+VT3AQVSTEei3QrVJYZRIPs=
+	t=1751618795; cv=none; b=WaoG9FfK2nsu3/MNg/4j+nj2d/T6c6k4EZHUpjVnqe7WSmuPZHOjbrjdMh1bw+zD+iGufepl28msDAqaAHOsHNB1G0soGZB6SWEr4X+3U4+lxJH0qKS1Tk9IhzqaxoDgAad9Bn/FNL3CQUCDDWj0SzD6XrUHugMg78q+gB2Bvaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618769; c=relaxed/simple;
-	bh=HU0oCF3SsO6xY8EQnlB2lkoCeGaZMBu9JmdYXoSnmms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMMNIlecfXhXcApSUcIKWyacQSv6nZVZJTwb9J59UrE5r1cn6aO7PBLL9I+zZoc/XJgBnPUFPFAAcTg/n5HguLviQxw7egs4+KFu10WJYmt15tKiOGHtwmdp3iBKHcZtN3cowXF1Qn9E3N6LvM7pf2ej5/EL/RZSLxHKACZW1ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oSCZKgVv; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751618795; c=relaxed/simple;
+	bh=kv/PeDCma7DCvRH0d52zdnodi9MDnPnb219FgiA2Fh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ijotk0TKUwnBlRgvbWy+boRncl+nwz/misH97m8IyomLIP7YTYc4P2RJiKZdrKHAiJjeeJRtPXm+9Ab/u3iMv003DXKCaHBg6xpHw/Z1NnDXrRh01F3QzgnEGDuIxPoe9gUQZqGx3EN1KXhIigwGzUcBdxDpujuyIxusdRg6EbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wPNG8kyH; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oSCZKgVv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BiiPFvk8pVVBJSxL7L3t13j61DBtLfP08JMvkqNoRsw=; b=oSCZKgVvDMkuC841Is/QwZap2m
-	VDvyrkacWFey7YEIFLQ2AJKNjdwlGKCYlgcCiWZQTzJdY1E4M47UL/r+1VKktDy042QTiHRz5Dven
-	NdVZUUujpVJdD/cPH574LTNCpimDerJPIaWdiqhpd5vnckr6/OLt3YXf3btNsXjAXtYjFa37XH+Ay
-	+FKX6uJtMclo/uq4GaDoIrDWQRrxsrUiaZ3eA+yswpGHpwxDU+7c158dAkjabe3BUYlTRf/73Ed0i
-	HBtMIneeGzjpEsidmBO5yTpQ+Puk6qtRl3PAo7mQv6UdPd+XJhmsNvS6TSifcA63aKe6+7dN1z3gX
-	i8eXjroQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXc3I-00000007s3T-3ouw;
-	Fri, 04 Jul 2025 08:45:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0CCB8300212; Fri, 04 Jul 2025 10:45:48 +0200 (CEST)
-Date: Fri, 4 Jul 2025 10:45:47 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Tim Chen <tim.c.chen@intel.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Libo Chen <libo.chen@oracle.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Hillf Danton <hdanton@sina.com>, Len Brown <len.brown@intel.com>,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>
-Subject: Re: [RFC patch v3 01/20] sched: Cache aware load-balancing
-Message-ID: <20250704084547.GF2001818@noisy.programming.kicks-ass.net>
-References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
- <cbe56cb89cca4c3ddcbc9956a82bda23f5b81c57.1750268218.git.tim.c.chen@linux.intel.com>
- <b4cce11c-5ed6-4366-92c6-9a6b34998295@linux.ibm.com>
- <ba7f6c16-919a-4261-8677-056072572fc9@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wPNG8kyH"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5648kL834136291;
+	Fri, 4 Jul 2025 03:46:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751618781;
+	bh=UM6Vn3fL7J3xAJBIYyUzeIBiXiYvGrMBNB36K+Hll8k=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=wPNG8kyHauGIWBSfpBfVvQGPrBldXCRwZvu/mVbzUwtQH9qzYvZjtsmdzJBC8opZs
+	 45VZi0uAPhGF4wpHxjzPMtGzGhc4yQrHIjMLiiQgOONsD0G+/UWnIkGUPX6SMfelfx
+	 121mwkJL1rZ7ML2HiHdhPST6NG5hDMK7TEb7RroY=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5648kLvG2656895
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 4 Jul 2025 03:46:21 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 4
+ Jul 2025 03:46:21 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 4 Jul 2025 03:46:21 -0500
+Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5648kGSJ2686036;
+	Fri, 4 Jul 2025 03:46:16 -0500
+Message-ID: <6f151fc8-ff95-4e1a-b92f-4e908f62e979@ti.com>
+Date: Fri, 4 Jul 2025 14:16:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba7f6c16-919a-4261-8677-056072572fc9@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/4] arm64: dts: ti: Add support for AM62D2-EVM
+To: Vignesh Raghavendra <vigneshr@ti.com>, <nm@ti.com>, <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
+        <devarsht@ti.com>, <s-vadapalli@ti.com>, <andrew@lunn.ch>
+References: <20250627115753.2246881-1-p-bhagat@ti.com>
+ <20250627115753.2246881-5-p-bhagat@ti.com>
+ <485dc90b-dc9b-4b1a-ad18-9a9ef117637c@ti.com>
+Content-Language: en-US
+From: Paresh Bhagat <p-bhagat@ti.com>
+In-Reply-To: <485dc90b-dc9b-4b1a-ad18-9a9ef117637c@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Jul 04, 2025 at 04:40:39PM +0800, Chen, Yu C wrote:
+Hi,
 
-> > > @@ -953,6 +953,10 @@ config NUMA_BALANCING
-> > > ?????????????? This system will be inactive on UMA systems.
-> > > +config SCHED_CACHE
-> > > +?????? bool "Cache aware scheduler"
-> > > +?????? default y
-> > > +
-> > 
-> > Should it depend on EXPERT?
-> > IMO this could add quite a bit of overhead and maybe n by default?
-> > 
-> 
-> I would leave this to Peter and Tim to decide.
 
-Runtime controls are always better than compile time. Distros will have
-no choice but to enable the config option.
+On 04/07/25 09:40, Vignesh Raghavendra wrote:
+> Hi
+>
+> [...]
+>
+> On 27/06/25 17:27, Paresh Bhagat wrote:
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2.dtsi b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+>> new file mode 100644
+>> index 000000000000..70aeb40872a9
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+>> @@ -0,0 +1,25 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+>> +/*
+>> + * Device Tree Source for AM62D2 SoC family in Quad core configuration
+>> + *
+>> + * TRM: https://www.ti.com/lit/pdf/sprujd4
+>> + *
+>> + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "k3-am62a7.dtsi"
+>> +
+>> +/ {
+>> +	model = "Texas Instruments K3 AM62D SoC";
+>> +	compatible = "ti,am62d2";
+>> +};
+>> +
+>> +&vpu {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&e5010 {
+>> +	status = "disabled";
+>> +};
+>
+> Norm seems to be to use /delete-node/ here instead. Please respin
+> accordingly.
 
-But that is not the kind of thing you start a series with. First
-versions didn't even have the config option. First you make it work,
-then later you worry about silly detail.
 
+Yep makes sense to delete the node itself. Will update this.
+>
