@@ -1,115 +1,256 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550F81E47AD;
-	Fri,  4 Jul 2025 07:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093EF271442
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612549; cv=none; b=ltqyVsubTZ1R8r61mRm+Njxt2sJM8YxQTCSfiVTqoCAtWTPWJg7V8/UMKwFQz69m7ML6xAVMVLEIwKvfW7l8uMItWrjpiCfm2/kQ/me7ykXVPlenQgz9d/qdCb747C09u7G7EkpTeyfMW2GMbWNwHshrRUk/EaKgk8A+7ah60bc=
+	t=1751612659; cv=none; b=PwZ89ozuX8reKtzo03iKbBRp449VC1nxT5Txk/zWavZFsvWjSw0RbGpihehw9CRphTenOIEBbRWrQeiXthCsw/VoI0W6NGHZFjTEKpFkEvNCWVKHk6kiAFL+dp4QXtJyq3s/x0CBshjA8At57lyLBbnrWPKVN/iz1NogstoR0Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612549; c=relaxed/simple;
-	bh=C47jAzKFX+keTRxbBe1Xb9p5orpam0fMTfx0p4dmAJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PKQtmjIEtv6RSG9jRdXsY2MVrRlyCYuy+RVDMQzjXTN0D1gA4YrCSaOIqSGa2tpj+ALQBoOCAqdbt9dOeHXIRfExbK7qPF+Vmoh1X0MIHNV4QUjLDBkq9tU739JSn+1RoYqLcBjhYwo/661AmRuJtrFJzyRL0Y7N17hHnvvCB5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llo6uspO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751612659; c=relaxed/simple;
+	bh=q2EmQLeYA4OKxgp19CQ265DwJ8OtmojXAvRLvrYct94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPtcbwb3GqgMnVU6Z7Djv9bpmIsrKg8BaZ493JivLbnB2K1x5FKiubdWv8kII7a7MemizwNwj03/REwfr3HpNhf8D4Nsv8Lut9SufdAyjufA7eCzOtD+s7rpPBnv+EHPu80H2srm8+BDmwBLYdQndwYzO7HlVkq1Bl92ix1bI6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aL4BoyPa; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llo6uspO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B87C4CEED;
-	Fri,  4 Jul 2025 07:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751612548;
-	bh=C47jAzKFX+keTRxbBe1Xb9p5orpam0fMTfx0p4dmAJw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=llo6uspOSi9J8N1NIWF2R3ZwKU7PNWQ1ayDpHtwXFbsBsY8AqyH/nTyyF3301Aaht
-	 u+DhYpbiy1lKcpEDuyoyW16t43SX07BT8LTnrJY1hsydUQJ6XCLRiahtOW6HOYu/Sg
-	 hnuKNOK/J9ye3hIDSQSx1uypZXbYl4e9x4cSevnOU3f0API/Oe2l/xXtK57jmPey4T
-	 6fG6B4NJYHtwVKuPyspEScIp3L3pgKjZUOcSvupb4YXMoF2QOV5CEIZUPODBpzPrwH
-	 XpuLmsngb4PyMM3/7QcCzYM3TPMctMKZTdOtthlZaaFLuvlKamnTjhclObg39W2jCO
-	 cJBU7BBTwAicA==
-Message-ID: <948ae892-0918-4b75-9d8c-0c2f00c989f0@kernel.org>
-Date: Fri, 4 Jul 2025 09:02:21 +0200
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aL4BoyPa"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23602481460so7346705ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751612657; x=1752217457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rNV4yYQMrOJDAS1UrXmWT/jHR79hA6tazWjsnWTTuMk=;
+        b=aL4BoyPa4hlbauunorYanQx1fNfpwIxFf5M6t5sQn1ldlfxjBnXakNsUJi+suKn+OU
+         SC4+fpH8GUS0GKcqhIJ0dznmaXipHwM8BiXH4qomDiB03jqbZZrs/ffzk/SaGWz6bPCe
+         UPFYvLH7iNbCc1CzOoidmG9uF8VAFOltTB5wCWm/0UvqaHPW/pKqCpO0N/8x+cRa6ag0
+         kbLVC8iZtjBQwIdkXBdwRdXzDugrP+LBIktJzWU7YKqZifZlpHYzAc5hq1wNV/hlAVSq
+         42HO8/FybZyTzFXEh1lkquuW2xgsFBbyhLDKod7u9lSKrsrTKPsJ6GFskkx1R8URVhT/
+         jVfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751612657; x=1752217457;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rNV4yYQMrOJDAS1UrXmWT/jHR79hA6tazWjsnWTTuMk=;
+        b=tQHaYL3KQEqjhE4kS50e6eP5WA9TDQnu3SU9Op9ADv0DFP2OEqDLNzRi7ihkb1mPLs
+         dBeK4GgffXtGo4gLYp/pSa9vXrV47u12P+LHwxDbIM4pY6afZjPCn0r6N0Szjn8V8CgZ
+         XYONeI4wEofqShokigz1/npshp4ROs8LTd2eEl0y1ZFIoZd1EfjXH4BhO6kVUxNvxRlr
+         GgI2e0dViHD9bLumulNMRbQXzGXNMPYa+e3tlj/eeOlElwtczkLsar2KFMCm4bqtNqh8
+         EFzkqXlzuSovsXuziEtHgYEThRCL55Pxvs12D6cMpzkPl0+IkaWWC0WkOJAN3l5LlUHV
+         nhew==
+X-Forwarded-Encrypted: i=1; AJvYcCXOzrJWZBfqjqqMfhlUsP/ywr3GOZZ7M/AHaqf8bV3Xp+2esrDA1C6cSzQkU8gnKnZqiGwlzxiC42mB8pM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Z1or5VxqfBB5dujs6ZWquaC2mNYXnlY2Rogd6ZpdW3nQ3Bn4
+	ZauDPU4vZILIOLBUlYWVjrk0+9cQhm48+eKqGa8fCYSYQ6JCbIkSFC0x2JFqQ04NyZs=
+X-Gm-Gg: ASbGncssSB8R9KQjYLJvKBg0yLVOypqwqis2HHjGOU68kgphO9KMrsba2OHqA31rCTL
+	F/EAzBeSOEfJjGbDAB+plBFXw0Bm4GBWGDllwda5q0OA9Qb0bhZ1n4AFGskf65oEYkKv7W/XksT
+	pytcMShwF6YAmZvOSbEQJ931mZPVNFxbmubzHo2SuNnP8f8zqap5s8F2XOKlXsBoh6D8aYnIIWg
+	OH1/bhifmEfrbosFxkBvvHgPOP3+diC5HhMNjFhUEQSu9WL2juyrYC3TnqKBs0rMWc/Lh+Vy9fC
+	WzHA+9nn5nJ3CZ7WiYbJaOi6D98V5XolK6Li80nD8itzWqK7gocWzBF8SLBij1jjC25MlYtkz7u
+	aXMap32qnfgLkS04fCUidmTLZww==
+X-Google-Smtp-Source: AGHT+IE6Selq5x5dbP8GjsTtUsdcC1T2xdo7xnrlnnZL2hnwCQn7lKmnlLU2hnm1nIy+2TTjIKdA+Q==
+X-Received: by 2002:a17:903:32c1:b0:235:e8da:8d6 with SMTP id d9443c01a7336-23c8609bfe2mr29264605ad.2.1751612657098;
+        Fri, 04 Jul 2025 00:04:17 -0700 (PDT)
+Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae59a93sm1358697a91.12.2025.07.04.00.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 00:04:16 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v8 00/24] Linux SBI MPXY and RPMI drivers
+Date: Fri,  4 Jul 2025 12:33:32 +0530
+Message-ID: <20250704070356.1683992-1-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/10] dt-bindings: gpio: cdns: add Axiado AX3000 GPIO
- variant
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jan Kotas <jank@cadence.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
- Michal Simek <michal.simek@amd.com>, =?UTF-8?Q?Przemys=C5=82aw_Gaj?=
- <pgaj@cadence.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Frank Li <Frank.Li@nxp.com>, Boris Brezillon <bbrezillon@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- soc@lists.linux.dev, linux-serial@vger.kernel.org,
- linux-i3c@lists.infradead.org
-References: <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-0-cebd810e7e26@axiado.com>
- <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-4-cebd810e7e26@axiado.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-4-cebd810e7e26@axiado.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/07/2025 20:20, Harshit Shah wrote:
-> Add binding for Axiado AX3000 GPIO controller. So far, no changes
-> are known, so it can fallback to default compatible.
-> 
-> Signed-off-by: Harshit Shah <hshah@axiado.com>
-> ---
+The SBI v3.0 (MPXY extension) [1] and RPMI v1.0 [2] specifications
+are frozen and finished public review at the RISC-V International.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Currently, most of the RPMI and MPXY drivers are in OpenSBI whereas
+Linux only has SBI MPXY mailbox controller driver, RPMI clock driver
+and RPMI system MSI driver This series also includes ACPI support
+for SBI MPXY mailbox controller and RPMI system MSI drivers.
 
-Best regards,
-Krzysztof
+These patches can be found in the riscv_sbi_mpxy_mailbox_v8 branch
+at: https://github.com/avpatel/linux.git
+
+To test these patches, boot Linux on "virt,rpmi=on,aia=aplic-imsic"
+machine with OpenSBI and QEMU from the dev-upstream branch at:
+https://github.com/ventanamicro/opensbi.git
+https://github.com/ventanamicro/qemu.git
+
+[1] https://github.com/riscv-non-isa/riscv-sbi-doc/releases
+[2] https://github.com/riscv-non-isa/riscv-rpmi/releases
+
+Changes since v7:
+ - Addressed comments on PATCH3, PATCH7, PATCH10, PATCH14, and PATCH21
+
+Changes since v6:
+ - Rebased the series on Linux-6.16-rc4
+ - Added Stephen's Reviewed-by in appropriate patches
+ - Addressed Andy's comments on PATCH5, PATCH6, PATCH9, and PATCH14
+ - New PATCH6 in this series which is factored-out from PATCH7
+
+Changes since v5:
+ - Rebased the series on Linux-6.16-rc2
+ - Added Conor's Reviewed-by in all DT binding patches
+ - Addressed Andy's comments on PATCH5
+ - Addressed Tglx's comments on PATCH12 and PATCH21
+
+Changes since v4:
+ - Rebased the series on Linux-6.16-rc1
+ - Dropped PATCH1 since a similar change is already merged
+   https://lore.kernel.org/linux-riscv/20250523101932.1594077-4-cleger@rivosinc.com/
+ - Addressed Andy's comments on PATCH4, PATCH5, PATCH6, PATCH7,
+   PATCH13, and PATCH17
+ - Addressed Atish's comments on PATCH11 and PATCH12
+ - Addressed Conor's comments on PATCH9
+
+Changes since v3:
+ - Rebased the series on Linux-6.15-rc7
+ - Updated PATCH2 DT bindings as-per Rob's suggestion
+ - Improved request_threaded_irq() usage in PATCH7
+ - Updated PATCH10 clk-rpmi driver as-per commments from Andy
+ - Updated PATCH13 irq-riscv-rpmi-sysmsi driver as-per comments
+   from Andy and Tglx
+ - Addressed ACPI related comments in PATCH14, PATCH15, PATCH18,
+   PATCH20 and PATCH21
+
+Changes since v2:
+ - Dropped the "RFC" tag from series since the SBI v3.0 and
+   RPMI v1.0 specifications are now frozen
+ - Rebased the series on Linux-6.15-rc5
+ - Split PATCH8 of v2 into two patches adding separate DT
+   bindings for "riscv,rpmi-mpxy-clock" and "riscv,rpmi-clock"
+ - Split PATCH10 of v2 into two patches adding separate DT
+   bindings for "riscv,rpmi-mpxy-system-msi" and
+   "riscv,rpmi-system-msi"
+ - Addressed comments from TGLX on PATCH11 of v2 adding irqchip
+   driver for RPMI system MSI
+ - Addressed ACPI related comments in PATCH15 and PATCH16 of v2
+ - New PATCH17 and PATCH18 in this series
+
+Changes since v1:
+ - Addressed DT bindings related comments in PATCH2, PATCH3, and
+   PATCH7 of v1 series
+ - Addressed comments in PATCH6 and PATCH8 of v1 series
+ - New PATCH6 in v2 series to allow fwnode based mailbox channel
+   request
+ - New PATCH10 and PATCH11 to add RPMI system MSI based interrupt
+   controller driver
+ - New PATCH12 to PATCH16 which adds ACPI support in SBI MPXY
+   mailbox driver and RPMI system MSI driver
+ - New PATCH17 to enable required kconfig option to allow graceful
+   shutdown on QEMU virt machine
+
+Anup Patel (14):
+  dt-bindings: mailbox: Add bindings for RPMI shared memory transport
+  dt-bindings: mailbox: Add bindings for RISC-V SBI MPXY extension
+  RISC-V: Add defines for the SBI message proxy extension
+  mailbox: Add common header for RPMI messages sent via mailbox
+  mailbox: Allow controller specific mapping using fwnode
+  byteorder: Add memcpy_to_le32() and memcpy_from_le32()
+  mailbox: Add RISC-V SBI message proxy (MPXY) based mailbox driver
+  dt-bindings: clock: Add RPMI clock service message proxy bindings
+  dt-bindings: clock: Add RPMI clock service controller bindings
+  dt-bindings: Add RPMI system MSI message proxy bindings
+  dt-bindings: Add RPMI system MSI interrupt controller bindings
+  irqchip: Add driver for the RPMI system MSI service group
+  RISC-V: Enable GPIO keyboard and event device in RV64 defconfig
+  MAINTAINERS: Add entry for RISC-V RPMI and MPXY drivers
+
+Rahul Pathak (1):
+  clk: Add clock driver for the RISC-V RPMI clock service group
+
+Sunil V L (9):
+  ACPI: property: Refactor acpi_fwnode_get_reference_args() to support
+    nargs_prop
+  ACPI: Add support for nargs_prop in acpi_fwnode_get_reference_args()
+  ACPI: scan: Update honor list for RPMI System MSI
+  ACPI: RISC-V: Create interrupt controller list in sorted order
+  ACPI: RISC-V: Add support to update gsi range
+  ACPI: RISC-V: Add RPMI System MSI to GSI mapping
+  irqchip/irq-riscv-imsic-early: Export imsic_acpi_get_fwnode()
+  mailbox/riscv-sbi-mpxy: Add ACPI support
+  irqchip/riscv-rpmi-sysmsi: Add ACPI support
+
+ .../bindings/clock/riscv,rpmi-clock.yaml      |   64 ++
+ .../bindings/clock/riscv,rpmi-mpxy-clock.yaml |   64 ++
+ .../riscv,rpmi-mpxy-system-msi.yaml           |   67 ++
+ .../riscv,rpmi-system-msi.yaml                |   74 ++
+ .../mailbox/riscv,rpmi-shmem-mbox.yaml        |  124 ++
+ .../bindings/mailbox/riscv,sbi-mpxy-mbox.yaml |   51 +
+ MAINTAINERS                                   |   15 +
+ arch/riscv/configs/defconfig                  |    2 +
+ arch/riscv/include/asm/irq.h                  |    6 +
+ arch/riscv/include/asm/sbi.h                  |   63 +
+ drivers/acpi/property.c                       |  128 ++-
+ drivers/acpi/riscv/irq.c                      |   75 +-
+ drivers/acpi/scan.c                           |    2 +
+ drivers/base/property.c                       |    2 +-
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rpmi.c                        |  616 ++++++++++
+ drivers/irqchip/Kconfig                       |    7 +
+ drivers/irqchip/Makefile                      |    1 +
+ drivers/irqchip/irq-riscv-imsic-early.c       |    2 +
+ drivers/irqchip/irq-riscv-rpmi-sysmsi.c       |  328 ++++++
+ drivers/mailbox/Kconfig                       |   11 +
+ drivers/mailbox/Makefile                      |    2 +
+ drivers/mailbox/mailbox.c                     |   65 +-
+ drivers/mailbox/riscv-sbi-mpxy-mbox.c         | 1017 +++++++++++++++++
+ include/linux/byteorder/generic.h             |   16 +
+ include/linux/mailbox/riscv-rpmi-message.h    |  243 ++++
+ include/linux/mailbox_controller.h            |    3 +
+ include/linux/wordpart.h                      |   16 +
+ 29 files changed, 2990 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
+ create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
+ create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
+ create mode 100644 drivers/clk/clk-rpmi.c
+ create mode 100644 drivers/irqchip/irq-riscv-rpmi-sysmsi.c
+ create mode 100644 drivers/mailbox/riscv-sbi-mpxy-mbox.c
+ create mode 100644 include/linux/mailbox/riscv-rpmi-message.h
+
+-- 
+2.43.0
+
