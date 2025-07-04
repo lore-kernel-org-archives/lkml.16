@@ -1,88 +1,90 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6746260572;
-	Fri,  4 Jul 2025 07:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C7481FC0FC;
+	Fri,  4 Jul 2025 07:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614520; cv=none; b=qeZ8vX6zjQ4wGPTlhaI5lD+LNtEiyWHOWBzE8625nAbQFgH75fihBvxhlaySn+tNTljNUYtUe+Cm6+ZlARJhFJT+zZAiPwIu3K/uauMxVc9HqQDLxBrrk9fczWjcxL/fgcvwQ5syejNlAkOSEuycharGT1A2tkijpG7YLjtR+Xg=
+	t=1751614552; cv=none; b=o5SjtpbhqGbRqX5jiKQfTg5ZNPdgDX8ZrbxGya/fZbVAyi4yvxSLkw4AeXfdXeS9V0rasiGGawDweZJ+erAjp8G7nEompN04REJFp6woSAhUy8LBH/OHHKJw5VzZl462+usrBet5evRmz1hUkZ3m4I3SErtcODANjsOKueItT8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614520; c=relaxed/simple;
-	bh=J22onrbDL63ztIzfTyZRwTuoB/+v29eZAD1UlVeYANE=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=JoaRmib1RamI9W6nCGZKcYZsWyqc4ItBAtIyMx3rF9AsKsCuVGgBgHF6dO0vJCl7ChNUYh3Iz/7+So5sKUNIc21Yo8k4nOdzCBUw4HhCqvqY5jZ/z8pGNYb9m642beiwJgtJxwvLUI+tCt0Bi5u4iBgG1/3W2vNWpiF9QiFa0CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uXawj-001kVS-O2;
-	Fri, 04 Jul 2025 07:34:57 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1751614552; c=relaxed/simple;
+	bh=XY83Hduz2IFtdympjVunRV8NwH0o03IOlu4UckdZpGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VV3i5VAj66cVQk1p/OxgtQs/VIW5UKRTVqg0c6zoNnZRROezZhC9m3NazcbkrLNXM0Ec82HqmzrEnEzhVxLSUJ58vQ401MenR0vaJXE6kIt0QEWJXEPb8+E/NkX9Z7djv+h2U4EV36AH3f4JyW0fLqRn3/kqNHXRF8hNlRyIp/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BaLnfg8/; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BaLnfg8/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=/r
+	pQNnf/SXH5Yewblodb44FTxFUHDBPnbG5vsS5IwbI=; b=BaLnfg8/M8ba8Vt0Ry
+	8LNN/l0GrZ4cSGz110ACOscpDQ3Xa5RZ8rmW5ZL3URhdOe9rv2nmhGuXJSXZRTK1
+	tNAPjDvp/BFX5nUcfAiLBtw1+MiWtumftRQWKyrz7RdmHjbmW8GVtJpOcqp66XVh
+	RFlBDwljXlfNVdTL1B5Vwr5/0=
+Received: from fzy-XPS-15-9570.lenovo.com (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgD3H5k4hGdoT5cmAA--.5387S2;
+	Fri, 04 Jul 2025 15:35:21 +0800 (CST)
+From: Ziyan Fu <13281011316@163.com>
+To: wim@linux-watchdog.org,
+	linux@roeck-us.net
+Cc: linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	fuzy5@lenovo.com
+Subject: [PATCH] watchdog: iTCO_wdt: Report error if timeout configuration fails
+Date: Fri,  4 Jul 2025 15:35:18 +0800
+Message-ID: <20250704073518.7838-1-13281011316@163.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH RFC 0/2] nfsd: issue POSIX_FADV_DONTNEED after READ/WRITE/COMMIT
-In-reply-to: <c7268db3-ee38-425a-b524-da38cceb02ff@oracle.com>
-References: <>, <c7268db3-ee38-425a-b524-da38cceb02ff@oracle.com>
-Date: Fri, 04 Jul 2025 17:34:49 +1000
-Message-id: <175161448993.565058.9950023351466537449@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgD3H5k4hGdoT5cmAA--.5387S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFWxGryrtr1UCrykuFW7Jwb_yoW8Wr1fpF
+	sxKayDAry8WF4xWw4Iya93Za18ua40gFWUCFZ0g3409wn8JwsxGF4rta4Dta48AF9rJr1r
+	Ja48XrW5W3y5ZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnZ23UUUUU=
+X-CM-SenderInfo: bprtjmyrqrijirw6il2tof0z/xtbBEgOA8WhnfUKqCQABsy
 
-On Fri, 04 Jul 2025, Chuck Lever wrote:
-> On 7/3/25 7:16 PM, NeilBrown wrote:
-> > On Fri, 04 Jul 2025, Jeff Layton wrote:
-> >> Chuck and I were discussing RWF_DONTCACHE and he suggested that this
-> >> might be an alternate approach. My main gripe with DONTCACHE was that it
-> >> kicks off writeback after every WRITE operation. With NFS, we generally
-> >> get a COMMIT operation at some point. Allowing us to batch up writes
-> >> until that point has traditionally been considered better for
-> >> performance.
-> > 
-> > I wonder if that traditional consideration is justified, give your
-> > subsequent results.  The addition of COMMIT in v3 allowed us to both:
-> >  - delay kicking off writes
-> >  - not wait for writes to complete
-> > 
-> > I think the second was always primary.  Maybe we didn't consider the
-> > value of the first enough.
-> > Obviously the client caches writes and delays the start of writeback.
-> > Adding another delay on the serve side does not seem to have a clear
-> > justification.  Maybe we *should* kick-off writeback immediately.  There
-> > would still be opportunity for subsequent WRITE requests to be merged
-> > into the writeback queue.
-> 
-> Dave Chinner had the same thought a while back. So I've experimented
-> with starting writes as part of nfsd_write(). Kicking off writes,
-> even without waiting, is actually pretty costly, and it resulted in
-> worse performance.
+From: Ziyan Fu <fuzy5@lenovo.com>
 
-Was this with filemap_fdatawrite_range_kick() or something else?
+The driver probes with the invalid timeout value when
+'iTCO_wdt_set_timeout()' fails, as its return value is not checked. In
+this case, when executing "wdctl", we may get:
 
-> 
-> Now that .pc_release is called /after/ the WRITE response has been sent,
-> though, that might be a place where kicking off writeback could be done
-> without charging that latency to the client.
+Device:        /dev/watchdog0
+Timeout:       30 seconds
+Timeleft:      613 seconds
 
-Certainly after is better.  I was imagining kicking the writeback
-threads, but they seems to only do whole filesystems.  Maybe that is OK?
+The timeout value is the value of "heartbeat" or "WATCHDOG_TIMEOUT", and
+the timeleft value is calculated from the register value we actually read
+(0xffff) by masking with 0x3ff and converting ticks to seconds (* 6 / 10).
 
-I doubt we want more than one thread kicking off write for any given
-inode at a time.  Maybe it would be best to add a "kicking_write" flag
-in the filecache and if it is already set, then just add the range to
-some range of pending-writes.  Maybe.
-I guess I should explore how to test :-)
+Add error handling to return the failure code if 'iTCO_wdt_set_timeout()'
+fails, ensuring the driver probe fails and prevents invalid operation.
 
-NeilBrown
+Signed-off-by: Ziyan Fu <fuzy5@lenovo.com>
+---
+ drivers/watchdog/iTCO_wdt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+index 9ab769aa0244..4ab3405ef8e6 100644
+--- a/drivers/watchdog/iTCO_wdt.c
++++ b/drivers/watchdog/iTCO_wdt.c
+@@ -577,7 +577,11 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+ 	/* Check that the heartbeat value is within it's range;
+ 	   if not reset to the default */
+ 	if (iTCO_wdt_set_timeout(&p->wddev, heartbeat)) {
+-		iTCO_wdt_set_timeout(&p->wddev, WATCHDOG_TIMEOUT);
++		ret = iTCO_wdt_set_timeout(&p->wddev, WATCHDOG_TIMEOUT);
++		if (ret != 0) {
++			dev_err(dev, "Failed to set watchdog timeout (%d)\n", WATCHDOG_TIMEOUT);
++			return ret;
++		}
+ 		dev_info(dev, "timeout value out of range, using %d\n",
+ 			WATCHDOG_TIMEOUT);
+ 		heartbeat = WATCHDOG_TIMEOUT;
+-- 
+2.27.0
+
