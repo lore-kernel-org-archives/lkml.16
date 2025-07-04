@@ -1,110 +1,106 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host11-snip4-10.eps.apple.com [57.103.67.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9B1307AE3
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7079303DE9;
+	Fri,  4 Jul 2025 13:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635731; cv=none; b=EJKr71maH+5/+K8wWRMrT7tF8ZhffqJVzoiD5ClW8rZ11PMubV6LhI+V9qwBmE8CdYATgFHnupnYBYADqqlgcWaSaPTuCiUmHHjiplBJgLB/LxvEH5VZi9hvB3ejQm/u5tWoUdbTxJcGJCvsRHnCnHEEBbAvRR0tJw1BhRDbNTs=
+	t=1751635811; cv=none; b=Isx999XDm5ie4Q3bhEGbnjuppr+BawFi6A221NYhNDbg8nb4ESCLw8jf1awFNPq+Dw0HAIODesJDC08qkXxqF7I6hLPT5O4DdbDxs9U6v1XcO2M27JONG6Mfsf0dvn87DYX3p4BhEcjmRLpNeOl/8yukgALKEZ8XV8LCZ4G8NbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635731; c=relaxed/simple;
-	bh=rUPc6HarIFgYCi5PCcb/6kreZya/jVbJye2++gX7mpw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y+12a/wVZuaWIG5Ak1E+JcvT8MxuuShJfPzHpYqzTSi/B/0XG4MPWIFS5AdCqiTWcUHXfePhPIttzvzg+w3AICRoyBg/hUJD45crx5zbaDcfR+LBnjl6N3LUdLi8PGwmirfNtnJQdwvqoCpu5To+H3YZw0Il3bvYAzL6DP7FcNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=LxjpWLCm; arc=none smtp.client-ip=57.103.67.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1751635811; c=relaxed/simple;
+	bh=3TJShfcgPgVDiAOqSjcv6639c1g5yfDzdsKl4BnWeDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bAVk3pAJy37zTVTHnOd4PS+AsjrYKxmRtziGBt4iSZ2lhUMyTZms6ZeWu3Ro5YHjgIbbLcnmNHbQ6sA/9dYyaVwae012h1kwdCvixNHkjlthDS4INxJYYzb9kjwH6cJXNe5zm5sQ0FguXv8/f0j6hUEzTE00CR918wFHFDnV1gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlB64oJw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="LxjpWLCm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=MxR3vmUTXOypUpeb+mW6WO9zX6HevJTvOmfA6oc0iJM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=LxjpWLCmH4HovGsbtKkiybuGbTGeQZWsVtYmqnt0CzNJ4zBLciNC9+zuCiN9s00Ur
-	 rJUYzDmHoT65aLOqPLljtdfqNFPRv44dKHu/ChmAJlFDRsqMIbJ8sxHT5fdKGY+/UZ
-	 rLRzz2QHb/4ZjFx69HW/ljCkpq20YWMI30I8i3KwYqFP4OM40jRHNtl3yUjWr5Mfmd
-	 pnCnr/xvuPB2z6nF3vdgKTS/a3STnorZ36uqRBoARue6Zf/dZIK7JzapwiTw+OIW4F
-	 srOs7tIk1rISy5fd02X3tT59w/aVtzHf1w7BVxKsud5mEAAj+OUpIa6OXe0D88HgBb
-	 vGsMFq3EJJQdQ==
-Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 4B1BD1800638;
-	Fri,  4 Jul 2025 13:28:45 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id DBBDD1803C5B;
-	Fri,  4 Jul 2025 13:26:38 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Fri, 04 Jul 2025 21:26:06 +0800
-Subject: [PATCH v4 8/8] sparc: kernel: apc: Remove macro APC_MINOR
- definition
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlB64oJw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F4AC4CEE3;
+	Fri,  4 Jul 2025 13:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751635811;
+	bh=3TJShfcgPgVDiAOqSjcv6639c1g5yfDzdsKl4BnWeDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mlB64oJwHLb+6t102HcThFDTSceZXKq6RAhkl9YnvcTUj1/48ODP+AxTn4AIhi5SS
+	 wgqg+glsT/bLoPm/jhdKp6MIJlDsO+qDp9Ax8SK5jLykl917XmiJv69YGTgVJXxs5o
+	 XgUwyh8qpAQLI4KTBA0FFpCd0YjSoVPEvmX19+UG8ABPqeug99sqDYHQjvyc1mk7oI
+	 7ZLJZ1sN6m9Dr8+PPYo4iRejBuzAa84q8F+5DBhaEltWxDOGmkYrVtI9GiziBT3bRa
+	 2ZRQhuBWP36bOJkYnlvcF8CTaliy5cJUOCpo4RQ9hJmHx5ALw2pUvuZnMD0f676coD
+	 WEz3lMLVJcHtg==
+Date: Fri, 4 Jul 2025 14:30:05 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	florian.fainelli@broadcom.com, kuba@kernel.org, opendmb@gmail.com,
+	pabeni@redhat.com, zakkemble@gmail.com,
+	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH net v2] net: bcmgenet: Initialize u64 stats seq counter
+Message-ID: <20250704133005.GN41770@horms.kernel.org>
+References: <20250702092417.46486-1-ryotkkr98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-rfc_miscdev-v4-8-b48986112d6a@oss.qualcomm.com>
-References: <20250704-rfc_miscdev-v4-0-b48986112d6a@oss.qualcomm.com>
-In-Reply-To: <20250704-rfc_miscdev-v4-0-b48986112d6a@oss.qualcomm.com>
-To: Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
- Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
- Zijun Hu <zijun.hu@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: Z12DxcO4y-Zq33ux5MR8s14ed2G_zkRm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDEwMiBTYWx0ZWRfX+gCGtyp9jUEs
- bE6OTTDayiibtJ1yKFKkPff8Ro5P9KlpalcLw9K1CYP7AQfKehqpE8ZVDlma6F5wtBzumDGMK8j
- RUfgNRHDSFs/90I21605MXWcM2Nrik0gP2WDjTli23lGyVjUwzZfrco8UtzrEQ41HHRBd+StqyB
- uJqqAED/+FDLsrYG7lS/rasHM2xwEHlio+50tRYNPztr74dt7IeD+CZenWdSOIku/ZYsmZOrJsq
- j8B5g9LzM+HdEmU8btws+Pl0BFoh9l3M+AzepvZ5q5rh463qn9CIV8gcHu7L4pO7msy+QU35U=
-X-Proofpoint-GUID: Z12DxcO4y-Zq33ux5MR8s14ed2G_zkRm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_05,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015
- adultscore=0 spamscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2506270000 definitions=main-2507040102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702092417.46486-1-ryotkkr98@gmail.com>
 
-From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+On Wed, Jul 02, 2025 at 06:24:17PM +0900, Ryo Takakura wrote:
+> Initialize u64 stats as it uses seq counter on 32bit machines
+> as suggested by lockdep below.
+> 
+> [    1.830953][    T1] INFO: trying to register non-static key.
+> [    1.830993][    T1] The code is fine but needs lockdep annotation, or maybe
+> [    1.831027][    T1] you didn't initialize this object before use?
+> [    1.831057][    T1] turning off the locking correctness validator.
+> [    1.831090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.16.0-rc2-v7l+ #1 PREEMPT
+> [    1.831097][    T1] Tainted: [W]=WARN
+> [    1.831099][    T1] Hardware name: BCM2711
+> [    1.831101][    T1] Call trace:
+> [    1.831104][    T1]  unwind_backtrace from show_stack+0x18/0x1c
+> [    1.831120][    T1]  show_stack from dump_stack_lvl+0x8c/0xcc
+> [    1.831129][    T1]  dump_stack_lvl from register_lock_class+0x9e8/0x9fc
+> [    1.831141][    T1]  register_lock_class from __lock_acquire+0x420/0x22c0
+> [    1.831154][    T1]  __lock_acquire from lock_acquire+0x130/0x3f8
+> [    1.831166][    T1]  lock_acquire from bcmgenet_get_stats64+0x4a4/0x4c8
+> [    1.831176][    T1]  bcmgenet_get_stats64 from dev_get_stats+0x4c/0x408
+> [    1.831184][    T1]  dev_get_stats from rtnl_fill_stats+0x38/0x120
+> [    1.831193][    T1]  rtnl_fill_stats from rtnl_fill_ifinfo+0x7f8/0x1890
+> [    1.831203][    T1]  rtnl_fill_ifinfo from rtmsg_ifinfo_build_skb+0xd0/0x138
+> [    1.831214][    T1]  rtmsg_ifinfo_build_skb from rtmsg_ifinfo+0x48/0x8c
+> [    1.831225][    T1]  rtmsg_ifinfo from register_netdevice+0x8c0/0x95c
+> [    1.831237][    T1]  register_netdevice from register_netdev+0x28/0x40
+> [    1.831247][    T1]  register_netdev from bcmgenet_probe+0x690/0x6bc
+> [    1.831255][    T1]  bcmgenet_probe from platform_probe+0x64/0xbc
+> [    1.831263][    T1]  platform_probe from really_probe+0xd0/0x2d4
+> [    1.831269][    T1]  really_probe from __driver_probe_device+0x90/0x1a4
+> [    1.831273][    T1]  __driver_probe_device from driver_probe_device+0x38/0x11c
+> [    1.831278][    T1]  driver_probe_device from __driver_attach+0x9c/0x18c
+> [    1.831282][    T1]  __driver_attach from bus_for_each_dev+0x84/0xd4
+> [    1.831291][    T1]  bus_for_each_dev from bus_add_driver+0xd4/0x1f4
+> [    1.831303][    T1]  bus_add_driver from driver_register+0x88/0x120
+> [    1.831312][    T1]  driver_register from do_one_initcall+0x78/0x360
+> [    1.831320][    T1]  do_one_initcall from kernel_init_freeable+0x2bc/0x314
+> [    1.831331][    T1]  kernel_init_freeable from kernel_init+0x1c/0x144
+> [    1.831339][    T1]  kernel_init from ret_from_fork+0x14/0x20
+> [    1.831344][    T1] Exception stack(0xf082dfb0 to 0xf082dff8)
+> [    1.831349][    T1] dfa0:                                     00000000 00000000 00000000 00000000
+> [    1.831353][    T1] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    1.831356][    T1] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> 
+> Fixes: 59aa6e3072aa ("net: bcmgenet: switch to use 64bit statistics")
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+> ---
+> 
+> Changes since v1:
+> [0] https://lore.kernel.org/netdev/20250629114109.214057-1-ryotkkr98@gmail.com/
+> 
+> - Rebased on the net tree.
+> - Add <Reviewed-by> by Florian. Thank you Florian!
 
-Macro APC_MINOR is defined as MISC_DYNAMIC_MINOR to request dynamic
-minor, but its name 'APC_MINOR' looks like fixed minor.
+Thanks for the update, LGTM.
 
-Remove the macro definition and directly use MISC_DYNAMIC_MINOR instead.
-
-Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
----
- arch/sparc/kernel/apc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/sparc/kernel/apc.c b/arch/sparc/kernel/apc.c
-index d44725d37e30f388bf8cf19d72baf720f94da084..849db20e7165cdf48d4d36cf770dd6aaaa191b41 100644
---- a/arch/sparc/kernel/apc.c
-+++ b/arch/sparc/kernel/apc.c
-@@ -28,7 +28,6 @@
-  * #define APC_DEBUG_LED
-  */
- 
--#define APC_MINOR	MISC_DYNAMIC_MINOR
- #define APC_OBPNAME	"power-management"
- #define APC_DEVNAME "apc"
- 
-@@ -138,7 +137,7 @@ static const struct file_operations apc_fops = {
- 	.llseek =		noop_llseek,
- };
- 
--static struct miscdevice apc_miscdev = { APC_MINOR, APC_DEVNAME, &apc_fops };
-+static struct miscdevice apc_miscdev = { MISC_DYNAMIC_MINOR, APC_DEVNAME, &apc_fops };
- 
- static int apc_probe(struct platform_device *op)
- {
-
--- 
-2.34.1
-
+Reviewed-by: Simon Horman <horms@kernel.org>
