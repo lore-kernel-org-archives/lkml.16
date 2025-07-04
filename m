@@ -1,90 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F029309A58
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76A1309A59
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647606; cv=none; b=ZMk0qJBY4HDea5QWc0v++Pgi3kODOeSNVwGC2lPOz3T7LoHebWQIRroGAjGvSXMSDazXCR/69ZAtB49h8eWgcuyLNiS0J5Y8w4x4l7VaxP8p+ovTHmYXRM4eO+E6v60fP8oRMxKqI4M8/V2i3C7lejTnEbIIwBrPsiZA6c7vbRQ=
+	t=1751647608; cv=none; b=PpEEpT1fHNVNCJnOt6lCAtMkvZFxFFK7oi2rWX+RYu8NULk5IRNGI8VfV1a13QxO9UYN/bhR7IyTVQVYw1oTDW6EqL1VNGk7WP4vLVUbDvh/bTSbzaswgGQaDXhPzmNUasXa80a4U8d0SekO0K+G3gjpcH1d1ih0euJIK7qKV94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647606; c=relaxed/simple;
-	bh=/UhG+PrAWuDRKhnrnXNOPvjeJ896dmbS6DO0ehBJdK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MjYBbpb6JnHKvOCtm7e1O8CVzjw0nGKqCH/dZRMgZmJ+GSgHSeN7QZ+JDO0L4NZEuA563j0lXJFvVG8ifX659XZEmjcI03qsrM9upTAKnvibcC36kWpO/gFVoUc+e15W8VbikNQQIcak0dAjSe9azOvwS1KhrvoyZKZcOhlUPMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BA4S3YQ5; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BA4S3YQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751647605; x=1783183605;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/UhG+PrAWuDRKhnrnXNOPvjeJ896dmbS6DO0ehBJdK0=;
-  b=BA4S3YQ5jj6vYkeGTrjpcSP5OnzqxCipTXWErutVanSi11c8Mm0t5p3O
-   oveEuT9Bcrna1JgarVrEc53hNPBoKNTnEo3IRFMhSQwmHHgNwJNuny6sJ
-   MuKJO5bmMqX78X2/RPtHOyMNjf0u7otIqZHZOp6dQN4pZPDdqNi5xocNe
-   1HBazqICWVLdXzVxXuFCwudgyQT1S84hopSbfVqIyyomHKHX8PaIH1y91
-   ab9U5wNxNW+QXIS8vO9n1CDxJgMknYHJaYUmm6mFlLnjUDNSFDTZlsBKW
-   CmUQO1v4FSPowb4EOJ5hxqU9S/uHCzfEUXZAYdb7OSsBX6II4cub+l8u3
-   g==;
-X-CSE-ConnectionGUID: MBHNHJN+TKWqS+LXTfH5Zg==
-X-CSE-MsgGUID: iI9R296cQeubW2YmDE4ztg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57755829"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="57755829"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:45 -0700
-X-CSE-ConnectionGUID: NseANNQ9TjCwt2C3UgXdKw==
-X-CSE-MsgGUID: a4w/rHn/TEGGKxh6xCVT2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="154424747"
-Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:43 -0700
-From: Badal Nilawar <badal.nilawar@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com,
-	alexander.usyskin@intel.com,
-	gregkh@linuxfoundation.org,
-	daniele.ceraolospurio@intel.com
-Subject: [PATCH v7 10/10] drm/xe/xe_late_bind_fw: Select INTEL_MEI_LATE_BIND for CI
-Date: Fri,  4 Jul 2025 22:20:38 +0530
-Message-Id: <20250704165038.1464460-11-badal.nilawar@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250704165038.1464460-1-badal.nilawar@intel.com>
-References: <20250704165038.1464460-1-badal.nilawar@intel.com>
+	s=arc-20240116; t=1751647608; c=relaxed/simple;
+	bh=0kTMew52cRaWNXIHn1pEHe+lf6e/XRLunhVDmPc3FTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gS6KiaAklp6Ji4afs83SL/Zogt1IyJqTOmMRWYSWNgKg5TtJmQrHrFWd+w2/i0zv3aGOzYvgPp1F8tH3laA0OP44lphqPtKAmFcAVWuYvjL2GEA9gO9/OZ8JfgpTcRs8sFdlFm88bFZGuA8eIu88MZv3T83h8p6qdoD6INQiAyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57B9F26AC;
+	Fri,  4 Jul 2025 09:46:31 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A7F53F63F;
+	Fri,  4 Jul 2025 09:46:42 -0700 (PDT)
+Date: Fri, 4 Jul 2025 17:46:32 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Oleg Nesterov <oleg@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH 21/23] um: ptrace: Use USER_REGSET_NOTE_TYPE() to specify
+ regset note names
+Message-ID: <aGgFQxrBfwF5QbP4@e133380.arm.com>
+References: <20250701135616.29630-1-Dave.Martin@arm.com>
+ <20250701135616.29630-22-Dave.Martin@arm.com>
+ <98d145e6dd8e216a3f7e146ad4e401724c3d669b.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98d145e6dd8e216a3f7e146ad4e401724c3d669b.camel@sipsolutions.net>
 
-Do not review
+Hi,
 
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
----
- drivers/gpu/drm/xe/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, Jul 04, 2025 at 01:58:57PM +0200, Johannes Berg wrote:
+> On Tue, 2025-07-01 at 14:56 +0100, Dave Martin wrote:
+> > Instead of having the core code guess the note name for each regset,
+> > use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
+> > 
+> 
+> Seems to work according to the test in the cover letter. Since it's part
+> of a larger series and this patch doesn't build by itself, I'll assume
+> you want to take them all together through some other tree, so:
+> 
+> Acked-by: Johannes Berg <johannes@sipsolutions.net>
+> Tested-by: Johannes Berg <johannes@sipsolutions.net>
+> 
+> johannes
 
-diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-index f66e6d39e319..ef3f4807b0b3 100644
---- a/drivers/gpu/drm/xe/Kconfig
-+++ b/drivers/gpu/drm/xe/Kconfig
-@@ -45,6 +45,7 @@ config DRM_XE
- 	select WANT_DEV_COREDUMP
- 	select AUXILIARY_BUS
- 	select HMM_MIRROR
-+	select INTEL_MEI_LATE_BIND
- 	help
- 	  Driver for Intel Xe2 series GPUs and later. Experimental support
- 	  for Xe series is also available.
--- 
-2.34.1
+Thanks!
 
+Cheers
+---Dave
