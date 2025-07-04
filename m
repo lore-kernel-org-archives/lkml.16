@@ -1,246 +1,81 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA23F2D9EE5
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1242D77E5
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751634432; cv=none; b=pflTXKcGPZwq7ZnznHVUblyw5njW6nAw5+yjaCdOxykqNp769aIvWxt3k6bttEs5YpBMW4IXeZ8HTK27SIN8PYoD5FsO/29w+mN3CzeviX4HR2K8IZ0/ckCEq0AcSgoUP0vfzHS8kGSJJE8dryqjCiHeZ441IQzlhk7lBU3MA8Y=
+	t=1751634477; cv=none; b=mStxFziHWjV83kwIN5RlIdQWQjU82JhKP/cN96V7U0qiEJkfmgketFrbTNIlGNn0ffjPwkezU0MJye2P9r18FHFKN20GhUH3yEEFmPq+RzaWHZjHWxlhgUSdCy9pBUuch8JcBQ2vEdWkb7CZRq6QWlAaRs5zHKeUWBqs2WVln5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751634432; c=relaxed/simple;
-	bh=nJm/JpQ5hKG28cvJdC+Vz8Bb6+JygvwJ/6EqwdB87eQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iRz5pWE2h7cjYlVGDE3AUPKJhAmsJoCHR4Z68F2N1N45QQtXiG20UN8O+VAUF5EULm+Ve7+lp3nV+dYbU/q8MNJNVwi+QfKwejzM2SH5S8/sOzJQHzBKyeLPqg68a4w7hvTrs0wEASS4cAxnqhuT4csgzI5sfPxFKGKyxrsx+tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d51i8lu9; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d51i8lu9"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-714066c7bbbso8840667b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751634430; x=1752239230; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BG7Ddm0bR/bFSHtYHIkPOCI2Tm2uR+6ypTPEQJ0cjd4=;
-        b=d51i8lu9fsYnnZIiAwzejHgUSqYLGqYNxovh/tPfEdMDr9u2dTCNdF03JC6BO7+4ZN
-         O7C50LprEOrjE+pZsWPTWQ57hrXZEK4ZRtqcw7H2818m6i5FYO6kbXOunzJOZ18CTkGF
-         OIkY3Rgjj64tY7cbAw+eL3e6eSlKe4jEVscoHJ8WBd/1ldlnQFUC++7kFL24tNsIYSdx
-         IX5605v7qT7BPPGlkbD0uNOrqE8df0RjEG5kRL4AP10uTLLZ8L2EaSylIbWvDdRImoFl
-         VgqmxmF4K0Kgxzljnf7OR4SqxvOemNo1tMdMgGcsFsWAf0l37ntli8CyGmXPmf5WK+xg
-         VSnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751634430; x=1752239230;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BG7Ddm0bR/bFSHtYHIkPOCI2Tm2uR+6ypTPEQJ0cjd4=;
-        b=VW1/orKuU0HVjI2K/nJ1ZSttL/9vzp5r5i7YJPnEwNtthuKiFD8UC4BTkr+d+I2Gi4
-         tb9xYqOBXIqzUjMlQ/tWqQtQ/VeYtmHkqbUjE+NEYQn6/iT2eVdcARCoGpgUcpHOXk/0
-         ukuwOjinP9qcjYD3KhW1bcF77UnU6Dgvtg9vUMBZb0KTvdMo2LsUjqfY2GJOMNnjULh5
-         DbYn4iZay4aqcWP9AT1df9DICF3sVGtmSi2i4Gsf5NBPuG8YtbzumAXRmw6TazgHO6nR
-         Bh+kuc9KhmelASWWg9PbdMpVi4JNdPHY7WQ8kyQQL1WLpuAaMaogVFenYUpSSWOdMt/X
-         gWzw==
-X-Forwarded-Encrypted: i=1; AJvYcCU75IHY26h2qTtgz5UH5DGrrbxeRmCpE+JBrrlqWm9LhQcRecoQ6SI77Ii7dWZjwIeOmB1s6kIT+XZyjkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwylVPh5gnTHXcx6AWVxTQyR+gaN+LDXL4YzDb5qudu1/M9YbAi
-	FQYJ+T0r6wbN5ajjf99cnl9uo3fzgv94wGIjpuaPTFWnDDkorSIkdkgobk20fCXqtySXoAMV8kn
-	quMS2QU1KWsMHOBj0J9Q/T1K0okDLDepGBrslz5Vs6Q==
-X-Gm-Gg: ASbGncvH2i382jt50Z9AJwEpFbOJgNXjpfrUoqFpkdP+X1gI6/eF5eXwNHBMBaacODr
-	HX1i8ef8Rs1E5qWHFVDZLh+w3hVfwJ9fiAd2sYCXakumm8f6BYDCQBgr/Or+oMUWd8TudXvdG0G
-	iDMAh6x+EYcGS8L5wwlb20ItneNNJAJ0OeCv7fU0brYwq4Ph3N84XF9CQ=
-X-Google-Smtp-Source: AGHT+IHkK5WfjgtTvbpa7FiHK9LpczpbZEvDoq7LGvHzI0T4YifFQNw+iZp3OmqZXE4hZCZq2dpYRO3HjyYzWWHMR2Y=
-X-Received: by 2002:a05:690c:4d09:b0:714:5eb:b589 with SMTP id
- 00721157ae682-71668d3363cmr35142727b3.35.1751634429706; Fri, 04 Jul 2025
- 06:07:09 -0700 (PDT)
+	s=arc-20240116; t=1751634477; c=relaxed/simple;
+	bh=extDsVbb9anmJOT/i+066iso1LSucl2pzA4ay2dJ1j0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzFLSOZsDFIGgTdX96euir5rbgIdEshoAnmL7U31QLhhc+9SYPvfcVuhoToLcJFIB1UlkBNPWjBUyw26OCXWPy2KFnK6CuZa67WXuhzrIDKfIbnSwXTQy38QbE1+rmVApGoydkXSB2I6XjmAEKAOadWo1hvqMwFJ4tNqgef2HWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 564D75Qd002650
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Fri, 4 Jul 2025 21:07:05 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Jul
+ 2025 21:07:05 +0800
+Date: Fri, 4 Jul 2025 21:07:05 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <arnd@arndb.de>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+        <aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <soc@lists.linux.dev>,
+        <tim609@andestech.com>
+Subject: Re: [PATCH 0/8] add Voyager board support
+Message-ID: <aGfR+Vx0dseqgmKW@atctrx.andestech.com>
+References: <20250704081451.2011407-1-ben717@andestech.com>
+ <cb8891d4-de4e-493c-9914-0391b3baf212@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616102917.1677116-1-o.rempel@pengutronix.de> <20250616102917.1677116-4-o.rempel@pengutronix.de>
-In-Reply-To: <20250616102917.1677116-4-o.rempel@pengutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 4 Jul 2025 15:06:33 +0200
-X-Gm-Features: Ac12FXzv7Pd-8fWA59Oqv8197-6dQGgVmGYpCLugpkdpMpUcPsrs0HUnWmT5i44
-Message-ID: <CAPDyKFqczOb2i6XHCmTyLr-AOm89zdnP8Ti-xNMEJxCrR6zOjw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] mmc: core: add undervoltage handler for MMC/eMMC devices
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>, 
-	Christian Loehle <christian.loehle@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Avri Altman <Avri.Altman@sandisk.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cb8891d4-de4e-493c-9914-0391b3baf212@kernel.org>
+User-Agent: Mutt/2.1.4 (2021-12-11)
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 564D75Qd002650
 
-On Mon, 16 Jun 2025 at 12:29, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+On Fri, Jul 04, 2025 at 11:15:43AM +0200, Krzysztof Kozlowski wrote:
+> > Also, there is a patch dependency in this patchset:
+> > Patch 2 <- Patch 4 <- Patch 5 <- Patch 6
+> 
+> How? These are bindings. How DTS can depend on the binding? Do you have
+> akcs from their subsystem maintainers that you are sending it here?
 >
-> Introduce `_mmc_handle_undervoltage()` to handle undervoltage events for
-> MMC/eMMC devices. The handler performs a controlled emergency suspend and
-> then marks the card as removed to prevent further I/O.
->
-> This is achieved by calling a new internal helper, `__mmc_suspend()`,
-> with `MMC_POWEROFF_UNDERVOLTAGE`. This ensures a fast power-down sequence
-> by using the short power-off notification and skipping the cache flush.
-> If power-off notify is not supported, it falls back to sleep or deselect.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v6:
-> - Refactor suspend logic: move cache flush skipping during undervoltage
->   to a separate, preceding commit.
-> - update commit message
-> changes v5:
-> - Rebased on top of patch introducing enum mmc_poweroff_type
-> - Updated call to __mmc_suspend() to use MMC_POWEROFF_UNDERVOLTAGE
-> - Dropped __mmc_resume() helper, as it is no longer needed
-> - Updated commit message to reflect API change and code removal
-> changes v4:
-> - Drop HPI step.
-> changes v3:
-> - reword commit message.
-> - add comments in the code
-> - do not try to resume sleeping device
-> ---
->  drivers/mmc/core/mmc.c | 76 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 73 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 6812df679ba9..fe4fc2ad261e 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -2120,7 +2120,7 @@ static int _mmc_flush_cache(struct mmc_host *host)
->         return err;
->  }
->
-> -static int _mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
-> +static int __mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
->  {
->         unsigned int notify_type = EXT_CSD_POWER_OFF_SHORT;
->         int err = 0;
-> @@ -2128,8 +2128,6 @@ static int _mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
->         if (pm_type == MMC_POWEROFF_SHUTDOWN)
->                 notify_type = EXT_CSD_POWER_OFF_LONG;
->
-> -       mmc_claim_host(host);
-> -
->         if (mmc_card_suspended(host->card))
->                 goto out;
->
-> @@ -2156,7 +2154,17 @@ static int _mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
->                 mmc_card_set_suspended(host->card);
->         }
->  out:
-> +       return err;
-> +}
-> +
-> +static int _mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
-> +{
-> +       int err;
-> +
-> +       mmc_claim_host(host);
-> +       err = __mmc_suspend(host, pm_type);
->         mmc_release_host(host);
-> +
->         return err;
->  }
->
-> @@ -2219,6 +2227,13 @@ static int mmc_shutdown(struct mmc_host *host)
->  {
->         int err = 0;
->
-> +       /*
-> +        * In case of undervoltage, the card will be powered off by
-> +        * _mmc_handle_undervoltage()
-> +        */
-> +       if (host->undervoltage)
-> +               return 0;
+> Sorry, but no, this should go via their maintainers, unless they did not
+> want to pick it up. Is this the case here?
 
-Maybe use mmc_card_removed() instead?
+The dependency chain arises because each of these patches introduces a new file,
+requiring a corresponding update to the MAINTAINERS file.
 
-BTW, I wonder if there are any other places where we need to add more
-bailout points... Let me think a bit more about this...
+In v4 [1], Rob and Daniel attempted to merge Patch 4 and Patch 5, respectively,
+but encountered conflicts in the MAINTAINERS file. That's why I specified the
+patch dependencies in v5 and this patchset.
 
-> +
->         /*
->          * If the card remains suspended at this point and it was done by using
->          * the sleep-cmd (CMD5), we may need to re-initialize it first, to allow
-> @@ -2309,6 +2324,60 @@ static int _mmc_hw_reset(struct mmc_host *host)
->         return mmc_init_card(host, card->ocr, card);
->  }
->
-> +/**
-> + * _mmc_handle_undervoltage - Handle an undervoltage event for MMC/eMMC devices
-> + * @host: MMC host structure
-> + *
-> + * This function is triggered when an undervoltage condition is detected.
-> + * It attempts to transition the device into a low-power or safe state to
-> + * prevent data corruption.
-> + *
-> + * Steps performed:
-> + * 1. If no card is present, return immediately.
-> + * 2. Perform an emergency suspend using EXT_CSD_POWER_OFF_SHORT if possible.
-> + *    - If power-off notify is not supported, fallback mechanisms like sleep or
-> + *      deselecting the card are attempted.
-> + *    - Cache flushing is skipped to reduce execution time.
-> + * 3. Mark the card as removed to prevent further interactions after
-> + *    undervoltage.
-> + *
-> + * Note: This function does not handle host claiming or releasing. The caller
-> + *      must ensure that the host is properly claimed before calling this
-> + *      function and released afterward.
-> + *
-> + * Returns: 0 on success, or a negative error code if any step fails.
-> + */
-> +static int _mmc_handle_undervoltage(struct mmc_host *host)
-> +{
-> +       struct mmc_card *card = host->card;
-> +       int err;
-> +
-> +       /* If there is no card attached, nothing to do */
-> +       if (!card)
-> +               return 0;
+Now, I understand that binding patches are typically handled by subsystem
+maintainers. To prevent the conflicts again, I think I should gather all
+MAINTAINERS file changes into a single patch. Is that right?
 
-This check should not be needed. Refer to my comments on patch1 for
-more information.
+[1] https://lore.kernel.org/all/20250514095350.3765716-1-ben717@andestech.com/
 
-> +
-> +       /*
-> +        * Perform an emergency suspend to power off the eMMC quickly.
-> +        * This ensures the device enters a safe state before power is lost.
-> +        * We first attempt EXT_CSD_POWER_OFF_SHORT, but if power-off notify
-> +        * is not supported, we fall back to sleep mode or deselecting the card.
-> +        * Cache flushing is skipped to minimize delay.
-> +        */
-> +       err = __mmc_suspend(host, MMC_POWEROFF_UNDERVOLTAGE);
-> +       if (err)
-> +               pr_err("%s: undervoltage suspend failed: %pe\n",
-> +                      mmc_hostname(host), ERR_PTR(err));
-> +
-> +       /*
-> +        * Mark the card as removed to prevent further operations.
-> +        * This ensures the system does not attempt to access the device
-> +        * after an undervoltage event, avoiding potential corruption.
-> +        */
-> +       mmc_card_set_removed(card);
-> +
-> +       return err;
-> +}
-> +
->  static const struct mmc_bus_ops mmc_ops = {
->         .remove = mmc_remove,
->         .detect = mmc_detect,
-> @@ -2321,6 +2390,7 @@ static const struct mmc_bus_ops mmc_ops = {
->         .hw_reset = _mmc_hw_reset,
->         .cache_enabled = _mmc_cache_enabled,
->         .flush_cache = _mmc_flush_cache,
-> +       .handle_undervoltage = _mmc_handle_undervoltage,
->  };
->
->  /*
-> --
-> 2.39.5
->
-
-Kind regards
-Uffe
+Thanks,
+Ben
