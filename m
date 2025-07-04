@@ -1,28 +1,28 @@
 Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD8D3196CA;
-	Fri,  4 Jul 2025 15:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE28326228;
+	Fri,  4 Jul 2025 15:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751644749; cv=none; b=qFsmdteBdAQ+wxnsPAKjxGVMZLza8U8XVSY7O3/YkFo3vyElhXfWRM+SZhVHr5j5RhH4TPs/IprlsZu7e0trXCn5H3WSakq4qmm4G0YI3+R7dEwmw6hnFj4yHPk2Vsg0/tGbsioJxsqtfIvjF8b299hbR8of0Plat9i/aG9pTk4=
+	t=1751644754; cv=none; b=ZXvpXWo/P4WtK5Z2Huukq56IhTRWc8RPu0+0z/oYfL7LA1w1Gs5ZQtzfWyUhgAJ0I2CWt0GFKB2WtqNii+f6a4Gi0YTn/yhE/pTdcWo+m76bPqmElXcQwQrM9bqHFZQTZwW3cVxD/NBpRf+bHrcIbLtz/YFpKbxBM+lf//7o6/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751644749; c=relaxed/simple;
-	bh=BJu/qu+MScmnB/kg3RgdS3D4V86q3Wnt0q/kJ5vJObs=;
+	s=arc-20240116; t=1751644754; c=relaxed/simple;
+	bh=Q78f1QuSFzz5rj+1pXgpOayq9ghe6QXSykrzUaECxnA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OyC44fBfaJIjfD2Xa5TVJRp8ndu2E96r9G5GtuHPKdaYg/9GwhwzNUJdwcHGrWIkSW3VGe5bW7VRsd5k9owDnW5EV8eNJuCJ1FmP2sWcAa840x+m4d83m5wedY9EE7srtBtbI+PPa4JxTH1fG8zOtVOXNs86UJS4d4rxuGHV6EM=
+	 MIME-Version; b=pNwAbVKX6Z9D4e0M3AfoFPWr4d0SQh0PdIWRjR8mFLapn5yra3LTlRL+CqbQKyD5MFx2OiXODb2mLjG7S+qOemgxvCd74Wqnm+Kny5Q9O31VuU6S9B0PpKkTLKH6+aKl00mvGTL4SSC9WIn3OaiJ7+i6Lf1kJ4GS3w5PuIMOBTY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
 Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id AC6601F00059;
-	Fri,  4 Jul 2025 15:58:56 +0000 (UTC)
+	by leonov.paulk.fr (Postfix) with ESMTPS id E35AA1F00062;
+	Fri,  4 Jul 2025 15:58:58 +0000 (UTC)
 Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 7F129ACA698; Fri,  4 Jul 2025 15:49:52 +0000 (UTC)
+	id 396FEACA6B0; Fri,  4 Jul 2025 15:51:53 +0000 (UTC)
 X-Spam-Level: *
 Received: from localhost.localdomain (unknown [192.168.1.64])
-	by laika.paulk.fr (Postfix) with ESMTP id 7C358ACA656;
-	Fri,  4 Jul 2025 15:46:35 +0000 (UTC)
+	by laika.paulk.fr (Postfix) with ESMTP id C5661ACA659;
+	Fri,  4 Jul 2025 15:46:40 +0000 (UTC)
 From: Paul Kocialkowski <paulk@sys-base.io>
 To: linux-media@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc: Yong Deng <yong.deng@magewell.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Maxime Ripard <mripard@kernel.org>,
 	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v8 4/9] ARM: dts: sun8i: v3s: Add mbus node to represent the interconnect
-Date: Fri,  4 Jul 2025 17:46:21 +0200
-Message-ID: <20250704154628.3468793-5-paulk@sys-base.io>
+Subject: [PATCH v8 7/9] ARM: dts: sun8i: a83t: Add MIPI CSI-2 controller node
+Date: Fri,  4 Jul 2025 17:46:24 +0200
+Message-ID: <20250704154628.3468793-8-paulk@sys-base.io>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250704154628.3468793-1-paulk@sys-base.io>
 References: <20250704154628.3468793-1-paulk@sys-base.io>
@@ -59,42 +59,74 @@ Content-Transfer-Encoding: 8bit
 
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-The V3s uses the mbus interconnect to provide DRAM access for a
-number of blocks. The SoC can only map 2 GiB of DRAM, which is
-reflected in the dma-ranges property.
+MIPI CSI-2 is supported on the A83T with a dedicated controller that
+covers both the protocol and D-PHY. It is connected to the only CSI
+receiver with a fwnode graph link. Note that the CSI receiver supports
+both this MIPI CSI-2 source and a parallel source.
+
+An empty port with a label for the MIPI CSI-2 sensor input is also
+defined for convenience.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Samuel Holland <samuel@sholland.org>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 ---
- arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/allwinner/sun8i-a83t.dtsi | 43 +++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
-index fa54510319ac..02d6c62b3874 100644
---- a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
-@@ -629,6 +629,21 @@ int_mii_phy: ethernet-phy@1 {
- 			};
- 		};
- 
-+		mbus: dram-controller@1c62000 {
-+			compatible = "allwinner,sun8i-v3s-mbus";
-+			reg = <0x01c62000 0x1000>,
-+			      <0x01c63000 0x1000>;
-+			reg-names = "mbus", "dram";
-+			clocks = <&ccu CLK_MBUS>,
-+				 <&ccu CLK_DRAM>,
-+				 <&ccu CLK_BUS_DRAM>;
-+			clock-names = "mbus", "dram", "bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			dma-ranges = <0x00000000 0x40000000 0x80000000>;
-+			#interconnect-cells = <1>;
+diff --git a/arch/arm/boot/dts/allwinner/sun8i-a83t.dtsi b/arch/arm/boot/dts/allwinner/sun8i-a83t.dtsi
+index 6f88d8764e6a..cc107c6030de 100644
+--- a/arch/arm/boot/dts/allwinner/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/allwinner/sun8i-a83t.dtsi
+@@ -1062,6 +1062,49 @@ csi: camera@1cb0000 {
+ 			clock-names = "bus", "mod", "ram";
+ 			resets = <&ccu RST_BUS_CSI>;
+ 			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					reg = <1>;
++
++					csi_in_mipi_csi2: endpoint {
++						remote-endpoint = <&mipi_csi2_out_csi>;
++					};
++				};
++			};
 +		};
 +
- 		spi0: spi@1c68000 {
- 			compatible = "allwinner,sun8i-h3-spi";
- 			reg = <0x01c68000 0x1000>;
++		mipi_csi2: csi@1cb1000 {
++			compatible = "allwinner,sun8i-a83t-mipi-csi2";
++			reg = <0x01cb1000 0x1000>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_MIPI_CSI>,
++				 <&ccu CLK_CSI_MISC>;
++			clock-names = "bus", "mod", "mipi", "misc";
++			resets = <&ccu RST_BUS_CSI>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mipi_csi2_in: port@0 {
++					reg = <0>;
++				};
++
++				mipi_csi2_out: port@1 {
++					reg = <1>;
++
++					mipi_csi2_out_csi: endpoint {
++						remote-endpoint = <&csi_in_mipi_csi2>;
++					};
++				};
++			};
+ 		};
+ 
+ 		hdmi: hdmi@1ee0000 {
 -- 
 2.49.0
 
