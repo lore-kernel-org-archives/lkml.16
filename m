@@ -1,155 +1,142 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425212D0C98;
-	Fri,  4 Jul 2025 11:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490727CB04
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751628612; cv=none; b=cHGQ7Q5+p2z5nytndJkY1jHoNJghM1DBmY/hjIHvT4mbYvkcr2KLblEGBS93WKLOIG0uTauAPbgwqMHsaC9gSn8bItm/SQPoPY0HB7jDEEdaOt5013A35p5YGztnlg07LR77qpFToty0yAcWjAtmnvRvohATi4EtL1l6xissswk=
+	t=1751628646; cv=none; b=E/TBPZ0Ev1VukkJBFGYYlP8hu56l6gfP2xZr9+fXxMTBxcFOedpTIHY0rGyclbxPRLVTLbHdc2q7u7BX6cdkCyzURCy6JScPfKeVg2RICc/b+TfbhkvGRSFq5DKAEnMB0okKOCLHUHJrKmGIwI8vgwp1TqUW59MI0gaP/mWG0BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751628612; c=relaxed/simple;
-	bh=LBBKUZPE2gWKJIlUUTuZzM4rUYU+U7D59WGqtSEG+zU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dZSLO5ke68K5hWqz12gaSpZqzgdALLShetov/4/3OgWAtAABqiJUVdDWVJjEzPn/E+OFmal6gdhyh1TFXcQ3SBNwwGxVtF4Dp/29YwTJGhky2NuHdH+1Cx8KMd61+OWj/UztaxD9pHuVRcGlhirya3vnYy46saiAj5EzueOgy2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=OIsG7Ij3; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=W4gdiY2u reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1751628646; c=relaxed/simple;
+	bh=3Am2Cd1VOOLz9RfaU+/P+fOLxMsEKbxd6wVjp7Wl+JU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TJ7FDVHN+cRppbgMfm4baV8pmSx9E1LmSxidbnpcaTNXHD+k9IGevCSI/aLWWpwyPnNeX3EfYHO9Lu9TfTyI4Pm1sD4WCWumw6D7qdHXu2OWY+y0sHHM35XQLaWQdaT8Of3HKLfSr+c6qo4AmoHergUd66gS4faUvN33+SolZRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EsZVIiTY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="OIsG7Ij3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="W4gdiY2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751628608; x=1783164608;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oQLSCU6s7tadJXW3ijfkRaS6QjwulBRxirc1q6sY6so=;
-  b=OIsG7Ij3AG2IZL3NvAndB4AIBWeWdo28Ty9QKZqB9sStL0AenSZr/cGx
-   CgqALvouK5PdeRlAarSOfrXRgYbbGCL4kwkFYXDlsKYSgcP7lkPLXr6Kt
-   17iUHwTGam1pN2gY+9U6IiJ913coctf/bK8nH86ZNFaMtXVMTwPd9osIY
-   qr6rzJ1oycjjRjIUYi5CbGi13yyIsWr4RnLpvQ6sALQr391oBViziSRGD
-   lj1DR6e7+FqZrVlILIyY4Fc7KKjobRse9P14U8K1kPCQk5hi9NFwFshEB
-   Sy8Eu5S0S288doXeThQJW1bsgs4XqNTCGc7k8eJnjrGOmGY45/x5+C1iZ
-   w==;
-X-CSE-ConnectionGUID: jSRuNTPpRsydYLYRPhbXQg==
-X-CSE-MsgGUID: R+RKeJOgQ+S5uDN6S6S9fA==
-X-IronPort-AV: E=Sophos;i="6.16,287,1744063200"; 
-   d="scan'208";a="45031135"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 04 Jul 2025 13:30:04 +0200
-X-CheckPoint: {6867BB3C-30-4FC15ADB-CD71293B}
-X-MAIL-CPID: 407389F97A04FFAD1E4F8CCE6D42EE93_0
-X-Control-Analysis: str=0001.0A006396.6867BB4C.0063,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AC794165607;
-	Fri,  4 Jul 2025 13:29:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751628600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oQLSCU6s7tadJXW3ijfkRaS6QjwulBRxirc1q6sY6so=;
-	b=W4gdiY2u+KnVU6AEdD0acwe3gCkG8t/uyJscqkMzNXOpRFSqpVNFfLN9jFk/1GB+71IMXE
-	kWwh6jGmZ+hBi4ZZ98dPY9+hZRc8zDTWF5S42ufc3p0vo0uB7aULUruYxiNzkCrNAT/dIp
-	Qpw3v6qWfXz7EwZcnEe677+Ytex/+2ODif3jwmve/nnfYpoL1eTfa7lWOOciCU3ukcS0hr
-	d0eYqEiAt1eRyuRZmrjbZV+VihawcFagHfXxm7z1ahKQ7+MsGLI4O48PqNOEl8w9aK2jpC
-	vr9n7V6SlBwd92LVSYrWcBgrTkMgNkpj7p61/UB0iymUekecOOfIsYbbIAq8Aw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
- dri-devel@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH 04/14] drm/imx: dc-fu: Fix dimensions
-Date: Fri, 04 Jul 2025 13:29:57 +0200
-Message-ID: <3702593.R56niFO833@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250704-imx8-dc-prefetch-v1-4-784c03fd645f@nxp.com>
-References:
- <20250704-imx8-dc-prefetch-v1-0-784c03fd645f@nxp.com>
- <20250704-imx8-dc-prefetch-v1-4-784c03fd645f@nxp.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EsZVIiTY"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5648X5Oj025373
+	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 11:30:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=TRT/1n9Uj6hl0JSHIwiesVxFk9Y13Rj5QHc
+	z9Wen35g=; b=EsZVIiTYwyBVrUqRp1t19DxCNCfddOOP9hFKAdzwyoRdU5ocQrG
+	mm7X+Iv+EP6d5vxS/YKFNAcs/wwsd7V5w+7Oe2Gi1VNAR2GhQN7THDDVAaFKnKM9
+	DVewZUf388rO47zchyQCs85CuIUhJ04cmPSca8NLzEvqrCMiyOffyhueHTGRfbEN
+	LmUAzDhtT93jNBk9M6O4c27OAjPakryVED+PB3XCMZe+c8LMGwvH+ZTEMzB8Z3zD
+	/DLoFYqV+S/BEMPAK5/xP+s9wQk+gCTsIdpFTkHjGQZIIw8aQtgObo84iGw/zzhV
+	ASQTGLSZ+oPX2G9CZtzXPaOghYGnRP8sQ3g==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd650u0u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:30:43 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-235089528a0so16292955ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 04:30:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751628642; x=1752233442;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TRT/1n9Uj6hl0JSHIwiesVxFk9Y13Rj5QHcz9Wen35g=;
+        b=Sm25cuVb8Z5wXyIAHUxor/iXPKc/T2t7VQ3zzpW617Ek4IITwWAY4UiO5+5P8IBTfR
+         lxgdfSNmGCG3Zmdq9mT+o08EMfX7oR7cDJh3AKwcOLzGZXBBvFC/9PL2U+b2g5zXYf0E
+         L/fPnLI/P316r9g6TJFGAG0roVWolDP+Zl1Dw7AGAycEPnt1Js1FjPt9U9t7vwiT0UE6
+         W3HsqtavRo+j5bixk71Q//m0VqmMcUD5QR2diN72uiIDMgHR+FRw4mpcmyMBJ6nbHgPL
+         uVKYqjx/ggqgZMHbtf4LA7odgmPHkTD+FNFKuzWL0G/zgj+rmenvXxH11+RUU4d0U3G8
+         k00Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXXwZrqLvWU3SAt7+WlNVXB3OVoU/zI5is6HAWn/EP5A9qi+rBStC+bB/z1svOQ7IcBKUi8K3Jb5Ktd9wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfyLMTYathH49tJ0eIbrKuxQLXIIuFjJu/ET/VG/c4ThfNezfW
+	rsDW5ccd9md3CfvrxhlQC+MIN5upxlxLglzmnGGtmaAX3cJ4bKfH5uCz1z1zEfQo6INWeheLiJZ
+	T/z9n7AzfQf89X1FU4N5QWSnM0dOyEGAbJ4wLdiWishLNKJ6raLjbNRsIT5PCA4Rhfw==
+X-Gm-Gg: ASbGncuxMtS/NKhDaCZpTCx+be3wHJpESSTgXZjgKfllDan1TrOtCaOCN5BWS+xDU0g
+	Bou1ooPcmsKmOqlT54hz4ro2slYmrirQEXNp2+A0UJi0r0lb4/p3kTDhttRdenM66emJBZTZxsJ
+	X11RXAsl4iR5QxclGl8ka/mMdRqMHx8Rfcwo4qP5CZCTHP/hff/qCehkQNggzinPhH86TyZWF+v
+	xTjdkU8P5Wjvc3DLnIMzTyTCvQ5OKrDYrUAvZ7MNyGilS/OLi68mo4f16EoQgnV20PhEDvV0cPX
+	bLUoJf8lQGwO9Zyif/Iooh7RBstUIGhn5C7t1tyltJQ7wVmiCQFL
+X-Received: by 2002:a17:903:298d:b0:235:278c:7d06 with SMTP id d9443c01a7336-23c858ac2camr35631045ad.8.1751628642302;
+        Fri, 04 Jul 2025 04:30:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgveXe0/YeKWEfOQKlimaMpMFKvBsskf0SziUSbDx8nOrhY41iGmb2VeU9JAOFPCpbCoAhQQ==
+X-Received: by 2002:a17:903:298d:b0:235:278c:7d06 with SMTP id d9443c01a7336-23c858ac2camr35630505ad.8.1751628641873;
+        Fri, 04 Jul 2025 04:30:41 -0700 (PDT)
+Received: from hu-kotarake-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845b4f8bsm18221515ad.229.2025.07.04.04.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 04:30:41 -0700 (PDT)
+From: Rakesh Kota <rakesh.kota@oss.qualcomm.com>
+To: andersson@kernel.org, konradybcio@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: rakesh.kota@oss.qualcomm.com, jishnu.prakash@oss.qualcomm.com,
+        kamal.wadhwa@oss.qualcomm.com
+Subject: [PATCH] soc: qcom: spmi-pmic: add more PMIC SUBTYPE IDs
+Date: Fri,  4 Jul 2025 17:00:36 +0530
+Message-Id: <20250704113036.1627695-1-rakesh.kota@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6867bb63 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=X0g3_YmebwwKsQmXG4UA:9
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA4OCBTYWx0ZWRfX48VfUU5XxU4Z
+ dHuJ1JW+Mkq6TSmsrMsqlO8xIuCbI9VUgFPT3NsOYAImW2sijxq3EPZ6EhI6P8uUAI69BEAGt0v
+ XI0eORcqhBStzrKofBzhamL64Lx8NuXynpFH93BSEJgTmm5Jb+P1h52U5a5nRp0tdtsnGb0GQwV
+ E9ZlDc18dG5e5gDwGEgty//ekI+jxastKXxaF7Gk1dLp+NyFJbIyYhg4fQ2J/DKgY3LumFyq3dB
+ nVCLn1ETh3w53rOY6zTz8W5lrQB0MQbseGgjVWzNURbqQgdLVJccQs4CNWFxCDfjpJBqu4ABK3J
+ kiC0PFC+Ci2XcH+ur9jy7FCRygJsArwU8WHQ1c4laZvsRSO0q0S8tmwxmmgo3Foh74i/kbeIzr8
+ V4QJJ2B/yrAmpy73fKFM+q51TiF9V1I/oIiSi8nVOxAjR5p0NnP5xb84RVO6ENim9jQh1WFI
+X-Proofpoint-GUID: buqkRbuFPr4Vt86vgeFCf-GcFzTqTSb_
+X-Proofpoint-ORIG-GUID: buqkRbuFPr4Vt86vgeFCf-GcFzTqTSb_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxlogscore=712
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040088
 
-Hi,
+Add the PMM8650AU and PMM8650AU_PSAIL PMIC SUBTYPE IDs and
+These PMICs are used by the qcs8300 and qcs9100 platforms.
 
-thanks for the patch.
+Signed-off-by: Rakesh Kota <rakesh.kota@oss.qualcomm.com>
+---
+ drivers/soc/qcom/socinfo.c        | 2 ++
+ include/soc/qcom/qcom-spmi-pmic.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Am Freitag, 4. Juli 2025, 11:03:51 CEST schrieb Liu Ying:
-> Fix off-by-one issue in LINEWIDTH, LINECOUNT, FRAMEWIDTH and FRAMEHEIGHT
-> macro definitions.  The first two macros are used to set a fetchunit's
-> source buffer dimension and the other two are used to set a fetchunit's
-> frame dimension.  It appears that display controller itself works ok
-> without this fix, however, it enters panic mode when prefetch engine(DPRC
-> and PRGs) attaches to it without this fix.
->=20
-> Fixes: 0e177d5ce01c ("drm/imx: Add i.MX8qxp Display Controller pixel engi=
-ne")
-> Signed-off-by: Liu Ying <victor.liu@nxp.com>
-
-Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-> ---
->  drivers/gpu/drm/imx/dc/dc-fu.c | 4 ++--
->  drivers/gpu/drm/imx/dc/dc-fu.h | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/imx/dc/dc-fu.c b/drivers/gpu/drm/imx/dc/dc-f=
-u.c
-> index f94c591c815891468a5c2a940076963eeaa4d51c..b36d3034b8d5962eaab212b6b=
-65ebbb5c29f978c 100644
-> --- a/drivers/gpu/drm/imx/dc/dc-fu.c
-> +++ b/drivers/gpu/drm/imx/dc/dc-fu.c
-> @@ -31,8 +31,8 @@
->  #define STRIDE(x)			FIELD_PREP(STRIDE_MASK, (x) - 1)
-> =20
->  /* SOURCEBUFFERDIMENSION */
-> -#define LINEWIDTH(x)			FIELD_PREP(GENMASK(13, 0), (x))
-> -#define LINECOUNT(x)			FIELD_PREP(GENMASK(29, 16), (x))
-> +#define LINEWIDTH(x)			FIELD_PREP(GENMASK(13, 0), (x) - 1)
-> +#define LINECOUNT(x)			FIELD_PREP(GENMASK(29, 16), (x) - 1)
-> =20
->  /* LAYEROFFSET */
->  #define LAYERXOFFSET(x)			FIELD_PREP(GENMASK(14, 0), (x))
-> diff --git a/drivers/gpu/drm/imx/dc/dc-fu.h b/drivers/gpu/drm/imx/dc/dc-f=
-u.h
-> index e016e1ea5b4e0471cf6627782603e72d0475c4e8..518d1af49f5ae9d4f67da5e6c=
-2e80abd7e962120 100644
-> --- a/drivers/gpu/drm/imx/dc/dc-fu.h
-> +++ b/drivers/gpu/drm/imx/dc/dc-fu.h
-> @@ -38,8 +38,8 @@
->  #define SOURCEBUFFERENABLE		BIT(31)
-> =20
->  /* FRAMEDIMENSIONS */
-> -#define FRAMEWIDTH(x)			FIELD_PREP(GENMASK(13, 0), (x))
-> -#define FRAMEHEIGHT(x)			FIELD_PREP(GENMASK(29, 16), (x))
-> +#define FRAMEWIDTH(x)			FIELD_PREP(GENMASK(13, 0), (x) - 1)
-> +#define FRAMEHEIGHT(x)			FIELD_PREP(GENMASK(29, 16), (x) - 1)
-> =20
->  /* CONTROL */
->  #define INPUTSELECT_MASK		GENMASK(4, 3)
->=20
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+index 8c4147737c35..e975b30d3ee0 100644
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -126,6 +126,8 @@ static const char *const pmic_models[] = {
+ 	[72] = "PMR735D",
+ 	[73] = "PM8550",
+ 	[74] = "PMK8550",
++	[78] = "PMM8650AU",
++	[79] = "PMM8650AU_PSAIL",
+ 	[82] = "PMC8380",
+ 	[83] = "SMB2360",
+ };
+diff --git a/include/soc/qcom/qcom-spmi-pmic.h b/include/soc/qcom/qcom-spmi-pmic.h
+index df3d3a0af98a..2cf9e2d8cd55 100644
+--- a/include/soc/qcom/qcom-spmi-pmic.h
++++ b/include/soc/qcom/qcom-spmi-pmic.h
+@@ -50,6 +50,8 @@
+ #define PMR735B_SUBTYPE		0x34
+ #define PM6350_SUBTYPE		0x36
+ #define PM4125_SUBTYPE		0x37
++#define PMM8650AU_SUBTYPE       0x4e
++#define PMM8650AU_PSAIL_SUBTYPE 0x4f
+ 
+ #define PMI8998_FAB_ID_SMIC	0x11
+ #define PMI8998_FAB_ID_GF	0x30
+-- 
+2.34.1
 
