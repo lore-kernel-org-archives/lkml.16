@@ -1,117 +1,380 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C4E286893;
-	Fri,  4 Jul 2025 08:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00E129AB1E;
+	Fri,  4 Jul 2025 08:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619268; cv=none; b=Rvn970V9ZpVGHKQaHIZozz0xIN/4VGqpVLe/7ooSK/ViYnljl4lHRpBrs1LLQ4UkLjvO4CalF+/MD/AwwSTXKPzKNjJNiCCNH96zvvXHiU0rIgH2PaCnjRzMJYVbNDnq9HT0qoFc6GVFC+B7seJ4sSw7yxe0dkRI0LlajBlHVrA=
+	t=1751619274; cv=none; b=u+HnfC0CsP9Mwuv00YtpkjjwY+DKI3YuujayNGdW7Hzryautq6Xi2yrZAofwzmkmdwbz2txpQxy0hSAV9NBEtXE6WssN5wY83Cbd4njqmf7d24ct59BlROzMNPWgTd9ggvP5cyTr1HGcNCzWDPURmZqYrcuZ+pZWmoLM+KkXbTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619268; c=relaxed/simple;
-	bh=uz/zicClKa77WCJ3YsL+10TMEVpskxKUqb8kUyLUeUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=chVLzR8REk13iQkfe7KVxc6LmFZf4LRpGOiuya6P8siXmix1ghh2+OFYcjB+DUxHEpQDrZlHrCFHM6CxSjdcajX1X+QcH6lTiCLTsDk1vVJmdjy5SMNhUMsNJyL+ve61ZwSR63p8Tx85EvdGuMBFD5AmAUVpG6vupanq5nG0ijk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=htj2+znE; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751619274; c=relaxed/simple;
+	bh=ZSABudlhTKUDPWbW8XSdcuCu3VaJtavRmMqHjdpwlnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qfO85r0HRQ943Jxig/G4v8NJ4LcMNehAou3sr0HVUdRzd62V63XbASr2zpTANMvv5/hjCuHX4Jah+IR92iYHWPLkjISH1YuyuKzBlohDUzo6/4Qy2eAb2yq5N59Wa00nO1+EguVd/fsCNTYjobWDf8bgm9UDTfE4qKZbDrnCNpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BweFXU2d; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="htj2+znE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751619231;
-	bh=ZCHo5NqU7SbFbU/bIDHFUIZHzFSRaHBIyId8HLH6J94=;
-	h=Date:From:To:Cc:Subject:From;
-	b=htj2+znE2moaKwfLr3/jSMjySprOWUM5D5+4etRUaCDntPL3sDpIdSPukXC3HUfZt
-	 mb8lQnb9d5R1k7/VJdtd5UVkVPhzyoD45pk7g3xpeCfuW0goEJcNL+ruOnGRrTCttE
-	 L+lZGNeazzJADta2Pxd5xM6+Hu0kB8SHbfRSHOKTv2VQXjOJdOMRgdKtlWp+Z/lEOJ
-	 tYZeX+NduwLW4t/RahpRJimceXxVL9sj5C44sGH+T5r5tW5CMa1JfWdaQ0s//Tx9Nm
-	 wCWEBbx3P5Q8PDVhgRE1iWOPpbqpvOHJ2FfFcP5rYd5TxlT/mAAqMUyCxyhK9i7YDU
-	 ZGR7ZkrP8edaQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYS996v79z4wxh;
-	Fri,  4 Jul 2025 18:53:49 +1000 (AEST)
-Date: Fri, 4 Jul 2025 18:54:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: linux-next: manual merge of the gpio-brgl tree with the devicetree
- tree
-Message-ID: <20250704185418.3e7599c2@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BweFXU2d"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60c3aafae23so3995747a12.1;
+        Fri, 04 Jul 2025 01:54:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751619271; x=1752224071; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IYYb4psIPvpliyRichfelE7dhl+X+oSKUx+ZDfgpqiU=;
+        b=BweFXU2ddQrXqvSPnrhif/qLTweqSDhZDNxT8pKA3cyw3LIK84Nf6q3+UyVv6GvV88
+         RSYZJ3XbwsYsZw10D3Ps5CS3soeQBjKa72SN0ZG1sghBF5LgRM7rvjFXKGvXXCTJb/56
+         4Hob/95xc9/IfRcMR3AKwvoi2a5dd8p1QQV9LNTLk5Ga4xQU7HJQooPMVlDRZjoV/23c
+         WwwrhNpXrmaGrSKVKe9AcIlyPrO81fWYifyjMhPd5cyiCYCXFXn2IRTeph6oFRUFz2Mz
+         uFTjZKfO94YO62E6451phHQWnUcJsq8UbDRyBTy/rGL4cYxKxEJYEpe70F44TUIWZePI
+         l7Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751619271; x=1752224071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IYYb4psIPvpliyRichfelE7dhl+X+oSKUx+ZDfgpqiU=;
+        b=Ks4LqXzWB5u+DlyBzXyZxesYKlP+WReGptJsoXWooE2j2jjo036R6i9IW+89+eTfMY
+         4z3FuSdRK5gWrqzEB1qzIX5HW8kAxwmBFhpPFaudGqYVk8i3RBj6gghikt7yj2FIaS6o
+         /hUhQaJnn2mwvMYxpvKFM0TxffuAp5N5cJDsEJ+cjV7jw8WalMNIcS5Xz1sSF0XgqOUE
+         WzkiMKXaCm02ca6x226wxoF9HoRACDm2s6Ew9VrLDRdd3+bqraAkip1SxxLWfZTmDTnF
+         x0C1LrDusP++H3SP6n6IB9glzXUOTC/3y+Er+Lo8tpKx91RpRuds9xCWi3joHMUydYzZ
+         XIXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbyo7ePe3tKW3pPQTsIJkc+G2X5FescyIx7a1f94Z9MhgdEMHVq8Z3tj6WRX434xqlOvyXHPHyntz2@vger.kernel.org, AJvYcCUmWfynB2YKjtRr62wHUmmLhcuCPGtwBX/GB5xIiOMCWjCf7v2q4Ouc540A4oV2fjtF4iaLXdnupYniL3YdBA==@vger.kernel.org, AJvYcCWBtU/vrA8o2cIU1wYDkaQKqs/q8zu9Q/EmHeuq5uG/ElksX4bipgog9LRyQTszYofWxOuDf6/FUkE=@vger.kernel.org, AJvYcCWaudbZwIEnpZe3iheACXybIiF4RbaWrJEO+62VFsrhjpCNUx9l42cCUzriGoWd7+S7Jwr9VS7KsIvhtWrZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS6jdE3rmT0Ll5fj6mKtB1sJh0AO+hAO6fej4WQD9vwbjRwe61
+	DLTF9QA3udYiXoIJy6ccvYtDv4Q/5PK0ShasDTHS0H7s6kM1KS6emZ6Hk8RjXvVjMyY8wLClnE4
+	Ie/MX4kvDkAFmLCvW1F5T7OxL5nZ4aYk=
+X-Gm-Gg: ASbGncs61aM+nFn3SmMAEDdIn49axXNwvrDk1B8kOueGbYlXiXSmz+xbKXId00p9Xjw
+	dG0CvUfodaSW2lOGdrSnViOtuIHDOWXK91F9c23qMlixBwCnkhUEr2bKIwSw363tKSPuafNXBLr
+	lnicYLYLqF4cSXjxArOOMUiCrNtNdmFNu1VX717Pnc9jg=
+X-Google-Smtp-Source: AGHT+IHcZMlcvKWkDRCTTYHYBlE/yVUzdpyQxoMzu23LPxRAf01JGJK4vdjZG8u8oHAxRui/6pv6vPPsfcA2UUkTzBY=
+X-Received: by 2002:a17:907:9408:b0:ae3:bb0a:1ce9 with SMTP id
+ a640c23a62f3a-ae3f9c07333mr186513866b.12.1751619270770; Fri, 04 Jul 2025
+ 01:54:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LB=LD9kpseukT9DZ2hcfXt5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/LB=LD9kpseukT9DZ2hcfXt5
-Content-Type: text/plain; charset=US-ASCII
+References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-13-john@groves.net>
+In-Reply-To: <20250703185032.46568-13-john@groves.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 4 Jul 2025 10:54:18 +0200
+X-Gm-Features: Ac12FXxdD0dKmEKz1SXgkNvAKENkLT1knuiKkxdeBvqe6tEEHXxQtEYAzYhPTaA
+Message-ID: <CAOQ4uxh-qDahaEpdn2Xs9Q7iBTT0Qx577RK-PrZwzOST_AQqUA@mail.gmail.com>
+Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
+To: John Groves <John@groves.net>
+Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredb.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Thu, Jul 3, 2025 at 8:51=E2=80=AFPM John Groves <John@groves.net> wrote:
+>
+> Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
+> retrieve and cache up the file-to-dax map in the kernel. If this
+> succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
+>
+> GET_FMAP has a variable-size response payload, and the allocated size
+> is sent in the in_args[0].size field. If the fmap would overflow the
+> message, the fuse server sends a reply of size 'sizeof(uint32_t)' which
+> specifies the size of the fmap message. Then the kernel can realloc a
+> large enough buffer and try again.
+>
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/fuse/file.c            | 84 +++++++++++++++++++++++++++++++++++++++
+>  fs/fuse/fuse_i.h          | 36 ++++++++++++++++-
+>  fs/fuse/inode.c           | 19 +++++++--
+>  fs/fuse/iomode.c          |  2 +-
+>  include/uapi/linux/fuse.h | 18 +++++++++
+>  5 files changed, 154 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 93b82660f0c8..8616fb0a6d61 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -230,6 +230,77 @@ static void fuse_truncate_update_attr(struct inode *=
+inode, struct file *file)
+>         fuse_invalidate_attr_mask(inode, FUSE_STATX_MODSIZE);
+>  }
+>
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
 
-Today's linux-next merge of the gpio-brgl tree got a conflict in:
+We generally try to avoid #ifdef blocks in c files
+keep them mostly in h files and use in c files
+   if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
 
-  Documentation/devicetree/bindings/trivial-devices.yaml
+also #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+it a bit strange for a bool Kconfig because it looks too
+much like the c code, so I prefer
+#ifdef CONFIG_FUSE_FAMFS_DAX
+when you have to use it
 
-between commit:
+If you need entire functions compiled out, why not put them in famfs.c?
 
-  4fb2210866f7 ("dt-bindings: trivial-devices: Add Analog Devices ADT7411")
+> +
+> +#define FMAP_BUFSIZE 4096
+> +
+> +static int
+> +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode, u64 nodeid)
+> +{
+> +       struct fuse_get_fmap_in inarg =3D { 0 };
+> +       size_t fmap_bufsize =3D FMAP_BUFSIZE;
+> +       ssize_t fmap_size;
+> +       int retries =3D 1;
+> +       void *fmap_buf;
+> +       int rc;
+> +
+> +       FUSE_ARGS(args);
+> +
+> +       fmap_buf =3D kcalloc(1, FMAP_BUFSIZE, GFP_KERNEL);
+> +       if (!fmap_buf)
+> +               return -EIO;
+> +
+> + retry_once:
+> +       inarg.size =3D fmap_bufsize;
+> +
+> +       args.opcode =3D FUSE_GET_FMAP;
+> +       args.nodeid =3D nodeid;
+> +
+> +       args.in_numargs =3D 1;
+> +       args.in_args[0].size =3D sizeof(inarg);
+> +       args.in_args[0].value =3D &inarg;
+> +
+> +       /* Variable-sized output buffer
+> +        * this causes fuse_simple_request() to return the size of the
+> +        * output payload
+> +        */
+> +       args.out_argvar =3D true;
+> +       args.out_numargs =3D 1;
+> +       args.out_args[0].size =3D fmap_bufsize;
+> +       args.out_args[0].value =3D fmap_buf;
+> +
+> +       /* Send GET_FMAP command */
+> +       rc =3D fuse_simple_request(fm, &args);
+> +       if (rc < 0) {
+> +               pr_err("%s: err=3D%d from fuse_simple_request()\n",
+> +                      __func__, rc);
+> +               return rc;
+> +       }
+> +       fmap_size =3D rc;
+> +
+> +       if (retries && fmap_size =3D=3D sizeof(uint32_t)) {
+> +               /* fmap size exceeded fmap_bufsize;
+> +                * actual fmap size returned in fmap_buf;
+> +                * realloc and retry once
+> +                */
+> +               fmap_bufsize =3D *((uint32_t *)fmap_buf);
+> +
+> +               --retries;
+> +               kfree(fmap_buf);
+> +               fmap_buf =3D kcalloc(1, fmap_bufsize, GFP_KERNEL);
+> +               if (!fmap_buf)
+> +                       return -EIO;
+> +
+> +               goto retry_once;
+> +       }
+> +
+> +       /* Will call famfs_file_init_dax() when that gets added */
+> +
+> +       kfree(fmap_buf);
+> +       return 0;
+> +}
+> +#endif
+> +
+>  static int fuse_open(struct inode *inode, struct file *file)
+>  {
+>         struct fuse_mount *fm =3D get_fuse_mount(inode);
+> @@ -263,6 +334,19 @@ static int fuse_open(struct inode *inode, struct fil=
+e *file)
+>
+>         err =3D fuse_do_open(fm, get_node_id(inode), file, false);
+>         if (!err) {
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +               if (fm->fc->famfs_iomap) {
 
-from the devicetree tree and commit:
+That should be
+> +               if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> +                   fm->fc->famfs_iomap) {
 
-  e65e2b0d0f7e ("dt-bindings: mfd: adp5585: document adp5589 I/O expander")
+> +                       if (S_ISREG(inode->i_mode)) {
+> +                               int rc;
+> +                               /* Get the famfs fmap */
+> +                               rc =3D fuse_get_fmap(fm, inode,
+> +                                                  get_node_id(inode));
+> +                               if (rc)
+> +                                       pr_err("%s: fuse_get_fmap err=3D%=
+d\n",
+> +                                              __func__, rc);
+> +                       }
+> +               }
+> +#endif
+>                 ff =3D file->private_data;
+>                 err =3D fuse_finish_open(inode, file);
+>                 if (err)
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index f4ee61046578..e01d6e5c6e93 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -193,6 +193,10 @@ struct fuse_inode {
+>         /** Reference to backing file in passthrough mode */
+>         struct fuse_backing *fb;
+>  #endif
+> +
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +       void *famfs_meta;
+> +#endif
+>  };
+>
+>  /** FUSE inode state bits */
+> @@ -945,6 +949,8 @@ struct fuse_conn {
+>  #endif
+>
+>  #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +       struct rw_semaphore famfs_devlist_sem;
+> +       struct famfs_dax_devlist *dax_devlist;
+>         char *shadow;
+>  #endif
+>  };
+> @@ -1435,11 +1441,14 @@ void fuse_free_conn(struct fuse_conn *fc);
+>
+>  /* dax.c */
+>
+> +static inline int fuse_file_famfs(struct fuse_inode *fi); /* forward */
+> +
+>  /* This macro is used by virtio_fs, but now it also needs to filter for
+>   * "not famfs"
+>   */
+>  #define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)    \
+> -                                       && IS_DAX(&fuse_inode->inode))
+> +                                       && IS_DAX(&fuse_inode->inode)   \
+> +                                       && !fuse_file_famfs(fuse_inode))
+>
+>  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
+>  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
+> @@ -1550,4 +1559,29 @@ extern void fuse_sysctl_unregister(void);
+>  #define fuse_sysctl_unregister()       do { } while (0)
+>  #endif /* CONFIG_SYSCTL */
+>
+> +/* famfs.c */
+> +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
+> +                                                      void *meta)
+> +{
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +       return xchg(&fi->famfs_meta, meta);
+> +#else
+> +       return NULL;
+> +#endif
+> +}
+> +
+> +static inline void famfs_meta_free(struct fuse_inode *fi)
+> +{
+> +       /* Stub wil be connected in a subsequent commit */
+> +}
+> +
+> +static inline int fuse_file_famfs(struct fuse_inode *fi)
+> +{
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +       return (READ_ONCE(fi->famfs_meta) !=3D NULL);
+> +#else
+> +       return 0;
+> +#endif
+> +}
+> +
+>  #endif /* _FS_FUSE_I_H */
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index a7e1cf8257b0..b071d16f7d04 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct super_bl=
+ock *sb)
+>         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+>                 fuse_inode_backing_set(fi, NULL);
+>
+> +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> +               famfs_meta_set(fi, NULL);
+> +
+>         return &fi->inode;
+>
+>  out_free_forget:
+> @@ -138,6 +141,13 @@ static void fuse_free_inode(struct inode *inode)
+>         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+>                 fuse_backing_put(fuse_inode_backing(fi));
+>
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +       if (S_ISREG(inode->i_mode) && fi->famfs_meta) {
+> +               famfs_meta_free(fi);
+> +               famfs_meta_set(fi, NULL);
+> +       }
+> +#endif
+> +
+>         kmem_cache_free(fuse_inode_cachep, fi);
+>  }
+>
+> @@ -1002,6 +1012,9 @@ void fuse_conn_init(struct fuse_conn *fc, struct fu=
+se_mount *fm,
+>         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+>                 fuse_backing_files_init(fc);
+>
+> +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> +               pr_notice("%s: Kernel is FUSE_FAMFS_DAX capable\n", __fun=
+c__);
+> +
+>         INIT_LIST_HEAD(&fc->mounts);
+>         list_add(&fm->fc_entry, &fc->mounts);
+>         fm->fc =3D fc;
+> @@ -1036,9 +1049,8 @@ void fuse_conn_put(struct fuse_conn *fc)
+>                 }
+>                 if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+>                         fuse_backing_files_free(fc);
+> -#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> -               kfree(fc->shadow);
+> -#endif
+> +               if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> +                       kfree(fc->shadow);
+>                 call_rcu(&fc->rcu, delayed_release);
+>         }
+>  }
+> @@ -1425,6 +1437,7 @@ static void process_init_reply(struct fuse_mount *f=
+m, struct fuse_args *args,
+>                                  * those capabilities, they are held here=
+).
+>                                  */
+>                                 fc->famfs_iomap =3D 1;
+> +                               init_rwsem(&fc->famfs_devlist_sem);
+>                         }
+>                 } else {
+>                         ra_pages =3D fc->max_read / PAGE_SIZE;
+> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
+> index aec4aecb5d79..443b337b0c05 100644
+> --- a/fs/fuse/iomode.c
+> +++ b/fs/fuse/iomode.c
+> @@ -204,7 +204,7 @@ int fuse_file_io_open(struct file *file, struct inode=
+ *inode)
+>          * io modes are not relevant with DAX and with server that does n=
+ot
+>          * implement open.
+>          */
+> -       if (FUSE_IS_VIRTIO_DAX(fi) || !ff->args)
+> +       if (FUSE_IS_VIRTIO_DAX(fi) || fuse_file_famfs(fi) || !ff->args)
+>                 return 0;
 
-from the gpio-brgl tree.
+This is where fuse_is_dax() helper would be handy.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/devicetree/bindings/trivial-devices.yaml
-index db0295bf9fde,43b21fed7ec0..000000000000
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@@ -39,10 -39,6 +39,8 @@@ properties
-            - ad,adm9240
-              # AD5110 - Nonvolatile Digital Potentiometer
-            - adi,ad5110
--             # Analog Devices ADP5589 Keypad Decoder and I/O Expansion
--           - adi,adp5589
- +            # Analog Devices ADT7411 Temperature Sensor and 8-channel ADC
- +          - adi,adt7411
-              # Analog Devices LT7182S Dual Channel 6A, 20V PolyPhase Step-=
-Down Silent Switcher
-            - adi,lt7182s
-              # AMS iAQ-Core VOC Sensor
-
---Sig_/LB=LD9kpseukT9DZ2hcfXt5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnlroACgkQAVBC80lX
-0Gz56Af/W6fbp+iVlLmX/wcIe9hzQzgqeU1YTuOMpZdTYgzN7Ej+mVc7s4fPEZum
-u38S0m6g/K62HEZoHprlMNJ01bvysrE9hNZ7vC2J09QhrVW5APsfw3NsSHekrlke
-i70B0BUhUFJe4q7EO4SG6kh4KpF/0+/oOoOXtkuaT7p/r63TejeHD/M+/hNEK2KM
-57IgxrF8QedPEuI3Q8K7smnMbAmOELpQe1rGy/K2USfVo8Q5St535ayx4Prt4/a9
-gZUCNF7MxqzpGSBChBgZPXncf2xjJ5m64PnUs8JXDyEfLzNrcQwPJzIlRPkqwT1D
-jgGWTxk+mMwZD4bFuubUPoKAv1twqA==
-=n/Cj
------END PGP SIGNATURE-----
-
---Sig_/LB=LD9kpseukT9DZ2hcfXt5--
+Thanks,
+Amir.
