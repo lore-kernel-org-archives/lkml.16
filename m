@@ -1,95 +1,139 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881841D5CD4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14E01D5CD4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751594035; cv=none; b=sYlyFHpkWRB/TS233aJTmxZBnbbdxtZtSwJktomyVS5l99amunu+0fMkL1T1DxfFHI2Qr5tLdsC2zpxhJUMZnZ3mjcQ6sWUxjEyDjoQJiCREv2WxA13Jj0Bl/foIBmNvEuU6PqIhIdhvXeLhH9BdgonA1jXimRe86RpiiX3Q+gE=
+	t=1751594072; cv=none; b=H0TaWIM27Q0IUsqaCr2ZZodLtJrDKF/j26fTpspVxskF/k6pSPxhjDwUkcq2cmQcpLtQ7NO82bRExBy9usXE68zCVsZQPLj0ywOEzX6Du/Elihoj5RQcz1wLcCY3mmKmYNH5VklNQqbT8h93iqD5bucYSMJ7YLHXIxNKNSR9X8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751594035; c=relaxed/simple;
-	bh=IUMF0hGdyx2upyKxeDRqselmMwuKI0v+FfCyIWW4URc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VsS2/UohZSQ9HsC5VW91dRO3/EB9YA0iyZCbgJLxwwqVBOKPBrk0ZaiussmKMLSS1yxZwr7JQ8XbekmOWuH+vwajngoCOxz0ZIKaM4912rSBZidC1rnVjdX9WID8RTe08CTm68w0eW9+rYyviq/pcW9C+hYY+624L9EZBM678LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z28ygIIS; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751594072; c=relaxed/simple;
+	bh=ruukrF8SuAMY/rRR1Jo/Ra+SgmM3R3oJ7P8PMzTsEQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VfcWZx/iECny7R9w7OPsJ18yG7dLc6oKPn8kkkGJ7ebYaHloZcxitx+oIChG/klB0lEMnN6TJLc5aQsjQ1DHGAzpDVxt7ac5Xk0OG4jrOw5lxZRBLvrHRaP0bXDlXZRHOssHfYFIIkJG2dc/R5DU6j6OHMtlUIwpBykli33RgxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i4z+AGVW; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z28ygIIS"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34a71d9208so320858a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 18:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751594033; x=1752198833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAQ6TVq16tZQ6x8pz/0CtqrKxJ7X+TGiOhIJo9QOyHo=;
-        b=Z28ygIISkRVr9FffNX90JwVXNbBkCGFKcB9XvfwCzeiRZ7JoZx/WrVY0hpszkKqEM+
-         oYC4uDx6oZU9gIgincrQ0ctD3xabE9O1hNbCT6BW/fsCyyYgXt4NWXsMSNlXnsCOh5S6
-         mJZTKvni3OfgDhdnU+0Q9jzR+1y/9dOoe3GnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751594033; x=1752198833;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jAQ6TVq16tZQ6x8pz/0CtqrKxJ7X+TGiOhIJo9QOyHo=;
-        b=TQ08l0BI2sSHzU3eBRnlkOKqkdbGoMXStIMd3GhLaobmzT2dZKpb/e9StpIhb/42E7
-         ov22kw31DgySnwM1aHg55p84bGMDzynC1TakYcn4wN0BuSvfkFskFZaNPGuQ2Wul+M4p
-         GgYfaKf9/y8sDT1ZwYeR3lEASy/Tyow4uPPKXgK6e4jJWY4YluGI7klnjE6EXMyNYFln
-         Rw/lJB40ZAatZXSh8P7GQwEAhsqdgiNh6TTrmYnB+9yZV6cZQwsQah/d5/EYLj7X2VFC
-         j2YGbRQniZ743w8wmeGU9JAMESZY91QIapI63cScjvvmXktbBKsFGXp12HC12gfCR5dX
-         SAgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrYMYS0IecqX0zQ3j6KR3QkRozwaQxbCj6t0Wkru2Jtec51+OCntFg1UMEPUe8fNx6/bg94Woqsq7mapg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCrk840NfH9DqjSy5GKbChco7hczb0j0FwYfTlJglAyAiEgtp8
-	qtYQhP476jAeECH3QxrjpxuRXMAFU2EQLqcT6mQDeMeuf5OATdlmdauDSrdntzCKyQ==
-X-Gm-Gg: ASbGnctJuRiHMv/Gc4FetoW+Nnjh+uXC19+fZFhp9DKWRWxMRyxFOBYBAIsmetYFBib
-	nZnrfWq303UqRKLHFe8DSd2duXnefRvHD12GuJxorN/Fcb7FkIqYHq/Gb6Z47iE5VW6wBHsEW7A
-	mvN3P4/k/RaZR4vU44aShy9sAbo316hLHWn7jDIYXXzkLJDzlHw2I1aY1fc+AuQo3rvpnr0gbno
-	Qngdv9RqWgFjLg7b7hpPzxgYWVvRN/0wT19VEYWpbzs/lptF8EtnWDSrDfrDN7fhq1IlsooeauU
-	ljsmdvg3INPZPFOqOndE+4+5BIQQawkgGunxfuOeab3rL2iJToH0vn+YYcbYwXYSMw==
-X-Google-Smtp-Source: AGHT+IFU4hNoU+sLjwVd0pcP0UOZs85uDhW3yq5YhMO4v88MqVeHKE4G9GMzITqjnfTVpsq+dB4Blw==
-X-Received: by 2002:a17:90b:3890:b0:314:2bae:97d7 with SMTP id 98e67ed59e1d1-31aadd43c66mr426877a91.15.1751594032745;
-        Thu, 03 Jul 2025 18:53:52 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:20ef:ef86:780b:d631])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457f308sm7578975ad.149.2025.07.03.18.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 18:53:51 -0700 (PDT)
-Date: Fri, 4 Jul 2025 10:53:47 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Minchan Kim <minchan@kernel.org>, Rahul Kumar <rk0006818@gmail.com>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] zram: pass buffer offset to zcomp_available_show()
-Message-ID: <tgqiahkbc6u6w75rivbishixxq64wfzx6tucscaa3yyt5u55kc@ur62ahdhq4ew>
-References: <20250627035256.1120740-1-rk0006818@gmail.com>
- <20250627071840.1394242-1-senozhatsky@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i4z+AGVW"
+X-Forwarded-Encrypted: i=1; AJvYcCUYwyXvIF9ZodjWAu3hHaTcbuX8NC1B0zxQwwv6SXvm0ubkzYfC1KJIJMR5D5EGDFfJiBEaLlSVNg==@vger.kernel.org, AJvYcCV1DlZJRyMlyxkMuqS79ocnnZ6yu7D76707H8ZS9ZLiaRqVqiwcXncP6eg9wNVfGQk0his=@vger.kernel.org, AJvYcCWZeXipZ+XHH/LhgjFKAu++KzYHnp2NhcYU71MNfCKNa1SBshOn11ZLiYWLZBWnwAZYHeTvV6+jidlBES1/@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751594058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5zUFgNGFp2OU4bUfryivIV0PkBSaxkBjWLGPlV+/kxg=;
+	b=i4z+AGVWaKSna0myZX6oVmjel9tQ3ISAmXupQYDlJvwZMlnUWu2emMuRxApot4npPz7cxh
+	4vHBVFITErZg2j2bahe7tGUhwuvGDD6Yo9zQ92dfEJEtCqUI5AG+OlDENDqzMd6/9eUM54
+	/q/Hw4sVsdDxXbrieKjrZiMGRFvko/Q=
+X-Gm-Message-State: AOJu0Yx/C4jjEgav/jGGB/63wd7dKHHQiIzzVwFeFHY6NJWC7tE79LH7
+	6Z0ajTwigujF7kvxOuZQraVTBkDsItPkIZl4u8RllcvTyJDcQs62NFXbCfxC8pf3HxkG4aXTjH3
+	VmpWXObk708yNaXWTYEob7wP3ca2rHuc=
+X-Google-Smtp-Source: AGHT+IHRp6cTYv2ZHhR/OqEQNvtHD+Kd9XEFyWCdJBjr2fL9kfV74hSEp+yyV6sRdSRdWq6c0+lR+1sTP0wHrzTW07E=
+X-Received: by 2002:a05:6102:6c1:b0:4ec:b2cc:de60 with SMTP id
+ ada2fe7eead31-4f2f1ebdc71mr162883137.11.1751594053446; Thu, 03 Jul 2025
+ 18:54:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627071840.1394242-1-senozhatsky@chromium.org>
+References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
+ <20250703200012.3734798-2-shakeel.butt@linux.dev> <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
+ <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t> <f6900de7-bfab-47da-b29d-138c75c172fd@paulmck-laptop>
+In-Reply-To: <f6900de7-bfab-47da-b29d-138c75c172fd@paulmck-laptop>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Thu, 3 Jul 2025 18:54:02 -0700
+X-Gmail-Original-Message-ID: <CAGj-7pUdbtumOmfmW52F3aHJfkd5F+nGeH5LAf5muKqYR+xV-w@mail.gmail.com>
+X-Gm-Features: Ac12FXx-lZjWHd45ZSUnauMrY3R7tVAdMQDZfFbYy-kqIPMaM-Muufg8oe5W5TU
+Message-ID: <CAGj-7pUdbtumOmfmW52F3aHJfkd5F+nGeH5LAf5muKqYR+xV-w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
+To: paulmck@kernel.org
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	JP Kobryn <inwardvessel@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Ying Huang <huang.ying.caritas@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-On (25/06/27 16:18), Sergey Senozhatsky wrote:
-> In most cases zcomp_available_show() is the only emitting
-> function that is called from sysfs read() handler, so it
-> assumes that there is a whole PAGE_SIZE buffer to work with.
-> There is an exception, however: recomp_algorithm_show().
-> 
-> In recomp_algorithm_show() we prepend the buffer with
-> priority number before we pass it to zcomp_available_show(),
-> so it cannot assume PAGE_SIZE anymore and must take
-> recomp_algorithm_show() modifications into consideration.
-> Therefore we need to pass buffer offset to zcomp_available_show().
-> 
-> Also convert it to use sysfs_emit_at(), to stay aligned
-> with the rest of zram's sysfs read() handlers.
-> 
-> On practice we are never even close to using the whole PAGE_SIZE
-> buffer, so that's not a critical bug, but still.
+On Thu, Jul 3, 2025 at 4:53=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
+> wrote:
+>
+> On Thu, Jul 03, 2025 at 03:46:07PM -0700, Shakeel Butt wrote:
+[...]
+> > Let me answer this one first. The previous patch actually made
+> > init_llist_node() do WRITE_ONCE().
+> >
+> > So the actual question is why do we need
+> > data_race([READ|WRITE]_ONCE()) instead of just [READ|WRITE]_ONCE()?
+>
+> You should *almost* always use [READ|WRITE]_ONCE() instead of data_race()=
+.
+>
+> > Actually I had the similar question myself and found the following
+> > comment in include/linux/compiler.h:
+> >
+> > /**
+> >  * data_race - mark an expression as containing intentional data races
+> >  *
+> >  * This data_race() macro is useful for situations in which data races
+> >  * should be forgiven.  One example is diagnostic code that accesses
+> >  * shared variables but is not a part of the core synchronization desig=
+n.
+> >  * For example, if accesses to a given variable are protected by a lock=
+,
+> >  * except for diagnostic code, then the accesses under the lock should
+> >  * be plain C-language accesses and those in the diagnostic code should
+> >  * use data_race().  This way, KCSAN will complain if buggy lockless
+> >  * accesses to that variable are introduced, even if the buggy accesses
+> >  * are protected by READ_ONCE() or WRITE_ONCE().
+> >  *
+> >  * This macro *does not* affect normal code generation, but is a hint
+> >  * to tooling that data races here are to be ignored.  If the access mu=
+st
+> >  * be atomic *and* KCSAN should ignore the access, use both data_race()
+> >  * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
+> >  */
+> >
+> > IIUC correctly, I need to protect llist_node against tearing and as wel=
+l
+> > as tell KCSAN to ignore the access for race then I should use both.
+> > Though I think KCSAN treat [READ|WRITE]_ONCE similar to data_race(), so
+> > it kind of seem redundant but I think at least I want to convey that we
+> > need protection against tearing and ignore KCSAN and using both conveys
+> > that. Let me know if you think otherwise.
+> >
+> > thanks a lot for taking a look.
+>
+> The thing to remember is that data_race() does not affect the
+> generated code (except of course when running KCSAN), and thus does
+> absolutely nothing to prevent load/store tearing.  You need things like
+> [READ|WRITE]_ONCE() to prevent tearing.
+>
+> So if it does not affect the generated code, what is the point of
+> data_race()?
+>
+> One answer to this question is for diagnostics where you want KCSAN
+> to check the main algorithm, but you don't want KCSAN to be confused
+> by the diagnostic accesses.  For example, you might use something like
+> ASSERT_EXCLUSIVE_ACCESS() as in __list_splice_init_rcu(), and not want
+> your diagnostic accesses to result in false-positive KCSAN reports
+> due to interactions with ASSERT_EXCLUSIVE_ACCESS() on some particular
+> memory location.  And if you were to use READ_ONCE() to access that same
+> memory location in your diagnostics, KCSAN would complain if they ran
+> concurrently with that ASSERT_EXCLUSIVE_ACCESS().  So you would instead
+> use data_race() to suppress such complaints.
+>
+> Does that make sense?
+>
 
-Jens, do you feel like picking these 2 up or should I route
-them to Andrew's tree?
+Thanks a lot Paul for the awesome explanation. Do you think keeping
+data_race() here would be harmful in a sense that it might cause
+confusion in future?
