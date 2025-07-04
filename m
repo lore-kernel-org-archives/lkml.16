@@ -1,66 +1,67 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393362D542C;
-	Fri,  4 Jul 2025 07:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECC42D4B6F;
+	Fri,  4 Jul 2025 07:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615667; cv=none; b=ICk+FijGw/sdhBWNgrzMZQNaLtBb4XHwIPZirSyT/wEJquyPFNrjqGVtA7Ek4bXDcMOUap2zD/p79qY4dW4QXcyGKG8i240hpWM/CdaFFOffkrIWFuidDFANwXZlAD6FghJNoNZc5RSJB93ExPbnE1b7JpbtExHXdMxjIjzwz54=
+	t=1751615667; cv=none; b=XbO2jWiS/wGzCxT70GHiY6+oo59GswBW/FTAyjRIW+eFFvB8Q31Ux/8bgGoks07sY0I6xoHqs4yZT+mjGUZe8YrRb//50q/40dTROHrutuFBVsP/GxGZabjsGQnAonlvnPFZCkxkyPzSwF8Tjuyv455prj5A9a/MSuECHPN4B/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615667; c=relaxed/simple;
-	bh=EsSRBPHL51gb+N+5iscaLJIMNNVWp/ZmaF2YUnpikUU=;
+	bh=2WLiRATfI8wJEoYB6D4uEr4LXTXjQ0McJ6+WbU8bC9E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CBxvQPYbme9U0slMyKfwCMfR0OS7+9wa6cAYuTbm+yL3zX+9FGXqe+/NlY/qwL7X55I6EErHUtDb7ZFz94/LFt7+UDEKt46sagEv8R5zrP20l/5U1sIk3fsZLP7HWXw92FfmtDQGV00QS4QuimV2dcbrpdnEA9NDRpB3S0v5t8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQHbbXQV; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=Uq3nzM+xDJOrT75G0x5c89PA+fXnjs9/qfAbUrXXgYIBg/M+4wNU/Cb/UhkQFtofBYhy3HKGXKqxpCAzlfcLoE1zayRR7EhOy4VvrZLWMztM2B8WTSRiTzClbLr4Ch69/8wWnGUYot/nq2SCDkJYpBzc1NlcvaHaaJqsuHEsHe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCV/J84Z; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQHbbXQV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCV/J84Z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615666; x=1783151666;
+  t=1751615665; x=1783151665;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EsSRBPHL51gb+N+5iscaLJIMNNVWp/ZmaF2YUnpikUU=;
-  b=hQHbbXQVoS7KlqWhGqUPzqm0gZhKH5DbmVjnMXBtsp+WKaB89qQskePN
-   AwL/NcdifJQsHrGKA2lLX3r15XwKYQb/V6MwIj6a4RxwssK+rKwSU/lzM
-   MMvhDawrndoExWqouvqD4MgebV/KwlK06sNcSTh5Lg4+CZBBJAy1YPmCQ
-   9jFsEJCAazlCb/CllacYrMC64CjZfIy47IWbRG6n/LO/b2oWphaWcSRMD
-   LudJcA3GSdOzMP1J8JDUko58HNVQjA0cmW9a8OIbZLsA3ieUZFcylpE+v
-   bKvpSg59e8kBmiKhsqMQ29TdPowbvFHQxk2YNb47rMco3a2O37Lp2gcEj
-   w==;
-X-CSE-ConnectionGUID: wB3T8GAkQi+uYAF/rtbfrw==
-X-CSE-MsgGUID: 7tZPsp/vRH2tMW8Y8cBj/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494614"
+  bh=2WLiRATfI8wJEoYB6D4uEr4LXTXjQ0McJ6+WbU8bC9E=;
+  b=TCV/J84Z4uLR/lrh1pazSewrZ+BhzmY1i68jYyh88IudOXvQzpdMSLjM
+   xL/C4K4nfKR0jP7JQu73TxSFdFpEfrcgxzvgGwunQfoUGDpaZC01hzMI0
+   M2Unl0v0wqMBOaqsLv8arWiiDtA0bfuMfuJ5BSKDF2bu6lGyQI/I4Ooe6
+   rQRFUclUa4oxlbkVofYv0/UzSxM1d0Og0DJZUoslu3oCvAyppsLASsxL3
+   60j7Ke9zJA9fTzLAE35zynaYiqJmbRL3OD6rYU5GMLiG5QTl3k/ZRcI8W
+   ++aipTF5GMBgUobVlENfluIepf0jxpZj3Burfrz5JJrdO/r0zgEiAw5DT
+   g==;
+X-CSE-ConnectionGUID: OvyPaj4rQn+kkwN/IHfQ5A==
+X-CSE-MsgGUID: aX6jAeOCQF2EvEMvvv8VEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494607"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494614"
+   d="scan'208";a="76494607"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:25 -0700
-X-CSE-ConnectionGUID: qtuDCPjqR1OZ4WgHSakl5Q==
-X-CSE-MsgGUID: zqALsrCnTiGhdANOempUEg==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:23 -0700
+X-CSE-ConnectionGUID: rWIsyR0XT9WSWSB/utMKWA==
+X-CSE-MsgGUID: Rz/jGlQuRYKzIxLB5RvwdQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924263"
+   d="scan'208";a="158924266"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:22 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:20 -0700
 Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id CA85844910;
-	Fri,  4 Jul 2025 10:54:20 +0300 (EEST)
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 5208844433;
+	Fri,  4 Jul 2025 10:54:18 +0300 (EEST)
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
+To: Even Xu <even.xu@intel.com>,
+	Xinpeng Sun <xinpeng.sun@intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Waqar Hameed <waqar.hameed@axis.com>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-	Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: linux-iio@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Philipp Stanner <phasta@kernel.org>
+Cc: linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 29/80] iio: chemical: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:20 +0300
-Message-Id: <20250704075420.3219166-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 26/80] HID: intel-thc-hid: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:18 +0300
+Message-Id: <20250704075418.3218839-1-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
@@ -89,58 +90,76 @@ rc2:
         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
                 pm-runtime-6.17-rc1
 
- drivers/iio/chemical/atlas-sensor.c | 2 --
- drivers/iio/chemical/bme680_core.c  | 3 ---
- 2 files changed, 5 deletions(-)
+ drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c | 2 --
+ drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-hid.c | 1 -
+ drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c | 2 --
+ drivers/hid/intel-thc-hid/intel-quickspi/quickspi-hid.c | 1 -
+ 4 files changed, 6 deletions(-)
 
-diff --git a/drivers/iio/chemical/atlas-sensor.c b/drivers/iio/chemical/atlas-sensor.c
-index 1daaa36f87a9..8bbba85af699 100644
---- a/drivers/iio/chemical/atlas-sensor.c
-+++ b/drivers/iio/chemical/atlas-sensor.c
-@@ -425,7 +425,6 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
+index e944a6ccb776..599f12d3e657 100644
+--- a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
++++ b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
+@@ -328,7 +328,6 @@ static irqreturn_t quicki2c_irq_thread_handler(int irq, void *dev_id)
+ 		if (try_recover(qcdev))
+ 			qcdev->state = QUICKI2C_DISABLED;
  
--	pm_runtime_mark_last_busy(&data->client->dev);
- 	ret = pm_runtime_put_autosuspend(&data->client->dev);
- 	if (ret)
- 		return ret;
-@@ -491,7 +490,6 @@ static int atlas_read_measurement(struct atlas_data *data, int reg, __be32 *val)
+-	pm_runtime_mark_last_busy(qcdev->dev);
+ 	pm_runtime_put_autosuspend(qcdev->dev);
  
- 	ret = regmap_bulk_read(data->regmap, reg, val, sizeof(*val));
+ 	return IRQ_HANDLED;
+@@ -711,7 +710,6 @@ static int quicki2c_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* Enable runtime power management */
+ 	pm_runtime_use_autosuspend(qcdev->dev);
+ 	pm_runtime_set_autosuspend_delay(qcdev->dev, DEFAULT_AUTO_SUSPEND_DELAY_MS);
+-	pm_runtime_mark_last_busy(qcdev->dev);
+ 	pm_runtime_put_noidle(qcdev->dev);
+ 	pm_runtime_put_autosuspend(qcdev->dev);
  
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
+diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-hid.c b/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-hid.c
+index 5c3ec95bb3fd..834a537b6780 100644
+--- a/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-hid.c
++++ b/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-hid.c
+@@ -72,7 +72,6 @@ static int quicki2c_hid_raw_request(struct hid_device *hid,
+ 		break;
+ 	}
  
- 	return ret;
-diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-index 61d446fd456c..70f81c4a96ba 100644
---- a/drivers/iio/chemical/bme680_core.c
-+++ b/drivers/iio/chemical/bme680_core.c
-@@ -950,7 +950,6 @@ static int bme680_read_raw(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	ret = __bme680_read_raw(indio_dev, chan, val, val2, mask);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-@@ -1021,7 +1020,6 @@ static int bme680_write_raw(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	ret = __bme680_write_raw(indio_dev, chan, val, val2, mask);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
+-	pm_runtime_mark_last_busy(qcdev->dev);
+ 	pm_runtime_put_autosuspend(qcdev->dev);
  
  	return ret;
-@@ -1140,7 +1138,6 @@ static int bme680_buffer_postdisable(struct iio_dev *indio_dev)
- 	struct bme680_data *data = iio_priv(indio_dev);
- 	struct device *dev = regmap_get_device(data->regmap);
+diff --git a/drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c b/drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c
+index 5e5f179dd113..2b518d88645a 100644
+--- a/drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c
++++ b/drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c
+@@ -335,7 +335,6 @@ static irqreturn_t quickspi_irq_thread_handler(int irq, void *dev_id)
+ 		if (try_recover(qsdev))
+ 			qsdev->state = QUICKSPI_DISABLED;
  
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	return 0;
- }
+-	pm_runtime_mark_last_busy(qsdev->dev);
+ 	pm_runtime_put_autosuspend(qsdev->dev);
+ 
+ 	return IRQ_HANDLED;
+@@ -670,7 +669,6 @@ static int quickspi_probe(struct pci_dev *pdev,
+ 	/* Enable runtime power management */
+ 	pm_runtime_use_autosuspend(qsdev->dev);
+ 	pm_runtime_set_autosuspend_delay(qsdev->dev, DEFAULT_AUTO_SUSPEND_DELAY_MS);
+-	pm_runtime_mark_last_busy(qsdev->dev);
+ 	pm_runtime_put_noidle(qsdev->dev);
+ 	pm_runtime_put_autosuspend(qsdev->dev);
+ 
+diff --git a/drivers/hid/intel-thc-hid/intel-quickspi/quickspi-hid.c b/drivers/hid/intel-thc-hid/intel-quickspi/quickspi-hid.c
+index ad52e402c28a..82c72bfa2795 100644
+--- a/drivers/hid/intel-thc-hid/intel-quickspi/quickspi-hid.c
++++ b/drivers/hid/intel-thc-hid/intel-quickspi/quickspi-hid.c
+@@ -71,7 +71,6 @@ static int quickspi_hid_raw_request(struct hid_device *hid,
+ 		break;
+ 	}
+ 
+-	pm_runtime_mark_last_busy(qsdev->dev);
+ 	pm_runtime_put_autosuspend(qsdev->dev);
+ 
+ 	return ret;
 -- 
 2.39.5
 
