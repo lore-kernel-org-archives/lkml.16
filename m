@@ -1,123 +1,122 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0BA2D239F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036C730B985
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641730; cv=none; b=J7reqgQ6635H+CCPJ/d/7o3yDDuB7qXbVLkLK8KI9bgTAhkLKO+ZgD4U2SCnUX14PdBbfr55c/1n0KhmlSwztL8jvS5nFsYKS8jzhpTTdSjko0ByHbm3vHB0GQMLeqDRJxrUjV9Av0J0Z+nvUb7qIW3cYM2EhxkC1q2fo/zTOdQ=
+	t=1751641742; cv=none; b=r/WvkbauCUSpOiJHXd0QP4mIP1TgWQFiEFQFegsYleWqMNbU42w5N5WOfzSkrDxu54hZaITZfxcShVT4qJG8/DxyyMt3+DeXUjNv+YlB2aMmZzW7GmOoQYrwkC6+d99qlpVOrGolfwBEieV5ohNlllm+cIc+CLk+Z/qHS4zA6ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641730; c=relaxed/simple;
-	bh=q/dUdo5NAO3E5/eRdbn+WVf7dbNkr9uKXLcJPljs+4w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pLhuROg2Uu8QBP3J7MjpB1Wrt2HFNLFbK7Qe6gLYg22NDCpYG1BkzCJ/temIPev32TKIcWz52SqZ5bRdfhh5pES5L/BHEh5cSEFeQbzO/5MdydtyBYc49dk0kkGuJKaMfB0bePj6wUxg0hso4Z4EFkXrBzyYTbib5LIyZJkRfZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zWXhVUi+; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1751641742; c=relaxed/simple;
+	bh=ipnj/ShwN4qWMwlvjTyy3Pk2w7mwcXypC/ulNiTQd8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fbbE1z7BAvBj+a1r1oac6riQ8YVzVkB4m4ZYkoCOJCK1mox/68DZMKoWofZRbLtRl8OS7pAzJYrkWJAevp58D/yOkozcHJGkKvXsiz+M59pEcZt+jp0TJj1xvsHNAdLKaAilffo+PiEbqzjIeOnTgAH6E1RYN5dGpKmpPTsjgFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zjL//tdH; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zWXhVUi+"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450ce671a08so5957595e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:08:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zjL//tdH"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso583828f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751641727; x=1752246527; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GclhZB+I+gWjc1PWB+Tmja4z4M9XT8ugZhSsO+bEP7o=;
-        b=zWXhVUi+hnoJXLeHfQ+ZlLjgk+y5rd9JhXH9llEAdBiB+ad6v+nJOR/vVImX5g5I/c
-         GOXYLz6soiJ2sU2Nlk9Abjmno/r1sb0U8t0KgwCyFvnST0nbTiwR8+eoSRvqFXZzy4L5
-         O5HmadlOz/ecKQqKkcySI6OVGG7sPoofF79FULbEZzXI8ZVWhbZgGRMKDf9TFvAHRGb8
-         piSeV8f7lEJ/kZ+YcbrRSa025sCoOcuTpjLWYw+HCs0QrA5u1l0TJ2momN8rSJE+tiaD
-         5yEMjsQ/UU8eFIV5bSkbY7cvAZ67rgny9yrvN9gOO0TekpPfyei3o1OuN2hNUNiuZMZ3
-         ykgA==
+        d=linaro.org; s=google; t=1751641739; x=1752246539; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WOyFHtQS4VvsDjcbQRHgwxAxnr6aZ/PpVMTdfF6upkw=;
+        b=zjL//tdHwM1nPlxPr0X0VJABfizrP+XW4CC/IqymV0u1mUbOVB5ZFlu8a1B8CPPUhd
+         NToLmjtZMm9wlwcWceHG+gS7pN+MJBX0ZeoOWZWnIazFqtgPbubtTKGZNA03ISF75un1
+         1q/nVz8wY6oo9E9IXgYNCNKpqYGY1RB+jdH86BrTywAI/RPgyIU8INkTOkusfI2n/Bpr
+         2kPxJTG4B1aCA0llDKXSxqSOohL+FOcT0fpXNdn+I6YV5MlM/WWamfzMSaf/ay124h0y
+         3PZgB6WE3ADDSreqeAoh8gpXNvcwj/6hTPuXzQrSnM7HElJ38B5+FoPI9oCnNzcnpg2k
+         7w0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751641727; x=1752246527;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GclhZB+I+gWjc1PWB+Tmja4z4M9XT8ugZhSsO+bEP7o=;
-        b=Bm4iFY+QXaiHfGmUEpFOUHTYr6g31a0bnd+477D4I19i+X6fv4L++Bd006sNtd9PYb
-         bgQpo/7UZxmuP/tv16+KuYMno42wg0TkeKLLo3FeechYhFbswrgM6jAhdwJhDRfB8exq
-         vZkHD82zLEwpCdqiCFCvA0LXMi1UYTPLS2DDMEs8wHjoFqTBQOxBv4SJRFI2CmhgIVqu
-         noD658yysP8HeofFxUKBGC1WdNc1NE8ypVSHapTB4r7EZj73T20omBYNgFZDdc0ItxHR
-         llMQDaJYqyZQS6+oTg7zl2M6rAbFonIln4kr340BmuUU8zjDaTVgiw25a7z9Ce6GWP1D
-         ZxsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6YJ539r08Tm3Q5dIyVNSr4D//PCN8+zMTw70JsAPEo7HlKMKf3NYRvY0GUy5QSaZQuv9ITU9hPC/GERs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkygJXt1h5WLKhw1QsakO+35sqRecY9nbIQk4apMgWOi9yliSo
-	CYLUB+zfUcpdgH1CcV/hyN9h1Y7ira2n/rT1A8VAHg7R/rJ1YEnNz+2k1rDXupGhNxA=
-X-Gm-Gg: ASbGncvzoIJRCcNbHbp9d6OvFqI/yRSWI09p04ZdNHG9v3g5qkg7+FrmpAE2/wokDRD
-	A+1ag+FJ/03CaqlDs9+ugBW6LFZJ0c1AWyePs4XoPCPmpniDrd3Pdhju8S9fl50xonWotVYLmUY
-	b6ppzi/XXEIJcPtdF7CVsXwGAycWkVCoWkvPs7MobuLWpxxuxmVgVXiXGAqjjBPr6m9ACE/Ox2j
-	hGStCm9LA6YhbwdJd/OFOPMNDKvRzx1dKJIypu+JVSR2rI0IBEYkyjE9xpAVhTPlFdKEWaHsUWz
-	pzkWSrTZeHbEPyAsM89UZNpQ09wv9tfIC7o+I/EN2q3g2LBYFRs3LlHb9Sgm+LmQukJvVABHuqT
-	V2KqkIUM=
-X-Google-Smtp-Source: AGHT+IE7H9vRYfC7d4kJ+PSNtqfq+5KdOErVu7jZId1urOwLE5iqgduTgGoQI9kj0MA3An7JAcpEWQ==
-X-Received: by 2002:a05:6000:2910:b0:3a4:ec23:dba7 with SMTP id ffacd0b85a97d-3b497038e99mr2076301f8f.31.1751641727135;
-        Fri, 04 Jul 2025 08:08:47 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bead7csm57231595e9.39.2025.07.04.08.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:08:46 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
-References: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
-Subject: Re: [PATCH v3 0/2] arm64: Device Tree for Ugoos AM3 board
-Message-Id: <175164172639.2841706.12481135333211530140.b4-ty@linaro.org>
-Date: Fri, 04 Jul 2025 17:08:46 +0200
+        d=1e100.net; s=20230601; t=1751641739; x=1752246539;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WOyFHtQS4VvsDjcbQRHgwxAxnr6aZ/PpVMTdfF6upkw=;
+        b=uHGwfkcX+v7Tp7UlJdDnIBELBgGo/Zu2TnkkE71FVgoLd6dNH6yO9CRJtT+W2WaVxO
+         vj+JQV2JRPhWwD8VCORwsgQkeczrGFhu4fykumZ4keXcz3iM9mZa1nWHGzIAlSNdo27A
+         SiHQGyCPW4/MXyQlpY+dAlk/pjGjBxwI0CKS53QvqAJ6/Gzd01tGu8KGZ0FPzFtugo46
+         dfpiH6hN2Uesy3xz/C7eufxu/nArj6tGCh2zdVKLuBgpIXpPj1Y/gECabWnCECU82t8/
+         9RThok2Qxlcox6IOg3zX2MDtdDwn3xDGlu+W8CLfHg6Uis848FKwO8p079CdgjLmyKP9
+         6mDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbGroPzrNlcPK02zxqvxlRznYxPMWA+SOUIftuFGK2EIirEwirD3t4cq5kXxj9Ra2IS23MT8zJUE8xQ44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNBZhHk80RC6pts+4A8Rziujc3J3o0iDuDecIz4lVeNmFqZUX4
+	9pKaX7TwxkxI1KoF1Ws65y4AExzEfL+mHBjOTZC3dVDVjYXlBmd54+uuByr82cfWuok=
+X-Gm-Gg: ASbGncvGMlrk8OnHZ0gm4guRVuk241Q8dTpnJoSTSKxN9nFrkXcQ/DZd0s9dlH16dvy
+	nQx5CA1Xr3nRAKZL7PhbQXFatNRoaIRkKiJZogC9YCYCH0kAeBxRTBtRKDg5oelI9wm7uEWJrIN
+	odt+UgfyRACU6xARkXQcNY0Rsk2oYxQcwUkgNL/BJ5LZujnABJ6ArkvsgYtnxlV229BIZnuLbTW
+	wTzQJhUtK1v0bU5z6WJsPQ5OPyWV8zygkwYwzV0WuJP1jE/57HcTbdfDsqTEDbH5Oq1e0cTygw5
+	IA/+lVmXIUCzB0+PzgtR/9iEgp1PJZmr2j/iDxlEtRlpDYd9LA3VeRVjYGBefa7q0FIQvAe+kVw
+	8krrYmSJZz1nW8i558oZ4AuMPFng=
+X-Google-Smtp-Source: AGHT+IH9cnwUoqoWS5/qQDudbSz0QU2bdpH6UeAa65SEFEoIDoAtlPs1SdHDTe/5FJH8jfA2orMi5Q==
+X-Received: by 2002:a5d:5e0a:0:b0:3a5:8cdd:c174 with SMTP id ffacd0b85a97d-3b4964f6f85mr2726920f8f.26.1751641739273;
+        Fri, 04 Jul 2025 08:08:59 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b975efsm2667049f8f.46.2025.07.04.08.08.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 08:08:58 -0700 (PDT)
+Message-ID: <0b526bee-dd8b-446b-9b79-00fcf811837e@linaro.org>
+Date: Fri, 4 Jul 2025 16:08:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] clk: qcom: videocc-sm8550: Allow building without
+ SM8550/SM8560 GCC
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+ Johan Hovold <johan@kernel.org>, Stefan Schmidt <stefan.schmidt@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
+ <20250701-x1e-videocc-v1-2-785d393be502@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250701-x1e-videocc-v1-2-785d393be502@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On Fri, 13 Jun 2025 15:39:12 +0200, J. Neuschäfer wrote:
-> This patchset adds a device tree for Ugoos AM3, an Android TV box from
-> 2018. Most hardware functionality has been tested, as noted in patch 2/2.
+On 01/07/2025 18:28, Stephan Gerhold wrote:
+>  From the build perspective, the videocc-sm8550 driver doesn't depend on
+> having one of the GCC drivers enabled. It builds just fine without the GCC
+> driver. In practice, it doesn't make much sense to have it enabled without
+> the GCC driver, but currently this extra dependency is inconsistent with
+> most of the other VIDEOCC entries in Kconfig. This can easily cause
+> confusion when you see the VIDEOCC options for some of the SoCs but not for
+> all of them.
 > 
+> Let's just drop the depends line to allow building the videocc driver
+> independent of the GCC selection. Compile testing with randconfig will also
+> benefit from keeping the dependencies minimal.
 > 
-
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.17/arm64-dt)
-
-[1/2] dt-bindings: arm: amlogic: Add Ugoos AM3
-      https://git.kernel.org/amlogic/c/ef491ab7cbf6a460476a41d8b5dbd8a4394282ba
-[2/2] arm64: dts: amlogic: Add Ugoos AM3
-      https://git.kernel.org/amlogic/c/b33f8cfb2b4d91c4bb7c16b354138cc205befed2
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.17/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
-
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
+>   drivers/clk/qcom/Kconfig | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 36d6e6e1e7f0162d53f02f39125f4593517e0dba..26752bd79f508612347ce79fd3693359d4dd656d 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -1391,7 +1391,6 @@ config SM_VIDEOCC_8350
+>   config SM_VIDEOCC_8550
+>   	tristate "SM8550 Video Clock Controller"
+>   	depends on ARM64 || COMPILE_TEST
+> -	depends on SM_GCC_8550 || SM_GCC_8650
+>   	select QCOM_GDSC
+>   	help
+>   	  Support for the video clock controller on Qualcomm Technologies, Inc.
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
