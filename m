@@ -1,113 +1,211 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DE52877F9;
-	Fri,  4 Jul 2025 08:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAD3328B15;
+	Fri,  4 Jul 2025 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618954; cv=none; b=KwfgQhZyLFlHS88AHTk41NDJP9sMkiEQk1t/Xrw5wiVj8S+DGSuW6p7l8G3C3sJ1Taso+E57EborkkmUJAOTxmc0CMtZjgZj1bjX2ZqFJDXbgN5LDMr6wbL6zulTMBG1eERgerRnogRgyAXeKH1AAaocae/X17D4xrRGrB3hQIg=
+	t=1751619005; cv=none; b=ohgyXXtjuP/RhMmkr/HJUa3xA/+DpbYy32S3+BpRUvfuYQqs88+EWjB5gVt+Afui6ZI7ihRnXqYe8gPI0aSzmK9Txt2lQ6DnQnS/vZ/I7FWLyQcwOKsDDo91vsBmxUfni+Ft4SpTgE/Coq34yXWyEfVx5N5j00BIvr5DI6e27DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618954; c=relaxed/simple;
-	bh=VJlhA+4V8cKq6Ze77CKxoGIcWtomnmXZsPHxdC45v7c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VCukMlkKpCZaMdA5E55qw9hKJNqZEraLR+qdojCTphXJdBNT5sZusQnk0havDb4LWZEDK+KikFeDNmtWYMLlvAxckGnrj76eSj9qWnis8e7w06eztlJClQmCV+7Aok0yPwOMTfIEELkz1NVUBNn8CD72EIumqHN7kT2+Sl9i1eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net; spf=pass smtp.mailfrom=hadess.net; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hadess.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hadess.net
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D394F43123;
-	Fri,  4 Jul 2025 08:49:07 +0000 (UTC)
-Message-ID: <1f49c0993c61d97128a78667c1967b440dc5b7df.camel@hadess.net>
-Subject: Re: [PATCH v3] Bluetooth: ISO: Support SCM_TIMESTAMPING for ISO TS
-From: Bastien Nocera <hadess@hadess.net>
-To: yang.li@amlogic.com, Marcel Holtmann <marcel@holtmann.org>, Johan
- Hedberg	 <johan.hedberg@gmail.com>, Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,  "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 04 Jul 2025 10:49:07 +0200
-In-Reply-To: <20250704-iso_ts-v3-1-2328bc602961@amlogic.com>
-References: <20250704-iso_ts-v3-1-2328bc602961@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1751619005; c=relaxed/simple;
+	bh=DmWmWnG0xzD5jR64/AXRzwV45mL5Jd9K9YLXjjpIGjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AtEe9/g2WfQFo8IZUT5A15Cer3eNTfPPuF0yVRdB9ZxGY/Zw/ZNaWw+rAAVCwaSIlBF9U54j1AwKoqTv/Kut9NpnhbC6br9Pg1gY6tVb3nG3cCQhkgowoZD6bnfcxAP9VmOa1H3OquU/gzh9kvnn9wq5YdxVvARdf8hHLA3Jk40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sHMAVZhy; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sHMAVZhy"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5648nvv84137013;
+	Fri, 4 Jul 2025 03:49:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751618997;
+	bh=MNcJEOQZ0+j6Wxt3y+Bn5OQsOtsRMAuYq1Yrns6q6q8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=sHMAVZhyCYyA28916ZVQshWt6/7jLlzmoSmyanqO/OR7VIhp2dObKaqzLZ2OneWdW
+	 7kMIGjjBEN3aY/Y+GryVgtUh5oz992/gMRgRDen44hs/i3SJgZ2/x7DwDmdekigBI7
+	 /AwV15DCRuPRq8buvUQ+rv3BzeFkixpbt4tIEEZM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5648nv392659128
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 4 Jul 2025 03:49:57 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 4
+ Jul 2025 03:49:56 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 4 Jul 2025 03:49:56 -0500
+Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5648np2f2413577;
+	Fri, 4 Jul 2025 03:49:52 -0500
+Message-ID: <3d766967-a562-4b91-bafb-0d6688f72636@ti.com>
+Date: Fri, 4 Jul 2025 14:19:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdejvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpeeurghsthhivghnucfpohgtvghrrgcuoehhrgguvghssheshhgruggvshhsrdhnvghtqeenucggtffrrghtthgvrhhnpeffieeuudevuddtffeiheduteelgffgfeegueefheduueejhfdtuddvkefhvdekgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgefgeemvggtjeefmegtfhdvtdemjeduuggrmeefsggumedvtdgrleemudeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgefgeemvggtjeefmegtfhdvtdemjeduuggrmeefsggumedvtdgrleemudeffedphhgvlhhopeglkffrvheimedvrgdtudemvgefgeemvggtjeefmegtfhdvtdemjeduuggrmeefsggumedvtdgrleemudeffegnpdhmrghilhhfrhhomhephhgruggvshhssehhrgguvghsshdrnhgvthdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohephigrnhhgrdhlihesrghmlhhoghhitgdrtghomhdprhgtphhtthhopehmrghrtggvlheshhholhhtmhgrnhhnrdhorhhgpdhrtghpthhtohepjhhohhgrn
- hdrhhgvuggsvghrghesghhmrghilhdrtghomhdprhgtphhtthhopehluhhiiidruggvnhhtiiesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: hadess@hadess.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/4] arm64: dts: ti: Add support for AM62D2-EVM
+To: Vignesh Raghavendra <vigneshr@ti.com>, <nm@ti.com>, <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
+        <devarsht@ti.com>, <s-vadapalli@ti.com>, <andrew@lunn.ch>
+References: <20250627115753.2246881-1-p-bhagat@ti.com>
+ <20250627115753.2246881-5-p-bhagat@ti.com>
+ <c9e0c113-f663-426b-8a23-d82300987b98@ti.com>
+Content-Language: en-US
+From: Paresh Bhagat <p-bhagat@ti.com>
+In-Reply-To: <c9e0c113-f663-426b-8a23-d82300987b98@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, 2025-07-04 at 13:36 +0800, Yang Li via B4 Relay wrote:
-> From: Yang Li <yang.li@amlogic.com>
->=20
-> User-space applications (e.g., PipeWire) depend on
-> ISO-formatted timestamps for precise audio sync.
->=20
-> Signed-off-by: Yang Li <yang.li@amlogic.com>
-> ---
-> Changes in v3:
-> - Change to use hwtimestamp
-> - Link to v2:
-> https://lore.kernel.org/r/20250702-iso_ts-v2-1-723d199c8068@amlogic.com
->=20
-> Changes in v2:
-> - Support SOCK_RCVTSTAMPNS via CMSG for ISO sockets
-> - Link to v1:
-> https://lore.kernel.org/r/20250429-iso_ts-v1-1-e586f30de6cb@amlogic.com
-> ---
-> =C2=A0net/bluetooth/iso.c | 10 +++++++++-
-> =C2=A01 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
-> index fc22782cbeeb..67ff355167d8 100644
-> --- a/net/bluetooth/iso.c
-> +++ b/net/bluetooth/iso.c
-> @@ -2301,13 +2301,21 @@ void iso_recv(struct hci_conn *hcon, struct
-> sk_buff *skb, u16 flags)
-> =C2=A0		if (ts) {
-> =C2=A0			struct hci_iso_ts_data_hdr *hdr;
-> =C2=A0
-> -			/* TODO: add timestamp to the packet? */
-> =C2=A0			hdr =3D skb_pull_data(skb,
-> HCI_ISO_TS_DATA_HDR_SIZE);
-> =C2=A0			if (!hdr) {
-> =C2=A0				BT_ERR("Frame is too short (len
-> %d)", skb->len);
-> =C2=A0				goto drop;
-> =C2=A0			}
-> =C2=A0
-> +			/* The ISO ts is based on the controller=E2=80=99s
-> clock domain,
-> +			 * so hardware timestamping (hwtimestamp)
-> must be used.
-> +			 * Ref:
-> Documentation/networking/timestamping.rst,
-> +			 * chapter 3.1 Hardware Timestamping.
-> +=C2=A0			 */
-> +			struct skb_shared_hwtstamps *hwts =3D
-> skb_hwtstamps(skb);
+Hi Vignesh,
 
-The variable should be declared at the top of the scope.
 
-Cheers
+On 04/07/25 10:20, Vignesh Raghavendra wrote:
+>
+> On 27/06/25 17:27, Paresh Bhagat wrote:
+>> +&main_pmx0 {
+>> +	main_uart0_pins_default: main-uart0-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x01c8, PIN_INPUT, 0) /* (E14) UART0_RXD */
+>> +			AM62DX_IOPAD(0x01cc, PIN_OUTPUT, 0) /* (D15) UART0_TXD */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_i2c0_pins_default: main-i2c0-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x01e0, PIN_INPUT_PULLUP, 0) /* (D17) I2C0_SCL */
+>> +			AM62DX_IOPAD(0x01e4, PIN_INPUT_PULLUP, 0) /* (E16) I2C0_SDA */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_i2c1_pins_default: main-i2c1-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x01e8, PIN_INPUT_PULLUP, 0) /* (C17) I2C1_SCL */
+>> +			AM62DX_IOPAD(0x01ec, PIN_INPUT_PULLUP, 0) /* (E17) I2C1_SDA */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_i2c2_pins_default: main-i2c2-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x00b0, PIN_INPUT_PULLUP, 1) /* (M22) GPMC0_CSn2.I2C2_SCL */
+>> +			AM62DX_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /* (M20) GPMC0_CSn3.I2C2_SDA */
+>> +		>;
+>> +	};
+>> +
+>> +	main_mmc0_pins_default: main-mmc0-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x0220, PIN_INPUT_PULLUP, 0) /* (Y6) MMC0_CMD */
+>> +			AM62DX_IOPAD(0x0218, PIN_OUTPUT, 0) /* (AB7) MMC0_CLK */
+>> +			AM62DX_IOPAD(0x0214, PIN_INPUT_PULLUP, 0) /* (AA6) MMC0_DAT0 */
+>> +			AM62DX_IOPAD(0x0210, PIN_INPUT_PULLUP, 0) /* (AB6) MMC0_DAT1 */
+>> +			AM62DX_IOPAD(0x020c, PIN_INPUT_PULLUP, 0) /* (Y7) MMC0_DAT2 */
+>> +			AM62DX_IOPAD(0x0208, PIN_INPUT_PULLUP, 0) /* (AA7) MMC0_DAT3 */
+>> +			AM62DX_IOPAD(0x0204, PIN_INPUT_PULLUP, 0) /* (Y8) MMC0_DAT4 */
+>> +			AM62DX_IOPAD(0x0200, PIN_INPUT_PULLUP, 0) /* (W7) MMC0_DAT5 */
+>> +			AM62DX_IOPAD(0x01fc, PIN_INPUT_PULLUP, 0) /* (W9) MMC0_DAT6 */
+>> +			AM62DX_IOPAD(0x01f8, PIN_INPUT_PULLUP, 0) /* (AB8) MMC0_DAT7 */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_mmc1_pins_default: main-mmc1-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x023c, PIN_INPUT, 0) /* (C21) MMC1_CMD */
+>> +			AM62DX_IOPAD(0x0234, PIN_OUTPUT, 0) /* (E22) MMC1_CLK */
+>> +			AM62DX_IOPAD(0x0230, PIN_INPUT, 0) /* (B22) MMC1_DAT0 */
+>> +			AM62DX_IOPAD(0x022c, PIN_INPUT_PULLUP, 0) /* (D21) MMC1_DAT1 */
+>> +			AM62DX_IOPAD(0x0228, PIN_INPUT_PULLUP, 0) /* (C22) MMC1_DAT2 */
+>> +			AM62DX_IOPAD(0x0224, PIN_INPUT_PULLUP, 0) /* (D22) MMC1_DAT3 */
+> Double check PULLUP here.. There seems to be external PULLUPs on the
+> board. Do you still need internal pulls?
 
-> +			if (hwts)
-> +				hwts->hwtstamp =3D
-> us_to_ktime(le32_to_cpu(hdr->ts));
-> +
-> =C2=A0			len =3D __le16_to_cpu(hdr->slen);
-> =C2=A0		} else {
-> =C2=A0			struct hci_iso_data_hdr *hdr;
->=20
-> ---
-> base-commit: 3bc46213b81278f3a9df0324768e152de71eb9fe
-> change-id: 20250421-iso_ts-c82a300ae784
->=20
-> Best regards,
+
+Will check this and update in next version. Thanks.
+>
+>> +			AM62DX_IOPAD(0x0240, PIN_INPUT, 0) /* (E18) MMC1_SDCD */
+>> +			AM62DX_IOPAD(0x0244, PIN_INPUT, 0) /* (D18) MMC1_SDWP */
+> This pin isn't needed/connected right?
+
+
+Yep. i am planning to enable heartbeat led using the pin in next version.
+>
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_mdio0_pins_default: main-mdio0-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x160, PIN_OUTPUT, 0) /* (V12) MDIO0_MDC */
+>> +			AM62DX_IOPAD(0x15c, PIN_INPUT, 0) /* (V13) MDIO0_MDIO */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_rgmii1_pins_default: main-rgmii1-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x14c, PIN_INPUT, 0) /* (AB16) RGMII1_RD0 */
+>> +			AM62DX_IOPAD(0x150, PIN_INPUT, 0) /* (V15) RGMII1_RD1 */
+>> +			AM62DX_IOPAD(0x154, PIN_INPUT, 0) /* (W15) RGMII1_RD2 */
+>> +			AM62DX_IOPAD(0x158, PIN_INPUT, 0) /* (V14) RGMII1_RD3 */
+>> +			AM62DX_IOPAD(0x148, PIN_INPUT, 0) /* (AA16) RGMII1_RXC */
+>> +			AM62DX_IOPAD(0x144, PIN_INPUT, 0) /* (AA15) RGMII1_RX_CTL */
+>> +			AM62DX_IOPAD(0x134, PIN_INPUT, 0) /* (Y17) RGMII1_TD0 */
+>> +			AM62DX_IOPAD(0x138, PIN_INPUT, 0) /* (V16) RGMII1_TD1 */
+>> +			AM62DX_IOPAD(0x13c, PIN_INPUT, 0) /* (Y16) RGMII1_TD2 */
+>> +			AM62DX_IOPAD(0x140, PIN_INPUT, 0) /* (AA17) RGMII1_TD3 */
+>> +			AM62DX_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AB17) RGMII1_TXC */
+>> +			AM62DX_IOPAD(0x012c, PIN_OUTPUT, 0) /* (W16) RGMII1_TX_CTL */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_rgmii2_pins_default: main-rgmii2-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x0184, PIN_INPUT, 0) /* (AA21) RGMII2_RD0 */
+>> +			AM62DX_IOPAD(0x0188, PIN_INPUT, 0) /* (Y20) RGMII2_RD1 */
+>> +			AM62DX_IOPAD(0x018c, PIN_INPUT, 0) /* (AB21) RGMII2_RD2 */
+>> +			AM62DX_IOPAD(0x0190, PIN_INPUT, 0) /* (AB20) RGMII2_RD3 */
+>> +			AM62DX_IOPAD(0x0180, PIN_INPUT, 0) /* (AA20) RGMII2_RXC */
+>> +			AM62DX_IOPAD(0x017c, PIN_INPUT, 0) /* (W18) RGMII2_RX_CTL */
+>> +			AM62DX_IOPAD(0x016c, PIN_INPUT, 0) /* (AA19) RGMII2_TD0 */
+>> +			AM62DX_IOPAD(0x0170, PIN_INPUT, 0) /* (Y18) RGMII2_TD1 */
+>> +			AM62DX_IOPAD(0x0174, PIN_INPUT, 0) /* (AA18) RGMII2_TD2 */
+>> +			AM62DX_IOPAD(0x0178, PIN_INPUT, 0) /* (W17) RGMII2_TD3 */
+>> +			AM62DX_IOPAD(0x0168, PIN_OUTPUT, 0) /* (AB19) RGMII2_TXC */
+>> +			AM62DX_IOPAD(0x0164, PIN_OUTPUT, 0) /* (Y19) RGMII2_TX_CTL */
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	main_gpio1_ioexp_intr_pins_default: main-gpio1-ioexp-intr-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x01d4, PIN_INPUT, 7) /* (C15) UART0_RTSn.GPIO1_23 */
+>> +		>;
+>> +	};
+>> +
+>> +	vddshv_sdio_pins_default: vddshv-sdio-default-pins {
+>> +		pinctrl-single,pins = <
+>> +			AM62DX_IOPAD(0x1F4, PIN_OUTPUT, 7) /* (M19) GPMC0_CLK.GPIO1_31 */
+> 					^^^ use lower case hexadecimals
+
+
+Will fix this
+>
+>> +		>;
+>> +		bootph-all;
+>> +	};
+>> +};
+>> +
