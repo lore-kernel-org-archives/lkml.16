@@ -1,172 +1,76 @@
-Received: from the.earth.li (the.earth.li [93.93.131.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6A64501A;
-	Fri,  4 Jul 2025 15:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0BA4501A;
+	Fri,  4 Jul 2025 15:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751644293; cv=none; b=mmLtEqGxbMGSYxBCjEg3fDMto3owL01dxCl2bkmvJmLIELflkjIG6uMV4YToCkk5JVT2l61Yqp0TjAhgLmnqLXX69HAxk+F07A12PgUzoWd7ze1PINDE5SSz5LAmru3Ma/aLL68HhIuB/nf9NYBMWaud3tW24wKgA/K9EgTrlTo=
+	t=1751644342; cv=none; b=GsUOMCiyvbCmRtioYkBobePoE79fnI1TlsGu5sPG4a/RU2mkbdLUdXjFZOlhwREER14dvgGN30WZbeHG08hNdfuA43CFN5NY+IL84kUyvhxrg/NRvjPU2gwkT1aF69LVqgIBzjeN9w2X4O7S0xpXqbg6SSV9rBWAMeGjhS7KaDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751644293; c=relaxed/simple;
-	bh=FCnVZIOYhNx+EjP+n5BFpCdKpnT4NOhcK56CUNab/0Y=;
+	s=arc-20240116; t=1751644342; c=relaxed/simple;
+	bh=PqIUZzW3hHwEWkUH6fgIl0ek+eo73zsrYyKZoR9Fv6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjaITAcWLyEku7ZgoDVUR1CUpFiQTgcGf5vuocBLFwf8tZ460wzp6z53rc83c3nfjyMeEQZ0n/BTD+xna5nE2qq3LJPQdSJwLDNqoJySM2IRrB/pyGS6vqMXGRizG+dT2+5DyJTZNGfObqd22ErQbhwYkfzj+iJ/B3QKP+r7t2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=njgfOrPV; arc=none smtp.client-ip=93.93.131.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pb+NtZlY/5zxRrnxwzUOBBmsoCm9ynmPK7799e3qpC493/M+rJ4ke9HKMF9IJDcwKsWyov7MCutbyPyylFtxh7mv4SSwpBhrWCtmAHQkrs1gjiGDKgAqE4DPAnJA4dCWeKaiPxZcWjTCBzwgGMN4x3sk0A02DzK76hxCs9Tky3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFSPoo/P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="njgfOrPV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-	s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
-	Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=5yIk903c/6Tuugga8xcZneoZW3zuKnTSfGdd5qCKqlY=; b=njgfOrPVGUWR5K6ZS9mdd/1FCe
-	jBbrB6eyznX3yHXAnGDj9lpbICMlfgjxTL8lMXZK/TH7L//BUG3dJWfJUCtqMaBiYJBIL3+CU4HHN
-	Ru9++xcSgIBb6705Trhwa6Cnxe6ERiJ8STXt0KKiASyU5Ghd+HzlEwSYP3Ks6ei5eKXkhGDSVADCN
-	Fbek/VYhdNFgkSTqXdlI5hJUW13dzKCcxWEH+ilmdx99gSDrzCB2CERNmWKnUInUDVL7wbAwCJp24
-	kCfToSVR/dRl0LPkatMClamXiUPwCbFazN1KM8QoDsnXQrUb1nrw7MP+pWZAnx2oDMLY18Xq3pfM8
-	9Q2goXyA==;
-Received: from noodles by the.earth.li with local (Exim 4.96)
-	(envelope-from <noodles@earth.li>)
-	id 1uXihD-00FRvW-0b;
-	Fri, 04 Jul 2025 16:51:27 +0100
-Date: Fri, 4 Jul 2025 16:51:27 +0100
-From: Jonathan McDowell <noodles@earth.li>
-To: "Orlov, Ivan" <ivan.orlov0322@gmail.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	"Orlov, Ivan" <iorlov@amazon.co.uk>,
-	"peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Woodhouse, David" <dwmw@amazon.co.uk>
-Subject: Re: [PATCH v2] tpm: Fix the timeout & use ktime
-Message-ID: <aGf4f-PKyqlBNgNj@earth.li>
-References: <20250620180828.98413-1-iorlov@amazon.com>
- <aFhtKrWTDzZbpTSh@earth.li>
- <aFwnG--lzZO0mQgc@kernel.org>
- <aGeYqQG15lb2_NaU@earth.li>
- <aGfwPbMZf-SHshXH@kernel.org>
- <048723bf-4a8d-451a-911b-f9f94a4270d7@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFSPoo/P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAEB9C4CEE3;
+	Fri,  4 Jul 2025 15:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751644342;
+	bh=PqIUZzW3hHwEWkUH6fgIl0ek+eo73zsrYyKZoR9Fv6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RFSPoo/PAr6t5QxwTQa93VHluA6zVV68bERPo2F9zwJD6o08v5Hh0nP0nPfs0FhvA
+	 ofNKBk24ju9pWmn8wZ1rx5Fb18DWXisSM2TXl3Po+VHtVcv+tI9ijvUWVz7Re3q1I2
+	 1VQ5lx9zuevQMdeAXr1O3l1MfW2ZZpF3EeXTFPn7Yw8mswb7Rfya73iVddfrk1Z6+5
+	 s9O97IcnMhL3IlO2f3Hg0lmzldqOo4odLjfilacbtzWRO0VCoBUF5TtsmVD1JLkdi3
+	 AYvGiUV/aczZIUlY23wRM4T3u/w7DBU31CENSvtesiXES9s/Unzz+umjBu3KhdgmCH
+	 JE2dzoSCuL+9Q==
+Date: Fri, 4 Jul 2025 16:52:16 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
+	liuyonglong@huawei.com, chenhao418@huawei.com,
+	jonathan.cameron@huawei.com, shameerali.kolothum.thodi@huawei.com,
+	salil.mehta@huawei.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/4] net: hns3: fix concurrent setting vlan filter
+ issue
+Message-ID: <20250704155216.GF41770@horms.kernel.org>
+References: <20250702130901.2879031-1-shaojijie@huawei.com>
+ <20250702130901.2879031-2-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <048723bf-4a8d-451a-911b-f9f94a4270d7@gmail.com>
+In-Reply-To: <20250702130901.2879031-2-shaojijie@huawei.com>
 
-On Fri, Jul 04, 2025 at 04:39:20PM +0100, Orlov, Ivan wrote:
->On 04/07/2025 16:16, Jarkko Sakkinen wrote:
->>On Fri, Jul 04, 2025 at 10:02:33AM +0100, Jonathan McDowell wrote:
->>>On Wed, Jun 25, 2025 at 07:43:07PM +0300, Jarkko Sakkinen wrote:
->>>>On Sun, Jun 22, 2025 at 09:52:58PM +0100, Jonathan McDowell wrote:
->>>>>On Fri, Jun 20, 2025 at 06:08:31PM +0000, Orlov, Ivan wrote:
->>>>>>The current implementation of timeout detection works in the following
->>>>>>way:
->>>>>>
->>>>>>1. Read completion status. If completed, return the data
->>>>>>2. Sleep for some time (usleep_range)
->>>>>>3. Check for timeout using current jiffies value. Return an error if
->>>>>>   timed out
->>>>>>4. Goto 1
->>>>>>
->>>>>>usleep_range doesn't guarantee it's always going to wake up strictly in
->>>>>>(min, max) range, so such a situation is possible:
->>>>>>
->>>>>>1. Driver reads completion status. No completion yet
->>>>>>2. Process sleeps indefinitely. In the meantime, TPM responds
->>>>>>3. We check for timeout without checking for the completion again.
->>>>>>   Result is lost.
->>>>>>
->>>>>>Such a situation also happens for the guest VMs: if vCPU goes to sleep
->>>>>>and doesn't get scheduled for some time, the guest TPM driver will
->>>>>>timeout instantly after waking up without checking for the completion
->>>>>>(which may already be in place).
->>>>>>
->>>>>>Perform the completion check once again after exiting the busy loop in
->>>>>>order to give the device the last chance to send us some data.
->>>>>>
->>>>>>Since now we check for completion in two places, extract this check into
->>>>>>a separate function.
->>>>>>
->>>>>>Signed-off-by: Ivan Orlov <iorlov@amazon.com>
->>>>>>---
->>>>>>V1 -> V2:
->>>>>>- Exclude the jiffies -> ktime change from the patch
->>>>>>- Instead of recording the time before checking for completion, check
->>>>>>  for completion once again after leaving the loop
->>>>>>
->>>>>>drivers/char/tpm/tpm-interface.c | 17 +++++++++++++++--
->>>>>>1 file changed, 15 insertions(+), 2 deletions(-)
->>>>>>
->>>>>>diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
->>>>>>index 8d7e4da6ed53..6960ee2798e1 100644
->>>>>>--- a/drivers/char/tpm/tpm-interface.c
->>>>>>+++ b/drivers/char/tpm/tpm-interface.c
->>>>>>@@ -82,6 +82,13 @@ static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
->>>>>>	return chip->ops->req_canceled(chip, status);
->>>>>>}
->>>>>>
->>>>>>+static bool tpm_transmit_completed(struct tpm_chip *chip)
->>>>>>+{
->>>>>>+	u8 status_masked = tpm_chip_status(chip) & chip->ops->req_complete_mask;
->>>>>>+
->>>>>>+	return status_masked == chip->ops->req_complete_val;
->>>>>>+}
->>>>>>+
->>>>>>static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->>>>>>{
->>>>>>	struct tpm_header *header = buf;
->>>>>>@@ -129,8 +136,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->>>>>>	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
->>>>>>	do {
->>>>>>		u8 status = tpm_chip_status(chip);
->>>>>>-		if ((status & chip->ops->req_complete_mask) ==
->>>>>>-		    chip->ops->req_complete_val)
->>>>>>+		if (tpm_transmit_completed(chip))
->>>>>>			goto out_recv;
->>>>>
->>>>>The only thing I'd point out here is we end up doing a double status read
->>>>>one after the other (once here, once in tpm_transmit_completed), and I'm
->>>>>pretty sure I've seen instances where that caused a problem.
->>>>
->>>>It would be easy to to prevent at least double reads after completion
->>>>e.g., in tpm_chip_status():
->>>
->>>Or just take the simple approach and make the check after the while loop:
->>>
->>>	if ((tpm_chip_status(chip) & chip->ops->req_complete_mask) ==
->>>	    chip->ops->req_complete_val)
->>>		goto out_recv;
->>>
->>>There might be potential for a longer term cleanup using chip->status to
->>>cache things, but I'm little concerned that's going to open paths where we
->>>might not correctly update it, so I think it should be a separate piece.
->>>
->>>(I'm motivated by the fact we've started to see the "Operation Canceled"
->>>error and I'd like us to close on the best way to fix it. :) )
->>
->>This would work for me too!
->>
->
->Hi, and sorry for the late reply :(
->
->I believe this option would work for us as well. Please let me know 
->whether you'd like me to send V3 or you feel free to send it yourself 
->if you want.
+On Wed, Jul 02, 2025 at 09:08:58PM +0800, Jijie Shao wrote:
+> From: Jian Shen <shenjian15@huawei.com>
+> 
+> The vport->req_vlan_fltr_en may be changed concurrently by function
+> hclge_sync_vlan_fltr_state() called in periodic work task and
+> function hclge_enable_vport_vlan_filter() called by user configuration.
+> It may cause the user configuration inoperative. Fixes it by protect
+> the vport->req_vlan_fltr by vport_lock.
+> 
+> Fixes: fa6a262a2550 ("net: hns3: add support for VF modify VLAN filter state")
 
-As far as I'm concerned it's something you found, and your patch. You 
-send a new version, I'll test + review it. :)
+I think the commit sited above is for the VF driver, whereas this
+patch addresses PF driver code. I think the following is the
+correct tag:
 
-J.
+Fixes: 2ba306627f59 ("net: hns3: add support for modify VLAN filter state")
 
--- 
-  What have you got in your pocket? |  .''`.  Debian GNU/Linux Developer
-                                    | : :' :  Happy to accept PGP signed
-                                    | `. `'   or encrypted mail - RSA
-                                    |   `-    key on the keyservers.
+> Signed-off-by: Jian Shen <shenjian15@huawei.com>
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+
+Otherwise, this looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
