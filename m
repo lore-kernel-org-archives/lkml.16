@@ -1,139 +1,202 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE46D2F273F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A093F2F236A;
+	Fri,  4 Jul 2025 10:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623812; cv=none; b=hOhXwpjSfjit6I8SCzqX5cE10MZevyhi+KVvcniNJPr3ZsXsmsagzTcwZpYcSH8NcOBkRtdduzExGSwPP1jOcy3lbClPGLYmYTLZFbnCmblsZBryvdLtF4frqOwX9UfG80IT1FmJSGa39OUHc+Nt2Ljfh8AHkBmxr1La9J7XHDM=
+	t=1751623823; cv=none; b=Fm2MprP9xjvSTlCj7tRawK6f9A6pVZa1EW+McDZRPW3MFTnu977ROECnQknCtn3ByHkIGm8dOQ0/PlDBf9eKwuz2Xji0moJApFVBbSUYZKiPihId0Un4OUeqeT6mzQ5Mk/VnDDzrG3BBiwx3x+KEEE5+ifpjoskKI9jux72fcno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623812; c=relaxed/simple;
-	bh=edVCtLPNmEyUg+JxcvkVvpYAULerPJaroe+1N9eutfM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=En5ZKd92YM7T5OQIdyXaq1W2u5AaKphWu0wuNwwjmW+hv7PG/Gq6gsjeRgqy2EQbyEUpnyncG3gKDGFiXHtAlDex5KwHPQ8El8cMvP4HVIGHx6NrjCDLNLkNB80W05WNBWpnxWNXSqhylaySIlM+eoKTSYzy7Z2JgmzXHpGPTTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dIIc/gPP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QLumzDf3; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1751623823; c=relaxed/simple;
+	bh=sgYT9MmYDSFN7NXja1D708xePMH0j5raSQXUK70USUc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dBD0lOoaOB/mVyS40PLTM9fTprUxsZuLn1TLUmo9f6H5sTtq48kgo9ACk06YYGjYSwKx/gMtoCJA4Em53khz5KvvqVAVkM0rA2zffh8MVgnCl31mP+cmHSgiil5MceBeL29iQLTNsIMH3TjOHTeKSBUUMSdleyXFHGz0lmS8hsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mAH/ULnm; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dIIc/gPP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QLumzDf3"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id DF5111D00226;
-	Fri,  4 Jul 2025 06:10:08 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 06:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751623808;
-	 x=1751710208; bh=ASjtsV3/GLyL6IawlTFlfhxkgTBfBjU0amMAxMOoRSQ=; b=
-	dIIc/gPPD9XKPZ6RYjigTfU6f+Ni4/Sw1RSlQhDwoXpycy3g0INdMp8dq82CS4HE
-	eGWPstTKIjD0HgWHsvKmn9PBnK+H6nDylkfJz9F5EbDf3TjbBlebGPY820CL5BO5
-	dvgEmkFkgdTRx0xmNusJQPP09Bu3lHwhbg3wK+5cttSBHJf1nKYCE7+I8LJMjEdI
-	veMmtQC8iYkuF3SVa/iATVNV5lf9gmS94hDo76ZSdLW2A77I+xayqA67YdPy8erM
-	3mi83x1iS0F6NXVlrn8nUjlu9Yg3sbWfZ1VnajqTy5K2Ddb5KEwT/RnDSxYkqMW+
-	NLGZ3QXAWptthPKIO9NarA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751623808; x=
-	1751710208; bh=ASjtsV3/GLyL6IawlTFlfhxkgTBfBjU0amMAxMOoRSQ=; b=Q
-	LumzDf3EcbhY3DEgiUNb/pSb6vXu+I05FYdHlaVtDNCQ8Up1lS3DxAKExXnDKJlC
-	tWPvB2+S8W9znxp3ABX7zx5pXvXabZMppdRZSGnJpi7BDZMeiUfdHUYwAR045/Nk
-	36qeyVzyjynqCQmfVY+XFuQ71mJyKcBcykumZ6nBC+k0PjHZGi9lo8yX2gYIsyKc
-	CnK2OUD0kaZ73lKby4OMAojzkiZl+LyCxPRjz1aQkDCwpYSaRCPGd84KnmNCBgly
-	qdzU8RiFrH7iMQdLt9UZ26jun5eZF/S/XFro1I4/+1xS3uVz14bLfCpfTgO96Uj/
-	iZTomFk1qyZPZob/OIhqQ==
-X-ME-Sender: <xms:gKhnaO2BoALedA4TnTCdSHsWYstGUjfU6qMYCFyKknp_2fTG_tU-zw>
-    <xme:gKhnaBFchOfSDVdfEGoFBsf7n5NtmbuwuLymNmZuADy9iTJhdkoVKQBBtE4zHVDYp
-    OqI-VwcdLzjNZdMEPA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdekkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopehhuhhirdifrghnghestggrnhhonhhitggrlhdrtghomhdprhgtphhtth
-    hopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnug
-    grthhiohhnrdhorhhgpdhrtghpthhtoheprghlvgigrghnuggvrhdrshhvvghrughlihhn
-    sehsihgvmhgvnhhsrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:gKhnaG7RHhNULOGnUHXYADMlgtGp_lbo7WgKrqXUqj9Vi4gT0ktXbQ>
-    <xmx:gKhnaP1rk46Q-gdozwhnKVE9Gzta8DjPtEuV8v3wcc0pKE-pgiGjPQ>
-    <xmx:gKhnaBENSlcaEXmu_LaHyj51qA6T6ankDOMa46gKuBGrrZka-7XFqQ>
-    <xmx:gKhnaI9y1_zgS1dgN5OqM6sVB0W5aJ284O1f0xJBragIXUBCJLdMtQ>
-    <xmx:gKhnaLGyzZYde82W2j2rKE6PKkbQ9vFsZ01biWifwX_I4fSZX_NhH5gp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5609D700068; Fri,  4 Jul 2025 06:10:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mAH/ULnm"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 564AACBi267821;
+	Fri, 4 Jul 2025 05:10:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751623812;
+	bh=mhku16+L6UOMneh74gmOAB+C80CxnUV/UXbORcNGufQ=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=mAH/ULnmNEKbaca8uVdM4uQuMnaezfAgA0nfn+1J/P2iXnz+iZE+vX9u5s6Kl0yyM
+	 y6c5j/Z8DCSUj2ONjbS1+el1KKMtSH/gtgp9OsFODb+lhrdmcyaVKsrWNiLLdEtRqk
+	 WpxdLHFPNrK0mP3sj232GKKWfhOS0kc4Licn53Es=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 564AACAW3289939
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 4 Jul 2025 05:10:12 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 4
+ Jul 2025 05:10:12 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 4 Jul 2025 05:10:12 -0500
+Received: from localhost (ula0502350.dhcp.ti.com [172.24.227.38])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 564AABbQ2531794;
+	Fri, 4 Jul 2025 05:10:12 -0500
+From: Paresh Bhagat <p-bhagat@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
+        <devarsht@ti.com>, <s-vadapalli@ti.com>, <andrew@lunn.ch>
+Subject: [PATCH v6 1/4] arm64: dts: ti: Add bootph property to nodes at source for am62a
+Date: Fri, 4 Jul 2025 15:39:51 +0530
+Message-ID: <20250704100954.2231853-2-p-bhagat@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250704100954.2231853-1-p-bhagat@ti.com>
+References: <20250704100954.2231853-1-p-bhagat@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Ta67ec7dbdfe9b7ce
-Date: Fri, 04 Jul 2025 12:09:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "A. Sverdlin" <alexander.sverdlin@siemens.com>,
- linux-kernel@vger.kernel.org
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Michael Walle" <mwalle@kernel.org>, "Hui Wang" <hui.wang@canonical.com>,
- "Mark Brown" <broonie@kernel.org>
-Message-Id: <d5be177d-505d-4d72-9d18-913e69c23ea8@app.fastmail.com>
-In-Reply-To: <20250702222823.864803-1-alexander.sverdlin@siemens.com>
-References: <20250702222823.864803-1-alexander.sverdlin@siemens.com>
-Subject: Re: [PATCH] eeprom: at25: convert to spi-mem API
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Jul 3, 2025, at 00:28, A. Sverdlin wrote:
->  static int at25_ee_read(void *priv, unsigned int offset,
->  			void *val, size_t count)
->  {
-> +	u8 *bounce __free(kfree) = kmalloc(min(count, io_limit), GFP_KERNEL);
->  	struct at25_data *at25 = priv;
->  	char *buf = val;
+Add bootph property directly into the original definitions of relevant
+nodes (e.g., power domains, USB controllers, and other peripherals)
+within their respective DTSI files (ex. main, mcu, and wakeup) for
+am62a.
 
-I see nothing wrong with your patch, but the added bounce buffer
-reminds me or a general problem with such buffers in the SPI
-layer (and a couple of other places like it).
+By defining bootph in the nodes source definitions instead of appending
+it later in final DTS files, this change ensures that the property is
+inherently present wherever the nodes are reused across derived device
+trees.
 
-The problem is that kmalloc() does not take into account the
-DMA mask of the device, which can have two suboptimal outcomes:
+Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi   | 13 +++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi |  2 ++
+ 2 files changed, 15 insertions(+)
 
-- on builds without SWIOTLB/IOMMU and an SPI host that has a DMA
-  mask smaller than RAM, dma_map_sg() fails down the line,
-  so either the transfer will fail or fall back to MMIO mode
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index 63e097ddf988..44e7e459f176 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -51,6 +51,7 @@ phy_gmii_sel: phy@4044 {
+ 			compatible = "ti,am654-phy-gmii-sel";
+ 			reg = <0x4044 0x8>;
+ 			#phy-cells = <1>;
++			bootph-all;
+ 		};
+ 
+ 		epwm_tbclk: clock-controller@4130 {
+@@ -96,6 +97,7 @@ secure_proxy_main: mailbox@4d000000 {
+ 			#mbox-cells = <1>;
+ 			interrupt-names = "rx_012";
+ 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++			bootph-all;
+ 		};
+ 
+ 		inta_main_dmss: interrupt-controller@48000000 {
+@@ -131,6 +133,7 @@ main_bcdma: dma-controller@485c0100 {
+ 			ti,sci-rm-range-bchan = <0x20>; /* BLOCK_COPY_CHAN */
+ 			ti,sci-rm-range-rchan = <0x21>; /* SPLIT_TR_RX_CHAN */
+ 			ti,sci-rm-range-tchan = <0x22>; /* SPLIT_TR_TX_CHAN */
++			bootph-all;
+ 		};
+ 
+ 		main_pktdma: dma-controller@485c0000 {
+@@ -147,6 +150,8 @@ main_pktdma: dma-controller@485c0000 {
+ 				    "ring", "tchan", "rchan", "rflow";
+ 			msi-parent = <&inta_main_dmss>;
+ 			#dma-cells = <2>;
++			bootph-all;
++
+ 			ti,sci = <&dmsc>;
+ 			ti,sci-dev-id = <30>;
+ 			ti,sci-rm-range-tchan = <0x23>, /* UNMAPPED_TX_CHAN */
+@@ -220,16 +225,19 @@ dmsc: system-controller@44043000 {
+ 		k3_pds: power-controller {
+ 			compatible = "ti,sci-pm-domain";
+ 			#power-domain-cells = <2>;
++			bootph-all;
+ 		};
+ 
+ 		k3_clks: clock-controller {
+ 			compatible = "ti,k2g-sci-clk";
+ 			#clock-cells = <2>;
++			bootph-all;
+ 		};
+ 
+ 		k3_reset: reset-controller {
+ 			compatible = "ti,sci-reset";
+ 			#reset-cells = <2>;
++			bootph-all;
+ 		};
+ 	};
+ 
+@@ -254,6 +262,7 @@ secure_proxy_sa3: mailbox@43600000 {
+ 		 * firmware on non-MPU processors
+ 		 */
+ 		status = "disabled";
++		bootph-all;
+ 	};
+ 
+ 	main_pmx0: pinctrl@f4000 {
+@@ -282,6 +291,7 @@ main_timer0: timer@2400000 {
+ 		assigned-clock-parents = <&k3_clks 36 3>;
+ 		power-domains = <&k3_pds 36 TI_SCI_PD_EXCLUSIVE>;
+ 		ti,timer-pwm;
++		bootph-all;
+ 	};
+ 
+ 	main_timer1: timer@2410000 {
+@@ -651,6 +661,7 @@ usb0: usb@31000000 {
+ 			interrupt-names = "host", "peripheral";
+ 			maximum-speed = "high-speed";
+ 			dr_mode = "otg";
++			bootph-all;
+ 			snps,usb2-gadget-lpm-disable;
+ 			snps,usb2-lpm-disable;
+ 		};
+@@ -745,6 +756,7 @@ cpsw_port1: port@1 {
+ 				phys = <&phy_gmii_sel 1>;
+ 				mac-address = [00 00 00 00 00 00];
+ 				ti,syscon-efuse = <&cpsw_mac_syscon 0x0>;
++				bootph-all;
+ 			};
+ 
+ 			cpsw_port2: port@2 {
+@@ -764,6 +776,7 @@ cpsw3g_mdio: mdio@f00 {
+ 			clocks = <&k3_clks 13 0>;
+ 			clock-names = "fck";
+ 			bus_freq = <1000000>;
++			bootph-all;
+ 		};
+ 
+ 		cpts@3d000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
+index 259ae6ebbfb5..9ef1c829a9df 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
+@@ -17,6 +17,7 @@ wkup_conf: bus@43000000 {
+ 		chipid: chipid@14 {
+ 			compatible = "ti,am654-chipid";
+ 			reg = <0x14 0x4>;
++			bootph-all;
+ 		};
+ 
+ 		opp_efuse_table: syscon@18 {
+@@ -67,6 +68,7 @@ wkup_uart0: serial@0 {
+ 			reg = <0 0x100>;
+ 			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
++			bootph-pre-ram;
+ 	       };
+ 	};
+ 
+-- 
+2.34.1
 
-- when SWIOTLB is available, dma_map_sg() will succeed but
-  require another copy into a second bounce buffer.
-
-There are various drivers that work around the problem by using
-GFP_DMA instead of GFP_KERNEL. This should be reliable on all
-platforms, but means that the allocation comes from a potentially
-really small pool and is more likely to fail. Ideally I think we
-should not do that any more at all but find another way to
-allocate bounce buffers for SPI transfers. The two ideas I had
-were:
-
-a) and a generic interface to ask for a buffer that can be used
-   by an SPI bus driver for efficient transfers, with the SPI
-   core code making an informed decision on using either kmalloc()
-   or dma_alloc_noncoherent() based on the size of the transfer
-   and the DMA mask.
-
-b) push down the bouncing into the SPI core, so you can just
-   pass buffers from anywhere (stack, vmalloc, ...) and
-   ask for the lower parts of the stack to copy these into
-   an appropriate buffer if necessary. For the spi mem API
-   I suppose that would require assigning a flag in
-   spi_mem_op->data.
-
-    Arnd
