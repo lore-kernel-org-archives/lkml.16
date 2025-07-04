@@ -1,105 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669012E3716;
-	Fri,  4 Jul 2025 20:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0E6A2D;
+	Fri,  4 Jul 2025 21:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751662593; cv=none; b=jMTJAjlVHR6fsY2SlPmC2kqNZhvGChohOGxUuhL2yY0BEsDSZdCcA4Qy6MOfPbyCFZl2DYeP5ckyLzkqrowSVd9Qf++DReDd6V8XyJ96yJPKu4gR/n1dB12MyvtJVM74Qn8iYdXeBzoYGMFUBrQjSOV6MWGN2moOgAsyIf6VgJk=
+	t=1751663186; cv=none; b=bbwX0oW82X3pOn0ZRXyXd7uYnu6tUzuac9oZZsdpwYAcsXjUt56eK9BJrZs5iLGFbXttsm73qPdefg9yejDsVSOlVaxRU1HnNYz4o3agk7lv5GjgHymA/gBvyrPzG/MJoM/yrl4hjIkBasSOLrJ65c9Rl1qhD6roZsm/wbKMU9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751662593; c=relaxed/simple;
-	bh=/3YRFezrr8EJenY5ydJDWvYfG5QhETwTNQQul8BZb6c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=luLeybFfalGhcQ2TjPJGTbPSFEVAciI77Qd9h/Y3A1kkT/E3NH2qgoqtWINhpqd2DBsoLfzOJ6DOznQvYPG5BpytjpMcSRnX7BnTzMWS14pIagMdtjUnm3MlM6gMtalAmLBqeGYnQBlqYnhWB2EiEBHm4fl24W6QiUT8t5u/qCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipinztuM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751663186; c=relaxed/simple;
+	bh=f1hFiasjHfmlcHU6lmk4NYAher/zzJdd1u4QQBrYVJ8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NBocScyDG87bjOlrMQLdM5GxNZKcLEgdftYuhIT3kOnTeeqzR9ScxrO5Ltg35qceY/7AKBkuSHzRIJ7AOHhq5N5CqoHgd+YlD2CYQfwH948BCb639qaf8AXic9Mm8cHwigv2uxRbDYAUtxjBUHlrhQq6abC1ABhB5pncGaVFmiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=y88kB/pc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipinztuM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FCCC4CEE3;
-	Fri,  4 Jul 2025 20:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751662592;
-	bh=/3YRFezrr8EJenY5ydJDWvYfG5QhETwTNQQul8BZb6c=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ipinztuMt5KUnYPucmuaBLL/D3ZjwbSEk29DsbdMnyTihYJQ/h8aTT79RZXRBsUUg
-	 IQ++y/DN5GIoOwKnrgIyzWu5ezYoJgcY7FZQZADm/ybFUkzSa7dGcjFDvN3Zghb4qe
-	 7g54DL9Xh8LsRjTYXcXpvAMZiyHE+wEpjEwISSaK3COf5nikr06bkAbaZwOeEdfC5q
-	 0H6A6wH9QyrLAvqF80ij/J0zO+CBOkb80bpjpDx59yV/wxwiKoXfcQH7PnbnSGnW/A
-	 v3FWOrVy6ksEmyDf63LIA9ipBiCGZvD4owM2J/ynbTEc6grg1SqeqGz5BDqBBDmEXK
-	 MJc8UIEupH92Q==
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="y88kB/pc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27406C4CEE3;
+	Fri,  4 Jul 2025 21:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751663185;
+	bh=f1hFiasjHfmlcHU6lmk4NYAher/zzJdd1u4QQBrYVJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=y88kB/pcD4E4EqtT4CkMHjZGaNV/MSL+BfunpDneJYf0u7QKpcXsSW9s14r8BkNmx
+	 WaI24KqTkwL1L2kVQDd0U0gUqzKoB3oOSJKBdiYtW2qefak2kybpZOsGNd5sTK4MTP
+	 njKj4JxNYga3WE9rzmNqEaH7gILlxUtdajr7p1I8=
+Date: Fri, 4 Jul 2025 14:06:23 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, Jonathan
+ Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Jerrin Shaji George
+ <jerrin.shaji-george@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
+ <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Zi Yan
+ <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, Joshua Hahn
+ <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park
+ <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Minchan
+ Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard
+ <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin
+ <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Miaohe
+ Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>, Harry
+ Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel
+ Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v2 00/29] mm/migration: rework movable_ops page
+ migration (part 1)
+Message-Id: <20250704140623.d6b9a013984bc2a109dd4dc9@linux-foundation.org>
+In-Reply-To: <20250704102524.326966-1-david@redhat.com>
+References: <20250704102524.326966-1-david@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Jul 2025 22:56:26 +0200
-Message-Id: <DB3KKAZ4HJ96.YPY4C6W0Y5HZ@kernel.org>
-Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 1/6] rust: kernel: remove `fmt!`, fix
- clippy::uninlined-format-args
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Danilo
- Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Nishanth Menon" <nm@ti.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com>
- <20250704-core-cstr-prepare-v1-1-a91524037783@gmail.com>
-In-Reply-To: <20250704-core-cstr-prepare-v1-1-a91524037783@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri Jul 4, 2025 at 10:14 PM CEST, Tamir Duberstein wrote:
-> Rather than export a macro that delegates to `core::format_args`, simply
-> re-export `core::format_args` as `fmt` from the prelude. This exposes
-> clippy warnings which were previously obscured by this macro, such as:
->
->     warning: variables can be used directly in the `format!` string
->       --> ../drivers/cpufreq/rcpufreq_dt.rs:21:43
->        |
->     21 |     let prop_name =3D CString::try_from_fmt(fmt!("{}-supply", na=
-me)).ok()?;
->        |                                           ^^^^^^^^^^^^^^^^^^^^^^=
-^
->        |
->        =3D help: for further information visit https://rust-lang.github.i=
-o/rust-clippy/master/index.html#uninlined_format_args
->        =3D note: `-W clippy::uninlined-format-args` implied by `-W clippy=
-::all`
->        =3D help: to override `-W clippy::all` add `#[allow(clippy::uninli=
-ned_format_args)]`
->     help: change this to
->        |
->     21 -     let prop_name =3D CString::try_from_fmt(fmt!("{}-supply", na=
-me)).ok()?;
->     21 +     let prop_name =3D CString::try_from_fmt(fmt!("{name}-supply"=
-)).ok()?;
->        |
->
-> Thus fix them in the same commit. This could possibly be fixed in two
-> stages, but the diff is small enough (outside of kernel/str.rs) that I
-> hope it can taken in a single commit.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Fri,  4 Jul 2025 12:24:54 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+> In the future, as we decouple "struct page" from "struct folio", pages
+> that support "non-lru page migration" -- movable_ops page migration
+> such as memory balloons and zsmalloc -- will no longer be folios. They
+> will not have ->mapping, ->lru, and likely no refcount and no
+> page lock. But they will have a type and flags 🙂
+> 
+> This is the first part (other parts not written yet) of decoupling
+> movable_ops page migration from folio migration.
+> 
+> In this series, we get rid of the ->mapping usage, and start cleaning up
+> the code + separating it from folio migration.
+> 
+> Migration core will have to be further reworked to not treat movable_ops
+> pages like folios. This is the first step into that direction.
+> 
+> Heavily tested with virtio-balloon and lightly tested with zsmalloc
+> on x86-64. Cross-compile-tested.
 
----
-Cheers,
-Benno
+Thanks, I added this to mm-new.  I suppressed the 1363 mm-commits
+emails to avoid breaking the internet.
 
-> ---
->  drivers/cpufreq/rcpufreq_dt.rs    |  3 +--
->  drivers/gpu/nova-core/firmware.rs |  5 +++--
->  rust/kernel/opp.rs                |  2 +-
->  rust/kernel/prelude.rs            |  2 +-
->  rust/kernel/str.rs                | 34 ++++++++++++++-------------------=
--
->  5 files changed, 20 insertions(+), 26 deletions(-)
