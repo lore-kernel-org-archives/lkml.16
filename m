@@ -1,27 +1,27 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB092FD899
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DFD2DBB25
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616970; cv=none; b=oj40scS25JetM99Dkq31giRxf04QyG0tcB2gOf2Yeu2pVGjH+s0RgkTL+EFnr4EG6XULyriqTFYRXgJsMdnslpnrasZbXLzS3Uq9RQ2ZK3dOp4cLqkudgcgwSnM4I60bdzaAKwhgRNN1aeOOsFXtwBKmGDcPqTZfcIOGpGM9Atw=
+	t=1751616971; cv=none; b=JeAcYU9rGaeu0N3J2DTtiVOeyCXJD6ots7NkZHIEDsyZLz1bU6fW+vPIP0W+X7jk4XgADZMljJzlo2u/w1RtkP0Z4sKm5w16bWr81//fd1iqc3RCuaCw9plc/vIJ9diJXZvpQJO9uSO0ABGJ4iR1b8TqNG5gqbUF6lm9K7L5zvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616970; c=relaxed/simple;
-	bh=63SOELCORMxrKVDUUIzKKFTRBqKDHRIy+LUddzrAvg4=;
+	s=arc-20240116; t=1751616971; c=relaxed/simple;
+	bh=zylAOvDJUdBHWCYEsmH/F3qbW1VoaC4/zwHAJ5vXbps=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bb9loxPO2wYbExyCH+wMUBjqZTB5TvA/8v2BqUaiDV2VsIQKPTHyBBj7C0CtdRm02M3UT2+D742Rf27K3lTM9eQJF2lnb9RIpGPuKHAEkiiVWgSv/VCqz/UYu6lsqEUhe/fLuss/1NXik4EMHLimLbPqGXkdhVK+YjWHKopmOgU=
+	 MIME-Version:Content-Type; b=LapZifXQyJfqHdZsri7rN/6hcooc3mxSjJdb7je5x2GidGSdYqZFo5mkHheMzQ5QqcFQs+G13pJAHoEjoQc4ZhPeVd23r8emjy3wCk51Jbjk9f3f/3ZE70lBcMRUKRJDrt1fDKbqFKC0I0vH9G0hawxp0EK3iE28+f2Hde5PXaw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 5648F9Wm092254
+	by Atcsqr.andestech.com with ESMTPS id 5648EwqC091878
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Jul 2025 16:15:09 +0800 (+08)
+	Fri, 4 Jul 2025 16:14:58 +0800 (+08)
 	(envelope-from ben717@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
  (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Fri, 4 Jul 2025
- 16:15:09 +0800
+ 16:14:57 +0800
 From: Ben Zong-You Xie <ben717@andestech.com>
 To:
 CC: <arnd@arndb.de>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
@@ -31,9 +31,9 @@ CC: <arnd@arndb.de>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
         <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <soc@lists.linux.dev>,
         <tim609@andestech.com>, Ben Zong-You Xie <ben717@andestech.com>
-Subject: [PATCH 7/8] riscv: dts: andes: add Voyager board device tree
-Date: Fri, 4 Jul 2025 16:14:50 +0800
-Message-ID: <20250704081451.2011407-8-ben717@andestech.com>
+Subject: [PATCH 2/8] dt-bindings: riscv: add Andes QiLai SoC and the Voyager board bindings
+Date: Fri, 4 Jul 2025 16:14:45 +0800
+Message-ID: <20250704081451.2011407-3-ben717@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250704081451.2011407-1-ben717@andestech.com>
 References: <20250704081451.2011407-1-ben717@andestech.com>
@@ -48,75 +48,66 @@ Content-Type: text/plain
 X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 5648F9Wm092254
+X-MAIL:Atcsqr.andestech.com 5648EwqC091878
 
-Introduce the device tree support for Voyager development board.
+Add DT binding documentation for the Andes QiLai SoC and the
+Voyager development board.
 
-Currently only support booting into console with only uart,
-other features will be added later.
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
 ---
- arch/riscv/boot/dts/Makefile                |  1 +
- arch/riscv/boot/dts/andes/Makefile          |  2 ++
- arch/riscv/boot/dts/andes/qilai-voyager.dts | 28 +++++++++++++++++++++
- 3 files changed, 31 insertions(+)
- create mode 100644 arch/riscv/boot/dts/andes/Makefile
- create mode 100644 arch/riscv/boot/dts/andes/qilai-voyager.dts
+ .../devicetree/bindings/riscv/andes.yaml      | 25 +++++++++++++++++++
+ MAINTAINERS                                   |  5 ++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/andes.yaml
 
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index 64a898da9aee..3b99e91efa25 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- subdir-y += allwinner
-+subdir-y += andes
- subdir-y += canaan
- subdir-y += microchip
- subdir-y += renesas
-diff --git a/arch/riscv/boot/dts/andes/Makefile b/arch/riscv/boot/dts/andes/Makefile
+diff --git a/Documentation/devicetree/bindings/riscv/andes.yaml b/Documentation/devicetree/bindings/riscv/andes.yaml
 new file mode 100644
-index 000000000000..c545c668ef70
+index 000000000000..aa1edf1fdec7
 --- /dev/null
-+++ b/arch/riscv/boot/dts/andes/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_ANDES) += qilai-voyager.dtb
-diff --git a/arch/riscv/boot/dts/andes/qilai-voyager.dts b/arch/riscv/boot/dts/andes/qilai-voyager.dts
-new file mode 100644
-index 000000000000..fa7d2b32a9b4
---- /dev/null
-+++ b/arch/riscv/boot/dts/andes/qilai-voyager.dts
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2025 Andes Technology Corporation. All rights reserved.
-+ */
++++ b/Documentation/devicetree/bindings/riscv/andes.yaml
+@@ -0,0 +1,25 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/riscv/andes.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include "qilai.dtsi"
++title: Andes SoC-based boards
 +
-+/ {
-+	model = "Voyager";
-+	compatible = "andestech,voyager", "andestech,qilai";
++maintainers:
++  - Ben Zong-You Xie <ben717@andestech.com>
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++description:
++  Andes SoC-based boards
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - andestech,voyager
++          - const: andestech,qilai
 +
-+	memory@400000000 {
-+		device_type = "memory";
-+		reg = <0x4 0x00000000 0x4 0x00000000>;
-+	};
-+};
++additionalProperties: true
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6135a36a54a8..f4b4261d3c44 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21285,6 +21285,11 @@ F:	drivers/irqchip/irq-riscv-intc.c
+ F:	include/linux/irqchip/riscv-aplic.h
+ F:	include/linux/irqchip/riscv-imsic.h
+ 
++RISC-V ANDES SoC Support
++M:	Ben Zong-You Xie <ben717@andestech.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/riscv/andes.yaml
 +
-+&uart0 {
-+	status = "okay";
-+};
+ RISC-V ARCHITECTURE
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
+ M:	Palmer Dabbelt <palmer@dabbelt.com>
 -- 
 2.34.1
 
