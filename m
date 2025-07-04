@@ -1,78 +1,87 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7545C1853;
-	Fri,  4 Jul 2025 04:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76E71853;
+	Fri,  4 Jul 2025 04:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751603481; cv=none; b=h2gmPKF14Am3s+fpkGBApnFNLhe71PSe533uJ7KkqmrIBa+5A4mVaELjXj2BgFiq5eMV8pC8VqtTBxrfI+GR05X0L2a/O8yUCkRw3hDwG5IfHjWLhk/7I4FYpRKVtk2Y+pAISFpfFfLVNycaUrxw4e3/FzEoR0gCV3OC3Pdx500=
+	t=1751603581; cv=none; b=gpzqR+AY40rWDh1T9NWeI74SOC7BXsDz3BpF9PNRKWbAAtv+rVclqFRVCv709cNP83ay+x3+N3pjbQhmAA8uGaYarakou8LX7vp0yh78Gd5JQYXmYkqVGBOwbV3Y38sY/wTi2BV/gi3amYxhp6//CqhKyKW1Ej+Q6KBg37DDYEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751603481; c=relaxed/simple;
-	bh=13qGOsCJDg5W7qhM9k4Cp9R4/kOgj/YISD399woMggk=;
+	s=arc-20240116; t=1751603581; c=relaxed/simple;
+	bh=0EhyfsG7e1DiIpLNZmKVH2C4E2I/HFptCc49kB93dt8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amKlUtIZVyFT0GU9uvXeXm0zCa/t8iyLiozMottMvns5+10skcvPLoAVVWN7seGxQZv0zoaCUrYuaamMSqqVqk0xGcgam/D7osZP+RhNnd3t+QS5MRpnR+Uhy4/BDr1YY/V5KO9z9ZqFKsdrDDnHFrDlLIY00Ft/JIn3JdNYuDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OgnJGGW1; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6LLW+TzcVYrmjSb3DCvc7dk1tdMX4vvnxJkEKXjdlJ2JyVUbGTWhXlPLEXMxTr4+4TRUdqLsKe84WpuMzsyq24Z6fxsAzNpbyLcvD3zGVbsIBcWowvQqNFpXPw8a64RQ2bzPiJ8j/PfoLf0HhmgUFrcA5pcZX9lVoJd827U3BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ietRwSSa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7fMAXDZL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgnJGGW1"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso559895a12.2;
-        Thu, 03 Jul 2025 21:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751603480; x=1752208280; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fxALKIjMO7YvRd1pEEIdH4CeFOM7Eh9lzExephTx580=;
-        b=OgnJGGW1wFD1BI56EGdTdCTXPm75Wa2reYtkw442Q+S5g67b5kFgEdeK4T7KXtfgvU
-         4/H2zvYqF5dXrgwZniWFFeAOQ0a9klT8sb/tbltQq2pWpLh+XmcQLomxpiLCoNpwocxi
-         SZvdw+uNCKnf4c5xu3b/Ovt4/3G/cC7ONW2lj4iYaJ9nny5JeooniumiaeBhTAGlaxH2
-         tfV2tpm5jqoXrU2/CJXl7QdA+tnHP9Q4iXvj9BIBQv6Or0FERSefHlj1vYRvd9vCqqBd
-         oRMmG6mAsqY+nPJtO/JEEmHbRZLwi8S6pYLefL3+c6DWdjVnsBwLFZqJXeumyJjvl8qJ
-         GdFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751603480; x=1752208280;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fxALKIjMO7YvRd1pEEIdH4CeFOM7Eh9lzExephTx580=;
-        b=Y0raDFoF2vNzUtuK/l/V92eoIcUYyav+NfWcwPpuNROJX2KQBjv/VknkEvpNsu+cGh
-         fTyButJ0o+PGt+lda+CsyZuDVAgwxYHsjO3TtzQyUJF3UOaQdwg+J8vXqUNfZUahz4WP
-         x8i5bAmsCtdvT0hoQsZzCTW3Uoei9GNf/QYXowgG6rmIPi3fI0ugL+MycmvfnpbnJyQF
-         btOM+rOXS4tkw8yQE9Km0nubknry2rnpEnTiGxy3h0vwX2ZP0K5EJQliVvHoP3I9bwua
-         J0vY/T6/eGQfKjfMOPAwB1yh/oTRfzuo4i+L+fewYuyNIH4KIbxVHfosfCSrBI4y/L9L
-         xPEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjl6k9Ro2K8z3X9a31m66najNJXpz8dkcCDmgTslCL/UAdEDMOWB9K0owQYS67iE9GmGnxyH5k297fuPs=@vger.kernel.org, AJvYcCWB50UJ8h0y0YmZKoAMqeH2CCa7Hlj8+zj/fuCOdyQESgtj9IyVKoPiiBley+BFz4tFC5p0Mm4v@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj8wh/g3H+CWg96fK0Xq1rKP0aJzqaejEB/adrj5txrPR1NdpZ
-	qNuOZ2Of+0GO/zThgr3y/SB/ASEwrac09sj+xf0LNCLxhBDPQOA0VpT0
-X-Gm-Gg: ASbGncuzZ8ZxxhR/xBgKPtDGlgG1TVpbR7iDnyB2LIId9q9EEg1RseSn8KTD4cYkkt0
-	Z7+tJt93UYhmyF6b+PL0fXgBasDFqZVdJnnl6Hrt8ZfzeH3sfH/J73tHqCRNTNT6q//VP6pAZ28
-	8Fe5RQonUymK+7c7QFBRw5xzpvbIkhxDhNF3Ftaj8IIEDJbrnNouc3TJB6Bg8j+i+xLocTJ/s/U
-	PMAtf5IyE27epMclZjFYJoF4VJJTSO6yT0WFWWDtcKLi/zBfEohyJvrCBRaHq61lGEAynSHUZHo
-	JbkUZmgGRBODH683MlHEiAI0/B8sG+1KPQ+aQ4XLC/nam3wyUyQuuS5nTq3Uo8QY23rboTef29i
-	grjE=
-X-Google-Smtp-Source: AGHT+IHkvlcewWbWz3RLsWy6U2O5nxq2HueWe9yVOwfG6KNgonIBzAzpwgDA+2exlfrQ3C/FYpx7rg==
-X-Received: by 2002:a05:6a21:a8e:b0:220:a3de:a083 with SMTP id adf61e73a8af0-225b85f3eafmr2173223637.10.1751603479663;
-        Thu, 03 Jul 2025 21:31:19 -0700 (PDT)
-Received: from localhost ([2601:647:6881:9060:1aeb:7d0c:33d1:51f4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cc72dsm1023375b3a.42.2025.07.03.21.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 21:31:19 -0700 (PDT)
-Date: Thu, 3 Jul 2025 21:31:18 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Fengyuan Gong <gfengyuan@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, toke@toke.dk, edumazet@google.com,
-	"David S . Miller" <davem@davemloft.net>,
-	Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cake@lists.bufferbloat.net, willemb@google.com
-Subject: Re: [PATCH net-next] net: account for encap headers in qdisc pkt len
-Message-ID: <aGdZFhGu40UD6UDU@pop-os.localdomain>
-References: <20250702160741.1204919-1-gfengyuan@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ietRwSSa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7fMAXDZL"
+Date: Fri, 4 Jul 2025 06:32:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751603577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lu5UwG3gkU9yDfSYrynq/q3LHcvqLFRt2qUTkA3VXJ4=;
+	b=ietRwSSaofHPYLX3xPHbQaRdwmhUvR0oG8Jl0ekizuf2VPs/EAlorh3boX28GKlEeceUNn
+	VhpeW/GXutZoVkHxMSzLCoatSTmRx/nqXRYuTIyxAT0QqF9bqPjstMq67AaQvZd1qbGdVN
+	X3N0QU6YDX0FoIUDwBw704MktK9Q7N+uT5gw7OJLt0Iv9w9AZx/MK2Rhh/rtKsPn7C2Omg
+	kKxjyGuxpdrjagqrItkq6cwY+dflmv6h0qZ0LmPEmiJX7FIX7NZzYuK1i9xBimF3CYHdYI
+	4GGQLFD6S5e3aP4UiR2M1E2S1J1Hq26eLabdb/UgzCr3SlmFRGh5AZbtW3kWUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751603577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lu5UwG3gkU9yDfSYrynq/q3LHcvqLFRt2qUTkA3VXJ4=;
+	b=7fMAXDZLA+9VHQVCrhjUDQ7LNL/DeUPGCzycSMx6ONMfNd12NQ/irqPvP3F1XlTvENIrMK
+	LKJgQV0TOcmWrbBA==
+From: Nam Cao <namcao@linutronix.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+Message-ID: <20250704043255.JCK9HyRj@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyaht595.ffs@tglx>
+ <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87zfdlrmvr.ffs@tglx>
+ <SN6PR02MB41573141969F6B3028099C65D442A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,44 +90,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702160741.1204919-1-gfengyuan@google.com>
+In-Reply-To: <SN6PR02MB41573141969F6B3028099C65D442A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Wed, Jul 02, 2025 at 04:07:41PM +0000, Fengyuan Gong wrote:
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 11da1e272ec20..dfec541f68e3a 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -3944,7 +3944,10 @@ static void qdisc_pkt_len_init(struct sk_buff *skb)
->  		unsigned int hdr_len;
->  
->  		/* mac layer + network layer */
-> -		hdr_len = skb_transport_offset(skb);
-> +		if (!skb->encapsulation)
-> +			hdr_len = skb_transport_offset(skb);
-> +		else
-> +			hdr_len = skb_inner_transport_offset(skb);
+On Fri, Jul 04, 2025 at 02:27:01AM +0000, Michael Kelley wrote:
+> I haven't resolved the conflict. As a shortcut for testing I just
+> removed the conflicting patch since it is for a Microsoft custom NIC
+> ("MANA") that's not in the configuration I'm testing with. I'll have to
+> look more closely to figure out the resolution.
+> 
+> Separately, this patch (the switch to misc_create_parent_irq_domain)
+> isn't working for Linux VMs on Hyper-V on ARM64. The initial symptom
+> is that interrupts from the NVMe controller aren't getting handled
+> and everything hangs. Here's the dmesg output:
+> 
+> [   84.463419] hv_vmbus: registering driver hv_pci
+> [   84.463875] hv_pci abee639e-0b9d-49b7-9a07-c54ba8cd5734: PCI VMBus probing: Using version 0x10004
+> [   84.464518] hv_pci abee639e-0b9d-49b7-9a07-c54ba8cd5734: PCI host bridge to bus 0b9d:00
+> [   84.464529] pci_bus 0b9d:00: root bus resource [mem 0xfc0000000-0xfc00fffff window]
+> [   84.464531] pci_bus 0b9d:00: No busn resource found for root bus, will use [bus 00-ff]
+> [   84.465211] pci 0b9d:00:00.0: [1414:b111] type 00 class 0x010802 PCIe Endpoint
+> [   84.466657] pci 0b9d:00:00.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit]
+> [   84.481923] pci_bus 0b9d:00: busn_res: [bus 00-ff] end is updated to 00
+> [   84.481936] pci 0b9d:00:00.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit]: assigned
+> [   84.482413] nvme nvme0: pci function 0b9d:00:00.0
+> [   84.482513] nvme 0b9d:00:00.0: enabling device (0000 -> 0002)
+> [   84.556871] irq 17, desc: 00000000e8529819, depth: 0, count: 0, unhandled: 0
+> [   84.556883] ->handle_irq():  0000000062fa78bc, handle_bad_irq+0x0/0x270
+> [   84.556892] ->irq_data.chip(): 00000000ba07832f, 0xffff00011469dc30
+> [   84.556895] ->action(): 0000000069f160b3
+> [   84.556896] ->action->handler(): 00000000e15d8191, nvme_irq+0x0/0x3e8
+> [  172.307920] watchdog: BUG: soft lockup - CPU#6 stuck for 26s! [kworker/6:1H:195]
 
-This pattern seems repeated in a few places, other than the two you are
-patching, I saw another one:
+Thanks for the report.
 
-2465 static netdev_features_t hns3_features_check(struct sk_buff *skb,
-2466                                              struct net_device *dev,
-2467                                              netdev_features_t features)
-2468 {
-2469 #define HNS3_MAX_HDR_LEN        480U
-2470 #define HNS3_MAX_L4_HDR_LEN     60U
-2471 
-2472         size_t len;
-2473 
-2474         if (skb->ip_summed != CHECKSUM_PARTIAL)
-2475                 return features;
-2476 
-2477         if (skb->encapsulation)
-2478                 len = skb_inner_transport_offset(skb);
-2479         else
-2480                 len = skb_transport_offset(skb);
+On arm64, this driver relies on the parent irq domain to set handler. So
+the driver must not overwrite it to NULL.
 
+This should cures it:
 
-Maybe worth a helper now?
-
-Thanks!
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 3a24fadddb83..f4a435b0456c 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -577,8 +577,6 @@ static void hv_pci_onchannelcallback(void *context);
+ 
+ #ifdef CONFIG_X86
+ #define DELIVERY_MODE	APIC_DELIVERY_MODE_FIXED
+-#define FLOW_HANDLER	handle_edge_irq
+-#define FLOW_NAME	"edge"
+ 
+ static int hv_pci_irqchip_init(void)
+ {
+@@ -723,8 +721,6 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ #define HV_PCI_MSI_SPI_START	64
+ #define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
+ #define DELIVERY_MODE		0
+-#define FLOW_HANDLER		NULL
+-#define FLOW_NAME		NULL
+ #define hv_msi_prepare		NULL
+ 
+ struct hv_pci_chip_data {
+@@ -2162,8 +2158,9 @@ static int hv_pcie_domain_alloc(struct irq_domain *d, unsigned int virq, unsigne
+ 		return ret;
+ 
+ 	for (int i = 0; i < nr_irqs; i++) {
+-		irq_domain_set_info(d, virq + i, 0, &hv_msi_irq_chip, NULL, FLOW_HANDLER, NULL,
+-				    FLOW_NAME);
++		irq_domain_set_hwirq_and_chip(d, virq + i, 0, &hv_msi_irq_chip, NULL);
++		if (IS_ENABLED(CONFIG_X86))
++			__irq_set_handler(virq + i, handle_edge_irq, 0, "edge");
+ 	}
+ 
+ 	return 0;
