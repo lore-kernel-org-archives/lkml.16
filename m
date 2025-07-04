@@ -1,124 +1,162 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BB92F2378;
-	Fri,  4 Jul 2025 10:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031E11F419B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751626547; cv=none; b=Mp232E4gD3JCDI37AlnPxQw8ONGDVKb+nklR5d5XojHnENNQbJ6fs/1Gd6Zy04voJTBhm+d8VFoZYarizgGMEjoLxs9cn0n38KKDkRCs0IqtXPWN/SX35zIFfofCv+47VoeN6i6j9busHVNuONSzbeWzaqhxgUKCTr12Tr4b/2Q=
+	t=1751626674; cv=none; b=EvIxyuVcDccTsPOuMTokt3IBfYvmSJUbEVMaNe9OF2RhN0s+8atBW9iky74fdpN7qSM4y0A+gbqFRKfvghCID5UdkeGbqFX3+THgAtJX511jx/Bu8Wqt+vn+3bPAx5JfDoJ/jZRB7da6av8QP9pXYBuwI3xwWxGMDlu1Hg89NDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751626547; c=relaxed/simple;
-	bh=OfZxMm0wtJ0u/hEKScgSTDyZshlYtHfsHkORSdK9eEY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WdrbTXZLgQYNPZeA81dbyeQp0g9yU2J2Vfh2I3aCFmi9WKsVXGiSMEALYU0HETeElZL5Yvbj97YimB9ClPiFGcIj0l9vg7NuC0g4lB+DYwaSF9QW6BPQtWX0PbL9Lop9vRxjmK5kP53WeKx6WIZCtdHeaFqD4gvMh5dGpZYOtHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60c3aafae23so4217701a12.1;
-        Fri, 04 Jul 2025 03:55:45 -0700 (PDT)
+	s=arc-20240116; t=1751626674; c=relaxed/simple;
+	bh=1cxKkZFvCDOhTzY2nmvDiN/WHQTDMZaVAEL8yNSOdDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fBRK+W0WnCI8v1AC+SvvxY3rzwygnRA+nfppKLcb2u6nyml+wqMpB0c5KyK7kJzg9bpRD6HCiAw3qBmZePQRLC7br1gyVzGqkQgzq+lOJMot0C5rULSlS23JE5MTTGF6qgBWeip7oE4P3pNidTP7rif0PCJJAvBsgsjNdp3+e98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZeHmfD2Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZeHmfD2Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751626668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CrvE7HgkF0Duv49KG//QWMSmUEkIXLGid+oDz5Nnx5A=;
+	b=ZeHmfD2QyxqLtYDsLqiDPPY5mLg9vMPAcc+tz60ngUtopHJSb4VxRj0dFie0YrCtRY+kti
+	8XFovyc7u0s7mg2LDRJLtcu0/nOGsvLBL7fz237OA4cVO+ujUkrGyTOvj96Hxc1Rdsw736
+	tpIJvhEKMF2WspN5uU3SsRaYWT4442U=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-266-LwFcj-JUOVubF5s1AKlR7g-1; Fri, 04 Jul 2025 06:57:47 -0400
+X-MC-Unique: LwFcj-JUOVubF5s1AKlR7g-1
+X-Mimecast-MFC-AGG-ID: LwFcj-JUOVubF5s1AKlR7g_1751626667
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-6076ad0b2f1so742194a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:57:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751626544; x=1752231344;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zXhjbBQxPc41dmIg6kX1o57348NlT6T9Q+QljyaNGuE=;
-        b=nRa6QHMJQvKeTgkYDF1rVBzgOzx8x41gUIZ7niddJeS3NvU2/xMVSil0eaYilGfaRd
-         5FYX7rS5keJLNSsRqzQUNZ/9sGEvWvgIm+Gbpmwt5K1BldFaV+fXXAjV+LAAUSXGhPw7
-         NbrGEjDK2/cIUMtvSgGLiVbXfdPOGvM2fdGJcEClktrSiqAtyIBiF2dz08EtCTY4F4zy
-         bOMsG4Ib5PdvNls6QYPE1zIFJxz9e7EbTKZ4TPR+nG+FMlzfP5F49VFnVEraYQVS6y5V
-         gqwLVil3HaG/ZTu6m1BGMWm/D3tlch2j+WeboxKAfztn9TTy2WF1PlGZ4I6aAz+t+V4A
-         UjiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7DzLcvEyVJJIm53SV4taIzo7GRMHXQw7cikezjA2+3Cj931Vl3pXNA0xYS+YnzwdbLS1UkVL7swj+Dw==@vger.kernel.org, AJvYcCVGYVbEx/1OzaakNmHBN077aa8VuzIjj88TQIbsJAiAnvSpnYbNQ2XV0hKrtmbVVptqajNRh3eEk4qY@vger.kernel.org, AJvYcCWZQfy3DJaqRUJFV8KJDdqDvkFM26zrL2jlfcgEf8/XAkkRWdvvUhYrnWCIO5Z7aIlVdBrigqPKIVIamHmo@vger.kernel.org, AJvYcCWi0acyCmgJqIUcWXYtv0YvUEXEkd6M9hI25bfsE4+Z7w7mFbibkhXFIgiQS5zKEtVBE/TG53RSq6fK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfYbNpcngqrX9sYZH3bsEue02kTpRoIbXBiDZkGlsmuTiIYtA3
-	WRNGlKlKIJvL85aPDBPj5KQUm7pR1Wh7y7GaPwovph3P50lXrz2HNOXU
-X-Gm-Gg: ASbGncsfNu+DQVMAqFHPesHqAHdwJneh4oRP+xTfOrGs8AlI4UDCzYv+JrrHGDpNOEv
-	ZeZRRHp2adGlRbsGc2Mvmhj8QRAfZs1Nin7buLcCh4fVjkfMWfpC6vu65TeKUU1e8JoisEUTjzs
-	E1Rcnf1NpRb8RFIYo6qc2PPgGaprKBK9MVw8zzhANW8jhpJHQ3nomELvI1ehCZ5719fuxlxTvD3
-	0Lah0zB4+OuBrX1Pfxgzr4c6GglSVfX7+imPZ6rBFXg6ABe8gV/2fW88GBGpjctNQ4vgoAWX6T+
-	TWsW+WiAn35JYWeVjdpZq5GEtz4GJl1wjYnEVRXgc3ANq476mLYx
-X-Google-Smtp-Source: AGHT+IFtecnxFxpAEi73VQ7stv/WU5mZI7Q3B3ULoJe26MN/qhHXGZTHEmxxv8nFLd24f8A1QAm6Vw==
-X-Received: by 2002:a17:906:fd87:b0:ae0:d409:5f19 with SMTP id a640c23a62f3a-ae3f8021712mr265754066b.2.1751626544193;
-        Fri, 04 Jul 2025 03:55:44 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6ac373fsm152691866b.79.2025.07.04.03.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 03:55:43 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Fri, 04 Jul 2025 03:55:20 -0700
-Subject: [PATCH 2/2] acpi/ghes: taint kernel on recovered hardware errors
+        d=1e100.net; s=20230601; t=1751626667; x=1752231467;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CrvE7HgkF0Duv49KG//QWMSmUEkIXLGid+oDz5Nnx5A=;
+        b=iVowc58jgNcqNI7DlM5hUZIBchN4dOCJWg7uVzMDOAAuh5LeFAebnLusHLl/4WMLsN
+         wOz4RN2tVih6zNW14ZWn9l8yF0Om5DwjjmftWRqoV7sB00Jm52KmuhGt6MrL/08X/iY7
+         74VPFRB0IkCk91YSLL3mvx09Tzv5gtI98YyXNgYTHDQhYPGmSJDWMAPBTMy7xNqA2cLY
+         9KFF9tadNPhd+I8GA4Qs+W2D1kCJxmtXiJi1krSJKRcdWNWK3MHia751oBcge2FCs/50
+         z8F/QfXGJigjuVMsy79fuElKiKY1lwJpFSAhZ6cRahvz4pElKmNbQZ+UCFY5VsvTFFBS
+         js9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVyKtjQReDUx3gy1VbjYjYsWSyKwjRk/Ki2ZAfqNzp0dc6x22smouf5QJjA1VWq5AZUTmnvpxUYU40gxfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGCk6GaIBEX+FleH9+EjLD9omLqnmQ3MCpgcwktWtaFrBXarU7
+	RzzK2CJEJI72tmK4K+0jUHv3VlT7L8VtF5FCvebgnii9PYiL/osVEBlH+dZh5he+YROVih8bDys
+	JGUY/U6uKv7DlhAdN91oG2JkHsc7nBjQiW4ZhF5o9v628lERTtDNEicEG3pRQPyvqUA==
+X-Gm-Gg: ASbGnct4gTQ1zowPRbfjzeWJNRW/M3toaQqkfx6N28RRcx9CQNmsIzZRMRMfsamxZ3h
+	W8A8vzOuwEDhvi03LpmgF/Dquy1Hl/ry4rFwjh0OoT+JoSdk71Xdv/hoyMaNGMQn+GUIw2LqwhJ
+	Sz4Lw3N+7dscJ5RvkxL/YfRqm5Uc5BJpkRcMkzzM2JU20lPhXCbbJgNs6u0PImKNqRYAUna6v2T
+	XQ4QrooWFNb4yIQM20ARXYFl/h3edktMqisNcOehpLV1udP2hYLgTuUk0Qt0oPQC9BfUGyttili
+	FvMjEsLqfyqY+tNnnEZ3jDoyenewzEy9sZT7jHVoafTwJD1B0SKwT3cyQgNf5rf8OoqQ
+X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id 4fb4d7f45d1cf-60fd3491e75mr1660545a12.24.1751626666597;
+        Fri, 04 Jul 2025 03:57:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcyEXrT1z/JTIyDwlwHTVjdjScy5iO7EyP/8wawH2bxWvrpwpkH9Px/UxRdIe8p7HXgydn3w==
+X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id 4fb4d7f45d1cf-60fd3491e75mr1660526a12.24.1751626666058;
+        Fri, 04 Jul 2025 03:57:46 -0700 (PDT)
+Received: from [10.45.225.135] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fca6641fbsm1164917a12.3.2025.07.04.03.57.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Jul 2025 03:57:45 -0700 (PDT)
+From: Eelco Chaudron <echaudro@redhat.com>
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ dev@openvswitch.org, linux-kernel@vger.kernel.org,
+ Aaron Conole <aconole@redhat.com>
+Subject: Re: [PATCH net-next v2] net: openvswitch: allow providing upcall pid
+ for the 'execute' command
+Date: Fri, 04 Jul 2025 12:57:44 +0200
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <0DF63EA6-305E-4F76-A88C-F2520198702B@redhat.com>
+In-Reply-To: <20250702155043.2331772-1-i.maximets@ovn.org>
+References: <20250702155043.2331772-1-i.maximets@ovn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-taint_recovered-v1-2-7a817f2d228e@debian.org>
-References: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
-In-Reply-To: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
-To: Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
- Jonathan Corbet <corbet@lwn.net>, tony.luck@intel.com, rafael@kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>, kbusch@kernel.org, rmikey@meta.com, 
- kuba@kernel.org, ast@kernel.org, linux-edac@vger.kernel.org, 
- mchehab@kernel.org, bp@alien8.de, linux-acpi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-dd21f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1398; i=leitao@debian.org;
- h=from:subject:message-id; bh=OfZxMm0wtJ0u/hEKScgSTDyZshlYtHfsHkORSdK9eEY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoZ7MrtRmjW3TJIxqrt1/Zwjaj0nvtpE8DseDjZ
- c65ogrhs2yJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaGezKwAKCRA1o5Of/Hh3
- benCD/98A+Zy6cEraPLcV/ZuVANE8SzjYuc2VCeS+ELaHyfugQzeQ580nf2Yo7PYEoE9UpaFLg4
- zsLbmgdazNLnFatAapInAOckQ4L4tozwKnyWFvZedlCst+HNV2bxXNPskiArA0svc6j2z1rhlhP
- k0ytX1N7IYK17QY8cdNJz/Wf/ppGsVm57cJdV9I8RFOfhhz9MD4d7zl4Gxsmlyyb+o9y8MUqwh+
- qvlBpBDrxk7106JgZw4CrKK2n1Fo2IxOsMLqlz1Y2ugWCL26GKxinkgJXv+ExI14Fu494Z6vJGc
- VnNF4ESpY1rgpJuguAGF+mP69cTVk14dYv4xsIum5R1AdTXmmkH6nCMSr920UAOS0vxVBQwzoTj
- I51KEXsl4djmGg+5SWHhQDSfdnV8VYHBY1GjP/tW5DkV8wl6qHTAMFhPHJvUcK2f6ec9yONImmG
- w5Rw2jrmbFZc9YmhWCafYBqiVAUIYPTVRx4wHjk3SwMv0MmBkk3E43N024oaqD3RuMFXAdWqJAP
- WyV1zMXsdmhWIMngqvwxhFuxnHUPKzg/D/JUlo53m2AuMuVod6R513rLl/Naai/ShErRnepNvhm
- U90GiYgI4N8U3eLXLG3RqRSMrIxdZEBx2ikbNM2iak/YmP42EInvlIB/nNU8y0WY+LIlKxA07lo
- s/uVeBkBiAw8Sug==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain
 
-Update the GHES error processing logic to taint the kernel when
-a recoverable or corrected hardware error is detected.
 
-If the error severity is GHES_SEV_RECOVERABLE or GHES_SEV_CORRECTED, the
-TAINT_HW_ERROR_RECOVERED flag is set. This allows users and support
-tools to identify systems that have experienced hardware issues that
-were recovered at runtime, improving traceability and diagnostics.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/acpi/apei/ghes.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On 2 Jul 2025, at 17:50, Ilya Maximets wrote:
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 3d44f926afe8e..f323cefe234b9 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -1102,13 +1102,16 @@ static int ghes_proc(struct ghes *ghes)
- {
- 	struct acpi_hest_generic_status *estatus = ghes->estatus;
- 	u64 buf_paddr;
--	int rc;
-+	int rc, sev;
- 
- 	rc = ghes_read_estatus(ghes, estatus, &buf_paddr, FIX_APEI_GHES_IRQ);
- 	if (rc)
- 		goto out;
- 
--	if (ghes_severity(estatus->error_severity) >= GHES_SEV_PANIC)
-+	sev = ghes_severity(estatus->error_severity);
-+	if (sev == GHES_SEV_RECOVERABLE || sev ==  GHES_SEV_CORRECTED)
-+		add_taint(TAINT_HW_ERROR_RECOVERED, LOCKDEP_STILL_OK);
-+	else if (sev >= GHES_SEV_PANIC)
- 		__ghes_panic(ghes, estatus, buf_paddr, FIX_APEI_GHES_IRQ);
- 
- 	if (!ghes_estatus_cached(estatus)) {
+> When a packet enters OVS datapath and there is no flow to handle it,
+> packet goes to userspace through a MISS upcall.  With per-CPU upcall
+> dispatch mechanism, we're using the current CPU id to select the
+> Netlink PID on which to send this packet.  This allows us to send
+> packets from the same traffic flow through the same handler.
+>
+> The handler will process the packet, install required flow into the
+> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
+>
+> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
+> recirculation action that will pass the (likely modified) packet
+> through the flow lookup again.  And if the flow is not found, the
+> packet will be sent to userspace again through another MISS upcall.
+>
+> However, the handler thread in userspace is likely running on a
+> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
+> in the syscall context of that thread.  So, when the time comes to
+> send the packet through another upcall, the per-CPU dispatch will
+> choose a different Netlink PID, and this packet will end up processed
+> by a different handler thread on a different CPU.
+>
+> The process continues as long as there are new recirculations, each
+> time the packet goes to a different handler thread before it is sent
+> out of the OVS datapath to the destination port.  In real setups the
+> number of recirculations can go up to 4 or 5, sometimes more.
+>
+> There is always a chance to re-order packets while processing upcalls,
+> because userspace will first install the flow and then re-inject the
+> original packet.  So, there is a race window when the flow is already
+> installed and the second packet can match it and be forwarded to the
+> destination before the first packet is re-injected.  But the fact that
+> packets are going through multiple upcalls handled by different
+> userspace threads makes the reordering noticeably more likely, because
+> we not only have a race between the kernel and a userspace handler
+> (which is hard to avoid), but also between multiple userspace handlers.
+>
+> For example, let's assume that 10 packets got enqueued through a MISS
+> upcall for handler-1, it will start processing them, will install the
+> flow into the kernel and start re-injecting packets back, from where
+> they will go through another MISS to handler-2.  Handler-2 will install
+> the flow into the kernel and start re-injecting the packets, while
+> handler-1 continues to re-inject the last of the 10 packets, they will
+> hit the flow installed by handler-2 and be forwarded without going to
+> the handler-2, while handler-2 still re-injects the first of these 10
+> packets.  Given multiple recirculations and misses, these 10 packets
+> may end up completely mixed up on the output from the datapath.
+>
+> Let's allow userspace to specify on which Netlink PID the packets
+> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
+> This makes it possible to ensure that all the packets are processed
+> by the same handler thread in the userspace even with them being
+> upcalled multiple times in the process.  Packets will remain in order
+> since they will be enqueued to the same socket and re-injected in the
+> same order.  This doesn't eliminate re-ordering as stated above, since
+> we still have a race between kernel and the userspace thread, but it
+> allows to eliminate races between multiple userspace threads.
+>
+> Userspace knows the PID of the socket on which the original upcall is
+> received, so there is no need to send it up from the kernel.
+>
+> Solution requires storing the value somewhere for the duration of the
+> packet processing.  There are two potential places for this: our skb
+> extension or the per-CPU storage.  It's not clear which is better,
+> so just following currently used scheme of storing this kind of things
+> along the skb.  We still have a decent amount of space in the cb.
+>
+> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 
--- 
-2.47.1
+Thanks for working on fixing this, and for the detailed explanation!
+
+Acked-by: Eelco Chaudron <echaudro@redhat.com>
 
