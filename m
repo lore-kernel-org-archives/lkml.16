@@ -1,93 +1,130 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC83256D;
-	Fri,  4 Jul 2025 00:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F65623A6;
+	Fri,  4 Jul 2025 00:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751587599; cv=none; b=XWS2Ffzhrqsb2Nu+NdgWWVojSefX4dlAMg0n2mkdIrCd+7DKjx6cJIOcdQcAfghFhUHSS5TbL8K0fOHQ/S7c/DdzyfHG9yOCmYnsS6nKxJQL1XtwjluAwcmL69m1FttXUkVeZf+OP6cxP3HNrPmSTWmj+gayViJuuass0Wa3EvI=
+	t=1751587689; cv=none; b=mcH75K+C1LQZSXwd2qN+KcZNYOO9onZwutOFitpJ1IrjZlFbvnbMFFzgYsO/cYjvwFfe2XySQk8l+Ko1hRfZBnF+S3XedraHZyk2uKMqvTXGJGddwJmK6l6oSONizeU35A+JSLIWRUb1rKlJnEsDZzOCZLc3Q6PA/8KV3c0cL6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751587599; c=relaxed/simple;
-	bh=4HvshWDHlLlPvbXK9Y83KcYdKVX+YX4UjkJdPlQODCg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U6hOzfxgkEZEk33aR93UhZCOulKSbtzmkNbRRUE6G2S6/BHsNsDP/6KrfcFaFIjxcSfUHYHRzk8+c6zXVC+waQxgRvNFntoYTizs2PmndqDZGPYllWWyZx5EcPNNiFw0AHm8gcYaC/0Ra6Zzxj7iThxZ2X/fhF0+RqaaoBywWi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=bd8cK7MY; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1751587689; c=relaxed/simple;
+	bh=6IOtBe302IQ49hbl2incLA/h2cLlOoTFSUyfYxYhEiY=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Vv0hvmYjNFpi2rfAa5fRZUTWakfaRJXeQjm+VnzTGXFHOcQ8GZp456qBtezNW6Jfis6U19+0PdFNEwBJu9F0y8txMXOWZr0tzLvbuGjB2xmGNnuTmB2nVrfsaQJ75zIxuuCqDrdV5X0FFuWGxYGNidm0IeRPKdptBW7aTD7F1Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SZ7yhh+f; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="bd8cK7MY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZ7yhh+f"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-748f5a4a423so339034b3a.1;
+        Thu, 03 Jul 2025 17:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1751587594;
-	bh=4HvshWDHlLlPvbXK9Y83KcYdKVX+YX4UjkJdPlQODCg=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=bd8cK7MYknGTS0lOj+U8WZ6K9i1+iL4/RcZ+73L+lPeLQ+/miHT1MDVXHrbVf1To8
-	 C5X6XpLEK6MffQ1s78rE7Y+heB8kXVhyjtBf6eeD0nQ8XtD2zZE4rseor3xURQ8SFV
-	 72jk/KMostVgC9EsC9AB7NasfNH/i0p1kfQnXVOaoWjelDS5zw0CuMm5FXdMtAR2b5
-	 FCbJTrOhbAlt9ZUnCaFUajIcfRUuCOVeRNxN3yh5SpDAZXKGKwJqY5228nsOnzo5W/
-	 hs3108j+Sw3AywZrDMEKTvq1sFY3CDCMMdOPU2vUqFTVgVLF+Fl1EGuPoBN+imQkG8
-	 TK9ry16QRj3Kg==
-Received: from [192.168.68.112] (unknown [180.150.112.153])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 431E36443C;
-	Fri,  4 Jul 2025 08:06:33 +0800 (AWST)
-Message-ID: <78f9fcbc58261064f248e95eb7740549e338bc78.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 1/5] ARM: dts: aspeed: Expand data0 partition in
- facebook-bmc-flash-layout-128.dtsi
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: rentao.bupt@gmail.com, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel
- Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, Tao Ren <taoren@meta.com>
-Date: Fri, 04 Jul 2025 09:36:29 +0930
-In-Reply-To: <20250702050421.13729-2-rentao.bupt@gmail.com>
-References: <20250702050421.13729-1-rentao.bupt@gmail.com>
-	 <20250702050421.13729-2-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4-2 
+        d=gmail.com; s=20230601; t=1751587687; x=1752192487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iTtXxeSTjFwbn7vBl3oWSyxodotdHStB5CipA3nQfs0=;
+        b=SZ7yhh+fLi0/3lWw7FCOVLkmFsHd/fLP0KIWLdeno7Qlp+yqdixRcJRJBnv5vpI0dv
+         dsO5wrhZAN2yMlOaU76rPMP+OXdxaZlZoyEf3zhHne2lKG1+JViMLbUZnVCWA+DiGMoO
+         c+gdXdBHNh47jLnV6Ilp7I0D9E6Wg7hC0lnU2uP5uNtMUTR58xNoicUJlNyOdUOy/6/U
+         tw8f7c2YuOmwnZ+ubeQRD6xlysN50Y0mUpg6tw4LYnjm2ePZdhOVhsFy2p1BgSSwafq+
+         0Bt0wd/wrdcyFb7aok50y1WTZGK52J0vNrdUMyjmQGKTyawkGK/FD9RWORCcghG1Utrp
+         RyJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751587687; x=1752192487;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iTtXxeSTjFwbn7vBl3oWSyxodotdHStB5CipA3nQfs0=;
+        b=T3dTdjbCMw+vP0FDLdN1ZgeLHbCOPG4mY/qHs5osYO5pIIh5LxTTpcungsTEtQK30k
+         ZVangMbSzp8FaHx53i4MsFkQxo69pWVDvyoXHnegJwmNDBGjgtTbjnMKgCoWup38NjcR
+         h7t+cOO4TVqvJYlUBtmwskFLNr6HxWnq8HRjwcqCNd9NX0UxuSV2CJtT/WmV8dJl1wAJ
+         YHBjfsMrFFlPK/JnGCOkhsJGCruPzfhz+Zcc6uxtk5n+lAQH2rg1f11BvcF8wuaGop4F
+         ROhuAgRdSwJXE8eomGWtAfikU0QLIfbNGlyXELJZ+w237R+NiYpm+PT6dPzeL5/VlSzO
+         ESlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjwJ9kBoN7mcB8wVXl1HzzXwGeCA9YjUSUJk7saAb5RXetBoGX9Lh57+vW2u+ZoSFtyOdde6kyKrHzg3Q3NeY=@vger.kernel.org, AJvYcCWmfBFXtMimJQbHAjV70/ruZLfOhfgB6jiX2C0prmTQT1v6iVkYajZ22qOQe7gjoIelAlWUUXeOEbkTLEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDe3etPmo4i5QkoF0ONbB53jG6RNJ/h/AB4UGNLJ/BT1IaSPCr
+	ePLdOdMl+XvO1hsfn/DGueGnwD57SiOo8B6dFssJcVeLJP0OesdmXyNw
+X-Gm-Gg: ASbGncvxHRXwBeZo8tjQQI4DVztIWCfWJ+l1B2yoxxp/aStQC2cDwr9VPegOebHvHWx
+	45xdh/hJQwgrQf3xea1ibhRPIrvxPM09ZgP1XDx/JGKvKUbDu2z01fTSbT0bIwHkshLAwWcAvKb
+	R+0y9jNDRDljB4KntRYbbvfTBzGQv/erb9G9Clm+Yl9sDnpceA1z7vaB3kQ314HcpeUOWe3GRcX
+	kvyI10rf2eBp1eRaDVfSIusGRqUQzBnsBqQOjLdZff7wkzmVfy8EGFMarsNoafowMJSdq2kT62K
+	CUiTO7kvdEksVirzjTcBAuchE9RAdHOQG0ZSHojaOxfKzbn6ATGwKpwmhpp7T1ZJRx7oE6RZub+
+	/fGBRLPHhmgeWPiugdE4K53Smu2TuLxwXPHrQz1zbedE/C+X4XOM=
+X-Google-Smtp-Source: AGHT+IEcjjhEoGNnFpdeaxOrd3OBNKkUIO/cGlogM9cZHvglpNVTY2wleVcrSuVvg7vDsuQBbWiXbw==
+X-Received: by 2002:a05:6a00:3d16:b0:748:2cbb:be45 with SMTP id d2e1a72fcca58-74ce8a8debcmr157858b3a.15.1751587687381;
+        Thu, 03 Jul 2025 17:08:07 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce359f54asm629336b3a.31.2025.07.03.17.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 17:08:06 -0700 (PDT)
+Date: Fri, 04 Jul 2025 09:07:51 +0900 (JST)
+Message-Id: <20250704.090751.571327900479764851.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com, a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, ojeda@kernel.org,
+ boqun.feng@gmail.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com,
+ dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
+ jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
+ lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
+ tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CAH5fLgjdpso4waCrP6iVaMEOpYLUmqCz8PxqXuSbQBMaxxCHBw@mail.gmail.com>
+References: <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+	<87sejfuf3n.fsf@kernel.org>
+	<CAH5fLgjdpso4waCrP6iVaMEOpYLUmqCz8PxqXuSbQBMaxxCHBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDI1LTA3LTAxIGF0IDIyOjA0IC0wNzAwLCByZW50YW8uYnVwdEBnbWFpbC5jb20g
-d3JvdGU6Cj4gRnJvbTogVGFvIFJlbiA8cmVudGFvLmJ1cHRAZ21haWwuY29tPgo+IAo+IEV4cGFu
-ZCBkYXRhMCBwYXJ0aXRpb24gdG8gNjRNQiBpbiBmYWNlYm9vay1ibWMtZmxhc2gtbGF5b3V0LTEy
-OC5kdHNpIGZvcgo+IGxhcmdlciBwZXJzaXN0ZW50IHN0b3JhZ2UuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogVGFvIFJlbiA8cmVudGFvLmJ1cHRAZ21haWwuY29tPgo+IC0tLQo+IMKgLi4uL2Jvb3QvZHRz
-L2FzcGVlZC9mYWNlYm9vay1ibWMtZmxhc2gtbGF5b3V0LTEyOC5kdHNpIHwgMTAgKysrKystLS0t
-LQo+IMKgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKPiAK
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2ZhY2Vib29rLWJtYy1mbGFz
-aC1sYXlvdXQtMTI4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQvZmFjZWJvb2stYm1j
-LWZsYXNoLWxheW91dC0xMjguZHRzaQo+IGluZGV4IDdmMzY1MmRlYTU1MC4uZWZkOTIyMzJjZGEy
-IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9mYWNlYm9vay1ibWMtZmxh
-c2gtbGF5b3V0LTEyOC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2ZhY2Vi
-b29rLWJtYy1mbGFzaC1sYXlvdXQtMTI4LmR0c2kKPiBAQCAtMzIsMTkgKzMyLDE5IEBAIGltYWdl
-LW1ldGFAZjAwMDAgewo+IMKgwqDCoMKgwqDCoMKgwqB9Owo+IMKgCj4gwqDCoMKgwqDCoMKgwqDC
-oC8qCj4gLcKgwqDCoMKgwqDCoMKgICogRklUIGltYWdlOiAxMTkgTUIuCj4gK8KgwqDCoMKgwqDC
-oMKgICogRklUIGltYWdlOiA2MyBNQi4KPiDCoMKgwqDCoMKgwqDCoMKgICovCj4gwqDCoMKgwqDC
-oMKgwqDCoGZpdEAxMDAwMDAgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZWcg
-PSA8MHgxMDAwMDAgMHg3NzAwMDAwPjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-cmVnID0gPDB4MTAwMDAwIDB4M2YwMDAwMD47Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqBsYWJlbCA9ICJmaXQiOwo+IMKgwqDCoMKgwqDCoMKgwqB9Owo+IMKgCj4gwqDCoMKgwqDC
-oMKgwqDCoC8qCj4gLcKgwqDCoMKgwqDCoMKgICogImRhdGEwIiBwYXJ0aXRpb24gKDhNQikgaXMg
-dXNlZCBieSBGYWNlYm9vayBCTUMgcGxhdGZvcm1zIGFzCj4gK8KgwqDCoMKgwqDCoMKgICogImRh
-dGEwIiBwYXJ0aXRpb24gKDY0TUIpIGlzIHVzZWQgYnkgRmFjZWJvb2sgQk1DIHBsYXRmb3JtcyBh
-cwo+IMKgwqDCoMKgwqDCoMKgwqAgKiBwZXJzaXN0ZW50IGRhdGEgc3RvcmUuCj4gwqDCoMKgwqDC
-oMKgwqDCoCAqLwo+IC3CoMKgwqDCoMKgwqDCoGRhdGEwQDc4MDAwMDAgewo+IC3CoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHg3ODAwMDAwIDB4ODAwMDAwPjsKPiArwqDCoMKg
-wqDCoMKgwqBkYXRhMEA0MDAwMDAwIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-cmVnID0gPDB4NDAwMDAwMCAweDQwMDAwMDA+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgbGFiZWwgPSAiZGF0YTAiOwo+IMKgwqDCoMKgwqDCoMKgwqB9Owo+IMKgCgpUd28gZXhp
-c3Rpbmcgc3lzdGVtcyB1c2UgdGhpcyBkdHNpOgoKICAgPiBnaXQgZ3JlcCBmYWNlYm9vay1ibWMt
-Zmxhc2gtbGF5b3V0LTEyOC5kdHNpCiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9hc3BlZWQt
-Ym1jLWZhY2Vib29rLXdlZGdlNDAwLmR0czojaW5jbHVkZSAiZmFjZWJvb2stYm1jLWZsYXNoLWxh
-eW91dC0xMjguZHRzaSIKICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2FzdDI2MDAtZmFjZWJv
-b2stbmV0Ym1jLWNvbW1vbi5kdHNpOiNpbmNsdWRlICJmYWNlYm9vay1ibWMtZmxhc2gtbGF5b3V0
-LTEyOC5kdHNpIgoKVGhpcyBjaGFuZ2UgcmVxdWlyZXMgYSBmdWxsIHJlZmxhc2ggb2YgdGhvc2Ug
-ZGV2aWNlcywgd2hpY2ggaXMgcHJldHR5CmRpc3J1cHRpdmUuCgpJdCBzZWVtcyBtb3JlIGFwcHJv
-cHJpYXRlIHRvIG1lIHRvIGNyZWF0ZSBhIHNlcGFyYXRlIGR0c2kgZm9yIHRoZSBuZXcKZmxhc2gg
-bGF5b3V0IHRvIHVzZSBpbiBuZXcgc3lzdGVtcy4KCkFuZHJldwo=
+On Wed, 2 Jul 2025 11:50:35 +0200
+Alice Ryhl <aliceryhl@google.com> wrote:
+
+>> >>> Mark the ClockSource trait as unsafe and document its safety
+>> >>> requirements. Specifically, implementers must guarantee that their
+>> >>> `ktime_get()` implementation returns a value in the inclusive range
+>> >>> [0, KTIME_MAX].
+>> >>>
+>> >>> Update all existing implementations to use `unsafe impl` with
+>> >>> corresponding safety comments.
+>> >>>
+>> >>> Note that there could be potential users of a customized clock source [1]
+>> >>> so we don't seal the trait.
+>> >>>
+>> >>> Link: https://lore.kernel.org/rust-for-linux/Z9xb1r1x5tOzAIZT@boqun-archlinux/ [1]
+>> >>> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+>> >>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> >>
+>> >> LGTM:
+>> >> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>> >
+>> > Thanks!
+>> >
+>> >> Though you're missing `` around [0; KTIME_MAX] in some places, which
+>> >> may be worth adding.
+>> >
+>> > Andreas, would you like me to send v2 with the above changes?
+>>
+>> Perhaps we should use rust ranges instead [1]? Like this, no brackets: `0..=KTIME_MAX`.
+> 
+> Well, maybe. But I think it's also worth considering just using
+> english to describe it:
+
+I had a quick look at the official Rust documentation, and I think I
+agree with this opinion.
+
+> Implementers must ensure that `ktime_get()` returns a positive value
+> less than or equal to `KTIME_MAX`.
+
+Would it make sense to explicitly mention that zero is included? Also
+it would be nice to explain the value of KTIME_MAX?
+
+
+Implementers must ensure that ktime_get() returns a non-negative value
+less than or equal to KTIME_MAX, where KTIME_MAX equals i64::MAX.
 
