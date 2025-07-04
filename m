@@ -1,122 +1,91 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9352DAFA8
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18685A2D;
+	Fri,  4 Jul 2025 09:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622107; cv=none; b=crT6kYE2qH1pNa2IPitqkPDnG+X+Oe3WPJa/NHRgYdtG37KjI5B3TW6wZGjPSSgfd3KOyDUx3yrbRC6QMZ1gpbY7HrtkPw9FsiMX80f42t7E1XDa1mOzJNgFmF8QL3u7LaxfqmdLIEtUrPuNG17i2mL09EFOmNmqv4s/xfr9IuA=
+	t=1751622183; cv=none; b=YupVVKCC+nGrEGNamzflUL9tn8vvcfP/ijk6maI1Zqx+jC/eJcxfrc9dN+JqZOQdHa2v/AhCeaxWWt//PbKdLI9ClTICSwDPq7AM02c2tqS1G7XVy2Rb9EcA3A35CZJfmr6fxd7Qe3cUAfME/pg+t72CbyELiVuK5XYz77CSnh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622107; c=relaxed/simple;
-	bh=f8KJwsnNMzDSXCcr+Avb2AwztgI5qoTLwLOR6IeBS/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+Y1y2FD/EHoMZBrAjmZILmjZo4hfEo3Tpq7ezKb0QeeiqbJB/ZSqHqb0QBWLKAA7Q5xwPypT8R6LFuVwJSK8bJIUFEI0Aazol0LqFiTbi+Rf66vm2YzEvNMJoGd8Bb848T6mZvxUXY/2TxUX6ofRtaWuL/Bug7zjktn8neGyEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g3P1jk+B; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751622183; c=relaxed/simple;
+	bh=5eb6AKCbpHuIGf13tSNQmtmiiVKq+2jlzkApt8oVY6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oaAg6B8VPd68GKOVN0GFTYg+DALtv8bZ0Ii/NeWzwshmzy1sznhixM/+PSE29sJ7ACNYDH+B1tjGT+A2abLn51ENa0hr3Zpcws7r+Vf0uC/9iTqeeICxapL6KqE/Z6nuxNsQtRm22vzNQ0sagYeMvhKfkpfVd+uRyJpIozlf8CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gURBsIeN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g3P1jk+B"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453398e90e9so4475945e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 02:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751622104; x=1752226904; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=f8KJwsnNMzDSXCcr+Avb2AwztgI5qoTLwLOR6IeBS/c=;
-        b=g3P1jk+BlfXibf9qbAcB0lx+KlcwRFQhHefsB1vY4n68GFZ4oD9LovXHi+BObnB4ao
-         mSAqepJ/qHOCWnisdOXorGRyj+zBFt06cZlccbaigWfpHSFgPSNp1qXlXW9kTzdLnEe0
-         c1gl5F19Srx5tBldA1QtG4qQ3SPub/6xFzvTjcman8Mi8MiNevthyfUq+rfeMlCJhtQ6
-         QdV3GU72brhtOJBH9yP2W2VLRSQ7ohbifKSNvegnLlMxweo18tudG/M5G1eg6jhCElzi
-         T5K81oRAO0OOT8PwT9N/bvY2X21md4TqciP8lGXBKoWay6/ajYJZ6uhjpyyxf7G+IttA
-         UP5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751622104; x=1752226904;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f8KJwsnNMzDSXCcr+Avb2AwztgI5qoTLwLOR6IeBS/c=;
-        b=jmd0X2bmKRNcy7yo3nvkN1mbPm2wwCK2rjjUmh0dbbtMjoEJyZcJz4vodszfXh+G2y
-         PKwA1YXRIm7KLSSbVC/z04L5vpK5dvBW4zHMIJBLB9gMPOC0jAis/Z/wXN7HnreriQXW
-         3na1+YexLFfI3tg6V3DZYgnbXmCgxnZIImdSi5EKMz2B3scdhEQKHeatwNFMahnjiuyn
-         TOkwyM3El4HJttqrX2ZBm2IwCzcROO1wSfC9zEkOp3WsxGKNm5uNd+R1UrjU5smsqZvL
-         oIzwvLmV8+T/kUz1pWB0TUM8XRRvH1jVVVlvWHKoC/gBpFUldT9SuY6MQGK3XejtAyYZ
-         GUHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHKDXJLHRcmTWuRIMCUzglSZYLhyv/KdkRg21ahmSwvAINQaZ+PQDJvr/JyEIIM9ZVxvi8HYLstBanwG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJphZ22hoWR11Npqgbl4aOO3M9ib+c/L+asHDgKoBKJeZOxlMj
-	wWzr+cAFQLCLpVxC/dVayN50izKdg1k1c4ya6LPg033NtDWI3CyrUk8vjZVDAjx54ZsqBQC2IqS
-	5xpnE
-X-Gm-Gg: ASbGncvIHzI/xV6ixnx6cAxsn/hGcj/PenL6zzAG+2whq6EBoUagoxp8L1AWjdOTLk/
-	KP+0aH03xWDLC1zzZ8ZjVAYsLiSymXsvDBsLsO34tWLFff/pjZumPLh4/E0beWF1bVGT3DlDWEG
-	VVqUgGyn8DnGuU4o0COOLRur2RIoxJzUk+fcllfPkVbBd5cvI0FqxUL24wFmBwbybvrzNdgNkKs
-	2of28mZSTW6frvxIjValI8J7b6F6UBi+oYV0TcNYpe90Bm1b4EG44NNDZSZGy4pPJ/RR+EtLwCN
-	73OYvUuIrAISRS9cvKo0KPDOhGSOV89uRgBUW11CDSYT4D6ujzZDlLgHJOZpVYaPRU623yaJPmg
-	=
-X-Google-Smtp-Source: AGHT+IGUjYMUD08GoD1AoiKFpUXCYjS+U0f2xn5DR+TvetLvteDx1zxFn8QzKiN0Fr5rObhFCHiOcg==
-X-Received: by 2002:a05:600c:19c9:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-454b305fcb1mr20498375e9.0.1751622103886;
-        Fri, 04 Jul 2025 02:41:43 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454adc71aadsm38629065e9.25.2025.07.04.02.41.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 02:41:43 -0700 (PDT)
-Date: Fri, 4 Jul 2025 11:41:41 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-Message-ID: <bc2igjpyzuzkxjrbdhixsuldxatnqqwm666enqkbrm5x2hj7u7@uhe6xouufklc>
-References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
- <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
- <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
- <aGcf0Prl-hVX2j4Q@JPC00244420>
- <aGd5lrUvm9Bhh-b8@JPC00244420>
- <wnoymxwdikh6iawrcvhewq6er4si75oqzjdbibhl6n57swq3ff@glkzfmbaots7>
- <aGeZwLAuysAmyX-q@JPC00244420>
- <aGebynaCuASn3t4s@JPC00244420>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gURBsIeN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343A2C4CEE3;
+	Fri,  4 Jul 2025 09:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751622182;
+	bh=5eb6AKCbpHuIGf13tSNQmtmiiVKq+2jlzkApt8oVY6s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gURBsIeNGdjDFKqABlcuncjz1243ZRy45f/kRPdAyPmhsWxh1x9lrh9X/WJ+rRqKp
+	 Jwt/6UNnKNjGypQxQdJDsYwPf2dI89i3DX5TKiBo0FvPk2cAzDa7yYaQeg53CCULsd
+	 SHlDd+n2SoJLwI7Ffcv0sOpVoNKU8WLfu1q2u+xMo7MntFZBxymOZjGjIREwgugHq1
+	 LwMXinKhgBQ3mZrymfpq2Qr+4Q3GsoGfeZlYBBVmHSoyOhdCyWt0kl7R5r/QjEfK4C
+	 QLzmvQ+KF2aykYDaLE1qW8r+x7uFJ8ZtVEwiP0B4CqrX8f1MPgmLbr2INz3kvTwpcI
+	 axbqlCOmpM+Mg==
+Message-ID: <d0614e1c-2966-4766-999c-2bc58d643e7e@kernel.org>
+Date: Fri, 4 Jul 2025 11:42:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ctjxpi437gfzjwsr"
-Content-Disposition: inline
-In-Reply-To: <aGebynaCuASn3t4s@JPC00244420>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: media: atomisp: fix coding style
+To: Pablo <pablo@pablo.ct.ws>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ hdegoede@redhat.com, mchehab@kernel.org, sakari.ailus@linux.intel.com,
+ andy@kernel.org, gregkh@linuxfoundation.org
+Cc: ~lkcamp/patches@lists.sr.ht, koike@igalia.com, pablolucas890@gmail.com
+References: <20250503200030.5982-1-pablo@pablo.ct.ws>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250503200030.5982-1-pablo@pablo.ct.ws>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 3-May-25 10:00 PM, Pablo wrote:
+> Fix a coding style:
+> "ERROR: that open brace { should be on the previous line"
+> issue reported in ia_css_vf.host.c:94.
+> 
+> Signed-off-by: Pablo <pablo@pablo.ct.ws>
+
+Thank you for your patch.
+
+I have merged this in my media-atomisp branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
+
+And this patch will be included in my next
+pull-request to Mauro (to media subsystem maintainer)
+
+Regards,
+
+Hans
 
 
---ctjxpi437gfzjwsr
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-MIME-Version: 1.0
 
-On Fri, Jul 04, 2025 at 06:15:54PM +0900, Shashank Balaji <shashank.mahadas=
-yam@sony.com> wrote:
-> I forgot to add the fixes tags:
-> Fixes: a79906570f9646ae17 ("cgroup: Add test_cpucg_max_nested() testcase")
-> Fixes: 889ab8113ef1386c57 ("cgroup: Add test_cpucg_max() testcase")
->=20
-> Should I send a v3 with your ack and the tags?
+> ---
+>  Hey, this is my first patch, I apreciate any feedback, thanks!
+>  .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c   | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> index ece5e3da3..0ce75d9bd 100644
+> --- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> +++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> @@ -91,8 +91,7 @@ configure_kernel(
+>  	unsigned int vf_log_ds = 0;
+>  
+>  	/* First compute value */
+> -	if (vf_info)
+> -	{
+> +	if (vf_info) {
+>  		err = sh_css_vf_downscale_log2(out_info, vf_info, &vf_log_ds);
+>  		if (err)
+>  			return err;
 
-Yeah, I think it'd be simpler to apply.
-
-Thanks,
-Michal
-
---ctjxpi437gfzjwsr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGeh0wAKCRB+PQLnlNv4
-CFu8AP9oYIVYY2GTEEdyLaoXHQ4+JBuGrYba76X7wg8t7IV/YAD9GvS9tVBxg9Lj
-QT/cJhIuyDcmy+TdsQbo5gmsAgMQ7wY=
-=aScy
------END PGP SIGNATURE-----
-
---ctjxpi437gfzjwsr--
