@@ -1,87 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851F41DE3B5;
-	Fri,  4 Jul 2025 18:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BBB2153E7
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 19:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751655537; cv=none; b=QLJp2wy4D/EePYYDKwqVxJNnV+yqkeip/dVtQOiyiotDupUjke4q5+Wmr2yrZXc14znAycF34yFKj+pQ++tr/KmlWOcXHECXpYJ/OlB3EIhf+dXm9D95oesQ1uUioCNI2aVa/Md8NrhGloQW8ADdUhIhDW8Yw5xDjvlH1TvecdU=
+	t=1751655605; cv=none; b=NVUZkigjCrcNDm+ZO87JILvwlYgEP1BYQ7tIObhUfU5K4I5dwbr+oY1T36R6ifLWnoew0HtPa4VZBeWn6YSBR36+G1jX8CAHR08CKX4/PgccGP/OB6/vWY+j2Px58gKcyyAav1kZ+AnPL4uteFREH3akY2pUqJ3/8R5Q81GhOFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751655537; c=relaxed/simple;
-	bh=g/rKyV7VLe4C2HnR5afRx/OqcQOwCYib/qRjPEkH9es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jhe2MiIwlT+EEIajFjrXYeZnFh+Fx/CRsPIvqcSLAtrlwa2HoZg+ey4dMyS/I02zuAPNjjBkM9EVBNAyDo9QmbHv1+sDxUnNaa6ecDS273brODPa1m0k8JZVvXaaS9nzQGzNcT1IbgsbK88erJGqcXPfnFAnn7xsoQGMjmyAunM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nkkLNYgu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nkkLNYgu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7bVe6j5MuC+VkuFyICwiR2qNPRIfLIced8O4pJKdKJM=; b=nkkLNYgupLUB0HceleDG4+xZ8K
-	8+rCVo+Wnv1djgMWa/6V0IIKMt61rZR57bumIJwXVxyTvzBmRpWqENoLf9A4rsgK9G8QaCowiYEnX
-	O24sSvtcYTqooU30yfDhfbgQVHJ+sq6gM44CNK2i6w5caEXljf3eOCNknwWrWKAsufevfDcebvsw+
-	ACaIHJEIO3H1mo90JKdImUkUjecb2aYbrBJnQkGA0dMa8oD/aL9DSdy7P14jVtVk+SOpTE7x8j5Hg
-	Bm7puEHd08gAlXZdQ+21n0EwF/CHmzy1G54pkDJctj3LMXIa9LabTK6XGlrLKm/cqHmFgztnpSNsL
-	JbihNqAA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXlcC-00000000PPj-2Fpn;
-	Fri, 04 Jul 2025 18:58:28 +0000
-Date: Fri, 4 Jul 2025 19:58:28 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, John Groves <John@groves.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
-Message-ID: <aGgkVA81Zms8Xgel@casper.infradead.org>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-19-john@groves.net>
- <aGcf4AhEZTJXbEg3@archie.me>
- <87ecuwk83h.fsf@trenco.lwn.net>
- <aGdQM-lcBo6T5Hog@archie.me>
+	s=arc-20240116; t=1751655605; c=relaxed/simple;
+	bh=SHxA1dv/+gICCLfumnnjKi0DbEkc6PSAHkvuY/qsF6U=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=au2R+GvQCxdcZSN3HDARvLZs5wXoK3gcCuI9X/lxKI4KAE+gWjtBDjj7st8+smWUCkUAV4wKB4d6yU3RZCFPwckLueCNb199o6LIlIh7fupzdnZ9yob7hZ7VrtPNREkXFD07M2cA7CjxqtNPyB+FK2/U8oXBtM44gSPSWpH2S58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86a5def8869so266462639f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 12:00:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751655603; x=1752260403;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AgYmEDNU5pmAm9t6e07cc46IBSLYMk37dtQuDd586w0=;
+        b=YEhMf9d1pS2xGJw31bf210Hlk2uLwgmVts1sXbdxNVxDRjhX/d6yuzbiNbq6edPCm1
+         eTvr4Lw9kTaa/NGVwEZ9LCQ5ppplUgqWlQtyVdtS31klqN4WAsY4hZ99E34gwm4SA+6l
+         DB4xO3Fx0AS4/D1RTgOhOaHbkdA19JJNxhyjBfQVLTsLBK20CQvkjkAcNw9U3Mg5AQYd
+         Qvd7qYlHh0NJn7wR5GEIg5D/oxQITDoKTNz+8ms9jJFXT1uCp/F1JSxLC8ELvFqlvhs7
+         OckXLzV2ZFZkpt0uw2pkK3s6iR10xrkLwtBGSis2Y+NZ7MJxIYQrxsCrZCC0gY+vvuID
+         TP4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVwDJREIx1d3qyRwWLt2thcxpZ3IhkTqJheLlvubRF6oEB0hMAMZIPC713ifK+AvS+TYmisSdfJn3s3Vao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6hdDh1qs9qb3wftcKo6DsDig+ACih54YUuM3w/2C+3oKbigty
+	2W9i581OMlzmqoWJxMPigB8YBWZ9zLFIo4iWqF9o6J7n7ZmyNysUJhYMBeNnDRDA74/ECgsbfvn
+	BRRHzyt5CaWo/cnriVqAFgAK+B9B4hV2ZGPhaKm3LuMw9fQijU5CBBkdLOR0=
+X-Google-Smtp-Source: AGHT+IH2ZgNM717R1mynWYdlVTd8SH+et8An3Vks52sY0r0f4ZXcl7wh1HBFaTDYAyNFcelbHy41fcLhnL2YeQxKA4adKETzR3Jf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGdQM-lcBo6T5Hog@archie.me>
+X-Received: by 2002:a05:6e02:97:b0:3df:460a:ec3c with SMTP id
+ e9e14a558f8ab-3e1355e9c4cmr41019365ab.22.1751655602841; Fri, 04 Jul 2025
+ 12:00:02 -0700 (PDT)
+Date: Fri, 04 Jul 2025 12:00:02 -0700
+In-Reply-To: <20250704181107.33961-1-enjuk@amazon.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686824b2.a00a0220.c7b3.0022.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in das16m1_attach
+From: syzbot <syzbot+c52293513298e0fd9a94@syzkaller.appspotmail.com>
+To: abbotti@mev.co.uk, enjuk@amazon.com, hsweeten@visionengravers.com, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 04, 2025 at 10:53:23AM +0700, Bagas Sanjaya wrote:
-> On Thu, Jul 03, 2025 at 08:22:58PM -0600, Jonathan Corbet wrote:
-> > Bagas.  Stop.
-> > 
-> > John has written documentation, that is great.  Do not add needless
-> > friction to this process.  Seriously.
-> > 
-> > Why do I have to keep telling you this?
-> 
-> Cause I'm more of perfectionist (detail-oriented)...
+Hello,
 
-Reviews aren't about you.  They're about producing a better patch.
-Do your reviews produce better patches or do they make the perfect the
-enemy of the good?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+c52293513298e0fd9a94@syzkaller.appspotmail.com
+Tested-by: syzbot+c52293513298e0fd9a94@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         c435a4f4 Merge tag 'riscv-for-linus-6.16-rc5' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=139d4582580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba6cef8f153bfeb
+dashboard link: https://syzkaller.appspot.com/bug?extid=c52293513298e0fd9a94
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=149e6c8c580000
+
+Note: testing is done by a robot and is best-effort only.
