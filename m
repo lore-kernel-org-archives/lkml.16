@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDF323F294
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02365222561
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609263; cv=none; b=rMVDlccqHLMNz9Z8ZaMDhuSLyY0wWaN4B/HBvOej4X9sU5Lhafx29SPekh08has5c9t0SVhbSQBh6C7M6Vyrp5fnevwIWqdeGjsAgyNpZBB512sQB8H8zroRDEG0ucILWE559vfb4uTk+zoGRPkddH3KGTprELLto6og5tx2Bm4=
+	t=1751609267; cv=none; b=bbLfzOt5fVqqnXci6j2iiGjpmg2wdOiHIbvrGuhjZZTI2d8IMced44OpA+FM0XcfKun6BLFMfVjy5+g7rf6Cbs5eF6VtyQ3d0jJmXzf9VjPQtilfy5OsltXbnZrQZZ7Egl0DOq5T/+OlLr1Jl+rnu1QwFINz/gUctUkkda2Ca2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609263; c=relaxed/simple;
-	bh=WMdtgrr0/nAUiC/6BwG7uLPF5Tm6Y08FEzL5Ntj1PoA=;
+	s=arc-20240116; t=1751609267; c=relaxed/simple;
+	bh=ldcFF1mghDA07EpAp/w0hayCexC2/uagTVEfPtokacg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FtduYzOD6Gu84174Im80K+7wIt9MFRF+otzJZBSy8efX86C6fLBwxcfpHdOo4DEyNugDKnGii48JQAyNAyvabk0zEq6GDYn/0wgnEV6W9EKauR2YAowa/hGtaOIVzKD9HJXy8CvcU6fL33TiNpiIv6RwQvZNahnHwNKvz7rtT9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qy/k+efT; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=XFKj2BMQVT1HbpG2cKZWXVE5/teUZ7fNtQUkUFbQYEzM5mI78aJR3QDNjBVnaKemixy+ayHfN0WD0OjLxuduxp2bOIaqyBN8Tv8PNYbUBhwrZw8SRhr1m9x7wTos7UjHRn3dxkTMz96QWZB/7kDdLPH/hVH2OIve7Vthdg1QcLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XI80Qrkd; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qy/k+efT"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313fb0ec33bso675108a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:07:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XI80Qrkd"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74ce2491c0fso937667b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751609261; x=1752214061; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751609265; x=1752214065; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+EEGEPDve4y58hrdp46uj5UK2kmzvt0af85C6yPTlxY=;
-        b=qy/k+efTDrNtBdNa203lTcB5j6dqlIYuPB01jkga8ZsqJijRxpkGZXechiH2kmwTxc
-         33boSKWbIEo3adm9qFr73nPVUVvOIW5bkW+jl2WIxM94YZ5HYf4IETmXgiAv7bLCud9K
-         0K5bitxkoADzI5G1RtTletSciyJ08dJDPi5rJxhLK8wsSk31jTB85ivoQXpoI0aHXm0V
-         CxRDm3p8Vkzks+s/o/+pTBllPiFiCfqAKk4UeUg7WYbVk2z38VXxoiQ25cpd2gEDbXLv
-         0ubC4s3iDN0myg4rQis+3yLBRTXvGR8ILpIExkf1A1TB3KvuYJuXIp6RxXHRTt27zSUN
-         NeLg==
+        bh=V87ghHwj2x/F08cA4iUlHoTxBegCjR03gbXdVLHzhkQ=;
+        b=XI80Qrkd+t5+RRZzxlJXAb1SpowpB2XBtKtqRI4lmw8GsSeF1mO1cyv9lb3mie3cy5
+         IDXGZ+0UQRDsDU70E3iBGVbfdjwDnrpJr/f4Ct0mymKZt61kAUHyaip/3/0Syzhg0I6J
+         +IRhLgMMM2InQDEtt/Mv7Fk6Brnmq09OXRw3EoiUUQ4qP7aBIFi2fi/Ly0/22gMaQr1J
+         PHLp6VbaPweAtkgg2xv8HDNEd6akxTUSVoW4P9rHGhuUPPj5UcgUBw+WkPWaif93dctg
+         Iz97Srbt81M/1ewwdN3TjuQHcCNEJQrkGcRidRdtS50GADHto3XkEM+utR/dofcWWTtH
+         Hxjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751609261; x=1752214061;
+        d=1e100.net; s=20230601; t=1751609265; x=1752214065;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+EEGEPDve4y58hrdp46uj5UK2kmzvt0af85C6yPTlxY=;
-        b=C8YaxBkLDJKFBEsfBv4dtDNCtbJXb6uzp33kXCbgNG/vcluXWcWqWak4iIHb9Ggv/L
-         NhjJnfopNw9wYVWM1xJCKrA/bNoIxVaTo+qzX0EBeefBJ6AnQTGFbhi7hIyGOC4hjuhc
-         rYjduTEIMjY4CMpAkD7gVNWgAcgKkZeYPwr8KErZp8zFZlXNeJvlBWCHeJeAJMn49XAX
-         lKk+TRmKzuxG//MQ8E3Bfj9Ujo3DKVh06GgEV1qXsw54sH/wqDhZtv9be1JsG1QLx7W1
-         bQk20WcJu1ds63VBoliD7u0UL4syrlAn6dDUnBm78f9hRibg+OIJbwjQUavq03OJZVu7
-         23VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBhELyTRB1Jmu4Z/Kse7gxiKRYrH/bBhRrLq5rWqt2IKRDnINCTfODA+htSOgr2kldiidCoXPIO109BFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW8FtRHzfVwNMHUzQGo0TU7azqv85Ycp0pYRjslYZiHNOeop0U
-	Cgoj9+XkGoXfJ3Ixq1i9v2QjnMSOblbNPVGhc82gwCSYPRdk4YEzEFOjeJLp/nDg25kLsUKAMIU
-	3gnSVoQ==
-X-Google-Smtp-Source: AGHT+IGwByjyjbWto9oY/VtnoR6krv+OKvQ79zjK0W0qyloVZR9Tx47plfk6bg9opHV46dxYuI5qPKfJ5JE=
-X-Received: from pgha7.prod.google.com ([2002:a63:d407:0:b0:b2c:3dd5:8139])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c888:b0:21a:de8e:5e6d
- with SMTP id adf61e73a8af0-225be6e4963mr2470660637.8.1751609261073; Thu, 03
- Jul 2025 23:07:41 -0700 (PDT)
-Date: Thu,  3 Jul 2025 23:07:23 -0700
+        bh=V87ghHwj2x/F08cA4iUlHoTxBegCjR03gbXdVLHzhkQ=;
+        b=dnLSLMvC+MGqOI0YIQYFAbWEm233StBRSk4uZosAiqg30KKVUGSrVnJcK0OtNZtUTe
+         gFUh3sGt5c3JwOA25lbPJPJ46B2yIUkUByYMNgPN4vuftNxgIKRSq6O4TQmvXia8osLT
+         GtHs2viAU4ucJAoo0nRZm5os71/vFmukiKfT7dD5oNm90IMFHPDthWbZriOW3RiSifXQ
+         9OJSc4jwUUlpCc2sfUYRF4yRyTSQUkF9L0RU/+jJeyxXYTBUN+xkAq9IKO8Z6vWVH9EZ
+         fEGlQ4ia2/5pJAx3QgBiG1uin7iI9jQ+9mWxA94Q5diCND6ivxR3vCWZwAw876xiOBQ4
+         mpcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKVAxwtZGUa86mmvDOLP5B52K4ojeT7DaaINb/aF3oIIRi8wAB7Y6qEg+g2+dAFbhIVWTalx9sQEl7DLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAUIDrSiLalO6ieY1YCeaZJOirXBtXY97cege0EIRwww5PkVzk
+	JRMjpe6pEMw9YuBLef7L4RreVIPmkdkmNaSLWWlDneodRIF4vT5B+n/xp/eCwwbxS1U33DGwXqE
+	UPSwdww==
+X-Google-Smtp-Source: AGHT+IHa4YAEN8ymTNIzYo1RkEc+q9IqwmzCpnw8Sx/y3o7WA6jQRp5CcMpLhh5Oi7FcyNjv7oAKTzvc1WM=
+X-Received: from pfbfc40.prod.google.com ([2002:a05:6a00:2e28:b0:746:fd4c:1fcf])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4fc9:b0:748:f406:b09
+ with SMTP id d2e1a72fcca58-74ce6a6e9b6mr2178587b3a.23.1751609265125; Thu, 03
+ Jul 2025 23:07:45 -0700 (PDT)
+Date: Thu,  3 Jul 2025 23:07:25 -0700
 In-Reply-To: <20250704060727.724817-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250704060727.724817-1-surenb@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250704060727.724817-6-surenb@google.com>
-Subject: [PATCH v6 5/8] selftests/proc: add verbose more for tests to
- facilitate debugging
+Message-ID: <20250704060727.724817-8-surenb@google.com>
+Subject: [PATCH v6 7/8] fs/proc/task_mmu: read proc/pid/maps under per-vma lock
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
@@ -75,319 +74,372 @@ Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com,
 	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, surenb@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add verbose mode to the proc tests to print debugging information.
-Usage: proc-pid-vm -v
+With maple_tree supporting vma tree traversal under RCU and per-vma
+locks, /proc/pid/maps can be read while holding individual vma locks
+instead of locking the entire address space.
+Completely lockless approach (walking vma tree under RCU) would be quite
+complex with the main issue being get_vma_name() using callbacks which
+might not work correctly with a stable vma copy, requiring original
+(unstable) vma - see special_mapping_name() for an example.
+When per-vma lock acquisition fails, we take the mmap_lock for reading,
+lock the vma, release the mmap_lock and continue. This fallback to mmap
+read lock guarantees the reader to make forward progress even during
+lock contention. This will interfere with the writer but for a very
+short time while we are acquiring the per-vma lock and only when there
+was contention on the vma reader is interested in. We shouldn't see a
+repeated fallback to mmap read locks in practice, as this require a
+very unlikely series of lock contentions (for instance due to repeated
+vma split operations). However even if this did somehow happen, we would
+still progress.
+One case requiring special handling is when vma changes between the
+time it was found and the time it got locked. A problematic case would
+be if vma got shrunk so that it's start moved higher in the address
+space and a new vma was installed at the beginning:
+
+reader found:               |--------VMA A--------|
+VMA is modified:            |-VMA B-|----VMA A----|
+reader locks modified VMA A
+reader reports VMA A:       |  gap  |----VMA A----|
+
+This would result in reporting a gap in the address space that does not
+exist. To prevent this we retry the lookup after locking the vma, however
+we do that only when we identify a gap and detect that the address space
+was changed after we found the vma.
+This change is designed to reduce mmap_lock contention and prevent a
+process reading /proc/pid/maps files (often a low priority task, such
+as monitoring/data collection services) from blocking address space
+updates. Note that this change has a userspace visible disadvantage:
+it allows for sub-page data tearing as opposed to the previous mechanism
+where data tearing could happen only between pages of generated output
+data. Since current userspace considers data tearing between pages to be
+acceptable, we assume is will be able to handle sub-page data tearing
+as well.
 
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- tools/testing/selftests/proc/proc-maps-race.c | 159 ++++++++++++++++--
- 1 file changed, 146 insertions(+), 13 deletions(-)
+ fs/proc/internal.h        |   5 ++
+ fs/proc/task_mmu.c        | 118 ++++++++++++++++++++++++++++++++++----
+ include/linux/mmap_lock.h |  11 ++++
+ mm/madvise.c              |   3 +-
+ mm/mmap_lock.c            |  88 ++++++++++++++++++++++++++++
+ 5 files changed, 214 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/proc/proc-maps-race.c b/tools/testing/selftests/proc/proc-maps-race.c
-index 6acdafdac9db..5f912fedd6cf 100644
---- a/tools/testing/selftests/proc/proc-maps-race.c
-+++ b/tools/testing/selftests/proc/proc-maps-race.c
-@@ -39,6 +39,7 @@
- 
- static unsigned long test_duration_sec = 5UL;
- static int page_size;
-+static bool verbose;
- 
- /* /proc/pid/maps parsing routines */
- struct page_content {
-@@ -207,6 +208,99 @@ static void stop_vma_modifier(struct vma_modifier_info *mod_info)
- 	signal_state(mod_info, SETUP_MODIFY_MAPS);
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 3d48ffe72583..7c235451c5ea 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -384,6 +384,11 @@ struct proc_maps_private {
+ 	struct task_struct *task;
+ 	struct mm_struct *mm;
+ 	struct vma_iterator iter;
++	loff_t last_pos;
++#ifdef CONFIG_PER_VMA_LOCK
++	bool mmap_locked;
++	struct vm_area_struct *locked_vma;
++#endif
+ #ifdef CONFIG_NUMA
+ 	struct mempolicy *task_mempolicy;
+ #endif
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index b8bc06d05a72..ff3fe488ce51 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -127,15 +127,107 @@ static void release_task_mempolicy(struct proc_maps_private *priv)
  }
+ #endif
  
-+static void print_first_lines(char *text, int nr)
+-static struct vm_area_struct *proc_get_vma(struct proc_maps_private *priv,
+-						loff_t *ppos)
++#ifdef CONFIG_PER_VMA_LOCK
++
++static void unlock_vma(struct proc_maps_private *priv)
 +{
-+	const char *end = text;
-+
-+	while (nr && (end = strchr(end, '\n')) != NULL) {
-+		nr--;
-+		end++;
++	if (priv->locked_vma) {
++		vma_end_read(priv->locked_vma);
++		priv->locked_vma = NULL;
 +	}
++}
 +
-+	if (end) {
-+		int offs = end - text;
++static const struct seq_operations proc_pid_maps_op;
 +
-+		text[offs] = '\0';
-+		printf(text);
-+		text[offs] = '\n';
-+		printf("\n");
++static inline bool lock_vma_range(struct seq_file *m,
++				  struct proc_maps_private *priv)
++{
++	/*
++	 * smaps and numa_maps perform page table walk, therefore require
++	 * mmap_lock but maps can be read with locking just the vma.
++	 */
++	if (m->op != &proc_pid_maps_op) {
++		if (mmap_read_lock_killable(priv->mm))
++			return false;
++
++		priv->mmap_locked = true;
 +	} else {
-+		printf(text);
++		rcu_read_lock();
++		priv->locked_vma = NULL;
++		priv->mmap_locked = false;
++	}
++
++	return true;
++}
++
++static inline void unlock_vma_range(struct proc_maps_private *priv)
++{
++	if (priv->mmap_locked) {
++		mmap_read_unlock(priv->mm);
++	} else {
++		unlock_vma(priv);
++		rcu_read_unlock();
 +	}
 +}
 +
-+static void print_last_lines(char *text, int nr)
++static struct vm_area_struct *get_next_vma(struct proc_maps_private *priv,
++					   loff_t last_pos)
 +{
-+	const char *start = text + strlen(text);
++	struct vm_area_struct *vma;
 +
-+	nr++; /* to ignore the last newline */
-+	while (nr) {
-+		while (start > text && *start != '\n')
-+			start--;
-+		nr--;
-+		start--;
-+	}
-+	printf(start);
++	if (priv->mmap_locked)
++		return vma_next(&priv->iter);
++
++	unlock_vma(priv);
++	vma = lock_next_vma(priv->mm, &priv->iter, last_pos);
++	if (!IS_ERR_OR_NULL(vma))
++		priv->locked_vma = vma;
++
++	return vma;
 +}
 +
-+static void print_boundaries(const char *title,
-+			     struct page_content *page1,
-+			     struct page_content *page2)
-+{
-+	if (!verbose)
-+		return;
++#else /* CONFIG_PER_VMA_LOCK */
 +
-+	printf("%s", title);
-+	/* Print 3 boundary lines from each page */
-+	print_last_lines(page1->data, 3);
-+	printf("-----------------page boundary-----------------\n");
-+	print_first_lines(page2->data, 3);
-+}
-+
-+static bool print_boundaries_on(bool condition, const char *title,
-+				struct page_content *page1,
-+				struct page_content *page2)
-+{
-+	if (verbose && condition)
-+		print_boundaries(title, page1, page2);
-+
-+	return condition;
-+}
-+
-+static void report_test_start(const char *name)
-+{
-+	if (verbose)
-+		printf("==== %s ====\n", name);
-+}
-+
-+static struct timespec print_ts;
-+
-+static void start_test_loop(struct timespec *ts)
-+{
-+	if (verbose)
-+		print_ts.tv_sec = ts->tv_sec;
-+}
-+
-+static void end_test_iteration(struct timespec *ts)
-+{
-+	if (!verbose)
-+		return;
-+
-+	/* Update every second */
-+	if (print_ts.tv_sec == ts->tv_sec)
-+		return;
-+
-+	printf(".");
-+	fflush(stdout);
-+	print_ts.tv_sec = ts->tv_sec;
-+}
-+
-+static void end_test_loop(void)
-+{
-+	if (verbose)
-+		printf("\n");
-+}
-+
- static void capture_mod_pattern(int maps_fd,
- 				struct vma_modifier_info *mod_info,
- 				struct page_content *page1,
-@@ -218,18 +312,24 @@ static void capture_mod_pattern(int maps_fd,
- 				struct line_content *restored_last_line,
- 				struct line_content *restored_first_line)
++static inline bool lock_vma_range(struct seq_file *m,
++				  struct proc_maps_private *priv)
  {
-+	print_boundaries("Before modification", page1, page2);
+-	struct vm_area_struct *vma = vma_next(&priv->iter);
++	return mmap_read_lock_killable(priv->mm) == 0;
++}
 +
- 	signal_state(mod_info, SETUP_MODIFY_MAPS);
- 	wait_for_state(mod_info, SETUP_MAPS_MODIFIED);
- 
- 	/* Copy last line of the first page and first line of the last page */
- 	read_boundary_lines(maps_fd, page1, page2, mod_last_line, mod_first_line);
- 
-+	print_boundaries("After modification", page1, page2);
++static inline void unlock_vma_range(struct proc_maps_private *priv)
++{
++	mmap_read_unlock(priv->mm);
++}
 +
- 	signal_state(mod_info, SETUP_RESTORE_MAPS);
- 	wait_for_state(mod_info, SETUP_MAPS_RESTORED);
++static struct vm_area_struct *get_next_vma(struct proc_maps_private *priv,
++					   loff_t last_pos)
++{
++	return vma_next(&priv->iter);
++}
  
- 	/* Copy last line of the first page and first line of the last page */
- 	read_boundary_lines(maps_fd, page1, page2, restored_last_line, restored_first_line);
- 
-+	print_boundaries("After restore", page1, page2);
++#endif /* CONFIG_PER_VMA_LOCK */
 +
- 	mod_info->vma_mod_check(mod_last_line, mod_first_line,
- 				restored_last_line, restored_first_line);
- 
-@@ -301,6 +401,7 @@ static void test_maps_tearing_from_split(int maps_fd,
- 	mod_info->vma_restore = merge_vma;
- 	mod_info->vma_mod_check = check_split_result;
- 
-+	report_test_start("Tearing from split");
- 	capture_mod_pattern(maps_fd, mod_info, page1, page2, last_line, first_line,
- 			    &split_last_line, &split_first_line,
- 			    &restored_last_line, &restored_first_line);
-@@ -313,6 +414,7 @@ static void test_maps_tearing_from_split(int maps_fd,
- 	struct timespec start_ts, end_ts;
- 
- 	clock_gettime(CLOCK_MONOTONIC_COARSE, &start_ts);
-+	start_test_loop(&start_ts);
- 	do {
- 		bool last_line_changed;
- 		bool first_line_changed;
-@@ -332,12 +434,18 @@ static void test_maps_tearing_from_split(int maps_fd,
- 			 * In that case new first line will be the same as the
- 			 * last restored line.
- 			 */
--			assert(!strcmp(new_first_line.text, split_first_line.text) ||
--			       !strcmp(new_first_line.text, restored_last_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, split_first_line.text) &&
-+					strcmp(new_first_line.text, restored_last_line.text),
-+					"Split result invalid", page1, page2));
- 		} else {
- 			/* The vmas should be consistent with merge results */
--			assert(!strcmp(new_last_line.text, restored_last_line.text) &&
--			       !strcmp(new_first_line.text, restored_first_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_last_line.text, restored_last_line.text),
-+					"Merge result invalid", page1, page2));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, restored_first_line.text),
-+					"Merge result invalid", page1, page2));
- 		}
- 		/*
- 		 * First and last lines should change in unison. If the last
-@@ -362,7 +470,9 @@ static void test_maps_tearing_from_split(int maps_fd,
- 			vma_end == split_first_line.end_addr));
- 
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
-+		end_test_iteration(&end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
-+	end_test_loop();
- 
- 	/* Signal the modifyer thread to stop and wait until it exits */
- 	signal_state(mod_info, TEST_DONE);
-@@ -409,6 +519,7 @@ static void test_maps_tearing_from_resize(int maps_fd,
- 	mod_info->vma_restore = expand_vma;
- 	mod_info->vma_mod_check = check_shrink_result;
- 
-+	report_test_start("Tearing from resize");
- 	capture_mod_pattern(maps_fd, mod_info, page1, page2, last_line, first_line,
- 			    &shrunk_last_line, &shrunk_first_line,
- 			    &restored_last_line, &restored_first_line);
-@@ -421,6 +532,7 @@ static void test_maps_tearing_from_resize(int maps_fd,
- 	struct timespec start_ts, end_ts;
- 
- 	clock_gettime(CLOCK_MONOTONIC_COARSE, &start_ts);
-+	start_test_loop(&start_ts);
- 	do {
- 		unsigned long vma_start;
- 		unsigned long vma_end;
-@@ -437,12 +549,18 @@ static void test_maps_tearing_from_resize(int maps_fd,
- 			 * again. In that case new first line will be the same
- 			 * as the last restored line.
- 			 */
--			assert(!strcmp(new_first_line.text, shrunk_first_line.text) ||
--			       !strcmp(new_first_line.text, restored_last_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, shrunk_first_line.text) &&
-+					strcmp(new_first_line.text, restored_last_line.text),
-+					"Shrink result invalid", page1, page2));
- 		} else {
- 			/* The vmas should be consistent with the original/resored state */
--			assert(!strcmp(new_last_line.text, restored_last_line.text) &&
--			       !strcmp(new_first_line.text, restored_first_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_last_line.text, restored_last_line.text),
-+					"Expand result invalid", page1, page2));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, restored_first_line.text),
-+					"Expand result invalid", page1, page2));
- 		}
- 
- 		/* Check if PROCMAP_QUERY ioclt() finds the right VMA */
-@@ -456,7 +574,9 @@ static void test_maps_tearing_from_resize(int maps_fd,
- 			vma_end - vma_start == page_size));
- 
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
-+		end_test_iteration(&end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
-+	end_test_loop();
- 
- 	/* Signal the modifyer thread to stop and wait until it exits */
- 	signal_state(mod_info, TEST_DONE);
-@@ -512,6 +632,7 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 	mod_info->vma_restore = patch_vma;
- 	mod_info->vma_mod_check = check_remap_result;
- 
-+	report_test_start("Tearing from remap");
- 	capture_mod_pattern(maps_fd, mod_info, page1, page2, last_line, first_line,
- 			    &remapped_last_line, &remapped_first_line,
- 			    &restored_last_line, &restored_first_line);
-@@ -524,6 +645,7 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 	struct timespec start_ts, end_ts;
- 
- 	clock_gettime(CLOCK_MONOTONIC_COARSE, &start_ts);
-+	start_test_loop(&start_ts);
- 	do {
- 		unsigned long vma_start;
- 		unsigned long vma_end;
-@@ -540,12 +662,18 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 			 * again. In that case new first line will be the same
- 			 * as the last restored line.
- 			 */
--			assert(!strcmp(new_first_line.text, remapped_first_line.text) ||
--			       !strcmp(new_first_line.text, restored_last_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, remapped_first_line.text) &&
-+					strcmp(new_first_line.text, restored_last_line.text),
-+					"Remap result invalid", page1, page2));
- 		} else {
- 			/* The vmas should be consistent with the original/resored state */
--			assert(!strcmp(new_last_line.text, restored_last_line.text) &&
--			       !strcmp(new_first_line.text, restored_first_line.text));
-+			assert(!print_boundaries_on(
-+					strcmp(new_last_line.text, restored_last_line.text),
-+					"Remap restore result invalid", page1, page2));
-+			assert(!print_boundaries_on(
-+					strcmp(new_first_line.text, restored_first_line.text),
-+					"Remap restore result invalid", page1, page2));
- 		}
- 
- 		/* Check if PROCMAP_QUERY ioclt() finds the right VMA */
-@@ -561,7 +689,9 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 			vma_end - vma_start == page_size));
- 
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
-+		end_test_iteration(&end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
-+	end_test_loop();
- 
- 	/* Signal the modifyer thread to stop and wait until it exits */
- 	signal_state(mod_info, TEST_DONE);
-@@ -571,6 +701,7 @@ int usage(void)
- {
- 	fprintf(stderr, "Userland /proc/pid/{s}maps race test cases\n");
- 	fprintf(stderr, "  -d: Duration for time-consuming tests\n");
-+	fprintf(stderr, "  -v: Verbose mode\n");
- 	fprintf(stderr, "  -h: Help screen\n");
- 	exit(-1);
- }
-@@ -588,9 +719,11 @@ int main(int argc, char **argv)
- 	pid_t pid;
- 	int opt;
- 
--	while ((opt = getopt(argc, argv, "d:h")) != -1) {
-+	while ((opt = getopt(argc, argv, "d:vh")) != -1) {
- 		if (opt == 'd')
- 			test_duration_sec = strtoul(optarg, NULL, 0);
-+		else if (opt == 'v')
-+			verbose = true;
- 		else if (opt == 'h')
- 			usage();
++static struct vm_area_struct *proc_get_vma(struct seq_file *m, loff_t *ppos)
++{
++	struct proc_maps_private *priv = m->private;
++	struct vm_area_struct *vma;
++
++	vma = get_next_vma(priv, *ppos);
++	/* EINTR is possible */
++	if (IS_ERR(vma))
++		return vma;
++
++	/* Store previous position to be able to restart if needed */
++	priv->last_pos = *ppos;
+ 	if (vma) {
+-		*ppos = vma->vm_start;
++		/*
++		 * Track the end of the reported vma to ensure position changes
++		 * even if previous vma was merged with the next vma and we
++		 * found the extended vma with the same vm_start.
++		 */
++		*ppos = vma->vm_end;
+ 	} else {
+-		*ppos = -2;
++		*ppos = -2; /* -2 indicates gate vma */
+ 		vma = get_gate_vma(priv->mm);
  	}
+ 
+@@ -163,28 +255,34 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
+ 		return NULL;
+ 	}
+ 
+-	if (mmap_read_lock_killable(mm)) {
++	if (!lock_vma_range(m, priv)) {
+ 		mmput(mm);
+ 		put_task_struct(priv->task);
+ 		priv->task = NULL;
+ 		return ERR_PTR(-EINTR);
+ 	}
+ 
++	/*
++	 * Reset current position if last_addr was set before
++	 * and it's not a sentinel.
++	 */
++	if (last_addr > 0)
++		*ppos = last_addr = priv->last_pos;
+ 	vma_iter_init(&priv->iter, mm, (unsigned long)last_addr);
+ 	hold_task_mempolicy(priv);
+ 	if (last_addr == -2)
+ 		return get_gate_vma(mm);
+ 
+-	return proc_get_vma(priv, ppos);
++	return proc_get_vma(m, ppos);
+ }
+ 
+ static void *m_next(struct seq_file *m, void *v, loff_t *ppos)
+ {
+ 	if (*ppos == -2) {
+-		*ppos = -1;
++		*ppos = -1; /* -1 indicates no more vmas */
+ 		return NULL;
+ 	}
+-	return proc_get_vma(m->private, ppos);
++	return proc_get_vma(m, ppos);
+ }
+ 
+ static void m_stop(struct seq_file *m, void *v)
+@@ -196,7 +294,7 @@ static void m_stop(struct seq_file *m, void *v)
+ 		return;
+ 
+ 	release_task_mempolicy(priv);
+-	mmap_read_unlock(mm);
++	unlock_vma_range(priv);
+ 	mmput(mm);
+ 	put_task_struct(priv->task);
+ 	priv->task = NULL;
+diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+index 5da384bd0a26..1f4f44951abe 100644
+--- a/include/linux/mmap_lock.h
++++ b/include/linux/mmap_lock.h
+@@ -309,6 +309,17 @@ void vma_mark_detached(struct vm_area_struct *vma);
+ struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
+ 					  unsigned long address);
+ 
++/*
++ * Locks next vma pointed by the iterator. Confirms the locked vma has not
++ * been modified and will retry under mmap_lock protection if modification
++ * was detected. Should be called from read RCU section.
++ * Returns either a valid locked VMA, NULL if no more VMAs or -EINTR if the
++ * process was interrupted.
++ */
++struct vm_area_struct *lock_next_vma(struct mm_struct *mm,
++				     struct vma_iterator *iter,
++				     unsigned long address);
++
+ #else /* CONFIG_PER_VMA_LOCK */
+ 
+ static inline void mm_lock_seqcount_init(struct mm_struct *mm) {}
+diff --git a/mm/madvise.c b/mm/madvise.c
+index a34c2c89a53b..e61e32b2cd91 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -108,7 +108,8 @@ void anon_vma_name_free(struct kref *kref)
+ 
+ struct anon_vma_name *anon_vma_name(struct vm_area_struct *vma)
+ {
+-	mmap_assert_locked(vma->vm_mm);
++	if (!rwsem_is_locked(&vma->vm_mm->mmap_lock))
++		vma_assert_locked(vma);
+ 
+ 	return vma->anon_name;
+ }
+diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
+index 5f725cc67334..ed0e5e2171cd 100644
+--- a/mm/mmap_lock.c
++++ b/mm/mmap_lock.c
+@@ -178,6 +178,94 @@ struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
+ 	count_vm_vma_lock_event(VMA_LOCK_ABORT);
+ 	return NULL;
+ }
++
++static struct vm_area_struct *lock_vma_under_mmap_lock(struct mm_struct *mm,
++						       struct vma_iterator *iter,
++						       unsigned long address)
++{
++	struct vm_area_struct *vma;
++	int ret;
++
++	ret = mmap_read_lock_killable(mm);
++	if (ret)
++		return ERR_PTR(ret);
++
++	/* Lookup the vma at the last position again under mmap_read_lock */
++	vma_iter_init(iter, mm, address);
++	vma = vma_next(iter);
++	if (vma)
++		vma_start_read_locked(vma);
++
++	mmap_read_unlock(mm);
++
++	return vma;
++}
++
++struct vm_area_struct *lock_next_vma(struct mm_struct *mm,
++				     struct vma_iterator *iter,
++				     unsigned long address)
++{
++	struct vm_area_struct *vma;
++	unsigned int mm_wr_seq;
++	bool mmap_unlocked;
++
++	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "no rcu read lock held");
++retry:
++	/* Start mmap_lock speculation in case we need to verify the vma later */
++	mmap_unlocked = mmap_lock_speculate_try_begin(mm, &mm_wr_seq);
++	vma = vma_next(iter);
++	if (!vma)
++		return NULL;
++
++	vma = vma_start_read(mm, vma);
++
++	if (IS_ERR_OR_NULL(vma)) {
++		/*
++		 * Retry immediately if the vma gets detached from under us.
++		 * Infinite loop should not happen because the vma we find will
++		 * have to be constantly knocked out from under us.
++		 */
++		if (PTR_ERR(vma) == -EAGAIN) {
++			vma_iter_init(iter, mm, address);
++			goto retry;
++		}
++
++		goto out;
++	}
++
++	/*
++	 * Verify the vma we locked belongs to the same address space and it's
++	 * not behind of the last search position.
++	 */
++	if (unlikely(vma->vm_mm != mm || address >= vma->vm_end))
++		goto out_unlock;
++
++	/*
++	 * vma can be ahead of the last search position but we need to verify
++	 * it was not shrunk after we found it and another vma has not been
++	 * installed ahead of it. Otherwise we might observe a gap that should
++	 * not be there.
++	 */
++	if (address < vma->vm_start) {
++		/* Verify only if the address space might have changed since vma lookup. */
++		if (!mmap_unlocked || mmap_lock_speculate_retry(mm, mm_wr_seq)) {
++			vma_iter_init(iter, mm, address);
++			if (vma != vma_next(iter))
++				goto out_unlock;
++		}
++	}
++
++	return vma;
++
++out_unlock:
++	vma_end_read(vma);
++out:
++	rcu_read_unlock();
++	vma = lock_vma_under_mmap_lock(mm, iter, address);
++	rcu_read_lock();
++
++	return vma;
++}
+ #endif /* CONFIG_PER_VMA_LOCK */
+ 
+ #ifdef CONFIG_LOCK_MM_AND_FIND_VMA
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
