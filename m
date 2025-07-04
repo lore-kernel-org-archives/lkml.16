@@ -1,137 +1,90 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E80F9D9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 19:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41BF27454
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 19:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751655782; cv=none; b=RMO1Sxgu9eOzx1uCStPAEn8Avfo/pGXyk8q3Vn5amtQCwbvU6paQiVJkDc1cUxbKUJ57HfF+yDAGKtoIq9ndljrzOQ++s5HKjOpEZmc2X8kcbrCsyISHvfIZWkORgmFIdawjOgnuV4zTmavQh40W593TvzHbMQeQV3pcQYAN7pM=
+	t=1751656062; cv=none; b=B4r8NF+cQHTuk9QcwmrpKR2HJfj/q1WGAXY7VgyXDOWM2WCRJedr/A1Qr83zpbJUrqNaIF2bUggyNOjD0mNQhAwHvvBSPR+RQS5sTXhRJ9LIUs02JxRHRzV6+WUWc0e9wpvVF1GUC8Xu5cgYGuAmwLJreN4wvwNt+Qfx84cRoYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751655782; c=relaxed/simple;
-	bh=/v6QItEjY2M41/Qa9fmYKxE5bdEX6yoFE70JLIG+fSc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mMphTO7bH/ikR0nMQqyuHlYsZE+tnIvwdALDUxThAW+jarLZ6uzvVeOtIjgvRnHl9GSeU+uoCawswuH28xno1N5et3fsOUBtSfQizGvSj0Z5iUMjZ5PPPQ1oLRLARImFDmLczhiifnImJZLXP/LCKOnTdS6+mKft58bi0nNsKcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3gQnIvW; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751656062; c=relaxed/simple;
+	bh=oR5Dl/ahjtuDSD7EjyuMOwkN++ZyVEsqiGfsVWllU/I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oktgFburT7yjTvnwcT8eGt7Z1BjBTOTUE9kQVz4pMPSO70OtbB0pucBFJxZAxfxXX85mly8NF8/XL0Z3zAgrmFm7f1z7d2gS41poqi9G37/2gCFHCzsZMjt61xk1OtV6gVXEuL7KICejE93olocJ5dxVuQyFPd1pJnpHHuYgoW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nTvKW0hD; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3gQnIvW"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so10566085e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 12:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751655779; x=1752260579; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uBZoBb5JCYLVeVGhzIarMky5rZCEpXBsa3Bvtdfk3uM=;
-        b=g3gQnIvWMBf1EnLBvdcHi0cRwpfqI1vAsbuiLQ8ns/4DDZTEZTqzmIZkqUauCE3oJU
-         pFprCieK5523SpJ2uWUPlRCkcT7Z0S/B75Dhf1wXxrgP4x2TW0ky9jtFfWaB9z5xo4A5
-         7TYxg3MlNLKJCj3pJifZgCizUvEr59MiJmFf0NBffycl6osK8MFwBCnPiBgAqrapc4ej
-         uLFTWddEi+m3G+UNBj7LjWlQQwGnJ43Xeenv1CwmrfpBclbLP/v9CLurBa+o6Az9+gbG
-         mBSgV9s0nEqyK+MvOMv4Kki2fnJBCuM9Vkc1hiVquc5Ws1lidkytBYN//ndXrB/XCRpX
-         8vqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751655779; x=1752260579;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uBZoBb5JCYLVeVGhzIarMky5rZCEpXBsa3Bvtdfk3uM=;
-        b=ayA77n6j0MXhWPmv6V5DsWbsqbbD9byxqbCzdOlI+mXGbMXztbHi8ieqlQR2vVag3A
-         0fE2g+8b0MjnbnvmU8wMS46OzBn7010g5LKAgLL3pJh21GChzFuPWUM6H/+2MhilBfyx
-         vXcPDko3sIGJddNuXYS5ME8s/LGH4Jg3rmxYNbLR35+RuxJF3UaYX3NQDCYBReSWDGSn
-         Nufq4W9iMRVDJEX0mj58+4dWM2TIijijNbiuoLmloaYi4vL3BMaeaJ/41SYLEwIL/vGf
-         O0n2ECs7rVvDvJnQ1yFjtThahfSBucJYLJpfIYaQFmx3BXcrTdLiUQJZBig0Lp6LsM60
-         ANQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWV4OAk0fEAxK48UIzW2PUzd3qSbRnRm98k1jizVn5O+QS+zHuQCa2NW8d0KDBmB6hEJwDdx+9wxgZ49Bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxazBYDKn1x7SLTpPl8WAIgNIXQzilRTp97Vj1qyzcapd0ecVYf
-	vy0oXYjIO7RCPEuM454stE8RQoCn7h7cgWub6CglIeQ4SFB8kvML6dlzmtHXqDbq3cM=
-X-Gm-Gg: ASbGnct1266cMem76bEIBlHC1lrjswvccIWDJPF9I7NGgKBY2hVJHSE/mphvFDN0w7g
-	r6XfOwOjiEakY+xzih5l5i9EHmZ9YLzSqQ4rW3M7AE4in2jFnHWlMfbf8FFUCivLuIne9yOwKMy
-	kmOQNCg6/BfpUsnjuYPSaFEZTyis4tlt4GTcPeuc0E2FcXd4La59Uc88ggKa46dfur+npr1DDSm
-	OEJmOL5L4oBTTvu+GhwoqsgNE2slp50+iRG8tZhj7WiskryCCoNHh20UDBQ+jl1+WeelQHbD2H5
-	UZqO6okGrmXWwUQMgHHjXHxv26T+5VfrEqbJVV9dYrkrzAz+r0io+S8ruSzkDZ/qwfTQprOyJTd
-	EQMa6DteTH1gQMEUvD3pLHJOryMvogu5e+UMB10BQMaZM7yrf2Tohr/s+HXtQwLOL3iwRISE=
-X-Google-Smtp-Source: AGHT+IHsW1Nk92FeuphcCxSTyljJ7SWSU/rzOCynLFyorepBd+U4hYT9fjCdNkZIa26bYhCJTJh2CA==
-X-Received: by 2002:a05:600c:1c21:b0:453:7b2b:ed2e with SMTP id 5b1f17b1804b1-454b4eb7e77mr32347315e9.24.1751655779121;
-        Fri, 04 Jul 2025 12:02:59 -0700 (PDT)
-Received: from green.cable.virginm.net (nail-04-b2-v4wan-166353-cust693.vm26.cable.virginm.net. [82.35.130.182])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bde35dsm62220505e9.30.2025.07.04.12.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 12:02:57 -0700 (PDT)
-From: Terry Tritton <terry.tritton@linaro.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Cc: ttritton@google.com,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nTvKW0hD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=HHqYU6yfCCsgkKL7sQNU57940KHhUSPee74Ywt9zyMI=; b=nTvKW0hD93VwV//0y9nBRdjyx0
+	ae4BEjTfb4KCRul7vNYzblwVOqm67VWlntPKYK2uUI5fiUQDOykXnT9QkEs1T1QUnaAGR5KY9vvz5
+	PwsBOKy3HPhyZenxQ9ZECtV+2aRa/jlplvsKJxly9bsm9M308pjwgB1TBrXpeRhW4JUZtqeeV3L9l
+	x6N3pkkRpwPMZ1rZjuQU0UD2lLlaeY9vMGBtJQonU3A3eo22Mhkj5tL4nq9Sw2OVYFHuW0D7HOSdV
+	mjbxjZFO6MzLuWEIjjocUgrnxETqcKo4uHioG600/7l3tpjdN8GmAZwuGne0kT2odKRQGQSVXFDzr
+	kfn0lS5Q==;
+Received: from [179.100.5.63] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uXlkw-00CY0F-0f; Fri, 04 Jul 2025 21:07:30 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, airlied@gmail.com, simona@ffwll.ch, " Raag Jadav " <raag.jadav@intel.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Terry Tritton <terry.tritton@linaro.org>,
-	Wei Gao <wegao@suse.com>
-Subject: [PATCH v5] selftests/futex: Convert 32bit timespec struct to 64bit version for 32bit compatibility mode
-Date: Fri,  4 Jul 2025 20:02:34 +0100
-Message-Id: <20250704190234.14230-1-terry.tritton@linaro.org>
-X-Mailer: git-send-email 2.39.5
+	kernel-dev@igalia.com,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH v4 1/3] drm/doc: Fix title underline for "Task information"
+Date: Fri,  4 Jul 2025 16:07:22 -0300
+Message-ID: <20250704190724.1159416-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-sys_futex_wait() can not accept old_timespec32 struct, so userspace should
-convert it from 32bit to 64bit before syscall to support 32bit compatible
-mode.
+Fix the following warning:
 
-This fix is based off [1]
+Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
 
-Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
+Task information
+--------------- [docutils]
 
-Originally-by: Wei Gao <wegao@suse.com>
-Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/lkml/20250618150333.5ded99a0@canb.auug.org.au/
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
 ---
-Changes in v5:
-- Fixed checkpatch errors
+v4: Drop new line at the end of file
+v2: Add Reported-by tag
+---
+---
+ Documentation/gpu/drm-uapi.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v4:
-- Change to use __kernel_timespec as suggested by tglx
-
-Changes in v3:
-- Fix signed-off-by chain but for real this time
-
-Changes in v2:
-- Fix signed-off-by chain
- tools/testing/selftests/futex/include/futex2test.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
-index ea79662405bc..ff9eebcc270c 100644
---- a/tools/testing/selftests/futex/include/futex2test.h
-+++ b/tools/testing/selftests/futex/include/futex2test.h
-@@ -5,6 +5,7 @@
-  * Copyright 2021 Collabora Ltd.
-  */
- #include <stdint.h>
-+#include <linux/time_types.h>
+diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+index 263e5a97c080..5bc1da4915af 100644
+--- a/Documentation/gpu/drm-uapi.rst
++++ b/Documentation/gpu/drm-uapi.rst
+@@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
+ complete wedging.
  
- #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
+ Task information
+----------------
++----------------
  
-@@ -65,7 +66,12 @@ struct futex32_numa {
- static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
- 			      unsigned long flags, struct timespec *timo, clockid_t clockid)
- {
--	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
-+		struct __kernel_timespec ts = {
-+				.tv_sec = timo->tv_sec,
-+				.tv_nsec = timo->tv_nsec,
-+		};
-+
-+		return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &ts, clockid);
- }
- 
- /*
+ The information about which application (if any) was involved in the device
+ wedging is useful for userspace if they want to notify the user about what
 -- 
-2.39.5
+2.49.0
 
