@@ -1,69 +1,66 @@
-Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4117289379;
-	Fri,  4 Jul 2025 22:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9087B1D7E5C;
+	Fri,  4 Jul 2025 22:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751666902; cv=none; b=vAf8RRzbDUjZO9x1JuLqc3Mp85pFpKJHnMIDdcATOMz3Ij9y9xjWfguP0xkxi756m7o6S++Cl3Vnb74oBt9Nt2F8e3sguW+f4DbnvsHR8Ki4L0kYRDf769K3/4N10OhN7iHK5yXaYywHTdXIjaunOJ5nZ1QgSEP3ahVlmo49xnA=
+	t=1751667253; cv=none; b=RYk4H8tcgY/D/3fdwM+mF0nVVXiGJhAfwqQBSb35c1jlV7/NAvSWd+X/qsyiIg3DAZ+vSeGhsgaKUKlnNyNatldbsaCr6nso/gYhqVXGCXCfwUV0P9c+4i1wosL3FK1KEjB9q4oXVbONi0STw3hhZCjD5lU0OYEUvqydCBd/Z/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751666902; c=relaxed/simple;
-	bh=jgufuOdJL8p5gukIbwKyLhiiTnvh4r3xS+pRM81NgX0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bCZJjMyBSwva1XvOiNo4ilzfVlAnMkU3qWsReLi/w7Wr8MvuvqP3ShOWWYsAnTmUtX+7NJVxenKSeTd0TLycFm9/Vd4Yry1MHw1SRM9HQOOqSas/3MFucsGIrJVt9g9mzzulw44gdHDagecDl6shHC/u/d6BTNoM6cHX8fymajs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=HZZAfPWx; arc=none smtp.client-ip=91.227.220.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
+	s=arc-20240116; t=1751667253; c=relaxed/simple;
+	bh=iweyl4UADi/qIPmNnASst+ROilTN90Y7YfVHKjKx0MQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q/yJ/vNqEqtC970sG6Q7k9Ff955wzJN7REIK2X6npWa5lTq52w5rbbD0QY24rbo2y08sn9a1NDYC+mg7Q8J3TG+Q2+So71bW1cDU8qtWjocPuwEn7dPuZuSj6FxzqRajtrVZ3n0vgWPtyv+EDp92ork7ILaxcO9ukyw8TJbd5LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6EFnAVS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="HZZAfPWx"
-Date: Sat, 5 Jul 2025 00:08:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
-	s=202107; t=1751666899;
-	bh=jgufuOdJL8p5gukIbwKyLhiiTnvh4r3xS+pRM81NgX0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
-	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
-	 mime-version:references:reply-to:Sender:Subject:Subject:To:To;
-	b=HZZAfPWxqH5Y1MxmwYizFgeKLyx39oseJorzdUt/XhkeC+u/rWU93HLttLJADHmhN
-	 LVzECSPy3nRkxDbJQSjWT22ZbrEpGgAcugxSVopFg/Ywiapvfz88vIpml8j03phIN2
-	 ihYUN1nK+spAGaodgWOM5unZN3KZjFKOntW1E/3jMo6T8kbiFm691AWKED6pnnws4t
-	 merE359CRDfewhoOqIw0rDl9cqo2RDt0IhI0aG48CEc3Ue5muUwRrqeOuiiCYqZg1s
-	 QkzBC/0cvSyW0Zwce+kQmvK6Oiao9LaLPLaCoJ/RZ7QKwka15J9VTdOp93a3fBoWZH
-	 LkAlIq6OrWOlQ==
-From: Markus Reichelt <lkt+2023@mareichelt.com>
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc2 review
-Message-ID: <20250704220818.GB3473@pc21.mareichelt.com>
-Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250704125604.759558342@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6EFnAVS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95C4C4CEEE;
+	Fri,  4 Jul 2025 22:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751667253;
+	bh=iweyl4UADi/qIPmNnASst+ROilTN90Y7YfVHKjKx0MQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=F6EFnAVSOGwjnVn1IFEFhW244EfvLZUgICVSoHKXRDnl6WiyvM0TPPtnUa1KIv0mE
+	 44GwDzaryp6XwtD1dk4xLZwYDNf14e7g/1/Mc79Y+inkAG22PCUpGgP4v1TY0xV7/M
+	 yH+9QGc1YeeCChJV8mpo14uG76LRl44uMpB9zblZ4F2TsrvNHxOlcluxjMnZ5xoidZ
+	 0z6DtfDfDpNn281yqx8m7loEvrANAc/4fbaNOo3848C630fh1k1o9cGI3Musbta1mA
+	 1ZD8xg6JgCoC/Dr6Mc8e00edeiOZx1WrUezmIK3/O1EUmX+vS8YWMS8EWvNTGl0J9M
+	 mzZ4hYMiuXeAQ==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm/damon: add trace events for auto-tuned monitoring intervals and DAMOS quota
+Date: Fri,  4 Jul 2025 15:14:06 -0700
+Message-Id: <20250704221408.38510-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704125604.759558342@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
 
-* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+The aim-oriented auto-tuning features for monitoring intervals and DAMOS
+quota are important and recommended.  Add tracepoints for observabilities
+of those tuned values and the tuning itself.
 
-> This is the start of the stable review cycle for the 6.15.5 release.
-> There are 263 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+SeongJae Park (2):
+  mm/damon: add trace event for auto-tuned monitoring intervals
+  mm/damon: add trace event for effective size quota
 
-Hi Greg
+ include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
+ mm/damon/core.c              | 21 +++++++++++++++++-
+ 2 files changed, 63 insertions(+), 1 deletion(-)
 
-6.15.5-rc2 compiles on x86_64 (Xeon E5-1620 v2, Slackware64-15.0),
-and boots on x86_64 (AMD Ryzen 5 7520U, Slackware64-current),
-no dmesg regressions observed.
 
-The difference in /sys/class/backlight/amdgpu_bl0/brightness value
-compaired to kernel 6.15.4 and reported for -rc1 is still present.
-Changing brightness with function keys in X works as before.
-
-Not a problem, just a heads up for those of us who like to keep their
-scripts simple.
-
-Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
+base-commit: 09cf52aa7503a7126edc3af797e116a7ec49e572
+-- 
+2.39.5
