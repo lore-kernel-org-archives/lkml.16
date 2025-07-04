@@ -1,190 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FEC1547C9;
-	Fri,  4 Jul 2025 22:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D9F1991D2;
+	Fri,  4 Jul 2025 22:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751668043; cv=none; b=V34ttn+oQOzd0H/JiTlUFDhvfP9zz84Z+OhjAQB0EafzM9ig3X4z34idsYlvLA/qAnJJLVzVkx4B+OPLrsESUExl7duRBShc5vFVHwzo7Ul8/LxODjg1XueDoUuX32pGcAQ2ujgTkN+kcF4Q0RVz+XNL6tV4Bot49nM+nUpCFig=
+	t=1751668236; cv=none; b=gGPJYCuK4DnzwjAW0gLHG+uGufaCaN16bJDrzCFRbWyNBEmQTCXs/31yl0HOjZSe33lzrTRgjW2SHPIYHsqcKRNPU86fg9xCJg8nL5UldXpNt8mc1gNPddKdBryNfnRvoEcwLjPqIjtckQ4DL2PezK3ff4YasBNgSONWrErGBQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751668043; c=relaxed/simple;
-	bh=6pN8QsPthkTJefuOZUVxexb9Ul0bnI3TXHScLqcuGz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nYoXkQUQXT2ReQqgwVgsVo8++4BX9B3WtcNvFsLFdGuYNHBWrj0vZokMGp3B4Suz30xa7NvT4fpTjTn6h6JvtQRg9/zBesiLbA+9gWSWKw9KzLOlTwErY2IdTsnTOGNLaCUuMQgIGgkQ7FX8H3xhIhGHJ8J0irtdwNekQ093HmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bPgITsE4; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751668236; c=relaxed/simple;
+	bh=V3QcC619cgfXh78rzL/aBg2aB9/ohO0hsNXEcmi7jVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfP8DA/nir6YTjzR82qZRfBwvqQXWyhrxF/GxguRpF3hnKI5GBH/bXK6EtQ6ZamVuz7GYAUa5EXoMbZZeVTc3gTtuGnkiX0ooWWe/9jIHvuB/fpjlRCyRQKgDYxBLIA2mT84L7BEqUaDQ62AEyUi6xl2N9/4Rqx2NVf0epdWSEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RSHJzpLY; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bPgITsE4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751668041; x=1783204041;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6pN8QsPthkTJefuOZUVxexb9Ul0bnI3TXHScLqcuGz8=;
-  b=bPgITsE4syU1EsaFs6nr6jQATgbbRcNVkwEGFd4Q6tIdxp8VDgeH8TTN
-   VMO4DnTWAnP8S1fiskwP7TN96q2WS/hfgu38MwVTJKl2OJhAVesil9MR5
-   LknFGtNPMmYtdFiPHc//hz5M/seOzZ0D7b+GIrvx60Dv9tlUaieFYaXf7
-   AYpTtV/CzhThw5V+WFe7pD84Z1UdtgCcAIgpKt45TDEHJ8lip8npQ5ciJ
-   U1512khabYHMx8bJPA7J6tO5lJIuvbzEhrIhMIebz8riWO8F6Hj6K+n8/
-   3RcALMJaCI+/7SUzUCdTbeMGBgEirg3Vcpyz7yxbVwJLsXttJJdct49kT
-   A==;
-X-CSE-ConnectionGUID: AYrGqd/eQA2iASXWLStLvQ==
-X-CSE-MsgGUID: B3ky5kLfRa+Lv2eTh+LGUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53125295"
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="53125295"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 15:27:20 -0700
-X-CSE-ConnectionGUID: cwhj1lZtTn61lkfkrqG6ww==
-X-CSE-MsgGUID: PwhlZnptS7mlQaTmlWi0ZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="154363921"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 15:27:20 -0700
-Received: from [10.124.223.245] (unknown [10.124.223.245])
-	by linux.intel.com (Postfix) with ESMTP id 7046420B571C;
-	Fri,  4 Jul 2025 15:27:19 -0700 (PDT)
-Message-ID: <fa6e6ac2-e451-4bcc-9888-d363c60e4bb4@linux.intel.com>
-Date: Fri, 4 Jul 2025 15:27:18 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSHJzpLY"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a4bb155edeso16429801cf.2;
+        Fri, 04 Jul 2025 15:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751668233; x=1752273033; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nefZOk+kep9tY/NwNpHy33HLJmnyE2SxXn/pEIOWo0I=;
+        b=RSHJzpLYBdyNtGWVf+oMFctr1XWDrpnZAUFZfNcJXg/h80zBMX9sb3ZZxxP8SVlLPf
+         rK4+7dzKWzYPvPMh3i2xxNdgE4NHThFVBysTINL3oWa95c/4OR7emQvS7pg33KcWwArw
+         gMoLYXczmZmudwGzkm/IypBayzjV7bgkhT5X22eB3OyEYcSij2S5/pkR1vu4SeaDB2AQ
+         Y4+YeGYItylNLxnNaMKrCVMoQwZTPo9999JgvUlZ1pQ2YpM9G37Y2JDicOdvfFebo7Ww
+         IorENAz6bHG2NoZDKKbv7pNLowTijoWaiLdNT268+CW5SsnUVRx/WuLDDGrag2FScIQi
+         QNKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751668233; x=1752273033;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nefZOk+kep9tY/NwNpHy33HLJmnyE2SxXn/pEIOWo0I=;
+        b=jjqv/vJL3UEdgT8grNTMW6ZwKFZV30YxNb/q18o/AWYzMemSKSedSdFTr5NvQ2aR2u
+         Otkv4vErgf1UcvAL3me+0DRWvVMtI1JUJYAxE5X4eQY7kZz7PF5jMLUus/uUaL0OaBqX
+         811APloeB7gphae9aemA2ZdVBuvrg5DhttGul0TpnpG/CGS+/voCc3J5mzWBeL5xd/yb
+         VXBZOPXmjV4KqIq5KfJ2tr4Dipd+PdwBsUIGCBQYJcIKHwLniJRu7NtBC05VToe5c8MM
+         1hY0e7+i0K8wCifwx6Cp25YYhE6AaNCbXwebT7LsqS2oUAotw6F0jZ6Z2gG8FOQn7yqB
+         Rv4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkp8BlXkkfKG2KBqzD08Qo9/LDywqCxPb/uYvx5CyGMAO4MjPqhgaRGw8b8eq/zshkkDsbuHp7GjLw1ia9@vger.kernel.org, AJvYcCW0jvzcF+L2Xw8fcXQM7PvNwzkrfvFAX4lg9zdXlvKQDgC3JyiPhBTgqFWG3OmFu3dvWBxlt18I9+B15lNaVoM=@vger.kernel.org, AJvYcCX4QbpuumpM8KLt5cTqjf+rM9nmLYcUM9aZjbYXPnzu1lyWET7Sb3PBIqrj6E4sKLkqLbATN0K0PQQS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxFIHnOP0svPcFFVVPdR6sFnGZicBYvZsaMrNgPbx1E3ZYiDdU
+	Ij1Sg7IVInXUaGXtQAE5MdEhnmtMht5SgpWhL7MkGxBRQwRMgu3Av4fY
+X-Gm-Gg: ASbGncvjYnLfeAD1Dv70CQ8Zjg3BV4aS5ToqOZ3PZAPLQA4y8VxhwqyaNrlGgwbrcmi
+	AEYGskbpov5Q3YBMBn+C5YAglvieVmAh5BHm5NWEFwh6rUcREaJ7wYhkCqRctt5SH4lpfxxlqX3
+	6oqFRO7KhumVRY6WrEwdic1B+IuabDoIOBI1kxvxy3flrOKTKQaB+hKvLdHVbDJLfGdAwKevjvO
+	g42KyzEiUkCA9V1dyUN5dEttSRAugt83sTey7JFp2Q5kH79Bnv34wDBT/cct2uDmjaDhmcfXyb3
+	lzq7dUV5vX6jrrHN8brfNxPlZCeoeRbSiqP6EIpqatOCzX7cnLhrDblGTQRXv/RF7UjWi991/y0
+	nYJn3/7OIGLw+cX+AT+GdS/fFij4PWjPcLpM6/0nysjbLA9dSr1Nr
+X-Google-Smtp-Source: AGHT+IFnJ4ct/hxx/mmwZ2bUHzXAYzptMqwal+VpPBqDDwH0PZjIqpb+XOdkgZ9e4wftMhzLVM0iXQ==
+X-Received: by 2002:a05:622a:1310:b0:4a7:8916:90a1 with SMTP id d75a77b69052e-4a9a6899b53mr8186101cf.22.1751668233254;
+        Fri, 04 Jul 2025 15:30:33 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a994a8cdc4sm21340451cf.60.2025.07.04.15.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 15:30:32 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 31D3AF40066;
+	Fri,  4 Jul 2025 18:30:32 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 18:30:32 -0400
+X-ME-Sender: <xms:CFZoaO-GPh2fHHcQH6PwAcrkEaTf2_aSUscH4mdq942y39pacroItg>
+    <xme:CFZoaOtJJI_srAMpWdVsT6wsd-HXsluANWMCMX5XDZwmv8pMo1lzDTIJJqhS_DPsY
+    KtWF_GRVHsmVXFlzw>
+X-ME-Received: <xmr:CFZoaEDz4HLthLma9NjK3wJt0iH_B1gWteAR36KCEmykdbVLKIfwuUxMBg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvgeefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpedtgeehleevffdujeffgedvlefghffhleekieeifeegveetjedvgeevueffieeh
+    hfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihse
+    hgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhl
+    ihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsjh
+    horhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:CFZoaGd-Ngg2J_is3EvlOnZa18DL8bnwZO8Y7qRgI3TC8LBTiwcIsw>
+    <xmx:CFZoaDMg_IkoqL9ztSvx9tdEyOtZWp2QETvrWmEtu7MXTDT8EDdEmw>
+    <xmx:CFZoaAkkMq-iq10o_2KZv49PDGjG2v6Hm7NOIVc4fjqFTThdhmaiPg>
+    <xmx:CFZoaFv_oh1m9T3oVhqQ0ctzKz7NH3w_3CEFCx7EMidGeDikzjrY9A>
+    <xmx:CFZoaJtIZ2rsI4xuMUpWSQcaYtNqDguzJiAycPgXWyyTLmFXxNPAVyfb>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 4 Jul 2025 18:30:31 -0400 (EDT)
+Date: Fri, 4 Jul 2025 15:30:30 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Gary Guo <gary@garyguo.net>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, lkmm@lists.linux.dev,
+	linux-arch@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
+Message-ID: <aGhWBp3IhfJDhPOs@Mac.home>
+References: <20250618164934.19817-5-boqun.feng@gmail.com>
+ <20250621123212.66fb016b.gary@garyguo.net>
+ <aFjj8AV668pl9jLN@Mac.home>
+ <20250623193019.6c425467.gary@garyguo.net>
+ <aFmmYSAyvxotYfo7@tardis.local>
+ <DAUAW2Y0HYLY.3CDC9ZW0BUKI4@kernel.org>
+ <aFrTyXcFVOjWa2o-@Mac.home>
+ <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org>
+ <aGhGDJvUf7zFCmQt@Mac.home>
+ <DB3M1FEMKVLN.1BDAD6WHDR7HG@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] efi/tpm: Fix the issue where the CC platforms event log
- header can't be correctly identified
-To: Ge Yang <yangge1116@126.com>, Jarkko Sakkinen <jarkko@kernel.org>
-Cc: ardb@kernel.org, ilias.apalodimas@linaro.org, jgg@ziepe.ca,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, liuzixing@hygon.cn
-References: <1751510317-12152-1-git-send-email-yangge1116@126.com>
- <aGczaEkhPuOqhRUv@kernel.org> <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB3M1FEMKVLN.1BDAD6WHDR7HG@kernel.org>
 
+On Sat, Jul 05, 2025 at 12:05:48AM +0200, Benno Lossin wrote:
+[..]
+> >> 
+> >> I don't think there is a big difference between�`Opaque<T>`�and
+> >> `Opaque<T::Repr>`�if we have the transmute equivalence between the two.
+> >> From a safety perspective, you don't gain or lose anything by using the
+> >> first over the second one. They both require the invariant that they are
+> >> valid (as�`Opaque`�removes that... we should really be using
+> >> `UnsafeCell`�here instead... why aren't we doing that?).
+> >> 
+> >
+> > I need the `UnsafePinned`-like behavior of `Atomic<*mut T>` to support
+> > Rcu<T>, and I will replace it with `UnsafePinned`, once that's is
+> > available.
+> 
+> Can you expand on this? What do you mean by "`UnsafePinned`-like
+> behavior"? And what does `Rcu<T>` have to do with atomics?
+> 
 
-On 7/3/25 7:53 PM, Ge Yang wrote:
->
->
-> 在 2025/7/4 9:50, Jarkko Sakkinen 写道:
->> On Thu, Jul 03, 2025 at 10:38:37AM +0800, yangge1116@126.com wrote:
->>> From: Ge Yang <yangge1116@126.com>
->>>
->>> Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
->>> for CC platforms") reuses TPM2 support code for the CC platforms, when
->>> launching a TDX virtual machine with coco measurement enabled, the
->>> following error log is generated:
->>>
->>> [Firmware Bug]: Failed to parse event in TPM Final Events Log
->>>
->>> Call Trace:
->>> efi_config_parse_tables()
->>>    efi_tpm_eventlog_init()
->>>      tpm2_calc_event_log_size()
->>>        __calc_tpm2_event_size()
->>>
->>> The pcr_idx value in the Intel TDX log header is 1, causing the
->>> function __calc_tpm2_event_size() to fail to recognize the log header,
->>> ultimately leading to the "Failed to parse event in TPM Final Events
->>> Log" error.
->>>
->>> According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
->>> MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
->>> event log header, the check for a pcr_idx value of 0 has been removed
->>> here, and it appears that this will not affect other functionalities.
->>
->> I'm not familiar with the original change but with a quick check it did
->> not change __calc_tpm2_event_size(). Your change is changing semantics
->> to two types of callers:
->>
->> 1. Those that caused the bug.
->> 2. Those that nothing to do with this bug.
->>
->> I'm not seeing anything explaining that your change is guaranteed not to
->> have any consequences to "innocent" callers, which have no relation to
->> the bug.
->>
->
-> Thank you for your response.
->
-> According to Section 10.2.1, Table 6 (TCG_PCClientPCREvent Structure) in the TCG PC Client Platform Firmware Profile Specification, determining whether an event is an event log header does not require checking the pcrIndex field. The identification can be made based on other fields alone. Therefore, removing the pcrIndex check here is considered safe
-> for "innocent" callers.
->
-> Reference Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_PCClient_PFP_r1p05_v23_pub.pdf
+`Rcu<T>` is an RCU protected (atomic) pointer, the its definition is
 
+    pub struct Rcu<T>(Atomic<*mut T>);
 
-It looks like this check was originally added to handle a case which does not align with the TCG spec. So
-removing it directly may have some impact to these older platform. Can we make this conditional to
-CC platform?
+I need Pin<&mut Rcu<T>> and &Rcu<T> able to co-exist: an updater will
+have the access to Pin<&mut Rcu<T>>, and all the readers will have the
+access to &Rcu<T>, for that I need `Atomic<*mut T>` to be
+`UnsafePinned`, because `Pin<&mut Rcu<T>>` cannot imply noalias.
 
-commit 7dfc06a0f25b593a9f51992f540c0f80a57f3629
-Author: Fabian Vogt <fvogt@suse.de>
-Date:   Mon Jun 15 09:16:36 2020 +0200
+> > Maybe that also means `UnsafePinned<T>` make more sense? Because if `T`
+> > is a pointer, it's easy to prove the provenance is there. (Note a
+> > `&Atomic<*mut T>` may come from a `*mut *mut T`, may be a field in C
+> > struct)
+> 
+> Also don't understand this.
+> 
 
-     efi/tpm: Verify event log header before parsing
+One of the usage of the atomic is being able to communicate with C side,
+for example, if we have a struct foo:
 
-     It is possible that the first event in the event log is not actually a
-     log header at all, but rather a normal event. This leads to the cast in
-     __calc_tpm2_event_size being an invalid conversion, which means that
-     the values read are effectively garbage. Depending on the first event's
-     contents, this leads either to apparently normal behaviour, a crash or
-     a freeze.
+    struct foo {
+        struct bar *b;
+    }
 
-     While this behaviour of the firmware is not in accordance with the
-     TCG Client EFI Specification, this happens on a Dell Precision 5510
-     with the TPM enabled but hidden from the OS ("TPM On" disabled, state
-     otherwise untouched). The EFI firmware claims that the TPM is present
-     and active and that it supports the TCG 2.0 event log format.
+and writer can do this at C side:
 
-     Fortunately, this can be worked around by simply checking the header
-     of the first event and the event log header signature itself.
+   struct foo *f = ...;
+   struct bar *b = kcalloc(*b, ...);
 
-     Commit b4f1874c6216 ("tpm: check event log version before reading final
-     events") addressed a similar issue also found on Dell models.
+   // init b;
 
-     Fixes: 6b0326190205 ("efi: Attempt to get the TCG2 event log in the boot stub")
-     Signed-off-by: Fabian Vogt <fvogt@suse.de>
-     Link: https://lore.kernel.org/r/1927248.evlx2EsYKh@linux-e202.suse.de
-     Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1165773
-     Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+   smp_store_release(&f->b, b);
 
+and a reader at Rust side can do:
 
->>>
->>> Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#intel-trust-domain-extension
->>> Fixes: d228814b1913 ("efi/libstub: Add get_event_log() support for CC platforms")
->>> Signed-off-by: Ge Yang <yangge1116@126.com>
->>> Cc: stable@vger.kernel.org
->>> ---
->>>   include/linux/tpm_eventlog.h | 3 +--
->>>   1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
->>> index 891368e..05c0ae5 100644
->>> --- a/include/linux/tpm_eventlog.h
->>> +++ b/include/linux/tpm_eventlog.h
->>> @@ -202,8 +202,7 @@ static __always_inline u32 __calc_tpm2_event_size(struct tcg_pcr_event2_head *ev
->>>       event_type = event->event_type;
->>>         /* Verify that it's the log header */
->>> -    if (event_header->pcr_idx != 0 ||
->>> -        event_header->event_type != NO_ACTION ||
->>> +    if (event_header->event_type != NO_ACTION ||
->>>           memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
->>>           size = 0;
->>>           goto out;
->>> -- 
->>> 2.7.4
->>>
->>
->> BR, Jarkko
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+    #[repr(transparent)]
+    struct Bar(binding::bar);
+    struct Foo(Opaque<bindings::foo>);
 
+    fn get_bar(foo: &Foo) {
+        let foo_ptr = foo.0.get();
+
+	let b: *mut *mut Bar = unsafe { &raw mut (*foo_ptr).b }.cast();
+	// SAFETY: C side accessing this pointer with atomics.
+        let b = unsafe { Atomic::<*mut Bar>::from_ptr(b) };
+
+        // Acquire pairs with the Release from C side;
+	let bar_ptr = b.load(Acquire);
+
+	// accessing bar.
+    }
+
+This is the case we must support if we want to write any non-trivial
+synchronization code communicate with C side.
+
+And in this case, it's generally easier to reason why we can convert a
+*mut *mut Bar to &UnsafePinned<*mut Bar>.
+
+Regards,
+Boqun
+
+> ---
+> Cheers,
+> Benno
