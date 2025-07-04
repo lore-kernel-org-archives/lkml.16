@@ -1,332 +1,123 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2070.outbound.protection.outlook.com [40.107.236.70])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C4E217707
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751611961; cv=fail; b=dO6kVu4a6uRsWVX+fpf53JyrCaFQtio7v+iV0gjOs1Ge6De1dlo1kpA7yapFDDeevW9A5zSk/KgO2Vrx82MLYc8p1/2aUMaAQCiRMmpCxA8dJr3xycaIVP69EvxXxYHqFYZuqgWhtkEhev26C4XdrS/l7fsTFR7lvyG7eWYZAW8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751611961; c=relaxed/simple;
-	bh=+Q8ppJam5Xh+0oIvPDfw3dvatH+9Z5nTdo4tcwws8OE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Os8DYMr/42H6kJU2pPoX9sSK056ojzn6TDCJtN1I7xVle6BH6vwVWLj1eWm6Zn2eEToZT5mJib5UI/jKckgr+/37+WBTTU9kS/yo9EzxkbN7ThtIwLNgchTS8qBTaCJ8cAfPYqYgWuKPOynjIHgkKb+a1rJ70FLX3D2Tm0188b0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0KR5iYku; arc=fail smtp.client-ip=40.107.236.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F24A262FEB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751611965; cv=none; b=uy1+AGPyT74/VQSZST+q22TYpkzfwHGkeAsU6PZ5Yzdnv5WrapapU9op5C084d2bz79c/WO6k1RKCfpN10my6/liwsjEBSKm+xBM7gX2RlNCe8Wt1gXz5ne3u4jXgqMtunr7vG6nVzsChPOCoQL1QVyCXiPGgXrx+018/8pwEPI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751611965; c=relaxed/simple;
+	bh=Tv4gB4IzmA09TgqZAyPP+TGiF9YCCa1B+JrlwcTCnmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jf/F7pY+DUBlJ2SJzRz1PcN9y98S6M1bk+4vZL+ukXuvGnmgyHPRYed+QRQfJZNuY4kmwklwQgl5g0QGEZAVn1WqC4y6zn91hPIrx76JZ8I087kG3eYMvN2tm20BMgCz6sFAMiH5lS1sif2vRrN81+ggWPW6sllq8m6BkfV4YxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ZMDT0Lsq; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0KR5iYku"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=naIcErsZstQbMEFkE9V0+FtLgknEmm56SmD/jZgHwSGxQ/OCz5/ymzs9MGpJulS9Kl605GSMi26Fa52vM4slS3zTMmc4fEaKTpBsjL8Jh7sSW2DXWbYp9iTYGFsNk5sKXgZXPMbpeoTZBcTUH5My3lYyL00qof1AtBWpLdn6zdOTElRggTrbZUja+MKJF2FQQqfViBsA65dnoVwgAQwP1rktpAjWt3c/MtthffPbAZqibREz5ewYpNZyWPGVmIEp6yBBhX9qXTq7mlsoOKDjV4pXwerULOmHYT5/JehljqNBQjH6LJICB5i8DEaamPrhzOqxOfkRizsbrxDm7XQ9XQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jXzpmGf//4tq4yH0BMCn1PaS5r2Jg98hT8saVt85JhY=;
- b=FL8qI7+2IIEvyqluNalppogRaqR/EZY/TMkYOUBjsSYaog5SGRVdMFuHrQU3qpd2krFEScysOOr93o9XL8/itHWBMqY5RCBPe9y8wMaFlu/gn/vtDgR5RJcsF2qz5ExhEL85L/MyEswszi7RE+c46jPKRAvg9oE+WiEv/c3kz/81BHNdyZxEe/bvj0eAtVLLZ39+X7+ia4FINJzV6MUhmiAl8iECarMy5Y78gpzfD/I1Ir2x9vEEp+JtbPQWdgrtwWdZEDHvDzr0jzAwYJpfwz85uB1U3zfcIWYaAUEkA0884M4cq4o2CQLcSEIWsfXO7uBIdM6eFlaNDtIWIiDX0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jXzpmGf//4tq4yH0BMCn1PaS5r2Jg98hT8saVt85JhY=;
- b=0KR5iYku2ucaRMnORBulEgVrQiljjbH711CFh8wGI8xCL/BwktCY0axROPOkNIGHpb5PxjcY/XCb4NAP+bz4foCcSZX/nP3OfmSPMoksTz78qj13ZAbhIPinGU64fjuIiOPEkie0SEwI2quOg1XaDpLNQFiJ/YShBhc/5ZLFg8Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5753.namprd12.prod.outlook.com (2603:10b6:208:390::15)
- by SJ0PR12MB7083.namprd12.prod.outlook.com (2603:10b6:a03:4ae::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Fri, 4 Jul
- 2025 06:52:35 +0000
-Received: from BL1PR12MB5753.namprd12.prod.outlook.com
- ([fe80::81e6:908a:a59b:87e2]) by BL1PR12MB5753.namprd12.prod.outlook.com
- ([fe80::81e6:908a:a59b:87e2%6]) with mapi id 15.20.8901.018; Fri, 4 Jul 2025
- 06:52:35 +0000
-Message-ID: <3ffcf77d-abf2-4c2a-8a0f-f1128fff5de5@amd.com>
-Date: Fri, 4 Jul 2025 12:22:28 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/4] drm/amdgpu: add debugfs support for VM pagetable
- per client
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sunil Khatri <sunil.khatri@amd.com>, dri-devel@lists.freedesktop.org
-Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
- tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
- linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-References: <20250701164948.8105-1-sunil.khatri@amd.com>
- <20250701164948.8105-4-sunil.khatri@amd.com>
- <586cff2c-bf69-4202-8ca5-67a3f30d80ec@amd.com>
-Content-Language: en-US
-From: "Khatri, Sunil" <sukhatri@amd.com>
-In-Reply-To: <586cff2c-bf69-4202-8ca5-67a3f30d80ec@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0247.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:21a::14) To BL1PR12MB5753.namprd12.prod.outlook.com
- (2603:10b6:208:390::15)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ZMDT0Lsq"
+Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com [209.85.222.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 622EE3F69B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751611960;
+	bh=Tv4gB4IzmA09TgqZAyPP+TGiF9YCCa1B+JrlwcTCnmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=ZMDT0LsqzJYbpqAg0pgTwx0phG0NcgEfh0IwT3/xlrqszixi5CYBcjNcI1hRjNOcz
+	 YZ+47/H455eTGRIdhkWdjc6uH0A06FwF1a/ZIIwKW3bM4n2wwGyErk4z4XjrBnaxii
+	 eJnNrIgqMZ+MdFlICAn1A3rDCBEtrR9P+fiJDvZkbytuprZ1ERYl4u/Z0PUnyY7xY2
+	 hq/ut8pSQ9sXbHIShAIlwrzhQH7nCzZF668bCAxPvEAcRmtRK4EtZX+es48NZKTRbq
+	 DisLGQNiCPZYLGZgI25uPa7LKZdAhrljj4++2LWqKgoSAcvEqIQB8rzR8FZYN+K3sd
+	 2TaKlZrkPR4/w==
+Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-87edf585bf9so462440241.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:52:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751611956; x=1752216756;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tv4gB4IzmA09TgqZAyPP+TGiF9YCCa1B+JrlwcTCnmU=;
+        b=badcyZXIoV8AOC65FH4FCGU8UisbyMS9Cf3Wve7IlUka8kFUBecDf1fUnF2r4Wl8Bh
+         ozE2pM2kshrBcM+kWOFBOz9+S6m6Sq5c+CIYfsiN4dDiyD5UqFhNSbxLaevk3h6hkJw+
+         2IkjYme+Eqo3s7wKiMEU+VTxQe3L8bu+0hkUzt45yFj5YfGzued/x5OcavIL3TBHoyRT
+         l2WHK4h17qeOVxGFa3e/sZ5dm0lQZUAyohpMwQPb4nxrMIwXgWgGC7VDG3/6fX6KNzUV
+         EPW42ergU1xQibTUIBZJR7LRmpX9n+Tg7MlBRtN9S0QTmXf9X4ss+NspMgukHvZgy0Ye
+         2xiQ==
+X-Gm-Message-State: AOJu0YxZS7sTWcuqHrofi6SMoCzdmwwk8LctSTIyB9Tx33ld+7JVScxj
+	DDOFsHSD2/VCM6yDDjJNpBlaTbzfYeAJ3+yupdxRf7RFBFcSu7bUtTCbfAYJ1kcPMyeAr0zh1LM
+	kmwsX7QldJKYG11qibW+WfCR/f0u05/BDG2FmrAvbOboIooktkNkCHzPASbJW+S4qAsrWtMcpBe
+	1F+OL+xVsjWOrtXIvQxqAl4fp16tqbrpHkBC9koXtMn7D7ctfFxWDvwM/J
+X-Gm-Gg: ASbGncsuZcbvIUP8FtW2ZtDdfZc81FzWMIPczWhOUULs3gQGXqyQCVsKXp3HX28xMtP
+	t9t69edPFGrcO5nvH7BwhKMoZw2AmKJvYQ09w/6oErP2KC6IWXhihGYdhTmq1/W8VL/VQac77R9
+	kqnEcr
+X-Received: by 2002:a05:6102:50ab:b0:4e5:9138:29ab with SMTP id ada2fe7eead31-4f2f18cfc95mr441081137.15.1751611956009;
+        Thu, 03 Jul 2025 23:52:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHB7HfZmQOhR9Isg874gqYf7ux5G+ZxtwZDg/dj07LCt1Yk4BMJUJdZLZ+cFBmHmnW+F1WX3cb4/8peLVtympU=
+X-Received: by 2002:a05:6102:50ab:b0:4e5:9138:29ab with SMTP id
+ ada2fe7eead31-4f2f18cfc95mr441078137.15.1751611955653; Thu, 03 Jul 2025
+ 23:52:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5753:EE_|SJ0PR12MB7083:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ccddcbd-8691-4535-5329-08ddbac75b63
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N1B0dGhWeGdDVmQ5YUdDUHVFMlJ1dW1CZzdjVzlwS0VZNU53azR5SWtZNUxZ?=
- =?utf-8?B?TkFTL1FpNjhtRENQK3QyUFBZc05IaC9EMVBvd0lTbG1zSTlDUDA2Wm1jSGV5?=
- =?utf-8?B?WUwxMmxzcXNxZ0ZkeCtoTWlXWDRkZHAwWXRSMWtwQnh3aWIzbHZ0QldXK3RU?=
- =?utf-8?B?NXoxWnBUMmp6d3hFT3gwRkQ4dXFNUm9pbVQ1eHI0OUZWQ3RzT0NOTEtDaitK?=
- =?utf-8?B?VFUyNnl6T3pMSnhQTHNrRHlpNGE3aXhoei96YjVqNFVGUTI1bFZDWlI2ZE5m?=
- =?utf-8?B?MmtiTFNBU3NsQ2NWVHE4UHM0NEZCT3lZaHVxRmhOY005N0g5encvbDVGWFhq?=
- =?utf-8?B?QTNxbUtSNU5FRSt5Sk9IazNTb1NFRUh4ekVLTkZWbmJvTUQ4Z2pOaEJBL1hz?=
- =?utf-8?B?VWl5UVREV1RNMkx3R1VXUEk0S2xFRVU3bDhFYlVkS1d5eHk0cGhOZkdmcTFq?=
- =?utf-8?B?c0JQelRDVG00ZnIxNUYxRTNxT0VON0NPak13SzVIUWRHSkdvRG5HWXQzaWxK?=
- =?utf-8?B?ajlMQVJTVkdzaVVzQVBjNDZoMTdnQzVVQUtwelFvTGJKOEs2Q1ljRk5Yc3Zj?=
- =?utf-8?B?ck9QeUdDd0NpeU0raWdlREV6TWlSMm9LUjh3dklySGN6VVc4b3VLWVNpZ1lU?=
- =?utf-8?B?RjV1OWY3bGJKUjNKSHpCL3FvVm5PWThXNVFyaVY2UVNoNC9CZWNCZUVSaFV0?=
- =?utf-8?B?bktZcVhNS1BWbnlJaEQ5Qk96NFRzdWJNbUFKSk4zTDArMGk4dGlEb0cyZjJ5?=
- =?utf-8?B?dXhCbDI2TXg1OXBmWGNrdjBBeWg5OXZ0U0JnVGRLS0ZQMktXQVd5ZUJmMHE1?=
- =?utf-8?B?ZW1tUy9ELzVLWmU5UHNoKzIxQTFvakQwQjRFOUlzWXh0WW40dEJRRmpqWXZp?=
- =?utf-8?B?aWoyUmpKRGEzUnQ2NkNoKzJHS0lvUTNKZlVvUWZ0UGtLNjlJb3lDZ3cxdnpu?=
- =?utf-8?B?NlczZlM0NU9mQkUvdEZkdC9iakZlLzI2aU1jL2dzTVhaNFpZNnMxSVJpRUxH?=
- =?utf-8?B?ckFDNzB4ZGgvTlh1b1JNU1RjNStQZXo1Tzc2eFRtVUFuNDRva3VqYUlRU1Vs?=
- =?utf-8?B?S2thTE1iRGkyOUZhdEFhRmE1MTdGK0JRdWEwZkYrOGpYbFkybFpZcDRMRlh6?=
- =?utf-8?B?bHFvdkwxRk5hZmNrTVk2QmlrdksrVWZ3QkZOeDVRb3FDRGZFYnJaSWswMTg3?=
- =?utf-8?B?SGtucGFEcEl1OWhrRUZYNHBWWTRSajVNOEhQQ1hpMG5kU3dCYzAwaDU5WHEr?=
- =?utf-8?B?NkxUdnFPQ01DcFpiODFnRXZyNmVJZU5PVDk3TGVpRE1HMEM2RmRTL1BwMmJJ?=
- =?utf-8?B?aUNsYjJSVHZGUncrZUdNdnNvQkxiaXF0eTdiY0JuUU0yTEdKRlhjUEZQTTRy?=
- =?utf-8?B?OEZGeHBEb1VMY0FSb1YxbXVnOWI1VUt0bjErOHBwL1FGWkV0ZXFMa0NZQnBH?=
- =?utf-8?B?TW1tNGxFV3N5OGx0Qmhpc2ZTWU9CbzlNZ1g3RmFkdklzd2JaQWZqdlBKdkVQ?=
- =?utf-8?B?OGthZHZrN1ZqeG1idGtVNXk1Wkx5OFd6TjVzcHEzbkJQaGkvR2xhOTl3eGtt?=
- =?utf-8?B?ZEFpWjRhOCtvaUlVNlpwMjJxczBZUmluR1JFL0g3L2FhalBQUG1yZ3JTL0J5?=
- =?utf-8?B?eHc5V3Rxbk5XRUo2VWRuL2trd3JWWGt0RjM2anZYY2F0RUkrcEV4eGdqRTIr?=
- =?utf-8?B?Q3dmU3ZtMWw2MjBMYTJOVENJTnRBSG1SV0lmVk5hRFFpTzVNZ3FuWmlUMjda?=
- =?utf-8?B?ZVRscEdrNjNIOUh5bGpQL3dERHJsY3FZUTBwTGw2TVpHbjJid0FYcG5mMmVq?=
- =?utf-8?B?NUdXTitYYzhLbXZJWFE5UDE2VUhxZDczK3pVdEMzdXBzcmxXaU56TlhPQ2pt?=
- =?utf-8?B?R3k5RHA3KzhvKzJTYk9JRmdKUGZPUk5VTzNqUVQ2MjhiZnJNSE5VODRXMlJ2?=
- =?utf-8?Q?YlygXinEyKM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5753.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djlsemdEbFhmSmhxRE9FTktrdWlnYkVmbUdTa1RvWThvZHc4SjA4eXdUWEVx?=
- =?utf-8?B?eG9wZlRNaWl2NlNVNlhpYWZXcWVEUmpwMDVNOFBNQzVuL1Vnc1RxdHpPTU9w?=
- =?utf-8?B?dm02ZUdXVkp0YXdUSWR0K29MVzFrekpSZ055SXU3Zm5JQzlYSnVERjFmL1h6?=
- =?utf-8?B?ckh4Mm84R0FVSGlXRy9FOEl3SUdpQ0xSWFZXM1oyU0o1VFl3aHpNWjhkNTJ2?=
- =?utf-8?B?RUtHdytMdWxVcGZKa0pPdzMrelkxVU5aNnZocG5XUXBQZGNUNWo4SXJNR0hq?=
- =?utf-8?B?L2ZxNGtVL09kMUF3ZXBTTUgrRWl2RlZpSkxOTFRzZHlZNUxENEM4NGR5VTNQ?=
- =?utf-8?B?YTEzMkVkaXZpdGREejM5cmowT0VNckRpRzhDTzhCbVNvdEpjbjJpTUFicmFL?=
- =?utf-8?B?TVhNK3JCQWRFY1hSRVNiMGpUaUlySjAzcjBMeXE5U01BRUlIZTFBVkxhYitQ?=
- =?utf-8?B?WW9nNGhJMHd1RzhhakZzdmpQSmRrNnhjOW1pNjg2VDhPQzROM1hjTWUyVlBS?=
- =?utf-8?B?aWhOdERZc0ZBNll0RjNCTUJwOTJ6MHcwYzhseUdXOUNOMHpFMGQ2aDdmZjdR?=
- =?utf-8?B?ZGVzMmhlWTZwdnZnQTF5QTlCV1h2SkZVTVkyajlidElXbXJIM29yS0N6dFNW?=
- =?utf-8?B?aExQaWcvWmljbWtZMjNQZEo3bmRMY09GSzB6Vlk4ZHdjME4xR1I0Vm5EcHg3?=
- =?utf-8?B?V3gwS1UwenBkQ25qNjhDTVZtcjh2OXhvcjNEVjAzWURUdm9lVmdJaVVxQzZz?=
- =?utf-8?B?VTRJbFo2b0ZFNGRLV29pKzdTcXh6YktNeGZoekJnR1dub1U0dy93b0k5bVkz?=
- =?utf-8?B?ZFFDNnkrek05TkZ2SkNQTDNsUi9MY3dMUis1ejVCWHVUODZiWC9BWXQyRG1z?=
- =?utf-8?B?MTd1Z3F0alIza1FHRVM1MGJ6VGZkWFMvM2RvNzJkYktaZlVoK016emJOYlJm?=
- =?utf-8?B?djNqTlNaaEg3ZWYwODVIK0JJUVlBNUo2REY1eDdHVVdrWXV4M1VuaDJ4SE5V?=
- =?utf-8?B?MVoyck9Eck9EajlRZ2thdGQzNkU2VFMxNGVyN1E0eEZYU1dWQXZLd0dHcUxo?=
- =?utf-8?B?VWJjVkFhbmJEcksxZXBPSElncGgvL0tjYU1ZSUJCaVNKb1JhRTR4UXBNOWlv?=
- =?utf-8?B?eDdlUGI0dGxwaUwxMXFsSXBwSGxiTy9QTGwyL3lNa1NLdWVqKzJvRlU5RUhL?=
- =?utf-8?B?ZEpxb29adUtncmFnaDZKOTg2UXRHZ3ZQNUtHTFVJZGI1c0laMmk4WStrdlY2?=
- =?utf-8?B?S0V2QWg4Zys3dkVEaVFGbjN0RVBOVFRzQkJhTGV0WVZRb3A5WWtmZVJubHB1?=
- =?utf-8?B?SUo3emMrSEh1Q1E2M1lSQ1h4THA5N3F6UzZBTFF3Vnl4NkJic2l1V2NDV2F6?=
- =?utf-8?B?K2ZQYXZQUWJwdnM2cm91V3hRRnkrcy9tOXdvWjJDbm9GSVpwYW1aRHgxak9h?=
- =?utf-8?B?K3VkcHRPVUVFUE1DeWpFL2FVV1ErelJCUDFUQTZDQng2VXFPRnJzN2tTQlJa?=
- =?utf-8?B?amc5M0NMeUFmeFlQZHY3Q0V6LzJuOUo2eVlNVzZSbThhbm9NaGgyUW9IeUVC?=
- =?utf-8?B?UHpoQ0lXQTBKQ3EvdERrck41K3hYc1FXVmEwcGx2RnZWVXZVYithRmc4Rmhs?=
- =?utf-8?B?TjAxblZwVmxjbjJESzYxWkNKNzRDWWl1bmJFOGlkcUtpMnprNWRKUjdwSnpW?=
- =?utf-8?B?QjhmZzV2eG5FdkdEbjU5eTlTTllobWdlek5RaHk4QnFtd1J2eVhCMEVvVVNW?=
- =?utf-8?B?RlJCdG5XRGpYdHowTWE2ajl1ZFA4b2VMbGRzSGdtQzIyU0RvYlNxeGxLQXBa?=
- =?utf-8?B?cHkwYmhWOHZ3WC92VEVGa1BiQ3czcjdHMWdVTWc2Wk85emxLc3Q3Z1JJaHlU?=
- =?utf-8?B?dWtUcmsyVWtrZ2tzQ09lOHZhbnJVTjJsUWhVRW5sd1NmemJqMXhUa3lRazV5?=
- =?utf-8?B?ZmZlcjQ3SDlhdVJsWXdLejJEM3IwQ3daUUFORndxVGxXNUgxN3lSQ2p6Y2dx?=
- =?utf-8?B?OGJDejA3RmVpZTllVHdwQmtnN1dnVklHSlhJNjNpR0VXSll4Nmc0RU1WTldE?=
- =?utf-8?B?V3U4TnpSdHdaQlhrVDB2c1BzNDlRQWNoNVkwV05mTk55WG1odnpqVjlxcnYy?=
- =?utf-8?Q?uMj9xc9acJ3wOorN3TL1aJZch?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ccddcbd-8691-4535-5329-08ddbac75b63
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5753.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 06:52:35.4598
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UgNyid07Le8uG+rAavBkljKi33dq0ajBS6/yDIELZy+NQJbJGE8U0H1JbeWo+FzZSaQWtAjTbc4S8LIApOpTcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7083
+References: <20250703222314.309967-1-aleksandr.mikhalitsyn@canonical.com>
+ <20250703222314.309967-7-aleksandr.mikhalitsyn@canonical.com> <CAAVpQUDn6vjd2SpwZj8v9KM=yzmC6ZjB1sf3xO4fc=sr4s367g@mail.gmail.com>
+In-Reply-To: <CAAVpQUDn6vjd2SpwZj8v9KM=yzmC6ZjB1sf3xO4fc=sr4s367g@mail.gmail.com>
+From: Aleksandr Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Date: Fri, 4 Jul 2025 08:52:24 +0200
+X-Gm-Features: Ac12FXxtIsZihNOxSNCXS3Jjflo4OPvAJ9izvZuFGthK8qAmPo3MPUpvzqlW5DM
+Message-ID: <CAEivzxeM3+TwwU7jR0i-=GrhZEyd+uffAQeODvyb6ZRRd7gsDg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 6/7] af_unix: enable handing out pidfds for
+ reaped tasks in SCM_PIDFD
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Willem de Bruijn <willemb@google.com>, Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Luca Boccassi <bluca@debian.org>, David Rheinsberg <david@readahead.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 4, 2025 at 8:38=E2=80=AFAM Kuniyuki Iwashima <kuniyu@google.com=
+> wrote:
+>
+> On Thu, Jul 3, 2025 at 3:24=E2=80=AFPM Alexander Mikhalitsyn
+> <aleksandr.mikhalitsyn@canonical.com> wrote:
+> >
+> > Now everything is ready to pass PIDFD_STALE to pidfd_prepare().
+> > This will allow opening pidfd for reaped tasks.
+> >
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: Simon Horman <horms@kernel.org>
+> > Cc: Willem de Bruijn <willemb@google.com>
+> > Cc: Leon Romanovsky <leon@kernel.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Kuniyuki Iwashima <kuniyu@google.com>
+> > Cc: Lennart Poettering <mzxreary@0pointer.de>
+> > Cc: Luca Boccassi <bluca@debian.org>
+> > Cc: David Rheinsberg <david@readahead.eu>
+> > Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.c=
+om>
+> > Reviewed-by: Christian Brauner <brauner@kernel.org>
+>
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
+>
+> Overall looks good, thanks!
 
-On 7/3/2025 1:30 PM, Christian König wrote:
-> On 01.07.25 18:49, Sunil Khatri wrote:
->> Add a debugfs file under the client directory which shares
->> the root page table base address of the VM.
->>
->> This address could be used to dump the pagetable for debug
->> memory issues.
->>
->> Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 52 +++++++++++++++++++++
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h |  1 +
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c     |  2 +-
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c      |  4 +-
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h      |  4 +-
->>   5 files changed, 60 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
->> index f81608330a3d..6762dd11f00c 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
->> @@ -2131,6 +2131,55 @@ int amdgpu_debugfs_init(struct amdgpu_device *adev)
->>   	return 0;
->>   }
->>   
->> +static int amdgpu_pt_info_read(struct seq_file *m, void *unused)
->> +{
->> +	struct drm_file *file;
->> +	struct amdgpu_fpriv *fpriv;
->> +	struct amdgpu_bo *root_bo;
->> +	int r;
->> +
->> +	file = m->private;
->> +	if (!file)
->> +		return -EINVAL;
->> +
->> +	fpriv = file->driver_priv;
->> +	if (!fpriv && !fpriv->vm.root.bo)
->> +		return -ENODEV;
->> +
->> +	root_bo = amdgpu_bo_ref(fpriv->vm.root.bo);
->> +	r = amdgpu_bo_reserve(root_bo, true);
->> +	if (r) {
->> +		amdgpu_bo_unref(&root_bo);
->> +		return -EINVAL;
->> +	}
->> +
->> +	seq_printf(m, "gpu_address: 0x%llx\n", amdgpu_bo_gpu_offset(fpriv->vm.root.bo));
->> +
->> +	amdgpu_bo_unreserve(root_bo);
->> +	amdgpu_bo_unref(&root_bo);
->> +
->> +	return 0;
->> +}
->> +
->> +static int amdgpu_pt_info_open(struct inode *inode, struct file *file)
->> +{
->> +	return single_open(file, amdgpu_pt_info_read, inode->i_private);
->> +}
->> +
->> +static const struct file_operations amdgpu_pt_info_fops = {
->> +	.owner = THIS_MODULE,
->> +	.open = amdgpu_pt_info_open,
->> +	.read = seq_read,
->> +	.llseek = seq_lseek,
->> +	.release = single_release,
->> +};
->> +
->> +void amdgpu_debugfs_vm_init(struct drm_file *file)
->> +{
->> +	debugfs_create_file("vm_pagetable_info", 0444, file->debugfs_client, file,
->> +			    &amdgpu_pt_info_fops);
->> +}
->> +
->>   #else
->>   int amdgpu_debugfs_init(struct amdgpu_device *adev)
->>   {
->> @@ -2140,4 +2189,7 @@ int amdgpu_debugfs_regs_init(struct amdgpu_device *adev)
->>   {
->>   	return 0;
->>   }
->> +void amdgpu_debugfs_vm_init(struct drm_file *file)
->> +{
->> +}
->>   #endif
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
->> index 0425432d8659..e7b3c38e5186 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
->> @@ -33,4 +33,5 @@ void amdgpu_debugfs_fence_init(struct amdgpu_device *adev);
->>   void amdgpu_debugfs_firmware_init(struct amdgpu_device *adev);
->>   void amdgpu_debugfs_gem_init(struct amdgpu_device *adev);
->>   void amdgpu_debugfs_mes_event_log_init(struct amdgpu_device *adev);
->> +void amdgpu_debugfs_vm_init(struct drm_file *file);
->>   
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
->> index 4aab5e394ce2..d3f16a966c70 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
->> @@ -1415,7 +1415,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
->>   	if (r)
->>   		goto error_pasid;
->>   
->> -	r = amdgpu_vm_init(adev, &fpriv->vm, fpriv->xcp_id);
->> +	r = amdgpu_vm_init(adev, &fpriv->vm, fpriv->xcp_id, file_priv);
->>   	if (r)
->>   		goto error_pasid;
->>   
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
->> index f042372d9f2e..7e31fb5f6f33 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
->> @@ -2527,6 +2527,7 @@ void amdgpu_vm_set_task_info(struct amdgpu_vm *vm)
->>    * @adev: amdgpu_device pointer
->>    * @vm: requested vm
->>    * @xcp_id: GPU partition selection id
->> + * @file: drm_file
->>    *
->>    * Init @vm fields.
->>    *
->> @@ -2534,7 +2535,7 @@ void amdgpu_vm_set_task_info(struct amdgpu_vm *vm)
->>    * 0 for success, error for failure.
->>    */
->>   int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm,
->> -		   int32_t xcp_id)
->> +		   int32_t xcp_id, struct drm_file *file)
->>   {
->>   	struct amdgpu_bo *root_bo;
->>   	struct amdgpu_bo_vm *root;
->> @@ -2610,6 +2611,7 @@ int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm,
->>   	if (r)
->>   		dev_dbg(adev->dev, "Failed to create task info for VM\n");
->>   
->> +	amdgpu_debugfs_vm_init(file);
-> Move that into the caller of amdgpu_vm_init(), this way amdgpu_vm_init() also doesn't need to get the drm_file as parameter.
-Ah yes that's better.Sure, Noted.
->
-> With that done Reviewed-by: Christian König <christian.koenig@amd.com>.
->
-> If nobody objects I will push the first two patches to drm-misc-next now, so you only need to edit, rebase and send out again patch #3 and #4.
-Looks like there are new changes and need some more in drm_debugfs.c due 
-to another debugfs file which is not in amd-staging-drm-next. I will 
-make that change and push new patch set.
+Thanks, Kuniyuki for your help and reviews ;-)
 
-Regards
-Sunil khatri
->
-> Regards,
-> Christian
->
->>   	amdgpu_bo_unreserve(vm->root.bo);
->>   	amdgpu_bo_unref(&root_bo);
->>   
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
->> index f3ad687125ad..555afaf867c4 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
->> @@ -487,7 +487,9 @@ int amdgpu_vm_set_pasid(struct amdgpu_device *adev, struct amdgpu_vm *vm,
->>   			u32 pasid);
->>   
->>   long amdgpu_vm_wait_idle(struct amdgpu_vm *vm, long timeout);
->> -int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm, int32_t xcp_id);
->> +int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm, int32_t xcp_id,
->> +		   struct drm_file *file);
->> +
->>   int amdgpu_vm_make_compute(struct amdgpu_device *adev, struct amdgpu_vm *vm);
->>   void amdgpu_vm_fini(struct amdgpu_device *adev, struct amdgpu_vm *vm);
->>   int amdgpu_vm_lock_pd(struct amdgpu_vm *vm, struct drm_exec *exec,
+Kind regards,
+Alex
