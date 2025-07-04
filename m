@@ -1,100 +1,135 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4478E4501A;
-	Fri,  4 Jul 2025 15:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D7C4501A;
+	Fri,  4 Jul 2025 15:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751644190; cv=none; b=I1+It0Xh4iu3QSsGWEHKV571QSv2LIK7iH6j/p7GvpczSdxJdqG475MV7PuVTJjUhwAaV9J2/fa7hgsMQZePcaFdbxhyOAVfmFPXa2S5qKjklhverswGx0E481VTQbvYDHS5cr8rLhB9uyrD4ESUTCcZy/3ldzKWuk6TzBzdgE4=
+	t=1751644223; cv=none; b=XmBrLWOeHUXDpSWgyoKmM/SVnpo/dytKY7cB/mo2AvdZHpBvwYyHC7j/3lSvMuNlCsNmR0YGtYGF144CoZo2s7RQtXFuX3H7ltcyOlMyM35sjs41/mcMsGTQay3CYmdp1Fo3EEohE6nGKRb5qIxDwznkRJxY7j2mzKUgW23eMwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751644190; c=relaxed/simple;
-	bh=vPs2F2ZJUdLH88YYwUGJUiwQkRzfw0gyOT12ZIqjTJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JntVV7TQiCQmU7vNtc4GY48+cgpJ4EAN37mDduSV39WYENJiSlccGRYNr0mMKJgnGP67WQBX9E/ulcDTSNZnVswdaAI+wWMW1Y4azFQeJQUPHOggUnCOKegnnl8qfT5QcVoebWHHPdK5FW3vB1Y/AKWP5ewoSZ1Y5neTI1c4CJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=CqgD6mLf; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="CqgD6mLf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+AMZ30LNlP2Z2bZ8j41BcwAp6IeuatrbCsARCkcU0Nk=; b=CqgD6mLf8lrEGXCyT+ebBjqzH3
-	kmQ8ny09RpVQ8RSMA0ohQd/HGc0npvDbpbMufNL4xTKynHcJUytWmkt4wBEx7ABV7/iNuXR3NTxRm
-	XgsjkklwSo1L5ezxEghOnTpUFDw4asXZdovrbNuJnfV/hwgyTXkEeoOFV4bS5W/m+R4+/oFr85SmI
-	DvRywf573MJygv4Yk9cqNNHEC09DD8vVf24eHJC322BwZG6E1ZRvZ/DxBu8/AsLFzTb81w1LcqAin
-	SpNlcBYMFdjmbh4oNYHVQf+Jm/wE/PztqiiwyhTUybeuZB0Ir2Ef6a97cFupnOPqLzaQ8YSR/5MeY
-	77cvrfKA==;
-Received: from [179.100.5.63] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uXifU-00CUNA-W9; Fri, 04 Jul 2025 17:49:41 +0200
-Message-ID: <61f90ebf-3cb4-4e81-a7d7-cfffe41d9d47@igalia.com>
-Date: Fri, 4 Jul 2025 12:49:36 -0300
+	s=arc-20240116; t=1751644223; c=relaxed/simple;
+	bh=twYZghTXQcVO0LNfLEmd62PlWPE6v2GPlTk8wTJbwMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9nFQ7sFQZPHqbTr4jnNnR6VPCaNmhNrm5K8bvVfrAlQMysxAJ/+uaC+T6I2bUnd4ssDB/cMh1Z/70M936u5zrgoH6Xb6sKMOGsGBvCRt7G5d2Qwy3gF9mO6Hz3Rv6lAFklJ7iD8d4Bx+ZXm4+IpbxDprSXcgrPgKwOHy2l3+8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08ECB153B;
+	Fri,  4 Jul 2025 08:50:05 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81EC03F66E;
+	Fri,  4 Jul 2025 08:50:18 -0700 (PDT)
+Date: Fri, 4 Jul 2025 16:50:16 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Alexandru Elisei <Alexandru.Elisei@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
+ PMBPTR_EL1 or PMBSR_EL1
+Message-ID: <20250704155016.GI1039028@e132581.arm.com>
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-To: Terry Tritton <terry.tritton@linaro.org>
-Cc: ttritton@google.com, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, linux-kselftest@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>,
- linux-kernel@vger.kernel.org, Wei Gao <wegao@suse.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>
-References: <20250704103521.10124-1-terry.tritton@linaro.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250704103521.10124-1-terry.tritton@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
 
-Hi Terry
+On Tue, Jul 01, 2025 at 04:31:58PM +0100, James Clark wrote:
 
-Em 04/07/2025 07:35, Terry Tritton escreveu:
-> sys_futex_wait() can not accept old_timespec32 struct, so userspace should
-> convert it from 32bit to 64bit before syscall to support 32bit compatible mode.
+[...]
+
+> @@ -661,16 +666,24 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+>  	 */
+>  	irq_work_run();
+>  
+> +	/*
+> +	 * arm_spe_pmu_buf_get_fault_act() already drained, and PMBSR_EL1.S == 1
+> +	 * means that StatisticalProfilingEnabled() == false. So now we can
+> +	 * safely disable the buffer.
+> +	 */
+> +	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
+> +	isb();
+> +
+> +	/* Status can be cleared now that PMBLIMITR_EL1.E == 0 */
+> +	write_sysreg_s(0, SYS_PMBSR_EL1);
+> +
+
+An important thing is about sequence:
+As described in arm_spe_pmu_disable_and_drain_local(), should we always
+clear ELs bits in PMSCR_EL1 before clear PMBLIMITR_EL1.E bit? As a
+reference, we could see TRBE always clear ELx bits before disable trace
+buffer.
+
+And a trivial flaw:
+
+If the TRUNCATED flag has been set, the irq_work_run() above runs the
+IRQ work to invoke the arm_spe_pmu_stop() to disable trace buffer, which
+clear SYS_PMBLIMITR_EL1.E bit. This is why the current code does not
+explictly clear SYS_PMBLIMITR_EL1.E bit.
+
+With this patch, the interrupt handler will clear SYS_PMBLIMITR_EL1.E
+bit twice for a trunacated case.
+
+
+>  	switch (act) {
+>  	case SPE_PMU_BUF_FAULT_ACT_FATAL:
+>  		/*
+> -		 * If a fatal exception occurred then leaving the profiling
+> -		 * buffer enabled is a recipe waiting to happen. Since
+> -		 * fatal faults don't always imply truncation, make sure
+> -		 * that the profiling buffer is disabled explicitly before
+> -		 * clearing the syndrome register.
+> +		 * To complete the full disable sequence, also disable profiling
+> +		 * at EL0 and EL1, we don't want to continue at all anymore.
+>  		 */
+> -		arm_spe_pmu_disable_and_drain_local();
+> +		write_sysreg_s(0, SYS_PMSCR_EL1);
+>  		break;
+>  	case SPE_PMU_BUF_FAULT_ACT_OK:
+>  		/*
+> @@ -679,18 +692,14 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+>  		 * PMBPTR might be misaligned, but we'll burn that bridge
+>  		 * when we get to it.
+>  		 */
+> -		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
+> +		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
+>  			arm_spe_perf_aux_output_begin(handle, event);
+> -			isb();
+
+I am a bit suspecious we can remove this isb().
+
+As a reference to the software usage PKLXF in Arm ARM (DDI 0487 L.a),
+after enable TRBE trace unit, an ISB is mandatory. Maybe check a bit
+for this?
+
+Thanks,
+Leo
+
+> -		}
+>  		break;
+>  	case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
+>  		/* We've seen you before, but GCC has the memory of a sieve. */
+>  		break;
+>  	}
+>  
+> -	/* The buffer pointers are now sane, so resume profiling. */
+> -	write_sysreg_s(0, SYS_PMBSR_EL1);
+>  	return IRQ_HANDLED;
+>  }
+>  
 > 
-> This fix is based off [1]
+> -- 
+> 2.34.1
 > 
-> Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
 > 
-> Originally-by: Wei Gao <wegao@suse.com>
-> Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
-> ---
-
-Thanks! It fixes the test when compiling with -m32.
-
-However, please check the results ./scripts/checkpatch.pl, there are a 
-lot of codestyle errors:
-
-ERROR: trailing whitespace
-#37: FILE: tools/testing/selftests/futex/include/futex2test.h:69:
-+        struct __kernel_timespec ts = { $
-
-ERROR: code indent should use tabs where possible
-#37: FILE: tools/testing/selftests/futex/include/futex2test.h:69:
-+        struct __kernel_timespec ts = { $
-
-WARNING: please, no spaces at the start of a line
-#37: FILE: tools/testing/selftests/futex/include/futex2test.h:69:
-+        struct __kernel_timespec ts = { $
-
-ERROR: trailing whitespace
-#38: FILE: tools/testing/selftests/futex/include/futex2test.h:70:
-+                .tv_sec = timo->tv_sec, $
-
-ERROR: code indent should use tabs where possible
-#38: FILE: tools/testing/selftests/futex/include/futex2test.h:70:
-+                .tv_sec = timo->tv_sec, $
-
-...
-
-
