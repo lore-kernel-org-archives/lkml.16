@@ -1,116 +1,77 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259CC2D8383
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896692D8397;
+	Fri,  4 Jul 2025 17:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651071; cv=none; b=P7WXDrZisk0TPz+DtNyPrut6sllsgjZtChet+n4MZiOYgYGvCdRLtZvjNpfZsgq0RBEI6cQ8u56Vdy0W3bA5DeJoo9vXeaQc1ZlqsMoh1c2q31oclbqovB2kKFI/5FzFuKPdZriMXZgAt/dYOKCUjq8z/gGPbHRGUvOB0tTTJ34=
+	t=1751651071; cv=none; b=SdkQQcTP9VaO6PtXL1KYKW/7+UJNu0e/buRmKVE6zrUDfc6qL62S76NG4ADJJt7fkSnn2JZ4NFfpZWL9UkuRiajOuBoITLqOiqmyN2R+usqGmNw9gTxSSchW5NRLJPmMQExAhIKaAgsCBkuXaVmNlunk0KJwZPeDdv4K8hvqt2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751651071; c=relaxed/simple;
-	bh=+XClgXfK5539UpfpVJ0FXUXY6s0Q6GsORz9dYVHVAt0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RpqISjN2Wdq4r2DaIV6gbLRRdF6NdO11MzdMHK/+zqISgOvLDRiDfvXqHZilR1uhcUX6fFaDcNRzUVm2idoJcRnPa/XqZOQbvZnKYxhMD2oLhub9/LUNKqTYG8Y1dzNGQS8kubMS7mbR4XmLwQWKJ19Qx8XdffLRlOaYkF6ZRUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df2d0b7c50so12844745ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 10:44:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751651069; x=1752255869;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6reEAjZbC0EFOta4hsE/f6/3JFK1KtUWT6rEBCyeXtM=;
-        b=sHzF058uEAqBUSckPyd6tyVoHuOCEZLakvUDGOLS8t8lof529vdB5ehf87muBRzXO1
-         0sgEkTovsD/meXyngU04kcYktuY7+1GuAsPBWjn7wZgQKIa2rTioREoP/4Q6J0yx4a3i
-         6IJjonO52gY0CJIMighC/jngjcBS/YQzQFNiw1AJr1cJSmKaWq4KwW3Smax/+75FxIri
-         5BfoFxTymyFeiRJQw2bjxBn2YLs3a8TeXjaUpha2trv5SgGHTBiEZNDrDtUiNRz9A5zS
-         ACsH7ArrtGRzM1HZqTUaxx7eEpUHQ9WYCxBS78Fnla65ubTWP/VxZ+n95B8+of1nnjDC
-         y/Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWY4Lv9tiSI0CzZLqgZhCZZOKsW4pFkLi+7MW0ZfMWCzCk2BBiPAvs6uBHtwH04dlztIoApYP5DHZMnYdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi1zIyRl/YRm7u7E34IcIJaiInd9yAbZhiVXQETCvRtsCcMPcL
-	IzVSTHfUoWjcdXptAmgimBQLaiApKkMv+rAkuUykNaKDWyirZaM808LP3WlBhZWxfE2AXVCvS8d
-	ASMLvh8RPO8CqRkZ8AO5J2zUVGFLB5HU0jLdU17v3mMq89T4PNeDNEVXj0cU=
-X-Google-Smtp-Source: AGHT+IGxnkF+jK9kcfbeYVAYPmNFQGpp0HxbAR/UMkQSYP3VAXKmHVJI7VOExp4skgFZmmGT0iL2Btc8ZkLaAqmbYCZ6V27EfVd8
+	bh=iQPCag/CMmrdNN8jXkXcdi2pgaLZRiU1dC347/6lGyY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OllxxTLeebsa6EVeQ2V4IFC3In48oKCVxmdXxyr8LXSOjZU51z0LLHzj5stngXEIiO7cQgD1CGDxLLJ+612gN2jOZGVxrGn0gNQilyAUeRE3b4xTjvb9TcXoubaSj7tbzFzUdsXeG8tqSpWIAco1bWvKmSn87lAH+QizX3YRFsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KiOO0OYD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KiOO0OYD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C00C4CEE3;
+	Fri,  4 Jul 2025 17:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751651071;
+	bh=iQPCag/CMmrdNN8jXkXcdi2pgaLZRiU1dC347/6lGyY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KiOO0OYDfD/dMXIc9qXQXmd9E49UqynbdXyiwZpN6JIZW9Y6TCi2xZtoinpXAkEu7
+	 i57ljCLpi0Z5d7grd73b+sBnzu8IQ3GrUROu8nxThQnAvQdEt5jYd4UJDfmRDMmfG5
+	 UVIeXIQi5TbJjhdCoiJDEJsWJEAeeCjO8u9zHCVx4EMzO7S9jM+C3EUv4Yz10hmUqU
+	 b1KVXxC+CyjrpxuMQFRcdqM0ed+MaHdqiQUiZgZWin6pi/DKmQbDJ7zWlw+/M/pgno
+	 74FAsH0+nCIgCHQBfU+2Xlb6ihVj/NizjbkrfL0adDtMvebLZ0zPr8B25RV0/7qOUx
+	 3NDwxPCoPj8XA==
+From: Will Deacon <will@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yury Khrustalev <yury.khrustalev@arm.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: Filter out SME hwcaps when FEAT_SME isn't implemented
+Date: Fri,  4 Jul 2025 18:44:10 +0100
+Message-Id: <175164333073.1188085.16117765198083829346.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250620-arm64-sme-filter-hwcaps-v1-1-02b9d3c2d8ef@kernel.org>
+References: <20250620-arm64-sme-filter-hwcaps-v1-1-02b9d3c2d8ef@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2591:b0:3df:3222:278e with SMTP id
- e9e14a558f8ab-3e136ea4bf6mr30724205ab.1.1751651069283; Fri, 04 Jul 2025
- 10:44:29 -0700 (PDT)
-Date: Fri, 04 Jul 2025 10:44:29 -0700
-In-Reply-To: <682602fd.a00a0220.a2f23.01d0.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686812fd.a00a0220.c7b3.0020.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] WARNING in mac80211_hwsim_sta_rc_update
-From: syzbot <syzbot+c0472dd80bb8f668625f@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+On Fri, 20 Jun 2025 12:28:48 +0100, Mark Brown wrote:
+> We have a number of hwcaps for various SME subfeatures enumerated via
+> ID_AA64SMFR0_EL1. Currently we advertise these without cross checking
+> against the main SME feature, advertised in ID_AA64PFR1_EL1.SME which
+> means that if the two are out of sync userspace can see a confusing
+> situation where SME subfeatures are advertised without the base SME
+> hwcap. This can be readily triggered by using the arm64.nosme override
+> which only masks out ID_AA64PFR1_EL1.SME, and there have also been
+> reports of VMMs which do the same thing.
+> 
+> [...]
 
-HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16f94582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b29b1a0d7330d4a8
-dashboard link: https://syzkaller.appspot.com/bug?extid=c0472dd80bb8f668625f
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f66c8c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12497ebc580000
+Applied to arm64 (for-next/fixes), thanks!
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4c06e63b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ff61efc838cb/vmlinux-4c06e63b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/dea44d0d14bb/bzImage-4c06e63b.xz
+[1/1] arm64: Filter out SME hwcaps when FEAT_SME isn't implemented
+      https://git.kernel.org/arm64/c/a75ad2fc76a2
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c0472dd80bb8f668625f@syzkaller.appspotmail.com
+Cheers,
+-- 
+Will
 
-------------[ cut here ]------------
-intf 08:02:11:00:00:01 [link=0]: bad STA 00:00:00:ff:ff:ff bandwidth 20 MHz (0) > channel config 10 MHz (7)
-WARNING: CPU: 0 PID: 176 at drivers/net/wireless/virtual/mac80211_hwsim.c:2653 mac80211_hwsim_sta_rc_update+0x6f5/0x860 drivers/net/wireless/virtual/mac80211_hwsim.c:2650
-Modules linked in:
-CPU: 0 UID: 0 PID: 176 Comm: kworker/u4:4 Not tainted 6.16.0-rc4-syzkaller-00123-g4c06e63b9203 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-RIP: 0010:mac80211_hwsim_sta_rc_update+0x6f5/0x860 drivers/net/wireless/virtual/mac80211_hwsim.c:2650
-Code: 71 17 00 00 48 c7 c7 c0 ae 2d 8c 48 8b 74 24 28 89 ea 48 8b 4c 24 10 41 89 d8 45 89 f9 41 56 50 e8 d0 df 8f fa 48 83 c4 10 90 <0f> 0b 90 90 e9 0c ff ff ff e8 2d 37 cc fa 90 0f 0b 90 e9 fe fe ff
-RSP: 0018:ffffc90001a07768 EFLAGS: 00010282
-RAX: 2b7aa56dabf85f00 RBX: 0000000000000014 RCX: ffff888000b5a440
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
-RBP: 0000000000000000 R08: ffff88801fc24293 R09: 1ffff11003f84852
-R10: dffffc0000000000 R11: ffffed1003f84853 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000007 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88808d21c000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffec31d80b8 CR3: 000000001216d000 CR4: 0000000000352ef0
-Call Trace:
- <TASK>
- mac80211_hwsim_sta_add+0xa3/0x310 drivers/net/wireless/virtual/mac80211_hwsim.c:2670
- drv_sta_add net/mac80211/driver-ops.h:466 [inline]
- drv_sta_state+0x8be/0x1840 net/mac80211/driver-ops.c:155
- sta_info_insert_drv_state net/mac80211/sta_info.c:775 [inline]
- sta_info_insert_finish net/mac80211/sta_info.c:883 [inline]
- sta_info_insert_rcu+0xd32/0x1940 net/mac80211/sta_info.c:960
- ieee80211_ocb_finish_sta net/mac80211/ocb.c:102 [inline]
- ieee80211_ocb_work+0x31f/0x580 net/mac80211/ocb.c:136
- cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
