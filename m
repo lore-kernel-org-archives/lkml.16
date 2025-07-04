@@ -1,111 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBC72D836B;
-	Fri,  4 Jul 2025 18:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C852E36F0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653581; cv=none; b=BtU5jB2Jyy2aGL4eirfiNpEgDcP3OrubVje6RkhsKRi9Z+INZPxd65iPA1IwjZ8in6f/obWFmyK3hmmiFJtxcZBKIVgv+fQ9tnLxjtOml4ZEHiXlz/J9i+JzkWWy9mjqygqBc1jujEAw0Ja/cHPS6UNBiDCMBpgppb25EZb1xeo=
+	t=1751653751; cv=none; b=mtYxx6THy6PS2DUd3tjaUllfOqCahwGV72dqiRoSFKSNzXIu9a7hitDgK4+i00qUUO1YB4pdNbtztWIGwBWlXPw2oOwPhFmVlbH0KWWmMLEdD+t9lCskKdV7pR6WIMVPeTw+DzjnITEqbONbVFYlRqb67f7+uilNdMiN478lxig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751653581; c=relaxed/simple;
-	bh=ipbT/QnTBUeVAy6M/JFK1jDQZRfz8BWcFfq/b7kFN+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FPqaNAooeEpNPPrCmowbo95egFzE/wdoCCC4Kc9O8kkws96kO44Q8Z8IRjN5J+H+1mJIsgBOO74qLOCcp4hmzd75aBlH0/Mvg9WBR8zfeb1zcI1VOwjIoBDH9lYDGa+pI3+PcEjgZ6jO2RX5UvzfPolMCes00ByE/1Uk0LwLNk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSK5omIH; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751653751; c=relaxed/simple;
+	bh=BFQom8CRsfX5+9eMLCdrsz8BwecPF8NjpitltozJt90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afELqqqOwX6JoRynxowv9xw0b9vbNdknwBq4EPBDzQSRKnQ3ckWKWX6FPV97TxfXoy6oZQmiwSwlGM5PTJRI6DcU8Xgtf2rYW77xsyKHeoExbBjke0j1vtp16Sx95a0q2p2MObO5059quJ5VlM6BjF3AmCMrxpS1u+10isnUREY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXFZdIoz; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSK5omIH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751653580; x=1783189580;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ipbT/QnTBUeVAy6M/JFK1jDQZRfz8BWcFfq/b7kFN+E=;
-  b=CSK5omIHyKmAfukwrDCXCNwXAMg50bh8JsV97qcS1S//HJ4PdK0xNUSr
-   8EKfMwYplOxHd7+hA7qc9XJ1vExpulsxC4MdFvRo+/hEeoSbuBV6N6O8/
-   pfAo4aU7rzqnZ83eZbXz0kWcWCoUjhU+jQbrQfmQUBgLWTgTU3IUrmDTv
-   Nzn4VjGmp1NXPd4TF9xx1CcaBv9fVwi0/muWx6b65h2ewYNTMp5NfL+nj
-   Wq3gcs87AMcr2TKQGpxqSAnva9ueY9K8EBSnidiafnRIuY8OEBAhCMfJJ
-   BNQ/2YVcVuLvyxMK2NCa/hq4ZrviAgDcSPM18EahNpcUkaVrRW4a095eX
-   g==;
-X-CSE-ConnectionGUID: lyCX2bnoR/up3AXsCa2rbQ==
-X-CSE-MsgGUID: m/0DRPT9SS+VWIu/JCjKiw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="76536505"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="76536505"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:26:20 -0700
-X-CSE-ConnectionGUID: nkFlUfNPSamRutD/MNS/mg==
-X-CSE-MsgGUID: +pw7iWkBSmuuwv5dBLym0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="154780787"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:26:17 -0700
-Date: Fri, 4 Jul 2025 21:26:14 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: simona@ffwll.ch, Krzysztof Karas <krzysztof.karas@intel.com>,
-	airlied@gmail.com,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>, kernel-dev@igalia.com
-Subject: Re: [PATCH v3 1/3] drm/doc: Fix title underline for "Task
- information"
-Message-ID: <aGgcxuT7YQx4YC2Q@black.fi.intel.com>
-References: <20250627171715.438304-1-andrealmeid@igalia.com>
- <52c32d1b-e5c4-4f6d-82a3-cf02c0cf4681@igalia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXFZdIoz"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so1524649f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751653748; x=1752258548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Lv+MSsgBNOJHMMndsvJGs/aVKU1C3SCJjVTZh90PrQ=;
+        b=RXFZdIozgWR9jM5ug7xgS7VX7+mg/5sR1hvAnXmVci2DHUYIVSefCt+J+/D7a0zd/M
+         aknzQPWt+pGrfVOYb0LRLnUaDNgsmXC7sCelg0t0vuomzVCyns16fNn9H7ltm3AH5fNO
+         cMrkGZyDVCpfBQq+dyzDuihqChRDu5GNdgoJlMRGBgoWWRdTzzcv1S5jkMjiXYXix4gl
+         Nndm/f/+W1rKc4K575O5kGUSa2NkAofYnEgR6BZOGKh7Boa1l7lXcOAUpxk2rfSz+eIK
+         IPyWFWV0tPiYkcO+YQoTeeDi+rpWSZa24iXi3DeO10FnFe/Hf+v25I/JHFTZQejfYtcX
+         o46A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751653748; x=1752258548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Lv+MSsgBNOJHMMndsvJGs/aVKU1C3SCJjVTZh90PrQ=;
+        b=eUcicVArMvsu6LiJk91FW3ZdfdMT+EF9RAXpyI5ZMAI9+F6DWrj9d+lI/PgazCkhAj
+         kI8xarrH3gnbaWqHwO+I0e3QxUUKmnodofH5bGlvsDLYTN0dpAIvOyBo4Jp1/J580O7D
+         jHrdiabgqKrldBREUmMO/XxpVb+X5yNssWkrCqwhtbm5wU/OR27nCuLGTv/qsI5RKueV
+         L8CI+waSWgKdQpEonmKuZ5UGnle4Sg+uVxof3Fqn/E1XhOckaIrKACP9q1QI/6gywnWM
+         3cPSQghhKS8tWXyC3nZ/6bupdwlMuDg0hZWjcK4L2gSPmYRzFU713P2RlctZcfvKGnog
+         bl5g==
+X-Gm-Message-State: AOJu0YxX67o0cxEF2cLiZ3iiCBlQ8ZEnQq4WC4V0QT5c151z+Fb+M5fM
+	M0BpSTbx10tBv9uP2jx+fpi5j7U0v7oPTX10Xz2sGMZkteCjz4zIqr7+
+X-Gm-Gg: ASbGncsCv7BA64lAkAJeQGoA2srCblw2UPEC/DB3ftW/VIxoerWSzo/vQozyncUu8Pe
+	p9EcYMYaoiJ0iGlXvByYoyBDf/zN1zJwS6iwre0TnMmHx0NFXETNp2QPBdBTG4PlwMOD8FRx9Xb
+	DWjfkz79bqZNFDj3lEUvO4VbC7qIR+MQnRJMSpFhppm5qIhu/LZEI79aPPVH4X3zmKwmzahhEaz
+	TJAfZTEUEAHs4QloLbgc+H4UJzbKYzWpd4aNlF4hMkRzL2P/zHRji3dA5Jim9hs+hoO++wpc9hS
+	T80Q3vReeVmAeN7jZwGiSTWDWItFu3d1rLqwIqAl1h310POqOlKzImp8RLcEXyiPipOmNDGSrf4
+	6
+X-Google-Smtp-Source: AGHT+IG6FMLPTE4t74XLa+BVp0Qno+bbrHcLnfkSlRNJ0EcC9XHV1LYUTmD7u5wza4YrSO+znhKFaA==
+X-Received: by 2002:a05:6000:20c5:b0:3b1:a735:e6bb with SMTP id ffacd0b85a97d-3b4925845f9mr2418479f8f.4.1751653747407;
+        Fri, 04 Jul 2025 11:29:07 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b168664bsm33761875e9.20.2025.07.04.11.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 11:29:07 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [RESEND PATCH v2] entry: Remove duplicate function documentation
+Date: Fri,  4 Jul 2025 18:28:02 +0000
+Message-ID: <20250704182815.978-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <52c32d1b-e5c4-4f6d-82a3-cf02c0cf4681@igalia.com>
 
-On Fri, Jul 04, 2025 at 01:46:07PM -0300, André Almeida wrote:
-> Raag, gently ping for reviewing this series.
+Move exit_to_user_mode_loop() documentation to "entry-common.h",
+above function prototype for consistency and remove duplicate
+function doc.
 
-Somehow this didn't land in my inbox and I have no idea why.
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ include/linux/entry-common.h | 2 ++
+ kernel/entry/common.c        | 5 -----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-Raag
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index f94f3fdf15fc..dad1f257e3dd 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -302,6 +302,8 @@ void arch_do_signal_or_restart(struct pt_regs *regs);
+ 
+ /**
+  * exit_to_user_mode_loop - do any pending work before leaving to user space
++ * @regs:	Pointer to pt_regs on entry stack
++ * @ti_work:	TIF work flags as read by the caller
+  */
+ unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 				     unsigned long ti_work);
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index 3e9f2d40230f..67df77732fd2 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -81,11 +81,6 @@ noinstr void syscall_enter_from_user_mode_prepare(struct pt_regs *regs)
+ /* Workaround to allow gradual conversion of architecture code */
+ void __weak arch_do_signal_or_restart(struct pt_regs *regs) { }
+ 
+-/**
+- * exit_to_user_mode_loop - do any pending work before leaving to user space
+- * @regs:	Pointer to pt_regs on entry stack
+- * @ti_work:	TIF work flags as read by the caller
+- */
+ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 						     unsigned long ti_work)
+ {
+-- 
+2.49.0
 
-> Em 27/06/2025 14:17, André Almeida escreveu:
-> > Fix the following warning:
-> > 
-> > Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
-> > 
-> > Task information
-> > --------------- [docutils]
-> > 
-> > Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> > ---
-> > v2: Add Reported-by tag
-> > ---
-> >   Documentation/gpu/drm-uapi.rst | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> > index 263e5a97c080..10dea6a1f097 100644
-> > --- a/Documentation/gpu/drm-uapi.rst
-> > +++ b/Documentation/gpu/drm-uapi.rst
-> > @@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
-> >   complete wedging.
-> >   Task information
-> > ----------------
-> > +----------------
-> >   The information about which application (if any) was involved in the device
-> >   wedging is useful for userspace if they want to notify the user about what
-> > @@ -728,4 +728,4 @@ Stable uAPI events
-> >   From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
-> >   .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> > -   :doc: uAPI trace events
-> > \ No newline at end of file
-> > +   :doc: uAPI trace events
-> 
