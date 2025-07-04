@@ -1,99 +1,78 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FA826D4C6;
-	Fri,  4 Jul 2025 23:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2CD54723
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 23:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751672618; cv=none; b=k1VYg2S5XAlFjOJfOm3ntTqQ6XhHdf82lEOcfALVbwrlXvta4o2K8+LlZjgUFzzT3JVNum7RScEmB5fjicc3Xhfy16T3n0ic4vohYqeEWTPsqkNYOS9vdC+GFfSfbnuGfGjVjjuJg91IfEFLN3wGOg6r8OyCF6AuesRONIll1GE=
+	t=1751672777; cv=none; b=OGYiNcdaHc3OucEimOhZCsnfNj3ogEX5a4SZU1/l7TW5ROFA6agDD1fh0L8MTZsVXSYdxQA0vRzwTQCbzr+AtG8ANuV2s35jrX37NZ4/3X9OfYizY7AYO4F9WTxgBUXwjApwo+A4uOJmmqxuWuGYnv0xBBtTMx0vbGfpQJnnXkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751672618; c=relaxed/simple;
-	bh=ynNo1Z4lyyh6Xq3Mw8cGMe5YNA9OWQ0njpEepLshJxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zz1EdONeOY+cu0Ai7z23ANRBXiosW2fWnnplbehlXON9JhMe4qlJ6XTbUxQpqguxgKEC9ndAzVZTU4zRjcRTPRdTXdFhDkyvNPM8aF5oI6bCl8sJo/itlBCo38ay/QE7rgiJfOFdvixns8WtYu5TE8ezDtBgO2Jgi+XXsMyWafQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gqm3tahu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751672777; c=relaxed/simple;
+	bh=OlXpvVzublmpzcZs1WXLlpHn8HUh9C22Ev/qmySCF2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k/qsehPsSZoIv4kbHfu2Ypxn4XYCLN4bUFuJ4lB2BzaXN7eVL0elL7V+ZF67Cf31//7wds20q+biq0V9uLybIGXRP008tuSrx+6gKlYhCB+zCwSb9No3Zi24oCkrNYwz9vNZjAYSOxCaqB2lpO0TjUC/YZErLyCqpFxAIJDHUMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=jbYad3TU; arc=none smtp.client-ip=202.108.3.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gqm3tahu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C6HJ8IcGtBRiubKjaCXVhjsl7fuFELcIKXF72SPTkqQ=; b=gqm3tahumcaChgcx7QDFVmUJvJ
-	KKMr79ur1vJTD9agV0AdSDOuzLZ/tbd3SQ4q+MS9MrbVaLAHYHzxVtU+DS/ZA/27EOs2enqJws+Wz
-	qK13vj/V/hxtKeNv5bhnczcR+tSx6b0cx94RnLDbwgU6GvH45g0XTnrlgwxNhcFp0R94Uor9XyL59
-	Obwza+stWXW+CGjpAcVe9NPjw2NMrph6c6kUws3bQ0NUfNe63YZ68NUsf//f4rJ+UIQKrr0ur5KJ9
-	18qf6UbxmNFuHJdUgXycYM5RhLBLq2qbQ6BiQ7QWdT1lBkf/Ue2+x/b7RmqK0Om65bKPQJe8IycDV
-	TSGbcB9w==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXq3q-000000019v0-1vIH;
-	Fri, 04 Jul 2025 23:43:18 +0000
-Date: Sat, 5 Jul 2025 00:43:18 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, John Groves <John@groves.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
-Message-ID: <aGhnFu8C9wVPiXBq@casper.infradead.org>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-19-john@groves.net>
- <aGcf4AhEZTJXbEg3@archie.me>
- <87ecuwk83h.fsf@trenco.lwn.net>
- <aGdQM-lcBo6T5Hog@archie.me>
- <aGgkVA81Zms8Xgel@casper.infradead.org>
- <aGhjv37uw3w4nZ2C@archie.me>
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="jbYad3TU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751672772;
+	bh=vxGDDAIghtkSB0NURMJX0uAmy6KtjeRVKcUI16aLrBU=;
+	h=From:Subject:Date:Message-ID;
+	b=jbYad3TUM6GODyHkP4O2pDmBe0/WigVltfluy8HNx5dZxBa//M2mqg/WBpHXWHkQB
+	 sedbtWb7GJhz2pkFGLQW64CHWV4LqDOJNWRP5Wlis2fuuD8BVFBOaN2bSJ9Zyq3q/F
+	 LVcNOdJSYEAXWPXubK1HTKobqgKLn1GJRZ38F6RA=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 686867BA0000406F; Fri, 5 Jul 2025 07:46:03 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 5830304456930
+X-SMAIL-UIID: 45A23F742C9143F98C01E66E7F00AA3A-20250705-074603-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in pcl812_attach
+Date: Sat,  5 Jul 2025 07:45:32 +0800
+Message-ID: <20250704234551.2525-1-hdanton@sina.com>
+In-Reply-To: <68684cb9.a00a0220.c7b3.0027.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGhjv37uw3w4nZ2C@archie.me>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jul 05, 2025 at 06:29:03AM +0700, Bagas Sanjaya wrote:
-> On Fri, Jul 04, 2025 at 07:58:28PM +0100, Matthew Wilcox wrote:
-> > On Fri, Jul 04, 2025 at 10:53:23AM +0700, Bagas Sanjaya wrote:
-> > > On Thu, Jul 03, 2025 at 08:22:58PM -0600, Jonathan Corbet wrote:
-> > > > Bagas.  Stop.
-> > > > 
-> > > > John has written documentation, that is great.  Do not add needless
-> > > > friction to this process.  Seriously.
-> > > > 
-> > > > Why do I have to keep telling you this?
-> > > 
-> > > Cause I'm more of perfectionist (detail-oriented)...
-> > 
-> > Reviews aren't about you.  They're about producing a better patch.
-> > Do your reviews produce better patches or do they make the perfect the
-> > enemy of the good?
+> Date: Fri, 04 Jul 2025 14:50:49 -0700
+> syzbot found the following issue on:
 > 
-> I'm looking for any Sphinx warnings, but if there's none, I check for
-> better wording or improving the docs output.
+> HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=104a8f70580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b29b1a0d7330d4a8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=32de323b0addb9e114ff
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b17ebc580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144a8f70580000
 
-That's appreciated.  Really.  But what you should be looking for is
-unclear or misleading wording.  Not "this should be 'may' instead of
-'might'".  The review you give is often closer to nitpicking than
-serious review.
+#syz test
+
+--- x/drivers/comedi/drivers/pcl812.c
++++ y/drivers/comedi/drivers/pcl812.c
+@@ -1148,6 +1148,8 @@ static int pcl812_attach(struct comedi_d
+ 					 I8254_OSC_BASE_2MHZ, I8254_IO8, 0);
+ 		if (IS_ERR(dev->pacer))
+ 			return PTR_ERR(dev->pacer);
++		if (it->options[1] < 0 || it->options[1] > 31)
++			return -EINVAL;
+ 
+ 		if ((1 << it->options[1]) & board->irq_bits) {
+ 			ret = request_irq(it->options[1], pcl812_interrupt, 0,
+--
