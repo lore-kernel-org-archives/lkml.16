@@ -1,137 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17829288C8F;
-	Fri,  4 Jul 2025 07:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6440428A41C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615645; cv=none; b=kktwMOLsP7gnP0gzHH4XZyY0fzx+NkyLOM+OpYiZavr80Hi9/1Nvj4SxqT7YQHm37hMr95SbpmPchMOYepsdo3mzROcH0e2RZLv5AvyUWEieZ+wJzLBIpKUuoEJtT/WJha/xoEHpOWouvskIgg21XIb6v2mszdXj4ap1BNFV640=
+	t=1751615648; cv=none; b=UzZ4GW/+L0TY0GrdSC0U7SnRad2IhmCW8+kArJneoao3EACz+ad+qAUWmQncGJmiXRZuwq9hFGm8qcrdVBxdTmJiKQ7II6CphM14/5hk2cuVQGmmPAANmFL31v4zi+W5vdDB7r8BZmpLBzobRI6p5f2G/VYobnHtPK55X8VFhyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615645; c=relaxed/simple;
-	bh=9sgrDBDt6l/8nblPznn01M3b9Hq+ziVBP/+mB5n2VUI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=i6VwTKiD1pEUy9UrSW8A/IOaX5eMTr2IVa9azxDShFbY5atgMF8/zAZzXGu9JZRnT3zSXoIrHyyVBVGhC8RCPufuLGAyDI3EMCeE9L/4U6GIZ/+/CuBzeDQ6Q39oVaXzCDEu6HJgPDMpfFxurSOWsMnVZvBgOefcQmyVjIm4A4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lZXbJbgW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751615648; c=relaxed/simple;
+	bh=nHMM1O4IslvrfeqGodyglti8CaB1ROJeZIDQqlgaxII=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kcgYRr7eqeF5MO7NtHBkwf8z1wjLmnbYmpVIXyycR4c4HWDXxIEwsm9VtWQFXnyu7DNw7QBgwSI5HykjrOXvEdaRsOVNXvCPzkqnQXz8NxD8alFRgglvnHFJWkYa58tHSIIHhEu/tb2QDlWlqglkCpePDKTzW9kl52sG3jLL0C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjgSbj4S; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lZXbJbgW"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563JPJc6029542;
-	Fri, 4 Jul 2025 07:53:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rZ9nWVQW0Uu8adQyey2qqf18o2DXaVid4arZvYDvmPc=; b=lZXbJbgWfLv6KgYH
-	kUpQd6lRdFpBM5zK+goIBG0mQXEeUFIe20StIskSaf4Shw4bbre4INID+CjumCNB
-	YJajbpncic1+WP2bsOlz35djKHisADQCfyladqZ+sX/WFK3OWHF3e3ZEmAxuXyRE
-	HMdkdjVo8d51Kg33uLIA8JU6J+4iAgM0YBldiucZesOM1+1VjPkDz3DMAYilFzwF
-	IIPpZCtxT2Zv4Ushe+nQifIvFkuBTpGuYeQHDSe7uaWieBbG4DfsU70QeMSE3KfC
-	hFAi9Y+V2Q8hGvVm76ICpk2kpPiA4eaSg1Yk3Kwg7X98gwVTcXqO7NOq1R2g2tcw
-	5QvvdQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47nh9s4bqw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:53:59 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rw4G001317
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:53:58 GMT
-Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:53:53 -0700
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 4 Jul 2025 13:23:10 +0530
-Subject: [PATCH 10/25] media: iris: Send dummy buffer address for all
- codecs during drain
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjgSbj4S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751615646; x=1783151646;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nHMM1O4IslvrfeqGodyglti8CaB1ROJeZIDQqlgaxII=;
+  b=XjgSbj4SAIXbvAlmLFjnToeJPx1T9qdrQDUDNPEz+o2qmf2LbcuPcyzR
+   J26XdO7ntK+AZzRwpAyO4yzD8Y/PXgSXh/R15bAVNDfcmyMfKBlifwy+G
+   A0Twqexx3VaSRFQ/Ske4/9ueirHWV7D6/NaBRIkdhiWJr5u5m6j5L2lFC
+   RQTBuJ6i1KluDIkV7NL9W4rpn4KFKdvkjTPUGQthprJ9YAtT46C/0hbmY
+   Jpam6BDavHZsrF93DqEYAMSIBKS1JoO0GWKqFT7KrfDvAGHawQqMnO/Zw
+   Kp0UAXY7pqDX7AREzE/wiEd9CUjDZ9c90GO3L5tJxpWzCGyAlQWBqk81O
+   A==;
+X-CSE-ConnectionGUID: 8o4mhb0XSNOmnB5BUDFLxg==
+X-CSE-MsgGUID: l+yFIRPwTSuqgM0M9jtKzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494459"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="76494459"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:05 -0700
+X-CSE-ConnectionGUID: 7LTrMyx/QlqWGtX+avivNw==
+X-CSE-MsgGUID: xH/cd10lR62+1jlZ97J90Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="158924163"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:01 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 14D6944433;
+	Fri,  4 Jul 2025 10:53:59 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Zhang Zekun <zhangzekun11@huawei.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 04/80] bus: sunxi-rsb: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:53:58 +0300
+Message-Id: <20250704075358.3216894-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250704-iris-video-encoder-v1-10-b6ce24e273cf@quicinc.com>
-References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        "Vedang
- Nagar" <quic_vnagar@quicinc.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1360;
- i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=9sgrDBDt6l/8nblPznn01M3b9Hq+ziVBP/+mB5n2VUI=;
- b=8gdEqX3ioLbGIwAo0ImHMaulSmHJUsHiDJa11+REZswR7rQEt3YCd3hSomC32+fjsknaYS6hk
- 15kySHUSWh7B9HIWvwnBf78npElmrn+u1+f41u+PvUZ+il5lCyMIqII
-X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
- pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=frrcZE4f c=1 sm=1 tr=0 ts=68678897 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=9ca8n8zwjEs3-HHftV8A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX2XEYUgSthNa3
- f0HW2y49pttzFW2RkH8ZjmLpB5s2IdDvdp8v9LOAzmKHPpwtitC67+rKHd9wJK13ctSQNAoSIEX
- RINYpBcyYlLUMx4r2m/bluwxhZR140WOJqfEHQGg7KyXQ/UECjixTZVoLPX/bSuWc/EmXGq0d/p
- YdmaumEczfTYQwLBO6wJe2uO/GJSQCu/PAMvVcqOTA8BwH4poUMKiAJUh943qT6mVWatQ/Te8qG
- znRHINsYiBeNMCHL/QWUBzZ91/srxfxvHhDLKvMIXe+tfx1mNPtYRshCmRb6jGrLKLcrfQHSTUW
- UlUi910RNKlQqzYycB7C3JQxW2feFRYGilbXo3aF8MYJmvKkO0OtX124bw2F//v3gMPEn1OcV1Q
- 1fC2Y6rVvfKl752722ugpCDiltjCThS/qCnakvzmhq4bUwgC2UaBJdLiVd8hUegncq02+ZTa
-X-Proofpoint-GUID: ZcyaU_NlAGAQ185LjZaP4i5b5AFTX_LM
-X-Proofpoint-ORIG-GUID: ZcyaU_NlAGAQ185LjZaP4i5b5AFTX_LM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040060
+Content-Transfer-Encoding: 8bit
 
-Firmware can handle a dummy address for buffers with the EOS flag. To
-ensure consistent behavior across all codecs, update the drain
-command to always send a dummy buffer address.
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-This makes the drain handling uniform and avoids any codec specific
-assumptions.
-
-Fixes: 478c4478610d ("media: iris: Add codec specific check for VP9 decoder drain handling")
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-index 5f1748ab80f88393215fc2d82c5c6b4af1266090..5097680ee14ebba3a126213c0584161627ca47d7 100644
---- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-+++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-@@ -402,8 +402,7 @@ static int iris_hfi_gen1_session_drain(struct iris_inst *inst, u32 plane)
- 	ip_pkt.shdr.hdr.pkt_type = HFI_CMD_SESSION_EMPTY_BUFFER;
- 	ip_pkt.shdr.session_id = inst->session_id;
- 	ip_pkt.flags = HFI_BUFFERFLAG_EOS;
--	if (inst->codec == V4L2_PIX_FMT_VP9)
--		ip_pkt.packet_buffer = 0xdeadb000;
-+	ip_pkt.packet_buffer = 0xdeadb000;
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
+
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
+
+ drivers/bus/sunxi-rsb.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 7a33c3b31d1e..82735c58be11 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -373,7 +373,6 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ unlock:
+ 	mutex_unlock(&rsb->lock);
  
- 	return iris_hfi_queue_cmd_write(inst->core, &ip_pkt, ip_pkt.shdr.hdr.size);
- }
-
+-	pm_runtime_mark_last_busy(rsb->dev);
+ 	pm_runtime_put_autosuspend(rsb->dev);
+ 
+ 	return ret;
+@@ -417,7 +416,6 @@ static int sunxi_rsb_write(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 
+ 	mutex_unlock(&rsb->lock);
+ 
+-	pm_runtime_mark_last_busy(rsb->dev);
+ 	pm_runtime_put_autosuspend(rsb->dev);
+ 
+ 	return ret;
 -- 
-2.34.1
+2.39.5
 
