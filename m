@@ -1,331 +1,238 @@
-Received: from CAN01-YQB-obe.outbound.protection.outlook.com (mail-yqbcan01on2114.outbound.protection.outlook.com [40.107.116.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32061D6193;
-	Fri,  4 Jul 2025 14:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.116.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751640294; cv=fail; b=luGpojPqS7lDQyc3MNokjULcN6sUBzNMSxigUosIAu7lWnGz13kp1VStlGl7G8i0N5/zllARN0b3qbB7xJkncZ0PuhRjfTOlqxUmsQmfSpSugwgiOThzhoV36jsM8w5tns7B2Z7wVOmQX0eMK60Qj8n6+uruEDyJ8NNLO1xcjKw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751640294; c=relaxed/simple;
-	bh=dKzjNFexT34QJSXxWyR0FSZ5ANjr8k2GZ/trLgG1FSE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Zhoek09aI4Q1MMx/1SCGShI7tqv07uD5391jh8JP3J+xd0W7sEmg8Iin6QabYBaRtZa8tyByo3ZcylttMOb6xiM5lMMdjyYV/SVLb5XWZd9Tq7cDuodz3isZGM9zWNkCMw2YqPr9V6+57k3l/IvqpCbN2uKpdk5jlJ+bnGc0g6A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ndigital.com; spf=pass smtp.mailfrom=ndigital.com; dkim=pass (2048-bit key) header.d=ndigital.com header.i=@ndigital.com header.b=jdi7JJzl; arc=fail smtp.client-ip=40.107.116.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ndigital.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndigital.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndigital.com header.i=@ndigital.com header.b="jdi7JJzl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D4ODXhv8dDS3u2y6Og36u1TCGOjlyvZALLxIJ0EsEZ0m38teKeYbxYApmOv3jjsYCvwGZR0wvokxxbaM4QJd3YOz8/0aZgbgjyEqTg4RaH6Xm5q3lPyjcLH7UQ3BEOzpvlxNMVki4uyyylbw+ae1Xo7yzbByTFmLfk3lFnZU+bKS1lk1M4AJePoyCI8hrWiUOTHjAvcefNHOI8qSR9fEmIHNCh0S3hvqAMRPjbW2OsnRaviVPp9ItXxKCydr3HHFmPb/YZOypLzaieupQbGnsIU7LXfm/BNeV1afTV0Y4pAmxFPuMtvwSASLjN7RbBMD1HG4vggRKcyelEEMuLdtPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7p70bH6Wzyai1bOKI84CZmo+1ypRPwSlYCQfUXh/ReU=;
- b=Lu0z4Pe5ZKQMFMh2O+vMDRmv81sxzzIZMjEi5N58aZa+z2cmRppz1hVuV6jcpc/K4bfOpwOf6NbeG851OsuAameTkM1LLXaf+NFKneMbu7q3cpisJ+/nN8n/rt4E0ox28oJbsGsL5fOhiJHQhEjho/XhoQkxgyPTRHKmXOQlClTnl3AnBLaqmlvBAGNU9WOaQFXkbK/pU+2Ave6qXFnlf8nW9+rNnefWd6esuxpQl2ypVq/HWy0+WNvwgQuLfxMvXG4roZJBvUDaObG9w/7SC2fPa5VmS+ESvqrLkr9LRWgA8WyOkDAxiojt3W0mzI2ky7oyxhGa3UCbgGCTycX/ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ndigital.com; dmarc=pass action=none header.from=ndigital.com;
- dkim=pass header.d=ndigital.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ndigital.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7p70bH6Wzyai1bOKI84CZmo+1ypRPwSlYCQfUXh/ReU=;
- b=jdi7JJzl+kIcoIjU7f2mH9+6j8j/qjJJACjaqAV9vxU/Yba/v3IGoBeW1aq8XFUyl4ORQzoTcZv30mlQjBEzvuqFreAvmQFMW0zZ+yMrNg0fcH7vRaQx74/ShA0A+WdltWcmWCy6rkaUM2wgI83U/aBuugdAsyqeME7cLS95KDhnsvyedUfUO+cxRThv6s5VtMBQl4NrRGS2TBXQIorche/3btfzOysJ6aRVx4w8hmiLmptSkY34ItUWJq2NQ8QMFTzs9G2NH6ldY2DSwop2VqLIZz0RwwwBSOrmFN3R+yRdp8ZK79BDLOQZ5acd7uajihQIrqsO8VcqX2DlOVa7bQ==
-Received: from YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:27::5)
- by YT1PPF884096D71.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b08::55d) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
- 2025 14:44:48 +0000
-Received: from YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::206e:a5af:7f5f:76a3]) by YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::206e:a5af:7f5f:76a3%3]) with mapi id 15.20.8901.021; Fri, 4 Jul 2025
- 14:44:47 +0000
-From: Ryan Mann <rmann@ndigital.com>
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"johan@kernel.org" <johan@kernel.org>
-CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] NDI FTDI USB driver support
-Thread-Topic: [PATCH] NDI FTDI USB driver support
-Thread-Index: AdvsUo3AZSEQGa88Q3O7CZcXksmAVAAn42cQ
-Date: Fri, 4 Jul 2025 14:44:46 +0000
-Message-ID:
- <YQXPR01MB49879486E5B552D1B0A0E5F6DF42A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
-References:
- <YQXPR01MB49870CB7B3075ADDF88A3FD4DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
-In-Reply-To:
- <YQXPR01MB49870CB7B3075ADDF88A3FD4DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ndigital.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: YQXPR01MB4987:EE_|YT1PPF884096D71:EE_
-x-ms-office365-filtering-correlation-id: a8bda0a6-213a-4a40-ac67-08ddbb095297
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|13003099007|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?siyHdGCosJkVQjIGv3CxAtlTcww2opXXSNL8sN4AJheLVsrQiGSLneyvrkVO?=
- =?us-ascii?Q?Z7kaAkWsTO7zGWQfFmWZ04BdjGU8rC+s7XqjnjRejzl2C/3Ec8dsFD0pFmm7?=
- =?us-ascii?Q?LPj9b6fFHPT5eiNE2slKJ4D2BS8D9IecijT6r6UGRCieVyD1Jgdj/Sz87VlL?=
- =?us-ascii?Q?tp4dvwLl3Ep89WQWO5zL6qboKa0ABiy5CB4Djco7fh4c4Z/EgkP+LYEdzeCF?=
- =?us-ascii?Q?w6I797o2oNFYrR0xGZaOTrwROtuT+I42sFDLdnAUIOusdm74W+bjoHEQT2Pb?=
- =?us-ascii?Q?63Zm9SqwatFmozZDCY+rG+41L5/0vw4I81YyJ5qB/CKJEIBWG68KEFkXdSp5?=
- =?us-ascii?Q?ktfEl7+7Dn6HNt9LPExjgqCkAMDAxGcbR3iVvVuasVLr1T58HHFXlHVMCds9?=
- =?us-ascii?Q?C+d9GICSxMbs2C7CqAMtfPz48mzFGVeRLQf5DnWv9kD3fpYxtjACHVZO9j2K?=
- =?us-ascii?Q?kMCCgJbL7TIcRRjLZGOKQaqGTlwlXwqRfo6EfenxGV1Co63/V9QMFp43CWp8?=
- =?us-ascii?Q?9vaJhMB4be8uDf+K+9xK0B9xfFYG2tBCcC0yaNudqMo15qeEXpTciR6Hcdtk?=
- =?us-ascii?Q?Z/OPrVucHnsHQhZK7D1E3DZS8i4y2SBwSDJ6uM/JWx3XwR0VElnLCrZuluIX?=
- =?us-ascii?Q?0TcUhr8axg3nqdOQsAQ0Ks09FQRI+qWxqupC+7gD7g+eZ77Y6AZ/IcC+lJDg?=
- =?us-ascii?Q?usZsHzAArcHLUkIhzr3bKB9Je/8lceMkMOVFY1N+3RFMI7vWRiBAbSfU5qge?=
- =?us-ascii?Q?nRH0Ic0Dj6pBV4FnaFqpSSHR2pXyI0+0Ck/n6wbAd2FrnX4dAFBkTK6kNKzX?=
- =?us-ascii?Q?g09MerZ5Rxkwa6PdXfmtLRMOWh9VWKs+qOcfQy2V+EkWRq+5DiGajWZ/LVe2?=
- =?us-ascii?Q?hyVqxu47A0sp4Z5NVRucIiwsom4FIVqlSs3uF43W3AtVmQ9Q60CriCtw7axW?=
- =?us-ascii?Q?1mjQnaWGaF62x/1v3gV7o2k+i0RqOlbwKowrkHU3DvA8qXxbtXGwL8tOmDhR?=
- =?us-ascii?Q?zL1sUonT3UkoCnuUXhuS19pce0ZBB5wUhElFb5ww7T9xnnqmDLe+TgwnwcT3?=
- =?us-ascii?Q?ERqJnblVaU0zatDFPy5klJ2g3MSk6jRWYNJGDV1r98OS3uUfdTTuKhw2y/CU?=
- =?us-ascii?Q?N0B2K7QxgI5lHjS/uDf1IuIFzBRScgyIHJ5Gzh2H3B7Wzx9prgh+k1Oa1mGu?=
- =?us-ascii?Q?YAU4oZ0X/zf4tGI4Uz37ChUV2kreWzk6JajgadjmYC5/HSkOPI+dtQf6q8a7?=
- =?us-ascii?Q?t798pHz/mk+ndI/0xxb8k86tRP2xcZtPsP3Uw1iDO5tVMSA2inIrrUx+ikZ1?=
- =?us-ascii?Q?dZu0WyoOT1OXyb+a0w8nbdt0O4+3bdICtH9/nl8YvsdaYS5dmOZa0vwY7FOR?=
- =?us-ascii?Q?deZ8IRsJVNCC4AZbrW/U1EsIJaXKggUKLWvSctnnLcpFXxn7+KmKSYl0JQsC?=
- =?us-ascii?Q?ZEfED2eptgw=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(13003099007)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?aoICRKYt+lyIRkaw2U8yQp/kww5IIske4HkeOH15ESuxVPRX4lsDwXGbvcBK?=
- =?us-ascii?Q?41SuzKAIM75/gjzmjvw1U+FDu1lpx7NeJlBwvApzutOGry2gio/aF+uCHCvQ?=
- =?us-ascii?Q?+MmhELh3UiStDotRl7FuFQxkjBykqbvR520L/txPY9DJbjLUmARfDEXGDi9U?=
- =?us-ascii?Q?3GJb7asGTvpWXgXVNFh+7IyjoW1qc2zr5CTxMnaft9WL9drTLvRciTKnq5zX?=
- =?us-ascii?Q?wJkk1g4dX10cKeWFAZ8OHSP8JjPcxjl7UsuHQ8PQc03LOpH3IS3x9toGwxAy?=
- =?us-ascii?Q?YHqfPBbtOpECIhCLa+JDQ3wgl3FLewJ5bhjeJpPWFtwpl7k29+n9N2rqCBw2?=
- =?us-ascii?Q?/yr0pKEag7yg0uXZT/tf5lAc5nmUj2TRHGcCLGA+HK0bzYonKQBLEUi7ydk6?=
- =?us-ascii?Q?ZnwX6fQpfp/muVZeXqrEJ7tYA4WSJcTtQ4IcRMrxNMwaFbrObaaeE/sFOQvy?=
- =?us-ascii?Q?1eoqvTHyp79B+CLDmlt1YkRE7cBgb8u+wQ4Aad6bpMKFl76MKJQXZn+EbNXf?=
- =?us-ascii?Q?r0UZfCLPTOFXvmWH6DbwxKJ0rxtaXfcpQnORlbD6cOwmIHQ+taoU2WHX2pX0?=
- =?us-ascii?Q?yQRxaTj0+RHXdaj5raGpZGD+LcRSVWJnMeMcCI/KeawYAvfCP0wbkVlwOO1q?=
- =?us-ascii?Q?4CDDfEvDOzPQiIQgvWIZ01a6giliW5w+i2XZaDMW45geMIvZMGsi7Fxx5+j1?=
- =?us-ascii?Q?dmEzI49SyBa24ZsdbuNy24CrVbVzVLUQBG1mSjmWGpw3J6MIXcpt6rnM8eKc?=
- =?us-ascii?Q?/ZbKTm7fv0O0ZSGoNK03mE7oW2o2+eSaJk6gBr6+hQv1rxRGF4u689zjG37V?=
- =?us-ascii?Q?bP19JjZqiobTXJ/5X26YDpWxumviA0G9JKoFlGR7Y55XKeeUr31Lt1/DLabs?=
- =?us-ascii?Q?XtPjfQd4O2rM46UMsFMw90L9aoVrXH5gL6i68GV4McojiLoT5IRbEFu2eE/+?=
- =?us-ascii?Q?Y3zXN1x1cvRUyfZloOrn2sJjSI6DO/BoCz7dVBT45NOBXZfgfRRhdW4efEs9?=
- =?us-ascii?Q?AT4DEillHsJg3Ly26FMBmCXeBoBBx53/bBFjUJBTm5JdARIJWgo9uTW1PEJ3?=
- =?us-ascii?Q?j9K9/mhyknwp2drX0W022eK/lWOcHGtNoQd44cFfFnkLzMz/SeG1q9r5MQui?=
- =?us-ascii?Q?8/eBiB4KxdA2d6iRc+nLiJA88vEDruHvlikdYSSf00PdjevcxC0mgF3BVpp6?=
- =?us-ascii?Q?xG2Zj93wv6rKTzuSAjA+/HoU34OefVwQbWTt8gqou+p/GSAuooY8XAlhe78b?=
- =?us-ascii?Q?VqIkvxQkdvzUIGLB7p4yX3EY5GiYzO77VSwALpe/5PkiAy3iXEgj5g76wVWG?=
- =?us-ascii?Q?/n8vLiybb3tOv08BAwQ0E0AKcrV5gU6r2ub62p/DKI73yF7L1nRUiRKjC7Tz?=
- =?us-ascii?Q?c67VXSgrXYMXRZsBpaE7Nk4mg1EqwI4YSrXWayGEl4V1m6RQ960/aA2oxP/L?=
- =?us-ascii?Q?tHYHYKbdqm3Gc717I9cLPC8OmNCbvCQ3TppvYr7BPkMdAvr3pag8XkCYWbv2?=
- =?us-ascii?Q?SvVTdeSmTSg4GNpJe1qkm+WTgcTTujS0DYLocoeRXJqX4HrlRIcHIU3a0kQ8?=
- =?us-ascii?Q?1kF2P5okGHHJ6QqtfGYWnrjS1J0yBazPl7F87bNE?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031C51BD9D0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751640364; cv=none; b=tiDdhWV4gK2tBjyXM9eUii2HfbSYbekp1Ov+1eC+44X+4oDdiSYeskRJrTLHqaxFaGTmOzre++vfnyCovpQG5g+7zT2b4qq7TerUJ3/dIzoB7nfOSrSwBH8KFLloawUvA8Z8uCPvA0X17i1N89tWGH+csPq8psXeBAgpWwaac9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751640364; c=relaxed/simple;
+	bh=UAA7tV4bTRaBZINXIEaUwASiT6Luujt1nWDHJBMg31g=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cLNndXEfFSUvc4U6sHKjAbB6ci58YHMr6ZAx0phAJb/eisSVAvb01WJ55BCobwFCXZkAfk+PwSPWuP8jVxdt2lmHdkI0lAlh7SAvLEmRlhAXlBLUmrcSRTnJZopyDep3anelUPOnauB9Aksrfkweex24n+Yyugrwt8ygehyOiN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd97c04f4so15563295ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:46:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751640362; x=1752245162;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDiV3CpoOxR7bXQwCKdZ0OczeX6tRWWZM8IbsaE8uIk=;
+        b=T7yMQkgFsKUWVesgLSe7Z3W6yDNO3oHBaTfRiGVDdNv+XgtPP4buuk3wsOpzBv8k58
+         zTRpaJ2dndLQLledH+1x/RNOCTL5fu+zxHIHlzRH3qVpVfxc2FZUXVnudHSm7toup0DV
+         NJu4xur7BZZT7pERUHhxAD8UAgb5qx2t+fTZqc3HGiPZzMwohLPehoVMsOGoCct3T1s0
+         UgkE8RdHV6w8qXiqAponMxCYRFkksjEKEybquE2kV8hHpa2FMFznDWJvdjafqfqgLqvv
+         vGu8oGyy0m9nfID8M2pElACP50D88ulrNZL4cw5RSXvk/E1/LWCG6r9Ygy55aoTwr+ZA
+         KuSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUOzn+aDmEWTag3gOm4asqUhAv6YQgALrRD2i020rCIWGRqAgPTbQxadrV7/caOl6GCBK2hI0gT5gyjko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1RULxYp8mb8ZLjZGA/7LuhsS5VCowFK3mWR1mPolH3hebCm+G
+	677oKBNQADbm9PoX7h1iDVn+Gsc4iSwRrs2mrGF8/GBwsP6gv3PotsLzJIWheaKDjmDUSFFSl2r
+	0rNQrgJi4cuQnnTwmW7uWkvlD5idwMIWRiQFfzY8qy5pTSqBHdM7Z30mfGeU=
+X-Google-Smtp-Source: AGHT+IGSDij3Br5ThFDf1aIo9WSJdxvu+TiKnQDNEBlFBHuZzK4MJk0X3eNC+IzgqwKgg+u5BiP8O/oWumFfA5iLllMajAVLZmvT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ndigital.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8bda0a6-213a-4a40-ac67-08ddbb095297
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2025 14:44:47.0714
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd6f7980-6d04-4a6f-86bf-8f6d0297dd2f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R/H44bz0ud8gmb8BkcxtLH0yUt6GLi/VBAedu9ZN9QxIxuqqgHyoGgMCP+caUeuI9KjFJtQu4OigmCHckotdJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PPF884096D71
+X-Received: by 2002:a05:6e02:330c:b0:3dd:d189:6511 with SMTP id
+ e9e14a558f8ab-3e13561cc81mr34276865ab.21.1751640362173; Fri, 04 Jul 2025
+ 07:46:02 -0700 (PDT)
+Date: Fri, 04 Jul 2025 07:46:02 -0700
+In-Reply-To: <20250704142954.2464-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6867e92a.a70a0220.29cf51.001e.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in force_devcd_write
+From: syzbot <syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-NDI (Northern Digital Inc.) is introducing a new product called the EMGUIDE=
- GEMINI that will use an FTDI chip for USB serial communications. The EMGUI=
-DE GEMINI will support 1.2Mbaud the same as other NDI FTDI USB serial devic=
-es, by mapping the 19200. It was noticed in making this change that the NDI=
- Aurora was included in this "quirk", but it does not support rates as high=
- as 1.2Mbaud, so it was replaced by the EMGUIDE.
-This patch adds the new VID as "FTDI_NDI_VID" in the ftdi_sio_ids.h header =
-file. It also reserves PID 0x0003 for the EMGUIDE GEMINI. Finally, it adds =
-this VID/PID combination to the USB_DEVICE list in the ftdi_sio.c.
+Hello,
 
-Signed-off-by: Ryan Mann <rmann@ndigital.com>
----
- drivers/usb/serial/ftdi_sio.c     | 4 ++--
- drivers/usb/serial/ftdi_sio_ids.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: slab-use-after-free Read in force_devcd_write
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 6ac7a0a5cf07..e5d7cce83a72 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -801,8 +801,8 @@ static const struct usb_device_id id_table_combined[] =
-=3D {
-                .driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-        { USB_DEVICE(FTDI_VID, FTDI_NDI_FUTURE_3_PID),
-                .driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
--       { USB_DEVICE(FTDI_VID, FTDI_NDI_AURORA_SCU_PID),
--               .driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+       { USB_DEVICE(NDI_VID, FTDI_NDI_EMGUIDE_GEMINI_PID),
-+         .driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-        { USB_DEVICE(TELLDUS_VID, TELLDUS_TELLSTICK_PID) },
-        { USB_DEVICE(NOVITUS_VID, NOVITUS_BONO_E_PID) },
-        { USB_DEVICE(FTDI_VID, RTSYSTEMS_USB_VX8_PID) },
-diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_si=
-o_ids.h
-index 9acb6f837327..0cb33d257973 100644
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -203,6 +203,8 @@
- #define FTDI_NDI_FUTURE_2_PID          0xDA72  /* NDI future device #2 */
- #define FTDI_NDI_FUTURE_3_PID          0xDA73  /* NDI future device #3 */
- #define FTDI_NDI_AURORA_SCU_PID                0xDA74  /* NDI Aurora SCU *=
-/
-+#define FTDI_NDI_VID                   0x23F2  /* NDI Vendor ID */
-+#define FTDI_NDI_EMGUIDE_GEMINI_PID    0x0003  /* NDI Emguide Gemini */
+==================================================================
+BUG: KASAN: slab-use-after-free in force_devcd_write+0x3ab/0x3d0 drivers/bluetooth/hci_vhci.c:357
+Read of size 8 at addr ffff88807ab4c800 by task syz.0.616/8054
 
- /*
-  * ChamSys Limited (www.chamsys.co.uk) USB wing/interface product IDs
---
-2.43.0
+CPU: 1 UID: 0 PID: 8054 Comm: syz.0.616 Not tainted 6.16.0-rc4-syzkaller-g4c06e63b9203-dirty #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xcd/0x680 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ force_devcd_write+0x3ab/0x3d0 drivers/bluetooth/hci_vhci.c:357
+ full_proxy_write+0x13c/0x200 fs/debugfs/file.c:398
+ vfs_write+0x29d/0x1150 fs/read_write.c:684
+ ksys_write+0x12a/0x250 fs/read_write.c:738
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6d5398e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6d547a1038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6d53bb5fa0 RCX: 00007f6d5398e929
+RDX: 000000000000000e RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f6d53a10b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f6d53bb5fa0 R15: 00007ffd8bc9db28
+ </TASK>
 
------Original Message-----
-From: Ryan Mann=20
-Sent: Thursday, July 3, 2025 3:52 PM
-To: gregkh@linuxfoundation.org; johan@kernel.org
-Cc: linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: [PATCH] NDI FTDI USB driver support
+Allocated by task 6589:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ vhci_open+0x4c/0x430 drivers/bluetooth/hci_vhci.c:650
+ misc_open+0x35a/0x420 drivers/char/misc.c:161
+ chrdev_open+0x231/0x6a0 fs/char_dev.c:414
+ do_dentry_open+0x744/0x1c10 fs/open.c:964
+ vfs_open+0x82/0x3f0 fs/open.c:1094
+ do_open fs/namei.c:3896 [inline]
+ path_openat+0x1de4/0x2cb0 fs/namei.c:4055
+ do_filp_open+0x20b/0x470 fs/namei.c:4082
+ do_sys_openat2+0x11b/0x1d0 fs/open.c:1437
+ do_sys_open fs/open.c:1452 [inline]
+ __do_sys_openat fs/open.c:1468 [inline]
+ __se_sys_openat fs/open.c:1463 [inline]
+ __x64_sys_openat+0x174/0x210 fs/open.c:1463
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-From: Ryan Mann <rmann@ndigital.com>
-This represents changes to the FTDI USB serial device drivers to support a =
-new NDI (Northern Digital Inc.) product called the EMGUIDE GEMINI. The EMGU=
-IDE GEMINI will support 1.2Mbaud the same as other NDI FTDI virtual COM por=
-t devices. It was noticed in making this change that the NDI Aurora was inc=
-luded in this "quirk", but it does not support rates as high as 1.2Mbaud, s=
-o it was replaced by the EMGUIDE.
-Previous FTDI devices produced by NDI all used the FTDI VID (0x0403) and a =
-very limited set of PIDs that Future Technology Devices allowed NDI to use =
-(0xda70 to 0xda74). Since then, NDI has reserved its own VID (0x23f2), and =
-used two of the PIDs for two experimental, non-production products that did=
-n't use the FTDI chip for USB connection.
-This patch adds the new VID as "FTDI_NDI_VID" in the ftdi_sio_ids.h header =
-file. It also reserves PID 0x0003 for the EMGUIDE GEMINI, as well as stubbi=
-ng out PIDs 0x0004 through 0x0009 for "future" NDI devices. In the unlikely=
- event that the NDI hardware team chooses to implement the USB functionalit=
-y using something other than FTDI chips, those "future device" lines may ne=
-ed to get removed.
-As the EMGUIDE GEMINI product development has not been completed and the st=
-ep to write over the default VID and PID has not been completed, these code=
- changes have not been tested with an EMGUIDE GEMINI. However, the code cha=
-nges were compiled successfully using Ubuntu 24.04 locally and tested as a =
-module using an NDI Aurora system.
+Freed by task 6589:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2381 [inline]
+ slab_free mm/slub.c:4643 [inline]
+ kfree+0x2b4/0x4d0 mm/slub.c:4842
+ vhci_release+0xcd/0x110 drivers/bluetooth/hci_vhci.c:688
+ __fput+0x402/0xb70 fs/file_table.c:465
+ task_work_run+0x14d/0x240 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x86c/0x2bd0 kernel/exit.c:964
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1105
+ get_signal+0x2673/0x26d0 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x8f/0x790 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop+0x84/0x110 kernel/entry/common.c:111
+ exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+ syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+ do_syscall_64+0x3f6/0x490 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-By making a contribution to this project, I certify that:
+The buggy address belongs to the object at ffff88807ab4c800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 0 bytes inside of
+ freed 1024-byte region [ffff88807ab4c800, ffff88807ab4cc00)
 
-        (a) The contribution was created in whole or in part by me and I
-            have the right to submit it under the open source license
-            indicated in the file; or
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7ab48
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801b841dc0 0000000000000000 0000000000000001
+raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff88801b841dc0 0000000000000000 0000000000000001
+head: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
+head: 00fff00000000003 ffffea0001ead201 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0x52820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 2954, tgid 2954 (kworker/u8:8), ts 94650347230, free_ts 94499980362
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1c0/0x230 mm/page_alloc.c:1704
+ prep_new_page mm/page_alloc.c:1712 [inline]
+ get_page_from_freelist+0x1321/0x3890 mm/page_alloc.c:3669
+ __alloc_frozen_pages_noprof+0x261/0x23f0 mm/page_alloc.c:4959
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2451 [inline]
+ allocate_slab mm/slub.c:2619 [inline]
+ new_slab+0x23b/0x330 mm/slub.c:2673
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3859
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3949
+ __slab_alloc_node mm/slub.c:4024 [inline]
+ slab_alloc_node mm/slub.c:4185 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_noprof+0x2f2/0x510 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ ieee802_11_parse_elems_full+0x1d7/0x3780 net/mac80211/parse.c:1013
+ ieee802_11_parse_elems_crc net/mac80211/ieee80211_i.h:2414 [inline]
+ ieee802_11_parse_elems net/mac80211/ieee80211_i.h:2421 [inline]
+ ieee80211_inform_bss+0x10b/0x1140 net/mac80211/scan.c:79
+ rdev_inform_bss net/wireless/rdev-ops.h:418 [inline]
+ cfg80211_inform_single_bss_data+0x8ea/0x1df0 net/wireless/scan.c:2367
+ cfg80211_inform_bss_data+0x224/0x3bc0 net/wireless/scan.c:3222
+ cfg80211_inform_bss_frame_data+0x26f/0x750 net/wireless/scan.c:3313
+ ieee80211_bss_info_update+0x310/0xab0 net/mac80211/scan.c:226
+ ieee80211_rx_bss_info net/mac80211/ibss.c:1094 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1573 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x1905/0x2fd0 net/mac80211/ibss.c:1600
+ ieee80211_iface_process_skb net/mac80211/iface.c:1668 [inline]
+ ieee80211_iface_work+0xbf4/0x1020 net/mac80211/iface.c:1722
+page last free pid 2938 tgid 2938 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1248 [inline]
+ __free_frozen_pages+0x7fe/0x1180 mm/page_alloc.c:2706
+ discard_slab mm/slub.c:2717 [inline]
+ __put_partials+0x16d/0x1c0 mm/slub.c:3186
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x4d/0x120 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x195/0x1e0 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4148 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_node_noprof+0x1d5/0x3b0 mm/slub.c:4249
+ __alloc_skb+0x2b2/0x380 net/core/skbuff.c:660
+ alloc_skb include/linux/skbuff.h:1336 [inline]
+ nlmsg_new include/net/netlink.h:1041 [inline]
+ br_vlan_notify+0x15b/0x8c0 net/bridge/br_vlan.c:1933
+ br_vlan_bridge_event+0x343/0x5c0 net/bridge/br_vlan.c:1772
+ br_device_event+0x3d8/0xa00 net/bridge/br.c:40
+ notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+ call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+ call_netdevice_notifiers net/core/dev.c:2282 [inline]
+ unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+ ops_exit_rtnl_list net/core/net_namespace.c:188 [inline]
+ ops_undo_list+0x8fc/0xab0 net/core/net_namespace.c:249
+ cleanup_net+0x408/0x890 net/core/net_namespace.c:686
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
 
-        (b) The contribution is based upon previous work that, to the best
-            of my knowledge, is covered under an appropriate open source
-            license and I have the right under that license to submit that
-            work with modifications, whether created in whole or in part
-            by me, under the same open source license (unless I am
-            permitted to submit under a different license), as indicated
-            in the file; or
+Memory state around the buggy address:
+ ffff88807ab4c700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88807ab4c780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88807ab4c800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff88807ab4c880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88807ab4c900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-        (c) The contribution was provided directly to me by some other
-            person who certified (a), (b) or (c) and I have not modified
-            it.
 
-        (d) I understand and agree that this project and the contribution
-            are public and that a record of the contribution (including all
-            personal information I submit with it, including my sign-off) i=
-s
-            maintained indefinitely and may be redistributed consistent wit=
-h
-            this project or the open source license(s) involved.
+Tested on:
 
-Signed-off-by: Ryan Mann <rmann@ndigital.com>
----
- drivers/usb/serial/ftdi_sio.c     | 16 +++++++++++++++-
- drivers/usb/serial/ftdi_sio_ids.h | 16 ++++++++++++++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
+commit:         4c06e63b Merge tag 'for-6.16-rc4-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15708f70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
+dashboard link: https://syzkaller.appspot.com/bug?extid=bc71245e56f06e3127b7
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=119473d4580000
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c =
-index 6ac7a0a5cf07..a41a9ed7e946 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -803,6 +803,20 @@ static const struct usb_device_id id_table_combined[] =
-=3D {
- 		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
- 	{ USB_DEVICE(FTDI_VID, FTDI_NDI_AURORA_SCU_PID),
- 		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_EMGUIDE_GEMINI_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_4_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_5_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_6_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_7_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_8_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
-+	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_9_PID),
-+		.driver_info =3D (kernel_ulong_t)&ftdi_NDI_device_quirk },
- 	{ USB_DEVICE(TELLDUS_VID, TELLDUS_TELLSTICK_PID) },
- 	{ USB_DEVICE(NOVITUS_VID, NOVITUS_BONO_E_PID) },
- 	{ USB_DEVICE(FTDI_VID, RTSYSTEMS_USB_VX8_PID) }, @@ -1333,7 +1347,7 @@ st=
-atic u32 get_ftdi_divisor(struct tty_struct *tty,
- 			     (product_id =3D=3D FTDI_NDI_SPECTRA_SCU_PID)	||
- 			     (product_id =3D=3D FTDI_NDI_FUTURE_2_PID)	||
- 			     (product_id =3D=3D FTDI_NDI_FUTURE_3_PID)	||
--			     (product_id =3D=3D FTDI_NDI_AURORA_SCU_PID))	&&
-+			     (product_id =3D=3D FTDI_NDI_EMGUIDE_GEMINI_PID)) &&
- 			    (baud =3D=3D 19200)) {
- 				baud =3D 1200000;
- 			}
-diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_si=
-o_ids.h
-index 9acb6f837327..6e162a73f64c 100644
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -197,13 +197,29 @@
-=20
- /*
-  * NDI (www.ndigital.com) product ids
-+ * Almost all of these devices use FTDI's VID (0x0403).
-+ * Newer devices use NDI Vendor ID
-  */
-+/* Using DA70 to DA74 block of FTDI VID (0x0403 ) */
- #define FTDI_NDI_HUC_PID		0xDA70	/* NDI Host USB Converter */
- #define FTDI_NDI_SPECTRA_SCU_PID	0xDA71	/* NDI Spectra SCU */
- #define FTDI_NDI_FUTURE_2_PID		0xDA72	/* NDI future device #2 */
- #define FTDI_NDI_FUTURE_3_PID		0xDA73	/* NDI future device #3 */
- #define FTDI_NDI_AURORA_SCU_PID		0xDA74	/* NDI Aurora SCU */
-=20
-+#define FTDI_NDI_VID 0x23F2 /* NDI Vendor ID */
-+/*
-+ * VID 0x23F2 PIDs 0x0001 and 0x0002 were used for products that do not=20
-+use FTDI
-+ * The following NDI devices use NDI VID  */
-+#define FTDI_NDI_EMGUIDE_GEMINI_PID	0x0003  /* NDI Emguide Gemini */
-+#define FTDI_NDI_FUTURE_4_PID		0x0004 /* NDI future device #4 */
-+#define FTDI_NDI_FUTURE_5_PID		0x0005 /* NDI future device #5 */
-+#define FTDI_NDI_FUTURE_6_PID		0x0006 /* NDI future device #6 */
-+#define FTDI_NDI_FUTURE_7_PID		0x0007 /* NDI future device #7 */
-+#define FTDI_NDI_FUTURE_8_PID		0x0008 /* NDI future device #8 */
-+#define FTDI_NDI_FUTURE_9_PID		0x0009 /* NDI future device #9 */
-+
- /*
-  * ChamSys Limited (www.chamsys.co.uk) USB wing/interface product IDs
-  */
---=20
