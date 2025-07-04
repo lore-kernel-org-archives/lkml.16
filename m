@@ -1,97 +1,97 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2E22DE710
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9B133E1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751599826; cv=none; b=ADcY+UnHQhxXvyBSdjDIHcGDeTFAzcwhZy9YPUIhLSu/X/VP/BKvegTc5dPVc9t/BaxZnUKRGLXC0B4t+PSWinc/Ocflg0np5Dum8970vG/AsIsruzuNe3mX39zBQ7nyyed6+/GdTvRRTVkg1igbyEgCV7XprErAWWpclVp9zpg=
+	t=1751600375; cv=none; b=ls2nRgpJiiKTn9meS/Ox/1xDJJKam+Xl4lqaU3FWnyvba9jJXUdrq6xcHYJw8Dqsvc3dOd72oC7YK65G6O3edaHYUHXYut2OSOwh4egxlPNulBX//i4eKI6Mr/Bz+uPsdqpkhp61qdD/0lYQdZk+/vVmbEArM0U4jQRs8bguC3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751599826; c=relaxed/simple;
-	bh=E/cu5hc6fvoB3H2h8mHPslJpGH+A+7L3GT/Zsv4qgoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LW1Hs+lDCm5iEEjWL+2Agr0Onvik1naAQQp1sxiSoFIJ/DnIn3J4CApd/Dn6jUezLWPvxqLlE6iZ6Su/iVZetkdF8uwFmO7RVg7wKr5WEUJ/bM8ewWt2RbKOWaIFvf3q73HfNJPqXwDKyrmEjDtu4HLtuYj+dibo/3vQw4Vh45E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 33d6e296588711f0b29709d653e92f7d-20250704
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:7333f72d-cfa2-40be-95fa-6b5dc0a96f72,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-30
-X-CID-META: VersionHash:6493067,CLOUDID:79c5d3fe3c20506a7d79babaa6678826,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 33d6e296588711f0b29709d653e92f7d-20250704
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <jiangyunshui@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1110516493; Fri, 04 Jul 2025 11:30:16 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 00484E0091AB;
-	Fri,  4 Jul 2025 11:30:15 +0800 (CST)
-X-ns-mid: postfix-68674AC7-8599861065
-Received: from kylin-pc.. (unknown [172.25.130.133])
-	by mail.kylinos.cn (NSMail) with ESMTPA id DA066E0091A7;
-	Fri,  4 Jul 2025 11:30:14 +0800 (CST)
-From: Yunshui Jiang <jiangyunshui@kylinos.cn>
-To: linux-kernel@vger.kernel.org
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	Yunshui Jiang <jiangyunshui@kylinos.cn>
-Subject: [PATCH v2] drm/amdgpu: use kmalloc_array() instead of kmalloc()
-Date: Fri,  4 Jul 2025 11:30:11 +0800
-Message-ID: <20250704033011.2875239-1-jiangyunshui@kylinos.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1751600375; c=relaxed/simple;
+	bh=FDt34RbEYo0vqpY00U9ijTPtHhHk6iMis9c9F4GmtsA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dyePeA7M5gdf6vlqdUuK54WE7zcCKKCqpMkY24Bv8YkOXkeWj1NmuUyI+/euIFeM0SUw6uFoDWQ0mQ0qCRF9CevlMCP7oJ62EikX5o7nSmjQP1xVPGIX3V5TMUVXVVYC6XpO03PblniUgUnZteauzCaBDNonAhFplCxsB4D1tH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OLuVguGL; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OLuVguGL"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70f94fe1e40so18991967b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 20:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751600372; x=1752205172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FDt34RbEYo0vqpY00U9ijTPtHhHk6iMis9c9F4GmtsA=;
+        b=OLuVguGLapU1DVOBXQr9TBFMHhyCcKPUQgw3gVNYXZZwmf1ze0ywI4wVFzzcEKA/5G
+         M+nNeJbTY2CaeiFKXBTiGvtf2XdTOmx/FWz5zZZiTZeHt5TFiceJiVebT8HCilKamrJ6
+         Oec30N+6wTY9iZucF63UK1VorYhFPa2ytYzp8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751600372; x=1752205172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FDt34RbEYo0vqpY00U9ijTPtHhHk6iMis9c9F4GmtsA=;
+        b=gFAaAKLseO0uoqRSi9+Akv08iyh36eGz2D+83YMDkOxeyy3KUlYSJ4Aaw+7EJjgFvS
+         rt+X1WCiYBOSV+7d/JaOjcBEP8TMDbEBHljoWzPHuBBnvSRfrBjjkbMP7aNJnECqm4ph
+         wwqSAcxXvHwhjcqP0R5hjDcfvrKDe5BJgC43DDjOiB/QfID67H6f+7L989aiM9KrNjEL
+         51SiDUIVnaTRn7PHE/QtLWzD/+QbL4yzOncAVbKqg7hNSodjMK+GAIEMAwCFnoCrs0Hs
+         OxKz/oQzjkr49HyyiOsOtBMuCAG2VQfISLUvO9Ix1WHuGiZanj1N55JLvLnky/sbh04C
+         J8Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCKPBQkC8NIjKvZ7OlHpyGO3ELTjRoDYPxVLBDW/XohkTdABwKsGCW2syHX533SOVm5AmLffRsAE+2uis=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp1wTnQcBCcUVK7BtiWeemx8c7LKAK5MiEoHdJ0ImJziuRxc73
+	Tj8ltwDwyzYZyPO6cmnEMqWg6dSn/WyxJxlP0eOaGBPskdwusBA6ScGJEzZtzctcIec+S2AX4bD
+	XsBmaHdzzqcoznXoDI3nng38IkUX7nkxru3HlXDkH
+X-Gm-Gg: ASbGncsKITyjblXxgxspKa7b1RTjVihizI/n/qlEqIY92EzfPkFM5h8LpBPTGK+ylr2
+	ETp18+KqEnoHnqj29BIxRN+ZqM0sCsgIrf6EJvVr1Ts/zoWqjWRorl7CSKInm9YURI/QqqGK1mo
+	9wxV8h/RUCqfpEJBtd2ELccYiGeuKL43fD8CQT+0E5BJXZ
+X-Google-Smtp-Source: AGHT+IEpv4/ABsyEPWBaSbnhDaxcTMMoASH0qOMAb1EUBzfvoB9Rs9KL0TsrqeATirMWAbb6GqIiVFu78+U/gU30DoM=
+X-Received: by 2002:a05:690c:46c5:b0:712:cc11:aff with SMTP id
+ 00721157ae682-716672d3d02mr24980587b3.11.1751600372350; Thu, 03 Jul 2025
+ 20:39:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250703183523.2075276-1-robh@kernel.org> <aGdAmGGPDA71rDE3@google.com>
+In-Reply-To: <aGdAmGGPDA71rDE3@google.com>
+From: Cheng-yi Chiang <cychiang@chromium.org>
+Date: Fri, 4 Jul 2025 11:39:05 +0800
+X-Gm-Features: Ac12FXx1clDJs40GrPtAnmhl7h9XO9sxxgXTs_ThD6wPGcXtPD9F4XTO-6ZiN-s
+Message-ID: <CAFv8NwJcwD0wqJAoe99M+dQYA383n0g9U+5+Z77uuQ2d=Ac5pA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: Use of_reserved_mem_region_to_resource() for "memory-region"
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Benson Leung <bleung@chromium.org>, 
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+	Bard Liao <yung-chuan.liao@linux.intel.com>, 
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, chrome-platform@lists.linux.dev, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	sound-open-firmware@alsa-project.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Use kmalloc_array() instead of kmalloc() with multiplication.
-kmalloc_array() is a safer way because of its multiply overflow check.
+On Fri, Jul 4, 2025 at 10:46=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org> =
+wrote:
+>
+> On Thu, Jul 03, 2025 at 01:35:21PM -0500, Rob Herring (Arm) wrote:
+> > Use the newly added of_reserved_mem_region_to_resource() function to
+> > handle "memory-region" properties.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>
+> Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
-Signed-off-by: Yunshui Jiang <jiangyunshui@kylinos.cn>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for the patch!
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/am=
-d/amdgpu/amdgpu_ras.c
-index de0944947eaf..12f5a1b9ff8b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -2563,7 +2563,7 @@ static int amdgpu_ras_badpages_read(struct amdgpu_d=
-evice *adev,
- 		goto out;
- 	}
-=20
--	*bps =3D kmalloc(sizeof(struct ras_badpage) * data->count, GFP_KERNEL);
-+	*bps =3D kmalloc_array(data->count, sizeof(struct ras_badpage), GFP_KER=
-NEL);
- 	if (!*bps) {
- 		ret =3D -ENOMEM;
- 		goto out;
-@@ -2719,7 +2719,7 @@ static int amdgpu_ras_realloc_eh_data_space(struct =
-amdgpu_device *adev,
- 	unsigned int old_space =3D data->count + data->space_left;
- 	unsigned int new_space =3D old_space + pages;
- 	unsigned int align_space =3D ALIGN(new_space, 512);
--	void *bps =3D kmalloc(align_space * sizeof(*data->bps), GFP_KERNEL);
-+	void *bps =3D kmalloc_array(align_space, sizeof(*data->bps), GFP_KERNEL=
-);
-=20
- 	if (!bps) {
- 		return -ENOMEM;
---=20
-2.47.1
-
+Reviewed-by: Cheng-Yi Chiang <cychiang@chromium.org>
