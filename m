@@ -1,95 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D45C18A6A7;
-	Fri,  4 Jul 2025 15:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B221189F3B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642118; cv=none; b=pDvqSA+92SdpjDESlG5ctfNwbfznaj9Lfs89vVbKEBZAanzX6Mn+1RGPxCeMxMmEEqQf04u2zBrhEVTU5i32jTSY8vqVcPa5bfmyA4kKZtSP47GWc5n2LtRFHYUSEZpT3S8Z7I34yVXMFgLZ/1iAjsUsuZkoXpEzziSq5e/IvnU=
+	t=1751642166; cv=none; b=L65hoWKuRnMPalA6U/zKNZGIaxd7g7VJtQPaHhIaherzJvjz1AUp14orIgdLDk6aL9U4GN25Cn2sqSVk9CZcdXuLEIFn/2XF48sVMf55umPkF5WqBUQ1++q/JrY27acCtuTDpmGgyxhC+3u66VfivbNwwCobmfKl0IU9tsOR6kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642118; c=relaxed/simple;
-	bh=M29PB0qokE4bmLeeZQ5HIARhdbWunEgM+7tuL3dyYvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L59eoJD0S8RLcmWo9XnUIW7P8y22T9N8X1sgyzVysERNVWwQ8GKNPr92nFm8Aci1VYC5UzJz/94aMI5fWf5tATYu40LX3YI0wEBBXgrBJTLv3QsliAlcvxyslkODefbLVakA3CbBtNhEe0urrsGfB4AG/cW5zd50NEypcjRz12c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGM4eavL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGM4eavL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA93DC4CEE3;
-	Fri,  4 Jul 2025 15:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751642116;
-	bh=M29PB0qokE4bmLeeZQ5HIARhdbWunEgM+7tuL3dyYvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RGM4eavLoDlvJygoBJF2xosQ7RRXB5xI6BnG0LMsvRPSiEaAePSLrGyXDg3nc+YRT
-	 PQ614E/W1N3llo8GpQwtQ+9qQU5+nvL2rCS86DQ5mOjb7gi4+bSyol29RNyWFpVOM+
-	 NH8bbekU6eo50PSyK1LefqqTdQ+AyBr9ysSK8sOOr9LzHUhII91D08mFSc9vMGYi7h
-	 rlXJGa4EwDGy1UmnJ6k4IIzv0xp/QZiKOFFAZxFN46Pt0lEFwouRsv7/3mzYt5rQ6f
-	 bUXYuGwcExH0MjVajMmhEKVu/BQDldzqMb96llhmPVsJbCwuvot2g3Ce7W5BCi/4mX
-	 fdzcSm9IcxW4A==
-Date: Fri, 4 Jul 2025 16:15:11 +0100
-From: Simon Horman <horms@kernel.org>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Tomasz Duszynski <tduszynski@marvell.com>
-Subject: Re: [net] Octeontx2-vf: Fix max packet length errors
-Message-ID: <20250704151511.GE41770@horms.kernel.org>
-References: <20250702110518.631532-1-hkelam@marvell.com>
+	s=arc-20240116; t=1751642166; c=relaxed/simple;
+	bh=EAsnUN73ruLYHRIaF8c+gbWNnSdE6fXyfBnKlJRLL6U=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZYNtPx8PoheweHUQPNuAmg761V3r/xMpXvLuE9wpA0YAbV0cexJUffv4N+cmsdckKOuT3qDJJeIXSSMC2vVoyY6jh1pGMVOXEQSiJT4nE0zvG3SB6IOWndcMZ8ri5n5OnA325DNwoQjLtuS6wu5shX+m/tifN8TWIcGX4Y3pU3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-87632a0275dso94202439f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:16:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751642164; x=1752246964;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yu6HMyDKADnRPwMdTNfPbyIzaSkTzS13hufmtK1G5yY=;
+        b=QvSVfqKRsJZMbO/gRs+9rl6NWNbX/E20rb3EP4yo2W79CQnSkkCYZavll5KBZryIZa
+         ZrBw4KVs5AeH1xqAb1Xdgcm4VcCcbg58Moe9YXUSuHhBWU0IjLuuft8gVx/MA2UpaNCO
+         ZJv1GTh6TND2zCjrLTrEGD12/lADGW1FMKhGf/cPy1ya5/hFxBdZUgjgE2VJqB5b9D5o
+         ncv7L0h1ZaHszUl4dkYR53NjbyO37qVWI4ymYEvCQZNj8LicBYVI1WG+gvQZK2FxPlCE
+         0BGorSYF6z+1dhYxXWoT/rhSKI5L3tdvKoPByXhqK+x0vlMsj96sVX/1UVxqKPqBJJQB
+         eBOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXzeEkzh6LO6AJqpuukajJNnq0DYM1ZxZaApEDrSgMpYngMVdMbAVTGiBhAJK+3GpTa4pvjQ+9GFnMWAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+kGgt7Sf6513vZnfd68ZvC0NE+n4zSIn2uQikaMgYI2zkV+dT
+	nAL/WbHPr+cNS5tPrSmJuQ3IMH01oLbXlG4cHtQoFqAiKKCyjsVX5fkBQzS4h1Vz9X119vDRTt0
+	hMgimNzcF8Nrph8oCPh1YRmP2VP6zSzZQ8enEgtaqpsoZFu5Mkf3bIxYD954=
+X-Google-Smtp-Source: AGHT+IHPzPgdmzv5nhRYyWrZOIqyFmIpRhrpgi9qVHdqGvg1cDqEnTWL3AymTvClyIrNwtFSjlrAYGX6G5SoQauhCxm3WDPROHGU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702110518.631532-1-hkelam@marvell.com>
+X-Received: by 2002:a05:6e02:2182:b0:3df:29c8:4a0f with SMTP id
+ e9e14a558f8ab-3e1355eae1cmr24422395ab.21.1751642164373; Fri, 04 Jul 2025
+ 08:16:04 -0700 (PDT)
+Date: Fri, 04 Jul 2025 08:16:04 -0700
+In-Reply-To: <20250704145211.2487-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6867f034.a70a0220.29cf51.0020.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in force_devcd_write
+From: syzbot <syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 02, 2025 at 04:35:18PM +0530, Hariprasad Kelam wrote:
-> Implement packet length validation before submitting packets to
-> the hardware to prevent MAXLEN_ERR.
-> 
-> Fixes: 3184fb5ba96e ("octeontx2-vf: Virtual function driver support")
-> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-> ---
->  drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-> index 8a8b598bd389..766237cd86c3 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-> @@ -394,6 +394,13 @@ static netdev_tx_t otx2vf_xmit(struct sk_buff *skb, struct net_device *netdev)
->  	struct otx2_snd_queue *sq;
->  	struct netdev_queue *txq;
->  
-> +	/* Check for minimum and maximum packet length */
-> +	if (skb->len <= ETH_HLEN ||
-> +	    (!skb_shinfo(skb)->gso_size && skb->len > vf->tx_max_pktlen)) {
-> +		dev_kfree_skb(skb);
-> +		return NETDEV_TX_OK;
-> +	}
+Hello,
 
-Hi Hariprasad,
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-I see the same check in otx2_xmit().
-But I wonder if in that case and this one the rx drop counter for the
-netdev should be incremented.
+Reported-by: syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com
+Tested-by: syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com
 
-Also, do you need this check in rvu_rep_xmit() too?
+Tested on:
 
-> +
->  	sq = &vf->qset.sq[qidx];
->  	txq = netdev_get_tx_queue(netdev, qidx);
->  
-> -- 
-> 2.34.1
-> 
-> 
+commit:         4c06e63b Merge tag 'for-6.16-rc4-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13cf4c8c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
+dashboard link: https://syzkaller.appspot.com/bug?extid=bc71245e56f06e3127b7
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16888f70580000
+
+Note: testing is done by a robot and is best-effort only.
