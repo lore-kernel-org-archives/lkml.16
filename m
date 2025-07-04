@@ -1,175 +1,89 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AF02E36F6;
-	Fri,  4 Jul 2025 21:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972102E36F6;
+	Fri,  4 Jul 2025 21:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751663600; cv=none; b=BL+b8DMj4A2+clVDSXpDaakutrtySU5d69wkDDBjYydY/SOiU6MtemgF09u/MpOP8G2Z0bUXkL3HX0dubU+rTzOCe+lvTvt15xI6hyykMdEf6v36/IUSye02ZS9nSNE45XPLq918xwdLxU5bUIFWsRMvY+NZUeO22K0s2qaYTf0=
+	t=1751663664; cv=none; b=N5WoI8mH3spVrZtSkPrqrtm4iX0QUidXW/13OHWIQriDXDOy8Jco16iwKJvzBtLeIosyAhC0iJCYsn8HB3WudNYnWSIerfiZjJqsYP2h12g/YqZOIo1VXRPtLVZK9t6tbJmEGTc1pPECc16IUKJKtjx3fg640DgTeCW10ZIRc6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751663600; c=relaxed/simple;
-	bh=zT57kjzSuc2YjOZ/13Q1WCxljHbZ3simyydCTfUXuoc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S+vh8oj/AK0cIyVabkCcxdbBkU3HQrAinwCOg+Zqe3iUoegbGHcbwyxd9O/T+iexpRd9SBeHAbnwvp2B9pV5RVlcOs3zpKfnlaP/4Pzv3d9lQiAEHxJNCnBLrZeD0RxQIba1QBN2fB1SDJxLjwmsJhW+P/BjLdXVtz/A/rg9cg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B74npjwp; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751663664; c=relaxed/simple;
+	bh=4ZXjjIEFeyNziz8nI9hyycb93PeMN+TlTyQFX8ZUBy8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VGRgpLe6Ps+ifPRfesxz/MDIiCcq1cgsZG392FpvJoV8QzVLDdmzXqUDcfmmrDmTtLLfnbuUlTABgyyc8iJyk+rB7Brkbz3dn5Mn6CSSFdMUa9K6mBsnzM5uJa31c2VvNmEuKXQTTyQhlvkuxkt7qeaIvd2lyJXzmz6tmn5DxUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=P+mguad3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B74npjwp"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23602481460so13414675ad.0;
-        Fri, 04 Jul 2025 14:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751663598; x=1752268398; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Eged04V15WcYZIT4EIvtaTKSNXjWorwpdzN3lCt28So=;
-        b=B74npjwpMTeRc93hhau2GFuy0QnJ/qnVTXmb76GSAJFEI73faxjiWZhS52RY7YFrm+
-         CW3oDdpSDrKCP65wHiPNENizb1Ajin78F5c5ZeFzQZpWCz5VirL6vBNw5seUf4tp4nJF
-         MhSlYKi4eYB+FgCqhsBLQcyY1j68ME0Ap2LBZf1LvPChDM1c/2vXuvFLHx5ZzW+Ai2i8
-         DrFxFM96R/L+ys8JRUlo9U340/M3REFrX+F+j4Y4GBjKmFR95HZYkGHCF+ytheKBpHGF
-         Yyy2eu/1CMKsniSzmUYrAYSjivorh90ZkO7zFISEaLyIhW7B2wFaVQdzWhriXziDkL2b
-         XUxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751663598; x=1752268398;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Eged04V15WcYZIT4EIvtaTKSNXjWorwpdzN3lCt28So=;
-        b=F3IYILu77xgpxTPvInZGn13+HYGhUKyd8mYlLjGH+baE1assqzsfqabB5BIcaS4H7B
-         Z79TbxYkfBfL1GWbLepMUN5GsXxoeqKUW4aoUDvYcWqJ98ndaqjyFj2Hxlk8Lg2fNzkB
-         z/6JXB9cnFBk+XubAf1eW9LK+qxbDtoL7CCDE5Pn6aKnldeBCkOS7BZidxSIgDcCzvCS
-         NNi5FHA67ZM9PAwx9IVZm3WgLzBCwpa9NG83NayCOzgoSALFUI2zcrnr8erIqauGO7dd
-         Zocp1zuIyf3Wicd0jK70VfYBmJnQoGlVuMhPu0DMTv9AUVvP+XH1TZsJjVhs3o26s0c9
-         Wunw==
-X-Forwarded-Encrypted: i=1; AJvYcCVn8BymwuOVT1eSjaroG+ghY6Nt4KypbY0NMSfVA5nsCuHMZWEDmjQ3lS3meChholTcRsxLuNyIfIPTQe+R@vger.kernel.org, AJvYcCWSRQyWWtfV2mEtW3awOQjBVgzg6j4aXrR7Jhjh0NVLmkogVt54OyMeeukzCJvPMz3qv6AJewp4@vger.kernel.org, AJvYcCXnDLDbc7zs8wuG30HA1RkHGjPQkcQxnIy/WdvAlXgV6ib4CJmJ2DwJn8bMNwaqCp6g8/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5aUAfRxjmEVs3Z1/r28TsSJRne3zHWX4dSg6/nDQLxe54Zvjb
-	ZfsX9bICZz6wQCVAMR//RkhQ2pOi3jGPCEKxcnoYK4vptRsCkSdfBXuH
-X-Gm-Gg: ASbGncs4T30CjzP5DJWCLt0bYSekiylHZW3+6mK7zFLgH13IzM4jAFI21zCUJhCj7/d
-	7cfVdNVpOAdl2Hi99P6eV87BFW3eudno2CU6gbMsqDUx2voHJ4grv32/c1K8k3RmApjWFkPL2Pp
-	JYvpBiF6hfvNYVwqJNhBQRAH5YaaeEThe4Pn0TImZKNgosab/0t6kBpD1rem7WNDXsG0klAHZzT
-	EcBcin44kCdn8wVp2o2f4pFbEQwjQOCAWGFbPFWYKoksCdXhuZZEVphMR9nIn8kGUDU1wnd+8N0
-	E4nNh5Qhqw9YBWOFhh02DXds9AlsmVTeW890Muq44B0OvHK4XREf75e/uzWJAJkY3cuP
-X-Google-Smtp-Source: AGHT+IFjFDPJlayCrRfWc9DvJXqh3dkzjLFvxTRqPgCdZj4Esjh95caHOKAZO16V6xVZyk1IxO0I0g==
-X-Received: by 2002:a17:903:984:b0:234:9497:69e3 with SMTP id d9443c01a7336-23c9105c63amr1095985ad.25.1751663598333;
-        Fri, 04 Jul 2025 14:13:18 -0700 (PDT)
-Received: from [192.168.0.56] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457b2cesm26689035ad.157.2025.07.04.14.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 14:13:17 -0700 (PDT)
-Message-ID: <e43c25b451395edff0886201ad3358acd9670eda.camel@gmail.com>
-Subject: Re: [syzbot] [bpf?] WARNING in reg_bounds_sanity_check
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Paul Chaignon <paul.chaignon@gmail.com>
-Cc: syzbot <syzbot+c711ce17dd78e5d4fdcf@syzkaller.appspotmail.com>, 
-	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net, 	haoluo@google.com, john.fastabend@gmail.com,
- jolsa@kernel.org, kpsingh@kernel.org, 	linux-kernel@vger.kernel.org,
- martin.lau@linux.dev, netdev@vger.kernel.org, 	sdf@fomichev.me,
- song@kernel.org, syzkaller-bugs@googlegroups.com, 	yonghong.song@linux.dev
-Date: Fri, 04 Jul 2025 14:13:15 -0700
-In-Reply-To: <df2cdc5f4fa16a4e3e08e6a997af3722f3673d38.camel@gmail.com>
-References: <68649190.a70a0220.3b7e22.20e8.GAE@google.com>
-		 <aGa3iOI1IgGuPDYV@Tunnel>
-		 <865f2345eaa61afbd26d9de0917e3b1d887c647d.camel@gmail.com>
-		 <aGgL_g3wA2w3yRrG@mail.gmail.com>
-	 <df2cdc5f4fa16a4e3e08e6a997af3722f3673d38.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="P+mguad3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8B8C4CEE3;
+	Fri,  4 Jul 2025 21:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751663664;
+	bh=4ZXjjIEFeyNziz8nI9hyycb93PeMN+TlTyQFX8ZUBy8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P+mguad3o1QgfcWmYUtbI6/FsgHbbB1PA5+bCjq2nLDTkFt6v2jx4aZiXAWx0pGHX
+	 GYiIki4MzU5sYOZthXKw5Qdw3sFPMG9PgFKOFzykAvnsiUDIk7rb95YkqaazLj6zw4
+	 3dbkLeWZtRfOmQ8v6ZKZpz4JUS1oNnQLE+gi45Rw=
+Date: Fri, 4 Jul 2025 14:14:22 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, david@redhat.com, ziy@nvidia.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, baohua@kernel.org, willy@infradead.org,
+ peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+Subject: Re: [PATCH v8 11/15] khugepaged: allow madvise_collapse to check
+ all anonymous mTHP orders
+Message-Id: <20250704141422.359c89146ad69512b9be4902@linux-foundation.org>
+In-Reply-To: <2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
+References: <20250702055742.102808-1-npache@redhat.com>
+	<20250702055742.102808-12-npache@redhat.com>
+	<2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2025-07-04 at 10:26 -0700, Eduard Zingerman wrote:
-> On Fri, 2025-07-04 at 19:14 +0200, Paul Chaignon wrote:
-> > On Thu, Jul 03, 2025 at 11:54:27AM -0700, Eduard Zingerman wrote:
+On Fri, 4 Jul 2025 14:11:13 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
 
-[...]
+> On 2025/7/2 13:57, Nico Pache wrote:
+> > Allow madvise_collapse to scan/collapse all mTHP orders without the
+> > strict requirement of needing the PMD-order enabled.
+> > 
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> 
+> I am afraid we should drop this patch from the series, since Hugh 
+> explicitly opposed my modification of the madvise_collapse control logic 
+> in this thread[1].
 
-> > > I think is_branch_taken() modification should not be too complicated.
-> > > For JSET it only checks tnum, but does not take ranges into account.
-> > > Reasoning about ranges is something along the lines:
-> > > - for unsigned range a =3D b & CONST -> a is in [b_min & CONST, b_max=
- & CONST];
-> > > - for signed ranged same thing, but consider two unsigned sub-ranges;
-> > > - for non CONST cases, I think same reasoning can apply, but more
-> > >   min/max combinations need to be explored.
-> > > - then check if zero is a member or 'a' range.
-> > >=20
-> > > Wdyt?
-> >=20
-> > I might be missing something, but I'm not sure that works. For the
-> > unsigned range, if we have b & 0x2 with b in [2; 10], then we'd end up
-> > with a in [2; 2] and would conclude that the jump is never taken. But
-> > b=3D8 proves us wrong.
->=20
-> I see, what is really needed is an 'or' joined mask of all 'b' values.
-> I need to think how that can be obtained (or approximated).
+Well it drops easily enough.  I don't know if it compiles yet.
 
-I think the mask can be computed as in or_range() function at the
-bottom of the email. This gives the following algorithm, if only
-unsigned range is considered:
+Nico, can you confirm that you're OK with the droppage and that the
+series is still good without this patch?
 
-- assume prediction is needed for "if a & b goto ..."
-- bits that may be set in 'a' are or_range(a_min, a_max)
-- bits that may be set in 'b' are or_range(b_min, b_max)
-- if computed bit masks intersect: both branches are possible
-- otherwise only false branch is possible.
-
-Wdyt?
-
-[...]
-
----
-
-#include <stdint.h>
-#include <stdio.h>
-
-static uint64_t or_range(uint64_t lo, uint64_t hi)
-{
-  uint64_t m;
-  uint32_t i;
-
-  m =3D hi;
-  i =3D 0;
-  while (lo !=3D hi) {
-    m |=3D 1lu << i;
-    lo >>=3D 1;
-    hi >>=3D 1;
-    i++;
-  }
-  return m;
-}
-
-static uint64_t or_range_simple(uint64_t lo, uint64_t hi)
-{
-  uint64_t m =3D 0;
-  uint64_t v =3D 0;
-
-  for (v =3D lo; v <=3D hi; v++)
-    m |=3D v;
-  return m;
-}
-
-int main(int argc, char *argv[])
-{
-  int max =3D 0x1000;
-  for (int lo =3D 0; lo < max; lo++) {
-    for (int hi =3D lo; hi < max; hi++) {
-      uint64_t expected =3D or_range_simple(lo, hi);
-      uint64_t result =3D or_range(lo, hi);
-
-      if (expected !=3D result) {
-        printf("mismatch: %x..%x -> expecting %lx, result %lx\n",
-               lo, hi, expected, result);
-        return 1;
-      }
-    }
-  }
-  printf("all ok\n");
-  return 0;
-}
+> Moreover, since we have not yet clarified how to handle the conflict 
+> between the semantics of madvise_collapse and the THP interfaces, we 
+> should keep the current logic[2] (means madvise_collapse still only 
+> allows PMD collapse).
+> 
+> If madvise_collapse is to support mTHP collapse, there will be more 
+> semantic conflicts to discuss.
+> 
+> [1] 
+> https://lore.kernel.org/all/cover.1750815384.git.baolin.wang@linux.alibaba.com/
+> [2] 
+> https://lore.kernel.org/all/23b8ad10-cd1f-45df-a25c-78d01c8af44f@redhat.com/
