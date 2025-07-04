@@ -1,233 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD051273F9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09714273F9;
+	Fri,  4 Jul 2025 14:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637761; cv=none; b=ZUYgvaEi71DbUeZ7LHnX6VZZP5NRie5VFGGdr7BAVoaTv8GO5hTMfcFe8bP9YxZNkJtppy+jke2R/lDsqnQZr7bcQYQSlvR3OkIb+dfRdoRVOxNJxeHHNtHtUnBpW/bjB7vFVnlLPYRYETcqibSy5FHCulJkDMyylnDoVT02O9U=
+	t=1751637802; cv=none; b=KBDul8koS+weuyu5xVW554RvvsiZ/cwcElRyJKsb0kJUAw/4xK8W6Os9eXSq8rmGlibT0Qgg53nl+vqO2BHgoppqSsmABpQ2sSf7be30Vjoyqu+TgRZR05ySIIs5mc1oNXIlG7Lbw6+Ut2NosdZdjPkAZE6AdyPeHpEncrX2sjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637761; c=relaxed/simple;
-	bh=z4NiysJi/pzKaPKoYnPgtRUlk8zSuboSjm4/VXDO7/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=puDHQgKCfOET+cRKWC7b4YCr7YNG+IIre7Xa4rIiZ6TKkX0rod7k7bg3lgKMqENMbylfttkAQ1Eqy1OWji0dlPFw/kZiT3gZgHNUxnosm72QW72Kas90sfhDtjs+7048AL2sms+6Oui/1hL4nUGKITBboYQ+NfV+OTFWZN35sOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgwK/LqK; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751637802; c=relaxed/simple;
+	bh=MIkKO3ROEAcvFmZbM08D9Naq8WPWPvTABFHJbqIruaI=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=qpz9wpFaautWRfQtYXY8qLgBtBAWBpkswNLhgSZYvNZy1BJUMf9kNsUspQzE3Yr0AbqeqmLQZo2PlnZf+UbKsP3e4FJoJ4OCoiKIuoEWW2ob+7wtREEzSklXxJKj8+Qr7U79OTr+w/D8elz2Q/EZSTJIMJehEKWjWfBiuBRkdvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=W4RmNA2s; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgwK/LqK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751637760; x=1783173760;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z4NiysJi/pzKaPKoYnPgtRUlk8zSuboSjm4/VXDO7/Y=;
-  b=WgwK/LqKyuFK1AYJICCr0fvL97dnI30Xfou41dFu+aF3Er0IjqEK1axN
-   sQIqJHGq7uorRRU5DLHZBFs+ytr54U7HpkOTuLYY3ZzJb/1Eyr5HlRMrt
-   oV+h7FtY6OFYzinVUko6HkvtHv2AJ5I3qLvdfG306aENsYZ54jRs8XL3Q
-   IfMMmYFJZYFjTOE93GtQsAj2nn15BhZEB8sKPuqJAnjpcDEFHf8+/Sd25
-   ZsPv2cH5n0rZeruu/eOiQCY37yDYbA6JTUmzqp+Jq/Pkxu+HE71NUU4nZ
-   Ltr41q+jTFWI4nXLw/l1PZqc0zYK7JOFGHkBmJ9WLFMP8KvQxScraFwyB
-   A==;
-X-CSE-ConnectionGUID: 9NdTSnViQIaT+sO9Qa8r1g==
-X-CSE-MsgGUID: Gh38vDFBRH+C4ikAFwkSvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53944878"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="53944878"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 07:02:39 -0700
-X-CSE-ConnectionGUID: jusLOYYHQVGTsi8V2vLmmA==
-X-CSE-MsgGUID: aPqqQyJ3RxO/KtTi85zdUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="158994295"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by orviesa003.jf.intel.com with ESMTP; 04 Jul 2025 07:02:36 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Chen Yu <yu.c.chen@intel.com>,
-	Jirka Hladky <jhladky@redhat.com>,
-	Srikanth Aithal <Srikanth.Aithal@amd.com>,
-	Suneeth D <Suneeth.D@amd.com>,
-	Libo Chen <libo.chen@oracle.com>,
-	Michal Hocko <mhocko@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "sched/numa: add statistics of numa balance task"
-Date: Fri,  4 Jul 2025 21:56:20 +0800
-Message-Id: <20250704135620.685752-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="W4RmNA2s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=ptAkVOvHyjTU5vzUWd4lQ7vWlCuqotN7mv/qbmEOs8s=; b=W4RmNA2smiG/nfQ7Vj3oPjaqAg
+	8bEXTVD8+p6M3o9TiOnJkv5OSt4vIIK37GkX7D5kafwuigL9v0Y3zyOGBecedhm4n0HNNP/toeFpZ
+	E0R2dGS5LXd5EZhPNe3kl0n5I0fq1BIPiIE6lhjRbP9BdTg5QwfsbIxAatxXOTqsXShg=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:33412 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uXh0Q-0002kj-QQ; Fri, 04 Jul 2025 10:03:11 -0400
+Date: Fri, 4 Jul 2025 10:03:09 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, stable@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <20250704100309.efe7a82ac66fd43fedc09ef6@hugovil.com>
+In-Reply-To: <CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
+References: <20250703191829.2952986-1-hugo@hugovil.com>
+	<CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.3 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH] gpiolib: fix efficiency regression when using
+ gpio_chip_get_multiple()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-This reverts commit ad6b26b6a0a79166b53209df2ca1cf8636296382.
+Hi Bartosz,
 
-This commit introduces per-memcg/task NUMA balance statistics,
-but unfortunately it introduced a NULL pointer exception due
-to the following race condition: After a swap task candidate
-was chosen, its mm_struct pointer was set to NULL due to task
-exit. Later, when performing the actual task swapping, the
-p->mm caused the problem.
+On Fri, 4 Jul 2025 10:26:58 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-CPU0                                   CPU1
-:
-...
-task_numa_migrate
-     task_numa_find_cpu
-      task_numa_compare
-        # a normal task p is chosen
-        env->best_task = p
+> On Thu, Jul 3, 2025 at 9:18 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> >
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >
+> > commit 74abd086d2ee ("gpiolib: sanitize the return value of
+> > gpio_chip::get_multiple()") altered the value returned by
+> > gc->get_multiple() in case it is positive (> 0), but failed to
+> > return for other cases (<= 0).
+> >
+> > This may result in the "if (gc->get)" block being executed and thus
+> > negates the performance gain that is normally obtained by using
+> > gc->get_multiple().
+> >
+> > Fix by returning the result of gc->get_multiple() if it is <= 0.
+> >
+> > Also move the "ret" variable to the scope where it is used, which as an
+> > added bonus fixes an indentation error introduced by the aforementioned
+> > commit.
+> 
+> Thanks, I queued it for fixes. I typically keep local variables at the
+> top of the function (just a personal readability preference) but since
+> this function already has scope-local variables, let's do it. What is
+> the indentation error you're mentioning exactly?
 
-                                          # p exit:
-                                          exit_signals(p);
-                                             p->flags |= PF_EXITING
-                                          exit_mm
-                                             p->mm = NULL;
+Ok, I was under the assumption that having local-scope variables was the preferred approach in the kernel, as I sometimes see patches just for fixing variables scope. If it is something specific to the GPIO subsystem, no problem.
 
-      migrate_swap_stop
-        __migrate_swap_task((arg->src_task, arg->dst_cpu)
-         count_memcg_event_mm(p->mm, NUMA_TASK_SWAP)# p->mm is NULL
+The ret variable was indented ok, but an empty line with spaces was introduced just after it.
 
-task_lock() should be held and the PF_EXITING flag needs to
-be checked to prevent this from happening. After discussion,
-the conclusion was that adding a lock is not worthwhile for
-some statistics calculations. Revert the change and rely on
-the tracepoint for this purpose.
+Thanks for applying the patch.
 
-Fixes: ad6b26b6a0a7 ("sched/numa: add statistics of numa balance task")
-Reported-by: Jirka Hladky <jhladky@redhat.com>
-Closes: https://lore.kernel.org/all/CAE4VaGBLJxpd=NeRJXpSCuw=REhC5LWJpC29kDy-Zh2ZDyzQZA@mail.gmail.com/
-Reported-by: Srikanth Aithal <Srikanth.Aithal@amd.com>
-Reported-by: Suneeth D <Suneeth.D@amd.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- Documentation/admin-guide/cgroup-v2.rst | 6 ------
- include/linux/sched.h                   | 4 ----
- include/linux/vm_event_item.h           | 2 --
- kernel/sched/core.c                     | 9 ++-------
- kernel/sched/debug.c                    | 4 ----
- mm/memcontrol.c                         | 2 --
- mm/vmstat.c                             | 2 --
- 7 files changed, 2 insertions(+), 27 deletions(-)
+Hugo.
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 0cc35a14afbe..bd98ea3175ec 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1732,12 +1732,6 @@ The following nested keys are defined.
- 	  numa_hint_faults (npn)
- 		Number of NUMA hinting faults.
- 
--	  numa_task_migrated (npn)
--		Number of task migration by NUMA balancing.
--
--	  numa_task_swapped (npn)
--		Number of task swap by NUMA balancing.
--
- 	  pgdemote_kswapd
- 		Number of pages demoted by kswapd.
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4f78a64beb52..aa9c5be7a632 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -548,10 +548,6 @@ struct sched_statistics {
- 	u64				nr_failed_migrations_running;
- 	u64				nr_failed_migrations_hot;
- 	u64				nr_forced_migrations;
--#ifdef CONFIG_NUMA_BALANCING
--	u64				numa_task_migrated;
--	u64				numa_task_swapped;
--#endif
- 
- 	u64				nr_wakeups;
- 	u64				nr_wakeups_sync;
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 91a3ce9a2687..9e15a088ba38 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -66,8 +66,6 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HINT_FAULTS,
- 		NUMA_HINT_FAULTS_LOCAL,
- 		NUMA_PAGE_MIGRATE,
--		NUMA_TASK_MIGRATE,
--		NUMA_TASK_SWAP,
- #endif
- #ifdef CONFIG_MIGRATION
- 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a3..ca0be74e865b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3362,10 +3362,6 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
- #ifdef CONFIG_NUMA_BALANCING
- static void __migrate_swap_task(struct task_struct *p, int cpu)
- {
--	__schedstat_inc(p->stats.numa_task_swapped);
--	count_vm_numa_event(NUMA_TASK_SWAP);
--	count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
--
- 	if (task_on_rq_queued(p)) {
- 		struct rq *src_rq, *dst_rq;
- 		struct rq_flags srf, drf;
-@@ -7934,9 +7930,8 @@ int migrate_task_to(struct task_struct *p, int target_cpu)
- 	if (!cpumask_test_cpu(target_cpu, p->cpus_ptr))
- 		return -EINVAL;
- 
--	__schedstat_inc(p->stats.numa_task_migrated);
--	count_vm_numa_event(NUMA_TASK_MIGRATE);
--	count_memcg_event_mm(p->mm, NUMA_TASK_MIGRATE);
-+	/* TODO: This is not properly updating schedstats */
-+
- 	trace_sched_move_numa(p, curr_cpu, target_cpu);
- 	return stop_one_cpu(curr_cpu, migration_cpu_stop, &arg);
- }
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 9d71baf08075..557246880a7e 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -1210,10 +1210,6 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 		P_SCHEDSTAT(nr_failed_migrations_running);
- 		P_SCHEDSTAT(nr_failed_migrations_hot);
- 		P_SCHEDSTAT(nr_forced_migrations);
--#ifdef CONFIG_NUMA_BALANCING
--		P_SCHEDSTAT(numa_task_migrated);
--		P_SCHEDSTAT(numa_task_swapped);
--#endif
- 		P_SCHEDSTAT(nr_wakeups);
- 		P_SCHEDSTAT(nr_wakeups_sync);
- 		P_SCHEDSTAT(nr_wakeups_migrate);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 902da8a9c643..70fdeda1120b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -474,8 +474,6 @@ static const unsigned int memcg_vm_event_stat[] = {
- 	NUMA_PAGE_MIGRATE,
- 	NUMA_PTE_UPDATES,
- 	NUMA_HINT_FAULTS,
--	NUMA_TASK_MIGRATE,
--	NUMA_TASK_SWAP,
- #endif
- };
- 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 429ae5339bfe..a78d70ddeacd 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1346,8 +1346,6 @@ const char * const vmstat_text[] = {
- 	"numa_hint_faults",
- 	"numa_hint_faults_local",
- 	"numa_pages_migrated",
--	"numa_task_migrated",
--	"numa_task_swapped",
- #endif
- #ifdef CONFIG_MIGRATION
- 	"pgmigrate_success",
+
+> > Fixes: 74abd086d2ee ("gpiolib: sanitize the return value of gpio_chip::get_multiple()")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > ---
+> >  drivers/gpio/gpiolib.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index fdafa0df1b43..3a3eca5b4c40 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -3297,14 +3297,15 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+> >  static int gpio_chip_get_multiple(struct gpio_chip *gc,
+> >                                   unsigned long *mask, unsigned long *bits)
+> >  {
+> > -       int ret;
+> > -
+> >         lockdep_assert_held(&gc->gpiodev->srcu);
+> >
+> >         if (gc->get_multiple) {
+> > +               int ret;
+> > +
+> >                 ret = gc->get_multiple(gc, mask, bits);
+> >                 if (ret > 0)
+> >                         return -EBADE;
+> > +               return ret;
+> >         }
+> >
+> >         if (gc->get) {
+> >
+> > base-commit: b4911fb0b060899e4eebca0151eb56deb86921ec
+> > --
+> > 2.39.5
+> >
+> 
+
+
 -- 
-2.25.1
-
+Hugo Villeneuve <hugo@hugovil.com>
