@@ -1,38 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6154C72634;
-	Fri,  4 Jul 2025 07:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5B325DAFC;
+	Fri,  4 Jul 2025 07:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612462; cv=none; b=V0D/cJndWLHbcuneQ9dPZkceLusp33KdCImuMjte+NcZOHyJCdKS18SwLjSylOOU1KbzvhzOHJcX26nyKxbZe/VdOddY7jNIdbASt4k9pMPX8ZuAaNVGbgC9NCpYsq/5C3f20JERU5EMXD3fiDqwD3hyoiEtuDlOUM09706tp4g=
+	t=1751612484; cv=none; b=G+rhsx5l9R2gaHAa79rEDYcnFFe0KFNcRC4j8fwRe+cslcd5DCmbrM1ewk9qLCq6Dfj2Q5/Sp0OHl5iWUVYrHJ64uYWgibJI97vclt9nFe1QhUB5ViPUvZn81YKz/ElkkcCgehn3+9bitPZipb2o3y2uXhmByoNUAXAGaPJja0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612462; c=relaxed/simple;
-	bh=9WrWDigzEJpLGzDtxoaenJht7v54bH1p5TaHigl/27s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=l5IN4UM8xouT8TvJou0I6YrSR0xY0vTAgdHr5ScMtzFtuZDmW7tYCgQwluCoDSedBV7hn5VGhQUyy0gHMkAOu18AB0doXmH/gu0Vyj/5KizScikHjlcC0SZMmtL2CQZmMliKKVqWj8So2SykS4gBVF3sAXH+yumS5DymP+iUltk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hj0KEHsv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751612484; c=relaxed/simple;
+	bh=4khF2ydaRh9P9gvEopkfzH9p52OvKGZ1cKP/qrbnxms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bn/lEWScY9t40wwiSV1XxvjOkgGDJFDVZqxHgnb+xFzJeuLaUOFUoonwWKVex8QKwGXlTXfyrQxolb/v4vw9NXEJkiGGhsSJAl8ZQqXeH74U1dp5O/pnvRFtQG4y7vOYx3k8xPkdLb7rZLlKffImJF7uZ7nTZDnvVpYWocrQVQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEbLZ+qf; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hj0KEHsv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4345FC4CEE3;
-	Fri,  4 Jul 2025 07:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751612462;
-	bh=9WrWDigzEJpLGzDtxoaenJht7v54bH1p5TaHigl/27s=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Hj0KEHsvw42SoriIkDAhIPMCwCaMtsVv41FqOxGhHzrJGJcys2MKp8H8NsiF1Ipxn
-	 ml3sevjBVDYRHvzTjtfLP+46kcSDnxcuHqoAIvN50/3Ud/OwfSbitL5okFsXhBs/e3
-	 ufjrPxaK+NjXpqGQ8tTkK81dgYJhu/EPdm9h7rqc98STK6QV22NkM5XckLzDxvdLZ3
-	 0LU3vU4KYY92UA00IHKgZl1peMg8oPJDS9KmO3gI6GIJshpVjBIj3mes17vWzKGhr1
-	 6DEq6cg4adxxcPu+RcHdRNmytwUXhn17R7/HVkBekjwSuP5AdfeifrLYVye+Tz4rQr
-	 ube95H2ev3Fhw==
-Date: Fri, 4 Jul 2025 09:00:57 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, 
-	linux-i2c <linux-i2c@vger.kernel.org>, Andi Shyti <andi.shyti@kernel.org>
-Subject: [GIT PULL] i2c-host-fixes for v6.16-rc5
-Message-ID: <3ygvpeurj6vvve7d2vtlpyygjobbj2yzhgkpmlvyrxbpw24udw@o5zlnw6tx4ju>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEbLZ+qf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751612483; x=1783148483;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4khF2ydaRh9P9gvEopkfzH9p52OvKGZ1cKP/qrbnxms=;
+  b=cEbLZ+qfxsIwciv4EOrczgRrlJGQGjlx2bfG4g7CiAuSPwNsJq+ohRL8
+   NJmkyB9uqEkrsmUjCGnljSfOChVNDgxEOhS0ugkfN+k+ZDM4/SM7m8JC7
+   uDUGfg09dKBHzhszPtPmS4x5fRI7QuGUXqcVBIeByCjaz1ZUqvlmHtAzm
+   K+7EuPaKosJbIpfpmys2sO/00OTWrSIxA92KC4MzUx3g8t3JGOiIqtqkE
+   NELLu1icLhXhJSscDd2rIOmWRh2fnq2NPrY5se0dWorNYWNxQXpogREYy
+   n9nAoaig+Ps6IE4CpC0eKj/spk+cBbE9S6+r1zLpSc9dmnND0GWdGXe7v
+   Q==;
+X-CSE-ConnectionGUID: Sz7GDxEIQnaZdvn3+b0SBA==
+X-CSE-MsgGUID: r8qMeue6QiavlAB3ocEySQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57752431"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="57752431"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:01:22 -0700
+X-CSE-ConnectionGUID: QQtpBEeXRGmTeBW803Rtow==
+X-CSE-MsgGUID: 5ZVZO86jTKeCuxY1TkW0Qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="154655596"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 04 Jul 2025 00:01:18 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXaQ8-0003QZ-26;
+	Fri, 04 Jul 2025 07:01:16 +0000
+Date: Fri, 4 Jul 2025 15:00:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Menglong Dong <menglong8.dong@gmail.com>, alexei.starovoitov@gmail.com,
+	rostedt@goodmis.org, jolsa@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
+	Menglong Dong <dongml2@chinatelecom.cn>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 05/18] bpf: introduce bpf_gtramp_link
+Message-ID: <202507041433.Taj70BHu-lkp@intel.com>
+References: <20250703121521.1874196-6-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,45 +70,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250703121521.1874196-6-dongml2@chinatelecom.cn>
 
-Hi Wolfram,
+Hi Menglong,
 
-here's the fixes pull request. Nothing fancy this week, all seems
-normal.
+kernel test robot noticed the following build warnings:
 
-Have a great weekend,
-Andi
+[auto build test WARNING on bpf-next/master]
 
-The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
+url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/bpf-add-function-hash-table-for-tracing-multi/20250703-203035
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250703121521.1874196-6-dongml2%40chinatelecom.cn
+patch subject: [PATCH bpf-next v2 05/18] bpf: introduce bpf_gtramp_link
+config: x86_64-buildonly-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041433.Taj70BHu-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041433.Taj70BHu-lkp@intel.com/reproduce)
 
-  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507041433.Taj70BHu-lkp@intel.com/
 
-are available in the Git repository at:
+All warnings (new ones prefixed by >>):
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-fixes-6.16-rc5
+>> kernel/bpf/trampoline.c:36:34: warning: 'bpf_shim_tramp_link_lops' defined but not used [-Wunused-const-variable=]
+      36 | static const struct bpf_link_ops bpf_shim_tramp_link_lops;
+         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
 
-for you to fetch changes up to 5f05fc6e2218db7ecc52c60eb34b707fe69262c2:
 
-  dt-bindings: i2c: realtek,rtl9301: Fix missing 'reg' constraint (2025-07-02 17:23:59 +0200)
+vim +/bpf_shim_tramp_link_lops +36 kernel/bpf/trampoline.c
 
-----------------------------------------------------------------
-i2c-host-fixes for v6.16-rc5
+    33	
+    34	static struct bpf_global_trampoline global_tr_array[MAX_BPF_FUNC_ARGS + 1];
+    35	static DEFINE_MUTEX(global_tr_lock);
+  > 36	static const struct bpf_link_ops bpf_shim_tramp_link_lops;
+    37	
 
-designware: initialise msg_write_idx during transfer
-microchip: check return value from core xfer call
-realtek: add 'reg' property constraint to the device tree
-
-----------------------------------------------------------------
-Conor Dooley (1):
-      i2c: microchip-core: re-fix fake detections w/ i2cdetect
-
-Krzysztof Kozlowski (1):
-      dt-bindings: i2c: realtek,rtl9301: Fix missing 'reg' constraint
-
-Michael J. Ruhl (1):
-      i2c/designware: Fix an initialization issue
-
- Documentation/devicetree/bindings/i2c/realtek,rtl9301-i2c.yaml | 3 ++-
- drivers/i2c/busses/i2c-designware-master.c                     | 1 +
- drivers/i2c/busses/i2c-microchip-corei2c.c                     | 6 +++++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
