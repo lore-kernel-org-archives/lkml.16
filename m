@@ -1,146 +1,165 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E35A2D12ED;
-	Fri,  4 Jul 2025 07:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AB72C3242
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615665; cv=none; b=mD3B1Vq+QduMXck5xNEIfHIa2fUOxdGl9So5Ve0iYDoAyQkIazIf2zJZdTiSkffTpOce8ho1rqkFoirYEsxDoxl7vXeBBZaafYI1pEXjgzrHUZBxMj6KxFZW+nPNC4lU7BMfdp0bzMDasEIXGlWUaFp4eKg6PUdJzbK9RoQe58s=
+	t=1751615666; cv=none; b=duqawcFKEL7r0ewmM7KfaYvInAHEh+YtCObGYXzZJEf45ukNlEnqwxniNhmI6X6xPLCvAGFVc1EA4qUcCF+IYMUpUJjwiWZMEtJNGbng1XaQjA6S83PvAMkUPf1aK5ddrPuacMPYTjXKemNCyzATXRMEsFAxGBOuCdbqMviAMAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615665; c=relaxed/simple;
-	bh=HRAOdaZPz4TdXaD50WyBJL6WbKyKNuM01m4aW/p2Eks=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=cKuIA8daxWXy30tLqZ7G6dSjKIBcUW+UTOARW1hBj7gUohSiN7NHvRl6INULIzDB/dkvZ3Ax1QHwYkCENKgdsJ8Auswzm+Ol+wM5tsWCvlsUrWw7fTyxSAz4tNGz6/SaZ0W028t2LDRoOY6Ghv0iQ5z8TCqFU1ebSO87+VEK4tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dM63eWzn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751615666; c=relaxed/simple;
+	bh=q2znRzlNkp1VX01C6C6SWFWs8cikijZSrtuwfc3vXfo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FFk5QV4nz4xSLcaiCbYH5cBaQwaq+Nn6+aNyrfOGlAy7YiFG12BLw+8ZW1BnVWO2ZQxmGaTolmWAqXXwwejCBNA+Gr6RIP/WlGwIb+Uja/pTiekob4YTgpyHGtOHu9cFdHIKvVrUQISpSgZnRREUgjpLqz5EYNbyrrAJzI2uLYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkJzONL/; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dM63eWzn"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56464I7j007047;
-	Fri, 4 Jul 2025 07:54:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ThZ99ENkNRYHQWZj87w7NChFG0hgkn0V9pizxk8AFR0=; b=dM63eWzntPJpox/l
-	inB6L3roRoXzO4l6NcDGQ9bojoCDO4ovPzD4hAkqllWirJNyC2OCrEtqCIINTdaW
-	RdjSU+JTWnQM9tXe1mIzzbXWoU8AaBy2zM6o+3eKNrAIYaQRyxHQew2YVLLyntiZ
-	HesviHjQorTuhFLfgEN26CbxW/AM7sdbujNAkjiHOWAt2cT35+6eVifXzaCxQq3O
-	Ug459NRYnlSFq2AODfGvPLKriqQwQR00LZmNd3TbLRXVvLtyg7QxaoSj/XeuyiXc
-	uHqbd0JCBdf92geQ8gpD/0qlvDUPnQtMN6PkYE+1lNPKFDqcLblenLOaEwOBCbJk
-	fCqNcw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jqgt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:54:17 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647sHo2018461
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:54:17 GMT
-Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:54:14 -0700
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 4 Jul 2025 13:23:16 +0530
-Subject: [PATCH 16/25] media: iris: Add support for VIDIOC_QUERYCAP for
- encoder video device
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkJzONL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751615663; x=1783151663;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=q2znRzlNkp1VX01C6C6SWFWs8cikijZSrtuwfc3vXfo=;
+  b=IkJzONL/4mLoRXhhGhdOV0rzBoGUVKW+uWfMy3xi4bd8ms0GkzgoSBM1
+   mgsoQncyGIA08UuWASIAzj0Paz6mM2FRR15CjSxmmclSqFGIiSt/oNTCq
+   SzlHtTQhD+U/+RydLcxk1TyghxPviPpuqLhcsHyEQfTgV46dL/jjh9GGs
+   uHrgdjq35QAM4WGGQ/gVjNppbX2nAiRCuiZtFJG7A9ci6mMvOCJ5N6R5w
+   5tv7BVXJi5BCSpaoFLWRjOMEsdqPhfqYW1ej61o/LwkRv1Cr8lfxT5xy9
+   kvwLBqFWVSI4NSHLrwEM+Dn48cRV/Ap8Gmrmt0oFOFaLoidcPPw9Q+KPc
+   w==;
+X-CSE-ConnectionGUID: w+8A0oeCSn6ppElfxODdVw==
+X-CSE-MsgGUID: g99wdkJKRj6ryMM37rqosA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494584"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="76494584"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:22 -0700
+X-CSE-ConnectionGUID: IUennC47Tk2lCs9hia+Stw==
+X-CSE-MsgGUID: DVXgBXKdTmiKM3rSFP38Iw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="158924252"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:19 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 90C7344424;
+	Fri,  4 Jul 2025 10:54:17 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Aniket <aniketmaurya@google.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: linux-i3c@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 25/80] i3c: dw: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:17 +0300
+Message-Id: <20250704075417.3218742-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250704-iris-video-encoder-v1-16-b6ce24e273cf@quicinc.com>
-References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        "Vedang
- Nagar" <quic_vnagar@quicinc.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1524;
- i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=HRAOdaZPz4TdXaD50WyBJL6WbKyKNuM01m4aW/p2Eks=;
- b=cpEcaouTDmdhSBwrueSrUJVcFOUUIE1ZNWkJaI/iAms8rQoZsodrC9smhi2ltM/FDZubhxk/o
- NGfkEvqWUgXD2gwtFmGoS2FBZ1nmC8dT+3v7lVao6kZ5QrOjEQkspRs
-X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
- pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=686788aa cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=-r1po_HhmiMhMH7Jft0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: BHSZCCDpKaWfS8UUfzJlY1OZASIsgUUC
-X-Proofpoint-GUID: BHSZCCDpKaWfS8UUfzJlY1OZASIsgUUC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX5r0Stazfkq3k
- XdXzsZDgLwwMhj5MbfGSq7zoxZJRCyKcRW3cRcydNoO7G8HyBCUu+ARsAcHErVM7ySMBcS07V7X
- OtHHpIUyKLKPQoftspGBFLdW/sHUgdf+Py3GxUG8Itq8D5jWzhRxnEdiz/8nAWfM+TE8eLt3YWz
- tfr1OFRllFHJeB90Qnw/3pBobtqI5SRP21W9ziNhMbWhiOx3hj13EvDglDTDixlJlxZq5zvAtRa
- b84TZsOY5iIZ28X1c15u/rxzDDarpKuob07L5XoQ6C3b6VVRUwAIC7LDadxUqrR0pzA6dF8wgZN
- MIwLCFCW7bJFxEXw8ImQAZtz87o6HOJMs3xI3aqfTdY3bfx7gRVTlldaaGg5ie/9p3iwvDa+JN8
- hm2EiUawkxcd9hlNFfN1iL7A9MZR8wwTIwmj4Mz/K0DHlPo51b5VV9HH94PCNSE/+cNY3KI1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040060
+Content-Transfer-Encoding: 8bit
 
-Add support for the VIDIOC_QUERYCAP V4L2 iocts for the encoder video
-device to report core driver capabilities.
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/platform/qcom/iris/iris_vidc.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
-index cb1280c0c6c82187243f0bda4d98e42370ee787c..458773a2ed7f5e16d5bd5e79dba2f5c029036505 100644
---- a/drivers/media/platform/qcom/iris/iris_vidc.c
-+++ b/drivers/media/platform/qcom/iris/iris_vidc.c
-@@ -446,8 +446,14 @@ static int iris_enum_frameintervals(struct file *filp, void *fh,
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
+
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
+
+ drivers/i3c/master/dw-i3c-master.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index 611c22b72c15..37bee9c21736 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -699,7 +699,6 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
+ 	dw_i3c_master_enable(master);
  
- static int iris_querycap(struct file *filp, void *fh, struct v4l2_capability *cap)
- {
-+	struct iris_inst *inst = iris_get_inst(filp, NULL);
-+
- 	strscpy(cap->driver, IRIS_DRV_NAME, sizeof(cap->driver));
--	strscpy(cap->card, "Iris Decoder", sizeof(cap->card));
-+
-+	if (inst->domain == DECODER)
-+		strscpy(cap->card, "Iris Decoder", sizeof(cap->card));
-+	else
-+		strscpy(cap->card, "Iris Encoder", sizeof(cap->card));
+ rpm_out:
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return ret;
+ }
+@@ -829,7 +828,6 @@ static int dw_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
+ 	else
+ 		ret = dw_i3c_ccc_set(master, ccc);
  
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return ret;
+ }
+@@ -912,7 +910,6 @@ static int dw_i3c_master_daa(struct i3c_master_controller *m)
+ 	dw_i3c_master_free_xfer(xfer);
+ 
+ rpm_out:
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return ret;
+ }
+@@ -998,7 +995,6 @@ static int dw_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
+ 	ret = xfer->ret;
+ 	dw_i3c_master_free_xfer(xfer);
+ 
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return ret;
+ }
+@@ -1148,7 +1144,6 @@ static int dw_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+ 	ret = xfer->ret;
+ 	dw_i3c_master_free_xfer(xfer);
+ 
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return ret;
+ }
+@@ -1316,7 +1311,6 @@ static int dw_i3c_master_disable_hotjoin(struct i3c_master_controller *m)
+ 	writel(readl(master->regs + DEVICE_CTRL) | DEV_CTRL_HOT_JOIN_NACK,
+ 	       master->regs + DEVICE_CTRL);
+ 
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
  	return 0;
  }
-@@ -577,6 +583,7 @@ static const struct v4l2_ioctl_ops iris_v4l2_ioctl_ops_enc = {
- 	.vidioc_g_fmt_vid_out_mplane    = iris_g_fmt_vid_mplane,
- 	.vidioc_enum_framesizes         = iris_enum_framesizes,
- 	.vidioc_enum_frameintervals     = iris_enum_frameintervals,
-+	.vidioc_querycap                = iris_querycap,
- };
+@@ -1342,7 +1336,6 @@ static int dw_i3c_master_enable_ibi(struct i3c_dev_desc *dev)
  
- void iris_init_ops(struct iris_core *core)
-
+ 	if (rc) {
+ 		dw_i3c_master_set_sir_enabled(master, dev, data->index, false);
+-		pm_runtime_mark_last_busy(master->dev);
+ 		pm_runtime_put_autosuspend(master->dev);
+ 	}
+ 
+@@ -1362,7 +1355,6 @@ static int dw_i3c_master_disable_ibi(struct i3c_dev_desc *dev)
+ 
+ 	dw_i3c_master_set_sir_enabled(master, dev, data->index, false);
+ 
+-	pm_runtime_mark_last_busy(master->dev);
+ 	pm_runtime_put_autosuspend(master->dev);
+ 	return 0;
+ }
 -- 
-2.34.1
+2.39.5
 
