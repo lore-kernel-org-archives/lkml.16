@@ -1,84 +1,158 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D879E1F94A;
-	Fri,  4 Jul 2025 11:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9E82C15B1;
+	Fri,  4 Jul 2025 11:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751628508; cv=none; b=oio1Gd53PUPx1pIgjdNLqnEnnVGzpSFHyq48LD/Ne3MQOqtHwl76aybGpHgdjhv9cnjVxUxOz2vCRrKxFNR8g8LhkD5Nzp3mSogRs+9KAxJGStpH4owWJls7Lw2lQclQ+EW6mPF/fVC0FNiob9olgDgZer9Wls2Ra8t4cw1pjjo=
+	t=1751628549; cv=none; b=BQ+AhLsO/M7iFnK4nBFq7I45W6URXyfxF8EDQLTnAauOK3b3ConFa8rJ2LBIC2sZK2wsLza8G7FRrKel/FsCaeoGYiLwOTF7YuBVAFdpJJ+q3hoJNAbcsny9Tv1gVHbGv9sI0JqBsb+mNhdnpJXEXYmjdCWR3C9Hkw6y4uJy+hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751628508; c=relaxed/simple;
-	bh=UnmwrU3QJv4GZMxWgvZ9CpARRSyCpjfVPQ0/mJuafNU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qVTw7L8aa8l7xtwfjLsNKxsW+nRIlv+m3Dyw1FgDylT5ENZ0f27ScAOVsqUCcW9h9Q9HYR2WvTJ/T9CaDYoxKaru0Up0x0v4ntbYSMXAASm7LcwF5k4xUEWC2weYnkggrMjKcWqfiIN0y/GDiBCzL8LgYqzNwoakKzxr0n36J6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kQh1xmeM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ixbMam1Z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kQh1xmeM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ixbMam1Z"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751628504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I0LURxOcxuqwAQQqO4WfSPEKfoNEYt9GKdhYl2Q/biE=;
-	b=kQh1xmeMp2qdFaP4M6OOXYXTdL0pbpi+auZzOKS5nS2dc4cDyGkizNRhelF0nC8SLgVAd/
-	BfX4yITZhlpSrGQBqF6WysDFPsiId6OZAVeNOLZU1xJhfC32bRaTFtWLio3VH0b1cVFRKy
-	h/xPUbZ6M0oacwr2FNmkdxSNfsGF/am1ZIge0cgA9WhP70wghLJa8lF0SQpxGKtJrNKLTh
-	8ZWD9gUQbgWRj3WmfICHCPI2WrMqPpdI3AYtZEkui9KkASAELExHkmn5Ej7nhIInmCA32K
-	2gY5eNoZuY5WN+b/Ya3BwLlxRMUG69o+2C1SVYHRS1qOFD/qCncaU2eD02i+XQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751628504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I0LURxOcxuqwAQQqO4WfSPEKfoNEYt9GKdhYl2Q/biE=;
-	b=ixbMam1Z8xOq1NWaBjeqiYelhvbQuwPpRiEvZ7MRWR511SFpzNfgbyBS93dJ6e5SIoubFT
-	7xV1LY6/4GmZwABA==
-To: Petr Mladek <pmladek@suse.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>, Dan Carpenter
- <dan.carpenter@linaro.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, "Gustavo A . R .
- Silva" <gustavoars@kernel.org>, David Gow <davidgow@google.com>, Arnd
- Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Petr Mladek
- <pmladek@suse.com>
-Subject: Re: [PATCH 1/3] printk: ringbuffer: Explain why the KUnit test
- ignores failed writes
-In-Reply-To: <20250702095157.110916-2-pmladek@suse.com>
-References: <20250702095157.110916-1-pmladek@suse.com>
- <20250702095157.110916-2-pmladek@suse.com>
-Date: Fri, 04 Jul 2025 13:34:23 +0206
-Message-ID: <844ivskxew.fsf@jogness.linutronix.de>
+	s=arc-20240116; t=1751628549; c=relaxed/simple;
+	bh=d6izWEeJk2kJa5GSgadR6b2xMlIhvrbazcDk3EqyLmc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Abcb+cBt5GAxFk6sIMslBOczHr2g/O/odPgm/EMYXh5xxEwHV34UHRShrj0/1tIVjLji8C+4+DV74vTmtQvSEUKiK1pX+O0OinIuIXd3a7pMXM1pKzpTckGh9a5GjJBCyNEbNW8TZ7huDdugm946YunIW5WBU5Zn586WnrZTe60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYW8R3VnVz6L5dh;
+	Fri,  4 Jul 2025 19:08:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 36B8E1404C5;
+	Fri,  4 Jul 2025 19:11:22 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
+ 2025 13:11:20 +0200
+Date: Fri, 4 Jul 2025 12:11:19 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: John Groves <John@Groves.net>
+CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
+	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
+ . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
+ Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
+ Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 03/18] dev_dax_iomap: Save the kva from memremap
+Message-ID: <20250704121119.00002846@huawei.com>
+In-Reply-To: <20250703185032.46568-4-john@groves.net>
+References: <20250703185032.46568-1-john@groves.net>
+	<20250703185032.46568-4-john@groves.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 2025-07-02, Petr Mladek <pmladek@suse.com> wrote:
-> The KUnit test ignores prb_reserve() failures on purpose. It tries
-> to push the ringbuffer beyond limits.
->
-> Note that it is a know problem that writes might fail in this situation.
-> printk() tries to prevent this problem by:
->
->   + allocating big enough data buffer, see log_buf_add_cpu().
->
->   + allocating enough descriptors by using small enough average
->     record, see PRB_AVGBITS.
->
->   + storing the record with disabled interrupts, see vprintk_store().
->
-> Also the amount of printk() messages is always somehow bound in
-> practice. And they are serialized when they are printed from
-> many CPUs on purpose, for example, when printing backtraces.
->
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+On Thu,  3 Jul 2025 13:50:17 -0500
+John Groves <John@Groves.net> wrote:
 
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
+> Save the kva from memremap because we need it for iomap rw support.
+> 
+> Prior to famfs, there were no iomap users of /dev/dax - so the virtual
+> address from memremap was not needed.
+> 
+> Also: in some cases dev_dax_probe() is called with the first
+> dev_dax->range offset past the start of pgmap[0].range. In those cases
+> we need to add the difference to virt_addr in order to have the physaddr's
+> in dev_dax->ranges match dev_dax->virt_addr.
+> 
+> This happens with devdax devices that started as pmem and got converted
+> to devdax. I'm not sure whether the offset is due to label storage, or
+> page tables, but this works in all known cases.
+
+Clearly a question we need to resolve to understand if this is correct
+handling.
+
+> 
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  drivers/dax/dax-private.h |  1 +
+>  drivers/dax/device.c      | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> index 0867115aeef2..2a6b07813f9f 100644
+> --- a/drivers/dax/dax-private.h
+> +++ b/drivers/dax/dax-private.h
+> @@ -81,6 +81,7 @@ struct dev_dax_range {
+>  struct dev_dax {
+>  	struct dax_region *region;
+>  	struct dax_device *dax_dev;
+> +	void *virt_addr;
+>  	unsigned int align;
+>  	int target_node;
+>  	bool dyn_id;
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 29f61771fef0..583150478dcc 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -372,6 +372,7 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
+>  	struct dax_device *dax_dev = dev_dax->dax_dev;
+>  	struct device *dev = &dev_dax->dev;
+>  	struct dev_pagemap *pgmap;
+> +	u64 data_offset = 0;
+>  	struct inode *inode;
+>  	struct cdev *cdev;
+>  	void *addr;
+> @@ -426,6 +427,20 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
+>  	if (IS_ERR(addr))
+>  		return PTR_ERR(addr);
+>  
+> +	/* Detect whether the data is at a non-zero offset into the memory */
+> +	if (pgmap->range.start != dev_dax->ranges[0].range.start) {
+
+Using pgmap->range.start here but then getting to the same (I think)
+with  dev_dax->pgmap[0].range.start is rather inconsistent.
+
+Also, perhaps drag the assignment of phys and pgmap_phys out of this
+scope so that you can use them for the condition check above and
+then reuse the same in here.
+
+
+> +		u64 phys = dev_dax->ranges[0].range.start;
+> +		u64 pgmap_phys = dev_dax->pgmap[0].range.start;
+> +		u64 vmemmap_shift = dev_dax->pgmap[0].vmemmap_shift;
+> +
+> +		if (!WARN_ON(pgmap_phys > phys))
+> +			data_offset = phys - pgmap_phys;
+
+In the event of the condition above being false.
+phys == pgmap_phys and data_offset == 0.
+
+So why not do this unconditionally replacing this block with something like
+
+	/* Apply necessary offset */
+
+	dev_dax->virt_addr = addr +
+		(dev_dax->ranges[0].range.start - pgmap->range.start);
+> +
+> +		pr_debug("%s: offset detected phys=%llx pgmap_phys=%llx offset=%llx shift=%llx\n",
+> +		       __func__, phys, pgmap_phys, data_offset, vmemmap_shift);
+
+If it's only used in the print, I'd just put the path to vmemmap_shift directly in here
+and probably get to it via pgmap->vmemmap_shift
+
+
+
+> +	}
+> +	dev_dax->virt_addr = addr + data_offset;
+> +
+>  	inode = dax_inode(dax_dev);
+>  	cdev = inode->i_cdev;
+>  	cdev_init(cdev, &dax_fops);
+
