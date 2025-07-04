@@ -1,85 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535554207F;
-	Fri,  4 Jul 2025 02:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201F64B5AE;
+	Fri,  4 Jul 2025 02:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751597930; cv=none; b=LU29m3KyMe2V90OuTDzLdl2Qnh+/rNJ8Qh7QXbJPSOVVeoiQDchhkediEKO//3VMS7vqWTXwKyDeMyzls3q7TWCcbd/C/7JmeDZUL5EZUoYtUsX4xgxQk7+DbF3Smj0B1+0WpOjqyoP4+7B+wftSoW1cxsga/u3r1XpMb1q7Yf4=
+	t=1751597942; cv=none; b=aBLQyf2m1dGm/7/pn2PlXEAZCrpqVyjunDcIWKTfc/qdIabZ0d2iWK7d+/avbojBBLgWTpDFiK3ArmE3TeRRMUxb4QHgb9EyJuXeEd/aSMFrv7Aw2PtBGatcZTmiOItS2zYUWbjb2+V2oW76tZgUySK6RL129LjD+5lB91L6fQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751597930; c=relaxed/simple;
-	bh=qO9mOBPpvlL4od66vpINa3TB8+oUKIGbu0TsfXlPscI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MakUma4F3xz2v+tQE3iwZ5wtAR7+/SPCD7pT9ti0SAAg/+oMxaB4caKofz/GOui+bd210wtFayziTXT4X7P5VA23Kuz+BOpNTl5SLhCNuICAPOEe8NSMWoaJOAIfCD7kF5OkipJan09Qs/pcvBvIUna/DnJuSFsZTqqXwBnZ0ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDbUww+P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751597942; c=relaxed/simple;
+	bh=v9ZSaeRH6xsUbDphucE3stcYhLXtHMYDO+SbC5YTOzM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rpWXBxvwCJLO28yvpu1oT7d1dR5swOrDeGu2DaNs8pjb3WSgSuXN2M4SGJt1bw5/CBpQxgBF7BMEqRtrjF/9h/lFMvZ6n3FesuM4EFZ+XTGI+zYFB3frJqDmbK72lte3iNN6mAGEyaNmnDpg1hOsNHJkZx8a7tsKI0C2K1VkUuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l4/kMENZ; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDbUww+P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535A4C4CEE3;
-	Fri,  4 Jul 2025 02:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751597929;
-	bh=qO9mOBPpvlL4od66vpINa3TB8+oUKIGbu0TsfXlPscI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CDbUww+P0vHt0eG/vKEhPKqRHNJUT78diFAcTHIjbs6YdeK+S9PjBwLw02Ksy4/0J
-	 pbbAqXNkXl1QqTJhjrj7KSL/j2LkGSxXEKK10ddB54iaqcrUnZkfBt8dv/13hNJmn8
-	 INJDloX4XWMVCQw3guZ8HNdKc7dwsJdN759TmRO5M6FJ2hmW3jLZLnZ3CJXkdk3hg6
-	 i2ldItQ2rJhdSSDpmFbgyvYjftfleE6tUiq9rNxl6bcKAGjImzFuSqorXTtcjyg9Xi
-	 HM6tSahk4cjvD6gTnLt0kJtdrEY8kiknf0oX+EwhsDTqjvh9D/wR3mj5qVCAwyxakE
-	 VJjyvMgpvJiQw==
-Date: Fri, 4 Jul 2025 05:58:46 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: Use of_reserved_mem_region_to_resource() for
- "memory-region"
-Message-ID: <aGdDZodNndTfVEQ2@kernel.org>
-References: <20250703183424.2073075-1-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l4/kMENZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=fWUTasDZ77zNHMZTc9qdSgR+3p0hsCmRaegRW2WfdU4=;
+	b=l4/kMENZIligMjiU7+FNAXfCSKhaxJ8cJ7K/7rb/RihrStQXXfTVXsMdCYQKZn
+	Sh1xiIXxGvgaaFcZYPF2OHyad9KAjpkzJ0srhxrJ61sG5lPRf1jvox3Ma785hS3A
+	h//2nLF3EWH+8RbMNi1HQ+Zdni8eLDwZ6DHKaEiCU58lQ=
+Received: from SZ-jihb.starsmicrosystem.com (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD357JjQ2doqh++CQ--.43258S2;
+	Fri, 04 Jul 2025 10:58:43 +0800 (CST)
+From: Hongbin Ji <jhb_ee@163.com>
+To: jogletre@opensource.cirrus.com
+Cc: fred.treven@cirrus.com,
+	ben.bright@cirrus.com,
+	dmitry.torokhov@gmail.com,
+	patches@opensource.cirrus.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hongbin Ji <jhb_ee@163.com>
+Subject: [PATCH] Input: cs40l50 -  fix possible NULL pointer dereference
+Date: Fri,  4 Jul 2025 10:58:38 +0800
+Message-Id: <20250704025838.11810-1-jhb_ee@163.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703183424.2073075-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD357JjQ2doqh++CQ--.43258S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWruF4xKF4DArykXrWUXr15twb_yoWfGrc_uF
+	WrGrs2kryqk3yUKFs0qw47Zry8KF1Yvw4kZFnIg39rXry0gr4DW34IgF4qvrsrWFy7tF9x
+	Gw47Wa4F9wnrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNqXdUUUUUU==
+X-CM-SenderInfo: 5mkesvrh6rljoofrz/1tbiYAWAfGhnPtCgeQAAsh
 
-On Thu, Jul 03, 2025 at 01:34:24PM -0500, Rob Herring (Arm) wrote:
-> Use the newly added of_reserved_mem_region_to_resource() function to
-> handle "memory-region" properties.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/char/tpm/eventlog/of.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
-> index 930fe43d5daf..92cec9722ee4 100644
-> --- a/drivers/char/tpm/eventlog/of.c
-> +++ b/drivers/char/tpm/eventlog/of.c
-> @@ -24,16 +24,10 @@
->  
->  static int tpm_read_log_memory_region(struct tpm_chip *chip)
->  {
-> -	struct device_node *node;
->  	struct resource res;
->  	int rc;
->  
-> -	node = of_parse_phandle(chip->dev.parent->of_node, "memory-region", 0);
-> -	if (!node)
-> -		return -ENODEV;
-> -
-> -	rc = of_address_to_resource(node, 0, &res);
-> -	of_node_put(node);
-> +	rc = of_reserved_mem_region_to_resource(chip->dev.parent->of_node, 0, &res);
->  	if (rc)
->  		return rc;
->  
-> -- 
-> 2.47.2
-> 
+Add a NULL‐check and return ‑ENOMEM if allocation failed to prevent a kernel oops
 
-Thanks. It is now applied to my master.
+Signed-off-by: Hongbin Ji <jhb_ee@163.com>
+---
+ drivers/input/misc/cs40l50-vibra.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-BR, Jarkko
+diff --git a/drivers/input/misc/cs40l50-vibra.c b/drivers/input/misc/cs40l50-vibra.c
+index dce3b0ec8cf3..61d87bc5f175 100644
+--- a/drivers/input/misc/cs40l50-vibra.c
++++ b/drivers/input/misc/cs40l50-vibra.c
+@@ -238,6 +238,9 @@ static int cs40l50_upload_owt(struct cs40l50_work *work_data)
+ 	header.data_words = len / sizeof(u32);
+ 
+ 	new_owt_effect_data = kmalloc(sizeof(header) + len, GFP_KERNEL);
++	if (!new_owt_effect_data) {
++		return -ENOMEM;
++	}
+ 
+ 	memcpy(new_owt_effect_data, &header, sizeof(header));
+ 	memcpy(new_owt_effect_data + sizeof(header), work_data->custom_data, len);
+-- 
+2.34.1
+
