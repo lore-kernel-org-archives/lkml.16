@@ -1,124 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F09286415
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DF7288C29;
+	Fri,  4 Jul 2025 07:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615643; cv=none; b=r2KQ4Qyn/MpUD09c8YSM53+ohhwd0J/b44/2QW2vGRV6sD8jPJpV461tTiiVf3xREXVaVmS1oNdUSSF0LXWhAqK86Gaqti1Fa8vTBO0914MlMw51wIvBZbA28n8tut1xAsuXT+S0rv2Tq73jo/Uym9UrnuY5E/XNO4k5ZFFBWG8=
+	t=1751615643; cv=none; b=Z3VvqdjnYsgcAzEL0EOYoDKaNtwLJtNYZlOZL/8c2uX3U8HxhtbaXHLmyXmAsKF98meuNawjXelJYJQFH5HUOZX3eZFzJmjYWa6qCHj7Oh4a1t+S4JM2+FB/Yr/QOb4kIzSlY9XYTJ/W3BjZAQcAqMp/bQs+lcuRH7UWSh34ZcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615643; c=relaxed/simple;
-	bh=2ytS98LP09yxUibnFIJ15FCH120g81M7gToAN6HatlE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GYuwmTTOSdzNE3msnMfgvnK5uepmNJaoyhP4mgatiZjJ9hefVmTLvHm3xQ6BRO+Jg9zFo7dMAQ8tIaXG6J+EqdCA/45XAjCUdO+Olx/mroEV/LxDlgMEZpSDT0xaeffcNTrQTmVIXQPlgoco3+7fWUO/J2XCt9huB3O05ZZjwnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=leyJnn35; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=dRxbz96Z2+jNfqLv4UxWyQRKThDSBP9Zop23bLgLf+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=RyhBhMBblkOBFFd+g4Xfs4RqONUCCbmp1f9MfLlImKlDh5280bGuWeFNy9O3nWKjJIVGjPlgAjGvvHsIvScY5ovqqEJoChyuN2zdSUXNgQojxMLQl51nqCKjCt4XV0oYo8KjVsHeTyUHaq8ZyPZnFZy+2Zh3kQ3b66Cl0qQh3Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JqaJJTln; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="leyJnn35"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615641; x=1783151641;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2ytS98LP09yxUibnFIJ15FCH120g81M7gToAN6HatlE=;
-  b=leyJnn35wA1fclrEMPDqejnN+NT+wnDJyH2jfAWilYUkAvsCXPkoGkNw
-   wl8+epK3MWsWM0VQpidVfsuht2KDPWUvEx8lwAXx54zPJPOrNf/5NVJ+p
-   jNmzFNCFChr2XLbLFs3AwR0MN4BLJoJR5ZLKQEg0ZiY1S/KJlC4x5xtw1
-   i2AqT7snd1OlElVGEKC6sCkuxp2GgbUrWSWTGw0py8JB8wLjE0Ri33qNT
-   ryvVCtHkiTyU5LRmTc1emTlo5DqVQKs0HL6YQNxSP6M3w4F37Qk/WwlTT
-   oTU+PCjDpa2bo5v2VcbSooT/QEeaizVLaatpmXdGCVCalylzLiJPxU5Kk
-   A==;
-X-CSE-ConnectionGUID: Ev9syrP0QDiawrKv+2OxZw==
-X-CSE-MsgGUID: 2YOVGBitTQmQLmo4VnOsFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494446"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494446"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:01 -0700
-X-CSE-ConnectionGUID: MHb23xx3RHCVWynOmTIl3A==
-X-CSE-MsgGUID: +zKqp9/NRbmdahhWuJas7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924153"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:53:59 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 1470F44394;
-	Fri,  4 Jul 2025 10:53:57 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/80] accel/ivpu: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:53:56 +0300
-Message-Id: <20250704075356.3216699-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JqaJJTln"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5645w92P028430;
+	Fri, 4 Jul 2025 07:53:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JcVofRBfVreMJIT8Bh5XM2YdJsgL8YWro4Lt3Uj3ZfQ=; b=JqaJJTlnhQ3YEHBt
+	ESz5HdnWSF0DlHG3Ty1junGQKWlp5O7vBVlr/FLDpjWexijrc0lUsm71STZsmC8E
+	pdHoKK6Ldfx9zw5+mras2n3dKOzgH9mpqwWlG7wX/hhTvAEtQVwTfMkFHwCnU/Zp
+	jh5uUL+kW3O8KqOWDRYCxB5oszcuF5vXV9htrAYDVS/JZG+G7Hc4t/SLR7LofGoT
+	Ps45WqC5TMRSoXrgUdQgrdVY1dY28IO7xRZzvpjXOa9dTbx77M2ocLRztbopNRYY
+	2h0uEnxKi24niXdoZV2PcgEjDFILrYDepiI29rF/B3EEbC/SXb6i0BxXKDoBYHIh
+	f3IR7w==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bw34s6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 07:53:50 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647roI6017939
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 07:53:50 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 4 Jul 2025 00:53:47 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:08 +0530
+Subject: [PATCH 08/25] media: iris: Update vbuf flags before
+ v4l2_m2m_buf_done
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250704-iris-video-encoder-v1-8-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        "Vedang
+ Nagar" <quic_vnagar@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1365;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=dRxbz96Z2+jNfqLv4UxWyQRKThDSBP9Zop23bLgLf+8=;
+ b=+Gq3tMYKouZMTDqZhnZApgufQOYbAltLtG++wGzUjkWSeXKbPJ4X0SyvpmKhnageVwc7Rpnd+
+ 0+gKd5WlnafDTchxxGq8AjEFUFY2ilW71DDFkQ+EuQmrfTuEGLZGVXx
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4Nu0ZGRzqiCLVl98N0SPx4YU_UNJ4C3R
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=6867888e cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=MjMrax0v_7cEApFHy6YA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 4Nu0ZGRzqiCLVl98N0SPx4YU_UNJ4C3R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX/lTN4A92BqH1
+ bdfS45eKEV6pxxUBypj1qUR1wEQ7oQd4KlX33Ngdcy7naV3fC+R7VFTH3jR/XVm5Q47GrbIGSig
+ t5I7L3AyONCiQXq0hfIZ4qIFgzh1BVwmvZXfs3PVY6fTmOoDALmrMenhsP/OMNC9VXe+vidR4rI
+ 4rJ8lB7ppaZHSjLoJl5nYxQAm26hVS1O6iKOmJRHBFAAm1HsW6WR336CxrtCyAKdbyC/DUPNcNs
+ XGh5nLkkmzlVBA1chg9+e8RYTjcf5nzYkvwFYHSp32aNadiRhN3wa96BjkZ1nUCI3q4XtLms6Qk
+ BfCGiPaFXJoVIDlghXr0+lBEc7fRe1fn+tqOj+OcNZxV+4LEKfKSVhnLYcbLW3BZJuzl+o6pOsV
+ QOyf1cT2FJpd2E2RMwst47W6iOx/MyA/DjgAeLGmpQmX32h74pKbdaCY972akbIXAbfomz0j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=860 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040060
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+Update the vbuf flags appropriately in error cases before calling
+v4l2_m2m_buf_done(). Previously, the flag update was skippied in error
+scenario, which could result in incorrect state reporting for buffers.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Fixes: 17f2a485ca67 ("media: iris: implement vb2 ops for buf_queue and firmware response")
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ drivers/media/platform/qcom/iris/iris_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
+diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+index 320ebfb833331294ba5ddda8e9cd243c80633408..3ab533310b2dfece11ea31b30d29ecb32e0c3f87 100644
+--- a/drivers/media/platform/qcom/iris/iris_buffer.c
++++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+@@ -651,6 +651,8 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
+ 
+ 	vb2 = &vbuf->vb2_buf;
+ 
++	vbuf->flags |= buf->flags;
++
+ 	if (buf->flags & V4L2_BUF_FLAG_ERROR) {
+ 		state = VB2_BUF_STATE_ERROR;
+ 		vb2_set_plane_payload(vb2, 0, 0);
+@@ -659,8 +661,6 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
+ 		return 0;
+ 	}
+ 
+-	vbuf->flags |= buf->flags;
+-
+ 	if (V4L2_TYPE_IS_CAPTURE(type)) {
+ 		vb2_set_plane_payload(vb2, 0, buf->data_size);
+ 		vbuf->sequence = inst->sequence_cap++;
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/accel/ivpu/ivpu_job.c | 1 -
- drivers/accel/ivpu/ivpu_pm.c  | 2 --
- 2 files changed, 3 deletions(-)
-
-diff --git a/drivers/accel/ivpu/ivpu_job.c b/drivers/accel/ivpu/ivpu_job.c
-index 060f1fc031d3..05a1a768e1c9 100644
---- a/drivers/accel/ivpu/ivpu_job.c
-+++ b/drivers/accel/ivpu/ivpu_job.c
-@@ -1049,6 +1049,5 @@ void ivpu_context_abort_work_fn(struct work_struct *work)
- 	mutex_unlock(&vdev->submitted_jobs_lock);
- 
- runtime_put:
--	pm_runtime_mark_last_busy(vdev->drm.dev);
- 	pm_runtime_put_autosuspend(vdev->drm.dev);
- }
-diff --git a/drivers/accel/ivpu/ivpu_pm.c b/drivers/accel/ivpu/ivpu_pm.c
-index eacda1dbe840..761b4d7e1a5a 100644
---- a/drivers/accel/ivpu/ivpu_pm.c
-+++ b/drivers/accel/ivpu/ivpu_pm.c
-@@ -359,7 +359,6 @@ int ivpu_rpm_get(struct ivpu_device *vdev)
- 
- void ivpu_rpm_put(struct ivpu_device *vdev)
- {
--	pm_runtime_mark_last_busy(vdev->drm.dev);
- 	pm_runtime_put_autosuspend(vdev->drm.dev);
- }
- 
-@@ -428,7 +427,6 @@ void ivpu_pm_enable(struct ivpu_device *vdev)
- 	struct device *dev = vdev->drm.dev;
- 
- 	pm_runtime_allow(dev);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- }
- 
 -- 
-2.39.5
+2.34.1
 
