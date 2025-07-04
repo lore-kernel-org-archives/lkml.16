@@ -1,107 +1,114 @@
-Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8631120E005;
-	Fri,  4 Jul 2025 05:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BAE20E314
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 05:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751608339; cv=none; b=c9fP9PU9ZWE3o+OJ5Arz5kFEHRaBHWNut16i2bH+fPUmPEk1BwdJWa+6JBa0vAGOiNp2MnTMM62k5GB51OG9tHCPiREpBU2LaOzHlJIVvIiI1spUGizYAgG8gvkfFi5G35eaAmA2EUOaeKGMy8NxYbqR0zwz6SdRxUWN8CzdlfE=
+	t=1751608382; cv=none; b=B5AOqoB53yUpaxwDB+rJG/jN1fyZQVjyiFtZjIoyIrfj3v/rISwjGls+TPhsSsLtZE4+o3/3vK36/+bBS0V+aHbF0zqCdEQ0x7NLbCrqSSgSb4AomEJnw2/2eGgSIsas8UflQsLRtOv1iz/CBI1R/T0dKyFp8a5RxDgdTtRrIMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751608339; c=relaxed/simple;
-	bh=E6svKm+Qv+ZXCWMqasvSRlkJ1IQ9meRTlpMu7mgHXYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IwtNYv77vJ44sarRVz/lGMUqbIAvpfce9GQRQIglJ3iR9TiyyiqmsOskjq+U5xirOZTldY25/0pkt4jQ2ZePlGGJuFo09+1H20cCAFHE4oNcH8RtedOslUt0b5Bs76ialUCWgOQI0Ce58azbo9P8UG0IZTTE702+DIL1dlYDUNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=FetE71AY; arc=none smtp.client-ip=178.154.239.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1751608382; c=relaxed/simple;
+	bh=rA4LBDewxvPyjFV5f8OYkZ7aP5FZ1aARUOL3n/eDFb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BO98Vu/sgT0R71aUREhLU8MHC+MvK8Q+ImJ31p/2YZNlfeLzYXXh6KkDtzkbThfxmeJ/bt31BI9wKvooDa1D9L/ekcOlYzccIV1hHEtUcU8K8CbdNzNJh19Au5NOV7dyHI+LIdZLrkZjg5h1nwuMRUSjKQepI15BiQqhv5/l3pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=yA9lgoBL; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="FetE71AY"
-Received: from forward101d.mail.yandex.net (forward101d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d101])
-	by forward202d.mail.yandex.net (Yandex) with ESMTPS id E4ACB65FFF;
-	Fri,  4 Jul 2025 08:46:01 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2f26:0:640:90f6:0])
-	by forward101d.mail.yandex.net (Yandex) with ESMTPS id C4C9760021;
-	Fri,  4 Jul 2025 08:45:52 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ejVF7TEL2uQ0-QF09MHxa;
-	Fri, 04 Jul 2025 08:45:52 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1751607952;
-	bh=7pgV02ZJczYf5f5e5DwWjzRTxSRKgprRp4L6AbFTIGU=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=FetE71AYojF99W3Hu4Xn4HWi/I552o16HJP1eRnSG2xfkKS0/exNh7rLlfRaSvezZ
-	 IG0PYGyVFw9yXBH2XKlQpCnjhYZZjFP4bP4Pdl4m2e0N/kQ/5AuIFNrzV/DuM4VJ4I
-	 BsQDKGcdDmfufkwy9SNXtzmhjk1xFPZJ2p2Yg86A=
-Authentication-Results: mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	mattgilbride@google.com,
-	wedsonaf@gmail.com,
-	daniel@sedlak.dev,
-	tamird@gmail.com,
-	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH] rust: rbtree: simplify finding `current` in `remove_current`
-Date: Fri,  4 Jul 2025 08:45:39 +0300
-Message-ID: <20250704054539.7715-1-work@onurozkan.dev>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="yA9lgoBL"
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+	by cmsmtp with ESMTPS
+	id XX7ju8X4SVkcRXZKUuWsKY; Fri, 04 Jul 2025 05:51:22 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id XZKTulnY1DFILXZKUuW6g7; Fri, 04 Jul 2025 05:51:22 +0000
+X-Authority-Analysis: v=2.4 cv=YtIJRZYX c=1 sm=1 tr=0 ts=68676bda
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=ZJCAKeS_rTr8ZDEThcMA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=O9MMJkEsR1KX+OJ9KCLO9TodMSMz2wW/Kp46ei93ju8=; b=yA9lgoBLNBZ0ejKSWPAEj13tkT
+	xmrj+Yy9lqFly1B/TrFac5lJrA2Km//8QSBEwgldGZW4oraWoHHnV4CCInadGR5iRNdCEmAzr9whs
+	QRZs3Y3iMYina+DaDMbk5qRIwmV/Yb3RoiFnXUCjfmOXOYnm0bXU1ypEv1bdxdOSLP+q4EJBDE70V
+	heDCyD/WqbIPTq3sFTiJeEEzKhjXcFIN9ihsvKXn1IINuEt0zFrr3utrr5CobUnWT/+rIfFjeCmu1
+	8Y9xKhmnCxWvIv+l/viwJA9LWbPDSW1c4qqS7Ov3HXXaqumlGuCsILLO2ZwAdyYP8v0t5fc8sl45X
+	0XjrApJQ==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:33296 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uXZKR-00000000mGp-1H4y;
+	Thu, 03 Jul 2025 23:51:19 -0600
+Message-ID: <d984a233-edfe-4748-bc07-0c32f8d27458@w6rz.net>
+Date: Thu, 3 Jul 2025 22:51:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250703144004.276210867@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250703144004.276210867@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uXZKR-00000000mGp-1H4y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:33296
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMmAsy6owuDkKu8eQa7NdsG8xzbH76CPTjfG2uqjvM+C+fdphysf8wTxnPH2AVkEkwJ7ZTxIeq0i+PC85cr3aiRFVr2TTIycbINy2gyaVzSHXtgSHvHs
+ 8PDa7aQ/cCTovJwTKTOdeQyjflJ62iMatOS9lyvzJmvce0/M4SRq+9F9QwHYT0/wzLtWtve4/JyIqWXnAEujMBEycI4mFPqSky8=
 
-The previous version used a verbose `match` to get
-`current`, which may be slightly confusing at first
-glance.
+On 7/3/25 07:38, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.5 release.
+> There are 263 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.5-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-This change makes it shorter and more clearly expresses
-the intent: prefer `next` if available, otherwise fall
-back to `prev`.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Signed-off-by: Onur Özkan <work@onurozkan.dev>
----
- rust/kernel/rbtree.rs | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
-
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index 8d978c896747..8f1052552132 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -769,18 +769,10 @@ pub fn remove_current(self) -> (Option<Self>, RBTreeNode<K, V>) {
-         // the tree cannot change. By the tree invariant, all nodes are valid.
-         unsafe { bindings::rb_erase(&mut (*this).links, addr_of_mut!(self.tree.root)) };
-
--        let current = match (prev, next) {
--            (_, Some(next)) => next,
--            (Some(prev), None) => prev,
--            (None, None) => {
--                return (None, node);
--            }
--        };
--
-         (
--            // INVARIANT:
--            // - `current` is a valid node in the [`RBTree`] pointed to by `self.tree`.
--            Some(Self {
-+            next.or(prev).map(|current| Self {
-+                // INVARIANT:
-+                // - `current` is a valid node in the [`RBTree`] pointed to by `self.tree`.
-                 current,
-                 tree: self.tree,
-             }),
---
-2.50.0
+Tested-by: Ron Economos <re@w6rz.net>
 
