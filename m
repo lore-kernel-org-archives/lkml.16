@@ -1,210 +1,150 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8760C2EE96F;
-	Fri,  4 Jul 2025 10:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3C42F272C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623866; cv=none; b=gZAhsV7pt3bnQbxKMkrX1yNVoPTqsHHN3PwCIDBpE9QiyFdkaAvLRvmDY0zbQuCT+0M03QK4nAGbe3EN2QFvDFHJ2tdYw9YRGPH5vLPC9PDBmQQjBDpHxKEwsyQPSDNMHv80Tgwq8+vPDBqrq85CC0lznAg/oHzs/Tznfv0PODE=
+	t=1751623887; cv=none; b=YulRMGbkQsRudMzahPpTk3QNBP4xIAhCxLVe3wiymKN2N8y7/5OkmUpL3GXUi7POep+IXVMHdPMIDHZH2IbMqheXxzg8fqZ4eKr3OVR7IkWj1WNieqC8/y5DSIxi9F/dKxpTO2+jt2w/hb6lt8mDe0jceGi218IV3NxdYj2jaf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623866; c=relaxed/simple;
-	bh=vpOW6eWpnMOvFjCRArTBEY2dAsyhhAeZds1DtDRWzFo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdqN33JrVk5LdePjU42NP7sWcOhMQ4+DUpzPQNnpJNXcY4Hcz96FJ80Pl1M38acav+q3aR01WDTx1UJO10d9O71YJc8wSUe+8pBVWsqeXaa2xuZzuoe5W7nd6vAMg/GbOInCtMSS8LUeLgyTxWAG6a5x3pak+MmbC5cVDYlPNCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVCxfwuT; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751623887; c=relaxed/simple;
+	bh=ZJfiMH6yrhrW4z13OYY/q+7njP7HRfoaeaZaIxvoLsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AHkt76M+tUXlX4gtOEXmNIuJnKC71AlcF4C8wn6+sKFEgiP1KIR1sRvrmEICWXEwRRdOrzElZx0Url/gcTkZBrGAFD9ltzvo6BgdEMrS0S/RIU1tvvcP3CbBjcCQEzoIjDIOvRx6u7LUN2iIdw3Q/K4bpzpNX8es6BhBMt6hTJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=NlfZj2fr; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVCxfwuT"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553dceb342fso800438e87.0;
-        Fri, 04 Jul 2025 03:11:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="NlfZj2fr"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553dceb345eso973133e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751623863; x=1752228663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6hFh51BLuZwCFkzcHxtYDUVh7kL90TvhT7DOkfO+fT4=;
-        b=AVCxfwuT6TMOCWmfni5pLytlkhquHL4hTL3tkbzForkwm/W1+khK1ilSKf+sHAsCVt
-         MIrYxa5+heyEJZ9gWgpgbN72LMOP/CmRo39zldE/+WpORQQ4T/IMv7OX6aumNtdIpKsO
-         JzHJ5k9AalQ+TltbF1ouDF6H/UJIMyvZlsgBSBu5t3Z1MYYDXOwB7QQbDJgNOB7VVw3w
-         VheQ/CBnigt5wtePzL0VvQvwlTonrC3TxNwnGT4je3d3cJvI2Y1r8885eyhWqj5h9soT
-         NApIlIFtBbj3yOavbtg7b/wG52MtMGHn5nC53H7TIf2GTBQ6wlUPIwjPR9e4d6Vv40uB
-         rEGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751623863; x=1752228663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1751623884; x=1752228684; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6hFh51BLuZwCFkzcHxtYDUVh7kL90TvhT7DOkfO+fT4=;
-        b=uThStsKdUCW6KJedmfQxlW8hYjIeHX7rRrGJh7kVqwYTeUwnP6vZ3wC9FW4QEF1QjW
-         KTLI7ZyX6jvuvEgge8vAI0OwvJFyuQqF7mfxrZEhyXsjOxCobAqRUZMr5J0BKzIewwpi
-         fbF+pVly1mlIEvYI2R5JIDFug9l+ojT1J+gVkzEIBkafQIzg+v4AJvChBiJ2BHjDHppM
-         OFfqsbOcpN3hZLmwfJFh/J8TzruuwK4NOk1QXPvmbRC274qh7GmVstIiRS0XRFUiGiD1
-         wE7oqwVg5fMfKs+Cicx3VUyJCiy4hzCo0nk5aeQMqVlCekx4y4d0JgMLNBnuzFhy/0lS
-         KXMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ztmL3gDQcxpP/tQbltE1qJrmPhhyRCLlB2tle/Wdgq0sgiHvYpnC5urEjITJwlFuv9GweJX+dsFDCeo=@vger.kernel.org, AJvYcCX2X9ywdloOoRmh3lJevanZkGA5wJb/25GKKTMLeAjIVCEj3Inky21SoAjVa3RlYsuFBHnxd1C1mqLVb4qqo9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeiqwEl72mXNjsYvzWDipfqgN+9r5MwYy4gkTRqBYZMkvWrYMx
-	QJzNe2frllU04cG/uC3EU1nyv719HvWydH3COr5EQ09uMBRU27TajO3e
-X-Gm-Gg: ASbGncuWVOjXDgKbYJGEFuZ7tjluWp5JQOuzEq1j85n9xqZq0nWZGSHBrJR1xFLBg+o
-	ji9klevnUCVjRXvE6HHt3HJCElbnBEywgvV9KoOm/mPpHjWfFh/H80ocL59sizIEZt9hGEXjMk9
-	fKNVTRV/7X4k1H6x3j1I3Z8cMkKEHCIC2M83dG7HKHDoIisPwrP0oSyK/JLXQCF+wAVW1oAoX6f
-	nZ/ghUkcAX9fS4KywiP9rXwI1GwOTjhZrpT8TH1VXfQ+FJF211zoBSxJHgRQ/ZEfp1OMnFPeYJw
-	fBHSNw7dFiysysMEQePD0OPh8IIngwC6B+i0UjwDkF39/tszNQFiwT884nGg1D/PLWRTcWPZCk/
-	lw0UikJUHLxb+XA==
-X-Google-Smtp-Source: AGHT+IEPipxgigrzCJYt18EpBU6h7oYOkJ72QENXkAwAV5zTFI/u66qor5gv6Sk3B2jTSy9z5DRvrg==
-X-Received: by 2002:a05:6512:3b1f:b0:553:a469:3fed with SMTP id 2adb3069b0e04-556dc2653b3mr561385e87.11.1751623862368;
-        Fri, 04 Jul 2025 03:11:02 -0700 (PDT)
-Received: from pc636 (host-78-77-210-196.mobileonline.telia.com. [78.77.210.196])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384b83a3sm209662e87.199.2025.07.04.03.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 03:11:01 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Fri, 4 Jul 2025 12:10:59 +0200
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v10 1/4] mm/vmalloc: allow to set node and align in
- vrealloc
-Message-ID: <aGeos0WWKEdjmhQr@pc636>
-References: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
- <20250702160824.3610055-1-vitaly.wool@konsulko.se>
+        bh=ThnYue16skpDKY73i8RkpzoMae/+gmhFicLx/ccew8c=;
+        b=NlfZj2frJ0MoI/3h7QveKv3Y0EgzXgLQw8j2Ge+Wo0BaXCzdjZufQmSA/ijuVDP9gi
+         gJz4g/4zLumrGQqytWbXxeWHMEK0gbxZzTnKz0n7dciwIIWnDBRKLTHvXypSBwF4d9i1
+         nzIqaSMslKbZh3agm9XKrIDh4JTKzk2qwzddiGAXIXGtyp7+cqPObMq3H+2oSMRCLEJG
+         JeqMmMdhVRY0YOqnhqCkiV5Ho1k8WTQduCIqx5tuK/tX66Mi0GDGRrjdo0KTeBKK6VPa
+         6dJSqsdmSoDN5QvRnopc0iXMyN3DGNdd08Za0D5A0OiMXr1MFTIDRjxVmRZAXd/GPNJZ
+         N2FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751623884; x=1752228684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ThnYue16skpDKY73i8RkpzoMae/+gmhFicLx/ccew8c=;
+        b=X6EakB29IrW5kpLiGgBKDcK32Fwh55+dUiy4lAuG5dcGZ4NMiuNFBvPXh1MdzYJNOE
+         KwcMDjSzaGNrchNdSbYdAkUiNl0p3yEGsGqspCZgM93FuZO2mWBwIQdqIGHyX+pz3iU2
+         3MrzjAT6avoJHTySfUQ2YujAiejEZHczm4a6CJxAW324hW+BpydxpEzdpyQ5zrRRGi/b
+         6Hy8CS7+2H1iLnRb2ljSwCYBdrxzqEADb8ds8UKVly56hZFj6zygQWSVOiseP/w2piSV
+         MHgv+o1POSfi2h3ufFlTzZdEjD0IMruE+IGMe4WNsUZ8E3viAa3M5eRq0qE1PfJOgNPC
+         kSEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW8ofMXRNR21DXoBg07nvcG5v8SZfq88+Ju50BPC2i34OQNMhrVWqppnLhOY/8Ao8qy0K78Sz0NkACNt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz98/4Xp7nUyAgjb744YgeNAg/TtGp3ZCQ0VeyQD3KgTVrBWkLR
+	vsJ+0juMvhRKycSnbXQU4GSIRvpIBdlRz/bp1iz+KKPN8JwxMRiszJAOLBsq5zeXURp617eOeyr
+	SWIARIPQSa1Qlb7tOdXQSwd28AFfN9gJY1xp9paKLUQ==
+X-Gm-Gg: ASbGncsHfXwpE7ON69SKXJqyGGpHQB+Zx21d2o/lBXViUB+RR02PedBFt150IUWJMDg
+	yWEBJ1FQub8tm2Pnz6ItrCiOI9mdS9omhqIUEcayT5WoU6qkYs9qNBznTyoB9Ouncni/hgsma4F
+	kIKpeeG50EKVgGceOGLk9dSgcTxHlghdzkL9FBsIDrYlw/Py8n1WpiWsY=
+X-Google-Smtp-Source: AGHT+IFYm/wR4jTRlbIDDwF6FIxEmPbVXFWiC29PN2h5l87b4kSraGLAGzH7R/iggEXemYKU5MQvLCtTcORv1zFuOus=
+X-Received: by 2002:a05:6512:3c94:b0:553:291f:92d with SMTP id
+ 2adb3069b0e04-556e617c939mr532276e87.57.1751623883637; Fri, 04 Jul 2025
+ 03:11:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702160824.3610055-1-vitaly.wool@konsulko.se>
+References: <20250704070356.1683992-1-apatel@ventanamicro.com> <20250704-attractive-sawfly-of-artistry-1c86a3@krzk-bin>
+In-Reply-To: <20250704-attractive-sawfly-of-artistry-1c86a3@krzk-bin>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Fri, 4 Jul 2025 15:41:11 +0530
+X-Gm-Features: Ac12FXzuBcUQShERIhU7sx8yxPVr9NpYbWLk5Qb0GVfeL-KIfhtDK6Kn6d-Jp8I
+Message-ID: <CAK9=C2Xt5r0Vjw916U7hV7jR1iRwfaLpvhLYTLmWec_p_1pziw@mail.gmail.com>
+Subject: Re: [PATCH v8 00/24] Linux SBI MPXY and RPMI drivers
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 06:08:24PM +0200, Vitaly Wool wrote:
-> Reimplement vrealloc() to be able to set node and alignment should
-> a user need to do so. Rename the function to vrealloc_node_align()
-> to better match what it actually does now and introduce macros for
-> vrealloc() and friends for backward compatibility.
-> 
-> With that change we also provide the ability for the Rust part of
-> the kernel to set node and alignment in its allocations.
-> 
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
-> ---
->  include/linux/vmalloc.h | 12 +++++++++---
->  mm/nommu.c              |  3 ++-
->  mm/vmalloc.c            | 28 +++++++++++++++++++++++-----
->  3 files changed, 34 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index fdc9aeb74a44..68791f7cb3ba 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
->  extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
->  #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
->  
-> -void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> -		__realloc_size(2);
-> -#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-> +void *__must_check vrealloc_node_align_noprof(const void *p, size_t size,
-> +		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
-> +#define vrealloc_node_noprof(_p, _s, _f, _nid)	\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
-> +#define vrealloc_noprof(_p, _s, _f)		\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
-> +#define vrealloc_node_align(...)		alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
-> +#define vrealloc_node(...)			alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
-> +#define vrealloc(...)				alloc_hooks(vrealloc_noprof(__VA_ARGS__))
->  
->  extern void vfree(const void *addr);
->  extern void vfree_atomic(const void *addr);
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index 87e1acab0d64..8359b2025b9f 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -119,7 +119,8 @@ void *__vmalloc_noprof(unsigned long size, gfp_t gfp_mask)
->  }
->  EXPORT_SYMBOL(__vmalloc_noprof);
->  
-> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
-> +				 gfp_t flags, int node)
->  {
->  	return krealloc_noprof(p, size, (flags | __GFP_COMP) & ~__GFP_HIGHMEM);
->  }
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 6dbcdceecae1..412664656870 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -4089,13 +4089,22 @@ void *vzalloc_node_noprof(unsigned long size, int node)
->  EXPORT_SYMBOL(vzalloc_node_noprof);
->  
->  /**
-> - * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
-> + * vrealloc_node_align_noprof - reallocate virtually contiguous memory; contents
-> + * remain unchanged
->   * @p: object to reallocate memory for
->   * @size: the size to reallocate
-> + * @align: requested alignment
->   * @flags: the flags for the page level allocator
-> + * @nid: node number of the target node
-> + *
-> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). If @size is
-> + * 0 and @p is not a %NULL pointer, the object pointed to is freed.
->   *
-> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
-> - * @p is not a %NULL pointer, the object pointed to is freed.
-> + * if @nid is not NUMA_NO_NODE, this function will try to allocate memory on
-> + * the given node. If reallocation is not necessary (e. g. the new size is less
-> + * than the current allocated size), the current allocation will be preserved
-> + * unless __GFP_THISNODE is set. In the latter case a new allocation on the
-> + * requested node will be attempted.
->   *
->   * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
->   * initial memory allocation, every subsequent call to this API for the same
-> @@ -4111,7 +4120,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
->   * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
->   *         failure
->   */
-> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
-> +				 gfp_t flags, int nid)
->  {
->  	struct vm_struct *vm = NULL;
->  	size_t alloced_size = 0;
-> @@ -4135,6 +4145,12 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  		if (WARN(alloced_size < old_size,
->  			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
->  			return NULL;
-> +		if (WARN(!IS_ALIGNED((unsigned long)p, align),
-> +			 "will not reallocate with a bigger alignment (0x%lx)\n", align))
-> +			return NULL;
-> +		if (unlikely(flags & __GFP_THISNODE) && nid != NUMA_NO_NODE &&
-> +			     nid != page_to_nid(vmalloc_to_page(p)))
-> +			goto need_realloc;
->  	}
->  
->  	/*
-> @@ -4165,8 +4181,10 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  		return (void *)p;
->  	}
->  
-> +need_realloc:
->  	/* TODO: Grow the vm_area, i.e. allocate and map additional pages. */
-> -	n = __vmalloc_noprof(size, flags);
-> +	n = __vmalloc_node_noprof(size, align, flags, nid, __builtin_return_address(0));
-> +
->  	if (!n)
->  		return NULL;
->  
-> -- 
-> 2.39.2
-> 
-This one LGTM. Let's see what folk think about SLUB changes. We need to
-be aligned with naming and approach on both sides.
+On Fri, Jul 4, 2025 at 1:15=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On Fri, Jul 04, 2025 at 12:33:32PM +0530, Anup Patel wrote:
+> > The SBI v3.0 (MPXY extension) [1] and RPMI v1.0 [2] specifications
+> > are frozen and finished public review at the RISC-V International.
+> >
+> > Currently, most of the RPMI and MPXY drivers are in OpenSBI whereas
+> > Linux only has SBI MPXY mailbox controller driver, RPMI clock driver
+> > and RPMI system MSI driver This series also includes ACPI support
+> > for SBI MPXY mailbox controller and RPMI system MSI drivers.
+> >
+> > These patches can be found in the riscv_sbi_mpxy_mailbox_v8 branch
+> > at: https://github.com/avpatel/linux.git
+> >
+> > To test these patches, boot Linux on "virt,rpmi=3Don,aia=3Daplic-imsic"
+> > machine with OpenSBI and QEMU from the dev-upstream branch at:
+> > https://github.com/ventanamicro/opensbi.git
+> > https://github.com/ventanamicro/qemu.git
+> >
+> > [1] https://github.com/riscv-non-isa/riscv-sbi-doc/releases
+> > [2] https://github.com/riscv-non-isa/riscv-rpmi/releases
+> >
+> > Changes since v7:
+> >  - Addressed comments on PATCH3, PATCH7, PATCH10, PATCH14, and PATCH21
+>
+> Which comments? What exactly did you change? Provide in-patch changelogs
+> explaining this, because what you wrote is way too vague.
+>
 
-Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Apologies for being a bit lazy here. Most changes are pretty straight forwa=
+rd
+except the improvements in PATCH14. More detailed change log is below ...
 
---
-Uladzislau Rezki
+Changes since v7:
+ - Addressed enum related nits in PATCH3
+   (Refer, https://lore.kernel.org/all/CAK9=3DC2VxhC6soxHtmacedbeCU=3DrFi84=
+Br1RvN2uPcBKoLhRaJw@mail.gmail.com/)
+ - Addressed comments in PATCH7 as follows:
+   - Added minmax.h to includes
+   - Removed "rc" variable from mpxy_mbox_send_rpmi_data()
+   - Removed alignment and other checks from mpxy_mbox_peek_rpmi_data()
+   - Created separate function to restrict scope of channel_ids used
+in mpxy_mbox_probe()
+   (Refer, https://lore.kernel.org/all/CAK9=3DC2Ume2CmBYHYob7HSJHu=3DZdfdWM=
++4JYPgFJ9Hir5Oi8cOg@mail.gmail.com/)
+ - Improved comments for struct rpmi_clk_rates in PATCH10
+   (Refer, https://lore.kernel.org/all/CAK9=3DC2VfvsbFTjecQm0OSsssXbff7wC4f=
+qWf3CTmnpWSiaLcBw@mail.gmail.com/)
+ - Improved refactoring of acpi_fwnode_get_reference_args() in PATCH14
+   (Refer, https://lore.kernel.org/all/20250702051345.1460497-15-apatel@ven=
+tanamicro.com/)
+ - Improve nargs_count parsing in acpi_fwnode_get_reference_args() for PATC=
+H15
+   (Refer, https://lore.kernel.org/all/20250702051345.1460497-16-apatel@ven=
+tanamicro.com/)
+ - Added more comments describing why need to explicitly set device
+MSI domain in PATCH21
+   (Refer, https://lore.kernel.org/all/aGaUmpw1pVWNAmpb@smile.fi.intel.com/=
+)
+
+Regards,
+Anup
