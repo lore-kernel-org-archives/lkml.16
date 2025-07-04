@@ -1,117 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36F42F3C35
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9AF2F4315;
+	Fri,  4 Jul 2025 07:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615705; cv=none; b=i6UdhscqBcCHqteluk3Ni6v+nCLmeJsdsPszXeH1UOWBmndQ0aVvdyKOfBNy81pqay/mBxn46Hz5quwWNk/ZC7QBxfhWTerE9SgzkIajltUrfDWhGMe+GNg4sRocinzlDkUiTDjeRk5RX3LBUVApfJJI/mE5AeoJop4Y1WL3E4M=
+	t=1751615706; cv=none; b=qulbYgToINrDMO9/64LnMI6mSXCiVBkqEsHymxWetF4lULwfdA1s7T0F39jXH53Ug0NZeMMIdBfxz3KyDJtWkJL3HgT2R2FZg3V0fcTWu1x9/KNvqUy9LgikegK+Jjwmf4xdyhfynhrSPNbi44iWSNuHlrhtq+O2/hDkzB48JNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615705; c=relaxed/simple;
-	bh=qd8Jabk23N4/4W/Jfwg2Vhw/5dNNhoAgmpr14eTHRnE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lcaORVyDBSz82KwLVKFkh4fzdOGGU4VEPTCEOWI2yG44OY47sjkfnxmahzTjnpCy02PCJ0ABOSO1hKRw86zFC0NybH1VhQF+yu+BwEiOc9+JBTui/Z6jt8P0cx/pytiv5eZQ94RkU4rI0GSFnRcWtFbDN3JwRN8A1TVR2/YDJ/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YRl3gRbt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YRl3gRbt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615703; x=1783151703;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qd8Jabk23N4/4W/Jfwg2Vhw/5dNNhoAgmpr14eTHRnE=;
-  b=YRl3gRbtqnuJB+FcWmQJIl6r1oVIgDAHWVjezacEBrD/oHKCxzNB6Mce
-   To/iqKc7ERic57lhG5FfCdW2gDm+K/ngb16EsERPrt56fCpNPO0S5JE55
-   moUaF5CPZnpM6E8jFvjDInKIEwANt/SyLjABlhBiL4HABD8IVByIgO+nr
-   893ia9uFC7LpVy+iIeIE7QsYRgdyjTddOUAZFemnbdn+kK8/Oqx2fclGE
-   DV8vX+JLxLbInsElUFNuQUzVyaoAvTeJJm0pLNdDNFT5RONADUcFU4asO
-   8xyBEVsvttRteJEpUVE0COxKUuVGz7AG05999TiiaP9GVXMETlUx4GiKp
-   A==;
-X-CSE-ConnectionGUID: 2NiQuuofRNGKahMTFvMrcw==
-X-CSE-MsgGUID: bfaToOOHSKePOmd5jgZflw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194256"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="64194256"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:59 -0700
-X-CSE-ConnectionGUID: gWSRCDqQSH+IVoBxVZe6Mg==
-X-CSE-MsgGUID: TAR//cGuSLCFRfLCsb3ZiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158616663"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:54 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 0FF2A44394;
-	Fri,  4 Jul 2025 10:54:50 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greybus-dev@lists.linaro.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 63/80] greybus: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:49 +0300
-Message-Id: <20250704075449.3221896-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	s=arc-20240116; t=1751615706; c=relaxed/simple;
+	bh=x9A3hNhSIv1JfhUbvnxXKeblQ+dzPJLL+9vPRTOw4PY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cpMiwwyCJGYU2WjxuWXAOHwlhA4Kuvs7vssCArtKmnUjfyNJ4RkuqNQwDmIeNx/oMKe4I9vwi5qpzQqnljMh1DN0Gbv31+iMvSiy3ipAjvmQ8mJp9PfoPnLPRkqPerfZ+EV8VYZemxTil69cqWTZfTfPAwe3GBLldVkUER73n1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bYQqD0Hdfz2BdWG;
+	Fri,  4 Jul 2025 15:53:12 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5B79B1402CB;
+	Fri,  4 Jul 2025 15:55:00 +0800 (CST)
+Received: from [10.174.179.113] (10.174.179.113) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 4 Jul 2025 15:54:59 +0800
+Message-ID: <d1bb9101-f826-4d79-a74d-dabcbcac351d@huawei.com>
+Date: Fri, 4 Jul 2025 15:54:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] atm: clip: Fix NULL pointer dereference in vcc_sendmsg()
+To: Kuniyuki Iwashima <kuniyu@google.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>
+References: <20250704023914.3876975-1-yuehaibing@huawei.com>
+ <20250704065353.1621693-1-kuniyu@google.com>
+Content-Language: en-US
+From: Yue Haibing <yuehaibing@huawei.com>
+In-Reply-To: <20250704065353.1621693-1-kuniyu@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+On 2025/7/4 14:53, Kuniyuki Iwashima wrote:
+> Please specify 'net' in subject:
+> 
+>   [PATCH net v2] atm: clip: ...
+> 
+> From: Yue Haibing <yuehaibing@huawei.com>
+> Date: Fri, 4 Jul 2025 10:39:14 +0800
+[...]
+>> as above.
+> 
+> Please move commit message before the splat.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ok
+> 
+> 
+>>
+>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Reported-by: syzbot+e34e5e6b5eddb0014def@syzkaller.appspotmail.com
+>> Closes: https://lore.kernel.org/all/682f82d5.a70a0220.1765ec.0143.GAE@google.com/T
+>> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+>> ---
+>>  net/atm/clip.c | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/atm/clip.c b/net/atm/clip.c
+>> index b234dc3bcb0d..c02ba9d64bc3 100644
+>> --- a/net/atm/clip.c
+>> +++ b/net/atm/clip.c
+>> @@ -616,8 +616,15 @@ static void atmarpd_close(struct atm_vcc *vcc)
+>>  	module_put(THIS_MODULE);
+>>  }
+>>  
+>> +static int atmarpd_send(struct atm_vcc *vcc, struct sk_buff *skb)
+>> +{
+>> +	dev_kfree_skb_any(skb);
+> 
+> This is not enough, see:
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
+Thanks, will check this and rework.
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/greybus/bundle.c    | 1 -
- drivers/greybus/interface.c | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/drivers/greybus/bundle.c b/drivers/greybus/bundle.c
-index a6e1cca06172..269a82c5c757 100644
---- a/drivers/greybus/bundle.c
-+++ b/drivers/greybus/bundle.c
-@@ -155,7 +155,6 @@ static int gb_bundle_resume(struct device *dev)
- 
- static int gb_bundle_idle(struct device *dev)
- {
--	pm_runtime_mark_last_busy(dev);
- 	pm_request_autosuspend(dev);
- 
- 	return 0;
-diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
-index a0f3e9422721..c49fe54c16ca 100644
---- a/drivers/greybus/interface.c
-+++ b/drivers/greybus/interface.c
-@@ -753,7 +753,6 @@ static int gb_interface_resume(struct device *dev)
- 
- static int gb_interface_runtime_idle(struct device *dev)
- {
--	pm_runtime_mark_last_busy(dev);
- 	pm_request_autosuspend(dev);
- 
- 	return 0;
--- 
-2.39.5
-
+> commit 7851263998d4269125fd6cb3fdbfc7c6db853859
+> Author: Kuniyuki Iwashima <kuniyu@google.com>
+> Date:   Mon Jun 16 18:21:15 2025
+> 
+>     atm: Revert atm_account_tx() if copy_from_iter_full() fails.
+> 
+> 
+>> +	return 0;
+>> +}
+>> +
+>>  static const struct atmdev_ops atmarpd_dev_ops = {
+>> -	.close = atmarpd_close
+>> +	.close = atmarpd_close,
+>> +	.send = atmarpd_send
+>>  };
+>>  
+>>  
+>> -- 
+>> 2.34.1
