@@ -1,162 +1,120 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EDD2D9EDB;
-	Fri,  4 Jul 2025 12:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B11A28C2A4;
+	Fri,  4 Jul 2025 12:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633690; cv=none; b=Ar0AV+X6L5N75I0yx6+GgaxVZZvuootb1uMPpB3fr+7j9Z6HyLEe3ARKqfGC9+TbdjAQDdOkW/cBODsBImhXGZkfKc66BPXuj5qLa9Lrl9dDfFZ5dcQKLrRbpHeoGViOlk3wXbbuTvijqiGu544cQBkXjIzRjZbDOKGE4gJS5FI=
+	t=1751633741; cv=none; b=HFHovYSaZyqg5grvA+U3e+fQjMrxPzfzG4HprNI7y6a/awziD6KibweqIOBPp8b0ivxb3t8Qp/rEMQFURQUp78pbMa+ASmpaOWWHty4A1dzX2ORYDj/rBOvui0cKTzl5ILMJoMn2zU4yAvWrDeWmlN5IDlaBb8lVYAvd0EqQmj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633690; c=relaxed/simple;
-	bh=WFTveO6q4/9I10ER4OzIRFRhszAcOJqSl6IAE70OKT4=;
+	s=arc-20240116; t=1751633741; c=relaxed/simple;
+	bh=QNqx/Wlj9nCWIT8fMgfwx3NmivnXDqJI/W6mFi+gCRQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PuKw1QM+JYJWGLelZ9sto66gZqjKLiIw44ar1cb2HEZGA6YJHwdJolMv7SMcOHRr14CqyrA61vouanz1Uf1nZON1iHZ9FQ5ZPKqJUfwCAYSQUc4DO4/rKFQMCg3pI2ZJC1G0/Z7VXHkFyoBniap/HaGRXBZGdP83a0qQmwZ+BcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMytGmPv; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jOwAIot2gPvsDU+rGhz9GMRSSBL5Rc3D8l7oqkxEfQ9ohbPMA39L0rwwRaokt0mZu+i/4PhPfv06dRleq5Fh6NogKdwydYoniYdP1omp2TGaxkWJ5MM3RTRNeIGE99AXNMGNs4WYYHliDvKWfvZVwvKulkxYr5cEIkvzWBST4i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Trik42J8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3NQGlFpi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMytGmPv"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60402c94319so574055eaf.1;
-        Fri, 04 Jul 2025 05:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751633686; x=1752238486; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fWEiBexGknF9z9JpON4CDuydmvoVyHEn0sWhDagRzsw=;
-        b=XMytGmPv6zJQ1N7jQmAzGbLjTAvsCju/5+M8Fk0T1DnJhS7gvB/acjbJgaFvSftDsr
-         jV1kY0eyFUtj/M+3hDRy5W3sPdefMstroDxMOq21jLMj8NZ6EHvBY9W0KFvNtLFRZhvI
-         QYcZbfyisEFQlKT/El0gDQqM5IODrxZDwFwR+Z31iLwmjyUiE2Hb8aA0sMmlRo1NGYg3
-         jvjTtuoRvxsGy80dTGzI1TAS+nvkDRhltMXa56IRsEqYe2R0PTN6p2V6oM+kcnsQJ3Cr
-         nj/rAy3RelXQ3UnfU3Q0y6iVZLWBLzMXfSuTlQU/kecqbKILO9fSUWUUzdr/fwn9mi/9
-         NWEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633686; x=1752238486;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fWEiBexGknF9z9JpON4CDuydmvoVyHEn0sWhDagRzsw=;
-        b=xEHU9jll3HRqejcj7r0AFZ5BCHOYFmsNfprdhOZAMibiy0eBeLq7fSWSroDsT7W8+3
-         wx+52TL/O/3ckm2jiAuXpghhdNmNogQv6ZFbcycemUTq+6Guqc3zvqxkubr9Xg6h8Ww0
-         ucpxdefh1U4mXe5rGzn3EgxAIzYNShoygFIQq9N/fzLZ9UiLpFTTvhvA00xwwBNyw3yW
-         B56Xky0jThC0rylhUk7bST5iRjrhRcwgK3I8Ihyl67VRCOlMw1HzuN4pJW6uYgOQXEGw
-         x6lDX8i1C8m8BhO6Xq4LYqDw52+9nNpGGccMmwXfEnTrJd9pbUswmlanWl0N1VfKK5Wh
-         QfqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUckJIaeT8m4BaMaHj7MG31F3Cox6FtveyIw+2LywpTtCpT7uO0KXQLZjYdTBHu6rJAg/cGwwI0JiM=@vger.kernel.org, AJvYcCWCQi72JKwJnJl6QbUIehG5XX3QmuSiztIzLU4SZC9GBfZgknKfGhoUqwLlBX9iBcjl/85wnk//XdUhZELzzA==@vger.kernel.org, AJvYcCXC/oUFnCKP63nypKJisbXvXAJps1oOPt60NFfMoNv+SkqaO2hXjBP9iECRNU45AsMLP7DUxk9YKX5KlK8H@vger.kernel.org, AJvYcCXce96OFcK+Ciabuc7E7GqZnFxRVbwOli16ocZvJc856/ZOMybYJx35/rAfk8BAySJI7Ac1Zpjf+Xho@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxCimePdhL1MYaogu1n4QyWwzukDdIDgshiR543pI9TUFpK/KN
-	Bvu1mw3edYBKH8OyMxciriioeeiJ9XE5n26Bk88nFshaZxyIf2WNAqo4
-X-Gm-Gg: ASbGncsaHThxz1oi5M0rMryWk93AR0Sf4mMWSOaat0pDKz5VSfdF9uiPH9WPBvzvpIj
-	TiFxvQ2csJViKAexFkThkjVJyXOhZmmQntI+s5x6Ka/a+c63Lu62nXYnb6M9lTO9z0ABAKe0Hif
-	Ng6d39J38a34Ru0yUe+DdcEXbZYRcrQFnpuRv3xaDufCtgP2qHIVbKhTH2tYcvlYm18eHcsP0gp
-	k8M7uWo0LjG126B/pa8Umryc7f27oJmhIZhvMHwk7ZdxvYSAWH+6EnWDGHLR9MZ/7mCvCqdTIpp
-	STNRcD6V+aBpA9uIIw1rQmYhOrzJsnE9lZwjduv5JasQ4K5Oxe8TH+NQ+nZ51IxrKWNgzss8HOc
-	=
-X-Google-Smtp-Source: AGHT+IEQCt6EzoQ1S/rGkyJCcVERY+DBQiFOXPfhObXBAnuO2Eb6V1GMOP7z4zut5KZK3JQFhWGgIg==
-X-Received: by 2002:a05:6820:1986:b0:611:b85f:b159 with SMTP id 006d021491bc7-6138ffa3919mr1751955eaf.1.1751633686279;
-        Fri, 04 Jul 2025 05:54:46 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:2db1:5c0d:1659:a3c])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6138e5c1db3sm304526eaf.35.2025.07.04.05.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:54:43 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 4 Jul 2025 07:54:38 -0500
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 02/18] dev_dax_iomap: Add fs_dax_get() func to prepare
- dax for fs-dax usage
-Message-ID: <or7rm2n4syer4uxaubtotarjtmmilhedih4odgiwvqb4cfkvsl@5w66of2xms5l>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-3-john@groves.net>
- <20250704113935.000028cf@huawei.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Trik42J8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3NQGlFpi"
+Date: Fri, 4 Jul 2025 14:55:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751633737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=siSheAnqTz9/4N7NpEjvCWRV6o0nWfZMJg4SzJ4Lsro=;
+	b=Trik42J8gxVN7HCZYZgBXLMap/JtEPimOltNmk1ZIFK6WWs0t024+y5ByCmthWGF0CyCn/
+	gNjxaBm9UBjbA+321JYdP5NmtbVYz5BWnjxrdZy3j4xTpF0gmtjm7XtwPsbPuAg8Q2le2O
+	hqEewnnvI/rrgeomydG9pZSzPjrpXQXVu77AZIbBCQ3UnygB6JETA16kVPie9Z6vHGMI1N
+	hjYg+SMhvuiGUW0lIOezLPPkXW5Rg5TlfxI9YkrpdUh7GLF02h6scu4aca46TDrVP0D6Hn
+	yJCUemFvQG/3I88x+LyKTY1Jpud+Zfc9GalFrY+ajnyW35Uk13oQUrdgOphs9w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751633737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=siSheAnqTz9/4N7NpEjvCWRV6o0nWfZMJg4SzJ4Lsro=;
+	b=3NQGlFpij+1fr3PrzxZLqo1wM5XOQqaq53IJg6c+2TeIRgDlaEpQXKAUC0YWpDpUUO2MQ5
+	NABcMwboGoBCODCQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Rae Moar <rmoar@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	workflows@vger.kernel.org
+Subject: Re: [PATCH v4 08/15] kunit: tool: Don't overwrite test status based
+ on subtest counts
+Message-ID: <20250704145203-1dbf1c70-5ce9-4654-9995-4b794a8ee96e@linutronix.de>
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
+ <20250626-kunit-kselftests-v4-8-48760534fef5@linutronix.de>
+ <CA+GJov45CF67nKJ7AC=g0fPL68pLdJbvJBwG8ecn9OUZ7hCewA@mail.gmail.com>
+ <20250703170653-0747ad3a-ee33-4ce9-9f69-1118b0d8260a@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250704113935.000028cf@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250703170653-0747ad3a-ee33-4ce9-9f69-1118b0d8260a@linutronix.de>
 
-On 25/07/04 11:39AM, Jonathan Cameron wrote:
-> On Thu,  3 Jul 2025 13:50:16 -0500
-> John Groves <John@Groves.net> wrote:
-> 
-> > This function should be called by fs-dax file systems after opening the
-> > devdax device. This adds holder_operations, which effects exclusivity
-> > between callers of fs_dax_get().
+Hi Rae,
+
+On Thu, Jul 03, 2025 at 05:30:02PM +0200, Thomas Weiﬂschuh wrote:
+> On Tue, Jul 01, 2025 at 05:11:59PM -0400, Rae Moar wrote:
+
+<snip>
+
+> > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > > Reviewed-by: David Gow <davidgow@google.com>
+> > > ---
+> > >  tools/testing/kunit/kunit_parser.py                                  | 5 +++++
+> > >  tools/testing/kunit/kunit_tool_test.py                               | 3 ++-
+> > >  tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log | 3 +++
+> > >  3 files changed, 10 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+> > > index c176487356e6c94882046b19ea696d750905b8d5..2478beb28fc3db825855ad46200340e884da7df1 100644
+> > > --- a/tools/testing/kunit/kunit_parser.py
+> > > +++ b/tools/testing/kunit/kunit_parser.py
+> > > @@ -686,6 +686,11 @@ def bubble_up_test_results(test: Test) -> None:
+> > >                 counts.add_status(status)
+> > >         elif test.counts.get_status() == TestStatus.TEST_CRASHED:
+> > >                 test.status = TestStatus.TEST_CRASHED
+> > > +       if not test.ok_status():
+> > > +               for t in subtests:
+> > > +                       if not t.ok_status():
+> > > +                               counts.add_status(t.status)
+> > > +                               break
 > > 
-> > This function serves the same role as fs_dax_get_by_bdev(), which dax
-> > file systems call after opening the pmem block device.
-> > 
-> > This also adds the CONFIG_DEV_DAX_IOMAP Kconfig parameter
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> Trivial stuff inline.
+> > Here instead I recommend checking if not test.ok_status() and
+> > test.counts.get_status() == TestStatus.SUCCESS and if so
+> > counts.add_status(status)
 > 
-> 
-> > ---
-> >  drivers/dax/Kconfig |  6 ++++++
-> >  drivers/dax/super.c | 30 ++++++++++++++++++++++++++++++
-> >  include/linux/dax.h |  5 +++++
-> >  3 files changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> > index d656e4c0eb84..ad19fa966b8b 100644
-> > --- a/drivers/dax/Kconfig
-> > +++ b/drivers/dax/Kconfig
-> > @@ -78,4 +78,10 @@ config DEV_DAX_KMEM
-> >  
-> >  	  Say N if unsure.
-> >  
-> > +config DEV_DAX_IOMAP
-> > +       depends on DEV_DAX && DAX
-> > +       def_bool y
-> > +       help
-> > +         Support iomap mapping of devdax devices (for FS-DAX file
-> > +         systems that reside on character /dev/dax devices)
-> >  endif
-> > diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> > index e16d1d40d773..48bab9b5f341 100644
-> > --- a/drivers/dax/super.c
-> > +++ b/drivers/dax/super.c
-> > @@ -122,6 +122,36 @@ void fs_put_dax(struct dax_device *dax_dev, void *holder)
-> >  EXPORT_SYMBOL_GPL(fs_put_dax);
-> >  #endif /* CONFIG_BLOCK && CONFIG_FS_DAX */
-> >  
-> > +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> > +/**
-> > + * fs_dax_get()
-> 
-> Trivial but from what I recall kernel-doc isn't going to like this.
-> Needs a short description.
+> Thanks for the recommendation. I tried this and it works well for this specific
+> testcase, but unfortunately all kinds of othes tests are now broken.
+> I'll look into it some more, but any hints are highly appreciated.
+> It has been a while since I looked at the code.
 
-Right you are. I thought I'd checked all those, but missed this one.
-Queued to -next.
+The following variant passes all tests. What do you think?
 
-> 
-> > + *
-> > + * fs-dax file systems call this function to prepare to use a devdax device for
-> > + * fsdax. This is like fs_dax_get_by_bdev(), but the caller already has struct
-> > + * dev_dax (and there  * is no bdev). The holder makes this exclusive.
-> 
-> there is no *bdev?  So * in wrong place.
-
-I think that's a line-break-refactor malfunction on my part. Aueued to -next.
-
-Thanks,
-John
-
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 333cd3a4a56b..5338489dcbe4 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -689,6 +689,9 @@ def bubble_up_test_results(test: Test) -> None:
+        elif test.counts.get_status() == TestStatus.TEST_CRASHED:
+                test.status = TestStatus.TEST_CRASHED
+ 
++       if status == TestStatus.FAILURE and test.counts.get_status() == TestStatus.SUCCESS:
++               counts.add_status(status)
++
