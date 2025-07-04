@@ -1,197 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1906814A4CC;
-	Fri,  4 Jul 2025 12:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961202D94A3;
+	Fri,  4 Jul 2025 12:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632208; cv=none; b=FHXJ2Vt+hsAICprR9vWWOPQkvMAWGMUp4LxkfQ+8aTM4dQxXYIYx1EskEzzU65dhKXcqkgRjQczwfviNyqwZQgMIoSEkTh5nPMxZRx9RmP3cPqf18QTY9l9UkFnhjRAEqmtQjlGQ9OC71/Z1OnngWzdwDHPUld8xTBiNFCRIJ+8=
+	t=1751632212; cv=none; b=fj0jewxv7Fuqne7ai8Js6WnspkG82HLRAfwvGRoQuePe1PJQInltvd0/3SJK6JO8C1oYwRwWJDG36a6XZITm066Vtcih2BQwUWwZH1e5iSg2TlhpUWbVEpa/Bb4wqjj0BBT/rR/ALCgaFP5a/qrndonan3oDo63DkKOPWuzE8Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632208; c=relaxed/simple;
-	bh=zW7noFryrnYZPc0SGx8AEUXZ+kRRxTufCit12o2wRrc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=awAP4Zft5wcvgYltcDwKvPv7OxucbsQnwVtGVlEAcvCU4ICVBtQGiLt7P9ZXRUxBNxRmxaw1zXQxAyY1qts2VFzYQlX+qRDkpqhWmaRuZV1nbs7YQD3/PFX2a8tCsarrolOSUmYwq4fM0tNi94VTio0x9qmRSegdThy/LDa6eQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qs61oTuP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751632212; c=relaxed/simple;
+	bh=s4u3hYoZy2lhWJsXQ4PocdmXhMcIc6dcQUR7IICROuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K2oxkQFtA3+fjV4kWSwvpdnLGvKxJTj8jyhm7+lS7bwSxXvRi7o8llc4i+3QH7+uYE/xHKLMUdD0UuJddG98a13RUFAmiKGojWUBDXcYuBKSaRH+ABUWhKx8t0K1o+23FJfMrBR+Hx5VzarV5r04i/s69qSXqj41KR9D/1MntzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/fsUOQh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qs61oTuP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99B5C4CEE3;
-	Fri,  4 Jul 2025 12:30:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/fsUOQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00966C4CEF0;
+	Fri,  4 Jul 2025 12:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751632207;
-	bh=zW7noFryrnYZPc0SGx8AEUXZ+kRRxTufCit12o2wRrc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Qs61oTuPjVkJsgP5wobUD0zmdh+m8uHFHLXVwQDQcMrjLgpXDdbIPNPeZp9uEKKm3
-	 keWBVG5nQMPgJfTSsmvvVN0rqvfZt/ZXfTK7qRLAHrMLGwQdKzmOCArjtLwkTOCmSU
-	 Dd1B7oqroTXqPn77EJ3ymyf9zamLo4YZ3L/6kmZioxUtol160LeyqShT97Xf8IpJBP
-	 xlhEiRi4aXsfaQvwb0/NVHOUnXTUN+h3SIrPbnrLSwVna5fFh9bLmBV77oq1fgcQEd
-	 3l7RZSDBtAQKfITPprttuaccFSz7/tvKRJKhQX0iBh26790jGP0uxM6JoViUqetkuX
-	 dUNqs6cFl1DHA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v14 5/7] rust: module: update the module macro with
- module parameter support
-In-Reply-To: <DB1OK2PQZ790.S317HUWYJR3J@kernel.org> (Benno Lossin's message of
-	"Wed, 02 Jul 2025 17:38:52 +0200")
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-	<20250702-module-params-v3-v14-5-5b1cc32311af@kernel.org>
-	<5fYjUlNFhuBwWOP46ph07KX4CMe0ORT5pZ_pD-l719E0ChkPTI2pV1tYJcN3oxKKcMI8_HGU1InaWBj52Kbbag==@protonmail.internalid>
-	<DB1OK2PQZ790.S317HUWYJR3J@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 04 Jul 2025 14:29:57 +0200
-Message-ID: <875xg8rvei.fsf@kernel.org>
+	s=k20201202; t=1751632212;
+	bh=s4u3hYoZy2lhWJsXQ4PocdmXhMcIc6dcQUR7IICROuM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e/fsUOQhRGGymBBj6Q36Fzm2mBsoyyNvQGV6Yn+gljki7oI+lrtpFTBoH2WXGP6hs
+	 oJY8dsob5zvVkanNg2lq4S1ofrVaukg68KVtudZs/T7oDRMLQURf41EgEscz3J1gmE
+	 F/EVgFdRlYXRw7kveYW1GWCnFtblIZsDVChkqPH02I3UNfOil0Ew9IlR1p4kYNbB4S
+	 A0fDCUzw0wHXG7hh/lpo5MqkLq8wdmmTlo2WKmtS5QzRdT5unzy2cGEpvn1hJi9ZT9
+	 DnXr6dCANL8txgbvVdr6joXb51kkuAM6ZUCMdQ0cj73B993xpXFjBxW5aM0kY7qBhM
+	 aYHi326I57FHQ==
+Message-ID: <59edb982-43bd-4055-b546-f4af17228b72@kernel.org>
+Date: Fri, 4 Jul 2025 14:30:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/11] dt-bindings: clock: qcom: document the Milos GPU
+ Clock Controller
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250704-sm7635-clocks-v2-0-9e47a7c0d47f@fairphone.com>
+ <20250704-sm7635-clocks-v2-8-9e47a7c0d47f@fairphone.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250704-sm7635-clocks-v2-8-9e47a7c0d47f@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-"Benno Lossin" <lossin@kernel.org> writes:
+On 04/07/2025 09:17, Luca Weiss wrote:
+> Add bindings documentation for the Milos (e.g. SM7635) Graphics Clock
+> Controller.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
->> Allow module parameters to be declared in the rust `module!` macro.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
-> A few nits below, with those fixed
->
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
->
->> ---
->>  rust/macros/helpers.rs |  25 +++++++
->>  rust/macros/lib.rs     |  31 +++++++++
->>  rust/macros/module.rs  | 177 ++++++++++++++++++++++++++++++++++++++++++=
-++++---
->>  3 files changed, 223 insertions(+), 10 deletions(-)
->
->> +    fn emit_params(&mut self, info: &ModuleInfo) {
->> +        let Some(params) =3D &info.params else {
->> +            return;
->> +        };
->> +
->> +        for param in params {
->> +            let ops =3D param_ops_path(&param.ptype);
->> +
->> +            // Note: The spelling of these fields is dictated by the us=
-er space
->> +            // tool `modinfo`.
->> +            self.emit_param("parmtype", &param.name, &param.ptype);
->> +            self.emit_param("parm", &param.name, &param.description);
->> +
->> +            write!(
->> +                self.param_buffer,
->> +                "
->> +                    pub(crate) static {param_name}:
->> +                        ::kernel::module_param::ModuleParamAccess<{para=
-m_type}> =3D
->> +                            ::kernel::module_param::ModuleParamAccess::=
-new({param_default});
->> +
->> +                    #[link_section =3D \"__param\"]
->> +                    #[used]
->> +                    static __{module_name}_{param_name}_struct:
->
-> Does it make sense to move this static to a `const _: () =3D {};` block?
-
-Yes, that makes sense.
-
->
->> +                        ::kernel::module_param::RacyKernelParam =3D
->> +                        ::kernel::module_param::RacyKernelParam::new(
->> +                          ::kernel::bindings::kernel_param {{
->> +                            name: if cfg!(MODULE) {{
->
-> s/cfg/::core::cfg/
-
-OK.
-
->
-> :)
->
-> Also there seems to only be a 2-space indentation here.
-
-Fixed.
-
->
->> +                                ::kernel::c_str!(\"{param_name}\").as_b=
-ytes_with_nul()
->> +                            }} else {{
->> +                                ::kernel::c_str!(\"{module_name}.{param=
-_name}\").as_bytes_with_nul()
->> +                            }}.as_ptr(),
->> +                            // SAFETY: `__this_module` is constructed b=
-y the kernel at load time
->> +                            // and will not be freed until the module i=
-s unloaded.
->> +                            #[cfg(MODULE)]
->> +                            mod_: unsafe {{
->> +                                (&::kernel::bindings::__this_module
->> +                                    as *const ::kernel::bindings::modul=
-e)
->> +                                    .cast_mut()
->> +                            }},
->
-> It doesn't stop with the improvements...
->
->     https://github.com/Rust-for-Linux/linux/issues/1176
->
-> Maybe we should also have one to use it here, but eh we can do that
-> later (and it's not as bad to forget about :)
-
-Applying `from_ref`.
-
->
->> +                            #[cfg(not(MODULE))]
->> +                            mod_: ::core::ptr::null_mut(),
->> +                            ops: &{ops} as *const ::kernel::bindings::k=
-ernel_param_ops,
->
->     ::core::ptr::from_ref(&{ops})
-
-=F0=9F=91=8D
-
->
->> +                            perm: 0, // Will not appear in sysfs
->> +                            level: -1,
->> +                            flags: 0,
->> +                            __bindgen_anon_1:
->> +                                ::kernel::bindings::kernel_param__bindg=
-en_ty_1 {{
->> +                                    arg: {param_name}.as_void_ptr()
->> +                                }},
->
-> Formatting?
->
-> +                            __bindgen_anon_1: ::kernel::bindings::kernel=
-_param__bindgen_ty_1 {{
-> +                                arg: {param_name}.as_void_ptr()
-> +                            }},
-
-
-That makes the line more than 100 characters after changing other
-formatting things. Perhaps I should just left shift all this?
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
-Andreas Hindborg
-
-
-
+Krzysztof
