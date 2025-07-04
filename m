@@ -1,111 +1,95 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8F2EFD89;
-	Fri,  4 Jul 2025 09:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D506288526;
+	Fri,  4 Jul 2025 09:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620580; cv=none; b=pKQAVsTNwnUaV55EkzcDNJ4Nx/P4I2l+j/I76bJWDZjH3xuyxqzCpnnlGlKT83/zxwx2YNwea7uTMHj8w1yPOzEUO09l4e++3wATfvuuxQK9k0lCOmjU2ANbQ7+4+jY7mZV6bleaNiLcEpkB1YOpnT5rfsx3VVG8nGLQldoB+q4=
+	t=1751620595; cv=none; b=ijOgkS1CSQJ1/kcLhR78juBCxSvGOXg8LRi3uEJKAXGCuzU+Iq3Gpdbe2mf9i1jTmkdxiuS72KUW1AP+Ckj/BcmrZ0jfrvIdTzKsDEOQh0IWibWALzEC/nLwb/57CN+igQAfq3v5efz81FnUIWGJfxaBW3uHUKGwHqTD16nLa+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620580; c=relaxed/simple;
-	bh=MpUbnIYKlBAUil3Thq/LzCLGjaTmHfYdzlw5yOQJwF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FJINuljfwhOgDNkb8HHW2N4U7szV8fH5YGCwZsOV4L05PXwYDebb/wuGFqEuD7a7FOtgQTyQ3+Wd5QMIAjXGXk+x8Mhvh/qvg15g93PipbG6dLTk/In4KSxzePA8raXUQJ4K3q69aKbhN610BD96y7fmxB7J1g17pE/WSnOVFQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bYScx3mc5z2SSrH;
-	Fri,  4 Jul 2025 17:14:25 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C9A7140278;
-	Fri,  4 Jul 2025 17:16:14 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
- 2025 17:16:13 +0800
-Message-ID: <3c51a0b3-9027-4397-9912-8c7635989dc6@huawei.com>
-Date: Fri, 4 Jul 2025 17:16:13 +0800
+	s=arc-20240116; t=1751620595; c=relaxed/simple;
+	bh=AkRYvE+iRYD9m1Wwp6Jy8xhOGndE4ScJG+8190VCBdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bvTYdiD5Fnrx1ooKPmkygqwb0edOoWI+7hc2dwi1F3wkpfNTmaRl+AwLV2P/hp21zWKjx5EWbWVOW8HMuDh9nTby7m+ce6URb2o9HjRv/OFJrIwRvqDBi17xLD3ge1VseZHNSs/R34ZTEC90GSwgOcr7JGarpWyhQK7fSfuXj1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ydu/QZE0; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ydu/QZE0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751620594; x=1783156594;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AkRYvE+iRYD9m1Wwp6Jy8xhOGndE4ScJG+8190VCBdY=;
+  b=Ydu/QZE0DMqV5aKFHLPElTFOl4GtzfmBZjyxKwyM9w5H5zEa65tYoYyd
+   aytr8k084YXjOIxrGCL12tZA+Jk3UNz+IWk5g4T5uyvxLVe/YxQa3gPVy
+   Y96uZ9uYeDeB2347JMnhCTviOPBq/eOvP8x/fbiVahwg1qrxXgjPJ3nNe
+   rxk9C1+rHB73678OBZ+LGXYqhldbBf5Jq5w69QjzuA7cOr+IZNNUO8VEU
+   kSZue3aOtXNbqixaShVYMe6fmS+jmW5xjuUEBSyPYVKxatlD2WR/8+y8D
+   tTnGIZAilmiRcVx4UnScpIsQavzVbArEsqLC/a4zxWxcRdRX0AoCCyv5F
+   g==;
+X-CSE-ConnectionGUID: ui3M3KoiTeaBYIiH8Wpl5w==
+X-CSE-MsgGUID: 1K7aQcqsTFGeuYJhkVlizw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57763093"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="57763093"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 02:16:33 -0700
+X-CSE-ConnectionGUID: 7OgdyKb4TLujesp+0RKKLA==
+X-CSE-MsgGUID: YIr1wxvYRqOmp50GpF9Aew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="154011509"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 04 Jul 2025 02:16:31 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXcWy-0003XX-2I;
+	Fri, 04 Jul 2025 09:16:28 +0000
+Date: Fri, 4 Jul 2025 17:15:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vivek.Pernamitta@quicinc.com, Manivannan Sadhasivam <mani@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Vivek Pernamitta <quic_vpernami@quicinc.com>
+Subject: Re: [PATCH 4/5] bus: mhi: host: pci_generic: Remove MHI driver and
+ ensure graceful device recovery
+Message-ID: <202507041755.evB3U2Ju-lkp@intel.com>
+References: <20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] cpufreq: Move the check of cpufreq_driver->get into
- cpufreq_verify_current_freq()
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: <viresh.kumar@linaro.org>, <ionela.voinescu@arm.com>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <yubowen8@huawei.com>
-References: <20250623133402.3120230-1-zhenglifeng1@huawei.com>
- <20250623133402.3120230-6-zhenglifeng1@huawei.com>
- <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3@quicinc.com>
 
-On 2025/6/23 23:35, Rafael J. Wysocki wrote:
+Hi,
 
-> On Mon, Jun 23, 2025 at 3:34 PM Lifeng Zheng <zhenglifeng1@huawei.com> wrote:
->>
->> Move the check of cpufreq_driver->get into cpufreq_verify_current_freq() in
->> case of calling it without check.
->>
->> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
->> ---
->>  drivers/cpufreq/cpufreq.c | 11 +++++------
->>  1 file changed, 5 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
->> index c4891bf5dc84..9b2578b905a5 100644
->> --- a/drivers/cpufreq/cpufreq.c
->> +++ b/drivers/cpufreq/cpufreq.c
->> @@ -1800,6 +1800,9 @@ static unsigned int cpufreq_verify_current_freq(struct cpufreq_policy *policy, b
->>  {
->>         unsigned int new_freq;
->>
->> +       if (!cpufreq_driver->get)
->> +               return 0;
->> +
-> 
-> This will duplicate the check in cpufreq_policy_refresh(), won't it?
+kernel test robot noticed the following build warnings:
 
-Yes, the check will duplicate but I think it's OK. If remove the check in
-cpufreq_policy_refresh(), the logic will be changed.
+[auto build test WARNING on 1343433ed38923a21425c602e92120a1f1db5f7a]
 
-> 
->>         new_freq = cpufreq_driver->get(policy->cpu);
->>         if (!new_freq)
->>                 return 0;
->> @@ -1922,10 +1925,7 @@ unsigned int cpufreq_get(unsigned int cpu)
->>
->>         guard(cpufreq_policy_read)(policy);
->>
->> -       if (cpufreq_driver->get)
->> -               return __cpufreq_get(policy);
->> -
->> -       return 0;
->> +       return __cpufreq_get(policy);
->>  }
->>  EXPORT_SYMBOL(cpufreq_get);
->>
->> @@ -2479,8 +2479,7 @@ int cpufreq_start_governor(struct cpufreq_policy *policy)
->>
->>         pr_debug("%s: for CPU %u\n", __func__, policy->cpu);
->>
->> -       if (cpufreq_driver->get)
->> -               cpufreq_verify_current_freq(policy, false);
->> +       cpufreq_verify_current_freq(policy, false);
->>
->>         if (policy->governor->start) {
->>                 ret = policy->governor->start(policy);
->> --
->> 2.33.0
->>
+url:    https://github.com/intel-lab-lkp/linux/commits/Vivek-Pernamitta-quicinc-com/bus-mhi-host-pci_generic-Add-SRIOV-support-for-PCIe-device/20250703-231724
+base:   1343433ed38923a21425c602e92120a1f1db5f7a
+patch link:    https://lore.kernel.org/r/20250703-sriov_vdev_next-20250630-v1-4-87071d1047e3%40quicinc.com
+patch subject: [PATCH 4/5] bus: mhi: host: pci_generic: Remove MHI driver and ensure graceful device recovery
+config: i386-buildonly-randconfig-001-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041755.evB3U2Ju-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041755.evB3U2Ju-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507041755.evB3U2Ju-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/bus/mhi/host/pci_generic.c:63 struct member 'reset_on_driver_unbind' not described in 'mhi_pci_dev_info'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
