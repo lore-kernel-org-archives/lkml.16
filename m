@@ -1,160 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF707285045;
-	Fri,  4 Jul 2025 22:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4117289379;
+	Fri,  4 Jul 2025 22:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751666756; cv=none; b=fS2o7+5lrlz6q2RnrQHSfm5LvtXJQfv+46s8xfmui59/7Z87Y393pZJ+2BSVt6Y2teajlXs60osJzNFhOoxxDhOo7DL8OcIZtSnLwAjfRcmDxnvrKIBmdNIHKKE+s/No7/xUa2tS0LvSTNKDCr87AJEbPe8O0We33lC7GSMFKDc=
+	t=1751666902; cv=none; b=vAf8RRzbDUjZO9x1JuLqc3Mp85pFpKJHnMIDdcATOMz3Ij9y9xjWfguP0xkxi756m7o6S++Cl3Vnb74oBt9Nt2F8e3sguW+f4DbnvsHR8Ki4L0kYRDf769K3/4N10OhN7iHK5yXaYywHTdXIjaunOJ5nZ1QgSEP3ahVlmo49xnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751666756; c=relaxed/simple;
-	bh=XLeXxdSCNAGO5NV6NYg14ixnzSnIeBzMBFkCaOw/yTg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=KG5mIxB42oLrCdExcG783IoQLKGas4h4G+pFF3h+DQq5o5DRBbFC631S4hgKZHYFtkw7eOtT0wVh4/pyoe0AAQUHOuOGYjY1ij9HeXmZo76z25zMThDA4fs0JUSdCkiiDEOzqXEZRkNhF0sWKAHAl6FCB0VSdTK5hieNQtj3jto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaObhdcg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751666902; c=relaxed/simple;
+	bh=jgufuOdJL8p5gukIbwKyLhiiTnvh4r3xS+pRM81NgX0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bCZJjMyBSwva1XvOiNo4ilzfVlAnMkU3qWsReLi/w7Wr8MvuvqP3ShOWWYsAnTmUtX+7NJVxenKSeTd0TLycFm9/Vd4Yry1MHw1SRM9HQOOqSas/3MFucsGIrJVt9g9mzzulw44gdHDagecDl6shHC/u/d6BTNoM6cHX8fymajs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=HZZAfPWx; arc=none smtp.client-ip=91.227.220.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaObhdcg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C10C4CEE3;
-	Fri,  4 Jul 2025 22:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751666755;
-	bh=XLeXxdSCNAGO5NV6NYg14ixnzSnIeBzMBFkCaOw/yTg=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=RaObhdcgZPd6pSpQ4SqB2VmgQ1BFy9M6LKrbBG5JDNxN8mtqA67t9eTdPBYVb+83q
-	 3k39fL7Wai8dpPb5Ap2GVdwIIbUwBQbCEB+C7Yt+r6IxGgAMC57JHoOpv/tZobkIlG
-	 apiYAYtAsgWi/KnkLkuEG8VCpcTa2TbwyXc4Lr66ac0iiCZJMoY2lyuZdGrXUAsUqt
-	 LAMO6ScsIc5hpifZlgQwUJdYyLOsjRxXWOi67zLt4Ajt28tJzYUv9Esd/Ckj7zVka9
-	 lzGFk03x2udcuVyMFGLN8PbU1xk36UcKuKblVRZz1aB4eFxbjAvPKhuEfAdhT2XBQx
-	 5OENedr+rHnYQ==
+	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="HZZAfPWx"
+Date: Sat, 5 Jul 2025 00:08:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
+	s=202107; t=1751666899;
+	bh=jgufuOdJL8p5gukIbwKyLhiiTnvh4r3xS+pRM81NgX0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
+	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
+	 mime-version:references:reply-to:Sender:Subject:Subject:To:To;
+	b=HZZAfPWxqH5Y1MxmwYizFgeKLyx39oseJorzdUt/XhkeC+u/rWU93HLttLJADHmhN
+	 LVzECSPy3nRkxDbJQSjWT22ZbrEpGgAcugxSVopFg/Ywiapvfz88vIpml8j03phIN2
+	 ihYUN1nK+spAGaodgWOM5unZN3KZjFKOntW1E/3jMo6T8kbiFm691AWKED6pnnws4t
+	 merE359CRDfewhoOqIw0rDl9cqo2RDt0IhI0aG48CEc3Ue5muUwRrqeOuiiCYqZg1s
+	 QkzBC/0cvSyW0Zwce+kQmvK6Oiao9LaLPLaCoJ/RZ7QKwka15J9VTdOp93a3fBoWZH
+	 LkAlIq6OrWOlQ==
+From: Markus Reichelt <lkt+2023@mareichelt.com>
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc2 review
+Message-ID: <20250704220818.GB3473@pc21.mareichelt.com>
+Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250704125604.759558342@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 05 Jul 2025 00:05:48 +0200
-Message-Id: <DB3M1FEMKVLN.1BDAD6WHDR7HG@kernel.org>
-Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Cc: "Gary Guo" <gary@garyguo.net>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
- <linux-arch@vger.kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Will Deacon" <will@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude Paul" <lyude@redhat.com>,
- "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
- <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
-X-Mailer: aerc 0.20.1
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-5-boqun.feng@gmail.com>
- <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
- <20250623193019.6c425467.gary@garyguo.net> <aFmmYSAyvxotYfo7@tardis.local>
- <DAUAW2Y0HYLY.3CDC9ZW0BUKI4@kernel.org> <aFrTyXcFVOjWa2o-@Mac.home>
- <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org> <aGhGDJvUf7zFCmQt@Mac.home>
-In-Reply-To: <aGhGDJvUf7zFCmQt@Mac.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704125604.759558342@linuxfoundation.org>
 
-On Fri Jul 4, 2025 at 11:22 PM CEST, Boqun Feng wrote:
-> On Thu, Jun 26, 2025 at 03:54:24PM +0200, Benno Lossin wrote:
->> On Tue Jun 24, 2025 at 6:35 PM CEST, Boqun Feng wrote:
->> > On Tue, Jun 24, 2025 at 01:27:38AM +0200, Benno Lossin wrote:
->> >> On Mon Jun 23, 2025 at 9:09 PM CEST, Boqun Feng wrote:
->> >> > On Mon, Jun 23, 2025 at 07:30:19PM +0100, Gary Guo wrote:
->> >> >> cannot just transmute between from pointers to usize (which is its
->> >> >> Repr):
->> >> >> * Transmuting from pointer to usize discards provenance
->> >> >> * Transmuting from usize to pointer gives invalid provenance
->> >> >>=20
->> >> >> We want neither behaviour, so we must store `usize` directly and
->> >> >> always call into repr functions.
->> >> >>=20
->> >> >
->> >> > If we store `usize`, how can we support the `get_mut()` then? E.g.
->> >> >
->> >> >     static V: i32 =3D 32;
->> >> >
->> >> >     let mut x =3D Atomic::new(&V as *const i32 as *mut i32);
->> >> >     // ^ assume we expose_provenance() in new().
->> >> >
->> >> >     let ptr: &mut *mut i32 =3D x.get_mut(); // which is `&mut self.=
-0.get()`.
->> >> >
->> >> >     let ptr_val =3D *ptr; // Does `ptr_val` have the proper provena=
-nce?
->> >>=20
->> >> If `get_mut` transmutes the integer into a pointer, then it will have
->> >> the wrong provenance (it will just have plain invalid provenance).
->> >>=20
->> >
->> > The key topic Gary and I have been discussing is whether we should
->> > define Atomic<T> as:
->> >
->> > (my current implementation)
->> >
->> >     pub struct Atomic<T: AllowAtomic>(Opaque<T>);
->> >
->> > or
->> >
->> > (Gary's suggestion)
->> >
->> >     pub struct Atomic<T: AllowAtomic>(Opaque<T::Repr>);
->> >
->> > `T::Repr` is guaranteed to be the same size and alignment of `T`, and
->> > per our discussion, it makes sense to further require that `transmute<=
-T,
->> > T::Repr>()` should also be safe (as the safety requirement of
->> > `AllowAtomic`), or we can say `T` bit validity can be preserved by
->> > `T::Repr`: a valid bit combination `T` can be transumated to `T::Repr`=
-,
->> > and if transumated back, it's the same bit combination.
->> >
->> > Now as I pointed out, if we use `Opaque<T::Repr>`, then `.get_mut()`
->> > would be unsound for `Atomic<*mut T>`. And Gary's concern is that in
->> > the current implementation, we directly cast a `*mut T` (from
->> > `Opaque::get()`) into a `*mut T::Repr`, and pass it directly into C/as=
-m
->> > atomic primitives. However, I think with the additional safety
->> > requirement above, this shouldn't be a problem: because the C/asm atom=
-ic
->> > primitives would just pass the address to an asm block, and that'll be
->> > out of Rust abstract machine, and as long as the C/primitives atomic
->> > primitives are implemented correctly, the bit representation of `T`
->> > remains valid after asm blocks.
->> >
->> > So I think the current implementation still works and is better.
->>=20
->> I don't think there is a big difference between=C2=A0`Opaque<T>`=C2=A0an=
-d
->> `Opaque<T::Repr>`=C2=A0if we have the transmute equivalence between the =
-two.
->> From a safety perspective, you don't gain or lose anything by using the
->> first over the second one. They both require the invariant that they are
->> valid (as=C2=A0`Opaque`=C2=A0removes that... we should really be using
->> `UnsafeCell`=C2=A0here instead... why aren't we doing that?).
->>=20
->
-> I need the `UnsafePinned`-like behavior of `Atomic<*mut T>` to support
-> Rcu<T>, and I will replace it with `UnsafePinned`, once that's is
-> available.
+* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Can you expand on this? What do you mean by "`UnsafePinned`-like
-behavior"? And what does `Rcu<T>` have to do with atomics?
+> This is the start of the stable review cycle for the 6.15.5 release.
+> There are 263 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-> Maybe that also means `UnsafePinned<T>` make more sense? Because if `T`
-> is a pointer, it's easy to prove the provenance is there. (Note a
-> `&Atomic<*mut T>` may come from a `*mut *mut T`, may be a field in C
-> struct)
+Hi Greg
 
-Also don't understand this.
+6.15.5-rc2 compiles on x86_64 (Xeon E5-1620 v2, Slackware64-15.0),
+and boots on x86_64 (AMD Ryzen 5 7520U, Slackware64-current),
+no dmesg regressions observed.
 
----
-Cheers,
-Benno
+The difference in /sys/class/backlight/amdgpu_bl0/brightness value
+compaired to kernel 6.15.4 and reported for -rc1 is still present.
+Changing brightness with function keys in X works as before.
+
+Not a problem, just a heads up for those of us who like to keep their
+scripts simple.
+
+Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
