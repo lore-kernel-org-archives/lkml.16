@@ -1,104 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA752E370A;
-	Fri,  4 Jul 2025 21:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B6A1E51EE;
+	Fri,  4 Jul 2025 21:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751665951; cv=none; b=iAk6EmnGUGyM7edy58B7XNjfJE4pktm3cMQs7ERiwBFbEwZwYN0mjA1BXdIUAWCg5bDLrmKwIhrC1R5hSuV4mOuzJeSh9Y7uVlKQKdASOhvuc3NqrqsP6fre4LwHKCTZW8ucFm2nlZZv76i1hv//Fbb+FoTJuZAGPqWo1+U0QLw=
+	t=1751665961; cv=none; b=koGdG1Y6SF0yaVgELs+MCPn5XW0cQRk5UKH+KpZRqKteqdqrmEnHT4Dg8WXWrtd+vacZlgpYKDz/zbBwPzn9IokdzYX8EsyNOcQbt8RshVU2zpdegK6QnBWr5IS40KkUwlIq6gpqbRHJb45BhKB1nRCbR2f5WJ30HGrl8iFChyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751665951; c=relaxed/simple;
-	bh=k6/4TFceHQy6sWE6+SzawLZ4xB3ffR2Gi1S7m5FKRN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ah9adGVJghzbqqGOWiqi3V4fEGegeS9GJlh5Z48e21WYr/H6GS5ztbL6gX7RVWaVguY/+BcoHpjPZwLX5l5ydGnchjQ/2iTCTOQuenofYUZiNmIsyyl+f7wkPHDeoFZGxBqLPkbV70/Fwz9zG8AKTMX/dRQgXWNdISUCgZwJkSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sN4dbwQy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sN4dbwQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594EBC4AF09;
-	Fri,  4 Jul 2025 21:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751665950;
-	bh=k6/4TFceHQy6sWE6+SzawLZ4xB3ffR2Gi1S7m5FKRN0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sN4dbwQyGyGzl686FYVZ4i1JZI6nR9MwEqrRmAEwAupfNyOjaNfFOXytk69u4wzEc
-	 8vAfhxYuQz60etrBBOxXPb4DqKb0AieHX/zc5AzZI6YW6OWOBrAF3ysHpJkDcBca9l
-	 2oOQGfiLPJHJEBXHNDSXXRjLMISVPYGFOH478RBZUFZARqnlXDakFksueuM3K7nSvP
-	 EgjozpwjiLV1SDOHFhWhVZu9aLfZ07HHATucPMcIhmFtCfeNpCdAA5SXxumd/Vgqw3
-	 fPLXo7MnTV70kmZj7XknktQc6UzqLcbXcjp8yHWst5yZImSEQLFFDIb7pwAWw+amgu
-	 JrxKFJ6BDgWcQ==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32b7123edb9so15649551fa.2;
-        Fri, 04 Jul 2025 14:52:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUa3MFbXnbynb5L6uGzhE6G9S1tvZ9NdqrnMqYQjIAfeBPq25/oXUk8zaK93EP7+sKQwBc+S+7Q74yO@vger.kernel.org, AJvYcCVVIglHy1jii0iXBOWw4TKvgXm6EkOJSpINr9tA9QW0WVHHY+as7H+EteyBrcVl7sws+NAPMVhoetC20lNt@vger.kernel.org, AJvYcCW0OVYVdkbWqP7Z1iD4TTMiM4Q+yJJg7DzrSrCll0J5WhofLDvDJEa3gyw8bnbxIZNPAuw6ytevrVnF+hRY@vger.kernel.org, AJvYcCW7YN8pY1gFnjqydn0XIfviFQO2bar2xhdroZGQCpt3R97PDNOWVHTqqQJyQVsr+qSBz6VtWQJe78o=@vger.kernel.org, AJvYcCWKjSmU3zLPBM2bXMo4zYabw3K7M1Jkd4ph4iIzDYbZQljGBteBeOKLDvNXLU/VCwmXuae/p6S78Tnd3jIpPX9f@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrHobTTu7/+Gx9qW9dFpr3rglIXwvh2Z9Ry2eeV6pGMqLnfPwz
-	0ANX0MByZhqgE9yIiG2OaMU1i+dXqNXajIHzCnd7UbKN3+9v1dUEPiLLizY4iuQ85mE8bnT9Jq/
-	izk+PhQPC61Fr3jir2UuCNGtSJBx5go0=
-X-Google-Smtp-Source: AGHT+IEjZlRqX2PB4iXlu4a9JMpjlaUQ1vC27uCqGMq3M3oIVxqm+xXIexyDxapLxYAZ7ry5gMmviCNP5BNb8/UwPKY=
-X-Received: by 2002:a05:651c:408b:b0:32a:749a:14d4 with SMTP id
- 38308e7fff4ca-32e5f57cd56mr9135181fa.12.1751665949031; Fri, 04 Jul 2025
- 14:52:29 -0700 (PDT)
+	s=arc-20240116; t=1751665961; c=relaxed/simple;
+	bh=rGh/9x7GKS/zN0CBbLJXQvlsi/zZ/QHHtkX/ov0jyyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CggJoySgS/z241JxORlTQHrLDf3P8zh6oNkWGC2EnAJmR/epYvBX8nK0h1OleO2H4iPIcIatb9TKVsLkEbsLxFHetypj2SqJRNn67KCtKaw364IoHOvzh/CLXO9WeywodW8710Hpu2Ml5yVoFv88H0y1RwSeOCngo9sydvtH6As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 3B9261F00055;
+	Fri,  4 Jul 2025 21:52:27 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 5F126ACA77B; Fri,  4 Jul 2025 21:52:25 +0000 (UTC)
+X-Spam-Level: 
+Received: from collins (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 52886ACA76F;
+	Fri,  4 Jul 2025 21:52:23 +0000 (UTC)
+Date: Fri, 4 Jul 2025 23:52:21 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Icenowy Zheng <icenowy@aosc.xyz>,
+	Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 1/2] clk: sunxi-ng: v3s: Fix de clock definition
+Message-ID: <aGhNFe3wGLX8aUC6@collins>
+References: <20250704154008.3463257-1-paulk@sys-base.io>
+ <4cd84b9e2227c9225d977107eb05b9c3813b8846.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de> <20250626-kunit-kselftests-v4-2-48760534fef5@linutronix.de>
-In-Reply-To: <20250626-kunit-kselftests-v4-2-48760534fef5@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 5 Jul 2025 06:51:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQYAjBS=7LmfRvi5ytd8b6ciMoq57M7awHYRwoCUL0BwQ@mail.gmail.com>
-X-Gm-Features: Ac12FXyTxog7Nk26-bTXwv8VNWi8eyBHX1_ALdps90JOm0syKwUdZhoZy6UHhp0
-Message-ID: <CAK7LNAQYAjBS=7LmfRvi5ytd8b6ciMoq57M7awHYRwoCUL0BwQ@mail.gmail.com>
-Subject: Re: [PATCH v4 02/15] kbuild: userprogs: also inherit byte order and
- ABI from kernel
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, workflows@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RaiVzssz9gQuLCYX"
+Content-Disposition: inline
+In-Reply-To: <4cd84b9e2227c9225d977107eb05b9c3813b8846.camel@icenowy.me>
+
+
+--RaiVzssz9gQuLCYX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Make sure the byte order and ABI of the userprogs matches the one of the
-> kernel, similar to how the bit size is handled.
-> Otherwise the userprogs may not be executable.
-> This happens for example on powerpc little endian, or riscv32.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index c4293cf91e968ca8ee64452841fb266e24df63f6..b9aa1058321dabd3b3dd5610e=
-45a2807dfa257f4 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1129,8 +1129,8 @@ ifneq ($(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS),)
->  LDFLAGS_vmlinux        +=3D --emit-relocs --discard-none
->  endif
->
-> -# Align the bit size of userspace programs with the kernel
-> -USERFLAGS_FROM_KERNEL :=3D -m32 -m64 --target=3D%
-> +# Align the bit size, byte order and architecture of userspace programs =
-with the kernel
-> +USERFLAGS_FROM_KERNEL :=3D -m32 -m64 -mlittle-endian -mbig-endian --targ=
-et=3D% -march=3D% -mabi=3D%
->  KBUILD_USERCFLAGS  +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPF=
-LAGS) $(KBUILD_CFLAGS))
->  KBUILD_USERLDFLAGS +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPF=
-LAGS) $(KBUILD_CFLAGS))
+Hi,
 
+Le Fri 04 Jul 25, 23:54, Icenowy Zheng a =C3=A9crit :
+> =E5=9C=A8 2025-07-04=E6=98=9F=E6=9C=9F=E4=BA=94=E7=9A=84 17:40 +0200=EF=
+=BC=8CPaul Kocialkowski=E5=86=99=E9=81=93=EF=BC=9A
+> > The de clock is marked with CLK_SET_RATE_PARENT, which is really not
+> > necessary (as confirmed from experimentation) and significantly
+> > restricts flexibility for other clocks using the same parent.
+>=20
+> With it not setting parent, is arbitary pixel clocks still possible?
 
-Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+Absolutely and the clock tree is very much improved, I think the flag was t=
+he
+reason that was preventing it from naturally keeping the tcon and de clocks
+under the video pll in my case.
+
+Now it can provide both the 33 Mhz for the pixel clock and runs the mixer at
+nearly 150 MHz. The video pll now runs at 297 MHz which is a perfect fit for
+csi-sclk camera main clock, so the algorithm is doing its job at its best!
+
+So this means that I no longer have to change the mixer clock to 297 MHz to
+keep it under the video pll. It pretty much solves all my problems at once.
+
+Here is the relevant clk_summary extract:
+    pll-video                        2       2        2        297000000   =
+50000      0     50000      Y      deviceless                      no_conne=
+ction_id        =20
+       csi-sclk                      0       0        3        297000000   =
+50000      0     50000      N         1cb8000.isp                     mod  =
+                   =20
+                                                                           =
+                                      1cb0000.camera                  mod  =
+                   =20
+                                                                           =
+                                      1cb1000.csi                     mod  =
+                   =20
+       tcon                          2       2        1        33000000    =
+50000      0     50000      Y         1c0c000.lcd-controller          tcon-=
+ch0                =20
+          tcon-data-clock            1       1        1        33000000    =
+50000      0     50000      Y            deviceless                      no=
+_connection_id        =20
+       de                            2       2        0        297000000   =
+50000      0     50000      Y         1000000.clock                   mod  =
+                   =20
+          wb-div                     0       0        0        297000000   =
+50000      0     50000      Y            deviceless                      no=
+_connection_id        =20
+             wb                      0       0        0        297000000   =
+50000      0     50000      N               deviceless                     =
+ no_connection_id        =20
+          mixer0-div                 1       1        0        148500000   =
+50000      0     50000      Y            deviceless                      no=
+_connection_id        =20
+             mixer0                  1       1        0        148500000   =
+50000      0     50000      Y               1100000.mixer                  =
+ mod                     =20
+
+Cheers,
+
+Paul
+
+> >=20
+> > In addition the source selection (parent) field is marked as using
+> > 2 bits, when it the documentation reports that it uses 3.
+> >=20
+> > Fix both issues in the de clock definition.
+> >=20
+> > Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+> > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> > ---
+> > =C2=A0drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +--
+> > =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > index 52e4369664c5..df345a620d8d 100644
+> > --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > @@ -347,8 +347,7 @@ static
+> > SUNXI_CCU_GATE(dram_ohci_clk,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0"dram-ohci",=C2=A0=C2=A0=C2=A0=C2=A0"dram",
+> > =C2=A0
+> > =C2=A0static const char * const de_parents[] =3D { "pll-video", "pll-
+> > periph0" };
+> > =C2=A0static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents,
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x104, 0, 4, 24, 2, BIT(31),
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARENT);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x104, 0, 4, 24, 3, BIT(31), 0);
+> > =C2=A0
+> > =C2=A0static const char * const tcon_parents[] =3D { "pll-video", "pll-
+> > periph0" };
+> > =C2=A0static SUNXI_CCU_M_WITH_MUX_GATE(tcon_clk, "tcon", tcon_parents,
+>=20
 
 --=20
-Best Regards
-Masahiro Yamada
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--RaiVzssz9gQuLCYX
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhoTRUACgkQhP3B6o/u
+lQxbYA//RHcmC2v5VG/WOF5k4Jxlw3iw+cDIPEFZifNzFxgSMjXLP3+LgrG4Z3Yv
+WusHzye4XCRui2HzEB0exnbhb2H/UgOqmbQin9q0c87H4ZBqWF1rNAbtOrKCGBqN
+2c8k/e6W+5KzJ2gFwonc54jw+X4yKjgckE8vd3afHjIjs1OoPHN465ulYmsu56n/
+3fRBIYonPB6LGPOQlGdpN40/emIpOmMNlKtM+R2UEUh8D17OKr7Mae3mtOZi7Tc/
+T2YtEa+gzyn+bobKPAJ4HbvBfYy66Wh0JDc6J8EGMyLl13NX6+EU4N5Nu4tABY4K
+75HDwyc27t6zKRHBePvmS+VvcUw5JOdpg80qgwWnVKc/XQ5WV5LDhOMwbrA3SnmP
+h4pWBGcdlnd/ngHsZDAmb7xO94UJBnzc9X5PSrq9dRWBUnbok11aIKAH5TUR7Hyd
+68wQtAzMT08oJb3XA8d5fj5fTsKRHBcqYCpyzuMFlZmumIR/yelfmyZNuWOphdqm
+L0ZQd5d1FRYBUrNE6td439wbXoXL15e22nfNlkbL/CLXSuchodaWW+kPrSnf+/Bp
+V7P9OwNtmaI8LA6ANIFrRXqoaYJ3T+8OjHgpsO5zXH8f4ltEDWaqNl8Jg5NdNC5U
+inqvGtvmlsaUZ6wRQWreBp1trzhM5cmxJrYaKFZtyAtMgFiLrZM=
+=/bFC
+-----END PGP SIGNATURE-----
+
+--RaiVzssz9gQuLCYX--
