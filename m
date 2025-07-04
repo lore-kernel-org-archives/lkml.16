@@ -1,150 +1,113 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15ABA2F949B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1D02EA17F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619660; cv=none; b=XfBEHD1e2EhWoFNFT9gW8ci6wpMtTeABH9DiN4mGW2n2UMLTQSEmWlWdp8TmWhdLIOFdMtOUxJPr+EwPNvsIDspymXxmBAQoaqThM3ygsgOddRTJwieYbHpajws0/lwJoUrzd2WyK3gUYejx1qm7KU74bqXici/6VhjHS4XlIG4=
+	t=1751619667; cv=none; b=mDwSkCnriDKQNlO2vYKieoW3UR04XYwbBu/lu4paFpl5CLAyQce+HfHEBMy+3lhAAqppQkutaAzXeFcxsp5VW1xUfrkXaZRpxxY3H+Bmqu4rrHGKyYYnJ/W2yijHgtx7RZEOf+ACn4+hSovZkJwl5C+P10+2+MJuITkK5b7Qw30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619660; c=relaxed/simple;
-	bh=MMnTcJHh2YsAwogfNwsy9ZiBRqSAqI/yxQAcExaX3RA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=obGQylxmr1R42yWhPVfkSo6Hbpj1Hi5I0Eq27USn9Du140B/0U/pUxxqM7OvR4duVoIJ9LGhXdoLPtHHdxTboObEgtQgDZ+iFiMrXmEJSK19Ler25nQZ/M5NKAkixM1GgIiHfs4Qa/EKGaevzQLdoPpVG4wTz3WEXmFedsjQBek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ojI/Zgdl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fV3mnSpf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ojI/Zgdl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fV3mnSpf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751619667; c=relaxed/simple;
+	bh=f01+/+d1XLTUFc4UC8xyL1lZLSP86t0bF3BHim2xIzY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RFCeI4vHic8+s79HJxhKUuxOmi8ctbxbO4DS53jCcD4LP5jeEwfCVFCiiJvDUhScVZblFM5Q1WLCRs4g/5cI3dpkWKtoJ6j/9JaBban+bbf3dLYa+pi8ClvcqHomYBs9y+WzFKJAJCBCtDGi+XC7Qy9hVe8Cvbk4jqxKTXsVr7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QXqQ86eB; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ojI/Zgdl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fV3mnSpf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ojI/Zgdl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fV3mnSpf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4E30621194;
-	Fri,  4 Jul 2025 09:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751619657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=ojI/ZgdlMnbHGxydH02at11LU07EryvjEUTW7WVdoAjLRhMLAokRomxzvHEJXtOdQVawX6
-	VDIbitatw5Ywe1F4boG0x0rUykXpoytb4PwfTuEEgLmMAhHmSON49CSuq8TJIS1Z/tSIOf
-	RK+NY1xW4KHOrzYcLNqbNsg0mBFN5FE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751619657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=fV3mnSpfrnCpASP7NvSx894BJkuq1cbiSAOYFl4lMPqMSsRn+OyInOp1SEJEAK5kxGaTp4
-	1EQNt2jmjNN+LiBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751619657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=ojI/ZgdlMnbHGxydH02at11LU07EryvjEUTW7WVdoAjLRhMLAokRomxzvHEJXtOdQVawX6
-	VDIbitatw5Ywe1F4boG0x0rUykXpoytb4PwfTuEEgLmMAhHmSON49CSuq8TJIS1Z/tSIOf
-	RK+NY1xW4KHOrzYcLNqbNsg0mBFN5FE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751619657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=fV3mnSpfrnCpASP7NvSx894BJkuq1cbiSAOYFl4lMPqMSsRn+OyInOp1SEJEAK5kxGaTp4
-	1EQNt2jmjNN+LiBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 299B013757;
-	Fri,  4 Jul 2025 09:00:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id COEjCkmYZ2ibHQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 04 Jul 2025 09:00:57 +0000
-Date: Fri, 4 Jul 2025 11:00:56 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Aaron Tomlin <atomlin@atomlin.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v7 08/10] blk-mq: use hk cpus only when isolcpus=io_queue
- is enabled
-Message-ID: <75aafd33-0aff-4cf7-872f-f110ed896213@flourine.local>
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-8-557aa7eacce4@kernel.org>
- <20250703090158.GA4757@lst.de>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QXqQ86eB"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553b5165cf5so1042068e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 02:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751619661; x=1752224461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LGg0wyJ8KAmIjSaK0H/nMj/AJ/mfSEWt0jqoZQ0jjqU=;
+        b=QXqQ86eBmboWyCN6XgvQwWiwVMY6iFtVfzqteDuAe/CKQ2SXm2G0jO047Jg8SsvIJe
+         xaBrMRZ32PoUpF803zSeiYuvp8Cy8RtCvgK1rxyf87sgW9+i2ONoIOtAEKX/NH7dTQnF
+         vr7cbVy3ycQlmdhK5THoOtEndV6pV7Cd9ro53p9s6HT5xuT8A3t7IjOoez9DM1GD9yzh
+         RpOXUcEpkriQrLMBTM7rZYruvVsE6ewGQHCLtL9c4NruDVp6D9NPoJ3NhpCJMx6C83FM
+         9AO0AcVlXTwxqyNGqETMRNRPmY07GsKrpsfuSMm5dy2nU8AYfBZaE+bYVadLZ+tfbpEj
+         rgeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751619661; x=1752224461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LGg0wyJ8KAmIjSaK0H/nMj/AJ/mfSEWt0jqoZQ0jjqU=;
+        b=Tk4IRBxzez4Mx1OTIf1GgHWIjvtyeRju3ZvrAWF0pD4fzJbvgEETCQhXn4t7Gd7NOw
+         32bH8ijJSvizV2S3Tt3CpwnurzZJUFL085TyuMlKqjDv5u1k07KAbwz52B97aDEY875Z
+         N42kPwwwPcuPFJVYYuUfDdvyror8zMj/2zcmKe/wD2oS10NXH6qruR3Q1a9jWrXMGCWH
+         Qhy0jeFM1vzYQ1S01fkgaUeped4iCHVicWPM7/Eb3rI3HNi8Y5ewh/4ViC3VhR79srkL
+         ta2ayvfHb3cz9SGqJkOf/Ra28eGn520J/k6BDLINtFpHMgjctqMudAUdMjM47tSGxdxR
+         9J2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPYtv4g3pcsLAmhgLm8RN9MhP3P68ldGLF3U1Qllu7VYMI0mbYyNsWkYUQ94ZjNqMKeZ8bVKGm+C/ctdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdstOQ4ft/8Txoo45Sru6ggaU9+0OWeqElycRrayoZIp5DiB8S
+	1ATDBiMQnuRX3IMHDl4+w/+D8URPyhTeaYSkN/t6GPGVCk4CGMTIU/19/mC+S++2YM7vVaAskFI
+	1/jlBtSVstjhjRrswALlXq2KaduS0DsGbtEggUL06cA==
+X-Gm-Gg: ASbGncv2HQFHJy6I3ot3Y+4mnwBbOViiUvkgLdLmwDczFjBRArpuxzbNMsyp9wJJ+Eb
+	nlO4QZ7Qjo9ggj701+PTODLfXsguLTNX79f4MqeUGqM7GeWp4iziKS562VAlB/8GZwzWHIjtHdi
+	nzaxIssvQV68MIBpPc6bAp/gvYHX047DBhbt2aMVDKepv/yhEtOtqdBZFjlILEG72gEW4M1bQbm
+	g==
+X-Google-Smtp-Source: AGHT+IE5A7Qpn2fHe3IyqjqEzjlqNYNE2mHbcn3t6AEuEEL0CMWc04hr2ZJMVVPzs0NtOe/o/dX+X5us1ObF+NrmG9A=
+X-Received: by 2002:a05:6512:250f:b0:549:8b24:989d with SMTP id
+ 2adb3069b0e04-556d05a738amr570751e87.0.1751619660444; Fri, 04 Jul 2025
+ 02:01:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703090158.GA4757@lst.de>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL67935bhfdkbndpbo95z3ogoo)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
+References: <20250704185641.430ae617@canb.auug.org.au>
+In-Reply-To: <20250704185641.430ae617@canb.auug.org.au>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 4 Jul 2025 11:00:49 +0200
+X-Gm-Features: Ac12FXxCBYjNfFP1OStTgTeGYx_69fDp2ljdeAPPq9NLbDE6_W7nIeVT6KMWz8g
+Message-ID: <CAMRc=Md7Znq6Lww3-i+sRW1LZMD78s7vnVYnDwVKQsjn7OMhvg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the gpio-brgl tree with the input tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Lee Jones <lee@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 11:01:58AM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 02, 2025 at 06:33:58PM +0200, Daniel Wagner wrote:
-> >  const struct cpumask *blk_mq_possible_queue_affinity(void)
-> >  {
-> > +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE))
-> > +		return housekeeping_cpumask(HK_TYPE_IO_QUEUE);
-> > +
-> >  	return cpu_possible_mask;
-> >  }
-> 
-> I'm no expert on the housekeeping stuff, but why isn't the
-> housekeeping_enabled check done in housekeeping_cpumask directly so
-> that the drivers could use housekeeping_cpumask without a blk-mq
-> wrapper?
+On Fri, Jul 4, 2025 at 10:56=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the gpio-brgl tree got a conflict in:
+>
+>   drivers/input/keyboard/adp5589-keys.c
+>
+> between commit:
+>
+>   43a8440f3969 ("Input: adp5589 - use new GPIO line value setter callback=
+s")
+>
+> from the input tree and commit:
+>
+>   3bdbd0858df6 ("Input: adp5589: remove the driver")
+>
+> from the gpio-brgl tree.
+>
+> I fixed it up (I removed the file) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>
 
-Yes, housekeeping_cpumask will return cpu_possible_mask when housekeping
-is disabled. Though some drivers want cpu_online_mask instead. If all
-drivers would agree on one version of the mask it should allow to drop
-to these helpers (maybe we the houskeeping API needs to be extended then
-though)
+Ah, I pulled a tag from Lee's MFD tree containing 3bdbd0858df6
+("Input: adp5589: remove the driver") but I don't have 43a8440f3969
+("Input: adp5589 - use new GPIO line value setter callbacks") from
+Dmitry's tree. Dmitry: is it too late to get an immutable branch with
+these changes? Or otherwise you can drop 43a8440f3969 from your 6.17
+branch.
 
-This is also what Hannes brought up. If the number of supported hardware
-queues for a device is less than cpu_possible_mask, it really makes
-sense to distribute the hardware queues only between the online cpus. I
-think the only two drivers which are interested in the cpu_possible_mask
-are nvme-pci and virtio.
+Bartosz
