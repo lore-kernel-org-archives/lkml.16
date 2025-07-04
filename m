@@ -1,49 +1,74 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA8360
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE39189F43;
+	Fri,  4 Jul 2025 14:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637980; cv=none; b=aDNbrac9zOp17FX1MVq9LCMks5ym+9My7dCyIB9u5C7c7zPFrO3oMmg5mq80cGIeMABMnE8xuXniPaY2gk4DgDOj3b89ktFPbsY/lBhHdHKatbKqSaaiX7WgR3jUqtdcnj4+fO/Pe8zwJYDeFQsLZW9ir4chFycy8l03MDV6lBs=
+	t=1751637986; cv=none; b=KO1HjPdZ0JB2HdZCzgnTmurf1/QpcCiKsGLPw51mTueWnX/BK4NXUimMChGbKt2PqXONIw48ycGppLSGFbWhtuasKak/ERiEcBSOLWe5uVa6vzBht6otzYpYKHXWn0SzxMs9Hqgne+gOM/dtnAy2m76M0wqn6WE9KJwoJKkdG4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637980; c=relaxed/simple;
-	bh=L3iiYNpzKdlyuo02+vX6SHbyCVpQpCKSiEHFvwp9pI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=X9v11LCEi01HNEPzGpo/PwhJDNzeP8xqeLgXFhmyixRZwpZLBfeZNzV2a9/CdGTVMtyLz/sqTnkCyjP2XDBAWQTdHLkkgavsmNCyA8F07ntDco2qztTthO8BOm+30vx6LzV2iUEP2XG3QjCaaY3TGHBK7w3dRMgPMSMAQIo+C98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 564E69Tw082985;
-	Fri, 4 Jul 2025 23:06:09 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 564E68TC082978
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 4 Jul 2025 23:06:08 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <ac18278a-588b-4f83-8233-a2bada117013@I-love.SAKURA.ne.jp>
-Date: Fri, 4 Jul 2025 23:06:05 +0900
+	s=arc-20240116; t=1751637986; c=relaxed/simple;
+	bh=bvUt5RBrPgm3NXhrDrR2/hHVU1sK8NPSyzsYpuA4wkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TazKl0N2oSFh1DYIgAdRybyTNo7n6JiTh9+cgMPd0OkHvKMm3eo9SY1rUKAFWfZA9pX2r6Etp1341NNEiK/g7R46nlyQDJArdYc3kJti+br6gXWOtFWZMzP4G8CoNT2X3IebtLhiGM7jEa28sxnh+PbnvMxI0K49E4kr84uxNLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=pL+NgX/K; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="pL+NgX/K"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bYb5m6fJSz9tK9;
+	Fri,  4 Jul 2025 16:06:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751637981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7DYCDCCOoVVXT9pyOQhiwPUPgRm+oA4KD4grxIaOPOQ=;
+	b=pL+NgX/KXlyeAZEcTLhWWmzb2iGUOpZwlxpsvBsUhj2MseNSTqbgo81M9uv/COQCqdtHxw
+	3WUo55KXEIF3MgCFBPcz5PDJH662JYTt/axSFs6/5zKxs2Cm69BNEj2enTOz04DQp1gGgF
+	LzHXFKIH3EkY3ycEhS+Z4cOSawXqXu21qs2+wsCeruODpD0itZFUVOVjODurA7DQBTNPJv
+	+GTTdUhP4+0XZ/jhGwjmuXnjbnpW08/fpkGHmJDqPBYgG+OGqPGvNGtJgN+gTfTHCIdr09
+	8nWxpINfFjPKnlaXFUUYQolcaIhKF6g1GOMobi0s2pB0jxavBTYawsZrW3ZXJg==
+Message-ID: <17f53f72-9fd9-4cf0-b925-8ca3e9b02792@pankajraghav.com>
+Date: Fri, 4 Jul 2025 16:06:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] WARNING: locking bug in __set_page_owner
-To: syzbot <syzbot+56dc65adbd1d2ae1f844@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <6727a996.050a0220.35b515.019e.GAE@google.com>
+Subject: Re: [PATCH v2] block: reject bs > ps block devices when THP is
+ disabled
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Hannes Reinecke <hare@suse.de>, mcgrof@kernel.org,
+ Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, hch@lst.de,
+ linux-block@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+ gost.dev@samsung.com, Pankaj Raghav <p.raghav@samsung.com>
+References: <20250704095036.293568-1-kernel@pankajraghav.com>
+ <aGfNXbQ5ExO95Uf8@casper.infradead.org>
 Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <6727a996.050a0220.35b515.019e.GAE@google.com>
+From: Pankaj Raghav <kernel@pankajraghav.com>
+In-Reply-To: <aGfNXbQ5ExO95Uf8@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav105.rs.sakura.ne.jp
-X-Virus-Status: clean
+X-Rspamd-Queue-Id: 4bYb5m6fJSz9tK9
 
-#syz fix: kasan: make kasan_record_aux_stack_noalloc() the default behaviour
 
+On 7/4/25 14:47, Matthew Wilcox wrote:
+> On Fri, Jul 04, 2025 at 11:50:36AM +0200, Pankaj Raghav (Samsung) wrote:
+>> Changes since v1:
+>> - Use mapping_max_folio_size_supported() instead of doing a ifdef with
+>>   CONFIG_THP
+> 
+> why?  v1 looked better to me
+
+Oh really? I am fine with anything but I thought this looks better instead
+having an ifdef.
+
+--
+Pankaj
