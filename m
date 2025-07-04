@@ -1,67 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E432DEA6E;
-	Fri,  4 Jul 2025 17:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911E81A76BC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651739; cv=none; b=fiYvu6RjHrEH/3jQO3hXA2ZQLePvCrELtpqzpNOgP2bxwR5/JMPE/WUoK/SLutDQRa+8m3FP74Bv7TxX/loTW/KbTtgV5QqEjyAbjLmGox49HB+xNVANxCPSYOhEzbC0aYNLReVv/BwFx7DFj66sk+/mnDl7apkuL1qChhlpo3I=
+	t=1751651810; cv=none; b=CJg/Rbmq9wkeMwqfzZjbx1VL2TC0tye8FV51+PsK4P2XBc9SjuqX/QN0DtozRPD8jqaoordqT+jGKjlC+kdJ/nWTCr647+P6MaO+dC/WTrakyDtI5N3Nx5+wmd5JOYKxE/k0Yyz9ZNK7X4BIFpQEKupm+vqPTIaFjekMlYAQuNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751651739; c=relaxed/simple;
-	bh=TxfXG/TnoB5cS43y+ihelTbSmjlldl171h067YFIq4o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rXeMYjF/ua+vCHytkrdS6vdEWG1FoTTSkkoy3tVjSvsiM69lUKicoQe876fIqHjk9HQF2q7bx2zjrxo/bJf665DRHUjEx4rviJoDTJhK0iJPtL5RIbDSPEoKHGZlCygP/bfWA0XVX29Z+M5kczVQCZ6D8f/h7TWtaSMdaRoQkxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQoWdP0n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751651810; c=relaxed/simple;
+	bh=RKPVMYwlIXXGLv5KkIATm3Cf3vqnlU/H4tKoDr3YVqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EP1w9LqTEEvHzK5XWNYScPH4aBPH57/lQm/E2ZEca++tLY20fmO40m2t4XMALW7ZQhu/MPP8tcsdMHrstvsgafX+9/O5oZkrLBv6a48F/nwHzXcOfpY3gyAkNQ7cuknoxPw2noi1aFS0899uI4Hm6OskqSfW7ezXTpw+PFAZbJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cogentembedded.com; spf=pass smtp.mailfrom=cogentembedded.com; dkim=pass (2048-bit key) header.d=cogentembedded-com.20230601.gappssmtp.com header.i=@cogentembedded-com.20230601.gappssmtp.com header.b=YsIQHX6P; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cogentembedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cogentembedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQoWdP0n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE14C4CEEF;
-	Fri,  4 Jul 2025 17:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751651739;
-	bh=TxfXG/TnoB5cS43y+ihelTbSmjlldl171h067YFIq4o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XQoWdP0n46aO7cE9bAlJ9Xmd41KhSMyFHf/sTDd2Le/upgWg4PjS/bc8URfqscOlj
-	 g5plQ5SplVgm0zkMCJVGynb9IVLpd2862lcP6/kiMYYmcwHpH71aZOuMASiJpkAuut
-	 lElyn31sAUj4R7mY7/3zOlXBk7SkFzzpRe8lQq4oFTovnYtjKNCz2xybpu24c+B2hk
-	 4xmjQrgY0Y0OmA3o01JQ8tMPlaO/PttzapsieTOvhP4DYEAFW79O6eRkdTJANLbDG7
-	 jtbGL/Rb3zDmVaJIqey55MeflwTyNdSiJMQ+1wgzPMorJ6M9+oweKH92W8gZMQKsal
-	 vkp/1+IrjTi3g==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
-References: <20250703014942.1369397-1-namhyung@kernel.org>
-Subject: Re: [PATCHSET 0/8] perf sched: Fix various memory leaks
-Message-Id: <175165173893.3149172.3930792821230111207.b4-ty@kernel.org>
-Date: Fri, 04 Jul 2025 10:55:38 -0700
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20230601.gappssmtp.com header.i=@cogentembedded-com.20230601.gappssmtp.com header.b="YsIQHX6P"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a16e5so2083543a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 10:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20230601.gappssmtp.com; s=20230601; t=1751651807; x=1752256607; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U6n6hbn9caysKhPeEP/I9KvzM0cAThA7k26sM9u1aLk=;
+        b=YsIQHX6PVONxqknKgVzzeHXo7oId/leAKFmgWGgk9dmiz+ckS2b2Fj+aodXZbT0R5S
+         CNcqlcTw4bFBbelcJWTZLc/7EQ6tRBc9kO+1dlLz2B3gs30pFrzCmifN0DHpppyQuGpB
+         91wwZ2Y2gnlvsk+EaF/I18Z7bM13K+5GfD8gCK96vPvEVm8WST60RsXCd1ErYIGdyVLA
+         Qqeexa4HnURjwfYWxAENs2sVbK1WYmO/2KVNbY4RmBbIDnBjhAi0O/EVF2wGk4bZnp0j
+         mdrjPLkoD5EmjmEUmAdOjPz1YqtU1p4ENJ9rAX9m7hTIrfB7B1EGejcPtoabehQqH3+U
+         Msbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751651807; x=1752256607;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U6n6hbn9caysKhPeEP/I9KvzM0cAThA7k26sM9u1aLk=;
+        b=A7co4gsMR3HbLoGw7XkN2sR92Ia5qcnCLauhFRcl8b4fEfjwZrrbiUQh9uWhDBTPMx
+         QpCI8HqxQxSiqLmeMdbvhfsIK3tkqASjjArY1RQiJqI/Gko1LkGi/P3lJmKg0M4TVc+3
+         aqDGgATGUKF2nTz9N8mBQ4BeBZ0iowsKXVuBfxw/oi6pM0L/OxcsdUu+mXO0sVnIKCpG
+         og3kB3HwErJ6MIjNE0yadj8sc+KhPR6eS7Y/sDnBDKBnqJZQFE/DQrGCzSAKesU6mQxd
+         lnPlWixVNSWknK5YjDdTY8cquaM8LDKLvX9Y06AAqmGrn9tQzjnTq3wUVnXItNlrW0Q2
+         NVxw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8qflYqzGxt8qdxbwhgzpkvwN87cyzd1Ac0T+mh0EzQd10N2Ljvb6TDNK6xtsgI0om2QKhVzohjVpFkzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx90tFY+XWAZB5kysJnOBDGdKgK+sXtene0e0bz880J87Gde/ah
+	JBREDSS5XLatFpDnHRx3r2MbM1JlSEAWSqKTfw04eYQKy4iaLWu1WgtkrSZQ+BGCo24=
+X-Gm-Gg: ASbGncvJomTAr4HokbmKO1SuEQPQgVtbMBUSVQatSWVy5j64mXnnmZxsfu14RoRvNdY
+	jDAeeP4X56t4CsaG7KvSpamiKZPtfUAxDqQkh5MBIFFaR7AWRH+I8Vpl5NHVIZmj0Sz2xyDufOm
+	DG2EQ9uLJteE9sODhx7GfoF9+GUI1A9TvW+HWmhrfBUiYYpb3k3QcPPbzLYhUF6V+u0nAaQAFRC
+	SpvceUjmvNUkl2K61kt2rdTCujwFiuUnmMQhu5dhnVCSssssFx1jYwVdOxYBdpB8/w77ZZg9GIK
+	M/qpYuk/mD8nSlesW6SSCD6KlHzcx46E4yY6xFDRSgmcYMoZxFpew5CUAOSvKMESbPWYmE9OagV
+	w9N+n6GQGTz+netuuydKH6Do=
+X-Google-Smtp-Source: AGHT+IGoshS6MZusfjRaRJaVsMhxqzjeYCxj2P6UK+ArpuRluCl7/5NTB3tt7deN/8EfRsinNgpEIg==
+X-Received: by 2002:a05:6402:3591:b0:607:5987:5ba1 with SMTP id 4fb4d7f45d1cf-60fd3370b41mr3071724a12.20.1751651806823;
+        Fri, 04 Jul 2025 10:56:46 -0700 (PDT)
+Received: from ?IPV6:2a02:810a:b98:a000::f225? ([2a02:810a:b98:a000::f225])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fca696ec5sm1648446a12.25.2025.07.04.10.56.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 10:56:46 -0700 (PDT)
+Message-ID: <79dca2df-1126-4d94-bab9-761a982090b6@cogentembedded.com>
+Date: Fri, 4 Jul 2025 19:56:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] net: renesas: rswitch: R-Car S4 add HW offloading for
+ layer 2 switching
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Michael Dege <michael.dege@renesas.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Paul Barker <paul@pbarker.dev>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250704-add_l2_switching-v1-0-ff882aacb258@renesas.com>
+ <4310ae08-983a-49bb-b9fe-4292ca1c6ace@lunn.ch>
+ <79a57427-fd4a-4b9a-a081-cf09b649a20e@cogentembedded.com>
+ <27047e61-8307-472d-96dd-1e5b89dc427f@lunn.ch>
+Content-Language: en-US, ru-RU
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+In-Reply-To: <27047e61-8307-472d-96dd-1e5b89dc427f@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 02 Jul 2025 18:49:34 -0700, Namhyung Kim wrote:
-> While running the new perf sched test with ASAN, it fails due to
-> memory leaks.  They comes mostly from missing thread__put() but
-> sometimes it needs to release other data structures.
+
+
+04.07.2025 19:53, Andrew Lunn wrote:
+> On Fri, Jul 04, 2025 at 11:05:14AM +0200, Nikita Yushchenko wrote:
+>>> Looking at the code, it is not clear to me what would happen with:
+>>>
+>>> ip link add name br0 type bridge
+>>> ip link set dev tsn0 master br0
+>>> ip link set dev br0 up
+>>> ip link set dev tsn0 up
+>>> ip link add name br1 type bridge
+>>> ip link set dev tsn1 master br1
+>>> ip link set dev br1 up
+>>> ip link set dev tsn1 up
+>>
+>> Per design, it shall enable hardware forwarding when two ports are in the same brdev.
 > 
-> Fix those leaks and add more subcommands to the test.
+> So in this case, the hardware offload has been reserved by br0, but is
+> in fact never used, since there is only one port in the bridge. If i
+> was to then do
 > 
-> Thanks,
-> Namhyung
+> ip link set dev tsn2 master br1
+> ip link set dev tsn2 up
 > 
-> [...]
-Applied to perf-tools-next, thanks!
+> br1 would not be offloaded, but done in software.
 
-Best regards,
-Namhyung
+rswitch_update_offload_brdev() calculates which brdev to offload, and it only considers brdev having at 
+least two rswitch ports. So in this case br1 shall get offloaded.
 
-
+Nikita
