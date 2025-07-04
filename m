@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862191F419B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4562DA77B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751626020; cv=none; b=aBN99fRTry64BkMfG9gxf0kRQmAYzdYtRK8mBRipWYoQCrLeqtSMjzKdzBP5W6Vpowsj+3VbLmhUF8bPOqNb1GGvDKfEOqbrbnSbCGFp+p0kYjhes10p50yvz3BZy5QEstwn6vdbSlN1ZeFZCabajCo+cEsrX7IpVilNHWjKKps=
+	t=1751626045; cv=none; b=uu1b0gyrChdbd61MytpLu+ijy0kHDJMODPpM2I5xcde0pseLSnbQgwRvD1giehaurvzhr/LDIR0urajEEt/9gSCo/NignvWa0oHkxczTF8oyrHSKpbxHoA8YUm0Y4JXZebiuQNKx2fRTYUVYw/krFMNTpA4yhS0Q51L8lXZ/ee8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751626020; c=relaxed/simple;
-	bh=LwpbUOOi9a1Tkf/5E5Irs0Pf5SHfW34gxxArrqXeHjA=;
+	s=arc-20240116; t=1751626045; c=relaxed/simple;
+	bh=ZfzHSR/pm+cc1OErmwUbAJJI9xphNoHVnSltDbkM+pk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gKRzDP311VXeDXiObd5FvC+7skd2QqGbHB3umLWXCjN4Us8iumjWcRhE9Ss0j/8psr8xUsY8mNdhZtir17LTHO9TlctxXY1aXEI+3QYf5aq19GnyS0IoEF88gkaeZEAqCTu/OD2N5q9wQmagCqqSHgcYF3y+/R0vAtc9qSsisoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R4IWo9ZW; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=t3Byea/aHa/3UbZFLdWeB1RFqsxtSlanPsyTtHJt/SOwrj7qiaTmF/eQEUiITbS4iryuQz9OS/W7mKpjyKxXHakRinw8Ypfs0XmwHmOwtgLt1DltfTI6gTDEq7DaM21VWX/Tpqs5k+DL24r15a/vDcw67ZtXBAxRpJTraVM4qEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eHcSmheh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4IWo9ZW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eHcSmheh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751626017;
+	s=mimecast20190719; t=1751626042;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aM0lOK2EdqhK/MwINbgFdS/3GfdbpkWlUgF2GD5LjP4=;
-	b=R4IWo9ZWK/AOA6RNefWZntu7JA7TSmz+GoAphGC2IrwV2DTTnWkncNA+sBSrcpCacvrKxU
-	AlYWCJ++eesR+4IqO1Js0xAZk3b2/7djDCPT9OjF9MCFEYS4R/BVlB0JZ4sGT0QP7AC1NY
-	Tp83Rv+o3noyryWQGuRk+iGwpKXL5uA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=EanUAC63JHnx0F00R/Vd8sQinADxJHPTAwx399RRfUY=;
+	b=eHcSmhehIZkjmfxOqgMZvkpZXt61/hc4TzPn7CxaGnoJNcKphSUIFdZvT8MQh7z+5D0THq
+	VAqNuSy+fKzcHRGOBN/icElZtk3s2ntZtQD0NLGzmWCq2bfSjU/+sFUEQ7bzhLWLc0lNIA
+	zB610z0gYMd8X0w/DMy+cHXQFcTqpl4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-212-3zbUnvGlO9WxscnMM2MmBg-1; Fri, 04 Jul 2025 06:46:54 -0400
-X-MC-Unique: 3zbUnvGlO9WxscnMM2MmBg-1
-X-Mimecast-MFC-AGG-ID: 3zbUnvGlO9WxscnMM2MmBg_1751626013
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450df53d461so6369215e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:46:54 -0700 (PDT)
+ us-mta-490-edXFN07AO468F0x7PSlxWA-1; Fri, 04 Jul 2025 06:47:21 -0400
+X-MC-Unique: edXFN07AO468F0x7PSlxWA-1
+X-Mimecast-MFC-AGG-ID: edXFN07AO468F0x7PSlxWA_1751626040
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4ff581df3so399550f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:47:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751626013; x=1752230813;
+        d=1e100.net; s=20230601; t=1751626040; x=1752230840;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=aM0lOK2EdqhK/MwINbgFdS/3GfdbpkWlUgF2GD5LjP4=;
-        b=c7LH56p44W/33FI2hwJZyi1MyVE0JW+mRnGn2sLsLvN+ny2IJqNYR6vM7R43i+YAxV
-         NQankMHv6p2Uvko5ap8KTCK01CNR7CaWZJJiMIcJjEdwmVCZnhtLmSxdGTh6tL3BOorg
-         7LHflADeaCwdeWW0JB5ZH/Rp/cCkLNjzYIqPlLa9f8FRJ4orsAf665JJcrtu8Y7hq6/8
-         X6wtA9wi8BlngdFb2541JkRmviu02bx+sbujcJQ5CEVFKNLcjzY1trcaTwvefF+EX3GX
-         3aHpTXswc1C0TxkIKA2sQ2HUUE+bmMZNJ2WJkFjwdJMKrW7QSwv8g3HJ9f6tRwbbD358
-         Q3ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVycU7jZ6DI20jfdkWaXyi27fiVUPr+4zLzlzXjg5ePjk81u6odV8nC+VjLkiWBe+tn3ODzArTsCvlHmPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDVnVq1/IYOnsahE8chIzQiF2aaHYEYbeNvRCGOQSdMzAJoHmC
-	WisKg0k8OIl+p/L6rEOZ2Nu5sLPt2l92AulmURkrNOeusZauSJgfBQOWauVWxx+fFcGp1Hl17fj
-	aS2gfw39oTMOQQt1aSpl/DRs64q53u0Sz20aDj/AMDg3Ktj+PrtAyxQacNfwMcwlmhA==
-X-Gm-Gg: ASbGncvq5nl1929IXQ4mi0EYvK4aCmcPq8D/q4vcK1jTiPVfJRsDsonCxiDFCtYGntt
-	qUfVhN7NdjXSWURf+ZPwxONZljTkixK2NDJMtBjzFCu0n3LiDaZy9v6xxevKNQ9cEtsQSlRoe7N
-	dIN2FJGOe4eEF44Rr5lsn7HBZHxJkm1hfKYM6hBwk7nAr1IfmtjLexQDMeqRzNjJ2he5ZElHXgv
-	qJD8Qrc+Svr0k9WMDiBnwooomVNdH989GYRn7xIp3TKieEBzYvlygBVOnlxSdfUYoAyGHIPam2/
-	MV9bTGSmtP+jlzTPJcoWerbP3lG603Bez+OYKZztDORS728xj21tKB69hJUa4kjYrwVtKl0DiPP
-	pLxZ7TQgR26md3YmF3xxEzwkDhSjAzgOoIfEDVJZncZEHzMQ=
-X-Received: by 2002:a05:600c:35c3:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-454b306a18dmr21949935e9.4.1751626012944;
-        Fri, 04 Jul 2025 03:46:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzuCo5KQpgtydk+2PCg7wstPFqQNO9VlInp//VgtVlQ4u16Sq+FiyJKm2KQhZjVVnU9NJz/Q==
-X-Received: by 2002:a05:600c:35c3:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-454b306a18dmr21949595e9.4.1751626012525;
-        Fri, 04 Jul 2025 03:46:52 -0700 (PDT)
+        bh=EanUAC63JHnx0F00R/Vd8sQinADxJHPTAwx399RRfUY=;
+        b=rEWgppHYtj3rmApl/f+gjbbEIBlQ42s0ApIUXvOnz6hsprHZRdKFyizmS+b6Ow6jP6
+         efTIBP9FUzyqZdMRJwzyD4nFu3BNfUzEJCGnZAmiM9KsJWbBCSbaSLW8E6oJIyGrPuP2
+         nznK/1YHe+sD1zsrFcSBBfEusrvez9qF2bTXIbmTFrJN+mglAAzVz0DHIFYUbb5J7iLJ
+         7G5WRrFyexcu1pNjr+QHqgMAJgIAdg+0DbLkpru1e/XjM09SlfGPiMcL3ygIgWr5n6g6
+         oUHvDuEIHRHXg6/SeHK0xcWB9ptcMPwVAcNdcAfkFT0x/fY57oihF0uNYdKEYgiQnF5x
+         o5bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQWiOALsxKCmeIrUQ+tMMrV+orkU9i+HrBrnEuxpDgZQsUiZpbi0S+FzLKJMSkLXS8T4bGWDQq7f7PxC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyMisy9rVmG25KgBK/5+ORV9EkYwpHhElM4gJrJGKK2ZTFJywu
+	B0Ub20euf2GrmHDV6nIw3BWAHqh/RwYg3kUAn4JgHD+uBzTEgrwIbDiTHxgW4Am8OnZLR4wq0O9
+	XPtyBeiq0OlmzQ5OsNP+6ymee9pB1akYvj7+QFjnOe38vy79Q6dZMWRW/feoFMOVfkQ==
+X-Gm-Gg: ASbGnct1BuEAhAY7OQLeMbU9Bq7NJDlq1OnvQifD5lC7JCnpO+yPQGk7SjVCoB4Rm52
+	EinrqhmynaHUkhdh1s7UvyvjAP2LAAFHQzbHnlsjM0OquGMppRFxTGgJKXTYle2YM6nvyrjbymD
+	d+iGWwLTaVGiFRkUWs0mNkSv4dBLwuhcVU06n07tEkibIXxczWtxUZF/y/c2SOLkvt9rpkuNcb2
+	kGBChZEVl42hOPprEeoQhgMHp2Eemvn2oYPOcnR4MJ5MgQw3Ad7tT3a8PmZXudQWthc7zz9v1gy
+	yD73qRI9+WVoPPbwzB7gdJB8UrwVYyAGmwgUreTud1N/WoUE5Sef61G7LWKQ+ko6gEoIiYaUaBQ
+	XwgSZ8U6JCzmT3xELM6hmAHCmtxxAKpMQJBp8PRtrfato8nE=
+X-Received: by 2002:adf:9d85:0:b0:3a3:70ab:b274 with SMTP id ffacd0b85a97d-3b4936d6989mr1715483f8f.12.1751626040066;
+        Fri, 04 Jul 2025 03:47:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGrDhWSJ8OsAFqya5CuQkYJgLqqPE8OtJ1QKP9AddFcgptaJBHZm+3R8G0yJLcRjSogg/9n0Q==
+X-Received: by 2002:adf:9d85:0:b0:3a3:70ab:b274 with SMTP id ffacd0b85a97d-3b4936d6989mr1715453f8f.12.1751626039587;
+        Fri, 04 Jul 2025 03:47:19 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f2c:5500:988:23f9:faa0:7232? (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b188d8e6sm22746705e9.36.2025.07.04.03.46.51
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b168673asm23050705e9.26.2025.07.04.03.47.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 03:46:52 -0700 (PDT)
-Message-ID: <3184cd54-416b-4456-aeff-0d8165beffac@redhat.com>
-Date: Fri, 4 Jul 2025 12:46:51 +0200
+        Fri, 04 Jul 2025 03:47:19 -0700 (PDT)
+Message-ID: <7a6903d0-0ba1-4536-aea0-08ff511f5149@redhat.com>
+Date: Fri, 4 Jul 2025 12:47:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,15 +75,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] mm,hugetlb: rename anon_rmap to new_anon_folio and
- make it boolean
+Subject: Re: [PATCH v4 4/5] mm,hugetlb: drop obsolete comment about
+ non-present pte and second faults
 To: Oscar Salvador <osalvador@suse.de>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
  Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
 References: <20250630144212.156938-1-osalvador@suse.de>
- <20250630144212.156938-4-osalvador@suse.de>
+ <20250630144212.156938-5-osalvador@suse.de>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -131,31 +131,65 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250630144212.156938-4-osalvador@suse.de>
+In-Reply-To: <20250630144212.156938-5-osalvador@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 30.06.25 16:42, Oscar Salvador wrote:
-> anon_rmap is used to determine whether the new allocated folio is
-> anonymous.  Rename it to something more meaningul like new_anon_folio and
-> make it boolean, as we use it like that.
+> There is a comment in hugetlb_fault() that does not hold anymore.  This
+> one:
 > 
-> While we are at it, drop 'new_pagecache_folio' as 'new_anon_folio' is
-> enough to check whether we need to restore the consumed reservation.
+>   /*
+>    * vmf.orig_pte could be a migration/hwpoison vmf.orig_pte at this
+>    * point, so this check prevents the kernel from going below assuming
+>    * that we have an active hugepage in pagecache. This goto expects
+>    * the 2nd page fault, and is_hugetlb_entry_(migration|hwpoisoned)
+>    * check will properly handle it.
+>    */
 > 
-> Link: https://lkml.kernel.org/r/20250627102904.107202-4-osalvador@suse.de
+> This was written because back in the day we used to do:
+> 
+>   hugetlb_fault () {
+>    ptep = huge_pte_offset(...)
+>    if (ptep) {
+>      entry = huge_ptep_get(ptep)
+>      if (unlikely(is_hugetlb_entry_migration(entry))
+>          ...
+>      else if (unlikely(is_hugetlb_entry_hwpoisoned(entry)))
+>          ...
+>    }
+> 
+>    ...
+>    ...
+> 
+>    /*
+>     * entry could be a migration/hwpoison entry at this point, so this
+>     * check prevents the kernel from going below assuming that we have
+>     * a active hugepage in pagecache. This goto expects the 2nd page fault,
+>     * and is_hugetlb_entry_(migration|hwpoisoned) check will properly
+>     * handle it.
+>     */
+>    if (!pte_present(entry))
+>            goto out_mutex;
+>    ...
+>   }
+> 
+> The code was designed to check for hwpoisoned/migration entries upfront,
+> and then bail out if further down the pte was not present anymore, relying
+> on the second fault to properly handle migration/hwpoison entries that
+> time around.
+> 
+> The way we handle this is different nowadays, so drop the misleading
+> comment.
+> 
+> Link: https://lkml.kernel.org/r/20250627102904.107202-5-osalvador@suse.de
 > Signed-off-by: Oscar Salvador <osalvador@suse.de>
 > Cc: David Hildenbrand <david@redhat.com>
 > Cc: Gavin Guo <gavinguo@igalia.com>
 > Cc: Muchun Song <muchun.song@linux.dev>
 > Cc: Peter Xu <peterx@redhat.com>
 > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-
-BTW, these SOB are wrong :)
-
 > ---
-
-Nothing jumped at me, but it's all very complicated stuff
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
