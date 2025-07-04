@@ -1,131 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B22A28D821;
-	Fri,  4 Jul 2025 09:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE91329B790;
+	Fri,  4 Jul 2025 09:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623126; cv=none; b=LtDznqagZlXo1O4TKLOcfCLBKU5fgnZgf7hv3dIRClVQKHAo8wSeSpitZ6JOmPu2loXAcBDf8+H747AvfgMBpLqTFS2/hbtRhB3cAXBYodTwGQpVW7Q6Cewhkgt3v/SDusn2M7OayfvSnEMO+BrYhGOCMAIt8ZiT8PYULerD/7A=
+	t=1751623187; cv=none; b=ZDjITSKtryE9RVaHzoJoZK1X0Rbi1NBwerWguP2rg/U4rlVcikwCgycfpV6znkxIffhYkr1stKaOUm+ooRXgvAz4x9HqXk+sritbxD7Z4g47LAe27nC/wovgAMwEQUoUbtU/b6Qk/01kyL9JY/wCEtIpgLcwPFC/XNTOiwxBEO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623126; c=relaxed/simple;
-	bh=6y/QrROAdpMG0KepOi2ABSvBSikwo1+w0ZScUptNNMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XmCFw1IwAHV0AQySD5PpT0X8vDGZyV7tA/iZJ1RMVw5DtwyRunZV2hojTGIwU8xFoMSGJGVxWiEGu87g07kxMCls1UuGsXw+NxyILtITr9WSh47VP/RqcUuEVojP/AiMcQ5zvRcDLDdtHx9bgsZSX3PgSrwNDNhNksPFj0h1+aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFRIQo4h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751623187; c=relaxed/simple;
+	bh=i2NX/0XGbvqHv1vq1CFp+VRtaQ0tYwiJJDPkl7hVchI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KVn2jxEyES+gN3JkoHUk1X3Uwr8p5FLXQkpb5xVvj+k4V1AOeClSw40tjaRarXHuey4oOVxlVj2dFvfBiVFnylO7/PTV206dQc1uYSXqE2oEusYMmTy9GA39lo+m7uE0bCTID0AzlVD0Xqefo655RtqQUk2gbNVXDQjE3c5LL0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAv/XRZo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFRIQo4h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E78C4CEE3;
-	Fri,  4 Jul 2025 09:58:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAv/XRZo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06C3C4CEE3;
+	Fri,  4 Jul 2025 09:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751623125;
-	bh=6y/QrROAdpMG0KepOi2ABSvBSikwo1+w0ZScUptNNMA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vFRIQo4haEeX4z5G3jGKdot+Ekt3XkyErGwHdiSf82A1pio97j4o+a5RUViuC0Rq4
-	 5J2iAyDuCnCcHJHG9aAHo22icN2sNwSBPXudpAOpPY4u0d+5MWluuZVUjaXso3iyMj
-	 EahQZNxNrzn+p8Yj3maagbM2KJADYIyh3mAQthEbWNC1hOpocQsHNnib2DRz/GOqzR
-	 /sqoSfdiSs13t6LPG7HxRvr/WGdSfVaQhsQgm8qM9unLa1ofbUCuxo/qzyyQTJVM7V
-	 lpaGIUtoJae4pJ9Xd5dHwaKmZ9ZEq8Z1Lo25wjRFfXp2XVD1aetV/OqzFYSpvhpbgO
-	 wdjOWFkU7/CHQ==
-Message-ID: <88a64a65-bd8c-4b73-af19-6764054d4572@kernel.org>
-Date: Fri, 4 Jul 2025 11:58:37 +0200
+	s=k20201202; t=1751623187;
+	bh=i2NX/0XGbvqHv1vq1CFp+VRtaQ0tYwiJJDPkl7hVchI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=NAv/XRZoBqDaKXo52NCJUZhjJlI/0JD6+0jqOmjvc5+n6kUXo8WrgAbTkYNO3lGcw
+	 JzhUAj1JSkcypWKhFMT4vnk6wriwxLCOYCe3g1CfeY0MahZaYKV3j4/wpDWZYcHA7N
+	 DFkI+FCwSpJcSvF5FAbec2vjjBIDug+QJ2QP6lOmBjH9QaXWqxCzaHCAHvdqHWmMyj
+	 OTKJq5B/JLEHe0j5gqwcjJ0+RIgB2mduUspe4Wfzzc0+wnSAMHsN/hmvx5DsuDfpBh
+	 Kfs9k8nUXc9LnXxPU7IBdw3jqNPvo8vBEV/r9nlS5pl78dnCiptnkPgHUSq5RwoaO+
+	 bEZomn9lhLcYQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next,v3 2/2] selftests/bpf: Enhance XDP Rx metadata
- handling
-To: "Song, Yoong Siang" <yoong.siang.song@intel.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Magnus Karlsson <magnus.karlsson@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20250702165757.3278625-1-yoong.siang.song@intel.com>
- <20250702165757.3278625-3-yoong.siang.song@intel.com>
- <77463344-1b1a-443a-97be-a7ef8a88b8af@kernel.org>
- <IA3PR11MB92546301B67FB3A9FDCD716DD842A@IA3PR11MB9254.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <IA3PR11MB92546301B67FB3A9FDCD716DD842A@IA3PR11MB9254.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 11:59:40 +0200
+Message-Id: <DB36LGJOWHZQ.GHXR3VGX7806@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, "Nicolas Schier"
+ <nicolas.schier@linux.dev>, "Trevor Gross" <tmgross@umich.edu>, "Adam
+ Bratschi-Kaye" <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v14 3/7] rust: introduce module_param module
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
+ <20250702-module-params-v3-v14-3-5b1cc32311af@kernel.org>
+ <aOJo8e9FTJikY-WFnv8a7qAvQS6RFIHTU_gb8fa9RD-8SdGo7o56AoSlWUJUG9NTNB1Wgd09N4p5LJEY8HHXvQ==@protonmail.internalid> <0e89892f-103e-4b92-a067-e192cb7b89a6@kernel.org> <875xg8tnv7.fsf@kernel.org> <87zfdks8y2.fsf@kernel.org>
+In-Reply-To: <87zfdks8y2.fsf@kernel.org>
 
-
-
-On 04/07/2025 03.17, Song, Yoong Siang wrote:
-> On Friday, July 4, 2025 1:05 AM, Jesper Dangaard Brouer <hawk@kernel.org> wrote:
->> On 02/07/2025 18.57, Song Yoong Siang wrote:
->>> Introduce the XDP_METADATA_SIZE macro as a conservative measure to
->>> accommodate any metadata areas reserved by Ethernet devices.
+On Fri Jul 4, 2025 at 9:37 AM CEST, Andreas Hindborg wrote:
+> Andreas Hindborg <a.hindborg@kernel.org> writes:
+>
+>> "Danilo Krummrich" <dakr@kernel.org> writes:
+>>
+>>> On 7/2/25 3:18 PM, Andreas Hindborg wrote:
+>>>> +    /// Get a shared reference to the parameter value.
+>>>> +    // Note: When sysfs access to parameters are enabled, we have to =
+pass in a
+>>>> +    // held lock guard here.
+>>>> +    pub fn get(&self) -> &T {
+>>>> +        self.value.as_ref().unwrap_or(&self.default)
+>>>> +    }
 >>>
+>>> I think you forgot to rename this.
 >>
->> This seems like a sloppy workaround :-(
->>
->> To me, the problem arise because AF_XDP is lacking the ability to
->> communicate the size of the data_meta area.  If we had this capability,
->> then we could allow the IGC driver to take some of the space, have the
->> BPF-prog expand it futher (bpf_xdp_adjust_meta) and then userspace
->> AF_XDP would simply be able to see the size of the data_meta area, and
->> apply the struct xdp_meta at right offset.
->>
-> Thanks for your input.
-> 
-> I agree with you that the implementation will be simple if user application
-> able to get the size of data_meta area. The intention of this patch set is to let
-> developer aware of such limitations before we have a perfect solution.
-> 
-> Btw, do you got any suggestion on how to expose the metadata length?
-> I not sure whether xdp_desc.options is a simple and good idea or not?
+>> Yes, thanks for being persistent on this :)
+>
+> Actually, there is a discussion on whether to keep the API similar to
+> `std::sync::OnceLock` [1] but also whether to rename this to something
+> other than `OnceLock` [2]. Depending on how that resolves, it might make
+> sense to stay with `get` or rename to something else.
 
-That is a question to the AF_XDP maintainers... added them to this email.
+But this is for the `ModuleParamAccess`, right? There I think it makes
+sense to choose `access` or `value`.
 
-/* Rx/Tx descriptor */
-struct xdp_desc {
-	__u64 addr;
-	__u32 len;
-	__u32 options;
-};
+---
+Cheers,
+Benno
 
-As far as I know, the xdp_desc.options field isn't used, right?
-
-
-(Please AF_XDP experts, please verify below statements:)
-Something else we likely want to document: The available headroom in the
-AF_XDP frame.  When accessing the metadata in userspace AF_XDP we do a
-negative offset from the UMEM packet pointer.  IIRC on RX the available
-headroom will be either 255 or 192 bytes (depending on NIC drivers).
-
-Slightly confusing when AF_XDP transmitting from userspace the UMEM
-headroom is default zero (XSK_UMEM__DEFAULT_FRAME_HEADROOM is zero).
-This is configurable via xsk_umem_config.frame_headroom, like I did in
-this example[1].
-
-Maybe I did something wrong in[1], because I see that the new method is
-setting xsk_umem_config.tx_metadata_len + flag XDP_UMEM_TX_METADATA_LEN.
-This is nicely documented in [2]. How does this interact with setting
-xsk_umem_config.frame_headroom ?
-
-
-[1] 
-https://github.com/xdp-project/bpf-examples/blob/3f365af4be1fe6a0ef77e751ff9b12c912810453/AF_XDP-interaction/af_xdp_user.c#L423-L424
-[2] https://www.kernel.org/doc/html/v6.12/networking/xsk-tx-metadata.html
-
---Jesper
+> Best regards,
+> Andreas Hindborg
+>
+>
+> [1] https://lore.kernel.org/all/35e1fef4-b715-4827-a498-bdde9b58b51c@peng=
+uintechs.org
+> [2] https://lore.kernel.org/all/CAH5fLggY2Ei14nVJzLBEoR1Rut1GKU4SZX=3D+14=
+tuRH1aSuQVTA@mail.gmail.com
