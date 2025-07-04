@@ -1,259 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B817A2080C0
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F35520FAA4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653350; cv=none; b=sUa6869KXQUfHjpTmECdrtCy7f7Ia6Tw3P5Jy63snVW6NulfOBZ2jD6IkFGP3apR7k+Dypbeng1QRnfbyJt4GnCM+46m7PCgd51YxNvuKSS3NojYCVfx2+viMrzkdkpqlR9ngKVPiZYaza1cUs20LJ8imDb6Xuo1r4PthXn3cw0=
+	t=1751653352; cv=none; b=big8H0br97GZn5qkapS70z19D9sp9MYLqR1he4oLM8E/lzGiKHRErIxH7GsdMEjDHPG/CKQRuy/nDF6YjebtA+A1FiYLqzAv13l8s8mP2/zK2DkGVEP2PV3phfiC4eiwFW2fIPuHJEvJ+hMfh3xhkK3azx0twZQDMzZAYWxFqo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751653350; c=relaxed/simple;
-	bh=i27P3jEWmWzGzRgNhUWz+u/M6292Ldf9n4PvhYDa7lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IgaeCyauLtckcLIb0v6NiYqz+fCQmrvZRkS7Jj+7tfmxirQk0VeDJp1022YUjSQNQKnMuFkqPiGrS68hBhdigCg92VNacUXSysyZ+ACfO4NV148A1ioK5r2CpLbvUKDP8+ERFY28Lz8QF/nW4Oqz8EG2VDagxtw0pgd5MZcbJNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fgFcsNyk; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1751653352; c=relaxed/simple;
+	bh=y7Hbl1pAqGjQzF/82eshc8yF2u6xa68k61bwAB5tTzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UhZzI6EEVgI2dbbXu/uCKptaZ4o3KRrnwRYPF9q+e5YrN88wnhW9g/P9M//39Ezzg8iVKP+48U60lH32rTBCxZ1M2kRY96iSDgvdwTVnXUYcG/j4+Wx/Z1HQQMCI1r1hyXYc9DTPmSvkR2yAKwf/nI2MelB3rn8204xJAyVv0Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JPZ9YQdJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fgFcsNyk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JPZ9YQdJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751653347;
+	s=mimecast20190719; t=1751653349;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UseA/26zhMetzuZ60tcpK4PCqd09zfuDJX7oVgsGQiM=;
-	b=fgFcsNykE4l6oozqZYutbz5ySE73WttxxVr2ze0iu4XHxtlbdiwba76GqdIHHmViuXX8q0
-	4O+YjbTH/jkGO+/3pfut/HpbbzhxZJlOJ8tSZJg5W9JcUSDS84lqaKNmQDcX8HIxXxL7jC
-	U2XvS6ysNbQkRYPLs6329kzxEMIEzqQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-652-13l49NBBNliWdQEEwdHuYQ-1; Fri,
- 04 Jul 2025 14:22:24 -0400
-X-MC-Unique: 13l49NBBNliWdQEEwdHuYQ-1
-X-Mimecast-MFC-AGG-ID: 13l49NBBNliWdQEEwdHuYQ_1751653342
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 26686180028B;
-	Fri,  4 Jul 2025 18:22:21 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.45.226.37])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C49A719560A7;
-	Fri,  4 Jul 2025 18:22:13 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: Jiri Pirko <jiri@resnulli.us>,
-	netdev@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v13 01/12] dt-bindings: dpll: Add DPLL device and pin
-Date: Fri,  4 Jul 2025 20:21:51 +0200
-Message-ID: <20250704182202.1641943-2-ivecera@redhat.com>
-In-Reply-To: <20250704182202.1641943-1-ivecera@redhat.com>
-References: <20250704182202.1641943-1-ivecera@redhat.com>
+	bh=Ao5yV0OWlWrLaBBV5SLduZ6Vw0gfsxB0sugrEeYXGWQ=;
+	b=JPZ9YQdJqLIRS7c7QW497UVPE5oGN8Ly4yq8GsSbCNajIOJQXhFoj0SHUqN4tauaP1rM29
+	Nv8+tKbFtTmbWPQdoI0lq7YOC8OTjpUfwBLEbAmoYje7Ggw3oix4fiZLYu/g4xnak2isca
+	xbJ9pGIoGXyvs05IBuhG2PNomtFRB5E=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-zZ8puU_gNxiCIKJ5Qols3g-1; Fri, 04 Jul 2025 14:22:29 -0400
+X-MC-Unique: zZ8puU_gNxiCIKJ5Qols3g-1
+X-Mimecast-MFC-AGG-ID: zZ8puU_gNxiCIKJ5Qols3g_1751653348
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fd75e60875so22059506d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:22:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751653348; x=1752258148;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ao5yV0OWlWrLaBBV5SLduZ6Vw0gfsxB0sugrEeYXGWQ=;
+        b=nuD4SiqmkSN90kgMMtThxHOZ5NrFR5ovfUaRUXffCxY1HPNTrmJBbFDFNCBZFWeG2+
+         kjdPmwxnuR+epVTagPu0+ZQmKs4yHWzd27EGbepKyrkvqMrldUQr4fAtz2fyr4ty+DHo
+         DofRBJthHv7sgldEqzwZZG8OODBUM9chZ7GcSMbNwqx56MD8MOeM/nW5F/9rktYdbJjz
+         ZB471QLM3McmpWI/o+RTskZW9M7H1ZmW+VZb2S6Kzf3O+uTVa7rLpH8Prl2ci+jONf7l
+         g2o3e8jrQWTdiQtzbEmbPNISD/Qp5wTrv+Lz/OV2kwn7I/hJD6AgGMQvYeCVNI17OIuW
+         AnWA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBdBX8rDlN1LBsa4WHOmwsKxDySixj9zwSwvWLnqD8qUcqrqubFGjea659XdaWibPRfolTMNWkF64MfK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8+ubt8JdvpDE9jOwjGGu1STBGYdsVzQKwYuhMGaxYpScOA7sM
+	6d6nptZQcftby4rEJHvCWFJEW37JqVN06IETFhB2S3hYM+xPLZQ82dklYXE3ueXkpfFlRS5fLg1
+	91mXZ5F727TwGaJyh1sFyImTLYQEPcAaltjUgOq+6arVP4noJtjteBoqdSBpDoe8pAarxtFCOsD
+	Zs
+X-Gm-Gg: ASbGncuOuaBoWM8n/AzrYbj2Yjol3ec4Iab/LnS9zpWZqhL64GdQqiV/hr61xrEAJR8
+	yGT3MoqfxCkOkTU1+tZtBppbkLOJDQh/JNoQnedMlWNhnaitkHuFL1Xq3r4qZ1Sj3vNoPOpv9iz
+	1QTL7xsEF+Df6ryftVRG+lGJcsUVXG0ErfStppoqv4CrCMzMF4b7Y3hpxdAVUUVlIgE9QZhCgL0
+	a2+YM2Rcob/2IFwAIBWE/76zzTv3XYWclJeEZ1Wr4JVHmGcjKGxQNHlNcFlsqIgi+b6oFNTNgBO
+	MIH4CHwB3wUGBjmXZp4ydPka
+X-Received: by 2002:a05:6214:e4b:b0:702:c15f:3291 with SMTP id 6a1803df08f44-702c6d7a145mr47718036d6.22.1751653343417;
+        Fri, 04 Jul 2025 11:22:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOOAnVJ2nhxq4q+rgZ9MWxRastPRZ+F+UsTkduj/PWXspmSODVR5v/cT1qpEPk5qddOrytUA==
+X-Received: by 2002:a05:6214:e4b:b0:702:c15f:3291 with SMTP id 6a1803df08f44-702c6d7a145mr47717576d6.22.1751653342959;
+        Fri, 04 Jul 2025 11:22:22 -0700 (PDT)
+Received: from [192.168.2.110] ([69.156.206.24])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4cd2c1esm16472856d6.50.2025.07.04.11.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 11:22:22 -0700 (PDT)
+Message-ID: <34be0c05-a805-4173-b8bd-8245b5eb0df8@redhat.com>
+Date: Fri, 4 Jul 2025 14:22:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
+ users
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ Michal Hocko <mhocko@suse.com>, david@redhat.com, shakeel.butt@linux.dev,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
+ sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
+ <87bjqx4h82.fsf@gmail.com> <aEaOzpQElnG2I3Tz@tiehlicka>
+ <890b825e-b3b1-4d32-83ec-662495e35023@linux.alibaba.com>
+ <87a56h48ow.fsf@gmail.com> <4c113d58-c858-4ef8-a7f1-bae05c293edf@suse.cz>
+ <06d9981e-4a4a-4b99-9418-9dec0a3420e8@suse.cz>
+ <20250609171758.afc946b81451e1ad5a8ce027@linux-foundation.org>
+Content-Language: en-US, en-CA
+From: Luiz Capitulino <luizcap@redhat.com>
+In-Reply-To: <20250609171758.afc946b81451e1ad5a8ce027@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a common DT schema for DPLL device and its associated pins.
-The DPLL (device phase-locked loop) is a device used for precise clock
-synchronization in networking and telecom hardware.
+On 2025-06-09 20:17, Andrew Morton wrote:
+> On Mon, 9 Jun 2025 10:56:46 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+> 
+>> On 6/9/25 10:52 AM, Vlastimil Babka wrote:
+>>> On 6/9/25 10:31 AM, Ritesh Harjani (IBM) wrote:
+>>>> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
+>>>>
+>>>>> On 2025/6/9 15:35, Michal Hocko wrote:
+>>>>>> On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
+>>>>>>>
+>>>>>>> Any reason why we dropped the Fixes tag? I see there were a series of
+>>>>>>> discussion on v1 and it got concluded that the fix was correct, then why
+>>>>>>> drop the fixes tag?
+>>>>>>
+>>>>>> This seems more like an improvement than a bug fix.
+>>>>>
+>>>>> Yes. I don't have a strong opinion on this, but we (Alibaba) will
+>>>>> backport it manually,
+>>>>>
+>>>>> because some of user-space monitoring tools depend
+>>>>> on these statistics.
+>>>>
+>>>> That sounds like a regression then, isn't it?
+>>>
+>>> Hm if counters were accurate before f1a7941243c1 and not afterwards, and
+>>> this is making them accurate again, and some userspace depends on it,
+>>> then Fixes: and stable is probably warranted then. If this was just a
+>>> perf improvement, then not. But AFAIU f1a7941243c1 was the perf
+>>> improvement...
+>>
+>> Dang, should have re-read the commit log of f1a7941243c1 first. It seems
+>> like the error margin due to batching existed also before f1a7941243c1.
+>>
+>> " This patch converts the rss_stats into percpu_counter to convert the
+>> error  margin from (nr_threads * 64) to approximately (nr_cpus ^ 2)."
+>>
+>> so if on some systems this means worse margin than before, the above
+>> "if" chain of thought might still hold.
+> 
+> f1a7941243c1 seems like a good enough place to tell -stable
+> maintainers where to insert the patch (why does this sound rude).
+> 
+> The patch is simple enough.  I'll add fixes:f1a7941243c1 and cc:stable
+> and, as the problem has been there for years, I'll leave the patch in
+> mm-unstable so it will eventually get into LTS, in a well tested state.
 
-The device includes one or more DPLLs (channels) and one or more
-physical input/output pins.
+Andrew, are you considering submitting this patch for 6.16? I think
+we should, it does look like a regression for larger systems built
+with 64k base page size.
 
-Each DPLL channel is used either to provide a pulse-per-clock signal or
-to drive an Ethernet equipment clock.
+On comparing a very simple app which just allocates & touches some
+memory against v6.1 (which doesn't have f1a7941243c1) and latest
+Linus tree (4c06e63b9203) I can see that on latest Linus tree the
+values for VmRSS, RssAnon and RssFile from /proc/self/status are
+all zeroes while they do report values on v6.1 and a Linus tree
+with this patch.
 
-The input and output pins have the following properties:
-* label: specifies board label
-* connection type: specifies its usage depending on wiring
-* list of supported or allowed frequencies: depending on how the pin
-  is connected and where)
-* embedded sync capability: indicates whether the pin supports this
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- .../devicetree/bindings/dpll/dpll-device.yaml | 76 +++++++++++++++++++
- .../devicetree/bindings/dpll/dpll-pin.yaml    | 45 +++++++++++
- MAINTAINERS                                   |  2 +
- 3 files changed, 123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
- create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
-
-diff --git a/Documentation/devicetree/bindings/dpll/dpll-device.yaml b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
-new file mode 100644
-index 0000000000000..fb8d7a9a3693f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dpll/dpll-device.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Digital Phase-Locked Loop (DPLL) Device
-+
-+maintainers:
-+  - Ivan Vecera <ivecera@redhat.com>
-+
-+description:
-+  Digital Phase-Locked Loop (DPLL) device is used for precise clock
-+  synchronization in networking and telecom hardware. The device can
-+  have one or more channels (DPLLs) and one or more physical input and
-+  output pins. Each DPLL channel can either produce pulse-per-clock signal
-+  or drive ethernet equipment clock. The type of each channel can be
-+  indicated by dpll-types property.
-+
-+properties:
-+  $nodename:
-+    pattern: "^dpll(@.*)?$"
-+
-+  "#address-cells":
-+    const: 0
-+
-+  "#size-cells":
-+    const: 0
-+
-+  dpll-types:
-+    description: List of DPLL channel types, one per DPLL instance.
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    items:
-+      enum: [pps, eec]
-+
-+  input-pins:
-+    type: object
-+    description: DPLL input pins
-+    unevaluatedProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^pin@[0-9a-f]+$":
-+        $ref: /schemas/dpll/dpll-pin.yaml
-+        unevaluatedProperties: false
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  output-pins:
-+    type: object
-+    description: DPLL output pins
-+    unevaluatedProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^pin@[0-9]+$":
-+        $ref: /schemas/dpll/dpll-pin.yaml
-+        unevaluatedProperties: false
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+additionalProperties: true
-diff --git a/Documentation/devicetree/bindings/dpll/dpll-pin.yaml b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
-new file mode 100644
-index 0000000000000..51db93b77306f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dpll/dpll-pin.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DPLL Pin
-+
-+maintainers:
-+  - Ivan Vecera <ivecera@redhat.com>
-+
-+description: |
-+  The DPLL pin is either a physical input or output pin that is provided
-+  by a DPLL( Digital Phase-Locked Loop) device. The pin is identified by
-+  its physical order number that is stored in reg property and can have
-+  an additional set of properties like supported (allowed) frequencies,
-+  label, type and may support embedded sync.
-+
-+  Note that the pin in this context has nothing to do with pinctrl.
-+
-+properties:
-+  reg:
-+    description: Hardware index of the DPLL pin.
-+    maxItems: 1
-+
-+  connection-type:
-+    description: Connection type of the pin
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [ext, gnss, int, mux, synce]
-+
-+  esync-control:
-+    description: Indicates whether the pin supports embedded sync functionality.
-+    type: boolean
-+
-+  label:
-+    description: String exposed as the pin board label
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+  supported-frequencies-hz:
-+    description: List of supported frequencies for this pin, expressed in Hz.
-+
-+required:
-+  - reg
-+
-+additionalProperties: false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb9df569a3fff..5488a6fd31f59 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7324,6 +7324,8 @@ M:	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
- M:	Jiri Pirko <jiri@resnulli.us>
- L:	netdev@vger.kernel.org
- S:	Supported
-+F:	Documentation/devicetree/bindings/dpll/dpll-device.yaml
-+F:	Documentation/devicetree/bindings/dpll/dpll-pin.yaml
- F:	Documentation/driver-api/dpll.rst
- F:	drivers/dpll/*
- F:	include/linux/dpll.h
--- 
-2.49.0
+My test setup is a arm64 VM with 80 CPUs running a kernel with 64k
+pagesize. The kernel only reports the RSS values starting at 10MB
+(which makes sense since the Per-CPU counters will cache up to two
+times the number of CPUs and the kernel accounts pages). The situation
+will be worse on larger systems, of course.
 
