@@ -1,64 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7BB3093DC;
-	Fri,  4 Jul 2025 13:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE513093DD;
+	Fri,  4 Jul 2025 13:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637031; cv=none; b=Wzjbur92XtlnP3CPpIZIjGFw5wIlZIzY6GL140VM1ztVfNzIXHy08UPxcylGLlmJoDU8EwjiDCBya3aeCgyIAM66CeKBKx14UCrh+aEy7jgpsPSRwB2KaF5D3Lnqqtv9MZP8PnW+8WTIm1Wxp/PNyy28vfUCuYPkenP1VtRL0GI=
+	t=1751637037; cv=none; b=Fl06bo51Ru7ALO8rA2GFnInHBkskmnqDa7YRn08yz4PIBLxLl75yYilth/Elcc9rvTtgPFVxTXCT1/iPpC3rLjJcUQbSp3MNXjoF3RCS/E2mzH+edMClqMXoVwLpOrEEYrid0h6VcIGrQdDGLpc+tU9ojJ9UOpB9HhsJ4bt6/aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637031; c=relaxed/simple;
-	bh=vipOAhEShnkbc7YvZlAmzBI8cdPmlOvoAE2pLoD+pfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LMX5qi5KlWHA2g5fqd0dh392zck97jbKUNG7RV3ZbqnxxBRB+Wi5fUpSxdCHaFljwAZBAi6aXONIpiQQV5vrz7924Kru0/BiwDYODTLpRDeCYIglLJ2rGa0RgQLJ7ld3aq8Ei6VZASo0Ga+XN2cbQ2YJai1I4BtYxFPo6z+yARg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qftfLblA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751637037; c=relaxed/simple;
+	bh=N93fx/HWGQ9/7LBI0Q5dx377OnCZ8CrZ/OhiD9v/Z/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JY6Nba9gmq/LFHKeOVjC5qwxO/c+rf+4nTTckwPVGCnTKOLZLkau3XIWYuRQZroS2zC6s42tFt8PoGmLzuvMvbxESJz7P/RMwGiRpBU9S8MSh+7uRyIXTuIpG4ODc9ucun/LAguDlD3jaBXXr+WO3NgxQVMW2TKp0Eqb4o5K01A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IafJ5zhz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qftfLblA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC553C4CEF1;
-	Fri,  4 Jul 2025 13:50:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IafJ5zhz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716F3C4CEEB;
+	Fri,  4 Jul 2025 13:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637031;
-	bh=vipOAhEShnkbc7YvZlAmzBI8cdPmlOvoAE2pLoD+pfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qftfLblA0lt7pjera3ueLaMfRUO72L6spQsI98HCtRIcjuCEiSAklZzfSdZaesKDy
-	 DazAm5CDda6cvbzeIAfBD1T930IGGHcLQk3PBVspBjZXQESoV5jHpc3weZHQah2Tit
-	 tvhOEX44axtWWovkkwAnOHxUEF5T0aMTy7BwJv6go4cudPC7vJt4Sfhyq0vYhsr0+k
-	 xn26RdvxnuYi7ghY2SeK5yKZFRT0QkzGt6Brchy9TMGGpJuD/bLhc941RRvoZoigZZ
-	 ks7Ky3VCmcZvMnRpVtRNaR1xg2OIW2qXTrFHkym3aVDGHYmGXIZG0uRTJVnP2yfVJ9
-	 cD+crx0WgOeBw==
-Date: Fri, 4 Jul 2025 14:50:26 +0100
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next v2 2/7] netpoll: factor out UDP checksum
- calculation into helper
-Message-ID: <20250704135026.GP41770@horms.kernel.org>
-References: <20250702-netpoll_untagle_ip-v2-0-13cf3db24e2b@debian.org>
- <20250702-netpoll_untagle_ip-v2-2-13cf3db24e2b@debian.org>
+	s=k20201202; t=1751637036;
+	bh=N93fx/HWGQ9/7LBI0Q5dx377OnCZ8CrZ/OhiD9v/Z/8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IafJ5zhzJJMzQ5RvGFz9jHElZlpQS/cEpbHiJxGptp5RZk2uaNXSUmlxru9vxG0Kb
+	 my6sw81V2pUOKJO1VNXbXkyX54FcpSGrYkNlcQ/zC2JzREUevQHixwULxSwoZP/0Ao
+	 L57ARhp2EwtWbNo4JI2cnYce4L0oAVLtG4KnJPruYzna/Ruxpq+TTi3Xed2SikeQCx
+	 G0QZsiDA0BAqUNC0WiLG5StfJgJ7NHGRRJSNizFGe+xDAEuQrswFi0JvogCPgcbwwV
+	 53cCDyXsz+5McRnjUaaNiAgEigDmHz7JsdAkKoJqHfzCVV1vqibVOyCx3Q6UJM33Dm
+	 j1LzYJybqnstw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 8/8] x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations
+Date: Fri,  4 Jul 2025 16:49:43 +0300
+Message-ID: <20250704134943.3524829-9-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
+References: <20250704134943.3524829-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-netpoll_untagle_ip-v2-2-13cf3db24e2b@debian.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 03:06:34AM -0700, Breno Leitao wrote:
-> Extract UDP checksum calculation logic from netpoll_send_udp()
-> into a new static helper function netpoll_udp_checksum(). This
-> reduces code duplication and improves readability for both IPv4
-> and IPv6 cases.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+For the most part ftrace uses text poking and can handle ROX memory.
+The only place that requires writable memory is create_trampoline() that
+updates the allocated memory and in the end makes it ROX.
+
+Use execmem_alloc_rw() in x86::ftrace::alloc_tramp() and enable ROX cache
+for EXECMEM_FTRACE when configuration and CPU features allow that.
+
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/x86/kernel/ftrace.c | 2 +-
+ arch/x86/mm/init.c       | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 252e82bcfd2f..4450acec9390 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -263,7 +263,7 @@ void arch_ftrace_update_code(int command)
+ 
+ static inline void *alloc_tramp(unsigned long size)
+ {
+-	return execmem_alloc(EXECMEM_FTRACE, size);
++	return execmem_alloc_rw(EXECMEM_FTRACE, size);
+ }
+ static inline void tramp_free(void *tramp)
+ {
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 442fafd8ff52..bb57e93b4caf 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -1105,7 +1105,14 @@ struct execmem_info __init *execmem_arch_setup(void)
+ 				.pgprot	= PAGE_KERNEL_ROX,
+ 				.alignment = MODULE_ALIGN,
+ 			},
+-			[EXECMEM_FTRACE ... EXECMEM_BPF] = {
++			[EXECMEM_FTRACE] = {
++				.flags	= flags,
++				.start	= start,
++				.end	= MODULES_END,
++				.pgprot	= pgprot,
++				.alignment = MODULE_ALIGN,
++			},
++			[EXECMEM_BPF] = {
+ 				.flags	= EXECMEM_KASAN_SHADOW,
+ 				.start	= start,
+ 				.end	= MODULES_END,
+-- 
+2.47.2
 
