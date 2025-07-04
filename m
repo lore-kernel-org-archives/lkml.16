@@ -1,89 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D59B2AEFD;
-	Fri,  4 Jul 2025 00:45:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FC61E4A9;
+	Fri,  4 Jul 2025 00:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751589906; cv=none; b=k6zZRU28+miT/nEy1kD6zWvPavSdWP6opwURs3E9XxpJB/+Lf5UPkVpNKIPrj+o+a8/tFwhSU6Qrhis4l26t69XDE99OiicNcmbYFzuuZcDN05aEJEG1b2h0W6oDjL5DJsXoYUP0hfWCoZNHzpYKDBc2lv6xVy6dmAPkMWZZM5w=
+	t=1751589925; cv=none; b=DTB86DEYoQbnJ0hVth/1woLsp4CxuSj+00bVyEdrEP87U8sp3Ok4OALQAt2OxwmrJCUZCWlRrV8GKL48XXBBUK26LPH58DZfKnWvPTscIdVCPUM013aasELnDp86dbwMwAJyYn3/bCdhM6DxzPduQySCl96BoD52Sd0JG3SW+lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751589906; c=relaxed/simple;
-	bh=x4AmA2Vgk3IOJCey+Z/XynRFoRbv3YCP77LijBksTWQ=;
+	s=arc-20240116; t=1751589925; c=relaxed/simple;
+	bh=k26Ea3cuMt8hwubtRp47mgUQrP0aEYUTNEaV6IprOQ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kySh/ovUa45b6pTKd4ellGptWUS3FZL2o/lSrDeps8VsfQR7Ok4M+bxcoKvOSGUmwf2mIBoaECxVQSGOA3U/5wi8Rp5tjFN4hEbW0O/r4RAbl1V2BDh3klCxfLqCtmuJmMCXFkcJCrVJYUofmJ6rObVPv6ij2rwR5qA6BkZjxQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0jXZv/J; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMpQLS6FC8j3E0xd2n9NMU8fyGRdpYiBye8UdjjfSXtYJ/ETGsos6/wa5iKAxNSV/EJTD1/NxfGVs3Nr8yTzQ0IDyGNdxXC8b7ws6VTry42I4gLb4N4t2yff5zN1PysLW4SuWOosQ8ebgrnWPbznvP8RU9qYYihx0/4lxKd6+LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpVI+XE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0jXZv/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46A7C4CEE3;
-	Fri,  4 Jul 2025 00:45:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpVI+XE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAEE9C4CEE3;
+	Fri,  4 Jul 2025 00:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751589905;
-	bh=x4AmA2Vgk3IOJCey+Z/XynRFoRbv3YCP77LijBksTWQ=;
+	s=k20201202; t=1751589925;
+	bh=k26Ea3cuMt8hwubtRp47mgUQrP0aEYUTNEaV6IprOQ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k0jXZv/JsSEoXrLgaZezrbAQfnqdDJ5hah0Dud1hK14CYyAUzjtHe/nnBhmLi5QOt
-	 KZE8pmdg1araHaCN1EqnQSMpuE4NO0bxo5Mvxl5sDzkRHttvGCcOSJWbynfiSsPiWf
-	 aXsnijRPX+el1D+mpyNLOh1oTl99K9G6/JzGtbJ6nJvvP/eb7fdMgrW86BljhR3JW/
-	 kNq1sD56w6PLon5VNNxeFeb7x7TeXE/8lM8Fv0UyQ5jNr5FlQcBZFrtdeuwLaCZBWu
-	 ipy0WVl9y7/cPnuWkoeH63AneG9p+dHz4+2TjH+r8JhdxxjlIag6FhFLAtsu/DR/gv
-	 AzAbb3LNS9QBQ==
-Date: Fri, 4 Jul 2025 02:44:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: alex.gaynor@gmail.com, gregkh@linuxfoundation.org, ojeda@kernel.org,
-	rafael@kernel.org, robh@kernel.org, saravanak@google.com,
-	a.hindborg@kernel.org, aliceryhl@google.com, bhelgaas@google.com,
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
-	david.m.ertman@intel.com, devicetree@vger.kernel.org,
-	gary@garyguo.net, ira.weiny@intel.com, kwilczynski@kernel.org,
-	leon@kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lossin@kernel.org,
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: Re: [PATCH v2 1/3] rust: device_id: split out index support into a
- separate trait
-Message-ID: <aGckCY3BiPRCPmS7@pollux>
-References: <20250701141252.600113-1-fujita.tomonori@gmail.com>
- <20250701141252.600113-2-fujita.tomonori@gmail.com>
+	b=RpVI+XE25GDQ58qLXZOaQkcg+qF+MOfs/tKH0VxsLvgZJCfSt3OEQGG16VJoMCpyU
+	 +KsrYetSHPXmFXqFZYxPSpAU33dnlK0cRkxMbF93KTLvMtwwszKbdxDHSrSi1C/Wgi
+	 Y8Bbv3dRfhn54UKsSlhpSFbwCc4q2rfn3NHMu7MYPUDfyIlBudzsiO+4BKtmn+hfy/
+	 jtUH3ygj2AE390bQ3fbwb4SFHs839ysRNNU/UMztMoWk+G0FzJpyMTcrxrf1EsExj7
+	 mxkUAETBzORrobO8iKXs+POCy/0IlZT89nBtGHbRURMejvSjeGI5Utiu2A23jcVik9
+	 ONpSVkcwPUaQw==
+Date: Fri, 4 Jul 2025 08:45:21 +0800
+From: Coly Li <colyli@kernel.org>
+To: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bcache: fix "for/take a while" typos
+Message-ID: <n6svt7l67blzqrrkrq5kys673yyyrvll5wj5lh3y7dcukkhtiw@luvs2a6fcyi3>
+References: <vabrss3eucpl4xhvyrqflqj4rgtpzhv76wjtlqldlafdonkgjr@tarta.nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250701141252.600113-2-fujita.tomonori@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <vabrss3eucpl4xhvyrqflqj4rgtpzhv76wjtlqldlafdonkgjr@tarta.nabijaczleweli.xyz>
 
-On Tue, Jul 01, 2025 at 11:12:50PM +0900, FUJITA Tomonori wrote:
-> +// SAFETY:
-> +// * `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
+On Thu, Jul 03, 2025 at 08:21:18PM +0800, Ahelenia Ziemiańska wrote:
+> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
 
-Here and for a few other occurances, this doesn't need to be a list, since it's
-just a single item.
+Acked-by: Coly Li <colyli@kernel.org>
 
-> +/// Extension trait for [`RawDeviceId`] for devices that embed an index or context value.
-> +///
-> +/// This is typically used when the device ID struct includes a field like `driver_data`
-> +/// that is used to store a pointer-sized value (e.g., an index or context pointer).
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that:
-> +///   - `DRIVER_DATA_OFFSET` is the correct offset (in bytes) to the context/data field (e.g., the
-> +///     `driver_data` field) within the raw device ID structure. This field must be correctly sized
-> +///     to hold a `usize`.
-> +///
-> +///     Ideally, the data should ideally be added during `Self` to `RawType` conversion,
+Thanks.
 
-Remove one of the duplicate "ideally".
+> ---
+> v1: https://lore.kernel.org/lkml/h2ieddqja5jfrnuh3mvlxt6njrvp352t5rfzp2cvnrufop6tch@tarta.nabijaczleweli.xyz/t/#u
+> 
+>  drivers/md/bcache/bcache.h  | 2 +-
+>  drivers/md/bcache/request.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+> index 1d33e40d26ea..7318d9800370 100644
+> --- a/drivers/md/bcache/bcache.h
+> +++ b/drivers/md/bcache/bcache.h
+> @@ -499,7 +499,7 @@ struct gc_stat {
+>   * won't automatically reattach).
+>   *
+>   * CACHE_SET_STOPPING always gets set first when we're closing down a cache set;
+> - * we'll continue to run normally for awhile with CACHE_SET_STOPPING set (i.e.
+> + * we'll continue to run normally for a while with CACHE_SET_STOPPING set (i.e.
+>   * flushing dirty data).
+>   *
+>   * CACHE_SET_RUNNING means all cache devices have been registered and journal
+> diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
+> index af345dc6fde1..87b4341cb42c 100644
+> --- a/drivers/md/bcache/request.c
+> +++ b/drivers/md/bcache/request.c
+> @@ -257,7 +257,7 @@ static CLOSURE_CALLBACK(bch_data_insert_start)
+>  
+>  	/*
+>  	 * But if it's not a writeback write we'd rather just bail out if
+> -	 * there aren't any buckets ready to write to - it might take awhile and
+> +	 * there aren't any buckets ready to write to - it might take a while and
+>  	 * we might be starving btree writes for gc or something.
+>  	 */
+>  
+> -- 
+> 2.39.5
 
-> +///     but there's currently no way to do it when using traits in const.
-> +///
-> +///   - The `index` method must return the value stored at the location specified
-> +///     by `DRIVER_DATA_OFFSET`, assuming `self` is layout-compatible with `RawType`.
 
-I think technically this safety requirement isn't needed.
 
-With this:
-
-	Acked-by: Danilo Krummrich <dakr@kernel.org>
+-- 
+Coly Li
