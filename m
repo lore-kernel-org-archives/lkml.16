@@ -1,229 +1,294 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31789246798
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751629696; cv=none; b=LBr9cdbgeE4KxJekzNgubshxl0ka2c9kmnfXg0cv61P1B0zuPAYyskL1JaOgP6Abd1wbBaJDOre7O1Yg4IO482OKiaWcB8fzORuEsWF9svyLYVFAVOR4wz3UBhA10JPIgAvD3tgbgyIcShzgNMT+GdSVZsEMT1z8M+t5p1A4hhc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751629696; c=relaxed/simple;
-	bh=BLt2e4gYJDfFUIoqp0C1xUglnvplbIMHK+j3HeEZ7T4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ItL1vVuC2LupOawxuHgqgOVctUetWnWAcWjGe/WdKOBjuuAR/a3UriE16EXWWYcasjshEjJObmCig4WiMv1fWbLc+AfkDD2MjlqAJm6K5s/0ccryJNyGTiRNMwSzsM87EKgSUAugMDfUoLuZGJOV25F2+4I5TRb0eXPQ12OZGxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BlG1Vrf9; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C10246798
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751629739; cv=fail; b=h9ym44BAeP9H9jm+rXFFSBqnE+9NdYmVvqSWfiN5wzxkRAquAHSw+qifWkre0+7ffuioX59wpl4sVO4doUE59O+nVMB1N5PUaqLOuP9kSDynCSpJXjEd5GokyZPf7WFr7yjS580m3aX40GLb6q0X0AA+/RoMMubx2EsC/gmkJdk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751629739; c=relaxed/simple;
+	bh=SLmB9hQ57QT5AnsRLdf2FDUubT9wp01J0r4Zu+mJGV8=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=boa0jpohi6C1aIajjWwPHI5ADnSMW50MPB0HfRCAKcQ6O3RaNWShte6sHlvAAUaiokkXr+GzFr36zbjJSxH+PuP7kBrkCJWFRa/fr3rA1m5IOpL/1GcQghIMEXKG1mRp6+d6pibQ9BbZevF0iYKdirYuXA7kSxjsI8O76RY6KBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OZHi4toy; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlG1Vrf9"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23636167afeso8884575ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 04:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751629692; x=1752234492; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DUjN4QXidtuC9MgKWPzYZIK3wmGJF/NB5v4vy9SsyI4=;
-        b=BlG1Vrf9tGgk1tePNmN9bb4jCzj6fFSEmKSMelUb5FA1tQjuoNLaT5IDg0Hv1C5Fp8
-         sHUTZM80WWHFJIitWvMgC1Qc8fB0gH7PzQNDlmPykoq5Bx4y/aFdMtQZAES5zxuLhklY
-         /MFwu7Zh+WJVgtvHxXVzKiuqVNMSXzNmkz+OmUEacM6jMjLfZF5T7cq8AEvuSKz9Wjbs
-         vAdQUNVB5RpuaNWPCQDeSlhHj6c1dZoFhBr4XhxhMVkOg0Og9mHetwfzHBzwvzGCu6Lk
-         13NAZq5g+6HxPC2gLzW5Efm2h3KqlnjkK/NIRtgKKE4o17vGkgSJ8l6XEeCfk+PwNWFB
-         hd1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751629692; x=1752234492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DUjN4QXidtuC9MgKWPzYZIK3wmGJF/NB5v4vy9SsyI4=;
-        b=ZVOiAzEl77pNI+DAmOJXSjewL5P7QzVpu6x3OTonlUpxn9X9+uwmC6oclZ4PIQHB2j
-         M9uw+ZIOVh0m6unmxGbD04VPheMBmBtqvXCjdLog6UPBppJacZWVcLIrk2WZx+/6xpR1
-         5wMxRfuh70BimUbp42V7pYy+BfSMMO/jwfZgml74pZWshzKJ+UcvGMuCi7aJN/78EODc
-         AhLWWkDANhPGY8aIpYvXtJvS0KNU0QsocyjJM04/1fgt4+BsQEGKpG57j0XKXQ685pmE
-         +5v2hQpc32hTrUT1Kckeu3cN/LBhvDLkgE0TSi7CqbhnHMqh4mKYvToR54PP608vfoWq
-         n6uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQuUSKv1HvYiESGYgW0Kq3HbOLiKYX5kh3TZSwwnH7HAfQMUzjEbIAk46wtKECME6qRgwM7j7x/zlEn5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmy7/WRA3YfbBoQ/f2HQLVPE+uMwalcRTtw/VcGbCkE/qWeWJc
-	mgidFETIugbV/bKWNnQ6VDBDjwiVeqSawC9T8ytcitSRuh7ThI/DaGZLQtRwPtDkbhBWDU0pF6o
-	ikk2qANlvWuD9Q0WC7fG6z09dJrY3F5vT/N7o/AUo9g==
-X-Gm-Gg: ASbGncscJUv8RDp13hn9hZJq4dOmO0ePf3AtsYgPQJJbfZ39qfKOo9PzxfpS6UqUgSs
-	45uxPk1XOWb0Jcnpf3O46esSPwaFZp0Fl3J79SIc7bACtC6upqoZMt9+lgRKUdRhPmKu3bXxZja
-	ZSnRfRA9Gt/WeQmpIfQPR4cCF9VB8/ZK4SWHFwBkyCzqlTWOUkhN07yn3BQsU3gB0pXMvUlRRb1
-	Y/m
-X-Google-Smtp-Source: AGHT+IEZP3iwLGUJFpqwoWWIOW6UVQ23gWdyxZYmObiHJnJt2wQd7+1nwt5UYR1/ti449dFIgpH/kWfqiz/Bd7UHlwQ=
-X-Received: by 2002:a17:903:3d0d:b0:234:dd3f:80fd with SMTP id
- d9443c01a7336-23c87465293mr33713885ad.2.1751629692416; Fri, 04 Jul 2025
- 04:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OZHi4toy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751629738; x=1783165738;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=SLmB9hQ57QT5AnsRLdf2FDUubT9wp01J0r4Zu+mJGV8=;
+  b=OZHi4toyx4HKQg5RmqAT18g4YWvdIzbIYKwB4s0x0YeYwNEamqKDMEl/
+   E6Kq82SX44jC+65KFp+zRLxrNNOidz7xrszMk7tn2cJRO8bVsw7MiowFn
+   5gEiWHSfCgJigI8aOwONs8Fck3Abit/9KUy+BL6yjceguagR7oJUj5zmu
+   srUJck8Ezo0qnX8yEXAoPC5yPeGeh29XWtzfSu5Vrsme3/G6nfVEEj/HO
+   01CJN9Pz1zntTXjBw6dwtK3i4LuPwen/d8UEihaU5s7ntnq0pIFCD3RVP
+   9zH/XaSsM0/ULHToibBaVemfMy3+7Sq3t7jvsbij8lcmK2wXaxQWJx/q9
+   g==;
+X-CSE-ConnectionGUID: KZGHEx1BRgufQ4Yne+Qx7w==
+X-CSE-MsgGUID: 1UAmYrKwS7y21YZzBqDXWQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65416469"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="65416469"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 04:48:57 -0700
+X-CSE-ConnectionGUID: 7T+Ru43jTOC35X8Eh2S1BA==
+X-CSE-MsgGUID: 8FMTdnDMQVWWkpO/K08T2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="160141306"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 04:48:57 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 4 Jul 2025 04:48:56 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 4 Jul 2025 04:48:56 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.59)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 4 Jul 2025 04:48:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OBmZH06XT0y8R3ytVtC3M3j23pKOjwuSrPrWf4CJgba+zu5WBHSyRqu3gM1L8tR6GPyhwAsGsldoGooLxF66BGo39c76mqlhv6RzWnSOw7UHDzi3KYcdsrr1JKIBJDOJ3P7odREe2yBLZR2JB73vTwz+9jOduAjalSUabkGtnty36CpK2b9j+Aqndq/ITZYMiXk8Cxq3z1SxoN/qLNsoi5giYaejLW89ZaBEDuzVCfSVnIXVBpWjqtnbSuE2Fe2j6by6FzyvrPk2hZe5bulajgUnLOpD7OTJJU8SLcOde05d/By+FL7hQtT/fJN+gbeqAiIsRAycjXBS5clq1AgW2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YvxAXFmLTrVBEBooYwwKqGyNpFEp7BlEj1CydaPiGT8=;
+ b=KlGYLXohtYbjSe/pmjLJaRX0Jqlu5x2QEA1hx0v3h0J+TN+rvlRlt3jdkkE+My6RkQi02G9wq2gEZM6TEAiHzyCm7GXzwr+3+Ki0WAGIjLtSSrDJ/0KOs7r3nN+hN4AzBOPXtsC4Bgx2xpvMpckcTbDsM0i6TrsuYErjBgMwwxTt8m9i2dAZjMstr/WTdXM97PeFvu183GtiUxK1QQhnLmlFnNfQlMWiymoCXbtgpHcb6+qAKcfnof5NB/tO2cfGdfOLLTZCe2Pr+QGzizWQuIrMLJGToCRAkFifmVIhJ4fh2HfRMzmMO9HTqCiSH3UhpwVxDr3otpwAGRo+4PkI+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BN9PR11MB5530.namprd11.prod.outlook.com (2603:10b6:408:103::8)
+ by IA1PR11MB8788.namprd11.prod.outlook.com (2603:10b6:208:597::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
+ 2025 11:48:54 +0000
+Received: from BN9PR11MB5530.namprd11.prod.outlook.com
+ ([fe80::13bd:eb49:2046:32a9]) by BN9PR11MB5530.namprd11.prod.outlook.com
+ ([fe80::13bd:eb49:2046:32a9%4]) with mapi id 15.20.8880.030; Fri, 4 Jul 2025
+ 11:48:53 +0000
+Message-ID: <fe774af5-76fb-4056-9eae-e2ccb0e0f078@intel.com>
+Date: Fri, 4 Jul 2025 17:18:46 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/10] mei: late_bind: add late binding component
+ driver
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <anshuman.gupta@intel.com>,
+	<rodrigo.vivi@intel.com>, <alexander.usyskin@intel.com>,
+	<daniele.ceraolospurio@intel.com>
+References: <20250703193106.954536-1-badal.nilawar@intel.com>
+ <20250703193106.954536-3-badal.nilawar@intel.com>
+ <2025070421-cattishly-buffed-d992@gregkh>
+ <0b40eadc-c763-4cbc-910d-cbeb03b432d4@intel.com>
+ <2025070452-rendering-passover-9f8c@gregkh>
+Content-Language: en-US
+From: "Nilawar, Badal" <badal.nilawar@intel.com>
+In-Reply-To: <2025070452-rendering-passover-9f8c@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MA0PR01CA0013.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:80::13) To BN9PR11MB5530.namprd11.prod.outlook.com
+ (2603:10b6:408:103::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703144004.276210867@linuxfoundation.org>
-In-Reply-To: <20250703144004.276210867@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 4 Jul 2025 17:18:00 +0530
-X-Gm-Features: Ac12FXybOZIGHC5PyPBUj4nRBTvqSKaPmqw6NTEjvBZOrsk-eVQnQskIsVP5bTI
-Message-ID: <CA+G9fYuk8=yLbdUv7ngQ0b5_p2-w21D6JdOYDcsdx7XUK-aQ=A@mail.gmail.com>
-Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|IA1PR11MB8788:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0273d60-d135-442e-0547-08ddbaf0c018
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?TUd5Y1ZTOFJUQStiT3l0cSs4eEZSTEVkY2JwR0dsTktxclNwL3U0KzMxN3JL?=
+ =?utf-8?B?b2FaUFJ6eDg0d1Z4YWtONmR5N0Q5MExybU1OSkt6Vk12bHNzaHR1Q29ESUJJ?=
+ =?utf-8?B?empGcGlHUlFmSThCRGVIZzBGdnFyVHMxSi9Gdk9aQnMySTgrTjJEd255WEkw?=
+ =?utf-8?B?ZURyRnV1Q1BCL0xOYjBSUVRYQkRKVWovWHZyaSt3dlp1ZXpDZ25qQTVFeUNk?=
+ =?utf-8?B?Slh0dnV0VzRZbjFZSHNwQjFlRzdONWwyVzc1ZE84MUQyckxrZ1hYalZNcFFN?=
+ =?utf-8?B?UlY5VXJhcFVGT2xOQks2V3ByWVFyS0xvcW1SbEU2cTdrcEhDQ1orNDdGdHVY?=
+ =?utf-8?B?MSs1Vnpob1hmV1c3N25mUElPQU9TNkhIa1d2bzBpd3Z0ZERLQ2NYVm9IT0w5?=
+ =?utf-8?B?VkhHYS9VTGpzeng4alo4RWllRlRsNk1vSHhxN1VvRDZMVzZnYmNLQkZCcUl6?=
+ =?utf-8?B?cTNtVGNwUTdMaklwVXFkYk9sSkpuK0kvRmN0aUlLSE1rWE8wbEpFNGpiOFRW?=
+ =?utf-8?B?NE42czVpbzlDK2dZVHJSNHp0S0J5UnlsVVRFMGs4ZHNiOXQ4WWZJb3lsQXZ0?=
+ =?utf-8?B?Nis2RU5sQWVzQWlJT3ZMTVFCYWJOTndKd0RQVUFvVGxXSUd0ZTJRVDFNNlpX?=
+ =?utf-8?B?VWRmcEZTbVFvRDJ4b1BSWkdmaEhjK2tUKzFaVGZVOVp2c2tyOHBSOTZQZXNE?=
+ =?utf-8?B?c3NtbkFBZ0NCNS9vaU5sU1FjTFpjTlFRNkZwakVycm5wd3NraTdWSzFjN05Q?=
+ =?utf-8?B?dFI4VHN2VWh6WTBycWhQQWRVa0lBQmdrYTJjMCtLS3B5djl5SWQ1N2pzdnJD?=
+ =?utf-8?B?TjdlbkpWcXpERVpYV29ZVUZ3d245aEtDZkF6UnI3MEhpbXVSZ0FQRC9aazFs?=
+ =?utf-8?B?UzM0ZjJCZUZ2bitEVGdjZStsQ3JjTEQxV055T1g0dy9pd1lzYVlFT1g5OXpB?=
+ =?utf-8?B?aHhCaFVzTkVvVXdiUjJJVU1nRUFoV2Rta2c4cUhZeURMbTVsYlgwc2FaL3or?=
+ =?utf-8?B?LzhYQ1J0RkNlNGU0aVpMYk02d3oyejFqMGZXRllvYW5HYmFjandnWmtsN1RU?=
+ =?utf-8?B?Wm9lTEJ2RUdqeFQ2dXFwczErTkNPdGhCS0ZHeFc5MkNMZGZvV1J3Rm9Dbi9t?=
+ =?utf-8?B?S080N25teFNqckttSzR3QVBlVmZZbE0xSXdWdU1jTTNKejFYN0VOOFQ3S01B?=
+ =?utf-8?B?Rjd5V0JtZXNlR3BMODRxZ1FEREtRK3p5WGlBeWN1NTd0VDhJTnVzL0plMGJ1?=
+ =?utf-8?B?S0lTdmtFa3ZGTUZWeUlwb0sxcnl0VW9sOTRxTW1OTzdFbU9WUU4xVUZWS2xL?=
+ =?utf-8?B?cGVCVlVFNVBCRTJ6V2k1dml0RmJVZG4vUWF4eThURUkwczZhREEwUWYweGtU?=
+ =?utf-8?B?R1Y1T0Yvd0VudjZwbzVvZWFEREl4ZjRuMUVlUER0YUJrU3NocUI5UHNsNjhU?=
+ =?utf-8?B?Mk1SY1J6TWEwTkVuRXI5M1IzbVVvbEhNRlI2UzVJbFR5ZVdDTHZDRUIzN3ZZ?=
+ =?utf-8?B?UDAwMVl6ZUR1djVtZXY3Zzl0MTRNYjQydzVkdUtQMjlLdDdDaVBXZk0wSnQv?=
+ =?utf-8?B?OFAxN3Y4OEtnM3BOVnlIOXU1dnkxSU5ZVVVYSlF2eHhkNkh4OEdhNXRiRU5W?=
+ =?utf-8?B?UmtvOHIwaTBYVE51bG91azUrNFBSeW5iaDRmT2VvZU9MbVhmQjZzRlRyV0lV?=
+ =?utf-8?B?UTlGWjNQOUZ5Yi9XakhRYWFXTndLbUlzNVVzSmtVSmRwNzBUN203eDNRamNJ?=
+ =?utf-8?B?Yk42cW1VTkFRZzhqWlVkdmVOMTIxOGt0ajVadnBCOUtBajZHWklYTTFML3JN?=
+ =?utf-8?B?NnNmQkZjK1RZMDBZRmtyTC8rbEMwU2hqbFA3OXo1ZlpLLzNsckVMUklsd3Ji?=
+ =?utf-8?B?S09TVGJpZmZTUEJUbU1QWU45SnErNkhIRXZXQkovUkliRUluZWNydFB1Ny9S?=
+ =?utf-8?Q?HI+daYKFDsE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aFFMUWdWVnpUd2pCb2xWUmlhc0RDSWFWL2tNOGpWUUsvQ0ZZdkpZK3lnbjU2?=
+ =?utf-8?B?SnYyK1hHZXZUYW16NzZzcVp6M3V0OHMxOWZXTkkyTU5YRjBOcnRaQUJXczdI?=
+ =?utf-8?B?eWpCeGhxM1l1anFvSm9aKzE4S2VUa09xczJqd01TbmI1RFBaaE53dEFoMVRq?=
+ =?utf-8?B?cmZFTXMvZjQ0aFpzRHlCbzdrMjBOekk2VGxiTnR1Sm16YXVJYU5oamY4anlv?=
+ =?utf-8?B?ajhqU20zSnRqMVJGRk55WFRvUG1vQ1NuN3VjY0VLZzlJTEJ1Q1NwdkhmWCt3?=
+ =?utf-8?B?SlNFNGJtYTJ0eURlcllDMXp0bm0vaUxMSENTbHpqK0lxWkhzUkJmQms4SHBI?=
+ =?utf-8?B?TUNubjRTZXVValBNV1NaZkM2dThQNENUZVZQT3U3b2Q2bUc5cDB2TTh4dUkv?=
+ =?utf-8?B?eXNPU2FiU2hyQlZqWlpibUxxaE5telpUU1lxcGY4Z09OYW1XUVpsQVd2cWll?=
+ =?utf-8?B?M3FwSXRHa2FlMEc1cTVhWG1XajA2WUcrQVJoTnd2Uk5DQ1ZYeEpia0N1S2xx?=
+ =?utf-8?B?SmdWUlBTMkVQVXFkbG5KQjJ2cnVyclpPVDhKa085bGpRUTA4OTA0MllIZDNU?=
+ =?utf-8?B?c0R1UkludGppYk5BTEo1MUJHaVhJNmU1QzNhaHZ1dms0YTRVNnI4NWh1bU1S?=
+ =?utf-8?B?NlFVZDNSMjc0YXdxNzUwZkI3NHJqU2RIekYzNHoraVdpMGtqeFVqM0ZCekJu?=
+ =?utf-8?B?Y3h1NVIvU3hRTTRxcE5TVm01NUwvakpLRkRpN0ovSE5iaW9qVjEweDJKYUR3?=
+ =?utf-8?B?b1lCWGNFbU1WUEZhbFpYNlI4M1pKOXlTaThaTEZXY1pFKy9LYU0yVjd1MU05?=
+ =?utf-8?B?VHE3am5oR2xTVWhmaGhBMnpjczJ6L2MzZFpKS0dIQVJrb1dmTTNyWkNiVnly?=
+ =?utf-8?B?aXUycndvSzh0Q1Eyb2FUTGVnTUFSTnhnRDNmSGJEdFdNUm5VWWF6UEpzVHJ3?=
+ =?utf-8?B?WGgxdjNqbWI4TVlaQTJ4SThzLzhoeFQ4R3FVNDNnTFNXVm43b3pIK2FxSFpp?=
+ =?utf-8?B?NDJSeURPS09YRWFoajJxS2FxUzNNeVpIb1pVYnZqVWlPd0FuZkZ3K1BlOEMz?=
+ =?utf-8?B?QWhUUHMyV2dWUnpteDlNRXZUTEFtaW9XVmVBK0tCNVlsWDUwVllXY0ptY3Fu?=
+ =?utf-8?B?SEVHOUUxT24ra3pINFpYTnFGeTlUY24yTzlIT1VtZTA4dWMwK29hK1YydHgx?=
+ =?utf-8?B?cHR4TkNDbE5IcDRKMUI3bHE2djJRU1g4MmRBUzJESldaL2Z2djVUQzMzOTF6?=
+ =?utf-8?B?dHNsY3Z2bC9pR2hSalpDallCUWR5dzluTG9OYlhybnlKVGdmcVArblo4T01y?=
+ =?utf-8?B?Ykg4bjdzcXNKVmQxUG0zWk5EbmhuOEVXREtOWWNYNmY3YWh6eHVHSEZqWU9n?=
+ =?utf-8?B?eStGaU1FKzkxa1Joc3FUSDk2SnF2V3ZObSs2Vncwek5Mc0x4ODhCMSs4ZnNE?=
+ =?utf-8?B?bG9yQ1F0UlJqaHJPUzdVN1FnT2ZRb3FkNlM2Qm9oQ3Rzb0lOb3hqRlNrWVZG?=
+ =?utf-8?B?UDc0RFBKOFJqbUhtaEp2UnRyWnl2anVNc0s0ZG5sOVlVdHh3RGM0anRXQ2lx?=
+ =?utf-8?B?d1Y2UGlHUVBuOHN0MFhjS1pDUkphSjNydHZ4VFE4aVA4R2ZsNDJCcXNqdGVJ?=
+ =?utf-8?B?V0tPRVlleUIxQTF4b2xjQVhkUlcrRzgvTDdqTjF1MUJDSlJoU2xTb1l5OU5I?=
+ =?utf-8?B?ektCU2lHOW9Nc0grOFZXV3VvL3hrODNzNVphdkhNRFY0MzlwWk9yeGxqWTR2?=
+ =?utf-8?B?dmliSzVzTU1VdUgxZ2VNQmFoKzl6VEplMCtLMmlWNndyb2NiUlMwd1VTMTZ2?=
+ =?utf-8?B?QkpPM0paN0M5cFNEV0JIeGZyL2lRb210N0VNSzI3RHpObmNXZFFZYUNKai94?=
+ =?utf-8?B?QkdPdDZuOFRTTVBVOUNTcnpxWnVTNjl1YjZQbmUzdklrbDNFeWR6dEt0UkQv?=
+ =?utf-8?B?bFlWN0VUZkpPM1QxZUNVblh6d2tOZ0YzZkgvSTc3ZjBSMUkvTkpaaW04a2k4?=
+ =?utf-8?B?bEZtV1AxVnIwZTY3a2duSVliUUZKcUcxTENxeFFRV3IxbmpUMmsxOWRINmVj?=
+ =?utf-8?B?dnpHSkx2M3R0OUVnc3V2SHBlbUhxTkdvRzM3OFJYeXdETkpkcmEyNUpnWlZH?=
+ =?utf-8?B?bVRzTzRZZFByM1hiNC9XVGhQaFYrTGN3Njd2bzJvbGxyYythUzhZMTRBSnpD?=
+ =?utf-8?B?Wnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0273d60-d135-442e-0547-08ddbaf0c018
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5530.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 11:48:53.7261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tk8MSOWZ0fe1i21+HsUeVO9MqwjSbA3W0MyqUcyOyNY+nXZCZm0jqoCXVnP7PCQLpdcbAoAGCGmGym4fM3wRKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8788
+X-OriginatorOrg: intel.com
 
-On Thu, 3 Jul 2025 at 20:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+
+On 04-07-2025 16:04, Greg KH wrote:
+> On Fri, Jul 04, 2025 at 03:59:40PM +0530, Nilawar, Badal wrote:
+>> On 04-07-2025 10:44, Greg KH wrote:
+>>> On Fri, Jul 04, 2025 at 01:00:58AM +0530, Badal Nilawar wrote:
+>>>> From: Alexander Usyskin <alexander.usyskin@intel.com>
+>>>>
+>>>> Add late binding component driver.
+>>>> It allows pushing the late binding configuration from, for example,
+>>>> the Xe graphics driver to the Intel discrete graphics card's CSE device.
+>>>>
+>>>> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+>>>> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+>>>> Reviewed-by: Anshuman Gupta <anshuman.gupta@intel.com>
+>>>> ---
+>>>>    drivers/misc/mei/Kconfig                    |   1 +
+>>>>    drivers/misc/mei/Makefile                   |   1 +
+>>>>    drivers/misc/mei/late_bind/Kconfig          |  13 +
+>>>>    drivers/misc/mei/late_bind/Makefile         |   9 +
+>>>>    drivers/misc/mei/late_bind/mei_late_bind.c  | 272 ++++++++++++++++++++
+>>> Why do you have a whole subdir for a single .c file?  What's wrong with
+>>> just keepign it in drivers/misc/mei/ ?
+>> There is separate subdir for each component used by i915/xe, so one was
+>> created for late_bind as well. Should we still drop late_bind subdir?
+>>
+>> cd drivers/misc/mei/
+>>        gsc_proxy/ hdcp/      late_bind/ pxp/
+> For "modules" that are just a single file, yeah, that's silly, don't do
+> that.
+Another reason to maintain the sub_dir is to accommodate additional 
+files for future platforms. If you still insist, I'll remove the sub_dir.
 >
-> This is the start of the stable review cycle for the 6.15.5 release.
-> There are 263 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>>>> +/**
+>>>> + * struct csc_heci_late_bind_req - late binding request
+>>>> + * @header: @ref mkhi_msg_hdr
+>>>> + * @type: type of the late binding payload
+>>>> + * @flags: flags to be passed to the firmware
+>>>> + * @reserved: reserved field
+>>> Reserved for what?  Set to what?
+>> Reserved by firmware for future use, default value set to 0, I will update
+>> above doc.
+>>
+>>>> + * @payload_size: size of the payload data in bytes
+>>>> + * @payload: data to be sent to the firmware
+>>>> + */
+>>>> +struct csc_heci_late_bind_req {
+>>>> +	struct mkhi_msg_hdr header;
+>>>> +	u32 type;
+>>>> +	u32 flags;
+>>>> +	u32 reserved[2];
+>>>> +	u32 payload_size;
+>>> As these cross the kernel boundry, they should be the correct type
+>>> (__u32), but really, please define the endiness of them (__le32) and use
+>>> the proper macros for that.
+>> If we go with __le32 then while populating elements of structure
+>> csc_heci_late_bind_req  I will be using cpu_to_le32().
+>>
+>> When mapping the response buffer from the firmware with struct
+>> csc_heci_late_bind_rsp, there's no need to use le32_to_cpu() since the
+>> response will already be in little-endian format.
+> How do you know?  Where is that defined?  Where did the conversion
+> happen?
+
+Sorry, I got confused. Conversion is needed when assigning the response 
+structure elements.
+
+e.g ret = (int)(le32_to_cpu)rsp.status;
+
 >
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
+>> Are you fine with this?
+> Please be explicit.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.15.5-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.15.y
-> and the diffstat can be found below.
+>>>> +	ret = (int)rsp.status;
+>>>> +end:
+>>>> +	mei_cldev_disable(cldev);
+>>>> +	kfree(req);
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static const struct late_bind_component_ops mei_late_bind_ops = {
+>>>> +	.owner = THIS_MODULE,
+>>> I thought you were going to drop the .owner stuff?
+>>>
+>>> Or if not, please implement it properly (i.e. by NOT forcing people to
+>>> manually set it here.)
+>> Somehow I missed this. I will drop it.
+> And from the structure definition please.
+
+Sure.
+
+Thanks,
+Badal
+
 >
 > thanks,
 >
 > greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 6.15.5-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: d5e6f0c9ca48c1efb86783db4a2b4e457118c27b
-* git describe: v6.15.4-264-gd5e6f0c9ca48
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.15.y/build/v6.15=
-.4-264-gd5e6f0c9ca48
-
-## Test Regressions (compared to v6.15.3-590-gd93bc5feded1)
-
-## Metric Regressions (compared to v6.15.3-590-gd93bc5feded1)
-
-## Test Fixes (compared to v6.15.3-590-gd93bc5feded1)
-
-## Metric Fixes (compared to v6.15.3-590-gd93bc5feded1)
-
-## Test result summary
-total: 261397, pass: 239055, fail: 6046, skip: 16296, xfail: 0
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 136 passed, 1 failed, 2 skipped
-* arm64: 57 total, 49 passed, 0 failed, 8 skipped
-* i386: 18 total, 18 passed, 0 failed
-* mips: 34 total, 27 passed, 7 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 39 passed, 1 failed
-* riscv: 25 total, 25 passed, 0 failed
-* s390: 22 total, 22 passed, 0 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 48 passed, 0 failed, 1 skipped
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-rust
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
