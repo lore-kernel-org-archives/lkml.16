@@ -1,31 +1,52 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08221DF756;
-	Fri,  4 Jul 2025 06:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06F71DF756
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609489; cv=none; b=uZrAbu0xk78TByVDU1Hy1ZG8kp2B7yaNE1nvIEMvs1aKqi/udH1OVi39Q9VqeVYrn1wUYed24ZFVVQepJZ71y4FOgzZLha5s1lgo/nqDaGSAGWY0sIhFc6vRWzujk1KUvFGEHiwBww2duXIUJb9XGmASKK5Ltj771mrUpnQW3F0=
+	t=1751609495; cv=none; b=j6wXkRdnepcEfm9FqI6o3DU2OmLnsXEEYbIlBOBgKhaUtt69w2sgd10bWSySKiEdlyAio0oQePUDIohlhvglrZDCQxIhkz7dr7ATxcMKIRnxClncmjYICkGH2gf2Ek5v9waq6XZh5601pjcMJWvhuxiKyuRYuwNMcudGhy2wyy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609489; c=relaxed/simple;
-	bh=37vTWydzOOilvawZgVTJ3C/b1jmtIPZSmCWufUailro=;
+	s=arc-20240116; t=1751609495; c=relaxed/simple;
+	bh=O6LXBFbCwIJaDin+zzb+0raOCWqTDDFp2Cm5kHSUdTY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MYSaK8L+sBoWAIQ2XztBspsg3mXcAFQ2bbQ2aWZ5bSbi7b3v0k1slsFelb5ku+uQQhfdJ8TB5/80nhWDUptcJoSFbQkRHk7Hh4SDDl5XfjfeUESm9+E9ppbhOXxhCPltSTmkL68ZSYSwQPnOgN2Poz78VKBYIDymD8IIul9H8j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=II4QTLzW; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=RySifcHBhf5pwEFMZu0hvtExg3J8VZ0FDY2OcWhvX7ZiwJUZY9H3YJycZYQSVYYHwUBLlxmSB/SnAgFE/JDNQLbxFzu+rnXlv+8n/JWdEKcVejNxMm9vd/kKllfeiaIxW9DDFs+qphKcd5bXHM5l5WLLzgTeV+HyclFT6FG2FO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=cleKjt69; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="II4QTLzW"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751609477; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=eFIDEdjGbaabW/o+SYfX0GCyecdOoVdNRLtkOOBMNxs=;
-	b=II4QTLzWXyj5KCCyShJ/sgxfqhOSRga3Hq56ApISu8VmRevDuXEcWY040jjQqe9Olay3Ux6HgsAs01l1RUc1dmH7Uzy2X87NIwQ1T1TiWFo6mesjlDh+CGtOh1cCywcATSxdpsmr1QYPv6ZcLRTrb9+YnzwbltLiM2TAjUI5PW4=
-Received: from 30.74.144.116(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WhCHD62_1751609473 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Jul 2025 14:11:14 +0800
-Message-ID: <2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
-Date: Fri, 4 Jul 2025 14:11:13 +0800
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="cleKjt69"
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTPS
+	id XTqOuIn6GMETlXZe1u2nJ1; Fri, 04 Jul 2025 06:11:33 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id XZe0uncLhNVlHXZe1uEhL2; Fri, 04 Jul 2025 06:11:33 +0000
+X-Authority-Analysis: v=2.4 cv=FOPQxPos c=1 sm=1 tr=0 ts=68677095
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=ZJCAKeS_rTr8ZDEThcMA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LwZAWYloBXc3Pm9ESwZeSkYQftvpmTtLdDVeFx9GEfg=; b=cleKjt69V9QB0FxbyhP9Jcm7nb
+	/rIyTNZBkirZkXxUJvcbRmHpyeGJYPzdZFCrMtUGToPqMaF9uH4HWo2u1tu1jW8JSkd1W2v7E8ONL
+	nboMReChR60zfXtdRdgXzA/CI+Hs2+cKXYxkiNxcF7KHbFEWz6ULw3HTOiNZBP2zuEW79nbitiVgR
+	YLvlb7Yh0N4s6SnOWcjs3kaLFQOEB5uFRRziefGWXtOQouH/BGkjaz7NFa2HclHYoZ4aQjkyI1zGm
+	W/IE5hphQKPPRB12yyatpZOwCzZvsX6h4u3jXwz0vOj9tJdy0NJXYCfc3P4s+EK5tJzr4DsGTCtEP
+	KGNTxIrg==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:46382 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uXZdy-00000000xFS-0jNn;
+	Fri, 04 Jul 2025 00:11:30 -0600
+Message-ID: <a320110a-47bc-4d1c-b1cd-325f7f1b2e8b@w6rz.net>
+Date: Thu, 3 Jul 2025 23:11:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,87 +54,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/15] khugepaged: allow madvise_collapse to check all
- anonymous mTHP orders
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250702055742.102808-1-npache@redhat.com>
- <20250702055742.102808-12-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250702055742.102808-12-npache@redhat.com>
+Subject: Re: [PATCH 6.1 000/132] 6.1.143-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250703143939.370927276@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250703143939.370927276@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uXZdy-00000000xFS-0jNn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:46382
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 35
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDGDtUfN8nbLrNcghA1Kvhca6s48WB5DU/7eIymF1YSK8rlkLhj5BFRwGiEW4YWRvC+BKPlzFcteooQC2TwPXM4nAV+/OpTyEMEuYzrC3xP98EozEQoz
+ ruc6sGOu6k8E56TPpHmw3g4WXVrhKF4ErPEvpuX3B2ItDTUADf+JvjDc4z6p7UVFH3Ng6iNtc6ygqPkWQ+uphp/vaDgdA53h14M=
 
+On 7/3/25 07:41, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.143 release.
+> There are 132 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.143-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-On 2025/7/2 13:57, Nico Pache wrote:
-> Allow madvise_collapse to scan/collapse all mTHP orders without the
-> strict requirement of needing the PMD-order enabled.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-
-I am afraid we should drop this patch from the series, since Hugh 
-explicitly opposed my modification of the madvise_collapse control logic 
-in this thread[1].
-
-Moreover, since we have not yet clarified how to handle the conflict 
-between the semantics of madvise_collapse and the THP interfaces, we 
-should keep the current logic[2] (means madvise_collapse still only 
-allows PMD collapse).
-
-If madvise_collapse is to support mTHP collapse, there will be more 
-semantic conflicts to discuss.
-
-[1] 
-https://lore.kernel.org/all/cover.1750815384.git.baolin.wang@linux.alibaba.com/
-[2] 
-https://lore.kernel.org/all/23b8ad10-cd1f-45df-a25c-78d01c8af44f@redhat.com/
-
-> ---
->   mm/khugepaged.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b96a7327b9c0..6ea681b81647 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -2930,11 +2930,13 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   	unsigned long hstart, hend, addr;
->   	int thps = 0, last_fail = SCAN_FAIL;
->   	bool mmap_locked = true;
-> +	unsigned long orders = vma_is_anonymous(vma) ?
-> +					THP_ORDERS_ALL_ANON : BIT(PMD_ORDER);
->   
->   	BUG_ON(vma->vm_start > start);
->   	BUG_ON(vma->vm_end < end);
->   
-> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
-> +	if (!thp_vma_allowable_orders(vma, vma->vm_flags, 0, orders))
->   		return -EINVAL;
->   
->   	cc = kmalloc(sizeof(*cc), GFP_KERNEL);
-> @@ -2956,7 +2958,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   			mmap_read_lock(mm);
->   			mmap_locked = true;
->   			result = hugepage_vma_revalidate(mm, addr, false, &vma,
-> -							 cc, BIT(HPAGE_PMD_ORDER));
-> +							 cc, orders);
->   			if (result  != SCAN_SUCCEED) {
->   				last_fail = result;
->   				goto out_nolock;
+Tested-by: Ron Economos <re@w6rz.net>
 
