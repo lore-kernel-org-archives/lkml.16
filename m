@@ -1,229 +1,123 @@
-Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40042877C2;
-	Fri,  4 Jul 2025 15:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F85919C54B;
+	Fri,  4 Jul 2025 15:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642013; cv=none; b=i48To9enIJJSO0PdC4JsivDs/y+PejZVw48+uVhg+o4KjOCwCEWUoSP5KvS81jPMAfxdKf9qJldBvhK9DyuImDdhRn8mgUOkaKU07hQzdeBjLqHQUrem+r/QsMRtYpSJoEQentbHG0niYQ0zaYOv53aKMmIcYmjVwgfukNUdurA=
+	t=1751642035; cv=none; b=TCjFBIExhd9wwyG+gXSH55yJXZE/szaG7aems43uox+PydILuD0QKuo4ND5SfyTjkhNx1iOhOGoLL6K4XhtxlxPd/mDV0+nB49O4Aqgeo3k+jZv+As5J3ffN1yXOxG2G/Ym56fHEB16uaPdKudkyOlemZncdH1uwWXr5JWGqWZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642013; c=relaxed/simple;
-	bh=Qel5rCPAfHdxNBguBsC7TWTVCVBwGuyoc+JjDnt63Fw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iI6lBixVN6GpNNzzjf+LqFpiCyi/8UzOG1TyxlMdpMvn1zwEEJ17w6nWGiwtrfCHvNKhVHnQN6VcNM4B59H/FKoxxOqml/vlbZBctd+mNIEWSelVni6u6aJAZBgfdwJjduMw2eX1JU6Q+e2UQlclAY9+f/Wk41QxLxQ++gHwN0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H8mVkJr3; arc=none smtp.client-ip=217.70.178.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751642035; c=relaxed/simple;
+	bh=dcH2LMCzBXT7aa0Qbuio3lOIk3gZyXtMY3q3240QCzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IfkUXawQLNBpdL/Nq5W7vU2azUowgAXERgIkp6DSyjhUCFMWeFdBgm84/M2Xob0krHzfXpWlvVfno1lASahOVru7/Yt5RCrK0wlW55HMQvOmB+doLkscfcnvkakYHAzDIhGZ3ihBCRRCSiltm7/SNGYaEmw97BtYB1D6kV5V3e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUn3IriD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H8mVkJr3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8BF8F4427A;
-	Fri,  4 Jul 2025 15:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751642003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dsdT3TdhepGwaCrl6/fxZX7HlEBraKUA+MIpWAvv+gU=;
-	b=H8mVkJr3NR8watBn6gDxTK3uLWwPLNYNPuT/kI80DsfYH57V/2ANutw0BS3RUZdJOz3gS+
-	DRiO540I8cOSao67OPe0DCFGeVFgOeBy8qoA8gCfUl8Ml0wIRr650SM7kShjk+xiG94U+1
-	C8J4JlzWZ+NH5xWL6atLQXdXLd1mUzgiXzIiFct4FbrzDU/WmUVTt1MmmSxDm24zgTySTc
-	kdMZE/AUZN1WFLr3YAlvyc64YULWmhMDagh9hzQiVE5EnVJvHrmqLntTDS4jeTlypC2/JL
-	kNPxZdH0FyBG6358qHTag199ghmABt+sil+uJTM9GMiqbdjYHDIzF7voBA1HEw==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Fri, 04 Jul 2025 17:13:10 +0200
-Subject: [PATCH v2 1/3] MIPS: CPS: Improve
- mips_cps_first_online_in_cluster()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUn3IriD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C9FC4CEE3;
+	Fri,  4 Jul 2025 15:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751642035;
+	bh=dcH2LMCzBXT7aa0Qbuio3lOIk3gZyXtMY3q3240QCzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NUn3IriDxtCzaJN8q0gbLBJN3x+VvQCkcbaPXHQL5v1qfAxadfGhKwpWY9EwrKRvR
+	 Zwo677Fivdw5E19lXfVtHnBnZ5CDQEua68FJ13HQqaHnABGkq2At8HbV9njJxRrxos
+	 X/3KAHvZL5ziKJX0Q0104BaGuCJXAvhSv0WHhhL98X2mL83GCGx5ls1ZvtqvgHof6X
+	 ajruNjJ3JN+NGn5KPa6cmXGVl11J2XHIYIgvLeNbw+BIF2Pn2lj+j78BEcrz9R4gfp
+	 XoPWNVGTeKC1jh4DC3xjRlr11Nw2a+F7EQtsdvNesF3FlE5v8G0Jvuhk8B39zSmCdS
+	 ZRnzx1HzXd5DQ==
+Date: Fri, 4 Jul 2025 18:13:51 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Ge Yang <yangge1116@126.com>
+Cc: ardb@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
+	ilias.apalodimas@linaro.org, jgg@ziepe.ca,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, liuzixing@hygon.cn
+Subject: Re: [PATCH] efi/tpm: Fix the issue where the CC platforms event log
+ header can't be correctly identified
+Message-ID: <aGfvr2pBau6z9GLC@kernel.org>
+References: <1751510317-12152-1-git-send-email-yangge1116@126.com>
+ <aGczaEkhPuOqhRUv@kernel.org>
+ <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-smp_calib-v2-1-bade7e9c0463@bootlin.com>
-References: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
-In-Reply-To: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeeglecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfedvffevfefhieefteeuieeuleevgffhveegvdegueegjeehfeejudettdegvdffnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggrtdgumeejtdehheemugdtudgvmedugeekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggrtdgumeejtdehheemugdtudgvmedugeekhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehtrgiffhhikhdrsggrhihou
- hhksehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
 
-The initial implementation of this function goes through all the CPUs
-in a cluster to determine if the current CPU is the only one
-running. This process occurs every time the function is called.
+On Fri, Jul 04, 2025 at 10:53:54AM +0800, Ge Yang wrote:
+> 
+> 
+> 在 2025/7/4 9:50, Jarkko Sakkinen 写道:
+> > On Thu, Jul 03, 2025 at 10:38:37AM +0800, yangge1116@126.com wrote:
+> > > From: Ge Yang <yangge1116@126.com>
+> > > 
+> > > Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
+> > > for CC platforms") reuses TPM2 support code for the CC platforms, when
+> > > launching a TDX virtual machine with coco measurement enabled, the
+> > > following error log is generated:
+> > > 
+> > > [Firmware Bug]: Failed to parse event in TPM Final Events Log
+> > > 
+> > > Call Trace:
+> > > efi_config_parse_tables()
+> > >    efi_tpm_eventlog_init()
+> > >      tpm2_calc_event_log_size()
+> > >        __calc_tpm2_event_size()
+> > > 
+> > > The pcr_idx value in the Intel TDX log header is 1, causing the
+> > > function __calc_tpm2_event_size() to fail to recognize the log header,
+> > > ultimately leading to the "Failed to parse event in TPM Final Events
+> > > Log" error.
+> > > 
+> > > According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
+> > > MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
+> > > event log header, the check for a pcr_idx value of 0 has been removed
+> > > here, and it appears that this will not affect other functionalities.
+> > 
+> > I'm not familiar with the original change but with a quick check it did
+> > not change __calc_tpm2_event_size(). Your change is changing semantics
+> > to two types of callers:
+> > 
+> > 1. Those that caused the bug.
+> > 2. Those that nothing to do with this bug.
+> > 
+> > I'm not seeing anything explaining that your change is guaranteed not to
+> > have any consequences to "innocent" callers, which have no relation to
+> > the bug.
+> > 
+> 
+> Thank you for your response.
+> 
+> According to Section 10.2.1, Table 6 (TCG_PCClientPCREvent Structure) in the
+> TCG PC Client Platform Firmware Profile Specification, determining whether
+> an event is an event log header does not require checking the pcrIndex
+> field. The identification can be made based on other fields alone.
+> Therefore, removing the pcrIndex check here is considered safe
+> for "innocent" callers.
 
-However, during boot, we already perform this task, so let's take
-advantage of this opportunity to create and fill a CPU bitmask that
-can be easily and efficiently used later.
+Thanks for digging that out. Can you add something to the commit
+message? That spec is common knowledge if you are "into the topic"
+in the first palace so something along the lines of this would be
+perfectly fine:
 
-This requires creating a single CPU bitmask per cluster, which is why
-it's essential to know how many clusters can be utilized. The default
-setting is 4 clusters, but this value can be changed when configuring
-the kernel or even customized for a given SoC family.
+"The check can be safely removed, as ccording to table 6 at section
+10.2.1 of TCG PC client specification the index field does not require
+fixing the PCR index to zero."
 
-This patch modifies the function to allow providing the first
-available online CPU when one already exists, which is necessary for
-delay CPU calibration optimization.
+But then: we still have that constraint there and we cannot predict the
+side-effects of removing a constraint, even if it is incorrectly defined
+constraint. For comparison, it's much less risky situation when adding
+additional constraints, as possible side-effects in the worst case
+scenarios can be even theoretically much lighter than in the opposite
+situation.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/mips/Kconfig                |  6 ++++++
- arch/mips/include/asm/mips-cps.h | 18 ++++++++++++++++--
- arch/mips/kernel/mips-cm.c       | 40 +++++++---------------------------------
- arch/mips/kernel/smp-cps.c       |  2 ++
- 4 files changed, 31 insertions(+), 35 deletions(-)
+For this reasons it would be perhaps better to limit the fix for the
+CC only, and not change the semantics across the board.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 1e48184ecf1ec8e29c0a25de6452ece5da835e30..47aa3f8849f05632773c9064282147608483c715 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2329,6 +2329,12 @@ config MIPS_CPS
- 	  no external assistance. It is safe to enable this when hardware
- 	  support is unavailable.
- 
-+config MIPS_CPS_CLUSTER_MAX
-+       int "Maximum cluster supported"
-+       default 4
-+       help
-+	Maximum number of cluster available on the SoC.
-+
- config MIPS_CPS_PM
- 	depends on MIPS_CPS
- 	bool
-diff --git a/arch/mips/include/asm/mips-cps.h b/arch/mips/include/asm/mips-cps.h
-index 917009b80e6951dc7e2b308ad7fb42cd9fbbf7d7..674f0628a2ded42f4f42c7362a667a457944caa0 100644
---- a/arch/mips/include/asm/mips-cps.h
-+++ b/arch/mips/include/asm/mips-cps.h
-@@ -12,6 +12,8 @@
- #include <linux/io.h>
- #include <linux/types.h>
- 
-+extern struct cpumask __cpu_cluster_mask[CONFIG_MIPS_CPS_CLUSTER_MAX] __read_mostly;
-+
- extern unsigned long __cps_access_bad_size(void)
- 	__compiletime_error("Bad size for CPS accessor");
- 
-@@ -114,10 +116,20 @@ static inline void clear_##unit##_##name(uint##sz##_t val)		\
-  */
- static inline unsigned int mips_cps_numclusters(void)
- {
-+	unsigned int nclusters;
-+
- 	if (mips_cm_revision() < CM_REV_CM3_5)
- 		return 1;
- 
--	return FIELD_GET(CM_GCR_CONFIG_NUM_CLUSTERS, read_gcr_config());
-+	nclusters = FIELD_GET(CM_GCR_CONFIG_NUM_CLUSTERS, read_gcr_config());
-+	if (nclusters > CONFIG_MIPS_CPS_CLUSTER_MAX) {
-+		pr_warn("%d clusters detected but limited to %d because of CONFIG_MIPS_CPU_CLUSTER_MAX value\n"
-+			"consider modifying it to match the hardware capability.\n",
-+			nclusters, CONFIG_MIPS_CPS_CLUSTER_MAX);
-+		nclusters = CONFIG_MIPS_CPS_CLUSTER_MAX;
-+	}
-+
-+	return nclusters;
- }
- 
- /**
-@@ -258,6 +270,8 @@ static inline bool mips_cps_multicluster_cpus(void)
- 
- /**
-  * mips_cps_first_online_in_cluster() - Detect if CPU is first online in cluster
-+ * @first_cpu: The first other online CPU in cluster, or nr_cpu_ids if
-+ * the function returns true.
-  *
-  * Determine whether the local CPU is the first to be brought online in its
-  * cluster - that is, whether there are any other online CPUs in the local
-@@ -265,6 +279,6 @@ static inline bool mips_cps_multicluster_cpus(void)
-  *
-  * Returns true if this CPU is first online, else false.
-  */
--extern unsigned int mips_cps_first_online_in_cluster(void);
-+extern unsigned int mips_cps_first_online_in_cluster(int *first_cpu);
- 
- #endif /* __MIPS_ASM_MIPS_CPS_H__ */
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 43cb1e20baed3648ff83bb5d3bbe6a726072e063..d1d98e03559df5f891c3afce0955d63db7eb1c45 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -529,39 +529,13 @@ void mips_cm_error_report(void)
- 	write_gcr_error_cause(cm_error);
- }
- 
--unsigned int mips_cps_first_online_in_cluster(void)
-+unsigned int mips_cps_first_online_in_cluster(int *first_cpu)
- {
--	unsigned int local_cl;
--	int i;
-+	unsigned int local_cl = cpu_cluster(&current_cpu_data);
-+	struct cpumask *local_cluster_mask = &__cpu_cluster_mask[local_cl];
- 
--	local_cl = cpu_cluster(&current_cpu_data);
--
--	/*
--	 * We rely upon knowledge that CPUs are numbered sequentially by
--	 * cluster - ie. CPUs 0..X will be in cluster 0, CPUs X+1..Y in cluster
--	 * 1, CPUs Y+1..Z in cluster 2 etc. This means that CPUs in the same
--	 * cluster will immediately precede or follow one another.
--	 *
--	 * First we scan backwards, until we find an online CPU in the cluster
--	 * or we move on to another cluster.
--	 */
--	for (i = smp_processor_id() - 1; i >= 0; i--) {
--		if (cpu_cluster(&cpu_data[i]) != local_cl)
--			break;
--		if (!cpu_online(i))
--			continue;
--		return false;
--	}
--
--	/* Then do the same for higher numbered CPUs */
--	for (i = smp_processor_id() + 1; i < nr_cpu_ids; i++) {
--		if (cpu_cluster(&cpu_data[i]) != local_cl)
--			break;
--		if (!cpu_online(i))
--			continue;
--		return false;
--	}
--
--	/* We found no online CPUs in the local cluster */
--	return true;
-+	*first_cpu = cpumask_any_and_but(local_cluster_mask,
-+					 cpu_online_mask,
-+					 smp_processor_id());
-+	return (*first_cpu >= nr_cpu_ids);
- }
-diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
-index 7b0e69af4097025196b93115139a5e89c1d71fcc..a5c538742769dcbf22e27d2d4485c071e2e64ec2 100644
---- a/arch/mips/kernel/smp-cps.c
-+++ b/arch/mips/kernel/smp-cps.c
-@@ -40,6 +40,7 @@ static u64 core_entry_reg;
- static phys_addr_t cps_vec_pa;
- 
- struct cluster_boot_config *mips_cps_cluster_bootcfg;
-+struct cpumask __cpu_cluster_mask[CONFIG_MIPS_CPS_CLUSTER_MAX] __read_mostly;
- 
- static void power_up_other_cluster(unsigned int cluster)
- {
-@@ -242,6 +243,7 @@ static void __init cps_smp_setup(void)
- 				cpu_set_cluster(&cpu_data[nvpes + v], cl);
- 				cpu_set_core(&cpu_data[nvpes + v], c);
- 				cpu_set_vpe_id(&cpu_data[nvpes + v], v);
-+				cpumask_set_cpu(nvpes + v, &__cpu_cluster_mask[cl]);
- 			}
- 
- 			nvpes += core_vpes;
-
--- 
-2.47.2
-
+BR, Jarkko
