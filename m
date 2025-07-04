@@ -1,105 +1,213 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC911D6DB6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEF733DF;
+	Fri,  4 Jul 2025 01:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751594249; cv=none; b=mDulx8LzPqtqRUjQ504jX0V6RySxSAFLLD4L7zW/l9h5g9guXP41st0dMuqqxygy9tpm9yo6JpC3bEZ4p0MkAZaqDBfMqNM8gBho0a2k1uAhzQ/d259eBhVmmWw74uERS2SEvFMV7SAaFW1U68TA4UqxlUYQNY8NQkFFfe/LgVg=
+	t=1751594298; cv=none; b=qOER9i6p+Tu65CKqAmCHmmyIrk62A+AD8IP+2GNabn+VyDTgNSNe0NGN4gxKbuqciMipnDAtD8G6lUDcoCUPXqSTYq7F/yAMC1XCCyauVuRaht6ENScNZfIdoRsGNWsJ1pKgYBn3vCg1FAljTdHE+W4oc4brwXOzgMmdHS36DfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751594249; c=relaxed/simple;
-	bh=OoCZq6LdsFnIFXOYI9tB7SS91E2B0eFrGNPYaxleC80=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=f8Lbjw0RTrqqu3WdP9cKUnMWEjuv52ER8tPGfbMNnKCgbhilj9WMfaDaA4qLsvs6W/Y9ssOzh/r5AMH7qWespl6hVtEBTlNweQIzYeRap3F9kmjhTqv57mXT0wfH87NDxVXEqOzR2+kIvAI3iNtNGh10uQkHGvcrI3rYQcD2b1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=M8tTvihy; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1751594298; c=relaxed/simple;
+	bh=+8oj1rsUkCGo3Ge6pkBest+5bfjbY2tsYyhkx3PRuDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W9pRJMyUz68iBZbtHmiyAKc3ufuRCCl6oQLJxxjaqhKdA5of6nOv4yPWMRE6bsELEumqvcY8Lj/tHpcV/Al6kBunk6Wm0bIslmexWtnlPNKjDi6bq/02+34pgI5Ghb8tP1ziUnTjQcSgtQ3RKOdwYPQwwQn7W8+/1JgmLJNk/S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wly16Edp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="M8tTvihy"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-86d0168616aso46302539f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 18:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751594245; x=1752199045; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QcpGOYJoS+x1DjWEeDlJG5WLQCM2ycI6S4ggaBmrR7U=;
-        b=M8tTvihyw5twFRgof6N8pL8bUYCiy0O2vkpwc4ngH+zw01ziJxn/lmmRrpRHG1U+Xw
-         zlIwhlHD7FcOZphxChse2nDF7i+cBZTxcF7o/+kjmxs7n8jOPQ4xAFuoXp7qXly9NNx1
-         l2k/U+lt8lDwJHKZBitXFGLyyAj3ZEUYVdc/irArvXzx4ho4A0Hma1c4RZA8dUsPTvCZ
-         RReBxqu1GS0A8s/n6/dEwoZ7JZTTUg7yx+ndm3cukkNCujS0j3G3TedANK7UH4VyYLGp
-         9Qr1R/4WklI3Kf1ZlUkVh7NFG/X73KTVmVctt+A/fX/0PrnmE+HVZc4m4nahuBrlWBlk
-         4isw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751594245; x=1752199045;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QcpGOYJoS+x1DjWEeDlJG5WLQCM2ycI6S4ggaBmrR7U=;
-        b=JlKfvrG3f1moGrsaaPolPEw5gX8KPGpDL+1OsIv3YBLkE9rj9H1I2kdiEiPOmxmkXD
-         vJnz84vepvGKFptjJquYDnczkNltFUe3aAdaG5LE1gekLjn27o08jC8uwTRhI4gMj4tX
-         yckuXXE7Dt+im3etFDXcIgIIQ7KwZtzFbmqIeAxNxIYAWr5BhwBfIULDR2BzIqnQrV/s
-         F/2aneqKtyChl81LRHibjB4CjhuG2l+rW1KkvJFTMF1LRBAKp6ZUJYliWKrURyMnvVAY
-         3kHqFwy2gccWkof3IqmeIuGcF0WPPpmasJQRUhz9aHBX51f+gYHxqy2aDipLgqNYMe1f
-         Tl7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHQTPqgB+4Gsc07TrMFWCWolxVIFixNcX7UR4hRLzJ5WPyuvlgnYixTTBWNxZ5DAm4zuvj/1KV7hlgM9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyUAyuNu+n2LYPpCC1gw3nIaOYK5DpklT1xPjYfFGDlak+3i65
-	/zWWhvVSLwcMbJ4cMrdjVjrI8Hg6l55I9kgNm4LffR5FTfYT9gx+VpLSi2mlpffnUTLDzlmEDho
-	bnSWe
-X-Gm-Gg: ASbGncvtiDPNWZrKQeEBA8/9w/SROoANioorBbZ5HAXI0jSi0RAVwIi/G7xrC7EkeCi
-	YBviTM2AfrDQ0yq8DGfmrS+OEvnfjOdT2myR6Yvy8EXkgvDO3vh+4GT867MnOw6ThL+xd7zazNs
-	oA0kQXbC/JmSKX5i2ruCCkUXgV2b+R+4H3YtT7WyGXKUIM0wJfWxQNrAX2jwAcG2K4P+HKeqAFz
-	pNZrBdPQtjPtaLZ1XQMztIkvh0pA9bvkT60MmF2s6AtNUs9tV/OvQg6dHBO+7pCYw2HwkQh5pxj
-	azdQN66HZdn61jFcaKOobCMadCgecq5TyznVn8fQuqT8vBeVftd86VRz7k1xEYYR
-X-Google-Smtp-Source: AGHT+IGUGe/QPbULYs8yVIdrGcRGsydBwpQMFK+/9rqX/ujQ16crNXvpMjb/DcznQMGXzDKwDWM1cg==
-X-Received: by 2002:a05:6602:29c6:b0:875:acf6:20f with SMTP id ca18e2360f4ac-876e490c7famr9887639f.10.1751594245338;
-        Thu, 03 Jul 2025 18:57:25 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-503b5c38a6bsm218292173.120.2025.07.03.18.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 18:57:24 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: minchan@kernel.org, senozhatsky@chromium.org, 
- Rahul Kumar <rk0006818@gmail.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
-In-Reply-To: <20250627035256.1120740-1-rk0006818@gmail.com>
-References: <20250627035256.1120740-1-rk0006818@gmail.com>
-Subject: Re: [PATCH] block: zram: replace scnprintf() with sysfs_emit() in
- *_show() functions
-Message-Id: <175159424438.587194.16568667665048848339.b4-ty@kernel.dk>
-Date: Thu, 03 Jul 2025 19:57:24 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wly16Edp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24A1C4CEE3;
+	Fri,  4 Jul 2025 01:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751594295;
+	bh=+8oj1rsUkCGo3Ge6pkBest+5bfjbY2tsYyhkx3PRuDA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wly16EdpXxKeqTTBFORGVcHt5uI/9fhSkKzmSO7wz1RP9yEtat70CfLPaDFiCZezA
+	 I0mrqC+HV2VumcZiE1aASYiCYzO499MOj5xk2s9aO6LLf6nyV43r69sfYWSPBoGYAg
+	 udJGRbL6xueX+eA4x4Kw6vf6vyrQ4cOl1v/mclrsP48+XT+f9bPpHV+9ERY6PWLPoF
+	 eiLHWbKgoFu71/NCcspH6IptDFNYrTgJwmlhYAfLifr+qAj6XJGBQ5pZ8ShI/cfWKK
+	 J3/zokxpzHhVwGwWyUcKZ7iXgwrBRZ+6HzLBOKLVqF/dPQ+k6R3HDMdhyse1ANTDNz
+	 Nj531hHol1Pjw==
+Message-ID: <098ab194-f678-4e85-9e35-f8339c2551c7@kernel.org>
+Date: Thu, 3 Jul 2025 21:57:58 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] HID: Add Legion Go S Driver
+To: Benjamin Tissoires <bentiss@kernel.org>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Richard Hughes <hughsient@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250703004943.515919-1-derekjohn.clark@gmail.com>
+ <j3isljjyd6rlddlhpp7knxgss2mpr4ft3pcx5lc7r5r4bnnzpw@wjr6brfv2hsf>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <j3isljjyd6rlddlhpp7knxgss2mpr4ft3pcx5lc7r5r4bnnzpw@wjr6brfv2hsf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-d7477
 
-
-On Fri, 27 Jun 2025 09:22:56 +0530, Rahul Kumar wrote:
-> Replace scnprintf() with sysfs_emit() or sysfs_emit_at() in sysfs
-> *_show() functions in zram_drv.c to follow the kernel's guidelines
-> from Documentation/filesystems/sysfs.rst.
+On 7/3/25 09:48, Benjamin Tissoires wrote:
+> Hi Derek,
 > 
-> This improves consistency, safety, and makes the code easier to
-> maintain and update in the future.
+> [I'll answer to this email with a very high level overview of it, as I'm
+> not sure I'll have time to dig much deeper in 6/6 today.]
+
+I'll touch on my two patches at the front of the series and let Derek 
+get to the questions/comments on the later ones.
+
 > 
-> [...]
+> On Jul 02 2025, Derek J. Clark wrote:
+>> This series adds initial support for the Legion Go S's built-in
+>> controller HID configuration interface. In the first patch a new HID
+>> uevent property is added, HID_FIRMWARE_VERSION, so as to permit fwupd
+>> to read the firmware version of the HID interface without detaching the
+>> kernel driver.
+> 
+> That immediately raise red flags on my side. HID_FIRMWARE_VERSION will
+> likely be used only for this new driver, and that means a special case
+> in each and every client.
 
-Applied, thanks!
+Actually Richard and I had envisioned that all updatable HID devices 
+would start exporting their firmware version through this HID property.
+lenovo-legos-hid was just the first.
 
-[1/1] block: zram: replace scnprintf() with sysfs_emit() in *_show() functions
-      commit: 264a3fdab2365395e43d3a0b40162a29e61ffa22
-[1/1] zram: pass buffer offset to zcomp_available_show()
-      commit: e74a1c6a8e8af2422fce125c29b14f1d3fab5b5c
+The idea would then be that userspace software like fwupd would know to 
+parse this property to show the current version and never need to 
+interrogate the device directly unless it was actually being updated.
 
-Best regards,
--- 
-Jens Axboe
+> 
+> We had to deal with firmware versions in the past in the HID drivers,
+> and we ended up relying on the uniq field of the hid_device (because the
+> serial+firmware version uniquely identify the device).
 
+I think this is a different case.  We don't care so much about the 
+unique identification of the device as much as we care about the stream 
+of firmware applied to the device.
 
+If HID_UNIQ is the right way to get the firmware version but some 
+drivers encode a serial+firmware and others encode firmware that's going 
+to make for a very messy "generic" property to read the firmware version 
+of a device.
+
+> 
+>> The second patch adds the ability for an hid_driver to
+>> assign new/arbitrary uevent properties for static data that doesn't
+>> benefit from having a sysfs entry.
+> 
+> That, in my mind, is even worse (for the reasons above).
+
+Do clients actually need to know about all the properties?  My thought 
+was that if a client encounters a property it doesn't care about it can 
+just ignore it.
+
+If that's misplaced; what would you prefer for all this static 
+information?  A pile of sysfs files?
+
+> 
+>> The third patch adds the VID and PID
+>> for the Lenovo Legion Go S MCU.
+> 
+> Which shouldn't be in its own patch, but part of the driver initial
+> patch.
+> 
+>> The fourth patch adds ABI documentation
+>> for the config interface introduced in the final patch. The fifth patch
+>> introduces the core lenovo-legos-hid driver which acts as a routing
+>> interface for the different endpoints.
+> 
+> That "core" patch is IMO useless. All it does is:
+> - check for the USB endpoint (but in the wrong way, because if you
+> 	insert a device through uhid with the same PID/VID it will crash)
+> - replace the HID-core core functions with the same code
+> 
+> Really, this should be squashed into the next patch (with 3/6 then).
+> 
+> Also, why adding a new subdirectory? All the hid drivers are flat in the
+> drivers/hid/ directory, and the subdirs are for transport layers. There
+> is one exception for the surface driver but I don't see why you need
+> such an exception (yeah, the code is big, but what's the difference in
+> having a 1500 lines of code source in its own subdir vs at the root?)
+> 
+>> The sixth path introduces the
+>> config lenovo-legos-hid driver wich uses both the HID_FIRMWARE_VERSION
+>> as well as arbitrary uevent properties. Additional interfaces and config
+>> properties are planned to be added in a future series.
+> 
+> That one is too big for my liking. Generally speaking, a commit
+> descrition which says "this does this and that" can be split into 2
+> patches at least :)
+> 
+> What kind of future interfaces and config properties are you planning?
+> 
+>>
+>> Patch 6 introduces a checkpatch WARNING that I'm unable to resolve:
+>> WARNING: ENOSYS means 'invalid syscall nr' and nothing else
+>> 1292: FILE: drivers/hid/lenovo-legos-hid/lenovo-legos-hid-config.c:1085:
+>> +       case -ENOSYS: /* during rmmod -ENOSYS is expected */
+> 
+> We can losely waive those while merging. We do it quite often actually.
+> 
+> But trying to minimize checkpatch warnings is a good thing, so thanks
+> for that.
+> 
+>>
+>> This error handling case was added as it is experienced in the real world
+>> when the driver is rmmod. The LED subsystem produces this error code in
+>> its legacy code and this is not a new novel use of -ENOSYS, we are simply
+>> catching the case to avoid spurious errors in dmesg when the driver is
+>> removed. If there is a way to prevent this error from being triggered by
+>> checkpatch in the first place, that would be an ideal remedy, but I'm not
+>> aware how that can be done at this time.
+> 
+> Again, nothing to worry about.
+> 
+> Cheers,
+> Benjamin
+> 
+>>
+>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>>
+>>
+>> Derek J. Clark (4):
+>>    HID: Add Legion Go S ID's
+>>    HID: Add documentation for lenovo-legos-hid driver
+>>    HID: Add lenovo-legos-hid core
+>>    HID: Add lenovo-legos-hid configuration endpoint interface
+>>
+>> Mario Limonciello (2):
+>>    HID: Include firmware version in the uevent
+>>    HID: Allow HID drivers to add more uevent variables
+>>
+>>   .../ABI/testing/sysfs-driver-lenovo-legos-hid |  269 +++
+>>   MAINTAINERS                                   |    7 +
+>>   drivers/hid/Kconfig                           |    2 +
+>>   drivers/hid/Makefile                          |    2 +
+>>   drivers/hid/hid-core.c                        |   11 +
+>>   drivers/hid/hid-ids.h                         |    4 +
+>>   drivers/hid/lenovo-legos-hid/Kconfig          |   11 +
+>>   drivers/hid/lenovo-legos-hid/Makefile         |    6 +
+>>   drivers/hid/lenovo-legos-hid/config.c         | 1518 +++++++++++++++++
+>>   drivers/hid/lenovo-legos-hid/config.h         |   19 +
+>>   drivers/hid/lenovo-legos-hid/core.c           |  122 ++
+>>   drivers/hid/lenovo-legos-hid/core.h           |   25 +
+>>   include/linux/hid.h                           |    2 +
+>>   13 files changed, 1998 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-legos-hid
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/Kconfig
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/Makefile
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/config.c
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/config.h
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/core.c
+>>   create mode 100644 drivers/hid/lenovo-legos-hid/core.h
+>>
+>> -- 
+>> 2.50.0
+>>
 
