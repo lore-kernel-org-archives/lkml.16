@@ -1,194 +1,114 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FDB1FDE39;
-	Fri,  4 Jul 2025 04:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A878B20298E;
+	Fri,  4 Jul 2025 04:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602256; cv=none; b=SgnZwyVcU8XigBUI0m8tPzpYJzDofEK4xFOPtCfQ7MkRbb1zsp5m7bfplYABE7HI6z8KX5/vgv1N1UiaTdqbG9HsSbn9Cy1rkGNxroqk77VMY6CXJuJsFpkjNjvNmS5Abbe1a8MwXWmYSkqBw1inFItQw9j4/yL/BfNcl63FZf8=
+	t=1751602259; cv=none; b=OXD5yNdEnUX70GAlKOY4MPG9lbnRfufjxMKvELQqkWBAf4nXRhNVQfLJojRo2Fkq5QZtZfUlTRLVBv1PMsI65DPn6eUejFVp2Qp6b9fVgHnPuw8YvjsXMd5z8Z3xelTjA4/vRpatwxnW7fpafjSWUbF+ZPlJtLSTDKDEYKFWqkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602256; c=relaxed/simple;
-	bh=FtCvNYjLrE6/jIO6wT2KtwY4Dg2KTonsKpTSVZl93iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ppCoFatoKQ/DLL8sGPd53wEwODWuB4oFV7Hd68MQ0hXZFTXuovd2WbCvLGmWTq1I2myR9rYU1JW06ZOk7X3hwiYCadCw+oBjXesrHLhK+UJc6GAp63nczIXc/9baDmXspNzJmbJ1MCGgDGQLzcGtuIvqCOP2DOm2YfMglrIEMjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaHmfEhh; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751602259; c=relaxed/simple;
+	bh=2ifQg3oyu3Xg8ovGPMRP9ryzstnmdXufFFPNL9IWCEk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pNIOzSPMe5BhMLA5biLk3l9JjBVLvOVL5x0UZkF7Lp7IyzFAnaytmOD+848aANwNhJQEn1iSqKMVAprVbgRcOxMc92xbIwnkbLE2xJXvj6oDj5PAoumKFRBFkakQFPDjPH5PnMHg2BzewkFGI5fuLSUmvsHLxUN6kw4roe16+qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PfU85ndY; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaHmfEhh"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b170c99aa49so378779a12.1;
-        Thu, 03 Jul 2025 21:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751602254; x=1752207054; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8YC19N8gX3c+UCcVBsZb/0sncBuBKOFkHCNQT4MJHZw=;
-        b=QaHmfEhhe7u1O0BlIi4qDFK7I2JgXwJ8pV9oIkEIJ3eje8fuyPLCtfWkUZEkOMjJ2a
-         tX+XHhvalhu7fWSJTDIG+oJ7bMArSOdJ+hqqNai0KQAgD/g18QA/Vk+OURtcZ67LN3hB
-         dSZW1bXxiKEtdPEQYyahbXSuxw3YMxJ77OMzcNe9jRCq7cr/RRhaWoh1xYPbye9iaweo
-         eNo6ab5WN4ic/BTS9/mpGWiAu9j2swWCx5uNrF0N5Fsx2vIlCLpyMFq3gXHk6Yd2kHvi
-         EHQXCbTQbxdM/6+fG8rdgyukig2qxu/ygYLYu/0gK/YYEoHlJN9HZHylEQw7z+diRj7R
-         YQ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751602254; x=1752207054;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8YC19N8gX3c+UCcVBsZb/0sncBuBKOFkHCNQT4MJHZw=;
-        b=C05ffqgHm+u+8xRL3KhjFe/W0OKggHWI3tfP9rIve5StJ07AXbmAzXf9eyL0OXf0gv
-         DPvUeJvg9MTgBHNWvn2RW+J6uCdd1Lu6s0pbH3jwbT2ZqHnwTaLwK3vzZku0noWmlCu/
-         yDJSnTpQDPCVupO0tM3KOjNtF6SbEFcYUQ5U1bzz4A0jX+K1E6lF2f41UFZM6Z4Z3sIo
-         C3E1geISr+PzfeA02xWFWV+aU8FIKqyz0IBy2Tb9Q/TyMl2vXSLyESbPmHDk6ku7O3HC
-         cE0GnT2McEMcVpb7nQBY3Nbp9G0Vx+LLR911zIVJyp4svWlJxW3PT1yKCHP3J178pl1M
-         EWbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE7sy3xD150QFEHyYlgOBG4ECfesMnpFpTcWah0AMwruMkwVJeG7CoFv+4PJ/jwfTMnZbu1/W3O5QJk02MA/Q=@vger.kernel.org, AJvYcCVEs+nk4ZKnsNLrm2UaiPIqq65FHD8tk710RXHY7NzyBKrQiAPVosqEQ3vZviRnVXc0mx7DukDujE0bAG8L@vger.kernel.org, AJvYcCVI+UPvvBVff4ZUtH5kAhneS7lF6RydNL6HMlijJMeYfUB3dIqbo7Pb5UWrYPmOudOozXKskYyflztH@vger.kernel.org, AJvYcCVgBSlsybNRPZX3XBwlLS7uuAQeWlBmgijUFjCyebpMmtFjCNTfd9KCaJczT5LZ40gGoA+rrRRt@vger.kernel.org, AJvYcCXvBAYm2G3bCKATXCYxJ0Z3PhM4sc7iY7M2w06hdrMHDUjfWPc/2s2zL1VuJmE6+rk55qTFQCIT4mrm@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtt8VtfTykkaEkUiE0NS4PuSABOpS/KHp9xsB9Moly4P9jBi3d
-	uN6bx/eCMCAN+H/GVtEdUEM9OXVOag/xW+JHwyHdQ4+PaGn/eQUodiOc
-X-Gm-Gg: ASbGncsKVvUgo92xXQzQNEaOJ7+4nTOhNeV/ExiIuDVrYtOZ5jc8dPko38f9R2C5cqH
-	Yucb8BXh3SdPRlQePRbG/4URtl4VmYectmlqy5tfYkG6hYOPwCpFMeNB+9L9YbFlw6W0eruTWpt
-	x+ao46rXmlpuyl9qmh+u1N7QoG4KIjjkY9M6ijYN7VE9+3rtpAwszgqF/bhOgBBES6VU9ilIzBj
-	SCqCmi9CNSVF5dRxDWDaqSjUx0vSeKLrNm/V42QQkBDFjhE6RAiluu/5VWztyINJHHXpIYBZ1np
-	8gayne3Hupjug+5Wr3DPsmmNWSBeXNYkthfHjKNIrn46p4QDPanVjZ128hXOas/he9CuV1usLVv
-	h0lLMBAoRgClxIo5PyPtXNlAWYsXEgVp/XkJxcciba+nnHQ==
-X-Google-Smtp-Source: AGHT+IE9LQuB7/Ap+rO08DMf7bb/ZRItBTKRcsr4ZNEKUs8oyTf5BtUNy7POz2MF7hdmGjfi5+UDdA==
-X-Received: by 2002:a05:6a20:7352:b0:21f:50d9:dde with SMTP id adf61e73a8af0-225be6e38d2mr1817202637.5.1751602254128;
-        Thu, 03 Jul 2025 21:10:54 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35ccb9esm1055290b3a.50.2025.07.03.21.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 21:10:53 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v3 3/3] rust: net::phy Change module_phy_driver macro to use module_device_table macro
-Date: Fri,  4 Jul 2025 13:10:03 +0900
-Message-ID: <20250704041003.734033-4-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250704041003.734033-1-fujita.tomonori@gmail.com>
-References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PfU85ndY"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5644AlXR3718250;
+	Thu, 3 Jul 2025 23:10:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751602247;
+	bh=zJkXfrPAxpJPDeMDmwVXBCvheZa++B3SkX7TfmxEWUI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PfU85ndYBC4X+eoY306KEwfcUjMe2cXNwldNP83irprGxwk8ILAxdwgDsj/x2z17A
+	 0P+o85f8wBkDjXdBhSNFS+escb7U2UrMYuw+GsJYSiOdoJpdNUvaaOl2BJbKTaDByD
+	 MIYYDi6xxAF1aFhAeIzd1+w6lrAZgRQQhPqzotEA=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5644AlJ42464333
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 3 Jul 2025 23:10:47 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 3
+ Jul 2025 23:10:46 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 3 Jul 2025 23:10:46 -0500
+Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5644Af6l2296864;
+	Thu, 3 Jul 2025 23:10:42 -0500
+Message-ID: <485dc90b-dc9b-4b1a-ad18-9a9ef117637c@ti.com>
+Date: Fri, 4 Jul 2025 09:40:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/4] arm64: dts: ti: Add support for AM62D2-EVM
+To: Paresh Bhagat <p-bhagat@ti.com>, <nm@ti.com>, <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
+        <devarsht@ti.com>, <s-vadapalli@ti.com>, <andrew@lunn.ch>
+References: <20250627115753.2246881-1-p-bhagat@ti.com>
+ <20250627115753.2246881-5-p-bhagat@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20250627115753.2246881-5-p-bhagat@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Change module_phy_driver macro to build device tables which are
-exported to userspace by using module_device_table macro.
+Hi
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/net/phy.rs | 51 ++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+[...]
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 940972ffadae..338451a067fa 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -6,7 +6,7 @@
- //!
- //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
- 
--use crate::{error::*, prelude::*, types::Opaque};
-+use crate::{device_id::RawDeviceId, error::*, prelude::*, types::Opaque};
- use core::{marker::PhantomData, ptr::addr_of_mut};
- 
- pub mod reg;
-@@ -750,6 +750,12 @@ pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
-     }
- }
- 
-+// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct mdio_device_id`
-+// and does not add additional invariants, so it's safe to transmute to `RawType`.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::mdio_device_id;
-+}
-+
- enum DeviceMask {
-     Exact,
-     Model,
-@@ -850,19 +856,18 @@ const fn as_int(&self) -> u32 {
- ///     }
- /// };
- ///
--/// const _DEVICE_TABLE: [::kernel::bindings::mdio_device_id; 2] = [
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0x00000001,
--///         phy_id_mask: 0xffffffff,
--///     },
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0,
--///         phy_id_mask: 0,
--///     },
--/// ];
--/// #[cfg(MODULE)]
--/// #[no_mangle]
--/// static __mod_device_table__mdio__phydev: [::kernel::bindings::mdio_device_id; 2] = _DEVICE_TABLE;
-+/// const N: usize = 1;
-+///
-+/// const TABLE: ::kernel::device_id::IdArray<::kernel::net::phy::DeviceId, (), N> =
-+///     ::kernel::device_id::IdArray::new_without_index([
-+///         ::kernel::net::phy::DeviceId(
-+///             ::kernel::bindings::mdio_device_id {
-+///                 phy_id: 0x00000001,
-+///                 phy_id_mask: 0xffffffff,
-+///             }),
-+///     ]);
-+///
-+/// ::kernel::module_device_table!("mdio", phydev, TABLE);
- /// ```
- #[macro_export]
- macro_rules! module_phy_driver {
-@@ -873,20 +878,12 @@ macro_rules! module_phy_driver {
-     };
- 
-     (@device_table [$($dev:expr),+]) => {
--        // SAFETY: C will not read off the end of this constant since the last element is zero.
--        const _DEVICE_TABLE: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = [
--            $($dev.mdio_device_id()),+,
--            $crate::bindings::mdio_device_id {
--                phy_id: 0,
--                phy_id_mask: 0
--            }
--        ];
-+        const N: usize = $crate::module_phy_driver!(@count_devices $($dev),+);
-+
-+        const TABLE: $crate::device_id::IdArray<$crate::net::phy::DeviceId, (), N> =
-+            $crate::device_id::IdArray::new_without_index([ $(($dev,())),+, ]);
- 
--        #[cfg(MODULE)]
--        #[no_mangle]
--        static __mod_device_table__mdio__phydev: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = _DEVICE_TABLE;
-+        $crate::module_device_table!("mdio", phydev, TABLE);
-     };
- 
-     (drivers: [$($driver:ident),+ $(,)?], device_table: [$($dev:expr),+ $(,)?], $($f:tt)*) => {
+On 27/06/25 17:27, Paresh Bhagat wrote:
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2.dtsi b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+> new file mode 100644
+> index 000000000000..70aeb40872a9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Device Tree Source for AM62D2 SoC family in Quad core configuration
+> + *
+> + * TRM: https://www.ti.com/lit/pdf/sprujd4
+> + *
+> + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "k3-am62a7.dtsi"
+> +
+> +/ {
+> +	model = "Texas Instruments K3 AM62D SoC";
+> +	compatible = "ti,am62d2";
+> +};
+> +
+> +&vpu {
+> +	status = "disabled";
+> +};
+> +
+> +&e5010 {
+> +	status = "disabled";
+> +};
+
+
+Norm seems to be to use /delete-node/ here instead. Please respin
+accordingly.
+
 -- 
-2.43.0
+Regards
+Vignesh
+https://ti.com/opensource
 
