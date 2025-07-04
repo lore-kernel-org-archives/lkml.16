@@ -1,50 +1,49 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4FA2877F3;
-	Fri,  4 Jul 2025 07:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105E92877F4;
+	Fri,  4 Jul 2025 07:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615627; cv=none; b=S9izSESE1l7QWdkIyjUY7o3ojOUllJUVavq0z7riu8dN2Ba4duyQiLEib5mza0VUx+5F95sjPJVqenE3/PCg7RsqNSfh+ojTgsVejfotSLGNqLsUXrwAR8FfkQSRmdh73VmZnyO1+fHj5nWmdzpbKwP4pZ9vDg4IozLD9Cdc5Yg=
+	t=1751615629; cv=none; b=mPwIs4xyrDFvit3i2JPS/I3dxg6D4SzSNOiCrck3UaEFn6wy+GbC38+8QOKLGeqAROWMMv7BFyeWg4uuQ6w6EYqAeiUK9QDkaXwRTQPskn7sp0QegO1l1KgSG86/12futCXMUHiBYAE37Yjy3FZkWeztaf7IqLmprW3933ptqis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615627; c=relaxed/simple;
-	bh=CCPkkDTnG3P0SeeewUyE2VVrE49g0bg3/xbTp2/W0xQ=;
+	s=arc-20240116; t=1751615629; c=relaxed/simple;
+	bh=RNJbZWkTYQTBMx2fNSRet7xZLfc5sRQK7bocJ7lsJ3w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=KPr5YsKWK4MngDm7vJQ4zIF0/plNhaFr9nq5P8zzrijlHaCFKqErYmyXX018nWMJqvr27omovvcnNyb9+TDuDeP5BpUuVhPaGgS0bkPxeBMS8Y6EG6/4lo1Dnz17Blykirhw+wEQMFPN8ZCmgeod/l65GA4aG87qdCyyuVnc8AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jUxbclyX; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=G4lFz/rAiwtajkwDWwcGd+BTHLShIGWz0EXCHcQc458xBJQE8oqLq3MWyzlnNuZRuZOmRVsXVdUIxbdSnLKXpg0rJMbO95rjrBgymeU6KIjLR4Gofgksmw4+iKdgGvje8AGpcPoIDIafZEsj48xoHyXEpedlVWL2L1Azg3ovOd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dpdiGQBG; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jUxbclyX"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5646Iwpk007227;
-	Fri, 4 Jul 2025 07:53:34 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dpdiGQBG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563IctQE029572;
+	Fri, 4 Jul 2025 07:53:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9XK46q5Hqzobm1M9phw2brCy2RlA73mJMO84guBG4pY=; b=jUxbclyXODoiKt4f
-	OBI4YW/KvW8iSrZXiUhLQoglGD4x3fFISGuyZjfYqDc6PXPKd7ms4LppNCb0McmF
-	j00rDT8GUQYySh0g0QtnfWR407kY1FetguIyhIOYhaCfbP58raGzs+ANexQ0fRfn
-	PJCcjWTptMJHuqv5aAwaqO8Uh3MRAD9J3uyJ3bMoZ+HCXr4gw6f7oVVI3WThYiRM
-	KA6s+DZJokNzFImRhK6qgM1pbYTXMF+6hwHo9bQqsiwz/qzHGMQ5kCPHkueggkz4
-	FRtwDuSRomr4M3Xiq0namqcBWq2ECxX0gRG+lIMjDkIbGy/R81POCuQkk13U8kVX
-	p6f5lA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jqgpk-1
+	tGAV81va0ndjiQQ/lBves87DuWtGn+AsjOR6jDsOz9Q=; b=dpdiGQBGew6S5T0s
+	bNuuVifg6rK+K6t5E+PfzWQIU460CKzvHpiGFAzqDrs5yMuvoB/NYjMYkRjv0dky
+	UTzsf0ssPRpXo1k0lhtQzUQIJ+gVElcQf+1eLzf0rV5tZUo8V/LLsaCYYIXx9VmZ
+	U2kk5d1ymGS+Zu1Lu20vtrzNFdmu2NOpatzBJ+m8OZ6vPg0rQI4Mz/6TTJ2Zbbe6
+	3MLWNHaMM9ra+CPA7XVfDQ2Wq1JZMk1Co848X5OE5+kJEfAMFAZ9cPRg0+jsPb7d
+	67T+0xfbDWhPO8qiODjKMiswNL6g4sZX2c4t1Q3RObVk4FlZnzbvG04/nmC4pbks
+	96bWAQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47nh9s4bpw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:53:34 +0000 (GMT)
+	Fri, 04 Jul 2025 07:53:40 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rXVf024430
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rews000550
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:53:33 GMT
+	Fri, 4 Jul 2025 07:53:40 GMT
 Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:53:30 -0700
+ 15.2.1748.10; Fri, 4 Jul 2025 00:53:36 -0700
 From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 4 Jul 2025 13:23:03 +0530
-Subject: [PATCH 03/25] media: iris: Fix memory leak by freeing untracked
- persist buffer
+Date: Fri, 4 Jul 2025 13:23:05 +0530
+Subject: [PATCH 05/25] media: iris: Fix port streaming handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250704-iris-video-encoder-v1-3-b6ce24e273cf@quicinc.com>
+Message-ID: <20250704-iris-video-encoder-v1-5-b6ce24e273cf@quicinc.com>
 References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
 In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
@@ -70,74 +69,140 @@ CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Dikshita Agarwal <quic_dikshita@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1302;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=4453;
  i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=CCPkkDTnG3P0SeeewUyE2VVrE49g0bg3/xbTp2/W0xQ=;
- b=1tmaWezTVm3wYv6R82Uv3FB71nq1C7kE/rrs6v+RYPJfALmOU5VOR5MLxXgtEPZBEL6GPR6wg
- 5fiyxBnpCCUD8J4dCanYAkByIyv9ZbJ66xXJpheneYn+IOXcLMY4QBE
+ bh=RNJbZWkTYQTBMx2fNSRet7xZLfc5sRQK7bocJ7lsJ3w=;
+ b=exKh17bLknbyicH220AJYHJdERtOj554xuiwD+4C42BnAXbuyCAt/H882RBrz/EvvZtojWe3n
+ Li8gk7Nx0XgBd0i173B8kQ0kOSQwjsCnm+lTZOTrBqcJoT+b+uFWr4d
 X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
  pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=6867887e cx=c_pps
+X-Authority-Analysis: v=2.4 cv=frrcZE4f c=1 sm=1 tr=0 ts=68678884 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=GUxkLdxIJ5orBtzUV8IA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: MDj8h39Vs9H-1_zOLpwdpVEEH1PQeQ8f
-X-Proofpoint-GUID: MDj8h39Vs9H-1_zOLpwdpVEEH1PQeQ8f
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfXz3JOpMnPgJsU
- xsMs2/oTDS2Mv1pR6z3WqQnLLGB691R3wGTNB90dWRpa3G6t5cL7em8+WEaecvjvTjZncPapGNA
- ePHScWD3V+K6uIoaQFUxoDtwvvsmBjftEITqvHUzUNTT8JfYifIFoJwkL4CeNSH0U8eHHyATxCa
- Cxm9PPNR3H6ZPVbS0b2krYHM3PJVvEa1oZhyFCUfcUGVQD8J/11MMwUrLZEoOQXcdoCDqSl3Ohr
- vJ++XvVs5XKwmiNmjXHsTvRefHp1lDuP1ljwh/iP1Ldl8KtYaXtKHC06Crsc57yQ1Mq5cfnKqmP
- gMcvB1Ux227991wm7IECUbu2n6mxDT3QnXK1Ii8eyO3UxGcbqwMj0v4IBO8Wrlw6eVbEZCP1cMr
- OuSNcRP9P3eUbMtjoWaZqNQRCeRGDVstc4cYdqAbVUUCrh4XEWHun6JVUAZ4uARxuwn0GrxA
+ a=KN8zqi05ybdC166h3CMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX5AEyi0O4AHyh
+ oNfOx9tqNNpZ/7f0v26Jwj9tOKX9r9mYHOrZJiql7A9UUBfHpAiyc1ATtjLJR5Ne45h7Z8ahqgS
+ N7GnVJvDGx6fMVTY6dTgicjqzpjM16ANl0mBZgmFI9iRuIfKF0s7FQIEX4eJs6qzS5TG1VVRLST
+ a8b08i+Par/U60vgbjvzp66i7HzTkdGJvUwRnmlH4x45LGCBTO0twZmTc1N5/EP+1ZID9V+EDLA
+ ATMtC6gveicWgkwgVR6BGfV4pXlfE95b/1HKMsDNMaTZ6sIUlAt6jYLaXBn2gKD6l9qEW2Nn2r0
+ LFJK7d+FEk3sTxMY0oxR4NdtfW96yA2sTGE8AI4UQUXAkAqk8maiwyXXaRqa+PsHArWRZjJXMvL
+ Axv5cGqWhie+CtIylcfwWOrhurbtq64A7ilJvINuePwK0eBBKb7bhHDxq03f5KBcjDkBweKW
+X-Proofpoint-GUID: JL8K27BEaGUYecXmYC7HtD-qEtwe7MG3
+X-Proofpoint-ORIG-GUID: JL8K27BEaGUYecXmYC7HtD-qEtwe7MG3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=933 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040060
+ phishscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507040060
 
-One internal buffer which is allocated only once per session was not
-being freed during session close because it was not being tracked as
-part of internal buffer list which resulted in a memory leak.
+The previous check to block capture port streaming before output port
+was incorrect and caused some valid usecase to fail. While removing that
+check allows capture port to enter streaming independently, it also
+introduced firmware errors due to premature queuing of DPB buffers
+before the firmware session was fully started which happens only when
+streamon is called on output port.
 
-Add the necessary logic to explicitly free the untracked internal buffer
-during session close to ensure all allocated memory is released
-properly.
+Fix this by deferring DPB buffer queuing to the firmware until both
+capture and output are streaming and state is 'STREAMING'.
 
-Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+Fixes: 11712ce70f8e ("media: iris: implement vb2 streaming ops")
 Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
- drivers/media/platform/qcom/iris/iris_buffer.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/platform/qcom/iris/iris_buffer.c | 27 ++++++++++++++++++++++++++
+ drivers/media/platform/qcom/iris/iris_buffer.h |  1 +
+ drivers/media/platform/qcom/iris/iris_vb2.c    |  8 ++++----
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
-index 6425e4919e3b0b849ba801ca9e01921c114144cd..9f664c241149362d44d3a8fa65e2266f9c2e80e0 100644
+index 809ce77744f996c23dc07ef9ecb3e8e92b709850..320ebfb833331294ba5ddda8e9cd243c80633408 100644
 --- a/drivers/media/platform/qcom/iris/iris_buffer.c
 +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
-@@ -413,6 +413,16 @@ static int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool
- 		}
- 	}
+@@ -334,6 +334,29 @@ int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf)
+ 	return 0;
+ }
  
-+	if (force) {
-+		buffers = &inst->buffers[BUF_PERSIST];
++int iris_queue_internal_deferred_buffers(struct iris_inst *inst, enum iris_buffer_type buffer_type)
++{
++	struct iris_buffer *buffer, *next;
++	struct iris_buffers *buffers;
++	int ret = 0;
 +
-+		list_for_each_entry_safe(buf, next, &buffers->list, list) {
-+			ret = iris_destroy_internal_buffer(inst, buf);
++	buffers = &inst->buffers[buffer_type];
++	list_for_each_entry_safe(buffer, next, &buffers->list, list) {
++		if (buffer->attr & BUF_ATTR_PENDING_RELEASE)
++			continue;
++		if (buffer->attr & BUF_ATTR_QUEUED)
++			continue;
++
++		if (buffer->attr & BUF_ATTR_DEFERRED) {
++			ret = iris_queue_buffer(inst, buffer);
 +			if (ret)
 +				return ret;
 +		}
 +	}
 +
- 	return 0;
- }
++	return ret;
++}
++
+ int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane)
+ {
+ 	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+@@ -358,6 +381,10 @@ int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane)
+ 				continue;
+ 			if (buffer->attr & BUF_ATTR_QUEUED)
+ 				continue;
++			if (buffer->type == BUF_DPB && inst->state != IRIS_INST_STREAMING) {
++				buffer->attr |= BUF_ATTR_DEFERRED;
++				continue;
++			}
+ 			ret = iris_queue_buffer(inst, buffer);
+ 			if (ret)
+ 				return ret;
+diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+index 00825ad2dc3a4bd1ace32d7e95d15b95276315b0..b9b011faa13ae72e08545c191cdcc2f1bcaf9e0a 100644
+--- a/drivers/media/platform/qcom/iris/iris_buffer.h
++++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+@@ -105,6 +105,7 @@ int iris_get_buffer_size(struct iris_inst *inst, enum iris_buffer_type buffer_ty
+ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
++int iris_queue_internal_deferred_buffers(struct iris_inst *inst, enum iris_buffer_type buffer_type);
+ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+ int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane);
+diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c b/drivers/media/platform/qcom/iris/iris_vb2.c
+index 8b17c7c3948798326ed4732ca50ebd98b833401f..e62ed7a57df2debf0a930ad8307e6d945f589922 100644
+--- a/drivers/media/platform/qcom/iris/iris_vb2.c
++++ b/drivers/media/platform/qcom/iris/iris_vb2.c
+@@ -173,9 +173,6 @@ int iris_vb2_start_streaming(struct vb2_queue *q, unsigned int count)
+ 
+ 	inst = vb2_get_drv_priv(q);
+ 
+-	if (V4L2_TYPE_IS_CAPTURE(q->type) && inst->state == IRIS_INST_INIT)
+-		return 0;
+-
+ 	mutex_lock(&inst->lock);
+ 	if (inst->state == IRIS_INST_ERROR) {
+ 		ret = -EBUSY;
+@@ -203,7 +200,10 @@ int iris_vb2_start_streaming(struct vb2_queue *q, unsigned int count)
+ 
+ 	buf_type = iris_v4l2_type_to_driver(q->type);
+ 
+-	ret = iris_queue_deferred_buffers(inst, buf_type);
++	if (inst->state == IRIS_INST_STREAMING)
++		ret = iris_queue_internal_deferred_buffers(inst, BUF_DPB);
++	if (!ret)
++		ret = iris_queue_deferred_buffers(inst, buf_type);
+ 	if (ret)
+ 		goto error;
  
 
 -- 
