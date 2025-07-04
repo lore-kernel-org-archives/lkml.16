@@ -1,91 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18685A2D;
-	Fri,  4 Jul 2025 09:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D4828A71E;
+	Fri,  4 Jul 2025 09:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622183; cv=none; b=YupVVKCC+nGrEGNamzflUL9tn8vvcfP/ijk6maI1Zqx+jC/eJcxfrc9dN+JqZOQdHa2v/AhCeaxWWt//PbKdLI9ClTICSwDPq7AM02c2tqS1G7XVy2Rb9EcA3A35CZJfmr6fxd7Qe3cUAfME/pg+t72CbyELiVuK5XYz77CSnh8=
+	t=1751622247; cv=none; b=CCwkaB0vp2KDfEhfAEV1hVW1jhReOHz4oGG/t2L3mWyV33DhQzmBPnMNZ1wqB+GFJpsG/7//Kv78yM3YKPteKaJ/INuHHHdum2CKRPj6W8ThHDIPf+y7VjvcuC2OF4eWMoTDhqz/zstp1NVjntF1yKwMScV6IgHRFqJhJ0WemrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622183; c=relaxed/simple;
-	bh=5eb6AKCbpHuIGf13tSNQmtmiiVKq+2jlzkApt8oVY6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oaAg6B8VPd68GKOVN0GFTYg+DALtv8bZ0Ii/NeWzwshmzy1sznhixM/+PSE29sJ7ACNYDH+B1tjGT+A2abLn51ENa0hr3Zpcws7r+Vf0uC/9iTqeeICxapL6KqE/Z6nuxNsQtRm22vzNQ0sagYeMvhKfkpfVd+uRyJpIozlf8CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gURBsIeN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gURBsIeN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343A2C4CEE3;
-	Fri,  4 Jul 2025 09:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751622182;
-	bh=5eb6AKCbpHuIGf13tSNQmtmiiVKq+2jlzkApt8oVY6s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gURBsIeNGdjDFKqABlcuncjz1243ZRy45f/kRPdAyPmhsWxh1x9lrh9X/WJ+rRqKp
-	 Jwt/6UNnKNjGypQxQdJDsYwPf2dI89i3DX5TKiBo0FvPk2cAzDa7yYaQeg53CCULsd
-	 SHlDd+n2SoJLwI7Ffcv0sOpVoNKU8WLfu1q2u+xMo7MntFZBxymOZjGjIREwgugHq1
-	 LwMXinKhgBQ3mZrymfpq2Qr+4Q3GsoGfeZlYBBVmHSoyOhdCyWt0kl7R5r/QjEfK4C
-	 QLzmvQ+KF2aykYDaLE1qW8r+x7uFJ8ZtVEwiP0B4CqrX8f1MPgmLbr2INz3kvTwpcI
-	 axbqlCOmpM+Mg==
-Message-ID: <d0614e1c-2966-4766-999c-2bc58d643e7e@kernel.org>
-Date: Fri, 4 Jul 2025 11:42:58 +0200
+	s=arc-20240116; t=1751622247; c=relaxed/simple;
+	bh=9z4E+Mk81Lu5KzlwnRVKdz0mC+JqPwzqyftbZD+ad4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuFw4tMRMyl3kIGM2RniXwdoTk79Y6VsHU2v55GXmkKMIoAu76CVBeLtQLgL3jKswqabz31XpseNZRywigXObXhY8U3EE6KHWZIkyz5AL3wrbPU1KHvY4ZA2p6oCCfamnPb5id/EA2vHzRV/RFJ/tE336TL7b/JeAKBtQGFtvVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F894152B;
+	Fri,  4 Jul 2025 02:43:51 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 773913F6A8;
+	Fri,  4 Jul 2025 02:44:03 -0700 (PDT)
+Date: Fri, 4 Jul 2025 10:44:00 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, <arm-scmi@vger.kernel.org>,
+	<imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/7] firmware: arm_scmi: imx: Support getting syslog of
+ MISC protocol
+Message-ID: <aGeiYKhPqrFMvf3t@bogus>
+References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
+ <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
+ <20250702-classic-sloth-of-snow-34ed1b@sudeepholla>
+ <20250704102353.GE4525@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: fix coding style
-To: Pablo <pablo@pablo.ct.ws>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- hdegoede@redhat.com, mchehab@kernel.org, sakari.ailus@linux.intel.com,
- andy@kernel.org, gregkh@linuxfoundation.org
-Cc: ~lkcamp/patches@lists.sr.ht, koike@igalia.com, pablolucas890@gmail.com
-References: <20250503200030.5982-1-pablo@pablo.ct.ws>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250503200030.5982-1-pablo@pablo.ct.ws>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704102353.GE4525@nxa18884-linux>
 
-On 3-May-25 10:00 PM, Pablo wrote:
-> Fix a coding style:
-> "ERROR: that open brace { should be on the previous line"
-> issue reported in ia_css_vf.host.c:94.
+On Fri, Jul 04, 2025 at 06:23:53PM +0800, Peng Fan wrote:
+> On Wed, Jul 02, 2025 at 04:22:30PM +0100, Sudeep Holla wrote:
+> >On Fri, Jun 27, 2025 at 02:03:48PM +0800, Peng Fan wrote:
+> >> MISC protocol supports getting system log regarding system sleep latency
+> >> ,wakeup interrupt and etc.
+> >
+> >We now have SCMI telemetry protocol to provide such information in a
+> >standard protocol. You must consider using that or switching to that
+> >in near future. I am OK with this but would like to warn use of custom
+> >interface for things like this is not scalable for long term.
 > 
-> Signed-off-by: Pablo <pablo@pablo.ct.ws>
+> I have shared latest 4.0 alpha release information to our firmware
+> owner. In future, we may use telemetry, but not up to me.
+> 
 
-Thank you for your patch.
+Thanks for that. Much appreciated!
 
-I have merged this in my media-atomisp branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
-
-And this patch will be included in my next
-pull-request to Mauro (to media subsystem maintainer)
-
+-- 
 Regards,
-
-Hans
-
-
-
-> ---
->  Hey, this is my first patch, I apreciate any feedback, thanks!
->  .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c   | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> index ece5e3da3..0ce75d9bd 100644
-> --- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> +++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> @@ -91,8 +91,7 @@ configure_kernel(
->  	unsigned int vf_log_ds = 0;
->  
->  	/* First compute value */
-> -	if (vf_info)
-> -	{
-> +	if (vf_info) {
->  		err = sh_css_vf_downscale_log2(out_info, vf_info, &vf_log_ds);
->  		if (err)
->  			return err;
-
+Sudeep
