@@ -1,107 +1,120 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF100288C22
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2A5286D66
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617320; cv=none; b=BC1b9X875T7I3hru1GDk0/CvRDX6ItZ1BU7B8O5z8WXid3ixGZ30ZNeRehFXeXr//2P622RPomFThv7fZhtPvAKPwhqWMQj36MrZI+u8AGcq10EF8s13GtahRTzNaNxf23YonjkRePT5jztV2goKSgulutFxoDOYP3W/Fvu+nCo=
+	t=1751617391; cv=none; b=ZQ0N6KufJ8S/5CgM7v1CvYxeiALjNcUuhZ1RDLluZMiDPQJ1azFz0Lb2N3npdwYPjpuYQffZiOSFVsKsxdciKYwqGyAIX+iJaO8/hjVvxQwNjbxdRF/x0keSEWdCveIsbZkIUhQvMRKK78kbnvtfQDMsBxxbq0kAHDDQFe2Ck9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617320; c=relaxed/simple;
-	bh=BqF93+TAjohew7xEc+xhLbJwBdMg2ZtKZkD6/ZYDjFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X0g/znrUS2K8by2IcdqP+VqA/R1oOvDRS1ykQm2PJSEDGoAL28aKQnMI2aWl1MfhupuSztBuqh1c8zEyg/pcFWp4lI9cpQQqor0a2yV5AQQqXObMzHGWGx3Y/PrqWv809jk6vABD3QXbdvv/i6Ftxr80GF3CMQ/wvmlslES9U8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GZUJqo3K; arc=none smtp.client-ip=209.85.167.45
+	s=arc-20240116; t=1751617391; c=relaxed/simple;
+	bh=0vKgJofS2qfVbDLeJnc2bc+mCh9FaxZgAqij7cOILPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uu33JZTNh7rjw3DgNi+MxPDglaVgj6mKBvQDnUi7NEWlpI0hRkt3Ph15XCWg+dXyV7f0mVpVlHDKqtySEB26HGli/S0hGs5fWGYsqRd7oc6+hLshZco+zGh26HTKAj0pPel8FYCryJ5W6TzJc6Yf6V4eKabfM5cTganOq5B04Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h2yq6RkE; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GZUJqo3K"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553bcf41440so829556e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:21:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h2yq6RkE"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a588da60dfso399079f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751617317; x=1752222117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BqF93+TAjohew7xEc+xhLbJwBdMg2ZtKZkD6/ZYDjFY=;
-        b=GZUJqo3KLL8gYQ3Rb6umJI92QObJm/vnWe2jXRA7jwBFz5IeUq0EpdAtGvYNU28gBP
-         6HoQvx38Rllu9bZRErlOzyx+5c7PiMng4T1OjdhoGZuhUR7ZuUqVVNPjk88OD4cuGgZb
-         9uxGXyV7Ui3H35ReYfqENPx798Fygmo698V0AUGd7TKFPnKWyit6BKheOklo7hvFHJdO
-         sZYshB7gnl6/y1PRtCNT5D6UQL520Rsbalz4lCDia58eC7cyxSvDVI6UEgHjj+ugrIX9
-         21D5mTdsLnOU6RWa+u12Vs92UFAU0b6XzToJ1tKvMspuOiQ0vVPSL5nAARUX5/8kaExw
-         1tzg==
+        d=linaro.org; s=google; t=1751617389; x=1752222189; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LQl9Ypa8N/fQd7fiGf/U1lVWGmgfHhe4fQnd3suQNU0=;
+        b=h2yq6RkEUxLi2dNB8LeODuf5RevRCS/+2/AVSY4zW9+odjyF/zNuRi8UemXJ0m1kPl
+         ZErnMrzlAMn55CkLX4o/H9LBAVQfNLf/N/NOAGEJqwar45g3T3Qx37iGYB+Lpg88lvR4
+         +crA4+ugZ7LZwC1rsu9bS1EB0h2onJBuPyEdKZ5kwT7NPQ6o++B/aGXxJGe+3+6/BjDN
+         ud8BhzImFmKJmokQUGIqrZ2/bZo+m71E7xrpuYtQHhjxg9n5UHLQ8SPo7PhmRSJQydhw
+         ejZ5toevOBZIZC5byEuCj5qfYFtuXPf40hVLBBnZbMt0ytJxK2DyCZN0s7UUTfwMOLE5
+         06dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751617317; x=1752222117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BqF93+TAjohew7xEc+xhLbJwBdMg2ZtKZkD6/ZYDjFY=;
-        b=qXMlddZZPn1Rbf5bAISFEaD3OU+po8DQdV6UJ6xookIBbnWjQbUKtih37XTwNCzsGl
-         109Mz6PGf/t1fa5heGRl1qYICoBnfSCSPISEf7G1U90LOzkd9pgVty8lUk/37Lr0J/CT
-         5B6f4jYETXEaDGHOfnOpSK3+cAI/rutZZOy5ZrEsn5IAaa9E3HZLzuCJvRay78XLWn01
-         ULfZvyCh7ehAF8CaQVI5ok2Kwh2L2oiSnN0oTKz69sTdJAmPu3vvzKbatOP4TkUTlEZm
-         fkf5nfcYpz2L3XsqMBYc0gbh+nqF0/lZ+/mihf3bLo2rS28aZV1EI1L78XIsLzCOPMvX
-         u3ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVaenSdfK4pmMPvCiK5PJMLTDnXUU9gP/KJXsW2TDfLzgdv7wn7e/F30bA2Ps+0K8MomSTJZifA4tW5c30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCXEDheOFh3TPovJdR6M6HRUsxZotF62y/2cyqTqMOvEVKMUWX
-	egRTl0fPM3l5j1HztRbxVzqhG8bGybIFfC3iM9f2iqLVbsCqjDs0CpuDqNpyk/DcPb82U6IPH2/
-	W4+8R3AkG4YYY01BbTduwYziDImVM9ViNDZe+eH9tVw==
-X-Gm-Gg: ASbGncuTNEQwPszwooK9YJTISZ00yz2Hiy2vroGyVk0VG7VyZMf3jOnlGYanvTb7OxU
-	IGMegN0K+kEq8lEW5OOTecdn8lu4Hh70TgTAF2lWen6055tXmDALe9JybNG4NX/emjtbgrl/Uro
-	1E7SOKN2YktulcymsM/8Qz5mGR0hX4ti0XJKkxnaFiCfg=
-X-Google-Smtp-Source: AGHT+IGFwOhG8+m1BfQFADC0UUWHtQFbQV44vnBFvtrzNfXOTMJLGYBZ3rW0/F4C4PngHF/NaTUtYXRmX+TsiW/pxqQ=
-X-Received: by 2002:a05:6512:110d:b0:554:fa07:c56 with SMTP id
- 2adb3069b0e04-556f1f62fbamr490777e87.26.1751617316841; Fri, 04 Jul 2025
- 01:21:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751617389; x=1752222189;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LQl9Ypa8N/fQd7fiGf/U1lVWGmgfHhe4fQnd3suQNU0=;
+        b=jI2NeT9cRT6FLR+QWjOsmujVyk6kalTd5/Q6NYV9S7PGd0hFe502lq6mxyt1OkMHVn
+         aMORS1Q6Ub3dFpl5P5DbzU+X/oj3VMGylxL4vx3GtbxGiqR5Tz486QeIiVvE8RN4hSqg
+         rBOHJYwnoQ3tsUeQZpuuDun8MZ4zWP2+o8cUpsNKxosICZDLBLSKBcstMeLu18gjyuau
+         asRiPpKbs/LnGc1HnLV8S8/b+FpdMVF7emdZOliMyTK+ojNlmnCazuLXVx0vdStUeLv9
+         USStioufQO+kf42HLNGSwww7u/aMcLzX5gzUX7FFe6ygm1xemsXZmITLxifyeYmqhSW0
+         9JBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0BaeFPrg3nisGs7AjmE7/x1aOOWluSnM2iisA1lYUVm58IvQcR+id2K+nBej+3VF9cMldlPH0YU4Qpfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFd63SgA03DM2kqI/B0iVMM/OxokYqGehdNNs3wKgOalWEyng8
+	7SBlkh7tu+4z7QwUIdeGVO5Fmwfqp1rfuui+DNludq6Y9f5csXxwFNeJiI2jI3l50c4=
+X-Gm-Gg: ASbGncuwthe5krMb7nUKGzQo8/WtNDB0VHDm9JmdJ/m3HcnMxFBcNH0CqMqpxg08qMb
+	6cM9kuGT9Mt2w3qIXAmLxK0USoMxkqfYjqKBzW6WxOkfsIedxoZRkmVQ7O1skfI9AyR+JTa3fuH
+	uGDXgHDHMmwRBtEK/6A8dDcQoS0wQCIDDrZRndMizuCfGdEmrRlRhzm2YLUGZZQbhhqdsssrFN1
+	qPcVSGuP4lKB/LBeYe4xJdjFAcbviUJ20krUUE7ufGKBNiwa1vMyse+TsBE+Qg69hGbDb4HhGbb
+	xQar5tGlll+7yRvMT4/ILgjhg81gNkgvXzb1SIsfDBEIHcG69Hov0pKB7uACY6r+AWzGfNLJwzh
+	rjLcXWT5jxgGev83aXqMgYAtvmAE=
+X-Google-Smtp-Source: AGHT+IHHgjaBnAo5QwMN3YDy0wbG9DnxVwT7uttl5fAV0MIC0EYWYl5on3snuz454zD1gSCLp/iWwQ==
+X-Received: by 2002:a05:6000:2888:b0:3b3:bd27:f2ab with SMTP id ffacd0b85a97d-3b4964bb66fmr1281979f8f.5.1751617388607;
+        Fri, 04 Jul 2025 01:23:08 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969f2asm49958455e9.8.2025.07.04.01.23.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 01:23:08 -0700 (PDT)
+Message-ID: <e1a6e75a-2a5d-44a2-8bbc-140eb86d1806@linaro.org>
+Date: Fri, 4 Jul 2025 09:23:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
- <aGPrFnDxG4W7S9Ym@smile.fi.intel.com> <20250702035439.GA20273@rigel>
- <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
- <aGUeRczCNJLg-KON@smile.fi.intel.com> <CAMRc=MexjmozQ+vkLz1L4_Vfb+aqqwNSxKtNVA7zb-=r5eCMQw@mail.gmail.com>
-In-Reply-To: <CAMRc=MexjmozQ+vkLz1L4_Vfb+aqqwNSxKtNVA7zb-=r5eCMQw@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 4 Jul 2025 10:21:45 +0200
-X-Gm-Features: Ac12FXyekbDQxpchxSNlzOVJJqHOd-HyTMawzBiFpK1wdDITbhXtGu3_5sBoCBw
-Message-ID: <CACRpkdYD5nT=f-uCARniUvBScu2gA+oY7ALgjYrdX-T_XRxEVg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
-	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+ <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+ <f5ebf0d6-2f0b-45cc-b99a-b786e5df9edc@linaro.org>
+ <5qsgbqml367yq6g5vb4lotrzulojqhi5zlwwribze373a63qrn@rxi4kwyt66m2>
+ <4f38058d-a2f1-4ac5-b234-228cfb2e85ff@kernel.org>
+ <1ad2ca1e-1d57-4ad8-a057-ab0d804f1d49@oss.qualcomm.com>
+ <7da769b4-88e9-401f-bb21-0ff123818b9c@kernel.org>
+ <6840d462-8269-4359-a6e5-d154842b62db@oss.qualcomm.com>
+ <af0da28c-3ca0-41dc-aaa4-572723ea74bf@linaro.org>
+ <klhvgzizub33f46buqsog54wqksqp24a5tijwyv355l2ao2imo@wdkojfebc6s2>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <klhvgzizub33f46buqsog54wqksqp24a5tijwyv355l2ao2imo@wdkojfebc6s2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 2, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On 03/07/2025 22:23, Dmitry Baryshkov wrote:
+>> I still give my RB for the series.
+>>
+>> To me the only question is should it be applied to sm8550 or to new SoCs
+>> from now on, sa8775p, x1e and derivatives.
+> I think we need to apply it to_all_ SoCs, maybe starting from MSM8x26
+> and MSM8x16. Likewise, we need to think bout secure buffers usecase. And
+> once we do that, we will realize that it also changes the ABI for all
+> SoCs that support either Venus or Iris.
 
-> Whatever your opinion on this is - if user-space wants to keep the
-> interface, then we need to support it. We can only propose
-> alternatives and hope the users will switch. Please read the
-> discussion, it explains why people want to keep using the simple sysfs
-> ABI and why those specific users will most likely never switch to the
-> character device. At this point a bigger concern to me is the global
-> GPIO numberspace, not the existence of the sysfs class as such.
+I think a dts change is a non-starter as its an ABI break.
 
-I agree with Bart here, the global GPIO numberspace is the big
-problem we need to get rid of, if we move users over to the new
-sysfs ABI and disable and finally delete the old one, we can get
-rid of the global GPIO numberspace.
+So if ABI break is out and reworking future dts to allow for a new 
+device is out, then some API change is needed to allow the driver to 
+stop the kernel automatically setting up the IOMMUs, create the new 
+device as a platform device not dependent on DT change and have the 
+probe() of the relevant drivers setup their own IOMMU extents based on - 
+probably indexes we have in the driver configuration parameters.
 
-This will be needed to conclude the work inside the kernel do
-move everyone and their dog over to using GPIO descriptors
-instead of numbers.
-
-We would maybe be able to delete <linux/gpio.h> but without
-also getting rid of the global numberspace it will feel very
-incomplete.
-
-Yours,
-Linus Walleij
+---
+bod
