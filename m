@@ -1,163 +1,116 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EED1E2614;
-	Fri,  4 Jul 2025 15:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A46F19E96A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643343; cv=none; b=tOEMs6arljKZPPQ+/TCHVgT637XqO/A9z233ubh3P7rA1sjKG3JkdvCGXVb8Clkz9tn9rrG97l8rulS1Q0KnMngW1Hcfwt3SlaAXjnKz/lFae6JXf59jdeOc7c7D8UwJBFWueoAth89PjEGvSgAmgZv3pxZMrJwb+KLmud9SBAM=
+	t=1751643376; cv=none; b=cYouw0BGWh5FCnPf4LNlcevjDPrIpJhErEIqYRpnI6M5n4kesNFQA5s6Fl8K2ya44oVF2dRRDOO5Y/c4nBbyeLib042kvUzW3ue6nZmksEDga1/QOo7pUfUbx5p3mqVAZUFy973h9IRTOdPryhN1flQ59WhAhLLJmN9qpA8yxwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643343; c=relaxed/simple;
-	bh=9XNM1qLRpm7fiyDmLGrtrcj/3GIaT6hkKfkqd71D2aA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UoZrQijQiwVvOiwXO13eqADw/t5UckFJ8LkRd1A6qtbw18vdxH82olAwqOlYCiDhP13l1AyhnOp2fK0ZUbzsRPqgdoPG1EV0tc8R2bZFFhqea2DNsiyhaAxA/N2KA+gaINdVkzXfhBecDhmKVMSG4pdppmeCziwA/oIIVVT50OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NETME7G1; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751643376; c=relaxed/simple;
+	bh=SWttKQL4FkWzc6MgsldmYN3kVwwpFN2mg/MdqGHZizY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqYoQhmtUqsGcZQHmEMn0ClpaNZaN62FhsKTVqZzy5CBiRn1aZM9oPTAOwq9IBF11QS2c/VAfXF5nJqu2veux0/SgSv+/gMxfKJ2WcjYFhe1twkRETQ1a3g7W9lvTuRKAgC4ojN+Ht2WhQpCpUXi75OCJ4WSnodISVoOj5CNt9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJJgN3SO; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NETME7G1"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453398e90e9so7052685e9.1;
-        Fri, 04 Jul 2025 08:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751643339; x=1752248139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=kN+P++wgn6VZ7R5SIjGo6LxITIRZcUIj55TIgiJeZPQ=;
-        b=NETME7G1S2pSisRgv3NvVmxPSzKpnodkdZVbv9gJ/mN2Bt9lCiQ1O2M6dHs2lIHnn9
-         o7OWiPnlofwkMteDQZFm2KJ5otOh0eXigfMakv13jtQZ286SNOZHGYLOZMSRIBlT6985
-         DlXd3OtW6XK+k97QEfZR+RsoTWAG6heQ+oFzXoMoWYTNpT/sh63LEw8JCB/jruenXE6i
-         i6iqsWjcYb/m11wo/tksPJ3jQMWqv7HOdsOuEp/UEPFd7wYbeYTOl0dtmSuEy3Cww++v
-         2SD0dTn3dW7AO8lMJBGZjh1GpxIVBQ0ocfgkqooUAUgXXGgY25PwI/S0m22mZ8AAaRzp
-         XAOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751643339; x=1752248139;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kN+P++wgn6VZ7R5SIjGo6LxITIRZcUIj55TIgiJeZPQ=;
-        b=AMvLAOo6aFnBRKwFcfPYyCwRjLVKherUBIj7CkX5o+IcuJBFQfAR6BxSwBHi46LNnd
-         wR8XKLR6ZCMYAKwiNHkI6J+xOqm0EmgrwZzbI+Vjh8RQaU4o+IU+xWTC/0A4LxLfZ6sA
-         Ejc12Dh8q2bBwItijLLmJcMjjk/rXXtnkZWLKx1TMwYrtGDzxKTgLKhUX5lZHTqZeOpM
-         EXW5XufJZneQt8fI//8FPp0ohqBsm2AFqMluqXkJ436RNBDgqpU/RQddUnh4I8P1C1vc
-         RLzrQC270prfyh46aCM+icbu3FOUSyHnges8WUUQmmGtf6Snc+1puGfxIuSbSC9XHhiL
-         AtZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5HzdPX+jX9P+0FVetiwlUZfLFh8PJ+OA2bFpONGeoQd9S1sr5BHsEHOwyuuL3F7laf7n9TDAwwxy0cdlC5pI=@vger.kernel.org, AJvYcCWxpkFSRKfX1N3u+uCGIWVa9NIGajR/7YetUGym3EYYws1I/F/e3IF4Uvd3KpC8tvcL92a7DLtv7VM=@vger.kernel.org, AJvYcCXUG0rCs8B2v08NeX3ALzKgZKoDvmcEKWBxw27WN2CQ72nuZp3Ho11DBUQash1bYfheLUpXntMLHsyXPBdR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnEkazbWncANCSBbaWRY9wok5v0p1/WNdMfS5VoFw7rZqPxxKs
-	XhDPSC8ihGhev9dYB0OUxj0vwd0woGhhXt73VegXn5GsS4ohxUTL9adlWqJw9Pfbkn4=
-X-Gm-Gg: ASbGnctH8uO1oTB1tfzxXFlSqUnJJiQ9eabfY0sEe8k9rA9bCWxVO0j6/B+9rGrTaYe
-	+1OB+HBaoVyr6sOSDnhZSM+N7XZQfkVNhASXW/9dqAplvoa27MVwYAKZNrDDIrqR1iSM0g8EoVF
-	bSRo110Ag8XaJw5a7GMFcuqUQGtSfkXp1LdV9waKNKDhNeFSalOulXywWkZvplFTDpKfosqA8Sp
-	Uk+Xyj3w6bM7J/MvZWlxLh6t27XZSgRiKnx2iC8PmgeTwXsC5STy2mmgF/XJJs9m7s/f7XpIpea
-	LGSEaE7h+cAT603pA7SV7xoXcLjF9IfsRJ3OjWcIqLcNscp+TyMtVDqD4jAo/m3Tl2B3odYu0eR
-	41TooJ+OLLhRZL1jamGf5/EC0s3fq/e3n/FlL
-X-Google-Smtp-Source: AGHT+IEHIbq3wa0/hRtNzOKHvuH2gq3hNf1lEbKvJ0ODKMYcW/0PWbprq6rFKyYvjTZywbgsSFgcfg==
-X-Received: by 2002:a05:600c:35cc:b0:450:d3b9:4b96 with SMTP id 5b1f17b1804b1-454b76ad107mr19002375e9.13.1751643339074;
-        Fri, 04 Jul 2025 08:35:39 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b188e84dsm28976375e9.38.2025.07.04.08.35.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:35:38 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJJgN3SO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751643376; x=1783179376;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SWttKQL4FkWzc6MgsldmYN3kVwwpFN2mg/MdqGHZizY=;
+  b=OJJgN3SOy4xJxe6bxVx3XCE8BYUx9FAJcUXNfZNV3THjrO7KOSI5bxJM
+   rTLYrkqkh7ehYGV0QXzB9acNGqIIGzbGfZikpIEBe62e501lKxUHV8vDc
+   gQ9Y1a7UqVy8QlSxSny6n3lp08FjOIKAzHlzegPWjzouUqLdA1CYS5jgz
+   yCToTFvEu79Fioyw+Ns8dLB8WxPInMEsPqAxv2dA/G3TI2rCWhkyaJM+y
+   zEVH0e4kT4nWxmVtCEHyzWCoK1e2PzLvWE0xCbJU2rkFy8YbDKyqQZeD6
+   yfZMI8BuHLl8terGSmDnyfIAbrBH3/qi8pK8XCxvFtbGexVsZ+6ZDzbYs
+   Q==;
+X-CSE-ConnectionGUID: gqjfpB6MQzKJ/6aA2uHouA==
+X-CSE-MsgGUID: KkyXoSf3Snq2Nd5l7yuZCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53951509"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="53951509"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 08:36:15 -0700
+X-CSE-ConnectionGUID: 8Wuv05NdRTiiT1w3N26BHA==
+X-CSE-MsgGUID: IL7TXyDfRxq0Y0POh56owg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="158697099"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 04 Jul 2025 08:36:09 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXiSN-0003q7-1l;
+	Fri, 04 Jul 2025 15:36:07 +0000
+Date: Fri, 4 Jul 2025 23:35:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Balbir Singh <balbirs@nvidia.com>, linux-mm@kvack.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	Balbir Singh <balbirs@nvidia.com>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
 	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Asahi Lina <lina+kernel@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v2 0/4] rust: i2c: Add basic I2C driver abstractions
-Date: Fri,  4 Jul 2025 16:33:32 +0100
-Message-ID: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Matthew Wilcox <willy@infradead.org>, Peter Xu <peterx@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Jane Chu <jane.chu@oracle.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Donet Tom <donettom@linux.ibm.com>
+Subject: Re: [v1 resend 04/12] mm/migrate_device: THP migration of zone
+ device pages
+Message-ID: <202507042336.o2mutGeh-lkp@intel.com>
+References: <20250703233511.2028395-5-balbirs@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703233511.2028395-5-balbirs@nvidia.com>
 
-This patch series lays the groundwork for writing Linux I2C drivers in Rust by:
+Hi Balbir,
 
- 1. Core abstractions 
-    Introduce `i2c::Device`, `i2c::Driver` and `i2c::Adapter` built on the
-    existing `struct i2c_client` and `struct i2c_driver`, with safe Rust wrappers
-    around probe, transfer, and teardown logic.
+kernel test robot noticed the following build warnings:
 
- 2. Manual device creation  
-    Provide an API to register an I2C device at runtime from Rust using
-    `I2cBoardInfo`, including automatic cleanup when the driver unloads.
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on next-20250704]
+[cannot apply to akpm-mm/mm-nonmm-unstable shuah-kselftest/next shuah-kselftest/fixes linus/master v6.16-rc4]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
- 3. Sample driver (legacy table, OF & ACPI)  
-    Add `rust_driver_i2c`, a sample that binds to an I2C client via:
-      - legacy I2C-ID table,
-      - Open Firmware (device-tree) compatible strings, or
-      - ACPI IDs.
+url:    https://github.com/intel-lab-lkp/linux/commits/Balbir-Singh/mm-zone_device-support-large-zone-device-private-folios/20250704-073807
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250703233511.2028395-5-balbirs%40nvidia.com
+patch subject: [v1 resend 04/12] mm/migrate_device: THP migration of zone device pages
+config: x86_64-randconfig-075-20250704 (https://download.01.org/0day-ci/archive/20250704/202507042336.o2mutGeh-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507042336.o2mutGeh-lkp@intel.com/reproduce)
 
- 4. Sample for manual registration  
-    Add `rust_device_i2c`, a sample demonstrating how to create an I²C device
-    on a given `I2cAdapterRef`, and how to unregister it automatically.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507042336.o2mutGeh-lkp@intel.com/
 
-Together, these four patches:
+All warnings (new ones prefixed by >>):
 
-- Establish the essential Rust traits and types for I2C drivers.
-- Enable driver binding via legacy ID table, device-tree (OF), or ACPI
-- Enable manual device creation at runtime.
-- Ship two samples showing typical usage: one for firmware- or table-based binding,
-  and one for manual registration.
+>> Warning: mm/migrate_device.c:89 function parameter 'fault_folio' not described in 'migrate_vma_collect_huge_pmd'
+>> Warning: mm/migrate_device.c:707 function parameter 'page' not described in 'migrate_vma_insert_huge_pmd_page'
+   Warning: mm/migrate_device.c:707 Excess function parameter 'folio' description in 'migrate_vma_insert_huge_pmd_page'
 
-Igor Korotin (4):
-  rust: i2c: add basic I2C device and driver abstractions
-  rust: i2c: add manual I2C device creation abstractions
-  samples: rust: add Rust I2C sample driver
-  samples: rust: add Rust manual I2C device creation sample
-
-Changelog
----------
-v2:
- - Merged separated ACPI support patches since ACPI-table support is 
-   merged into driver-core-next.
- - Added I2cAdapterRef and I2cBoardInfo abstractions 
- - Added DeviceState generic parameter which is used for `i2c::Device`
-   as a sign if the device is created manually
- - Added `DeviceOwned` abstraction which is a safe reference to a 
-   manually created `i2c::Device<Ctx, state::Owned>`. 
- - Added Rust manual I2C device creation sample
- - Link to v1: https://lore.kernel.org/rust-for-linux/20250626174623.904917-1-igor.korotin.linux@gmail.com/
-
- MAINTAINERS                     |   4 +
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/i2c.c              |  15 +
- rust/kernel/i2c.rs              | 565 ++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs              |   2 +
- samples/rust/Kconfig            |  24 ++
- samples/rust/Makefile           |   2 +
- samples/rust/rust_device_i2c.rs |  50 +++
- samples/rust/rust_driver_i2c.rs |  69 ++++
- 10 files changed, 733 insertions(+)
- create mode 100644 rust/helpers/i2c.c
- create mode 100644 rust/kernel/i2c.rs
- create mode 100644 samples/rust/rust_device_i2c.rs
- create mode 100644 samples/rust/rust_driver_i2c.rs
-
-
-base-commit: b75e1f0619bd707e027812e262af3fbce445e71a
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
