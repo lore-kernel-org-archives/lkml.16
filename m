@@ -1,115 +1,98 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54CB307487
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E7A3074AC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616596; cv=none; b=ssCl20/N1y3Tx5T2FmorlfCUzomajkZeImCe7ZCKeDsB1r9iSftvMYYB6kJ8hPmJAH7gb/U3c3FzM8sMDGDg2ky4BsQe0sOcCgkJSjV3XDRZeTCCUf/TbJSAUgI3ezJAhXZgo/ZAot2JpxseFggr4TwCaYhyaEaevyA5Ab3G3gE=
+	t=1751616603; cv=none; b=QlyS73BMvueEN6+PDyAUhw+sWYIHchEr8hpVkvXj9xX+D32QYCAEl0dugK6+HgXxmsTRYu2Wrz6R+z6NARTGnJNt++3PxdtnmJH3cCtaZGVDI8hr/ZKfxKdZJx1gyojr/lKd/piadCtN19GOIF4HiHPk+gct4fiSRFgqoq2fzzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616596; c=relaxed/simple;
-	bh=dlMnnwp1dpnotw8e5/iEHxXbLwDZGkrbADhWsQHKiFs=;
+	s=arc-20240116; t=1751616603; c=relaxed/simple;
+	bh=SVTv3A04ZbfNzzCBC3M52V2FsbDet2cE5mKOx3BOEK8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jTnPMtb74v0t3HHKdCk/blwZWBGyUOrUTrmRvZp/7BebMpLytdiYKzS9f31Dh/LD1jsXvb1HWy4ENmot7pctQIVPQ/7a7kmSvn05+WIcgJm8xWbdew4XX5i44/yfb64taku3buWDssvMbG98nhO9cvZWc1iHuiHzYCVKYBJe28A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OWJFAgp8; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=TV5tub+dNufPxLeKm3hiHe3XXQYCZqoVtzklPLg3TDlUVYflefg89KCFJrvBlvmd1bXcLpb9aM2VabhkYD3GcKA3xf5hPwYAfjUiYVcwQYAI/EjOBySaRkOGvLp8TuH8YlzShQ2glCD1/kl0JI/8AzKO+elIQ8+n17pEEj2dM6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pZf+qC+t; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OWJFAgp8"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so1997468e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:09:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pZf+qC+t"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b9eb2299so1615740e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751616593; x=1752221393; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751616600; x=1752221400; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dlMnnwp1dpnotw8e5/iEHxXbLwDZGkrbADhWsQHKiFs=;
-        b=OWJFAgp85si9j+xJ8F836ZuzFcvFNeh3M7fKd5Aik+Y4UdJyAv9nFxe5ye3oiNq6MB
-         GMYni1yy6uIhtO/AXVWvijmcq8WxerQ8h0aS3FT4t2awG/KUJEq1w8vF7yQX05IpJS9s
-         zTUlWVdsjIjVm991MSAb11ZukZEX5b/OBmXDKxu2IV80FRl6z9/0HpO/LgqzhUYYrrUg
-         xkfoeuzGssZkZLicEj0uYImlEbaiG/ATI2qxBTy6ytql86e+N2RUrS8e7Ne24qZegy/c
-         MPVDHiHKShBMyel7Rv/HA/NV3VOZBEhHhaSwF+Gri9VrPKKnm0XXNz9CIFLDrZb8kSyF
-         JUTA==
+        bh=SVTv3A04ZbfNzzCBC3M52V2FsbDet2cE5mKOx3BOEK8=;
+        b=pZf+qC+tdfyz4RuuTVk4mOfcbG7+UO7k4PzwTkaepcRDG48lRpBelA/MMYpthiuuxK
+         Po8uLmiOvFJ7HLXNNl/IlPe/ASrRQI7CgO09NpfyKsNTMoPKtoCJxb+STWdeIyPNQ8Mg
+         1eln0KcoFh+3UgXWDd/41PitpKMcN0jpN0sIKLzB1aV8sRxcA3ok8msIkk378k9AfGcN
+         1QvTpMPh6exKciHlzXlUIoT2zHdUoU+IvMLsRlatmt8PGETF2QyKOv+bn22hh6l0midw
+         MD8e7aaiwDld3tfteC78FfkyL1KpEad18obZwB8YdVSU9wP1TKI1hwGLPTL3mNZYwuPZ
+         wWDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751616593; x=1752221393;
+        d=1e100.net; s=20230601; t=1751616600; x=1752221400;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dlMnnwp1dpnotw8e5/iEHxXbLwDZGkrbADhWsQHKiFs=;
-        b=r7zLoOkaB9Jsms96khL3TAONJa2qYbfqW4OqXE9FWERZUYAKK6ULEMk8uuW40R721N
-         Dbpug1PT96hVeClFi5pmGuhJbBpLRijhSKAk+jsnAdyZRUKA8UldvhaFhpLAVgeEDxGo
-         kPgHTLOffL+lQDYoym6b5NCmDNi94DvoU6tGX3+/EqW6lxcBF6cAN6VfS83nVKjMcItx
-         6uW5Y+sYJocH4IDw+GFZMikNVTi9GSJHoYSFOPNMWDSeEsi/j9TrlXbXg866CYKYPvyh
-         6Bu9AKHLYYCG7sM6vZUFPqSABk2V3EgXZ0GIwrKxTRUdFmnrRHjZ0dTBVfCjsHXW19mh
-         SeJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+L340DmloB3spXFLqcWMNBMAEDnI94vcr2m71DWMIk/EpdN6ratp9R5PmuddG2On6WxtiILsvfgmQWNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLmnv4VVWfPj9o2kDs0UHcpKOeT1FAbHMhAmpnhOvnYDbUu11d
-	eT+lzcXQi9ctBsl7XjUggS0ZrrS7/cjrLlS38iUhkBBVES7ghLW3Boaup6bLBkHC/P3Dwwrgyez
-	+qGv7jh+95n10mEoCMq2xPZRqf2M3Jmlpq0cid9sSng==
-X-Gm-Gg: ASbGncvMyQweCNz/910cOnKqFzC/N3h5G2PnheMe4Vad3YcgJL6oBp7hObKNi57oysd
-	+GJEvAimL8YRHSSZsllvW7pxYhsnaYn8m9LW80vSA17StNfGppqPDYjk3x+sh4cCNEjpNhwTdBM
-	5aO8h3OGu2uuh00EJosQ0FDM+WN23wcKOwrwMx8CHp3ml78WaT6OmwH83HHGw0nrtXvxb2HLYDg
-	g==
-X-Google-Smtp-Source: AGHT+IE4LgEsW9jjv71RhSCmOAPvG/Ad9nkwHJ9y2F8Rwu4ip+/5BNS6kZwLHzfjh3sGGG/3P6x2aOFT/NRZcazuhoI=
-X-Received: by 2002:a05:6512:1102:b0:550:e692:611b with SMTP id
- 2adb3069b0e04-5565baa727cmr572418e87.16.1751616592750; Fri, 04 Jul 2025
- 01:09:52 -0700 (PDT)
+        bh=SVTv3A04ZbfNzzCBC3M52V2FsbDet2cE5mKOx3BOEK8=;
+        b=dkCG41m7kKtZnLZGYJxx6yYBpA9CN96nd46qXnPbNIWVCh68+b0BbuEMWO4RnDLrdG
+         v73yTTvx/llkq4mNcEj8WIU48++bKjamw3zfrYVH4mOZfbrMAzlWQsyWVflI7DBKNRj7
+         sRY1wmt4eIWLIff09mTZH0nYFGNc5Fy62iVTsBifnmqpimLqNWC6j7bjajaYdYSv0Z2y
+         4Kx69LS72uaEyMi/PWneBb7te49mVMoaW7I+y+AutwZPEfOFSEz+5VRfzHwlyH5jq36w
+         TJKmC6AZZmwl1b6znl9aV5Gd4sQGKGRCXTABGEqYnMBFYD966YrcuMHbj1fX59feE4sj
+         vEcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCcaZqnxqN1TDoHdORpX7NEU+HpE5wPDQ147JffITje/ltzlmMLr3RkBy1g72Tz3diw/k1kRoR6qRw9dE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxlb5adELgbtuzRu1YGeD2meG0wMGSTaR0KKALXEqssBsBbloEr
+	sZ+QUPw8CidrCuK9Zo6yq0flvuxkqnP6NDKnjefxb8mit17Y1MBs64Oi4GJuiOztAxxsoH9xn+h
+	b/4Fu8X0wLAgkBGvX0VTp2yhgQQJhFz1ORC8nkYdF+YJ4RsQOEvuXCyL3WA==
+X-Gm-Gg: ASbGncuT3DMrJ44XHBTGKnKWnH/M1130ypJcamJrsd+NflQZuiifDHhgBEU8h/k4eF/
+	LtYF45bIm3NquAdYcOtiYSWwTLYOOhcq+utijyUIYlr/lrSYJcE8t6LueshP7s4qi87aJlou3Ea
+	XV39Zq0Kj/EhhVgDfSmh4BLrBk3jI57oV7rJbspEU/Bng=
+X-Google-Smtp-Source: AGHT+IGTpG/0eGIAKP8lBycN3vss409uW+QvILO2grjOoE21AbFlZrVluebK7kmCN2btM6bnR9uZ3ew02rKohEH+QB8=
+X-Received: by 2002:a05:6512:3e12:b0:553:243c:c1d3 with SMTP id
+ 2adb3069b0e04-5564325acacmr726753e87.18.1751616600011; Fri, 04 Jul 2025
+ 01:10:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153711.194208-1-brgl@bgdev.pl> <d92e7c52-eab5-4759-af3f-16b24254bff6@oss.qualcomm.com>
- <CAMRc=Md=ABd+aSc7DE-2dsR5rMnpnvbetuexw8vmrf7_zzT31Q@mail.gmail.com> <CACRpkdZTXzyROqb3mGoQrsO5X_Y9-yDSU2ESUxivpb=N1WsP-g@mail.gmail.com>
-In-Reply-To: <CACRpkdZTXzyROqb3mGoQrsO5X_Y9-yDSU2ESUxivpb=N1WsP-g@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 4 Jul 2025 10:09:41 +0200
-X-Gm-Features: Ac12FXzBbjGix2e4hwrUzcQzOAwkz-H-4Z3odNBxk-58uy8AtckdJWtwxkPRDTs
-Message-ID: <CAMRc=MeL3PNJjBQ88L9Hqj+kvHvBDFTe36YR2Oi6OZbLnKEWsg@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT] pinctrl: qcom: make the pinmuxing strict
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org> <20250630-gpio-sysfs-chip-export-v3-10-b997be9b7137@linaro.org>
+In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-10-b997be9b7137@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 10:09:49 +0200
+X-Gm-Features: Ac12FXzMHgmvCuG-Y0llbY7URG0KwopPOgFzDKxtaQTHuGgn8hiqaDntdlZrfRc
+Message-ID: <CACRpkdZTKBErpxwR8Bfz9Mu2osSaNyagVnCc-_e+BXGpayjHpw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/10] gpio: TODO: remove the task for the sysfs rework
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 4, 2025 at 12:21=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Fri, Jun 27, 2025 at 10:26=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
->
-> > Yeah, I would be surprised if nothing broke.It's probably worth
-> > looking into the implementation of the strict flag as it makes every
-> > muxed pin unavailable as GPIO even if - like in this case - the
-> > function *is* "gpio". Of course the "gpio" string has no real meaning
-> > to the pinctrl core, it's just a name but it would be awesome if we
-> > could say for a given function that this means GPIO and as such should
-> > be available to the GPIOLIB API.
->
-> Can't we just add a special callback to the pinmux_ops for that?
-> like
->
-> int (*is_gpio_mode) (struct pinctrl_dev *pctldev, unsigned int pin);
->
-> That the core code can call to ask the driver if a pin is in GPIO
-> mode already? A simple strcmp("gpio", ...) is one way for the
-> Qualcomm driver to implement that.
->
+On Mon, Jun 30, 2025 at 2:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Yeah, this is similar to what I proposed in my RFC except that I went
-with a flag in struct pinfunction. I think it's more future-proof than
-string comparison, especially when we also have functions called
-"egpio" which, while not used now, may also need this (possibly).
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Remove the completed task tracking the rework of the sysfs interface.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It's unfortunate that the struct pinfunction list for given controller
-- while defined globally - does not seem to be stored anywhere in
-pinctrl core data structures. That would allow the core to query these
-things like function name and - in this case - whether it's a GPIO
-without going through pinmux callbacks. Maybe this could be added to
-struct pinctrl_desc?
+Maye add a task to delete
+default y if GPIO_SYSFS
+for the legacy sysfs in a few kernel releases from now, or whatever is
+required to
+shift people toward the new ABI?
 
-Bart
+... and then a task to just delete the old sysfs some years after that.
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
