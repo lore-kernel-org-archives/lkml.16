@@ -1,104 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 769C413BC0C;
-	Fri,  4 Jul 2025 14:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7C2360;
+	Fri,  4 Jul 2025 14:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637888; cv=none; b=JP+CXqggAVOD0xJESPS6aylsxtev8GRSKSJeaZ4xZ3o5OnJlCK9G+vx1A47fBsR4DSneZjTUzzDBjHp83v3186ZcgG8LYfo2lGAO1OZ0bpJRs3Bb11v4vl4JArOVpzuFMfFSnULG4UpqsnhBbnuk8Zy8cOJiPxmDF4R36vHz3eU=
+	t=1751637920; cv=none; b=ZANZEMe4Pr0g+nPXDNwmRXZly6v1npL63sJN9+Kpy//QkxPtiQkZZCCrA/FM33VKyOuklChPEvz1B0PVsS+VobJ4Ig3QpksFLHMFdsM0dfEL4FEZdshotyVknhPDiTlPkczIskLMf1WQDXnpD3Rh9+/nrvzdJRyt8zEkvQl/Roc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637888; c=relaxed/simple;
-	bh=2fTB4eZSfWO9hqTIwd7L+Z/CosZn1YDOT8FR8MWvd1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmr7YBepZmqDQGOZDzoikvEtaOAP3skZwUt6VaU52yCftOogrci7b9ERh63Y3nrUwc7MKjWeWN4BVVz5WH4X400g1c7EjHiPhP5NyiSzLnp0/Sfx9F0rJcSSyKmU6S1+wRPfDPMEP3rL5JcXwjvpZlxOdhwQFk0Rp116tkpyQ8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC0B61515;
-	Fri,  4 Jul 2025 07:04:31 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF303F63F;
-	Fri,  4 Jul 2025 07:04:45 -0700 (PDT)
-Date: Fri, 4 Jul 2025 15:04:43 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandru Elisei <Alexandru.Elisei@arm.com>,
-	Anshuman Khandual <Anshuman.Khandual@arm.com>,
-	Rob Herring <Rob.Herring@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	Robin Murphy <Robin.Murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf: arm_spe: Add barrier before enabling profiling
- buffer
-Message-ID: <20250704140443.GH1039028@e132581.arm.com>
-References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
- <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
+	s=arc-20240116; t=1751637920; c=relaxed/simple;
+	bh=raNLNwEQzdPuJ1w8Jief/AX2ggS4mJBnSAHW/GkocrE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gvoM49EcbcOG2b6et6eKoINNMDvzhfN9n8hKfLmXHZhdhHBbByUvyOMqnD13Pr2zHEN1gON2jThsNTQLSLdOvICPx0JHUn/sc3RuQFsIpN1KgLEEe74KsB45i1IzVWRJzadLEtL+ZkkkJ/T+InkwaYpStjMMef3p+N6jxWlURAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=GfFLz3Tx; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="GfFLz3Tx"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bYb4P3StJz9sTZ;
+	Fri,  4 Jul 2025 16:05:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751637909;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lLuXp7lB20JYT8y9pzOwm0YYE7YBcFIo5+HmXt0CEXg=;
+	b=GfFLz3TxUlGrFkE0JZSUKQTi7Mc0jOqA+uJG7SAM3fcRQPVBn6q4oqRWhySSTLZnL0809/
+	Xfc/rKraMF3aROnEVq6xZH04UTuyF0UKnYYenw4qMyAAOooGSpzlzgJCxY8VadeSKRY6Ex
+	vSIx9Z60jIEua7urC6VVemcu3NlEpFGEbsuz7r55jZTaZPsdFhuCm8TSurNuJmpSV0OQ3G
+	szRjC5LPmwyJHje6Acw0Bz+QFwoyaGoGOJ6uB3tN1H6p+MEYf/eFbMhdUGLsPDyvYFkn2b
+	S6E0d6TSyXt+IidMkhnqcpifRgX9mJD2h4Shqz70pNx+i9pxPIlxCEfdpaODsg==
+Message-ID: <93888462-4aeb-4cce-bcce-2ffb82db1857@pankajraghav.com>
+Date: Fri, 4 Jul 2025 16:05:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
+Subject: Re: [PATCH] block: reject bs > ps block devices when THP is disabled
+To: Matthew Wilcox <willy@infradead.org>, Pankaj Raghav <p.raghav@samsung.com>
+Cc: Hannes Reinecke <hare@suse.de>, mcgrof@kernel.org,
+ Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, gost.dev@samsung.com, hch@lst.de,
+ Christian Brauner <brauner@kernel.org>
+References: <20250704092134.289491-1-p.raghav@samsung.com>
+ <aGfNKGBz9lhuK1AF@casper.infradead.org>
+Content-Language: en-US
+From: Pankaj Raghav <kernel@pankajraghav.com>
+In-Reply-To: <aGfNKGBz9lhuK1AF@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
-> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
-> buffer is enabled. Ensure that enabling the buffer comes after setting
-> PMBPTR_EL1 by inserting an isb().
+On 7/4/25 14:46, Matthew Wilcox wrote:
+> On Fri, Jul 04, 2025 at 11:21:34AM +0200, Pankaj Raghav wrote:
+>> As large folio support depends on THP, only allow bs > ps block devices
+>> if THP is enabled.
 > 
-> This only applies to guests for now, but in future versions of the
-> architecture the PE will be allowed to behave in the same way.
-> 
-> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  drivers/perf/arm_spe_pmu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 3efed8839a4e..6235ca7ecd48 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	limit += (u64)buf->base;
->  	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
->  	write_sysreg_s(base, SYS_PMBPTR_EL1);
-> +	isb();
+> I mean, it's a quick fix, so sure.  But really we should remove that
+> dependency.  Particularly for bs>PS as there's no need for any of the
+> splitting code.
 
-I know that you and Alexandru have discussed whether the isb() should
-be placed here or after the out_write_limit label. I should have engaged
-in the discussion earlier. Sorry for raising the question now.
+Ok, I didn't know that. Let's add this as a stop gap and I will take a look so
+that we can remove this dependency.
 
-My understanding is that isb() is not only for synchronizing the write
-to PMBPTR_EL1. It also serves as a context synchronization event
-between any other SPE register writes and the write to
-SYS_PMBLIMITR_EL1.
+Thanks.
 
-Let me give an example (perhaps a rare one): if we use perf snapshot
-mode or the AUX pause/resume mode, it's possible that the flow does
-not trigger an interrupt via overflow. Instead, the sequence might
-look like this:
+--
+Pankaj
 
-  arm_spe_pmu_stop()
-    `> arm_spe_pmu_start()
-         `> arm_spe_perf_aux_output_begin()
-
-In this case, to ensure that all SPE system registers are properly
-written to the hardware, the safest approach is to always execute isb()
-just before writing to SYS_PMBLIMITR_EL1. (In other words, after the
-label out_write_limit).
-
-Thanks,
-Leo
-
->  out_write_limit:
->  	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> 
-> -- 
-> 2.34.1
-> 
-> 
