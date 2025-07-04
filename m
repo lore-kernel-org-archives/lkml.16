@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEF733DF;
-	Fri,  4 Jul 2025 01:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E4A2869E;
+	Fri,  4 Jul 2025 02:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751594298; cv=none; b=qOER9i6p+Tu65CKqAmCHmmyIrk62A+AD8IP+2GNabn+VyDTgNSNe0NGN4gxKbuqciMipnDAtD8G6lUDcoCUPXqSTYq7F/yAMC1XCCyauVuRaht6ENScNZfIdoRsGNWsJ1pKgYBn3vCg1FAljTdHE+W4oc4brwXOzgMmdHS36DfU=
+	t=1751594493; cv=none; b=qxKHJyy84qHxHvzwqlmYBg9yxBatrOc/3UQwXUel9ZfKt/eoTh+QpVnHp8rDzhTybkeEBquaMqh2d/IqtCrzRptBchqP6AFJLsmwFKPEDHVEsARuVYcCf+RWbK0pzaCa0/Y/bKddir3kN/SeDp5ju4jobUJK8E7uzRr2C3LcLC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751594298; c=relaxed/simple;
-	bh=+8oj1rsUkCGo3Ge6pkBest+5bfjbY2tsYyhkx3PRuDA=;
+	s=arc-20240116; t=1751594493; c=relaxed/simple;
+	bh=bOYiwreUJd6fupghKK4N1Ov79oxyIiLE7aijDZhysuo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W9pRJMyUz68iBZbtHmiyAKc3ufuRCCl6oQLJxxjaqhKdA5of6nOv4yPWMRE6bsELEumqvcY8Lj/tHpcV/Al6kBunk6Wm0bIslmexWtnlPNKjDi6bq/02+34pgI5Ghb8tP1ziUnTjQcSgtQ3RKOdwYPQwwQn7W8+/1JgmLJNk/S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wly16Edp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JqUtZHXG0CoJnwFfd7kWLVFBGysnbGSlL4BteQKd5tENnGB551OVTB9CkLnkI2aOO5QAgTGtgFIZ0uIuhaO5Q64+lfqol8nYb1NZfOhMFjavPADcDzFh4oUNzHUBEiT1Jx/36om+M/5Kb9TLniK9o/DH/XJ9YN9R9f2sdTAT8hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkT6XxXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wly16Edp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24A1C4CEE3;
-	Fri,  4 Jul 2025 01:58:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkT6XxXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9390DC4CEE3;
+	Fri,  4 Jul 2025 02:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751594295;
-	bh=+8oj1rsUkCGo3Ge6pkBest+5bfjbY2tsYyhkx3PRuDA=;
+	s=k20201202; t=1751594492;
+	bh=bOYiwreUJd6fupghKK4N1Ov79oxyIiLE7aijDZhysuo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wly16EdpXxKeqTTBFORGVcHt5uI/9fhSkKzmSO7wz1RP9yEtat70CfLPaDFiCZezA
-	 I0mrqC+HV2VumcZiE1aASYiCYzO499MOj5xk2s9aO6LLf6nyV43r69sfYWSPBoGYAg
-	 udJGRbL6xueX+eA4x4Kw6vf6vyrQ4cOl1v/mclrsP48+XT+f9bPpHV+9ERY6PWLPoF
-	 eiLHWbKgoFu71/NCcspH6IptDFNYrTgJwmlhYAfLifr+qAj6XJGBQ5pZ8ShI/cfWKK
-	 J3/zokxpzHhVwGwWyUcKZ7iXgwrBRZ+6HzLBOKLVqF/dPQ+k6R3HDMdhyse1ANTDNz
-	 Nj531hHol1Pjw==
-Message-ID: <098ab194-f678-4e85-9e35-f8339c2551c7@kernel.org>
-Date: Thu, 3 Jul 2025 21:57:58 -0400
+	b=hkT6XxXaM+qLqZ/3aN9wdEephOGUKE6kkqGZMAEWEgdc1TTY/L69D4WqUyWr7Nbxc
+	 Y95DZlsS+lZBDLlJaNCATZ0IgyVLyvhtQDle6KE9JbY5lE4cPFIczsZc7wZF2FUbH2
+	 rqUe0BXglbQA8Wx/nZZn6HlZlNtINB6SWw/9MbITS571lQQgWMQ3A1iFi13iv0wLSn
+	 NKq2KHwUTb17SyaP32hsHnQMOhx8WSffRIWv0NgGpgaPci4MSQNCxDGntkM+0kRElN
+	 +m4tAlN53C9n7HRIGewrKAFpT0udTf4CVlzaVP5i/ZVA8z+zfKhmLkCobJ1r7VqUUK
+	 pF0Fx9/E7iWHA==
+Message-ID: <8fda8cf1-1291-422e-bb63-094e38c47b7b@kernel.org>
+Date: Thu, 3 Jul 2025 22:01:30 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,179 +35,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] HID: Add Legion Go S Driver
-To: Benjamin Tissoires <bentiss@kernel.org>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Richard Hughes <hughsient@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250703004943.515919-1-derekjohn.clark@gmail.com>
- <j3isljjyd6rlddlhpp7knxgss2mpr4ft3pcx5lc7r5r4bnnzpw@wjr6brfv2hsf>
+Subject: Re: [PATCH v4 0/5] Improvements to S5 power consumption
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250616175019.3471583-1-superm1@kernel.org>
+ <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <j3isljjyd6rlddlhpp7knxgss2mpr4ft3pcx5lc7r5r4bnnzpw@wjr6brfv2hsf>
+In-Reply-To: <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/3/25 09:48, Benjamin Tissoires wrote:
-> Hi Derek,
-> 
-> [I'll answer to this email with a very high level overview of it, as I'm
-> not sure I'll have time to dig much deeper in 6/6 today.]
-
-I'll touch on my two patches at the front of the series and let Derek 
-get to the questions/comments on the later ones.
-
-> 
-> On Jul 02 2025, Derek J. Clark wrote:
->> This series adds initial support for the Legion Go S's built-in
->> controller HID configuration interface. In the first patch a new HID
->> uevent property is added, HID_FIRMWARE_VERSION, so as to permit fwupd
->> to read the firmware version of the HID interface without detaching the
->> kernel driver.
-> 
-> That immediately raise red flags on my side. HID_FIRMWARE_VERSION will
-> likely be used only for this new driver, and that means a special case
-> in each and every client.
-
-Actually Richard and I had envisioned that all updatable HID devices 
-would start exporting their firmware version through this HID property.
-lenovo-legos-hid was just the first.
-
-The idea would then be that userspace software like fwupd would know to 
-parse this property to show the current version and never need to 
-interrogate the device directly unless it was actually being updated.
-
-> 
-> We had to deal with firmware versions in the past in the HID drivers,
-> and we ended up relying on the uniq field of the hid_device (because the
-> serial+firmware version uniquely identify the device).
-
-I think this is a different case.  We don't care so much about the 
-unique identification of the device as much as we care about the stream 
-of firmware applied to the device.
-
-If HID_UNIQ is the right way to get the firmware version but some 
-drivers encode a serial+firmware and others encode firmware that's going 
-to make for a very messy "generic" property to read the firmware version 
-of a device.
-
-> 
->> The second patch adds the ability for an hid_driver to
->> assign new/arbitrary uevent properties for static data that doesn't
->> benefit from having a sysfs entry.
-> 
-> That, in my mind, is even worse (for the reasons above).
-
-Do clients actually need to know about all the properties?  My thought 
-was that if a client encounters a property it doesn't care about it can 
-just ignore it.
-
-If that's misplaced; what would you prefer for all this static 
-information?  A pile of sysfs files?
-
-> 
->> The third patch adds the VID and PID
->> for the Lenovo Legion Go S MCU.
-> 
-> Which shouldn't be in its own patch, but part of the driver initial
-> patch.
-> 
->> The fourth patch adds ABI documentation
->> for the config interface introduced in the final patch. The fifth patch
->> introduces the core lenovo-legos-hid driver which acts as a routing
->> interface for the different endpoints.
-> 
-> That "core" patch is IMO useless. All it does is:
-> - check for the USB endpoint (but in the wrong way, because if you
-> 	insert a device through uhid with the same PID/VID it will crash)
-> - replace the HID-core core functions with the same code
-> 
-> Really, this should be squashed into the next patch (with 3/6 then).
-> 
-> Also, why adding a new subdirectory? All the hid drivers are flat in the
-> drivers/hid/ directory, and the subdirs are for transport layers. There
-> is one exception for the surface driver but I don't see why you need
-> such an exception (yeah, the code is big, but what's the difference in
-> having a 1500 lines of code source in its own subdir vs at the root?)
-> 
->> The sixth path introduces the
->> config lenovo-legos-hid driver wich uses both the HID_FIRMWARE_VERSION
->> as well as arbitrary uevent properties. Additional interfaces and config
->> properties are planned to be added in a future series.
-> 
-> That one is too big for my liking. Generally speaking, a commit
-> descrition which says "this does this and that" can be split into 2
-> patches at least :)
-> 
-> What kind of future interfaces and config properties are you planning?
-> 
+On 7/3/25 10:29, Rafael J. Wysocki wrote:
+> On Mon, Jun 16, 2025 at 7:50 PM Mario Limonciello <superm1@kernel.org> wrote:
 >>
->> Patch 6 introduces a checkpatch WARNING that I'm unable to resolve:
->> WARNING: ENOSYS means 'invalid syscall nr' and nothing else
->> 1292: FILE: drivers/hid/lenovo-legos-hid/lenovo-legos-hid-config.c:1085:
->> +       case -ENOSYS: /* during rmmod -ENOSYS is expected */
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> A variety of issues both in function and in power consumption have been
+>> raised as a result of devices not being put into a low power state when
+>> the system is powered off.
+>>
+>> There have been some localized changes[1] to PCI core to help these issues,
+>> but they have had various downsides.
+>>
+>> This series instead tries to use the S4 flow when the system is being
+>> powered off.  This lines up the behavior with what other operating systems
+>> do as well.  If for some reason that fails or is not supported, unwind and
+>> do the previous S5 flow that will wake all devices and run their shutdown()
+>> callbacks.
 > 
-> We can losely waive those while merging. We do it quite often actually.
+> I actually like this approach, but I think that it is risky.
+
+Yeah; it does touch a lot of areas.
+
 > 
-> But trying to minimize checkpatch warnings is a good thing, so thanks
-> for that.
+> It also requires more work/review from other people.
+
+I view patches 3-5 as being dependent upon patch 1, so until we have 
+agreement on that one the others might not make a lot of sense.
+
+Bjorn,
+
+Can you take a look at patch 2?
+
 > 
->>
->> This error handling case was added as it is experienced in the real world
->> when the driver is rmmod. The LED subsystem produces this error code in
->> its legacy code and this is not a new novel use of -ENOSYS, we are simply
->> catching the case to avoid spurious errors in dmesg when the driver is
->> removed. If there is a way to prevent this error from being triggered by
->> checkpatch in the first place, that would be an ideal remedy, but I'm not
->> aware how that can be done at this time.
+> I'll be sending some comments on the individual patches going forward,
+> but I think the earliest it can go in is after 6.17-rc1 (given it is
+> reviewed properly till then).
+
+Thanks!
+
 > 
-> Again, nothing to worry about.
+> Thanks!
 > 
-> Cheers,
-> Benjamin
-> 
+>> v3->v4:
+>>   * Fix LKP robot failure
+>>   * Rebase on v6.16-rc2
 >>
->> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>> Previous submissions [1]:
+>> Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcXSYc5kkL=6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f4906225d2
+>> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+>> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/ (v1)
+>> Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@kernel.org/ (v2)
+>> Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/ (v3)
 >>
+>> Mario Limonciello (5):
+>>    PM: Use hibernate flows for system power off
+>>    PCI: Put PCIe ports with downstream devices into D3 at hibernate
+>>    drm/amd: Avoid evicting resources at S5
+>>    scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+>>    usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
 >>
->> Derek J. Clark (4):
->>    HID: Add Legion Go S ID's
->>    HID: Add documentation for lenovo-legos-hid driver
->>    HID: Add lenovo-legos-hid core
->>    HID: Add lenovo-legos-hid configuration endpoint interface
+>>   drivers/base/power/main.c                  |  7 ++
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+>>   drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
+>>   drivers/scsi/mesh.c                        |  1 +
+>>   drivers/scsi/stex.c                        |  1 +
+>>   drivers/usb/host/sl811-hcd.c               |  1 +
+>>   include/linux/pm.h                         |  3 +
+>>   include/trace/events/power.h               |  3 +-
+>>   kernel/reboot.c                            |  6 ++
+>>   9 files changed, 86 insertions(+), 34 deletions(-)
 >>
->> Mario Limonciello (2):
->>    HID: Include firmware version in the uevent
->>    HID: Allow HID drivers to add more uevent variables
->>
->>   .../ABI/testing/sysfs-driver-lenovo-legos-hid |  269 +++
->>   MAINTAINERS                                   |    7 +
->>   drivers/hid/Kconfig                           |    2 +
->>   drivers/hid/Makefile                          |    2 +
->>   drivers/hid/hid-core.c                        |   11 +
->>   drivers/hid/hid-ids.h                         |    4 +
->>   drivers/hid/lenovo-legos-hid/Kconfig          |   11 +
->>   drivers/hid/lenovo-legos-hid/Makefile         |    6 +
->>   drivers/hid/lenovo-legos-hid/config.c         | 1518 +++++++++++++++++
->>   drivers/hid/lenovo-legos-hid/config.h         |   19 +
->>   drivers/hid/lenovo-legos-hid/core.c           |  122 ++
->>   drivers/hid/lenovo-legos-hid/core.h           |   25 +
->>   include/linux/hid.h                           |    2 +
->>   13 files changed, 1998 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-legos-hid
->>   create mode 100644 drivers/hid/lenovo-legos-hid/Kconfig
->>   create mode 100644 drivers/hid/lenovo-legos-hid/Makefile
->>   create mode 100644 drivers/hid/lenovo-legos-hid/config.c
->>   create mode 100644 drivers/hid/lenovo-legos-hid/config.h
->>   create mode 100644 drivers/hid/lenovo-legos-hid/core.c
->>   create mode 100644 drivers/hid/lenovo-legos-hid/core.h
->>
->> -- 
->> 2.50.0
+>> --
+>> 2.43.0
 >>
 
