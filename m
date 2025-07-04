@@ -1,154 +1,85 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F082372634;
-	Fri,  4 Jul 2025 23:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CF6285C99;
+	Fri,  4 Jul 2025 23:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751672184; cv=none; b=sohoVMTmos5kvqr4zs6iTOIvLzb8cZaS5uMNI44Cr39F1rplD8N4wm3GIehqxN/C0J9GyKr2QJjTcfklzr+XdR3Yrmja4vbYB7NGQF2x5f0uIISilZNERKdMv306VetQ1AX+dk0Ew6goQqCAlTwOzEGFvUBrV/qFY+usbSTsJQk=
+	t=1751672329; cv=none; b=obf+EOVICdFkWrAbkHbkzFiu11qxD9bcluMDh8iZatz5pfFGQfzADae1B0rFygf/wTtZmhyFNpJQDFBjC6on3ewnrmKfIZP8o99ABnpE69Mt0jd6f3Pvy0PFd7w4tE6K27XJ5xino6sYqgf862l6joehH74OxVEBzW7dU46+zBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751672184; c=relaxed/simple;
-	bh=JCpe8NhiKEj2zPnP8azgWkKGslF6NDrVquXo+ef/qfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GP/bAsqfn/+FsT9P12iYrvW3hLffNoYLyH/QLGbT3tQ8m+UmPlCf7W374vMvyvxTOq83X0McZb/4PPKxZeAdunkiSERcm9zZwgM3P9bawBUaragpWF4eaX7y4w14r3+YadaS9mpgxQZDfPvfrIYoKk4rdVTEFCMs2vp4inAnYpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UR3ZOtFF; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751672329; c=relaxed/simple;
+	bh=boACrwX22LRkOJG93nW6MVH5ZSHkR5lQQxg4dZPrkcc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ttPlKq/QsIWv1u6Yi/J7cqggjqyjXw24qfHJIlyboDLaO+Odxsd3WDU9Bu3wEk3ynbOw2I+FcbMl1/4yJouTDGkJvtXBxXqTYncHgk8FXpCPUOBjf0X1t04cSF2ERVvGMi+UIfDvosAfY7Qmzx0N00+UGmmUX3wa9REJgdsWOEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F9mIadHk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR3ZOtFF"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b34a6d0c9a3so1340041a12.3;
-        Fri, 04 Jul 2025 16:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751672182; x=1752276982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KW4ZkVJLizEOMZlm6FbGon5OHPMCQ+a5mWweGHJG9kk=;
-        b=UR3ZOtFFIip9KvC6LIwxX1d/hjGVPqFS6zDHI2JqAOscdBCOki3fHxapF2fl2/F5gP
-         1izoSjgLmcWqV9FkeXvenHQyTO34tJtlzJvuNzI0FJh+IJUGqdvCkabeWnXLZ8IRbFx6
-         EHNLP/uktsCCmVpgVGubP3U/e/kyC+riSOBKGh8FWIwMvlQK9OuU+4WA57XUo8PsC6ns
-         kRFDZTGY150U4IczWh1PGApdhx3swea4bknfI6iWOk//SPpP1rdyIePO2X4xOsa6NfBq
-         LDQJqY70gjBGkQQib+HYqDD6ZVtJUSpIMSYW/Cua3leJO5TqPZflGg1ivnF1pY8t8oaH
-         jaiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751672182; x=1752276982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KW4ZkVJLizEOMZlm6FbGon5OHPMCQ+a5mWweGHJG9kk=;
-        b=E+KaZKz99D196TI9xyxApHGvjliN22CZSS6qpRRMmgBR/SZJv6pTUb7l6EF21CdngZ
-         M3qKw+8KKwApu7aAEL/Kdeusm/xxNrkeVnSzM7j23nKwHHx9Irqn3CZ4+BgH3urVNrq0
-         Ip105JSkkAOmCaqJQOTb/PxMlmTQCykEhXWD6gS5JnXCU5cCEbY+5C+EMCK+5a/N+Tdb
-         xalcGiz07S+sv7lVpfVlCIVtfQyLNA/h/Hpj+SjgIGOKjAXhP79rWHMIwFLASPzlhRJG
-         Pj2bU3AMEV6D/hUThJEuFyidaJA5DkNZB+D2cHECeaaGqjAMXjefSGLAL1fVu0yWSfhj
-         wPUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS82RLiXwv5CCHwSxCPU9ZZPn5GhV6dXBPDxBlfcD+P4YVUogvbEEVbiM7WpHcYqK0W431U89PsMc=@vger.kernel.org, AJvYcCVgXSV7MSyIDo89SHthsWIfeLt7ED4JYxFRjkVivORULqMmvT0M/wjC9a105XU3wDdo2h/9C8E3+NXh@vger.kernel.org, AJvYcCW0UuDoSbQuuU3ZtLEHhTnVD86VZNS8xJObgrm/Cv/2rjQoD3Y8HM4F7cwmTujin98u/bbz/J4NfW3RZpW2@vger.kernel.org, AJvYcCWkbPH/iC+HjJV8FLK7HV+hboCR6+V/76biuojxw7aeZajNHdUDvO2MccS6YjK+3RESOo+1nZ344qeScjvupA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0TbDfoQl+02e1eGJIeYtdpwwC6U+Tvlv9JfQihxeMizmrVeXh
-	gOTG36DfKyrSfjFrqA+zorpYWdv7m9utJNHnDU4BLxgdF/Y639wIY4vT
-X-Gm-Gg: ASbGncvEi2ReTPmDbcjjI66rvT8Vax+Uwxo/4nP45F9yqKze8nfok+R4Bp7DJp/KiBo
-	x194F64yO3ytEt/aK4HSZXJXjudXUcs+ihEALhCr5oYTERPRbQcnKyjmVXuR+hg0nAqmkR6vFX2
-	hzDl8KiCHtkw02Z0+2LlVBvQyEpzhYI6Nk9dbuBRnYpvk+wbQbBOmL26e5HEjk9dnDVOaujbu9l
-	zbQY90FLkPwvGXr1XAiujzuZqtg0uYoK9/4T9mlp2DBkGLeX4bubUfSaQY03fdyjfzC3F1nt0zN
-	UUl91jyu0F09EpCjRcZuzz8s/AJPhrY8Wbc2hdwUMmXbDSCBnFLyOqGKjoLYgF4oOLXyfCbV
-X-Google-Smtp-Source: AGHT+IE4IRYdu9IVNI0Qi70rnYU18p+ftbhSiwCIQTDS0BZ3EOaU16ZkHZIPPf80+LxTA19o+gzvyQ==
-X-Received: by 2002:a17:90b:3d8d:b0:2ff:6167:e92d with SMTP id 98e67ed59e1d1-31aac52f963mr5107707a91.32.1751672182068;
-        Fri, 04 Jul 2025 16:36:22 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845c4e19sm30681285ad.255.2025.07.04.16.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 16:36:21 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D71E34206889; Sat, 05 Jul 2025 06:36:18 +0700 (WIB)
-Date: Sat, 5 Jul 2025 06:36:18 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Amir Goldstein <amir73il@gmail.com>, John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
-Message-ID: <aGhlckJrNJE1Au10@archie.me>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-19-john@groves.net>
- <CAOQ4uxj0Q5bnMNyOEA96H9yP=mPoM5LsyzEuKu184cDKaQuJpg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F9mIadHk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=ks//WZrTiccz2OFfHdTqv+PE5CbqjT3gCKKb4ZvwCv4=; b=F9mIadHkKDXv7k0m8v5lyI9sLi
+	iSD0/sQaod9H+G+FfRpVY/WA5xzPahMfm3d/ntsUEGMYLMZ/Q4vA1ISWg1mj58J4IdeSkqUkbDq6M
+	+Rs0M48ymUPH21nVSDBsSR7148VmxlqJ1B8K2rhHP1zhCUb5HeX+Lu+/aNMqUn9QlOHeYC/RWYNOK
+	5xilLhB4q0PtFX3WUfGP5PZA4PHfY7fsPQh3b+bLY72sFepBh/dVCn0Cd0hgEgSmrzMDBWH5kwKeD
+	45GVVo0CyxQODYkz7RC/DXBccTh/zNPFcxfoFogIt2J15+EhfQqsq5irnmVRVAKM1eoBcDlNmNvIx
+	Pgh5S97A==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXpzQ-000000019Bn-0CIf;
+	Fri, 04 Jul 2025 23:38:44 +0000
+Message-ID: <f06082bf-27b5-488d-b484-fecc100014a1@infradead.org>
+Date: Fri, 4 Jul 2025 16:38:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PGzdml3OhylUUifk"
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxj0Q5bnMNyOEA96H9yP=mPoM5LsyzEuKu184cDKaQuJpg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Jul 4 (kernel/bpf/stream.c)
+From: Randy Dunlap <rdunlap@infradead.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org
+References: <20250704205116.551577e4@canb.auug.org.au>
+ <5496b723-440f-451b-b101-f0c7c971fc9b@infradead.org>
+Content-Language: en-US
+In-Reply-To: <5496b723-440f-451b-b101-f0c7c971fc9b@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---PGzdml3OhylUUifk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 04, 2025 at 10:27:03AM +0200, Amir Goldstein wrote:
-> On Thu, Jul 3, 2025 at 8:51=E2=80=AFPM John Groves <John@groves.net> wrot=
-e:
-> >
-> > Add Documentation/filesystems/famfs.rst and update MAINTAINERS
-> >
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
-> >  Documentation/filesystems/index.rst |   1 +
-> >  MAINTAINERS                         |   1 +
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 Documentation/filesystems/famfs.rst
->=20
->=20
-> Considering "Documentation: fuse: Consolidate FUSE docs into its own
-> subdirectory"
-> https://lore.kernel.org/linux-fsdevel/20250612032239.17561-1-bagasdotme@g=
-mail.com/
->=20
-> I wonder if famfs and virtiofs should be moved into fuse subdir?
-> To me it makes more sense, but it's not a clear cut.
->=20
+On 7/4/25 4:35 PM, Randy Dunlap wrote:
+> 
+> 
+> On 7/4/25 3:51 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20250703:
+>>
+> 
+> on i386:
+> 
+> kernel/bpf/stream.c: In function 'dump_stack_cb':
+> kernel/bpf/stream.c:501:53: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>   501 |                                                     (void *)ip, line, file, num);
+>       |                                                     ^
+> ../kernel/bpf/stream.c:505:64: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>   505 |         ctxp->err = bpf_stream_stage_printk(ctxp->ss, "%pS\n", (void *)ip);
+>       |     
+> 
+> 
 
-I guess these can stay in their place as-is for now. However, if we later h=
-ave
-more fuse-based filesystems (at least 3 or 4), placing them in
-Documentation/filesystems/fuse-based might make sense (fuse subdir documents
-fuse framework itself, though).
+Also reported (earlier) here:
 
-Thanks.
+  https://lore.kernel.org/linux-next/CACo-S-16Ry4Gn33k4zygRKwjE116h1t--DSqJpQfodeVb0ssGA@mail.gmail.com/T/#u
 
---=20
-An old man doll... just what I always wanted! - Clara
 
---PGzdml3OhylUUifk
-Content-Type: application/pgp-signature; name=signature.asc
+-- 
+~Randy
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGhlbQAKCRD2uYlJVVFO
-o4hrAPwIkZyEF8E7JsHO+OKP5L0TvZjbT8oSivNiKmNfaE5ezAEA2d4o2XYkIwSK
-r1OLeL7fnBcdD125WPePOhWuuw5xoAc=
-=gU4v
------END PGP SIGNATURE-----
-
---PGzdml3OhylUUifk--
