@@ -1,208 +1,145 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012028.outbound.protection.outlook.com [52.101.66.28])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A682F3656;
-	Fri,  4 Jul 2025 09:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620219; cv=fail; b=d4HaVQB1aVIsTncVdp9FxUsOSleqNkuD0l4KHvrAHxiwuOQq8ZN7UcHgovWzfbO8EwqQfanaqfWGfLbJXHXYwehLt0gxHU0zWD7bhq0wEKdDSpIxz+6XQvOcWQyFZpiFHGk8EJVNelfTInboUhCXJVyLV0Vh2ZAjouxIEo4QU50=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620219; c=relaxed/simple;
-	bh=ku16wGbyspGo+GMy3lSkdgJM/kAeYWqyJfWnofvOVqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VswVgWWHTUEexP+x956p5998N32V8ogXi/YbOio4T84q666n/cgRu6cISTapUACT2iTl9YcUAZaNVfhcR5aUFpAx3Wj7EMgyAPsigV43u229wpExKw5XF9RrH1sQ7eIftLEH0r8BXp37JPnT/yc29xOLa4pUtbCTTdXvsuz953I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=CB0YhMQN; arc=fail smtp.client-ip=52.101.66.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4152BEFF0;
+	Fri,  4 Jul 2025 09:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751620228; cv=none; b=YcPxbPdSUYLlza+8ZvR8fqD9qpcTOb0LGb1nNGdGEvKNs310G3amxx4qX4+ecY/lO1SuSFXVF5cGjHblIu8wL/PIZbXUQhc05I6yc4uH/kEkPBLGQYX9YIw4CVLS+Q6p1+FigNRkdyCR1FsDSIwh/GLwHJRGPzR5oSR61bmJbt0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751620228; c=relaxed/simple;
+	bh=LS55SnAvYsxVzeFBB6DMdq8qX0Bw9GOxFpUEDYhEl28=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H7+GvgOcWGQ5kDdc39q/Z+VL6tc7Vkng2oCLcV5pJDx6vVSp8Uu3Jibkz8eNie3oB+z5WLn7coIwnmS6oesgRX9neiWyw+iNcnmA+0zZStve/4+AzXZUH2NRNwFxsmTtBk2C9xOWIGAXaY7BWHl/u4NZeEgTWARz5JLlYO/V1Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TTLPozt3; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="CB0YhMQN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XWmg81hSLNzqoB35xyyUaWXISfRhjnplni07uW7yvtvU60dkA2C2yM0i2eTMl9XSVSAvDPTUhxYz9p4kEn+wHvE+eOI5XtNOYOT54TWUJ4lG8JdrjpTuOQfHL5SvgD5dAlYet3TCVSFOHW3ywNT76n4ojPp9qM/F7P/55FhjnKCXufHfTXlhpqk69LtOErqhwoPELh+7StFkNp5Va9K5S1PZUyRSB/eO1NjEShQpigW+zJDMacNuJsQFf14q5Rk61lOE2YkmYi0SnbhT1MPcpV9KcCq8jaiKbi0Np4w67z3LdGzuvEa1GEVwr9Bi5iTItMwb+1+0jv4iyzTY9tknzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BdN/vmAo60zUMab+0+kt98UJlAxkcRsKJ+QfAWLMSmg=;
- b=d/n0hVZPWNcj5XQJbX25PFQ1YoN0uVZh4uO5ztH/mpE9R4jvc1c43EhgUD2QrWfuMfSt3ndS8sdUQX9kfpo7yUbC0r24KfTI4DW5QaAiLMPzzv9Q9E2erdiWDtqd8H50L+voY0SHRUtE1TTV1Ie+4yowvgzHLFiqEU8Qv4RqkhtjV4GD7mVeA2HzjYEE1AW7olb7UKG/gErRT8B0xA1J7x2u9J8HENxOZDhGBYd99W1+4Jxf8bneQiGQz3RNM/uNoPhKXmzVHBh5MoXNAvehAwS0pcXEGSKS8HkGI4oTL+hX9g8q/kj6UauJbsLPt0MVYPLp78kszrPiFAf1NvPlBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdN/vmAo60zUMab+0+kt98UJlAxkcRsKJ+QfAWLMSmg=;
- b=CB0YhMQNmxs/1kQ8jFusAMzBvUsgbGn2B/wZHiTGl5ZDEutdceSBLiGr4qo9JPUeQN6flaq4z8M/9wsu/27patxITsF+pREwjKBIaffG9eHAAiMQcSh6/T76r+fkuWoo41jLm2PMOGcBqMpNKgn840PZ8xBcN/Z7zdxAM9GGqrLqYbjRzf8hGD1pdyhh6wlRJiIwKOK+tsxDdh2z9QpvRalMeNWWIavRqs8H1vPiHTJTFlM2A/l0vZrzP6b3Yn6f4YaIY8K07VvyTlpbxecPkTFhGxEuY9RDGFvlgjM+LCVjS6UBmigHj0ICtKC3xOwjNhoUDgBEta8i0Loy7ACj9g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
- by GVXPR04MB11041.eurprd04.prod.outlook.com (2603:10a6:150:218::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
- 2025 09:10:13 +0000
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197%3]) with mapi id 15.20.8901.021; Fri, 4 Jul 2025
- 09:10:13 +0000
-Date: Fri, 4 Jul 2025 18:20:57 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] firmware: arm_scmi: imx: Support getting silicon
- info of MISC protocol
-Message-ID: <20250704102057.GD4525@nxa18884-linux>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-4-2b99481fe825@nxp.com>
- <20250702-sceptical-caracal-of-drama-3cbc63@sudeepholla>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-sceptical-caracal-of-drama-3cbc63@sudeepholla>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: MA0PR01CA0031.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::18) To DB9PR04MB8461.eurprd04.prod.outlook.com
- (2603:10a6:10:2cf::20)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TTLPozt3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0013341C06;
+	Fri,  4 Jul 2025 09:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751620224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HSEJYUsoa+vkXDvdMIMqEjCNC9HqOGRY+ObCm1SntTI=;
+	b=TTLPozt3aTpWICefNME9ZYHQZEDiVeUpqHFdPo2ttK384ZJH2SPDL5JLidVYBaZ88zsEhW
+	YE+aZ0vkNVHBVKhlUri2cRuTq+GeCLZ1fuo4QVP7trqhN6bsjX6AmYvIZH0bbLtsRe4XMK
+	zfqyuR9XdCunB1KXX8lqTi+o5AraWy9H4sTWoWfi1+imqH1a4lkt9+Zz+GKiiOBnPlDRRw
+	oYD7ZGVhPPshZocGAUXaqUcWAy9fWAwROqUYMexlY7JXtCQWErjNLL//6jazAsif/6+4Sp
+	OprWoiMhB3+oLQGs01KKR9V/txErWX6w6+JGP3JI0eA3M4+O4n20f+bGsRBslQ==
+Date: Fri, 4 Jul 2025 11:10:20 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Ayush Singh <ayush@beagleboard.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, David Gibson
+ <david@gibson.dropbear.id.au>, Rob Herring <robh@kernel.org>, Andrew Davis
+ <afd@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org, Luca
+ Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
+Message-ID: <20250704111020.7cde176b@bootlin.com>
+In-Reply-To: <ed6beb97-12f1-4d71-b4dc-b34d4d611b81@beagleboard.org>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+	<20250430125154.195498-2-herve.codina@bootlin.com>
+	<0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
+	<20250528185740.4bf91bef@bootlin.com>
+	<49e1e1fc-412d-4334-8337-16e352a34788@kernel.org>
+	<20250618113232.6d237208@bootlin.com>
+	<ed6beb97-12f1-4d71-b4dc-b34d4d611b81@beagleboard.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|GVXPR04MB11041:EE_
-X-MS-Office365-Filtering-Correlation-Id: 579e170f-35b9-4028-0a62-08ddbada9564
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|52116014|1800799024|19092799006|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dJKldE7qpWM+0bi7S3KZbnZA2ImZlnkuSyc3+f2+p9WtT2MthglesipysQbj?=
- =?us-ascii?Q?2xkwtMXsn3LWYp8oEEdsU0rGfiUs2Mv9ZJIYG0tDEK9VTNIqDYdQGn+MFaWL?=
- =?us-ascii?Q?B7xGNX83ZS+Ezc668jobGTuXJXPaAvDNNG183tR5NadKGKuL4tR1S7c1B1b+?=
- =?us-ascii?Q?QDNGh35+C7dhMNkzuikkT4t+uUYkGKbvGzh0O1CXUuuDtai8c+3pfBC8r6LT?=
- =?us-ascii?Q?M0NZYoBBAVsb7C0e70pS8zq300KMVDWpy0aezGfqohdOtoEIRd7nm+0p2yA6?=
- =?us-ascii?Q?LOrAVrDSFLUEijvLMRV9t4qiHVnZz+l0I2zl/aWOOReurchrQ7rxTo37H29g?=
- =?us-ascii?Q?+JeCrOAw4y/Q2BQJPVZiOHUUAoWk3Tnv78CMheYeWV9WVzlIcNj4iSSLh8FY?=
- =?us-ascii?Q?UwH3xISRPLImbCeY6pwNYQFffM6ZQmr7fjZOos0OehzKbKLaZXi++D7FMD1O?=
- =?us-ascii?Q?RKvhwjF+iMp3/pYZepOTV4HzYu6epmj3wGv1/8rTnbkl5Z2aY6u1JRJ6lBEd?=
- =?us-ascii?Q?8qys3QHJff4Sr2i9awVcmGInJL29kgCDPa8bWtKzPXH2rym8QlzTwSe4+59Y?=
- =?us-ascii?Q?bELW8K7vG1ybve+3VrTzfUAod9L3CGss989fSdLosSFRssy8sJD63ZVzyJwS?=
- =?us-ascii?Q?SSN6X14Yrg90au3YE/V3lJrNEEgSsZtPRv2CKCQ5WgPr4jFIaODABs1VBHyF?=
- =?us-ascii?Q?zPu+AYiIhbzSaD362oAVi41wm6eg4oEtzlCCrXk0puRIIZZjndIZTbbY7y+j?=
- =?us-ascii?Q?e+eCsWZw3sVwhdYRcGBTWbvUpBFvSA+FM0bi0nmpfWfMzTEmfMf1eWCNzpeE?=
- =?us-ascii?Q?8FECj82Dyw+nUYIq42PMrTtk2yraui6MNjI3pIO5C8SwAoHTC2qlkdcAbg/7?=
- =?us-ascii?Q?LKl2JOt4r3ZusnEQ/a4dp8KU0/9UVNjPS4ilOEnzht6ZVMDWcg+dg1t966OX?=
- =?us-ascii?Q?DbCK178Ui3tlziJcnIliCFo2/0GaLgTGMODZGXXiGg7v3ZWhcY53mnFZeqQ/?=
- =?us-ascii?Q?+Q+y35GFdc0Tm7l1imsQtfl0PngdkzRNbyI+i2mwotwAu1fMH0iq8LTziRUG?=
- =?us-ascii?Q?Cq+5OxNJ6smX1OaHwfuJ1Gl/l5e6k2/eXvUC4kTXce8ZTEPqyzKFZ4KN3qf+?=
- =?us-ascii?Q?3TTzedjtSa62O2MLc/axScs8BepuH81IxrUBrAySPoNqg5JMiW3I4NU96ZTM?=
- =?us-ascii?Q?vtJqxSJzMf9j6824wjQyBAQfLe/XKhpkUSMHEWNW+8tTOfwKorlL7JAurFjF?=
- =?us-ascii?Q?sdX+SOeTi9DlYP/b3yA92/pNzMvyk0Fb2pHbuPyWtVevLpG2kBf3DyG4hkBY?=
- =?us-ascii?Q?6kDpQUGRe+ZIhgN6h8lwDxJWo5ge0cFET92s+3rWLaQWXWs1os38M3Uzuq4k?=
- =?us-ascii?Q?ueSUBigaI4yxz8pnFfSa3eSnTLF4Pn8ysEJ+kLMccREEqram2y+zf3/tTkoM?=
- =?us-ascii?Q?VAntu/CL0krALHJmQasw6oloHAizGcehmap7fLAl4pAm7tG0cA0uQg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(1800799024)(19092799006)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LjjXXmXAy8CDHtd4OGs+lWmPBNvM97BZV3mj1EevO7dtVnHhrRjEKxUDhw87?=
- =?us-ascii?Q?XygUZOy3Go+8a7zVplKvpdhcO/mzXgWisLYncHNXHunFbZCXD41x9UuNpBen?=
- =?us-ascii?Q?bG0Jlxcjd4JQRJMPR9pF40Q6lO9w8gw8PYoV2DqPYXjxI1BMstfUtzCT0dEI?=
- =?us-ascii?Q?5ZW80hhfMoSXBXF+JP/CyyPhdNkF3AuT1n7eKXG+vS57KW1R1h2+zTd0ZW+G?=
- =?us-ascii?Q?oeklC1g7miDAIkxDOc6nMZemanEX053r9PEF5sWpovMLwDRiSyGeBgo0owJ+?=
- =?us-ascii?Q?YSaTZk4OTgOW7EFdja9jwEWgSisYYBi1Abpi4jxf8T9FD/wMwex0taxMsOUA?=
- =?us-ascii?Q?6aG6/LRiRREx9XN8s062tK1sRfdd5jDfmM01cLxzRcAvHD/Z+hTNWzfqhLOO?=
- =?us-ascii?Q?sBu58aKDz/lbQVKPBO0j7SYCJHJmqxS+dtwWB4PUE6jxQ0KzyvfFx77iBfBF?=
- =?us-ascii?Q?sdhQU2n7p/vyQvISMDrGXB/sM3l967rmKLr/AXisOG4EB3mmMPqAGMTVdcWG?=
- =?us-ascii?Q?zdDqvy5vA1xFh46irrgwh5lPBjPBk+U8JPusDys4lSkTMK8wC9/6dXZGRG7F?=
- =?us-ascii?Q?bwZonyUt3NXapWZiWSB2O5ypCW+xGd+7wy6kcOepqvwBJ0t0dlwzcHSfiAuI?=
- =?us-ascii?Q?8ye6JWsk8791PlUFab3kJycbPTbN//ef3y5dVt9sSdgZdsMM6Xsn1t+gv+zW?=
- =?us-ascii?Q?IwUeGV99+aFR0rCsi7e7H/deHiAb4luDZ9Higd/CHg9ARqpJgDyA1e7WqQAy?=
- =?us-ascii?Q?b43fIEOqiQOFH1WyW5NNyLEEwarO9R8fJPSX98mEcbipQv7JwkN4ESy/qghf?=
- =?us-ascii?Q?JgDypAH3a2bjJ9273tsKq2Vr17MltuacpL8tjK8RbmYX532ErPk9+vz84C46?=
- =?us-ascii?Q?qhgehYrYFc0DuWqd8YXuLv6gqNxK7bHbBJwoAKlpK6GnNdoUJxBlZoidMnZU?=
- =?us-ascii?Q?GtYG5s2XP/SeIi+J+WWUbgaWnMgh+kQz4lAzt868vgy7HM23tBuqqJS33ar3?=
- =?us-ascii?Q?6mCIExzhptfNYofAdjiJa/r3eS72SP6wTlFQSzV1OIhxFYo0SKKYyymLPn9K?=
- =?us-ascii?Q?CBOMTLdV8AkZN7NGuzFzq8K7KvGRNFiyKTIEl41MnX61BSBDRxGA0AsZ6FEe?=
- =?us-ascii?Q?zl0ZNrEnhBvDmqR+4BdkgD3QWxjjcHFAbzdlGhLkO89L3do2hRuPydtRPEFL?=
- =?us-ascii?Q?ccHiSbEFojg0aF+5aWZxirQ5C16iW2Zla19JHsNygXufbnQpRPv3MxgQzY4u?=
- =?us-ascii?Q?Mn/qn/6VQ7XCcuh2Gm2Mc+NISHW36EzgHgbKXYw8YzUSt3wkqGz3YvkA+sB4?=
- =?us-ascii?Q?n2mnkAuy/F/rorsQQkKtG/+pHpY4+LzA1CVX+rcJYm0/FMOlfAp5Ollp84Lp?=
- =?us-ascii?Q?79R1b9TE37bUVrWPVUiv7gF1IgH1wnDpWD56xFUP8AwzrLl2ycmZNNWNTU+2?=
- =?us-ascii?Q?XFoHiCYvb1qUlbgv9s9J5coUmm55USdWWJoCpneCJQ2RYVk2bXWPf4wVaXk1?=
- =?us-ascii?Q?gjR5EC7y+L6AzuMmdeeElaycrFq+fRknfu8r2leDcR5VUQ14jJHm/2tuuvX5?=
- =?us-ascii?Q?A3Le3yXoPhTqNC+qjWW9JuiIDhQpoj6r2vSGeF8s?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 579e170f-35b9-4028-0a62-08ddbada9564
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 09:10:12.9942
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xhzZsOwMGYWypt75qv2axom/AKPuD9MbGKXOqHaimrb2mL62yO+fGHT3ni4gsAiIYbkm6OO0bzbnITsXSjjWOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB11041
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvhhiugesghhisghsohhnrdgurhhophgsvggrrhdrihgurdgruhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghfugesthhirdgtohhmpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkr
+ dhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, Jul 02, 2025 at 04:22:11PM +0100, Sudeep Holla wrote:
->On Fri, Jun 27, 2025 at 02:03:47PM +0800, Peng Fan wrote:
->> MISC protocol supports getting the silicon information including revision
->> number, part number and etc. Add the API for user to retrieve the
->> information from SM.
->> 
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 34 ++++++++++++++++++++++
->>  include/linux/scmi_imx_protocol.h                  |  8 +++++
->>  2 files changed, 42 insertions(+)
->> 
->> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> index 8ce4bf92e6535af2f30d72a34717678613b35049..d5b24bc4d4ca6c19f4cddfaea6e9d9b32a4c92f7 100644
->> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> @@ -26,6 +26,7 @@ enum scmi_imx_misc_protocol_cmd {
->>  	SCMI_IMX_MISC_CTRL_SET	= 0x3,
->>  	SCMI_IMX_MISC_CTRL_GET	= 0x4,
->>  	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
->> +	SCMI_IMX_MISC_SI_INFO = 0xB,
->
->Again, this seem to have slipped through in my initial review. How is this
->different from SMCCC SOC_ID interface. I am OK to have it as part of your
->vendor extensions and be here in the kernel documentation. But I won't
->accept any users of this within the kernel. Please provide justification
->as why you can't use the standard SMCCC SOC_ID.
->
->So, clear NACK for adding this support in the kernel for now.
+Hi Krzysztof, David, Rob,
 
-What I do here is just wanna to let
-linux could print similar information as what SM shows in its console:
+Any opinion?
 
->$ info
-SM Version    = Build 677, Commit 49a36aaf
-SM Config     = mx95evk, mSel=0
-Board         = i.MX95 EVK, attr=0x00000000
-Silicon       = i.MX95 B0
-Boot mode     = normal
-Boot device   = SD2
-Boot stage    = primary
-Boot set      = 1
-ECID          = 0x7BADEECC000001D40001300963E636F1
-PMIC 0 (0x08) = 0x20, 0x09, 0x20, 0x00, 0x01
-PMIC 1 (0x2A) = 0x54, 0x22, 0x00, 0x0B
-PMIC 2 (0x29) = 0x55, 0x22, 0x00, 0x0A
-Compiler      = gcc 14.2.1 20241119
+Best regards,
+Hervé
 
-With soc_device_register, dumping the silicon information needs use the
-other sysfs interface. Here with this patchset, reading one sysfs file could
-dump all the information.
+On Wed, 18 Jun 2025 15:24:07 +0530
+Ayush Singh <ayush@beagleboard.org> wrote:
 
-But anyway, ok to drop this patch.
- 
-Thanks,
-Peng
+> On 6/18/25 15:02, Herve Codina wrote:
+...
+
+> >  
+> >>>>> +patternProperties:
+> >>>>> +  "^[a-zA-Z_]?[a-zA-Z0-9_]*$":  
+> >>>> This messes up with coding style which I would prefer keep intact.
+> >>>> Basically these properties will be using label style.  
+> >>> Yes, those properties remap phandles.
+> >>>
+> >>> Their names are the name of the label used from the overlay and their
+> >>> values are the phandle mapped.
+> >>>
+> >>> You already have this kind properties using label style in __symbols__,
+> >>> __fixups__, __local_fixups__ nodes.  
+> >> I have them in DTB, but I don't have these in DTS. The exported-symbols
+> >> would be in the DTS and that is what coding style is about.
+> >>  
+> > I think export-symbols has to be in DTS.
+> > Maybe it could be described in an other way in order to avoid the coding style
+> > issue you reported.
+> >
+> > Hardware:
+> >    i2c0 from SoC --------- connector 1, I2C A signals
+> >    i2c1 from SoC --------- connector 1, I2C B signals
+> >
+> >    connector1 {
+> >        export-symbols {
+> > 	  i2c_a = <&i2c0>;
+> > 	  i2c_b = <&i2c1>;
+> >        };
+> >    };
+> >
+> > In order to avoid the coding style issue, this could be replace
+> > with:
+> >   connector1 {
+> >        export-symbols {
+> > 	  symbol-names = "i2c_a", "i2c_b";
+> > 	  symbols = <&i2c0>, <&i2c1>;
+> >        };
+> >    };
+> >
+> > Krzysztof, Rob, do you think this could be accepted ?
+> >
+> > Ayush, David, do you thing this could be easily implemented in fdtoverlay ?
+> >
+> > Best regards,
+> > Hervé
+> >  
+> 
+> Well, it is possible.
+> 
+> However, on connectors like pb2 header, there will be 50-100 export 
+> symbols. So it will start becoming difficult to maintain.
+> 
+> Additionally, the further away we move from __symbols__ style, the more 
+> difficult the implementation will become since we can currently very 
+> easily piggy-back on __symbols__ resolution implementation.
+> 
+> 
+> Best Regards,
+> 
+> Ayush Singh
+> 
+
