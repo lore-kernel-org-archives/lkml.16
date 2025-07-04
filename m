@@ -1,72 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C9F199E89
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 20:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DAE29A2;
+	Fri,  4 Jul 2025 20:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751660065; cv=none; b=Y62DHCj79ufnAVaThlVgj9J9W4MAHCGzuRaGnjN9egv2xEKz63Wt2afp9RD0PDbbVriptGw7pT33dJadGfc/4matHwPZfYxINGXJtzFPKN6HFsXmscBsQDR0AmP96GftntWPxq0w4bhtai4j5mylv8UZXUGPDX3bzdBNuhB1C+8=
+	t=1751660066; cv=none; b=Nyhky6TzMZhtDrpoN5enYZjyUeHsS/7PlL0p/rosGQc2wvb86+AM2E6uARwriPLxeJGIMRymrdA7HXn8GhZ2fSTcRrOGaI5C85LWRGBTKv6v6LxOglElQWtAyq4vhj56SEOEygbJBnfiiWdxfC1Nhm0SOy0z5EfGEOvg8Lb16I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751660065; c=relaxed/simple;
-	bh=qF5cFRWUxC1JmJrxNp/jbfTReueRIFQZ8w1klIaj1n4=;
+	s=arc-20240116; t=1751660066; c=relaxed/simple;
+	bh=GrWs/V5I/ue3CYgK5F9/Hx1QroCU8tx9FBpQGZTBa00=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ppGDOfMAiBFm1iMwhs0N9folYGAvzWBjDhDqgxda278E/kfAWhOzc5eh79hl/jD/vW/HMtWPSDYfTTA37IJDqszhVsYrA92d3qLH8iD15jS1hAOAP504nK4Dn/5hIcgXwtJxFaJtqJ6ynspa5XaL5Fc6AfqjFCjPHkBnifcTXsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OAZiSFzN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=gzax7me0XIlvoyX4RrzpTQCHbctrHoKDEO+GMHBM6F/x6wBEk13l+rqyB+AR65UCLxl4mIv9XVA5csNxGTTYUiH23WUW97HhLfaypowRxCDCJWUaSf6AWzQxoDz5iWaYI4qfEPmuYxxfaK9wAXDzVbkNvZVHkO7NqpKpg0s7XrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=YVW+hlZ7; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OAZiSFzN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751660062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8sro0Umn1NMzGu9F+6MRx/1okjlHv6ILx8WDuiJLxEA=;
-	b=OAZiSFzNsXM89fb0nl9YxSXV/F9opk3b1QaBt8D4nuqM8gJXIU7+T9Xs64VStes4NjZ12u
-	EaPa1DdvWHTFZfsqAgLtVJku2ogQeY5+5Xfl5Z2X09szZAQrmUG9/1x456x+5l1VRhfMrL
-	y9NDYKFdBDJ9GfTWWhBDzTvLcfb+GHQ=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-ucisKttTO5Gn2AS72XFpHg-1; Fri, 04 Jul 2025 16:14:21 -0400
-X-MC-Unique: ucisKttTO5Gn2AS72XFpHg-1
-X-Mimecast-MFC-AGG-ID: ucisKttTO5Gn2AS72XFpHg_1751660061
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fac45de153so15755106d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 13:14:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751660061; x=1752264861;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8sro0Umn1NMzGu9F+6MRx/1okjlHv6ILx8WDuiJLxEA=;
-        b=OrgsYcPHsx6EE7Vd0JVoU5MP1FtRj+GXslq21jqPHFtdtiPNM+D8kvhrvjJHuWgIQS
-         /4mXOuVl2MmMeb2zJ8X46shwYcOEujwNNP7bfHyv+u+cv7JQId4UbdyHnVPTXkqvA81u
-         eypad5GqvRCZuaILquQHNh4+K0Ew18NdUK1SF45d3bub5B3jl1gFkHBhA6e2F2f8CEvQ
-         GLx6NYWmFsr3zUWHJ65p0jSaaTRp/HCKhytom2bRqdPRZPZM0Axfmlek2xonPMFUobri
-         y8eajfwS4gX5PlruA5QruYVsGa9QZ+ZUe3dMvcnv0FxczuZ/HTMQ90lQlnwBE7ToQPKN
-         NsTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWF+Xez46b6EoeE61nEceGWLBj4stezFK2uXOayxWmXMpWOp2zSMV9ulc32XFyr7S4spFmY+aq056TbcYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs0FDzOHYsc8/4NYRQhPGWrGM2QO4QXVfqoj9+HAAaHGtKIYdj
-	Rp7kmMq3ERwUwZLFsPSBaqMmqrUz2772z5W4M0wqSzKYCYg6wpBFhah06YHTdZ29oImKcJTHSRd
-	c59bHmeKCUPmJmXEyGR2Qd91EA2qdFOe/89knxl7+ECgxq6V7JF/OIy5LCCtOkLCgjw==
-X-Gm-Gg: ASbGncv4UAE/NS06vhSl58xBmvaQihMU5c3BdWbQXjrgZpfbI4BjTJ2bi0ZjjjMJGH9
-	eh/gE0BqDvQyMGX320j1m++qr/dUvE3JdDkAPHu9Jqg1tuDSx4JMgNXg2Tr0r4l/9nOhZw1z9xU
-	TuCEX2w2uxOdX1HpJKibW6du+zGq6wN4Y8a0W6ro2lRuWN9Evyeah/KzSW08+/e1JZXJtYVhkMM
-	lhzJ1e3rfeKwzoVAM7hUeLSQSFhiN9TmCQxvxQVthOPI0JSFeAG2Fqd30Ve4WLqd41yZ9zr7RMe
-	rvTPOFNGsNVgCUdQw+DdXvP8+PrH7mVBBTNjeHCYk7JvT+3yY/ewgmQa/dbkz3hvOy8YZenyT3f
-	CCODYIkk8PBPY
-X-Received: by 2002:a05:6214:d02:b0:6fa:c55e:869 with SMTP id 6a1803df08f44-702c6db7185mr53484606d6.23.1751660061111;
-        Fri, 04 Jul 2025 13:14:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgHvmYQYDzxm6cMa7QAhCGrXjB8ke5qkyfGgtGmtXvg06qWtHT/72WennoBkgBv4qpKyT/nA==
-X-Received: by 2002:a05:6214:d02:b0:6fa:c55e:869 with SMTP id 6a1803df08f44-702c6db7185mr53484196d6.23.1751660060710;
-        Fri, 04 Jul 2025 13:14:20 -0700 (PDT)
-Received: from [192.168.2.110] (bras-base-aylmpq0104w-grc-65-69-156-206-24.dsl.bell.ca. [69.156.206.24])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4cc7593sm17760576d6.12.2025.07.04.13.14.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 13:14:20 -0700 (PDT)
-Message-ID: <624c702b-d149-4025-9557-88736681246b@redhat.com>
-Date: Fri, 4 Jul 2025 16:14:19 -0400
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="YVW+hlZ7"
+Received: from [192.168.50.23] (S01061056118100b4.lb.shawcable.net [96.51.42.105])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 4F3193F702;
+	Fri,  4 Jul 2025 20:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751660055;
+	bh=lk+V+156WnSEWPfShb3xaUyPVUkRJkFafIG/l9fCboo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=YVW+hlZ71wRJPC67/XmzgsqK6KRzyaYbLwyujwGRxGT3JdSqbDA20PsjqFufgcXck
+	 qyH4SZNKFiQZjwdwZwQQP2VG4D6dj9lK1ay5iWdCiO/vp85cxOz3IhslJB51OzEeu+
+	 +p3X1xKYReVmBqzctX5jXJrrk2arC0CviVb8bpIOfQP3DG4voQg+vqBiruJEN1SnII
+	 /Vl4ow1xHAWiPgZ9Sb4hZ93DRMiLyegE88fcgEIAACPODhS6m1LJYogF7FqeqI0w+J
+	 Gq9PrP4qbBw+zDO5uNJ745bNxD+dBlsWgY0rQoNGWh/1PDPOvl5Wp0W8VQDZNXFrov
+	 x0AJN8I2aflTA==
+Message-ID: <d7393780-d48a-49f6-b9dc-cca97a2e18fe@canonical.com>
+Date: Fri, 4 Jul 2025 13:14:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,58 +42,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
- users
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Michal Hocko <mhocko@suse.com>, david@redhat.com, shakeel.butt@linux.dev,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
- sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
- <87bjqx4h82.fsf@gmail.com> <aEaOzpQElnG2I3Tz@tiehlicka>
- <890b825e-b3b1-4d32-83ec-662495e35023@linux.alibaba.com>
- <87a56h48ow.fsf@gmail.com> <4c113d58-c858-4ef8-a7f1-bae05c293edf@suse.cz>
- <06d9981e-4a4a-4b99-9418-9dec0a3420e8@suse.cz>
- <20250609171758.afc946b81451e1ad5a8ce027@linux-foundation.org>
- <34be0c05-a805-4173-b8bd-8245b5eb0df8@redhat.com>
- <20250704131142.54d2bf06d554c9000e2d0c00@linux-foundation.org>
-Content-Language: en-US, en-CA
-From: Luiz Capitulino <luizcap@redhat.com>
-In-Reply-To: <20250704131142.54d2bf06d554c9000e2d0c00@linux-foundation.org>
+Subject: Re: linux-next: manual merge of the apparmor tree with the libcrypto
+ tree
+To: Eric Biggers <ebiggers@kernel.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Linux Crypto List <linux-crypto@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250704153630.0fb1e2f3@canb.auug.org.au>
+ <20250704060447.GC4199@sol>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20250704060447.GC4199@sol>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2025-07-04 16:11, Andrew Morton wrote:
-> On Fri, 4 Jul 2025 14:22:11 -0400 Luiz Capitulino <luizcap@redhat.com> wrote:
-> 
->>> The patch is simple enough.  I'll add fixes:f1a7941243c1 and cc:stable
->>> and, as the problem has been there for years, I'll leave the patch in
->>> mm-unstable so it will eventually get into LTS, in a well tested state.
+On 7/3/25 23:04, Eric Biggers wrote:
+> On Fri, Jul 04, 2025 at 03:36:30PM +1000, Stephen Rothwell wrote:
+>> Hi all,
 >>
->> Andrew, are you considering submitting this patch for 6.16? I think
->> we should, it does look like a regression for larger systems built
->> with 64k base page size.
+>> Today's linux-next merge of the apparmor tree got a conflict in:
+>>
+>>    security/apparmor/crypto.c
+>>
+>> between commit:
+>>
+>>    ad7ca74e1c60 ("apparmor: use SHA-256 library API instead of crypto_shash API")
+>>
+>> from the libcrypto tree and commit:
+>>
+>>    e9ed1eb8f621 ("apparmor: use SHA-256 library API instead of crypto_shash API")
+>>
+>> from the apparmor tree.
+>>
+>> I fixed it up (I used the former version since it appears to be much
+>> newer) and can carry the fix as necessary. This is now fixed as far as
+>> linux-next is concerned, but any non trivial conflicts should be mentioned
+>> to your upstream maintainer when your tree is submitted for merging.
+>> You may also want to consider cooperating with the maintainer of the
+>> conflicting tree to minimise any particularly complex conflicts.
 > 
-> I wasn't planning on 6.16-rcX because it's been there for years but
-> sure, I moved it into the mm-hotfixes pile so it'll go Linuswards next
-> week.
-
-Wonderful, thank you!
-
+> Thanks Stephen.  John, can you drop your version when you have a chance?
 > 
->> On comparing a very simple app which just allocates & touches some
->> memory against v6.1 (which doesn't have f1a7941243c1) and latest
->> Linus tree (4c06e63b9203) I can see that on latest Linus tree the
->> values for VmRSS, RssAnon and RssFile from /proc/self/status are
->> all zeroes while they do report values on v6.1 and a Linus tree
->> with this patch.
-> 
-> Cool, I'll paste this para into the changelog to help people link this
-> patch with wrong behavior which they are observing.
 
-OK.
+Ooops, sorry. done
 
