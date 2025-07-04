@@ -1,95 +1,178 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05602FCFE8
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A647D30AAB8
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637069; cv=none; b=iNdtS4+kwSRe8tD24R2CVrDmkrNEXzKk86uWafvUuiKwAg2SPcApOC+0NU8yN7u6eBSfTlZo4ytf+o0Edw5eU+dMgpbW4YEyB5P8fdyIyJHVBa/AaQmPpc9UA3waqRfL1t2KoPjL3nmmTV0DB8shxLZGWskJsobc9c9dPpxsWrA=
+	t=1751637075; cv=none; b=Y7ldnSl7BYOodHR0rtkS/AXz0Pxhca+BriQCf7W7uZImLwP72HNCZK1U4Lj2qIcCGmzTVod1gcxuwrGzf96+xpuI2AuTEzA+z+TQbtftHImrHStpOw3cuS1aBG0a99uOgH1UEyJ97rgDXxYJ2DsdAibUxlsPwrfmNxSdSU2GT+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637069; c=relaxed/simple;
-	bh=+UyVNx3d2xsOsv3hlWbLcO0faItygFtG1VFebtg95qg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5gyX93ztPXu+x04ayiaQKZOImTgOxi8cNnNNxaKoWDiqnDplvVIYImgv8odLTS+wulaZEFcuTnLLSOILhYz7tf6OSOofgjN9N9Au4UTk/hj+qoVuLrlwEqn7etz7o6zISYE5PkV2CjqeNEX0l1wnoMd4CO60omraGKvWKiq/5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=cfLsj6No; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1751637075; c=relaxed/simple;
+	bh=miC47NO9VePQREntYQ2C1ptH1JHrH445C2mxs1mptSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CMQnuctddJVUcPuyDYxMGkvsTazycXygAaY+uQnsAnWsbYiPPr/UjgRAHbTHCt+d3B9U4zyEpsS4puol0DqkfzK8FLG3pjbDuf2xySByr8TFKEC4gN33B40JRVk7nsx1GOHWz/VT+94VfriWOuQhRzmxYHwDoNAbV0DhCpvveKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qRfmkpVD; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="cfLsj6No"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d3efcb9bd6so95395185a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:51:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qRfmkpVD"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae3a604b43bso160529166b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1751637067; x=1752241867; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uYQz0SJHD/yO65tyydxbBaxqDOlxtpBqpW8dxJVOqUU=;
-        b=cfLsj6NoyhBIdaTL8glE5jE7X5IquV8u7ZkxhSFgovpE1s6lfhOrV60Ysc7Xm4knQT
-         9lUFcJ6K5EOS8Yf50AKEMCbGl0IUqMdvrtNuWB9qhjplZ1mRqcCrpzpXjJ/E8ifc1bvc
-         mOAfhsI+lP1aFb0Dsp9JOgsAjKZQaLkS/GqYo/70nhSQBzyvkluCFQ7rz8GOML99P0M0
-         e4Ry9bOlcJ/a+bcWDfFOVSAL/zMY54g2+a5AWlPppcgDPXFOkV5bYvJUB7fkcFvg5uXc
-         ZeJUakWfV+rLNoBxmUhJydw7xkwl7rDbdmFhVZHAG1pstiw35CyriCe73S36UqK8PD22
-         CRJQ==
+        d=tuxon.dev; s=google; t=1751637071; x=1752241871; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U+4pnbmOXAdM0mHM7kF6SCf+HmJcVo3mHL3EXrsTmvo=;
+        b=qRfmkpVD+xI+Npzbq1OPbfQdUTJO8vOQ9eX5GxigJa2Tqop1BOwVlQj/S9qRHzx5ty
+         viijJo0m9xgO15vGt3QzdtbbE6rX+kxUIf0SNjmKTWN7qsD9gzGXGHe8h/CxP8CoVAsJ
+         00dZtJsEQcSkR1yUpcFoxzwhyoSBPCtnHkiH7pz1pJKL4qKLN2dO55QZKACEisQXU1Gs
+         8cD0wWE1yYcbGiZRGvbY8OXL+JEzvXr/u3E7dDPab3pA1b6ir403KnL3zfp0tKgftnVm
+         C+18Q4E3kv2QP2/PxCrpcfMR1vC5fKkh00Rw/74AUPiotlD/MJ8bM0BoV7i5Hepz2DNo
+         icuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751637067; x=1752241867;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uYQz0SJHD/yO65tyydxbBaxqDOlxtpBqpW8dxJVOqUU=;
-        b=pov6VYMiSsYR/EtLrIyNDqz7Omh1yS0t+1jwpZiK2fw33SMEGeeF+7AVVTf8P0WB+b
-         73S77mmCBSDeGtkVGhEmmg1Sw0BzetwJNJtIDYzeHdRF2negGzOG/HHxnhXj3HrbqMuN
-         jzpU4nUfTXTV6+BN0vrdlZHP8PsYWY+O4n1V6x3bARizQuxfDAcQxC7WHu+EgkCaN9Z+
-         5e6SYER0Zl2PElwTxbX/HUZjloFGhlFsBSYDJAo5ma8MJ6OKXZi2VOouUvzC8fmm4eA2
-         xrILN/l7CIey0UE9xYFEt13DQ6HGmAVfOj21vVrXZiKNPRIpGmicParpg67NRFbg62qM
-         SxbA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0zre1iZWH/83Oqh2VeC8/YDOk/hRBOYjC03ZbD9u4f47ppRtKyc6kQ8Klu8aXuV0MkRGMEAUEnlOTBgM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJbrwtNfwp/wK/3/sQqUeQfTmQZjMCxULQ5wYiSmXcAxWfpa3w
-	eTsHpcWO72bIu43g8ie3NUSkm4wvy4PocE4nYtEzLJSGPl+bF2DbZTtZgn5WoxvJ+w==
-X-Gm-Gg: ASbGnctJlFdXazV4TEMMXUgGPdRdUANPOGf7Q8HNYwcmloEOOQtYIMGm5wZxfJsEe2r
-	AR3eDJ6a9gAKA2UjbT8XNbCjaZ3MI9ketwLKA5AHIuNjXsTZy4Jk6+XRkK9IrifKEB0msTacWhk
-	JzT3vl6E2H1cnQmBwM5GD/Mg2Wx2S92i1qRcIdaZ/TKzAN9s4Kkx/PmdF0xkIWYQ0LTxerSrI9v
-	N79oCYnRNXurl0i7XZQ8NMmvKR0TVMC7tmVEd241zJXGcSVNozwqL9QaFqmwXr2if30IfJ31ikx
-	d9mxenwM958tNvmx0tj3xym5I2lSDFhJpct9F7Vj2SinqYo4riHbdlcKJHgkAPM=
-X-Google-Smtp-Source: AGHT+IGPrA4k9Zr2z8tw+Z35KFW9UzX5+1J5nLqm7+nyYdjjQoYkcLFbaNyTIqAXeMIcMfmr1ExyVw==
-X-Received: by 2002:a05:620a:198f:b0:7d0:a1b1:cb0c with SMTP id af79cd13be357-7d5ddb7ada5mr262663285a.29.1751637066601;
-        Fri, 04 Jul 2025 06:51:06 -0700 (PDT)
-Received: from rowland.harvard.edu ([2601:19b:681:fd10::4179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d5ac60sm12583176d6.97.2025.07.04.06.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 06:51:06 -0700 (PDT)
-Date: Fri, 4 Jul 2025 09:51:03 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
-	thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v5 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <afb549d1-a7d8-47ee-83af-76faedbb55a0@rowland.harvard.edu>
-References: <20250704095751.73765-1-xu.yang_2@nxp.com>
- <20250704095751.73765-2-xu.yang_2@nxp.com>
+        d=1e100.net; s=20230601; t=1751637071; x=1752241871;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U+4pnbmOXAdM0mHM7kF6SCf+HmJcVo3mHL3EXrsTmvo=;
+        b=fB9g1mO0NagaIL75NOeExSIWp082g5CoftDmCNo75dIIW/5Rz+QTr9OTK4+AYp27W0
+         /PPGQOuhycOs/ZdZhT6hdir8yifcZXOVSf297vkQ0ZdUCOBFhgJUe+aUwGRtxi4mpTFu
+         4PpWFNRcBjN7IjygZzah0jTHjVoN0dobxgOyLsHc8Q0QmfhLvJ4mexzyfB02OfLqkEDG
+         f2T3uRTfRjRaNegw3i7bBMkVEF7rxBTPuPV7sKnhzYr9eJkfwmyLoAOK3nSkk2nw4acG
+         z8RSyVCyzYO/fQWTmtRBDJkOvFD9WCQ7SRs2VQYzP2pMPoGwBUrtB/ERXnrcQ2XLEDVB
+         YH1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXwClwaqBn+12tXlTD/Ke0twBMgavpQa74nuROTYiDjltGGQIDE+o2jsMAR2Zk80tK/BlbZyDz7QfjhFbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhicQF92wQclDBfU8yvC1ZXBafESpxT59dIod3Cdg8fZSKFRRA
+	tkhxKbIW8EJaBCWXNSU2tUANKnwvdzYoog5tT6lZQFlEeVACIde5oN1icwTl/xOfkfA=
+X-Gm-Gg: ASbGncsYCA2nqTnwgTBXFpQmp/CJ0G+K2YZ90lwAZVOUgDHj4DYsasREx+mRwk4V1Is
+	zJI/Ks/TegBpOqSpehDukjzpVP35xhhNl4JV0yFLPpSz/Q4jvKdavw9udMnxoKP6HzOMLDanFmq
+	Jx1luvOL1Y39D5P6SmyBRgNozZsVORE+ewv2QEfJtSsOUrZiVMh3fefZSq9ZQSKcgwJe2Ra01yS
+	GdEdWcpdWzh79UOaXlVPcUMLKIrXavqZJkPVTItVwJGqpvsKLlcJs1xPsHV879HjBVlhbsP4g2e
+	ScuW26lAlSiTMjqFWpA6HyFCbf5u6ndHU3wcEKM7NLKjJCBcNTi+KWfwEmxD1r/uT3RCZw==
+X-Google-Smtp-Source: AGHT+IEKaHL8J9Su0mB3XI0LmZS3jYa1Tv+ttRwStxrwJ7gZXvWH4fgHU4a56M1/TXoMiu+j5EZrtA==
+X-Received: by 2002:a17:907:6d26:b0:ae3:6cc8:e426 with SMTP id a640c23a62f3a-ae3fbc336f7mr270116966b.9.1751637071005;
+        Fri, 04 Jul 2025 06:51:11 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.83])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f692ecacsm179199366b.57.2025.07.04.06.51.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 06:51:10 -0700 (PDT)
+Message-ID: <930cf8e2-5716-4a36-8238-e573876db869@tuxon.dev>
+Date: Fri, 4 Jul 2025 16:51:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704095751.73765-2-xu.yang_2@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] PM: domains: Detach on device_unbind_cleanup()
+To: Ulf Hansson <ulf.hansson@linaro.org>, rafael@kernel.org
+Cc: linux@armlinux.org.uk, gregkh@linuxfoundation.org,
+ david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+ dakr@kernel.org, len.brown@intel.com, pavel@kernel.org,
+ andersson@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, wsa+renesas@sang-engineering.com,
+ mathieu.poirier@linaro.org, vkoul@kernel.org,
+ yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+ broonie@kernel.org, robh@kernel.org, jirislaby@kernel.org,
+ saravanak@google.com, jic23@kernel.org, dmitry.torokhov@gmail.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+ bhelgaas@google.com, geert@linux-m68k.org, linux-iio@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 05:57:49PM +0800, Xu Yang wrote:
-> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> functions to support alloc and free buffer in a dma-noncoherent way.
-> 
-> To explicit manage the memory ownership for the kernel and device,
-> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> and call it at proper time.  The management requires the user save
-> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+Hi, Ulf,
 
-Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+On 04.07.2025 14:15, Ulf Hansson wrote:
+> On Thu, 3 Jul 2025 at 13:27, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Hi,
+>>
+>> Series drops the dev_pm_domain_detach() from platform bus remove and
+>> adds it in device_unbind_cleanup() to avoid runtime resumming the device
+>> after it was detached from its PM domain.
+>>
+>> Please provide your feedback.
+>>
+>> Thank you,
+>> Claudiu
+>>
+>> Changes in v5:
+>> - added PD_FLAG_ATTACH_POWER_ON, PD_FLAG_DETACH_POWER_OFF;
+>>   due to this a new patch was introduced
+>>   "PM: domains: Add flags to specify power on attach/detach"
+>>
+>> Changes in v4:
+>> - added a flag in dev_pm_info that is saved in dev_pm_domain_attach()
+>>   and used in device_unbind_cleanup()
+>>
+>> Changes in v3:
+>> - add devm_pm_domain_attach()
+>>
+>> Changes in v2:
+>> - dropped the devres group open/close approach and use
+>>   devm_pm_domain_attach()
+>> - adjusted patch description to reflect the new approach
+>>
+>>
+>> Claudiu Beznea (3):
+>>   PM: domains: Add flags to specify power on attach/detach
+>>   PM: domains: Detach on device_unbind_cleanup()
+>>   driver core: platform: Drop dev_pm_domain_detach() call
+>>
+>>  drivers/amba/bus.c                       |  4 ++--
+>>  drivers/base/auxiliary.c                 |  2 +-
+>>  drivers/base/dd.c                        |  2 ++
+>>  drivers/base/platform.c                  |  9 +++------
+>>  drivers/base/power/common.c              |  9 ++++++---
+>>  drivers/clk/qcom/apcs-sdx55.c            |  2 +-
+>>  drivers/gpu/drm/display/drm_dp_aux_bus.c |  2 +-
+>>  drivers/i2c/i2c-core-base.c              |  2 +-
+>>  drivers/mmc/core/sdio_bus.c              |  2 +-
+>>  drivers/rpmsg/rpmsg_core.c               |  2 +-
+>>  drivers/soundwire/bus_type.c             |  2 +-
+>>  drivers/spi/spi.c                        |  2 +-
+>>  drivers/tty/serdev/core.c                |  2 +-
+>>  include/linux/pm.h                       |  1 +
+>>  include/linux/pm_domain.h                | 10 ++++++++--
+>>  15 files changed, 31 insertions(+), 22 deletions(-)
+>>
+>> --
+>> 2.43.0
+>>
+> 
+> The series looks good to me, please add:
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> 
+> Rafael, do you intend to pick this via your tree?
+> 
+> Another note, the similar thing that is being done in patch3 from the
+> platform bus, is needed for other buses too (at least the amba bus for
+> sure). Claudiu, are you planning to do that as a step on top - or are
+> you expecting others to help out?
+
+My plan was to take care of it once the approach here (or something
+similar, if any) will end up in a release.
+
+Thank you,
+Claudiu
+
+> 
+> Kind regards
+> Uffe
+
