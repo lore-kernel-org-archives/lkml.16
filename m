@@ -1,148 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9506F239E6B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA112877C7;
+	Fri,  4 Jul 2025 10:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623444; cv=none; b=mL2+ezHvDpOHdopnoR4aG2GR/H8zoKmNe/V4S8FFyeCjkPpJtSF9kEwS5HD8dD/lo7mwYvB5+nyW84X2aQav+m0xaiigzC0tGLlv9/0GGhGYAY/N13MeBZgyugcizHQWp5LR0p3y6T0DSocIoIUcm8RfTtCbUkJqD12/UFwSygM=
+	t=1751623541; cv=none; b=SKmhhTy2nycJPZ7nFszWAZiFJarf70YCmeXcN+pOwvxH0vMKuoioFTDbQRpC5ncpfCRj0/NZ+ibd4qG5YbqrNp5A4GiBAgK1b67lOmx4IDpcils/5qwgN7+/hkeevOFroRt2y9WGXz5+na1gEz6BOAlcucpBD604As8EWtrVJD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623444; c=relaxed/simple;
-	bh=B7aUvk/jHjdAbP1Txi087l61k45RNX1ZWe+SIygilVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bmq1rie0C9/bOmmgJbID7Gfx1Ib0sYGicYJ0lvKs0Iex9+FFKSQRewtA4jAN1JDwNFPypWa+PI6haJ67UTR0I+43l6n9PsoL7rWrslMLyV07o4+apSZy3DXipu2QqxWHeYVvSJxLl8PqdcFZkMqQnPzWE9z9YD7+1hZfif+LE6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eyKzGkqX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751623541; c=relaxed/simple;
+	bh=3zMvBpnjYhXNk119LId6VxXRlohR+SMqHtEt+DjGgOs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Lw1FLW99xPWNr/qjic2EsDUo68wNQjAZq6pA+jWDO/bLp/oGaGiEwKpHmervEXwOmSI4KesNrU3KuCjHnH3rtFVwl+YwLRdS4sIEo/9ktlLjPuMm+uSD+pB0OPoQWRgaLgqLJuqRppZOdsWCZY+PyNzDLrwW1+rP5VarwAIpKwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIFzhyDo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyKzGkqX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751623441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rWi88a+JkVfvhFesKDsYwPcS3Up3wpcEEvDnhl9YEKo=;
-	b=eyKzGkqXL8vpPgddz8IWyIRdr9pBfI6XprIXpUXmxSkbh0ZtZwSnP9GvX2ZbHdMRfB38l4
-	iqdEBmqSC3CxGd4M8YhgxAumfTKLgSs5N3uYLeyWx1A+aiWAtic8kNrFYo2aJ0sMpTiuTA
-	Teo/EN5UpwwsBgZ6BoKMollsPlhbCsE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-o826u-i0PsaEsCxH1hMEcA-1; Fri, 04 Jul 2025 06:04:00 -0400
-X-MC-Unique: o826u-i0PsaEsCxH1hMEcA-1
-X-Mimecast-MFC-AGG-ID: o826u-i0PsaEsCxH1hMEcA_1751623439
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae0dffaa8aeso82964566b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:04:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751623439; x=1752228239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rWi88a+JkVfvhFesKDsYwPcS3Up3wpcEEvDnhl9YEKo=;
-        b=gVvA6ozvGkYLdKzWKzV7Q+n6J4bJup5DW8Gj9thP9iOt4esHTkibCiLrOUCmTu2JrF
-         QPkwfidVsiz8/8e/voxNG3sK7Jab/o8EyH2NQ5+wT0wc/NfOAs40kuqXLpevFmYHGNYu
-         YkuUOiV1ajsFBSHibCD/8ryJETiZA8geRCz+bGKu1VymG/25pXLHWS58ZC2lPHLF0N7v
-         QvIspjT8OvHPxrx1/xAJwvgKvYFMcqIYNJbnSLHjWBuo2UwC3NZ8X42IKXnOZ0aWHfvS
-         rzhk1XNNCBwukzDmC1okdl0oUHwMa3ruvwNNrN5I8oOdGPvlqqqT/FInCbAjEPP76+B/
-         Zprw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2g0ym4tKvAUBtLzlu266Fq/SuedBrpjxYnD4VdXbyQL5Lgkkbajv7bW3EKvZeXZdBlmYRzqTENRMsVqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9PxT4PryBqTRti7HZm2J8R+XxqCpiHMg+Gd/NX3bBNMxTqzNX
-	OK32UvIy3m9axJfRXK+1RPlKc+aATK0XHxjVKldTPc+oPSyHg4WK6enXzCz2X5FZLFgS69CRL5g
-	A3mgflKQNHduKX5YVqxJ9SnztmVmDd/8e55/CeR/TOxHfXEjR/paPvZ7uKsRv6EAn50it3ttxz0
-	piIh8gyu/UFN5OsUD8yvzEVaqRyVqdWdUSIA0HDxxg
-X-Gm-Gg: ASbGncvLm+1coMFlpfu7RB+qZgnP60L/bwz/9aEMcI9HscJxRweOyyix0UBI9M+to4o
-	UIhfpjIL5sxvpRt5Qx9HAtvTCNDNVIUEDxXY/r/TlIdZ8CaDFDPr0pq2qkEm+Uxm6cD0N2P278e
-	aUMMKp
-X-Received: by 2002:a17:907:1b28:b0:ae3:6038:ad6f with SMTP id a640c23a62f3a-ae3f801ffffmr257587166b.3.1751623439046;
-        Fri, 04 Jul 2025 03:03:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHS9N1eCIk/WZ0O55TJaTXfCqhycvxAdX3gpiv7v0S1xEAaaTDokoaZNHnw35/eNshgWtKvOMMHV8DKBFb9MEc=
-X-Received: by 2002:a17:907:1b28:b0:ae3:6038:ad6f with SMTP id
- a640c23a62f3a-ae3f801ffffmr257584266b.3.1751623438615; Fri, 04 Jul 2025
- 03:03:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIFzhyDo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8AFC4CEE3;
+	Fri,  4 Jul 2025 10:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751623540;
+	bh=3zMvBpnjYhXNk119LId6VxXRlohR+SMqHtEt+DjGgOs=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=dIFzhyDoOtTAbxDe4ng7ZMrO/97heBHHA2tlOt/nH+8zNG51bHrYZPY5Otop9wkEE
+	 GOrKb3MaWAOEqB12OvaklthhMEb5eZrWI0BPDhSMueKmloWwIpmrdhA574pgwdyDVL
+	 5lRojgAt+uopNziY+Nbq2Vyar7Ow/l0OqQ3ieJWWl/vzootQhnKntCRzNGjWwagrXs
+	 ZQVT86x9TMFgy9J6Lt1mMum6Y6ipYwyQeTLs74SvWohAan1nxvN+IidtlqAZw2lilc
+	 nqy6gMPSSrHzKKMC7HAuqqW0Qh3uEfCRekMqt+80F1Dobu3rSHA5697iSIX1wfMM87
+	 5aWiEaLuho2cA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250702014139.721-1-liming.wu@jaguarmicro.com>
-In-Reply-To: <20250702014139.721-1-liming.wu@jaguarmicro.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Fri, 4 Jul 2025 18:03:21 +0800
-X-Gm-Features: Ac12FXx2LPRflMaDOhrK2WN9s4Zkqha02pwAGwf7MkpIy2PH8obbz9l4skjV1c8
-Message-ID: <CAPpAL=wY_JU7r8oWgcF_keq+rbpGdkhS5KF0K67g=rbX7_nwng@mail.gmail.com>
-Subject: Re: [PATCH] virtio_net: simplify tx queue wake condition check
-To: liming.wu@jaguarmicro.com
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, angus.chen@jaguarmicro.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 12:05:26 +0200
+Message-Id: <DB36PVASJ5G9.2TMRXNIXYI9UO@kernel.org>
+Cc: "Michal Rostecki" <vadorovsky@protonmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Brendan Higgins"
+ <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
+ <rmoar@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>, "Russ Weight"
+ <russ.weight@linux.dev>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Nick Desaulniers"
+ <nick.desaulniers+lkml@gmail.com>, "Bill Wendling" <morbo@google.com>,
+ "Justin Stitt" <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Jens Axboe" <axboe@kernel.dk>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Dave
+ Ertman" <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+ "Leon Romanovsky" <leon@kernel.org>, "Breno Leitao" <leitao@debian.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com>
+ <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+ <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <DB2PIGAQHCJR.3BF8ZHECYH3KB@kernel.org>
+ <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
 
-I tested this patch with virito-net regression tests, everything works fine=
-.
+On Fri Jul 4, 2025 at 12:41 AM CEST, Tamir Duberstein wrote:
+> On Thu, Jul 3, 2025 at 4:36=E2=80=AFPM Benno Lossin <lossin@kernel.org> w=
+rote:
+>> On Thu Jul 3, 2025 at 8:55 PM CEST, Tamir Duberstein wrote:
+>> > On Thu, Jul 3, 2025 at 11:08=E2=80=AFAM Benno Lossin <lossin@kernel.or=
+g> wrote:
+>> >> On Thu Jul 3, 2025 at 3:55 PM CEST, Tamir Duberstein wrote:
+>> >> > On Thu, Jul 3, 2025 at 5:32=E2=80=AFAM Benno Lossin <lossin@kernel.=
+org> wrote:
+>> >> >> On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
+>> >> >> > +impl<T: ?Sized + Display> fmt::Display for Adapter<&T> {
+>> >> >> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+>> >> >> > +        let Self(t) =3D self;
+>> >> >> > +        Display::fmt(t, f)
+>> >> >>
+>> >> >> Why not `Display::fmt(&self.0, f)`?
+>> >> >
+>> >> > I like destructuring because it shows me that there's only one fiel=
+d.
+>> >> > With `self.0` I don't see that.
+>> >>
+>> >> And what is the benefit here?
+>> >
+>> > In general the benefit is that the method does not ignore some portion
+>> > of `Self`. A method that uses `self.0` would not provoke a compiler
+>> > error in case another field is added, while this form would.
+>>
+>> Yeah, but why would that change happen here? And even if it got another
+>> field, why would that invalidate the impl of `fn fmt`?
+>
+> I don't know, but I would rather force a person to make that decision
+> when they add another field rather than assume that such an addition
+> wouldn't require changes here.
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+I don't think so. If this were in another file, then destructuring
+might make sense if the struct could conceivably get more fields in the
+future **and** it if the other file relied on there only being one
+field (or if it *had* to be changed when there was a field added). This
+isn't the case here so it's just unnecessary noise.
 
-On Wed, Jul 2, 2025 at 9:42=E2=80=AFAM <liming.wu@jaguarmicro.com> wrote:
->
-> From: Liming Wu <liming.wu@jaguarmicro.com>
->
-> Consolidate the two nested if conditions for checking tx queue wake
-> conditions into a single combined condition. This improves code
-> readability without changing functionality. And move netif_tx_wake_queue
-> into if condition to reduce unnecessary checks for queue stops.
->
-> Signed-off-by: Liming Wu <liming.wu@jaguarmicro.com>
-> ---
->  drivers/net/virtio_net.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index e53ba600605a..6f3d69feb427 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2998,12 +2998,11 @@ static void virtnet_poll_cleantx(struct receive_q=
-ueue *rq, int budget)
->                         free_old_xmit(sq, txq, !!budget);
->                 } while (unlikely(!virtqueue_enable_cb_delayed(sq->vq)));
->
-> -               if (sq->vq->num_free >=3D 2 + MAX_SKB_FRAGS) {
-> -                       if (netif_tx_queue_stopped(txq)) {
-> -                               u64_stats_update_begin(&sq->stats.syncp);
-> -                               u64_stats_inc(&sq->stats.wake);
-> -                               u64_stats_update_end(&sq->stats.syncp);
-> -                       }
-> +               if (sq->vq->num_free >=3D 2 + MAX_SKB_FRAGS &&
-> +                   netif_tx_queue_stopped(txq)) {
-> +                       u64_stats_update_begin(&sq->stats.syncp);
-> +                       u64_stats_inc(&sq->stats.wake);
-> +                       u64_stats_update_end(&sq->stats.syncp);
->                         netif_tx_wake_queue(txq);
->                 }
->
-> @@ -3195,12 +3194,11 @@ static int virtnet_poll_tx(struct napi_struct *na=
-pi, int budget)
->         else
->                 free_old_xmit(sq, txq, !!budget);
->
-> -       if (sq->vq->num_free >=3D 2 + MAX_SKB_FRAGS) {
-> -               if (netif_tx_queue_stopped(txq)) {
-> -                       u64_stats_update_begin(&sq->stats.syncp);
-> -                       u64_stats_inc(&sq->stats.wake);
-> -                       u64_stats_update_end(&sq->stats.syncp);
-> -               }
-> +       if (sq->vq->num_free >=3D 2 + MAX_SKB_FRAGS &&
-> +           netif_tx_queue_stopped(txq)) {
-> +               u64_stats_update_begin(&sq->stats.syncp);
-> +               u64_stats_inc(&sq->stats.wake);
-> +               u64_stats_update_end(&sq->stats.syncp);
->                 netif_tx_wake_queue(txq);
->         }
->
-> --
-> 2.34.1
->
->
-
+---
+Cheers,
+Benno
