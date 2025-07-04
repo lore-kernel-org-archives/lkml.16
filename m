@@ -1,237 +1,128 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFD028936B;
-	Fri,  4 Jul 2025 08:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFA128983F;
+	Fri,  4 Jul 2025 08:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617394; cv=none; b=XMupVOfdHkCMs7+z3mnsxs9qaRxOB7x4wq5y4MXOYilCEBip1aHIIslD1H+WZ2XoNIe+RHPhFOMQSgLUfDKiP2ExFY3mtN2+GvHReVsWdq8Lb1nMiRho/1vF+pYHjZxCJargo3Ym3k8XSzDXEcANfm/USL/Sh7K8lg/KK6c371Y=
+	t=1751617400; cv=none; b=G/PjndJMfvDES9tvAokDC7IadoXUS87BEtroOlr9rHm5koHDzmwTUlbP2t3SHrBdkxnclUCAMd5miBijLvVA3Ag48Dgt7oXDe/3PHyhwIxywTaflYJsk2s9Uus0VBnFC3fShG/b26cSy4bPODRn/kc3Cw8421eitogys7emK1ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617394; c=relaxed/simple;
-	bh=MJSI7ivdMdGD+6cRfJB5zzWLZZW8Y6msLof6mcVxiX8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBulfccxp4acDtCsRBJKsSbSkRGfmuq+Gs2KAZivVyrX7wbcK24FFdYhpCxSj/oM0A2YhCOADwZwiY/3nGtHnnXMVuF79x913ezZKohGXtFcEFaI/eehCBj+AxpN4P1OdKk+ORvchRlF2akaEeueSXzWa8QHJ5ErngmA/pvw6Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUnQgDer; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751617400; c=relaxed/simple;
+	bh=eOqbhC+GH0pDiZg4qC85HV2YqOJ8EpF/iF3CK5uD8AQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jmhdNOBeyQvdJZuyVVUztpL9Br4eODdqEaTPDRWhR62/WDmAs/VCjdsw5b3LuLYTI9gZklWjjSNyD/8h9Q8ur//dlt0UTY8FWgLU7KcdG4yMpB30zUqstjlqLW0jhTFIqY4nTg69lwAEH/KxIit/J9kc88rWV8V6c6QMJJ3YjW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jSvM8n+X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUnQgDer"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so1072127a12.2;
-        Fri, 04 Jul 2025 01:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751617391; x=1752222191; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+aRQZfPqrxNYi05aXszkPTu2ttF+snrJL4n2DEDIxSw=;
-        b=IUnQgDerXfCgBaoTCforD1el62tnldMa3DW8zGk/zvoVhrIQ+ASVDvmBiFtuLD4yC7
-         F4FAaESCuj3M6WzTy61HBiJFKqVvKG6pKdToN0JjAMRoZnATHfWqBjwnWY9VcCsux0wm
-         DFJBTZieBki9f6qYqComeGD+Cbg0TnM0l/YA70+OmJXMseXDf2ca7AJEkQDkjY2loboR
-         7faOjNm3ISjrYnTmhIQghltxyNSJj7W+ldE0Qt+J+JlGMnlR9X7B/t60+hJgIWTt0lrj
-         toqYDDIG66sjY0zH6n3gk2JgCFXAkFg1eFuxBApPEk+ZQr0DzSxF/xFJJyHel6IFY/r1
-         Ns5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751617391; x=1752222191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+aRQZfPqrxNYi05aXszkPTu2ttF+snrJL4n2DEDIxSw=;
-        b=wHz+PZQyHiEJI03HeJBDmSuVcvrYQPOvDWcSrLaUu7OcdtUZxqhrOcv3ePIFI1XM7+
-         64mWEbmSVGEQDKlAVbLYbja0DXqAFhMvDki2N3KFrZtD+SewVMTe5pCOmtD3wbhqQwA1
-         gv27RCKUqRm5gDdaIJDYmgkTGvT6ySl2LOiepX5EqFOtwQndxD2Noc7ArbKyFm8gCqdZ
-         9of3okk6SCVplnmPLOV4HkBcnjMtilEdBqh66QVCOqMOFkh5QYSfb3JKefsPlmvjQ0Bv
-         IXMfpchNq+2/hhDeqCDk3RT/z/aHITQFg0Pm/R6CiLG1YQan2fRF3WchQd7Op0dNR//8
-         RHmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW22k6JEcLzNqrLHO7Zk4I9vqQX8wcwuALI4Luo6vJ2LC3VtOQuJFb4wwKY848fNL/YJMmd3BAI+liUhmtc1cdrjyPa@vger.kernel.org, AJvYcCWsu52zUZTFBk9B/LXogm2oC7aSHtMO2O1ZGB+Ix7a9M2SEyW+xhUuTP3CrsN1TQ9DnyVo=@vger.kernel.org, AJvYcCXDOJF3aPgNyk/pLmc9x98PfEx24Y0brHG2w+fd1UNwP86f1xC9xO7oxExZgB4b7uGlhvZ97eVbxutl/NCW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5Gnzkm4Lv3DofVF4P7kpbU15lAUbzv3iuF3CZ9PC7yFNK4g+o
-	wlLEjTiG9Ojf//5V5hzXklSlTMFUXK5c9LsyUxSdGHsd0PP4tLqdNG8L
-X-Gm-Gg: ASbGncs8Nwg+IDLKMvkGhdAWROQ1R82foEy3ER5uY9lb55pk+T3Z7KE6KDOaHgjKt9i
-	ljLZNA/s00e6/A7ZmhoeZRHVdUefwXOSOs+S5HPQYuHM1B7q3sI3Uh0UnqpbM5JdRjceM8eL4m1
-	OP0sCkEPVi57OzdNL7fnhZv3kRCB7RmTmAWG2A2kMg5n39yvpI/H5tYFuUZ98HTbwY5MjaoJHO+
-	Z6bgO/4SYAoEA1XyIYQoHHWOJPVp6E3kpnDxVJ0/r2hqfqF0UboXnA4AeH8IpWfxB2RVn7ZsaCI
-	/lJjxBUxYv8oazx+MQXssIpGrYDLNNsKMKT0ktvDYvzMkeCjBKOx0IFFwSW2
-X-Google-Smtp-Source: AGHT+IGEs6eDc0ZFDT+JKhFDraySpqOdRTr37B5P/2aZpGwd3tYIQpuLSMzAVTGY8OBQK0hNY6pGLw==
-X-Received: by 2002:a17:906:f5aa:b0:ae3:de00:3a31 with SMTP id a640c23a62f3a-ae3fbd13713mr140313866b.30.1751617391014;
-        Fri, 04 Jul 2025 01:23:11 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b5e6d2sm128943766b.154.2025.07.04.01.23.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 01:23:10 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 4 Jul 2025 10:23:08 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <aGePbMh3_yw2makD@krava>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
- <20250605132350.1488129-9-jolsa@kernel.org>
- <20250625172122.ad1e955ae2bc3957d9fb8546@kernel.org>
- <aFwS2EENyOFh7IbY@krava>
- <20250627150145.15cdec0f4991a99f997a8168@kernel.org>
- <aF6Q9NgCJx5p0MNJ@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jSvM8n+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5FABC4CEED;
+	Fri,  4 Jul 2025 08:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751617398;
+	bh=eOqbhC+GH0pDiZg4qC85HV2YqOJ8EpF/iF3CK5uD8AQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jSvM8n+X2J+m7M9vrLPSY7I6sT7bvjxvrXtLZnDvi5i3QyBC6RE4p2FbyTjBjAtaS
+	 7IbON1I4ZKuhu3hIHb5Abg36xQomplyaGjVUuLdoUlwCbNRZXLpJKx0XlYd+SFCxx+
+	 8p53RKUX4eSeu3EwwtQIK/Ro+YoGhACaRdZa1E88eq+cLYCh/wLnbv1bwnF5YkxmGW
+	 SvJ72d55xvA5Yj7otKS1ytJJfM+Sq8Zytotd+rzQCNKjU/sjqqpjmfXehxTFKtyVQr
+	 zD13XNp/gxOYYKYU/LqW+BMsRyr3v0qX/NAzM/CQmO8EGy5JTPh57V+FNTmiAN6a0S
+	 gcx1WGP5oAWKA==
+Message-ID: <6a7b118a-f266-4510-80f6-c357202b09cc@kernel.org>
+Date: Fri, 4 Jul 2025 10:23:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF6Q9NgCJx5p0MNJ@krava>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
+ controllers driver
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: ojeda@kernel.org, =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?=
+ <jefflessard3@gmail.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Christian Hewitt <christianshewitt@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629131830.50034-1-jefflessard3@gmail.com>
+ <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
+ <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
+ <57f0289a-7d82-4294-a1dc-c6986da0c5ce@kernel.org>
+ <aGJe2krBnrPXQiU6@smile.fi.intel.com>
+ <532c88b8-d938-4633-ac09-12bb3080a023@kernel.org>
+ <aGKcfuQdNtQjmVC8@smile.fi.intel.com>
+ <668a149e-f39f-45dc-8c55-d914df116b47@kernel.org>
+ <aGVOCw6iqeIpIDBK@smile.fi.intel.com>
+ <CANiq72nhJVz4MgSmWvHFJwg=mQ2O+WC6XsUQgsjPAdOfF3hAJA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CANiq72nhJVz4MgSmWvHFJwg=mQ2O+WC6XsUQgsjPAdOfF3hAJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 02:39:16PM +0200, Jiri Olsa wrote:
-> On Fri, Jun 27, 2025 at 03:01:45PM +0900, Masami Hiramatsu wrote:
+On 03/07/2025 22:49, Miguel Ojeda wrote:
+> On Wed, Jul 2, 2025 at 5:19 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+>>
+>> It's not my preference for the record, but I wanted to know more about
+>> an application of the clang-format. And perhaps some docs (besides .clang-format)
+>> should be fixed rather sooner?
 > 
-> SNIP
+> There are some docs at:
 > 
-> > > > 
-> > > > > +			return tramp;
-> > > > > +	}
-> > > > > +
-> > > > > +	tramp = create_uprobe_trampoline(vaddr);
-> > > > > +	if (!tramp)
-> > > > > +		return NULL;
-> > > > > +
-> > > > > +	*new = true;
-> > > > > +	hlist_add_head(&tramp->node, &state->head_tramps);
-> > > > > +	return tramp;
-> > > > > +}
-> > > > > +
-> > > > > +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
-> > > > > +{
-> > > > > +	hlist_del(&tramp->node);
-> > > > > +	kfree(tramp);
-> > > > 
-> > > > Don't we need to unmap the tramp->vaddr?
-> > > 
-> > > that's tricky because we have no way to make sure the application is
-> > > no longer executing the trampoline, it's described in the changelog
-> > > of following patch:
-> > > 
-> > >     uprobes/x86: Add support to optimize uprobes
-> > > 
-> > >     ...
-> > > 
-> > >     We do not unmap and release uprobe trampoline when it's no longer needed,
-> > >     because there's no easy way to make sure none of the threads is still
-> > >     inside the trampoline. But we do not waste memory, because there's just
-> > >     single page for all the uprobe trampoline mappings.
-> > > 
-> > 
-> > I think we should put this as a code comment.
-> 
-> ok
-> 
-> > 
-> > >     We do waste frame on page mapping for every 4GB by keeping the uprobe
-> > >     trampoline page mapped, but that seems ok.
-> > 
-> > Hmm, this is not right with the current find_nearest_page(), because
-> > it always finds a page from the farthest +2GB range until it is full.
-> > Thus, in the worst case, if we hits uprobes with the order of
-> > uprobe0 -> 1 -> 2 which is put as below;
-> > 
-> > 0x0abc0004  [uprobe2]
-> > ...
-> > 0x0abc2004  [uprobe1]
-> > ...
-> > 0x0abc4004  [uprobe0]
-> > 
-> > Then the trampoline pages can be allocated as below.
-> > 
-> > 0x8abc0000  [uprobe_tramp2]
-> > [gap]
-> > 0x8abc2000  [uprobe_tramp1]
-> > [gap]
-> > 0x8abc4000  [uprobe_tramp0]
-> > 
-> > Using true "find_nearest_page()", this will be mitigated. But not
-> > allocated for "every 4GB". So I think we should drop that part
-> > from the comment :)
-> 
-> I think you're right, it's better to start with nearest page,
-> will change it in new version
+>     https://docs.kernel.org/dev-tools/clang-format.html
 
-I wonder we could actualy use page every 4GB (+-) code below seems to work, wdyt?
+You just pasted the same what we talk about. Did you read the thread?
 
-thanks,
-jirka
-
-
----
-
-+#define __4GB		 (1UL << 32)
-+#define MASK_4GB	~(__4GB - 1)
-+#define PAGE_COUNT(addr) ((addr & ~MASK_4GB) >> PAGE_SHIFT)
-+
-+static unsigned long find_nearest_page(unsigned long vaddr)
-+{
-+	struct vm_unmapped_area_info info = {
-+		.length     = PAGE_SIZE,
-+		.align_mask = ~PAGE_MASK,
-+	};
-+	unsigned long limit, low_limit = PAGE_SIZE, high_limit = TASK_SIZE;
-+	unsigned long cross_4GB, low_4GB, high_4GB;
-+	unsigned long low_tramp, high_tramp;
-+	unsigned long call_end = vaddr + 5;
-+
-+	/*
-+	 * The idea is to create a trampoline every 4GB, so we need to find
-+	 * free page closest to the 4GB alignment. We find intersecting 4GB
-+	 * alignment address and search up and down to find the closest free
-+	 * page.
-+	 */
-+
-+	low_4GB = call_end & MASK_4GB;
-+	high_4GB = low_4GB + __4GB;
-+
-+	/* Restrict limits to be within (PAGE_SIZE,TASK_SIZE) boundaries. */
-+	if (!check_add_overflow(call_end, INT_MIN, &limit))
-+		low_limit = limit;
-+	if (low_limit == PAGE_SIZE)
-+		low_4GB = low_limit;
-+
-+	high_limit = call_end + INT_MAX;
-+	if (high_limit > TASK_SIZE)
-+		high_limit = high_4GB = TASK_SIZE;
-+
-+	/* Get 4GB alligned address that's within 2GB distance from call_end */
-+	if (low_limit <= low_4GB)
-+		cross_4GB = low_4GB;
-+	else
-+		cross_4GB = high_4GB;
-+
-+	/* Search up from intersecting 4GB alignment address. */
-+	info.low_limit = cross_4GB;
-+	info.high_limit = high_limit;
-+	high_tramp = vm_unmapped_area(&info);
-+
-+	/* Search down from intersecting 4GB alignment address. */
-+	info.low_limit = low_limit;
-+	info.high_limit = cross_4GB;
-+	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-+	low_tramp = vm_unmapped_area(&info);
-+
-+	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
-+		return -ENOMEM;
-+	if (IS_ERR_VALUE(high_tramp))
-+		return low_tramp;
-+	if (IS_ERR_VALUE(low_tramp))
-+		return high_tramp;
-+
-+	/* Return address that's closest to the 4GB alignment address. */
-+	if (cross_4GB - low_tramp < high_tramp - cross_4GB)
-+		return low_tramp;
-+	return high_tramp;
-+}
+Best regards,
+Krzysztof
