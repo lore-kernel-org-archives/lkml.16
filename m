@@ -1,124 +1,149 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B13B2F4328
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874682F4334;
+	Fri,  4 Jul 2025 09:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620243; cv=none; b=s12rpnpMZFHSVgLXKu1J6roFoW8O4/gAVZqY2+tzm/9HPE/rQMbu7p3wv8gtruaIM9p9qjTNk2mv02lvcYuQRBLfH1j6R42bbt33PUVUN5H92aiG5ijyixomTnwDUjd7Tw0d8rzf8oStiQVxL/4YVWq6NPnKzoZLfcWvJTVw1IM=
+	t=1751620292; cv=none; b=oxhqEm5uC950uOHSEO6OS1RFnD6+Q2JBKkE7Sn3VLLQb1VP6BaWDpycunW43WzQ0kpgeOVGrymxpe4nPJJWNe/s5OHgHgMa2j1Ka98pKvshVv80Xi4AyiUfRRsvkgTS2e6f3lsIZkhpalQwixL63gIrDxBU8bKk7urUVcsurv2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620243; c=relaxed/simple;
-	bh=cLwWQyrB0mwed4cU0+cVqyYgNBtoPEX59tc7uNEyzC0=;
+	s=arc-20240116; t=1751620292; c=relaxed/simple;
+	bh=U/K6TYBPGbFygsv68xo28nwKyHeVOgVII1meYzdMuSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rOx+c5TBuse3NF5axi06xyCRrormOfPiRgeLkxAgjCmYi3drwHU3r9WRALU2JfNbbeeQJeamXkouaeFHjwPtsidUKC6ioVXwFe5AvrrSJVlFW48jsdd0d+6dMZdg8HO8A8WXD1shMANT4aXNEi6vT1y83GHw6TVD3iK+HDHjtC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Vw4T7YWj; arc=none smtp.client-ip=83.166.143.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=PFXpdx7fnllvxMadXgHJKHbV1gWWSI50kL5qS/LNs8QbePN+QzuuUEOcX22I5kEFhFFoWhxxUMJ7vZVMZtACOEYnvFikSRaOzEIUUeTU+CIFtBRyuoOEjTzDsEUdqu6+XCFyrViaJR/0vkXIZvYdtmWxmDReW0+//a8FtgEDTik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSjVfTLx; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Vw4T7YWj"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bYSK33ksszLpZ;
-	Fri,  4 Jul 2025 11:00:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1751619639;
-	bh=d3B0Gl5NVIkFKbxEnnnoas390sBQL3HhXfp2/141yac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vw4T7YWjqqarK0hzIK+mYBSKByM3YmZa15/CNzENwM488+YCclY06+Q7b2iMPxEv0
-	 Xyj5R7UTvG9FaWdeQRu/kX4AFt4xvHq2VHqL2zBxyvlCFJQDGE3BwnkgfWY27g+ihH
-	 mpqujgWOXcwyos0XAMuUxRVDESIVsKIwzrUgYKtQ=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bYSK21vkQzMBN;
-	Fri,  4 Jul 2025 11:00:38 +0200 (CEST)
-Date: Fri, 4 Jul 2025 11:00:37 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <songliubraving@meta.com>
-Cc: Song Liu <song@kernel.org>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
-	"jack@suse.cz" <jack@suse.cz>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"mattbobrowski@google.com" <mattbobrowski@google.com>, "m@maowtm.org" <m@maowtm.org>, 
-	"neil@brown.name" <neil@brown.name>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v5 bpf-next 2/5] landlock: Use path_walk_parent()
-Message-ID: <20250704.quio1ceil4Xi@digikod.net>
-References: <20250617061116.3681325-1-song@kernel.org>
- <20250617061116.3681325-3-song@kernel.org>
- <20250703.ogh0eis8Ahxu@digikod.net>
- <C62BF1A0-8A3C-4B58-8CC8-5BD1A17B1BDB@meta.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSjVfTLx"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a588da60dfso430462f8f.1;
+        Fri, 04 Jul 2025 02:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751620289; x=1752225089; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4BxPSNuI1K+0U+zGcMRGFuPmBq+1SIMVgn3s+fjE3jI=;
+        b=mSjVfTLxuo99cIYHIvwTU+Wjr6nOn12otsxhwMiLoBeGaB3QoVGvc+Et2V4F6qRmJs
+         thG8i9qmI2AKYZT0B+1fCRCjKpMdvcCwDHltVJr3z9pLEzgETEOVlc7eq5+XHuEpdPOU
+         WOUy4Zc0ziZ7ykaW6UXbcumTjIoEg248VGks9KMk1UiTJcCilzJttJtj11SoZ/ukUZ2s
+         CTstPf7nS4PnWRzDDUkTcN7I07WbYwamJLO7EUQXOF6ZW98JniTA1LXSgUoP2/2bcl+Z
+         KQrCKRiBNb+OYD5fKr78DyMrZiurXZhZJ/6LAWMzalLvZaH8QU3pgzpjvBCsINn7YRPQ
+         8r1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751620289; x=1752225089;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4BxPSNuI1K+0U+zGcMRGFuPmBq+1SIMVgn3s+fjE3jI=;
+        b=KutpM6rgsWV5xwIk8H0orXO38fem5PayURFW2Ce8Ziz5SY+lk0KwMEuLwD+UeLnNKs
+         9OFkaWZqt9/3APcOg6LWsW6IxuGi/x2hrXd9wyLQKmMLIdl2phOrWyySSPxWE0qCM6Ob
+         HVJ7IpI0VJh+J1wkPMweOLCfDXhYqKsZxBWDyw3ezlFSPw08AvGUURzkqFc4Mpu5GV4a
+         OFEVle4Rz9+DJrdYMjSAz28AEP6ApiFgk6W/q8uLHcNqrCz00Nv9jzcTWzVm1BibFkxO
+         21lbsgzXdiKmsyQRjPr/XpTXemzwVUW/pfiu+9xkGkzSPNJq7rVhOWvoFzLBBBbhne6O
+         vpcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTJqW+1svipFO7h8JjyoYSswsMETRnYMo4b3nbGYwsj+HPzt5KHxHlSSmqN5bi/GPyPvFJQLsmjE2p+Cw=@vger.kernel.org, AJvYcCWlxIH/RbtyQQ9HiVUvKXRpu+ONEwjoaoPj2J2885lcsWJ5QGe5JKla13et9bYX25Ppm6bZ6d1OYDS1Cw==@vger.kernel.org, AJvYcCX7Z3gPNPwgk6mRb/ya8AOJ0Z+jP5vGhl5uPyAAtSVuzx6edhoc8EchVaVvZh/zZvMThewANDO8xEGH@vger.kernel.org, AJvYcCXfCj1Q5g/0zCKpumS7Mb4Ywz/VxaDZAx110J5sLSmDSv2Yv63VadTlLotGC3zWrZa6GcuUivf/cilz55M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/3lqyoU/GbtrMkkyx9ENkFXYHIhrwm/VEFKk7LiC4QiKRiX25
+	QMKgdU0NOiNJKd9V3eiVpE5Nao49208QOunlFdepoVY0vhTeeOIhBwgh
+X-Gm-Gg: ASbGncuLYEMglQZora+bF5XK7E7c2yT+959Yl8iWIWhr1Pw/oRhZAQkrhchJlcR+eJ7
+	l8tUqMV7Qlm8MmEUjYsh7Iv96eGhW4BujSdGP/JJbzlSgnG59yG/N9J+Qj7rdFwcZbuFB5wAY/M
+	diCCViBURSZTZ2EHgyFHUPPYGbbyS+IqJRJuSu8FxKkR/fvtg6/Zr0RReZXgvJrn7URz9UU69u3
+	k+BbhAQbCu70r59va36tOrJE+S2CA6oxFe8ra1mt/685D4rL98Y9GtpxmzF6qYg1PUXpNRot6lX
+	k5h/QiTbf0i0J4g95iyVT17KZnUpYm5EhsGk86WkHFIQYZQ2QB95Bt53cgY8k16YWsAhQOkqLYO
+	8zY/vKPYLu3Gy4tGzinu68hXYqBVokOV9kVgjzg6iss62fR4N
+X-Google-Smtp-Source: AGHT+IEifZ9+Qoefw6C59P68ghxiOjv/mmB7vnLxOoNgNMQhGBq65x9dlLFXIorvyQQpoQF/016xrw==
+X-Received: by 2002:a05:6000:2f83:b0:3a5:8934:493a with SMTP id ffacd0b85a97d-3b4964e56c8mr1521328f8f.44.1751620288471;
+        Fri, 04 Jul 2025 02:11:28 -0700 (PDT)
+Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcececsm49889865e9.23.2025.07.04.02.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 02:11:27 -0700 (PDT)
+Date: Fri, 4 Jul 2025 11:11:25 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Peter Chen <peter.chen@kernel.org>, 
+	Pawel Laszczak <pawell@cadence.com>, Roger Quadros <rogerq@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Michal Simek <michal.simek@amd.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+	Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bastien Nocera <hadess@hadess.net>, Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 67/80] usb: Remove redundant pm_runtime_mark_last_busy()
+ calls
+Message-ID: <ycajp5zwm65aauacebivz5773qhe2tmhcn7wqhorjybarfs5qq@su6kxog6t66k>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+ <20250704075453.3222311-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dd3rsrobpe5enhed"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C62BF1A0-8A3C-4B58-8CC8-5BD1A17B1BDB@meta.com>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20250704075453.3222311-1-sakari.ailus@linux.intel.com>
 
-On Thu, Jul 03, 2025 at 10:27:02PM +0000, Song Liu wrote:
-> Hi Mickaël,
-> 
-> > On Jul 3, 2025, at 11:29 AM, Mickaël Salaün <mic@digikod.net> wrote:
-> > 
-> > On Mon, Jun 16, 2025 at 11:11:13PM -0700, Song Liu wrote:
-> >> Use path_walk_parent() to walk a path up to its parent.
-> >> 
-> >> No functional changes intended.
-> > 
-> > Using this helper actualy fixes the issue highlighted by Al.  Even if it
-> > was reported after the first version of this patch series, the issue
-> > should be explained in the commit message and these tags should be
-> > added:
-> > 
-> > Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-> > Closes: https://lore.kernel.org/r/20250529231018.GP2023217@ZenIV 
-> > Fixes: cb2c7d1a1776 ("landlock: Support filesystem access-control")
-> > 
-> > I like this new helper but we should have a clear plan to be able to
-> > call such helper in a RCU read-side critical section before we merge
-> > this series.  We're still waiting for Christian.
-> > 
-> > I sent a patch to fix the handling of disconnected directories for
-> > Landlock, and it will need to be backported:
-> > https://lore.kernel.org/all/20250701183812.3201231-1-mic@digikod.net/
-> > Unfortunately a rebase would be needed for the path_walk_parent patch,
-> > but I can take it in my tree if everyone is OK.
-> 
-> The fix above also touches VFS code (makes path_connected available 
-> out of namei.c. It probably should also go through VFS tree? 
-> 
-> Maybe you can send 1/5 and 2/5 of this set (with necessary changes) 
-> and your fix together to VFS tree. Then, I will see how to route the
-> BPF side patches. 
 
-That could work, but because it would be much more Landlock-specific
-code than VFS-specific code, and there will probably be a few versions
-of my fixes, I'd prefer to keep this into my tree if VFS folks are OK.
-BTW, my fixes already touch the VFS subsystem a bit.
+--dd3rsrobpe5enhed
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 67/80] usb: Remove redundant pm_runtime_mark_last_busy()
+ calls
+MIME-Version: 1.0
 
-However, as pointed out in my previous email, the disconnected directory
-case should be carefully considered for the path_walk_parent() users to
-avoid BPF LSM programs having the same issue I'm fixing for Landlock.
-The safe approaches I can think of to avoid this issue for BPF programs
-while making the interface efficient (by not calling path_connected()
-after each path_walk_parent() call) is to either have some kind of
-iterator as Tingmao proposed, or a callback function as Neil proposed.
-The callback approach looks simpler and more future-proof, but I guess
-you'll have to make it compatible with the eBPF runtime.  I think the
-best approach would be to have a VFS API with a callback, and a BPF
-helper (leveraging this VFS API) with an iterator state.
+On Fri, Jul 04, 2025 at 10:54:53AM +0300, Sakari Ailus wrote:
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+[...]
+> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+> index 0c7af44d4dae..554b03e3ae92 100644
+> --- a/drivers/usb/host/xhci-tegra.c
+> +++ b/drivers/usb/host/xhci-tegra.c
+> @@ -1394,7 +1394,6 @@ static void tegra_xhci_id_work(struct work_struct *=
+work)
+>  		}
+> =20
+>  		tegra_xhci_set_port_power(tegra, true, true);
+> -		pm_runtime_mark_last_busy(tegra->dev);
+> =20
+>  	} else {
+>  		if (tegra->otg_usb3_port >=3D 0)
 
-I'm aware that this disconnected directory fix might delay your patch
-series, but the good news is that it's an opportunity for eBPF programs
-to not have the issue I'm fixing for Landlock.
+pm_runtime_mark_last_busy() was previously called conditionally only for
+host mode, but not for peripheral mode. That said, since that call was
+now moved into the pm_runtime_put_autosuspend(), any issues would
+already have been introduced by the series that this depends on, so
+we'll see if there's any fallout.
 
-> 
-> Thanks,
-> Song
-> 
-> 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--dd3rsrobpe5enhed
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhnmr0ACgkQ3SOs138+
+s6FhWRAAmqKDqeofJQ11k5izwUxvfuUGMikCMaAXOhGyv2+Tokqg6xbVpQ/LTy3A
+jW7wNUyH5ZjWFprk7RPURsZpkc8ruTDl3bmWdSdp+DlV5VNfEYs1fqreyNsOF1k/
+a++KWAlrXA7VRbSlFdMj6W6SjudMMjWby6Pm2K7I8pDuJQdOwSuBf0bWgN95JEiu
+MEf7+WORXLjgJToa1eiPE9aPSMqS+vOMhkrhJLfrsCmwqoG5CUnIJXf6wnaN5hqq
+QGKPnHXbDocqwAaMFkzX1/nSahQOIl4A882n8JB885SajqJ81BnjWVaUFnS2RDfS
+aPDiHDlZ+xs/Ix8ISxgpY6MPoMalnKlf3pkQ3FWrgS/NyTNryLm9bBT/SbhJVddC
+kAShqX2e8jXSn1MbNhLryWBJYdQ7jWagl5HwL2/R1w6BzY69iwUKHK/1Pi3SHFY9
+ryW8wlQGR2/ukqPqFPZVfXMmcX00Zuu+JIaiSscFM/Q5I3n47JIYmsFSWsertbI6
+DTkF9fKh5n1npEGFeUCilrG9b1bsYM+BJIrwqZ+7qfpgKb1uxC6yjdIlDLwkOLjy
+gc0ZORc30ulN3X2p+KUzVnte27Q3llclgZoISLYfv0+wkWvQcNYuBCBSvpajeqMe
+dC9Twi/Dm657HYa4TfqcD3EMTgt//GUiOVxKCHqOlQhXpEvQMuM=
+=lUG1
+-----END PGP SIGNATURE-----
+
+--dd3rsrobpe5enhed--
