@@ -1,93 +1,134 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A682857F6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9823285C8C;
+	Fri,  4 Jul 2025 07:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615612; cv=none; b=dWZ3dHqrY9oFQC/GaO51Ma9r7olmaLLUCwBqWmPYw3kPPWOEpxLm2aFQ4HNZtULN/ZIBji8bAQuoYbz/SpQYLrEzCDxMyy1mG8a3SMcjLVfyducbza8PpHxNjhkybZMvi8WWoSiTqOiIPjzWo8UlgnEVuCqTPzHrnLbPPYETfjQ=
+	t=1751615614; cv=none; b=GsgsN6FfqH2zK5BTSZ0oV29uY4eqmenYGEdolBsVdFeYGKzlS+UM6X4zVvfDnpicBq3DDBnH4OESzPdZiN51V4xhrx/FoeKDc7SEj/kiBGdVxFn+PeS5gqZqi1DcK+mCIVO64O1hhQid6JRrOKxQH8AMWsgw0IY1vOdu/gndCm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615612; c=relaxed/simple;
-	bh=KykIkmM9eLteMUVLTsm/o94BJ8e9CpiqfyoLjbdjFXM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=utcRopCsyKvx+n2k4dDYf8gUpr61CHkEKYLEbGoSs2hH6iM8Y2LbhgaZAipzr2oc40gqfCK5ZYrCX3MNE+bCT1raz0ElMXOwFQGcCviDnbeQV8J+xMKNZhff02X8ONbSSd4IRAZ6SM5Zvgguj8UKJo5se291r1sfz5mfKYaiTW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2A+4JAL; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1751615614; c=relaxed/simple;
+	bh=XjXb/f4mBC+GMBUn31nFodWyuIyN27+97CH15XpX1Tg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=fMAkAzaxATCU8EuMNbZhK7nTa1MC2tp2cTC+rSCvSvmUpCQ1yoxBNuiZpMelIUWYZYr/vxKCoSSplpl96cDBuRSN9qoAb8nOEIPVuPgeTsyR10FuHJLMCikSqldyjgjK6s8y4nzAUxGCpGB4tw4vHAStaW2LyOF8w9sgls62Ok4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lbI4DNeo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2A+4JAL"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4537f56ab74so3569095e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751615609; x=1752220409; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWV6N46YCWcyFKoNN7ytQeutwvqMPF1aOuLppT9L42M=;
-        b=j2A+4JAL/m4PA27zELaw7cVrAH5L0fSLqQk6Wmbvez1uHwdzHyVG//deDlkyRYHOGA
-         Ef4dx+5vsTcylzAAHI8hy3YEFO9s099bLru0Et/EXGl7bRxgHzEBF+I6VEr+whiHrYOY
-         0LksqWqitChwetPVQNcUJc9S7ioj8hhVRbji6A9SmRVsaMFmXhTMG+ZNSdn5qJqFRFQJ
-         IsB/NpxrMu9ZLOjW+/NMWZcI12mGkLORs0OLCeLGkqNjscKkGYeAad+RDzpmZU5tP/+i
-         8+ULIwD40FhvuHEp06JAQ6JSuBvgNcBe8ymr/fZ8maZrdFbUDPRBJ2aSpieACsP+hTeG
-         JZng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751615609; x=1752220409;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWV6N46YCWcyFKoNN7ytQeutwvqMPF1aOuLppT9L42M=;
-        b=HGEEafjaZxDCRUjjqls64oR4myylyP1V/m2sSOWRDb/3Rdhd51AhqAXABl7v9FrNbs
-         tDR8MyshU825+WxYHOBrG057Y6bNsUTa9uHsDWZkdMo83gEnsAy3Xqjhw3CJcC9rv2IR
-         IRrW2AM75QqRDDHMN7k9YnfiWhIKlwQqYvHsItSakm2HO+9eFD+rmDf85m9gFrgTRPKt
-         vbRFhZbqn/uLFZTRxwTRQYxinJ9s0oqFaOeWF9wAB475ftax5+dzTInzvW4bCPAGoRKp
-         1ynEIcqVR+cIVkn9w7DNlUj3xX8cuJOXKWtmzQaSRAmz1M7s50OcMdp0oab/yKFcBycM
-         CzqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrgy70Y/T46UuWebfqanW+gJDuYIUggCehE+xgo1qLZ9MfZDecWi1cfHHZR2+xSor72o9zxCGLzg0W6Kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHXRTB6+PLI4ZXRzCDW3hoDg7p4eoKsXpX1QPnryq7NOSKhMvH
-	BhoXO8B+bZPk1tbcQE7WijiFocw+95rL8JQA5oKPc6uQ2AJExnRQo8MUqi1tr7rhL6rwhkbRhWd
-	HuxeDOW2iFSqDHgTiSA==
-X-Google-Smtp-Source: AGHT+IE0bh3U7cJQpUshyJ2zCxCWKYVhS/atQp5WI6Mvd4s8SgWIQ7QsV49DdQFGizF5VkFqrdrBYInDOCz1+0g=
-X-Received: from wmtg7.prod.google.com ([2002:a05:600c:8b57:b0:453:65ee:17c9])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:83c3:b0:453:78f:faa8 with SMTP id 5b1f17b1804b1-454b31085e7mr14720135e9.6.1751615609724;
- Fri, 04 Jul 2025 00:53:29 -0700 (PDT)
-Date: Fri, 4 Jul 2025 07:53:28 +0000
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-4-74103bdc7c52@collabora.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lbI4DNeo"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5646R4Km018560;
+	Fri, 4 Jul 2025 07:53:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Flw3+3vxE9NVGKronCkiecrpyoqLvf9P4ImipXtgPsw=; b=lbI4DNeo2iML9g9w
+	BzySqIzDSQw2MZjYY8wptmRPTf/5btTDSMYnCKM+A5hZycmwZ0FwlIfrrChKCTCS
+	tTl6WHOKJoqGYzAlpfXn6++bgbkecQ3c/4P2IAE0KE10aApuNddAo7JCP9DoeoMo
+	IEMmtzlsjbtttOliPf0xwF6/8sP6LEj0cCvR1q/IZg1suDTj0Trn9RzG2AsT4ndE
+	zt/UGBUsEmlguWIQilPT7Kmwl9I4KfzCfYFRQNOoRgmqkthHJ3FihGIKg1+LuXoJ
+	CUDBumWdf45XoKaJwWsk5AB0+P4YipqQMcUCEfiNlfKglM/gLDFTerG7I1UxRKO4
+	hy7NhA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8fxu28a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 07:53:27 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rQlF018147
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 07:53:26 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 4 Jul 2025 00:53:23 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:01 +0530
+Subject: [PATCH 01/25] media: iris: Fix buffer count reporting in internal
+ buffer check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-4-74103bdc7c52@collabora.com>
-Message-ID: <aGeIeJ8_Wj_QvEf5@google.com>
-Subject: Re: [PATCH v6 4/6] rust: irq: add support for threaded IRQs and handlers
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250704-iris-video-encoder-v1-1-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        "Vedang
+ Nagar" <quic_vnagar@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1216;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=XjXb/f4mBC+GMBUn31nFodWyuIyN27+97CH15XpX1Tg=;
+ b=ps0SZCqiLy+VFitAj6ex4pNAfGK4eU/8JlvjlriaH+KtPdjG5sJKrWXJyy+aFGId7V2tSb2LG
+ IexGs4KjMN5AiG3MrR2zEbPr75pQUzYkL8z0yXk7nUrNb9M0fYtFKsm
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX8MysmOHuCu6n
+ +EjL/7zTHX7KKE4c0gwhPQW7lie2rAg+v00phHnHErZYX9pcHAA+mY7znHLhG1z6YVDz+29lHeH
+ QKMvnY9yCtOAloHDoMPBJOnsM8uyB8jFisiaIazEo8ZNwitv1GY6l+r5WCxkNJuTNzVpg0sZCtQ
+ HUlB/dMk5HRs+tpm3b7JrjDY0nUNl7f7RDykCko+GB3cBe/cPL6b0ILIMRxRFFcrZ6Mat9aMLsW
+ xXR6iGpMb5XMIKQs8sOYXlb/A/Sh8C76Qppie+tGiMxpIWBOrrv3xJdG8W3xYo9q4CtkqAgJsVV
+ wyrM9SY3r0/a3ghfautWVcjP0RN42a3KUOxNKfEf2oD5Nwgh+T7Gk/zT3gItGTrHhDmi2TMMHPV
+ N6/SRC6YC9DKmvdRM24T6XK0ZPmRuOwcdCVL8R7D+e2j0nepNe9EsXREa90rNp4qGzKZCm40
+X-Proofpoint-GUID: TqA5tFCFowQI2FJDIWuvFNEy_N9atNEE
+X-Proofpoint-ORIG-GUID: TqA5tFCFowQI2FJDIWuvFNEy_N9atNEE
+X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=68678877 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=-BUsXMgqhKYdWNcrEH8A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 mlxlogscore=852 suspectscore=0 adultscore=0
+ phishscore=0 malwarescore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040060
 
-On Thu, Jul 03, 2025 at 04:30:02PM -0300, Daniel Almeida wrote:
-> This patch adds support for threaded IRQs and handlers through
-> irq::ThreadedRegistration and the irq::ThreadedHandler trait.
-> 
-> Threaded interrupts are more permissive in the sense that further
-> processing is possible in a kthread. This means that said execution takes
-> place outside of interrupt context, which is rather restrictive in many
-> ways.
-> 
-> Registering a threaded irq is dependent upon having an IrqRequest that
-> was previously allocated by a given device. This will be introduced in
-> subsequent patches.
-> 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+Initialize the count variable to zero before counting unreleased
+internal buffers in iris_check_num_queued_internal_buffers().
+This prevents stale values from previous iterations and ensures accurate
+error reporting for each buffer type. Without this initialization, the
+count could accumulate across types, leading to incorrect log messages.
 
-Same comments as patch 3, otherwise LGTM.
+Fixes: d2abb1ff5a3c ("media: iris: Verify internal buffer release on close")
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+---
+ drivers/media/platform/qcom/iris/iris_vidc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Alice
+diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+index c417e8c31f806e03555cd5e2a662a6efe5d58f3e..8285bdaf9466d4bea0f89a3b1943ed7d6c014b7d 100644
+--- a/drivers/media/platform/qcom/iris/iris_vidc.c
++++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+@@ -240,6 +240,7 @@ static void iris_check_num_queued_internal_buffers(struct iris_inst *inst, u32 p
+ 
+ 	for (i = 0; i < internal_buffer_count; i++) {
+ 		buffers = &inst->buffers[internal_buf_type[i]];
++		count = 0;
+ 		list_for_each_entry_safe(buf, next, &buffers->list, list)
+ 			count++;
+ 		if (count)
+
+-- 
+2.34.1
+
