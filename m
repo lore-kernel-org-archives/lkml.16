@@ -1,149 +1,125 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A042BF013;
-	Fri,  4 Jul 2025 15:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD742D63E8
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642762; cv=none; b=Q3zm3x0ubi+Y2Ox9FWuwIN5IymPdmZdzk9nuav/s6Ou0VvCoGCV6hJ1xAXONq34KKMUUoOIkQD5JbDG5W+iu0ki5ok4HKtUheNZcMUox+e295UspLHfuVsh79E89IigugdzXOTvkoXMAwuLnNo6rtwuMmIUgrKHMBp+sDlH+Auc=
+	t=1751642781; cv=none; b=l/qRUBWvdnDUrpXmXg5Y9V2uLAhNxkbpNMucfWrCGLBljPz+AVwYessSfvHxF1BfcAz+gX3PFAuplAjgPpA5xyoLfHM8tf5G4ieizVS6odeJR/YzcNbFqBDfyvlZusKb/p7+8Kyozd5+vUi9cqIv6SB01/UgIhNBwOMHMdQL+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642762; c=relaxed/simple;
-	bh=hkrris0XIdMZwhPXqZ/D23EFgKNcyFvFnekDIAcLLls=;
-	h=From:Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:
-	 References:In-Reply-To; b=JhAlz13aMr7uGmATsCIcBYrCH5YDuXwRu+0ftQE76KSEXt6pa6PnhFtXWsaWsfLUwAIMh9FKuMos1nvHwtDYItrjNCRQ/aL4Ojr6SWdPqK8iaFnZmBcTrbzdXNnBxXeBmg7eEMq7aq59w22raLwpaXqGZmFbiF+T89Ql0OjWgY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOzUIwOk; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751642781; c=relaxed/simple;
+	bh=ohRy4gcoGuEcRKZpJdSU1G0sKmqubXx68E7KSC1A01I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZaV7GQQiEkeNQseZFFb4HBi4Zt81RedhGa8p65Xzkw+FSzaZrMuZJCQGbCUa8JKgYpEhALJiYScgqQ/v2e7y9pcNFFO1VWYMCmbDD2asa5TqD7+zbcAPHVrNFC2bvo/3QY+UybNK5QhAOJHmf2w4N4BXUDvBB3PVQoW65NW330s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IQpuTJ46; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOzUIwOk"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so5877015e9.3;
-        Fri, 04 Jul 2025 08:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751642759; x=1752247559; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBgWCKbdVEBzjfEHgGPgXI3i0E/9SHqAjmNTx+sAHHY=;
-        b=XOzUIwOkQeMcr71Ot3P3jbGNtDnpqRIp5HO9pQbnZK1oXvYDK9FoeO5r5vVaxM7W+U
-         TcrmEUHpFk1dbYoQ+VtjcZWxFuiX8xdpvqRE4vZb2yeDxeNa+PsfqooRFH7cqMf1zxPe
-         teqAVWsKuR1bELRlQxJuNoDEOU6mmHDue4mRe5SZ1Zn1MtC4MeuDhS8EDwYWLdpN8Ccb
-         B1nTtu7WKVRz/VskNSH1ESZXUJzhkUydnL4HgBwyYCitCTNwmZgy9jlBX1TthKTOAjWD
-         Vd1jfNdxepwLQh7bl5b8pN36m1gnXqfaoMj31DMxALWL+pdo6d/6lRA9LZJ6kzZoR71I
-         ANHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751642759; x=1752247559;
-        h=in-reply-to:references:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JBgWCKbdVEBzjfEHgGPgXI3i0E/9SHqAjmNTx+sAHHY=;
-        b=vFoGhLULQqniVMB+QdX0iAghACcMs1sI/3jxyH1eEz0NDS43rk3Bv7QchE3QUSqms2
-         muA/Qa6z3RRI/6V9cWRyBrU0C2VckFNafbozSFHEtTX3/+8D9jKMtavxuaRXtBtMGmOd
-         1rRvs7Byf1b7eStkLe5XcMVil1HJj6sqLlegqCI+52gFBcSCrPH8C3Tx/xHUZWCSR3r4
-         ecybxyVUHLvJXArQqs4P0dmLkroRlZdY0qTp5LTeFN9WK6w7fgJpTcjY0o5fMjs1vMc3
-         kn/1YyIXOGJBEaHJv5ieW3nMRvpMWXRKUtQRKjqCjZn66VuLiaNYuJqQrUdA/FWX4Acb
-         t3Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDYSD8Dx3qej3kFuau4Ru826cHaBEuXzT3yF1CWi8UBeVNrbCO7TpSc9sWdHmJEL7B48fhlT5EKAApYtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGStx7zqrmv4ey6OiKPbqm1lCDvi9LXcFRLKdiSJgRcTIgfowG
-	onMyjDP45z0ZuVAujeS97pmtWFn0Scb2AhvWa/QqJ0dtbtlZEn/VEiyW
-X-Gm-Gg: ASbGncsSUl/cZplv8YctAO4H8NY1VK7cwTKFJRMVsGyzhR686RjkCvlaSQXqVryqGla
-	2OoTgpSIgzm3mhxtyeWZgB+RHlz1i6TdVVI5ld7rUNjXv+hbo1x/Owv6xWdF7Jdg8TM+xBp9Nrf
-	Y3LEAq107TAnASSCk9aQ6XBVQ1tTwLr0HNK4S8yE1YqbcRTClGpRPL6Rd6sIJtrix/JDV9Dw494
-	nim1KJ++KSiVP0YBDjIVWrdQqsCpCIAHyjKoxBwibakJqUTM2q1ZINqB4IjclGBnVKupKkVGbKk
-	wnmUrseI9WjsPGOYIi5LjSXqHOUmVz7yldX9vVH07o69CFLuFug5h1aLHdLq9K2gXIQ52Veds36
-	8DPP5Ahne1s16lw==
-X-Google-Smtp-Source: AGHT+IFg9uvqa5LmAr6RLIhel5JMqvuWuppWw508GFdS/XFd61zn07luB9/xERilmez4oszfTjS0kw==
-X-Received: by 2002:a05:600c:a316:b0:442:d9fb:d9f1 with SMTP id 5b1f17b1804b1-454b3b8a485mr22839885e9.4.1751642758465;
-        Fri, 04 Jul 2025 08:25:58 -0700 (PDT)
-Received: from localhost (a95-94-245-170.cpe.netcabo.pt. [95.94.245.170])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a9969058sm59249505e9.3.2025.07.04.08.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:25:57 -0700 (PDT)
-From: Rui Miguel Silva <rmfrfs@gmail.com>
-X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IQpuTJ46"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751642770;
+	bh=ohRy4gcoGuEcRKZpJdSU1G0sKmqubXx68E7KSC1A01I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IQpuTJ46xB7t9TZsLEqdQUqcaUBAf7UcGR9KeXm5AbW+VdHtVw9PDpxe3+Zx8pk1A
+	 2tofxiaQsxOsBqI1Xoko5rRmH1K5bu7qQfSPpuDh9FHDevntD6KW1HNq8gawLU7HWj
+	 QN/lN+G1R0r+Nw79biJPjRdmz1WYurJMekV6zpmEDl6scwasEp6xsbqmNTSljPz6J6
+	 pDCt8GB71tdiXMdZ++n5SpjvzRnxX7/0eOzOnA9yMMhfpHs04vvBc2wV18ZLD0P/6T
+	 hvRxPGgcRDfX0NNfaE6a/UgspTX3s/2td2/OaNlIvJoPeuPYsoHL9B+Vb1799nm2kj
+	 uNYYV5pFL+w3w==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EDC8517E07C9;
+	Fri,  4 Jul 2025 17:26:09 +0200 (CEST)
+Message-ID: <c08e55bb-fb93-44d6-bcb2-f1a1b78a5fb7@collabora.com>
+Date: Fri, 4 Jul 2025 18:26:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] drm/rockchip: dw_hdmi_qp: Provide ref clock rate in
+ dw_hdmi_qp_plat_data
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
+ <20250704-rk3588-hdmi-cec-v1-3-2bd8de8700cd@collabora.com>
+ <20250704-granite-piculet-of-elevation-f01e08@houat>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250704-granite-piculet-of-elevation-f01e08@houat>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Jul 2025 16:25:57 +0100
-Message-Id: <DB3DJ9O7DEH9.377Y1IS7ZAVHV@linaro.com>
-To: "Sakari Ailus" <sakari.ailus@linux.intel.com>, "Jonathan Cameron"
- <jic23@kernel.org>, "David Lechner" <dlechner@baylibre.com>,
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, "Andy Shevchenko"
- <andy@kernel.org>, "Rui Miguel Silva" <rmfrfs@gmail.com>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Julien Stephan" <jstephan@baylibre.com>, "Hans
- de Goede" <hansg@kernel.org>, "Waqar Hameed" <waqar.hameed@axis.com>
-Cc: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 32/80] iio: gyro: Remove redundant
- pm_runtime_mark_last_busy() calls
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
- <20250704075422.3219401-1-sakari.ailus@linux.intel.com>
-In-Reply-To: <20250704075422.3219401-1-sakari.ailus@linux.intel.com>
+Content-Transfer-Encoding: 7bit
 
-Hi Sakari,
-Thanks for the patch
-On Fri Jul 4, 2025 at 8:54 AM WEST, Sakari Ailus wrote:
+Hi Maxime,
 
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
-> The cover letter of the set can be found here
-> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ail=
-us@linux.intel.com>.
->
-> In brief, this patch depends on PM runtime patches adding marking the las=
-t
-> busy timestamp in autosuspend related functions. The patches are here, on
-> rc2:
->
->         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git=
- \
->                 pm-runtime-6.17-rc1
->
->  drivers/iio/gyro/bmg160_core.c     | 1 -
->  drivers/iio/gyro/fxas21002c_core.c | 2 --
->  drivers/iio/gyro/mpu3050-core.c    | 3 ---
->  drivers/iio/gyro/mpu3050-i2c.c     | 1 -
->  4 files changed, 7 deletions(-)
->
-> diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_cor=
-e.c
-> index 781d3e96645f..4dbe3c0cc5eb 100644
-> --- a/drivers/iio/gyro/bmg160_core.c
-> +++ b/drivers/iio/gyro/bmg160_core.c
-> @@ -310,7 +310,6 @@ static int bmg160_set_power_state(struct bmg160_data =
-*data, bool on)
->  	if (on)
->  		ret =3D pm_runtime_get_sync(dev);
->  	else {
-> -		pm_runtime_mark_last_busy(dev);
->  		ret =3D pm_runtime_put_autosuspend(dev);
->  	}
-> =20
-> diff --git a/drivers/iio/gyro/fxas21002c_core.c b/drivers/iio/gyro/fxas21=
-002c_core.c
-> index 754c8a564ba4..a88670207cec 100644
-> --- a/drivers/iio/gyro/fxas21002c_core.c
-> +++ b/drivers/iio/gyro/fxas21002c_core.c
-> @@ -373,8 +373,6 @@ static int  fxas21002c_pm_put(struct fxas21002c_data =
-*data)
->  {
->  	struct device *dev =3D regmap_get_device(data->regmap);
-> =20
-> -	pm_runtime_mark_last_busy(dev);
-> -
->  	return pm_runtime_put_autosuspend(dev);
->  }
+On 7/4/25 6:07 PM, Maxime Ripard wrote:
+> On Fri, Jul 04, 2025 at 05:23:24PM +0300, Cristian Ciocaltea wrote:
+>> In order to support correct initialization of the timer base in the HDMI
+>> QP IP block, extend the platform data to provide the necessary reference
+>> clock rate.
+>>
+>> While at it, ensure plat_data is zero-initialized in
+>> dw_hdmi_qp_rockchip_bind().
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c | 13 ++++++++++++-
+>>  include/drm/bridge/dw_hdmi_qp.h                |  1 +
+>>  2 files changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+>> index 126e556025961e8645f3567b4d7a1c73cc2f2e7f..8c1185490009c5f1bc658998a868f8b18dc479a3 100644
+>> --- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+>> +++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+>> @@ -431,8 +431,8 @@ static int dw_hdmi_qp_rockchip_bind(struct device *dev, struct device *master,
+>>  				    void *data)
+>>  {
+>>  	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct dw_hdmi_qp_plat_data plat_data = {};
+>>  	const struct rockchip_hdmi_qp_cfg *cfg;
+>> -	struct dw_hdmi_qp_plat_data plat_data;
+>>  	struct drm_device *drm = data;
+>>  	struct drm_connector *connector;
+>>  	struct drm_encoder *encoder;
+>> @@ -515,6 +515,17 @@ static int dw_hdmi_qp_rockchip_bind(struct device *dev, struct device *master,
+>>  		return ret;
+>>  	}
+>>  
+>> +	for (i = 0; i < ret; i++) {
+>> +		if (!strcmp(clks[i].id, "ref")) {
+>> +			plat_data.ref_clk_rate = clk_get_rate(clks[i].clk);
+>> +			break;
+>> +		}
+>> +	}
+>> +	if (!plat_data.ref_clk_rate) {
+>> +		dev_err(hdmi->dev, "Missing ref clock\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+> 
+> You'd be better off not using clk_bulk, or calling an additional clk_get
+> for the ref clock only.
 
-LGTM,
-Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
+I'd keep clk_bulk as there are 5 more clocks in the list.  But replacing the
+loop with just an extra clk_get would be a simpler approach, indeed, so
+thanks for the hint!
 
-Cheers,
-   Rui
+Regards,
+Cristian
