@@ -1,91 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3832E3715;
-	Fri,  4 Jul 2025 17:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A42A1922ED
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751648892; cv=none; b=I1uBn7cfuioUthqsyf1JXy68B0l2D7SbVbVlRRnGFhGZC8KCZK4IbcEZnBvdetDikaN9Grn2ct5AFq4kkN+i0+qMsEOvidTX3ALf4rjMfl0UsNQrJEKj8AmflNAsbwsfN05mRvuZN2VhR/S2X+Wtqing/X6EdEZtpGi7Tcj3A4o=
+	t=1751648921; cv=none; b=cLm4ZmrJn43DAmayuuy03X4L30dGZoCvJb0FRUSutYAjstJo2LczH8t0sZDBeuLFp9jSGUOPru5AbzETODmbA6OI+p07GZyw/ALZErszpq1e2nnvjb0A9i3nO2R/F7luWn8HH+XA2cjx+9x/eIu30o44Ni5/iVmepQfgrB6K3/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751648892; c=relaxed/simple;
-	bh=0ITybG1gGZl6YRP0Mrv2Tjbb16ysrUlCnsvanObbjyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=obGYnFJeZb8BmNwrkDi5XgO+FC7+ovJmezOLHhxQULYFuAOsiTErqzqy4Z51pN93h4VFaOQn1uWRhZ8Fi/Lke47lyBJrYZfF/1joDEieFcKeMNMozlKTZ4TLtj/qc+kkCDYCkwJFlR1albSohVT53697gJYCaBifNz92GzNzWKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUJFqm+v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751648921; c=relaxed/simple;
+	bh=RSpc/HEh7EC9KbKUGCwegqfYZnp1BrMK74eIEFnWcFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q4RoRk0KErfWtjy5j3TdU/iLtCzF7ocD9biu3Po12h2WbvYOuhPgS7P+YA6aXCB9zXDlVCfOijipfYS/SAETmMtFMhY58fzZ9mHrCGESpYNO0rB+W1snKMOC6+Eptl2I1jO5WSljIt+Xuq2jNmCKfE4C36wlJFe431elLte0n74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fd0+5KKo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUJFqm+v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F009C4CEE3;
-	Fri,  4 Jul 2025 17:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751648891;
-	bh=0ITybG1gGZl6YRP0Mrv2Tjbb16ysrUlCnsvanObbjyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oUJFqm+vZebVfuVTFodwOJdFbLcDHvjUiHb6U8VPBJNXuVSI0SAzi7WPBVBJ/QUxD
-	 wdW1EdtPE4lrE41uwEZYe35M4Hfs8t2E0vAukVMR9+nRp2KWYsqmW97it0sbFMffhL
-	 tTHxZ2sOkmWUcfANOs14bH5GUsC+c1BuXgvx6QW/7KfWzV2Swetf9qkLpCcuGyZZjF
-	 1BSy1RyuXklQV/vmmij7Z8bOUfCS5s21QNdqWcHVouVd4rZHysgcgAAV7TaBnzk8MX
-	 AoaPKknZindFH4YpIfyc4cKIYA2yZIgwiWHimSm34MmK3GKplCSrYwwpNmVp0msITf
-	 Lhw+r94qHv1Gw==
-Date: Fri, 4 Jul 2025 20:08:07 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, shannon.nelson@amd.com,
-	brett.creeley@amd.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
-	andrew+netdev@lunn.ch, allen.hubbe@amd.com, nikhil.agarwal@amd.com,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Boyer <andrew.boyer@amd.com>
-Subject: Re: [PATCH v3 10/14] RDMA/ionic: Register device ops for control path
-Message-ID: <20250704170807.GO6278@unreal>
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250624121315.739049-11-abhijit.gangurde@amd.com>
- <20250701103844.GB118736@unreal>
- <20250702131803.GB904431@ziepe.ca>
- <20250702180007.GK6278@unreal>
- <bb0ac425-2f01-b8c7-2fd7-4ecf9e9ef8b1@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fd0+5KKo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751648918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sIfTKBxpXvRRKFDOhvV5FIjToEH8amE07fxIQ6HxVLA=;
+	b=fd0+5KKoBBTNhvE/j8+iqgMrzUjgO0iwKhiax1kLPFoDQKiYLbM0/3NfVpUMbGgP0RzrrO
+	MyMQFI988IwWRZGRiJs62126KB0QxFjTHyri5gJPWn1Nn93ejaF1/iIeL2G0T4TuL8+1mt
+	T3wMbUkIvDXUprn/tdkqRaxpXkpd83E=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-482-5wCcLCKuNFy2y5dL6ZtSFQ-1; Fri,
+ 04 Jul 2025 13:08:35 -0400
+X-MC-Unique: 5wCcLCKuNFy2y5dL6ZtSFQ-1
+X-Mimecast-MFC-AGG-ID: 5wCcLCKuNFy2y5dL6ZtSFQ_1751648913
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 823671956061;
+	Fri,  4 Jul 2025 17:08:32 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.79])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5124719560AB;
+	Fri,  4 Jul 2025 17:08:24 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v3 0/2] tracing/preemptirq: Optimize disabled tracepoint overhead
+Date: Fri,  4 Jul 2025 14:07:41 -0300
+Message-ID: <20250704170748.97632-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb0ac425-2f01-b8c7-2fd7-4ecf9e9ef8b1@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Thu, Jul 03, 2025 at 12:49:30PM +0530, Abhijit Gangurde wrote:
-> 
-> On 7/2/25 23:30, Leon Romanovsky wrote:
-> > On Wed, Jul 02, 2025 at 10:18:03AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Jul 01, 2025 at 01:38:44PM +0300, Leon Romanovsky wrote:
-> > > > > +static void ionic_flush_qs(struct ionic_ibdev *dev)
-> > > > > +{
-> > > > > +	struct ionic_qp *qp, *qp_tmp;
-> > > > > +	struct ionic_cq *cq, *cq_tmp;
-> > > > > +	LIST_HEAD(flush_list);
-> > > > > +	unsigned long index;
-> > > > > +
-> > > > > +	/* Flush qp send and recv */
-> > > > > +	rcu_read_lock();
-> > > > > +	xa_for_each(&dev->qp_tbl, index, qp) {
-> > > > > +		kref_get(&qp->qp_kref);
-> > > > > +		list_add_tail(&qp->ibkill_flush_ent, &flush_list);
-> > > > > +	}
-> > > > > +	rcu_read_unlock();
-> > > > Same question as for CQ. What does RCU lock protect here?
-> > > It should protect the kref_get against free of qp. The qp memory must
-> > > be RCU freed.
-> > I'm not sure that this was intension here. Let's wait for an answer from the author.
-> 
-> As Jason mentioned, It was intended to protect the kref_get against free of
-> cq and qp
-> in the destroy path.
+This series addresses unnecessary overhead introduced by the
+preempt/irq tracepoints when they are compiled into the kernel
+but are not actively enabled (i.e., when tracing is disabled).
 
-How is it possible? IB/core is supposed to protect from accessing verbs
-resources post their release/destroy.
+These optimizations ensure that when tracing is inactive, the kernel
+can largely bypass operations that would otherwise incur a passive
+performance penalty. This makes the impact of disabled preemptirq
+IRQ and preempt tracing negligible in performance-sensitive environments.
 
-After you answered what RCU is protecting, I don't see why you would
-have custom kref over QP/CQ/e.t.c objects.
+---
+Performance Measurements
 
-Thanks
+Measurements were taken using a specialized kernel module [1] to benchmark
+`local_irq_disable/enable()` and `preempt_disable/enable()` call pairs.
+The kernel used for benchmarking was version 6.16.0-rc2. "Max Average"
+represents the average of the 1000 highest samples, used to reduce noise
+from single highest samples.
+
+Each benchmark run collected 10^7 samples in parallel from each CPU
+for each call pair (used for average, max_avg, and median calculations).
+The 99th percentile was measured in a separate benchmark run, focused
+on a single CPU.
+
+The results show that compiling with tracers (Kernel Build:
+`-master-trace`) introduced significant overhead compared to a base
+kernel without tracers (Kernel Build: `-master`). After applying these
+patches (Kernel Build: `-patched-trace`), the overhead is
+substantially reduced, approaching the baseline.
+
+x86-64 Metrics
+
+Tests were run on a system equipped with an Intel(R) Xeon(R) Silver 4310 CPU.
+
+IRQ Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               28     5587      29          23
+6.16.0-rc2-master-trace         46     7895      48          32
+6.16.0-rc2-patched-trace        30     6030      31          27
+
+Preempt Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               26     5748      27          20
+6.16.0-rc2-master-trace         45     7526      48          26
+6.16.0-rc2-patched-trace        27     5479      27          21
+
+AArch64 Metrics
+
+Tests were also conducted on an AArch64 platform.
+
+IRQ Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        28     3298      32          64
+aarch64-6.16.0-rc2-master-trace 105     5769      96         128
+aarch64-6.16.0-rc2-patched-trace 29     3192      32          64
+
+Preempt Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        27     3371      32          32
+aarch64-6.16.0-rc2-master-trace  32     3000      32          64
+aarch64-6.16.0-rc2-patched-trace 28     3132      32          64
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+
+---
+References:
+[1] https://github.com/walac/tracer-benchmark
+
+--
+Changes:
+v1: Initial version of the patch.
+v2: Enabled IRQ tracing automatically when CONFIG_PROVE_LOCKING is active.
+v3: Resolved a build failure on the 32-bit ARM architecture.
+
+Wander Lairson Costa (2):
+  trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
+    overhead
+
+ include/linux/irqflags.h        | 30 +++++++++++++++++++---------
+ include/linux/preempt.h         | 35 ++++++++++++++++++++++++++++++---
+ include/linux/tracepoint-defs.h |  1 -
+ include/linux/tracepoint.h      |  1 +
+ kernel/sched/core.c             | 12 +----------
+ kernel/trace/trace_preemptirq.c | 22 +++++++++++++++++++++
+ 6 files changed, 77 insertions(+), 24 deletions(-)
+
+-- 
+2.50.0
+
