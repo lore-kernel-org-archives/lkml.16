@@ -1,121 +1,103 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108572D948E;
-	Fri,  4 Jul 2025 12:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4BE2D97B7;
+	Fri,  4 Jul 2025 12:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632789; cv=none; b=K065XCJexI8NST8n58jgKxA+gzN2PhpNTZBu0B5mNEO6d44mkg55KY/wn9Y6jMSyvZCEr7peI8LkAw09TR1IwYjhSNUSz1UW/8lwOMbS/O3qFIJdvzu4B5UOV8ch9BcISbK76t2QQRWl2ei2vS9DuWCL6LwSSG+TFbBODlzhcEo=
+	t=1751632798; cv=none; b=pbG6Gl+fEGy5fs862g9nqwn6Aos7N066zgNuLmcPg4rHEs7mB9kPdzpqSDWqpRQ1qeOMSinMXNtvkXvvleuPrFKfVm412lOIMIMCdvQtvO+WQP7g8g+ceelq/FIBHQLO5QQQ4Kx5sflUw4q6nCycev1kGtqwTot6Q6DlPEgMXzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632789; c=relaxed/simple;
-	bh=kM65gUyDV8Nq6O0X5HePJHOOeCngpBNSIlUrnpmpZME=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XpkmZc0XcYDYDz2YdIu9PJDexfQuMBVb+8X+LA59XJapk7S9NrqGF8hY5t2z5n/6fAGu68gbVdka4WXbE9kl1BsRi6JiMxW7+8Asgbh1dfOb1MN9xNizMH9iYEGcVLr7/XQri8fel2L5M5Iujc+xMH0upLx/z8M79S5pbR5VijE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZW231LNU; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751632798; c=relaxed/simple;
+	bh=LikTtaJjGNzZn+9RN96jwnZuX2ntlhHZCY88IkmjooU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnbH4Pgfiy+r74wG9krcezS4PDTsHoMT5XIedU/vy7p4VlrAGYzzhhStLeij6yt4/AlHLZJ0w9xLOqqfsYYSOcAbgpZNJVJ9+POQ3aAcIkWiSxLZie8m69O/F8sejdhMttBU/I9ncI5QbYqa9f3P+08B92p0iXkE882aJ9DIk7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kdux1bu9; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZW231LNU"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so1328238f8f.1;
-        Fri, 04 Jul 2025 05:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751632786; x=1752237586; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kM65gUyDV8Nq6O0X5HePJHOOeCngpBNSIlUrnpmpZME=;
-        b=ZW231LNUQSMqUpOkf0PO1o1HIEPt17lH9kRNXzVMEOApgXSXqZ08qa++OMRa9tSmS/
-         xPBwKMc2Wrinmy5BYpcgaxCkSMGK1lPiLuqiEG9Ezk7qsHif0UoAqWRLf7V6Y67H+EOa
-         oRTjOZdUajcIUQvF2b/tjTbm70e6qsXi0CQR4sQ67+pL/GG5e1mnkLjIw/J4guGajm25
-         LT6Ph/Ox47GJ5rwqatXFiwnwhBqoL1dKbdoZPSNQgQkQlM81l2RpXQN8BwI+UoeD+06Z
-         h9ojYol2s6QNTIVJTg4Q+kKl6unY8xEB23XXYpmbXi15VpRqh0Ydx/Jnuuk246X6FSkr
-         PeeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751632786; x=1752237586;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kM65gUyDV8Nq6O0X5HePJHOOeCngpBNSIlUrnpmpZME=;
-        b=T9tSai3zYBHKxQmbHn3794wk2U7TFHJmJ4oecMkPA1A4Gtf14bnR2OgAEZQ39XmZxc
-         rn4sSlq/uK6/RoqeIuyFjeeE2j5DHrD7GnT7KDPR6vv8RJkhfTZn0WMCaOuTVoI9v2sp
-         WKGixoa7j5Zxa5DNOsCIDJIrl/XJlHAXQykf9/gA4U/XqLroW9ZEXyvXAg1KCFXeSrdt
-         aF2pqsQ3BM7MUWNyWaO+NNIYX3jy9NYBlo+l5c1owp0IN/MZ2tnCb4MTRhRshc77gjR7
-         BkEVBmltNKyqC44O8f2cfm3/AtvPBUs+zrfZDz7m7ouxQ4qQs/axcyQ/ZH60MCuMeVa7
-         oygg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNOm6xvvRUJr9X8HM1z2SVeL9S1RH2A9tSUE6ZB6YGTAlc3cUTMTiUqItLRbX9Y9zqz17MZVVxjrg+@vger.kernel.org, AJvYcCWOMOXZkgbosfLZDXS+BH6G94XQd/uIkMsGkqfaVazeUg3Y28XuZCM7+nZ9Zl2JX0z4P+en3kBpBKodZiLI@vger.kernel.org, AJvYcCX5PdsFgsTJJJ6guad69FGTNUQgCxQw4lxZyofZeM/WiRYTQQnJIKZsemCF8MnXGqWGqaxMi9Ad8CAl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE287CRNkxg3WflIi3V+RfAlBSNskJy6V8OLIkpbFv/2aBMhnu
-	vEwzFY8zi28E5vq/PQVwDlcWemSfnFKsd+OqE5aUZSTY/OTaXfdVF6fx
-X-Gm-Gg: ASbGncvgas6uxAkSfn1Y5nVipneWTvMss9TJrRgHp6GInJjfkl9buUYKPPL/XlD/4G8
-	0/9qQzlMcQoJj9Y5vWaSKAJjJYuXm4AlI8Gxka8IWKUQp45oBjqhDWiTc/CtF9zLOud3pgGbrwx
-	6/xO+ZPBQZoaDk+u27j9Vvm6eDrp9zuqfPM/WoOXH3bcqIQdlltpX0LRXEepRpHF1+ldORbyAF1
-	mG/H7fSEVX/ITHQwm7ykR8MH7WfUgxjlqXY26/8RvIHpn8RtLqkf6kh26SWHi2WTsfoMsOEYcvx
-	6wyam+sKbWAFvPFtaNWHweh3zpEyEFDcGkE6DEIRyaKrhAv9TXkWuZREgSXgCsNERXSOVg==
-X-Google-Smtp-Source: AGHT+IGEZQqooZXYhGVoWPdBr2vTu84V+4w3rPWYqllSwEygO+t6NPXOBmMzmHVAtMjkZ8S2Ox0sXg==
-X-Received: by 2002:a05:6000:4911:b0:3a5:2915:ed68 with SMTP id ffacd0b85a97d-3b495ccbb9emr2195447f8f.28.1751632786152;
-        Fri, 04 Jul 2025 05:39:46 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030b4f6sm2467772f8f.10.2025.07.04.05.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:39:45 -0700 (PDT)
-Message-ID: <ab0a407412c705e409d9d26591543713a092c13f.camel@gmail.com>
-Subject: Re: [PATCH v2 0/6] iio: Add support for MT6363/6373 Auxiliary ADC
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	jic23@kernel.org
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org, 	krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, 	linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-mediatek@lists.infradead.org,
- kernel@collabora.com
-Date: Fri, 04 Jul 2025 13:39:56 +0100
-In-Reply-To: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
-References: 
-	<20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kdux1bu9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751632796; x=1783168796;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LikTtaJjGNzZn+9RN96jwnZuX2ntlhHZCY88IkmjooU=;
+  b=Kdux1bu9kixMmKuVq5n0r+O8zxJPpKkkACXARDuPakSnHc5sDmqm5dwT
+   1227DbyBtAC7sxKqGO/YaX/OR8zLJLjXArJ36nYAyYeA+fNtCYAuRejc6
+   1Fkgy1ajpZg+ZrbTU+1AyeTJQlfzVEZ102Z7juhyHSMl2bQOusSN869Ao
+   LfLpCxkcR/PDVkVBTkuilgMzcAE6mhPsNkOJCqcOafJn6HohUx5+cviqa
+   BlHOyzurBe89KGlXd1TtakKfKygPvaV61PfhEHuA++Gn5Xi7FXAMGmjCn
+   Zi6vXXDn/+f3IKkBKJCH0bT+BsCnYCjzgBXceuuaxLea6kfCKUIQVs9Ef
+   A==;
+X-CSE-ConnectionGUID: f71jAkGwRpWumWVrQ9lNmg==
+X-CSE-MsgGUID: Luuyu4SMQtC3WiV4Lj+nOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53834463"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="53834463"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 05:39:56 -0700
+X-CSE-ConnectionGUID: 3YimJf/1Sp6YNWjGDek8Lw==
+X-CSE-MsgGUID: NtJOoYdDQfugBLaj+hO45g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="158978302"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 04 Jul 2025 05:39:53 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXfhl-0003i7-36;
+	Fri, 04 Jul 2025 12:39:49 +0000
+Date: Fri, 4 Jul 2025 20:38:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] char: misc: Add a reentry test case about dynamic
+ minor request
+Message-ID: <202507042031.3gfceqb3-lkp@intel.com>
+References: <20250702-rfc_miscdev-v3-4-d8925de7893d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-rfc_miscdev-v3-4-d8925de7893d@oss.qualcomm.com>
 
-On Thu, 2025-07-03 at 16:11 +0200, AngeloGioacchino Del Regno wrote:
-> Changes in v2:
-> =C2=A0- Added error checks to all regmap r/w operations
-> =C2=A0- Moved adc_vref addition to different commit
-> =C2=A0- Various other fixes
->=20
-> This series adds support for the Auxiliary ADC IP found on the new
-> MediaTek MT6363 and MT6373 PMICs, found on board designs featuring
-> the MT8196 Chromebook SoC or the MT6991 Dimensity 9400 Smartphone SoC.
->=20
-> AngeloGioacchino Del Regno (6):
-> =C2=A0 dt-bindings: iio: adc: mt6359: Add MT6363 PMIC AuxADC
-> =C2=A0 dt-bindings: iio: adc: mt6359: Add MT6373 PMIC AuxADC
-> =C2=A0 iio: adc: mt6359: Add ready register index and mask to channel dat=
-a
-> =C2=A0 iio: adc: mt6359: Move reference voltage to platform data
-> =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6363 PMIC AUXADC
-> =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6373 PMIC AUXADC
->=20
-> =C2=A0.../iio/adc/mediatek,mt6359-auxadc.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A0drivers/iio/adc/mt6359-auxadc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 440 +++++++++++++++---
-> =C2=A0.../iio/adc/mediatek,mt6363-auxadc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 24 +
-> =C2=A0.../iio/adc/mediatek,mt6373-auxadc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 +
-> =C2=A04 files changed, 416 insertions(+), 69 deletions(-)
-> =C2=A0create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6363-auxa=
-dc.h
-> =C2=A0create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6373-auxa=
-dc.h
+Hi Zijun,
 
+kernel test robot noticed the following build warnings:
 
-LGTM,
+[auto build test WARNING on 626e89412dfb88766d90d842af4d9ec432d8526f]
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Zijun-Hu/char-misc-Move-drivers-misc-misc_minor_kunit-c-to-drivers-char/20250702-202131
+base:   626e89412dfb88766d90d842af4d9ec432d8526f
+patch link:    https://lore.kernel.org/r/20250702-rfc_miscdev-v3-4-d8925de7893d%40oss.qualcomm.com
+patch subject: [PATCH v3 4/8] char: misc: Add a reentry test case about dynamic minor request
+config: powerpc64-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507042031.3gfceqb3-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507042031.3gfceqb3-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507042031.3gfceqb3-lkp@intel.com/
+
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: vmlinux: section mismatch in reference: hash_debug_pagealloc_alloc_slots+0x98 (section: .text) -> memblock_alloc_try_nid (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: test_cases+0x60 (section: .data) -> miscdev_test_invalid_input (section: .init.text)
+>> WARNING: modpost: vmlinux: section mismatch in reference: test_cases+0x180 (section: .data) -> miscdev_test_dynamic_reentry (section: .init.text)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
