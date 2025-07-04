@@ -1,110 +1,190 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BD82857FA;
-	Fri,  4 Jul 2025 08:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5826D2882AD;
+	Fri,  4 Jul 2025 08:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618199; cv=none; b=BXY70Ky8UAlt/D0P16ikQ4fHqmp5bKc6+X3nB+MqMNsHaH+HzppTbwHW8gXZ8MbLJj6It6pgNh41OHFhG0VeNig4nGM/o2r/b2HT3I2xIjUnyUnmLbI/On6BZIokS/QwHvlhcvzD+02xjvtbXTOmV8ND6nbJNpykig3BhRstSPI=
+	t=1751618247; cv=none; b=JgDOXDB93/hW7sFKfHyQ2QhnLwkRbCpiox45fgtvy1jebbaV6zpXbVLrT+8oy3ElBirqKLRHnaAshjyPCLRhS3A27BMq1sThXJ91y147Qfkqa3a4vQAqdQR3yvmGsCOUyYQ5dtwtb434PX96Faxc2cOzNkb0MqnJKGQtshOz0fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618199; c=relaxed/simple;
-	bh=w2oE4pOh1akyKzIgJzSCOJHT+T23QNxc7gNrBnaFFh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hyOLvKNqEzpUhFxq0eY5aHSb7GqgW037Ioek3Yfja1ylqN4U1KYpaPOw+hMtfqGGEj1VwDRYiLAkSE/Zq21uttAQ6drH6R5AtcGEQEtopisEtxToakylThw0p+Inqd9HydU5vRXqPhNjiyYYdUb40bZTX3XlF2EjtDOrejFdj1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JPJ/sWpp; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1751618247; c=relaxed/simple;
+	bh=UcVEdWsMgJuOK8h1XyR+xUtQH0ZdYigTqHJT3JO4cLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UrrvlnOq9GZe0rNGdDoUlU6t6I9u7+bNn4lVtG5uzRjjqS40BWkxP05l2Yuz4vhTLy0xPz1Dk85qjVi2kILNSuEoGvTKepPLZre/EbPwV0btQJGVVIp0E2WHOPTyBKCQLBZxh/f5m+XKG6sHON+Zk0Uusykgd9QGgedQYb+2Fm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2wesZs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JPJ/sWpp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1751618185;
-	bh=d95nx73kVtyU4RyV75KvYPcyXTaQmjFaV1z38NhfO0A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JPJ/sWppdQuAt42JSvwi5mAkDItJ0kzLh+ZmRDstLITBOIkEK/OrXLj0cxTLJOrdo
-	 a2X2Il2+kGvHWvU2kC3QUezQMskuXcDiSpYtNX5yKEb2fXgBd9wWvOcd49fmUD967C
-	 iZX0xCjrQAlmWiqH2JcR5CniELT1UfBdw0xzyFRU=
-X-QQ-mid: zesmtpip3t1751618170ta0779b56
-X-QQ-Originating-IP: GVTrYKP7FbgWTpX/QoheMwYVtVk1rEfX3Iwi04kHrNQ=
-Received: from avenger-e500 ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 04 Jul 2025 16:36:07 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16565113001037801047
-EX-QQ-RecipientCnt: 18
-From: WangYuli <wangyuli@uniontech.com>
-To: horms@verge.net.au,
-	ja@ssi.bg,
-	pablo@netfilter.org,
-	kadlec@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	lvs-devel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	wangyuli@deepin.org,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH RESEND] ipvs: ip_vs_conn_expire_now: Rename del_timer in comment
-Date: Fri,  4 Jul 2025 16:35:53 +0800
-Message-ID: <E5403EE80920424D+20250704083553.313144-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2wesZs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C92C4CEE3;
+	Fri,  4 Jul 2025 08:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751618246;
+	bh=UcVEdWsMgJuOK8h1XyR+xUtQH0ZdYigTqHJT3JO4cLI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E2wesZs1dzJfJhjcqoa+yxVE6YJwdff8Kl7u4D4xKDxHxJTyYik8cM8E6maaYmazt
+	 71xJJs40ia567tw4hiZzgudx2ar+AnKUcaQfTh1j3Z/3koApKJ+w3LJjUyyrf54Xjd
+	 S2l2gFyfUIaZoA5t/VsKevBpr8Z4S1Y8LH1jbPZxNma7kC67cT2MCR3F8dBXyB4VDj
+	 bjuzWaooWWJgFTFNNtT8xgvbVrC3qzV1+kXioJSvpP4NMmVlwgcJchXz1XAksCJVDn
+	 gO61DpHb71/SUp8EYljp/dUDkikroLLG6a8jxyXeNi7wimsUpthUNYMcUavFJIHqxa
+	 trkC8qxIQkz0w==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Fri,  4 Jul 2025 10:36:54 +0200
+Message-ID: <20250704-vfs-fixes-fa31f5ff8c05@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5415; i=brauner@kernel.org; h=from:subject:message-id; bh=UcVEdWsMgJuOK8h1XyR+xUtQH0ZdYigTqHJT3JO4cLI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSkT1rJy3RN6tvdy2f/i/yZfXXiqx/lgXyPuy5y/fCJS HfePjMhu6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiuxgY/lebhRoEJbuZ7g/Z Vm9rHHdxu4uKts66s6J89npWX6Vk9zAy3I2z/CsplSZwcvHfO54ajWYJMd0X+g62ZZ7ZZCy++kQ mPwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NFToOSOzJvJPUdRWuFYvA3xtNnngWCK/MdKYtqeU2XliL+CABkjlBu/r
-	NHDglCmfW02t2Pqw/zDzAoIOC0bZq2+793TnV4M5V26BfcRBbiIzBEVtvsmO5a/k74QM2ia
-	MfvOhQZZverk3WrGyS83rGmJ5rLsBd91QWB8NduumkJLxlmix6S7xwrhSjRPEfoaSnyPgus
-	1gdMQDY+jBSpAfFl6+tSW9gfX0Hjwxb5MjgkEFUFh8LPPOAhlg9p7+rSxTgeVSwYdUw58S3
-	fRbX3+5eQd5TAnf+X/PnYehg5BHwinNpenVg8WFvyQltZvNcfebTLCy/mD6udzh2fQM3/34
-	ZW9ONEaf+weLoHnmwR+E4uL0Bt9NRMlulZ4MiHoyUe9xQ22nSJZT5m34FBmeyRGP1uDqscw
-	vUO/Aa86dWyqAB/3m96X5HfRs8bgxbBXDO0E2ABViO3UvvPqFvkPjCJc4Rec7JJa4lyb8rQ
-	lGkkK5AUSWC6wcHh5oqQKvjjPaWkn8UO6R0rjFb+5ylQTFeZ/HA0jDr4gXqV6tjqk3WazpY
-	dYVEBrtpCToclT0TQdrw05bB0C947MsZOk6BeiGSX/Q9+GWQIbcYjWqe7/XXj/piLnn9Tvs
-	i0t86ikm1wjvh375bxgsvMCC/mtQJnsDxsAC9M2SwrKjbwE0C49AyhAT2T7dCMiL7s1RgPn
-	6TsfmOQ5JEPZc1gVQbkuYiovf5iLhhwQtBq4MkD4wNwocq62xozYh9M6yw+2/7AvNfVpWA5
-	BQzd8aPjPfq04hAlCxuEaQYcgBzZk16/w0O0br6qMDzJPLVya2451RGRwfHdFrY3R9gzoXL
-	cdU6pK3buqhHNfQIK67eHO68fbq9NUuepbTjMMXqsgk9HDsmVty654mW0cT6gg/FnMfNWBE
-	Dn9xZo0+2Ph1M+YhieHB40qm+3cPhtLvEM/9TAefmZapefea05W6Tjv2pZ/hehXjibfWv5T
-	SdH1QfSXm3uz8byrizR/7W9tA+s33Tg2wQpNL6i+mAC/nzLnBfBm9CbxEg4nAQwp7sc97nj
-	hyn2b8a1YuOVJvHC2fo+6hawEpZXrdiI6qzUA0KmI6OvaA7hNtto4xRNAPomOKRfOovJD2e
-	PquAjAN4QY7
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
 
-Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
-switched del_timer to timer_delete, but did not modify the comment for
-ip_vs_conn_expire_now(). Now fix it.
+Hey Linus,
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- net/netfilter/ipvs/ip_vs_conn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This includes a fix for a priority inversion in eventpoll. I did
+consider it a fix and it is a single commit but it is a bit more code
+than we would usually let through after -rc2. If you want me to delay
+that until the merge window that's perfectly fine. You can either just
+revert right after merging this or I can send you a new pull request
+tomorrow.
 
-diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
-index 44b2ad695c15..965f3c8e5089 100644
---- a/net/netfilter/ipvs/ip_vs_conn.c
-+++ b/net/netfilter/ipvs/ip_vs_conn.c
-@@ -926,7 +926,7 @@ static void ip_vs_conn_expire(struct timer_list *t)
- void ip_vs_conn_expire_now(struct ip_vs_conn *cp)
- {
- 	/* Using mod_timer_pending will ensure the timer is not
--	 * modified after the final del_timer in ip_vs_conn_expire.
-+	 * modified after the final timer_delete in ip_vs_conn_expire.
- 	 */
- 	if (timer_pending(&cp->timer) &&
- 	    time_after(cp->timer.expires, jiffies))
--- 
-2.50.0
+/* Summary */
 
+This contains another round of fixes for this cycle:
+
+- Fix a regression caused by the anonymous inode rework. Making them
+  regular files causes various places in the kernel to tip over starting
+  with io_uring. Revert to the former status quo and port our assertion
+  to be based on checking the inode so we don't lose the valuable
+  VFS_*_ON_*() assertions that have already helped discover weird
+  behavior our outright bugs.
+
+- Fix the the upper bound calculation in fuse_fill_write_pages().
+
+- Fix priority inversion issues in the eventpoll code.
+
+- Make secretmen use anon_inode_make_secure_inode() to avoid bypassing
+  the LSM layer.
+
+- Fix a netfs hang due to missing case in final DIO read result
+  collection.
+
+- Fix a double put of the netfs_io_request struct.
+
+- Provide some helpers to abstract out NETFS_RREQ_IN_PROGRESS flag
+  wrangling.
+
+- Fix infinite looping in netfs_wait_for_pause/request().
+
+- Fix a netfs ref leak on an extra subrequest inserted into a request's
+  list of subreqs.
+
+- Fix various cifs RPC callbacks to set NETFS_SREQ_NEED_RETRY if a
+  subrequest fails retriably.
+
+- Fix a cifs warning in the workqueue code when reconnecting a channel.
+
+- Fix the updating of i_size in netfs to avoid a race between testing if
+  we should have extended the file with a DIO write and changing i_size.
+
+- Merge the places in netfs that update i_size on write.
+
+- Fix coredump socket selftests.
+
+/* Testing */
+
+gcc (Debian 14.2.0-19) 14.2.0
+Debian clang version 19.1.7 (3)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+
+  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc5.fixes
+
+for you to fetch changes up to 1e7ab6f67824343ee3e96f100f0937c393749a8a:
+
+  anon_inode: rework assertions (2025-07-02 14:41:39 +0200)
+
+Please consider pulling these changes from the signed vfs-6.16-rc5.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.16-rc5.fixes
+
+----------------------------------------------------------------
+Christian Brauner (2):
+      Merge patch series "netfs, cifs: Fixes to retry-related code"
+      anon_inode: rework assertions
+
+David Howells (9):
+      netfs: Fix hang due to missing case in final DIO read result collection
+      netfs: Fix double put of request
+      netfs: Provide helpers to perform NETFS_RREQ_IN_PROGRESS flag wangling
+      netfs: Fix looping in wait functions
+      netfs: Fix ref leak on inserted extra subreq in write retry
+      netfs: Fix i_size updating
+      netfs: Merge i_size update functions
+      netfs: Renumber the NETFS_RREQ_* flags to make traces easier to read
+      netfs: Update tracepoints in a number of ways
+
+Joanne Koong (1):
+      fuse: fix fuse_fill_write_pages() upper bound calculation
+
+Nam Cao (2):
+      selftests/coredump: Fix "socket_detect_userspace_client" test failure
+      eventpoll: Fix priority inversion problem
+
+Paulo Alcantara (3):
+      smb: client: set missing retry flag in smb2_writev_callback()
+      smb: client: set missing retry flag in cifs_readv_callback()
+      smb: client: set missing retry flag in cifs_writev_callback()
+
+Shivank Garg (1):
+      fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
+
+ fs/anon_inodes.c                                  |  23 +-
+ fs/eventpoll.c                                    | 458 +++++++---------------
+ fs/exec.c                                         |   9 +-
+ fs/fuse/file.c                                    |   5 +-
+ fs/libfs.c                                        |   8 +-
+ fs/namei.c                                        |   2 +-
+ fs/netfs/buffered_write.c                         |  38 +-
+ fs/netfs/direct_write.c                           |  16 -
+ fs/netfs/internal.h                               |  26 +-
+ fs/netfs/main.c                                   |   6 +-
+ fs/netfs/misc.c                                   |  50 ++-
+ fs/netfs/read_collect.c                           |  16 +-
+ fs/netfs/write_collect.c                          |  14 +-
+ fs/netfs/write_retry.c                            |   3 +-
+ fs/smb/client/cifssmb.c                           |  22 ++
+ fs/smb/client/smb2pdu.c                           |  27 +-
+ include/linux/fs.h                                |   2 +
+ include/linux/netfs.h                             |  21 +-
+ include/trace/events/netfs.h                      |  29 +-
+ mm/secretmem.c                                    |   9 +-
+ tools/testing/selftests/coredump/stackdump_test.c |   5 +
+ 21 files changed, 351 insertions(+), 438 deletions(-)
