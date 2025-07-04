@@ -1,125 +1,113 @@
-Received: from out.smtpout.orange.fr (out-68.smtpout.orange.fr [193.252.22.68])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D722F262A6;
-	Fri,  4 Jul 2025 02:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCC8262A6;
+	Fri,  4 Jul 2025 02:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751595972; cv=none; b=p/X8b3xW05POl3Anjo3p0GSa+w9O8Bi1FRJU3kgt/tPc74DXyMIvRCGBgtnRvAzYr/tjbFby8ThpOR3bg6npYsLzrF3Erkvgio9XG1c1xsE/M9PvWPNzQHEkRcH6IHcjs8QsVqv3eIpWkD2HALY/Hi7TcfhJ3J5dLJ7eawhW5Kg=
+	t=1751596014; cv=none; b=VleraLPxHsE0BTAjzP1U/nuZ7LRorJvp5IVKLsB7HIPwJ9qC3cinFEq9y5FNFfdQ77ogAsRqosxKEZ9JwMQJrVLqQr1WOaXcEnkmZdzzXJtlfT7d9aC4aAu3kYDkh25ecKld5VbyeewKv8uMm5O3NcNkVERbm/fvcboWp+j0edw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751595972; c=relaxed/simple;
-	bh=iPm5Ofn8MRGPd8y0n+5MUJ9kYHfvaz5TIzctrIo/Jes=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XPkkX76+lv+JL2CbzVDBuS39zYN863dsf+8iV7aEpixWV7VYKuCJVpnqt3RR57nNeMM7AvgRtJnsDbi5yQx6yAkFBlkT5u8ISC6r2Rbu/IuxjneOSgLmbP3DQZEIhM7QI5KxpOxpxQksszG7ZmnQfgEZ6XPZIl6yllmsbuTVTog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=eOJ3olbo; arc=none smtp.client-ip=193.252.22.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="eOJ3olbo"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id XW6cuC2lby0xoXW6du2g4p; Fri, 04 Jul 2025 04:24:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751595896;
-	bh=hwT/0WA5UQJcEXIk+bnpVULAHVu9hoVPiRAeyJ+99ko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=eOJ3olboslrS95tWL1l2W7Eeng2bAyyJxdSTWROxn06eBuiTqoOCa9pD1vXAU1JBM
-	 pZrCvlGlOn8MTQnqseEVzEivP94ZE8D9r08euIT6qF/s0UUZKuCVEf7kWtlKNuZfY2
-	 v0DoEw2HnUyjCi6EsXohRlobOYls9QYI4hMSw34rpmKKCXFcp0I0qZsSTV2SGTqonr
-	 geyxGC+DwOlX2y223qvbQoWkKCvHSX/AfMb7hmVm1RIwR3NDM3llllc06cIYzoYIa5
-	 +in3zGzRqmyopx3bcOoe3/+n6/QvhnimVIBT2pt5dK3TgZxcRVs2eCknW8kWb8BE3n
-	 RDmT3YhGhYBrw==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 04 Jul 2025 04:24:56 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <dc6d1cdf-0c93-4d7a-b3c4-722d1e58f5cf@wanadoo.fr>
-Date: Fri, 4 Jul 2025 11:24:49 +0900
+	s=arc-20240116; t=1751596014; c=relaxed/simple;
+	bh=2Jvgtj5t3hZ5VQ36euT0z9PS2vO0mdNlfh7YaTvGcyc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ys5hxJeFTk4hdBQJneEAhKSMWvPJh8l4PWMRP3PqiMQjMA5TchLy1Rhc0noJSoZtrBJVFVhvodcxeIyYpwy+r9BESh/ju2Arx1UqN6a+yRO9ULAao4hHLLfxyj1kPA6AFp1iNFzN1iGKBOq8H5+DegcmT0Ta2XmkbsoauUH/+vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bYHYJ40KDzVmcW;
+	Fri,  4 Jul 2025 10:25:40 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 17713180B2C;
+	Fri,  4 Jul 2025 10:26:48 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
+ 2025 10:26:47 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>
+Subject: [PATCH] atm: clip: Fix NULL pointer dereference in vcc_sendmsg()
+Date: Fri, 4 Jul 2025 10:39:14 +0800
+Message-ID: <20250704023914.3876975-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] can: rcar_canfd: Replace RCANFD_CFG_* macros with
- FIELD_PREP
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Biju Das <biju.das.au@gmail.com>, Marc Kleine-Budde <mkl@pengutronix.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>
-References: <20250703183411.332828-1-biju.das.jz@bp.renesas.com>
- <20250703183411.332828-5-biju.das.jz@bp.renesas.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250703183411.332828-5-biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-Hi Biju,
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+PGD 0 P4D 0
+Oops: Oops: 0010 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5324 Comm: syz.0.0 Not tainted 6.15.0-rc6-syzkaller-00346-g5723cc3450bc #0 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0018:ffffc9000d3cf778 EFLAGS: 00010246
+RAX: 1ffffffff1910dd1 RBX: 00000000000000c0 RCX: dffffc0000000000
+RDX: ffffc9000dc82000 RSI: ffff88803e4c4640 RDI: ffff888052cd0000
+RBP: ffffc9000d3cf8d0 R08: ffff888052c9143f R09: 1ffff1100a592287
+R10: dffffc0000000000 R11: 0000000000000000 R12: 1ffff92001a79f00
+R13: ffff888052cd0000 R14: ffff88803e4c4640 R15: ffffffff8c886e88
+FS:  00007fbc762566c0(0000) GS:ffff88808d6c2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 0000000041f1b000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ vcc_sendmsg+0xa10/0xc50 net/atm/common.c:644
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x52d/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmmsg+0x227/0x430 net/socket.c:2709
+ __do_sys_sendmmsg net/socket.c:2736 [inline]
+ __se_sys_sendmmsg net/socket.c:2733 [inline]
+ __x64_sys_sendmmsg+0xa0/0xc0 net/socket.c:2733
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-On 04/07/2025 at 03:34, Biju Das wrote:
-> Replace RCANFD_CFG_* macros with simpler FIELD_PREP macro.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
->  drivers/net/can/rcar/rcar_canfd.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-> index b5b059e83374..dd87b4e8e688 100644
-> --- a/drivers/net/can/rcar/rcar_canfd.c
-> +++ b/drivers/net/can/rcar/rcar_canfd.c
-> @@ -102,12 +102,6 @@
->  
->  /* Channel register bits */
->  
-> -/* RSCFDnCmCFG - Classical CAN only */
-> -#define RCANFD_CFG_SJW(x)		(((x) & 0x3) << 24)
-> -#define RCANFD_CFG_TSEG2(x)		(((x) & 0x7) << 20)
-> -#define RCANFD_CFG_TSEG1(x)		(((x) & 0xf) << 16)
-> -#define RCANFD_CFG_BRP(x)		(((x) & 0x3ff) << 0)
-> -
->  /* RSCFDnCFDCmCTR / RSCFDnCmCTR */
->  #define RCANFD_CCTR_CTME		BIT(24)
->  #define RCANFD_CCTR_ERRD		BIT(23)
-> @@ -1418,8 +1412,8 @@ static void rcar_canfd_set_bittiming(struct net_device *ndev)
->  	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || gpriv->info->shared_can_regs) {
->  		cfg = rcar_canfd_compute_nominal_bit_rate_cfg(gpriv->info, tseg1, brp, sjw, tseg2);
->  	} else {
-> -		cfg = (RCANFD_CFG_TSEG1(tseg1) | RCANFD_CFG_BRP(brp) |
-> -		       RCANFD_CFG_SJW(sjw) | RCANFD_CFG_TSEG2(tseg2));
-> +		cfg = FIELD_PREP(GENMASK(19, 16), tseg1) | FIELD_PREP(GENMASK(9, 0), brp) |
-> +		      FIELD_PREP(GENMASK(25, 24), sjw) | FIELD_PREP(GENMASK(22, 20), tseg2);
->  	}
+atmarpd_dev_ops does not implement the send method, which may cause crash
+as above.
 
-You can still keep the macro definition to give a meaning to the magic number:
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+e34e5e6b5eddb0014def@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/682f82d5.a70a0220.1765ec.0143.GAE@google.com/T
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+---
+ net/atm/clip.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-  #define RCANFD_CFG_SJW_MASK GENMASK(25, 24)
-
-and do a:
-
-  FIELD_PREP(RCANFD_CFG_SJW_MASK, sjw)
-
-(same for the other fields).
-
->  	rcar_canfd_write(priv->base, RCANFD_CCFG(ch), cfg);
-
-
-Yours sincerely,
-Vincent Mailhol
+diff --git a/net/atm/clip.c b/net/atm/clip.c
+index b234dc3bcb0d..c02ba9d64bc3 100644
+--- a/net/atm/clip.c
++++ b/net/atm/clip.c
+@@ -616,8 +616,15 @@ static void atmarpd_close(struct atm_vcc *vcc)
+ 	module_put(THIS_MODULE);
+ }
+ 
++static int atmarpd_send(struct atm_vcc *vcc, struct sk_buff *skb)
++{
++	dev_kfree_skb_any(skb);
++	return 0;
++}
++
+ static const struct atmdev_ops atmarpd_dev_ops = {
+-	.close = atmarpd_close
++	.close = atmarpd_close,
++	.send = atmarpd_send
+ };
+ 
+ 
+-- 
+2.34.1
 
