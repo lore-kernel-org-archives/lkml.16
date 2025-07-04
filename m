@@ -1,218 +1,192 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342DB1991D2;
-	Fri,  4 Jul 2025 22:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC4672634;
+	Fri,  4 Jul 2025 22:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751668635; cv=none; b=u1Ky3YKa2sP+Sb6tYni6cN3zfhn4hyc8Vq7Y0dYih86M7zt2hSyqGyn9o1hjit1e7yzQRj0yOEKVU9WwUDyb90FXtETth084dX89NQS3Y6knJ+zS9NxnQPS1718Vs33RFzKD4ElCttlA1Dc6C/2cvnDaDf7PL7tbRV+qiLnLlG8=
+	t=1751668692; cv=none; b=P1Ju6GIoOY875Ly0TLR26WwwW07se1R5568UVI1CvVPcE9WUwv4nfj0EfKK5dDk8NOEbzZAuPismSFSehOkI7qkmqAEal5rZDyld8GR2USbJUNY5RjDewYFoFqfQncuZupdnjPRtKdYg2kVtQntum1+OSBYzyEMi6x+HORdYL00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751668635; c=relaxed/simple;
-	bh=tzv9gHuqyrtu+ATJnK9d/TDJWr8Z26mlqIb4+5gWW2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F+7zLaffjAIcEOKRdYILWDkvqsUndU/45JrulG7Z85cqN8mdyoD9D27HQrhKKpQhF6b1mWypjCd6XQu1bfOqy7B1tE2YfK1hvh8rRjA+02QNx/1hL9jYCD1P7yI/dtAKqq9IhuSMhqCLymVZl6rZlVZ54Uu1+T9BJcxvkw/74C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CDBB153B;
-	Fri,  4 Jul 2025 15:36:58 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15A83F63F;
-	Fri,  4 Jul 2025 15:37:09 -0700 (PDT)
-Date: Fri, 4 Jul 2025 23:35:35 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
- Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
- Holland <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
-Message-ID: <20250704233535.4b026641@minigeek.lan>
-In-Reply-To: <20250626080923.632789-2-paulk@sys-base.io>
-References: <20250626080923.632789-1-paulk@sys-base.io>
-	<20250626080923.632789-2-paulk@sys-base.io>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1751668692; c=relaxed/simple;
+	bh=cYemWxJ+RJFvxGenORwW9qtNJL7Vn2FrKxfLCwZoSDk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=UPy53/dA5FeUiEQZ6xtX9PUHtkcvelqZaC5JHWHpGA5KxVI0/EAJxRMjY4pEXmA+wJRMDN9iDoV1L5aek3tb6JTiSa/Y3VKLrDImz2Q9761oPou1dEaxauLYnH2fzRAw0HX0WkuMHfNgG/LYvqKPbxdtylKJR/zcmbgdkhnrZqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDVDS+Hd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDVDS+Hd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84E8CC4CEE3;
+	Fri,  4 Jul 2025 22:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751668692;
+	bh=cYemWxJ+RJFvxGenORwW9qtNJL7Vn2FrKxfLCwZoSDk=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=JDVDS+HdNjAbrtqJ03ndHS6cV+RDunn0QloRxtI8bBra/IudNLF2PFPH3rvRLdaDF
+	 DdB3UrqPDUKUvdzzVI8SsL5zPtl++u8F2P1/YuFAgPKALpVy4qa0ZJ2cmdnzlbCLDU
+	 cXLWVQukIQdFiNYXAaiYgIEYhSK9qda0rj63FEMkTK6QBrZrdqnG5uje1sjntARG4A
+	 49jvvo4s1zyDSTqDk/mvdVtlcNY5Rw/uNvKb9xXIhgZkY/PStvMJtogRsjyBUmAVre
+	 IxIGfhJ1d8mXJZWSxlniCUQ02MznZG8NtjORC2hMH9VzAgP6ZW9hN3LJUrmUvkdoQs
+	 DhpgPb6SCAidQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 05 Jul 2025 00:38:05 +0200
+Message-Id: <DB3MQ54N1FLA.3RTNYKTJFDNYY@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: "Gary Guo" <gary@garyguo.net>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
+ <linux-arch@vger.kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Will Deacon" <will@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Mark Rutland"
+ <mark.rutland@arm.com>, "Wedson Almeida Filho" <wedsonaf@gmail.com>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude Paul" <lyude@redhat.com>,
+ "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
+ <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-5-boqun.feng@gmail.com>
+ <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
+ <20250623193019.6c425467.gary@garyguo.net> <aFmmYSAyvxotYfo7@tardis.local>
+ <aGg4sIORQiG02IoD@Mac.home> <DB3KC64NSYK7.31KZXSNO1XOGM@kernel.org>
+ <aGhFAlpOZJaLNekS@Mac.home>
+In-Reply-To: <aGhFAlpOZJaLNekS@Mac.home>
 
-On Thu, 26 Jun 2025 10:09:19 +0200
-Paul Kocialkowski <paulk@sys-base.io> wrote:
+On Fri Jul 4, 2025 at 11:17 PM CEST, Boqun Feng wrote:
+> On Fri, Jul 04, 2025 at 10:45:48PM +0200, Benno Lossin wrote:
+>> On Fri Jul 4, 2025 at 10:25 PM CEST, Boqun Feng wrote:
+>> > * transmute()-equivalent from_repr() and into_repr().
+>>=20
+>> Hmm I don't think this name fits the description below, how about
+>> "bit-equivalency of from_repr() and into_repr()"? We don't need to
+>> transmute, we only want to ensure that `{from,into}_repr` are just
+>> transmutes.
+>>=20
+>
+> Good point!
+>
+> Btw, do you offer naming service, I will pay! ;-)
 
-Hi Paul,
+:) :)
 
-> The Allwinner A100/A133 only has a single emac instance, which is
-> referred to as "emac" everywhere. Fix the pin names to drop the
-> trailing "0" that has no reason to be.
+>> >   (This is not a safety requirement)
+>> >
+>> >   from_repr() and into_repr(), if exist, should behave like transmute(=
+)
+>> >   on the bit pattern of the results, in other words, bit patterns of `=
+T`
+>> >   or `T::Repr` should stay the same before and after these operations.
+>> >
+>> >   Of course if we remove them and replace with transmute(), same resul=
+t.
+>> >
+>> >   This reflects the fact that customized atomic types should store
+>> >   unmodified bit patterns into atomic variables, and this make atomic
+>> >   operations don't have weird behavior [1] when combined with new(),
+>> >   from_ptr() and get_mut().
+>>=20
+>> I remember that this was required to support types like `(u8, u16)`? If
+>
+> My bad, I forgot to put the link to [1]...
+>
+> [1]: https://lore.kernel.org/rust-for-linux/20250621123212.66fb016b.gary@=
+garyguo.net/
+>
+> Basically, without requiring from_repr() and into_repr() to act as a
+> transmute(), you can have weird types in Atomic<T>.
 
-Sorry, but this is wrong. There *is* a second EMAC on the A133 die: it's
-indeed not mentioned in the manual, but you can probe its MMIO
-registers (@0x5030000), and there is a second syscon register
-(@0x03000034). It's mentioned in several BSP code places ([1]).
-It seem like no suitable pins are connected on the A133
-package, but that should not affect the A100 .dtsi (we use a similar
-approach for the H616 and A523).
+Ah right, I forgot some context... Is this really a problem? I mean it's
+weird sure, but if someone needs this, then it's fine?
 
-So I think we should keep the emac0 name.
+> `(u8, u16)` (in case it's not clear to other audience, it's tuple with a
+> `u8` and a `u16` in it, so there is a 8-bit hole) is not going to
+> support until we have something like a `Atomic<MaybeUninit<i32>>`.
 
+Ahh right we also had this issue, could you also include that in your
+writeup? :)
+
+>> yes, then it would be good to include a paragraph like the one above for
+>> enums :)
+>>=20
+>> > * Provenance preservation.
+>> >
+>> >   (This is not a safety requirement for Atomic itself)
+>> >
+>> >   For a `Atomic<*mut T>`, it should preserve the provenance of the
+>> >   pointer that has been stored into it, i.e. the load result from a
+>> >   `Atomic<*mut T>` should have the same provenance.
+>> >
+>> >   Technically, without this, `Atomic<*mut T>` still work without any
+>> >   safety issue itself, but the user of it must maintain the provenance
+>> >   themselves before store or after load.
+>> >
+>> >   And it turns out it's not very hard to prove the current
+>> >   implementation achieve this:
+>> >
+>> >   - For a non-atomic operation done on the atomic variable, they are
+>> >     already using pointer operation, so the provenance has been
+>> >     preserved.
+>> >   - For an atomic operation, since they are done via inline asm code, =
+in
+>> >     Rust's abstract machine, they can be treated as pointer read and
+>> >     write:
+>> >
+>> >     a) A load of the atomic can be treated as a pointer read and then
+>> >        exposing the provenance.
+>> >     b) A store of the atomic can be treated as a pointer write with a
+>> >        value created with the exposed provenance.
+>> >
+>> >     And our implementation, thanks to no arbitrary type coercion,
+>> >     already guarantee that for each a) there is a from_repr() after an=
+d
+>> >     for each b) there is a into_repr() before. And from_repr() acts as
+>> >     a with_exposed_provenance() and into_repr() acts as a
+>> >     expose_provenance(). Hence the provenance is preserved.
+>>=20
+>> I'm not sure this point is correct, but I'm an atomics noob, so maybe
+>> Gary should take a look at this :)
+>>=20
+>
+> Basically, what I'm trying to prove is that we can have a provenance-
+> preserved Atomic<*mut T> implementation based on the C atomics. Either
+> that is true, or we should write our own atomic pointer implementation.
+
+That much I remembered :) But since you were going into the specifics
+above, I think we should try to be correct. But maybe natural language
+is the wrong medium for that, just write the rust code and we'll see...
+
+>> >   Note this is a global property and it has to proven at `Atomic<T>`
+>> >   level.
+>>=20
+>> Thanks for he awesome writeup, do you want to put this in some comment
+>> or at least the commit log?
+>>=20
+>
+> Yes, so the round-trip transmutability will be in the safe requirement
+> of `AllowAtomic`. And if we still keep `from_repr()` and `into_repr()`
+> (we can give them default implementation using trasnmute()), I will put
+> the "bit-equivalency of from_repr() and into_repr()" in the requirement
+> of `AllowAtomic` as well.
+>
+> For the "Provenance preservation", I will put it before `impl
+> AllowAtomic for *mut T`. (Remember we recently discover that doc comment
+> works for impl block as well? [2])
+
+Yeah that sounds good!
+
+---
 Cheers,
-Andre
+Benno
 
-
-[1]
-https://github.com/qiaoweibiao/T507_Kernel/blob/main/arch/arm64/boot/dts/sunxi/sun50iw10p1.dtsi
-
-
-> 
-> Fixes: 473436e7647d ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 ++++++++++-----------
->  1 file changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
-> index b97de80ae2f3..95b764ee1c0d 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
-> @@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD1 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD1 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SDA */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD0 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD0 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCTL */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCTL */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
->  		  SUNXI_FUNCTION(0x3, "cir0"),		/* OUT */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* CLKIN */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* CLKIN */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "uart3"),		/* TX */
->  		  SUNXI_FUNCTION(0x3, "spi1"),		/* CS */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD1 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD1 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "uart3"),		/* RX */
->  		  SUNXI_FUNCTION(0x3, "spi1"),		/* CLK */
->  		  SUNXI_FUNCTION(0x4, "ledc"),
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD0 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD0 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "uart3"),		/* RTS */
->  		  SUNXI_FUNCTION(0x3, "spi1"),		/* MOSI */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCK */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCK */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "uart3"),		/* CTS */
->  		  SUNXI_FUNCTION(0x3, "spi1"),		/* MISO */
->  		  SUNXI_FUNCTION(0x4, "spdif"),		/* OUT */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCTL */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCTL */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA0 */
->  		  SUNXI_FUNCTION(0x3, "spi2"),		/* CLK */
->  		  SUNXI_FUNCTION(0x4, "i2s2"),		/* BCLK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDC */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* MDC */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA1 */
->  		  SUNXI_FUNCTION(0x3, "spi2"),		/* MOSI */
->  		  SUNXI_FUNCTION(0x4, "i2s2"),		/* LRCK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDIO */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* MDIO */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x3, "i2c3"),		/* SCK */
->  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* MCLK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* EPHY */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* EPHY */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* BCLK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD3 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD3 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* LRCK */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD2 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD2 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x3, "i2s3_dout0"),	/* DOUT0 */
->  		  SUNXI_FUNCTION(0x4, "i2s3_din1"),	/* DIN1 */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCK */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCK */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x3, "i2s3_dout1"),	/* DOUT1 */
->  		  SUNXI_FUNCTION(0x4, "i2s3_din0"),	/* DIN0 */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD3 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD3 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> @@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "cir0"),		/* OUT */
->  		  SUNXI_FUNCTION(0x3, "i2s3_dout2"),	/* DOUT2 */
->  		  SUNXI_FUNCTION(0x4, "i2s3_din2"),	/* DIN2 */
-> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD2 */
-> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD2 */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
-
+> [2]: https://lore.kernel.org/rust-for-linux/aD4NW2vDc9rKBDPy@tardis.local=
+/
