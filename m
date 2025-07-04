@@ -1,178 +1,105 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A647D30AAB8
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84DB30748D;
+	Fri,  4 Jul 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637075; cv=none; b=Y7ldnSl7BYOodHR0rtkS/AXz0Pxhca+BriQCf7W7uZImLwP72HNCZK1U4Lj2qIcCGmzTVod1gcxuwrGzf96+xpuI2AuTEzA+z+TQbtftHImrHStpOw3cuS1aBG0a99uOgH1UEyJ97rgDXxYJ2DsdAibUxlsPwrfmNxSdSU2GT+4=
+	t=1751637101; cv=none; b=PhAos7cHy3/SbKJbtBWLOfm7xODiP4sZYVHFsizjxSSxhqC2h7lPkdA5zdEAhVPeDqf/EM/nAJ7WKVPeVqDeSsL6gUdNkN4wJPKPaN/tZV6lAGi4uxafQobnIE8DYuudjLW/Ya6x6vJKkGEan7is3+m+LP93sgJMQ/Tpm+vm6NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637075; c=relaxed/simple;
-	bh=miC47NO9VePQREntYQ2C1ptH1JHrH445C2mxs1mptSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CMQnuctddJVUcPuyDYxMGkvsTazycXygAaY+uQnsAnWsbYiPPr/UjgRAHbTHCt+d3B9U4zyEpsS4puol0DqkfzK8FLG3pjbDuf2xySByr8TFKEC4gN33B40JRVk7nsx1GOHWz/VT+94VfriWOuQhRzmxYHwDoNAbV0DhCpvveKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qRfmkpVD; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1751637101; c=relaxed/simple;
+	bh=/OiYSjkCDD0yVzW/zMXSwGUuzicvKJf923CS++qCXzw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S+AZ4bpfvfdExWeJiGUlTpeUoymUrCMc5ap9uea0xnFHDXO1212VicYo8lSmtaww4pI2RkVdWAGgDrviBrA0oYxMYvNIRRQS/QFxyxbgdt4h6xvl4g9WNLWeGzjpKGr7LLrcp0/zJv6ffrqc7RHZfStupSF87DQKoXjSpRoW26A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjnrqUa3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qRfmkpVD"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae3a604b43bso160529166b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1751637071; x=1752241871; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U+4pnbmOXAdM0mHM7kF6SCf+HmJcVo3mHL3EXrsTmvo=;
-        b=qRfmkpVD+xI+Npzbq1OPbfQdUTJO8vOQ9eX5GxigJa2Tqop1BOwVlQj/S9qRHzx5ty
-         viijJo0m9xgO15vGt3QzdtbbE6rX+kxUIf0SNjmKTWN7qsD9gzGXGHe8h/CxP8CoVAsJ
-         00dZtJsEQcSkR1yUpcFoxzwhyoSBPCtnHkiH7pz1pJKL4qKLN2dO55QZKACEisQXU1Gs
-         8cD0wWE1yYcbGiZRGvbY8OXL+JEzvXr/u3E7dDPab3pA1b6ir403KnL3zfp0tKgftnVm
-         C+18Q4E3kv2QP2/PxCrpcfMR1vC5fKkh00Rw/74AUPiotlD/MJ8bM0BoV7i5Hepz2DNo
-         icuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751637071; x=1752241871;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U+4pnbmOXAdM0mHM7kF6SCf+HmJcVo3mHL3EXrsTmvo=;
-        b=fB9g1mO0NagaIL75NOeExSIWp082g5CoftDmCNo75dIIW/5Rz+QTr9OTK4+AYp27W0
-         /PPGQOuhycOs/ZdZhT6hdir8yifcZXOVSf297vkQ0ZdUCOBFhgJUe+aUwGRtxi4mpTFu
-         4PpWFNRcBjN7IjygZzah0jTHjVoN0dobxgOyLsHc8Q0QmfhLvJ4mexzyfB02OfLqkEDG
-         f2T3uRTfRjRaNegw3i7bBMkVEF7rxBTPuPV7sKnhzYr9eJkfwmyLoAOK3nSkk2nw4acG
-         z8RSyVCyzYO/fQWTmtRBDJkOvFD9WCQ7SRs2VQYzP2pMPoGwBUrtB/ERXnrcQ2XLEDVB
-         YH1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXwClwaqBn+12tXlTD/Ke0twBMgavpQa74nuROTYiDjltGGQIDE+o2jsMAR2Zk80tK/BlbZyDz7QfjhFbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhicQF92wQclDBfU8yvC1ZXBafESpxT59dIod3Cdg8fZSKFRRA
-	tkhxKbIW8EJaBCWXNSU2tUANKnwvdzYoog5tT6lZQFlEeVACIde5oN1icwTl/xOfkfA=
-X-Gm-Gg: ASbGncsYCA2nqTnwgTBXFpQmp/CJ0G+K2YZ90lwAZVOUgDHj4DYsasREx+mRwk4V1Is
-	zJI/Ks/TegBpOqSpehDukjzpVP35xhhNl4JV0yFLPpSz/Q4jvKdavw9udMnxoKP6HzOMLDanFmq
-	Jx1luvOL1Y39D5P6SmyBRgNozZsVORE+ewv2QEfJtSsOUrZiVMh3fefZSq9ZQSKcgwJe2Ra01yS
-	GdEdWcpdWzh79UOaXlVPcUMLKIrXavqZJkPVTItVwJGqpvsKLlcJs1xPsHV879HjBVlhbsP4g2e
-	ScuW26lAlSiTMjqFWpA6HyFCbf5u6ndHU3wcEKM7NLKjJCBcNTi+KWfwEmxD1r/uT3RCZw==
-X-Google-Smtp-Source: AGHT+IEKaHL8J9Su0mB3XI0LmZS3jYa1Tv+ttRwStxrwJ7gZXvWH4fgHU4a56M1/TXoMiu+j5EZrtA==
-X-Received: by 2002:a17:907:6d26:b0:ae3:6cc8:e426 with SMTP id a640c23a62f3a-ae3fbc336f7mr270116966b.9.1751637071005;
-        Fri, 04 Jul 2025 06:51:11 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f692ecacsm179199366b.57.2025.07.04.06.51.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 06:51:10 -0700 (PDT)
-Message-ID: <930cf8e2-5716-4a36-8238-e573876db869@tuxon.dev>
-Date: Fri, 4 Jul 2025 16:51:06 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjnrqUa3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9B4C4CEE3;
+	Fri,  4 Jul 2025 13:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751637101;
+	bh=/OiYSjkCDD0yVzW/zMXSwGUuzicvKJf923CS++qCXzw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DjnrqUa36fkh8FCFhG4sw12ZoEQfFO5inamHW+G/dfchhyYcVkgSTNUaT7VMxNcLQ
+	 n0NMJIE54SJcJTBThl4+lP+1p+nWD+FQsogOMa7LXxWImwDAVkByIIOOAHuQgRbKFd
+	 8cW61XSP+u/00KT/B7YrqlLeuyd3zkSV2zuEtD5knRGXd4NxajCNQHNj21kOFwBoA8
+	 ikzmrCdb3T0ZHWl/jdiG9yTzwTiGfvAsbL2GoEp3DWdP8Gh8PTMjFmAQB/o50DizLx
+	 /jRp0Wci77uzt8oWFXrXsB5VohKUetig9XsWsJROzsP+oCkCMIPrDGsy9LOwjbc3RL
+	 LvfM/eZpDJIEA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v14 5/7] rust: module: update the module macro with
+ module parameter support
+In-Reply-To: <DB3A6GR3TQON.C9N9U4V48R1D@kernel.org> (Benno Lossin's message of
+	"Fri, 04 Jul 2025 14:48:10 +0200")
+References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
+	<20250702-module-params-v3-v14-5-5b1cc32311af@kernel.org>
+	<5fYjUlNFhuBwWOP46ph07KX4CMe0ORT5pZ_pD-l719E0ChkPTI2pV1tYJcN3oxKKcMI8_HGU1InaWBj52Kbbag==@protonmail.internalid>
+	<DB1OK2PQZ790.S317HUWYJR3J@kernel.org> <875xg8rvei.fsf@kernel.org>
+	<32cgJkp6-1w5-FLQMuvqhCiTvKUhR7SiIWtWdQFlkp2UoeAU3YuYmj7EElURj_NxY01OuuWlZ2aNPzX1UksjOg==@protonmail.internalid>
+	<DB3A6GR3TQON.C9N9U4V48R1D@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Fri, 04 Jul 2025 15:51:27 +0200
+Message-ID: <87zfdkqd28.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] PM: domains: Detach on device_unbind_cleanup()
-To: Ulf Hansson <ulf.hansson@linaro.org>, rafael@kernel.org
-Cc: linux@armlinux.org.uk, gregkh@linuxfoundation.org,
- david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
- dakr@kernel.org, len.brown@intel.com, pavel@kernel.org,
- andersson@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, wsa+renesas@sang-engineering.com,
- mathieu.poirier@linaro.org, vkoul@kernel.org,
- yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
- broonie@kernel.org, robh@kernel.org, jirislaby@kernel.org,
- saravanak@google.com, jic23@kernel.org, dmitry.torokhov@gmail.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
- bhelgaas@google.com, geert@linux-m68k.org, linux-iio@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com>
- <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi, Ulf,
+"Benno Lossin" <lossin@kernel.org> writes:
 
-On 04.07.2025 14:15, Ulf Hansson wrote:
-> On Thu, 3 Jul 2025 at 13:27, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Hi,
->>
->> Series drops the dev_pm_domain_detach() from platform bus remove and
->> adds it in device_unbind_cleanup() to avoid runtime resumming the device
->> after it was detached from its PM domain.
->>
->> Please provide your feedback.
->>
->> Thank you,
->> Claudiu
->>
->> Changes in v5:
->> - added PD_FLAG_ATTACH_POWER_ON, PD_FLAG_DETACH_POWER_OFF;
->>   due to this a new patch was introduced
->>   "PM: domains: Add flags to specify power on attach/detach"
->>
->> Changes in v4:
->> - added a flag in dev_pm_info that is saved in dev_pm_domain_attach()
->>   and used in device_unbind_cleanup()
->>
->> Changes in v3:
->> - add devm_pm_domain_attach()
->>
->> Changes in v2:
->> - dropped the devres group open/close approach and use
->>   devm_pm_domain_attach()
->> - adjusted patch description to reflect the new approach
+> On Fri Jul 4, 2025 at 2:29 PM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
+>>>> +                            perm: 0, // Will not appear in sysfs
+>>>> +                            level: -1,
+>>>> +                            flags: 0,
+>>>> +                            __bindgen_anon_1:
+>>>> +                                ::kernel::bindings::kernel_param__bindgen_ty_1 {{
+>>>> +                                    arg: {param_name}.as_void_ptr()
+>>>> +                                }},
+>>>
+>>> Formatting?
+>>>
+>>> +                            __bindgen_anon_1: ::kernel::bindings::kernel_param__bindgen_ty_1 {{
+>>> +                                arg: {param_name}.as_void_ptr()
+>>> +                            }},
 >>
 >>
->> Claudiu Beznea (3):
->>   PM: domains: Add flags to specify power on attach/detach
->>   PM: domains: Detach on device_unbind_cleanup()
->>   driver core: platform: Drop dev_pm_domain_detach() call
->>
->>  drivers/amba/bus.c                       |  4 ++--
->>  drivers/base/auxiliary.c                 |  2 +-
->>  drivers/base/dd.c                        |  2 ++
->>  drivers/base/platform.c                  |  9 +++------
->>  drivers/base/power/common.c              |  9 ++++++---
->>  drivers/clk/qcom/apcs-sdx55.c            |  2 +-
->>  drivers/gpu/drm/display/drm_dp_aux_bus.c |  2 +-
->>  drivers/i2c/i2c-core-base.c              |  2 +-
->>  drivers/mmc/core/sdio_bus.c              |  2 +-
->>  drivers/rpmsg/rpmsg_core.c               |  2 +-
->>  drivers/soundwire/bus_type.c             |  2 +-
->>  drivers/spi/spi.c                        |  2 +-
->>  drivers/tty/serdev/core.c                |  2 +-
->>  include/linux/pm.h                       |  1 +
->>  include/linux/pm_domain.h                | 10 ++++++++--
->>  15 files changed, 31 insertions(+), 22 deletions(-)
->>
->> --
->> 2.43.0
->>
-> 
-> The series looks good to me, please add:
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> 
-> Rafael, do you intend to pick this via your tree?
-> 
-> Another note, the similar thing that is being done in patch3 from the
-> platform bus, is needed for other buses too (at least the amba bus for
-> sure). Claudiu, are you planning to do that as a step on top - or are
-> you expecting others to help out?
+>> That makes the line more than 100 characters after changing other
+>> formatting things. Perhaps I should just left shift all this?
+>
+> Not sure what you mean by left shift? When I tried it, it was fine, but
+> it could have changed with the other things... Do you have a branch with
+> your changes?
 
-My plan was to take care of it once the approach here (or something
-similar, if any) will end up in a release.
+Move all the code template so the least indented start at column 0.
 
-Thank you,
-Claudiu
+My WIP branch is here [1].
 
-> 
-> Kind regards
-> Uffe
+
+Best regards,
+Andreas Hindborg
+
+
+[1] https://github.com/metaspace/linux/tree/module-params
 
