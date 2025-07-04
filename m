@@ -1,134 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82F228B406;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF4F28AB16;
 	Fri,  4 Jul 2025 07:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615649; cv=none; b=I+iD0n9RYsgzM5OQf0P4lTutKPER0AK1ZqyljdcDlyvA0Sx8+8cWogbRvSLY4gmi8VQf+VCHVDw7oG5BhS/GnaI3wGJwq2MxUvrb5+PaxUX4UqOWX/5b6G0h2DNpfsYiJ6ijKccN8xJXQKCJHLFrRAnY/l/cRgmiaGVUVweM6RE=
+	t=1751615649; cv=none; b=oI+iINrPL8sxtxe8mx0buXfxGJeaUngZMrV1fA3KD9ldZHEU0qZijVsmJUjo1GPcBM/EJ9rX+r/Fs4tGZLnoDNeNZekuO8l4cTwimfY3IfnYr5TIYH1cYqDepQdFsEYJLnP9q8Y/Leda3O8o9LMgrSTVXUSZC3uoSNI3cavgxE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615649; c=relaxed/simple;
-	bh=6S1jQLVft9CNNkuWvgYSkTmf3bOzKfne8ZMe8Vq6GU4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E91qZpiSVpi6+PNSrUITiGWtBRANrVoKe08ChKjPrCJAZq/Z0QCUG3hZRAuamLyP9iucJbrcMgmnpRwx8XzSVGB27FgAwuZ1Ekna0WunZQ3DBnobzlzvQ5POcEpDJf4THDACrXHjVH2jo/m6/F68maXrwVcGwd2Nqt1nRZFqqdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DxLkGt4x; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=D4x384VXlugvbni5awmY75Cf1E6v+I4GeafLdEKYsw8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=Gt5v0rTQJr/GFmrEph7+rcP7yMQhg1t9A4l8+uNyw00yYU58mNbzI4waOYpXpTB4lrT0bJKQgJvDjRytheHSUfxLmxiKZnThsqc+b0cQulY+6SiefXhfdzn7QIGBXR/s7vymjbeLU8rkyPXjS7tVmQBnHOW4oP8cYXfCeEoiIyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Zpm4TB+h; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DxLkGt4x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615647; x=1783151647;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6S1jQLVft9CNNkuWvgYSkTmf3bOzKfne8ZMe8Vq6GU4=;
-  b=DxLkGt4xDZ67gIJfH+A6i7bbN8ldsLXcgIk0w9GT4j6LsE7cKRUoVBy4
-   MzjmF/QV9OfEfoxtcR4WzAtHriuosJUBviT3arnIlm8uISuc0XnahjQS6
-   1GJJa6n5EMDKj2sE06TLPffWqKhxFVWpz/2+BTKZiFRPVky2b0JuI6/dj
-   gyu9sho+Q/MzGBG2wVjOV5x2kexnpcIu8I+gwjK9ScHw9ayz/ki0v+f/J
-   RSvWqsfmB9jjVJwAsgHCSYA4DVV7xu4dsShEAtZNFDfSFhe063CA7e3Fb
-   1FJTwEKjoBkA2X4V6J9+0P4uCzh9c+HHxOXlum7a2+BDQN5VJZ3I2LBCu
-   Q==;
-X-CSE-ConnectionGUID: pm0SEDXFR1ich7VCuCLXvw==
-X-CSE-MsgGUID: UeBowQ7iQz2SZ7D2YmpufQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494468"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494468"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:07 -0700
-X-CSE-ConnectionGUID: gL30M09ETGyW95y1mlrcIQ==
-X-CSE-MsgGUID: aFS6pvBPQ+qMXhYXbC/72w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924176"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:04 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id C608A44394;
-	Fri,  4 Jul 2025 10:54:01 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/80] clk: qcom: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:01 +0300
-Message-Id: <20250704075401.3217179-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Zpm4TB+h"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5644i1L4011767;
+	Fri, 4 Jul 2025 07:54:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3JtYz2Tu8uhgCnpHpQKquAp3Iq6xq1lfS4KjUL/esS8=; b=Zpm4TB+hSD0Sgwyz
+	Lk+F6m4D//U75Xf6TxYnhlUlC9GNw/lPPIfy9oRMfaPM4i+PsxoYTaEEpiJZ/ziV
+	mO6hXpEolrDRyRwSpILwRsg7cGO7iYfC7G5S0XQWLwgPgnshJpzd8cI0KOowdt/v
+	VgurAmzN2TPXYXK8C/lCcnyYtYQN8GLLWUpuSqKEVykZ3aaqm8NZWxSQaOr2lbes
+	jlUWMDcD6bEg5wAo178Ks1UG+Xb0472KEiqp6eGKYp8mnXE9oF5ocecRA3x9rLbw
+	vFWPqcHHp8d9YFAqRBuQmPYyjGwLAwJFqZxU9FV5BFQOBQp4tRYUMZFlOoPSzzw4
+	6f+8bw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw30g2vj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 07:54:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647s0r0019179
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 07:54:00 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 4 Jul 2025 00:53:57 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:11 +0530
+Subject: [PATCH 11/25] media: iris: Fix missing LAST flag handling during
+ drain
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250704-iris-video-encoder-v1-11-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        "Vedang
+ Nagar" <quic_vnagar@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=3280;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=D4x384VXlugvbni5awmY75Cf1E6v+I4GeafLdEKYsw8=;
+ b=MBwW9tp7DX3Gjrjf8euMclzkV12V46TBKKQBv78yuvB61sQupuFuYh5XZMCXLH0LNoDm5Ih0Y
+ QcLRngy2LtiD+wpTDvZ+qCofkKerwn2g+ClBxKsTgawjLHyYERIGtTp
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=68678899 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=0wdjZXPW0me86wH4VXQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: pDVsbkU0ZRo30hQ7hqFT6E0FWxZ-nxsT
+X-Proofpoint-GUID: pDVsbkU0ZRo30hQ7hqFT6E0FWxZ-nxsT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX44NUaXrWOhvk
+ Ocv4AJe50dgpq2CLF7vNYqXpTdK08Uz5miKY3uCUFn/Bc422izeu2LwA+zKDSaY3T2IzYcY4jpH
+ KlLacGv/NtnI0ghB3seKn1mQ1W1lIbLMuCSN105iRTRI7O4zK/HCIjNOId+2Y27Z4OPvyDnJ4AC
+ +F2mc9WuLXZ+riuIm82xoQ48CTQhzBxtMJ5Deif6gpOGLOD+XdBdntMqikW6GagOFDhgfiEfx5I
+ CvvumrmpVMq5QLpbmff874o3wK7J74f1UJk0yLH8+qWYhsYi23cRbBYEGm4tCXKs46x5ZcjjVza
+ v/hWDzU33mAfh/m5Y/y3s61TEK74Xegwhd9tjSQRPBKLZaVYCFVAYj07FkJjo6jwsx6bgNYZUwD
+ Ht8PtIqKEsoSFqMALquYvAMrOVutxwE2UNrAofBuIpog9Z1t139NbP+SZwu3oMVa6+kgdH2t
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=655 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507040060
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+Improve drain handling by ensuring the LAST flag is attached to final
+capture buffer when drain response is received from the firmware.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Previously, the driver failed to attach the V4L2_BUF_FLAG_LAST flag when
+a drain response was received from the firmware, relying on userspace to
+mark the next queued buffer as LAST. This update fixes the issue by
+checking the pending drain status, attaching the LAST flag to the
+capture buffer received from the firmware (with EOS attached), and
+returning it to the V4L2 layer correctly.
+
+Fixes: d09100763bed ("media: iris: add support for drain sequence")
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c | 4 +---
+ drivers/media/platform/qcom/iris/iris_state.c             | 2 +-
+ drivers/media/platform/qcom/iris/iris_state.h             | 1 +
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
-
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/clk/qcom/lpassaudiocc-sc7280.c | 2 --
- drivers/clk/qcom/lpasscorecc-sc7180.c  | 2 --
- 2 files changed, 4 deletions(-)
-
-diff --git a/drivers/clk/qcom/lpassaudiocc-sc7280.c b/drivers/clk/qcom/lpassaudiocc-sc7280.c
-index 22169da08a51..3ff123bffa11 100644
---- a/drivers/clk/qcom/lpassaudiocc-sc7280.c
-+++ b/drivers/clk/qcom/lpassaudiocc-sc7280.c
-@@ -799,7 +799,6 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
- 		goto exit;
+diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+index 8d1ce8a19a45ebb2b29457e0fef7d72c1c0d9785..2a96458833835422d30c9386d15cc1e4fb226e3d 100644
+--- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
++++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+@@ -416,8 +416,6 @@ static void iris_hfi_gen1_session_ftb_done(struct iris_inst *inst, void *packet)
+ 			inst->flush_responses_pending++;
+ 
+ 		iris_inst_sub_state_change_drain_last(inst);
+-
+-		return;
  	}
  
--	pm_runtime_mark_last_busy(&pdev->dev);
- exit:
- 	pm_runtime_put_autosuspend(&pdev->dev);
+ 	if (iris_split_mode_enabled(inst) && pkt->stream_id == 0) {
+@@ -462,7 +460,7 @@ static void iris_hfi_gen1_session_ftb_done(struct iris_inst *inst, void *packet)
+ 		timestamp_us = (timestamp_us << 32) | timestamp_lo;
+ 	} else {
+ 		if (pkt->stream_id == 1 && !inst->last_buffer_dequeued) {
+-			if (iris_drc_pending(inst)) {
++			if (iris_drc_pending(inst) || iris_drain_pending(inst)) {
+ 				flags |= V4L2_BUF_FLAG_LAST;
+ 				inst->last_buffer_dequeued = true;
+ 			}
+diff --git a/drivers/media/platform/qcom/iris/iris_state.c b/drivers/media/platform/qcom/iris/iris_state.c
+index a21238d2818f9606871953bd0bee25382cca0474..d1dc1a863da0b0b1af60974e9ed2ef68ea225cdd 100644
+--- a/drivers/media/platform/qcom/iris/iris_state.c
++++ b/drivers/media/platform/qcom/iris/iris_state.c
+@@ -252,7 +252,7 @@ bool iris_drc_pending(struct iris_inst *inst)
+ 		inst->sub_state & IRIS_INST_SUB_DRC_LAST;
+ }
  
-@@ -868,7 +867,6 @@ static int lpass_aon_cc_sc7280_probe(struct platform_device *pdev)
- 		goto exit;
- 	}
+-static inline bool iris_drain_pending(struct iris_inst *inst)
++bool iris_drain_pending(struct iris_inst *inst)
+ {
+ 	return inst->sub_state & IRIS_INST_SUB_DRAIN &&
+ 		inst->sub_state & IRIS_INST_SUB_DRAIN_LAST;
+diff --git a/drivers/media/platform/qcom/iris/iris_state.h b/drivers/media/platform/qcom/iris/iris_state.h
+index e718386dbe0402417f408d8fc696a33e5c7f23b3..b09fa54cf17eeee0c9ae254588964ad959c82c80 100644
+--- a/drivers/media/platform/qcom/iris/iris_state.h
++++ b/drivers/media/platform/qcom/iris/iris_state.h
+@@ -141,5 +141,6 @@ int iris_inst_sub_state_change_drc_last(struct iris_inst *inst);
+ int iris_inst_sub_state_change_pause(struct iris_inst *inst, u32 plane);
+ bool iris_allow_cmd(struct iris_inst *inst, u32 cmd);
+ bool iris_drc_pending(struct iris_inst *inst);
++bool iris_drain_pending(struct iris_inst *inst);
  
--	pm_runtime_mark_last_busy(&pdev->dev);
- exit:
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
-diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpasscorecc-sc7180.c
-index 605516d03993..5937b071533b 100644
---- a/drivers/clk/qcom/lpasscorecc-sc7180.c
-+++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
-@@ -412,7 +412,6 @@ static int lpass_core_cc_sc7180_probe(struct platform_device *pdev)
- 
- 	ret = qcom_cc_really_probe(&pdev->dev, &lpass_core_cc_sc7180_desc, regmap);
- 
--	pm_runtime_mark_last_busy(&pdev->dev);
- exit:
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
-@@ -433,7 +432,6 @@ static int lpass_hm_core_probe(struct platform_device *pdev)
- 
- 	ret = qcom_cc_probe_by_index(pdev, 0, desc);
- 
--	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
- 	return ret;
+ #endif
+
 -- 
-2.39.5
+2.34.1
 
