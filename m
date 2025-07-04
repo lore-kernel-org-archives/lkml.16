@@ -1,153 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F311010942;
-	Fri,  4 Jul 2025 15:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA88514B08A;
+	Fri,  4 Jul 2025 15:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642177; cv=none; b=RBiQCWmiYAa7r/RjsaBGiYEAETwT4AMsUgfMz68nJYEaIX/cNyxq5ExOEgDpPEfjWj0ga0iBLnBt00kA5qvKGrvemQDMcWl/Uf7i2r8MaWGi6p8rJaOAzn9l6awt0n/XaiIOs27iQyrJqPyNNoLqavZK1OvPC1SSlw1kPamBkyA=
+	t=1751642185; cv=none; b=AYK2f6VxbUIM6k5A+Q0jSVbaS5oR0T3zOiWjuiI5Pc1l34RGL9HYEcI1omSzi+qaNIkU1dkFeTpexEssrm11bTuLvKC5wrC92bSY5lV9tewvkH7PoEM2axXLW/VcAHp2hR7DsP3fhqk2FzAfjuVsS9oVQt9eL6v5FfkG5YKk9aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642177; c=relaxed/simple;
-	bh=fdncFe+kRLkLN8JKby0Zgs6+T99Ms/eQIw5jZsqT9Ys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XNUetQEqIqYmpN8uMOOjsXs8RV22fr0jiFIfxtPnEUG5nvPkuD1Wdsn8u94VpAMf/lMq/Qw/gGCfyfJuk6SfG5zTNNBk8q9xhGEUxiZMj299y5P6RsLEtC1WRhBYZfCt4H6eA26BA1RTcSE3iy+lV28KlHTFzUT2jNJPYmbzZfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2OUUvjM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751642185; c=relaxed/simple;
+	bh=sjcSd1BF/qV33Upvx8GEXJdPeuWsAmcFKhQ/MGs3ZDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KwOuHZhe/YwOdVD5hdxic1ny5NxTbHaFSN+o+qsxr0s+D/r9jDfE+RKl7GE4s3lDsczXTkziFdU9J08Zc88ElU9amNwviWZpGQx+lUuE8ovbrjmERLRD/rm37pARwe4AG1yw1OUqWHdlU7BaXvMO6KucU+jIQlnKhQAP6QkQ3ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMPCTojR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2OUUvjM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73289C4CEE3;
-	Fri,  4 Jul 2025 15:16:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMPCTojR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93D1C4CEE3;
+	Fri,  4 Jul 2025 15:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751642176;
-	bh=fdncFe+kRLkLN8JKby0Zgs6+T99Ms/eQIw5jZsqT9Ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2OUUvjMt2UqsDufh8VcCyObOPhay8lZQM3h1uFbdqHCFtkKcWgi6Gnl8J0DI8qPC
-	 G5c6/M+LtmppkfVtj2PrpCzSI9ysYowncS7Cg5/ZyFxrRxkm9qfEOwaegiYBdEvjJN
-	 /g8n/39NKKy2HEvbXjUOo6uIyT4gi73ds2GUTHAhR1K0NlzXdz3pLD9mLTCKwpFYzT
-	 ZgarzHmuS1vFs8ZkOxXw2oP6zSyRKf9viUMhEv/A5y28r5WQcealVVksLSqpJhEGWr
-	 Ay3MoeBIMY4NF/p94veWNytGWNdZKaAlc7vVnRRTrl5WQ4iIlDOd6jvycPSOfgzJ5E
-	 zHJATaoA5UIuQ==
-Date: Fri, 4 Jul 2025 18:16:13 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Jonathan McDowell <noodles@earth.li>
-Cc: "Orlov, Ivan" <iorlov@amazon.co.uk>,
-	"peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Woodhouse, David" <dwmw@amazon.co.uk>
-Subject: Re: [PATCH v2] tpm: Fix the timeout & use ktime
-Message-ID: <aGfwPbMZf-SHshXH@kernel.org>
-References: <20250620180828.98413-1-iorlov@amazon.com>
- <aFhtKrWTDzZbpTSh@earth.li>
- <aFwnG--lzZO0mQgc@kernel.org>
- <aGeYqQG15lb2_NaU@earth.li>
+	s=k20201202; t=1751642185;
+	bh=sjcSd1BF/qV33Upvx8GEXJdPeuWsAmcFKhQ/MGs3ZDk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vMPCTojR8QnMaxoc92m1q9WMlclXlAIL2PM/Md0B2KXPAjtKzyx10u2Q8OQYXbmdd
+	 2m2LLpZWUdt3WNZ+toh6GWBxc+7MSxcAn/i8kWkQQvsGPSlg6sDJhqGFL+EpvBM2Mi
+	 UEt/Yk284wdX8dBM/EEobaEnt/XADxWokzSFL+F24c7r8XJ6rQCoNGjInD5cyc6O7x
+	 bto/CMAMbVqarRJ5gRCJjSHOqEwjAk1LsZbnk+bmh9KV8VRAiWhjWXeKp1Y0VBHYGs
+	 jFVvYSpkGPutxl8MXJNYRyu7MxF9eCTtn0JlJMD1oIx/FHe50dPt997zGx3YsRPU2h
+	 f3CzPwIvjWnzw==
+Message-ID: <d6b94d4f-4f3f-4ca2-847f-7af7e94b2221@kernel.org>
+Date: Fri, 4 Jul 2025 17:16:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGeYqQG15lb2_NaU@earth.li>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 1/2] dt-bindings: leds: pwm: add enable-gpios property
+To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>, lee@kernel.org,
+ pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: bsp-development.geo@leica-geosystems.com
+References: <20250704104338.46546-1-Qing-wu.Li@leica-geosystems.com.cn>
+ <20250704104338.46546-2-Qing-wu.Li@leica-geosystems.com.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250704104338.46546-2-Qing-wu.Li@leica-geosystems.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 10:02:33AM +0100, Jonathan McDowell wrote:
-> On Wed, Jun 25, 2025 at 07:43:07PM +0300, Jarkko Sakkinen wrote:
-> > On Sun, Jun 22, 2025 at 09:52:58PM +0100, Jonathan McDowell wrote:
-> > > On Fri, Jun 20, 2025 at 06:08:31PM +0000, Orlov, Ivan wrote:
-> > > > The current implementation of timeout detection works in the following
-> > > > way:
-> > > >
-> > > > 1. Read completion status. If completed, return the data
-> > > > 2. Sleep for some time (usleep_range)
-> > > > 3. Check for timeout using current jiffies value. Return an error if
-> > > >   timed out
-> > > > 4. Goto 1
-> > > >
-> > > > usleep_range doesn't guarantee it's always going to wake up strictly in
-> > > > (min, max) range, so such a situation is possible:
-> > > >
-> > > > 1. Driver reads completion status. No completion yet
-> > > > 2. Process sleeps indefinitely. In the meantime, TPM responds
-> > > > 3. We check for timeout without checking for the completion again.
-> > > >   Result is lost.
-> > > >
-> > > > Such a situation also happens for the guest VMs: if vCPU goes to sleep
-> > > > and doesn't get scheduled for some time, the guest TPM driver will
-> > > > timeout instantly after waking up without checking for the completion
-> > > > (which may already be in place).
-> > > >
-> > > > Perform the completion check once again after exiting the busy loop in
-> > > > order to give the device the last chance to send us some data.
-> > > >
-> > > > Since now we check for completion in two places, extract this check into
-> > > > a separate function.
-> > > >
-> > > > Signed-off-by: Ivan Orlov <iorlov@amazon.com>
-> > > > ---
-> > > > V1 -> V2:
-> > > > - Exclude the jiffies -> ktime change from the patch
-> > > > - Instead of recording the time before checking for completion, check
-> > > >  for completion once again after leaving the loop
-> > > >
-> > > > drivers/char/tpm/tpm-interface.c | 17 +++++++++++++++--
-> > > > 1 file changed, 15 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> > > > index 8d7e4da6ed53..6960ee2798e1 100644
-> > > > --- a/drivers/char/tpm/tpm-interface.c
-> > > > +++ b/drivers/char/tpm/tpm-interface.c
-> > > > @@ -82,6 +82,13 @@ static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
-> > > > 	return chip->ops->req_canceled(chip, status);
-> > > > }
-> > > >
-> > > > +static bool tpm_transmit_completed(struct tpm_chip *chip)
-> > > > +{
-> > > > +	u8 status_masked = tpm_chip_status(chip) & chip->ops->req_complete_mask;
-> > > > +
-> > > > +	return status_masked == chip->ops->req_complete_val;
-> > > > +}
-> > > > +
-> > > > static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
-> > > > {
-> > > > 	struct tpm_header *header = buf;
-> > > > @@ -129,8 +136,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
-> > > > 	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
-> > > > 	do {
-> > > > 		u8 status = tpm_chip_status(chip);
-> > > > -		if ((status & chip->ops->req_complete_mask) ==
-> > > > -		    chip->ops->req_complete_val)
-> > > > +		if (tpm_transmit_completed(chip))
-> > > > 			goto out_recv;
-> > > 
-> > > The only thing I'd point out here is we end up doing a double status read
-> > > one after the other (once here, once in tpm_transmit_completed), and I'm
-> > > pretty sure I've seen instances where that caused a problem.
-> > 
-> > It would be easy to to prevent at least double reads after completion
-> > e.g., in tpm_chip_status():
+On 04/07/2025 12:43, LI Qingwu wrote:
+> Some PWM LED driver chips like TPS92380 and LT3743 require a separate
+> enable signal in addition to PWM control. Add this property to allow
+> device trees to specify such GPIO, which will be controlled automatically
+> by the driver based on the LED brightness state.
 > 
-> Or just take the simple approach and make the check after the while loop:
-> 
-> 	if ((tpm_chip_status(chip) & chip->ops->req_complete_mask) ==
-> 	    chip->ops->req_complete_val)
-> 		goto out_recv;
-> 
-> There might be potential for a longer term cleanup using chip->status to
-> cache things, but I'm little concerned that's going to open paths where we
-> might not correctly update it, so I think it should be a separate piece.
-> 
-> (I'm motivated by the fact we've started to see the "Operation Canceled"
-> error and I'd like us to close on the best way to fix it. :) )
 
-This would work for me too!
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Please send a new version if you feel like it but next week I won't be
-reviewing that as I'm on holiday.
-
-> 
-> J.
-> -- 
-> I am afraid of the dark.
-
-BR, Jarkko
+Best regards,
+Krzysztof
