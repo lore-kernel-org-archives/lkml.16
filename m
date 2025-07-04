@@ -1,111 +1,110 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA08289826;
-	Fri,  4 Jul 2025 09:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA7136E;
+	Fri,  4 Jul 2025 09:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751621315; cv=none; b=G2WzpChEIHtlo51qovAjHduaNW0r+3/L6hTlDKmago3T0iWUPlwHRhHMNbPtnmAyIcJGj6pwOdG0F9d2Gn7bv/26PS2/QUZ4TC+0tlYzCUyraCy6qE8KQ0nT3elOPWO8Fjpm2Ml9wzaoYATarjTR32zn0y7aur+QKLEOSZvm7R8=
+	t=1751621463; cv=none; b=EUnEcKsbssFDeUbpi+/h6SSvGBr4rFVm5xjAqH1iD1LQW1yirs6KK8oa9wA43ZWOsNrfcps1V6IDxJyAHNjrXaEWhlEgGKw/bubHDC2Tzc+pqng8F/gxJhtbjuydZSUWIqfI66znhWWuaeE5J8NKjv7AI19eZM0/L8FNoLqbr9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751621315; c=relaxed/simple;
-	bh=AAEwlVRpG55UkIPZdG8kFZgt/NwdaZPjlhlHpqhnu2Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cShk+X8YhlmrAb8JLcNnjYBEnGfOpGStDzJtg9xJUqqJz00Jn4FWfC4uNPWG/dMnODnYgPRD819fyKfpt4b+eAtirzpVbTgPgSWBySntiuzycjQyYA0fNvAvTV8tNhHi1fxKbVOMaZiR30cPIisTCsbqRYQCTfRP0djdzxY4XeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oF7O1PlM; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oF7O1PlM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751621305;
-	bh=AAEwlVRpG55UkIPZdG8kFZgt/NwdaZPjlhlHpqhnu2Y=;
-	h=From:Date:Subject:To:Cc:From;
-	b=oF7O1PlMiM+ZoGkG+os205LerUhn7NCE21+gJdQRCF+ipw2hgs/wAKkbkxgA6dP9D
-	 vGH70rfCDHUakW217J9z4IfQTQbLYqk6rk1rCd8evNJP9Noj4e0ERbcQUzRVRE9KI1
-	 MU3DHqb+RYYKqJ/PDEDk7qDugtotNTv3uj2uKt7/SFf9G9i1s9VlHvbJ/nplSy4fsH
-	 5jymeFeLWCtDS2PitVknyVbJG9ShBRAw2KXOGRA+TszmfVyvTCn5Rid+60L0Thkumx
-	 0GYcXdnT8WGIXsQzPIX9vdcecmnsK4rXoRZAlgfKAXPePujoqAGJwery3h14/AAFwJ
-	 3fsZFc85dJ6xw==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600C8F85cf092d4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	s=arc-20240116; t=1751621463; c=relaxed/simple;
+	bh=DgJEirE2drDPGSXFXC0f/QIbKHo7uI3B5qoI9iYxmoc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gCiT0XbJb/YI3JA79BGM89JJrAcjrGuJBXT1WaeUKYj+E4MAnKTmIxICgL0dfT7cv6y7n6WG1o2k2prifEKL71A9KmaWxxZgjjAYzsyPVVknRcfNhcbI/W29uXJceVDpuK0n8IPu9wh1K3m78D9fdnI+CVKzs69cQXouXz2UED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E4FC517E07C9;
-	Fri,  4 Jul 2025 11:28:24 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Fri, 04 Jul 2025 11:28:24 +0200
-Subject: [PATCH] media: i2c: vgxy61: Report stream using frame descriptors
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bYSnK2YHbz9t29;
+	Fri,  4 Jul 2025 11:21:41 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Matthew Wilcox <willy@infradead.org>,
+	Hannes Reinecke <hare@suse.de>,
+	mcgrof@kernel.org,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Christian Brauner <brauner@kernel.org>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH] block: reject bs > ps block devices when THP is disabled
+Date: Fri,  4 Jul 2025 11:21:34 +0200
+Message-ID: <20250704092134.289491-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-vgxy61-frame-desc-v1-1-0e62b9c4e260@collabora.com>
-X-B4-Tracking: v=1; b=H4sIALeeZ2gC/x3MTQqAIBBA4avErBswK4OuEi0mnWoW/aAgRnj3p
- OW3eO+FwF44wFi94DlKkOssaOoK7E7nxiiuGLTSvRpUh3FLj2lw9XQwOg4WNRnXWmNp6Voo3e1
- 5lfQ/pznnD7+bnFNjAAAA
-X-Change-ID: 20250704-vgxy61-frame-desc-2a6d3c6cab43
-To: kernel@collabora.com, Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
- Sylvain Petinot <sylvain.petinot@foss.st.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Add support for .get_frame_desc() to report CSI-2 virtual channel
-and data type information. This allows CSI-2 receivers to properly
-interpret the stream without inferring the data type from the pixel
-format.
+If THP is disabled and when a block device with logical block size >
+page size is present, the following null ptr deref panic happens during
+boot:
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
+[   [13.2 mK  AOSAN: null-ptr-deref in range [0x0000000000000000-0x0000000000K0 0 0[07]
+[   13.017749] RIP: 0010:create_empty_buffers+0x3b/0x380
+<snip>
+[   13.025448] Call Trace:
+[   13.025692]  <TASK>
+[   13.025895]  block_read_full_folio+0x610/0x780
+[   13.026379]  ? __pfx_blkdev_get_block+0x10/0x10
+[   13.027008]  ? __folio_batch_add_and_move+0x1fa/0x2b0
+[   13.027548]  ? __pfx_blkdev_read_folio+0x10/0x10
+[   13.028080]  filemap_read_folio+0x9b/0x200
+[   13.028526]  ? __pfx_filemap_read_folio+0x10/0x10
+[   13.029030]  ? __filemap_get_folio+0x43/0x620
+[   13.029497]  do_read_cache_folio+0x155/0x3b0
+[   13.029962]  ? __pfx_blkdev_read_folio+0x10/0x10
+[   13.030381]  read_part_sector+0xb7/0x2a0
+[   13.030805]  read_lba+0x174/0x2c0
+<snip>
+[   13.045348]  nvme_scan_ns+0x684/0x850 [nvme_core]
+[   13.045858]  ? __pfx_nvme_scan_ns+0x10/0x10 [nvme_core]
+[   13.046414]  ? _raw_spin_unlock+0x15/0x40
+[   13.046843]  ? __switch_to+0x523/0x10a0
+[   13.047253]  ? kvm_clock_get_cycles+0x14/0x30
+[   13.047742]  ? __pfx_nvme_scan_ns_async+0x10/0x10 [nvme_core]
+[   13.048353]  async_run_entry_fn+0x96/0x4f0
+[   13.048787]  process_one_work+0x667/0x10a0
+[   13.049219]  worker_thread+0x63c/0xf60
+
+As large folio support depends on THP, only allow bs > ps block devices
+if THP is enabled.
+
+Fixes: 47dd67532303 ("block/bdev: lift block size restrictions to 64k")
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- drivers/media/i2c/vgxy61.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ include/linux/blkdev.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/i2c/vgxy61.c b/drivers/media/i2c/vgxy61.c
-index 5b0479f3a3c0592be430cefe5a1ab9a76812ba84..44d6c8d8fbf8d6182e42d44e129bc45945ee0da5 100644
---- a/drivers/media/i2c/vgxy61.c
-+++ b/drivers/media/i2c/vgxy61.c
-@@ -1181,6 +1181,21 @@ static int vgxy61_s_stream(struct v4l2_subdev *sd, int enable)
- 	return ret;
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 82348fcc2455..724ddc40f35c 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -270,11 +270,16 @@ static inline dev_t disk_devt(struct gendisk *disk)
+ 	return MKDEV(disk->major, disk->first_minor);
  }
  
-+static int vgxy61_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
-+				 struct v4l2_mbus_frame_desc *fd)
-+{
-+	struct vgxy61_dev *sensor = to_vgxy61_dev(sd);
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ /*
+  * We should strive for 1 << (PAGE_SHIFT + MAX_PAGECACHE_ORDER)
+  * however we constrain this to what we can validate and test.
+  */
+ #define BLK_MAX_BLOCK_SIZE      SZ_64K
++#else
++#define BLK_MAX_BLOCK_SIZE      PAGE_SIZE
++#endif
 +
-+	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
-+	fd->num_entries = 1;
-+	fd->entry[0].pixelcode = sensor->fmt.code;
-+	fd->entry[0].stream = 0;
-+	fd->entry[0].bus.csi2.vc = 0;
-+	fd->entry[0].bus.csi2.dt = get_data_type_by_code(sensor->fmt.code);
-+
-+	return 0;
-+}
-+
- static int vgxy61_set_fmt(struct v4l2_subdev *sd,
- 			  struct v4l2_subdev_state *sd_state,
- 			  struct v4l2_subdev_format *format)
-@@ -1402,6 +1417,7 @@ static const struct v4l2_subdev_pad_ops vgxy61_pad_ops = {
- 	.set_fmt = vgxy61_set_fmt,
- 	.get_selection = vgxy61_get_selection,
- 	.enum_frame_size = vgxy61_enum_frame_size,
-+	.get_frame_desc = vgxy61_get_frame_desc,
- };
  
- static const struct v4l2_subdev_ops vgxy61_subdev_ops = {
+ /* blk_validate_limits() validates bsize, so drivers don't usually need to */
+ static inline int blk_validate_block_size(unsigned long bsize)
 
----
-base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
-change-id: 20250704-vgxy61-frame-desc-2a6d3c6cab43
-
-Best regards,
+base-commit: 8d6c58332c7a8ba025fcfa76888b6c37dbce9633
 -- 
-Julien Massot <julien.massot@collabora.com>
+2.49.0
 
