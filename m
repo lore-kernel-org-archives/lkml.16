@@ -1,64 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C0F2D542C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AC02E6122;
 	Fri,  4 Jul 2025 07:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615685; cv=none; b=Q3VDSepiYJUJSIsvC6wGafHkeJTfSaZgezaw+8PA4jJLmlZeHl94yBarbrIF3F/8Y7t8Lozmt/u8QmQrM4UsxJXYJH6q7YWURkWXycqJ0ovamHDXn63diNIEJJdQSrui2ONzkIjFzRd1JXHsfqed2w8nR8pmvaZvdH3aiUxO6kI=
+	t=1751615685; cv=none; b=sQkF9SXASpo3cx8pw1SUsPznGEAbWyJGCZD1q/OzMJ2SXckG1isaRcLmDlfOBxJk7dQhijTc0MN4vMDOG2nsOWE8V+FxKrk2T8i42TdnlcAUGifIYMEoAAWutvplBtxif825QkKsOm9KOs/BgEIraNwS7ExYWf+kqYuID2oxZJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615685; c=relaxed/simple;
-	bh=logG108dBu9v+vZYmJaE48QCvdOD6icuV7EBnGifvsg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NiJsKcoAUaY4XtX/XqmO6Og9fuogxCUnE//068g6qbFClog7eoaBiFQNxoPMbeMkMxOs3FGA8wl0M3RHkRZ7Q9qowFwkyEw4g/mncnc2RKfLfTs2XtX8ysTKCniS/4y4Y/l4Bo+4K2T6vtP8798XDvy7xFdk6FEmzP4hs51Ul0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=et60A+wg; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=b0C3UNB2dTcxpMxJCVwNrXIVV0k0Pl+FY3tJp3Vlkr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RXd3Gk/bDPIv+1jcl+qX9BVJd3N1EtUqfljz00ZIUDXLpQrZK4jqaDlqRsZfgftPuBk2gLI2zke/nw4tigvslRPPROwhGxLYUgsQ2+a8LE9uD4nZE07dm+BQ4DtA2hye+eETyJXJOYL/owhR/0rE9lqw7XJU4B4qmOL4h7syIO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V4EuBuNB; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="et60A+wg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V4EuBuNB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1751615684; x=1783151684;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=logG108dBu9v+vZYmJaE48QCvdOD6icuV7EBnGifvsg=;
-  b=et60A+wgq6ISM4GjspNUpyRrKOfpEW3a00WN/zWYCu679/xm7leuYdCz
-   ZaSNNbHzCcnBjoJJjl9VZhXdu6aI/nvcGzbqAqESqTejeYk+8E3YyLnK8
-   I6nPvLYt0QK1JHfJVjKCBeoXj5Crodrx/Kov0WZTRxrM0eFYW4ghQ5At0
-   g/YYBlvRs4mFgxIPnCETdAqK6urMIrbegiA8aweyQvkhx70zeFWP8fzKM
-   tXcZVbn7V6WVS4x195LNk97PpD5VRK0nuD0fuhnqWsqIv3C5+7lXcy+/3
-   jDxG/41DP2yWNka2ftv20XeHOHTK/H7JxmD4C5E//xkDGOW84P2xl6he5
-   A==;
-X-CSE-ConnectionGUID: xgPG8+RvQem4YvrodoyOqQ==
-X-CSE-MsgGUID: ijRRG5kjQ3aeulZVRGgqLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194126"
+  bh=b0C3UNB2dTcxpMxJCVwNrXIVV0k0Pl+FY3tJp3Vlkr0=;
+  b=V4EuBuNBLN8wda+p6F5T3D3W3aBM8tvSNV6oB6ufuGitSQxrIcehHyX+
+   X0d1rFnI2Z7RHTc0YkVrLc/CFT6CceUQbD5T0hkenpNds3bDwIH4qv85g
+   thQpv8nYvbWYHRchZiLokiQX8X4+/kMMXzEIa6ohjgIYpS+BStarxoWYY
+   fxkXRn+1NUL+LKzR+D2p11J1Ak53/WqyzPP62HPY/8FWCg9utYT7dU/dM
+   R89i0B211WESiKVT207H2McKHtppZd455xVTpEPhj7L8tTEwKFooX+IMU
+   otEYrVIpnTBV45GSr9PHkSrWhFLBTcvdIoFFrHcq7vZm0xIn9MQ7ddGDY
+   Q==;
+X-CSE-ConnectionGUID: mZf86BatRIefkC30p90Kwg==
+X-CSE-MsgGUID: 7PPIePUQRuKwCgDCrdW1ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57621157"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="64194126"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:44 -0700
-X-CSE-ConnectionGUID: rbi9tavUSMOh371v/XWsQA==
-X-CSE-MsgGUID: 6ST/TLHmQKiMFn0fLWSHsg==
+   d="scan'208";a="57621157"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:43 -0700
+X-CSE-ConnectionGUID: If/1wdNKQx+vexxxA3uzaA==
+X-CSE-MsgGUID: XCHaFuSMTNqs5WSHg7I5KQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158616594"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:41 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id A488744424;
-	Fri,  4 Jul 2025 10:54:39 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mark Greer <mgreer@animalcreek.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
+   d="scan'208";a="154664052"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:40 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Cc: Lili Li <lili.li@intel.com>,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Laurens SEGHERS <laurens@rale.com>,
+	VikasX Chougule <vikasx.chougule@intel.com>,
+	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 50/80] nfc: trf7970a: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:39 +0300
-Message-Id: <20250704075439.3221036-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/3] EDAC/igen6: Add Intel Wildcat Lake SoCs support
+Date: Fri,  4 Jul 2025 23:16:08 +0800
+Message-ID: <20250704151609.7833-3-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250704151609.7833-1-qiuxu.zhuo@intel.com>
+References: <20250704151609.7833-1-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,38 +69,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+From: Lili Li <lili.li@intel.com>
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Intel Wildcat Lake is a mobile derivative of Panther Lake with one
+memory controller. Wildcat Lake SoCs share the same IBECC registers
+with Meteor Lake-P SoCs.
+
+Add a compute die ID and a new configuration structure for Wildcat
+Lake SoCs with In-Band ECC capability for EDAC support.
+
+Signed-off-by: Lili Li <lili.li@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 ---
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ drivers/edac/igen6_edac.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
-
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/nfc/trf7970a.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index d17c701c7888..2d0d348aa278 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -1139,7 +1139,6 @@ static void trf7970a_switch_rf_off(struct trf7970a *trf)
- 	trf->aborting = false;
- 	trf->state = TRF7970A_ST_RF_OFF;
+diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
+index 5ffe9579959f..2fc59f9eed69 100644
+--- a/drivers/edac/igen6_edac.c
++++ b/drivers/edac/igen6_edac.c
+@@ -275,6 +275,9 @@ static struct work_struct ecclog_work;
+ #define DID_PTL_H_SKU2	0xb001
+ #define DID_PTL_H_SKU3	0xb002
  
--	pm_runtime_mark_last_busy(trf->dev);
- 	pm_runtime_put_autosuspend(trf->dev);
- }
++/* Compute die IDs for Wildcat Lake with IBECC */
++#define DID_WCL_SKU1	0xfd00
++
+ static int get_mchbar(struct pci_dev *pdev, u64 *mchbar)
+ {
+ 	union  {
+@@ -569,6 +572,17 @@ static struct res_config mtl_p_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
  
++static struct res_config wcl_cfg = {
++	.machine_check		= true,
++	.num_imc		= 1,
++	.imc_base		= 0xd800,
++	.ibecc_base		= 0xd400,
++	.ibecc_error_log_offset	= 0x170,
++	.ibecc_available	= mtl_p_ibecc_available,
++	.err_addr_to_sys_addr	= adl_err_addr_to_sys_addr,
++	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
++};
++
+ static struct pci_device_id igen6_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, DID_EHL_SKU5), (kernel_ulong_t)&ehl_cfg },
+ 	{ PCI_VDEVICE(INTEL, DID_EHL_SKU6), (kernel_ulong_t)&ehl_cfg },
+@@ -622,6 +636,7 @@ static struct pci_device_id igen6_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, DID_PTL_H_SKU1), (kernel_ulong_t)&mtl_p_cfg },
+ 	{ PCI_VDEVICE(INTEL, DID_PTL_H_SKU2), (kernel_ulong_t)&mtl_p_cfg },
+ 	{ PCI_VDEVICE(INTEL, DID_PTL_H_SKU3), (kernel_ulong_t)&mtl_p_cfg },
++	{ PCI_VDEVICE(INTEL, DID_WCL_SKU1), (kernel_ulong_t)&wcl_cfg },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(pci, igen6_pci_tbl);
 -- 
-2.39.5
+2.43.0
 
