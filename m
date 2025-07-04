@@ -1,142 +1,90 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C35B246798;
-	Fri,  4 Jul 2025 12:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF942D8788
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632606; cv=none; b=R+rAhN4Hn/WZYhnbXMvtPvIC6z+YxY58Lk8vCBmX00+UT2Dks5GAhr7Fo7HtyXMDtA3VyR0ch+ebJMG8kJbObdf/dwvKhUmqgot7dUTP5M8Awk8TW8Wnri34+riwV11IMmgZaRLYwWxABWTPf3PFo14Y3EembSIUqjgqwgmleCw=
+	t=1751632707; cv=none; b=pjsxc4JEXto246aForxmTZMp70fxueQNufHMNwqCTIxcYitjMMc1xDYOP8a/a/t9pKkpM5UeidsmPluJ5XkTZRdcNkHFYfaDbogvIBXsTZLPTR/xlX5zy29byPmN4+12HaqLIQfjwyF2xQpDzOTioyRyEiku8YYiP6EPwe58DTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632606; c=relaxed/simple;
-	bh=KH3pnrVrQndUZYHEOWZYE12+XPrFlJ0oajDEPDLogkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJO717Zn2yvhkrX3yaGa+YtzXnOzDMinLaCcGQeAme/vceH/CpL0tkUv2sr8zjQO7OQXQSEJIg17sKzKMED4zzBBx+VZGx6T/3lkyP5589EXk15eyEgKUN+jmpZKU8tsTBX5q8MO1QB532BZUijaI/eWWwIaMg9A8aNPo5KmSzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so1489436a12.3;
-        Fri, 04 Jul 2025 05:36:44 -0700 (PDT)
+	s=arc-20240116; t=1751632707; c=relaxed/simple;
+	bh=6+6EkI/JGBIZUO61CrURGw6GZ/6fWgN0VwyEURRIf0g=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DeGR9CUtgbsLQqR4powkIV+m8DRFw+qaYBD/PvB1RMbZTlPKEAbQj5voK3PciAA3UHP4ZNYKhyVPhivRu/MS50Bc1e6XntaKmHjDS8f+WK2xKZbv5jx11FdW/TzQVhEaWICPUzViMbn6P68XyUCViE8pl9Ape8002nV9HA7HCbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86cc7cdb86fso75743239f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:38:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751632603; x=1752237403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YW8Mdm8VBfi1qlOCL6Pf2QZ+6mI2RYO5Q+XtAXUgQJ4=;
-        b=sZEAHW+8RtZBeg0iCOJzgr4XJuMx2EIUtKmeT3M/4N1zK0wMJUJIFNjttT39Me6LvG
-         K87ELKKcAW6YDxnIB88VGuix8Y80nRL4pCrVbjXA9NeuY6z83wGjXOL6OjPWkvsv0F7A
-         d6eJHMvzd0hmNrJQtFbawo/gLGx1//80zoWGI0f/GOH/3va20r58SlTjAv1x3jWFZaXN
-         d7IUy996J1086eq3EdvIOMqvyF3Vprb3gf6JJkIJHqZyr7Aeod82laTDfTJmCLftK+YW
-         rYBxo6UdK0kbPFTktfkevXal8q4tvuEdrid637SNR3584g185xOYj9hOCHM77/YQwYd/
-         GNwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+3eihK7aGEtBfBnSEHmNEBSYoR5YfHE6cykTfMoOmaj30X32hSlE0jGGtOEF0fnMwQDsQ3vvd3CQ3AVBI@vger.kernel.org, AJvYcCXlit4kVcJEsG3OBMTKuyn7WnxG5rh/XVh/nZDVA31ddbYwpJpxwymyJZHmoCuMRA8gUX96M5Pj2AU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzypqCwk6NFgVt9p88luDPF0tBfabfXAiRyEmnTCWtPZcNtx8ii
-	0pX2aP230nxhh3iQk/uEs5jzHzbSW+W2BIevVNlOzc7OykahWOdfzf8C
-X-Gm-Gg: ASbGncsGuZA6i4GNFAmXCmLgyboD/38S/GOjlSdcHYOy9inT04ussWcZNKwYykLF2I4
-	+F5jDSqEUH4in1yjcLgRsqcZMXtf48RLdJqUYWmYQu4Qd9E0F4zet2xiLiK4zqnXW7OidbHW4sj
-	wQYtl6RD6gG1JGuS64jpk1tPlFYCAYM481LFUgqAbZxU2XdWs3mEKB+RdXbUWd+x1Wo5eVFh+2p
-	DsEZV4NC/Mt1El5U0WpHIUCTuj7qGyISLuoRLRFA4QS4P5XRe4bjY+qn/MbKgljNzihCp70GW7R
-	HRY4mcdII8dbIVJQwhUluKoQza+Wm8mwPn66a/sxjqMevyo/AtHszrZNH30=
-X-Google-Smtp-Source: AGHT+IHU3ATpNL/cr0I7xRhbdLV8cgkTlj0aQw3gWc/YSeGekUiyN9FhxtUD4X0JFLW+UcEhQI6LSA==
-X-Received: by 2002:a05:6402:2103:b0:5ff:ef06:1c52 with SMTP id 4fb4d7f45d1cf-60fd2f84f16mr2179344a12.3.1751632602449;
-        Fri, 04 Jul 2025 05:36:42 -0700 (PDT)
-Received: from gmail.com ([2620:10d:c092:400::5:c915])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fc81a70e4sm1285566a12.0.2025.07.04.05.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:36:42 -0700 (PDT)
-Date: Fri, 4 Jul 2025 13:36:40 +0100
-From: Breno Leitao <leitao@debian.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, usamaarif642@gmail.com,
-	rmikey@meta.com, andreyknvl@gmail.com, kasan-dev@googlegroups.com,
-	linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH] arm64: efi: Fix KASAN false positive for EFI runtime
- stack
-Message-ID: <aGfK2N6po39zyVIp@gmail.com>
-References: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org>
- <aGaxZHLnDQc_kSur@arm.com>
- <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1751632705; x=1752237505;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E/KobVGwWj+yczhWyCQpLBwTo6ncGhSmFGCWV6CIOFs=;
+        b=QkDdcGaXvvat5dAEvR6hTtsO9pwqBOHiLJYm0136SApaD3fvibR9H/GxJ9gvNVkDlo
+         chd20Cl9+XnKlr/5d5BV+tV8p93WGyZ2XqRrU35ikxL85VRwSkfmMVAovdxfJMDtbn7j
+         DXZeVInVCGTq1JIlt9qGU76FtsyHukKuxhL51Awmj1+jfGxGIa1uxnoW/zLeNbhsrkd5
+         vH+N9Uiy5A/YOszfXWdnUV1vtZGM++T7rx3TGqYD5PaHuCeN1eBXRduG8VPkaN4NqPgh
+         NP1KVKkPkEMSYEvkX4I79PGWJATMRxnZ6GTBpYAp4RAfUuixSrwRH6M6ycC2ly7W4Tay
+         QkAg==
+X-Gm-Message-State: AOJu0YxXXfBDxPERlTRqWD4Ag4GeJ1u9/4uIaTh4Wf0wOOb2JH+x/aKD
+	S55NgKUsiW9B2SiO7R9mr02Mki08CerX5Z6Fomtu1w/JkmRuLgXsw9t25P4eoplFyNcMAX6X6Kb
+	nGya6yLmUoLWvBxI34lbgJa2SouT6IuH2gT9ofz0Suc052mXMvs/4nm2yFag=
+X-Google-Smtp-Source: AGHT+IHzxUq7frs9QYdd32isezGYus9fInAceYhr1eZ0hV+0oBhibkmx8qJmCDhr3bZ+mhwBZuuapmxFzLFc+oIhsG5DAuaRutf3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
+X-Received: by 2002:a05:6e02:1a28:b0:3e0:51b3:6f3f with SMTP id
+ e9e14a558f8ab-3e1371fb2f0mr16977865ab.21.1751632704915; Fri, 04 Jul 2025
+ 05:38:24 -0700 (PDT)
+Date: Fri, 04 Jul 2025 05:38:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6867cb40.a70a0220.29cf51.001b.GAE@google.com>
+Subject: [syzbot] Monthly nfs report (Jul 2025)
+From: syzbot <syzbot+listdc1ca7bb566f225a8ae2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Ard,
+Hello nfs maintainers/developers,
 
-On Fri, Jul 04, 2025 at 10:26:37AM +0200, Ard Biesheuvel wrote:
-> On Thu, 3 Jul 2025 at 18:35, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Tue, Jun 24, 2025 at 05:55:53AM -0700, Breno Leitao wrote:
-...
-> > >  arch/arm64/kernel/efi.c | 9 ++++++---
-...
-> > >  static bool region_is_misaligned(const efi_memory_desc_t *md)
-> > >  {
-> > > @@ -214,9 +215,11 @@ static int __init arm64_efi_rt_init(void)
-> > >       if (!efi_enabled(EFI_RUNTIME_SERVICES))
-> > >               return 0;
-> > >
-> > > -     p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
-> > > -                        NUMA_NO_NODE, &&l);
-> > > -l:   if (!p) {
-> > > +     if (!IS_ENABLED(CONFIG_VMAP_STACK))
-> > > +             return -ENOMEM;
-> >
-> > Mark Rutland pointed out in a private chat that this should probably
-> > clear the EFI_RUNTIME_SERVICES flag as well.
-> >
-> 
-> If VMAP_STACK is a hard requirement, should we make CONFIG_EFI depend
-> on it for arm64?
+This is a 31-day syzbot report for the nfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/nfs
 
-What about if we make CONFIG_EFI select VMAP_STACK? I think it is more
-straight forward from a configuration perspective.
+During the period, 0 new issues were detected and 1 were fixed.
+In total, 9 issues are still open and 17 have already been fixed.
 
-I thought about the following. What do you think?
+Some of the still happening issues:
 
-	arm64: EFI selects VMAP_STACK
+Ref Crashes Repro Title
+<1> 20778   Yes   INFO: task hung in nfsd_nl_listener_set_doit
+                  https://syzkaller.appspot.com/bug?extid=d1e76d963f757db40f91
+<2> 2447    No    INFO: task hung in nfsd_umount
+                  https://syzkaller.appspot.com/bug?extid=b568ba42c85a332a88ee
+<3> 939     No    INFO: task hung in nfsd_nl_version_get_doit
+                  https://syzkaller.appspot.com/bug?extid=41bc60511c2884783c27
+<4> 827     No    INFO: task hung in nfsd_nl_threads_get_doit
+                  https://syzkaller.appspot.com/bug?extid=c0831b61d6ade1e2d098
+<5> 817     No    INFO: task hung in nfsd_nl_rpc_status_get_dumpit
+                  https://syzkaller.appspot.com/bug?extid=68f089d6e18e8b1d41eb
+<6> 804     No    INFO: task hung in nfsd_nl_listener_get_doit
+                  https://syzkaller.appspot.com/bug?extid=4207adf14e7c0981d28d
+<7> 324     Yes   INFO: task hung in nfsd_nl_threads_set_doit
+                  https://syzkaller.appspot.com/bug?extid=e7baeb70aa00c22ed45e
 
-	Modify the ARM64 Kconfig to make the CONFIG_EFI configuration option
-	automatically select CONFIG_VMAP_STACK.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-	The motivation is that arm64_efi_rt_init() will fail at runtime if
-	CONFIG_VMAP_STACK is not set, so the patch ensures that enabling EFI
-	will always enable VMAP_STACK as well, and avoid having EFI disabled in
-	case the user didn't set VMAP_STACK.
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-	Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-	Signed-off-by: Breno Leitao <leitao@debian.org>
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-	diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-	index 55fc331af3371..cc2585143f511 100644
-	--- a/arch/arm64/Kconfig
-	+++ b/arch/arm64/Kconfig
-	@@ -2437,6 +2437,7 @@ config EFI
-		select EFI_RUNTIME_WRAPPERS
-		select EFI_STUB
-		select EFI_GENERIC_STUB
-	+	select VMAP_STACK
-		imply IMA_SECURE_AND_OR_TRUSTED_BOOT
-		default y
-		help
-
-> > (but let's see if Ard has a different opinion on the approach)
-
-> I think this is fine - the stack just needs to be disjoint from the
-> ordinary kernel mode task stack so that buggy firmware is less likely
-> to corrupt it, and so that we can recover from an unexpected
-> synchronous exception more reliably.
-> 
-> In that sense, the old and the new code are equivalent, so no
-> objections from me.
-
-Thanks. I will send an update with the update that Catalin and Mark
-suggested.
-
-Thanks!
---breno
+You may send multiple commands in a single email message.
