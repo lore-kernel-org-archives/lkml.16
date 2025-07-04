@@ -1,71 +1,126 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19822836B5
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9712227F18B;
+	Fri,  4 Jul 2025 07:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614206; cv=none; b=KDH2Fqlum9+69uipl0EKkax48TeK/F2KskWs0KAKzhfk/zb2UWZCpwVMYSw6DfiZjola5CrWKxz9nbNyxkUB7oE9sHWJUofc/p2Ao76AJMexcIwi928GSPJfkBF2hEP70IiDKb1GgItAJBp99wTfEk8oYSIQ8K/1lZIRcip6CD8=
+	t=1751614287; cv=none; b=g9JDrgWVCU8YImCJ9UIZpa2hxh7T0fVqr88lLm5LtR0gv46tG/1EIbK79ecanA3F/nYElr4+1cNPA8XZcMvVX1G7kgkwtwE7tfCfuhyHjNVYmyWxdLSWc3myQBcCmUY7/bXibI38hxKCxuSvXGgsXKeBnqOAa3XdSSAmK2LPd3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614206; c=relaxed/simple;
-	bh=2xu+rR+t0HC/gk3zhkZXJejIT5iJ5KMBi2PAigq/pg0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=s2Jx1F0bMikRRxSWHcFZNSnjMyk79rig/0wZzpXHTRUMq1aPS10oCnlsPU+G2ZQmqeAgBXqWT69khbTIRn0MpbD0aJhIXxI3BkntlaaPpBiP+LsT3JgUp0W4bCLYSIhrg0GymBKwqyF4cLs8D7+gNd5Xr2lA0BLg5QZUQHU3Xj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86463467dddso62584139f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:30:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751614204; x=1752219004;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JK1xSCb2rHdtQR1a4eu+HPubir72PmMf8vYKhieMVN4=;
-        b=PHTzMopsBsz2R7/nYG8ntAzmd1VSO7ydfMcmjK0gutXOYvYJOOgTM2kZRoM+0ZYt1+
-         EfVTQbdi7+30krRvsjDwxobnB7AShH+6pHW5sVFCrBggHaQB87awtin8g2wbEerq+zls
-         ZfkM8YXYblHABrk3HxX3VzgzVSQDD4OLbPW8VediqOqZTYzQOm5DAqdjYJxI7T+tpz3f
-         TfUjCpB32ATaUPW/OaZaCNdsdSjSoa1CWMwpWo8BxAdaguX7S0/GQy4TguZm+gdpMGM3
-         kA/wqtUZcjbv73M2tMnfePelBLaIhQbgXnhvGDBxucrZi3WYO8AmAL/JAe5H36YCltMJ
-         JLNw==
-X-Gm-Message-State: AOJu0YztE3n0faZkKamvgQsyszrR2H/zHPrQVvcmiACIBqypr80SUN0h
-	LH+cB8O2NpGpFO5FY0HsrViJuH2gLhA5GZEEGx8bTHcGvY6deIRGJzlTDh90Ro2VMCjsjGmGSS/
-	txfE0572POv+RvIEPgMm56DvMfgbWYyFCvawf8XL+6m3UHbyuDv4UqTkR4Wo=
-X-Google-Smtp-Source: AGHT+IHPAHCOMgPCNsIFdNwBzRzWCu0VC/Zvo0Y4n9L54/x6QnFmD+6doMNvFXm3wtBI1PCdTYKlfULMaIK/djDsT0eFXif2bpAp
+	s=arc-20240116; t=1751614287; c=relaxed/simple;
+	bh=I0BQB5Y0sAR1ONC1TeJSE+OpNExr7IsFBX7iMmg16MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ii5DmzTDQHZ2THQZ6lizjwWEaXsr66aeGoWtVREnj9cNKGX72jzyLjT8iJ1EjjS5gI7ZXIG2QN4Pnbo8pv99Fp0zWuX1FfxwuK4QmMC26pq7te0tVy2ApEKZC85hOUF8f9oRIoP5hysjNdQJ41ETaWKDQh+unk3EDEaVpJZL5Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHZeYaLY; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHZeYaLY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751614286; x=1783150286;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I0BQB5Y0sAR1ONC1TeJSE+OpNExr7IsFBX7iMmg16MA=;
+  b=AHZeYaLYKkLhsBO3qpELo4KicLw7pHGxZNqL6tJL/yN4exoIh5ihiHUZ
+   fXh3FWRT1DXapA4oOzX/Hh0MGhlz5wsCYlWxTC3MPGNBgOHmCXT0/jVmG
+   hVI8ghPGNjcB/LyQAG15HZ7Y67hw2l/kGdJKrVKmtPpf4NP2WEqjN1+dy
+   lb/3fgOh9C58m4aPkiI6AsO9CUOFRlJj69a433RgsJA65QUtUGK+aHxie
+   tHXrVOGJiK2PdtSxu7HXl5KPRtK4y+HY6p+E9nBDgCppHxcSDxFyXLBwB
+   kqakufG6Qtu8hqbgK7ed8CGbOn+ZooFnI5Nvc0F/2UmrMA9pBAkORRuZc
+   A==;
+X-CSE-ConnectionGUID: hYpzsugWTXqB1k3VPtp8yw==
+X-CSE-MsgGUID: tPNspjYyS+yhQKppjTZRng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53871627"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="53871627"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:31:25 -0700
+X-CSE-ConnectionGUID: NOGy6WoYRjKXVfBseLKXdA==
+X-CSE-MsgGUID: ob6MCjr8SRKu3k2TGvctbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="155337062"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 04 Jul 2025 00:31:21 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXatD-0003Rn-10;
+	Fri, 04 Jul 2025 07:31:19 +0000
+Date: Fri, 4 Jul 2025 15:31:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, aaro.koskinen@iki.fi,
+	andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
+	tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, m-leonard@ti.com,
+	praneeth@ti.com, jcormier@criticallink.com
+Subject: Re: [PATCH v6 2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
+Message-ID: <202507041537.da8R2iEX-lkp@intel.com>
+References: <20250703180751.168755-3-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2591:b0:3df:3222:278e with SMTP id
- e9e14a558f8ab-3e136ea4bf6mr9433395ab.1.1751614204000; Fri, 04 Jul 2025
- 00:30:04 -0700 (PDT)
-Date: Fri, 04 Jul 2025 00:30:03 -0700
-In-Reply-To: <20250704063547.3973319-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686782fb.a70a0220.29cf51.0011.GAE@google.com>
-Subject: Re: [syzbot] [net?] general protection fault in qdisc_tree_reduce_backlog
-From: syzbot <syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703180751.168755-3-s-ramamoorthy@ti.com>
 
-Hello,
+Hi Shree,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+kernel test robot noticed the following build errors:
 
-Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
-Tested-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
+[auto build test ERROR on v6.16-rc4]
+[also build test ERROR on linus/master next-20250703]
+[cannot apply to tmlind-omap/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Tested on:
+url:    https://github.com/intel-lab-lkp/linux/commits/Shree-Ramamoorthy/gpio-tps65219-Update-_IDX-_OFFSET-macro-prefix/20250704-021048
+base:   v6.16-rc4
+patch link:    https://lore.kernel.org/r/20250703180751.168755-3-s-ramamoorthy%40ti.com
+patch subject: [PATCH v6 2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
+config: hexagon-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041537.da8R2iEX-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 61529d9e36fa86782a2458e6bdeedf7f376ef4b5)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041537.da8R2iEX-lkp@intel.com/reproduce)
 
-commit:         17bbde2e Merge tag 'net-6.16-rc5' of git://git.kernel...
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ea0f70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a6dba31fc9bb876c
-dashboard link: https://syzkaller.appspot.com/bug?extid=1261670bbdefc5485a06
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1698548c580000
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507041537.da8R2iEX-lkp@intel.com/
 
-Note: testing is done by a robot and is best-effort only.
+All errors (new ones prefixed by >>):
+
+>> drivers/gpio/gpio-tps65219.c:208:14: error: incompatible function pointer types initializing 'int (*)(struct gpio_chip *, unsigned int, int)' with an expression of type 'void (struct gpio_chip *, unsigned int, int)' [-Wincompatible-function-pointer-types]
+     208 |         .set_rv                 = tps65219_gpio_set,
+         |                                   ^~~~~~~~~~~~~~~~~
+   drivers/gpio/gpio-tps65219.c:221:14: error: incompatible function pointer types initializing 'int (*)(struct gpio_chip *, unsigned int, int)' with an expression of type 'void (struct gpio_chip *, unsigned int, int)' [-Wincompatible-function-pointer-types]
+     221 |         .set_rv                 = tps65219_gpio_set,
+         |                                   ^~~~~~~~~~~~~~~~~
+   2 errors generated.
+
+
+vim +208 drivers/gpio/gpio-tps65219.c
+
+   200	
+   201	static const struct gpio_chip tps65214_template_chip = {
+   202		.label			= "tps65214-gpio",
+   203		.owner			= THIS_MODULE,
+   204		.get_direction		= tps65214_gpio_get_direction,
+   205		.direction_input	= tps65219_gpio_direction_input,
+   206		.direction_output	= tps65219_gpio_direction_output,
+   207		.get			= tps65219_gpio_get,
+ > 208		.set_rv			= tps65219_gpio_set,
+   209		.base			= -1,
+   210		.ngpio			= 2,
+   211		.can_sleep		= true,
+   212	};
+   213	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
