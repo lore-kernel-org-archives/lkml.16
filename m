@@ -1,186 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDFD261586;
-	Fri,  4 Jul 2025 06:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F635261390;
+	Fri,  4 Jul 2025 06:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751611463; cv=none; b=HPBT4mIPHuc63iaCnakNy5C39qj3gPxgj1l2/cIO0roqDH2o30DV2vvrZKQxjdwQtR8QxYo8tRF9+a/9qvRqVlmOkF9WhQx7d4i1eJ5mqndKrueQhXhX+s/R0b8I+Y/xMiWI1LyxyUBFmcrpVtb/7qa5KStWwTeAROSAewxqIos=
+	t=1751611485; cv=none; b=uS+95h5hURve6aCFRjHZnyD7dH1uiXCYDgfZm6VU4ZNUgkNFon1k6/d2wSQrh3WXzl32e/4C0mRr++nDKn8SZTHQxX2XRL4M5db2S/6rCWzeYi6I9yQ7H0xSafxxM5jDDsWSZwI8UTl7H8z9JHdZmVCC8Vx5etv9Jo5hF7Xu8Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751611463; c=relaxed/simple;
-	bh=oIBYSjEy8+jfQse5w4moT54WZuna8COxm+9MBf4blws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RAlEcpGTgJZ/Irdp1nYxkY/dycN7C/0uVyPgnGhI1tjIhMx5i9jt3cfPQ0s2vNILcFmBS50SaIFuilrLppuKDkECVQ6n4JNzR2r8oXG75VW3C2ECtN/0O+1HE0gP8yViQebGQLAEYsn6o+dB1zBI0H9zJFrHwJTHQ3k6pM0y6Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NlDIU6Hv; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NlDIU6Hv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751611462; x=1783147462;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oIBYSjEy8+jfQse5w4moT54WZuna8COxm+9MBf4blws=;
-  b=NlDIU6Hv8w9DLavQFiliuaaYenVledKr6NgpFsAn7bP9ELsd/88lfX8H
-   whTlowy/TKtx8C1QJnZ3pSeRrgDPDcwm93JHmBA0YRI+CjJlNAHVJbDvp
-   mHw7VI2tipI+mY6A4ttrbStsYVtv9sBV99Bl5ITgpYGvob3u60NJpDcm+
-   9o+PMfk2V9Vq6zqcjFff2WCfEQzYGhWlh1YE0ZDHYbTOokwvRkYwSrglp
-   5ZU3PfejuW3lvQa9mvACtAs9PapdAaTrMOjoRAaNBjwV9CAYTW6b1mg3A
-   V0/TFqxsKlb1lekJQR7NP6qy1/3BJvRaxliyBBw7e5m8ikNFyrOUEwDGM
-   g==;
-X-CSE-ConnectionGUID: kaH5oX0tSnaNjm2Um9KG8g==
-X-CSE-MsgGUID: un0LNJpLTvq3O/pe4n8G/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65394036"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="65394036"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 23:44:21 -0700
-X-CSE-ConnectionGUID: TFja1sDeSbu0DzjcG/lfww==
-X-CSE-MsgGUID: RnCiRpxzSByDv6yYK4Wspw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158602598"
-Received: from qliang3-mobl3.ccr.corp.intel.com (HELO [10.124.240.2]) ([10.124.240.2])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 23:44:16 -0700
-Message-ID: <b61dfcbf-adfc-4572-8625-4b0a57023684@linux.intel.com>
-Date: Fri, 4 Jul 2025 14:44:13 +0800
+	s=arc-20240116; t=1751611485; c=relaxed/simple;
+	bh=4jqv/tFlSpCT9VBH8J464fArP8r5d9j/6sOOfWltQDo=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=aG6lvmRo+dhqae6fQx2vNWQYfeANPOCrRAdStvTspb9oKy1wCNw+U3EIo6MGF770NlwR4lOzZz9pNlIMDrmkyMcrxkK923vLkO5Qo0t5Dlnqmob01P5cfuBGuhZvmm9fXd1NWRQ0IkjVMXHCv9JIxneyx/izOEHQWzPEnqlalOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bYPG45GX2z2BdVd;
+	Fri,  4 Jul 2025 14:42:52 +0800 (CST)
+Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
+	by mail.maildlp.com (Postfix) with ESMTPS id F24791A016C;
+	Fri,  4 Jul 2025 14:44:40 +0800 (CST)
+Received: from [10.174.178.219] (10.174.178.219) by
+ kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 4 Jul 2025 14:44:39 +0800
+Subject: Re: [PATCH 1/2] KVM: arm64: Fix enforcement of upper bound on
+ MDCR_EL2.HPMN
+To: Ben Horgan <ben.horgan@arm.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <joey.gouly@arm.com>, <suzuki.poulose@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<yury.norov@gmail.com>, <linux@rasmusvillemoes.dk>,
+	<linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
+	<stable@vger.kernel.org>
+References: <20250703135729.1807517-1-ben.horgan@arm.com>
+ <20250703135729.1807517-2-ben.horgan@arm.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <ca3054b2-b053-3859-a992-09499809d4d4@huawei.com>
+Date: Fri, 4 Jul 2025 14:44:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] x86/tdx: Skip clearing reclaimed pages unless
- X86_BUG_TDX_PW_MCE is present
-To: Xiaoyao Li <xiaoyao.li@intel.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com,
- seanjc@google.com, vannapurve@google.com, Tony Luck <tony.luck@intel.com>,
- Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, x86@kernel.org, H Peter Anvin
- <hpa@zytor.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- kai.huang@intel.com, reinette.chatre@intel.com,
- tony.lindgren@linux.intel.com, isaku.yamahata@intel.com,
- yan.y.zhao@intel.com, chao.gao@intel.com
-References: <20250703153712.155600-1-adrian.hunter@intel.com>
- <20250703153712.155600-3-adrian.hunter@intel.com>
- <d1cd2b34-9a3f-4dfc-93a2-2a20e9f16e1d@intel.com>
+In-Reply-To: <20250703135729.1807517-2-ben.horgan@arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <d1cd2b34-9a3f-4dfc-93a2-2a20e9f16e1d@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk200017.china.huawei.com (7.202.194.83)
 
+On 2025/7/3 21:57, Ben Horgan wrote:
+> Previously, u64_replace_bits() was used to no effect as the return value
+> was ignored. Convert to u64p_replace_bits() so the value is updated in
+> place.
+> 
+> Signed-off-by: Ben Horgan <ben.horgan@arm.com>
+> Fixes: efff9dd2fee7 ("KVM: arm64: Handle out-of-bound write to MDCR_EL2.HPMN")
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/arm64/kvm/sys_regs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 76c2f0da821f..c20bd6f21e60 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -2624,7 +2624,7 @@ static bool access_mdcr(struct kvm_vcpu *vcpu,
+>  	 */
+>  	if (hpmn > vcpu->kvm->arch.nr_pmu_counters) {
+>  		hpmn = vcpu->kvm->arch.nr_pmu_counters;
+> -		u64_replace_bits(val, hpmn, MDCR_EL2_HPMN);
+> +		u64p_replace_bits(&val, hpmn, MDCR_EL2_HPMN);
+>  	}
+>  
+>  	__vcpu_assign_sys_reg(vcpu, MDCR_EL2, val);
 
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-On 7/4/2025 9:32 AM, Xiaoyao Li wrote:
-> On 7/3/2025 11:37 PM, Adrian Hunter wrote:
->> Avoid clearing reclaimed TDX private pages unless the platform is affected
->> by the X86_BUG_TDX_PW_MCE erratum. This significantly reduces VM shutdown
->> time on unaffected systems.
->>
->> Background
->>
->> KVM currently clears reclaimed TDX private pages using MOVDIR64B, which:
->>
->>     - Clears the TD Owner bit (which identifies TDX private memory) and
->>       integrity metadata without triggering integrity violations.
->>     - Clears poison from cache lines without consuming it, avoiding MCEs on
->>       access (refer TDX Module Base spec. 16.5. Handling Machine Check
->>       Events during Guest TD Operation).
->>
->> The TDX module also uses MOVDIR64B to initialize private pages before use.
->> If cache flushing is needed, it sets TDX_FEATURES.CLFLUSH_BEFORE_ALLOC.
->> However, KVM currently flushes unconditionally, refer commit 94c477a751c7b
->> ("x86/virt/tdx: Add SEAMCALL wrappers to add TD private pages")
->>
->> In contrast, when private pages are reclaimed, the TDX Module handles
->> flushing via the TDH.PHYMEM.CACHE.WB SEAMCALL.
->>
->> Problem
->>
->> Clearing all private pages during VM shutdown is costly. For guests
->> with a large amount of memory it can take minutes.
->>
->> Solution
->>
->> TDX Module Base Architecture spec. documents that private pages reclaimed
->> from a TD should be initialized using MOVDIR64B, in order to avoid
->> integrity violation or TD bit mismatch detection when later being read
->> using a shared HKID, refer April 2025 spec. "Page Initialization" in
->> section "8.6.2. Platforms not Using ACT: Required Cache Flush and
->> Initialization by the Host VMM"
->>
->> That is an overstatement and will be clarified in coming versions of the
->> spec. In fact, as outlined in "Table 16.2: Non-ACT Platforms Checks on
->> Memory" and "Table 16.3: Non-ACT Platforms Checks on Memory Reads in Li
->> Mode" in the same spec, there is no issue accessing such reclaimed pages
->> using a shared key that does not have integrity enabled. Linux always uses
->> KeyID 0 which never has integrity enabled. KeyID 0 is also the TME KeyID
->> which disallows integrity, refer "TME Policy/Encryption Algorithm" bit
->> description in "Intel Architecture Memory Encryption Technologies" spec
->> version 1.6 April 2025. So there is no need to clear pages to avoid
->> integrity violations.
->>
->> There remains a risk of poison consumption. However, in the context of
->> TDX, it is expected that there would be a machine check associated with the
->> original poisoning. On some platforms that results in a panic. However
->> platforms may support "SEAM_NR" Machine Check capability, in which case
->> Linux machine check handler marks the page as poisoned, which prevents it
->> from being allocated anymore, refer commit 7911f145de5fe ("x86/mce:
->> Implement recovery for errors in TDX/SEAM non-root mode")
->>
->> Improvement
->>
->> By skipping the clearing step on unaffected platforms, shutdown time
->> can improve by up to 40%.
->>
->> On platforms with the X86_BUG_TDX_PW_MCE erratum (SPR and EMR), continue
->> clearing because these platforms may trigger poison on partial writes to
->> previously-private pages, even with KeyID 0, refer commit 1e536e1068970
->> ("x86/cpu: Detect TDX partial write machine check erratum")
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>
->>
->> Changes in V2:
->>
->>     Improve the comment
->>
->>
->>   arch/x86/virt/vmx/tdx/tdx.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
->> index 14d93ed05bd2..4fa86188aa40 100644
->> --- a/arch/x86/virt/vmx/tdx/tdx.c
->> +++ b/arch/x86/virt/vmx/tdx/tdx.c
->> @@ -642,6 +642,14 @@ void tdx_quirk_reset_paddr(unsigned long base, unsigned long size)
->>       const void *zero_page = (const void *)page_address(ZERO_PAGE(0));
->>       unsigned long phys, end;
->>   +    /*
->> +     * Typically, any write to the page will convert it from TDX
->> +     * private back to normal kernel memory. Systems with the
->> +     * erratum need to do the conversion explicitly.
->
-> Can we call out that "system with erratum need to do the conversion explicitly via MOVDIR64B" ?
-
-The original description of the function has mentioned it.
-I am wondering if it's better to merge the comments to the function description?
-
-
->
-> Without "via MOVDIR64B", it leads to the impression that explicit conversion with any write is OK for system with the erratum, and maybe the following code just happened to use movdir64b().
->
->> +     */
->> +    if (!boot_cpu_has_bug(X86_BUG_TDX_PW_MCE))
->> +        return;
->> +
->>       end = base + size;
->>       for (phys = base; phys < end; phys += 64)
->>           movdir64b(__va(phys), zero_page);
->
-
+Thanks!
