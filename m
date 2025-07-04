@@ -1,78 +1,76 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCED30113D
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E959309DB7;
+	Fri,  4 Jul 2025 08:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616977; cv=none; b=h1qsaIV3TywoGmoD8eOqY4RFUltycpMWQDgft7O615WXdE5qX6hfiBXh5w+rmJJ4Mi5Eb2fYcnsxx0Yx2bJhS60ifWk2TpKYFGKePX1A9c8ttmDONQAWmguBOz5e1dhleGLIWkozY5xBtcNNpERjFOQxJl5KcmQiva4YjWZiTfM=
+	t=1751616985; cv=none; b=gnFGUGCtsXFhgfNCKiYaOl01IQB9DSTD2wMngDLPrVq6udCoLjFUhThx8tJWYbp9V6kzHs0fSKVsqCTMAWs34iHI4/7TNjIZ6l6Gz8fCD2ME7TgaXJjk96amAaRHvOUoJH4ua9PJDs7ASDBgYhdT8mZwVmFoA4YhSHHP1TTuiMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616977; c=relaxed/simple;
-	bh=GI90PMG6oLQIFp7nu69CEzicczRXgBh1hr6PYZ2QH+4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tpga1c6+vXzUl7rhiSisHFafz4U+2PCsEWo9vUdHvQRUOJRYnT3IDoWcIzqF6nyMnXyPo8ME9g0lMddLkTJGjBSUpej8xhVDEPM81Xf4YKFtuu1g4JEJH2jHWCO73RxiF3MdI5SJSjOCEiOalQ0AWKZ6e5qwDBMbj+ig8jj5Krk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 5648FFiG092355
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Jul 2025 16:15:16 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Fri, 4 Jul 2025
- 16:15:15 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To:
-CC: <arnd@arndb.de>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <soc@lists.linux.dev>,
-        <tim609@andestech.com>, Ben Zong-You Xie <ben717@andestech.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH 8/8] riscv: defconfig: enable Andes SoC
-Date: Fri, 4 Jul 2025 16:14:51 +0800
-Message-ID: <20250704081451.2011407-9-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250704081451.2011407-1-ben717@andestech.com>
-References: <20250704081451.2011407-1-ben717@andestech.com>
+	s=arc-20240116; t=1751616985; c=relaxed/simple;
+	bh=FmEScJJtDiR5EC91e3JJpMlUWgBrFNK/IOQMLkXY8A4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EsdIU2qk5+VOezAWKPJulz7zgosBbwizpGV7WiAMDo/2V/3YpvrS9IHgBlfa8HA2mn2wueORvy/wM3T+AulTz0mI4l0FIPd/dDjknHy+L/fuudIL2QT3gn4nYbwP0OIzzqtE4K80GBmC5TgFmampmWS/6/7vvw0FMuCogK6vRto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=V8jzDXZy; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="V8jzDXZy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5hgLMUjtMWdFSYSDwSph8mH2JAMp8Kj0KGfpI3vdp/I=; b=V8jzDXZyHTLiYs0km7TJJ+IFul
+	soxASJuHloewfWsAUQzCH/NPFMARfCTgPy0BHDM8P8Pu+p5/nDdjYFAbArZZBnHUqwufIl4L0Kl6K
+	dIDBiEV200RGWTZjDBe3Jf25rEELiUpTR0p1gHzB8VSz30V+eJBPnN04txwbKubGQctc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXbaV-000BNF-0f; Fri, 04 Jul 2025 10:16:03 +0200
+Date: Fri, 4 Jul 2025 10:16:03 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andre Edich <andre.edich@microchip.com>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH net v2 2/3] net: phy: smsc: Force predictable MDI-X state
+ on LAN87xx
+Message-ID: <49b49005-e857-445e-8b63-e84cbfdae17b@lunn.ch>
+References: <20250703114941.3243890-1-o.rempel@pengutronix.de>
+ <20250703114941.3243890-3-o.rempel@pengutronix.de>
+ <20250704100031.19f95d3e@fedora.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 5648FFiG092355
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704100031.19f95d3e@fedora.home>
 
-Enable Andes SoC config in defconfig to allow the default
-upstream kernel to boot on Voyager board.
+> The patch looks good to me, but I have a few questions.  As this
+> overrides some configuration on existing HW, and I'm not utra familiar
+> with auto-mdix, is there any chance this could cause regressions ?
+> 
+> Especially regarding your patch 3, is there any chance that the PHY is
+> strapped in a fixed MDIX mode to address the broken autoneg off mode ? 
+> 
+> I'm not saying that strapping is a good solution for that ofc :) it's a
+> shame we can't read the strap config :/
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This might technically be considered a behaviour change. However there
+are few systems which don't support it. It is also independent of
+auto-neg, so autoneg off should not be an issue.
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index fe8bd8afb418..12f5f6ec00fa 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -22,6 +22,7 @@ CONFIG_USER_NS=y
- CONFIG_CHECKPOINT_RESTORE=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_PROFILING=y
-+CONFIG_ARCH_ANDES=y
- CONFIG_ARCH_MICROCHIP=y
- CONFIG_ARCH_SIFIVE=y
- CONFIG_ARCH_SOPHGO=y
--- 
-2.34.1
+I think this is reasonably safe, and if somebody does report a
+regression, we can revert the patch.
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
