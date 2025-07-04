@@ -1,72 +1,153 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B221189F3B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F311010942;
+	Fri,  4 Jul 2025 15:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642166; cv=none; b=L65hoWKuRnMPalA6U/zKNZGIaxd7g7VJtQPaHhIaherzJvjz1AUp14orIgdLDk6aL9U4GN25Cn2sqSVk9CZcdXuLEIFn/2XF48sVMf55umPkF5WqBUQ1++q/JrY27acCtuTDpmGgyxhC+3u66VfivbNwwCobmfKl0IU9tsOR6kw=
+	t=1751642177; cv=none; b=RBiQCWmiYAa7r/RjsaBGiYEAETwT4AMsUgfMz68nJYEaIX/cNyxq5ExOEgDpPEfjWj0ga0iBLnBt00kA5qvKGrvemQDMcWl/Uf7i2r8MaWGi6p8rJaOAzn9l6awt0n/XaiIOs27iQyrJqPyNNoLqavZK1OvPC1SSlw1kPamBkyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642166; c=relaxed/simple;
-	bh=EAsnUN73ruLYHRIaF8c+gbWNnSdE6fXyfBnKlJRLL6U=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZYNtPx8PoheweHUQPNuAmg761V3r/xMpXvLuE9wpA0YAbV0cexJUffv4N+cmsdckKOuT3qDJJeIXSSMC2vVoyY6jh1pGMVOXEQSiJT4nE0zvG3SB6IOWndcMZ8ri5n5OnA325DNwoQjLtuS6wu5shX+m/tifN8TWIcGX4Y3pU3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-87632a0275dso94202439f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751642164; x=1752246964;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yu6HMyDKADnRPwMdTNfPbyIzaSkTzS13hufmtK1G5yY=;
-        b=QvSVfqKRsJZMbO/gRs+9rl6NWNbX/E20rb3EP4yo2W79CQnSkkCYZavll5KBZryIZa
-         ZrBw4KVs5AeH1xqAb1Xdgcm4VcCcbg58Moe9YXUSuHhBWU0IjLuuft8gVx/MA2UpaNCO
-         ZJv1GTh6TND2zCjrLTrEGD12/lADGW1FMKhGf/cPy1ya5/hFxBdZUgjgE2VJqB5b9D5o
-         ncv7L0h1ZaHszUl4dkYR53NjbyO37qVWI4ymYEvCQZNj8LicBYVI1WG+gvQZK2FxPlCE
-         0BGorSYF6z+1dhYxXWoT/rhSKI5L3tdvKoPByXhqK+x0vlMsj96sVX/1UVxqKPqBJJQB
-         eBOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXzeEkzh6LO6AJqpuukajJNnq0DYM1ZxZaApEDrSgMpYngMVdMbAVTGiBhAJK+3GpTa4pvjQ+9GFnMWAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+kGgt7Sf6513vZnfd68ZvC0NE+n4zSIn2uQikaMgYI2zkV+dT
-	nAL/WbHPr+cNS5tPrSmJuQ3IMH01oLbXlG4cHtQoFqAiKKCyjsVX5fkBQzS4h1Vz9X119vDRTt0
-	hMgimNzcF8Nrph8oCPh1YRmP2VP6zSzZQ8enEgtaqpsoZFu5Mkf3bIxYD954=
-X-Google-Smtp-Source: AGHT+IHPzPgdmzv5nhRYyWrZOIqyFmIpRhrpgi9qVHdqGvg1cDqEnTWL3AymTvClyIrNwtFSjlrAYGX6G5SoQauhCxm3WDPROHGU
+	s=arc-20240116; t=1751642177; c=relaxed/simple;
+	bh=fdncFe+kRLkLN8JKby0Zgs6+T99Ms/eQIw5jZsqT9Ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XNUetQEqIqYmpN8uMOOjsXs8RV22fr0jiFIfxtPnEUG5nvPkuD1Wdsn8u94VpAMf/lMq/Qw/gGCfyfJuk6SfG5zTNNBk8q9xhGEUxiZMj299y5P6RsLEtC1WRhBYZfCt4H6eA26BA1RTcSE3iy+lV28KlHTFzUT2jNJPYmbzZfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2OUUvjM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2OUUvjM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73289C4CEE3;
+	Fri,  4 Jul 2025 15:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751642176;
+	bh=fdncFe+kRLkLN8JKby0Zgs6+T99Ms/eQIw5jZsqT9Ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N2OUUvjMt2UqsDufh8VcCyObOPhay8lZQM3h1uFbdqHCFtkKcWgi6Gnl8J0DI8qPC
+	 G5c6/M+LtmppkfVtj2PrpCzSI9ysYowncS7Cg5/ZyFxrRxkm9qfEOwaegiYBdEvjJN
+	 /g8n/39NKKy2HEvbXjUOo6uIyT4gi73ds2GUTHAhR1K0NlzXdz3pLD9mLTCKwpFYzT
+	 ZgarzHmuS1vFs8ZkOxXw2oP6zSyRKf9viUMhEv/A5y28r5WQcealVVksLSqpJhEGWr
+	 Ay3MoeBIMY4NF/p94veWNytGWNdZKaAlc7vVnRRTrl5WQ4iIlDOd6jvycPSOfgzJ5E
+	 zHJATaoA5UIuQ==
+Date: Fri, 4 Jul 2025 18:16:13 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Jonathan McDowell <noodles@earth.li>
+Cc: "Orlov, Ivan" <iorlov@amazon.co.uk>,
+	"peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [PATCH v2] tpm: Fix the timeout & use ktime
+Message-ID: <aGfwPbMZf-SHshXH@kernel.org>
+References: <20250620180828.98413-1-iorlov@amazon.com>
+ <aFhtKrWTDzZbpTSh@earth.li>
+ <aFwnG--lzZO0mQgc@kernel.org>
+ <aGeYqQG15lb2_NaU@earth.li>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2182:b0:3df:29c8:4a0f with SMTP id
- e9e14a558f8ab-3e1355eae1cmr24422395ab.21.1751642164373; Fri, 04 Jul 2025
- 08:16:04 -0700 (PDT)
-Date: Fri, 04 Jul 2025 08:16:04 -0700
-In-Reply-To: <20250704145211.2487-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6867f034.a70a0220.29cf51.0020.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in force_devcd_write
-From: syzbot <syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGeYqQG15lb2_NaU@earth.li>
 
-Hello,
+On Fri, Jul 04, 2025 at 10:02:33AM +0100, Jonathan McDowell wrote:
+> On Wed, Jun 25, 2025 at 07:43:07PM +0300, Jarkko Sakkinen wrote:
+> > On Sun, Jun 22, 2025 at 09:52:58PM +0100, Jonathan McDowell wrote:
+> > > On Fri, Jun 20, 2025 at 06:08:31PM +0000, Orlov, Ivan wrote:
+> > > > The current implementation of timeout detection works in the following
+> > > > way:
+> > > >
+> > > > 1. Read completion status. If completed, return the data
+> > > > 2. Sleep for some time (usleep_range)
+> > > > 3. Check for timeout using current jiffies value. Return an error if
+> > > >   timed out
+> > > > 4. Goto 1
+> > > >
+> > > > usleep_range doesn't guarantee it's always going to wake up strictly in
+> > > > (min, max) range, so such a situation is possible:
+> > > >
+> > > > 1. Driver reads completion status. No completion yet
+> > > > 2. Process sleeps indefinitely. In the meantime, TPM responds
+> > > > 3. We check for timeout without checking for the completion again.
+> > > >   Result is lost.
+> > > >
+> > > > Such a situation also happens for the guest VMs: if vCPU goes to sleep
+> > > > and doesn't get scheduled for some time, the guest TPM driver will
+> > > > timeout instantly after waking up without checking for the completion
+> > > > (which may already be in place).
+> > > >
+> > > > Perform the completion check once again after exiting the busy loop in
+> > > > order to give the device the last chance to send us some data.
+> > > >
+> > > > Since now we check for completion in two places, extract this check into
+> > > > a separate function.
+> > > >
+> > > > Signed-off-by: Ivan Orlov <iorlov@amazon.com>
+> > > > ---
+> > > > V1 -> V2:
+> > > > - Exclude the jiffies -> ktime change from the patch
+> > > > - Instead of recording the time before checking for completion, check
+> > > >  for completion once again after leaving the loop
+> > > >
+> > > > drivers/char/tpm/tpm-interface.c | 17 +++++++++++++++--
+> > > > 1 file changed, 15 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> > > > index 8d7e4da6ed53..6960ee2798e1 100644
+> > > > --- a/drivers/char/tpm/tpm-interface.c
+> > > > +++ b/drivers/char/tpm/tpm-interface.c
+> > > > @@ -82,6 +82,13 @@ static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
+> > > > 	return chip->ops->req_canceled(chip, status);
+> > > > }
+> > > >
+> > > > +static bool tpm_transmit_completed(struct tpm_chip *chip)
+> > > > +{
+> > > > +	u8 status_masked = tpm_chip_status(chip) & chip->ops->req_complete_mask;
+> > > > +
+> > > > +	return status_masked == chip->ops->req_complete_val;
+> > > > +}
+> > > > +
+> > > > static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> > > > {
+> > > > 	struct tpm_header *header = buf;
+> > > > @@ -129,8 +136,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> > > > 	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
+> > > > 	do {
+> > > > 		u8 status = tpm_chip_status(chip);
+> > > > -		if ((status & chip->ops->req_complete_mask) ==
+> > > > -		    chip->ops->req_complete_val)
+> > > > +		if (tpm_transmit_completed(chip))
+> > > > 			goto out_recv;
+> > > 
+> > > The only thing I'd point out here is we end up doing a double status read
+> > > one after the other (once here, once in tpm_transmit_completed), and I'm
+> > > pretty sure I've seen instances where that caused a problem.
+> > 
+> > It would be easy to to prevent at least double reads after completion
+> > e.g., in tpm_chip_status():
+> 
+> Or just take the simple approach and make the check after the while loop:
+> 
+> 	if ((tpm_chip_status(chip) & chip->ops->req_complete_mask) ==
+> 	    chip->ops->req_complete_val)
+> 		goto out_recv;
+> 
+> There might be potential for a longer term cleanup using chip->status to
+> cache things, but I'm little concerned that's going to open paths where we
+> might not correctly update it, so I think it should be a separate piece.
+> 
+> (I'm motivated by the fact we've started to see the "Operation Canceled"
+> error and I'd like us to close on the best way to fix it. :) )
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+This would work for me too!
 
-Reported-by: syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com
-Tested-by: syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com
+Please send a new version if you feel like it but next week I won't be
+reviewing that as I'm on holiday.
 
-Tested on:
+> 
+> J.
+> -- 
+> I am afraid of the dark.
 
-commit:         4c06e63b Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13cf4c8c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
-dashboard link: https://syzkaller.appspot.com/bug?extid=bc71245e56f06e3127b7
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16888f70580000
-
-Note: testing is done by a robot and is best-effort only.
+BR, Jarkko
