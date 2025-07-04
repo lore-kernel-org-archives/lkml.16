@@ -1,74 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457B2153E7;
-	Fri,  4 Jul 2025 22:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E29EA28CF6C;
+	Fri,  4 Jul 2025 22:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751668712; cv=none; b=fPOzBC48qZIsbcSUa23mpQXFLTyq6dq75LYn4rvjwbyYI1euwbj+8bkDe2uCfsKEGf3PmYea81NfmK20X2SnG+IRbacnNvJh8DXweQztoXzlIfDok9Ig9SqI4DF0vviMcXabyAgsNOvloICctniVub53XZDuAmJ20ma482moznc=
+	t=1751668932; cv=none; b=kr40Op2SB7QCvLouVKqtStIcHldOO9sYuU7uNd6RcJzT0Hsfs/EItO9o2WMoz2vmpCIEbGcGt3eUWN2GBgKTL5f9Evj6W9jLXR9CEtoyrA88dOphyaZUZVS0uyB2xTU3yZjC2LXioqfLPzAu1AQa7z7faC8nQzsAd/67m+e/XIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751668712; c=relaxed/simple;
-	bh=Voy1QjVh9xLwt9TKt2YCENbqa5daJHJYGpU8RXQaEQg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Z1l87rJvs/d2CXXgTFKXLVJNAnw+Mbcsac1zO5C2uIWozGvOqr3WiDTB0lZ623fIqjXF8zmEl3d90b+MyKSZqsriaBr/AlbxE8xS91M8iWtrW86dY7dK+EyR3VXkkbjoGvUbmXxX73sNqeN8QFLQsmrK9WLln0n9qKAJ7jQoyyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b098uLEQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b098uLEQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19E4C4CEE3;
-	Fri,  4 Jul 2025 22:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751668711;
-	bh=Voy1QjVh9xLwt9TKt2YCENbqa5daJHJYGpU8RXQaEQg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=b098uLEQJJwJl0enNLeKq5Jlcx9dlu6MANF80Yjb1KmLVkxLSL0iSY7pnZ75ZKx7V
-	 MZdrr5xGVRc0+laLXAL8pwyvtVf/jUZW0B5wOm+C0m2PBgCbLvaH3lfQgkbKUY7esV
-	 oO0t8l3g0U+Px6/GfufA0StnMcyyM5gk2h4oCr+55nc4RS9Us/7zcrRFc+Kilpmd9f
-	 TSTIbOtcmiEQhyLhGaiyj/pHg/uN6SrSvxud4HqFOQj6Mvpt/DxRKkPZ8VMduXHEUG
-	 TZHc+MShxJXCPKzkz4Qz7uTj42DbRhm8SZTZnlSkW9VjCAZS+uGaq/ZL9RYI2Iu2lW
-	 w1+S+NlaEiSHQ==
+	s=arc-20240116; t=1751668932; c=relaxed/simple;
+	bh=cPRhYI67+/sP1Rd8C91MlGh50ZiwNxh5/Zs6B0xSiM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jRvLN6W3g5tPfpcVFNut7IpQt+HgIjAQTOGYTLMJEyjb4Q44zVj60uYx8x00J8NXDH7mt56b335KT/u8sry+/iKv/DyEd7x+OVVo96EXDOZzOoWFAq/lTVIyBd/JZPind5NXT+GU8JrI6+78IoZ3fDTu6D4uAyhyoO8/UtDUM90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B2BF1C0A;
+	Fri,  4 Jul 2025 15:41:56 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC7763F63F;
+	Fri,  4 Jul 2025 15:42:07 -0700 (PDT)
+Date: Fri, 4 Jul 2025 23:40:40 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] dt-bindings: net: sun8i-emac: Add A100 EMAC
+ compatible
+Message-ID: <20250704234040.5021c468@minigeek.lan>
+In-Reply-To: <20250626080923.632789-4-paulk@sys-base.io>
+References: <20250626080923.632789-1-paulk@sys-base.io>
+	<20250626080923.632789-4-paulk@sys-base.io>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 05 Jul 2025 00:38:26 +0200
-Message-Id: <DB3MQEHYUAIU.1HRTOLR014FKZ@kernel.org>
-Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 2/6] rust: kernel: add `fmt` module
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Danilo
- Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Nishanth Menon" <nm@ti.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com>
- <20250704-core-cstr-prepare-v1-2-a91524037783@gmail.com>
-In-Reply-To: <20250704-core-cstr-prepare-v1-2-a91524037783@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri Jul 4, 2025 at 10:14 PM CEST, Tamir Duberstein wrote:
-> `kernel::fmt` is a facade over `core::fmt` that can be used downstream,
-> allowing future changes to the formatting machinery to be contained
-> within the kernel crate without downstream code needing to be modified.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Thu, 26 Jun 2025 10:09:21 +0200
+Paul Kocialkowski <paulk@sys-base.io> wrote:
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+Hi,
 
----
+> The Allwinner A100/A133 has an Ethernet MAC (EMAC) controller that is
+> compatible with the A64 one. It features the same syscon registers for
+> control of the top-level integration of the unit.
+
+As mentioned, the A133 has two Ethernet MACs on its die. Both look
+compatible to the A64, but EMAC1 uses a separate syscon register
+(@+0x34), so needs a separate compatible string for that one. We don't
+seem to have an example of any board (or even SoC package) that uses
+the 2nd EMAC, but I suggest to not slam the door on that possibility,
+and use a name suffixed by "0": allwinner,sun50i-a100-emac0. There is
+precedence for that in the H616 case.
+
+Otherwise I can confirm that the EMAC is indeed compatible to the A64,
+so with that fixed:
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
 Cheers,
-Benno
+Andre
 
+
+> 
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 > ---
->  rust/kernel/fmt.rs | 7 +++++++
->  rust/kernel/lib.rs | 1 +
->  2 files changed, 8 insertions(+)
+>  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml       | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> index 7b6a2fde8175..0ae415f1e69c 100644
+> --- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - items:
+>            - enum:
+>                - allwinner,sun20i-d1-emac
+> +              - allwinner,sun50i-a100-emac
+>                - allwinner,sun50i-h6-emac
+>                - allwinner,sun50i-h616-emac0
+>                - allwinner,sun55i-a523-emac0
+
