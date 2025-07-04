@@ -1,105 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r3-24.sinamail.sina.com.cn (r3-24.sinamail.sina.com.cn [202.108.3.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84DB30748D;
-	Fri,  4 Jul 2025 13:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169E22D77E8
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637101; cv=none; b=PhAos7cHy3/SbKJbtBWLOfm7xODiP4sZYVHFsizjxSSxhqC2h7lPkdA5zdEAhVPeDqf/EM/nAJ7WKVPeVqDeSsL6gUdNkN4wJPKPaN/tZV6lAGi4uxafQobnIE8DYuudjLW/Ya6x6vJKkGEan7is3+m+LP93sgJMQ/Tpm+vm6NI=
+	t=1751637129; cv=none; b=kdq8txEFGkSXQzOHJWAxAAev+i2OiFAtejKHu3lXsODYi/JtOqmLO8kgIRpxW9YDRZA7dNp1zFh+F653OXqxYbz6cYxCDiozjbu+uIa0/e1FmlDzaVtKEaufjnrZFo1o9Tu+gk0KjcxKsuXzJf5Qc00A2kD7wblGAxIxcUiAWc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637101; c=relaxed/simple;
-	bh=/OiYSjkCDD0yVzW/zMXSwGUuzicvKJf923CS++qCXzw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S+AZ4bpfvfdExWeJiGUlTpeUoymUrCMc5ap9uea0xnFHDXO1212VicYo8lSmtaww4pI2RkVdWAGgDrviBrA0oYxMYvNIRRQS/QFxyxbgdt4h6xvl4g9WNLWeGzjpKGr7LLrcp0/zJv6ffrqc7RHZfStupSF87DQKoXjSpRoW26A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjnrqUa3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751637129; c=relaxed/simple;
+	bh=ZLdvYAxW1DQxR/hA4qtc3cLNehkTQoufV9UWZc8YQsw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AmeAtd4nabYDqJbBpz6fdGr0kQd7UYeOUIL7YWjQiZ+a9EzzU6ml031epL/GHgly8zwKiujC84w5oeUJKUspMEG2kLVZEanaGlpTz70FZDpTwAQ8RxEYOm/xhr1UH8PiJJ9QZwfb5qFNi7AsmNLX2xQx2bzfy1CgXQVeuiavFMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=YVpZU9/P; arc=none smtp.client-ip=202.108.3.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjnrqUa3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9B4C4CEE3;
-	Fri,  4 Jul 2025 13:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637101;
-	bh=/OiYSjkCDD0yVzW/zMXSwGUuzicvKJf923CS++qCXzw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=DjnrqUa36fkh8FCFhG4sw12ZoEQfFO5inamHW+G/dfchhyYcVkgSTNUaT7VMxNcLQ
-	 n0NMJIE54SJcJTBThl4+lP+1p+nWD+FQsogOMa7LXxWImwDAVkByIIOOAHuQgRbKFd
-	 8cW61XSP+u/00KT/B7YrqlLeuyd3zkSV2zuEtD5knRGXd4NxajCNQHNj21kOFwBoA8
-	 ikzmrCdb3T0ZHWl/jdiG9yTzwTiGfvAsbL2GoEp3DWdP8Gh8PTMjFmAQB/o50DizLx
-	 /jRp0Wci77uzt8oWFXrXsB5VohKUetig9XsWsJROzsP+oCkCMIPrDGsy9LOwjbc3RL
-	 LvfM/eZpDJIEA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v14 5/7] rust: module: update the module macro with
- module parameter support
-In-Reply-To: <DB3A6GR3TQON.C9N9U4V48R1D@kernel.org> (Benno Lossin's message of
-	"Fri, 04 Jul 2025 14:48:10 +0200")
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-	<20250702-module-params-v3-v14-5-5b1cc32311af@kernel.org>
-	<5fYjUlNFhuBwWOP46ph07KX4CMe0ORT5pZ_pD-l719E0ChkPTI2pV1tYJcN3oxKKcMI8_HGU1InaWBj52Kbbag==@protonmail.internalid>
-	<DB1OK2PQZ790.S317HUWYJR3J@kernel.org> <875xg8rvei.fsf@kernel.org>
-	<32cgJkp6-1w5-FLQMuvqhCiTvKUhR7SiIWtWdQFlkp2UoeAU3YuYmj7EElURj_NxY01OuuWlZ2aNPzX1UksjOg==@protonmail.internalid>
-	<DB3A6GR3TQON.C9N9U4V48R1D@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 04 Jul 2025 15:51:27 +0200
-Message-ID: <87zfdkqd28.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="YVpZU9/P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751637124;
+	bh=XCWb0VIEl6AONUmdJsEwB9R0dutf6jIoeox21Q4ZYk4=;
+	h=From:Subject:Date:Message-ID;
+	b=YVpZU9/PR8ym9qb3mKvKBN721jiaxgERrgGvmltDM5W4U19Jml66HKVxnayUWf+vH
+	 m6MhuEN4mDk7vRcih/AAiPOMFK/Uxsj9SRTptzEdcfnzOjoEkLZW6yefrGKpxzxZIn
+	 vc28XlR1ocwWJiWc+K3fRuYOU5QoLyXFYrjBG+Zw=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.31) with ESMTP
+	id 6867DC7900003AA3; Fri, 4 Jul 2025 21:51:54 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 9984266816217
+X-SMAIL-UIID: 022DA8B4F7AB4A5CA7104670C4BF6A13-20250704-215154-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in force_devcd_write
+Date: Fri,  4 Jul 2025 21:51:41 +0800
+Message-ID: <20250704135143.2415-1-hdanton@sina.com>
+In-Reply-To: <6867a14e.a70a0220.29cf51.0017.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Benno Lossin" <lossin@kernel.org> writes:
+> Date: Fri, 04 Jul 2025 02:39:26 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11594c8c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
+> dashboard link: https://syzkaller.appspot.com/bug?extid=bc71245e56f06e3127b7
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139dac8c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b90f70580000
 
-> On Fri Jul 4, 2025 at 2:29 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
->>>> +                            perm: 0, // Will not appear in sysfs
->>>> +                            level: -1,
->>>> +                            flags: 0,
->>>> +                            __bindgen_anon_1:
->>>> +                                ::kernel::bindings::kernel_param__bindgen_ty_1 {{
->>>> +                                    arg: {param_name}.as_void_ptr()
->>>> +                                }},
->>>
->>> Formatting?
->>>
->>> +                            __bindgen_anon_1: ::kernel::bindings::kernel_param__bindgen_ty_1 {{
->>> +                                arg: {param_name}.as_void_ptr()
->>> +                            }},
->>
->>
->> That makes the line more than 100 characters after changing other
->> formatting things. Perhaps I should just left shift all this?
->
-> Not sure what you mean by left shift? When I tried it, it was fine, but
-> it could have changed with the other things... Do you have a branch with
-> your changes?
+#syz test
 
-Move all the code template so the least indented start at column 0.
-
-My WIP branch is here [1].
-
-
-Best regards,
-Andreas Hindborg
-
-
-[1] https://github.com/metaspace/linux/tree/module-params
-
+--- x/drivers/bluetooth/hci_vhci.c
++++ y/drivers/bluetooth/hci_vhci.c
+@@ -320,6 +320,7 @@ static inline void force_devcd_timeout(s
+ #endif
+ }
+ 
++static DEFINE_MUTEX(vhci_release_lock);
+ static ssize_t force_devcd_write(struct file *file, const char __user *user_buf,
+ 				 size_t count, loff_t *ppos)
+ {
+@@ -343,6 +344,17 @@ static ssize_t force_devcd_write(struct
+ 		return -ENOMEM;
+ 	skb_put_data(skb, &dump_data.data, data_size);
+ 
++	if (!mutex_trylock(&vhci_release_lock)) {
++out:
++		kfree_skb(skb);
++		return -EBUSY;
++	}
++	data = file->private_data;
++	if (!data) {
++		mutex_unlock(&vhci_release_lock);
++		goto out;
++	}
++	hdev = data->hdev;
+ 	hci_devcd_register(hdev, vhci_coredump, vhci_coredump_hdr, NULL);
+ 
+ 	/* Force the devcoredump timeout */
+@@ -352,6 +364,7 @@ static ssize_t force_devcd_write(struct
+ 	ret = hci_devcd_init(hdev, skb->len);
+ 	if (ret) {
+ 		BT_ERR("Failed to generate devcoredump");
++		mutex_unlock(&vhci_release_lock);
+ 		kfree_skb(skb);
+ 		return ret;
+ 	}
+@@ -369,9 +382,11 @@ static ssize_t force_devcd_write(struct
+ 		/* Do nothing */
+ 		break;
+ 	default:
++		mutex_unlock(&vhci_release_lock);
+ 		return -EINVAL;
+ 	}
+ 
++	mutex_unlock(&vhci_release_lock);
+ 	return count;
+ }
+ 
+@@ -656,6 +671,7 @@ static int vhci_release(struct inode *in
+ 	struct vhci_data *data = file->private_data;
+ 	struct hci_dev *hdev;
+ 
++	mutex_lock(&vhci_release_lock);
+ 	cancel_delayed_work_sync(&data->open_timeout);
+ 	flush_work(&data->suspend_work);
+ 
+@@ -669,6 +685,7 @@ static int vhci_release(struct inode *in
+ 	skb_queue_purge(&data->readq);
+ 	file->private_data = NULL;
+ 	kfree(data);
++	mutex_unlock(&vhci_release_lock);
+ 
+ 	return 0;
+ }
+--
