@@ -1,126 +1,298 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900422DCF55;
-	Fri,  4 Jul 2025 07:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42D22D542C;
+	Fri,  4 Jul 2025 07:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615673; cv=none; b=XgzX9OoM//BTMqryK0njfU7jdRZHBupU5I+0cr+Pc4ITnq7+biFeAr0gbGxlIFZu/fItInK994nomPPbF2zrhK0DpHawHZd6WP4da4KkqKbgKyUR3/m2NVsivtbrkChkYk3r6euwRBy8Iyr3J2QXcePBx6UtXWgh76F+y4+WoP0=
+	t=1751615675; cv=none; b=dQ2TxWP0b1dIqNrX5oj9jdtEgpnW4jqD6+Wuh38nShjAK2oCPylKI1D+YgWTKG7lT/2QkYnoXJi3nLq+7chuFq+r30nt6ge7cEzgkpXTy0sHDLeB6G3+rjzBgKe8BunLMP7JphBF3nCqQTY/Y8wHFmcR17vEcVBqmSUKP4BJfOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615673; c=relaxed/simple;
-	bh=5p7gOND5S78G6c8QwUB05hpS5qSqTn8+V/uQ6I3tCTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1Kz1x//uIXl/28XeI3lBrMDGxi8jHqPqn3XJPVWhFp6z5QUsdeE576sOoTjGcUDo28xbMwTExF7j077Pq8woubEj8IKYRnnrquKYMM5c0kfrU3riWnz3NWQ4mnKykDTffuZBFRE9FmSJ1LHY1PuBzjK1vfWeLx2QM8zac1gD4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liuKYEfY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751615675; c=relaxed/simple;
+	bh=CRIWCLPCoDeia77/badXqEi5i8gzI/aN0BfcHkaARVU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Rv3Tx+5cGoDbfD0d7rf9nD32t9pbr2FN/KZyL9VKDFDH3siw5Y0FOoD9LwiNzA21LQ6aVeP/jiBylosGAQDXQ6ScUH7CJ1t3QN6v6saxA3BTH8NpzeLdGnIV15Xl8BXEtrMT8f+LBjGVsI8+SwZ3ASTXA1jzrAh4OY7Oa2tYFyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cCMjBQKd; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liuKYEfY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51210C4CEE3;
-	Fri,  4 Jul 2025 07:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751615673;
-	bh=5p7gOND5S78G6c8QwUB05hpS5qSqTn8+V/uQ6I3tCTk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=liuKYEfYk33H3iySy8AibMWijxSIkotOWfcfrcw5YyZGUaSLZgf9bfYCW5W40+5nx
-	 Jb1tiRwm7vt/FF3L8AQYkLoHyZ3b9ImOJEZWJCh9iVLJB/Tmn+78WHNvYOCRigrSP0
-	 5r4ruhr/aeAxBIsd21ZFYpXsZL7cHxnaGbky9Z8GA2rrouvCoNeoeDx+rjTSVfoXDA
-	 ThAQhAcNM5ZAGq4qIEHTbDeWpnOzI66L3XLHDmsJnGflM6CmFjYeZ2dQXr/+y9csct
-	 B2r0BkgupWvBNMtnX3t0qPMaap/lfUXVufxG/vlG5EOtwHFy4VuKHcg3794xre3i0I
-	 vBnDaRp+75VAA==
-Message-ID: <3551dba1-0c5f-4000-8b95-6a04cd81a027@kernel.org>
-Date: Fri, 4 Jul 2025 09:54:27 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cCMjBQKd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751615672; x=1783151672;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=CRIWCLPCoDeia77/badXqEi5i8gzI/aN0BfcHkaARVU=;
+  b=cCMjBQKdkd3z3ZYMmfxn3ChrHqXvlmp1uG+ssZK4J9xN+uxQZ0lzUJiF
+   ea6zFzO+N92myD9s9xGdcPORe9N8/tly61xdel2jhcr9/Ocf/RWX80JnJ
+   vbNNVQu7YB6kiT6DckHZcZDnfutQwInvncRfmCsyO9rh2S3JcvSvJBc6+
+   shpjNjY+t2vGGnBhiO8hzrpBWWlZI8AmO9L+Pj4PALJa7S48tMZygsojI
+   mEMhvXlu4fdVnB0Iy8obo7TeFVptiWRzGBDTCvfLWQ6MM2ONVw1SAFHlm
+   eI1i99idjDIe1fDoKE1d5O2N0F9rymr7VfI/xlTKVTE6xXMJsfVq2mowk
+   A==;
+X-CSE-ConnectionGUID: 0fQALHxnRfCq8NWaZcAJIA==
+X-CSE-MsgGUID: FEMv23WnRumA2GC2GhzJgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494715"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="76494715"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:32 -0700
+X-CSE-ConnectionGUID: 9JGs9zU8R3mlxCN1zcIBUg==
+X-CSE-MsgGUID: rPW2CgHGQ+Onfly1RQWb+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="158924282"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:26 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id D826644433;
+	Fri,  4 Jul 2025 10:54:24 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Waqar Hameed <waqar.hameed@axis.com>,
+	Abhash Jha <abhashkumarjha123@gmail.com>,
+	chuguangqing <chuguangqing@inspur.com>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	Marek Vasut <marex@denx.de>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Vasileios Amoiridis <vassilisamir@gmail.com>,
+	Per-Daniel Olsson <perdaniel.olsson@axis.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 34/80] iio: light: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:24 +0300
+Message-Id: <20250704075424.3219556-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Enable CTCU device for QCS8300
-To: Jie Gan <quic_jiegan@quicinc.com>, Jie Gan <jie.gan@oss.qualcomm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250624095905.7609-1-jie.gan@oss.qualcomm.com>
- <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/06/2025 02:59, Jie Gan wrote:
-> 
-> 
-> On 6/24/2025 5:59 PM, Jie Gan wrote:
->> Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
->> the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
->> configurations as SA8775p platform.
-> 
-> Hi dear maintainers,
-> 
-> I just realized it would be more efficient to introduce a common 
-> compatible string for SoCs that include two TMC ETR devices.
-> 
-> Most of these SoCs share the same CTCU data configuration, such as the 
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-"Most" basically disqualifies your idea.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-> offsets for the ATID and IRQ registers, because they integrate the same 
-> version of the CTCU hardware.
-> 
-> So I propose introducing a common compatible string, 
-> "coresight-ctcu-v2", to simplify the device tree configuration for these 
-> platforms.
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
 
-This is explained in writing bindings.
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
 
-Best regards,
-Krzysztof
+ drivers/iio/light/apds9306.c   | 2 --
+ drivers/iio/light/apds9960.c   | 1 -
+ drivers/iio/light/bh1780.c     | 1 -
+ drivers/iio/light/gp2ap002.c   | 2 --
+ drivers/iio/light/isl29028.c   | 1 -
+ drivers/iio/light/ltrf216a.c   | 1 -
+ drivers/iio/light/pa12203001.c | 1 -
+ drivers/iio/light/rpr0521.c    | 1 -
+ drivers/iio/light/tsl2583.c    | 1 -
+ drivers/iio/light/tsl2591.c    | 2 --
+ drivers/iio/light/us5182d.c    | 1 -
+ drivers/iio/light/vcnl4000.c   | 1 -
+ drivers/iio/light/vcnl4035.c   | 1 -
+ 13 files changed, 16 deletions(-)
+
+diff --git a/drivers/iio/light/apds9306.c b/drivers/iio/light/apds9306.c
+index f676da245aa7..5916cabd0755 100644
+--- a/drivers/iio/light/apds9306.c
++++ b/drivers/iio/light/apds9306.c
+@@ -537,7 +537,6 @@ static int apds9306_read_data(struct apds9306_data *data, int *val, int reg)
+ 
+ 	*val = get_unaligned_le24(&buff);
+ 
+-	pm_runtime_mark_last_busy(data->dev);
+ 	pm_runtime_put_autosuspend(data->dev);
+ 
+ 	return 0;
+@@ -1121,7 +1120,6 @@ static int apds9306_write_event_config(struct iio_dev *indio_dev,
+ 			if (ret)
+ 				return ret;
+ 
+-			pm_runtime_mark_last_busy(data->dev);
+ 			pm_runtime_put_autosuspend(data->dev);
+ 
+ 			return 0;
+diff --git a/drivers/iio/light/apds9960.c b/drivers/iio/light/apds9960.c
+index b92d0fce5aec..79b202c59a0f 100644
+--- a/drivers/iio/light/apds9960.c
++++ b/drivers/iio/light/apds9960.c
+@@ -495,7 +495,6 @@ static int apds9960_set_power_state(struct apds9960_data *data, bool on)
+ 			usleep_range(data->als_adc_int_us,
+ 				     APDS9960_MAX_INT_TIME_IN_US);
+ 	} else {
+-		pm_runtime_mark_last_busy(dev);
+ 		ret = pm_runtime_put_autosuspend(dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/bh1780.c b/drivers/iio/light/bh1780.c
+index c7c877d2fe67..5d3c6d5276ba 100644
+--- a/drivers/iio/light/bh1780.c
++++ b/drivers/iio/light/bh1780.c
+@@ -111,7 +111,6 @@ static int bh1780_read_raw(struct iio_dev *indio_dev,
+ 			value = bh1780_read_word(bh1780, BH1780_REG_DLOW);
+ 			if (value < 0)
+ 				return value;
+-			pm_runtime_mark_last_busy(&bh1780->client->dev);
+ 			pm_runtime_put_autosuspend(&bh1780->client->dev);
+ 			*val = value;
+ 
+diff --git a/drivers/iio/light/gp2ap002.c b/drivers/iio/light/gp2ap002.c
+index 42859e5b1089..a0d8a58f2704 100644
+--- a/drivers/iio/light/gp2ap002.c
++++ b/drivers/iio/light/gp2ap002.c
+@@ -271,7 +271,6 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
+ 	}
+ 
+ out:
+-	pm_runtime_mark_last_busy(gp2ap002->dev);
+ 	pm_runtime_put_autosuspend(gp2ap002->dev);
+ 
+ 	return ret;
+@@ -353,7 +352,6 @@ static int gp2ap002_write_event_config(struct iio_dev *indio_dev,
+ 		pm_runtime_get_sync(gp2ap002->dev);
+ 		gp2ap002->enabled = true;
+ 	} else {
+-		pm_runtime_mark_last_busy(gp2ap002->dev);
+ 		pm_runtime_put_autosuspend(gp2ap002->dev);
+ 		gp2ap002->enabled = false;
+ 	}
+diff --git a/drivers/iio/light/isl29028.c b/drivers/iio/light/isl29028.c
+index 0e4284823d44..5ff20d423def 100644
+--- a/drivers/iio/light/isl29028.c
++++ b/drivers/iio/light/isl29028.c
+@@ -341,7 +341,6 @@ static int isl29028_set_pm_runtime_busy(struct isl29028_chip *chip, bool on)
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(dev);
+ 		ret = pm_runtime_put_autosuspend(dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/ltrf216a.c b/drivers/iio/light/ltrf216a.c
+index 61f57a82b872..5f27f754fe1c 100644
+--- a/drivers/iio/light/ltrf216a.c
++++ b/drivers/iio/light/ltrf216a.c
+@@ -208,7 +208,6 @@ static int ltrf216a_set_power_state(struct ltrf216a_data *data, bool on)
+ 			return ret;
+ 		}
+ 	} else {
+-		pm_runtime_mark_last_busy(dev);
+ 		pm_runtime_put_autosuspend(dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/pa12203001.c b/drivers/iio/light/pa12203001.c
+index 8885852bef22..93823421f42f 100644
+--- a/drivers/iio/light/pa12203001.c
++++ b/drivers/iio/light/pa12203001.c
+@@ -189,7 +189,6 @@ static int pa12203001_set_power_state(struct pa12203001_data *data, bool on,
+ 		ret = pm_runtime_resume_and_get(&data->client->dev);
+ 
+ 	} else {
+-		pm_runtime_mark_last_busy(&data->client->dev);
+ 		ret = pm_runtime_put_autosuspend(&data->client->dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/rpr0521.c b/drivers/iio/light/rpr0521.c
+index c50183f07240..15e2cca22e4d 100644
+--- a/drivers/iio/light/rpr0521.c
++++ b/drivers/iio/light/rpr0521.c
+@@ -361,7 +361,6 @@ static int rpr0521_set_power_state(struct rpr0521_data *data, bool on,
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(&data->client->dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(&data->client->dev);
+ 		ret = pm_runtime_put_autosuspend(&data->client->dev);
+ 	}
+ 	if (ret < 0) {
+diff --git a/drivers/iio/light/tsl2583.c b/drivers/iio/light/tsl2583.c
+index fc3b0c4226be..d3a4923e5adc 100644
+--- a/drivers/iio/light/tsl2583.c
++++ b/drivers/iio/light/tsl2583.c
+@@ -646,7 +646,6 @@ static int tsl2583_set_pm_runtime_busy(struct tsl2583_chip *chip, bool on)
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(&chip->client->dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(&chip->client->dev);
+ 		ret = pm_runtime_put_autosuspend(&chip->client->dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/tsl2591.c b/drivers/iio/light/tsl2591.c
+index 08476f193a44..c5557867ea43 100644
+--- a/drivers/iio/light/tsl2591.c
++++ b/drivers/iio/light/tsl2591.c
+@@ -772,7 +772,6 @@ static int tsl2591_read_raw(struct iio_dev *indio_dev,
+ err_unlock:
+ 	mutex_unlock(&chip->als_mutex);
+ 
+-	pm_runtime_mark_last_busy(&client->dev);
+ 	pm_runtime_put_autosuspend(&client->dev);
+ 
+ 	return ret;
+@@ -995,7 +994,6 @@ static int tsl2591_write_event_config(struct iio_dev *indio_dev,
+ 		pm_runtime_get_sync(&client->dev);
+ 	} else if (!state && chip->events_enabled) {
+ 		chip->events_enabled = false;
+-		pm_runtime_mark_last_busy(&client->dev);
+ 		pm_runtime_put_autosuspend(&client->dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/us5182d.c b/drivers/iio/light/us5182d.c
+index 61a0957317a1..8f0f85e98f3a 100644
+--- a/drivers/iio/light/us5182d.c
++++ b/drivers/iio/light/us5182d.c
+@@ -369,7 +369,6 @@ static int us5182d_set_power_state(struct us5182d_data *data, bool on)
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(&data->client->dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(&data->client->dev);
+ 		ret = pm_runtime_put_autosuspend(&data->client->dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+index 90e7d4421abf..39e2cf20038a 100644
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -581,7 +581,6 @@ static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, bool on)
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(dev);
+ 		ret = pm_runtime_put_autosuspend(dev);
+ 	}
+ 
+diff --git a/drivers/iio/light/vcnl4035.c b/drivers/iio/light/vcnl4035.c
+index 01bc99564f98..079fb49bf73b 100644
+--- a/drivers/iio/light/vcnl4035.c
++++ b/drivers/iio/light/vcnl4035.c
+@@ -147,7 +147,6 @@ static int vcnl4035_set_pm_runtime_state(struct vcnl4035_data *data, bool on)
+ 	if (on) {
+ 		ret = pm_runtime_resume_and_get(dev);
+ 	} else {
+-		pm_runtime_mark_last_busy(dev);
+ 		ret = pm_runtime_put_autosuspend(dev);
+ 	}
+ 
+-- 
+2.39.5
+
