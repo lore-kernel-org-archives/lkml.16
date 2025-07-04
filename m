@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FACB2D46AC;
-	Fri,  4 Jul 2025 12:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F162D46AC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632239; cv=none; b=rr28O2QUX10XlRDFC+wriLAqwOcJ63D9a6rC8ICNSiUSYXt/Pva83mMZ6HFyXMjXRryA9nHGPjjrQJUvvwssqfUQC1aqd0tGeN9bmTqSGxlaSkG9bPqBoxv+lqlPUy81BkLrio0b4uw2fqfU8aCiPoVdXD9ULJRRIqmXIAO9b9s=
+	t=1751632256; cv=none; b=swHj2KMIGQXccsaeivMi6vlJov106esGCV9aIH0CtmGr7923uDRFwhkyRQ7q5577Oh0df8Yn7Pq4Bee/Yxs3fTaWl+2SZlBmylolzhADyNt1g4QdP5r2UqZx02O7EY2cd/W4Dq7/uO4D4WFVz0MYH5AciMHHBKPjTEIyleZZW1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632239; c=relaxed/simple;
-	bh=9rZiRzdv9CtJTFc6rhk2cR+OOMU0FF61Txdcw7HIcbA=;
+	s=arc-20240116; t=1751632256; c=relaxed/simple;
+	bh=K2d10XQLTG7Ul5SDwI/aJTOW6i7f7ldw3wQqMDGme4U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SktkViYnqGj/Ir88vH5ffN9Hqk+hOLvUscfXTAZMoEkUk7gLXRW6Pfk/MlD2cAk2HYlb1BWFV6XKqVxQbu4pajTWps37a4+9Kaefik+iSRvqxJKNH3gDkb7zlC/binkLGQkL3jG0RvY3NTEqhCEOYTViuvhXQLpAHyhlhqSDh/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu1+/i46; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iRIB9iQyG26idCqicvhW2Xbv/SjKPMbTY7mmeIM0yX8l8Pu9ctcEmlm2CIKzXxCltvEKKyoSQE5fdDkWzMsVYj0hN6+fe6r5cMUtG2tWaLyxULQADkKMZeI91H+sPqBxqL9WkE72AuSErE5j079Ju6e0Xz7wWYffuFPFd9zq93U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CMDea8ey; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu1+/i46"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75547C4CEE3;
-	Fri,  4 Jul 2025 12:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751632237;
-	bh=9rZiRzdv9CtJTFc6rhk2cR+OOMU0FF61Txdcw7HIcbA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gu1+/i46XMKNQ6xNFRlzCovm6Nzzrc6XvBQshICMZ+70atFk9Z014eGcqKX6gTBe5
-	 dZUbjJW1r4Nc2AylOyLteMv0Wjps2ahM1mI4c8E8YeSdCIzcBEBw6Hb0dGfV2CAr3i
-	 D2y9Ch6xqd5JQW87kbsW3Y2sniw9G/LQsfKdT/ObSbDLXQ8anHEXhbrgAAlFLusSlX
-	 +QQoSTWEHn/U53HoEGYCT97+AGrwK5O81/diyinGC/wURzBpkhAwYSpx9SVrZXQVp3
-	 VbKacS440ehL6U6+HREuovwzsd/4TDVLPvSN3uuLYxVBQvP5YBccZovC/UYd9QWlDG
-	 w+n75aTREAhsg==
-Message-ID: <0191e184-7dd4-4dc3-957d-f045c5d8de93@kernel.org>
-Date: Fri, 4 Jul 2025 14:30:27 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CMDea8ey"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so1796097a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751632253; x=1752237053; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3eL7ggN4EThqkSufl95lxEu7wvlLi27XNgIMFlyQ+U4=;
+        b=CMDea8eyITN8Zy/7mqknUU590ksH5V2B1A752XAFWZe04ivpj1b3kAaNFYAjDj0oZZ
+         nzDSSSYXY/WHxA+TmaebzbDOe36byZBvolIC6NpWXQhadYwT22d1N1eioIyb5p1eTaAC
+         bV39mKM2bw280ICv2kOAZETNB3FItQznBkeBUxTgvpG926zSIlSgIp0JQ+Ix6ZPqstkD
+         7IAD3bcFjc9WsHNL6XG9JSuSphGcNqybo4B+qutxqS/zrl41ZASh6iGGI7W4EcHC3oKh
+         KtZqL0+2UAstB0MStPvoYda8ytPw5a43lE3FUKXTw1IxHO7caUScjhSuCvA21hlQXYTd
+         f+7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751632253; x=1752237053;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3eL7ggN4EThqkSufl95lxEu7wvlLi27XNgIMFlyQ+U4=;
+        b=uDvYftXJSP/TBQJl+jkkUyUTsUXKM3NNpUyBYA+8RGWLrAzTpCd7VQJpYTutbAPrJp
+         gAwoX8UR2SPJ0oE2j7nCBMKy81J69DHDPjEfrhGTWsihr31Q/8G9cxu+nbl74cDc2UAl
+         jwZCbaasQRrTpQJSUl1vMf8VvPXgNgeE/qmXlX8n6Wx5nU4/UHoD/5h5p0JUpMmtHUgK
+         S3y2aVFWnFlo8xp4g4e1WLaEflCSYDO6j3AHnL3z35pwt/iMgZka0dGwqnqIy+9sMULp
+         XQhWKZJQOKbJqB0jSyZ1zVFmB1YrFjNN1+AafdOONyJIc0UDR/hgyIuraPB1f63z7tlh
+         w7rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAza/G2Ws69oM/Gkbj27E3xEUJ4oq8sp/J9vak3JbUql7lpnpZDFC4wJ6Ln203VxfKT6pZ1LAhhZBPHJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy23BapUOkVT+/4xZgb2CBbTARci6WR8593DhexblT6F5dd5KE4
+	vCzt+zL7b7BstVbNi+lHQBB16ygcb4H3PZ9y2Vl5qsKWSpf0XZAqt+qpvoRwPIVOiKU=
+X-Gm-Gg: ASbGnct8lJ+aDjWZRjWuG31684Wr4JaVgSYypO9DkvCPS3AWZj6ZfO8dECc63b9jQbm
+	Of+HbkSRnNdgMMh7BqD21XKHMe++kfU2IEVA1Rl4yRB14h2JXlOseRVTCcEmWQ+qGJaAeKZHb0w
+	l7KU7xYO0GQKANagjs++Aa21ANcFWyHK2xMmW3PmThPJZ8EdkY4eOhqpmY7MjkcBl5yhU21YsvF
+	GmtFV8+Px+rNi3rgiUE6C5LxWBKwN5x0EaJ9esHSNdRpP18tVoIrjaKsK4xrGHGJ0bOmVhllabY
+	oUW5HSv9aLD1TrFicJ7GDlkeg/Sfry/XnEjnz7KZBRVJQLt4/JQlGOsXdLVivsTS1f3tqrCo
+X-Google-Smtp-Source: AGHT+IENYDx1S+W/IKOLqqR+xnsrF1ri83aQkOzSqUBrg7yPi6OXV2SVSRqeMh1z0BCCs7zVMQSi2A==
+X-Received: by 2002:a17:907:7213:b0:ade:7c6:498a with SMTP id a640c23a62f3a-ae3fbc4b041mr251129566b.10.1751632252576;
+        Fri, 04 Jul 2025 05:30:52 -0700 (PDT)
+Received: from [192.168.0.251] ([188.27.86.244])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e6f25sm164849066b.20.2025.07.04.05.30.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 05:30:52 -0700 (PDT)
+Message-ID: <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
+Date: Fri, 4 Jul 2025 13:30:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,76 +66,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/11] dt-bindings: clock: qcom: document the Milos
- Video Clock Controller
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250704-sm7635-clocks-v2-0-9e47a7c0d47f@fairphone.com>
- <20250704-sm7635-clocks-v2-10-9e47a7c0d47f@fairphone.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: peter.griffin@linaro.org, andre.draszik@linaro.org,
+ willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com,
+ kernel-team@android.com, arm-scmi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+ <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250704-sm7635-clocks-v2-10-9e47a7c0d47f@fairphone.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04/07/2025 09:17, Luca Weiss wrote:
-> Add bindings documentation for the Milos (e.g. SM7635) Video Clock
-> Controller.
+Hi, Jassi,
+
+Sorry for the delay, I was out for a while.
+
+On 6/23/25 12:41 AM, Jassi Brar wrote:
+> On Fri, Jun 6, 2025 at 8:41 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>>
+>> There are two cases where the chan lock is released and reacquired
+>> were it shouldn't really be:
+>>
+>> 1/ released at the end of add_to_rbuf() and reacquired at the beginning
+>> of msg_submit(). After the lock is released at the end of add_to_rbuf(),
+>> if the mailbox core is under heavy load, the mailbox software queue may
+>> fill up without any of the threads getting the chance to drain the
+>> software queue.
+>>         T#0 acquires chan lock, fills rbuf, releases the lock, then
+>>         T#1 acquires chan lock, fills rbuf, releases the lock, then
+>>         ...
+>>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
+>> We shall drain the software queue as fast as we can, while still holding
+>> the channel lock.
+>>
+> I don't see any issue to fix to begin with.
+> T#0 does drain the queue by moving on to submit the message after
+> adding it to the rbuf.
+
+The problem is that the code releases the chan->lock after adding the
+message to rbuf and then reacquires it on submit. A thread can be
+preempted after add_to_rbuf(), without getting the chance to get to
+msg_submit().
+
+Let's assume that
+T#0 adds to rbuf and gets preempted by T#1
+T#1 adds to rbuf and gets preempted by T#2
+...
+T#n-1 adds to rbuf and gets preempted by T#n
+
+We fill the mailbox software queue without any thread getting to
+msg_submit().
+
+Thanks,
+ta
+
+> And until the tx is done, T#1 would still be only adding to the rbuf
+> because of chan->active_req.
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
+>> 2/ tx_tick() releases the lock after setting chan->active_req = NULL.
+>> This gives again the possibility for the software queue to fill up, as
+>> described in case 1/.
+>>
+> This again is not an issue. The user(s) should account for the fact
+> that the message bus
+>  may be busy and there can be only limited buffers in the queue.
+> 
+> Thanks
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
