@@ -1,97 +1,73 @@
-Received: from jpms-ob01-os7.noc.sony.co.jp (jpms-ob01-os7.noc.sony.co.jp [211.125.139.71])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9F42BEFE2;
-	Fri,  4 Jul 2025 09:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6F62882A0;
+	Fri,  4 Jul 2025 09:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620041; cv=none; b=KG3DWcLJ64ulIid0Vs51Ns70Wb0LB1H7JxZf/qy0QW3rdAU70KCTXp/VJrZyYV95r41w+MxVY9qKGhVHoGRWNdLvV5Y5FsEVXap0iZfduOzoEbBlhRvBRQhjOIEzwxmu7KzBkq2P9Q/h8YiRYyNYWXvy8Y0v8iHAZ2djXy7pjRc=
+	t=1751620056; cv=none; b=uLw0CJv9q3BNUB3SkbxGYMJzrfMUjuRZprub0eKgYF70dNyZJ/G9kJ2f+PjhdTMaBYyirK0MNmsJKfcVO4stqsF/VTQbi37HS/NSTqe17e/igN0dRqEKFYD3LjMJDojPAAqhj94OiYJtD5MxHQsvdhyHGxR6lvB87XjXMPcgam0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620041; c=relaxed/simple;
-	bh=n0W3S+BRQ8k/BssGRmGFb5TiMCTQPADsA5/ZErUq4pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhZx/AeGz0UlYzici1Yv7OMgSzi6TrTHoMlq6b1dUtUobZTljqAPfL+xKCA6BStPEluHYE8lNVKTMO9FIgDjxCVgDgkyBjFu4eWaOFdD4t9isghqOABQjrXic1QPuxfoaYd25d1BWKRP1va2IwQp1NqQNKWioJJIfhlqSBY8Sw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=jVCWmOYm; arc=none smtp.client-ip=211.125.139.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="jVCWmOYm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1751620039; x=1783156039;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=8X98rHJnNI81bCfKr7mPTnKQ7asBKAxpOZ/sD34yX/8=;
-  b=jVCWmOYmVVoxMHJXTugDEKvQZnVb00NDxqnki8fOnJgPDOmWyXt8pKQx
-   gEHk7vAS9pwYjxQfnW3AgYJm6HS1OdE3o5Yf6lbBqokuOXpndJS/9iUwi
-   E7glNTeuZkHwk34X0EQK6aFvfuocamJbgdRekCcsJtrpqZYyffF4npcLN
-   dPj0CMatXaYXrisuvaV793pVYT3N6HyUx/EOBHwLmgpjcXLjuLpGcE/SP
-   V7KbWEIYZ9Y761/aum6kxCTaNlepWcrog/IQeKX9yQo2SP3AxJrwgL+vS
-   /YbyoY2TAyaTQLXW11BVlWKR+gDKXdkQMDPuhuaL1QquopShVGN118vOM
-   A==;
-Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
-  by jpms-ob01-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 18:07:15 +0900
-X-IronPort-AV: E=Sophos;i="6.16,286,1744038000"; 
-   d="scan'208";a="4682959"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
-  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 18:07:14 +0900
-Date: Fri, 4 Jul 2025 18:07:12 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-Message-ID: <aGeZwLAuysAmyX-q@JPC00244420>
-References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
- <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
- <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
- <aGcf0Prl-hVX2j4Q@JPC00244420>
- <aGd5lrUvm9Bhh-b8@JPC00244420>
- <wnoymxwdikh6iawrcvhewq6er4si75oqzjdbibhl6n57swq3ff@glkzfmbaots7>
+	s=arc-20240116; t=1751620056; c=relaxed/simple;
+	bh=m7DQxmEPQ6+xgS7Gb1bEgXe3teeybPe4freXbXoSI48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MYzuypFpKqa7cvTAmo9AINKoBsvaRv1n+aIoAKB3aeDbbAqSs0kfHgJYaUHctYZcagy2vswmrrIqYawsLfWdTNTguKbobCdhJHTr9MlIS03P2om4v6rGH+MUwIgLTpzNuR014DDOEAozJQYmZVOtCyLNfvRAO3EtwUymcjmNi78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bYSQs5jdmz2BcpV;
+	Fri,  4 Jul 2025 17:05:41 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D25218001B;
+	Fri,  4 Jul 2025 17:07:31 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
+ 2025 17:07:30 +0800
+Message-ID: <c2201037-4f16-4afc-a418-42e4514f27a4@huawei.com>
+Date: Fri, 4 Jul 2025 17:07:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] cpufreq: Contain scaling_cur_freq.attr in
+ cpufreq_attrs
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <viresh.kumar@linaro.org>, <ionela.voinescu@arm.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <yubowen8@huawei.com>
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com>
+ <20250623133402.3120230-4-zhenglifeng1@huawei.com>
+ <CAJZ5v0jvdttYihgNcTF=VVnd2K5QsC+W9XJJanqy4F_PXw+u2g@mail.gmail.com>
+ <CAJZ5v0jKY2og0bSwq97fwu7W690E-GeYxGkeju3kq4DVgOFCaw@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAJZ5v0jKY2og0bSwq97fwu7W690E-GeYxGkeju3kq4DVgOFCaw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <wnoymxwdikh6iawrcvhewq6er4si75oqzjdbibhl6n57swq3ff@glkzfmbaots7>
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-Hi Michal,
+On 2025/7/3 22:59, Rafael J. Wysocki wrote:
 
-On Fri, Jul 04, 2025 at 10:59:15AM +0200, Michal Koutn� wrote:
-> On Fri, Jul 04, 2025 at 03:49:58PM +0900, Shashank Balaji <shashank.mahadasyam@sony.com> wrote:
-> > > 1. We don't need to separately check user_usec because it'll always be
-> > > less than user_usec^W usage_usec, and usage_usec is what's directly
-> > > affected by throttling.
+> On Mon, Jun 23, 2025 at 5:30 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>> On Mon, Jun 23, 2025 at 3:34 PM Lifeng Zheng <zhenglifeng1@huawei.com> wrote:
+>>>
+>>> After commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file for
+>>> set_policy() drivers"), the file scaling_cur_freq is exposed to all
+>>> drivers. No need to create this file separately. It's better to be
+>>> contained in cpufreq_attrs.
+>>
+>> Fair enough.
 > 
-> When kernel is not preemptible, I'd expect the system time may more
-> easily excess the quota, so I considered the user_usage check less prone
-> to false results. But...
+> And so applied as 6.17 material along with the [4/7].
 > 
-> > > 2. I changed the >= to > because, not that it'll ever happen, but we can
-> > > let usage_usec = expected_usage_usec pass. Afterall, it's called
-> > > "expected" for a reason.
-> > 
-> > Hmm, here is something interesting. The following patch adds printfs to the
-> > existing code to see what user_usec, usage_usec, the expected_usage_usec used in
-> > the code, and the theoretical expected_usage_usec are. On running the modified test
-> > a couple of times, here is the output:
+> The other patches in the series need more work IMV.
 > 
-> ...thanks for checking. I was misled by the previous test implementation
-> (the expected_usage_usec had no relation to actual throttled usage in
-> there). What you observe is thus likely explained by the default
-> sched_cfs_bandwidth_slice (5 times the tested quota) and CONFIG_HZ.
-> 
-> So I'd say keep only the two-sided tolerant check. (I want to avoid the
-> test to randomly fail when there's no gaping issue.)
+> Thanks!
 
-Yep, patch v2 is doing just that. So, I assume I have your Acked-by?
-
-Thanks
-
-Shashank
+Thanks! Then in the next version these two patches won't be sent again.
