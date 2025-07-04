@@ -1,80 +1,87 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2CC1DE4D2
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851F41DE3B5;
+	Fri,  4 Jul 2025 18:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751655343; cv=none; b=X0w5VRu5a2NYHExBKFH1CU03ky4RfDoP6Cw9zdSa8i6QB6gjkJgt54cHViVgG9e5r4Q1+6rxJ7YinuqMWMGE9+F8AbWzSaDZgeuRQzyqQau4SeHcGUDkARmuR4dkaD3cVOiN3I+CeggIqSHLbuolS2Qvg8L/X6k7R+cphaQyeck=
+	t=1751655537; cv=none; b=QLJp2wy4D/EePYYDKwqVxJNnV+yqkeip/dVtQOiyiotDupUjke4q5+Wmr2yrZXc14znAycF34yFKj+pQ++tr/KmlWOcXHECXpYJ/OlB3EIhf+dXm9D95oesQ1uUioCNI2aVa/Md8NrhGloQW8ADdUhIhDW8Yw5xDjvlH1TvecdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751655343; c=relaxed/simple;
-	bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dtVAwbvLtXoMgaUVIiD88RDVjJQrKUzu4d+4AciOtw+/lBMs9fEXfUXL8EvdO+dQM1EYc/DthD2TqybM9KIjuPBZVWFuZbaeWF5Jc0S2w48m+xZU8X9dEke2npjPP5KO5KDqLseDsbxi7xZ8N2veuj0WYy+vVyI9xBAzL6NNqAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mxVdEJlj; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751655537; c=relaxed/simple;
+	bh=g/rKyV7VLe4C2HnR5afRx/OqcQOwCYib/qRjPEkH9es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jhe2MiIwlT+EEIajFjrXYeZnFh+Fx/CRsPIvqcSLAtrlwa2HoZg+ey4dMyS/I02zuAPNjjBkM9EVBNAyDo9QmbHv1+sDxUnNaa6ecDS273brODPa1m0k8JZVvXaaS9nzQGzNcT1IbgsbK88erJGqcXPfnFAnn7xsoQGMjmyAunM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nkkLNYgu; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mxVdEJlj"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso1121527276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751655341; x=1752260141; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
-        b=mxVdEJljmD3oWeYcmSC6hY5ucxGQQeNi94/WSgMotvQXiqpBQHq0xqOiAWb+RmqnJh
-         ygBvRKuIST5dEJcAjBABjh+SOXijS+yM8dFlJ2rnQWADCT6U6+Wwf1Of9TAdep5yMHjP
-         5lbNZWccN3YaHxq37GNoSaCYWh1Q2fnUVmHufXerL5+yCRnS2xRVxfBYAId3qTj6qmcq
-         TT+IKaHiNL1g4waxfmCCeJ62EEIr7ogYOHj/BTJdFX7n7RKs/ZgFPqLNgPT14gPN+9Zo
-         tGkI6Z9sJPxcVMM5BmYUbibdTgUR8IIuWOYaVObnQJLtB0TjU8Jmm/aUX/7CeJ0NTXfc
-         Zu5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751655341; x=1752260141;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
-        b=uXAs19njSvEWerxe3kBVxIUaB28X6PCszXkQEqpHoMwDY+5JGQgQe4Z4BWrwLlbAIE
-         z9+X6FJhql0oXiY7GiHOq98D+anX8rP1PXs5N25qm6z+G15SNyc67hTSsjf3+39Y8AZX
-         xaA+Zwy8NvRQ1OEhTTH7hCvTfIGrz0pUhOQQNrMTw1k8FE8pvDrdae7N10ZFfwVyguwG
-         dOLWQFc8VxXdVhwQnRiYqYMFJl7KO36Zy0nTNlD6dbfGyI2EEen6j6vbITdp8i2dW3Zw
-         5cMJ927J0ze9W+RiNsi6tNEAhNt8vjUvuneSvdgbfM6MWkjHDhpSr23Nj0rODcz8giLH
-         1I4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUqlX98ENkT46X3WX414vpGyfI93WxTKt9GAxa7cIfy2LQAAxVm0KE6hfZXnnFb1dtSsKm8LnZmwab0KYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnHl4VHgxGQN3VGGkJKmnTLekcgPtpmMzu+cs811al+e4NRU/2
-	zuwrTXOW/IBBSthOrG0HCVf6xaMLZ/DRLwcG1LixbtqOrmfSd6e9LK8q3eLcbD8RPqkch+qO40k
-	krSPKs9fl5dJj8sV8UHiDXU1X0L3DXkVCSqnDLeP6/Q==
-X-Gm-Gg: ASbGncv0mf//LL5TV1pnAauPQHA3f7IThyckGzwWEpo3cAkq6jRBpN3ZTO6neL6OSk3
-	508FLNER2F820q2ZgjnrksheMJjchnwgBA8HuK6PAbHnXN+T5tBnm+jw4j88jCMEmEOI8Q7gQ58
-	Phohj5MQLToRZCT9iGLHk0lt4QsVTkxmurkxpRA2IJ1ZU=
-X-Google-Smtp-Source: AGHT+IE8YU8yP6esqnqUnZk9RLXSToml0bj4v9nH7DrJYcsEUr7XQwY4dJ3lhgYdPf76EoZr+KTAoSLIcBsb+9QtwDA=
-X-Received: by 2002:a05:690c:d0b:b0:70d:f338:8333 with SMTP id
- 00721157ae682-7166b6cdd09mr39558687b3.22.1751655341084; Fri, 04 Jul 2025
- 11:55:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nkkLNYgu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7bVe6j5MuC+VkuFyICwiR2qNPRIfLIced8O4pJKdKJM=; b=nkkLNYgupLUB0HceleDG4+xZ8K
+	8+rCVo+Wnv1djgMWa/6V0IIKMt61rZR57bumIJwXVxyTvzBmRpWqENoLf9A4rsgK9G8QaCowiYEnX
+	O24sSvtcYTqooU30yfDhfbgQVHJ+sq6gM44CNK2i6w5caEXljf3eOCNknwWrWKAsufevfDcebvsw+
+	ACaIHJEIO3H1mo90JKdImUkUjecb2aYbrBJnQkGA0dMa8oD/aL9DSdy7P14jVtVk+SOpTE7x8j5Hg
+	Bm7puEHd08gAlXZdQ+21n0EwF/CHmzy1G54pkDJctj3LMXIa9LabTK6XGlrLKm/cqHmFgztnpSNsL
+	JbihNqAA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXlcC-00000000PPj-2Fpn;
+	Fri, 04 Jul 2025 18:58:28 +0000
+Date: Fri, 4 Jul 2025 19:58:28 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, John Groves <John@groves.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
+Message-ID: <aGgkVA81Zms8Xgel@casper.infradead.org>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-19-john@groves.net>
+ <aGcf4AhEZTJXbEg3@archie.me>
+ <87ecuwk83h.fsf@trenco.lwn.net>
+ <aGdQM-lcBo6T5Hog@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704103521.10124-1-terry.tritton@linaro.org> <61f90ebf-3cb4-4e81-a7d7-cfffe41d9d47@igalia.com>
-In-Reply-To: <61f90ebf-3cb4-4e81-a7d7-cfffe41d9d47@igalia.com>
-From: Terry Tritton <terry.tritton@linaro.org>
-Date: Fri, 4 Jul 2025 19:55:30 +0100
-X-Gm-Features: Ac12FXzsS18VRi1-qE0dpcrfnADu66E0lCMTJzxKRd3EQs1pCzZ2Ghi0HmE4GGM
-Message-ID: <CABeuJB1QxwBHn+_6cZP9WJXG+gh1x5HWYW9CGVEajqHL6GSEbQ@mail.gmail.com>
-Subject: Re: [PATCH v4] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: ttritton@google.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, linux-kselftest@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, 
-	Wei Gao <wegao@suse.com>, Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGdQM-lcBo6T5Hog@archie.me>
 
-> However, please check the results ./scripts/checkpatch.pl, there are a
-> lot of codestyle errors:
+On Fri, Jul 04, 2025 at 10:53:23AM +0700, Bagas Sanjaya wrote:
+> On Thu, Jul 03, 2025 at 08:22:58PM -0600, Jonathan Corbet wrote:
+> > Bagas.  Stop.
+> > 
+> > John has written documentation, that is great.  Do not add needless
+> > friction to this process.  Seriously.
+> > 
+> > Why do I have to keep telling you this?
+> 
+> Cause I'm more of perfectionist (detail-oriented)...
 
-Whoops! Can't believe I forgot to run check patch!
-Thanks for letting me know.
+Reviews aren't about you.  They're about producing a better patch.
+Do your reviews produce better patches or do they make the perfect the
+enemy of the good?
