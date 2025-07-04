@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C0E2E36ED;
-	Fri,  4 Jul 2025 17:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9252D8371;
+	Fri,  4 Jul 2025 17:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650568; cv=none; b=jeZ1wb8P1JvUQ1WUwh1jQ1TKor5xNAkyI4eRvUEbGSCnGLfvgTSL87s9xHWm+l86o1dxSW6RcKgl26R8PIefPupWxZvZJoZ+dWUFx86ysitTJbwCogj/4J/XfGE+oooD2oKBmcfTSMa6VU7UFmcb9DysHUlOKW1aE/bCsCA5uDY=
+	t=1751650570; cv=none; b=HOefG0xWAmnpvbgRyrBpnKj9ISG+SZYHbc8B7IMGkwgAKiKqjcXK35ezskbmKvL5wboitXLKLVs+RMOz3s3HMKAEzfo9mRnPTiUuPrMDIFR4sQLw0/as2xZhkaApvzPAUuuIx86i6Nbw7msrT76FWezHExapDgp7lgfaLHE5zu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650568; c=relaxed/simple;
-	bh=vuytvSfcCyGFAFENL5yEHpjFxBx/BXS4PYNVz1zTiYo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=tUnaefoaXbFcWSgbfCKlnHqs9nXIpN1ve4ajMAy7ZP38Dot2w6kUcIPd/Mbxco3kyqGi6JDuMNhL+D8uGlzAaeY1Gv6WWkkqEVM3wQzhgulkwBFNA9Dn0ZIAnw3J2FI92qRfuOK+nDl3MITEhpKpVyWLekUxt17Vomd4os+lPt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNHA0cKn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751650570; c=relaxed/simple;
+	bh=D1TjRJZ6DDaEjXyWJf+fcNYEEjSOefryIwBwA4wrDvY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DshxjXHrDXI+Eq2H6EMnA4l0vuLa9fM5xUY4/CdhPttDDK8H0z3t6dvmo6tzugh5Im8BJeuHRBJXpvzb1zh6UvIcVQnX8Bec9u8UZZhM2X/f4Ge4VzsQHK1ooNOVO1sw9Pde+Z5JxwJGoSm0JyzaV0ID1Li+m61D2/UJR+nMesU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMyF57ss; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNHA0cKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F19CBC4CEE3;
-	Fri,  4 Jul 2025 17:36:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMyF57ss"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0CAEC4CEE3;
+	Fri,  4 Jul 2025 17:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751650568;
-	bh=vuytvSfcCyGFAFENL5yEHpjFxBx/BXS4PYNVz1zTiYo=;
+	s=k20201202; t=1751650570;
+	bh=D1TjRJZ6DDaEjXyWJf+fcNYEEjSOefryIwBwA4wrDvY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=sNHA0cKnRSG2370T8+bOOISCDylQdF9AXgzCwip1V03UG0ZGaXRmGreSpm29hJS0q
-	 vPsHVmERf1UJ6HCW8cNcRhDyAXsH8+FO5tMWigHEOIJvNagdjaG6f6tkLRrqAYB36a
-	 eRLs1PFtF+2lxBcCCmhPV6WLPlik0KzOzmw7QAfGLUWqVbPjvRuujb29vyvqFk26C8
-	 5mMDYV2dNjXjqq9R/Xk/JStCt9lkiJvb42nHjBnUYM+JfHIOlP6yufSMw8EqMi4X+T
-	 RT9gPsVY1I1shwOEvGupaTN9n+MKlw9MR79eB+vPc0+oICpzsT0urRfXCZatT6MfVX
-	 l6b3jvqYWABlg==
+	b=BMyF57ssMYKMB5UHcf18bKqIcQKxsRewi+vN02rNMUVNeCcen+BfvC4L8v5VNd3Yd
+	 T+IF6P8dpCBEd4b29H/veJbKH6Fa8kvp1t5EhXce6jKvFmWNdeHUx6uy0CAreL7C1b
+	 gs6tOxYmWKHHBf81LgtpxD/PNWEPGtou5lRfP/O9elpS1ZPRa65fUu5djD/EeQmpYn
+	 WgZo1SRfVEBwuj7jKRZaXaDtay2nE6C8UyCheFUM0mVjPT0R/88nOOI5imz8k10jY/
+	 /8N9s5zKzDA3AM1QNwGCfr6Bdgp3o4mPIXo5riDWQqv/BdZ+orRwElk9q5irlaezwY
+	 XVmH+lzarzi2Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 2CC2E383BA01;
-	Fri,  4 Jul 2025 17:36:33 +0000 (UTC)
-Subject: Re: [git pull] IOMMU Fixes for Linux v6.16-rc3
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFAB383BA01;
+	Fri,  4 Jul 2025 17:36:35 +0000 (UTC)
+Subject: Re: [git pull] Input updates for v6.16-rc4
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aGfji8aafXu3hTQl@8bytes.org>
-References: <aGfji8aafXu3hTQl@8bytes.org>
-X-PR-Tracked-List-Id: <iommu.lists.linux.dev>
-X-PR-Tracked-Message-Id: <aGfji8aafXu3hTQl@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-fixes-v6.16-rc4
-X-PR-Tracked-Commit-Id: 25b1b75bbaf96331750fb01302825069657b2ff8
+In-Reply-To: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
+References: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
+X-PR-Tracked-List-Id: <linux-input.vger.kernel.org>
+X-PR-Tracked-Message-Id: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.16-rc4
+X-PR-Tracked-Commit-Id: 4cf65845fdd09d711fc7546d60c9abe010956922
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 923d401238c590f39833a2015f6f9493f146d98f
-Message-Id: <175165059177.2287194.9983918768670209599.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Jul 2025 17:36:31 +0000
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+X-PR-Merge-Commit-Id: d46971e0b6f574059d167ddda1355ed301a0bae6
+Message-Id: <175165059472.2287194.3502026881822228987.pr-tracker-bot@kernel.org>
+Date: Fri, 04 Jul 2025 17:36:34 +0000
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 4 Jul 2025 16:22:03 +0200:
+The pull request you sent on Thu, 3 Jul 2025 22:31:36 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-fixes-v6.16-rc4
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.16-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/923d401238c590f39833a2015f6f9493f146d98f
+https://git.kernel.org/torvalds/c/d46971e0b6f574059d167ddda1355ed301a0bae6
 
 Thank you!
 
