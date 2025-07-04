@@ -1,65 +1,33 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036C730B985
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3923E19C54B;
+	Fri,  4 Jul 2025 15:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641742; cv=none; b=r/WvkbauCUSpOiJHXd0QP4mIP1TgWQFiEFQFegsYleWqMNbU42w5N5WOfzSkrDxu54hZaITZfxcShVT4qJG8/DxyyMt3+DeXUjNv+YlB2aMmZzW7GmOoQYrwkC6+d99qlpVOrGolfwBEieV5ohNlllm+cIc+CLk+Z/qHS4zA6ns=
+	t=1751641812; cv=none; b=YDHatVVxDAK/4Np74HhxETmgEv+m8U6egPjQGKPR7yQkhTwSYZDv4YR/2rNRGnLSXriUXAHxINwL4uYGm2/BccrDQu7TNhkkHSvde7RrYzMA7Q0CctgxfPrLB+t5JIOqOZ/NpwDhN/rdanWOh04dteHVQf1jwdbT5wyPAWIiF8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641742; c=relaxed/simple;
-	bh=ipnj/ShwN4qWMwlvjTyy3Pk2w7mwcXypC/ulNiTQd8I=;
+	s=arc-20240116; t=1751641812; c=relaxed/simple;
+	bh=Z/gcoLGRph/U9VWm2UGRUvh3W6hdwsbr1W2MSDXdq7Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fbbE1z7BAvBj+a1r1oac6riQ8YVzVkB4m4ZYkoCOJCK1mox/68DZMKoWofZRbLtRl8OS7pAzJYrkWJAevp58D/yOkozcHJGkKvXsiz+M59pEcZt+jp0TJj1xvsHNAdLKaAilffo+PiEbqzjIeOnTgAH6E1RYN5dGpKmpPTsjgFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zjL//tdH; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=JWji/O31k0XO2yiU++B78/bEhA599lZ8wOG4DVp2Nixm2L7c05dBhfRIfpBUATTU4j4AyqUIS+HcNmk6yQlfSszf/9t/Fwf4sCBSE8Ab4b6t9CZfbH128p60kY1NGkqUGiuYJOzz3n8fL6frm4yDtul6P9ol1nKwlG5cNMeva2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MssHvzcz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zjL//tdH"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso583828f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751641739; x=1752246539; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WOyFHtQS4VvsDjcbQRHgwxAxnr6aZ/PpVMTdfF6upkw=;
-        b=zjL//tdHwM1nPlxPr0X0VJABfizrP+XW4CC/IqymV0u1mUbOVB5ZFlu8a1B8CPPUhd
-         NToLmjtZMm9wlwcWceHG+gS7pN+MJBX0ZeoOWZWnIazFqtgPbubtTKGZNA03ISF75un1
-         1q/nVz8wY6oo9E9IXgYNCNKpqYGY1RB+jdH86BrTywAI/RPgyIU8INkTOkusfI2n/Bpr
-         2kPxJTG4B1aCA0llDKXSxqSOohL+FOcT0fpXNdn+I6YV5MlM/WWamfzMSaf/ay124h0y
-         3PZgB6WE3ADDSreqeAoh8gpXNvcwj/6hTPuXzQrSnM7HElJ38B5+FoPI9oCnNzcnpg2k
-         7w0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751641739; x=1752246539;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WOyFHtQS4VvsDjcbQRHgwxAxnr6aZ/PpVMTdfF6upkw=;
-        b=uHGwfkcX+v7Tp7UlJdDnIBELBgGo/Zu2TnkkE71FVgoLd6dNH6yO9CRJtT+W2WaVxO
-         vj+JQV2JRPhWwD8VCORwsgQkeczrGFhu4fykumZ4keXcz3iM9mZa1nWHGzIAlSNdo27A
-         SiHQGyCPW4/MXyQlpY+dAlk/pjGjBxwI0CKS53QvqAJ6/Gzd01tGu8KGZ0FPzFtugo46
-         dfpiH6hN2Uesy3xz/C7eufxu/nArj6tGCh2zdVKLuBgpIXpPj1Y/gECabWnCECU82t8/
-         9RThok2Qxlcox6IOg3zX2MDtdDwn3xDGlu+W8CLfHg6Uis848FKwO8p079CdgjLmyKP9
-         6mDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbGroPzrNlcPK02zxqvxlRznYxPMWA+SOUIftuFGK2EIirEwirD3t4cq5kXxj9Ra2IS23MT8zJUE8xQ44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNBZhHk80RC6pts+4A8Rziujc3J3o0iDuDecIz4lVeNmFqZUX4
-	9pKaX7TwxkxI1KoF1Ws65y4AExzEfL+mHBjOTZC3dVDVjYXlBmd54+uuByr82cfWuok=
-X-Gm-Gg: ASbGncvGMlrk8OnHZ0gm4guRVuk241Q8dTpnJoSTSKxN9nFrkXcQ/DZd0s9dlH16dvy
-	nQx5CA1Xr3nRAKZL7PhbQXFatNRoaIRkKiJZogC9YCYCH0kAeBxRTBtRKDg5oelI9wm7uEWJrIN
-	odt+UgfyRACU6xARkXQcNY0Rsk2oYxQcwUkgNL/BJ5LZujnABJ6ArkvsgYtnxlV229BIZnuLbTW
-	wTzQJhUtK1v0bU5z6WJsPQ5OPyWV8zygkwYwzV0WuJP1jE/57HcTbdfDsqTEDbH5Oq1e0cTygw5
-	IA/+lVmXIUCzB0+PzgtR/9iEgp1PJZmr2j/iDxlEtRlpDYd9LA3VeRVjYGBefa7q0FIQvAe+kVw
-	8krrYmSJZz1nW8i558oZ4AuMPFng=
-X-Google-Smtp-Source: AGHT+IH9cnwUoqoWS5/qQDudbSz0QU2bdpH6UeAa65SEFEoIDoAtlPs1SdHDTe/5FJH8jfA2orMi5Q==
-X-Received: by 2002:a5d:5e0a:0:b0:3a5:8cdd:c174 with SMTP id ffacd0b85a97d-3b4964f6f85mr2726920f8f.26.1751641739273;
-        Fri, 04 Jul 2025 08:08:59 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b975efsm2667049f8f.46.2025.07.04.08.08.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 08:08:58 -0700 (PDT)
-Message-ID: <0b526bee-dd8b-446b-9b79-00fcf811837e@linaro.org>
-Date: Fri, 4 Jul 2025 16:08:57 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MssHvzcz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD26EC4CEE3;
+	Fri,  4 Jul 2025 15:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751641811;
+	bh=Z/gcoLGRph/U9VWm2UGRUvh3W6hdwsbr1W2MSDXdq7Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MssHvzczGNp0SlOYkBMQcvpjJ0WTuE0OEhRgAomsK4n5HwTXdo5EPAWNeE0KHkQWg
+	 /1Fd5Fu8kDrqhwoveNpzVlr19NcOvDkQpxC9Hn9ieUwUp2IU57L41AfB2CybrJbqRM
+	 2FgkMqxMxiKsJ1wtIlmYovNSU1PpQsojF8ZpVIjFASopl2IBCz4IvsVPNGZFnmSSbw
+	 0IyzHMQuTYQh88vfk28BcoI3wmWonumoJyKbIkQv31tLlgG4es8fl5DCCe6evomWUw
+	 JjPN1yDVSqIB/ChAqxRqPhbbakwA1VRHolIsxfcX1nQHzTsRosQHNxwm10An3GfI9R
+	 37CZFq6Vwwt+g==
+Message-ID: <765c675c-6ae9-4b79-bc49-865e03d54fa5@kernel.org>
+Date: Fri, 4 Jul 2025 17:10:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,56 +35,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] clk: qcom: videocc-sm8550: Allow building without
- SM8550/SM8560 GCC
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>,
- Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Johan Hovold <johan@kernel.org>, Stefan Schmidt <stefan.schmidt@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
- <20250701-x1e-videocc-v1-2-785d393be502@linaro.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: eeprom: Add ST M24LR support
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, luoyifan@cmss.chinamobile.com
+References: <20250704123914.11216-1-abd.masalkhi@gmail.com>
+ <20250704123914.11216-2-abd.masalkhi@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20250701-x1e-videocc-v1-2-785d393be502@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250704123914.11216-2-abd.masalkhi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 18:28, Stephan Gerhold wrote:
->  From the build perspective, the videocc-sm8550 driver doesn't depend on
-> having one of the GCC drivers enabled. It builds just fine without the GCC
-> driver. In practice, it doesn't make much sense to have it enabled without
-> the GCC driver, but currently this extra dependency is inconsistent with
-> most of the other VIDEOCC entries in Kconfig. This can easily cause
-> confusion when you see the VIDEOCC options for some of the SoCs but not for
-> all of them.
+On 04/07/2025 14:39, Abd-Alrhman Masalkhi wrote:
+> Add support for STMicroelectronics M24LR RFID/NFC EEPROM chips.
+> These devices use two I2C addresses: the primary address provides
+> access to control and system parameter registers, while the
+> secondary address is used for EEPROM access.
 > 
-> Let's just drop the depends line to allow building the videocc driver
-> independent of the GCC selection. Compile testing with randconfig will also
-> benefit from keeping the dependencies minimal.
-> 
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
 > ---
->   drivers/clk/qcom/Kconfig | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 36d6e6e1e7f0162d53f02f39125f4593517e0dba..26752bd79f508612347ce79fd3693359d4dd656d 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -1391,7 +1391,6 @@ config SM_VIDEOCC_8350
->   config SM_VIDEOCC_8550
->   	tristate "SM8550 Video Clock Controller"
->   	depends on ARM64 || COMPILE_TEST
-> -	depends on SM_GCC_8550 || SM_GCC_8650
->   	select QCOM_GDSC
->   	help
->   	  Support for the video clock controller on Qualcomm Technologies, Inc.
-> 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Changes in v5:
+>  - No changes and already reviewed by Krzysztof Kozlowski
+>  - Link to v4: https://lore.kernel.org/lkml/20250608182714.3359441-2-abd.masalkhi@gmail.com/
+
+So you just ignore the tag?
+
+<form letter>
+This is a friendly reminder during the review process.
+
+It looks like you received a tag and forgot to add it.
+
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
+
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
+
+
+Best regards,
+Krzysztof
