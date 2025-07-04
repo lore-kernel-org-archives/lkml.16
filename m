@@ -1,138 +1,136 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F162D46AC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EED14A4CC;
+	Fri,  4 Jul 2025 12:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632256; cv=none; b=swHj2KMIGQXccsaeivMi6vlJov106esGCV9aIH0CtmGr7923uDRFwhkyRQ7q5577Oh0df8Yn7Pq4Bee/Yxs3fTaWl+2SZlBmylolzhADyNt1g4QdP5r2UqZx02O7EY2cd/W4Dq7/uO4D4WFVz0MYH5AciMHHBKPjTEIyleZZW1A=
+	t=1751632408; cv=none; b=hFJNN8s8R82vZBWdLUiP06l6MAXJ4QwFxvpy8WSrep/K94xIdDDghxv63hS9a/B5pbwm9k36RgHBYSSpwfbDTKnSx+ITa2x5PCW15Y5EY+zN+TRLwfd+t3REE9qz3nmM+e/Ec4JmUOZRcKUHFIYTPBzKrHSnQioNkJsb5lais0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632256; c=relaxed/simple;
-	bh=K2d10XQLTG7Ul5SDwI/aJTOW6i7f7ldw3wQqMDGme4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iRIB9iQyG26idCqicvhW2Xbv/SjKPMbTY7mmeIM0yX8l8Pu9ctcEmlm2CIKzXxCltvEKKyoSQE5fdDkWzMsVYj0hN6+fe6r5cMUtG2tWaLyxULQADkKMZeI91H+sPqBxqL9WkE72AuSErE5j079Ju6e0Xz7wWYffuFPFd9zq93U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CMDea8ey; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751632408; c=relaxed/simple;
+	bh=0GjD73X7k8nBQVWH+4jf2QOikjK73rbaYEubmGDkpTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wlake/w1vSlznEvSilNO1QidpEahUOnaJ5iEMuF5S9XqmoUKzPTd6QCwHXomlxlRh5GcJPui0xMS0vns12rv1WsFGvRqshY0Lt/mgXEL5scg4wcAcSyvO+jB6bHNZDZwWMetwQ7v2vGtTLNQ4aLd/aUQ4UUjGzSfziZ2WvaFcBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZdZ3AEE2; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CMDea8ey"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so1796097a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751632253; x=1752237053; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3eL7ggN4EThqkSufl95lxEu7wvlLi27XNgIMFlyQ+U4=;
-        b=CMDea8eyITN8Zy/7mqknUU590ksH5V2B1A752XAFWZe04ivpj1b3kAaNFYAjDj0oZZ
-         nzDSSSYXY/WHxA+TmaebzbDOe36byZBvolIC6NpWXQhadYwT22d1N1eioIyb5p1eTaAC
-         bV39mKM2bw280ICv2kOAZETNB3FItQznBkeBUxTgvpG926zSIlSgIp0JQ+Ix6ZPqstkD
-         7IAD3bcFjc9WsHNL6XG9JSuSphGcNqybo4B+qutxqS/zrl41ZASh6iGGI7W4EcHC3oKh
-         KtZqL0+2UAstB0MStPvoYda8ytPw5a43lE3FUKXTw1IxHO7caUScjhSuCvA21hlQXYTd
-         f+7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751632253; x=1752237053;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3eL7ggN4EThqkSufl95lxEu7wvlLi27XNgIMFlyQ+U4=;
-        b=uDvYftXJSP/TBQJl+jkkUyUTsUXKM3NNpUyBYA+8RGWLrAzTpCd7VQJpYTutbAPrJp
-         gAwoX8UR2SPJ0oE2j7nCBMKy81J69DHDPjEfrhGTWsihr31Q/8G9cxu+nbl74cDc2UAl
-         jwZCbaasQRrTpQJSUl1vMf8VvPXgNgeE/qmXlX8n6Wx5nU4/UHoD/5h5p0JUpMmtHUgK
-         S3y2aVFWnFlo8xp4g4e1WLaEflCSYDO6j3AHnL3z35pwt/iMgZka0dGwqnqIy+9sMULp
-         XQhWKZJQOKbJqB0jSyZ1zVFmB1YrFjNN1+AafdOONyJIc0UDR/hgyIuraPB1f63z7tlh
-         w7rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAza/G2Ws69oM/Gkbj27E3xEUJ4oq8sp/J9vak3JbUql7lpnpZDFC4wJ6Ln203VxfKT6pZ1LAhhZBPHJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy23BapUOkVT+/4xZgb2CBbTARci6WR8593DhexblT6F5dd5KE4
-	vCzt+zL7b7BstVbNi+lHQBB16ygcb4H3PZ9y2Vl5qsKWSpf0XZAqt+qpvoRwPIVOiKU=
-X-Gm-Gg: ASbGnct8lJ+aDjWZRjWuG31684Wr4JaVgSYypO9DkvCPS3AWZj6ZfO8dECc63b9jQbm
-	Of+HbkSRnNdgMMh7BqD21XKHMe++kfU2IEVA1Rl4yRB14h2JXlOseRVTCcEmWQ+qGJaAeKZHb0w
-	l7KU7xYO0GQKANagjs++Aa21ANcFWyHK2xMmW3PmThPJZ8EdkY4eOhqpmY7MjkcBl5yhU21YsvF
-	GmtFV8+Px+rNi3rgiUE6C5LxWBKwN5x0EaJ9esHSNdRpP18tVoIrjaKsK4xrGHGJ0bOmVhllabY
-	oUW5HSv9aLD1TrFicJ7GDlkeg/Sfry/XnEjnz7KZBRVJQLt4/JQlGOsXdLVivsTS1f3tqrCo
-X-Google-Smtp-Source: AGHT+IENYDx1S+W/IKOLqqR+xnsrF1ri83aQkOzSqUBrg7yPi6OXV2SVSRqeMh1z0BCCs7zVMQSi2A==
-X-Received: by 2002:a17:907:7213:b0:ade:7c6:498a with SMTP id a640c23a62f3a-ae3fbc4b041mr251129566b.10.1751632252576;
-        Fri, 04 Jul 2025 05:30:52 -0700 (PDT)
-Received: from [192.168.0.251] ([188.27.86.244])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e6f25sm164849066b.20.2025.07.04.05.30.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 05:30:52 -0700 (PDT)
-Message-ID: <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
-Date: Fri, 4 Jul 2025 13:30:50 +0100
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZdZ3AEE2"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 99D8640E021C;
+	Fri,  4 Jul 2025 12:33:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id EAXE6mUcVyEs; Fri,  4 Jul 2025 12:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751632400; bh=4rq7IYgyEa3a1mMgzYHYOEf2XgV3U52AmVcdEkY7X84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZdZ3AEE2vpa3GOCQiVsW+6Oc6VJ2Ey0iab4vytbF3hWcMEKngc3Ki8TCGLKrLPmzT
+	 zFQm4+/T8RCg/HQ+9vPFG44FkjKr1oxFH62M1LsuHp/DZGn0N+unTNWcqEy7zUsXEL
+	 tY0QtvPkALe/j0uwobreDEsp8yMDIIQAOuSAhAHiyelXdHy8lMmGxA92xcb9rj0/N0
+	 UpKy6xRv7+H6B/ZwMkPcB1Jyan1Z243keDsxA+okMxhR00G+J3zfVlZ+VvxHyRCREm
+	 kheI4nXMPf/JQqpWCnpYCnKE2y6RIYtdAf7iguJIl6VYcsp2DpvlWvCC8puJbXf6rW
+	 2CQ3kQUeU30BTATwi4OSnyxhtKnFXejr3MhBw3gFY4ZMxy1HaLUL6YpxQ1+Wk2quuX
+	 cz7nxG/pvTvHC0jZYdfeTBYba6bugewn+Vs8Eq423Cp1iowJeMywYW9y9OA53vHBLQ
+	 IPTTyxhW1h1tFyOw5Ey6uMdTsF6qrWf7fg3wcXExkDOv7AwL1gG8xgWd5J2ewXNxen
+	 wTvYAUqtaxkCLULbP+iCnhIaUCCiRMTZnnq/19uES4RH/nNOZevxvVlGP6za7qx4mq
+	 1heCBj9qiPEz2AThb/WH1bHo/C5XRUdREVhqh2nupl3bIJ3BhtqXOQ1vqrfdT4O4ai
+	 9LOp0NpW34WlAAw1DrIBl/6A=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 266F140E00DD;
+	Fri,  4 Jul 2025 12:33:12 +0000 (UTC)
+Date: Fri, 4 Jul 2025 14:33:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Leon Romanovsky <leon@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
+Subject: Re: [tip: sched/urgent] sched/fair: Use sched_domain_span() for
+ topology_span_sane()
+Message-ID: <20250704123307.GCaGfKAzoceu9siXCN@fat_crate.local>
+References: <20250630061059.1547-1-kprateek.nayak@amd.com>
+ <175162039637.406.8610358723761872462.tip-bot2@tip-bot2>
+ <20250704102103.GAaGerDxWX7VhePA3j@fat_crate.local>
+ <c3e97fe5-f058-4958-8660-a661f6a662a3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: peter.griffin@linaro.org, andre.draszik@linaro.org,
- willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com,
- kernel-team@android.com, arm-scmi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
- <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c3e97fe5-f058-4958-8660-a661f6a662a3@amd.com>
 
-Hi, Jassi,
+On Fri, Jul 04, 2025 at 05:16:44PM +0530, K Prateek Nayak wrote:
+> In an attempt to solve a complicated case, I think I overlooked the
+> simplest one.
 
-Sorry for the delay, I was out for a while.
+It happens. No worries.
 
-On 6/23/25 12:41 AM, Jassi Brar wrote:
-> On Fri, Jun 6, 2025 at 8:41 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->>
->> There are two cases where the chan lock is released and reacquired
->> were it shouldn't really be:
->>
->> 1/ released at the end of add_to_rbuf() and reacquired at the beginning
->> of msg_submit(). After the lock is released at the end of add_to_rbuf(),
->> if the mailbox core is under heavy load, the mailbox software queue may
->> fill up without any of the threads getting the chance to drain the
->> software queue.
->>         T#0 acquires chan lock, fills rbuf, releases the lock, then
->>         T#1 acquires chan lock, fills rbuf, releases the lock, then
->>         ...
->>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
->> We shall drain the software queue as fast as we can, while still holding
->> the channel lock.
->>
-> I don't see any issue to fix to begin with.
-> T#0 does drain the queue by moving on to submit the message after
-> adding it to the rbuf.
+> Can you try the below incremental diff on top of this patch and
 
-The problem is that the code releases the chan->lock after adding the
-message to rbuf and then reacquires it on submit. A thread can be
-preempted after add_to_rbuf(), without getting the chance to get to
-msg_submit().
+Yap, works. Thanks.
 
-Let's assume that
-T#0 adds to rbuf and gets preempted by T#1
-T#1 adds to rbuf and gets preempted by T#2
-...
-T#n-1 adds to rbuf and gets preempted by T#n
-
-We fill the mailbox software queue without any thread getting to
-msg_submit().
-
-Thanks,
-ta
-
-> And until the tx is done, T#1 would still be only adding to the rbuf
-> because of chan->active_req.
+> let me know if you still hit the error:
 > 
->> 2/ tx_tick() releases the lock after setting chan->active_req = NULL.
->> This gives again the possibility for the software queue to fill up, as
->> described in case 1/.
->>
-> This again is not an issue. The user(s) should account for the fact
-> that the message bus
->  may be busy and there can be only limited buffers in the queue.
+> (Lightly tested on QEMU)
 > 
-> Thanks
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 0e46068acb0a..cce540fe36c6 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2423,6 +2423,14 @@ static bool topology_span_sane(const struct cpumask *cpu_map)
+>  			struct cpumask *sd_span = sched_domain_span(sd);
+>  			int id;
+> +			/*
+> +			 * If the child already covers the cpumap, sd
+> +			 * remains un-initialized. Use sd->private to
+> +			 * detect uninitialized domains.
+> +			 */
+> +			if (!sd->private)
+> +				continue;
+> +
+>  			/* lowest bit set in this mask is used as a unique id */
+>  			id = cpumask_first(sd_span);
+> ---
 
+Yeah, when you send a hunk I should apply, no matter how easy it is, pls send
+it from a mail client which doesn't mangle the diff otherwise I get:
+
+$ test-apply.sh -n /tmp/diff
+checking file kernel/sched/topology.c
+Hunk #1 FAILED at 2423.
+1 out of 1 hunk FAILED
+
+Or you can attach it.
+
+I've done it by hand now.
+
+> Thank you for the report and sorry for the oversight.
+
+No worries at all.
+
+> Hope I have not disrupted your Feierabend.
+
+Haha, I have Feierabend a lot later, if at all :-P
+
+I hope you can enjoy the weekend a bit and not look at code too much.
+
+:-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
