@@ -1,78 +1,162 @@
-Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2CD54723
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 23:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A12954723;
+	Fri,  4 Jul 2025 23:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751672777; cv=none; b=OGYiNcdaHc3OucEimOhZCsnfNj3ogEX5a4SZU1/l7TW5ROFA6agDD1fh0L8MTZsVXSYdxQA0vRzwTQCbzr+AtG8ANuV2s35jrX37NZ4/3X9OfYizY7AYO4F9WTxgBUXwjApwo+A4uOJmmqxuWuGYnv0xBBtTMx0vbGfpQJnnXkw=
+	t=1751672979; cv=none; b=UjAFzUrU/7v9IiOIYTXYkjlzkjg2A1sUytre4TP08xt2bTYe/magCis4ijD5111NEBh+A5yrHrFYod4LVzmBRx7Mw7J/0eRoEt9RBwuqA+z3biQJjn+S/t9hPCnBiA7hDVGb51bB7Yh/0Gwsf9AjDzvF+kSnxdlbZgxRm1Gqm0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751672777; c=relaxed/simple;
-	bh=OlXpvVzublmpzcZs1WXLlpHn8HUh9C22Ev/qmySCF2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k/qsehPsSZoIv4kbHfu2Ypxn4XYCLN4bUFuJ4lB2BzaXN7eVL0elL7V+ZF67Cf31//7wds20q+biq0V9uLybIGXRP008tuSrx+6gKlYhCB+zCwSb9No3Zi24oCkrNYwz9vNZjAYSOxCaqB2lpO0TjUC/YZErLyCqpFxAIJDHUMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=jbYad3TU; arc=none smtp.client-ip=202.108.3.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="jbYad3TU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751672772;
-	bh=vxGDDAIghtkSB0NURMJX0uAmy6KtjeRVKcUI16aLrBU=;
-	h=From:Subject:Date:Message-ID;
-	b=jbYad3TUM6GODyHkP4O2pDmBe0/WigVltfluy8HNx5dZxBa//M2mqg/WBpHXWHkQB
-	 sedbtWb7GJhz2pkFGLQW64CHWV4LqDOJNWRP5Wlis2fuuD8BVFBOaN2bSJ9Zyq3q/F
-	 LVcNOdJSYEAXWPXubK1HTKobqgKLn1GJRZ38F6RA=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.32) with ESMTP
-	id 686867BA0000406F; Fri, 5 Jul 2025 07:46:03 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 5830304456930
-X-SMAIL-UIID: 45A23F742C9143F98C01E66E7F00AA3A-20250705-074603-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in pcl812_attach
-Date: Sat,  5 Jul 2025 07:45:32 +0800
-Message-ID: <20250704234551.2525-1-hdanton@sina.com>
-In-Reply-To: <68684cb9.a00a0220.c7b3.0027.GAE@google.com>
-References: 
+	s=arc-20240116; t=1751672979; c=relaxed/simple;
+	bh=KsnRsT5Zp6SxXom0RgloRgybMVnMUbjcLP3imWbabD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J43XlxS97ku0WPWrNUI5KK5Y3PuTM1JUozzA+Ts9PN7PdmEKcNEfJ4225L5J2uoQY7KANw4rECQpPWKCD+L59rKviVezDvi2x4jdx36NK7OKScqd/HFec9+FrawmwTZ/F/ZEijVDUKnkrE1s1RgKuHGd6Qeug/HCzk+GlO8ECVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 28B8372C8CC;
+	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 15D0E36D0184;
+	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id EBF48360D4F8; Sat,  5 Jul 2025 02:49:28 +0300 (MSK)
+Date: Sat, 5 Jul 2025 02:49:28 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Kees Cook <kees@kernel.org>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: stable@vger.kernel.org, Michal Marek <mmarek@suse.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yong Zhi <yong.zhi@intel.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+	"Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id
+ name length
+Message-ID: <aukyxucdlmthz3v5a6xoh42vmz@altlinux.org>
+References: <20250415231420.work.066-kees@kernel.org>
+ <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
 
-> Date: Fri, 04 Jul 2025 14:50:49 -0700
-> syzbot found the following issue on:
+Andy, Kees,
+
+On Wed, Apr 16, 2025 at 09:45:52AM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 15, 2025 at 04:14:24PM -0700, Kees Cook wrote:
+> > The 20 byte length of struct platform_device_id::name is not long enough
+> > for many devices (especially regulators), where the string initialization
+> > is getting truncated and missing the trailing NUL byte. This is seen
+> > with GCC 15's -Wunterminated-string-initialization option:
+> > 
+> > drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   189 |         { .name = "hi6421v530-regulator" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   278 |         { .name = "hi6421v600-regulator" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   233 |         { "lp87565-q1-regulator", },
+> >       |           ^~~~~~~~~~~~~~~~~~~~~~
+> > sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   818 |         { .name = "rpmsg-micfil-channel" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   457 |                 .name = "HID-SENSOR-LISS-0041",
+> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   366 |                 .name = "HID-SENSOR-LISS-0226",
+> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Increase the length to 24, slightly more than is currently being used by
+> > the affected drivers. The string is used in '%s' format strings and via
+> > the module code, which appears to do its own length encoding. This size
+> > was chosen because there was already a 4 byte hole in the structure:
+> > 
+> > struct platform_device_id {
+> >         char                       name[20];             /*     0    20 */
+> > 
+> >         /* XXX 4 bytes hole, try to pack */
+> > 
+> >         kernel_ulong_t             driver_data;          /*    24     8 */
+> > 
+> >         /* size: 32, cachelines: 1, members: 2 */
+> >         /* sum members: 28, holes: 1, sum holes: 4 */
+> >         /* last cacheline: 32 bytes */
+> > };
 > 
-> HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=104a8f70580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b29b1a0d7330d4a8
-> dashboard link: https://syzkaller.appspot.com/bug?extid=32de323b0addb9e114ff
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b17ebc580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144a8f70580000
+> Since there is no even potential ABI breakage, I'm fine with the change.
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-#syz test
+This definitely breaks ABI on 32-bit architectures such as i586, because there
+is no gap from alignment. Perhaps, this also make the commit not suitable for
+backporting to stable branches?
 
---- x/drivers/comedi/drivers/pcl812.c
-+++ y/drivers/comedi/drivers/pcl812.c
-@@ -1148,6 +1148,8 @@ static int pcl812_attach(struct comedi_d
- 					 I8254_OSC_BASE_2MHZ, I8254_IO8, 0);
- 		if (IS_ERR(dev->pacer))
- 			return PTR_ERR(dev->pacer);
-+		if (it->options[1] < 0 || it->options[1] > 31)
-+			return -EINVAL;
- 
- 		if ((1 << it->options[1]) & board->irq_bits) {
- 			ret = request_irq(it->options[1], pcl812_interrupt, 0,
---
+I recently stumbled on build failure on v5.10.239 for i586:
+
+  make: Entering directory '/usr/src/kernel-source-5.10'
+    DEPMOD  5.10.239
+  depmod: FATAL: Module index: bad character '�'=0x80 - only 7-bit ASCII is supported:
+  platform:jsl_rt5682_max98360ax�
+  make: *** [Makefile:1786: modules_install] Error 1
+  make: Leaving directory '/usr/src/kernel-source-5.10'
+
+With this patch not applied "jsl_rt5682_max98360a" have terminating '\0'
+truncated due to PLATFORM_NAME_SIZE being same as the string length and
+concatenated with the following binary data:
+
+        {
+                .name = "jsl_rt5682_max98360a",
+                .driver_data = (kernel_ulong_t)(SOF_RT5682_MCLK_EN |
+                                        SOF_RT5682_MCLK_24MHZ |
+                                        SOF_RT5682_SSP_CODEC(0) |
+                                        SOF_SPEAKER_AMP_PRESENT |
+                                        SOF_MAX98360A_SPEAKER_AMP_PRESENT |
+                                        SOF_RT5682_SSP_AMP(1)),
+        },
+
+modpost then interprets it as an asciiz string concatenating with `driver_data`
+resulting in bad characters.
+
+  static int do_platform_entry(const char *filename,
+			       void *symval, char *alias)
+  {
+	  DEF_FIELD_ADDR(symval, platform_device_id, name);
+	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
+	  return 1;
+  }
+
+creating in an incorrect alias, and this somehow breaks depmod in kmod 34.2
+(maybe earlier).
+
+Old kmod 30 successfully adds incorrect alias:
+
+  $ modinfo snd-soc-sof_rt5682.ko | grep jsl_rt5682_max98360a
+  alias:          platform:jsl_rt5682_max98360a
+  alias:          platform:jsl_rt5682_max98360ax�
+
+and 
+
+  modules.alias:alias platform:jsl_rt5682_max98360ax� snd_soc_sof_rt5682
+
+Perhaps, scripts/mod/file2alias.c should be updated with:
+
+-	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
++	  sprintf(alias, PLATFORM_MODULE_PREFIX "%.*s", PLATFORM_NAME_SIZE, *name);
+
+(Or even producing an error if more serious truncation occurs.)
+
+Thanks,
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
