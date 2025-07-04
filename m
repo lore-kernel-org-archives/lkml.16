@@ -1,123 +1,72 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0932869E;
-	Fri,  4 Jul 2025 02:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708542869E;
+	Fri,  4 Jul 2025 02:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751594536; cv=none; b=HQStxon607WGUCJUtrqzoaQhPw/XPEtKtUIghlgJwUtc8Zt3f84K8Mdr+/wm1/2qkhAJX0xI9mPpTEUpvdbk0eEhD3PdQ9bSCIEhzCV9Y+2K8W/gkIizUNlFFuRZb+coX9cQDxgQpgpK0TY/Tt9rJIe6Ajhymbxk5c8bsDTl6zI=
+	t=1751594633; cv=none; b=nq+nYp6sF+UWdaUY4zP3PHaPmn2qacuDd75kfX8SRQ3bVem/zmQtGm/ctpVfgTilkp8ms+Gz83fcNYW4OXnC1mmaUHQsl/WBtgzRQVuTi0G9cIGVQ3FGwmMN3gtOnfQOaVt1W+AstSb6u3lQVRqH0k9gLhMUUIkAn29zCFoJOgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751594536; c=relaxed/simple;
-	bh=GwlRTvLAvefed5LygW8mt1w9cELdjhIzCvOFGcDq800=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dfGoMn6R6gQCrpuNuA0RQDyGhJfZkosX8WG7tzmuVfuZoVpNN/VlDj35BWwJtQL3aS12y/mJ3dnUSxp/TO4nQgafUvM8CQCS7PGAy4R4puXaTUVBbP06Ihope6aF2MbfMikjsSKo82zTr0JVjEcts5pIqtmRujhE1KZru8icYVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=i/mbZbnN; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751594633; c=relaxed/simple;
+	bh=epro97/CzykWe2P0Kc/c1P/hEUsL/QzbIYjMBiV1Xpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZppMlpALCgieWMT03+40bb24mE26Cs+RBwVAUaBwagAoRWvpn/GxCVCU02W0uhsrJJRfynBjs+EHXmOZlpUbpA0B7CjtSm6XIyFhHIMHBtpS+LRe1lfzlF8cTayMG0jsOzcyWyO74atD+sBPBQMnRP96giMCc3o3LnEulIK2q1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=sI/rU59H; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i/mbZbnN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751594501;
-	bh=xoCCfzg/d3U917bT1wXF1WjvX0Ta39Aa83euUVsXtYo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=i/mbZbnNJTtsqENFdgHNz1NB4HL0zuelrn/ZmBMgNOjY1bNKrfrf4tSDOeTlV/Ubn
-	 qQQExKmb4kbjBIoj3vEdKKlcCrHnRFiN1KIv73AXUKFuHN+2xGUO7akYs9YRFNl78N
-	 tj9CdtV5y5W+MyI0NjjuEtlg3EmXmGEptpguFjEixtl3YqGR17d+HsHqqhBrZ9U6z1
-	 4Y3Su57UTlPdKTefUYFXCds+RghWC5HlSfcqfmavkoAaaogvWcbGH8sBPOyNINGDcA
-	 vieMc/79rjU8dwHFJTbu34/70c55Z/oPwpwZ6cnngMMDM0JnDmn7Wqri+VCwnslF4v
-	 wEjHOdBKehctg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYH1c3jc9z4wy6;
-	Fri,  4 Jul 2025 12:01:40 +1000 (AEST)
-Date: Fri, 4 Jul 2025 12:02:07 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Qianfeng Rong <rongqianfeng@vivo.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the i2c-host tree
-Message-ID: <20250704120207.3e7d0d7e@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="sI/rU59H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=paXUcMhFn9asEXi9y0KMo+HqPmeYpQViJhvuLWWzFwQ=; b=sI/rU59H1SoHjRaxYzGvhZda+M
+	KPA/jAXyo8ddFqALS8uHmEq16PPeT/uBqicjkDpKEXSFS61mAv8923dFUNqPLe2FcEXzAEH94yeV2
+	rHlF76NyBHKxf78FusJjNLARnl3qe0zA+jweqLz2lI2+Fz2ORsKgpVYKYkuKBBiLwXEjs5ZisFubH
+	CUsPliNKQ8v9julzZJ/im//fEO7N4BOFF/11u9KC/5Qmb188aInHkvMD1GDveN5E+PWtJdBchFlDu
+	WNCFitH8US27CWZ9qtVBEJG6K/vmXY+KL728hks+w/7rstQ1SX8amlRGQDvM8tjCtq6FZ8SqwoStJ
+	4sCtVkhQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXVmG-00000008G5m-2zQc;
+	Fri, 04 Jul 2025 02:03:48 +0000
+Date: Fri, 4 Jul 2025 03:03:48 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neil@brown.name>
+Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
+	linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing
+ ->sysctl
+Message-ID: <20250704020348.GN1880847@ZenIV>
+References: <>
+ <20250703234313.GM1880847@ZenIV>
+ <175159315670.565058.128329102948224076@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dAvZ9q4mbOoB9E6aiXLfDs=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175159315670.565058.128329102948224076@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
---Sig_/dAvZ9q4mbOoB9E6aiXLfDs=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 04, 2025 at 11:39:16AM +1000, NeilBrown wrote:
+> On Fri, 04 Jul 2025, Al Viro wrote:
+> > On Mon, Jun 16, 2025 at 12:49:51PM +1000, NeilBrown wrote:
+> > 
+> > > The reality is that ->sysctl does not need rcu protection.  There is no
+> > > concurrent update except that it can be set to NULL which is pointless.
+> > 
+> > I would rather *not* leave a dangling pointer there, and yes, it can
+> > end up being dangling.  kfree_rcu() from inside the ->evict_inode()
+> > may very well happen earlier than (also RCU-delayed) freeing of struct
+> > inode itself.
+> 
+> In that case could we move the proc_sys_evict_inode() call from
+> proc_evict_inode() to proc_free_inode(), and replace kfree_rcu() with
+> kfree()?
 
-Hi all,
-
-After merging the i2c-host tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
-
-In file included from <command-line>:
-drivers/i2c/busses/i2c-st.c: In function 'st_i2c_rd_fill_tx_fifo':
-include/linux/compiler_types.h:568:45: error: call to '__compiletime_assert=
-_369' declared with attribute error: min(max, 0x8 - tx_fstat) signedness er=
-ror
-  568 |         _compiletime_assert(condition, msg, __compiletime_assert_, =
-__COUNTER__)
-      |                                             ^
-include/linux/compiler_types.h:549:25: note: in definition of macro '__comp=
-iletime_assert'
-  549 |                         prefix ## suffix();                        =
-     \
-      |                         ^~~~~~
-include/linux/compiler_types.h:568:9: note: in expansion of macro '_compile=
-time_assert'
-  568 |         _compiletime_assert(condition, msg, __compiletime_assert_, =
-__COUNTER__)
-      |         ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
-ssert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/minmax.h:93:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   93 |         BUILD_BUG_ON_MSG(!__types_ok(ux, uy),           \
-      |         ^~~~~~~~~~~~~~~~
-include/linux/minmax.h:98:9: note: in expansion of macro '__careful_cmp_onc=
-e'
-   98 |         __careful_cmp_once(op, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y=
-_))
-      |         ^~~~~~~~~~~~~~~~~~
-include/linux/minmax.h:105:25: note: in expansion of macro '__careful_cmp'
-  105 | #define min(x, y)       __careful_cmp(min, x, y)
-      |                         ^~~~~~~~~~~~~
-drivers/i2c/busses/i2c-st.c:453:13: note: in expansion of macro 'min'
-  453 |         i =3D min(max, SSC_TXFIFO_SIZE - tx_fstat);
-      |             ^~~
-
-Caused by commit
-
-  cbae4d3dd2f7 ("i2c: busses: Use min() to improve code")
-
-I have used the i2c-host tree from next-20250703 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dAvZ9q4mbOoB9E6aiXLfDs=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnNh8ACgkQAVBC80lX
-0Gx17Qf/e1Ne1zw30XyzEU6YK2iub0hbmpKRg+lmC/uQo+b5MWMDxRS4GzaF1IST
-5NCgeQneDJqYZ6aH9sMA0Bwu1nhba3VXrsxWw2RREsVns7XUuZELDvuiw5Tm/UYo
-D6R5wjj1TzN0cDQ+ywLGXRgnESyGjnKQKzlO1vuZN4ZrF2aZKTVe23deItnhvrdW
-bLv2SEtyp4JrQ5Sq3/BR5oEo1xRs/VSh4MQP66w4XMVmkb8v7STU9W56NTQvC4Xq
-DHCeqDvJGnGqI5gN3Ou2zOpJ3AYdQIh4P6mL9BedJtzb+HZC3cCFDhFpuGTH/mlt
-yZu0KpWI+XcKHObLIu2fMhi3ZuoXnA==
-=XMWB
------END PGP SIGNATURE-----
-
---Sig_/dAvZ9q4mbOoB9E6aiXLfDs=--
+proc_free_inode() can be called from softirq context, so we'd need to
+touch all sysctl_lock users for that.  Definitely a larger patch that
+way, if nothing else...
