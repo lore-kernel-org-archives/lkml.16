@@ -1,98 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF602DEA8A;
-	Fri,  4 Jul 2025 17:36:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1DB2E093D;
+	Fri,  4 Jul 2025 17:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650577; cv=none; b=eGmd1Qhqr+Yh4VX+ZLEKZww8R8XtLdyx/9wG3XZxH5Kp69CTJd2plyE3nuZfTYsedTMBu/iSfUDDMVvmeYJ9QiimFp8lXVALJePMO+BDrje4hlUZYKOhKfRg/fcN4fqml4R5tc24N324OEB8h95yLeNg4Eh5inusnhNgpR+Fz9M=
+	t=1751650578; cv=none; b=A/cwCDo+d7xs0Wls41+j5PyXSZGEJgRmjmI+pyglFS3Eh1jUQSgz2u7v1b8v1VvynxTDYxxSX6XWW0V/lXgWqXYrbPDulN76I4I8aQrEBAkmkxOHo1KXNO/yiN2np7Ary79z+26E3itBViSd01S67Xm8q0wNbIgKfGRo6xt7ypY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650577; c=relaxed/simple;
-	bh=YEBPecvN+/+CzyYo7nYN0cP1XFT4QG7XKpKI4CPaGq0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TgMAtgfI8Lb66HHdYE4dF6TFChgWh8IfEQeu8k9J4VZfNfkc04bL1XjTACy8rvSxkXUHkfXj84Ljwa7/UXYfS34rClPob/Mgmzx5zKJXh5FiBW6xB1DSPjVdKNEShPgh/HuMe+XzeB63sF3TaDE1tR6kfIiDnw9HEiRlkPWIO8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ft2VgfiE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751650578; c=relaxed/simple;
+	bh=P8Q/hylea7qyRY6tAEIKvRB5w/FGn6Oy3G2/ooSgWv8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aWmORD96+9LntDQyfQYHcAmfWncl9ib1xZ/F7Q7jcT1b6Qe/lr5GgY2WTFHGIHOsizXm86EoJ6pY4KR+726fxOw/O8sjMayqIaTCyadL6LmwoAuABrVmyJSNzB7NrOZ2Yr0apatBpAWfYTU7WyJFwe70z9LOKDnrSU/ds/jnMGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtQrQmCp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ft2VgfiE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4D6C4CEEE;
-	Fri,  4 Jul 2025 17:36:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtQrQmCp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73000C4CEE3;
+	Fri,  4 Jul 2025 17:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751650577;
-	bh=YEBPecvN+/+CzyYo7nYN0cP1XFT4QG7XKpKI4CPaGq0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ft2VgfiEegPPZ9c2w2mnNeJIDEKZSYBczaC2FpJ5NNvFxCoMEXfA0P9bKWRHAlGHH
-	 zCDqqAErJfoMG8hizrKuSRNbn3VqHIK0sxp+IxRcvH1AAglDujUTXsqo+I/eaZ5DUV
-	 msMRiyPaFwt8rkzB/0dMCXcOJq8avdhvBAMuefuB5vzMrlLgVSTpn2YNGDy2b9jS5w
-	 T/hRlgzidro77h7h74aCxkwujDh8cgOwI/5fcUHf1P9dbnjQpVZ2ZJRQesySsnqq5E
-	 DFvWsTVwtDuZ/RE7sGoquCcCWc1bH0C4KNq7Y6DuCw4UNdFGH/1Qe9wYsmIJQ9sxvk
-	 472DBKnQbUCkw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Subject: [RFC/RFT PATCH 0/5] Clean up UFS(-qcom) MCQ situation
-Date: Fri, 04 Jul 2025 19:36:08 +0200
-Message-Id: <20250704-topic-qcom_ufs_mcq_cleanup-v1-0-c70d01b3d334@oss.qualcomm.com>
+	s=k20201202; t=1751650578;
+	bh=P8Q/hylea7qyRY6tAEIKvRB5w/FGn6Oy3G2/ooSgWv8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=FtQrQmCpba/kfwEmdEmBgXI7nkKRXieFuB49/FgDsLqtUtH9KEp1aIoQf4CVb04Pu
+	 +g1eTkG87XohsZTrYhjqw2CJpnGizHpeFy4sr/3msrXMREhBQGqIBgXOEzLKEVzRYG
+	 FAiTsrIOsW6md41O6q144uC0vEvS8OTtZ3mcN4zAcEmlZ+FgPJr1MK2RiRmJzvEj45
+	 k5N7K0uYMWdt+5Jfzkh2HqWcBU2FnZIZeWG2SL0kkkINOo+Wwcjgs7t3QgDmklbD8B
+	 C0rzhgrlDPFtSOaMzOCLjgCUm0gM1NBaXAedM6YjbeV8PNdXbsazCcmX8hPufJwKd7
+	 7XfQaEKuL54Lw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD5B383BA01;
+	Fri,  4 Jul 2025 17:36:43 +0000 (UTC)
+Subject: Re: [GIT PULL] vfs fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250704-vfs-fixes-fa31f5ff8c05@brauner>
+References: <20250704-vfs-fixes-fa31f5ff8c05@brauner>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250704-vfs-fixes-fa31f5ff8c05@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc5.fixes
+X-PR-Tracked-Commit-Id: 1e7ab6f67824343ee3e96f100f0937c393749a8a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2eb7f03acf4ac5db937974e99e75dac4c2c5a83d
+Message-Id: <175165060220.2287194.9579881940381632085.pr-tracker-bot@kernel.org>
+Date: Fri, 04 Jul 2025 17:36:42 +0000
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAgRaGgC/x3MSwqAIBAA0KvErBPsH10lQmSaaqDUtCKI7p60f
- Jv3QCDPFKBLHvB0cWBrIrI0AVy0mUnwGA25zCvZyFIc1jGKHe2mzimoDXeFK2lzOlFQU2elJln
- rFmLgPE18/3k/vO8H/aXYsGwAAAA=
-X-Change-ID: 20250704-topic-qcom_ufs_mcq_cleanup-3e7614ae06a8
-To: Manivannan Sadhasivam <mani@kernel.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Asutosh Das <quic_asutoshd@quicinc.com>, 
- Bart Van Assche <bvanassche@acm.org>, 
- Stanley Chu <stanley.chu@mediatek.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- Can Guo <quic_cang@quicinc.com>, Nitin Rawat <quic_nitirawa@quicinc.com>, 
- linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751650573; l=1343;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=YEBPecvN+/+CzyYo7nYN0cP1XFT4QG7XKpKI4CPaGq0=;
- b=w1Y00gKqqNBo7rsQJ2hO5Loxvywl8yMjuhjpuKoW3IikHg+X9MywHMMhUlfcy5WgqhvWg7z/I
- oPZ5nW6urgxBSENoC7uKNEpcnnSKzRn0ovIzd4G3PkteEhshKdhldSm
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-The initial implementation was quite messy, including requesting
-regions that do not really exist in hardware (or at least not in the
-way they were described).
+The pull request you sent on Fri,  4 Jul 2025 10:36:54 +0200:
 
-As we have no users (and the corresponding dt-bindings were never even
-accepted), remove a whole lot of boilerplate code and clean up the
-software's expectations.
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc5.fixes
 
-Note that this revision does not fix the bindings defficiency yet.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2eb7f03acf4ac5db937974e99e75dac4c2c5a83d
 
-Compile-tested only & not the best code I've written, but I'm looking
-for feedback whether this approach is acceptable.
+Thank you!
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
-Konrad Dybcio (5):
-      ufs: ufs-qcom: Fix UFS base region name in MCQ case
-      ufs: ufs-qcom: Remove inferred MCQ mappings
-      ufs: ufs-qcom: Don't try to map inexistent regions
-      ufs: ufs-qcom: Rename "mcq_sqd" to "mcq_opr"
-      ufs: ufs-qcom: Kill ufshcd_res_info
-
- drivers/ufs/host/ufs-qcom.c      | 151 ++++++++++-----------------------------
- drivers/ufs/host/ufs-qcom.h      |   4 ++
- drivers/ufs/host/ufshcd-pltfrm.c |   4 +-
- include/ufs/ufshcd.h             |  26 +------
- 4 files changed, 45 insertions(+), 140 deletions(-)
----
-base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
-change-id: 20250704-topic-qcom_ufs_mcq_cleanup-3e7614ae06a8
-
-Best regards,
 -- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
