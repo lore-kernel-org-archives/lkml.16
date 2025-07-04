@@ -1,111 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8A32F6FA3;
-	Fri,  4 Jul 2025 08:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16971F4C83;
+	Fri,  4 Jul 2025 09:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.80.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619565; cv=none; b=tta4en+r3vn7VWSqPyQ+5DdNDF53no6SOjGbC3I1xU5YFpRq7HHQKmKfVmNcAgNO1QWxt90cc92IrdufWTGGSLT/xuaxHnVI45bI7sXrvFLsYWtVR10AdNTY3iR5KI4hkD0pK1Ss6aDb7QtUPRu35SwmtJrFZ07eQdHoYCAlONU=
+	t=1751619645; cv=none; b=LE/9zmPrFQIYbjsmWxG3+GTuAFz/tnq54bW2L2rO2qk94G8q2HMVpIn/o/NJ0S9PIk2CTdajdIiyWkn3RJ0WMAb3OycD485IOHj9duQieRaqDAsVAPpMVpHLfqZi2ylb6wlrSmFjiUb1L34uK/srlmpffmvCRgi1ZqyEP2lNhlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619565; c=relaxed/simple;
-	bh=Bbkzj8UT56S4ENmIsLScSyACdmBFtYnZcBu316QUoTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONLKfMtU0wg1RNDYnGk+k9lWnYK/YgV0z4/jkMOz7sDibVI6d32gcPYzw/FI5qyFfHMUlfDZ7U52Fyfh3oZT1SNFcbBxl54pu/B3w6HZrvk/zbXlKcTzsh8K76jn6cgR2pNRmrzEzNwUCFyFiDXt43VFtU5LXlRqeddUGtuCOnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAD5D152B;
-	Fri,  4 Jul 2025 01:59:07 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D663F6A8;
-	Fri,  4 Jul 2025 01:59:19 -0700 (PDT)
-Date: Fri, 4 Jul 2025 09:59:16 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Chuck Cannon <chuck.cannon@nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Souvik Chakravarty <souvik.chakravarty@arm.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, <arm-scmi@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] firmware: arm_scmi: imx: Support discovering
- buildinfo of MISC protocol
-Message-ID: <aGeX5NQycd5WFxZ8@bogus>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-2-2b99481fe825@nxp.com>
- <aGVOhMr7vg9Sl7Z2@bogus>
- <20250704051204.GB4525@nxa18884-linux>
+	s=arc-20240116; t=1751619645; c=relaxed/simple;
+	bh=w/q0mf9VDsgMFiA/gtkemoS1upQXm3k3QhkFgnYWqbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUBcbV1FYpJ3I+yDYC19Qm2Vhmm7+GR4LLPBdn5SqnhnIjvnfZLLAsUUbfSrAR1ry/tXpddEcldQK+fMh5x+gg+886PIaNyGzMtCprKRt7gMtC/71V6MnSgHArMkk7PpCfn/SWMBDS1VVVuOBdJ2qfv7aWM1i1yd0g9BVSgAdqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YkwxkN/R; arc=none smtp.client-ip=43.155.80.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YkwxkN/R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1751619601;
+	bh=7ADyi98oCBUBFtIDzaErwTJf/MpyAGpx68mKU987mZo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=YkwxkN/Rgnw3VwYFrbR4nPGTrwv8eYjVInshp0KU2DRuokGKethyY7zkcM++Yk/v5
+	 AztK0btgrN1846RDR3/bN3EHqG6/WQxSETfphk8HELJkIEOVhFG3QRtEwp4X2JOQ1e
+	 wu7DTWCgEa5eZefQKoUMKhebiC+KQl+DP5SmhOdI=
+X-QQ-mid: zesmtpip4t1751619588t1456e628
+X-QQ-Originating-IP: WrMrknaj4hw3ffa6ykftdBWrGLkPMePuJL2hmLCXUOg=
+Received: from avenger-e500 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 04 Jul 2025 16:59:46 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11834150841567911763
+EX-QQ-RecipientCnt: 9
+From: WangYuli <wangyuli@uniontech.com>
+To: richard.henderson@linaro.org,
+	mattst88@gmail.com,
+	wangyuli@uniontech.com
+Cc: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	wangyuli@deepin.org
+Subject: [PATCH RESEND] alpha/boot: Ignore vmlinux
+Date: Fri,  4 Jul 2025 16:59:45 +0800
+Message-ID: <6269AF2792BA8D05+20250704085945.317850-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704051204.GB4525@nxa18884-linux>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MqDJPKMI4IpJgmX5oXdfqoyv03NNkVBno93nu/otMq+MIA8l5HXW8qyT
+	8wGaSk4U2Dqz+ISYd4fmlMQlYF64KI92CTJ6gbQZp4LuUAQrKofaVNu+Y/goyRGTWTsG5b+
+	QJToj2AYeF79t+Xe+Pzc9aXNBGF6QxMM9VtU41qMUNMlkSOY/6zsiUHDL6lDKHXV4QRTtst
+	fgRFx8nrJ3vHnTGmsnAQRxMS4Eww16QenqiH8PaLj86OxhWuFxafvxzQ8kJSbIRVlSppE7A
+	XZfSziFNfYRILATzxohuV2fMUFky7jXZn1BFB1bvs80hc49n5qWt25w6oAK4+ZZOhI3+LWX
+	BJdbYAzfz62GOu0xy3q+AoTb1nB87TO0JPCoX+rY+uPnyUz+bkG/hKdhq7KjHKHBbRqIxUQ
+	HWMMBi27hnNjd7UGJUEdCV+8EgT5KX9RfIYc5uwJuKVSKVmSZ+94R5HtuXmMzTx67RD6lvG
+	lAV42TUpyf3ZqTbdZB4gKR7os0BVCahn5XF01SN5qQH2XtQPUUuKoHUX0zxpdhfnsBPt4L0
+	o5lpn/ld9kUqu4ouwlAIPTp1VJbOi2HR/kTrKstmLW4VG3Sm/o42icR9FneaUi1HR9NDrIr
+	0AnoItDWXVf2QHbptE/bi2TNqnIPFJs8ue5J6X9K6ws/HIbYrTQFnkU7LkLFDZ9QdrFj9KY
+	HkHH4XizhPUVBkwxHHHjBqdaD7OGuZcBHIWHqSaazUrbn8Hbpe++QulgA6qkC+14LJRjFqK
+	I9ZG54cNlaUerstFbpoJ9hmCJbiV/p+lxr1eQdxS+Z9siPmOYjobfgF52K8FhYxo46yltb1
+	IAkDK5HeUxG23w7lincjHQ6vktr4/715l/5z3zUgAYpnbwr92NWr9VAv69c9BXWOeqtHySK
+	n1wOkDjHxe3urgGPII6T0fB4cQ4NLSUnIUdkGocdml5JiCoC42ROqKMYnFotc3cigbybZhq
+	LCMsrd46nAGBziqe/U0n7SAE8MVwGqd0Q+S37N0Wv5KnD1nQOxZ1od8ZOT3qAQNO7ogb8R2
+	pX2E98ZKRIKibiy5YLSgwZq2WFUFW1+R6GqIVUh0fjFlqwMBsi1ggoNdyi0u5cPC8K8CXjb
+	w==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Jul 04, 2025 at 01:12:04PM +0800, Peng Fan wrote:
-> Hi Sudeep,
-> 
-> On Wed, Jul 02, 2025 at 04:21:40PM +0100, Sudeep Holla wrote:
-> >On Fri, Jun 27, 2025 at 02:03:45PM +0800, Peng Fan wrote:
-> >> MISC protocol supports discovering the System Manager(SM) build
-> >> information including build commit, build time and etc. Add the API
-> >> for user to retrieve the information from SM.
-> >> 
-> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> ---
-> >>  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 35 ++++++++++++++++++++++
-> >>  include/linux/scmi_imx_protocol.h                  | 12 ++++++++
-> >>  2 files changed, 47 insertions(+)
-> >> 
-> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> >> index a8915d3b4df518719d56bfff38922625ad9b70f6..1b24d070c6f4856b92f515fcdba5836fd6498ce6 100644
-> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> >> @@ -25,6 +25,7 @@
-> >>  enum scmi_imx_misc_protocol_cmd {
-> >>  	SCMI_IMX_MISC_CTRL_SET	= 0x3,
-> >>  	SCMI_IMX_MISC_CTRL_GET	= 0x4,
-> >> +	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
-> >
-> >I clearly missed to raise this point when the documentation for this command
-> >was added. Anyways I assume, you had explored all the options before adding
-> >this as generic tools may not be able to pick this up. Instead, I would have
-> >just stuck with vendor version in the standard protocol with build number
-> >embedded into it. The date and other info must be implicit from the build.
-> >
-> >I try to be more cautious and ask questions in the future as I don't want
-> >vendor extensions to be dumping ground for really random things like this.
-> 
-> +Souvik
-> 
-> And Loop our firmware owner to help comment. I just add what the firmware
-> supports here and allow linux to see the information when the firmware
-> does not have uart output in some builds.
-> 
-> From SCMI spec, it does not restrict what vendor extensions should be like
-> as I know. So I am not sure what we should do when we define vendor
-> extensions and what I should do next for this patch.
-> 
+The vmlinux file would be generated when building kernel.
 
-Just to be clear, I am not against vendor extensions. I am just saying
-this interface is not strictly needed. The vendor version could encode
-this nicely and you could have a map. The only and main concern is having
-such extensions will not help generic tools as these are very vendor specific.
+Add it to .gitignore to ensure Git does not track it.
 
-It is good to have firmware version and other related details in a standard
-format that anyone can understand without the need to dig deeper into vendor
-specific extensions.
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/alpha/boot/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 arch/alpha/boot/.gitignore
 
-Again I am not saying to drop these interfaces, but you will get questioned
-for its use in the kernel if that doesn't seem like the right approach.
-
+diff --git a/arch/alpha/boot/.gitignore b/arch/alpha/boot/.gitignore
+new file mode 100644
+index 000000000000..c85710c597e7
+--- /dev/null
++++ b/arch/alpha/boot/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++vmlinux
 -- 
-Regards,
-Sudeep
+2.50.0
+
