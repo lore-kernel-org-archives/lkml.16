@@ -1,122 +1,85 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAB0264615;
-	Fri,  4 Jul 2025 06:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6154C72634;
+	Fri,  4 Jul 2025 07:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612067; cv=none; b=INwqgWHiIrAgwojvyA0n3qgu+UBCigIMmbXjepWq5CO02YNbUAnap/Pcn0ZhIO5PmEyvf33V/loqDlfayl4s43awgXKlsu9TUDu5DamjtXh93Xtd4grEiHLyydwTK1NvqEgnl+OO+3u17Fb8V7gFvbEd7gRu6Z2KyehnVK6C2d8=
+	t=1751612462; cv=none; b=V0D/cJndWLHbcuneQ9dPZkceLusp33KdCImuMjte+NcZOHyJCdKS18SwLjSylOOU1KbzvhzOHJcX26nyKxbZe/VdOddY7jNIdbASt4k9pMPX8ZuAaNVGbgC9NCpYsq/5C3f20JERU5EMXD3fiDqwD3hyoiEtuDlOUM09706tp4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612067; c=relaxed/simple;
-	bh=z6tGLWoV40fbJyXLNAI+FtkufrSO5BqpPKdSK3iZ0Mc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CRXjQKEg+RTftKqx4ddsp1baQa3uEUQuyxLNVYR6M725M9YjtpGOac0mV0AQvoBgPacTaSdELp+W5qebhjKoyQ8EAkwcJJ9mCKLYZeDiR1FLGKnb1fiP7N+wYtkNvZPo9ssvFAmsHcakeVNMUVIXwIfYSuqn/9d1mQPewVqLiOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hn1gtQce; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751612462; c=relaxed/simple;
+	bh=9WrWDigzEJpLGzDtxoaenJht7v54bH1p5TaHigl/27s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l5IN4UM8xouT8TvJou0I6YrSR0xY0vTAgdHr5ScMtzFtuZDmW7tYCgQwluCoDSedBV7hn5VGhQUyy0gHMkAOu18AB0doXmH/gu0Vyj/5KizScikHjlcC0SZMmtL2CQZmMliKKVqWj8So2SykS4gBVF3sAXH+yumS5DymP+iUltk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hj0KEHsv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hn1gtQce"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563GCl1F007067;
-	Fri, 4 Jul 2025 06:54:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wZEI3ggObilLEiLudoV157ZQ5GVhwPZ91BoxAzz6WAY=; b=hn1gtQceJN9YIoOA
-	fO/OmfNrN/vdwIWIrmkHgF/410Xy2uZ69CLDrgSK+MjFEL3CkrVVoJWMPm1dvCUI
-	YjW5cTCzC640Ry8AgOMaIXvfgAIKV8GIb/Isg0WwWekzjbo3f6dDt68hynlx2XSQ
-	5W+XWSoQ7pggT6M/LIMxtDU5KrM+qM5reDVKWt+T29zVLl97FWc4//UzYwvSIbJM
-	bLN2t6zOc4tFkoHV9nLSZsQCvN633ti2JlW0wmKI217r6l20L9SYbX4ag5jxgkac
-	q68HMsGk99v33QsAvoJfFfarJeI9Q1S8i31kWBdgb8NRXFwD+zd9c9jz7tQZCT1L
-	O1H4Jw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jqb2t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 06:54:14 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5646sDV1015451
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 06:54:13 GMT
-Received: from [10.239.105.140] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
- 2025 23:54:11 -0700
-Message-ID: <80b54138-b5ae-49db-8e94-42de6de05bf8@quicinc.com>
-Date: Fri, 4 Jul 2025 14:54:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hj0KEHsv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4345FC4CEE3;
+	Fri,  4 Jul 2025 07:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751612462;
+	bh=9WrWDigzEJpLGzDtxoaenJht7v54bH1p5TaHigl/27s=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Hj0KEHsvw42SoriIkDAhIPMCwCaMtsVv41FqOxGhHzrJGJcys2MKp8H8NsiF1Ipxn
+	 ml3sevjBVDYRHvzTjtfLP+46kcSDnxcuHqoAIvN50/3Ud/OwfSbitL5okFsXhBs/e3
+	 ufjrPxaK+NjXpqGQ8tTkK81dgYJhu/EPdm9h7rqc98STK6QV22NkM5XckLzDxvdLZ3
+	 0LU3vU4KYY92UA00IHKgZl1peMg8oPJDS9KmO3gI6GIJshpVjBIj3mes17vWzKGhr1
+	 6DEq6cg4adxxcPu+RcHdRNmytwUXhn17R7/HVkBekjwSuP5AdfeifrLYVye+Tz4rQr
+	 ube95H2ev3Fhw==
+Date: Fri, 4 Jul 2025 09:00:57 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, 
+	linux-i2c <linux-i2c@vger.kernel.org>, Andi Shyti <andi.shyti@kernel.org>
+Subject: [GIT PULL] i2c-host-fixes for v6.16-rc5
+Message-ID: <3ygvpeurj6vvve7d2vtlpyygjobbj2yzhgkpmlvyrxbpw24udw@o5zlnw6tx4ju>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 2/3] virtio-spi: Add virtio-spi.h
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, <broonie@kernel.org>,
-        <virtio-dev@lists.linux.dev>, <viresh.kumar@linaro.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hdanton@sina.com>, <qiang4.zhang@linux.intel.com>,
-        <alex.bennee@linaro.org>
-CC: <quic_ztu@quicinc.com>
-References: <20250620041230.731504-1-quic_haixcui@quicinc.com>
- <20250620041230.731504-3-quic_haixcui@quicinc.com>
- <1382320e-e5ae-47c4-be82-ab438032eac4@quicinc.com>
-Content-Language: en-US
-From: Haixu Cui <quic_haixcui@quicinc.com>
-In-Reply-To: <1382320e-e5ae-47c4-be82-ab438032eac4@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=68677a96 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=QJtq3Um7bvPkYqldaawA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: LRGiIWRl6RSwnRe6sGI1M5mStYhnzrHw
-X-Proofpoint-GUID: LRGiIWRl6RSwnRe6sGI1M5mStYhnzrHw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA1MiBTYWx0ZWRfX+27AnD4Hs7qw
- oxzDNY/YdRd8mMZoMUgTdFYZ+6bey6MAhN28Wk5l9q9BQCIRm5ghlHPDIxP9xAtzsaYyF0uz5MZ
- VlFUZztGOqZ2zhojDb/pX6tKLEHA48EPm17501PxKJ1H0dNk9KNEhiQCmJtTfLcMUi01J6ZsC+T
- y9wYercuJy4GYQ+LvgVrxcmwvzqukDl27ZHf+R3akd+/E+R5Ypy1hdPBPem8BONQZImBefbhtmg
- sUyhS5u7VsIyTSWNcWGk+j86qXdGl+M+wZ93DwiiEXAbhCU6/6c8znxVk7uj/5aG/b9foJXqIVQ
- a2z8OWsudenJXx7qAohrCFjRYSfZCZlKnrNG5t98TH0aHMrhH7NmcVk5FR+vindaQkq/YtqzxlH
- zVK2cstkutfbn5IGBHh49ofaUBp0OK4BYEOEgMLAnq9qxifu4dD801UNyEbEuMSAnhvq8zcC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_02,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=818 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Wolfram,
 
+here's the fixes pull request. Nothing fancy this week, all seems
+normal.
 
-On 6/30/2025 2:59 PM, Mukesh Kumar Savaliya wrote:
-> 
-> 
-> On 6/20/2025 9:42 AM, Haixu Cui wrote:
->> Add virtio-spi.h header for virtio SPI.
->>
->> Signed-off-by: Haixu Cui <quic_haixcui@quicinc.com>
->> ---
->>   include/uapi/linux/virtio_spi.h | 185 ++++++++++++++++++++++++++++++++
->>   1 file changed, 185 insertions(+)
->>   create mode 100644 include/uapi/linux/virtio_spi.h
+Have a great weekend,
+Andi
 
->> + * @max_cs_setup_ns: the maximum delay supported after chipselect is 
->> asserted,
-> And before clock start. may also sound good, if we can write "delay 
-> between CS assert to clock start"
+The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
 
-I follow the existing comment in 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/spi/spi.h?h=v6.16-rc4#n166, 
-where the cs_setup is described only in terms of the delay after CS is 
-asserted, without explicitly referencing the clock signal.
-To maintain consistency, I kept the comment focused on the relationship 
-between the delay and the CS signal alone.
+  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-fixes-6.16-rc5
+
+for you to fetch changes up to 5f05fc6e2218db7ecc52c60eb34b707fe69262c2:
+
+  dt-bindings: i2c: realtek,rtl9301: Fix missing 'reg' constraint (2025-07-02 17:23:59 +0200)
+
+----------------------------------------------------------------
+i2c-host-fixes for v6.16-rc5
+
+designware: initialise msg_write_idx during transfer
+microchip: check return value from core xfer call
+realtek: add 'reg' property constraint to the device tree
+
+----------------------------------------------------------------
+Conor Dooley (1):
+      i2c: microchip-core: re-fix fake detections w/ i2cdetect
+
+Krzysztof Kozlowski (1):
+      dt-bindings: i2c: realtek,rtl9301: Fix missing 'reg' constraint
+
+Michael J. Ruhl (1):
+      i2c/designware: Fix an initialization issue
+
+ Documentation/devicetree/bindings/i2c/realtek,rtl9301-i2c.yaml | 3 ++-
+ drivers/i2c/busses/i2c-designware-master.c                     | 1 +
+ drivers/i2c/busses/i2c-microchip-corei2c.c                     | 6 +++++-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
