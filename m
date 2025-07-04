@@ -1,128 +1,136 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3262FC3BF;
-	Fri,  4 Jul 2025 13:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A230115E;
+	Fri,  4 Jul 2025 13:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751634038; cv=none; b=deZTD8Qj1t9jASUbU7qCpQaifq+gqk6W9XQaQK4yuh+q2rf18xVL6k7h3ZaezMgfGjsmfzf3Hk4B2JmTJd7HRaXpC7gf0lmin13Lf6hpEnDzCAe9JM8JbAo0gkcp1ZTshyrUx4WL1dVHQBU/aqRBRJtgXyNKddjbs54KlNMdx4o=
+	t=1751634040; cv=none; b=SKe0fAGSOx1JFqKAcC7jmbgGSKazfi17EXF98nTfCmeLnq5yV7JyZniqn3sNm6fGwQLfnaIfSZLVUC+FbTQn4OP/RgdcfInNo+4CMKE5qavggoSjnODOt4nhk3dqf3bDU2yp8zT4MMt9x24YnXYwbL4otgL1SIEvJhq/e6tLIH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751634038; c=relaxed/simple;
-	bh=v7lU4f5zMr8N+ikd3EfPfeZFUTJTKPOhU0exZZftG6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cF5e+GGzqvQZsYaJ5utYYdyYORcHPkLuJapYUK8CxCUmJ9FOUPu9zRQCYopTa1yl0ZVj4ciE2BJebVixv8zALO4u9w7pemwlNdztl6FwbSo5oquVmyaK5BnxMilDn7of1ZuWLmFiTivQ8tVpqjQqVQsqI+00MQKwTYUed4ZxqIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k3tUcUj6; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751634040; c=relaxed/simple;
+	bh=PQ+uuvbgXKFc5vIr220QI1Lf8oYUGvsoSa+Kga5uCxI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=CyR8vl9fWmINm7RKWId4dKPyemJ+9FqSebnWLZfFSs+UEEcvziTdvmE78TALAjSnNGurITdNjyS+SEu8DCBS807qDW6WL/bDrnQZx5dCJuxYJE94bbP6/KZGu2OL2Hm6q/X0mtxxoz1z+F233S/Li37GmVT0W4joNTzs5rGAUGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mi+LrZHj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3tUcUj6"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23636167b30so9572475ad.1;
-        Fri, 04 Jul 2025 06:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751634035; x=1752238835; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mQGjws5M8IuXv7Hc22/iewWiFVP1hrsYWYglQueIYvY=;
-        b=k3tUcUj69uwQUwrGYAIZG0+88/Q4MNR7NvZgVteeRnCTLtgCo1Dv9S4QLOGhF8uqsa
-         uqzBbKKZcMRtumb2WoDGHNJ3qH98TeXyPCc/5IpUBIuc57MGdWHE3dY+5E+sDAkHUqI/
-         Gs8bUrMs4uWX05QzI3wPhe1/fNmz7YwdKs+sOGUY7KJnvI+gxxAVLI6xjWZtKmS/hHlc
-         ZYxZivxKshlEmD+hFpkPYLWFEJX4x/QJ1Qqi2Hcp+Aiwco2GFdmHS0DNwAu8FFNzNeN6
-         0yJfu4TiD7xK1yyRM4oBcbr+BrtdTQ+EObvlWR0sGKYRIesKPr6olMqcSwWbEgKvPtUD
-         x7Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751634035; x=1752238835;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQGjws5M8IuXv7Hc22/iewWiFVP1hrsYWYglQueIYvY=;
-        b=D8tbO5DgijD4g1hpQckwsu1m0vVbst3BG6OfG2gnylp6QRpzlaWFfu+IPVeYKohn1F
-         w44W/Z9n3b3Njnaz4VXrFTFaFtiUVBozHXO1jJ8wDAk4LR7lKl/9yWk7ZxzQG5wHrlmu
-         iBEhPEMeAKVhr1fRQzta/u0cSW/AjZOZxqiH5CLVM7XFuK9gkCPrOANALJir+bZeXib5
-         VUeMB4UuOS5AdXUNcHmrFZjrtlcfL+M7Lh1QNUtDTWaGxcaszuvNXDVm5jwtnRNVbxY0
-         nPSrbNoKodq+ulZb0nC+5g50Ma/eyBmZEB8sme9L6e9aG4tMhZpbUDTlE6FEig5moktT
-         4AEA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8IEisgjYqJ3bC/Mw760rg7Tx8YobtLinY+Qg9BkcM3moony2A9pmcGpmQNSsinFZ/CJuIS8JF8kQSp/8s@vger.kernel.org, AJvYcCVG4F0PaoeqN+2nwD51R5F3ZbNQ9beB3mvR/H9zKy5StAe7yBznqsunYhOsv4M+UTMBkGlisLMrd3Lp@vger.kernel.org, AJvYcCVZfcAScNtAuDgKoZmH82PdrG+4GNxJ/XUwOrVEmXaozXKTQosEE5tO6u6F2hKdFu8vgK7rA2ko3JxG@vger.kernel.org, AJvYcCWO4eglMDB113hsutquTAwoUiBOq9o7COoWl84CE4xl9Ms9HeG5vrfyndSU24H/5HIeExajzQItAVEwIUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYwiCUsV0Hw6wfwIZpXA3VaPKTaF2pNmjoxjri9aj/tDSX6ip1
-	Q9D8+jLEAPzg/CIgtxvHv2PiguD/2+U/z3GYrEu4zyKJToFB4tudvzfK
-X-Gm-Gg: ASbGncvCy9yvw70MnNk1rvMnd7I/MIZZdQ7XiokwLn5RS1SikcT2jrDh9wAVIJYz2L/
-	YZHtoE8b0N7WqTErtXCTn4Gy7r3b8UZo1NI8eX99GHh3YFn0xP9sHMVtXnXTOxY4oPJlJ32hcBj
-	2T+uMjWcPNODESHdeYZWb4VjG3UFda8oc1S0Lg+MXg3/0VPqPSfr4kdQgHxsH0P/MTc6t/YGBxi
-	q8yNzHMV8mIpKRs4Ezk1o4Hg5Fhca9QttuaUpAZAf7Y5DdOPcd09/yNeSdoTqQel+iUO2gorigk
-	Oc2wocyVT2OJkW+En4sRAQxvc/6QFK2iE/uO3yFEVSdVZF/26X3htTuFLt85HbOlCZeLMgoYRf0
-	=
-X-Google-Smtp-Source: AGHT+IEDaXi0mlnwq8CmOY2xOIWopoVkpF+HHxHqff0HGahclQAW6sBorP5XQ2TgzgwJAV4gzOj4ZA==
-X-Received: by 2002:a17:903:27cc:b0:235:225d:30a2 with SMTP id d9443c01a7336-23c85ec7329mr33981495ad.48.1751634035360;
-        Fri, 04 Jul 2025 06:00:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c84581113sm19185835ad.183.2025.07.04.06.00.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 06:00:34 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 4 Jul 2025 06:00:33 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, jdelvare@suse.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	corbet@lwn.net, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH] drivers: hwmon: add EMC2101 driver
-Message-ID: <c70c3d26-c2c7-4e5b-b415-8d8c20f922f1@roeck-us.net>
-References: <20250701181228.1196102-1-noltari@gmail.com>
- <20250701181228.1196102-4-noltari@gmail.com>
- <c893384d-4134-4510-be87-11a2c9ba6cc7@kernel.org>
- <CAKR-sGeSPHu5DiFL2sX=SdET_jzbepo30qguscUjzYkX-Aub0Q@mail.gmail.com>
- <9df1cc49-34bd-42d4-96dc-ec9b512e0c5f@roeck-us.net>
- <CAKR-sGcLkihNKAQpPR6y3u2aCA6xmTd0mp2Ko15e3QZWrc4Dgg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mi+LrZHj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F840C4CEE3;
+	Fri,  4 Jul 2025 13:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751634040;
+	bh=PQ+uuvbgXKFc5vIr220QI1Lf8oYUGvsoSa+Kga5uCxI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=mi+LrZHjF+yRfLmrMqCm45+w6sUTBWLIFLln4t06TCRfNNID72odMCaUkq6P7uCUX
+	 6UUsEVXl8dcAwtsGpEQ4be8tzBNVlVqFR/dHUws6kyBu1YvtpkQhwwKUxloNwWR9R/
+	 IGSdHN0MxrYLaSCkpAV78+BdMxg3sCNdQTC9sRmKmYWFLMqIw4rrFCZRyV7KRJtd2E
+	 0j73lXtusTnleqcS0NxrPxjaCD0MHAoeWaeskbB4i7ET3pELASmMynDmabvpgju8s5
+	 lM5kWnUgAXLXzxzcI7AEuaVKCn3OYtKdR4/uhCwyRJ5lqmW3Ng5o+Qj0VkMX0rxdf6
+	 342H5Q7Nz/erA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKR-sGcLkihNKAQpPR6y3u2aCA6xmTd0mp2Ko15e3QZWrc4Dgg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 15:00:24 +0200
+Message-Id: <DB3AFTUC22W1.39C4DMWSENZGB@kernel.org>
+Subject: Re: [PATCH v13 3/5] rust: replace `CStr` with `core::ffi::CStr`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
+ <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
+ <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>, "Thomas Zimmermann"
+ <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Luis Chamberlain"
+ <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "FUJITA
+ Tomonori" <fujita.tomonori@gmail.com>, "Rob Herring" <robh@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Will Deacon"
+ <will@kernel.org>, "Waiman Long" <longman@redhat.com>, "Nathan Chancellor"
+ <nathan@kernel.org>, "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt"
+ <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit"
+ <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, "Arnd Bergmann" <arnd@arndb.de>, "Jens
+ Axboe" <axboe@kernel.dk>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Dave Ertman" <david.m.ertman@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, "Leon Romanovsky" <leon@kernel.org>, "Breno
+ Leitao" <leitao@debian.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
+ "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
+ <sboyd@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-3-29f7d3eb97a6@gmail.com>
+In-Reply-To: <20250701-cstr-core-v13-3-29f7d3eb97a6@gmail.com>
 
-On Fri, Jul 04, 2025 at 09:26:16AM +0200, Álvaro Fernández Rojas wrote:
-> Hi Guenter,
-> 
-> El vie, 4 jul 2025 a las 2:25, Guenter Roeck (<linux@roeck-us.net>) escribió:
-> >
-> > On Thu, Jul 03, 2025 at 09:23:41AM +0200, Álvaro Fernández Rojas wrote:
-> > > >
-> > > > Add a comment describing what you are protecting here. It looks so far
-> > > > like you could just use regmap and drop the mutex, but I didn't check
-> > > > thoroughly.
-> > >
-> > > The EMC2101 datasheet is explicit about the Look Up Table registers
-> > > (REG_FAN_LUT_TEMP and REG_FAN_LUT_SPEED) being RO if FAN_LUT_DISABLE
-> > > isn't set, so I believe that we need the mutex even if we switch to
-> > > regmap.
-> > > I will add an explanation with that in the next version.
-> > > Should I still switch the implementation to regmap considering that we
-> > > need a mutex?
-> > >
-> > What does r/w vs. r/o register access have to do with locking ?
-> 
-> FAN_LUT_DISABLE bit can be set or cleared when pwm_enable is modified,
-> but we need it to be set in order to be able to modify
-> REG_FAN_LUT_TEMP and REG_FAN_LUT_SPEED registers.
-> If FAN_LUT_DISABLE bit isn't set, any attempt to modify
-> REG_FAN_LUT_TEMP and REG_FAN_LUT_SPEED registers won't work because
-> they would be RO.
-> Therefore, we need a lock to ensure that FAN_LUT_DISABLE is kept while
-> modifying those registers.
-> Please, take a look at emc2101_pwm_enable_write() and
-> __pwm_auto_point_temp_store().
-> 
-Thanks for the clarification. Please add that as comment into the code.
+On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
+> `kernel::ffi::CStr` was introduced in commit d126d2380131 ("rust: str:
+> add `CStr` type") in November 2022 as an upstreaming of earlier work
+> that was done in May 2021[0]. That earlier work, having predated the
+> inclusion of `CStr` in `core`, largely duplicated the implementation of
+> `std::ffi::CStr`.
+>
+> `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64 in
+> September 2022. Hence replace `kernel::str::CStr` with `core::ffi::CStr`
+> to reduce our custom code footprint, and retain needed custom
+> functionality through an extension trait.
+>
+> C-String literals were added in Rust 1.77, while our MSRV is 1.78. Thus
+> opportunistically replace instances of `kernel::c_str!` with C-String
+> literals where other code changes were already necessary or where
+> existing code triggered clippy lints; the rest will be done in a later
+> commit.
+>
+> Link: https://github.com/Rust-for-Linux/linux/commit/faa3cbcca03d0dec8f8e=
+43f1d8d5c0860d98a23f [0]
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_panic_qr.rs |   2 +-
+>  rust/kernel/auxiliary.rs        |   4 +-
+>  rust/kernel/configfs.rs         |   4 +-
+>  rust/kernel/cpufreq.rs          |   2 +-
+>  rust/kernel/device.rs           |   4 +-
+>  rust/kernel/drm/device.rs       |   4 +-
+>  rust/kernel/error.rs            |   4 +-
+>  rust/kernel/firmware.rs         |  11 +-
+>  rust/kernel/kunit.rs            |   6 +-
+>  rust/kernel/miscdevice.rs       |   2 +-
+>  rust/kernel/net/phy.rs          |   2 +-
+>  rust/kernel/of.rs               |   2 +-
+>  rust/kernel/prelude.rs          |   5 +-
+>  rust/kernel/seq_file.rs         |   4 +-
+>  rust/kernel/str.rs              | 394 +++++++++++-----------------------=
+------
+>  rust/kernel/sync/condvar.rs     |   2 +-
+>  rust/kernel/sync/lock.rs        |   2 +-
+>  rust/kernel/sync/lock/global.rs |   2 +-
+>  samples/rust/rust_configfs.rs   |   2 +-
+>  19 files changed, 140 insertions(+), 318 deletions(-)
 
-Regmap is still valuable even if local locking is needed. It provides
-caching for non-volatile registers, and it provides various useful API
-functions (for example for bit value changes) which you otherwise have
-to implement by hand.
+Is it also possible to split this? First rename the existing functions
+on our CStr to match upstream & then you don't need to do the rename &
+removal of our CStr in the same patch?
 
-Guenter
+---
+Cheers,
+Benno
