@@ -1,92 +1,147 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0441D86C6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F71C84AB;
+	Fri,  4 Jul 2025 14:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751639021; cv=none; b=ncJCV++ebFM86naHxbjZ7bcAJOT6Fv+J4AHSZaromHMWOT20E9hZZy3zXGFDmu6BEXd2XKE2HtBdFExCgqVw08H7326y1XPWmn3sQYC9a0GRuo3CXmpNKF3BGRDJR88lteZoPQNitOIsHnmXQF7YjaVnnW5/UlER1QDTXQHphNY=
+	t=1751639047; cv=none; b=OfE6D8Ilp8r9l6hThiFP9y6Nodr5lMrESdtOKYO1Qm+PoxAsK0DP4/2O9Bwn1J1GFlhBpoYlLeeVvGeDPsoRr94YNBkNtt7EAX40/GUODqb9aihqfLm0mMvsMl6gE8Tu7WXGZd8XBqUQf+/bIAW9I9G31KSBZrD63+iaOeYKJTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751639021; c=relaxed/simple;
-	bh=gj4rXTi5xhvc6UX7OZe6K8Cx8rlffm0qUchexNCC4L0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZxoF1e8VFLDwgqLQirpmN58EOPQBSrGeuZaJGsHyX4u+oPSD3u9ReSjGyJX5Z9551z4t7YrvjR0XU+JqMrXRXgqEgOSq1bcNQvM/Y3NTW7Evzy3GocSGQL6KPoBioSnZD1e5IGpJGbBpsvO8QecmRpXRfpKe7jVs8htRYiqwkgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iw3CUVpA; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751639047; c=relaxed/simple;
+	bh=gqGr7YMNSNGMmPO5TwyjCTxRgNuwtUce0xo5IGee5Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NIREuFqk/HdeBpHa8Gf+TlctmsR3JX6zCCHbPg0gJY2VUOFFx8i/jVjs3Y8uco9s0X4csGrvnYirSsBf26BfmY8luAIpmR9KGj4jWUH6oip+eOVkqbF5XMaHhC9GUyyNQVo/TZzLq6k2lSXmuZZUp7bNHK5ktKJ2G9XRs125GwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKgRU8Hc; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iw3CUVpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751639015;
-	bh=gj4rXTi5xhvc6UX7OZe6K8Cx8rlffm0qUchexNCC4L0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=iw3CUVpAyfZir4XEsTPjG5HuHvHHttxjJ8tA2DNO7nE2SUAeIVVZoggYhW3v8QQjL
-	 EMwya6C7CY7j3J7xkC1oElN/2mYvpRumzRy/pZUVA2WxiCWAUkcKvx2RjGhtjQXYxE
-	 xdZVR8kyQ97ZriC9bEXoenGZn8FFRaAgXmCry7weStgFcAkRlWNwPkQvdSWXrYkXTE
-	 mDu9sFcKaxsIcq7fbVGK+MTZQ6PLW0XlYkpUfOmmhn7mtZt3XTLMhw7ACU339ESko7
-	 g/4p6cP1olCYlo+buESrIiAkJONqpPaAv+E3mSfW/7/r6ozjscsli/y0qjfyuV4Li3
-	 PIIKxkcB/2RDg==
-Received: from localhost (unknown [212.93.144.165])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 589AA17E0F3F;
-	Fri,  4 Jul 2025 16:23:35 +0200 (CEST)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Fri, 04 Jul 2025 17:23:26 +0300
-Subject: [PATCH 5/5] arm64: defconfig: Enable DW HDMI QP CEC support
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKgRU8Hc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751639046; x=1783175046;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gqGr7YMNSNGMmPO5TwyjCTxRgNuwtUce0xo5IGee5Nc=;
+  b=NKgRU8HcQskjes1wfy0m/h6Wj7TlCFjDNOthhB/qfDa/msyUKNY7aQyj
+   azJ8wlGS7aJz/zo9WkWv3plUUOnhNrEOQ3uJvhSbZFTWXXK5Cr5PmdvHj
+   IZ3rkIvujL8REPUjhrU217xmfRSIDmsxLT4rpgM9Hh+Nm9q+HMfsTCNfq
+   oAN6fVRoxdnbuzObYIERjGXBf+UBrC283weDKNHyyMhKDrn3HiI0yucXL
+   vL91leTZLrVVLex7cK6O1tNX/Z10ueNZCbVKXD/0WwgNj1Y9HjZ993/I/
+   bjHhYEUX0r1F33v6AEbECtdu1QbuUeDyYpKw+fDA2Y/HWgJa0kHBNvujl
+   g==;
+X-CSE-ConnectionGUID: S2Yd6CuoSh+9MgRlTFXLfQ==
+X-CSE-MsgGUID: Ay03D01YR0mGvZPPMFOUSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53846979"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="53846979"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 07:24:05 -0700
+X-CSE-ConnectionGUID: 4S/0i2I+QNCR9MadHUaojw==
+X-CSE-MsgGUID: pT61i3k+SwGGxvI3+kg+qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="154078646"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 04 Jul 2025 07:24:02 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXhKZ-0003nH-1p;
+	Fri, 04 Jul 2025 14:23:59 +0000
+Date: Fri, 4 Jul 2025 22:23:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jianping.Shen@de.bosch.com, jic23@kernel.org, lars@metafoo.de,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dima.fedrau@gmail.com, marcelo.schmitt1@gmail.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Christian.Lorenz3@de.bosch.com,
+	Ulrike.Frauendorf@de.bosch.com, Kai.Dolde@de.bosch.com
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] iio: imu: smi330: Add driver
+Message-ID: <202507042238.UDo16CzT-lkp@intel.com>
+References: <20250703153823.806073-3-Jianping.Shen@de.bosch.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-rk3588-hdmi-cec-v1-5-2bd8de8700cd@collabora.com>
-References: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
-In-Reply-To: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
-To: Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703153823.806073-3-Jianping.Shen@de.bosch.com>
 
-Enable support for the CEC interface of the Synopsys DesignWare HDMI QP
-IP block.
+Hi,
 
-This is used by all boards based on RK3588 & RK3576 SoCs.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on linus/master v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 739b19302865fe8edc54911213321d6f1278aae4..0363ba916e0ed7e7d9dc1169f447f3726580de18 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -958,6 +958,7 @@ CONFIG_DRM_CDNS_MHDP8546=m
- CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
- CONFIG_DRM_DW_HDMI_CEC=m
-+CONFIG_DRM_DW_HDMI_QP_CEC=y
- CONFIG_DRM_IMX_DCSS=m
- CONFIG_DRM_V3D=m
- CONFIG_DRM_VC4=m
+url:    https://github.com/intel-lab-lkp/linux/commits/Jianping-Shen-de-bosch-com/dt-bindings-iio-imu-smi330-Add-binding/20250703-234441
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250703153823.806073-3-Jianping.Shen%40de.bosch.com
+patch subject: [PATCH v3 2/2] iio: imu: smi330: Add driver
+config: microblaze-randconfig-r073-20250704 (https://download.01.org/0day-ci/archive/20250704/202507042238.UDo16CzT-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507042238.UDo16CzT-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507042238.UDo16CzT-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/iio/imu/smi330/smi330_i2c.c: In function 'smi330_regmap_i2c_read':
+>> drivers/iio/imu/smi330/smi330_i2c.c:26:11: warning: unused variable 'retry' [-Wunused-variable]
+     int ret, retry;
+              ^~~~~
+
+
+vim +/retry +26 drivers/iio/imu/smi330/smi330_i2c.c
+
+    20	
+    21	static int smi330_regmap_i2c_read(void *context, const void *reg_buf,
+    22					  size_t reg_size, void *val_buf,
+    23					  size_t val_size)
+    24	{
+    25		struct smi330_i2c_priv *priv = context;
+  > 26		int ret, retry;
+    27	
+    28		/*
+    29		 * SMI330 I2C read frame:
+    30		 * <Slave address[6:0], RnW> <x, Register address[6:0]>
+    31		 * <Slave address[6:0], RnW> <Dummy[7:0]> <Dummy[7:0]> <Data_0[7:0]> <Data_1[15:8]>...
+    32		 *                                                     <Data_N[7:0]> <Data_N[15:8]>
+    33		 * Remark: Slave address is not considered part of the frame in the following definitions
+    34		 */
+    35		struct i2c_msg msgs[] = {
+    36			{
+    37				.addr = priv->i2c->addr,
+    38				.flags = priv->i2c->flags,
+    39				.len = reg_size,
+    40				.buf = (u8 *)reg_buf,
+    41			},
+    42			{
+    43				.addr = priv->i2c->addr,
+    44				.flags = priv->i2c->flags | I2C_M_RD,
+    45				.len = SMI330_NUM_DUMMY_BYTES + val_size,
+    46				.buf = priv->rx_buffer,
+    47			},
+    48		};
+    49	
+    50		ret = i2c_transfer(priv->i2c->adapter, msgs, ARRAY_SIZE(msgs));
+    51		if (ret < 0)
+    52			return ret;
+    53	
+    54		memcpy(val_buf, priv->rx_buffer + SMI330_NUM_DUMMY_BYTES, val_size);
+    55	
+    56		return 0;
+    57	}
+    58	
 
 -- 
-2.50.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
