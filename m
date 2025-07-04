@@ -1,125 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691CA42A83;
-	Fri,  4 Jul 2025 15:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F3723A58E;
+	Fri,  4 Jul 2025 15:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642067; cv=none; b=Fs7hCh3JQWfipAhQ/Y8EbTz0cE0ZctxUgqIHRekuCZzr9UKCIZjAs50TIzN5bZrGmx4Ncip4blUqPS8TkWUw3RhhfEYb2H/XmPQowupeE+BFgbAGqMyObwiAHLO7CEwOGQduFPk8SjfZVcZsn9qOisMPVFEeRtVJRliYt8/MZV4=
+	t=1751642076; cv=none; b=XRIELG/K1jULJV+iZL3iv8WdCs4XYKVGAEo5sjxeAj9gszd+nyJE3+kA6vMzlg9cbnbyTq9xH5Lgl9novVONgIEBJ3H+3WNWFvUHXLGwjM4g3UucDF0LJ5CJnJjFAccR+wEiI4CBAj8aPD0mzZ/56r4nFQPOPCL49nQhp04Wzk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642067; c=relaxed/simple;
-	bh=TBHQcyYRpGcdVOEQVFj80NwCERIwfVHVzoRx9Sa/NDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PxIYUfRV71XrpXOABWQO5SFOsolM4IJpP4f3LvFI52KHsvwSR23jYHElkxLjWE2oSxr2GS+Ord1Cw385sUATrygFXN78vZY+0PNE8t5VQrhXFaXcR0MdXZc4LjBhbGhyM7WevddpCuw4D76/XZELmuyQWAP+zfl6ggsQuSFGeRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mt2BaqYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751642076; c=relaxed/simple;
+	bh=jF3Inlj3JG/E6BYFBEPp9WN3HpHGhw6OMBNAHh2KZhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mDexoKL+p9tXHbjY173dMOWZ8puCAZMLncxLTnj6kQnpilRzjIoKJA9qp75QvsJ4LXIzxGWDpJxu3wDplwxb97OCbvrfbPCpiOYbGVFwOzcQcVg8zdZPEliPhNmtMbi72nhSlhEQl8jG6fX5VTRJmOVjUhHOK0M/n0i7dsXVCIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=BCzccpvN; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mt2BaqYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28AEC4CEE3;
-	Fri,  4 Jul 2025 15:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751642067;
-	bh=TBHQcyYRpGcdVOEQVFj80NwCERIwfVHVzoRx9Sa/NDE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=mt2BaqYDaR3+63mZfTYt27Ehr2qLIjlF/QkOAehNlUsKorB7zAvOWMp5+RIaFLMlN
-	 bBBKSC8QgC8Fy3PnxZkGIfUVXKEgNEqpYSyr/Uie3RpqX2ovQtkOJsP9EmNgWW2gYd
-	 rhmqQ2rH78Ajq/64rsCRqqyBTXv/Hz6hY3l6r+4yaLLcXSNH5txPK32pouE+BZvNLE
-	 17vYa/cxEZKM3hQ6F7xQDJMLzpqt6/Ke90R8u+WTTMpOFOQjv/+ljf/mtLVHB0+Qe7
-	 bus6QiWvFjtdUOZqMy26khCjQIhesOSq5GfdamEt2tcBml78D2Mjd/YQXfwNCsZ7U+
-	 XIVOIe8OcShKA==
-Message-ID: <1196da81-ecd7-487c-8afc-e0d3660fa158@kernel.org>
-Date: Fri, 4 Jul 2025 17:14:22 +0200
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="BCzccpvN"
+Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c24:1820:0:640:7e2f:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 37AC7620FE;
+	Fri,  4 Jul 2025 18:14:25 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id JEfrFgXLrCg0-8kXO3A0w;
+	Fri, 04 Jul 2025 18:14:24 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1751642064;
+	bh=r3cC44VV953qYGUiBvgDLhMT0ZcikyuAe9Lipi2US5k=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=BCzccpvNGN1KSvPgJMpAGwht7xC/2+UW6iaqnQXd3QnDbwOb0Q/iE3imkRoO9syJq
+	 5bNt9woEXngoOaJB+1kxjV87/ebSNStuWCPLNIv5sZVvp2l9GTpSL3nVcbch2i47vi
+	 upyLPF95Wmz3tgoPlXrYECYsFCIpM886jIQKZQq8=
+Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Fri, 4 Jul 2025 18:14:19 +0300
+From: Onur <work@onurozkan.dev>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+ a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
+ mattgilbride@google.com, wedsonaf@gmail.com, daniel@sedlak.dev,
+ tamird@gmail.com
+Subject: Re: [PATCH] rust: rbtree: simplify finding `current` in
+ `remove_current`
+Message-ID: <20250704181419.0a6a4d97@nimda.home>
+In-Reply-To: <aGeEcOEYXiLju-Lj@google.com>
+References: <20250704054539.7715-1-work@onurozkan.dev>
+	<aGeEcOEYXiLju-Lj@google.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: imu: smi330: Add binding
-To: Jianping.Shen@de.bosch.com, jic23@kernel.org, lars@metafoo.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- dima.fedrau@gmail.com, marcelo.schmitt1@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Christian.Lorenz3@de.bosch.com,
- Ulrike.Frauendorf@de.bosch.com, Kai.Dolde@de.bosch.com
-References: <20250703153823.806073-1-Jianping.Shen@de.bosch.com>
- <20250703153823.806073-2-Jianping.Shen@de.bosch.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250703153823.806073-2-Jianping.Shen@de.bosch.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 03/07/2025 17:38, Jianping.Shen@de.bosch.com wrote:
-> From: Jianping Shen <Jianping.Shen@de.bosch.com>
-> 
-> Add devicetree binding for Bosch imu smi330.
-> The smi330 is a combined three axis angular rate and
-> three axis acceleration sensor module.
-> 
-> Signed-off-by: Jianping Shen <Jianping.Shen@de.bosch.com>
-<form letter>
-This is a friendly reminder during the review process.
+On Fri, 4 Jul 2025 07:36:16 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-It looks like you received a tag and forgot to add it.
+> On Fri, Jul 04, 2025 at 08:45:39AM +0300, Onur =C3=96zkan wrote:
+> > The previous version used a verbose `match` to get
+> > `current`, which may be slightly confusing at first
+> > glance.
+> >=20
+> > This change makes it shorter and more clearly expresses
+> > the intent: prefer `next` if available, otherwise fall
+> > back to `prev`.
+> >=20
+> > Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
+> > ---
+> >  rust/kernel/rbtree.rs | 14 +++-----------
+> >  1 file changed, 3 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+> > index 8d978c896747..8f1052552132 100644
+> > --- a/rust/kernel/rbtree.rs
+> > +++ b/rust/kernel/rbtree.rs
+> > @@ -769,18 +769,10 @@ pub fn remove_current(self) -> (Option<Self>,
+> > RBTreeNode<K, V>) { // the tree cannot change. By the tree
+> > invariant, all nodes are valid. unsafe { bindings::rb_erase(&mut
+> > (*this).links, addr_of_mut!(self.tree.root)) };
+> >=20
+> > -        let current =3D match (prev, next) {
+> > -            (_, Some(next)) =3D> next,
+> > -            (Some(prev), None) =3D> prev,
+> > -            (None, None) =3D> {
+> > -                return (None, node);
+> > -            }
+> > -        };
+> > -
+> >          (
+> > -            // INVARIANT:
+> > -            // - `current` is a valid node in the [`RBTree`]
+> > pointed to by `self.tree`.
+> > -            Some(Self {
+> > +            next.or(prev).map(|current| Self {
+> > +                // INVARIANT:
+> > +                // - `current` is a valid node in the [`RBTree`]
+> > pointed to by `self.tree`. current,
+> >                  tree: self.tree,
+> >              }),
+>=20
+> I'm okay with this change, but the INVARIANT: comment usually goes
+> before the `StructName {` declaration rather than on the field. For
+> example, what about this?
+>=20
+> 	// INVARIANT:
+> 	// - `current` is a valid node in the [`RBTree`] pointed to
+> by `self.tree`. let cursor =3D next.or(prev).map(|current| Self {
+> 	    current,
+> 	    tree: self.tree,
+> 	});
+> =09
+> 	(cursor, node)
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+Looks nice. Do you want me to send v2 right away, or wait couple of days
+to give sometime to other reviewers?
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
-
-Best regards,
-Krzysztof
+Regards,
+Onur
