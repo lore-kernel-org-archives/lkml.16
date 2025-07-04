@@ -1,78 +1,52 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jpms-ob02-os7.noc.sony.co.jp (jpms-ob02-os7.noc.sony.co.jp [211.125.139.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B8D6D17;
-	Fri,  4 Jul 2025 00:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E856D17;
+	Fri,  4 Jul 2025 00:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751588732; cv=none; b=GLTws+bKTx7HwClb+DfpmOn/rFn1iZt23raXbzOp+XmKldVmFErY1MDS24F6rZHOi1jDfPnOdMdcwDFU7nXJyIgmadQqI/zv7cGoI5zPAcyST31aW5IKIphyr8Z543Z67ZzAqbUSLNnyuw8t2gAkuTodMeJMGVzmJKkR0GQAWHg=
+	t=1751588823; cv=none; b=JHPrrm5+KgVDQyay7KqY4wRmF2ug89i5CkKwoc31v3Zz/EAXnc9LvxBh7d7IqW1qUSQgwFLLd9zYbMDCusUxGF8auFaI6VtFic1KtvPHYO6nDKcMHoqSZPdWLXw96ZnrubNZHOzIwrB6YBRB4AyrsOcQt/D/WqNXk4/Cc714Cy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751588732; c=relaxed/simple;
-	bh=E8Mos6/LrtQxYCj9mBaLwe6+10wBudiPbO+I5i1hz0k=;
+	s=arc-20240116; t=1751588823; c=relaxed/simple;
+	bh=BSzohEbES7uLxAvGJxNFa60vU3v/GMbyjfN5SySMFXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BEftqcVIlMZNZ7Aac2LCKUocq9Hf+Akwe+pBB/o1r97yM99qlRj2RbQYXaH8XNhkZk+wpQVSRqssKXCRXgvyzOVV0AvadZw66Hh/hp3v5bYRK7yANnG7hX8FdzNG0WXJUbgAnEGWO4UOueitpXtolYAmSj+1ThCQkZaEbjpwBsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Shfn/Web; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BHOX/QLFeR3MPVHI5CpZ2uUxYMQUiFgXH4yF4VdjLXEoM5JOGGPu3rFLhhwlFX3g1I97GIK2bj3pTwxIv0n7SquLfMsNm6sP5UeRfaqIq6OTk+5T8b+N+tYM+zZUl5mpYDiYQX4xMUklSag/eluCyTaIN4GdtRcX/3OP90d3bVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=GRRE+5iu; arc=none smtp.client-ip=211.125.139.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Shfn/Web"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235e1d710d8so6687995ad.1;
-        Thu, 03 Jul 2025 17:25:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="GRRE+5iu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751588730; x=1752193530; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x7v5gurrbmPldeiskIo+P7BWOKubUph5grmPZfX9X2Y=;
-        b=Shfn/Web4qHHZXhncGQlf1izlxmMoZlRCj8ChoKImo6iO90yOdOMiFPkZjhflXTfwU
-         lnJ+3PZpLMu0XhTdJ9sJT+2dmonpiB4QlkvfbWuxOFoTpIqUgaKpzXnHMrzzVdS7pd/U
-         I6CrJoXxk0zxik5xFdbBbHLC43Qgf5/QrdRSzekO2T/FAIQQl0D78CUB8S+MlaDYb4Cv
-         IDlGvCvY+DgsaN4t1mynh0K0D83iP7ONPi45NIqbqrd+y57M6rh4fActKb3MdexhsCX+
-         rZeSJ/d+0zAdi0SXhus2GaPb9AvZ/16YwhtwZGLIFn2QCP8GjyRX50idCfuNS0Qxpw7I
-         4urw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751588730; x=1752193530;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x7v5gurrbmPldeiskIo+P7BWOKubUph5grmPZfX9X2Y=;
-        b=KEl5OHMqqCl7hCXQOurrQP5EUYqC+7Ifvp4PCtph9QZkbXC+a/od/DO74+FzvFmBfY
-         9LxQFwVUCd5cU7eI7JxLr4YmgG6IptSmGTttXwXqHGDsoy3Ma3lOx0RG2KJMN7zhO5ZW
-         Vw/BfuOvnJmFS1olEhp4XsTjIadKCoDQ5aool9+QBurUgxJWMvT8neM4AFR1z/p3Jsv3
-         I75yVSgSsWLMlczRmTr9dDYT6qLs1oB2/w2f7Ur/Nvnc+fYj1bxmvk5T24hbNpsIIHMQ
-         PCl7tI8l9vOJEnekg2VP4Kw1ir82VdJVgK4KnQXsAxLnvM/t4Jj+C6nb59sOQWKbwLzM
-         2R0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWC06hfPSWMPz7tQ35IWQXwrSHqqheVqWpICvUhKyFLe+su8zRR2aw0Dhxk1WIhG/qijNV+bqleZ5ibKiY=@vger.kernel.org, AJvYcCWCbC8ZuLotH6n62/ZKO27P/0wBj9dXqPnTw5i5nwzkz5jOx1hehrm2kAmuZRHmcctlPh0v+Doka320JCBg@vger.kernel.org, AJvYcCWqWVVkpyl+wjsNwjqqVc/ACzHmFQSMTNL2pgXNReoYzOSB9H6frNoFAi0pUKw+1esww61gYyorbZXB@vger.kernel.org, AJvYcCXegzAg9ewlM5OsDiI0QJ2NwA+6Kl+xIQkX/2lbvVgUo4K8dPWfZE41/M+e7EAZyr6z/vILvCR8usZ/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIGVNXnd4ie7b99QJenTCBKIdrrHWCQYIas0fkwu8KWxNzH2Z1
-	dbeyViFtxiMAwLALcXmDziql6khMeVErPzKLZz1ijKyJ/yEqdzMnYFa/y5zO6w==
-X-Gm-Gg: ASbGncvWjr0BEEbQl88J/y/HTLC2Txd6sP2S8tOvk6JHG4qVjq86rYtvtr/BBPNgGj2
-	RIvGqKoB8MP3gw+PmaSfzc/uGq3LDriaKIlPfnkzmNzp0RcXBPegFdbdyPUTxnu5J9BNe+q6pBS
-	UMB/+Ky1ojLE5nF3qEXPujdYH8s4oAmRukZgfpssGM9m8rBTS0Fwo2gZkhdcv6Qv13hBewhTka/
-	tMN8JSvQMR6xIG6Y6wOgmyDvxhnKKU18FXXEescuH65+3mNKKAog+yhRV/OEP5YA0e9ounvH6tU
-	XVRhwFHc6KtlD+CZ+Hlk2O+LjorCCY3WjQvqD7BnVZb2PUM2to5FD0Ue5UDNqGon2lt6agMUuGk
-	=
-X-Google-Smtp-Source: AGHT+IGRwCEMCfziqd7AZLn6eRdp70jCSXDinw5sNQDRhQHK3Nrsi6Y+7oNCrXgKwrEh8fcVu5HCTg==
-X-Received: by 2002:a17:903:1b4d:b0:23c:7c59:c74e with SMTP id d9443c01a7336-23c85f7b95emr10297305ad.0.1751588730600;
-        Thu, 03 Jul 2025 17:25:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845be93esm6423975ad.247.2025.07.03.17.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 17:25:30 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 3 Jul 2025 17:25:28 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, jdelvare@suse.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	corbet@lwn.net, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH] drivers: hwmon: add EMC2101 driver
-Message-ID: <9df1cc49-34bd-42d4-96dc-ec9b512e0c5f@roeck-us.net>
-References: <20250701181228.1196102-1-noltari@gmail.com>
- <20250701181228.1196102-4-noltari@gmail.com>
- <c893384d-4134-4510-be87-11a2c9ba6cc7@kernel.org>
- <CAKR-sGeSPHu5DiFL2sX=SdET_jzbepo30qguscUjzYkX-Aub0Q@mail.gmail.com>
+  d=sony.com; s=s1jp; t=1751588821; x=1783124821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=rH/YAVAFRBh1vpkwFj/70i6IUSEQ9hEzAcVy+/le/Uc=;
+  b=GRRE+5iuV3gRXrjQ5o+vn4+vYw/WcslH8ZlJe1gqAt7LuOCmTcuaHnST
+   +8T1ToDGSfXoEXHRTDFvtBzwVYyXSvgwpmDdKCiqED43cjFN5ify1Ep+e
+   ygdS+ky97eH7Ep3/aaFd3SJcmHK/6wr/d4G7pI6t/TbUG/0Nnf4slV+R0
+   ZZe9nxK3rKS4/1+H5Uw7tedN7p2qv9GeG7rHsgKwYwYyXxk75IczugmCv
+   bxZFQ+B392Q+2LcOk3JE5NCXODhmAkIojjpAdfqby9fGwJh+ikJ67fiuS
+   KRyVWNwfjFQKXh1gi72+536MV3UFOLDCBLIEodkYR1OkPmjTcjVoByjPp
+   A==;
+Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
+  by jpms-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:26:59 +0900
+X-IronPort-AV: E=Sophos;i="6.16,285,1744038000"; 
+   d="scan'208";a="4466966"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
+  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:26:58 +0900
+Date: Fri, 4 Jul 2025 09:26:56 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
+ tests
+Message-ID: <aGcf0Prl-hVX2j4Q@JPC00244420>
+References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
+ <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
+ <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,22 +56,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKR-sGeSPHu5DiFL2sX=SdET_jzbepo30qguscUjzYkX-Aub0Q@mail.gmail.com>
+In-Reply-To: <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
 
-On Thu, Jul 03, 2025 at 09:23:41AM +0200, Álvaro Fernández Rojas wrote:
-> >
-> > Add a comment describing what you are protecting here. It looks so far
-> > like you could just use regmap and drop the mutex, but I didn't check
-> > thoroughly.
-> 
-> The EMC2101 datasheet is explicit about the Look Up Table registers
-> (REG_FAN_LUT_TEMP and REG_FAN_LUT_SPEED) being RO if FAN_LUT_DISABLE
-> isn't set, so I believe that we need the mutex even if we switch to
-> regmap.
-> I will add an explanation with that in the next version.
-> Should I still switch the implementation to regmap considering that we
-> need a mutex?
-> 
-What does r/w vs. r/o register access have to do with locking ?
+Hi Michal,
 
-Guenter
+On Thu, Jul 03, 2025 at 05:58:48PM +0200, Michal Koutný wrote:
+> On Thu, Jul 03, 2025 at 09:03:20PM +0900, Shashank Balaji <shashank.mahadasyam@sony.com> wrote:
+> > Current cpu.max tests (both the normal one and the nested one) are inaccurate.
+> > 
+> > They setup cpu.max with 1000 us quota and the default period (100,000 us).
+> > A cpu hog is run for a duration of 1s as per wall clock time. This corresponds
+> > to 10 periods, hence an expected usage of 10,000 us. We want the measured
+> > usage (as per cpu.stat) to be close to 10,000 us.
+> > 
+> > Previously, this approximate equality test was done by
+> > `!values_close(usage_usec, duration_usec, 95)`: if the absolute
+> > difference between usage_usec and duration_usec is greater than 95% of
+> > their sum, then we pass. This is problematic for two reasons:
+> > 
+> > 1. Semantics: When one sees `values_close` they expect the error
+> >    percentage to be some small number, not 95. The intent behind using
+> > `values_close` is lost by using a high error percent such as 95. The
+> > intent it's actually going for is "values far".
+> > 
+> > 2. Bound too wide: The condition translates to the following expression:
+> > 
+> > 	|usage_usec - duration_usec| > (usage_usec + duration_usec)*0.95
+> > 
+> >   	0.05*duration_usec > 1.95*usage_usec (usage < duration)
+> > 
+> > 	usage_usec < 0.0257*duration_usec = 25,641 us
+> > 
+> >    So, this condition passes as long as usage_usec is lower than 25,641
+> > us, while all we want is for it to be close to 10,000 us.
+> > 
+> > Fix this by explicitly calcuating the expected usage duration based on the
+> > configured quota, default period, and the duration, and compare usage_usec
+> > and expected_usage_usec using values_close() with a 10% error margin.
+> > 
+> > Also, use snprintf to get the quota string to write to cpu.max instead of
+> > hardcoding the quota, ensuring a single source of truth.
+> > 
+> > Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> > 
+> > ---
+> > 
+> > Changes in v2:
+> > - Incorporate Michal's suggestions:
+> > 	- Merge two patches into one
+> > 	- Generate the quota string from the variable instead of hardcoding it
+> > 	- Use values_close() instead of labs()
+> > 	- Explicitly calculate expected_usage_usec
+> > - v1: https://lore.kernel.org/all/20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com/
+> > ---
+> >  tools/testing/selftests/cgroup/test_cpu.c | 63 ++++++++++++++++-------
+> >  1 file changed, 43 insertions(+), 20 deletions(-)
+> 
+> 
+> > -	user_usec = cg_read_key_long(cpucg, "cpu.stat", "user_usec");
+> > -	if (user_usec <= 0)
+> > +	if (usage_usec <= 0)
+> >  		goto cleanup;
+> >  
+> > -	if (user_usec >= expected_usage_usec)
+> > -		goto cleanup;
+> 
+> I think this was a meaningful check. Not sure if dropped accidentally or
+> on purpose w/out explanation.
+> 
+> After that's addressed, feel free to add
+> Acked-by: Michal Koutný <mkoutny@suse.com>
+
+Sorry about that. I dropped it accidentally. This check should be okay,
+right?
+
+	if (usage_usec > expected_usage_usec)
+		goto cleanup;
+
+1. We don't need to separately check user_usec because it'll always be
+less than user_usec, and usage_usec is what's directly affected by
+throttling.
+2. I changed the >= to > because, not that it'll ever happen, but we can
+let usage_usec = expected_usage_usec pass. Afterall, it's called
+"expected" for a reason.
+
+Thanks
+
+Shashank
