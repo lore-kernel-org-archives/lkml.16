@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C1518DB37
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C626C43AA9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751638847; cv=none; b=AXVL/nkwmFKM37ZxwQ/midRPstijzx3AK7S8/5HYaCVaC9E3s/6aiz3dmYQTwSZHB4h1OsNPFlYJeTN3O8HKcYRwmyJnWRCyjWQZwdWgfMMFH9DMcYpwvvb6pTh/F09jtBngp5akk/zHCfUG0Vp3iLcWj3Vsm9NAzJjadlUy4ew=
+	t=1751638903; cv=none; b=CpDT8s3vjEuNwraQxOOC19+uu3D9gpl12oIqll+najXPvg9oSZEDljC07SXb0qSC179yj/gOT7pCgRIKOnKCzrAW6XB23n9tusv+hFAJy/MTCwIIz0rhj50mVhy51GdqofpXM9qhFIp4Do19WBbRH/J1pYzQCbu93S30Vjj3vaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751638847; c=relaxed/simple;
-	bh=LEugG4mzd2CRtbZmjSvzUzMzua440SgKtSi+2P+kwHI=;
+	s=arc-20240116; t=1751638903; c=relaxed/simple;
+	bh=7a+ss5z2H1PACvQvOzGjL42rkbRSa3BKTjFx3IT1474=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C+F2SafmPmAvB30Kez4saPKZdui2b+d68oHvMdMmJIgmW3ubyBj0iQLkqN0m1wCYQzCoP7+vyOOAe6dgWEbHqajCW22jEsLnkYXoLW9d6oboBFetSn2yEwU2KsF+Zg6RuV6XILGDRpfumDMzrmQCBhyXHeK4LXmtq+rC5/4E4SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jEmCGds6; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=QJ/sYasJtkse0j0bwnbVbNVwrw1Y4BIPamh0nvjz4TNuYgIs72Wf+80kk+pNKOewSQYCTdTxFoxSmdw6S/qvwiBr1zSpQNfyGx8dTtQdL1gQ8jHZwWUjp+1SXfL0Y12QY4oYLaC6crAwYlQnRtguWK0NIJfdQNb/sMEpdjgMosU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V08qVKZA; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jEmCGds6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V08qVKZA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751638844;
+	s=mimecast20190719; t=1751638901;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FPWR8/6FevG48UmfkMhjqNTe4/LZAWg9DvTsvfd8iaY=;
-	b=jEmCGds6SCt8IAiL3D3MN2vb9XqOs2C8qYq24BvpNUVqIPcdpGVDQRhZXTXBYbq8BHVujs
-	idQVEY5a5h/bOx08POo5VHso+D6XyFCdc7pvZoWSCvBHtZ6WJXt+yzfwakZpWB8/gCO5VT
-	lqxDgLC5lDgL0YKL4QtAAghwuOi+PhE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=P3nUdgGFNjpsPhESYpIfcTM9v3h7I05W5rObH4a7I48=;
+	b=V08qVKZA55Nc2M0LthaBHzOhQ+SBtnWIplswxJibvIYjlawK7bOxDaDHKCoDBTq/e+Qoxb
+	r/Tm1sh1m4xQg5eOdQYgs4FP+Grwex7CrJS4V06iBOG4dwK6AMoILwlhqiaUVT+RqFxNZ7
+	aPpV+IYa4SWuzB27aDqbUX+yLEAb+YQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-Q18SGRVdPkq4T7jw_AliXw-1; Fri, 04 Jul 2025 10:20:43 -0400
-X-MC-Unique: Q18SGRVdPkq4T7jw_AliXw-1
-X-Mimecast-MFC-AGG-ID: Q18SGRVdPkq4T7jw_AliXw_1751638842
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a52bfda108so485034f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:20:43 -0700 (PDT)
+ us-mta-483-vGzjAUlhNEKhicil605IqQ-1; Fri, 04 Jul 2025 10:21:39 -0400
+X-MC-Unique: vGzjAUlhNEKhicil605IqQ-1
+X-Mimecast-MFC-AGG-ID: vGzjAUlhNEKhicil605IqQ_1751638898
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4539b44e7b1so6673775e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:21:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751638842; x=1752243642;
+        d=1e100.net; s=20230601; t=1751638898; x=1752243698;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=FPWR8/6FevG48UmfkMhjqNTe4/LZAWg9DvTsvfd8iaY=;
-        b=jDoGN6VGnabgQkt78IwI8XuHrHqwdRbIWNk445e4O8K36cxX+8CTzrST2kkfh8PTAC
-         z6Mw4fCcL/qociCfZmJ6JEYj7TxAPCPFIgPMrezoRyCUW6xq9p2Pm78ev1km0D2VA2i4
-         rDs+/vf2XgHTrt5C+BA3/rCCS5iMxRIf+nbLaOEx2q4B2BvMKH5Y02uzJB9b93AEoH2B
-         DZo/pc/0yZLPUKHag9ULgUbb9748jDGkte4TnT3/BdAACcTqL8UvIYbSsaH6r/G99GWx
-         Q7y8u/kVP32SJeWm3YtFD8nkXgOG3dFLn3v7kBvpy82/A86nHDC8c4XDzZ9dk6NXT5+6
-         b6cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1eWFBi2gPvM2ygcoqmvaooF1V3ubGz2+Bsu04xYkN22BzQiHWouMycQ8FTOHLOGGhMe+eg48uF3RZSAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvzt1tIJ7UpVK/p3Ja+CFhhnRgXXa4kAMy/66M+SrlUFgRmiQF
-	h8kDFWWhSaz1+0Dir/YxHa3jf8XEKH4jtr1xLmyxz5hO3ydtuv1a+oxLRgvzJ+/iVwd1zCh6L/z
-	uQ+Id7njXssS3/BUDOH0QV65dur8J7x9bIH5MloAYMmERs0UDME8Knv1h+nM4Wsvrrg==
-X-Gm-Gg: ASbGnctM+Y4qkM1Eh1fcjr2GAUkiWS/QXix9fzFXh12tAGsVj7RMIHGOeZ9/pGq+JiP
-	vpKamXmdmXR6CQTjPZjz+Vtk3FaxZ3m8FzvP3ReVpBfMQeuUZzjtp4Sx2XJx8NAT0dXHqcmdgr/
-	lBRP5ThS4qOhWnihyaW0niKrtzmClumPSD2Dg4mujMfWuw9eC+kflo3kr27J+0JmScTDLSDb6nl
-	vgDV3AG7dawxnXp7Z8cVUOHuOq+cOsyg++eFsu2CpxmxSrn4B8XTuhl2xx8CSDRm7gwjcs6tp6N
-	NA4wOnWru08VvS9hPFZchBW1c7ZEtuaROc5tu/gRQv60GhJ/1Ow5DMZiI+Nr2Dt5hvblCiYe1/l
-	Dvi7qLK9Me0d0nvVozY/64LqpiuAq7T8YlzLpTvYei0xJhrg=
-X-Received: by 2002:a5d:5f8d:0:b0:3a4:f70e:abda with SMTP id ffacd0b85a97d-3b4964eafb0mr2523307f8f.10.1751638841921;
-        Fri, 04 Jul 2025 07:20:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+/kiTWcuui6KC8nKQ4kO8+DE7sHGdoqJ0Z4Ks5m7aF9X96EBl8jRZQtA50Mb5hMtiVeqQ5Q==
-X-Received: by 2002:a5d:5f8d:0:b0:3a4:f70e:abda with SMTP id ffacd0b85a97d-3b4964eafb0mr2523272f8f.10.1751638841478;
-        Fri, 04 Jul 2025 07:20:41 -0700 (PDT)
+        bh=P3nUdgGFNjpsPhESYpIfcTM9v3h7I05W5rObH4a7I48=;
+        b=Bp2CTTFw3e23cIkvixIq6x6DlOSir0c3RnvNppwEIGLkQDtIeg0OezfSfvnjSviZrT
+         Kp3iSZMhVSUr5GFQSCZat7MBhg/W8tw6gEOl0ItLL/FDeAuCNuA6fzg1W0vp0yS90G5x
+         B8CC8ddQoDiOi3eSF22mzUsG13a6R4GM09BKAsG2NDzltm6tdiHl3r+MlT0rHM8cR75/
+         kwslmPt5HJj7Q2v0g9fmgOIp5MCqrhqRs6gjUufXXrZcF6wTpeBcFvXQdzKokJpGpZ+i
+         4aQ986IRaU3JXsUIbXuvHMZcsj0HV2dZLz01dwXCol7uKwfnzWWDeSzfsas1+j2eXDq/
+         43Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6nQ6CblGrJ8mYb8SOmItUWYxZJXRxciBl4SjqUZXr3oYWnQPIvJJWL0jRB0JdtJumU0kBZUta7FhLZuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwoxzvZ7ghh+mo7c/K/gQq/AQPGb8wXO5x+QlOMj8jlw6NWTN4
+	4UuP2bjmDC6U1YbOuhgjYazqhtq7A6nZPNjDFBwlSnvxAbxqFc9akO2kvqROdEwdIuYOENY6ILc
+	gHXnzyx3qrZdeQO4l/gVBWGUjjYq8y+axaCV6Ho7FQ3kySi79ZXpHNrQ7oKWgCY9WqA==
+X-Gm-Gg: ASbGncv2u7he6Gjn6E6jR1ELH3tX1DoK2bDMvj0lBZGZ1M49ehERnmVpTYIUBICDQPn
+	5pSTRYJCuJridWQc5Dwfw4ChDmu8jRjt3CJImD6uQ1YfCSajbhyK+ooBVY9YP49BhDy1CmRRe6q
+	O06QiAICqJKGlSnYeKg60lU+XOfKpCQczFhFVLp5C3OM8jEqcFoqoK89UIkCau1FfyOIRkL6iJi
+	6pNqcvx6m3jfnnJEgmphQDpnyPoscmHePUulAprEH5KPoWSM/w3HHl9t7N8ZhBjx59tsSSvqiNz
+	+P7u8QiQES7itDOOspD5GwhI4Eh3GTR8GGUXUGC1LQIAgANckmKrIcyKSOPzhCX0zL3toWR8jtD
+	kkHf+K5uMudH66sSljBcVX4IS+Z06/4OS0GQVcR1DvBBU3Yo=
+X-Received: by 2002:a05:600c:1c06:b0:450:d3b9:4ba4 with SMTP id 5b1f17b1804b1-454b4e682ebmr26571095e9.2.1751638898216;
+        Fri, 04 Jul 2025 07:21:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDZLMWK3HYBpmt+8sbxwueuEJnFFCLUQgPluCGpWHMDuYeWcKYhaynSXYVQXR2rHmS6MDjxw==
+X-Received: by 2002:a05:600c:1c06:b0:450:d3b9:4ba4 with SMTP id 5b1f17b1804b1-454b4e682ebmr26570805e9.2.1751638897730;
+        Fri, 04 Jul 2025 07:21:37 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f2c:5500:988:23f9:faa0:7232? (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b161f351sm28210535e9.4.2025.07.04.07.20.40
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bde35dsm56185495e9.30.2025.07.04.07.21.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 07:20:41 -0700 (PDT)
-Message-ID: <dfcc7a23-2f28-4387-ab2b-07ab56b933fe@redhat.com>
-Date: Fri, 4 Jul 2025 16:20:40 +0200
+        Fri, 04 Jul 2025 07:21:37 -0700 (PDT)
+Message-ID: <28f5369c-3643-4338-9307-570dedadbd44@redhat.com>
+Date: Fri, 4 Jul 2025 16:21:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,14 +75,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/mm: Disable hugetlb page table sharing on 32-bit
-To: Jann Horn <jannh@google.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Vitaly Chikunov <vt@altlinux.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Dave Hansen <dave.hansen@intel.com>,
- stable@vger.kernel.org
-References: <20250702-x86-2level-hugetlb-v2-1-1a98096edf92@google.com>
+Subject: Re: [PATCH] mm/cma: Use str_plural() in
+ cma_declare_contiguous_multi()
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250630132318.41339-2-thorsten.blum@linux.dev>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -130,37 +128,18 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250702-x86-2level-hugetlb-v2-1-1a98096edf92@google.com>
+In-Reply-To: <20250630132318.41339-2-thorsten.blum@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 02.07.25 10:32, Jann Horn wrote:
-> Only select ARCH_WANT_HUGE_PMD_SHARE on 64-bit x86.
-> Page table sharing requires at least three levels because it involves
-> shared references to PMD tables; 32-bit x86 has either two-level paging
-> (without PAE) or three-level paging (with PAE), but even with
-> three-level paging, having a dedicated PGD entry for hugetlb is only
-> barely possible (because the PGD only has four entries), and it seems
-> unlikely anyone's actually using PMD sharing on 32-bit.
+On 30.06.25 15:23, Thorsten Blum wrote:
+> Use the string choice helper function str_plural() to simplify the code
+> and to fix the following Coccinelle/coccicheck warning reported by
+> string_choices.cocci:
 > 
-> Having ARCH_WANT_HUGE_PMD_SHARE enabled on non-PAE 32-bit X86 (which
-> has 2-level paging) became particularly problematic after commit
-> 59d9094df3d7 ("mm: hugetlb: independent PMD page table shared count"),
-> since that changes `struct ptdesc` such that the `pt_mm` (for PGDs) and
-> the `pt_share_count` (for PMDs) share the same union storage - and with
-> 2-level paging, PMDs are PGDs.
+>    opportunity for str_plural(nr)
 > 
-> (For comparison, arm64 also gates ARCH_WANT_HUGE_PMD_SHARE on the
-> configuration of page tables such that it is never enabled with 2-level
-> paging.)
-> 
-> Reported-by: Vitaly Chikunov <vt@altlinux.org>
-> Closes: https://lore.kernel.org/r/srhpjxlqfna67blvma5frmy3aa@altlinux.org
-> Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> Tested-by: Vitaly Chikunov <vt@altlinux.org>
-> Fixes: cfe28c5d63d8 ("x86: mm: Remove x86 version of huge_pmd_share.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
 
 Acked-by: David Hildenbrand <david@redhat.com>
