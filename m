@@ -1,127 +1,76 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2F2F2C6E;
-	Fri,  4 Jul 2025 10:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FA62F234E;
+	Fri,  4 Jul 2025 10:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625094; cv=none; b=FbgHS0NCbR4oI37Yo8p7on2qB/X2VQdjKafdB053UgCOV8F2y9nPy6mEVOnkxYbMJfCtJAl0a2d7jX0oB48WUecsi/ZBxLd7TvYP8NEr9HaDYaMNVHvMKK08dWVkw1F8lrnP3927s+SL12L/z/GRFE/bDtfjACBPa8cdaOdTcQM=
+	t=1751625172; cv=none; b=PQyGlIANMWRTj0GRLghj655/feK+2Zqf/o+LS1vc71S+fp/5hIJIc6EQsRRtMaeC/YR5C5sPc0moJZAeKPvc5grxj4GWIg3qNga5wZw2ChMbaGCY4HwyfnhvrRXS2ic0NyDADrH7ypGnY1473b96TQsp6Em66zSfvqvnT3Dzaug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625094; c=relaxed/simple;
-	bh=wP9Qj0PzhkA69kKg43kptmGrDAjSerq7qh9RYRvlzyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZYURvIo6yR0fHXEt0d/an5Sq4Ef1TSow6Y8T0ZGEDtfGycq/SJnmj94i/zbiNQ4oo32rEif0uY66NMfmcVMNGls83ONmpgcYIM9ZGaA2vYpcyq51h9Dpq4uP9PQse7U06/ExYOJqSWowwAu2Yj5HG7wv599F5ptv5Dut9wpcBL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ly+ohCCE; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751625172; c=relaxed/simple;
+	bh=X/yNWlWB/y2ACN5oLtHF/++ScOovYYJezLzNbWoUL8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lWVGrPQGJDVPSp27uO81Kq/nBN2oYTwin+HeniYYlA5KIcBH4dfrUcmsLSapx4axcfjPYFRbYbnK77maaNCoOFNYspITOdyDwW/N+tJ+T/wq1MTrxmev18ueVwr2WSxhZnEI6+BCxdkKTEeJ7zaLn81mmlCwwaswS828XpSBjNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DN5WXByJ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ly+ohCCE"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e8110ac0f5so209143137.0;
-        Fri, 04 Jul 2025 03:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751625092; x=1752229892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/xQKlBOT6P4mp+UtjZoqvRrQDEQeBJnUbiMyYywOQc=;
-        b=Ly+ohCCEMt6WRK0vbiURp2L8HkSRqdzC8hu6spKqsxhu0M63lnPA1e8A06p4q65V2n
-         zPF6KPVj3z5Qet1iI0RS1gLGBTADh+oyZ1qoU8u7UXF+d1XP0kMzmH6khUyY7yDl6sJj
-         Q+swlpjEdKz8bjL9U8Tg47ZAOi74IoN+BDFmTeWazGb+1d1L4/dUWz/i45BoIDMeRV+V
-         j3oPjqME4+pFm5AzKMZQGFhyYTlQRxWSLFScbxtIk/kfskFCDAjgN1Xhhu/iFcBWSwjt
-         1SIBGuEsK3pHOglKp7+ez82VFP0HsqR8y924AetYEgZxUm/ApZ3ki1y6TiSuIq5oYJho
-         X70w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751625092; x=1752229892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a/xQKlBOT6P4mp+UtjZoqvRrQDEQeBJnUbiMyYywOQc=;
-        b=e2GDVTlN7CHO5pWnCAPlHsdLUTLIhOtzmUbzFTh21/9SYOIrb+7XawFUV7nvBCXCXf
-         BDlS/jrFSxmhMdk0rlBhM70lU/BAPTzztOYKml4neWNCi8YPvc6cpRUowLVImjc1ZMHr
-         r6QG3xy4E8DqNfxe9MvuuujL+dt48L8r+QEhTAKveazjrqs0oLxVouV/SjbBKIxUotyz
-         9qSrbPaYUzcaCHSQt+P40dwulSp+x9rHGJFL3GRNxklFpI6DX9aRKfcbgCCytSv4qEzJ
-         wrbwAOksZaGG/lTNqv3rIE4bnDEKa2YgXQI7NBzUk7Z8HF+VnW3Y2c2+miQQ8LH06M49
-         H1UA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ33TrBpgOC4PM17l1Ipwzj1SLa6HaTvzebkTW0QkL4votJuix7Uvhj+A6HFpY0liGFfHQQExWVQvOBg0=@vger.kernel.org, AJvYcCXlddk5SJcnhpRjTxLgPQgAnbpLs+UX9rZ3mVtWk1h6K+sjH+KAoQ7q8Rf9iNE/rKSbCkx9V/cgT3A64eDn6OuDjQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/IjP4+3BsWDe6DdnH+J2SjPcK9IL+vMbztO6jPU98Wq/gwpsq
-	VEVNEWnXFuhpKdDazrcmtgloHpYJkN/oS/oivuv5w3BnkT/ZULKsFZUSEYAZ1mhsZiJqPeDl+QL
-	EKJteWxeCK/YHTqB7ZapysqYLbm42AHw=
-X-Gm-Gg: ASbGnctZd5ecsQHVcAsOdcBIbV2nMvTKMIAs+NUO2Mfd/HgmWGGP/Mqzxf0dTKhaNV9
-	k5WVd0V7RKJhFBJBnmf087Rcg3+hdXLhc8lt4nb10OH8uggy5rUdncUXxTeM3JRhTScq+sSvDg9
-	4zCX1yX54qoj6nVE8ZsiWncVY1tZUHUa7R6GvaxAZjgjQ=
-X-Google-Smtp-Source: AGHT+IHlGXvGOQ2VphguWOiSSKOQc0Bs6jXMtNMB761owKR/vtv710GFY0N2XIuOKvtR5oMroxYEWMNrPRtQek1SGN8=
-X-Received: by 2002:a05:6102:5a8b:b0:4e7:e5b2:f651 with SMTP id
- ada2fe7eead31-4f2f15acda9mr725020137.0.1751625092019; Fri, 04 Jul 2025
- 03:31:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DN5WXByJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e6rhXVAqDgkrV1yyz4a83LxOWl/gSNLKryLQbSZ9wsA=; b=DN5WXByJ6Fib4xlyf4PAVST/6B
+	AtGqIjuBo+P9FgNiMdm6t5xgZKvCJLV9rDB/fOmxeC8g+OWI+3GtA75ycViI7c6zMHivIMsf7Gfjb
+	xtLDxnHOyRknjPNH6H+GZ0McZjB1nDqn9+YqtAukDYmBRJYo+YyT9/sD6KS5KfLHTlMAxfwjR4Huz
+	BPGDwuou3i/vcSUVI5Qxdwpspk4sz9mN61LZY5N70rDnxKdLGWTsAPwAeX4pgNMlhp4EhqtchnVd4
+	GWWsi5dQZReYa5DSp22v4QFoBJssHvqmJpokOaCHJZ0oYvKEf8EpBHOhTXuPyh1kLpEKHAdqVvEeJ
+	Uuzqavgw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXdio-00000007weM-1Z1V;
+	Fri, 04 Jul 2025 10:32:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2C394300233; Fri, 04 Jul 2025 12:32:45 +0200 (CEST)
+Date: Fri, 4 Jul 2025 12:32:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	Leon Romanovsky <leon@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
+Subject: Re: [tip: sched/urgent] sched/fair: Use sched_domain_span() for
+ topology_span_sane()
+Message-ID: <20250704103244.GA2307777@noisy.programming.kicks-ass.net>
+References: <20250630061059.1547-1-kprateek.nayak@amd.com>
+ <175162039637.406.8610358723761872462.tip-bot2@tip-bot2>
+ <20250704102103.GAaGerDxWX7VhePA3j@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com> <20250704102007.6354ce9f@pumpkin>
-In-Reply-To: <20250704102007.6354ce9f@pumpkin>
-From: Usman Akinyemi <usmanakinyemi202@gmail.com>
-Date: Fri, 4 Jul 2025 16:01:21 +0530
-X-Gm-Features: Ac12FXw73ZOhyBKhSbbf_4Qj4dulDh8DBNftU6kNO6qEo_c_P5vHGtCLcAhkE8k
-Message-ID: <CAPSxiM_X8Ykz-kbBuFmT1vt_V3G4AkA3tE4wwbUniE-edoyJyw@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
-To: David Laight <david.laight.linux@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704102103.GAaGerDxWX7VhePA3j@fat_crate.local>
 
-On Fri, Jul 4, 2025 at 2:50=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Thu, 19 Jun 2025 03:28:43 +0530
-> Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
->
-> > strncpy() is unsafe for fixed-size binary data as
-> > it may not NUL-terminate and is deprecated for such
-> > usage. Since we're copying raw CPUID register values,
-> > memcpy() is the correct and safe choice.
-> >
-> > Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
-> > ---
-> >  tools/perf/arch/x86/util/header.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/ut=
-il/header.c
-> > index 412977f8aa83..43ba55627817 100644
-> > --- a/tools/perf/arch/x86/util/header.c
-> > +++ b/tools/perf/arch/x86/util/header.c
-> > @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
-> >       unsigned int b, c, d;
-> >
-> >       cpuid(0, 0, lvl, &b, &c, &d);
-> > -     strncpy(&vendor[0], (char *)(&b), 4);
-> > -     strncpy(&vendor[4], (char *)(&d), 4);
-> > -     strncpy(&vendor[8], (char *)(&c), 4);
-> > +     memcpy(&vendor[0], (char *)(&b), 4);
-> > +     memcpy(&vendor[4], (char *)(&d), 4);
-> > +     memcpy(&vendor[8], (char *)(&c), 4);
->
-> Why not:
->         cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(v=
-endor + 4));
-Hello David,
+On Fri, Jul 04, 2025 at 12:21:03PM +0200, Borislav Petkov wrote:
+> On Fri, Jul 04, 2025 at 09:13:16AM -0000, tip-bot2 for K Prateek Nayak wrote:
+> > The following commit has been merged into the sched/urgent branch of tip:
+> > 
+> > Commit-ID:     02bb4259ca525efa39a2531cb630329fb87fc968
+> > Gitweb:        https://git.kernel.org/tip/02bb4259ca525efa39a2531cb630329fb87fc968
+> > Author:        K Prateek Nayak <kprateek.nayak@amd.com>
+> > AuthorDate:    Mon, 30 Jun 2025 06:10:59 
+> > Committer:     Peter Zijlstra <peterz@infradead.org>
+> > CommitterDate: Fri, 04 Jul 2025 10:35:56 +02:00
+> > 
+> > sched/fair: Use sched_domain_span() for topology_span_sane()
+> 
+> My guest doesn't like this one and reverting it ontop of the whole tip lineup
+> fixes it.
 
-This also works well. But, I think the "memcpy" is more clean and
-explanatory . I can change it to this if it is prefered.
-
-What do you think ?
-
-Thank you.
->
->
-> >       vendor[12] =3D '\0';
-> >  }
-> >
->
+OK, let me pull this patch real quick for now. Clearly it needs moar
+work.
