@@ -1,163 +1,177 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B511923E336;
-	Fri,  4 Jul 2025 20:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751661335; cv=pass; b=TqyxwNh37IdCLJ3A5K71eDdxcN6R9MbdWjAfdR6sqoRd/u2R/h6lqRIMDaEtKexDGD2Mu1w/ThyH2f6mLh2dg9VzIe1jOFFoVOoL1ftiNkGV/b1sQmoONbbk62S9UCnKuQSN0t3KJhjKigcDBqy4piNfH9WX9zOrKABPjzmsWuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751661335; c=relaxed/simple;
-	bh=tGDhA6trtueapCTJZVqL3Ich/6m5S6c3emrgtXjYZfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cI3U65irvEGJWfq7Q2lSC6UKW0eUGybpxFMeiLY4wGSVeVTQYgQ2HIVPUg0LYIp/j5UQ6yby7zKC3S8lGOpYWqCFhbDsojBr8ueSE/DyaPHH4W6XsWWxC5xW17jTfrN/5o+x++nCqu+FhEc0487bUPhxEqIdKuIs2AOOS8TZvMg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=UXyu7DUn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162912E36EE;
+	Fri,  4 Jul 2025 20:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751661956; cv=none; b=C5cSQmct218P2DbwsDjOU6Gu6yTYnFnhGHjhgqITJjd0ZSOksJcDy+EW78E84rZd4oGWmV2eomZTREEybTnU1hKEZNe9jPuwdMEFJRSL4gb5ZD5GTgupDtRxEtIaMiMfd5AgMtlfkhrlOMW3sVAWdZesvBCd9xJTaDe6etHg4kc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751661956; c=relaxed/simple;
+	bh=4xYB//ni5ywKO3/5qJ9H8xJDtm5Tpvw8yytmicWjmdQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HZ7G4KnZZQ0RV1GMo/aPkQ7ubZEQ4j+F5cnXFixX2vuT8HjIYwZXY756RDXEunz7JIQTLyxiXI9dp+Q6HOQberXG1M1BqWJ/i/obZTg4IEG4Xnnm+0l697zxR2ETAC2jdKK14F1JTKc2AhHSdXXvimdskvaojbUzZaUqYASlew4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLciuCj0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="UXyu7DUn"
-ARC-Seal: i=1; a=rsa-sha256; t=1751661307; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KJkC27XZSlJxaKuRavoNposgZnBJRG8I/1U+dz8MTzS0rg/awahbWC4zjYRksq6DZhS6t3TiO60dOnjrh/x1QoA2IDARCQx7oWHFsQrUM3krwPiBmMk+JT6TUkHiLCdc5zl2GEi91BSpV+rnnxNU1dRQC3f/bUco8EcIsVcIq6s=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751661307; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lWLh7zgOofOdzlksseZPXqSdJOoOzDwsXnYOSGf61Lw=; 
-	b=gmgGLA1X3mHt3BnNjhMyJjxQ3dCY7mw9CUdacbXBTazw5OtE7h6Y4z+DKSwWGOMjnDNCjWgsZPIQv+V3+lo+d9HzMn8sFvjPGuKXKemzJBKHxHid3bWqq6QQc1ov2K9XTW8Rc8PSJ0KpA1bs3o63OTHKnJz/wP5T5KrUpNbUHBs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751661307;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=lWLh7zgOofOdzlksseZPXqSdJOoOzDwsXnYOSGf61Lw=;
-	b=UXyu7DUn9+jB0s2NqIRNqOjLabqXjO4ZxvwxSU7m8+P0Rhbz8SCh3MWp+ehUNujq
-	rlq0nsP/76jAa+s0dc6WtbtVyDzblAPY62wQHhYg3ZYNo0FGVd/up/FxeWv140UqvEe
-	l9rxthRt8B9phhiFuLHAqslO6k4ysmNc0wG8XDUk=
-Received: by mx.zohomail.com with SMTPS id 1751661305093761.4754666334662;
-	Fri, 4 Jul 2025 13:35:05 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 189271803D0; Fri, 04 Jul 2025 22:35:00 +0200 (CEST)
-Date: Fri, 4 Jul 2025 22:35:00 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>, 
-	Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH net] net: phy: realtek: Reset after clock enable
-Message-ID: <5xjp2k3b4rggbmjgchg6vlusotoqoqmxi54zzer3ioxv274vtx@22tzjjcs7s3z>
-References: <20250704-phy-realtek-clock-fix-v1-1-63b33d204537@kernel.org>
- <0310186d-dfc5-406f-8cd1-c393a7c620e8@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLciuCj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2362C4CEE3;
+	Fri,  4 Jul 2025 20:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751661955;
+	bh=4xYB//ni5ywKO3/5qJ9H8xJDtm5Tpvw8yytmicWjmdQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=PLciuCj0+j1fEScnAAeIbYC6x4uSeVBW8PIQ3zGFyZaSDSDGIJrq0rC9yG0GoeRMF
+	 pLS8PZC1sP+ts9IBEU5OQRHSSGzR6JWp676TI/FBrOutWpaEMsQ5ub2M7+pn4F0h20
+	 i7ZpaM5HuixNdXQKpOntl4OOxSzYooBRgv7yQwW8ZLsrCZBpAb8ppwevYZ/GHzKRRm
+	 PBaQX/IyJbeKOliZlVLPmhSC6gjEosCZksEB/rp0Ufk2lEyK+VZmJu/qFC2gQS4t76
+	 C8Ul39Zh++0koO7Ey5heEZIwjsYNIG2ic0wJ8q0A1t82aXKmT4epKFsfocAfqCeQWR
+	 1Pd541SGDJ67Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rh6zjux5atjchmnj"
-Content-Disposition: inline
-In-Reply-To: <0310186d-dfc5-406f-8cd1-c393a7c620e8@gmail.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/251.649.55
-X-ZohoMailClient: External
-
-
---rh6zjux5atjchmnj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net] net: phy: realtek: Reset after clock enable
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 22:45:48 +0200
+Message-Id: <DB3KC64NSYK7.31KZXSNO1XOGM@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <lkmm@lists.linux.dev>, <linux-arch@vger.kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Will Deacon" <will@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Wedson Almeida Filho"
+ <wedsonaf@gmail.com>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude
+ Paul" <lyude@redhat.com>, "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
+ <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>
+X-Mailer: aerc 0.20.1
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-5-boqun.feng@gmail.com>
+ <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
+ <20250623193019.6c425467.gary@garyguo.net> <aFmmYSAyvxotYfo7@tardis.local>
+ <aGg4sIORQiG02IoD@Mac.home>
+In-Reply-To: <aGg4sIORQiG02IoD@Mac.home>
 
-Hi,
+On Fri Jul 4, 2025 at 10:25 PM CEST, Boqun Feng wrote:
+> There are a few off-list discussions, and I've been trying some
+> experiment myself, here are a few points/concepts that will help future
+> discussion or documentation, so I put it down here:
+>
+> * Round-trip transmutability (thank Benno for the name!).
+>
+>   We realize this should be a safety requirement of `AllowAtomic` type
+>   (i.e. the type that can be put in a Atomic<T>). What it means is:
+>
+>   - If `T: AllowAtomic`, transmute() from `T` to `T::Repr` is always
+>     safe and
 
-On Fri, Jul 04, 2025 at 10:18:29PM +0200, Heiner Kallweit wrote:
-> On 04.07.2025 19:48, Sebastian Reichel wrote:
-> > On Radxa ROCK 4D boards we are seeing some issues with PHY detection and
-> > stability (e.g. link loss, or not capable of transceiving packages)
-> > after new board revisions switched from a dedicated crystal to providing
-> > the 25 MHz PHY input clock from the SoC instead.
-> >=20
-> > This board is using a RTL8211F PHY, which is connected to an always-on
-> > regulator. Unfortunately the datasheet does not explicitly mention the
-> > power-up sequence regarding the clock, but it seems to assume that the
-> > clock is always-on (i.e. dedicated crystal).
-> >=20
-> > By doing an explicit reset after enabling the clock, the issue on the
-> > boards could no longer be observed.
-> >=20
-> Is the SoC clock always on after boot? Or may it be disabled e.g.
-> during system suspend? Then you would have to do the PHY reset also
-> on resume from suspend.
+s/safe/sound/
 
-Upstream kernel does not yet support suspend/resume on Rockchip RK3576
-(the SoC used by the ROCK 4D) and I missed, that the clock is disabled
-in the PHY's suspend routine.
+>   - if a value of `T::Repr` is a result of transmute() from `T` to
+>     `T::Repr`, then `transmute()` for that value to `T` is also safe.
 
-Detlev: You added the initial clock support to the driver. If I add
-the reset in the resume routine, can you do regression testing on
-the board you originally added the clock handling for?
+s/safe/sound/
 
-Greetings,
+:)
 
--- Sebastian
+>
+>   This essentially means a valid bit pattern of `T: AllowAtomic` has to
+>   be a valid bit pattern of `T::Repr`.
+>
+>   This is needed because the atomic framework operates on `T::Repr` to
+>   implement atomic operations on `T`.
+>
+>   Note that this is more relaxed than bi-direct transmutability (i.e.
+>   transmute() between `T` and `T::Repr`) because we want to support
+>   atomic type over unit-only enums:
+>
+>     #[repr(i32)]
+>     pub enum State {
+>         Init =3D 0,
+> 	Working =3D 1,
+> 	Done =3D 2,
+>     }
+>
+>   This should be really helpful to support atomics as states, for
+>   example:
+>
+>     https://lore.kernel.org/rust-for-linux/20250702-module-params-v3-v14-=
+1-5b1cc32311af@kernel.org/
+>
+> * transmute()-equivalent from_repr() and into_repr().
 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 7300c9b574cc ("net: phy: realtek: Add optional external PHY cloc=
-k")
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  drivers/net/phy/realtek/realtek_main.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >=20
-> > diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/r=
-ealtek/realtek_main.c
-> > index c3dcb62574303374666b46a454cd4e10de455d24..3a783f0c3b4f2a4f6aa63a1=
-6ad309e3471b0932a 100644
-> > --- a/drivers/net/phy/realtek/realtek_main.c
-> > +++ b/drivers/net/phy/realtek/realtek_main.c
-> > @@ -231,6 +231,10 @@ static int rtl821x_probe(struct phy_device *phydev)
-> >  		return dev_err_probe(dev, PTR_ERR(priv->clk),
-> >  				     "failed to get phy clock\n");
-> > =20
-> > +	/* enabling the clock might produce glitches, so hard-reset the PHY */
-> > +	phy_device_reset(phydev, 1);
-> > +	phy_device_reset(phydev, 0);
-> > +
-> >  	ret =3D phy_read_paged(phydev, RTL8211F_PHYCR_PAGE, RTL8211F_PHYCR1);
-> >  	if (ret < 0)
-> >  		return ret;
-> >=20
-> > ---
-> > base-commit: 4c06e63b92038fadb566b652ec3ec04e228931e8
-> > change-id: 20250704-phy-realtek-clock-fix-6cd393e8cb2a
-> >=20
-> > Best regards,
->=20
+Hmm I don't think this name fits the description below, how about
+"bit-equivalency of from_repr() and into_repr()"? We don't need to
+transmute, we only want to ensure that `{from,into}_repr` are just
+transmutes.
 
---rh6zjux5atjchmnj
-Content-Type: application/pgp-signature; name="signature.asc"
+>   (This is not a safety requirement)
+>
+>   from_repr() and into_repr(), if exist, should behave like transmute()
+>   on the bit pattern of the results, in other words, bit patterns of `T`
+>   or `T::Repr` should stay the same before and after these operations.
+>
+>   Of course if we remove them and replace with transmute(), same result.
+>
+>   This reflects the fact that customized atomic types should store
+>   unmodified bit patterns into atomic variables, and this make atomic
+>   operations don't have weird behavior [1] when combined with new(),
+>   from_ptr() and get_mut().
 
------BEGIN PGP SIGNATURE-----
+I remember that this was required to support types like `(u8, u16)`? If
+yes, then it would be good to include a paragraph like the one above for
+enums :)
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhoOvAACgkQ2O7X88g7
-+posEA//SXz6ukkQ+k4ZKaQKCxpIXW1tYqCWcpKkffl6p0MR1HXt+n/V04xcAXlH
-2CSZyrXg7n54anYOxhLQ8coMyTPGRe4sA01z0ggfj1ChmAF4DxmE+yDjyUHdL6wW
-nUlSd9RWwrpfcDfDTab9mUfYUVq9b/FKG8REQa2RfA95/MXMmz7ZhtlmOca6xBq3
-3Zdylq/jzm20XoV9vDHysI2jIArDMxk+wFN1Fxw0DBpWREhEG7Cb4ypi2qP7En9d
-NnJ1oY29YEkMDXkrWal4gSgvALnI8QmiLNEyaSzuac025P5aS20mc7fc/48GUPFj
-+diVY3m4lnG277cJ4by44AYIv8j3qmssFkAiKk+Mt6RohtPmtbMmmf1ayPRoXq38
-rua/kR+ut//QS2wJoqqYQ0ng64MnkjW0aorhkcPQbkqeKWzdeyP7ZN/vPPsPLrqe
-Dcr4dIA81KsjWLFikYT+r9E1eX4xZibYpRiaHtkX2fwcqF4v2lDKuGXvHlZ5xPnt
-5MAEsgQ1g75DaDkttxiuybvVXcHyZp1W0fdKgo7tJss3+VA9oB/RJrBYFg/Yc9iW
-lThjwpml4hRmU7rAF4XVu8rHKpxF0EnoMuT1kOSoIUKHhikJ7Tu8CcXWB5lVmQ9u
-BYhzGseXFsQfpciDbXQ+1oW5yVOXFqA9Be0IOHQNI/QOAoFamyU=
-=bDSD
------END PGP SIGNATURE-----
+> * Provenance preservation.
+>
+>   (This is not a safety requirement for Atomic itself)
+>
+>   For a `Atomic<*mut T>`, it should preserve the provenance of the
+>   pointer that has been stored into it, i.e. the load result from a
+>   `Atomic<*mut T>` should have the same provenance.
+>
+>   Technically, without this, `Atomic<*mut T>` still work without any
+>   safety issue itself, but the user of it must maintain the provenance
+>   themselves before store or after load.
+>
+>   And it turns out it's not very hard to prove the current
+>   implementation achieve this:
+>
+>   - For a non-atomic operation done on the atomic variable, they are
+>     already using pointer operation, so the provenance has been
+>     preserved.
+>   - For an atomic operation, since they are done via inline asm code, in
+>     Rust's abstract machine, they can be treated as pointer read and
+>     write:
+>
+>     a) A load of the atomic can be treated as a pointer read and then
+>        exposing the provenance.
+>     b) A store of the atomic can be treated as a pointer write with a
+>        value created with the exposed provenance.
+>
+>     And our implementation, thanks to no arbitrary type coercion,
+>     already guarantee that for each a) there is a from_repr() after and
+>     for each b) there is a into_repr() before. And from_repr() acts as
+>     a with_exposed_provenance() and into_repr() acts as a
+>     expose_provenance(). Hence the provenance is preserved.
 
---rh6zjux5atjchmnj--
+I'm not sure this point is correct, but I'm an atomics noob, so maybe
+Gary should take a look at this :)
+
+>   Note this is a global property and it has to proven at `Atomic<T>`
+>   level.
+
+Thanks for he awesome writeup, do you want to put this in some comment
+or at least the commit log?
+
+---
+Cheers,
+Benno
