@@ -1,70 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE34D286D63
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016F52857FF;
+	Fri,  4 Jul 2025 08:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617471; cv=none; b=fP3lXrSiUXi5vD0BXDqRqPavFrNjGflPr9M5mn3WhGj3MsPMpjS8SuIy9s1IMRnv9Az6gG80pSFn/dzfvdA1s2oyRjvsgLfn5NqW9zuMIQQeSo7ZV4M5smgMrat2kLOiE2ReluVzFrl/O2cibguIF237y8N8YfyFlBuslI2O5SM=
+	t=1751617477; cv=none; b=q8V4MSYWHlHzJ9pzJl+gOkVJerR1zSdL3c/VPzc469WXaZFnh3KRDXc7KC+c4Cl+aEHYp2k7lPmF07i9eyAJS0HSlurKFABXC/NutBP6AzPel6yZIUFb8Hxn76qkKAJgxNvpBrIJjIpu6dkjEYJyV/jZwsRXiOZeIXXWXadoivI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617471; c=relaxed/simple;
-	bh=hNS3AJuvFAF9BI74gAcGsp48sqw2j6KHtYQY1YWXNa8=;
+	s=arc-20240116; t=1751617477; c=relaxed/simple;
+	bh=8bQ/kAWmKbMyR8G+zrxH66t6rKnWduiJy6CgnKtxMws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsboClwaV5RkS+T89IR05Ql2anlhxL830nyw6ST+dJ+WsTAe357K3H2kUr+n44ycS+N0Yq9pgJnA1e2mjvN6hI55MjpKSKkSAdyfnmUIX0L2XyW+/JUh3/7h181kUHy0GdCv7348ZPlMIQ8pG0de03hvC8R6bQrnzvmaRH8YCLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kibFYCCG; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PwFzLGjHUHVi0jhMnT40IjfAfmypmE7H2veafU7RdWnVfHSvxgcgN78xyTt1kxefj0W/j+/uOsoGhhv5CykkiqaJc2V5JSqyyRrAdZuLU5u12jjJguQlpnGElMkdsBdcdvvZXHE+StvFBIPxF01+DcQVFVMKFeS7ukxurAZqXBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YWc6Gsye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kibFYCCG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751617470; x=1783153470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hNS3AJuvFAF9BI74gAcGsp48sqw2j6KHtYQY1YWXNa8=;
-  b=kibFYCCGXtgwT8qXctBCXjjwCPbWm5Mth36L97jaCxQp5OE81vy0NHhj
-   QU4Zw8yjf0woNAY8g4bmUX9yNnR/RxuRCvUvEfgWG9xQIzYdGU5DNH8BU
-   42l9E1Mmmib7ps6q1FmOgrM0lBQnAKSSkQqIjH8V4IXUMiwF+hsVVZ3yv
-   7PFCjq4mTmn6a1xRf9zOtvCEZ4oht9YE39sTfWYOe5ST/48OR8SC4Fnms
-   BPiIzof1dr+rgs+cDT+n1AlknyjLRyHYAzBIELK/qNIu981+y7lP+oz20
-   embU/Y5EYfqdnUyLHB0BB1IgC2sAbqWX8CSqgdVZOXHuYgfai3ey6ukqs
-   Q==;
-X-CSE-ConnectionGUID: SUvOfvoqSOmhtxN0ki/PoQ==
-X-CSE-MsgGUID: LSUV/5IKTJ+ZKKaVDaGXIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="79388726"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="79388726"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:24:29 -0700
-X-CSE-ConnectionGUID: tpdZkD9uQC249uQq+oRqwQ==
-X-CSE-MsgGUID: zQjV/mBQRVWnR2077FGrHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="154716553"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 04 Jul 2025 01:24:26 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXbiZ-0003UF-1G;
-	Fri, 04 Jul 2025 08:24:23 +0000
-Date: Fri, 4 Jul 2025 16:24:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Caterina Shablia <caterina.shablia@collabora.com>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kernel@collabora.com,
-	Caterina Shablia <caterina.shablia@collabora.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] drm/panthor: Add support for atomic page table
- updates
-Message-ID: <202507041635.WyDu3TQ1-lkp@intel.com>
-References: <20250703152908.16702-3-caterina.shablia@collabora.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YWc6Gsye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45D9C4CEE3;
+	Fri,  4 Jul 2025 08:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751617476;
+	bh=8bQ/kAWmKbMyR8G+zrxH66t6rKnWduiJy6CgnKtxMws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YWc6Gsye+ceq3AZl6vz5vCYRgfvWD3+jAzpZp1Vi5asujwWdAYrLyVLGxbIlCW0jm
+	 cG2OyGRATW6+jpYColihmvT39vK/oRD9zPQ9qpgA3oUwTDDnLp2+skEk2sEyYE5d/s
+	 7+PVQhw+2NF0Z6JtvXHDSBOeAt4sTjP2pY/mFotE=
+Date: Fri, 4 Jul 2025 10:24:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jie Deng <dengjie03@kylinos.cn>
+Cc: stern@rowland.harvard.edu, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH v2] usb: storage: Ignore UAS driver for SanDisk Extreme
+ Pro 55AF storage device
+Message-ID: <2025070422-punctured-opal-f51e@gregkh>
+References: <2025070329-rinse-engaged-e7af@gregkh>
+ <20250704061116.1020646-1-dengjie03@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,71 +41,215 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703152908.16702-3-caterina.shablia@collabora.com>
+In-Reply-To: <20250704061116.1020646-1-dengjie03@kylinos.cn>
 
-Hi Caterina,
+On Fri, Jul 04, 2025 at 02:11:16PM +0800, Jie Deng wrote:
+> The SanDisk Extreme Pro 55AF storage device(0781:55af) has poor compatibility with UAS drivers.
+> The logs:
+> [    1.359859][ 0] [  T163] usb 2-1: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+> [    1.385708][ 0] [  T163] usb 2-1: New USB device found, idVendor=0781, idProduct=55af, bcdDevice=10.85
+> [    1.385709][ 0] [  T163] usb 2-1: New USB device strings: Mfr=2, Product=3, SerialNumber=1
+> [    1.385710][ 0] [  T163] usb 2-1: Product: Extreme Pro 55AF
+> [    1.385711][ 0] [  T163] usb 2-1: Manufacturer: SanDisk
+> [    1.385711][ 0] [  T163] usb 2-1: SerialNumber: 323234323935343030343636
+> [    1.927603][ 0] [  T306] usbcore: registered new interface driver usb-storage
+> [    1.940511][ 0] [  T306] scsi host3: uas
+> [    1.940584][ 0] [  T306] usbcore: registered new interface driver uas
+> [    1.940843][ 0] [  T188] scsi 3:0:0:0: Direct-Access     SanDisk  Extreme Pro 55AF 1085 PQ: 0 ANSI: 6
+> [    1.941363][ 0] [  T188] scsi 3:0:0:1: Enclosure         SanDisk  SES Device       1085 PQ: 0 ANSI: 6
+> [    1.941697][ 0] [  T188] sd 3:0:0:0: Attached scsi generic sg0 type 0
+> [    1.941783][ 0] [  T188] scsi 3:0:0:1: Attached scsi generic sg1 type 13
+> [    1.942296][ 0] [  T189] sd 3:0:0:0: [sda] 1953459617 512-byte logical blocks: (1.00 TB/931 GiB)
+> [    1.942373][ 0] [  T189] sd 3:0:0:0: [sda] Write Protect is off
+> [    1.942374][ 0] [  T189] sd 3:0:0:0: [sda] Mode Sense: 37 00 10 00
+> [    1.942534][ 0] [  T189] sd 3:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+> [    1.943586][ 0] [  T189] sd 3:0:0:0: [sda] Optimal transfer size 2097152 bytes
+> [    1.976797][ 0] [  T189]  sda: sda1
+> [    1.977898][ 0] [  T189] sd 3:0:0:0: [sda] Attached SCSI disk
+> [    1.980406][ 0] [  T267] scsi 3:0:0:1: Failed to get diagnostic page 0x1
+> [    1.980408][ 0] [  T267] scsi 3:0:0:1: Failed to bind enclosure -19
+> [    1.980414][ 0] [  T267] ses 3:0:0:1: Attached Enclosure device
+> [    1.981068][ 0] [    C0] sd 3:0:0:0: [sda] tag#10 data cmplt err -75 uas-tag 1 inflight: CMD
+> [    1.981071][ 0] [    C0] sd 3:0:0:0: [sda] tag#10 CDB: Read(10) 28 00 74 6f 6d 00 00 00 08 00
+> [   33.819186][ 0] [  T188] sd 3:0:0:0: [sda] tag#10 uas_eh_abort_handler 0 uas-tag 1 inflight: CMD
+> [   33.819188][ 0] [  T188] sd 3:0:0:0: [sda] tag#10 CDB: Read(10) 28 00 74 6f 6d 00 00 00 08 00
+> [   33.843186][ 0] [  T309] scsi host3: uas_eh_device_reset_handler start
+> 
+> Device decriptor is below:
+> Bus 002 Device 003: ID 0781:55af SanDisk Corp. Extreme Pro 55AF
+> Device Descriptor:
+>   bLength                18
+>   bDescriptorType         1
+>   bcdUSB               3.20
+>   bDeviceClass            0
+>   bDeviceSubClass         0
+>   bDeviceProtocol         0
+>   bMaxPacketSize0         9
+>   idVendor           0x0781 SanDisk Corp.
+>   idProduct          0x55af
+>   bcdDevice           10.85
+>   iManufacturer           2 SanDisk
+>   iProduct                3 Extreme Pro 55AF
+>   iSerial                 1 323234323935343030343636
+>   bNumConfigurations      1
+>   Configuration Descriptor:
+>     bLength                 9
+>     bDescriptorType         2
+>     wTotalLength       0x0079
+>     bNumInterfaces          1
+>     bConfigurationValue     1
+>     iConfiguration          0
+>     bmAttributes         0x80
+>       (Bus Powered)
+>     MaxPower              896mA
+>     Interface Descriptor:
+>       bLength                 9
+>       bDescriptorType         4
+>       bInterfaceNumber        0
+>       bAlternateSetting       0
+>       bNumEndpoints           2
+>       bInterfaceClass         8 Mass Storage
+>       bInterfaceSubClass      6 SCSI
+>       bInterfaceProtocol     80 Bulk-Only
+>       iInterface              0
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x81  EP 1 IN
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst              15
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x02  EP 2 OUT
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst              15
+>     Interface Descriptor:
+>       bLength                 9
+>       bDescriptorType         4
+>       bInterfaceNumber        0
+>       bAlternateSetting       1
+>       bNumEndpoints           4
+>       bInterfaceClass         8 Mass Storage
+>       bInterfaceSubClass      6 SCSI
+>       bInterfaceProtocol     98
+>       iInterface              0
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x81  EP 1 IN
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst              15
+>         MaxStreams             32
+>         Data-in pipe (0x03)
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x02  EP 2 OUT
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst              15
+>         MaxStreams             32
+>         Data-out pipe (0x04)
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x83  EP 3 IN
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst              15
+>         MaxStreams             32
+>         Status pipe (0x02)
+>       Endpoint Descriptor:
+>         bLength                 7
+>         bDescriptorType         5
+>         bEndpointAddress     0x04  EP 4 OUT
+>         bmAttributes            2
+>           Transfer Type            Bulk
+>           Synch Type               None
+>           Usage Type               Data
+>         wMaxPacketSize     0x0400  1x 1024 bytes
+>         bInterval               0
+>         bMaxBurst               0
+>         Command pipe (0x01)
+> 
+> So ignore UAS driver for this device.
+> 
+> Signed-off-by: Jie Deng <dengjie03@kylinos.cn>
+> ---
+>  drivers/usb/storage/unusual_uas.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+> index 1477e31d7763..6b1a08e2e724 100644
+> --- a/drivers/usb/storage/unusual_uas.h
+> +++ b/drivers/usb/storage/unusual_uas.h
+> @@ -52,6 +52,13 @@ UNUSUAL_DEV(0x059f, 0x1061, 0x0000, 0x9999,
+>  		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+>  		US_FL_NO_REPORT_OPCODES | US_FL_NO_SAME),
+>  
+> +/* Reported-by: Jie Deng <dengjie03@kylinos.cn> */
+> +UNUSUAL_DEV(0x0781, 0x55af, 0x0000, 0x9999,
+> +		"SanDisk",
+> +		"Extreme Pro 55AF",
+> +		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+> +		US_FL_IGNORE_UAS),
+> +
+>  /* Reported-by: Zhihong Zhou <zhouzhihong@greatwall.com.cn> */
+>  UNUSUAL_DEV(0x0781, 0x55e8, 0x0000, 0x9999,
+>  		"SanDisk",
+> -- 
+> 2.25.1
+> 
+> 
 
-kernel test robot noticed the following build warnings:
+Hi,
 
-[auto build test WARNING on drm-xe/drm-xe-next]
-[also build test WARNING on linus/master v6.16-rc4 next-20250703]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Caterina-Shablia/drm-gpuvm-Kill-drm_gpuva_init/20250704-002914
-base:   https://gitlab.freedesktop.org/drm/xe/kernel.git drm-xe-next
-patch link:    https://lore.kernel.org/r/20250703152908.16702-3-caterina.shablia%40collabora.com
-patch subject: [PATCH v2 1/7] drm/panthor: Add support for atomic page table updates
-config: x86_64-buildonly-randconfig-004-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041635.WyDu3TQ1-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041635.WyDu3TQ1-lkp@intel.com/reproduce)
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507041635.WyDu3TQ1-lkp@intel.com/
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-All warnings (new ones prefixed by >>):
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
->> drivers/gpu/drm/panthor/panthor_mmu.c:1685:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-    1685 |         if (vm->as.id >= 0) {
-         |             ^~~~~~~~~~~~~~
-   drivers/gpu/drm/panthor/panthor_mmu.c:1691:9: note: uninitialized use occurs here
-    1691 |         return ret;
-         |                ^~~
-   drivers/gpu/drm/panthor/panthor_mmu.c:1685:2: note: remove the 'if' if its condition is always true
-    1685 |         if (vm->as.id >= 0) {
-         |         ^~~~~~~~~~~~~~~~~~~
-   drivers/gpu/drm/panthor/panthor_mmu.c:1679:9: note: initialize the variable 'ret' to silence this warning
-    1679 |         int ret;
-         |                ^
-         |                 = 0
-   1 warning generated.
+thanks,
 
-
-vim +1685 drivers/gpu/drm/panthor/panthor_mmu.c
-
-  1675	
-  1676	static int panthor_vm_lock_region(struct panthor_vm *vm, u64 start, u64 size)
-  1677	{
-  1678		struct panthor_device *ptdev = vm->ptdev;
-  1679		int ret;
-  1680	
-  1681		mutex_lock(&ptdev->mmu->as.slots_lock);
-  1682		drm_WARN_ON(&ptdev->base, vm->locked_region.start || vm->locked_region.size);
-  1683		vm->locked_region.start = start;
-  1684		vm->locked_region.size = size;
-> 1685		if (vm->as.id >= 0) {
-  1686			lock_region(ptdev, vm->as.id, start, size);
-  1687			ret = wait_ready(ptdev, vm->as.id);
-  1688		}
-  1689		mutex_unlock(&ptdev->mmu->as.slots_lock);
-  1690	
-  1691		return ret;
-  1692	}
-  1693	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+greg k-h's patch email bot
