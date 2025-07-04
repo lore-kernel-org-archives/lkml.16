@@ -1,114 +1,80 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7451C20F063
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82296143C69;
+	Fri,  4 Jul 2025 06:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609075; cv=none; b=I3IsRePHCkTL82SFPJs0rM4iVerZP1PipxSSl3j+G2oAwY2oELwRXganoWwKQb3R3S6/Kn7WGxuFoUyTk68c8SL6vxrnfuaKevPsVrRKRL2nb1t/Wq0Uhu0ogezcUY6zK7qB+1wFY9OvJQf07wiwE7XQrkkVMJImwCztAbTNGDQ=
+	t=1751609130; cv=none; b=HdGLn9jTu3Qv9DsWS8ecW9Y4gr0V80U2k8pcRe2lVzCrcLAnSWXpxmKsJpMIcogBfR723MiWCHIyTMN/K9knIqUuHG0Zq9PTSX4aSasH+VkGEs37JVAAvEuT3cICT6MTi0CfYM8oqOY1buAU0SjNrc8kxDlI4LKRVdtKa/aG3mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609075; c=relaxed/simple;
-	bh=3OCzd5BTGn/s4JT1674h6fkTKDdG/cjR5zkZ2g3ccBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Op0gPTGQO5frZPzODVgkKrmJMekT8cJ0CnO4olG25TxObeM7LEeBVegTWnYs46ON5MvDAu64Xeups4n64+78dgB9yznBddCrLHNxCXyZQO16nSw4vStgtlyttBbUTD3ndGYMvu47OiVYUxfs0dXE4+fVLk6Juj/ibM7VBPx0kJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=LstC8Jdi; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1751609130; c=relaxed/simple;
+	bh=llJ6Ixj7Atm+JN8GCKw9TZo/vzaEZDwJyPYsadE69fk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mu+CisNZ2cKqBYo+F6IgvH8u7uKRNgk7s7SHgn2iLp+6DQ7xdvrhiYSKrw83WwAQVaCQ/nTPRByQhVH5/Jzyu3zoAwPAG1GpoNd/WnAKwP7faPGppTLCNKusNg8m/qFygfwDhs/suDwlXeuSK0xoHCK+EGOpU4UaBBkS0bTX/Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvEnSObd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="LstC8Jdi"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id XTlvuiTVlXshwXZXDurlx5; Fri, 04 Jul 2025 06:04:31 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id XZXCu74axTd1CXZXDuxTEF; Fri, 04 Jul 2025 06:04:31 +0000
-X-Authority-Analysis: v=2.4 cv=B/Jy0/tM c=1 sm=1 tr=0 ts=68676eef
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=ZJCAKeS_rTr8ZDEThcMA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=TlZBlsExbtZHpp9JpBdKHNq+76CAEy3oCuHbciuofzQ=; b=LstC8JdismZmfKNgt/A8MPlYqZ
-	iXbu3GxaivOw7ZurjMvvTpgNUcIdyV7wKegzrEw5RUbbdJihIa+V2EKIxHmiZnwoHst5YDeb9MYNJ
-	f+EhTrsPWzh1uOBbKwZngUkKHVUuheZyZvheCWgCM2krc/EDZqbQjFbaq3R8CkKNQR9SnZnecJrVq
-	tfH8gBabS5F+2xzj7y30yVMtCGtQveKwjpnjpBiLA2FUAyeWSzROuqQqPhx08Mh2APrCRFqfDdnRq
-	2SFpjRdm9UWh+u6QGWi/80KsCLd6WYv+MKUVJ18n5IpArl5D3IaqF4g88UVCRdGjpjHhaZVzcXpyY
-	ZYoxuRzQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:50322 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uXZXA-00000000sfL-1Jzn;
-	Fri, 04 Jul 2025 00:04:28 -0600
-Message-ID: <c64dfabd-cfc5-47f3-aed8-7f9e6fa9bc7a@w6rz.net>
-Date: Thu, 3 Jul 2025 23:04:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvEnSObd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2525DC4CEE3;
+	Fri,  4 Jul 2025 06:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751609130;
+	bh=llJ6Ixj7Atm+JN8GCKw9TZo/vzaEZDwJyPYsadE69fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NvEnSObd/nzwQp/s6bpByuKNLRkDXhkBJC4SCbnbW4f0aLfUNqvMcGNsQs+gJYlbY
+	 0MJvWDbV65HRXeKQZx+UUGml85dqlBOtWDNTcIHrNRhEu2VkcMedj3ynYc6S0ZumtF
+	 rmgkE5i5PqkkZ7zir18jiJTWTQ2eSaf5qNicekYqknR5KMi1gwMWzxF/y6OlNhWEKy
+	 IVEE96w2nCjaGetXcJcVHWR8TOUSOVl/lecT3FhGxO2P22WSMquqs9iZyf3Zl9PTRr
+	 OIxmh23RO/r+cT9nAdZz3cPNP1MCSKnZXMJMLiiBlzkOLNQN2COFD8cUl8/jkV2yWI
+	 xP+9C4VXvjqMQ==
+Date: Thu, 3 Jul 2025 23:04:47 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: John Johansen <john.johansen@canonical.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto List <linux-crypto@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the apparmor tree with the libcrypto
+ tree
+Message-ID: <20250704060447.GC4199@sol>
+References: <20250704153630.0fb1e2f3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250703143941.182414597@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uXZXA-00000000sfL-1Jzn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:50322
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGz+5BRbBnjwScy1s6aJHp/D0m20NSwd4q47H+vKqfzAhaZA4qxiqDFcqOXvzfy267wUt1ZYNhWqcjTTH+G3A/sSV9T7cVn/SuCocOsYWkZgnUD0zrJm
- uj+LyIQO66v/y/+fNrWZbu4UnoNRnH6hIji5+iAIH+0p0RxvmEYtkWx29PIOsGbiuYtFTnLOlRfbwsAfzTGGEsHSa42UovO97BY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704153630.0fb1e2f3@canb.auug.org.au>
 
-On 7/3/25 07:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.96 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.96-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Jul 04, 2025 at 03:36:30PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the apparmor tree got a conflict in:
+> 
+>   security/apparmor/crypto.c
+> 
+> between commit:
+> 
+>   ad7ca74e1c60 ("apparmor: use SHA-256 library API instead of crypto_shash API")
+> 
+> from the libcrypto tree and commit:
+> 
+>   e9ed1eb8f621 ("apparmor: use SHA-256 library API instead of crypto_shash API")
+> 
+> from the apparmor tree.
+> 
+> I fixed it up (I used the former version since it appears to be much
+> newer) and can carry the fix as necessary. This is now fixed as far as
+> linux-next is concerned, but any non trivial conflicts should be mentioned
+> to your upstream maintainer when your tree is submitted for merging.
+> You may also want to consider cooperating with the maintainer of the
+> conflicting tree to minimise any particularly complex conflicts.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Thanks Stephen.  John, can you drop your version when you have a chance?
 
-Tested-by: Ron Economos <re@w6rz.net>
+Thanks,
 
+- Eric
