@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0362EFD89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2F22F0022;
 	Fri,  4 Jul 2025 07:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615697; cv=none; b=S8x+dbsu5FRAXajPCFHebmU/jCDO7ycBYXEjrEHcNlMDBevpsDxh+KHypwi6HcS0XeEWYDi0tE8tG25BLPEBXkc/B/MBjAA3LnI8s5puW2Mg4KGSvqpJ0eWrvLJ0ruH8rBExtX2IgYPRgs02wvLS7OIOgkKaKQlSTLjIkXmpOnk=
+	t=1751615698; cv=none; b=cSzBRfgl+OoeYPcUdBCmHpQ49o6vP/NgALNa99XnjF1rWn323QWxA4zWGNBcmu6whfPGSy60jd4ANaUn4p7+O2mUY29vbnPI0dxI+HeyS8tDuOMieOMZGFIQGIf0ZtUkfk7g+y6AbXhdTplFZ75P4DVF0Qankae1H7erTkjCLA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615697; c=relaxed/simple;
-	bh=RIcCzYI0omisWFmazd0VVo2FRQVujzPyYzOVgfw8bqU=;
+	s=arc-20240116; t=1751615698; c=relaxed/simple;
+	bh=r1Gsmx9kfkhpUyKheatqOMNMQ+hakjSERBDtaMYrqa4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MinmPCeaslNPxAf4PGS8cgSx0itxN9tRYlpV/lcAXzdPlvZuULJgW9mFWnxWsm29N/22A4dMN3IiYQ/6ssWlegWGtY1LKAV8JFrL3LEzLDVR9IMLvenLaT8mkGBv56WXUw/pykrRd+EnPmwQehr3/I2+8xTPVrjjPTJbvpuC6UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqwWl0I9; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=FdmQmdjBA4LsOPU0Bs42BIMgNaWecVKAunLKlZXt/v7Uhwf103nEgDurkkgDWWoStC0ttg/SkaeBhIAWOp3n+G/9qCRQBFBx8+PeiaMK/yEnXR8p2OF6RUA/OYWgj3j6hUyDXNxiYfHo0Sf9CjZSHNLzOchd81gIabe3owcnD/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDY5/DoT; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqwWl0I9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDY5/DoT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1751615695; x=1783151695;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RIcCzYI0omisWFmazd0VVo2FRQVujzPyYzOVgfw8bqU=;
-  b=mqwWl0I9ibhLYvlBirTdSdWx6FTAlLYkytS8w83HjBq1ae+seaFiARkc
-   uDPI1Rhp4L3ek6Y3Oh9ZeXjNu9N+tCkSyQCAXQ9M1kMBxCVr/drU88kLr
-   KorVUUFrkVINxizGp9AEztanG9WuIPWPpGng1XwjqtFRcPKlY1qDOSsBm
-   8sxqYT9qGIaP/CTv9Q4i5+pB1tIsHgGW+dBCeQiH4F6PKT59/UHyTrFWj
-   GFeXph3e1cCe5g455HCWLBFjmrpia+tjOwTX2b++pGG+roUenvEwQm1fT
-   WjLCgkP7JzLpxYwK31vR2eoV6bRh6WA/p22nkiKLW7vrTmmDjJ/IQPwyI
+  bh=r1Gsmx9kfkhpUyKheatqOMNMQ+hakjSERBDtaMYrqa4=;
+  b=fDY5/DoTarFMFqglSXFhBtxGndFH/JAJ/ueyfw6AbAunA325QIamBWjS
+   mRcM9bEAqwi7gRDwFsPD8N0KmwNtuIYv+i+47gM4mBD/v4w2KIai20uP/
+   Wg3ZMbRHvDsLN3NvqWoexCXUViTm0NEVivrFMV4WQEfn9H8nqJMV7bOXc
+   VAVP2D+oVSa3xjgXGcWRbqIRwMzkxtwg74jmp3qBDqqvpou7ZMpX6xNzx
+   iexfJkNCIfLj4O+Cy2/k3XTarOkZ2MPda91FnjDguKDgvTdh2l5e2seeD
+   GqjfqrLgf56nQIQO5X1B27gQmsQ/17LUudZzv3f76WJOdYixSJ/sJGiDI
    Q==;
-X-CSE-ConnectionGUID: ZbCvDpDYSKqhYYJ1Kz6ktg==
-X-CSE-MsgGUID: 7v9BHGmeSUOHvqrA9GDaXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194227"
+X-CSE-ConnectionGUID: y6+w1is4TCWd/w+l5Yz6KA==
+X-CSE-MsgGUID: G6hjKhYNTr+vMXYZ74wpWQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194228"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="64194227"
+   d="scan'208";a="64194228"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
   by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:47 -0700
-X-CSE-ConnectionGUID: kNh7sPjLQEKh+YsQsQJClw==
-X-CSE-MsgGUID: 4T0DHlcURkeMStImsUv7Sw==
+X-CSE-ConnectionGUID: 21+9UfiPQw2lAJ4azmc15g==
+X-CSE-MsgGUID: tSgevDUzRKuB9BqmPwGLjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158616612"
+   d="scan'208";a="158616618"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:45 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:46 -0700
 Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 1751144BAC;
-	Fri,  4 Jul 2025 10:54:43 +0300 (EEST)
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 0452D44424;
+	Fri,  4 Jul 2025 10:54:44 +0300 (EEST)
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org,
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 55/80] power: supply: twl4030_charger: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:42 +0300
-Message-Id: <20250704075442.3221330-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 56/80] pwm: img: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:43 +0300
+Message-Id: <20250704075443.3221370-1-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
@@ -82,21 +82,29 @@ rc2:
         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
                 pm-runtime-6.17-rc1
 
- drivers/power/supply/twl4030_charger.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pwm/pwm-img.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
-index 9dcb5457bef4..04216b2bfb6c 100644
---- a/drivers/power/supply/twl4030_charger.c
-+++ b/drivers/power/supply/twl4030_charger.c
-@@ -512,7 +512,6 @@ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
- 		ret |= twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE, 0x2a,
- 					TWL4030_BCIMDKEY);
- 		if (bci->usb_enabled) {
--			pm_runtime_mark_last_busy(bci->transceiver->dev);
- 			pm_runtime_put_autosuspend(bci->transceiver->dev);
- 			bci->usb_enabled = 0;
- 		}
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index 71542956feca..91e0b19f0c08 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -139,7 +139,6 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	      (timebase << PWM_CH_CFG_TMBASE_SHIFT);
+ 	img_pwm_writel(imgchip, PWM_CH_CFG(pwm->hwpwm), val);
+ 
+-	pm_runtime_mark_last_busy(pwmchip_parent(chip));
+ 	pm_runtime_put_autosuspend(pwmchip_parent(chip));
+ 
+ 	return 0;
+@@ -175,7 +174,6 @@ static void img_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	val &= ~BIT(pwm->hwpwm);
+ 	img_pwm_writel(imgchip, PWM_CTRL_CFG, val);
+ 
+-	pm_runtime_mark_last_busy(pwmchip_parent(chip));
+ 	pm_runtime_put_autosuspend(pwmchip_parent(chip));
+ }
+ 
 -- 
 2.39.5
 
