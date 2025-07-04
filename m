@@ -1,61 +1,63 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05752D94A5;
-	Fri,  4 Jul 2025 12:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDE02D94BD;
+	Fri,  4 Jul 2025 12:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633563; cv=none; b=UaJ09b7f+gdSVtx2aOXO8jiKUREQ01nQ3GDYWqeQwHmFbOAn2OHcE+Sbn/gorhCJkXeU0IgXtegOLa71dvXtwVXEXSXfyBgBgDyP4uOg6i9nEsbuOmGPvKUescPczrY+9Qu1QPHxb5CkQFcuXdLvVyInWSWvzUlqAhy7h34zwyg=
+	t=1751633564; cv=none; b=YTovVlKXw27Zp3oW3HbLdEEodH9+sS2fnDe34mxRyiZd9jlscvnTDtG32uDV3o5akjWphuS1mzp8Ik7FTAEMqipBD2JWPAnX+2s+5sfbZkDRFa2pLBnOiUNCRdBr8rE55s0klssfdUoGBeh4kj5vwUO/0szIMxT0zTlqYT2WejQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633563; c=relaxed/simple;
-	bh=Lv77ncIZaSXhxMERgrh5OeHFTO3hg5Vgpt53QyAMAhQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LbGm8cosS+hexlNuGdb6V4wvV68reZUQaJJH9VFuXSfySng1RF7HVAjCoprmtRw01NLZype/OT0NDbvOJgb5u5Np66moGg7VGJ5gqn3WxVjbPdV+/7XLO+63E3HkbF7ZiS0R4DGzzrDmSg7elaA+aw3TJzh0/njyaPNHZFgUnjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNpak+Xv; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1751633564; c=relaxed/simple;
+	bh=u/WvBmmNg2jkDi7MkfdVS4k08BsPma+U0Rw36YzvuLo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e9ffpOeHQLlv0n0sp1JfAToOax5vQaX4y3PS7zpj1l8uWboJxg3yBvN3wAYawDDeFN6gztRcCbCnl6xGSUe1fofMxp8hRyFttokd68+KsFngE3eq0dX+IekVmlzVjWty163vnyGG9l/YuQLtZbvMORQiVmFAGBJnn13rSePnKuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMwsXTMt; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNpak+Xv"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae0a0cd709bso426174366b.0;
-        Fri, 04 Jul 2025 05:52:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMwsXTMt"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ae0d7b32322so134536066b.2;
+        Fri, 04 Jul 2025 05:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751633558; x=1752238358; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U6agZDXg3JLzaN2OCV+FcnM7kSozPXczImXEBeFbSpI=;
-        b=HNpak+XvYdw8A6qZi1PigFfjQ4GjEoB53RNBa3p+xTf9Wc3S3CEFfLQOBKaxqE0qOf
-         QX99Nu/f9i9ZFRLAaZFErNix2H2CbIqoZpqBRFT7DQrm/U0toah8I3Gjv1LUelxgAANK
-         fEG2gqCIh14faNTrqzh7wSRu9SpOEBChc2rMqDbP8MZrk6ke10T9m1w4qMZ8LrV/i+Js
-         XODsPfYVCsdmI464FyacBJSMIqKE+6h6JzNc1UUi/HLjqJTxpr/MhsP5UQUXiAuHJeTK
-         VaMJDGFcZ5U1WOk15ozITxEy6wM8287XDwkpLzmtU2WagMilDVbCkDJH01N+TkXrynC6
-         6fsw==
+        d=gmail.com; s=20230601; t=1751633561; x=1752238361; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eH0TrjB6gEUsCKkL3O1IfJU1WEkIKTIsQrhxUkFUHdQ=;
+        b=jMwsXTMtDyLuyZxxVhoXrc1OChGRPbattQ0wfABrVsUuC4XwkKjWsZv6CmAicNjAjB
+         nwUxR5FJ1HPC8MXpdCT6Xztz5KV76siHnPKuBxiWxKYIsG2z9A/QLGOovsK8Z/S79kCn
+         Lm4M+ktttdUnzaxW6PiEDGtVazcZ2wlidzym7gS+UC1BsVbjhrFxhm4XNhwMaWYV9TCo
+         oKDls/KqGXFspXiimiUgoK7MeJe2hnsTJVcwT/JCBgeiaNrU0fgR863c2gi9fLItqV1z
+         6Ejjj9qePjzZu2U3v1XXC+3Wlz/kByEtpvlRNXthP8SeNtBrkLulN6ZcwzQ7V0ANdf2I
+         JuZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633558; x=1752238358;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U6agZDXg3JLzaN2OCV+FcnM7kSozPXczImXEBeFbSpI=;
-        b=OFuVhpWl5ziXWXAlDv0rZ0c59pjhRHKVPHBuDAFFGb0retjnEoddnBCXTO48D2lx+v
-         O7As3eohis5wXSxjX1el7JxV2ZL+qzJm0YsUkjIUpm2Xg3VPJJ6bGmIQ/IbdnvbSmt0S
-         G0f3PWEDA0i62/17O45+PoJW5QpQDN0CKRmIlW6BMwQMqbI2v32d0l9rWCcnlhSwmMTE
-         58tzYPzbFwfTL4BboGQjYqb5kjTjKIDQnJpSsJN3Q5X44d74uPnv+hyuQPwRZQUn0I7i
-         VLv4+qZpVDTRp2Ab6oFjQ9BUTQ4LcS9JzQ8FpngWPwZK8qLrjjiZdxKtgHzlQaVvkXq3
-         pz6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWJHRe4x12pD6peQuIL4BGM/IRtxNFOY8EelPkykA+4jz8melzjxBSQGY/JLU5YBF5/HLImXdWxAtz/L/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw03jKllVwYsXtN5jDNh5N4Mf/voXI5dXDw9yAC9mFYOaZ5KbM
-	cApY8g3lt1Bu7zSyCLChCyj+NYrYjhmIhqzRjEHz4HipN42O2IJ6MiklMS2l+96hyHfVAw==
-X-Gm-Gg: ASbGncvX8tbYYzpGVxcky1jI/PSmMErM0XstVA0RTYW/2FnepUGgcLcHdw7iKxTYI7t
-	1k451PVPXifBYHScjxWfAD+bt8aaA4i55EdNSXFK4m9wVEJl+u3bTTiXAnF3k/ktg+o1K0cvos2
-	AesS1OAJ1CY6FDdCjKEwJ1qGPODk2gwg8pmsTI+udMjfqJhvofIBEaQixZDn4xHLjZnSUr4hLYT
-	JxFEcKAOGQemDHG8R4HGmTE+QxRGU2i/P6iGcPj8PmUuuxTgW0pVDWD8EwZqcAAgf5mfnZDeEkv
-	lDTbvQJKNOLgUzxeOCxQ01pvcLNwbsUMNFrPgk3ySOQnel3S6N24MFc2ILS81gMqBCdIYycAdTB
-	J0h9GLeSoBBqqL0BHBTKmqTRZ/bpV4y7wSs+87G2Q8M890FlGjvS3LuTeGQ+6ew==
-X-Google-Smtp-Source: AGHT+IFpCEztIGoFzfrmV+vqdIEGfp/nTh6AxOzZLT2hvsf0an1a/VUt6ax6LIeqDZwMXaAilODeiw==
-X-Received: by 2002:a17:907:9711:b0:ad8:adf3:7d6d with SMTP id a640c23a62f3a-ae3f9cecbadmr258052966b.21.1751633557801;
-        Fri, 04 Jul 2025 05:52:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751633561; x=1752238361;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eH0TrjB6gEUsCKkL3O1IfJU1WEkIKTIsQrhxUkFUHdQ=;
+        b=GVYheA+b7HvJT5E6l7QT2GoaiWPnZhCeIt5VG7gExvralEyQiJl7E8aBvuQ34sEgus
+         YzDrS0fnm6yMX0yoJIXkdJ2gbj2w4pDv5uNO0PrpW1JD+3F/l+lThHK1PYTqVNmg1OBL
+         XcZch4JgkuiUUdg5I7NQAHn2ZXGnQT74KBYFSHVyFVXoTLse+9HP7eNQjQvIctimVCWt
+         U+9r81cP/eEAie5ll/Rkyt6E/7oIngKiTMtijvDYUqTqqEYAcUjLHV8I7GFLxncK8+uj
+         kuz30GL3BU9JY4xMFXO5PEhaIesNRqzmi1wGBzkx7LY65cU+JfqmzxojxT8fO/U47MWY
+         XmEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPi0gGyDBd2g7PBjTanMfkUoqRCpynXv8ktQ/C9nNmRRIk+H2DRi4rHYoSlr3mg5u+QnNNZvEGMjuv5HU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW3UIsZ6fVlYlNaFyGAHCXwyTeoviEOFdXjtBdiX83NOmHFdgN
+	bD1kZnRkvVJccS1ZrYBYQ86Kv5q7twFScSTU1iwTi6Zrg5ZK365w+7PM8pjRqgeZGRjbGw==
+X-Gm-Gg: ASbGncvrV598rTfSfhL9OXcneew1vVPyR0N28sMe4eIMuuoz2MsXnE+GJ2TbfqLw0bw
+	q8WSIT2cyg8CtJUZ1oi7csnFf0zneHsYfIZFwnrEmcNDve9qMMhtL45kd7hGG0OmeOqaC1+puMV
+	YxBc43VGUYsyNX0WtKQDdkdhCc49E1qSk7sozbWmfYDaNsxIQkStKncqKFOU5DXTdK6pDwCPukB
+	1egug7wZrPvy1pZ22VJPdFB72izbSqNVMjsIw0apLcSHg7hFQEDzKJFRnW0EeyPTcBQuKlTe6GY
+	qLaU1hIB/3u1NRarURn7C74ST/u+t2TjZ0TWznemeKozHgqr71J+cgI/86Qy5x2WspGhJ6DzlAX
+	IN8wQskVTAEAaHnmKgQbjpcwYcGhUYYwJcQF26UFssd4fqP3EJJAR1HvL4BPdl1gPo+8/isOc
+X-Google-Smtp-Source: AGHT+IFGL3fZ/lPH11cxFwkYGYMUXNBs6sFbjX1tv6qGhqchD33KIQL3mimJ7278mh0sqWgWppUv9w==
+X-Received: by 2002:a17:907:7f8d:b0:ae0:dd95:1991 with SMTP id a640c23a62f3a-ae3fe5ce1a0mr180550066b.51.1751633560435;
+        Fri, 04 Jul 2025 05:52:40 -0700 (PDT)
 Received: from legolas.fritz.box (p200300d0af416e00eb84418c678abf7e.dip0.t-ipconnect.de. [2003:d0:af41:6e00:eb84:418c:678a:bf7e])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b64f5asm166346066b.162.2025.07.04.05.52.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b64f5asm166346066b.162.2025.07.04.05.52.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:52:37 -0700 (PDT)
+        Fri, 04 Jul 2025 05:52:40 -0700 (PDT)
 From: Markus Theil <theil.markus@gmail.com>
 To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -63,60 +65,93 @@ Cc: davem@davemloft.net,
 	akpm@linux-foundation.org,
 	Jason@zx2c4.com,
 	Markus Theil <theil.markus@gmail.com>
-Subject: [PATCH v2 0/4] add usage hints to prandom and switch to Xoshiro
-Date: Fri,  4 Jul 2025 14:52:29 +0200
-Message-ID: <20250704125233.2653779-1-theil.markus@gmail.com>
+Subject: [PATCH v2 3/4] prandom/random32: add checks against invalid state
+Date: Fri,  4 Jul 2025 14:52:32 +0200
+Message-ID: <20250704125233.2653779-4-theil.markus@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250704125233.2653779-1-theil.markus@gmail.com>
+References: <20250704125233.2653779-1-theil.markus@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series builds on top of the crng/master repository, as other
-prandom commits are already queued there.
+Xoshiro256++ will not work in the very unlikely case,
+that it is used with an all zeroes state. Add checks against
+this in all necessary places.
 
-v2:
-  - fix indentation
-  - add better checks against invalid state
-  - rebase
+Signed-off-by: Markus Theil <theil.markus@gmail.com>
+---
+ lib/random32.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-With the current cryptographically safe PRNG in drivers/char/random.c
-fast enough for most purposes, make annoyingly clear, that no one should
-use the prandom PRNG for cryptographic purposes without known about
-this.
-
-While looking at the prandom/random32 code, I informed myself about
-PRNGs and saw that currently fast PRNGs with better statistical
-properties than LFSR113, which is currently used, are available.
-
-Recent alternatives to consider are in my opinion:
-* PCG: https://www.pcg-random.org
-* Xoshiro: https://prng.di.unimi.it
-
-While both seem to have good statistical properties, I recommend
-to chose Xoshiro256++ here, because it seems to be even faster than
-RNGs from the PCG series.
-
-Furthermore, the authors of Xoshiro provide a small RNG named SplitMix64
-for generating high quality seeds for the Xoshiro RNG. By using this in
-the default way, no further seed checks or state warmup are necessary.
-This simplifies the PRNG code IMHO.
-
-Markus Theil (4):
-  prandom: add usage comments for cryptography
-  prandom/random32: switch to Xoshiro256++
-  prandom/random32: add checks against invalid state
-  test_hash.c: replace custom PRNG by prandom
-
- include/linux/prandom.h |  30 +---
- lib/random32.c          | 378 +++++++++++++++++++++-------------------
- lib/tests/test_hash.c   |  40 ++---
- 3 files changed, 220 insertions(+), 228 deletions(-)
-
+diff --git a/lib/random32.c b/lib/random32.c
+index 64fccfd64717..c01b763a7d40 100644
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -26,6 +26,8 @@
+ #include <linux/slab.h>
+ #include <linux/unaligned.h>
+ 
++#define IS_ALL_ZERO_STATE(state) (!state->s[0] && !state->s[1] && !state->s[2] && !state->s[3])
++
+ /**
+  *	prandom_u64_state - seeded pseudo-random number generator.
+  *	@state: pointer to state structure holding seeded state.
+@@ -40,6 +42,9 @@ u64 prandom_u64_state(struct rnd_state *state)
+ 	const u64 result = rol64(state->s[0] + state->s[3], 23) + state->s[0];
+ 	const u64 t = state->s[1] << 17;
+ 
++	/* defensive check, as this fn returns always zero otherwise */
++	BUG_ON(IS_ALL_ZERO_STATE(state));
++
+ 	state->s[2] ^= state->s[0];
+ 	state->s[3] ^= state->s[1];
+ 	state->s[1] ^= state->s[2];
+@@ -108,6 +113,12 @@ EXPORT_SYMBOL(prandom_bytes_state);
+  *
+  * splitmix64 init as suggested for xoshiro256++
+  * See: https://prng.di.unimi.it/splitmix64.c
++ *
++ * Seeding with this routine cannot result in an
++ * all zeroes state due to the addition operation
++ * with the fixed constant 0x9e3779b97f4a7c15!
++ * Nevertheless check early for such a state
++ * as a defensive mechanism.
+  */
+ void prandom_seed_state(struct rnd_state *state, u64 seed)
+ {
+@@ -120,6 +131,9 @@ void prandom_seed_state(struct rnd_state *state, u64 seed)
+ 		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+ 		state->s[i] = z ^ (z >> 31);
+ 	}
++
++	/* shall never happen */
++	BUG_ON(IS_ALL_ZERO_STATE(state));
+ }
+ EXPORT_SYMBOL(prandom_seed_state);
+ 
+@@ -133,7 +147,16 @@ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state)
+ 
+ 	for_each_possible_cpu(i) {
+ 		struct rnd_state *state = per_cpu_ptr(pcpu_state, i);
+-		get_random_bytes(&state->s, sizeof(state->s));
++		memset(state, 0, sizeof(struct rnd_state));
++		/*
++		 * Internal state MUST not be all zeroes. Check and repeat if necessary.
++		 *
++		 * Highly unlikely, that we ever need more than one round. Just defensive
++		 * coding, as this could happen in theory.
++		 */
++		while (IS_ALL_ZERO_STATE(state)) {
++			get_random_bytes(&state->s, sizeof(state->s));
++		}
+ 	}
+ }
+ EXPORT_SYMBOL(prandom_seed_full_state);
 -- 
 2.49.0
 
