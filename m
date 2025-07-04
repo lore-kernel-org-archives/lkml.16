@@ -1,160 +1,129 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F6F1DE4DC;
-	Fri,  4 Jul 2025 19:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283791EF391;
+	Fri,  4 Jul 2025 19:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751657973; cv=none; b=pF3dCC/1IBrfPjXQ7MWrsStrquO41pEvy0lULOvHuOavYrXC6hnkupNLImQWJbiYl3/Q/FW/r1sMg4xEK+NWB7L/UZgoZuo5sNCZAWQKkZZOzfQZ3TEJAofM7yDRuVHNrHD7X6k86yJ3epQiwKuFFR3Gtn4uVVtsZDK4ZMB5btk=
+	t=1751658025; cv=none; b=FkxnJvFgAUBsXfN6rAF/Id7t5JZnYvU9v3leXvoXqn74cH2LyK9lvGlkPcI7xUZ+YZYx+ONeKv2wJQB9MFker8kowWzRkTu7Ip6LJvRL0vJH3w5M7dcjvoDRDxfmiPKECticah5tCOFZALgURlYA9vqi/y7Xivw+TLffROCR1mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751657973; c=relaxed/simple;
-	bh=ty9V8JMAdvvmDv0P0k4PGgC/jV1j8pI2d1WXBXRtpJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bZ/IV4rgiavEdPXn/WiOxNcdii4rhQAQRTOnUeG51Pmce/PiJNm8a2f8Tc1ILrQF+Qg37bWBgiP9N7VmS1O17fl7HlnOKvdQeShHGTstME/zZhayJNROYQo65NC6FlR3+8x6xpxLo4fWFiUSZgrCQcTRxoAsgdWEwhr7m7Ph64A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I9UO33Ch; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751658025; c=relaxed/simple;
+	bh=C4l5zxyRkHkDKD3EQWWYfM1YsLti1iscNM70wSqSgUY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=to1Jop2R2AKTxE0vREbKL3r4ZbLagp0+ASx/oYSZ+HURqfZP3qjNMt8MCJQi4OwlMHFNpOmGlXx0ajQfxYAoQeT3h1ykwBONy+PlOy2swCaLsZk7BJbC5fPxZSI2yHvfyqdYb/bDgbNSTCrsBHiUFBg/gharnJCNpF5HyV1URd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO6K0Ecs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9UO33Ch"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32f1763673cso2319421fa.3;
-        Fri, 04 Jul 2025 12:39:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751657969; x=1752262769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PaN1iXlsiktU/ZIaAdJUYYtsPKiTgtwWPQpDE5mPO2Y=;
-        b=I9UO33Ch8Q9mrOD/M7pYrNP/6yXwnGYuiISlMxIx+fEgmO7W7xKxBWu7VE7BMhNeVz
-         B5VDHSNZ0a4SOXmult/S2ys6kOcY5rtYGnarXdjmrKCdIegLMN0dFgr96dmfJyIoclPv
-         VzKZ+qxH6H/Rn7XQvOJ0spguCYfsH6/87wnDHywwc1IKBh8VMFlPhPjxZjr1Taz9Icp1
-         O+qVNi/gO4mE6s0WggvOcnmjrzo1UJH9tYlwvqwEGf5+DqJOX18EEfs+bC8Q8MftxS9A
-         lNoKLhbAn72+T7w47bXi+ymPlA5QrFMNoo1a1i3sLaPpUZLIjzhBDrrdv23BVAcJMweQ
-         bp7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751657969; x=1752262769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PaN1iXlsiktU/ZIaAdJUYYtsPKiTgtwWPQpDE5mPO2Y=;
-        b=qTAByDLsFTL5NJ+cgfyLtSRfQo1qqF+UkUPANt/aycwHPGnwbVsnonZqr32K4BJiXn
-         Q0aAvyEGFIY6hLkRRa33PMIeXZSiBvdUXjoPSu2k990VZkUEzFXfqPQUHu9NYJAblUG2
-         mGbv7Qq0gn1gwoW6y+/OMUW2tv2y5gM94WFWhjJKc351wTgq5ps2MiiXfQHY2lK8nTqK
-         /JGOY+MYIDjWxP+3Lzn3N3v+Irx+BI2YO06U8qkYX9mzimAWGH9pffSWS5OJ04Upbhhs
-         WxbkAJJZzixP+qv8b6Ly5rlr0Uv50TlqRC21VP4DPbJJlrXCjcOTWDAIq++FU1x1JcDr
-         yJtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5bE6gYhBjtGijKZvpSP1iwBGuBpiQUIgB6x4PJES8xlC7qE5eu9rw/oI7/62+seyG4h1A9302nGXk2cykGxpn@vger.kernel.org, AJvYcCUH+S1fFbCXyJIcUE2m0Sw+ZqNlxjqGVqZzLCLzpKCH4AlxHT5nLGkg8QpCyXrNmfD0Qt2wNq300m2SpVxOFzs=@vger.kernel.org, AJvYcCUtq7h4qLLJy3OVh9VMg54/leVmm//v1hh9TZ0ubEcR7yp5bY7kHdGk6rq/uU/7goVAart/Wc/SqN4=@vger.kernel.org, AJvYcCUuFc2YE+0eazNbwlNd+IF0kqr1pvK7SmvyBikZDHrROy2/r6YsVcUFuNf3g8r3anS52XVC3GSY1uEmmvMe@vger.kernel.org, AJvYcCWXYlyFJPoY3pBbVB+1gio1tzfiSPEAT5XLiaHkYobZM0vgc+LSnorvyPRVxm0ZC5kyvMmMteTMPCyl@vger.kernel.org, AJvYcCWsFQoldrMHxuaS7QYxNIkzPi0sDNsG/fOrinWYaYh8mU+Y2vMmjtALRYYWD1YQGrdDUR/Sp4HXVCPM@vger.kernel.org, AJvYcCWxI4E0lc9vhXcYhgMvOpDHc1+rP6YRR4dPMFoKcOQ+WvagZXaXuLRCa4E1wQvxjTYDImIzbrhO2Lpz@vger.kernel.org, AJvYcCX7W5ocIKModOBVt5zie92WusYsn+u+PaitpMlcsAhtBlH+eEfzbYf0DWkgjKb3gQPXpJQQ7CW/@vger.kernel.org, AJvYcCXbnBEJEoyS5AUyxlWnxTPGTNghA2zsrfxjVAcwxxEZQgn08S4YwmwvTsez+T8qjkzVDagg4hbsQCq+osM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYk0xN29p7aRys9tiPnFLhnZMPtKzM8lg22NNojhzUdstDfiGY
-	EKKXDm7j31NRcxjUS+8Xug0NSdCE7xynQTVRv5yzzXh3Ajbk6d0WIIz978/40qHXVzxr2QlxEbk
-	2ei273M1We1fHE3+1BOWSu+0HbHHGw8M=
-X-Gm-Gg: ASbGncvlYShZkkURrkUg43I1M1XWZTlTiQ5ygjIqM5Feus3x/wo+J6M3OycGwtvxBCB
-	LYrPwATqM1K80/vAecVzgdBtAoBtqccUJbipLBelwksYf6n4mX7H+lJ8I/1DpoNxDJowLKqfBno
-	ffazwGFf3Z6yDgDc6QEZO6zH02D6Kjf2lDbCbmsbCFup+iPEC/heekMxX1RESQRzWWEJOrqCRM6
-	tdv9g==
-X-Google-Smtp-Source: AGHT+IEUCasNpOjrLiPTdba+G1DzRMt5tyZu55jlQh+AX9oNhtSkPC1M27OuhbpRgJbummxXICHmkFV1J91gViP7ObU=
-X-Received: by 2002:a2e:b88f:0:b0:32a:6c63:92a with SMTP id
- 38308e7fff4ca-32f03639f57mr13413521fa.22.1751657968994; Fri, 04 Jul 2025
- 12:39:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO6K0Ecs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB90C4CEE3;
+	Fri,  4 Jul 2025 19:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751658024;
+	bh=C4l5zxyRkHkDKD3EQWWYfM1YsLti1iscNM70wSqSgUY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FO6K0Ecsr6cJjn0QgDCY1P2sacN4491CyB7M0D9EbBhgpckW+eOB3qCIdFbjpERat
+	 eFS3k1vyLiu2+gEJxOyq2tOlgxdondn3vA9Ok0qpvYAJHB6Aw3sjkwbpLBH+N2GJtm
+	 y6Y8IaczIEahEUc0yqedU/nMOVo6UXri66gNVgnc4Gx8QtKA+28N67igLbKd4iKDkH
+	 7AWNADtVLrIBPH+zGxUcepVBmqf1S0Gjhgq5ZGwDSWYSJ085+AWd+6/YN01C9uBU+7
+	 TxY3WO4Tlx9Ebd51lHmg/GQYj7ggUvV6VfXx/73V2MvxiMG1hxMV3452ejal1yZ3CU
+	 bSxx+Nldr1iuQ==
+From: Daniel Gomez <da.gomez@kernel.org>
+Date: Fri, 04 Jul 2025 21:39:59 +0200
+Subject: [PATCH] MAINTAINERS: update Daniel Gomez's role and email address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
- <20250701-cstr-core-v13-3-29f7d3eb97a6@gmail.com> <DB3AFTUC22W1.39C4DMWSENZGB@kernel.org>
-In-Reply-To: <DB3AFTUC22W1.39C4DMWSENZGB@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 4 Jul 2025 15:38:53 -0400
-X-Gm-Features: Ac12FXzIFREDgXqCwrv6XJgEObqPEvHKICa5en-HTCiFL74MHyUAIu3tq-_u52g
-Message-ID: <CAJ-ks9=Q2+zmBzq36aYnePmRm2b5NL3buMXP36FpmnJ+UU3FWQ@mail.gmail.com>
-Subject: Re: [PATCH v13 3/5] rust: replace `CStr` with `core::ffi::CStr`
-To: Benno Lossin <lossin@kernel.org>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-add-dagomez-maintainer-v1-1-5fc32033c51c@samsung.com>
+X-B4-Tracking: v=1; b=H4sIAA8uaGgC/x2MwQ5GMBAGX0X2bJOiwu9VxKGxH/ag/rQiQry7x
+ mEOc5i5KSIoInXZTQGHRt18kiLPaFycn8Eqyak0ZW0aY9mJsLh5W3Hx6tTvCQQW26JoxFbTD5T
+ if8Ck5zfuh+d5Adf77ANoAAAA
+X-Change-ID: 20250704-add-dagomez-maintainer-d48e17d43f9e
+To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Daniel Gomez <da.gomez@kernel.com>, Sami Tolvanen <samitolvanen@google.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Daniel Gomez <da.gomez@samsung.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1966; i=da.gomez@samsung.com;
+ h=from:subject:message-id; bh=S/iikURRf5oCaytoYYJVR26dMzVDVdQzYjPG8cAoBL4=;
+ b=owEBbQKS/ZANAwAIAUCeo8QfGVH7AcsmYgBoaC4Zg2XlLOjmAr9xHsFm/1rsvdT64u7MaW2wC
+ vnNE3EP/7WJAjMEAAEIAB0WIQTvdRrhHw9z4bnGPFNAnqPEHxlR+wUCaGguGQAKCRBAnqPEHxlR
+ +6yzD/9cD09Ff690H9MGIyw3mjdajxZ99yPrgCUuWOM3AxImsa0D1GZtQaKgXlH8OYWNSarHd4m
+ SjaEDNTRjOK5vf9FzVNZO4er0wG3oCWJyVuqJltbBgCbUNlp7xQSGOhsNIV0Myl38iqrGpRepCD
+ 36Gzkb+YsiJTaKG3M+mo7ucQ09mAKvRPPmnoJxUrXv/LMT2hZxqNV+WNw4yIEVKk0saEbblGMcN
+ yjIWDcr2MQm0kdgoUcudbUgZutZyOytRFbxNRSolCLCMjpY810C2AhnG0Q8A+DvOGj0G1fV4Knj
+ CReZJ2Qqdxxj9cNYdpehJobW6Y6zGpxFry6BvM+myPWbpbyaEDY8xYfgG3RT53rTVCH14+YCOB9
+ MwEux5F+ji2pvxI46IeBa83/CqzreDWubxKUEvfoD1Qk/KtFLHUWSfbkaUSjlDuB29ZapX2fmHq
+ iH5OnXYyLGtKufZ1XIF5vjXgoDwd3USVHaltXdbvzHPQlmX5/ykHxshdUmhYsbD8BZpuzp6CPZU
+ 3CJGDR/+cnLkcL0TS23gXqSi6YVJEME2SA5vs7YxtpN2cHOVIlxjDMzUXG6uaUl/A8E6GUROK7L
+ hMXUrkfI7fdDOJsbkdy3zaLJ4a7PrG7FmnUUJwA/7cX1WGV5XbHwt7gzccCx/8soQ+tnD4Cgd4B
+ Sql0SrOmHcH8H/A==
+X-Developer-Key: i=da.gomez@samsung.com; a=openpgp;
+ fpr=B2A7A9CFDD03B540FF58B27185F56EA4E9E8138F
 
-On Fri, Jul 4, 2025 at 9:00=E2=80=AFAM Benno Lossin <lossin@kernel.org> wro=
-te:
->
-> On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
-> > `kernel::ffi::CStr` was introduced in commit d126d2380131 ("rust: str:
-> > add `CStr` type") in November 2022 as an upstreaming of earlier work
-> > that was done in May 2021[0]. That earlier work, having predated the
-> > inclusion of `CStr` in `core`, largely duplicated the implementation of
-> > `std::ffi::CStr`.
-> >
-> > `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64 in
-> > September 2022. Hence replace `kernel::str::CStr` with `core::ffi::CStr=
-`
-> > to reduce our custom code footprint, and retain needed custom
-> > functionality through an extension trait.
-> >
-> > C-String literals were added in Rust 1.77, while our MSRV is 1.78. Thus
-> > opportunistically replace instances of `kernel::c_str!` with C-String
-> > literals where other code changes were already necessary or where
-> > existing code triggered clippy lints; the rest will be done in a later
-> > commit.
-> >
-> > Link: https://github.com/Rust-for-Linux/linux/commit/faa3cbcca03d0dec8f=
-8e43f1d8d5c0860d98a23f [0]
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  drivers/gpu/drm/drm_panic_qr.rs |   2 +-
-> >  rust/kernel/auxiliary.rs        |   4 +-
-> >  rust/kernel/configfs.rs         |   4 +-
-> >  rust/kernel/cpufreq.rs          |   2 +-
-> >  rust/kernel/device.rs           |   4 +-
-> >  rust/kernel/drm/device.rs       |   4 +-
-> >  rust/kernel/error.rs            |   4 +-
-> >  rust/kernel/firmware.rs         |  11 +-
-> >  rust/kernel/kunit.rs            |   6 +-
-> >  rust/kernel/miscdevice.rs       |   2 +-
-> >  rust/kernel/net/phy.rs          |   2 +-
-> >  rust/kernel/of.rs               |   2 +-
-> >  rust/kernel/prelude.rs          |   5 +-
-> >  rust/kernel/seq_file.rs         |   4 +-
-> >  rust/kernel/str.rs              | 394 +++++++++++---------------------=
---------
-> >  rust/kernel/sync/condvar.rs     |   2 +-
-> >  rust/kernel/sync/lock.rs        |   2 +-
-> >  rust/kernel/sync/lock/global.rs |   2 +-
-> >  samples/rust/rust_configfs.rs   |   2 +-
-> >  19 files changed, 140 insertions(+), 318 deletions(-)
->
-> Is it also possible to split this? First rename the existing functions
-> on our CStr to match upstream & then you don't need to do the rename &
-> removal of our CStr in the same patch?
+From: Daniel Gomez <da.gomez@samsung.com>
 
-Yes.
+Update Daniel Gomez's modules reviewer role to maintainer. This is
+according to the plan [1][2] of scaling with more reviewers for modules
+(for the incoming Rust support [3]) and rotate [4] every 6 months.
+
+[1] Link:
+https://lore.kernel.org/linux-modules/
+ZsPANzx4-5DrOl5m@bombadil.infradead.org
+
+https://lore.kernel.org/linux-modules/
+a3701a9a-5b42-4581-a150-67d84601061c@suse.com
+
+[2] Link:
+https://lore.kernel.org/linux-modules/
+458901be-1da8-4987-9c72-5aa3da6db15e@suse.com
+
+[3] Link:
+https://lore.kernel.org/linux-modules/
+20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org
+
+[4] Link:
+https://lore.kernel.org/linux-modules/
+Z3gDAnPlA3SZEbgl@bombadil.infradead.org
+
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+---
+There are fixes [1][2] to be sent for this release cycle that fix a bug
+introduced in v6.16-rc1 and in v6.4-rc1.
+
+[1] Link:
+https://lore.kernel.org/oe-lkp/202506041623.e45e4f7d-lkp@intel.com/
+https://lore.kernel.org/linux-modules/20250610163328.URcsSUC1@linutronix.de/
+
+[2] Link:
+https://lore.kernel.org/linux-modules/20250618122730.51324-1-petr.pavlu@suse.com/
+https://lore.kernel.org/linux-modules/20230319213542.1790479-3-mcgrof@kernel.org/
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4bac4ea21b64..bf07c0acd1e1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16820,8 +16820,8 @@ F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
+ MODULE SUPPORT
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+ M:	Petr Pavlu <petr.pavlu@suse.com>
++M:	Daniel Gomez <da.gomez@kernel.org>
+ R:	Sami Tolvanen <samitolvanen@google.com>
+-R:	Daniel Gomez <da.gomez@samsung.com>
+ L:	linux-modules@vger.kernel.org
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+
+---
+base-commit: 60481cbdfae129753633cf03f061293b6e0c8bf4
+change-id: 20250704-add-dagomez-maintainer-d48e17d43f9e
+
+Best regards,
+--  
+Daniel Gomez <da.gomez@samsung.com>
+
