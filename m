@@ -1,81 +1,181 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394624501A;
-	Fri,  4 Jul 2025 15:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEDF4501A;
+	Fri,  4 Jul 2025 15:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643662; cv=none; b=JO31oxaw//QkM5gxexksGdBliKLUtP5AdnOGCNS+35ARd2h8hwar2ctGVWesbZ12nmTA5qXc1LI0vUPH+dxHLcdsMBjGLQ9350pcapG7vhR7OEf4LLSromKmRFpV4+p82A9rJUiU1aU5dTpMl6AZOu/WcYaSybKYS2hvmqaz+ds=
+	t=1751643672; cv=none; b=rTBGM8Eykv7OWsre5vGoLToCzbig0FZ0eFDHHGk8m2NHWMF+QrLsqjOsWT1lOC/Xsh3TAh3YVLKsvO10xTaLdn2WjtwHYblOo+urtTPxYhwGCaWsBQszbpyo3NXVAtcWHUn9UsPc/2NVs2ZFMllK+fRe+ePXfbMwxL2KSxS7iSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643662; c=relaxed/simple;
-	bh=vUycECx1FAV46dVJKyg/ExNOgR1wMXGEYVNv3Op+fLA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kCPO9A6I72YgruovWBvf4WjhzZqQnahu8zfUyUFjRohiFxsJbPi72zu75UHkTo/uNvpAgMhcY6IDEHPNK6bXTChM3TI8+fnI1nZCqJ41siWcOsBIvSJEaeBAWH31f3ui+txICqt8Webca1iBGE6TZp5xgWJN/xq7fQz4yjQiopk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id 2561E1F00036;
-	Fri,  4 Jul 2025 15:40:57 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 8E812ACA64B; Fri,  4 Jul 2025 15:40:56 +0000 (UTC)
-X-Spam-Level: *
-Received: from localhost.localdomain (unknown [192.168.1.64])
-	by laika.paulk.fr (Postfix) with ESMTP id 0F26AACA59D;
-	Fri,  4 Jul 2025 15:40:12 +0000 (UTC)
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Icenowy Zheng <icenowy@aosc.xyz>,
-	Maxime Ripard <mripard@kernel.org>,
-	Paul Kocialkowski <paulk@sys-base.io>
-Subject: [PATCH 1/2] clk: sunxi-ng: v3s: Fix de clock definition
-Date: Fri,  4 Jul 2025 17:40:07 +0200
-Message-ID: <20250704154008.3463257-1-paulk@sys-base.io>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1751643672; c=relaxed/simple;
+	bh=Im8I+7hlGniAQNwn5GxMLcoY1pxk5HJSJUp96zBoC2Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X5r/zTKLmZMhwhnjiaBDOg+9QnKZB6EFjpuhBCx/n493/JJcTBaV3DuqAXedXQIw+qa77kepsOMGeDofWWwoVzNvvS3jZr6zmMHc3nSaRM3793LPy65uLEx5tXkl70ORPRF5DJg6CMwSSdmbe9OIWLBnZTPo8sYtsjGUP32dAMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXGmh2nE; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXGmh2nE"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2349f096605so14984095ad.3;
+        Fri, 04 Jul 2025 08:41:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751643670; x=1752248470; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OedcBPFbzsQsV/0/v5ae1F3cwXPOlb49ooocQIKNZl4=;
+        b=WXGmh2nEwVgJIHhfCSWRWrPYtxzk/xdpg/f7sd7nF00o7EfKzz/t70twFUlNS0mu/e
+         o3nF6famN3ruflcIVTON6eDt3u9RSG0tcl4Qp4+QAu+ywUm+LX768UbbBDyVOm27o0wt
+         4w9BNjoV4iSUjw+cNSjqCiFmllts6Rkkmo1u9o7EJAVPLh6v60hqZwsTOa8qFtSxR8eL
+         4/6iUpaSTwt9kd5MK2jkZEqpOteb3mMJSzEykY4VOi30k34TIlI5xI594OxCNKLBYvCi
+         TLgcSU4hNjSUEM1vJVDUAuhx6snWWb473R79eTc/jnb8MTaO4BPe035AMGWxKEVZp6qn
+         4nQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751643670; x=1752248470;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OedcBPFbzsQsV/0/v5ae1F3cwXPOlb49ooocQIKNZl4=;
+        b=KDOLi6Ae3vh/X8X83sIxTcOdtcqss/nZsxOqm62tYeeOrVsM6kyHBXwlbB12CGMvmq
+         3w1cSIg9raWRb/LKxApalOaGAy6tPPrv+M0irKM7W0Nk4Dyv3uKOqRn6QBYcymfQlZFh
+         3N6qAz43kZxvzlAIQJq+CxmVt93g82ED+Mi+rki4Ir/z+JrsU1NStVOAm+V+yc9WHnH4
+         X5UkuksZk0OMV3PPWUYUvGpO/oePIxgYFPUh9okylcfPvn1kPmI/cn3+05r0OT1wyIW7
+         P5oaOqpisBnaM9Dm2XTf54POS7iW+poWvr4UMfH3hnhXMWNJOdRMFZOLi9ZHfDjTs1jx
+         g4iw==
+X-Forwarded-Encrypted: i=1; AJvYcCX78UdA1PM0Q7BRsnj5UNueseTCnGQAcJs79WzlW9n3YecTtSugFZJumt6b2N5GZUDFaEtW1Db5GI3Khuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6hhq1kCKHNN4kKiTtwQ/VXEo2tJS6U41bTh229pbiQeAJyAvH
+	LHFnplj84OVmo8FTfir94+TNNMCqqyApr2uikAkwpTa8lnTtUgE4F+kS
+X-Gm-Gg: ASbGnctrStmiCL00cu+iRwScpHFNwPbtlOjb4rYxisNPfv95lUZpKrnK6yL0xc1HlYY
+	O0x61IXYi8und3vRuYv9fa4hdNJYvg7/B6FlOEnlKcVGf+I8CK0iUhgxTwtWqyTcAKJdawtq2hh
+	jfgXNKzzHwtxRF7m9GAzYewSNmgilQoq5SF/7ljKBgMcyzgPn2lTnnL3a5pXmfHn6xkCgtbV0DC
+	1wke24p3Se2QmOzTxpWAVGwALheoM/d9gO74/G/VLoWCiCXbF4IidaYnlray8tfJPv8xu7S66ld
+	bBm10FQYid6XTcEoyvevV0GTUrSAl2PjkeXkWUz9TpGQeap3RH/cWBkDPzGIhq+Q6JtvQvIXAa8
+	e8hNjzB3WxyhbKfjL1oU1iCuf5ENNVKCaRlELgmCGQWWsboZofQ==
+X-Google-Smtp-Source: AGHT+IG1TDVx9zaBJ67Uj+KJrT++joFV5lUfwhoIBw0a6RJIPN4Mg//ySNPgrJ9HLqu6bkHlyCZM1w==
+X-Received: by 2002:a17:902:f682:b0:234:b422:7120 with SMTP id d9443c01a7336-23c8746d75bmr34272925ad.9.1751643669593;
+        Fri, 04 Jul 2025 08:41:09 -0700 (PDT)
+Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8431a4b6sm21912375ad.29.2025.07.04.08.41.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:41:08 -0700 (PDT)
+From: LiangCheng Wang <zaq14760@gmail.com>
+Subject: [PATCH v8 0/3] staging: media: atomisp: indentation cleanup per
+ directory
+Date: Fri, 04 Jul 2025 23:40:51 +0800
+Message-Id: <20250704-new_atomisp-v8-0-2a8560cbd9be@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAP2Z2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyLHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwMT3bzU8vjEkvzczOIC3VRz4zQTc8M0YwNzCyWgjoKi1LTMCrBp0bG
+ 1tQAqBeK0XQAAAA==
+X-Change-ID: 20250704-new_atomisp-e73f471f3078
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751643666; l=3949;
+ i=zaq14760@gmail.com; h=from:subject:message-id;
+ bh=Im8I+7hlGniAQNwn5GxMLcoY1pxk5HJSJUp96zBoC2Y=;
+ b=7Fs8CESTiTtc3P9HHWidgMqselOticjAAk5NbwihSCq27lVxaK+8mJ/UFthtNl9QL4+1adfpN
+ DHLAq81vczqCQaXIx39XSBWWwqwKLzwQbLuJcnYe0ktQoayc3Gv6BoA
+X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
+ pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
 
-The de clock is marked with CLK_SET_RATE_PARENT, which is really not
-necessary (as confirmed from experimentation) and significantly
-restricts flexibility for other clocks using the same parent.
+This patch series focuses on cleaning up indentation (spaces, tabs) in the
+AtomISP driver under drivers/staging/media/atomisp/pci/isp/kernels/.
 
-In addition the source selection (parent) field is marked as using
-2 bits, when it the documentation reports that it uses 3.
+Following previous discussions, this version:
+- Applies only indentation-related changes
+- Touches a limited number of files to keep the series reviewable
+- Splits patches by subdirectory to improve traceability and clarity
+- Does not include any clang-format output or automated rewrites
+- Leaves all non-indentation checkpatch.pl warnings or errors untouched
 
-Fix both issues in the de clock definition.
+There is no functional logic change.
 
-Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes in v8:
+- Reorganized cleanup by subdirectory (one commit per directory)
+- Focused only on indentation fixes (spaces, tabs)
+- Removed all clang-format involvement
+- No functional changes
+- Link to v7: https://lore.kernel.org/all/20250629113050.58138-1-zaq14760@gmail.com/
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 52e4369664c5..df345a620d8d 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -347,8 +347,7 @@ static SUNXI_CCU_GATE(dram_ohci_clk,	"dram-ohci",	"dram",
- 
- static const char * const de_parents[] = { "pll-video", "pll-periph0" };
- static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents,
--				 0x104, 0, 4, 24, 2, BIT(31),
--				 CLK_SET_RATE_PARENT);
-+				 0x104, 0, 4, 24, 3, BIT(31), 0);
- 
- static const char * const tcon_parents[] = { "pll-video", "pll-periph0" };
- static SUNXI_CCU_M_WITH_MUX_GATE(tcon_clk, "tcon", tcon_parents,
+Changes in v7:
+- Split previous monolithic patch into multiple smaller patches
+- Applied clang-format to entire driver excluding i2c directory
+- Fixed checkpatch.pl-reported ERRORs (parentheses in macros, unnecessary return parentheses, zero-initialized globals, spaces after unary minus)
+- Left WARNINGS untouched for future cleanup
+- No functional logic changes
+- Link to v6: https://lore.kernel.org/r/20250627-bar-v6-1-b22b5ea3ced0@gmail.com
+
+Changes in v6:
+- Applied clang-format across the entire AtomISP driver
+- Fixed all checkpatch.pl-reported ERRORs
+- Added explanation of tooling and scope
+- No functional logic modified
+- Moved 'Suggested-by' and 'Link' tags above Signed-off-by
+- Link to v5: https://lore.kernel.org/r/20250625-bar-v5-1-db960608b607@gmail.com
+
+Changes in v5:
+- Replaced space-based indentation with tabs in output_1.0 directory
+- Used checkpatch.pl and grep to identify formatting issues
+- No functional changes made
+- This patch is now focused solely on tab/space issues
+- Link to v4: https://lore.kernel.org/r/20250624-bar-v4-1-9f9f9ae9f868@gmail.com
+
+Changes in v4:
+- Moved assignment operator '=' to the same line for static struct definitions
+- Remove unnecessary line breaks in function definitions
+- Update commit message to reflect all the coding style fixes
+- Link to v3: https://lore.kernel.org/r/20250622-bar-v3-1-4cc91ef01c3a@gmail.com
+
+Changes in v3:
+- Removed extra spaces between type and asterisk (e.g., `*to`) in function
+  declarations, as pointed out by Andy Shevchenko
+- Update commit message to reflect all the coding style fixes
+- Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@gmail.com
+
+Changes in v2:
+- Fix patch subject prefix to "staging: media: atomisp:" to comply with media CI style.
+- No other functional changes.
+- Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gmail.com
+
+Thanks for your previous feedback.
+
+Best regards,  
+LiangCheng Wang <zaq14760@gmail.com>
+
+Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
+
+---
+LiangCheng Wang (3):
+      staging: media: atomisp: fix indentation in aa
+      staging: media: atomisp: fix indentation in anr
+      staging: media: atomisp: fix indentation in bh
+
+ .../pci/isp/kernels/aa/aa_2/ia_css_aa2_types.h     |  2 +-
+ .../pci/isp/kernels/anr/anr_1.0/ia_css_anr.host.c  | 29 +++++++++-------------
+ .../pci/isp/kernels/anr/anr_1.0/ia_css_anr.host.h  | 17 ++++++-------
+ .../pci/isp/kernels/anr/anr_1.0/ia_css_anr_types.h |  4 +--
+ .../pci/isp/kernels/anr/anr_2/ia_css_anr2.host.c   | 12 ++++-----
+ .../pci/isp/kernels/anr/anr_2/ia_css_anr2.host.h   | 11 ++++----
+ .../pci/isp/kernels/bh/bh_2/ia_css_bh.host.c       | 18 ++++++--------
+ .../pci/isp/kernels/bh/bh_2/ia_css_bh.host.h       | 12 ++++-----
+ .../pci/isp/kernels/bh/bh_2/ia_css_bh_types.h      | 14 +++++------
+ 9 files changed, 52 insertions(+), 67 deletions(-)
+---
+base-commit: 4c06e63b92038fadb566b652ec3ec04e228931e8
+change-id: 20250704-new_atomisp-e73f471f3078
+
+Best regards,
 -- 
-2.49.0
+LiangCheng Wang <zaq14760@gmail.com>
 
