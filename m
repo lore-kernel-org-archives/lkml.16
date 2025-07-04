@@ -1,402 +1,163 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15A32FC3AF
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633950; cv=none; b=byc1Fk+7dknhUmKdEgaElFt1aCe/ba8jn49o2C5u0mvdYATMHvhl4rV7xRhMKi1D2haL37Y1GCL6SEY2GKB8AaAvIhfK90hoLYmbanv+E1/FH3hjTntEUqc/cOXFA+hgSSYZINGlQMpYWapOL8u7O8GXUfNUyt8dRfRaLStC7eE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633950; c=relaxed/simple;
-	bh=SEQUE+wqnlsIeL+Vd0wTvWbzWH4y7y8v+wOvxDnzMmk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fw8MyPqYMXWgbScex26Nv8MnFELISI1u3kNpA5hzGyNDPAfur9zOksJC3fgHzzX8jmZuRDi1NcbDqlkQo2uJbBPbGIN1TXrYDBJmSuEuzJ0XR2RPRIpv2jt3Xyd0n6D1MV/UBHFpNrvaigMRJjEvCXnFGXmwjGk8Trizl2wcCBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=svLzJEZk; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613B42F7D13;
+	Fri,  4 Jul 2025 12:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751633957; cv=fail; b=KOzGc+46Pq7RJ32ZuSCDlvxpjqTLGd4A6HD3ihYZWs0CU68zun/GadPpJuL0tLFmakgiKGc4NCnSnsHrTOzeLvp1yBNk1/8JHKgXfPuwv/Z0aKCf8C+VNTYEs3QGeO6wzNDzUnszYIGuy30dMdAxjQ4BQZ3HBzBtDOqIc+PXPdg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751633957; c=relaxed/simple;
+	bh=du9gYEKdXK0KQhhLamu1Sl71RJ6JOG2LmF+DtKg/MrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=G2rnr7inmG/0+b+TUYJ0rLgkBLB+xrP8CykYNkJo2VbRucwyexYxEkMnjEUVSwAhn2cR1iABzZ4oXObc37OUyyn0Qf2j5ZalJocp6JSKwGTlzTK0MqyNbJTCtRhhb0BDu/5lHP/+JGeVmtI9wXrUPKSMPMlyReMZX50jmZrbvUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JhNmTvls; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="svLzJEZk"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so6530185e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751633947; x=1752238747; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6UOR2MPGqOiOmlbGxM7YXcw7cNM+OL5WteAFiwMTMKU=;
-        b=svLzJEZkNQlSX/ccQ9lYyw+p78VFItVHNDrnxwP/kFrQys55lLbLfFh792WPmIXwXN
-         DpyKD+VPbf5yYmHQXQyx6iK8ZjwQIUAulAsepFeV+/wVXaXodkfOEVgcEdeDLpePWGP2
-         FJU/8es19+3RpNvpOfTNQKpYGTL2vm+CzYEyVxDL/zzDV13tDodmY4WTKGCXUPMc7qDT
-         BuLpJLA32QrwFsYKudPn3XTKNo1BJmqWT2wRBowEbSf0JZClraCuDMqpTpoaZileqqbv
-         fxC/aDIzZ4p71YL5bfN6Twwv5RqbfrVwe4gHU4nsXuH+JTD7F+ogIocPfUyo+H9QrOUU
-         1u4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633947; x=1752238747;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6UOR2MPGqOiOmlbGxM7YXcw7cNM+OL5WteAFiwMTMKU=;
-        b=PpZn7H8N8VxfXGoLR8QBFosFKe1euGM/qf7u3ZLFjxVGOblSWDU0UK+XyPLZU0Pld8
-         UALU+XfzTM5Fzs/P8jtvIqvrTWfY9Ahn1ZMQhCu3C2gQKbCuBJZs9yFGVjcPy8cLdbGP
-         +LEqtykRl+7N40IYYDsh13+u1lbFOsM4gHnn8nW/EAM76n+xlGf4j5OjF0SWqHocd1SS
-         6AQ+R2VVWLKFjgbm3U17k5mX93wYYfO93epcvol99fBT713/aEwJiE6uC23wvOir4Bt6
-         9JVr/xdKwAIcxnjBS7uQGdS7lNn8twiIP+eNpwjXxapeDoSs9uRxodOCiBxh6Oezjho9
-         OTuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVz/xpe1pNsF6TnFPogqJ5/nTM3KUIg28ct5S7Kzku/67Zu2kvDhuJwzDIIsCMAwCT5V7+LumO7ZKVJAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9nLdUpQVVvn+jkpAcuQdADZqYxerD70FUy/GBDVq58iLD9T/r
-	MbLqZtorj8Jd5Yh+hz7MNyADSA51aBNsnGqR4Ut/ABek3mgE7U/hJaDVPDLK+Yfj7cLY0sDbP50
-	k5t68pvY=
-X-Gm-Gg: ASbGncvMDenhFFvNqF6B4G3Dw1kuCkgfIarFjaleVZ7WLbbjqGTTGwtMLLRz0hkcTrO
-	tphrM6INeIuMzl2kqhpB0NpBtYtUZI/+dR0GS/RqSWxvXIpSIEXh6eUruycDEBnl+1KG7+IZnLB
-	yZ8bmAZmyxa36+FzGcTBh2Pahj4sFKU8Z55suO5cfMeUgpfWZm2GhAb396/y+kTZymbTVGnmjAc
-	Bpx8onq4Y3Quv0iiiyDiv6dk/r60MiaYqQuK/JIGAmr3021QdoQQ7d4WYvriB04JGB1+SRZ2UwF
-	8ohmsCzGE7JN8ZqI+xL30r3QcklCrwpUe63NGcbYyBiyISblBxf7PsY=
-X-Google-Smtp-Source: AGHT+IHnksMyu8rvbVUDzpdeDkUVxrcX9/U69Pif100+iGeU2MGYmBeXjJy7gEarXskd975HFr0gFA==
-X-Received: by 2002:a05:600c:4f07:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-454b835631bmr7435805e9.14.1751633947059;
-        Fri, 04 Jul 2025 05:59:07 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:876:27c7:55ac:40ab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcebf7sm56129665e9.21.2025.07.04.05.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:59:06 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 04 Jul 2025 14:58:56 +0200
-Subject: [PATCH v4 09/10] gpio: sysfs: allow disabling the legacy parts of
- the GPIO sysfs interface
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JhNmTvls"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vETrvRcjThwgRjrFZdKMqKZnFIpjTws3NBMEh9m47Nouj2gH91XhgN88SzuCo+8GfthKh9LM1hiN4HsqSEhWnGTUA6dtdIauGzU8OBiX6o9DSJYNMV9OXxjhr07KlVl+fbyhcMNURhmlzDL2XvWZ0tIU0o9mtFYcKV0Xrv+mL5HMhH07EQkenV+lOhaNqjeeZtFofTyA+wy0klu2CrljWBIpzsKeT/YA5A5bssWrMf/tIRRVUbpA69CjOnfWc15QgrnQYvjWVPauUpqh0ob/mo06fWs4KqInSw338VSYFLNf67DSRGN1/sju6TVXSXwjBap/ZB2a+DLdqK+fI+GuEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FwEOrqp3BYf3VOJpbbm7ycTwpptuTFbzyrDvpwExiAk=;
+ b=u7vP5nACc9i+41ln1q/jW/eOn8HD7f57aSit/AVg+EFRXuEToT0/B0jbQIEduQMktgbvcnOzDs3yewo9azitl71c3bmiQOdZIc6rErO2OB1ecovJ8E8540zTihMJCJE0pVTyDi/0ooFE/ApiII4HHKxOIxWWkukSRluXw4WBvrYYHADeLpX75IOgaiz1TppKmysbHehHre7dSJY2w9dQtYnxLiIriaUim5jvdnA7IhFHrudu4L6tv8YLlIBc6fbKe48/uRHNvKrI8X177iuJMoS2lsiOLLwLp/99EpEFeHNL4OpZstG0oJRUfgtmzCiH07bVb4XW87YyUsObEpLA3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FwEOrqp3BYf3VOJpbbm7ycTwpptuTFbzyrDvpwExiAk=;
+ b=JhNmTvlspo8fOmUYkbjZqJqhJV5jy21Li20vd1eDjebOkOQlcAzYsafKwlMAswdZP1GwUYhevXYgyclxUTKIKd7xDoE+eeIZgCi2vPAB0UoLUfXlo++hUeM4mzefBO2iu+SdQpFxnVvFHxyuWRsQ4Lb07EhIQ4KIXUnRIwrxg2EjAbwY72hMJYjeqownIrkYWLtFeHw53ZIrJEK6oZuKVIc+6mb6v2QpF3vrUy7+WPLkrSlRLYB5ejqU3lVU6g1b3f9+Sg0olK+YfogxgHD/jN81q38Bp2rTc5lW/MjDIYVcJcL5F6A8kcVQ7aibJHpR9UI2nNNHZY9nsDO72kA2Zw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by IA1PR12MB8077.namprd12.prod.outlook.com (2603:10b6:208:3f4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
+ 2025 12:59:11 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Fri, 4 Jul 2025
+ 12:59:11 +0000
+Date: Fri, 4 Jul 2025 09:59:07 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 01/28] iommufd: Report unmapped bytes in the error
+ path of iopt_unmap_iova_range
+Message-ID: <20250704125907.GM1209783@nvidia.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <102e38967b38c28abbe8ebe70b39dcc8e14450ba.1750966133.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <102e38967b38c28abbe8ebe70b39dcc8e14450ba.1750966133.git.nicolinc@nvidia.com>
+X-ClientProxiedBy: BY5PR04CA0010.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::20) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-gpio-sysfs-chip-export-v4-9-9289d8758243@linaro.org>
-References: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
-In-Reply-To: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
- Kent Gibson <warthog618@gmail.com>, 
- =?utf-8?q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
- Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9996;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=NprZaQcSbklXSYi5LBjzK05jcMN3zcONcmqjGfbIn0Q=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoZ9AMQrcy/xXWwOFlmrFL1RwxS0/RzWVkEhsx4
- i7sE3A33DyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGfQDAAKCRARpy6gFHHX
- cpREEADTTaWivKZMznFeC8Odftis9aDiF/hPq1Mlge1xvsvGB1w4bie1l0Jp1DFq/JzPOWjiYV4
- 9GqDGdkeC89xTOLq82prEh0tQFj26xBJ5fldUn+azcpIeDRkQ8oN1+yAIEsEwoUoPM/LsnkV5gj
- 10/w7C8MOIqWlfqH/flXDvv87hsV9kHiMNPRP1vU/nAFFn2UQnji+UNZmxm+HjF0YL9kR3WHxMr
- OJTMZ5mHVubfOMCVHftxkNj2PeSf/73JeY3KUvpgiSkviG59Dx8nATwCf5o4HHu1+4eqsbrh7+G
- m25tjDOTz32MeazcnZj+V/gTRR/sldDqM55ePv+iRS49C8ulVpPFmyyz431QJQlPTbHMefvpC9h
- fXxTgPX4K06ZunZm0/a4feFUDCZsI4OoXb5dMKaxQpbRYS2K86oFHttCd4LJGP1h4CCn7G6bK0N
- +Ml/pHD9iYyuCcLwpVXp4KGrImzoyFJW44jd1Nxxo9K976GswY17/7fHMwfugc+RsXYi4Nw7bZq
- s70Ew+UwPbjYgi4XiMLyVoM8Ic6MIDFRT6UreEtzpaP3rPnfG/nRd0eCQXjWeTaRP+3fLFE6kwc
- WRbHL0MQlQpyFHMyMvfPAorgSzhMWbxD6SVH1MI78TWXT6g3XFJRE018Sr3+hOBkOR2u06k5muD
- 9GqZkq7Nnupd4xg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB8077:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40950a4e-6b28-4b3d-48e3-08ddbafa9178
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dGR8mA1fbMUwcHetV6vaUK6wVEXOOD2FxE/zgWVRjQMviO2ElMH2/dpqJiaq?=
+ =?us-ascii?Q?QKhZix82y41/ncxBmHGqDP8JbxSC3JaGrQYz08VGiCASc4Yim0c6iSjDgS6a?=
+ =?us-ascii?Q?XZlLyh/Iep7aieyP9k/Bo2fTr1Qmnh5310Fy52LCircu1LpOHEadzZVvqT3k?=
+ =?us-ascii?Q?D0fF28pFXJeKM33mhe/OIFP8yGlbrSxOP0gXR13ahChfwzMWapT3RtJt7YQy?=
+ =?us-ascii?Q?YecWHNffLC0gaEZrE3Cob14QlOgNnnkQoTDVlcBhxYaCMTnjKTdygyJpdbM7?=
+ =?us-ascii?Q?fqNwiwxcwNV5PUdNxdCT8DpLtNnbkhDkXR//4ZcGvviJC9/v4TAGD2tuGWBS?=
+ =?us-ascii?Q?AVvh8VRZRoNag7Vbr/mlX0DMzliDROOJwJS0JDEYjFLnT17aNOUeQvzL0xiY?=
+ =?us-ascii?Q?rKa0sTcByAbjGX3LDFlrXfp7XsFAh+mVpurJhtN3GqPCAdKwLCAPv1/J3Djz?=
+ =?us-ascii?Q?Sh7uGctEGpgcDe8dYHhghU0/pXt5QC4WP1W0DaBw2jGVn+DZ2CbjDWOMtE84?=
+ =?us-ascii?Q?yHgEHJ16s30eguW3HIfg/CWKyppiGtIsdxQpDazmF7ubmgY8KV2jwZOaAnjk?=
+ =?us-ascii?Q?63OVpcv3SxVjjSTDhz0ieM/BW8cow+jU550Fqslfn/rnVv7lNP4ZCA6bQPyr?=
+ =?us-ascii?Q?ZSXsiH3ogyjaxR/8v9FVAr5yelPnMmrnu4948OdoKfd1+Cjfi1nmvP9KfYKA?=
+ =?us-ascii?Q?Md+p4qtGuHpTWHOxMedtMGfOOywfyazs0Daxx92B43AzkwMVklSzg9yoyA8p?=
+ =?us-ascii?Q?4e/eyjJlyz0u7eBy5XDkKKJ0Y1SBsOXOBUSnWqEQpWaQqXs55FwerkJrgFqU?=
+ =?us-ascii?Q?XCoMLU8NpbHA6DWAXQnbb8vPGwNdvx97865ZKDThf/OPzYgid9cDDeWyah5v?=
+ =?us-ascii?Q?Rls3Sx3qFcO0oNpL4v2wPYZSbPxKJHs6hJYO3/YzbDgX/HU5dxoXRhvlO+Fb?=
+ =?us-ascii?Q?rHxL5E3hSVBdOyXrP8/xCNt5A3K0u6qe9SmDHFmeLLAdMWCvKwvL9JP1Gjfz?=
+ =?us-ascii?Q?FMmZGvtdPajXmnuq8NChIV4VIDLRj4aKXmSMdTiXxeqli+Nl/1H8ZmmeLi2U?=
+ =?us-ascii?Q?zpjh9x/3ngR3xLi7EAWftrzOuVYeJLpFzRets+oQJwPg6sTw1ik34hlu/3x0?=
+ =?us-ascii?Q?U3bbSEdJBrZN/7lqZQR+nR3yVIaiNdZISiZCJ5Qd7XLQjDjUExV0lQrJ20jQ?=
+ =?us-ascii?Q?S2kovRHXJDQV+Yzyh1IH835xjJ/U2JcfRL4NnT8o+uIewt+RwgVm4O4npe42?=
+ =?us-ascii?Q?qsCgMXLSYCMXplmh51HDBt8jvvbBTygfJKbMDK86vovCym/Mu5mCCnyDfVq9?=
+ =?us-ascii?Q?qLnWjuqHT1P+lMdAbLd3tHNVe0Jqgb8cR1qMKw/PcLa5MMaHYj6QNWY4Ty/b?=
+ =?us-ascii?Q?CApryav+8M4RRUL5RQEHFPttGz5Mo2Yab68LrIEzJ1wi+G08xg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aI/5V0nJLr1OwyWLhcVql16KPU/0dQESB3MrTZyawir3ri90DrbneRkWhr4H?=
+ =?us-ascii?Q?XqA7uHoaqXo3lAQIx2CQ4XMKXxpGI8srpuC3pX2i3RWQRvubKOFmgTTm+2pw?=
+ =?us-ascii?Q?SLAozq49vL6cpb2tXTiDtCXvL2HRPOFZdUwMptSUDUuoa2ZeB4WjGvHa1YVv?=
+ =?us-ascii?Q?B6rPDfkN5/1O2OE/uelE25tUi1nAThJ57D+DK36FgbTJ6FKOkdyuzy0SUkrK?=
+ =?us-ascii?Q?4bw7qRMuUbMFS9eNlVnhBnZHOUF7QpnlEKzEswNQ9FEo14QhGYmeTrh0gcrP?=
+ =?us-ascii?Q?gszv6RpfV1/MdlGVGntGEGW+9trq4qS+dsaFVv9D5d0CIzoaN364zV0lOZBw?=
+ =?us-ascii?Q?L8N1UUkfccNva8BsWXGcJgs1wbr0houaIwYnWwkz5rH5H+iRUUi3yEEXvw5o?=
+ =?us-ascii?Q?RaaCGdjz/VCK6E6h9WJAG0Y5FcZaMgVoaJEzFXurDEm1wHkUYFkkFUzxrIPq?=
+ =?us-ascii?Q?Zy+xjhqZvgW7tVCaCn7aG5jdXv9t087XRGndtHQgsk0Zggpckq+kqQuZXArG?=
+ =?us-ascii?Q?YpGCutqwla9lElWuA1YWiDBjsgogodhrNGB9EA6Mu0cVUcZy4fT1pikwUJB+?=
+ =?us-ascii?Q?GwbWMWZ4TMxxYpbkzVtUgjiT884Xj7xms8p1QGrSNYzOfnIZKaitwaKZuBYX?=
+ =?us-ascii?Q?Dob4Y+tc6Txc8NzkfWr+t0c8J01TJc/1I8d9L/9HSXW9V5jkhJyy5W+MQQTz?=
+ =?us-ascii?Q?sNyOUWzQrJmyxDumLR48c/tCRS6+EnDJQ+D4UK7E11YwQZr90KbunpcMS3HY?=
+ =?us-ascii?Q?bpMlSNcErcuSK3fg8Zhl3dVr8jlkrKCntXvV2IE1dyVGbaeGbjhrCuKPsbbF?=
+ =?us-ascii?Q?5BXLCSBCwZnclsE3yO3qK8Pu6ib+OQh1gKrByxughjMtRtJ1JmQJZ+OfjRNe?=
+ =?us-ascii?Q?KbJyIR1MuLmdv8U+zISdVNQ/nOWcHtM90hIZNjyF32mi5sflzGlx2kZd7Wlv?=
+ =?us-ascii?Q?uz7ibeAf0yY5INUgQOZ8iwt7N8atzAX/1tXlTZh16GZq82RWx7rhrhdOpq7+?=
+ =?us-ascii?Q?jslLtgY2nciQQjFwIsyxCJ0X+Ir2SUK33LumqNHZFkx+4bURmdRmQ2uD+zw1?=
+ =?us-ascii?Q?f+1aGfPJg9r/sanotFGonO7xIl9UFKoonx1VU5YDwFFqTKw4VPoVG5TaTsVb?=
+ =?us-ascii?Q?tECItZ25XeVqr8l2Q6J12aPcRQqaUyvvv295l5kQXgZv3Wa+giig++Prbn8h?=
+ =?us-ascii?Q?4nTROovcFQr69VDbRycQSvk3qHNmLWiwwt0983abN7zq482IWTgOmCzI8O+g?=
+ =?us-ascii?Q?GJd+h48i4zr0QzJ0XwwsOn7E/uFTEbRy0nLmez3ciE0g8ZTOjg8Lbswm04tx?=
+ =?us-ascii?Q?g6ZF3Bg4YSORpld2ZVgUBES3mFmR3W/BEFVrSzdD82fpiCAPN4iqwtGaVgnC?=
+ =?us-ascii?Q?jh9iQe0MzMo3R5IlZhgaHdP+/OZzvGkluf4b6HvzaReWGhSU1b7s5O6eVZrB?=
+ =?us-ascii?Q?WbwyK2/UL4zPuOsMDiidZDPMbaEXRLuhWrFxi8me4wy38xE0uZX/UMh8jGoY?=
+ =?us-ascii?Q?L0ILEbejWHmDxrlqVTdrCyTAmarQ1kGIbh5Y/hrM6yZtSlaVewOMZezJ8gjV?=
+ =?us-ascii?Q?bmuxjSd2SuF1S9s9KicOEnVBEI26nafCLov8Gc8u?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40950a4e-6b28-4b3d-48e3-08ddbafa9178
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 12:59:10.9252
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Nqa++ihHoxc5lTO7ds6vu90ksQecvMJIBmFwdGY4jKlSG1y6L0824gQpQYalVrc1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8077
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Jun 26, 2025 at 12:34:32PM -0700, Nicolin Chen wrote:
+> There are callers that read the unmapped bytes even when rc != 0. Thus, do
+> not forget to report it in the error path too.
+> 
+> Fixes: 8d40205f6093 ("iommufd: Add kAPI toward external drivers for kernel access")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/iommufd/io_pagetable.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-Add a Kconfig switch allowing to disable the legacy parts of the GPIO
-sysfs interface. This means that even though we keep the
-/sys/class/gpio/ directory, it no longer contains the global
-export/unexport attribute pair (instead, the user should use the
-per-chip export/unpexport) nor the gpiochip$BASE entries. This option
-default to y if GPIO sysfs is enabled but we'll default it to n at some
-point in the future.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/Kconfig         |  8 ++++++++
- drivers/gpio/gpiolib-sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 44f922e10db2f8dcbdacf79ccd27b0fd9cd93564..d040fdd95ee4b19851057fbedbb023f277149c9c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -69,6 +69,14 @@ config GPIO_SYSFS
- 	  use the character device /dev/gpiochipN with the appropriate
- 	  ioctl() operations instead.
- 
-+config GPIO_SYSFS_LEGACY
-+	bool "Enable legacy functionalities of the sysfs interface"
-+	depends on GPIO_SYSFS
-+	default y if GPIO_SYSFS
-+	help
-+	  Say Y here if you want to enable the legacy, global GPIO
-+	  numberspace-based functionalities of the sysfs interface.
-+
- config GPIO_CDEV
- 	bool "Character device (/dev/gpiochipN) support" if EXPERT
- 	default y
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 563e38456c33cd3a6e8674485105ef45ce8f5095..f31adc56bef1e215a257eab37ca3319c55ef36a6 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -24,6 +24,8 @@
- #include "gpiolib.h"
- #include "gpiolib-sysfs.h"
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
-+
- struct kernfs_node;
- 
- #define GPIO_IRQF_TRIGGER_NONE		0
-@@ -41,6 +43,8 @@ enum {
- 	GPIO_SYSFS_LINE_CLASS_ATTR_SIZE,
- };
- 
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
-+
- enum {
- 	GPIO_SYSFS_LINE_CHIP_ATTR_DIRECTION = 0,
- 	GPIO_SYSFS_LINE_CHIP_ATTR_VALUE,
-@@ -55,21 +59,26 @@ struct gpiod_data {
- 	struct device *dev;
- 
- 	struct mutex mutex;
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct kernfs_node *value_kn;
- 	int irq;
- 	unsigned char irq_flags;
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	bool direction_can_change;
- 
- 	struct kobject *parent;
- 	struct device_attribute dir_attr;
- 	struct device_attribute val_attr;
-+
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct device_attribute edge_attr;
- 	struct device_attribute active_low_attr;
- 
- 	struct attribute *class_attrs[GPIO_SYSFS_LINE_CLASS_ATTR_SIZE];
- 	struct attribute_group class_attr_group;
- 	const struct attribute_group *class_attr_groups[2];
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	struct attribute *chip_attrs[GPIO_SYSFS_LINE_CHIP_ATTR_SIZE];
- 	struct attribute_group chip_attr_group;
-@@ -80,7 +89,9 @@ struct gpiodev_data {
- 	struct list_head exported_lines;
- 	struct gpio_device *gdev;
- 	struct device *cdev_id; /* Class device by GPIO device ID */
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct device *cdev_base; /* Class device by GPIO base */
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- };
- 
- /*
-@@ -188,6 +199,7 @@ static ssize_t value_store(struct device *dev, struct device_attribute *attr,
- 	return size;
- }
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
- {
- 	struct gpiod_data *data = priv;
-@@ -383,6 +395,7 @@ static ssize_t active_low_store(struct device *dev,
- 
- 	return gpio_sysfs_set_active_low(data, value) ?: size;
- }
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
- 			       int n)
-@@ -397,6 +410,7 @@ static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
- 
- 		if (!data->direction_can_change)
- 			mode = 0;
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	} else if (strcmp(attr->name, "edge") == 0) {
- 		data = container_of(dev_attr, struct gpiod_data, edge_attr);
- 
-@@ -406,6 +420,7 @@ static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
- 		if (!data->direction_can_change &&
- 		    test_bit(FLAG_IS_OUT, &data->desc->flags))
- 			mode = 0;
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	}
- 
- 	return mode;
-@@ -426,6 +441,7 @@ static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
-  *   /ngpio ... matching gpio_chip.ngpio
-  */
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static ssize_t base_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
-@@ -434,6 +450,7 @@ static ssize_t base_show(struct device *dev, struct device_attribute *attr,
- 	return sysfs_emit(buf, "%u\n", data->gdev->base);
- }
- static DEVICE_ATTR_RO(base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static ssize_t label_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
-@@ -558,6 +575,7 @@ static struct device_attribute dev_attr_unexport = __ATTR(unexport, 0200,
- 							  NULL,
- 							  chip_unexport_store);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static struct attribute *gpiochip_attrs[] = {
- 	&dev_attr_base.attr,
- 	&dev_attr_label.attr,
-@@ -565,6 +583,7 @@ static struct attribute *gpiochip_attrs[] = {
- 	NULL,
- };
- ATTRIBUTE_GROUPS(gpiochip);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static struct attribute *gpiochip_ext_attrs[] = {
- 	&dev_attr_label.attr,
-@@ -575,6 +594,7 @@ static struct attribute *gpiochip_ext_attrs[] = {
- };
- ATTRIBUTE_GROUPS(gpiochip_ext);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- /*
-  * /sys/class/gpio/export ... write-only
-  *	integer N ... number of GPIO to export (full access)
-@@ -639,10 +659,13 @@ static struct attribute *gpio_class_attrs[] = {
- 	NULL,
- };
- ATTRIBUTE_GROUPS(gpio_class);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static const struct class gpio_class = {
- 	.name =		"gpio",
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	.class_groups =	gpio_class_groups,
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- };
- 
- static int match_gdev(struct device *dev, const void *desc)
-@@ -754,6 +777,8 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	gpiod_attr_init(&desc_data->dir_attr, "direction",
- 			direction_show, direction_store);
- 	gpiod_attr_init(&desc_data->val_attr, "value", value_show, value_store);
-+
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	gpiod_attr_init(&desc_data->edge_attr, "edge", edge_show, edge_store);
- 	gpiod_attr_init(&desc_data->active_low_attr, "active_low",
- 			active_low_show, active_low_store);
-@@ -789,6 +814,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 		status = -ENODEV;
- 		goto err_unregister_device;
- 	}
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	gdev_data = gdev_get_data(gdev);
- 	if (!gdev_data) {
-@@ -832,10 +858,12 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- err_free_name:
- 	kfree(desc_data->chip_attr_group.name);
- err_put_dirent:
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	sysfs_put(desc_data->value_kn);
- err_unregister_device:
- 	device_unregister(desc_data->dev);
- err_free_data:
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	kfree(desc_data);
- err_clear_bit:
- 	clear_bit(FLAG_EXPORT, &desc->flags);
-@@ -844,12 +872,14 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- }
- EXPORT_SYMBOL_GPL(gpiod_export);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static int match_export(struct device *dev, const void *desc)
- {
- 	struct gpiod_data *data = dev_get_drvdata(dev);
- 
- 	return gpiod_is_equal(data->desc, desc);
- }
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- /**
-  * gpiod_export_link - create a sysfs link to an exported GPIO node
-@@ -866,6 +896,7 @@ static int match_export(struct device *dev, const void *desc)
- int gpiod_export_link(struct device *dev, const char *name,
- 		      struct gpio_desc *desc)
- {
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct device *cdev;
- 	int ret;
- 
-@@ -882,6 +913,9 @@ int gpiod_export_link(struct device *dev, const char *name,
- 	put_device(cdev);
- 
- 	return ret;
-+#else
-+	return -EOPNOTSUPP;
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- }
- EXPORT_SYMBOL_GPL(gpiod_export_link);
- 
-@@ -920,6 +954,7 @@ void gpiod_unexport(struct gpio_desc *desc)
- 
- 		list_del(&desc_data->list);
- 		clear_bit(FLAG_EXPORT, &desc->flags);
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		sysfs_put(desc_data->value_kn);
- 		device_unregister(desc_data->dev);
- 
-@@ -929,6 +964,7 @@ void gpiod_unexport(struct gpio_desc *desc)
- 		 */
- 		if (desc_data->irq_flags)
- 			gpio_sysfs_free_irq(desc_data);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 		sysfs_remove_groups(desc_data->parent,
- 				    desc_data->chip_attr_groups);
-@@ -979,6 +1015,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 
- 	guard(mutex)(&sysfs_lock);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	/* use chip->base for the ID; it's already known to be unique */
- 	data->cdev_base = device_create_with_groups(&gpio_class, parent,
- 						    MKDEV(0, 0), data,
-@@ -990,13 +1027,16 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 		kfree(data);
- 		return err;
- 	}
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	data->cdev_id = device_create_with_groups(&gpio_class, parent,
- 						  MKDEV(0, 0), data,
- 						  gpiochip_ext_groups,
- 						  "chip%d", gdev->id);
- 	if (IS_ERR(data->cdev_id)) {
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		device_unregister(data->cdev_base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 		err = PTR_ERR(data->cdev_id);
- 		kfree(data);
- 		return err;
-@@ -1016,7 +1056,9 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
- 		if (!data)
- 			return;
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		device_unregister(data->cdev_base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 		device_unregister(data->cdev_id);
- 		kfree(data);
- 	}
-
--- 
-2.48.1
-
+Jason
