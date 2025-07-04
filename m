@@ -1,216 +1,256 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2AA2D8764
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7832F94AB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635356; cv=none; b=Ee3+bDmTGbJjlfMxOUjRjrEXV1ZQitliglwkDcLEHmK9ASnCDLoMbxPldAI2S7NlLWn7jqFISErinHs1DG+usrsBdPClaTpX4KgBJfJs084Dk6T+vsBQzA2wnieL4bwwnrRB1Yemt4NKaK6qiMaY1JeN8npKoCLct45nel79F1U=
+	t=1751635541; cv=none; b=GbhYUpn8BzuO/994L7H2LQkdENm5cyqHkhR83Rjt7NCt5UCrnB3yIPIBYpOUNHg9eMesVjVRCjuxPS92P/3xuUZcV8D06qlSQZDroSp7m8wzte5cAPq9mymjDkXd/yUuew99ejbZK3OSU8yVJvgwVZyaRijWRnKLFxNf0wM4yzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635356; c=relaxed/simple;
-	bh=NZwEDTKG16s4GLu3/3kVH1yKX1Wi2eX9GJGCc1Q3C0E=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IsxcZXL6ZzNSMzV/GYeq4s6pg67/kn66JxzcnGBqsXiiKpFlnoPnNdt3lXB8OnwEQRUJrkw1XXrvO1CtQ+4lRrG8/hd1q2RABUajVK4DjX+PuXuhbCLnU4dxo5S7Z4rs7tMaFlxz3mlH8TiVqYkxKjGwEEvjhV7G+12A4hE0iMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P58YDzJa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751635541; c=relaxed/simple;
+	bh=8lKJP1Z5Y7Dnii9C693REqDKfCL8ddZW23NtRFLW07g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E+QS3SWMELj5TpB27UF7M1TvPDZwrEhvMVKUCjV2wnvlaWWuszkzQkpk06xJSx80pbIZ26qxAG8EoQ3SwUGW4MNJ4oAz0Ofvia++5IB1y7I0f6aQc6qW8qag4mIffWfO2e9aqk3d/cBMIw3W7EH9Y4+8ztfizGwmHqz1gUAy2MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M9hx3Ltu; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P58YDzJa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751635353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iS3p25tHU3RM4I/3CZVdnqBFJoVJz2HfsGdXG6RAfbg=;
-	b=P58YDzJaZVz4OqH1kioybPwK7/gpH6p+4itQTs6L4OnbtkhBtMEGK4tqCGqdIs4b4JdmwL
-	H0dxD36eTQNF8R4BZhtteXXpkdva1nyzHOjDehqXb7qoflCWrGbmwkX35SWTX6Okm00mTt
-	DIF9cDj0eUuUli6zF0BxL0/KQeUJKic=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-112-vmlJx3euP1GS92Jak2Zaww-1; Fri, 04 Jul 2025 09:22:32 -0400
-X-MC-Unique: vmlJx3euP1GS92Jak2Zaww-1
-X-Mimecast-MFC-AGG-ID: vmlJx3euP1GS92Jak2Zaww_1751635352
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f3796779so449889f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:22:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M9hx3Ltu"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b3220c39cffso908372a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751635539; x=1752240339; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mdrJVJb2DLNFcGIFOTNNoe56BFKKklEBsHxLiosK2WU=;
+        b=M9hx3Ltu9XVLdm1TXVUa+82QqbR8uy2nC924sDMfE6L9FFA07ym45ZICfriYn+a4pF
+         WMT57lKYpsWiKOoD5r0g4IH0RqKIsrRL+w7k8Bj1ipGb8wPS3ZIYY15YuObSi2tZd/WJ
+         tarM0BhI2x+7wgl1816okh/HrJaUtFFMN1Vcg5xJGpB8iy+/3Di+ke+ZqzlyNTCvaMub
+         Qf9mgimxuydhnOmLuzIzeXcVqsxgPXlisGLBxapHLpEy6hNb0t48Ia2cqgwUXh5WF1OU
+         HWehQPd3Gyoi6Ub5/9KrGQ8DxBC2obDCL/4K1sIEVE+rlkrcNBvonnjCsT8WdMaDYMvt
+         /nSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751635351; x=1752240151;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iS3p25tHU3RM4I/3CZVdnqBFJoVJz2HfsGdXG6RAfbg=;
-        b=kIXp82AK5MqdNF0YycrwdyhRktTkvhfKx7YGJCEr5kOTeN0xer32dU/pU652RnfRo1
-         j5NuROcbJ64/B7+ryA0xCdrX08Zm6I8Lt1W0l+PBSj3v/hGApRfiMUqO0rDWsNi4dGVI
-         D7fLDjRB3bDZgp7R6jcqIRv2P68QyLeCfWHHNnqNwz0Zi5hjJmx0r+2OffsPzpWYd6uc
-         NWiEWzB0dIo9KOps27iBrlTBHJz/Jq4oT+gihf6Bu5V+FZYWGSAEH9nRe2RD5qNhE92L
-         /r7vzmZabc7xcV9rkgyUULL9DjGD/j3Ad1bU6t1RmwRnJ1o5NpHOT+Mu+m69osMMoOfF
-         lBig==
-X-Gm-Message-State: AOJu0YwSdjNFwhq8Acdt08APmWoIeUhyBKvudvjE203+pSLR+NWdh7L9
-	ul4S/lyufnM0NTM9V1s+PKXV4CTS81Lza3rF0p+wC+bZ/wBIK79wMqmgDYDQdw+6T5KvgLS6LdA
-	FtbepUXDwolVMcx5ly7vXnR/GTWoW5snBh2M2A7R4OZzhwnxdheYLE7h3B/rh38Lk5A==
-X-Gm-Gg: ASbGncvOV6J7WUP5+i77eeM0Hn18GUWR7VNIyx54mXFXjLqdxLOXSaYNR/goJjYvFz/
-	nQ+OZBAn0cQCIgBRd4FTo6pJp0S9LShAVJu+MijIcyPgZB2IfHE1ip6GpqxSNzRznZ8lK+hPccV
-	fX2XfiQrxZ/ZkoErnRnVpZPdoCGVA2QDVrMjNHgaVENKFEKwUuPz77jXZ9T6S1Wo/vGFpQD2qV+
-	YmZ9yMDoGkvvIwFaCnny7RuObtlUTxGq7k19L0Ks8FbSli2HznKGTVZiSwbntIYTBAWW8ofwh8r
-	gsSFinnmxIeA5YvJP+dVzeboOUW2ndL1hu9Gg5NKHLR6BswpbLPE/JPtxz5rfc6CJJD+q60ZMWV
-	SEl6b6moWl2ABwWbqv7hZk23un9yaAjR2SDutjU1nIoG8MqY=
-X-Received: by 2002:adf:eb4d:0:b0:3a4:f787:9b58 with SMTP id ffacd0b85a97d-3b496619e79mr1937393f8f.58.1751635351408;
-        Fri, 04 Jul 2025 06:22:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHRARbbUWKXhwf/Qzsz+yNJbGOJQ/fx81Tbz4PDE6rtFVVnp8zr/goOYhsUspYRzJ16F+5PYA==
-X-Received: by 2002:adf:eb4d:0:b0:3a4:f787:9b58 with SMTP id ffacd0b85a97d-3b496619e79mr1937351f8f.58.1751635350955;
-        Fri, 04 Jul 2025 06:22:30 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:5500:988:23f9:faa0:7232? (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bde954sm54847765e9.33.2025.07.04.06.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 06:22:30 -0700 (PDT)
-Message-ID: <36a8f286-1b09-43bd-9efa-5831ef3f315b@redhat.com>
-Date: Fri, 4 Jul 2025 15:22:28 +0200
+        d=1e100.net; s=20230601; t=1751635539; x=1752240339;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mdrJVJb2DLNFcGIFOTNNoe56BFKKklEBsHxLiosK2WU=;
+        b=P8c+HfAwCf5WEajQA2y68pL1exZ2PNK+7L22Zm+4ARaLU8xZpkOzqdaug18+VuGAKE
+         9tcYUsiE+a6BPdsZ5hwF1namK26CxM0Y1kX5WTNO10fTYxv3W/bxOPLZyRznexLQi3lM
+         M565Ku8gArY6apukGgZCQNJif3vsJh8O5wi2QzdIvY4YteaFpYDrMXCtJDgqOmoj4L7H
+         XNGuP2o1pLU3DkGzdlOQRQ1Ofcliv0RN+DHvH3DO/5QW6vNAhFEJrm3Jw22KteoclsnC
+         k8ms3nUpnkR3H6bhwHLzJ2nINnCvx7D58f7k/yjl4EBKc0lb4YQlJu9hEh2+TItqq0Ss
+         PXqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgmBOuGh4Q9K9TNSAp0SkHmK+3vHq5Kxx7Hi+ePdUL1dNUrDhb3wBd+0kxpU+72g5ZOz0cCY7oAaHop2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPQ41AbKFhTnbwMM0P/U9X1czHbL32kFpccpIccSw6P0/txRgO
+	MqtkLYTsAPLUt6sRHLncMZ+YXv3f8mNuXPLoYaow7+3xRt4H0LLGlnrHndaP+CHVOSJehbK4Vk7
+	gvSRsGZQiFb47hAhUzO2w+KUs13IhRbJyP2YyEbunPQ==
+X-Gm-Gg: ASbGncvQmXArAxsRVACdI5TM9T5q29ZfxLNnUANc753AA3Bc+kFQyw8VA+vPqegRoZi
+	ix7OiawB1IkOmCb4X0EKmDWv4tmQxIClmADq3Ap1x+x8j2NOMDhDd2mrRdPaTUoKQ0+jB4/W9dU
+	p+/Sw0P0Y2xFmOJylB4anQ//DlfAZGnBcCk5tbjKOI9gCKE5PBwGymeQSjUAXQ6YacV4gEL0Dsc
+	/Dr
+X-Google-Smtp-Source: AGHT+IEJ/sDn49EvivdcN4MphJg5GlX/nLZFnn+yYbIr+govC0++eMS6gpldFW4QKttk+Apc0UaImPReeCzAUISOslA=
+X-Received: by 2002:a17:90b:37c8:b0:311:ab20:159d with SMTP id
+ 98e67ed59e1d1-31aadd9ce5bmr3234913a91.19.1751635539104; Fri, 04 Jul 2025
+ 06:25:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 07/14] fs/dax: use vmf_insert_folio_pmd() to insert
- the huge zero folio
-From: David Hildenbrand <david@redhat.com>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, nvdimm@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-8-david@redhat.com>
- <cneygxe547b73gcfyjqfgdv2scxjeluwj5cpcsws4gyhx7ejgr@nxkrhie7o2th>
- <74acb38f-da34-448d-9b73-37433a5e342c@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <74acb38f-da34-448d-9b73-37433a5e342c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250703143941.182414597@linuxfoundation.org>
+In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 4 Jul 2025 18:55:27 +0530
+X-Gm-Features: Ac12FXx79trvmIhjSYqu8P5hDN1zeNOSmCT2hOXSGMNLXknUMkdBqfZVS5xK8Kw
+Message-ID: <CA+G9fYu=JdHJdZo0aO+kK-TBNMv3dy-cLyO7KF4RMB20KyDuAg@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Yeoreum Yun <yeoreum.yun@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 25.06.25 11:03, David Hildenbrand wrote:
-> On 24.06.25 03:16, Alistair Popple wrote:
->> On Tue, Jun 17, 2025 at 05:43:38PM +0200, David Hildenbrand wrote:
->>> Let's convert to vmf_insert_folio_pmd().
->>>
->>> In the unlikely case there is already something mapped, we'll now still
->>> call trace_dax_pmd_load_hole() and return VM_FAULT_NOPAGE.
->>>
->>> That should probably be fine, no need to add special cases for that.
->>
->> I'm not sure about that. Consider dax_iomap_pmd_fault() -> dax_fault_iter() ->
->> dax_pmd_load_hole(). It calls split_huge_pmd() in response to VM_FAULT_FALLBACK
->> which will no longer happen, what makes that ok?
-> 
-> My reasoning was that this is the exact same behavior other
-> vmf_insert_folio_pmd() users here would result in.
-> 
-> But let me dig into the details.
+On Thu, 3 Jul 2025 at 20:42, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.96 release.
+> There are 139 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.96-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Okay, trying to figure out what to do here.
+The following build errors were noticed on arm with gcc-13 and clang-20 on
+the stable-rc 6.6.96-rc1.
 
-Assume dax_pmd_load_hole() is called and there is already something. We 
-would have returned VM_FAULT_FALLBACK, now we would return VM_FAULT_NO_PAGE.
+Test environments:
+- arm
 
-That obviously only happens when we have not a write fault (otherwise, 
-the shared zeropage does not apply).
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-In dax_iomap_pmd_fault(), we would indeed split_huge_pmd(). In the DAX 
-case (!anon vma), that would simply zap whatever is already mapped there.
+Test regression: 6.6.96-rc1: coresight-core.c error implicit
+declaration of function 'FIELD_GET'
 
-I guess we would then return VM_FAULT_FALLBACK from huge_fault-> ... -> 
-dax_iomap_fault() and core MM code would fallback to handle_pte_fault() 
-etc. and ... load a single PTE mapping the shared zeropage.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-BUT
+## Test log
+drivers/hwtracing/coresight/coresight-core.c: In function
+'coresight_read_claim_tags':
+drivers/hwtracing/coresight/coresight-core.c:138:16: error: implicit
+declaration of function 'FIELD_GET'
+[-Werror=implicit-function-declaration]
+  138 |         return FIELD_GET(CORESIGHT_CLAIM_MASK,
+      |                ^~~~~~~~~
+cc1: some warnings being treated as errors
 
-why is this case handled differently than everything else?
+## Build
+* kernel: 6.6.96-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git commit: e950145d456d01fa4e589d5e6183c2f8f0676743
+* git describe: v6.6.95-140-ge950145d456d
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.95-140-ge950145d456d
 
-E.g.,
-
-(1) when we try inserting the shared zeropage through 
-dax_load_hole()->vmf_insert_page_mkwrite() and there is already 
-something ... we return VM_FAULT_NOPAGE.
-
-(2) when we try inserting a PTE mapping an ordinary folio through 
-dax_fault_iter()->vmf_insert_page_mkwrite() and there is already 
-something ... we return VM_FAULT_NOPAGE.
-
-(3) when we try inserting a PMD mapping an ordinary folio through 
-dax_fault_iter()->vmf_insert_folio_pmd() and there is already something 
-... we return VM_FAULT_NOPAGE.
+## Test Regressions (compared to v6.6.94-289-g33e06c71265b)
+* arm, build
+  - clang-20-lkftconfig
+  - clang-20-u8500_defconfig
+  - clang-nightly-lkftconfig
+  - clang-nightly-u8500_defconfig
+  - gcc-13-allmodconfig
+  - gcc-13-lkftconfig
+  - gcc-13-lkftconfig-debug
+  - gcc-13-lkftconfig-kasan
+  - gcc-13-lkftconfig-kunit
+  - gcc-13-lkftconfig-libgpiod
+  - gcc-13-lkftconfig-perf
+  - gcc-13-lkftconfig-rcutorture
+  - gcc-13-u8500_defconfig
+  - gcc-8-u8500_defconfig
 
 
-So that makes me think ... the VM_FAULT_FALLBACK right now is probably 
-... wrong? And probably cannot be triggered?
+## Metric Regressions (compared to v6.6.94-289-g33e06c71265b)
 
-If there is already the huge zerofolio mapped, all good.
+## Test Fixes (compared to v6.6.94-289-g33e06c71265b)
 
-Anything else is really not expected I would assume?
+## Metric Fixes (compared to v6.6.94-289-g33e06c71265b)
 
--- 
-Cheers,
+## Test result summary
+total: 224212, pass: 204338, fail: 5194, skip: 14300, xfail: 380
 
-David / dhildenb
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 129 total, 113 passed, 15 failed, 1 skipped
+* arm64: 44 total, 44 passed, 0 failed
+* i386: 23 total, 23 passed, 0 failed
+* mips: 26 total, 25 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 31 passed, 1 failed
+* riscv: 15 total, 14 passed, 0 failed, 1 skipped
+* s390: 14 total, 13 passed, 1 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 37 total, 36 passed, 0 failed, 1 skipped
 
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
