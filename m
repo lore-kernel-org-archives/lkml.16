@@ -1,118 +1,74 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEDA1CAA9C;
-	Fri,  4 Jul 2025 15:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83A328EA53;
+	Fri,  4 Jul 2025 15:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641912; cv=none; b=JmnMNFDA7CePNxa4LApEHXmzIOHNtVuYcBZA2fO4bKNqqLH6WbGEoj4V1LFYv324MCdtTxHNjz3PhtUG0W1yLhSTIljz9mHOL5AAIYa47Pxfa7xjPlZuHiFHS/lpvG5jQdJrPgduB66uAufg8KYCv46lv8LauWLy8FdkOzasVYg=
+	t=1751641931; cv=none; b=Eo428cLUu1PwfJionA88wfVmLSWo24BofRyMHpQS77gTDtFwEk3gc2G6sIKVkyDN5ANOcJ7ZEh4BSeFtoZdctYy7kq9KlvzBgNyuGDowEFMpS0NtaIu7/G47kiJh2yP9xcrrD9/Yypt5wokZAX8YeyAZi1zHTTF83FaVdhFD+bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641912; c=relaxed/simple;
-	bh=JC6aNxqLJiNxrgERg3dHfGISsgqo9cVbi6o20fNl2X8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sL2GTb4RgrUeq+KCeOPRqudE9KI0yVKffgJoMHsemWbW4poX4CXkeZ90kxkpoPXD+5mB++Ov6qdrHV5zxa0fTUEBWqkaH5IskmoxBI488MuPUNPO1Ydqz8emZNAky+KzrS6gqVpKvt5PMg/JgjB4fDiQV72PSfcbsRKiot9HYJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkCHx8xA; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkCHx8xA"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ae35f36da9dso199157666b.0;
-        Fri, 04 Jul 2025 08:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751641909; x=1752246709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2qusLXZdix5HSF6lr9ETc0fp9UfUs/stGEdK45z2VJA=;
-        b=MkCHx8xANzcu2exOOCHCO4RHwdua0Qf+S0de81GG7X5uAXDrs+t3yy9qH8wrAyP1S+
-         mkPHKnhVBKUw+FQpriWGMprVMJ3RxhUd/7H+URKTo6UqKJ8vHCXScUX+HPmHXZHnviBl
-         1BRsZfdN+ZgbHE/Lc6FB2oW+rzrrPuWVoZ/yMZaEg3lfr9y1Zbeemfjb/qSwBr4fi3sH
-         M5fzf6ZY/yVLPvmgGymjOEb5V/XWqUPHgCCQsUgL4QDhzkPTTxJRrOBxRATT4zbIoNxI
-         dXItIkH8mj06DEhwd3xA1hjSnF6UVyVR8iZgKv7fyQy8rcIceGSkji8eg89STHDf8SUz
-         jF2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751641909; x=1752246709;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2qusLXZdix5HSF6lr9ETc0fp9UfUs/stGEdK45z2VJA=;
-        b=u93JpcV828JE3WgneDMB5t7gRBLtNbO+IKV7eR2IzcXYFFty+PQDI7pq04adYi6OrF
-         gQjHMO5vNByhQIVEz422u9Iz84XE2YZGl3xA96wFTRFcnrF4Q5WJBoVP9ZarlHDhwG7p
-         otN7zoCQtOHj7FRpYs3i+wAkhOdZqrYzLqxrLG+6EvnoY3wiOUbhX3ywfMgspMsv+Wmx
-         zKywXsKY8aTSvTVEYU95X66Y7dJB2FZoP/yaD051M/cbVsTrPfgdwEnNHACA/FfvTY28
-         3nUMlWFMZSQhdJk0nrriOd3RRZm6LWlLvjjtl96Qd1ugCqbhjfDJNrVxUROERCcTPqJ6
-         S3xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVK2oJEBveVcYhyVuryK885YWSou2L3Qf/Ayx7ePYC3lGb/Ja4FjKThw2C6sLdXU3SXDGYjxjVaE3D@vger.kernel.org, AJvYcCXLrll8G8ZEFKGjysB1VZEBQz1zgFt1rNWGdjdrCt9nars1ZmR9IkQXO9az8SCO2CUbgmugZQ6cMLN4u82O@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVxzJhfUmSHmXloCcODk++CU5Ftewo2znNYnGS6e/BupRVhchc
-	taegA6AmGwalhjZavp/BKmGST+GCJTcjLsFPs80bP21C7V76nBi6qZ5V
-X-Gm-Gg: ASbGncvouS0pEeLDpf81MSZSVdx8WVjtQx+6apAyGXprPmFK7uX38we8hxPlSY5t8NQ
-	qNMW3QQm1DzQ3U6pQZTkZfjwWdZ1din1J1nTFDjp9pbmejcEjzsJkjw4GcrAH/6vEy+j04Fz6v7
-	jcV25pSJrARL8AA65MDokJlE3kP2WuiNpHRtN7jcBHQZYlpNbojYcOaKSws51F++CD9iVZhOFXE
-	sDG1ODfWlRHnIKNxCfPUNyTKpbuiPdzAAxU0Ia1TP/iB9DSiYvV74ss/wTtPgVZFYVDhYTYYwpA
-	g6Tdar1YvkjoN2+pY66wdnGz5YTmxyLC8AcpE9MlL8rlt0hi6yrGS8U1PkY5ly33HqzGKNSl6pb
-	9ttY3d4qOHqYjjniITqQa9D7oEREnF9k4EpZoTw==
-X-Google-Smtp-Source: AGHT+IH+O+aw6zSL1fLxHFTirFNjk3NMB7gQVoIvyy3kw7HmLqoOlErjjJoZ/5Sk3NUY623u5QReGQ==
-X-Received: by 2002:a17:906:584f:b0:ae3:f296:84cf with SMTP id a640c23a62f3a-ae3fbd8b224mr231755266b.30.1751641908910;
-        Fri, 04 Jul 2025 08:11:48 -0700 (PDT)
-Received: from masalkhi.. (ip-078-042-182-222.um17.pools.vodafone-ip.de. [78.42.182.222])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b03203sm186153766b.131.2025.07.04.08.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:11:47 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: christophe.jaillet@wanadoo.fr
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	luoyifan@cmss.chinamobile.com,
-	robh@kernel.org
-Subject: Re: [PATCH v5 2/3] eeprom: add driver for ST M24LR series RFID/NFC EEPROM chips
-Date: Fri,  4 Jul 2025 15:11:46 +0000
-Message-ID: <20250704151146.12118-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <f14dfb9a-caf7-4889-a892-6fd61a9a5ecd@wanadoo.fr>
-References: <f14dfb9a-caf7-4889-a892-6fd61a9a5ecd@wanadoo.fr>
+	s=arc-20240116; t=1751641931; c=relaxed/simple;
+	bh=d83IaNS6NoPxQCwpTGjtGRS33HFh5HvOOsfwdC2cPl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fhr9fZSQfnKW13kWePR7f61ynNqXyUSC5N4nn6OqAh1IvJFG2wgfLHvstW0p99jBgPN/kHRkQ1W3j7m67ybWr5mZRtzb01dfjRDQ6tzGKMmcG3dqz29xEhVcIOnbHBoY/gg2QKUyj3tET+kAzuan81bJn5zA6i+kuJS0zIIbVls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id AC924C0137;
+	Fri,  4 Jul 2025 15:12:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 999541C;
+	Fri,  4 Jul 2025 15:12:04 +0000 (UTC)
+Date: Fri, 4 Jul 2025 11:12:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
+Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
+ architectures that support it
+Message-ID: <20250704111248.511cc248@gandalf.local.home>
+In-Reply-To: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
+References: <20250703115222.2d7c8cd5@batman.local.home>
+	<CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
+	<20250703152643.0a4a45fe@gandalf.local.home>
+	<CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: kdpyha7h8q9zijedorfgx1j95xpy5fby
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 999541C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18IykUGAOzqgK7BvVmLX83iO7Znbr1dums=
+X-HE-Tag: 1751641924-873251
+X-HE-Meta: U2FsdGVkX1+Oo+MnSHPV5U5wj6rbj4q78/eL7FDvpQmOnnhjDO7oIFk5bZD4iaOeRZ4zsDUvGxjTzbkiYXQuRPaxXUAkRomnqEgiKbwb5aEEsrOKhnq77xjpBn2ad435krdBkGg6hrTee2hYTCrnm7dnT6EiSgwGUbfyJj2WUx9Q8H4IohtAiHqPMUsHmvt6okfkFKmRZTh6KKCsUwThN34EH0jF5wyb3s/unWKo7sCRj+6BT4y6la2UfeeDxGH1KzRCY6QBGi2OzgpsHdG3kQUwWr14x47aZ8LoI24Y0Qw/CDFT4WSFph+08mycpZnSirzosaBYVQGb4L1PyYmt1QZ5hU+t23l+exY3k1tPjSowuYTPRqd5Bm11FWt35lWF
 
-Hi Christophe,
+On Thu, 3 Jul 2025 13:58:17 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Thank you for the review!
-
-On Fri, 4 Jul 2025 16:12:56 +0200, Christophe JAILLET wrote:
-> > +/**
-> > + * m24lr_regmap_read - read data using regmap with retry on failure
-> > + * @regmap:  regmap instance for the device
-> > + * @buf:     buffer to store the read data
-> > + * @size:    number of bytes to read
-> > + * @offset:  starting register address
-> > + *
-> > + * Attempts to read a block of data from the device with retries and timeout.
-> > + * Some M24LR chips may transiently NACK reads (e.g., during internal write
-> > + * cycles), so this function retries with a short sleep until the timeout
-> > + * expires.
-> > + *
-> > + * Returns:
-> > + *	 Number of bytes read on success,
-> > + *	 -ETIMEDOUT if the read fails within the timeout window.
-> > + */
-> > +static ssize_t m24lr_regmap_read(struct regmap *regmap, u8 *buf,
-> > +				 size_t size, unsigned int offset)
+> So the reason I dislike the HAVE_xyz pattern is exactly that there
+> _isn't_ a pattern. When there are fifteen different patterns, it's not
+> a pattern at all.
 > 
-> Why returning a ssize_t?
-> regmap_bulk_read() returns an int.
+> That said, maybe it's better to have one place that has that "if
+> FUNCTION_TRACER, even if I despise the nonsensical "helper
+> indirection" just because of the random naming.
 
-Since I return @size (of type size_t) on success, should I keep the
-return type as ssize_t, or would it be better to change it to int
-to match regmap_bulk_read()?
+At least with HAVE_FTRACE_* there is a pattern. The HAVE_* may not be
+consistent across other parts of the kernel, but it has been with ftrace.
 
-Best regards,
-Abd-Alrhman Masalkhi
+As I have stated, ftrace is very tightly coupled with the architectures due
+to the assembly written trampolines. And having a simple way for the
+architectures to denote what it supports and what it does not makes the
+generic code much simpler to implement.
+
+-- Steve
