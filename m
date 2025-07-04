@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC47223816C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B55242D79
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609261; cv=none; b=J23vlE+prZHwWBBAjPpGxgTIKjSdTegBDiyCNlZt8s61BoWJzFUZjFOblW44d4R9jr7mBQ8/fsxzfPgyW5bnk65P7IMTC0jzDbodlODsD/3i0/cSS7Qzj1YAkMS4YZhZahghESR8x1rOye2fSu8YGYo+XS/oqlCF5+YgC1jIVl4=
+	t=1751609265; cv=none; b=AnDpj9XlSCX6qWzmMEZX94SRKfzHY5VhBqx63vAURfBKz1/CmxxS51FH9+Pn422YJATeaqwNwTwN/pSDL0NQ9CyvYfFOn1sMjorHw4iWHS7NeIQ4gElSN4QWAmfebxyQpOyanLLqNU9021LQjHPg8hWNAm6qXpgPqIb0iPu3QIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609261; c=relaxed/simple;
-	bh=6/KDaBp6ZM8MWS9qb0wO08Ku16BqGmytBKM3lNMr5qw=;
+	s=arc-20240116; t=1751609265; c=relaxed/simple;
+	bh=Ckxo6CgOFeLwkg+7L2QC60dmSgMIafJFsZkepFdeJnQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rnBBiYyyZuFMUsBTyX38+ats+8BVTyC8gTTUiDUjSXUKSCH4RJceZrYK2+ZSYb86ExpLFz0HncT1aqzxfa7rSP0qKZrHewi5fJQtRuIzKAD08lvqMYKZOG0qicMjRLnuqAejQoiriEzHZPzPGiTgg4Bwd6qCNwqSF53YSC+W8oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ffK5AO6; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=bHw8e/Gb/wG3ds174mR1tmlhVDFB3ClQQsD+6n4dNS/8o843r+X1DIJy3nIWZbVs+flX8tZfBP4Bk0WV2rGbYAvJh++/GRmScuS08QfIc+GNNvhzbHK6jk3k79mB06B/wFQLb+nx4murkJVa+9kttaF7QjncRtrpGUNqZSCm34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pOSeexGj; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ffK5AO6"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23632fd6248so5867815ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:07:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pOSeexGj"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313fab41f4bso912694a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751609259; x=1752214059; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751609263; x=1752214063; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wz+/Rb5/fWdnaWsOelI+A9jPFxhtbRCP90y3FqomvrU=;
-        b=4ffK5AO6g6JajBAiHR1LBfKyuiiNpcLzOvei42nDr1LYOryigi0WSc5YqWybLDDF68
-         uWyrrzspQoIeAMWZ3i1QNZhQ0ojIwwLgYFGVI3BKOzCgt4UqVLNI2Mj+gvPrJU6CLcrP
-         +x7bgv+N+DbpuDwf/W5+VHAttb9TJ5SpoElxjXo1ptt7H4trq2TZ1D/AloH+i6ESbnpg
-         95gf/oF9j+GfJPjrPT7ZlApFOHrgLdiv8W/xsxDLVaqJTESk4FwIpBsVCe6vfK+P2vet
-         JdL3z4X402t5vP3S5iZOx4syriJLfeMN5J3kdcPAfss1mYXoBXp/Qu4Rh4hXhbrne62l
-         CltA==
+        bh=h5UIhHsA2QH3v7duxv2jqX5tfGSl+3WijZnkCT/PyKo=;
+        b=pOSeexGjSzNEtzQ3RDxauUjgOnWOxJ82VTNUiJ6eL8erzaEzj2MjtAiGkKrijQLMzZ
+         juaHSK1FjpMK0rf198IqtTuUIzJcaFEltpB+1LMB7QoS3KUlnOL1wTgq96uW8tRaauAZ
+         626nEYOUf7+j+JeQH3PNXPJOZQuFAGqwTe2stuRSvMT6q0q2lnjX5+U31NQgNP00dtZB
+         XWcx/1fFyXSYXSUvF1VeYTp+BezstZqh+NFaTVFMx/I9Z8nypQ94HUdS2hypqHSKP94F
+         0ux+8QXwF/VNEe/s4aDxaEBaCh8IzH5fvUpOawyNzYRbuBiW8UtqGmqg/D+kwqqYEiPF
+         l/2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751609259; x=1752214059;
+        d=1e100.net; s=20230601; t=1751609263; x=1752214063;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wz+/Rb5/fWdnaWsOelI+A9jPFxhtbRCP90y3FqomvrU=;
-        b=WGENwmq2rHZKP3wxsdPBxakOf2APpv72LByAfTPdNcs9X8dnZz1avbEETLBIw9IyYY
-         /aWt72fz6PuOUvpLy/pjFbKjup4pdeg9LDTsouxkozFfBH0MpBXmybyPZtZSPkYbcAjg
-         5iy0IiC/RQzLCnGZ/5tO33N3HPHSEWrivP/+hR8SRNRoogcwI/a0YAbFJbSQdELSKUER
-         vTb4YLiyZyffRbDBuxjM66cSi1ylCZV3ZqfCjEDoPTYKrMVPvX2Pqkl/q6sGQ54pkIf7
-         0kHweoSPANyMZb6fanGp8GV/qR/LMpxpZGLHDcgqtJ2L21u1G3FCFGAyGfnIpOt4etKE
-         lmaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVDKWmW/6Lp415EqT6bGdq7LFzUZYWQ3JqO6XS/+AvOVQYJVp/IXFtQftuZ4qzWFbvYUh7NeP6CK/nckM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhj6Xg6+xpXvbyX2drMEW5kWpL59ClOugrhSGVcwC0c+o4sL+7
-	BaGWhqOpgkGmBkpV6ehcBfYqu6XySYZRVnk7RuSqJBJmzYrktcbY1XH2srdFkfNs/ft5mVx6eLo
-	yADzrug==
-X-Google-Smtp-Source: AGHT+IGb2+UYZlfBpIllsB5zBRnjJDEHHc7eLL5E2NOd532QUxSqIns3SjUtZteR3l3V6p3oyrgM+kKIc4Y=
-X-Received: from pjbrs14.prod.google.com ([2002:a17:90b:2b8e:b0:312:187d:382d])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:11c3:b0:234:d7b2:2ab4
- with SMTP id d9443c01a7336-23c85de4dfamr22462935ad.17.1751609258994; Thu, 03
- Jul 2025 23:07:38 -0700 (PDT)
-Date: Thu,  3 Jul 2025 23:07:22 -0700
+        bh=h5UIhHsA2QH3v7duxv2jqX5tfGSl+3WijZnkCT/PyKo=;
+        b=UVua8BpSwm/+FfuZA21qIh6ChOpOmjYPR5XGzlNf/MviN/pudQJVJ6t5ySIlQPGb/Q
+         tDZA6OaVq23Hfljf7+sgWdwa1bVX70FwnLXEQob0LLkusFdS+iaXTC1UpMiRC55z402M
+         IQphkX+kZZAkxmVHBykqy5WQxGAVdsfGjornNIDxoj16ZrUJNswEddZqDcA9AJR/0cLG
+         lGnx5Jvp3UooM4jjnCLJAcIQdxWxseZPVEulEEITRbnEBUe2NF8tc+GNiQEhFoJn1PuX
+         23fgJeAV2Aj94U50GO9JL8J3R7eKQfImfM0ErNQ/PicPmqQJFlBx592m4GKxMGKIgfG7
+         OLrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx0KIN4twBimH3Hs+0CKOOb+HZlvc4OHm3lRZLnqw0WsAMYHKr7VEeDKxJrJCLgO2irio1zvqtzDOboKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/ABEJLdMrsxA69pu0i/LFrnKx/2nU4g3tGgI9Y9+ygiUKrBZ2
+	qIcn2uffD7NKfcJTQKWQR9a/DEPiKhQ28txjIhkbaetPNOlj+CYOcs8K1iVbTrsj3BSZHUjemXm
+	zkLIl+g==
+X-Google-Smtp-Source: AGHT+IGb1KdAzn5YP1WDTyP0Cp9f49AuhUCkK4JgigY7PefACgEs5tH7aIbj4XAEANijeDnY8cuDukZytlM=
+X-Received: from pjtd10.prod.google.com ([2002:a17:90b:4a:b0:311:c197:70a4])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2702:b0:314:2939:efdc
+ with SMTP id 98e67ed59e1d1-31aac44a392mr2310092a91.13.1751609263074; Thu, 03
+ Jul 2025 23:07:43 -0700 (PDT)
+Date: Thu,  3 Jul 2025 23:07:24 -0700
 In-Reply-To: <20250704060727.724817-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250704060727.724817-1-surenb@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250704060727.724817-5-surenb@google.com>
-Subject: [PATCH v6 4/8] selftests/proc: test PROCMAP_QUERY ioctl while vma is
- concurrently modified
+Message-ID: <20250704060727.724817-7-surenb@google.com>
+Subject: [PATCH v6 6/8] fs/proc/task_mmu: remove conversion of seq_file
+ position to unsigned
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
@@ -75,136 +75,69 @@ Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com,
 	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, surenb@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-Extend /proc/pid/maps tearing test to verify PROCMAP_QUERY ioctl operation
-correctness while the vma is being concurrently modified.
+Back in 2.6 era, last_addr used to be stored in seq_file->version
+variable, which was unsigned long. As a result, sentinels to represent
+gate vma and end of all vmas used unsigned values. In more recent
+kernels we don't used seq_file->version anymore and therefore conversion
+from loff_t into unsigned type is not needed. Similarly, sentinel values
+don't need to be unsigned. Remove type conversion for set_file position
+and change sentinel values to signed.
 
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- tools/testing/selftests/proc/proc-maps-race.c | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ fs/proc/task_mmu.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/proc/proc-maps-race.c b/tools/testing/selftests/proc/proc-maps-race.c
-index 764821ffd63d..6acdafdac9db 100644
---- a/tools/testing/selftests/proc/proc-maps-race.c
-+++ b/tools/testing/selftests/proc/proc-maps-race.c
-@@ -30,6 +30,8 @@
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-+#include <linux/fs.h>
-+#include <sys/ioctl.h>
- #include <sys/mman.h>
- #include <sys/stat.h>
- #include <sys/types.h>
-@@ -239,6 +241,21 @@ static void capture_mod_pattern(int maps_fd,
- 	assert(strcmp(restored_first_line->text, first_line->text) == 0);
- }
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 751479eb128f..b8bc06d05a72 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -135,7 +135,7 @@ static struct vm_area_struct *proc_get_vma(struct proc_maps_private *priv,
+ 	if (vma) {
+ 		*ppos = vma->vm_start;
+ 	} else {
+-		*ppos = -2UL;
++		*ppos = -2;
+ 		vma = get_gate_vma(priv->mm);
+ 	}
  
-+static void query_addr_at(int maps_fd, void *addr,
-+			  unsigned long *vma_start, unsigned long *vma_end)
-+{
-+	struct procmap_query q;
-+
-+	memset(&q, 0, sizeof(q));
-+	q.size = sizeof(q);
-+	/* Find the VMA at the split address */
-+	q.query_addr = (unsigned long long)addr;
-+	q.query_flags = 0;
-+	assert(!ioctl(maps_fd, PROCMAP_QUERY, &q));
-+	*vma_start = q.vma_start;
-+	*vma_end = q.vma_end;
-+}
-+
- static inline void split_vma(const struct vma_modifier_info *mod_info)
+@@ -145,11 +145,11 @@ static struct vm_area_struct *proc_get_vma(struct proc_maps_private *priv,
+ static void *m_start(struct seq_file *m, loff_t *ppos)
  {
- 	assert(mmap(mod_info->addr, page_size, mod_info->prot | PROT_EXEC,
-@@ -299,6 +316,8 @@ static void test_maps_tearing_from_split(int maps_fd,
- 	do {
- 		bool last_line_changed;
- 		bool first_line_changed;
-+		unsigned long vma_start;
-+		unsigned long vma_end;
+ 	struct proc_maps_private *priv = m->private;
+-	unsigned long last_addr = *ppos;
++	loff_t last_addr = *ppos;
+ 	struct mm_struct *mm;
  
- 		read_boundary_lines(maps_fd, page1, page2, &new_last_line, &new_first_line);
+ 	/* See m_next(). Zero at the start or after lseek. */
+-	if (last_addr == -1UL)
++	if (last_addr == -1)
+ 		return NULL;
  
-@@ -329,6 +348,19 @@ static void test_maps_tearing_from_split(int maps_fd,
- 		first_line_changed = strcmp(new_first_line.text, first_line->text) != 0;
- 		assert(last_line_changed == first_line_changed);
+ 	priv->task = get_proc_task(priv->inode);
+@@ -170,9 +170,9 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
+ 		return ERR_PTR(-EINTR);
+ 	}
  
-+		/* Check if PROCMAP_QUERY ioclt() finds the right VMA */
-+		query_addr_at(maps_fd, mod_info->addr + page_size,
-+			      &vma_start, &vma_end);
-+		/*
-+		 * The vma at the split address can be either the same as
-+		 * original one (if read before the split) or the same as the
-+		 * first line in the second page (if read after the split).
-+		 */
-+		assert((vma_start == last_line->start_addr &&
-+			vma_end == last_line->end_addr) ||
-+		       (vma_start == split_first_line.start_addr &&
-+			vma_end == split_first_line.end_addr));
-+
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
+-	vma_iter_init(&priv->iter, mm, last_addr);
++	vma_iter_init(&priv->iter, mm, (unsigned long)last_addr);
+ 	hold_task_mempolicy(priv);
+-	if (last_addr == -2UL)
++	if (last_addr == -2)
+ 		return get_gate_vma(mm);
  
-@@ -390,6 +422,9 @@ static void test_maps_tearing_from_resize(int maps_fd,
+ 	return proc_get_vma(priv, ppos);
+@@ -180,8 +180,8 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
  
- 	clock_gettime(CLOCK_MONOTONIC_COARSE, &start_ts);
- 	do {
-+		unsigned long vma_start;
-+		unsigned long vma_end;
-+
- 		read_boundary_lines(maps_fd, page1, page2, &new_last_line, &new_first_line);
- 
- 		/* Check if we read vmas after shrinking it */
-@@ -409,6 +444,17 @@ static void test_maps_tearing_from_resize(int maps_fd,
- 			assert(!strcmp(new_last_line.text, restored_last_line.text) &&
- 			       !strcmp(new_first_line.text, restored_first_line.text));
- 		}
-+
-+		/* Check if PROCMAP_QUERY ioclt() finds the right VMA */
-+		query_addr_at(maps_fd, mod_info->addr, &vma_start, &vma_end);
-+		/*
-+		 * The vma should stay at the same address and have either the
-+		 * original size of 3 pages or 1 page if read after shrinking.
-+		 */
-+		assert(vma_start == last_line->start_addr &&
-+		       (vma_end - vma_start == page_size * 3 ||
-+			vma_end - vma_start == page_size));
-+
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
- 
-@@ -479,6 +525,9 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 
- 	clock_gettime(CLOCK_MONOTONIC_COARSE, &start_ts);
- 	do {
-+		unsigned long vma_start;
-+		unsigned long vma_end;
-+
- 		read_boundary_lines(maps_fd, page1, page2, &new_last_line, &new_first_line);
- 
- 		/* Check if we read vmas after remapping it */
-@@ -498,6 +547,19 @@ static void test_maps_tearing_from_remap(int maps_fd,
- 			assert(!strcmp(new_last_line.text, restored_last_line.text) &&
- 			       !strcmp(new_first_line.text, restored_first_line.text));
- 		}
-+
-+		/* Check if PROCMAP_QUERY ioclt() finds the right VMA */
-+		query_addr_at(maps_fd, mod_info->addr + page_size, &vma_start, &vma_end);
-+		/*
-+		 * The vma should either stay at the same address and have the
-+		 * original size of 3 pages or we should find the remapped vma
-+		 * at the remap destination address with size of 1 page.
-+		 */
-+		assert((vma_start == last_line->start_addr &&
-+			vma_end - vma_start == page_size * 3) ||
-+		       (vma_start == last_line->start_addr + page_size &&
-+			vma_end - vma_start == page_size));
-+
- 		clock_gettime(CLOCK_MONOTONIC_COARSE, &end_ts);
- 	} while (end_ts.tv_sec - start_ts.tv_sec < test_duration_sec);
- 
+ static void *m_next(struct seq_file *m, void *v, loff_t *ppos)
+ {
+-	if (*ppos == -2UL) {
+-		*ppos = -1UL;
++	if (*ppos == -2) {
++		*ppos = -1;
+ 		return NULL;
+ 	}
+ 	return proc_get_vma(m->private, ppos);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
