@@ -1,99 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C928A262A6;
-	Fri,  4 Jul 2025 22:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496502E3701;
+	Fri,  4 Jul 2025 22:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751669220; cv=none; b=Hu5x5Zpce+voI4udPAH0WO8nZdyyPW+7teIgeSj3meCUfhf3SP55IslRGpTX5UHdIAZOgY4tZJghbwaGFTmexZrLcJohIRHgNhFPOLzen+QHX9zHVUkla4BuKZbbjr8EI99WfvaKxUVjyIcRrJ6TclEG7ivvx2NP1nS3UPc34go=
+	t=1751669345; cv=none; b=UI0Va+xJkc0Wc0Lus/VVF57YJi3ez7kax7tkNWsteeOzivNQE7hJJVjn4Qn3qZnlh0wclynAuWVY10pFDQfadsNcR0wT+ThcfbZQhwCkRX5tt7+/BxMey3l5PtTAUSiUoBVO+B7MXyja9ifZb1Pt+SowVDuMC2BZkmCiMAYxYuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751669220; c=relaxed/simple;
-	bh=WY5tM4XqDysre5wQoyvPEvF7BiLnwxlb/IRaY8GroME=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BKq1eU7jcgYOEtiK7ex+q4JQDFRVvCH/CX28xuYhddxNjtvzfMC4EBSSmdY0vJXLIfQIUPzYlH0qcB2KYe6osMU+IUXf1Xlbt8C4qu5hPRMq4QN+SCn7AZx94RcuaxmrahPZxuog7FoV85cTschwle/nB2GX0xenLL/1B/wO4P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89F50153B;
-	Fri,  4 Jul 2025 15:46:44 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C72793F63F;
-	Fri,  4 Jul 2025 15:46:55 -0700 (PDT)
-Date: Fri, 4 Jul 2025 23:45:28 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
- Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
- Holland <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/5] arm64: dts: allwinner: a100: Add pin definitions
- for RGMII/RMII
-Message-ID: <20250704234528.4936fa72@minigeek.lan>
-In-Reply-To: <20250626080923.632789-3-paulk@sys-base.io>
-References: <20250626080923.632789-1-paulk@sys-base.io>
-	<20250626080923.632789-3-paulk@sys-base.io>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1751669345; c=relaxed/simple;
+	bh=ZMgTGcfcphmHgdShMOnlNA6jEGnh/5tAa8A1i0AbF2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ii8JRWGagxL+Zlu4Ma5v4lg9KM5NrESWV2kYSLYql6G8aOCliuOHFSuzpIfWyzPvuGB4HqVbYMEDQXrMSpvRbEelLF9bm2RqJDlox7HVi/LrrKn3JYl1iLFl3oenhKpmhKaTt153sgwpsbD4jDeFtX2feHFAzJeEoLzxiw4gMJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKd2hpn1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKd2hpn1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAFE8C4CEE3;
+	Fri,  4 Jul 2025 22:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751669344;
+	bh=ZMgTGcfcphmHgdShMOnlNA6jEGnh/5tAa8A1i0AbF2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fKd2hpn1QVPpJeuCk4rlzc5JnQDjyNVR1ETz8PfAgDjby3sxns4cPOIzlrKmWSPSt
+	 nN9osD3OQrCL9uSUGkC6TR6jAJIOozpynP4yLcZmR/YED9qxNBROKPG+9OGWrP/4YB
+	 88Ot0jT0+QFrtXCPn6P717LqO854yQNB707wkKUvu/OiQ6HBKOGnxbGEpNRQQBDpHg
+	 Daqz+PXqgyaSkr/r4eDSH6s8dLcXi/1w9uOQ/6rwboFmYntrg2vm80Bszh7pJSpW9Y
+	 D3sjC2ljNqqbok8nNuxb1tEOHSueuIaXiNCjM8gXM6LX4MrhGhgsH6+mEkUdCW096J
+	 NOSYq7oFljnew==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
+Date: Sat,  5 Jul 2025 00:48:55 +0200
+Message-ID: <20250704224855.328067-1-ojeda@kernel.org>
+In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
+References: <20250703143941.182414597@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Jun 2025 10:09:20 +0200
-Paul Kocialkowski <paulk@sys-base.io> wrote:
+On Thu, 03 Jul 2025 16:41:03 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.96 release.
+> There are 139 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
 
-Hi,
+Boot-tested under QEMU for Rust x86_64:
 
-> The Allwinner A100/A133 supports both RGMII and RMII for its Ethernet
-> MAC (EMAC) controller. Add corresponding pin definitions.
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-Apart from suffixing everything with "0" ("rgmii0_pins: rgmii0-pins"),
-this matches exactly what I gathered from manual and tested in my own
-version of this patch a few weeks ago, so with the 0 suffix attached:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Thanks!
 
 Cheers,
-Andre
-
-> 
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> index bd366389b238..1c4e71b32911 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> @@ -236,6 +236,21 @@ mmc2_pins: mmc2-pins {
->  				bias-pull-up;
->  			};
->  
-> +			rgmii_pins: rgmii-pins {
-> +				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-> +				       "PH5", "PH6", "PH7", "PH9", "PH10",
-> +				       "PH14", "PH15", "PH16", "PH17", "PH18";
-> +				function = "emac";
-> +				drive-strength = <40>;
-> +			};
-> +
-> +			rmii_pins: rmii-pins {
-> +				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-> +				       "PH5", "PH6", "PH7", "PH9", "PH10";
-> +				function = "emac";
-> +				drive-strength = <40>;
-> +			};
-> +
->  			uart0_pb_pins: uart0-pb-pins {
->  				pins = "PB9", "PB10";
->  				function = "uart0";
-
+Miguel
