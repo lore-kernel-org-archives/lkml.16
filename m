@@ -1,156 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6F02ECD27
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7502D541F;
+	Fri,  4 Jul 2025 09:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622662; cv=none; b=TEMO6s9qow2wedYysIB1ziVHEu28rU7a3kmHmvaxEfnx2aQHWM1AjCd6EsZUNprPQQPMMHhmUiShBmb+nY+w8e3xKRLG07zCZkPbIUdm5p6Fj1SU4QKO7tmJ/2sM+zx8zanYldKSFGlJPYb+Btz4FYzJ8qdRtQvnpwnPfpCXBeQ=
+	t=1751622768; cv=none; b=d5nMnUXmN+wOeDOGepSuXeg8m2+gmGKQetxeWG17/Q6HUSytWQVhS0V0+VrX2B2sknvOxykb9P199r5q5ykW9qxv1gYO8nj3lgmUdoWdnF3w8BZOsoVAf9nG5UJNH0X8F37izB3LMOJ5at+W9QbLjKWCd/W4phuNDeUga79CHaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622662; c=relaxed/simple;
-	bh=Zec5aAtgje1saqg3959mi64eaXHhk/cKgvNvFwImF30=;
+	s=arc-20240116; t=1751622768; c=relaxed/simple;
+	bh=fJk3jJe2GsDsuplJHVKGRlGVC8VaPj6RPnuA5RW6v/s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FAGUTPI+o+w/fVDK9MdJtK7uUQLBx+F/Nvqy2IBvr46m8b0e4k8lPIhfg12H1IxpwPq65ACukCM/8gDBH0P3SwNkEJ7EiDv5Mhq8huTsB+FiwIwvFvaHmqbhFQr1MU8+dC22YKDxxs3wyBOMn+B/dadAt7m6N9Wu+pjaNZW9Ye4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MteaW23Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=tjBpYQ568gp/QwWY2g1HS19eOeTZAvhcRjgFiYLeVJ8Yr8Cwynaqnffiivtu+kgzSEOo/pzzUDIyBKWegVz3T+dE8QTxMzfWgVd7GUxYcXbs+kBpgDdGmwv2hO4K3+5plgFvLz9UILzcsqzXH1551FCBv9rW1na5o8k4IR1VRM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enSYY8Pi; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MteaW23Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751622659;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tTdyBwlWGAyaHdEmFmxeJ+/oXgj79IJdQhxBgmlSUqU=;
-	b=MteaW23QLCwuvX6r1l+zVyDlSR37I73uhKa8e/I7EHlDfYoN0CUIK4hEfbYCJMn5+4Gwdm
-	E6t/2g6/iT3u9DN9U8n40+kwp/JlOSrvOvPiXguMbuCeOVjum0X0tXdx6RcOkWSz7EVz36
-	rxjd3qZIp/JjiGofpVQIXlZOhCasMkc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-lurf0zDfM0SdnLkfVUa8HQ-1; Fri, 04 Jul 2025 05:50:55 -0400
-X-MC-Unique: lurf0zDfM0SdnLkfVUa8HQ-1
-X-Mimecast-MFC-AGG-ID: lurf0zDfM0SdnLkfVUa8HQ_1751622655
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-adb33457610so73135366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 02:50:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enSYY8Pi"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b7113ed6bso7534971fa.1;
+        Fri, 04 Jul 2025 02:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751622765; x=1752227565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rtcggWI0EUkrnHdnx97WWYML+IOpgM/8IBDpI/ZQAlw=;
+        b=enSYY8PiBdteHONmNOzKrDVootZGHsDdy7B7r7YANXvnILTxvpeZ7wPPrvkiWwJLEO
+         eIeIKxFvI5NBwP9GYmFud8EbfSR28eCiT0s0+UegpiqWf8GArezX0SYDQfcDCiBLlxcu
+         7fNY0T9z0+rZk9xsHO9vicc6bonRNwFB7CWywfAOTc6S8raFMacTN8hr5l6kAfmwhukY
+         2Bw5fiCAi+XSZOv1vOvNySAsnAlnzbM28ZJvTx6zIdZUA0lpev74dzFWj20MxqdRBnRh
+         1f7Qfa69YFpdV7j+iRcSWAttsEd69rvhb3gWeR17sslgMtuXz4p7hE1F/dJh4IeWaMAc
+         ZnBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751622655; x=1752227455;
+        d=1e100.net; s=20230601; t=1751622765; x=1752227565;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tTdyBwlWGAyaHdEmFmxeJ+/oXgj79IJdQhxBgmlSUqU=;
-        b=ZxFoCw+s8Q1BK7rO3jSLg2wbH0Lux7myTJDdSQKdxFTy5KwWRLUTOFqwZS+HR4WTvF
-         tmnf3moZc2rvi24mvsTYYrL4MqFANE7PAO2CRjk+YuRRhFhhFA33T3snUrNFWlbymBs7
-         wpUDvEfu+454AbWsyIk1yvSoVcder8kvcfJJb+jNyQ2Oe27RNGbcDkd6ggMMcR8Q7uoh
-         aDSGD5os2M4I944bwVpm0/4w3aX5X83/O0/hmfLJyzXsQZ1CCuWALlVQg79XcFwYq0br
-         MwjY/SRR3RTm6a9SxesK5FVhD1CqPkaqz9PnQdHgk487G+/MhPPS+d7Dhbi5I8f8zmma
-         DH8g==
-X-Gm-Message-State: AOJu0YyU5l/u8AGR7p9LEB0jUPO8tpQJP+rYIr6Zs9ucnZIODiGBevMM
-	JVGlFnHnCC050sqkDwFAlvuE+NkXWnr8Blrjn32xNjFHhSTWYECiQhqi0tHbpxyRARK2LhpikMI
-	a2n91wBTIKSSN7+dOEOrh61YiO54i2s47ROP6+ZsCAIW0oSr9y8F7CMJSOIpoiHodOjMt6D6ZNn
-	7jrptyHy91II4z/HkuPg9lrtXAN4pKioBYOMnuHk2h
-X-Gm-Gg: ASbGnctgxk6B1wJxnfXvjSGHOiKLzIGkvxXJlQTNCGPYcrU5+isha5zmSXwH8cmlK3s
-	gsmovM50eGTrjbNzc3DwCx4sltIYLtJV3dXVWJDRwsUiLyeFB8NbjPcMtDiQUPMp7ehTQ3vnuTn
-	GjQ/3G
-X-Received: by 2002:a17:907:d0b:b0:ade:9b52:4da0 with SMTP id a640c23a62f3a-ae3fe791341mr118180566b.60.1751622654598;
-        Fri, 04 Jul 2025 02:50:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZ6rmo441u00rCw39ALIYLXhXjrSJGPTmWEcD7E0TeZdIInSkqrp6WRoYHqk0yeiuf4JW6qAtpz5TNgnRXERw=
-X-Received: by 2002:a17:907:d0b:b0:ade:9b52:4da0 with SMTP id
- a640c23a62f3a-ae3fe791341mr118177466b.60.1751622654163; Fri, 04 Jul 2025
- 02:50:54 -0700 (PDT)
+        bh=rtcggWI0EUkrnHdnx97WWYML+IOpgM/8IBDpI/ZQAlw=;
+        b=AfiT6i5rT+NDjpAqp7Vv5VzdkkeipnNeoHTVz6lnqlNmG400sy99DfMY+szPwUY4zC
+         gWLY80YmGSvWvO3CsA7bjzh5uKStEmVTxjx0BuLGkU9UFbzf+rIMXRYLlwDxbGkvQaq9
+         zaWEwvS21XpGSiCoVKXv4mhp8y6wvltOhIMuMTSOSqscc3bQJewSpl15xIv9iUrDGdjA
+         iIb6QTXCbjKso3knWFnKxLxbdbvk5NdXFjE+CkXiQsH7oMjesaIwBLympkQAve5xTE80
+         s5bbdzFU5SGQawv5HtbIwsNv+R++8/1MmePG2EXCPErRJeY9aqMgbgXT7JWooPUGM3sV
+         nzuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnidhtBrQK5SOzJHgTpgEj+xVjVPo7DGLyGn0m86TFW8BgZa0bQQY8UmyYn5sg7yoxkIYG9u937ET1N6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzJki07fowubO6E5tYjR16Lqk/3KeWxEQCqCSA9z8ubDio1mUG
+	fp6po/gJ/Fipyv2pMu9yVU8hD8NhwmrsN5nTZSGCDkYEzIiPyR44cwYgLpjfLUvAIRvW1N26Sr7
+	Ondh9XNAm4SF60PCe4CP2FdGWZtQ0d6rOHjqkwzsdBA==
+X-Gm-Gg: ASbGncsbnxB2QaPC6UAqkX+VCnxK9vNqHM3KPd95v01s8zHvfYznFHAc71pwpyfNH6/
+	V0/BlTrQgcYMHb4/cJ0v45X3aaMdgM1WkuzxdlXIIvu5z7uf9Ojnmlou3FsPYhYoggY8x/hAKdk
+	98Y8WPpS23LD6lodpQlrcPUQOwZOIKDnScNPsGLzjrVxFyFimCqzHUIevdpdXIUT72Grga+Rs6F
+	lAN
+X-Google-Smtp-Source: AGHT+IEQJtvURip5Eo1r+T3XuSDUEc12iPmo7gyNNW171IOi7PFDjp+RgiXo0ZnKbXQHoCybXScYJr7aE+3jHaGkQBc=
+X-Received: by 2002:a05:651c:2220:b0:32a:7332:bf7a with SMTP id
+ 38308e7fff4ca-32f00c93008mr4007081fa.13.1751622764562; Fri, 04 Jul 2025
+ 02:52:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701164507.14883-1-will@kernel.org>
-In-Reply-To: <20250701164507.14883-1-will@kernel.org>
-From: Lei Yang <leiyang@redhat.com>
-Date: Fri, 4 Jul 2025 17:50:16 +0800
-X-Gm-Features: Ac12FXwqxd82V3LOjpodDJwMF_q2dHh_J7JtDHMWUmQsDfy8ZtrC-XST6Mt-11Y
-Message-ID: <CAPpAL=zBxWBTQ8s-DGG-NywoE2+rDJQ4=9XGGn-YZSFH3R_mZg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] vsock/virtio: SKB allocation improvements
-To: Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, 
-	Steven Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, netdev@vger.kernel.org, 
-	virtualization@lists.linux.dev
+References: <nrq9MPwFBIHZRQzC6iAdiUz7uvBdbqKNxdfM8Jus8lTDZCwtPkFMjtJ1V5mkcpX0YX34TYNOddSEOgsXngLtHQ==@protonmail.internalid>
+ <20250704072604.13605-1-pranav.tyagi03@gmail.com> <y5d46toqsrrbqfxfioo5yqo532tzqh3f2arsidbe4gq4w3jdqp@rktbxszwtsbh>
+In-Reply-To: <y5d46toqsrrbqfxfioo5yqo532tzqh3f2arsidbe4gq4w3jdqp@rktbxszwtsbh>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Fri, 4 Jul 2025 15:22:33 +0530
+X-Gm-Features: Ac12FXyB3Xh9rJNctZ8qbUMoAf9rw6VaTvRVqfUEGOT7ePXJYmEJ14PIuqSHVSM
+Message-ID: <CAH4c4j+Hz8HNzxZhe0DzDAN8vUS3vGN+SL1iMJuXL29AnmQ0cg@mail.gmail.com>
+Subject: Re: [PATCH] fs/xfs: replace strncpy with memtostr_pad()
+To: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, djwong@kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	kernel test robot <oliver.sang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I tested this series of patches with virtio-net regression tests,
-everything works fine.
-
-Tested-by: Lei Yang <leiyang@redhat.com>
-
-On Wed, Jul 2, 2025 at 12:48=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
-:
+On Fri, Jul 4, 2025 at 2:22=E2=80=AFPM Carlos Maiolino <cem@kernel.org> wro=
+te:
 >
-> Hello again,
+> On Fri, Jul 04, 2025 at 12:56:04PM +0530, Pranav Tyagi wrote:
+> > Replace the deprecated strncpy() with memtostr_pad(). This also avoids
+> > the need for separate zeroing using memset(). Mark sb_fname buffer with
+> > __nonstring as its size is XFSLABEL_MAX and so no terminating NULL for
+> > sb_fname.
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Closes: https://lore.kernel.org/oe-lkp/202506300953.8b18c4e0-lkp@intel.=
+com
 >
-> Here is version two of the patches I previously posted here:
+> Hi Pranav.
 >
->   https://lore.kernel.org/r/20250625131543.5155-1-will@kernel.org
+> Please Read the kernel-test-robot email:
 >
-> Changes since v1 include:
+> "
+> If you fix the issue in a separate patch/commit (i.e. not just a new
+> version of the same patch/commit), kindly add following tags...
+> "
 >
->   * Remove virtio_vsock_alloc_skb_with_frags() and instead push decision
->     to allocate nonlinear SKBs into virtio_vsock_alloc_skb()
->
->   * Remove VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE and inline its definition
->     along with a comment
->
->   * Validate the length advertised by the packet header on the guest
->     receive path
->
->   * Minor tweaks to the commit messages and addition of stable tags
->
-> Thanks to Stefano for all the review feedback so far.
+> Those tags shouldn't be added here as you are not fixing anything, your
+> previous patch have not been committed.
 >
 > Cheers,
+> Carlos
 >
-> Will
->
-> Cc: Keir Fraser <keirf@google.com>
-> Cc: Steven Moreland <smoreland@google.com>
-> Cc: Frederick Mayle <fmayle@google.com>
-> Cc: Stefan Hajnoczi <stefanha@redhat.com>
-> Cc: Stefano Garzarella <sgarzare@redhat.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: "Eugenio P=C3=A9rez" <eperezma@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: virtualization@lists.linux.dev
->
-> --->8
->
-> Will Deacon (8):
->   vhost/vsock: Avoid allocating arbitrarily-sized SKBs
->   vsock/virtio: Validate length in packet header before skb_put()
->   vsock/virtio: Move length check to callers of
->     virtio_vsock_skb_rx_put()
->   vsock/virtio: Resize receive buffers so that each SKB fits in a page
->   vsock/virtio: Add vsock helper for linear SKB allocation
->   vhost/vsock: Allocate nonlinear SKBs for handling large receive
->     buffers
->   vsock/virtio: Rename virtio_vsock_skb_rx_put() to
->     virtio_vsock_skb_put()
->   vsock/virtio: Allocate nonlinear SKBs for handling large transmit
->     buffers
->
->  drivers/vhost/vsock.c                   | 15 +++++-----
->  include/linux/virtio_vsock.h            | 37 +++++++++++++++++++------
->  net/vmw_vsock/virtio_transport.c        | 25 +++++++++++++----
->  net/vmw_vsock/virtio_transport_common.c |  3 +-
->  4 files changed, 59 insertions(+), 21 deletions(-)
->
-> --
-> 2.50.0.727.gbf7dc18ff4-goog
->
->
+Hi Carlos,
 
+Thanks for the clarification. I was confused and thought that "separate
+patch" referred to correcting the original one and resending it separately.
+I=E2=80=99ll remove the tags and send a v2 shortly.
+
+Regards
+Pranav Tyagi
+
+> > ---
+> >  fs/xfs/libxfs/xfs_format.h | 2 +-
+> >  fs/xfs/xfs_ioctl.c         | 3 +--
+> >  2 files changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+> > index 9566a7623365..779dac59b1f3 100644
+> > --- a/fs/xfs/libxfs/xfs_format.h
+> > +++ b/fs/xfs/libxfs/xfs_format.h
+> > @@ -112,7 +112,7 @@ typedef struct xfs_sb {
+> >       uint16_t        sb_sectsize;    /* volume sector size, bytes */
+> >       uint16_t        sb_inodesize;   /* inode size, bytes */
+> >       uint16_t        sb_inopblock;   /* inodes per block */
+> > -     char            sb_fname[XFSLABEL_MAX]; /* file system name */
+> > +     char            sb_fname[XFSLABEL_MAX] __nonstring; /* file syste=
+m name */
+> >       uint8_t         sb_blocklog;    /* log2 of sb_blocksize */
+> >       uint8_t         sb_sectlog;     /* log2 of sb_sectsize */
+> >       uint8_t         sb_inodelog;    /* log2 of sb_inodesize */
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index d250f7f74e3b..c3e8c5c1084f 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -990,9 +990,8 @@ xfs_ioc_getlabel(
+> >       BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
+> >
+> >       /* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> > -     memset(label, 0, sizeof(label));
+> >       spin_lock(&mp->m_sb_lock);
+> > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> > +     memtostr_pad(label, sbp->sb_fname);
+> >       spin_unlock(&mp->m_sb_lock);
+> >
+> >       if (copy_to_user(user_label, label, sizeof(label)))
+> > --
+> > 2.49.0
+> >
