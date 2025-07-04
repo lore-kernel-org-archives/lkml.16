@@ -1,145 +1,134 @@
-Received: from jpms-ob02-os7.noc.sony.co.jp (jpms-ob02-os7.noc.sony.co.jp [211.125.139.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E856D17;
-	Fri,  4 Jul 2025 00:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76C53595A;
+	Fri,  4 Jul 2025 00:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751588823; cv=none; b=JHPrrm5+KgVDQyay7KqY4wRmF2ug89i5CkKwoc31v3Zz/EAXnc9LvxBh7d7IqW1qUSQgwFLLd9zYbMDCusUxGF8auFaI6VtFic1KtvPHYO6nDKcMHoqSZPdWLXw96ZnrubNZHOzIwrB6YBRB4AyrsOcQt/D/WqNXk4/Cc714Cy8=
+	t=1751588838; cv=none; b=uvP2JaVhx6gMzJtK+8M8Ay2nHVEjE5GYWDo6VCx/39UyrDec5lmg0j70D8B7KfO3aktmTjTE9cRkzU9kc5VLPg3/4TKsjETWC2ZmTv8Hmvk+cvJg1o2qZdvG0J2niXJJtSlyNLxLMpyQMnqpplu/cvjm7SxbkR8ItJzcGXf2liM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751588823; c=relaxed/simple;
-	bh=BSzohEbES7uLxAvGJxNFa60vU3v/GMbyjfN5SySMFXM=;
+	s=arc-20240116; t=1751588838; c=relaxed/simple;
+	bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHOX/QLFeR3MPVHI5CpZ2uUxYMQUiFgXH4yF4VdjLXEoM5JOGGPu3rFLhhwlFX3g1I97GIK2bj3pTwxIv0n7SquLfMsNm6sP5UeRfaqIq6OTk+5T8b+N+tYM+zZUl5mpYDiYQX4xMUklSag/eluCyTaIN4GdtRcX/3OP90d3bVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=GRRE+5iu; arc=none smtp.client-ip=211.125.139.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqQKk6Br7hqZ6nN/PEkIiWIuQwCrJYJG52lG7NLCjQVnUog40K2qh3dRCVf4DNu91t/NsCQhNnrvvhqg/BAgiAjPhkyx5VHifjOOsfhidql8uubOeRJMdai3kNbMGZHGOweg1D1ZdCun1lwhvHpP1a/BKc7I/6m3QhY2f6Vil6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLnITauF; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="GRRE+5iu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLnITauF"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74ce477af25so228985b3a.3;
+        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1751588821; x=1783124821;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rH/YAVAFRBh1vpkwFj/70i6IUSEQ9hEzAcVy+/le/Uc=;
-  b=GRRE+5iuV3gRXrjQ5o+vn4+vYw/WcslH8ZlJe1gqAt7LuOCmTcuaHnST
-   +8T1ToDGSfXoEXHRTDFvtBzwVYyXSvgwpmDdKCiqED43cjFN5ify1Ep+e
-   ygdS+ky97eH7Ep3/aaFd3SJcmHK/6wr/d4G7pI6t/TbUG/0Nnf4slV+R0
-   ZZe9nxK3rKS4/1+H5Uw7tedN7p2qv9GeG7rHsgKwYwYyXxk75IczugmCv
-   bxZFQ+B392Q+2LcOk3JE5NCXODhmAkIojjpAdfqby9fGwJh+ikJ67fiuS
-   KRyVWNwfjFQKXh1gi72+536MV3UFOLDCBLIEodkYR1OkPmjTcjVoByjPp
-   A==;
-Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
-  by jpms-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:26:59 +0900
-X-IronPort-AV: E=Sophos;i="6.16,285,1744038000"; 
-   d="scan'208";a="4466966"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
-  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:26:58 +0900
-Date: Fri, 4 Jul 2025 09:26:56 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-Message-ID: <aGcf0Prl-hVX2j4Q@JPC00244420>
-References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
- <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
- <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
+        d=gmail.com; s=20230601; t=1751588836; x=1752193636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
+        b=eLnITauFlD9iK4p71ryCuqXJS7SXyCrn+koHLxhVNiltAq5wgK+Y4THvM6pMW0+Yce
+         u0hDfFVzWjCJp+k0JwnJQUIx1s4OvfxA5/n+zYnoXSP2RKsdvKxR5SCKVCPtrndjLbxL
+         mT4hjrqSQeNAl/eqKDsATLkzN2HLhCb3DUzWi34FA4zBL6QV7GFjZlZqmi3qwIB3XnOx
+         Qye5NMQCWUxPxILGaoDO4NUoEYEvE3NEzckZcQzPnWni+/idpfyJZFjfOyYU1w85vJlo
+         Uy/uCG52wZTFNsH2BIfkjFdOu6C8nFEXW1Ou9ZXBLb6CU2He5NjwuQrBbjne0iwA3icj
+         jE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751588836; x=1752193636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
+        b=G89Ltq9UQ9c1pVWUk8qX/C+OIZzaf5uRdnA93EV013w8IKT+PjVF7bVmDj9srhkFNT
+         00XGnIQMb4faUl1k/uXP7JTg9PSW6djptE4CqOKYJI/pmIWmHPUVV4Q/VNH9p1Vhyo7C
+         Mlkrc27U8zTnhYWDzGNxzdED3VMEARCvxq4poTFXbeX38dstd/twOwmRv6qm+1inr9GM
+         ffvYa8pRo6qEQAjzg62Bg7O4BpxeyKhT8zlYYHInDQc1oKEikvHu1guziKgM4YngHCX3
+         8lYxTBg/KvKQGN6vEe4ZQR3mIQhXO5jXwSMeckefUKnKPMtYZhpVYMGm8WD9+Z4rYxUd
+         RdbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBWaNM4Z0D+bcIWZyVS/90j1ZvxIu20XtW3ZwWwIOEe1OMrX+CtPcsCA71u0olRVx54Au4QyzqEeo=@vger.kernel.org, AJvYcCVaR6y8bsBHyl/2X7Ob9Ac+oEiYLJJcCv0wryVA/UhczLjCckPrpQW127ZLILp3BBl4a6EP6fBEs8b7AoGYpw==@vger.kernel.org, AJvYcCWWFWE+tRxVpdezW9GXIO+q93uNIh6YNk7zsY5cFCzWVFcQrNVqHWq8TlQsywGcSlfEq0T9XXC+fmZIc3nY@vger.kernel.org, AJvYcCXEwxXC6F+djT7wkgp8J/IcyWbq1s6RFwFWr3Jd3Pvq2es8DGYK5I6uH/I38CEiT+CP7jawBJ/6fOte@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx11Q7AKH0rUyk1NYJ+GJ41GPBWdQgPtq6V+e+iWTBkS4rKLrtJ
+	/MD3faH/ncrHwM0bOtC1Sbh6c63K3Y4OmRFHk6Otb5QZrxKsxMRiynle
+X-Gm-Gg: ASbGncsCyv5U08nMAxBaebCMdgYEgL7FGm/OdKQ1/Fwl2vQUCRxl3vuGob7MnExIiHj
+	fbkJ7cJsd4VLTNn7PX2hKqCXXRS80L+pLu8gUxi6psJmW8L8PYNEHGdt3uxxoRPtiCwgF2RRiDc
+	f9gIsRH41Bm+9baMoIQzu9Ycul9USKEj3KKjofNxh1ffBExQHOQR8n5XxC+aMfHNqgAVyBWnMn5
+	Ks5UEnF+p+hmy5pB3y1XA6h/irzLZgHv2z7tprl+M8TAGr1yU/bg7nycK/oycbAIEdYqhb9wdor
+	T5CzlFaSPArQIYEZa2WYap/dol1CGVMSoo4zn5aaLfunf3xl9/lIbkk0YjPIhg==
+X-Google-Smtp-Source: AGHT+IGwQCrkWrjApK0htBGSorBdvNkVh5GSO+iYPYY+Kh0DqyqHto9HinLiE593880id3pXNBbbnw==
+X-Received: by 2002:a05:6a20:4325:b0:220:9e54:d5cc with SMTP id adf61e73a8af0-225b9b7a66bmr1282824637.31.1751588836070;
+        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62dd6asm647668a12.64.2025.07.03.17.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 17:27:15 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8A22A4206886; Fri, 04 Jul 2025 07:27:12 +0700 (WIB)
+Date: Fri, 4 Jul 2025 07:27:12 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
+Message-ID: <aGcf4AhEZTJXbEg3@archie.me>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-19-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FhmplPz1+JPluJTh"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
+In-Reply-To: <20250703185032.46568-19-john@groves.net>
 
-Hi Michal,
 
-On Thu, Jul 03, 2025 at 05:58:48PM +0200, Michal Koutný wrote:
-> On Thu, Jul 03, 2025 at 09:03:20PM +0900, Shashank Balaji <shashank.mahadasyam@sony.com> wrote:
-> > Current cpu.max tests (both the normal one and the nested one) are inaccurate.
-> > 
-> > They setup cpu.max with 1000 us quota and the default period (100,000 us).
-> > A cpu hog is run for a duration of 1s as per wall clock time. This corresponds
-> > to 10 periods, hence an expected usage of 10,000 us. We want the measured
-> > usage (as per cpu.stat) to be close to 10,000 us.
-> > 
-> > Previously, this approximate equality test was done by
-> > `!values_close(usage_usec, duration_usec, 95)`: if the absolute
-> > difference between usage_usec and duration_usec is greater than 95% of
-> > their sum, then we pass. This is problematic for two reasons:
-> > 
-> > 1. Semantics: When one sees `values_close` they expect the error
-> >    percentage to be some small number, not 95. The intent behind using
-> > `values_close` is lost by using a high error percent such as 95. The
-> > intent it's actually going for is "values far".
-> > 
-> > 2. Bound too wide: The condition translates to the following expression:
-> > 
-> > 	|usage_usec - duration_usec| > (usage_usec + duration_usec)*0.95
-> > 
-> >   	0.05*duration_usec > 1.95*usage_usec (usage < duration)
-> > 
-> > 	usage_usec < 0.0257*duration_usec = 25,641 us
-> > 
-> >    So, this condition passes as long as usage_usec is lower than 25,641
-> > us, while all we want is for it to be close to 10,000 us.
-> > 
-> > Fix this by explicitly calcuating the expected usage duration based on the
-> > configured quota, default period, and the duration, and compare usage_usec
-> > and expected_usage_usec using values_close() with a 10% error margin.
-> > 
-> > Also, use snprintf to get the quota string to write to cpu.max instead of
-> > hardcoding the quota, ensuring a single source of truth.
-> > 
-> > Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
-> > 
-> > ---
-> > 
-> > Changes in v2:
-> > - Incorporate Michal's suggestions:
-> > 	- Merge two patches into one
-> > 	- Generate the quota string from the variable instead of hardcoding it
-> > 	- Use values_close() instead of labs()
-> > 	- Explicitly calculate expected_usage_usec
-> > - v1: https://lore.kernel.org/all/20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com/
-> > ---
-> >  tools/testing/selftests/cgroup/test_cpu.c | 63 ++++++++++++++++-------
-> >  1 file changed, 43 insertions(+), 20 deletions(-)
-> 
-> 
-> > -	user_usec = cg_read_key_long(cpucg, "cpu.stat", "user_usec");
-> > -	if (user_usec <= 0)
-> > +	if (usage_usec <= 0)
-> >  		goto cleanup;
-> >  
-> > -	if (user_usec >= expected_usage_usec)
-> > -		goto cleanup;
-> 
-> I think this was a meaningful check. Not sure if dropped accidentally or
-> on purpose w/out explanation.
-> 
-> After that's addressed, feel free to add
-> Acked-by: Michal Koutný <mkoutny@suse.com>
+--FhmplPz1+JPluJTh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry about that. I dropped it accidentally. This check should be okay,
-right?
+On Thu, Jul 03, 2025 at 01:50:32PM -0500, John Groves wrote:
+> +Requirements 3 and 4 are handled by the user space components, and are
+> +largely orthogonal to the functionality of the famfs kernel module.
+> +
+> +Requirements 3 and 4 cannot be met by conventional fs-dax file systems
 
-	if (usage_usec > expected_usage_usec)
-		goto cleanup;
+"Such requirements, however, cannot be met by ..."
 
-1. We don't need to separately check user_usec because it'll always be
-less than user_usec, and usage_usec is what's directly affected by
-throttling.
-2. I changed the >= to > because, not that it'll ever happen, but we can
-let usage_usec = expected_usage_usec pass. Afterall, it's called
-"expected" for a reason.
+> +(e.g. xfs) because they use write-back metadata; it is not valid to mount
+> +such a file system on two hosts from the same in-memory image.
+> +
 
-Thanks
+Thanks.
 
-Shashank
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--FhmplPz1+JPluJTh
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGcf3AAKCRD2uYlJVVFO
+o7MlAQDFFzY/AyfkzJf6X39RAu80LaEnq2G/NAeqbWbqwX+W8gD6ArnxxAZHvTMc
+4pRWe3cIkdvJArMN4f2J8/XM623oTgk=
+=0PQj
+-----END PGP SIGNATURE-----
+
+--FhmplPz1+JPluJTh--
