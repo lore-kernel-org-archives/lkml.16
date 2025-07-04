@@ -1,127 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF94501A;
-	Fri,  4 Jul 2025 15:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32A110942;
+	Fri,  4 Jul 2025 15:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751644640; cv=none; b=T2aFgHG4MzNt5ZPej8rBYHAwioRA1hAVjCbXYHjGfpEt0jNqIyZebr8+HbZTpcBe6RFuI1DUYGAU0kxsyP6uArIaHz4VY/oafvdwNIaeeByohZnKLCLxDaABnOEpWDJc9l0PBM8dxvrwcC4a/Zx0s1R06hILkIKey66ssgwiyZE=
+	t=1751644737; cv=none; b=Cx5cypBz7BeFBUfJMTnTNYrWIu6kTg4QBgvp1vfFg2wMYeN0UW8PHZopF2ReCtNzPouY+kgFE07za5V1F/b+1m/zr/eVotuhwgUzlaI+hQTQFrKpfdK9Ho6WaNqpRzfdVTLN49hxuAiWJ+jotESOkE2r3wdcK5e76VOE8JCmWOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751644640; c=relaxed/simple;
-	bh=KwR5g9qe9ps60+YgjR6/XFGIu3jFv+pBMeR7+nYiQzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8p+h04E/gAAOQ7FOSw8LrCqTlJeP8Z7+cl8hzgvu+C0oc582U7GDvBLT41uvYf9cl14vPJXYDBCqN+dG5Er9XTXGoM78byS/Pts7ad9qXHw7iFBLwiLvEA9cVf4q/zcGnfpE+sPLHZ5egvujKEeCW3FUVBI1Df/+XsWKgxRo/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DsKfPW40; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DsKfPW40"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751644639; x=1783180639;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KwR5g9qe9ps60+YgjR6/XFGIu3jFv+pBMeR7+nYiQzE=;
-  b=DsKfPW40QRzYNqMKhh/ElrHC9LKSgY9OpoYOtjirHBpkwR/svY7g+1ry
-   mtdCTyvpO+XOidsGM1L/io6twfTOUCDzE9cBnZ1indJfovva8jYMXZhaA
-   IE1fgKiF0CwqSfxdJ+tKtjuwagfUDI3z7rZa7xQDR7WyaHHsiiyEMSPvS
-   cMOVnU9A7e1rD5ZjZCR9pTITW170FNDlT7xWORTEbmuM9GO98GNbVTnDJ
-   ozZQEkbEJcamKse1nPq0rQwQwu9gbaJ2x8BPnC83oWfRYnJLDKo9r8fm1
-   M91Q7oUtF/Xnf/4GeJO4PdJdB7CQ5h80rOFY6XSVXwUZMm1aSwL7FxehB
-   A==;
-X-CSE-ConnectionGUID: I3ivcooVTr+NKDcRzLZO4g==
-X-CSE-MsgGUID: KIryPaYpRTioVrVHkCXoEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="79421301"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="79421301"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 08:57:17 -0700
-X-CSE-ConnectionGUID: LlGoivA0SYalknVTk342qA==
-X-CSE-MsgGUID: qlh1fCFKTHuFfvi/Myn5DQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="158699194"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 04 Jul 2025 08:57:12 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXimj-0003rB-2T;
-	Fri, 04 Jul 2025 15:57:09 +0000
-Date: Fri, 4 Jul 2025 23:56:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	hannes@cmpxchg.org, yosry.ahmed@linux.dev, nphamcs@gmail.com,
-	chengming.zhou@linux.dev, usamaarif642@gmail.com,
-	ryan.roberts@arm.com, 21cnbao@gmail.com,
-	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
-	senozhatsky@chromium.org, linux-crypto@vger.kernel.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	clabbe@baylibre.com, ardb@kernel.org, ebiggers@google.com,
-	surenb@google.com, kristen.c.accardi@intel.com,
-	vinicius.gomes@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	wajdi.k.feghali@intel.com, vinodh.gopal@intel.com,
-	kanchana.p.sridhar@intel.com
-Subject: Re: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto
- driver to be usable by zswap and zram.
-Message-ID: <202507050102.v288TUAS-lkp@intel.com>
-References: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
+	s=arc-20240116; t=1751644737; c=relaxed/simple;
+	bh=Nbk7wLUjKq6J0X2SsBVO1EIU0vl1bFOUl6PqsjqzXFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dHlPLUyl8Ciy3JsSt2FNg33J4EqZhtQ1uVkV5jvt0UWY8jST/aK8Kme4xPUtJkpb/timnagPnSpDsV9inZ6+dhG4q3/8VJ6+8HxFQgVCmONu0ByxJKk9oaaSXMQQGle9u7bHuPooGcW/7fJVU6XRuAdrb0GERzw+yrJmvhqnlGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id AD8F21F0003D;
+	Fri,  4 Jul 2025 15:58:53 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 58433ACA6A1; Fri,  4 Jul 2025 15:50:36 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.64])
+	by laika.paulk.fr (Postfix) with ESMTP id E94BAACA657;
+	Fri,  4 Jul 2025 15:46:35 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Cc: Yong Deng <yong.deng@magewell.com>,
+	Paul Kocialkowski <paulk@sys-base.io>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v8 5/9] ARM: dts: sun8i: v3s: Add nodes for MIPI CSI-2 support
+Date: Fri,  4 Jul 2025 17:46:22 +0200
+Message-ID: <20250704154628.3468793-6-paulk@sys-base.io>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250704154628.3468793-1-paulk@sys-base.io>
+References: <20250704154628.3468793-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Kanchana,
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-kernel test robot noticed the following build warnings:
+MIPI CSI-2 is supported on the V3s with an A31-based MIPI CSI-2 bridge
+controller. The controller uses a separate D-PHY, which is the same
+that is otherwise used for MIPI DSI, but used in Rx mode.
 
-[auto build test WARNING on herbert-cryptodev-2.6/master]
-[also build test WARNING on herbert-crypto-2.6/master akpm-mm/mm-everything linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On the V3s, the CSI0 controller is dedicated to MIPI CSI-2 as it does
+not have access to any parallel interface pins.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kanchana-P-Sridhar/crypto-iaa-Reorganize-the-iaa_crypto-driver-code/20250704-122613
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20250704042323.10318-11-kanchana.p.sridhar%40intel.com
-patch subject: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto driver to be usable by zswap and zram.
-config: x86_64-randconfig-004-20250704 (https://download.01.org/0day-ci/archive/20250705/202507050102.v288TUAS-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050102.v288TUAS-lkp@intel.com/reproduce)
+Add all the necessary nodes (CSI0, MIPI CSI-2 bridge and D-PHY) to
+support the MIPI CSI-2 interface.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507050102.v288TUAS-lkp@intel.com/
+Note that a fwnode graph link is created between CSI0 and MIPI CSI-2
+even when no sensor is connected. This will result in a probe failure
+for the controller as long as no sensor is connected but this is fine
+since no other interface is available.
 
-All warnings (new ones prefixed by >>):
+The interconnects property is used to inherit the proper DMA offset.
 
->> drivers/crypto/intel/iaa/iaa_crypto_main.c:2347:30: warning: variable 'ctx' set but not used [-Wunused-but-set-variable]
-    2347 |         struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
-         |                                     ^
-   1 warning generated.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-
-vim +/ctx +2347 drivers/crypto/intel/iaa/iaa_crypto_main.c
-
-4d9d295bdce222 Kanchana P Sridhar 2025-07-03  2343  
-2ec6761df889fd Tom Zanussi        2023-12-05  2344  static int iaa_comp_init_fixed(struct crypto_acomp *acomp_tfm)
-2ec6761df889fd Tom Zanussi        2023-12-05  2345  {
-2ec6761df889fd Tom Zanussi        2023-12-05  2346  	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp_tfm);
-2ec6761df889fd Tom Zanussi        2023-12-05 @2347  	struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
-2ec6761df889fd Tom Zanussi        2023-12-05  2348  
-4d9d295bdce222 Kanchana P Sridhar 2025-07-03  2349  	ctx = iaa_ctx[IAA_MODE_FIXED];
-0ece0d4e1175a0 Kanchana P Sridhar 2025-07-03  2350  
-2ec6761df889fd Tom Zanussi        2023-12-05  2351  	return 0;
-2ec6761df889fd Tom Zanussi        2023-12-05  2352  }
-2ec6761df889fd Tom Zanussi        2023-12-05  2353  
-
+diff --git a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+index 02d6c62b3874..bfe02295f45d 100644
+--- a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+@@ -671,6 +671,77 @@ gic: interrupt-controller@1c81000 {
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		csi0: camera@1cb0000 {
++			compatible = "allwinner,sun8i-v3s-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			interconnects = <&mbus 5>;
++			interconnect-names = "dma-mem";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					reg = <1>;
++
++					csi0_in_mipi_csi2: endpoint {
++						remote-endpoint = <&mipi_csi2_out_csi0>;
++					};
++				};
++			};
++		};
++
++		mipi_csi2: csi@1cb1000 {
++			compatible = "allwinner,sun8i-v3s-mipi-csi2",
++				     "allwinner,sun6i-a31-mipi-csi2";
++			reg = <0x01cb1000 0x1000>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_CSI>;
++			status = "disabled";
++
++			phys = <&dphy>;
++			phy-names = "dphy";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mipi_csi2_in: port@0 {
++					reg = <0>;
++				};
++
++				mipi_csi2_out: port@1 {
++					reg = <1>;
++
++					mipi_csi2_out_csi0: endpoint {
++						remote-endpoint = <&csi0_in_mipi_csi2>;
++					};
++				};
++			};
++		};
++
++		dphy: d-phy@1cb2000 {
++			compatible = "allwinner,sun6i-a31-mipi-dphy";
++			reg = <0x01cb2000 0x1000>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_MIPI_CSI>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_CSI>;
++			allwinner,direction = "rx";
++			status = "disabled";
++			#phy-cells = <0>;
++		};
++
+ 		csi1: camera@1cb4000 {
+ 			compatible = "allwinner,sun8i-v3s-csi";
+ 			reg = <0x01cb4000 0x3000>;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
