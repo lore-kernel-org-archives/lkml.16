@@ -1,223 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7B31367;
-	Fri,  4 Jul 2025 01:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4A81367
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751591055; cv=none; b=Jn9v9J741T9U0XSnyOi0Wtm8ctcPz8JMOrTAGbCQG1JxsPuwb1EOl4ASzknO5KCy7UW0cXO/HVvBbCKUJAuNtUCOEmwjsBxmK/3yWhfh5cRdudxuvxj6UH1QjAKI2Z0wf0EojrSqWFIqj4QH4tgCk0nK07cvl814VlmIu5eLznA=
+	t=1751591529; cv=none; b=CRTwKulEglczy/HK69YeMzDuN/e9s7pvIWi0A6h/YCvYQoi842/Xg5fbQaf9WxtGyFHpb0nTjxudRc/3tU6yrx/8QTsR+RqfBewLnIOei6yTmEKZlHTd3EFsDyt943UkaJn5efMpFc8JYIB7fh+oag5zzjx2/WkEljuTUmAHejI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751591055; c=relaxed/simple;
-	bh=NwYXwioSFA+26ntHEcsMyePfyCypoWUmjB3nl6lM3yM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nOXCdpTEhJcGOvE8VJIRkpjZ2dZ94wwUe1UH3EJlXabWxALUJXS9DOK6T/WMuC5SlisGXQ0UbO95ARYVG4AhGIUY3umwfv0BU0OFhSbUmeW3u25qckuXeKf+CLzF/JDgFDx8kOvgybUUhQj/eXltC/ePXp+Ek5SYEwdksqqGbSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hLaIjUUU; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLaIjUUU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751591054; x=1783127054;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=NwYXwioSFA+26ntHEcsMyePfyCypoWUmjB3nl6lM3yM=;
-  b=hLaIjUUUWyrq0Gvu6xzHJs7XPyAcjgSvYb0HfU+2QfHK8EYGFCZL0GK7
-   +gR5TOaup8iFb7/lnjXMik1NJlykP08gTDXWjz3nth15hUam0Xz1LC0dN
-   piam93EjjMgHalR00wMMBO2Sn6LOCwwvoNiKVtwYwLodhN33mkg1LUyZR
-   fZo00t95qH8KvMMwk/PrwIvDzzHq3BzxQObJKdhhPxmnFdbxivtFEOWDw
-   ZGoQ00Of8H5JeGwQoAc+HOm7zzvb2wRvVN6kq79Fwq2/rxaoJDqZhLiok
-   O0y592YBLl2hCJ+vl4lK+wRYYdWpZAD8txNSN0114ujmg7fspGXXzzmfx
-   g==;
-X-CSE-ConnectionGUID: SW+IFz7bT7mOg9ARlC994A==
-X-CSE-MsgGUID: mcIi/HtiSoGzQMV+IM7uGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57701430"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="57701430"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:04:13 -0700
-X-CSE-ConnectionGUID: 0HQVXw3ITdOj0TgMEVV+qw==
-X-CSE-MsgGUID: LaK5miYZRDC1gkzDLcBvsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="153929357"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.37]) ([10.124.240.37])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:04:11 -0700
-Message-ID: <45caa98c-d84e-4e8f-acd8-c255ec339c6f@linux.intel.com>
-Date: Fri, 4 Jul 2025 09:04:08 +0800
+	s=arc-20240116; t=1751591529; c=relaxed/simple;
+	bh=v4ljxXh9jmLHKzoGwMvcVw2+anv/viIoaS532cR4bqI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=nSMkB0TSgNxbflutDE3oaO6IyiMGggh7ubc5SH2ynir1PWjLtCaLWGa8DsdrfWIyUZ9E2lz1I5hyZTToLdHMwwy0Z91ZyPs6dsl8iE4FcLS6MqpsTVUg5k/ccBeqBDRz2hmsY+h4YqKlWdsmA6NuYR7rN71O1Ppw+A62SzilBmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df4022687eso4716395ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 18:12:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751591525; x=1752196325;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MkuOwkFiGaiAuFJlUywvo+QnqLqF8JrCZ3yBHoZeImQ=;
+        b=Ph2SGFBFUamYMxrzMzW/yv3T2p1JsRftwRGLLB0p5TRi4t39aTgHMrHhJmrYauwRVP
+         V/P6cY4eXUUWYyPuYMevmtR1GE4WEmCFSnvLt+iZaXh5Jvs9MQnc8/CGW9RMDdtpYa4x
+         3BumTMhVTXaLgSUeXM+TskJhl2PjU58hf/KoHCqycv6mmJqpkfsTchGQJpQqjsH+0VIz
+         0r8xaPGpM81PrKsqEL35xFHiCIOaAd1A2TWVP8ABanfsZVzRowHta2mmJid20umeCsNi
+         xeZbCMA3kaw+DPzm1GrCW3Ek08E+eiMkSmzZtaLctyC0hheM/nngQgW2hoNvY1Iq0ATc
+         ircQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9fWZPJ5h8iDtPrbKuPdxJQP9fUdLaIwyyc/FasKRTKQS7+jENte+/CRwc8iU7RLQ1X25zEBkBlI08IPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUUViwz/PrqUktw42nSQf9dMhfEZW74H8BIPx2VvS+K3Hsplk3
+	hl76yMmgHCsUyA464V2O+welNZWlkir+v40ozkKDjqAZPHlqb8/6dv2daK9YjyqP5rVsXiPjjeh
+	F/rIlcx/kvisd/u/7v4sulxv4oskT6++LuQYDldZcvokYOJYyhvtARk7bBWg=
+X-Google-Smtp-Source: AGHT+IHwNUtJNYBWi9dh6hlhmUWt01g4j478p8KSAzt2iVqzGD7y+FBKavq1knyjjnEO5w2MgU6suKIGkQtwvL2xzu7Ovu7k6N+J
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/4] perf/x86/intel/uncore: Support MSR portal for
- discovery tables
-To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250703165614.606446-1-kan.liang@linux.intel.com>
- <20250703165614.606446-2-kan.liang@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250703165614.606446-2-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:c52b:0:b0:3e1:3491:e873 with SMTP id
+ e9e14a558f8ab-3e13491e9d2mr8427755ab.10.1751591525652; Thu, 03 Jul 2025
+ 18:12:05 -0700 (PDT)
+Date: Thu, 03 Jul 2025 18:12:05 -0700
+In-Reply-To: <f14f4c0f-dc5d-454e-b5ef-1143b5a8f512@mojatatu.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68672a65.a00a0220.c7b3.000c.GAE@google.com>
+Subject: Re: [syzbot] [net?] general protection fault in htb_qlen_notify
+From: syzbot <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, victor@mojatatu.com, 
+	xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
-On 7/4/2025 12:56 AM, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> Starting from the Panther Lake, the discovery table mechanism is also
-> supported in client platforms. The difference is that the portal of the
-> global discovery table is retrieved from an MSR.
->
-> The layout of discovery tables are the same as the server platforms.
-> Factor out __parse_discovery_table() to parse discover tables.
->
-> The uncore PMON is Die scope. Need to parse the discovery tables for
-> each die.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  arch/x86/events/intel/uncore_discovery.c | 87 ++++++++++++++++++------
->  arch/x86/events/intel/uncore_discovery.h |  3 +
->  2 files changed, 70 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-> index 571e44b49691..8680f66c3e34 100644
-> --- a/arch/x86/events/intel/uncore_discovery.c
-> +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -273,32 +273,15 @@ uncore_ignore_unit(struct uncore_unit_discovery *unit, int *ignore)
->  	return false;
->  }
->  
-> -static int parse_discovery_table(struct pci_dev *dev, int die,
-> -				 u32 bar_offset, bool *parsed,
-> -				 int *ignore)
-> +static int __parse_discovery_table(resource_size_t addr, int die,
-> +				   bool *parsed, int *ignore)
->  {
->  	struct uncore_global_discovery global;
->  	struct uncore_unit_discovery unit;
->  	void __iomem *io_addr;
-> -	resource_size_t addr;
->  	unsigned long size;
-> -	u32 val;
->  	int i;
->  
-> -	pci_read_config_dword(dev, bar_offset, &val);
-> -
-> -	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
-> -		return -EINVAL;
-> -
-> -	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
-> -#ifdef CONFIG_PHYS_ADDR_T_64BIT
-> -	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
-> -		u32 val2;
-> -
-> -		pci_read_config_dword(dev, bar_offset + 4, &val2);
-> -		addr |= ((resource_size_t)val2) << 32;
-> -	}
-> -#endif
->  	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
->  	io_addr = ioremap(addr, size);
->  	if (!io_addr)
-> @@ -341,7 +324,32 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
->  	return 0;
->  }
->  
-> -bool intel_uncore_has_discovery_tables(int *ignore)
-> +static int parse_discovery_table(struct pci_dev *dev, int die,
-> +				 u32 bar_offset, bool *parsed,
-> +				 int *ignore)
-> +{
-> +	resource_size_t addr;
-> +	u32 val;
-> +
-> +	pci_read_config_dword(dev, bar_offset, &val);
-> +
-> +	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
-> +		return -EINVAL;
-> +
-> +	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
-> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
-> +	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
-> +		u32 val2;
-> +
-> +		pci_read_config_dword(dev, bar_offset + 4, &val2);
-> +		addr |= ((resource_size_t)val2) << 32;
-> +	}
-> +#endif
-> +
-> +	return __parse_discovery_table(addr, die, parsed, ignore);
-> +}
-> +
-> +static bool intel_uncore_has_discovery_tables_pci(int *ignore)
->  {
->  	u32 device, val, entry_id, bar_offset;
->  	int die, dvsec = 0, ret = true;
-> @@ -390,6 +398,45 @@ bool intel_uncore_has_discovery_tables(int *ignore)
->  	return ret;
->  }
->  
-> +static bool intel_uncore_has_discovery_tables_msr(int *ignore)
-> +{
-> +	unsigned long *die_mask;
-> +	bool parsed = false;
-> +	int cpu, die;
-> +	u64 base;
-> +
-> +	die_mask = kcalloc(BITS_TO_LONGS(__uncore_max_dies),
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Better use uncore_max_dies() instead of __uncore_max_dies.
+Reported-by: syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com
+Tested-by: syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com
 
+Tested on:
 
-> +			   sizeof(unsigned long), GFP_KERNEL);
-> +	if (!die_mask)
-> +		return false;
-> +
-> +	cpus_read_lock();
-> +	for_each_online_cpu(cpu) {
-> +		die = topology_logical_die_id(cpu);
-> +		if (__test_and_set_bit(die, die_mask))
-> +			continue;
-> +
-> +		if (rdmsrq_safe_on_cpu(cpu, UNCORE_DISCOVERY_MSR, &base))
-> +			continue;
-> +
-> +		if (!base)
-> +			continue;
-> +
-> +		__parse_discovery_table(base, die, &parsed, ignore);
-> +	}
-> +
-> +	cpus_read_unlock();
-> +
-> +	kfree(die_mask);
-> +	return parsed;
-> +}
-> +
-> +bool intel_uncore_has_discovery_tables(int *ignore)
-> +{
-> +	return intel_uncore_has_discovery_tables_msr(ignore) ||
-> +	       intel_uncore_has_discovery_tables_pci(ignore);
-> +}
-> +
->  void intel_uncore_clear_discovery_tables(void)
->  {
->  	struct intel_uncore_discovery_type *type, *next;
-> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-> index 0e94aa7db8e7..690f737e6837 100644
-> --- a/arch/x86/events/intel/uncore_discovery.h
-> +++ b/arch/x86/events/intel/uncore_discovery.h
-> @@ -1,5 +1,8 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
->  
-> +/* Store the full address of the global discovery table */
-> +#define UNCORE_DISCOVERY_MSR			0x201e
-> +
->  /* Generic device ID of a discovery table device */
->  #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
->  /* Capability ID for a discovery table device */
+commit:         223e2288 vsock/vmci: Clear the vmci transport packet p..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=16685ebc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8b58d7b0ad89a678a16
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=141d8c8c580000
+
+Note: testing is done by a robot and is best-effort only.
