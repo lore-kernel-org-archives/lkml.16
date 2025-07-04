@@ -1,61 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23382E3715;
-	Fri,  4 Jul 2025 20:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25DA42AA3;
+	Fri,  4 Jul 2025 20:24:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751660597; cv=none; b=cqE2vmJcOod90eXR1UqGnnO/2xLAR+PT3SzigvzvnFxKJ8vjrjFUtl57T/9kQh2DA5+JAjinIuNR+Pi3qTax8pYmmwcCuNZeL7nkh1kmEGfyDVismG2dqUnYFwK0I7GgaqjqKVB6XMHkzwTzPTNZ3937B+gJk6qM/O3RJdVHD70=
+	t=1751660644; cv=none; b=cmIK1wOdKbt4OQ6KR1PHo9PQ1wgP8UxBz7D49lcMvrMQ0rCv11Rax1bCrIYoouY4lliMxQUvRX88yQJ1KZrF4nCIcTqSqF4x6tLRoiltsPge+vr36nuDOEBhSzaKOvkDEE5rfukB8zB+ZF0WtTaWJCPwT0BfWrs42Ai7hqR16wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751660597; c=relaxed/simple;
-	bh=bwqfxaSn3gMX+r+CX3L5sICpxhvEVe9LILpah+YwURA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aFQppsy09S2E9N9hReHnokghMjxOavdbu4yv+k4W9Yvjg8yQwBDQOts4gIoVcwTDp9avub7X7bcv/OSbJHtU5X76G8l7MKvI7WM1gXjcYc+70CTRgdlGIppn1B37cAXN9dIva86WLo0R++jIFViiTqlkLwawZaYUASLEj8Z+vxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT3er4mu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751660644; c=relaxed/simple;
+	bh=Q21PofIgBP9dI+Tfz8rPgeX/piinRsHxz0jawEt/xO0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bRvD3cwV/8tXzhF4XuplHGdEOR5JB1FPwyY6Nf46kbLSwBizkwDQeTIAISD6XyUVxm8WZxk7VjB92uhJPW5Qakdv75CVhpmVVl1f8KXr5051kHdn93PLDG3Ns/DnJCk9rMKfIV+35mpAK++6qTFgOspy53s4ErF+Om6xG1tXFC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsFbVSDC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT3er4mu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E476CC4CEE3;
-	Fri,  4 Jul 2025 20:23:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsFbVSDC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8D0C4CEE3;
+	Fri,  4 Jul 2025 20:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751660595;
-	bh=bwqfxaSn3gMX+r+CX3L5sICpxhvEVe9LILpah+YwURA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KT3er4muxKHMaOW+0y5WIkzyi8MfSNet+lbI3v4KD9NhUUWAvWWKYHn0qr/tU37Wx
-	 Qp1WMejW9k5BRqPZMbra8nIiM9RyoX3wnQv/IYs6MtA2VPjDZbNtkzWVIsFgNJYhNA
-	 tg/IUL/VxtuVcMcfa81WJYRVW655dXcQto8Kf4Fpk+ipDZRor/YEPmnA3d6o058A93
-	 DiTrdCYAU2aBjWgvkMnClGeXGL3mNLypMfxdI5miDbw/sn9+7+5/d3brjrJmUfiujz
-	 KkKbGHXS+sstAAHnSkaAZHyw1BO17rLMrLFIjJLvWMYwygOrBX4JG6MHguyURryhJ9
-	 RInC3hxkD0y5Q==
-Message-ID: <483d26c9-413f-49d7-89f7-7cc0e7f4cccd@kernel.org>
-Date: Fri, 4 Jul 2025 22:23:11 +0200
+	s=k20201202; t=1751660644;
+	bh=Q21PofIgBP9dI+Tfz8rPgeX/piinRsHxz0jawEt/xO0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=LsFbVSDClyblFMpaOq0PlfjgmONGSUWpr9UTpYtTAIvHiBnkFLYSOzVMRfFd5l3FR
+	 vzPDpwWCc3WLPxhQw5eHOdKEj4p0i7OyvbuNBe3ytHbUXx4m6mpCziNKkei77maeIj
+	 S8VMBI43VL9X5r3sJT+HabvnsrCpMVYr0AiWRPz08Z8P4BNGKqnNeVLA5pvBpaYnqa
+	 QJOeEeLm58/G9nVdWZnehFi+T/VytR5nguGPTDv+DRz+1aMB2qzXeWEPIpZkX3aFnN
+	 99JPPSoasREqVy6SBP1HxEyMrWklg7jucKZX/1QSoKCXPEFe9ZQ0PfaIHLyC+SShk+
+	 kxTFGoHwwu3ew==
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-73afbe149afso842559a34.1;
+        Fri, 04 Jul 2025 13:24:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVayAkSbgbe3kUzESrfoLWeOXXBcj9BLquKFlLeJ4G3P5V/PEPcJgvCituVuAZm08FsvQcjTfKdQx0=@vger.kernel.org, AJvYcCXnscdgLZKd5yQIYA7XD9acVFecm4i2JS08eFeBkPMNMHv0IRRHuJMTdKzfgHNstxPRLi5XpxYJFCUm7PA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznowua+blWghtP+HJngCA1A7rO0vsR28+wY0pcXEd1Y0yViTqs
+	Nm10WVYFO29kcJiVYLYeRRuFvm9rXKBu/U3nkxdr8cX28b/Yki5oEEJrb86V1H8A/fTTf21Z6SC
+	+e5Zk1z4Xr0bn+Yysgy4id9XTcGyc6yE=
+X-Google-Smtp-Source: AGHT+IE5pb/BmkLzpIvx4ESVIlKFMogctVtXGNtSme3P8OHYRfDDrgjqzb2SRaHfJFksA/nXHw/s2nVy+mh6z+5Y6Kc=
+X-Received: by 2002:a9d:3e57:0:b0:73a:9f43:6395 with SMTP id
+ 46e09a7af769-73ca6717da8mr1665496a34.19.1751660643664; Fri, 04 Jul 2025
+ 13:24:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: devres: remove unused import
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250704-cstr-include-devres-v1-1-4ee9e56fca09@gmail.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250704-cstr-include-devres-v1-1-4ee9e56fca09@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 4 Jul 2025 22:23:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jSU7CZ1PHB1-3ff-sBPt8SzhaYo9LNDYNPWzKG1DPq4Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxTeYCy7UIMQC3O5GECFn4LVyGmT15wSPoVHIYgh7kgcG7tC74QIfra0zw
+Message-ID: <CAJZ5v0jSU7CZ1PHB1-3ff-sBPt8SzhaYo9LNDYNPWzKG1DPq4Q@mail.gmail.com>
+Subject: [GIT PULL] ACPI fix for v6.16-rc5
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 7/4/25 10:11 PM, Tamir Duberstein wrote:
-> As far as I can tell, this was never used.
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Hi Linus,
 
-Do you want me to take this and the other include fixups through the driver-core
-tree or do you need them in rust-next as prerequisite for your CStr series?
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-6.16-rc5
+
+with top-most commit de1675de39aa945bad5937d1fde4df3682670639
+
+ Revert "ACPI: battery: negate current when discharging"
+
+on top of commit 234f71555019d308c6bc6f98c78c5551cb8cd56a
+
+ ACPI: battery: negate current when discharging
+
+to receive an ACPI fix for 6.16-rc5.
+
+This reverts a problematic ACPI battery driver change merged recently.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      Revert "ACPI: battery: negate current when discharging"
+
+---------------
+
+ drivers/acpi/battery.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
