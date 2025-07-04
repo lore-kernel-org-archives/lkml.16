@@ -1,181 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83FC182D7;
-	Fri,  4 Jul 2025 01:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5508360;
+	Fri,  4 Jul 2025 01:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751592738; cv=none; b=EF/tKchT/YFCCsjGc/D/DVbobIx7OGXtYcuiIu1E6Z+o1r7SAfkMu8Kp2r4bT3yAzXrf7gsffCJoeDLBdZcvnprWUokd3ydrvYxcka7fhhrmZz61sXTph1n4CQEA5uAwon6q6uUWTgdN0ydYa2f4GMLDmIoYKi/N94FUWqW1O9k=
+	t=1751592821; cv=none; b=fGlI9qcWcjZgDjMW9JFmQnQWlsrg3J4GUzRrjDjuD2JNXA0tAvScfL+ZuFZLgfHxrHNyka7PmvtayajiBQNaEJvhy/3OKVeUuVi4sEvky8PU17NQTxfmG5xHv3hRdGO4IsRfaKWgd7I2B+H6NgsywFXviQBKXylcV2ogsfbA5hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751592738; c=relaxed/simple;
-	bh=cVajWqbMaA8FdWsImYY7QMdtU6iMOS61HOPiAKw5xLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjgkYuy+NBi8ehrsATOQPgWHddZD76PGdrnbX0jy0NHaYKBvWtEG2JJ6Sv4DzhbOTwbruvqAoHM+hhDqvcR6yZulZAZJ4/SvCKKHQyqIXjv/uUguyhX+R6mgidPDkJYveN7UKFw4h7RZwuaNZXmKu5Tk5uk/N1aQiRQ+sn8iR+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BbwY/pZW; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BbwY/pZW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751592736; x=1783128736;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cVajWqbMaA8FdWsImYY7QMdtU6iMOS61HOPiAKw5xLQ=;
-  b=BbwY/pZWo1q9TpB7eI+Y8gQhxKugCWqdXaGQO0rULvCgNYxt6fBZlbQg
-   quZOulHu6oaKXye9zduo+fXP3MnGadwRrcbCjbrrbq3YXsSbS/dLYkZP8
-   y+UOML1HR9cAGlMI/G8MsaMa4EazgQ7+AqaKc6QCHwda+uKmXiJj0fAd4
-   q09lG7e02+uGCh8l3lAF9jxZXXeclP8XeEYuHVpuvQr7U2aPmSBwIIzSm
-   QLxkTg0I6ri5h/BDBnb4fZ5dSmiK4fcou0wrjD4s4iiB7Zqyr7uDSJ5M8
-   CheOgT66d8CHVVGnRL06HPD4vDuw/7ISvtAgaryjZadnLjrfdsKhq50cO
-   A==;
-X-CSE-ConnectionGUID: /J+kJCmjQN20861Ecy0/0A==
-X-CSE-MsgGUID: ig33fD0vTfmFp5T+Dg92Dw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="56550996"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="56550996"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:32:15 -0700
-X-CSE-ConnectionGUID: lLbGmm3wRs6oQvZyeAd2xg==
-X-CSE-MsgGUID: ETxZ+JWFQYys57YZkpM9SQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="158867833"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:32:10 -0700
-Message-ID: <d1cd2b34-9a3f-4dfc-93a2-2a20e9f16e1d@intel.com>
-Date: Fri, 4 Jul 2025 09:32:07 +0800
+	s=arc-20240116; t=1751592821; c=relaxed/simple;
+	bh=5upm/a1Q1xYZt2oprjiDZ+sMFMN5dlcunyhi/1gzG9Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ugt3EwpuAv3ZOZBJS5xFBeemSU/Xw85Ya0l3W0hS5mLOFBdcNIoUmrAd2LIW6fFe0j/OmTdPyzVNr4gfN+VWlrW9w71ffJmPqdhhpSwoUE+8PH8dF6gwCznLA7D5YNiSks35XtZvj+WqeVhuYQ+HnZFodRSzCva1Wa6IDydLm+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5640wuvb008777;
+	Fri, 4 Jul 2025 01:33:23 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 47j7c9e81e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 04 Jul 2025 01:33:22 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.57; Thu, 3 Jul 2025 18:32:39 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.57 via Frontend Transport; Thu, 3 Jul 2025 18:32:37 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <greg@kroah.com>
+CC: <Lizhi.Xu@windriver.com>, <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
+        <linux-next@vger.kernel.org>, <sfr@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Date: Fri, 4 Jul 2025 09:32:36 +0800
+Message-ID: <20250704013236.703903-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2025070323-unpicked-virtuous-07fa@gregkh>
+References: <2025070323-unpicked-virtuous-07fa@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] x86/tdx: Skip clearing reclaimed pages unless
- X86_BUG_TDX_PW_MCE is present
-To: Adrian Hunter <adrian.hunter@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, pbonzini@redhat.com,
- seanjc@google.com, vannapurve@google.com
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- x86@kernel.org, H Peter Anvin <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
- kirill.shutemov@linux.intel.com, kai.huang@intel.com,
- reinette.chatre@intel.com, tony.lindgren@linux.intel.com,
- binbin.wu@linux.intel.com, isaku.yamahata@intel.com, yan.y.zhao@intel.com,
- chao.gao@intel.com
-References: <20250703153712.155600-1-adrian.hunter@intel.com>
- <20250703153712.155600-3-adrian.hunter@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250703153712.155600-3-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: QT3oerwKfl2Vx3FvL0psQI25kGaNQqik
+X-Proofpoint-GUID: QT3oerwKfl2Vx3FvL0psQI25kGaNQqik
+X-Authority-Analysis: v=2.4 cv=M5xNKzws c=1 sm=1 tr=0 ts=68672f62 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=Wb1JkmetP80A:10 a=RQiUvKhxgLTsCj1AiuoA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDAxMCBTYWx0ZWRfXxxIYNWbynaem dBz3t2YLFWnjPRHfIilypG7XPcOv4RT0UYK5ePUa8T5M3WofnqkFhkbthVFdJgn7lA7/KYmG392 um+Q+x4OyKQhYUgBCPFnD9RyZfEVIHlM/mu31/GY9wPr2rK9tjCWA+uyZKWbt/ieymQq9GKE83E
+ G/JIPncsi+UbftDIzotFpnE7tNHBEUJSa6Zg6KjBxbvmYIPdACLXl3w/NeE7LWbRPnw0M9837k/ aSu8bvUpAmK3/g7DmTMWs5IpU9WMgfb/V5/tZ+lm4pXF76W2q1KkETh6ZxlhGrXNNJYhHI9/JHZ lW4TOQPYPYToEcWvxTzLOaiIVkpnAG8nwHbrCVPLoqeWolJ9aD2NeKwzjoVI9EccUCHUcFnxoT/
+ GTlAJ0ZT44XV8yeJDDaHMtmsuAUNWVOUaE9DbYze8sJMWcB1cZ8T7PKrFLOXclgnYcDS1avf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-03_06,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=994 suspectscore=0 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
+ definitions=main-2507040010
 
-On 7/3/2025 11:37 PM, Adrian Hunter wrote:
-> Avoid clearing reclaimed TDX private pages unless the platform is affected
-> by the X86_BUG_TDX_PW_MCE erratum. This significantly reduces VM shutdown
-> time on unaffected systems.
+On Thu, 3 Jul 2025 13:20:47 +0200, Greg KH wrote:
+> > Please read the context carefully, and you will understand that this is
+> > where everything starts.
 > 
-> Background
+> I'm sorry, but I do not understand your quoting style.  Didn't the links
+> I provided earlier explain this?
 > 
-> KVM currently clears reclaimed TDX private pages using MOVDIR64B, which:
+> > In the code before memset, the ev variable only
+> > initializes the members of its member hdr.
 > 
->     - Clears the TD Owner bit (which identifies TDX private memory) and
->       integrity metadata without triggering integrity violations.
->     - Clears poison from cache lines without consuming it, avoiding MCEs on
->       access (refer TDX Module Base spec. 16.5. Handling Machine Check
->       Events during Guest TD Operation).
+> What code does that?
+    static int ctx_fire_notification(u32 context_id, u32 priv_flags)
+...	
+   5                 struct vmci_event_ctx ev;
+   4
+   3                 ev.msg.hdr.dst = vmci_handle_arr_get_entry(subscriber_array, i);
+   2                 ev.msg.hdr.src = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
+   1                                                   VMCI_CONTEXT_RESOURCE_ID);
+253                  ev.msg.hdr.payload_size = sizeof(ev) - sizeof(ev.msg.hdr);
 > 
-> The TDX module also uses MOVDIR64B to initialize private pages before use.
-> If cache flushing is needed, it sets TDX_FEATURES.CLFLUSH_BEFORE_ALLOC.
-> However, KVM currently flushes unconditionally, refer commit 94c477a751c7b
-> ("x86/virt/tdx: Add SEAMCALL wrappers to add TD private pages")
+> > Originally, "struct vmci_event_ctx ev = {0};" could be used to solve this
+> > problem. After careful analysis, I can clearly see that the data after the
+> > ev member hdr is not fully initialized, so memset() is used to set the
+> > uninitialized data after the hdr member in ev to 0.
 > 
-> In contrast, when private pages are reclaimed, the TDX Module handles
-> flushing via the TDH.PHYMEM.CACHE.WB SEAMCALL.
+> Again, you have a structure that has 2 structures in it, but no
+> guarantees that there will not be any padding between those structures:
 > 
-> Problem
+> struct vmci_event_ctx {
+>         struct vmci_event_msg msg;
+>         struct vmci_event_payld_ctx payload;
+> };
 > 
-> Clearing all private pages during VM shutdown is costly. For guests
-> with a large amount of memory it can take minutes.
+> Nor do you have any guarantee that those structures don't also have
+> holes in them.  How does any of this work?  Is it just luck?  I walked
+> things backwards and find it impossible to guess as to any of the fields
+> here actually being properly aligned or even using the correct data
+> types to cross the user/kernel boundary.
 > 
-> Solution
+> And then you throw the whole thing on the stack:
 > 
-> TDX Module Base Architecture spec. documents that private pages reclaimed
-> from a TD should be initialized using MOVDIR64B, in order to avoid
-> integrity violation or TD bit mismatch detection when later being read
-> using a shared HKID, refer April 2025 spec. "Page Initialization" in
-> section "8.6.2. Platforms not Using ACT: Required Cache Flush and
-> Initialization by the Host VMM"
-> 
-> That is an overstatement and will be clarified in coming versions of the
-> spec. In fact, as outlined in "Table 16.2: Non-ACT Platforms Checks on
-> Memory" and "Table 16.3: Non-ACT Platforms Checks on Memory Reads in Li
-> Mode" in the same spec, there is no issue accessing such reclaimed pages
-> using a shared key that does not have integrity enabled. Linux always uses
-> KeyID 0 which never has integrity enabled. KeyID 0 is also the TME KeyID
-> which disallows integrity, refer "TME Policy/Encryption Algorithm" bit
-> description in "Intel Architecture Memory Encryption Technologies" spec
-> version 1.6 April 2025. So there is no need to clear pages to avoid
-> integrity violations.
-> 
-> There remains a risk of poison consumption. However, in the context of
-> TDX, it is expected that there would be a machine check associated with the
-> original poisoning. On some platforms that results in a panic. However
-> platforms may support "SEAM_NR" Machine Check capability, in which case
-> Linux machine check handler marks the page as poisoned, which prevents it
-> from being allocated anymore, refer commit 7911f145de5fe ("x86/mce:
-> Implement recovery for errors in TDX/SEAM non-root mode")
-> 
-> Improvement
-> 
-> By skipping the clearing step on unaffected platforms, shutdown time
-> can improve by up to 40%.
-> 
-> On platforms with the X86_BUG_TDX_PW_MCE erratum (SPR and EMR), continue
-> clearing because these platforms may trigger poison on partial writes to
-> previously-private pages, even with KeyID 0, refer commit 1e536e1068970
-> ("x86/cpu: Detect TDX partial write machine check erratum")
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
-> 
-> 
-> Changes in V2:
-> 
-> 	Improve the comment
-> 
-> 
->   arch/x86/virt/vmx/tdx/tdx.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-> index 14d93ed05bd2..4fa86188aa40 100644
-> --- a/arch/x86/virt/vmx/tdx/tdx.c
-> +++ b/arch/x86/virt/vmx/tdx/tdx.c
-> @@ -642,6 +642,14 @@ void tdx_quirk_reset_paddr(unsigned long base, unsigned long size)
->   	const void *zero_page = (const void *)page_address(ZERO_PAGE(0));
->   	unsigned long phys, end;
->   
-> +	/*
-> +	 * Typically, any write to the page will convert it from TDX
-> +	 * private back to normal kernel memory. Systems with the
-> +	 * erratum need to do the conversion explicitly.
+> > 248                  struct vmci_event_ctx ev;
+1.
+struct vmci_event_msg and struct vmci_event_payld_ctx, those struct are
+used to contain data for events.
+Size of this struct is a multiple of 8 bytes.
+So no hole.
 
-Can we call out that "system with erratum need to do the conversion 
-explicitly via MOVDIR64B" ?
+2. 
+ev.msg.hdr.payload_size = sizeof(ev) - sizeof(ev.msg.hdr);
+It means:
+2.1 ev.msg.hdr.payload_size is sizeof(struct vmci_event_ctx) - sizeof(struct vmci_datagram)
+2.2 The size of payload_size is fixed.
 
-Without "via MOVDIR64B", it leads to the impression that explicit 
-conversion with any write is OK for system with the erratum, and maybe 
-the following code just happened to use movdir64b().
+3.
+Yes, they are on the stack now.
+ctx_fire_notification()->
+  vmci_datagram_dispatch()->
+    dg_dispatch_as_host()->
 
-> +	 */
-> +	if (!boot_cpu_has_bug(X86_BUG_TDX_PW_MCE))
-> +		return;
-> +
->   	end = base + size;
->   	for (phys = base; phys < end; phys += 64)
->   		movdir64b(__va(phys), zero_page);
+Before the datagram is queued in dg_dispatch_as_host(), a copy of the
+datagram in the stack is made using kmemdup() and then queued.
 
+4.
+Before they all enter the queue, they are in the data preparation stage,
+the actual event datagram is not really saved, and the size of payload_size
+is fixed, so it is clear that except for hdr, setting the payload content
+to 0 before initializing other data will not introduce any unknown behavior.
+> 
+> And attempt to initialize the fields manually.  What could go wrong?
+> (hint, syzbot showed what went wrong, and the compiler is now telling
+> you how your proposed fix is not correct in the long-run...)
+
+BR,
+Lizhi
