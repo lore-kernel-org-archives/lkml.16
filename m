@@ -1,253 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73411E47CC;
-	Fri,  4 Jul 2025 02:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE434B5AE;
+	Fri,  4 Jul 2025 02:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751596927; cv=none; b=Fg7IhPal6/mLkzbjLf9DtAtRDq8k5ecJTj7KGfpzXXhCpytrj/xCvIZyTlRYqN3AkcjWMiJBIYRxkCq9Pn2M93EueE69BYH008ndxLUpSgGCeX01DYwx6q4Sj+qnoWLdt4qcVGg9sbdFYrILCJRcejzfj8b9WEIj4pUAhiQumc0=
+	t=1751597112; cv=none; b=ojN1kq0zQpWLseMT2Of17q/7GKz5wXrD0mg0l7rglgJ1qfoECazhLpgokgR6L5xnYjraoB6g1y1HenSTo4uejTjiwmp/BovYIZDVqdr684IUId+CzDE9IDq+d3XcCPQ9zpNpq1VP4QY/Bk/3gkZuArwt7m8hnGzqzo7gmAV48mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751596927; c=relaxed/simple;
-	bh=cJEKeMrrEFzU02uZcEkZZnobeGg0XAEqgJDDvcatu80=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PSENTGrq/brw5PXO0HFXnYgS4z2JMwHLR6HH2ooFlg8kePk+P4mRl+gyUagSkC2akE/MCoPbFYOqPT+yN8zbEcKtYK8KTUV5qOTH1yyyQguCGMdUVm0Ny3QOeYFsrqUog5W8SIL0QHFQe7grN0bJpBEJYaz0MNCH937AhQ878lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgYL/dPx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751597112; c=relaxed/simple;
+	bh=9oMh2+sXdaERiWL0EEhIeSNw+h5nudP0ZF7k9f831+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MgkUJMCisEQPNg6SH9Jbvk0V9Zj3BEzd9AjWvcqys0zaEB3P/k/VX+lwyn95I+v3jFFRwBWVTDLmL/WbNHyuC7bN4A7y5c34JDQhqTkWWYOfstjFxOfye3sXQRwBteTRec1zyypeWzVlKm/MkCWEs01TD1Sg01GTRb5DgsX6Y64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gu93gGBF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgYL/dPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C81C4CEEE;
-	Fri,  4 Jul 2025 02:42:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gu93gGBF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D88EC4CEE3;
+	Fri,  4 Jul 2025 02:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751596927;
-	bh=cJEKeMrrEFzU02uZcEkZZnobeGg0XAEqgJDDvcatu80=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XgYL/dPxx3tVST0ATkylNrYDgusq5kAsc1dJaMR/SHzed1jkA5IbKkjm2442fzjHu
-	 ZfwubcuqqRl7I+toiC4LYuPm3sceLMWz73Hh8C/+xkMssRfS9mrC7HGD2XQNJcZaHW
-	 hcA0ifxSALVhYQbh470HfuVklE5bUMK2/eojNh7a1gxA4ziuXnLkXE91Z9xosIQ+ce
-	 dj5ct2NqPspv7wICaktv9t4rsvQqSRPWNzepTe7ZMjjd5QF0DKawyCkuuBCWFJOxF8
-	 Jl69RLJ8n8ApU9YBM3G6mfm9NTIbmH6qqgMqsUj4VKJp8bpqsdEda4U6HYBAbATECO
-	 K4jrPqYAstABA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH 1/2] lib/crypto: x86/sha256: Move static_call above kernel-mode FPU section
-Date: Thu,  3 Jul 2025 19:39:57 -0700
-Message-ID: <20250704023958.73274-2-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250704023958.73274-1-ebiggers@kernel.org>
-References: <20250704023958.73274-1-ebiggers@kernel.org>
+	s=k20201202; t=1751597110;
+	bh=9oMh2+sXdaERiWL0EEhIeSNw+h5nudP0ZF7k9f831+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gu93gGBFUxz9MVgXCnp8UYYuw0tDyMQ7nOyVSn+A07ji3bvtRZZauAUlBZDV0RYhw
+	 DLhePMm/FBL+lNrWvU3/coYRAAR2FmbqmNfPlEVGbpxRX8ZNfXCtb8HfrZz2hhZku/
+	 wk2h5K4ZbSVd+viocHyX+Jh7IejOlCaOsfbOEuwCmjw932Ao4AZLTK+iqHIK/xoqUQ
+	 eWrZq4u45HzvUP2iBnXj+tXFkW2kOMiKGztKQwHzsnKqrECC2rtggyE/FJ2V6KpkiF
+	 EDFR4l2NjmqudWnM2lzJxTG2hZ4/8fZQAwG+b2V+Ka96pfO7ohAOX7gC6cCLqpzS7H
+	 AUv69KxHVgKsg==
+Date: Fri, 4 Jul 2025 05:45:06 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Prachotan Bathi <prachotan.bathi@arm.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
+ memset
+Message-ID: <aGdAMg43nHPwgeKn@kernel.org>
+References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
+ <20250626184521.1079507-3-prachotan.bathi@arm.com>
+ <aGWvtzhs5ksKgaYo@kernel.org>
+ <151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
 
-As I did for sha512_blocks(), reorganize x86's sha256_blocks() to be
-just a static_call.  To achieve that, for each assembly function add a C
-function that handles the kernel-mode FPU section and fallback.  While
-this increases total code size slightly, the amount of code actually
-executed on a given system does not increase, and it is slightly more
-efficient since it eliminates the extra static_key.  It also makes the
-assembly functions be called with standard direct calls instead of
-static calls, eliminating the need for ANNOTATE_NOENDBR.
+On Wed, Jul 02, 2025 at 10:58:56PM -0500, Prachotan Bathi wrote:
+> On 7/2/25 5:16 PM, Jarkko Sakkinen wrote:
+> 
+> > On Thu, Jun 26, 2025 at 01:45:20PM -0500, Prachotan Bathi wrote:
+> > > Add a memzero macro to simplify and standardize zeroing
+> > > FF-A data args, replacing direct uses of memset for
+> > > improved readability and maintainability.
+> > > 
+> > > Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
+> > > ---
+> > >   drivers/char/tpm/tpm_crb_ffa.c | 6 ++++--
+> > >   1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> > > index 089d1e54bb46..397cc3b0a478 100644
+> > > --- a/drivers/char/tpm/tpm_crb_ffa.c
+> > > +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> > > @@ -12,6 +12,8 @@
+> > >   #include <linux/arm_ffa.h>
+> > >   #include "tpm_crb_ffa.h"
+> > > +#define memzero(s, n) memset((s), 0, (n))
+> > > +
+> > >   /* TPM service function status codes */
+> > >   #define CRB_FFA_OK			0x05000001
+> > >   #define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
+> > > @@ -192,7 +194,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
+> > >   	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> > >   	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> > > -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
+> > > +		memzero(&tpm_crb_ffa->direct_msg_data2,
+> > >   		       sizeof(struct ffa_send_direct_data2));
+> > >   		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> > > @@ -205,7 +207,7 @@ static int __tpm_crb_ffa_send_receive(unsigned long func_id,
+> > >   		if (!ret)
+> > >   			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
+> > >   	} else {
+> > > -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> > > +		memzero(&tpm_crb_ffa->direct_msg_data,
+> > >   		       sizeof(struct ffa_send_direct_data));
+> > >   		tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> > > -- 
+> > > 2.43.0
+> > > 
+> > It adds a ross-reference to the source code, meaning that you have to
+> > jump back and forth in the source code just to see that there is a
+> > function that wraps up a single memset() call.
+> > 
+> > How does that map to "readability"?
+> > 
+> > BR, Jarkko
+> 
+> Hi Jarkko
+> 
+> I've implemented this change post your feedback on v4 of the initial patch
+> series, maybe this should've been a question at that point, but what was the
+> reasoning for recommending that I use memzero instead? I'll use the same
+> reasoning to rephrase the commit message.
 
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
- lib/crypto/x86/sha256-avx-asm.S   |  3 --
- lib/crypto/x86/sha256-avx2-asm.S  |  3 --
- lib/crypto/x86/sha256-ni-asm.S    |  2 --
- lib/crypto/x86/sha256-ssse3-asm.S |  2 --
- lib/crypto/x86/sha256.h           | 48 ++++++++++++++++---------------
- 5 files changed, 25 insertions(+), 33 deletions(-)
+OK I found what you were referring to:
 
-diff --git a/lib/crypto/x86/sha256-avx-asm.S b/lib/crypto/x86/sha256-avx-asm.S
-index 73bcff2b548f4..798a7f07fa013 100644
---- a/lib/crypto/x86/sha256-avx-asm.S
-+++ b/lib/crypto/x86/sha256-avx-asm.S
-@@ -46,11 +46,10 @@
- ########################################################################
- # This code schedules 1 block at a time, with 4 lanes per block
- ########################################################################
+https://lore.kernel.org/linux-integrity/aFF-WNSolTdV9PZG@kernel.org/
+
+Well, that was some truly misguided advice from my side so all the shame
+here is on me :-) There's no global memzero() and neither explicit
+version makes much sense here. Sorry about that.
+
+I gave it now (actual) thought, and here's what I'd propose:
+
+diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+index 96746d5b03e3..e769f6143a7c 100644
+--- a/drivers/char/tpm/tpm_crb_ffa.c
++++ b/drivers/char/tpm/tpm_crb_ffa.c
+@@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
+ 	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
  
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- ## assume buffers not aligned
- #define    VMOVDQ vmovdqu
- 
- ################################ Define Macros
-@@ -344,12 +343,10 @@ a = TMP_
- ## void sha256_transform_avx(struct sha256_block_state *state,
- ##			     const u8 *data, size_t nblocks);
- ########################################################################
- .text
- SYM_FUNC_START(sha256_transform_avx)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
+ 	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+-		memzero(&tpm_crb_ffa->direct_msg_data2,
+-		       sizeof(struct ffa_send_direct_data2));
 -
- 	pushq   %rbx
- 	pushq   %r12
- 	pushq   %r13
- 	pushq   %r14
- 	pushq   %r15
-diff --git a/lib/crypto/x86/sha256-avx2-asm.S b/lib/crypto/x86/sha256-avx2-asm.S
-index 45787570387f2..62a46993359e6 100644
---- a/lib/crypto/x86/sha256-avx2-asm.S
-+++ b/lib/crypto/x86/sha256-avx2-asm.S
-@@ -47,11 +47,10 @@
- ########################################################################
- # This code schedules 2 blocks at a time, with 4 lanes per block
- ########################################################################
+-		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+-		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+-		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+-		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
++		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
++			.data = { func_id, a0, a1, a2 },
++		};
  
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- ## assume buffers not aligned
- #define	VMOVDQ vmovdqu
- 
- ################################ Define Macros
-@@ -521,12 +520,10 @@ STACK_SIZE	= _CTX      + _CTX_SIZE
- ## void sha256_transform_rorx(struct sha256_block_state *state,
- ##			      const u8 *data, size_t nblocks);
- ########################################################################
- .text
- SYM_FUNC_START(sha256_transform_rorx)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
+ 		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
+ 				&tpm_crb_ffa->direct_msg_data2);
+ 		if (!ret)
+ 			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
+ 	} else {
+-		memzero(&tpm_crb_ffa->direct_msg_data,
+-		       sizeof(struct ffa_send_direct_data));
 -
- 	pushq	%rbx
- 	pushq	%r12
- 	pushq	%r13
- 	pushq	%r14
- 	pushq	%r15
-diff --git a/lib/crypto/x86/sha256-ni-asm.S b/lib/crypto/x86/sha256-ni-asm.S
-index 4af7d22e29e47..9ebbacbb9c13b 100644
---- a/lib/crypto/x86/sha256-ni-asm.S
-+++ b/lib/crypto/x86/sha256-ni-asm.S
-@@ -52,11 +52,10 @@
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  */
+-		tpm_crb_ffa->direct_msg_data.data1 = func_id;
+-		tpm_crb_ffa->direct_msg_data.data2 = a0;
+-		tpm_crb_ffa->direct_msg_data.data3 = a1;
+-		tpm_crb_ffa->direct_msg_data.data4 = a2;
++		tpm_crb_ffa->direct_msg_data = (struct ffa_send_direct_data){
++			.data1 = func_id,
++			.data2 = a0,
++			.data3 = a1,
++		};
  
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- #define STATE_PTR	%rdi	/* 1st arg */
- #define DATA_PTR	%rsi	/* 2nd arg */
- #define NUM_BLKS	%rdx	/* 3rd arg */
- 
-@@ -109,11 +108,10 @@
-  * void sha256_ni_transform(struct sha256_block_state *state,
-  *			    const u8 *data, size_t nblocks);
-  */
- .text
- SYM_FUNC_START(sha256_ni_transform)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
- 
- 	shl		$6, NUM_BLKS		/*  convert to bytes */
- 	jz		.Ldone_hash
- 	add		DATA_PTR, NUM_BLKS	/* pointer to end of data */
- 
-diff --git a/lib/crypto/x86/sha256-ssse3-asm.S b/lib/crypto/x86/sha256-ssse3-asm.S
-index 407b30adcd37f..3b602b7d43fad 100644
---- a/lib/crypto/x86/sha256-ssse3-asm.S
-+++ b/lib/crypto/x86/sha256-ssse3-asm.S
-@@ -351,12 +351,10 @@ a = TMP_
- ## void sha256_transform_ssse3(struct sha256_block_state *state,
- ##			       const u8 *data, size_t nblocks);
- ########################################################################
- .text
- SYM_FUNC_START(sha256_transform_ssse3)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
--
- 	pushq   %rbx
- 	pushq   %r12
- 	pushq   %r13
- 	pushq   %r14
- 	pushq   %r15
-diff --git a/lib/crypto/x86/sha256.h b/lib/crypto/x86/sha256.h
-index 3b5456c222ba6..669bc06538b67 100644
---- a/lib/crypto/x86/sha256.h
-+++ b/lib/crypto/x86/sha256.h
-@@ -6,50 +6,52 @@
-  */
- #include <asm/fpu/api.h>
- #include <crypto/internal/simd.h>
- #include <linux/static_call.h>
- 
--asmlinkage void sha256_transform_ssse3(struct sha256_block_state *state,
--				       const u8 *data, size_t nblocks);
--asmlinkage void sha256_transform_avx(struct sha256_block_state *state,
--				     const u8 *data, size_t nblocks);
--asmlinkage void sha256_transform_rorx(struct sha256_block_state *state,
--				      const u8 *data, size_t nblocks);
--asmlinkage void sha256_ni_transform(struct sha256_block_state *state,
--				    const u8 *data, size_t nblocks);
-+DEFINE_STATIC_CALL(sha256_blocks_x86, sha256_blocks_generic);
- 
--static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_sha256_x86);
-+#define DEFINE_X86_SHA256_FN(c_fn, asm_fn)                                 \
-+	asmlinkage void asm_fn(struct sha256_block_state *state,           \
-+			       const u8 *data, size_t nblocks);            \
-+	static void c_fn(struct sha256_block_state *state, const u8 *data, \
-+			 size_t nblocks)                                   \
-+	{                                                                  \
-+		if (likely(crypto_simd_usable())) {                        \
-+			kernel_fpu_begin();                                \
-+			asm_fn(state, data, nblocks);                      \
-+			kernel_fpu_end();                                  \
-+		} else {                                                   \
-+			sha256_blocks_generic(state, data, nblocks);       \
-+		}                                                          \
-+	}
- 
--DEFINE_STATIC_CALL(sha256_blocks_x86, sha256_transform_ssse3);
-+DEFINE_X86_SHA256_FN(sha256_blocks_ssse3, sha256_transform_ssse3);
-+DEFINE_X86_SHA256_FN(sha256_blocks_avx, sha256_transform_avx);
-+DEFINE_X86_SHA256_FN(sha256_blocks_avx2, sha256_transform_rorx);
-+DEFINE_X86_SHA256_FN(sha256_blocks_ni, sha256_ni_transform);
- 
- static void sha256_blocks(struct sha256_block_state *state,
- 			  const u8 *data, size_t nblocks)
- {
--	if (static_branch_likely(&have_sha256_x86) && crypto_simd_usable()) {
--		kernel_fpu_begin();
--		static_call(sha256_blocks_x86)(state, data, nblocks);
--		kernel_fpu_end();
--	} else {
--		sha256_blocks_generic(state, data, nblocks);
--	}
-+	static_call(sha256_blocks_x86)(state, data, nblocks);
- }
- 
- #define sha256_mod_init_arch sha256_mod_init_arch
- static inline void sha256_mod_init_arch(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_SHA_NI)) {
--		static_call_update(sha256_blocks_x86, sha256_ni_transform);
-+		static_call_update(sha256_blocks_x86, sha256_blocks_ni);
- 	} else if (cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM,
- 				     NULL) &&
- 		   boot_cpu_has(X86_FEATURE_AVX)) {
- 		if (boot_cpu_has(X86_FEATURE_AVX2) &&
- 		    boot_cpu_has(X86_FEATURE_BMI2))
- 			static_call_update(sha256_blocks_x86,
--					   sha256_transform_rorx);
-+					   sha256_blocks_avx2);
- 		else
- 			static_call_update(sha256_blocks_x86,
--					   sha256_transform_avx);
--	} else if (!boot_cpu_has(X86_FEATURE_SSSE3)) {
--		return;
-+					   sha256_blocks_avx);
-+	} else if (boot_cpu_has(X86_FEATURE_SSSE3)) {
-+		static_call_update(sha256_blocks_x86, sha256_blocks_ssse3);
- 	}
--	static_branch_enable(&have_sha256_x86);
- }
--- 
-2.50.0
+ 		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+ 				&tpm_crb_ffa->direct_msg_data);
 
+I tested the compilation with:
+
+make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 tinyconfig && ./scripts/config --file .config -e CONFIG_KEYS -e CONFIG_TCG_TPM -e CONFIG_64BIT -e CONFIG_TRUSTED_KEYS -e CONFIG_TTY -e CONFIG_PROCFS -e CONFIG_SYSFS -e CONFIG_TCG_VTPM_PROXY -e CONFIG_EFI -e CONFIG_ACPI -e CONFIG_ARM_FFA_TRANSPORT -e CONFIG_TCG_CRB && yes '' | make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 oldconfig && make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 -j$(nproc)
+
+BR, Jarkko
