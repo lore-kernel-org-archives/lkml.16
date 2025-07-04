@@ -1,105 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA88514B08A;
-	Fri,  4 Jul 2025 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63A214B08A;
+	Fri,  4 Jul 2025 15:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642185; cv=none; b=AYK2f6VxbUIM6k5A+Q0jSVbaS5oR0T3zOiWjuiI5Pc1l34RGL9HYEcI1omSzi+qaNIkU1dkFeTpexEssrm11bTuLvKC5wrC92bSY5lV9tewvkH7PoEM2axXLW/VcAHp2hR7DsP3fhqk2FzAfjuVsS9oVQt9eL6v5FfkG5YKk9aI=
+	t=1751642246; cv=none; b=Saq8iAaRF9nTxERlSZTYYL8g+Ij36iMdpCL7WovxmFQKhHky/mj24Ot/8ZIqcPTt7PFPKbKHD9fQx+05KVCeU0YX+dpziPQRgGM6rynlC+3tq3UKHJ4h0VEvP9pVIEprxq6G+fNbYPvnYFATemjSrF8T8gPYJGg3G96Om6tDhGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642185; c=relaxed/simple;
-	bh=sjcSd1BF/qV33Upvx8GEXJdPeuWsAmcFKhQ/MGs3ZDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KwOuHZhe/YwOdVD5hdxic1ny5NxTbHaFSN+o+qsxr0s+D/r9jDfE+RKl7GE4s3lDsczXTkziFdU9J08Zc88ElU9amNwviWZpGQx+lUuE8ovbrjmERLRD/rm37pARwe4AG1yw1OUqWHdlU7BaXvMO6KucU+jIQlnKhQAP6QkQ3ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMPCTojR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751642246; c=relaxed/simple;
+	bh=n7LOfSsjXE2FVStfZuw4MIKye9uX/BCPm/v95WafbBg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IS1JNecey6xJDRPZM3NsnEzkFL3wwPROwZnSbli3O3R0liYcIo3lqcWcKYiZHnxask5xrPvmQS+g5mIoPlI1QJDyk8D0MJlxMEf6EWpSBaVzuo5/s2u3iNAmho4DJ3W4EKH0kU2i8zoHHsuDeg8sqJJaU9hwyFPR096WasRXttQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OjYSZsw8; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMPCTojR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93D1C4CEE3;
-	Fri,  4 Jul 2025 15:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751642185;
-	bh=sjcSd1BF/qV33Upvx8GEXJdPeuWsAmcFKhQ/MGs3ZDk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vMPCTojR8QnMaxoc92m1q9WMlclXlAIL2PM/Md0B2KXPAjtKzyx10u2Q8OQYXbmdd
-	 2m2LLpZWUdt3WNZ+toh6GWBxc+7MSxcAn/i8kWkQQvsGPSlg6sDJhqGFL+EpvBM2Mi
-	 UEt/Yk284wdX8dBM/EEobaEnt/XADxWokzSFL+F24c7r8XJ6rQCoNGjInD5cyc6O7x
-	 bto/CMAMbVqarRJ5gRCJjSHOqEwjAk1LsZbnk+bmh9KV8VRAiWhjWXeKp1Y0VBHYGs
-	 jFVvYSpkGPutxl8MXJNYRyu7MxF9eCTtn0JlJMD1oIx/FHe50dPt997zGx3YsRPU2h
-	 f3CzPwIvjWnzw==
-Message-ID: <d6b94d4f-4f3f-4ca2-847f-7af7e94b2221@kernel.org>
-Date: Fri, 4 Jul 2025 17:16:20 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OjYSZsw8"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7BC48444D5;
+	Fri,  4 Jul 2025 15:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751642235;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vPDsl7h2Bce2nbFPpZwQgcXwb0DMKbxlxKdGJMWDlk=;
+	b=OjYSZsw8Bn/lPEEuZ/zT/ZWBMzACf1NkagEE6r3RmYhuXncRqUKcozz8UbibxN8M+UM53w
+	5KCH3FY+8+bYmUYW8qJTughgWJ+1qgywUibS0SjsnHWskADrYiNSCOnjiLt7hzAtHvuLb9
+	P+buEXUFLCp+TU4+Wtd2PWVTE+8gCZdWzSaI8WTQAjlbHr83pVLyYctwf7z/LVEK7pMhIX
+	Pz2sArh5UPnXVepkpVIJtW0zCYkqV++Ds+VTdCkP0Lo54B2E8UfDpSJu0Ces4HB22tZQvH
+	RBenF7bqjxNeDa3klct1EFjGEI+SHFRnEtgsVaJHgCMFKDJKR6oofzU3VD+khQ==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
+ =?utf-8?Q?=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: disable MMID if GINVT is not usable
+In-Reply-To: <aGUhUM1y-ZLGWZg-@alpha.franken.de>
+References: <20250625-mmid_disable_no_ginv_on_noc-v1-1-38a3902607a7@bootlin.com>
+ <808e21d2-1212-4358-9ba6-29f9d097be8a@app.fastmail.com>
+ <aGUhUM1y-ZLGWZg-@alpha.franken.de>
+Date: Fri, 04 Jul 2025 17:17:14 +0200
+Message-ID: <87h5zsgf45.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 1/2] dt-bindings: leds: pwm: add enable-gpios property
-To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>, lee@kernel.org,
- pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: bsp-development.geo@leica-geosystems.com
-References: <20250704104338.46546-1-Qing-wu.Li@leica-geosystems.com.cn>
- <20250704104338.46546-2-Qing-wu.Li@leica-geosystems.com.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250704104338.46546-2-Qing-wu.Li@leica-geosystems.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeehtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffffkgggtgfesthhqredttddtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefghfegvdehgfdtjedvtefhvdeikefgteeuhfeukeettefgvdeuueettddtkeegveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegurgdtugemjedtheehmegutdduvgemudegkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegurgdtugemjedtheehmegutdduvgemudegkeehpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtohepvhhlrggui
+ hhmihhrrdhkohhnughrrghtihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtrgiffhhikhdrsggrhihouhhksehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: gregory.clement@bootlin.com
 
-On 04/07/2025 12:43, LI Qingwu wrote:
-> Some PWM LED driver chips like TPS92380 and LT3743 require a separate
-> enable signal in addition to PWM control. Add this property to allow
-> device trees to specify such GPIO, which will be controlled automatically
-> by the driver based on the LED brightness state.
-> 
+Thomas Bogendoerfer <tsbogend@alpha.franken.de> writes:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> On Wed, Jun 25, 2025 at 03:44:00PM +0100, Jiaxun Yang wrote:
+>> =E5=9C=A82025=E5=B9=B46=E6=9C=8825=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=
+=E5=8D=882:27=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+>>=20
+>> Hi Gregory,
+>>=20
+>> > If System-level Interconnect (aka Network on Chip) does not support
+>> > the global invalidation, then MMID feature is not usable. Indeed the
+>> > current implementation of MMID relies on the GINV* instruction.
+>>=20
+>> Yes, it is the case if the NoC IP can't handle AMBA ACE DVM requests.
+>>=20
+>> >
+>> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> > ---
+>> >  arch/mips/Kconfig                    | 6 ++++++
+>> >  arch/mips/include/asm/cpu-features.h | 5 ++++-
+>> >  arch/mips/mobileye/Kconfig           | 2 ++
+>> >  3 files changed, 12 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>> > index=20
+>> > 1e48184ecf1ec8e29c0a25de6452ece5da835e30..05ce008459b89f03fa71d9442960=
+7feb9d06526f=20
+>> > 100644
+>> > --- a/arch/mips/Kconfig
+>> > +++ b/arch/mips/Kconfig
+>> > @@ -2575,6 +2575,12 @@ config WAR_R10000_LLSC
+>> >  config WAR_MIPS34K_MISSED_ITLB
+>> >  	bool
+>> >=20
+>> > +# Some I6500 based SoC do not support the global invalidation on their
+>> > +# System-level Interconnect (aka Network on Chip), this have an
+>> > +# influence on the MMID support.
+>> > +config GINVT_UNSUPPORTED_NOC
+>> > +	bool
+>> > +
+>>=20
+>> I believe this should be a DeviceTree property of CM node instead of Kco=
+nfig
+>> hack.
+>
+> Either that or by a runtime check, if possible.
 
-Best regards,
-Krzysztof
+Unfortunately we can't detect at runtime this (lack of) feature on the
+NoC, so it has to be a device tree property.
+
+Gregory
+
+>
+> Thomas.
+>
+> --=20
+> Crap can work. Given enough thrust pigs will fly, but it's not necessaril=
+y a
+> good idea.                                                [ RFC1925, 2.3 ]
+
+--=20
+Gr=C3=A9gory CLEMENT, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
