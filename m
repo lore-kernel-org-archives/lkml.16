@@ -1,159 +1,180 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA45D285CAF;
-	Fri,  4 Jul 2025 12:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DF92D94A5;
+	Fri,  4 Jul 2025 12:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633255; cv=none; b=BXVjtP5akRnGKI4GS5YzE8c9vQz9Z8U7jb96PZcBOAsmf7JgL8kdZThDy5Qkc223KLGlrLdhvWlwFXBABiYkQZ+HQddRWFoWl5nv99Ihi5fumtUjG2q9NVhWxLwXIx6kT/QkUQYImdtiWywbCez3rai7UjtI8EwsuQdFj94rFoI=
+	t=1751633272; cv=none; b=ph5cDje5gAPZvwpNatRaJ6bgWKRlfpdI9rOUuvIIBzbkdk4XqpOeaYcDG7M8slnzcZaYGthknw4/N2/dxcoEsQOJf09kO2oxw2sYOuO98LldpLG+BjrrbuK6gTnT5mPmig9pBYXTCUYpobLbHmZf2jyhA+iMm9meUfyrWPjQmpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633255; c=relaxed/simple;
-	bh=6jP9D9616ela9JZEfLO4DfalddDJ+mCTmT8T39jD33Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gKcpZ2ANUNS7c9l/W9E84nU/r5XBfjHGJ+tMv1ObSV/hlLDp51o9H5f5CAKddCvxwKvV1NLoEuGPx3hCsUxaadUcQPgpSdTatP9Jxu5j10rEGLF0ZQqfxpyCwFYJhDw1FCpeLQsCavckplFX+pyywOypjRGCgpX+cW1eo30wnAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+UmKBcB; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+UmKBcB"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9c3d752a8so561908137.2;
-        Fri, 04 Jul 2025 05:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751633252; x=1752238052; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qmkC/J54lBcE9vTJQ/eqQ53eT1txKtJeKwM2czVAqok=;
-        b=j+UmKBcBUi42r0flEc3G6XD/wE5f3bnjtJisy+6FICT7O/z2wh1SzoJGvIxyTXpenv
-         ikiw88imqDBIPXb9pj+wtVj4wkqy9ID4H6j5RIFGg6mEGHlW/XgHPELwVb8uDr3BwxQF
-         BPwybF6qadp5A7bGutuszeTzTR1maDOenweog0yF2EQyceS/iCyJw3prWfCrxIWbkmkH
-         BhO6G+1ZNmDp6bLoXqlfMsIrAcFZPQPF9ZaW2zedrWcwxkbu0zzHQVqF+CJpFzYhnGiy
-         NkWqTNV22K/xZYMH+++eJH80Jvzs68qDjbgFEw8JpPKNFVyczSP4Q6L8PbFl5Mw+wDGH
-         juDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633252; x=1752238052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qmkC/J54lBcE9vTJQ/eqQ53eT1txKtJeKwM2czVAqok=;
-        b=OTep7z8SGw5CtT+VvO3Xu99u5Qvp0DtEGVejWatWfehkFQJnGAhIQN4RNBwhKgYEHL
-         ILa8gwIsAE9uTugjfw3GPo0+Mj3EjdO7/S+ujoKmuVAJnI1k2ZqyUS5tnbUdi4T6TRyJ
-         2+bLdtGU9lBIqaWkTThRubuW2uyI9ZcgD9CQ0nSUIOBQNPOG+lJcTVcPH+In/lgs71AJ
-         ri+c+iLFGfsasV6zbPNH/Oc/p1Rp89eOkr7mJfriTFIFfywa+Mhq0kDbCfWR2CCX8qPP
-         52fXaQwS5lyzetuhdOHTwsPQfR3RAHzXoyeEdZazV9Ux56jeNJJ1GccrswPrZ5B0AbUb
-         z9hA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8vcuM/5khRwSeT7nHSrlvYT3+QeelGtwoiYwA1QfxnsdokWmwQGiRf4Fone2BerLaArPd2vpvl2SgwCI=@vger.kernel.org, AJvYcCX4OKongHI9LX3LSU3cqS/N7/WD+oofzaM901afS88nI8AZY3ttmGUJ4BD/EgpZTyD6yHZUHX/1N753pJuLyPaCsw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPm7Bl0OAjuO7kcN9m4lsnTaJiREmLiunNyszE/1eLdVBRqvls
-	VfPkWgGvCEswgVYlWA8gqqpKqr5JSGTmKWg6IdN45SZyeNW6tkBjYZpE+FDf5bUwln2OsRZf3Un
-	kcTs7auWamHpN8aBOC4mEjbDVUZSQtDw=
-X-Gm-Gg: ASbGncsjcse2+L68p03KNclKijoRrYgunjNi3aO5myA+TZYDNuQgBXcSda3hbIWJjqF
-	ttjJKYOWQHoR23J4xjmJPfsjeT8ikUE6+BXSIJm0xiQYUigWQ3jOMmtzSViBm53thr8IgUjR7zZ
-	q7WBQonKxm1ySnrYJ47ckA83EFBkV30oTTXGLY8oY3ut38A/FuyeM0Mg==
-X-Google-Smtp-Source: AGHT+IHawTsrx4WDbFlRPlxlZcwpJ9SQEb2goe8AMjagYDS4e6sLzohPm0ltLUpjuFrfN802O/n2TCqX5jwiMAcEvq0=
-X-Received: by 2002:a05:6102:1613:b0:4e7:7146:a9e with SMTP id
- ada2fe7eead31-4f2f1785dcdmr1076295137.6.1751633252563; Fri, 04 Jul 2025
- 05:47:32 -0700 (PDT)
+	s=arc-20240116; t=1751633272; c=relaxed/simple;
+	bh=q3W6qKOAkT7lw4zg9GWf0eKhGBj+FEgS0+PDTTbEsHg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WBbruVr604YLc14DsZ/E7cd6KWKFnNZ+GmmhN8CvgSI+tzeAZJnLpAPuHo8uboB6vfO6E1div/1q7qy1sNfFeHVOzVRGn2VPfHI7z3uTMUySjrnte+tpa5QMRAGwHj/oGvXG2J4qNTniA6H5PASCTcx4AP7RiHzNCkG1fP5BV3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYYLV23QGz6L5Q0;
+	Fri,  4 Jul 2025 20:47:14 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 83D0B1402E9;
+	Fri,  4 Jul 2025 20:47:46 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
+ 2025 14:47:45 +0200
+Date: Fri, 4 Jul 2025 13:47:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: John Groves <John@Groves.net>
+CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
+	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
+ . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
+ Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
+ Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 04/18] dev_dax_iomap: Add dax_operations for use by
+ fs-dax on devdax
+Message-ID: <20250704134744.00006bcd@huawei.com>
+In-Reply-To: <20250703185032.46568-5-john@groves.net>
+References: <20250703185032.46568-1-john@groves.net>
+	<20250703185032.46568-5-john@groves.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
- <20250704102007.6354ce9f@pumpkin> <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
-In-Reply-To: <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
-From: Usman Akinyemi <usmanakinyemi202@gmail.com>
-Date: Fri, 4 Jul 2025 18:17:20 +0530
-X-Gm-Features: Ac12FXzG0zByMCB0ae0k2YgqZqwpOgNB1rpA4c239EAnHokHVO5eYPlU3-XxRjA
-Message-ID: <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
-To: James Clark <james.clark@linaro.org>
-Cc: David Laight <david.laight.linux@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Jul 4, 2025 at 4:40=E2=80=AFPM James Clark <james.clark@linaro.org>=
- wrote:
->
->
->
-> On 04/07/2025 10:20 am, David Laight wrote:
-> > On Thu, 19 Jun 2025 03:28:43 +0530
-> > Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
-> >
-> >> strncpy() is unsafe for fixed-size binary data as
-> >> it may not NUL-terminate and is deprecated for such
->
-> But memcpy doesn't null terminate after the 4 chars either so I don't
-> think that's a good justification. Surely you don't want null
-> termination, because char *vendor is supposed to be a single string
-> without extra nulls in the middle. It specifically adds a null at the
-> end of the function.
->
-> >> usage. Since we're copying raw CPUID register values,
-> >> memcpy() is the correct and safe choice.
-> >>
->
-> There should be a fixes: tag here if it actually fixes something. But in
-> this use case strncpy seems to behave identically to memcpy so I don't
-> think we should change it. Except maybe if b,c,d have NULLs in them then
-> strncpy will give you uninitialized parts where memcpy won't. But that's
-> not mentioned in the commit message and presumably it doesn't happen?
+On Thu,  3 Jul 2025 13:50:18 -0500
+John Groves <John@Groves.net> wrote:
 
-Hi James,
+> Notes about this commit:
+> 
+> * These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
+> 
+> * dev_dax_direct_access() is returns the hpa, pfn and kva. The kva was
+>   newly stored as dev_dax->virt_addr by dev_dax_probe().
+> 
+> * The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
+>   for read/write (dax_iomap_rw())
+> 
+> * dev_dax_recovery_write() and dev_dax_zero_page_range() have not been
+>   tested yet. I'm looking for suggestions as to how to test those.
+> 
+> Signed-off-by: John Groves <john@groves.net>
+A few trivial things noticed whilst reading through.
 
-Thanks for the review.
+> ---
+>  drivers/dax/bus.c | 120 ++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 115 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 9d9a4ae7bbc0..61a8d1b3c07a 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -7,6 +7,10 @@
+>  #include <linux/slab.h>
+>  #include <linux/dax.h>
+>  #include <linux/io.h>
+> +#include <linux/backing-dev.h>
+> +#include <linux/pfn_t.h>
+> +#include <linux/range.h>
+> +#include <linux/uio.h>
+>  #include "dax-private.h"
+>  #include "bus.h"
+>  
+> @@ -1441,6 +1445,105 @@ __weak phys_addr_t dax_pgoff_to_phys(struct dev_dax *dev_dax, pgoff_t pgoff,
+>  }
+>  EXPORT_SYMBOL_GPL(dax_pgoff_to_phys);
+>  
+> +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
+> +
+> +static void write_dax(void *pmem_addr, struct page *page,
+> +		unsigned int off, unsigned int len)
+> +{
+> +	unsigned int chunk;
+> +	void *mem;
 
-What you said is true, strncpy and memcpy seem to behave identically.
+I'd move these two into the loop - similar to what you have
+in other cases with more local scope.
 
-I should have rephrased the commit message in a different way.
-While strncpy seems to work here, firstly, it is an interface that has
-been deprecated.
-See -> https://github.com/KSPP/linux/issues/90.
-Also, memcpy is semantically correct for copying raw data compared to
-strncpy which is for string.
+> +
+> +	while (len) {
+> +		mem = kmap_local_page(page);
+> +		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
+> +		memcpy_flushcache(pmem_addr, mem + off, chunk);
+> +		kunmap_local(mem);
+> +		len -= chunk;
+> +		off = 0;
+> +		page++;
+> +		pmem_addr += chunk;
+> +	}
+> +}
+> +
+> +static long __dev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
+> +			long nr_pages, enum dax_access_mode mode, void **kaddr,
+> +			pfn_t *pfn)
+> +{
+> +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
+> +	size_t size = nr_pages << PAGE_SHIFT;
+> +	size_t offset = pgoff << PAGE_SHIFT;
+> +	void *virt_addr = dev_dax->virt_addr + offset;
+> +	u64 flags = PFN_DEV|PFN_MAP;
 
-I am not sure if the b, c, d can have a null byte, I think using the
-semantically correct function (memcpy) improves the robustness even in
-cases where b, c, d have null byte.
+spaces around the |
 
-What do you think?
+Though given it's in just one place, just put these inline next
+to the question...
 
-Thank you.
->
-> >> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
-> >> ---
-> >>   tools/perf/arch/x86/util/header.c | 6 +++---
-> >>   1 file changed, 3 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/u=
-til/header.c
-> >> index 412977f8aa83..43ba55627817 100644
-> >> --- a/tools/perf/arch/x86/util/header.c
-> >> +++ b/tools/perf/arch/x86/util/header.c
-> >> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
-> >>      unsigned int b, c, d;
-> >>
-> >>      cpuid(0, 0, lvl, &b, &c, &d);
-> >> -    strncpy(&vendor[0], (char *)(&b), 4);
-> >> -    strncpy(&vendor[4], (char *)(&d), 4);
-> >> -    strncpy(&vendor[8], (char *)(&c), 4);
-> >> +    memcpy(&vendor[0], (char *)(&b), 4);
-> >> +    memcpy(&vendor[4], (char *)(&d), 4);
-> >> +    memcpy(&vendor[8], (char *)(&c), 4);
-> >
-> > Why not:
-> >       cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(v=
-endor + 4));
-> >
-> >
-> >>      vendor[12] =3D '\0';
-> >>   }
-> >>
-> >
->
+
+> +	phys_addr_t phys;
+> +	pfn_t local_pfn;
+> +	size_t dax_size;
+> +
+> +	WARN_ON(!dev_dax->virt_addr);
+> +
+> +	if (down_read_interruptible(&dax_dev_rwsem))
+> +		return 0; /* no valid data since we were killed */
+> +	dax_size = dev_dax_size(dev_dax);
+> +	up_read(&dax_dev_rwsem);
+> +
+> +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
+> +
+> +	if (kaddr)
+> +		*kaddr = virt_addr;
+> +
+> +	local_pfn = phys_to_pfn_t(phys, flags); /* are flags correct? */
+> +	if (pfn)
+> +		*pfn = local_pfn;
+> +
+> +	/* This the valid size at the specified address */
+> +	return PHYS_PFN(min_t(size_t, size, dax_size - offset));
+> +}
+
+> +static size_t dev_dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgoff,
+> +		void *addr, size_t bytes, struct iov_iter *i)
+> +{
+> +	size_t off;
+> +
+> +	off = offset_in_page(addr);
+
+Unused.
+> +
+> +	return _copy_from_iter_flushcache(addr, bytes, i);
+> +}
+
+
