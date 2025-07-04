@@ -1,263 +1,72 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF90C30E857;
-	Fri,  4 Jul 2025 16:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAAA7E0E8
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751645461; cv=none; b=fB1j/z9BCd6qjF/v1CM9hb77hn8oRgQb5bnCTF4RpkYP+TF+zYVkN61C+RqfXME78jWn2GzDXRU/ZhaVBWrLAYcJVbAmyyZ3pu8+UhYZoYthLS1wjHhxpFrl0VU/lG9wbTl1xFnAan2IeuU75CwAvU93DH89hQ3969zl+gaFX3o=
+	t=1751645526; cv=none; b=ePDurBezFGlsAxftM+euIg/+xCNCQm9/anWlaH5YiiETB5CCRynh7TAUSCSbK4wnXIrVzSnzVxCNahMMJb9hg38S1z6Sj4LP11KOJIWWN/WClxJ++Ym2QQ8Xy8++RA2mQ7YX+9l+S6pcSwZIosfU3KI27Dumd0cHmrpH4Baa9bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751645461; c=relaxed/simple;
-	bh=cwdZtGz3IXQ1EG/p34K3KVA9kUdd0ZAHJagpVOIanHA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VGYHwMPGFZl0og21crruIXT+By+fjiuPYm+CmhFOK1MHcaJm/uv5vMRHNuyaYSNFfCnzL1XAbSakxvzVqOqmP8GoPmIwq5HeXFK/YJHiYOqnAnW/iabKzyiYqQBckGrv67/gC/ArMsGa4LaGvyWsoNJWjY697DK3giIQ0csmnvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2CTRHV3; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2CTRHV3"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae0bf1616b9so20265366b.0;
-        Fri, 04 Jul 2025 09:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751645458; x=1752250258; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TWKv6PM/BcPQ/i8arO/1LhjBpgoq9M2qMlX7Y0R2Fpg=;
-        b=L2CTRHV3nvPBMngPfEFbjLg1w6ft5rG2kAth2sR/RMVypRS1Q8UNj7Wwqw85zQNkn2
-         0/gWoXyRxKG+SHIM+edn29FaCW94r+zsb4L7OZHHgYx3G+7zMVd8bQab2kcNERZUjD+U
-         tMpI2EW7o33jaRyMUBg7Pn/VHjqq9rdyDkaWSZR/th0OTOCPMm4lbX88VDwkDeg3Bdke
-         /OyNOASVZo2B+ZEZXUOswfDssvQlPrzha16gJWeEsXLGrzfX8wfFISb4JHvTlEw3u4g7
-         aOqESNeB0wU6y/IZpa2IlaNcId3LMOLGbkCx99ANJYxufzuCnYLa3yNxiBJL6oxtoipS
-         QIiA==
+	s=arc-20240116; t=1751645526; c=relaxed/simple;
+	bh=gn02xCQXl4IG78/9l2sZC7m+p33l4yl3v+5AK76yikA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tvUzKfN69fzotkyX5iDv7LVWMs9dYq96GGNETN0HCD/Ce/DnU8cXJimq2hD1ybBVD8UE4NfWbcUzTFqc7+SISknrH36Xdpxub0LM6jY+9aR6Davyydxp7CuUuez9q6jNhxwiEWyiN6Y05J4sQ3idQzVHKdUTS67syctjmQvnzOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3e059add15eso12870225ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:12:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751645458; x=1752250258;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TWKv6PM/BcPQ/i8arO/1LhjBpgoq9M2qMlX7Y0R2Fpg=;
-        b=gWb338Q8qsUO/Z9Fy9CPzH+ALrK4gCv37viNFmI6xTcWe0PYjRVRHlecWX5oimg7tW
-         qdqhqlTcNd+xsQChVT828WEFpCCn5vfL+NWCpXVcSajXwtcz/kIFsSQMcaSQC7LMQFiX
-         YsvtlT+aRKBP/+iniSms/DUgqItWuGwBiuuU48uYHnGvXnFiuGFF9JZHaY0m2VZbn0kz
-         t+PzaDcs+wMRHLAhRka5AkD31xLMOxQonexkYstO00yr/XoPuLk8bVav69/yy0fcMI6D
-         TKBSJ+CNj0FCfyQJynrUQK/2rRRQjyrKFTFp2N06MI1nPMr3Fw6fWnNsH7S4fKB11KP4
-         W9qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9KFgDd+hWFPem9wgk+VjgjpfLdlTu81D4kZe8IOprGWIcewOah2RjOxDd8Lh0lUYSfbjEnkYXxplDKq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYky1WyWjDjSv+TX4cCsXoLAJy+jPiBrWcA/dCxo3agQAdoEVE
-	xISW70znWGtIb8UGkW7zzSMrrfD+m1+vbZ3aQW5AyjdVHJo1bWhhYYAo
-X-Gm-Gg: ASbGncuvssHQ51q7ZtqT0syfPePvAieWphXWgAOMFuNmwX1KByaOBRLZm7q7FtVx+FN
-	N+o68md989VXA8KreWCkUDVAi6wyB+MSkBsLsVFzidRHXk11crf4xmshIo6zbpMw2uDAU1lYtAI
-	9cdwZyW8Z+txXrvllXOLlSRUk3XdBel6z+2kZSv6CNTnN6+usmN5mNhnYvbenDaZl+tTRiXEO3v
-	bgK6n01Z/Eogi4SxNXpVBsH88ayTAkJHVp5Rb6lyQKWK3rd7lPFu3iQGFwloiAh7nH0XSZH1sse
-	qnsnCPFgTWzC7lzp0n11fhmhIAFXr9HhrDFkKkIWvavW106IUcsMPzqNFVdJ/6zGsOgwax8GQlW
-	07LVq+bpeJhZjx61SZXi2GO/qjWVR2bdn
-X-Google-Smtp-Source: AGHT+IEi7/w7Pg0qVqgIrY+90Z1GOtJ0vUjMDQm+fZE47PMuaudthmL0Fjysm83XElDu8wKctqr5kA==
-X-Received: by 2002:a17:906:f583:b0:ade:40ed:9f3e with SMTP id a640c23a62f3a-ae3fbe6027amr111119666b.0.1751645457649;
-        Fri, 04 Jul 2025 09:10:57 -0700 (PDT)
-Received: from localhost.localdomain ([41.37.222.172])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b04d30sm192940066b.133.2025.07.04.09.10.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:10:57 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-To: hansg@kernel.org,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	andy@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	dan.carpenter@linaro.org,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Subject: [PATCH v3] staging: media: atomisp: Remove custom sysfs attributes from atomisp_drvfs.c
-Date: Fri,  4 Jul 2025 19:10:51 +0300
-Message-Id: <20250704161051.16733-1-abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1751645524; x=1752250324;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WDyDKeyXTO5SE0KVUU7cIDMX3Wi27uf2RCLljSeQ2bM=;
+        b=ZMvIuZXuatGrTqkmali6lXAVVoB8CCNrLa8E4IUmbHm+VVDceTDCDeslUtQXc91ffK
+         EjJVCnbI7X3oe07I6wXVDfJjjOHPuQsceG++RoFZ6idF7WdXEHa2IuAyHhTX/StO9JE2
+         aRsbZYH9lRfN8dOzKBwqk0YMEaJDsOsRmSAxbFUCeftQ83JsZ5zEEnzK/EZ8pKqUxk51
+         jLaBlz56yWcyFYaapSMC5Tt/ppC1dexsE9CvHjVEsRbdN07rWHf4hWl3ljHo99U5MVIw
+         BX5Msp2srznFHX+J/zcpFWdLJm+mA1GrDUtffOq7nsRKdE5HHWeupTX3YctMoW9z7rIz
+         Yo0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXVsbu3uX6c+tfgeLHBc2VWDrosa9u1Iwd8/l35hNnXDuQrM1C0CsWyfPjCUpBr11RjxVI8JvFLajgE41M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHqU1Mpq9j1CQvqAFIj9vKsOjeLu84LbB4sVARduHl19s7btEu
+	+P0pC2A0iuK8nP0Lcr7GHoBsx00/i1zDxj+5TNuTq+3JpN1Lr6Dh2Dkk5F3VtARyhv9dJxf8cX6
+	BdZkupire5VvR4K5hj4z1X9n3dxSxo1aTrRmiwgv+EJTtL14EkMzXJ/yeu2w=
+X-Google-Smtp-Source: AGHT+IE/8wGbf0OJYdx/c8NkEHe/l5t2FR3f3Bv1pat+2xxg8RikNmGu6Xdmftx9KMCSx4nLHxJb9e/LnEt6+TrEQsYH4BvmU9rV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2386:b0:3df:3ad6:bfb2 with SMTP id
+ e9e14a558f8ab-3e1355b1479mr29894345ab.17.1751645523910; Fri, 04 Jul 2025
+ 09:12:03 -0700 (PDT)
+Date: Fri, 04 Jul 2025 09:12:03 -0700
+In-Reply-To: <20250704140331.2436-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6867fd53.a70a0220.29cf51.0022.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] [usb?] KASAN: slab-use-after-free Read in btusb_disconnect
+From: syzbot <syzbot+2fc81b50a4f8263a159b@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Continue the cleanup of the AtomISP driver as discussed with Hans and Andy
-in [1].
+Hello,
 
-Tackle TODO item: "Remove custom sysfs files created by atomisp_drvfs.c":
-- Remove the sysfs attributes `dbglvl`, `dbgfun`, and `dbgopt`.
-- Delete their associated show/store handler functions.
-- Remove the corresponding attribute group definitions.
-- Keep `dbg_attr_groups[]` as an empty array to preserve compatibility.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Link: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org/ [1]
-Suggested-by: Hans de Goede <hansg@kernel.org>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
----
-v3:
-- fix style warning
-v2:
-- modify the reference link line.
+Reported-by: syzbot+2fc81b50a4f8263a159b@syzkaller.appspotmail.com
+Tested-by: syzbot+2fc81b50a4f8263a159b@syzkaller.appspotmail.com
 
- .../staging/media/atomisp/pci/atomisp_drvfs.c | 138 ------------------
- 1 file changed, 138 deletions(-)
+Tested on:
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-index 31c82c3c0d33..c25fd3ff003d 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-@@ -1,9 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Support for atomisp driver sysfs interface
-- *
-- * Copyright (c) 2014 Intel Corporation. All Rights Reserved.
-- */
+commit:         cf16f408 usb: core: config: Prevent OOB read in SS end..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f67ebc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=145112f03d31dd31
+dashboard link: https://syzkaller.appspot.com/bug?extid=2fc81b50a4f8263a159b
+compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=118a4582580000
 
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -16,140 +11,7 @@
- #include "hmm/hmm.h"
- #include "ia_css_debug.h"
-
--#define OPTION_BIN_LIST			BIT(0)
--#define OPTION_BIN_RUN			BIT(1)
--#define OPTION_VALID			(OPTION_BIN_LIST | OPTION_BIN_RUN)
--
--/*
-- * dbgopt: iunit debug option:
-- *        bit 0: binary list
-- *        bit 1: running binary
-- *        bit 2: memory statistic
-- */
--static unsigned int dbgopt = OPTION_BIN_LIST;
--
--static inline int iunit_dump_dbgopt(struct atomisp_device *isp,
--				    unsigned int opt)
--{
--	int ret = 0;
--
--	if (opt & OPTION_VALID) {
--		if (opt & OPTION_BIN_LIST) {
--			ret = atomisp_css_dump_blob_infor(isp);
--			if (ret) {
--				dev_err(isp->dev, "%s dump blob infor err[ret:%d]\n",
--					__func__, ret);
--				goto opt_err;
--			}
--		}
--
--		if (opt & OPTION_BIN_RUN) {
--			if (isp->asd.streaming) {
--				atomisp_css_dump_sp_raw_copy_linecount(true);
--				atomisp_css_debug_dump_isp_binary();
--			} else {
--				ret = -EPERM;
--				dev_err(isp->dev, "%s dump running bin err[ret:%d]\n",
--					__func__, ret);
--				goto opt_err;
--			}
--		}
--	} else {
--		ret = -EINVAL;
--		dev_err(isp->dev, "%s dump nothing[ret=%d]\n", __func__, ret);
--	}
--
--opt_err:
--	return ret;
--}
--
--static ssize_t dbglvl_show(struct device *dev, struct device_attribute *attr,
--			   char *buf)
--{
--	unsigned int dbglvl = ia_css_debug_get_dtrace_level();
--
--	return sysfs_emit(buf, "dtrace level:%u\n", dbglvl);
--}
--
--static ssize_t dbglvl_store(struct device *dev, struct device_attribute *attr,
--			    const char *buf, size_t size)
--{
--	unsigned int dbglvl;
--	int ret;
--
--	ret = kstrtouint(buf, 10, &dbglvl);
--	if (ret)
--		return ret;
--
--	if (dbglvl < 1 || dbglvl > 9)
--		return -ERANGE;
--
--	ia_css_debug_set_dtrace_level(dbglvl);
--	return size;
--}
--static DEVICE_ATTR_RW(dbglvl);
--
--static ssize_t dbgfun_show(struct device *dev, struct device_attribute *attr,
--			   char *buf)
--{
--	unsigned int dbgfun = atomisp_get_css_dbgfunc();
--
--	return sysfs_emit(buf, "dbgfun opt:%u\n", dbgfun);
--}
--
--static ssize_t dbgfun_store(struct device *dev, struct device_attribute *attr,
--			    const char *buf, size_t size)
--{
--	struct atomisp_device *isp = dev_get_drvdata(dev);
--	unsigned int opt;
--	int ret;
--
--	ret = kstrtouint(buf, 10, &opt);
--	if (ret)
--		return ret;
--
--	return atomisp_set_css_dbgfunc(isp, opt);
--}
--static DEVICE_ATTR_RW(dbgfun);
--
--static ssize_t dbgopt_show(struct device *dev, struct device_attribute *attr,
--			   char *buf)
--{
--	return sysfs_emit(buf, "option:0x%x\n", dbgopt);
--}
--
--static ssize_t dbgopt_store(struct device *dev, struct device_attribute *attr,
--			    const char *buf, size_t size)
--{
--	struct atomisp_device *isp = dev_get_drvdata(dev);
--	unsigned int opt;
--	int ret;
--
--	ret = kstrtouint(buf, 10, &opt);
--	if (ret)
--		return ret;
--
--	dbgopt = opt;
--	ret = iunit_dump_dbgopt(isp, dbgopt);
--	if (ret)
--		return ret;
--
--	return size;
--}
--static DEVICE_ATTR_RW(dbgopt);
--
--static struct attribute *dbg_attrs[] = {
--	&dev_attr_dbglvl.attr,
--	&dev_attr_dbgfun.attr,
--	&dev_attr_dbgopt.attr,
--	NULL
--};
--
--static const struct attribute_group dbg_attr_group = {
--	.attrs = dbg_attrs,
--};
-
- const struct attribute_group *dbg_attr_groups[] = {
--	&dbg_attr_group,
- 	NULL
- };
---
-2.25.1
-
+Note: testing is done by a robot and is best-effort only.
