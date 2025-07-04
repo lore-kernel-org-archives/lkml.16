@@ -1,76 +1,140 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FA62F234E;
-	Fri,  4 Jul 2025 10:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A502F2705
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625172; cv=none; b=PQyGlIANMWRTj0GRLghj655/feK+2Zqf/o+LS1vc71S+fp/5hIJIc6EQsRRtMaeC/YR5C5sPc0moJZAeKPvc5grxj4GWIg3qNga5wZw2ChMbaGCY4HwyfnhvrRXS2ic0NyDADrH7ypGnY1473b96TQsp6Em66zSfvqvnT3Dzaug=
+	t=1751625244; cv=none; b=NybarJk2dixkQ2RYN8dsuE7V22vcevpjM006NU+D394QEjuVYyL5yRrR4LVHZNBKRKFBUCMjBugCgUh2r4MTE+QKwFhjhzl44XYXZMJuYiH+VVzdP8GC8C69p4C8J2a0tLAPEhoU6EM+cTs9GMJQr1itvNvejvA7BgQ2y6nPYo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625172; c=relaxed/simple;
-	bh=X/yNWlWB/y2ACN5oLtHF/++ScOovYYJezLzNbWoUL8s=;
+	s=arc-20240116; t=1751625244; c=relaxed/simple;
+	bh=s9H3urHY7KsjMSrb7cdjXRt0vO3W3YR4v83fB4ZzWO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lWVGrPQGJDVPSp27uO81Kq/nBN2oYTwin+HeniYYlA5KIcBH4dfrUcmsLSapx4axcfjPYFRbYbnK77maaNCoOFNYspITOdyDwW/N+tJ+T/wq1MTrxmev18ueVwr2WSxhZnEI6+BCxdkKTEeJ7zaLn81mmlCwwaswS828XpSBjNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DN5WXByJ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ep6pxrtaiE4BDf0+X0GhejJtpO6QrvFPSMMegOhAOr1/zLpc13uDYcDhaqzFPee+MPBGe0vxiFsq3Erhlw7XvM735O56HLCsnLWR3B259Z8Zh/mYCVKKO3nSJ0U33FKPOSEE1DA2U+XixEKOjMdzgLuwUBz1YPq/Wl4YPZfL6Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OJ6fFCFn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DN5WXByJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=e6rhXVAqDgkrV1yyz4a83LxOWl/gSNLKryLQbSZ9wsA=; b=DN5WXByJ6Fib4xlyf4PAVST/6B
-	AtGqIjuBo+P9FgNiMdm6t5xgZKvCJLV9rDB/fOmxeC8g+OWI+3GtA75ycViI7c6zMHivIMsf7Gfjb
-	xtLDxnHOyRknjPNH6H+GZ0McZjB1nDqn9+YqtAukDYmBRJYo+YyT9/sD6KS5KfLHTlMAxfwjR4Huz
-	BPGDwuou3i/vcSUVI5Qxdwpspk4sz9mN61LZY5N70rDnxKdLGWTsAPwAeX4pgNMlhp4EhqtchnVd4
-	GWWsi5dQZReYa5DSp22v4QFoBJssHvqmJpokOaCHJZ0oYvKEf8EpBHOhTXuPyh1kLpEKHAdqVvEeJ
-	Uuzqavgw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXdio-00000007weM-1Z1V;
-	Fri, 04 Jul 2025 10:32:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2C394300233; Fri, 04 Jul 2025 12:32:45 +0200 (CEST)
-Date: Fri, 4 Jul 2025 12:32:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	Leon Romanovsky <leon@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
-Subject: Re: [tip: sched/urgent] sched/fair: Use sched_domain_span() for
- topology_span_sane()
-Message-ID: <20250704103244.GA2307777@noisy.programming.kicks-ass.net>
-References: <20250630061059.1547-1-kprateek.nayak@amd.com>
- <175162039637.406.8610358723761872462.tip-bot2@tip-bot2>
- <20250704102103.GAaGerDxWX7VhePA3j@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OJ6fFCFn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86470C4CEE3;
+	Fri,  4 Jul 2025 10:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751625244;
+	bh=s9H3urHY7KsjMSrb7cdjXRt0vO3W3YR4v83fB4ZzWO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJ6fFCFnhHQto411XNNpW/dZjk3PyLkOF+tJWnyRanWCvX0KoJZXO90zinyoc7QmI
+	 kC33DUv6LkTW6A2Ok7ZM0NmueM1LSHhdHIZNAlQ8/4cBYYIhXN1T8AG+C4O0N12LIk
+	 jFfJJtbDLXZdsBZMV0fyLLuKlE64EhNxYjRENCSc=
+Date: Fri, 4 Jul 2025 12:34:00 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Nilawar, Badal" <badal.nilawar@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, anshuman.gupta@intel.com,
+	rodrigo.vivi@intel.com, alexander.usyskin@intel.com,
+	daniele.ceraolospurio@intel.com
+Subject: Re: [PATCH v6 02/10] mei: late_bind: add late binding component
+ driver
+Message-ID: <2025070452-rendering-passover-9f8c@gregkh>
+References: <20250703193106.954536-1-badal.nilawar@intel.com>
+ <20250703193106.954536-3-badal.nilawar@intel.com>
+ <2025070421-cattishly-buffed-d992@gregkh>
+ <0b40eadc-c763-4cbc-910d-cbeb03b432d4@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250704102103.GAaGerDxWX7VhePA3j@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b40eadc-c763-4cbc-910d-cbeb03b432d4@intel.com>
 
-On Fri, Jul 04, 2025 at 12:21:03PM +0200, Borislav Petkov wrote:
-> On Fri, Jul 04, 2025 at 09:13:16AM -0000, tip-bot2 for K Prateek Nayak wrote:
-> > The following commit has been merged into the sched/urgent branch of tip:
-> > 
-> > Commit-ID:     02bb4259ca525efa39a2531cb630329fb87fc968
-> > Gitweb:        https://git.kernel.org/tip/02bb4259ca525efa39a2531cb630329fb87fc968
-> > Author:        K Prateek Nayak <kprateek.nayak@amd.com>
-> > AuthorDate:    Mon, 30 Jun 2025 06:10:59 
-> > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > CommitterDate: Fri, 04 Jul 2025 10:35:56 +02:00
-> > 
-> > sched/fair: Use sched_domain_span() for topology_span_sane()
+On Fri, Jul 04, 2025 at 03:59:40PM +0530, Nilawar, Badal wrote:
 > 
-> My guest doesn't like this one and reverting it ontop of the whole tip lineup
-> fixes it.
+> On 04-07-2025 10:44, Greg KH wrote:
+> > On Fri, Jul 04, 2025 at 01:00:58AM +0530, Badal Nilawar wrote:
+> > > From: Alexander Usyskin <alexander.usyskin@intel.com>
+> > > 
+> > > Add late binding component driver.
+> > > It allows pushing the late binding configuration from, for example,
+> > > the Xe graphics driver to the Intel discrete graphics card's CSE device.
+> > > 
+> > > Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> > > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> > > Reviewed-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > > ---
+> > >   drivers/misc/mei/Kconfig                    |   1 +
+> > >   drivers/misc/mei/Makefile                   |   1 +
+> > >   drivers/misc/mei/late_bind/Kconfig          |  13 +
+> > >   drivers/misc/mei/late_bind/Makefile         |   9 +
+> > >   drivers/misc/mei/late_bind/mei_late_bind.c  | 272 ++++++++++++++++++++
+> > Why do you have a whole subdir for a single .c file?  What's wrong with
+> > just keepign it in drivers/misc/mei/ ?
+> 
+> There is separate subdir for each component used by i915/xe, so one was
+> created for late_bind as well. Should we still drop late_bind subdir?
+> 
+> cd drivers/misc/mei/
+>       gsc_proxy/ hdcp/      late_bind/ pxp/
 
-OK, let me pull this patch real quick for now. Clearly it needs moar
-work.
+For "modules" that are just a single file, yeah, that's silly, don't do
+that.
+
+> > > +/**
+> > > + * struct csc_heci_late_bind_req - late binding request
+> > > + * @header: @ref mkhi_msg_hdr
+> > > + * @type: type of the late binding payload
+> > > + * @flags: flags to be passed to the firmware
+> > > + * @reserved: reserved field
+> > Reserved for what?  Set to what?
+> 
+> Reserved by firmware for future use, default value set to 0, I will update
+> above doc.
+> 
+> > 
+> > > + * @payload_size: size of the payload data in bytes
+> > > + * @payload: data to be sent to the firmware
+> > > + */
+> > > +struct csc_heci_late_bind_req {
+> > > +	struct mkhi_msg_hdr header;
+> > > +	u32 type;
+> > > +	u32 flags;
+> > > +	u32 reserved[2];
+> > > +	u32 payload_size;
+> > As these cross the kernel boundry, they should be the correct type
+> > (__u32), but really, please define the endiness of them (__le32) and use
+> > the proper macros for that.
+> If we go with __le32 then while populating elements of structure
+> csc_heci_late_bind_req  I will be using cpu_to_le32().
+> 
+> When mapping the response buffer from the firmware with struct
+> csc_heci_late_bind_rsp, there's no need to use le32_to_cpu() since the
+> response will already be in little-endian format.
+
+How do you know?  Where is that defined?  Where did the conversion
+happen?
+
+> Are you fine with this?
+
+Please be explicit.
+
+> > > +	ret = (int)rsp.status;
+> > > +end:
+> > > +	mei_cldev_disable(cldev);
+> > > +	kfree(req);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static const struct late_bind_component_ops mei_late_bind_ops = {
+> > > +	.owner = THIS_MODULE,
+> > I thought you were going to drop the .owner stuff?
+> > 
+> > Or if not, please implement it properly (i.e. by NOT forcing people to
+> > manually set it here.)
+> 
+> Somehow I missed this. I will drop it.
+
+And from the structure definition please.
+
+thanks,
+
+greg k-h
