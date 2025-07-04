@@ -1,59 +1,159 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADF12D8DC8;
-	Fri,  4 Jul 2025 12:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA45D285CAF;
+	Fri,  4 Jul 2025 12:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633250; cv=none; b=VcHrsMW761swXMb6m4LqgfT/pRRoMfMm67Uetl305uknWQvIxtg8xRN7Ke4LZLaPA6u4bu9UfPKl+Nvt4u70OKIsBaTE9Gx9JobiI89eicHiKrbVU6aBrzMzxqqSrzofIbKijE24D05Hlfnerm9SmWCkh8kr/9FzbZzUHB70dSI=
+	t=1751633255; cv=none; b=BXVjtP5akRnGKI4GS5YzE8c9vQz9Z8U7jb96PZcBOAsmf7JgL8kdZThDy5Qkc223KLGlrLdhvWlwFXBABiYkQZ+HQddRWFoWl5nv99Ihi5fumtUjG2q9NVhWxLwXIx6kT/QkUQYImdtiWywbCez3rai7UjtI8EwsuQdFj94rFoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633250; c=relaxed/simple;
-	bh=T90gNZWoeIwPdQb9kKnDO8z31RKQxyE2y9k3W8A2j4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENznDwKOABhlNx8+fMPFXnmQV5fPtYlZjj/T7RYkqPgoC/d98Z4aAIjza9UdwpqSID1TsSSIMzXGpB2rU38RGjqQ/V6q5BgH2cgqlpMshJ1vkaECyNSqLKHDTMObI5ps4j7G0orzLm8j9l4vWJAA00DGikNDpDhRmVqiwOx/zRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KCtfqo3A; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751633255; c=relaxed/simple;
+	bh=6jP9D9616ela9JZEfLO4DfalddDJ+mCTmT8T39jD33Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gKcpZ2ANUNS7c9l/W9E84nU/r5XBfjHGJ+tMv1ObSV/hlLDp51o9H5f5CAKddCvxwKvV1NLoEuGPx3hCsUxaadUcQPgpSdTatP9Jxu5j10rEGLF0ZQqfxpyCwFYJhDw1FCpeLQsCavckplFX+pyywOypjRGCgpX+cW1eo30wnAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+UmKBcB; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KCtfqo3A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dF0QLrRnHi3q/gPd8eAQq74gho4ELrDX/tZACh7jpxM=; b=KCtfqo3A4oBwiDisV4+rPARY+c
-	Uevmp12uGtkEP7tBjRwuC6ikO8G2y1WkNlYOb1519VvqrWUWYOshNs+LXgGaKim7XMr/2ttxIZRU3
-	Fxvr2QCKTU+5h0djOBeHVaWl7xH/f+CFWBwcprqX1PSTvcGljoibqZ6KL6JpobtfDQJc3Z9OiosAD
-	xhSy2S5Zh3XJV6yKQ6FaiMazM/j/SSUdRDW5ZwJlCQOdxzZFuPLXFRGQHGO9twyDkvWHKsZaVtY8V
-	yTTV48gahvduciOuyC/7qwV+8iF2hkLRvBT0uERbKwENmKa3LP41N7THGe+W7N4dlUup6QwXl8okz
-	I1WvluPw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXfp7-0000000Gvhr-3gxj;
-	Fri, 04 Jul 2025 12:47:25 +0000
-Date: Fri, 4 Jul 2025 13:47:25 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Hannes Reinecke <hare@suse.de>, mcgrof@kernel.org,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	hch@lst.de, linux-block@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>, gost.dev@samsung.com,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v2] block: reject bs > ps block devices when THP is
- disabled
-Message-ID: <aGfNXbQ5ExO95Uf8@casper.infradead.org>
-References: <20250704095036.293568-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+UmKBcB"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9c3d752a8so561908137.2;
+        Fri, 04 Jul 2025 05:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751633252; x=1752238052; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qmkC/J54lBcE9vTJQ/eqQ53eT1txKtJeKwM2czVAqok=;
+        b=j+UmKBcBUi42r0flEc3G6XD/wE5f3bnjtJisy+6FICT7O/z2wh1SzoJGvIxyTXpenv
+         ikiw88imqDBIPXb9pj+wtVj4wkqy9ID4H6j5RIFGg6mEGHlW/XgHPELwVb8uDr3BwxQF
+         BPwybF6qadp5A7bGutuszeTzTR1maDOenweog0yF2EQyceS/iCyJw3prWfCrxIWbkmkH
+         BhO6G+1ZNmDp6bLoXqlfMsIrAcFZPQPF9ZaW2zedrWcwxkbu0zzHQVqF+CJpFzYhnGiy
+         NkWqTNV22K/xZYMH+++eJH80Jvzs68qDjbgFEw8JpPKNFVyczSP4Q6L8PbFl5Mw+wDGH
+         juDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751633252; x=1752238052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qmkC/J54lBcE9vTJQ/eqQ53eT1txKtJeKwM2czVAqok=;
+        b=OTep7z8SGw5CtT+VvO3Xu99u5Qvp0DtEGVejWatWfehkFQJnGAhIQN4RNBwhKgYEHL
+         ILa8gwIsAE9uTugjfw3GPo0+Mj3EjdO7/S+ujoKmuVAJnI1k2ZqyUS5tnbUdi4T6TRyJ
+         2+bLdtGU9lBIqaWkTThRubuW2uyI9ZcgD9CQ0nSUIOBQNPOG+lJcTVcPH+In/lgs71AJ
+         ri+c+iLFGfsasV6zbPNH/Oc/p1Rp89eOkr7mJfriTFIFfywa+Mhq0kDbCfWR2CCX8qPP
+         52fXaQwS5lyzetuhdOHTwsPQfR3RAHzXoyeEdZazV9Ux56jeNJJ1GccrswPrZ5B0AbUb
+         z9hA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8vcuM/5khRwSeT7nHSrlvYT3+QeelGtwoiYwA1QfxnsdokWmwQGiRf4Fone2BerLaArPd2vpvl2SgwCI=@vger.kernel.org, AJvYcCX4OKongHI9LX3LSU3cqS/N7/WD+oofzaM901afS88nI8AZY3ttmGUJ4BD/EgpZTyD6yHZUHX/1N753pJuLyPaCsw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPm7Bl0OAjuO7kcN9m4lsnTaJiREmLiunNyszE/1eLdVBRqvls
+	VfPkWgGvCEswgVYlWA8gqqpKqr5JSGTmKWg6IdN45SZyeNW6tkBjYZpE+FDf5bUwln2OsRZf3Un
+	kcTs7auWamHpN8aBOC4mEjbDVUZSQtDw=
+X-Gm-Gg: ASbGncsjcse2+L68p03KNclKijoRrYgunjNi3aO5myA+TZYDNuQgBXcSda3hbIWJjqF
+	ttjJKYOWQHoR23J4xjmJPfsjeT8ikUE6+BXSIJm0xiQYUigWQ3jOMmtzSViBm53thr8IgUjR7zZ
+	q7WBQonKxm1ySnrYJ47ckA83EFBkV30oTTXGLY8oY3ut38A/FuyeM0Mg==
+X-Google-Smtp-Source: AGHT+IHawTsrx4WDbFlRPlxlZcwpJ9SQEb2goe8AMjagYDS4e6sLzohPm0ltLUpjuFrfN802O/n2TCqX5jwiMAcEvq0=
+X-Received: by 2002:a05:6102:1613:b0:4e7:7146:a9e with SMTP id
+ ada2fe7eead31-4f2f1785dcdmr1076295137.6.1751633252563; Fri, 04 Jul 2025
+ 05:47:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704095036.293568-1-kernel@pankajraghav.com>
+References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
+ <20250704102007.6354ce9f@pumpkin> <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
+In-Reply-To: <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
+From: Usman Akinyemi <usmanakinyemi202@gmail.com>
+Date: Fri, 4 Jul 2025 18:17:20 +0530
+X-Gm-Features: Ac12FXzG0zByMCB0ae0k2YgqZqwpOgNB1rpA4c239EAnHokHVO5eYPlU3-XxRjA
+Message-ID: <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
+To: James Clark <james.clark@linaro.org>
+Cc: David Laight <david.laight.linux@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 04, 2025 at 11:50:36AM +0200, Pankaj Raghav (Samsung) wrote:
-> Changes since v1:
-> - Use mapping_max_folio_size_supported() instead of doing a ifdef with
->   CONFIG_THP
+On Fri, Jul 4, 2025 at 4:40=E2=80=AFPM James Clark <james.clark@linaro.org>=
+ wrote:
+>
+>
+>
+> On 04/07/2025 10:20 am, David Laight wrote:
+> > On Thu, 19 Jun 2025 03:28:43 +0530
+> > Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
+> >
+> >> strncpy() is unsafe for fixed-size binary data as
+> >> it may not NUL-terminate and is deprecated for such
+>
+> But memcpy doesn't null terminate after the 4 chars either so I don't
+> think that's a good justification. Surely you don't want null
+> termination, because char *vendor is supposed to be a single string
+> without extra nulls in the middle. It specifically adds a null at the
+> end of the function.
+>
+> >> usage. Since we're copying raw CPUID register values,
+> >> memcpy() is the correct and safe choice.
+> >>
+>
+> There should be a fixes: tag here if it actually fixes something. But in
+> this use case strncpy seems to behave identically to memcpy so I don't
+> think we should change it. Except maybe if b,c,d have NULLs in them then
+> strncpy will give you uninitialized parts where memcpy won't. But that's
+> not mentioned in the commit message and presumably it doesn't happen?
 
-why?  v1 looked better to me
+Hi James,
+
+Thanks for the review.
+
+What you said is true, strncpy and memcpy seem to behave identically.
+
+I should have rephrased the commit message in a different way.
+While strncpy seems to work here, firstly, it is an interface that has
+been deprecated.
+See -> https://github.com/KSPP/linux/issues/90.
+Also, memcpy is semantically correct for copying raw data compared to
+strncpy which is for string.
+
+I am not sure if the b, c, d can have a null byte, I think using the
+semantically correct function (memcpy) improves the robustness even in
+cases where b, c, d have null byte.
+
+What do you think?
+
+Thank you.
+>
+> >> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
+> >> ---
+> >>   tools/perf/arch/x86/util/header.c | 6 +++---
+> >>   1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/u=
+til/header.c
+> >> index 412977f8aa83..43ba55627817 100644
+> >> --- a/tools/perf/arch/x86/util/header.c
+> >> +++ b/tools/perf/arch/x86/util/header.c
+> >> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
+> >>      unsigned int b, c, d;
+> >>
+> >>      cpuid(0, 0, lvl, &b, &c, &d);
+> >> -    strncpy(&vendor[0], (char *)(&b), 4);
+> >> -    strncpy(&vendor[4], (char *)(&d), 4);
+> >> -    strncpy(&vendor[8], (char *)(&c), 4);
+> >> +    memcpy(&vendor[0], (char *)(&b), 4);
+> >> +    memcpy(&vendor[4], (char *)(&d), 4);
+> >> +    memcpy(&vendor[8], (char *)(&c), 4);
+> >
+> > Why not:
+> >       cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(v=
+endor + 4));
+> >
+> >
+> >>      vendor[12] =3D '\0';
+> >>   }
+> >>
+> >
+>
