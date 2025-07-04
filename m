@@ -1,103 +1,108 @@
-Received: from sonic306-21.consmr.mail.sg3.yahoo.com (sonic306-21.consmr.mail.sg3.yahoo.com [106.10.241.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914169D2B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3276386340;
+	Fri,  4 Jul 2025 01:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751592321; cv=none; b=NSVlUIwpodPYQFFvWnXXsI+gTKYwOD+QmUp0O+pvJCyhmB00KEnLkTv/uGBdRRLrm3TZrLwmDVmXxfkugKXNFARHaP0PPrMEUJZ3hG0faXwGoJ0t04hJHTtNJItJ0nFrjqXTcUM+qf9mPKMpP3mfPNqlRvSN9l6T1QQ504y6dV8=
+	t=1751592446; cv=none; b=I+V075yaRyqJ2zEX8I2Sy8mI7ERohlTFLGlFmp3VtCsP79UWJvJQnHYy6EgQJvngwfHd99WXqIRiBBz3sjqejQy5aDWsEzX+JKpMnjtmW9p40snH9VlMc/JKNJaU4S1hTp/Wu/NtuDPpIKoZsdsmVPaQc4wrqtRSXQUfPjJJaPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751592321; c=relaxed/simple;
-	bh=yzGghOxhB0583+8ozZ+VDnbXqzZsTaGkG9HUdPHP+d4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=PmUrMjzDWDxyfU7rT2hvbEsBIfcGLy0uHcOBFp9aOwAxA/gJlYgKZLvh64AMWIziTO68b0EV6ascvDOZmfxSu7Q8ZzDrzbfPJrawOv/BPZf045o5ln+rhxQDbyOpbhfKf/DTqFqZqpwdjLAbt6XeTGkdYDjv5vBmO0KZxAEHLD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=K3X0Xyjd; arc=none smtp.client-ip=106.10.241.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1751592446; c=relaxed/simple;
+	bh=wiEAgWU9/grMvoZLEsMM2n7Py0FumSs1+9V6ieSrx/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oXxRJhluaiB1H2pZij6ae/+/tukOPRPKGgFliSIsfPB3vJtyC0Zu81xPfyemitNsg/Q6yx0Q/y3OABtniPyAxXEVquwjiPcumkiTBkVLOfLKU0rnVAJUzIrUX+dkjKevp+sBCPavD72om+o6nKULQ2u19lezhutZTf08fIH8iJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Py0056Bi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="K3X0Xyjd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1751592316; bh=5EaQn1mqLXzxd0VU6TV21eh6I2qsxXBZOTsHhJbSFzI=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=K3X0XyjdMBhSCNPaIVQpkPTB1c/EAsFKNCza30Gk/J0EPr7vqn9yuKc6Nw5QWZsI4sifmMkD/KSC+letCHQ9jv0IAacecCch0KHmkAFipGOZKs0Em90czLy3XAyw9GpSHsOr1eKEnGmzHKVa/4iBpSNYFB8B4Y98h9KOi0q/1zv1a6P124w4jFymxOz96/Bo2ybg0oDyd5dIj2wLG2Q+AoI+ABjprg92vp9pL4RSqKQDFZVGJ+0NdnT7ARmZuzvdxbVtOpxZCakfYFzZKKxjgR5u9Wo6OuuYtbtPser+2i/mziVrD3DL+qPVACJ47UHmmSORsXaf1WYnC/BZIIGSgg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1751592316; bh=oEOQDdrF5Yp1Cblscv1Amj/a3zCwsgJiqtfsg5WJOim=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=pBjFOAzKUuckbNrBfr1X9pgXKIcYBHen0MYPSKXaqoWIADMSf+41jyzPMQn5qk4OSGtsQn1NZIDzEEKZyew5WZg+pobC49F+5OZn9nwsAVVzNFiXHkmMj2Z6F4zviBx6v+HhjzKzEgYyqIXZEj83ry4+TdbZYcfNoHxoHIxvkj11kI+8lhgmWpqvH2uFk4Hw0iwt+y5OytCKyIrVKS+01lDBN02saKjKOvMd/545QmpdY50t0JAX5YoaldkVZdwsnkhsL3uDD4nwKR56GKpj8sJEHU/IHUNV6Lj5lTQeCRUEx8p37PVk0BTrRdAO6qUaJ6PIp+aS5/BZHnnK8TKyHA==
-X-YMail-OSG: JRecbucVM1kO_WsrXFfN02qfoglyrWxeEBrrRObAYf4PUpB10MbvoLHHS9aom6c
- dxc4Zd8Nxqaj9Rmx422P0vtv4EIwTRD6VZ8zCM76zFQNzybV.uVvYo6JyKzxPGFNMI6J2_bhXdOo
- lShhwG8VVan8m8jhdglVoxMeUMhYCKJkQR5xRZRJNQnkYbzpRnY5NLJkmfgDCPhgf82XcVePLZHZ
- pzRoMKul4q0yb8XV0TM7pXqoJzAAd7zpAAvb09jojMCP1K544hR0CMsJo7JvaKVOpPPPLEQZCFk_
- bIyqC4c4hRGPJ_crK2dW2FHbRiS487VZbzAGmdqUUHerk_THK2wCvwhaQCSjKfEcjmfWjoGT.yRr
- 2entM1Z2ANceA41p0EoHyYMn31GGahexToLdWrjfgK8FcSaSM14h4HLC2xGLxLxEP9zqGsuFxI8c
- 9rHPp3WN.CFLdlTktIosW_qz7WbuHcyt3_Ab2xjwKIEW4oYT15a3CxEYnn4ffh_8oFI3IZksdWMG
- Qo70xHfat8HjkvjCMXTVCx8.2RRM.QrJRgGX7zfEY8lykInk09GUiEKtIK1vb5likHwINcG3vPSa
- pie_sNeb3zpkIYC4JeZyfNKImigCeC4S.EO2FHlDAycs0fcQSg8S0MDu4kvZxYz2iNIkGtHEnD83
- XTJkx.hT8pXiWYDdSnYkkFHGY9wLCQbP5tnDCyD_Swdb9TcXp9ApjpBeQp9Byr2QNGd..GFisrd8
- GuVhxwg1ZvNsZqodijUjPbEXqluMmE9PxRAkaqsBHo7j1PmSfrfjOGjlxSOGDN7.W5fRNgmIemKS
- 7OWxlykR9hM3Y6JxjbE34OxJrzWh_HEPurA2Yk1Evjk5UZgF4PK_e8Ow2SOFVV4xc4kHAeBsBJ2t
- X7lGXoUdnLdsWb0sprsnYJTcBk1UMH3Z8OIt.dCt7zayovi0L34c.M8bi_uXV8hCJHpWULdlL.__
- VzZXzkImZI__JxQmhUEd9JF0uohcysyAime5WivV7KMZLqHi2h58NHvmXKw35KhBagAFT1Vxv9JB
- AMp9EcSoViHTupz286dctepLRBG90BlL6w0tKhCVthhQEHAb6aTirhT_fDP42wQ_ApMdlvIi5JUS
- QUk6KRUVFPprS5MK6Yyj5APh.cWDt8YEJPZJiuZX7Rhe60ptKpvIwp3O88zxuq2PVocevVa96euO
- 4ucFudrRws.bkzrbLhRDO05Hcf717jVbxhCjWjihAe2JLT6Tjkf6J4E3EnhOHq7y_i.LboiR1AaH
- RLSTQBeFKrjpioBoYW.cECw7YVARawkHS8UTwZjrCJsJqf3xyqoe09U8XWJncbUuHX9MxnJ.CrNJ
- lKKIXmjxGtUVm6496xikzSlK5X5sp06B8lQ0QdLR051bOudsy8sY6ZY1o5Gkfd7e0WaaYw63xtp7
- UspLAqkvDn_4KAt0qMvPb7sH8zoX1HnJ37TrcLC2y0uGViFITrwJwn.jwts9YnNr42FBA198KCpk
- mf1sMctl0iXu7tp6Ne.GwyiMFPvi.NcdObivmh7TvXfEeXtydg4w.ZHg2ZlYPK2TYJXUgBizAFZc
- N4x2uQq1t7kneEEG2xclLSTC5HniiYIyjyTsuFmbO2wqIBDMNrVcabpoSCd2ESnd7MpbGWSQiZn9
- ntUeWExwqrk.sWk1Mb.qPLIsfFhhCXS9ArOiwCBuSlTje9KlxoGmTMBjqXwXbRS3IeY5QXt5qIuq
- _dG1PZMm.ZyTQaJNSEw.l9kE2_6ON2_Vc3rmiT8BiuHf.66pLuJT9f1bn2bX2Po6fGXpmmU2CWq4
- oe5MMvf2h3hzJr_Q7rQCgoBIkFMfWvKG36zmE9Hbdz.VJYHpjmlkzg8aIMHY4vs9CSvuvR_qGCuC
- Mz3jwYB0fQrYbN2MDDk.MxVBwYBuMZZoax6t6AwwaUlnWyRDUf2KoHn0qrb6LghAT4bzvxC7NcFN
- fxyoqVJf8fi3.FH2dY.C7nrg5LcB.uTKnKE6BLE6a3ZkBYhXZ.k15kR6N9tV26W6xwkjJAd4.NZr
- X.A7N.hG2YMc9Ocl0GIw13PNQWLaBoHp4LfXOMVDR3Ajjmw5WWM1_aVqcA2nFIDBfiuzM.H_bfuh
- MV_cmMu9EC.ZXgDYPTWVulaU1ZPtq3maf7pO_mrQheugMr7u7orrzsntgP1rVoLQBbgs5wNNii5u
- gRJsnudyEjnVB4EJFUdPXtrwRMlQWmh1sGn9KwU0WpkGyu4qlQt9U8zPI3kqXu.hOBy79.x8IBEE
- uMhofZ.eK3w3_jufckRCKgxE8Qem42zcr28K7qw0QLfoXOz_E6A3etQdvL63RAQ3u7OAslWoTDJk
- c3yDTdH8-
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: e9662cc1-4981-4682-9f44-5f578b568ef2
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.sg3.yahoo.com with HTTP; Fri, 4 Jul 2025 01:25:16 +0000
-Received: by hermes--production-ne1-9495dc4d7-jrxzs (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a2c63466e6f86b622e08ed8c074f7ec5;
-          Fri, 04 Jul 2025 00:34:32 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: gregkh@linuxfoundation.org,
-	jkeeping@inmusicbrands.com,
-	kgroeneveld@lenbrook.com,
-	Chris.Wulff@biamp.com,
-	quic_prashk@quicinc.com,
-	linux-kernel@vger.kernel.org
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-usb@vger.kernel.org
-Subject: [PATCH] usb: gadget: f_uac2: replace scnprintf() with sysfs_emit()
-Date: Thu,  3 Jul 2025 19:34:22 -0500
-Message-ID: <20250704003425.467299-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Py0056Bi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751592445; x=1783128445;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wiEAgWU9/grMvoZLEsMM2n7Py0FumSs1+9V6ieSrx/k=;
+  b=Py0056Bi2x+KZ6WkYUcj6ToNWsj0BADBou5taW1pn0XQb56GxQI7/Yfp
+   KqjU7LgVRJcLk3Wa5op0cYKP7k4gfm305U2W3G1Qtz3V/Gzg2+rcLv630
+   7IzfCArEahOzCeZt9VxVb/BVslzBZK4riaTHPU1JtNKpQpCRy3DSyk0Fh
+   FahwCQyBA0t++ZWW9GB12XxsSmXcNZYgK4LaHM72vYyI5yx/suvkeOAfu
+   L81chfbi5UuQyTf0DMqJPsI8ae4vqIEEkoU0kKbyIcjlHW1FRoM39Ko63
+   qSvmdochst0GBPfzCQlTBterzNyToDGx9RzRrNikgenirixcxBfBrivcH
+   g==;
+X-CSE-ConnectionGUID: m4ydZx6IT0iz0rQW9h1JFA==
+X-CSE-MsgGUID: ja75FxzqSS+KBMGDHvVPEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="71498627"
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="71498627"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:27:24 -0700
+X-CSE-ConnectionGUID: SwyYW4yaQP+GjHkzz78g+g==
+X-CSE-MsgGUID: doSsbApTQNO2hzDH2dd9Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="154277007"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:27:22 -0700
+Message-ID: <b95b6a35-e6b5-46df-9a5f-4cc7f4e823bb@linux.intel.com>
+Date: Fri, 4 Jul 2025 09:25:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250704003425.467299-1-sumanth.gavini.ref@yahoo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] iommu/vt-d: Optimize iotlb_sync_map for
+ non-caching/non-RWBF modes
+To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250703031545.3378602-1-baolu.lu@linux.intel.com>
+ <BN9PR11MB5276F7B7E0F6091334A7A3128C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276F7B7E0F6091334A7A3128C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Documentation/filesystems/sysfs.rst mentions that show() should only
-use sysfs_emit() or sysfs_emit_at() when formating the value to be
-returned to user space. So replace scnprintf() with sysfs_emit().
+On 7/3/25 15:16, Tian, Kevin wrote:
+>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>> Sent: Thursday, July 3, 2025 11:16 AM
+>>
+>> The iotlb_sync_map iommu ops allows drivers to perform necessary cache
+>> flushes when new mappings are established. For the Intel iommu driver,
+>> this callback specifically serves two purposes:
+>>
+>> - To flush caches when a second-stage page table is attached to a device
+>>    whose iommu is operating in caching mode (CAP_REG.CM==1).
+>> - To explicitly flush internal write buffers to ensure updates to memory-
+>>    resident remapping structures are visible to hardware (CAP_REG.RWBF==1).
+>>
+>> However, in scenarios where neither caching mode nor the RWBF flag is
+>> active, the cache_tag_flush_range_np() helper, which is called in the
+>> iotlb_sync_map path, effectively becomes a no-op.
+>>
+>> Despite being a no-op, cache_tag_flush_range_np() involves iterating
+>> through all cache tags of the iommu's attached to the domain, protected
+>> by a spinlock. This unnecessary execution path introduces overhead,
+>> leading to a measurable I/O performance regression. On systems with
+>> NVMes
+>> under the same bridge, performance was observed to drop from
+>> approximately
+>> ~6150 MiB/s down to ~4985 MiB/s.
+> so for the same bridge case two NVMe disks likely are in the same
+> iommu group sharing a domain. Then there is contention on the
+> spinlock from two parallel threads on two disks. when disks come
+> from different bridges they are attached to different domains hence
+> no contention.
+> 
+> is it a correct description for the difference between same vs.
+> different bridge?
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- drivers/usb/gadget/function/f_uac2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes. I have the same understanding.
 
-diff --git a/drivers/usb/gadget/function/f_uac2.c b/drivers/usb/gadget/function/f_uac2.c
-index 9b324821c93b..dd252ff2fb4e 100644
---- a/drivers/usb/gadget/function/f_uac2.c
-+++ b/drivers/usb/gadget/function/f_uac2.c
-@@ -2052,7 +2052,7 @@ static ssize_t f_uac2_opts_##name##_show(struct config_item *item,	\
- 	int result;							\
- 									\
- 	mutex_lock(&opts->lock);					\
--	result = scnprintf(page, sizeof(opts->name), "%s", opts->name);	\
-+	result = sysfs_emit(page, "%s", opts->name);	                \
- 	mutex_unlock(&opts->lock);					\
- 									\
- 	return result;							\
--- 
-2.43.0
-
+Thanks,
+baolu
