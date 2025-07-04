@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9252D8371;
-	Fri,  4 Jul 2025 17:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B3A2D838F;
+	Fri,  4 Jul 2025 17:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650570; cv=none; b=HOefG0xWAmnpvbgRyrBpnKj9ISG+SZYHbc8B7IMGkwgAKiKqjcXK35ezskbmKvL5wboitXLKLVs+RMOz3s3HMKAEzfo9mRnPTiUuPrMDIFR4sQLw0/as2xZhkaApvzPAUuuIx86i6Nbw7msrT76FWezHExapDgp7lgfaLHE5zu0=
+	t=1751650572; cv=none; b=PggMdorl+gWF49+qdXsR+FyaKlb3L4ZHAX/rNZ1kE7L3XmHYkE0FJ5I4TsVUVaMfi/5yNP34pInCRbkmWgMwdOGuRY22UNjmxI4tt3U8Aj50L2NkSuzpVwj+f+4SI9J5tzTDnLK0+GxyRhJI539mHDDqCvtrmn28cuBLnJdYk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650570; c=relaxed/simple;
-	bh=D1TjRJZ6DDaEjXyWJf+fcNYEEjSOefryIwBwA4wrDvY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DshxjXHrDXI+Eq2H6EMnA4l0vuLa9fM5xUY4/CdhPttDDK8H0z3t6dvmo6tzugh5Im8BJeuHRBJXpvzb1zh6UvIcVQnX8Bec9u8UZZhM2X/f4Ge4VzsQHK1ooNOVO1sw9Pde+Z5JxwJGoSm0JyzaV0ID1Li+m61D2/UJR+nMesU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMyF57ss; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751650572; c=relaxed/simple;
+	bh=zT3sMakbhwFrNVaafncpigVu6xlhlv8cZoefYiNYWHs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DmiNCA8MxdjZGShz82BTFida81ycSC6COMlVoxQ6TItZFdPeWRKG/qRgl9BadVbjeHW+dqHhFnmuUb65GJ0oH3IHQ2pjwTIQ9lQSolq2cwzh24n3sxcB7qEvIIfUlkb3K34ou2q1k4SoSV4Mfa5BrDmiuzWC1yfEGrK6D7Kgd+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTqPji05; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMyF57ss"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0CAEC4CEE3;
-	Fri,  4 Jul 2025 17:36:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTqPji05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0A0C4CEE3;
+	Fri,  4 Jul 2025 17:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751650570;
-	bh=D1TjRJZ6DDaEjXyWJf+fcNYEEjSOefryIwBwA4wrDvY=;
+	s=k20201202; t=1751650572;
+	bh=zT3sMakbhwFrNVaafncpigVu6xlhlv8cZoefYiNYWHs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=BMyF57ssMYKMB5UHcf18bKqIcQKxsRewi+vN02rNMUVNeCcen+BfvC4L8v5VNd3Yd
-	 T+IF6P8dpCBEd4b29H/veJbKH6Fa8kvp1t5EhXce6jKvFmWNdeHUx6uy0CAreL7C1b
-	 gs6tOxYmWKHHBf81LgtpxD/PNWEPGtou5lRfP/O9elpS1ZPRa65fUu5djD/EeQmpYn
-	 WgZo1SRfVEBwuj7jKRZaXaDtay2nE6C8UyCheFUM0mVjPT0R/88nOOI5imz8k10jY/
-	 /8N9s5zKzDA3AM1QNwGCfr6Bdgp3o4mPIXo5riDWQqv/BdZ+orRwElk9q5irlaezwY
-	 XVmH+lzarzi2Q==
+	b=sTqPji056CrEBEguhmofQC4eEg7sADIx4hKvFhafjiv0y0B/8MY8bhq95X/OOIzew
+	 CUhCEV442q7hq4GXEounCZ8tkFjtU6fJ79buB2w1iJgCQmT4rbSmthn76BYW1jc1Ax
+	 WB+UbqBcq0oXvYP3HK1AdaBHx7Oibyn/FleJgdq2XKPRKbOQ0egfDzGl07GAyonBa3
+	 DVMiwICrL8PmHpZ9d0Kr4XV1ZmycZL1vHVeNVLOiV+G4V/AbVQ6qMF8us7wkdCAdc9
+	 en6UJEhbPurpAyOCft6J1m4u2QfZnJ+fYRHKMUMBYYI+A5oFzDUKHOPUA3F1kE0oXO
+	 G7pWxuVowybLQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFAB383BA01;
-	Fri,  4 Jul 2025 17:36:35 +0000 (UTC)
-Subject: Re: [git pull] Input updates for v6.16-rc4
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7E3CE383BA01;
+	Fri,  4 Jul 2025 17:36:37 +0000 (UTC)
+Subject: Re: [GIT PULL] SPI fixes for v6.16-rc4
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
-References: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
-X-PR-Tracked-List-Id: <linux-input.vger.kernel.org>
-X-PR-Tracked-Message-Id: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.16-rc4
-X-PR-Tracked-Commit-Id: 4cf65845fdd09d711fc7546d60c9abe010956922
+In-Reply-To: <36262b502dd08b5d5c602f7c7a1d6449.broonie@kernel.org>
+References: <36262b502dd08b5d5c602f7c7a1d6449.broonie@kernel.org>
+X-PR-Tracked-List-Id: <linux-spi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <36262b502dd08b5d5c602f7c7a1d6449.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc4
+X-PR-Tracked-Commit-Id: 04a8ff1bc3514808481ddebd454342ad902a3f60
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d46971e0b6f574059d167ddda1355ed301a0bae6
-Message-Id: <175165059472.2287194.3502026881822228987.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Jul 2025 17:36:34 +0000
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+X-PR-Merge-Commit-Id: a1d8128f701682d34d9308c9e6b7385c0ffa4b4b
+Message-Id: <175165059623.2287194.392976876670181790.pr-tracker-bot@kernel.org>
+Date: Fri, 04 Jul 2025 17:36:36 +0000
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 3 Jul 2025 22:31:36 -0700:
+The pull request you sent on Fri, 04 Jul 2025 16:07:12 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.16-rc4
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d46971e0b6f574059d167ddda1355ed301a0bae6
+https://git.kernel.org/torvalds/c/a1d8128f701682d34d9308c9e6b7385c0ffa4b4b
 
 Thank you!
 
