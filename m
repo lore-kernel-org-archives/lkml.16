@@ -1,177 +1,217 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43022BFC80
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A012BEC2E;
+	Fri,  4 Jul 2025 11:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751629518; cv=none; b=sqW1wByi+c25ezSXDHeF8Xu5aBqbEEcbqYMdWWCLCx1LMRQkgYTJTZLVZrDiSbthUR833+N+3ZMZlBMUpGsNNgs3qIVLWHH0WD1kNSpvMbcq4kGSPpZVIKla8NkLMUDW43UiDjIQR25pq/ooVEK5o6T2HgFxT5OCtx1tRdkHXNs=
+	t=1751629519; cv=none; b=BGD7E+iW2C3Egi070+jqXCq/UiN9a6NzxnOXf6spKy0wZiOhlez28GTy0vgjqnMDL5OSxbUuXNKNIxuT4NQibAxPSR2eSZ4S+8fGb2L25YBsfxaV8k+xAZS8xQmMCXabZeNBKTRPt2UzJ4k66V/dFYjzVqhucGJTZqhqzYSqJt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751629518; c=relaxed/simple;
-	bh=WHtk3sag/jmUNWuOCiIhUds/ncp5s9Ef7qsxvCBXj0c=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WUnWlVEv7bhtMiuevt6bxQet80n/7v73eXGSv//zyU06UorZiWV1VwnIeC6rD1vZNBgHTCjiGgPd49mcImJvsAz2jdb36uWXCFtnKjEkPFwp1jlSASABtk44aNMW9joKgBP+EbAcb/7nqQzG+BvVB48xOiv17zIeTIPnuyNOkEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=M5Pm4HhN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=elpCad+T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=M5Pm4HhN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=elpCad+T; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751629519; c=relaxed/simple;
+	bh=z68hIx6N0LmzAsvuKPuFBdHA0hWmmGwcGwMSRF8yrb0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=U5ZfmtEt2KtOPgvQoiTP/klPjF26QxfPzeTeL6XABSAipUmucASxu6EHVCBPU/EmTqrXBWUPP9/kBW35xrL+k6zMnElUCDdCb++Ah5s+EEEjMf/EyGlfcUE8Au/h5azbXzyqEwWvn0a3h1hggNMrLBs66KJBH6l4K1VH/pq9pYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0MeI5gh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="M5Pm4HhN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="elpCad+T";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="M5Pm4HhN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="elpCad+T"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5E14D21193;
-	Fri,  4 Jul 2025 11:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751629514; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kxTd+L1PywZxAAcgvHW1FZ54CTZk37zes5hyIjxPw0E=;
-	b=M5Pm4HhNIDCb8KFuRGr2KgM1ri1uCbbzNbUK+qvZJj1xdtJQIktAh9t4jPS6j9mHheGt8s
-	7sNIzsbNPxqkNpSu4HMATHsTg5N0MyDsHPnn5JWVAsxfP+t0Cvxed0DB25VFR6cxnKN/ws
-	awy+msOzDUHbPmghOCNWbIPVJ/ULFho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751629514;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kxTd+L1PywZxAAcgvHW1FZ54CTZk37zes5hyIjxPw0E=;
-	b=elpCad+TikYpLXGqcIlAbcrqpKwMc/2EJYjZI8bb1EWk9yj4KCCx4NVKYRaubxVC9tyNmo
-	evxqhp9IjJ3zaeAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751629514; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kxTd+L1PywZxAAcgvHW1FZ54CTZk37zes5hyIjxPw0E=;
-	b=M5Pm4HhNIDCb8KFuRGr2KgM1ri1uCbbzNbUK+qvZJj1xdtJQIktAh9t4jPS6j9mHheGt8s
-	7sNIzsbNPxqkNpSu4HMATHsTg5N0MyDsHPnn5JWVAsxfP+t0Cvxed0DB25VFR6cxnKN/ws
-	awy+msOzDUHbPmghOCNWbIPVJ/ULFho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751629514;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kxTd+L1PywZxAAcgvHW1FZ54CTZk37zes5hyIjxPw0E=;
-	b=elpCad+TikYpLXGqcIlAbcrqpKwMc/2EJYjZI8bb1EWk9yj4KCCx4NVKYRaubxVC9tyNmo
-	evxqhp9IjJ3zaeAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20A3613757;
-	Fri,  4 Jul 2025 11:45:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GJucBsq+Z2gCSQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 04 Jul 2025 11:45:14 +0000
-Date: Fri, 04 Jul 2025 13:45:13 +0200
-Message-ID: <87v7o8nprq.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 75/80] ALSA: intel_hdmi: Remove redundant pm_runtime_mark_last_busy() calls
-In-Reply-To: <20250704075500.3222950-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-	<20250704075500.3222950-1-sakari.ailus@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0MeI5gh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09449C4CEE3;
+	Fri,  4 Jul 2025 11:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751629517;
+	bh=z68hIx6N0LmzAsvuKPuFBdHA0hWmmGwcGwMSRF8yrb0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=F0MeI5gheTCH4SLUA6Gisiy9QboJeevD4jtxZZsLNfLuc2Z4R44obTQvEunniAReN
+	 k/UKeTALsE+PMpJnfgmnpjJfSxZlpEZvHuf2S68RwoWIb47ChvAVk7LCgnytqdqRCD
+	 ewkIuIHioMilQdhXQaQvz256+sLVsrUu6jeSYiH3a4m0IoyQZiR8bAOybwW2gPw7q+
+	 MF36TrXrHTxQwhqAlrSIae18ia6RWki+QJEQU8eM/6YN/m+yc+z42k0L73Y4+/i2+3
+	 7NLXceD4ca7Z/zaxZiFL4f5LsCt/B34ByaM+Yv93G5C4ZonQzzXW9/Tj+yqJpR3isj
+	 5KWbSvoCo64hw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v14 3/7] rust: introduce module_param module
+In-Reply-To: <DB1O6I32IYI4.OFHKKMD9JV40@kernel.org> (Benno Lossin's message of
+	"Wed, 02 Jul 2025 17:21:08 +0200")
+References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
+	<20250702-module-params-v3-v14-3-5b1cc32311af@kernel.org>
+	<dR1azql_mfbkqYH2GgSR3NoChU-VhgRMnWzZg_hWmpVx6P3-fLsrU8M06AwCzQPdrTSyCw0gzxG1bbGr7Wc_Dg==@protonmail.internalid>
+	<DB1O6I32IYI4.OFHKKMD9JV40@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Fri, 04 Jul 2025 13:45:06 +0200
+Message-ID: <87jz4orxh9.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,intel.com:email]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 04 Jul 2025 09:55:00 +0200,
-Sakari Ailus wrote:
-> 
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Acked-by: Takashi Iwai <tiwai@suse.de>
+> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
+>> Add types and traits for interfacing the C moduleparam API.
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>
+> I have some nits below, but overall
+>
+> Reviewed-by: Benno Lossin <lossin@kernel.org>
+>
+>> ---
+>>  rust/kernel/lib.rs          |   1 +
+>>  rust/kernel/module_param.rs | 191 +++++++++++++++++++++++++++++++++++++=
++++++++
+>>  2 files changed, 192 insertions(+)
+>
+> I really like how the `OnceLock` usage turned out here! Thanks for the
+> quick impl!
+>
+>>
+>> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+>> index 6b4774b2b1c3..2b439ea06185 100644
+>> --- a/rust/kernel/lib.rs
+>> +++ b/rust/kernel/lib.rs
+>> @@ -87,6 +87,7 @@
+>>  pub mod list;
+>>  pub mod miscdevice;
+>>  pub mod mm;
+>> +pub mod module_param;
+>>  #[cfg(CONFIG_NET)]
+>>  pub mod net;
+>>  pub mod of;
+>> diff --git a/rust/kernel/module_param.rs b/rust/kernel/module_param.rs
+>> new file mode 100644
+>> index 000000000000..ca4be7e45ff7
+>> --- /dev/null
+>> +++ b/rust/kernel/module_param.rs
+>> @@ -0,0 +1,191 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! Support for module parameters.
+>> +//!
+>> +//! C header: [`include/linux/moduleparam.h`](srctree/include/linux/mod=
+uleparam.h)
+>> +
+>> +use crate::prelude::*;
+>> +use crate::str::BStr;
+>> +use bindings;
+>> +use kernel::sync::once_lock::OnceLock;
+>> +
+>> +/// Newtype to make `bindings::kernel_param` [`Sync`].
+>> +#[repr(transparent)]
+>> +#[doc(hidden)]
+>> +pub struct RacyKernelParam(bindings::kernel_param);
+>
+> Can you remind me why this is called `Racy`? Maybe add the explainer in
+> a comment? (and if it's named racy, why is it okay?)
+>
+> If it doesn't have a real reason, maybe it should be called
+> `KernelParam`?
+
+It is an inherited name from way back. The type exists to allow a static
+`bindings::kernel_param`, as this C type is not `Sync`.
+
+I agree, it should just be `KernelParam`.
+
+>
+>> +
+>> +impl RacyKernelParam {
+>> +    #[doc(hidden)]
+>> +    pub const fn new(val: bindings::kernel_param) -> Self {
+>> +        Self(val)
+>> +    }
+>> +}
+>> +
+>> +// SAFETY: C kernel handles serializing access to this type. We never a=
+ccess it
+>> +// from Rust module.
+>> +unsafe impl Sync for RacyKernelParam {}
+>> +
+>> +/// Types that can be used for module parameters.
+>> +// NOTE: This trait is `Copy` because drop could produce unsoundness du=
+ring teardown.
+>> +pub trait ModuleParam: Sized + Copy {
+>> +    /// The [`ModuleParam`] will be used by the kernel module through t=
+his type.
+>> +    ///
+>> +    /// This may differ from `Self` if, for example, `Self` needs to tr=
+ack
+>> +    /// ownership without exposing it or allocate extra space for other=
+ possible
+>> +    /// parameter values.
+>> +    // This is required to support string parameters in the future.
+>> +    type Value: ?Sized;
+>
+> This isn't used anywhere in the patchset and AFAIK the kernel is moving
+> away from module params, so I'm not so sure if we're going to have
+> strings as params.
+
+The kernel dropping module parameters depends on who you ask. But
+regardless, we should probably remove it for now.
+
+>
+> Or do you already have those patches ready/plan to use strings? If not,
+> then I think we should just remove this type and when we actually need
+> them add it.
+
+They are in the old rust branch and they need some work. I do not have a
+user for them, which is why I am not including them in this series.
+
+>
+>> +
+>> +    /// Parse a parameter argument into the parameter value.
+>> +    fn try_from_param_arg(arg: &BStr) -> Result<Self>;
+>> +}
+>> +
+>
+>> +impl<T> ModuleParamAccess<T> {
+>> +    #[doc(hidden)]
+>> +    pub const fn new(default: T) -> Self {
+>> +        Self {
+>> +            value: OnceLock::new(),
+>> +            default,
+>> +        }
+>> +    }
+>> +
+>> +    /// Get a shared reference to the parameter value.
+>> +    // Note: When sysfs access to parameters are enabled, we have to pa=
+ss in a
+>> +    // held lock guard here.
+>> +    pub fn get(&self) -> &T {
+>> +        self.value.as_ref().unwrap_or(&self.default)
+>> +    }
+>> +
+>> +    /// Get a mutable pointer to `self`.
+>> +    ///
+>> +    /// NOTE: In most cases it is not safe deref the returned pointer.
+>> +    pub const fn as_void_ptr(&self) -> *mut c_void {
+>> +        (self as *const Self).cast_mut().cast()
+>
+> There is `core::ptr::from_ref` that we should use instead of the `as`
+> cast.
+
+Cool =F0=9F=91=8D
 
 
-thanks,
+Best regards,
+Andreas Hindborg
 
-Takashi
 
-> ---
-> The cover letter of the set can be found here
-> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
-> 
-> In brief, this patch depends on PM runtime patches adding marking the last
-> busy timestamp in autosuspend related functions. The patches are here, on
-> rc2:
-> 
->         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->                 pm-runtime-6.17-rc1
-> 
->  sound/x86/intel_hdmi_audio.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/sound/x86/intel_hdmi_audio.c b/sound/x86/intel_hdmi_audio.c
-> index fe5cb4139088..cc54539c6030 100644
-> --- a/sound/x86/intel_hdmi_audio.c
-> +++ b/sound/x86/intel_hdmi_audio.c
-> @@ -1102,7 +1102,6 @@ static int had_pcm_open(struct snd_pcm_substream *substream)
->  
->  	return retval;
->   error:
-> -	pm_runtime_mark_last_busy(intelhaddata->dev);
->  	pm_runtime_put_autosuspend(intelhaddata->dev);
->  	return retval;
->  }
-> @@ -1127,7 +1126,6 @@ static int had_pcm_close(struct snd_pcm_substream *substream)
->  	}
->  	spin_unlock_irq(&intelhaddata->had_spinlock);
->  
-> -	pm_runtime_mark_last_busy(intelhaddata->dev);
->  	pm_runtime_put_autosuspend(intelhaddata->dev);
->  	return 0;
->  }
-> @@ -1589,7 +1587,6 @@ static void had_audio_wq(struct work_struct *work)
->  	}
->  
->  	mutex_unlock(&ctx->mutex);
-> -	pm_runtime_mark_last_busy(ctx->dev);
->  	pm_runtime_put_autosuspend(ctx->dev);
->  }
->  
-> -- 
-> 2.39.5
-> 
+
