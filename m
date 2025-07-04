@@ -1,247 +1,366 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066FD2BE052
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86C41D6195
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751646130; cv=none; b=PTYMIwx8/qU8ZM1dvepWkWOqya1to5eGkbWv/vandyMrUVtJwXSxFQmMJMdJibytyfVCidBDzn+iJgdoKpuY28SqUf8gNUEpHNl4csRoky6IbiyPugx4r0c68PR+n+HM3E0/zUME0vYrt9HSLgrGYbZ7HqNyoggo27B+1ssuk6c=
+	t=1751646237; cv=none; b=QJDqxFj8O2BKSMnGBEiywNr+2ClUpImAcDuzJdwNLbUan4ACS+eohA1r5jP+6XBKiHj7+5zDLsURIRWvm9J0b8vVmmngmSa6MK6V75iddrCWQwx6epwYIfr2ueMRVO9IthMS/ya4H2t9VVnmqPIbkvf0DzbCzwQhizNn3fKa2Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751646130; c=relaxed/simple;
-	bh=1Z40vuaBlcXcT2gL2CRMf2qopjmWhxCM91PHcGJPMXc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BWWRDXNTWmiY5vC3z65yy6qlWAW0/0wWiE6ubY4pn6D5mnOlg3pkjzViofkTF1ULlx0/HtIWOfnfowpq96Flo85ctpf1eb7b7ugOFQVnjnwBlXzzQY3reJ7QDYNSHxq4mXEg9Erjcq8SnSYWg6bm4FZbGv4dPQflX20IteIF+Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bmhY4JYz; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751646237; c=relaxed/simple;
+	bh=CEqRI6dFzQK8T9dsxylVwj3iFUduQY713IaRIqBqoSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qO7ihWlGnc/C8KFvnbjEmttm1Ne/fpQUNaBJ6bqXyivL6GjG04vaeM3av/00pDvRqrvwAmwXRaSwSKFEe63SXOoovdEkNlYWtWq96wmpp1jYw3qqD5RyfHQ7L4qiwiafm7VuuZQ1gCjTCP2JGps+EtOETDyKQob264ddl+BE2sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=L2gR8tuP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2ovIm12+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=L2gR8tuP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2ovIm12+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bmhY4JYz"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2d09d495c6cso452548fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751646127; x=1752250927; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sbIxRJgDwSO6eFNbPIOvHsJciGlnmaV0CB/OfWkp75M=;
-        b=bmhY4JYzXO/ScIEgx5qUwRe3fMpnI+R6WzwTqlq8vXAXktcyEoja8jpxprHjhnAipE
-         /KyBiKiOvv6RBVVzAgBeYoeKMccl6+i5Vyayjaudkv75WkfON+3xjRFX/rxbpefbtVnn
-         YtD6AyEp2+Bhe1ej9/AInUsjOx56bZaIXc7NxPM/0GUUyCTSjQF7yi8b4MHs7qAU7pqE
-         B17E2K8u/lXs331nQYwWnGnH6UKTR4OM8rmPFuq7htDsOEeL0X5eCJeOB3EtlT1Sm/Tr
-         +wTHqR99LNxkjqI6zj7BWznIeQ2Hh+i0Aoi3h8ZxWAB+PrPYyIf884g/n/jY7C/1w6FP
-         wrsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751646127; x=1752250927;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sbIxRJgDwSO6eFNbPIOvHsJciGlnmaV0CB/OfWkp75M=;
-        b=Fn1ceMn4OOs0sEQ2fKSbYWoIB91HVc61iIIcDLglnuBVarezE1Exhkfme1g5wFK2ho
-         EJi3IzYKIS/yRRxCkQWq0lOmHTqUN+ki475p4ZClkayTUvjpkim6FGlw2hxwOEO01F0V
-         Mzki7cKD5AiU9hpTqfH6EPy/Auxe1YQCdIIkm+JDM76CU+HW9X/IUO4P4S+RrPzCIcu1
-         Q4Ahqc7u7I9uh3TZQ1mFPR5StbHJnuyjkrhc8rYVzHTKXyS44659L0V6ytA8kGd/2Ine
-         1la30c63Q8d45YZOROB7TcFSQDZkr8Afp5HFJAYC58iLXJFFQCfUs9bDOot8UHwaJjGs
-         F77w==
-X-Forwarded-Encrypted: i=1; AJvYcCXY1VCdz+/j2GJs51Lg7ohnpFY18Naglgrg9IVXGHnPanHbDIlkcraC2erf1f0PlQOCotMaOZWBLNzRxVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe8jjSZn5C+DzHQ5WgVzq/+03JkbjMUilR0ws/kMJcf0jL2QVG
-	NF/btE8wYTHa7KwDJa/QetR9WIrbnWTY6GGQnA8oXFncngZf/AydXGZbYQv4Hz4RiH4=
-X-Gm-Gg: ASbGncv13Pg4TdYGEM0aZ2N7VkJikazP9X/v2etgouxvVRqQ0Ikm3MdBdVHnL5zRwQT
-	FZtvIW9l7f55ch7YQUOCw5PKjPP/Ah5oEMeyIKZ1HE8Ha+ail7YvIdqFuM3BRBY6NzTgM7WcJuO
-	4SiCGjCLHpr2MSf3k/MGg4xlgX1Iz0Nl0EwJ4+7X0QWdROkF8KqNDxwDGZGhedQE9dwd381rH0d
-	5HzIJFUcn2VAFbuV8KEOw9/mWYOEJx6L1bdGJ6FpN8v52wEDhRbncjQOnwyo8VvjyTGhZX04O1c
-	dw6joWb88rp8jKKVoh8LuEjz6fKhVKgGxb91hfBOxZo+yFgxs+NsmRUHNZ6U0VL9aH03
-X-Google-Smtp-Source: AGHT+IHu3uXF+dk/Nho7ZxH20VneUtU5w5z5usD8PtyZUwU3MbU+wVKFavOLlChdnSeFT+w6ff1QqQ==
-X-Received: by 2002:a05:6871:5009:b0:2c1:5448:3941 with SMTP id 586e51a60fabf-2f791fa7cebmr2199132fac.18.1751646126861;
-        Fri, 04 Jul 2025 09:22:06 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:d956:6ab3:7240:6bd9])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f78ff048absm588075fac.5.2025.07.04.09.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:22:05 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 04 Jul 2025 11:21:54 -0500
-Subject: [PATCH v2] iio: adc: ad7173: fix num_slots
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L2gR8tuP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2ovIm12+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L2gR8tuP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2ovIm12+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BA2A51F38A;
+	Fri,  4 Jul 2025 16:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751646233; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QnCd8EhWi608gG2ZJYlh4eX8dcVJgRAAdrIHdUvyEVw=;
+	b=L2gR8tuP/PGpICezWU6I/FHdzfdVJ014+mXt7VCUxfIQQGuLHGkju0of77fIkhWtrXhLlv
+	6B6Nnw61wPYIIbP4VKNpFWgCSNIN7tPBAOsVBDPKwM6gVGRueQs4W3TQ4dj3xYzz/Imi/M
+	8K8tJAs/q55YfzyCxE5lnc279+Ynnyw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751646233;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QnCd8EhWi608gG2ZJYlh4eX8dcVJgRAAdrIHdUvyEVw=;
+	b=2ovIm12+Lw1AIzV5K/Ddziql1f/EX0Vn9Xt4Lt+ZdAxmlKIPcDAKDV1CHX+WjgoQJFWuV6
+	kQc3a1yAdZFyzRBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751646233; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QnCd8EhWi608gG2ZJYlh4eX8dcVJgRAAdrIHdUvyEVw=;
+	b=L2gR8tuP/PGpICezWU6I/FHdzfdVJ014+mXt7VCUxfIQQGuLHGkju0of77fIkhWtrXhLlv
+	6B6Nnw61wPYIIbP4VKNpFWgCSNIN7tPBAOsVBDPKwM6gVGRueQs4W3TQ4dj3xYzz/Imi/M
+	8K8tJAs/q55YfzyCxE5lnc279+Ynnyw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751646233;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QnCd8EhWi608gG2ZJYlh4eX8dcVJgRAAdrIHdUvyEVw=;
+	b=2ovIm12+Lw1AIzV5K/Ddziql1f/EX0Vn9Xt4Lt+ZdAxmlKIPcDAKDV1CHX+WjgoQJFWuV6
+	kQc3a1yAdZFyzRBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48A4613757;
+	Fri,  4 Jul 2025 16:23:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Kke6DxkAaGhNGgAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Fri, 04 Jul 2025 16:23:53 +0000
+Date: Fri, 4 Jul 2025 18:23:48 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, Henry
+ Martin <bsdhenrymartin@gmail.com>, Patrick Rudolph
+ <patrick.rudolph@9elements.com>, Andrew Geissler <geissonator@yahoo.com>,
+ Ninad Palsule <ninad@linux.ibm.com>, Patrick Venture <venture@google.com>,
+ Robert Lippert <roblip@gmail.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/10] soc: aspeed: lpc-snoop: Lift channel config to
+ const structs
+Message-ID: <20250704182348.53808e0f@endymion>
+In-Reply-To: <20250616-aspeed-lpc-snoop-fixes-v2-10-3cdd59c934d3@codeconstruct.com.au>
+References: <20250616-aspeed-lpc-snoop-fixes-v2-0-3cdd59c934d3@codeconstruct.com.au>
+	<20250616-aspeed-lpc-snoop-fixes-v2-10-3cdd59c934d3@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-iio-adc-ad7173-fix-num_slots-on-most-chips-v2-1-a74941609143@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAKH/Z2gC/52NQQ6CMBBFr0K6dkynDaCuuIchpi1VJoGWdJBIC
- He3cgQXf/F+fv7bBPtEnsWt2ETyCzHFkEGdCuF6E14eqMsslFSlrKUGogimczk11hqe9IHwHh8
- 8xJkhBhgjz+B6mhjs9aKUrIySFkU+nJLP80N2bzP3xHNM6+Fe8Nf+pVkQELSqXNkhao9lY806k
- E3+7OIo2n3fv6lEpnfnAAAA
-X-Change-ID: 20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-b982206a20b1
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6043; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=1Z40vuaBlcXcT2gL2CRMf2qopjmWhxCM91PHcGJPMXc=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoZ/+jF5xf7dykqORLe/NNBtPf7hGtoYaLkIa4p
- hsNGcSbYTOJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGf/owAKCRDCzCAB/wGP
- wAuoB/4n58J7TLyJWOTfU3AvZYQ/6NnhQ1WKop7g9CqY5cPQF8tFizAe6UV5+f9gayhvqkBhkqV
- 7qwCjqpxKQDFufYowzZP8+YnSHzokb2CjMZVs8LYYl0yuuUJ06320GKU8V4QnTTAHZTeOwHuoSs
- 6wM5O58ys0JICrlrC7aihHhR9VksyUqBlhIFlTZpPby+X5Lnpp85CQmdJjtIkcE5ELKTquKCxHI
- 44xfkehU41JA9mUu68bo+8WKxnli6oWl3q2VzsR4Z0DqsK15fnvSvAmBOG4BevslRD/jvxOtXdY
- ipBq8ZjjhQlDSPt/HEZMEEfFyIonPRKrESWCwJ027WdD8W+H
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	FREEMAIL_CC(0.00)[lists.ozlabs.org,jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,lists.infradead.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -3.80
 
-Fix the num_slots value for most chips in the ad7173 driver. The correct
-value is the number of CHANNELx registers on the chip.
+Hi Andrew,
 
-In commit 4310e15b3140 ("iio: adc: ad7173: don't make copy of
-ad_sigma_delta_info struct"), we refactored struct ad_sigma_delta_info
-to be static const data instead of being dynamically populated during
-driver probe. However, there was an existing bug in commit 76a1e6a42802
-("iio: adc: ad7173: add AD7173 driver") where num_slots was incorrectly
-set to the number of CONFIGx registers instead of the number of
-CHANNELx registers. This bug was partially propagated to the refactored
-code in that the 16-channel chips were only given 8 slots instead of
-16 although we did managed to fix the 8-channel chips and one of the
-4-channel chips in that commit. However, we botched two of the 4-channel
-chips and ended up incorrectly giving them 8 slots during the
-refactoring.
+On Mon, 16 Jun 2025 22:43:47 +0930, Andrew Jeffery wrote:
+> The shifts and masks for each channel are defined by hardware and
+> are not something that changes at runtime. Accordingly, describe the
+> information in an array of const structs and associate elements with
+> each channel instance, removing the need for the switch and handling of
+> its default case.
 
-This patch fixes that mistake on the 4-channel chips and also
-corrects the 16-channel chips to have 16 slots.
+I like this.
 
-Fixes: 4310e15b3140 ("iio: adc: ad7173: don't make copy of ad_sigma_delta_info struct")
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-Changes in v2:
-- Improve commit message.
-- Link to v1: https://lore.kernel.org/r/20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com
----
- drivers/iio/adc/ad7173.c | 37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+Note that technically, the removal of the default case in the switch
+was already possible since patch 06/10 (soc: aspeed: lpc-snoop:
+Constrain parameters in channel paths).
 
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..9c197cea11eb955becf4b9b97246379fa9c5da13 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -771,10 +771,27 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
- 	.num_slots = 8,
- };
- 
-+static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
-+	.set_channel = ad7173_set_channel,
-+	.append_status = ad7173_append_status,
-+	.disable_all = ad7173_disable_all,
-+	.disable_one = ad7173_disable_one,
-+	.set_mode = ad7173_set_mode,
-+	.has_registers = true,
-+	.has_named_irqs = true,
-+	.supports_spi_offload = true,
-+	.addr_shift = 0,
-+	.read_mask = BIT(6),
-+	.status_ch_mask = GENMASK(3, 0),
-+	.data_reg = AD7173_REG_DATA,
-+	.num_resetclks = 64,
-+	.num_slots = 16,
-+};
-+
- static const struct ad7173_device_info ad4111_device_info = {
- 	.name = "ad4111",
- 	.id = AD4111_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 8,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -796,7 +813,7 @@ static const struct ad7173_device_info ad4111_device_info = {
- static const struct ad7173_device_info ad4112_device_info = {
- 	.name = "ad4112",
- 	.id = AD4112_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 8,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -817,7 +834,7 @@ static const struct ad7173_device_info ad4112_device_info = {
- static const struct ad7173_device_info ad4113_device_info = {
- 	.name = "ad4113",
- 	.id = AD4113_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 8,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -836,7 +853,7 @@ static const struct ad7173_device_info ad4113_device_info = {
- static const struct ad7173_device_info ad4114_device_info = {
- 	.name = "ad4114",
- 	.id = AD4114_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 16,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -855,7 +872,7 @@ static const struct ad7173_device_info ad4114_device_info = {
- static const struct ad7173_device_info ad4115_device_info = {
- 	.name = "ad4115",
- 	.id = AD4115_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 16,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -874,7 +891,7 @@ static const struct ad7173_device_info ad4115_device_info = {
- static const struct ad7173_device_info ad4116_device_info = {
- 	.name = "ad4116",
- 	.id = AD4116_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in_div = 11,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -893,7 +910,7 @@ static const struct ad7173_device_info ad4116_device_info = {
- static const struct ad7173_device_info ad7172_2_device_info = {
- 	.name = "ad7172-2",
- 	.id = AD7172_2_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_4_slots,
- 	.num_voltage_in = 5,
- 	.num_channels = 4,
- 	.num_configs = 4,
-@@ -926,7 +943,7 @@ static const struct ad7173_device_info ad7172_4_device_info = {
- static const struct ad7173_device_info ad7173_8_device_info = {
- 	.name = "ad7173-8",
- 	.id = AD7173_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in = 17,
- 	.num_channels = 16,
- 	.num_configs = 8,
-@@ -943,7 +960,7 @@ static const struct ad7173_device_info ad7173_8_device_info = {
- static const struct ad7173_device_info ad7175_2_device_info = {
- 	.name = "ad7175-2",
- 	.id = AD7175_2_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_4_slots,
- 	.num_voltage_in = 5,
- 	.num_channels = 4,
- 	.num_configs = 4,
-@@ -960,7 +977,7 @@ static const struct ad7173_device_info ad7175_2_device_info = {
- static const struct ad7173_device_info ad7175_8_device_info = {
- 	.name = "ad7175-8",
- 	.id = AD7175_8_ID,
--	.sd_info = &ad7173_sigma_delta_info_8_slots,
-+	.sd_info = &ad7173_sigma_delta_info_16_slots,
- 	.num_voltage_in = 17,
- 	.num_channels = 16,
- 	.num_configs = 8,
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 100 +++++++++++++++-------------------
+>  1 file changed, 45 insertions(+), 55 deletions(-)
+> 
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index 9f88c5471b1b6d85f6d9e1970240f3d1904d166c..2d97b8d5fb429e215c321c9c2ee3fa35d39f8618 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -63,7 +63,16 @@ enum aspeed_lpc_snoop_index {
+>  	ASPEED_LPC_SNOOP_INDEX_MAX = ASPEED_LPC_SNOOP_INDEX_1,
+>  };
+>  
+> +struct aspeed_lpc_snoop_channel_cfg {
+> +	enum aspeed_lpc_snoop_index index;
+> +	u32 hicr5_en;
+> +	u32 snpwadr_mask;
+> +	u32 snpwadr_shift;
+> +	u32 hicrb_en;
+> +};
+> +
+>  struct aspeed_lpc_snoop_channel {
+> +	const struct aspeed_lpc_snoop_channel_cfg *cfg;
+>  	bool enabled;
+>  	struct kfifo		fifo;
+>  	wait_queue_head_t	wq;
+> @@ -77,6 +86,23 @@ struct aspeed_lpc_snoop {
+>  	struct aspeed_lpc_snoop_channel chan[ASPEED_LPC_SNOOP_INDEX_MAX + 1];
+>  };
+>  
+> +static const struct aspeed_lpc_snoop_channel_cfg channel_cfgs[ASPEED_LPC_SNOOP_INDEX_MAX + 1] = {
+> +	{
+> +		.index = ASPEED_LPC_SNOOP_INDEX_0,
+> +		.hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
+> +		.snpwadr_mask = SNPWADR_CH0_MASK,
+> +		.snpwadr_shift = SNPWADR_CH0_SHIFT,
+> +		.hicrb_en = HICRB_ENSNP0D,
+> +	},
+> +	{
+> +		.index = ASPEED_LPC_SNOOP_INDEX_1,
+> +		.hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
+> +		.snpwadr_mask = SNPWADR_CH1_MASK,
+> +		.snpwadr_shift = SNPWADR_CH1_SHIFT,
+> +		.hicrb_en = HICRB_ENSNP1D,
+> +	},
+> +};
+> +
+>  static struct aspeed_lpc_snoop_channel *snoop_file_to_chan(struct file *file)
+>  {
+>  	return container_of(file->private_data,
+> @@ -189,28 +215,27 @@ static int aspeed_lpc_snoop_config_irq(struct aspeed_lpc_snoop *lpc_snoop,
+>  }
+>  
+>  __attribute__((nonnull))
+> -static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+> -				   struct device *dev,
+> -				   enum aspeed_lpc_snoop_index index, u16 lpc_port)
+> +static int aspeed_lpc_enable_snoop(struct device *dev,
+> +				    struct aspeed_lpc_snoop *lpc_snoop,
+> +				    struct aspeed_lpc_snoop_channel *channel,
+> +				    const struct aspeed_lpc_snoop_channel_cfg *cfg,
+> +				    u16 lpc_port)
+>  {
 
----
-base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
-change-id: 20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-b982206a20b1
+I'm confused by this new calling convention. With lpc_snoop and index,
+you could already retrieve the aspeed_lpc_snoop_channel struct and the
+aspeed_lpc_snoop_channel_cfg struct. I can't see the benefit of the
+change. It even forces you to add an index field to struct
+aspeed_lpc_snoop_channel_cfg, which would otherwise not be needed.
 
-Best regards,
+If you prefer to pass cfg instead of index as a parameter, that does
+not imply passing channel too. You can get the index from the cfg (if
+you decide to keep it in that struct), and then the channel from index.
+
+Or you could even pass only the channel (to be consistent with
+aspeed_lpc_disable_snoop), if you set channel->cfg before calling this
+function. Again this implies keeping index in struct
+aspeed_lpc_snoop_channel_cfg.
+
+>  	const struct aspeed_lpc_snoop_model_data *model_data;
+> -	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
+> -	struct aspeed_lpc_snoop_channel *channel;
+>  	int rc = 0;
+>  
+> -	channel = &lpc_snoop->chan[index];
+> -
+>  	if (WARN_ON(channel->enabled))
+>  		return -EBUSY;
+>  
+>  	init_waitqueue_head(&channel->wq);
+>  
+> +	channel->cfg = cfg;
+>  	channel->miscdev.minor = MISC_DYNAMIC_MINOR;
+>  	channel->miscdev.fops = &snoop_fops;
+>  	channel->miscdev.parent = dev;
+>  
+>  	channel->miscdev.name =
+> -		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, index);
+> +		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, cfg->index);
+>  	if (!channel->miscdev.name)
+>  		return -ENOMEM;
+>  
+> @@ -223,39 +248,18 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  		goto err_free_fifo;
+>  
+>  	/* Enable LPC snoop channel at requested port */
+> -	switch (index) {
+> -	case 0:
+> -		hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W;
+> -		snpwadr_mask = SNPWADR_CH0_MASK;
+> -		snpwadr_shift = SNPWADR_CH0_SHIFT;
+> -		hicrb_en = HICRB_ENSNP0D;
+> -		break;
+> -	case 1:
+> -		hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W;
+> -		snpwadr_mask = SNPWADR_CH1_MASK;
+> -		snpwadr_shift = SNPWADR_CH1_SHIFT;
+> -		hicrb_en = HICRB_ENSNP1D;
+> -		break;
+> -	default:
+> -		rc = -EINVAL;
+> -		goto err_misc_deregister;
+> -	}
+> -
+> -	/* Enable LPC snoop channel at requested port */
+> -	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
+> -	regmap_update_bits(lpc_snoop->regmap, SNPWADR, snpwadr_mask,
+> -			   lpc_port << snpwadr_shift);
+> +	regmap_set_bits(lpc_snoop->regmap, HICR5, cfg->hicr5_en);
+> +	regmap_update_bits(lpc_snoop->regmap, SNPWADR, cfg->snpwadr_mask,
+> +		lpc_port << cfg->snpwadr_shift);
+
+It is a good practice to align the second line on the opening
+parenthesis of the first line (as was done originally).
+
+>  
+>  	model_data = of_device_get_match_data(dev);
+>  	if (model_data && model_data->has_hicrb_ensnp)
+> -		regmap_update_bits(lpc_snoop->regmap, HICRB, hicrb_en, hicrb_en);
+> +		regmap_set_bits(lpc_snoop->regmap, HICRB, cfg->hicrb_en);
+>  
+>  	channel->enabled = true;
+>  
+>  	return 0;
+>  
+> -err_misc_deregister:
+> -	misc_deregister(&channel->miscdev);
+>  err_free_fifo:
+>  	kfifo_free(&channel->fifo);
+>  	return rc;
+> @@ -263,30 +267,13 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  
+>  __attribute__((nonnull))
+>  static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+> -				     enum aspeed_lpc_snoop_index index)
+> +				     struct aspeed_lpc_snoop_channel *channel)
+>  {
+> -	struct aspeed_lpc_snoop_channel *channel;
+> -
+> -	channel = &lpc_snoop->chan[index];
+> -
+>  	if (!channel->enabled)
+>  		return;
+>  
+>  	/* Disable interrupts along with the device */
+> -	switch (index) {
+> -	case 0:
+> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
+> -				   HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
+> -				   0);
+> -		break;
+> -	case 1:
+> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
+> -				   HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
+> -				   0);
+> -		break;
+> -	default:
+> -		return;
+> -	}
+> +	regmap_clear_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en);
+>  
+>  	channel->enabled = false;
+>  	/* Consider improving safety wrt concurrent reader(s) */
+> @@ -299,8 +286,8 @@ static void aspeed_lpc_snoop_remove(struct platform_device *pdev)
+>  	struct aspeed_lpc_snoop *lpc_snoop = dev_get_drvdata(&pdev->dev);
+>  
+>  	/* Disable both snoop channels */
+> -	aspeed_lpc_disable_snoop(lpc_snoop, ASPEED_LPC_SNOOP_INDEX_0);
+> -	aspeed_lpc_disable_snoop(lpc_snoop, ASPEED_LPC_SNOOP_INDEX_1);
+> +	aspeed_lpc_disable_snoop(lpc_snoop, &lpc_snoop->chan[0]);
+> +	aspeed_lpc_disable_snoop(lpc_snoop, &lpc_snoop->chan[1]);
+>  }
+>  
+>  static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+> @@ -339,6 +326,8 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+>  	if (rc)
+>  		return rc;
+>  
+> +	static_assert(ARRAY_SIZE(channel_cfgs) == ARRAY_SIZE(lpc_snoop->chan),
+> +		"Broken implementation assumption regarding cfg count");
+
+Both also need to be equal to ASPEED_LPC_SNOOP_INDEX_MAX + 1, right?
+Otherwise the loop below would break. But it turns out that both arrays
+are now declared that way, so it just has to be true. This makes me
+believe that this static assert is no longer needed.
+
+>  	for (idx = ASPEED_LPC_SNOOP_INDEX_0; idx <= ASPEED_LPC_SNOOP_INDEX_MAX; idx++) {
+>  		u32 port;
+>  
+> @@ -346,7 +335,8 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+>  		if (rc)
+>  			break;
+>  
+> -		rc = aspeed_lpc_enable_snoop(lpc_snoop, dev, idx, port);
+> +		rc = aspeed_lpc_enable_snoop(dev, lpc_snoop, &lpc_snoop->chan[idx],
+> +					     &channel_cfgs[idx], port);
+>  		if (rc)
+>  			goto cleanup_channels;
+>  	}
+> 
+
+
 -- 
-David Lechner <dlechner@baylibre.com>
-
+Jean Delvare
+SUSE L3 Support
