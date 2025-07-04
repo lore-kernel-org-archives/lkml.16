@@ -1,63 +1,62 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E172C3258
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5FE2D8DC8
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751639786; cv=none; b=Z5rCiDvFp5ILXTYv3mJjIljcMBrUN9+lAnBgQsXDFvES390V2hThza2S+kEMEPRexxGUvggGMGEFA/DkELhZiVozrutSJsjoDmOMxc+zzXtrxCVdnM7tV4Xf9QIWvq1pULhTsMOVZBr2yh8lBZ2r3SI0TJCj8gTEyStVd0o7nPQ=
+	t=1751639788; cv=none; b=G9UKDIpTbmim3+8rE8ESfQhCEDtUdIEuenCtxJ9MxvWl8UwmJDGLyiAYt7IMf35dDAGGDiP+tPZyTU8ZyI1lHZbTfJUj4FrwipMqJnJpTBnCkxcEmkB0JZSYcuYc2/0vVArlVymlUM2PqKwcD8vOKR6e1TcJ4EepzDSvpfl1Ezk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751639786; c=relaxed/simple;
-	bh=nb4um9P8hUoqYEaIVbgAm/x5zCvPnr2ef9UlSlIIiMA=;
+	s=arc-20240116; t=1751639788; c=relaxed/simple;
+	bh=K3IdBv+el5XcgNdSoavpeFZhuDRUnWvXjoODKRwd5TY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AQmNkLP3tIZQupexBQpEatMY4RmX6kqlT9QqAAFYMvDhm9HBZasXmOv0VSTpv+5ugGGilhy3tc++F6MKE69tbOv649z/DEASmNfajq19zOai8wVrDqPY49W8lkU41zwfxOTHZhFe8xPpel6FJw2WJ+ZQTPTbdFLhlvHsondT51o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rjvLs4rx; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=P8c02rdGzWdCcI8crbCUUvkjoBp/7vDD83xJIwv2OxufJ/HhMpIWWMsSAhPZhfnDhJnODZEfCaE7fa2oig2f9q/N8Wc+6zTLeULmgG9hqg2toTI4EE9GrWQ6e7XaayM4NEOMfv7ZdGqvB8A/RSt6Rviaa14GE86p0A3crmT5KkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mGSbXR2M; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rjvLs4rx"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4538bc52a8dso7604315e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:36:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mGSbXR2M"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453749af004so4930065e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751639783; x=1752244583; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751639785; x=1752244585; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aYfIWQe8S3zIoB06sVdRdEn43/CQJKSFHRiqx/zs5CE=;
-        b=rjvLs4rxrnhdfSwpwXJHcITwz72ommLyNbf9zwXj6zC/3HIDPdfrFDmVQ4wjfmTc9X
-         9iULlDzksTSgFOj4M5cqb5tdUePogAFZk3KXmb8Qg6+Up6GekOUZ9E7RqC70tv0yRVWx
-         ip581Dv3ybN3GCGucpS9wIH9hc9EL/lmsrEYOXwPXhtu1LA819VqscTeQDOQQJtBUAPe
-         sCHsaVMXzePaBWTr3kZRavFBp/QPu8o4jaIhC/Gf84z1SrNpmGQnCw1Zv+E2ubYcDNHJ
-         nSjuvcAB0LK4BLdXd9YQ131R97gXCmUtX7NwC0K4rATn1TSDzPax+FDylGKgEMSqQ/eH
-         MX+A==
+        bh=HlHWzk+mMbngQROsiCm7HVXVg8kCE36dvYmeJzMAcTk=;
+        b=mGSbXR2MwFiVeQVFaoE8/z5Wp+RkM21Sae4tmKmulcqPCN1tCRP4aTBn2U2DsReza9
+         jCdi5uAZEF31EClaeHZori12nTHaqlGLE/oFk6p/SNir6JisE1m/rBlXkHVIllxeWq3N
+         LBlaylIkeHX8JuARjRLLmSv0UCpm+hWKfZ8SJRokADL7ejx7Un8fTpVAaTwEXfUrNftL
+         vVdIYNH/cGJZCGwsfOKlZ1XtEGlP0CaeWPmD65ca6chXRjY3IQ7FrStS69BturUfUo8u
+         8AMAJHWlDCUWDFLRlQ7zzm4FeB6UUKPBW3JSR/1KnmOppEx2jQSMw0r+xtSeBQcxpG6A
+         wfzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751639783; x=1752244583;
+        d=1e100.net; s=20230601; t=1751639785; x=1752244585;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aYfIWQe8S3zIoB06sVdRdEn43/CQJKSFHRiqx/zs5CE=;
-        b=UfXoIRcZ5Aqy+LwZufSbvsyCt2Dgknvg491d8HQ9L1GNIszzyszVL8nIB4yuT/ZSmt
-         oErBG0+WVXSj5yb4whmcAiWsgzyV5Z+sE57Yzu9XXQHN43+Kn3Kx2AoeKD00Ys+efR+W
-         AhJpx2/57Jyt6m9qnyY+Hb1nRMW679V1yNlpmHn2SaL4whKorktOO0AhnnQGYDTfXNDh
-         mrf4TAsP2mnATHZelWJC5V2VrT3MgMDVV115akWRsnFbkF+WI9M4TctG3Fwp1kgxWMAV
-         amIYs+3DJ5c79cI3nIfLid/zT3oFylQ8AxlUJ4gskCo4zmjkOp5mFLiUxkdubiRMi/MK
-         KUiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1e/lcQ21lKdWud0OyPZ8TtqSsvnj+OHD59XNoEZ0re3ZDiAoROUdyfTN+eK4sRZFDbI5zLiikkJ9xxYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzssHXfn2PjmNeaN5p2NIDsOHpMeaGllQIr/tFdv+rtMrSdGAte
-	wb+sElb5k5Iudym5pSfXIOeCWWgNzjGGnJS3JXYb6rDErd52ZJQdDvK4MypKrxZOUUU0yQZQpuC
-	4nVPy
-X-Gm-Gg: ASbGncsd5E3aw858goJIf5CrTX7sHqhnbnID2G3bVwDy5Mo8VSM/AUi/7J5Jwq0CTLa
-	yuLywupnR3oP61rMz8XCxRClBpnzYZrhbYDWdCiQnAve3O4DgbptC5aPPiNRXWyIeboU9bQv7V1
-	V+mu6H0F3dWRFMeL4uH+dDEhEcsrwsZRQgNw2hhmetjfNmHOwL4R/3zd3rD6cNiGdT45xsLYnkY
-	b1rFIHPjxyHLfaRcLYcgAK0tad1/oazgAFn2Olq9cY0orhdQtXVJ+eMbYRX8DaF0/RX/zVA8gH5
-	nOFcuf94R62klYEXyQwoUOdWd2imvQBeqcr8Hytd9DaXXxqhXl8NLtqqibWR/UoyRfsd/fc=
-X-Google-Smtp-Source: AGHT+IEvxKudST1vPPvq53xQ78WkR/ilZX9FnxePFKofGNqwn70qdcXs4eLbY09PRDLMzHgEG2j4DA==
-X-Received: by 2002:a05:600c:c492:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-454b3108998mr32960635e9.4.1751639783310;
-        Fri, 04 Jul 2025 07:36:23 -0700 (PDT)
+        bh=HlHWzk+mMbngQROsiCm7HVXVg8kCE36dvYmeJzMAcTk=;
+        b=dWMfsxQsUs4w1Ikf8y922BOu1DdooipW2g51qcsGRuz9Jtq4KYTz34oDDr2HvZEVPt
+         8W+cvwywxkLsd/ysQ0VOAtxTtGtPkXv5h/wxGCNj2kXZnik/pDdqNALK4/mH0bo7v/ET
+         P23DegTf6GmZ7LDFSVm9IGEINRX51eIbbH2VNyxCCMclXbUWBVJ94ljZUvokwmseA5fN
+         Ub+W0BmQ3m2RPiFn7bqzOB5lM+qgQT7g1UlfAHYIuPWebceDPDVRl67mC7bwNZTtOu4h
+         HtGK6ZAdQTd0J5XZsMcX1uUbyl2lcOszo/2L4YmTI9s05HAsVZUWXmlISGC3cL5Qg5Ys
+         h4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNQMIIAeCd6rVIwI5D4noQMU4iuNFoTe/Mpip2Tpe9y6pKvcJwG6gkPCBl5T//MDP0GozRHoUGest+ejo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdlLDmFMKNx2Bitj6uJIkCPiFG9C2nnLIfh98P8qkj2r+7kku9
+	uTQI90PHUeI8b4cuCyIZ81hIJppe/rmn6k4oLC/A+QENV9miXdxQpL8qH67iE2nILR8=
+X-Gm-Gg: ASbGncvYshll2w9mIaQxC2NY0ngj5FcnZ1tgyX9lfeQna/E3cLk6GROH8nqCBwRhj1N
+	RyUW7DihbHpu3Aq9LpyU1rUbMu6rbOZAXe9V3QsRcijXWmZFR3L6cJ/M+9WP5LNfLz6KcXg8lPP
+	TzqXV2XkV6Y8WDKi95uxl9WJ/AvUaJgF3yesJhPqM3Oy+Su3H24+FpgIbJiPIpKFUxGMJyAUrOi
+	QLOE8QeHgrcEGch+rc0DO5jIxjUOZF3mFI3V+tIjtlzmwAKy7NGUcDqIc1IeWH25zVR7l//Gcd4
+	k/JgDkl/hQoMOpY3E9OMibBx+b7pQYAzmFdpvrBnHgv2CJ7iZbqf9PHWJY/mx+NibRsSBwE=
+X-Google-Smtp-Source: AGHT+IGvvno6QlrWBE/NdjghYUhex+mwx0AnVdFXd2l6QiVmsJOhVKLHywWVUqvnXSGBpQ40EPsH5Q==
+X-Received: by 2002:a05:600c:4e8f:b0:450:d614:cb with SMTP id 5b1f17b1804b1-454b31158e6mr27299975e9.33.1751639785291;
+        Fri, 04 Jul 2025 07:36:25 -0700 (PDT)
 Received: from vingu-cube.. ([2a01:e0a:f:6020:7ff5:bbf8:9357:784a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0beesm2690186f8f.36.2025.07.04.07.36.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0beesm2690186f8f.36.2025.07.04.07.36.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 07:36:21 -0700 (PDT)
+        Fri, 04 Jul 2025 07:36:23 -0700 (PDT)
 From: Vincent Guittot <vincent.guittot@linaro.org>
 To: mingo@redhat.com,
 	peterz@infradead.org,
@@ -70,9 +69,9 @@ To: mingo@redhat.com,
 	dhaval@gianis.ca,
 	linux-kernel@vger.kernel.org
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2 4/6] sched/fair: Limit run to parity to the min slice of enqueued entities
-Date: Fri,  4 Jul 2025 16:36:10 +0200
-Message-ID: <20250704143612.998419-5-vincent.guittot@linaro.org>
+Subject: [PATCH v2 5/6] sched/fair: Fix entity's lag with run to parity
+Date: Fri,  4 Jul 2025 16:36:11 +0200
+Message-ID: <20250704143612.998419-6-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250704143612.998419-1-vincent.guittot@linaro.org>
 References: <20250704143612.998419-1-vincent.guittot@linaro.org>
@@ -84,47 +83,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Run to parity ensures that current will get a chance to run its full
-slice in one go but this can create large latency and/or lag for
-entities with shorter slice that has exhausted their previous slice
-and wait to run their next slice.
-
-Clamp the run to parity to the shortest slice of all enqueued entities.
+When an entity is enqueued without preempting current, we must ensure
+that the slice protection is updated to take into account the slice
+duration of the newly enqueued task so that its lag will not exceed
+its slice (+ tick).
 
 Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/fair.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2e624a769b86..2a0348b0cc3d 100644
+index 2a0348b0cc3d..58f25f0be25f 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -884,16 +884,20 @@ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
- /*
-  * HACK, Set the vruntime up to which an entity can run before picking another
-  * one, in vlag, which isn't used until dequeue.
-- * In case of run to parity, we let the entity run to its deadline.
-+ * In case of run to parity, we use the shortest slice of the enqueued entities
-+ * to define the longest runtime.
+@@ -889,12 +889,12 @@ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
   * When run to parity is disabled, we give a minimum quantum to the running
   * entity to ensure progress.
   */
- static inline void set_protect_slice(struct sched_entity *se)
+-static inline void set_protect_slice(struct sched_entity *se)
++static inline void set_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
  {
--	u64 quantum = se->slice;
-+	u64 quantum;
+ 	u64 quantum;
  
--	if (!sched_feat(RUN_TO_PARITY))
--		quantum = min(quantum, normalized_sysctl_sched_base_slice);
-+	if (sched_feat(RUN_TO_PARITY))
-+		quantum = cfs_rq_min_slice(cfs_rq_of(se));
-+	else
-+		quantum = normalized_sysctl_sched_base_slice;
-+	quantum = min(quantum, se->slice);
+ 	if (sched_feat(RUN_TO_PARITY))
+-		quantum = cfs_rq_min_slice(cfs_rq_of(se));
++		quantum = cfs_rq_min_slice(cfs_rq);
+ 	else
+ 		quantum = normalized_sysctl_sched_base_slice;
+ 	quantum = min(quantum, se->slice);
+@@ -905,6 +905,13 @@ static inline void set_protect_slice(struct sched_entity *se)
+ 		se->vlag = se->deadline;
+ }
  
- 	if (quantum != se->slice)
- 		se->vlag = min(se->deadline, se->vruntime + calc_delta_fair(quantum, se));
++static inline void update_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
++{
++	u64 quantum = cfs_rq_min_slice(cfs_rq);
++
++	se->vlag = min(se->vlag, (s64)(se->vruntime + calc_delta_fair(quantum, se)));
++}
++
+ static inline bool protect_slice(struct sched_entity *se)
+ {
+ 	return ((s64)(se->vlag - se->vruntime) > 0);
+@@ -5468,7 +5475,7 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 		__dequeue_entity(cfs_rq, se);
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 
+-		set_protect_slice(se);
++		set_protect_slice(cfs_rq, se);
+ 	}
+ 
+ 	update_stats_curr_start(cfs_rq, se);
+@@ -8730,6 +8737,9 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+ 	if (__pick_eevdf(cfs_rq, !do_preempt_short) == pse)
+ 		goto preempt;
+ 
++	if (sched_feat(RUN_TO_PARITY) && do_preempt_short)
++		update_protect_slice(cfs_rq, se);
++
+ 	return;
+ 
+ preempt:
 -- 
 2.43.0
 
