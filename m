@@ -1,157 +1,223 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8CD1367;
-	Fri,  4 Jul 2025 01:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7B31367;
+	Fri,  4 Jul 2025 01:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751590955; cv=none; b=XkIoTmqGx/OuDFSm1INXxHKGcRRXc/saHoi5go5YTtR4gg8YSd3C94Zn+L1y1us7OSL2M0r/QbrMSO5gO61sIKisOs5u+WQrYpJKYb9SxHeOFkin5X6wHP8NVaKAGS5NZiSb1ty4KfheFZ9pWpN6OCSBejnv/JmrUrdjhyuIbfg=
+	t=1751591055; cv=none; b=Jn9v9J741T9U0XSnyOi0Wtm8ctcPz8JMOrTAGbCQG1JxsPuwb1EOl4ASzknO5KCy7UW0cXO/HVvBbCKUJAuNtUCOEmwjsBxmK/3yWhfh5cRdudxuvxj6UH1QjAKI2Z0wf0EojrSqWFIqj4QH4tgCk0nK07cvl814VlmIu5eLznA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751590955; c=relaxed/simple;
-	bh=4yM9H18WKb8ZQoai1J+dXO7Gqdgx9RawE/f2J7Fq7ws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzGxf0VSbwYi2clBBL1DtgizmmIAe/c66Ylk0zwml6vTWPkTNA4RjjCUcH0fds5s49K0ux/q+Fy5SrofYovwnmZAsu0iSKVo0/Nqd1m5JTfp6vXIkqmW6dZGNGYTXnfVQb9xUGSKeoU6nSPkJLvimiIbK9ys5oyAgKT0w+ocYTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=rUUzFsMD; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1751591055; c=relaxed/simple;
+	bh=NwYXwioSFA+26ntHEcsMyePfyCypoWUmjB3nl6lM3yM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nOXCdpTEhJcGOvE8VJIRkpjZ2dZ94wwUe1UH3EJlXabWxALUJXS9DOK6T/WMuC5SlisGXQ0UbO95ARYVG4AhGIUY3umwfv0BU0OFhSbUmeW3u25qckuXeKf+CLzF/JDgFDx8kOvgybUUhQj/eXltC/ePXp+Ek5SYEwdksqqGbSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hLaIjUUU; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="rUUzFsMD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M8AXJg1tKSMX9yM/D1GDp09pdz1kDnJW5g7KxaXavI4=; b=rUUzFsMDuM6jDKn/65069gKDKj
-	QpK2jPDELrkp8ER4J89aukeSAyCupy2fmMEWi+pyIJs9Qffp09oC97c2yNXoOR/xEN8qLRx8i0zBq
-	LMYcfMcnOU9rJtVCvc5dkIM7Ih+aTiJZ8hBtIq9QoMgAyHps7pcPwUTmG/Kvt8p3elzPGrhVz7MeD
-	jp3KK4D0dlyBgjpO3DplsaBUzV/VUrkmfgDQSfEH0vXrpT7KyCm/R7MCSuNfTuTkpRvXZ9Z4ghwm9
-	J4GvP3r4xdXdMScTc0sneu1xYB7xOVVaUt8nqXRTIgByxTtOGnOJaXwk3r4EthbLPSmzfinVutXRI
-	grWHlCPQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXUow-00000007qiP-0bZx;
-	Fri, 04 Jul 2025 01:02:30 +0000
-Date: Fri, 4 Jul 2025 02:02:30 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: NeilBrown <neil@brown.name>
-Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
-	linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing
- ->sysctl
-Message-ID: <20250704010230.GA1868876@ZenIV>
-References: <175002843966.608730.14640390628578526912@noble.neil.brown.name>
- <20250615235714.GG1880847@ZenIV>
- <175004219130.608730.907040844486871388@noble.neil.brown.name>
- <20250703234313.GM1880847@ZenIV>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLaIjUUU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751591054; x=1783127054;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=NwYXwioSFA+26ntHEcsMyePfyCypoWUmjB3nl6lM3yM=;
+  b=hLaIjUUUWyrq0Gvu6xzHJs7XPyAcjgSvYb0HfU+2QfHK8EYGFCZL0GK7
+   +gR5TOaup8iFb7/lnjXMik1NJlykP08gTDXWjz3nth15hUam0Xz1LC0dN
+   piam93EjjMgHalR00wMMBO2Sn6LOCwwvoNiKVtwYwLodhN33mkg1LUyZR
+   fZo00t95qH8KvMMwk/PrwIvDzzHq3BzxQObJKdhhPxmnFdbxivtFEOWDw
+   ZGoQ00Of8H5JeGwQoAc+HOm7zzvb2wRvVN6kq79Fwq2/rxaoJDqZhLiok
+   O0y592YBLl2hCJ+vl4lK+wRYYdWpZAD8txNSN0114ujmg7fspGXXzzmfx
+   g==;
+X-CSE-ConnectionGUID: SW+IFz7bT7mOg9ARlC994A==
+X-CSE-MsgGUID: mcIi/HtiSoGzQMV+IM7uGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57701430"
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="57701430"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:04:13 -0700
+X-CSE-ConnectionGUID: 0HQVXw3ITdOj0TgMEVV+qw==
+X-CSE-MsgGUID: LaK5miYZRDC1gkzDLcBvsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="153929357"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.37]) ([10.124.240.37])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 18:04:11 -0700
+Message-ID: <45caa98c-d84e-4e8f-acd8-c255ec339c6f@linux.intel.com>
+Date: Fri, 4 Jul 2025 09:04:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703234313.GM1880847@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/4] perf/x86/intel/uncore: Support MSR portal for
+ discovery tables
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250703165614.606446-1-kan.liang@linux.intel.com>
+ <20250703165614.606446-2-kan.liang@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250703165614.606446-2-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 12:43:13AM +0100, Al Viro wrote:
 
-> I would rather *not* leave a dangling pointer there, and yes, it can
-> end up being dangling.  kfree_rcu() from inside the ->evict_inode()
-> may very well happen earlier than (also RCU-delayed) freeing of struct
-> inode itself.
-> 
-> What we can do is WRITE_ONCE() to set it to NULL on the evict_inode
-> side and READ_ONCE() in the proc_sys_compare().
-> 
-> The reason why the latter is memory-safe is that ->d_compare() for
-> non-in-lookup dentries is called either under rcu_read_lock() (in which
-> case observing non-NULL means that kfree_rcu() couldn't have gotten to
-> freeing the sucker) *or* under ->d_lock, in which case the inode can't
-> reach ->evict_inode() until we are done.
-> 
-> So this predicate is very much relevant.  Have that fucker called with
-> neither rcu_read_lock() nor ->d_lock, and you might very well end up
-> with dereferencing an already freed ctl_table_header.
+On 7/4/2025 12:56 AM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Starting from the Panther Lake, the discovery table mechanism is also
+> supported in client platforms. The difference is that the portal of the
+> global discovery table is retrieved from an MSR.
+>
+> The layout of discovery tables are the same as the server platforms.
+> Factor out __parse_discovery_table() to parse discover tables.
+>
+> The uncore PMON is Die scope. Need to parse the discovery tables for
+> each die.
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  arch/x86/events/intel/uncore_discovery.c | 87 ++++++++++++++++++------
+>  arch/x86/events/intel/uncore_discovery.h |  3 +
+>  2 files changed, 70 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index 571e44b49691..8680f66c3e34 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -273,32 +273,15 @@ uncore_ignore_unit(struct uncore_unit_discovery *unit, int *ignore)
+>  	return false;
+>  }
+>  
+> -static int parse_discovery_table(struct pci_dev *dev, int die,
+> -				 u32 bar_offset, bool *parsed,
+> -				 int *ignore)
+> +static int __parse_discovery_table(resource_size_t addr, int die,
+> +				   bool *parsed, int *ignore)
+>  {
+>  	struct uncore_global_discovery global;
+>  	struct uncore_unit_discovery unit;
+>  	void __iomem *io_addr;
+> -	resource_size_t addr;
+>  	unsigned long size;
+> -	u32 val;
+>  	int i;
+>  
+> -	pci_read_config_dword(dev, bar_offset, &val);
+> -
+> -	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
+> -		return -EINVAL;
+> -
+> -	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
+> -#ifdef CONFIG_PHYS_ADDR_T_64BIT
+> -	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		u32 val2;
+> -
+> -		pci_read_config_dword(dev, bar_offset + 4, &val2);
+> -		addr |= ((resource_size_t)val2) << 32;
+> -	}
+> -#endif
+>  	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
+>  	io_addr = ioremap(addr, size);
+>  	if (!io_addr)
+> @@ -341,7 +324,32 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+>  	return 0;
+>  }
+>  
+> -bool intel_uncore_has_discovery_tables(int *ignore)
+> +static int parse_discovery_table(struct pci_dev *dev, int die,
+> +				 u32 bar_offset, bool *parsed,
+> +				 int *ignore)
+> +{
+> +	resource_size_t addr;
+> +	u32 val;
+> +
+> +	pci_read_config_dword(dev, bar_offset, &val);
+> +
+> +	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
+> +		return -EINVAL;
+> +
+> +	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
+> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
+> +	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> +		u32 val2;
+> +
+> +		pci_read_config_dword(dev, bar_offset + 4, &val2);
+> +		addr |= ((resource_size_t)val2) << 32;
+> +	}
+> +#endif
+> +
+> +	return __parse_discovery_table(addr, die, parsed, ignore);
+> +}
+> +
+> +static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+>  {
+>  	u32 device, val, entry_id, bar_offset;
+>  	int die, dvsec = 0, ret = true;
+> @@ -390,6 +398,45 @@ bool intel_uncore_has_discovery_tables(int *ignore)
+>  	return ret;
+>  }
+>  
+> +static bool intel_uncore_has_discovery_tables_msr(int *ignore)
+> +{
+> +	unsigned long *die_mask;
+> +	bool parsed = false;
+> +	int cpu, die;
+> +	u64 base;
+> +
+> +	die_mask = kcalloc(BITS_TO_LONGS(__uncore_max_dies),
 
-IOW, I would prefer to do this:
+Better use uncore_max_dies() instead of __uncore_max_dies.
 
-[PATCH] fix proc_sys_compare() handling of in-lookup dentries
 
-There's one case where ->d_compare() can be called for an in-lookup
-dentry; usually that's nothing special from ->d_compare() point of
-view, but... proc_sys_compare() is weird.
-
-The thing is, /proc/sys subdirectories can look differently for
-different processes.  Up to and including having the same name
-resolve to different dentries - all of them hashed.
-
-The way it's done is ->d_compare() refusing to admit a match unless
-this dentry is supposed to be visible to this caller.  The information
-needed to discriminate between them is stored in inode; it is set
-during proc_sys_lookup() and until it's done d_splice_alias() we really
-can't tell who should that dentry be visible for.
-
-Normally there's no negative dentries in /proc/sys; we can run into
-a dying dentry in RCU dcache lookup, but those can be safely rejected.
-
-However, ->d_compare() is also called for in-lookup dentries, before
-they get positive - or hashed, for that matter.  In case of match
-we will wait until dentry leaves in-lookup state and repeat ->d_compare()
-afterwards.  In other words, the right behaviour is to treat the
-name match as sufficient for in-lookup dentries; if dentry is not
-for us, we'll see that when we recheck once proc_sys_lookup() is
-done with it.
-    
-While we are at it, fix the misspelled READ_ONCE and WRITE_ONCE there.
-
-Fixes: d9171b934526 ("parallel lookups machinery, part 4 (and last)")
-Reported-by: NeilBrown <neilb@brown.name>
-Reviewed-by: Christian Brauner <brauner@kernel.org>
-Reviewed-by: NeilBrown <neil@brown.name>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index a3eb3b740f76..3604b616311c 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -42,7 +42,7 @@ static void proc_evict_inode(struct inode *inode)
- 
- 	head = ei->sysctl;
- 	if (head) {
--		RCU_INIT_POINTER(ei->sysctl, NULL);
-+		WRITE_ONCE(ei->sysctl, NULL);
- 		proc_sys_evict_inode(inode, head);
- 	}
- }
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index cc9d74a06ff0..08b78150cdde 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -918,17 +918,21 @@ static int proc_sys_compare(const struct dentry *dentry,
- 	struct ctl_table_header *head;
- 	struct inode *inode;
- 
--	/* Although proc doesn't have negative dentries, rcu-walk means
--	 * that inode here can be NULL */
--	/* AV: can it, indeed? */
--	inode = d_inode_rcu(dentry);
--	if (!inode)
--		return 1;
- 	if (name->len != len)
- 		return 1;
- 	if (memcmp(name->name, str, len))
- 		return 1;
--	head = rcu_dereference(PROC_I(inode)->sysctl);
-+
-+	// false positive is fine here - we'll recheck anyway
-+	if (d_in_lookup(dentry))
-+		return 0;
-+
-+	inode = d_inode_rcu(dentry);
-+	// we just might have run into dentry in the middle of __dentry_kill()
-+	if (!inode)
-+		return 1;
-+
-+	head = READ_ONCE(PROC_I(inode)->sysctl);
- 	return !head || !sysctl_is_seen(head);
- }
- 
+> +			   sizeof(unsigned long), GFP_KERNEL);
+> +	if (!die_mask)
+> +		return false;
+> +
+> +	cpus_read_lock();
+> +	for_each_online_cpu(cpu) {
+> +		die = topology_logical_die_id(cpu);
+> +		if (__test_and_set_bit(die, die_mask))
+> +			continue;
+> +
+> +		if (rdmsrq_safe_on_cpu(cpu, UNCORE_DISCOVERY_MSR, &base))
+> +			continue;
+> +
+> +		if (!base)
+> +			continue;
+> +
+> +		__parse_discovery_table(base, die, &parsed, ignore);
+> +	}
+> +
+> +	cpus_read_unlock();
+> +
+> +	kfree(die_mask);
+> +	return parsed;
+> +}
+> +
+> +bool intel_uncore_has_discovery_tables(int *ignore)
+> +{
+> +	return intel_uncore_has_discovery_tables_msr(ignore) ||
+> +	       intel_uncore_has_discovery_tables_pci(ignore);
+> +}
+> +
+>  void intel_uncore_clear_discovery_tables(void)
+>  {
+>  	struct intel_uncore_discovery_type *type, *next;
+> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+> index 0e94aa7db8e7..690f737e6837 100644
+> --- a/arch/x86/events/intel/uncore_discovery.h
+> +++ b/arch/x86/events/intel/uncore_discovery.h
+> @@ -1,5 +1,8 @@
+>  /* SPDX-License-Identifier: GPL-2.0-only */
+>  
+> +/* Store the full address of the global discovery table */
+> +#define UNCORE_DISCOVERY_MSR			0x201e
+> +
+>  /* Generic device ID of a discovery table device */
+>  #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
+>  /* Capability ID for a discovery table device */
