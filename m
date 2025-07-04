@@ -1,289 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802772D8DDF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ACF2D97BE;
 	Fri,  4 Jul 2025 07:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615671; cv=none; b=rcqvqCEGhyGhufiycgfKnb5wPIh5KT4beVSoUHZ2kxLYrghXjohJ9m3/D1dbzmQychnt21RVe9/+IXzGpNghO5jRR5DLOL8gj3KJGdX5Dnx70Nl3Jk0aq+Gd72eF00pM7b2KZXdEwIFGck169Jncss7Pz1gX9IcPopI0/EbmBtw=
+	t=1751615672; cv=none; b=Ri6QsMSl27fSCdKcM0p64LBIPAV4868dHk3639jg4oyJSZc/3vBwZOIz2XudlVn2xZIIHMuP4eN3irj1OnMF0Aunp5AvX/Uqq+jo74Lixgh8LEpIdFl/v13SDUHXrYaRjmx3tj394QIAkGx+17E1Sfk8QE+zsiRPcL8RVzq3Byo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615671; c=relaxed/simple;
-	bh=qbtIAI5uewIloEDrr1CezLGRWGhcnEHM5qLOuB4lMpw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HDq6OQwfXL5H2/WJArA2Qtq23WX5TxZrxtMJEQHd0lvDIu1k/mErgxdm7Aonl+BO3dlTCk4hEJGfVf/orektNwly0Z4FQekk2jWQP3mwyve62AVGrFxM2pWYofP6g5D6/T+l5WQg8pf3A9z8PtpJ5663LXt+3XXnAe56r1zKu4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjHA7Ifo; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751615672; c=relaxed/simple;
+	bh=s5EcbUknkQfTe70BqoXoFc1adqDtlQbwQUL/1RUlW2k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=aSRvKxQ20/FGRckHwA0c8pTiTJ8pkF15z7ysxedZ6u8vKJHA/bDRQdryvLXC9NGbEZycZfFBKQ+/e3ShSD6nbx23qbyIxR+mfGiotB5+DtaR+fNZGOTj+kSNiblUhikDnvcuES9t6QyCPZ+IBUbONl5QzbRCOY5chXgvrACcLTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=icgw9/5y; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjHA7Ifo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615669; x=1783151669;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qbtIAI5uewIloEDrr1CezLGRWGhcnEHM5qLOuB4lMpw=;
-  b=YjHA7IfofF//qKXbqbohx2YBhyjGRCDM9H8LAMMJ4cY7gRcKOzxEF7p1
-   2u6pfsY187OqNRDpiZbxICb4TgX1Snp+R1g/jbGofx43O1DndK/gT+QVB
-   16DeaxRL80sZ1pz80X0YdA3eOH/5KayvszxTyanw1sm74We3fKgrn+5jH
-   AoLpXYd/ZmOaI7zmzkKz+IbSRdYBZVuTRsX2O4UXHiLsIRaAYsFphgx+V
-   7JKUqC7KAMWrnN10bBSybrMZIVzOZco3qgWgc+jlUWAtO8xXwHIwg4p++
-   Y9YRnbYCwS6/RkbalJJC0TTAeL5MXIiws/8X9ktpp6DB1TVa3rsYsbBdo
-   w==;
-X-CSE-ConnectionGUID: Xs6hYK3dRIGpr/F019v61Q==
-X-CSE-MsgGUID: AZaOR70qTpupVRV+F28F4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494680"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494680"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:28 -0700
-X-CSE-ConnectionGUID: ZasxoBPFS3+kUOoWDH4WVg==
-X-CSE-MsgGUID: 0Tl0AWXQQq2Do/O0e42OXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924277"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:26 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 06D7944424;
-	Fri,  4 Jul 2025 10:54:24 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Waqar Hameed <waqar.hameed@axis.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 33/80] iio: imu: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:23 +0300
-Message-Id: <20250704075423.3219461-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="icgw9/5y"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563IctQO029572;
+	Fri, 4 Jul 2025 07:54:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bUAvhVvnBbbYgy9q0mHdzebSgGWDOX2R719IRsy1Ogc=; b=icgw9/5ybqA7/ei2
+	FqITrI+8NDGHrGpZhfRVuLDtXjgSUWdTsB6Yyz7EOZknQQOTvw4Lfe9llRt6Du9y
+	UigmBh/XOZ95Mnm0EJt57TtDTX/TDZvn2JSHJfHBGSJ7lBtHcldQYfso8PziNr3E
+	mZs+PafU4WMrLqjzEvpqnFpu/18JMQM2VzbXsYjQWP4Qwy3Fh9x6oUy3KFFxs3BF
+	nobkCSlEoGgUzbTeP3zxgVD5O6OpEX92eR/OsUdTpP3N0SYeCCCzrz5D3L7gIkSr
+	5AhBdjE6b9HqMLRd5H9yjS5zBgKwSirRutgmH5nItFv9fjhf2wA5gwOM7qLniSQZ
+	gxZ/1Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47nh9s4bv9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 07:54:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647sO23002082
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 07:54:24 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 4 Jul 2025 00:54:20 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:18 +0530
+Subject: [PATCH 18/25] media: iris: Add support for G/S_SELECTION for
+ encoder video device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250704-iris-video-encoder-v1-18-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        "Vedang
+ Nagar" <quic_vnagar@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=5403;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=s5EcbUknkQfTe70BqoXoFc1adqDtlQbwQUL/1RUlW2k=;
+ b=pPLUCcxCPz40tNk/Zu5WqNQqH0IAc4ky00+3VnoEFnyf9Wwe2bBYbjMIrLXs1Zd1rXjzSQyHq
+ vMaaScwzBmuCtumpXJz+205T6wM+cDNnKAGINLgPMfXVMKGZ5MVQ3OP
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=frrcZE4f c=1 sm=1 tr=0 ts=686788b0 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=HMXTeDd-yh4hRLGjqV0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX0wbFOIm2ygyv
+ vQKv1PsELq/Ma4Ss5K8K5w2cPwthIr4ECqTznfHPcK/ZIhC7FPEKx34IUKLplomXvZy2Z9mw1JA
+ ELWPK6zsCKlNbvSgK4Vg1MvKnSvNww9FrwCIhoD2PbaYli3r8qMBtJCaeb27aQt+WJmt6LvtaQG
+ q0/hXKiFLlUpowy2y5hUADvuxLBjS78vE08HI3jvUyClUTmTFlAjUsotZw8K7aBZOY4O9KSlaDn
+ lArN6IeDTvuMo+0NeI/moDXJgIYWIotuuWFEUOYqSIw6fSzdExysQXiHqB7IAkBf1vpy8xjdA6P
+ qkX5qoAt1Lo7bEOPRRcXfvIXXJAkSAOP/ndAPIAEQW5Ss32p5xxlEjPL5UlwL33GYO7SzKGEeek
+ 55XyIvnpNV2kwQolj+6q2UO4fVchQOa7EU2nfdxg41QCoS0utC+I6ZPdvtqHniO2+nrcf8om
+X-Proofpoint-GUID: pOqOPl39xmFrlXKIve8JuIZfMvkzq0yb
+X-Proofpoint-ORIG-GUID: pOqOPl39xmFrlXKIve8JuIZfMvkzq0yb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507040060
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+Add support for G/S_SELECTION V4L2 ioctls for the encoder video
+device with necessary hooks. This allows userspace to query and
+configure rectangular selection areas such as crop.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ drivers/media/platform/qcom/iris/iris_venc.c | 28 ++++++++++++
+ drivers/media/platform/qcom/iris/iris_venc.h |  1 +
+ drivers/media/platform/qcom/iris/iris_vidc.c | 65 ++++++++++++++++++++++------
+ 3 files changed, 80 insertions(+), 14 deletions(-)
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
+diff --git a/drivers/media/platform/qcom/iris/iris_venc.c b/drivers/media/platform/qcom/iris/iris_venc.c
+index 3dbcce23cbe94cf0edc4421694a3ba11faa5eb96..930f5afe9489d01be193f1dbe429d33f5401b468 100644
+--- a/drivers/media/platform/qcom/iris/iris_venc.c
++++ b/drivers/media/platform/qcom/iris/iris_venc.c
+@@ -297,3 +297,31 @@ int iris_venc_subscribe_event(struct iris_inst *inst,
+ 		return -EINVAL;
+ 	}
+ }
++
++int iris_venc_s_selection(struct iris_inst *inst, struct v4l2_selection *s)
++{
++	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
++		return -EINVAL;
++
++	switch (s->target) {
++	case V4L2_SEL_TGT_CROP:
++		s->r.left = 0;
++		s->r.top = 0;
++
++		if (s->r.width > inst->fmt_src->fmt.pix_mp.width ||
++		    s->r.height > inst->fmt_src->fmt.pix_mp.height)
++			return -EINVAL;
++
++		inst->crop.left = s->r.left;
++		inst->crop.top = s->r.top;
++		inst->crop.width = s->r.width;
++		inst->crop.height = s->r.height;
++		inst->fmt_dst->fmt.pix_mp.width = inst->crop.width;
++		inst->fmt_dst->fmt.pix_mp.height = inst->crop.height;
++		return iris_venc_s_fmt_output(inst, inst->fmt_dst);
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
+diff --git a/drivers/media/platform/qcom/iris/iris_venc.h b/drivers/media/platform/qcom/iris/iris_venc.h
+index 2d9614ae18e8a2318df6673fbeae5ee33c99b596..72c6e25d87113baa6d2219ae478b7d7df1aed7bf 100644
+--- a/drivers/media/platform/qcom/iris/iris_venc.h
++++ b/drivers/media/platform/qcom/iris/iris_venc.h
+@@ -15,5 +15,6 @@ int iris_venc_try_fmt(struct iris_inst *inst, struct v4l2_format *f);
+ int iris_venc_s_fmt(struct iris_inst *inst, struct v4l2_format *f);
+ int iris_venc_validate_format(struct iris_inst *inst, u32 pixelformat);
+ int iris_venc_subscribe_event(struct iris_inst *inst, const struct v4l2_event_subscription *sub);
++int iris_venc_s_selection(struct iris_inst *inst, struct v4l2_selection *s);
+ 
+ #endif
+diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+index d8c94074153e9b1ceac4f911210ddbf89bbe3533..2074682a35fd1c4c9f5d29fdaee3392d98bf8923 100644
+--- a/drivers/media/platform/qcom/iris/iris_vidc.c
++++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+@@ -462,29 +462,64 @@ static int iris_g_selection(struct file *filp, void *fh, struct v4l2_selection *
+ {
+ 	struct iris_inst *inst = iris_get_inst(filp, NULL);
+ 
+-	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE &&
++	    inst->domain == DECODER)
+ 		return -EINVAL;
+ 
+-	switch (s->target) {
+-	case V4L2_SEL_TGT_CROP_BOUNDS:
+-	case V4L2_SEL_TGT_CROP_DEFAULT:
+-	case V4L2_SEL_TGT_CROP:
+-	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
+-	case V4L2_SEL_TGT_COMPOSE_PADDED:
+-	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+-	case V4L2_SEL_TGT_COMPOSE:
++	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT &&
++	    inst->domain == ENCODER)
++		return -EINVAL;
++
++	if (inst->domain == DECODER) {
++		switch (s->target) {
++		case V4L2_SEL_TGT_CROP_BOUNDS:
++		case V4L2_SEL_TGT_CROP_DEFAULT:
++		case V4L2_SEL_TGT_CROP:
++		case V4L2_SEL_TGT_COMPOSE_BOUNDS:
++		case V4L2_SEL_TGT_COMPOSE_PADDED:
++		case V4L2_SEL_TGT_COMPOSE_DEFAULT:
++		case V4L2_SEL_TGT_COMPOSE:
++			s->r.left = inst->crop.left;
++			s->r.top = inst->crop.top;
++			s->r.width = inst->crop.width;
++			s->r.height = inst->crop.height;
++			break;
++		default:
++			return -EINVAL;
++		}
++	} else if (inst->domain == ENCODER) {
++		switch (s->target) {
++		case V4L2_SEL_TGT_CROP_BOUNDS:
++		case V4L2_SEL_TGT_CROP_DEFAULT:
++			s->r.width = inst->fmt_src->fmt.pix_mp.width;
++			s->r.height = inst->fmt_src->fmt.pix_mp.height;
++			break;
++		case V4L2_SEL_TGT_CROP:
++			s->r.width = inst->crop.width;
++			s->r.height = inst->crop.height;
++			break;
++		default:
++			return -EINVAL;
++		}
+ 		s->r.left = inst->crop.left;
+ 		s->r.top = inst->crop.top;
+-		s->r.width = inst->crop.width;
+-		s->r.height = inst->crop.height;
+-		break;
+-	default:
+-		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+ }
+ 
++static int iris_s_selection(struct file *filp, void *fh, struct v4l2_selection *s)
++{
++	struct iris_inst *inst = iris_get_inst(filp, NULL);
++
++	if (inst->domain == DECODER)
++		return -EINVAL;
++	else if (inst->domain == ENCODER)
++		return iris_venc_s_selection(inst, s);
++
++	return -EINVAL;
++}
++
+ static int iris_subscribe_event(struct v4l2_fh *fh, const struct v4l2_event_subscription *sub)
+ {
+ 	struct iris_inst *inst = container_of(fh, struct iris_inst, fh);
+@@ -591,6 +626,8 @@ static const struct v4l2_ioctl_ops iris_v4l2_ioctl_ops_enc = {
+ 	.vidioc_querycap                = iris_querycap,
+ 	.vidioc_subscribe_event         = iris_subscribe_event,
+ 	.vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
++	.vidioc_g_selection             = iris_g_selection,
++	.vidioc_s_selection             = iris_s_selection,
+ };
+ 
+ void iris_init_ops(struct iris_core *core)
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c  | 5 -----
- drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c | 1 -
- drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c   | 5 -----
- drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c   | 1 -
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         | 6 ------
- drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c      | 1 -
- drivers/iio/imu/kmx61.c                            | 1 -
- 7 files changed, 20 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-index 8a6f09e68f49..11cab815e1e2 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-@@ -289,7 +289,6 @@ static int inv_icm42600_accel_read_sensor(struct iio_dev *indio_dev,
- 		ret = -EINVAL;
- exit:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	return ret;
- }
-@@ -367,7 +366,6 @@ static int inv_icm42600_accel_write_scale(struct iio_dev *indio_dev,
- 	ret = inv_icm42600_set_accel_conf(st, &conf, NULL);
- 
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-@@ -471,7 +469,6 @@ static int inv_icm42600_accel_write_odr(struct iio_dev *indio_dev,
- 
- out_unlock:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-@@ -523,7 +520,6 @@ static int inv_icm42600_accel_read_offset(struct inv_icm42600_state *st,
- 	memcpy(data, st->buffer, sizeof(data));
- 
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	if (ret)
- 		return ret;
-@@ -661,7 +657,6 @@ static int inv_icm42600_accel_write_offset(struct inv_icm42600_state *st,
- 
- out_unlock:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	return ret;
- }
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-index 00b9db52ca78..8c36ad87f328 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-@@ -439,7 +439,6 @@ static int inv_icm42600_buffer_postdisable(struct iio_dev *indio_dev)
- 	if (sleep)
- 		msleep(sleep);
- 
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-index 9ba6f13628e6..8a7cc9127631 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-@@ -184,7 +184,6 @@ static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
- 		ret = -EINVAL;
- exit:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	return ret;
- }
-@@ -283,7 +282,6 @@ static int inv_icm42600_gyro_write_scale(struct iio_dev *indio_dev,
- 	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
- 
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-@@ -378,7 +376,6 @@ static int inv_icm42600_gyro_write_odr(struct iio_dev *indio_dev,
- 
- out_unlock:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-@@ -430,7 +427,6 @@ static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
- 	memcpy(data, st->buffer, sizeof(data));
- 
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	if (ret)
- 		return ret;
-@@ -567,7 +563,6 @@ static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
- 
- out_unlock:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 	return ret;
- }
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-index 8b15afca498c..684007376178 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-@@ -37,7 +37,6 @@ static int inv_icm42600_temp_read(struct inv_icm42600_state *st, s16 *temp)
- 
- exit:
- 	mutex_unlock(&st->lock);
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- 
- 	return ret;
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index b8656c02354a..c351d0e4f810 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -735,7 +735,6 @@ static int inv_mpu6050_read_channel_data(struct iio_dev *indio_dev,
- 		break;
- 	}
- 
--	pm_runtime_mark_last_busy(pdev);
- 	pm_runtime_put_autosuspend(pdev);
- 
- 	return ret;
-@@ -938,7 +937,6 @@ static int inv_mpu6050_write_raw(struct iio_dev *indio_dev,
- 		break;
- 	}
- 
--	pm_runtime_mark_last_busy(pdev);
- 	pm_runtime_put_autosuspend(pdev);
- error_write_raw_unlock:
- 	mutex_unlock(&st->lock);
-@@ -1146,14 +1144,12 @@ static int inv_mpu6050_enable_wom(struct inv_mpu6050_state *st, bool en)
- 			st->chip_config.wom_en = false;
- 		}
- 
--		pm_runtime_mark_last_busy(pdev);
- 		pm_runtime_put_autosuspend(pdev);
- 	}
- 
- 	return result;
- 
- error_suspend:
--	pm_runtime_mark_last_busy(pdev);
- 	pm_runtime_put_autosuspend(pdev);
- 	return result;
- }
-@@ -1249,7 +1245,6 @@ static int inv_mpu6050_write_event_value(struct iio_dev *indio_dev,
- 	value = (u64)val * 1000000ULL + (u64)val2;
- 	result = inv_mpu6050_set_wom_threshold(st, value, INV_MPU6050_FREQ_DIVIDER(st));
- 
--	pm_runtime_mark_last_busy(pdev);
- 	pm_runtime_put_autosuspend(pdev);
- 
- 	return result;
-@@ -1357,7 +1352,6 @@ inv_mpu6050_fifo_rate_store(struct device *dev, struct device_attribute *attr,
- 	if (result)
- 		goto fifo_rate_fail_power_off;
- 
--	pm_runtime_mark_last_busy(pdev);
- fifo_rate_fail_power_off:
- 	pm_runtime_put_autosuspend(pdev);
- fifo_rate_fail_unlock:
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
-index 5b1088cc3704..10a473342075 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
-@@ -194,7 +194,6 @@ static int inv_mpu6050_set_enable(struct iio_dev *indio_dev, bool enable)
- 		result = inv_mpu6050_prepare_fifo(st, false);
- 		if (result)
- 			goto error_power_off;
--		pm_runtime_mark_last_busy(pdev);
- 		pm_runtime_put_autosuspend(pdev);
- 	}
- 
-diff --git a/drivers/iio/imu/kmx61.c b/drivers/iio/imu/kmx61.c
-index 55c82891e08c..42016d56c852 100644
---- a/drivers/iio/imu/kmx61.c
-+++ b/drivers/iio/imu/kmx61.c
-@@ -750,7 +750,6 @@ static int kmx61_set_power_state(struct kmx61_data *data, bool on, u8 device)
- 	if (on) {
- 		ret = pm_runtime_resume_and_get(&data->client->dev);
- 	} else {
--		pm_runtime_mark_last_busy(&data->client->dev);
- 		ret = pm_runtime_put_autosuspend(&data->client->dev);
- 	}
- 	if (ret < 0) {
 -- 
-2.39.5
+2.34.1
 
