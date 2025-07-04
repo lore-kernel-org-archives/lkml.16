@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7342FD896;
-	Fri,  4 Jul 2025 08:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6261E86E;
+	Fri,  4 Jul 2025 08:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616211; cv=none; b=j6vb5X36/rOOppaF1+qiZUgC7Tf4J2gDBFQiKc13FLcKZ9Qe6QwO+jhAg/f/Yz2FgD1k8QRWMs9onVuGSPXY7z4tUcb2iYdwf9SSZSI68aBlTq+0jRNv6H7xXzfQVfwwumdEaiiijzyamjiHlXBZvKa7kEMXtwnxVJPa+leuCNw=
+	t=1751616332; cv=none; b=WVjOSkHsUM0i1JfG3ahgZoN4h2vKb3ODjx6eXI/hprCzNuF4SXuN+PQSEmUZNKDpM3HHlBBesuRs/Pk7PskSwWpPGXu/p77mngn5zFHIOwbBZ+BWOhF8BLMPVw/Env9kxmKiDRiU3fedy7X12iDiiukSHKhHV+OGYELAU0yjE64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616211; c=relaxed/simple;
-	bh=QxxkEyOjJNJTCeb7MO7040oT6nQ1b7SDESRmzDTEDKs=;
+	s=arc-20240116; t=1751616332; c=relaxed/simple;
+	bh=M4tLvMocMKZCPNaWwDYho3G+PEEpNx9DsEPKqpH/EOk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bxgyMgqJ4vs8dWJZGgjCkZ0VnA8iRDdUoy2Wjj4P+qejicqd4MFQtrnNSFEsySoxL45dVB7vfDYRO1HXyt+fCTiMv+QQSOpMKFEfHxvxD1pDKjQr9cJknirTldOEDyrJIpbQ5givJNBFam7Wtec3fp0rXpFgKMgyzfHeUKs2CwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1qsomdR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=P1OR45Gssv5JytT084WOqyGz4gqDsX9Cji5dBFqxQbCZsrxPg4gTfUVl4S1HArnlktSyjuESEVxbtc4+SKfcbJ8knG5cai/IhXDBY3OtwdqKQl+BgZBUzSUErK+B8qRC8/owE+lkyStLpEZK9cvXqWwUtRsExsENouX3jRTdGiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qe+p5u1n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1qsomdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CEDCC4CEE3;
-	Fri,  4 Jul 2025 08:03:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qe+p5u1n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA802C4CEED;
+	Fri,  4 Jul 2025 08:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751616211;
-	bh=QxxkEyOjJNJTCeb7MO7040oT6nQ1b7SDESRmzDTEDKs=;
+	s=k20201202; t=1751616330;
+	bh=M4tLvMocMKZCPNaWwDYho3G+PEEpNx9DsEPKqpH/EOk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N1qsomdRgikUv2usvSotFco33ECoxLfxcchjZk+oiSAbMOxa2aHP5kf0wsJNtv9db
-	 lcxJoIhNhYe1dXmrJjRzQAsioexf3QWdtq+PZYh3bkAw+N6tezq/zbVqE0MhfgDWxk
-	 EfOwKC6jR0DP3bd/9islJHOz9PZCWK6fPsttHOCSBszqny3tfc6A2unpiji9u6RmQD
-	 wdSPGquUu8+lkp913B/aAb3n1ckC6maIHICTSMc90SQ+rK8UKnhjfx7MHVgLWu+xKK
-	 2HkwabcqyJ60RD28ZvzVCZVDgjphS2yXtXnu0G1/6cUrxkJZ6nqzESKTkIREZgVwEJ
-	 THx5uOkLMCQTg==
-Message-ID: <51feb545-42a4-4f8b-a983-59104980f97d@kernel.org>
-Date: Fri, 4 Jul 2025 10:03:27 +0200
+	b=qe+p5u1n7NsAdvlY1G3lDnDy8TDuqoxVtC7bmrmXfGgekakETe/L/i7LECxQiqERb
+	 Kbpe+Kuhlxfn+MQxDUwZoXA5Sx7xKBwDzMUo+SDrT7s5sH0/NyxzWkdPHAcQB0W8Vl
+	 hNvuKYPJZnkMc/IbDLp65AxiS06+3pYelXEs5b8SbEU7xjdkgcavHbDMzK1jOtwDdK
+	 /wIu4U4pXuUg4pOGq9OfzppCJXP32EhxNN6JHP5b14VgYs2GeY+kDn3eIEw+xyJP1T
+	 cEhv2AblhzFParPWuwz79/7uBB4POOUrpYJ4Ji6P/tF+0MRjOdIwsunfGsIYCsp2NW
+	 wRSkMvkkI9xag==
+Message-ID: <e32f074e-72ac-452c-9b1a-623750548cf0@kernel.org>
+Date: Fri, 4 Jul 2025 10:05:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 50/80] nfc: trf7970a: Remove redundant
- pm_runtime_mark_last_busy() calls
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Mark Greer <mgreer@animalcreek.com>
-Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs615-ride: add WiFi/BT nodes
+To: "Yu Zhang(Yuriy)" <yu.zhang@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
- <20250704075439.3221036-1-sakari.ailus@linux.intel.com>
+References: <20250704-615-v3-0-6c384e0470f2@oss.qualcomm.com>
+ <20250704-615-v3-2-6c384e0470f2@oss.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,28 +89,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250704075439.3221036-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20250704-615-v3-2-6c384e0470f2@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/07/2025 09:54, Sakari Ailus wrote:
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
+On 04/07/2025 08:43, Yu Zhang(Yuriy) wrote:
+> Add a node for the PMU module of the WCN6855 present on the qcs615 ride
+> board. Assign its LDO power outputs to the existing WiFi/BT module.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Yu Zhang(Yuriy) <yu.zhang@oss.qualcomm.com>
 > ---
-> The cover letter of the set can be found here
-> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+>  arch/arm64/boot/dts/qcom/qcs615-ride.dts | 135 +++++++++++++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
 > 
-> In brief, this patch depends on PM runtime patches adding marking the last
-> busy timestamp in autosuspend related functions. The patches are here, on
-> rc2:
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> index 011f8ae077c256f079ce1b07720374a9bf721488..e21524a8ceffca0c68951d04fa6895cac5bb3d0e 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> @@ -18,6 +18,7 @@ aliases {
+>  		mmc0 = &sdhc_1;
+>  		mmc1 = &sdhc_2;
+>  		serial0 = &uart0;
+> +		serial1 = &uart7;
+>  	};
+>  
+>  	chosen {
+> @@ -209,6 +210,85 @@ vreg_l17a: ldo17 {
+>  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  	};
+> +
+> +	vreg_conn_1p8: vreg_conn_1p8 {
 
-You did not send cover letter to people, so this changelog should
-explain what I should do with this patch (what is the merging/dependency).
+
+I don't see any improvements here. Please read DTS coding style again.
+
 
 Best regards,
 Krzysztof
