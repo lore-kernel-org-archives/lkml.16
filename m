@@ -1,119 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB5A13EFF3;
-	Fri,  4 Jul 2025 16:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0541813EFF3;
+	Fri,  4 Jul 2025 16:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751645068; cv=none; b=eegcQTeO/qaSlZU3pTAgqwzHQ7wZkCmQHDXQIE+6WrU0L6n0DkdHbsGMg9ZUIgO1zYDUDJuna7Lpmsmk+YhA6ZQxWw26LB5nol+VVPxdzUpDxp1qxKmThsxQDq5I/kVwyoJnBQ388/lQmhrJV7eOgvjVQ1BpL/9gwq5b7hE0bio=
+	t=1751645134; cv=none; b=RT6Zr41nLpfvqAYFaAVQvrRrH2Ygssl2ao9fJ3d4WHKDX196L4e469hmsm6XGuSARoxJ2ei32EB+aWqdhouR+ofgZaHOWKYf//W6wKWCvwhBQogt1yh1PiTWixEZKihOMoFSCLeNl6MjqYGEzb9Q+f/+RxBBYG4e5Q/4nDDKW9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751645068; c=relaxed/simple;
-	bh=M9n2Q9cXb3bGzai3G9o0+Afu6gYoxXbovRVunTPC6tQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GVhJDm2EGX7IhWLt912QI18BeL82rsfUJYTNBVw+Yv+WkFUDwursYD09M6BmJywDHY0D4exbFvaO6ZQEIdfnpyXuuJun/Oa+pklI+8ReU8ImyJlQXh2BJPF4ek6FiHIL27OENm7UmnOU5KfIEzxQcyrsjpUM9z9+LBBhlGspmYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tU7+z4FY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751645134; c=relaxed/simple;
+	bh=+OYPHK1ZnPZMg6uKHuWwPmQ6Oe8JR3QO0E9b83zeALg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=DQq9Gi79F86aAtVCANPYb9Ym5suBWLJlg3Gf/kDQrBaR0VVQK/OEg6iEu4OFyGk23Z7zLLXMbaNAhync695phxKsBRIdoCFKBtfa0XWHqJ1LxgP1Otaa6h5KtgfMg7smVKLsFjTCFyNrs/0d+uDrdWxWjBlFyU61zZ05+P8LxlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=R2pFAGxW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WUGIH107; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tU7+z4FY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DEA0C4CEE3;
-	Fri,  4 Jul 2025 16:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751645067;
-	bh=M9n2Q9cXb3bGzai3G9o0+Afu6gYoxXbovRVunTPC6tQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tU7+z4FYuh0BVlLIvRisojhalfOl91C0FNBPhC7Xq/ur/19ujU8uZOP8Vfh8ft/IP
-	 xpkCMrVGdW0UecnEOmcxvvOVaIaJcbjHzaXOk4kKRES5AWDiQlWSpwh+bzY8ekCaU1
-	 SvjjRnmpl6Lg9d3THr39a6aVD1vWHi80o/RncyG8r4Sp8QDOpxwkTejBQZkgO14bRu
-	 QeI+oVIOyPMxQgXaAnVDt5Imhl+RXCVBz2xEbZqVJ305jUvyoPMCdSjlFB0oSZf+Pd
-	 nQ8HOlRj9225heyBvWv2GBkEhbb/lHmFZaFEDIctjblBDGohhg4Fk+3zdwuHCQstFe
-	 0BmXU07FbmmFQ==
-Date: Fri, 4 Jul 2025 17:04:17 +0100
-From: Will Deacon <will@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Ankit Agrawal <ankita@nvidia.com>,
-	"maz@kernel.org" <maz@kernel.org>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>,
-	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
-	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>,
-	"coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"maobibo@loongson.cn" <maobibo@loongson.cn>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: Re: [PATCH v9 3/6] KVM: arm64: Block cacheable PFNMAP mapping
-Message-ID: <aGf7gfMjLhrqU5Kv@willie-the-truck>
-References: <20250621042111.3992-1-ankita@nvidia.com>
- <20250621042111.3992-4-ankita@nvidia.com>
- <aF6hamOI7YVDP1Cp@willie-the-truck>
- <SA1PR12MB7199144BBDA23C9A06DA12F9B046A@SA1PR12MB7199.namprd12.prod.outlook.com>
- <20250630122501.GQ167785@nvidia.com>
- <4b06b163-e1ce-4c20-b878-4593bc86bf53@redhat.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="R2pFAGxW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WUGIH107"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 299C914002E6;
+	Fri,  4 Jul 2025 12:05:32 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 12:05:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751645132;
+	 x=1751731532; bh=ye0B8joJLkUfI2iBIiVNnb3bZDrTy3icljur47MpVLc=; b=
+	R2pFAGxWHB+CVPV9OZJnmRWsqG3nhKdEqOGTcKNRMkKnMoM036fON8GXn6uabcjy
+	TBN/MHWftq9wyoMQxtXm+D7z8iS6tZJp7OAePZz65cKX3Dmwc7/Mci/JBTOHfDef
+	re97vnNU8ifHfXqUppw5tlCxvlHTb3fFFqAnCKSpHMdxqLxpLRB26ISesWLhfqQ0
+	VASKIisRksE+n4mJrs5bLSqkKHhD2UHI9UZFcgqNWJh+vvQ7BcnSzRjak1WdLIaZ
+	4KO4fcOsaLhawjtOVPusUnnDNC916t8F3Z9Ft7COf25LGBStqJD7KjB3P3X2S+UF
+	CjARKznyocSs+6uc87Gbcg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751645132; x=
+	1751731532; bh=ye0B8joJLkUfI2iBIiVNnb3bZDrTy3icljur47MpVLc=; b=W
+	UGIH107UBjHOU4Bu0nQtmZ66iPfAwEoxdM+u52FoQopmi4D4DFvMvNK24G3evbaX
+	R05WrXzLJtac4Yn/lDKzztEhZOZWWqNH8sVfmnoph6Xvuz3ul9jEt5dglUjXCykc
+	N2ko18DEobA9rTfc9drWVA61ue8eVdRlkzsPAsclPvq4fbS/xREc5an8lIHn5Gmp
+	C/wPnZwl7F9G5/7IL+q+SzE+O2AlgmE72MV8+FEBV/aM8hwcCoRKrJKXFxXw5lH0
+	eDaVlCx5tag2iq1CvGshFjmbfe1kOzCi17BsQHLFFC7ux3zbm8tE0RNDGYyOL8MS
+	CMZACfjnN4er0bux3Qaew==
+X-ME-Sender: <xms:y_tnaERDHvuG2Tt-7fqQfifK0JhcCEezF0UBljXsNNa8D9hp3XOUVw>
+    <xme:y_tnaBzY9177SZBSHTvIJ6boVZAEJgyjxVs7qpr2S2TzClIJxD_jN8Fa4_iB5GwxG
+    UNM1U9Y5soUpEu3et4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedukedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtph
+    htthhopehkrghjvghtrghnrdhpuhgthhgrlhhskhhisegrrhhmrdgtohhmpdhrtghpthht
+    ohepshhuuggvvghprdhhohhllhgrsegrrhhmrdgtohhmpdhrtghpthhtohepghhuohhmih
+    hnrdgthhgvnhestghigihtvggthhdrtghomhdprhgtphhtthhopehlihhhuhgrrdhlihhu
+    segtihigthgvtghhrdgtohhmpdhrtghpthhtoheptghigidqkhgvrhhnvghlqdhuphhsth
+    hrvggrmhestghigihtvggthhdrtghomhdprhgtphhtthhopehgrghrhidrhigrnhhgsegt
+    ihigthgvtghhrdgtohhmpdhrtghpthhtohepphgvthgvrhdrtghhvghnsegtihigthgvtg
+    hhrdgtohhmpdhrtghpthhtohepjhgrshhsihhsihhnghhhsghrrghrsehgmhgrihhlrdgt
+    ohhm
+X-ME-Proxy: <xmx:y_tnaB2E4JRm2dhOmK9_0wW5WXjBI4yLf7QpziI9qi0xvshiu8hNKg>
+    <xmx:y_tnaIC66U_TewYOKGz-dYeh1IxZg_asLWlxTdxpoO7-dercT0kXBQ>
+    <xmx:y_tnaNgsVy7HSYzwPUJToU7TceJ5E5PbRavGZ9VmIqrTzOuc84HEhw>
+    <xmx:y_tnaErEbjV5Xd0NP2kFGmHg-c7Xinn-wkuYf3DF2jz2G60BhPQx-w>
+    <xmx:zPtnaBEBGz8iCLBuiXFxJ19OKmBWDn9wCeTbDHqPsvqTeXH1pfCeqoqT>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 359A3700068; Fri,  4 Jul 2025 12:05:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b06b163-e1ce-4c20-b878-4593bc86bf53@redhat.com>
+X-ThreadId: T7a47ae1d7bea40f2
+Date: Fri, 04 Jul 2025 18:04:59 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Peter Chen" <peter.chen@cixtech.com>, "Rob Herring" <robh@kernel.org>,
+ krzk+dt@kernel.org, "Conor Dooley" <conor+dt@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Jassi Brar" <jassisinghbrar@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ "Marc Zyngier" <maz@kernel.org>, "Sudeep Holla" <sudeep.holla@arm.com>,
+ "Kajetan Puchalski" <kajetan.puchalski@arm.com>,
+ "Enric Balletbo" <eballetb@redhat.com>,
+ "Guomin Chen" <Guomin.Chen@cixtech.com>, "Gary Yang" <gary.yang@cixtech.com>,
+ "Lihua Liu" <Lihua.Liu@cixtech.com>
+Message-Id: <64f39e94-7e88-49d0-8455-cd77d61d4fe2@app.fastmail.com>
+In-Reply-To: <20250609031627.1605851-6-peter.chen@cixtech.com>
+References: <20250609031627.1605851-1-peter.chen@cixtech.com>
+ <20250609031627.1605851-6-peter.chen@cixtech.com>
+Subject: Re: [PATCH v9 5/9] mailbox: add CIX mailbox driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 02:21:32PM +0200, David Hildenbrand wrote:
-> On 30.06.25 14:25, Jason Gunthorpe wrote:
-> > On Mon, Jun 30, 2025 at 01:56:43AM +0000, Ankit Agrawal wrote:
-> > > > Sorry for the drive-by comment, but I was looking at this old series from
-> > > > Paolo (look at the cover letter and patch 5):
-> > > > 
-> > > > https://lore.kernel.org/r/20250109133817.314401-1-pbonzini@redhat.com
-> > > > 
-> > > > in which he points out that the arm64 get_vma_page_shift() function
-> > > > incorrectly assumes that a VM_PFNMAP VMA is physically contiguous, which
-> > > > may not be the case if a driver calls remap_pfn_range() to mess around
-> > > > with mappings within the VMA. I think that implies that the optimisation
-> > > > in 2aa53d68cee6 ("KVM: arm64: Try stage2 block mapping for host device
-> > > > MMIO") is unsound.
-> > > 
-> > > Hm yeah, that does seem problematic. Perhaps we need a new
-> > > vma flag that could help the driver communicate to the KVM that the
-> > > mapping is contiguous and it can go ahead with the optimization?
-> > > E.g. something similar to VM_ALLOW_ANY_UNCACHED.
-> > 
-> > I think Paolo has the right direction - remove any attempts by KVM to
-> > expand contiguity, it should only copy the primary's PTEs and rely on
-> > the primary to discover contiguity. No new flags.
-> 
-> 100%
+On Mon, Jun 9, 2025, at 05:16, Peter Chen wrote:
+> From: Guomin Chen <Guomin.Chen@cixtech.com>
+>
+> The CIX mailbox controller, used in the Cix SoCs, like sky1.
+> facilitates message transmission between multiple processors
+> within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
+> and others.
+>
+> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
+> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
 
-The part I don't understand, however, is that I can't see an MMU notifier
-anywhere on the successful remap_pfn_range() path. So if a driver is
-using that interface to change the mapping properties of a VM_PFNMAP VMA,
-how do we ensure that the guest doesn't use whatever stale mappings it's
-faulted in previously? Did I just miss something?
+This is the only driver holding up the merge of the CIX
+platform, so I had a closer look myself. The driver looks
+well written overall, and I see a lot of details that have
+come up in previous versions are addressed.
 
-Will
+The one thing that stuck out to me is the design of
+having multiple types of mailbox in one driver, which
+feels out of scope for a simple mailbox.
+
+> +static int cix_mbox_send_data_reg(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
+> +       union cix_mbox_msg_reg_fifo *msg = data;
+> +       u32 len, i;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       len = mbox_get_msg_size(data);
+> +       for (i = 0; i < len; i++)
+> +               cix_mbox_write(priv, msg->buf[i], REG_MSG(i));
+
+In particular, this bit seems to do more than just what I think
+of as a simple mailbox that should have fixed-length messages,
+it feels more like a generic message passing interface between
+device drivers and firmware or some microcontroller.
+
+What is the purpose here?
+
+> +static int cix_mbox_send_data(struct mbox_chan *chan, void *data)
+> +{
+...
+> +       switch (cp->type) {
+> +       case CIX_MBOX_TYPE_DB:
+> +               cix_mbox_send_data_db(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_REG:
+> +               cix_mbox_send_data_reg(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_FIFO:
+> +               cix_mbox_send_data_fifo(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_FAST:
+> +               cix_mbox_send_data_fast(chan, data);
+> +               break;
+
+Similarly, this also exceeds the complexity I would expect
+in a simple controller, it feels like there should either
+be four separate drivers that implement one type of interface,
+or a much higher-level abstraction.
+
+Is there a document that details how the messages are
+structured and what the users are? How does a user of
+the mailbox know the size of a message to pass down?
+
+     Arnd
