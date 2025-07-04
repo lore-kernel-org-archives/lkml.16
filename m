@@ -1,64 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE122E425B;
-	Fri,  4 Jul 2025 07:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C0F2D542C;
+	Fri,  4 Jul 2025 07:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615684; cv=none; b=ivqMU5pmqK7c6EBR/NQXbZasYaG6EUa//luomj2iw+N5aXExcUMjtWuuX1DGz/6WN+19ne1Hlw2MJ/z8s+Ih0XmNnbQMVqKNkeC9gZwq92p56zo2XKYoRY2mzNanW6bOk+Zj3VFd6YUBX0Y7IWjd7kqq9AlDDXTXkogyOFFxrPA=
+	t=1751615685; cv=none; b=Q3VDSepiYJUJSIsvC6wGafHkeJTfSaZgezaw+8PA4jJLmlZeHl94yBarbrIF3F/8Y7t8Lozmt/u8QmQrM4UsxJXYJH6q7YWURkWXycqJ0ovamHDXn63diNIEJJdQSrui2ONzkIjFzRd1JXHsfqed2w8nR8pmvaZvdH3aiUxO6kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615684; c=relaxed/simple;
-	bh=8QGS586pL2Vx2KX9XeLloe4i2zvKJP8iAOXD73uMv0c=;
+	s=arc-20240116; t=1751615685; c=relaxed/simple;
+	bh=logG108dBu9v+vZYmJaE48QCvdOD6icuV7EBnGifvsg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T/r5Bg/e6e52vezdkVRfYHJPaez/mR+pTYVIVFNziKHV/aZTP4O58ZWYYQOmQYV102ZV5tjIua1XDNHmoYH0SW3fdvF0A/RD0znp+7WDt4HaRLWd6LnHYvQWqEGXeVW/4psrrrTIWHv1mchNLJk5iSA64jKQnySKzS8ngf7EjOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ieVxKGns; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=NiJsKcoAUaY4XtX/XqmO6Og9fuogxCUnE//068g6qbFClog7eoaBiFQNxoPMbeMkMxOs3FGA8wl0M3RHkRZ7Q9qowFwkyEw4g/mncnc2RKfLfTs2XtX8ysTKCniS/4y4Y/l4Bo+4K2T6vtP8798XDvy7xFdk6FEmzP4hs51Ul0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=et60A+wg; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ieVxKGns"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="et60A+wg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615683; x=1783151683;
+  t=1751615684; x=1783151684;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8QGS586pL2Vx2KX9XeLloe4i2zvKJP8iAOXD73uMv0c=;
-  b=ieVxKGnsRTK/XMNVsxHqXDSaL2XpkOb9qoibpfComGY3ASw7h8p3RZPY
-   yH1ltL3ifhdCpVPKXk2dBZxZhhndkqu+8klU8WmTX2awMr+MRZ+DIZa7y
-   QWRH+aUM3uBosadx3PgISIHCMJhHGFcbFtqk17VCJUsbkKLqMdAGXkNjf
-   L5mg9KeYfpsjpg95IOP7OAOk6cW9VVO9LlFmCCy9Vpqg19numRDUNbwVm
-   dzNmd7xJE78AmZD2x2WLNYg52qNlJlNsidzDFzbYB73moq/J8R42HSs8S
-   7/ybsrYQSl++NSgH9xgoysdvI+S2EsuuWWwhM1kn5VNRKT10FBWhDvHKF
-   g==;
-X-CSE-ConnectionGUID: ux1RhkpbReq2cnQJ5C8V+Q==
-X-CSE-MsgGUID: rItfn04ST+G9trjB7SviyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194118"
+  bh=logG108dBu9v+vZYmJaE48QCvdOD6icuV7EBnGifvsg=;
+  b=et60A+wgq6ISM4GjspNUpyRrKOfpEW3a00WN/zWYCu679/xm7leuYdCz
+   ZaSNNbHzCcnBjoJJjl9VZhXdu6aI/nvcGzbqAqESqTejeYk+8E3YyLnK8
+   I6nPvLYt0QK1JHfJVjKCBeoXj5Crodrx/Kov0WZTRxrM0eFYW4ghQ5At0
+   g/YYBlvRs4mFgxIPnCETdAqK6urMIrbegiA8aweyQvkhx70zeFWP8fzKM
+   tXcZVbn7V6WVS4x195LNk97PpD5VRK0nuD0fuhnqWsqIv3C5+7lXcy+/3
+   jDxG/41DP2yWNka2ftv20XeHOHTK/H7JxmD4C5E//xkDGOW84P2xl6he5
+   A==;
+X-CSE-ConnectionGUID: xgPG8+RvQem4YvrodoyOqQ==
+X-CSE-MsgGUID: ijRRG5kjQ3aeulZVRGgqLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194126"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="64194118"
+   d="scan'208";a="64194126"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:42 -0700
-X-CSE-ConnectionGUID: A742lPtkQpWtJwUYEUKHpQ==
-X-CSE-MsgGUID: VgCYBLmTSoqFu9DCqiqNIA==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:44 -0700
+X-CSE-ConnectionGUID: rbi9tavUSMOh371v/XWsQA==
+X-CSE-MsgGUID: 6ST/TLHmQKiMFn0fLWSHsg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158616578"
+   d="scan'208";a="158616594"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:39 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:41 -0700
 Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 02E4744394;
-	Fri,  4 Jul 2025 10:54:37 +0300 (EEST)
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id A488744424;
+	Fri,  4 Jul 2025 10:54:39 +0300 (EEST)
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Alex Elder <elder@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
+To: Mark Greer <mgreer@animalcreek.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 47/80] net: ipa: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:36 +0300
-Message-Id: <20250704075436.3220762-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 50/80] nfc: trf7970a: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:39 +0300
+Message-Id: <20250704075439.3221036-1-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
@@ -87,111 +84,19 @@ rc2:
         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
                 pm-runtime-6.17-rc1
 
- drivers/net/ipa/ipa_interrupt.c | 1 -
- drivers/net/ipa/ipa_main.c      | 1 -
- drivers/net/ipa/ipa_modem.c     | 4 ----
- drivers/net/ipa/ipa_smp2p.c     | 2 --
- drivers/net/ipa/ipa_uc.c        | 2 --
- 5 files changed, 10 deletions(-)
+ drivers/nfc/trf7970a.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
-index 245a06997055..8336596b1247 100644
---- a/drivers/net/ipa/ipa_interrupt.c
-+++ b/drivers/net/ipa/ipa_interrupt.c
-@@ -149,7 +149,6 @@ static irqreturn_t ipa_isr_thread(int irq, void *dev_id)
- 		iowrite32(pending, ipa->reg_virt + reg_offset(reg));
- 	}
- out_power_put:
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index d17c701c7888..2d0d348aa278 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -1139,7 +1139,6 @@ static void trf7970a_switch_rf_off(struct trf7970a *trf)
+ 	trf->aborting = false;
+ 	trf->state = TRF7970A_ST_RF_OFF;
  
- 	return IRQ_HANDLED;
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index f25f6e2cf58c..b37516de01fa 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -911,7 +911,6 @@ static int ipa_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_deconfig;
- done:
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 
- 	return 0;
-diff --git a/drivers/net/ipa/ipa_modem.c b/drivers/net/ipa/ipa_modem.c
-index 8fe0d0e1a00f..9b136f6b8b4a 100644
---- a/drivers/net/ipa/ipa_modem.c
-+++ b/drivers/net/ipa/ipa_modem.c
-@@ -71,7 +71,6 @@ static int ipa_open(struct net_device *netdev)
- 
- 	netif_start_queue(netdev);
- 
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 
- 	return 0;
-@@ -102,7 +101,6 @@ static int ipa_stop(struct net_device *netdev)
- 	ipa_endpoint_disable_one(priv->rx);
- 	ipa_endpoint_disable_one(priv->tx);
- out_power_put:
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 
- 	return 0;
-@@ -175,7 +173,6 @@ ipa_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- 
- 	ret = ipa_endpoint_skb_tx(endpoint, skb);
- 
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 
- 	if (ret) {
-@@ -432,7 +429,6 @@ static void ipa_modem_crashed(struct ipa *ipa)
- 		dev_err(dev, "error %d zeroing modem memory regions\n", ret);
- 
- out_power_put:
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- }
- 
-diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
-index fcaadd111a8a..420098796eec 100644
---- a/drivers/net/ipa/ipa_smp2p.c
-+++ b/drivers/net/ipa/ipa_smp2p.c
-@@ -171,7 +171,6 @@ static irqreturn_t ipa_smp2p_modem_setup_ready_isr(int irq, void *dev_id)
- 	WARN(ret != 0, "error %d from ipa_setup()\n", ret);
- 
- out_power_put:
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 
- 	return IRQ_HANDLED;
-@@ -213,7 +212,6 @@ static void ipa_smp2p_power_release(struct ipa *ipa)
- 	if (!ipa->smp2p->power_on)
- 		return;
- 
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
- 	ipa->smp2p->power_on = false;
- }
-diff --git a/drivers/net/ipa/ipa_uc.c b/drivers/net/ipa/ipa_uc.c
-index 2963db83ab6b..dc7e92f2a4fb 100644
---- a/drivers/net/ipa/ipa_uc.c
-+++ b/drivers/net/ipa/ipa_uc.c
-@@ -158,7 +158,6 @@ static void ipa_uc_response_hdlr(struct ipa *ipa)
- 		if (ipa->uc_powered) {
- 			ipa->uc_loaded = true;
- 			ipa_power_retention(ipa, true);
--			pm_runtime_mark_last_busy(dev);
- 			(void)pm_runtime_put_autosuspend(dev);
- 			ipa->uc_powered = false;
- 		} else {
-@@ -203,7 +202,6 @@ void ipa_uc_deconfig(struct ipa *ipa)
- 	if (!ipa->uc_powered)
- 		return;
- 
--	pm_runtime_mark_last_busy(dev);
- 	(void)pm_runtime_put_autosuspend(dev);
+-	pm_runtime_mark_last_busy(trf->dev);
+ 	pm_runtime_put_autosuspend(trf->dev);
  }
  
 -- 
