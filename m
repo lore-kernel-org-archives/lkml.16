@@ -1,125 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6996B2D77E6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D1273F9;
+	Fri,  4 Jul 2025 14:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637462; cv=none; b=IJ7+sbmAjymfQEj3Ztf0Ax+bNxseU/2O9iTCmxX/TdbbRY+YuzofFvWRq3LS02MneYAXbMy5CAIZswsYsaLItcAjGi/sTGJF+jSkcrsBkVBcWhpsURXEvkTeFQwbr9VOhCgkHxzZkRg3qgm0z5WRyQz97yUpIp1dHQg+SiDa7hY=
+	t=1751637664; cv=none; b=rdDBT7yfEcb1XrP+XCj3MY+Pg/HesObnPIwe8B9YS/GJls0KL5cWm8jL3C3r6sBFxDPGqyQeAUc5+SY7RoBPxKT4+p5R+fGs2T1xUGDchHC20aQ8zZym7ZZFXRilt9bsFg2gg5On5SLl3tYYZdcK/XWa8hfMUHnlo0sHHsUtaOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637462; c=relaxed/simple;
-	bh=9AiBcdtjRwo6HxUAL4Q5EAN5efoCq3iYuR6+iA0Sddg=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NEIoCknvBS2zZCSkvlAkePywGq5jXOf7WMEH690UXi6w6jn1i8ycL3hI2u7XZpwTfqubFh95WeuQi3ZRl1x87Qb+71OEnRsT0bSzX0etmaoOuThTzAxclCw0NO6tQSa/VyROnWNoS7WOCOct3WjrG0Ihe4mT0AYwEFjDh83hiCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DFPN7cnP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751637664; c=relaxed/simple;
+	bh=MH35eF0CmI7L7oslC20HrDk0Bjg9pVK4Ssqj9zI7+rQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JBRU9ynb8cvftIZI6gwzzIwuZh6+UpMT67bppkip4y700C6pVOWtvqCVfs7UTrcsKYsBF2Y3NcH7x7FPP6XCSqTJRlCxnGEtz+U+Sg6Z8ub5bYQ+wpcf2F/mkxJaIR8rQzm8ht656SolFT8fuYnVejssz12kR+X1dNq+MbVBVLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxImwCjO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFPN7cnP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751637459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXC+Pbvv6wMd3kWlbuRF5FHReiHS9E94l/kQUP50cvc=;
-	b=DFPN7cnP5QUPF820VIcTvAeXLU8esQjSqmZAdcPyvtb6sZJbVGse5y4w+mz97AZZMRajhY
-	fajxw6aiS5ScqSleD1fUl/fkPw5qgn//MCoMXq+ZQr5tibFLVhvuaOao2zLhZN9piOPivd
-	vgp4KMFiE34H9EKBd9ueayfmh/VovTE=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657--2x8eTY7O3y7aTv_WasRdA-1; Fri, 04 Jul 2025 09:57:38 -0400
-X-MC-Unique: -2x8eTY7O3y7aTv_WasRdA-1
-X-Mimecast-MFC-AGG-ID: -2x8eTY7O3y7aTv_WasRdA_1751637457
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d399070cecso161962985a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:57:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751637457; x=1752242257;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXC+Pbvv6wMd3kWlbuRF5FHReiHS9E94l/kQUP50cvc=;
-        b=I5JSseF55HTsAzjlXBzNOn/vMNekbD/DSEJ5T0Aoy6ap/j2Lc1hp4XLMAB4UU95FSZ
-         r/2B+Ji2Zek946GZPEfTSTowJzlcI/Yh09Spkw7WF9Tufbq1bUzgHEHBVjKIfe9XS7IJ
-         spqSvu8IGNT7xSHUNZgZT6kqwPD9KUGLAb0EE+8aH4qRFgp7yW13V6MSwS+MP14XxNvH
-         hVIY90aJYlzntNt5s+aw4DNP43cLYiUgBwich6kFAUmSNj1gDrOl3NfMWusqmVLXPJz2
-         Ljc6vPXre352Jv1hBJlN84wgv9LJhHHtryN6rvt6ewZeo8tzomjPxAuniaQt3wLEZXsG
-         AAHg==
-X-Gm-Message-State: AOJu0YyHmItv7SQX3jY8LU4FZGSynBEY6TvkXHkvX5WnVdfW6USZWTZW
-	kX5IibcopXoKCy3OsCjdULFiKu3bv1txgE2ck/cfgrfnAvUdA3xwfickBiVzAoUJl58H2iLrdtB
-	KqqpHEn3q5shjCkB5IVQaGWFs2Q0j7rbMS9C7QZ0wnme4Bw/2tEztpIlRuHbhW8TdEg==
-X-Gm-Gg: ASbGnctx5YYhcYappKB85lZLf9/2RzrzgrKoDjhEtyCLEjX/OQs7mfIT6bUuggKED+b
-	5UGCuUY0kiWTaZ569V64Lmbm/Tc4QUvDiqdtDCS+p2rdedP1a9YC+J45kwkHyyQnT0AITmalgHS
-	KRfVbG9CPZcFFiawK9L+IW5yVn9/d5aAfhwD7en2fVbS62jVnrfjqeUFT02OfYBEdS55XkuQBhS
-	dmH3A8D/HkMFgHwV0pAePdNYkYZKId/wZ8+KP5D0C9iAlF/QbtIa4rmsM0guKXj7AzWJbEeFVpn
-	+cG+E/CJLpc80dSSbRJ66Q2ZNTSeUr+Hj6Si1ksPNZE5wiH6u4nTTHQxU4ECAk7KDodo
-X-Received: by 2002:a05:620a:3705:b0:7d2:2822:3f79 with SMTP id af79cd13be357-7d5df0efa00mr257121485a.13.1751637457533;
-        Fri, 04 Jul 2025 06:57:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1fBg+sAtLXj6W9yiXg9aDLRlkJbzYXVk7hXqRbct72Y6FPsj/v1DpV9N99Hdwb5FAsg+IPg==
-X-Received: by 2002:a05:620a:3705:b0:7d2:2822:3f79 with SMTP id af79cd13be357-7d5df0efa00mr257118385a.13.1751637457180;
-        Fri, 04 Jul 2025 06:57:37 -0700 (PDT)
-Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbe8f9a5sm146104285a.87.2025.07.04.06.57.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 06:57:36 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <6a687f94-770b-4fa8-83be-978007e902b6@redhat.com>
-Date: Fri, 4 Jul 2025 09:57:35 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxImwCjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CC6C4CEE3;
+	Fri,  4 Jul 2025 14:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751637664;
+	bh=MH35eF0CmI7L7oslC20HrDk0Bjg9pVK4Ssqj9zI7+rQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=gxImwCjOs7DiaSHZ6K+ae9M507FW7V93du2DHvDhsPA+mc5hFEd1Ut6HLd2VtEljS
+	 3FOK8L8Jd/8zJu/bpFyVwHaqT/nhDsw3iplgD67lGSEIf+aoQIi95iaMxDe0jL0sno
+	 MVL8VZ4RTGmGvC9bbOUXOGlsigJ3anmOHV/TzUkObjCSbJKgx+nx2NFHcYB2DRgOcJ
+	 DPJGxj7x6gylXShdHmkFEPDBfts6ockAOjKAczAZV/gaDdTcCd/HVPFn4F/iF34CAp
+	 srZNdSgmkKnEUtWkyAA+K2N7bECflbMwC58C/fG9g21D+amyGVhHc9QtCb7FbpyVa5
+	 /p2UKNcJzcyJw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] locking/mutex: remove redundant ifdef
-To: ranxiaokai627@163.com, peterz@infradead.org, mingo@redhat.com,
- will@kernel.org, boqun.feng@gmail.com
-Cc: linux-kernel@vger.kernel.org, ran.xiaokai@zte.com.cn
-References: <20250704015218.359754-1-ranxiaokai627@163.com>
-Content-Language: en-US
-In-Reply-To: <20250704015218.359754-1-ranxiaokai627@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 16:00:56 +0200
+Message-Id: <DB3BQ6IIFK35.JDQBAJWVQQT6@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
+ Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
+ Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
+ "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
+ <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
+ Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v14 5/7] rust: module: update the module macro with
+ module parameter support
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
+ <20250702-module-params-v3-v14-5-5b1cc32311af@kernel.org>
+ <5fYjUlNFhuBwWOP46ph07KX4CMe0ORT5pZ_pD-l719E0ChkPTI2pV1tYJcN3oxKKcMI8_HGU1InaWBj52Kbbag==@protonmail.internalid> <DB1OK2PQZ790.S317HUWYJR3J@kernel.org> <875xg8rvei.fsf@kernel.org> <32cgJkp6-1w5-FLQMuvqhCiTvKUhR7SiIWtWdQFlkp2UoeAU3YuYmj7EElURj_NxY01OuuWlZ2aNPzX1UksjOg==@protonmail.internalid> <DB3A6GR3TQON.C9N9U4V48R1D@kernel.org> <87zfdkqd28.fsf@kernel.org>
+In-Reply-To: <87zfdkqd28.fsf@kernel.org>
 
+On Fri Jul 4, 2025 at 3:51 PM CEST, Andreas Hindborg wrote:
+> "Benno Lossin" <lossin@kernel.org> writes:
+>> On Fri Jul 4, 2025 at 2:29 PM CEST, Andreas Hindborg wrote:
+>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>> On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
+>>>>> +                            perm: 0, // Will not appear in sysfs
+>>>>> +                            level: -1,
+>>>>> +                            flags: 0,
+>>>>> +                            __bindgen_anon_1:
+>>>>> +                                ::kernel::bindings::kernel_param__bi=
+ndgen_ty_1 {{
+>>>>> +                                    arg: {param_name}.as_void_ptr()
+>>>>> +                                }},
+>>>>
+>>>> Formatting?
+>>>>
+>>>> +                            __bindgen_anon_1: ::kernel::bindings::ker=
+nel_param__bindgen_ty_1 {{
+>>>> +                                arg: {param_name}.as_void_ptr()
+>>>> +                            }},
+>>>
+>>>
+>>> That makes the line more than 100 characters after changing other
+>>> formatting things. Perhaps I should just left shift all this?
+>>
+>> Not sure what you mean by left shift? When I tried it, it was fine, but
+>> it could have changed with the other things... Do you have a branch with
+>> your changes?
+>
+> Move all the code template so the least indented start at column 0.
+>
+> My WIP branch is here [1].
 
-On 7/3/25 9:52 PM, ranxiaokai627@163.com wrote:
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->
-> hung_task_set/clear_blocker() is already guarded by
-> CONFIG_DETECT_HUNG_TASK_BLOCKER in hung_task.h, So remove
-> the redudant check of #ifdef.
->
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> ---
->   kernel/locking/mutex.c | 4 ----
->   1 file changed, 4 deletions(-)
->
-> diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-> index a39ecccbd106..d4210dc97b6a 100644
-> --- a/kernel/locking/mutex.c
-> +++ b/kernel/locking/mutex.c
-> @@ -191,9 +191,7 @@ static void
->   __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
->   		   struct list_head *list)
->   {
-> -#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
->   	hung_task_set_blocker(lock, BLOCKER_TYPE_MUTEX);
-> -#endif
->   	debug_mutex_add_waiter(lock, waiter, current);
->   
->   	list_add_tail(&waiter->list, list);
-> @@ -209,9 +207,7 @@ __mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter)
->   		__mutex_clear_flag(lock, MUTEX_FLAGS);
->   
->   	debug_mutex_remove_waiter(lock, waiter, current);
-> -#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
->   	hung_task_clear_blocker();
-> -#endif
->   }
->   
->   /*
-Acked-by: Waiman Long <longman@redhat.com>
+If you dedent the contents of the string once, then everything fits in
+100 columns.
 
+---
+Cheers,
+Benno
+
+> Best regards,
+> Andreas Hindborg
+>
+>
+> [1] https://github.com/metaspace/linux/tree/module-params
