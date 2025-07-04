@@ -1,178 +1,172 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012069.outbound.protection.outlook.com [52.101.126.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20921E2834;
-	Fri,  4 Jul 2025 02:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751597432; cv=fail; b=aujZwBrUEmjP1fF3359R790rZVb4mdc+NOii9Rr+F4HxONljPPCP/j+493Y+/T4d7r6WXamIXqenunS5UH4MAn+9CYF72roWnuIaC4nbE+b7MG7EQUYv+EhamaYFcmN2JTL/eKNsEBVI1vAojGQtkhcZ3LslLssVnyxKDqeZvXE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751597432; c=relaxed/simple;
-	bh=Hhsb/ZeoKiBP4wA2DORWYU+aL/JzqL8757NaMB53Sw4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kZMEI7q1wAneSbB4IhvTNVTSeqkkAAQvolSbCe50s/YOyU71cVxetj7nAvACgUVAy4O5rznQjh9J6+Z3DM5V/87sEJ3/iW1ksn/DIaPIwOCd4JT1nDWCCyJor9hSP6g0NneIqgheCZOghz1T2bGGt95FJvLCj5FpvgBRRaVnYyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=qI4Rx7V0; arc=fail smtp.client-ip=52.101.126.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277E51FC3;
+	Fri,  4 Jul 2025 02:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751597608; cv=none; b=VC1iyqD/g1oFx8ToNIkKe+S8bsD3j6333MugByAhmy5+RBz6JOGMVOeklzNJNvzndIdp/V8GfoJbkqFWUg3HzuG+yQuX3sP27KNgljXJ2yM5LxIUIwQ/5o8pQGV8X4OLXj7iHna3g9uShV5FG+BvYyOyFqwOrqoDdA/MERiitQA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751597608; c=relaxed/simple;
+	bh=9UOWMeZLVtkwSXIS3fo46rKrNh0I1J1skAXKQCS7QZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGi6btcK00b1r78HrukV3oEM3stlwbNZafeaHcvyXKM26AoDfpQ6FtovrHp5ncmvwDXlMEkgSStBR9OqR5eyvBtzYfZQxf7RSfRyfsHqcUIcFhDoDAauaCisz414CRfqTP4fBQu61o4j8S7JIH50fg1HFJr45d0S68a2VtG3GJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgzeqJSM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="qI4Rx7V0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kLuC/zAMNh8IK1/v8FYKllSAEioeqgVVG2YF2q76/5fshUDFpBDnAVqP8IaT3er1u4mtxTwn31khiEE60X/cLWGZ1nvt0j6JWsM3vG3erBnnJFQkRzcJzIXFdMH5+HYzH+bSQ5Jcfyu2IJTlve0UUr4RjPZ4dFvU6GG4kaoTdnyDuOBW7ySw+U2ROXrBXGwjcyuK1uu9VlbfUgztoP7WGk/FXM/xfNfO9g4pXwrxbdN8S6UXi2dsdVFYvLIYQDw5O1ZRcL1ysRNiLrl6cE+Iy813Mt9BuGt9/JYL0bYDs7aMANIy5i47B0c7RoAXA/tOLFCrBSJ9nIV0i76nAAafag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uA4wmyKmaelcY+dfRfm28NitvluuhFSH4QjBvD3Ia/s=;
- b=njhW4+kOOQSySKqT+i0/fDlCZ/8B4r62vjEDd0DIC2haRObf0y901Bvj/l924Rp+G2IeDTP6TULoOIGeIU5ST/pwWASjFi1keobftZAfB+1AgzkDmEfeh1rLMefzqtMy3jV42V+QTTIzS/iOS+fAU9lx1ozmVJbXlCMN0K4WJFA5yyO1kC65tjNjl23ZQBZkbixjE3ZNoRnuP5DMzzDgJ98GYB2WRqFYmxumSj6lxaQ/BWj3tQiM6BAftxE+d9+LcYk77/uU8djWguwd3tVacRmT7jj/kStFk6ffyxZnS5So9b7sh6JHkOecnqnNHE+Ua5slAu1Yi9VTid6IqaQDHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uA4wmyKmaelcY+dfRfm28NitvluuhFSH4QjBvD3Ia/s=;
- b=qI4Rx7V0qJAsKdQ3Nhvw3C0ca28+Q1/6v+GnNNKGVsuBk1DvmGYznBIdx2oZOlT1564j9Ef8ObdjRf38PO+FaQvDvm6qz+BO+zPq1Nk09bvmqGRjTtPVaWsoyTW9tdyzpmQHWiiVXSKHH9vHF/3PTJS+Uhx/82XcBQezgbuwxLAQkEwR+ZY1FbBO39qVCO5j+oJUtYCS2SRH5XwZ0tYHQEHQUHP2cHkjV585LNxjx3nR10CZyrssmTAes2faP9LMgB0MHsue/kIp6BuluZDp3EGzhOA88MhmO86PdYbxNDKxWyrKO6tvynsx9Ri8eKMwJXXq5/ppJ/N9seOIkV/FGw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9) by
- TYSPR06MB6608.apcprd06.prod.outlook.com (2603:1096:400:477::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.20; Fri, 4 Jul 2025 02:50:26 +0000
-Received: from SI2PR06MB5140.apcprd06.prod.outlook.com
- ([fe80::468a:88be:bec:666]) by SI2PR06MB5140.apcprd06.prod.outlook.com
- ([fe80::468a:88be:bec:666%4]) with mapi id 15.20.8880.024; Fri, 4 Jul 2025
- 02:50:25 +0000
-Message-ID: <ffac4324-66f3-4621-9300-a09ca8045bab@vivo.com>
-Date: Fri, 4 Jul 2025 10:50:23 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the i2c-host tree
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250704120207.3e7d0d7e@canb.auug.org.au>
- <bd7bf583-5c75-4e73-9672-657749a72b1a@vivo.com>
- <20250704123601.52101f49@canb.auug.org.au>
-From: Qianfeng Rong <rongqianfeng@vivo.com>
-In-Reply-To: <20250704123601.52101f49@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR06CA0185.apcprd06.prod.outlook.com (2603:1096:4:1::17)
- To SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgzeqJSM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B912C4CEE3;
+	Fri,  4 Jul 2025 02:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751597607;
+	bh=9UOWMeZLVtkwSXIS3fo46rKrNh0I1J1skAXKQCS7QZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IgzeqJSMKseKK7omQDZzCBBv4DBbLPEh9U0RIFksF3m2S4jguzBc5zNf1Di2F2Ar1
+	 FWgHdlp6V1NZ1mSDzod7Qn77tSMPXrdIUAV+zraDYFFJ8tAjd+UE0vNuOWOl1NkQGI
+	 Oz0cYcSVQO5w1YVCNL8UEROl7yHcXs+jHZgeSWS4C3mhz3v/fLSbSgpsuWPeL3BD4p
+	 5Si7qyVAxfWZuKLoFdoazIIjMxpxHjGg7ydu/iIKUlH9ciLlYZKpwEK27mz3U6nhh+
+	 U7GnwOuDMQam/auYi2FcvVUEj5qJg7eekf/BYUbhl8JaQv5d/Y8ns+Dkk+ssw1+TLd
+	 zlsy6L+HvChnQ==
+Date: Fri, 4 Jul 2025 05:53:23 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v5] tpm: Managed allocations for tpm_buf instances
+Message-ID: <aGdCI7aD05aIqS6s@kernel.org>
+References: <20250703181712.923302-1-jarkko@kernel.org>
+ <be1c5bef-7c97-4173-b417-986dc90d779c@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SI2PR06MB5140:EE_|TYSPR06MB6608:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1a29ec3-4b4d-4125-5455-08ddbaa58741
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnhqWjFINUFub0ZKTkpjUGFXVS9Eb1hBQ21mOGZkai8zOHZ6Zk42b0E4TmRY?=
- =?utf-8?B?STBzc09wYy9RYk4vQTFEV0hZSU9TUXdoVmwzaVhDT0Z1bE5XaWI1VjAwWHNO?=
- =?utf-8?B?ck9HREY5UE5XU0Q3SG52d2diSWNTT09HOU92MGkwR0xUSTd4VEtnalFXWXFW?=
- =?utf-8?B?bXplU25OUTQ2Z0g3RmlGNWVoN0s5ZE1ESkIzTTB3U0tXam0yMjlIK0o0ZUxQ?=
- =?utf-8?B?MDZ6RStCVkdRZVREZlFMSEt0MjZwblRubmN2N2lYWTMwZ2EzWFlQa1dYNnZs?=
- =?utf-8?B?V2g3ZkM0NnZRd0ZVaDM1aW1tVkJqejZ6Sk9sK3dEMnVVanNzbzFJRVlsZ3I2?=
- =?utf-8?B?ZDRCQXZWR25jZ2lYSTFsdmRxRkpGeXJNQUxHaGErTDA4Yyt5eU4vcG1GQjJN?=
- =?utf-8?B?TGhKUkZUUnJuWVQ4WVRCV0t6N2pyZTdkNDgyeGg2MlRPV0p5ZG1JZUx2MTJX?=
- =?utf-8?B?V3N1VUJhYTJkemIxcmJlU2wrbGp6N0hkSW13ZTEyMnU4WXhYQ0wxZEVudVQy?=
- =?utf-8?B?c3Y5bnhoYUowc3ZPMmNPTmIrOE5pNTZQdCs2NkFMMTFFMjNlbEJvbUo4MHVQ?=
- =?utf-8?B?bzE5UUJwVHRZREhRVzgxZzZzWi8xaTErRUlIN3VXblR4cnhBTkg3cWpjNDZQ?=
- =?utf-8?B?dmRlaGdtUkV2NFVLOVZNNkRjNW01Q29mRUR3LzB2ZU9qYVFYNHhaUGd5US9T?=
- =?utf-8?B?YlFxd3V2aVZvS29tUUJtVFU0cWVSSVJRMDZ3WC9UWTZKUXVFRWpPTERVOE02?=
- =?utf-8?B?N0xuakdPUzlpSXJFS1UzZEZBdWpjRUhNRU1vM3pJN24rc2F1ZEpmczliU09T?=
- =?utf-8?B?MnVPdG1pb3dhcHJSR1c5Vkt1R2k0YW9USzNTZTl6alIvWmRVMWdRL1NhK0px?=
- =?utf-8?B?akozN1FmWHpLYStCV2lLTVpJcnpnNEgvV0M0clYvWjRqcDBVK2FxRDA0b0gx?=
- =?utf-8?B?UUk4Z1ZZOCtIa0E3M1dzVS9RVmVkMkU2MURtZUdQcmdPTEovSktGdmliL2Vp?=
- =?utf-8?B?RTJndHJodHFaZHYrRHAxT0ljdG95YS9RNHVpV016WTZQRmRIVUtFZTJ4cnpI?=
- =?utf-8?B?K0RhK2xPdHJReGRDWnI3UzJ4QyszS0FGMEJRODA0ZVpjZlQ2dDVhZGVHa3RT?=
- =?utf-8?B?cFVMT3JXaFl4bjJkUGVMOURLcFFLT1dydTlzdmFQZURlWSsvdGlienJ5UzBT?=
- =?utf-8?B?eitLdGlTVnd4ajVUNkNBQ09GR0w3aUl4NzQvUGRwMjh4SVpqc3FiNlUyaUxl?=
- =?utf-8?B?dnVObHhNZXBtbEgyVzhhTlk4MGpNYWdNalc2d2xRTGQ3aWw2ZURDZHUyOTFO?=
- =?utf-8?B?UlU1YVR1ZnVBVXRsMlUrQStpUDdZUGt2OHBlaUlDM3l0cmdFdGx1dnplQzQx?=
- =?utf-8?B?K21VenlhdkwrQWVuSG5MTGp2c3hZNXBJZURkRFdBb0pCUTFKMmpycW96dzN2?=
- =?utf-8?B?ejBoRzFkL0VueWM1ZzRCRjhCWktneXcvRFI2blczUWZBcElwaXlNN1M4dFFI?=
- =?utf-8?B?Y1grRDc3Um4xM1EzY0tYWExER21STWdMRzhvUEx0Q2dsSzVaTU4zYXFrbUtR?=
- =?utf-8?B?dGs4eXIvNkpvQTBNY2czcGVhQ3pzaHhQZTJWQWx1QW1JNS9ObDgzZDFUWG1S?=
- =?utf-8?B?WXd3NFFtdzZaSmFpM3VqVmNGOG1FWGQ1b1FOTmY4S1V0bURyVjhoa0E4blov?=
- =?utf-8?B?Sm9JUnlsMVJMeXA0eENRK2RmenA2REZuMVZjeHRzd1IyOGZldzIzaHRBcFV4?=
- =?utf-8?B?OUgzL2p1ZHhDVDhqUFk2TUNGTDg5WXkrMTh1NkhPRHR5bGc3Zi9mcktMMHQ2?=
- =?utf-8?B?by9BaWwzaUVlK1h3c0hRZ2tocW9wTkdWUDZnYXVFaUhzNGc5L1hqTGQ4U3Ny?=
- =?utf-8?B?cXVycGNQVnFTalRWRVkycTA0VmxXMXpTOTlCZS9ScTFQV0E9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR06MB5140.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RjB1dWJ0b0lMUWFSUlVDSTQ0WGJsMUFxWGROL0NJWUNRK1JlaUFqOThLVkNx?=
- =?utf-8?B?c05CRHBNRU1FUzFlcWszQU1HNk5WeTBpZ1BlWDl5VFE4VnlXcVJROHhWaGJL?=
- =?utf-8?B?WjZzUklCL1FXMkFyR0R0d0srL1pjWkczSmpjVHdxMkNWS3FCS3hsaVFybDJQ?=
- =?utf-8?B?eUNmOVFSTkc4WTgzZjZpSTFZUG1jejh0NjlUa1V0UVIxVi80QjVUMExpcFlr?=
- =?utf-8?B?V040dk13VkRDMzNDM3ErSi9XWm9saTNscEhMZW1NVXJwWkZhQkFjcVRpc0Fr?=
- =?utf-8?B?b2RoaEZpUkp6UjlGOGdnUWFZRUJrUjJlQWU2bmtxdTB0WStPVmtRUkRzdDRs?=
- =?utf-8?B?MEVUWXREQXQvNXQyNmJJOEczUzMwS09yV0FvTjVCZmJUTXRLMzhNWmVsY3V0?=
- =?utf-8?B?SzVjamwzMVpQYkVydk0vb0huNVdzYUtFSjhneHJLUmtpNFJ0UWNsTE02UHhQ?=
- =?utf-8?B?eFRsTWJsSUVVTVhzbWlEUGNyeXFHRjFLOW5MNkRONGJtc3ptM1dVRC9sWGxl?=
- =?utf-8?B?VTlqbmkrOHpFdVVHeXgzb2ZnWTljT3huOG9XeFZjaCtUYUNmTE1Ja08xWXlC?=
- =?utf-8?B?ZHpXZ0J4RkJqazlCZjc0U2YxNDZxZjBUS0M5Y2pRU2llQUNOcU1MNS9mWWdt?=
- =?utf-8?B?eldMTTJoTWRORmNtSVZPNDViU2xnOHJqNkU3R0lCblpBWS9tdk5yTFc4cXIz?=
- =?utf-8?B?eEZlM3p3L3ltSzhOVjIzVGhlbVNyWVNBejlRUDBHYnVFclJ0VXVjcXVtdks1?=
- =?utf-8?B?dmR2Nm9kd09OVkl1SkY3M0FJMmpaSTRnZmgyN3VKSHRWWmluSGs2RzUvK01x?=
- =?utf-8?B?K1FMVmlwTkpFcHJqbDByVFZWVGQrQlNGUXN5c0lVc2liY0FTWm5maEZ0WkdR?=
- =?utf-8?B?RHhPb04zdzdZelRDZlBETEFkaHR4MVZKdS9UQ2h6RVRlblBjU0d6RUQxR1hB?=
- =?utf-8?B?NkRvMm5EWlhkdTlUN25QQkZIQ3Q2VFlBUmJoMTIyNGQ3MXlXVFZ3R2svNndJ?=
- =?utf-8?B?d2R3d1c2TEpJSFBvNkNKSUw3TUtHK0UwaU5QTVFSNjJPS2N3Q0czVnFwZ29m?=
- =?utf-8?B?dytVRG5vZ2dnRXJha1NDZjRLczRhc3hJT2MvYWk0cndNZXBVRmw5ZGlOTWpU?=
- =?utf-8?B?YU5IS3UrOGZ2a0Z5K1JqdjFIa1EvYkRZMlFmK3BCMEc1ME9mdkFuTjAzYzRo?=
- =?utf-8?B?MUkwd3RkZUpMamkxdjU2Y25YT3U5QkZrMkpmcHpXTVRIWHV4a0FUenZQT0Nt?=
- =?utf-8?B?Zk1FaHBXM2dUTGJnUUo1ZHlSbHNnK0p0RUdoT1BEU2tXdzVhc0F0bkFKK2dG?=
- =?utf-8?B?ZnR4TFRuVUZZUlZUR2pCQWRqbDNBVlNIZ0VqQTRXK3Rib3M5M2kraDJ5VVZq?=
- =?utf-8?B?QkZiS0lBWlpxaEJ3M3k2YnQ0NXlDMm9rc21HLzRoMzdDV3BHSEVwY3Y3VmRW?=
- =?utf-8?B?V1htV3FPSVlJOExxY3JJZXprUXdnTGdkb1NHeGJQVHA4c1F2U2tJbWxRKytP?=
- =?utf-8?B?dndvTjhBOUt3RlQwNWFWKzgwcmoxVkpkRUpWaFN5WmpRNWd3VHBkUkIySjVh?=
- =?utf-8?B?NGFad0VDWFg3dWFRaGNtOWxwK3hhOGlDQmN6THdIQ0dEWGs1QkszanZCY2ZP?=
- =?utf-8?B?YW9ESkZJb01DUm9oQ0J3OWJ2V1pyeEgyaWVXdGtWZ3JtOHgvU24vdjRPbENF?=
- =?utf-8?B?Vzg2cjF3VmVKMUpCbkJhOFBHby9sTEtvUjNtSlJkM3V0K2xnNkN0RHhFZlps?=
- =?utf-8?B?bG5WaTFaRXJZQWFGRG1kbXBHcmRaL1pma3pUNHJNVS9hdFlSWWZkTG5jNi8v?=
- =?utf-8?B?NDNqL3ZMR0xpOWFJS1ZpYjhkVGgwa3QvZmRPM3FQTFBoSVlyTFlTek1KMnk0?=
- =?utf-8?B?UmZxY1YzVDcvOTRXL1AyTGsrUTRVYmF1bXBQdmZRZ2F6a1JRRDR0VEYwdlJm?=
- =?utf-8?B?ZnhaOU9pWXh0OHkyYVZmKy9sc0s2V05YdlBXc0p6a2tWdzhpaFNRMFBDdGZl?=
- =?utf-8?B?Um5rRVFZcUlCaEtBL0xlekRQK3MzSmtXMkNZc3ZGdFN6YlUvNGNhSHFzTGFs?=
- =?utf-8?B?ck1WNXJZWG5GRTY2NllQZnBoNjR0d010S3k0TEJ2amZkMGFKWkZqa3pzYVlE?=
- =?utf-8?Q?PA2cTf9iFzEigKl54+4EOOJs1?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1a29ec3-4b4d-4125-5455-08ddbaa58741
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR06MB5140.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 02:50:25.9338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bmgtKcsSLQz4vvE4gRD5sQw/XzQxS9aXw91dlimcFpgr1JrZpvY1QCo3adxDKy3da83URlD5cXzo6/U0pcYifQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6608
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be1c5bef-7c97-4173-b417-986dc90d779c@linux.ibm.com>
 
-Hi Stephen Rothwell，
+On Thu, Jul 03, 2025 at 04:21:05PM -0400, Stefan Berger wrote:
+> 
+> 
+> On 7/3/25 2:17 PM, Jarkko Sakkinen wrote:
+> > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > 
+> > Repeal and replace tpm_buf_init() and tpm_buf_init_sized() with
+> > tpm_buf_alloc(), which returns a buffer of  memory with the struct tpm_buf
+> > header at the beginning of the returned buffer. This leaves 4092 bytes of
+> > free space for the payload.
+> > 
+> > Given that kfree() becomes the destructor for struct tpm_buf instances,
+> > tpm_buf_destroy() is now obsolete, and can be removed.
+> > 
+> > The actual gist is that a struct tpm_buf instance can be declared using
+> > __free(kfree) from linux/slab.h:
+> > 
+> > 	struct tpm_buf *buf __free(kfree) buf = tpm_buf_alloc();
+> > 
+> > Doing this has two-folded benefits associated with struct tpm_buf:
+> > 
+> > 1. New features will not introduce memory leaks.
+> > 2. It addresses undiscovered memory leaks.
+> > 
+> > In addition, the barrier to contribute is lowered given that managing
+> > memory is a factor easier.
+> > 
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > ---
+> 
+> > @@ -374,20 +362,18 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+> >    */
+> >   void tpm2_flush_context(struct tpm_chip *chip, u32 handle)
+> >   {
+> > -	struct tpm_buf buf;
+> > -	int rc;
+> > +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+> >
+> 
+> Remove empty line?
 
-在 2025/7/4 10:36, Stephen Rothwell 写道:
-> Hi Qianfeng,
->
-> On Fri, 4 Jul 2025 10:16:08 +0800 Qianfeng Rong <rongqianfeng@vivo.com> wrote:
->> I'm sorry, I made a mistake,  can anyone help to roll back this patch?
->> But I want to ask if it's because I didn't compile with W=1 and
->> didn't find this compilation error locally？ Anyway, I will learn
->> from this lesson and be more careful in subsequent submissions.
-> I just did an arm multi_v7_defconfig build.  Building this file depends
-> on CONFIG_I2C_ST which in turn depend on ARCH_STI || COMPILE_TEST.  I
-> don't use W=1.
-Thank you for your feedback. I did report this problem when I compiled
-locally with 'make allyesconfig'.
-This was caused by my carelessness and insufficient compilation locally.
-I wonder if anyone can roll back this patch in time, or I can send a
-'min_t(int, ...' version to fix this compilation error immediately.
+I recalled from the past that checkpatch.pl would complain if there was
+no empty line after the declarations.
 
-Best regards,
-Qianfeng
+Now that I tested removing that line, it did not so I guess I can remove
+that empty line. The presumed checkpatch error was the only reason for
+having it.
+> 
+> > -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
+> > -	if (rc) {
+> > +	if (!buf) {
+> >   		dev_warn(&chip->dev, "0x%08x was not flushed, out of memory\n",
+> >   			 handle);
+> >   		return;
+> >   	}
+> > -	tpm_buf_append_u32(&buf, handle);
+> > +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
+> > +	tpm_buf_append_u32(buf, handle);
+> > -	tpm_transmit_cmd(chip, &buf, 0, "flushing context");
+> > -	tpm_buf_destroy(&buf);
+> > +	tpm_transmit_cmd(chip, buf, 0, "flushing context");
+> >   }
+> >   EXPORT_SYMBOL_GPL(tpm2_flush_context);
+> > @@ -414,19 +400,20 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
+> >   			const char *desc)
+> >   {
+> >   	struct tpm2_get_cap_out *out;
+> > -	struct tpm_buf buf;
+> >   	int rc;
+> > -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> > -	if (rc)
+> > -		return rc;
+> > -	tpm_buf_append_u32(&buf, TPM2_CAP_TPM_PROPERTIES);
+> > -	tpm_buf_append_u32(&buf, property_id);
+> > -	tpm_buf_append_u32(&buf, 1);
+> > -	rc = tpm_transmit_cmd(chip, &buf, 0, NULL);
+> > +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+> > +	if (!buf)
+> > +		return -ENOMEM;
+> > +
+> > +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> > +	tpm_buf_append_u32(buf, TPM2_CAP_TPM_PROPERTIES);
+> > +	tpm_buf_append_u32(buf, property_id);
+> > +	tpm_buf_append_u32(buf, 1);
+> > +	rc = tpm_transmit_cmd(chip, buf, 0, NULL);
+> >   	if (!rc) {
+> >   		out = (struct tpm2_get_cap_out *)
+> > -			&buf.data[TPM_HEADER_SIZE];
+> > +			&buf->data[TPM_HEADER_SIZE];
+> >   		/*
+> >   		 * To prevent failing boot up of some systems, Infineon TPM2.0
+> >   		 * returns SUCCESS on TPM2_Startup in field upgrade mode. Also
+> > @@ -438,7 +425,6 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
+> >   		else
+> >   			rc = -ENODATA;
+> >   	}
+> > -	tpm_buf_destroy(&buf);
+> >   	return rc;
+> >   }
+> >   EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
+> > @@ -455,15 +441,14 @@ EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
+> >    */
+> >   void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type)
+> >   {
+> > -	struct tpm_buf buf;
+> > -	int rc;
+> > +	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
+> 
+> Remove empty line here.
+> 
+> With this nit fixed:
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> 
+
+Thanks and I'm happy to fixup those. They did look also silly to me :-)
+
+BR, Jarkko
