@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9EF2877C2
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425628B518;
+	Fri,  4 Jul 2025 15:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641630; cv=none; b=EdEpxbXPGKgZQ6KnuQL4jcuwZ9rnIYKtynmJZc2XcEiu3LXoROQWywfly/codBWgNhPfoqNprl8UXAopc3WBZXDlwYLTSUuXzmuS6WyL34hUnalkvEgjG6BdY+oVTbUaFqtKqUJwUvr4b8tFIL5bdznUfPOQwikRyaGwv9CwxSo=
+	t=1751641641; cv=none; b=LzYPgkVXfNvywpZd3BftTv65pLWNKi59maxj/1LcexxxtyKQtwyL/6xNZSwFd7tiSVflkCrqKeJwu2Oj7KFpfp5ClKP2Lq1o2r1jyiJAEu+EGEqjCTl96AFSSvY1PJxtlCSMsEIhJ9hdsYNHgoVbNs0gAKBQ/UXlpguGa2p9r/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641630; c=relaxed/simple;
-	bh=yeBbiQXP4X73con7+MWKTN/Hn8J9+0zpd+up3PexS5I=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=JITBhCsEw0Zkf3ciLZfSmZ1wXtl2grcWMdD9wRSgu4SVpI1UM3LoE0qKL1M+jkA2/ABfMWBwKrj7HEEiQo9jOrg3fi6VrQWJ29lOfmxS8tXLCDxm+opr+NRVxT9MtHRKwUuWMg1eDuz/ygvtKylXgDk7PET56yTPKxv6Dl8Zjrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbCCoh/A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751641641; c=relaxed/simple;
+	bh=ukAKM+xwwkXTirgfsAR9KlRjq4Dana8wYKEmQtIvP+M=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=udLojf3OzQdddegc7wcoRhsdtx0ppVIYc7e4akEu8ySU/qy9SgTpGnOtNlZMi4lIzF6n8eHgxAZsh3kuXFiF3BSFjGwyyWT79x+rKVuxT8Dv35TJ7cZmDjU19EgInsHZH+4pKKSGx61VG6XHKBkShamfMEjSCTmOUsa5mNP6ITU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3NL+i4G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbCCoh/A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C460C4CEE3;
-	Fri,  4 Jul 2025 15:07:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3NL+i4G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D9DC4CEE3;
+	Fri,  4 Jul 2025 15:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751641629;
-	bh=yeBbiQXP4X73con7+MWKTN/Hn8J9+0zpd+up3PexS5I=;
+	s=k20201202; t=1751641640;
+	bh=ukAKM+xwwkXTirgfsAR9KlRjq4Dana8wYKEmQtIvP+M=;
 	h=From:To:Cc:Subject:Date:From;
-	b=jbCCoh/ApFgyL6Vak7yTdUl2sZjaFDMGqZFoIgddTcYgN75IhqSdaUp8HBFlIjYhj
-	 guFIxKE9qRBODySxsNpLx6ZGLo75JLQvVxJTxyB94i+M3IREuZyz7zI8/9KOF3mPEg
-	 EKWFGFvrAGg0cOsNoalPDOTP0sbLtcr+rbL4tMcek6TqfXuJ9+nBoAdimAGo4vZcTh
-	 pyiny2UI36xFNiWYOjXa/jEs+7K2EzFMCj94BKmESj461hoSi31qRdgAS42QO4yqxO
-	 kuXtoCxtHC3ptkrGO4wGRfgNxb3b7GDJKam+Dv+4HKriquxe3Gb/NfMlO2LWtrunD1
-	 ZNsv1KuSPb0Zw==
-Message-ID: <29572e6de29cb03ebdf8b553a11a800e.broonie@kernel.org>
+	b=V3NL+i4GmB9apvk5ImKEDzSexSxvO9Ww7reKcyEANXPTnuEsnc9gvq1O6kvsAPewo
+	 8F+MubXRj76muDnts9ipiVeB/r0W9L31kgxAFOpO25zfi6ZQUyVQHMvakqDOw4D2Tl
+	 3nAADeTfjtkhVW0k6zjICuBBsBmgsk+WHt19ohZOUuxNwL2O2jynqzNmn1yaNNNuth
+	 jTodiUiCNUpr22SMoR2CK1lGCM1nAz25Ya5eARV+rxBBeAyvp+qq3DYUyG4uQvohxc
+	 ccnxcMGwdtciqKnB3WvnAQhVvUQ1hSuNV7GuU2itlKUtRxHSq3KvwN+7cDtFpIs7zK
+	 0Vc43Q7/xUynA==
+Message-ID: <36262b502dd08b5d5c602f7c7a1d6449.broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regulator fixes for v6.16-rc4
-Date: Fri, 04 Jul 2025 16:06:59 +0100
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.16-rc4
+Date: Fri, 04 Jul 2025 16:07:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,36 +43,48 @@ The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc4
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc4
 
-for you to fetch changes up to c9764fd88bc744592b0604ccb6b6fc1a5f76b4e3:
+for you to fetch changes up to 04a8ff1bc3514808481ddebd454342ad902a3f60:
 
-  regulator: gpio: Fix the out-of-bounds access to drvdata::gpiods (2025-07-03 12:22:35 +0100)
-
-----------------------------------------------------------------
-regulator: Fixes for v6.16
-
-A few driver fixes (the GPIO one being potentially nasty, though it has
-been there for a while without anyone reporting it), and one core fix
-for the rarely used combination of coupled regulators and unbinding.
+  spi: cadence-quadspi: fix cleanup of rx_chan on failure paths (2025-07-01 14:02:26 +0100)
 
 ----------------------------------------------------------------
-Alessandro Carminati (1):
-      regulator: core: fix NULL dereference on unbind due to stale coupling data
+spi: Fixes for v6.16
 
-Jisheng Zhang (2):
-      regulator: sy8824x: Fix ID table driver_data
-      regulator: mp886x: Fix ID table driver_data
+As well as a few driver specific fixes we've got a core change here
+which raises the hard coded limit on the number of devices we can
+support on one SPI bus since some FPGA based systems are running into
+the existing limit.  This is not a good solution but it's one suitable
+for this point in the release cycle, we should dynamically size the
+relevant data structures which I hope will happen in the next couple of
+merge windows.
 
-Manivannan Sadhasivam (1):
-      regulator: gpio: Fix the out-of-bounds access to drvdata::gpiods
+We also pull in a MTD fix for the Qualcomm SNAND driver, the two fixes
+cover the same issue and merging them together minimises bisection
+issues.
 
-Shree Ramamoorthy (1):
-      regulator: tps65219: Fix devm_kmalloc size allocation
+----------------------------------------------------------------
+Gabor Juhos (2):
+      spi: spi-qpic-snand: reallocate BAM transactions
+      mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
 
- drivers/regulator/core.c               |  1 +
- drivers/regulator/gpio-regulator.c     |  8 ++++----
- drivers/regulator/mp886x.c             |  3 ++-
- drivers/regulator/sy8824x.c            |  5 ++++-
- drivers/regulator/tps65219-regulator.c | 28 ++++++++++++++--------------
- 5 files changed, 25 insertions(+), 20 deletions(-)
+James Clark (1):
+      spi: spi-fsl-dspi: Clear completion counter before initiating transfer
+
+Khairul Anuar Romli (1):
+      spi: cadence-quadspi: fix cleanup of rx_chan on failure paths
+
+Marc Kleine-Budde (1):
+      spi: Raise limit on number of chip selects to 24
+
+Mark Brown (1):
+      spi: spi-qpic-snand: avoid memory corruption
+
+ drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
+ drivers/spi/spi-cadence-quadspi.c    |  5 -----
+ drivers/spi/spi-fsl-dspi.c           | 11 ++++++++++-
+ drivers/spi/spi-qpic-snand.c         | 16 ++++++++++++++++
+ include/linux/mtd/nand-qpic-common.h |  8 ++++++++
+ include/linux/spi/spi.h              |  2 +-
+ 6 files changed, 61 insertions(+), 11 deletions(-)
