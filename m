@@ -1,153 +1,103 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401252DCF52
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA022ED151;
+	Fri,  4 Jul 2025 09:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751621838; cv=none; b=rdY7gR+g20w+IrE4oXxNVOKtUrbiv2tZoZAmHdVzgNNsviw/DReBxtROAUzBobeAhpQCw9vMZ4AUaSfjXo752jduuz8hPjjbufD26pmnMkFiYDXFwW9Q+tVDKw74SK1rXo9UgSSWGPIf+j5QYI+bYTSsn2xkOrG9+Y390rPr3rk=
+	t=1751621842; cv=none; b=pM+ZcQv959zxk3+HOCfxCZBbL+Pxh0Wurow4UNOUjh/YKrZ6nGumYGtOBvhPnjB4dotMXlVcwtmPZbpzSd/7zmaMTVH5o7VKtGncyixu8JobjIFOIBKanwalwiO76n2aftyG8/arDpDbs2uKAEtkzYZ3jyhtLZ+sWVLZrcatdHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751621838; c=relaxed/simple;
-	bh=ekBlNVVd5BWSYFIgjqQoE6SrY7z90AKUGm9nA4AlaBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E+8tWh3SXyy4LlWJRfXm2Dv6+CCdLHIt9wmrny9VuCgN7xZB8lRbSeat+mRJMULE+/tZBKx59Dh8nhnOD7R/5IXtxPg7R9P7uNIu76e9jGAY6soLAIL6vh0zB6Z6medk76YqWuASC4d4ZTO7m4gLjycO8ma7ZP+9DCwT1yis3Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=d7LLuBoz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uwbLtNAp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=d7LLuBoz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uwbLtNAp; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="d7LLuBoz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uwbLtNAp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="d7LLuBoz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uwbLtNAp"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 68FFD1F38A;
-	Fri,  4 Jul 2025 09:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751621834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ekBlNVVd5BWSYFIgjqQoE6SrY7z90AKUGm9nA4AlaBA=;
-	b=d7LLuBozyvt0UmZ/0dHI6gw2gLOxlUtxZK1CHleSZohhSwLM32fbGWYIIRIgIrMXIv/+Z3
-	1pbzaEv1Ux4CL+vE1V1VWrvc/5XK7z01AdkMMd1VaD46Sak3aIAW0QJZ0SMmAD+6iRn/sg
-	HqoAqhAunfgAS6ir47eRXPzzeofRz+o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751621834;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ekBlNVVd5BWSYFIgjqQoE6SrY7z90AKUGm9nA4AlaBA=;
-	b=uwbLtNAp0WDeizI4MkZOTyJ6ajYGyMwu4acyMYvelEpxTNHKp0Oe8+GLl+3vcYBifXFrGk
-	NWyFzdl7LcM75JDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751621834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ekBlNVVd5BWSYFIgjqQoE6SrY7z90AKUGm9nA4AlaBA=;
-	b=d7LLuBozyvt0UmZ/0dHI6gw2gLOxlUtxZK1CHleSZohhSwLM32fbGWYIIRIgIrMXIv/+Z3
-	1pbzaEv1Ux4CL+vE1V1VWrvc/5XK7z01AdkMMd1VaD46Sak3aIAW0QJZ0SMmAD+6iRn/sg
-	HqoAqhAunfgAS6ir47eRXPzzeofRz+o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751621834;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ekBlNVVd5BWSYFIgjqQoE6SrY7z90AKUGm9nA4AlaBA=;
-	b=uwbLtNAp0WDeizI4MkZOTyJ6ajYGyMwu4acyMYvelEpxTNHKp0Oe8+GLl+3vcYBifXFrGk
-	NWyFzdl7LcM75JDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4018213757;
-	Fri,  4 Jul 2025 09:37:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KFlRD8qgZ2jZKAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 04 Jul 2025 09:37:14 +0000
-Date: Fri, 4 Jul 2025 11:37:09 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Aaron Tomlin <atomlin@atomlin.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v7 05/10] scsi: Use block layer helpers to constrain
- queue affinity
-Message-ID: <2e7576e4-442f-4000-817d-6253374f5818@flourine.local>
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-5-557aa7eacce4@kernel.org>
- <d95de280-8cd7-4697-933a-37dc53f4c552@suse.de>
+	s=arc-20240116; t=1751621842; c=relaxed/simple;
+	bh=Q6DU9Maaa5t5RS/a/U5aVXjSaZjINPjf3HaqiEQsUdo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=X2zBCiVb1E12EeHW5Z2wLku+EY2Xxa/W34puUT0fkKn6f0L2BCc5IIblRqMLGhRhp7qxTqUJ6BUpmYuS7AXIqx/O0WhRjek7SqQYalPuj5HaXLiYdLtokAZ0hI2c8Ya42SfErSdU3SDIvrjLTJWPpI1T7V1hvzQXZu2DUXj08fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bYT611KsGztSj6;
+	Fri,  4 Jul 2025 17:36:09 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F664140156;
+	Fri,  4 Jul 2025 17:37:16 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
+ 2025 17:37:15 +0800
+Message-ID: <ea80d7ce-4e5b-4817-a795-6400835c252d@huawei.com>
+Date: Fri, 4 Jul 2025 17:37:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d95de280-8cd7-4697-933a-37dc53f4c552@suse.de>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL67935bhfdkbndpbo95z3ogoo)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,flourine.local:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] cpufreq: Refactor code about starting governor in
+ cpufreq_set_policy()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <viresh.kumar@linaro.org>, <ionela.voinescu@arm.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <yubowen8@huawei.com>
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com>
+ <20250623133402.3120230-7-zhenglifeng1@huawei.com>
+ <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Thu, Jul 03, 2025 at 08:43:01AM +0200, Hannes Reinecke wrote:
-> All of these drivers are not aware of CPU hotplug, and as such
-> will not be notified when the number of CPUs changes.
+On 2025/6/23 23:13, Rafael J. Wysocki wrote:
 
-Ah, this explains this part.
+> On Mon, Jun 23, 2025 at 3:34 PM Lifeng Zheng <zhenglifeng1@huawei.com> wrote:
+>>
+>> Refactor code about starting governor without functional change in
+>> cpufreq_set_policy() to make it more readable.
+> 
+> Sorry, but I don't see the point.
 
-> But you use 'blk_mq_online_queue_affinity()' for all of these
-> drivers.
+Just some refactoring to reduce nest level and make the style more similar
+to other code in this file. If you don't like it, I'll drop it.
 
-All these drivers are also using blk_mq_num_online_queue. When I only
-used cpu_possible_mask the resulting mapping was not usable.
+> 
+>> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+>> ---
+>>  drivers/cpufreq/cpufreq.c | 16 ++++++++++------
+>>  1 file changed, 10 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>> index 9b2578b905a5..7b82ffb50283 100644
+>> --- a/drivers/cpufreq/cpufreq.c
+>> +++ b/drivers/cpufreq/cpufreq.c
+>> @@ -2698,15 +2698,19 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
+>>         /* start new governor */
+>>         policy->governor = new_gov;
+>>         ret = cpufreq_init_governor(policy);
+>> -       if (!ret) {
+>> -               ret = cpufreq_start_governor(policy);
+>> -               if (!ret) {
+>> -                       pr_debug("governor change\n");
+>> -                       return 0;
+>> -               }
+>> +       if (ret)
+>> +               goto start_old_gov;
+>> +
+>> +       ret = cpufreq_start_governor(policy);
+>> +       if (ret) {
+>>                 cpufreq_exit_governor(policy);
+>> +               goto start_old_gov;
+>>         }
+>>
+>> +       pr_debug("governor change\n");
+>> +       return 0;
+>> +
+>> +start_old_gov:
+>>         /* new governor failed, so re-start old one */
+>>         pr_debug("starting governor %s failed\n", policy->governor->name);
+>>         if (old_gov) {
+>> --
+> 
 
-> Wouldn't 'blk_mq_possible_queue_affinit()' a better choice here
-> to insulate against CPU hotplug effects?
-
-With this mask the queues will be distributed to all possible CPUs and
-some of the hardware queues could be assigned to offline CPUs. I think
-this would work but the question is, is this okay to leave some of the
-perfomance on the road?
-
-I am not against this, just saying it would change the existing
-behavior.
-
-> Also some drivers which are using irq affinity (eg aacraid, lpfc) are
-> missing from these conversions. Why?
-
-I was not aware of aacraid. I started to work on lpfc and well let's put
-it this way, it's complicated. lpfc needs a lot of work to make it
-isolcpus aware.
