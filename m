@@ -1,163 +1,132 @@
-Received: from hrbeu.edu.cn (mx1.hrbeu.edu.cn [202.118.176.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC352ED17F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.118.176.6
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB164267B01
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622561; cv=none; b=RCJ2VDsKUrlCBm38UaujkDByHi+RvF+mO1mFR3uXIg2q5+a37azatGkRgzdfjrbHCX3oCei9ovvEUbXxQcddQq9DNgWEGHPVHr+cEJ+udPo2JvBysF/NYbNBe8cLrvCaIrFa1dl7aKuazseJ7Vw6zpBA5RlC5BHjwIfS37EKCWA=
+	t=1751622562; cv=none; b=U14I5c0P0VkVLEjOh/IZp4xK7uDjItpLT70tlNWOlGRAZRvetVtu3GZUdDDwk5oG+2zW7mF+lU8n3QWk4xNvQHicnajF9AegCEs7fPaSHEzz+GVyuuMRG4C3fxmG9whabLwZ5x9W0KKT+K1AtyFuZk48PRlSx6h8TjiNZyci77c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622561; c=relaxed/simple;
-	bh=F5FZ83oCDp21lR0lpF6KRRK7nLad4KjiGIhDrhnjYXo=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=eU1hQzL3a7v13UoAyMxb3+naBHakn1T+Am/s+TD8+kgAq91LZ0H3yfnDSKoghp0IranM2gro4FpYrTZidwQoZnodJBkajP9L+cBdTfXTmRsPxRz9g7m2FNg6/V37Bwwch5b4pT024IIxO6gO2y3WR4XbLGy+l+6cmpWmXSPnZG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hrbeu.edu.cn; spf=pass smtp.mailfrom=hrbeu.edu.cn; arc=none smtp.client-ip=202.118.176.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hrbeu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hrbeu.edu.cn
-Received: from baishuoran$hrbeu.edu.cn ( [118.74.253.71] ) by
- ajax-webmail-Front (Coremail) ; Fri, 4 Jul 2025 17:49:03 +0800 (GMT+08:00)
-Date: Fri, 4 Jul 2025 17:49:03 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>
-To: "David Howells" <dhowells@redhat.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, netfs@lists.linux.dev,
-	"Kun Hu" <huk23@m.fudan.edu.cn>,
-	"Jiaji Qin" <jjtan24@m.fudan.edu.cn>, syzkaller@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Subject: INFO: task hung in netfs_writepages
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT5 build
- 20241202(ebbd5d74) Copyright (c) 2002-2025 www.mailtech.cn hrbeu.edu.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1751622562; c=relaxed/simple;
+	bh=Ucbo7v51fQBpSPEcmC2oC1OMdgo3BVP6CkawMLVEiv4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J1NWVgeAABuf6worlhN4YmaC+gW7Q3AiCMP9EgZu5s5ejN25XTro/GDKSbgmI3fDyR9F1XzDahVXwm1g4W096b8sG42LWcVHHJg4ypgKOP2525nYrv4Ls1e2IMgNz4+80gXWOqYPUN1rscm88CyGdE7NE0l0KoBXFsnmXm5A4NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QY7rlK40; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QY7rlK40"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5649mrFB264764;
+	Fri, 4 Jul 2025 04:48:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751622533;
+	bh=tL1i8/9vpQanxe1RfVzbrNGx7ZulJeN77FBHMNXBaRI=;
+	h=From:To:CC:Subject:Date;
+	b=QY7rlK40TkuwaMJ+cw/Pa2J+QCebavlYVNoTD7aE61nTnSHsUU1fuDQEoNsUFrsv/
+	 7t9afAxGgRYRLrKAfv3uz6wGlHYoHmVOAe/R3l0xAMANJFC52YmmytT6gAdUQ0Rqb6
+	 xnyPs/hX+7MPRPAtPkfSuUrqmxi9tjzO1uvmzIMo=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5649mr6m1645551
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 4 Jul 2025 04:48:53 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 4
+ Jul 2025 04:48:52 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 4 Jul 2025 04:48:52 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.166])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5649mqaA2774006;
+	Fri, 4 Jul 2025 04:48:52 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <jyri.sarha@iki.fi>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
+        <tomi.valkeinen@ideasonboard.com>, <mwalle@kernel.org>
+CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+        <j-choudhary@ti.com>
+Subject: [PATCH v4 0/3] Decouple max_pclk check from constant display feats
+Date: Fri, 4 Jul 2025 15:18:48 +0530
+Message-ID: <20250704094851.182131-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <30015186.126dc.197d4d6e8dd.Coremail.baishuoran@hrbeu.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:CbB2ygD38WiPo2do8PsIAA--.1625W
-X-CM-SenderInfo: pedl2xpxrut0w6kuuvvxohv3gofq/1tbiAQINCmhmVOUbwgAAsi
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-RGVhciBNYWludGFpbmVycywKCldoZW4gdXNpbmcgb3VyIGN1c3RvbWl6ZWQgU3l6a2FsbGVyIHRv
-IGZ1enogdGhlIGxhdGVzdCBMaW51eCBrZXJuZWwsIHRoZSBmb2xsb3dpbmcgY3Jhc2ggKDExNXRo
-KXdhcyB0cmlnZ2VyZWQuCgoKSEVBRCBjb21taXQ6IDY1MzdjZmIzOTVmMzUyNzgyOTE4ZDhlZTdi
-N2YxMGJhMmNjM2NiZjIKZ2l0IHRyZWU6IHVwc3RyZWFtCk91dHB1dDpodHRwczovL2dpdGh1Yi5j
-b20vcGdoazEzL0tlcm5lbC1CdWcvYmxvYi9tYWluLzA3MDJfNi4xNC9JTkZPJTNBJTIwdGFzayUy
-MGh1bmclMjBpbiUyMG5ldGZzX3dyaXRlcGFnZXMvMTE1cmVwb3J0LnR4dApLZXJuZWwgY29uZmln
-Omh0dHBzOi8vZ2l0aHViLmNvbS9wZ2hrMTMvS2VybmVsLUJ1Zy9ibG9iL21haW4vMDcwMl82LjE0
-L2NvbmZpZy50eHQgCkMgcmVwcm9kdWNlcjpodHRwczovL2dpdGh1Yi5jb20vcGdoazEzL0tlcm5l
-bC1CdWcvYmxvYi9tYWluLzA3MDJfNi4xNC9JTkZPJTNBJTIwdGFzayUyMGh1bmclMjBpbiUyMG5l
-dGZzX3dyaXRlcGFnZXMvMTE1cmVwcm8uYwpzeXNsYW5nIHJlcHJvZHVjZXI6aHR0cHM6Ly9naXRo
-dWIuY29tL3BnaGsxMy9LZXJuZWwtQnVnL2Jsb2IvbWFpbi8wNzAyXzYuMTQvSU5GTyUzQSUyMHRh
-c2slMjBodW5nJTIwaW4lMjBuZXRmc193cml0ZXBhZ2VzLzExNXJlcHJvLnR4dAoKT3VyIHJlcHJv
-ZHVjZXIgdXNlcyBtb3VudHMgYSBjb25zdHJ1Y3RlZCBmaWxlc3lzdGVtIGltYWdlLgogCiAKVGhl
-IGVycm9yIG1pZ2h0IG9jY3VycmVkIG5lYXIgbGluZSA1MjkgYW5kIGxpbmUgNTM0IG9mIHRoZSBu
-ZXRmc193cml0ZXBhZ2VzIGZ1bmN0aW9uLiBJbiAhbXV0ZXhfdHJ5bG9jaygmaWN0eC0+d2JfbG9j
-ayksIHRoZSBwcm9jZXNzIGFscmVhZHkgaG9sZHMgd2JfbG9jaywgYnV0IHdoaWxlIHByb2Nlc3Np
-bmcgdGhlIHdyaXRlYmFjaywgaXQgbWF5IGF0dGVtcHQgdG8gYWNxdWlyZSB0aGUgc2FtZSBsb2Nr
-IGFnYWluIHRocm91Z2ggc29tZSBjYWxsIHBhdGgsIGxlYWRpbmcgdG8gYSBkZWFkbG9jay4KV2Ug
-aGF2ZSByZXByb2R1Y2VkIHRoaXMgaXNzdWUgc2V2ZXJhbCB0aW1lcyBvbiA2LjE0IGFnYWluLgoK
-CgpJZiB5b3UgZml4IHRoaXMgaXNzdWUsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8g
-dGhlIGNvbW1pdDoKUmVwb3J0ZWQtYnk6IEt1biBIdSA8aHVrMjNAbS5mdWRhbi5lZHUuY24+LCBK
-aWFqaSBRaW4gPGpqdGFuMjRAbS5mdWRhbi5lZHUuY24+LCBTaHVvcmFuIEJhaSA8YmFpc2h1b3Jh
-bkBocmJldS5lZHUuY24+CgoKCgo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT0KCk5NSSBiYWNrdHJhY2UgZm9yIGNwdSAxCkNQVTogMSBVSUQ6IDAgUElEOiA0NyBD
-b21tOiBraHVuZ3Rhc2tkIE5vdCB0YWludGVkIDYuMTQuMCAjMQpIYXJkd2FyZSBuYW1lOiBRRU1V
-IFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjEzLjAtMXVidW50dTEu
-MSAwNC8wMS8yMDE0CkNhbGwgVHJhY2U6CiA8VEFTSz4KIGR1bXBfc3RhY2tfbHZsKzB4MTE2LzB4
-MWIwCiBubWlfY3B1X2JhY2t0cmFjZSsweDJhMC8weDM1MAogbm1pX3RyaWdnZXJfY3B1bWFza19i
-YWNrdHJhY2UrMHgyOWIvMHgzMDAKIHdhdGNoZG9nKzB4ZjRjLzB4MTIxMAoga3RocmVhZCsweDQy
-YS8weDg4MAogcmV0X2Zyb21fZm9yaysweDQ4LzB4ODAKIHJldF9mcm9tX2ZvcmtfYXNtKzB4MWEv
-MHgzMAogPC9UQVNLPgpTZW5kaW5nIE5NSSBmcm9tIENQVSAxIHRvIENQVXMgMCwyLTM6Ck5NSSBi
-YWNrdHJhY2UgZm9yIGNwdSAyCkNQVTogMiBVSUQ6IDAgUElEOiAyNTQyNSBDb21tOiBzeXouNC4y
-MjY5IE5vdCB0YWludGVkIDYuMTQuMCAjMQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBD
-IChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjEzLjAtMXVidW50dTEuMSAwNC8wMS8yMDE0
-ClJJUDogMDAxMDpjb25zdF9mb2xpb19mbGFncy5jb25zdHByb3AuMCsweDAvMHg3MApDb2RlOiBl
-MCBlOCA3YiA4YiA0YyA4OSBlNyBlOCBhZSBhYyBlYyBmZiA5MCAwZiAwYiBlOCAyNiAzZCAwOSAw
-MCBlYiBiYiAwZiAxZiA0MCAwMCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5
-MCA5MCA5MCA5MCA8NDE+IDU0IDQ5IDg5IGZjIDUzIGU4IGU1IDQzIGE1IGZmIDQ5IDhkIDdjIDI0
-IDA4IDQ4IGI4IDAwIDAwIDAwIDAwClJTUDogMDAxODpmZmZmYzkwMDA3NWQ3MzE4IEVGTEFHUzog
-MDAwMDAyNDYKUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogZGZmZmZjMDAwMDAwMDAwMCBSQ1g6
-IGZmZmZmZmZmODIxNTA1OTYKUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZjg4ODA0M2U5
-YTQ4MCBSREk6IGZmZmZlYTAwMDE4ZjI0ODAKUkJQOiBmZmZmZWEwMDAxOGYyNDgwIFIwODogMDAw
-MDAwMDAwMDAwMDAwMCBSMDk6IGZmZmZmOTQwMDAzMWU0ODkKUjEwOiBmZmZmZjk0MDAwMzFlNDg4
-IFIxMTogZmZmZmVhMDAwMThmMjQ0NyBSMTI6IGZmZmY4ODgwN2MwNzIyNDAKUjEzOiBmZmZmZWEw
-MDAxOGYyNDgwIFIxNDogMDAwMDAwMDAwMDAwMDA0NiBSMTU6IDAwMDAwMDAwMDAwMDAwMDAKRlM6
-ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4ODgwMmI5MDAwMDAoMDAwMCkga25sR1M6
-MDAwMDAwMDAwMDAwMDAwMApDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAw
-MDgwMDUwMDMzCkNSMjogMDAwMDAwMDAyMDQwNDAzMCBDUjM6IDAwMDAwMDAwMTMwYTIwMDAgQ1I0
-OiAwMDAwMDAwMDAwNzUwZWYwCkRSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAw
-MDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwCkRSMzogMDAwMDAwMDAwMDAwMDAwZSBEUjY6IDAw
-MDAwMDAwZmZmZjBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwClBLUlU6IDgwMDAwMDAwCkNhbGwg
-VHJhY2U6CiA8Tk1JPgogPC9OTUk+CiA8VEFTSz4KIGZyZWVfc3dhcF9jYWNoZSsweDE4LzB4MmQw
-CiBmcmVlX3BhZ2VzX2FuZF9zd2FwX2NhY2hlKzB4MTU2LzB4NDYwCiB0bGJfZmx1c2hfbW11KzB4
-MTY4LzB4NzUwCiB1bm1hcF9wYWdlX3JhbmdlKzB4ZmE5LzB4NGFmMAogdW5tYXBfc2luZ2xlX3Zt
-YSsweDE5YS8weDJiMAogdW5tYXBfdm1hcysweDFmZS8weDQ1MAogZXhpdF9tbWFwKzB4MWI0LzB4
-YmYwCiBtbXB1dCsweDE3OC8weDQ1MAogZG9fZXhpdCsweDk0Yi8weDMwYzAKIGRvX2dyb3VwX2V4
-aXQrMHhkMy8weDJhMAogZ2V0X3NpZ25hbCsweDI2MWYvMHgyNzkwCiBhcmNoX2RvX3NpZ25hbF9v
-cl9yZXN0YXJ0KzB4ODEvMHg4YjAKIHN5c2NhbGxfZXhpdF90b191c2VyX21vZGUrMHgyMjgvMHgy
-YTAKIGRvX3N5c2NhbGxfNjQrMHhkYy8weDI1MAogZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2Zy
-YW1lKzB4NzcvMHg3ZgpSSVA6IDAwMzM6MHg3ZjlhNTRiYWNhZGQKQ29kZTogVW5hYmxlIHRvIGFj
-Y2VzcyBvcGNvZGUgYnl0ZXMgYXQgMHg3ZjlhNTRiYWNhYjMuClJTUDogMDAyYjowMDAwN2Y5YTU1
-YWFkYmE4IEVGTEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAxMmIKUkFYOiAw
-MDAwMDAwMDAwMDEwMTA2IFJCWDogMDAwMDdmOWE1NGRhNjA4MCBSQ1g6IDAwMDA3ZjlhNTRiYWNh
-ZGQKUkRYOiAwMDAwMDAwMDAwMDEwMTA2IFJTSTogMDAwMDAwMDAyMDAwMDBjMCBSREk6IDAwMDAw
-MDAwMDAwMDAwMDMKUkJQOiAwMDAwN2Y5YTU0YzJhYjhmIFIwODogMDAwMDAwMDAwMDAwMDAwMCBS
-MDk6IDAwMDAwMDAwMDAwMDAwMDAKUjEwOiAwMDAwMDAwMDAwMDAwMDAyIFIxMTogMDAwMDAwMDAw
-MDAwMDI0NiBSMTI6IDAwMDAwMDAwMDAwMDAwMDAKUjEzOiAwMDAwN2Y5YTU0ZGE2MDhjIFIxNDog
-MDAwMDdmOWE1NGRhNjExOCBSMTU6IDAwMDA3ZjlhNTVhYWRkNDAKIDwvVEFTSz4KTk1JIGJhY2t0
-cmFjZSBmb3IgY3B1IDMKQ1BVOiAzIFVJRDogMCBQSUQ6IDk0NTQgQ29tbTogc3l6LWV4ZWN1dG9y
-IE5vdCB0YWludGVkIDYuMTQuMCAjMQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChp
-NDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjEzLjAtMXVidW50dTEuMSAwNC8wMS8yMDE0ClJJ
-UDogMDAxMDppb3JlYWQ4KzB4NDgvMHhhMApDb2RlOiBmZiBmZiAwMyAwMCA3NyA2MCBlOCBhNyAx
-MiBlOCBmYyA0YyA4OSBlNiBiZiAwMCAwMCAwMSAwMCBlOCBkYSAxNCBlOCBmYyA0OSA4MSBmYyAw
-MCAwMCAwMSAwMCA3NiAxYyBlOCA4YyAxMiBlOCBmYyA0NCA4OSBlMiBlYyA8NDQ+IDBmIGI2IGUw
-IGU4IDdmIDEyIGU4IGZjIDQ0IDg5IGUwIDQxIDVjIGU5IDcwIDMyIDNlIGZjIGU4IDcwIDEyClJT
-UDogMDAxODpmZmZmYzkwMDAwNWMwZDI4IEVGTEFHUzogMDAwMDAwNDYKUkFYOiAwMDAwMDAwMDAw
-MDAwMDA0IFJCWDogZmZmZjg4ODAyMzY3MDAwMCBSQ1g6IGZmZmZmZmZmODRkMjBlNzYKUkRYOiAw
-MDAwMDAwMDAwMDFjMDYyIFJTSTogZmZmZjg4ODAxYjI5YzkwMCBSREk6IDAwMDAwMDAwMDAwMDAw
-MDIKUkJQOiAwMDAwMDAwMDAwMDFjMDYyIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IGZmZmZm
-YmZmZjIwYzJmYTMKUjEwOiBmZmZmZmJmZmYyMGMyZmEyIFIxMTogZmZmZmZmZmY5MDYxN2QxNyBS
-MTI6IDAwMDAwMDAwMDAwMWMwNjIKUjEzOiBmZmZmODg4MDIzNjcwMTgwIFIxNDogZmZmZmZmZmY4
-NjQ3YTRiMCBSMTU6IGZmZmY4ODgwMjM2NzQ0ZDAKRlM6ICAwMDAwNTU1NTgxNjllOWMwKDAwMDAp
-IEdTOmZmZmY4ODgwN2VmMDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMApDUzogIDAw
-MTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzCkNSMjogMDAwMDdmYzAx
-Mjc2OTEzOCBDUjM6IDAwMDAwMDAwMjE5ODIwMDAgQ1I0OiAwMDAwMDAwMDAwNzUwZWYwClBLUlU6
-IDAwMDAwMDAwCkNhbGwgVHJhY2U6CiA8Tk1JPgogPC9OTUk+CiA8SVJRPgogYXRhX2JtZG1hX2ly
-cV9jbGVhcisweDQ5LzB4NzAKIF9fYXRhX3NmZl9wb3J0X2ludHIrMHgyOGMvMHg2NjAKIGF0YV9i
-bWRtYV9wb3J0X2ludHIrMHhjMC8weDgxMAogYXRhX2JtZG1hX2ludGVycnVwdCsweDI3Zi8weDZh
-MAogX19oYW5kbGVfaXJxX2V2ZW50X3BlcmNwdSsweDIzNy8weDdhMAogaGFuZGxlX2lycV9ldmVu
-dF9wZXJjcHUrMHgxOC8weGUwCiBoYW5kbGVfaXJxX2V2ZW50KzB4YTUvMHgxNDAKIGhhbmRsZV9l
-ZGdlX2lycSsweDI1NC8weDhjMAogX19jb21tb25faW50ZXJydXB0KzB4ZTMvMHgyNTAKIGNvbW1v
-bl9pbnRlcnJ1cHQrMHhmMi8weDExMAogPC9JUlE+CiA8VEFTSz4KIGFzbV9jb21tb25faW50ZXJy
-dXB0KzB4MjYvMHg0MApSSVA6IDAwMTA6cmVsZWFzZV9zb2NrKzB4MWFhLzB4MjIwCkNvZGU6IDQ4
-IDM5IGM1IDc0IDFkIGU4IGY2IDFkIDk2IGY4IDQ4IDhkIGJiIDA4IDAyIDAwIDAwIDMxIGM5IGJh
-IDAxIDAwIDAwIDAwIGJlIDAzIDAwIDAwIDAwIGU4IDhlIGJiIDZlIGY4IGU4IGQ5IDFkIDk2IGY4
-IDRjIDg5IGU3IDw1Yj4gNWQgNDEgNWMgNDEgNWQgZTkgZmIgYmEgMzggMDIgZTggYzYgMWQgOTYg
-ZjggOTAgMGYgMGIgOTAgZTkgNTMKUlNQOiAwMDE4OmZmZmZjOTAwMDI2OTdhMTggRUZMQUdTOiAw
-MDAwMDI0NgpSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmODg4MDQ1ZDA4MDAwIFJDWDog
-MWZmZmZmZmZmMzUyNmYxNApSRFg6IDFmZmZmMTEwMDhiYTEwNDkgUlNJOiBmZmZmODg4MDFiMjlj
-OTAwIFJESTogZmZmZjg4ODA0NWQwODFjMApSQlA6IGZmZmY4ODgwNDVkMDgyNDggUjA4OiAwMDAw
-MDAwMDAwMDAwMDAwIFIwOTogZmZmZmZiZmZmMmRlNzliNQpSMTA6IGZmZmZmYmZmZjJkZTc5YjQg
-UjExOiBmZmZmZmZmZjk2ZjNjZGE3IFIxMjogZmZmZjg4ODA0NWQwODFjMApSMTM6IDAwMDAwMDAw
-MDAwMDAwMDEgUjE0OiAwMDAwMDAwMDAwMDAwMDA0IFIxNTogZmZmZmM5MDAwMjY5N2E4MAogdGNw
-X3JlY3Ztc2crMHgxMjIvMHg2MjAKIGluZXRfcmVjdm1zZysweDEyYi8weDZlMAogc29ja19yZWN2
-bXNnKzB4MWI3LzB4MjkwCiBzb2NrX3JlYWRfaXRlcisweDJjOC8weDNjMAogdmZzX3JlYWQrMHhh
-NDgvMHhiZjAKIGtzeXNfcmVhZCsweDFmZS8weDI0MAogZG9fc3lzY2FsbF82NCsweGNmLzB4MjUw
-CiBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg3Ny8weDdmClJJUDogMDAzMzoweDdm
-MmFjZDMxZWIxMgpDb2RlOiBmZiBmZiBmZiBmNyBkOCA2NCA4OSAwMiA0OCBjNyBjMCBmZiBmZiBm
-ZiBmZiBlYiBiZSAwZiAxZiA4MCAwMCAwMCAwMCAwMCBmMyAwZiAxZSBmYSA2NCA4YiAwNCAyNSAx
-OCAwMCAwMCAwMCA4NSBjMCA3NSAxMCAwZiAwNSA8NDg+IDNkIDAwIGYwIGZmIGZmIDc3IDU2IGMz
-IDBmIDFmIDQ0IDAwIDAwIDQ4IDgzIGVjIDI4IDQ4IDg5IDU0IDI0ClJTUDogMDAyYjowMDAwN2Zm
-ZmVkY2Y2MDQ4IEVGTEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMDAKUkFY
-OiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDA3ZjJhY2Qz
-MWViMTIKUkRYOiAwMDAwMDAwMDAwMDAwMDA0IFJTSTogMDAwMDdmZmZlZGNmNjEyMCBSREk6IDAw
-MDAwMDAwMDAwMDAwMDMKUkJQOiAwMDAwMDAwMDAwMDAwMDAwIFIwODogMDAwMDAwMDAwMDAwMDAw
-MCBSMDk6IDAwMDAwMDAwMDAwMGYwNWMKUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAw
-MDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDAwMDAwMDQKUjEzOiAwMDAwN2ZmZmVkY2Y2NGMwIFIx
-NDogMDAwMDdmZmZlZGNmNjEyMCBSMTU6IDAwMDA3ZmZmZWRjZjY0YzAKIDwvVEFTSz4KTk1JIGJh
-Y2t0cmFjZSBmb3IgY3B1IDAgc2tpcHBlZDogaWRsaW5nIGF0IGRlZmF1bHRfaWRsZSsweDFlLzB4
-MzAKCgoKCnRoYW5rcywKS3VuIEh1Cg==
+In an effort to make the existing compatibles more usable, we are
+removing the max_pclk_khz form dispc_features structure and doing the
+correspondig checks using "curr_max_pclk[]".
+
+Changes are fully backwards compatible.
+
+After integration of OLDI support[0], we need additional patches in
+oldi to identify the VP that has OLDI. We have to do this since
+OLDI driver owns the VP clock (its serial clock) and we cannot perform
+clock operations on those VP clock from tidss driver. This issue was
+also reported upstream when DSI fixes[1] had some clock related calls
+in tidss driver. When "clk_round_rate()" is called, ideally it should
+have gone to "sci_clk_determine_rate()" to query DM but it doesn't since
+clock is owned by OLDI not tidss.
+
+So add a member is_oldi_vp[] in tidss_device structure to identify this
+and avoid performing clock operations for VP if it has OLDI panel.
+For the same checks in OLDI driver, atomic_check() hook is added to its
+bridge_funcs.
+In the atomic_check() chain, first the bridge_atomic_check() is called
+and then crtc_atomic_check() is called. So mode clock is first checked
+in oldi driver and then skipped in tidss driver.
+
+Had the tidss_oldi structure been exposed to tidss_dispc.c, we could
+have directly checked VP type in dispc but since the structure is defined
+in tidss_oldi.c , we have to add additional member to tidss_device
+structure.
+
+[0]: https://lore.kernel.org/all/20250528122544.817829-1-aradhya.bhatia@linux.dev/
+[1]: https://lore.kernel.org/all/DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org/
+
+Changelog v3->v4:
+- Minor cosmetic fixes in code, comments and commit message
+- Pick up R-by and add Fixes tag
+
+v3 patch link:
+https://lore.kernel.org/all/20250701095541.190422-1-j-choudhary@ti.com/
+
+Changelog v2->v3:
+- Add changes for OLDI
+- Rename max_pclk as it is misleading
+- Change commit message to make it more appropriate
+- Drop unnecessary zero initialization
+
+v2 patch link:
+https://lore.kernel.org/all/20250618100509.20386-1-j-choudhary@ti.com/
+
+Changelog v1->v2:
+- Rebase it on linux-next after OLDI support series as all of its
+  patches are reviewed and tested and it touches one of the functions
+  used.
+  
+v1 patch link:
+https://lore.kernel.org/all/20250618075804.139844-1-j-choudhary@ti.com/
+
+Jayesh Choudhary (3):
+  drm/tidss: oldi: Add property to identify OLDI supported VP
+  drm/tidss: Remove max_pclk_khz from tidss display features
+  drm/tidss: oldi: Add atomic_check hook for oldi bridge
+
+ drivers/gpu/drm/tidss/tidss_dispc.c | 77 +++++++++++------------------
+ drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
+ drivers/gpu/drm/tidss/tidss_drv.h   |  7 +++
+ drivers/gpu/drm/tidss/tidss_oldi.c  | 26 ++++++++++
+ 4 files changed, 62 insertions(+), 49 deletions(-)
+
+-- 
+2.34.1
+
