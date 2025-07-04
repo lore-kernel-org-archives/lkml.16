@@ -1,823 +1,353 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BD92F94A6;
-	Fri,  4 Jul 2025 13:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B8F302CB0;
+	Fri,  4 Jul 2025 13:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635240; cv=none; b=R4elz3WUfDKSYJGmvfBcoq7Z+raKMTWWn8FrXvWaeBGoS/iPk5lDz8+vof0RjJjXLGDI8ZEqnAbw3bJ3BbyTvqCnNW8pXMhvD0wVt4onmLMFl66KbMB+MiZwbM95oBwv9Jx+ncBBITeAObGk9bbYl7CeHeKHPMYJ50aP1wykmwc=
+	t=1751635245; cv=none; b=IPmK2dYkYPUFVKRKNWGSeIVk6/POjRf7i/IR7JGFLmIly4o2YZOSUDVG+fwKBCpVQs64D31Vfj9U2r20GE5Dg4LiFuB2Vx55kYieHX+95LByl2vi88j7SDyv6IcxkDotdK9hokIdkVSizb41U9u6lQ7HnA5vJeQ9W7aU5REEuqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635240; c=relaxed/simple;
-	bh=BlA6PQqIv5pTwbg7B8FRT8nV5ZlN/yyEq5hrwhrDLLc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rV02dxOMZqLLp7rNDrMlNQ47S8vwnKvuGbnmfk4YvVOqfOUQnDxzzBaE0yYuqf6K6BU6o2/kPj1G0/EAsLq2UHnxtf2PkWfZn1XiYROS2zBdr4z1g55xdiTXID/hHtTkgchw+LvRS5TcixGtQsw11z1XdXqdrsVztOrXz7h9B34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yIFeQf+J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uUcFQ6rD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yIFeQf+J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uUcFQ6rD"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751635235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J+RNWYu1SgSahorf/z3esUDvCmO80tzytOTkrZJG51I=;
-	b=yIFeQf+JF3ujF7ljIO7pwkWRsBxFjdz+274SBIjPqfWZkJUHjpqG0A/cURMzZwemxqBEg4
-	8JzkzLbUnkV52TTskrmYz8lyAiVG46o+MqL8qbpEJHxi2qMAqix63ppASLnigJIOhvtiyQ
-	55g9l5OhWQne6wFUwjQViaaycdoMr8llAmz3R5Bag+7kvLFWFluaX1eG92eEWPcPR4pwIr
-	GTc2cRBTuR/an5DVS7ORh1V+MXHp0Ud28YHJk08LOQQby3JXV/xVYhd5AxR8Hsxvu+8iEe
-	o84iMv/nDYR3AEx9ZPBaw/gLeLtPP8TFcKuRpyACMHXARA1khXuAjb7FbSrKFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751635235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J+RNWYu1SgSahorf/z3esUDvCmO80tzytOTkrZJG51I=;
-	b=uUcFQ6rD3iTAfxVpivBMyxLLaJtobx7VaX1+4saIniJ4HI/X7W/Cgr18mEH50335O3zHuw
-	aK7zCHDozI5uvxBA==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v11 12/21] verification/rvgen: Restructure the classes to prepare for LTL inclusion
-Date: Fri,  4 Jul 2025 15:20:04 +0200
-Message-Id: <692137a581ba6bee7a64d37fb7173ae137c47bbd.1751634289.git.namcao@linutronix.de>
-In-Reply-To: <cover.1751634289.git.namcao@linutronix.de>
-References: <cover.1751634289.git.namcao@linutronix.de>
+	s=arc-20240116; t=1751635245; c=relaxed/simple;
+	bh=r/zZfk+rBckUaqy0G8l9RA51eIYy10yBBUZBXpfCWZ4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YlNbpACYsI5c6NRqkOzcQ3D8hWqOaSgt7yEhgxzmdLupEhqgatm7dTuYQxog1I1Ay4kBdd9y801i4FACrVpoCy6fyUS8olwWC23wEeHtlzx4dv27yH5t/EG6T8khEqEDz4Ou9RHUYbs/oqGLv7sWxkiOCeadZBYNPrXNlVpcjX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYZ3x2mjWz6M4jr;
+	Fri,  4 Jul 2025 21:19:41 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 03F1E1402A5;
+	Fri,  4 Jul 2025 21:20:40 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
+ 2025 15:20:38 +0200
+Date: Fri, 4 Jul 2025 14:20:37 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: John Groves <John@Groves.net>
+CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
+	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
+ . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
+ Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
+ Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
+Message-ID: <20250704142037.00002717@huawei.com>
+In-Reply-To: <20250703185032.46568-15-john@groves.net>
+References: <20250703185032.46568-1-john@groves.net>
+	<20250703185032.46568-15-john@groves.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Both container generation and DA monitor generation is implemented in the
-class dot2k. That requires some ugly "if is_container ... else ...". If
-linear temporal logic support is added at the current state, the "if else"
-chain is longer and uglier.
+On Thu,  3 Jul 2025 13:50:28 -0500
+John Groves <John@Groves.net> wrote:
 
-Furthermore, container generation is irrevelant to .dot files. It is
-therefore illogical to be implemented in class "dot2k".
+> * The new GET_DAXDEV message/response is enabled
+> * The command it triggered by the update_daxdev_table() call, if there
+>   are any daxdevs in the subject fmap that are not represented in the
+>   daxdev_dable yet.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-Clean it up, restructure the dot2k class into the following class
-hierarchy:
+More drive by stuff you can ignore for now if you like.
 
-         (RVGenerator)
-              /\
-             /  \
-            /    \
-           /      \
-          /        \
-    (Container)  (Monitor)
-                    /\
-                   /  \
-                  /    \
-                 /      \
-              (dot2k)  [ltl2k] <- intended
+> ---
+>  fs/fuse/famfs.c           | 227 ++++++++++++++++++++++++++++++++++++++
+>  fs/fuse/famfs_kfmap.h     |  26 +++++
+>  fs/fuse/fuse_i.h          |   1 +
+>  fs/fuse/inode.c           |   4 +-
+>  fs/namei.c                |   1 +
+>  include/uapi/linux/fuse.h |  18 +++
+>  6 files changed, 276 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> index 41c4d92f1451..f5e01032b825 100644
+> --- a/fs/fuse/famfs.c
+> +++ b/fs/fuse/famfs.c
 
-This allows a simple and clean integration of LTL.
+> +/**
+> + * famfs_fuse_get_daxdev() - Retrieve info for a DAX device from fuse server
+> + *
+> + * Send a GET_DAXDEV message to the fuse server to retrieve info on a
+> + * dax device.
+> + *
+> + * @fm:     fuse_mount
+> + * @index:  the index of the dax device; daxdevs are referred to by index
+> + *          in fmaps, and the server resolves the index to a particular daxdev
+> + *
+> + * Returns: 0=success
+> + *          -errno=failure
+> + */
+> +static int
+> +famfs_fuse_get_daxdev(struct fuse_mount *fm, const u64 index)
+> +{
+> +	struct fuse_daxdev_out daxdev_out = { 0 };
+> +	struct fuse_conn *fc = fm->fc;
+> +	struct famfs_daxdev *daxdev;
+> +	int err = 0;
+> +
+> +	FUSE_ARGS(args);
+> +
+> +	/* Store the daxdev in our table */
+> +	if (index >= fc->dax_devlist->nslots) {
+> +		pr_err("%s: index(%lld) > nslots(%d)\n",
+> +		       __func__, index, fc->dax_devlist->nslots);
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	args.opcode = FUSE_GET_DAXDEV;
+> +	args.nodeid = index;
+> +
+> +	args.in_numargs = 0;
+> +
+> +	args.out_numargs = 1;
+> +	args.out_args[0].size = sizeof(daxdev_out);
+> +	args.out_args[0].value = &daxdev_out;
+> +
+> +	/* Send GET_DAXDEV command */
+> +	err = fuse_simple_request(fm, &args);
+> +	if (err) {
+> +		pr_err("%s: err=%d from fuse_simple_request()\n",
+> +		       __func__, err);
+> +		/*
+> +		 * Error will be that the payload is smaller than FMAP_BUFSIZE,
+> +		 * which is the max we can handle. Empty payload handled below.
+> +		 */
+> +		goto out;
+> +	}
+> +
+> +	down_write(&fc->famfs_devlist_sem);
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- tools/verification/rvgen/Makefile           |   2 +
- tools/verification/rvgen/__main__.py        |   6 +-
- tools/verification/rvgen/rvgen/container.py |  22 ++
- tools/verification/rvgen/rvgen/dot2k.py     | 275 ++------------------
- tools/verification/rvgen/rvgen/generator.py | 264 +++++++++++++++++++
- 5 files changed, 308 insertions(+), 261 deletions(-)
- create mode 100644 tools/verification/rvgen/rvgen/container.py
- create mode 100644 tools/verification/rvgen/rvgen/generator.py
+Worth thinking about guard() in this code in general.
+Simplify some of the error paths at least.
 
-diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/M=
-akefile
-index 8d08825e7e54..cca8c9ba82e8 100644
---- a/tools/verification/rvgen/Makefile
-+++ b/tools/verification/rvgen/Makefile
-@@ -19,5 +19,7 @@ install:
- 	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
- 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
- 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
-+	$(INSTALL) rvgen/container.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/containe=
-r.py
-+	$(INSTALL) rvgen/generator.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/generato=
-r.py
- 	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
- 	cp -rp rvgen/templates $(DESTDIR)$(PYLIB)/rvgen/
-diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvge=
-n/__main__.py
-index 994d320ad2d1..63ecf0c37034 100644
---- a/tools/verification/rvgen/__main__.py
-+++ b/tools/verification/rvgen/__main__.py
-@@ -10,6 +10,8 @@
-=20
- if __name__ =3D=3D '__main__':
-     from rvgen.dot2k import dot2k
-+    from rvgen.generator import Monitor
-+    from rvgen.container import Container
-     import argparse
-     import sys
-=20
-@@ -29,7 +31,7 @@ if __name__ =3D=3D '__main__':
-                                 help=3D"Monitor class, either \"da\" or \"=
-ltl\"")
-     monitor_parser.add_argument('-s', "--spec", dest=3D"spec", help=3D"Mon=
-itor specification file")
-     monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
-pe",
--                                help=3Df"Available options: {', '.join(dot=
-2k.monitor_types.keys())}")
-+                                help=3Df"Available options: {', '.join(Mon=
-itor.monitor_types.keys())}")
-=20
-     container_parser =3D subparsers.add_parser("container")
-     container_parser.add_argument('-n', "--model_name", dest=3D"model_name=
-", required=3DTrue)
-@@ -47,7 +49,7 @@ if __name__ =3D=3D '__main__':
-                 print("Unknown monitor class:", params.monitor_class)
-                 sys.exit(1)
-         else:
--            monitor =3D dot2k(None, None, vars(params))
-+            monitor =3D Container(vars(params))
-     except Exception as e:
-         print('Error: '+ str(e))
-         print("Sorry : :-(")
-diff --git a/tools/verification/rvgen/rvgen/container.py b/tools/verificati=
-on/rvgen/rvgen/container.py
-new file mode 100644
-index 000000000000..47d8ab2ad3ec
---- /dev/null
-+++ b/tools/verification/rvgen/rvgen/container.py
-@@ -0,0 +1,22 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira <bristo=
-t@kernel.org>
-+#
-+# Generator for runtime verification monitor container
-+
-+from . import generator
-+
-+
-+class Container(generator.RVGenerator):
-+    template_dir =3D "container"
-+
-+    def __init__(self, extra_params=3D{}):
-+        super().__init__(extra_params)
-+        self.name =3D extra_params.get("model_name")
-+        self.main_h =3D self._read_template_file("main.h")
-+
-+    def fill_model_h(self):
-+        main_h =3D self.main_h
-+        main_h =3D main_h.replace("%%MODEL_NAME%%", self.name)
-+        return main_h
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
-vgen/rvgen/dot2k.py
-index a9ed97d0b224..ed0a3c901106 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -9,108 +9,21 @@
- #   Documentation/trace/rv/da_monitor_synthesis.rst
-=20
- from .dot2c import Dot2c
--import platform
--import os
-+from .generator import Monitor
-=20
--class dot2k(Dot2c):
--    monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
--    rv_dir =3D "kernel/trace/rv"
--    monitor_type =3D "per_cpu"
-=20
--    def __init__(self, file_path, MonitorType, extra_params=3D{}):
--        self.container =3D extra_params.get("subcmd") =3D=3D "container"
--        self.parent =3D extra_params.get("parent")
--        if self.container:
--            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/container")
--        else:
--            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/dot2k")
--
--        if self.container:
--            if file_path:
--                raise ValueError("A container does not require a dot file")
--            if MonitorType:
--                raise ValueError("A container does not require a monitor t=
-ype")
--            if self.parent:
--                raise ValueError("A container cannot have a parent")
--            self.name =3D extra_params.get("model_name")
--            self.events =3D []
--            self.states =3D []
--            self.main_h =3D self._read_template_file("main.h")
--        else:
--            super().__init__(file_path, extra_params.get("model_name"))
-+class dot2k(Monitor, Dot2c):
-+    template_dir =3D "dot2k"
-=20
--            self.monitor_type =3D self.monitor_types.get(MonitorType)
--            if self.monitor_type is None:
--                raise ValueError("Unknown monitor type: %s" % MonitorType)
--            self.monitor_type =3D MonitorType
--            self.trace_h =3D self._read_template_file("trace.h")
--
--        self.main_c =3D self._read_template_file("main.c")
--        self.kconfig =3D self._read_template_file("Kconfig")
-+    def __init__(self, file_path, MonitorType, extra_params=3D{}):
-+        self.monitor_type =3D MonitorType
-+        Monitor.__init__(self, extra_params)
-+        Dot2c.__init__(self, file_path, extra_params.get("model_name"))
-         self.enum_suffix =3D "_%s" % self.name
--        self.description =3D extra_params.get("description", self.name) or=
- "auto-generated"
--        self.auto_patch =3D extra_params.get("auto_patch")
--        if self.auto_patch:
--            self.__fill_rv_kernel_dir()
--
--    def __fill_rv_kernel_dir(self):
--
--        # first try if we are running in the kernel tree root
--        if os.path.exists(self.rv_dir):
--            return
--
--        # offset if we are running inside the kernel tree from verificatio=
-n/dot2
--        kernel_path =3D os.path.join("../..", self.rv_dir)
--
--        if os.path.exists(kernel_path):
--            self.rv_dir =3D kernel_path
--            return
--
--        if platform.system() !=3D "Linux":
--            raise OSError("I can only run on Linux.")
--
--        kernel_path =3D os.path.join("/lib/modules/%s/build" % platform.re=
-lease(), self.rv_dir)
--
--        # if the current kernel is from a distro this may not be a full ke=
-rnel tree
--        # verify that one of the files we are going to modify is available
--        if os.path.exists(os.path.join(kernel_path, "rv_trace.h")):
--            self.rv_dir =3D kernel_path
--            return
--
--        raise FileNotFoundError("Could not find the rv directory, do you h=
-ave the kernel source installed?")
--
--    def __read_file(self, path):
--        try:
--            fd =3D open(path, 'r')
--        except OSError:
--            raise Exception("Cannot open the file: %s" % path)
--
--        content =3D fd.read()
--
--        fd.close()
--        return content
--
--    def _read_template_file(self, file):
--        try:
--            path =3D os.path.join(self.abs_template_dir, file)
--            return self.__read_file(path)
--        except Exception:
--            # Specific template file not found. Try the generic template f=
-ile in the template/
--            # directory, which is one level up
--            path =3D os.path.join(self.abs_template_dir, "..", file)
--            return self.__read_file(path)
-=20
-     def fill_monitor_type(self):
-         return self.monitor_type.upper()
-=20
--    def fill_parent(self):
--        return "&rv_%s" % self.parent if self.parent else "NULL"
--
--    def fill_include_parent(self):
--        if self.parent:
--            return "#include <monitors/%s/%s.h>\n" % (self.parent, self.pa=
-rent)
--        return ""
--
-     def fill_tracepoint_handlers_skel(self):
-         buff =3D []
-         for event in self.events:
-@@ -144,30 +57,6 @@ class dot2k(Dot2c):
-             buff.append("\trv_detach_trace_probe(\"%s\", /* XXX: tracepoin=
-t */, handle_%s);" % (self.name, event))
-         return '\n'.join(buff)
-=20
--    def fill_main_c(self):
--        main_c =3D self.main_c
--        monitor_type =3D self.fill_monitor_type()
--        min_type =3D self.get_minimun_type()
--        nr_events =3D len(self.events)
--        tracepoint_handlers =3D self.fill_tracepoint_handlers_skel()
--        tracepoint_attach =3D self.fill_tracepoint_attach_probe()
--        tracepoint_detach =3D self.fill_tracepoint_detach_helper()
--        parent =3D self.fill_parent()
--        parent_include =3D self.fill_include_parent()
--
--        main_c =3D main_c.replace("%%MONITOR_TYPE%%", monitor_type)
--        main_c =3D main_c.replace("%%MIN_TYPE%%", min_type)
--        main_c =3D main_c.replace("%%MODEL_NAME%%", self.name)
--        main_c =3D main_c.replace("%%NR_EVENTS%%", str(nr_events))
--        main_c =3D main_c.replace("%%TRACEPOINT_HANDLERS_SKEL%%", tracepoi=
-nt_handlers)
--        main_c =3D main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_atta=
-ch)
--        main_c =3D main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_deta=
-ch)
--        main_c =3D main_c.replace("%%DESCRIPTION%%", self.description)
--        main_c =3D main_c.replace("%%PARENT%%", parent)
--        main_c =3D main_c.replace("%%INCLUDE_PARENT%%", parent_include)
--
--        return main_c
--
-     def fill_model_h_header(self):
-         buff =3D []
-         buff.append("/* SPDX-License-Identifier: GPL-2.0 */")
-@@ -226,147 +115,15 @@ class dot2k(Dot2c):
-         buff.append("	     TP_ARGS(%s)" % tp_args_c)
-         return '\n'.join(buff)
-=20
--    def fill_monitor_deps(self):
--        buff =3D []
--        buff.append("	# XXX: add dependencies if there")
--        if self.parent:
--            buff.append("	depends on RV_MON_%s" % self.parent.upper())
--            buff.append("	default y")
--        return '\n'.join(buff)
--
--    def fill_trace_h(self):
--        trace_h =3D self.trace_h
--        monitor_class =3D self.fill_monitor_class()
--        monitor_class_type =3D self.fill_monitor_class_type()
--        tracepoint_args_skel_event =3D self.fill_tracepoint_args_skel("eve=
-nt")
--        tracepoint_args_skel_error =3D self.fill_tracepoint_args_skel("err=
-or")
--        trace_h =3D trace_h.replace("%%MODEL_NAME%%", self.name)
--        trace_h =3D trace_h.replace("%%MODEL_NAME_UP%%", self.name.upper())
--        trace_h =3D trace_h.replace("%%MONITOR_CLASS%%", monitor_class)
--        trace_h =3D trace_h.replace("%%MONITOR_CLASS_TYPE%%", monitor_clas=
-s_type)
--        trace_h =3D trace_h.replace("%%TRACEPOINT_ARGS_SKEL_EVENT%%", trac=
-epoint_args_skel_event)
--        trace_h =3D trace_h.replace("%%TRACEPOINT_ARGS_SKEL_ERROR%%", trac=
-epoint_args_skel_error)
--        return trace_h
--
--    def fill_kconfig(self):
--        kconfig =3D self.kconfig
--        monitor_class_type =3D self.fill_monitor_class_type()
--        monitor_deps =3D self.fill_monitor_deps()
--        kconfig =3D kconfig.replace("%%MODEL_NAME%%", self.name)
--        kconfig =3D kconfig.replace("%%MODEL_NAME_UP%%", self.name.upper())
--        kconfig =3D kconfig.replace("%%MONITOR_CLASS_TYPE%%", monitor_clas=
-s_type)
--        kconfig =3D kconfig.replace("%%DESCRIPTION%%", self.description)
--        kconfig =3D kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
--        return kconfig
--
--    def fill_main_container_h(self):
--        main_h =3D self.main_h
--        main_h =3D main_h.replace("%%MODEL_NAME%%", self.name)
--        return main_h
--
--    def __patch_file(self, file, marker, line):
--        file_to_patch =3D os.path.join(self.rv_dir, file)
--        content =3D self.__read_file(file_to_patch)
--        content =3D content.replace(marker, line + "\n" + marker)
--        self.__write_file(file_to_patch, content)
--
--    def fill_tracepoint_tooltip(self):
--        monitor_class_type =3D self.fill_monitor_class_type()
--        if self.auto_patch:
--            self.__patch_file("rv_trace.h",
--                            "// Add new monitors based on CONFIG_%s here" =
-% monitor_class_type,
--                            "#include <monitors/%s/%s_trace.h>" % (self.na=
-me, self.name))
--            return "  - Patching %s/rv_trace.h, double check the result" %=
- self.rv_dir
--
--        return """  - Edit %s/rv_trace.h:
--Add this line where other tracepoints are included and %s is defined:
--#include <monitors/%s/%s_trace.h>
--""" % (self.rv_dir, monitor_class_type, self.name, self.name)
--
--    def fill_kconfig_tooltip(self):
--        if self.auto_patch:
--            self.__patch_file("Kconfig",
--                            "# Add new monitors here",
--                            "source \"kernel/trace/rv/monitors/%s/Kconfig\=
-"" % (self.name))
--            return "  - Patching %s/Kconfig, double check the result" % se=
-lf.rv_dir
--
--        return """  - Edit %s/Kconfig:
--Add this line where other monitors are included:
--source \"kernel/trace/rv/monitors/%s/Kconfig\"
--""" % (self.rv_dir, self.name)
--
--    def fill_makefile_tooltip(self):
--        name =3D self.name
--        name_up =3D name.upper()
--        if self.auto_patch:
--            self.__patch_file("Makefile",
--                            "# Add new monitors here",
--                            "obj-$(CONFIG_RV_MON_%s) +=3D monitors/%s/%s.o=
-" % (name_up, name, name))
--            return "  - Patching %s/Makefile, double check the result" % s=
-elf.rv_dir
--
--        return """  - Edit %s/Makefile:
--Add this line where other monitors are included:
--obj-$(CONFIG_RV_MON_%s) +=3D monitors/%s/%s.o
--""" % (self.rv_dir, name_up, name, name)
--
--    def fill_monitor_tooltip(self):
--        if self.auto_patch:
--            return "  - Monitor created in %s/monitors/%s" % (self.rv_dir,=
- self. name)
--        return "  - Move %s/ to the kernel's monitor directory (%s/monitor=
-s)" % (self.name, self.rv_dir)
--
--    def __create_directory(self):
--        path =3D self.name
--        if self.auto_patch:
--            path =3D os.path.join(self.rv_dir, "monitors", path)
--        try:
--            os.mkdir(path)
--        except FileExistsError:
--            return
--        except:
--            print("Fail creating the output dir: %s" % self.name)
--
--    def __write_file(self, file_name, content):
--        try:
--            file =3D open(file_name, 'w')
--        except:
--            print("Fail writing to file: %s" % file_name)
--
--        file.write(content)
--
--        file.close()
--
--    def __create_file(self, file_name, content):
--        path =3D "%s/%s" % (self.name, file_name)
--        if self.auto_patch:
--            path =3D os.path.join(self.rv_dir, "monitors", path)
--        self.__write_file(path, content)
--
--    def __get_main_name(self):
--        path =3D "%s/%s" % (self.name, "main.c")
--        if not os.path.exists(path):
--            return "main.c"
--        return "__main.c"
--
--    def print_files(self):
--        main_c =3D self.fill_main_c()
--
--        self.__create_directory()
--
--        path =3D "%s.c" % self.name
--        self.__create_file(path, main_c)
-+    def fill_main_c(self):
-+        main_c =3D super().fill_main_c()
-=20
--        if self.container:
--            main_h =3D self.fill_main_container_h()
--            path =3D "%s.h" % self.name
--            self.__create_file(path, main_h)
--        else:
--            model_h =3D self.fill_model_h()
--            path =3D "%s.h" % self.name
--            self.__create_file(path, model_h)
-+        min_type =3D self.get_minimun_type()
-+        nr_events =3D len(self.events)
-+        monitor_type =3D self.fill_monitor_type()
-=20
--            trace_h =3D self.fill_trace_h()
--            path =3D "%s_trace.h" % self.name
--            self.__create_file(path, trace_h)
-+        main_c =3D main_c.replace("%%MIN_TYPE%%", min_type)
-+        main_c =3D main_c.replace("%%NR_EVENTS%%", str(nr_events))
-+        main_c =3D main_c.replace("%%MONITOR_TYPE%%", monitor_type)
-=20
--        kconfig =3D self.fill_kconfig()
--        self.__create_file("Kconfig", kconfig)
-+        return main_c
-diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verificati=
-on/rvgen/rvgen/generator.py
-new file mode 100644
-index 000000000000..19d0078a3803
---- /dev/null
-+++ b/tools/verification/rvgen/rvgen/generator.py
-@@ -0,0 +1,264 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira <bristo=
-t@kernel.org>
-+#
-+# Abtract class for generating kernel runtime verification monitors from s=
-pecification file
-+
-+import platform
-+import os
-+
-+
-+class RVGenerator:
-+    rv_dir =3D "kernel/trace/rv"
-+
-+    def __init__(self, extra_params=3D{}):
-+        self.name =3D extra_params.get("model_name")
-+        self.parent =3D extra_params.get("parent")
-+        self.abs_template_dir =3D \
-+            os.path.join(os.path.dirname(__file__), "templates", self.temp=
-late_dir)
-+        self.main_c =3D self._read_template_file("main.c")
-+        self.kconfig =3D self._read_template_file("Kconfig")
-+        self.description =3D extra_params.get("description", self.name) or=
- "auto-generated"
-+        self.auto_patch =3D extra_params.get("auto_patch")
-+        if self.auto_patch:
-+            self.__fill_rv_kernel_dir()
-+
-+    def __fill_rv_kernel_dir(self):
-+
-+        # first try if we are running in the kernel tree root
-+        if os.path.exists(self.rv_dir):
-+            return
-+
-+        # offset if we are running inside the kernel tree from verificatio=
-n/dot2
-+        kernel_path =3D os.path.join("../..", self.rv_dir)
-+
-+        if os.path.exists(kernel_path):
-+            self.rv_dir =3D kernel_path
-+            return
-+
-+        if platform.system() !=3D "Linux":
-+            raise OSError("I can only run on Linux.")
-+
-+        kernel_path =3D os.path.join("/lib/modules/%s/build" % platform.re=
-lease(), self.rv_dir)
-+
-+        # if the current kernel is from a distro this may not be a full ke=
-rnel tree
-+        # verify that one of the files we are going to modify is available
-+        if os.path.exists(os.path.join(kernel_path, "rv_trace.h")):
-+            self.rv_dir =3D kernel_path
-+            return
-+
-+        raise FileNotFoundError("Could not find the rv directory, do you h=
-ave the kernel source installed?")
-+
-+    def _read_file(self, path):
-+        try:
-+            fd =3D open(path, 'r')
-+        except OSError:
-+            raise Exception("Cannot open the file: %s" % path)
-+
-+        content =3D fd.read()
-+
-+        fd.close()
-+        return content
-+
-+    def _read_template_file(self, file):
-+        try:
-+            path =3D os.path.join(self.abs_template_dir, file)
-+            return self._read_file(path)
-+        except Exception:
-+            # Specific template file not found. Try the generic template f=
-ile in the template/
-+            # directory, which is one level up
-+            path =3D os.path.join(self.abs_template_dir, "..", file)
-+            return self._read_file(path)
-+
-+    def fill_parent(self):
-+        return "&rv_%s" % self.parent if self.parent else "NULL"
-+
-+    def fill_include_parent(self):
-+        if self.parent:
-+            return "#include <monitors/%s/%s.h>\n" % (self.parent, self.pa=
-rent)
-+        return ""
-+
-+    def fill_tracepoint_handlers_skel(self):
-+        return "NotImplemented"
-+
-+    def fill_tracepoint_attach_probe(self):
-+        return "NotImplemented"
-+
-+    def fill_tracepoint_detach_helper(self):
-+        return "NotImplemented"
-+
-+    def fill_main_c(self):
-+        main_c =3D self.main_c
-+        tracepoint_handlers =3D self.fill_tracepoint_handlers_skel()
-+        tracepoint_attach =3D self.fill_tracepoint_attach_probe()
-+        tracepoint_detach =3D self.fill_tracepoint_detach_helper()
-+        parent =3D self.fill_parent()
-+        parent_include =3D self.fill_include_parent()
-+
-+        main_c =3D main_c.replace("%%MODEL_NAME%%", self.name)
-+        main_c =3D main_c.replace("%%TRACEPOINT_HANDLERS_SKEL%%", tracepoi=
-nt_handlers)
-+        main_c =3D main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_atta=
-ch)
-+        main_c =3D main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_deta=
-ch)
-+        main_c =3D main_c.replace("%%DESCRIPTION%%", self.description)
-+        main_c =3D main_c.replace("%%PARENT%%", parent)
-+        main_c =3D main_c.replace("%%INCLUDE_PARENT%%", parent_include)
-+
-+        return main_c
-+
-+    def fill_model_h(self):
-+        return "NotImplemented"
-+
-+    def fill_monitor_class_type(self):
-+        return "NotImplemented"
-+
-+    def fill_monitor_class(self):
-+        return "NotImplemented"
-+
-+    def fill_tracepoint_args_skel(self, tp_type):
-+        return "NotImplemented"
-+
-+    def fill_monitor_deps(self):
-+        buff =3D []
-+        buff.append("	# XXX: add dependencies if there")
-+        if self.parent:
-+            buff.append("	depends on RV_MON_%s" % self.parent.upper())
-+            buff.append("	default y")
-+        return '\n'.join(buff)
-+
-+    def fill_kconfig(self):
-+        kconfig =3D self.kconfig
-+        monitor_class_type =3D self.fill_monitor_class_type()
-+        monitor_deps =3D self.fill_monitor_deps()
-+        kconfig =3D kconfig.replace("%%MODEL_NAME%%", self.name)
-+        kconfig =3D kconfig.replace("%%MODEL_NAME_UP%%", self.name.upper())
-+        kconfig =3D kconfig.replace("%%MONITOR_CLASS_TYPE%%", monitor_clas=
-s_type)
-+        kconfig =3D kconfig.replace("%%DESCRIPTION%%", self.description)
-+        kconfig =3D kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
-+        return kconfig
-+
-+    def __patch_file(self, file, marker, line):
-+        file_to_patch =3D os.path.join(self.rv_dir, file)
-+        content =3D self._read_file(file_to_patch)
-+        content =3D content.replace(marker, line + "\n" + marker)
-+        self.__write_file(file_to_patch, content)
-+
-+    def fill_tracepoint_tooltip(self):
-+        monitor_class_type =3D self.fill_monitor_class_type()
-+        if self.auto_patch:
-+            self.__patch_file("rv_trace.h",
-+                            "// Add new monitors based on CONFIG_%s here" =
-% monitor_class_type,
-+                            "#include <monitors/%s/%s_trace.h>" % (self.na=
-me, self.name))
-+            return "  - Patching %s/rv_trace.h, double check the result" %=
- self.rv_dir
-+
-+        return """  - Edit %s/rv_trace.h:
-+Add this line where other tracepoints are included and %s is defined:
-+#include <monitors/%s/%s_trace.h>
-+""" % (self.rv_dir, monitor_class_type, self.name, self.name)
-+
-+    def fill_kconfig_tooltip(self):
-+        if self.auto_patch:
-+            self.__patch_file("Kconfig",
-+                            "# Add new monitors here",
-+                            "source \"kernel/trace/rv/monitors/%s/Kconfig\=
-"" % (self.name))
-+            return "  - Patching %s/Kconfig, double check the result" % se=
-lf.rv_dir
-+
-+        return """  - Edit %s/Kconfig:
-+Add this line where other monitors are included:
-+source \"kernel/trace/rv/monitors/%s/Kconfig\"
-+""" % (self.rv_dir, self.name)
-+
-+    def fill_makefile_tooltip(self):
-+        name =3D self.name
-+        name_up =3D name.upper()
-+        if self.auto_patch:
-+            self.__patch_file("Makefile",
-+                            "# Add new monitors here",
-+                            "obj-$(CONFIG_RV_MON_%s) +=3D monitors/%s/%s.o=
-" % (name_up, name, name))
-+            return "  - Patching %s/Makefile, double check the result" % s=
-elf.rv_dir
-+
-+        return """  - Edit %s/Makefile:
-+Add this line where other monitors are included:
-+obj-$(CONFIG_RV_MON_%s) +=3D monitors/%s/%s.o
-+""" % (self.rv_dir, name_up, name, name)
-+
-+    def fill_monitor_tooltip(self):
-+        if self.auto_patch:
-+            return "  - Monitor created in %s/monitors/%s" % (self.rv_dir,=
- self. name)
-+        return "  - Move %s/ to the kernel's monitor directory (%s/monitor=
-s)" % (self.name, self.rv_dir)
-+
-+    def __create_directory(self):
-+        path =3D self.name
-+        if self.auto_patch:
-+            path =3D os.path.join(self.rv_dir, "monitors", path)
-+        try:
-+            os.mkdir(path)
-+        except FileExistsError:
-+            return
-+        except:
-+            print("Fail creating the output dir: %s" % self.name)
-+
-+    def __write_file(self, file_name, content):
-+        try:
-+            file =3D open(file_name, 'w')
-+        except:
-+            print("Fail writing to file: %s" % file_name)
-+
-+        file.write(content)
-+
-+        file.close()
-+
-+    def _create_file(self, file_name, content):
-+        path =3D "%s/%s" % (self.name, file_name)
-+        if self.auto_patch:
-+            path =3D os.path.join(self.rv_dir, "monitors", path)
-+        self.__write_file(path, content)
-+
-+    def __get_main_name(self):
-+        path =3D "%s/%s" % (self.name, "main.c")
-+        if not os.path.exists(path):
-+            return "main.c"
-+        return "__main.c"
-+
-+    def print_files(self):
-+        main_c =3D self.fill_main_c()
-+
-+        self.__create_directory()
-+
-+        path =3D "%s.c" % self.name
-+        self._create_file(path, main_c)
-+
-+        model_h =3D self.fill_model_h()
-+        path =3D "%s.h" % self.name
-+        self._create_file(path, model_h)
-+
-+        kconfig =3D self.fill_kconfig()
-+        self._create_file("Kconfig", kconfig)
-+
-+
-+class Monitor(RVGenerator):
-+    monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
-+
-+    def __init__(self, extra_params=3D{}):
-+        super().__init__(extra_params)
-+        self.trace_h =3D self._read_template_file("trace.h")
-+
-+    def fill_trace_h(self):
-+        trace_h =3D self.trace_h
-+        monitor_class =3D self.fill_monitor_class()
-+        monitor_class_type =3D self.fill_monitor_class_type()
-+        tracepoint_args_skel_event =3D self.fill_tracepoint_args_skel("eve=
-nt")
-+        tracepoint_args_skel_error =3D self.fill_tracepoint_args_skel("err=
-or")
-+        trace_h =3D trace_h.replace("%%MODEL_NAME%%", self.name)
-+        trace_h =3D trace_h.replace("%%MODEL_NAME_UP%%", self.name.upper())
-+        trace_h =3D trace_h.replace("%%MONITOR_CLASS%%", monitor_class)
-+        trace_h =3D trace_h.replace("%%MONITOR_CLASS_TYPE%%", monitor_clas=
-s_type)
-+        trace_h =3D trace_h.replace("%%TRACEPOINT_ARGS_SKEL_EVENT%%", trac=
-epoint_args_skel_event)
-+        trace_h =3D trace_h.replace("%%TRACEPOINT_ARGS_SKEL_ERROR%%", trac=
-epoint_args_skel_error)
-+        return trace_h
-+
-+    def print_files(self):
-+        super().print_files()
-+        trace_h =3D self.fill_trace_h()
-+        path =3D "%s_trace.h" % self.name
-+        self._create_file(path, trace_h)
---=20
-2.39.5
+> +
+> +	daxdev = &fc->dax_devlist->devlist[index];
+> +
+> +	/* Abort if daxdev is now valid */
+> +	if (daxdev->valid) {
+> +		up_write(&fc->famfs_devlist_sem);
+> +		/* We already have a valid entry at this index */
+> +		err = -EALREADY;
+> +		goto out;
+> +	}
+> +
+> +	/* Verify that the dev is valid and can be opened and gets the devno */
+> +	err = famfs_verify_daxdev(daxdev_out.name, &daxdev->devno);
+> +	if (err) {
+> +		up_write(&fc->famfs_devlist_sem);
+> +		pr_err("%s: err=%d from famfs_verify_daxdev()\n", __func__, err);
+> +		goto out;
+> +	}
+> +
+> +	/* This will fail if it's not a dax device */
+> +	daxdev->devp = dax_dev_get(daxdev->devno);
+> +	if (!daxdev->devp) {
+> +		up_write(&fc->famfs_devlist_sem);
+> +		pr_warn("%s: device %s not found or not dax\n",
+> +			__func__, daxdev_out.name);
+> +		err = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	daxdev->name = kstrdup(daxdev_out.name, GFP_KERNEL);
+> +	wmb(); /* all daxdev fields must be visible before marking it valid */
+> +	daxdev->valid = 1;
+> +
+> +	up_write(&fc->famfs_devlist_sem);
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +/**
+> + * famfs_update_daxdev_table() - Update the daxdev table
+> + * @fm   - fuse_mount
+> + * @meta - famfs_file_meta, in-memory format, built from a GET_FMAP response
+> + *
+> + * This function is called for each new file fmap, to verify whether all
+> + * referenced daxdevs are already known (i.e. in the table). Any daxdev
+> + * indices that referenced in @meta but not in the table will be retrieved via
+> + * famfs_fuse_get_daxdev() and added to the table
+> + *
+> + * Return: 0=success
+> + *         -errno=failure
+> + */
+> +static int
+> +famfs_update_daxdev_table(
+> +	struct fuse_mount *fm,
+> +	const struct famfs_file_meta *meta)
+> +{
+> +	struct famfs_dax_devlist *local_devlist;
+> +	struct fuse_conn *fc = fm->fc;
+> +	int err;
+> +	int i;
+> +
+> +	/* First time through we will need to allocate the dax_devlist */
+> +	if (!fc->dax_devlist) {
+> +		local_devlist = kcalloc(1, sizeof(*fc->dax_devlist), GFP_KERNEL);
+> +		if (!local_devlist)
+> +			return -ENOMEM;
+> +
+> +		local_devlist->nslots = MAX_DAXDEVS;
+> +
+> +		local_devlist->devlist = kcalloc(MAX_DAXDEVS,
+> +						 sizeof(struct famfs_daxdev),
+> +						 GFP_KERNEL);
+> +		if (!local_devlist->devlist) {
+> +			kfree(local_devlist);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		/* We don't need the famfs_devlist_sem here because we use cmpxchg... */
+> +		if (cmpxchg(&fc->dax_devlist, NULL, local_devlist) != NULL) {
+> +			kfree(local_devlist->devlist);
+> +			kfree(local_devlist); /* another thread beat us to it */
+> +		}
+> +	}
+> +
+> +	down_read(&fc->famfs_devlist_sem);
+> +	for (i = 0; i < fc->dax_devlist->nslots; i++) {
+> +		if (meta->dev_bitmap & (1ULL << i)) {
+Flip for readability.
+		if (!(meta->dev_bitmap & (1ULL << i))
+			continue;
+
+Or can we use bitmap_from_arr64() and
+for_each_set_bit() to optimize this a little.
+
+> +			/* This file meta struct references devindex i
+> +			 * if devindex i isn't in the table; get it...
+> +			 */
+> +			if (!(fc->dax_devlist->devlist[i].valid)) {
+> +				up_read(&fc->famfs_devlist_sem);
+> +
+> +				err = famfs_fuse_get_daxdev(fm, i);
+> +				if (err)
+> +					pr_err("%s: failed to get daxdev=%d\n",
+> +					       __func__, i);
+Don't want to surface that error?
+> +
+> +				down_read(&fc->famfs_devlist_sem);
+> +			}
+> +		}
+> +	}
+> +	up_read(&fc->famfs_devlist_sem);
+> +
+> +	return 0;
+> +}
+> +
+> +/***************************************************************************/
+
+?
+
+> diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
+> index ce785d76719c..f79707b9f761 100644
+> --- a/fs/fuse/famfs_kfmap.h
+> +++ b/fs/fuse/famfs_kfmap.h
+> @@ -60,4 +60,30 @@ struct famfs_file_meta {
+>  	};
+>  };
+>  
+> +/**
+> + * famfs_daxdev - tracking struct for a daxdev within a famfs file system
+> + *
+> + * This is the in-memory daxdev metadata that is populated by
+> + * the responses to GET_FMAP messages
+> + */
+> +struct famfs_daxdev {
+> +	/* Include dev uuid? */
+> +	bool valid;
+> +	bool error;
+> +	dev_t devno;
+> +	struct dax_device *devp;
+> +	char *name;
+> +};
+> +
+> +#define MAX_DAXDEVS 24
+> +
+> +/**
+> + * famfs_dax_devlist - list of famfs_daxdev's
+
+Run kernel-doc script over these. It gets grumpy about partial
+documentation.
+
+> + */
+> +struct famfs_dax_devlist {
+> +	int nslots;
+> +	int ndevs;
+> +	struct famfs_daxdev *devlist; /* XXX: make this an xarray! */
+> +};
+> +
+>  #endif /* FAMFS_KFMAP_H */
+
+> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> index ecaaa62910f0..8a81b6c334fe 100644
+> --- a/include/uapi/linux/fuse.h
+> +++ b/include/uapi/linux/fuse.h
+> @@ -235,6 +235,9 @@
+>   *      - struct fuse_famfs_simple_ext
+>   *      - struct fuse_famfs_iext
+>   *      - struct fuse_famfs_fmap_header
+> + *    - Add the following structs for the GET_DAXDEV message and reply
+> + *      - struct fuse_get_daxdev_in
+> + *      - struct fuse_get_daxdev_out
+>   *    - Add the following enumerated types
+>   *      - enum fuse_famfs_file_type
+>   *      - enum famfs_ext_type
+> @@ -1351,6 +1354,20 @@ struct fuse_famfs_fmap_header {
+>  	uint64_t reserved1;
+>  };
+>  
+> +struct fuse_get_daxdev_in {
+> +	uint32_t        daxdev_num;
+> +};
+> +
+> +#define DAXDEV_NAME_MAX 256
+> +struct fuse_daxdev_out {
+> +	uint16_t index;
+> +	uint16_t reserved;
+> +	uint32_t reserved2;
+> +	uint64_t reserved3; /* enough space for a uuid if we need it */
+
+Odd place for the comment. If it just refers to reserved3 then nope
+not enough space.  If you mean that and reserved4 then fiar enough
+but that's not obvious as it stands.
+
+> +	uint64_t reserved4;
+> +	char name[DAXDEV_NAME_MAX];
+> +};
+> +
+>  static inline int32_t fmap_msg_min_size(void)
+>  {
+>  	/* Smallest fmap message is a header plus one simple extent */
+> @@ -1358,4 +1375,5 @@ static inline int32_t fmap_msg_min_size(void)
+>  		+ sizeof(struct fuse_famfs_simple_ext));
+>  }
+>  
+> +
+Stray change.  Worth a quick scrub to clean these out (even in an RFC) as they just add
+noise to the bits you want people to look at!
+
+>  #endif /* _LINUX_FUSE_H */
 
