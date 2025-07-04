@@ -1,105 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7924B2F9483;
-	Fri,  4 Jul 2025 07:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE792F7CE5;
+	Fri,  4 Jul 2025 07:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615716; cv=none; b=r61rJENKxbgCKtj2DwXjsr66AqTfMKjbasYCZ2W6fkgPO1V2ENzdpoG7OZ7zqoGFcfAc59ry1CVrXw7K4CXC6+USA2dic7XGwisHJ0FU53Z37zNzIqrhGc76rkQa0XvHRdU8p+ouiryPXMuXcPuTmEeEM3Xdhc6Vx2QdB7bP9CE=
+	t=1751615715; cv=none; b=OCGHx4cQq3TTGczo+kS5dGShYFaePbW/9MB7q4uJdJ1iop9WUYkbuUgqbYo0oB7iCFATtR74TYngFzV1vvVzd3RlHvvJI2RxyEZSHzXmk653rJ7C5AjvGWlg3MZPQqbNpaRUzxUK64nfjQ2MZ4MjFCex4IL1WMNiEZ8YeJtf2Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615716; c=relaxed/simple;
-	bh=/sdRjYxfS+XsY+oFUi9LbPiw9xP+mi2C4Wu33DXiipM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z8Uam4+efft0DQjCliCIqTtDdvNNubLmxXMANPXgeoRQksLbjCC1ilPWe2uzN7ybq2ReBl/XWcxffcapmPwhKQSTaC+e9AF5EbwBpO27GeKL1aQkAIfaXtHDtQ36mMnmZxwhFqkI/8t2Zw3MSKm0Ql8vCyZnGXK9SRI2PHc9pZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b71O0mqt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751615715; c=relaxed/simple;
+	bh=g5Qwv3E6Y5AzhAoHAIoso2lcbLsyKVgZSLviisDZlBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nI6iqEhg30pTQKEnge/tko+haZHvQHVhfuWe0d1JVvwprZNnPKeINLrOQrfwQAs3I57Gdg95D2XQiGSx8kUVJomiL1sJ93P1PYyCKTKPp3QrEizcJ52J3vFXtsHOt2TW5oLxjwjTTy9yw2e9CxnV1ozHJTroJOJ/Na/qB8I7zg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGHVUoCf; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b71O0mqt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615715; x=1783151715;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/sdRjYxfS+XsY+oFUi9LbPiw9xP+mi2C4Wu33DXiipM=;
-  b=b71O0mqtj6gM83eomGve+rmuB61X5brZJRhVDj+SYddzBmmu0QEsiohl
-   rD1+qG+FXeBeAsp1IevXg85yroBpgfevCr3XfdEsFiHcDd2CU+Rx/htF4
-   XZ8M/xCU2Bf+OpHDEEZDz+iLcOVZK5o0qQy8IntV5VErCth0cYctFgZvv
-   aJRLl1sLWj/p7/HP073AFqoEgHx8g3Vu7g1Cx2fN2CNsx4N9FvrtQTxnQ
-   U1OclumaV6Pdx19caoOCGcV4FI7r22hYbataEwbk7jOZbIfvd6CteWCu0
-   GFMh/h6Drgj9m66voEwuvoby2H4Gj/q68e8Npy2QNXBwPzPWWi7XJIa/q
-   w==;
-X-CSE-ConnectionGUID: vBlivEolRFmd3WcWZfXKhA==
-X-CSE-MsgGUID: TFueOom6QVqDzh/TLvxKYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="64194346"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="64194346"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:55:04 -0700
-X-CSE-ConnectionGUID: VMyG7aEjR4iffiOzvKpwyQ==
-X-CSE-MsgGUID: s7YHK/SnR1ieixpXxymbsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158616694"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:55:00 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 9EFFB44433;
-	Fri,  4 Jul 2025 10:54:58 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 73/80] ASoC: component: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:58 +0300
-Message-Id: <20250704075458.3222817-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGHVUoCf"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acb5ec407b1so110868866b.1;
+        Fri, 04 Jul 2025 00:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751615709; x=1752220509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KqTjHtFUDnwHiahJgAdrD1pVSqjrxzaMh3NEMJveZz8=;
+        b=TGHVUoCfczslT4Cszm3O2JE88Xe+7CM0ElkGVuXMV4t1ZrdpVVHyfGJJie4cTZQmdq
+         pQthGf/GK1Ow8YqzMaB7Nb+V9xNGb39p7pwj9Rq6kjc3SC6Rn8Iexf9JhMrODMtIhC3E
+         ffqO9PlVBobxEdY2bl/D7sedpenn9sSM+zEPEW9A9UgFo/W58//osc1Ysiq6/C2nvgTq
+         v3kJajqirPtVqae7yq1Gy5XvcvM4ol8VEb1V7Tx1Dfc/XVpa9qrxFwwtP9HUUwW4K7p4
+         Jto/Q70qVuhiwbvN1dZiZaa8pcuhMXP1Dx2dOCBH7HmeI4gce+IjcRcV6K8DX1jxY2k8
+         YMZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751615709; x=1752220509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KqTjHtFUDnwHiahJgAdrD1pVSqjrxzaMh3NEMJveZz8=;
+        b=Brl26zIt4RmMIx4IIAF1x3C+mTMH1p/DBwbjrorj0ECl51Of+dwraPoIjcBT9EarZZ
+         Rig0yKUlXNERi2+jzxz3PC8sFrQnHB323ElhqMJHPRQm5BwyRBAimyjTQ25Chqkghwro
+         bij2XR265UShP4lL44MsFr78+fJiNvKlN4G+eCNVgRGzzOg8CQWO7jHGywpVL0FeGKuF
+         MtM6GV10dkxeRQkAAWkFgkya1rjwGFXfr2awT1SbwKjgCvF9XOwCl9Ew92S1HecOzpy9
+         JKVB9kRYgu9NowzFNkCxhKoaUOSCiL5c6+Y60/5pWjR5hZ0KQxuNlK3EzSwUfo8eYfZ/
+         m3Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU08/cWFgwvCVrBn2VKz4ttsTxi3hOHO9uWgWY2qpNKYKDq0wuZE8MtNk9UB61oEbyACyiU61246yvntMOuAQ==@vger.kernel.org, AJvYcCVywHV8WyT03APVzlovESO5z8INVufiMtZ3Xfa3g/NWA0SZ8Dfhbp/qugk9CCO+aZueAHn+Af4C4l2WyLB+@vger.kernel.org, AJvYcCW7CRVzua9sZwP8qBQUb3otz0aNDPWNT+KilDPbbXH6C/ecvHr8SQDbGrsOFdladQZLugSNNynD44NW@vger.kernel.org, AJvYcCWhV6euYQD1pgCxQk+9NVkSFALTqAf925QoEdt0fETnG3ydtFv/n3dreaG33eI3y73HDnnGI7OgQBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtCZUSn6KtOHnaeocUFP8I9aCR9cvC93f8gNZzodU2qLMcIHRY
+	DyL4NQglzVO7RpSPJO9Hb5dv9+1gLvxiPh4sxlW4OXDj4ZLcEmnfdNvYmQzPzUbLxAhlMtUDOsV
+	tl60bf+gjZMhLfko5ETO51G01YZ2jO3Q=
+X-Gm-Gg: ASbGncsvXM1WSs1lnBcNxsO+k/H61mp0klpYXOSLX6XyfdMzRYdR125RweFD6e5l/Yz
+	y0yEwbvJgjKrBwoboI73Yx24TRG3xs5735QlcQ8E2CYCvlwEgFZjEKYinT2+GEP6LVGSCH9WUeP
+	HhFdmHV4dqUaoLlKjpI0vP/v46mvo6t1Nx67+PiL8ebwV03/xRyjJaPA==
+X-Google-Smtp-Source: AGHT+IHbu/7trC65/DeYLqxtEkSBbngCiJCl8lGS3daoUK+l03S1ER+X1QI0bHRXSoe9V0uZOz3GBHDUIYUYwFgLXPA=
+X-Received: by 2002:a17:906:681a:b0:ad2:417b:2ab5 with SMTP id
+ a640c23a62f3a-ae3fbde92a2mr99463566b.60.1751615708510; Fri, 04 Jul 2025
+ 00:55:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-11-john@groves.net>
+In-Reply-To: <20250703185032.46568-11-john@groves.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 4 Jul 2025 09:54:57 +0200
+X-Gm-Features: Ac12FXx2fL6cg_25gbv1TfaaBei9pa2nMH_xl-QIp40xf5dKMB13gicr8ctumWk
+Message-ID: <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
+Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for famfs
+To: John Groves <John@groves.net>, "Darrick J . Wong" <djwong@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredb.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+On Thu, Jul 3, 2025 at 8:51=E2=80=AFPM John Groves <John@groves.net> wrote:
+>
+> * FUSE_DAX_FMAP flag in INIT request/reply
+>
+> * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
+>   famfs-enabled connection
+>
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/fuse/fuse_i.h          |  3 +++
+>  fs/fuse/inode.c           | 14 ++++++++++++++
+>  include/uapi/linux/fuse.h |  4 ++++
+>  3 files changed, 21 insertions(+)
+>
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 9d87ac48d724..a592c1002861 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -873,6 +873,9 @@ struct fuse_conn {
+>         /* Use io_uring for communication */
+>         unsigned int io_uring;
+>
+> +       /* dev_dax_iomap support for famfs */
+> +       unsigned int famfs_iomap:1;
+> +
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+pls move up to the bit fields members.
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
+>         /** Maximum stack depth for passthrough backing files */
+>         int max_stack_depth;
+>
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 29147657a99f..e48e11c3f9f3 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *=
+fm, struct fuse_args *args,
+>                         }
+>                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enab=
+led())
+>                                 fc->io_uring =3D 1;
+> +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> +                           flags & FUSE_DAX_FMAP) {
+> +                               /* XXX: Should also check that fuse serve=
+r
+> +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN=
+,
+> +                                * since it is directing the kernel to ac=
+cess
+> +                                * dax memory directly - but this functio=
+n
+> +                                * appears not to be called in fuse serve=
+r
+> +                                * process context (b/c even if it drops
+> +                                * those capabilities, they are held here=
+).
+> +                                */
+> +                               fc->famfs_iomap =3D 1;
+> +                       }
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
+1. As long as the mapping requests are checking capabilities we should be o=
+k
+    Right?
+2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
+3. Darrick mentioned the need for a synchronic INIT variant for his work on
+    blockdev iomap support [1]
 
- sound/soc/soc-component.c | 1 -
- 1 file changed, 1 deletion(-)
+I also wonder how much of your patches and Darrick's patches end up
+being an overlap?
 
-diff --git a/sound/soc/soc-component.c b/sound/soc/soc-component.c
-index 25f5e543ae8d..65c495094024 100644
---- a/sound/soc/soc-component.c
-+++ b/sound/soc/soc-component.c
-@@ -1278,7 +1278,6 @@ void snd_soc_pcm_component_pm_runtime_put(struct snd_soc_pcm_runtime *rtd,
- 		if (rollback && !soc_component_mark_match(component, stream, pm))
- 			continue;
- 
--		pm_runtime_mark_last_busy(component->dev);
- 		pm_runtime_put_autosuspend(component->dev);
- 
- 		/* remove marked stream */
--- 
-2.39.5
+Thanks,
+Amir.
 
+[1] https://lore.kernel.org/linux-fsdevel/20250613174413.GM6138@frogsfrogsf=
+rogs/
