@@ -1,123 +1,295 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7907628725B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C45287257;
 	Fri,  4 Jul 2025 07:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751613981; cv=none; b=IkDYad9A4ArxBnWg89DYEiO6nJEJp887DWHR8ExAbPsWTdbQoBfl37C4Ctq2qhzIrBwFyZg4adYSrYPo7M9MWnv+e6L7NVyvM/UwlVadG+WqanaToUa49LG1Ma5Y5OqPVcjl8tGj4EzTF/tr3/EiOSAD46Vd6OkPKMzHmzEmFlE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751613981; c=relaxed/simple;
-	bh=Upigb2pu4dZf0sT6kkLAt84b8rlfCgQMY6Qq/ZtbZrY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dBqhspb5ucFkOTciPzq2UHI4Yjpwer+hwSGvACW3Y7dRufn0/xpxmiw2EGlzdGZRvtiMkIkCGDkjK/YifPbG+tMWeyy8AHQuZCpuaJ9E3ieYB7cqkTFmI18gOYJoV09J6652NMpsySvBVBpGrLgrUvUfUIxgfiyqbVE6aklX0DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DmRRxE1i; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751613982; cv=fail; b=gs1BqnaIQrXLIYG17HWimT+AznZwy7YY9bUMgqrnO0NbWXD6JGkmQCoVvcOGBwC4r0v53pKq5aXm7uVbfgaCRMqtpvKeGqvbvu1JDomivov+2gg88C5Xhn8dongVjvosBlkL/eL8bgXcIO7U43BHxYbx5UoIssPIN088JlFWrkc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751613982; c=relaxed/simple;
+	bh=HRmHiTh/crRVLQOgfQf1Us8sikjDHYYPSHJf3YY5/QM=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=grWQEHN/6pnVusN3x3UyVmcj0EDSTJYywSAIXHI/mC6aQS34U8E/6qXrCmwU2JyCtat+yma6Y1IUaAcGu5zCtMjKzQrnM9E7t4kQPayQHGtdJGqmDMXLnDbJByDi+3WedTk/wJFYYC3CIOO1OxXwKoDTiuNRjSQQL6Pf74BCPT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bSluTf6B; arc=fail smtp.client-ip=40.107.94.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmRRxE1i"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236377f00easo9463695ad.1;
-        Fri, 04 Jul 2025 00:26:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751613978; x=1752218778; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDxuxUDgUgDkcVZdx4yl7cOtfH39Xq3bSHZLoPDyb9E=;
-        b=DmRRxE1iiDZmscjNq9QCo0O4f4e12uCcXfUtLOYi4YCyorEkt9nO6+jsGR+PgTq9jg
-         CXIwNt+hnOXB784FGWPSbTTinY/aOoBl3SUvAZ3XQ1L8LfKtfT3zHEN9MhH8eyr9NBNy
-         99Pp+LU5pWNJ0m5u2rUD3uOvojsa9ULGqkK4L2815cR3AeRqj5KUyxCHDivOuUSENg6I
-         5Adq6HOU8KiiX2xGFPENFlAHAZc/H4o+g39gtpxkYYo7e+16U7M5FUO9NQfRndCHaJbM
-         /y0s93I58DjFC7r0QCtOu5TrhhmlsUDqapYdQgvJklCcWg6UszEd8+HefaDleZcrOwIQ
-         /2EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751613978; x=1752218778;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kDxuxUDgUgDkcVZdx4yl7cOtfH39Xq3bSHZLoPDyb9E=;
-        b=UBpqUr/x2hBjQ2Z1n55xI6RHUndJpAaN/jo0gM6C9hlvvLCbPdBvzpqgSiIciDxdZR
-         3V0Ng3AlnMRxjtoQFXByXgsS10QRq+ztjBvnKNcMIpljiISjvlu+5HLrck/SfNRoXxh3
-         a5dprBonBR0inwo6AejTn2Td2RqnHTHX/s6AfJw9QjBUF6PtbkSmVH//uq/EaCG22LPP
-         TAXrlLZ6zTZPNPXACQp0y2og9syFrxmT5KRUicMHx3wUZHyiALx80EC7KSql5bmNItdS
-         X51GfMdTykmsdyt38mPHZmF0cTAF+HGH7uXNaZFKedRjFNuuvU3LjjuA7Dy8IK+iPQDI
-         v9yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaSHxrrhR2EkhKGMGOjjvw7xT4o4KzxtFa7ClyJ+QAGpS+gLBIN8SgSMVeu/akvRF8UwIxxHnJTau9Rfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfwXAtyX4rg4XCyaLthnU51+bmYuuZk4ES8zRBkEeAzMRAf+4P
-	XmR0s01DCiX93LHHyeftZzAdzDiPRvjqzIMz5+OC+nU1KqfvTOEOfAH9kK3J1eO6SKw=
-X-Gm-Gg: ASbGncuUni6Sbwk88zBR3X9nU2J/08nCankrW/yi1E2feWin1yP3IJCZ9qTo89nWup7
-	7/gWwLZr68CIm0ZQGHnCWnHFVswyd4ObODN4gHLLR7kReT84yZmun0200NZBf/b31+WbdocXm28
-	0Vp9B5OvNANpz6+kHXuFO7hFsmxc9O7vbEuGTD5sKa8pSTeBzxKzXGKfTKfkgMSA9BoukCOlE85
-	SRN4WqURE+US3d9XwwxFTGnxKl4iTcd5V7FXFoBvI+IRjp8bvZvmerh+e1AQp8wL7RhYo3NxSfn
-	YE5+gAmE4Ll4l9xL2SYtPxntiQZOW/Q3NjD2tnCTlRaeTwElA4G12ePZUNRpsiIdDQPyEhP/sVA
-	rZuvR+oiMDyjPnXqm
-X-Google-Smtp-Source: AGHT+IF868eyucOmTptTbQbUozxpL8rfVAZcdj+zsUMVFE1ZmgFNdh9GJcoKkdvBbd8xKBaEX3JDJw==
-X-Received: by 2002:a17:902:fc48:b0:235:27b6:a891 with SMTP id d9443c01a7336-23c85e772c8mr31057695ad.28.1751613978318;
-        Fri, 04 Jul 2025 00:26:18 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c30:6f3f:3d1:c4c0:3855:2a18])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8455dafcsm13455985ad.96.2025.07.04.00.26.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 00:26:17 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: cem@kernel.org,
-	djwong@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH] fs/xfs: replace strncpy with memtostr_pad()
-Date: Fri,  4 Jul 2025 12:56:04 +0530
-Message-ID: <20250704072604.13605-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bSluTf6B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=preBaQOBE48zIpSl0Pie7yfPcqetCKUoF6a2SMeOMCMyRiQle2sdvaRLJiA6MYd4aLzUcBIAnKHSYFfGrxOa+hFluWDnmXGhyL+eZNYuE7hkivniSIt5l41ZV0BrdWIQzU1iWyyDNIqolfgfW425Vry6+cEWKc3NUbrPybRMNVlfbY2CvzueOWqnOyRYTWy04wKGOXuQRcdKh9Gn8kd31pZpSarek9hEiZcV4sriXWlJEp7ACixG3kuqeJ0RaxjHVN9VSzm5tYL1pqSYu9fDKjP380dzNGcSgGv7hX+fn3hZlMbW48VoX8PP2NIdCu69A3qnZ9Xypojd2Tx5lI+HPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/3sWIUxlxAkLWbHtUo8FocrTd5OKRJZU/i5Kcb0UAhY=;
+ b=LjKwgWN+VNJuakCnIwmjVU5BRlZAU6MqNTy0aF9Dspuw3TzI5Cnrp9bNx5q/CMvX6YZl+LeZy9CCO4TiChqERd02smnvDy+ZrmwT6TNCLufVy6QD25Sws55JpkFEdl3I/TI1cK1t/kGu6K+dfubflZkslZwJI8FixY+LpSt2ONp7jj+caPEdGWttL8co0WwkTvgIWNGNBPmwTjuWNb34CrqXuIKoggaUeJ50n4K+GjSzUzoc1+yfA6XRe+AJ0dTV0r/UNYPe7xUTMZtQOtPD5VvK21f8grFrENxnWeHTbsP+snA6/GFCEmwWDqSijs/xNoKaadiNk+1cWdapGH3WuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/3sWIUxlxAkLWbHtUo8FocrTd5OKRJZU/i5Kcb0UAhY=;
+ b=bSluTf6BLd44jPA7nonBemLr6PLZzmcsHabtrdYFQbdUnsq2/tB1gaBXv6JcJ0N+37Aslzfif+XirSi4FcX7KDL9rA/4bPGeJXJuJotf1VraEfm0b/vIVY4H1RqV/hT4NyYSAPG5yOdtUkc3DwcIjo5R51YFPn7vIe8y4YJeoqTIDKdnygTfsa7cIV8dFocyolOmgggbMVjW6qdZlzo+h3gaRzRUHSMIy7+2IXVbSOX0UOsT5B9FfGPhoZkz0hzeHur+K6BhJDfR6hPBmklVrse5AeOR0ksoo/Lsf55BJhHeKu47UFYcx8+kr78xWB9NgrJSo+RKCYK3Zyeen32rCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by MN0PR12MB6341.namprd12.prod.outlook.com (2603:10b6:208:3c2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.23; Fri, 4 Jul
+ 2025 07:26:14 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8901.018; Fri, 4 Jul 2025
+ 07:26:14 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Date: Fri, 04 Jul 2025 16:25:16 +0900
+Subject: [PATCH 15/18] gpu: nova-core: falcon: add distinct base address
+ for PFALCON2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-nova-regs-v1-15-f88d028781a4@nvidia.com>
+References: <20250704-nova-regs-v1-0-f88d028781a4@nvidia.com>
+In-Reply-To: <20250704-nova-regs-v1-0-f88d028781a4@nvidia.com>
+To: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, 
+ Beata Michalska <beata.michalska@arm.com>, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: TYCP286CA0282.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c9::9) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|MN0PR12MB6341:EE_
+X-MS-Office365-Filtering-Correlation-Id: fab95165-73ea-4b8b-9795-08ddbacc0f10
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OEtPQVJSVmw1UHROdHIrck9zNnFNTFMvLzFqbzVLK3ZlUWdIcTFpUWhEMmtF?=
+ =?utf-8?B?Qk9FUVUzM0FnQkhCOVVkcERZQ3ZzSzJRbUhPNkkrR0N3ZHBKem4wWEZzUUJ3?=
+ =?utf-8?B?Zms3c3BzMnVwTjdORXN1Sjdiek4veXMzZmhQQ0doZ0c4VXFjZjVYT1BQaTJU?=
+ =?utf-8?B?RjUxRExKMVpNR242cWxIcWdsMkJlaGZNakg5NGdEeVlHNHhjbUNVNGFnWmdW?=
+ =?utf-8?B?MWNIaGdFMW9Ud0lHaHptOXVScmZRajVEVGlHb0dWTmdTcURPVzFoeEc2Nml1?=
+ =?utf-8?B?ajU3cEIwNi9YZE4wVXE2Y2U4OURQVkthTmhYUnhtWFNuZXNmMW90bms3NHJ2?=
+ =?utf-8?B?Q3U0amJ5YnFCNXZsZ1hGcHkzKzQ5VkI2cGtITGVmVWhFQ1BDL3diRlAzVHJX?=
+ =?utf-8?B?NzkvWlJFNm16N1FtRGNWdFlaTkFQOUdzaDUyVThQMWZxdDhNMkRzYXVDR3hH?=
+ =?utf-8?B?MmhwT01rdEpBeHNvVmJqM3FIOFkvQ0VRRHAwNEcza2YrcG8ySHpDR1RQSEd3?=
+ =?utf-8?B?Z2dObEFTOGo3VnBkQ01EZ2JyZ2phOHgva0x4aDZiY2d2dkdDamVKRGRMQ2Nk?=
+ =?utf-8?B?RGQrbGFBcE9CNFY1U0N3Rk0zVStXVUlBRi9GditXa1RlUHI0K09ZVi9QSG4x?=
+ =?utf-8?B?ZEFYVGRnN0xkcUZaUUdxVG5HdENEcmFteTMrdVVBV2RGZS9WRkdBaXhOdXpn?=
+ =?utf-8?B?enNUbHdyNyttT3B3MXU5bG9MeVh2TWtoRm5aOE9lcC9TMmthMXF1emwwcUhj?=
+ =?utf-8?B?bERyTXVVeUhjL2tVSy9keDM2WDhWQTFrZlNWNkNJSWlySDRwMSt0WnRIRWNx?=
+ =?utf-8?B?ZENuZTJaOWUvMFNwR2o0UXRtUGhQWHVxWXppc25jVWhuaUFURElYeVk4bFM0?=
+ =?utf-8?B?ZFR5OWNmZldxdDFlUCtlczN5Rk91YUUwYmNWZGkvQjBXWGJXK0ZnbWxIUkRq?=
+ =?utf-8?B?U0R0R05jQloxb05VNEU0N3h2M3RNSklYQkt0alJjQm5uM045YUdZSDZYbEtt?=
+ =?utf-8?B?VENobm9EelZGcnh5dmxYLzA3Tzd2emt1algzZVhkWElSdlBkSm9aRWNjeHhC?=
+ =?utf-8?B?K1hSdVRKaHZjS2Z5Smx6UCtGVnladUFiYnRYbUhiL0hzdkliYkxvTTRKNFdW?=
+ =?utf-8?B?ZzJKMU1tK2lrRUp6RHdSeWpzUGxwTkRvcnZtdU9Xamw1Q09Lc0dIZGFQb25m?=
+ =?utf-8?B?QUV5ZEpQazhMb3JXK1g3L1Q1REd2UmlPV29EWnp0T2dVaElMQWZQTktkUEFX?=
+ =?utf-8?B?b3l6dUZXU0xaYVhDSThVY1pmM25GQytiUUF4VXhZR0pKazN3YktndWhscTA5?=
+ =?utf-8?B?RmlVN2JDVUlNbHFialUrczhYUlNyRkZLczRraDZORU9aS1FkSGUrc01FV05B?=
+ =?utf-8?B?ZURURUVYVFdNNnNCV0tQc3Vic1M0UzJVeUJ2bDc2cis4OE5nSUZlWUFOclEw?=
+ =?utf-8?B?dFNxcWJDdnVxVjl6OUhSU3UrcXAzRXlzbGJBeTV2eWZkY3hUWGhlRmx3aGpo?=
+ =?utf-8?B?N3NsdGFMZ1Z6bDN2elp1Ym4xUjJ6eHZXQ3c5dUcwKzJLY0VMdC9lMENlSDVS?=
+ =?utf-8?B?UkJxUURKQkxqL1ZKc21tSjlPZGNuTzk5Z0xKOXQ5UXU1dEsxQWgvcXpCL3U3?=
+ =?utf-8?B?WWRZUTVsYWc2WFUrOEk4TmZLRHJmSkRpUllTb0VBOTV3bnI5ODhiOU1HZDJX?=
+ =?utf-8?B?V0tyUU5IOHBTcjFYZ2ZkeXNuRzFpMGFYNHlhOURrY2wvRmJ3Wk40Q1BNamNv?=
+ =?utf-8?B?VDZxVzRhWklObCsvV0RJK254Y2Q4cmErbU9Kci9EemVlRWwxQWhwaGVSRStn?=
+ =?utf-8?B?Vkpaa1lpU291cnBEZWpYa1dJOE1WdlZHcmJTQVRyc2o3UEVkV1VHR3hUTVRB?=
+ =?utf-8?B?bEdlamdFZlRON1J4UGV2MTlqNkNzeTJWRVNTY0c1MHR0WGVaQWNXb1owN3ZE?=
+ =?utf-8?Q?K779otemohA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NHVsNHZEUHJHYm9iczdDdWcwYWtvVVhzOG5ZN2dNUWppbWVaZWZTL01TWTUy?=
+ =?utf-8?B?TzdiWU9penFjRUxZWFppYXk3d01EVXczQWVqYlN4Z0k5c0tBNjFOM3lqOHB6?=
+ =?utf-8?B?Z2t3alJBQ3VJRmd6d01saXl6enVETFJIZEpKdWorWEI2ckMvQkRvQklIVnVt?=
+ =?utf-8?B?eXVMd3l0OUxrUGJJdFFwZ0M5SVpueC9GZmlNMEV6ZFF0eW5yK1VVOXBBem5V?=
+ =?utf-8?B?YVJWNFByU2UzcENORGlUL2t6eUs0K0oyWkc5Y3RmZ3J1NmVrRG5UcFRIL3VR?=
+ =?utf-8?B?Y2ZhNXZYa2xZQkl1S1pNR0hEdExOeUxsNEwrK0ZlRWxZMEtjNlhqbVBLRDdw?=
+ =?utf-8?B?a1hxTCt5MVoySGxkNmhZTWZLanNzd3dqRlhlckxubUZsRWlyVnRmYkxpSExq?=
+ =?utf-8?B?cm1jTEw3dFBCR01CNHBMeTV4NHB3WVp2Z2hvVFc5WVNWVmlJNEMvTkxST0pz?=
+ =?utf-8?B?aHhscVZPR1JOc1FTWTJmMHRVK1gzbkJSYyt0dXR2ZnNHa3JaeXpJRWRXWFp4?=
+ =?utf-8?B?MGlmdnl0UHJPSlBXSkp1Z1IreVFJUDZmSzN6YUQ3VElicXRNYzdRYjRyNG9s?=
+ =?utf-8?B?TFVoaTRDZzR6UHRFNUEyTVNmWHlrdU14RHYzTXRXbWoxREVpWnpvSDBTSFgy?=
+ =?utf-8?B?dnRFY2czNXVoWHZRWmxZbll6cWxibUFzSjE3VCthYkVrSVZBUDZCUVdsU2Na?=
+ =?utf-8?B?bGJWT2ZnOEZac3BIRmNDMnJ0aEQ1MTJQNzNWajBjSzZIeW5OL3JzWnZxZjZ4?=
+ =?utf-8?B?NTRpUDRoWGJiTE5TUXc2dFFDb1F1cGlVcy9uc1B6ZFZMVHNWa21QQUp3TU9C?=
+ =?utf-8?B?MVY1cW93eVYramRkNnlVb3BDSVhyNURiTlMxOWd5ODdxUktjanlub291K1pG?=
+ =?utf-8?B?eDMyWXRkM0lUVDdKSVROcGhnNjNwYXdkUVlxV0VvY1lrRGtrZStXZ3lNUUIx?=
+ =?utf-8?B?QWVzbkZxZU5NUVN2ZG9QMFQ2RGpPQjJ1b1docGtBMFZReDU1dU1CQ1dVdU9p?=
+ =?utf-8?B?ZDd6UlkwUzRVL0NhMnJYS0xkMG9DUTgvQitlanVyUWR4Z0xzOHJud05zMTRB?=
+ =?utf-8?B?cHVHOEFUQUg4YUN3bjZPYUhQZngwbVNRMkhGbjhSWk5oczJaVm96ejlmUTVi?=
+ =?utf-8?B?UTNSRVM4dmlJV3YwQlNwbmNiVkIzbVpBZXNIZFVJeng1bXVXd0NBK2F3QzZh?=
+ =?utf-8?B?UDF3KzZZbWNpN2dRSm9na2dqVVFXdm5URlJnb2xzQ1JFVTRWa1hTOW1ka2ox?=
+ =?utf-8?B?SU8vMkFiSU0xNTFFM3Qvcm5oQlRxTGtnQUUwaUI5dHg4VklSQ1ViRUIvenBr?=
+ =?utf-8?B?U3BCT0ZYN2pwZ093T0h6MnVtWFdOQVlOcnYwWTlhdm4xQTI1Q2t1UGl4dlpp?=
+ =?utf-8?B?WlBubUFhdlNVb0crT2V6N0Z2V3BvSlFLelo5a3ZMQWdwd3BEV0NNY3dFQVMw?=
+ =?utf-8?B?aXg4WFhkOVlpOG80OFhCNkpib0VudURwUUpHaGtiWWNES1o4WkZXdGhlTkl6?=
+ =?utf-8?B?bytWcXI1bytRdkNhRlU0T2ZnSXlkV2pDVEtYbXVhdTNoNEVEUENySGJieDJK?=
+ =?utf-8?B?TmM0cDVTajczQmRyV1d6aS9Yd0JYTnlUeC9xWkxac1lZSjcxU3ZldHhWditr?=
+ =?utf-8?B?QmFJWlA3MUhEUEhJQ0xQb2F3emdhUkNGWm8wVGJrZmp5Y1FONW1CL2l6RC8w?=
+ =?utf-8?B?U21Jc0xLd0ZSNVN2ZWxmd2JnNkR3SDBpMW1SZjY0ZHV6RmhabHdCckpNRGxC?=
+ =?utf-8?B?bk5ZaFhCK3NLdFJBV1VrSkVpVG5acWlpemt0Q1JpYTk4U0wybEFFS2FreWUy?=
+ =?utf-8?B?TGY0Q2JnK1FXZldpS2x6UUpyRW95VFRlVUtpWU9iSEt1N0V2QkVlVUtRWUd4?=
+ =?utf-8?B?d25YZC90YkNMN2YxYW9YcWNMMWdlL0MzbjdMS2RYY1l3Z0RkNnpTZ2RqMkhu?=
+ =?utf-8?B?NVNucUJod0NUL2hUdklpNzRSd3ZzbXM1QXFBWGRoZXpqU2hlVUpRR3p1S2xt?=
+ =?utf-8?B?UmVMRTIrSUxRdVdJR2Faazk1cTlVaWNZb0ExcElFYmZZMGZ4Ym9QVUhZUEJO?=
+ =?utf-8?B?cnBJQ00xNDZqZ1ZwblQ3aFFSTkxzS3VyWnh4RTlncWhDb3J0bnRJc2FnOCs0?=
+ =?utf-8?B?ZWV6a3RRREtsVjlBT3BOQ0FLWWV2K2ZNcjlCTlUvVld4azVoanoxc0o4MGlM?=
+ =?utf-8?Q?qiVphBr8nGl4MN0vmK0bz/FxeJMCCBJ3YcwYrzGo4gvG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fab95165-73ea-4b8b-9795-08ddbacc0f10
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 07:26:14.6606
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mZcxWme3ikC37CcVKiij4yCwKU44nSR+27wf25oHyqrhzO4JyY7E0T8f8Lj0WQOgdAVff/omA70PC8SFvicvVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6341
 
-Replace the deprecated strncpy() with memtostr_pad(). This also avoids
-the need for separate zeroing using memset(). Mark sb_fname buffer with
-__nonstring as its size is XFSLABEL_MAX and so no terminating NULL for
-sb_fname.
+Falcon engines have two distinct register bases: `PFALCON` and
+`PFALCON2`. So far we assumed that `PFALCON2` was located at `PFALCON +
+0x1000` because that is the case of most engines, but there are
+exceptions (NVDEC uses `0x1c00`).
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202506300953.8b18c4e0-lkp@intel.com
+Fix this shortcoming by leveraging the redesigned relative registers
+definitions to assign a distinct `PFalcon2Base` base address to each
+falcon engine.
+
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- fs/xfs/libxfs/xfs_format.h | 2 +-
- fs/xfs/xfs_ioctl.c         | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/nova-core/falcon.rs      |  7 ++++++-
+ drivers/gpu/nova-core/falcon/gsp.rs  |  6 +++++-
+ drivers/gpu/nova-core/falcon/sec2.rs |  6 +++++-
+ drivers/gpu/nova-core/regs.rs        | 12 +++++++-----
+ 4 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 9566a7623365..779dac59b1f3 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -112,7 +112,7 @@ typedef struct xfs_sb {
- 	uint16_t	sb_sectsize;	/* volume sector size, bytes */
- 	uint16_t	sb_inodesize;	/* inode size, bytes */
- 	uint16_t	sb_inopblock;	/* inodes per block */
--	char		sb_fname[XFSLABEL_MAX]; /* file system name */
-+	char		sb_fname[XFSLABEL_MAX] __nonstring; /* file system name */
- 	uint8_t		sb_blocklog;	/* log2 of sb_blocksize */
- 	uint8_t		sb_sectlog;	/* log2 of sb_sectsize */
- 	uint8_t		sb_inodelog;	/* log2 of sb_inodesize */
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d250f7f74e3b..c3e8c5c1084f 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -990,9 +990,8 @@ xfs_ioc_getlabel(
- 	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
+diff --git a/drivers/gpu/nova-core/falcon.rs b/drivers/gpu/nova-core/falcon.rs
+index 66400d07d186938735f705c116d7c7df5fb77fca..23a4ff591c8db8d4600ec43dfaa42233cbf65c0e 100644
+--- a/drivers/gpu/nova-core/falcon.rs
++++ b/drivers/gpu/nova-core/falcon.rs
+@@ -263,11 +263,16 @@ fn from(value: bool) -> Self {
+ /// Type used to represent the `PFALCON` registers address base for a given falcon engine.
+ pub(crate) struct PFalconBase(());
  
- 	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
--	memset(label, 0, sizeof(label));
- 	spin_lock(&mp->m_sb_lock);
--	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-+	memtostr_pad(label, sbp->sb_fname);
- 	spin_unlock(&mp->m_sb_lock);
++/// Type used to represent the `PFALCON2` registers address base for a given falcon engine.
++pub(crate) struct PFalcon2Base(());
++
+ /// Trait defining the parameters of a given Falcon engine.
+ ///
+ /// Each engine provides one base for `PFALCON` and `PFALCON2` registers. The `ID` constant is used
+ /// to identify a given Falcon instance with register I/O methods.
+-pub(crate) trait FalconEngine: Sync + RegisterBase<PFalconBase> + Sized {
++pub(crate) trait FalconEngine:
++    Sync + RegisterBase<PFalconBase> + RegisterBase<PFalcon2Base> + Sized
++{
+     /// Singleton of the engine, used to identify it with register I/O methods.
+     const ID: Self;
+ }
+diff --git a/drivers/gpu/nova-core/falcon/gsp.rs b/drivers/gpu/nova-core/falcon/gsp.rs
+index 0db9f94036a6a7ced5a461aec2cff2ce246a5e0e..f17599cb49fa1e5077a554dc14b3715aa62a4ebd 100644
+--- a/drivers/gpu/nova-core/falcon/gsp.rs
++++ b/drivers/gpu/nova-core/falcon/gsp.rs
+@@ -2,7 +2,7 @@
  
- 	if (copy_to_user(user_label, label, sizeof(label)))
+ use crate::{
+     driver::Bar0,
+-    falcon::{Falcon, FalconEngine, PFalconBase},
++    falcon::{Falcon, FalconEngine, PFalcon2Base, PFalconBase},
+     regs::{self, macros::RegisterBase},
+ };
+ 
+@@ -13,6 +13,10 @@ impl RegisterBase<PFalconBase> for Gsp {
+     const BASE: usize = 0x00110000;
+ }
+ 
++impl RegisterBase<PFalcon2Base> for Gsp {
++    const BASE: usize = 0x00111000;
++}
++
+ impl FalconEngine for Gsp {
+     const ID: Self = Gsp(());
+ }
+diff --git a/drivers/gpu/nova-core/falcon/sec2.rs b/drivers/gpu/nova-core/falcon/sec2.rs
+index dbc486a712ffce30efa3a4264b0757974962302e..815786c8480db6cb74541d7ab574112baeb816fe 100644
+--- a/drivers/gpu/nova-core/falcon/sec2.rs
++++ b/drivers/gpu/nova-core/falcon/sec2.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-use crate::falcon::{FalconEngine, PFalconBase};
++use crate::falcon::{FalconEngine, PFalcon2Base, PFalconBase};
+ use crate::regs::macros::RegisterBase;
+ 
+ /// Type specifying the `Sec2` falcon engine. Cannot be instantiated.
+@@ -10,6 +10,10 @@ impl RegisterBase<PFalconBase> for Sec2 {
+     const BASE: usize = 0x00840000;
+ }
+ 
++impl RegisterBase<PFalcon2Base> for Sec2 {
++    const BASE: usize = 0x00841000;
++}
++
+ impl FalconEngine for Sec2 {
+     const ID: Self = Sec2(());
+ }
+diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+index 4e047fc4947b6dc09dbd34e26eeda1ff14dff4ad..e6382c116adf699ab24de097c15ddca08017b36d 100644
+--- a/drivers/gpu/nova-core/regs.rs
++++ b/drivers/gpu/nova-core/regs.rs
+@@ -9,7 +9,7 @@
+ 
+ use crate::falcon::{
+     DmaTrfCmdSize, FalconCoreRev, FalconCoreRevSubversion, FalconFbifMemType, FalconFbifTarget,
+-    FalconModSelAlgo, FalconSecurityModel, PFalconBase, PeregrineCoreSelect,
++    FalconModSelAlgo, FalconSecurityModel, PFalcon2Base, PFalconBase, PeregrineCoreSelect,
+ };
+ use crate::gpu::{Architecture, Chipset};
+ use kernel::prelude::*;
+@@ -282,20 +282,22 @@ pub(crate) fn mem_scrubbing_done(self) -> bool {
+     7:7     allow_phys_no_ctx as bool;
+ });
+ 
+-register!(NV_PFALCON2_FALCON_MOD_SEL @ PFalconBase[0x00001180] {
++/* PFALCON2 */
++
++register!(NV_PFALCON2_FALCON_MOD_SEL @ PFalcon2Base[0x00000180] {
+     7:0     algo as u8 ?=> FalconModSelAlgo;
+ });
+ 
+-register!(NV_PFALCON2_FALCON_BROM_CURR_UCODE_ID @ PFalconBase[0x00001198] {
++register!(NV_PFALCON2_FALCON_BROM_CURR_UCODE_ID @ PFalcon2Base[0x00000198] {
+     7:0    ucode_id as u8;
+ });
+ 
+-register!(NV_PFALCON2_FALCON_BROM_ENGIDMASK @ PFalconBase[0x0000119c] {
++register!(NV_PFALCON2_FALCON_BROM_ENGIDMASK @ PFalcon2Base[0x0000019c] {
+     31:0    value as u32;
+ });
+ 
+ // TODO[REGA]: this is an array of registers.
+-register!(NV_PFALCON2_FALCON_BROM_PARAADDR @ PFalconBase[0x00001210] {
++register!(NV_PFALCON2_FALCON_BROM_PARAADDR @ PFalcon2Base[0x00000210] {
+     31:0    value as u32;
+ });
+ 
+
 -- 
-2.49.0
+2.50.0
 
