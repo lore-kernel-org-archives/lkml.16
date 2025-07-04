@@ -1,123 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F85919C54B;
-	Fri,  4 Jul 2025 15:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691CA42A83;
+	Fri,  4 Jul 2025 15:14:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642035; cv=none; b=TCjFBIExhd9wwyG+gXSH55yJXZE/szaG7aems43uox+PydILuD0QKuo4ND5SfyTjkhNx1iOhOGoLL6K4XhtxlxPd/mDV0+nB49O4Aqgeo3k+jZv+As5J3ffN1yXOxG2G/Ym56fHEB16uaPdKudkyOlemZncdH1uwWXr5JWGqWZ4=
+	t=1751642067; cv=none; b=Fs7hCh3JQWfipAhQ/Y8EbTz0cE0ZctxUgqIHRekuCZzr9UKCIZjAs50TIzN5bZrGmx4Ncip4blUqPS8TkWUw3RhhfEYb2H/XmPQowupeE+BFgbAGqMyObwiAHLO7CEwOGQduFPk8SjfZVcZsn9qOisMPVFEeRtVJRliYt8/MZV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642035; c=relaxed/simple;
-	bh=dcH2LMCzBXT7aa0Qbuio3lOIk3gZyXtMY3q3240QCzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IfkUXawQLNBpdL/Nq5W7vU2azUowgAXERgIkp6DSyjhUCFMWeFdBgm84/M2Xob0krHzfXpWlvVfno1lASahOVru7/Yt5RCrK0wlW55HMQvOmB+doLkscfcnvkakYHAzDIhGZ3ihBCRRCSiltm7/SNGYaEmw97BtYB1D6kV5V3e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUn3IriD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751642067; c=relaxed/simple;
+	bh=TBHQcyYRpGcdVOEQVFj80NwCERIwfVHVzoRx9Sa/NDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PxIYUfRV71XrpXOABWQO5SFOsolM4IJpP4f3LvFI52KHsvwSR23jYHElkxLjWE2oSxr2GS+Ord1Cw385sUATrygFXN78vZY+0PNE8t5VQrhXFaXcR0MdXZc4LjBhbGhyM7WevddpCuw4D76/XZELmuyQWAP+zfl6ggsQuSFGeRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mt2BaqYD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUn3IriD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C9FC4CEE3;
-	Fri,  4 Jul 2025 15:13:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mt2BaqYD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28AEC4CEE3;
+	Fri,  4 Jul 2025 15:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751642035;
-	bh=dcH2LMCzBXT7aa0Qbuio3lOIk3gZyXtMY3q3240QCzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NUn3IriDxtCzaJN8q0gbLBJN3x+VvQCkcbaPXHQL5v1qfAxadfGhKwpWY9EwrKRvR
-	 Zwo677Fivdw5E19lXfVtHnBnZ5CDQEua68FJ13HQqaHnABGkq2At8HbV9njJxRrxos
-	 X/3KAHvZL5ziKJX0Q0104BaGuCJXAvhSv0WHhhL98X2mL83GCGx5ls1ZvtqvgHof6X
-	 ajruNjJ3JN+NGn5KPa6cmXGVl11J2XHIYIgvLeNbw+BIF2Pn2lj+j78BEcrz9R4gfp
-	 XoPWNVGTeKC1jh4DC3xjRlr11Nw2a+F7EQtsdvNesF3FlE5v8G0Jvuhk8B39zSmCdS
-	 ZRnzx1HzXd5DQ==
-Date: Fri, 4 Jul 2025 18:13:51 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Ge Yang <yangge1116@126.com>
-Cc: ardb@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-	ilias.apalodimas@linaro.org, jgg@ziepe.ca,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, liuzixing@hygon.cn
-Subject: Re: [PATCH] efi/tpm: Fix the issue where the CC platforms event log
- header can't be correctly identified
-Message-ID: <aGfvr2pBau6z9GLC@kernel.org>
-References: <1751510317-12152-1-git-send-email-yangge1116@126.com>
- <aGczaEkhPuOqhRUv@kernel.org>
- <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
+	s=k20201202; t=1751642067;
+	bh=TBHQcyYRpGcdVOEQVFj80NwCERIwfVHVzoRx9Sa/NDE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=mt2BaqYDaR3+63mZfTYt27Ehr2qLIjlF/QkOAehNlUsKorB7zAvOWMp5+RIaFLMlN
+	 bBBKSC8QgC8Fy3PnxZkGIfUVXKEgNEqpYSyr/Uie3RpqX2ovQtkOJsP9EmNgWW2gYd
+	 rhmqQ2rH78Ajq/64rsCRqqyBTXv/Hz6hY3l6r+4yaLLcXSNH5txPK32pouE+BZvNLE
+	 17vYa/cxEZKM3hQ6F7xQDJMLzpqt6/Ke90R8u+WTTMpOFOQjv/+ljf/mtLVHB0+Qe7
+	 bus6QiWvFjtdUOZqMy26khCjQIhesOSq5GfdamEt2tcBml78D2Mjd/YQXfwNCsZ7U+
+	 XIVOIe8OcShKA==
+Message-ID: <1196da81-ecd7-487c-8afc-e0d3660fa158@kernel.org>
+Date: Fri, 4 Jul 2025 17:14:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: imu: smi330: Add binding
+To: Jianping.Shen@de.bosch.com, jic23@kernel.org, lars@metafoo.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ dima.fedrau@gmail.com, marcelo.schmitt1@gmail.com,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Christian.Lorenz3@de.bosch.com,
+ Ulrike.Frauendorf@de.bosch.com, Kai.Dolde@de.bosch.com
+References: <20250703153823.806073-1-Jianping.Shen@de.bosch.com>
+ <20250703153823.806073-2-Jianping.Shen@de.bosch.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250703153823.806073-2-Jianping.Shen@de.bosch.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 10:53:54AM +0800, Ge Yang wrote:
+On 03/07/2025 17:38, Jianping.Shen@de.bosch.com wrote:
+> From: Jianping Shen <Jianping.Shen@de.bosch.com>
 > 
+> Add devicetree binding for Bosch imu smi330.
+> The smi330 is a combined three axis angular rate and
+> three axis acceleration sensor module.
 > 
-> 在 2025/7/4 9:50, Jarkko Sakkinen 写道:
-> > On Thu, Jul 03, 2025 at 10:38:37AM +0800, yangge1116@126.com wrote:
-> > > From: Ge Yang <yangge1116@126.com>
-> > > 
-> > > Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
-> > > for CC platforms") reuses TPM2 support code for the CC platforms, when
-> > > launching a TDX virtual machine with coco measurement enabled, the
-> > > following error log is generated:
-> > > 
-> > > [Firmware Bug]: Failed to parse event in TPM Final Events Log
-> > > 
-> > > Call Trace:
-> > > efi_config_parse_tables()
-> > >    efi_tpm_eventlog_init()
-> > >      tpm2_calc_event_log_size()
-> > >        __calc_tpm2_event_size()
-> > > 
-> > > The pcr_idx value in the Intel TDX log header is 1, causing the
-> > > function __calc_tpm2_event_size() to fail to recognize the log header,
-> > > ultimately leading to the "Failed to parse event in TPM Final Events
-> > > Log" error.
-> > > 
-> > > According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
-> > > MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
-> > > event log header, the check for a pcr_idx value of 0 has been removed
-> > > here, and it appears that this will not affect other functionalities.
-> > 
-> > I'm not familiar with the original change but with a quick check it did
-> > not change __calc_tpm2_event_size(). Your change is changing semantics
-> > to two types of callers:
-> > 
-> > 1. Those that caused the bug.
-> > 2. Those that nothing to do with this bug.
-> > 
-> > I'm not seeing anything explaining that your change is guaranteed not to
-> > have any consequences to "innocent" callers, which have no relation to
-> > the bug.
-> > 
-> 
-> Thank you for your response.
-> 
-> According to Section 10.2.1, Table 6 (TCG_PCClientPCREvent Structure) in the
-> TCG PC Client Platform Firmware Profile Specification, determining whether
-> an event is an event log header does not require checking the pcrIndex
-> field. The identification can be made based on other fields alone.
-> Therefore, removing the pcrIndex check here is considered safe
-> for "innocent" callers.
+> Signed-off-by: Jianping Shen <Jianping.Shen@de.bosch.com>
+<form letter>
+This is a friendly reminder during the review process.
 
-Thanks for digging that out. Can you add something to the commit
-message? That spec is common knowledge if you are "into the topic"
-in the first palace so something along the lines of this would be
-perfectly fine:
+It looks like you received a tag and forgot to add it.
 
-"The check can be safely removed, as ccording to table 6 at section
-10.2.1 of TCG PC client specification the index field does not require
-fixing the PCR index to zero."
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
 
-But then: we still have that constraint there and we cannot predict the
-side-effects of removing a constraint, even if it is incorrectly defined
-constraint. For comparison, it's much less risky situation when adding
-additional constraints, as possible side-effects in the worst case
-scenarios can be even theoretically much lighter than in the opposite
-situation.
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
 
-For this reasons it would be perhaps better to limit the fix for the
-CC only, and not change the semantics across the board.
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
 
-BR, Jarkko
+Best regards,
+Krzysztof
