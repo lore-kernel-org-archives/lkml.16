@@ -1,147 +1,118 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982EF6A8D2;
-	Fri,  4 Jul 2025 18:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE919F48D;
+	Fri,  4 Jul 2025 18:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751654028; cv=none; b=sKSHICoKMXwF6QchZsjWq/R/kq9HexiHixNgQcQ5qhBKQ56nPMW7NE9OMWCluIaZ4Jfv5Cou2ARHccjPjmGuAvhZal53JRG/w9I+DRZhDp8X/XZx1H+laifUkZcNoMLqYZySZcRUjA0od0OKY0qcv8BEV1zvWa2+XGhwoZsmnv8=
+	t=1751654165; cv=none; b=ZwmNF+/+ebwOWE6BxSGIgt21F3Vg75v6Rq1bFD+Qu6YdBth1ivYp86nX6zTFLy1vFKhRSa8AyfiG8AAoBOLYCBr68GTZ0AqZhxGq5p6YwTd5b5kkfh8tTTK4mnMZbPzwOzR1+1tYUJpITLbVItzGdcADPYUhgpw5vfEH3OrMJ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751654028; c=relaxed/simple;
-	bh=vQhQdHr2NuWlF2W+dHvSx4F+3fByHijwc6wElC5GA44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nB5sfSG0BCJ1mat6JV5la1yhcBY0rFOy/zOcWLCFx+IdP4MzFbIEtQwUQ12kHFdBZIzZG4M18GX7HLU1r6EDJokjsVFFFP7x/daQBgL7xF/fxx4x126J1itKtoHZDHyyAkNZTVRQz8lAq0ONXizm6CjoFq1lcJT38XOYSk16694=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2piz3vO2; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751654165; c=relaxed/simple;
+	bh=Xeg/JPm6n6HC2qxgyIIg/Hz6baV2O8fYoHgw0N8NS2Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aUJZmTfysU3Qe/cTETSRvvVTnsbJn6aGUhmCGcA5mXNZEgh9ByE18TPknZiiSgB5zC6TB4owBoPKYfyIuSYhIgF1s74i6DliTLh03UiLXSIXKnY+zKZBwWxOOp8No3QQIw/lcTv0QAXFo4D/eO24aofhOd1nFkvtFoRIfkUaEHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2fXZdPp; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2piz3vO2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=bycTEzS3KLjwL/YYFrn1fCzuXg0ug+wcTwmO/hQuwXY=; b=2piz3vO2IngY5GxzURTUkzmr81
-	/hP0CWqCWTEKtU/OmNAv231Dm6ikse0SHXU4mkaO272CdaJ0HDX7SR1MDCcNOjzIv314N0SGheQE8
-	xKHiG5Co3KZopd2qy3tHpP/VVtx3uTRRmLuYl9WQd43sGO0mObHEZK3NsXSsrQJRF8qA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXlDm-000Hc3-Bx; Fri, 04 Jul 2025 20:33:14 +0200
-Date: Fri, 4 Jul 2025 20:33:14 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dong Yibo <dong100@mucse.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/15] net: rnpgbe: Add download firmware for n210 chip
-Message-ID: <37ede55f-613b-481f-a8d9-43ee1414849a@lunn.ch>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-6-dong100@mucse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2fXZdPp"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-40a4de1753fso820975b6e.1;
+        Fri, 04 Jul 2025 11:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751654163; x=1752258963; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xeg/JPm6n6HC2qxgyIIg/Hz6baV2O8fYoHgw0N8NS2Q=;
+        b=T2fXZdPpyxrAm4lTSqd2NT5ftcKTL3VgiuFHLltLkGZ65ra9lrobWLxLA30BOsnVbl
+         jf3bgH8lliN7VbstPMGNnrw3x2hRnBVjOhDb8WJTauqrTN+s6VKNe0bGWB7yDPl8NwX/
+         SK7JhlFPz/C2y7kQ1Drf2nAIctQWBrcsRIl4y+zgbSRg3nfBOTvOyFSZFCsjmtlocxdR
+         CXIjbaPxASfg+etK/tLplu1QJzJsqBB6iMJ4H0MKX7XYOkFeHGPjZ99MI5tawXhNiKmh
+         N61oIOtrbvUJggzA6awUmLvYn+pCWTi4rCUZMD8uj/6DDyPdonwLpsLfD3m6L8ABsJ04
+         ElTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751654163; x=1752258963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xeg/JPm6n6HC2qxgyIIg/Hz6baV2O8fYoHgw0N8NS2Q=;
+        b=uQK16GLxsdQQ17mW2qE5Z2AHwtH7kHsv+FhxLwAFdIMegVk+d7u1qLm2wYD5f49oO6
+         /iD9E0/mjMZQil+fBN8jmRoMlkRbvRk1s9o6XobrJGfBNpPFPY5sC4S7vCpSnujnPVVw
+         rqtUUZo/9Fjoi1C3AL3Rvj/b5puXgak1iV7T3hy2P/enyLsu7joAInGcIXFmr4Ot3hRc
+         RiwppPBlRLfV2zLeUOA3iphXLDcRnYydpCMntJMcXobxCfqXb8ES9g7d9BxHz3/TTOvP
+         8Qf7LpmjINtRo3dKBs5HN+qy2Qqmp7l438V9/uN1QLRHVYukLsKmbLEidJ1VdEO7p8b1
+         Mcow==
+X-Forwarded-Encrypted: i=1; AJvYcCU0RL4X4B59JSNQnlyJjf18CuD3uxhwTOk2WpY64C6QmnT+YY4DUNL0bFNZrYa+XV92IgRA2ZRh7N+t@vger.kernel.org, AJvYcCXWqenZXsxtLcyJoEVVWMlTebbLvjZgaaA7r8K88CaONB9f0Knn6ktHgqtnteNJA/YNxOS7XgrKQ/jXpls4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3NxdksOF0Sfn3fDR3eLQXc8p1chsnRHj6ENqOdXsZZJccftEH
+	mq/lyzGJAnPd/8oKjFg8UHB94avJBb+lAuk0vpTxJX6fQJElnNSYwnGhWaHKbDKcCql7+jEJ1TM
+	EkOfzs+4C3py4HArgLUjUPG36sPZN8Dr0xw==
+X-Gm-Gg: ASbGncvkC1JymjB7QVcddfmXzk9O/DzMDkcwdTAcIWKHhnjLag0DNd6MZJfZm2WSN6x
+	+kWdAno5NUK9ThBAb0gBYf+dO7YYV8ne/P9hEG4X+/Hbk/t0P0k7dZGONX8pR3GY82RjfMgsbY0
+	NhH7ubNdE1FOepFj+z/HWLxwT4lh7b1UMigk7G4OR1WT0d
+X-Google-Smtp-Source: AGHT+IFbA6BEdKGEcMG1hPfdYdlou35N5PiGkJ6gDYA+8ptFPbpOHXlaxK1xR2BlaFABc43Ybr4ALWavsaG7bbVz6Nc=
+X-Received: by 2002:a05:6808:1188:b0:40b:9527:8e9b with SMTP id
+ 5614622812f47-40d029f52d9mr3054856b6e.7.1751654162680; Fri, 04 Jul 2025
+ 11:36:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703014859.210110-6-dong100@mucse.com>
+References: <20250609031627.1605851-1-peter.chen@cixtech.com>
+ <20250609031627.1605851-6-peter.chen@cixtech.com> <64f39e94-7e88-49d0-8455-cd77d61d4fe2@app.fastmail.com>
+In-Reply-To: <64f39e94-7e88-49d0-8455-cd77d61d4fe2@app.fastmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Fri, 4 Jul 2025 13:35:51 -0500
+X-Gm-Features: Ac12FXyLydZrRTipZV1GpQ3LNzUnb0dIxPUYlGRWR5QEyZ7_13BUSLAzEe2C5Ro
+Message-ID: <CABb+yY1pzut-A9Xf117AoGMze2OevWKYrH5NtWBGFBhAMZky+A@mail.gmail.com>
+Subject: Re: [PATCH v9 5/9] mailbox: add CIX mailbox driver
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Chen <peter.chen@cixtech.com>, Rob Herring <robh@kernel.org>, krzk+dt@kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	cix-kernel-upstream@cixtech.com, Marc Zyngier <maz@kernel.org>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Kajetan Puchalski <kajetan.puchalski@arm.com>, 
+	Enric Balletbo <eballetb@redhat.com>, Guomin Chen <Guomin.Chen@cixtech.com>, 
+	Gary Yang <gary.yang@cixtech.com>, Lihua Liu <Lihua.Liu@cixtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->  static int init_firmware_for_n210(struct mucse_hw *hw)
->  {
-> -	return 0;
-> +	char *filename = "n210_driver_update.bin";
-> +	const struct firmware *fw;
-> +	struct pci_dev *pdev = hw->pdev;
-> +	int rc = 0;
-> +	int err = 0;
-> +	struct mucse *mucse = (struct mucse *)hw->back;
-> +
-> +	rc = request_firmware(&fw, filename, &pdev->dev);
-> +
-> +	if (rc != 0) {
-> +		dev_err(&pdev->dev, "requesting firmware file failed\n");
-> +		return rc;
-> +	}
-> +
-> +	if (rnpgbe_check_fw_from_flash(hw, fw->data)) {
-> +		dev_info(&pdev->dev, "firmware type error\n");
+On Fri, Jul 4, 2025 at 11:05=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Mon, Jun 9, 2025, at 05:16, Peter Chen wrote:
+> > From: Guomin Chen <Guomin.Chen@cixtech.com>
+> >
+> > The CIX mailbox controller, used in the Cix SoCs, like sky1.
+> > facilitates message transmission between multiple processors
+> > within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
+> > and others.
+> >
+> > Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> > Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+> > Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> > Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
+> > Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+>
+> This is the only driver holding up the merge of the CIX
+> platform, so I had a closer look myself.
+>
+Sorry I wasn't made aware of this. Also I normally let the drivers
+roast until second half
+hoping other platform folks find issues - I have reduced imposing my
+opinions on platform
+specific code because it is usually met with some sledge-hammer requirement=
+.
 
-Why dev_info()? If this is an error then you should use dev_err().
+>
+> The one thing that stuck out to me is the design of
+> having multiple types of mailbox in one driver, which
+> feels out of scope for a simple mailbox.
+>
+Yes, if not all modes are used currently, maybe drop unused ones.
 
-> +	dev_info(&pdev->dev, "init firmware successfully.");
-> +	dev_info(&pdev->dev, "Please reboot.");
+I will review the rest separately.
 
-Don't spam the lock with status messages.
-
-Reboot? Humm, maybe this should be devlink flash command.
-
-request_firmware() is normally used for download into SRAM which is
-then used immediately. If you need to reboot the machine, devlink is
-more appropriate.
-
-> +static inline void mucse_sfc_command(u8 __iomem *hw_addr, u32 cmd)
-> +{
-> +	iowrite32(cmd, (hw_addr + 0x8));
-> +	iowrite32(1, (hw_addr + 0x0));
-> +	while (ioread32(hw_addr) != 0)
-> +		;
-
-
-Never do endless loops waiting for hardware. It might never give what
-you want, and there is no escape.
-
-> +static int32_t mucse_sfc_flash_wait_idle(u8 __iomem *hw_addr)
-> +{
-> +	int time = 0;
-> +	int ret = HAL_OK;
-> +
-> +	iowrite32(CMD_CYCLE(8), (hw_addr + 0x10));
-> +	iowrite32(RD_DATA_CYCLE(8), (hw_addr + 0x14));
-> +
-> +	while (1) {
-> +		mucse_sfc_command(hw_addr, CMD_READ_STATUS);
-> +		if ((ioread32(hw_addr + 0x4) & 0x1) == 0)
-> +			break;
-> +		time++;
-> +		if (time > 1000)
-> +			ret = HAL_FAIL;
-> +	}
-
-iopoll.h 
-
-> +static int mucse_sfc_flash_erase_sector(u8 __iomem *hw_addr,
-> +					u32 address)
-> +{
-> +	int ret = HAL_OK;
-> +
-> +	if (address >= RSP_FLASH_HIGH_16M_OFFSET)
-> +		return HAL_EINVAL;
-
-Use linux error codes, EINVAL.
-
-> +
-> +	if (address % 4096)
-> +		return HAL_EINVAL;
-
-EINVAL
-
-> +
-> +	mucse_sfc_flash_write_enable(hw_addr);
-> +
-> +	iowrite32((CMD_CYCLE(8) | ADDR_CYCLE(24)), (hw_addr + 0x10));
-> +	iowrite32((RD_DATA_CYCLE(0) | WR_DATA_CYCLE(0)), (hw_addr + 0x14));
-> +	iowrite32(SFCADDR(address), (hw_addr + 0xc));
-> +	mucse_sfc_command(hw_addr, CMD_SECTOR_ERASE);
-> +	if (mucse_sfc_flash_wait_idle(hw_addr)) {
-> +		ret = HAL_FAIL;
-> +		goto failed;
-
-mucse_sfc_flash_wait_idle() should return -ETIMEDOUT, so return that.
-
-	Andrew
+Thanks.
