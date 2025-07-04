@@ -1,51 +1,51 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459927263A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3111DDA34
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 05:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751606439; cv=none; b=oRto+t9MJ0DeSFEV4ybTzryb0Th47UiK+EoYwNWH55pHCwl828KZjQrh/Ti6UQXxgP3VQ4N2E3pZZSeEiVIU2eYETTLvFvCKwFK2aZBo4SyyB9+n1N+mcObkThGWGM/UvPnpHpd93qiVO1fV5tUrzBsKEnUPzsteOd0s8wdwuqg=
+	t=1751606440; cv=none; b=eJvh7mNxoe3tnd5RUCd93SbB2AjV6L5h+qtMxDuwlGi4RpCFHFN0V/SXnaOgTmEpJqJhavmwp+qUfnKCly96vjfZiaJJ3X3mA8hZAqxDdXaYozP7ChWLTmMc+sklOqCNCC5xQjPO5qnNmkSO+/4kK2woPkKXhvrlb/Qo8yuC0ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751606439; c=relaxed/simple;
-	bh=0pOsgtsTo4ckHDpTYcuNPhkYno5xKl2ahM4BAGNhQcY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IUFcsVnzGVLf0ioc93UQ5Em7TnwXtOOScdcqsw9dbW1h/4yZIhg0BW9llc3p/9tLbzcx9S8Zfb/5RD1iDCJwoEkwejQTK8otVSy4VIY0bZMexHuwJzNZzHLFz+JKtaSN0Ck6DT/R7RGjR4AGrgfUQpWqlNtWPASTh0ghcbZqu0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+	s=arc-20240116; t=1751606440; c=relaxed/simple;
+	bh=C0HL7rXhTPzkfX1xuF+FUHrAJ2KFyKuHkopqsiYOV0Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=felyw2g6GL2EJ9GaK8jrvdUN+yP4hT4VW2GBsBCGIm6eV1sA6G+ziEa0Bw3bO/B0mwv1RkJsGojTutgGyFg13tdMqyncs/EJr6bIiZ31ZbCB/Fj6iBRvuf4dPBifO5+pnEWhIGhxsbklnsJlrXYLOa9/ozknWgiJki160z3Gk5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86a5def8869so137385839f.0
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-8730ca8143eso148412839f.0
         for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 22:20:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1751606437; x=1752211237;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=18/sKOicE2f7Ggx1undsXQNvrnSH762Hho/UUhpZCcA=;
-        b=twK5FZWS9AKvGczEyfvchSiItMCv4wGIAjgpBlD+7B3KgG5YiWP9fG4P38DmCDgjBJ
-         +Ssi/UAh6QeDfbKqMSP1ZzMJ1Wgx6RYqr2yDlTAnVHgk4QR8fuSaQzOnwmo9T+oCp3Xt
-         1w4jdeSOTbNkfr7oWSWyF6fhWgL6zlRGhrV3SJnjSaO48S+aG7fXDAtCBGnEVUK29aCC
-         c8EzLKpMIlvHOjJUDFFyBDyAlE2eIgFFriziqdmm7fmJpwohaBuBTz7SrxZIRQ2V9d2z
-         kJkIbiimc1kTdFMXAgsoFfSXrtmQbPR/F1O3O+VfZtyIFuGfFnHNYCHZAUZ9qRUjEVoH
-         flTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzTQtJZMaf+pWtUE6qUsCU4SAtxHnKssDF7OH5lclHkPq/MfxXD6EqVLQHpAqL3EAEUu71D81MfoBv0so=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlk5bxx4g8rWxDV0ERM9xbW9kqtvVupU4VqdXp3SlBPtIdq0CN
-	qxUU8X4hDXc2DTUPRVg8gyzgbTlQMfHlq36Lj+aZ09GunNvUDUe/c1r1xonNwKcbcOPt/HEjcVW
-	BthNew3j2HisOvYxyw8h1zSIcDCx4jkqHChY1JLruMhZOo5Qi3uPsdJGmeAU=
-X-Google-Smtp-Source: AGHT+IG2RVhiGN+n9hq1Ug6fUL9AKll7f+7HBi2SyveCtTq/KLhYBck4RbdtT+kHBtLzABmCAuLoCBjX5sMRh8vyQZ2yColPwLD/
+        bh=lt9Y79Nk4LiSf2GgssT6uA7q78x7mgqpEHX9ixLmMzc=;
+        b=o9PE40L3ZIbiC5Oh4a+3l/CZjijhB4jMphgBOmP6jl2VnsPbSvFSwhtTZCnbQb7mJ0
+         /T6fNfh6zm+aZ/ubnb0+s3i/flIJhYFcEQbQImPdvtUO1HTyGrGp1m6GShcQSdhc0P24
+         GFDhYDTFlMBXQGTpb5U2RmVOYyjGt82sxohhg+0+aqr0yp9nywl37g/z4UfuHAqf2AUT
+         V/GcDx1H53sCaXZOcy8MtOEzsYmtsWGxc0KuHaWkXH2r7ZgdwDN1utx+zpbn0fpnQooj
+         85CvX/A200CHl5e8u3d6fm0lD10691lxskuoNgUnkrDns+OyBt12uRrBbyHDjN5TflG2
+         5kZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXg3eI04cMfHbnJbZH5QWNYEoyKuP1cDDkgZpC2FSP6l/VwLTqPKrGxfpH4s8UC2250DrWEKLduqInAGro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6dW59Wlugnn4ILAvEjOoT4CPWcqm22V1ZFMX9GuKmHx8ENc5f
+	dXW41Ub8XwmmjyUPYMnLYgwjWlRHNsNymOl2xkWKXtSJhQDhQNTv4hR368EAqwOQ/+rR/YVSaZ8
+	De4dvcWRtdIy8/LczDTnvETC8xoi/GKU2pgdOf2uI7cP1LnzQ8+aQQ35IsM8=
+X-Google-Smtp-Source: AGHT+IFF1c4jMnaZLD2CuyKx2+YFZWYALwSa06aMHpXZj51UMHBHDBkR9SGNwuehb7iMIMXY4YgoYJG6+8Bqt3pAssdWU43q/3Nd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12c3:b0:3d6:cbad:235c with SMTP id
- e9e14a558f8ab-3e13548bc4dmr10693475ab.6.1751606437444; Thu, 03 Jul 2025
+X-Received: by 2002:a05:6e02:349f:b0:3dc:7b3d:6a45 with SMTP id
+ e9e14a558f8ab-3e13457dbaamr17061185ab.0.1751606437671; Thu, 03 Jul 2025
  22:20:37 -0700 (PDT)
 Date: Thu, 03 Jul 2025 22:20:37 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686764a5.a00a0220.c7b3.0013.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in qdisc_tree_reduce_backlog
-From: syzbot <syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com>
+Message-ID: <686764a5.a00a0220.c7b3.0014.GAE@google.com>
+Subject: [syzbot] [net?] general protection fault in drr_qlen_notify
+From: syzbot <syzbot+15b96fc3aac35468fe77@syzkaller.appspotmail.com>
 To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
 	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
 	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
@@ -56,108 +56,114 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
-git tree:       net
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12f0b3d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=1261670bbdefc5485a06
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164d8c8c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14839ebc580000
+HEAD commit:    17bbde2e1716 Merge tag 'net-6.16-rc5' of git://git.kernel...
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1533f770580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8b0724e6945b4773
+dashboard link: https://syzkaller.appspot.com/bug?extid=15b96fc3aac35468fe77
+compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14044c8c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14840c8c580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d59bc82a55e0/disk-bd475eea.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2a83759fceb6/vmlinux-bd475eea.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/07576fd8e432/bzImage-bd475eea.xz
+disk image: https://storage.googleapis.com/syzbot-assets/62107140ac32/disk-17bbde2e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/72e5df2d1649/vmlinux-17bbde2e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e906bf8ebf5c/bzImage-17bbde2e.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
+Reported-by: syzbot+15b96fc3aac35468fe77@syzkaller.appspotmail.com
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 0 UID: 0 PID: 5835 Comm: syz-executor374 Not tainted 6.16.0-rc3-syzkaller-00144-gbd475eeaaf3c #0 PREEMPT(full) 
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000000b: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000058-0x000000000000005f]
+CPU: 1 UID: 0 PID: 5817 Comm: syz-executor457 Not tainted 6.16.0-rc4-syzkaller-00108-g17bbde2e1716 #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:qdisc_tree_reduce_backlog+0x223/0x480 net/sched/sch_api.c:806
-Code: 89 ef e8 40 80 b3 f8 4d 89 ef 85 db 74 0d e8 74 fc 4f f8 4c 89 f5 e9 88 00 00 00 48 8b 6d 00 48 8d 45 20 48 89 c3 48 c1 eb 03 <42> 80 3c 33 00 48 89 04 24 74 0d 48 8b 3c 24 e8 09 80 b3 f8 48 8b
-RSP: 0018:ffffc900040bf0a8 EFLAGS: 00010202
-RAX: 0000000000000020 RBX: 0000000000000004 RCX: 0000000000000000
-RDX: ffff888031da3c00 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff888031da3c00 R09: 0000000000000002
-R10: 00000000ffffffff R11: 0000000000000000 R12: 00000000000afff2
-R13: ffff88802875a000 R14: dffffc0000000000 R15: ffff88802875a000
-FS:  000055555b6b1380(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
+RIP: 0010:__list_del_entry_valid_or_report+0x20/0x200 lib/list_debug.c:49
+Code: 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 b8 00 00 00 00 00 fc ff df 41 54 55 53 48 89 fb 48 83 c7 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 8b 01 00 00 48 89 da 48 8b 6b 08 48 b8 00 00 00
+RSP: 0018:ffffc9000410f2e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000050 RCX: 1ffff1100f97af5c
+RDX: 000000000000000b RSI: ffffffff898bef4c RDI: 0000000000000058
+RBP: 0000000000000050 R08: 0000000000000005 R09: 0000000000000000
+R10: 00000000000a0000 R11: 0000000000000001 R12: ffffffff8ce802e0
+R13: 0000000000000058 R14: ffffffff8ce802c0 R15: ffff88807cbd7800
+FS:  000055557a6d4380(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000000240 CR3: 00000000726c2000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CR2: 0000200000001fc0 CR3: 00000000721d4000 CR4: 00000000003526f0
 Call Trace:
  <TASK>
- fq_codel_change+0xa96/0xef0 net/sched/sch_fq_codel.c:450
- fq_codel_init+0x355/0x960 net/sched/sch_fq_codel.c:487
- qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1324
+ __list_del_entry_valid include/linux/list.h:124 [inline]
+ __list_del_entry include/linux/list.h:215 [inline]
+ list_del_init include/linux/list.h:287 [inline]
+ drr_qlen_notify+0x24/0x150 net/sched/sch_drr.c:238
+ qdisc_tree_reduce_backlog+0x221/0x500 net/sched/sch_api.c:811
+ pie_change+0x86e/0xe70 net/sched/sch_pie.c:204
+ pie_init+0x364/0x470 net/sched/sch_pie.c:456
+ qdisc_create+0x454/0xfc0 net/sched/sch_api.c:1324
  __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
- tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
- rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
+ tc_modify_qdisc+0x12bb/0x2130 net/sched/sch_api.c:1813
+ rtnetlink_rcv_msg+0x3c6/0xe90 net/core/rtnetlink.c:6953
+ netlink_rcv_skb+0x155/0x420 net/netlink/af_netlink.c:2534
  netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
  sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ __sock_sendmsg net/socket.c:727 [inline]
+ ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+ ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+ __sys_sendmsg+0x16d/0x220 net/socket.c:2652
  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f79d710a6a9
+RIP: 0033:0x7f9cedcdb669
 Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff2ee70668 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fff2ee70838 RCX: 00007f79d710a6a9
-RDX: 0000000000000800 RSI: 0000200000000100 RDI: 0000000000000003
-RBP: 00007f79d717d610 R08: 0000000000000004 R09: 00007fff2ee70838
+RSP: 002b:00007ffd67f881b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007ffd67f88388 RCX: 00007f9cedcdb669
+RDX: 0000000000004000 RSI: 0000200000000280 RDI: 0000000000000006
+RBP: 00007f9cedd4e610 R08: 0000000000000004 R09: 00007ffd67f88388
 R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007fff2ee70828 R14: 0000000000000001 R15: 0000000000000001
+R13: 00007ffd67f88378 R14: 0000000000000001 R15: 0000000000000001
  </TASK>
 Modules linked in:
 ---[ end trace 0000000000000000 ]---
-RIP: 0010:qdisc_tree_reduce_backlog+0x223/0x480 net/sched/sch_api.c:806
-Code: 89 ef e8 40 80 b3 f8 4d 89 ef 85 db 74 0d e8 74 fc 4f f8 4c 89 f5 e9 88 00 00 00 48 8b 6d 00 48 8d 45 20 48 89 c3 48 c1 eb 03 <42> 80 3c 33 00 48 89 04 24 74 0d 48 8b 3c 24 e8 09 80 b3 f8 48 8b
-RSP: 0018:ffffc900040bf0a8 EFLAGS: 00010202
-RAX: 0000000000000020 RBX: 0000000000000004 RCX: 0000000000000000
-RDX: ffff888031da3c00 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff888031da3c00 R09: 0000000000000002
-R10: 00000000ffffffff R11: 0000000000000000 R12: 00000000000afff2
-R13: ffff88802875a000 R14: dffffc0000000000 R15: ffff88802875a000
-FS:  000055555b6b1380(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
+RIP: 0010:__list_del_entry_valid_or_report+0x20/0x200 lib/list_debug.c:49
+Code: 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 b8 00 00 00 00 00 fc ff df 41 54 55 53 48 89 fb 48 83 c7 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 8b 01 00 00 48 89 da 48 8b 6b 08 48 b8 00 00 00
+RSP: 0018:ffffc9000410f2e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000050 RCX: 1ffff1100f97af5c
+RDX: 000000000000000b RSI: ffffffff898bef4c RDI: 0000000000000058
+RBP: 0000000000000050 R08: 0000000000000005 R09: 0000000000000000
+R10: 00000000000a0000 R11: 0000000000000001 R12: ffffffff8ce802e0
+R13: 0000000000000058 R14: ffffffff8ce802c0 R15: ffff88807cbd7800
+FS:  000055557a6d4380(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000000240 CR3: 00000000726c2000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CR2: 0000200000001fc0 CR3: 00000000721d4000 CR4: 00000000003526f0
 ----------------
 Code disassembly (best guess):
-   0:	89 ef                	mov    %ebp,%edi
-   2:	e8 40 80 b3 f8       	call   0xf8b38047
-   7:	4d 89 ef             	mov    %r13,%r15
-   a:	85 db                	test   %ebx,%ebx
-   c:	74 0d                	je     0x1b
-   e:	e8 74 fc 4f f8       	call   0xf84ffc87
-  13:	4c 89 f5             	mov    %r14,%rbp
-  16:	e9 88 00 00 00       	jmp    0xa3
-  1b:	48 8b 6d 00          	mov    0x0(%rbp),%rbp
-  1f:	48 8d 45 20          	lea    0x20(%rbp),%rax
-  23:	48 89 c3             	mov    %rax,%rbx
-  26:	48 c1 eb 03          	shr    $0x3,%rbx
-* 2a:	42 80 3c 33 00       	cmpb   $0x0,(%rbx,%r14,1) <-- trapping instruction
-  2f:	48 89 04 24          	mov    %rax,(%rsp)
-  33:	74 0d                	je     0x42
-  35:	48 8b 3c 24          	mov    (%rsp),%rdi
-  39:	e8 09 80 b3 f8       	call   0xf8b38047
-  3e:	48                   	rex.W
-  3f:	8b                   	.byte 0x8b
+   0:	90                   	nop
+   1:	90                   	nop
+   2:	90                   	nop
+   3:	90                   	nop
+   4:	90                   	nop
+   5:	90                   	nop
+   6:	90                   	nop
+   7:	90                   	nop
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	f3 0f 1e fa          	endbr64
+   e:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  15:	fc ff df
+  18:	41 54                	push   %r12
+  1a:	55                   	push   %rbp
+  1b:	53                   	push   %rbx
+  1c:	48 89 fb             	mov    %rdi,%rbx
+  1f:	48 83 c7 08          	add    $0x8,%rdi
+  23:	48 89 fa             	mov    %rdi,%rdx
+  26:	48 c1 ea 03          	shr    $0x3,%rdx
+* 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2e:	0f 85 8b 01 00 00    	jne    0x1bf
+  34:	48 89 da             	mov    %rbx,%rdx
+  37:	48 8b 6b 08          	mov    0x8(%rbx),%rbp
+  3b:	48                   	rex.W
+  3c:	b8                   	.byte 0xb8
+  3d:	00 00                	add    %al,(%rax)
 
 
 ---
