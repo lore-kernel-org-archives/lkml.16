@@ -1,203 +1,247 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB66D28C2C9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893BC28B3ED;
 	Fri,  4 Jul 2025 07:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615651; cv=none; b=COUF4LZfOU8P0kkzxeO01jkYysyfA6rK3HWVVVt9Qs9aoxsrDOEG6c1w3lkzR6dE8Ef9iBU6BxT8YUUikzQDu01D+Z27TPis9Xf8AsfiqB1Fpx4P+nmiwnC4qt05nHHxAINpmnqsT0QICY/hqzCG91IvzdFE+zuKvhBok3t13gg=
+	t=1751615651; cv=none; b=SfopQYf0JyMZU+9AHYmU0/oKon/jqTc0JCxqiRNLd+ksI6YVbRv2dzg0ACC1t2zWObdEcimt0xeu5VnoZPmOc5pIPA8Uq2oTeqqhaAbQ6nUVLzzHVGbp9xRFO6JKkF2DRdcsCuekPz2WJhRd3ZomnKjCmmWXZIWjP1uijRtkq0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615651; c=relaxed/simple;
-	bh=egUHL6RyLJfuRq1gVjjLudjmpTQnx+4gpQe9sleSvp8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kiBmtNBqpXdwTw/kfB47mK7/FRMQaUOQaJswCxjqj2fGO/EiTLwrPEy3DIFN3s81wbOc4r9PcJ6+0SARKYkMfXhUVqm/LbPrIFzNWDPAZwDDiZ3Yp4IxPipvHb9nkmOCgyMgeMoJUjEs+h8WiOSHK3a55dusA8WeUmSjkRlb6sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E0q1HzRZ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=HW/7bQDz6RN1kDmyJ95OWFrRONwb+HcZP7enCpgPaNA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=elSoq5fU9YVUC1PrCdZvngNCpoy+X/w4bsQoUGk0M/+5p2IcjJGw6xCAy3wkreM4qUZJLRPE6+JdD1k/XNXxQO3pOTuyvxNlyUYy+63BySSrxYK2DktPkaYUxFFVhMW0el4vxTmuHuAzMnFHWeH19UFtSkqupqHfO6/sVq+GN30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k9wZXyrI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E0q1HzRZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615649; x=1783151649;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=egUHL6RyLJfuRq1gVjjLudjmpTQnx+4gpQe9sleSvp8=;
-  b=E0q1HzRZxiDYHxbPp+oXwLkZZnZZ+8+yvv+f6Qy/IxwxMzx25DapJWFl
-   mJAzXl3l9s5i3rDnANPc6s7cHty6dH2mYSSYWEUEQzjdMRsG8UwFvRwAy
-   COfM5YESB+0eX+AiwbNSE8Mz4housoNlc/AaukPADiJmevPAyX/gDt4Cr
-   HrlAS5gDjSKYanIZ/rxsYNyYk375/1/rPmQ5QoJuHJTIJqrTVix0cY4Wx
-   XsL+x1W10ezcBU+tJQdfAfFpjpmEPjN3trNVqQl05SA5oL3EQe+BfxDpy
-   yhBZEqyf4neToUzz6H0O1iVZzhT8rDyiQREg1FdDI1EeiN9PAmF3KJtKg
-   w==;
-X-CSE-ConnectionGUID: 2NvexcnATf6O3LUQmSuPgA==
-X-CSE-MsgGUID: U9ObsUCOSNKsQz7OM1bPIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494485"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494485"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:09 -0700
-X-CSE-ConnectionGUID: phoA/CdOScGQ5w7h4YAwIw==
-X-CSE-MsgGUID: nyKMon0+Sb2jJnHLR6QVFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924179"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:05 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id AF13844419;
-	Fri,  4 Jul 2025 10:54:02 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Gilad Ben-Yossef <gilad@benyossef.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Weili Qian <qianweili@huawei.com>,
-	Zhou Wang <wangzhou1@hisilicon.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Eric Biggers <ebiggers@google.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 08/80] crypto: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:02 +0300
-Message-Id: <20250704075402.3217279-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k9wZXyrI"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5644MtWc002481;
+	Fri, 4 Jul 2025 07:54:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+eG0mVfcfmUzuEgbSciyUwrRIEdvISJ0vd2Smn12H4c=; b=k9wZXyrIKZTeoqrq
+	NOOL2OTUZqijC+5CVT3++VOr7JF7NrnlAgvjTGJtpwuO+ZYW4YTX1g/RwPFDsT53
+	aZnJABUH7Jk00Tkc0MDBdBJwwr+hcAz6LOIhrC2Kjd6WfVYGAk2WXcntLQmZw5wY
+	pbHTgCfeGqRqJzV0wCOvHjLTWOBVp2t/wJF9Bzxc8szrhqjJ+QjVBsFAy3forYwc
+	skvqqD1mTsH1lTVneYcZWc71NJbt86xBOmkCRn1rihTxOOtrgcNjswcywVjZGYD4
+	63wjzTilA6y6Fifm8P43Z9VOwwmGez5umb68rrX1f5IrWbybenXMxLyVSqnpGNRX
+	hKUyuQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47p7ut0gej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 07:54:04 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647s3dG019355
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 07:54:03 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 4 Jul 2025 00:54:00 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:12 +0530
+Subject: [PATCH 12/25] media: iris: Add support for video encoder device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250704-iris-video-encoder-v1-12-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        "Vedang
+ Nagar" <quic_vnagar@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=4819;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=HW/7bQDz6RN1kDmyJ95OWFrRONwb+HcZP7enCpgPaNA=;
+ b=cKF3RZjeVhgpLIPR/VuHtBoctIUncjVt8fmfOzFPKCiVfoXWr/Hg92nNyt2NlfcvOM/ZrGFoQ
+ 1yQmHceVnhNAT5yT8nq70Bj13hrKX8/HA0oXmL7weFeWkhhXCtwOHSs
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfXxIVfCU0/3CDj
+ 3Mu3j+TAo5WMcgmlU9oS1AAKzpl6rP/8ZmrBVInSrYHmHeS7neVIk2Gili3QRQjSNPFS0Zpd4j0
+ gOuvJOnZJr4paQ2HW5HbQWlynF2PuUdhgV/cKWenxqIBVuwm21sesTrx7/v6/4OQgHd47YJ+WdK
+ zEvP6YHceF93Ok+IyBO4VWstWzTBuFOfOld/g8dCTu4L9LzUxVzRxCu8dt8rcjjIdvdZe2pwUNR
+ LLYHtNp5Fi57SEenpBIFj5Hx4zDsjoqmcv7/UHGNA/IpbC9/qqMpzvgayjVjJh1+a/DQJViTcqR
+ voYhJnswZOhIL0ycy4Loyk1bczhEXc1qR1BMjPlpyDOiXn/HyStmvqvter3TN8XpD3gtEdfy2Jn
+ esmL/LG6o8+hPJku2kiOIKinvMXWYasedZpwq4FeCWfy2TBV1NiPQ9dg0iegd2KTnwUlGsDj
+X-Proofpoint-GUID: z9YUuieJMSrq9v3un4E9jwnhslTL_8zm
+X-Authority-Analysis: v=2.4 cv=Ncfm13D4 c=1 sm=1 tr=0 ts=6867889c cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=2mCIi3ssoROZVgXUOfUA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: z9YUuieJMSrq9v3un4E9jwnhslTL_8zm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040060
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+Add support for registering a V4L2 encoder video device to the iris
+driver. The encoder device is registered with the name
+"qcom-iris-encoder".
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+ drivers/media/platform/qcom/iris/iris_core.h  |  7 ++++++
+ drivers/media/platform/qcom/iris/iris_probe.c | 36 ++++++++++++++++++++-------
+ 2 files changed, 34 insertions(+), 9 deletions(-)
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
-
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/crypto/ccree/cc_pm.c      | 1 -
- drivers/crypto/hisilicon/qm.c     | 1 -
- drivers/crypto/omap-aes-gcm.c     | 1 -
- drivers/crypto/omap-aes.c         | 1 -
- drivers/crypto/omap-des.c         | 1 -
- drivers/crypto/omap-sham.c        | 1 -
- drivers/crypto/stm32/stm32-cryp.c | 1 -
- drivers/crypto/stm32/stm32-hash.c | 1 -
- 8 files changed, 8 deletions(-)
-
-diff --git a/drivers/crypto/ccree/cc_pm.c b/drivers/crypto/ccree/cc_pm.c
-index 6124fbbbed94..bbd118f8de0e 100644
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -77,6 +77,5 @@ int cc_pm_get(struct device *dev)
+diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
+index aeeac32a1f6d9a9fa7027e8e3db4d95f021c552e..09e83be4e00efb456b7098a499b6cce850134a06 100644
+--- a/drivers/media/platform/qcom/iris/iris_core.h
++++ b/drivers/media/platform/qcom/iris/iris_core.h
+@@ -25,6 +25,11 @@ struct icc_info {
+ #define IRIS_FW_VERSION_LENGTH		128
+ #define IFACEQ_CORE_PKT_SIZE		(1024 * 4)
  
- void cc_pm_put_suspend(struct device *dev)
++enum domain_type {
++	ENCODER	= BIT(0),
++	DECODER	= BIT(1),
++};
++
+ /**
+  * struct iris_core - holds core parameters valid for all instances
+  *
+@@ -33,6 +38,7 @@ struct icc_info {
+  * @irq: iris irq
+  * @v4l2_dev: a holder for v4l2 device structure
+  * @vdev_dec: iris video device structure for decoder
++ * @vdev_enc: iris video device structure for encoder
+  * @iris_v4l2_file_ops: iris v4l2 file ops
+  * @iris_v4l2_ioctl_ops: iris v4l2 ioctl ops
+  * @iris_vb2_ops: iris vb2 ops
+@@ -73,6 +79,7 @@ struct iris_core {
+ 	int					irq;
+ 	struct v4l2_device			v4l2_dev;
+ 	struct video_device			*vdev_dec;
++	struct video_device			*vdev_enc;
+ 	const struct v4l2_file_operations	*iris_v4l2_file_ops;
+ 	const struct v4l2_ioctl_ops		*iris_v4l2_ioctl_ops;
+ 	const struct vb2_ops			*iris_vb2_ops;
+diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+index 4e6e92357968d7419f114cc0ffa9b571bad19e46..c3be9deb0a57cc2cf25d69784d54be5e4a5fe06c 100644
+--- a/drivers/media/platform/qcom/iris/iris_probe.c
++++ b/drivers/media/platform/qcom/iris/iris_probe.c
+@@ -146,7 +146,7 @@ static int iris_init_resources(struct iris_core *core)
+ 	return iris_init_resets(core);
+ }
+ 
+-static int iris_register_video_device(struct iris_core *core)
++static int iris_register_video_device(struct iris_core *core, enum domain_type type)
  {
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- }
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index 7c41f9593d03..2e4ee7ecfdfb 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -912,7 +912,6 @@ static void qm_pm_put_sync(struct hisi_qm *qm)
- 	if (!test_bit(QM_SUPPORT_RPM, &qm->caps))
- 		return;
+ 	struct video_device *vdev;
+ 	int ret;
+@@ -155,7 +155,6 @@ static int iris_register_video_device(struct iris_core *core)
+ 	if (!vdev)
+ 		return -ENOMEM;
  
--	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
- }
+-	strscpy(vdev->name, "qcom-iris-decoder", sizeof(vdev->name));
+ 	vdev->release = video_device_release;
+ 	vdev->fops = core->iris_v4l2_file_ops;
+ 	vdev->ioctl_ops = core->iris_v4l2_ioctl_ops;
+@@ -163,11 +162,23 @@ static int iris_register_video_device(struct iris_core *core)
+ 	vdev->v4l2_dev = &core->v4l2_dev;
+ 	vdev->device_caps = V4L2_CAP_VIDEO_M2M_MPLANE | V4L2_CAP_STREAMING;
  
-diff --git a/drivers/crypto/omap-aes-gcm.c b/drivers/crypto/omap-aes-gcm.c
-index c498950402e8..1f4586509ca4 100644
---- a/drivers/crypto/omap-aes-gcm.c
-+++ b/drivers/crypto/omap-aes-gcm.c
-@@ -38,7 +38,6 @@ static void omap_aes_gcm_finish_req(struct omap_aes_dev *dd, int ret)
+-	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+-	if (ret)
++	if (type == DECODER) {
++		strscpy(vdev->name, "qcom-iris-decoder", sizeof(vdev->name));
++		ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
++		if (ret)
++			goto err_vdev_release;
++		core->vdev_dec = vdev;
++	} else if (type == ENCODER) {
++		strscpy(vdev->name, "qcom-iris-encoder", sizeof(vdev->name));
++		ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
++		if (ret)
++			goto err_vdev_release;
++		core->vdev_enc = vdev;
++	} else {
++		ret = -EINVAL;
+ 		goto err_vdev_release;
++	}
  
- 	crypto_finalize_aead_request(dd->engine, req, ret);
+-	core->vdev_dec = vdev;
+ 	video_set_drvdata(vdev, core);
  
--	pm_runtime_mark_last_busy(dd->dev);
- 	pm_runtime_put_autosuspend(dd->dev);
- }
+ 	return 0;
+@@ -189,6 +200,7 @@ static void iris_remove(struct platform_device *pdev)
+ 	iris_core_deinit(core);
  
-diff --git a/drivers/crypto/omap-aes.c b/drivers/crypto/omap-aes.c
-index 1ecf5f6ac04e..244e24e52987 100644
---- a/drivers/crypto/omap-aes.c
-+++ b/drivers/crypto/omap-aes.c
-@@ -400,7 +400,6 @@ static void omap_aes_finish_req(struct omap_aes_dev *dd, int err)
+ 	video_unregister_device(core->vdev_dec);
++	video_unregister_device(core->vdev_enc);
  
- 	crypto_finalize_skcipher_request(dd->engine, req, err);
+ 	v4l2_device_unregister(&core->v4l2_dev);
  
--	pm_runtime_mark_last_busy(dd->dev);
- 	pm_runtime_put_autosuspend(dd->dev);
- }
+@@ -258,17 +270,21 @@ static int iris_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-diff --git a/drivers/crypto/omap-des.c b/drivers/crypto/omap-des.c
-index a099460d5f21..9c5538ae17db 100644
---- a/drivers/crypto/omap-des.c
-+++ b/drivers/crypto/omap-des.c
-@@ -489,7 +489,6 @@ static void omap_des_finish_req(struct omap_des_dev *dd, int err)
+-	ret = iris_register_video_device(core);
++	ret = iris_register_video_device(core, DECODER);
+ 	if (ret)
+ 		goto err_v4l2_unreg;
  
- 	crypto_finalize_skcipher_request(dd->engine, req, err);
++	ret = iris_register_video_device(core, ENCODER);
++	if (ret)
++		goto err_vdev_unreg_dec;
++
+ 	platform_set_drvdata(pdev, core);
  
--	pm_runtime_mark_last_busy(dd->dev);
- 	pm_runtime_put_autosuspend(dd->dev);
- }
+ 	dma_mask = core->iris_platform_data->dma_mask;
  
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index 56f192cb976d..6328e8026b91 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -1167,7 +1167,6 @@ static void omap_sham_finish_req(struct ahash_request *req, int err)
- 	dd->flags &= ~(BIT(FLAGS_FINAL) | BIT(FLAGS_CPU) |
- 			BIT(FLAGS_DMA_READY) | BIT(FLAGS_OUTPUT_READY));
+ 	ret = dma_set_mask_and_coherent(dev, dma_mask);
+ 	if (ret)
+-		goto err_vdev_unreg;
++		goto err_vdev_unreg_enc;
  
--	pm_runtime_mark_last_busy(dd->dev);
- 	pm_runtime_put_autosuspend(dd->dev);
+ 	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+ 	dma_set_seg_boundary(&pdev->dev, DMA_BIT_MASK(32));
+@@ -277,11 +293,13 @@ static int iris_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(core->dev);
+ 	ret = devm_pm_runtime_enable(core->dev);
+ 	if (ret)
+-		goto err_vdev_unreg;
++		goto err_vdev_unreg_enc;
  
- 	ctx->offset = 0;
-diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
-index 5ce88e7a8f65..a89b4c5d62a0 100644
---- a/drivers/crypto/stm32/stm32-cryp.c
-+++ b/drivers/crypto/stm32/stm32-cryp.c
-@@ -851,7 +851,6 @@ static void stm32_cryp_finish_req(struct stm32_cryp *cryp, int err)
- 	if (!err && (!(is_gcm(cryp) || is_ccm(cryp) || is_ecb(cryp))))
- 		stm32_cryp_get_iv(cryp);
+ 	return 0;
  
--	pm_runtime_mark_last_busy(cryp->dev);
- 	pm_runtime_put_autosuspend(cryp->dev);
- 
- 	if (is_gcm(cryp) || is_ccm(cryp))
-diff --git a/drivers/crypto/stm32/stm32-hash.c b/drivers/crypto/stm32/stm32-hash.c
-index 768b27de4737..a4436728b0db 100644
---- a/drivers/crypto/stm32/stm32-hash.c
-+++ b/drivers/crypto/stm32/stm32-hash.c
-@@ -1373,7 +1373,6 @@ static void stm32_hash_unprepare_request(struct ahash_request *req)
- 		*preg++ = stm32_hash_read(hdev, HASH_CSR(i));
- 
- pm_runtime:
--	pm_runtime_mark_last_busy(hdev->dev);
- 	pm_runtime_put_autosuspend(hdev->dev);
- }
- 
+-err_vdev_unreg:
++err_vdev_unreg_enc:
++	video_unregister_device(core->vdev_enc);
++err_vdev_unreg_dec:
+ 	video_unregister_device(core->vdev_dec);
+ err_v4l2_unreg:
+ 	v4l2_device_unregister(&core->v4l2_dev);
+
 -- 
-2.39.5
+2.34.1
 
