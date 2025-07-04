@@ -1,63 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365D52E0936;
-	Fri,  4 Jul 2025 17:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BA72F8C58;
+	Fri,  4 Jul 2025 17:36:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650580; cv=none; b=WNJ3k7C+wj528Hs/ccYZTe/1z375/jEUe7wvaq86pAN8tsRNtwoqE7WAPLrUWycoAgGdp9CEvACkg2ljKry9vFedQD+S12PCVFgZ++IrOaMgHnELG82+PiOCSYi/6QHEgIpWcNKFjWR6ygvkq6SOx+0hGgaynG6/onUyL+7T1Dg=
+	t=1751650581; cv=none; b=JLWgGCIYqWNo7jbRXvNxuBeNJmysjQD1p5Q4NkX0C0U5Ia6OPXEz6JtdLKg4zIz/8VRen8a1ic9IcCPMhCltt+P4Dj3m6j5zxVwhg8BJYhphCE7Xx2MexQiwdv6ASLnTLPXWtBRcDP57w/EtURxV7HcluQ3kAAzZCr7AtxAGvfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650580; c=relaxed/simple;
-	bh=tQD43+XsyZ2Mog5uStgWOBm34qHgf0BWYQifXUOlWEA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QGtbqlgLnLcGAD7xZW0DB3HgkIE+8h+rCag6VI4+PjtAxpCxI3laX/9SA3mYzu2AJmFRj7q2vvOix80GFk683Uqn7/ZpLiukzwJRSm8pYdlXAd8N3aqy3uLpUYu2KVhDDTlwdO6/PTR/+llosJU2jyrqzHThrWnKl4FUri9Awkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3YiYHN8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751650581; c=relaxed/simple;
+	bh=8jaz+aYQDTWx1my2TCQZNcKLuM37UT8p2RZdSRV9x5E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RbW/BCh14dVBqgQ6jhpylgWlgc9J1cNcagT5eJuBnYXBQYtMgYAHbewBfkiRqzUBXVxgJNUUxJMb+TNrD7/gk3hZFRtIAaRTlrSlFdzb17YGy0Q6RUfRSKob+W7ABKkPlll3bBmCiDKIiLClPzt9CkvNfPdaiJFkC3lTtPJrl4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnlAXUF+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3YiYHN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73BDC4CEE3;
-	Fri,  4 Jul 2025 17:36:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnlAXUF+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490F0C4CEEE;
+	Fri,  4 Jul 2025 17:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751650579;
-	bh=tQD43+XsyZ2Mog5uStgWOBm34qHgf0BWYQifXUOlWEA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=b3YiYHN8NnPPHpfCl93sAQ7xgXPK/kCjAfjTQNjClm+QIMUbw7wEOpwfWIy76D3U0
-	 8lJXs7BRxhSNo28aXorpv1U5+nFzg9KYw+0yuDD/YBHH6YfJwfYV1RPmg3sW/UcGR2
-	 dFcBY2xfztwkaUVemi8p9uiZI24UAhiw7x2RSkkkUp4EWdTFCjrOLreah4YqHlpy8E
-	 8YgKdyjTJ8Cy+qHwLebWLML3JmhKMLGjvefuPJkeKnzPBAUjCJt3Hes/KseeTZumj9
-	 TMXbzDsX0AFaS4Lfc47x7PcCGMeO8pIWvdpJq1dMESEss3ODfqqSvmhapobqKnZk6c
-	 7QQv4i8yqcKRA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BBA383BA01;
-	Fri,  4 Jul 2025 17:36:45 +0000 (UTC)
-Subject: Re: [GIT PULL] USB driver fixes for 6.16-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aGfkoTIQaoylP-Ul@kroah.com>
-References: <aGfkoTIQaoylP-Ul@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aGfkoTIQaoylP-Ul@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.16-rc5
-X-PR-Tracked-Commit-Id: 9bd9c8026341f75f25c53104eb7e656e357ca1a2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3c2bd251d2039ce2778c35ced5ef47b3a379f5df
-Message-Id: <175165060388.2287194.551018231553988939.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Jul 2025 17:36:43 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+	s=k20201202; t=1751650581;
+	bh=8jaz+aYQDTWx1my2TCQZNcKLuM37UT8p2RZdSRV9x5E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=EnlAXUF+/QV1mkeIxWRoZBCR51V5lllijW7S19FOq6wohuuVSIccxZLYR8uLNwaZf
+	 nTIAOAwJ3Pq0PSBOwZzTnrglK4LwZO/xEoqBDavP1jdz7I0ZdFhccQyuAvQcwLO3dJ
+	 1qNMUCq7INGlLuNaMehBgAmFbVxImM/LyvpyG3F73BZ9t2f6oEBi8cQHRp8o0OputO
+	 QzzQ/ciSkVsgXCMcO2S+NTKvVPfSfiz1g7EUN6S2srdeoz3lQ8bY0MCZb0lvUkeMlv
+	 50QsiYLgn0OosRwOi/Pvcoe1uO1Zu6mjCuX06/LmM91brPJTgK1niGXaaY6gctRtIs
+	 a4sxERU4XEo4g==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Fri, 04 Jul 2025 19:36:09 +0200
+Subject: [PATCH RFC/RFT 1/5] ufs: ufs-qcom: Fix UFS base region name in MCQ
+ case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-topic-qcom_ufs_mcq_cleanup-v1-1-c70d01b3d334@oss.qualcomm.com>
+References: <20250704-topic-qcom_ufs_mcq_cleanup-v1-0-c70d01b3d334@oss.qualcomm.com>
+In-Reply-To: <20250704-topic-qcom_ufs_mcq_cleanup-v1-0-c70d01b3d334@oss.qualcomm.com>
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Asutosh Das <quic_asutoshd@quicinc.com>, 
+ Bart Van Assche <bvanassche@acm.org>, 
+ Stanley Chu <stanley.chu@mediatek.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ Can Guo <quic_cang@quicinc.com>, Nitin Rawat <quic_nitirawa@quicinc.com>, 
+ linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751650573; l=946;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=IbnTdlJA3DyHgeEuZgss0N7Bjbg2NunWI+vgqCmwlLE=;
+ b=wAIG7O7w+MRGN7Scpx2E1RHI/qWDEKaG7e0L2T7hTqmJCedKoOZIoHGv3+obCLfX93+3xKR8j
+ qfMXgbNws9HB98UE91CqKF47AfexB33vGojNVVqz5fSQ3SiiGbDXfjp
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-The pull request you sent on Fri, 4 Jul 2025 16:26:41 +0200:
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.16-rc5
+There is no need to reinvent the wheel. There are no users yet, and the
+dt-bindings were never updated to accommodate for this, so fix it while
+we still easily can.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3c2bd251d2039ce2778c35ced5ef47b3a379f5df
+Fixes: c263b4ef737e ("scsi: ufs: core: mcq: Configure resource regions")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ drivers/ufs/host/ufs-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you!
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 318dca7fe3d735431e252e8a2a699ec1b7a36618..8dd9709cbdeef6ede5faa434fcb853e11950721f 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1899,7 +1899,7 @@ static void ufs_qcom_config_scaling_param(struct ufs_hba *hba,
+ 
+ /* Resources */
+ static const struct ufshcd_res_info ufs_res_info[RES_MAX] = {
+-	{.name = "ufs_mem",},
++	{.name = "std",},
+ 	{.name = "mcq",},
+ 	/* Submission Queue DAO */
+ 	{.name = "mcq_sqd",},
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.50.0
+
