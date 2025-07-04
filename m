@@ -1,244 +1,279 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2088.outbound.protection.outlook.com [40.107.102.88])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED6B19BBA
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647890; cv=fail; b=CP2HTtgTbNM/zT8BDGBBJR06v+T8qAwOZ0H4LsjBmTa/HQJcyj/txsPMB8RM2SfETqH1/k1keS5pZRQcHMbeFhZVm1B3LVLrWD/QgJwlHqyCrdBJUhwX8n7gwrOtyJT3jdGILfK7LWzdxNvtomFvCNIQ5xVPQgcv8MtsijBUCqQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647890; c=relaxed/simple;
-	bh=bI2llRidJ786BnXZDS3UkYoj3HjfZIkhZTzozCVaurg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZueC99qTapAlpCWoFZbUxvntr1OVVkUWs0NKp2xUq0kqz4260m0jnhYDb+pSSpiXniU9C4sTimqt+mytYfZd06tkGTz9UzHlpg5s43bmDrmC2fj+b/XnNMDAkLb+p5ZKfgN2QDgVCXXqC8gQAZRV+hWUrRgvswx4Ksg/6B1BJo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=btJn+gZI; arc=fail smtp.client-ip=40.107.102.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6865A2E3704
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751648054; cv=none; b=O4X+ku5MBTeojLqcb2RjH0u9jwVePghK1DjJ6DlS8thpcMJiHBKQxRu8oxV23JDL5t9AtBOnJ590QZW5uVIG37JP4JmN6FsYQ6nEs+a9hAdsvfH5u0eA9l8sNuerwyZRaACYRTCZ/7rMfdMq7+FlaNud+MCilP7QPUJIg6/42Wg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751648054; c=relaxed/simple;
+	bh=zVcxeLHHb3UAiesd2aayBXbz3f9dTa2g1Dyjp2m3+vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VBtSFWsd7eWxm8/aN5lljOEyUSuGL0WvkSqs6jPxH9kU0Ti+fone8chwSlwTCye0dwZOsURwAI5rCh6/Qqq6Xd4J7ECuhizkc9keOthNmuxGfaY/YASnSvb3SEUdJ2To5Lz2FUbRLe211rF0RVcvVhEi2qBzAfdDr6NF/GUum9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=H2ABQTvC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="btJn+gZI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lzudBjFpegW9pxpOT4myLSeJnUwnj/cUW1sWiPZdKncxxj8zrv6l1fj2nDGon2FBKLb9f/ybf3Eel6kjZULYrCLW3nZYGeozHutWEdo4UaXsq082RNt/diGZhYl6BKgbBKM8FIcyEPcbP9XPa7BwkaOPuMLEFbLCDhTV6k12i9l09h1jSnky01ZI9SPdvpbZ7poy8BnUhHItY4ZFlbNrQklbSYJGBeIiwTCzZ+e/XWmp0RAUATCpy8F03zOOVOY6iuCEdzwyFoHSdILoQe+Mp7QNNUVO1xpsk+2ZdLjaskglGbivAgyupUMZNayq0SJeOjO/OPbPjB8wyURNQjEMYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sm9iw0vLXW8CBQNS5yAHZfWIMpFaKOpyLL/aCTfRlwk=;
- b=lrdOcdQSy5yRo10Vn/gbIxOjjeIV2qz9lX4kys4WNV/IdPjGhcCFmkjJITxcXze34+Qf/LCMFzXrw2bT8DTr3r26hzQlOjkUqYLl9HsWG3CCmHJQ1q5R/p68q7ilztq4JwgccQQPNTd4GDxwWjMeibqjNZ4sITSrKuh1I/b28Nx8zny6d9ojvAsf8MHgPUU6Vt5k/thB/FiAh+zgUgvfOc3YydHfYDuowV7YorFtjW7n+L4BMWeqe1AFBFm7HbgC86A/TWedrg7QodgEAhC2B/Y9rUHUxKnBmzi3Tzoayt07du8TWFB6YwEVIHahy5ETspVrvEccdlkQRKS2srBfqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sm9iw0vLXW8CBQNS5yAHZfWIMpFaKOpyLL/aCTfRlwk=;
- b=btJn+gZIQGTz1G8rayAt/gajO3i7AQgPRWZ6IbaFcW/Zud6D/4QmhWHo32QrYLLL+tJZGODRr+WCx8QW/TvwCkAFKvQUkemDyBiDvDdNDA88birQrkG329lQD9oGBFAtsAUbiixCOxzdrC8KEGRFDxe6+3lXhMgK/ivBfzt9KgaMYJBHq+I/c7gHIEMdpWU1neNwyUCsytTqc3ZmOX2HU+iLljD4OuaqmPOkBq3urMmvDSbvAwYopoW4/VKjIpnCy0JIvhu9YwlNH3eXxwQtLI4erF4TQajaIRXMjPdWLCtqtgSqJz2xnjB4tLejx8NxetgrASFaw/iJJscBz+tVdg==
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
- by CYYPR12MB8891.namprd12.prod.outlook.com (2603:10b6:930:c0::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 4 Jul
- 2025 16:51:25 +0000
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2%3]) with mapi id 15.20.8901.018; Fri, 4 Jul 2025
- 16:51:25 +0000
-From: Ankit Agrawal <ankita@nvidia.com>
-To: David Hildenbrand <david@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-CC: "maz@kernel.org" <maz@kernel.org>, "oliver.upton@linux.dev"
-	<oliver.upton@linux.dev>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
-	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"will@kernel.org" <will@kernel.org>, "ryan.roberts@arm.com"
-	<ryan.roberts@arm.com>, "shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "ddutile@redhat.com"
-	<ddutile@redhat.com>, "seanjc@google.com" <seanjc@google.com>, Aniket Agashe
-	<aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, Kirti Wankhede
-	<kwankhede@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>, "Tarun Gupta
- (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
- Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
- Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, Zhi Wang
-	<zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Uday Dhoke
-	<udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com"
-	<coltonlewis@google.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
-	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "maobibo@loongson.cn"
-	<maobibo@loongson.cn>
-Subject: Re: [PATCH v9 5/6] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Thread-Topic: [PATCH v9 5/6] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Thread-Index: AQHb4mP29FdVbgxB8EOb5cMp1eIgb7QiFFiAgAACeQCAACndcw==
-Date: Fri, 4 Jul 2025 16:51:25 +0000
-Message-ID:
- <SA1PR12MB719988B006EBB121DF0CB07BB042A@SA1PR12MB7199.namprd12.prod.outlook.com>
-References: <20250621042111.3992-1-ankita@nvidia.com>
- <20250621042111.3992-6-ankita@nvidia.com>
- <20250704140431.GH1410929@nvidia.com>
- <07e0fddd-76ba-4905-95f4-b98063215866@redhat.com>
-In-Reply-To: <07e0fddd-76ba-4905-95f4-b98063215866@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|CYYPR12MB8891:EE_
-x-ms-office365-filtering-correlation-id: c4f1b4d6-4b0a-4c89-87d9-08ddbb1b0387
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?JjK25NYfaWqq04dZtGJZhv7PKfv8/BmMh52UyVuSx1tYgXM1ftWeJC0Fan?=
- =?iso-8859-1?Q?Wkmxm3BYhNKkQqf6wfFN/7rJjPXqN6OMNTovAVf4lzm5HjGsouWmCv0epy?=
- =?iso-8859-1?Q?XnHCxFQ6/VO6KVh7DZPPbH35pkzkgLoqg/pf9de6dOtENtdteI++NSYkxZ?=
- =?iso-8859-1?Q?SDR+IAlxbi5Mrwccl5xJfnYS6PVu/fAUCF7Nah9yuFy6lz7/huvQf+QB9t?=
- =?iso-8859-1?Q?gMlMVpDvsX6uqfPO5G1L52a99I/Ah7n1ES/oS1hO5F5y8jfV0OtwS+W5sw?=
- =?iso-8859-1?Q?EgMJdIVu4z8ThqFRiXIEMwFKNuFGuphBtjY2JzDY0oagCYcnFD8Z3EJ7Gd?=
- =?iso-8859-1?Q?TYYnRmZPWINusgKm7Xo6BAcpTb2cEUakYfJMN+oZsWUt+ophsMtEdsszJm?=
- =?iso-8859-1?Q?MTO9yciVK5Inxv/jrwy8+5xFjTFi2fVQtwRYwzbN4sfEt6C4JFnr/Up7AC?=
- =?iso-8859-1?Q?k6e9BYNFTgE9GDcJZPoqbMn4sZ+lbaSG5LUjRYXIczml5oEc8bGOUg1UPo?=
- =?iso-8859-1?Q?TX9c1rEHLGpOWv4afVavsjaNjCIZGvWN7deniQto4HPwCUE/ZSxgV/Hrn5?=
- =?iso-8859-1?Q?J0B4qwXPk8PeWMh5VHgQpoffEHGgjvM8/UbWm7p0wfD0s5n+DPFTRfqI3O?=
- =?iso-8859-1?Q?7zvZ2HaI/2eo99uuG5wP3eRORAD3NbbGiwh4VeIX//Lu0Bn5HMY/giHYxw?=
- =?iso-8859-1?Q?JwyGzAvNJVYXvrTGfmQiq/FbwQfUbgAfIh6sHoPdrrkx8/Nt0B0P2wu4vj?=
- =?iso-8859-1?Q?dzqJZtTcQcHjMehHofCb4Eeld8Ar7VjP2OwDMsEtCBre83TARxAXcCGIeG?=
- =?iso-8859-1?Q?PXUwWnimwcSGEU5Jx3MSeI5M3A5FqraI7DU7jpyimbhKelp9yX3VHP5sdF?=
- =?iso-8859-1?Q?igRTS7xmTcYzy6fiqOAAig1iEqBJyoeySNdsEqxDLoks2+8KvFnJLOTQ60?=
- =?iso-8859-1?Q?RLn5CkYx3i/M+7GnJmyJGM7UnjdhSUnD2fNteqL/v0O77Cxo0uZy+Z9+5D?=
- =?iso-8859-1?Q?2730AqDyqdqEkckpToAiYlioT8YuAe2VmF3sb+JHgp4iL5ovcY+8dJ7MCS?=
- =?iso-8859-1?Q?gEJRke0vjXEE58zK8dpIAZlUEZNVXrF7yZmwExHz7MTvJb7DkPSARseS1g?=
- =?iso-8859-1?Q?tUQdUh9qZYgVzf5nhW8WGRwGYn78AhSAn2BbR9hg/k8/GiC4M9FRFVMZH3?=
- =?iso-8859-1?Q?xB4GemNvniO4Jzf0E4aG8YCBIJepQgF3KepFBRCSqqxJBvpk1Bm9qWJ74U?=
- =?iso-8859-1?Q?RxxdNq8Vc+kUzsCZvVnjWxSe8xgonRkwcywQU+f6+W5DSd43x0xP1e9wVL?=
- =?iso-8859-1?Q?lxHZapJ8uhvBSvwj3l76w3s9lzQLqkViDg3NlXlkfkS4Y2z2jDEVXjJjXU?=
- =?iso-8859-1?Q?KXfJC6AaNr1sqI9gV3ljlJFkwdYIOUDiKiDuwtYich7lJ2utOi/w5+Jk0B?=
- =?iso-8859-1?Q?lQvIcCDz0RaCyeaywE9us7dH3gTjtOI8o3b71vyAPjCgNfINkgB3J23uQg?=
- =?iso-8859-1?Q?nNobWljduvGVAoRruY4DWOP0uyTTB5MzPK//S/eoCbAQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?2lUS3CWxWSFeOQKrNqd05iUtVDRm1xPb+k+ZDw7SJoan8Z33zVYlh9N1ro?=
- =?iso-8859-1?Q?8LMNy5ApXVFMgKA0FoSS+VZTZFm4f+TJw9j4R+u2IT8yYcHK/zVk9DR+gp?=
- =?iso-8859-1?Q?Vs4D8uc3yMnUsXktj3v3oCFppJg8TGZAzpG3awpZ3KGnY2XWvherXEQqPW?=
- =?iso-8859-1?Q?nT8vOyNzLccQCg4GwLTgtDK8kP2oYHXxlV88yzEBH23aEs5PVFM0OdlkAw?=
- =?iso-8859-1?Q?bYGCQZ9WFb9PtSpFnS95IE35VV4ioIJbrWo5+Rm6p/wiq1Fr2PpeKYRjNO?=
- =?iso-8859-1?Q?tt9RRLG1MkeRddMmlyUBiJ2uIaPCvbJzU0OHpS5hjIsG53jvLldQhkSZo1?=
- =?iso-8859-1?Q?8+8RBUzkZjyyFVDYvH4GMg2jzBO1hmnnqyPjFty0CK80by0uoUhy4+rCke?=
- =?iso-8859-1?Q?USA8DU+cdbn5uOhHfLoEIHSZHv7tG6zG3P4eBcsFM6H0ceRmON7VJpe+b1?=
- =?iso-8859-1?Q?IvI29zjGX0CyJ9ugOufbwoStluAH0G7WoqOXmHAWnDDIiCfIo517svWZfb?=
- =?iso-8859-1?Q?0w2QQ5Ov+0eh5PgMnqsq4S9pnjgn9OV4VjO/kJ9KopoSlsjGtkvl7wXUBG?=
- =?iso-8859-1?Q?yXnHa03NwH9M3j4F7Hmw1MCV1e8RTs5zj9B3HHejxNHNoUlBbrV3TUyfZF?=
- =?iso-8859-1?Q?dRfqTfKNVwTxwQeFZ1E9fVKYJ9LlWo090fQH8KYXJGJ69QWg7ETv2wfue1?=
- =?iso-8859-1?Q?QQd3AeGGZ2T668h7JHEwx9BVVn+5rnfiWl3sLDGnN5k+2k5P40S5ZyOVZU?=
- =?iso-8859-1?Q?Cw3eDql2Urlz5TZaUGR1ROqOXlvcOINVALXHgez+AKXUVaz1UDVC1tpNRr?=
- =?iso-8859-1?Q?YG4JD3MxTxtO6reqjb7CcZA7XcSyOvAcdkc80PRZpJwsJZDU3yVgUVK/Pt?=
- =?iso-8859-1?Q?zTUZhKfHMSqeZKsBXqj36XJfY9oCj0pAF4iManYr/nbbeuHmKiEv7ZOf0C?=
- =?iso-8859-1?Q?6CYBqIVqar6GUMa9mFy8gawf3TA8ekrEn82XOlyqI5A9yg+C26rj/Cwrp4?=
- =?iso-8859-1?Q?/xhlruilz3JGWgaLefwi3w28PdQkzFODKChjD7Mqig7Tqvpq3r7wvO3ZTV?=
- =?iso-8859-1?Q?LTc0H9mE54MEl9ShcnlDfILHyw0ehYFPJxpg+ZwrAnfrYYYSEBdj5f974t?=
- =?iso-8859-1?Q?//3m89os6BxBW4oGVQCTGvfsy64k7nEjFOGk6dvSIJIyUtkpPL6UPXfLgV?=
- =?iso-8859-1?Q?mNI8VnymNOutWwma3T5UNSe+3wdvZtQsgjpzJpZZl5Maccv9aCxpBkGUQT?=
- =?iso-8859-1?Q?eDZvHPy9t3eBj21p8gxlcvozcyUNj414N1sTAnVitr6krOHbTeImEMLfSy?=
- =?iso-8859-1?Q?lLZjmV9fmLEKR4f6NeBn9VNTswZVpRCCC+niTn1a/l5MJYBoxQnyVaMq1K?=
- =?iso-8859-1?Q?KPgzgAJVZ/BoYe0UIxwHhdo/FomEt3+fO0R6o7wIQUWPsfudAbFy5OAlBm?=
- =?iso-8859-1?Q?jRuSP+2ttJXcsmJqAuqwwrHxrETUpfvy6oxwSvdgtafgpxIh+6imRSnVuN?=
- =?iso-8859-1?Q?7v7qfGFwnR94Q4t2lJifMMG1SXcqmitrd3FUvg3UfkwOtU3+emKRNeIOjX?=
- =?iso-8859-1?Q?k9hhz1bcXN6ZpGIxE1Y75YrqMtc7a+nFRFdgiU84KlPuR5aoEez+UpQmrQ?=
- =?iso-8859-1?Q?HK/A0a0RRHJLU=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="H2ABQTvC"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564CZRH2024702
+	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 16:54:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=JCnWs7HpX0UFVtw8HQhAyWss
+	jVoIzirlLKgIK0AskiY=; b=H2ABQTvCilF8UYtQFTV1UWquLuuD4LMWiKxrlY2C
+	HoH5RuQcUTrCv5hgNgw1D6kzFLQRegDnVTfnySL2viCiM1neGq9tcnDEB5yehb2R
+	aTLC2neS4Bflnw8oz3u3tvjTeEdqJRoR/9VwgXFLUMrX7aoNlCDnoMl4pmnpDCjs
+	fFuJTjpXAKDSqii92WftnSLrYG1bxIllDjmnr6EJC3yUl9KpQHyQ3UhHM1dqc15i
+	2irJRED1TARzPoHiBOC50Pg1ThKrtna4ap8OoqntSBabnCRrVAx2gBdGMq2VMsbb
+	8DfBkfYYTtycACu3ph841p6Ers3GZ6wGMZE49ETyw7A/6A==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8s9vjcc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 16:54:11 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d413a10b4cso165472585a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:54:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751648050; x=1752252850;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JCnWs7HpX0UFVtw8HQhAyWssjVoIzirlLKgIK0AskiY=;
+        b=qyT0vH20/2nryn/leF17Jlpzs72K1nXVgSOGkN6/vErhrBTBPfS1KjuN5rP4lcPjd2
+         FY1znwWkyFPqUMKpg3J4M4x+UkPBb91gXMXT6xI3c5ldNhR47lBBAhUdBqDK6EGqvjOI
+         jesAukFmW1LR1DLRerBjlVxN2g+yNjt3+UCnGZQQ2j20eH/cOedvTVCLVXTjD8ENX3S/
+         qaukass2c6tAK+AiC7uYaAfksDcTarWlPIBXb1z3zEPCRKLn0oaUK39V1hIhvbiPXClg
+         +4i1FT7RJlseHxK9iFsWh2Amzp0HbBFDch0XMb/sperwkqZ8dmV8rSlyLKZHRvIuRAGu
+         jzKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgi4D4ehA5TAHXfYDM/hn1ibVPLDg7s3aCWlk20vius+z172iEGzxPg8XqJHY5ZiPvOuJ36KEOzhk+VUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzam5gHk8BmMEd+jDAoBvikrtPd8wrfQh9sBJ+4hZfu2BvVnbNL
+	jv0Qha7ubNWGCfxOJHN3/tZQBQ0CvuOC13rmFeJ0dB+elbdHZOzRP6SuXdE98gzcjALkx5M/sLA
+	ffLMQlBP87cdV2o2hTN9NhF6hNtg60Rx0sUW5hC18oea5BkMd6zpuUX8IuMOAeu4nXnk=
+X-Gm-Gg: ASbGncvH8HoIUbe2HpTtb7gLg8/+mADlb5sM8s6S/vsHmccjtJOcTNTHU0SVC0bYxn/
+	/liTOI/VzRoew59BKF2GZFThOBHVWN/rY6JmcEHVsHNxKmMxAAu860afkAxoDZz4lG2/0WRCISJ
+	YPh/bTNz230CLIKlq0M+OKo/jRrr7qibSmffvxO/S1eXs2qWGjirDZVGIIM5LPJAL2O4/NcKhEo
+	Y3zqvbQKGMH8vEjtn7q3757RT4MetEdBejfq17TeqMTIbVA18e9WiXryDshSLgDK1bxePJeJxgD
+	zzkmuv/2auXn8TfVXnCQEGvHtmov+yALfi88iZJZwUVWVxmfnrHBUtmQNgulrtgPo7GBj+eBJmJ
+	j1rcEE5PH9qy09RshSzocpesBM15NSWPo6qs=
+X-Received: by 2002:a05:620a:290b:b0:7d5:d240:ba4d with SMTP id af79cd13be357-7d5ddb73047mr420030285a.22.1751648050302;
+        Fri, 04 Jul 2025 09:54:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHP1MExcsP+nrJr5948Cl2sm6PizF1yfXSgekgHKgKP0zFPbPt35XLwDLimR56wBkYRj7QhAQ==
+X-Received: by 2002:a05:620a:290b:b0:7d5:d240:ba4d with SMTP id af79cd13be357-7d5ddb73047mr420026285a.22.1751648049845;
+        Fri, 04 Jul 2025 09:54:09 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384b60fcsm290213e87.191.2025.07.04.09.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 09:54:08 -0700 (PDT)
+Date: Fri, 4 Jul 2025 19:54:06 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ling Xu <quic_lxu5@quicinc.com>
+Cc: srini@kernel.org, amahesh@qti.qualcomm.com, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
+        konradybcio@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+        quic_kuiw@quicinc.com, ekansh.gupta@oss.qualcomm.com,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 3/4] misc: fastrpc: Refactor domain ID to enforce
+ strict mapping
+Message-ID: <56gevv7ripovymgclebnjdkxpfg3ppoosjxphkwqplef3hpikv@u5jua6hgxa34>
+References: <20250702025341.1473332-1-quic_lxu5@quicinc.com>
+ <20250702025341.1473332-4-quic_lxu5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4f1b4d6-4b0a-4c89-87d9-08ddbb1b0387
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2025 16:51:25.4127
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AsQPB7IdONxizx+7MV/Ia2PnirwkQwAY8bFeZo4Lq2PEJjurNOPwoqgs4jnAazP8UHIe0eFjBBC6/UlN6nDXNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8891
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702025341.1473332-4-quic_lxu5@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=H/Pbw/Yi c=1 sm=1 tr=0 ts=68680733 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=uRHWFKxjRNLRQCLycSwA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: I67-xUhPwmM3M9xpKyt2xru6E3eHq9ZW
+X-Proofpoint-GUID: I67-xUhPwmM3M9xpKyt2xru6E3eHq9ZW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDEyNiBTYWx0ZWRfX/IDQ/3kHdn4J
+ NUUIFd4k4smoJwRWobhHQuFuxpIkWBD4M+jnTDhz6tPqHpFSDohs5MBbfak+EKiezx7fJ6tL6+r
+ YdEP4N9S0TWiwhiZWcL5YPnEqvO8K5N3GjJ+B/kZWmi4eP9SNH/bsepDXwjympjxaavlOJ3QlmY
+ 9jQsnSJJipl1o0/OkQnuRDimy+dgHFFNn7NjwbOh/ZMC4fyNYIgxjklNVXRfyxH8axbLSJWSs6U
+ J6cbiru9yVo9Hvw9sJl3hmVCJReCsZIkNBGjTWD0Ao8iB01N67Ue9Uefa0SFpnbXdqBYAzbsk0q
+ MgdTyjTzU07CRnAtktjtIOhGm1BhVPuwroa4AJwfMrzTGd9UmdYaLlAlHN/ASbpBwOZN1a2LPoe
+ AMWc7+Yk3qvqjbIZaHI7c1m/00Pr7Ohgnvx4BawMqd6NCIh8eRcpl2KYT7+9OtdnDLdm0XRw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_06,2025-07-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 spamscore=0
+ adultscore=0 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507040126
 
-Thank you Jason and David to review this and other patches in the series!=
-=0A=
-Comments inline.=0A=
-=0A=
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * COW VM_PFNMAP is possible when =
-doing a MAP_PRIVATE=0A=
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * /dev/mem mapping on systems tha=
-t allow such mapping.=0A=
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Reject such case.=0A=
->>>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */=0A=
->>> -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 s2_force_noncacheable =3D true;=0A=
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (is_cow_mapping(vm_flags))=0A=
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EINV=
-AL;=0A=
->>=0A=
->> I still would like an explanation why we need to block this.=0A=
->>=0A=
->> COW PFNMAP is like MIXEDMAP, you end up with a VMA where there is a=0A=
->> mixture of MMIO and normal pages. Arguably you are supposed to use=0A=
->> vm_normal_page() not pfn_is_map_memory(), but that seems difficult for=
-=0A=
->> KVM.=0A=
->>=0A=
->> Given we exclude the cachable case with the pfn_is_map_memory() we=0A=
->> know this is the non-struct page memory already, so why do we need to=0A=
->> block the COW?=0A=
->>=0A=
->> I think the basic rule we are going for is that within the VMA the=0A=
->> non-normal/special PTE have to follow the vma->vm_pgprot while the=0A=
->> normal pages have to be cachable.=0A=
->>=0A=
->> So if we find a normal page (ie pfn_is_map_memory()) then we know it=0A=
->> is cachable and s2_force_noncacheable =3D false. Otherwise we use the=0A=
->> vm_pgprot to decide if the special PTE is cachable.=0A=
->>=0A=
->> David can you think of any reason to have this is_cow_mapping() test?=0A=
->=0A=
-> I think with that reasoning, it should be fine to drop it.=0A=
->=0A=
-> I think, the COW test made sense when we were talking about limiting it=
-=0A=
-> to VM_PFNMAP only and simplifying by dropping other checks. Then, it=0A=
-> would have identified that something is certainly not "normal" memory.=0A=
->=0A=
-=0A=
-Ack, I'll drop the check in the next version.=0A=
-=0A=
-> Then this logic that immediately follows:=0A=
->=0A=
->        if (is_vma_cacheable && s2_force_noncacheable)=0A=
->                return -EINVAL;=0A=
->=0A=
-> Doesn't make alot of sense either, the only cases that set=0A=
-> s2_force_noncacheable=3Dtrue are the else block of 'if (is_vma_cacheable)=
-'=0A=
-> so this is dead code too.=0A=
-=0A=
-I had left it there so that that condition doesn't get violated in the=0A=
-future. But perhaps it doesn't make much sense to keep it. I'll remove in=
-=0A=
-the next version.=0A=
-=0A=
-> Seems like this still needs some cleanup to remove these impossible=0A=
-> conditions. The logic make sense to me otherwise though.=0A=
-=0A=
-Sure, I'll fix that in the next version.=0A=
-=0A=
+On Wed, Jul 02, 2025 at 08:23:40AM +0530, Ling Xu wrote:
+> Currently, domain ids are added for each instance, which is not scalable.
+> Strict domain IDs for domain.
+
+What does this mean?
+
+> 
+> Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
+> ---
+>  drivers/misc/fastrpc.c      | 51 ++++++++++++++++---------------------
+>  include/uapi/misc/fastrpc.h |  2 +-
+>  2 files changed, 23 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 378923594f02..441f5851eb97 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -27,8 +27,7 @@
+>  #define MDSP_DOMAIN_ID (1)
+>  #define SDSP_DOMAIN_ID (2)
+>  #define CDSP_DOMAIN_ID (3)
+> -#define CDSP1_DOMAIN_ID (4)
+> -#define FASTRPC_DEV_MAX		5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
+> +#define FASTRPC_DOMAIN_MAX    CDSP_DOMAIN_ID
+
+Unused
+
+>  #define FASTRPC_MAX_SESSIONS	14
+>  #define FASTRPC_MAX_VMIDS	16
+>  #define FASTRPC_ALIGN		128
+> @@ -106,8 +105,6 @@
+>  
+>  #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
+>  
+> -static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
+> -						"sdsp", "cdsp", "cdsp1" };
+>  struct fastrpc_phy_page {
+>  	u64 addr;		/* physical address */
+>  	u64 size;		/* size of contiguous region */
+> @@ -1723,7 +1720,6 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+>  	uint32_t attribute_id = cap->attribute_id;
+>  	uint32_t *dsp_attributes;
+>  	unsigned long flags;
+> -	uint32_t domain = cap->domain;
+>  	int err;
+>  
+>  	spin_lock_irqsave(&cctx->lock, flags);
+> @@ -1741,7 +1737,7 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+>  	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES);
+>  	if (err == DSP_UNSUPPORTED_API) {
+>  		dev_info(&cctx->rpdev->dev,
+> -			 "Warning: DSP capabilities not supported on domain: %d\n", domain);
+> +			 "Warning: DSP capabilities not supported\n");
+>  		kfree(dsp_attributes);
+>  		return -EOPNOTSUPP;
+>  	} else if (err) {
+> @@ -1769,17 +1765,6 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+>  		return  -EFAULT;
+>  
+>  	cap.capability = 0;
+> -	if (cap.domain >= FASTRPC_DEV_MAX) {
+> -		dev_err(&fl->cctx->rpdev->dev, "Error: Invalid domain id:%d, err:%d\n",
+> -			cap.domain, err);
+> -		return -ECHRNG;
+> -	}
+> -
+> -	/* Fastrpc Capablities does not support modem domain */
+> -	if (cap.domain == MDSP_DOMAIN_ID) {
+> -		dev_err(&fl->cctx->rpdev->dev, "Error: modem not supported %d\n", err);
+> -		return -ECHRNG;
+> -	}
+>  
+>  	if (cap.attribute_id >= FASTRPC_MAX_DSP_ATTRIBUTES) {
+>  		dev_err(&fl->cctx->rpdev->dev, "Error: invalid attribute: %d, err: %d\n",
+> @@ -2255,6 +2240,20 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
+>  	return err;
+>  }
+>  
+> +static int fastrpc_get_domain_id(const char *domain)
+> +{
+> +	if (!strncmp(domain, "adsp", 4))
+> +		return ADSP_DOMAIN_ID;
+> +	else if (!strncmp(domain, "cdsp", 4))
+> +		return CDSP_DOMAIN_ID;
+> +	else if (!strncmp(domain, "mdsp", 4))
+> +		return MDSP_DOMAIN_ID;
+> +	else if (!strncmp(domain, "sdsp", 4))
+> +		return SDSP_DOMAIN_ID;
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  {
+>  	struct device *rdev = &rpdev->dev;
+> @@ -2272,15 +2271,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  		return err;
+>  	}
+>  
+> -	for (i = 0; i < FASTRPC_DEV_MAX; i++) {
+> -		if (!strcmp(domains[i], domain)) {
+> -			domain_id = i;
+> -			break;
+> -		}
+> -	}
+> +	domain_id = fastrpc_get_domain_id(domain);
+>  
+>  	if (domain_id < 0) {
+> -		dev_info(rdev, "FastRPC Invalid Domain ID %d\n", domain_id);
+> +		dev_info(rdev, "FastRPC Domain %s not supported\n", domain);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -2330,21 +2324,20 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  	case ADSP_DOMAIN_ID:
+>  	case MDSP_DOMAIN_ID:
+>  	case SDSP_DOMAIN_ID:
+> -		/* Unsigned PD offloading is only supported on CDSP and CDSP1 */
+> +		/* Unsigned PD offloading is only supported on CDSP */
+>  		data->unsigned_support = false;
+> -		err = fastrpc_device_register(rdev, data, secure_dsp, domains[domain_id]);
+> +		err = fastrpc_device_register(rdev, data, secure_dsp, domain);
+>  		if (err)
+>  			goto err_free_data;
+>  		break;
+>  	case CDSP_DOMAIN_ID:
+> -	case CDSP1_DOMAIN_ID:
+>  		data->unsigned_support = true;
+>  		/* Create both device nodes so that we can allow both Signed and Unsigned PD */
+> -		err = fastrpc_device_register(rdev, data, true, domains[domain_id]);
+> +		err = fastrpc_device_register(rdev, data, true, domain);
+>  		if (err)
+>  			goto err_free_data;
+>  
+> -		err = fastrpc_device_register(rdev, data, false, domains[domain_id]);
+> +		err = fastrpc_device_register(rdev, data, false, domain);
+>  		if (err)
+>  			goto err_deregister_fdev;
+>  		break;
+> diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
+> index f33d914d8f46..27b892b546f6 100644
+> --- a/include/uapi/misc/fastrpc.h
+> +++ b/include/uapi/misc/fastrpc.h
+> @@ -134,7 +134,7 @@ struct fastrpc_mem_unmap {
+>  };
+>  
+>  struct fastrpc_ioctl_capability {
+> -	__u32 domain;
+> +	__u32 domain; /* deprecated, ignored by the kernel */
+
+reserved1 or unused
+
+>  	__u32 attribute_id;
+>  	__u32 capability;   /* dsp capability */
+>  	__u32 reserved[4];
+> -- 
+> 2.34.1
+> 
+
+-- 
+With best wishes
+Dmitry
