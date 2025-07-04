@@ -1,123 +1,119 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A9C282F5;
-	Fri,  4 Jul 2025 07:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8F62857FA;
+	Fri,  4 Jul 2025 07:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615234; cv=none; b=I2ykW4EfQUNT7CwnPHLEoBKZ2l52oRGAQv8hHPe+xqubn0F0TuOooIaMWq518ijBS929h0dedalJMP/+VbXB3n+iaLfjKEEFJUbY5b0+CuMtTJf31e/0ck82iQesXGIjkTnU9HhN8bFD43/Q9ElATLOxEqqiC8k0nWzqRla34iM=
+	t=1751615236; cv=none; b=urDJincCOqg36IldaJIJHfOI7099astX/6wi49t+5ES69vtnuqrjg9r2vcK0u/w5/g0D9Hlr+rknQAZTYEnXhT2HexlypjduVUT27RO+usfYOCgk8H2cn6Lm2+8wLAeYWjF6l0HKF6tC2Wc0ohvwP7rLgvMRWnuHdrYXHhEY240=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615234; c=relaxed/simple;
-	bh=f5bUyETWuLf21xHjox/tbacH4YnaGKFp9ktsm1YeJpI=;
+	s=arc-20240116; t=1751615236; c=relaxed/simple;
+	bh=8gB+AO68oAYcL/RcwfcXX8F3VEcyUkNlDhqHsTYg8h4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XTZKQWBUid95ecls9Tt4BWQIcF00rIhhf3sljXyAe/iZKX/AYRotn3bXc6jws3NU9WZ7KjgALw/06f6WFJQHiRrR/vKXsbQZT6DAtfYzMinHnk7NsblTGgP+jRCGYVOK07in8VNz1BhOjUgPv2QU7Uu7r0Dj3/+AGBQzFbd+5do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id 103F1E81788;
-	Fri,  4 Jul 2025 09:47:10 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id 1F09416005E; Fri,  4 Jul 2025 09:47:09 +0200 (CEST)
-Date: Fri, 4 Jul 2025 09:47:08 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: GONG Ruiqi <gongruiqi1@huawei.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when secure
- boot be disabled"
-Message-ID: <aGeG_C2fcWqpgo1O@gardel-login>
-References: <Z9wDxeRQPhTi1EIS@gardel-login>
- <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
- <aGYurikYK1ManAp3@gardel-login>
- <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
- <aGZ_x8Ar6iwzt2zV@gardel-login>
- <c74b5581-b5a5-4f71-a4da-2cef73351715@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DcNPGJhB8nWy0p/8vuHuFAx9f/OaNeC5w16RBEBXto/KVM4cjFDsA/MM2Lt+ET+4sNXToLytGJ8BrrmKVCQLVtZLIcrSDn4A/xKzS5FO7AlYsLuQlYzfgF1tvxXm73q3WAvfbu3KSjNNqWkN4pw90DKuBS6b+Llwh2kXit9gHH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s7b8gHjl; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s7b8gHjl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=lLeBr9v7iWnmJB5WR8E+Qdx4chL/QEo8kPrObOm2XBg=; b=s7b8gHjlLshr/s6aHjDwESkoZv
+	9xldLQc20XR4fF5OqxXWznCzk91go6X0+1hokaiCtTzgcvzRs3qRiKtfsqTUJE7KKzeAgCKHREsra
+	kvnr9afUyBdWT23H0Pp+eDaPiqOZEqx4FXHdDlmRumtj22gq0Q3GoFqjbkWKDBxQn6m8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXb7w-000B5q-N9; Fri, 04 Jul 2025 09:46:32 +0200
+Date: Fri, 4 Jul 2025 09:46:32 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michal Rostecki <vadorovsky@protonmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+Message-ID: <307d7547-b8da-4a82-9ae6-c95f66a283d2@lunn.ch>
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com>
+ <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+ <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <34c00dfa-8302-45ee-8d80-58b97a08e52e@lunn.ch>
+ <CANiq72ksOG10vc36UDdBytsM-LT7PdgjcZ9B0dkqSETH6a0ezA@mail.gmail.com>
+ <CAJ-ks9mkC3ncTeTiJo54p2nAgoBgTKdRsAwEEwZE2CtwbAS7BA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c74b5581-b5a5-4f71-a4da-2cef73351715@huawei.com>
+In-Reply-To: <CAJ-ks9mkC3ncTeTiJo54p2nAgoBgTKdRsAwEEwZE2CtwbAS7BA@mail.gmail.com>
 
-On Fr, 04.07.25 09:30, GONG Ruiqi (gongruiqi1@huawei.com) wrote:
+> There's also a tactical question about splitting by subsystem: are
+> there any tools that would assist in doing this, or is it a matter of
+> manually consulting MAINTAINERS to figure out file groupings?
 
-> > patch arbitrary keys into the ELF image of the kernel before starting
-> > it, and everything will look perfect later on, because the image is
-> > not authenticated after all via SB. So there *already* is a way into
-> > the kernel keyring with this – it's just really messy to parse and
-> > patch ELF at runtime like this from the bootloader. My hope with just
-> > relaxing the rules on MOK keys when SB is off is to just make this
-> > stuff cleaner and more elegant (and also to leave the ELF image intact
-> > so that we get clean measurements, both of the kernel and of the keys
-> > we add).
->
-> Just curious: if an attacker takes control of the boot phase earlier
-> than the kernel, then not just this check has no value, but any check in
-> the kernel has no value, right? Anything that got loaded early enough
-> could theoretically patch the kernel with anything on anywhere. So shall
-> we just remove them all?
+You can run ./scripts/get_maintainer -f path/to/file.c
 
-Measured boot protects you against that, as I explained: what we do in
-our model is lock the full disk encryption to a key in the TPM that
-enforces an local attestation policy: only if a all measurements match
-that policy the FDE key is released to the OS. Hence yes, if SB is off
-*any* code can run, but if it's not the right code then it cannot
-unlock the disk. If it *is* able to unlock the FDE however, then this
-is proof that the boot chain is in order, and hence the kernel can be
-trusted, and it makes sense for it to defend itself from later steps.
+and it will give you the Maintainers for that file. From that you can
+imply the subsystem.
 
-> Certainly the answer is no, and they are still meaningful somehow and
-> somewhere. IMHO I think the concern behind the check is reasonable, but
-> the actual code could be an overkill. It would be better if it does:
->
->   if (arch_ima_get_secureboot() && ima_mok_verify()) // hypothetical
->
-> , and in the future we could extend the ima policy for the boot phase
-> chain of trust and perform the check here accordingly, i.e. let the
-> users decide how things should go.
->
-> While for the current situation, my personal advice would be to add a
-> config to control whether or not the check is conducted. Let's call it
-> CONFIG_LOAD_UEFI_KEYS_STRICT temporarily:
->
-> #ifdef CONFIG_LOAD_UEFI_KEYS_STRICT
->   /* the MOK/MOKx can not be trusted when secure boot is disabled */
->   if (!arch_ima_get_secureboot())
->           return 0;
-> #endif
->
-> so that both sides are happy, and we can think of more fine-grained
-> verification methods, like the one I said above, for the strict mode
-> afterwards.
+It might be possible to do one tree wide patchset, since Rust is still
+small at the moment. But you will need to get Reviewed-by: or
+Acked-by: from each subsystem Maintainer for the patches. That is not
+always easy, since some subsystems have CI systems, and will want the
+patch to pass their CI tests before giving an Reviewed-by.
 
-Having an option for this would be better than nothing of course, but
-I seriously wonder what the value of the check is supposed to be at
-all. SecureBoot=off tells the system: hey, please accept any boot-time
-resource without validation, and firmware and boot loaders honour that,
-but Linux then does the opposite, invents some artificial checks not
-even done if SB is on!
-
-I mean, a boot trust chain means: trust what comes before, and
-authenticate/measure what comes next before you pass control to it.
-
-But for some reason Linux makes up a different model, where if told to
-not authenticate it suddenly doesn't trust half of what comes before
-anymore, but the other half it does. And that's just bogus, and
-illogical.
-
-Lennart
-
---
-Lennart Poettering, Berlin
+	Andrew
