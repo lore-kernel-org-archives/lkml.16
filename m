@@ -1,102 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F40D29AAFD;
-	Fri,  4 Jul 2025 09:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CEB28D840;
+	Fri,  4 Jul 2025 09:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622519; cv=none; b=lD3l2a8i8GC8hkShio7ePYASZnf4Xv+I4My39k2z1+a8xa+Yb0weQothN86T4y4XDAY0qb99w60QRsUaY7yM+z9Dine012TghN5hUiP61IScPNM+mnrp0P5Mz8Bl1INDcYmEBd5qAqtnbp8I+tJCkvKOPgs9FW6xzhJDXRGywTc=
+	t=1751622545; cv=none; b=r9S+M8HMEHMDa0Rhisa67WFQrGAGuaSN/55jAEYit5lHERhE0akMW1mASYgE3R9z3DZvnD1vDWa2EizLQu5v9QDgsvizP1fDfADwgDodcFamWZUXFLKNwzu+dx5B/QkHyfzu3Ha+111KeV/OfgdoqOB1UnP/Uqb+O33KtJHQFxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622519; c=relaxed/simple;
-	bh=am0YjSLq6opId+8jb8XluWaS3QEulOIJcT1B2pYF464=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YsIV7JHSmRkv4oZBVjSKAzUwNzR/25xzfsaj0WczmvhFsyw3l62JybKaL0Nh4xnNg7dOL56mnjmZVbrHJpozTEEuYq5Uyw0Lmet4e45sVbfWNn4pzAoNkNvyDWiNpU+UJYIUZ/+h0p7L7jqXzsZbAmbr9AEnTSfASGXm/8lAdyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lv9KvEEg; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751622545; c=relaxed/simple;
+	bh=0Ud86XP9bYEP8sLzhOOGO61bEW1HVjXeaRHDIa3CSGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dn5/tbKyfbrQBpZFv9hVl3yQYGwPMX9HTep0ItjUV6KTsOIyPu57Eq3h4dgtU+FZGzjovAIuQFysEWzemO43eKSNvLxOOARFjmzReGkUdWjx2rqdfLpn3oi1y7IOGMbvzRIuOJVHZGgBLR6Yd5wX6JqkjwAb3XBbdwBiU+Bq10k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XirrYf0G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lv9KvEEg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751622519; x=1783158519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=am0YjSLq6opId+8jb8XluWaS3QEulOIJcT1B2pYF464=;
-  b=Lv9KvEEgviuLQTffuh2sdu4r7G80QCJWf5ZavNjSg/IBBAGMedAHvfmQ
-   xUjmHryiHpyHQT5AgBCBThdNjW3WP5YrH9os2ctmmDOtjmSzYMHBxtLtr
-   0JLptc6a2YjDsp+/N+ccW5nsPVR4ZxbE0sUBrIQwqt55dsCjNZ+qSWG65
-   xRvenl1HKO3NJuz40n0r56Y1E7GYU7AjNLiX2sLALKpd9dSajs3hp2Vtm
-   9x7YPXOzWQ/z0QMM75L4j5J/IWw/bWIYi0cd+lDv6UHIwcp9JLUTk/exa
-   1DVjDIXOOy5dEmvsGuOjvVhKswd6ob7zihcV1NrIYpRgS8dNhcf+8agNR
-   Q==;
-X-CSE-ConnectionGUID: lrf5lB4FTcCmPRpyM3mMMg==
-X-CSE-MsgGUID: 30SNgoBNR1KOUkHAqeHKgw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65408516"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="65408516"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 02:48:38 -0700
-X-CSE-ConnectionGUID: kSKs1kAUT6+aKYAMcPG3Kg==
-X-CSE-MsgGUID: qMilI+FFQwqrwSpxQFY3ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="154016435"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 04 Jul 2025 02:48:35 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXd20-0003ZL-1Q;
-	Fri, 04 Jul 2025 09:48:32 +0000
-Date: Fri, 4 Jul 2025 17:48:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zijun Hu <zijun_hu@icloud.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
-	Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 2/8] char: misc: Adapt and add test cases for simple
- minor space division
-Message-ID: <202507041717.ZONOYCp2-lkp@intel.com>
-References: <20250702-rfc_miscdev-v3-2-d8925de7893d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XirrYf0G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E833C4CEEE;
+	Fri,  4 Jul 2025 09:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751622545;
+	bh=0Ud86XP9bYEP8sLzhOOGO61bEW1HVjXeaRHDIa3CSGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XirrYf0GjePlbRcR4e5kgYVe+qrZwml1Adl2K8NBLzxXu/C1de4Zin8szgl+Y2BRj
+	 /RWmJniJH9MAqKTAVtbV+8s8xLYqYlgs2eoIMlMLLt6nWpsMc1smIJvmrQKuoIQGxu
+	 EsP4MTY6YsbXdOc3OBzOLe4uLfTTJmA5WSpWcdnkR63juOBhdTpOmdGbwbeJkDrfkR
+	 lK7PpY33hQnaZ6wuEnM+jOhGdxK/GIXeFEFfPxj+UVHPoqIXeCmixXkiR6sr6HTFie
+	 BL65kw3Sb6LT6U7YkDfSmeGuf/5wI3/rPnuAf51NKiBVmETMCP/jUTFTpTrJeDbsiy
+	 UcZtuzEcorcjw==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-61396c3f681so49529eaf.3;
+        Fri, 04 Jul 2025 02:49:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVbjbBgXIXoODmQGeiVM9Gcq11E4u9RnmEi5o+1VFRX9u9/WBOq0tBM0aA8DgeZ7JvZKbzIAGgUt2s=@vger.kernel.org, AJvYcCWMwM0HijLpLL3qbq7zgeI0Xr7EMZD54Nh2CITLLIEsXdfRQ2Yu1H0VhfDnqXX4EV43pK0j65sTGHmnfLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkrs8fJ5Z41Y625WK44T8b0WHMsafv5sxLXaaXEdqQwMrueLOM
+	C3wBZO3uHEcw8xBU3k9rXgyFxGt5Au93JK8Yp7sU8h+8xcdCK6nqUjEprC1IhiNKDK4Der1gIii
+	ufsq758soJwt63ATPQ278c5LfKXEkhyM=
+X-Google-Smtp-Source: AGHT+IHSKYWJVT4Y3YWle481bfVW84W5gzUk/bh3TVw9A/v1XsLO3tSf/KPvBrhlZSIXrYhDTyrVfPi7AKbp7pOOHw8=
+X-Received: by 2002:a05:6820:174b:b0:613:7eb8:a4a6 with SMTP id
+ 006d021491bc7-6138fd5e525mr1548591eaf.2.1751622544551; Fri, 04 Jul 2025
+ 02:49:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-rfc_miscdev-v3-2-d8925de7893d@oss.qualcomm.com>
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com>
+ <20250623133402.3120230-8-zhenglifeng1@huawei.com> <CAJZ5v0hizEYaJw77feqAoHJWYuANvbdxZ6BbogZ52sTU2eKTUA@mail.gmail.com>
+ <7c509446-7925-4bcb-97c5-1a6082550d96@huawei.com>
+In-Reply-To: <7c509446-7925-4bcb-97c5-1a6082550d96@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 4 Jul 2025 11:48:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h6iN_EQd6kMvYZjQwryF5cPo-EEXDFcJ6MK+k=24dr2Q@mail.gmail.com>
+X-Gm-Features: Ac12FXwRFY3IHfo2wyyje1ul5fFlkpToFDdYhI6wzgo76tUDvNADNu-Ibd6MZS0
+Message-ID: <CAJZ5v0h6iN_EQd6kMvYZjQwryF5cPo-EEXDFcJ6MK+k=24dr2Q@mail.gmail.com>
+Subject: Re: [PATCH 7/7] cpufreq: Exit governor when failed to start old governor
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Zijun,
+On Fri, Jul 4, 2025 at 11:38=E2=80=AFAM zhenglifeng (A) <zhenglifeng1@huawe=
+i.com> wrote:
+>
+> On 2025/6/23 23:12, Rafael J. Wysocki wrote:
+>
+> > On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huaw=
+ei.com> wrote:
+> >>
+> >> Detect the result of starting old governor in cpufreq_set_policy(). If=
+ it
+> >> fails, exit the governor and clear policy->governor.
+> >>
+> >> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> >> ---
+> >>  drivers/cpufreq/cpufreq.c | 8 +++++---
+> >>  1 file changed, 5 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> >> index 7b82ffb50283..2b431845a8a3 100644
+> >> --- a/drivers/cpufreq/cpufreq.c
+> >> +++ b/drivers/cpufreq/cpufreq.c
+> >> @@ -2715,10 +2715,12 @@ static int cpufreq_set_policy(struct cpufreq_p=
+olicy *policy,
+> >>         pr_debug("starting governor %s failed\n", policy->governor->na=
+me);
+> >>         if (old_gov) {
+> >>                 policy->governor =3D old_gov;
+> >> -               if (cpufreq_init_governor(policy))
+> >> +               if (cpufreq_init_governor(policy)) {
+> >>                         policy->governor =3D NULL;
+> >> -               else
+> >> -                       cpufreq_start_governor(policy);
+> >> +               } else if (cpufreq_start_governor(policy)) {
+> >> +                       cpufreq_exit_governor(policy);
+> >
+> > This may introduce a governor module reference imbalance AFAICS.
+>
+> Sorry, I don't really understand this. Could you explain more? Thanks.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 626e89412dfb88766d90d842af4d9ec432d8526f]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Zijun-Hu/char-misc-Move-drivers-misc-misc_minor_kunit-c-to-drivers-char/20250702-202131
-base:   626e89412dfb88766d90d842af4d9ec432d8526f
-patch link:    https://lore.kernel.org/r/20250702-rfc_miscdev-v3-2-d8925de7893d%40oss.qualcomm.com
-patch subject: [PATCH v3 2/8] char: misc: Adapt and add test cases for simple minor space division
-config: powerpc64-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041717.ZONOYCp2-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041717.ZONOYCp2-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507041717.ZONOYCp2-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: vmlinux: section mismatch in reference: hash_debug_pagealloc_alloc_slots+0x98 (section: .text) -> memblock_alloc_try_nid (section: .init.text)
->> WARNING: modpost: vmlinux: section mismatch in reference: test_cases+0x60 (section: .data) -> miscdev_test_invalid_input (section: .init.text)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+It looks like I've confused cpufreq_start_governor() with
+cpufreq_init_governor(), sorry for the noise.
