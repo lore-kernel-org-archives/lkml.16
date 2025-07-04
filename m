@@ -1,115 +1,103 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FA3258CC0;
-	Fri,  4 Jul 2025 11:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC032222CC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751628024; cv=none; b=LoyKSliXiR8vrHk3SH+RQAu9Zz9PXva4NbAUgN+kwfndz+vTJlmb4wZfs2NvjrvskxoQ3kneS/DvPJTcHJN4MbeEDzLyzEjBBXY2l23ySlRsPuOKquDk6OmrsK+90Qo8cwp2bML5NKTEnB1rcwvXOm4mlaGaZj5IOny701FSmN0=
+	t=1751628131; cv=none; b=CA+4gMd2G7E2/RGxxBBk4Z61ivKD5zmyQDqvsmpab3OyFXeyLmew3AbdINkpy4FipjAuNW+hNtZZwxZT9qyoa65Uyf5eyRpQS0QkL7EqHvktLHd1YDltWap7e0lFZgsgIypzxxFi8NR+QaVtObQEYDTuBsap62Qq3RqERSo/0K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751628024; c=relaxed/simple;
-	bh=an+9EeNhe+f7NnClXdzy3GT6wr5ZBU9/N4Xn0aJS5Mg=;
+	s=arc-20240116; t=1751628131; c=relaxed/simple;
+	bh=kw1Ts3/LTsZ4+wKtri5gY1iYq+HjlpSCJi/WkIwgMnk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HugWJH2wU4qW+imBpLuMhLAsnLoQWVbp4Y9NLpQRG/CB336dfQJ5V1ZTkQ/rL3IFG7/m7ceNfP+3DWxMnu2u1jSxFchoHbcipopMcYpkoThiwn2bULmKndlZbmj0QpnlEaMx3bd+7CVFonmR7Li6ppe1TN3n4vOlFo7rCzmHHa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Pg+ub1sc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Pg+ub1sc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E6CA940E021F;
-	Fri,  4 Jul 2025 11:20:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ImRrZ82OTgD8; Fri,  4 Jul 2025 11:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751628016; bh=PbxPRHfo8N4/KU51gmHKmbPHvzNy62/CXTuO33u0tnA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pg+ub1scvKldoKC9Ddw71bhRdkqL0oPyDEOyxXt/tLUSxq0lLyLLq4kuuENHD2X44
-	 tmxZW9IeFIRwHFUHvv1IVUePmve4vx9evHRDQkSOr0N0LC0l5VSwgKQtUfhZbbDnN9
-	 WioZ5lVAouTwMkBi8u1LkoxmtGVGGYwlTTeamzsT1LUux57EaKd9ln7HM3P90gYMWa
-	 WhxVOYHVSDFp5FBsbWClz7LjPSQy2B/xQ0iA0jQbTtDmduCnSr4MDuuK6rrYO61KiH
-	 99b0nZpXqWmsCMpfkBBU/4PuLz3KrjpxP6uUp34w0Lw6N1b4pCtSZ1tK9LeG9qdoUl
-	 RdVmNfVfp/jWXAlfILdT24bluuiFejdLSFDBE6Vh2eQhkVIadmmtoukGGTgNZpaElX
-	 2vUYNb79OXqmVFcPtFrbV7lf5je6N/abM4wf3Ka/NQwExEi0B2fKv8tyhQHe8TK+jW
-	 iKfLfjh1rtc8TOADC+64EGNYMgrY63fWzQ8Uhea8Ds92V2OcoX5lO5dBdgMaLZ/aH1
-	 j0evWwTP+yr/fuQv5h523cVSL612AyNBQ/NaA6jBE62avucrRo+4/wJMlmcXvNNtzG
-	 dfKyyun2NRGQACwd7lp8x30EG6ho2IiUrK9aGkc8cStkxmG3yvQqiOCfvmZqexU/kO
-	 ufm/8IhY1dxTkUA8dezDqfww=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7914C40E021E;
-	Fri,  4 Jul 2025 11:20:00 +0000 (UTC)
-Date: Fri, 4 Jul 2025 13:19:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Breno Leitao <leitao@debian.org>
-Cc: Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, tony.luck@intel.com,
-	rafael@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	kbusch@kernel.org, rmikey@meta.com, kuba@kernel.org,
-	linux-edac@vger.kernel.org, mchehab@kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH 0/2] panic: taint flag for recoverable hardware errors
-Message-ID: <20250704111954.GBaGe42gY5_xADb17Z@fat_crate.local>
-References: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtYoOasDzbnWRs2apBZ/qeRMXbedtk4Y8A3LlhmQFQXKoJkr80nSEAZm2+2LjOInvxVbk9EUlixgj1xi4qpRp5+tFPdlte5A+AyE+wZdbPiMip9MaaVXEMAscy1lV0NDTN4vsVqTc66halfWN6LiUZNp0PVu6HgrqyVKhrjn1Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA469C4CEEF;
+	Fri,  4 Jul 2025 11:22:08 +0000 (UTC)
+Date: Fri, 4 Jul 2025 12:22:06 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: will@kernel.org, anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+	ryan.roberts@arm.com, kevin.brodsky@arm.com,
+	yangyicong@hisilicon.com, joey.gouly@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH v4] arm64: Enable vmalloc-huge with ptdump
+Message-ID: <aGe5XjWKhgjzcw7L@arm.com>
+References: <20250626052524.332-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704-taint_recovered-v1-0-7a817f2d228e@debian.org>
+In-Reply-To: <20250626052524.332-1-dev.jain@arm.com>
 
-On Fri, Jul 04, 2025 at 03:55:18AM -0700, Breno Leitao wrote:
-> Add a new taint flag to the kernel (HW_ERROR_RECOVERED - for the lack of
-> a better name) that gets set whenever the kernel detects and recovers
-> from hardware errors.
-> 
-> The taint provides additional context during crash investigation *without*
-> implying that crashes are necessarily caused by hardware failures
-> (similar to how PROPRIETARY_MODULE taint works). It is just an extra
-> information that will provide more context about that machine.
+On Thu, Jun 26, 2025 at 10:55:24AM +0530, Dev Jain wrote:
+> @@ -1301,16 +1314,39 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>  	}
+>  
+>  	table = pmd_offset(pudp, addr);
+> +	/*
+> +	 * Isolate the PMD table; in case of race with ptdump, this helps
+> +	 * us to avoid taking the lock in __pmd_free_pte_page().
+> +	 *
+> +	 * Static key logic:
+> +	 *
+> +	 * Case 1: If ptdump does static_branch_enable(), and after that we
+> +	 * execute the if block, then this patches in the read lock, ptdump has
+> +	 * the write lock patched in, therefore ptdump will never read from
+> +	 * a potentially freed PMD table.
+> +	 *
+> +	 * Case 2: If the if block starts executing before ptdump's
+> +	 * static_branch_enable(), then no locking synchronization
+> +	 * will be done. However, pud_clear() + the dsb() in
+> +	 * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
 
-Dunno, looks like a hack to me to serve your purpose only.
+Statements like "observes" really need to be relative, not absolute.
+Like in "observes an empty PUD before/after ...".
 
-Because when this goes up, then people will start wanting to taint the kernel
-for *every* *single* correctable error.
+> +	 * empty PUD. Thus, it will never walk over a potentially freed
+> +	 * PMD table.
+> +	 */
+> +	pud_clear(pudp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	if (static_branch_unlikely(&ptdump_lock_key)) {
+> +		mmap_read_lock(&init_mm);
+> +		mmap_read_unlock(&init_mm);
+> +	}
 
-So even if an error got corrected, the kernel will be tainted.
+This needs a formal model ;).
 
-Then users will say, oh oh, my kernel is tainted, I need to replace my hw
-because broken. Even if it isn't broken in the very least.
+static_branch_enable() is called before the mmap_write_lock(), so even
+if the above observes the new branch, it may do the read_unlock() before
+the ptdump_walk_pgd() attempted the write lock. So your case 1
+description is not entirely correct.
 
-Basically what we're doing with drivers/ras/cec.c will be undone.
+I don't get case 2. You want to ensure pud_clear() is observed by the
+ptdump code before the pmd_free(). The DSB in the TLB flushing code
+ensures some ordering between the pud_clear() and presumably something
+that the ptdump code can observe as well. Would that be the mmap
+semaphore? However, the read_lock would only be attempted if this code
+is seeing the static branch update, which is not guaranteed. I don't
+think it even matters since the lock may be released anyway before the
+write_lock in ptdump.
 
-All because you want to put a bit of information somewhere that the machine
-had a recoverable error.
+For example, you do a pud_clear() above, skip the whole static branch.
+The ptdump comes along on another CPU but does not observe the
+pud_clear() since there's no synchronisation. It goes ahead and
+dereferences it while this CPU does a pmd_free().
 
-Well, that bit of information is in your own RAS logs, no? I presume you log
-hw errors in a big fleet and then you analyze those logs when the machine
-bombs. So a mere look at those logs will tell you that you had hw errors.
-
-And mind you, that proposed solution does not help people who want to know
-what the errors were: "Oh look, my kernel got tainted because of hw errors. Now
-where are those errors?"
-
-So I think this is just adding redundant information which we already have
-somewhere else and also actively can mislead users.
-
-IOW, no need to taint - you want to simply put a bit of info in the kdump blob
-which gets dumped by the second kernel that the first kernel experienced hw
-errors. That is, if you don't log hw errors. But you should...!
+And I can't get my head around memory ordering, it doesn't look sound.
+static_branch_enable() I don't think has acquire semantics, at least not
+in relation to the actual branch update. The static_branch_unlikely()
+test, again, not sure what guarantees it has (I don't think it has any
+in relation to memory loads). Maybe you have worked it all out and is
+fine but it needs a better explanation and ideally some simple formal
+model. Show it's correct with a global variable first and then we can
+optimise with static branches.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Catalin
