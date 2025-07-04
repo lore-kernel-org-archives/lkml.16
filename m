@@ -1,139 +1,144 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C231AF0C1;
-	Fri,  4 Jul 2025 19:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FD620ED;
+	Fri,  4 Jul 2025 19:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751658648; cv=none; b=kqnXf9+ofIlIY6CG7hGK+nu7J2fWUDbZ1OAby9zt3bNmyrW6kxKxXJcbjApNKnGZmXmtWidse1imTf5LE4aSnaTmH/oajhSYX8ly3BNo3HsgMl8opQx4r9LR4M5CMsa1jSVlJU2xo/XJ7GCBpvrj59utGlTfYUXiRCvgmvYy+3A=
+	t=1751658796; cv=none; b=eVEm3I5g+hTNkXF8ZRaXJi55oxy+CiHMgIT8zZz/LzQADASvkrKEnPos+dRZbb/S/8eETbvYTEsyWAVxtxvjXtlxPvfIJe4JnCjxJNtruqdybxCCWL1xNtHeEJeD++ou4K/TnEP3nLgfhdjgPRVyZJb8T5KSC2hmQI2Uum2XUOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751658648; c=relaxed/simple;
-	bh=qKgo02B17DodnhaibVPdaDlTdyhSAoUeT/A9aoa3X7Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bk3RY6ZiWpwBouYj/ckoFxffV2oxUqthcrJGHi88IbsGlRRviRWKDWzY4HURjTx1PxYrNXmiFX5lJbbtqXG5BXMF5mQDM0cw8barWw168+8yHIqDA3tJl2A3b11NTVR6VJKUqZEkw/WR56eBs62lKeeYuntM6+6I9GJ+ZWAEY3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWjlyHtP; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751658796; c=relaxed/simple;
+	bh=DET2Gu0vw6K100zocQHh/uFyXtWFTkNoh5o1rTKK820=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PSJc3G0ptJoJCShRtFeZj+HUShREHFd5oRvv3ZdvAtP3DRAuvv2rCrVn/nUek9Z1pi4oNoE2Q8qWe7slblDouwJAZJW89mceuM7BrM8NrdZnXJGLF1q1Kbh3LcI94AbA0AcCjwZfJNqQOZXmgYLrIy8yHojXVUXKEq8lsj9v42c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZQWPG3w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWjlyHtP"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a442a3a2bfso21796411cf.1;
-        Fri, 04 Jul 2025 12:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751658646; x=1752263446; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7PuVHoEnE9nwV2qIez2+av51S6d8Rz9QyuW19Fhxnfw=;
-        b=NWjlyHtPzgq13ZNlqtLeKW02okFhLCCLhbpwQ1dAgkpIPU0gp2+hkJD+WErsTY2zyk
-         nUzXg/IhdoasSa5F/BFkphdb3v8VdllsjgBZP7FKrs+6GNX1mofOr21UPdg9Y4cLWP37
-         fKcPV34XQhXn5XbnqBel1wUl92e8sLZ2g4l9AwmGp+fRtYWM4G+55zkDVcHsR7QpLFT1
-         hUaM1q8QVqdEIfbu2s3OHI5bvA+2tpwFknkYn0OGG0S6uSLrmIUfbZjP8YHH+ubmDF9W
-         dqJD9ohyt0livyIwk1XaTPU1AOlzUfw5kN83qj5ESuPy6eeDpNUKOzm5BEUwwPXeO1SA
-         IMCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751658646; x=1752263446;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7PuVHoEnE9nwV2qIez2+av51S6d8Rz9QyuW19Fhxnfw=;
-        b=klN6wqcNbR3mIpHHyJm4IoP/IKpjPHKcl3mDUjJww8oOpbrcyqRAIZxuktRjx9JOza
-         P+M+72+lbZEmsqu588iX2md5SmqKTcUnZtwLMR+R4Hwcae/nM1uEPOcCNtKxIhAzrfWV
-         rxula8/LuagvLATskAJR/3aOPg5ISpDlpK/r42gt0gRtXKoSrllyHw1WJl04wlCqRWDI
-         QQsiSqYXbAPnPowJugBO4H3pNkGxBq7E5mYMuZOI+7mASB0yyCqaxSypbtL7vTgAKhv6
-         n9l+Z6ib7NOHybqQXY4BewYUMWEapnR5VsZxqT34OmEHMUvESX2hayJZqGFEQQdrCgze
-         xZxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhH82LipRY2EIrV9LHoOuK+VMHFaNQ+qWriiXOpDZKTyj0OxAxM582B3Kd3cKg6LnyXJq8o46n4QKPiIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvj1C1YoD8xszkjeAeHSFj/uFkQyYr2pwKzruMxOk57OxMR7mt
-	SFWPEgGTcdnEWOq3qHO6w5U0gD379GdeoEplAwiY7BmDXDXSPI19SWZd
-X-Gm-Gg: ASbGncvJqCQejozzGGjpsSfqFWfPhENsDtnOLUzv4pwZ6EAKoZfKh8g2qNHCwqoE8Yg
-	LXPT51eqiQmgdXxprilqpk6xS580cf4Unp3avy+eAUy3ssDizWg8jrqXgpyvV0JszjzPW8MZKi4
-	7726l3uxIlzHPxDI1yIFbIsvo9a/LLIRfEsKy1KL6EYRNYjE7vIoiXPiAPa/JladXxlnrJKTBB6
-	kCEbGaz5OcT2sy74bB38zkbhoY/CUr4gOkUKBzldoFHq27Q5rk7VWtroUD7gLOJ7WEfMoL9UH/0
-	5KIrmwInPZzhpftBVKKMxw+H2MV7h4qtEV3jzuAzIJkbD3H4QYv1YKAxLwD6EDJTqzNOF7IenuV
-	aKGpwfSkTJYi1MT8XRw==
-X-Google-Smtp-Source: AGHT+IFvplrbfx5eIIEM7v2xo7xdx+f8EnlLoYHF/n7XRXsSIX9Mq7yEa6hYb2Zp5xdQ7JlW21zyUw==
-X-Received: by 2002:a05:622a:142:b0:47a:e1b1:c6c9 with SMTP id d75a77b69052e-4a99689f4f1mr58363971cf.42.1751658646273;
-        Fri, 04 Jul 2025 12:50:46 -0700 (PDT)
-Received: from 156.1.168.192.in-addr.arpa ([2600:4041:5c29:e400:94f3:d2bb:5ace:77a1])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a994a8e083sm19401281cf.65.2025.07.04.12.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 12:50:45 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 04 Jul 2025 15:50:44 -0400
-Subject: [PATCH] rust: auxiliary: remove unnecessary import
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZQWPG3w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A59DC19421;
+	Fri,  4 Jul 2025 19:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751658795;
+	bh=DET2Gu0vw6K100zocQHh/uFyXtWFTkNoh5o1rTKK820=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DZQWPG3w0lJkqYfBxwBNM3BVHGWmPzyMBcjTAIkyB/N9SqiQ4/IOx2DJRrKeiNw3i
+	 w8lMfZ9su1NRgEQ80Er9kIAvm/ShWhC0Qi20IwZY2UB37ha31FmXvBf8mfBDS4M7qe
+	 xwt/q+VrNeGN7W9JlI4kalMSjNfC8yH8yWh5roHFJSIWsERZN/7Xk+QIozVj8kOq0R
+	 Qoy0wPppSnr+DF2T5UZqfJ7RoWXYM9MNzS4YD9f6AqHq+fYeV6riQww1jKtdhQXFpg
+	 Xri+k6bHoSbB1P2T+bFHl0Y6C0zIsv3HOEFPZZ4nPP/S6IpRlAjFF+Yf4/ZclM//hD
+	 f28emAB+5GrbQ==
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7387f21daadso1409244a34.0;
+        Fri, 04 Jul 2025 12:53:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU6/wqTrQKLFkskvwey5ed3uuYg8b8TJzMRGAA36AM6pAPHJnACO38vGJnBQe6ce8SDyugVT1iT5Uh/@vger.kernel.org, AJvYcCV3jIfbSu9SnOYj+NOFK7tvwkuIFvaBD0XXA5M1YrEN6KpO+KfAk5oBPxF4Jmd8qnGxmVpm7fua11yIJ14=@vger.kernel.org, AJvYcCVEI3hjhiQxNg9XyGP52a2BrI5UzP1pA7SQExIQM070ZBzmFg661cXZfA/KcgcqLRUdeDJaak33hVca@vger.kernel.org, AJvYcCVQiz3X3dLwULVkqW17SPGfttnisuTw6eeJ5p1BbIJeRNQnAoCFncn0UF7SYfbIKsdRpzKzzKtQrTFFBsPq@vger.kernel.org, AJvYcCVcEJZc11p24SKj/vrqVa6medaQK9aUruVC9NA8H1gdMSV0LfIqOjqdCZL9twZULaeyIG9bS4orvru0srxC3ZHhV40=@vger.kernel.org, AJvYcCVeeKGq3p1xVHfrqk6T0a7cx/mgu9pJ/O7397udUXz1i6PO28dThPIbp1mZO+yG6kcVrW2USs6Lq/8Majsqruscsw==@vger.kernel.org, AJvYcCWDdUHmSgwXR22/L9jKIFnSZDYYHFAaND//8PwjWShigIa/5zK6+kHgU6RV3LV4tWJBFYul4eWFmv+CWAL2@vger.kernel.org, AJvYcCWYHkLr7s13pm6NCntUx7ZRCGrZsKhQ7SytuAEs4e5ozGU6xFNlnpyruRxGmKWM3Sb1K3EQItCcn0PpghQw@vger.kernel.org, AJvYcCWbOZxP8Hi3TH6RrFn92rXb4OdPLjPwi7JWsbDV2+heggvnc7yyFESzXyTNBKM3cCswcQ5qzjBFeb/Y@vger.kernel.org, AJvYcCWuEJcVT1/+wke4vtzdiM406LdRydcMGH4irFTtqMJ9coAwl3SQOPeZe2fEAq6KcL9GymrgCphQKpI=@vger.kernel.org, AJvYcCXfDIUeXEm4RwdpGDxksDUx1G7srmGevgdjYIKokxob5ISbRV70FdEBI+X9Cju1H7ZaLW68TlYhT8EQ@vger.kernel.org, AJvYcCXgFgyVIK8udl7foc7t7RERBst0yD4T5Ik2BQ+SYs7sWH6kWrlg5zXqmLnqEM5/SiHw58xS2EpZ3nVt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx46CCdg84FCk8EY6Jjhy/WMJEy9wJFVko+/0+2E49DaqS8Et55
+	Mm4U98sXfThJN1oeNgIHpiJ3fHhMUHNZGl5N8NefMT9iXu+n7lLrANLN+CsXLDVvNRmKb6t5uGb
+	X9MLQBejz/fV3YAVSi0WHU635Yvnhq/U=
+X-Google-Smtp-Source: AGHT+IGwyJdpfUpQdC1ll+pDxheWsfqF2OxiXgG5efFF2JMqLn7rWmU52bUG3dmWON2puNLtUSymlX1XAG1ud9UOuuY=
+X-Received: by 2002:a05:6808:4f11:b0:40b:1e12:3cda with SMTP id
+ 5614622812f47-40d028eb731mr3068338b6e.0.1751658794378; Fri, 04 Jul 2025
+ 12:53:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-cstr-include-aux-v1-1-e1a404ae92ac@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAJMwaGgC/x3MQQqAIBBA0avErBswqdSuEi3EphoIi7EiiO6et
- HyL/x9IJEwJuuIBoYsTbzGjKgsIi48zIY/ZoJVulFE1hnQIcgzrORL680Zja+NaZ1rtLeRsF5r
- 4/pf98L4f3UJHjWIAAAA=
-X-Change-ID: 20250704-cstr-include-aux-7847969762a8
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Leon Romanovsky <leon@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1751658645; l=1353;
- i=tamird@gmail.com; h=from:subject:message-id;
- bh=qKgo02B17DodnhaibVPdaDlTdyhSAoUeT/A9aoa3X7Y=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
- MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QChOkqPD1zqIfkWPNOY022Cb7O7nhFhCdmEdMBKm8ipc2WcJz+bO0uCOGrvyMTUFb1ptkfRh01x
- Ppbs96AWcuAg=
-X-Developer-Key: i=tamird@gmail.com; a=openssh;
- fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
+References: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com> <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
+In-Reply-To: <CAPDyKFoznqfdX7Dvu3VPa5Me10VHGphnRRHrU17w-fie7HrQ5g@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 4 Jul 2025 21:53:02 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gH9ZAK9br58KB0VEtG+4VdwO7vEKtrKbpcYOKnZPf7bg@mail.gmail.com>
+X-Gm-Features: Ac12FXwblY0_4cI57ifv3CnjCYA9AzB00n7d7xgdR8a0f_LjAGiuDDstt8INfuU
+Message-ID: <CAJZ5v0gH9ZAK9br58KB0VEtG+4VdwO7vEKtrKbpcYOKnZPf7bg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] PM: domains: Detach on device_unbind_cleanup()
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Claudiu <claudiu.beznea@tuxon.dev>, rafael@kernel.org, linux@armlinux.org.uk, 
+	gregkh@linuxfoundation.org, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	andersson@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, wsa+renesas@sang-engineering.com, 
+	mathieu.poirier@linaro.org, vkoul@kernel.org, yung-chuan.liao@linux.intel.com, 
+	pierre-louis.bossart@linux.dev, broonie@kernel.org, robh@kernel.org, 
+	jirislaby@kernel.org, saravanak@google.com, jic23@kernel.org, 
+	dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-serial@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
+	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-`kernel::str::CStr` is included in the prelude.
+On Fri, Jul 4, 2025 at 1:16=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
+>
+> On Thu, 3 Jul 2025 at 13:27, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Hi,
+> >
+> > Series drops the dev_pm_domain_detach() from platform bus remove and
+> > adds it in device_unbind_cleanup() to avoid runtime resumming the devic=
+e
+> > after it was detached from its PM domain.
+> >
+> > Please provide your feedback.
+> >
+> > Thank you,
+> > Claudiu
+> >
+> > Changes in v5:
+> > - added PD_FLAG_ATTACH_POWER_ON, PD_FLAG_DETACH_POWER_OFF;
+> >   due to this a new patch was introduced
+> >   "PM: domains: Add flags to specify power on attach/detach"
+> >
+> > Changes in v4:
+> > - added a flag in dev_pm_info that is saved in dev_pm_domain_attach()
+> >   and used in device_unbind_cleanup()
+> >
+> > Changes in v3:
+> > - add devm_pm_domain_attach()
+> >
+> > Changes in v2:
+> > - dropped the devres group open/close approach and use
+> >   devm_pm_domain_attach()
+> > - adjusted patch description to reflect the new approach
+> >
+> >
+> > Claudiu Beznea (3):
+> >   PM: domains: Add flags to specify power on attach/detach
+> >   PM: domains: Detach on device_unbind_cleanup()
+> >   driver core: platform: Drop dev_pm_domain_detach() call
+> >
+> >  drivers/amba/bus.c                       |  4 ++--
+> >  drivers/base/auxiliary.c                 |  2 +-
+> >  drivers/base/dd.c                        |  2 ++
+> >  drivers/base/platform.c                  |  9 +++------
+> >  drivers/base/power/common.c              |  9 ++++++---
+> >  drivers/clk/qcom/apcs-sdx55.c            |  2 +-
+> >  drivers/gpu/drm/display/drm_dp_aux_bus.c |  2 +-
+> >  drivers/i2c/i2c-core-base.c              |  2 +-
+> >  drivers/mmc/core/sdio_bus.c              |  2 +-
+> >  drivers/rpmsg/rpmsg_core.c               |  2 +-
+> >  drivers/soundwire/bus_type.c             |  2 +-
+> >  drivers/spi/spi.c                        |  2 +-
+> >  drivers/tty/serdev/core.c                |  2 +-
+> >  include/linux/pm.h                       |  1 +
+> >  include/linux/pm_domain.h                | 10 ++++++++--
+> >  15 files changed, 31 insertions(+), 22 deletions(-)
+> >
+> > --
+> > 2.43.0
+> >
+>
+> The series looks good to me, please add:
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> Rafael, do you intend to pick this via your tree?
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/auxiliary.rs              | 1 -
- samples/rust/rust_driver_auxiliary.rs | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index d2cfe1eeefb6..4fe62bbf8b3a 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -10,7 +10,6 @@
-     driver,
-     error::{to_result, Result},
-     prelude::*,
--    str::CStr,
-     types::{ForeignOwnable, Opaque},
-     ThisModule,
- };
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index abf3d55ed249..f2a820683fc3 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -5,8 +5,7 @@
- //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
- 
- use kernel::{
--    auxiliary, bindings, c_str, device::Core, driver, error::Error, pci, prelude::*, str::CStr,
--    InPlaceModule,
-+    auxiliary, bindings, c_str, device::Core, driver, error::Error, pci, prelude::*, InPlaceModule,
- };
- 
- use pin_init::PinInit;
-
----
-base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
-change-id: 20250704-cstr-include-aux-7847969762a8
-
-Best regards,
---  
-Tamir Duberstein <tamird@gmail.com>
-
+I do in general, but I haven't looked at this version yet.  I'll get
+to it early next week.
