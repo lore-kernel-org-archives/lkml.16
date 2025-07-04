@@ -1,127 +1,177 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723E41D90DF;
-	Fri,  4 Jul 2025 15:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71F29B8DB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642695; cv=none; b=OeVCKhze8mAP8qu5+qsLOPGx8EfANUyS+wcB9IRc2sIY36P5cwBMk3bOJK1P2v8bbWsAqIkdEeCgoxwOzvgc4FJpDz3xg7NlFSKzfeSWR39CROTPMDOUku8+FlzjuY/jIOkzqzBlRJJ8uwQQBCD+UYE9uF5ETIj4HpmknOu3fMs=
+	t=1751642704; cv=none; b=lRXlOw2Vzd6hSp1v/FiQ0g1FbvBP6+l562AHzk/lRyBv+uqRDk5Z9golQJSwYTQgt3lor29UaVzTuFj+VW12IOAw11pEAI837rbr8g9MrY2xiEqfTeoT7Dl05jxQqn3Q8QQYszNZBuNb+VSrIsr7CQIzZTN4qkyuNlFcTr9Fba4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642695; c=relaxed/simple;
-	bh=xAd35bvRTKqhy46h4g79JkR0vHUD07jpCvDljPjDKSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RehTv29J2jYC4XJetEHau48VZF79RmquK/seKDK8krwwx0wZFfCquYzpDsgJ19/BSmsVKvwLW7yZhUriyRlUB7105K6cmwHkxXr7339pB37WiEfCyYxTeRfirJtFTchyLrSeHpV1N2GVMSV4HScKrL6XyoiCvQIvrikIjypJ7fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iEuzVTYy; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751642704; c=relaxed/simple;
+	bh=4+t9XeVok2CNNwq8+4fTqhuZ5vwv/14UGzpJiaIIxL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h2xAU6x1GvojSxQ2WdyXPux4RQLq/DGCH43UnNxDQFJnLRFgMrGY59dDpzxqj1xpDN2Ui3SeLIvN3PnfvnpVOrByH+BXjPugtMTkKSgqqxfhNhdqQIT3/4KX+FZuC4tS/jzzRfwQg1b4XUlULa/O3Dfd99t8xw++ZO8MdJYDpVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xvethSmZ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEuzVTYy"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad572ba1347so150223066b.1;
-        Fri, 04 Jul 2025 08:24:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xvethSmZ"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453643020bdso7889655e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:25:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751642692; x=1752247492; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ej3nCbFn1XbsBpYqHQKdTumXsRWi+Kro1lNdGeFzJSM=;
-        b=iEuzVTYyIGLF+beps+Xa+40DkppvCgux2RvfC2rM7A5QjX6GC16xzqf4eFR06FaHDx
-         O19aCJY3L6zX+pybPs8qfMWZMaAcNbkxPA/B/1U29+IYGurWirtgpxhDWZX5kPKuwnmh
-         drj2ES/UmoN3H7NXxNmVCF85LYfSu0tKfJNlp1eY8AiTncZ6WXD+vMTlb7yKq60QWrd6
-         Exe5qmCeX7nvL/AJUfg9mTtW5zLMZ6llzM5t653Z2TTV65mzFE1EMipH1PmUJ2CWN2wB
-         xSrXorUSI7R5GxXvnHKIs/humIsT7fS7npwh399/Y5MHOykX39RKMePFNWKcL6lXkRWx
-         pQgg==
+        d=linaro.org; s=google; t=1751642700; x=1752247500; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ex3KxNtMtSZ/VdrbXkChoGhTiQNqhVU1db+WMbI9p8M=;
+        b=xvethSmZlvBbj0Iwf55DsEOkXGJYBKk7O2C4xgcbOSZMXTF7dIZ8LiRiSpY3thzJfB
+         UyNP4JS/UP3eyGfZRiFrDIInMzkChkFrAMowEx7QIc02mwUGqdX0PL5KwPSUjipRO5N2
+         RXZeU5+1dqHGfy+b+klDvS5oxGXJQnd9Ww6e0S8rZ3FzwjW9PT9Cj4kEZQPobZrva1In
+         cLQTLBG1kQy+6aPEKeXxOO40N+5tNScJJ20L3b/jEOak12iOKl3AaLP0EraIWrwmWHTz
+         2lgapNFX2YorJjn5Z2HnF7TJXwwmm2j35UnWIXOrEjOonleVZduu5O6w2RsCoqRxAehX
+         L5FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751642692; x=1752247492;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ej3nCbFn1XbsBpYqHQKdTumXsRWi+Kro1lNdGeFzJSM=;
-        b=pyiLK1+Lipgp3FdaFZWwxJq60DcovULe9NZq6M0nqwVb5O+4KClD3USCvwyAE+IjlG
-         YM0+dq3yJGUTuRrkcoOQhnTurq+KJEPCtJmxDPgVwy378vQ+8/85Tzat9zhJlZHxR2D6
-         yV3OiJtHw+IJCLzzLY1eaqGkcK+I6vaOP+bQjie2hvgrBHXUkZjBSZDI5mpAsc/99SlT
-         by1Tt7rSDbcVc6W44HTNIF6cBEMZsqKqN6pTJW5vVYZNMszRlRcuUNiAGxVi5/rv+yWz
-         u1Q8PCVpfHYElsfWNjJIs6mUwShl8Hhv7YABeHhLeae1okDwF7mHsqY9fg56wMsi1Rce
-         SrJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNQBuf58K8C0bN+kgBWWj7702pjEqHG/mU8b8zh9TPPFxveYzlQ517I3eCeSkDg92m66d6ra7ktEao@vger.kernel.org, AJvYcCXF211rFx17/62wSpFviOZUok91qT1KAmh/TdqtTeU3h3X5Ebp8lz8oYck5IPGfEn3ErbswVVOneNZeIH+d@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3oQIyMBF9NKEFuqf5J9WRYGAyEcHdI84Ju7qZLRXtO1doTOCt
-	q/xXrjEq79cfOzur/aEtoEPiTHoxLAgFiMwFYrkMvbhfwYmjxmCGagm5
-X-Gm-Gg: ASbGncuL+WyvSgty78R742qqDn4f+intOTJew7DAEQVEw0N1rakQgmmJcuzH3k6a+jA
-	au+24M5TJG5IgIfNvK1cFdsIsb9Qs6mPRYyJ4/GVIYlzkZN/v/pnqr8tBk78qgqN/go7ldKd6vl
-	pvWt66fHYrsCYqzfyhwyxy1wAuRMLuojCgPm/uXPF9x3JEI5VEUIuNSOtXsyHcMcgKtbTTZly+x
-	AT/RDii4OBDKJkN+wy/vU8G3bY8Q78FSVBSPybwKijofKLxqdUj3/zJMhJpUuecM9wn4u9FjkkJ
-	1dqryZwjFR2S/ZUzhKRDFgwGwjw1kIh//FrCSJFCjrFBviqkUEKn/oUWPfJTTvU8uHU+aBVYL4T
-	DdYhdRrd2Sq57tlLjuZSsPCu1/CRjMCxx6BHWIWcr3hkHcsZB
-X-Google-Smtp-Source: AGHT+IHwano/8F7J4IZ7KXk0r/+3gnI1s2HpUjYzfPDb1NoCmRTCepUeVhiNl6KYkfterigM84Tagg==
-X-Received: by 2002:a17:906:d54c:b0:add:fb01:c64a with SMTP id a640c23a62f3a-ae3fe7f113bmr251053866b.43.1751642691465;
-        Fri, 04 Jul 2025 08:24:51 -0700 (PDT)
-Received: from masalkhi.. (ip-078-042-182-222.um17.pools.vodafone-ip.de. [78.42.182.222])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6abfd8bsm187604166b.81.2025.07.04.08.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:24:51 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: krzk@kernel.org
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	luoyifan@cmss.chinamobile.com,
-	robh@kernel.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: eeprom: Add ST M24LR support
-Date: Fri,  4 Jul 2025 15:24:49 +0000
-Message-ID: <20250704152449.12156-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <765c675c-6ae9-4b79-bc49-865e03d54fa5@kernel.org>
-References: <765c675c-6ae9-4b79-bc49-865e03d54fa5@kernel.org>
+        d=1e100.net; s=20230601; t=1751642700; x=1752247500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ex3KxNtMtSZ/VdrbXkChoGhTiQNqhVU1db+WMbI9p8M=;
+        b=JGwtXFKeU2hRIw7vu+OarIqgzIOVg0UTJGIpGK5UDEXDpapIPIRg2Vyioe4TVDjLTz
+         DqXhN11I7JB+KzCzNxXgNXm9BMrRukI6xZ7f+HW0gS5lOrF21ACes1Kotp6d0UEftnHf
+         +a18jX/QRwGGe5x5L076HbnBheSF7s7AHb9+SC9JAQwKbKXlxDbZUEPmr3P+p4U3n09J
+         J1zdljL3Fiy5kZIC6yCMMwLoWpnB82CyeTm/zvNGW4J4NKBlhjquXukF5Ya+IBCbEMYH
+         OYGNofHD6ipzx2X2rgfXJsoaslluypdRt+FdnpAvmojzyZssljqHdzfZIRwDsmcNutp0
+         sSJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBJVGx2mmNPjCSuOknndNWyFdC1w+pwaQYfYo71+0BK6j0ELiQjnxN8xJWFOJMdPRbrTKARCzau0tgc0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSakMdHfGVc8RqabnS8yrTgutk89SbvqHFl7f75xIJ785rWJNW
+	derFtYc9zi3HVdvzcq1zejMVkOnuuEWadyJqxW+ZsHECvSOwKUN4TL+1oVnkc5ejO78=
+X-Gm-Gg: ASbGncvqelJzoUh0ueQ8GSR1g8FUq2WrSuSQKb29+ODj9bEfmn9OR8lNDcA25lARAHW
+	dYQ/tkxA0lpr2KdLfXubOU8NpoWGZacgB+9gH4xYJfWjmqTv8+ZsMxiw9gNnUjP2wvsLm7mcTzn
+	U8i3Xx3X+cA6I18j8eTVwggQJuj2rg2zwi+mT+Z3RY3gXo0ekHspWg8ol1WYc8pMeA0Cw3VgQhm
+	kDKQl/hzDRGHlNfG47s60PMS/i2fqq8koIj8Nav0Xmy9Fz9XUH8IP3EtxBwEmhHSRiHedb26qCi
+	dZwVdPgLr4z472RgJoVId8ryA7VsCfe0cSoyyFQiIvwxJYVw9INDuzIStXAFRBMIwaeE8CmCl1A
+	yiwbh3hBMUU8uEaDoXqaKRsGol7yJaPI//00XaXI=
+X-Google-Smtp-Source: AGHT+IFbHQUJNEaUtYuoiAKnpxKSTUdx7Of+p6cxehImAaw+BY4hOH0GpPbuuowaAwyAR0v3kXlQMw==
+X-Received: by 2002:a05:6000:4210:b0:3a5:2beb:7493 with SMTP id ffacd0b85a97d-3b4964c8b9emr2778414f8f.9.1751642700293;
+        Fri, 04 Jul 2025 08:25:00 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b9651dsm2780455f8f.65.2025.07.04.08.24.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 08:24:59 -0700 (PDT)
+Message-ID: <f1c4240d-a601-454b-9cc3-88ed8becb490@linaro.org>
+Date: Fri, 4 Jul 2025 16:24:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] clk: qcom: videocc-sm8550: Add separate frequency
+ tables for X1E80100
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+ Johan Hovold <johan@kernel.org>, Stefan Schmidt <stefan.schmidt@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
+ <20250701-x1e-videocc-v1-3-785d393be502@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250701-x1e-videocc-v1-3-785d393be502@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 4 Jul 2025 17:10:07 +0200, Krzysztof Kozlowski wrote:
-> On 04/07/2025 14:39, Abd-Alrhman Masalkhi wrote:
-> > Add support for STMicroelectronics M24LR RFID/NFC EEPROM chips.
-> > These devices use two I2C addresses: the primary address provides
-> > access to control and system parameter registers, while the
-> > secondary address is used for EEPROM access.
-> > 
-> > Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> > ---
-> > Changes in v5:
-> >  - No changes and already reviewed by Krzysztof Kozlowski
-> >  - Link to v4: https://lore.kernel.org/lkml/20250608182714.3359441-2-abd.masalkhi@gmail.com/
+On 01/07/2025 18:28, Stephan Gerhold wrote:
+> X1E80100 videocc is identical to the one in SM8550, aside from slightly
+> different recommended PLL frequencies. Add the separate frequency tables
+> for that and apply them if the qcom,x1e80100-videocc compatible is used.
 > 
-> So you just ignore the tag?
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
+>   drivers/clk/qcom/Kconfig          |  2 +-
+>   drivers/clk/qcom/videocc-sm8550.c | 29 +++++++++++++++++++++++++++++
+>   2 files changed, 30 insertions(+), 1 deletion(-)
 > 
-> <form letter>
-> This is a friendly reminder during the review process.
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 26752bd79f508612347ce79fd3693359d4dd656d..53bbdbe0725bd1b37ecd4c6b15b0d31676d9f548 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -1394,7 +1394,7 @@ config SM_VIDEOCC_8550
+>   	select QCOM_GDSC
+>   	help
+>   	  Support for the video clock controller on Qualcomm Technologies, Inc.
+> -	  SM8550 or SM8650 devices.
+> +	  SM8550 or SM8650 or X1E80100 devices.
+>   	  Say Y if you want to support video devices and functionality such as
+>   	  video encode/decode.
+>   
+> diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
+> index 3e5891b43ee404edc6c99bbf8f2583cb44df9e37..32a6505abe265472de4059c4a048f731fdbf1dfe 100644
+> --- a/drivers/clk/qcom/videocc-sm8550.c
+> +++ b/drivers/clk/qcom/videocc-sm8550.c
+> @@ -145,6 +145,16 @@ static const struct freq_tbl ftbl_video_cc_mvs0_clk_src_sm8650[] = {
+>   	{ }
+>   };
+>   
+> +static const struct freq_tbl ftbl_video_cc_mvs0_clk_src_x1e80100[] = {
+> +	F(576000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	F(720000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	F(1014000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	F(1098000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	F(1332000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	F(1443000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
+> +	{ }
+> +};
+> +
+>   static struct clk_rcg2 video_cc_mvs0_clk_src = {
+>   	.cmd_rcgr = 0x8000,
+>   	.mnd_width = 0,
+> @@ -177,6 +187,15 @@ static const struct freq_tbl ftbl_video_cc_mvs1_clk_src_sm8650[] = {
+>   	{ }
+>   };
+>   
+> +static const struct freq_tbl ftbl_video_cc_mvs1_clk_src_x1e80100[] = {
+> +	F(840000000, P_VIDEO_CC_PLL1_OUT_MAIN, 1, 0, 0),
+> +	F(1050000000, P_VIDEO_CC_PLL1_OUT_MAIN, 1, 0, 0),
+> +	F(1350000000, P_VIDEO_CC_PLL1_OUT_MAIN, 1, 0, 0),
+> +	F(1500000000, P_VIDEO_CC_PLL1_OUT_MAIN, 1, 0, 0),
+> +	F(1650000000, P_VIDEO_CC_PLL1_OUT_MAIN, 1, 0, 0),
+> +	{ }
+> +};
+> +
+>   static struct clk_rcg2 video_cc_mvs1_clk_src = {
+>   	.cmd_rcgr = 0x8018,
+>   	.mnd_width = 0,
+> @@ -559,12 +578,22 @@ static const struct qcom_cc_desc video_cc_sm8550_desc = {
+>   static const struct of_device_id video_cc_sm8550_match_table[] = {
+>   	{ .compatible = "qcom,sm8550-videocc" },
+>   	{ .compatible = "qcom,sm8650-videocc" },
+> +	{ .compatible = "qcom,x1e80100-videocc" },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, video_cc_sm8550_match_table);
+>   
+>   static int video_cc_sm8550_probe(struct platform_device *pdev)
+>   {
+> +	if (of_device_is_compatible(pdev->dev.of_node, "qcom,x1e80100-videocc")) {
+> +		video_cc_pll0_config.l = 0x1e;
+> +		video_cc_pll0_config.alpha = 0x0000;
+> +		video_cc_pll1_config.l = 0x2b;
+> +		video_cc_pll1_config.alpha = 0xc000;
+> +		video_cc_mvs0_clk_src.freq_tbl = ftbl_video_cc_mvs0_clk_src_x1e80100;
+> +		video_cc_mvs1_clk_src.freq_tbl = ftbl_video_cc_mvs1_clk_src_x1e80100;
+> +	}
+> +
+>   	if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8650-videocc")) {
+>   		video_cc_pll0_config.l = 0x1e;
+>   		video_cc_pll0_config.alpha = 0xa000;
 > 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-> of patchset, under or above your Signed-off-by tag, unless patch changed
-> significantly (e.g. new properties added to the DT bindings). Tag is
-> "received", when provided in a message replied to you on the mailing
-> list. Tools like b4 can help here. However, there's no need to repost
-> patches *only* to add the tags. The upstream maintainer will do that for
-> tags received on the version they apply.
-> 
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
 
-Hi Krzysztof,
-
-Thank you for the clear explanation. I wasn't aware of the process,
-I will make sure to include the tags properly in future versions.
-
-Best regards,
-Abd-Alrhman Masalkhi
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
