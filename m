@@ -1,119 +1,211 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA082F5320
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2B62D8DA6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633745; cv=none; b=BW/wY07xerrE6nDBaDMHevYyDAuA6FLoQakBLSuKtW6CQL49SsmzKvhvNuIFZYWbPvYldmMxAIVsFKs8MjYSjNdqg3FyQB5iIsVU2cV/wAJt/P3MtmFAiNnv/aT5gXSP3s7/sl3vJVKa5w6gzd5sYoPw6K2x08YMhV2FjeP4mdU=
+	t=1751633793; cv=none; b=k8GnSrpz64yHN5zxPVjGf8hYA3Q7/LI7QeNt228FxilEiFpIdEkEpr0/SnOfruumAJC3wDlNOgTrjMoPXyMiqCh8fZakyf4wLeNSo90TdUbl4pCmqbe5OsPSW0rkcnIIJ36os/wbb832vIjHQehErP6gRBIm4aHZMcVYkkn6ZY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633745; c=relaxed/simple;
-	bh=KPH3Xiy9mlbjaxPq8h3ifisCHjsTKK7k/FurarbQ5uI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=svFIJ9jmvA2W5qxHUZUAim7z+Z0REVKbrLh5wl5PTAdvwQVtsszQA6PCeohat1nXbr0E+8Flw55n5cvori2Y6jW3mD3qIY7pBdUTSGyemPNF2cPmOmnRk8fugMfikIibD/KvAM6OMez92C3niY3haZfrnISBEQeWCOeZ9OJVopc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vijZUmqk; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1751633793; c=relaxed/simple;
+	bh=xmYMifisU3UCACBD2leKDvX3VJcHEDXqgkueFEu/YiQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cFOuLDvD91yy9Xia+YQCtUM3+VkAiFiAjDlKttRxa05GChS5vUyXy5qcEqKb4B5u5Pfy2ES7c6mcLABk2n7Cs/HI6Jmu/FX4psbzavzXvHzOfqIvT+7GJwung8WUMCqP8etcVOzDSEg9wfQMIz6EVBC2qiM0UPBe2FqacKSweLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KicpCalK; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vijZUmqk"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553bd56011dso38928e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:55:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KicpCalK"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74264d1832eso1361054b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751633742; x=1752238542; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bXS2CAH8cY4s46125RlrGwDTCzxYthjabffdF2nmZ6E=;
-        b=vijZUmqk5dvIE5ReLc28vf++0zXe/+XCfx1sbVYumPRxSm/UEKH7ebnQ9ppSWcyG2n
-         sv27PgQ8IUSCOTduAp1J6dbIqGJSvkLTdXUvxU+CQaKIIOSYIZQPLooz5IW6NfSG5F3B
-         lA571fObpCjHbbCoNFkiXQFXIBIXtVhizlUgtJVBFcDcoB0d0JHDZ0KzO1hm+nVrVdRq
-         T8KjkpJ818MTTz60YEr4tB5/y7U16n4Dw1s6c4mIHVy0dubuDtHyYS9CWkXCn4p1XVMN
-         wyiAVs410o89oIw5zwU1VvG5THJ532lDMouV+prINax+o+/LRNefX4MFQyJ9aI5wWkOg
-         DL4g==
+        d=linaro.org; s=google; t=1751633791; x=1752238591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=53ijbolrIGV94MONKE1Z3H7DSZ9JfeQihGO4V8FR6X0=;
+        b=KicpCalKjNRkk9vkFUVE7l0S4xcxpiDVe1khXZYj/MZ8xPFKo+Ud2KoLCWDhX1bJwB
+         RttWwMFVr68tY3XWiKoVR2TzOdnqtKVPYNxlY2j7xgcjMVlAOCohjjOxlqTy09NupmCM
+         xoLGFl/F6OTZTC8OGQY5WPKtAHUy+xaYNNRMseYSxErGJ1ZJmhX14aD/NhK7ASw7lbXm
+         uJ8Cvx5mZJTgTiCGOjgpn8tX7eIvrB+EsQM+ElREFhNvGnps0gYn/ncXm9iJSRQi/xjK
+         GU0QLbw/jbxSYg8LNxYd76VTbQ+LljLHH8HIiSWs9DZipzyk/bxJcfLbue/cSeP8ieSj
+         J3jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633742; x=1752238542;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bXS2CAH8cY4s46125RlrGwDTCzxYthjabffdF2nmZ6E=;
-        b=cBqhJyXA+XGEAlyADPBmmO4UqctBN4G7Q9IbXuui7TyVQ/HGxvgO7SUG10NcJHfg0M
-         I/VwLsgoyIwsYE9BvYOEVlLHd6QkqlWlCjCa2kmbCjouKVMidSlqeAkcHNQ9Y8JChV5M
-         stQPOabdQ0Lgtzr+Kfpql/2zlyFVS+Mh/rfWuD7ZyVagS4wmYUpOkIVmquOqRY0F2BPc
-         wCccE2ctkY2vqcd4I2UaUAJytv9KNY9mYamtvO+8EDyQ2egCjsVQcfeGVYwTckq3NY/o
-         mznFV1lIAFopKhj4sJhZGfnE+Dqrx/qIAL8V3LT+daoIXidVo8d9ntiKVhrYwodrvx6o
-         ejHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFnJs8KsjyRs6LYfCvE2seOeFgSPLJ1aVZ9EzADBww8ehWnQy0mHymeKbJ3oivpX1rxMSXOgZLucS8JCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf7+xw1Uc4/7mL1aGq3ft8AB3MbK0aWX019hFDXJBISAcrxh9N
-	T04TqIg7hTx9/syE+i6lfkh9l3P2HoEw0jc4yP6LZqCMQEepoQuTxWr3Cvp0FmNsYVI=
-X-Gm-Gg: ASbGncuAXLeau8n/3TI/HVQyZVUKNQQqnUFyxM+uzxwiIv8WJDZ+QlmFpqU12PRBRky
-	lXVof3VrxyLk2VIwS+k7Pix1IIgusVPl5TD/WtbtTZB+mMjQvzrrV/wuFCdc/iz8HE01s1OhYlZ
-	auQNKsbpcxFFGjIM1IyceRCcILeTsC3q5zPwB8cXV5dXptDcxYsHTfWkrpe47irjwKqBHBKXzbA
-	YWMtzJz1kx4KqtlFBKNMjYCPF8uWxxysh30dCxttfZar+QASC4PZqWtJkdy4/zqxb3Yhh3kS0Qi
-	zbZ7hg1M+lJvjJLNP0Yq3v5FwBXEWfkX1K88+fzDCPW1N81GrCx6yJ+n1OE9JvstUd7BL6btJQl
-	g16NHC2zAt2j144B6FA904/F8ZU9b0AL6
-X-Google-Smtp-Source: AGHT+IEXL/S82jil0CchvfSvjiER+3hIXl3C8odNwTNIX/B7ZjFtkvE5wSgpuVOReGNVJal1fGnQMA==
-X-Received: by 2002:a05:6512:39d5:b0:553:af02:78e4 with SMTP id 2adb3069b0e04-556f330539dmr222570e87.5.1751633741779;
-        Fri, 04 Jul 2025 05:55:41 -0700 (PDT)
-Received: from localhost (c-85-229-7-191.bbcust.telenor.se. [85.229.7.191])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-556383d33f3sm247513e87.68.2025.07.04.05.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:55:41 -0700 (PDT)
-From: Anders Roxell <anders.roxell@linaro.org>
-To: lduncan@suse.com,
-	cleech@redhat.com,
-	michael.christie@oracle.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: open-iscsi@googlegroups.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	arnd@arndb.de,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] pps: Fix IDR memory leak in module exit
-Date: Fri,  4 Jul 2025 14:55:36 +0200
-Message-ID: <20250704125536.1091187-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.47.2
+        d=1e100.net; s=20230601; t=1751633791; x=1752238591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=53ijbolrIGV94MONKE1Z3H7DSZ9JfeQihGO4V8FR6X0=;
+        b=Or72hgjCD0VKyh44NAYosZ1Is2F0FrHYbjqhchtq4N7IhmG8xydwXyEI1R5CkTizLm
+         BGoBTuN5w3opNHyIKP3A8wFnC+qZzXUs0N0QGEhQjyBXYRuUSvvLMzBc4103838c/Cbf
+         YWlul975oZkEB2ECHwSu7C3W1yEs7BhHAYXho/76WrEjzJrHf3tX9FOp+CRmQ6FTC43H
+         LgNA0LgPT9Q/0hQuKgapTN3nDpoqatdQb9LZ0o+2YAOPlzivkX2mIXKecLVGWp73x6oo
+         vAE26H6Pcdyc2OnWMS+4boIKO/FqDhpeMormDxzh60T9L5F97dsli3v2iSPJh6QK0SNR
+         YD4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXpwlMtH59MUoxpLKtATzihNJYHo13WyPluxkY3BERgBoEHt6HnKCzV7c9w7M143UebqHu0Xj0nXZN+weM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiJYLvZAyDBMvUyi1kIwx/+EEuQlt/FE0bBMW2j40o/sGwiRu4
+	sI5bAl+rfB7fBQcBUA4xIBFfIGm5kV6vTnNForPmUCxPDvCqBDgCVMzaNuzRIGe28/iAx+Htzrz
+	6JVO2obRqOR0J0nhPhb27M1bhkmK0xa4HuUy4FfT0oQ==
+X-Gm-Gg: ASbGncvVBeafy8+Tk58nBxFSr8nFsi9fePMSAL7KTvTA+DoycO2PhhszGaq2Au9lAie
+	xk59UH+ISFyvqTW5xLvMk2mTquqft2P/EmHsCfq5OgvP1PZYxAJ114BWZIUjUE2sudRDzZ4QzJi
+	szQxq50bV+ES4rs4WJ3lbIV08O/wbfWK1zP0JEx+6I/ZIyRFOjkC1PpoytC0zSwXXC4ZpSfB76k
+	/Yt
+X-Google-Smtp-Source: AGHT+IHCC19tlq/mxugEabtlhBGS3FlTu0no8iuCYdPEnR6bzs/APNIibs0972qf4+yiF50uU5zoRc2r3l7kph+66f8=
+X-Received: by 2002:a17:90a:d604:b0:311:c939:c84a with SMTP id
+ 98e67ed59e1d1-31aadd3c253mr3418900a91.15.1751633790678; Fri, 04 Jul 2025
+ 05:56:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703143939.370927276@linuxfoundation.org>
+In-Reply-To: <20250703143939.370927276@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 4 Jul 2025 18:26:18 +0530
+X-Gm-Features: Ac12FXzktStP7ltVpOhJx2NTN-IriMAsaKefYnF9CrPTpQRC83-9dyCQlMWKGEo
+Message-ID: <CA+G9fYsJh3duKrK5cwZmXVRYEgS60pC3wfyv139V-5sdOjO00A@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/132] 6.1.143-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add missing idr_destroy() call in pps_exit() to properly free the pps_idr
-radix tree nodes. Without this, module load/unload cycles leak 576-byte
-radix tree node allocations, detectable by kmemleak as:
+On Thu, 3 Jul 2025 at 20:49, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.143 release.
+> There are 132 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.1.143-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-unreferenced object (size 576):
-  backtrace:
-    [<ffffffff81234567>] radix_tree_node_alloc+0xa0/0xf0
-    [<ffffffff81234568>] idr_get_free+0x128/0x280
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-The pps_idr is initialized via DEFINE_IDR() at line 32 and used throughout
-the PPS subsystem for device ID management. The fix follows the documented
-pattern in lib/idr.c and matches the cleanup approach used by other drivers
-such as drivers/uio/uio.c.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-This leak was discovered through comprehensive module testing with cumulative
-kmemleak detection across 10 load/unload iterations per module.
+## Build
+* kernel: 6.1.143-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: cef96cfe5f17c92183187befc6b682fd16cace0e
+* git describe: v6.1.142-133-gcef96cfe5f17
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.1=
+42-133-gcef96cfe5f17
 
-Fixes: eae9d2ba0cfc ("LinuxPPS: core support")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/scsi/scsi_transport_iscsi.c | 1 +
- 1 file changed, 1 insertion(+)
+## Test Regressions (compared to v6.1.141-508-g6d3c6e22f526)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index c75a806496d6..adbedb58930d 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -5024,6 +5024,7 @@ static void __exit iscsi_transport_exit(void)
- 	class_unregister(&iscsi_endpoint_class);
- 	class_unregister(&iscsi_iface_class);
- 	class_unregister(&iscsi_transport_class);
-+	idr_destroy(&iscsi_ep_idr);
- }
- 
- module_init(iscsi_transport_init);
--- 
-2.47.2
+## Metric Regressions (compared to v6.1.141-508-g6d3c6e22f526)
 
+## Test Fixes (compared to v6.1.141-508-g6d3c6e22f526)
+
+## Metric Fixes (compared to v6.1.141-508-g6d3c6e22f526)
+
+## Test result summary
+total: 156857, pass: 141500, fail: 3804, skip: 11388, xfail: 165
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 133 total, 131 passed, 0 failed, 2 skipped
+* arm64: 41 total, 40 passed, 0 failed, 1 skipped
+* i386: 21 total, 21 passed, 0 failed
+* mips: 26 total, 25 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 31 passed, 1 failed
+* riscv: 11 total, 11 passed, 0 failed
+* s390: 14 total, 14 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 33 total, 33 passed, 0 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
