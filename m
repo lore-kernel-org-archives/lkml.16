@@ -1,358 +1,177 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5E2F5326;
-	Fri,  4 Jul 2025 08:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9E2F547E
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619469; cv=none; b=PhIZjVD4T9xyf0qyrIbfO1vKcBIXsT3e2X/hg6B0PzqmioQvVZxVggw4LXLk+pSjdIfAm0TIfOtsrrQH9UiCSXhaQbbysQMbqIu7q4ip/3cBxGz+kK6kO+1Jp+IcwX+lCEQChxSdhZqeNQLPnAHR3BIpGC6K9Zjzn2V0FQW86ss=
+	t=1751619474; cv=none; b=msw53SnyA0dlWTJMaVMQUdU+t0LPJDF/rqoG1xAfi7UeuXycWSoR13ZLdYMSyz6TtlUdCDnJdAaUx8K4gaN6ft9P5aGgekIa628G61otf95oltVDWQbtYXMSDOhV0bKWhNXViwIPHoETOh5ep8R3prIlkKMFwjdII/OhP18CPlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619469; c=relaxed/simple;
-	bh=wuYMIxwGMEMR3DYWFdJ7l4qk19i6gD9BmnMrRAyqqfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=itarA3q3sCT4UG2iqru6BSMTc1XSMzxvSjFNveonn+vNz3tVEHoRn7tbI0xYDEkrWEPiebieJ4HO5KsEkacq9JhZx2gU2GTYBo8lfgmrSbDz8I/x0RrbclfXlUUxAfa8T+j3GemeuY/0fFATy0UPQow7NtTo8NF4dL90qPM0yI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=Dr/1zclY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IF4ZC77U; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1751619474; c=relaxed/simple;
+	bh=ggInmIOr7WKEN0+YNThAR8U4Q5TJCasopXzArJGvOFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgHGpJc8mZ4zSNtVVqoEz9iFGIttpXynS8KXsJsFGztwaLxhiG3AYER/E7Biv0jTFGejOFGh592UqCTM9bqAXgnDtZakdH7//iUK3TNRVYytvbCKQjRML67HLFmXEQNyg448o2/oPOHrfADm0wM00Z1ryUq+8fSZC3Gul2hIfcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hju2KAR0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="Dr/1zclY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IF4ZC77U"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 22FB87A00C0;
-	Fri,  4 Jul 2025 04:57:44 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 04:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751619463;
-	 x=1751705863; bh=USFQgATkh8/GL2dbFYao1i5xeRL2FTm2q9EcU0XzEoM=; b=
-	Dr/1zclY5VnCcX3Wrmn9rAI9DAJyukc2yq4xYBK/PD4syJlxiIfuGokDnlN6Vfni
-	ZKYyl/QJKrSdE+lYQecP3Hk2KUT7gjLvl5RFZAdwKzTHQ/jw+Oj7T51motWFJUYV
-	5arT/u39EB0E850TO4FoFlHBHzf4hzBhg74dGrJmDjxY3L7Z4Yudk/avRDzmqMDG
-	CeHdeZC1xos+ipHFbp/ZRwzU0NzJqWPhgTFW31GyCJHv+208woRbR74D/ZgLyKys
-	Z/yOdtfiob+h3WaiPkM4gTbWo1Ic80B9aPYzOotaQPP0MqnLiY7xF++DueSsef+o
-	SjUpvM3vFfMkQGY1lcFIBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751619463; x=
-	1751705863; bh=USFQgATkh8/GL2dbFYao1i5xeRL2FTm2q9EcU0XzEoM=; b=I
-	F4ZC77UMFJHiBktdjeuEGtkZOtl/rj/n+Sy7Z1NE3CCQhv8ucBLnuhQt087Kr93s
-	bMi7KUaNv2PVYXw7LMruqtaMks+QucHiMjkS0zrRF1Cy1e/Repb8566s1Xqn7ic1
-	wXtXUZa7dweW/g0HIkYky6wAX84/mwYpzSaiXc18uRzh69h29zSyYXRN4V5JJFhP
-	xYJnkjma8f6RI9eMUU02qyh8fpJ0XbcRnoe2oaGH8BAyq+Sa+rdTy1TBiwuL3t2B
-	2+SYAn3g7XzzxzV4yk4N/vXy9Mt0u82nlIkookGgo0vNW2NAsLz5V8wqgXY2MnIu
-	umHef8k16i7kg0I4/d/9g==
-X-ME-Sender: <xms:h5dnaIy3yDqp7ePuo4llfq5xTyaRcqoiP3ITpTwHBXaEo8PNj1meVA>
-    <xme:h5dnaMQKZEHmAmoRhGmixlOxweCv_u_Tk6TUxHm_E3gMavcpGDVRFQy0lX2JnhL4n
-    M2Vn0C9svZ3GpsAmdA>
-X-ME-Received: <xmr:h5dnaKUFVZUC2asEGUaw5XD5TtHlrSRjcs_tN2ozMJgGfGIECKYCrI11AV1mCk_WBIsMMNhX0hAMOOCVPLJPaOJyXdKZf2gTiA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghs
-    ucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
-    gvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepffdtgeefveefgfeutdevveelgfelkeeu
-    vdefgefgfeehfeeijeehudelhfejkefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhk
-    lhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtth
-    hopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshgrkhgrrhhirdgrihhl
-    uhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepnhhitgholhgrshdrfh
-    gvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgs
-    vgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvg
-    hvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
-    thdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
-    epkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughh
-    rghtrdgtohhmpdhrtghpthhtohepfigvihdrfhgrnhhgsehngihprdgtohhm
-X-ME-Proxy: <xmx:h5dnaGgRRYevqoMdxIkYsoMnzpEwu0pNJCRCJcTFsKIPW0BIsWGslg>
-    <xmx:h5dnaKCdLx4MYN94d2T3nOyWAl2RnY0frqlxLDSCkao496knxVBGfQ>
-    <xmx:h5dnaHJ5SjLMY_lvvU3DW_8SSWaLuJ8R2O18tI9Kg22woFPhxldnPg>
-    <xmx:h5dnaBCzh5ayu5tZKL1wEvnt50eePvTtZGLn_zj7dTA268hrm5Yrng>
-    <xmx:h5dnaDz-jPh8bR8XsNIlqxcl6GNFwgtvAaU1cczzuw2qtUirGWEk8I4B>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Jul 2025 04:57:42 -0400 (EDT)
-Date: Fri, 4 Jul 2025 10:57:40 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>, Paul Barker <paul@pbarker.dev>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
-	linux-omap@vger.kernel.org
-Subject: Re: [PATCH 46/80] net: ethernet: Remove redundant
- pm_runtime_mark_last_busy() calls
-Message-ID: <20250704085740.GA137171@ragnatech.se>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
- <20250704075435.3220683-1-sakari.ailus@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hju2KAR0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751619471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mVyrAhiOnPT8DybQln1iSMYW0QSR+P4ZCW/jBPEH7PI=;
+	b=Hju2KAR0+Qc8G3DJ7u/r1hoXB0HeXp7s0ynFjMqvgTdjVC5CLhXpG3LA7qP2pXPR5r1p1n
+	mIqzxKJxKnetdLUBLsyKsFHc77pvQ0dvZyZPpYPhnLshw141YomwQgmL0br+7sTuNNj7tZ
+	4m+bxkSWJLNX0Z95frF/7R83VBtLBYk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-aSX2EkydP-afl9fzIg6Pqw-1; Fri, 04 Jul 2025 04:46:21 -0400
+X-MC-Unique: aSX2EkydP-afl9fzIg6Pqw-1
+X-Mimecast-MFC-AGG-ID: aSX2EkydP-afl9fzIg6Pqw_1751618781
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-453817323afso3704015e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:46:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751618780; x=1752223580;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mVyrAhiOnPT8DybQln1iSMYW0QSR+P4ZCW/jBPEH7PI=;
+        b=tNCi3UdQxYyTj1A2gH78Cn8g/WUxnjAVVKxTeqKO7+2dhKZbvyZGAnlFFj52i8sMa4
+         unkFwu/W8GvjqHQ/6RBi8znCS2i7imP1H5Sbra+17aQQejdd6msp+mirgJrtdE/8ac+U
+         xTLL1RwzeeCec0e/X91IgACeUozpUksonORiInu+F6cTei1fy0N18Sa+5jyH3SWDN1eu
+         EFCzqHu25u/huV+X8D8Wq3qIcd5zw0UaK+F24mLpOLFWYpqkrR4qfs+gpBBpsZMdeENl
+         PhEMNm9lgYvXnFXd+zkGCghneMO5E/QtAVGsf1vudRC4aA20u9sB80tWjN7i8A96Wat7
+         qt/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXqXcz0lM5nKPOHVZsbRp2osBmXhG4gTM/+VD5K0dpvzaCe34+ZEWPFl595bhXqp6/CRs5cnn7OaEhOlc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVUbKqu9b5Fy4e6mgCWCzJaoyDkFcGxYrNGYDKH9zax1ZJ86uZ
+	dvJaaOjqGaucBDm+CLr4TXjIpbMeuE2TZQMHB4g48mcPl2IKJ5PHpeTusLAxcNOCh7I+E4UpIg+
+	3fGLXd7hcqqFLQOg2667598pzzoj/c0/xRxlfwzX71eIK7L/Jy/lKXKX/OF6RlLWezA==
+X-Gm-Gg: ASbGncsdqLBQDAXcUfeaEV0hGHTpAT2cWTBZHcDT6mO8GzpoWEd+EUsPxJO8bGYQfNY
+	DLXmmvUoH5iOAut80/9D6rDsd3tXY6P7ke/hspqZkf7mi1c75cYT/2jM4qmtsNp05RVrr6dtBWj
+	8brO4atn8nY8hIUbNGEz+yXxT7yuxyeOE1XKa8Qyy4cX+DPO6M/RBayTnoQoyy5FdoIKo5t+hHm
+	zRXdETWvtWkezWpn3U6MmBnGqsdTBH/tl+Alxj05dsLHcugPOQgR/90T3Llns4oRUxf8sF1eKJ6
+	8YWGfPvUDWK/aAimuMT0gfiHiGAkVtqFIpeD5ma3C3gpu33Ac3KCzuPQ7J1Z9TSvFon/Eo4VFGh
+	BnwksjBMeJ6wL+BSLM5vPP3KdGzSiFb80M6W0g1cHwOpMs7c=
+X-Received: by 2002:a05:600c:4711:b0:450:cfcb:5c9b with SMTP id 5b1f17b1804b1-454b3108982mr14259425e9.1.1751618780378;
+        Fri, 04 Jul 2025 01:46:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHaUV8FC+Py3RIAFTeLzepgFWje3L0XmJO5Yhj+dy4UyFtkI7upnmtWvFcBPMBDMfvgNn2l6w==
+X-Received: by 2002:a05:600c:4711:b0:450:cfcb:5c9b with SMTP id 5b1f17b1804b1-454b3108982mr14259055e9.1.1751618779935;
+        Fri, 04 Jul 2025 01:46:19 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2c:5500:988:23f9:faa0:7232? (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b97353sm1929683f8f.51.2025.07.04.01.46.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 01:46:19 -0700 (PDT)
+Message-ID: <10a7ced9-33f2-47a0-b368-a6fecad6a842@redhat.com>
+Date: Fri, 4 Jul 2025 10:46:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250704075435.3220683-1-sakari.ailus@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] vfio/type1: introduce a new member has_rsvd for
+ struct vfio_dma
+To: lizhe.67@bytedance.com, alex.williamson@redhat.com,
+ akpm@linux-foundation.org, peterx@redhat.com, jgg@ziepe.ca
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250704062602.33500-1-lizhe.67@bytedance.com>
+ <20250704062602.33500-5-lizhe.67@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250704062602.33500-5-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hej Sakari,
-
-Thanks for your work, this is a nice improvement!
-
-On 2025-07-04 10:54:35 +0300, Sakari Ailus wrote:
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
+On 04.07.25 08:26, lizhe.67@bytedance.com wrote:
+> From: Li Zhe <lizhe.67@bytedance.com>
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Introduce a new member has_rsvd for struct vfio_dma. This member is
+> used to indicate whether there are any reserved or invalid pfns in
+> the region represented by this vfio_dma. If it is true, it indicates
+> that there is at least one pfn in this region that is either reserved
+> or invalid.
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
 > ---
-> The cover letter of the set can be found here
-> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+>   drivers/vfio/vfio_iommu_type1.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> In brief, this patch depends on PM runtime patches adding marking the last
-> busy timestamp in autosuspend related functions. The patches are here, on
-> rc2:
-> 
->         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->                 pm-runtime-6.17-rc1
-> 
->  drivers/net/ethernet/cadence/macb_main.c  | 5 -----
->  drivers/net/ethernet/freescale/fec_main.c | 8 --------
->  drivers/net/ethernet/renesas/ravb_main.c  | 4 ----
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index b770eb1c4e07..13c5667d431c 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -92,6 +92,7 @@ struct vfio_dma {
+>   	bool			iommu_mapped;
+>   	bool			lock_cap;	/* capable(CAP_IPC_LOCK) */
+>   	bool			vaddr_invalid;
+> +	bool			has_rsvd;	/* has 1 or more rsvd pfns */
+>   	struct task_struct	*task;
+>   	struct rb_root		pfn_list;	/* Ex-user pinned pfn list */
+>   	unsigned long		*bitmap;
+> @@ -774,6 +775,7 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>   	}
+>   
+>   out:
+> +	dma->has_rsvd |= rsvd;
+>   	ret = vfio_lock_acct(dma, lock_acct, false);
+>   
+>   unpin_out:
 
-For RAVB,
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
->  drivers/net/ethernet/ti/davinci_mdio.c    | 7 -------
->  4 files changed, 24 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 53aaf6b08e39..9b7cbb3e3108 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -360,7 +360,6 @@ static int macb_mdio_read_c22(struct mii_bus *bus, int mii_id, int regnum)
->  	status = MACB_BFEXT(DATA, macb_readl(bp, MAN));
->  
->  mdio_read_exit:
-> -	pm_runtime_mark_last_busy(&bp->pdev->dev);
->  	pm_runtime_put_autosuspend(&bp->pdev->dev);
->  mdio_pm_exit:
->  	return status;
-> @@ -406,7 +405,6 @@ static int macb_mdio_read_c45(struct mii_bus *bus, int mii_id, int devad,
->  	status = MACB_BFEXT(DATA, macb_readl(bp, MAN));
->  
->  mdio_read_exit:
-> -	pm_runtime_mark_last_busy(&bp->pdev->dev);
->  	pm_runtime_put_autosuspend(&bp->pdev->dev);
->  mdio_pm_exit:
->  	return status;
-> @@ -438,7 +436,6 @@ static int macb_mdio_write_c22(struct mii_bus *bus, int mii_id, int regnum,
->  		goto mdio_write_exit;
->  
->  mdio_write_exit:
-> -	pm_runtime_mark_last_busy(&bp->pdev->dev);
->  	pm_runtime_put_autosuspend(&bp->pdev->dev);
->  mdio_pm_exit:
->  	return status;
-> @@ -484,7 +481,6 @@ static int macb_mdio_write_c45(struct mii_bus *bus, int mii_id,
->  		goto mdio_write_exit;
->  
->  mdio_write_exit:
-> -	pm_runtime_mark_last_busy(&bp->pdev->dev);
->  	pm_runtime_put_autosuspend(&bp->pdev->dev);
->  mdio_pm_exit:
->  	return status;
-> @@ -5358,7 +5354,6 @@ static int macb_probe(struct platform_device *pdev)
->  		    macb_is_gem(bp) ? "GEM" : "MACB", macb_readl(bp, MID),
->  		    dev->base_addr, dev->irq, dev->dev_addr);
->  
-> -	pm_runtime_mark_last_busy(&bp->pdev->dev);
->  	pm_runtime_put_autosuspend(&bp->pdev->dev);
->  
->  	return 0;
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index d4eed252ad40..e6979599ae7e 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -2207,7 +2207,6 @@ static int fec_enet_mdio_read_c22(struct mii_bus *bus, int mii_id, int regnum)
->  	ret = FEC_MMFR_DATA(readl(fep->hwp + FEC_MII_DATA));
->  
->  out:
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
->  	return ret;
-> @@ -2256,7 +2255,6 @@ static int fec_enet_mdio_read_c45(struct mii_bus *bus, int mii_id,
->  	ret = FEC_MMFR_DATA(readl(fep->hwp + FEC_MII_DATA));
->  
->  out:
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
->  	return ret;
-> @@ -2288,7 +2286,6 @@ static int fec_enet_mdio_write_c22(struct mii_bus *bus, int mii_id, int regnum,
->  	if (ret)
->  		netdev_err(fep->netdev, "MDIO write timeout\n");
->  
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
->  	return ret;
-> @@ -2332,7 +2329,6 @@ static int fec_enet_mdio_write_c45(struct mii_bus *bus, int mii_id,
->  		netdev_err(fep->netdev, "MDIO write timeout\n");
->  
->  out:
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
->  	return ret;
-> @@ -2814,7 +2810,6 @@ static void fec_enet_get_regs(struct net_device *ndev,
->  		buf[off] = readl(&theregs[off]);
->  	}
->  
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  }
->  
-> @@ -3590,7 +3585,6 @@ fec_enet_open(struct net_device *ndev)
->  err_enet_alloc:
->  	fec_enet_clk_enable(ndev, false);
->  clk_enable:
-> -	pm_runtime_mark_last_busy(&fep->pdev->dev);
->  	pm_runtime_put_autosuspend(&fep->pdev->dev);
->  	pinctrl_pm_select_sleep_state(&fep->pdev->dev);
->  	return ret;
-> @@ -3621,7 +3615,6 @@ fec_enet_close(struct net_device *ndev)
->  		cpu_latency_qos_remove_request(&fep->pm_qos_req);
->  
->  	pinctrl_pm_select_sleep_state(&fep->pdev->dev);
-> -	pm_runtime_mark_last_busy(&fep->pdev->dev);
->  	pm_runtime_put_autosuspend(&fep->pdev->dev);
->  
->  	fec_enet_free_buffers(ndev);
-> @@ -4568,7 +4561,6 @@ fec_probe(struct platform_device *pdev)
->  
->  	INIT_WORK(&fep->tx_timeout_work, fec_enet_timeout_work);
->  
-> -	pm_runtime_mark_last_busy(&pdev->dev);
->  	pm_runtime_put_autosuspend(&pdev->dev);
->  
->  	return 0;
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index c9f4976a3527..b8bfc3cdbb6b 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> @@ -1974,7 +1974,6 @@ static int ravb_open(struct net_device *ndev)
->  out_set_reset:
->  	ravb_set_opmode(ndev, CCC_OPC_RESET);
->  out_rpm_put:
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  out_napi_off:
->  	if (info->nc_queues)
-> @@ -2383,7 +2382,6 @@ static int ravb_close(struct net_device *ndev)
->  	if (error)
->  		return error;
->  
-> -	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
->  	return 0;
-> @@ -3089,7 +3087,6 @@ static int ravb_probe(struct platform_device *pdev)
->  	netdev_info(ndev, "Base address at %#x, %pM, IRQ %d.\n",
->  		    (u32)ndev->base_addr, ndev->dev_addr, ndev->irq);
->  
-> -	pm_runtime_mark_last_busy(&pdev->dev);
->  	pm_runtime_put_autosuspend(&pdev->dev);
->  
->  	return 0;
-> @@ -3274,7 +3271,6 @@ static int ravb_resume(struct device *dev)
->  
->  out_rpm_put:
->  	if (!priv->wol_enabled) {
-> -		pm_runtime_mark_last_busy(dev);
->  		pm_runtime_put_autosuspend(dev);
->  	}
->  
-> diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-> index 68507126be8e..9f049ebbf107 100644
-> --- a/drivers/net/ethernet/ti/davinci_mdio.c
-> +++ b/drivers/net/ethernet/ti/davinci_mdio.c
-> @@ -234,7 +234,6 @@ static int davinci_mdiobb_read_c22(struct mii_bus *bus, int phy, int reg)
->  
->  	ret = mdiobb_read_c22(bus, phy, reg);
->  
-> -	pm_runtime_mark_last_busy(bus->parent);
->  	pm_runtime_put_autosuspend(bus->parent);
->  
->  	return ret;
-> @@ -251,7 +250,6 @@ static int davinci_mdiobb_write_c22(struct mii_bus *bus, int phy, int reg,
->  
->  	ret = mdiobb_write_c22(bus, phy, reg, val);
->  
-> -	pm_runtime_mark_last_busy(bus->parent);
->  	pm_runtime_put_autosuspend(bus->parent);
->  
->  	return ret;
-> @@ -268,7 +266,6 @@ static int davinci_mdiobb_read_c45(struct mii_bus *bus, int phy, int devad,
->  
->  	ret = mdiobb_read_c45(bus, phy, devad, reg);
->  
-> -	pm_runtime_mark_last_busy(bus->parent);
->  	pm_runtime_put_autosuspend(bus->parent);
->  
->  	return ret;
-> @@ -285,7 +282,6 @@ static int davinci_mdiobb_write_c45(struct mii_bus *bus, int phy, int devad,
->  
->  	ret = mdiobb_write_c45(bus, phy, devad, reg, val);
->  
-> -	pm_runtime_mark_last_busy(bus->parent);
->  	pm_runtime_put_autosuspend(bus->parent);
->  
->  	return ret;
-> @@ -332,7 +328,6 @@ static int davinci_mdio_common_reset(struct davinci_mdio_data *data)
->  	data->bus->phy_mask = phy_mask;
->  
->  done:
-> -	pm_runtime_mark_last_busy(data->dev);
->  	pm_runtime_put_autosuspend(data->dev);
->  
->  	return 0;
-> @@ -441,7 +436,6 @@ static int davinci_mdio_read(struct mii_bus *bus, int phy_id, int phy_reg)
->  		break;
->  	}
->  
-> -	pm_runtime_mark_last_busy(data->dev);
->  	pm_runtime_put_autosuspend(data->dev);
->  	return ret;
->  }
-> @@ -478,7 +472,6 @@ static int davinci_mdio_write(struct mii_bus *bus, int phy_id,
->  		break;
->  	}
->  
-> -	pm_runtime_mark_last_busy(data->dev);
->  	pm_runtime_put_autosuspend(data->dev);
->  
->  	return ret;
-> -- 
-> 2.39.5
-> 
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
-Kind Regards,
-Niklas Söderlund
+Cheers,
+
+David / dhildenb
+
