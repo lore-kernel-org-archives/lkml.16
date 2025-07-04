@@ -1,191 +1,567 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1DE2857E9;
-	Fri,  4 Jul 2025 07:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F33F2D027F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615668; cv=none; b=C9UFTXuG/EECcLJhZ+NTZwq6SIrLgaufD6zICz6W0XA11Gs0jU2aZm1ya1nBteerUqV8w3X/wngxAZy+JteVM69KNiWyHP8r4e2pdt/7cEJI/ylujw4dwbmmxHNpjtLkw9dQdNpyr4te4P7XZnAFB792L2NGO4XUxJCjNBtiEeQ=
+	t=1751615665; cv=none; b=b4A5qH9/oWp0zNjDn5rnQU6eEVE4hNy7BFkkgg/ZhUVjRDA2uP/xQ4tcnZ2HI+FR7H4yY0OlJbcMOV/eimXDLMs4Kv0K9ysVNxpGJa46veGokp9oN2XuJRpHV+gqscv6nOftTcSSwic9CyiFWSzGeE3iP6aNXVrljD0Fx//nYzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615668; c=relaxed/simple;
-	bh=aVSBRYM0dzFACZSMY6AVKuZ0pWWqdJ/B2pGpYaZ0PSw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=gbn84NPBAOMbMKLsFoZ/8VhuAJJ1zaARnYk6zoG3/t9+g5l5cyEwH+nfE3sIBY8ggL+J4PMyHsm+WeBCpYlgkPO57uorUD9q/LVBcdBCBqFp5Kl0Ap/dyO0YIGLSpA/mGdFee5V3lHQ45DnDM0TJ4NdWsYDPsXsnwJkhBsGox6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mFEMCNIf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751615665; c=relaxed/simple;
+	bh=2oLAN0I3MPH743jpOiM312shdseQ1P5Sz0tCpCEQSuw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ROfZLKKINR+Jx1WY+uM9i04jS8yQ6L2QUctarCdw0BXWvbkJy5miKuSceGadYXxVWQ6B9q42oV9xAfa4ibtHu84NJdyhd/QVRd72rqEc2llIioOdiaAOpHlTePkXTqnjcOQNVLz9DVGEr9xCLtsHWQKFZ19yikTIYPbGQ6wti10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n0F7qHh3; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mFEMCNIf"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563Mwio5022207;
-	Fri, 4 Jul 2025 07:54:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rBK0U+PPSWwscE7KUwHuHViQLhQP9bEJG4X6O6r4lWs=; b=mFEMCNIfOwMehZqz
-	cF79DFzOQaa34GYEEzo9soDA5Cnn6pcy9+G2aWVAqKOz22AKO2U1oI9l9+hwK3ts
-	BCiZ7l0Z/aQu4aU/5lJujQ43FMwoihoXU9rjKulP9E6kBbzIytuw7uscKNTWqHlu
-	MUfE6mR4fc725jkG5vL7F2VR4MrhY2/jjm7bn9b8kRxfbTUEI34O6NIiGthg3MNq
-	DoqvZMDv4T/Ie+Lpm3cgnbuN7zDlkd5AJCjNSy62te9ayHE6fWRtWfkvO76CJlRA
-	IsaIMx2LRDMa5vDQNuJDxYVzQYSAFjkR5u6v55ObQWssjJW1znQDY12xMYawQTjR
-	HrrZSg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bw34wm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:54:21 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647sKPB019904
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:54:20 GMT
-Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:54:17 -0700
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 4 Jul 2025 13:23:17 +0530
-Subject: [PATCH 17/25] media: iris: Add encoder support for V4L2 event
- subscription
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n0F7qHh3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751615663; x=1783151663;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2oLAN0I3MPH743jpOiM312shdseQ1P5Sz0tCpCEQSuw=;
+  b=n0F7qHh3aau8cR2om4TYR4dCoriYmQ76iMyTOFwdZqZ+gpQR+M3R4ccC
+   UH27meT+r1xOx8tp5z4mpuzbfN5n6Klr6ldyTT4cCC4t6Iq9HRXLxBn8Y
+   +Z9Hsuuwbh67JWXTX+bT59cSV0Nx5vgC5tI6N7h1Tv/6UAIts94x35D8a
+   sCUkqLkWPpW0JgkbgZgCvQzDAUK/RBoTWNBQvl+EVbdu5oa2r1+Qj+qGs
+   ZbHgPmUH3bdRu5XgsjaixTsHE/y7MNSV/ZhK8TgeIh2P8MN17p0La0W3S
+   f0PraOwAfOpAIyYrgvcZgw1LDAqaVAb795xJIN6hpq6NBbASB0taZIaNK
+   A==;
+X-CSE-ConnectionGUID: HFDtwWwjQJSYWorJzThk7g==
+X-CSE-MsgGUID: 2ta+pU0ARhGp41bj15HT2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494595"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="76494595"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:22 -0700
+X-CSE-ConnectionGUID: RhFtQ7PRQl6VBE4/Qd22QQ==
+X-CSE-MsgGUID: fBIQ85yES5ehhaXU4RLS3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="158924260"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:11 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 8B01D44419;
+	Fri,  4 Jul 2025 10:54:09 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Kenneth Feng <kenneth.feng@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Antonio Quartulli <antonio@mandelbit.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Ma Ke <make24@iscas.ac.cn>,
+	Yang Wang <kevinyang.wang@amd.com>,
+	Jesse Zhang <jesse.zhang@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Sathishkumar S <sathishkumar.sundararaju@amd.com>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tim Huang <tim.huang@amd.com>,
+	=?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Asad Kamal <asad.kamal@amd.com>,
+	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jack Xiao <Jack.Xiao@amd.com>,
+	Prike Liang <Prike.Liang@amd.com>,
+	Shashank Sharma <shashank.sharma@amd.com>,
+	Victor Skvortsov <victor.skvortsov@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	Tao Zhou <tao.zhou1@amd.com>,
+	ganglxie <ganglxie@amd.com>,
+	YiPeng Chai <YiPeng.Chai@amd.com>,
+	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 16/80] drm/amd: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:09 +0300
+Message-Id: <20250704075409.3217885-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250704-iris-video-encoder-v1-17-b6ce24e273cf@quicinc.com>
-References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        "Vedang
- Nagar" <quic_vnagar@quicinc.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=3502;
- i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=aVSBRYM0dzFACZSMY6AVKuZ0pWWqdJ/B2pGpYaZ0PSw=;
- b=1fivc1NE9oZFlhdJoF/spQlh2QQj8AFQOZOm2pNzKSA6RSICZNhgVS7tcqw9PdnJW6wgQD7DL
- e4hPzV6dIviCyL6px05TFyFU+N9BkaKJ24qVB1CEpVp+Kx8maWCm4n5
-X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
- pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: N_pfPDwL1STJndBZ1CHAq_eghcnI8H6M
-X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=686788ad cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=JXiySR5JOE9jObuYKgMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: N_pfPDwL1STJndBZ1CHAq_eghcnI8H6M
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX+NmnEg0Y7vIY
- BTME2lUs/KyB4KvOdvkmAPMVabgJ/JSQIMbXFytz5AXyBrUQxemnmdnQKxiuirqMX5MkteskY61
- UmJ4arOFci/FsL7E/h+kSC0AGnops2Qqxktyo6QKdeoD42RtPelM79X6+nk1n097FXiXLCkEM18
- 0NwCdLXzy7EqTTa/6oVkjk8+6OT+ZgQaOIROgAGesQKu1ohP5Jmn8AAUwwPoZREsmxAcL3Xd80d
- f7oIfx+sQYZB4kpknrg/TbOpPIMvBaxIy9ues4PZ2W7X+hhuCn87udzInG3KdpbX4ymRSe8HC5p
- 9npSreKmyTLatuM8W3AY+Dwwun4rzNsYF0Gv6oOZ0YgDz+5N7sw0nM08n09BLkvJrkUaxi6DPi0
- 57sdHefkGFcOgWkeuqAXnsVscig/VjvWGflLnyJZPhmunDv97hxERRE7SaLL/8aiCqsRPhPG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040060
+Content-Transfer-Encoding: 8bit
 
-Implement support for V4L2 event subscription on the encoder device by
-handling the SUBSCRIBE_EVENT and UNSUBSCRIBE_EVENT ioctls with the
-necessary hooks.
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-This enables userspace applications to subscribe to V4L2 events,
-allowing asynchronous notification mechanisms.
-
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/platform/qcom/iris/iris_venc.c | 14 ++++++++++++++
- drivers/media/platform/qcom/iris/iris_venc.h |  1 +
- drivers/media/platform/qcom/iris/iris_vidc.c |  9 ++++++++-
- 3 files changed, 23 insertions(+), 1 deletion(-)
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-diff --git a/drivers/media/platform/qcom/iris/iris_venc.c b/drivers/media/platform/qcom/iris/iris_venc.c
-index 301206253090962abbb4e4eac8ee88e7b359c98d..3dbcce23cbe94cf0edc4421694a3ba11faa5eb96 100644
---- a/drivers/media/platform/qcom/iris/iris_venc.c
-+++ b/drivers/media/platform/qcom/iris/iris_venc.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
+
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c      |  1 -
+ .../gpu/drm/amd/amdgpu/amdgpu_connectors.c    |  4 ---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c   | 25 -------------------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_display.c   |  2 --
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  4 ---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c     |  2 --
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c       |  1 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |  2 --
+ drivers/gpu/drm/amd/amdgpu/amdgpu_rap.c       |  1 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c       |  1 -
+ .../gpu/drm/amd/amdgpu/amdgpu_securedisplay.c |  1 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c     |  1 -
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c      |  1 -
+ drivers/gpu/drm/amd/pm/amdgpu_pm.c            |  1 -
+ 14 files changed, 47 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+index f5466c592d94..9e4f135b9173 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+@@ -507,7 +507,6 @@ static int amdgpu_atif_handler(struct amdgpu_device *adev,
+ 				pm_runtime_get_sync(adev_to_drm(adev)->dev);
+ 				/* Just fire off a uevent and let userspace tell us what to do */
+ 				drm_helper_hpd_irq_event(adev_to_drm(adev));
+-				pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 				pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 			}
+ 		}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index 5e375e9c4f5d..7220ecb93ff7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -738,7 +738,6 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
+ 	amdgpu_connector_update_scratch_regs(connector, ret);
  
-+#include <media/v4l2-event.h>
- #include <media/v4l2-mem2mem.h>
+ 	if (!drm_kms_helper_is_poll_worker()) {
+-		pm_runtime_mark_last_busy(connector->dev->dev);
+ 		pm_runtime_put_autosuspend(connector->dev->dev);
+ 	}
  
- #include "iris_buffer.h"
-@@ -283,3 +284,16 @@ int iris_venc_validate_format(struct iris_inst *inst, u32 pixelformat)
+@@ -923,7 +922,6 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
+ 
+ out:
+ 	if (!drm_kms_helper_is_poll_worker()) {
+-		pm_runtime_mark_last_busy(connector->dev->dev);
+ 		pm_runtime_put_autosuspend(connector->dev->dev);
+ 	}
+ 
+@@ -1150,7 +1148,6 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ exit:
+ 	if (!drm_kms_helper_is_poll_worker()) {
+-		pm_runtime_mark_last_busy(connector->dev->dev);
+ 		pm_runtime_put_autosuspend(connector->dev->dev);
+ 	}
+ 
+@@ -1450,7 +1447,6 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 	amdgpu_connector_update_scratch_regs(connector, ret);
+ out:
+ 	if (!drm_kms_helper_is_poll_worker()) {
+-		pm_runtime_mark_last_busy(connector->dev->dev);
+ 		pm_runtime_put_autosuspend(connector->dev->dev);
+ 	}
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index 83f211903425..2c724e8354de 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -129,7 +129,6 @@ static int  amdgpu_debugfs_process_reg_op(bool read, struct file *f,
+ 	if (use_bank) {
+ 		if ((sh_bank != 0xFFFFFFFF && sh_bank >= adev->gfx.config.max_sh_per_se) ||
+ 		    (se_bank != 0xFFFFFFFF && se_bank >= adev->gfx.config.max_shader_engines)) {
+-			pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 			pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 			amdgpu_virt_disable_access_debugfs(adev);
+ 			return -EINVAL;
+@@ -179,7 +178,6 @@ static int  amdgpu_debugfs_process_reg_op(bool read, struct file *f,
+ 	if (pm_pg_lock)
+ 		mutex_unlock(&adev->pm.mutex);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	amdgpu_virt_disable_access_debugfs(adev);
+@@ -255,7 +253,6 @@ static ssize_t amdgpu_debugfs_regs2_op(struct file *f, char __user *buf, u32 off
+ 	if (rd->id.use_grbm) {
+ 		if ((rd->id.grbm.sh != 0xFFFFFFFF && rd->id.grbm.sh >= adev->gfx.config.max_sh_per_se) ||
+ 		    (rd->id.grbm.se != 0xFFFFFFFF && rd->id.grbm.se >= adev->gfx.config.max_shader_engines)) {
+-			pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 			pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 			amdgpu_virt_disable_access_debugfs(adev);
+ 			mutex_unlock(&rd->lock);
+@@ -310,7 +307,6 @@ static ssize_t amdgpu_debugfs_regs2_op(struct file *f, char __user *buf, u32 off
+ 
+ 	mutex_unlock(&rd->lock);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	amdgpu_virt_disable_access_debugfs(adev);
+@@ -446,7 +442,6 @@ static ssize_t amdgpu_debugfs_gprwave_read(struct file *f, char __user *buf, siz
+ 	amdgpu_gfx_select_se_sh(adev, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, rd->id.xcc_id);
+ 	mutex_unlock(&adev->grbm_idx_mutex);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	if (!x) {
+@@ -557,7 +552,6 @@ static ssize_t amdgpu_debugfs_regs_pcie_read(struct file *f, char __user *buf,
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -617,7 +611,6 @@ static ssize_t amdgpu_debugfs_regs_pcie_write(struct file *f, const char __user
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -676,7 +669,6 @@ static ssize_t amdgpu_debugfs_regs_didt_read(struct file *f, char __user *buf,
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -736,7 +728,6 @@ static ssize_t amdgpu_debugfs_regs_didt_write(struct file *f, const char __user
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -795,7 +786,6 @@ static ssize_t amdgpu_debugfs_regs_smc_read(struct file *f, char __user *buf,
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -855,7 +845,6 @@ static ssize_t amdgpu_debugfs_regs_smc_write(struct file *f, const char __user *
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return r;
+@@ -1003,7 +992,6 @@ static ssize_t amdgpu_debugfs_sensor_read(struct file *f, char __user *buf,
+ 
+ 	r = amdgpu_dpm_read_sensor(adev, idx, &values[0], &valuesize);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	if (r) {
+@@ -1094,7 +1082,6 @@ static ssize_t amdgpu_debugfs_wave_read(struct file *f, char __user *buf,
+ 	amdgpu_gfx_select_se_sh(adev, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0);
+ 	mutex_unlock(&adev->grbm_idx_mutex);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	if (!x) {
+@@ -1192,7 +1179,6 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
+ 	amdgpu_gfx_select_se_sh(adev, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0);
+ 	mutex_unlock(&adev->grbm_idx_mutex);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	while (size) {
+@@ -1266,7 +1252,6 @@ static ssize_t amdgpu_debugfs_gfxoff_residency_read(struct file *f, char __user
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1315,7 +1300,6 @@ static ssize_t amdgpu_debugfs_gfxoff_residency_write(struct file *f, const char
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1365,7 +1349,6 @@ static ssize_t amdgpu_debugfs_gfxoff_count_read(struct file *f, char __user *buf
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1414,7 +1397,6 @@ static ssize_t amdgpu_debugfs_gfxoff_write(struct file *f, const char __user *bu
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1460,7 +1442,6 @@ static ssize_t amdgpu_debugfs_gfxoff_read(struct file *f, char __user *buf,
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1501,7 +1482,6 @@ static ssize_t amdgpu_debugfs_gfxoff_status_read(struct file *f, char __user *bu
+ 
+ 	r = result;
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+@@ -1701,7 +1681,6 @@ static int amdgpu_debugfs_test_ib_show(struct seq_file *m, void *unused)
+ 
+ 	up_write(&adev->reset_domain->sem);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
  
  	return 0;
- }
-+
-+int iris_venc_subscribe_event(struct iris_inst *inst,
-+			      const struct v4l2_event_subscription *sub)
-+{
-+	switch (sub->type) {
-+	case V4L2_EVENT_EOS:
-+		return v4l2_event_subscribe(&inst->fh, sub, 0, NULL);
-+	case V4L2_EVENT_CTRL:
-+		return v4l2_ctrl_subscribe_event(&inst->fh, sub);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-diff --git a/drivers/media/platform/qcom/iris/iris_venc.h b/drivers/media/platform/qcom/iris/iris_venc.h
-index 04fd41275547c40c359c6ea04dfe4ee31d2d0df6..2d9614ae18e8a2318df6673fbeae5ee33c99b596 100644
---- a/drivers/media/platform/qcom/iris/iris_venc.h
-+++ b/drivers/media/platform/qcom/iris/iris_venc.h
-@@ -14,5 +14,6 @@ int iris_venc_enum_fmt(struct iris_inst *inst, struct v4l2_fmtdesc *f);
- int iris_venc_try_fmt(struct iris_inst *inst, struct v4l2_format *f);
- int iris_venc_s_fmt(struct iris_inst *inst, struct v4l2_format *f);
- int iris_venc_validate_format(struct iris_inst *inst, u32 pixelformat);
-+int iris_venc_subscribe_event(struct iris_inst *inst, const struct v4l2_event_subscription *sub);
+@@ -1721,7 +1700,6 @@ static int amdgpu_debugfs_evict_vram(void *data, u64 *val)
  
- #endif
-diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
-index 458773a2ed7f5e16d5bd5e79dba2f5c029036505..d8c94074153e9b1ceac4f911210ddbf89bbe3533 100644
---- a/drivers/media/platform/qcom/iris/iris_vidc.c
-+++ b/drivers/media/platform/qcom/iris/iris_vidc.c
-@@ -489,7 +489,12 @@ static int iris_subscribe_event(struct v4l2_fh *fh, const struct v4l2_event_subs
+ 	*val = amdgpu_ttm_evict_resources(adev, TTM_PL_VRAM);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return 0;
+@@ -1742,7 +1720,6 @@ static int amdgpu_debugfs_evict_gtt(void *data, u64 *val)
+ 
+ 	*val = amdgpu_ttm_evict_resources(adev, TTM_PL_TT);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return 0;
+@@ -1762,7 +1739,6 @@ static int amdgpu_debugfs_benchmark(void *data, u64 val)
+ 
+ 	r = amdgpu_benchmark(adev, val);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return r;
+@@ -2014,7 +1990,6 @@ static int amdgpu_debugfs_sclk_set(void *data, u64 val)
+ 		ret = -EINVAL;
+ 
+ out:
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+index 9e463d3ee927..d5844fee7204 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+@@ -332,8 +332,6 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 		if (crtc->enabled)
+ 			active = true;
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+-
+ 	adev = drm_to_adev(dev);
+ 	/* if we have active crtcs and we don't have a power ref,
+ 	 * take the current one
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index b299e15bb5e5..24edb5a327c2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -2228,7 +2228,6 @@ static void amdgpu_get_secondary_funcs(struct amdgpu_device *adev)
+ 						adev->pdev->bus->number, i);
+ 		if (p) {
+ 			pm_runtime_get_sync(&p->dev);
+-			pm_runtime_mark_last_busy(&p->dev);
+ 			pm_runtime_put_autosuspend(&p->dev);
+ 			pci_dev_put(p);
+ 		}
+@@ -2469,7 +2468,6 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
+ 
+ 		pm_runtime_allow(ddev->dev);
+ 
+-		pm_runtime_mark_last_busy(ddev->dev);
+ 		pm_runtime_put_autosuspend(ddev->dev);
+ 
+ 		pci_wake_from_d3(pdev, TRUE);
+@@ -2907,7 +2905,6 @@ static int amdgpu_pmops_runtime_idle(struct device *dev)
+ 
+ 	ret = amdgpu_runtime_idle_check_userq(dev);
+ done:
+-	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_autosuspend(dev);
+ 	return ret;
+ }
+@@ -2926,7 +2923,6 @@ long amdgpu_drm_ioctl(struct file *filp,
+ 
+ 	ret = drm_ioctl(filp, cmd, arg);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ out:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+index 2c3547f4cea4..5e52ac2f9206 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+@@ -267,7 +267,6 @@ bool amdgpu_fence_process(struct amdgpu_ring *ring)
+ 
+ 		dma_fence_signal(fence);
+ 		dma_fence_put(fence);
+-		pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 		pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 	} while (last_seq != seq);
+ 
+@@ -920,7 +919,6 @@ static int gpu_recover_get(void *data, u64 *val)
+ 
+ 	*val = atomic_read(&adev->reset_domain->reset_res);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c
+index c80c8f543532..c922e141f4c6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c
+@@ -1594,7 +1594,6 @@ static ssize_t amdgpu_gfx_set_run_cleaner_shader(struct device *dev,
+ 
+ 	ret = amdgpu_gfx_run_cleaner_shader(adev, value);
+ 
+-	pm_runtime_mark_last_busy(ddev->dev);
+ 	pm_runtime_put_autosuspend(ddev->dev);
+ 
+ 	if (ret)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 195ed81d39ff..c7233f30a29f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -1450,7 +1450,6 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 	kfree(fpriv);
+ 
+ out_suspend:
+-	pm_runtime_mark_last_busy(dev->dev);
+ pm_put:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+@@ -1521,7 +1520,6 @@ void amdgpu_driver_postclose_kms(struct drm_device *dev,
+ 	kfree(fpriv);
+ 	file_priv->driver_priv = NULL;
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_rap.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_rap.c
+index 123bcf5c2bb1..bacf888735db 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_rap.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_rap.c
+@@ -101,7 +101,6 @@ static ssize_t amdgpu_rap_debugfs_write(struct file *f, const char __user *buf,
+ 	}
+ 
+ 	amdgpu_gfx_off_ctrl(adev, true);
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return size;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+index dd37d8815ba5..258acce7db8f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+@@ -3869,7 +3869,6 @@ static void amdgpu_ras_counte_dw(struct work_struct *work)
+ 		atomic_set(&con->ras_ue_count, ue_count);
+ 	}
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ Out:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_securedisplay.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_securedisplay.c
+index 41ebe690eeff..3739be1b71e0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_securedisplay.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_securedisplay.c
+@@ -159,7 +159,6 @@ static ssize_t amdgpu_securedisplay_debugfs_write(struct file *f, const char __u
+ 		dev_err(adev->dev, "Invalid input: %s\n", str);
+ 	}
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return size;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+index 295e7186e156..5e939ea8ea42 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+@@ -322,7 +322,6 @@ amdgpu_userq_destroy(struct drm_file *filp, int queue_id)
+ 	amdgpu_userq_cleanup(uq_mgr, queue, queue_id);
+ 	mutex_unlock(&uq_mgr->userq_mutex);
+ 
+-	pm_runtime_mark_last_busy(adev_to_drm(adev)->dev);
+ 	pm_runtime_put_autosuspend(adev_to_drm(adev)->dev);
+ 
+ 	return r;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index 5be28c6c4f6a..04b1abd8e80a 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -1083,7 +1083,6 @@ static void kfd_process_destroy_pdds(struct kfd_process *p)
+ 		 * for auto suspend
+ 		 */
+ 		if (pdd->runtime_inuse) {
+-			pm_runtime_mark_last_busy(adev_to_drm(pdd->dev->adev)->dev);
+ 			pm_runtime_put_autosuspend(adev_to_drm(pdd->dev->adev)->dev);
+ 			pdd->runtime_inuse = false;
+ 		}
+diff --git a/drivers/gpu/drm/amd/pm/amdgpu_pm.c b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
+index edd9895b46c0..728b3982df57 100644
+--- a/drivers/gpu/drm/amd/pm/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
+@@ -172,7 +172,6 @@ static int amdgpu_pm_get_access_if_active(struct amdgpu_device *adev)
+  */
+ static inline void amdgpu_pm_put_access(struct amdgpu_device *adev)
  {
- 	struct iris_inst *inst = container_of(fh, struct iris_inst, fh);
- 
--	return iris_vdec_subscribe_event(inst, sub);
-+	if (inst->domain == DECODER)
-+		return iris_vdec_subscribe_event(inst, sub);
-+	else if (inst->domain == ENCODER)
-+		return iris_venc_subscribe_event(inst, sub);
-+
-+	return -EINVAL;
+-	pm_runtime_mark_last_busy(adev->dev);
+ 	pm_runtime_put_autosuspend(adev->dev);
  }
  
- static int iris_dec_cmd(struct file *filp, void *fh,
-@@ -584,6 +589,8 @@ static const struct v4l2_ioctl_ops iris_v4l2_ioctl_ops_enc = {
- 	.vidioc_enum_framesizes         = iris_enum_framesizes,
- 	.vidioc_enum_frameintervals     = iris_enum_frameintervals,
- 	.vidioc_querycap                = iris_querycap,
-+	.vidioc_subscribe_event         = iris_subscribe_event,
-+	.vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
- };
- 
- void iris_init_ops(struct iris_core *core)
-
 -- 
-2.34.1
+2.39.5
 
