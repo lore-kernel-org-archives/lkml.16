@@ -1,63 +1,63 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222C82DC35C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9532E0920
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751645695; cv=none; b=asb31+cszl2i6cV2Wqjg/GvMpjdAO4Po3p/JtomBspYNWd/gOxDQ7wkiRvUXjtU6hjqSWY9ilXt8j/30y5n7oCoYYBR5RtgonPN2yUL5qN7Grx95zq2lK/MOMglId40SL1MAdMrDl4JykWtcpMQ9awoCa3Mustl8U7QvnDEWD6o=
+	t=1751645696; cv=none; b=iGAZ9lo1uXtcaVMbhQxrZxcoId575Zb9SlHFfCNS/177i4ecEu39grMm5BDx6q8yLFMy7Hm3FXG4RUqcHfSg1B0cgHL8f0CbOqiFGA649+kdsy+g34FmHHGyfIs/ytTZaKnQ2QuZmqPKrpmEfesWvaXDCCzLbzun/DzI2wUoVhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751645695; c=relaxed/simple;
-	bh=WguPuQh3/mnSf62tuhpCluxDoAVKFv7lhwgnIqAg2mA=;
+	s=arc-20240116; t=1751645696; c=relaxed/simple;
+	bh=BH1aKcd76IaUZZ/ToYr9eDZkVxa6rxOK7GvAzGHVDi4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XCCjgO1lyJYOQEhkfuYanXICWom0Plt8WSRi7+UYmIy6nmmCSwlew3uziuHNPv0iCrz+7GDUZ88QKV9RVP/hgRZjt3dKNvRuWOIIoAQ1BCbJlp8Z3cvAAfftybzLlAYMK5GcSXri1P04Rih7abAxSvZsAw1ugr6309QEAT60C88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=kNsxm4aQ; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=aIjW6JTws+8WlxRVLoGSNyCt5r6pyo9AflOXFyUedxmF8jw1r94bM6uZFHK1aUWo6Q/2pUk02suY+llHquV+D+hfEfCdI8/gAKZSe3YmuGBRJ6NRzvcNnj1WmG+YtNC9jx02uUaNupNU/RxgpVMLa8n/ouPi1ZP13eJzfRjI3d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=BSCbg6+e; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="kNsxm4aQ"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo1788024a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:14:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="BSCbg6+e"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae361e8ec32so244604366b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1751645691; x=1752250491; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1751645693; x=1752250493; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EDg1DpjdtfK3/pj3Ed0aWvzIW/qZbuuI4Dyv55kxUjI=;
-        b=kNsxm4aQzR7UeO/Sg2pPhSVSa/aBvxxcStZmcjSqc6NnX6y3RNzAaB4a45xbKHnCl6
-         OjURboHgmHjDqY0UcT2awnFZGMJTtMLgk4gziU9qQ1TbNb1ouWGsB0xtNEBHanWq6CCF
-         q/Y79U/XX6PK15ZK8mFb2I8UBmyDe5kH9xPMaYfoTl4Efw+y1mwOm8Q7wIfxYRT3fq/E
-         E7AGP/eBjdDMmFSw8+yuMCJWyTbqmGIoBpk47m6t+rDEJKGFXtngaFACVEuEICuXj/rC
-         bEI4NbTz+Aq672q6ZUiVP3nJCUIDvcghA1Ta/+BjifYq48r7l2WRJq0HWJWH+SJ4QjYo
-         4GzQ==
+        bh=YJ/8zy8l4B85cHtddHm5bMRDVmAGhs389YDqHOJWbP8=;
+        b=BSCbg6+eqWxsdM+U4V+a2msCtN9paviA8SqT1mQaT4m+JjPTt/qE6lzwqKeRrxFQbW
+         6/WpbORYsVosT4sAg1E3xuUgAHt8JD4ZiKTkoIOPFNEb6VVX5aIOOXZ3p6MeXqbTXNGs
+         DApTUTlwAEdFF6mEDQRMOFHHl6Da/4uPOfPYofeZDLvri0GYWXXzvOuFyNMKzq9zpfiK
+         x8iZ8bqRH8YWa3Ze5MxGT+46IGjwIIY1jQcb1W8CHAJIN2TNlwbaM/6LOZf7U54wGaKC
+         n0zdwpEQ1Ax9WdQtH8dCw9Nwfg+ZI9xBASWVofuaAXNqARrLnrR+6aL/TsEb4x6gF1jv
+         DubQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751645691; x=1752250491;
+        d=1e100.net; s=20230601; t=1751645693; x=1752250493;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EDg1DpjdtfK3/pj3Ed0aWvzIW/qZbuuI4Dyv55kxUjI=;
-        b=e1MpcBzMpxCCYjm/fAtLasv69Pn7aVCNMwL91bdEieCAgTEM/zMdjquQZqtPVWzOeC
-         iKcrH1PkcLE39BrS4+rXil8Zf+3Suka7SsYsR9ByfDRrZjvmR3Wy7NkfkMCg1ZlXCzYR
-         XzhOVtyKShK1IJo/iUH6e+Zw7lml7IQvrmnlpNDvWcRRADeGJWjzOzE1KZPjPsJR13BW
-         4dgO/XNf8+0TjLWnDorOmlnLc2bN3CmGcVk5xNvaW47MEsGtJIA6+pTmyeKZyuwdLDFX
-         moWLJyIqn5U+ad3M7ICuzS3GYWmjVTkr6cMhAbPch+rpFiOAZ3yGVoARI5ES2Ht28qp8
-         du0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXvikAVuxrFDlXOh2gd5iQ9dRDwUHx601gMNxsIYqyMtDyd5LOIde8xQvbn0l5zxdqdiHkSS76yCKL0UQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1/b7VUBQBJ/ojQQsNQ6C+T0g+E3uTjWU3fQYU+Ufysvkuw10w
-	QIaZnI2J1ioKyGhoXI1Cz5rzMx3pks/PdRs9KrvoA4MuAneqTMtarZlzUqOqUsyzMAs=
-X-Gm-Gg: ASbGncv7HSB773+u9e7IGX0Zom/rwkTL6e7M10HqLqq0Mk9l7IWW5YCVrUkIbWGA19I
-	7I2zc5ZWOSJpZtUy/dqvBbBANhNNOmnqL4E7r4P6lXeQg4MnQARg4d9L7oed+qjJ6SVaJxGs7Bf
-	MwehrXTYkwXOlW9PZwebx6fNPQhPrN5J4CwFqFoaHlnr9n0mSNGALOrP9MvO2cogPfZDByZB1ij
-	OgYla19iWeCoeLogf8MDOXxChqP8a96j+0XF6CFZNUeHN/bfHYtEdgdlXCyJT8PIrxA/naZyAhQ
-	W9Ubre2E6Z3IZ0KnNMjhg0Tcx5m7D/L/n9SEjqLknsi6MjY9NP5yZeDZ9b3dgxc4TNSq7IWAqfO
-	eTGKWmllNFjUB30Q=
-X-Google-Smtp-Source: AGHT+IEZfr0ji4LDK9KAfq64DmhYMTWRTB1pQDXq1rT0Tuj0QwG5y9ROAnPBq8wcVt6C4csWmuVLvQ==
-X-Received: by 2002:a17:907:9621:b0:ae3:a717:e90c with SMTP id a640c23a62f3a-ae3fe695451mr259268966b.23.1751645691353;
-        Fri, 04 Jul 2025 09:14:51 -0700 (PDT)
+        bh=YJ/8zy8l4B85cHtddHm5bMRDVmAGhs389YDqHOJWbP8=;
+        b=QbBo/CJ96LS2MLLOZI8BX/GtKYaJ4fRC1f7bYdWmHD1A87ybLQYNU+E5JR9GIYWsOT
+         Ng4u8QK5mrZ27oZxb4Mpaq7oVOOcljnKgcOPzrdVwSO3lPhJeuJvxQugVc/JsB8Oirlz
+         BI9eTO/IdOC7qZep5BHzBO2CE+2P08c6mQGV5knMO78hJe/dxeZcHJLKZbRKeOE5yZHF
+         jx5jnVjOKK9/eLG0lKbZz6re7MK/vzmGXMnGeVGLvuaXmw34O+9ApEfQx5iUbkHAYYbY
+         kVyRJ+IZiCfVI/I9mhzyitDA6a9bIolPH3qBsvZvsojbBIv1+MOk7JdTLuoEO+EfGrGy
+         fxlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFZgjg68U5qauY1ml7/wkTnFX5DNiM1BaN9lVxKrDTXkv0dOCp0My/9z3wdsZen0/7xqsrDRy9mugGhcE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeQh1PKTMLI1DgGiFLkG6v4uiWH+G8ceLhScoy2YRLoj8znQy8
+	u+jHQf1m+oIe5bp7g+fKP1OOsqQ5ORcNFULXBzqIwLn22x8PGv1CX8STsXlSW06i3fE=
+X-Gm-Gg: ASbGncuUEOGtvM8j/QK/ZmesnhSIPcPJltrHZ7RwiTQ0x476zKoqv11xjJVISaLXijv
+	w828LojIq+17Th96N/oro4dhKBiJInI6Kgs/hGqke0EAFCI4HCDFhMUpCHkNgwt/2Xk9iYJxD7s
+	voFFFL79D8GvnxttxLIktqKfbQNMCLZGj0mq2dlDoSEIpCwQZqIYdzLtbq0TpsXaYq2W3W6rS4R
+	DhA8fSPCQ2dTrMjVSnFQab85izyKjwXntYg6a+oZeKE9ZODzipIE+oi+vtaWlYpO0ibNgUiUpiJ
+	BExFWa+dGJjLe4DXBUWnu6dU89gTD2cP/ImGcOMBUNOdxjrWOCkZ9hE7ej+RSpbV/xQui3QDXay
+	tYwb2F6uEHHhTC3E=
+X-Google-Smtp-Source: AGHT+IGDhz0qhVTw0+Jv8lS4jO8NKu6i+6S1WnDonE3OKo10n+XAusMMQdVW5VodGZ41K5WwIdd9Lg==
+X-Received: by 2002:a17:907:72c2:b0:ae3:bd92:e69b with SMTP id a640c23a62f3a-ae3fbc4c2a9mr336020266b.7.1751645693200;
+        Fri, 04 Jul 2025 09:14:53 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d9215sm194703766b.2.2025.07.04.09.14.49
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d9215sm194703766b.2.2025.07.04.09.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:14:50 -0700 (PDT)
+        Fri, 04 Jul 2025 09:14:52 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: bhelgaas@google.com,
@@ -84,9 +84,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-clk@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH v3 8/9] arm64: dts: renesas: rzg3s-smarc: Enable PCIe
-Date: Fri,  4 Jul 2025 19:14:08 +0300
-Message-ID: <20250704161410.3931884-9-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 9/9] arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
+Date: Fri,  4 Jul 2025 19:14:09 +0300
+Message-ID: <20250704161410.3931884-10-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
@@ -100,8 +100,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The RZ Smarc Carrier-II board has PCIe headers mounted on it. Enable PCIe
-support.
+Enable PCIe for the Renesas RZ/G3S SoC.
 
 Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
@@ -113,38 +112,21 @@ Changes in v3:
 Changes in v2:
 - none
 
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 5e044a4d0234..6e9e78aca0b0 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -132,6 +132,12 @@ power-monitor@44 {
- 	};
- };
- 
-+&pcie {
-+	pinctrl-0 = <&pcie_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	audio_clock_pins: audio-clock {
- 		pins = "AUDIO_CLK1", "AUDIO_CLK2";
-@@ -159,6 +165,11 @@ key-3-gpio-hog {
- 		line-name = "key-3-gpio-irq";
- 	};
- 
-+	pcie_pins: pcie {
-+		pinmux = <RZG2L_PORT_PINMUX(13, 2, 2)>, /* PCIE_RST_OUT_B */
-+			 <RZG2L_PORT_PINMUX(13, 3, 2)>; /* PCIE_CLKREQ_B */
-+	};
-+
- 	scif0_pins: scif0 {
- 		pinmux = <RZG2L_PORT_PINMUX(6, 3, 1)>, /* RXD */
- 			 <RZG2L_PORT_PINMUX(6, 4, 1)>; /* TXD */
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 739b19302865..b3533ba5be7e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -227,6 +227,7 @@ CONFIG_PCIE_MEDIATEK_GEN3=m
+ CONFIG_PCI_TEGRA=y
+ CONFIG_PCIE_RCAR_HOST=y
+ CONFIG_PCIE_RCAR_EP=y
++CONFIG_PCIE_RENESAS_RZG3S_HOST=m
+ CONFIG_PCIE_ROCKCHIP_HOST=m
+ CONFIG_PCI_XGENE=y
+ CONFIG_PCI_IMX6_HOST=y
 -- 
 2.43.0
 
