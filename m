@@ -1,49 +1,50 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B32857FF;
-	Fri,  4 Jul 2025 07:53:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032B2857CA;
+	Fri,  4 Jul 2025 07:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615613; cv=none; b=GMoDpwuyVKPm9Ub0R+iZv3KT1BYU6fTOkmEhLanWPqiwy1ubC4FKxNYW+SipOrtoaSgmbo49VFiDqrPUzNhe/US9c+P2uhJ24m42CeRxpXyJkErEVcYRJ5ZQTEArmuG2RcxviU6spEl0qtwNt8ya1jPq31ZnqsVQMYEFqpFxpWg=
+	t=1751615623; cv=none; b=HnQ8t6TlDGFZgCVr17IaTSOgW52Hoya5HvspE0QmTluZXb2wqBzCG8YL7wZGvIGC79gvAJX9MwR+168n90ZHhxi+7WAx8SGYz/QAt0L6iEqU/XH3zkQG3n92L8IqkxuCEfDM6Hu5R/fsl9o/MoWNW74Fxg7QJSn6ckgKUJiIUDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615613; c=relaxed/simple;
-	bh=DzdQXMWhyG9E4sVrJMYgGSMgTnQvBf+I5VypqOlvn5g=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=JhSo9PI738ZSCobuL0bIhimAmO23utDojs8RoP0s722WO2ohkgjgwQfWNsQkNKV9kKDhr4Dp0HPhe5ifO8EgOTIyDdPMLHjQ53BUmLWAk/0n0++oEN4cpEN7jZTL9NSc+4zdRzMYCDLRKux3y1eMGRGm5cpqoe8/CxPcXde9G8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CrJdBVSH; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1751615623; c=relaxed/simple;
+	bh=PPfazh2Q408uklF/v6kVSRHe+a/+PoprrTMStPMs+WM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=g0q5H6CLCH1E/V1ewopYjQ82TaDr2fSLkW7UUJInQdttw7e2uMC4m/gvxA4fkYfuyNRtVSzsnaIQxDPNoWqhq8oqbgbVqYGZzx8pPMumhTxNeqvhn6Tzx1aTutxxLkvxRawPC97PWLO/JdJHdKTx3a1r8XOZFkAdOOhltuymhiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Cm86kJSx; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CrJdBVSH"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5643cRGL010767;
-	Fri, 4 Jul 2025 07:53:24 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cm86kJSx"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5643eqg2007093;
+	Fri, 4 Jul 2025 07:53:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+wqbvG6u0UN4FRByDkxyHw
-	dH3zFh7+u99HXn00gixFM=; b=CrJdBVSHnvO7h4DVZCKyOpRM0XkkN/ToAbyCaP
-	bKGKHHb6zsLEg3JXX94XjKGR7F/pOMXO5du4bjNmGf0e8wNyszDmQEzf8YsDGEAV
-	uDk8DwLTsQCM1hsw8/vNKLVnV526Kyx9NDKTntZMo/F+iDJJ1cEwUCtPZM88Wd2U
-	6EIINUylloTN4lN9s/eAS16Y+1aGTu1TkYu/a+d1mexG80FvzLX7Q1L8V3BNo/D2
-	Npr6ewgcxWl75b/a05jm5fEE0NPKIYEDHAdvwBwMV6X00/QxP5eJs0yTvl919CS7
-	+DXWMQ7J3a/l9afXKb2mi3P9u/pobXy51dw+BJ+dGpB+pfIQ==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rH/5s/9SRxA2uKus31tw/QE8fku89JeoKtG5AWsIXTg=; b=Cm86kJSxr1cRaZmS
+	TGo3N+IIxPkBxx43zCwiiOQP1b3gppiOfh3l8/4wfp0X1lL0wBsB22QWEBnfr3k2
+	VLCD8B6Zt37EwxT51hxao4mWQ1RTukFKTO+fhvo7GGZFMZvZRhNApnb5EpTHQi63
+	GlWjvKtxxFzRmnoHB0jTGf5FqBo3giGTJz4Uk3ewQNmxf/0pvwbhrTMwhBnRaHgb
+	7Lkhz+zJsQg2Td0CzuwjYk9KgptwrDRqWV5D9CK9HK9S6Dv+CWXtL6rLdv7mnFYd
+	4XopgpQrylkvuAjn76LeRKxZFcJGtkfiZPAvs867WIPqX++qwsTQRtdTIfEeNCz3
+	5SYr3g==
 Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw30g2s8-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jqgpf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:53:23 +0000 (GMT)
+	Fri, 04 Jul 2025 07:53:30 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rNox017215
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647rUgx017323
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:53:23 GMT
+	Fri, 4 Jul 2025 07:53:30 GMT
 Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:53:19 -0700
+ 15.2.1748.10; Fri, 4 Jul 2025 00:53:26 -0700
 From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Subject: [PATCH 00/25] Enable H.264/H.265 encoder support and fixes in
- common code
-Date: Fri, 4 Jul 2025 13:23:00 +0530
-Message-ID: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+Date: Fri, 4 Jul 2025 13:23:02 +0530
+Subject: [PATCH 02/25] media: iris: Report unreleased PERSIST buffers on
+ session close
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,10 +53,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFyIZ2gC/x3MQQqAIBBA0avIrBvQSqyuEi0sp5qNxggRhHdPW
- r7F/y9kEqYMk3pB6ObMKVaYRsF2+ngQcqiGVrdWO90jC2e8OVBCilsKJLiaseusXvvBeajhJbT
- z80/npZQPTqnzb2QAAAA=
-X-Change-ID: 20250704-iris-video-encoder-b193350b487a
+Message-ID: <20250704-iris-video-encoder-v1-2-b6ce24e273cf@quicinc.com>
+References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
+In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
         Abhinav Kumar
 	<abhinav.kumar@linux.dev>,
@@ -70,349 +70,72 @@ CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Dikshita Agarwal <quic_dikshita@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=13073;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=1364;
  i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=DzdQXMWhyG9E4sVrJMYgGSMgTnQvBf+I5VypqOlvn5g=;
- b=j2qgJDjqM6mbua07B5cjmbuagl4Kgpnq0lICQj1uU2RiVajIb1WMOTEJ9OQxyynRn/SeBtBYv
- b9Zw2/uWJyQBi7rJqVAgGVPWS0x8pko0ZSF2SPXqjP2Udno6ynonHvz
+ bh=PPfazh2Q408uklF/v6kVSRHe+a/+PoprrTMStPMs+WM=;
+ b=Iya6S9bUIuJpjxWaKw8i43hTgH8d4PtDeoO0uODiQkbuG+xKbbDQSXSOpSUnwHRDKQrJb+NxL
+ y79aCm+pZieB6n/0HMP6x8Zqv6qGexakcDh8zFlEaMlX8x45Md737AQ
 X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
  pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=68678874 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=6867887a cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=hE2_k2m4_orhzAUJXGEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: PEfGj97Fyje_MEPp4HmHNjjl4JbziBWa
-X-Proofpoint-GUID: PEfGj97Fyje_MEPp4HmHNjjl4JbziBWa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfXw+NzbD4rvmqF
- qUUQp1hUqyqsR8zf0VtUpeva+QAg2hj0lAfLgTJbjDr0KPHoR1ZUavHeOC3JVtw61+qMWK24fD1
- 9TlWcsE+l8MEYsQJjqBTaBbIKeKFS+sD8eU1/WqjQIkFUsIVeJNKVWTVD6z7AJCIFzuQxsVZfcR
- 2WlTsYAHAa6K9frGYK1IJL5EnkYIgTqtg5D9ZIEYCym24MngaWpcZycfy9qsdTsbiyDIZAWgP7D
- d/37gZPqTQQHvsF0dEBzAWPBfO2x3lODY7HFAC1qiqWKjMrrf54RNA9h9X/zKabDQPsc+yCNr9M
- HE3UArj7hB3CiwDpi+LPB34xCc3Xtd6uSRrd5f35SYa9jnRTxO6SGHNJ/5H+H7Qi43Zg0UEYfm8
- TecOByoqU9xQDs6BVk/nsrtRLD292yJ+Sb/Xb8woFotjbVmHVMwC0ib0E7KGFkaLT0sjQ1AL
+ a=r7dkYRASveuLtx3RUUQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 0BUmGl_LCd0EzIJOX-y9nWekPJp8ZmIA
+X-Proofpoint-GUID: 0BUmGl_LCd0EzIJOX-y9nWekPJp8ZmIA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX6xf42sSq+XRH
+ Ta+u1P1DnoZu4OHx3aVXY+3/tdTlhEmVwxjprkjHTW8qheT/PMmj/xkbKKfwlKdEOzMTLS8JsjU
+ Cj3MZFhHXAgxWKnfIfp5hu10/kc3K7TCGiXm8FGct60ieoQReQ/VhDSa1ZlE35yqe4r4BSxreFA
+ yxQI7+qJt44ULZnr82RZhxNa9i1rU7rKEjYA9k0IZCa/9GgP+2BsD/NW35nu0lhQ4hAhNNLH1xB
+ MItAXttxfFLZQMZnNHfdZM66sxXCG8AhaaC0RxKDF3Z3iXJHIE96jX7v9chJqKWL7Jz1N3t2YpW
+ 4sxOIhwau7s5qvn463X1JFKeu5Rf1ZJ8qgMTh40BmWeluR9jO2gHb9MIV3LKvwME1Dbqt1g3g+n
+ Ac7Y28lH7QcvrDT0HqWy0ydS7C+yK5C6jFkE5IuiIiWjd1kSx7i5YVmq+1VeRUidpD7no11Q
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040060
+ impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
+ mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040060
 
-Hi All,
+Add error reporting for unreleased PERSIST internal buffers in
+iris_check_num_queued_internal_buffers(). This ensures all buffer types
+are checked and logged if not freed during session close, helping to
+detect memory leaks and improve driver robustness. No change to buffer
+lifecycle or allocation logic.
 
-This patch series adds support for H.264 and H.265 encoder in iris 
-driver and includes a few fixes and cleanup in the common code that were 
-identified during encoder bring-up process.
-
-The changes include:
-- Enabling support for H.264 and H.265 encoding.
-- Fixes and improvements in shared componenets used by both encoder and 
-decoder paths.
-- Ensuring compatibility and stability with the existing decoder flow.
-
-All patches have been tested with v4l2-compliance, v4l2-ctl and 
-Gstreamer on SM8250 and SM8550 for encoder, at the same time ensured 
-that the existing decoder functionality remains uneffected.
-
-The result of v4l2-compliance on SM8550:
-v4l2-compliance 1.29.0-5270, 64 bits, 64-bit time_t
-v4l2-compliance SHA: dc947661089e 2024-11-11 10:25:38
-
-Compliance test for iris_driver device /dev/video1:
-
-Driver Info:
-        Driver name      : iris_driver
-        Card type        : Iris Encoder
-        Bus info         : platform:aa00000.video-codec
-        Driver version   : 6.16.0
-        Capabilities     : 0x84204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-        Detected Stateful Encoder
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-        test invalid ioctls: OK
-
-Allow for multiple opens:
-        test second /dev/video1 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 37 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test CREATE_BUFS maximum buffers: OK
-        test VIDIOC_REMOVE_BUFS: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
-        test blocking wait: OK
-
-Test input 0:
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (select, REQBUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (epoll, REQBUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (select, CREATE_BUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (epoll, CREATE_BUFS): OK
-        test USERPTR (select): OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
-Total for iris_driver device /dev/video1: 54, Succeeded: 54, Failed: 0, Warnings: 0
-
-The result of v4l2-compliance on SM8250:
-v4l2-compliance 1.29.0-5270, 64 bits, 64-bit time_t
-v4l2-compliance SHA: dc947661089e 2024-11-11 10:25:38
-
-Compliance test for iris_driver device /dev/video1:
-
-Driver Info:
-        Driver name      : iris_driver
-        Card type        : Iris Encoder
-        Bus info         : platform:aa00000.video-codec
-        Driver version   : 6.16.0
-        Capabilities     : 0x84204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-        Detected Stateful Encoder
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-        test invalid ioctls: OK
-
-Allow for multiple opens:
-        test second /dev/video1 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 19 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test CREATE_BUFS maximum buffers: OK
-        test VIDIOC_REMOVE_BUFS: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
-        test blocking wait: OK
-
-Test input 0:
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (select, REQBUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (epoll, REQBUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (select, CREATE_BUFS): OK
-        Video Capture Multiplanar: Captured 61 buffers
-        test MMAP (epoll, CREATE_BUFS): OK
-        test USERPTR (select): OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
-Total for iris_driver device /dev/video1: 54, Succeeded: 54, Failed: 0, Warnings: 0
-
-Looking forward to your review and feedback.
-
-Thanks,
-Dikshita
-
+Fixes: d2abb1ff5a3c ("media: iris: Verify internal buffer release on close")
 Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-Dikshita Agarwal (25):
-      media: iris: Fix buffer count reporting in internal buffer check
-      media: iris: Report unreleased PERSIST buffers on session close
-      media: iris: Fix memory leak by freeing untracked persist buffer
-      media: iris: Fix buffer timestamp handling
-      media: iris: Fix port streaming handling
-      media: iris: Allow substate transition to load resources during output streaming
-      media: iris: Always destroy internal buffers on firmware release response
-      media: iris: Update vbuf flags before v4l2_m2m_buf_done
-      media: iris: Allow stop on firmware only if start was issued.
-      media: iris: Send dummy buffer address for all codecs during drain
-      media: iris: Fix missing LAST flag handling during drain
-      media: iris: Add support for video encoder device
-      media: iris: Initialize and deinitialize encoder instance structure
-      media: iris: Add support for ENUM_FMT, S/G/TRY_FMT encoder
-      media: iris: Add support for ENUM_FRAMESIZES/FRAMEINTERVALS for encoder
-      media: iris: Add support for VIDIOC_QUERYCAP for encoder video device
-      media: iris: Add encoder support for V4L2 event subscription
-      media: iris: Add support for G/S_SELECTION for encoder video device
-      media: iris: Add support for G/S_PARM for encoder video device
-      media: iris: Add platform-specific capabilities for encoder video device
-      media: iris: Add V4L2 streaming support for encoder video device
-      media: iris: Set platform capabilities to firmware for encoder video device
-      media: iris: Allocate and queue internal buffers for encoder video device
-      media: iris: Add support for buffer management ioctls for encoder device
-      media: iris: Add support for drain sequence in encoder video device
+ drivers/media/platform/qcom/iris/iris_vidc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- drivers/media/platform/qcom/iris/Makefile          |   5 +-
- drivers/media/platform/qcom/iris/iris_buffer.c     | 226 ++++--
- drivers/media/platform/qcom/iris/iris_buffer.h     |   5 +-
- drivers/media/platform/qcom/iris/iris_common.c     | 233 ++++++
- drivers/media/platform/qcom/iris/iris_common.h     |  18 +
- drivers/media/platform/qcom/iris/iris_core.h       |  20 +-
- drivers/media/platform/qcom/iris/iris_ctrls.c      | 675 +++++++++++++++-
- drivers/media/platform/qcom/iris/iris_ctrls.h      |  15 +
- drivers/media/platform/qcom/iris/iris_hfi_common.h |   2 +-
- .../platform/qcom/iris/iris_hfi_gen1_command.c     | 494 +++++++++---
- .../platform/qcom/iris/iris_hfi_gen1_defines.h     | 113 ++-
- .../platform/qcom/iris/iris_hfi_gen1_response.c    |  62 +-
- .../platform/qcom/iris/iris_hfi_gen2_command.c     | 357 ++++++---
- .../platform/qcom/iris/iris_hfi_gen2_defines.h     |  44 +-
- .../platform/qcom/iris/iris_hfi_gen2_response.c    |  46 +-
- drivers/media/platform/qcom/iris/iris_instance.h   |  24 +
- .../platform/qcom/iris/iris_platform_common.h      |  73 +-
- .../media/platform/qcom/iris/iris_platform_gen2.c  | 502 +++++++++++-
- .../platform/qcom/iris/iris_platform_qcs8300.h     | 352 ++++++++-
- .../platform/qcom/iris/iris_platform_sm8250.c      | 245 +++++-
- drivers/media/platform/qcom/iris/iris_probe.c      |  39 +-
- drivers/media/platform/qcom/iris/iris_state.c      |   5 +-
- drivers/media/platform/qcom/iris/iris_state.h      |   1 +
- drivers/media/platform/qcom/iris/iris_utils.c      |  36 +
- drivers/media/platform/qcom/iris/iris_utils.h      |   2 +
- drivers/media/platform/qcom/iris/iris_vb2.c        |  58 +-
- drivers/media/platform/qcom/iris/iris_vdec.c       | 249 +-----
- drivers/media/platform/qcom/iris/iris_vdec.h       |  13 +-
- drivers/media/platform/qcom/iris/iris_venc.c       | 579 ++++++++++++++
- drivers/media/platform/qcom/iris/iris_venc.h       |  27 +
- drivers/media/platform/qcom/iris/iris_vidc.c       | 298 +++++++-
- drivers/media/platform/qcom/iris/iris_vpu_buffer.c | 846 ++++++++++++++++++++-
- drivers/media/platform/qcom/iris/iris_vpu_buffer.h |  20 +
- 33 files changed, 4970 insertions(+), 714 deletions(-)
----
-base-commit: c26e8dcd9d4e86d788c5bf7a5dd0ea70a95ab067
-change-id: 20250704-iris-video-encoder-b193350b487a
+diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+index 8285bdaf9466d4bea0f89a3b1943ed7d6c014b7d..96313856a026efaff40da97eaaa63e847172cd57 100644
+--- a/drivers/media/platform/qcom/iris/iris_vidc.c
++++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+@@ -247,6 +247,14 @@ static void iris_check_num_queued_internal_buffers(struct iris_inst *inst, u32 p
+ 			dev_err(inst->core->dev, "%d buffer of type %d not released",
+ 				count, internal_buf_type[i]);
+ 	}
++
++	buffers = &inst->buffers[BUF_PERSIST];
++
++	count = 0;
++	list_for_each_entry_safe(buf, next, &buffers->list, list)
++		count++;
++	if (count)
++		dev_err(inst->core->dev, "%d buffer of type %d not released", count, buf->type);
+ }
+ 
+ int iris_close(struct file *filp)
 
-Best regards,
 -- 
-Dikshita Agarwal <quic_dikshita@quicinc.com>
+2.34.1
 
