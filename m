@@ -1,253 +1,100 @@
-Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEA83257C2
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93E0326231;
+	Fri,  4 Jul 2025 07:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615841; cv=none; b=UKIE1UDeFrvCLYqNJKUae+hGWi6n06NDJmAnjG5n2GGTymcMhUCpIsIlNX0w/oE4eAJXNn3oKhmaCB0ho0xQAIHoaPrkxkUx3kZv8cVNjvO2eawvdo/K64dd4nMHC8IWhTAhpr5LHWbSu8gMsi8XvFR8j6BPFMNdHGcw35wdVLs=
+	t=1751615845; cv=none; b=Aa4vhqTgIZu2wIE48O0DcObBTS1zri+VfnAoe9aokw5G5qdSF3sFEpFX7BNeQt6dS6v5qf40DQVxi8I5HrG5QVe0cEBh6lQnivIyyybW5M8SeNf7hQME0IA3AdEDG5jw5oG5ZWXXEJAVI4i+m5xWAVZY0pEm0n5lN/XKAvKfb8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615841; c=relaxed/simple;
-	bh=4CMG7CKyFsqz/xv0iHM3N/fNKnYNr2VNReejD6yUAR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JjDxdJh29j9Ha7IkN0j3b/aJpFn55NL4Qx2HcVi0zpy6WFxjURPzBaIivXG0xgwxShw4OMIcE0X/mWOMDXJW6bcwMue5U8idX0FCMdqkP7X+xJGqMlM99YBw9Lpg0K9hjHv5zsD0+ovoBJZgjiXMm8s6IQLTJiF0pXfhy6tXc1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
-Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5647uVAl1550164;
-	Fri, 4 Jul 2025 13:26:31 +0530
-Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5647uVqF1550163;
-	Fri, 4 Jul 2025 13:26:31 +0530
-From: Sunil Khatri <sunil.khatri@amd.com>
-To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        dri-devel@lists.freedesktop.org
-Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
-        tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
-        linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
-        Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH v10 2/4] drm: add debugfs support on per client-id basis
-Date: Fri,  4 Jul 2025 13:25:46 +0530
-Message-Id: <20250704075548.1549849-3-sunil.khatri@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250704075548.1549849-1-sunil.khatri@amd.com>
-References: <20250704075548.1549849-1-sunil.khatri@amd.com>
+	s=arc-20240116; t=1751615845; c=relaxed/simple;
+	bh=MgFEolINa2mqHDNtnOb4oERRABfY40yjNkoZlWQnkZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBnpWD9HzOuvSXGueVapoIlmwa8kA2sJQttSDjgPBEALCMcon28OLMbvsqBdo4rQLXCB173R2EViyNyX0TZGI9ghZoADZbGnBtgb380bfXZxbCRlf9Q7dm06e62Us/moPwCtVK61l1MF79QEy4vCHWZGPwWhlIcCLpgwgpb2ErI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ok/N6c8Q; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ok/N6c8Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=L0bdJ55ZuGgGGTacDM0SpqaswUQMNdvtMXzThUW4T3M=; b=ok/N6c8QoiKqC9VyX88ZXrEXhj
+	wYv0ERTE0LGnSRzAhporwVm9X77AJX2ZvnFfYvToGVRee3PmRp3WHJNQ/np0X8up+AEOzJxtcp4AP
+	YiaXVYTagHG0IOgYDVNGWvFeSRQ2vo5vuZgT9xcbJ25kTnpd9T++xGJlaAptP6ZB0CWWstc5mOXsG
+	jRA9U7UeBhZEk+88wlppPBF9K8Xk2IbeQCkjnKN9Tl2InP9wGhHcokumn0kAuZRQte7cgkRX9w2Zd
+	BlNA4mFA2b55FUgMR2PBc4zVbAL0xBrGo1ZxqlFKSS1IAQcA8996dTYayewmhcF2sHJSkva3ffrcx
+	Mj1+WNSA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXbIN-00000007pyj-3Jvg;
+	Fri, 04 Jul 2025 07:57:20 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B4906300233; Fri, 04 Jul 2025 09:57:18 +0200 (CEST)
+Date: Fri, 4 Jul 2025 09:57:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: Michal Koutn?? <mkoutny@suse.com>, rafael@kernel.org, pavel@kernel.org,
+	timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lujialin4@huawei.com,
+	chenridong@huawei.com
+Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
+ frozen
+Message-ID: <20250704075718.GA2001818@noisy.programming.kicks-ass.net>
+References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
+ <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
+ <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
+ <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
 
-add support to add a directory for each client-id
-with root at the dri level. Since the clients are
-unique and not just related to one single drm device,
-so it makes more sense to add all the client based
-nodes with root as dri.
+On Fri, Jul 04, 2025 at 11:11:52AM +0800, Chen Ridong wrote:
 
-Also create a debugfs file which show the process
-information for the client and create a symlink back
-to the parent drm device from each client.
+Your patches are mangled; please educate your MUA.
 
-Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
----
- drivers/gpu/drm/drm_debugfs.c | 81 +++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/drm_file.c    | 11 +++++
- include/drm/drm_debugfs.h     | 11 +++++
- include/drm/drm_file.h        |  7 +++
- 4 files changed, 110 insertions(+)
+> --- a/kernel/freezer.c
+> +++ b/kernel/freezer.c
+> @@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
+>         for (;;) {
+>                 bool freeze;
+> 
+> -               raw_spin_lock_irq(&current->pi_lock);
+> -               WRITE_ONCE(current->__state, TASK_FROZEN);
+> -               /* unstale saved_state so that __thaw_task() will wake
+> us up */
+> -               current->saved_state = TASK_RUNNING;
+> -               raw_spin_unlock_irq(&current->pi_lock);
+> -
+>                 spin_lock_irq(&freezer_lock);
+> -               freeze = freezing(current) && !(check_kthr_stop &&
+> kthread_should_stop());
+> +               freeze = (freezing(current) || !cgroup_thawed(current))
+> +                        && !(check_kthr_stop && kthread_should_stop());
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index a084d16a3cb4..365cf337529f 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -311,6 +311,87 @@ void drm_debugfs_remove_root(void)
- 	debugfs_remove(drm_debugfs_root);
- }
- 
-+static int drm_debugfs_proc_info_show(struct seq_file *m, void *unused)
-+{
-+	struct pid *pid;
-+	struct task_struct *task;
-+	struct drm_file *file = m->private;
-+
-+	if (!file)
-+		return -EINVAL;
-+
-+	rcu_read_lock();
-+	pid = rcu_dereference(file->pid);
-+	task = pid_task(pid, PIDTYPE_TGID);
-+
-+	seq_printf(m, "pid: %d\n", task ? task->pid : 0);
-+	seq_printf(m, "comm: %s\n", task ? task->comm : "Unset");
-+	rcu_read_unlock();
-+	return 0;
-+}
-+
-+static int drm_debufs_proc_info_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, drm_debugfs_proc_info_show, inode->i_private);
-+}
-+
-+static const struct file_operations drm_debugfs_proc_info_fops = {
-+	.owner = THIS_MODULE,
-+	.open = drm_debufs_proc_info_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+/**
-+ * drm_debugfs_clients_add - Add a per client debugfs directory
-+ * @file: drm_file for a client
-+ *
-+ * Create the debugfs directory for each client. This will be used to populate
-+ * driver specific data for each client.
-+ *
-+ * Also add the process information debugfs file for each client to tag
-+ * which client belongs to which process.
-+ */
-+void drm_debugfs_clients_add(struct drm_file *file)
-+{
-+	char *client;
-+
-+	client = kasprintf(GFP_KERNEL, "client-%llu", file->client_id);
-+	if (!client)
-+		return;
-+
-+	/* Create a debugfs directory for the client in root on drm debugfs */
-+	file->debugfs_client = debugfs_create_dir(client, drm_debugfs_root);
-+	kfree(client);
-+
-+	debugfs_create_file("proc_info", 0444, file->debugfs_client, file,
-+			    &drm_debugfs_proc_info_fops);
-+
-+	client = kasprintf(GFP_KERNEL, "../%s", file->minor->dev->unique);
-+	if (!client)
-+		return;
-+
-+	/* Create a link from client_id to the drm device this client id belongs to */
-+	debugfs_create_symlink("device", file->debugfs_client, client);
-+	kfree(client);
-+}
-+
-+/**
-+ * drm_debugfs_clients_remove - removes all debugfs directories and files
-+ * @file: drm_file for a client
-+ *
-+ * Removes the debugfs directories recursively from the client directory.
-+ *
-+ * There is also a possibility that debugfs files are open while the drm_file
-+ * is released.
-+ */
-+void drm_debugfs_clients_remove(struct drm_file *file)
-+{
-+	debugfs_remove_recursive(file->debugfs_client);
-+	file->debugfs_client = NULL;
-+}
-+
- /**
-  * drm_debugfs_dev_init - create debugfs directory for the device
-  * @dev: the device which we want to create the directory for
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index 3952e27447ee..eebd1a05ee97 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -46,6 +46,7 @@
- #include <drm/drm_file.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_print.h>
-+#include <drm/drm_debugfs.h>
- 
- #include "drm_crtc_internal.h"
- #include "drm_internal.h"
-@@ -168,6 +169,9 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
- 
- 	drm_prime_init_file_private(&file->prime);
- 
-+	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		drm_debugfs_clients_add(file);
-+
- 	if (dev->driver->open) {
- 		ret = dev->driver->open(dev, file);
- 		if (ret < 0)
-@@ -182,6 +186,10 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
- 		drm_syncobj_release(file);
- 	if (drm_core_check_feature(dev, DRIVER_GEM))
- 		drm_gem_release(dev, file);
-+
-+	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		drm_debugfs_clients_remove(file);
-+
- 	put_pid(rcu_access_pointer(file->pid));
- 	kfree(file);
- 
-@@ -236,6 +244,9 @@ void drm_file_free(struct drm_file *file)
- 		     (long)old_encode_dev(file->minor->kdev->devt),
- 		     atomic_read(&dev->open_count));
- 
-+	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		drm_debugfs_clients_remove(file);
-+
- 	drm_events_release(file);
- 
- 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
-diff --git a/include/drm/drm_debugfs.h b/include/drm/drm_debugfs.h
-index cf06cee4343f..ea8cba94208a 100644
---- a/include/drm/drm_debugfs.h
-+++ b/include/drm/drm_debugfs.h
-@@ -153,6 +153,9 @@ void drm_debugfs_add_files(struct drm_device *dev,
- 
- int drm_debugfs_gpuva_info(struct seq_file *m,
- 			   struct drm_gpuvm *gpuvm);
-+
-+void drm_debugfs_clients_add(struct drm_file *file);
-+void drm_debugfs_clients_remove(struct drm_file *file);
- #else
- static inline void drm_debugfs_create_files(const struct drm_info_list *files,
- 					    int count, struct dentry *root,
-@@ -181,6 +184,14 @@ static inline int drm_debugfs_gpuva_info(struct seq_file *m,
- {
- 	return 0;
- }
-+
-+static inline void drm_debugfs_clients_add(struct drm_file *file)
-+{
-+}
-+
-+static inline void drm_debugfs_clients_remove(struct drm_file *file)
-+{
-+}
- #endif
- 
- #endif /* _DRM_DEBUGFS_H_ */
-diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
-index 5c3b2aa3e69d..eab7546aad79 100644
---- a/include/drm/drm_file.h
-+++ b/include/drm/drm_file.h
-@@ -400,6 +400,13 @@ struct drm_file {
- 	 * @client_name_lock: Protects @client_name.
- 	 */
- 	struct mutex client_name_lock;
-+
-+	/**
-+	 * @debugfs_client:
-+	 *
-+	 * debugfs directory for each client under a drm node.
-+	 */
-+	struct dentry *debugfs_client;
- };
- 
- /**
--- 
-2.34.1
+This makes no sense to me; why can't this stay in cgroup_freezing()?
 
+Also, can someone please fix that broken comment style there.
+
+>                 spin_unlock_irq(&freezer_lock);
+> 
+>                 if (!freeze)
+>                         break;
+> 
+> +               raw_spin_lock_irq(&current->pi_lock);
+> +               WRITE_ONCE(current->__state, TASK_FROZEN);
+> +               /* unstale saved_state so that __thaw_task() will wake
+> us up */
+> +               current->saved_state = TASK_RUNNING;
+> +               raw_spin_unlock_irq(&current->pi_lock);
+> +
+
+And I'm not quite sure I understand this hunk either. If we bail out,
+current->__state is reset to TASK_RUNNING, so what's the problem?
