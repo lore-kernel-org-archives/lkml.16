@@ -1,131 +1,127 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E212E3713;
-	Fri,  4 Jul 2025 17:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3842D59E1;
+	Fri,  4 Jul 2025 17:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751649196; cv=none; b=NgnY8J/n5cewMG57+MWjrBhoWt37rSzDQ7VunulwVW6vdNxAMpQ1bYknvfdTpoPY9X4NwkPATCOylm61Xv7uU7AJVZ/th5H4DVpfdP2p44munkOnvD/rnTwXls5Rsv+59+OKqi1gzM3GBJektPn/PZ2PplySLB3jz6qcu1MXDLk=
+	t=1751649258; cv=none; b=hPqi0PqT+IUCrshWfnGLJGfvGwzhbospzb550mMk2Pv+VoW/ESd5GxZMj5etHwSOVUmGSluJxzzGI02Tbcn5btIsQROTVhnm3U66MejYfB4Ty2nz4VfJ3/e1zAr60CpiuHSCMZBMiK4ekRpBANyQ3aagkDDTGLYKGlRFhFbjxq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751649196; c=relaxed/simple;
-	bh=1EyDVXXMVLol+7QZs1VPMEJtlkKlZUBeMC4m/Udzxc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fzUxxKrswc7XkMGIC/zCgPdXbBivPIeI0vvtMzEPgePy6s+6DfTe1st41XqgKNiyLVzGrkj2fdKdoCaNV16BernFKuKPY16QYmhD40vzELbKt6ghPehXZtV1RRjdmpA/PqdjAeD6Vr66xqkGrzoba8ZX5mZ+RL3a/JnOeVbQ1TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwH5AepA; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751649258; c=relaxed/simple;
+	bh=S8cWKIiwtDiSfStJh84KCei6d3DwGM2GwUkVOE4faQo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z8aztsvLWWnhvC1GdRrCRl39M+55+IP3ZdoY79QA10ypA0Bs+Qv8Xqh9EtT38OEu335mWF699kbr6hDKQxIX/pmlP7HSjCmrIlzU2E+NSEzgft8ClhSRMpdPSgWI8oINB8y7F2z2cvR0VLIVjBIo9lyQ6up9vBQGA1denH0QUQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KWDkUUao; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwH5AepA"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so6127395e9.2;
-        Fri, 04 Jul 2025 10:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751649193; x=1752253993; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/2fEHQ1GEiGNPuo9j5/RpeCrkwSbYJX6sR6izT+TvM=;
-        b=OwH5AepAdxJTu1Rxuwtj2m+oR7pq/UEL6s4xgQYeZE+2g1xNyYjKzI1j0bk/Ij4mPY
-         3n9O5EDw5FWjPiW8Zp+oKumWbMU3SbIvx4opGbLnU6Jz+uU7YYnRHCkiGOx7RUNWqLrj
-         h5BBh5I931QI0mUkvSJHBF2gqIcBLoKHn17q6Bl4zkai/l2WXLVNT92mPt77mpkLn4Xg
-         z8TSQUrfpRQEZbIGCJjPqM3Yul8Fjm9SzCF1Vn1fumYGhZFlFFmIGb/haPC9cJlIYdYP
-         eFkk8RmAkyGMYjEyLbd5jgk93YLdIRVXWxDJ3eiZwpWZ1Q3sWhmmHG0PTxgLmvS3QMjD
-         W3aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751649193; x=1752253993;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V/2fEHQ1GEiGNPuo9j5/RpeCrkwSbYJX6sR6izT+TvM=;
-        b=Gy9wBHCOXf4mnxyFPhgCrNw7aJ2+9uK2w6m86WChMO8NevBY6+SOgXK6XbdfxaQZMg
-         C9yNR7yMvpymmMi2XtmwlupkXovSCwqojEYKvGWEwxlTBRm/tYzinfnbVPo4u+hGwaiG
-         Qh7ffjC40VQssXFO07sYmDYrHhr9RpOFZ9LL/uH1vqdXe7QjJvVH7sNnqTHLy3+Kfa15
-         lLPOX9noUIcDNv/AXj+eeNlnF6Rq4IOVxlfL7MaGUF3u0PzL3yW3LAvdVCvBBDDspCOQ
-         xrvUe+KEXdrecMrsTIIB7BklX99hAvi4kNijs5gaaM+x6cJeozzLky5MRe2/fezxWX8G
-         p5HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVf9Y4wrfUKqQnh7MIDTW5YL/p7/SHrCKqNfc+B6GKe7tpxukEOCqUkG0z6uEYR6vwlHrFutsNdpLk@vger.kernel.org, AJvYcCW5sq9cTczpA1N63MRVRMKGcQbDc+5PDEXxz0KtseQxV+LwF/LLAO8Yy+kmCaZQzKYvcrjVw8rhpK9J66t+@vger.kernel.org, AJvYcCWGsEeoFVBB1CeNjjtpt6V3C7On8S85wQomtGeIG7pSMRwPqKodWhJpDMLdKxH9pA9116ov1BkCStRbrJDtTggYxIQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS2KJsKZNHjinfVR+hGnrWqmUBHvHNhA6oWgRv9gmMXeAY6L4Y
-	nRLVH0HVOAHgvRdfju4wk1RKnR4QGFsWfjwscdnHSBY4tz/3QFlWmoDY/tTryiK31ZzUJOqvwIi
-	zcWOeNzS9+OvZnFSQIAf4nDjQzpV+VCw=
-X-Gm-Gg: ASbGncvz9R0vNODOMtGc6mixjT4j79PwsxxYPXipAJxaSfwv0sDKpQV0Es4ONzDY5Ig
-	LWVszYGbkunb80MfUNcGMJm59rVwHzzTG4KayLA0SmNGsXIqTjUN+YGb5uufixg9x9XYnPnLOMq
-	3Mf6TFSnsNBQJ57QkD8qRqcH+7vHGtWyC2c6vQorq2uWaE
-X-Google-Smtp-Source: AGHT+IGSFx+iMx3ZbRiYNNO3ouCFIIMLPoYmfc7VjUeo056sKlRi94k+VtSLPgIFIfLYCOyuW4DIE4zkra/OfPvYyss=
-X-Received: by 2002:a05:600c:8b84:b0:451:e394:8920 with SMTP id
- 5b1f17b1804b1-454b929f1cfmr9296375e9.27.1751649192567; Fri, 04 Jul 2025
- 10:13:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KWDkUUao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751649254;
+	bh=S8cWKIiwtDiSfStJh84KCei6d3DwGM2GwUkVOE4faQo=;
+	h=From:Date:Subject:To:Cc:From;
+	b=KWDkUUaoYN5CRfFZTT0YTXnnnEB67PNOS49ze/RoxK2MOpu2GIqsGC51CPfCScOQp
+	 F1da3abN0+7q7KS+1jti0WYgANv+bom883yz9AN/RxV5sgRzrMgKeEdRAPJqTdhSMD
+	 Roht7RWoTZrdIMj8W+Q5mLTPXAPv6+NMDghupC6Rh2gJiiG9yoZ00laB98vtWBawuf
+	 z3vzpz5Iv9sAqRPoUb9UK6qOhDtaMleOppXfUvPp8Ulmv5EJhF3O+aTlQMFj4IUFyC
+	 7c401ccgr0l//zJOOjLAIhJBg+zAYYreTsYw1VN7Hbjy2Hmp45gq/GsLRBqmZ9LIcj
+	 hy20ndBaFDmkw==
+Received: from jupiter.universe (dyndsl-091-248-191-229.ewe-ip-backbone.de [91.248.191.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7161A17E0202;
+	Fri,  4 Jul 2025 19:14:14 +0200 (CEST)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 19F71480039; Fri, 04 Jul 2025 19:14:14 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Fri, 04 Jul 2025 19:14:14 +0200
+Subject: [PATCH] arm64: dts: rockchip: Enable HDMI receiver on RK3588 EVB1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250625153042.159690-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVvxebkm9A4g9hADww=9zREXJqyW3eQ6tFVwVJvkUkEOw@mail.gmail.com> <CA+V-a8s9r9U91CqUdC5zDxZGuAA51upduJ1epgmMdKPeYPJQxQ@mail.gmail.com>
-In-Reply-To: <CA+V-a8s9r9U91CqUdC5zDxZGuAA51upduJ1epgmMdKPeYPJQxQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 4 Jul 2025 18:12:46 +0100
-X-Gm-Features: Ac12FXzVFMcau5ucG50XdB4zOyogQv_Qrb-IfgDeSTpZyuqB7m9XeWgyiVFn8j0
-Message-ID: <CA+V-a8uW00iMUFfSczBsFsC3JLSK8SbufMhYGd_1XgrZ29C1Cg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] arm64: dts: renesas: r9a09g077: Add SDHI nodes
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-rk3588-evb1-hdmi-rx-v1-1-248315c36ccd@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOULaGgC/x3MSwqAMAwA0atI1gZStVi9irhQm2oQP6Qggnh3i
+ 8u3mHkgsgpHaLMHlC+JcuwJJs9gWoZ9ZhSfDAUVlmqqUNfSOod8jQYXvwnqjda4sjHUEFGAVJ7
+ KQe7/2vXv+wG/4P39ZQAAAA==
+X-Change-ID: 20250704-rk3588-evb1-hdmi-rx-51839109000f
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1392; i=sre@kernel.org;
+ h=from:subject:message-id; bh=S8cWKIiwtDiSfStJh84KCei6d3DwGM2GwUkVOE4faQo=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGhoC+Ynu96nCSNsKxpenn4F4N4nZhIray6ew
+ sopv3oLcmldc4kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJoaAvmAAoJENju1/PI
+ O/qa3gcP/0pAVYqWKnbMQo58dsFsLmzMm+rZ72RwyO8pvHgKJYwDUuibJYQSMwAI12W//vIOQ8S
+ p6KZ4YmF7BClcHA/2cJiIk8Q3WygeLfOxxKjry6LEFOHjqy7Vn0jd7VNXZMbkX77LAdWAmf5kfx
+ mxGLyjZYTTgS5CHmVi2NVw14gdZxmB9esDEk8SrIY2ycV1fntN5MiNFjnoTW/uQuxaCWaydbqCF
+ W91WhRcOmdUozfmD7ybDOUKUMeRYRQBNZPHNDPGyYxQv8WPCWO5yvZ1BO0xO4VJWxkcEjcrBv3R
+ BtxMDzAlrkusn71xdJ1hLCMhLVT0kUBGQlB/6ONIM17NFattTZ+pEo9CD78m4Fd+XigeE6X1Lvn
+ OX6jhcFIt9th7c9n97je48RiKodHBJWZRcwOPIs7PheGVkYiq7zJAgoMAoWo/W9ZMkt/S29xz2t
+ niKYxym7MgwzzKR+bREw9LGaIaNqADBmVeDh/vVZKFerZNdVwsFs/bfhI8UhQbuENmGfUBc2tT8
+ gzfjdpcWb1fCmmLeI/BHAd+jEsNadaUjZHELSAAbou1DUNf8oqyaqQZ8GqvEHVipUCZwc6GzDZ1
+ 8vRFAXLbgBYF3igUVZ6tX9dMdGSSr0Zb99AlM25zr2V9WA5/+v4yeVFmOCqmRLu+Qnkqqy4c3Ba
+ LWGGlvGbb4XH7C0LXrk8fCA==
+X-Developer-Key: i=sre@kernel.org; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Hi Geert,
+Enable HDMI input port of the RK3588 EVB1.
 
-On Fri, Jul 4, 2025 at 12:52=E2=80=AFAM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Geert,
->
-> Thank you for the review.
->
-> On Thu, Jul 3, 2025 at 10:56=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> >
-> > Hi Prabhakar,
-> >
-> > On Wed, 25 Jun 2025 at 17:31, Prabhakar <prabhakar.csengg@gmail.com> wr=
-ote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Add SDHI0-SDHI1 nodes to RZ/T2H ("R9A09G077") SoC DTSI.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
->
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> > > @@ -155,6 +155,46 @@ gic: interrupt-controller@83000000 {
-> > >                         interrupt-controller;
-> > >                         interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>=
-;
-> > >                 };
-> > > +
-> > > +               sdhi0: mmc@92080000  {
-> > > +                       compatible =3D "renesas,sdhi-r9a09g077",
-> > > +                                    "renesas,sdhi-r9a09g057";
-> > > +                       reg =3D <0x0 0x92080000 0 0x10000>;
-> > > +                       interrupts =3D <GIC_SPI 782 IRQ_TYPE_LEVEL_HI=
-GH>,
-> > > +                                    <GIC_SPI 783 IRQ_TYPE_LEVEL_HIGH=
->;
-> > > +                       clocks =3D <&cpg CPG_MOD 1212>,
-> >
-> > 1112?
-> >
-> Agreed (and below).
->
-Sorry, it is indeed 1212/1213 as the bits belong to MSTPCRM register.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Cheers,
-Prabhakar
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+index 8e912da299a218b61623e6973d2f955504bd44aa..ff1ba5ed56ef5b985c54fa9e1a433fc81f988f8b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+@@ -391,6 +391,17 @@ hdmi1_out_con: endpoint {
+ 	};
+ };
+ 
++&hdmi_receiver_cma {
++	status = "okay";
++};
++
++&hdmi_receiver {
++	hpd-gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&hdmim1_rx_cec &hdmim1_rx_hpdin &hdmim1_rx_scl &hdmim1_rx_sda &hdmirx_hpd>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
+ &hdptxphy0 {
+ 	status = "okay";
+ };
+@@ -582,6 +593,12 @@ rtl8211f_rst: rtl8211f-rst {
+ 
+ 	};
+ 
++	hdmirx {
++		hdmirx_hpd: hdmirx-5v-detection {
++			rockchip,pins = <2 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	hym8563 {
+ 		hym8563_int: hym8563-int {
+ 			rockchip,pins = <0 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
+
+---
+base-commit: e05818ef75bee755fc56811cb54febf4174d7cf2
+change-id: 20250704-rk3588-evb1-hdmi-rx-51839109000f
+
+Best regards,
+-- 
+Sebastian Reichel <sre@kernel.org>
+
