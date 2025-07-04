@@ -1,109 +1,111 @@
-Received: from jpms-ob01-os7.noc.sony.co.jp (jpms-ob01-os7.noc.sony.co.jp [211.125.139.71])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB5B2EF66B;
-	Fri,  4 Jul 2025 09:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8F2EFD89;
+	Fri,  4 Jul 2025 09:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620561; cv=none; b=HwyxoEPzQrvJV8qe/dv2iHxY00A3aqQ9dLX8OAZLG6GmCY8FVBIl29rc1ZovbrySA691XgNBlz2Qu5B0kLYeK/OUzA2Y+2HPFtXH68xvmEJK0bk4VUjoqTyFJwPbM6CzyjgKiFcTDi//FkLfJCli0YFAiSsABXlwqCAAO3dnUL4=
+	t=1751620580; cv=none; b=pKQAVsTNwnUaV55EkzcDNJ4Nx/P4I2l+j/I76bJWDZjH3xuyxqzCpnnlGlKT83/zxwx2YNwea7uTMHj8w1yPOzEUO09l4e++3wATfvuuxQK9k0lCOmjU2ANbQ7+4+jY7mZV6bleaNiLcEpkB1YOpnT5rfsx3VVG8nGLQldoB+q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620561; c=relaxed/simple;
-	bh=5/rnuy+1f9ZFp0QSN91h1vj2LZOYoPBNuzCVHxWsUKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m+8tm35dop3kjd/MgfaakFF6ElVYKheKC4q9UHVehgkszTLLVSdjsFMa/pfI7AOx8WEVYk5C57ajli/rME8i7JgCABIdae+97tbd4WTX00YyRySo1AHdzDGZHqHUW7D0lyB1HETqhsmNYH+X7t7miBSWrBTTuiNc0ZFRjY2WSpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=Z1pG+42B; arc=none smtp.client-ip=211.125.139.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="Z1pG+42B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1751620559; x=1783156559;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=btYJQmsa0mQHvJvl4VaCgrJUwxKb2AyZxRtp+4lLNe0=;
-  b=Z1pG+42BTKjwvjfh2S9Vkhjxm8Lf4D56v1zFYocbngBaaF8qT+72hJLE
-   KhAQFH6dTcFbc01fIlbtzONMzVteG5iqx44vvWAD69IF9AGrhq4rmx2/H
-   q4j4AGvgZN2+UEDXnbylr+OIFtO4PN+E0CLH7o8EMkLgd04obBJ582RU8
-   G0JVLougheh/KBsb0bWNiuAWrWH0JU0BU2DVcVhQK9/LC3pFlm0agubIr
-   FqkhBGRnw8o/trmGST1jPyO1MQ2d5E+/+CjeL4AvMOALAynU8PRZzAtoP
-   tCaMVtnNb79xGDVO/cwImkzQc04nFfS3XfT7Am0mr9UJBz+8qsQZnw50w
-   w==;
-Received: from unknown (HELO jpmta-ob01-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::6])
-  by jpms-ob01-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 18:15:56 +0900
-X-IronPort-AV: E=Sophos;i="6.16,286,1744038000"; 
-   d="scan'208";a="3335550"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
-  by jpmta-ob01-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 18:15:56 +0900
-Date: Fri, 4 Jul 2025 18:15:54 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v2] selftests/cgroup: improve the accuracy of cpu.max
- tests
-Message-ID: <aGebynaCuASn3t4s@JPC00244420>
-References: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
- <20250703120325.2905314-1-shashank.mahadasyam@sony.com>
- <l3sal6zkvo4lqnfs6fepxytnrmqmqwfvtxudnjm53oigtuatpd@7czfeursgwyh>
- <aGcf0Prl-hVX2j4Q@JPC00244420>
- <aGd5lrUvm9Bhh-b8@JPC00244420>
- <wnoymxwdikh6iawrcvhewq6er4si75oqzjdbibhl6n57swq3ff@glkzfmbaots7>
- <aGeZwLAuysAmyX-q@JPC00244420>
+	s=arc-20240116; t=1751620580; c=relaxed/simple;
+	bh=MpUbnIYKlBAUil3Thq/LzCLGjaTmHfYdzlw5yOQJwF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FJINuljfwhOgDNkb8HHW2N4U7szV8fH5YGCwZsOV4L05PXwYDebb/wuGFqEuD7a7FOtgQTyQ3+Wd5QMIAjXGXk+x8Mhvh/qvg15g93PipbG6dLTk/In4KSxzePA8raXUQJ4K3q69aKbhN610BD96y7fmxB7J1g17pE/WSnOVFQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bYScx3mc5z2SSrH;
+	Fri,  4 Jul 2025 17:14:25 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C9A7140278;
+	Fri,  4 Jul 2025 17:16:14 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
+ 2025 17:16:13 +0800
+Message-ID: <3c51a0b3-9027-4397-9912-8c7635989dc6@huawei.com>
+Date: Fri, 4 Jul 2025 17:16:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] cpufreq: Move the check of cpufreq_driver->get into
+ cpufreq_verify_current_freq()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <viresh.kumar@linaro.org>, <ionela.voinescu@arm.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <yubowen8@huawei.com>
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com>
+ <20250623133402.3120230-6-zhenglifeng1@huawei.com>
+ <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGeZwLAuysAmyX-q@JPC00244420>
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Fri, Jul 04, 2025 at 06:07:12PM +0900, Shashank Balaji wrote:
-> Hi Michal,
+On 2025/6/23 23:35, Rafael J. Wysocki wrote:
+
+> On Mon, Jun 23, 2025 at 3:34â€¯PM Lifeng Zheng <zhenglifeng1@huawei.com> wrote:
+>>
+>> Move the check of cpufreq_driver->get into cpufreq_verify_current_freq() in
+>> case of calling it without check.
+>>
+>> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+>> ---
+>>  drivers/cpufreq/cpufreq.c | 11 +++++------
+>>  1 file changed, 5 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>> index c4891bf5dc84..9b2578b905a5 100644
+>> --- a/drivers/cpufreq/cpufreq.c
+>> +++ b/drivers/cpufreq/cpufreq.c
+>> @@ -1800,6 +1800,9 @@ static unsigned int cpufreq_verify_current_freq(struct cpufreq_policy *policy, b
+>>  {
+>>         unsigned int new_freq;
+>>
+>> +       if (!cpufreq_driver->get)
+>> +               return 0;
+>> +
 > 
-> On Fri, Jul 04, 2025 at 10:59:15AM +0200, Michal Koutný wrote:
-> > On Fri, Jul 04, 2025 at 03:49:58PM +0900, Shashank Balaji <shashank.mahadasyam@sony.com> wrote:
-> > > > 1. We don't need to separately check user_usec because it'll always be
-> > > > less than user_usec^W usage_usec, and usage_usec is what's directly
-> > > > affected by throttling.
-> > 
-> > When kernel is not preemptible, I'd expect the system time may more
-> > easily excess the quota, so I considered the user_usage check less prone
-> > to false results. But...
-> > 
-> > > > 2. I changed the >= to > because, not that it'll ever happen, but we can
-> > > > let usage_usec = expected_usage_usec pass. Afterall, it's called
-> > > > "expected" for a reason.
-> > > 
-> > > Hmm, here is something interesting. The following patch adds printfs to the
-> > > existing code to see what user_usec, usage_usec, the expected_usage_usec used in
-> > > the code, and the theoretical expected_usage_usec are. On running the modified test
-> > > a couple of times, here is the output:
-> > 
-> > ...thanks for checking. I was misled by the previous test implementation
-> > (the expected_usage_usec had no relation to actual throttled usage in
-> > there). What you observe is thus likely explained by the default
-> > sched_cfs_bandwidth_slice (5 times the tested quota) and CONFIG_HZ.
-> > 
-> > So I'd say keep only the two-sided tolerant check. (I want to avoid the
-> > test to randomly fail when there's no gaping issue.)
+> This will duplicate the check in cpufreq_policy_refresh(), won't it?
+
+Yes, the check will duplicate but I think it's OK. If remove the check in
+cpufreq_policy_refresh(), the logic will be changed.
+
 > 
-> Yep, patch v2 is doing just that. So, I assume I have your Acked-by?
-> 
-> Thanks
-> 
-> Shashank
+>>         new_freq = cpufreq_driver->get(policy->cpu);
+>>         if (!new_freq)
+>>                 return 0;
+>> @@ -1922,10 +1925,7 @@ unsigned int cpufreq_get(unsigned int cpu)
+>>
+>>         guard(cpufreq_policy_read)(policy);
+>>
+>> -       if (cpufreq_driver->get)
+>> -               return __cpufreq_get(policy);
+>> -
+>> -       return 0;
+>> +       return __cpufreq_get(policy);
+>>  }
+>>  EXPORT_SYMBOL(cpufreq_get);
+>>
+>> @@ -2479,8 +2479,7 @@ int cpufreq_start_governor(struct cpufreq_policy *policy)
+>>
+>>         pr_debug("%s: for CPU %u\n", __func__, policy->cpu);
+>>
+>> -       if (cpufreq_driver->get)
+>> -               cpufreq_verify_current_freq(policy, false);
+>> +       cpufreq_verify_current_freq(policy, false);
+>>
+>>         if (policy->governor->start) {
+>>                 ret = policy->governor->start(policy);
+>> --
+>> 2.33.0
+>>
 
-I forgot to add the fixes tags:
-Fixes: a79906570f9646ae17 ("cgroup: Add test_cpucg_max_nested() testcase")
-Fixes: 889ab8113ef1386c57 ("cgroup: Add test_cpucg_max() testcase")
-
-Should I send a v3 with your ack and the tags?
-
-Thanks
-
-Shashank
