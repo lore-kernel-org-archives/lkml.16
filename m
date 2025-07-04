@@ -1,147 +1,93 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out162-62-63-194.mail.qq.com (out162-62-63-194.mail.qq.com [162.62.63.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461EA1DF246;
-	Fri,  4 Jul 2025 03:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3801DF246
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.63.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751598720; cv=none; b=bi0YPkYKCCWazbcYo+QMdSDYia3Z2kN8eQRLLl2x6qZQ37IUxgLCNrWVKUzRF6B4Ld5KP+uvgeL0SjT1gRFjTq6O918H3lU4zX/7uAgTCBDlHzZfiPHFpQZjQ6LFg15bZHVofbzQFogI5X+73XYYd0wrD/xGr63SYbxRppFfEPI=
+	t=1751598733; cv=none; b=fJyZ9BEhuQgfCrhia5x6dBlmDh0n+ZjyHiaskxL3k/gHEyyEgkpkPJOWmM+14OHeGdrU+kMVGWrbn6gGCAfJAI3NQq+WWmcA0raZQ4f3ZEiVmcYFcNGq5WU+kJeA6THcOrlV0BP9ECDsw9Zn9XPaAjd7qqNn9a2ezafpC0dsjmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751598720; c=relaxed/simple;
-	bh=xpFzJK7EbTj8oT8gx1B/pIapBvfvKwiCvyDHV1ZcyUo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=A5BQy8SltePE+L+VTIE1A+cua405WkH2PfgQ0evuObbT0kZ3ZY9OynFo+5t75II0Mhnpthiza5uzYttooA3QB15RFzeBJzdpnrD24X6GMdv9unkvXTVZExO5HPD66/TeDtRKM+zzgcma+LXq1Z0WdTm49F7pmYwpdPuub36GldI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bYJZf4gjMzYQtdc;
-	Fri,  4 Jul 2025 11:11:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7F8801A0EA9;
-	Fri,  4 Jul 2025 11:11:53 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP4 (Coremail) with SMTP id gCh0CgA37Lx5RmdoRWNgAg--.12441S2;
-	Fri, 04 Jul 2025 11:11:53 +0800 (CST)
-Message-ID: <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
-Date: Fri, 4 Jul 2025 11:11:52 +0800
+	s=arc-20240116; t=1751598733; c=relaxed/simple;
+	bh=nYggTAMcLj6Uqc5ac+V9709CFd+IIQwLhlfVXY/u0K4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Mjp4fpsq++8yGEBm/KhHCfsqGRTfGwBhjsgSy5PaJgdb1RsDjOnNtlL1rBdvFoCMSk2E8FLnzdOxjNwZDLWgqUywa3iWUfhuSimMnSVVt1z3kqlVIJvMedEcF68AFZfCnWC3hKfrkQNEHtH04ta4khLkM3XXLWY3UTkfsXJZyR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=dAS01igL; arc=none smtp.client-ip=162.62.63.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="dAS01igL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1751598725; bh=nYggTAMcLj6Uqc5ac+V9709CFd+IIQwLhlfVXY/u0K4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=dAS01igLKiEgIY80eMambZkcvvF2n25fH43OeHIWr1+Vh20iBZ34eJ4MVCdUweJaO
+	 B7QVs1vz1eqUjtMK0OTkyL14DllTpkRufb+T6GuXei18fioGDtrvK9HcDdk8nJEzbq
+	 L+olhwP8bNVKsRolD6EJv4/E5SmlCb7AD5m/gfLQ=
+Received: from VM-222-126-tencentos.localdomain ([14.22.11.163])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 301A4097; Fri, 04 Jul 2025 11:12:01 +0800
+X-QQ-mid: xmsmtpt1751598721t1fxbom3j
+Message-ID: <tencent_CC020A5F9A042ED46D9E3F5792E3FB53F306@qq.com>
+X-QQ-XMAILINFO: NCmjBvJFq6XNTfcRopDfMWg5EYfIHLYheuFWAK/UmgouXBcs/zJRiRSLWo0K2L
+	 RRA6nZSGdhBnzAudMiRIDPRvcfKXgsSz4RP4knAs9mq7HQTgOg2PoudFyJCiU9LcX6Y2e5p/WCOI
+	 7U4QhqFi4eFQzbmcAqYWbOXeYWxGeMpO2hxDdaNrbyIFK5j2LR1BxMPHbuI4iN+qAVuekcqLXHWm
+	 9GWdXlp4bYcEvw7wgzX3YKm8GE+HROtUgaFSGPT+XhnfLRo3irQ4FeKS+0ZmJE9hFvU+7QZ4pqRS
+	 4Nareug/R2Itmo1sAXIw5HwRog5cwhDsWT4/zNcDY0YnULcuFps09ySbs446b9/gnpnfKHWlIpC5
+	 rJIQ2Z2rab8t80AT5Yr4hQukaHpWTAtB55WFvrN5kBX06M1QWCPRFnel4wnZt2nidHNiiNic2YTy
+	 FTG/jJjZbGLKc0LI9XwE/P2toGe30Jzwu4Ahf3Rf1ZuhOZpE0YtBtVqDwEf36eqCatznc1ICUW34
+	 u0j0aw4McAsoZQ+Vsr7NmS1VYjKkIS9IpcO4abAaMi6V4cwMIGx97/ZWcjImS/ERbv7v0nyP6CrI
+	 +68nP9E21HoHRMnbQ7IjPGlb0jkiqYoZUp4SMh5egYhcrSH5ugFJj6e/utFDCWRsDscfrT+vb0CG
+	 o3XT5+likPfAKEPj0T5tbU5abzvyDyCIZdxbLUaSD//CQtgTgkfpxOEoLP2nSf6ll/NXjW265jms
+	 ml4KYdNJOtWlSVUk2QyuZIYhA9oEIAHnBqM53lEhv7wR/5531Kop7NuRiGyjGEYwj9oye67S5dGO
+	 RaVLvM7x0lDXwyO6kWnqrWb5ngOMk2gBoSMn+AEC746ulNvAQ+6B1H+D6HfqRpnYYrQ6oQyw/esE
+	 WQV51ZXFz5UE3SV9YHTAwUyAW4js5DJsY8La00byLqfFDnlMa1l3mrxpvg7OXfcCgeSDiLKhDJCU
+	 bRXWR5taDF8OFGLzmY/WW0hfm7mwmlzBEboKeO7ydIuMvJAaOVjzP2XIT1TtrBTfkQLtTBlbtDe4
+	 zk5B3whbo6RcDzQr2YebBytUkldli3sZUQsLXj7jN4790CYOXtNXYlqQsjQIaX5nsYLJoOSQ==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: jackysliu <1972843537@qq.com>
+To: harry.wentland@amd.com
+Cc: 1972843537@qq.com,
+	Austin.Zheng@amd.com,
+	Dillon.Varone@amd.com,
+	Security@tencent.com,
+	Sung.Lee@amd.com,
+	Wayne.Lin@amd.com,
+	airlied@gmail.com,
+	alexander.deucher@amd.com,
+	alvin.lee2@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	aurabindo.pillai@amd.com,
+	christian.koenig@amd.com,
+	dri-devel@lists.freedesktop.org,
+	joshua.aberback@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux@treblig.org,
+	mario.limonciello@amd.com,
+	ryanseto@amd.com,
+	simona@ffwll.ch,
+	siqueira@igalia.com,
+	sunpeng.li@amd.com
+Subject: RE:[PATCH] drm/amd/display:fix a Null pointer dereference vulnerability
+Date: Fri,  4 Jul 2025 11:11:56 +0800
+X-OQ-MSGID: <20250704031156.3113667-1-1972843537@qq.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <220f9fb4-45ad-4997-9572-564242737dd4@amd.com>
+References: <220f9fb4-45ad-4997-9572-564242737dd4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
- frozen
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: peterz@infradead.org, rafael@kernel.org, pavel@kernel.org,
- timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
-References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
- <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
- <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgA37Lx5RmdoRWNgAg--.12441S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1rKw4DJw4xWF17Kw1xZrb_yoW8Kr1fpr
-	WrWa1UG3Z7trs2yrn2qw4vqws8K392yF4UGr95CrWxJa1YqasIgr4Ik3yYkF1jvryxArnF
-	qF4jq3s7AayUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
-	mii3UUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
+On 2025-07-03 11:15, Harry Wentland wrote
+>Thanks for your patch.
+>
+>Please run and fix this checkpatch.pl warning:
+>
+>WARNING: From:/Signed-off-by: email address mismatch: 'From: jackysliu <1972843537@qq.com>' != 'Signed-off-by: jackysliu <Security@tencent.com>'
 
-
-On 2025/7/4 11:02, Chen Ridong wrote:
-> 
-> 
-> On 2025/7/4 1:01, Michal Koutný wrote:
->> Hello Ridong.
->>
->> On Thu, Jul 03, 2025 at 01:34:27PM +0000, Chen Ridong <chenridong@huaweicloud.com> wrote:
->>> 2. The cgroup freezer state changes to FROZEN (Can be triggered by reading
->>>    freezer.state).
->> /o\
->>
->>> 3. freezing() is called and returns false.
->>
->> I can see how this can happen because freezer_lock != freezer_mutex.
->>
->>> As a result, the task may escape being frozen when it should be.
->>>
->>> To fix this, move the setting of the FROZEN flag to occur just before
->>> schedule(). This ensures the flag is only set when we're certain the
->>> task must be switched out.
->>
->> Is it sufficient? (If the task is spuriously woken up, the next
->> iteration in that refrigerator loop would be subject to same race, no?)
->>
->> Thanks,
->> Michal
-> 
-> Hi, Michal:
-> 
-> Regarding your question: Did you mean that the task was frozen, received
-> another signal to wake up, but should have remained frozen instead of
-> entering the running state?
-> 
-> For this scenario, the solution I've found is that the task can only
-> break out of the frozen state when its cgroup is thawed. The code
-> modification would look like the following, and we'll need to add the
-> cgroup_thawed(p) function:
-> 
-
-Sorry, the code should look like:
-
---- a/kernel/freezer.c
-+++ b/kernel/freezer.c
-@@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
-        for (;;) {
-                bool freeze;
-
--               raw_spin_lock_irq(&current->pi_lock);
--               WRITE_ONCE(current->__state, TASK_FROZEN);
--               /* unstale saved_state so that __thaw_task() will wake
-us up */
--               current->saved_state = TASK_RUNNING;
--               raw_spin_unlock_irq(&current->pi_lock);
--
-                spin_lock_irq(&freezer_lock);
--               freeze = freezing(current) && !(check_kthr_stop &&
-kthread_should_stop());
-+               freeze = (freezing(current) || !cgroup_thawed(current))
-+                        && !(check_kthr_stop && kthread_should_stop());
-                spin_unlock_irq(&freezer_lock);
-
-                if (!freeze)
-                        break;
-
-+               raw_spin_lock_irq(&current->pi_lock);
-+               WRITE_ONCE(current->__state, TASK_FROZEN);
-+               /* unstale saved_state so that __thaw_task() will wake
-us up */
-+               current->saved_state = TASK_RUNNING;
-+               raw_spin_unlock_irq(&current->pi_lock);
-+
-                was_frozen = true;
-                schedule();
-        }
-
-Best regards,
-Ridong
+>I would prefer to simply wrap the dc->ctx->logger and dc->ctx bits
+>with if (!dc->ctx) and avoid the goto.
+Thank you Harry, for the patient review. I'll submit a revised patch later.
 
