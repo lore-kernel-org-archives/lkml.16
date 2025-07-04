@@ -1,134 +1,142 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76C53595A;
-	Fri,  4 Jul 2025 00:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AEEA31
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 00:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751588838; cv=none; b=uvP2JaVhx6gMzJtK+8M8Ay2nHVEjE5GYWDo6VCx/39UyrDec5lmg0j70D8B7KfO3aktmTjTE9cRkzU9kc5VLPg3/4TKsjETWC2ZmTv8Hmvk+cvJg1o2qZdvG0J2niXJJtSlyNLxLMpyQMnqpplu/cvjm7SxbkR8ItJzcGXf2liM=
+	t=1751589094; cv=none; b=nD96D+ni9HNb/yOnpGDwfJBLsmrum54PlA2mb8120aQOcFCbOfieExtPZ2gvkMDpwyvAyWoif6mOTOP5rLKhmF3JnKS3fF8aTRzLZNPtzaJgtFXp4D7aKXKoyybsJT38JrGpHl3XrmuUbEdeZM+zVIS8qWVzwxvvF3FmEpjpv9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751588838; c=relaxed/simple;
-	bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqQKk6Br7hqZ6nN/PEkIiWIuQwCrJYJG52lG7NLCjQVnUog40K2qh3dRCVf4DNu91t/NsCQhNnrvvhqg/BAgiAjPhkyx5VHifjOOsfhidql8uubOeRJMdai3kNbMGZHGOweg1D1ZdCun1lwhvHpP1a/BKc7I/6m3QhY2f6Vil6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLnITauF; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751589094; c=relaxed/simple;
+	bh=72zDQTd5BmmYeY1nfHTe2maCok+0iQOLU6grGNy0p08=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g4jXiYJ8VJOR48EYy9zIAxRwZzXEhCxl/S7ILIxcrpUqdCyzUJKQoMRv389wkzPG7nZ6awRQwSmilync9/+g7h/4U+gUzwF8QCH02HOME6+4GGZqKkPxatpXbdp1JbgaQjnqb8w9kJTGJNjPGM/0Ry5VQEGLCdj4DLtE2l6SI44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=LGhtdO5F; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLnITauF"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74ce477af25so228985b3a.3;
-        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751588836; x=1752193636; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
-        b=eLnITauFlD9iK4p71ryCuqXJS7SXyCrn+koHLxhVNiltAq5wgK+Y4THvM6pMW0+Yce
-         u0hDfFVzWjCJp+k0JwnJQUIx1s4OvfxA5/n+zYnoXSP2RKsdvKxR5SCKVCPtrndjLbxL
-         mT4hjrqSQeNAl/eqKDsATLkzN2HLhCb3DUzWi34FA4zBL6QV7GFjZlZqmi3qwIB3XnOx
-         Qye5NMQCWUxPxILGaoDO4NUoEYEvE3NEzckZcQzPnWni+/idpfyJZFjfOyYU1w85vJlo
-         Uy/uCG52wZTFNsH2BIfkjFdOu6C8nFEXW1Ou9ZXBLb6CU2He5NjwuQrBbjne0iwA3icj
-         jE/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751588836; x=1752193636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
-        b=G89Ltq9UQ9c1pVWUk8qX/C+OIZzaf5uRdnA93EV013w8IKT+PjVF7bVmDj9srhkFNT
-         00XGnIQMb4faUl1k/uXP7JTg9PSW6djptE4CqOKYJI/pmIWmHPUVV4Q/VNH9p1Vhyo7C
-         Mlkrc27U8zTnhYWDzGNxzdED3VMEARCvxq4poTFXbeX38dstd/twOwmRv6qm+1inr9GM
-         ffvYa8pRo6qEQAjzg62Bg7O4BpxeyKhT8zlYYHInDQc1oKEikvHu1guziKgM4YngHCX3
-         8lYxTBg/KvKQGN6vEe4ZQR3mIQhXO5jXwSMeckefUKnKPMtYZhpVYMGm8WD9+Z4rYxUd
-         RdbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBWaNM4Z0D+bcIWZyVS/90j1ZvxIu20XtW3ZwWwIOEe1OMrX+CtPcsCA71u0olRVx54Au4QyzqEeo=@vger.kernel.org, AJvYcCVaR6y8bsBHyl/2X7Ob9Ac+oEiYLJJcCv0wryVA/UhczLjCckPrpQW127ZLILp3BBl4a6EP6fBEs8b7AoGYpw==@vger.kernel.org, AJvYcCWWFWE+tRxVpdezW9GXIO+q93uNIh6YNk7zsY5cFCzWVFcQrNVqHWq8TlQsywGcSlfEq0T9XXC+fmZIc3nY@vger.kernel.org, AJvYcCXEwxXC6F+djT7wkgp8J/IcyWbq1s6RFwFWr3Jd3Pvq2es8DGYK5I6uH/I38CEiT+CP7jawBJ/6fOte@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx11Q7AKH0rUyk1NYJ+GJ41GPBWdQgPtq6V+e+iWTBkS4rKLrtJ
-	/MD3faH/ncrHwM0bOtC1Sbh6c63K3Y4OmRFHk6Otb5QZrxKsxMRiynle
-X-Gm-Gg: ASbGncsCyv5U08nMAxBaebCMdgYEgL7FGm/OdKQ1/Fwl2vQUCRxl3vuGob7MnExIiHj
-	fbkJ7cJsd4VLTNn7PX2hKqCXXRS80L+pLu8gUxi6psJmW8L8PYNEHGdt3uxxoRPtiCwgF2RRiDc
-	f9gIsRH41Bm+9baMoIQzu9Ycul9USKEj3KKjofNxh1ffBExQHOQR8n5XxC+aMfHNqgAVyBWnMn5
-	Ks5UEnF+p+hmy5pB3y1XA6h/irzLZgHv2z7tprl+M8TAGr1yU/bg7nycK/oycbAIEdYqhb9wdor
-	T5CzlFaSPArQIYEZa2WYap/dol1CGVMSoo4zn5aaLfunf3xl9/lIbkk0YjPIhg==
-X-Google-Smtp-Source: AGHT+IGwQCrkWrjApK0htBGSorBdvNkVh5GSO+iYPYY+Kh0DqyqHto9HinLiE593880id3pXNBbbnw==
-X-Received: by 2002:a05:6a20:4325:b0:220:9e54:d5cc with SMTP id adf61e73a8af0-225b9b7a66bmr1282824637.31.1751588836070;
-        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62dd6asm647668a12.64.2025.07.03.17.27.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 17:27:15 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 8A22A4206886; Fri, 04 Jul 2025 07:27:12 +0700 (WIB)
-Date: Fri, 4 Jul 2025 07:27:12 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
-Message-ID: <aGcf4AhEZTJXbEg3@archie.me>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-19-john@groves.net>
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="LGhtdO5F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=AOORWtoNtKLsZJgWY71g6pOF0AA/x+qOVBm+Q6RvWFo=; b=LGhtdO5F/dvV9SsL/rCTmZMLQG
+	BbZNw1WQYinZCj4Co3U0t3CwsT0BaRkIhzPc8AkeegN2RLZR4yTeIKEn44Nar2/PWRhyvOyLv8EYb
+	exfM9Io3fvCyBlE944GUrbYbLtauanHT78CLie2KPukIrjflmQISOT1ChMP6U9ykRpOsi5ev18X+o
+	5Or9/T3IoKjsgK2M6RTuCMqKzZRNR7hqP+FFnxYej/apw8DF1SXwd4BaHvcs8DSQxYpS5fH7uXH/Q
+	luY5M0IIl8lpyCH61Bhy6q4SKdlKrofQh/jxDLpwUIcYb0r8bosE+5r9SeDr/Y65DSy5XrMSdBj4K
+	neQlWgIg==;
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1uXUJn-000000002Dp-209v;
+	Thu, 03 Jul 2025 20:30:19 -0400
+Date: Thu, 3 Jul 2025 20:30:19 -0400
+From: Rik van Riel <riel@surriel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yury Norov <yury.norov@gmail.com>, Jann Horn <jannh@google.com>, syzbot
+ <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+ luto@kernel.org, mingo@redhat.com, neeraj.upadhyay@kernel.org,
+ paulmck@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+ x86@kernel.org, kernel-team <kernel-team@meta.com>, David Hildenbrand
+ <david@redhat.com>
+Subject: [PATCH v2] smp: Wait for enqueued work regardless of IPI sent
+Message-ID: <20250703203019.11331ac3@fangorn>
+In-Reply-To: <87ikk9tdqs.ffs@tglx>
+References: <68653927.a70a0220.3b7e22.245d.GAE@google.com>
+	<366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
+	<CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
+	<CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
+	<874ivuldog.ffs@tglx>
+	<aGVwAtUi8eKNT8Jy@yury>
+	<20250702135954.7a00497d@fangorn>
+	<87ikk9tdqs.ffs@tglx>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FhmplPz1+JPluJTh"
-Content-Disposition: inline
-In-Reply-To: <20250703185032.46568-19-john@groves.net>
-
-
---FhmplPz1+JPluJTh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 01:50:32PM -0500, John Groves wrote:
-> +Requirements 3 and 4 are handled by the user space components, and are
-> +largely orthogonal to the functionality of the famfs kernel module.
-> +
-> +Requirements 3 and 4 cannot be met by conventional fs-dax file systems
+On Thu, 03 Jul 2025 18:56:11 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-"Such requirements, however, cannot be met by ..."
+> On Wed, Jul 02 2025 at 13:59, Rik van Riel wrote:
+> > Thomas, please let me know if you already reverted Yury's patch,
+> > and want me to re-send this without the last hunk. =20
+>=20
+> I did so immediately after saying so in my previous reply. It's gone in
+> tip and next.
 
-> +(e.g. xfs) because they use write-back metadata; it is not valid to mount
-> +such a file system on two hosts from the same in-memory image.
-> +
+Here is v2 of the patch, with the last hunk removed, and
+the changelog adjusted to match the new context.
 
-Thanks.
+---8<---
+=46rom 2ae6417fa7ce16f1bfa574cbabba572436adbed9 Mon Sep 17 00:00:00 2001
+From: Rik van Riel <riel@surriel.com>
+Date: Wed, 2 Jul 2025 13:52:54 -0400
+Subject: [PATCH] smp: Wait only if work was enqueued
 
+Whenever work is enqueued with a remote CPU, smp_call_function_many_cond()
+may need to wait for that work to be completed. However, if no work is
+enqueued with a remote CPU, because "func" told us to skip all CPUs,
+there is no need to wait.
+
+Set run_remote only if work was enqueued on remote CPUs.
+
+Document the difference between "work enqueued", and "CPU needs to be
+woken up"
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Suggested-by: Jann Horn <jannh@google.com>
+Reviewed-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+---
+ kernel/smp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletions(-)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 84561258cd22..c5e1da7a88da 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -802,7 +802,6 @@ static void smp_call_function_many_cond(const struct cp=
+umask *mask,
+=20
+ 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
+ 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
+-		run_remote =3D true;
+ 		cfd =3D this_cpu_ptr(&cfd_data);
+ 		cpumask_and(cfd->cpumask, mask, cpu_online_mask);
+ 		__cpumask_clear_cpu(this_cpu, cfd->cpumask);
+@@ -816,6 +815,9 @@ static void smp_call_function_many_cond(const struct cp=
+umask *mask,
+ 				continue;
+ 			}
+=20
++			/* Work is enqueued on a remote CPU. */
++			run_remote =3D true;
++
+ 			csd_lock(csd);
+ 			if (wait)
+ 				csd->node.u_flags |=3D CSD_TYPE_SYNC;
+@@ -827,6 +829,10 @@ static void smp_call_function_many_cond(const struct c=
+pumask *mask,
+ #endif
+ 			trace_csd_queue_cpu(cpu, _RET_IP_, func, csd);
+=20
++			/*
++			 * Kick the remote CPU if this is the first work
++			 * item enqueued.
++			 */
+ 			if (llist_add(&csd->node.llist, &per_cpu(call_single_queue, cpu))) {
+ 				__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
+ 				nr_cpus++;
 --=20
-An old man doll... just what I always wanted! - Clara
+2.49.0
 
---FhmplPz1+JPluJTh
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGcf3AAKCRD2uYlJVVFO
-o7MlAQDFFzY/AyfkzJf6X39RAu80LaEnq2G/NAeqbWbqwX+W8gD6ArnxxAZHvTMc
-4pRWe3cIkdvJArMN4f2J8/XM623oTgk=
-=0PQj
------END PGP SIGNATURE-----
-
---FhmplPz1+JPluJTh--
