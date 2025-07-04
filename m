@@ -1,67 +1,66 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412BE2FBFFC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D0F2FC00F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633948; cv=none; b=i65Pk8ski0hJY4u1n98WtT+eLjbC2JAkCnwlt5fLyHk54zYPqQCndpJurKve6Uz/0TP6NBsfNeHSH0iv6ax0cksmGiV36HynMUWWp0g9wmpZOlnjMg92s+4L278OVMMhlwU0fqpDC3fUSBolCpgzK0cSwj9/iQlsC0w5cibPQrg=
+	t=1751633949; cv=none; b=XtYA7cOumExXJ0rJjgBfBn2diEMgE3AjmqLaHPVV2HHmKXIaX1fgnVOwRmZ0r03dL7sodpydkSDThMYM6ARY6l0rYDGsWwIpuiVqkZOtkFfAx3OuLMHx7ps8nr+DpFGRB9L+op0cGgllPWPbdlq2ag7EfWWsyvMYGgZHz8ElO5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633948; c=relaxed/simple;
-	bh=HSQrtGe4/Z0TBW+gwH8FOlwHslQisfYTdDaYyI3dFb8=;
+	s=arc-20240116; t=1751633949; c=relaxed/simple;
+	bh=MRAmlbg2el9RlT82IXfipSqk95B1KCNXrlmXQW0Xgmo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dAEqF8f5NOR3pPKHfH8kwWVMg/4EMUIJPwN3v0Koz6Q+AoHO0FhpjpaHO4mmT6rsxzX8lyNhYJB45qm8IcDj3uSir0H4gkrLDxzpgekyhw2jco2Bb+j1yCqC+GjZXr66ei7QDVeFCk3sV99ijdf0etYESApvAWZUvxSgbdQ80Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AWyQhWov; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:To:Cc; b=po14U24TPF3+/xQ+tTFGfJpQFqv54IDTpiu44qUxLMPhwhvJBDnslrNU5QYpPGMEcTPg3jqK31/hEGpEOQ3hCUzPIEM9D9ZwnX/a+dOpesB81LyZRqM8Roj4ETkasY5cVZwND1qxvmyxb8ilIdrP1Nl3BUNz8r0qaP+jkpCUoaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GBMdmUer; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AWyQhWov"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453608ed113so10072605e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GBMdmUer"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a57c8e247cso699927f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751633944; x=1752238744; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751633946; x=1752238746; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BMEMEAqg83bufN2QGDWBOgNHkNfUTOyZRf8AHX0Mf9g=;
-        b=AWyQhWovjeK4CkJQanLCf3+cTor+PiwLoyFEiGbBEREs+1IfNvT++A6O/N84IRnjyD
-         p6Y4AvM1KOF2w0euIDlews2/1emcv80hjELuMW1PqOGSGaZep6NY7xCGGPdkMPu8qhY8
-         9XKmXLjc5OHdOxVAZWe7p9BYSTw2CilZdYUVDv/q3+cu6Xj5GWI1o0Q6qiARpj+5O+R0
-         gOwq9M+LIJ9Nongg1Uxmq3gcuiSgxEj5JFkskrbsRFZUgjY1n+xZ/WcE7cA9/5ADsqG9
-         dOyo2ri1+ki8w6KRi1Yml65l83zq9bnFEQ/MRnXJUv63ZiSNQiA2neBtDFZLsv7OL1Sv
-         AmSw==
+        bh=0mWdlg54oJudcLcZCbZIGM2v7WwK4QYuaO3Uvq5fqN4=;
+        b=GBMdmUeru27gLfP01u/KnRnlevwTU6jvxOYIiq09CE8AmxnXH/OrExB2AjSfIxku3i
+         jkKYeFzsnzdulSqXnJbnsmy0mcHCS2fDXTVPfBjV1DHeNshNVsXWJLSFuW92C05xa9H+
+         N+bImZ4Ybg+zrrrzQ3V+RLQRbguGFXEWscUnB9IaQ77n648e7TJbwVYQMIZ4H1YEEJq0
+         s/320UrEGQJv5MAG25uh3SRYk2m08EcJVCgjd1TV9iDGrLEueyV5z1rcQOj+l/4z9nuC
+         K0oWXM3rdcW8kqjCyAd3Fz/VTvUAyAXh/OwX69oEGdmKjTOIqEfYXHEVWap1XJYvL9UU
+         pFcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633944; x=1752238744;
+        d=1e100.net; s=20230601; t=1751633946; x=1752238746;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BMEMEAqg83bufN2QGDWBOgNHkNfUTOyZRf8AHX0Mf9g=;
-        b=OycI+ej24Ap/JUDB20eckT+gfn2+3Ih1/iIRAPSnsRgUg3jFOARGQMPpCRYvF9/Rop
-         7M2YgQ2PcvjHAftuxg1AErzvSEWsayYvtQ5neWOWlKF2vRzOj/zeds9Koly0kO6Qg+X0
-         w0XYATVmHogshqA7u3/BAFul1I/9odERGIrY7UbsMHBLmQ32P5pcn3JO+i5qkjSxBWib
-         ajES6pqD0qvCVqOrYSxaAA/t8WEB2SYbd4cbUhGHJ1K7BtXflUFaMUgastPbRkFkvW07
-         xcvXOIn4vSKAUBaUHymNnG0p8dpdybn0OylwSUVbTS6wd8Y9ln8RXcA2Uhvcy5cGVxzh
-         qMTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvk0Rp71s8uhejr/hCHdtgGUWaoSpaaJ7t4SgeALE+z4aU+gIxFeE/VLo3ith79x/0lRmkm4T8L+11DhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF088IGhMQlGqszY32fs/v5oZuY5vO23EnUmt8Nk71IiY/1DBL
-	/vdYQHaxKLpQo8K250aQ1pHCn2sIZx0gQPttIKc1mh4dBY9Acp7i4oXS9952NN4yYVFryjaiWg3
-	oy3z3FOA=
-X-Gm-Gg: ASbGnctBiFd3cpD6tuEUfGkjtJXTFkeVVjeH6KmeiFrQmecCXKxgIPNK2s6zm70rnYQ
-	EplsaoRG5IzStaj++e/lQhNOaSfdM6tL1IOXV2joqthSSZZpIFnfHZpvUedfbhRUd//91x2fOTh
-	vR/V0qTh/A1kOvR0WyQcHBGDIdnCft0gj7Cw+mEk7SEci07MINZ5YAr+C6ZTPIu/oi6ev/jOYeV
-	bKz7ntf8E+P2Ce4lZTWXcDLR64REoBeqIhy1a4+VhXz4lHIz7TChgg2y++te8iRRQn6+3lGvkIl
-	7vyDXbgI8sVAo0H2LVFGn0waNhALBEJCmRDA6c5vgAZ+q2+TdBW1ZKk=
-X-Google-Smtp-Source: AGHT+IHaSluiSjg6ZhGmsBkYXRIG9iwoBZVF5T5tgaWqiOqPiLzLikZKD5mhzB+Wy9gylFEewYJvkA==
-X-Received: by 2002:a5d:64c3:0:b0:3b2:e07f:757 with SMTP id ffacd0b85a97d-3b4964f5198mr2409455f8f.1.1751633944485;
-        Fri, 04 Jul 2025 05:59:04 -0700 (PDT)
+        bh=0mWdlg54oJudcLcZCbZIGM2v7WwK4QYuaO3Uvq5fqN4=;
+        b=va0l6YFVB6OAM7MrPR6hwS6hekBL957y9NMyo2DdtGW7qcVUBYy2GTMkr6aStTPJVZ
+         QL3bd9xxUwje9dxsXT6jrDyngVIb6vqXCGcQ1KYXTlfDNWNAX44kF2KdPNp5piMp2kUS
+         9zJUrW/YaQ0GmCbct+YaNMJiYideVwzrH8HJG0wl5pV9WJiOwMQTUqrHLbZtOPFEFCwb
+         LQ+kiW7dqX7E9HznOQDDN6/rjBmdfcb5SG8TQz2VuI7N4llTKixk/YtPnkgHbI9CUCRl
+         EYPKxGT53uvhq2QckKJ0w62Xxw/VGidyhDeBFFOlX83kPDLAgafVPVNC8n4IlR8ZUZWt
+         d3Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2B7CPJIpJBq61MUGtHg+z5yIi5iRl/K9v+uSWV6/woO8fqXLvw2GILK4B/5BawQ1J898dUViz9mPwhag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywozP2foa4roo4hl18ZtjtucYQaP+2lBAzf2Yz9fvPW3nUdSNf
+	pjY9UBLKTHNGnrpyN9jIj9YEw3CwCKTy4pTNZfBBohOrJIjb7mFpkLLsU9e+/M6MHKk=
+X-Gm-Gg: ASbGncvI5gt+f2pKQf3pF7CvYC+jbf9CwvVv+q15M4oaVR0+1ocROITzQDB8gXbxSS0
+	u1r0kqqh2RBvxZO51EprRWycw615CW8ne6FwbwBghxB8shz4BR2ASvXvuyZ8gu6ZHtTsKrmms0P
+	HcNYbWGj6f/clauA97Mpb4foxFriOOTtwL8xC2/jpuz2icU+DT5lWKWPkJ/3/qCihgxDVwez/aA
+	RD7o4o3XGk7wRJGeADbiesOyY6ma6ej8XDknWG+tDjSXNM09L8exW0nHIKo0gSMEo4jCU1bDQuk
+	oiwDrKvsGpbka/B45uVJ4d8LB/7jwZEDHMToj69eXF2iKbm7/Rvr/H0=
+X-Google-Smtp-Source: AGHT+IHUN/J9ch4zZkcw26qV3iwG7fpp7cXYR7gk3IfEtkYyUXzrE2xtjGDXbgYjpYTt6DFJW6B8xA==
+X-Received: by 2002:a05:6000:2006:b0:3a5:2cb5:63fd with SMTP id ffacd0b85a97d-3b49700c452mr1896057f8f.10.1751633945736;
+        Fri, 04 Jul 2025 05:59:05 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:876:27c7:55ac:40ab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcebf7sm56129665e9.21.2025.07.04.05.59.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcebf7sm56129665e9.21.2025.07.04.05.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:59:03 -0700 (PDT)
+        Fri, 04 Jul 2025 05:59:05 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 04 Jul 2025 14:58:54 +0200
-Subject: [PATCH v4 07/10] gpio: sysfs: don't look up exported lines as
- class devices
+Date: Fri, 04 Jul 2025 14:58:55 +0200
+Subject: [PATCH v4 08/10] gpio: sysfs: export the GPIO directory locally in
+ the gpiochip<id> directory
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-gpio-sysfs-chip-export-v4-7-9289d8758243@linaro.org>
+Message-Id: <20250704-gpio-sysfs-chip-export-v4-8-9289d8758243@linaro.org>
 References: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
 In-Reply-To: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
 To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
@@ -83,177 +82,155 @@ To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4753;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4648;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=gFW3JmLsuFySaX3ICt4Hmzv3Y1dJIcjL8tzNr7Vj5fc=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoZ9ALPECgZHxSOj7PIlfwj6d6B65AXnkb47jub
- lqMni47QJKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGfQCwAKCRARpy6gFHHX
- cp7HEADCzPIbVzpehNKQDCLf+jLNRs3MrkpbPHsavzLLFI2F9sxsXacNI1pkqRaCTY53Y3N4Kuz
- oFBUtdRrIFF0I2O75rsl+gjJTAAFXT0i0kLDCLRp1Wix8AZgCCqpESqJgVAVM2LuPTuWSPaxaqn
- c+4lgvdlDshS5kAl3KgKzQRsAyStCnX7U4H5Vhde8k0b0JWOhqGVpQ8XvZmBT8vzJC6vGsnXSKI
- fa3/rvBrn2Kt6QxGz28/Sb3mtECdw2ENuVjU83UZd8DuuG5ZnhjtW+WnFeJM/THodXvTCAHHs+q
- QBWnoA9ckrW41TJFOOT9q6W/FH63UVM5jzWziJG4EVY8nizqeR5DFSs04FuEkDCei6Me7MCYF8h
- 6pzHqWgiW/sK2tDZ5Z23jV7UunmnLQCNy4kWmndRVKx5DKZ0SutDvA7Lonuii4zzCpvwp5hkR3l
- nE54gO9ajX8sucK0OcO9i653k73fVt4HWMJrBF/hXgbeW4zGbNVXMM2BgV25LUW1axwwuLbmPb5
- Ij8Hc+yriRCSQvxdylzYoPM1A7E2v/CAvcB10EoW7+bMJ3HXcFcBUCjLXEok4cUaD5GGNkqbTD4
- Iy12o1KDhEfRhud68dUcq2f2Q5R6A24xREzMMnsp2G6KTido+ffIrE5U77xqIdlc/tzyeu/Xr3Q
- /Bj4BNdAkE11zCQ==
+ bh=cYZbz96eXlnV3MjcgWxLoHkCLzWOQdWS5dSJMpwHOg8=;
+ b=owEBbAKT/ZANAwAKARGnLqAUcddyAcsmYgBoZ9ALt9l9ireev9OrRcbTpBT1GQjAIm1/4RaPw
+ udOH88TBkiJAjIEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGfQCwAKCRARpy6gFHHX
+ cgvxD/dEQZku0pJR0CaOwt5rW6WAShbkSUtJIB/x2vcU+5upUjE2ADZzspk5Y+4CQtspOvMTIDD
+ jmNoB3qOidul8p5fFvsvCi/ZZqYODZ8AJIIin3TfGLSJ1yPphG/9YF2pAPdaV7vxTLKmAufRDc5
+ u8Dv1BcK/5vec0NDFx8DnDtKoYgIFlDvM9tzpOXZuUN1zk6wgUrIH7Jk16Dc7tPlu0LTROGObpN
+ bBNYT7Ki62zia7DsgdluaKXDlrgm37QPU6GYk5dCKvJvGj8razz987i3Ofg7SgkPLbALH/T/sBA
+ wLwD4eKAUH9RC8J0/2RMrMZOUjPQ6ZXYhvwrpt/7fP7kjvrPj54DJTazLmDJpmvvx2JQt4CesQ2
+ jm/oU4uJv/f5cyphZHFaXuAw985kUEbAEQ3BW1aD0GjCGNSrbk/Uwcl/sG+EOalhFBrXiC5NCVg
+ Btud9CzPFyIxR2ZrYCbtsI8FB4MriFnPIwc4ARBNCHgUPO/nHUAHFB4TdKCTlk55Q+eUecTeT5l
+ TCclBQpI1fjNBr/AezHyLVumMx29N0TUPsLpvyQwovceSa7NO2XobM50M2ddcgvpBmafl7Cl8pX
+ 23CR7B9xfzZNfzpJ/jPglyyqQqBsKe1ZIx8Wiy+E/FtKPgSgUU/3PCqS+iAhSJRezLnnRrmjxW3
+ A9qBdzQAb347N
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-In preparation for adding a parallel, per-chip attribute group for
-exported GPIO lines, stop using class device APIs to refer to it in the
-code. When unregistering the chip, don't call class_find_device() but
-instead store exported lines in a linked list inside the GPIO chip data
-object and look it up there.
+As a way to allow the user-space to stop referring to GPIOs by their
+global numbers, introduce a parallel group of line attributes for
+exported GPIO that live inside the GPIO chip class device and are
+referred to by their HW offset within their parent chip.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib-sysfs.c | 60 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 44 insertions(+), 16 deletions(-)
+ Documentation/ABI/obsolete/sysfs-gpio |  3 +++
+ drivers/gpio/gpiolib-sysfs.c          | 51 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 53 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/ABI/obsolete/sysfs-gpio b/Documentation/ABI/obsolete/sysfs-gpio
+index ff694708a3bef787afa42dedf94faf209c44dbf0..0d3f12c4dcbde4f93da33707cd36e9acc0ee2fbf 100644
+--- a/Documentation/ABI/obsolete/sysfs-gpio
++++ b/Documentation/ABI/obsolete/sysfs-gpio
+@@ -27,6 +27,9 @@ Description:
+ 	    /base ... (r/o) same as N
+ 	    /label ... (r/o) descriptive chip name
+ 	    /ngpio ... (r/o) number of GPIOs; numbered N to N + (ngpio - 1)
++	    /gpio<OFFSET>
++	        /value ... always readable, writes fail for input GPIOs
++	        /direction ... r/w as: in, out (default low); write: high, low
+ 	/chipX ... for each gpiochip; #X is the gpio device ID
+ 	    /export ... asks the kernel to export a GPIO at HW offset X to userspace
+ 	    /unexport ... to return a GPIO at HW offset X to the kernel
 diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index e10d720ee0adb3b0f6e91eccbf64c33e5700c616..ccc293a4cc5d51294703959317061af55fb0dab0 100644
+index ccc293a4cc5d51294703959317061af55fb0dab0..563e38456c33cd3a6e8674485105ef45ce8f5095 100644
 --- a/drivers/gpio/gpiolib-sysfs.c
 +++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -42,7 +42,10 @@ enum {
+@@ -41,6 +41,13 @@ enum {
+ 	GPIO_SYSFS_LINE_CLASS_ATTR_SIZE,
  };
  
- struct gpiod_data {
-+	struct list_head list;
++enum {
++	GPIO_SYSFS_LINE_CHIP_ATTR_DIRECTION = 0,
++	GPIO_SYSFS_LINE_CHIP_ATTR_VALUE,
++	GPIO_SYSFS_LINE_CHIP_ATTR_SENTINEL,
++	GPIO_SYSFS_LINE_CHIP_ATTR_SIZE,
++};
 +
- 	struct gpio_desc *desc;
-+	struct device *dev;
+ struct gpiod_data {
+ 	struct list_head list;
  
- 	struct mutex mutex;
- 	struct kernfs_node *value_kn;
-@@ -62,6 +65,7 @@ struct gpiod_data {
+@@ -54,6 +61,7 @@ struct gpiod_data {
+ 
+ 	bool direction_can_change;
+ 
++	struct kobject *parent;
+ 	struct device_attribute dir_attr;
+ 	struct device_attribute val_attr;
+ 	struct device_attribute edge_attr;
+@@ -62,6 +70,10 @@ struct gpiod_data {
+ 	struct attribute *class_attrs[GPIO_SYSFS_LINE_CLASS_ATTR_SIZE];
+ 	struct attribute_group class_attr_group;
+ 	const struct attribute_group *class_attr_groups[2];
++
++	struct attribute *chip_attrs[GPIO_SYSFS_LINE_CHIP_ATTR_SIZE];
++	struct attribute_group chip_attr_group;
++	const struct attribute_group *chip_attr_groups[2];
  };
  
  struct gpiodev_data {
-+	struct list_head exported_lines;
- 	struct gpio_device *gdev;
- 	struct device *cdev_id; /* Class device by GPIO device ID */
- 	struct device *cdev_base; /* Class device by GPIO base */
-@@ -687,10 +691,10 @@ static void gpiod_attr_init(struct device_attribute *dev_attr, const char *name,
+@@ -691,6 +703,7 @@ static void gpiod_attr_init(struct device_attribute *dev_attr, const char *name,
   */
  int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
  {
-+	struct gpiodev_data *gdev_data;
++	char *path __free(kfree) = NULL;
+ 	struct gpiodev_data *gdev_data;
  	struct gpiod_data *desc_data;
  	struct gpio_device *gdev;
- 	struct attribute **attrs;
--	struct device *dev;
- 	int status;
- 
- 	/* can't export until sysfs is available ... */
-@@ -751,25 +755,40 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	desc_data->class_attr_group.attrs = desc_data->class_attrs;
- 	desc_data->class_attr_groups[0] = &desc_data->class_attr_group;
- 
--	dev = device_create_with_groups(&gpio_class, &gdev->dev,
--					MKDEV(0, 0), desc_data,
--					desc_data->class_attr_groups,
--					"gpio%u", desc_to_gpio(desc));
--	if (IS_ERR(dev)) {
--		status = PTR_ERR(dev);
-+	/*
-+	 * Note: we need to continue passing desc_data here as there's still
-+	 * at least one known user of gpiod_export_link() in the tree. This
-+	 * function still uses class_find_device() internally.
-+	 */
-+	desc_data->dev = device_create_with_groups(&gpio_class, &gdev->dev,
-+						   MKDEV(0, 0), desc_data,
-+						   desc_data->class_attr_groups,
-+						   "gpio%u",
-+						   desc_to_gpio(desc));
-+	if (IS_ERR(desc_data->dev)) {
-+		status = PTR_ERR(desc_data->dev);
- 		goto err_free_data;
- 	}
- 
--	desc_data->value_kn = sysfs_get_dirent(dev->kobj.sd, "value");
-+	desc_data->value_kn = sysfs_get_dirent(desc_data->dev->kobj.sd,
-+						       "value");
- 	if (!desc_data->value_kn) {
+@@ -780,13 +793,46 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	gdev_data = gdev_get_data(gdev);
+ 	if (!gdev_data) {
  		status = -ENODEV;
- 		goto err_unregister_device;
- 	}
- 
-+	gdev_data = gdev_get_data(gdev);
-+	if (!gdev_data) {
-+		status = -ENODEV;
-+		goto err_unregister_device;
+-		goto err_unregister_device;
++		goto err_put_dirent;
 +	}
 +
-+	list_add(&desc_data->list, &gdev_data->exported_lines);
++	desc_data->chip_attr_group.name = kasprintf(GFP_KERNEL, "gpio%u",
++						    gpio_chip_hwgpio(desc));
++	if (!desc_data->chip_attr_group.name) {
++		status = -ENOMEM;
++		goto err_put_dirent;
++	}
 +
- 	return 0;
- 
- err_unregister_device:
--	device_unregister(dev);
-+	device_unregister(desc_data->dev);
- err_free_data:
- 	kfree(desc_data);
- err_clear_bit:
-@@ -828,8 +847,9 @@ EXPORT_SYMBOL_GPL(gpiod_export_link);
-  */
- void gpiod_unexport(struct gpio_desc *desc)
- {
--	struct gpiod_data *desc_data;
--	struct device *dev;
-+	struct gpiod_data *desc_data = NULL;
-+	struct gpiodev_data *gdev_data;
-+	struct gpio_device *gdev;
- 
- 	if (!desc) {
- 		pr_warn("%s: invalid GPIO\n", __func__);
-@@ -840,14 +860,22 @@ void gpiod_unexport(struct gpio_desc *desc)
- 		if (!test_bit(FLAG_EXPORT, &desc->flags))
- 			return;
- 
--		dev = class_find_device(&gpio_class, NULL, desc, match_export);
--		if (!dev)
-+		gdev = gpiod_to_gpio_device(desc);
-+		gdev_data = gdev_get_data(gdev);
-+		if (!gdev_data)
- 			return;
- 
--		desc_data = dev_get_drvdata(dev);
-+		list_for_each_entry(desc_data, &gdev_data->exported_lines, list)
-+			if (gpiod_is_equal(desc, desc_data->desc))
-+				break;
++	attrs = desc_data->chip_attrs;
++	desc_data->chip_attr_group.is_visible = gpio_is_visible;
++	attrs[GPIO_SYSFS_LINE_CHIP_ATTR_DIRECTION] = &desc_data->dir_attr.attr;
++	attrs[GPIO_SYSFS_LINE_CHIP_ATTR_VALUE] = &desc_data->val_attr.attr;
 +
-+		if (!desc_data)
-+			return;
++	desc_data->chip_attr_group.attrs = attrs;
++	desc_data->chip_attr_groups[0] = &desc_data->chip_attr_group;
 +
-+		list_del(&desc_data->list);
- 		clear_bit(FLAG_EXPORT, &desc->flags);
- 		sysfs_put(desc_data->value_kn);
--		device_unregister(dev);
-+		device_unregister(desc_data->dev);
- 
- 		/*
- 		 * Release irq after deregistration to prevent race with
-@@ -857,7 +885,6 @@ void gpiod_unexport(struct gpio_desc *desc)
- 			gpio_sysfs_free_irq(desc_data);
++	desc_data->parent = &gdev_data->cdev_id->kobj;
++	status = sysfs_create_groups(desc_data->parent,
++				     desc_data->chip_attr_groups);
++	if (status)
++		goto err_free_name;
++
++	path = kasprintf(GFP_KERNEL, "gpio%u/value", gpio_chip_hwgpio(desc));
++	if (!path) {
++		status = -ENOMEM;
++		goto err_remove_groups;
  	}
  
--	put_device(dev);
+ 	list_add(&desc_data->list, &gdev_data->exported_lines);
+ 
+ 	return 0;
+ 
++err_remove_groups:
++	sysfs_remove_groups(desc_data->parent, desc_data->chip_attr_groups);
++err_free_name:
++	kfree(desc_data->chip_attr_group.name);
++err_put_dirent:
++	sysfs_put(desc_data->value_kn);
+ err_unregister_device:
+ 	device_unregister(desc_data->dev);
+ err_free_data:
+@@ -883,6 +929,9 @@ void gpiod_unexport(struct gpio_desc *desc)
+ 		 */
+ 		if (desc_data->irq_flags)
+ 			gpio_sysfs_free_irq(desc_data);
++
++		sysfs_remove_groups(desc_data->parent,
++				    desc_data->chip_attr_groups);
+ 	}
+ 
  	mutex_destroy(&desc_data->mutex);
- 	kfree(desc_data);
- }
-@@ -899,6 +926,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 		return -ENOMEM;
- 
- 	data->gdev = gdev;
-+	INIT_LIST_HEAD(&data->exported_lines);
- 
- 	guard(mutex)(&sysfs_lock);
- 
 
 -- 
 2.48.1
