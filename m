@@ -1,220 +1,145 @@
 Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCFC2E371B;
-	Fri,  4 Jul 2025 21:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465E217F56
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 21:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751664145; cv=none; b=DrHLOaX1kUArCwk8biZJaXJpTpU6h1jrVCfaX0WNRbSwN7hJh78COU7TtuMfEdXdLBdGBReDKdg5QHGIljxt97cVjntZWul40plu0IBEe/VwBkCXMMmQ8q6EBAj/5fww5HI+Z14f6J+2RVNpzSLkBv5jsC17M/zAwSpuKdeLGzU=
+	t=1751664466; cv=none; b=j4wuoEPt2Pt4gL44jXlgMDKz+6Xeytoc6HnN1AbmWZv4y0bf6MFa8GKwAplYfhDVp8BiDJ9hfbJwa0qGYntIP318G7js2J1KxbQ8h8IkleFmDzZ+JZnpeubY51Lmx/3H1KcHUhawITEOjIAI/8O1qugrLf5JVz2pRgl51y0MzN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751664145; c=relaxed/simple;
-	bh=nEaL1d/qgCL0Q1cP7dkEJ83Ce260S2VpV2ACqoM+q3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DOmxmkGZYhd8R8TgloDGqxkSRRKrjZXvbiw+FW4DR5mmP65lgL7A5rcemjx0So9zBrGqHOxDD+esRGdC+QTqS4oslh5rqWuNE/uMDZTDT9QucIIOFd2lIdlfJ7PMUhTCCseVKykVOReu2DinbP+GNDDksKLT9D0JWjhsPLpVilg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jedkLYVU; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751664466; c=relaxed/simple;
+	bh=Kgg/RKJy8xEDDuxlWknvCpjWS7jJF/UFzea/o+2ajss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lU0cRRlCFw8eQNJVLWS+7peCjMUfW31GkS2u1fC351TQukjSOssKVPmSct4BNyEyHqWF7zp/oUQIj6vciIrZsBpKCeBLVMfnX1NiltvHuQCWH0zM4XZD8k+AQIltJSAnZY0aPcmBRdLayAjQ/fhnvJlmHzb5tQ+S+TftsmzZ+QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=D/W6O1m4; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jedkLYVU"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a44b0ed780so15212741cf.3;
-        Fri, 04 Jul 2025 14:22:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="D/W6O1m4"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a44b3526e6so20381471cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 14:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751664143; x=1752268943; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=skDBk1uIw+9b6f6fiqiCtEJpFIHpZm8P5PILwC7Y1+o=;
-        b=jedkLYVUFp2uC7lcty/TkQYocGclqSNYRsx54bsxyYTmst7FC4l8oyTgViGP3nfxKA
-         ALIQoBIGyTqfMGOpCw7sRP2qealPgtBj47KSaQZCskGdzlnVDo6W+M6zLLDqYiaw7Zug
-         ukzAmYmJj4Z2/c0bsB0UWK2q2TnmwQpNTT4aW0J2nDQlL877aH9YfPqbsepQTNKpCyLC
-         4V7lRgGXrzCqrUZ3C7zGYrPwhuKBhfypFaQQphicjJMT0Sy/r+MUFOjeru4B7UJJwQAM
-         oL75knOSRjGDzv27S9aoQ3Bx1qiK7ePD7GyoOY5aTi2r/PEX6r+HCdaoG5bt0N9H9DbQ
-         T9tg==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1751664464; x=1752269264; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4TQkwHrKOM7GBKYdSow9FOChuDO7+LFMsjIK09/6sn0=;
+        b=D/W6O1m4kvzvw3gw+xtZJffd2vYKhKkpVRpfW2Lmj6L90jjHNte6XJt5Aalp8op7g4
+         SGWgLawjO2YuhrK24QA8rlfQG2m78Fd3BgfjgQNRi7JiSV09T/8/v0AIJzGp2rx68AyX
+         JwBKP+iwlhxkfHBNDVqnsqebU5vyveyi5N2PpoJ49Rb0Crwl+GLQqYmSGZzi8snZeugA
+         fVgc/QP9vDhsZrkc8duwpGYKiyMN20pRBa77kiCzdbkH6QwI1m4OaDErVMdXhdIwncA2
+         dPu9ifcfePujky3EhIvGkQ8Xdcye+6irLZBA1AtdqcTHe0mvmxbLvGLSv22ZYEZ2fjIs
+         FqCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751664143; x=1752268943;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=skDBk1uIw+9b6f6fiqiCtEJpFIHpZm8P5PILwC7Y1+o=;
-        b=gCuWMCOeGRVGHkTTNUk7uScnflIjVkYpQGVRRpo4VSlzJTZU+JkS7PMzQeXQm43xvR
-         evTs0xLHth2hfIIkN5x+NYgDFWAY4LedqDUb9MS490rAicr2W2CYGXbdS5F5OPFH+4AT
-         XazDSsx0BPJcs+B9R/zLWHbyJt8a9F1tu7do3E2fcWcRQjJPevBDV1/2ZA/IbQNDZUNq
-         9D8ug3iOcy/vzR7b+e+e7ItoQl01j4GGckitPIGuR1MFdXuc6b3DItPxt97So6rYzqR9
-         lewMdYO98I4JqQvzGW82gUMkVZ+Iq9EyNUY/Wb3AMTaHJocnEZv5k1uQN8gIe8/qjfCz
-         yLqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYQU9K3ia4WB3mRFscSvWcz+NEw6TZjfbUHRsTj721lPGCw+ScQHrLzAB1Lu1NevTFtOSA2ialMBqiKHs8vRI=@vger.kernel.org, AJvYcCUqQHnnApHD2Fw5XAZzR5dfZEM24BWqqN4fZAIImQbKMZ0xpo0CeNFkomakZytlhnwLs7QrQNj9v0QlUoVH@vger.kernel.org, AJvYcCV5e4eut/uzn9tM4hFkVz9OKmSHu+EHqiGeYP/fqtERQ4QWPFJeViImweyn9GwOIzoKX1fQC0yZTbKY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMo3JhSj5vQ6mP5uAkom/Dlz4zx6JUxK6nvqWcgmWJ36PDcS57
-	dQ24r3YQzSbePMGsHAktgjau49M837SMQFORZ52rjicZMf112Q3QXtvT
-X-Gm-Gg: ASbGncvyAr3Xd9ZzbZkF0zDHxqQGRQlxZmPIOg90NvxGHg6fMZUhhEpRYydbf0wB/sE
-	2HrCf9KTFxo7NA2a/3QiNmjN9P4vnTT6adlLsK4pB5HZWsdaGCR2cmRJ+ZnLhS+9i0jtMtbDAzy
-	ACpwnu3kWCKu3w19KqGamT+Zcb1kHt9Wx1bNC9vtaiL9KGkipErW3ELo5PdkOOZW3cZimyb3ssn
-	QIOFUMli0eT7GYnGCoSJV7xNG58LspxD5iLdo9/8c4K4pYNvUTIifWBkr1BSyVxVQ/4sdx0AHxP
-	zteMbGakTaXEEpv4qU3tOxf122q+TZAOm5G2oQe3Rvu+wFf3a6/6ghMES756PvGpref09fwzJn5
-	zlqqzNeXptLBy83Dwo/dkFLjKpRzBtor4uiYLCdnxU0QDO84zhEZ4FvAW7ZawY8U=
-X-Google-Smtp-Source: AGHT+IGunNurUZuGfLKh7RTnWW6InBf9AxO9MfDXUAsw41fRhH2n1BJWnlvbpSiVAlbeQu7yWvUHfA==
-X-Received: by 2002:a05:6214:e4b:b0:6fa:fcb0:b88d with SMTP id 6a1803df08f44-702c6d79cf4mr57197946d6.28.1751664143058;
-        Fri, 04 Jul 2025 14:22:23 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d60227sm18418456d6.108.2025.07.04.14.22.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 14:22:22 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1E79AF40068;
-	Fri,  4 Jul 2025 17:22:22 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 04 Jul 2025 17:22:22 -0400
-X-ME-Sender: <xms:DkZoaGN_VEQiaYMQojeuQZfWu0MyO7BGl4xG3rS1l2-qH8HtwA8FFA>
-    <xme:DkZoaE9Lp5NSOo6-wEH9E13E8XnezGnywo_xVW4OtkhdcJ8y6hmRGQoF658HzHmnW
-    FZr3vESdqNRaf1kqw>
-X-ME-Received: <xmr:DkZoaNRiGBKl3c0RKRTLKeOzDMmkXDTpC0cuUEgy992ZZItHss3eKljn9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvgedvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedtgeehleevffdujeffgedvlefghffhleekieeifeegveetjedvgeevueffieeh
-    hfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihse
-    hgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhl
-    ihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsjh
-    horhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
-X-ME-Proxy: <xmx:DkZoaGv4f9Wf8e41z6xQTjDTU69dBwrjAekFgRMSc76ObJV28-eQWg>
-    <xmx:DkZoaOerlOm7YTt_jpnVkztHh6MSAKZ2nkDS53NEuLjb-pgePFy0qg>
-    <xmx:DkZoaK1XmVKo6HMBkIYzxfZwSntpOTMKa_rZiYxv2tGWoVI4ORmo5w>
-    <xmx:DkZoaC9UKTx-yjhnuNgig3QjeyMXJA9zIen7wipn1CIhtK7aWaY4xQ>
-    <xmx:DkZoaN_ePyUlcCTEcACuMKAJdmMh4Jpa8p2_sBM02IVNuu3qZfeUYxlu>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Jul 2025 17:22:21 -0400 (EDT)
-Date: Fri, 4 Jul 2025 14:22:20 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Gary Guo <gary@garyguo.net>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, lkmm@lists.linux.dev,
-	linux-arch@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
-Message-ID: <aGhGDJvUf7zFCmQt@Mac.home>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-5-boqun.feng@gmail.com>
- <20250621123212.66fb016b.gary@garyguo.net>
- <aFjj8AV668pl9jLN@Mac.home>
- <20250623193019.6c425467.gary@garyguo.net>
- <aFmmYSAyvxotYfo7@tardis.local>
- <DAUAW2Y0HYLY.3CDC9ZW0BUKI4@kernel.org>
- <aFrTyXcFVOjWa2o-@Mac.home>
- <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org>
+        d=1e100.net; s=20230601; t=1751664464; x=1752269264;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4TQkwHrKOM7GBKYdSow9FOChuDO7+LFMsjIK09/6sn0=;
+        b=KAhmlCWa6oDNfqswR0wmSyDHOa2mlBdG95/ba0wED1BFxJz6vrRnMIPgJbdviBCR2W
+         o5XyrRUzJ4dNyVro55AyenaZCiCy2s/jY89giMvGi0Gmqen8rHIHF5ig+C4zhg85qPYd
+         REySqy177d3I4Tr3/B8mTpR5I+xLnPiygnWBUQ3zUuODEM3g5OTBpqD8YeUzUXmG6hzM
+         RjFQ6kwiew+DKqBblFv7L65u2UkVe14VosncY5WQ9aNwZvI6t7A3nMZ6G3PV0NEuJamB
+         E3VQhvpTWoGNw0Fi2t3ygrUNmMWkZRUBqBJMXGjc74CRQG67GkrUYR2nMQCQte6GEz6t
+         pfIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXN7ia5RfJ8HqgP+E19Ce7MuDjDUnz0Nl1fQCa1dU1jnei2iDmKoeHwc25RlrhIJO6J8rDBiV6LxIjDl/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK+wVJZRHCaglQFgW5CfiEYZdtMjSTDjipNsG75iVhvfu6uDYa
+	XORIxmaGtnceKsDGyQGvzvtzJoVXjAOrxbq/mSUDdUEs56fYufJdZIKOTE+0LSKHI3OE65fklUQ
+	s04YfeO8PyIuZE3RoXYh0nAWdnRn9GrGLTkXlQaEebA==
+X-Gm-Gg: ASbGncsntQHsrMRLLh3BKzkVeVhz79LxFrIrs8dcoVHvpVMTnJTQIZ1CDnVIEDdK2HR
+	wSIzTS48xxIyhLkYddEG8/UqUwMLRopOZ2LgF+z2Bw6mUumMb7ZDGzk0DLrDq/8/7yLSz3/+gC5
+	kIWh1oVlpwVY2NX9/IdNIQ8cdq9bf6GrhGfjSmh8mZoMQ=
+X-Google-Smtp-Source: AGHT+IGwRxeilUXnNTdyTmvD/TxGpaex9AA5plhgd4LQeziorhQNSpF9IPdyc2W55Icnyp7w2dKKaCqhFLE3q9BjF14=
+X-Received: by 2002:ac8:5ac5:0:b0:494:a283:1c4a with SMTP id
+ d75a77b69052e-4a9a69609f8mr6114921cf.32.1751664463660; Fri, 04 Jul 2025
+ 14:27:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org>
+References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
+ <20250625232653.GJ369@kvack.org> <CA+CK2bAsz4Zz2_Kp8QMKxG5taY52ykhhykROd0di85ax5eeOrw@mail.gmail.com>
+ <20250704173340.GL904431@ziepe.ca>
+In-Reply-To: <20250704173340.GL904431@ziepe.ca>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 4 Jul 2025 17:27:06 -0400
+X-Gm-Features: Ac12FXw2Yd-cXQEJ8nXkM_HsCPClfwCnN3pDQjubPyn-7sQcW8XOW2RmSJQEGm0
+Message-ID: <CA+CK2bC6iUfh4Y36oTVfsbTgow+3D7V9EE=Gj5jz4hsk0JU+xQ@mail.gmail.com>
+Subject: Re: [PATCH v1 00/32] Live Update Orchestrator
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Benjamin LaHaise <bcrl@kvack.org>, pratyush@kernel.org, jasonmiu@google.com, 
+	graf@amazon.com, changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
+	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
+	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
+	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
+	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
+	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
+	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
+	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
+	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
+	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net, 
+	brauner@kernel.org, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 03:54:24PM +0200, Benno Lossin wrote:
-> On Tue Jun 24, 2025 at 6:35 PM CEST, Boqun Feng wrote:
-> > On Tue, Jun 24, 2025 at 01:27:38AM +0200, Benno Lossin wrote:
-> >> On Mon Jun 23, 2025 at 9:09 PM CEST, Boqun Feng wrote:
-> >> > On Mon, Jun 23, 2025 at 07:30:19PM +0100, Gary Guo wrote:
-> >> >> cannot just transmute between from pointers to usize (which is its
-> >> >> Repr):
-> >> >> * Transmuting from pointer to usize discards provenance
-> >> >> * Transmuting from usize to pointer gives invalid provenance
-> >> >> 
-> >> >> We want neither behaviour, so we must store `usize` directly and
-> >> >> always call into repr functions.
-> >> >> 
-> >> >
-> >> > If we store `usize`, how can we support the `get_mut()` then? E.g.
-> >> >
-> >> >     static V: i32 = 32;
-> >> >
-> >> >     let mut x = Atomic::new(&V as *const i32 as *mut i32);
-> >> >     // ^ assume we expose_provenance() in new().
-> >> >
-> >> >     let ptr: &mut *mut i32 = x.get_mut(); // which is `&mut self.0.get()`.
-> >> >
-> >> >     let ptr_val = *ptr; // Does `ptr_val` have the proper provenance?
-> >> 
-> >> If `get_mut` transmutes the integer into a pointer, then it will have
-> >> the wrong provenance (it will just have plain invalid provenance).
-> >> 
+On Fri, Jul 4, 2025 at 1:33=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrote=
+:
+>
+> On Wed, Jun 25, 2025 at 07:44:12PM -0400, pasha.tatashin wrote:
+> > On Wed, Jun 25, 2025 at 7:26=E2=80=AFPM Benjamin LaHaise <bcrl@kvack.or=
+g> wrote:
+> > >
+> > > FYI: Every one of your emails to the list for this series was bounced=
+ by
+> > > all the recipients using @gmail.com email addresses.
+> > >
+> > >                 -ben (owner-linux-mm)
 > >
-> > The key topic Gary and I have been discussing is whether we should
-> > define Atomic<T> as:
-> >
-> > (my current implementation)
-> >
-> >     pub struct Atomic<T: AllowAtomic>(Opaque<T>);
-> >
-> > or
-> >
-> > (Gary's suggestion)
-> >
-> >     pub struct Atomic<T: AllowAtomic>(Opaque<T::Repr>);
-> >
-> > `T::Repr` is guaranteed to be the same size and alignment of `T`, and
-> > per our discussion, it makes sense to further require that `transmute<T,
-> > T::Repr>()` should also be safe (as the safety requirement of
-> > `AllowAtomic`), or we can say `T` bit validity can be preserved by
-> > `T::Repr`: a valid bit combination `T` can be transumated to `T::Repr`,
-> > and if transumated back, it's the same bit combination.
-> >
-> > Now as I pointed out, if we use `Opaque<T::Repr>`, then `.get_mut()`
-> > would be unsound for `Atomic<*mut T>`. And Gary's concern is that in
-> > the current implementation, we directly cast a `*mut T` (from
-> > `Opaque::get()`) into a `*mut T::Repr`, and pass it directly into C/asm
-> > atomic primitives. However, I think with the additional safety
-> > requirement above, this shouldn't be a problem: because the C/asm atomic
-> > primitives would just pass the address to an asm block, and that'll be
-> > out of Rust abstract machine, and as long as the C/primitives atomic
-> > primitives are implemented correctly, the bit representation of `T`
-> > remains valid after asm blocks.
-> >
-> > So I think the current implementation still works and is better.
-> 
-> I don't think there is a big difference between `Opaque<T>` and
-> `Opaque<T::Repr>` if we have the transmute equivalence between the two.
-> From a safety perspective, you don't gain or lose anything by using the
-> first over the second one. They both require the invariant that they are
-> valid (as `Opaque` removes that... we should really be using
-> `UnsafeCell` here instead... why aren't we doing that?).
-> 
+> > This is extremely annoying, I will need to figure out why this is
+> > happening. soleen.com uses google workspace.
+>
+> b4 also seems unhappy with your mail:
+>
+>   X [PATCH v1 1/32] kho: init new_physxa->phys_bits to fix lockdep
+>     X BADSIG: DKIM/soleen-com.20230601.gappssmtp.com
+>
+> Though I spent a few mins trying to guess why and came up empty. The
+> mail servers thought the DKIM was OK when they accepted it..
+>
+> ARC-Authentication-Results:i=3D1; smtp.subspace.kernel.org; dmarc=3Dpass =
+(p=3Dnone dis=3Dnone) header.from=3Dsoleen.com; spf=3Dpass smtp.mailfrom=3D=
+soleen.com; dkim=3Dpass (2048-bit key) header.d=3Dsoleen-com.20230601.gapps=
+smtp.com header.i=3D@soleen-com.20230601.gappssmtp.com header.b=3DVxWLPP8s;=
+ arc=3Dnone smtp.client-ip=3D209.85.219.177
+> Authentication-Results: smtp.subspace.kernel.org; dmarc=3Dpass (p=3Dnone =
+dis=3Dnone) header.from=3Dsoleen.com
+> Authentication-Results: smtp.subspace.kernel.org; spf=3Dpass smtp.mailfro=
+m=3Dsoleen.com
+> Authentication-Results: smtp.subspace.kernel.org;
+>         dkim=3Dpass (2048-bit key) header.d=3Dsoleen-com.20230601.gappssm=
+tp.com header.i=3D@soleen-com.20230601.gappssmtp.com header.b=3D"VxWLPP8s"
+> Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e8259b783=
+f6so264959276.3
+>         for <linux-doc@vger.kernel.org>; Wed, 25 Jun 2025 16:18:45 -0700 =
+(PDT)
 
-I need the `UnsafePinned`-like behavior of `Atomic<*mut T>` to support
-Rcu<T>, and I will replace it with `UnsafePinned`, once that's is
-available.
+Thank you Jason, I think I found the reason why this happened:
 
-Maybe that also means `UnsafePinned<T>` make more sense? Because if `T`
-is a pointer, it's easy to prove the provenance is there. (Note a
-`&Atomic<*mut T>` may come from a `*mut *mut T`, may be a field in C
-struct)
+While DMARC itself was enabled, the Quarantine/Reject policy was set to non=
+e.
 
-Regards,
-Boqun
+I will resend this series.
+
+Pasha
