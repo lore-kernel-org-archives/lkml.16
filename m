@@ -1,141 +1,111 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D082E3708;
-	Fri,  4 Jul 2025 18:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBC72D836B;
+	Fri,  4 Jul 2025 18:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653546; cv=none; b=Z8uIKsmNaQcwY7eNNuYOsHcyOEw68f6bI57Wd9trdKlHXTK/VMl4RNXQ9VdiawEBieYEw+jp5ndUpK8cqlNGRy7HiN9d9qybpUdMGfwprgAkF0FXEUcrHUHlB4FJplG7fIWRZujLwAF0FVZuE1zEMu912gXsLaIsQ3GgfmFdYv0=
+	t=1751653581; cv=none; b=BtU5jB2Jyy2aGL4eirfiNpEgDcP3OrubVje6RkhsKRi9Z+INZPxd65iPA1IwjZ8in6f/obWFmyK3hmmiFJtxcZBKIVgv+fQ9tnLxjtOml4ZEHiXlz/J9i+JzkWWy9mjqygqBc1jujEAw0Ja/cHPS6UNBiDCMBpgppb25EZb1xeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751653546; c=relaxed/simple;
-	bh=Tcc2cp1J3hJghNlu06wLU838crKTMjvUyVsC8F7P9uM=;
+	s=arc-20240116; t=1751653581; c=relaxed/simple;
+	bh=ipbT/QnTBUeVAy6M/JFK1jDQZRfz8BWcFfq/b7kFN+E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAvvJY9uHjeky5xt0UU8MUluv/KmY4vTFWycS5/Q3oDiC92D6YwcYK/kWsgYCtXyPQ3sudwYyhpcbI2GSesG0inAikmyw/oD51oXHPfhOhnJEMb7HiIK2JHfRsKFbsk3lBF0HdXVTCNU47eDVEsY/XO6ivZA6RG3YU9TXpjsML8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RpWj/QBW; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPqaNAooeEpNPPrCmowbo95egFzE/wdoCCC4Kc9O8kkws96kO44Q8Z8IRjN5J+H+1mJIsgBOO74qLOCcp4hmzd75aBlH0/Mvg9WBR8zfeb1zcI1VOwjIoBDH9lYDGa+pI3+PcEjgZ6jO2RX5UvzfPolMCes00ByE/1Uk0LwLNk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSK5omIH; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RpWj/QBW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=AhTPqugTJeHRSvrLtdRgJO1L1SfOKuOe2n2ufOgp31E=; b=RpWj/QBWWSvK3r8g/3Ln4y8Zy8
-	4j4dkrGrEAcgjj+nj908KhaEOrIo5gmYvCXa8Q6MMc9dNKFngrBeTfMMv7h3XpOGl0hLtBN9P+KRJ
-	tZl3naIM2dn6E/U2PSXcQ+IVUsg8ci5JpL9EhPyI6lLyHSRxQUf/dd3wXnwlc2tKgc2Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXl60-000HVr-2D; Fri, 04 Jul 2025 20:25:12 +0200
-Date: Fri, 4 Jul 2025 20:25:12 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dong Yibo <dong100@mucse.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/15] net: rnpgbe: Add get_capability mbx_fw ops support
-Message-ID: <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-5-dong100@mucse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSK5omIH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751653580; x=1783189580;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ipbT/QnTBUeVAy6M/JFK1jDQZRfz8BWcFfq/b7kFN+E=;
+  b=CSK5omIHyKmAfukwrDCXCNwXAMg50bh8JsV97qcS1S//HJ4PdK0xNUSr
+   8EKfMwYplOxHd7+hA7qc9XJ1vExpulsxC4MdFvRo+/hEeoSbuBV6N6O8/
+   pfAo4aU7rzqnZ83eZbXz0kWcWCoUjhU+jQbrQfmQUBgLWTgTU3IUrmDTv
+   Nzn4VjGmp1NXPd4TF9xx1CcaBv9fVwi0/muWx6b65h2ewYNTMp5NfL+nj
+   Wq3gcs87AMcr2TKQGpxqSAnva9ueY9K8EBSnidiafnRIuY8OEBAhCMfJJ
+   BNQ/2YVcVuLvyxMK2NCa/hq4ZrviAgDcSPM18EahNpcUkaVrRW4a095eX
+   g==;
+X-CSE-ConnectionGUID: lyCX2bnoR/up3AXsCa2rbQ==
+X-CSE-MsgGUID: m/0DRPT9SS+VWIu/JCjKiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="76536505"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="76536505"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:26:20 -0700
+X-CSE-ConnectionGUID: nkFlUfNPSamRutD/MNS/mg==
+X-CSE-MsgGUID: +pw7iWkBSmuuwv5dBLym0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
+   d="scan'208";a="154780787"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:26:17 -0700
+Date: Fri, 4 Jul 2025 21:26:14 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+Cc: simona@ffwll.ch, Krzysztof Karas <krzysztof.karas@intel.com>,
+	airlied@gmail.com,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>, kernel-dev@igalia.com
+Subject: Re: [PATCH v3 1/3] drm/doc: Fix title underline for "Task
+ information"
+Message-ID: <aGgcxuT7YQx4YC2Q@black.fi.intel.com>
+References: <20250627171715.438304-1-andrealmeid@igalia.com>
+ <52c32d1b-e5c4-4f6d-82a3-cf02c0cf4681@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250703014859.210110-5-dong100@mucse.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <52c32d1b-e5c4-4f6d-82a3-cf02c0cf4681@igalia.com>
 
-> +/**
-> + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
-> + * @hw: Pointer to the HW structure
-> + * @req: Pointer to the cmd req structure
-> + * @reply: Pointer to the fw reply structure
-> + *
-> + * mucse_fw_send_cmd_wait sends req to pf-cm3 mailbox and wait
-> + * reply from fw.
-> + *
-> + * Returns 0 on success, negative on failure
-> + **/
-> +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
-> +				  struct mbx_fw_cmd_req *req,
-> +				  struct mbx_fw_cmd_reply *reply)
-> +{
-> +	int err;
-> +	int retry_cnt = 3;
-> +
-> +	if (!hw || !req || !reply || !hw->mbx.ops.read_posted)
+On Fri, Jul 04, 2025 at 01:46:07PM -0300, André Almeida wrote:
+> Raag, gently ping for reviewing this series.
 
-Can this happen?
+Somehow this didn't land in my inbox and I have no idea why.
 
-If this is not supposed to happen, it is better the driver opps, so
-you get a stack trace and find where the driver is broken.
+Raag
 
-> +		return -EINVAL;
-> +
-> +	/* if pcie off, nothing todo */
-> +	if (pci_channel_offline(hw->pdev))
-> +		return -EIO;
-
-What can cause it to go offline? Is this to do with PCIe hotplug?
-
-> +
-> +	if (mutex_lock_interruptible(&hw->mbx.lock))
-> +		return -EAGAIN;
-
-mutex_lock_interruptable() returns -EINTR, which is what you should
-return, not -EAGAIN.
-
-> +
-> +	err = hw->mbx.ops.write_posted(hw, (u32 *)req,
-> +				       L_WD(req->datalen + MBX_REQ_HDR_LEN),
-> +				       MBX_FW);
-> +	if (err) {
-> +		mutex_unlock(&hw->mbx.lock);
-> +		return err;
-> +	}
-> +
-> +retry:
-> +	retry_cnt--;
-> +	if (retry_cnt < 0)
-> +		return -EIO;
-> +
-> +	err = hw->mbx.ops.read_posted(hw, (u32 *)reply,
-> +				      L_WD(sizeof(*reply)),
-> +				      MBX_FW);
-> +	if (err) {
-> +		mutex_unlock(&hw->mbx.lock);
-> +		return err;
-> +	}
-> +
-> +	if (reply->opcode != req->opcode)
-> +		goto retry;
-> +
-> +	mutex_unlock(&hw->mbx.lock);
-> +
-> +	if (reply->error_code)
-> +		return -reply->error_code;
-
-The mbox is using linux error codes? 
-
-> +#define FLAGS_DD BIT(0) /* driver clear 0, FW must set 1 */
-> +/* driver clear 0, FW must set only if it reporting an error */
-> +#define FLAGS_ERR BIT(2)
-> +
-> +/* req is little endian. bigendian should be conserened */
-> +struct mbx_fw_cmd_req {
-> +	u16 flags; /* 0-1 */
-> +	u16 opcode; /* 2-3 enum GENERIC_CMD */
-> +	u16 datalen; /* 4-5 */
-> +	u16 ret_value; /* 6-7 */
-
-If this is little endian, please use __le16, __le32 etc, so that the
-static analysers will tell you if you are missing cpu_to_le32 etc.
-
-	Andrew
+> Em 27/06/2025 14:17, André Almeida escreveu:
+> > Fix the following warning:
+> > 
+> > Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
+> > 
+> > Task information
+> > --------------- [docutils]
+> > 
+> > Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> > ---
+> > v2: Add Reported-by tag
+> > ---
+> >   Documentation/gpu/drm-uapi.rst | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> > index 263e5a97c080..10dea6a1f097 100644
+> > --- a/Documentation/gpu/drm-uapi.rst
+> > +++ b/Documentation/gpu/drm-uapi.rst
+> > @@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
+> >   complete wedging.
+> >   Task information
+> > ----------------
+> > +----------------
+> >   The information about which application (if any) was involved in the device
+> >   wedging is useful for userspace if they want to notify the user about what
+> > @@ -728,4 +728,4 @@ Stable uAPI events
+> >   From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
+> >   .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> > -   :doc: uAPI trace events
+> > \ No newline at end of file
+> > +   :doc: uAPI trace events
+> 
