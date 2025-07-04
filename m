@@ -1,167 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F166262A6;
-	Fri,  4 Jul 2025 22:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22EB2E370D;
+	Fri,  4 Jul 2025 23:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751669356; cv=none; b=hnvxaf9roeAAyMBuef3tkK0xDmGR4eUIhO0IFQkHwQ31mg+2gVEKzZKJqWYQVL89fEZX1/rTCIyO4v8px5yPpp/i4SfyEg/nLoiFRvedbW5YQ68ROPEtxsZSHJr/SAniZGgeV5Lk7xjZTzIIOA0YBmiS+oGZyIR6uTWuHo1BQ5I=
+	t=1751670234; cv=none; b=kdosMOS2WA3PAa5ACIdzjy+961r5rcC9yPXGRh1lsWJg/mJfMngE+uBQxyIJdzBu1f912502GM6OsxeeYZf3bzKlbb/rq4ExGr55i6YtnQF2VXssq35Eatkdthrb8/Rf1Vdd1kk+B4qBgKz6Hszb17CWrlfTo2Qp5C4FY5jwBF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751669356; c=relaxed/simple;
-	bh=kPlkbtpdeAKller+eP0lsjwYSwOWFj+yVROQguMI7CE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=EyVcAEccMImSD4N9TDLisNf9TL9j5BF1Y0JSIL7nNu5wffKZxTd6GsSzphtj9wCyf6qEHXCx8us0sa1QMzi25FIeAImBPpmvacLR1gXElUE3pP1KDijuzywYOIHTFFIRnPaTyg7tzu2YPEFaZNXaFZPaZApfXrofff6hvGQXPqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxT62+UR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751670234; c=relaxed/simple;
+	bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spwme5wgoS9wdHEl4gsmZEWNZQX1forMqLkTxrGxrK8pEuCvxnPv1+m3SfF8d0ZrN+otBkjDG5sZVNP2SP9w0pTK567+8oTxHMhSXis5z0iHyuVGUAhElDrYAvrwQxFtZAP/+pCbexlYKnaDAlGWK7Lsu+f0zFdKb9/GNi6B7ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4PKWz+E; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxT62+UR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90003C4CEE3;
-	Fri,  4 Jul 2025 22:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751669356;
-	bh=kPlkbtpdeAKller+eP0lsjwYSwOWFj+yVROQguMI7CE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=sxT62+URuBu+b9goE6vgNpl5nAvrr1+Uo3a2wsMD0m+Hog64hPwdIWrUVYyIQxu7S
-	 oaLD6LQnjBwYJl6gleWn9YWrbSGPZrp3XVE3NVhBLWG0Xnn8P3K/R67aiEsKXo4TyZ
-	 /sbbQa7ptoEzlNUrWwui1OoJHV48AIBI4mQQ4Oy8EgnT28qjYHuQCeHMo4IB0HDQRX
-	 Iz3kHTGX0wzzo03sBLFRHb3DWg4FDgjDZMB56He+HipkrtG7kFcUMCN6EThit5KNSl
-	 U7TZuM7bPa13yNfIFVJR9rxlU81hmQqiJuyKq7xISZKHZmPJTrdzwXSf+mphtuK+DO
-	 1GoOmhYl5A57A==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4PKWz+E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751670233; x=1783206233;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
+  b=T4PKWz+EDUi0IuMRP2xyYBBETuMVx9hzneq1MDdB4JHgRSGpMe4BjppB
+   KENrbJpaSx/i0/tw7e2aAi6g5E1Gu/6UIHM6O3vld5jreUPHDve7TByE4
+   s9QkntsnHN/7S/w0lbo0Btzw07WCwopAPjmWK3DFUkpfqBKN54rNy7mW2
+   oOwQ+a/BcDcHsJJRlF+yqGTxyui1/wL+JhLayrcoPjbddJQdROXEBFWoi
+   JFgOCm3EMFv7jpzAksNk3+Js6szSzcJb+llOKHIFPTO69bsIfH5FNz4Go
+   Zi3zWktoFatKYFLXTC0XawqvfHwcDwTMqI4vYfTzQFPt8gIZqHJN018In
+   A==;
+X-CSE-ConnectionGUID: UQfMXCD4RiOpA0seCyhq7Q==
+X-CSE-MsgGUID: L+SDInEMSTmlfDfbT8z63w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="64594852"
+X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
+   d="scan'208";a="64594852"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 16:03:52 -0700
+X-CSE-ConnectionGUID: xMI2KgH0Sz2GeaKQyHZoww==
+X-CSE-MsgGUID: 2NIQhblOT4uFkdMli7zH3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
+   d="scan'208";a="185684170"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 04 Jul 2025 16:03:49 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXpRb-00047v-2r;
+	Fri, 04 Jul 2025 23:03:47 +0000
+Date: Sat, 5 Jul 2025 07:02:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Subject: Re: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <202507050624.7hvmxJdI-lkp@intel.com>
+References: <20250704072807.9335-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 05 Jul 2025 00:49:09 +0200
-Message-Id: <DB3MYM27XOVT.2TNXQP9K1KK9I@kernel.org>
-Cc: "Gary Guo" <gary@garyguo.net>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
- <linux-arch@vger.kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Will Deacon" <will@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude Paul" <lyude@redhat.com>,
- "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
- <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
-Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250618164934.19817-5-boqun.feng@gmail.com>
- <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
- <20250623193019.6c425467.gary@garyguo.net> <aFmmYSAyvxotYfo7@tardis.local>
- <DAUAW2Y0HYLY.3CDC9ZW0BUKI4@kernel.org> <aFrTyXcFVOjWa2o-@Mac.home>
- <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org> <aGhGDJvUf7zFCmQt@Mac.home>
- <DB3M1FEMKVLN.1BDAD6WHDR7HG@kernel.org> <aGhWBp3IhfJDhPOs@Mac.home>
-In-Reply-To: <aGhWBp3IhfJDhPOs@Mac.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704072807.9335-1-ansuelsmth@gmail.com>
 
-On Sat Jul 5, 2025 at 12:30 AM CEST, Boqun Feng wrote:
-> On Sat, Jul 05, 2025 at 12:05:48AM +0200, Benno Lossin wrote:
-> [..]
->> >>=20
->> >> I don't think there is a big difference between=C2=A0`Opaque<T>`=C2=
-=A0and
->> >> `Opaque<T::Repr>`=C2=A0if we have the transmute equivalence between t=
-he two.
->> >> From a safety perspective, you don't gain or lose anything by using t=
-he
->> >> first over the second one. They both require the invariant that they =
-are
->> >> valid (as=C2=A0`Opaque`=C2=A0removes that... we should really be usin=
-g
->> >> `UnsafeCell`=C2=A0here instead... why aren't we doing that?).
->> >>=20
->> >
->> > I need the `UnsafePinned`-like behavior of `Atomic<*mut T>` to support
->> > Rcu<T>, and I will replace it with `UnsafePinned`, once that's is
->> > available.
->>=20
->> Can you expand on this? What do you mean by "`UnsafePinned`-like
->> behavior"? And what does `Rcu<T>` have to do with atomics?
->>=20
->
-> `Rcu<T>` is an RCU protected (atomic) pointer, the its definition is
->
->     pub struct Rcu<T>(Atomic<*mut T>);
->
-> I need Pin<&mut Rcu<T>> and &Rcu<T> able to co-exist: an updater will
-> have the access to Pin<&mut Rcu<T>>, and all the readers will have the
-> access to &Rcu<T>, for that I need `Atomic<*mut T>` to be
-> `UnsafePinned`, because `Pin<&mut Rcu<T>>` cannot imply noalias.
+Hi Christian,
 
-Then `Rcu` should be
-   =20
-    pub struct Rcu<T>(UnsafePinned<Atomic<*mut T>>);
+kernel test robot noticed the following build warnings:
 
-And `Atomic` shouldn't wrap `UnsafePinned<T>`. Because that prevents
-`&mut Atomic<i32>` to be tagged with `noalias` and that should be fine.
-You should only pay for what you need :)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->> > Maybe that also means `UnsafePinned<T>` make more sense? Because if `T=
-`
->> > is a pointer, it's easy to prove the provenance is there. (Note a
->> > `&Atomic<*mut T>` may come from a `*mut *mut T`, may be a field in C
->> > struct)
->>=20
->> Also don't understand this.
->>=20
->
-> One of the usage of the atomic is being able to communicate with C side,
-> for example, if we have a struct foo:
->
->     struct foo {
->         struct bar *b;
->     }
->
-> and writer can do this at C side:
->
->    struct foo *f =3D ...;
->    struct bar *b =3D kcalloc(*b, ...);
->
->    // init b;
->
->    smp_store_release(&f->b, b);
->
-> and a reader at Rust side can do:
->
->     #[repr(transparent)]
->     struct Bar(binding::bar);
->     struct Foo(Opaque<bindings::foo>);
->
->     fn get_bar(foo: &Foo) {
->         let foo_ptr =3D foo.0.get();
->
->         let b: *mut *mut Bar =3D unsafe { &raw mut (*foo_ptr).b }.cast();
->         // SAFETY: C side accessing this pointer with atomics.
->         let b =3D unsafe { Atomic::<*mut Bar>::from_ptr(b) };
->
->         // Acquire pairs with the Release from C side;
->         let bar_ptr =3D b.load(Acquire);
->
->         // accessing bar.
->     }
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250704-153259
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250704072807.9335-1-ansuelsmth%40gmail.com
+patch subject: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/reproduce)
 
-This is a nice example, might be a good idea to put this on
-`Atomic::from_ptr`.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507050624.7hvmxJdI-lkp@intel.com/
 
-> This is the case we must support if we want to write any non-trivial
-> synchronization code communicate with C side.
->
-> And in this case, it's generally easier to reason why we can convert a
-> *mut *mut Bar to &UnsafePinned<*mut Bar>.
+All warnings (new ones prefixed by >>):
 
-What does that have to do with `UnsafePinned`? `UnsafeCell` should
-suffice.
+   In file included from ./arch/openrisc/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:7,
+                    from arch/openrisc/include/asm/pgalloc.h:20,
+                    from arch/openrisc/include/asm/io.h:18,
+                    from include/linux/io.h:12,
+                    from drivers/pwm/pwm-airoha.c:20:
+   drivers/pwm/pwm-airoha.c: In function 'airoha_pwm_apply_bucket_config':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from drivers/pwm/pwm-airoha.c:16:
+>> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+>> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
 
-Also where does the provenance interact with `UnsafePinned`?
 
----
-Cheers,
-Benno
+vim +195 include/asm-generic/div64.h
+
+^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02 @195  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  199  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
