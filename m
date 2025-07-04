@@ -1,260 +1,126 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ACF2D97BE;
-	Fri,  4 Jul 2025 07:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900422DCF55;
+	Fri,  4 Jul 2025 07:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615672; cv=none; b=Ri6QsMSl27fSCdKcM0p64LBIPAV4868dHk3639jg4oyJSZc/3vBwZOIz2XudlVn2xZIIHMuP4eN3irj1OnMF0Aunp5AvX/Uqq+jo74Lixgh8LEpIdFl/v13SDUHXrYaRjmx3tj394QIAkGx+17E1Sfk8QE+zsiRPcL8RVzq3Byo=
+	t=1751615673; cv=none; b=XgzX9OoM//BTMqryK0njfU7jdRZHBupU5I+0cr+Pc4ITnq7+biFeAr0gbGxlIFZu/fItInK994nomPPbF2zrhK0DpHawHZd6WP4da4KkqKbgKyUR3/m2NVsivtbrkChkYk3r6euwRBy8Iyr3J2QXcePBx6UtXWgh76F+y4+WoP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615672; c=relaxed/simple;
-	bh=s5EcbUknkQfTe70BqoXoFc1adqDtlQbwQUL/1RUlW2k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aSRvKxQ20/FGRckHwA0c8pTiTJ8pkF15z7ysxedZ6u8vKJHA/bDRQdryvLXC9NGbEZycZfFBKQ+/e3ShSD6nbx23qbyIxR+mfGiotB5+DtaR+fNZGOTj+kSNiblUhikDnvcuES9t6QyCPZ+IBUbONl5QzbRCOY5chXgvrACcLTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=icgw9/5y; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751615673; c=relaxed/simple;
+	bh=5p7gOND5S78G6c8QwUB05hpS5qSqTn8+V/uQ6I3tCTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c1Kz1x//uIXl/28XeI3lBrMDGxi8jHqPqn3XJPVWhFp6z5QUsdeE576sOoTjGcUDo28xbMwTExF7j077Pq8woubEj8IKYRnnrquKYMM5c0kfrU3riWnz3NWQ4mnKykDTffuZBFRE9FmSJ1LHY1PuBzjK1vfWeLx2QM8zac1gD4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liuKYEfY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="icgw9/5y"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 563IctQO029572;
-	Fri, 4 Jul 2025 07:54:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bUAvhVvnBbbYgy9q0mHdzebSgGWDOX2R719IRsy1Ogc=; b=icgw9/5ybqA7/ei2
-	FqITrI+8NDGHrGpZhfRVuLDtXjgSUWdTsB6Yyz7EOZknQQOTvw4Lfe9llRt6Du9y
-	UigmBh/XOZ95Mnm0EJt57TtDTX/TDZvn2JSHJfHBGSJ7lBtHcldQYfso8PziNr3E
-	mZs+PafU4WMrLqjzEvpqnFpu/18JMQM2VzbXsYjQWP4Qwy3Fh9x6oUy3KFFxs3BF
-	nobkCSlEoGgUzbTeP3zxgVD5O6OpEX92eR/OsUdTpP3N0SYeCCCzrz5D3L7gIkSr
-	5AhBdjE6b9HqMLRd5H9yjS5zBgKwSirRutgmH5nItFv9fjhf2wA5gwOM7qLniSQZ
-	gxZ/1Q==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47nh9s4bv9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Jul 2025 07:54:24 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5647sO23002082
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Jul 2025 07:54:24 GMT
-Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 4 Jul 2025 00:54:20 -0700
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 4 Jul 2025 13:23:18 +0530
-Subject: [PATCH 18/25] media: iris: Add support for G/S_SELECTION for
- encoder video device
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liuKYEfY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51210C4CEE3;
+	Fri,  4 Jul 2025 07:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751615673;
+	bh=5p7gOND5S78G6c8QwUB05hpS5qSqTn8+V/uQ6I3tCTk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=liuKYEfYk33H3iySy8AibMWijxSIkotOWfcfrcw5YyZGUaSLZgf9bfYCW5W40+5nx
+	 Jb1tiRwm7vt/FF3L8AQYkLoHyZ3b9ImOJEZWJCh9iVLJB/Tmn+78WHNvYOCRigrSP0
+	 5r4ruhr/aeAxBIsd21ZFYpXsZL7cHxnaGbky9Z8GA2rrouvCoNeoeDx+rjTSVfoXDA
+	 ThAQhAcNM5ZAGq4qIEHTbDeWpnOzI66L3XLHDmsJnGflM6CmFjYeZ2dQXr/+y9csct
+	 B2r0BkgupWvBNMtnX3t0qPMaap/lfUXVufxG/vlG5EOtwHFy4VuKHcg3794xre3i0I
+	 vBnDaRp+75VAA==
+Message-ID: <3551dba1-0c5f-4000-8b95-6a04cd81a027@kernel.org>
+Date: Fri, 4 Jul 2025 09:54:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Enable CTCU device for QCS8300
+To: Jie Gan <quic_jiegan@quicinc.com>, Jie Gan <jie.gan@oss.qualcomm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250624095905.7609-1-jie.gan@oss.qualcomm.com>
+ <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250704-iris-video-encoder-v1-18-b6ce24e273cf@quicinc.com>
-References: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-In-Reply-To: <20250704-iris-video-encoder-v1-0-b6ce24e273cf@quicinc.com>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        "Vedang
- Nagar" <quic_vnagar@quicinc.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751615599; l=5403;
- i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=s5EcbUknkQfTe70BqoXoFc1adqDtlQbwQUL/1RUlW2k=;
- b=pPLUCcxCPz40tNk/Zu5WqNQqH0IAc4ky00+3VnoEFnyf9Wwe2bBYbjMIrLXs1Zd1rXjzSQyHq
- vMaaScwzBmuCtumpXJz+205T6wM+cDNnKAGINLgPMfXVMKGZ5MVQ3OP
-X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
- pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=frrcZE4f c=1 sm=1 tr=0 ts=686788b0 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=HMXTeDd-yh4hRLGjqV0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MCBTYWx0ZWRfX0wbFOIm2ygyv
- vQKv1PsELq/Ma4Ss5K8K5w2cPwthIr4ECqTznfHPcK/ZIhC7FPEKx34IUKLplomXvZy2Z9mw1JA
- ELWPK6zsCKlNbvSgK4Vg1MvKnSvNww9FrwCIhoD2PbaYli3r8qMBtJCaeb27aQt+WJmt6LvtaQG
- q0/hXKiFLlUpowy2y5hUADvuxLBjS78vE08HI3jvUyClUTmTFlAjUsotZw8K7aBZOY4O9KSlaDn
- lArN6IeDTvuMo+0NeI/moDXJgIYWIotuuWFEUOYqSIw6fSzdExysQXiHqB7IAkBf1vpy8xjdA6P
- qkX5qoAt1Lo7bEOPRRcXfvIXXJAkSAOP/ndAPIAEQW5Ss32p5xxlEjPL5UlwL33GYO7SzKGEeek
- 55XyIvnpNV2kwQolj+6q2UO4fVchQOa7EU2nfdxg41QCoS0utC+I6ZPdvtqHniO2+nrcf8om
-X-Proofpoint-GUID: pOqOPl39xmFrlXKIve8JuIZfMvkzq0yb
-X-Proofpoint-ORIG-GUID: pOqOPl39xmFrlXKIve8JuIZfMvkzq0yb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040060
 
-Add support for G/S_SELECTION V4L2 ioctls for the encoder video
-device with necessary hooks. This allows userspace to query and
-configure rectangular selection areas such as crop.
+On 25/06/2025 02:59, Jie Gan wrote:
+> 
+> 
+> On 6/24/2025 5:59 PM, Jie Gan wrote:
+>> Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
+>> the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
+>> configurations as SA8775p platform.
+> 
+> Hi dear maintainers,
+> 
+> I just realized it would be more efficient to introduce a common 
+> compatible string for SoCs that include two TMC ETR devices.
+> 
+> Most of these SoCs share the same CTCU data configuration, such as the 
 
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
----
- drivers/media/platform/qcom/iris/iris_venc.c | 28 ++++++++++++
- drivers/media/platform/qcom/iris/iris_venc.h |  1 +
- drivers/media/platform/qcom/iris/iris_vidc.c | 65 ++++++++++++++++++++++------
- 3 files changed, 80 insertions(+), 14 deletions(-)
+"Most" basically disqualifies your idea.
 
-diff --git a/drivers/media/platform/qcom/iris/iris_venc.c b/drivers/media/platform/qcom/iris/iris_venc.c
-index 3dbcce23cbe94cf0edc4421694a3ba11faa5eb96..930f5afe9489d01be193f1dbe429d33f5401b468 100644
---- a/drivers/media/platform/qcom/iris/iris_venc.c
-+++ b/drivers/media/platform/qcom/iris/iris_venc.c
-@@ -297,3 +297,31 @@ int iris_venc_subscribe_event(struct iris_inst *inst,
- 		return -EINVAL;
- 	}
- }
-+
-+int iris_venc_s_selection(struct iris_inst *inst, struct v4l2_selection *s)
-+{
-+	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
-+		return -EINVAL;
-+
-+	switch (s->target) {
-+	case V4L2_SEL_TGT_CROP:
-+		s->r.left = 0;
-+		s->r.top = 0;
-+
-+		if (s->r.width > inst->fmt_src->fmt.pix_mp.width ||
-+		    s->r.height > inst->fmt_src->fmt.pix_mp.height)
-+			return -EINVAL;
-+
-+		inst->crop.left = s->r.left;
-+		inst->crop.top = s->r.top;
-+		inst->crop.width = s->r.width;
-+		inst->crop.height = s->r.height;
-+		inst->fmt_dst->fmt.pix_mp.width = inst->crop.width;
-+		inst->fmt_dst->fmt.pix_mp.height = inst->crop.height;
-+		return iris_venc_s_fmt_output(inst, inst->fmt_dst);
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/media/platform/qcom/iris/iris_venc.h b/drivers/media/platform/qcom/iris/iris_venc.h
-index 2d9614ae18e8a2318df6673fbeae5ee33c99b596..72c6e25d87113baa6d2219ae478b7d7df1aed7bf 100644
---- a/drivers/media/platform/qcom/iris/iris_venc.h
-+++ b/drivers/media/platform/qcom/iris/iris_venc.h
-@@ -15,5 +15,6 @@ int iris_venc_try_fmt(struct iris_inst *inst, struct v4l2_format *f);
- int iris_venc_s_fmt(struct iris_inst *inst, struct v4l2_format *f);
- int iris_venc_validate_format(struct iris_inst *inst, u32 pixelformat);
- int iris_venc_subscribe_event(struct iris_inst *inst, const struct v4l2_event_subscription *sub);
-+int iris_venc_s_selection(struct iris_inst *inst, struct v4l2_selection *s);
- 
- #endif
-diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
-index d8c94074153e9b1ceac4f911210ddbf89bbe3533..2074682a35fd1c4c9f5d29fdaee3392d98bf8923 100644
---- a/drivers/media/platform/qcom/iris/iris_vidc.c
-+++ b/drivers/media/platform/qcom/iris/iris_vidc.c
-@@ -462,29 +462,64 @@ static int iris_g_selection(struct file *filp, void *fh, struct v4l2_selection *
- {
- 	struct iris_inst *inst = iris_get_inst(filp, NULL);
- 
--	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE &&
-+	    inst->domain == DECODER)
- 		return -EINVAL;
- 
--	switch (s->target) {
--	case V4L2_SEL_TGT_CROP_BOUNDS:
--	case V4L2_SEL_TGT_CROP_DEFAULT:
--	case V4L2_SEL_TGT_CROP:
--	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
--	case V4L2_SEL_TGT_COMPOSE_PADDED:
--	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
--	case V4L2_SEL_TGT_COMPOSE:
-+	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT &&
-+	    inst->domain == ENCODER)
-+		return -EINVAL;
-+
-+	if (inst->domain == DECODER) {
-+		switch (s->target) {
-+		case V4L2_SEL_TGT_CROP_BOUNDS:
-+		case V4L2_SEL_TGT_CROP_DEFAULT:
-+		case V4L2_SEL_TGT_CROP:
-+		case V4L2_SEL_TGT_COMPOSE_BOUNDS:
-+		case V4L2_SEL_TGT_COMPOSE_PADDED:
-+		case V4L2_SEL_TGT_COMPOSE_DEFAULT:
-+		case V4L2_SEL_TGT_COMPOSE:
-+			s->r.left = inst->crop.left;
-+			s->r.top = inst->crop.top;
-+			s->r.width = inst->crop.width;
-+			s->r.height = inst->crop.height;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	} else if (inst->domain == ENCODER) {
-+		switch (s->target) {
-+		case V4L2_SEL_TGT_CROP_BOUNDS:
-+		case V4L2_SEL_TGT_CROP_DEFAULT:
-+			s->r.width = inst->fmt_src->fmt.pix_mp.width;
-+			s->r.height = inst->fmt_src->fmt.pix_mp.height;
-+			break;
-+		case V4L2_SEL_TGT_CROP:
-+			s->r.width = inst->crop.width;
-+			s->r.height = inst->crop.height;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
- 		s->r.left = inst->crop.left;
- 		s->r.top = inst->crop.top;
--		s->r.width = inst->crop.width;
--		s->r.height = inst->crop.height;
--		break;
--	default:
--		return -EINVAL;
- 	}
- 
- 	return 0;
- }
- 
-+static int iris_s_selection(struct file *filp, void *fh, struct v4l2_selection *s)
-+{
-+	struct iris_inst *inst = iris_get_inst(filp, NULL);
-+
-+	if (inst->domain == DECODER)
-+		return -EINVAL;
-+	else if (inst->domain == ENCODER)
-+		return iris_venc_s_selection(inst, s);
-+
-+	return -EINVAL;
-+}
-+
- static int iris_subscribe_event(struct v4l2_fh *fh, const struct v4l2_event_subscription *sub)
- {
- 	struct iris_inst *inst = container_of(fh, struct iris_inst, fh);
-@@ -591,6 +626,8 @@ static const struct v4l2_ioctl_ops iris_v4l2_ioctl_ops_enc = {
- 	.vidioc_querycap                = iris_querycap,
- 	.vidioc_subscribe_event         = iris_subscribe_event,
- 	.vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
-+	.vidioc_g_selection             = iris_g_selection,
-+	.vidioc_s_selection             = iris_s_selection,
- };
- 
- void iris_init_ops(struct iris_core *core)
+> offsets for the ATID and IRQ registers, because they integrate the same 
+> version of the CTCU hardware.
+> 
+> So I propose introducing a common compatible string, 
+> "coresight-ctcu-v2", to simplify the device tree configuration for these 
+> platforms.
 
--- 
-2.34.1
+This is explained in writing bindings.
 
+Best regards,
+Krzysztof
