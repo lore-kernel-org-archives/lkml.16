@@ -1,140 +1,229 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213BE28C2DE
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6B928C2DE
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633482; cv=none; b=RVCDNfDBFwkK3Ntne5/J4R0z0A7K7QM00PAE8hqhCPgRZI04l95WWIQHY/vRlOnFxM2PTPNCdAgYHa2+ynMrYcHatQN+1Tz+6AU/oTnkD9DM8tWecKRI1c+Cxyu0IZuc9j1Rse3QMxxRAessQPa30MEbM34hyUsMZDLLk8KZ5Dc=
+	t=1751633491; cv=none; b=YUnj6l0sA81HhG1ZKEZNm9LnNtv2LjgCac9tq5DAQlmq2BsKFwkw2muBA5mIy6t8VNruHd9Bf8FDQ/0znwCd4Nivr4SMUrGgE78JAUR6KlGFgFkJDsc3x7lGdtIIxZWOe/oZNCCs31nWvCHrjp31y0yrkUte5Nz1Z/HPsSr40Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633482; c=relaxed/simple;
-	bh=C2JsrBQDM/2Gtp6cf9tRIQqCka5uiTWycN0lUlxENJM=;
+	s=arc-20240116; t=1751633491; c=relaxed/simple;
+	bh=y/kbYTbXwrVINRik7S+tkYYYL4C0iQ3Fnbn38ah7j78=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A/sqcDaCQS9FBYs9EIoxsOawayEZFvfygBRC1+1Wr50yRn1QmexTU+wctgNCZaRGZ/LMaKpV1y4IeRUc0BFHlcPI/8xb5PNXJcEsPlPAvJxH4sAN7rUWPAyTdmaMDhxvzAarorYLmtVMg/deHD8qmpNtXtZSdF6PrKfXnPvedxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tU1Jf52l; arc=none smtp.client-ip=209.85.128.173
+	 To:Cc:Content-Type; b=ogo7wwJ+LHe/1LTussBZ+06hYVS7F26Dd2fIGhHJOJILG9c3KQUjvBamF9HLP5d/pFNOU4gvOtTcnkOiaem3XGWfVGtQU292/laxRHR4hwsvyzDumHgUpKVDLt0wYsUzO3+UP16owda/Oa+Os+4w1IzR44bmAU6zdV/Whc8Ruqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BOBHUPHo; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tU1Jf52l"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70e302191a3so7726127b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:51:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BOBHUPHo"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b31d578e774so1748368a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751633479; x=1752238279; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=d3mT2DmA5wvH27UV5xYoCQ2K7QXKbZIhjduzRwCTti4=;
-        b=tU1Jf52lIdIiyQZlxygQYGBot1AgszSIA4plyR9/54fxmuvF+Ya0CQO4ZrtRQFcf7i
-         7Gn1RUPWQ/Br/eSep+9qA5BR9pEBAToFD4UOZlqe9pTM7BrPW9ZBn0j78u6vXEJBfJ/v
-         DIyQq/3LClRepcjbql+fQ3MvLox+oqf3T048Nm+ctLfoHVEjFtit3bQd6wqeVcvRDg8/
-         F0zUk/vxpt5f0MO+twiu3x10jLvLV3QETfKoc10E2rkc8Imwlh5M5leuXF8jatF3KHG+
-         ykdYQEpnofnlQKTy1VO59XjR5UaKgkM1Fy22RqYUBgHGD3p3BKnfRZUSEEZjYPkLXgKr
-         okvQ==
+        d=linaro.org; s=google; t=1751633489; x=1752238289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WzewkNlMN96GiZVrIk9GUqEzXm0VfOX3d4MoVRPtoWg=;
+        b=BOBHUPHohcOmwqD3lpL91IFHXZq9BRR6/A7AwFtIBuJFkHnK9AFZxWwvG/6FVNOW6g
+         JD1aUrwBZmJpXralxYdmH211XNqQSvKHPc0bIhawO6PUWfJYVR52X/c5kiNHMu2ktoCo
+         xtnr3h/Rx4Uuj1sQzsuK9h35rtH/hD82eDRuORadtLOvXV1HrE2kP5JXxvCM8lbG5h8V
+         FNTyVQjNexFjFVpPfYNmTLQxTKZR5GbEhLXc+a3nQVNVDg7D5Qa9kwdqHUHP4ysgjCWC
+         xYv5x8XG2oMtNLKU1BJxHJCYgN0nx3RHGywcZ6tf4Tpa45e4cXv1UgQpLtBUiHlNUhBR
+         SffQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633479; x=1752238279;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d3mT2DmA5wvH27UV5xYoCQ2K7QXKbZIhjduzRwCTti4=;
-        b=R35X8o1QoZxqQTBiyVCJ8jiAkzKpa/n/Jg3yO1mabm+iAkDy1pWplaue5uzrIBFY7E
-         H8dEJ35kPNY4RtVbDpMuUlvsyQ4jql9dR5Oj/2E5YyDgnYNHYX0+ayzueuktfrd62TNp
-         GZUa1JS9rX/0Ti4dvzPITACx1uGmQpId6r9KCGMy6z+qs/RfmCjAla7sKCKN5WcJPpXr
-         VKmi8iBDJGheF+lMF8f3ETTHkKQbzvuvMJSpxax7HswYYIL3ImTBup/pHlg+Nqm1RbC+
-         2zK9jvKm+Y2uQP/2Qq15irQoBwyAcQjTToZ3DV7CrBHiT/fv4rHdVNpx4TsiVdxhc14Y
-         Dhsw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2fv+fgx2Lq3+w8TuVVECQfnm3/LcvVfL53RXX9MPbUjjRQPL1HvBe7shXG5JeWBMpK/txuIw3JBtn6S0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5D+VplHktHZAmIqtiF9YVEpXD5DDtPZn9603eBHZEZaXG3kHf
-	YyX16JHYgwycidmQ+aMnKEp5A3/J/7pZrtfIdNDj8ll4yIkrQX94cSLS48Jwg4g/tvfJGXe0Gyk
-	P4p/dYLOyNHdqw5OhMudH8EMHEDMhUmYwshxOT/2HBg==
-X-Gm-Gg: ASbGncsP1bxll6VPzigZo5l+kUu9WXVBUnLkHfk9yVvP0IPA4SwjpVVJcuFSZi05HkN
-	mAw3+vhk9nKl7Dkeptwud5Ll63Cyd4MOj1iYurlaTV3e8XsfXYl317p//n1NT5O91PniTtQnoWV
-	0P0Nmwt5KJmRzIZoF2X21FedFpAhxKD6TlVhr9K9nlLUDrSoc5COfo4y4=
-X-Google-Smtp-Source: AGHT+IFQbNFkv/fEySTEVZ9okBV5QTRp6+fp/hf67AUdITWKjdmWSEHBFqPIy5Jt+n5Rq/hwT5RWEGJi9jyWEkvpPkQ=
-X-Received: by 2002:a05:690c:fd1:b0:711:16d4:60dd with SMTP id
- 00721157ae682-71668cf2028mr34131887b3.19.1751633479103; Fri, 04 Jul 2025
- 05:51:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751633489; x=1752238289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WzewkNlMN96GiZVrIk9GUqEzXm0VfOX3d4MoVRPtoWg=;
+        b=U9HmMya0wZfaCyEZV/46Sfo/GgC2vrc8atBgkbqgJKyR2pJ2udGb0zGVXtzL075wPC
+         PWHv9k6AOEXnCMlAyDzjgnCFY5T6E2lAxgz2FxbUEvnEglK6IBCXZmwbz8spKLrjIA+a
+         JdEv/Teoyy2XfgrXeClcWqk7kn0Wn99/1fk3d8AmTQ6tGfIG4BmhPabUbniLdSJo5OWO
+         fD2XZ7P7VBJSB1E0hbbP82uFbDiJhgNKJ0dqkX30+vj356a2GY7ca6ngk6zDZQ6eId24
+         VM9iZaCrj1zxAYZTHSJj6GoR1Vqpy/aI3Kfq3XtVzb+AYTmfGrR6PpmPqQpQ34HfZRLq
+         N3OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVInQ5oLob5hOMN7by0A5slaOLF5+r/XAhhEtL1OV17ldKLct/Wi5S+TAJESow/HicWIpXPbkRoACJ+HMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3SmdpKENgNXdHeQu3CS1nCdfuhifaq70B/JlfF0+qm2exbH3y
+	tGU/eWrn7YoPGBeu+xfAJUWE4wC+cgAmN1pBnrGhTqovB3tg5cnmSIvjqQztOJn80PqaB2zKhtF
+	U06BdgL8EZ4/BbKte1FHl6i7U7lWjQv642YJ1a8DSCQ==
+X-Gm-Gg: ASbGncucabMx0HlI6LmaGvS0oqMpCrcAFFXOaRahHJrAQolNTz0zBXcteI/M1pWbIO3
+	2agatXwo6WBxCk0zfMGK6VrNix6Q6R69K0kqUabT9j2jLh3NiqhB/LcQuHmVeXArkaQ/39J3uKu
+	U+z0nvxNen0KWNa17hVOGCWEtR9VQFgFgAU1ee0oOIFufk0t5j+M1p0JXZ2i+6DIz3DavCZlD+L
+	MAM
+X-Google-Smtp-Source: AGHT+IE+dot2yMfM7G74tn6pBGrGMaT/wjPZVf/oo+P5hOer7D8qLs0cW1oLs4J2BeGO40uaVcVvqD1O9Z/H7hvNNJA=
+X-Received: by 2002:a17:90b:3a05:b0:311:b5ac:6f7d with SMTP id
+ 98e67ed59e1d1-31aab854e04mr3898911a91.6.1751633489174; Fri, 04 Jul 2025
+ 05:51:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616102917.1677116-1-o.rempel@pengutronix.de> <20250616102917.1677116-3-o.rempel@pengutronix.de>
-In-Reply-To: <20250616102917.1677116-3-o.rempel@pengutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 4 Jul 2025 14:50:43 +0200
-X-Gm-Features: Ac12FXycOTDU5DpoFxOAxmXzvceBnNCsToAY-3pMEV-YnqafCa0Kdog2wWrND_M
-Message-ID: <CAPDyKFp1gyJYWpuHB2-fP2q9ZuRwHNMJAB_0rPScYvD6rPi8wQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] mmc: core: Add MMC_POWEROFF_UNDERVOLTAGE support
- in _mmc_suspend()
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Avri Altman <avri.altman@sandisk.com>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>, 
-	Christian Loehle <christian.loehle@arm.com>, Adrian Hunter <adrian.hunter@intel.com>
+References: <20250703143955.956569535@linuxfoundation.org>
+In-Reply-To: <20250703143955.956569535@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 4 Jul 2025 18:21:16 +0530
+X-Gm-Features: Ac12FXxkoI9c359mtmkiGWYxMRrw6eIFnOiBA7xCFWZuNBOvGtFp14r2FRTFehc
+Message-ID: <CA+G9fYv2CYDZGm_MC0F3pr8ia2E93epOoLOAoLn724YL6R8YCw@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/218] 6.12.36-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025 at 12:29, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+On Thu, 3 Jul 2025 at 20:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Introduce MMC_POWEROFF_UNDERVOLTAGE as a new mmc_poweroff_type value and
-> adjust _mmc_suspend() to skip cache flush for this case. This prepares for
-> undervoltage handling in a follow-up patch.
+> This is the start of the stable review cycle for the 6.12.36 release.
+> There are 218 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v5:
-> - rebase against latest mmc/next
-> - use MMC_POWEROFF_UNDERVOLTAGE enum instead of function parameter.
-> changes v3:
-> - add comments
-> - make sure _mmc_flush_cache is not executed in the undervoltage case
-> ---
->  drivers/mmc/core/mmc.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
 >
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 5689ab6eefe1..6812df679ba9 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -36,6 +36,7 @@
->  enum mmc_poweroff_type {
->         MMC_POWEROFF_SUSPEND,
->         MMC_POWEROFF_SHUTDOWN,
-> +       MMC_POWEROFF_UNDERVOLTAGE,
->         MMC_POWEROFF_UNBIND,
->  };
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.36-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
 >
-> @@ -2132,9 +2133,15 @@ static int _mmc_suspend(struct mmc_host *host, enum mmc_poweroff_type pm_type)
->         if (mmc_card_suspended(host->card))
->                 goto out;
+> thanks,
 >
-> -       err = _mmc_flush_cache(host);
-> -       if (err)
-> -               goto out;
-> +       /*
-> +        * For the undervoltage case, we care more about device integrity.
-> +        * Avoid cache flush and notify the device to power off quickly.
-> +        */
-> +       if (pm_type != MMC_POWEROFF_UNDERVOLTAGE) {
-> +               err = _mmc_flush_cache(host);
-> +               if (err)
-> +                       goto out;
-> +       }
+> greg k-h
 
-I think this sounds reasonable as we may simply not have the time to
-complete a flush.
 
-Yet, it may be device specific on what makes best sense. Let's see if
-Avri also agrees with this.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
->
->         if (mmc_card_can_poweroff_notify(host->card) &&
->             mmc_host_can_poweroff_notify(host, pm_type))
-> --
-> 2.39.5
->
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-That said, please squash this with patch3. Especially since I think
-patch3 can be made a bit simpler due to my comments on patch1.
+## Build
+* kernel: 6.12.36-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 08de5e8741606608ca5489679ec1604bb7f3d777
+* git describe: v6.12.35-219-g08de5e874160
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.35-219-g08de5e874160
 
-Kind regards
-Uffe
+## Test Regressions (compared to v6.12.34-414-g7ea56ae300ce)
+
+## Metric Regressions (compared to v6.12.34-414-g7ea56ae300ce)
+
+## Test Fixes (compared to v6.12.34-414-g7ea56ae300ce)
+
+## Metric Fixes (compared to v6.12.34-414-g7ea56ae300ce)
+
+## Test result summary
+total: 254325, pass: 232385, fail: 5932, skip: 15566, xfail: 442
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 57 total, 55 passed, 0 failed, 2 skipped
+* i386: 18 total, 18 passed, 0 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 23 passed, 2 failed
+* s390: 22 total, 21 passed, 1 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 48 passed, 0 failed, 1 skipped
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
