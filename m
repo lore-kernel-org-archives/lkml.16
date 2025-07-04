@@ -1,353 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4CA2D839D
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF6B2DEA7B;
+	Fri,  4 Jul 2025 16:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647587; cv=none; b=pJgmyIvPyOjovDcLHJR03PKz2uY4nuTa8ZGywF6drGUkecLFz3Dw/48HsdAv6Swu6CL8OYPSd/6YxE9ltlmeXdiQGR+X2rpQAW532dfCu45ApGL6hItL8QcgULRJYy19rCKY+rCVmRlsI5BcZc7LDCs/gULED4/K7Wkpkh9xCYY=
+	t=1751647589; cv=none; b=tAJVH7u9n2VnmuW8iYaFhEZ6ygNIWj1eiLyWZfrBKHTmx6LKSvfj9Q/yNfSVxIPSstWpBBP1D2SKw5hCISKUFEnAIva2sFQryvd6DeCE7Ix5sdJb0ENmgwQOekweCOUjtJqP/F3o8WTTm5I8xeGCdrLgFZkhulpTk8LACo/Vnn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647587; c=relaxed/simple;
-	bh=8zgEsBtQlAbR7YHqO1ES3oiGDQ0Op93+6KkkFiK2OUI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YUHS3EDg1hYJWkmD/FI+5k5RIJ48PjG/4PPPxeL0n99Av0bz+BHDhdjcXMXMZjxIk4+puknvGQeQfOJ9pgbHa7FRzTFMZhFUpMWpAdmyPInX7MMpjvArCRa1CN1Ep6R3ASlZzUJwgGniSQP2puB1QcV8d9HVcFb1xQgAxxQYDw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJwAvRzX; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751647589; c=relaxed/simple;
+	bh=OPohBrKnAITM+aAWgmMkvXlTHyOCvLEu5b187LOl4TM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+d/nUI/1Lj0Lznk2gyIhg5K430c4/++1JIyeQX6+R0zQyQHATY0NlZqa3OXZcmyOOC2c3goXjTYj7ncZcR0asJjZVEbJ1/A4IqLf1jAMdHf//2nqUJijI7YylINlAamh2Kyh+QR47/of/HYScnY0XZXLDFSuSUWjBbhebJHXE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKi3gt4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJwAvRzX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751647585; x=1783183585;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8zgEsBtQlAbR7YHqO1ES3oiGDQ0Op93+6KkkFiK2OUI=;
-  b=TJwAvRzX45flxU+bbVJEjFiHX777Fz9Z3AoOnb2vBQ9LAnKR2Efk3QIS
-   YBstdsLbf8BpTCgve9x2CqOOcd2SwbILPunWIIQmVzjZEl/CRykQh9SWH
-   5sKbdEBacbawR+dLo2xKDP0FL7TaPWUiw8ZwHTlde2sgjwlt0oMN93xE4
-   CftkvFz3Uy4hM1CVqsJrb+Se6fg5TcTwdU8BkUn0fJDYUUv+UuPVYvrL1
-   sFIEzPp0Z6TZC25BaXm4S8Y4eMDn6NBxY+GHFCR2qA0OP1k1KxLHHAwVv
-   +hCRrMs8LUrNB6VqDocRe9MPsCcBxOD0utuN3SNbICBY8PtOwxYca12s8
-   w==;
-X-CSE-ConnectionGUID: ZBpYm+cDT4WdPWwmk2jZ5A==
-X-CSE-MsgGUID: LRaVwXTwTv+r9UUUfcVpnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57755780"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="57755780"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:25 -0700
-X-CSE-ConnectionGUID: 8tSSXBxBQ2K+Jr5OjaCsAQ==
-X-CSE-MsgGUID: iINHxvMwR5aWiOGCQAbQtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="154424706"
-Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:23 -0700
-From: Badal Nilawar <badal.nilawar@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com,
-	alexander.usyskin@intel.com,
-	gregkh@linuxfoundation.org,
-	daniele.ceraolospurio@intel.com
-Subject: [PATCH v7 03/10] drm/xe/xe_late_bind_fw: Introducing xe_late_bind_fw
-Date: Fri,  4 Jul 2025 22:20:31 +0530
-Message-Id: <20250704165038.1464460-4-badal.nilawar@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250704165038.1464460-1-badal.nilawar@intel.com>
-References: <20250704165038.1464460-1-badal.nilawar@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKi3gt4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42005C4CEE3;
+	Fri,  4 Jul 2025 16:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751647588;
+	bh=OPohBrKnAITM+aAWgmMkvXlTHyOCvLEu5b187LOl4TM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cKi3gt4d0wzXA1Ri/K5ySvQImLczX2EvCkKGn5b5DaURYQBzhsE2UtsKIISxSsJS9
+	 QvLK0PCamBPKwzyOOmLN49kkZl0S09fa7A1sSa8RizeSXe3QQmdNiPAiW/+Dg9rhqT
+	 i10XZksjYhwiMfwzGukN/1ZfCXLuHlU3k6+WLV/bbDwDU4oWvJlrPgm9YTBpvzBDtz
+	 CzBVTcGM0OuVjbdoSs+KWj2VeYIOc7RvEwUXMcKq/CVyGDRDB4iVwXADaGryIv4kOh
+	 xRLRUWEN4ZQG8+MLpke+IpvN3ST4EgYL8OfkVEAX4hlcyB9/p7frJrDC50tqyBqXBr
+	 pf5hfTsQtGTfw==
+Date: Fri, 4 Jul 2025 17:46:22 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ido Schimmel <idosch@idosch.org>
+Cc: Wang Liang <wangliang74@huawei.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.aring@gmail.com, dsahern@kernel.org, yuehaibing@huawei.com,
+	zhangchangzhong@huawei.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-wpan@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: replace ND_PRINTK with dynamic debug
+Message-ID: <20250704164622.GA354404@horms.kernel.org>
+References: <20250701081114.1378895-1-wangliang74@huawei.com>
+ <aGf8_dnXpnzCutA7@shredder>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGf8_dnXpnzCutA7@shredder>
 
-Introducing xe_late_bind_fw to enable firmware loading for the devices,
-such as the fan controller, during the driver probe. Typically,
-firmware for such devices are part of IFWI flash image but can be
-replaced at probe after OEM tuning.
-This patch binds mei late binding component to enable firmware loading.
+On Fri, Jul 04, 2025 at 07:10:37PM +0300, Ido Schimmel wrote:
+> On Tue, Jul 01, 2025 at 04:11:14PM +0800, Wang Liang wrote:
+> > ND_PRINTK with val > 1 only works when the ND_DEBUG was set in compilation
+> > phase. Replace it with dynamic debug. Convert ND_PRINTK with val <= 1 to
+> > net_{err,warn}_ratelimited, and convert the rest to net_dbg_ratelimited.
+> 
+> One small comment below
+> 
+> [...]
+> 
+> > @@ -751,9 +747,8 @@ static void ndisc_solicit(struct neighbour *neigh, struct sk_buff *skb)
+> >  	probes -= NEIGH_VAR(neigh->parms, UCAST_PROBES);
+> >  	if (probes < 0) {
+> >  		if (!(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
+> > -			ND_PRINTK(1, dbg,
+> > -				  "%s: trying to ucast probe in NUD_INVALID: %pI6\n",
+> > -				  __func__, target);
+> > +			net_warn_ratelimited("%s: trying to ucast probe in NUD_INVALID: %pI6\n",
+> > +					     __func__, target);
+> 
+> Without getting into a philosophical discussion about the appropriate
+> log level for this message, the purpose of this patch is to move
+> ND_PRINTK(val > 1, ...) to net_dbg_ratelimited(), but for some reason
+> this hunk promotes an existing net_dbg_ratelimited() to
+> net_warn_ratelimited(). Why not keep it as net_dbg_ratelimited()?
 
-v2:
- - Add devm_add_action_or_reset to remove the component (Daniele)
- - Add INTEL_MEI_GSC check in xe_late_bind_init() (Daniele)
-v3:
- - Fail driver probe if late bind initialization fails,
-   add has_late_bind flag (Daniele)
-v4:
- - %S/I915_COMPONENT_LATE_BIND/INTEL_COMPONENT_LATE_BIND/
-v6:
- - rebased
+Indeed. Sorry for not noticing that in my review.
 
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
----
- drivers/gpu/drm/xe/Makefile                |  1 +
- drivers/gpu/drm/xe/xe_device.c             |  5 ++
- drivers/gpu/drm/xe/xe_device_types.h       |  6 ++
- drivers/gpu/drm/xe/xe_late_bind_fw.c       | 84 ++++++++++++++++++++++
- drivers/gpu/drm/xe/xe_late_bind_fw.h       | 15 ++++
- drivers/gpu/drm/xe/xe_late_bind_fw_types.h | 33 +++++++++
- drivers/gpu/drm/xe/xe_pci.c                |  2 +
- drivers/gpu/drm/xe/xe_pci_types.h          |  1 +
- 8 files changed, 147 insertions(+)
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.c
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.h
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-
-diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-index 7c039caefd00..521547d78fd2 100644
---- a/drivers/gpu/drm/xe/Makefile
-+++ b/drivers/gpu/drm/xe/Makefile
-@@ -76,6 +76,7 @@ xe-y += xe_bb.o \
- 	xe_hw_fence.o \
- 	xe_irq.o \
- 	xe_lrc.o \
-+	xe_late_bind_fw.o \
- 	xe_migrate.o \
- 	xe_mmio.o \
- 	xe_mocs.o \
-diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-index 0b73cb72bad1..cb595bae5f55 100644
---- a/drivers/gpu/drm/xe/xe_device.c
-+++ b/drivers/gpu/drm/xe/xe_device.c
-@@ -44,6 +44,7 @@
- #include "xe_hw_engine_group.h"
- #include "xe_hwmon.h"
- #include "xe_irq.h"
-+#include "xe_late_bind_fw.h"
- #include "xe_mmio.h"
- #include "xe_module.h"
- #include "xe_nvm.h"
-@@ -866,6 +867,10 @@ int xe_device_probe(struct xe_device *xe)
- 	if (err)
- 		return err;
- 
-+	err = xe_late_bind_init(&xe->late_bind);
-+	if (err && err != -ENODEV)
-+		return err;
-+
- 	err = xe_oa_init(xe);
- 	if (err)
- 		return err;
-diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-index 78c4acafd268..a8891833f980 100644
---- a/drivers/gpu/drm/xe/xe_device_types.h
-+++ b/drivers/gpu/drm/xe/xe_device_types.h
-@@ -16,6 +16,7 @@
- #include "xe_devcoredump_types.h"
- #include "xe_heci_gsc.h"
- #include "xe_lmtt_types.h"
-+#include "xe_late_bind_fw_types.h"
- #include "xe_memirq_types.h"
- #include "xe_oa_types.h"
- #include "xe_platform_types.h"
-@@ -325,6 +326,8 @@ struct xe_device {
- 		u8 has_heci_cscfi:1;
- 		/** @info.has_heci_gscfi: device has heci gscfi */
- 		u8 has_heci_gscfi:1;
-+		/** @info.has_late_bind: Device has firmware late binding support */
-+		u8 has_late_bind:1;
- 		/** @info.has_llc: Device has a shared CPU+GPU last level cache */
- 		u8 has_llc:1;
- 		/** @info.has_mbx_power_limits: Device has support to manage power limits using
-@@ -557,6 +560,9 @@ struct xe_device {
- 	/** @nvm: discrete graphics non-volatile memory */
- 	struct intel_dg_nvm_dev *nvm;
- 
-+	/** @late_bind: xe mei late bind interface */
-+	struct xe_late_bind late_bind;
-+
- 	/** @oa: oa observation subsystem */
- 	struct xe_oa oa;
- 
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-new file mode 100644
-index 000000000000..17808eb21905
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: MIT
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#include <linux/component.h>
-+#include <linux/delay.h>
-+
-+#include <drm/drm_managed.h>
-+#include <drm/intel/i915_component.h>
-+#include <drm/intel/late_bind_mei_interface.h>
-+#include <drm/drm_print.h>
-+
-+#include "xe_device.h"
-+#include "xe_late_bind_fw.h"
-+
-+static struct xe_device *
-+late_bind_to_xe(struct xe_late_bind *late_bind)
-+{
-+	return container_of(late_bind, struct xe_device, late_bind);
-+}
-+
-+static int xe_late_bind_component_bind(struct device *xe_kdev,
-+				       struct device *mei_kdev, void *data)
-+{
-+	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
-+	struct xe_late_bind *late_bind = &xe->late_bind;
-+
-+	late_bind->component.ops = data;
-+	late_bind->component.mei_dev = mei_kdev;
-+
-+	return 0;
-+}
-+
-+static void xe_late_bind_component_unbind(struct device *xe_kdev,
-+					  struct device *mei_kdev, void *data)
-+{
-+	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
-+	struct xe_late_bind *late_bind = &xe->late_bind;
-+
-+	late_bind->component.ops = NULL;
-+}
-+
-+static const struct component_ops xe_late_bind_component_ops = {
-+	.bind   = xe_late_bind_component_bind,
-+	.unbind = xe_late_bind_component_unbind,
-+};
-+
-+static void xe_late_bind_remove(void *arg)
-+{
-+	struct xe_late_bind *late_bind = arg;
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+
-+	component_del(xe->drm.dev, &xe_late_bind_component_ops);
-+}
-+
-+/**
-+ * xe_late_bind_init() - add xe mei late binding component
-+ * @late_bind: pointer to late bind structure.
-+ *
-+ * Return: 0 if the initialization was successful, a negative errno otherwise.
-+ */
-+int xe_late_bind_init(struct xe_late_bind *late_bind)
-+{
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	int err;
-+
-+	if (!xe->info.has_late_bind)
-+		return 0;
-+
-+	if (!IS_ENABLED(CONFIG_INTEL_MEI_LATE_BIND) || !IS_ENABLED(CONFIG_INTEL_MEI_GSC)) {
-+		drm_info(&xe->drm, "Can't init xe mei late bind missing mei component\n");
-+		return -ENODEV;
-+	}
-+
-+	err = component_add_typed(xe->drm.dev, &xe_late_bind_component_ops,
-+				  INTEL_COMPONENT_LATE_BIND);
-+	if (err < 0) {
-+		drm_info(&xe->drm, "Failed to add mei late bind component (%pe)\n", ERR_PTR(err));
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
-+}
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-new file mode 100644
-index 000000000000..4c73571c3e62
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#ifndef _XE_LATE_BIND_FW_H_
-+#define _XE_LATE_BIND_FW_H_
-+
-+#include <linux/types.h>
-+
-+struct xe_late_bind;
-+
-+int xe_late_bind_init(struct xe_late_bind *late_bind);
-+
-+#endif
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-new file mode 100644
-index 000000000000..f79e5aefed94
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#ifndef _XE_LATE_BIND_TYPES_H_
-+#define _XE_LATE_BIND_TYPES_H_
-+
-+#include <linux/iosys-map.h>
-+#include <linux/mutex.h>
-+#include <linux/types.h>
-+
-+/**
-+ * struct xe_late_bind_component - Late Binding services component
-+ * @mei_dev: device that provide Late Binding service.
-+ * @ops: Ops implemented by Late Binding driver, used by Xe driver.
-+ *
-+ * Communication between Xe and MEI drivers for Late Binding services
-+ */
-+struct xe_late_bind_component {
-+	struct device *mei_dev;
-+	const struct late_bind_component_ops *ops;
-+};
-+
-+/**
-+ * struct xe_late_bind
-+ */
-+struct xe_late_bind {
-+	/** @component: struct for communication with mei component */
-+	struct xe_late_bind_component component;
-+};
-+
-+#endif
-diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-index 755e335c8e18..c5e33a79dcd7 100644
---- a/drivers/gpu/drm/xe/xe_pci.c
-+++ b/drivers/gpu/drm/xe/xe_pci.c
-@@ -328,6 +328,7 @@ static const struct xe_device_desc bmg_desc = {
- 	.has_gsc_nvm = 1,
- 	.has_heci_cscfi = 1,
- 	.max_gt_per_tile = 2,
-+	.has_late_bind = true,
- 	.needs_scratch = true,
- };
- 
-@@ -574,6 +575,7 @@ static int xe_info_init_early(struct xe_device *xe,
- 	xe->info.has_gsc_nvm = desc->has_gsc_nvm;
- 	xe->info.has_heci_gscfi = desc->has_heci_gscfi;
- 	xe->info.has_heci_cscfi = desc->has_heci_cscfi;
-+	xe->info.has_late_bind = desc->has_late_bind;
- 	xe->info.has_llc = desc->has_llc;
- 	xe->info.has_pxp = desc->has_pxp;
- 	xe->info.has_sriov = desc->has_sriov;
-diff --git a/drivers/gpu/drm/xe/xe_pci_types.h b/drivers/gpu/drm/xe/xe_pci_types.h
-index 4de6f69ed975..51a607d323fb 100644
---- a/drivers/gpu/drm/xe/xe_pci_types.h
-+++ b/drivers/gpu/drm/xe/xe_pci_types.h
-@@ -39,6 +39,7 @@ struct xe_device_desc {
- 	u8 has_gsc_nvm:1;
- 	u8 has_heci_gscfi:1;
- 	u8 has_heci_cscfi:1;
-+	u8 has_late_bind:1;
- 	u8 has_llc:1;
- 	u8 has_mbx_power_limits:1;
- 	u8 has_pxp:1;
--- 
-2.34.1
-
+> 
+> >  		}
+> >  		ndisc_send_ns(dev, target, target, saddr, 0);
+> >  	} else if ((probes -= NEIGH_VAR(neigh->parms, APP_PROBES)) < 0) {
+> 
