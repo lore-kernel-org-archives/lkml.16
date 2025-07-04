@@ -1,67 +1,66 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345B572634;
-	Fri,  4 Jul 2025 20:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B8823BD1F;
+	Fri,  4 Jul 2025 20:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751660167; cv=none; b=iF59tW4WeR+dt9hRSzwtGdE7ApUyjuc1Kl2sOOutHP370SRNo4EicYKkj1ozjIFeHwu+QBTEp8phQpS9sv2FiHwP78pOGRNBmIIGye9qNkJNem9bTS8294fFY18++kmUh5MUFYeQ/M1VEBUO8yV0l5OQSb8GJhbLJz1ke+//990=
+	t=1751660169; cv=none; b=OPMo5cgQ8rlFP56T+F9SCMcIqpsM4rXTWjsES7fk9ZybKNbIHMVfOQ/TzHOjmz6Sn/++sj3inhZBdDwQRNMO6WPHVkPCAPbeZ5kmcJz2F/8tySfbHs5Y/gfXm0xjgs0jeWVHD2HQE+BTSKk2Mm4u/N19oU1tHkkde1ps9sbZisk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751660167; c=relaxed/simple;
-	bh=0eE29d4BDbrbeYPny4FZm2lEWg1f3s4QbLWbmMdfS2Q=;
+	s=arc-20240116; t=1751660169; c=relaxed/simple;
+	bh=pDl2EDPfxPEYVWR9FNKoe/jjP+2a7nwmEQia5/vDvaQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XySAKcfWQzmaV88dsPTUVHIWE8aY+gPSP5rxMgVyRt+F6Of4IV56W8QuMV8VlZrlQo3Y999rwPfhezT0wwDEVm1h+iwJl66WtDdGUdi/F31ixu98iMhOEg9aE+39I4oESkUnsiPNClx6nMVNQJUF3+NkfVvkf/HJ7HqFFVi+gag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=blXEuRQt; arc=none smtp.client-ip=209.85.160.180
+	 In-Reply-To:To:Cc; b=PTP+X26Pix4moDpdY5hkauDtJQvigcz71wYjTyCmel7d+sqEJla4s+tQaG4RXWcazoQ4+QwmKwjkxkaAI0yMscxjo8pM2zCNMHY5J4d604gAxEL1Y09KorjNEsgLuJqExLm2A/DPR36V7MhhSVFzmnDQcfA8BaehRsiACIkJ1J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcWytZQJ; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blXEuRQt"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a8244e897fso17298951cf.1;
-        Fri, 04 Jul 2025 13:16:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcWytZQJ"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a76ea97cefso13098201cf.2;
+        Fri, 04 Jul 2025 13:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751660164; x=1752264964; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751660167; x=1752264967; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ytj/U1rka5vUlSmFzHnNuz0MRFUCm7uq4gnATea5MG4=;
-        b=blXEuRQt/mqmEy2pdBvvcr4G5cWOyu9NXOK2l4VutbcfyWUp9b20W6HTIe0Np+PZWF
-         EXGxgUHTg4tp9W3JSlr/WF7/+XKFWMs+5Xn6/qKXxR+d25FRHGMcydwjJjOfCKGmuqjP
-         GvuH3zFAc2ISZY/aog+U/MVMeD3iIG3Is6hpGbIWZgFkvLvtWooqOTYoWANRVL4LzmX9
-         nS48+tjvLsRwAgZi72dfIAuIHrOTavHwGr+63LVhWgkDUYAk593oCaGL8xjntgG5npsO
-         06r2CqWMHl6UFRStItYQGGPbrUcLxt6qRudbW1s4hKeLY+xUfOtbeeZUi5oZUBiOGgCn
-         2bMw==
+        bh=IjAX5By1woBTkVbpv4Ax05fTUisbOPE+2UGRU9+yRbU=;
+        b=WcWytZQJ6vpFCLHH3jz9Cqtk2fgeopjU6zHk4kx4YlAtAgS/YY3hg/Gsic23CW9IfD
+         q4I4t8N73ukzyAbmO+W7j8ECMwoNVy3DdNz1WVIyNzBfxNGvEYM0vhp/CKXsDETDyVzC
+         RrwhoqtRAdWHoNDfs/jXKvD0/JCf3PRUS6E7rNw59XGHt2cIV6c1mxH5BYLje2VU4jpB
+         8Pr1NmJv9DinMTqLMrye/0z5/I0k09A53hAWb2G2su0YOOlOG7hK0axm6TYYNc17LCDn
+         HhFbxcY/FI5t2WHFQqxu3ECNdonVn0nbPhvzKFKnLF9Q+GfFZDqjxtvTRL6HXDCPtcgA
+         4xTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751660164; x=1752264964;
+        d=1e100.net; s=20230601; t=1751660167; x=1752264967;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ytj/U1rka5vUlSmFzHnNuz0MRFUCm7uq4gnATea5MG4=;
-        b=wFiB5hGOL1FJP0YRaj0Y7Zln0jodDbGH6iuiu0+Ftw4n7hEQm05ITDWDPIPW9q64qq
-         CeuVpVhWIi1ZPZ/jHbVm8BQ0PgnPS2PNR7n/1JQoZLVZpZjG1RcW+FLrJMe2bTWsYCwj
-         G0DwzESnTWF6ipzXvYONDCGpSy6fTho1n63Y4cuIVSK36SN0WuccFvuVqVj4Uy7pq6s8
-         ZTzBmjRvHfB+VHh29qVl4nu6E1czcJB7Bx5AMBXYcCh0VZJPkdyNdxfY2UlfJq+BWuTT
-         YKY4sZr/sLoSre2FIB2q6K6yZE5EquPqmhMZtPpXxmdLzKSCidfaWqerLNy7YcuGTJir
-         vExw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT/zNofLwQVjR91ft80buj2dEAWPQ3p/ZELDGyUR9xt8Iv+eIsOMunu4yi1bUDTaZQJWZODa/O9LdyFygMfi0=@vger.kernel.org, AJvYcCV1yadPodH+K5hGmNFe6L8gObpnRFrnpJisB/pOpyjoxTheBfgqPAnZNgdJR5tnJwthpGBM9R97dUE+GYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqEd5BMeBMkG0zH09GsvTeGeX5J+U9JsGtJD7kUwMmbIQNSiIV
-	fLsyb5CSu5rO7pUGQCNrx9CPsH568Bb5Vqcin8W0L/tq/xWfnGjXoYm1
-X-Gm-Gg: ASbGncslkcjeTXk2u4Io8SBYQvKz4rzh7nDcRxHOAcJPzh1KdVKFfjYxcbELl8LCKV9
-	4XoTz8fIIXcfdqSfZbkfqTeknKscnenEQK0fyBykvRNl2lAPsWJ3hUMo8Lxeucnf05DzwbzxZnu
-	QCv+wOINOgX9TrAFMRjvtt7yglxdifcYg9b4x2yszXL1Ji03S2KuHyCkS6/WhqIvGfpmQN/9ppW
-	qBl+KnGnT33Z7XqwexfdIo2RntUPVGQfpRf7yIb6ebEvnb9zlIpWGnt7Az6OThKcJmR/dQHj4rH
-	yzflt44Vqvvj5TCYCfJ5tFHVjC7mtMy/oViSlkynaNM1PVac97AjztSCeQANGGIWWbBb2zhvo7i
-	gPCsxel4=
-X-Google-Smtp-Source: AGHT+IFEHuArpM8TIRSfH3/PNk3fgwhnpLrdJuiimaZA+jC0FuRTqewTYv7paL4gvO9Vh/4dQDMg8w==
-X-Received: by 2002:ac8:7e86:0:b0:4a6:c5ee:6ced with SMTP id d75a77b69052e-4a9a6d5f372mr751781cf.4.1751660163869;
-        Fri, 04 Jul 2025 13:16:03 -0700 (PDT)
+        bh=IjAX5By1woBTkVbpv4Ax05fTUisbOPE+2UGRU9+yRbU=;
+        b=OaPnyVucBBxfVnt/DZXV0ucz4OKrxWdmuX1riXdasozZQtv3yGbqItNJkr3NerN69v
+         lSm8xve/FHTqXyXZZnPGsTQIjv/v1xVKONHwjfRQf/ocFOsSbx5XMLnxqXsI7HN60CFD
+         VTdmcVBCsP0YwPieIYAvorxEVLPRo7Sc3eDPILG97RdpQ9868fPrzWQ1mFdqe/m8qOHO
+         APYACgT9UtbMVqKOBAmBZ/EibU+2NKW4xS40+IPHM6SJzYR2lqmt8LPY2+DStYD1HD2U
+         D5CIw83u9SQpe3PlRWt7AlYCiA/W9OUaCnXLntWB8Ote4VmSJriRY54gxGIOjUpIoRg/
+         NHWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwW3L4553Y+Ku+g/EuwdX7ZntOUjqzbT0Nh1OaHhss4Gn5WJKt5vMVYFkVTCT6tzoXfzZL9JMnnmyEkKc9wlM=@vger.kernel.org, AJvYcCVxnk3ZmTFlj0Lub0Rc6/JAmd9NdoFQloF9nNfFWT1NwLk17ZLQXi7IdlgokOq/4/EFLoC1QdL6O6oGfwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQVyhMlZ4kt+2X9gG2OQa/SUwazXDkhce2vlfEExQWEJ9+BqYo
+	tChmtDCrM9Y3TnFaZFscYLvJyR0x77LsWX5vv0+/2VMA5leldsE7ETMy
+X-Gm-Gg: ASbGncvBfnUeqfHQXyqeM2n9q2Ol5SsK63vag7QkmYmk4JzTxg1I7gYjgGTAUMYA3tt
+	1hxwnCkUGHA+qRMxUsldoIvA36DLVP65kEJHsE0dSs2lEs2tfU/SY55Z91m54EBpRLEPrS/pfd+
+	3YdztZ94x5PTlJdnESU2faxUyeBhRoIyjEVOifu0O/I3ukQv0gjKolrA3G4/q3XJRBxGe4j1j3A
+	N+JoTjXfT02zlir3yzb+2F8zVvhPUuwnadXkGvlWT84QfYJbDI22DgGjTrgkvLSnJtUSXIwDsNG
+	GIgvjOYM4NttyNafKFJLwXWcOyzadMi9WfiVx4qhIWYHPxbhymBNvChwsIAvOP7vLXcZ1szArhL
+	0re2EfKo=
+X-Google-Smtp-Source: AGHT+IHoJuyrMg+1Oet7D/5z8M7VsWfC8gsB87eCJncM3DAyTr2cIYU7OHvXVugATk7u3p3qiIn2YQ==
+X-Received: by 2002:a05:622a:316:b0:4a4:4063:94d1 with SMTP id d75a77b69052e-4a9985e0c0cmr42987461cf.8.1751660166573;
+        Fri, 04 Jul 2025 13:16:06 -0700 (PDT)
 Received: from 156.1.168.192.in-addr.arpa ([2600:4041:5c29:e400:94f3:d2bb:5ace:77a1])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a9949e5221sm19772941cf.2.2025.07.04.13.16.02
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a9949e5221sm19772941cf.2.2025.07.04.13.16.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 13:16:03 -0700 (PDT)
+        Fri, 04 Jul 2025 13:16:06 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 04 Jul 2025 16:14:52 -0400
-Subject: [PATCH 1/6] rust: kernel: remove `fmt!`, fix
- clippy::uninlined-format-args
+Date: Fri, 04 Jul 2025 16:14:54 -0400
+Subject: [PATCH 3/6] rust: use `kernel::{fmt,prelude::fmt!}`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,8 +68,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250704-core-cstr-prepare-v1-1-a91524037783@gmail.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-core-cstr-prepare-v1-3-a91524037783@gmail.com>
 References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com>
 In-Reply-To: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, 
@@ -86,222 +85,114 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
  rust-for-linux@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1751660160; l=8814;
+X-Developer-Signature: v=1; a=openssh-sha256; t=1751660160; l=3354;
  i=tamird@gmail.com; h=from:subject:message-id;
- bh=0eE29d4BDbrbeYPny4FZm2lEWg1f3s4QbLWbmMdfS2Q=;
+ bh=pDl2EDPfxPEYVWR9FNKoe/jjP+2a7nwmEQia5/vDvaQ=;
  b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
  MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QBTfUwC+8+4Q7FidFkzWZ9u87I5aWLRGbg8aJnPxxBijaaEp1K9afxbrP+TMPnlXRRmGa9ue8Lk
- J89tQ+BdPTgY=
+ QCBuyGbM9Ex3z6w+I8XsfYWnnt5RfWTJc8W/D+LryP6sut6ti1h3WTUJlGdh3zPO073i/ELXAnX
+ ilrfpP+tUvgE=
 X-Developer-Key: i=tamird@gmail.com; a=openssh;
  fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
 
-Rather than export a macro that delegates to `core::format_args`, simply
-re-export `core::format_args` as `fmt` from the prelude. This exposes
-clippy warnings which were previously obscured by this macro, such as:
-
-    warning: variables can be used directly in the `format!` string
-      --> ../drivers/cpufreq/rcpufreq_dt.rs:21:43
-       |
-    21 |     let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-       |                                           ^^^^^^^^^^^^^^^^^^^^^^^
-       |
-       = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args
-       = note: `-W clippy::uninlined-format-args` implied by `-W clippy::all`
-       = help: to override `-W clippy::all` add `#[allow(clippy::uninlined_format_args)]`
-    help: change this to
-       |
-    21 -     let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-    21 +     let prop_name = CString::try_from_fmt(fmt!("{name}-supply")).ok()?;
-       |
-
-Thus fix them in the same commit. This could possibly be fixed in two
-stages, but the diff is small enough (outside of kernel/str.rs) that I
-hope it can taken in a single commit.
+Reduce coupling to implementation details of the formatting machinery by
+avoiding direct use for `core`'s formatting traits and macros.
 
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- drivers/cpufreq/rcpufreq_dt.rs    |  3 +--
- drivers/gpu/nova-core/firmware.rs |  5 +++--
- rust/kernel/opp.rs                |  2 +-
- rust/kernel/prelude.rs            |  2 +-
- rust/kernel/str.rs                | 34 ++++++++++++++--------------------
- 5 files changed, 20 insertions(+), 26 deletions(-)
+ rust/kernel/error.rs            | 6 +++---
+ rust/kernel/print.rs            | 6 +++---
+ rust/kernel/str.rs              | 2 +-
+ samples/rust/rust_print_main.rs | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index 30a170570c0e..4608d2286fa1 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -9,7 +9,6 @@
-     cpumask::CpumaskVar,
-     device::{Core, Device},
-     error::code::*,
--    fmt,
-     macros::vtable,
-     module_platform_driver, of, opp, platform,
-     prelude::*,
-@@ -19,7 +18,7 @@
+diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
+index 6277af1c1baa..ffa8efd2d547 100644
+--- a/rust/kernel/error.rs
++++ b/rust/kernel/error.rs
+@@ -6,10 +6,10 @@
  
- /// Finds exact supply name from the OF node.
- fn find_supply_name_exact(dev: &Device, name: &str) -> Option<CString> {
--    let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-+    let prop_name = CString::try_from_fmt(fmt!("{name}-supply")).ok()?;
-     dev.property_present(&prop_name)
-         .then(|| CString::try_from_fmt(fmt!("{name}")).ok())
-         .flatten()
-diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
-index 4b8a38358a4f..e503a4fddae0 100644
---- a/drivers/gpu/nova-core/firmware.rs
-+++ b/drivers/gpu/nova-core/firmware.rs
-@@ -24,11 +24,12 @@ pub(crate) struct Firmware {
+ use crate::{
+     alloc::{layout::LayoutError, AllocError},
++    fmt,
+     str::CStr,
+ };
  
- impl Firmware {
-     pub(crate) fn new(dev: &device::Device, chipset: Chipset, ver: &str) -> Result<Firmware> {
--        let mut chip_name = CString::try_from_fmt(fmt!("{}", chipset))?;
-+        let mut chip_name = CString::try_from_fmt(fmt!("{chipset}"))?;
-         chip_name.make_ascii_lowercase();
-+        let chip_name = &*chip_name;
- 
-         let request = |name_| {
--            CString::try_from_fmt(fmt!("nvidia/{}/gsp/{}-{}.bin", &*chip_name, name_, ver))
-+            CString::try_from_fmt(fmt!("nvidia/{chip_name}/gsp/{name_}-{ver}.bin"))
-                 .and_then(|path| firmware::Firmware::request(&path, dev))
-         };
- 
-diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
-index 0e94cb2703ec..5a161ad12bf7 100644
---- a/rust/kernel/opp.rs
-+++ b/rust/kernel/opp.rs
-@@ -345,7 +345,7 @@ fn drop(&mut self) {
- /// impl ConfigOps for Driver {}
- ///
- /// fn configure(dev: &ARef<Device>) -> Result<ConfigToken> {
--///     let name = CString::try_from_fmt(fmt!("{}", "slow"))?;
-+///     let name = CString::try_from_fmt(fmt!("slow"))?;
- ///
- ///     // The OPP configuration is cleared once the [`ConfigToken`] goes out of scope.
- ///     Config::<Driver>::new()
-diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-index 2f30a398dddd..3ca934885797 100644
---- a/rust/kernel/prelude.rs
-+++ b/rust/kernel/prelude.rs
-@@ -31,9 +31,9 @@
- // `super::std_vendor` is hidden, which makes the macro inline for some reason.
- #[doc(no_inline)]
- pub use super::dbg;
--pub use super::fmt;
- pub use super::{dev_alert, dev_crit, dev_dbg, dev_emerg, dev_err, dev_info, dev_notice, dev_warn};
- pub use super::{pr_alert, pr_crit, pr_debug, pr_emerg, pr_err, pr_info, pr_notice, pr_warn};
-+pub use core::format_args as fmt;
- 
- pub use super::{try_init, try_pin_init};
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index cbc8b459ed41..10399fb7af45 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -54,13 +54,13 @@ impl fmt::Display for BStr {
-     /// Formats printable ASCII characters, escaping the rest.
-     ///
-     /// ```
--    /// # use kernel::{fmt, b_str, str::{BStr, CString}};
-+    /// # use kernel::{prelude::fmt, b_str, str::{BStr, CString}};
-     /// let ascii = b_str!("Hello, BStr!");
--    /// let s = CString::try_from_fmt(fmt!("{}", ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{ascii}"))?;
-     /// assert_eq!(s.as_bytes(), "Hello, BStr!".as_bytes());
-     ///
-     /// let non_ascii = b_str!("🦀");
--    /// let s = CString::try_from_fmt(fmt!("{}", non_ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{non_ascii}"))?;
-     /// assert_eq!(s.as_bytes(), "\\xf0\\x9f\\xa6\\x80".as_bytes());
-     /// # Ok::<(), kernel::error::Error>(())
-     /// ```
-@@ -85,14 +85,14 @@ impl fmt::Debug for BStr {
-     /// escaping the rest.
-     ///
-     /// ```
--    /// # use kernel::{fmt, b_str, str::{BStr, CString}};
-+    /// # use kernel::{prelude::fmt, b_str, str::{BStr, CString}};
-     /// // Embedded double quotes are escaped.
-     /// let ascii = b_str!("Hello, \"BStr\"!");
--    /// let s = CString::try_from_fmt(fmt!("{:?}", ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{ascii:?}"))?;
-     /// assert_eq!(s.as_bytes(), "\"Hello, \\\"BStr\\\"!\"".as_bytes());
-     ///
-     /// let non_ascii = b_str!("😺");
--    /// let s = CString::try_from_fmt(fmt!("{:?}", non_ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{non_ascii:?}"))?;
-     /// assert_eq!(s.as_bytes(), "\"\\xf0\\x9f\\x98\\xba\"".as_bytes());
-     /// # Ok::<(), kernel::error::Error>(())
-     /// ```
-@@ -429,15 +429,15 @@ impl fmt::Display for CStr {
-     ///
-     /// ```
-     /// # use kernel::c_str;
--    /// # use kernel::fmt;
-+    /// # use kernel::prelude::fmt;
-     /// # use kernel::str::CStr;
-     /// # use kernel::str::CString;
-     /// let penguin = c_str!("🐧");
--    /// let s = CString::try_from_fmt(fmt!("{}", penguin))?;
-+    /// let s = CString::try_from_fmt(fmt!("{penguin}"))?;
-     /// assert_eq!(s.as_bytes_with_nul(), "\\xf0\\x9f\\x90\\xa7\0".as_bytes());
-     ///
-     /// let ascii = c_str!("so \"cool\"");
--    /// let s = CString::try_from_fmt(fmt!("{}", ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{ascii}"))?;
-     /// assert_eq!(s.as_bytes_with_nul(), "so \"cool\"\0".as_bytes());
-     /// # Ok::<(), kernel::error::Error>(())
-     /// ```
-@@ -459,16 +459,16 @@ impl fmt::Debug for CStr {
-     ///
-     /// ```
-     /// # use kernel::c_str;
--    /// # use kernel::fmt;
-+    /// # use kernel::prelude::fmt;
-     /// # use kernel::str::CStr;
-     /// # use kernel::str::CString;
-     /// let penguin = c_str!("🐧");
--    /// let s = CString::try_from_fmt(fmt!("{:?}", penguin))?;
-+    /// let s = CString::try_from_fmt(fmt!("{penguin:?}"))?;
-     /// assert_eq!(s.as_bytes_with_nul(), "\"\\xf0\\x9f\\x90\\xa7\"\0".as_bytes());
-     ///
-     /// // Embedded double quotes are escaped.
-     /// let ascii = c_str!("so \"cool\"");
--    /// let s = CString::try_from_fmt(fmt!("{:?}", ascii))?;
-+    /// let s = CString::try_from_fmt(fmt!("{ascii:?}"))?;
-     /// assert_eq!(s.as_bytes_with_nul(), "\"so \\\"cool\\\"\"\0".as_bytes());
-     /// # Ok::<(), kernel::error::Error>(())
-     /// ```
-@@ -578,7 +578,7 @@ mod tests {
- 
-     macro_rules! format {
-         ($($f:tt)*) => ({
--            CString::try_from_fmt(::kernel::fmt!($($f)*))?.to_str()?
-+            CString::try_from_fmt(fmt!($($f)*))?.to_str()?
-         })
-     }
- 
-@@ -840,7 +840,7 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
- /// # Examples
- ///
- /// ```
--/// use kernel::{str::CString, fmt};
-+/// use kernel::{str::CString, prelude::fmt};
- ///
- /// let s = CString::try_from_fmt(fmt!("{}{}{}", "abc", 10, 20))?;
- /// assert_eq!(s.as_bytes_with_nul(), "abc1020\0".as_bytes());
-@@ -930,9 +930,3 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-         fmt::Debug::fmt(&**self, f)
+-use core::fmt;
+ use core::num::NonZeroI32;
+ use core::num::TryFromIntError;
+ use core::str::Utf8Error;
+@@ -219,8 +219,8 @@ fn from(_: LayoutError) -> Error {
      }
  }
--
--/// A convenience alias for [`core::format_args`].
--#[macro_export]
--macro_rules! fmt {
--    ($($f:tt)*) => ( ::core::format_args!($($f)*) )
--}
+ 
+-impl From<core::fmt::Error> for Error {
+-    fn from(_: core::fmt::Error) -> Error {
++impl From<fmt::Error> for Error {
++    fn from(_: fmt::Error) -> Error {
+         code::EINVAL
+     }
+ }
+diff --git a/rust/kernel/print.rs b/rust/kernel/print.rs
+index ecdcee43e5a5..2d743d78d220 100644
+--- a/rust/kernel/print.rs
++++ b/rust/kernel/print.rs
+@@ -8,10 +8,10 @@
+ 
+ use crate::{
+     ffi::{c_char, c_void},
++    fmt,
+     prelude::*,
+     str::RawFormatter,
+ };
+-use core::fmt;
+ 
+ // Called from `vsprintf` with format specifier `%pA`.
+ #[expect(clippy::missing_safety_doc)]
+@@ -149,7 +149,7 @@ macro_rules! print_macro (
+         // takes borrows on the arguments, but does not extend the scope of temporaries.
+         // Therefore, a `match` expression is used to keep them around, since
+         // the scrutinee is kept until the end of the `match`.
+-        match format_args!($($arg)+) {
++        match $crate::prelude::fmt!($($arg)+) {
+             // SAFETY: This hidden macro should only be called by the documented
+             // printing macros which ensure the format string is one of the fixed
+             // ones. All `__LOG_PREFIX`s are null-terminated as they are generated
+@@ -168,7 +168,7 @@ macro_rules! print_macro (
+     // The `CONT` case.
+     ($format_string:path, true, $($arg:tt)+) => (
+         $crate::print::call_printk_cont(
+-            format_args!($($arg)+),
++            $crate::prelude::fmt!($($arg)+),
+         );
+     );
+ );
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 10399fb7af45..48d9a518db96 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -3,7 +3,7 @@
+ //! String representations.
+ 
+ use crate::alloc::{flags::*, AllocError, KVec};
+-use core::fmt::{self, Write};
++use crate::fmt::{self, Write};
+ use core::ops::{self, Deref, DerefMut, Index};
+ 
+ use crate::prelude::*;
+diff --git a/samples/rust/rust_print_main.rs b/samples/rust/rust_print_main.rs
+index 8ea95e8c2f36..4095c72afeab 100644
+--- a/samples/rust/rust_print_main.rs
++++ b/samples/rust/rust_print_main.rs
+@@ -40,7 +40,7 @@ fn arc_print() -> Result {
+         // behaviour, contract or protocol on both `i32` and `&str` into a single `Arc` of
+         // type `Arc<dyn Display>`.
+ 
+-        use core::fmt::Display;
++        use kernel::fmt::Display;
+         fn arc_dyn_print(arc: &Arc<dyn Display>) {
+             pr_info!("Arc<dyn Display> says {arc}");
+         }
 
 -- 
 2.50.0
