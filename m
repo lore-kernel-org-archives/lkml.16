@@ -1,325 +1,264 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAB1143C69
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D9219319
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 06:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609163; cv=none; b=uC0qZC9r8ZwgH74R+ayXuScdwuNLi5CAxTJeQ5S1ceEOiFwnz/+XbqnxLYGa/W/2TKb33Ybq0nv0IXKQr8pFTSvqkO9yy3/gDRQ1qT44tNmZjqd3aHXYknDkFeX3XN4ktTQASx+RawuUe14SnauR8DgA097y3BGNA9zYfCbuQPo=
+	t=1751609253; cv=none; b=ZO/Qpv1Fls81JbFzk9WHV16zYLJm22qu0AdH0z9HlWSwvBgOwGr6wnaWOCAvUbEwyNDwfyMemiWfePCW+PMy/Xd4Lt1h8MClIY8AoEyfv4dU7ekpXTR+e3jyfh31Xz+3mosCTS2oxGkKCmk7mG3+HyvUi4uB6iuRyLWRPGho40I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609163; c=relaxed/simple;
-	bh=R381eyYRfRq8peSzzcIztZmKGkcULzxVLB0cidkDPJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PtEHW0L05DVOIOjucQQ6x5WO0GrY7UHm9AxGJTgzf7oK4C0oMsqhi5YGztkm5SHA60Yl2UY2ofK+cRgKw6VW4yKOsSmOju0PHCym5Vrd2AfiKJjslEFLESUIOtcOlDPtOHqooGMaKEIhU5SJUwuWczsA4fxU4mYmo47tpRZ0PUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Ifow4KRX; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gH6jFy63; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751609253; c=relaxed/simple;
+	bh=num7ZwJGxm2xcwzgmExP91PNehpZ10zz5brwKdCfm2M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=iQV7hYR1zS67aWTkOsSRmJuRJ9sSCJ6NlSsYwVoyJj4lwp/XbH+mn/aJJHdUaTph1sban3cNIRh9cXw/CoNvmQFx8G8EcNm+OqSKao5/FJjLynoJnWhLd7VCi59tBVlbyw6S3cIX/glxGMSHtlNPgnypZLY3aiDrRzsmGSpChvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ku6U8Nbh; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Ifow4KRX";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gH6jFy63"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CF1C51F38A;
-	Fri,  4 Jul 2025 06:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751609157; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=R381eyYRfRq8peSzzcIztZmKGkcULzxVLB0cidkDPJY=;
-	b=Ifow4KRXFGSLu2I8sOAAZQCzI5MRfQmm/zJ0NRQsfjmy1LBcrvyO84HDMdGU8SrlLw1q2Y
-	y+f7xkXS+GjsnCTarZf2ypGF40FncbZPfWRZoIg3kK08HAw4Z0alryTkGF+4kkWGxTdSfy
-	LHBOuvh2SqvB4nbr1aumlZ7RKCBwRF0=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=gH6jFy63
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751609156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=R381eyYRfRq8peSzzcIztZmKGkcULzxVLB0cidkDPJY=;
-	b=gH6jFy63mC31e98PPG1ZR5N0scEddWy4IHLCsSE6/POrrGk1bBwrsHzV6n/fmlSmGaIjSE
-	ud2B0AwTvVoZCh9fF8MNICf8JCr5zMXC5liMTI4VHSBIob0pbMilE2WY2jVNU1Wlt/1kLG
-	zuHKIaJ6YwPcyxoRtkcWc1xxp5iQ7ZQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7EFC213AEF;
-	Fri,  4 Jul 2025 06:05:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mFcZHURvZ2jeZQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 04 Jul 2025 06:05:56 +0000
-Message-ID: <f8335a71-f9af-4911-96fa-46e7088acaf8@suse.com>
-Date: Fri, 4 Jul 2025 08:05:55 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ku6U8Nbh"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748764d84feso925615b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 23:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751609251; x=1752214051; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZEckqv9KvWhwhlMKe66GULnS7cfmA5oovNSgnKfWkgg=;
+        b=Ku6U8NbhocuLryxZx7e8eSojI9A0Yhjfq/trr3pXNvKIdbg5yV9MuC0NlYDhSXG50x
+         IFlwVtsR1Ga0VtJIdrMWi3QBT9gF2pw4pgRDVGtSRMaTvjTeDYCreF8JuMJq7K4D6mPm
+         UgXVGNnI8SxEBM0xSBFHLX8iE5KH+ixhIKV2MLxW5LuL8mtjakYPdn9n9sulie+YHNvf
+         LZEqygr1Boo4RBvtBGY/nh1t+Q9xgz7cUX9gWDY4qSAnJyTcZQ5RkZeHaEYX1cU9napK
+         iv9N/scn+DWXMUOczQ4o6F2xx/4h9wDOvFZ0gjbE8D5WdKjwJEcgV83m2alMkBPJOhJv
+         pzHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751609251; x=1752214051;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZEckqv9KvWhwhlMKe66GULnS7cfmA5oovNSgnKfWkgg=;
+        b=R+6XpfwLDSahnj/MfJmPzHa3yylZ5duifnAbWErIVxRqxoug7qHXckGg9E2dWibjFE
+         39mkdQQiIzMAYGANeSn3ve/7Kp2SWGFsmT5Z+ezwwEnjf4ueMASccaAupud2Hlo1bNX4
+         SMHBUg4DbmdRJqG2RlJSMZsmUXPlbOee7BPmU/hMEPsVdTfdd8XtFuJUhg3UVK7vmLcr
+         Aio/+hTlcYLiqihD8BFriT/Awhk0VSUiAGrtxL5OO7t8Ngm2ICJFmicSzN9XYFpuWvgT
+         lnWYpFxTnawvPCPpt6UjRa1sZnYyHhA8YDzSvia3/AaTP9fQL0x0M0AqjQXBB8nhab0O
+         lyFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmc2MSAk48E4PEXzuLAHmMk2AM/ccpxRA1QnuYChQ/IXDlC+eJDdjXdLDB/bwgH63qE0AyAJkeceIjaOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQwKWp+x//ujBfILoIVcSAFT0XnKj8wx/DnjdbzVOaG445rzJd
+	ffMA31sX6X1yNbjkB0CSq1MX/3itOL/ZeXJaHlrZarNjiafaKnrkDg5atMMH7VDM4W7JwKKEr6T
+	mauPzOQ==
+X-Google-Smtp-Source: AGHT+IFG67ZnYijnEmrANJ862qby4lfyUrmXgaBAHJy2D7Sq0PQ1+KEFSXZY6Nd+epUGRR6aiPOLz1kauiE=
+X-Received: from pfbhs5.prod.google.com ([2002:a05:6a00:6905:b0:747:af58:72ca])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:84c:b0:748:2d1d:f7b7
+ with SMTP id d2e1a72fcca58-74ce8af2ae5mr1489520b3a.21.1751609250767; Thu, 03
+ Jul 2025 23:07:30 -0700 (PDT)
+Date: Thu,  3 Jul 2025 23:07:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] xen/gntdev: reduce stack usage by dynamically
- allocating gntdev_copy_batch
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Tu Dinh <ngoc-tu.dinh@vates.tech>, Abinash <abinashlalotra@gmail.com>
-Cc: sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- Abinash Singh <abinashsinghlalotra@gmail.com>
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com>
- <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
- <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
- <ab668ddb-1ea5-4444-95fc-f31469b4f05e@vates.tech>
- <f8bde276-9d4e-47d0-9841-fd8724ef5275@suse.com>
- <f1c68345-a511-46b8-964c-a00bb62274ba@wanadoo.fr>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <f1c68345-a511-46b8-964c-a00bb62274ba@wanadoo.fr>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ZLQua54py0y302zmmXQaUITj"
-X-Spamd-Result: default: False [-6.41 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,wanadoo.fr];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	FREEMAIL_TO(0.00)[wanadoo.fr,vates.tech,gmail.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	HAS_ATTACHMENT(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,epam.com,lists.xenproject.org,vger.kernel.org,gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.com:dkim];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: CF1C51F38A
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -6.41
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250704060727.724817-1-surenb@google.com>
+Subject: [PATCH v6 0/8] use per-vma locks for /proc/pid/maps reads and PROCMAP_QUERY
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
+	vbabka@suse.cz, peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, 
+	mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
+	brauner@kernel.org, josef@toxicpanda.com, yebin10@huawei.com, 
+	linux@weissschuh.net, willy@infradead.org, osalvador@suse.de, 
+	andrii@kernel.org, ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	tjmercier@google.com, kaleshsingh@google.com, aha310510@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, surenb@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ZLQua54py0y302zmmXQaUITj
-Content-Type: multipart/mixed; boundary="------------SImcOnPmWUOC3YSpKB9YRqi8";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Tu Dinh <ngoc-tu.dinh@vates.tech>, Abinash <abinashlalotra@gmail.com>
-Cc: sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- Abinash Singh <abinashsinghlalotra@gmail.com>
-Message-ID: <f8335a71-f9af-4911-96fa-46e7088acaf8@suse.com>
-Subject: Re: [RFC PATCH] xen/gntdev: reduce stack usage by dynamically
- allocating gntdev_copy_batch
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com>
- <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
- <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
- <ab668ddb-1ea5-4444-95fc-f31469b4f05e@vates.tech>
- <f8bde276-9d4e-47d0-9841-fd8724ef5275@suse.com>
- <f1c68345-a511-46b8-964c-a00bb62274ba@wanadoo.fr>
-In-Reply-To: <f1c68345-a511-46b8-964c-a00bb62274ba@wanadoo.fr>
+Reading /proc/pid/maps requires read-locking mmap_lock which prevents any
+other task from concurrently modifying the address space. This guarantees
+coherent reporting of virtual address ranges, however it can block
+important updates from happening. Oftentimes /proc/pid/maps readers are
+low priority monitoring tasks and them blocking high priority tasks
+results in priority inversion.
 
---------------SImcOnPmWUOC3YSpKB9YRqi8
-Content-Type: multipart/mixed; boundary="------------h5v6MQRVJSQBTHVbv0AI9xba"
+Locking the entire address space is required to present fully coherent
+picture of the address space, however even current implementation does not
+strictly guarantee that by outputting vmas in page-size chunks and
+dropping mmap_lock in between each chunk. Address space modifications are
+possible while mmap_lock is dropped and userspace reading the content is
+expected to deal with possible concurrent address space modifications.
+Considering these relaxed rules, holding mmap_lock is not strictly needed
+as long as we can guarantee that a concurrently modified vma is reported
+either in its original form or after it was modified.
 
---------------h5v6MQRVJSQBTHVbv0AI9xba
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+This patchset switches from holding mmap_lock while reading /proc/pid/maps
+to taking per-vma locks as we walk the vma tree. This reduces the
+contention with tasks modifying the address space because they would have
+to contend for the same vma as opposed to the entire address space. Same
+is done for PROCMAP_QUERY ioctl which locks only the vma that fell into
+the requested range instead of the entire address space. Previous version
+of this patchset [1] tried to perform /proc/pid/maps reading under RCU,
+however its implementation is quite complex and the results are worse than
+the new version because it still relied on mmap_lock speculation which
+retries if any part of the address space gets modified. New implementaion
+is both simpler and results in less contention. Note that similar approach
+would not work for /proc/pid/smaps reading as it also walks the page table
+and that's not RCU-safe.
 
-T24gMDMuMDcuMjUgMTk6MzUsIENocmlzdG9waGUgSkFJTExFVCB3cm90ZToNCj4gTGUgMDMv
-MDcvMjAyNSDDoCAwNzoyMiwgSsO8cmdlbiBHcm/DnyBhIMOpY3JpdMKgOg0KPj4gT24gMDMu
-MDcuMjUgMDA6NDIsIFR1IERpbmggd3JvdGU6DQo+Pj4gT24gMDEvMDcvMjAyNSAyMzo1Mywg
-QWJpbmFzaCB3cm90ZToNCj4+Pj4gSGkgLA0KPj4+Pg0KPj4+PiBUaGFua3MgZm9yIHBvaW50
-aW5nIHRoYXQgb3V0Lg0KPj4+Pg0KPj4+PiBJIGhhdmVu4oCZdCBtZWFzdXJlZCB0aGUgcGVy
-Zm9ybWFuY2UgaW1wYWN0IHlldCDigJQgbXkgbWFpbiBmb2N1cyB3YXMgb24NCj4+Pj4gZ2V0
-dGluZyByaWQgb2YgdGhlIHN0YWNrIHVzYWdlIHdhcm5pbmcgdHJpZ2dlcmVkIGJ5IExMVk0g
-ZHVlIHRvDQo+Pj4+IGlubGluaW5nLiBCdXQgeW91J3JlIHJpZ2h0LCBnbnRkZXZfaW9jdGxf
-Z3JhbnRfY29weSgpIGlzIG9uIGEgaG90DQo+Pj4+IHBhdGgsIGFuZCBjYWxsaW5nIGttYWxs
-b2MoKSB0aGVyZSBjb3VsZCBkZWZpbml0ZWx5IHNsb3cgdGhpbmdzIGRvd24sDQo+Pj4+IGVz
-cGVjaWFsbHkgdW5kZXIgbWVtb3J5IHByZXNzdXJlLg0KPj4+Pg0KPj4+PiBJ4oCZbGwgcnVu
-IHNvbWUgYmVuY2htYXJrcyB0byBjb21wYXJlIHRoZSBjdXJyZW50IGFwcHJvYWNoIHdpdGgg
-dGhlDQo+Pj4+IGR5bmFtaWMgYWxsb2NhdGlvbiwgYW5kIGFsc28gbG9vayBpbnRvIGFsdGVy
-bmF0aXZlcyDigJQgbWF5YmUNCj4+Pj4gcHJlLWFsbG9jYXRpbmcgdGhlIHN0cnVjdCBvciBs
-aW1pdGluZyBpbmxpbmluZyBpbnN0ZWFkLiBJZiB5b3UgaGF2ZQ0KPj4+PiBhbnkgaWRlYXMg
-b3Igc3VnZ2VzdGlvbnMgb24gaG93IGJlc3QgdG8gYXBwcm9hY2ggdGhpcywgSeKAmWQgYmUg
-aGFwcHkgdG8NCj4+Pj4gaGVhciB0aGVtLg0KPj4+Pg0KPj4+PiBEbyB5b3UgaGF2ZSBhbnkg
-c3VnZ2VzdGlvbnMgb24gaG93IHRvIHRlc3QgdGhlIHBlcmZvcm1hbmNlPw0KPj4+Pg0KPj4+
-PiBCZXN0LA0KPj4+PiBBYmluYXNoDQo+Pj4+DQo+Pj4+DQo+Pj4NCj4+PiBQcmVhbGxvY2F0
-aW5nIG1heSB3b3JrIGJ1dCBJJ2QgYmUgd2FyeSBvZiBzeW5jaHJvbml6YXRpb24gaWYgdGhl
-DQo+Pj4gcHJlYWxsb2NhdGVkIHN0cnVjdCBpcyBzaGFyZWQuDQo+Pj4NCj4+PiBJJ2QgbG9v
-ayBhdCBvcHRpbWl6aW5nIHN0YXR1c1tdIHdoaWNoIHNob3VsZCBzYXZlIHF1aXRlIGEgZmV3
-IGJ5dGVzLg0KPj4+DQo+Pj4gUmVkdWNpbmcgR05UREVWX0NPUFlfQkFUQ0ggY291bGQgYmUg
-YSBsYXN0IHJlc29ydCwgYnV0IHRoYXQgbWF5IGFsc28NCj4+PiBpbXBhY3QgcGVyZm9ybWFu
-Y2UuDQo+Pg0KPj4gSU1ITyB0aGUgbW9zdCBwcm9taXNpbmcgd2F5IHdvdWxkIGJlIHRvIGR5
-bmFtaWNhbGx5IGFsbG9jYXRlIHRoZSBzdHJ1Y3QsIGJ1dA0KPj4gZG9uJ3QgZnJlZSBpdCBh
-dCB0aGUgZW5kIG9mIHRoZSBpb2N0bC4gSW5zdGVhZCBpdCBjb3VsZCBiZSBwdXQgaW50byBh
-IGxpc3QNCj4+IGFuY2hvcmVkIGluIHN0cnVjdCBnbnRkZXZfcHJpdiwgc28gZnJlZWluZyB3
-b3VsZCBiZSBkb25lIG9ubHkgYXQgY2xvc2UoKSB0aW1lLg0KPj4NCj4+IFN5bmNocm9uaXph
-dGlvbiB3b3VsZCBiZSBtaW5pbWFsIChqdXN0IGZvciB0YWtpbmcgYSBmcmVlIHN0cnVjdCBm
-cm9tIHRoZSBsaXN0DQo+PiBvciBwdXR0aW5nIGl0IGJhY2sgYWdhaW4pLCB3aGlsZSBtZW1v
-cnkgdXNhZ2Ugd291bGQgYmUgYmFzaWNhbGx5IGp1c3QgYXMgbmVlZGVkLA0KPj4gZGVwZW5k
-aW5nIG9uIHRoZSBudW1iZXIgb2YgY29uY3VycmVudCB0aHJlYWRzIHVzaW5nIHRoZSBzYW1l
-IGZpbGUgZGVzY3JpcHRvcg0KPj4gZm9yIHRoZSBpb2N0bC4NCj4+DQo+PiBUaGlzIGFwcHJv
-YWNoIHdvdWxkIGV2ZW4gYWxsb3cgdG8gcmFpc2UgR05UREVWX0NPUFlfQkFUQ0gsIG1heWJl
-IHJlc3VsdGluZyBldmVuDQo+PiBpbiBhIGdhaW4gb2YgcGVyZm9ybWFuY2UuDQo+Pg0KPj4g
-SSdsbCB3cml0ZSBhIHBhdGNoIGltcGxlbWVudGluZyB0aGUgYWxsb2NhdGlvbiBzY2hlbWUu
-DQo+Pg0KPj4NCj4+IEp1ZXJnZW4NCj4gDQo+IEl0IG1heSBiZSBhbiBvdmVya2lsbCwgYnV0
-IHNvbWV0aW1lcyB3ZSBzZWUgcGF0dGVybiB0aGF0IHRyeSB0byBrZWVwIHRoZSBiZXN0IG9m
-IA0KPiB0aGUgMiB3b3JsZHMuIFNvbWV0aGluZyBsaWtlOg0KPiANCj4gDQo+IHN0YXRpYyBz
-dHJ1Y3QgZ250ZGV2X2NvcHlfYmF0Y2ggc3RhdGljX2JhdGNoOw0KPiBzdGF0aWMgc3RydWN0
-IG11dGV4IG15X211dGV4Ow0KPiANCj4gc3RhdGljIGxvbmcgZ250ZGV2X2lvY3RsX2dyYW50
-X2NvcHkoLi4uKQ0KPiB7DQo+ICDCoMKgwqDCoHN0cnVjdCBnbnRkZXZfY29weV9iYXRjaCAq
-ZHluYW1pY19iYXRjaCA9IE5VTEw7DQo+ICDCoMKgwqDCoHN0cnVjdCBnbnRkZXZfY29weV9i
-YXRjaCAqYmF0Y2g7DQo+IA0KPiAgwqDCoMKgwqAuLi4NCj4gDQo+ICDCoMKgwqDCoGlmICht
-dXRleF90cnlsb2NrKCZteV9tdXRleCkpIHsNCj4gIMKgwqDCoMKgwqDCoMKgIC8qDQo+ICDC
-oMKgwqDCoMKgwqDCoMKgICogTm8gY29uY3VycmVudCBhY2Nlc3M/DQo+ICDCoMKgwqDCoMKg
-wqDCoMKgICogVXNlIGEgc2hhcmVkIHN0YXRpYyB2YXJpYWJsZSB0byBhdm9pZCBhbiBhbGxv
-Y2F0aW9uDQo+ICDCoMKgwqDCoMKgwqDCoMKgICovDQo+ICDCoMKgwqDCoMKgwqDCoCBiYXRj
-aCA9ICZzdGF0aWNfYmF0Y2g7DQo+ICDCoMKgwqDCoGVsc2Ugew0KPiAgwqDCoMKgwqDCoMKg
-wqAgLyogb3RoZXJ3aXNlLCB3ZSBuZWVkIHNvbWUgZnJlc2ggbWVtb3J5ICovDQo+ICDCoMKg
-wqDCoMKgwqDCoCBkeW5hbWljX2JhdGNoID0ga21hbGxvYyhzaXplb2YoKmJhdGNoKSwgR0ZQ
-X0tFUk5FTCk7DQo+ICDCoMKgwqDCoMKgwqDCoCBpZiAoIWJhdGNoKQ0KPiAgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsNCj4gDQo+ICDCoMKgwqDCoMKgwqDCoCBi
-YXRjaCA9IGR5bmFtaWNfYmF0Y2g7DQo+ICDCoMKgwqDCoH0NCj4gDQo+ICDCoMKgwqDCoC8q
-IGRvIHN0dWZmIHdpdGggJ2JhdGNoJyAqLw0KPiAgwqDCoMKgwqAuLi4NCj4gDQo+IGZyZWVf
-YmF0Y2g6DQo+ICDCoMKgwqDCoGlmICghZHluYW1pY19iYXRjaCkNCj4gIMKgwqDCoMKgwqDC
-oMKgIG11dGV4X3VubG9jaygmbXlfbXV0ZXgpOw0KPiAgwqDCoMKgwqBlbHNlDQo+ICDCoMKg
-wqDCoMKgwqDCoCBrZnJlZShkeW5hbWljX2JhdGNoKTsNCj4gIMKgwqDCoMKgIHJldHVybiBy
-ZXQ7DQo+ICDCoH0NCj4gDQo+IA0KPiBKdXN0IG15IDJjLg0KDQpUaGFua3MgZm9yIHRoZSBy
-ZW1hcmssIGJ1dCB0aGlzIHdvbid0IGhlbHAgbXVjaC4gZ250ZGV2X2lvY3RsX2dyYW50X2Nv
-cHkoKQ0KaXMgZS5nLiB1c2VkIGJ5IHFlbXUgZm9yIGRvaW5nIGRpc2sgSS9PIG9uIGJlaGFs
-ZiBvZiBhIFhlbiBndWVzdC4gVGhpcw0KbWVhbnMgdGhhdCBpdCBpcyB2ZXJ5IGxpa2VseSB0
-byBiZSB1c2VkIGNvbmN1cnJlbnRseSwgc28ganVzdCBvcHRpbWl6aW5nDQpmb3IgYSBzaW5n
-bGUgdGhyZWFkIHdvbid0IGJlIGVub3VnaC4NCg0KDQpKdWVyZ2VuDQo=
---------------h5v6MQRVJSQBTHVbv0AI9xba
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Paul McKenney's designed a test [2] to measure mmap/munmap latencies while
+concurrently reading /proc/pid/maps. The test has a pair of processes
+scanning /proc/PID/maps, and another process unmapping and remapping 4K
+pages from a 128MB range of anonymous memory.  At the end of each 10
+second run, the latency of each mmap() or munmap() operation is measured,
+and for each run the maximum and mean latency is printed. The map/unmap
+process is started first, its PID is passed to the scanners, and then the
+map/unmap process waits until both scanners are running before starting
+its timed test.  The scanners keep scanning until the specified
+/proc/PID/maps file disappears. This test registered close to 10x
+improvement in update latencies:
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Before the change:
+./run-proc-vs-map.sh --nsamples 100 --rawdata -- --busyduration 2
+    0.011     0.008     0.455
+    0.011     0.008     0.472
+    0.011     0.008     0.535
+    0.011     0.009     0.545
+    ...
+    0.011     0.014     2.875
+    0.011     0.014     2.913
+    0.011     0.014     3.007
+    0.011     0.015     3.018
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+After the change:
+./run-proc-vs-map.sh --nsamples 100 --rawdata -- --busyduration 2
+    0.006     0.005     0.036
+    0.006     0.005     0.039
+    0.006     0.005     0.039
+    0.006     0.005     0.039
+    ...
+    0.006     0.006     0.403
+    0.006     0.006     0.474
+    0.006     0.006     0.479
+    0.006     0.006     0.498
 
---------------h5v6MQRVJSQBTHVbv0AI9xba--
+The patchset also adds a number of tests to check for /proc/pid/maps data
+coherency. They are designed to detect any unexpected data tearing while
+performing some common address space modifications (vma split, resize and
+remap). Even before these changes, reading /proc/pid/maps might have
+inconsistent data because the file is read page-by-page with mmap_lock
+being dropped between the pages. An example of user-visible inconsistency
+can be that the same vma is printed twice: once before it was modified and
+then after the modifications. For example if vma was extended, it might be
+found and reported twice. What is not expected is to see a gap where there
+should have been a vma both before and after modification. This patchset
+increases the chances of such tearing, therefore it's even more important
+now to test for unexpected inconsistencies.
 
---------------SImcOnPmWUOC3YSpKB9YRqi8--
+In [3] Lorenzo identified the following possible vma merging/splitting
+scenarios:
 
---------------ZLQua54py0y302zmmXQaUITj
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Merges with changes to existing vmas:
+1 Merge both - mapping a vma over another one and between two vmas which
+can be merged after this replacement;
+2. Merge left full - mapping a vma at the end of an existing one and
+completely over its right neighbor;
+3. Merge left partial - mapping a vma at the end of an existing one and
+partially over its right neighbor;
+4. Merge right full - mapping a vma before the start of an existing one
+and completely over its left neighbor;
+5. Merge right partial - mapping a vma before the start of an existing one
+and partially over its left neighbor;
 
------BEGIN PGP SIGNATURE-----
+Merges without changes to existing vmas:
+6. Merge both - mapping a vma into a gap between two vmas which can be
+merged after the insertion;
+7. Merge left - mapping a vma at the end of an existing one;
+8. Merge right - mapping a vma before the start end of an existing one;
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmhnb0QFAwAAAAAACgkQsN6d1ii/Ey8N
-agf+NDt/hN16kHzKdIWxFdnd8LWYPCHfiyeIsI4kQB1wYytYXIOTS6T8HsemCBvpxL+un1leTI2G
-78+WNDm7TrsNU27J27UurYZeUqyxjSLWRGdUlbiXEKNROMFE/Ca8966QtyQzDp03ZBGP4fE8oQcf
-25yqWVEw17eoRaCxH4mh2GDaNHoO0r8aShq6HtJAFDS5qECyWYOAByEih22dnanhT02HJkZTU0Gm
-siZPN3j09+Wye6Koeg4kol9qO42BYSZSO/1pGbI38L3DIMozXxHyRABnqIDkWYhkz4/phA06DqNU
-57lplB34sXYNYHsDIgr20lbm5BEZCVA+UtfA7c0VlQ==
-=hpAH
------END PGP SIGNATURE-----
+Splits
+9. Split with new vma at the lower address;
+10. Split with new vma at the higher address;
 
---------------ZLQua54py0y302zmmXQaUITj--
+If such merges or splits happen concurrently with the /proc/maps reading
+we might report a vma twice, once before the modification and once after
+it is modified:
+
+Case 1 might report overwritten and previous vma along with the final
+merged vma;
+Case 2 might report previous and the final merged vma;
+Case 3 might cause us to retry once we detect the temporary gap caused by
+shrinking of the right neighbor;
+Case 4 might report overritten and the final merged vma;
+Case 5 might cause us to retry once we detect the temporary gap caused by
+shrinking of the left neighbor;
+Case 6 might report previous vma and the gap along with the final marged
+vma;
+Case 7 might report previous and the final merged vma;
+Case 8 might report the original gap and the final merged vma covering the
+gap;
+Case 9 might cause us to retry once we detect the temporary gap caused by
+shrinking of the original vma at the vma start;
+Case 10 might cause us to retry once we detect the temporary gap caused by
+shrinking of the original vma at the vma end;
+
+In all these cases the retry mechanism prevents us from reporting possible
+temporary gaps.
+
+Changes since v5 [4]:
+- Made /proc/pid/maps tearing test a separate selftest,
+per Alexey Dobriyan
+- Changed asserts with or'ed conditions into separate ones,
+per Alexey Dobriyan
+- Added a small cleanup patch [6/8] to avoid unnecessary seq_file position
+type casting
+- Removed unnecessary is_sentinel_pos() helper
+- Changed titles to use fs/proc/task_mmu instead of mm/maps prefix,
+per David Hildenbrand
+- Included Lorenzo's fix for mmap lock assertion in anon_vma_name()
+- Reworked the last patch to avoid allocation in the rcu read section,
+which replaces Jeongjun Park's fix
+
+!!! NOTES FOR APPLYING THE PATCHSET !!!
+
+Applies cleanly over mm-unstable after reverting old version with fixes.
+The following patches should be reverted before applyng this patchset:
+
+b33ce1be8a40 ("selftests/proc: add /proc/pid/maps tearing from vma split test")
+b538e0580fd6 ("selftests/proc: extend /proc/pid/maps tearing test to include vma resizing")
+4996b4409cc6 ("selftests/proc: extend /proc/pid/maps tearing test to include vma remapping")
+c39471f78d5e ("selftests/proc: test PROCMAP_QUERY ioctl while vma is concurrently modified")
+487570f548f3 ("selftests/proc: add verbose more for tests to facilitate debugging")
+e1ba4969cba1 ("mm/maps: read proc/pid/maps under per-vma lock")
+ecb110179e77 ("mm/madvise: fixup stray mmap lock assert in anon_vma_name()")
+6772c457a865 ("fs/proc/task_mmu:: execute PROCMAP_QUERY ioctl under per-vma locks")
+d5c67bb2c5fb ("mm/maps: move kmalloc() call location in do_procmap_query() out of RCU critical section")
+
+[1] https://lore.kernel.org/all/20250418174959.1431962-1-surenb@google.com/
+[2] https://github.com/paulmckrcu/proc-mmap_sem-test
+[3] https://lore.kernel.org/all/e1863f40-39ab-4e5b-984a-c48765ffde1c@lucifer.local/
+[4] https://lore.kernel.org/all/20250624193359.3865351-1-surenb@google.com/
+
+Suren Baghdasaryan (8):
+  selftests/proc: add /proc/pid/maps tearing from vma split test
+  selftests/proc: extend /proc/pid/maps tearing test to include vma
+    resizing
+  selftests/proc: extend /proc/pid/maps tearing test to include vma
+    remapping
+  selftests/proc: test PROCMAP_QUERY ioctl while vma is concurrently
+    modified
+  selftests/proc: add verbose more for tests to facilitate debugging
+  fs/proc/task_mmu: remove conversion of seq_file position to unsigned
+  fs/proc/task_mmu: read proc/pid/maps under per-vma lock
+  fs/proc/task_mmu: execute PROCMAP_QUERY ioctl under per-vma locks
+
+ fs/proc/internal.h                            |   5 +
+ fs/proc/task_mmu.c                            | 188 +++-
+ include/linux/mmap_lock.h                     |  11 +
+ mm/madvise.c                                  |   3 +-
+ mm/mmap_lock.c                                |  88 ++
+ tools/testing/selftests/proc/.gitignore       |   1 +
+ tools/testing/selftests/proc/Makefile         |   1 +
+ tools/testing/selftests/proc/proc-maps-race.c | 829 ++++++++++++++++++
+ 8 files changed, 1098 insertions(+), 28 deletions(-)
+ create mode 100644 tools/testing/selftests/proc/proc-maps-race.c
+
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
