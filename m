@@ -1,129 +1,112 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584872E370A
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 21:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA92E370A;
+	Fri,  4 Jul 2025 21:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751665852; cv=none; b=DSmEHmEYNAMGoNvstm1S+t6UMS7fICAwYG10Qt9ZcF6nphR7TzXeTGhzjV4VrsS0fZ6e+3X0xWn6wRlHU5rTEB5f+iRaD7T6jbsuSoDapmZY0+ycObBUBNLuKF9/10hY9ZuDZEOORzQ+t1hwGQhfRcpkDj+jDLojeSYn6u6n4XA=
+	t=1751665912; cv=none; b=F4fuWwmf1YRUJGs+1hifqLIS9WgmSZPjjN07haBoy3aSzeZg7S1kJ9Z3LhQ/RSuO/lvP1X3xIMA+h8ECOUCY2bAPCF8PL443OBMwFg7w9Jva1SxrcVMnqtK/TE/r7P2AL15Y7brcFJ6FdVx5fCJZv7364ChiTovsUrJ2PuRrTdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751665852; c=relaxed/simple;
-	bh=qgxq7///GeouJK7xcHvUiFrlrBEzil20246mzZ43dtI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n9Pedw399rNJdq1HMtcFiSBgAFoeROv3+b4GXzgKUTCo14M+fXndn22wxFLq1IIlONaJu5/8TkabOMkK2i+etFmBvBcSksxDGY3oSbK98Th4XX4b8VHP0kGE6lMDFPb6Kwq9l8iljK7ZbYSKE7wQgyrT16OOZJrO6OXgTD9wxXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3de3b5b7703so7626115ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 14:50:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751665849; x=1752270649;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mBVoY6MXTyvkzm4bD6y7JoQow2ydBQAJtt7fOsYxSXI=;
-        b=dQCf4bIY17h/+niVGwsmhaWAm0uYFHKTMxNiNWOarC5Ccg/fARuxkfG2Chy7NzMtAx
-         aCcMHOBvfjMW9+kieylriMxBc4uC/gUywL0LjqvVky5y44fKBenqkcnVkemMyY5RqBMZ
-         VmTcb1LDMnLBi11Ev09P2vmxTcIxoWtNFKf3Qpznd3ZwfdndRD/GuYkUBAN9yZRLM2Dw
-         kdWJX0J5qrdmb8cyZ7BHws+k8twbtWt63+xC6LLBK/QXzlEBFmHN/bZdlR1BxqpPAJz+
-         +iFtu4kTXkvawtHxKXAnv3+tWx6/a6ln4Ehc5hSCMs2Yo5ermplCVatHT0wW2lzu+Ovr
-         fUhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVu4Es+tZpMF8PAZMnzwtHpqWrZxY95Hc8tgGSZu4rxz6CKfD9twyopXBr63oZ26wyJ1MgLfb/3zCPd+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzzDfCbn+AIHJGnIZVUmdXMB0gAHJG7nZlThwQdVMh/4T+ivZn
-	nRsQ/BioEaLHY/S7yR71sNOcmpr51wmDAY7lRLTA1bhdNFvkPLsMOz1eeIhZX0QT5QgwEXM3UA0
-	tEhANUiYgHMsGesL37poY2uc7+pXQMATCYOBewOJkAGJK9J1NHwyszFsIq1k=
-X-Google-Smtp-Source: AGHT+IEChCJYW3c9CF+R7CukkrwnrBpPGEpzi8aXvidGZhf432oLkyKZhi/BEpKH90dKP9V2ck8bBuJIvRGZUxUipgRXSulfoKZ6
+	s=arc-20240116; t=1751665912; c=relaxed/simple;
+	bh=t9flg7u82clPx3gawCNQFga3j2hrwuKYVb7q0KayW2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MySQnUND9p9W1H6JtFSEHo5EjbQFTbaf9affhEHONs7rvVMA6hYboeGXtkcj5GxgSZmlIkoJtGcW8TgeercNegrkEFj7VN9bvw6GpSOsQ6YypAsF7AYW1EiluZ6sbz9o5BshUSinEtrqXfpQbffl3L4Hxnu8bdNcl7TydTqprsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOmXWdAb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOmXWdAb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4685C4CEEF;
+	Fri,  4 Jul 2025 21:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751665911;
+	bh=t9flg7u82clPx3gawCNQFga3j2hrwuKYVb7q0KayW2c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YOmXWdAbGI3BIHxJCDGKkS90GNv6sQOTf6r/yS5nqa0oepLo/aLYyZUosYAJgAbdV
+	 GjY+5gKzqY1yrV1o0Yq8Q+EXigbxB5Ko+l8CRqmXxxJV7uf8m7M+LHOItBW+jhFnvI
+	 Lcg8UYVHQQk/8x4joDBwr0MamdaU9NQuyZ/96jrlwFGabjuPBMf6fKq/aw/52LjPMT
+	 jy0mLjO5Qy9m15EztWTl3YD61rEfEpIVjHhAAoIV8bfbIuiirLPLRWZa/gw0Q3NmNQ
+	 NIPi5/iqqrzM3a1FaLausMoiOvDbr+bO99pOrSDKcXsdpB4s0/pr/RKirZnn2Q3UfK
+	 qgtL5ZJ7hU1Cg==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32add56e9ddso11747661fa.2;
+        Fri, 04 Jul 2025 14:51:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVdx+VLfjRj7E+HDux/ItjO46PfOLFZDHVfnAkqwjq10b6eaItD3QZ7xcpSNaHe0i4izcid1oBkMXRk@vger.kernel.org, AJvYcCWBShLgCacRQxHxFuPegxPGAn4ygyv+x1VFsGCgMxPpfiDutjcvtzLKlDowS/AofKvtSBJ/VyEp65x2l1E+@vger.kernel.org, AJvYcCWbbBab4y6+FMrBRwwvTHxlUeD5NxR+9MC/bvX7Eq3b0p7DymU1sUSL7Ljb1rrNF/dOcjuO0ZCxauI=@vger.kernel.org, AJvYcCXFDFhgCz4jvYDcIW4mYi9s/+o4mSdh6G+pVPFI5IB4AsfrrsJa4LqD7oSAAW1LlvFluRjJMsfC5JEWMZj+@vger.kernel.org, AJvYcCXjc7Sfjo5CSrDz4AKaJJoBhAa8/7KnqsLTrcdiulg6VJagxzE3y3jiLGHoFcKJgtI3xbGUnhcmaFoJgnrhOJep@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLDYra94wwBVCDogn2nBitMoEq7FKa8K0CEUKi/s12uBSjhGyW
+	BvgavkSUnhdyDdU8weittgyUO/Qmrx+4h7nN2GKPqzcFcrvfZnjLOk79pTVZzUzQ5eIcEw/+uXk
+	FzPKnDG/mO6TScj+zn2FTPoHuMZXEiE8=
+X-Google-Smtp-Source: AGHT+IGD64LdVimTYrrEYHkksyjH05eDJjNW+f6BrZ6aIKjkeqUVvDAGeO5hcdPg3i9qqFh8j8tgTZHqhiEP50d7qdg=
+X-Received: by 2002:a2e:9181:0:b0:32a:de79:2ca with SMTP id
+ 38308e7fff4ca-32e5f57ca68mr8591381fa.11.1751665910378; Fri, 04 Jul 2025
+ 14:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:349f:b0:3dd:ceb0:f603 with SMTP id
- e9e14a558f8ab-3e136ea24f4mr39331245ab.2.1751665849464; Fri, 04 Jul 2025
- 14:50:49 -0700 (PDT)
-Date: Fri, 04 Jul 2025 14:50:49 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68684cb9.a00a0220.c7b3.0027.GAE@google.com>
-Subject: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in pcl812_attach
-From: syzbot <syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com>
-To: abbotti@mev.co.uk, hsweeten@visionengravers.com, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de> <20250626-kunit-kselftests-v4-1-48760534fef5@linutronix.de>
+In-Reply-To: <20250626-kunit-kselftests-v4-1-48760534fef5@linutronix.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 5 Jul 2025 06:51:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASVLGD6FMqyFd_Siy_JuRZX-TMAZ5TVH8+kN1Bwjwx5eg@mail.gmail.com>
+X-Gm-Features: Ac12FXxpmIgKwjbffGSAIIbb0apS3wkBzhbD7god4vAMeUYGlKwgJvbMYebnzVM
+Message-ID: <CAK7LNASVLGD6FMqyFd_Siy_JuRZX-TMAZ5TVH8+kN1Bwjwx5eg@mail.gmail.com>
+Subject: Re: [PATCH v4 01/15] kbuild: userprogs: avoid duplication of flags
+ inherited from kernel
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, workflows@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Jun 26, 2025 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> The duplication makes maintenance harder. Changes need to be done in two
+> places and the lines will grow overly long.
+>
+> Use an intermediary variable instead.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  Makefile | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 35e6e5240c61a8a329011929fcd0352b881dccdc..c4293cf91e968ca8ee6445284=
+1fb266e24df63f6 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1130,8 +1130,9 @@ LDFLAGS_vmlinux   +=3D --emit-relocs --discard-none
+>  endif
+>
+>  # Align the bit size of userspace programs with the kernel
+> -KBUILD_USERCFLAGS  +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CPPFLA=
+GS) $(KBUILD_CFLAGS))
+> -KBUILD_USERLDFLAGS +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CPPFLA=
+GS) $(KBUILD_CFLAGS))
+> +USERFLAGS_FROM_KERNEL :=3D -m32 -m64 --target=3D%
+> +KBUILD_USERCFLAGS  +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPF=
+LAGS) $(KBUILD_CFLAGS))
+> +KBUILD_USERLDFLAGS +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPF=
+LAGS) $(KBUILD_CFLAGS))
+>
 
-syzbot found the following issue on:
+Acked-by: Masahiro Yamada <masahiroy@kernel.org>
 
-HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=104a8f70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b29b1a0d7330d4a8
-dashboard link: https://syzkaller.appspot.com/bug?extid=32de323b0addb9e114ff
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b17ebc580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144a8f70580000
+However, as I mentioned before, the following code is shorter.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4c06e63b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ff61efc838cb/vmlinux-4c06e63b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/dea44d0d14bb/bzImage-4c06e63b.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in drivers/comedi/drivers/pcl812.c:1152:10
-shift exponent 8550 is too large for 32-bit type 'int'
-CPU: 0 UID: 0 PID: 5465 Comm: syz.0.16 Not tainted 6.16.0-rc4-syzkaller-00123-g4c06e63b9203 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:233
- __ubsan_handle_shift_out_of_bounds+0x386/0x410 lib/ubsan.c:494
- pcl812_attach+0x1b9e/0x2300 drivers/comedi/drivers/pcl812.c:1152
- comedi_device_attach+0x51d/0x670 drivers/comedi/drivers.c:996
- do_devconfig_ioctl drivers/comedi/comedi_fops.c:855 [inline]
- comedi_unlocked_ioctl+0x686/0xf40 drivers/comedi/comedi_fops.c:2136
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fed6198e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd34893f98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fed61bb5fa0 RCX: 00007fed6198e929
-RDX: 0000200000000140 RSI: 0000000040946400 RDI: 0000000000000003
-RBP: 00007fed61a10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fed61bb5fa0 R14: 00007fed61bb5fa0 R15: 0000000000000003
- </TASK>
----[ end trace ]---
+USERFLAGS_FROM_KERNEL :=3D $(filter -m32 -m64 --target=3D%,
+$(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+KBUILD_USERCFLAGS  +=3D $(USERFLAGS_FROM_KERNEL)
+KBUILD_USERLDFLAGS +=3D $(USERFLAGS_FROM_KERNEL)
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--=20
+Best Regards
+Masahiro Yamada
