@@ -1,30 +1,45 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA64E2DAFAE;
-	Fri,  4 Jul 2025 08:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00462882A9;
+	Fri,  4 Jul 2025 08:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618836; cv=none; b=iJhqJXNZfbvXH3pf4sgT60tSosHANbjfaEBjgrIBXY0d+oDKi6Vbjy8WE+yy3aqmd13nnwQJPYH4HW86ljshEEILnuPyizjYYlaQVINzJAw6paMRfV/ZP7S5mCRHbuMkUpS9Uqls2PrAAxB7IasnOvP9RaC5VBKIvrd3wCRlcDI=
+	t=1751618911; cv=none; b=fIab01SvuOQWibI5KcPP4ZXfKgvlWr2AmjGUz52gJ9CWl/I4bT9AHWWxB2g2QMFEN0LkpEuqaW071UDtz3Wkro4Amq9nVww1fi4gMk9Rgie3TboHuLF/zbNSsqXO96Liu+CaPIhhgcg8nEo42+Xk24EZQA6dXVT+yr6tJ2K0Mws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618836; c=relaxed/simple;
-	bh=TWmJdeIYeEuBJcd9NqV2O8kqXLjlEAjWmbj91C+OgL4=;
+	s=arc-20240116; t=1751618911; c=relaxed/simple;
+	bh=9c1/n9u5apM1Vt0+8SET65XN0ovmups73fCT2CzcPOw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=udNd4EOufPCYQiE7crXgRXmgl5FeK/fRsVZhSena5gMjwxYHefuvL5ImX8LRksfqMv34z3SECKzuG72XP7y+tgcML7s9UbZS4DwORtsi0zerXq8ass4lI3G+ZUwB4qvkIdtGRdzR6S/OO1zK0aG4O80fWBVmNWk7YAf6Rf51KmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bYS1Y0LSQzKHMkC;
-	Fri,  4 Jul 2025 16:47:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 72C061A06E6;
-	Fri,  4 Jul 2025 16:47:11 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgBXuSYNlWdoU6BzAg--.32297S3;
-	Fri, 04 Jul 2025 16:47:11 +0800 (CST)
-Message-ID: <6a47b6f2-08d5-49ae-aee5-9068a421de05@huaweicloud.com>
-Date: Fri, 4 Jul 2025 16:47:09 +0800
+	 In-Reply-To:Content-Type; b=aNH/XXsGWjdjcAFDQaOtbArdSMYiq+H0sBgVwyQ61QITSpMLgqFj3NOUV7yzmvMXYH/yEX6MVX3Iqkos4NVvoCZfJpW7bkizxlhaSwUPUiXr4FTdFURtq2coJtf5B1O25Jw2Xm7Ty0eddcMlQTaePSQF3+6cbY0xM/lWKuNKFv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a436fb0858b311f0b29709d653e92f7d-20250704
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:339b74d9-8120-4eeb-b0e5-f7c48230ba07,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:0dbd8aee02da0d227be7b481bf494ec9,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a436fb0858b311f0b29709d653e92f7d-20250704
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1311471061; Fri, 04 Jul 2025 16:48:22 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 5BAC2E008FA3;
+	Fri,  4 Jul 2025 16:48:22 +0800 (CST)
+X-ns-mid: postfix-68679556-278304758
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 4A653E008FA1;
+	Fri,  4 Jul 2025 16:48:21 +0800 (CST)
+Message-ID: <67997bdd-d00a-413a-a565-188c4b06f385@kylinos.cn>
+Date: Fri, 4 Jul 2025 16:48:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,120 +47,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/10] ext4: restart handle if credits are insufficient
- during allocating blocks
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com,
- libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-6-yi.zhang@huaweicloud.com>
- <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
- <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
- <zqrcmug26tnhhjombztjjqwcorbnk4elqg2dqayhtfo2gkx3e3@wvzykthigny6>
- <f73b6973-3f7c-4e0e-9908-3a3f151715b5@huaweicloud.com>
- <mk5f4g4rwp37ob6qmd7asocumeepjcnufqzjvazr3yukbyzq3y@6gp6x6zvxf7r>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <mk5f4g4rwp37ob6qmd7asocumeepjcnufqzjvazr3yukbyzq3y@6gp6x6zvxf7r>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgBXuSYNlWdoU6BzAg--.32297S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFyDZw47Kw4fAFW3WF17Wrg_yoW5ArWDpr
-	WfCF1jyr47GFyUAF40vw18XF13t348CrWUXrZ8Wryqq3Z09r1fKF18Ja4jkFyjyrW8WF4U
-	Zr4Ut343WF15ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
+To: Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: pavel@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
+ <20250611101247.15522-2-zhangzihuan@kylinos.cn>
+ <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
+ <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
+ <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
+ <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/7/4 16:18, Jan Kara wrote:
-> On Fri 04-07-25 09:40:23, Zhang Yi wrote:
->> On 2025/7/4 0:27, Jan Kara wrote:
->>> On Thu 03-07-25 10:13:07, Zhang Yi wrote:
->>>> On 2025/7/2 22:18, Jan Kara wrote:
->>>>> On Tue 01-07-25 21:06:30, Zhang Yi wrote:
->>>>>> From: Zhang Yi <yi.zhang@huawei.com>
->>>>>>
->>>>>> After large folios are supported on ext4, writing back a sufficiently
->>>>>> large and discontinuous folio may consume a significant number of
->>>>>> journal credits, placing considerable strain on the journal. For
->>>>>> example, in a 20GB filesystem with 1K block size and 1MB journal size,
->>>>>> writing back a 2MB folio could require thousands of credits in the
->>>>>> worst-case scenario (when each block is discontinuous and distributed
->>>>>> across different block groups), potentially exceeding the journal size.
->>>>>> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
->>>>>> when delalloc is not enabled.
->>>>>>
->>>>>> Fix this by ensuring that there are sufficient journal credits before
->>>>>> allocating an extent in mpage_map_one_extent() and
->>>>>> ext4_block_write_begin(). If there are not enough credits, return
->>>>>> -EAGAIN, exit the current mapping loop, restart a new handle and a new
->>>>>> transaction, and allocating blocks on this folio again in the next
->>>>>> iteration.
->>>>>>
->>>>>> Suggested-by: Jan Kara <jack@suse.cz>
->>>>>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->>>>>
->>>>> Very nice. Feel free to add:
->>>>>
->>>>> Reviewed-by: Jan Kara <jack@suse.cz>
->>>>>
->>>>> One small comment below:
->>>>>
->>>>>> +/*
->>>>>> + * Make sure that the current journal transaction has enough credits to map
->>>>>> + * one extent. Return -EAGAIN if it cannot extend the current running
->>>>>> + * transaction.
->>>>>> + */
->>>>>> +static inline int ext4_journal_ensure_extent_credits(handle_t *handle,
->>>>>> +						     struct inode *inode)
->>>>>> +{
->>>>>> +	int credits;
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	if (!handle)
->>>>>
->>>>> Shouldn't this rather be ext4_handle_valid(handle) to catch nojournal mode
->>>>> properly?
->>>>>
->>>> __ext4_journal_ensure_credits() already calls ext4_handle_valid() to handle
->>>> nojournal mode, and the '!handle' check here is to handle the case where
->>>> ext4_block_write_begin() passes in a NULL 'handle'.
->>>
->>> Ah, right. But then you don't need the test at all, do you? Anyway,
->>> whatever you decide to do with this (or nothing) is fine by me.
->>>
->>
->> Yeah, remove this test is fine with me. I added this one is because the
->> comments in ext4_handle_valid() said "Do not use this for NULL handles."
->> I think it is best to follow this rule. :)
-> 
-> Right, I didn't read that comment :) So maybe the best fix will be just
-> adding a comment before the test like:
-> 
-> 	/* Called from ext4_da_write_begin() which has no handle started? */
-> 	if (!handle)
-> 		return 0;
-> 
+Hi Peter,
 
-Sure, it looks good, will do.
+Thanks for the feedback.
 
-Thanks,
-Yi.
+=E5=9C=A8 2025/7/4 16:19, Peter Zijlstra =E5=86=99=E9=81=93:
+> =E3=80=80=E3=80=80=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=E3=80=80 =E3=80=
+=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=
+ =E3=80=80 =E3=80=80=E3=80=80
+> Depending on where they wait (I can't seem to find in a hurry) it might
+> make sense to make that wait FREEZABLE anyway.
+>
+> For example, AFAICT it wouldn't hurt, and might even help some, to make
+> kernel/exit.c:do_wait() TASK_FREEZABLE.
+>
+> So where do ZOMBIEs sleep? Don't they simply pass through do_task_dead(=
+)
+> and never get scheduled again? Notably, do_task_dead() already marks th=
+e
+> tasks as PF_NOFREEZE.
+>
+> Anyway, yes, the condition it adds is relatively simple, but I really
+> don't see why we should complicate things *at*all*.
 
+You=E2=80=99re absolutely right =E2=80=94 zombie processes won=E2=80=99t =
+be frozen in practice,=20
+since PF_NOFREEZE is already set in do_task_dead(). However, if we don=E2=
+=80=99t=20
+explicitly skip them early in try_to_freeze_task(), they still go=20
+through the freezer logic path, including calls like freeze_task() =E2=86=
+=92=20
+freezing() before eventually returning without freezing.
 
+This not only introduces unnecessary code path traversal, but also=20
+involves locking (e.g., spin_lock_irqsave/restore()), which could be=20
+avoided altogether if we bail out earlier.
 
+Additionally, skipping zombies directly helps reduce the list traversal=20
+overhead in freeze_processes(), especially on systems with a large=20
+number of tasks, where zombies can account for a non-trivial fraction.
 
-
+So while the practical effect might be small, the gain is low-risk and=20
+helps streamline the freezer logic a bit more.
