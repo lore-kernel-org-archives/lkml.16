@@ -1,197 +1,159 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2392F50AD;
-	Fri,  4 Jul 2025 09:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2242F50B3;
+	Fri,  4 Jul 2025 09:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620325; cv=none; b=Ewf+wAulE7waQZ2c+IkIwJzGP7LYwBKsSOX/s5HvmDQ3EOHCbprTnyPns3ChOW8dthF7d2HP+Ns4tEt5xBUrnLi1Ug9pX6s+LaozKnbOS3gpAKOWgtyorC9ICnKYcCF3Jo5AEGlf+2V8Gc5C4XwpWwE2WGuHjjBBhUrYU6539VQ=
+	t=1751620334; cv=none; b=JYxq4j7MzOdL4tVANcvwEP0V3+Ofb+XDWLJudclzmu27UH1S3FDOTDdkfTUAp409dOa/3RCiBx8LDiHwMljSPI22+PYi7bXAeElyhiO4LgDZKV5mVSWIaF/1SXHvj2VL+AC3FflqPbiozI8HV3x6WlKSZS/jt6a8bBQEp9gVg24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620325; c=relaxed/simple;
-	bh=RNKT2fX9yOVVpWHgCAMPOtfP5J0v5bEcgERwxXq1XXo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=juwODa67QWqxZuuh0vrHS0Y5U36CVW5cuMnUtKT5d0qjpzuyhNFsKnIY9toNPvyPUQqaMuapbdtpsxfsm4JFHOwmaQcGsbjDYh2MmFKeebkviIDwojX5w3kJcNDdcWzdsdkQj/hPP3hQHFc9jOJwBCw4rrXUDBNvw9Wu3NjFKCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYSVk6gbHz6L5K0;
-	Fri,  4 Jul 2025 17:09:02 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6B2D01402F1;
-	Fri,  4 Jul 2025 17:12:01 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
- 2025 11:12:00 +0200
-Date: Fri, 4 Jul 2025 10:11:59 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
-	<Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy Shevchenko
-	<andy@kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: ad7173: fix num_slots on most chips
-Message-ID: <20250704101159.000013fd@huawei.com>
-In-Reply-To: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
-References: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751620334; c=relaxed/simple;
+	bh=6cDZJ3qB4J8b5zsWmQr2zNx2Y1qp7sgokKOOCeCt7n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6Q8yj8o3cSFLQ5YdVQ2lB1XuHLrHG1Tg3JmJivSxDMT9RU2raNuM/2BkS+IbPdawIE6ZcXsqnp8xtF3YltvIcLnhJ7XE8sU2GgYVL7PsjF2QU7jFv5YmHask30abvBNLJE6gAUa/FOBgv12C7UjwCgoEzQD82pKU2C+I7SULPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCmr8ifg; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCmr8ifg"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60707b740a6so997158a12.0;
+        Fri, 04 Jul 2025 02:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751620331; x=1752225131; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KptkojN101D7RtN6vbUFu716Ck19MPKgSUb97X17FaE=;
+        b=ZCmr8ifgUnjffLKRfcCe58FjKJYcW2FqAcrPtSt6PlsbpU/45NWjPZXxaY4DnYcvRf
+         4pwft5PBwARsJSeQOl4DlMZrHaFwR+Xjks1pEKxy1JMnlQptzrenwb7uaSH7RzM5pX0A
+         aWWCucPcAs6g4TB6D4Kih5CkglcivEcJOD8Gd3AUyXbK8hil1ft5JeTowE2jGmdOvvry
+         kxn/aONlKkzK9V/0uz5FsLsQlGxclRFbt0pHwTgJjBtgrb2gjzpJ4wHvp5WCN3OCWR48
+         FFRAhqFB4b6a15fVo0Gm1YgkjKOIN0ST/3/3SujZKhy0kIlbg9BJxJjL6HIN1dYvO43e
+         PVLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751620331; x=1752225131;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KptkojN101D7RtN6vbUFu716Ck19MPKgSUb97X17FaE=;
+        b=qww834TkJB4048aeKC6kveuHqvyBLE9SBoZA60Fe7dzVwom2kOxdLD4Yjlea0Yaej6
+         61OpeBQj1abn9kgguljurTnvtHO5sjaOhjv8QVYFGeQ6FoNaHblX0eI3E0Kdnj1E4xMS
+         EhXrgXpjUttNR1VmSTFNoJKJjFm5fmGqCT7N3MrdhKQnIOuijsITgyI+tcGRMjOKuwz9
+         8Mzdm1tKw4JMr5jVrKREH0Y061DZ22UnUpRHbpnEWwsyQLFQxXv7CGSOw7+kObqttyXM
+         HgtEdKWq7xnYMxqTrV9kTCCvcH/KP0jqybVy2zbFEZJVp6YGJ7C00D2wq6ZwRubexKVe
+         PALg==
+X-Forwarded-Encrypted: i=1; AJvYcCUITPjz2UB6QqIRUUX+H+luklSfT8YjxDOErVrT3v7FNZ9QnU2HsPWNQNW06sS3I2BZLXg6hBFJfSJ2Mwk=@vger.kernel.org, AJvYcCUUNevF3oeQ3FnxuwdUS96eWT0wnqFQ8amtzEuVtdAfWlONXxurgb77QdS4LCiTJXRLDITuQjtYdBR9WNiCxh9xW9Q=@vger.kernel.org, AJvYcCXB79NIHPBJUBAqbYcFzXLxj2VrahWdqmsjHgSW0e39z71ArTmZAdWOxg1X/yM1jW/AUgd1rHnCGCsMekw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcoBl24fkyh9QlEHXgWHIOlEA7dCmR0NDqkVGmrL92dBpw+lu+
+	QFhxBhid1T4CRyzvZ0UfDDlklGHk7oW0rIF/gpqwi3tzsp4r3YECKRmM
+X-Gm-Gg: ASbGncv0ojgsKLDMbjf+IYCGV5vg7ikiNg/QxGclEKe/b0cTQOOWPd2IOKu0xiL4ufz
+	cmAq5N7E56e0BuVsZn7lAVbzGb7sLpeoum2PeygdNdnKqJPNpgbK1BDAszMeFmO9Hh4u4XmtOQx
+	hC0H7PCpPi36IEE8t1gN0MQC3PC9gLrGUM06llZx227+n2PN8o3LQQCMcYpwAerGcAapsSx4zdH
+	1TgLeahqWWGBiH/T6R+08M7/9BPElCRH1w5BD3dXW1lE7Q3o6D6Zu0HMaCz8ZLi6fALET329erY
+	8llsmygn4DXmSzB7Z4vbfE8rUQpmJvsNjrG94WqVq/2rE0kaIC3dU6YmvYSsYA09ZtKjJoZjq3n
+	4oIYpYC3DzXTUMwsjw+QeS/ajHccLCo9jX0FZqK5JLjC0ORhKofhIfMjjNhA=
+X-Google-Smtp-Source: AGHT+IFdp3dnaPNX2K9juktcKvt9T7MKTZPR3ZqZ1DcevNm+PpERG7zIx/J5e+1Xs4SiNQ/M23vBdQ==
+X-Received: by 2002:a05:6402:50ce:b0:607:f431:33f8 with SMTP id 4fb4d7f45d1cf-60fd6d90e62mr978981a12.24.1751620331153;
+        Fri, 04 Jul 2025 02:12:11 -0700 (PDT)
+Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fcb8c80c4sm1016517a12.75.2025.07.04.02.12.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 02:12:09 -0700 (PDT)
+Date: Fri, 4 Jul 2025 11:12:07 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Douglas Anderson <dianders@chromium.org>, Lucas Stach <l.stach@pengutronix.de>, 
+	Russell King <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner <christian.gmeiner@gmail.com>, 
+	Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Qiang Yu <yuq825@gmail.com>, 
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Jyri Sarha <jyri.sarha@iki.fi>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, =?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Damon Ding <damon.ding@rock-chips.com>, Ayushi Makhija <quic_amakhija@quicinc.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org, imx@lists.linux.dev, 
+	lima@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 20/80] drivers: drm: Remove redundant
+ pm_runtime_mark_last_busy() calls
+Message-ID: <gh6mdzdl4gzs22zxfigdpbep3xcaf37fhjis5bvuvrjbxyxhkt@53hdnb53m32p>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+ <20250704075413.3218307-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="73fi2dtgof2ecl74"
+Content-Disposition: inline
+In-Reply-To: <20250704075413.3218307-1-sakari.ailus@linux.intel.com>
 
-On Thu, 03 Jul 2025 17:16:31 -0500
-David Lechner <dlechner@baylibre.com> wrote:
 
-> Fix the num_slots value for most chips in the ad7173 driver. The number
-> of slots corresponds to the number of CHANNEL registers on each chip.
-> 
-> Fixes: 4310e15b3140 ("iio: adc: ad7173: don't make copy of ad_sigma_delta_info struct")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+--73fi2dtgof2ecl74
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 20/80] drivers: drm: Remove redundant
+ pm_runtime_mark_last_busy() calls
+MIME-Version: 1.0
 
-Perhaps worth calling out that for many chips it seems to be falsely limiting
-the number of slots which is a functionality limitation I think rather
-than a bug.  The ones going the other way are more of a problem though!
+On Fri, Jul 04, 2025 at 10:54:13AM +0300, Sakari Ailus wrote:
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+[...]
+> diff --git a/drivers/gpu/drm/tegra/submit.c b/drivers/gpu/drm/tegra/submi=
+t.c
+> index 2430fcc97448..5e0e76ebc5be 100644
+> --- a/drivers/gpu/drm/tegra/submit.c
+> +++ b/drivers/gpu/drm/tegra/submit.c
+> @@ -502,7 +502,6 @@ static void release_job(struct host1x_job *job)
+>  	kfree(job_data->used_mappings);
+>  	kfree(job_data);
+> =20
+> -	pm_runtime_mark_last_busy(client->base.dev);
+>  	pm_runtime_put_autosuspend(client->base.dev);
+>  }
+> =20
 
-Jonathan
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> ---
-> FYI, the bug actually existed before the commit I used for Fixes:, but
-> that commit did major refactoring involving multiple drivers that would
-> be too complicated to try to backport to older kernels.
-> 
-> I will try to send a separate fix to stable@ to fix the bug in it's
-> original form on older kernels as that is just a one-liner.
-> ---
->  drivers/iio/adc/ad7173.c | 37 +++++++++++++++++++++++++++----------
->  1 file changed, 27 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..9c197cea11eb955becf4b9b97246379fa9c5da13 100644
-> --- a/drivers/iio/adc/ad7173.c
-> +++ b/drivers/iio/adc/ad7173.c
-> @@ -771,10 +771,27 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
->  	.num_slots = 8,
->  };
->  
-> +static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
-> +	.set_channel = ad7173_set_channel,
-> +	.append_status = ad7173_append_status,
-> +	.disable_all = ad7173_disable_all,
-> +	.disable_one = ad7173_disable_one,
-> +	.set_mode = ad7173_set_mode,
-> +	.has_registers = true,
-> +	.has_named_irqs = true,
-> +	.supports_spi_offload = true,
-> +	.addr_shift = 0,
-> +	.read_mask = BIT(6),
-> +	.status_ch_mask = GENMASK(3, 0),
-> +	.data_reg = AD7173_REG_DATA,
-> +	.num_resetclks = 64,
-> +	.num_slots = 16,
-> +};
-> +
->  static const struct ad7173_device_info ad4111_device_info = {
->  	.name = "ad4111",
->  	.id = AD4111_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 8,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -796,7 +813,7 @@ static const struct ad7173_device_info ad4111_device_info = {
->  static const struct ad7173_device_info ad4112_device_info = {
->  	.name = "ad4112",
->  	.id = AD4112_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 8,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -817,7 +834,7 @@ static const struct ad7173_device_info ad4112_device_info = {
->  static const struct ad7173_device_info ad4113_device_info = {
->  	.name = "ad4113",
->  	.id = AD4113_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 8,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -836,7 +853,7 @@ static const struct ad7173_device_info ad4113_device_info = {
->  static const struct ad7173_device_info ad4114_device_info = {
->  	.name = "ad4114",
->  	.id = AD4114_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 16,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -855,7 +872,7 @@ static const struct ad7173_device_info ad4114_device_info = {
->  static const struct ad7173_device_info ad4115_device_info = {
->  	.name = "ad4115",
->  	.id = AD4115_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 16,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -874,7 +891,7 @@ static const struct ad7173_device_info ad4115_device_info = {
->  static const struct ad7173_device_info ad4116_device_info = {
->  	.name = "ad4116",
->  	.id = AD4116_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in_div = 11,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -893,7 +910,7 @@ static const struct ad7173_device_info ad4116_device_info = {
->  static const struct ad7173_device_info ad7172_2_device_info = {
->  	.name = "ad7172-2",
->  	.id = AD7172_2_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_4_slots,
->  	.num_voltage_in = 5,
->  	.num_channels = 4,
->  	.num_configs = 4,
-> @@ -926,7 +943,7 @@ static const struct ad7173_device_info ad7172_4_device_info = {
->  static const struct ad7173_device_info ad7173_8_device_info = {
->  	.name = "ad7173-8",
->  	.id = AD7173_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in = 17,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> @@ -943,7 +960,7 @@ static const struct ad7173_device_info ad7173_8_device_info = {
->  static const struct ad7173_device_info ad7175_2_device_info = {
->  	.name = "ad7175-2",
->  	.id = AD7175_2_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_4_slots,
->  	.num_voltage_in = 5,
->  	.num_channels = 4,
->  	.num_configs = 4,
-> @@ -960,7 +977,7 @@ static const struct ad7173_device_info ad7175_2_device_info = {
->  static const struct ad7173_device_info ad7175_8_device_info = {
->  	.name = "ad7175-8",
->  	.id = AD7175_8_ID,
-> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
-> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
->  	.num_voltage_in = 17,
->  	.num_channels = 16,
->  	.num_configs = 8,
-> 
-> ---
-> base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
-> change-id: 20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-b982206a20b1
-> 
-> Best regards,
+--73fi2dtgof2ecl74
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhnmucACgkQ3SOs138+
+s6EwIA/+Lm7/OgfvX+wbCwmhCbQp5/BVsRO878lwGCmlqPoYL2WYHH/eSzmXSvUK
+xb7ZYOHW0fzKZGrQhw4CoKbIEoD5so8k56hh1QQ0y0nlSTnW1QGrQjINcBXXen12
+xKQLm3Iim4xi+haF9Bo2v0tpjEQynVvV2rsLqtanwUoo2ZUioMdNfDGVRtm+xShI
+HAqxFVcL+aJEkbX1Z/3H4Nb1UKYe8tqXo8KurA3XuWDPGpCBPfUhgm61rWnq7DGu
+OqKFeqdRAhEL1SMd5Ptl4qNV5vQHpjdhgpnUWL24Sj+DCSh9SrRAeZA5svDx/pVW
+gFYa7SGUyHxt8GXmUM7RAJwTD2+DK1NaUWD5LtvjYFZ703AavEfPJcUULNZj25Lk
+zCUs5TJkF9xOaJeosrm97c0515FHwcX/bRD90PTuzcvtXTpSPIR6NcGTvIzEV2gU
+McLf0pU3g7TSh4VRi14oBS8mjPeEgFpnWbYc9VT2JwkE4WTzx3FBtC1k3auDQel4
+s00mGYbkG+5LLz0SBCWnDdRB4tPYzytyAfnhv0MOBHhAO4EQ1GN6WeNlnqQJed5m
+f5j4zUjT5xCp7d/ADR6ZqKH0OrxA1zTlZliRsxW44FPl5QHhozZKNP0Wqa7F1HQ+
+mAr8c/EP9BLSaE2mF6jelG8TDZfTyTraHew1D/JwRkgK53rNmHY=
+=z+c+
+-----END PGP SIGNATURE-----
+
+--73fi2dtgof2ecl74--
