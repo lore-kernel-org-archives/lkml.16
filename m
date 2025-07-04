@@ -1,185 +1,107 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093062C3264
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22792EACE0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751621252; cv=none; b=nldIwpu0zyglaPy+TNrvXhUru6LZNqI2LaTo0qJDz6iQSTcoydIOA/vgxjvPwyYgIJpgFxm4//5qKxVaNfaMeEWMo1i5GQW1G2d+e2LPeEB2cHrFpMM/+XGfS/jLlsdfMrxsgp+KYrXJQM9zGJppHnnoo5Pm1FDGNbVIxxDZzms=
+	t=1751621259; cv=none; b=b8IWKTA79HtAK+caw3XRkp6J5nsMbbVz/fRjvDsJrY0HyplfjmHxDirsF6Xb3V+0RTg0GuQ0TmAz15CmFKepmOdGa8/V9vqEG1kT/K2xo1ln4MKpp7B4PEsVHyjW7Q7OTsldgvIu+1JSV6Ww8faI9NR9Nr6qw7WRD6sjb8wzw3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751621252; c=relaxed/simple;
-	bh=vJmRxvt5IjJvJLikyAZ61MuBwjllp4Iz/jKtV4ZDZv4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IJFSTjdqTG117wlCA0yUGL5MciMTjMdJBsMg67YFefHcIDSA4mbPTTEQYPWAFvp+/ehvtK78hiQ0qMKENgqRF61Xq66wIMa0w/Z/1ZFlJk9vvNsk599IoMXQS2KQCqusfg5ORMuunIloNrQL1aP9kbkI5hvTfCSlYyYu1ErM7V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cfccca327so160478839f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 02:27:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751621250; x=1752226050;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b18G2rPqWbI95khyrG3L6Ov9rjrXsFNqNwmdeoc/jfs=;
-        b=A0k3aeBGWItutZ12WKZLI6uOIAv/iE0EH4dgsQCnGmNAoU1g7HWsgvk4rFWxfLX0o0
-         iHHVSTMj03lLyfTYLNgv4SLCMC8MiBF/TtnGoctoqhupIuWE+aFokrFB70WiXc/R/EXI
-         BIptf18HJgQOovr47cAYxLXBaOBjrA68PykzHccvth/6dXs6eH73g09frl9ZqAr8DVwM
-         ubT8vTLgjQj03j5hysU2zKpNIWrlz/tIlsLLzbF/DT4/L2La/sncrT6WMDHEiN/bMS5g
-         WMxb1lg1KY2W+7U3vXzhTuyOhvyyw5vOxs5pfhSEp0lSh7qfiKoMYg09nMk0I340pMoz
-         SR2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUh5/0K3Jzt47jQztTC8Lv3AJpn7SJvRnyFT5ZvRpa+UqIF8OnZ9B88lGntaainOZQ0M+i89LTqa2MgWDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4ouY5Oetq8KaLEdlW7ZZB7uG8Ur2p3Uxd8hKD+mMIqjoMM+jz
-	WGGAqn30F6wZuvUZskNqLU601dn8dimFme3ORjDMxhv3t6tmTXlq6Z06NMhz2Pk4aq7vipvHr/X
-	emsQdsvBLuJ2Rz7VIgMSwLVMGUhdh7Wi2ZeJLxJCwpDOxYlmBMRh50BoxuRo=
-X-Google-Smtp-Source: AGHT+IH/3kwB+gIcPOEvk6chq9FpuZ5NabBEmzsw1+Q5nqpukL/TSIM+IWz4qwlWVxLxzdFNKsSLstn/HAd+pk8hobNw41wgZKlg
+	s=arc-20240116; t=1751621259; c=relaxed/simple;
+	bh=xsewCoZTz13Afl0fYgBbzrqkR2165Vy3a+LpTEr+0cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MrtAvW23BTmTaHfTOu3hVsCP532YYX0vD/8TC7d4aPPMOjmFkXc8Gb06a0q31gghzkFCuhUXV0wZBSeB5gG66G+/84eKC/TGSK88RwfA5mWlW5B5f1F8b+NBJ/vbZnA5g/5zmo8au4Lo/4M36XLFm0q1v8L/GWTfWraBzqkMUAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pm+AHmGB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pm+AHmGB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751621257; x=1783157257;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xsewCoZTz13Afl0fYgBbzrqkR2165Vy3a+LpTEr+0cY=;
+  b=Pm+AHmGBPkwRwtSRS65ndfZhZFxYTyUqKDZVbhKxdjeIwb7s+FsIHz97
+   7k4qc0MnG7XpGPJhPKMk65U1YIXQVBG1X0r+8He1j6ODKJUnvGINkhi6L
+   vb6QBGy+ajXshgla2M7Qyd5ZmlRyYmXc0RjjgwGnKKMYmPAcg6HS+CVtP
+   9ak0H/GiZqKrOQEk6B4tv3cgqHE5+dL8YGX9Rq1CIS5T95WciEIrJ13RS
+   LH0onFz7gq0agSGGtrVLF9pbYk/U7+zwwKWyWgbLs/5R2ZdvbXoKb9gBu
+   ALDyga/72BHcJiP7YZR0UOye7GuuAXjWNlavyyoyZoTzSUfCaoSKjHlDd
+   w==;
+X-CSE-ConnectionGUID: DE0o86YTSSyCmFmu23ex6g==
+X-CSE-MsgGUID: ZXcgu/vYRkKGiZnhxHChoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65406784"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="65406784"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 02:27:36 -0700
+X-CSE-ConnectionGUID: oKzAvXfKRAWMOXa+tKIBkg==
+X-CSE-MsgGUID: OZdC7sXeSnWJyAK76jyCwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="154013038"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 04 Jul 2025 02:27:33 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXche-0003Y9-1X;
+	Fri, 04 Jul 2025 09:27:30 +0000
+Date: Fri, 4 Jul 2025 17:27:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Caterina Shablia <caterina.shablia@collabora.com>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	kernel@collabora.com,
+	Caterina Shablia <caterina.shablia@collabora.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] drm/panthor: Add support for repeated mappings
+Message-ID: <202507041742.rHigXm3n-lkp@intel.com>
+References: <20250703152908.16702-9-caterina.shablia@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:380c:b0:3df:154d:aa5b with SMTP id
- e9e14a558f8ab-3e135465292mr15826895ab.5.1751621249723; Fri, 04 Jul 2025
- 02:27:29 -0700 (PDT)
-Date: Fri, 04 Jul 2025 02:27:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68679e81.a70a0220.29cf51.0016.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in qfq_qlen_notify
-From: syzbot <syzbot+4dadc5aecf80324d5a51@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703152908.16702-9-caterina.shablia@collabora.com>
 
-Hello,
+Hi Caterina,
 
-syzbot found the following issue on:
+kernel test robot noticed the following build warnings:
 
-HEAD commit:    17bbde2e1716 Merge tag 'net-6.16-rc5' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1774b3d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a6dba31fc9bb876c
-dashboard link: https://syzkaller.appspot.com/bug?extid=4dadc5aecf80324d5a51
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-userspace arch: i386
+[auto build test WARNING on drm-xe/drm-xe-next]
+[also build test WARNING on next-20250703]
+[cannot apply to linus/master v6.16-rc4]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Unfortunately, I don't have any reproducer for this issue yet.
+url:    https://github.com/intel-lab-lkp/linux/commits/Caterina-Shablia/drm-gpuvm-Kill-drm_gpuva_init/20250704-002914
+base:   https://gitlab.freedesktop.org/drm/xe/kernel.git drm-xe-next
+patch link:    https://lore.kernel.org/r/20250703152908.16702-9-caterina.shablia%40collabora.com
+patch subject: [PATCH v2 7/7] drm/panthor: Add support for repeated mappings
+config: x86_64-buildonly-randconfig-004-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041742.rHigXm3n-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041742.rHigXm3n-lkp@intel.com/reproduce)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/224153e195ae/disk-17bbde2e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/790493022e09/vmlinux-17bbde2e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/67c6b016f914/bzImage-17bbde2e.xz
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507041742.rHigXm3n-lkp@intel.com/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4dadc5aecf80324d5a51@syzkaller.appspotmail.com
+All warnings (new ones prefixed by >>):
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000000b: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000058-0x000000000000005f]
-CPU: 1 UID: 0 PID: 21481 Comm: syz.0.4721 Not tainted 6.16.0-rc4-syzkaller-00108-g17bbde2e1716 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:list_empty include/linux/list.h:373 [inline]
-RIP: 0010:qfq_qlen_notify+0x29/0x70 net/sched/sch_qfq.c:1422
-Code: 90 f3 0f 1e fa 41 57 41 56 53 48 89 f3 49 89 fe e8 ac 6b 3f f8 4c 8d 7b 58 4c 89 f8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ff e8 59 ee a2 f8 49 8b 07 4c 39 f8 74 1c
-RSP: 0018:ffffc9000468efc8 EFLAGS: 00010202
-RAX: 000000000000000b RBX: 0000000000000000 RCX: dffffc0000000000
-RDX: ffffc9000c37b000 RSI: 0000000000000b34 RDI: 0000000000000b35
-RBP: dffffc0000000000 R08: ffff88802c5f8000 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff8980e2e0 R12: 0000000000000000
-R13: ffff888036988000 R14: ffff888036988000 R15: 0000000000000058
-FS:  0000000000000000(0000) GS:ffff888125d50000(0063) knlGS:00000000f50aeb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000030117ff8 CR3: 000000007cd72000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 000000000000000e DR6: 00000000ffff0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- qdisc_tree_reduce_backlog+0x299/0x480 net/sched/sch_api.c:811
- fq_change+0x1519/0x1f50 net/sched/sch_fq.c:1147
- fq_init+0x699/0x960 net/sched/sch_fq.c:1201
- qdisc_create+0x7a9/0xea0 net/sched/sch_api.c:1324
- __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
- tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
- rtnetlink_rcv_msg+0x77c/0xb70 net/core/rtnetlink.c:6953
- netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg+0x164/0x220 net/socket.c:2652
- do_syscall_32_irqs_on arch/x86/entry/syscall_32.c:83 [inline]
- __do_fast_syscall_32+0xb6/0x2b0 arch/x86/entry/syscall_32.c:306
- do_fast_syscall_32+0x34/0x80 arch/x86/entry/syscall_32.c:331
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf70be539
-Code: 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f50ae55c EFLAGS: 00000206 ORIG_RAX: 0000000000000172
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000080000200
-RDX: 0000000004008000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:list_empty include/linux/list.h:373 [inline]
-RIP: 0010:qfq_qlen_notify+0x29/0x70 net/sched/sch_qfq.c:1422
-Code: 90 f3 0f 1e fa 41 57 41 56 53 48 89 f3 49 89 fe e8 ac 6b 3f f8 4c 8d 7b 58 4c 89 f8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ff e8 59 ee a2 f8 49 8b 07 4c 39 f8 74 1c
-RSP: 0018:ffffc9000468efc8 EFLAGS: 00010202
-RAX: 000000000000000b RBX: 0000000000000000 RCX: dffffc0000000000
-RDX: ffffc9000c37b000 RSI: 0000000000000b34 RDI: 0000000000000b35
-RBP: dffffc0000000000 R08: ffff88802c5f8000 R09: 0000000000000002
-R10: 00000000ffffffff R11: ffffffff8980e2e0 R12: 0000000000000000
-R13: ffff888036988000 R14: ffff888036988000 R15: 0000000000000058
-FS:  0000000000000000(0000) GS:ffff888125d50000(0063) knlGS:00000000f50aeb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000030117ff8 CR3: 000000007cd72000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 000000000000000e DR6: 00000000ffff0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	90                   	nop
-   1:	f3 0f 1e fa          	endbr64
-   5:	41 57                	push   %r15
-   7:	41 56                	push   %r14
-   9:	53                   	push   %rbx
-   a:	48 89 f3             	mov    %rsi,%rbx
-   d:	49 89 fe             	mov    %rdi,%r14
-  10:	e8 ac 6b 3f f8       	call   0xf83f6bc1
-  15:	4c 8d 7b 58          	lea    0x58(%rbx),%r15
-  19:	4c 89 f8             	mov    %r15,%rax
-  1c:	48 c1 e8 03          	shr    $0x3,%rax
-  20:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
-  27:	fc ff df
-* 2a:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
-  2e:	74 08                	je     0x38
-  30:	4c 89 ff             	mov    %r15,%rdi
-  33:	e8 59 ee a2 f8       	call   0xf8a2ee91
-  38:	49 8b 07             	mov    (%r15),%rax
-  3b:	4c 39 f8             	cmp    %r15,%rax
-  3e:	74 1c                	je     0x5c
+>> Warning: drivers/gpu/drm/panthor/panthor_mmu.c:220 Excess struct member 'bo_repeat_range' description in 'panthor_vm_op_ctx'
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
