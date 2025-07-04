@@ -1,133 +1,380 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD59D16A956
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511FC2D9ECD
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643460; cv=none; b=FJXamFdP6ULpKZswmG+SaN6Gnh+d90gNmnf944lNeu7TU4D/o64YiQSzOjzzvNigZWli1GQWACok2L2oGgWhJdbBaybG8+Pf0OUzHDNbdIaLlDQx5PBYuHUUyer1GVzgY7O7saygomi8lOpSa+H5TXyZ/hmPewslYl/64LvLRtQ=
+	t=1751643470; cv=none; b=mPRgUKLv5sFBEAn1UfzGIk6TAkeuCcbSZ+7RFdj0fP1Q7hcYmEG4k4fjbWQQhIDuf0KYHCzRv3a0RaNEIfaLKZ415PpqFEfOMoIChQOzczUhC7mI+7qmXauDu/1yqm/KS8U6tuO/mkjtQoYlQkbp9u2zVv6czkA5+s9MLsy+pIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643460; c=relaxed/simple;
-	bh=nMUwUQvpw8YaloECKT7I6pAgLXmQeXqRvqFH/BN0VR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eEYZ5+PPSMufGP0qQOGfCPO/McajoBZ2rzl0/Nui9KX/4MDjsHpQuiKne02eCEHO4qg5Yh4NRtgb3ucYXsFezxcqoyx6pFCoUVFGYOYbxA629c0KnAvMMotAQha61zo/G1v/Fg1LTwbevr7GKVIGbvopkaEM3RUOx0tnlclkZ4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N2iLyecg; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1751643470; c=relaxed/simple;
+	bh=AqCAt1wI7tAF5McZIeuIhOgu1S/knglyj60+bdPhkbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JcBcZHTm9frs9U3nc6VEYmlBnhdw5SKikK8v1GngnLgaAf1XdDjaRw8+Ax4PqbFsp4fT6uRGmig58dk6dPHYeQ7z1sDOV0kIPrzY+iNfaPFyDPrrfCmqem5HEbF6gAa3udN4kU32Q9Kx3lnU8ZN+nz9MJeNsSQUL3kVyW0xyGTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ziC6Hxfi; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2iLyecg"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso600239f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:37:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziC6Hxfi"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso949752a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:37:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751643457; x=1752248257; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k4vHSbtWGZygYaRzsrpR/TDlNvjSrpMlfZbiVgpj+GA=;
-        b=N2iLyecgzhJET466YfbKN+tbe28nj5TdEMz0iYFCAJYsrFUc+xw5lKK812NkcVMgEv
-         ppAM0IaCrZ8XAkZgY2zpe36EdVzWQ4gKZvzhaI/J8JOZLMD21Dn7u9SqmtBKn7/vZYFd
-         eymYDwwxbyFcNsmAYagnr2SoVAUT6cfc6ZNy/8P9pX1WrwSPrV2WF/Y9LTDJsD9lW4UC
-         xxtcHuEPGqhKIRwknGMrFpTUdjYadUDhz6QZU1r6/5IshlsQRWr/DS0diK0SgL5JSN6Q
-         vtwAob6M5RMrwjtZUrgcAzLoPKlX1kB8F/rO+iiSyBTZ7jL93cNgr1uHSrOl7jHAW5aj
-         IDYw==
+        d=linaro.org; s=google; t=1751643466; x=1752248266; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pfUDmHeepnt8bgi+nNBa1jZtXWQ+k/4Kcm7pPkbYwkQ=;
+        b=ziC6HxfiLCtBqhZc6qt3dRh9L9ae72vgX1Ji1xziuE7879XZZFlH1Ev6cUvMZVzBZ1
+         O92b/dh2zytrc+ZXGOcAoPQH1g8mVBtafQttlkHaGoy1frvu4PF2TWOYe3ObJ04hAHVg
+         bboZhbngbVsriRB8rKU33i1Tw0TkTdaWTD02QE9f8QOjLx8kYvv+e3N+H7vp6E7T+fo/
+         mfUkLX3ryWGvVzsFCbWeXs06y/klclfuBaUCuduiEXNHbtF1cV9s4SS60QxgVaHohdB6
+         d/cp57q63oet12DVmfw7+gKkxEa2Pypkx/e4lGeu7kSm9iYte7J3PMTwlWgdT5qFCUkN
+         RSuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751643457; x=1752248257;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4vHSbtWGZygYaRzsrpR/TDlNvjSrpMlfZbiVgpj+GA=;
-        b=fqSuig9DoMbrK8zCWDp1y5F4aCopK6Yw67nOioojkSfNkPOy9uONy0W2Kho8Gq1d5R
-         zdSjgBK1W7Suy5q05mbboUK0Xu3aYCYqmJuTdP3FxLquGBSDoesZblucA78c9Xx0Vi7A
-         nKm7qZ7MjQUgLK8vvPz5+9V1B8K+GOS8d+qpgiOQcFp165lUF+OIJuG0tFuDO+kcNznC
-         Z+rygs+MA+sVouTBfakBdCH6sBLGPBmzBb+uaoDmq/8UjBVPvwpM8KWaRGI5w0ZS5T/r
-         F95kZ6QvaNDCbp+WfOwlxOsgSjnJ4lRnHfRu9+UXS1iLGVwFuJ/k4FYFF645qbeYda9s
-         IcYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgZ+C+aZyWneI92P695H2hfzWSlfoYSWvmZO71syWSCDnW0IrbGruR2/wp9OKI8sCH7yqW+IvBRc4W62Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6V1XoWszU1ROVO+FoReVISzRUQJuO3+EXnI1AhNbkxeXJPERZ
-	WHTYlTOC1sJkWavXoacZu1Hqduddx0PhQ42wmr2jyLmLuJhkPLmHw2JGXkf9Su/hLo0=
-X-Gm-Gg: ASbGncu1Dt5Hgt8N5FMdhv0iyxQt0GHm8WlYSycaZ/bzPFU/ahR+ACYH1guNWsKP2aY
-	cNQ0MduWdKf10L6nMbvZF8uQjqeQ1aiPFmR5zKeuzTwF6R5YJ3c3co6KxnfuyXRP2DfyyXvneJv
-	HjlUO5X90Ypgsat5Ly1ETalXAQfv/8rZSIjV2swmvDot+Txcq2LXbpi9Y/f4aTlclZ54/CryWY4
-	0FGn2uPyu8WYohtkJRnWZchBlXKIeYNO5PjMhP+py+ka2o6FZaVktK2TTAZ+UoPzmUEuf8qTbCL
-	VTWQTHpX2hyYbpQhzTxh7g+9MZyTski2FpOamXepYiKU0TnI5Ws+vy+aiorTcTkpdwZL1wntB/+
-	qkLx1owbYrD15/xVMXo2SRJWssEOF
-X-Google-Smtp-Source: AGHT+IFhUkHnFrfbIeRzLcPeKFu2lnHSq4lMxRS57J9vUC96pAccxTa3B3IG8HOVaY9CGSpbxOA07w==
-X-Received: by 2002:a05:6000:4387:b0:3a4:cfbf:51a0 with SMTP id ffacd0b85a97d-3b4964f1f76mr2566213f8f.21.1751643457080;
-        Fri, 04 Jul 2025 08:37:37 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997b1ecsm58921595e9.11.2025.07.04.08.37.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 08:37:36 -0700 (PDT)
-Message-ID: <c0e03c16-ab33-442a-b73d-1b231b6d141b@linaro.org>
-Date: Fri, 4 Jul 2025 16:37:35 +0100
+        d=1e100.net; s=20230601; t=1751643466; x=1752248266;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pfUDmHeepnt8bgi+nNBa1jZtXWQ+k/4Kcm7pPkbYwkQ=;
+        b=Q44KjjuqwUQTGFFKG7crDGGyv7jHm23dMbb03NTz+7KGeDWSafCBYJubPL+lM+06Mr
+         7LWHU1MJJeKVcBAW2VemYEhLk717oPCeUyOeaHjZlx45V+0TDf7ccUOBzmiewP7TEgzS
+         AZMLMbo1edVVW3rUnV8QByF1+tckkg5x4tHG375CbvFWPHoNLZ+dUK0Ouo6NkVwUYfjy
+         4aHyNi6LvrkYqjwhZ9UI5BZoWx1f5Wz7sGvPX4ZX+gLz0e8nzQNK9MTjeAVH817Fd1Eu
+         aqSu4KxCHnGOsJE2+4F9Z9EIHPV2xdRK9PAO4YS/39kZXWFbdoOsKTRiNHFvhNAhR7Jc
+         QJsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAuYm6goJSmtirC1F9J4K9t0wX0nidvzE3H0HbHitx3gt/Xc0rGhs0/L1y1HXa/TCCs5gSDqMs//mRbIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCS3ZYxM67pnPAp6mDXkarzH4RAqyBEv9gqqytEVn9TaISVjF3
+	3Kp5geYqO3GioVqIFfuixbuOZZSQBjP0Q3UmIJ06lJXRqRxVVy0jDJPXRaLboNQ6RHA=
+X-Gm-Gg: ASbGncsZp8kYAF2G0gGKZs03u6vmlCYL5Ki/6+tOYhN/SvHa7Tz2Av5IuQILVU52nkO
+	paI42o2IZlYQud8E9pBCfqsuY4EYtdNPocq5BZqJYU2obvzKJwmdHNNqg6RPYLBwQ90vzZ2MssW
+	bmQUOsZyoUeX9CNKnOFkFmvmvuD9xpWiCJMZ6cf4hlBxARM6JMecGsIMKSZ6+8wNb0NemmKkZP6
+	/D+YhPj5QIMgN9GuI2p2GZJ577HZl/m1JUaGZz/P5Ua2FeHjphre56l71bsHhMDlQF7Tqc/NUek
+	LkoaQOd/+CggzidMaYRSQ2I+XMXSwGW41UkXdqCIY4SDMK7x83DGPFSuukPtLlKZgQ==
+X-Google-Smtp-Source: AGHT+IFPI2zhve4aVtUtekaO97BS+JFBRK74WkSk2tLAhK9T3VoR5MF+THO0XUOGjGGiMHNpLBAJwA==
+X-Received: by 2002:a17:90a:d604:b0:312:1143:cf8c with SMTP id 98e67ed59e1d1-31aadd86742mr4003854a91.16.1751643466282;
+        Fri, 04 Jul 2025 08:37:46 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:ebf3:da99:de93:f600])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cb7e88esm5358629a91.0.2025.07.04.08.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:37:45 -0700 (PDT)
+Date: Fri, 4 Jul 2025 09:37:42 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linux@armlinux.org.uk, gregkh@linuxfoundation.org,
+	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+	rafael@kernel.org, dakr@kernel.org, len.brown@intel.com,
+	pavel@kernel.org, andersson@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, wsa+renesas@sang-engineering.com,
+	ulf.hansson@linaro.org, vkoul@kernel.org,
+	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+	broonie@kernel.org, robh@kernel.org, jirislaby@kernel.org,
+	saravanak@google.com, jic23@kernel.org, dmitry.torokhov@gmail.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+	bhelgaas@google.com, geert@linux-m68k.org,
+	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	fabrizio.castro.jz@renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v5 1/3] PM: domains: Add flags to specify power on
+ attach/detach
+Message-ID: <aGf1Rjy7WLEuNGme@p14s>
+References: <20250703112708.1621607-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250703112708.1621607-2-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: x1e80100: Add videocc
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>,
- Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Johan Hovold <johan@kernel.org>, Stefan Schmidt <stefan.schmidt@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
- <20250701-x1e-videocc-v1-6-785d393be502@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250701-x1e-videocc-v1-6-785d393be502@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703112708.1621607-2-claudiu.beznea.uj@bp.renesas.com>
 
-On 01/07/2025 18:28, Stephan Gerhold wrote:
-> Add the video clock controller for X1E80100, similar to sm8550.dtsi. It
-> provides the needed clocks/power domains for the iris video codec.
+On Thu, Jul 03, 2025 at 02:27:06PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> Calling dev_pm_domain_attach()/dev_pm_domain_detach() in bus driver
+> probe/remove functions can affect system behavior when the drivers attached
+> to the bus use devres-managed resources. Since devres actions may need to
+> access device registers, calling dev_pm_domain_detach() too early, i.e.,
+> before these actions complete, can cause failures on some systems. One such
+> example is Renesas RZ/G3S SoC-based platforms.
+> 
+> If the device clocks are managed via PM domains, invoking
+> dev_pm_domain_detach() in the bus driver's remove function removes the
+> device's clocks from the PM domain, preventing any subsequent
+> pm_runtime_resume*() calls from enabling those clocks.
+> 
+> The second argument of dev_pm_domain_attach() specifies whether the PM
+> domain should be powered on during attachment. Likewise, the second
+> argument of dev_pm_domain_detach() indicates whether the domain should be
+> powered off during detachment.
+> 
+> Upcoming commits address the issue described above (initially for the
+> platform bus only) by deferring the call to dev_pm_domain_detach() until
+> after devres_release_all() in device_unbind_cleanup(). The detach_power_off
+> field in struct dev_pm_info stores the detach power off info from the
+> second argument of dev_pm_domain_attach().
+> 
+> Because there are cases where the device's PM domain power-on/off behavior
+> must be conditional (e.g., in i2c_device_probe()), the patch introduces
+> PD_FLAG_ATTACH_POWER_ON and PD_FLAG_DETACH_POWER_OFF flags to be passed to
+> dev_pm_domain_attach().
+> 
+> Finally, dev_pm_domain_attach() and its users are updated to use the newly
+> introduced PD_FLAG_ATTACH_POWER_ON and PD_FLAG_DETACH_POWER_OFF macros.
+> 
+> This is a preparatory commit.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > ---
->   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index a9a7bb676c6f8ac48a2e443d28efdc8c9b5e52c0..890eaaa40184a18bff54f2d750968112a2546d19 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -5,6 +5,7 @@
->   
->   #include <dt-bindings/clock/qcom,rpmh.h>
->   #include <dt-bindings/clock/qcom,sc8280xp-lpasscc.h>
-> +#include <dt-bindings/clock/qcom,sm8450-videocc.h>
->   #include <dt-bindings/clock/qcom,x1e80100-dispcc.h>
->   #include <dt-bindings/clock/qcom,x1e80100-gcc.h>
->   #include <dt-bindings/clock/qcom,x1e80100-gpucc.h>
-> @@ -5171,6 +5172,20 @@ usb_1_ss1_dwc3_ss: endpoint {
->   			};
->   		};
->   
-> +		videocc: clock-controller@aaf0000 {
-> +			compatible = "qcom,x1e80100-videocc";
-> +			reg = <0 0x0aaf0000 0 0x10000>;
-> +			clocks = <&bi_tcxo_div2>,
-> +				 <&gcc GCC_QMIP_VIDEO_VCODEC_AHB_CLK>;
-> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
-> +					<&rpmhpd RPMHPD_MXC>;
-> +			required-opps = <&rpmhpd_opp_low_svs>,
-> +					<&rpmhpd_opp_low_svs>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +		};
-> +
->   		mdss: display-subsystem@ae00000 {
->   			compatible = "qcom,x1e80100-mdss";
->   			reg = <0 0x0ae00000 0 0x1000>;
+> Changes in v5:
+> - none; this patch is new
 > 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>  drivers/amba/bus.c                       |  4 ++--
+>  drivers/base/auxiliary.c                 |  2 +-
+>  drivers/base/platform.c                  |  2 +-
+>  drivers/base/power/common.c              |  6 +++---
+>  drivers/clk/qcom/apcs-sdx55.c            |  2 +-
+>  drivers/gpu/drm/display/drm_dp_aux_bus.c |  2 +-
+>  drivers/i2c/i2c-core-base.c              |  2 +-
+>  drivers/mmc/core/sdio_bus.c              |  2 +-
+>  drivers/rpmsg/rpmsg_core.c               |  2 +-
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+>  drivers/soundwire/bus_type.c             |  2 +-
+>  drivers/spi/spi.c                        |  2 +-
+>  drivers/tty/serdev/core.c                |  2 +-
+>  include/linux/pm_domain.h                | 10 ++++++++--
+>  13 files changed, 23 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 71482d639a6d..74e34a07ef72 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -138,7 +138,7 @@ static int amba_read_periphid(struct amba_device *dev)
+>  	void __iomem *tmp;
+>  	int i, ret;
+>  
+> -	ret = dev_pm_domain_attach(&dev->dev, true);
+> +	ret = dev_pm_domain_attach(&dev->dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret) {
+>  		dev_dbg(&dev->dev, "can't get PM domain: %d\n", ret);
+>  		goto err_out;
+> @@ -291,7 +291,7 @@ static int amba_probe(struct device *dev)
+>  		if (ret < 0)
+>  			break;
+>  
+> -		ret = dev_pm_domain_attach(dev, true);
+> +		ret = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  		if (ret)
+>  			break;
+>  
+> diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+> index dba7c8e13a53..44cd3f85b659 100644
+> --- a/drivers/base/auxiliary.c
+> +++ b/drivers/base/auxiliary.c
+> @@ -217,7 +217,7 @@ static int auxiliary_bus_probe(struct device *dev)
+>  	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
+>  	int ret;
+>  
+> -	ret = dev_pm_domain_attach(dev, true);
+> +	ret = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret) {
+>  		dev_warn(dev, "Failed to attach to PM Domain : %d\n", ret);
+>  		return ret;
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 075ec1d1b73a..df1ec34fdf56 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1396,7 +1396,7 @@ static int platform_probe(struct device *_dev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = dev_pm_domain_attach(_dev, true);
+> +	ret = dev_pm_domain_attach(_dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret)
+>  		goto out;
+>  
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index 781968a128ff..fecb85fa85ac 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -83,7 +83,7 @@ EXPORT_SYMBOL_GPL(dev_pm_put_subsys_data);
+>  /**
+>   * dev_pm_domain_attach - Attach a device to its PM domain.
+>   * @dev: Device to attach.
+> - * @power_on: Used to indicate whether we should power on the device.
+> + * @flags: indicate whether we should power on/off the device on attach/detach
+>   *
+>   * The @dev may only be attached to a single PM domain. By iterating through
+>   * the available alternatives we try to find a valid PM domain for the device.
+> @@ -100,14 +100,14 @@ EXPORT_SYMBOL_GPL(dev_pm_put_subsys_data);
+>   * Returns 0 on successfully attached PM domain, or when it is found that the
+>   * device doesn't need a PM domain, else a negative error code.
+>   */
+> -int dev_pm_domain_attach(struct device *dev, bool power_on)
+> +int dev_pm_domain_attach(struct device *dev, u32 flags)
+>  {
+>  	int ret;
+>  
+>  	if (dev->pm_domain)
+>  		return 0;
+>  
+> -	ret = acpi_dev_pm_attach(dev, power_on);
+> +	ret = acpi_dev_pm_attach(dev, !!(flags & PD_FLAG_ATTACH_POWER_ON));
+>  	if (!ret)
+>  		ret = genpd_dev_pm_attach(dev);
+>  
+> diff --git a/drivers/clk/qcom/apcs-sdx55.c b/drivers/clk/qcom/apcs-sdx55.c
+> index 3ba01622d8f0..90dd1f1855c2 100644
+> --- a/drivers/clk/qcom/apcs-sdx55.c
+> +++ b/drivers/clk/qcom/apcs-sdx55.c
+> @@ -111,7 +111,7 @@ static int qcom_apcs_sdx55_clk_probe(struct platform_device *pdev)
+>  	 * driver, there seems to be no better place to do this. So do it here!
+>  	 */
+>  	cpu_dev = get_cpu_device(0);
+> -	ret = dev_pm_domain_attach(cpu_dev, true);
+> +	ret = dev_pm_domain_attach(cpu_dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret) {
+>  		dev_err_probe(dev, ret, "can't get PM domain: %d\n", ret);
+>  		goto err;
+> diff --git a/drivers/gpu/drm/display/drm_dp_aux_bus.c b/drivers/gpu/drm/display/drm_dp_aux_bus.c
+> index 7b9afcf48836..2d279e82922f 100644
+> --- a/drivers/gpu/drm/display/drm_dp_aux_bus.c
+> +++ b/drivers/gpu/drm/display/drm_dp_aux_bus.c
+> @@ -58,7 +58,7 @@ static int dp_aux_ep_probe(struct device *dev)
+>  		container_of(aux_ep, struct dp_aux_ep_device_with_data, aux_ep);
+>  	int ret;
+>  
+> -	ret = dev_pm_domain_attach(dev, true);
+> +	ret = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "Failed to attach to PM Domain\n");
+>  
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 2ad2b1838f0f..38eabf1173da 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -573,7 +573,7 @@ static int i2c_device_probe(struct device *dev)
+>  		goto err_clear_wakeup_irq;
+>  
+>  	do_power_on = !i2c_acpi_waive_d0_probe(dev);
+> -	status = dev_pm_domain_attach(&client->dev, do_power_on);
+> +	status = dev_pm_domain_attach(&client->dev, do_power_on ? PD_FLAG_ATTACH_POWER_ON : 0);
+>  	if (status)
+>  		goto err_clear_wakeup_irq;
+>  
+> diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
+> index b66b637e2d57..656601754966 100644
+> --- a/drivers/mmc/core/sdio_bus.c
+> +++ b/drivers/mmc/core/sdio_bus.c
+> @@ -161,7 +161,7 @@ static int sdio_bus_probe(struct device *dev)
+>  	if (!id)
+>  		return -ENODEV;
+>  
+> -	ret = dev_pm_domain_attach(dev, false);
+> +	ret = dev_pm_domain_attach(dev, 0);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index 6ee36adcbdba..bece5e635ee9 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -479,7 +479,7 @@ static int rpmsg_dev_probe(struct device *dev)
+>  	struct rpmsg_endpoint *ept = NULL;
+>  	int err;
+>  
+> -	err = dev_pm_domain_attach(dev, true);
+> +	err = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (err)
+>  		goto out;
+>  
+> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+> index 75d6f16efced..bc1e653080d9 100644
+> --- a/drivers/soundwire/bus_type.c
+> +++ b/drivers/soundwire/bus_type.c
+> @@ -101,7 +101,7 @@ static int sdw_drv_probe(struct device *dev)
+>  	/*
+>  	 * attach to power domain but don't turn on (last arg)
+>  	 */
+> -	ret = dev_pm_domain_attach(dev, false);
+> +	ret = dev_pm_domain_attach(dev, 0);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 1bc0fdbb1bd7..8200b47b2295 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -427,7 +427,7 @@ static int spi_probe(struct device *dev)
+>  	if (spi->irq < 0)
+>  		spi->irq = 0;
+>  
+> -	ret = dev_pm_domain_attach(dev, true);
+> +	ret = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 0213381fa358..d16c207a1a9b 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -399,7 +399,7 @@ static int serdev_drv_probe(struct device *dev)
+>  	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
+>  	int ret;
+>  
+> -	ret = dev_pm_domain_attach(dev, true);
+> +	ret = dev_pm_domain_attach(dev, PD_FLAG_ATTACH_POWER_ON);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 0b18160901a2..62a35a78ce9b 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -36,10 +36,16 @@
+>   *				isn't specified, the index just follows the
+>   *				index for the attached PM domain.
+>   *
+> + * PD_FLAG_ATTACH_POWER_ON:	Power on the domain during attach.
+> + *
+> + * PD_FLAG_DETACH_POWER_OFF:	Power off the domain during detach.
+> + *
+>   */
+>  #define PD_FLAG_NO_DEV_LINK		BIT(0)
+>  #define PD_FLAG_DEV_LINK_ON		BIT(1)
+>  #define PD_FLAG_REQUIRED_OPP		BIT(2)
+> +#define PD_FLAG_ATTACH_POWER_ON		BIT(3)
+> +#define PD_FLAG_DETACH_POWER_OFF	BIT(4)
+>  
+>  struct dev_pm_domain_attach_data {
+>  	const char * const *pd_names;
+> @@ -501,7 +507,7 @@ struct generic_pm_domain *of_genpd_remove_last(struct device_node *np)
+>  #endif /* CONFIG_PM_GENERIC_DOMAINS_OF */
+>  
+>  #ifdef CONFIG_PM
+> -int dev_pm_domain_attach(struct device *dev, bool power_on);
+> +int dev_pm_domain_attach(struct device *dev, u32 flags);
+>  struct device *dev_pm_domain_attach_by_id(struct device *dev,
+>  					  unsigned int index);
+>  struct device *dev_pm_domain_attach_by_name(struct device *dev,
+> @@ -518,7 +524,7 @@ int dev_pm_domain_start(struct device *dev);
+>  void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd);
+>  int dev_pm_domain_set_performance_state(struct device *dev, unsigned int state);
+>  #else
+> -static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
+> +static inline int dev_pm_domain_attach(struct device *dev, u32 flags)
+>  {
+>  	return 0;
+>  }
+> -- 
+> 2.43.0
+> 
