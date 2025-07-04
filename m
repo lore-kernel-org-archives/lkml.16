@@ -1,65 +1,45 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EB31E4A9;
-	Fri,  4 Jul 2025 00:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3059101FF;
+	Fri,  4 Jul 2025 00:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751589934; cv=none; b=Rw1f7enz3gEY64dvKhMGMGIcCU6HYCcIrFrgJZ0Th5tl0rcpLpX58yOABhsU3jEo+C+LY5/+swiCJnlaQSQmeOFz7vFrWkWBS21JqZHU4rgcDuWv9APgZxtMis3qAa1ISs+gtyvPxhA3OoXoOuc1I61BwEYAPOFLPFDQceSjjWA=
+	t=1751590191; cv=none; b=DjVvrVFWnheR4AjHRJgDEJyV2efwnL4PTHEBxX4tuLym5Y/qAQ0mHsSgjzvWpBJLsl8nJwK2R4HNW4zJRaz+TFPG57Uqqx+OWsOJpaL3k61sqv+tlPWh/1Mh1ieRymJrwsyIETaUoYeDVwNZpmLI50DC+EttczfaERxpADxRxa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751589934; c=relaxed/simple;
-	bh=KuNeK4zTpBo+7X3UthfgBzmB2v4rD8I8vRbO5/dlwkQ=;
+	s=arc-20240116; t=1751590191; c=relaxed/simple;
+	bh=5F907ZyFEux2K1To8HaYnR98NR61E4isDCST+c/aslE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WHx8zAbxwcs66r6DWXCanGUak2yRBOutxkH7XsKFDsVB9XhcVsfdnQINEgQAHrr9BNlWWzYFb1jnTj61pARIMrz71EM4BIyGfJA3x9mjE+0CFKNeflvi7DoQPuYdid73J9aALIfjZObDMJiFWAOp6eAMm3bV1hoR/HiDbQWyfwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDF90E/H; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDF90E/H"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-748e378ba4fso695201b3a.1;
-        Thu, 03 Jul 2025 17:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751589932; x=1752194732; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qDsiobw7Nz4ZdCG272Kd4BIeWOznbg+2NwLFATwKqK4=;
-        b=ZDF90E/HosQv9RCnJMIpRIVHfD6IpxTy9S4RPPftpI3OkljyhSz+7iF9dLfF2LCmVE
-         TU0I4E1xR277NZ41X6aQ0f2iMEXtCFj9lmPgkoIJ/Tcs3gYcWGgAx0fcvS0lsbaXEP4H
-         2dJKxDOSm6sfmeuBkFNmK5rbihZsM1YP3ohRFCb478zeSezjCjDeeDKra1KIQOX74p+C
-         7c4CNv9e3ZJydgvP1OKpQoGHdTXkZLqPNPe0Jioz0sjMV+DwwJPEz4OIBuWZ+8B8n8yN
-         sh5refObO7FuOBNzxYb6aXoyT1KZVUD5hmzG5atRw40WNNQh/qGyXHpOuaMicVKSh1iD
-         3OYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751589932; x=1752194732;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDsiobw7Nz4ZdCG272Kd4BIeWOznbg+2NwLFATwKqK4=;
-        b=UkmcABr16CWVF0wqOYTQ35k1aTBKT8wBniwZgaNpvBRMbzrDA6l1k9fNXCRZXq7XrY
-         4VRzUKvegebUxOgRLfMutWItQqSW1YwkQiA+L62Zt0vtIcfrgvgRDK54E7AI6G2NlmnL
-         cbULpFfPLsTH+fRGAS2y9l4Z+cz2Z4DE2CA7IXCzNNcDw4iMNGO1epUD9uxuzrm6Ufzj
-         F662CSjYBV3Xqj7wdvfCOIGa6+T1Mj0AxdE+c2lIoExK/N1AGa0cBOcpAE3rHX2njPN3
-         KFj84kwyPpaae1blU22VH4I5zIOeh0/En9UtSgFgUnXQmhdvuBWokzJ9r5Dn+OMSBkRi
-         mE4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUpczbV8ne2Vn/8Q6/fPzKYJ5skjDb9tjeS6Y1xfN5fbX/LYhnTnxUFufj87SSc70Vt36+nc2cJ3bQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi5JRH9N97iOMu/Pc2p3Y1nJMW9WoC+PTP65fsfZP7IVQPBNoh
-	LUMQYL8MiRwcHwPhJVuYL6t38IIcfdcjFJZNsv7KzKun4fmv0/dpOfN8q2x2nQ==
-X-Gm-Gg: ASbGncvMN/1ljPKdbZ1r6t3fbUm/4/LkNvLZ8a6WkNAkowwsPptAJVXbiQZg44J/NsQ
-	gtQdLvl4bhOE3enKvDe7wFNGgPJZDBYaz7nZpnCPQVSwOslLGFhMpLLysst0jtB6wpTZw3Nwd/B
-	JEqzfcUNWfT+fFsGaGLPlHLiiIGqSozvo4SXBQ9GxETAy8WRqnk2wc5/U836DJTExUHHcJ0imXW
-	Sw9kct6bGLCwGJqRWHz4u6NhSc54PaxYQDUsAr6ObMZvQ7SaYZtn/wvyheAAgAyoDbvJa/WHbWZ
-	yOdBV+dAP5jcskRv52QSmCdItGGe5aYSfa/yabFwKKSpQm5mMDUhyurniPLMv7bU/NvwyPfJ86+
-	p9TwwFUXERGWx90ug3RUL9+3QEoFWOvm0lBWVKdeBVWI=
-X-Google-Smtp-Source: AGHT+IG7evbZKac3rDdr2HCLFM/y1FhB+TTx5Q8JT1powIRmDPSlOSbyXc5Lj7mVxKRa40pl1bkCeQ==
-X-Received: by 2002:a05:6a00:22c7:b0:748:f1ba:9aff with SMTP id d2e1a72fcca58-74ce68e4dbbmr897136b3a.5.1751589931895;
-        Thu, 03 Jul 2025 17:45:31 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce429f518sm627144b3a.121.2025.07.03.17.45.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 17:45:31 -0700 (PDT)
-Message-ID: <60c83207-c4e0-427d-b543-988230a52f34@gmail.com>
-Date: Fri, 4 Jul 2025 09:45:28 +0900
+	 In-Reply-To:Content-Type; b=gb8nBLv78gx/oDVHkZODVs/Zh70mqeCHxi8G/frWKyFx2a+RBrDYrCVSmKt8E67BJUeY6hyuqwtWyaGTnS6iN3d4FCZV7I50afIZ9DoJ5vNJfCByu9mBSJ4fkYPNQ9U/rwelXb2jC0xYW46agZAQGIOHfRW7qff4SJ8TKeMJnh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c5460f3e587011f0b29709d653e92f7d-20250704
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:af34f8ec-cead-4cff-8f15-48635f4ddbbb,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:ff0f69d7ae8fb705f0c75159692fc8d1,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: c5460f3e587011f0b29709d653e92f7d-20250704
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1353150857; Fri, 04 Jul 2025 08:49:41 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 919F3E008FA2;
+	Fri,  4 Jul 2025 08:49:41 +0800 (CST)
+X-ns-mid: postfix-68672525-50253432
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id D3C93E008FA1;
+	Fri,  4 Jul 2025 08:49:40 +0800 (CST)
+Message-ID: <7f6b7ea9-8fb5-466c-b92b-fe2c20e64b0b@kylinos.cn>
+Date: Fri, 4 Jul 2025 08:49:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,43 +47,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] Further kernel-doc tweakery
-To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-References: <20250703184403.274408-1-corbet@lwn.net>
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20250703184403.274408-1-corbet@lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 2/4] PM: freezer: Print tasks stuck in D-state during
+ freeze
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: pavel@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250619035355.33402-1-zhangzihuan@kylinos.cn>
+ <20250619035355.33402-3-zhangzihuan@kylinos.cn>
+ <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <CAJZ5v0hyBg3mVhfERkTLUnARLrsGarvtKOnL=RrL9VGF5DNLsg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Thu,  3 Jul 2025 12:43:56 -0600, Jonathan Corbet wrote:
-> This is a set of miscellaneous improvements, finishing my pass over the
-> first parsing pass and getting into the second ("dump_*") pass.
-> 
-> Changes from v1:
->  - Apply tags
->  - Rework the KernRe microoptimization to avoid exceptions
->  - Fix the stupid white-space error in patch 7
+Hi Rafael,
 
-Tested-by: Akira Yokosawa <akiyks@gmail.com>
+=E5=9C=A8 2025/7/3 22:40, Rafael J. Wysocki =E5=86=99=E9=81=93:
+> On Thu, Jun 19, 2025 at 5:54=E2=80=AFAM Zihuan Zhang <zhangzihuan@kylin=
+os.cn> wrote:
+>> To help diagnose freezing delays caused by tasks stuck in D-state, thi=
+s
+>> patch adds logging for tasks that are stuck in D-state during each ret=
+ry
+>> of the freezer loop.  Such tasks are not killable and cannot be frozen=
+,
+>> which can cause the system suspend process to retry many times
+>> before aborting.  This message can help developers identify which
+>> user-space or kernel tasks are blocking the freeze process.
+>>
+>> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+>> ---
+>>   kernel/power/process.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/kernel/power/process.c b/kernel/power/process.c
+>> index 87616ca710ac..4007f621c2ad 100644
+>> --- a/kernel/power/process.c
+>> +++ b/kernel/power/process.c
+>> @@ -55,6 +55,9 @@ static int try_to_freeze_tasks(bool user_only)
+>>                          if (p =3D=3D current || !freeze_task(p))
+>>                                  continue;
+>>
+>> +                       if (retry > 1 && READ_ONCE(p->__state) =3D=3D =
+TASK_UNINTERRUPTIBLE)
+>> +                               sched_show_task(p);
+>> +
+> This is going to be too noisy IMV.  Any chance to rate limit it somehow=
+?
+Thanks for pointing this out.
 
-Thanks!
+To avoid excessive verbosity, I=E2=80=99ll make the D-state task logging=20
+conditional on pm_debug_messages_on() being true. Additionally, I=E2=80=99=
+ll=20
+limit the logging to only occur during retry rounds 1=E2=80=94 that shoul=
+d be=20
+enough to catch problematic tasks early without spamming the logs in=20
+prolonged freeze attempts.
 
-> 
-> Jonathan Corbet (7):
->   docs: kdoc: don't reinvent string.strip()
->   docs: kdoc: micro-optimize KernRe
->   docs: kdoc: remove the brcount floor in process_proto_type()
->   docs: kdoc: rework type prototype parsing
->   docs: kdoc: some tweaks to process_proto_function()
->   docs: kdoc: Remove a Python 2 comment
->   docs: kdoc: pretty up dump_enum()
-> 
->  Documentation/sphinx/kerneldoc.py |   2 -
->  scripts/lib/kdoc/kdoc_parser.py   | 150 +++++++++++++++---------------
->  scripts/lib/kdoc/kdoc_re.py       |   7 +-
->  3 files changed, 79 insertions(+), 80 deletions(-)
-> 
++                       if (pm_debug_messages_on && retry =3D=3D 1 && REA=
+D_ONCE(p->__state) =3D=3D TASK_UNINTERRUPTIBLE)
++                               sched_show_task(p);
++
 
+
+>>                          todo++;
+>>                  }
+>>                  read_unlock(&tasklist_lock);
+>> --
+>> 2.25.1
+>>
+Best regards,
+Zihuan Zhang
