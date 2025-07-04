@@ -1,63 +1,63 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C151552E0;
-	Fri,  4 Jul 2025 14:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA34A190676;
+	Fri,  4 Jul 2025 14:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751638114; cv=none; b=a29GNIm0bYK0DoHQjQgKm3SqvSQZSRnqVLNs5orWF1B/qlJmB7uvEWbdegnaq73ILy++BgeiNz6Tm3IrDRNtEz280kiWt/yIWF0Ufzn1kNgp5fF6L48Ddcpi3CKXlzqv7lIIUCN0kSUC++401/TwaM82TVWQ2G6mRzbvrwozh94=
+	t=1751638116; cv=none; b=GiE9toZT+R1m3Jo7ywhmYMj7P8+4fEACXvtqusCD0/Qduz+xHkWDxHnMpsTdAHMSen+ZZzqzp2yoGzSXgEVObyxPmn2XXMbhh/74bfWcdCvFDGWcBNvKbQkMikWGjm/RhTOBIVHEEV1f001H619HKjDHgtaqNkcSHCI+BYqZKu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751638114; c=relaxed/simple;
-	bh=Igx/lKHLV2QDliTLutRN3L8sKt2ELRnyG5tN1O60qH4=;
+	s=arc-20240116; t=1751638116; c=relaxed/simple;
+	bh=E9V2Ma73sGUM576b84kgLyF4OIugTbMr1Zuf7UiaNhQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lC833vCKiU+ApLQO+0KP0bHHYpbEicRIYs3BZIPOud/dPh3Dswpp6y8Bz717VXYVMUWV6nXpmpgE1uTblOBhVetbzNSJlWJKfzwKbSGESujBAP8HvtLhtSGMHwCRjvgBGp73WpZoBF9VLSbi9geJU+r+3hoN7x0DRRWn2Uj5MS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0DIGo4Z; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=pJUa6gYtH7Qbe14mR7U0IptIBQue3Yw6CKjy4rnB4che6G1HHBzrYvhswz3l/fHmeCkR0ETJS3N8CYwID6kvqTwJxcandU4NFyt1SzYrSSKooYPryT+N1Ji1aOzc8f1SNPMhZ3RBjms/nYXOSkgNoJ4vciWLq6Vr1elU54BK2ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RI50VDsq; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0DIGo4Z"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-453643020bdso7360885e9.1;
-        Fri, 04 Jul 2025 07:08:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RI50VDsq"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so1387017f8f.0;
+        Fri, 04 Jul 2025 07:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751638110; x=1752242910; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751638113; x=1752242913; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ao7PytVuBDSpArCV73b0YXXYVhqgv39eodObXYm3abI=;
-        b=L0DIGo4Z2NwDpyb0Et/L2FmVPqmxW+VM/WuQbJcrN+R5gg8dQefqrNmUtLveb9bamo
-         Ypiw4RQCQ24WB0oSNxyguiug22c0AzjiTvo0nQWwndn9Orjim7JiXOkMiCpPPkLAtA4d
-         GQx4RumBlB59LuxGDfzQrVnTlE/ORSiiJrDuZvwHPpxPjOhyhNy4PbbP66PfGrw96sOA
-         phlpP2XfYe41S7XQClElFhCmvWO19mVQeOF8k7xR6hIVB+TVVV5r/ZtkBjip29pT04uJ
-         tiVUs0nLSLxSQxba9cnsqJRJRbKZZmTwqk2Sm9a14A6+FCXff+PnYiUrxYfZRr9nWRrR
-         z1tA==
+        bh=VUTJet6RQvRBcO9z//8YHPWqWCQe7/flkvja4q72OQ4=;
+        b=RI50VDsqbPW+vSLEObCArrmwvcmIUug7wAgYwyZkGrSMMww39orsE2JLkDgTKD19HI
+         N+rPfZOU8eSQ71K3jxRYgxP/Yt1nwaqsgAMOo1HlSgnVbsilwcn6Ls9VriP/aBpp23qW
+         lL/CqIUTgIB0XxuLntcBbJMTiYwpw+hHmeVZnvktv6EML2gZnIJhSsCZLl1rVIkR5FFi
+         tT6xK9pqGt0AL9uZTlSwo38cOSSJ4qGKRGbr7eC+H45W3e1MUwLjhFzmUSxH6mEljsKg
+         vobCGtIzrTI1ue/gg2SXIvTnsGzsTnyjhGX8Lylxzb/vT1E424fALCYi38kwQswcMd8C
+         qBug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751638110; x=1752242910;
+        d=1e100.net; s=20230601; t=1751638113; x=1752242913;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ao7PytVuBDSpArCV73b0YXXYVhqgv39eodObXYm3abI=;
-        b=UNNTwXi9JGXerEq7qVh79apTFG1VzG0ByhQsoXfe8FsPFV8f/Z1ttaxmDNINO9FC7v
-         wvc/rFAg7U+3Cezu23Ozg8VbvhIYESxXy6zrCGuFFO1D1if7mp71NrLUgs2A8pgydUjH
-         vPw7PtCpAn70EUNYA6ZepnQJ8lED5ub7KrvmOJN6ONVePVDR1oNA1hJgVkuh2jOaFOHQ
-         ciCqIyBCHwvnH84uwG+7wIQxP2CzfzEAUEsmQRmFlfdhkeceY5KlL08AoXDn/5akT7Cz
-         ZAMZO/Td37FpbHzwayn6v76zDp10ed9Dr5pPK467fRLgDAj3gbK/xbX5YmSuTXIrAhGC
-         c+pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbkcBwHdBVKzTvGQm0af4NRP6P4Chb08lBayPLLy1BUnNl5Rz6N8qTpxXlHC9ef+UGfSGg4L/boy6J@vger.kernel.org, AJvYcCWezVUFQ4x1Cs9iDaQb9Lzw1spFwS4G2NmrTmdgzU61+aZVe8pKZNP1fIbqqXDvL40BZJZEi8zLkSRTzsIV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz93Bbl2myaHK1Q2R+zZv7e3whC4kd026W8EV/G5+A6qqLkIZtz
-	E7TulkcH4mwheT1SdKJLRHAjPKnbxop+hx/kxF1Tt9vhXL+nUBlumxQ/
-X-Gm-Gg: ASbGncvL2tHRYG5+DErG0zMZugONQvWb6wOy/Tq8appo+xxQOgia/EZykEphII53UCe
-	APIqUjzlFeZz3IJ9JX0F+VdUquCdTUEk49Yxrsz105VL8o+aOdnRbJuO5LeGfZEAXTipeiZnNxX
-	f6vsdhKGPznafETpfAIKSq+FII/Me827hEeWdnkXz69s+5JoLG4YL9ep1/O9BnRed4jOfqnH6lz
-	ZnGf8AlVxLQSMCzXcrHtmUx/GyivagLEGRgaWZz91BJ85P0yscinKPeFP1n3Xh+A5rXZTrQHoyb
-	asolYajKybi1GgXB/rSUmynRFzslU6hLjDYqxe+4Qowgpt/n3xSLSKdBHAhq2q3duxFbOAhO68E
-	W0U6mmviOMwNDzmE0BrVs
-X-Google-Smtp-Source: AGHT+IFwTAFTjhgEXFBW9DFlJMn5aeL4lpp5xvk82NfqweWTjIgPBbyqFqR+tIZ21OlcTOMVY4iWiw==
-X-Received: by 2002:a05:6000:3111:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3b4964fc7e9mr2507552f8f.58.1751638110177;
-        Fri, 04 Jul 2025 07:08:30 -0700 (PDT)
+        bh=VUTJet6RQvRBcO9z//8YHPWqWCQe7/flkvja4q72OQ4=;
+        b=kXz1IYKsBjAELB/dThMgkN+xTuy1T5K9QTjcmR1Hw1D6i9ZoPHgKrX3DHquN/tKiA3
+         Wp7akEJ5USsx8g9UzyG4y+FDtjNMgBiJ76P/uLzB1/TH9Sfn8CGs8Fi/hlR8P1Dois2J
+         d+Y5ny2EL2cXZREsSjT7na36qqysQgHAwh8CI1Rc/v8STGYEv0xkx4rvKL7tnnpfyvyT
+         pYqmfwTZ6EiXN9bAhByGCU5QQ78mOcA1vLTFOyJMbbwjTvE5MjsDHLBFSSVxolJCS4jy
+         9GXug4KsZSb4xSjAGKk92MUyTP+OopRbTS6ehQ/PPza6Chp6Jyt3Pi2TfskaZCZVS+4q
+         0mSg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9p7vFrtluzzDLkSU+els5EcY5sDmqUyU0YC54Xve462PaLyDi3cuXMJ7k4DKkuvzijlLNpZTbgDSk@vger.kernel.org, AJvYcCUaQbwFTa2nT6WISc7BIUbO9FGgZr+UkYruHwze1fnJXuuT8cQvuaMNp/L6xGmMZqmrEPK+w8p+wZ+ybS0i@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkls8tLocTP9cYVv0OioaTepqQeb61KDqy8ai4xAi7NlBhgynW
+	0tBltnpISstu4LJwP/tYlV8N3t/Hao0SVJ3tP7MLqYAkJSL1Wpc/IzMP
+X-Gm-Gg: ASbGncsd3c7JiYa+n0DDInKWDtVQDQUj/OWrK4Jgeg2+ObXenm1FXVOn0uGLwYvS8gp
+	sU9X6xwl4yChtGBPq+EHQg5Kw3D9hKJwJVDqFQIHx5gB5D4BxAI+f8W+sToBmi5z1P/Qi3XLAfH
+	hq54rV0xSDyTWmqsiCAaf1u1/JjhwbT/GSD3DbJu/irlOCFEU4DN2b7QL4qjxeLFMwXzUYntka2
+	HQOKMgzF0BHmZFJA/Kfv4hUIZsS248BiOIp8ZBeej2aHRqwH5ApVBiJvGv6z8A8VmZ66wv05S6G
+	9uV07tkB9UVan7fcRek1CJZnKYk16PLOtQm/qOPYUfiOfdvAGcJV/TNjrU8pSt2xaGilzaO5i2Z
+	fveidPpPrPendVNaQz+rk
+X-Google-Smtp-Source: AGHT+IHQ8T5YS+U20mReb39jzfX8BUEQDwbNHiayRJ5e5l7cGA3Do+1WUAmT/ouZbX74YYdht2aIEw==
+X-Received: by 2002:a05:6000:4304:b0:3a5:281b:9fac with SMTP id ffacd0b85a97d-3b495cb02cfmr2831534f8f.17.1751638112403;
+        Fri, 04 Jul 2025 07:08:32 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:e31c:ff37:8f66:5091])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225afd4sm2535946f8f.83.2025.07.04.07.08.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225afd4sm2535946f8f.83.2025.07.04.07.08.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 07:08:29 -0700 (PDT)
+        Fri, 04 Jul 2025 07:08:31 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -72,9 +72,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 1/4] arm64: dts: renesas: r9a09g056: Add XSPI node
-Date: Fri,  4 Jul 2025 15:08:20 +0100
-Message-ID: <20250704140823.163572-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 3/4] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable serial NOR FLASH
+Date: Fri,  4 Jul 2025 15:08:22 +0100
+Message-ID: <20250704140823.163572-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250704140823.163572-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250704140823.163572-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -88,46 +88,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add XSPI node to RZ/V2N ("R9A09G056") SoC DTSI.
+Enable MT25QU512ABB8E12 FLASH connected to XSPI.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/renesas/r9a09g056.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g056.dtsi b/arch/arm64/boot/dts/renesas/r9a09g056.dtsi
-index 617b9ec9eef1..44f0bad451f3 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g056.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a09g056.dtsi
-@@ -208,6 +208,27 @@ sys: system-controller@10430000 {
- 			resets = <&cpg 0x30>;
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+index 5829b9afaa95..4dc4014f25d8 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
++++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+@@ -341,6 +341,18 @@ vbus {
+ 			pinmux = <RZV2N_PORT_PINMUX(9, 5, 14)>; /* VBUS */
  		};
- 
-+		xspi: spi@11030000 {
-+			compatible = "renesas,r9a09g056-xspi", "renesas,r9a09g047-xspi";
-+			reg = <0 0x11030000 0 0x10000>,
-+			      <0 0x20000000 0 0x10000000>;
-+			reg-names = "regs", "dirmap";
-+			interrupts = <GIC_SPI 228 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 229 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "pulse", "err_pulse";
-+			clocks = <&cpg CPG_MOD 0x9f>,
-+				 <&cpg CPG_MOD 0xa0>,
-+				 <&cpg CPG_CORE R9A09G056_SPI_CLK_SPI>,
-+				 <&cpg CPG_MOD 0xa1>;
-+			clock-names = "ahb", "axi", "spi", "spix2";
-+			resets = <&cpg 0xa3>, <&cpg 0xa4>;
-+			reset-names = "hresetn", "aresetn";
-+			power-domains = <&cpg>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
+ 	};
++
++	xspi_pins: xspi0 {
++		ctrl {
++			pins = "XSPI0_RESET0N", "XSPI0_CS0N", "XSPI0_CKP";
++			output-enable;
 +		};
 +
- 		ostm0: timer@11800000 {
- 			compatible = "renesas,r9a09g056-ostm", "renesas,ostm";
- 			reg = <0x0 0x11800000 0x0 0x1000>;
++		io {
++			pins = "XSPI0_IO0", "XSPI0_IO1", "XSPI0_IO2", "XSPI0_IO3";
++			renesas,output-impedance = <3>;
++		};
++	};
+ };
+ 
+ &qextal_clk {
+@@ -383,3 +395,46 @@ &usb2_phy0 {
+ &wdt1 {
+ 	status = "okay";
+ };
++
++&xspi {
++	pinctrl-0 = <&xspi_pins>;
++	pinctrl-names = "default";
++	/*
++	 * MT25QU512ABB8E12 flash chip is capable of running at 166MHz
++	 * clock frequency. Set the maximum clock frequency to 133MHz
++	 * supported by the RZ/V2N SoC.
++	 */
++	assigned-clocks = <&cpg CPG_CORE R9A09G056_SPI_CLK_SPI>;
++	assigned-clock-rates = <133333334>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		vcc-supply = <&reg_1p8v>;
++		m25p,fast-read;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "bl2";
++				reg = <0x00000000 0x00060000>;
++			};
++
++			partition@60000 {
++				label = "fip";
++				reg = <0x00060000 0x1fa0000>;
++			};
++
++			partition@2000000 {
++				label = "user";
++				reg = <0x2000000 0x2000000>;
++			};
++		};
++	};
++};
 -- 
 2.49.0
 
