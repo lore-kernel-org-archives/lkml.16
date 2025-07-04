@@ -1,150 +1,140 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B1711CA9;
-	Fri,  4 Jul 2025 05:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1428E20A5F5;
+	Fri,  4 Jul 2025 05:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751607101; cv=none; b=KCm3tkK1HMLvJ2EG5mANpj6+hPsbUcO/wHKKAAkCcMeEmyQWY/AFjA29oULA6lPkXptFdMgE8q+jx+75i6HrKPnxPy6ITM7UKXgabrvq54Tu4I1Q3HoAxCEF/cZniXPqTJ8xtC/nUDOvxKLQ5ErRjtgKi9HP6zoexEntNG8ok2Y=
+	t=1751607106; cv=none; b=p3b8E3eTmhapG5ACEzxoICvxTdJtj2YlS0i8VtA0lS/3iNJaMnYDGx3A5wdozkHrt9Jf/kPDHUUmRK5kZF0r+7q36wJ0DtFZuEtjUli9oECB3fGzUEho952CqDQZaAzQ43mviaK84o58CxtCRBdr2vuhCgtwjSwwf7Dfcg04YnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751607101; c=relaxed/simple;
-	bh=V12d63hkERNm+c9AVeRrxNTF/IfNRFwdxKyd1enk4CI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pqU4FvzS917JaoFg6uSpOHuQK1/2szNZU4phDEA6myyoFh5yF5uq5KcBnzMn/OM70qsRAGegsxYcLtg8gbGtHRFopcrqQM2Sz3ZwsfCHzI+cefw1JOzgdw0/cSFkrpwJbedVhpCCCeR1ReOkNMEyAfcdSOnyy3Knf8UomQ5ohhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EopwffOv; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751607106; c=relaxed/simple;
+	bh=lbr/w3Atu8u0QgKs9GzUVac/xCX7/2DRddCVhydzMw8=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=sg/PlP5YztrU581SBqW2GJZ9qvXasyDMoLejlStGMPj/jsaxR9FZf4mfNYPIOAItRShkpjddtzWN8n/5c/RalwUzuh+XLsxyWxdr6ds88NlABQJAlB5kr2a8iCVzSI6THlnUZ+YzuVWSIgE3dOtsNwKfjE6fSNViTP2dCqG3ww4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KHxSOdhI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EopwffOv"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234fcadde3eso9707485ad.0;
-        Thu, 03 Jul 2025 22:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751607100; x=1752211900; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pogRbjxBMF9v4j3VGI9bABnhpYMrItvYpoTjPTViwNQ=;
-        b=EopwffOvd4DoVOaV3Br2g55boT4hdSomZ2jHs2fL//34+wl/bOIL3cjBjUUXYuzR/F
-         bZspLUwuuNzMXKNR3djrhPxhwvRDuQA0NdQe7HSNdeToAO3Pmfza34nCA3PXttxS8zmL
-         zvYMYd6+P03wambqVeJmWRMaFAh0l0/Tx3m44c7IIA12EoF4uJDc/jxfYfkZPvEgUIWr
-         2sAimMxZHPiarQYqwV9q70I7bGTrEOudDYZMWJT+lNDcfU0NakogywalBsxV9gctqSGr
-         3q1MmNc3QbhE8eIws4pu+yft8qTT+YvtBcUU3YpQ7760dFzAQzmd9rRJsL24/5nv/mla
-         Dp6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751607100; x=1752211900;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pogRbjxBMF9v4j3VGI9bABnhpYMrItvYpoTjPTViwNQ=;
-        b=c5INVcC6tgdIoBbx769pI6vzeYNrc9C8ndy6yFQ2T+T7DQ2oCwc+7UFx3zFLQM2l0L
-         QYj43GNFyL1OLaugoukAn8i7+B0rgHrFz1bM/dxQamZuEQkNwc1/+So2+QDFeUQc0Uz3
-         0j++gTWMhMk9T32E7QzQvZDcOp0R9M1VpDxxWNjxg82m3gM8zoSL7vaAi1SfuGz2MQf1
-         4/QKuVsE9M/nzCVn5e5O/Dlj5HYQifV8YiN8lk7tTyyyB2xifdx7TN4gpC+8tb9gZy46
-         oOYlfYfj2CsC5EwZX04Yqx/BEfgsa81u2QwTHYoYCQ6GYrXMNz52KfqLM+NkY/+Rywg2
-         soEw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8ywaY7fdBiWgvMKCgAoK73SsVBBgpfKSlTImA7jpUxRv278WOrmnOvwP8RU73A3aqATM0rpZTMMN7+Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZXs9qabk3poHWrg2icHdg5eHk6FlGdLR4OILZt+LLVl0AkjBD
-	1jJqpq7IJGMhqhExUky+QT88H551ZVwi+8KeodYlqTUm+1r8t3FnkoQj5OJRoA==
-X-Gm-Gg: ASbGncsWaF3tWf1Amre2Wjnp2TJ9om9l6vRN19+n1kz7g0AQDycsfiw7qBH0zvfaQqz
-	LV3mgyOb2EFdlK7HAWTHl7mAXoTcjCO6YM7oUiGi8eurw+fb+6QEECf5n1Un30ADUXI7I0CFEKQ
-	nhFlE5NgqAsMxN37+kSIv+me34qky9LTU+bN4qlRyR8a7LHAeAmPQ8yrrkiYwbF3+bTtqhJtAlC
-	GqNZ0xTjQa3SJEUbvXCWxxeJkCZQHfjEIKci4gwAB2cDHB62hX8l1LZYkfCCYx6wqZN2KJcyOHX
-	eos6YGcVRdzJ1p1zomuRnew+dqqXI/rKXqREg3KjgUd7UWzIzUe1PSNEKS6AV2E=
-X-Google-Smtp-Source: AGHT+IFauLb+JvWf1fzEQ+SQu05FAwhPoK0TB8DHORMtCiUZKcUsLhXeSgSlg9nmAMZnWgwXL6oPlw==
-X-Received: by 2002:a17:902:e885:b0:235:1966:93a9 with SMTP id d9443c01a7336-23c8746d7c5mr15727215ad.3.1751607099621;
-        Thu, 03 Jul 2025 22:31:39 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:8ddd:816c:9ca2:2a5f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c843519cdsm10719695ad.65.2025.07.03.22.31.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 22:31:39 -0700 (PDT)
-Date: Thu, 3 Jul 2025 22:31:36 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v6.16-rc4
-Message-ID: <rl7tuutaftwo35bvpsdwkd2fg223yzxef6wj4ufwdz3eu2pjaf@ky6ht3qo6g6o>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KHxSOdhI"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5640GOhH014069;
+	Fri, 4 Jul 2025 05:31:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Bes+W9qoQRtMECU3uZpM7J
+	zR5WqARX2AyGZAPPR1ydk=; b=KHxSOdhIJuqVLjYfRehspUzIJMG/E/2NbKm7c5
+	++Uh+Sh5/L4uugkkqkl5wJoBwdT7tCHTIVX9zLjUbh2CHZ0bcl+aZAotwbzM29cD
+	sNFD262AJq6XOZLYJiOA9ODydcFyNJOOB5P3WWgJR05LNnSJ9whUqQfkWHXLxRzJ
+	H8V7QUdlKDHkngcbh8KTmdrfuddLLrV/yz6xiWioT17Fr7HR0zsSk6azIu4nnC3g
+	XWnRYZ+cAxUf6uv85cY8/lbaOeIpkI/bxBioawHZqayjPNvmYD0tELq4L9TABlgS
+	GT4ecaRc0oJDqc5uTF2SjT30NOJK4YZQXZJemKRcNk5tLl6g==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bw2rj8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 05:31:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5645VMgh016875
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 05:31:22 GMT
+Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 3 Jul 2025 22:31:18 -0700
+From: Luo Jie <quic_luoj@quicinc.com>
+Subject: [PATCH RESEND net 0/3] Fix QCA808X WoL Issue and Enable WoL
+ Support for QCA807X
+Date: Fri, 4 Jul 2025 13:31:12 +0800
+Message-ID: <20250704-qcom_phy_wol_support-v1-0-053342b1538d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACBnZ2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwMT3cLk/Nz4gozK+PL8nPji0oKC/KIS3VSTNENTk+RkozSjRCWg1oK
+ i1LTMCrCx0UpBrsGufi4g4bzUEqXY2loAku2xBnUAAAA=
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Viorel Suman
+	<viorel.suman@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        "Russell King (Oracle)"
+	<rmk+kernel@armlinux.org.uk>,
+        Wei Fang <wei.fang@nxp.com>
+CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <maxime.chevallier@bootlin.com>,
+        Luo Jie
+	<quic_luoj@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751607078; l=1288;
+ i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
+ bh=lbr/w3Atu8u0QgKs9GzUVac/xCX7/2DRddCVhydzMw8=;
+ b=J2KWzNG9u3Qp9GpL49mnLPoTz82x6I+/blPQTx3331ZzZG3e+3UGfBdMhK6QcOt0TcYTe1dv9
+ eu279EMWerSDciZRlVmfjwhzl6oe1WahmK8XCe3c6sBaaEFuvMzdxYU
+X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
+ pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5DwSsTRLWhQF87L-A5mwRlEgB96AZHlB
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=6867672b cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=QfVGnWNc7DW3J7Ta4DgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 5DwSsTRLWhQF87L-A5mwRlEgB96AZHlB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA0MCBTYWx0ZWRfX1PmzvuJ9fVCY
+ fYJe35YCTvVAn7qFYW/AeygjgYTzF65pA/uYOsQxLIQovzUfBuEDfz+woM9TX9rSEVomj/63LGI
+ oGIGtU9T/+gsoZ/RFM5Iqxm/oeOCC5sRAHOQSTa2Kb9TKR3cCK8yyC/+yvxT8eRh095p0UmV0Xn
+ gGsAQTQsemKxD5s5Z47dFQij0R0ANiCSoiI+4U1qeqQa3mMfWmgllWwu/15ufBXookR/NxzhYuI
+ 1OY0k/hWJ/Clmf7Vbositu71oQvB1bYz1BbcRyhYuTfXozOwsWRH8EvBf7PAFSXlij+nDIxp2B1
+ 0QuTrnE730ahNn8yd1pDfegk9mi4Da8slPborsoPSHP4IVtLI3JrA944y3W9GmSRjBsaea+tReZ
+ CHDJAvWD87rjaQ+fMuz93C43qPgkGjg2+GiH7iJ115onRHCGTD/l3fl4TWTPnht1amC+6C6u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_02,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=697 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040040
 
-Hi Linus,
+Restore WoL (Wake-on-LAN) enablement via MMD3 register 0x8012 BIT5 for
+the QCA808X PHY. This change resolves the issue where WoL functionality
+was not working due to its unintended removal in a previous commit.
 
-Please pull from:
+Refactor at8031_set_wol() into a shared library to enable reuse of the
+Wake-on-LAN (WoL) functionality by the AT8031, QCA807X and QCA808X PHY
+drivers.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.16-rc4
+Additionally, enable the WoL function for the QCA807X PHY by utilizing
+the at8031_set_wol() function from the shared library.
 
-to receive updates for the input subsystem. You will get:
+Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+---
+Luo Jie (3):
+      net: phy: qcom: move the WoL function to shared library
+      net: phy: qcom: qca808x: Fix WoL issue by utilizing at8031_set_wol()
+      net: phy: qcom: qca807x: Enable WoL support using shared library
 
-- support for Acer NGR 200 Controller added to xpad driver
+ drivers/net/phy/qcom/at803x.c       | 27 ---------------------------
+ drivers/net/phy/qcom/qca807x.c      |  4 ++++
+ drivers/net/phy/qcom/qca808x.c      |  2 +-
+ drivers/net/phy/qcom/qcom-phy-lib.c | 25 +++++++++++++++++++++++++
+ drivers/net/phy/qcom/qcom.h         |  5 +++++
+ 5 files changed, 35 insertions(+), 28 deletions(-)
+---
+base-commit: 223e2288f4b8c262a864e2c03964ffac91744cd5
+change-id: 20250704-qcom_phy_wol_support-e4f154cc2f2a
 
-- xpad driver will no longer log errors about URBs at sudden disconnect
-
-- a fix for potential NULL dereference in cs40l50-vibra driver
-
-- several drivers have been switched to using scnprintf() to suppress
-  warnings about potential output truncation
-
-Changelog:
----------
-
-Andy Shevchenko (1):
-      Input: alps - use scnprintf() to suppress truncation warning
-
-Chen-Yu Tsai (1):
-      dt-bindings: HID: i2c-hid: elan: Introduce Elan eKTH8D18
-
-Dmitry Torokhov (4):
-      Input: atkbd - switch to use scnprintf() to suppress truncation warning
-      Input: alps - switch to use scnprintf() to suppress truncation warning
-      Input: lifebook - switch to use scnprintf() to suppress truncation warning
-      Input: psmouse - switch to use scnprintf() to suppress truncation warning
-
-Jeff LaBundy (2):
-      Input: iqs626a - replace snprintf() with scnprintf()
-      Input: iqs7222 - explicitly define number of external channels
-
-Krzysztof Kozlowski (1):
-      Input: Fully open-code compatible for grepping
-
-Mario Limonciello (2):
-      Input: xpad - adjust error handling for disconnect
-      Input: xpad - return errors from xpad_try_sending_next_out_packet() up
-
-Markus Koch (1):
-      Input: fsia6b - suppress buffer truncation warning for phys
-
-Nilton Perim Neto (1):
-      Input: xpad - support Acer NGR 200 Controller
-
-Sven Peter (1):
-      Input: apple_z2 - drop default ARCH_APPLE in Kconfig
-
-Yunshui Jiang (1):
-      Input: cs40l50-vibra - fix potential NULL dereference in cs40l50_upload_owt()
-
-Diffstat:
---------
-
- Documentation/devicetree/bindings/input/elan,ekth6915.yaml | 12 +++++++-----
- drivers/input/joystick/fsia6b.c                            |  2 +-
- drivers/input/joystick/xpad.c                              | 11 +++++++----
- drivers/input/keyboard/atkbd.c                             |  4 ++--
- drivers/input/misc/cs40l50-vibra.c                         |  2 ++
- drivers/input/misc/gpio-beeper.c                           |  2 +-
- drivers/input/misc/iqs626a.c                               |  2 +-
- drivers/input/misc/iqs7222.c                               |  7 +++++--
- drivers/input/mouse/alps.c                                 | 10 +++++-----
- drivers/input/mouse/lifebook.c                             |  4 ++--
- drivers/input/mouse/psmouse-base.c                         |  2 +-
- drivers/input/touchscreen/Kconfig                          |  1 -
- drivers/input/touchscreen/melfas_mip4.c                    |  2 +-
- 13 files changed, 35 insertions(+), 26 deletions(-)
-
-Thanks.
-
-
+Best regards,
 -- 
-Dmitry
+Luo Jie <quic_luoj@quicinc.com>
+
