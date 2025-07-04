@@ -1,145 +1,282 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390E730AAB8
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE15F30B9B6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616991; cv=none; b=BAI625Xg5N+qqFzVGgOotMhW12EnQCfLHItNBO5n8WCQsWJqzwHpl/ia7L7d2P8r0m2VDz07cG9Nm8GQcvZRtXAOkbEhLIX896zJ7mG7YloWWQnN2b/msgFbn3HcWrq40zOk6aIKwBAt1aCZFArEIP+tz7Q4N7h+DQrQXcJIWD8=
+	t=1751616995; cv=none; b=GcQQco05ANlxMbc7BkKYnltYhH1i9qbEGkX4yS6XKMgmqJMfchkpSnaBq8SlcQxZcSnzJ6lFRFwCKHaTAZvmkqaMj2E6+8YaeQHuj04E/dpZX9jl9CjN5Eh+dAxSIqBKN25oOALC3jYnkcLxNKviyinKqqtCfLNt1sVhwTXqDUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616991; c=relaxed/simple;
-	bh=aKdC/fRJ+J6WHGQoAiIwXJ0mtHGxMv8NI/q7yo9xl6c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e0qpiXdjCBU7vEf6uQ7hJMpoYkoaNigfVvG/51WQ+si7fdvBmoyngvGZ9mBRFIKchaXFcNeOQzErhXrVl7C/nRRq7a0JWGSLT2eqAP7uD4bK6kM5E9Xua80/9rG3fdZ1rbcKXPsSYByXt+sRhCXFs5cWGD6OAOMFmvY/YrXyyj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 5648F0GA092007
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Jul 2025 16:15:00 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Fri, 4 Jul 2025
- 16:15:00 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To:
-CC: <arnd@arndb.de>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <soc@lists.linux.dev>,
-        <tim609@andestech.com>, Ben Zong-You Xie <ben717@andestech.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH 4/8] dt-bindings: interrupt-controller: add Andes machine-level software interrupt controller
-Date: Fri, 4 Jul 2025 16:14:47 +0800
-Message-ID: <20250704081451.2011407-5-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250704081451.2011407-1-ben717@andestech.com>
-References: <20250704081451.2011407-1-ben717@andestech.com>
+	s=arc-20240116; t=1751616995; c=relaxed/simple;
+	bh=xbsopJL39niuVsGDOYwMUaBUFCKFRngrgF79uxr/ZKY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZunUiX6FsNoxwk7aNIGSQHadA9kP/Ku4d0c6gpwf8oHwsiNTNTszmlUXMbXzZVkXfk7TGvpIa8xxAfxZUQWx+/BscUGxH1VOLALgrdWX3gqPrLF1IlRy2pUdF1VDPTm/cbtGT0nuFqMlXbMb4LTw7ptA7m9nEgSRcj0KvFvGHEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cfe68a8bbso49176339f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:16:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751616993; x=1752221793;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yAOV0O39Dfto9e1fmoguAJJZaZN12TGtoq2S9bd2LxM=;
+        b=eIxfySNnBaL9Zbt7teDjtbldnkWf4+3sysmOUnTnf1mXlHJWom8ROCdWphijcBYQet
+         zYOU1oQSlit+QwWxFVRa0U23llAdII4g689gZPqDPS6YmQmPThdN2YFM/6tsQPNtyGwd
+         oNBrDGRz3dDkWAOF2aC4CgYdZCBoRYHJHVWzwLsRtIL4aHRyFH8jsrte9zTfsM9wYyGX
+         BSmgAmRAHGj+nFAwGkL0u3VTZpu2cd/eJGh4gw996+qyzi6fi3ME56YS0VKMOQbZ0KKb
+         vCIasNOC/vCzsuBLly+cEMryG2+Is8UiHbaN/ZX56mmfUgfbhwRgysbcnt8p5j53emw1
+         zR3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkAUdfJExXSIYt+QTNC7pR8QO2xY6oqYozKXiV/qMq8lmce+nfURajyx7px/ZaOmHkiO0JZawJy8oSrr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2BhSsTZgLgsqW15Cvu7Z2kyYthGkIt9T0mNFG008VgZeJZvNd
+	02Fffalu4Up9zqe0D+r3s3Efo2P7+cjgeOvu1T82bQO0VILcWM1nzB01tm60+l4AzsocSwsmg/v
+	Fru3uO0RTZtQIljhhzzNWCIfrjNAy3Fcv8x4DRklXdCVA86mls4lk8sKGG1k=
+X-Google-Smtp-Source: AGHT+IEvKDQ+YdcHLVl4KW33OmyKCaFvS6FxKhuBMNxKWBxx8PsBuwRKPv0+rkooN7roBoaMjoV19uAghEpSvfLN6eKrPjEyUt/U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 5648F0GA092007
+X-Received: by 2002:a05:6e02:1a0a:b0:3e0:4564:4ef9 with SMTP id
+ e9e14a558f8ab-3e13544f97amr14701475ab.4.1751616992708; Fri, 04 Jul 2025
+ 01:16:32 -0700 (PDT)
+Date: Fri, 04 Jul 2025 01:16:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68678de0.a70a0220.29cf51.0012.GAE@google.com>
+Subject: [syzbot] [bluetooth?] [usb?] KASAN: slab-use-after-free Read in btusb_disconnect
+From: syzbot <syzbot+2fc81b50a4f8263a159b@syzkaller.appspotmail.com>
+To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add the DT binding documentation for Andes machine-level software
-interrupt controller.
+Hello,
 
-In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-second time with all interrupt sources tied to zero as the software
-interrupt controller (PLICSW). PLICSW can generate machine-level software
-interrupts through programming its registers.
+syzbot found the following issue on:
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+HEAD commit:    cf16f408364e usb: core: config: Prevent OOB read in SS end..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=1356f48c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c5153915e19e58
+dashboard link: https://syzkaller.appspot.com/bug?extid=2fc81b50a4f8263a159b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cf7770580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1756f48c580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/a4e5962e656a/disk-cf16f408.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/13d6d9e53c15/vmlinux-cf16f408.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dea34e20aa1d/bzImage-cf16f408.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2fc81b50a4f8263a159b@syzkaller.appspotmail.com
+
+usb 4-1: New USB device found, idVendor=0e8d, idProduct=763f, bcdDevice=9b.23
+usb 4-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 4-1: Product: syz
+usb 4-1: Manufacturer: syz
+usb 4-1: SerialNumber: syz
+usb 4-1: USB disconnect, device number 2
+==================================================================
+BUG: KASAN: slab-use-after-free in btusb_disconnect+0x4dc/0x580 drivers/bluetooth/btusb.c:4287
+Read of size 4 at addr ffff888107ebf7c0 by task kworker/0:1/10
+
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.16.0-rc2-syzkaller-00053-gcf16f408364e #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xcd/0x680 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ btusb_disconnect+0x4dc/0x580 drivers/bluetooth/btusb.c:4287
+ usb_unbind_interface+0x1da/0x9a0 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:569 [inline]
+ device_remove+0x122/0x170 drivers/base/dd.c:561
+ __device_release_driver drivers/base/dd.c:1272 [inline]
+ device_release_driver_internal+0x44b/0x620 drivers/base/dd.c:1295
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:579
+ device_del+0x396/0x9f0 drivers/base/core.c:3881
+ usb_disable_device+0x355/0x7d0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2e1/0x920 drivers/usb/core/hub.c:2316
+ hub_port_connect drivers/usb/core/hub.c:5375 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+ port_event drivers/usb/core/hub.c:5835 [inline]
+ hub_event+0x1aa0/0x5030 drivers/usb/core/hub.c:5917
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5b3/0x6c0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 10:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x8f/0xa0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4328 [inline]
+ __kmalloc_node_track_caller_noprof+0x212/0x4c0 mm/slub.c:4347
+ alloc_dr drivers/base/devres.c:119 [inline]
+ devm_kmalloc+0xa5/0x260 drivers/base/devres.c:864
+ devm_kzalloc include/linux/device/devres.h:53 [inline]
+ btusb_probe+0x23f/0x4480 drivers/bluetooth/btusb.c:3892
+ usb_probe_interface+0x300/0x9c0 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x241/0xa90 drivers/base/dd.c:657
+ __driver_probe_device+0x1de/0x440 drivers/base/dd.c:799
+ driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:829
+ __device_attach_driver+0x1df/0x310 drivers/base/dd.c:957
+ bus_for_each_drv+0x159/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1029
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0x1148/0x1a70 drivers/base/core.c:3692
+ usb_set_configuration+0x1187/0x1e20 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0xb1/0x110 drivers/usb/core/generic.c:250
+ usb_probe_device+0xec/0x3e0 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x241/0xa90 drivers/base/dd.c:657
+ __driver_probe_device+0x1de/0x440 drivers/base/dd.c:799
+ driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:829
+ __device_attach_driver+0x1df/0x310 drivers/base/dd.c:957
+ bus_for_each_drv+0x159/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1029
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0x1148/0x1a70 drivers/base/core.c:3692
+ usb_new_device+0xd07/0x1a20 drivers/usb/core/hub.c:2663
+ hub_port_connect drivers/usb/core/hub.c:5535 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+ port_event drivers/usb/core/hub.c:5835 [inline]
+ hub_event+0x2f85/0x5030 drivers/usb/core/hub.c:5917
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5b3/0x6c0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Freed by task 10:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x37/0x50 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2381 [inline]
+ slab_free mm/slub.c:4643 [inline]
+ kfree+0x283/0x470 mm/slub.c:4842
+ release_nodes+0x11e/0x240 drivers/base/devres.c:506
+ devres_release_all+0x112/0x180 drivers/base/devres.c:535
+ device_unbind_cleanup+0x19/0x1b0 drivers/base/dd.c:549
+ __device_release_driver drivers/base/dd.c:1277 [inline]
+ device_release_driver_internal+0x4c3/0x620 drivers/base/dd.c:1295
+ usb_driver_release_interface+0x109/0x190 drivers/usb/core/driver.c:640
+ btusb_disconnect+0x448/0x580 drivers/bluetooth/btusb.c:4280
+ usb_unbind_interface+0x1da/0x9a0 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:569 [inline]
+ device_remove+0x122/0x170 drivers/base/dd.c:561
+ __device_release_driver drivers/base/dd.c:1272 [inline]
+ device_release_driver_internal+0x44b/0x620 drivers/base/dd.c:1295
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:579
+ device_del+0x396/0x9f0 drivers/base/core.c:3881
+ usb_disable_device+0x355/0x7d0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2e1/0x920 drivers/usb/core/hub.c:2316
+ hub_port_connect drivers/usb/core/hub.c:5375 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+ port_event drivers/usb/core/hub.c:5835 [inline]
+ hub_event+0x1aa0/0x5030 drivers/usb/core/hub.c:5917
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5b3/0x6c0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff888107ebf000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 1984 bytes inside of
+ freed 2048-byte region [ffff888107ebf000, ffff888107ebf800)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x107eb8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x200000000000040(head|node=0|zone=2)
+page_type: f5(slab)
+raw: 0200000000000040 ffff888100042000 ffffea00041ba600 dead000000000002
+raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+head: 0200000000000040 ffff888100042000 ffffea00041ba600 dead000000000002
+head: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+head: 0200000000000003 ffffea00041fae01 00000000ffffffff 00000000ffffffff
+head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 3804462285, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1c0/0x230 mm/page_alloc.c:1704
+ prep_new_page mm/page_alloc.c:1712 [inline]
+ get_page_from_freelist+0xf98/0x2ce0 mm/page_alloc.c:3669
+ __alloc_frozen_pages_noprof+0x259/0x21e0 mm/page_alloc.c:4959
+ alloc_pages_mpol+0xe4/0x410 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2451 [inline]
+ allocate_slab mm/slub.c:2619 [inline]
+ new_slab+0x23b/0x330 mm/slub.c:2673
+ ___slab_alloc+0xda5/0x1940 mm/slub.c:3859
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3949
+ __slab_alloc_node mm/slub.c:4024 [inline]
+ slab_alloc_node mm/slub.c:4185 [inline]
+ __kmalloc_cache_noprof+0x209/0x3c0 mm/slub.c:4354
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kmalloc_array_noprof include/linux/slab.h:948 [inline]
+ netdev_create_hash+0x3c/0xc0 net/core/dev.c:12447
+ netdev_init+0x70/0x230 net/core/dev.c:12463
+ ops_init+0x1df/0x5f0 net/core/net_namespace.c:138
+ __register_pernet_operations net/core/net_namespace.c:1284 [inline]
+ register_pernet_operations+0x39c/0x700 net/core/net_namespace.c:1361
+ register_pernet_subsys+0x28/0x40 net/core/net_namespace.c:1402
+ net_dev_init+0x13a/0xcb0 net/core/dev.c:12796
+ do_one_initcall+0x120/0x6e0 init/main.c:1274
+ do_initcall_level init/main.c:1336 [inline]
+ do_initcalls init/main.c:1352 [inline]
+ do_basic_setup init/main.c:1371 [inline]
+ kernel_init_freeable+0x5c2/0x900 init/main.c:1584
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888107ebf680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888107ebf700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888107ebf780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                           ^
+ ffff888107ebf800: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888107ebf880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
- .../andestech,plicsw.yaml                     | 54 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-new file mode 100644
-index 000000000000..eb2eb611ac09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/andestech,plicsw.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Andes machine-level software interrupt controller
-+
-+description:
-+  In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-+  second time with all interrupt sources tied to zero as the software interrupt
-+  controller (PLIC_SW). PLIC_SW directly connects to the machine-mode
-+  inter-processor interrupt lines of CPUs, so RISC-V per-CPU local interrupt
-+  controller is the parent interrupt controller for PLIC_SW. PLIC_SW can
-+  generate machine-mode inter-processor interrupts through programming its
-+  registers.
-+
-+maintainers:
-+  - Ben Zong-You Xie <ben717@andestech.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - andestech,qilai-plicsw
-+      - const: andestech,plicsw
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts-extended:
-+    minItems: 1
-+    maxItems: 15872
-+    description:
-+      Specifies which harts are connected to the PLIC_SW. Each item must points
-+      to a riscv,cpu-intc node, which has a riscv cpu node as parent.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts-extended
-+
-+examples:
-+  - |
-+    interrupt-controller@400000 {
-+      compatible = "andestech,qilai-plicsw", "andestech,plicsw";
-+      reg = <0x400000 0x400000>;
-+      interrupts-extended = <&cpu0intc 3>,
-+                            <&cpu1intc 3>,
-+                            <&cpu2intc 3>,
-+                            <&cpu3intc 3>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f4b4261d3c44..df309a360615 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21288,6 +21288,7 @@ F:	include/linux/irqchip/riscv-imsic.h
- RISC-V ANDES SoC Support
- M:	Ben Zong-You Xie <ben717@andestech.com>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
- F:	Documentation/devicetree/bindings/riscv/andes.yaml
- 
- RISC-V ARCHITECTURE
--- 
-2.34.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
