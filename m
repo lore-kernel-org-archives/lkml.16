@@ -1,152 +1,250 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B412F8C2B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF952E36EB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650746; cv=none; b=kh+o0Zx5NQLIe7AxRIq9lHPompPCxVKGnkFHaW3qaSJu3KSty46HMsdDlCCWVpbFjVcESc7NdF9GvH9eSyOdzzlOrm5AQ7Zy0JulWZI+PPPDPEFAmW9RRUTRPxLVXB5IAAlvlvNlnkbzqKyas+M0SJg5wVnJ0RmZYGZeP3Diybg=
+	t=1751650846; cv=none; b=ssRNQ1TZFpIAHZze2Tcaw+PU4JpimSQ6nCRTXits/V/d5b3nsYynqA0ytcPx2ew2SQPCntT9d3UnDYjf6hr+Il1v6axOrpRsPWL1pA23RSaOSi84CrC9ZG73Qeb3nbCq/+B3csE1B1+4rk+spWYEpntvaLqYLYQ87N1/xOLkAt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650746; c=relaxed/simple;
-	bh=j02YDs6aDCl4rqT3OFIlEJ2Sbfh56QMrKCAykaGjHL0=;
+	s=arc-20240116; t=1751650846; c=relaxed/simple;
+	bh=j1y5fK2pSIFjeIzluaoTZB7LiubY9SK90IFdNX+JcVI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DQ5rcMC0eLktnkmC9nvxCWi9yGKj8a92Z2i1sacIv4C9ghkjW7VUdP7xmfktgz+C3cQaK4+vRaGrRG2SmUaZXra5Kg1aPOBIsUXrgEbGca32ABLtN9188fKamyveHBy9iU3GMKL51WauVBtd8Lenj2FDqMo5L9Op2Gy62e8GPZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D1C293B;
-	Fri,  4 Jul 2025 10:38:50 -0700 (PDT)
-Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C7A83F66E;
-	Fri,  4 Jul 2025 10:39:03 -0700 (PDT)
-Message-ID: <642f2fa8-cd61-47ed-9d63-a15de263d36d@arm.com>
-Date: Fri, 4 Jul 2025 18:39:02 +0100
+	 In-Reply-To:Content-Type; b=fYQEaw+p3vDMrkFOw8dc/Xc8qlaBKpn+lynLTATcM3Tvv0iONShzjh9A1fCS5nVC7rLAlSOGOZqA4iqS7zxHtVg7Y+FE0ECqeej+6TZt5p8uz8Rd2b5HJeQyLsP5NRPmabkB7IziR2iECR729JTq9aMf5m2GLRcnHYPubxNhO0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pKspoYDT; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pKspoYDT"
+Message-ID: <2459c10e-d74c-4118-9b6d-c37d05ecec02@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751650841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xIRcNmmy2VbVp7gJQIkaTFfPIXvag7FLLr7FrIV0lQo=;
+	b=pKspoYDT8P7/dYSLFT3Wcf6V3S1xlnly+2wS8ALTKH+MecAV9raqgDtRFHb0+N2lny17mW
+	Urcm4546PBB3ywrgOhyT2lNXU6S1ODfdsqWVsxtfy8Ky7lG6s44qnb6dsS029GqH9Obmh5
+	BPBmV3Y+sZ0PNlQN6O1PuI38XaEGhZU=
+Date: Fri, 4 Jul 2025 10:40:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] cacheinfo: Add arch hook to compress CPU h/w id into
- 32 bits for cache-id
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, sudeep.holla@arm.com,
- Ben Horgan <ben.horgan@arm.com>
-References: <20250613130356.8080-1-james.morse@arm.com>
- <20250613130356.8080-3-james.morse@arm.com>
- <CAL_Jsq+rsBq1Dsw4+hfkMhopN9Pdwyp9JJbqeT6yB+d++s4v7g@mail.gmail.com>
- <ee08ba7e-2669-447f-ae04-5a6b00a16e77@arm.com>
- <CAL_Jsq+mXkQTM-zbozPGkCQ40CusOUudWgtaxx_ufqL+0t96mQ@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
 Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <CAL_Jsq+mXkQTM-zbozPGkCQ40CusOUudWgtaxx_ufqL+0t96mQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi Rob,
-
-On 30/06/2025 20:43, Rob Herring wrote:
-> On Fri, Jun 27, 2025 at 11:38 AM James Morse <james.morse@arm.com> wrote:
->> On 23/06/2025 15:48, Rob Herring wrote:
->>> On Fri, Jun 13, 2025 at 8:04 AM James Morse <james.morse@arm.com> wrote:
->>>> Filesystems like resctrl use the cache-id exposed via sysfs to identify
->>>> groups of CPUs. The value is also used for PCIe cache steering tags. On
->>>> DT platforms cache-id is not something that is described in the
->>>> device-tree, but instead generated from the smallest CPU h/w id of the
->>>> CPUs associated with that cache.
->>>>
->>>> CPU h/w ids may be larger than 32 bits.
->>>>
->>>> Add a hook to allow architectures to compress the value from the devicetree
->>>> into 32 bits. Returning the same value is always safe as cache_of_set_id()
->>>> will stop if a value larger than 32 bits is seen.
->>>>
->>>> For example, on arm64 the value is the MPIDR affinity register, which only
->>>> has 32 bits of affinity data, but spread across the 64 bit field. An
->>>> arch-specific bit swizzle gives a 32 bit value.
->>
->>> What's missing here is why do we need the cache id to be only 32-bits?
->>> I suppose it is because the sysfs 'id' file has been implicitly that?
->>
->> Yup, and its too late to change.
->>
->>
->>> Why can't we just allow 64-bit values there? Obviously, you can't have
->>> a 64-bit value on x86 because that might break existing userspace.
->>
->> It's the same user-space. Users of resctrl should be portable between architectures.
->> Resctrl isn't the only user, of the cache-id field.
->>
->>
->>> But for Arm, there is no existing userspace to break.
->>
->> libvirt: https://github.com/libvirt/libvirt/blob/master/src/util/virresctrl.c#L1588
-> 
-> Looks to me like AMD wasn't even supported til v10.8.0 (2024-10-01)[1].
-
-'when mounted with [a particular option]'
-
-AMDs bandwidth controls count in 1/8ths of 1GB/s - and you have to know you're running on
-an AMD machine. I'm aiming for the arm64 support to be portable between Intel and RISC-V.
+To: Song Liu <song@kernel.org>, bpf@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+Cc: kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
+ ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
+ viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org, neil@brown.name
+References: <20250617061116.3681325-1-song@kernel.org>
+ <20250617061116.3681325-2-song@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20250617061116.3681325-2-song@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
->> DPDK: http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanage@arm.com/
-> 
-> Is that even applied yet?
 
-No idea, but its equally likely that I haven't found all the places this gets parsed by
-user-space. I don't think we have a way of telling people using stable-kernels that we
-might change the size of that field. It's pretty clear people don't anticipate it changing!
+On 6/16/25 11:11 PM, Song Liu wrote:
+> This helper walks an input path to its parent. Logic are added to handle
+> walking across mount tree.
+>
+> This will be used by landlock, and BPF LSM.
+>
+> Suggested-by: Neil Brown <neil@brown.name>
+> Signed-off-by: Song Liu <song@kernel.org>
+> ---
+>   fs/namei.c            | 95 +++++++++++++++++++++++++++++++++++--------
+>   include/linux/namei.h |  2 +
+>   2 files changed, 79 insertions(+), 18 deletions(-)
+>
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 4bb889fc980b..d0557c0b5cc8 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2048,36 +2048,95 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd)
+>   	return nd->path.dentry;
+>   }
+>   
+> -static struct dentry *follow_dotdot(struct nameidata *nd)
+> +/**
+> + * __path_walk_parent - Find the parent of the given struct path
+> + * @path  - The struct path to start from
+> + * @root  - A struct path which serves as a boundary not to be crosses.
+> + *        - If @root is zero'ed, walk all the way to global root.
+> + * @flags - Some LOOKUP_ flags.
+> + *
+> + * Find and return the dentry for the parent of the given path
+> + * (mount/dentry). If the given path is the root of a mounted tree, it
+> + * is first updated to the mount point on which that tree is mounted.
+> + *
+> + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new
+> + * mount, the error EXDEV is returned.
+> + *
+> + * If no parent can be found, either because the tree is not mounted or
+> + * because the @path matches the @root, then @path->dentry is returned
+> + * unless @flags contains %LOOKUP_BENEATH, in which case -EXDEV is returned.
+> + *
+> + * Returns: either an ERR_PTR() or the chosen parent which will have had
+> + * the refcount incremented.
+> + */
+> +static struct dentry *__path_walk_parent(struct path *path, const struct path *root, int flags)
+>   {
+> -	struct dentry *parent;
+> -
+> -	if (path_equal(&nd->path, &nd->root))
+> +	if (path_equal(path, root))
+>   		goto in_root;
+> -	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
+> -		struct path path;
+> +	if (unlikely(path->dentry == path->mnt->mnt_root)) {
+> +		struct path new_path;
+>   
+> -		if (!choose_mountpoint(real_mount(nd->path.mnt),
+> -				       &nd->root, &path))
+> +		if (!choose_mountpoint(real_mount(path->mnt),
+> +				       root, &new_path))
+>   			goto in_root;
+> -		path_put(&nd->path);
+> -		nd->path = path;
+> -		nd->inode = path.dentry->d_inode;
+> -		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+> +		path_put(path);
+> +		*path = new_path;
+> +		if (unlikely(flags & LOOKUP_NO_XDEV))
+>   			return ERR_PTR(-EXDEV);
+>   	}
+>   	/* rare case of legitimate dget_parent()... */
+> -	parent = dget_parent(nd->path.dentry);
+> +	return dget_parent(path->dentry);
 
-This is just the downside of exposing anything to user-space!
+I have some confusion with this patch when crossing mount boundary.
+
+In d_path.c, we have
+
+static int __prepend_path(const struct dentry *dentry, const struct mount *mnt,
+                           const struct path *root, struct prepend_buffer *p)
+{
+         while (dentry != root->dentry || &mnt->mnt != root->mnt) {
+                 const struct dentry *parent = READ_ONCE(dentry->d_parent);
+
+                 if (dentry == mnt->mnt.mnt_root) {
+                         struct mount *m = READ_ONCE(mnt->mnt_parent);
+                         struct mnt_namespace *mnt_ns;
+
+                         if (likely(mnt != m)) {
+                                 dentry = READ_ONCE(mnt->mnt_mountpoint);
+                                 mnt = m;
+                                 continue;
+                         }
+                         /* Global root */
+                         mnt_ns = READ_ONCE(mnt->mnt_ns);
+                         /* open-coded is_mounted() to use local mnt_ns */
+                         if (!IS_ERR_OR_NULL(mnt_ns) && !is_anon_ns(mnt_ns))
+                                 return 1;       // absolute root
+                         else
+                                 return 2;       // detached or not attached yet
+                 }
+
+                 if (unlikely(dentry == parent))
+                         /* Escaped? */
+                         return 3;
+
+                 prefetch(parent);
+                 if (!prepend_name(p, &dentry->d_name))
+                         break;
+                 dentry = parent;
+         }
+         return 0;
+}
+
+At the mount boundary and not at root mount, the code has
+	dentry = READ_ONCE(mnt->mnt_mountpoint);
+	mnt = m; /* 'mnt' will be parent mount */
+	continue;
+
+After that, we have
+	const struct dentry *parent = READ_ONCE(dentry->d_parent);
+	if (dentry == mnt->mnt.mnt_root) {
+		/* assume this is false */
+	}
+	...
+	prefetch(parent);
+         if (!prepend_name(p, &dentry->d_name))
+                 break;
+         dentry = parent;
+
+So the prepend_name(p, &dentry->d_name) is actually from mnt->mnt_mountpoint.
+
+In your above code, maybe we should return path->dentry in the below if statement?
+
+         if (unlikely(path->dentry == path->mnt->mnt_root)) {
+                 struct path new_path;
+
+                 if (!choose_mountpoint(real_mount(path->mnt),
+                                        root, &new_path))
+                         goto in_root;
+                 path_put(path);
+                 *path = new_path;
+                 if (unlikely(flags & LOOKUP_NO_XDEV))
+                         return ERR_PTR(-EXDEV);
++		return path->dentry;
+         }
+         /* rare case of legitimate dget_parent()... */
+         return dget_parent(path->dentry);
+
+Also, could you add some selftests cross mount points? This will
+have more coverages with __path_walk_parent().
+
+> +
+> +in_root:
+> +	if (unlikely(flags & LOOKUP_BENEATH))
+> +		return ERR_PTR(-EXDEV);
+> +	return dget(path->dentry);
+> +}
+> +
+> +/**
+> + * path_walk_parent - Walk to the parent of path
+> + * @path: input and output path.
+> + * @root: root of the path walk, do not go beyond this root. If @root is
+> + *        zero'ed, walk all the way to real root.
+> + *
+> + * Given a path, find the parent path. Replace @path with the parent path.
+> + * If we were already at the real root or a disconnected root, @path is
+> + * not changed.
+> + *
+> + * Returns:
+> + *  0  - if @path is updated to its parent.
+> + *  <0 - if @path is already the root (real root or @root).
+> + */
+> +int path_walk_parent(struct path *path, const struct path *root)
+> +{
+> +	struct dentry *parent;
+> +
+> +	parent = __path_walk_parent(path, root, LOOKUP_BENEATH);
+> +
+> +	if (IS_ERR(parent))
+> +		return PTR_ERR(parent);
+> +
+> +	if (parent == path->dentry) {
+> +		dput(parent);
+> +		return -ENOENT;
+> +	}
+> +	dput(path->dentry);
+> +	path->dentry = parent;
+> +	return 0;
+> +}
+> +
 
 [...]
 
->>> It is obviously nice
->>> if we can avoid modifying userspace, but I don't think that's a
->>> requirement and I'd be surprised if there's not other things that need
->>> to be adapted for MPAM support.
->>
->> The whole multi-year effort has been to make existing user-space work without any ABI
->> changes. The effect is some platforms have features that can't be used because resctrl
->> expects things to be Xeon shaped.
->> But if your platform looks a bit like a Xeon (cache portion controls on the L3, memory
->> bandwidth controls somewhere that is believably the L3), then resctrl works as it does on
->> Intel. The only thing that has come a little unstuck is the 'num_rmid' property where MPAM
->> doesn't have an equivalent, so '1' is exposed as a safe value.
-> 
-> Fair enough, but I'd be rather surprised if there doesn't end up being
-> changes to support Arm platforms.
-> 
->>> Also, what if an architecture can't swizzle their value into 32-bits?
->>> They would be stuck with requiring userspace to deal with 64-bit
->>> values.
->>
->> Remap them in a more complicated way. Chances are there aren't 2^32 CPUs.
-
-> What about using the logical CPU number instead? That's stable for a
-> given machine and firmware.
-
-Hmmm, if you offline CPU-0 then kexec, then CPU-1 becomes the new CPU-0 and the numbers
-get doled out differently.
-
-
-> And then instead of having 3 sets of
-> numbers (MPIDR, compressed MPIDR, and logical CPU), we'd still only
-> have 2. And logical CPU is what sysfs already exposes to userspace.
-
-I don't think the linux allocated CPU number is robust enough.
-
-We could use the CPU number as seen when walking through the DT to make it stable, but
-that would still be a third type of number. It would save the arch hook to swizzle the
-bits, but changing the DT would change the numbers which doesn't happen with this scheme.
-
-Let me know if that is what you prefer.
-(I'll summarise this on the cover-letter/patch-1 of the incoming series)
-
-
-Thanks,
-
-James
