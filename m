@@ -1,84 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6371FC3;
-	Fri,  4 Jul 2025 13:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93951FC3;
+	Fri,  4 Jul 2025 13:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635226; cv=none; b=lANkjEvEJrNGFUsO3WrBgK0VoQ5aW+X5roz2joEOk0Cird4cGD998mm79MMGh//gjNYNqeEIULrHJuDCfuBYC7q1fWKwsVSf1p6n9ouQYmeeER1jRtd8W5SGamN3MX8Nh1OBmKZtGIjSGmV4eG0fdeOfyL3EH62MhjYrZJiSdp8=
+	t=1751635233; cv=none; b=EkfUoKbB/xpoY27qZgXVS1o+tzc5masHnrBCGFbwX3f+LWUbExr4XkUOhiINbceFBgZI8bui7FgCmyMjnZP7XiYn7PPwLqSjiZchMppQvJ/fjxmXyDhSkTeYuHTwoZ1JkTbavQFMzNo04E+B3t9cspx4TNXf+bl3x6xFEXatY4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635226; c=relaxed/simple;
-	bh=E22YtMZTkR47Wy1MgCwxvROHlw1OXESfmqj7ZX28cqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOMip3DQlVTfvoUP+qbP3RM/cBaARrrovFsbnGVHlZrhXRJNMxPpWnyKvM46AxjRYPMEJ045gDjqR65YkGWZ1AcqRDJLUYlbBz0U/QJIT1EKhcHMT/lUG6mMCV83U+t0I5hb3Y4IAjcWSVOOB3B0GpEejYynLLOvefSNnq8nyx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1rnLoTG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751635233; c=relaxed/simple;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sAO93MicFvNusEgktQ91FWekdzzvS0VYE1RjqngK4wOeJsLdYxssl7la0FPK6XsKRCSo8h0ynUAUi5PGzT14bhpMsgdi5jaXrpW0/yDATu5xdzNvVoRlRmJo6MjdGaCU5qb0IqV6xJ/JkuSr9kID9yIzHsMu4Dxw1lvrwiKWHJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o71t87yN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/xtVsI6x; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1rnLoTG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490C7C4CEE3;
-	Fri,  4 Jul 2025 13:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751635226;
-	bh=E22YtMZTkR47Wy1MgCwxvROHlw1OXESfmqj7ZX28cqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n1rnLoTGg9cU81lRJDad4WyocHeKRrv6pdAGHIdWLPhBvNyfKGfWXhNojQCHcDlpC
-	 8AcoKk25fnpCFr2fcIBNAyFgPF/Z6UQI28e4vzLJhqDsJEhjGstJm/XFHnGP6N8J7a
-	 UEtpo4l+YsUUrlg7tFvThQLAF3Y/DgSvRv68J9v1dH8wefeC1OaU4+XwljcBcsRuEA
-	 VPYklgFSNxaUCx/Wiy4LuClOhKpIU7QTxbp4/bqfn61Gtj/HzZtbKxthNUFPWBiP42
-	 csj7MOMYePlkGbJ/h9Y2YKSg0EdLSnFXv4+DorCR9s9VJWNQXL6wXOtUmDjL/fFpUI
-	 Qw1+6Arh/D8ag==
-Date: Fri, 4 Jul 2025 14:20:19 +0100
-From: Simon Horman <horms@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next 3/3] selftests: ethtool: Introduce ethernet PHY
- selftests on netdevsim
-Message-ID: <20250704132019.GM41770@horms.kernel.org>
-References: <20250702082806.706973-1-maxime.chevallier@bootlin.com>
- <20250702082806.706973-4-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o71t87yN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/xtVsI6x"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751635230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=o71t87yN4pUXKTRJVq52dE+wQJSMLrSGiHo8JF8xqKOHTKnIQ7r83os7xAdF+WUXyAUWhq
+	GeLLRNltLivSDdoVkbqVXsgFJiW+UW1mCykhPYcEom+kqxqO4ST0rk4hJ3Zn7OtupHO3ss
+	BEN3MqRi73RHyN8GWx/ThdJqxJdkUPXRD1fMdXUERl0TOF7r2Td+rG/M+WR4laBHlujGf0
+	CYtlzRYnhmvNMoAHcOR4nqA71J4zt6WeCDU8pITF/BOjVZYlbw6q+oEIxnYVelNzYuevNk
+	i1lTOagS/5DvtKhSiDCeJKEboYDisH0wG5OrLmeYD8KcupBJeF8L+/j6nmUZEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751635230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=/xtVsI6x0OrnCSmxhpCNj4mhbrg49Bnl1hTfCklZkZ5QslphSJ3gkv49IaKFjvau8JvLQT
+	60chLHn4eQ7T6YCQ==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v11 01/21] rv: Add #undef TRACE_INCLUDE_FILE
+Date: Fri,  4 Jul 2025 15:19:53 +0200
+Message-Id: <9c8e7fce68d4b30568ffaf9e8cc02ae311600997.1751634289.git.namcao@linutronix.de>
+In-Reply-To: <cover.1751634289.git.namcao@linutronix.de>
+References: <cover.1751634289.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702082806.706973-4-maxime.chevallier@bootlin.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 10:28:05AM +0200, Maxime Chevallier wrote:
-> Now that netdevsim supports PHY device simulation, we can start writing
-> some tests to cover a little bit all PHY-related ethtool commands.
-> 
-> So far we only test the basic use of "ethtool --show-phys", with :
->  - A simple command to get a PHY we just added
->  - A DUMP command listing PHYs on multiple netdevsim instances
->  - A Filtered DUMP command listing all PHYs on a netdevsim
-> 
-> Introduce some helpers to create netdevsim PHYs, and a new test file.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Without "#undef TRACE_INCLUDE_FILE", there could be a build error due to
+TRACE_INCLUDE_FILE being redefined. Therefore add it.
 
-Hi Maxime,
+Also fix a typo while at it.
 
-We have recently started running shellcheck as part of our CI (NIPA).
-Could you do so for the scripts added and modified by this patch?
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/rv_trace.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
->  .../selftests/drivers/net/netdevsim/config    |  1 +
->  .../drivers/net/netdevsim/ethtool-common.sh   | 15 +++++
->  .../drivers/net/netdevsim/ethtool-phy.sh      | 64 +++++++++++++++++++
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 422b75f58891..99c3801616d4 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -129,8 +129,9 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+=20
+-/* This part ust be outside protection */
++/* This part must be outside protection */
+ #undef TRACE_INCLUDE_PATH
+ #define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE rv_trace
+ #include <trace/define_trace.h>
+--=20
+2.39.5
 
-Should ethtool-phy.sh be added to TEST_PROGS the Makefile in
-the same directory?
-
-...
