@@ -1,150 +1,167 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DAA2D8393
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 17:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F77E6A8D2;
+	Fri,  4 Jul 2025 17:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751651669; cv=none; b=a+DpuxH4WZGlcZLVTokfdUgMNyseC3N4A+ecraOfoViket1UnOaIZN0rzG3TN8Ym1dYxNXK6sssE2nIsF8mk+69tqQKtGFKQyHZt66werOKA/3Lhu+ViNYOCP9UWbOGvdkfE3TheVEcgP19UWXfTcr462GXxTb4/My70ZrTw1wA=
+	t=1751651718; cv=none; b=oCKy1HBK07AQ2lm5kOC0Odm4GEVevfTy1bZygAyC9PYifh03U891Svf0HWyvjA0xpPvIg+LgOXChwofBADu0FBXHCY8pgV84lWhZBxjgt2lyaSRuzOQ5MZ3daDTu6yQ8sIDbFsSqc8Tp1BQtZMvGBaj9RoHMcIHPdMqwcuhlUbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751651669; c=relaxed/simple;
-	bh=qTNc7+1p4sx/z+Ihm4/J09j0G//xpF1WUSAnIfFyOOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngoI/H/E8EHcSvdAS56HaUaZ3jN/0h/++TMurozW5xiy9H8sz3KfEEun1utnyh0uUGdJ1Msei+ZTCyvNm2LOf+hPa+YCdTunBLx3oc9tnCQJpZon0heTnlFruxTCFOKfody2JUe25Gu1WSbQNHTXz/TNbYbXNVf75YpXS/RDs/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Hy5unYwn; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1751651718; c=relaxed/simple;
+	bh=EGZgrTldAmn1FZT1xY8Fa7a4iDUzyJQCZj4MIa86epo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fDW5XCPKpBEwdOvEJSOyWRBN274X+tOyBjsH7zbhm/3+vqKun36cIVQl4qzYyvWB8K7oQ7Y09OXRQTGC8QzHKnan/dL7RMJNcDFFvzVQ8AanlOUSFM+CMF6SAEfVUBaUjiR45AlKRthA1K/R5glVQhLrOc6Prb4sdeZLSpnys+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=laJYEap6; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Hy5unYwn"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3122a63201bso973423a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 10:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1751651667; x=1752256467; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XuxUGCJzgBIyontDTdqwJrs5j4TnI5gqZ41JcRqn9+o=;
-        b=Hy5unYwnQWeHvclqGWWZmlYVO6t+KVcSFgHvukAUZ8tsgk/4vTQ9COQ5UuGMNYID4l
-         HwovZvBbnI+XBTiEGO3F2ook5wLpIh0hA4P9YjCIE5Wqvv5kxlaM42548iO7exc57NNj
-         YOFmgIZP4XWrTV2bntXgkakHhuQEa0C6Z2+nftrl+XR6VUuadw0zQx1bAQ82mFwE10fr
-         27jxkATY2Ds0jGY4FsISrgsfw3OyvsyAQ3O8VkmEugbNeJORrSR/3Evbv6xm4WNpSoWc
-         AeXRX/rMaCKJGAy90Byg3U/1lRyQtvrOa5p3RJWre+iPkYPZVt2gO7B3i3MffOltvKXe
-         rRcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751651667; x=1752256467;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XuxUGCJzgBIyontDTdqwJrs5j4TnI5gqZ41JcRqn9+o=;
-        b=v4meRSO0lH6NPMN4wPOUx74ClWckk8ja7vDK+gFGSaz0F8WeO5rb18ODOxt65G1389
-         ba8lfqzq7qQWv9/GPOLjmOQQYtv4ubVS8kMjDLZBdxPhgGgqVHS5FZTMxZnhdl7owT3L
-         WoAf+z/7i6pYmxstmVZtcIeRI3aJRtX2SWrHxDo4lApiSOlW4ae/nyU4RuwqpD2CWTTp
-         y7wtLxASapS/XvX8OIX314kbZBLX/WCtBzxMcnRDBwbda7yhPRRHSiDCfue7ZWEBRoQG
-         w5byGjgjF9z/OWML8wG9fG27TTQzeFFG6cSCHpHkn7oPfflnYpQTt0SMVsLz0SKZ3v4a
-         wPBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaVyisaBJEpQgqbU//7X/FeJaGdO2ODFNl2axiRgWRzbighlfO4CceLxHEfngPv2VvzMsDE2eS+VeckII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMYa2tYNuMSrj7/Xbw5YbOnHhO7/Esoc5YxELc62wE+FdVEACE
-	enemujsJ2AVg8MMXZf9fpeG6MC+xcYT/hVjSHuP241lx4VwmWHB7fNJjiscvwBuEO6M=
-X-Gm-Gg: ASbGncu6+S4/NW860C9ZSUVVt3PyyvDSZOWQHDzTpVYWOxW0Cl6KW1RDA0QZFHQ1MLG
-	mcM7EuMu5jUmyMvoLSNYkDbqlTgEj3KHV1K7w3H5mvchV/ZE5MHReD4fDBdoMfU3LtBLCcvqhxX
-	vDo5s4JRe/2tpabkUOvkN80C+LyXooALv2/WIrH3fsUaYLzYw6eWPfQ9+4/NhqCx/lV9HXTELK0
-	Bk2N8uj+aU3ugzXq1Dh+s20TaFLRd66xBpk4FK24PzZONkNCQ9qj204SsG9Bqt0gR38LhEotw1N
-	dp3G9126SxS3TNOFR12dvRe1iplEj4ArXroc
-X-Google-Smtp-Source: AGHT+IEh1aJoFY/nLlH7wiffnloJQKoRXxbF/IF6yLU1DedrCGkd2rfvxrkg/X7+7Uo3KEx9efT39g==
-X-Received: by 2002:a17:90a:dfcc:b0:313:1e9d:404b with SMTP id 98e67ed59e1d1-31aadcf8e2bmr4389360a91.2.1751651667045;
-        Fri, 04 Jul 2025 10:54:27 -0700 (PDT)
-Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae4095asm2682225a91.8.2025.07.04.10.54.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 10:54:26 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uXkcD-00000005zua-0liE;
-	Fri, 04 Jul 2025 14:54:25 -0300
-Date: Fri, 4 Jul 2025 14:54:25 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
-Message-ID: <20250704175425.GM904431@ziepe.ca>
-References: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
- <20250623153931.158765-4-benjamin.gaignard@collabora.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="laJYEap6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751651714;
+	bh=EGZgrTldAmn1FZT1xY8Fa7a4iDUzyJQCZj4MIa86epo=;
+	h=From:Date:Subject:To:Cc:From;
+	b=laJYEap6GFb00/wn9mafhf6IQMTeVeTmHAp3Z1aH5hcXDbhfrjsbYKxW/6y3kZCIF
+	 VxX7ZYhtlXTFlflXQ2JIdxHv8/T9mTCMMms/cyORHU8c3RGvTCrbjWFSLohXNugMUL
+	 koMhLx+ocHvd21DwRV3pN1sjRfd26HfgVXHi+pnOdEGDleXJzNxz5r9H6Cr/yuplDH
+	 /liGDIl6/IbD2JAbJs5t2IqKf2MtTAscUDZJ2HKc2Y/M/COYWF6m5W7Z817/8V8e/1
+	 EI6L46X5kaEOiNvzfxXaELx2v0LsEJ9a/poEvPZLvLDU7guFMpLYrlL2u8v0EBZ+LM
+	 qexsRXxVaFl/w==
+Received: from jupiter.universe (dyndsl-091-248-191-229.ewe-ip-backbone.de [91.248.191.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6889817E0497;
+	Fri,  4 Jul 2025 19:55:14 +0200 (CEST)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 112CB480039; Fri, 04 Jul 2025 19:55:14 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Fri, 04 Jul 2025 19:55:06 +0200
+Subject: [PATCH] usb: typec: fusb302: cache PD RX state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623153931.158765-4-benjamin.gaignard@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250704-fusb302-race-condition-fix-v1-1-239012c0e27a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHkVaGgC/x2MQQqEMAwAvyI5byBbFdGvLHuoaaq5VGlVBPHvB
+ o8zMHNBkaxSYKguyHJo0SUZfD8V8OzTJKjBGBy5ljpqMO5lrMlh9izISwq6WYJRT+yZ+yBdHak
+ NYIM1i+l3/vvf9wNQuEiKbAAAAA==
+X-Change-ID: 20250704-fusb302-race-condition-fix-9cc9de73f05d
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Yueyao Zhu <yueyao@google.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com, stable@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3679; i=sre@kernel.org;
+ h=from:subject:message-id; bh=EGZgrTldAmn1FZT1xY8Fa7a4iDUzyJQCZj4MIa86epo=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGhoFYIutKbFxG9ZC7pfUe7LakRxyic00Kn6J
+ RegVdFTUvnHCYkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJoaBWCAAoJENju1/PI
+ O/qaw8oP/2AkpSbmrL4MBvRB0UsZydDjXTxJSk10nHqhOql+jqM+PlvaFhQkwSZu3ooTZCFG84Q
+ QDONauuJWwOw/TIhe7X2rE5Oew3cGsK5J1EAH2/q0Tm9HFjgh2eMkANJNfXcctweUv67/CUAWDH
+ lgxm9iox3xp0Ul1grabgGtwy/asTMDjNPngWj3rdau7iHOmn1LPg1F0ySZGlWlnkTaXeEOhi9FP
+ ayWkLHdBEidWCI42f+5L3mHgxd4+dJc4lkozhiyiCQB5py2/GkQtfF5wDWwkhBHvpJssSF+pLjk
+ OCwLeTqBt8o572OP9ivDXAMDe93bWQhcVfpdteo+5HfUTvvC5B/UmGUvsDXQoMvp9x289XKeqwB
+ aOqMu1h5P5nW815CSci4X+hY9HZZFO+ILtFIJnZldZ01jHASQrRPDDaRkl90f0DlNin3A2wXBn+
+ pWwX608ze/BkOuVNToU8RRJ5u0jc/eOh6Tdh+KuVxsfs6IJmnlPwW7T7pNbvG1MG69vjgB6RkUz
+ K47lV0qp1lbnvntfF9BwBWW661DgpQ3sfXeqPvqTcdaN8OotnVWihbIQt4zPJ3QIO1k9c66ZHK5
+ pJaEMgoVsgFGTcCZZivi0YjgQPMJwtNN/3dzzuaUQKdW6fBZAt7V6iWrJPuBL3gImuCkWyXtIM/
+ KCsSI50GcYO3YQGDMWWIvkA==
+X-Developer-Key: i=sre@kernel.org; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-On Mon, Jun 23, 2025 at 05:39:27PM +0200, Benjamin Gaignard wrote:
-> The Verisilicon IOMMU hardware block can be found in combination
-> with Verisilicon hardware video codecs (encoders or decoders) on
-> different SoCs.
-> Enable it will allow us to use non contiguous memory allocators
-> for Verisilicon video codecs.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
-> change in version 4:
-> - Kconfig dependencies
-> - Fix the remarks done by Jason and Robin: locking, clocks, macros
->   probing, pm_runtime, atomic allocation.
+This patch fixes a race condition communication error, which ends up in
+PD hard resets when losing the race. Some systems, like the Radxa ROCK
+5B are powered through USB-C without any backup power source and use a
+FUSB302 chip to do the PD negotiation. This means it is quite important
+to avoid hard resets, since that effectively kills the system's
+power-supply.
 
-It broadly seems OK to me
+I've found the following race condition while debugging unplanned power
+loss during booting the board every now and then:
 
-Though I did notice this:
+1. lots of TCPM/FUSB302/PD initialization stuff
+2. TCPM ends up in SNK_WAIT_CAPABILITIES (tcpm_set_pd_rx is enabled here)
+3. the remote PD source does not send anything, so TCPM does a SOFT RESET
+4. TCPM ends up in SNK_WAIT_CAPABILITIES for the second time
+   (tcpm_set_pd_rx is enabled again, even though it is still on)
 
-> +static struct iommu_domain *vsi_iommu_domain_alloc_paging(struct device *dev)
-> +{
-> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-> +	struct vsi_iommu_domain *vsi_domain;
-> +
-> +	vsi_domain = kzalloc(sizeof(*vsi_domain), GFP_KERNEL);
-> +	if (!vsi_domain)
-> +		return NULL;
-> +
-> +	vsi_domain->iommu = iommu;
+At this point I've seen broken CRC good messages being send by the
+FUSB302 with a logic analyzer sniffing the CC lines. Also it looks like
+messages are being lost and things generally going haywire with one of
+the two sides doing a hard reset once a broken CRC good message was send
+to the bus.
 
-So we store the iommu in the domain? And use the iommu->lock all over
-the place
+I think the system is running into a race condition, that the FIFOs are
+being cleared and/or the automatic good CRC message generation flag is
+being updated while a message is already arriving.
 
-> +static int vsi_iommu_attach_device(struct iommu_domain *domain,
-> +				   struct device *dev)
-> +{
-> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-> +	unsigned long flags;
-> +	int ret = 0;
-> +
-> +	ret = pm_runtime_resume_and_get(iommu->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	spin_lock_irqsave(&iommu->lock, flags);
-> +	/* iommu already attached */
-> +	if (iommu->domain == domain)
-> +		goto unlock;
+Let's avoid this by caching the PD RX enabled state, as we have already
+processed anything in the FIFOs and are in a good state. As a side
+effect that this also optimizes I2C bus usage :)
 
-But here we don't check that the domain matches the iommu of dev.
+As far as I can tell the problem theoretically also exists when TCPM
+enters SNK_WAIT_CAPABILITIES the first time, but I believe this is less
+critical for the following reason:
 
-This seems a bit weird to me, I didn't quite get why the domain uses
-iommu->lock instead of just having its own per-domain lock?
+On devices like the ROCK 5B, which are powered through a TCPM backed
+USB-C port, the bootloader must have done some prior PD communication
+(initial communication must happen within 5 seconds after plugging the
+USB-C plug). This means the first time the kernel TCPM state machine
+reaches SNK_WAIT_CAPABILITIES, the remote side is not sending messages
+actively. On other devices a hard reset simply adds some extra delay and
+things should be good afterwards.
 
-But if it does use iommu->lock then this does need to prevent using
-domains with the wrong iommu because the also use the wrong lock and
-then this:
+Fixes: c034a43e72dda ("staging: typec: Fairchild FUSB302 Type-c chip driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/usb/typec/tcpm/fusb302.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +
-> +	vsi_iommu_enable(iommu, domain);
-> +	list_add_tail(&iommu->node, &vsi_domain->iommus);
+diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+index f15c63d3a8f441569ec98302f5b241430d8e4547..870a71f953f6cd8dfc618caea56f72782e40ee1c 100644
+--- a/drivers/usb/typec/tcpm/fusb302.c
++++ b/drivers/usb/typec/tcpm/fusb302.c
+@@ -104,6 +104,7 @@ struct fusb302_chip {
+ 	bool vconn_on;
+ 	bool vbus_on;
+ 	bool charge_on;
++	bool pd_rx_on;
+ 	bool vbus_present;
+ 	enum typec_cc_polarity cc_polarity;
+ 	enum typec_cc_status cc1;
+@@ -841,6 +842,11 @@ static int tcpm_set_pd_rx(struct tcpc_dev *dev, bool on)
+ 	int ret = 0;
+ 
+ 	mutex_lock(&chip->lock);
++	if (chip->pd_rx_on == on) {
++		fusb302_log(chip, "pd is already %s", str_on_off(on));
++		goto done;
++	}
++
+ 	ret = fusb302_pd_rx_flush(chip);
+ 	if (ret < 0) {
+ 		fusb302_log(chip, "cannot flush pd rx buffer, ret=%d", ret);
+@@ -863,6 +869,8 @@ static int tcpm_set_pd_rx(struct tcpc_dev *dev, bool on)
+ 			    str_on_off(on), ret);
+ 		goto done;
+ 	}
++
++	chip->pd_rx_on = on;
+ 	fusb302_log(chip, "pd := %s", str_on_off(on));
+ done:
+ 	mutex_unlock(&chip->lock);
 
-Is not safe?
+---
+base-commit: c435a4f487e8c6a3b23dafbda87d971d4fd14e0b
+change-id: 20250704-fusb302-race-condition-fix-9cc9de73f05d
 
-Jason
+Best regards,
+-- 
+Sebastian Reichel <sre@kernel.org>
+
