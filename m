@@ -1,79 +1,77 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DD72877D5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75C35FEE6
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641883; cv=none; b=gHA9lWuh4mHu7jXP6Rupun7pVZnt6Y1fIBjuI/OOx1dPW+pmIWqsPj30Yn54sIqt2SlxiBSwaZIsUFt6BoWtPrXzvBy6Kna0iSjIJbdm3GmIS5PWWQHKFcesI9rBNX1AxaSrXBgDBhgFvQJMgCo5XKvpH8EgjNE94BYO6+nRuNQ=
+	t=1751641883; cv=none; b=m8lF/IRJ21W54s/B40qGSJkRIduGzgR25ytB38mcOLBO80vNhHfYkiCI31QVzDarNE2VBOAUPlUM00NcIP9uiRhpztvfPNG4A69tWKB4b3fYTDZxAO6wTsGAOAQsAJHFOYJXfM69WpIpXDMhHjCEClzaNxSOKr4sqRlL8BiMVq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751641883; c=relaxed/simple;
-	bh=5waSe9JNG3bmoZ4Dl76hVYYd3LVFKdDlnURf+9XosaU=;
+	bh=2minLDyG5d0VogiZ/Ke52L2s1w2fOZUyNC6Repf/8Yg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HG4Eza7POgoZqcDELmYd2zvULKyyOUb8j2j7o6GotZEUqMlXfHbLq85CEZtl8RW4cH+i/jQVeah96xV1nNacpRiKlv8fg5tTH8XarH3e4q/dSdPn1wZDuRbxF9Ne0mYnakdqGpOfvu69ReU9ME4L0N2nOLnAD/dxl+dPldICsYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dINeEi1k; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=Dw+PrbqhCkckCu52KGQFsWuOCq56ZgyK5cskecI0H4UNQzF6v9eB/6wrvm9QTk3p/LQt9LR089fXSYXKEaI2hjHeCRk38sHmbmoe4+ASWyweZJmIVQA8W7jA1BRXBxpRG1kuprtmgDKs7I688fCkPNdnTSLbvAaI+NUHyALPxPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AM2+kpb6; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dINeEi1k"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a528243636so613233f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:11:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AM2+kpb6"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so771200f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751641879; x=1752246679; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751641880; x=1752246680; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
-        b=dINeEi1kgZWQgFEYAJ5FVwmFBPT5EzLOv33qfoPmv7r4IE0mgMMTfMsGwcRyuRe61K
-         FMkjIBZSJIecG2RitvoOimj6hMLBTAIV1TaS5zpnBYcGTdxIi3lr8/Up6IzFeh1D2qja
-         39f4WyarFFq255vcCosZ+jh7p++fRISzDvr1ZTaGDlZnF8iivGDatb1CKjKpbUkvJlh7
-         yu08I2szKq4Gx4MvWFPB27Ys/njhieh/zhJjsYoPaL/at6nIkKl0INB+XBIUPMr8fldA
-         /pefZShXVZnyVxYycrUDATLgiTbIU2NNQ5i4XxlIBUsOoN01fRuT23OGkjx3QerUwVZ5
-         1HaQ==
+        bh=RoEspbh1eRKE7g7m7KXe/ScKkbCYU5aYNDNwW3OSB14=;
+        b=AM2+kpb6WSatxQN9kZtzec+9cZiDo6vbdgKH0IwaJF5XL221H0yovD2t26ZynvooML
+         1h+17ffkoi9HSZHBNy2B2DWGc3JpVXXjUXIqt8apDbODB6uaZJiBL2UKKG9mYCxI8q1u
+         oANS00dBhe/+sDiac+3s/G4Y8qdU6Swl5+ziT2Ubm3bsWbZf1SGZqMnMv2y2irblVJWg
+         9DP6Vz1Q9I4ooEM9BNs5LdO/mnCsBbrm1JIYI8tGMBs3d06gV5EuntmXWr5mpIccE13b
+         ZFiGwglYzLukMjOgEV6j/CyN754NtJAUUvEj+vGJ1CVFsGeMrFrUyJ59gLTY0TKk/pPX
+         eIWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751641879; x=1752246679;
+        d=1e100.net; s=20230601; t=1751641880; x=1752246680;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
-        b=QkcQSJ/0iaJA4THRLkRsEduEQiQDNL12gAL9mPQsD2GrO4pOKjBV8hZNzxCwenkAQa
-         w23XuDzQD34tJHdAR4YlIeK8IjF5oJba5GrUPI1yWblX3NDY/PCHKIj2f0xjfXnN/OKz
-         JU0TrxzyZfri7cx9S+2mCvpT6ftW3ESHmNQMCdlATIY8XzLOXeaqZVQ4cbnawzK31Y/h
-         PjGRqrIKuAxKJ6zP8SJrjOj/fQurwMDGBPWLt6sTubr7fQ7k+al+p9zc7vmivyUjC4/A
-         /efupZlPVhcLrebxlmuOhcU2HGFCSLvxkwODv3q3SiGyk/eOkhpc6nqdHozLFw/T8hWh
-         C65w==
-X-Forwarded-Encrypted: i=1; AJvYcCUpG9ICESJW+X2aXZwQJr0ZIhyhzkeuFJVaogxFuMxE0+ODpdoTiVW8owXzXqoyQCxZLXyT9WGPxNBJyPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI31/DzupqONms6Vh4ng9ggPFJqQVa9qMHHRhOkwU1ba9jZD0h
-	l7c6Yq6OM6We6qAK1wfXvphCubOvDq4UhH+hwy/mVtkzkBElAqaQqDWuG7xh29lLnGc=
-X-Gm-Gg: ASbGncsks7CpPG5eqFwGL/F7m2ZO4Grf/yk7ina27uALNoh8XrHM8bn3r7rjn14Q5Ib
-	6inENkMkSf+jLg3PF8+Xaal7TJjSxItDjxAw5kqBgaBQzSLpjqG5PRajivLRw5y5uEK2HY/xbQK
-	DDreodVTmvAjM9/LaZXqLbaoIHBScaBEUAza5LZihWLLrti7TjlkqnTdhGr6xqfjpd3gaAY298Q
-	99OwW/JN1VNKk+cj6MTSE9TIv3F4gt31mRaIzr1+q/xSyByjDvl3VIVSCwqxYdJh344KSo39vuo
-	bu64JRVAem6WOC+MrPBLsOiUB5tzxwxAENkcB9NjMp72qfpEwN5g/68TelrZ5Xh4lSMNyrlBWxu
-	8Yga+KDE=
-X-Google-Smtp-Source: AGHT+IEK4aTwZb/t+iBAfYaNAla4w2TjyMyeRG101P7FjyngDibQMih+NwFX/4yVby7V0AceGcPGpg==
-X-Received: by 2002:a05:6000:1a8c:b0:3a5:8905:2df9 with SMTP id ffacd0b85a97d-3b4964dc1famr2429125f8f.37.1751641879342;
-        Fri, 04 Jul 2025 08:11:19 -0700 (PDT)
+        bh=RoEspbh1eRKE7g7m7KXe/ScKkbCYU5aYNDNwW3OSB14=;
+        b=oq2DlqaH8HHZROjOI4DDHuQNkbPEDDCNgB5u4BSa3EKM3/mwWFZWF4Nsy/pgGMTmNq
+         wvuku2zdoT6hkJF9bRhJf2rLo0khKtTcXA18Yd8egNWFqsJW4KnETfJOsa3zxjQkSouV
+         qdg9UPF1jvYrf/MgeZvOHeWhpo7fzEIVZXnnRrcjCwgZZ/wf5nnnb/pYAQAiCFjjSq04
+         tPNw5pOcZZRIc+S3BrQr5IrulSaQFqSJeELVquZ7Ijr9hfPnasS2jYCL7EZ2uOshH/Gn
+         H45xvD2Xfb+Jo+f/r6bIrhQJDpJrz92yHhGIbsB7Tf8lWcZwgjGTzsBeKYFhGPaOu07X
+         pxQA==
+X-Gm-Message-State: AOJu0YzLVME4yuWYCnC167ZQLW+etBI6lc7ZO76zEEc5lRX6OlFp7S/d
+	qto7i14Po89ZSpzIa0glbr2ZT4WQiKbO6GdiRFrF8LWoY1SQWGF6GLwkO6Pnp78/UtRN9tfdwd6
+	6rEtnsr8=
+X-Gm-Gg: ASbGncvmPVsS0BnMytw+/qZfRWLBQYR93H4sxWSd/XYSjTqWkyBhIYs2dR/B8GKGUbA
+	pTZLFQjhdRqrjGKe+5gQc99gFfBtHHtnKF3DdQvG/erqljHDRDnm8PU23/POujvQ8X/+efwoJY0
+	foIM+DECFgV27C+zHjBDAnl1MnVYR42CDAoktVrRuuFWXO8sZHWJ4x1vwINIqHa9idgkmM/JrVl
+	QlHFS09P9SLTaVpBJTPJrUA+c8zNS5cXKZSlXOiPft7Mifmmm/D5J0iVu0yTOFc9HHXfa90bRfv
+	fBjfzOy8iKvGA8lcIZbrVsbq/ULUzObKVJJ6kbujrmyZPzDOyTOC00BIPg4pbhNzHn1TSrdKwdl
+	LoL5Q8sMTJjM6NTt9YA==
+X-Google-Smtp-Source: AGHT+IGJq4QH4n1fa8cinoR1z+3JkFuWIr6OSpZpSR6Ueat01j+mEIj1olmOHplIEibyLWK0AicYSg==
+X-Received: by 2002:a05:6000:250f:b0:3a4:ebc2:d6ec with SMTP id ffacd0b85a97d-3b4964f8b3cmr2987717f8f.14.1751641880123;
+        Fri, 04 Jul 2025 08:11:20 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470e928aesm2675416f8f.44.2025.07.04.08.11.18
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470e928aesm2675416f8f.44.2025.07.04.08.11.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:11:18 -0700 (PDT)
+        Fri, 04 Jul 2025 08:11:19 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+To: linux-kernel@vger.kernel.org, Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
  Jerome Brunet <jbrunet@baylibre.com>, 
  Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
-References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
-Subject: Re: (subset) [PATCH v3 0/6] Add support for Amlogic S7/S7D/S6
- pinctrl
-Message-Id: <175164187861.2868628.1382846991470897290.b4-ty@linaro.org>
-Date: Fri, 04 Jul 2025 17:11:18 +0200
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org
+In-Reply-To: <20250522092940.3293889-1-tomeu@tomeuvizoso.net>
+References: <20250522092940.3293889-1-tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH] arm64: dts: amlogic: Enable the npu node for Alta and
+ VIM3
+Message-Id: <175164187949.2868628.8689971906930320435.b4-ty@linaro.org>
+Date: Fri, 04 Jul 2025 17:11:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,26 +84,16 @@ X-Mailer: b4 0.14.2
 
 Hi,
 
-On Tue, 27 May 2025 13:23:27 +0800, Xianwei Zhao wrote:
-> In some Amlogic SoCs, to save register space or due to some
-> abnormal arrangements, two sets of pins share one mux register.
-> A group starting from pin0 is the main pin group, which acquires
-> the register address through DTS and has management permissions,
-> but the register bit offset is undetermined.
-> Another GPIO group as a subordinate group. Some pins mux use share
-> register and bit offset from bit0 . But this group do not have
-> register management permissions.
+On Thu, 22 May 2025 11:29:40 +0200, Tomeu Vizoso wrote:
+> We now have support in Mesa and everything is ready in distros such as
+> Debian.
 > 
-> [...]
+> 
 
 Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.17/arm64-dt)
 
-[4/6] dts: arm64: amlogic: add S7 pinctrl node
-      https://git.kernel.org/amlogic/c/9291207753c733dcd9f1c08749950323f7f071e8
-[5/6] dts: arm64: amlogic: add S7D pinctrl node
-      https://git.kernel.org/amlogic/c/bd42a25d696e0d5ccc9e27de388d4ca9ff52f710
-[6/6] dts: arm64: amlogic: add S6 pinctrl node
-      https://git.kernel.org/amlogic/c/fb183c8d7a5a90cdee953701d8a5b92642a2e917
+[1/1] arm64: dts: amlogic: Enable the npu node for Alta and VIM3
+      https://git.kernel.org/amlogic/c/587c1c00f75565567d1f26a333a3392f7a21c28c
 
 These changes has been applied on the intermediate git tree [1].
 
