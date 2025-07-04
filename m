@@ -1,176 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC67F1624D5;
-	Fri,  4 Jul 2025 05:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459927263A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 05:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751606344; cv=none; b=FzB3rQkwUKFOdN1g+jLMy4Gm/CAffdR/D4jKWmDbr9n54zr8Dbus2S/Hr9hzIoiBdgj+7C4HiAlxNn31vmj5af7H8XlRBVu8711kcTnf74xXQWMUSNWKSj8M/rsZD+moTctwjOSvmCbKUn/u81fmwttsCyVH8JjCAFtMuVLw+EI=
+	t=1751606439; cv=none; b=oRto+t9MJ0DeSFEV4ybTzryb0Th47UiK+EoYwNWH55pHCwl828KZjQrh/Ti6UQXxgP3VQ4N2E3pZZSeEiVIU2eYETTLvFvCKwFK2aZBo4SyyB9+n1N+mcObkThGWGM/UvPnpHpd93qiVO1fV5tUrzBsKEnUPzsteOd0s8wdwuqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751606344; c=relaxed/simple;
-	bh=fy2czFwCVDTZMlkTjGWZ9ETYAcyTdWu1ljEEbONCQ9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3sSNT0mpCHCJK+NWZPG6EpyNmIImgQ7zTIF8ikEXk1rzEPpwxMcIARG9HcTMG3B7AmyRDpsDz4xOqKzsUzWH++uJolSyxmzjhwi6UKRo5u7P+23FVVdbHTtbesOVxoC9twEBOYimWzZnQ0SyWeqaNpj2CiIpi87MC8+w+//1jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2J+z80zt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2J+z80zt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC36C4CEE3;
-	Fri,  4 Jul 2025 05:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751606344;
-	bh=fy2czFwCVDTZMlkTjGWZ9ETYAcyTdWu1ljEEbONCQ9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2J+z80ztP3tx/o1F2yt8ODNIlNRk8avjIxv59SvtcY+Ch3O8vzouj1fGzQ3QMFHyh
-	 tl9gKvNa9m89QNdD/o0akyRoP4lbSaU26NRTsrgowbFqyab0zDxWwJwwuivIbSiIlQ
-	 EQkWk93+HqwTZUF4w0ZL/pv+VetEgsEEm1lLMY9I=
-Date: Fri, 4 Jul 2025 07:18:59 +0200
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Ryan Mann <rmann@ndigital.com>
-Cc: "johan@kernel.org" <johan@kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] NDI FTDI USB driver support
-Message-ID: <2025070406-saloon-craving-70fa@gregkh>
-References: <YQXPR01MB49870CB7B3075ADDF88A3FD4DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1751606439; c=relaxed/simple;
+	bh=0pOsgtsTo4ckHDpTYcuNPhkYno5xKl2ahM4BAGNhQcY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IUFcsVnzGVLf0ioc93UQ5Em7TnwXtOOScdcqsw9dbW1h/4yZIhg0BW9llc3p/9tLbzcx9S8Zfb/5RD1iDCJwoEkwejQTK8otVSy4VIY0bZMexHuwJzNZzHLFz+JKtaSN0Ck6DT/R7RGjR4AGrgfUQpWqlNtWPASTh0ghcbZqu0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86a5def8869so137385839f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 22:20:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751606437; x=1752211237;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=18/sKOicE2f7Ggx1undsXQNvrnSH762Hho/UUhpZCcA=;
+        b=twK5FZWS9AKvGczEyfvchSiItMCv4wGIAjgpBlD+7B3KgG5YiWP9fG4P38DmCDgjBJ
+         +Ssi/UAh6QeDfbKqMSP1ZzMJ1Wgx6RYqr2yDlTAnVHgk4QR8fuSaQzOnwmo9T+oCp3Xt
+         1w4jdeSOTbNkfr7oWSWyF6fhWgL6zlRGhrV3SJnjSaO48S+aG7fXDAtCBGnEVUK29aCC
+         c8EzLKpMIlvHOjJUDFFyBDyAlE2eIgFFriziqdmm7fmJpwohaBuBTz7SrxZIRQ2V9d2z
+         kJkIbiimc1kTdFMXAgsoFfSXrtmQbPR/F1O3O+VfZtyIFuGfFnHNYCHZAUZ9qRUjEVoH
+         flTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzTQtJZMaf+pWtUE6qUsCU4SAtxHnKssDF7OH5lclHkPq/MfxXD6EqVLQHpAqL3EAEUu71D81MfoBv0so=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxlk5bxx4g8rWxDV0ERM9xbW9kqtvVupU4VqdXp3SlBPtIdq0CN
+	qxUU8X4hDXc2DTUPRVg8gyzgbTlQMfHlq36Lj+aZ09GunNvUDUe/c1r1xonNwKcbcOPt/HEjcVW
+	BthNew3j2HisOvYxyw8h1zSIcDCx4jkqHChY1JLruMhZOo5Qi3uPsdJGmeAU=
+X-Google-Smtp-Source: AGHT+IG2RVhiGN+n9hq1Ug6fUL9AKll7f+7HBi2SyveCtTq/KLhYBck4RbdtT+kHBtLzABmCAuLoCBjX5sMRh8vyQZ2yColPwLD/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQXPR01MB49870CB7B3075ADDF88A3FD4DF43A@YQXPR01MB4987.CANPRD01.PROD.OUTLOOK.COM>
+X-Received: by 2002:a05:6e02:12c3:b0:3d6:cbad:235c with SMTP id
+ e9e14a558f8ab-3e13548bc4dmr10693475ab.6.1751606437444; Thu, 03 Jul 2025
+ 22:20:37 -0700 (PDT)
+Date: Thu, 03 Jul 2025 22:20:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686764a5.a00a0220.c7b3.0013.GAE@google.com>
+Subject: [syzbot] [net?] general protection fault in qdisc_tree_reduce_backlog
+From: syzbot <syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 03, 2025 at 07:51:38PM +0000, Ryan Mann wrote:
-> From: Ryan Mann <rmann@ndigital.com>
-> This represents changes to the FTDI USB serial device drivers to support a new NDI (Northern Digital Inc.) product called the EMGUIDE GEMINI. The EMGUIDE GEMINI will support 1.2Mbaud the same as other NDI FTDI virtual COM port devices. It was noticed in making this change that the NDI Aurora was included in this "quirk", but it does not support rates as high as 1.2Mbaud, so it was replaced by the EMGUIDE.
-> Previous FTDI devices produced by NDI all used the FTDI VID (0x0403) and a very limited set of PIDs that Future Technology Devices allowed NDI to use (0xda70 to 0xda74). Since then, NDI has reserved its own VID (0x23f2), and used two of the PIDs for two experimental, non-production products that didn't use the FTDI chip for USB connection.
-> This patch adds the new VID as "FTDI_NDI_VID" in the ftdi_sio_ids.h header file. It also reserves PID 0x0003 for the EMGUIDE GEMINI, as well as stubbing out PIDs 0x0004 through 0x0009 for "future" NDI devices. In the unlikely event that the NDI hardware team chooses to implement the USB functionality using something other than FTDI chips, those "future device" lines may need to get removed.
-> As the EMGUIDE GEMINI product development has not been completed and the step to write over the default VID and PID has not been completed, these code changes have not been tested with an EMGUIDE GEMINI. However, the code changes were compiled successfully using Ubuntu 24.04 locally and tested as a module using an NDI Aurora system.
+Hello,
 
-Take a minute and read other patches in the kernel, and on the mailing
-lists to see if your changelog text matches up with what they contain.
+syzbot found the following issue on:
 
-> By making a contribution to this project, I certify that:
-> 
->         (a) The contribution was created in whole or in part by me and I
->             have the right to submit it under the open source license
->             indicated in the file; or
-> 
->         (b) The contribution is based upon previous work that, to the best
->             of my knowledge, is covered under an appropriate open source
->             license and I have the right under that license to submit that
->             work with modifications, whether created in whole or in part
->             by me, under the same open source license (unless I am
->             permitted to submit under a different license), as indicated
->             in the file; or
-> 
->         (c) The contribution was provided directly to me by some other
->             person who certified (a), (b) or (c) and I have not modified
->             it.
-> 
->         (d) I understand and agree that this project and the contribution
->             are public and that a record of the contribution (including all
->             personal information I submit with it, including my sign-off) is
->             maintained indefinitely and may be redistributed consistent with
->             this project or the open source license(s) involved.
+HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12f0b3d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
+dashboard link: https://syzkaller.appspot.com/bug?extid=1261670bbdefc5485a06
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164d8c8c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14839ebc580000
 
-Hint, you don't have to duplicate the whole of the DCO in your
-changelog, where in the documentation did you see that?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d59bc82a55e0/disk-bd475eea.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2a83759fceb6/vmlinux-bd475eea.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/07576fd8e432/bzImage-bd475eea.xz
 
-Try reading the submitting patches document again please.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
 
-> 
-> Signed-off-by: Ryan Mann <rmann@ndigital.com>
-> ---
->  drivers/usb/serial/ftdi_sio.c     | 16 +++++++++++++++-
->  drivers/usb/serial/ftdi_sio_ids.h | 16 ++++++++++++++++
->  2 files changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-> index 6ac7a0a5cf07..a41a9ed7e946 100644
-> --- a/drivers/usb/serial/ftdi_sio.c
-> +++ b/drivers/usb/serial/ftdi_sio.c
-> @@ -803,6 +803,20 @@ static const struct usb_device_id id_table_combined[] = {
->  		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
->  	{ USB_DEVICE(FTDI_VID, FTDI_NDI_AURORA_SCU_PID),
->  		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_EMGUIDE_GEMINI_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_4_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_5_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_6_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_7_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_8_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
-> +	{ USB_DEVICE(FTDI_NDI_VID, FTDI_NDI_FUTURE_9_PID),
-> +		.driver_info = (kernel_ulong_t)&ftdi_NDI_device_quirk },
->  	{ USB_DEVICE(TELLDUS_VID, TELLDUS_TELLSTICK_PID) },
->  	{ USB_DEVICE(NOVITUS_VID, NOVITUS_BONO_E_PID) },
->  	{ USB_DEVICE(FTDI_VID, RTSYSTEMS_USB_VX8_PID) },
-> @@ -1333,7 +1347,7 @@ static u32 get_ftdi_divisor(struct tty_struct *tty,
->  			     (product_id == FTDI_NDI_SPECTRA_SCU_PID)	||
->  			     (product_id == FTDI_NDI_FUTURE_2_PID)	||
->  			     (product_id == FTDI_NDI_FUTURE_3_PID)	||
-> -			     (product_id == FTDI_NDI_AURORA_SCU_PID))	&&
-> +			     (product_id == FTDI_NDI_EMGUIDE_GEMINI_PID)) &&
->  			    (baud == 19200)) {
->  				baud = 1200000;
->  			}
-> diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
-> index 9acb6f837327..6e162a73f64c 100644
-> --- a/drivers/usb/serial/ftdi_sio_ids.h
-> +++ b/drivers/usb/serial/ftdi_sio_ids.h
-> @@ -197,13 +197,29 @@
->  
->  /*
->   * NDI (www.ndigital.com) product ids
-> + * Almost all of these devices use FTDI's VID (0x0403).
-> + * Newer devices use NDI Vendor ID
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 0 UID: 0 PID: 5835 Comm: syz-executor374 Not tainted 6.16.0-rc3-syzkaller-00144-gbd475eeaaf3c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:qdisc_tree_reduce_backlog+0x223/0x480 net/sched/sch_api.c:806
+Code: 89 ef e8 40 80 b3 f8 4d 89 ef 85 db 74 0d e8 74 fc 4f f8 4c 89 f5 e9 88 00 00 00 48 8b 6d 00 48 8d 45 20 48 89 c3 48 c1 eb 03 <42> 80 3c 33 00 48 89 04 24 74 0d 48 8b 3c 24 e8 09 80 b3 f8 48 8b
+RSP: 0018:ffffc900040bf0a8 EFLAGS: 00010202
+RAX: 0000000000000020 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: ffff888031da3c00 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff888031da3c00 R09: 0000000000000002
+R10: 00000000ffffffff R11: 0000000000000000 R12: 00000000000afff2
+R13: ffff88802875a000 R14: dffffc0000000000 R15: ffff88802875a000
+FS:  000055555b6b1380(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000240 CR3: 00000000726c2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ fq_codel_change+0xa96/0xef0 net/sched/sch_fq_codel.c:450
+ fq_codel_init+0x355/0x960 net/sched/sch_fq_codel.c:487
+ qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1324
+ __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
+ tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
+ rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
+ netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x21c/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f79d710a6a9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff2ee70668 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fff2ee70838 RCX: 00007f79d710a6a9
+RDX: 0000000000000800 RSI: 0000200000000100 RDI: 0000000000000003
+RBP: 00007f79d717d610 R08: 0000000000000004 R09: 00007fff2ee70838
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff2ee70828 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:qdisc_tree_reduce_backlog+0x223/0x480 net/sched/sch_api.c:806
+Code: 89 ef e8 40 80 b3 f8 4d 89 ef 85 db 74 0d e8 74 fc 4f f8 4c 89 f5 e9 88 00 00 00 48 8b 6d 00 48 8d 45 20 48 89 c3 48 c1 eb 03 <42> 80 3c 33 00 48 89 04 24 74 0d 48 8b 3c 24 e8 09 80 b3 f8 48 8b
+RSP: 0018:ffffc900040bf0a8 EFLAGS: 00010202
+RAX: 0000000000000020 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: ffff888031da3c00 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff888031da3c00 R09: 0000000000000002
+R10: 00000000ffffffff R11: 0000000000000000 R12: 00000000000afff2
+R13: ffff88802875a000 R14: dffffc0000000000 R15: ffff88802875a000
+FS:  000055555b6b1380(0000) GS:ffff888125c50000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000240 CR3: 00000000726c2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	89 ef                	mov    %ebp,%edi
+   2:	e8 40 80 b3 f8       	call   0xf8b38047
+   7:	4d 89 ef             	mov    %r13,%r15
+   a:	85 db                	test   %ebx,%ebx
+   c:	74 0d                	je     0x1b
+   e:	e8 74 fc 4f f8       	call   0xf84ffc87
+  13:	4c 89 f5             	mov    %r14,%rbp
+  16:	e9 88 00 00 00       	jmp    0xa3
+  1b:	48 8b 6d 00          	mov    0x0(%rbp),%rbp
+  1f:	48 8d 45 20          	lea    0x20(%rbp),%rax
+  23:	48 89 c3             	mov    %rax,%rbx
+  26:	48 c1 eb 03          	shr    $0x3,%rbx
+* 2a:	42 80 3c 33 00       	cmpb   $0x0,(%rbx,%r14,1) <-- trapping instruction
+  2f:	48 89 04 24          	mov    %rax,(%rsp)
+  33:	74 0d                	je     0x42
+  35:	48 8b 3c 24          	mov    (%rsp),%rdi
+  39:	e8 09 80 b3 f8       	call   0xf8b38047
+  3e:	48                   	rex.W
+  3f:	8b                   	.byte 0x8b
 
-"newer" is going to age badly, these lines are not needed.
 
->   */
-> +/* Using DA70 to DA74 block of FTDI VID (0x0403 ) */
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-What does this comment mean?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
->  #define FTDI_NDI_HUC_PID		0xDA70	/* NDI Host USB Converter */
->  #define FTDI_NDI_SPECTRA_SCU_PID	0xDA71	/* NDI Spectra SCU */
->  #define FTDI_NDI_FUTURE_2_PID		0xDA72	/* NDI future device #2 */
->  #define FTDI_NDI_FUTURE_3_PID		0xDA73	/* NDI future device #3 */
->  #define FTDI_NDI_AURORA_SCU_PID		0xDA74	/* NDI Aurora SCU */
->  
-> +#define FTDI_NDI_VID 0x23F2 /* NDI Vendor ID */
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Missing tab?
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-> +/*
-> + * VID 0x23F2 PIDs 0x0001 and 0x0002 were used for products that do not use FTDI
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-There is no need for that line.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-> + * The following NDI devices use NDI VID
-
-That's kind of obvious and not needed :)
-
-> + */
-> +#define FTDI_NDI_EMGUIDE_GEMINI_PID	0x0003  /* NDI Emguide Gemini */
-> +#define FTDI_NDI_FUTURE_4_PID		0x0004 /* NDI future device #4 */
-> +#define FTDI_NDI_FUTURE_5_PID		0x0005 /* NDI future device #5 */
-> +#define FTDI_NDI_FUTURE_6_PID		0x0006 /* NDI future device #6 */
-> +#define FTDI_NDI_FUTURE_7_PID		0x0007 /* NDI future device #7 */
-> +#define FTDI_NDI_FUTURE_8_PID		0x0008 /* NDI future device #8 */
-> +#define FTDI_NDI_FUTURE_9_PID		0x0009 /* NDI future device #9 */
-
-No need to list future devices like this, why not just add them to the
-driver when you have them, with the proper name then?
-
-thanks,
-
-greg k-h
+If you want to undo deduplication, reply with:
+#syz undup
