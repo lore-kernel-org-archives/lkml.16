@@ -1,146 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16F71D7E5C;
-	Fri,  4 Jul 2025 22:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC81A2AD25;
+	Fri,  4 Jul 2025 22:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751667256; cv=none; b=mWmgGFpzINZsLPbAnTPY1MaPG+SchibbreVp+fjkNrWwXyMpjk/c9mjzC/hP+hr5RtOFJP0ZJLWnTvYfDXa4FZp2rjDHVhNg5lacXnS90kE3Nb39xxCVaf6zds6350yqZlKDwswwsdJ0w4mTYAtLMjB7s6Hq+YguUQ5apTsmkvc=
+	t=1751667367; cv=none; b=B3seBEjCL4+jSx03h5Ur3nDrTIx7UDm8nvOinMl7LRuLd02An/braldBlUbFT8Y2HyzyuKDPcVpu21WAE2sX213kBplYe55Y3FUF1rN34EjDAr8Us8bBe547aZa3fYWTgEkcHLT4mQAbNtfEgXnLAlapQMjQpPvqPQoG0EaEccE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751667256; c=relaxed/simple;
-	bh=i4kVmwYYJvbGjW13oTsr6Z3ar3qE24r2fehpO6C3TQk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jV1tX617ZRH1j4iwxdJfiDZ5KD3ZfpDfVMvFcRR6Crz1mZ9Kt+6k1Zagq4hk1NRC3qjiUcYNpJUK4OT4hSlpiuz8BBiPb6veZw6NcbJve6WvNFwxqHm9zgvedTZzIaOIHmaQtvshYR1BRVkSC7mBWfV454VMqw/525vSRgAn0e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgAEPQBt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751667367; c=relaxed/simple;
+	bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=obNiET3Ot7pzjJqnBDd415HIHVXjj6/J926kLNV+3XeTHh2jLw0GRk2kEoXtR0VhXiIzUOvZW3B7RF89rYhA6VkIFJBF/9G41SPm27Vi+WqKJ25UZ2snXsqe1WUWTgm4fCxy6NyLj9sVL5iSwDEb2WNXBOdo2M3XBRjiPpVcr0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2cnkQhQ; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgAEPQBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D502C4CEE3;
-	Fri,  4 Jul 2025 22:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751667255;
-	bh=i4kVmwYYJvbGjW13oTsr6Z3ar3qE24r2fehpO6C3TQk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SgAEPQBtRLpmCaGFxRT8Oo59TvtLlP2zpM0NfePZsyd0x4yCx3ffAzZI9kRC+q1jE
-	 VuAxxRQOiV3tgom2qEq6ODaJZeB0jz+vqndDUU3jQ5WwmvDE1Rc2pC5uAJxhOYd94K
-	 HI/s5iiw955ielbthQ7MHpS77IVEYtORmaI2indIDSC0bfW/pm1MYYzYwPEqxqhj0R
-	 uakb6FmuJ9GBTq7zyCxsU3lG4jZ3VM7ZiU6PiKcfYpezRJb6fUiwE70PykLYXGeLuh
-	 qsrMV/XNNveEfSZDy17DFMiqJyBXi9ZlhpkVAH9JKiII0quwI29nJgWNFH4oRaeIR7
-	 F1fwTd267fZ6g==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mm/damon: add trace event for effective size quota
-Date: Fri,  4 Jul 2025 15:14:08 -0700
-Message-Id: <20250704221408.38510-3-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704221408.38510-1-sj@kernel.org>
-References: <20250704221408.38510-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2cnkQhQ"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b34dde96cbfso63803a12.2;
+        Fri, 04 Jul 2025 15:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751667365; x=1752272165; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
+        b=C2cnkQhQrF2B4IGqgxHs+pkrlegR0GmEDVtv5OzXeiv/X/+ntaecZ/q5AbT7n+ocm4
+         YjnlxDkFu+EWMzi97zHFm1pVURnG6H1y2hNiDDl4yEmCT1XD6lYI1SUlblaejduUtYkr
+         s5WNPpztlSVwm+idRD0V+ketjz7+hdSn1uGdQr6LxD54y1TWN3GKgdgpWmiKM0+yR/F2
+         ZXwXgV288lGUP/jVPDhcNy7YnwzWY9CWnFmsodJCBVDePnenpKWVYY1g29v6ZBSqD+Wn
+         cv5F7jZ2xYEXzWnC3uS8fCCaSJYD3Bv3oEDgro89BG5Jdkyt45ji3MWjqYgob+naCnl9
+         VhMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751667365; x=1752272165;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1qPLH2DUCtpS7ngyfeRXFfT4BV6higPIeS0SuWPwrIs=;
+        b=GXaOADtXtKT+59m324l1jdap+PlCc2GYEd+VzhixBHVp60HNlq1zpISgUbRng6SkDc
+         5pPE+1zLfc9CGeiuMQlktS20RhvGeTfNtdAGV+rIiy9wRHl15bmLwXaiF0nUuF8vCpt+
+         M5TtpVy/LorZ910zKsTfyhAJYpEW3oWJPKDEZoGIDvWs3xFWyJtO9VBrrHvfCkg0vEXk
+         uzOJ5LczgLG/y0blOlbvb/JZ7SfzHClhsHHZUr4uxH24mRdzrp1dr7MjG605WwW24hrB
+         urTD7Va8s5oJLELQ5OLbwR7W5xXK+bKnL5cHdun/4qfy25f5oTHIbGbi1+1DEszf8ehv
+         WG6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW0zh0+/E37iZbk9HxuWzSrSQlCTZuR4h675VaF0KyfhZ2Pkpnf762KCzXaCaW2NFHQ3fWy+O3TLJAS0scgI0c=@vger.kernel.org, AJvYcCXTR8WI8F7BKuC3i0OsSdE8ausesG+3+4OuEoUI0zgG86OqXnxwMPuKEHoxifsYTyKtxtYcdfIvkcIQimM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNokDkXAbd3kOLJyUvgQU2UwHwGuRhjxJA2M7iCEQFqZN5qcDK
+	EJsPcH40VvgBTx61imtuATFsJyDxZ49IlxOXPum8AvYLSOnmo2OB3LJyl51w4gK2hfVUhvW//PE
+	UNl3B4I7cyn+zjgO27m8QsYrALDKt0dQ=
+X-Gm-Gg: ASbGncucB7lCisd1KeXJKt9Ys5jWHnzTZP2bpKXXmshX5mIQ+lYV07a0UpcqRIvW4fr
+	t7ZC/5fMydF1/4cINz/INJsPqKfOQXsFZGtkFGrFVIg7cqVmeLYOkqQN/DY1KZmnYRwn1eBUYVK
+	ZXKoh2+xNcvtDrKRsyuFtRLLPveIpRPMF8msNEypK944dG
+X-Google-Smtp-Source: AGHT+IGmQH4dNb8TFmji3Oa7QAVqdfXqa1PncIaNrishd7qZsoqjrndooJiEnVDz8dB5O53zOlOlnb49LuuEEbVUUiQ=
+X-Received: by 2002:a17:90b:17d0:b0:312:e9d:3fff with SMTP id
+ 98e67ed59e1d1-31aacb4118emr2011549a91.1.1751667365131; Fri, 04 Jul 2025
+ 15:16:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250704054539.7715-1-work@onurozkan.dev> <aGeEcOEYXiLju-Lj@google.com>
+ <20250704181419.0a6a4d97@nimda.home>
+In-Reply-To: <20250704181419.0a6a4d97@nimda.home>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 5 Jul 2025 00:15:50 +0200
+X-Gm-Features: Ac12FXwbkOCrJSpH8WT1tsVCnsqS0WBQLMbDsWpwwUfk0ggJcHa4tKtAPJTEIKY
+Message-ID: <CANiq72mj1AEH6S+kZ12D2+ib3jVPJHo01L6D1qhHz_9_FzwA_A@mail.gmail.com>
+Subject: Re: [PATCH] rust: rbtree: simplify finding `current` in `remove_current`
+To: Onur <work@onurozkan.dev>
+Cc: Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
+	mattgilbride@google.com, wedsonaf@gmail.com, daniel@sedlak.dev, 
+	tamird@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Aim-oriented DAMOS quota auto-tuning is an important and recommended
-feature for DAMOS users.  Add a trace event for the observability of the
-tuned quota and tuning itself.
+On Fri, Jul 4, 2025 at 5:14=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
+>
+> Looks nice. Do you want me to send v2 right away, or wait couple of days
+> to give sometime to other reviewers?
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/trace/events/damon.h | 26 ++++++++++++++++++++++++++
- mm/damon/core.c              | 20 +++++++++++++++++++-
- 2 files changed, 45 insertions(+), 1 deletion(-)
+Unless there is a particular reason (e.g. it needs to land quickly),
+in general it is best to wait at least a few days.
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 32c611076023..36b2cdf47dce 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -9,6 +9,32 @@
- #include <linux/types.h>
- #include <linux/tracepoint.h>
- 
-+TRACE_EVENT_CONDITION(damos_esz,
-+
-+	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-+		unsigned long esz, bool do_trace),
-+
-+	TP_ARGS(context_idx, scheme_idx, esz, do_trace),
-+
-+	TP_CONDITION(do_trace),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, context_idx)
-+		__field(unsigned int, scheme_idx)
-+		__field(unsigned long, esz)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->context_idx = context_idx;
-+		__entry->scheme_idx = scheme_idx;
-+		__entry->esz = esz;
-+	),
-+
-+	TP_printk("ctx_idx=%u scheme_idx=%u esz=%lu",
-+			__entry->context_idx, __entry->scheme_idx,
-+			__entry->esz)
-+);
-+
- TRACE_EVENT_CONDITION(damos_before_apply,
- 
- 	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 57a1ace4d10d..6019b8ec4bba 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2011,12 +2011,26 @@ static void damos_set_effective_quota(struct damos_quota *quota)
- 	quota->esz = esz;
- }
- 
-+static void damos_trace_esz(struct damon_ctx *c, struct damos *s,
-+		struct damos_quota *quota)
-+{
-+	unsigned int cidx = 0, sidx;
-+	struct damos *siter;
-+
-+	damon_for_each_scheme(siter, c) {
-+		if (siter == s)
-+			break;
-+		sidx++;
-+	}
-+	trace_damos_esz(cidx, sidx, quota->esz, true);
-+}
-+
- static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
- {
- 	struct damos_quota *quota = &s->quota;
- 	struct damon_target *t;
- 	struct damon_region *r;
--	unsigned long cumulated_sz;
-+	unsigned long cumulated_sz, cached_esz;
- 	unsigned int score, max_score = 0;
- 
- 	if (!quota->ms && !quota->sz && list_empty(&quota->goals))
-@@ -2030,7 +2044,11 @@ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
- 		quota->total_charged_sz += quota->charged_sz;
- 		quota->charged_from = jiffies;
- 		quota->charged_sz = 0;
-+		if (trace_damos_esz_enabled())
-+			cached_esz = quota->esz;
- 		damos_set_effective_quota(quota);
-+		if (trace_damos_esz_enabled() && quota->esz != cached_esz)
-+			damos_trace_esz(c, s, quota);
- 	}
- 
- 	if (!c->ops.get_scheme_score)
--- 
-2.39.5
+Cheers,
+Miguel
