@@ -1,246 +1,250 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BBE328B1E;
-	Fri,  4 Jul 2025 08:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A782877D7
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618679; cv=none; b=N7gkmVq50yWpEx1B3V8aRU5l1CWk/ZbC5SuYcJ1R5g1hNDlb7jwDxAd2i3zg42wnDg1pZHgg1L8RBSA8drnWBkLPGuFispugY1CB9KQXb5IGd9mOBpXfa+z6kH3/RyzSSA7e0YWSQL6XwCetiGfUkwQjERPFgS5gI/O5P+M/Wh8=
+	t=1751618715; cv=none; b=g1pTtiQV8JLKWuCtpja5z3SOgaEYKP+VrKhdotJ7XhBpRllC9O8hxLzZ4x5nLOC3dh8NUGy+alIKQLilJUZuLhRa/HhFVIhVzcsuIQuhCv0J8qi4U9sxa7ebysDkcFm00WdYYu7QMeswquDFZMTs99oyO8PQLAXYotIcleMkB8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618679; c=relaxed/simple;
-	bh=ubkxPX2FW+GZUe3/04Eh7dd0rWb/KcE745/jPL04D+A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lpdm+y+N5nSPlh0DZcvByOhBMwRGfpobiteHJss14hPwXXxGxQhWw+dftq7C7aH/f6qILma2+LA0sorKXwbCenXvLkO6uTAvhVQQZWNpd8TGAqr9qETDAhsIBAnfklcOStK31yMNYJoUCWgAhK/azgI78yRpACgE3htOMy6/pLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iPMQykqK; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751618715; c=relaxed/simple;
+	bh=hEYT/TtBh26X/Vvd8QANkkvTxzLE9+3qz5T2f2b9PZU=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=jJdDEgE7M43X4xqEdz/DpjT1kaBrugIJJ9TWWFzcaYnWAQqQ88uV2AVAHTuVGuPfTFh8zci3KBzslK4a9wuFDyQyxC4vmjP65lKT3NQs5LVBdE6sfl2R5otgx4OWxL2YQRj1+HHLLHqp5SVzgpLQ5Cks9QQ0OXmrBpjEt4fZ1Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NubWRX8R; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPMQykqK"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so1196644a12.2;
-        Fri, 04 Jul 2025 01:44:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NubWRX8R"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-748e63d4b05so451320b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751618675; x=1752223475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pLxVD++bObx7XIGt1aHIikLchHPfaB8ug5wDwTwQnEE=;
-        b=iPMQykqKQDzJ/qyqwf8UXnEM+QAeQ/FMxrsswA+vRKzBE8LDpCvdyLO5n41ee9nsXI
-         EcN1jLK69K30zD01Hymxd88y+3th6KBcZaBaGAAs2Nu5OihJCKQuxq8qR6T6VYDcp7ma
-         SvXNp/cbZNe2XR0fTV6SlfNYgiLM0eLeQBI7SiMqQtH8WZC4soJLvqiNt4r4SEDJMWE5
-         xhGpWYHMOky90jBejawKzd+VJTkP1XD6D2/5690GX4/zDVQU1Dc6ovzKgdsCwBubqkB0
-         QxlQbhzPmOMFE9r8UFcIci1dKEduETdglQ/aIXDxjH+/hBww1AtZS+pgLLp6QlAKBAeH
-         eTHQ==
+        d=bytedance.com; s=google; t=1751618712; x=1752223512; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=63zu7OUSE7H3LEgq1aY0wKyYCc7q428IAvJH1wbVnOQ=;
+        b=NubWRX8RHeZQxKGs9rxIaDvVJUNkdG5WPYo02b3yFWwTzDW6FcofcgMG/AOnvqVmrW
+         K7KypCw9uTCCvMZouSheeUfToCZwbl0C7lhg9ce3xI6FoVv+moAI04kl/cH03RfF4BEa
+         DUa6+fid33b3GttYD9D38ryXFBGH4hjkHqD6jYXXvieVR+hIzWY73fJ6lprsZtyyhs50
+         Hqpw7e6xHFm51pDI9m+3StfgOgUMXKDBuFxcIZ7D938a8CHzgORh+T+0mZkfUFd462Tq
+         kZt8RdbYvQImm5MasDGvbrv4WhmX/k9o8S9MQwW1DLsPnG2Zt4S8Jcga7zCdWMWYdgIw
+         Dptg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751618675; x=1752223475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pLxVD++bObx7XIGt1aHIikLchHPfaB8ug5wDwTwQnEE=;
-        b=m1j99wHQCJZ9R2cswD6C6lpXV27uYeidgBgqnS7AtXp5POnuFMyetGy2vbhC+DsfkH
-         vHF+pFz93d/f9ZzEFUbSe35ZvLBa172Ia0YGqJ1b1B0f9skjgXU3vQxIRcNv8BZffXAX
-         pzG1MvUWbWRph0+fCXzI9uzTjfvwVas5/f0qlhnLUAkl+0iHwau5Nk+fiQIMle0CV20e
-         2saAjFqLz1Hzh5wG3JT1VeW4NdKJV0c5UmPMfumUQ6DJPKKsJ/kTujKWJHM7hBruzhdj
-         G82O2vMWvnwJ5LM3tEUTyDaEY39Ilg9iucoEMGB0uaCDesnsKJ1kQP2ZfBP06dU2hZ4s
-         qC9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUJc2MI22hgReNm4MAS8eZ7YRazNsna6aV68eSvcUzQ3O1GrH4DQTyGQJAxPYO9SGDu1MCIWzJIfis=@vger.kernel.org, AJvYcCVz99qTlXDClG5P9+8XFVtEP4HvfvqS1CryeEpobOhTeuvSug3nRxv/ruDP5VEXtlBSyOQ/1iw38voFMNLdPQ==@vger.kernel.org, AJvYcCWdzH0VOmHblQDyvz+N+KripNDLuED22kjZQTNrJB41X7I5IIsohMBT6alrD57S5cHjCzIlZWTnwTJZLlsO@vger.kernel.org, AJvYcCXW4EfoZbkYkc8Kz+ZJOM6wreIEwJ3p0NUUYfhvT15l+/6fv0h4qtf0GnX8aA7pr9Oas2ifYDNs0tgK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOJTJflQl3gdga1WBxskRDxtM/7BT+MVfgv6uF2ghy9quM6EhJ
-	yt78mjV1jS5QtcRHVOtaNZPPRNhitEyk3pvGE+/9NVJf0brmUnCL2QGTlbiXs9IsXubioWIcrYx
-	8RKJsn36j5HtBKE6kDb/DmBqp7+wboQc=
-X-Gm-Gg: ASbGncu9u47uoOhlybqaw+P67KaOlN/7u3jY++7dI92NiimhXUvSmFKpSK0o549QgVu
-	5Xo9/rPw7sK0aq3S3RclLzVO4EEiqe6a/tlu9OPNx9B81RFELs+XF3E+f75W52hZ58yaHlqkd3W
-	CVfC3piEKFFm5Qn8yNCGqsfyOb/XeiB6NpfoNXRpapPfw=
-X-Google-Smtp-Source: AGHT+IFBDaP8zQxWcQljULEFa6GosLHM1Fr9HgBZPyfuh3qYvt0YaniWVIKCyvoHhchZrszWhCvhEz6VfcNnf1wh2wI=
-X-Received: by 2002:a17:907:7290:b0:ae3:64ec:5eb0 with SMTP id
- a640c23a62f3a-ae3fbc2896bmr136387066b.11.1751618674841; Fri, 04 Jul 2025
- 01:44:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751618712; x=1752223512;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=63zu7OUSE7H3LEgq1aY0wKyYCc7q428IAvJH1wbVnOQ=;
+        b=KDaG10HbB/4I2hrAnOD06ofR1u3ODCzUnA3peBsZrWLlhau2VvqybbhDaP9XFOuwkP
+         NcCmwGfiW7RfLoKKuOjtoarqhflU5LndR+WVHQEdS/WBm5z71/MPTzpwVZ88Pjq0jaDx
+         vtUhAlwTyFowGWfFGKZ7+rbkBRAggmpI8O72xoNupodWrBZ8c7DbabC1wUC1ZqA33+qn
+         MpIKEStYyeAyA+IaUcuwoXEjFZeVkqZmb+w4rR7cgk40cd5fBlfyqyFZAOyQtcDLoC2I
+         bYZ3RnxBOTn63DAlOSW3s6mbGGoR48p1CrjSG10bEpJD6/pSa9935IrGP/5P65Xiv4Vx
+         6wQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGFF/dsPUo5BQcABEM2ykdX0SDNS8Ue32hCchJkqcgJTxDkNyVRWiJizyV1bpo68mQRL9nfxkOPi02FxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1SWpGfawtC6CuURUGabqS1uu9livQn8lzrQzDaEQeRmdXpxbV
+	vqNBKfqJLcoMrHT6dt955na9x+prFdwkNYpKIhNCiuiCbSublFX/8KSdyA3N8rmg/qI=
+X-Gm-Gg: ASbGncsFMyvGTVQfX1gSSb6X5Y7iMuc2faX2JwzEq2WzmucDBIyJIerUfDFUO6Hww+2
+	5YlSJbxom5rH5uvSiH0UiQ0/TKzsSwyP4liVYvlOTpfTp+z7oekQRshedeN5fy+P5auovg3+GdZ
+	MRq2HxYaS+x0GIAmBilZWBK+wVeJTEyiylQJ46bleIfyX+5HWuNTKflqVIxmtMLNwp58pQs6XK0
+	zZ//9nfl9xcAqWoQGxkqqX06Epm+tD2VyHl3eJZvdg0vuCOUY7Ua90HxDcZasUKoIt1N38TG2vT
+	cDmYWVWzsODgrEm7OANBk8gwpwNIwXFPGK0Zz+RI0zPJnDNkU+BrcZ4gYswe7DaVB/6owFUxTJ8
+	Y0ejY2rnkEYRy1o9h
+X-Google-Smtp-Source: AGHT+IHwfnsSoknuDyaRYIcga1M43ZSFI80Oh8nP0dEX5TdzD+tVrQdta0nFCVUmLLuNum1o9VjWJA==
+X-Received: by 2002:a05:6a00:6ca1:b0:74c:efae:ffae with SMTP id d2e1a72fcca58-74cefaf0042mr19469b3a.5.1751618712474;
+        Fri, 04 Jul 2025 01:45:12 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([61.213.176.9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cd066sm1722118b3a.53.2025.07.04.01.45.04
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 04 Jul 2025 01:45:12 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev,
+	dennis@kernel.org,
+	tj@kernel.org,
+	cl@gentwo.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	andybnac@gmail.com,
+	bjorn@rivosinc.com,
+	cyrilbur@tenstorrent.com,
+	rostedt@goodmis.org,
+	puranjay@kernel.org,
+	ben.dooks@codethink.co.uk,
+	zhangchunyan@iscas.ac.cn,
+	ruanjinjie@huawei.com,
+	jszhang@kernel.org,
+	charlie@rivosinc.com,
+	cleger@rivosinc.com,
+	antonb@tenstorrent.com,
+	ajones@ventanamicro.com,
+	debug@rivosinc.com,
+	cuiyunhui@bytedance.com,
+	haibo1.xu@intel.com,
+	samuel.holland@sifive.com,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH RFC] RISC-V: Fix a register to store the percpu offset
+Date: Fri,  4 Jul 2025 16:45:00 +0800
+Message-Id: <20250704084500.62688-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-10-john@groves.net>
-In-Reply-To: <20250703185032.46568-10-john@groves.net>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 4 Jul 2025 10:44:23 +0200
-X-Gm-Features: Ac12FXxwSwxI5T6ujv-byO1091sUsmVe0O4bcF4RyE_aZllEPVlxUcLQOg0w034
-Message-ID: <CAOQ4uxgqMOL4aRnpm02Q7V8_T1vtgHHxe+QnoLANhS_Vr2-VRw@mail.gmail.com>
-Subject: Re: [RFC V2 09/18] famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, Miklos Szeredi <miklos@szeredi.hu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 3, 2025 at 8:51=E2=80=AFPM John Groves <John@groves.net> wrote:
->
-> Virtio_fs now needs to determine if an inode is DAX && not famfs.
->
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  fs/fuse/dir.c    |  2 +-
->  fs/fuse/file.c   | 13 ++++++++-----
->  fs/fuse/fuse_i.h |  6 +++++-
->  fs/fuse/inode.c  |  2 +-
->  fs/fuse/iomode.c |  2 +-
->  5 files changed, 16 insertions(+), 9 deletions(-)
->
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index 8f699c67561f..ad8cdf7b864a 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -1939,7 +1939,7 @@ int fuse_do_setattr(struct mnt_idmap *idmap, struct=
- dentry *dentry,
->                 is_truncate =3D true;
->         }
->
-> -       if (FUSE_IS_DAX(inode) && is_truncate) {
-> +       if (FUSE_IS_VIRTIO_DAX(fi) && is_truncate) {
->                 filemap_invalidate_lock(mapping);
->                 fault_blocked =3D true;
->                 err =3D fuse_dax_break_layouts(inode, 0, -1);
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 754378dd9f71..93b82660f0c8 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -239,7 +239,7 @@ static int fuse_open(struct inode *inode, struct file=
- *file)
->         int err;
->         bool is_truncate =3D (file->f_flags & O_TRUNC) && fc->atomic_o_tr=
-unc;
->         bool is_wb_truncate =3D is_truncate && fc->writeback_cache;
-> -       bool dax_truncate =3D is_truncate && FUSE_IS_DAX(inode);
-> +       bool dax_truncate =3D is_truncate && FUSE_IS_VIRTIO_DAX(fi);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
-> @@ -1770,11 +1770,12 @@ static ssize_t fuse_file_read_iter(struct kiocb *=
-iocb, struct iov_iter *to)
->         struct file *file =3D iocb->ki_filp;
->         struct fuse_file *ff =3D file->private_data;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
->
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_read_iter(iocb, to);
->
->         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> @@ -1791,11 +1792,12 @@ static ssize_t fuse_file_write_iter(struct kiocb =
-*iocb, struct iov_iter *from)
->         struct file *file =3D iocb->ki_filp;
->         struct fuse_file *ff =3D file->private_data;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
->
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_write_iter(iocb, from);
->
->         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> @@ -2627,10 +2629,11 @@ static int fuse_file_mmap(struct file *file, stru=
-ct vm_area_struct *vma)
->         struct fuse_file *ff =3D file->private_data;
->         struct fuse_conn *fc =3D ff->fm->fc;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->         int rc;
->
->         /* DAX mmap is superior to direct_io mmap */
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_mmap(file, vma);
->
->         /*
-> @@ -3191,7 +3194,7 @@ static long fuse_file_fallocate(struct file *file, =
-int mode, loff_t offset,
->                 .mode =3D mode
->         };
->         int err;
-> -       bool block_faults =3D FUSE_IS_DAX(inode) &&
-> +       bool block_faults =3D FUSE_IS_VIRTIO_DAX(fi) &&
->                 (!(mode & FALLOC_FL_KEEP_SIZE) ||
->                  (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
->
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 2086dac7243b..9d87ac48d724 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -1426,7 +1426,11 @@ void fuse_free_conn(struct fuse_conn *fc);
->
->  /* dax.c */
->
-> -#define FUSE_IS_DAX(inode) (IS_ENABLED(CONFIG_FUSE_DAX) && IS_DAX(inode)=
-)
-> +/* This macro is used by virtio_fs, but now it also needs to filter for
-> + * "not famfs"
-> + */
-> +#define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)    \
-> +                                       && IS_DAX(&fuse_inode->inode))
+The following data was collected from tests conducted on the
+Spacemit(R) X60 using the fixed register method:
 
-I think we should take this opportunity to make it
-static inline fuse_is_virtio_dax()
+No modifications:
+6.77, 6.791, 6.792, 6.826, 6.784, 6.839, 6.776, 6.733, 6.795, 6.763
+Average: 6.786839305
 
-and because some of the call site really do want to know if this is dax
-should also leave a helper
+ffix-x27:
+7.106, 7.035, 7.362, 7.141, 7.096, 7.182, 7.109, 7.126, 7.186, 7.12
+Average: 7.145826539
 
-static inline fuse_is_dax()
+ffix-x27 + x27(s11) used for offset optimization:
+7.059, 6.951, 6.961, 6.985, 6.93, 6.964, 6.977, 6.907, 6.983, 6.944
+Average: 6.965993173
 
-...
+Analysis:
+The fixed register method reduced performance by 5.29%.
+The per-CPU offset optimization improved performance by 2.52%.
 
->
->  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
->  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index e9db2cb8c150..29147657a99f 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -164,7 +164,7 @@ static void fuse_evict_inode(struct inode *inode)
->         if (inode->i_sb->s_flags & SB_ACTIVE) {
->                 struct fuse_conn *fc =3D get_fuse_conn(inode);
->
-> -               if (FUSE_IS_DAX(inode))
-> +               if (FUSE_IS_VIRTIO_DAX(fi))
->                         fuse_dax_inode_cleanup(inode);
->                 if (fi->nlookup) {
->                         fuse_queue_forget(fc, fi->forget, fi->nodeid,
-> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
-> index c99e285f3183..aec4aecb5d79 100644
-> --- a/fs/fuse/iomode.c
-> +++ b/fs/fuse/iomode.c
-> @@ -204,7 +204,7 @@ int fuse_file_io_open(struct file *file, struct inode=
- *inode)
->          * io modes are not relevant with DAX and with server that does n=
-ot
->          * implement open.
->          */
-> -       if (FUSE_IS_DAX(inode) || !ff->args)
-> +       if (FUSE_IS_VIRTIO_DAX(fi) || !ff->args)
->                 return 0;
->
+Issues with the fixed register method (beyond code size):
+Performance degradation due to the loss of one general-purpose register.
+Each handle_exception() call requires loading the per-CPU offset into the
+fixed register.
 
-... Like here, later in your patch set you add explicit check for
-!fuse_famfs_file()
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+---
+ Makefile                        |  4 ++--
+ arch/riscv/include/asm/percpu.h | 22 ++++++++++++++++++++++
+ arch/riscv/kernel/asm-offsets.c |  1 +
+ arch/riscv/kernel/entry.S       | 11 +++++++++--
+ arch/riscv/kernel/smpboot.c     |  3 +++
+ 5 files changed, 37 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/percpu.h
 
-If you make this into if (fuse_is_dax(fi)
-it will be easier and nicer in the end.
+diff --git a/Makefile b/Makefile
+index b7d5f2f0def0..e291f865adc4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1026,8 +1026,8 @@ include $(addprefix $(srctree)/, $(include-y))
+ 
+ # Add user supplied CPPFLAGS, AFLAGS, CFLAGS and RUSTFLAGS as the last assignments
+ KBUILD_CPPFLAGS += $(KCPPFLAGS)
+-KBUILD_AFLAGS   += $(KAFLAGS)
+-KBUILD_CFLAGS   += $(KCFLAGS)
++KBUILD_AFLAGS   += $(KAFLAGS) -ffixed-x27
++KBUILD_CFLAGS   += $(KCFLAGS) -ffixed-x27
+ KBUILD_RUSTFLAGS += $(KRUSTFLAGS)
+ 
+ KBUILD_LDFLAGS_MODULE += --build-id=sha1
+diff --git a/arch/riscv/include/asm/percpu.h b/arch/riscv/include/asm/percpu.h
+new file mode 100644
+index 000000000000..5d6b109cfab7
+--- /dev/null
++++ b/arch/riscv/include/asm/percpu.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __ASM_PERCPU_H
++#define __ASM_PERCPU_H
++
++static inline void set_my_cpu_offset(unsigned long off)
++{
++	asm volatile("addi s11, %0, 0" :: "r" (off));
++}
++
++static inline unsigned long __kern_my_cpu_offset(void)
++{
++	unsigned long off;
++	asm ("mv %0, s11" :"=r" (off) :);
++	return off;
++}
++
++#define __my_cpu_offset __kern_my_cpu_offset()
++
++#include <asm-generic/percpu.h>
++
++#endif
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index a03129f40c46..0ce96f30bf32 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -35,6 +35,7 @@ void asm_offsets(void)
+ 	OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
+ 	OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
+ 	OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
++	OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
+ 	OFFSET(TASK_TI_FLAGS, task_struct, thread_info.flags);
+ 	OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
+ 	OFFSET(TASK_TI_KERNEL_SP, task_struct, thread_info.kernel_sp);
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 9d1a305d5508..529d6576265e 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -77,6 +77,13 @@ SYM_CODE_START(handle_exception)
+ 	 */
+ 	csrw CSR_SCRATCH, x0
+ 
++	/* load __per_cpu_offset[cpu] to s11*/
++	REG_L t6, TASK_TI_CPU(tp)
++	slli t6, t6, 3
++	la s11, __per_cpu_offset
++	add s11, s11, t6
++	REG_L s11, 0(s11)
++
+ 	/* Load the global pointer */
+ 	load_global_pointer
+ 
+@@ -298,7 +305,7 @@ SYM_FUNC_START(__switch_to)
+ 	REG_S s8,  TASK_THREAD_S8_RA(a3)
+ 	REG_S s9,  TASK_THREAD_S9_RA(a3)
+ 	REG_S s10, TASK_THREAD_S10_RA(a3)
+-	REG_S s11, TASK_THREAD_S11_RA(a3)
++	/* REG_S s11, TASK_THREAD_S11_RA(a3) */
+ 	/* Save the kernel shadow call stack pointer */
+ 	scs_save_current
+ 	/* Restore context from next->thread */
+@@ -315,7 +322,7 @@ SYM_FUNC_START(__switch_to)
+ 	REG_L s8,  TASK_THREAD_S8_RA(a4)
+ 	REG_L s9,  TASK_THREAD_S9_RA(a4)
+ 	REG_L s10, TASK_THREAD_S10_RA(a4)
+-	REG_L s11, TASK_THREAD_S11_RA(a4)
++	/* REG_L s11, TASK_THREAD_S11_RA(a4) */
+ 	/* The offset of thread_info in task_struct is zero. */
+ 	move tp, a1
+ 	/* Switch to the next shadow call stack */
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index fb6ab7f8bfbd..6fa12cc84523 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -43,6 +43,7 @@ static DECLARE_COMPLETION(cpu_running);
+ 
+ void __init smp_prepare_boot_cpu(void)
+ {
++	set_my_cpu_offset(per_cpu_offset(smp_processor_id()));
+ }
+ 
+ void __init smp_prepare_cpus(unsigned int max_cpus)
+@@ -240,6 +241,8 @@ asmlinkage __visible void smp_callin(void)
+ 	mmgrab(mm);
+ 	current->active_mm = mm;
+ 
++	set_my_cpu_offset(per_cpu_offset(curr_cpuid));
++
+ 	store_cpu_topology(curr_cpuid);
+ 	notify_cpu_starting(curr_cpuid);
+ 
+-- 
+2.43.0
 
-Thanks,
-Amir.
