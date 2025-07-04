@@ -1,107 +1,163 @@
-Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE72148830
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EED1E2614;
+	Fri,  4 Jul 2025 15:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643340; cv=none; b=CEuUCZ6PiJCVPjHEzBTemt9QFEI06aBPIwFSetOnvd6X4n0/5fDvVzMwFuN0Mu3O2anVk62XwZFC0gjvaT4u5Ys0l8VkzDCnHf7JAKEuwcC9rpC9ukgfqojGRP37u04+ToggPF2dyHJ1JDhyOOUC97o53Sha5is14kLTbq5xZ/0=
+	t=1751643343; cv=none; b=tOEMs6arljKZPPQ+/TCHVgT637XqO/A9z233ubh3P7rA1sjKG3JkdvCGXVb8Clkz9tn9rrG97l8rulS1Q0KnMngW1Hcfwt3SlaAXjnKz/lFae6JXf59jdeOc7c7D8UwJBFWueoAth89PjEGvSgAmgZv3pxZMrJwb+KLmud9SBAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643340; c=relaxed/simple;
-	bh=SUYcXSzBWGdNNz9o/+UtQEG7BQ3lY74Lpl9Cdx1xB5s=;
-	h=From:To:CC:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=mtzTihIjnWJfLXHXbPsGKtQKQ2nyNhCgl3niaY+5049np8YRFJNAdMHkp00X7rssgIRC74uWwvtSYCpIQPSt9/JpIu1nNL3247wDCC0lnAE1c1tAJoR1XDlSxdhuGMUpWy1BdGMNf6L56lDHuGIi/f4PXgXpWj8zwxbVHEHPc8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=okGCi0zX; arc=none smtp.client-ip=185.132.180.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1751643343; c=relaxed/simple;
+	bh=9XNM1qLRpm7fiyDmLGrtrcj/3GIaT6hkKfkqd71D2aA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UoZrQijQiwVvOiwXO13eqADw/t5UckFJ8LkRd1A6qtbw18vdxH82olAwqOlYCiDhP13l1AyhnOp2fK0ZUbzsRPqgdoPG1EV0tc8R2bZFFhqea2DNsiyhaAxA/N2KA+gaINdVkzXfhBecDhmKVMSG4pdppmeCziwA/oIIVVT50OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NETME7G1; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="okGCi0zX"
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.8/8.18.1.8) with ESMTP id 5648IYGi172034;
-	Fri, 4 Jul 2025 16:35:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=i
-	c4dCORjyUvIUluNdB6Hv8sLxo7aFOVTQQMZZh4ItpY=; b=okGCi0zXLFdWJ15MR
-	LHKKZLE0JRbUuCkUuzKJjHXBS+X/haRD1jjNDZdjFhqg0aCmVA5osQE0Efrk5eds
-	dxgJD+uTbs07RhfE8+F43At4Kw2oAiMl9uFlFAMERG7wy3FhNYXAH3dBzkrx0GbR
-	kRH07RiUcVdL793kyuWnCHPlCn00laVE+lSaGaQVUN9Pjo/q7BpXLF07/Vy3ee+B
-	eNR/AxnP/Itdg0h7wHyjXnQ97/EBQpnpIsao0Djr+OTM85qpTgQnIkXkp6kUSXiL
-	JuarBF6Aa7x2oQD5p/khqCaLHm1ri/ir3YEHZIVyuhJ3bUqwUDAfyxxsqzdQroxN
-	C9Qdw==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 47j8ftcxep-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 04 Jul 2025 16:35:10 +0100 (BST)
-Received: from
- 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
- (172.25.7.125) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 4 Jul 2025 16:35:08 +0100
-From: Matt Coster <matt.coster@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Alexandru Dadu
-	<alexandru.dadu@imgtec.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Alessio Belle <alessio.belle@imgtec.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20250624-fix-kernel-crash-gpu-hard-reset-v1-1-6d24810d72a6@imgtec.com>
-References: <20250624-fix-kernel-crash-gpu-hard-reset-v1-1-6d24810d72a6@imgtec.com>
-Subject: Re: [PATCH] drm/imagination: Fix kernel crash when hard resetting
- the GPU
-Message-ID: <175164330873.70322.8845862980956103647.b4-ty@imgtec.com>
-Date: Fri, 4 Jul 2025 16:35:08 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NETME7G1"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453398e90e9so7052685e9.1;
+        Fri, 04 Jul 2025 08:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751643339; x=1752248139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=kN+P++wgn6VZ7R5SIjGo6LxITIRZcUIj55TIgiJeZPQ=;
+        b=NETME7G1S2pSisRgv3NvVmxPSzKpnodkdZVbv9gJ/mN2Bt9lCiQ1O2M6dHs2lIHnn9
+         o7OWiPnlofwkMteDQZFm2KJ5otOh0eXigfMakv13jtQZ286SNOZHGYLOZMSRIBlT6985
+         DlXd3OtW6XK+k97QEfZR+RsoTWAG6heQ+oFzXoMoWYTNpT/sh63LEw8JCB/jruenXE6i
+         i6iqsWjcYb/m11wo/tksPJ3jQMWqv7HOdsOuEp/UEPFd7wYbeYTOl0dtmSuEy3Cww++v
+         2SD0dTn3dW7AO8lMJBGZjh1GpxIVBQ0ocfgkqooUAUgXXGgY25PwI/S0m22mZ8AAaRzp
+         XAOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751643339; x=1752248139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kN+P++wgn6VZ7R5SIjGo6LxITIRZcUIj55TIgiJeZPQ=;
+        b=AMvLAOo6aFnBRKwFcfPYyCwRjLVKherUBIj7CkX5o+IcuJBFQfAR6BxSwBHi46LNnd
+         wR8XKLR6ZCMYAKwiNHkI6J+xOqm0EmgrwZzbI+Vjh8RQaU4o+IU+xWTC/0A4LxLfZ6sA
+         Ejc12Dh8q2bBwItijLLmJcMjjk/rXXtnkZWLKx1TMwYrtGDzxKTgLKhUX5lZHTqZeOpM
+         EXW5XufJZneQt8fI//8FPp0ohqBsm2AFqMluqXkJ436RNBDgqpU/RQddUnh4I8P1C1vc
+         RLzrQC270prfyh46aCM+icbu3FOUSyHnges8WUUQmmGtf6Snc+1puGfxIuSbSC9XHhiL
+         AtZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5HzdPX+jX9P+0FVetiwlUZfLFh8PJ+OA2bFpONGeoQd9S1sr5BHsEHOwyuuL3F7laf7n9TDAwwxy0cdlC5pI=@vger.kernel.org, AJvYcCWxpkFSRKfX1N3u+uCGIWVa9NIGajR/7YetUGym3EYYws1I/F/e3IF4Uvd3KpC8tvcL92a7DLtv7VM=@vger.kernel.org, AJvYcCXUG0rCs8B2v08NeX3ALzKgZKoDvmcEKWBxw27WN2CQ72nuZp3Ho11DBUQash1bYfheLUpXntMLHsyXPBdR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnEkazbWncANCSBbaWRY9wok5v0p1/WNdMfS5VoFw7rZqPxxKs
+	XhDPSC8ihGhev9dYB0OUxj0vwd0woGhhXt73VegXn5GsS4ohxUTL9adlWqJw9Pfbkn4=
+X-Gm-Gg: ASbGnctH8uO1oTB1tfzxXFlSqUnJJiQ9eabfY0sEe8k9rA9bCWxVO0j6/B+9rGrTaYe
+	+1OB+HBaoVyr6sOSDnhZSM+N7XZQfkVNhASXW/9dqAplvoa27MVwYAKZNrDDIrqR1iSM0g8EoVF
+	bSRo110Ag8XaJw5a7GMFcuqUQGtSfkXp1LdV9waKNKDhNeFSalOulXywWkZvplFTDpKfosqA8Sp
+	Uk+Xyj3w6bM7J/MvZWlxLh6t27XZSgRiKnx2iC8PmgeTwXsC5STy2mmgF/XJJs9m7s/f7XpIpea
+	LGSEaE7h+cAT603pA7SV7xoXcLjF9IfsRJ3OjWcIqLcNscp+TyMtVDqD4jAo/m3Tl2B3odYu0eR
+	41TooJ+OLLhRZL1jamGf5/EC0s3fq/e3n/FlL
+X-Google-Smtp-Source: AGHT+IEHIbq3wa0/hRtNzOKHvuH2gq3hNf1lEbKvJ0ODKMYcW/0PWbprq6rFKyYvjTZywbgsSFgcfg==
+X-Received: by 2002:a05:600c:35cc:b0:450:d3b9:4b96 with SMTP id 5b1f17b1804b1-454b76ad107mr19002375e9.13.1751643339074;
+        Fri, 04 Jul 2025 08:35:39 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b188e84dsm28976375e9.38.2025.07.04.08.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:35:38 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Asahi Lina <lina+kernel@asahilina.net>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v2 0/4] rust: i2c: Add basic I2C driver abstractions
+Date: Fri,  4 Jul 2025 16:33:32 +0100
+Message-ID: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDAyNiBTYWx0ZWRfX5Gs7zLjaetpy
- VqUtRFg6YPs9FkUBve99ajWSgqxlSNPybyzcqzaLmL6kAikZL7tbnovI74FHmXtt59+C6iK9i0m
- AGmKMzmVHUNjJiTv4buna52i35SYEpVPiuyVVZ/94f3C9DSgE2auhm0bvFKgdDXxVFgFI06PNCK
- /iPv3XIxQIOiJ6y0FwFxXqfPFbEFPYNRvK6KCzBndvVwD7Kg8MLM3f9qRdAuEPUra+KJ0ahLAyd
- 5jEWspJpeP6kwAH7aCDeLnqpO3BVVHMFBFJ9SnNxTrR4LCRrZS+4adb2Wmzt8DR30we7OMJwj7Z
- L5UXKfXWNJHTfobG7N6HIFlVzA00tqiG1VoCnxqyj6ota4d1k6Xyz4IglBJbwTCIC5rEGM1UZJm
- mYQMZnDR
-X-Proofpoint-ORIG-GUID: JKLeiVrMa3mQVAY2PDaW3BOGxbFwL4kL
-X-Authority-Analysis: v=2.4 cv=LpiSymdc c=1 sm=1 tr=0 ts=6867f4ae cx=c_pps
- a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17
- a=fFtJDOQOLN4A:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=r_1tXGB3AAAA:8
- a=_LgECFMNShmt_M_GEIUA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=zZCYzV9kfG8A:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: JKLeiVrMa3mQVAY2PDaW3BOGxbFwL4kL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This patch series lays the groundwork for writing Linux I2C drivers in Rust by:
+
+ 1. Core abstractions 
+    Introduce `i2c::Device`, `i2c::Driver` and `i2c::Adapter` built on the
+    existing `struct i2c_client` and `struct i2c_driver`, with safe Rust wrappers
+    around probe, transfer, and teardown logic.
+
+ 2. Manual device creation  
+    Provide an API to register an I2C device at runtime from Rust using
+    `I2cBoardInfo`, including automatic cleanup when the driver unloads.
+
+ 3. Sample driver (legacy table, OF & ACPI)  
+    Add `rust_driver_i2c`, a sample that binds to an I2C client via:
+      - legacy I2C-ID table,
+      - Open Firmware (device-tree) compatible strings, or
+      - ACPI IDs.
+
+ 4. Sample for manual registration  
+    Add `rust_device_i2c`, a sample demonstrating how to create an I²C device
+    on a given `I2cAdapterRef`, and how to unregister it automatically.
+
+Together, these four patches:
+
+- Establish the essential Rust traits and types for I2C drivers.
+- Enable driver binding via legacy ID table, device-tree (OF), or ACPI
+- Enable manual device creation at runtime.
+- Ship two samples showing typical usage: one for firmware- or table-based binding,
+  and one for manual registration.
+
+Igor Korotin (4):
+  rust: i2c: add basic I2C device and driver abstractions
+  rust: i2c: add manual I2C device creation abstractions
+  samples: rust: add Rust I2C sample driver
+  samples: rust: add Rust manual I2C device creation sample
+
+Changelog
+---------
+v2:
+ - Merged separated ACPI support patches since ACPI-table support is 
+   merged into driver-core-next.
+ - Added I2cAdapterRef and I2cBoardInfo abstractions 
+ - Added DeviceState generic parameter which is used for `i2c::Device`
+   as a sign if the device is created manually
+ - Added `DeviceOwned` abstraction which is a safe reference to a 
+   manually created `i2c::Device<Ctx, state::Owned>`. 
+ - Added Rust manual I2C device creation sample
+ - Link to v1: https://lore.kernel.org/rust-for-linux/20250626174623.904917-1-igor.korotin.linux@gmail.com/
+
+ MAINTAINERS                     |   4 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/i2c.c              |  15 +
+ rust/kernel/i2c.rs              | 565 ++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ samples/rust/Kconfig            |  24 ++
+ samples/rust/Makefile           |   2 +
+ samples/rust/rust_device_i2c.rs |  50 +++
+ samples/rust/rust_driver_i2c.rs |  69 ++++
+ 10 files changed, 733 insertions(+)
+ create mode 100644 rust/helpers/i2c.c
+ create mode 100644 rust/kernel/i2c.rs
+ create mode 100644 samples/rust/rust_device_i2c.rs
+ create mode 100644 samples/rust/rust_driver_i2c.rs
 
 
-On Tue, 24 Jun 2025 15:22:08 +0100, Alessio Belle wrote:
-> The GPU hard reset sequence calls pm_runtime_force_suspend() and
-> pm_runtime_force_resume(), which according to their documentation should
-> only be used during system-wide PM transitions to sleep states.
-> 
-> The main issue though is that depending on some internal runtime PM
-> state as seen by pm_runtime_force_suspend() (whether the usage count is
-> <= 1), pm_runtime_force_resume() might not resume the device unless
-> needed. If that happens, the runtime PM resume callback
-> pvr_power_device_resume() is not called, the GPU clocks are not
-> re-enabled, and the kernel crashes on the next attempt to access GPU
-> registers as part of the power-on sequence.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] drm/imagination: Fix kernel crash when hard resetting the GPU
-      commit: d38376b3ee48d073c64e75e150510d7e6b4b04f7
-
-Best regards,
+base-commit: b75e1f0619bd707e027812e262af3fbce445e71a
 -- 
-Matt Coster <matt.coster@imgtec.com>
+2.43.0
 
