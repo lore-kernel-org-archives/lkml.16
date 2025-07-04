@@ -1,129 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6261E86E;
-	Fri,  4 Jul 2025 08:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843942FEE1F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616332; cv=none; b=WVjOSkHsUM0i1JfG3ahgZoN4h2vKb3ODjx6eXI/hprCzNuF4SXuN+PQSEmUZNKDpM3HHlBBesuRs/Pk7PskSwWpPGXu/p77mngn5zFHIOwbBZ+BWOhF8BLMPVw/Env9kxmKiDRiU3fedy7X12iDiiukSHKhHV+OGYELAU0yjE64=
+	t=1751616337; cv=none; b=MbQY9pmkYvcqkTRfZhbsDmJ5f4UFbp9BMS+iWTLAxqGQAyi3xrZEg77e3BTynLeEc5HNyWsu1eEH2gcEpRx+85iljeJbfgakPEjoJ1Xs57bLkkGEP6NBxmGXE3Bb/AglIPW4vHSEtBkAElRTdI6KRvmAXmyf9YMlCv0lHNvd8dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616332; c=relaxed/simple;
-	bh=M4tLvMocMKZCPNaWwDYho3G+PEEpNx9DsEPKqpH/EOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1OR45Gssv5JytT084WOqyGz4gqDsX9Cji5dBFqxQbCZsrxPg4gTfUVl4S1HArnlktSyjuESEVxbtc4+SKfcbJ8knG5cai/IhXDBY3OtwdqKQl+BgZBUzSUErK+B8qRC8/owE+lkyStLpEZK9cvXqWwUtRsExsENouX3jRTdGiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qe+p5u1n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751616337; c=relaxed/simple;
+	bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O+znqIB836kdgtVjgMagwwbC3MBHS5PCPrUYS6R2gdmgIpm+YMVkVp8LMM21s8qDgUJwKls2my+GmBHcf53PTsN5vjW0T2iH3pb2ZKYWGABRAq5uzkULs5WOsNuXgHHg1qYzaU9s1Zl0JsjwdxKUTA6Kl7W1hgyiVjLYKa7tOfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IVfgHXpt; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qe+p5u1n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA802C4CEED;
-	Fri,  4 Jul 2025 08:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751616330;
-	bh=M4tLvMocMKZCPNaWwDYho3G+PEEpNx9DsEPKqpH/EOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qe+p5u1n7NsAdvlY1G3lDnDy8TDuqoxVtC7bmrmXfGgekakETe/L/i7LECxQiqERb
-	 Kbpe+Kuhlxfn+MQxDUwZoXA5Sx7xKBwDzMUo+SDrT7s5sH0/NyxzWkdPHAcQB0W8Vl
-	 hNvuKYPJZnkMc/IbDLp65AxiS06+3pYelXEs5b8SbEU7xjdkgcavHbDMzK1jOtwDdK
-	 /wIu4U4pXuUg4pOGq9OfzppCJXP32EhxNN6JHP5b14VgYs2GeY+kDn3eIEw+xyJP1T
-	 cEhv2AblhzFParPWuwz79/7uBB4POOUrpYJ4Ji6P/tF+0MRjOdIwsunfGsIYCsp2NW
-	 wRSkMvkkI9xag==
-Message-ID: <e32f074e-72ac-452c-9b1a-623750548cf0@kernel.org>
-Date: Fri, 4 Jul 2025 10:05:25 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVfgHXpt"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32ce252c3acso3795401fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751616333; x=1752221133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
+        b=IVfgHXptx3+ju7va/qniKcTy30vstmHwSGutSFL+XdxVUJUqloDkJyoHfJ/hXDDRwx
+         cFq/Cl1AJyywMKM2ykx21EyhEbygSfQTOtIY3JmKJnCNDcjr3orJfGfpZbWS5MGAGJoc
+         uiCGqcrO3xO/YrgaFKR2mKZI02P1+jmtnRoTdIJarVZrxyalDIeAmDd6g52EF+p5vH6T
+         DL1UtS3kQ2rgZ1yUxe0pDJJz/WEfdeKH5yaP2Hq5Ye7f7j3aOTONOYN86Ooc7no2Cws+
+         zbv67o13LZx0gh4Ea9j4Ad/7qdh8Pm6X2tXcwDf2YM64bVSzNrm/ijV79CSiR846Hz2D
+         ICxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751616333; x=1752221133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
+        b=tUl/G59CZ2ONheObtliT4kEWEyfZrHnT5txqZ6WOffjPYO9nPWh52dEvGPo2Hz3jZe
+         Doe1Gn5N57/xN2kg3TT2PrLcQ1Pmc+yQNSj6/6OW4fGVPSHzFgeAUie2u03JAMSb6QdV
+         /JOHNc0+Z49Sic2AEl1cS+MNI5DjlzDOwdUG9HBlbNPJiucTTmQ/mzdLZgz1DXoHPHy8
+         pj7Bj5dsXAQjjEX4UkAVr/PbDZ2IgdbSzqHNYD/deK6F8aYWRM7t9lUgQNskkGzmHVJd
+         2D4PXIBqfjJXcmHFtOtccntCuvj1kGq3zJQ6ogj8PLGupputOtIv9BBkXlioDPhkmpL7
+         tOew==
+X-Forwarded-Encrypted: i=1; AJvYcCWBYguO5MniXmHApwUhf+Hv1t1c5lKIaHmoaCOSOYTDsbI22Tr8PxbYlQiZPaDJ/HNTWRGvSrs1dpmmnq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYx6Hmjrr/XGD2z0Q6zLWbRDtfkRwzw5zBOomzcbDYT6byL6o1
+	dgcKmirqHrOXPTxmDneulh4hZFIRf3G/NzjjzpenRTE/lnwz2yktjgrgzEO6H33vzmYVv6MeWCk
+	ak6DjfRcAlDuE2ozNhdrXRjAYNN7d+xPQndUATku3BA==
+X-Gm-Gg: ASbGncs831F6fmBb35kiWhth8ZPDVh2wkWdM2FJ+SHfO5MA3KpXb+xLBJSDEgMWWral
+	IGMksNOyCoa5Gwv20rTXLAYtEgI8wYsaBxu92NJSGNGyPrZtZXV3xQCfd+hJ1n9xUFG6ZXjM1SA
+	hBaJIObIR+ryZnlOSjDLW5bG3EewRzXaIS+IBiarcuBgU=
+X-Google-Smtp-Source: AGHT+IFctPLcSJg4ykfhGL/MZ+g9vuXZvLZVkJpJyt2M2asLefjSEl5BwFpp7OuvBfV1YT/bzHqI/PtScrnLd3/qkSk=
+X-Received: by 2002:a05:651c:411a:b0:32b:488a:f561 with SMTP id
+ 38308e7fff4ca-32e5f5992cbmr3352351fa.18.1751616333296; Fri, 04 Jul 2025
+ 01:05:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs615-ride: add WiFi/BT nodes
-To: "Yu Zhang(Yuriy)" <yu.zhang@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250704-615-v3-0-6c384e0470f2@oss.qualcomm.com>
- <20250704-615-v3-2-6c384e0470f2@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250704-615-v3-2-6c384e0470f2@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org> <20250630-gpio-sysfs-chip-export-v3-1-b997be9b7137@linaro.org>
+In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-1-b997be9b7137@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 10:05:22 +0200
+X-Gm-Features: Ac12FXwBzNCj1y-ZrLdw9OXFh5sOrrWzfZ4fOjTViVGgzsj5minz_lC6w5id4wM
+Message-ID: <CACRpkdY0DcuXD5sY-RSa_uCbHFcOB=CRoiTdENM7yQg_oQssPQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/10] gpio: sysfs: use gpiod_is_equal() to compare
+ GPIO descriptors
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/07/2025 08:43, Yu Zhang(Yuriy) wrote:
-> Add a node for the PMU module of the WCN6855 present on the qcs615 ride
-> board. Assign its LDO power outputs to the existing WiFi/BT module.
-> 
-> Signed-off-by: Yu Zhang(Yuriy) <yu.zhang@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615-ride.dts | 135 +++++++++++++++++++++++++++++++
->  1 file changed, 135 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-> index 011f8ae077c256f079ce1b07720374a9bf721488..e21524a8ceffca0c68951d04fa6895cac5bb3d0e 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-> @@ -18,6 +18,7 @@ aliases {
->  		mmc0 = &sdhc_1;
->  		mmc1 = &sdhc_2;
->  		serial0 = &uart0;
-> +		serial1 = &uart7;
->  	};
->  
->  	chosen {
-> @@ -209,6 +210,85 @@ vreg_l17a: ldo17 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  	};
-> +
-> +	vreg_conn_1p8: vreg_conn_1p8 {
+On Mon, Jun 30, 2025 at 2:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We have a dedicated comparator for GPIO descriptors that performs
+> additional checks and hides the implementation detail of whether the
+> same GPIO can be associated with two separate struct gpio_desc objects.
+> Use it in sysfs code
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I don't see any improvements here. Please read DTS coding style again.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-
-Best regards,
-Krzysztof
+Yours,
+Linus Walleij
