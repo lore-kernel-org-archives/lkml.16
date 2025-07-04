@@ -1,146 +1,111 @@
-Received: from smtp153-170.sina.com.cn (smtp153-170.sina.com.cn [61.135.153.170])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5B082C60
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBD120EB;
+	Fri,  4 Jul 2025 14:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751640763; cv=none; b=BmnTJ9hOh032D0tb62RN163AE8QlZOBkwvHOnDkdu/WejEJmnLOm0j94CKikjvFQbF4YyM2fAF9f6EVF+JeOph6G5W3fHjseB7SyEklmPhBGEXZnNTIR74zR1+KkYs5UWaeQiJy1P1yEvKmndLhnvPV1Tzd1Ix7v1QlL3AyNsAU=
+	t=1751641188; cv=none; b=d5m0dBzUewI5/r0GG9CMzlVc++dDiP+wnz6laP/5SB4s2YI4zJy+rlykNQ7f8iftasY+XxsDQukfsDWo0ABsMcIlfCQfQhzhl24s+TY5qkN7xAbmfdoMdeEbpicUw8mfKm93tQ0uTzXtTVxnMa6eH7D4+6+u23ehtPNA0LWD/iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751640763; c=relaxed/simple;
-	bh=ebzy+L2kDzPSh0AbweyyGdq0j7lJb5zpEI3DTbgf62E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GJ216wghM19VnIBHo08QCOLzCzO5qc1Sj+4QBBKu26Ka98E1JjHYKI7UEKxkpjZd/+IL4LNYqPqo2Ezq/rtrI30/9kUyg9oOEwrjVkVU19nsbu1vAY7OnI1ZeQAh9yUlxvJ3akfTvwenFsFlGR99NAR9Qt5jUSbK+hxCYIEolaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=Wp0cQBRj; arc=none smtp.client-ip=61.135.153.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+	s=arc-20240116; t=1751641188; c=relaxed/simple;
+	bh=SbQps3Lqq4Ao3UcX5KMW6+EQLx+pBd68WWZFR3kGQkY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NXAydniOPOG2ugS9gJ5RA5HBiiJciorCaWstGmMIKVaXs7vEJXdH22BLYo3wvJE4bYStftAD8EuMklHjPrsI9ItmUjB2XzXw65Ns/PjoSVUJb3v45lPz1Kl2bt0WMHg7m8wMclotPV7tPMgvmdeV/5divKCkc7lJ/WiYujFOKmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ZB/QmCSO; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="Wp0cQBRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751640752;
-	bh=zXpGu7hMwY17GClItf6VxP/amPRruId0ptQiYfJD7As=;
-	h=From:Subject:Date:Message-ID;
-	b=Wp0cQBRjcP9Md11rO5Hh+GbQsTfRX8cwKjv8DKnh1lL5i+W7kX5H0PGjoRg+XNU6a
-	 H//Q9JV6WOsYZuw1ZTiBjsSB7GRUuowJgaJ53HcftM0t96ZXjJRnZEy0o5oxkxwceN
-	 FN3djUhDzdt+zP7QPfbUVw6lWSKIUFqY5YBZraeo=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.34) with ESMTP
-	id 6867EAA50000411F; Fri, 4 Jul 2025 22:52:23 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 3120106292002
-X-SMAIL-UIID: 2D7CD7CE3D804D40A0674AD0055D249A-20250704-225223-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+bc71245e56f06e3127b7@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in force_devcd_write
-Date: Fri,  4 Jul 2025 22:52:10 +0800
-Message-ID: <20250704145211.2487-1-hdanton@sina.com>
-In-Reply-To: <6867a14e.a70a0220.29cf51.0017.GAE@google.com>
-References: 
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ZB/QmCSO"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 44030406FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1751641186; bh=PJWohgyx6ekDulgSfjlkhWK+EgaA0rVbdyJLP0+k1BQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZB/QmCSOhf4UEJ5N/Avo8x8VL1uHAqWTtaDqaUMzyz70HHbv+RMtIqlV0MyZvIkx3
+	 NI03P7P0NAUIGhWbYs1MUxnwgrVlwCu1EuppUePZCf9/O0QdhwwzzTNd7HXS1kXvC3
+	 SAYDYqAjGuvFeJQ8ImRFBHWxwSThFMVzCJAJfDtMX1TiCAzB8DdQ/+YtOjf2GZQQKz
+	 gYIp5uDajyVtudBXKo2LTBrc2P7KjDUen7WmVteg5M2QIbJgqXmHuUy2zwboUnM6sq
+	 u8jMFXfvw+Lrp+GrgZ2+TzQLLiV5MKwrzbPTZY0OAAERIeSKBvc+VxfkJntRlYv62S
+	 j3j488gOt8s+Q==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 44030406FA;
+	Fri,  4 Jul 2025 14:59:46 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
+ <akiyks@gmail.com>
+Subject: Re: [PATCH v2 2/7] docs: kdoc: micro-optimize KernRe
+In-Reply-To: <20250704080140.136b0b38@foz.lan>
+References: <20250703184403.274408-1-corbet@lwn.net>
+ <20250703184403.274408-3-corbet@lwn.net> <20250704003146.118f5799@foz.lan>
+ <87ms9kkfb2.fsf@trenco.lwn.net> <20250704080140.136b0b38@foz.lan>
+Date: Fri, 04 Jul 2025 08:59:45 -0600
+Message-ID: <87a55kj926.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> Date: Fri, 04 Jul 2025 02:39:26 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11594c8c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
-> dashboard link: https://syzkaller.appspot.com/bug?extid=bc71245e56f06e3127b7
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139dac8c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b90f70580000
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-#syz test
+> Em Thu, 03 Jul 2025 17:47:13 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>> 
+>> > Em Thu,  3 Jul 2025 12:43:58 -0600
+>> > Jonathan Corbet <corbet@lwn.net> escreveu:
+>> >  
+>> >> Rework _add_regex() to avoid doing the lookup twice for the (hopefully
+>> >> common) cache-hit case.
+>> >> 
+>> >> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+>> >> ---
+>> >>  scripts/lib/kdoc/kdoc_re.py | 7 ++-----
+>> >>  1 file changed, 2 insertions(+), 5 deletions(-)
+>> >> 
+>> >> diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
+>> >> index e81695b273bf..612223e1e723 100644
+>> >> --- a/scripts/lib/kdoc/kdoc_re.py
+>> >> +++ b/scripts/lib/kdoc/kdoc_re.py
+>> >> @@ -29,12 +29,9 @@ class KernRe:
+>> >>          """
+>> >>          Adds a new regex or re-use it from the cache.
+>> >>          """
+>> >> -
+>> >> -        if string in re_cache:
+>> >> -            self.regex = re_cache[string]
+>> >> -        else:
+>> >> +        self.regex = re_cache.get(string, None)  
+>> >
+>> > With get, None is default...
+>> >  
+>> >> +        if not self.regex:
+>> >>              self.regex = re.compile(string, flags=flags)  
+>> >
+>> > ... yet, as you're using get, better to code it as:
+>> >
+>> > 	self.regex = re_cache.get(string, re.compile(string, flags=flags))  
+>> 
+>> ...but that will recompile the regex each time, defeating the purpose of
+>> the cache, no?
+>
+> No. It should do exactly like the previous code:
+>
+> - if re_cache[string] exists, it returns it. 
+> - Otherwise, it returns re.compile(string, flags=flags).
+>
+> https://www.w3schools.com/python/ref_dictionary_get.asp
 
---- x/drivers/bluetooth/hci_vhci.c
-+++ y/drivers/bluetooth/hci_vhci.c
-@@ -320,11 +320,13 @@ static inline void force_devcd_timeout(s
- #endif
- }
- 
-+static DEFINE_MUTEX(vhci_release_lock);
-+static int released = 0;
- static ssize_t force_devcd_write(struct file *file, const char __user *user_buf,
- 				 size_t count, loff_t *ppos)
- {
--	struct vhci_data *data = file->private_data;
--	struct hci_dev *hdev = data->hdev;
-+	struct vhci_data *data;
-+	struct hci_dev *hdev;
- 	struct sk_buff *skb = NULL;
- 	struct devcoredump_test_data dump_data;
- 	size_t data_size;
-@@ -343,6 +345,21 @@ static ssize_t force_devcd_write(struct
- 		return -ENOMEM;
- 	skb_put_data(skb, &dump_data.data, data_size);
- 
-+	if (!mutex_trylock(&vhci_release_lock)) {
-+out:
-+		kfree_skb(skb);
-+		return -EBUSY;
-+	}
-+	if (released) {
-+		mutex_unlock(&vhci_release_lock);
-+		goto out;
-+	}
-+	data = file->private_data;
-+	if (!data) {
-+		mutex_unlock(&vhci_release_lock);
-+		goto out;
-+	}
-+	hdev = data->hdev;
- 	hci_devcd_register(hdev, vhci_coredump, vhci_coredump_hdr, NULL);
- 
- 	/* Force the devcoredump timeout */
-@@ -352,6 +369,7 @@ static ssize_t force_devcd_write(struct
- 	ret = hci_devcd_init(hdev, skb->len);
- 	if (ret) {
- 		BT_ERR("Failed to generate devcoredump");
-+		mutex_unlock(&vhci_release_lock);
- 		kfree_skb(skb);
- 		return ret;
- 	}
-@@ -369,9 +387,11 @@ static ssize_t force_devcd_write(struct
- 		/* Do nothing */
- 		break;
- 	default:
-+		mutex_unlock(&vhci_release_lock);
- 		return -EINVAL;
- 	}
- 
-+	mutex_unlock(&vhci_release_lock);
- 	return count;
- }
- 
-@@ -656,6 +676,8 @@ static int vhci_release(struct inode *in
- 	struct vhci_data *data = file->private_data;
- 	struct hci_dev *hdev;
- 
-+	mutex_lock(&vhci_release_lock);
-+	data = file->private_data;
- 	cancel_delayed_work_sync(&data->open_timeout);
- 	flush_work(&data->suspend_work);
- 
-@@ -669,6 +691,8 @@ static int vhci_release(struct inode *in
- 	skb_queue_purge(&data->readq);
- 	file->private_data = NULL;
- 	kfree(data);
-+	released++;
-+	mutex_unlock(&vhci_release_lock);
- 
- 	return 0;
- }
---
+The re.compile() call is evaluated before the call to get() - just like
+it would be in C.  This is easy enough to prove to yourself in the REPL
+if you doubt me...
+
+Thanks,
+
+jon
