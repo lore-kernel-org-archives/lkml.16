@@ -1,120 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B7B2E36EB;
-	Fri,  4 Jul 2025 18:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2CC1DE4D2
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751655256; cv=none; b=Sd7kjKaPtjGgwweeuFxxiak6qESL/6OmtCoiDVXAGtRYg+5QULNdhXvVwXpHbGSZBE9iHTyGOB6QuJ77xjzRAUo3iw3NzO4X93s9UbiCVuY6SaaTGKStoKJbeoNFLGHPUpF6eHJ0u99NxKbcUsfV4CM618tmYsLqsAOuXTvTPqA=
+	t=1751655343; cv=none; b=X0w5VRu5a2NYHExBKFH1CU03ky4RfDoP6Cw9zdSa8i6QB6gjkJgt54cHViVgG9e5r4Q1+6rxJ7YinuqMWMGE9+F8AbWzSaDZgeuRQzyqQau4SeHcGUDkARmuR4dkaD3cVOiN3I+CeggIqSHLbuolS2Qvg8L/X6k7R+cphaQyeck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751655256; c=relaxed/simple;
-	bh=9us3u8dMglkUh2itXDDjCeO2cuGHG/qkSgoIX/es3Yw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGPIytm+eN8t4mpliWgErLPML4PfF813sl46YluVK5aVXB0DzYAAoB3UFgH65hUUvgqmXUTRcz768DggtSNmOoxswVdwaxYQuXUalo7RH/Q22eEd7QuQIP/qSi2DIpRM9aKp/nlKLNwzzcpqrpAwC4l87KcEgTD1QGNg/Q73f90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYj/SEZC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751655343; c=relaxed/simple;
+	bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dtVAwbvLtXoMgaUVIiD88RDVjJQrKUzu4d+4AciOtw+/lBMs9fEXfUXL8EvdO+dQM1EYc/DthD2TqybM9KIjuPBZVWFuZbaeWF5Jc0S2w48m+xZU8X9dEke2npjPP5KO5KDqLseDsbxi7xZ8N2veuj0WYy+vVyI9xBAzL6NNqAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mxVdEJlj; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYj/SEZC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751655255; x=1783191255;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=9us3u8dMglkUh2itXDDjCeO2cuGHG/qkSgoIX/es3Yw=;
-  b=BYj/SEZCP8Clzhv7ZF3VAfNLCGkjJWZys/RO4NZQ2pIKl//38WT/VMf8
-   8qfUJQkuMa1CQ+S5tZxDYpo6cT5spUdHpO0XN2B+X1R+kGhT7bU+5AIzS
-   4jNRbEDoS1QI/RkLJ+ImFhW6rseB5D/HOfaHlnyXva4ZnVQeeyIu11SsY
-   +mRl/HbTSof1Rer4vJO/8L31HCzTDEyF+bYerUGfHwzyRjfPf5sTjwdKY
-   W+0WudgTfMn9Fg0wanHv8xQ9v5kU758iUQK0ngS2vNdopFDErYsJaBsl+
-   A1yfluzYDFF6lc7ReBAcv3jcx7I+XhDuadJRY856kiYIRR/tFLDEzyGFo
-   Q==;
-X-CSE-ConnectionGUID: zkKrqtI1RuWvk6ubjcjr4g==
-X-CSE-MsgGUID: XqQ6RvYyRUeTl4a5mVH/dw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="65440163"
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="65440163"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:54:14 -0700
-X-CSE-ConnectionGUID: Pz+262ZJQ9q3wNK5hbYlww==
-X-CSE-MsgGUID: EQicEOqNQP6fv0ph3elCjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="158962062"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 11:54:11 -0700
-Date: Fri, 4 Jul 2025 21:54:08 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	airlied@gmail.com, simona@ffwll.ch,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com
-Subject: Re: [PATCH v3 1/3] drm/doc: Fix title underline for "Task
- information"
-Message-ID: <aGgjUCGr-NKeJ5pz@black.fi.intel.com>
-References: <20250627171715.438304-1-andrealmeid@igalia.com>
- <aGggPuSCEK_opydS@black.fi.intel.com>
- <73a84621-400e-41f8-b3a3-96499fc3320b@igalia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mxVdEJlj"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso1121527276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 11:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751655341; x=1752260141; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
+        b=mxVdEJljmD3oWeYcmSC6hY5ucxGQQeNi94/WSgMotvQXiqpBQHq0xqOiAWb+RmqnJh
+         ygBvRKuIST5dEJcAjBABjh+SOXijS+yM8dFlJ2rnQWADCT6U6+Wwf1Of9TAdep5yMHjP
+         5lbNZWccN3YaHxq37GNoSaCYWh1Q2fnUVmHufXerL5+yCRnS2xRVxfBYAId3qTj6qmcq
+         TT+IKaHiNL1g4waxfmCCeJ62EEIr7ogYOHj/BTJdFX7n7RKs/ZgFPqLNgPT14gPN+9Zo
+         tGkI6Z9sJPxcVMM5BmYUbibdTgUR8IIuWOYaVObnQJLtB0TjU8Jmm/aUX/7CeJ0NTXfc
+         Zu5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751655341; x=1752260141;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i5UrnJioarzHLByYSLycjk6gxtQARLu2d2F8hbNdkaQ=;
+        b=uXAs19njSvEWerxe3kBVxIUaB28X6PCszXkQEqpHoMwDY+5JGQgQe4Z4BWrwLlbAIE
+         z9+X6FJhql0oXiY7GiHOq98D+anX8rP1PXs5N25qm6z+G15SNyc67hTSsjf3+39Y8AZX
+         xaA+Zwy8NvRQ1OEhTTH7hCvTfIGrz0pUhOQQNrMTw1k8FE8pvDrdae7N10ZFfwVyguwG
+         dOLWQFc8VxXdVhwQnRiYqYMFJl7KO36Zy0nTNlD6dbfGyI2EEen6j6vbITdp8i2dW3Zw
+         5cMJ927J0ze9W+RiNsi6tNEAhNt8vjUvuneSvdgbfM6MWkjHDhpSr23Nj0rODcz8giLH
+         1I4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUqlX98ENkT46X3WX414vpGyfI93WxTKt9GAxa7cIfy2LQAAxVm0KE6hfZXnnFb1dtSsKm8LnZmwab0KYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnHl4VHgxGQN3VGGkJKmnTLekcgPtpmMzu+cs811al+e4NRU/2
+	zuwrTXOW/IBBSthOrG0HCVf6xaMLZ/DRLwcG1LixbtqOrmfSd6e9LK8q3eLcbD8RPqkch+qO40k
+	krSPKs9fl5dJj8sV8UHiDXU1X0L3DXkVCSqnDLeP6/Q==
+X-Gm-Gg: ASbGncv0mf//LL5TV1pnAauPQHA3f7IThyckGzwWEpo3cAkq6jRBpN3ZTO6neL6OSk3
+	508FLNER2F820q2ZgjnrksheMJjchnwgBA8HuK6PAbHnXN+T5tBnm+jw4j88jCMEmEOI8Q7gQ58
+	Phohj5MQLToRZCT9iGLHk0lt4QsVTkxmurkxpRA2IJ1ZU=
+X-Google-Smtp-Source: AGHT+IE8YU8yP6esqnqUnZk9RLXSToml0bj4v9nH7DrJYcsEUr7XQwY4dJ3lhgYdPf76EoZr+KTAoSLIcBsb+9QtwDA=
+X-Received: by 2002:a05:690c:d0b:b0:70d:f338:8333 with SMTP id
+ 00721157ae682-7166b6cdd09mr39558687b3.22.1751655341084; Fri, 04 Jul 2025
+ 11:55:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <73a84621-400e-41f8-b3a3-96499fc3320b@igalia.com>
+References: <20250704103521.10124-1-terry.tritton@linaro.org> <61f90ebf-3cb4-4e81-a7d7-cfffe41d9d47@igalia.com>
+In-Reply-To: <61f90ebf-3cb4-4e81-a7d7-cfffe41d9d47@igalia.com>
+From: Terry Tritton <terry.tritton@linaro.org>
+Date: Fri, 4 Jul 2025 19:55:30 +0100
+X-Gm-Features: Ac12FXzsS18VRi1-qE0dpcrfnADu66E0lCMTJzxKRd3EQs1pCzZ2Ghi0HmE4GGM
+Message-ID: <CABeuJB1QxwBHn+_6cZP9WJXG+gh1x5HWYW9CGVEajqHL6GSEbQ@mail.gmail.com>
+Subject: Re: [PATCH v4] selftests/futex: Convert 32bit timespec struct to
+ 64bit version for 32bit compatibility mode
+To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Cc: ttritton@google.com, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, linux-kselftest@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, 
+	Wei Gao <wegao@suse.com>, Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 04, 2025 at 03:49:36PM -0300, André Almeida wrote:
-> Em 04/07/2025 15:41, Raag Jadav escreveu:
-> > On Fri, Jun 27, 2025 at 02:17:13PM -0300, André Almeida wrote:
-> > > Fix the following warning:
-> > > 
-> > > Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
-> > > 
-> > > Task information
-> > > --------------- [docutils]
-> > > 
-> > > Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
-> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> > > ---
-> > > v2: Add Reported-by tag
-> > > ---
-> > >   Documentation/gpu/drm-uapi.rst | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> > > index 263e5a97c080..10dea6a1f097 100644
-> > > --- a/Documentation/gpu/drm-uapi.rst
-> > > +++ b/Documentation/gpu/drm-uapi.rst
-> > > @@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
-> > >   complete wedging.
-> > >   Task information
-> > > ----------------
-> > > +----------------
-> > >   The information about which application (if any) was involved in the device
-> > >   wedging is useful for userspace if they want to notify the user about what
-> > > @@ -728,4 +728,4 @@ Stable uAPI events
-> > >   From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
-> > >   .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> > > -   :doc: uAPI trace events
-> > > \ No newline at end of file
-> > > +   :doc: uAPI trace events
-> > 
-> > Unrelated change. Someone with a different editor added this and now
-> > your editor disagrees with it.
-> > 
-> > Switching to binary mode usually fixes the issue.
-> > 
-> > Raag
-> 
-> After fixing that, can I add your Reviewed-by:?
+> However, please check the results ./scripts/checkpatch.pl, there are a
+> lot of codestyle errors:
 
-Sure. Feel free to add,
-
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+Whoops! Can't believe I forgot to run check patch!
+Thanks for letting me know.
