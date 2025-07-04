@@ -1,517 +1,313 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0207282C60;
-	Fri,  4 Jul 2025 14:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2035D82C60
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751640094; cv=none; b=AwX7tr2Mz3dlZs20F7AxQrAGcdhbod4jQUhUBRa8K2BERByMrjwQ2bkh4XJyU9Owm7501BOKfBDaGlITwkd1v1cu9lp+XEq6lDUpfOifiY/wo29BTPJMvFUuIGiSJngYTafPwCaghSRHZK3mA341fOtJRjLbtxFxChEmEWYCzxQ=
+	t=1751640130; cv=none; b=Cg9PpFE3ZEcP9yQhy5eJCic+SQUu+V65aIaviqJTRDbLoiDeFIV+yWOi6RkJWDVUsNglLPvQd+0kdOeDk2u4ceD/vVj30tc9upUQ73sRMktkn6KWora/T65lfiwyTTlRAlcvXCuvfgmfLi56sp5PBoTzyTWAhQHKtbzHtjmU/4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751640094; c=relaxed/simple;
-	bh=9nbypNAho9nadol4NSOwL4uWk3u4bC94DSwgDtmfi/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mQcT+cxyE90jwfc8zIzRNnVxph45ZQCsqHN0sXx6qcsPtFzZakZNP64/WlRsXCcQLATQ1/EpFDC+IPikQtWeQle4B/hB/+8Csac+9ZSfOnMoQxqDpsnLpM2SGy7bi6mOq3Hkw+cKmc6Qm3pS/Tm+UUIqdRrs8YFOZZ2LqyO/9/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wz+vggL1; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751640130; c=relaxed/simple;
+	bh=jzgzIQq0NH4+dITKH3aVitK0r0MrqcavKPuI2SyGzn0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=stcUfSLtS6u6Zbb3saMziloBpA2pN0w/9C1VDB6M0hHXmlTmklyvqFM6QRS4+q30yBe6ifyB6RejKWzbYcFpWd6bOc6tjULtc8YAJEXtdzFAWge4QMVk9bLhEbqEQKQ7hwPxC6qrC25i9kCR87kSj7QuOzdO19C7mRMgNfZC5h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yaR+7889; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kftSKAmB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wz+vggL1"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae0de1c378fso151885766b.3;
-        Fri, 04 Jul 2025 07:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751640090; x=1752244890; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iu8qZZJRCeE/RahbP7L8lz9R1hckY1KpUM97hdaH2L4=;
-        b=Wz+vggL1cM7QCJ2zfy2/QEHgIT7uEV88veTSvTJuGs5PBf43rzLhXxqfjVSMTEH4qy
-         wd/kAfTN7KqJm0BfY6xquO0UxFzA5rzNMUQa7NGHLWw9wV7CpGRIFBM3+9aOdsfpvGgw
-         tSvfdlN/MeqYBKBayc+TFweT+EtFRxr1JKG5Mp8hxyEw0aSX5GWo1E662TIlaz/DOfsT
-         cQmXddbQC0ZpOVVLvcUJNQ/+GB47kxX61GCBmZI/4yxLLtbyUN6Y3leF4hoYNrFF+/jN
-         HbbYJnuUYtW8hBMZ7/URR3vliohSJJdJsZUK2vLTJYFBPd5pqJJwbWQUtAnglPFkDp8N
-         UcTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751640090; x=1752244890;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iu8qZZJRCeE/RahbP7L8lz9R1hckY1KpUM97hdaH2L4=;
-        b=mJfKSO2K8syDMwgyLIG+KNkO2Ys20vAWS1++F40f0twD17p5y7t9a12abAB2dS6Y8R
-         M2/sEOyE8xdsFP77DtAlcYhNpcJmN7uKkrNSVMbr9PpnFJy0Y3J1Z8W5lcBR5PDzRf3/
-         Z4ygKYMwx38kQ84Jxa+areygWHdVwxDqtm7OBwa76eHLlBD9+1mISy3yIUDxRfnOEFia
-         kBzOwxUSMUlXq2AK9lgws2CRZkpaPfugBb/IvHG9dFVmfb7geXu9Vvx0fuhRkPVd7lEl
-         N8099npDQFw8MNXM3jx2XUMpw2eFN2zr/C5dNCrwkiE1wfpRiA/0eemGu9V/Osz9r5pV
-         C0/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiucWc6+hsE+s46MSunjvp8/+U8lk82LiQKxlCg5JhbWEXWPSg3IAkSVLyd2sc4/7UomLEAMV3/Cro@vger.kernel.org, AJvYcCVLgS2KJJmoIH9xt/9julVjoRwPQrY8D71q5D1nnzMvyCQcLTFl39WDzAfnCyPKlf+jOf6tgIiMt4H6m55D@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeRHIEM6ZeQ+QNHFNUqxEiz8cIPLr/yHlH2htkkeV1ZNhIFCnW
-	IsXljjI0hOLzAa9NVD1CNuVD3kxfN8etBn62gto8c7SRFZuRr1klsCAD
-X-Gm-Gg: ASbGnctfuu08x0D78XuM6vLdT2B8juVNBICshSfG3HQHYgrF4hHGpQ/Vy5LxMCkVb/u
-	hKM51N0znsTqc2WnSBGizBYCkb+7VQgvznXn922A0iWlTQ+u1PTU5vW/xraAvPsS9vnpz26caD0
-	s5you/LoYMvKIkTPLRjmf1Lsm8KOnADSDLarHwBNUi/JKPAokEcInBG1Axps4z05yzEsRoGmvdk
-	ZGcXNsBqPLdSpvWqDcy40KqrenJ2uhnTUCeE3Da89bvqd1iuAjIxu/JEsaf07r9CzdUI/PX7HqC
-	mAxVGiR4skV75f3eN3iNho2sGTGlzf7+R16nDE8UTa466O1fNOr/BjW0J6fO33ZMPjjaoTUtG+7
-	riBRy07/PEIT4uQXV2lzv4+cXxqWTMP9+IB4Rep89MC1/f64A
-X-Google-Smtp-Source: AGHT+IEsqn5ffeQ8ITnI7FSKA6V0dSpHAhCXvx37aUvzrskfrFtE5qmiG0tBwQAXTY4wY+dLBbE0mw==
-X-Received: by 2002:a17:907:3d0c:b0:ae3:163a:f69a with SMTP id a640c23a62f3a-ae3fbd13e86mr253767466b.33.1751640089906;
-        Fri, 04 Jul 2025 07:41:29 -0700 (PDT)
-Received: from masalkhi.. (ip-078-042-182-222.um17.pools.vodafone-ip.de. [78.42.182.222])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f692a6desm182883766b.42.2025.07.04.07.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 07:41:29 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: christophe.jaillet@wanadoo.fr
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	luoyifan@cmss.chinamobile.com,
-	robh@kernel.org
-Subject: Re: [PATCH v5 2/3] eeprom: add driver for ST M24LR series RFID/NFC EEPROM chips
-Date: Fri,  4 Jul 2025 14:41:28 +0000
-Message-ID: <20250704144128.11341-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <f14dfb9a-caf7-4889-a892-6fd61a9a5ecd@wanadoo.fr>
-References: <f14dfb9a-caf7-4889-a892-6fd61a9a5ecd@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yaR+7889";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kftSKAmB"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751640127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sSgQN4gJVEWaNIRhXA+y1OBK57ub0h1qW04DyZY6zjU=;
+	b=yaR+7889iuwJ5A88AN/6HXjeBYR7g+sWKg6oat+0Nr7KgD2ZGZdh1kbghOlHPWcRw9q5H/
+	+raWh7gAb784yOtJknp6a1rahA2FI/GtBOVvAmU9nuyZVC9WKLTMFAfW6Z7wAJRAuLTfb0
+	+6hBMkLr3Po1sILn2Y8LgQZKAjyNLvZMNJCQC3YAk9RkVit4tNSgtusMYBJWj+oyNNWz55
+	YmfmRUd4IJtO2J8/ISjPUeSIX8+41p0z+aObbHA7AGFHtFzAU0f/oM1TNpgcarwKRvxagj
+	Thm5TpG0ArDYYlapcQdZQhC2I+wTgia5hwyUBAd1wt1wocO3LP0IY7SysJJynQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751640127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sSgQN4gJVEWaNIRhXA+y1OBK57ub0h1qW04DyZY6zjU=;
+	b=kftSKAmBXqys+FPHPw1WUuL49oeJwSAAbZ8huoBe0PaTtHzbp4bdM27W7Yls65eR87CkMd
+	jAlmrGVVfbhva1CQ==
+To: Liangyan <liangyan.peng@bytedance.com>
+Cc: linux-kernel@vger.kernel.org, Yicong Shen
+ <shenyicong.1023@bytedance.com>, ziqianlu@bytedance.com,
+ songmuchun@bytedance.com, yuanzhu@bytedance.com
+Subject: Re: [External] Re: [RFC] genirq: Fix lockup in handle_edge_irq
+In-Reply-To: <f3608ef2-1d9f-406c-92f3-fa69486e1644@google.com>
+References: <20250701163558.2588435-1-liangyan.peng@bytedance.com>
+ <87a55mlok9.ffs@tglx> <f3608ef2-1d9f-406c-92f3-fa69486e1644@google.com>
+Date: Fri, 04 Jul 2025 16:42:05 +0200
+Message-ID: <87o6u0rpaa.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, 4 Jul 2025 16:12:56 +0200, Christophe JAILLET wrote:
-> Hi, some nitpicks below, mostly related to types.
-> 
-> ...
-> 
-> > +#include <linux/i2c.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/module.h>
-> > +#include <linux/device.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/nvmem-provider.h>
-> 
-> Sometimes, alphabetical order is preferred.
-> 
-> > +
-> > +#define M24LR_WRITE_TIMEOUT	  25u
-> > +#define M24LR_READ_TIMEOUT	  (M24LR_WRITE_TIMEOUT)
-> 
-> ...
-> 
-> > +/**
-> > + * m24lr_regmap_read - read data using regmap with retry on failure
-> > + * @regmap:  regmap instance for the device
-> > + * @buf:     buffer to store the read data
-> > + * @size:    number of bytes to read
-> > + * @offset:  starting register address
-> > + *
-> > + * Attempts to read a block of data from the device with retries and timeout.
-> > + * Some M24LR chips may transiently NACK reads (e.g., during internal write
-> > + * cycles), so this function retries with a short sleep until the timeout
-> > + * expires.
-> > + *
-> > + * Returns:
-> > + *	 Number of bytes read on success,
-> > + *	 -ETIMEDOUT if the read fails within the timeout window.
-> > + */
-> > +static ssize_t m24lr_regmap_read(struct regmap *regmap, u8 *buf,
-> > +				 size_t size, unsigned int offset)
-> 
-> Why returning a ssize_t?
-> regmap_bulk_read() returns an int.
-> 
-> > +{
-> > +	int err;
-> > +	unsigned long timeout, read_time;
-> > +	ssize_t ret = -ETIMEDOUT;
-> > +
-> > +	timeout = jiffies + msecs_to_jiffies(M24LR_READ_TIMEOUT);
-> > +	do {
-> > +		read_time = jiffies;
-> > +
-> > +		err = regmap_bulk_read(regmap, offset, buf, size);
-> > +		if (!err) {
-> > +			ret = size;
-> > +			break;
-> > +		}
-> > +
-> > +		usleep_range(1000, 2000);
-> > +	} while (time_before(read_time, timeout));
-> > +
-> > +	return ret;
-> > +}
-> ...
-> 
-> > +static ssize_t m24lr_read(struct m24lr *m24lr, u8 *buf, size_t size,
-> > +			  unsigned int offset, bool is_eeprom)
-> > +{
-> > +	struct regmap *regmap;
-> > +	long ret;
-> 
-> Why long?
-> m24lr_regmap_read() returns a ssize_t. (+ see comment there for why a 
-> ssize_t)
-> 
-> (same comment applies to several places)
-> 
-> > +
-> > +	if (is_eeprom)
-> > +		regmap = m24lr->eeprom_regmap;
-> > +	else
-> > +		regmap = m24lr->ctl_regmap;
-> > +
-> > +	mutex_lock(&m24lr->lock);
-> > +	ret = m24lr_regmap_read(regmap, buf, size, offset);
-> > +	mutex_unlock(&m24lr->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * m24lr_write - write buffer to M24LR device with page alignment handling
-> > + * @m24lr:     pointer to driver context
-> > + * @buf:       data buffer to write
-> > + * @size:      number of bytes to write
-> > + * @offset:    target register address in the device
-> > + * @is_eeprom: true if the write should target the EEPROM,
-> > + *             false if it should target the system parameters sector.
-> > + *
-> > + * Writes data to the M24LR device using regmap, split into chunks no larger
-> > + * than page_size to respect device-specific write limitations (e.g., page
-> > + * size or I2C hold-time concerns). Each chunk is aligned to the page boundary
-> > + * defined by page_size.
-> > + *
-> > + * Returns:
-> > + *	 Total number of bytes written on success,
-> > + *	 A negative error code if any write fails.
-> > + */
-> > +static ssize_t m24lr_write(struct m24lr *m24lr, const u8 *buf, size_t size,
-> > +			   unsigned int offset, bool is_eeprom)
-> > +{
-> > +	unsigned int n, next_sector;
-> > +	struct regmap *regmap;
-> > +	ssize_t ret = 0;
-> > +	long err;
-> > +
-> > +	if (is_eeprom)
-> > +		regmap = m24lr->eeprom_regmap;
-> > +	else
-> > +		regmap = m24lr->ctl_regmap;
-> > +
-> > +	n = min(size, m24lr->page_size);
-> 
-> min_t()?
-> 
-> > +	next_sector = roundup(offset + 1, m24lr->page_size);
-> > +	if (offset + n > next_sector)
-> > +		n = next_sector - offset;
-> > +
-> > +	mutex_lock(&m24lr->lock);
-> > +	while (n) {
-> > +		err = m24lr_regmap_write(regmap, buf, n, offset);
-> > +		if (IS_ERR_VALUE(err)) {
-> > +			mutex_unlock(&m24lr->lock);
-> > +			if (ret)
-> > +				return ret;
-> > +			else
-> 
-> Unneeded else.
-> 
-> > +				return err;
-> > +		}
-> > +
-> > +		offset += n;
-> > +		size -= n;
-> > +		ret += n;
-> > +		n = min(size, m24lr->page_size);
-> 
-> min_t()?
-> Or change the type of page_size?
-> 
-> > +	}
-> > +	mutex_unlock(&m24lr->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * m24lr_write_pass - Write password to M24LR043-R using secure format
-> > + * @m24lr: Pointer to device control structure
-> > + * @buf:   Input buffer containing hex-encoded password
-> > + * @count: Number of bytes in @buf
-> > + * @code:  Operation code to embed between password copies
-> > + *
-> > + * This function parses a 4-byte password, encodes it in  big-endian format,
-> > + * and constructs a 9-byte sequence of the form:
-> > + *
-> > + *	  [BE(password), code, BE(password)]
-> > + *
-> > + * The result is written to register 0x0900 (2304), which is the password
-> > + * register in M24LR04E-R chip.
-> > + *
-> > + * Return: Number of bytes written on success, or negative error code on failure
-> > + */
-> > +static ssize_t m24lr_write_pass(struct m24lr *m24lr, const char *buf,
-> > +				size_t count, u8 code)
-> > +{
-> > +	__be32 be_pass;
-> > +	u8 output[9];
-> > +	long ret;
-> 
-> long vs ssize_t vs int.
-> 
-> > +	u32 pass;
-> > +	int err;
-> > +
-> > +	if (!count)
-> > +		return -EINVAL;
-> > +
-> > +	if (count > 8)
-> > +		return -EINVAL;
-> > +
-> > +	err = kstrtou32(buf, 16, &pass);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	be_pass = cpu_to_be32(pass);
-> > +
-> > +	memcpy(output, &be_pass, sizeof(be_pass));
-> > +	output[4] = code;
-> > +	memcpy(output + 5, &be_pass, sizeof(be_pass));
-> > +
-> > +	mutex_lock(&m24lr->lock);
-> > +	ret = m24lr_regmap_write(m24lr->ctl_regmap, output, 9, 2304);
-> > +	mutex_unlock(&m24lr->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static ssize_t m24lr_read_reg_le(struct m24lr *m24lr, u64 *val,
-> > +				 unsigned int reg_addr,
-> > +				 unsigned int reg_size)
-> > +{
-> > +	long ret;
-> 
-> same
-> 
-> > +	__le64 input = 0;
-> > +
-> > +	ret = m24lr_read(m24lr, (u8 *)&input, reg_size, reg_addr, false);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		return ret;
-> > +
-> > +	if (ret != reg_size)
-> > +		return -EINVAL;
-> > +
-> > +	switch (reg_size) {
-> > +	case 1:
-> > +		*val = *(u8 *)&input;
-> > +		break;
-> > +	case 2:
-> > +		*val = le16_to_cpu((__le16)input);
-> > +		break;
-> > +	case 4:
-> > +		*val = le32_to_cpu((__le32)input);
-> > +		break;
-> > +	case 8:
-> > +		*val = le64_to_cpu((__le64)input);
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	};
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int m24lr_nvmem_read(void *priv, unsigned int offset, void *val,
-> > +			    size_t bytes)
-> > +{
-> > +	struct m24lr *m24lr = priv;
-> > +
-> > +	if (!bytes)
-> > +		return bytes;
-> > +
-> > +	if (offset + bytes > m24lr->eeprom_size)
-> > +		return -EINVAL;
-> > +
-> > +	return m24lr_read(m24lr, val, bytes, offset, true);
-> 
-> We return an int now?
-> 
-> > +}
-> 
-> ...
-> 
-> > +static ssize_t m24lr_ctl_sss_read(struct file *filep, struct kobject *kobj,
-> > +				  const struct bin_attribute *attr, char *buf,
-> > +				  loff_t offset, size_t count)
-> > +{
-> > +	struct m24lr *m24lr = attr->private;
-> > +
-> > +	if (!count)
-> > +		return count;
-> > +
-> > +	if (offset + count > m24lr->sss_len)
-> 
-> Does using size_add() would make sense?
-> 
-> > +		return -EINVAL;
-> > +
-> > +	return m24lr_read(m24lr, buf, count, offset, false);
-> > +}
-> > +
-> > +static ssize_t m24lr_ctl_sss_write(struct file *filep, struct kobject *kobj,
-> > +				   const struct bin_attribute *attr, char *buf,
-> > +				   loff_t offset, size_t count)
-> > +{
-> > +	struct m24lr *m24lr = attr->private;
-> > +
-> > +	if (!count)
-> > +		return -EINVAL;
-> > +
-> > +	if (offset + count > m24lr->sss_len)
-> 
-> Same
-> 
-> > +		return -EINVAL;
-> > +
-> > +	return m24lr_write(m24lr, buf, count, offset, false);
-> > +}
-> > +static BIN_ATTR(sss, 0600, m24lr_ctl_sss_read, m24lr_ctl_sss_write, 0);
-> 
-> ...
-> 
-> > +static struct attribute *m24lr_ctl_dev_attrs[] = {
-> > +	&dev_attr_unlock.attr,
-> > +	&dev_attr_new_pass.attr,
-> > +	&dev_attr_uid.attr,
-> > +	&dev_attr_total_sectors.attr,
-> > +	NULL,
-> 
-> Unneeded trailing ,
-> 
-> > +};
-> 
-> ...
-> 
-> > +static int m24lr_probe(struct i2c_client *client)
-> > +{
-> > +	struct regmap_config eeprom_regmap_conf = {0};
-> > +	struct nvmem_config nvmem_conf = {0};
-> > +	struct device *dev = &client->dev;
-> > +	struct i2c_client *eeprom_client;
-> > +	const struct m24lr_chip *chip;
-> > +	struct regmap *eeprom_regmap;
-> > +	struct nvmem_device *nvmem;
-> > +	struct regmap *ctl_regmap;
-> > +	struct m24lr *m24lr;
-> > +	u32 regs[2];
-> > +	long err;
-> > +
-> > +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	chip = m24lr_get_chip(dev);
-> > +	if (!chip)
-> > +		return -ENODEV;
-> > +
-> > +	m24lr = devm_kzalloc(dev, sizeof(struct m24lr), GFP_KERNEL);
-> > +	if (!m24lr)
-> > +		return -ENOMEM;
-> > +
-> > +	err = device_property_read_u32_array(dev, "reg", regs, ARRAY_SIZE(regs));
-> > +	if (err) {
-> > +		dev_err(dev, "device_property_read_u32_array\n");
-> 
-> return dev_err_probe() maybe?
-> 
-> > +		return err;
-> > +	}
-> > +	/* Create a second I2C client for the eeprom interface */
-> > +	eeprom_client = devm_i2c_new_dummy_device(dev, client->adapter, regs[1]);
-> > +	if (IS_ERR(eeprom_client)) {
-> > +		dev_err(dev,
-> > +			"Failed to create dummy I2C client for the EEPROM\n");
-> 
-> return dev_err_probe() maybe?
-> ...
-> 
-> > +		return PTR_ERR(eeprom_client);
-> > +	}
-> > +
-> > +	ctl_regmap = devm_regmap_init_i2c(client, &m24lr_ctl_regmap_conf);
-> > +	if (IS_ERR(ctl_regmap)) {
-> > +		err = PTR_ERR(ctl_regmap);
-> > +		dev_err(dev, "Failed to init regmap\n");
-> > +		return err;
-> > +	}
-> > +
-> > +	eeprom_regmap_conf.name = "m24lr_eeprom";
-> > +	eeprom_regmap_conf.reg_bits = 16;
-> > +	eeprom_regmap_conf.val_bits = 8;
-> > +	eeprom_regmap_conf.disable_locking = true;
-> > +	eeprom_regmap_conf.max_register = chip->eeprom_size - 1;
-> > +
-> > +	eeprom_regmap = devm_regmap_init_i2c(eeprom_client,
-> > +					     &eeprom_regmap_conf);
-> > +	if (IS_ERR(eeprom_regmap)) {
-> > +		err = PTR_ERR(eeprom_regmap);
-> > +		dev_err(dev, "Failed to init regmap\n");
-> > +		return err;
-> > +	}
-> > +
-> > +	mutex_init(&m24lr->lock);
-> > +	m24lr->sss_len = chip->sss_len;
-> > +	m24lr->page_size = chip->page_size;
-> > +	m24lr->eeprom_size = chip->eeprom_size;
-> > +	m24lr->eeprom_regmap = eeprom_regmap;
-> > +	m24lr->ctl_regmap = ctl_regmap;
-> > +
-> > +	nvmem_conf.dev = &eeprom_client->dev;
-> > +	nvmem_conf.owner = THIS_MODULE;
-> > +	nvmem_conf.type = NVMEM_TYPE_EEPROM;
-> > +	nvmem_conf.reg_read = m24lr_nvmem_read;
-> > +	nvmem_conf.reg_write = m24lr_nvmem_write;
-> > +	nvmem_conf.size = chip->eeprom_size;
-> > +	nvmem_conf.word_size = 1;
-> > +	nvmem_conf.stride = 1;
-> > +	nvmem_conf.priv = m24lr;
-> > +
-> > +	nvmem = devm_nvmem_register(dev, &nvmem_conf);
-> > +	if (IS_ERR(nvmem))
-> > +		return PTR_ERR(nvmem);
-> > +
-> > +	i2c_set_clientdata(client, m24lr);
-> > +	i2c_set_clientdata(eeprom_client, m24lr);
-> > +
-> > +	bin_attr_sss.size = chip->sss_len;
-> > +	bin_attr_sss.private = m24lr;
-> > +	err = sysfs_create_bin_file(&dev->kobj, &bin_attr_sss);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/* test by reading the uid, if success store it */
-> > +	err = m24lr_read_reg_le(m24lr, &m24lr->uid, 2324, sizeof(m24lr->uid));
-> > +	if (IS_ERR_VALUE(err))
-> 
-> Missing sysfs_remove_bin_file() or error handling pah?
-> 
-> > +		return -ENODEV;
-> > +
-> > +	return 0;
-> > +}
+Liangyan!
 
-Hi Christophe, 
+Please don't top post and trim your reply. See:
 
-Thank you for the review!
+  https://people.kernel.org/tglx/notes-about-netiquette
 
-It is done.
+for further explanation.
 
-Best regards,
-Abd-Alrhman Masalkhi
+On Thu, Jul 03 2025 at 23:31, Liangyan wrote:
+> We have this softlockup issue in guest vm, so the related IRQ is from 
+> virtio-net tx queue, the interrupt controller is virt pci msix 
+> controller, related components have pci_msi_controller, virtio_pci, 
+> virtio_net and qemu.
+
+That's a random list of pieces, which are not necessarily related to the
+interrupt control flow. You have to look at the actual interrupt domain
+hierarchy of the interrupt in question. /sys/kernel/debug/irq/irqs/$N.
+
+> And according to qemu msix.c source code, when irq is unmasked, it will 
+> fire new one if the msix pending bit is set.
+> Seems that for msi-x controller, it will not lose interrupt during 
+> unmask period.
+
+That's correct and behaving according to specification. Though
+unfortunately not all PCI-MSI-X implementations are specification
+compliant, so we can't do that unconditionally. There is also no way to
+detect whether there is a sane implementation in the hardware
+[emulation] or not.
+
+So playing games with the unmask is not really feasible. But let's take
+a step back and look at the actual problem.
+
+It only happens when the interrupt affinity is moved or the interrupt
+has multiple target CPUs enabled in the effective affinity mask. x86 and
+arm64 enforce the effective affinity to be a single CPU, so on those
+architectures the problem only arises when the interrupt affinity
+changes.
+
+Now we can use that fact and check whether the CPU, which observes
+INPROGRESS, is the target CPU in the effective affinity mask. If so,
+then the obvious cure is to busy poll the INPROGRESS flag instead of
+doing the mask()/PENDING/unmask() dance.
+
+Something like the uncompiled and therefore untested patch below should
+do the trick. If you find bugs in it, you can keep and fix them :)
+
+Thanks,
+
+        tglx
+---
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -449,22 +449,31 @@ void unmask_threaded_irq(struct irq_desc
+ 	unmask_irq(desc);
+ }
+ 
+-static bool irq_check_poll(struct irq_desc *desc)
++/* Busy wait until INPROGRESS is cleared */
++static bool irq_wait_on_inprogress(struct irq_desc *desc)
+ {
+-	if (!(desc->istate & IRQS_POLL_INPROGRESS))
+-		return false;
+-	return irq_wait_for_poll(desc);
++	if (IS_ENABLED(CONFIG_SMP)) {
++		do {
++			raw_spin_unlock(&desc->lock);
++			while (irqd_irq_inprogress(&desc->irq_data))
++				cpu_relax();
++			raw_spin_lock(&desc->lock);
++		} while (irqd_irq_inprogress(&desc->irq_data));
++	}
++	/* Might have been disabled in meantime */
++	return !irqd_irq_disabled(&desc->irq_data) && desc->action;
+ }
+ 
+ static bool irq_can_handle_pm(struct irq_desc *desc)
+ {
+-	unsigned int mask = IRQD_IRQ_INPROGRESS | IRQD_WAKEUP_ARMED;
++	struct irq_data *irqd = &desc->irq_data;
++	const struct cpumask *aff;
+ 
+ 	/*
+ 	 * If the interrupt is not in progress and is not an armed
+ 	 * wakeup interrupt, proceed.
+ 	 */
+-	if (!irqd_has_set(&desc->irq_data, mask))
++	if (!irqd_has_set(irqd, IRQD_IRQ_INPROGRESS | IRQD_WAKEUP_ARMED))
+ 		return true;
+ 
+ 	/*
+@@ -472,13 +481,53 @@ static bool irq_can_handle_pm(struct irq
+ 	 * and suspended, disable it and notify the pm core about the
+ 	 * event.
+ 	 */
+-	if (irq_pm_check_wakeup(desc))
++	if (unlikely(irqd_has_set(irqd, IRQD_WAKEUP_ARMED))) {
++		irq_pm_handle_wakeup(desc);
++		return false;
++	}
++
++	/* Check whether the interrupt is polled on another CPU */
++	if (unlikely(desc->istate & IRQS_POLL_INPROGRESS)) {
++		if (WARN_ONCE(irq_poll_cpu == smp_processor_id(),
++			      "irq poll in progress on cpu %d for irq %d\n",
++			      smp_processor_id(), desc->irq_data.irq))
++			return false;
++		return irq_wait_on_inprogress(desc);
++	}
++
++	if (!IS_ENABLED(CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK) ||
++	    !irqd_is_single_target(irqd) || desc->handle_irq != handle_edge_irq)
+ 		return false;
+ 
+ 	/*
+-	 * Handle a potential concurrent poll on a different core.
++	 * If the interrupt affinity was moved to this CPU and the
++	 * interrupt is currently handled on the previous target CPU, then
++	 * busy wait for INPROGRESS to be cleared. Otherwise for edge type
++	 * interrupts the handler might get stuck on the previous target:
++	 *
++	 * CPU 0			CPU 1 (new target)
++	 * handle_edge_irq()
++	 * repeat:
++	 *	handle_event()		handle_edge_irq()
++	 *			        if (INPROGESS) {
++	 *				  set(PENDING);
++	 *				  mask();
++	 *				  return;
++	 *				}
++	 *	if (PENDING) {
++	 *	  clear(PENDING);
++	 *	  unmask();
++	 *	  goto repeat;
++	 *	}
++	 *
++	 * This happens when the device raises interrupts with a high rate
++	 * and always before handle_event() completes and the CPU0 handler
++	 * can clear INPROGRESS. This has been observed in virtual machines.
+ 	 */
+-	return irq_check_poll(desc);
++	aff = irq_data_get_effective_affinity_mask(irqd);
++	if (cpumask_first(aff) != smp_processor_id())
++		return false;
++	return irq_wait_on_inprogress(desc);
+ }
+ 
+ static inline bool irq_can_handle_actions(struct irq_desc *desc)
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -20,6 +20,7 @@
+ #define istate core_internal_state__do_not_mess_with_it
+ 
+ extern bool noirqdebug;
++extern int irq_poll_cpu;
+ 
+ extern struct irqaction chained_action;
+ 
+@@ -112,7 +113,6 @@ irqreturn_t handle_irq_event(struct irq_
+ int check_irq_resend(struct irq_desc *desc, bool inject);
+ void clear_irq_resend(struct irq_desc *desc);
+ void irq_resend_init(struct irq_desc *desc);
+-bool irq_wait_for_poll(struct irq_desc *desc);
+ void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action);
+ 
+ void wake_threads_waitq(struct irq_desc *desc);
+@@ -277,11 +277,11 @@ static inline bool irq_is_nmi(struct irq
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-bool irq_pm_check_wakeup(struct irq_desc *desc);
++void irq_pm_handle_wakeup(struct irq_desc *desc);
+ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action);
+ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action);
+ #else
+-static inline bool irq_pm_check_wakeup(struct irq_desc *desc) { return false; }
++static inline void irq_pm_handle_wakeup(struct irq_desc *desc) { }
+ static inline void
+ irq_pm_install_action(struct irq_desc *desc, struct irqaction *action) { }
+ static inline void
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -13,17 +13,13 @@
+ 
+ #include "internals.h"
+ 
+-bool irq_pm_check_wakeup(struct irq_desc *desc)
++void irq_pm_handle_wakeup(struct irq_desc *desc)
+ {
+-	if (irqd_is_wakeup_armed(&desc->irq_data)) {
+-		irqd_clear(&desc->irq_data, IRQD_WAKEUP_ARMED);
+-		desc->istate |= IRQS_SUSPENDED | IRQS_PENDING;
+-		desc->depth++;
+-		irq_disable(desc);
+-		pm_system_irq_wakeup(irq_desc_get_irq(desc));
+-		return true;
+-	}
+-	return false;
++	irqd_clear(&desc->irq_data, IRQD_WAKEUP_ARMED);
++	desc->istate |= IRQS_SUSPENDED | IRQS_PENDING;
++	desc->depth++;
++	irq_disable(desc);
++	pm_system_irq_wakeup(irq_desc_get_irq(desc));
+ }
+ 
+ /*
+--- a/kernel/irq/spurious.c
++++ b/kernel/irq/spurious.c
+@@ -19,45 +19,10 @@ static int irqfixup __read_mostly;
+ #define POLL_SPURIOUS_IRQ_INTERVAL (HZ/10)
+ static void poll_spurious_irqs(struct timer_list *unused);
+ static DEFINE_TIMER(poll_spurious_irq_timer, poll_spurious_irqs);
+-static int irq_poll_cpu;
++int irq_poll_cpu;
+ static atomic_t irq_poll_active;
+ 
+ /*
+- * We wait here for a poller to finish.
+- *
+- * If the poll runs on this CPU, then we yell loudly and return
+- * false. That will leave the interrupt line disabled in the worst
+- * case, but it should never happen.
+- *
+- * We wait until the poller is done and then recheck disabled and
+- * action (about to be disabled). Only if it's still active, we return
+- * true and let the handler run.
+- */
+-bool irq_wait_for_poll(struct irq_desc *desc)
+-{
+-	lockdep_assert_held(&desc->lock);
+-
+-	if (WARN_ONCE(irq_poll_cpu == smp_processor_id(),
+-		      "irq poll in progress on cpu %d for irq %d\n",
+-		      smp_processor_id(), desc->irq_data.irq))
+-		return false;
+-
+-#ifdef CONFIG_SMP
+-	do {
+-		raw_spin_unlock(&desc->lock);
+-		while (irqd_irq_inprogress(&desc->irq_data))
+-			cpu_relax();
+-		raw_spin_lock(&desc->lock);
+-	} while (irqd_irq_inprogress(&desc->irq_data));
+-	/* Might have been disabled in meantime */
+-	return !irqd_irq_disabled(&desc->irq_data) && desc->action;
+-#else
+-	return false;
+-#endif
+-}
+-
+-
+-/*
+  * Recovery handler for misrouted interrupts.
+  */
+ static bool try_one_irq(struct irq_desc *desc, bool force)
+
+
