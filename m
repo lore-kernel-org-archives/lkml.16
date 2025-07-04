@@ -1,81 +1,219 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33821215789;
-	Fri,  4 Jul 2025 18:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F608214209
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653357; cv=none; b=WwP/blvwc55bAJ9G1Ls8swYZaJGTE46kurMYctqEPFySafBD9+daY4t6N6uJT6sVRaXVBjTPKXcLc0epyUVsrYCbTJIp85yffxgACqlhVS9x9SpcVrw9RbYVl78KyP1GnJz6PsSGmvg/VT3iRquh2BZ7PA8IgBt736lvZU2ILQw=
+	t=1751653357; cv=none; b=D9h6cQv88QrIshNhXPB9x+IpCjyRZS56mKF1JykfwnubjVtfbPwqawfFspd2XWQAkWTGVDT6svUHWqy3hL0CxwMddvvpT7eHNyPGmKLLcQDfVilV4Ef1tfAVOJD57uN/tMaw84f4AaCHXrYNnb5EAlapfdzIdkkSjTO3fh0jI2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751653357; c=relaxed/simple;
-	bh=xZiG/pUC5ivyvjny/Jo3gzT6ORDrAk9o48nwb9w3eng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6ScmHVl4ex1dzt+dZCbQWzTMr3CjpnrHRiSvJTwmDi8YFkZrcfpOWFGwhR142RkadOfoF9fFbucnrLImHXrAABXXkGXkQoUvgrXqNrRi/jQDY1noK9pkOM7zCGzFmcYh+G4gs/fNbYLD4324XheUkNlnxEqeWJU1J00L2LMELY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ywj9SUYM; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	bh=qEdrSy4Q87CvOHGtR8+hUYwUG7Ds7TG14HpcsurG7Es=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ghsl+7tTcMHus9xGNpFVw73tCFilgWpgf+9R+iTAUHXzhqXbtWcr5Tm4MFGI4pcqbrVecKyhrl/OO5fqWTueRbLla2guGrUMWPBAJD/ElDf/flaiTfASSbinMe1V33sLYF/b00YeGRjaCYEYsiP9cWycmmhW69P8zB7R2BogjoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=daO60ZJx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ywj9SUYM"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id EAA761F901;
-	Fri,  4 Jul 2025 20:22:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1751653352;
-	bh=n2sJ1cjIIyagn20/uD0dl3omt8NxJ7dGLZUTDggrAdk=; h=From:To:Subject;
-	b=ywj9SUYMGN5khkUMEf4bsRw5A140ywJFyxJHPxQB7L0tiVim9jKUjCy3fDKwjSdMq
-	 weyH/B81I5TRxBj7mmMwHqJaXD6xXoIPsDL5BvcbYlfzeuR+y3rUzVpkY4brchrLjz
-	 iLKjGYklqyqGuIekya3ddLKb3DbrSal7f0F3qk0dtwFyMsYexCZXAg16rRCqdo/O8/
-	 yUheAqD3e21wt9toNV/HhbE2HZvT2fEeP/PXM/n2szL5orw8Zhr4wsfHcSEPiG+/HQ
-	 POmG9UKIT1pwLBKndIF0oBGBjwjYRUiwpK652yoHs0PiXKBbAYoeqCK4LMNVVynWDa
-	 mkFKVku8rF43g==
-Date: Fri, 4 Jul 2025 20:22:27 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Vitor Soares <ivitro@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Vitor Soares <vitor.soares@toradex.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	David Lin <yu-hao.lin@nxp.com>, stable@vger.kernel.org
-Subject: Re: [PATCH wireless v1] wifi: mwifiex: discard erroneous disassoc
- frames on STA interface
-Message-ID: <20250704182227.GA7800@francesco-nb>
-References: <20250701142643.658990-1-ivitro@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daO60ZJx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751653355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X4nG/TqBaEYd9E2tK36ugXx7I0fRyMCG78phH6Nuzo0=;
+	b=daO60ZJxq+vecGS2Fui2TbiJ43/FVU3ZOe2sUoqXP0t+nidXglj1DC5oSpaNVNikHwGjQo
+	h6afmF1XLwCK3qjGZxGiic7La5pPs1IVUcQcMxODugOrMBO/93WS9Q7OsJkt462k09SlJ3
+	WRAh+zhxRjsT9sv7ILbPWeHHbAExZEw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-2xtBYMiBNvGwRMyVukNI8A-1; Fri,
+ 04 Jul 2025 14:22:32 -0400
+X-MC-Unique: 2xtBYMiBNvGwRMyVukNI8A-1
+X-Mimecast-MFC-AGG-ID: 2xtBYMiBNvGwRMyVukNI8A_1751653350
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 73D5218089B4;
+	Fri,  4 Jul 2025 18:22:29 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.45.226.37])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C7FA9195E74A;
+	Fri,  4 Jul 2025 18:22:21 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: Jiri Pirko <jiri@resnulli.us>,
+	netdev@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v13 02/12] dt-bindings: dpll: Add support for Microchip Azurite chip family
+Date: Fri,  4 Jul 2025 20:21:52 +0200
+Message-ID: <20250704182202.1641943-3-ivecera@redhat.com>
+In-Reply-To: <20250704182202.1641943-1-ivecera@redhat.com>
+References: <20250704182202.1641943-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701142643.658990-1-ivitro@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue, Jul 01, 2025 at 03:26:43PM +0100, Vitor Soares wrote:
-> From: Vitor Soares <vitor.soares@toradex.com>
-> 
-> When operating in concurrent STA/AP mode with host MLME enabled,
-> the firmware incorrectly sends disassociation frames to the STA
-> interface when clients disconnect from the AP interface.
+Add DT bindings for Microchip Azurite DPLL chip family. These chips
+provide up to 5 independent DPLL channels, 10 differential or
+single-ended inputs and 10 differential or 20 single-ended outputs.
+They can be connected via I2C or SPI busses.
 
-...
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
 
-> Add validation in the STA receive path to verify that disassoc/deauth
-> frames originate from the connected AP. Frames that fail this check
-> are discarded early, preventing them from reaching the MLME layer and
-> triggering WARN_ON().
-> 
-> This filtering logic is similar with that used in the
-> ieee80211_rx_mgmt_disassoc() function in mac80211, which drops
-> disassoc frames that don't match the current BSSID
-> (!ether_addr_equal(mgmt->bssid, sdata->vif.cfg.ap_addr)), ensuring
-> only relevant frames are processed.
-> 
-> Tested on:
-> - 8997 with FW 16.68.1.p197
-> 
-> Fixes: 36995892c271 ("wifi: mwifiex: add host mlme for client mode")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
-
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+new file mode 100644
+index 0000000000000..17747f754b845
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+@@ -0,0 +1,115 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dpll/microchip,zl30731.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Azurite DPLL device
++
++maintainers:
++  - Ivan Vecera <ivecera@redhat.com>
++
++description:
++  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
++  provides up to 5 independent DPLL channels, up to 10 differential or
++  single-ended inputs and 10 differential or 20 single-ended outputs.
++  These devices support both I2C and SPI interfaces.
++
++properties:
++  compatible:
++    enum:
++      - microchip,zl30731
++      - microchip,zl30732
++      - microchip,zl30733
++      - microchip,zl30734
++      - microchip,zl30735
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - $ref: /schemas/dpll/dpll-device.yaml#
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30732";
++        reg = <0x70>;
++        dpll-types = "pps", "eec";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30731";
++        reg = <0x70>;
++        spi-max-frequency = <12500000>;
++
++        dpll-types = "pps";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++...
+-- 
+2.49.0
 
