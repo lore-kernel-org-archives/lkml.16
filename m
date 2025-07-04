@@ -1,85 +1,68 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5D62E3AEC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 09:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F40D29AAFD;
+	Fri,  4 Jul 2025 09:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622493; cv=none; b=KDJ3CtzBVqqAfBC20srKOea7jBCgOgL8aFNL8jRhAj6mtmqaIOWcoflgQLbeXfQgh76ojxuaNX8TCIyM5vkH0oYtwb7zrm0u5TlIEskEMZUCnvy8+V3CPtAzOaAt1TbPMS16u4F4MrHbcE6ALG8nn3gUlT7q1d4ry718EDyS+Ks=
+	t=1751622519; cv=none; b=lD3l2a8i8GC8hkShio7ePYASZnf4Xv+I4My39k2z1+a8xa+Yb0weQothN86T4y4XDAY0qb99w60QRsUaY7yM+z9Dine012TghN5hUiP61IScPNM+mnrp0P5Mz8Bl1INDcYmEBd5qAqtnbp8I+tJCkvKOPgs9FW6xzhJDXRGywTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622493; c=relaxed/simple;
-	bh=/tzfyDXt+5ilZkHINu1zLNJ5EhAmmilg6YaeUpuO80A=;
+	s=arc-20240116; t=1751622519; c=relaxed/simple;
+	bh=am0YjSLq6opId+8jb8XluWaS3QEulOIJcT1B2pYF464=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0Cv10TuWd3/luFd6z2s13/9/UsTlYLsNY82rvJCgwCx1DJrcwURO+/NAkDarKL8x2bk24eWE7AbSkm0I3x4mr4idahuRHzfnxQ7gKKBVf0peMLKu4zCNN9QHY0TAFrX233KZSDxi1bmcWaGaxtnnRPjiGsG6EoSX6MXyLYYImY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eHVJBMxX; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YsIV7JHSmRkv4oZBVjSKAzUwNzR/25xzfsaj0WczmvhFsyw3l62JybKaL0Nh4xnNg7dOL56mnjmZVbrHJpozTEEuYq5Uyw0Lmet4e45sVbfWNn4pzAoNkNvyDWiNpU+UJYIUZ/+h0p7L7jqXzsZbAmbr9AEnTSfASGXm/8lAdyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lv9KvEEg; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eHVJBMxX"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23c8a505177so1549545ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 02:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751622491; x=1752227291; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kqzFSWVT0CEMlX4YaSd4jCSFf7mKERmjShUwDZ++GeE=;
-        b=eHVJBMxXfpFxImLMPK5MDPa/IrOXpoivTKSWOr4l/TJT1/+E35kkSNJwvtbye95AQq
-         SqEIQ8qn2l/DLnHBalA+Yt/XKTbuij9yLO0wAIl9LACT6inzWmgag+S0LqytYs/yO/RL
-         7aF/qI/VtIBqJEf4o/Ba6PUrcjSZSq8eZD/XCAL/qjrQBr5eX7P3f4RIyQXg3MZRr0DQ
-         QL5TNRuXqZpAUgsBoejGeHDasxz/q3CIb8Hf9JGEXsgviNIPTltFn+bV/LVRSy8EuBEy
-         /BJNJLGBwW+paigvkV1ZpE3XSgw97vhtuD6maSPnqnLQ9Er1Sai9iUn5lW/d4xbYRfxX
-         yUbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751622491; x=1752227291;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kqzFSWVT0CEMlX4YaSd4jCSFf7mKERmjShUwDZ++GeE=;
-        b=vfA6iKMlNohNO9ZiVfTGeKK51O/NhP6z+7ph79XbLn6Rjgxte1URFYO9/Fbc7xYknM
-         RSbDNQ+Gvz88JFxV8jwMMw5gB94yxLneG8m+RdIjs2OA9tCsVzuT+wRPJSwOG+vJtAam
-         7MHML0ndeN0RoxdPxmc2h07rq6jjIGIfe0GJ83ioP7smn38sA987tHlBv/VPzx4mAHOJ
-         6ySvV10MvDBaW7s043Zo8RUEdiUOJblAlZlQhJ7+INK7pfFBIE7cJ9Fm1DFDg0lNGIVA
-         mf25ixpaPxxF5AM23DCF7+wGd6Hs2Xh3fR1uvOGlWgZiRvRcAYNVES8jnWo6K2mgnwoV
-         Y5hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaJTRZ0hGSP9p+StNVs2zeU6zsymzt7nb3d28lk4OuPg06mg8U3tvu6jKCyr07KZnd/DF9JHRO1N+irD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCGbCSKJBBQ9qh8QZQnkq5UKxFMtphV8tTZ/R881nEQFARIYFL
-	WYXtIa88GgF14rDMSgUq0Nvm0HADMfROK+gZqizUXNdhxb8d4mW+2Ib3Am6HFOms4g==
-X-Gm-Gg: ASbGncsF+Bd5bZHavKS9jh+agfKf2ue8IhrxNf3Xw/Gq0DDVVGksXWtVhQ823kD/3FR
-	JDdHLFUGrPoKgcEWmMmTxn6lpj1M0b7m7ZfhkQxNRbPgJpnzC9pIe0vzqXtai10xWT49FTWu7RM
-	dX4A4I3hV0/NEs0s3VKDe6SKyYqLz33bYYQFKhjk10/UmY7NNTlmG3qSM5AECqV5Op6GiAHevan
-	kIciFRX0+jmZQADve5f0L4TdTno7wVcpnxzNZ+wz05dnjx94taSvFQxZGL3hH6lF5VtX1IfzAET
-	hFAKsXW+swPbbslxTqPppsYSN4mOa+g/HK7TUpPcpyKkqQlgUbaY3thUdxSDyxf4K8BWvYJ+AQF
-	Zu22I8g4=
-X-Google-Smtp-Source: AGHT+IGPL1iB8wcuES3AKv491OrMgf2cni17T7HuKDEal5mdHa+p491dn93eMACg8jv6kw0s6ZHAbg==
-X-Received: by 2002:a17:90b:5845:b0:313:2adc:b4c4 with SMTP id 98e67ed59e1d1-31aac4f0636mr3173205a91.24.1751622490884;
-        Fri, 04 Jul 2025 02:48:10 -0700 (PDT)
-Received: from bytedance ([61.213.176.55])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc4c800sm4318798a91.5.2025.07.04.02.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 02:48:09 -0700 (PDT)
-Date: Fri, 4 Jul 2025 17:47:50 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Benjamin Segall <bsegall@google.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH v2 0/5] Defer throttle when task exits to user
-Message-ID: <20250704094750.GA1654@bytedance>
-References: <20250618081940.621-1-ziqianlu@bytedance.com>
- <xm26qzyyb6cn.fsf@google.com>
- <dc54a6ab-2529-4def-ae7d-6a217e3bc1bc@amd.com>
- <20250704075430.GA1641@bytedance>
- <b4461e54-ab3c-4596-8da2-ffbd4c7d87b6@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lv9KvEEg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751622519; x=1783158519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=am0YjSLq6opId+8jb8XluWaS3QEulOIJcT1B2pYF464=;
+  b=Lv9KvEEgviuLQTffuh2sdu4r7G80QCJWf5ZavNjSg/IBBAGMedAHvfmQ
+   xUjmHryiHpyHQT5AgBCBThdNjW3WP5YrH9os2ctmmDOtjmSzYMHBxtLtr
+   0JLptc6a2YjDsp+/N+ccW5nsPVR4ZxbE0sUBrIQwqt55dsCjNZ+qSWG65
+   xRvenl1HKO3NJuz40n0r56Y1E7GYU7AjNLiX2sLALKpd9dSajs3hp2Vtm
+   9x7YPXOzWQ/z0QMM75L4j5J/IWw/bWIYi0cd+lDv6UHIwcp9JLUTk/exa
+   1DVjDIXOOy5dEmvsGuOjvVhKswd6ob7zihcV1NrIYpRgS8dNhcf+8agNR
+   Q==;
+X-CSE-ConnectionGUID: lrf5lB4FTcCmPRpyM3mMMg==
+X-CSE-MsgGUID: 30SNgoBNR1KOUkHAqeHKgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65408516"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="65408516"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 02:48:38 -0700
+X-CSE-ConnectionGUID: kSKs1kAUT6+aKYAMcPG3Kg==
+X-CSE-MsgGUID: qMilI+FFQwqrwSpxQFY3ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="154016435"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 04 Jul 2025 02:48:35 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXd20-0003ZL-1Q;
+	Fri, 04 Jul 2025 09:48:32 +0000
+Date: Fri, 4 Jul 2025 17:48:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] char: misc: Adapt and add test cases for simple
+ minor space division
+Message-ID: <202507041717.ZONOYCp2-lkp@intel.com>
+References: <20250702-rfc_miscdev-v3-2-d8925de7893d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,124 +71,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4461e54-ab3c-4596-8da2-ffbd4c7d87b6@amd.com>
+In-Reply-To: <20250702-rfc_miscdev-v3-2-d8925de7893d@oss.qualcomm.com>
 
-Hi Prateek,
+Hi Zijun,
 
-On Fri, Jul 04, 2025 at 02:18:49PM +0530, K Prateek Nayak wrote:
-> Hello Aaron,
-> 
-> On 7/4/2025 1:24 PM, Aaron Lu wrote:
-> > On Fri, Jul 04, 2025 at 10:04:13AM +0530, K Prateek Nayak wrote:
-> > > Hello Ben,
-> > > 
-> > > On 7/3/2025 3:30 AM, Benjamin Segall wrote:
-> > > > Aaron Lu <ziqianlu@bytedance.com> writes:
-> > > > 
-> > > > > For pelt clock, I chose to keep the current behavior to freeze it on
-> > > > > cfs_rq's throttle time. The assumption is that tasks running in kernel
-> > > > > mode should not last too long, freezing the cfs_rq's pelt clock can keep
-> > > > > its load and its corresponding sched_entity's weight. Hopefully, this can
-> > > > > result in a stable situation for the remaining running tasks to quickly
-> > > > > finish their jobs in kernel mode.
-> > > > 
-> > > > I suppose the way that this would go wrong would be CPU 1 using up all
-> > > > of the quota, and then a task waking up on CPU 2 and trying to run in
-> > > > the kernel for a while. I suspect pelt time needs to also keep running
-> > > > until all the tasks are asleep (and that's what we have been running at
-> > > > google with the version based on separate accounting, so we haven't
-> > > > accidentally done a large scale test of letting it pause).
-> > > 
-> > > Thinking out loud ...
-> > > 
-> > > One thing this can possibly do is create a lot of:
-> > > 
-> > >    throttled -> partially unthrottled -> throttled
-> > > 
-> > > transitions when tasks wakeup on throttled hierarchy, run for a while,
-> > > and then go back to sleep. If the PELT clocks aren't frozen, this
-> > > either means:
-> > > 
-> > > 1. Do a full walk_tg_tree_from() placing all the leaf cfs_rq that have
-> > >     any load associated back onto the list and allow PELT to progress only
-> > >     to then remove them again once tasks go back to sleep. A great many of
-> > >     these transitions are possible theoretically which is not ideal.
-> > > 
-> > 
-> > I'm going this route, becasue it is kind of already the case now :)
-> > 
-> > I mean throttled cfs_rqs are already added back to the leaf cfs_rq
-> > list during enqueue time, to make the assert_list_leaf_cfs_rq(rq); at
-> > the bottom of enqueue_task_fair() happy when a task is enqueued to a
-> > throttled cfs_rq.
-> > 
-> > I'm sorry if this is not obvious in this series, I guess I put too many
-> > things in patch3.
-> > 
-> > Below is the diff I cooked on top of this series to keep pelt clock
-> > running as long as there is task running in a throttled cfs_rq, does it
-> > look sane?
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index d869c8b51c5a6..410b850df2a12 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -5290,8 +5290,15 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-> >   	se->on_rq = 1;
-> >   	if (cfs_rq->nr_queued == 1) {
-> > +		struct rq *rq = rq_of(cfs_rq);
-> > +
-> >   		check_enqueue_throttle(cfs_rq);
-> >   		list_add_leaf_cfs_rq(cfs_rq);
-> > +		if (cfs_rq->pelt_clock_throttled) {
-> > +			cfs_rq->throttled_clock_pelt_time += rq_clock_pelt(rq) -
-> > +				cfs_rq->throttled_clock_pelt;
-> > +			cfs_rq->pelt_clock_throttled = 0;
-> > +		}
-> 
-> At this point we've already done a update_load_avg() above in
-> enqueue_entity() without unfreezing the PELT clock. Does it make
-> sense to do it at the beginning?
->
+kernel test robot noticed the following build warnings:
 
-My thinking is, when the first entity is enqueued, the cfs_rq should
-have been throttled so the update_load_avg() done above should do nothing
-since its pelt clock is frozen(so no decay should happen). Then after the
-entity is added, this throttled cfs_rq's pelt clock is unfrozen and load
-can be updated accordingly.
+[auto build test WARNING on 626e89412dfb88766d90d842af4d9ec432d8526f]
 
-Thinking it another way, when we move the unfreezing earlier, the delta
-calculated in __update_load_sum() should be zero because
-cfs_rq->throttled_clock_pelt_time is adjusted and the "now" value
-derived from cfs_rq_clock_pelt() should be the same as last update time.
+url:    https://github.com/intel-lab-lkp/linux/commits/Zijun-Hu/char-misc-Move-drivers-misc-misc_minor_kunit-c-to-drivers-char/20250702-202131
+base:   626e89412dfb88766d90d842af4d9ec432d8526f
+patch link:    https://lore.kernel.org/r/20250702-rfc_miscdev-v3-2-d8925de7893d%40oss.qualcomm.com
+patch subject: [PATCH v3 2/8] char: misc: Adapt and add test cases for simple minor space division
+config: powerpc64-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041717.ZONOYCp2-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041717.ZONOYCp2-lkp@intel.com/reproduce)
 
-Does this make sense or do I mis-understand it?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507041717.ZONOYCp2-lkp@intel.com/
 
-> Overall idea seems sane to me. I was thinking if anything can go
-> wrong by only unfreezing the PELT for one part of the hierarchy but
-> I suppose the other cfs_rq can be considered individually throttled
-> and it should turn out fine.
-> 
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-Unfreezing the PELT for only one part seems problematic, I suppose we
-will have to propagate the load upwards all the way up to let the root
-level sched entity have a correct load setting so that when it needs to
-compete for cpu resources, it gets the correct share. I assume this is
-why Ben think it is better to keep the pelt clock running as long as
-there is task running.
+WARNING: modpost: vmlinux: section mismatch in reference: hash_debug_pagealloc_alloc_slots+0x98 (section: .text) -> memblock_alloc_try_nid (section: .init.text)
+>> WARNING: modpost: vmlinux: section mismatch in reference: test_cases+0x60 (section: .data) -> miscdev_test_invalid_input (section: .init.text)
 
-Note that the pelt clock is only frozen when the cfs_rq has no tasks
-running, and gets unfrozen when the first entity is enqueued or at
-unthrottle time. So when a new task is enqueued, at each level's
-enqueue_entity():
-- if it's the first entity of a throttled cfs_rq, then its PELT clock
-  will be unfrozen;
-- if it's not the first entity, that means the cfs_rq's pelt clock is
-  not frozen yet.
-So in the end, we should not have a partial unfrozen hiearchy. At least,
-that's my intention, please let me know if I messed up :)
-
-Thanks for the quick review!
-
-Best regards,
-Aaron
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
