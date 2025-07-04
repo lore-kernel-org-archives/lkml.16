@@ -1,122 +1,149 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE31307AC9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A042BF013;
+	Fri,  4 Jul 2025 15:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642750; cv=none; b=gZaP4H//SnS/rHQ6JYxSXvrbdkETfkpPDIsEbeFzX3SVIlmykrZas8u8NYzkxBn21wvc5dqXT/70GnGSgxtdYrj0Pa310tfH+CnQqkHnJsJX5xR3JzuvruBQ8Ax+qeSzzCxXt4OQd8QGGEXwRUgyikeIqbwcy3tsTbWeoJG3FmI=
+	t=1751642762; cv=none; b=Q3zm3x0ubi+Y2Ox9FWuwIN5IymPdmZdzk9nuav/s6Ou0VvCoGCV6hJ1xAXONq34KKMUUoOIkQD5JbDG5W+iu0ki5ok4HKtUheNZcMUox+e295UspLHfuVsh79E89IigugdzXOTvkoXMAwuLnNo6rtwuMmIUgrKHMBp+sDlH+Auc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642750; c=relaxed/simple;
-	bh=qdbcmnfi6BBagOQtQeWcXYCebYXtRv8siscZpl3YqSs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ueWXoLhZj/sGupXrAyEDP12MqOfyZlgEUam51agrC8LKIMC7pawgY2knyASp7YEPfQGgejs6YLn07l2PypNRpPu4JpgDbl3TTatS9pCQAPdtmxbmHguWZZ6Lb51mj9tlGoElnWGiT66bsoDXVUPtmWNkXrTumjMynaxKGV1wRYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aB8OuB49; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1751642762; c=relaxed/simple;
+	bh=hkrris0XIdMZwhPXqZ/D23EFgKNcyFvFnekDIAcLLls=;
+	h=From:Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:
+	 References:In-Reply-To; b=JhAlz13aMr7uGmATsCIcBYrCH5YDuXwRu+0ftQE76KSEXt6pa6PnhFtXWsaWsfLUwAIMh9FKuMos1nvHwtDYItrjNCRQ/aL4Ojr6SWdPqK8iaFnZmBcTrbzdXNnBxXeBmg7eEMq7aq59w22raLwpaXqGZmFbiF+T89Ql0OjWgY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOzUIwOk; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aB8OuB49"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so1308106e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:25:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOzUIwOk"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so5877015e9.3;
+        Fri, 04 Jul 2025 08:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751642747; x=1752247547; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751642759; x=1752247559; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kenxt5H/LkX1Kdgcu9dff1634Pox2bcA7pVcuxiSLYs=;
-        b=aB8OuB4936SnwjW0Pe8curH/YYo8TyLrhzITvmA6FpeaJE+8BAtUlcVwX01rP3XXPs
-         xmP22WqV5CA3HxGpCKkNr7fKibVXiV7DqlCaAjxaIpm2gGyUufSaPnc+dygaYpEe+Fkk
-         QCXXQs2uhL74XTDPnMnbc72Giqu14OVHt+H2ivc4mvGsDCBjAAJtpoVEbj2Bxe8tD+Jx
-         kGw8eZl+ymxZxVfxWXtPzXVN0lv6SCoDiygWkpLcN+bFCjxydREjAUZl7hTkRZInX+XX
-         gE2wpauraestzFo6Pgs2egTsVt+pRH6Ru9GfrNhEAdfKGJKXDYAFzVCVS4KQtwumcF7x
-         tbgA==
+        bh=JBgWCKbdVEBzjfEHgGPgXI3i0E/9SHqAjmNTx+sAHHY=;
+        b=XOzUIwOkQeMcr71Ot3P3jbGNtDnpqRIp5HO9pQbnZK1oXvYDK9FoeO5r5vVaxM7W+U
+         TcrmEUHpFk1dbYoQ+VtjcZWxFuiX8xdpvqRE4vZb2yeDxeNa+PsfqooRFH7cqMf1zxPe
+         teqAVWsKuR1bELRlQxJuNoDEOU6mmHDue4mRe5SZ1Zn1MtC4MeuDhS8EDwYWLdpN8Ccb
+         B1nTtu7WKVRz/VskNSH1ESZXUJzhkUydnL4HgBwyYCitCTNwmZgy9jlBX1TthKTOAjWD
+         Vd1jfNdxepwLQh7bl5b8pN36m1gnXqfaoMj31DMxALWL+pdo6d/6lRA9LZJ6kzZoR71I
+         ANHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751642747; x=1752247547;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kenxt5H/LkX1Kdgcu9dff1634Pox2bcA7pVcuxiSLYs=;
-        b=jyGnaPZ6f1adbopTukVc6N9SlKR61CdnWhlKh9xrxAa3fFzd/3Q86mk088fnsxCUWh
-         djnxKGewPtPsew0q2Qy06zK2sI9cMfxfZ4MxpVeXS/G2vFPwv4Nb8MpkXS97QKkKFKEJ
-         N1usBkoaR06fXUiTSh5fPhBl3YdmSKiHdunK5awlHyV2Tpjt3ztMJESbZB5fIG9QsQBw
-         ilfOKBUH+0F3b++SVR8tK9Z0snbsuqC28cCUKgMH5FBf8ak7SrhhNALKhie+MZa2O7vO
-         5oLaEwkN5NCfEvKoU8caTrjxctOCyA9CeNcyp4nPXGCfDWNH9hVVCTZKJw5Odq/w/Yw/
-         ZKBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUJhhW4KKdfeIYty1TrsMTLXUbjBEjtq39U3ZvdCz0elh4sDQTylXcbmI8vE3f256DVcXc33OGSOJ2zZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9oCWdPHp+iTeeKxFEz6K+Ec3ilxcle1NDtyGAsx0Gffs6+eeR
-	Jg+9GwlazCvUu37VNfVm2H94DJEhYtMhEmXcrTiBU3f7iPWfUcG2gI57
-X-Gm-Gg: ASbGncsA5P3ZFnNn+r9+oRE0JxEgJgVB4XcSl02oRebOlJYMfiRwfDRY6lYB35tRkS2
-	JSKa5gSGLPGZXKjxUO2yc7AWiK0c4GmJtFj84lIUy+3KvzEcNet+dWWgAtBnKz/LjvJUmK7PC4U
-	LxkVH/oZaM3s5wsxHxFPurfELrOCemXMJjyTUM0DGtbbmisqLOWw2NjMrXiLjCop9RNT1QokJEv
-	xY7IE91+X1mdyabeyVw9gU+KoF78uTC0ka2M4GV5mmi+gAfz+4uXTVUD4LGRCWitHvB4DxAEhjD
-	qBFyBwQkqnfOBo0W5AMW/lko0iHKrs4h50/pgtw4aKUWReeyF/AnegSDwQ==
-X-Google-Smtp-Source: AGHT+IG/HUixC6AiULlotmtiHBrwDZHuColKMq21lzt3LlhO52ExwXaVlOR9T0P1ss5qTdOAN6EAxw==
-X-Received: by 2002:a05:6512:12c8:b0:553:35f5:7aac with SMTP id 2adb3069b0e04-556dd1e4a26mr931907e87.48.1751642746367;
-        Fri, 04 Jul 2025 08:25:46 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556383bb113sm281028e87.11.2025.07.04.08.25.45
+        d=1e100.net; s=20230601; t=1751642759; x=1752247559;
+        h=in-reply-to:references:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JBgWCKbdVEBzjfEHgGPgXI3i0E/9SHqAjmNTx+sAHHY=;
+        b=vFoGhLULQqniVMB+QdX0iAghACcMs1sI/3jxyH1eEz0NDS43rk3Bv7QchE3QUSqms2
+         muA/Qa6z3RRI/6V9cWRyBrU0C2VckFNafbozSFHEtTX3/+8D9jKMtavxuaRXtBtMGmOd
+         1rRvs7Byf1b7eStkLe5XcMVil1HJj6sqLlegqCI+52gFBcSCrPH8C3Tx/xHUZWCSR3r4
+         ecybxyVUHLvJXArQqs4P0dmLkroRlZdY0qTp5LTeFN9WK6w7fgJpTcjY0o5fMjs1vMc3
+         kn/1YyIXOGJBEaHJv5ieW3nMRvpMWXRKUtQRKjqCjZn66VuLiaNYuJqQrUdA/FWX4Acb
+         t3Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDYSD8Dx3qej3kFuau4Ru826cHaBEuXzT3yF1CWi8UBeVNrbCO7TpSc9sWdHmJEL7B48fhlT5EKAApYtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGStx7zqrmv4ey6OiKPbqm1lCDvi9LXcFRLKdiSJgRcTIgfowG
+	onMyjDP45z0ZuVAujeS97pmtWFn0Scb2AhvWa/QqJ0dtbtlZEn/VEiyW
+X-Gm-Gg: ASbGncsSUl/cZplv8YctAO4H8NY1VK7cwTKFJRMVsGyzhR686RjkCvlaSQXqVryqGla
+	2OoTgpSIgzm3mhxtyeWZgB+RHlz1i6TdVVI5ld7rUNjXv+hbo1x/Owv6xWdF7Jdg8TM+xBp9Nrf
+	Y3LEAq107TAnASSCk9aQ6XBVQ1tTwLr0HNK4S8yE1YqbcRTClGpRPL6Rd6sIJtrix/JDV9Dw494
+	nim1KJ++KSiVP0YBDjIVWrdQqsCpCIAHyjKoxBwibakJqUTM2q1ZINqB4IjclGBnVKupKkVGbKk
+	wnmUrseI9WjsPGOYIi5LjSXqHOUmVz7yldX9vVH07o69CFLuFug5h1aLHdLq9K2gXIQ52Veds36
+	8DPP5Ahne1s16lw==
+X-Google-Smtp-Source: AGHT+IFg9uvqa5LmAr6RLIhel5JMqvuWuppWw508GFdS/XFd61zn07luB9/xERilmez4oszfTjS0kw==
+X-Received: by 2002:a05:600c:a316:b0:442:d9fb:d9f1 with SMTP id 5b1f17b1804b1-454b3b8a485mr22839885e9.4.1751642758465;
+        Fri, 04 Jul 2025 08:25:58 -0700 (PDT)
+Received: from localhost (a95-94-245-170.cpe.netcabo.pt. [95.94.245.170])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a9969058sm59249505e9.3.2025.07.04.08.25.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 08:25:45 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>
-Subject: [RFC 7/7] mm: Drop __GFP_DIRECT_RECLAIM flag if PF_MEMALLOC is set
-Date: Fri,  4 Jul 2025 17:25:37 +0200
-Message-Id: <20250704152537.55724-8-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704152537.55724-1-urezki@gmail.com>
-References: <20250704152537.55724-1-urezki@gmail.com>
+        Fri, 04 Jul 2025 08:25:57 -0700 (PDT)
+From: Rui Miguel Silva <rmfrfs@gmail.com>
+X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 16:25:57 +0100
+Message-Id: <DB3DJ9O7DEH9.377Y1IS7ZAVHV@linaro.com>
+To: "Sakari Ailus" <sakari.ailus@linux.intel.com>, "Jonathan Cameron"
+ <jic23@kernel.org>, "David Lechner" <dlechner@baylibre.com>,
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, "Andy Shevchenko"
+ <andy@kernel.org>, "Rui Miguel Silva" <rmfrfs@gmail.com>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Julien Stephan" <jstephan@baylibre.com>, "Hans
+ de Goede" <hansg@kernel.org>, "Waqar Hameed" <waqar.hameed@axis.com>
+Cc: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 32/80] iio: gyro: Remove redundant
+ pm_runtime_mark_last_busy() calls
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+ <20250704075422.3219401-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20250704075422.3219401-1-sakari.ailus@linux.intel.com>
 
-The memory allocator already avoids reclaim when PF_MEMALLOC is set.
-Clear __GFP_DIRECT_RECLAIM explicitly to suppress might_alloc() warnings
-to make more correct behavior.
+Hi Sakari,
+Thanks for the patch
+On Fri Jul 4, 2025 at 8:54 AM WEST, Sakari Ailus wrote:
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- include/linux/sched/mm.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+> The cover letter of the set can be found here
+> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ail=
+us@linux.intel.com>.
+>
+> In brief, this patch depends on PM runtime patches adding marking the las=
+t
+> busy timestamp in autosuspend related functions. The patches are here, on
+> rc2:
+>
+>         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git=
+ \
+>                 pm-runtime-6.17-rc1
+>
+>  drivers/iio/gyro/bmg160_core.c     | 1 -
+>  drivers/iio/gyro/fxas21002c_core.c | 2 --
+>  drivers/iio/gyro/mpu3050-core.c    | 3 ---
+>  drivers/iio/gyro/mpu3050-i2c.c     | 1 -
+>  4 files changed, 7 deletions(-)
+>
+> diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_cor=
+e.c
+> index 781d3e96645f..4dbe3c0cc5eb 100644
+> --- a/drivers/iio/gyro/bmg160_core.c
+> +++ b/drivers/iio/gyro/bmg160_core.c
+> @@ -310,7 +310,6 @@ static int bmg160_set_power_state(struct bmg160_data =
+*data, bool on)
+>  	if (on)
+>  		ret =3D pm_runtime_get_sync(dev);
+>  	else {
+> -		pm_runtime_mark_last_busy(dev);
+>  		ret =3D pm_runtime_put_autosuspend(dev);
+>  	}
+> =20
+> diff --git a/drivers/iio/gyro/fxas21002c_core.c b/drivers/iio/gyro/fxas21=
+002c_core.c
+> index 754c8a564ba4..a88670207cec 100644
+> --- a/drivers/iio/gyro/fxas21002c_core.c
+> +++ b/drivers/iio/gyro/fxas21002c_core.c
+> @@ -373,8 +373,6 @@ static int  fxas21002c_pm_put(struct fxas21002c_data =
+*data)
+>  {
+>  	struct device *dev =3D regmap_get_device(data->regmap);
+> =20
+> -	pm_runtime_mark_last_busy(dev);
+> -
+>  	return pm_runtime_put_autosuspend(dev);
+>  }
 
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index b13474825130..40757173acb1 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -246,12 +246,14 @@ static inline bool in_vfork(struct task_struct *tsk)
-  * PF_MEMALLOC_NOIO implies GFP_NOIO
-  * PF_MEMALLOC_NOFS implies GFP_NOFS
-  * PF_MEMALLOC_PIN  implies !GFP_MOVABLE
-+ * PF_MEMALLOC      implies !__GFP_DIRECT_RECLAIM
-  */
- static inline gfp_t current_gfp_context(gfp_t flags)
- {
- 	unsigned int pflags = READ_ONCE(current->flags);
- 
--	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_PIN))) {
-+	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
-+			PF_MEMALLOC_PIN | PF_MEMALLOC))) {
- 		/*
- 		 * NOIO implies both NOIO and NOFS and it is a weaker context
- 		 * so always make sure it makes precedence
-@@ -263,6 +265,9 @@ static inline gfp_t current_gfp_context(gfp_t flags)
- 
- 		if (pflags & PF_MEMALLOC_PIN)
- 			flags &= ~__GFP_MOVABLE;
-+
-+		if (pflags & PF_MEMALLOC)
-+			flags &= ~__GFP_DIRECT_RECLAIM;
- 	}
- 	return flags;
- }
--- 
-2.39.5
+LGTM,
+Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
 
+Cheers,
+   Rui
