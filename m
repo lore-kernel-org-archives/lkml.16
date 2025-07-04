@@ -1,131 +1,103 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1561F12E0;
-	Fri,  4 Jul 2025 04:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC01E2F2E;
+	Fri,  4 Jul 2025 04:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751604924; cv=none; b=XjdZfjnUlEkniKPBOtpI1qV/CZbMxbtTUDdI+pBdXIY/ovI3//8smtnu3Nv/4LT9ZaTD/e9NRa+D+m1ix1sLh90H5EWMbR91NvUycfMr9a5iaIiGykn94cxmHe8ZLDYIMKcxL7ca1KXN/ogBikuATdCZKyrzkVtDf982MZhGbm4=
+	t=1751604959; cv=none; b=DdbD1PnlYaBXPTTcKRS+6f/SmFCG8Md8SkiQSyc3k+E/utf/tc0xFzv6zbgTERT/6afAsGPo2ZI4CzkSBqSvsN+vz52oqxZ69DLFYOqYDQo9j+mwL+JB6uPGZLVDvOfDQWXPfgRbnlf/4eHDMLMdL6/u/2Ci7lbzXWuyg4WjKXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751604924; c=relaxed/simple;
-	bh=uz7E/3lyyWcGy/zaFzZm3Xi8fMrEATIP1mwzow3SP88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fCHGvanJJWnE1+3zBzIZAoN4l1Ty+OVlGdqKa6jsFEuctd3SegDBaXFvzb6tHf4QsZ6aHxrOG86fK03C6Q3T6SdaAmzIcw/SXLk5p9qW2M/BMYYyfin0+NLAD/+ADayxrHFRFtjiHNS8vVg13kbnEtA0JTVcwb7YW4ZXRpQ6PW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLCpcvxM; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1751604959; c=relaxed/simple;
+	bh=iA7enkcaYYP10zGHvuzjL4NSKWxWCwqiCSwCw5FbyZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eUS/n5wTqP9dZqJ/lH/wbFGeIPtuaOR62lRzixZuh2p+Y55qgEPe1iV1m86egmUdvXvEn3BwByoDakxmtfpboXXUw4MZM8MqJxIzNRRqOlNjTrirJa61edhKwvrlOyTc/SeYda3om70D4uTpSPJhOd/CdwLoYkbLkpJHpoOlu0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aakER9Cm; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLCpcvxM"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a54700a46eso236635f8f.1;
-        Thu, 03 Jul 2025 21:55:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aakER9Cm"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b3507b63c6fso591093a12.2;
+        Thu, 03 Jul 2025 21:55:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751604921; x=1752209721; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=txRfSTqQyK4OCVcc+lfj6TlKM+lidxFZ6/G4s0wfT/I=;
-        b=XLCpcvxMrEabbv8sdkUpRpvmOriQbddvdqjywfJ+aUCUCF3MqHHDQlVFLwNzBX+rmg
-         WLEcFQaXw67sNzX0r8sKb478U5gYfR/CfDhfYGU/xM+pDMm/uFpkkXttVsvGLuXqN6t+
-         YXTUUR2b5R5bC9ijx5w+G/TB3wKc1FZYhZuCjaTa2imFRuLZd649rsOeA/qbu7YpEGuf
-         VD4iggAGYDkCvO0hLGQZIoUm1KFXHHSBw9kn3hz2tVKQa5307WJ/56vs/RNwdb5lfivg
-         m7Pulf4VrzNPtbKrtjwIm2TprQLSG22mNXffMxZ02ld1Q+PHC82V8oq/TYF0M1h0U87I
-         U2ew==
+        d=gmail.com; s=20230601; t=1751604957; x=1752209757; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CifI9suLoX8sU3mMb0TVZUF1eSg8fmqZC9+fcJINJg8=;
+        b=aakER9CmYUER5m8FVoYf8g9AHBUihA653Ox9IlKa3eTvrLo86Ex7Fxy26Zh4iaznlx
+         dp9V35xbR66YjhsofXr4D5bzBNyw6TaIragfzvdAmvkWIQmCd07I5c2oE0GxmmvMY+Hf
+         OUu5MbpLQe7oWqTGPdSKJZB+oRN1nurlSA1vz7qjq6esPhJ5pxF30zKkVuWcx5LbK9yf
+         lmfvosTDjjtwv0ORbGepCwVKmsVKxmiDEv3SwBm10HnJhVKxb0jcCvS3SkYltv9gimwS
+         oKRV5X/SqajdJAyKfMf80N/VcjLc/ceAUCC38S6hT56ImVp/jaLQpf/dFzeCKziCtb/W
+         i3ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751604921; x=1752209721;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=txRfSTqQyK4OCVcc+lfj6TlKM+lidxFZ6/G4s0wfT/I=;
-        b=uYJ/w5rVrqsDknmEJF3I3WuGhFkce9LdH1ZJQdJV4F6dWQIYPMzM6wbkxNbV8H1RLR
-         5UwiUK3ryILde9cZOjx7C648hIgMH4oOjh5nueIRrxJ1JlvUbHHTrctJz7dOdUdW8igM
-         azWJ+Al5hr6IsB0zVjNNkeo2ctM2DIKhmCS903O+ZK00K5eEHsGdjqqQouWdY4Knl6qz
-         e9lG/kzVnVrONpB47zT+XgZRuscxVreapx2NyYy1C43EVH7Ou/CahkHRXEiyrxc4rX7g
-         nJLgTCKMMFVznDIwMYyKZMMzBjNUDY+/0ss4Oh4L25QMVVeXYafGkq23ScF7B0QV/se1
-         Ok4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWCKdKTY3u6yqYIK+vq+q9xEPumqkLFbm3Q5yew+gVzQ51rEpkWla082YvrUXFlpG958kikjWBzy+9sog==@vger.kernel.org, AJvYcCWHhkKFQmpkQfMcx5/Wi6aNmlcTJIvd6tgfmgkiN6fzoKxL8hRuyY6NXNtADA9nejQ27y8nRcfw@vger.kernel.org, AJvYcCXh7SafGD3sNHt3p+Dop7OJ6M4m1pjznxI+jfjoHUMq/6kJ7ukvnOMdRl7upIhP/E2iatlr4no7Vem1FJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1unaZyYwNI7AFnc5RRAxwT1RG6vYCJKsa8rU3c5rN0wDQjWRA
-	7cqsyf7+FKbCrUEjWgFsT0La/u80cpQqby3HmhdJabn5bHa8XIe5Ot1Q
-X-Gm-Gg: ASbGncs69wIO/Szdn1krBIoXJzkRf+i/8hXm6abUBxQExiHKiNWR8/vsTICxgKFgcXR
-	lHlmRe4cm/bOp+49/N0FhYtwQv16A6tnNLvPkXbzrUfjUXVS1VuIv4cWqiA5fDeG8zdxPpUZnZx
-	m3XDesIOUiDp3iaEt3y4skFz5CezcMQqtxA5HyDVMKTGMj52rif+D0Ue2CVsMrG2VflxfgIFZs6
-	0kyiVQ7gVdT4uT64gvLd+2DXt8e5pSd2caSsjVKpo3j4tP20U/78BgVIoUPZ37X5WAlfvbDkTGl
-	xXroaFXMknGNhApACtNvznqq41an+WS52S2/j3MrYXIb8LaW8pNzrRtBMIlqFZZhEyXu+X4Fy8a
-	TOZStK0TBFg==
-X-Google-Smtp-Source: AGHT+IFQcgEw3R2KRF1A7GhhZlgVAZV3jrIJ+fYUelomene8qoxtvz7tJUhKq5adyjUGUlsgMre6jg==
-X-Received: by 2002:a05:6000:18ad:b0:3a5:3b03:3bc6 with SMTP id ffacd0b85a97d-3b4964f1f10mr718155f8f.28.1751604920594;
-        Thu, 03 Jul 2025 21:55:20 -0700 (PDT)
-Received: from [172.27.52.43] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1893479sm15047175e9.39.2025.07.03.21.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 21:55:20 -0700 (PDT)
-Message-ID: <15c4c8d9-e9d8-4c4c-ad13-c734bbb04bb3@gmail.com>
-Date: Fri, 4 Jul 2025 07:55:20 +0300
+        d=1e100.net; s=20230601; t=1751604957; x=1752209757;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CifI9suLoX8sU3mMb0TVZUF1eSg8fmqZC9+fcJINJg8=;
+        b=ceJux50+SGiGogC0Z9Dir5ZdzhGj8p+m0cHikyf7TVocUb9P1IS0A+GGvlMEqZCT0k
+         +OYb4sgc/eX/BDIV72oGchnKGDCqq2/fDjxQ8CngUXadvTp9g6fPbldmGqX4K7jMa1cr
+         7h4hBtlMNEXBnYUurhDTHmISq7lTSCjRMV4mo5l7R2YzHzybiQTHd0lYTGGH5S0sOl/s
+         kZvyz4SFN12TQqnclr/fDthdLulLE2b1tYyMs0yf0QHSvzl1rWMnOS0wEwcThJ59ZCFI
+         W11q0Om5rhUsonILAG+5EDkiB4nMjixQB/n9Y+N4RUU8hVGUsmTxnLPf5PxxJBxndz67
+         zHlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVi5XY7ePCKqKmuRORwIrDrtrgZr45nrnTEa/sEJSqSHw0kKqtUYK3o4nZ5bj3VcMnK8SRTMzlljs80pg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOMyKjjpycr7tednwOXu4k0GLKaTI0MoEUsllEVUvk9Ldi5a/Z
+	Vj/85f7F1APHVVAKtHPq7ypPajFphg7cCWX/WdRN0Rc5PSIMOc07adQw
+X-Gm-Gg: ASbGncuZv5gmfcnBAj2RVAhR+1NQ/MLOXvOLfgcSuMRiW56RUX23FHaeQ4J65GGHJgf
+	aeyMsl7Iba4rF4uEw7ICTBKoItoDNbqWL8wbNmT+xVbAsf3N9qt9g8NfzGHF72XIOG/NSm72oKG
+	wYE26aOaD5XIO79q8PyXs/26mcNkdScGFXFaRh2yHokmwr+9iDbLUVQiCiCG8JmXazya/QqR2ZS
+	SmxZ8tw+SI2nH3ocOp4cTgfvnET7WIbnlmoBGkxQylGyHDN6iwn4/p2s6wkjxIraP0xdfE5vQBL
+	BCHjTi1mM9XXKk5CZZ7UXBQrxyZ4v3JA8Kbc7P5za6iijVv+arzf7g1cQJ7OMaE=
+X-Google-Smtp-Source: AGHT+IFiqePAzezgFsSFO8Arbd8+5l8xDnvBOdMdeFdQca+DfwPdk3ANsY9pByJSA22HhNseC8mpog==
+X-Received: by 2002:a05:6a21:6da6:b0:21f:eec5:85d2 with SMTP id adf61e73a8af0-2260c2401c6mr852418637.19.1751604957019;
+        Thu, 03 Jul 2025 21:55:57 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:8ddd:816c:9ca2:2a5f])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee5f32c1sm1051265a12.48.2025.07.03.21.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 21:55:56 -0700 (PDT)
+Date: Thu, 3 Jul 2025 21:55:53 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Yunshui Jiang <jiangyunshui@kylinos.cn>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH] Input: cs40l50: Fix potential NULL dereference and
+ memory leak
+Message-ID: <m2i5ewrkh72dl3lcrfqpoy7l3ohjkraogpqkskvvybg2oshvm6@dnximnav2uqf>
+References: <20250704024010.2353841-1-jiangyunshui@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [pull-request] mlx5-next updates 2025-07-03
-To: Tariq Toukan <tariqt@nvidia.com>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <1751574385-24672-1-git-send-email-tariqt@nvidia.com>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <1751574385-24672-1-git-send-email-tariqt@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704024010.2353841-1-jiangyunshui@kylinos.cn>
 
+Hi Yunshui,
 
+On Fri, Jul 04, 2025 at 10:40:10AM +0800, Yunshui Jiang wrote:
+> The cs40l50_upload_owt() function allocates memory via kmalloc()
+> without checking for allocation failure, which could lead to a
+> NULL pointer dereference when GFP_KERNEL allocation fails under
+> memory pressure.
 
-On 03/07/2025 23:26, Tariq Toukan wrote:
-> Hi,
-> 
-> The following pull-request contains common mlx5 updates
-> for your *net-next* tree.
-> Please pull and let me know of any problem.
-> 
-> Regards,
-> Tariq
-> 
+Yes, the check is indeed missing. It is likely that the allocation is
+small enough so it always succeeds (or waits indefinitely), but it is a
+good idea to add the check nevertheless.
 
-This is V2, previous PR submitted by Mark:
-https://lore.kernel.org/all/e7a83ea5-d70b-4c37-8068-a73293b51262@nvidia.com/
+> 
+> Additionally, if any subsequent operation fails after successful
+> allocation, the allocated memory is not freed, causing a memory
+> leak.
 
-V2:
-- add a bug fix for the fs patch.
+This is not correct. Because the new_owt_effect_data variable is
+annotated as __free(kfree) it will be automatically freed at the end of
+the function scope. Your patch introduces a double-free.
 
-> ----------------------------------------------------------------
-> 
-> The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
-> 
->    Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-> 
-> are available in the Git repository at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git 02943ac2f6fb
-> 
-> for you to fetch changes up to 02943ac2f6fbba8fc5e57c57e7cbc2d7c67ebf0d:
-> 
->    net/mlx5: fs, fix RDMA TRANSPORT init cleanup flow (2025-07-02 14:08:18 -0400)
-> 
-> ----------------------------------------------------------------
-> Dragos Tatulea (2):
->        net/mlx5: Small refactor for general object capabilities
->        net/mlx5: Add IFC bits for PCIe Congestion Event object
-> 
-> Patrisious Haddad (2):
->        net/mlx5: fs, add multiple prios to RDMA TRANSPORT steering domain
->        net/mlx5: fs, fix RDMA TRANSPORT init cleanup flow
-> 
->   drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 44 ++++++++++++---
->   include/linux/mlx5/fs.h                           |  2 +-
->   include/linux/mlx5/mlx5_ifc.h                     | 67 +++++++++++++++++++----
->   3 files changed, 93 insertions(+), 20 deletions(-)
-> 
+I will adjust to only keep the check and apply, thank you.
 
+Thanks.
+
+-- 
+Dmitry
