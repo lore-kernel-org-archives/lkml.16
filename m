@@ -1,180 +1,95 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DF92D94A5;
-	Fri,  4 Jul 2025 12:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D47228C2DE;
+	Fri,  4 Jul 2025 12:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633272; cv=none; b=ph5cDje5gAPZvwpNatRaJ6bgWKRlfpdI9rOUuvIIBzbkdk4XqpOeaYcDG7M8slnzcZaYGthknw4/N2/dxcoEsQOJf09kO2oxw2sYOuO98LldpLG+BjrrbuK6gTnT5mPmig9pBYXTCUYpobLbHmZf2jyhA+iMm9meUfyrWPjQmpI=
+	t=1751633282; cv=none; b=nsj1dDQf9804gg6uW9Wv4l/poeDosj08maY+mbkDd6HRJMoTDKJGYtb2GyaCH8xTM9cvIkasL0Gh+ZuY51dZj+jkIoroQ/m4JVJfKgGtfrjGGQB8dIoNVz/kH5L32A+DXkCUVHKkdzPoJudeWMTUN75fwz8tszHGvze37CJcRIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633272; c=relaxed/simple;
-	bh=q3W6qKOAkT7lw4zg9GWf0eKhGBj+FEgS0+PDTTbEsHg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBbruVr604YLc14DsZ/E7cd6KWKFnNZ+GmmhN8CvgSI+tzeAZJnLpAPuHo8uboB6vfO6E1div/1q7qy1sNfFeHVOzVRGn2VPfHI7z3uTMUySjrnte+tpa5QMRAGwHj/oGvXG2J4qNTniA6H5PASCTcx4AP7RiHzNCkG1fP5BV3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYYLV23QGz6L5Q0;
-	Fri,  4 Jul 2025 20:47:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 83D0B1402E9;
-	Fri,  4 Jul 2025 20:47:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
- 2025 14:47:45 +0200
-Date: Fri, 4 Jul 2025 13:47:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: John Groves <John@Groves.net>
-CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
-	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
-	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
- . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
- Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
- Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
- Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
- Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 04/18] dev_dax_iomap: Add dax_operations for use by
- fs-dax on devdax
-Message-ID: <20250704134744.00006bcd@huawei.com>
-In-Reply-To: <20250703185032.46568-5-john@groves.net>
-References: <20250703185032.46568-1-john@groves.net>
-	<20250703185032.46568-5-john@groves.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751633282; c=relaxed/simple;
+	bh=Lmq9cmXGUx71IDmJg1Vxj7KBXlBI/PY+lV1MKrvd0Os=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mrzNHVjLMLcCX6oxTiXOMFwBKwcpZ/BMVHNLc6zLWemxji6ivrxWl2KZ76GmOKYxoli8BPQWVcWkBHKNO3KzMcYXLZUZcr9B5vFy8BehEAYEdgy6V5ZFmwZ5YwWMhNMyvgp9+CGyRl8kgcoCusApLYbAb9yWzEYeaZEZU1NxcP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=mALiwNSq; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mALiwNSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751633245;
+	bh=Lmq9cmXGUx71IDmJg1Vxj7KBXlBI/PY+lV1MKrvd0Os=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mALiwNSqOOsmrCO0weJhLzLMTvzRNnsUBUI3PEizhQIdP66b/ZSmbZjB3T84fipsb
+	 Ct2aGQoUV3++z0TEdEU09OSKfnqKv3Gi+4/G7emouAC25dSPZExL7lcFqBqWLj5lQt
+	 nvyfoPmN/gzAdCEsamSKidIgzOgwBTExnRhLDzipkHAoWlVQ7fzX/y32gKu/BmWbr5
+	 xYBFahvivd/SSybdOUIWcEscOZbzoZpwiGpKi+I3O8CkPBFCsMuZfbnfRiq4YPlgPk
+	 hUNLUc3LO0RlrJ4O3x5JTAD3H2hbZTSCWFIzO6hp+3WXt2xReK97oUfQ0UFLG4rC7q
+	 ErkDxAz+bQyEQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYYLh6qm1z4wxx;
+	Fri,  4 Jul 2025 22:47:24 +1000 (AEST)
+Date: Fri, 4 Jul 2025 22:47:53 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>, Lee Jones <lee@kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Subject: Re: linux-next: manual merge of the gpio-brgl tree with the input
+ tree
+Message-ID: <20250704224753.45391b67@canb.auug.org.au>
+In-Reply-To: <CAMRc=Md7Znq6Lww3-i+sRW1LZMD78s7vnVYnDwVKQsjn7OMhvg@mail.gmail.com>
+References: <20250704185641.430ae617@canb.auug.org.au>
+	<CAMRc=Md7Znq6Lww3-i+sRW1LZMD78s7vnVYnDwVKQsjn7OMhvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/signed; boundary="Sig_/w6Xoq8YlvtL0=UnqzONdv.=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu,  3 Jul 2025 13:50:18 -0500
-John Groves <John@Groves.net> wrote:
+--Sig_/w6Xoq8YlvtL0=UnqzONdv.=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Notes about this commit:
-> 
-> * These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
-> 
-> * dev_dax_direct_access() is returns the hpa, pfn and kva. The kva was
->   newly stored as dev_dax->virt_addr by dev_dax_probe().
-> 
-> * The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
->   for read/write (dax_iomap_rw())
-> 
-> * dev_dax_recovery_write() and dev_dax_zero_page_range() have not been
->   tested yet. I'm looking for suggestions as to how to test those.
-> 
-> Signed-off-by: John Groves <john@groves.net>
-A few trivial things noticed whilst reading through.
+Hi Bartosz,
 
-> ---
->  drivers/dax/bus.c | 120 ++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 115 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 9d9a4ae7bbc0..61a8d1b3c07a 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -7,6 +7,10 @@
->  #include <linux/slab.h>
->  #include <linux/dax.h>
->  #include <linux/io.h>
-> +#include <linux/backing-dev.h>
-> +#include <linux/pfn_t.h>
-> +#include <linux/range.h>
-> +#include <linux/uio.h>
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> @@ -1441,6 +1445,105 @@ __weak phys_addr_t dax_pgoff_to_phys(struct dev_dax *dev_dax, pgoff_t pgoff,
->  }
->  EXPORT_SYMBOL_GPL(dax_pgoff_to_phys);
->  
-> +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> +
-> +static void write_dax(void *pmem_addr, struct page *page,
-> +		unsigned int off, unsigned int len)
-> +{
-> +	unsigned int chunk;
-> +	void *mem;
+On Fri, 4 Jul 2025 11:00:49 +0200 Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> Ah, I pulled a tag from Lee's MFD tree containing 3bdbd0858df6
+> ("Input: adp5589: remove the driver") but I don't have 43a8440f3969
+> ("Input: adp5589 - use new GPIO line value setter callbacks") from
+> Dmitry's tree. Dmitry: is it too late to get an immutable branch with
+> these changes? Or otherwise you can drop 43a8440f3969 from your 6.17
+> branch.
 
-I'd move these two into the loop - similar to what you have
-in other cases with more local scope.
+It really not a big problem, Linus can be told about this when he
+merges the trees ...
 
-> +
-> +	while (len) {
-> +		mem = kmap_local_page(page);
-> +		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
-> +		memcpy_flushcache(pmem_addr, mem + off, chunk);
-> +		kunmap_local(mem);
-> +		len -= chunk;
-> +		off = 0;
-> +		page++;
-> +		pmem_addr += chunk;
-> +	}
-> +}
-> +
-> +static long __dev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-> +			long nr_pages, enum dax_access_mode mode, void **kaddr,
-> +			pfn_t *pfn)
-> +{
-> +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
-> +	size_t size = nr_pages << PAGE_SHIFT;
-> +	size_t offset = pgoff << PAGE_SHIFT;
-> +	void *virt_addr = dev_dax->virt_addr + offset;
-> +	u64 flags = PFN_DEV|PFN_MAP;
+--=20
+Cheers,
+Stephen Rothwell
 
-spaces around the |
+--Sig_/w6Xoq8YlvtL0=UnqzONdv.=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Though given it's in just one place, just put these inline next
-to the question...
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnzXkACgkQAVBC80lX
+0GxWmwgAnfmwUWHXvY4FzaApVfk5JjvECTEQ0l+9LEFzTmS3ZQfYx+xCPyD3RBHU
+KOS4TU4UqkxolSm1eKpUpyhn628tUcsYNFqFxFUA0l68gOoNN9a5jaBvUZY0aJ9n
+gsYZhwC2x2LmFSYNsVHpfe457AW9iSV7UeHVfJrqA2GxVNwkrmOPCciFca7kQJwR
+7RXVbX1m37StZm8xzfSkdbvsEBiKPna70d2TM/wfa6RBO/5VUHD9j1K7v9tmLYWJ
+fL/BWNEIHC+Nl2xsiTl73Jtv9YS+xsjr/IGJCi+6xmuNjdfFQ/Fa2VQ9jlIhqoN4
+UPrCwDGS4WKpnoc/seswYYStE0lIrQ==
+=tafw
+-----END PGP SIGNATURE-----
 
-> +	phys_addr_t phys;
-> +	pfn_t local_pfn;
-> +	size_t dax_size;
-> +
-> +	WARN_ON(!dev_dax->virt_addr);
-> +
-> +	if (down_read_interruptible(&dax_dev_rwsem))
-> +		return 0; /* no valid data since we were killed */
-> +	dax_size = dev_dax_size(dev_dax);
-> +	up_read(&dax_dev_rwsem);
-> +
-> +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
-> +
-> +	if (kaddr)
-> +		*kaddr = virt_addr;
-> +
-> +	local_pfn = phys_to_pfn_t(phys, flags); /* are flags correct? */
-> +	if (pfn)
-> +		*pfn = local_pfn;
-> +
-> +	/* This the valid size at the specified address */
-> +	return PHYS_PFN(min_t(size_t, size, dax_size - offset));
-> +}
-
-> +static size_t dev_dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgoff,
-> +		void *addr, size_t bytes, struct iov_iter *i)
-> +{
-> +	size_t off;
-> +
-> +	off = offset_in_page(addr);
-
-Unused.
-> +
-> +	return _copy_from_iter_flushcache(addr, bytes, i);
-> +}
-
-
+--Sig_/w6Xoq8YlvtL0=UnqzONdv.=--
