@@ -1,203 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22EB2E370D;
-	Fri,  4 Jul 2025 23:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880DF20EB;
+	Fri,  4 Jul 2025 23:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751670234; cv=none; b=kdosMOS2WA3PAa5ACIdzjy+961r5rcC9yPXGRh1lsWJg/mJfMngE+uBQxyIJdzBu1f912502GM6OsxeeYZf3bzKlbb/rq4ExGr55i6YtnQF2VXssq35Eatkdthrb8/Rf1Vdd1kk+B4qBgKz6Hszb17CWrlfTo2Qp5C4FY5jwBF4=
+	t=1751670656; cv=none; b=GOax1mBmIZzWGT+KSeVSsx59efhWA6aUOOteTF5FjVuNBz0VEMnRLeOAjN12HLxZaoKdsP4V774hGrRGO4/Zb3B1lqQGlotQTOuBlpLXKt+galxji9tVXbfRLqXGfTUuAIFG4p67DAb9XE/sqoxUdiyfra1iWmLWziXmCYBrtro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751670234; c=relaxed/simple;
-	bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spwme5wgoS9wdHEl4gsmZEWNZQX1forMqLkTxrGxrK8pEuCvxnPv1+m3SfF8d0ZrN+otBkjDG5sZVNP2SP9w0pTK567+8oTxHMhSXis5z0iHyuVGUAhElDrYAvrwQxFtZAP/+pCbexlYKnaDAlGWK7Lsu+f0zFdKb9/GNi6B7ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4PKWz+E; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751670656; c=relaxed/simple;
+	bh=WzEF1y0lZmRnc5y+Tvi5rT34TyJUGRdq03o+P2fNCUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PSGaZOLLOh4pxos+FMCVeYDWaTcvvdjn4kWzwTpC3sbYiIUhO8zcfSxz8nv4IqC8clCbkKMspdZH4qd9HlHHV97Pi+IkKdlKMajgNuxmDwy2NekWk7dmQdMyVIuiWxoHUIfO2ws7Zye7+XkEejQpRu8s/Nu9tU6mnC6+7DmkS+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpH/f1rS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4PKWz+E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751670233; x=1783206233;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
-  b=T4PKWz+EDUi0IuMRP2xyYBBETuMVx9hzneq1MDdB4JHgRSGpMe4BjppB
-   KENrbJpaSx/i0/tw7e2aAi6g5E1Gu/6UIHM6O3vld5jreUPHDve7TByE4
-   s9QkntsnHN/7S/w0lbo0Btzw07WCwopAPjmWK3DFUkpfqBKN54rNy7mW2
-   oOwQ+a/BcDcHsJJRlF+yqGTxyui1/wL+JhLayrcoPjbddJQdROXEBFWoi
-   JFgOCm3EMFv7jpzAksNk3+Js6szSzcJb+llOKHIFPTO69bsIfH5FNz4Go
-   Zi3zWktoFatKYFLXTC0XawqvfHwcDwTMqI4vYfTzQFPt8gIZqHJN018In
-   A==;
-X-CSE-ConnectionGUID: UQfMXCD4RiOpA0seCyhq7Q==
-X-CSE-MsgGUID: L+SDInEMSTmlfDfbT8z63w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="64594852"
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="64594852"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 16:03:52 -0700
-X-CSE-ConnectionGUID: xMI2KgH0Sz2GeaKQyHZoww==
-X-CSE-MsgGUID: 2NIQhblOT4uFkdMli7zH3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="185684170"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Jul 2025 16:03:49 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXpRb-00047v-2r;
-	Fri, 04 Jul 2025 23:03:47 +0000
-Date: Sat, 5 Jul 2025 07:02:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <202507050624.7hvmxJdI-lkp@intel.com>
-References: <20250704072807.9335-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpH/f1rS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C15CC4CEE3;
+	Fri,  4 Jul 2025 23:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751670656;
+	bh=WzEF1y0lZmRnc5y+Tvi5rT34TyJUGRdq03o+P2fNCUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YpH/f1rSloLFgWn5sNuRXIkA3oG9qbQku5W83DlodFuFMraEvIl70MwYU02Y11KMz
+	 BeZfUgEwL6rGwnJDH13p2pfkAS9cIh5020XslK10a5CY2XiiKAkxn2qonJUZ7UZ8Ce
+	 Iu4mAhK3vJ/RhpDOLHryQ+aVBAqqG9VOBZxqUfjjkT+Zqe1ANtfCeRErgKBlJHZB32
+	 q8XJ9EAp1yip/XX4jPuA05st/9Rd5M6QTerlH0AlA+RCqckXmy/tyBX4jACcZsxMOJ
+	 I5SJTaHsb+s5XzXTOhLF6+reSm+wmolOu/PoNW+zF/pGP+S+25vuHhlPxMqkH0O/6k
+	 mSUhGD1HCirhA==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH 6.12 000/218] 6.12.36-rc1 review
+Date: Sat,  5 Jul 2025 01:10:46 +0200
+Message-ID: <20250704231046.332586-1-ojeda@kernel.org>
+In-Reply-To: <20250703143955.956569535@linuxfoundation.org>
+References: <20250703143955.956569535@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704072807.9335-1-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+On Thu, 03 Jul 2025 16:39:08 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.36 release.
+> There are 218 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> Anything received after that time might be too late.
 
-kernel test robot noticed the following build warnings:
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64:
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250704-153259
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250704072807.9335-1-ansuelsmth%40gmail.com
-patch subject: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
-config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/reproduce)
+However, in my loongarch64 built-test, I am seeing:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507050624.7hvmxJdI-lkp@intel.com/
+    arch/loongarch/mm/mmap.c:69:21: error: call to undeclared function 'huge_page_mask_align'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+       69 |                 info.align_mask = huge_page_mask_align(filp);
+          |                                   ^
 
-All warnings (new ones prefixed by >>):
+Which makes sense since that function appeared first in v6.13 in:
 
-   In file included from ./arch/openrisc/include/generated/asm/div64.h:1,
-                    from include/linux/math.h:6,
-                    from include/linux/kernel.h:27,
-                    from include/linux/cpumask.h:11,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/spinlock.h:63,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7,
-                    from arch/openrisc/include/asm/pgalloc.h:20,
-                    from arch/openrisc/include/asm/io.h:18,
-                    from include/linux/io.h:12,
-                    from drivers/pwm/pwm-airoha.c:20:
-   drivers/pwm/pwm-airoha.c: In function 'airoha_pwm_apply_bucket_config':
-   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
-     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                                   ^~
-   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
-     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-         |                 ^~~~~~
-   In file included from include/linux/array_size.h:5,
-                    from drivers/pwm/pwm-airoha.c:16:
->> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-     195 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^~
-   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
-     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-         |                 ^~~~~~
-   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
-     199 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-         |                                    |
-         |                                    u32 * {aka unsigned int *}
-   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
-     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-         |                 ^~~~~~
-   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
-     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
-         |                            ~~~~~~~~~~^~~~~~~~
-   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
-     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                                   ^~
-   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
-     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-         |                 ^~~~~~
->> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-     195 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^~
-   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
-     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-         |                 ^~~~~~
-   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
-     199 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-         |                                    |
-         |                                    u32 * {aka unsigned int *}
-   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
-     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-         |                 ^~~~~~
-   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
-     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
-         |                            ~~~~~~~~~~^~~~~~~~
+    7f24cbc9c4d4 ("mm/mmap: teach generic_get_unmapped_area{_topdown} to handle hugetlb mappings")
 
+Cc: Bibo Mao <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 
-vim +195 include/asm-generic/div64.h
+I hope that helps!
 
-^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
-^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
-^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
-^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
-^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16 @183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
-461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
-461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
-461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02 @195  	} else if (likely(((n) >> 32) == 0)) {		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  199  		__rem = __div64_32(&(n), __base);	\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
-^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Miguel
