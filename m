@@ -1,369 +1,185 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAB429A310;
-	Fri,  4 Jul 2025 12:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862A62D6402
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632221; cv=none; b=UyHu0KxrMGZueX4dsUkhWOUhOTdNwl7LVqoHppu/DAzX0mjtRumQ/V4Hq3b5nNRH5sh2dq9ZNHmXhnTRBYW1oLe7iGtUM5/j4NyRmtEZ0SB1TZmK963ya2zOegoGn2n57vvb4fJz6CcpmeXGkcXoqpATZmSc4HLwOv+giq+A/bI=
+	t=1751632222; cv=none; b=DYGn0tC3VpICLZxg9pYqdXDnZiw1+rhgArpj77yK4AXhbUn7Tw9w7/CO4mkfACEIcV94zhBBJZvCe0kb5vF/N3uKNfeEPLNtL72TCiY3MI4qyS0iw9GLlHfl+42x27QOH5eqDAvxiqE1sMotDbsIToKnpL8c1+uHTE4QDx0/lcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632221; c=relaxed/simple;
-	bh=Vp8tuDWzoT6QJTkPDVsTGshvcn9OnKRK3jYRHmSGqi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BbR3YzYeBRtSZc39EPZAdI+l8oOd+7j7FTojDOKClGlKjKHZAXyCPIVVSxdttayVRhJrV7uVLFOtVv5fe3pZXE6nmdiG/z1Z8x0S4taPZLu3QNGd9vFVPXDZRnD106mC9h+6FaG7PEMt0aETj7Gu3tfmPnIkx+B8/yxgJxWsF1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ldJBXSYz; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1751632222; c=relaxed/simple;
+	bh=EhqUgOJCJlnSDCmE5YbN+SmR7GZFhyPzjsXP0FF1GYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVhQ3X0t/VES1ApOCgKMtsYrPrKgLVH0mKrAvDOwstabiJPUaISQlDFEH+sO0qmAQDIJZwWUSJ6t60dDa2a0flPMre/90uTXvgdmPPoWggwGW4697Xx/7JKD8HZC2JG1XdDtiQBO7RYR/L6+Yhcmajug3Ab3btIuMqA+gy4lEf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1PNeuq6X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Qw5LBiTr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iUH4+5Vu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZffzaIRI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ldJBXSYz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0xfZqBp17aRS6MxoH8oIJF+tAVuvVXaqV0rJ/wtD2Ng=; b=ldJBXSYz7KzJMMVpkDqKFAtjMp
-	ByXKmWZgWhQyFOwT4xlWUFrEy62aQ/t2fdUBJZ6y+FeiFrC7pPX51zggyg76zOkcYNqANfd9i5QdX
-	iUukzKGJXe1M/4YqiQeyKB5mDyJpfHk6DrvKnXefeImwD71FdVAA+jSPu6aYb/2kfN85laAnV/S7x
-	BbHBUh2a32uVYZQ5gK7WmigO8v8tVAAWEWr3Cp3o5IszvrLO2eTjdildqbtzjBYkoAmKq/qIY+2sR
-	pscHq1GMXZNCN7FR0n8TsbwBnYnehUEpccE76EAemBdmoJ5G1OAEGf73XYKdOkUXZm7R1SZT/M9sm
-	JGY3uSjg==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uXfYH-00CQTY-B5; Fri, 04 Jul 2025 14:30:01 +0200
-Message-ID: <da5fefba-7222-4d77-9528-51eef235c36a@igalia.com>
-Date: Fri, 4 Jul 2025 13:30:00 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1PNeuq6X";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Qw5LBiTr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iUH4+5Vu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZffzaIRI"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 68609211B1;
+	Fri,  4 Jul 2025 12:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751632218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q+FqtZMjtP4HpZ/jeTQTPK73EGvFDqPilJ5M/AUaOsg=;
+	b=1PNeuq6XRG9MLSKh16/8j87kZJMB7EIl2HpEWVs2u8pn4ERdxbvgelzT1f5k+NPAxh1NA3
+	DUhuhO33rqPurfYDV6Xd6LvxR7Ete9BU17kVZxsSQq6GNQ+XFFClvqd4nRp/A5nzVx5KTs
+	zK1JxYRs9oPAk10lH1ZjkkCMs6fkV6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751632218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q+FqtZMjtP4HpZ/jeTQTPK73EGvFDqPilJ5M/AUaOsg=;
+	b=Qw5LBiTryjPMOx7bvmSs0x5fIFEAlrw4PFmoc6rh/CevNJnTZQovkQFMhOVgGAycZXvDAG
+	yQYm71qi29pWD2Dg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=iUH4+5Vu;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZffzaIRI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751632217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q+FqtZMjtP4HpZ/jeTQTPK73EGvFDqPilJ5M/AUaOsg=;
+	b=iUH4+5VultHZW/BBXGA+BmaiSW4ERO0GGGCIXtyomlhI4kUC2UuvbntREmfxxaGRS6qiYD
+	hi1IhXlsoGLh8tcEins5JEoHmBxUFBPxJeUY3VkbOuhDyn9Cwj64A1IV9uB8rq1TnEVLHk
+	en7cLJ94w0kqDZkxYepKPUB6rC5hcZc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751632217;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q+FqtZMjtP4HpZ/jeTQTPK73EGvFDqPilJ5M/AUaOsg=;
+	b=ZffzaIRI91Wrez4gmihemHyE278M17FvJei2kFPfkywnXuEZHbdJw/QsufVHUpEN//WEQT
+	xO9k6fQKdvq5TrCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 41F8913A71;
+	Fri,  4 Jul 2025 12:30:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ViIbEFnJZ2j/VAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 04 Jul 2025 12:30:17 +0000
+Date: Fri, 4 Jul 2025 14:30:16 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Aaron Tomlin <atomlin@atomlin.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	storagedev@microchip.com, virtualization@lists.linux.dev, 
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v7 05/10] scsi: Use block layer helpers to constrain
+ queue affinity
+Message-ID: <fdbc2ddc-830b-4727-88ae-5347fea8fca8@flourine.local>
+References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
+ <20250702-isolcpus-io-queues-v7-5-557aa7eacce4@kernel.org>
+ <d95de280-8cd7-4697-933a-37dc53f4c552@suse.de>
+ <2e7576e4-442f-4000-817d-6253374f5818@flourine.local>
+ <c06d0ef2-6bd2-4f5d-895f-0255415b2a24@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] drm/sched/tests: Port to cancel_job()
-To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org
-References: <20250701132142.76899-3-phasta@kernel.org>
- <20250701132142.76899-5-phasta@kernel.org>
- <f9b55d5b-0018-4850-a9b7-2f267467e957@igalia.com>
- <6762d33b4fe8e7b264a7403f228e6ec6723ae623.camel@mailbox.org>
- <9a070a66-f6fd-45b4-958c-c6e9f3487a0c@igalia.com>
- <fc61c7c9d5d341d752458d0ee6313ec932803ab3.camel@mailbox.org>
- <298eeb951676d24981f1d9208b076ec03563a3ae.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <298eeb951676d24981f1d9208b076ec03563a3ae.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c06d0ef2-6bd2-4f5d-895f-0255415b2a24@suse.de>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 68609211B1
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MIME_TRACE(0.00)[0:+];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	R_RATELIMIT(0.00)[to_ip_from(RL71uuc3g3e76oxfn4mu5aogan)];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[flourine.local:mid,suse.de:dkim]
+X-Spam-Score: -4.51
 
+On Fri, Jul 04, 2025 at 12:28:49PM +0200, Hannes Reinecke wrote:
+> It really shouldn't be an issue when the cpus are distributed 'correctly'
+> :-)
 
-On 04/07/2025 12:27, Philipp Stanner wrote:
-> On Fri, 2025-07-04 at 11:53 +0200, Philipp Stanner wrote:
->> On Wed, 2025-07-02 at 12:25 +0100, Tvrtko Ursulin wrote:
->>>
->>> On 02/07/2025 11:56, Philipp Stanner wrote:
->>>> On Wed, 2025-07-02 at 11:36 +0100, Tvrtko Ursulin wrote:
->>>>>
->>>>> On 01/07/2025 14:21, Philipp Stanner wrote:
->>>>>> The GPU Scheduler now supports a new callback, cancel_job(),
->>>>>> which
->>>>>> lets
->>>>>> the scheduler cancel all jobs which might not yet be freed
->>>>>> when
->>>>>> drm_sched_fini() runs. Using this callback allows for
->>>>>> significantly
->>>>>> simplifying the mock scheduler teardown code.
->>>>>>
->>>>>> Implement the cancel_job() callback and adjust the code where
->>>>>> necessary.
->>>>>
->>>>> Cross referencing against my version I think you missed this
->>>>> hunk:
->>>>>
->>>>> --- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
->>>>> +++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
->>>>> @@ -49,7 +49,6 @@ struct drm_mock_scheduler {
->>>>>
->>>>>     	spinlock_t		lock;
->>>>>     	struct list_head	job_list;
->>>>> -	struct list_head	done_list;
->>>>>
->>>>>     	struct {
->>>>>     		u64		context;
->>>>>
->>>>
->>>> Right, overlooked that one.
->>>>
->>>>>
->>>>> I also had this:
->>>>>
->>>>> @@ -97,7 +96,8 @@ struct drm_mock_sched_job {
->>>>>     	struct completion	done;
->>>>>
->>>>>     #define DRM_MOCK_SCHED_JOB_DONE		0x1
->>>>> -#define DRM_MOCK_SCHED_JOB_TIMEDOUT	0x2
->>>>> +#define DRM_MOCK_SCHED_JOB_CANCELED	0x2
->>>>> +#define DRM_MOCK_SCHED_JOB_TIMEDOUT	0x4
->>>>>
->>>>> And was setting it in the callback. And since we should add a
->>>>> test to
->>>>> explicitly cover the new callback, and just the callback, that
->>>>> could
->>>>> make it very easy to do it.
->>>>
->>>> What do you imagine that to look like? The scheduler only invokes
->>>> the
->>>> callback on tear down.
->>>>
->>>> We also don't have tests that only test free_job() and the like,
->>>> do
->>>> we?
->>>>
->>>> You cannot test a callback for the scheduler, because the
->>>> callback
->>>> is
->>>> implemented in the driver.
->>>>
->>>> Callbacks are tested by using the scheduler. In this case, it's
->>>> tested
->>>> the intended way by the unit tests invoking drm_sched_free().
->>>
->>> Something like (untested):
->>>
->>> static void drm_sched_test_cleanup(struct kunit *test)
->>> {
->>> 	struct drm_mock_sched_entity *entity;
->>> 	struct drm_mock_scheduler *sched;
->>> 	struct drm_mock_sched_job job;
->>> 	bool done;
->>>
->>> 	/*
->>> 	 * Check that the job cancel callback gets invoked by the
->>> scheduler.
->>> 	 */
->>>
->>> 	sched = drm_mock_sched_new(test, MAX_SCHEDULE_TIMEOUT);
->>> 	entity = drm_mock_sched_entity_new(test,
->>> 					
->>> DRM_SCHED_PRIORITY_NORMAL,
->>> 					   sched);
->>>
->>> 	job = drm_mock_sched_job_new(test, entity);
->>> 	drm_mock_sched_job_submit(job);
->>> 	done = drm_mock_sched_job_wait_scheduled(job, HZ);
->>> 	KUNIT_ASSERT_TRUE(test, done);
->>>
->>> 	drm_mock_sched_entity_free(entity);
->>> 	drm_mock_sched_fini(sched);
->>>
->>> 	KUNIT_ASSERT_TRUE(test, job->flags &
->>> DRM_MOCK_SCHED_JOB_CANCELED);
->>> }
->>
->> That could work – but it's racy.
->>
->> I wonder if we want to introduce a mechanism into the mock scheduler
->> through which we can enforce a simulated GPU hang. Then it would
->> never
->> race, and that might be useful for more advanced tests for reset
->> recovery and those things.
->>
->> Opinions?
-> 
-> Ah wait, we can do that with job_duration = 0
+If I get the drift, we start to discuss how the mapping could be
+normally, so not for isolcpus. The isolcpus case is just how many hwq
+are available (and affinity):
 
-Yes, the above already wasn't racy.
+ num queues to map = min(num housekeeping CPUs, #hwq)
 
-If job duration is not explicitly set, and it isn't, the job will not 
-complete until test would call drm_mock_sched_advance(sched, 1). And 
-since it doesn't, the job is guaranteed to be sitting on the list 
-forever. So drm_sched_fini() has a guaranteed chance to clean it up.
+and then it's common code, no special housekeeping mapping code.
 
-> Very good, I'll include something like that in v2.
+> We have several possibilities:
+> -> #hwq > num_possible_cpus: easy, 1:1 mapping, no problem
 
-Ack.
+I agree, no problem here.
 
-Regards,
+> -> num_online_cpu < #hwq < num_possible_cpus: Not as easy, but if we
+>    ensure that each online cpu is mapped to a different hwq we don't
+>    have a performance impact.
 
-Tvrtko
+This should also be fairly straightforward too. First assign each online
+CPU a hwq and distribute the rest of the hwq amount the rest of the
+possible offline CPUs.
 
->>> Or via the hw fence status.
->>>
->>> Regards,
->>>
->>> Tvrtko
->>>
->>>>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
->>>>>> ---
->>>>>>     .../gpu/drm/scheduler/tests/mock_scheduler.c  | 66
->>>>>> +++++++--
->>>>>> -----
->>>>>> -----
->>>>>>     1 file changed, 23 insertions(+), 43 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>>>> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>>>> index 49d067fecd67..2d3169d95200 100644
->>>>>> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>>>> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>>>> @@ -63,7 +63,7 @@ static void
->>>>>> drm_mock_sched_job_complete(struct
->>>>>> drm_mock_sched_job *job)
->>>>>>     	lockdep_assert_held(&sched->lock);
->>>>>>     
->>>>>>     	job->flags |= DRM_MOCK_SCHED_JOB_DONE;
->>>>>> -	list_move_tail(&job->link, &sched->done_list);
->>>>>> +	list_del(&job->link);
->>>>>>     	dma_fence_signal_locked(&job->hw_fence);
->>>>>>     	complete(&job->done);
->>>>>>     }
->>>>>> @@ -236,26 +236,39 @@ mock_sched_timedout_job(struct
->>>>>> drm_sched_job
->>>>>> *sched_job)
->>>>>>     
->>>>>>     static void mock_sched_free_job(struct drm_sched_job
->>>>>> *sched_job)
->>>>>>     {
->>>>>> -	struct drm_mock_scheduler *sched =
->>>>>> -			drm_sched_to_mock_sched(sched_job-
->>>>>>> sched);
->>>>>>     	struct drm_mock_sched_job *job =
->>>>>> drm_sched_job_to_mock_job(sched_job);
->>>>>> -	unsigned long flags;
->>>>>>     
->>>>>> -	/* Remove from the scheduler done list. */
->>>>>> -	spin_lock_irqsave(&sched->lock, flags);
->>>>>> -	list_del(&job->link);
->>>>>> -	spin_unlock_irqrestore(&sched->lock, flags);
->>>>>>     	dma_fence_put(&job->hw_fence);
->>>>>> -
->>>>>>     	drm_sched_job_cleanup(sched_job);
->>>>>>     
->>>>>>     	/* Mock job itself is freed by the kunit framework.
->>>>>> */
->>>>>>     }
->>>>>>     
->>>>>> +static void mock_sched_cancel_job(struct drm_sched_job
->>>>>> *sched_job)
->>>>>> +{
->>>>>> +	struct drm_mock_scheduler *sched =
->>>>>> drm_sched_to_mock_sched(sched_job->sched);
->>>>>> +	struct drm_mock_sched_job *job =
->>>>>> drm_sched_job_to_mock_job(sched_job);
->>>>>> +	unsigned long flags;
->>>>>> +
->>>>>> +	hrtimer_cancel(&job->timer);
->>>>>> +
->>>>>> +	spin_lock_irqsave(&sched->lock, flags);
->>>>>> +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
->>>>>> +		list_del(&job->link);
->>>>>> +		dma_fence_set_error(&job->hw_fence, -
->>>>>> ECANCELED);
->>>>>> +		dma_fence_signal_locked(&job->hw_fence);
->>>>>> +	}
->>>>>> +	spin_unlock_irqrestore(&sched->lock, flags);
->>>>>> +
->>>>>> +	/* The GPU Scheduler will call
->>>>>> drm_sched_backend_ops.free_job(), still.
->>>>>> +	 * Mock job itself is freed by the kunit framework.
->>>>>> */
->>>>>
->>>>> /*
->>>>>     * Multiline comment style to stay consistent, at least in
->>>>> this
->>>>> file.
->>>>>     */
->>>>>
->>>>> The rest looks good, but I need to revisit the timeout/free
->>>>> handling
->>>>> since it has been a while and you changed it recently.
->>>>>
->>>>> Regards,
->>>>>
->>>>> Tvrtko
->>>>>
->>>>>> +}
->>>>>> +
->>>>>>     static const struct drm_sched_backend_ops
->>>>>> drm_mock_scheduler_ops
->>>>>> = {
->>>>>>     	.run_job = mock_sched_run_job,
->>>>>>     	.timedout_job = mock_sched_timedout_job,
->>>>>> -	.free_job = mock_sched_free_job
->>>>>> +	.free_job = mock_sched_free_job,
->>>>>> +	.cancel_job = mock_sched_cancel_job,
->>>>>>     };
->>>>>>     
->>>>>>     /**
->>>>>> @@ -289,7 +302,6 @@ struct drm_mock_scheduler
->>>>>> *drm_mock_sched_new(struct kunit *test, long timeout)
->>>>>>     	sched->hw_timeline.context =
->>>>>> dma_fence_context_alloc(1);
->>>>>>     	atomic_set(&sched->hw_timeline.next_seqno, 0);
->>>>>>     	INIT_LIST_HEAD(&sched->job_list);
->>>>>> -	INIT_LIST_HEAD(&sched->done_list);
->>>>>>     	spin_lock_init(&sched->lock);
->>>>>>     
->>>>>>     	return sched;
->>>>>> @@ -304,38 +316,6 @@ struct drm_mock_scheduler
->>>>>> *drm_mock_sched_new(struct kunit *test, long timeout)
->>>>>>      */
->>>>>>     void drm_mock_sched_fini(struct drm_mock_scheduler *sched)
->>>>>>     {
->>>>>> -	struct drm_mock_sched_job *job, *next;
->>>>>> -	unsigned long flags;
->>>>>> -	LIST_HEAD(list);
->>>>>> -
->>>>>> -	drm_sched_wqueue_stop(&sched->base);
->>>>>> -
->>>>>> -	/* Force complete all unfinished jobs. */
->>>>>> -	spin_lock_irqsave(&sched->lock, flags);
->>>>>> -	list_for_each_entry_safe(job, next, &sched-
->>>>>>> job_list,
->>>>>> link)
->>>>>> -		list_move_tail(&job->link, &list);
->>>>>> -	spin_unlock_irqrestore(&sched->lock, flags);
->>>>>> -
->>>>>> -	list_for_each_entry(job, &list, link)
->>>>>> -		hrtimer_cancel(&job->timer);
->>>>>> -
->>>>>> -	spin_lock_irqsave(&sched->lock, flags);
->>>>>> -	list_for_each_entry_safe(job, next, &list, link)
->>>>>> -		drm_mock_sched_job_complete(job);
->>>>>> -	spin_unlock_irqrestore(&sched->lock, flags);
->>>>>> -
->>>>>> -	/*
->>>>>> -	 * Free completed jobs and jobs not yet processed by
->>>>>> the
->>>>>> DRM scheduler
->>>>>> -	 * free worker.
->>>>>> -	 */
->>>>>> -	spin_lock_irqsave(&sched->lock, flags);
->>>>>> -	list_for_each_entry_safe(job, next, &sched-
->>>>>>> done_list,
->>>>>> link)
->>>>>> -		list_move_tail(&job->link, &list);
->>>>>> -	spin_unlock_irqrestore(&sched->lock, flags);
->>>>>> -
->>>>>> -	list_for_each_entry_safe(job, next, &list, link)
->>>>>> -		mock_sched_free_job(&job->base);
->>>>>> -
->>>>>>     	drm_sched_fini(&sched->base);
->>>>>>     }
->>>>>>     
->>>>>
->>>>
->>>
->>
-> 
+> -> #hwq < num_online_cpu: If we ensure that a) the number of online cpus
+>    per hwq is (roughly) identical we won't have a performance impact.
+>    As a bonus we should strive to have the number of offline cpus
+>    distributed equally on each hwq.
 
+__group_cpus_evenly is handling this pretty well.
+
+> Of course, that doesn't take into accound NUMA locality; with NUMA locality
+> you would need to ensure to have at least one CPU per NUMA node
+> mapped to each hwq. Which actually would impose a lower limit on the
+> number (and granularity!) of hwqs (namely the number of NUMA nodes), but
+> that's fair, I guess.
+
+Again __group_cpus_evenly is taking NUMA into account as I understand it.
+
+> But this really can be delegated to later patches; initially we really
+> should identify which drivers might have issues with CPU hotplug,
+> and at the very least issue a warning for these drivers.
+
+There are different ways I suppose. My approach is not to change the
+drivers too much because I don't have access to all the hardware for
+testing. Instead extend the core code so that the different cases are
+covered.
