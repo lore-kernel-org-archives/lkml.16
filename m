@@ -1,191 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2046.outbound.protection.outlook.com [40.107.244.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BFF1876
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 04:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602146; cv=none; b=VuUrkyROf3hmIqsypib2lxwmpE9ViTFeIbfLzr2uynufrDDwpLIL6HgLCtM2X7U6JwB7CzNfUjAKG5MKdXzVPqwk1diHrq9Bm/721bZsgpnHvAgGnz0QqRrsVDpR6tVHmX9v4TIS6vHISGSnHiEWmtXw2TeC0Z9CYQsn+pxZrYU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602146; c=relaxed/simple;
-	bh=PBzA0VmSYgiuTtZ5AHfbnDZGQlkbDW5Cysn/FEk1S6U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=LsvZMO9DOEMLmO1LtWH+9ehZH/TPbg1o35UWe4bWLtdmgnrep3udKkL8nq+vUzsvG13/QSFxubRxSySWOtvRF5mdNnjFTzFuFtwslHGmE/l/cDteHtS4HSDw8CAAjhMv3CxknbRJazvFgKBYcB/NZkPn9XUm2ik4uWAN9iJgVW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KQWepVgm; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1EB1876;
+	Fri,  4 Jul 2025 04:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751602155; cv=fail; b=Bs1wIA2JmSe3HyTYUfPnenZxtB2C+IBRWl+YYU8qAqFD+A4vAqCKhGG9iYxrf97fXgKDzVFf519ffamfYTGz1uKI7+nYRPnmoo91Hqgctas/mY/2jOuVeYgl3ueZ5Xyfx00R+8fk2/VR/2Hmi735+FRiIf1AIPxF1/+7bay5vjU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751602155; c=relaxed/simple;
+	bh=kVSrP77AexIJcTL3EAQL6dZsh5Ezc3X7UvWJRfovN2c=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=agXZEkQkUoR6sowamUbg2Yxt2QfWgk/wo65VSnrZKu8Z27XpiyFSfQmEbqACw49HNNK3gLWIifM4Y/DHnxYpz4vl9bYKm6+xorIPgyEGqQ7iTMLdvY7z8Xc3NtRoRscOkiyYqEF0cIdAYRq5m7L0pcucsx29PKQTKC8tnv9Mfdw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Eh0BdinZ; arc=fail smtp.client-ip=40.107.244.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KQWepVgm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751602144; x=1783138144;
-  h=date:from:to:cc:subject:message-id;
-  bh=PBzA0VmSYgiuTtZ5AHfbnDZGQlkbDW5Cysn/FEk1S6U=;
-  b=KQWepVgmPWpo4YFo6aBy33ilZrhjf8AD1qA2lQvFTumXM3DXQLV5Wrk3
-   ZnwhqIve9nRqk/I80v/RRW02CJJQcAc0qoVG64yGNQgEs3fgaaOdpIeLw
-   Z9TG6iV/d2wNOGsI0SYFbNL/6ZPeZG6fFDcyDSPuwPBZEtlsVqVxdqnTm
-   mEfvnoKxFqQsWzmwEEyN+wCjNS1p7JocnONH+kAM2KythofTLRocnUgdK
-   K3+/FKRaa089e5LPp/Yp73AVEi/5xBppbG4mr+0lVCY3jY5GqnZv4xgSd
-   ozJA4A9MEFsps5KkRw3wiXySNj5GfikuZmAXUv9JLXrH+43ZU6fF2o2ix
-   g==;
-X-CSE-ConnectionGUID: 4W55z5liTAW/OAmniGMitg==
-X-CSE-MsgGUID: yPs+mMRPSNaEOxWVnyk71w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="41564010"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="41564010"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 21:09:04 -0700
-X-CSE-ConnectionGUID: VJIp3rtwRuyY30XcLAEtvA==
-X-CSE-MsgGUID: IAbfmSfXQZ+K929FOVFi/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="155112238"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 03 Jul 2025 21:09:04 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXXjR-0003Jd-0J;
-	Fri, 04 Jul 2025 04:09:01 +0000
-Date: Fri, 04 Jul 2025 12:08:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:timers/ptp] BUILD SUCCESS
- 8959338617a85e35820e3a7fa21801cf55b068bf
-Message-ID: <202507041227.DtP1PWMk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Eh0BdinZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qjev9KHLTsnsnDcxgBn1UmqR7+IAFm+DnpPKPTs4jvps7OJA4bP8HXyeSsmUNmGZcSE25cKxOZDyNAd6zmx/5BCky7FMW3gIW89LzLrkctYJh6fvmi+ymtnMmLPaRTmLj17+TgXUapWKwFry/7nQ8p++vOyg4F1f2ER4W/GoeOvuqL11HR1m9ldp2cjaOowGFmhJkU0swbnwscjubDEAxgqqIxoY6BbQ0Ba2F9xUf08VDb9vyMiH4MqOK4iD1zLNvHxu8wHi+DXDeNw5IZ5D96FGdOJQRquO66wN7BhlCoLzViTRVZNsyNz6+8o02mpkfWK3IEtgpPkInEboOx6wJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YPbah+lSD8kZgpfDaIiS/pRd26Nwlta81qIk6i3ZLqA=;
+ b=Wuyx6/jd6mxPLVI9ChUobmDLaR57a1iV7yK+raQ6HO//lTiEYECBS6KG8VTm5zFtw3TiqUm6wvUVKdRMWx+aLKiwlj4Smde3mHdg7l17FD46Y7vgd+vMpM/aGxaCygE25ttfpmAc3fvYeDpdSKRuP2RA+q/frSjAqoqyz/kKw/Xmrw4JyS1fU7x3K1JfaF9BFanrhN4QqOzsOnX+fa5aXreyaIyDeRlTO/EP5IRmtM3IhRD8ytXHTia/Xw13R+T6dFHa24spJ02+40tVwUubBfgbXJ/V4HSafouIxDPNDD4tCZtr0vGHM3qpR4Ohdo9UFD5EQyhYr5bDTs7qeiPvIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YPbah+lSD8kZgpfDaIiS/pRd26Nwlta81qIk6i3ZLqA=;
+ b=Eh0BdinZc6qTSXOXql7W0M61C9SY/cAc/17+D3QLsu4Coq0WA6YWfN9d3IhqUgIgGvbZXu6adV4Gw24iQfnJ0IgS/oRWvsnOloELmU4xlQvpQ3iCsWNUcIsmCb3eSmbDUFL5nVxFd96o2j3iuoJ61Q6hFYg+vRRDqByyKEEXYdOFymqKXZ+Sqrg3J8p/+wvXcSNJPosPsUgqom691ARexnCeM9K3mlxg7BJeDysNkN4PsyLulvgWrf1NWlaDHJOn91cSoPqnXQY1VpibGLLu4EoahgrpI/muKfR3p+TYHO4oYIdN9G+8aHY0K62wQ1J6d7Uezl3/ytfEPMTh3nzyug==
+Received: from BN9PR03CA0181.namprd03.prod.outlook.com (2603:10b6:408:f9::6)
+ by DM4PR12MB6590.namprd12.prod.outlook.com (2603:10b6:8:8f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Fri, 4 Jul
+ 2025 04:09:10 +0000
+Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
+ (2603:10b6:408:f9:cafe::16) by BN9PR03CA0181.outlook.office365.com
+ (2603:10b6:408:f9::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Fri,
+ 4 Jul 2025 04:09:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 04:09:09 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 3 Jul 2025
+ 21:08:54 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 3 Jul
+ 2025 21:08:53 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 3 Jul 2025 21:08:51 -0700
+Date: Thu, 3 Jul 2025 21:08:50 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
+	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
+	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
+	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v7 10/28] iommufd/access: Bypass access->ops->unmap for
+ internal use
+Message-ID: <aGdT0uNtfIFLvnBO@Asurada-Nvidia>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <a2b2a9704d7efff717448cbb76695e83f2fe67c9.1750966133.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276F03CF1E97173E711A5288C40A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aGWSkRX4yUuuOVZ8@Asurada-Nvidia>
+ <BN9PR11MB5276BED9EC2F89E805F6BA678C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276BED9EC2F89E805F6BA678C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|DM4PR12MB6590:EE_
+X-MS-Office365-Filtering-Correlation-Id: 81394f77-9561-494c-2ced-08ddbab086f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0o9i3f7j0kp+sOt+5g2ZcxUCnNKVmGqi3aTzFEESLq3JgQBYaHdOJmkbgmIh?=
+ =?us-ascii?Q?HKP5Km6qcPrFqOJZ5lflGhwikhtJ1kFCNB0hb1BkU5AkXQa4Jd7JueWp/fdx?=
+ =?us-ascii?Q?2oKt/OrJw1KhN43JlQw30+yBCeX9sUY9+/388TAV4aX8mN7/gg64ce3Z64N4?=
+ =?us-ascii?Q?HzbpRWYOOjlu01c6wrNHPHn5JWDHXGuz37TIj7vxY5udHS6tkJMXTknCipgC?=
+ =?us-ascii?Q?paUgoxINKuPGuS0oIWz5pDgZoxLLaZz5sChnA+yvPVlX5+ilY6gsTJM4SFYS?=
+ =?us-ascii?Q?USOVKu4sSbwejXi7vPi01jIHigVYzt5kD1L9u9/opcXDgrT+G7XBnu4pZDNB?=
+ =?us-ascii?Q?MHuYqhyJnnjdWlBhHdPWZYh3jNidHZ3P7i0pfJ7IPJ7taJgo9kK5l6R/uSWJ?=
+ =?us-ascii?Q?TFT1ESp/iEbn4ANPqw9A5U41w/2bRyCc7sTqQjdeNKiaB5y8XlbGqi1ezDFx?=
+ =?us-ascii?Q?FTrxu/tm+gnI8GWe9N0O95LmE6TUJm1DlfcSd6GWdtS8rNY+rDrlZYmExvfn?=
+ =?us-ascii?Q?UrqHmC1a+jek/Si8RoPBRrE9ve7Vw2JTD7hNYFFMsXKtSPZ879ccc4ayXLfz?=
+ =?us-ascii?Q?pFf5pQTYRwQbxvTPEzbv4RfEG02uLrUYmdtrL4+UGMfd9bNm3aOF5UUdGuq0?=
+ =?us-ascii?Q?mvUSjcJrkX/7wcYqInUpmwziGLdin0DAlv8YgOlf/1VK6V7NmLZuIfILwaK3?=
+ =?us-ascii?Q?Knafk8MGpILV+kAkXP1y9QMOcVlht4dqajLg2MEjygt/ZJpZi/kE2hezxmce?=
+ =?us-ascii?Q?Upio0oXKBU79IwhxF/8oRHCRC1ptnQ5Y/260FHlD/y/1vdeabrUiDm5Dn8hv?=
+ =?us-ascii?Q?we3A0XrT0wuJslD2USsmFzIjOXpVje0oDTU7yg4o3bo8SJizdVQtZfCqLYPK?=
+ =?us-ascii?Q?lHdBFFNUtYoi1DA6J7jRCxnXOw2HEEZWXvW+n6TbzR0L67n0r/66bPZDktyT?=
+ =?us-ascii?Q?aadxov3oex44jW1r8/N7VNMNHsEDh26Z2mVANCMREryHpBHduf5rdnQqv93l?=
+ =?us-ascii?Q?HTgVIOIXXoLLdlrnbldHkQZKyiyND4E9E7MAOqyKU79tdpMSLh1h6+t9O8rt?=
+ =?us-ascii?Q?xmVER+Wwn7yBlCJ5RbuZrJqmsHqu3xWwAmSyn6fjt9fjdyR2ektH+iCp0PKa?=
+ =?us-ascii?Q?+fZgUfkUciReVu+IgH+ELLoL7tJvNTzBBpon8bZc0CCm9gW9QIlUBWWjDpWJ?=
+ =?us-ascii?Q?lThbw2T5oyT2ks+hO2W5GFMDk2E8Ct3CRr2UQsooQZTMtSYCfafth9sNposy?=
+ =?us-ascii?Q?cGg+fFINYbMISael3610jo1g0zFGicmMuXo+qB9l50J4Jw2r6WP5rIRFcbb1?=
+ =?us-ascii?Q?QKRc/ssQrT8wLa2xVTHUb9RgJAkz0yD1PiudEWvQJLaaPB1Jb2Ammx5ctCbQ?=
+ =?us-ascii?Q?C7gM8uDT4PdhvYlYA/BEeiZjF+2yMH8/E82SuFUeK5o8Ih0Mrrpy5e9DVntK?=
+ =?us-ascii?Q?34kaU5G3rVPwS5a5V4pxk2daw/poDcM2NrBnpwWdz6St+fw6srvwGc+EH6Lb?=
+ =?us-ascii?Q?g2M4Ev6RiTkZo4RfsbDK29YkrBNfbLeyqOP8Y2O0A2SB9JlmBSR0obHHsg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 04:09:09.5733
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81394f77-9561-494c-2ced-08ddbab086f4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB52.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6590
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/ptp
-branch HEAD: 8959338617a85e35820e3a7fa21801cf55b068bf  timekeeping: Remove the temporary CLOCK_AUX workaround
+On Thu, Jul 03, 2025 at 04:57:34AM +0000, Tian, Kevin wrote:
+> I meant something like below:
+> 
+> iopt_unmap_iova_range()
+> {
+> 	bool internal_access = false;
+> 
+> 	down_read(&iopt->domains_rwsem);
+> 	down_write(&iopt->iova_rwsem);
+> 	/* Bypass any unmap if there is an internal access */
+> 	xa_for_each(&iopt->access_list, index, access) {
+> 		if (iommufd_access_is_internal(access)) {
+> 			internal_access = true;
+> 			break;
+> 		}
+> 	}
+> 
+> 	while ((area = iopt_area_iter_first(iopt, start, last))) {
+> 		if (area->num_access) {
+> 			if (internal_access) {
+> 				rc = -EBUSY;
+> 				goto out_unlock_iova;
+> 			}
+> 			up_write(&iopt->iova_rwsem);
+> 			up_read(&iopt->domains_rwsem);
+> 			iommufd_access_notify_unmap(iopt, area_first, length);	
+> 		}
+> 	}
+> }
+> 
+> it checks the access_list in the common path, but the cost should be
+> negligible when there is no access attached to this iopt. The upside
+> is that now unmap is denied explicitly in the area loop instead of 
+> still trying to unmap and then handling errors.
 
-elapsed time: 879m
+Hmm, I realized that either way might be incorrect, as it iterates
+the entire iopt for any internal access regardless its iova ranges.
 
-configs tested: 114
-configs skipped: 3
+What we really want is to reject an unmap against the same range as
+once pinged by an internal access, i.e. other range of unmap should
+be still allowed.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So, doing it at this level isn't enough. I think we should still go
+down to struct iopt_area as my v5 did:
+https://lore.kernel.org/all/3ddc8c678406772a8358a265912bb1c064f4c796.1747537752.git.nicolinc@nvidia.com/
+We'd only need to rename to num_locked as you suggested, i.e.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250703    gcc-11.5.0
-arc                   randconfig-002-20250703    gcc-12.4.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20250703    clang-21
-arm                   randconfig-002-20250703    gcc-8.5.0
-arm                   randconfig-003-20250703    clang-17
-arm                   randconfig-004-20250703    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250703    clang-21
-arm64                 randconfig-002-20250703    gcc-14.3.0
-arm64                 randconfig-003-20250703    clang-21
-arm64                 randconfig-004-20250703    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250703    gcc-14.3.0
-csky                  randconfig-002-20250703    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250703    clang-21
-hexagon               randconfig-002-20250703    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250703    clang-20
-i386        buildonly-randconfig-002-20250703    gcc-12
-i386        buildonly-randconfig-003-20250703    gcc-12
-i386        buildonly-randconfig-004-20250703    clang-20
-i386        buildonly-randconfig-005-20250703    gcc-12
-i386        buildonly-randconfig-006-20250703    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch             randconfig-001-20250703    clang-18
-loongarch             randconfig-002-20250703    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250703    gcc-8.5.0
-nios2                 randconfig-002-20250703    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250703    gcc-8.5.0
-parisc                randconfig-002-20250703    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc               randconfig-001-20250703    gcc-10.5.0
-powerpc               randconfig-002-20250703    clang-21
-powerpc               randconfig-003-20250703    gcc-8.5.0
-powerpc64             randconfig-001-20250703    clang-18
-powerpc64             randconfig-002-20250703    clang-21
-powerpc64             randconfig-003-20250703    gcc-14.3.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250703    gcc-13.4.0
-riscv                 randconfig-002-20250703    gcc-14.3.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250703    gcc-12.4.0
-s390                  randconfig-002-20250703    clang-21
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250703    gcc-9.3.0
-sh                    randconfig-002-20250703    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250703    gcc-8.5.0
-sparc                 randconfig-002-20250703    gcc-13.4.0
-sparc64               randconfig-001-20250703    gcc-8.5.0
-sparc64               randconfig-002-20250703    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250703    gcc-12
-um                    randconfig-002-20250703    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250703    gcc-11
-x86_64      buildonly-randconfig-002-20250703    gcc-12
-x86_64      buildonly-randconfig-003-20250703    clang-20
-x86_64      buildonly-randconfig-004-20250703    clang-20
-x86_64      buildonly-randconfig-005-20250703    gcc-12
-x86_64      buildonly-randconfig-006-20250703    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250703    gcc-14.3.0
-xtensa                randconfig-002-20250703    gcc-8.5.0
+@@ -719,6 +719,12 @@ static int iopt_unmap_iova_range(struct io_pagetable *iopt, unsigned long start,
+ 			goto out_unlock_iova;
+ 		}
+ 
++		/* The area is locked by an object that has not been destroyed */
++		if (area->num_locked) {
++			rc = -EBUSY;
++			goto out_unlock_iova;
++		}
++
+ 		if (area_first < start || area_last > last) {
+ 			rc = -ENOENT;
+ 			goto out_unlock_iova;
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Nicolin
