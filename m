@@ -1,112 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A5B298CA4;
-	Fri,  4 Jul 2025 12:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B418A298CA4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751631818; cv=none; b=kh4cqUjuzNEMmvORV4ZsQBACoeLqI6VsIwGw01yZaDfbLEJBv3GaxWtKJa6fZKDk8JK9sagrvSMZ4tGoR0D6VjvHzZCepnTB5rxhm7q4cnHAebGCwJ6M1JJdlG+IM7QloVHUub0fTgF5UJUA6roZdsgeCAn874JkgE9Q40R7ogM=
+	t=1751631958; cv=none; b=dBJXMcjMswtmDjiZBWVgZh93LR1NVwYB1iIZk+hC44HTrug+Yw41KZu3Jmrp/06QN418joRj9c81MyPHGPiFnF9rHspNQahbF4K1Toa09H/BxPMIBpapKVhUwMeGVX6AfmkVwf7+O850jiCtLtVIg85TfbTVGoh+Raki61bkpGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751631818; c=relaxed/simple;
-	bh=oweq7sEis8OSPxaym3zvDjZpLebm0v2LQsMDtWM7+Zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojnZRJeWw1NqgLgZOdhrDd4aGPpGMAwm8Pqw0VXEN3+E6Oj1Zxt28xpUDbtopNkP7yZtkJrnWtQlaca4R3lcaoIKYHCJJNGlVvFxAAEXZrW+O/50R/ZZ2VGouzdJxrrRppYbQWftvjmDllYAKqpAO6CCQCkmf3b7RkjgK3TFCxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VwQWxOaO; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VwQWxOaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751631818; x=1783167818;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oweq7sEis8OSPxaym3zvDjZpLebm0v2LQsMDtWM7+Zs=;
-  b=VwQWxOaOdNyUqxeIBZ6kSdVOEggSJg4A7YI06FR4qh1yCBagoWY4RF9n
-   f8KynJSF/DB6mrsKP9NRE3H4brHfzN6CFoHuD91mPEDfnzEfo6k+tUULc
-   6JogCdZhIPdy/uZrbwbV8qh8eyW5dfddxa8whHsnHLtQSqVgx+pQMj/lC
-   7dtnwet+wx15LclipUEwGdMU0pTCod1CRS4GxpfxRbEhPESFLqhrABLQt
-   0p+Xg5SeZRTku4VhI6RBgVS256bdBeQxC8AANO2yZG0QnrzLmwUXfe+Rp
-   59PdfQe+9qXnHFPRIP+tMOLd+frADYR6/W7LemfQKrjxtUF8oqvQnI28B
-   w==;
-X-CSE-ConnectionGUID: kN5vIsK4StGPnljbxusiDw==
-X-CSE-MsgGUID: oeOBsxWEQZK3kWd2IPUGuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="54085571"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="54085571"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 05:23:36 -0700
-X-CSE-ConnectionGUID: h0pPry01S5+0sgbByQeXGQ==
-X-CSE-MsgGUID: zHTjG05tTGup2BFBFLyhMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="155395215"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 04 Jul 2025 05:23:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 4B75815D; Fri, 04 Jul 2025 15:23:23 +0300 (EEST)
-Date: Fri, 4 Jul 2025 15:23:23 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv8 04/17] x86/cpu: Defer CR pinning setup until after EFI
- initialization
-Message-ID: <ysoozflaqr3rnb2kjqca5ifeuc7clutiaypqraqs7r4sdumxmi@uc2bp7l5th75>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
- <20250701095849.2360685-5-kirill.shutemov@linux.intel.com>
- <841a200e-bcf0-4488-acbd-c00396a9ccd2@intel.com>
- <2n2knq4wkzyfr35udpxawgnc4ykk7s77yavu3crnzf77wjaj4c@njyscphln4gl>
+	s=arc-20240116; t=1751631958; c=relaxed/simple;
+	bh=yzJ9HssHenBi/iFGp5cyylipdwjBjFmFKRamvRxOc24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gXLgL/+ULm/tq4oRz9Y74oW9v27kLh0Egg7NKsF5JqeNNeN5IfCe8m9V/th98JZ7glr+FZuCrt3Iu5g9ukVYFIU67ou/gsUE2cdOPsAmuWouhNj9vB6myunvmIn1hpUdbd5F9kkF1oaoworvsuJYJZPOHetUU+LC5ZzpvGgHCEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E8F043A0B;
+	Fri,  4 Jul 2025 12:25:51 +0000 (UTC)
+Message-ID: <bd2bca3b-2b23-40be-b81b-f842b7afb10e@ghiti.fr>
+Date: Fri, 4 Jul 2025 14:25:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2n2knq4wkzyfr35udpxawgnc4ykk7s77yavu3crnzf77wjaj4c@njyscphln4gl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] Fix for riscv vmcore issue
+To: Pnina Feder <PNINA.FEDER@mobileye.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>
+Cc: Gregory Greenman <Gregory.Greenman@mobileye.com>,
+ "bjorn@rivosinc.com" <bjorn@rivosinc.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "mick@ics.forth.gr" <mick@ics.forth.gr>,
+ "palmer@dabbelt.com" <palmer@dabbelt.com>,
+ "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+ Vladimir Kondratiev <Vladimir.Kondratiev@mobileye.com>
+References: <20250409182129.634415-1-bjorn@kernel.org>
+ <20250630112309.97162-2-pnina.feder@mobileye.com>
+ <87jz4txsjx.fsf@all.your.base.are.belong.to.us>
+ <MRWPR09MB80229B89C8D4B4865783B3D78F43A@MRWPR09MB8022.eurprd09.prod.outlook.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <MRWPR09MB80229B89C8D4B4865783B3D78F43A@MRWPR09MB8022.eurprd09.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdeguefhhfevueejteevveeikeelkedvffdufeelveeggfeikeekgfeghfdttdevnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemgeekugefmedvjeekugemvdgrtdemrggrieejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeegkegufeemvdejkegumedvrgdtmegrrgeijedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemgeekugefmedvjeekugemvdgrtdemrggrieejngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopefrpffkpfetrdfhgfffgfftsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopegsjhhorhhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopefirhgvghhorhihrdfirhgvvghnmhgrnhesmhhosghilhgvhigvr
+ dgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihgtkhesihgtshdrfhhorhhthhdrghhrpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, Jul 02, 2025 at 01:05:23PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Jul 01, 2025 at 04:10:19PM -0700, Dave Hansen wrote:
-> > On 7/1/25 02:58, Kirill A. Shutemov wrote:
-> > > Move CR pinning setup behind the EFI initialization.
-> > 
-> > I kinda grumble about these one-off solutions. Could we just do this
-> > once and for all and defer CR pinning as long as possible? For instance,
-> > could we do it in a late_initcall()?
-> > 
-> > Do we need pinning before userspace comes up?
-> 
-> Hm. I operated from an assumption that we want to pin control registers as
-> early as possible to get most benefit from it.
-> 
-> I guess we can defer it until later. But I am not sure late_initcall() is
-> the right place. Do we want random driver to twiddle control registers?
+Hi Pnina,
 
-I will do it in core_initcall().
+On 7/3/25 14:06, Pnina Feder wrote:
+>> Pnina!
+>>
+>> Pnina Feder <pnina.feder@mobileye.com> writes:
+>>
+>>> We are creating a vmcore using kexec on a Linux 6.15 RISC-V system and
+>>> analyzing it with the crash tool on the host. This workflow used to
+>>> work on Linux 6.14 but is now broken in 6.15.
+>> Thanks for reporting this!
+>>
+>>> The issue is caused by a change in the kernel:
+>>> In Linux 6.15, certain memblock sections are now marked as Reserved in
+>>> /proc/iomem. The kexec tool excludes all Reserved regions when
+>>> generating the vmcore, so these sections are missing from the dump.
+>> How are you collecting the /proc/vmcore file? A full set of commands would be helpful.
+>>
+> We’ve defined in our system that when a process crashes, we call panic().
+> To handle crash recovery, we're using kexec with the following command:
+> kexec -p /Image --initrd=/rootfs.cpio --append "console=${con} earlycon=${earlycon} no4lvl"
+>
+> To simulate crash, we trigger it using:
+> sleep 100 & kill -6 $!
+>
+> This boots into the crash kernel (kdump), where we then copy the /proc/vmcore file back to the host for analysis.
+>
+>>> However, the kernel still uses addresses in these regions—for example,
+>>> for IRQ pointers. Since the crash tool needs access to these memory
+>>> areas to function correctly, their exclusion breaks the analysis.
+>> Wdym with "IRQ pointers"? Also, what version (sha1) of crash are you using?
+>>
+> We are currently using crash-utility version 9.0.0 (master).
+>  From the crash analysis logs, we observed errors like:
+>
+> "......
+> IRQ stack pointer[0] is  ffffffd6fbdcc068
+> crash: read error: kernel virtual address: ffffffd6fbdcc068  type: "IRQ stack pointer"
+> .....
+>
+> <read_kdump: addr: ffffffff80edf1cc paddr: 8010df1cc cnt: 4>
+> <readmem: ffffffd6fbdd6880, KVADDR, "runqueues entry (per_cpu)", 3456, (FOE), 55acf03963e0>
+>> read_kdump: addr: ffffffd6fbdd6880 paddr: 8fbdd6880 cnt: 1920<
+> crash: read error: kernel virtual address: ffffffd6fbdd6880  type: "runqueues entry (per_cpu)"
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+
+I can't reproduce this issue on qemu, booting with sv39. I'm using the 
+latest kexec-tools (which recently merged riscv support), crash 9.0.0 
+and kernel 6.16.0-rc4. Note that I'm using crash in qemu.
+
+Are you able to reproduce this on qemu too?
+
+Maybe that's related to the config, can you share your config?
+
+
+>
+> These failures occur consistently for addresses in the 0xffffffd000000000 region.
+
+
+FYI, this region is the direct mapping (see 
+Documentation/arch/riscv/vm-layout.rst).
+
+Thanks,
+
+Alex
+
+
+> Upon inspection, we confirmed that the physical addresses corresponding to those virtual addresses are not present in the vmcore, as they fall under Reserved memory sections.
+> We tested a patch to kexec-tools that prevents exclusion of the Reserved-memblock section from the vmcore. With this patch, the issue no longer occurs, and crash analysis succeeds.
+> Note: I suspect the same issue exists on ARM64, as both the signal.c and kexec-tools implementations are similar.
+>
+>> Thanks!
+>> Björn
