@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6751DDC1B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 05:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A3E1E25ED;
+	Fri,  4 Jul 2025 05:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751606100; cv=none; b=FkkmudxxDW+KsJWsn3pAnQTLgHx/gmLGyysGulS1M6JLPrXbtQEYlTzhF+47Otmz0xz5V/WVHZPD9Ypo+wZiV8pK/j2++SxVzNymCoHrntHJgHbJXvmOD88OkcjcqLUmZ+DUeXgqZkn4gGzKkx/ytUNwrsVz+Am+xVc2ssB8/Qo=
+	t=1751606125; cv=none; b=Zs+Nmy9bFr6MhaArw0JtVRXVJdV5q44Ht0n3ZkhR2Tb8UJJh0C0JgZWSOvLOBed3ZMQ9JKlz/V1N5V/3me4+fFADG5Jq/YaZaS0RrUclnuGvBpyVNEiYdXqdWxsDnrfcERMQlSAz1gB6H4x1ooQVeaaERG4vR99cGrbmHys4oSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751606100; c=relaxed/simple;
-	bh=7B5mXApoyD9cRUyBfr6KEQm1gWkVd5OPEB6n9hnnaHQ=;
+	s=arc-20240116; t=1751606125; c=relaxed/simple;
+	bh=qdpZxGlVsjZhB+Tb2pPFqZR6qJzZ532AJ17NAKNRlMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VdFPohRqRWv+lFJJP8/XQo3Japi8JNP6JdNpj8xTizqfhhiNeHUsPpkyYuSoh2j+pNiQ6j2BO5L9ASd2UyycFvFsiSFWZEpjpzu4BJyqFtyl/q7q2DXauBdwOdaoWiYX3ttCJAjLZzHOlRDVDLM1h1DMBJfB7S81uPMQ2qsG8ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=K+7fvisO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/mMyiVaPjMOJpil4hySLyGkXgEzsPQrfGlv4zz/Ili9AHd5lpUQ/0lDG6qkdS4zrjqkchPZBaeCJK5YffyrU8PuEm3W3mvK3g/0nkNHa3EWjI84RQ4j1kHAVb8RSyZJt12FNKx/YLn4zarlIyDzMszdj/NDlBD/0+7WjG5+OcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEQoyJmg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="K+7fvisO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8841C4CEE3;
-	Fri,  4 Jul 2025 05:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751606100;
-	bh=7B5mXApoyD9cRUyBfr6KEQm1gWkVd5OPEB6n9hnnaHQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEQoyJmg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CEEC4CEE3;
+	Fri,  4 Jul 2025 05:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751606124;
+	bh=qdpZxGlVsjZhB+Tb2pPFqZR6qJzZ532AJ17NAKNRlMA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K+7fvisO68yIKz3/uoJhqR1JrKOwoCkR9XFQdnvnAIIba19bev6sfguF3NEidiRcj
-	 mwi0zgUSE8Z+vV4vxYkwuXRQtjij9gs9e8pdGaYJfPBmyug2vadnFdHgnbtI3K5t6H
-	 DHYgXdnGszxllWL6G9RKY/88XOgV64s0EGjXYzW4=
-Date: Fri, 4 Jul 2025 07:14:55 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Badal Nilawar <badal.nilawar@intel.com>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com, alexander.usyskin@intel.com,
-	daniele.ceraolospurio@intel.com
-Subject: Re: [PATCH v6 02/10] mei: late_bind: add late binding component
- driver
-Message-ID: <2025070421-cattishly-buffed-d992@gregkh>
-References: <20250703193106.954536-1-badal.nilawar@intel.com>
- <20250703193106.954536-3-badal.nilawar@intel.com>
+	b=CEQoyJmgtkkqKUwNx8RTQfhqU35Jrjz5w5axXUPgFSnoMBNdLu0FqSqAETG03FuvJ
+	 InVP7iH6JOHjX8vvHG+vP/edytVEuYyNITNtfBWMe8Z9Ia0LucIay3Wh6vEKlxjTH/
+	 ob+pnldPx1wMavx+tWEzIRXJg06roF9Q07bMKIdN5XQmq2klwROP6CmYhweb8Z7htY
+	 CV+m+OYFMz1fYPYBJrG9sieGpv3W8pyex91kqyAYALsBjX60OdZMI7Cqi+1cQpRPcI
+	 WZ12yMe6/543dEzmMt7l66RyIXlgA07mmDU1FrXMhniYQ/sff+owm1reyWqnFlnVfw
+	 CeY4T6Y4KFrnQ==
+Date: Thu, 3 Jul 2025 22:14:41 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Yuwen Chen <ywen.chen@foxmail.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, jaegeuk@kernel.org,
+	linux-crypto@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tytso@mit.edu
+Subject: Re: [PATCH v2] fscrypt: improve filename encryption and decryption
+ performance
+Message-ID: <20250704051441.GA4199@sol>
+References: <tencent_D06DEE8D71295798F385BCC52FACAE96A207@qq.com>
+ <tencent_583C288FFF6BA70BAF0880FB7A5CCAB5EA05@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,191 +45,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703193106.954536-3-badal.nilawar@intel.com>
+In-Reply-To: <tencent_583C288FFF6BA70BAF0880FB7A5CCAB5EA05@qq.com>
 
-On Fri, Jul 04, 2025 at 01:00:58AM +0530, Badal Nilawar wrote:
-> From: Alexander Usyskin <alexander.usyskin@intel.com>
+On Fri, Jul 04, 2025 at 12:13:22PM +0800, Yuwen Chen wrote:
+> With the CONFIG_UNICODE configuration enabled, the fname_decrypt
+> and fscrypt_fname_encrypt functions may be called very frequently.
+> Since filenames are generally short, the frequent invocation of
+> memory allocation and release operations by these two functions
+> will lead to very poor performance.
 > 
-> Add late binding component driver.
-> It allows pushing the late binding configuration from, for example,
-> the Xe graphics driver to the Intel discrete graphics card's CSE device.
+> Use the following program to conduct a file-creation test in
+> the private program directory(/data/media/0/Android/data/*)
+> of Android.
 > 
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> Reviewed-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> int main(int argc, char **argv)
+> {
+>     size_t fcnt = 0;
+>     char path[PATH_MAX];
+>     char buf[4096] = {0};
+>     int i, fd;
+> 
+>     if (argc < 2)
+>         return - EINVAL;
+> 
+>     fcnt = atoi(argv[1]);
+>     for (i = 0; i < fcnt; i++) {
+>         snprintf(path, sizeof(path), "./%d", i);
+>         fd = open(path, O_RDWR | O_CREAT, 0600);
+>         if (fd < 0)
+>             return - 1;
+>         write(fd, buf, sizeof(buf));
+>         close(fd);
+>     }
+>     return 0;
+> }
+> 
+> The test platform is Snapdragon 8s Gen4, with a kernel version
+> of v6.6 and a userdebug version.
+> 
+> Before this submission was merged, when creating 2000 files,
+> the performance test results are as follows:
+> $ time /data/file_creater 2000
+> 0m14.83s real     0m00.00s user     0m14.30s system
+> 0m15.61s real     0m00.00s user     0m15.04s system
+> 0m14.72s real     0m00.01s user     0m14.18s system
+> 
+> After this submission was merged, the performance is as follows:
+> $ time /data/file_creater 2000
+> 0m07.64s real     0m00.00s user     0m07.37s system
+> 0m07.66s real     0m00.00s user     0m07.40s system
+> 0m08.67s real     0m00.01s user     0m08.35s system
+> 
+> Signed-off-by: Yuwen Chen <ywen.chen@foxmail.com>
 > ---
->  drivers/misc/mei/Kconfig                    |   1 +
->  drivers/misc/mei/Makefile                   |   1 +
->  drivers/misc/mei/late_bind/Kconfig          |  13 +
->  drivers/misc/mei/late_bind/Makefile         |   9 +
->  drivers/misc/mei/late_bind/mei_late_bind.c  | 272 ++++++++++++++++++++
-
-Why do you have a whole subdir for a single .c file?  What's wrong with
-just keepign it in drivers/misc/mei/ ?
-
-> +/**
-> + * struct csc_heci_late_bind_req - late binding request
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @flags: flags to be passed to the firmware
-> + * @reserved: reserved field
-
-Reserved for what?  Set to what?
-
-> + * @payload_size: size of the payload data in bytes
-> + * @payload: data to be sent to the firmware
-> + */
-> +struct csc_heci_late_bind_req {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 flags;
-> +	u32 reserved[2];
-> +	u32 payload_size;
-
-As these cross the kernel boundry, they should be the correct type
-(__u32), but really, please define the endiness of them (__le32) and use
-the proper macros for that.
-
-> +	u8  payload[] __counted_by(payload_size);
-> +} __packed;
+>  fs/crypto/fname.c         | 22 ++++++++++++++--------
+>  include/crypto/skcipher.h |  9 +++++++++
+>  2 files changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+> index 010f9c0a4c2f1..168b2a88fa23b 100644
+> --- a/fs/crypto/fname.c
+> +++ b/fs/crypto/fname.c
+> @@ -92,14 +92,20 @@ static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+>  int fscrypt_fname_encrypt(const struct inode *inode, const struct qstr *iname,
+>  			  u8 *out, unsigned int olen)
+>  {
+> -	struct skcipher_request *req = NULL;
+>  	DECLARE_CRYPTO_WAIT(wait);
+>  	const struct fscrypt_inode_info *ci = inode->i_crypt_info;
+>  	struct crypto_skcipher *tfm = ci->ci_enc_key.tfm;
+> +	SKCIPHER_REQUEST_ON_STACK(req, tfm, MAX_SKCIPHER_REQSIZE);
+>  	union fscrypt_iv iv;
+>  	struct scatterlist sg;
+>  	int res;
+>  
+> +	/*
+> +	 * When the size of the statically - allocated skcipher_request
+> +	 * structure is insufficient, remind us to make modifications.
+> +	 */
+> +	BUG_ON(MAX_SKCIPHER_REQSIZE < crypto_skcipher_reqsize(tfm));
 > +
-> +/**
-> + * struct csc_heci_late_bind_rsp - late binding response
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @reserved: reserved field
+>  	/*
+>  	 * Copy the filename to the output buffer for encrypting in-place and
+>  	 * pad it with the needed number of NUL bytes.
+> @@ -124,7 +130,6 @@ int fscrypt_fname_encrypt(const struct inode *inode, const struct qstr *iname,
+>  
+>  	/* Do the encryption */
+>  	res = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
+> -	skcipher_request_free(req);
+>  	if (res < 0) {
+>  		fscrypt_err(inode, "Filename encryption failed: %d", res);
+>  		return res;
 
-Same here.
+I'm guessing you have some debugging options enabled in your kconfig.  Usually
+the allocations aren't quite *that* expensive.  That being said, it's always
+been really annoying that they have to be there.
 
-> + * @status: status of the late binding command execution by firmware
-> + */
-> +struct csc_heci_late_bind_rsp {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 reserved[2];
-> +	u32 status;
+Unfortunately, as far as I know, you actually can't just allocate the
+skcipher_request on the stack like that, since the legacy crypto API assumes
+that the request memory is DMA-able.  On-stack requests also might not be
+properly aligned (see
+https://lore.kernel.org/all/CA+55aFxJOzMim_d-O2E2yip8JWo0NdYs_72sNwFKSkTjy8q0Sw@mail.gmail.com/
+-- may be outdated, but I haven't heard otherwise).
 
-Same on the types.
+The problem is really that the legacy crypto API (crypto_skcipher in this case)
+was never really designed for efficient CPU-based crypto in the first place.
+The correct solution is to add simple library APIs for the algorithms to
+lib/crypto/, then update fscrypt to use that instead of crypto_skcipher.
 
-> +} __packed;
-> +
-> +static int mei_late_bind_check_response(const struct device *dev, const struct mkhi_msg_hdr *hdr)
-> +{
-> +	if (hdr->group_id != MKHI_GROUP_ID_GFX) {
-> +		dev_err(dev, "Mismatch group id: 0x%x instead of 0x%x\n",
-> +			hdr->group_id, MKHI_GROUP_ID_GFX);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->command != GFX_SRV_MKHI_LATE_BINDING_RSP) {
-> +		dev_err(dev, "Mismatch command: 0x%x instead of 0x%x\n",
-> +			hdr->command, GFX_SRV_MKHI_LATE_BINDING_RSP);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->result) {
-> +		dev_err(dev, "Error in result: 0x%x\n", hdr->result);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mei_late_bind_push_config(struct device *dev, enum late_bind_type type, u32 flags,
-> +				     const void *payload, size_t payload_size)
-> +{
-> +	struct mei_cl_device *cldev;
-> +	struct csc_heci_late_bind_req *req = NULL;
-> +	struct csc_heci_late_bind_rsp rsp;
-> +	size_t req_size;
-> +	ssize_t bytes;
-> +	int ret;
-> +
-> +	cldev = to_mei_cl_device(dev);
-> +
-> +	ret = mei_cldev_enable(cldev);
-> +	if (ret) {
-> +		dev_dbg(dev, "mei_cldev_enable failed. %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	req_size = struct_size(req, payload, payload_size);
-> +	if (req_size > mei_cldev_mtu(cldev)) {
-> +		dev_err(dev, "Payload is too big %zu\n", payload_size);
-> +		ret = -EMSGSIZE;
-> +		goto end;
-> +	}
-> +
-> +	req = kmalloc(req_size, GFP_KERNEL);
-> +	if (!req) {
-> +		ret = -ENOMEM;
-> +		goto end;
-> +	}
-> +
-> +	req->header.group_id = MKHI_GROUP_ID_GFX;
-> +	req->header.command = GFX_SRV_MKHI_LATE_BINDING_CMD;
-> +	req->type = type;
-> +	req->flags = flags;
-> +	req->reserved[0] = 0;
-> +	req->reserved[1] = 0;
-> +	req->payload_size = payload_size;
-> +	memcpy(req->payload, payload, payload_size);
-> +
-> +	bytes = mei_cldev_send_timeout(cldev,
-> +				       (void *)req, req_size, LATE_BIND_SEND_TIMEOUT_MSEC);
-> +	if (bytes < 0) {
-> +		dev_err(dev, "mei_cldev_send failed. %zd\n", bytes);
-> +		ret = bytes;
-> +		goto end;
-> +	}
-> +
-> +	bytes = mei_cldev_recv_timeout(cldev,
-> +				       (void *)&rsp, sizeof(rsp), LATE_BIND_RECV_TIMEOUT_MSEC);
-> +	if (bytes < 0) {
-> +		dev_err(dev, "mei_cldev_recv failed. %zd\n", bytes);
-> +		ret = bytes;
-> +		goto end;
-> +	}
-> +	if (bytes < sizeof(rsp.header)) {
-> +		dev_err(dev, "bad response header from the firmware: size %zd < %zu\n",
-> +			bytes, sizeof(rsp.header));
-> +		ret = -EPROTO;
-> +		goto end;
-> +	}
-> +	if (mei_late_bind_check_response(dev, &rsp.header)) {
-> +		dev_err(dev, "bad result response from the firmware: 0x%x\n",
-> +			*(uint32_t *)&rsp.header);
-> +		ret = -EPROTO;
-> +		goto end;
-> +	}
-> +	if (bytes < sizeof(rsp)) {
-> +		dev_err(dev, "bad response from the firmware: size %zd < %zu\n",
-> +			bytes, sizeof(rsp));
-> +		ret = -EPROTO;
-> +		goto end;
-> +	}
-> +
-> +	dev_dbg(dev, "%s status = %u\n", __func__, rsp.status);
+I plan to do that, but I'm first focusing on other related things, such as doing
+the same for fsverity.
 
-dev_dbg() already contains __func__, you never need to add it again as
-you now have duplicate strings.  Please remove it.
-
-
-> +	ret = (int)rsp.status;
-> +end:
-> +	mei_cldev_disable(cldev);
-> +	kfree(req);
-> +	return ret;
-> +}
-> +
-> +static const struct late_bind_component_ops mei_late_bind_ops = {
-> +	.owner = THIS_MODULE,
-
-I thought you were going to drop the .owner stuff?
-
-Or if not, please implement it properly (i.e. by NOT forcing people to
-manually set it here.)
-
-thanks,
-
-greg k-h
+- Eric
