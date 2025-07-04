@@ -1,156 +1,168 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9FD140E34
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747CA2D8362;
+	Fri,  4 Jul 2025 16:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647249; cv=none; b=Tu9204GNZarbRWleJ0cgoVwi2u36RlIIYY8P8mZKILZrqXpacpv6ryM2wk1QtiDYGrRqgM7LQ7FK9CnWszHdjmQuumnh+H3mqD3bJ20bi/+qGdZQAfrJdNmV7Pe7OF6a5YVm945Q/cpMvgBFQzcTucBLatSPyMwptjMh4oSyiyU=
+	t=1751647314; cv=none; b=MmBBvD4KU5wAQk9ewo7LliFSUCsdNXyJ/0UuZGEuIkJffFul7UDPN0pZgMF+O+jBqJQDGXQQ+PXSsYaWQqENgVIVuGDvzaOI81Ad7aIBTPrYsuFR829eWhbne9CpRQcymhqzgBbR0Y75K/5BHH0mLUpsnSfgSTb65RlczBfCf40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647249; c=relaxed/simple;
-	bh=sEKHJG/iJ/vzcRFCIp5Aq6Ruhy5InePyFZo5yx8x9CU=;
+	s=arc-20240116; t=1751647314; c=relaxed/simple;
+	bh=kwRJznPR6BcIiAGHeBEbe0IFPo6eiiDX2nw/NSpaUUs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k9wsMTvYiW3In2HyvZItomGYTtPgm270jqcQQeqNu7r2/TMADk0lJg2Pm3MpjceVXNFxdAKqHgEhU0jgydm/Bx3lFp+5hc1RkRsZRjRTha0ZOtuek4zl1eKF7wxlwyxDUVwKVNNwKKmZgPet9TSIzgEakAwPsyGJz4JnOprp5wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uXjSh-0006IE-A5; Fri, 04 Jul 2025 18:40:31 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uXjSf-006nL1-0M;
-	Fri, 04 Jul 2025 18:40:29 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uXjSf-00H1RC-01;
-	Fri, 04 Jul 2025 18:40:29 +0200
-Date: Fri, 4 Jul 2025 18:40:28 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jun Miao <jun.miao@intel.com>
-Cc: sbhatta@marvell.com, kuba@kernel.org, oneukum@suse.com,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, qiang.zhang@linux.dev
-Subject: [bug report] [PATCH v6] net: usb: Convert tasklet API to new bottom
- half workqueue mechanism
-Message-ID: <aGgD_Lp0i-ZU2xkt@pengutronix.de>
-References: <20250618173923.950510-1-jun.miao@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pf78f881B2bAaMNK5pEPeQBj8CQgixzL6KKmZEYXycR/Ufn9xKZFCfqYOSkALRIensp4h45LX5fFAj5clWIQYzjLgHR4avLhLk/JE0Td1VBpY8diXxoQvxdZcCSJRlyGcU8tZl7oC7Jz+zikqJu/52aB28bYle6tx80+Ueb8MaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VgBkm2p3; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgBkm2p3"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a58ba6c945so15971851cf.2;
+        Fri, 04 Jul 2025 09:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751647312; x=1752252112; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m93ggs0equuJxK/njQ0NAI+Sfd41R6Vh2lHTcXlYRA0=;
+        b=VgBkm2p3PkwxyZOwHxem0rsJhpk2jD5HvRC5r47D0hl/XeymsysSIDLgMRvlZz58rZ
+         RmSWd3oDz1pyGShu4U2iSMvnQb2vHHRMg69HBVLeMjuPddp66GT6CRzmCZEv6hlVjdzZ
+         MxcTJZXXOXPTpOf0v2BFcNXYJmU1Badu2yxlBvosWspVYtnM1u8/z2qYAg2UCBgs/Vg6
+         7LsDbFwGdQJ8jG/yPgmnMYOp67haIZLhhXX0hJSOC6aMy+k4A8YhQXBX2r33TbEKYMFE
+         uDOJyLPWejOr+CXKRHLrHX51yMFL5yRaWR6144Lq8ujOtGJkLgNIHWQ80EKTQFBqUCyV
+         24Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751647312; x=1752252112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m93ggs0equuJxK/njQ0NAI+Sfd41R6Vh2lHTcXlYRA0=;
+        b=gix7zkH6MB6ytKkzyfxxF+vXLFkWI7UsWt+tf7V/qirDYVBZSonkeCTzMAjIaJWNLh
+         4xb/jvUbsyqSHuJQSrBH9erSREDEUakZJsJiA8RyM3DxTroiJRGW3mmtj1lxu3dZkh9q
+         LD+d1tm7fIGz/Vr8gLykBPb5jf/hYeo/yat9hzuk6cF5l8ViXcMF1EeFP1YUcV2OO4zq
+         fnnT5FEJ85m6V7qSga8R5jv88Y6MhTLVltnsP5RZ9mxztkUQ2VAquV9Mk6InhPADgaCe
+         LPWOv6xGY2eaB8ysBmJig+RmHia+loyoBR2nhSl9cKo9RombGYBz+IV1G3czNN+zbBUb
+         MUSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7aA58US1GYj2C+eEO2Lc024df5xAuWSYxQzbM+sphinAxZtzhhl/AhKBt4OBxQLGqwv9TA0DdysrT6b5l1Gs=@vger.kernel.org, AJvYcCVfeAFEv4gRvaQeFW5pU9CePkWIlA7K44UJ2sPmgZyI7liDTBsy6vLFnMcLKpPowXIpfDqTVwZfGw7VoJ4=@vger.kernel.org, AJvYcCWU05waEx9a0NY5yQfgvq0V99YPvbi/4q/UAbc2bXpdOzSRt6pY0IHw+gyD4XhI2IJwqXuPloGClh+/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqkD1zNeI6wvox1acUnH8N6duE3iNCuSmOkrZZZKrRT6r0DkNN
+	mpgajEd3gFvXSoYN9txB09iLuJq5aoktKRPaGq8bgkiWFSlVoyu1GpRR
+X-Gm-Gg: ASbGnctesi6dszETq/nnRZMbSkh2xK3qE1WbkvLGnvCWNt8PLuiYV2H4bmG6VlfQNCL
+	XpFgQ6NKmpQ887GzXpsmHlZaCGa0jap7MYl0/J6oIU1ihmE1pQBn93SfR2BFn95Z+JsK2ExG6Yu
+	d2ftPHOb59EsDep3Jlq//AZykf5s9vT9QXQvMJELSAszPogTqjpSr2dUDxOKr09+G52nbVwwMOe
+	K8TgGr69L45x2zGKM49JX++DrU5ghjvcGKthwJgCwV6vIzaJP+llt0rNcbRaHBy9GcfWZn2kTcN
+	uR8kvdWzb5tIiE977jtYkif7v98NciP/b+oukUTy+omEQRiztkcGxiWjbOlOZgTPelGKpv5Dp1+
+	idSMPYAEdauoiyp1Q25ZCsDOnlWR9OhiiULE5ck3U6tfh230mcoB0MFi18Ynm44s=
+X-Google-Smtp-Source: AGHT+IEez5Yn5K1lwCm0IiawOAg5VQ727cDTSQh/PmsoXM7GtxMUs1prRu2UBrN8DxhgR5OQXts8uw==
+X-Received: by 2002:ac8:7f49:0:b0:494:5805:c2b9 with SMTP id d75a77b69052e-4a996854acfmr51464411cf.31.1751647311905;
+        Fri, 04 Jul 2025 09:41:51 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a994a78bf3sm16669691cf.52.2025.07.04.09.41.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 09:41:51 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D4B5FF40069;
+	Fri,  4 Jul 2025 12:41:50 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 12:41:50 -0400
+X-ME-Sender: <xms:TgRoaMW8n0fUATnF06HtLxkouSAumt22qfpVE5vBPx2Ja7uLaAeZGw>
+    <xme:TgRoaAl6LibZBUbfSrDN__Q5KLuyVbe8gEEWzW7kZI8vgh4gHUoHTg7i1h4XJVB2N
+    TTcYMuPX-2LQE_2MA>
+X-ME-Received: <xmr:TgRoaAZkGklThrHHYBn3dUjeWoBLgyyvDSkcMph1HxU7m8y4Xp1pjWYuRA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeeiiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephfetvdfgtdeukedvkeeiteeiteejieehvdetheduudejvdektdekfeegvddvhedt
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghr
+    shhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvg
+    hngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohep
+    udelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghnihgvlhdrrghlmhgvih
+    gurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpd
+    hrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhr
+    nhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusg
+    horhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughupdhrtg
+    hpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:TgRoaLVmhYQnUVW8ZAY_MspMr8SQJE0uw4sSZFzoDJeiyN7u-SWkTw>
+    <xmx:TgRoaGkdMyjIqNABZh2nRcEWgHx4JTkIx_Q509AWE45bEET4ScW3yQ>
+    <xmx:TgRoaAd44rVp7xQJ-TO5pYAJhSjePUiyBB06C3rufsFDc0GwRms0yQ>
+    <xmx:TgRoaIH2VBTIirRGRFeURchS85u-3Kfa29nlw70KAC9IbGIqYC-EiA>
+    <xmx:TgRoaMmnQSMgOTwVnjLsbu2KonqnuwIa2V84hLL93sjjoj0zusNQNOqj>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 4 Jul 2025 12:41:50 -0400 (EDT)
+Date: Fri, 4 Jul 2025 09:41:49 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+Message-ID: <aGgETV_-MgEiZDHC@Mac.home>
+References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
+ <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
+ <aGgDpWkU6xAn5IFN@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618173923.950510-1-jun.miao@intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <aGgDpWkU6xAn5IFN@Mac.home>
 
-Hi Jun,
+On Fri, Jul 04, 2025 at 09:39:01AM -0700, Boqun Feng wrote:
+> On Thu, Jul 03, 2025 at 04:30:01PM -0300, Daniel Almeida wrote:
+> [...]
+> > +#[pin_data]
+> > +pub struct Registration<T: Handler + 'static> {
+> > +    #[pin]
+> > +    inner: Devres<RegistrationInner>,
+> > +
+> > +    #[pin]
+> > +    handler: T,
+> 
+> IIRC, as a certain point, we want this to be a `UnsafePinned<T>`, is
+> that requirement gone or we still need that but 1) `UnsafePinned` is not
+> available and 2) we can rely on the whole struct being !Unpin for the
+> address stability temporarily?
+> 
+> I think it was not a problem until we switched to `try_pin_init!()`
+> instead of `pin_init_from_closure()` because we then had to pass the
+> address of `handler` instead of the whole struct.
+> 
+> Since we certainly want to use `try_pin_init!()` and we certainly will
+> have `UnsafePinned`, I think we should just keep this as it is for now,
 
-On Wed, Jun 18, 2025 at 01:39:23PM -0400, Jun Miao wrote:
-> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-> replaces all occurrences of tasklet usage with the appropriate workqueue
-> APIs throughout the usbnet driver. This transition ensures compatibility
-> with the latest design and enhances performance.
+Of course the assumption is we want to it in before `UnsafePinned` ;-)
+Alternatively we can do what `Devres` did:
 
-After applying this patch, the smsc95xx driver fails after one down/up
-cycle.
-Here is how I can reproduce the issue:
+	https://lore.kernel.org/rust-for-linux/20250626200054.243480-4-dakr@kernel.org/
 
-nmcli device set enu1u1 managed no
-ip a a 10.10.10.1/24 dev enu1u1
-ping -c 4 10.10.10.3
-ip l s dev enu1u1 down
-ip l s dev enu1u1 up
-ping -c 4 10.10.10.3
+using an `Opaque` and manually drop for now.
 
-The second ping does not reach the host. Networking also fails on other
-interfaces.
+Regards,
+Boqun
 
-After some delay, the following trace appears:
-[  846.838527] INFO: task kworker/u16:1:308 blocked for more than 120 seconds.
-[  846.838596]       Not tainted 6.16.0-rc3-00963-g4fcedea9cdf2-dirty #32
-[  846.838666] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  846.838697] task:kworker/u16:1   state:D stack:0     pid:308 tgid:308   ppid:2
-               task_flags:0x4208060 flags:0x00000010
-[  846.838776] Workqueue: events_unbound linkwatch_event
-[  846.838851] Call trace:
-[  846.838880]  __switch_to+0x1d0/0x330 (T)
-[  846.838933]  __schedule+0xa88/0x2a90
-[  846.838980]  schedule+0x114/0x428
-[  846.839010]  schedule_preempt_disabled+0x80/0x118
-[  846.839036]  __mutex_lock+0x764/0xba8
-[  846.839060]  mutex_lock_nested+0x28/0x38
-[  846.839084]  rtnl_lock+0x20/0x30
-[  846.839115]  linkwatch_event+0x18/0x70
-[  846.839141]  process_one_work+0x760/0x17b0
-[  846.839175]  worker_thread+0x768/0xce8
-[  846.839208]  kthread+0x3bc/0x690
-[  846.839237]  ret_from_fork+0x10/0x20
-[  846.839359] INFO: task kworker/u16:1:308 is blocked on a mutex likely
-owned by task ip:899.
-[  846.839381] task:ip              state:D stack:0     pid:899
-tgid:899   ppid:1      task_flags:0x400100 flags:0x00000019
-[  846.839419] Call trace:
-[  846.839432]  __switch_to+0x1d0/0x330 (T)
-[  846.839466]  __schedule+0xa88/0x2a90
-[  846.839495]  schedule+0x114/0x428
-[  846.839524]  schedule_timeout+0xec/0x220
-[  846.839551]  wait_skb_queue_empty+0xa0/0x168
-[  846.839581]  usbnet_terminate_urbs+0x150/0x2c8
-[  846.839609]  usbnet_stop+0x41c/0x608
-[  846.839636]  __dev_close_many+0x1fc/0x4b8
-[  846.839668]  __dev_change_flags+0x33c/0x500
-[  846.839694]  netif_change_flags+0x7c/0x158
-[  846.839718]  do_setlink.isra.0+0x2040/0x2eb8
-[  846.839745]  rtnl_newlink+0xd88/0x16c8
-[  846.839770]  rtnetlink_rcv_msg+0x654/0x8c8
-[  846.839795]  netlink_rcv_skb+0x19c/0x350
-[  846.839823]  rtnetlink_rcv+0x1c/0x30
-[  846.839848]  netlink_unicast+0x3c4/0x668
-[  846.839873]  netlink_sendmsg+0x620/0xa10
-[  846.839899]  ____sys_sendmsg+0x2f8/0x788
-[  846.839924]  ___sys_sendmsg+0xf0/0x178
-[  846.839950]  __sys_sendmsg+0x104/0x198
-[  846.839975]  __arm64_sys_sendmsg+0x74/0xa8
-[  846.840000]  el0_svc_common.constprop.0+0xe4/0x338
-[  846.840033]  do_el0_svc+0x44/0x60
-[  846.840061]  el0_svc+0x3c/0xb0
-[  846.840089]  el0t_64_sync_handler+0x104/0x130
-[  846.840117]  el0t_64_sync+0x154/0x158
-[  846.840164]
-[  846.840164] Showing all locks held in the system:
-[  846.840199] 1 lock held by khungtaskd/41:
-[  846.840216]  #0: ffffffc08424ede0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x14/0x1b0
-[  846.840309] 3 locks held by kworker/u16:2/47:
-[  846.840325]  #0: ffffff800926a148 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work+0x698/0x17b0
-[  846.840406]  #1: ffffffc0860f7c00 ((work_completion)(&(&net->ipv6.addr_chk_work)->work)){+.+.}-{0:0}, at: process_one_work+0x6bc/0x17b0
-[  846.840484]  #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock+0x20/0x30
-[  846.840568] 2 locks held by pr/ttymxc1/60:
-[  846.840595] 5 locks held by sugov:0/84:
-[  846.840618] 2 locks held by systemd-journal/124:
-[  846.840639] 3 locks held by kworker/u16:1/308:
-[  846.840655]  #0: ffffff8005d00148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x698/0x17b0
-[  846.840733]  #1: ffffffc087307c00 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work+0x6bc/0x17b0
-[  846.840810]  #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock+0x20/0x30
-[  846.840894] 1 lock held by ip/899:
-[  846.840910]  #0: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x5e8/0x16c8
-[  846.840982] 2 locks held by sshd/901:
-[  846.840998]  #0: ffffff800aee06b0 (nlk_cb_mutex-ROUTE){+.+.}-{4:4}, at: __netlink_dump_start+0x100/0x800
-[  846.841073]  #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dumpit+0x128/0x1a8
-[  846.841149] 2 locks held by sshd/903:
-[  846.841165]  #0: ffffff800b1c76b0 (nlk_cb_mutex-ROUTE){+.+.}-{4:4}, at: __netlink_dump_start+0x100/0x800
-[  846.841237]  #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dumpit+0x128/0x1a8
-
-Reverting this patch recovers smsc95xx functionality.
-
-Best Regards,
-Oleksij
+> and add a TODO so that we can clean it up later when we have
+> `UnsafePinned`?
+> 
+> Thoughts?
+> 
+> Regards,
+> Boqun
