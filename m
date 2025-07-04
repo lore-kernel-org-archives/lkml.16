@@ -1,109 +1,124 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C221F28A1EE
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39C5286418;
+	Fri,  4 Jul 2025 10:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625605; cv=none; b=AuV3zgBWa4AR9TRq0u6iSj4otGDU7LrkMYN3y67rh+e87c980da5eZ0e3wiaeF0s9OSH+QGIbu+NR7nuELmVTowk3AvLXXIFeELBLfq6MVwj0x6yrs4lSvff9dLlqUno0MbNQjsRfteFm4LrnaawROaJG5rZYiWy6b82aX3TSE4=
+	t=1751625616; cv=none; b=TbpC13zlmPJ4X2ERh46GzQ38f0TrRDIieSuQ5uHCKhN0ee3idPDmmbEL7J60ipu7mHnmnjIKuvpLWctQ7yoiuo+3XNSXTJusV+EGCbbGrC815vNoymIvFOHO721x8pO7jPv9RLXsu0KkMyNeXtGBJH/z/6C2an+dcWPmx2gxe04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625605; c=relaxed/simple;
-	bh=QTDQwxpmMa7bdrjCOtTfl4c7nTDaps3asxtgIQRarGE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XRLpkVfSAZcfkccpcOgu5HJEeBgXZn+ikIQtArZqjgpLQRkJRuzgZKEg8nphoa7fr9QLrb6A/MIwVE7T0tof7g821dRAJTRDEKvTzeADh6vCKzQ3lrI9KP+Pt/1Ca1LAli8lNZYnHDM5+YUaQlCCV5E5bf6UE1MSMAhck6M+F/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Z8S2ENiT; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751625616; c=relaxed/simple;
+	bh=9UXDUg8PAd5tYI7z6Z+7INFUZp8wOl7XFwS2K9NVrHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fqoKyd9CorigJNfA2XzEHAWjtqL0qfflqWeQp6k6vWUe9S5iVO0bQCb4INzkAzRA6Hs4S1Te44+HsOBOzUKNNRo3HI3YcROOScXm9tujrKmQVT6o+3z3YYHktBppXGWz6fzf+QDPhdBY3poH6FxfyVy5Z7sJnhb61HlxWGSRi1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSEJ3/xZ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Z8S2ENiT"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-73972a54919so830517b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:40:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSEJ3/xZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453749af004so3619835e9.1;
+        Fri, 04 Jul 2025 03:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751625603; x=1752230403; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751625613; x=1752230413; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6qpm9oVk31iPLMFRDyV/0+2lbwRDN6/sR7bTcFUqHlY=;
-        b=Z8S2ENiTkQoIN1MVeLNIfnDmEKgJIztplobAA5pYZWftRJYOCcnBVIisz0/onL9Fmz
-         z+x0H6RkA1epXBUbkYWhiZ4/248WiX6fwVqu6SXwgteYmu1fN9ZM5Xk7OMKo1aeh64+b
-         pNF7OqtI9Jaupe+NTY0sQ+WEIBMGL5wcSIqbG5AUiwKF7/peC5nJ4P1cZr9u9ibWUyvc
-         ZmSlanbe91kE2n1iOxmqrit5N34SNSx2J7PV4wQlR+QtE1fv7tJgDWW4Ue/Rg+fr1Us2
-         yJTezJEaNc0jLUyZZSsCmF7SYgo6HZpWp+giCAiVaHPYfUSP/W6CtUXgXF4IuHvuRnMS
-         LFEA==
+        bh=t6Iq3/+8plHi10Ss9ehAabmq+DIYKcedVFnHzqlluoU=;
+        b=PSEJ3/xZWuoqdSIerUxo0dHf0t9WNeXMrJfDQWtHoGqJsmeHth5tRi0rVcarlIv1ld
+         QTlcK8le/14GZaM8kWx8h6MoDafsElmos3kFjVItPdCwDRHkr+EDRHYJl/l0EA+mqKDC
+         qVd4sDQ/aJmVCyjvTCJ0uzGTBA6SdvP9DRt4rzOYqwgjyEl9BJRf1QoTXHJIuMERyxod
+         rHihRbDIrJvwTt3WfPkAOH18nn7yeJZYDbxRcmHWajPzBQyTUxdMYGp4aOZ18sjdYl7n
+         YFNGkLWe1XKhoILZLWlMm0/xCDxRgBtgXs0BB6HIRIVIrsYU9TZgiW/TAb77qhrfZ6oP
+         maXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751625603; x=1752230403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751625613; x=1752230413;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6qpm9oVk31iPLMFRDyV/0+2lbwRDN6/sR7bTcFUqHlY=;
-        b=DVMKSFvCUyBdhib6h5if2fac/xhWTgf+E79T1GmiXWLCbN7bXFgDwyHCLfwcQHvUt7
-         +qYZMW/FsmsuUiL9MsPkG5u0quDCySiQnr6Oe8G8xv8EvyM0kE6rgyMjfIFDorq6JY5v
-         T/qc3zntrOD5XhOZnIXVvScR3Yh/+Zq1wEy0amNoSsdf7GHabNkVOYAyCFyDctLWphPn
-         PiLbfzJUV2mmPi783lgCmJngYuJZM52bK6L1gG/uplChop7Nrtb62wkLlDxXOOV5epvh
-         OT9mOYThnuMYd2J867x2WMDAG5i4+JI3txO+Z1S46BL793cpzPYVUtlSMFGvRf0PLeNE
-         JP+A==
-X-Forwarded-Encrypted: i=1; AJvYcCURHTTKQWgLIlbSv2rjpo94UlP4yb+VHIc0c+BDJvurpcU/q1q8TJj5/aIKBt8WwZL7QEOesz7YX4kUvlw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOCz/i5U0yqHHT/4zShf8Auf1FVqIs0vs32OEA/hs+8hTgXsh+
-	LlfJZHI2JTgJdJ8gprshbZEqiGEsrNZOhCaCQTSM7rbOYvxR6rlNFz+wHfWf2n9YifyTL6R94nb
-	FQMvkT9BMKl8XbyOqbFAJ+BXf4Mp2rDPkTBlAxOPleg==
-X-Gm-Gg: ASbGncs9ScIsB6iWmYkYnw/Rkeg0FaRY0kukQX9svtt+Bk0FZmHaEGRH403YUMbeovq
-	EbCe4nxzmKk3N4qreoB+BB0BmZuTmJa+K8WKXwpRCUOhM+/NpZw3xIuUAAWt3H+fOCOAISUw8jJ
-	DZvJ5/CAy/Rp20wUdz2lgGCpNhDf815aEcXzYh7oyM8EQQ1Z/De2lR3qHLPhxC6fsCvLbykDC5V
-	Z0R
-X-Google-Smtp-Source: AGHT+IGBs9C/a1h9wEnSJ4u2whXXZ8h6N1fXxSXBnoBq+aBJJFdxWz87n4GrI9gt5Rt5fyk2gdtaErEvJ5wxodxEPAg=
-X-Received: by 2002:a05:6a21:328a:b0:21d:fd1:9be with SMTP id
- adf61e73a8af0-226095a50bemr2186092637.12.1751625603014; Fri, 04 Jul 2025
- 03:40:03 -0700 (PDT)
+        bh=t6Iq3/+8plHi10Ss9ehAabmq+DIYKcedVFnHzqlluoU=;
+        b=F2ua51J2ZRBJWG3S2G8EoptIB47Y7Sf7wlyP65p/UCEqlDlGIzzwvO32Ox5t3Wz224
+         dw8tVLt33gT/b4eKGW/GhFke5FSwOFk2SDdxATqq8HGhLulKlm63Ub/6X927gaaDOe71
+         3A453r7/cKaz3RHEzJQkelX7BhKEEgtoq2j0ZOudYJEwwRrUwbqWOImTmtCtBO8WZ2p2
+         0UUmJueZxNl8iPFZr7xK2/0+rIZDCriiWcNmef2FZYXNdNmZXAE4z90MGbzRX57BoGEl
+         ZhtE1L/s6ChqeWeBO0AguvZ+afBVEvQAjCmhUEQorWwNRQqltdoB8wAXkIgV1Y2RsSau
+         v/MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrP+V5is9Egagk3Ym9owvHc+9jZPxQ/i2lrn2OC4KKX3JXAhOftU6XRWgBH2tZfYHUaSSYxSNRgSFWdBtC@vger.kernel.org, AJvYcCWk0SNh1lDxMLTFfNeIso2cj7sd6vnfpx8ESdPJa3izgWlvKT5Fggjkjvuh4bvrxWgoI989G38bZTXJh/JJuq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjpMAFX+B+LYWRwZJt8zHaJrerwu9g6wbW07K3V9bjpOnqL4/g
+	s6kTIM0wc3r+wFwgnILfsD47dtbnWRuTyu6jtWY6FA7jngMDOBe5YvhY
+X-Gm-Gg: ASbGncsxOOoepZvifOorzO0qdln8GWSrgldmJQGSI264iXV+g8Mu82M9zp1YPdGrxTZ
+	IUeq9+WYRwYF911KNQbxpFdWSqcxdBBK5RY690DkDbimpLEklsbcLvotkVFNwzz7PpzCGW6Wdo4
+	6BChkAHwXZk4nytPSjcSsQurqqLrE7l+eDK6a7j2j+mnOAzRjdc0sJWKLX23cSmkwbwvPWLAzor
+	zsvCIVHqJCygLFflSw20zhqBVHEPj7CnHjSjbIj88NeWjieaf823USSnfojdn67j2hWBAhZrMVc
+	lHq0zDaHrQ8t6fLHtMVAOq1wTwiav6+UjLI3aMxggwnWv0fERh5xLtLJJq1GoVaaugEwu0FhOZn
+	7v6VXw/Nk46IQZooJgQ==
+X-Google-Smtp-Source: AGHT+IH3FPFahV2LWODXrm0judCjRbWI2BLLJZkrPEdqsujvImFUOAeEFcDrKBUXbFsNn3a6NYrTSw==
+X-Received: by 2002:a05:600c:620b:b0:451:833f:483c with SMTP id 5b1f17b1804b1-454b306fa68mr19923165e9.7.1751625612692;
+        Fri, 04 Jul 2025 03:40:12 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225a4e1sm2150193f8f.74.2025.07.04.03.40.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 03:40:12 -0700 (PDT)
+Date: Fri, 4 Jul 2025 11:40:10 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Prachotan Bathi <prachotan.bathi@arm.com>, Peter Huewe
+ <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, Stuart Yoder
+ <stuart.yoder@arm.com>, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
+ memset
+Message-ID: <20250704114010.0d210c31@pumpkin>
+In-Reply-To: <aGdC8gyO00AB_aPr@kernel.org>
+References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
+	<20250626184521.1079507-3-prachotan.bathi@arm.com>
+	<aGWvtzhs5ksKgaYo@kernel.org>
+	<151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
+	<aGdAMg43nHPwgeKn@kernel.org>
+	<aGdC8gyO00AB_aPr@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701114733.636510-1-ulf.hansson@linaro.org> <20250701114733.636510-25-ulf.hansson@linaro.org>
-In-Reply-To: <20250701114733.636510-25-ulf.hansson@linaro.org>
-From: Rahul Pathak <rpathak@ventanamicro.com>
-Date: Fri, 4 Jul 2025 16:09:27 +0530
-X-Gm-Features: Ac12FXzyhceuDUHxAgg09E47FfPnvNTySeb2d62SyjDeeom2LGwO1x_uyESViw4
-Message-ID: <CA+Oz1=aU=2KFEsJNmO6LHjE0Wsdyor7Z4Yr30nLwRkAGm=ZO6w@mail.gmail.com>
-Subject: Re: [PATCH v3 24/24] cpuidle: riscv-sbi: Drop redundant sync_state support
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Johan Hovold <johan@kernel.org>, 
-	Maulik Shah <maulik.shah@oss.qualcomm.com>, Michal Simek <michal.simek@amd.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Hiago De Franco <hiago.franco@toradex.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 1, 2025 at 5:23=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
- wrote:
->
-> The recent updates to the genpd core, can entirely manage the sync_state
-> support for the cpuidle-riscv-sbi-domain. More precisely, genpd prevents
-> our ->power_off() callback from being invoked, until all of our consumers
-> are ready for it.
->
-> Let's therefore drop the sync_state support for the
-> cpuidle-riscv-sbi-domain as it has become redundant.
->
-> Cc: Anup Patel <anup@brainfault.org>
-> Cc: linux-riscv@lists.infradead.org
-> Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Colibri iMX8X
-> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> # TI AM62A,Xi=
-linx ZynqMP ZCU106
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/cpuidle/cpuidle-riscv-sbi.c | 22 +---------------------
->  1 file changed, 1 insertion(+), 21 deletions(-)
->
+On Fri, 4 Jul 2025 05:56:50 +0300
+Jarkko Sakkinen <jarkko@kernel.org> wrote:
 
-LGTM
+> On Fri, Jul 04, 2025 at 05:45:11AM +0300, Jarkko Sakkinen wrote:
+...
+> > Well, that was some truly misguided advice from my side so all the shame
+> > here is on me :-) There's no global memzero() and neither explicit
+> > version makes much sense here. Sorry about that.
+> > 
+> > I gave it now (actual) thought, and here's what I'd propose:
+> > 
+> > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> > index 96746d5b03e3..e769f6143a7c 100644
+> > --- a/drivers/char/tpm/tpm_crb_ffa.c
+> > +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> > @@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
+> >  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> >  
+> >  	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> > -		memzero(&tpm_crb_ffa->direct_msg_data2,
+> > -		       sizeof(struct ffa_send_direct_data2));
+> > -
+> > -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> > -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> > -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> > -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+> > +		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
+> > +			.data = { func_id, a0, a1, a2 },
+> > +		};
 
-Reviewed-by: Rahul Pathak <rpathak@ventanamicro.com>
+clang has a habit of compiling that as an un-named on-stack structure that
+is initialised and then memcpy() used to copy it into place.
+Often not was intended and blows the stack when the structure is large.
+
+So probably not a pattern that should be encouraged.
+
+	David
