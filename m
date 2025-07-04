@@ -1,63 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB5428B3ED;
-	Fri,  4 Jul 2025 07:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DC429E0E7
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615658; cv=none; b=akhix1i4p+RKOfOGKz9TGTM0Qa3Rk6FaujA1Ck2zXVge4u37WO247J4qZr/KlwkN1fmQPxtBe9E+PUDxsAQA/YTPOF9A7MsJ7GFyT7g8YoKywulZvhUAKgciKD5KZtu13OSQIG1kTW5d8pPgcURVBEUDzvIdzosix87LMWJL+p8=
+	t=1751615658; cv=none; b=okfBj9v3ZIqOCuEPZB6l7lZUwhin7a4Om5xJRvVUirK+qisuWrQu/6YZDsHQPX1iYqPoYqfMQn+fyj0/jRtTgnEWQosCOnC7jrkkaKP1pnJk+SB14MD+Piu5ZisgDpaWgoZfoDcsloNQly0JhiVzcRH0AHlRtCCWl6zu+61vt0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615658; c=relaxed/simple;
-	bh=ppfSYqAbvKz06hUuUu+InAtyPJ44rr6/wnF/AFQd36w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JJ5Oae8QCuDImnOPrJ7MHhteK6GTgZOsEJTRyZxIuqCjKUqA/NgT7h2vM+PDf9Dv5bWOKvakLctuTctFQG0wALVgMc7v5acrt/8uIQOYYNtvlgOKe081dzM4tG3AosGV+7pTaD1j6lYNfq0JrJIaRDv86/RkJWINVfdE3zFqZSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nx68XBF6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=O8egqTt7UsUxxJR5g7PvhZjDC48I3N4QwWH4q93qWUQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qQCwn/BQmFsIxlvNqc5K+/dJMM+OcW2BjGUIWlYvbWwAaeIp2WqhTaqipGIDmW63JybyGJ/SlP+29lEN3KgTHs0qJlUXB8Uv5iUmf6o1st1lIlBPvm7eEScqzZ0QisAk8koa+C3BZccP46qhyRTsbMzyNfp+ontsRItfqS4D6Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3szSnOx; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nx68XBF6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3szSnOx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1751615656; x=1783151656;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ppfSYqAbvKz06hUuUu+InAtyPJ44rr6/wnF/AFQd36w=;
-  b=Nx68XBF6P4+pTN8p7DUKXeCq88k7TVmI1u534dnbpDKYjw6A11iLjcWk
-   Vzt/kqO1FHWRiGQTQHODoLqLYbuyxDzw399CcN59oD5RR75drUpi6VQk9
-   frKSFIBY42dJfA35eaqUIpJYAacJCcStUDU8XtJTz8c1nE41BrihWCLN3
-   UDAUNlSNic1PgMJBJP6Xx5oC6ZDAxhpBlXNyZ9F/tjV2aWutJKSK8lw5W
-   Hs9drmU9VC0wdhObwI67RJ8SG7BmRXiDQukP+VSSI9ft90/m5I0P6lN3+
-   7zmbKZlmU577BgALNMmy/YLhCrmpwGFch91wpf21shQDOXrOc6gKX/3Wf
-   A==;
-X-CSE-ConnectionGUID: 1ZG7v0hOSTKlAQw7PPDYLw==
-X-CSE-MsgGUID: YW0gd2+TTTqHKuk4sOWRIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57621101"
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=O8egqTt7UsUxxJR5g7PvhZjDC48I3N4QwWH4q93qWUQ=;
+  b=c3szSnOxJ8aYQig54RvkXSKLERTLjnlmFrF83cVmpKJCRIPAz4q7gfui
+   oHiGNkOzQW18Cfkq/5ighCOgpCAEprvVgfVm5PLeDIaguLS3LyZlJyVlt
+   Z5/OsUQaPmjmLRTsSp4n/fF40pylM8KWsCtVpSPO6J0HeNGYRYd0e+wpW
+   U63irEiruoQ2ntlRpn+Igp60Tu/6EEL99MV5VOMdKAHzYTlc55XbSJ2Qp
+   ++7Vfv4yDBbneraJJo/BOgRXX4zIb/7BJxaH0PsCi2ZjrAdrJ66hOK8pf
+   LromoOZnHD1aiJ7kE3OMcYOyhx5wd+Z43IoTDoWH6bOgaza3BNQgBdisA
+   w==;
+X-CSE-ConnectionGUID: RcXoc7DhTPyb5g55IJWOeg==
+X-CSE-MsgGUID: oZWI6y+vQPWHe0XDM1EFSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494550"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="57621101"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:16 -0700
-X-CSE-ConnectionGUID: yOk/N1OrQ0qJ05Z7dUKvsg==
-X-CSE-MsgGUID: 3sc9ARBbS5GpD3N+4N5bBw==
+   d="scan'208";a="76494550"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:16 -0700
+X-CSE-ConnectionGUID: WfIGKu++T/KZR4Pj6Hj17g==
+X-CSE-MsgGUID: UeLDkmiTSKSncwjAXB02OA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="154663843"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:13 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Lili Li <lili.li@intel.com>,
-	Laurens SEGHERS <laurens@rale.com>,
-	VikasX Chougule <vikasx.chougule@intel.com>,
-	linux-edac@vger.kernel.org,
+   d="scan'208";a="158924240"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:12 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 6D57D447EB;
+	Fri,  4 Jul 2025 10:54:10 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Ben Skeggs <bskeggs@nvidia.com>,
+	Dave Airlie <airlied@redhat.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Suraj Kandpal <suraj.kandpal@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] EDAC: Add three Intel CPUs for EDAC support
-Date: Fri,  4 Jul 2025 23:16:06 +0800
-Message-ID: <20250704151609.7833-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH 17/80] drm/nouveau: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:10 +0300
+Message-Id: <20250704075410.3217943-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,28 +76,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add EDAC support for three Intel CPUs: 
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-  - Patch 1: Wildcat Lake SoCs with In-Band ECC.
-  - Patch 2: Granite Rapids-D for micro-server and edge computing applications.
-  - Patch 3: Raptor Lake HX series SoCs with Out-of-Band ECC.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-This patch series is on top of RAS edac-drivers branch.
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
 
-Lili Li (1):
-  EDAC/igen6: Add Intel Wildcat Lake SoCs support
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
 
-Qiuxu Zhuo (2):
-  EDAC/i10nm: Add Intel Granite Rapids-D support
-  EDAC/ie31200: Add Intel Raptor Lake-HX SoCs support
+ drivers/gpu/drm/nouveau/dispnv50/disp.c     | 2 --
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 1 -
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c   | 1 -
+ drivers/gpu/drm/nouveau/nouveau_display.c   | 1 -
+ drivers/gpu/drm/nouveau/nouveau_drm.c       | 4 ----
+ drivers/gpu/drm/nouveau/nouveau_gem.c       | 3 ---
+ 6 files changed, 12 deletions(-)
 
- drivers/edac/i10nm_base.c   | 12 +++++++++++-
- drivers/edac/ie31200_edac.c |  4 ++++
- drivers/edac/igen6_edac.c   | 15 +++++++++++++++
- 3 files changed, 30 insertions(+), 1 deletion(-)
-
-
-base-commit: 815703e2ecdf091a724c16671aadd8c55de24878
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index e97e39abf3a2..682d21a8a82d 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -1222,7 +1222,6 @@ nv50_mstc_detect(struct drm_connector *connector,
+ 		goto out;
+ 
+ out:
+-	pm_runtime_mark_last_busy(connector->dev->dev);
+ 	pm_runtime_put_autosuspend(connector->dev->dev);
+ 	return ret;
+ }
+@@ -2411,7 +2410,6 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
+ 	drm_atomic_state_put(state);
+ 
+ 	/* Drop the RPM ref we got from nv50_disp_atomic_commit() */
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 63621b1510f6..7d0c5e42d1dd 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -673,7 +673,6 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 	if (!nv_connector->edid)
+ 		drm_dp_cec_unset_edid(&nv_connector->aux);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return conn_status;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+index 200e65a7cefc..40eedb349c6c 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+@@ -62,7 +62,6 @@ nouveau_debugfs_strap_peek(struct seq_file *m, void *data)
+ 	seq_printf(m, "0x%08x\n",
+ 		   nvif_rd32(&drm->client.device.object, 0x101000));
+ 
+-	pm_runtime_mark_last_busy(drm->dev->dev);
+ 	pm_runtime_put_autosuspend(drm->dev->dev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
+index c50ec347b30a..c74f5ef315a7 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_display.c
++++ b/drivers/gpu/drm/nouveau/nouveau_display.c
+@@ -495,7 +495,6 @@ nouveau_display_hpd_work(struct work_struct *work)
+ 	if (first_changed_connector)
+ 		drm_connector_put(first_changed_connector);
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ noop:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 0c82a63cd49d..1dccd4af1bea 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -1177,7 +1177,6 @@ nouveau_pmops_runtime_idle(struct device *dev)
+ 		return -EBUSY;
+ 	}
+ 
+-	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_autosuspend(dev);
+ 	/* we don't want the main rpm_idle to call suspend - we want to autosuspend */
+ 	return 1;
+@@ -1224,7 +1223,6 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
+ 		kfree(cli);
+ 	}
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
+ }
+@@ -1258,7 +1256,6 @@ nouveau_drm_postclose(struct drm_device *dev, struct drm_file *fpriv)
+ 
+ 	nouveau_cli_fini(cli);
+ 	kfree(cli);
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	drm_dev_exit(dev_index);
+ }
+@@ -1306,7 +1303,6 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		break;
+ 	}
+ 
+-	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
+ }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index 690e10fbf0bd..d0f034b4a67c 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -89,7 +89,6 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 
+ 	ttm_bo_put(&nvbo->bo);
+ 
+-	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_put_autosuspend(dev);
+ }
+ 
+@@ -127,7 +126,6 @@ nouveau_gem_object_open(struct drm_gem_object *gem, struct drm_file *file_priv)
+ 		ret = nouveau_vma_new(nvbo, vmm, &vma);
+ 	else
+ 		ret = 0;
+-	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_put_autosuspend(dev);
+ out:
+ 	ttm_bo_unreserve(&nvbo->bo);
+@@ -206,7 +204,6 @@ nouveau_gem_object_close(struct drm_gem_object *gem, struct drm_file *file_priv)
+ 			ret = pm_runtime_get_sync(dev);
+ 			if (!WARN_ON(ret < 0 && ret != -EACCES)) {
+ 				nouveau_gem_object_unmap(nvbo, vma);
+-				pm_runtime_mark_last_busy(dev);
+ 			}
+ 			pm_runtime_put_autosuspend(dev);
+ 		}
 -- 
-2.43.0
+2.39.5
 
