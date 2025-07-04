@@ -1,136 +1,133 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09714273F9;
-	Fri,  4 Jul 2025 14:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F04360;
+	Fri,  4 Jul 2025 14:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637802; cv=none; b=KBDul8koS+weuyu5xVW554RvvsiZ/cwcElRyJKsb0kJUAw/4xK8W6Os9eXSq8rmGlibT0Qgg53nl+vqO2BHgoppqSsmABpQ2sSf7be30Vjoyqu+TgRZR05ySIIs5mc1oNXIlG7Lbw6+Ut2NosdZdjPkAZE6AdyPeHpEncrX2sjU=
+	t=1751637846; cv=none; b=uPdzF14ATZ7/O6qZwaubLjA5+T1kGXSBGzCbJTLHzN+VOTiIkCRpnVgp6hBzS1yiewrV67vS7m1hZZlzmBCGiJHTqi2gRnPLmF2qplzJzlwQyU1uFiT8kGqN2rOzIKBLXmfVA9bJOtN96CEC5enhwKozb6DMWxiY7KWevsMS33s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637802; c=relaxed/simple;
-	bh=MIkKO3ROEAcvFmZbM08D9Naq8WPWPvTABFHJbqIruaI=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=qpz9wpFaautWRfQtYXY8qLgBtBAWBpkswNLhgSZYvNZy1BJUMf9kNsUspQzE3Yr0AbqeqmLQZo2PlnZf+UbKsP3e4FJoJ4OCoiKIuoEWW2ob+7wtREEzSklXxJKj8+Qr7U79OTr+w/D8elz2Q/EZSTJIMJehEKWjWfBiuBRkdvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=W4RmNA2s; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1751637846; c=relaxed/simple;
+	bh=uDK0VCJtJw1Po5bTZiEIIjSPaTJw5LjKImIw4tpqKdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HOQ+wYyl0J6OmvL72tDzLKXsBQgXm5ZSKZiJMUZ6LdAkjawW2gp58/SNAH+ApujJh83z43nPmUwbe+dEnROYbZkRyxuIR5EN8CZipyaxzVzjlzY74/UbA6oOaIAynjSkry1gM00O4Wq6nefotRW+xXqzTwt6VHBJnCDZNl/VL/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4R/Kp0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="W4RmNA2s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=ptAkVOvHyjTU5vzUWd4lQ7vWlCuqotN7mv/qbmEOs8s=; b=W4RmNA2smiG/nfQ7Vj3oPjaqAg
-	8bEXTVD8+p6M3o9TiOnJkv5OSt4vIIK37GkX7D5kafwuigL9v0Y3zyOGBecedhm4n0HNNP/toeFpZ
-	E0R2dGS5LXd5EZhPNe3kl0n5I0fq1BIPiIE6lhjRbP9BdTg5QwfsbIxAatxXOTqsXShg=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:33412 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1uXh0Q-0002kj-QQ; Fri, 04 Jul 2025 10:03:11 -0400
-Date: Fri, 4 Jul 2025 10:03:09 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, stable@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <20250704100309.efe7a82ac66fd43fedc09ef6@hugovil.com>
-In-Reply-To: <CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
-References: <20250703191829.2952986-1-hugo@hugovil.com>
-	<CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4R/Kp0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7433C4CEE3;
+	Fri,  4 Jul 2025 14:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751637846;
+	bh=uDK0VCJtJw1Po5bTZiEIIjSPaTJw5LjKImIw4tpqKdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g4R/Kp0CmPsvqMfVotJ+TYNfN4KRWkDLt4BqqqQes6gkJlujp5lcFiID91dlQw2nJ
+	 0Y82hyPpwtDeDMYG2myxRST94My3KHmIdYdbJS31xHGPswKii7yWE+4ZsAeqRxq2qD
+	 ULlqWgGiqA2wyGO+QYwYxfoSM0dvmkvZwjNu0bQ+QI3KKpuhhYQr4rs9Ff3xJ/WuGC
+	 4SMeVRKup+jeWaKxRn7UYISakjLEPI5QQAG4+cRu8jzQXP2OHR19wewUg4MAyV73LP
+	 gRsAvQ4caOZfGasjSo7rXNLiC7m/GdxCRFLcWQovITGlmT/yoSqJvvzogsNHL9qGS3
+	 OLlvt9kDKzDXg==
+Date: Fri, 4 Jul 2025 17:04:02 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Prachotan Bathi <prachotan.bathi@arm.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
+ memset
+Message-ID: <aGffUrDSjNH6w6rB@kernel.org>
+References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
+ <20250626184521.1079507-3-prachotan.bathi@arm.com>
+ <aGWvtzhs5ksKgaYo@kernel.org>
+ <151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
+ <aGdAMg43nHPwgeKn@kernel.org>
+ <aGdC8gyO00AB_aPr@kernel.org>
+ <20250704114010.0d210c31@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.3 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH] gpiolib: fix efficiency regression when using
- gpio_chip_get_multiple()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704114010.0d210c31@pumpkin>
 
-Hi Bartosz,
-
-On Fri, 4 Jul 2025 10:26:58 +0200
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> On Thu, Jul 3, 2025 at 9:18 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> >
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >
-> > commit 74abd086d2ee ("gpiolib: sanitize the return value of
-> > gpio_chip::get_multiple()") altered the value returned by
-> > gc->get_multiple() in case it is positive (> 0), but failed to
-> > return for other cases (<= 0).
-> >
-> > This may result in the "if (gc->get)" block being executed and thus
-> > negates the performance gain that is normally obtained by using
-> > gc->get_multiple().
-> >
-> > Fix by returning the result of gc->get_multiple() if it is <= 0.
-> >
-> > Also move the "ret" variable to the scope where it is used, which as an
-> > added bonus fixes an indentation error introduced by the aforementioned
-> > commit.
+On Fri, Jul 04, 2025 at 11:40:10AM +0100, David Laight wrote:
+> On Fri, 4 Jul 2025 05:56:50 +0300
+> Jarkko Sakkinen <jarkko@kernel.org> wrote:
 > 
-> Thanks, I queued it for fixes. I typically keep local variables at the
-> top of the function (just a personal readability preference) but since
-> this function already has scope-local variables, let's do it. What is
-> the indentation error you're mentioning exactly?
-
-Ok, I was under the assumption that having local-scope variables was the preferred approach in the kernel, as I sometimes see patches just for fixing variables scope. If it is something specific to the GPIO subsystem, no problem.
-
-The ret variable was indented ok, but an empty line with spaces was introduced just after it.
-
-Thanks for applying the patch.
-
-Hugo.
-
-
-> > Fixes: 74abd086d2ee ("gpiolib: sanitize the return value of gpio_chip::get_multiple()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > ---
-> >  drivers/gpio/gpiolib.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index fdafa0df1b43..3a3eca5b4c40 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -3297,14 +3297,15 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
-> >  static int gpio_chip_get_multiple(struct gpio_chip *gc,
-> >                                   unsigned long *mask, unsigned long *bits)
-> >  {
-> > -       int ret;
-> > -
-> >         lockdep_assert_held(&gc->gpiodev->srcu);
-> >
-> >         if (gc->get_multiple) {
-> > +               int ret;
-> > +
-> >                 ret = gc->get_multiple(gc, mask, bits);
-> >                 if (ret > 0)
-> >                         return -EBADE;
-> > +               return ret;
-> >         }
-> >
-> >         if (gc->get) {
-> >
-> > base-commit: b4911fb0b060899e4eebca0151eb56deb86921ec
-> > --
-> > 2.39.5
-> >
+> > On Fri, Jul 04, 2025 at 05:45:11AM +0300, Jarkko Sakkinen wrote:
+> ...
+> > > Well, that was some truly misguided advice from my side so all the shame
+> > > here is on me :-) There's no global memzero() and neither explicit
+> > > version makes much sense here. Sorry about that.
+> > > 
+> > > I gave it now (actual) thought, and here's what I'd propose:
+> > > 
+> > > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> > > index 96746d5b03e3..e769f6143a7c 100644
+> > > --- a/drivers/char/tpm/tpm_crb_ffa.c
+> > > +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> > > @@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
+> > >  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> > >  
+> > >  	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> > > -		memzero(&tpm_crb_ffa->direct_msg_data2,
+> > > -		       sizeof(struct ffa_send_direct_data2));
+> > > -
+> > > -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> > > -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> > > -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> > > -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+> > > +		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
+> > > +			.data = { func_id, a0, a1, a2 },
+> > > +		};
 > 
+> clang has a habit of compiling that as an un-named on-stack structure that
+> is initialised and then memcpy() used to copy it into place.
+> Often not was intended and blows the stack when the structure is large.
+> 
+> So probably not a pattern that should be encouraged.
 
+This is interesting observation so I had to do some compilation tests to
+verify the claim just to see how it plays out (and for the sake of
+learning while doing it).
 
--- 
-Hugo Villeneuve <hugo@hugovil.com>
+Note that I use GCC for the examples but I have high doubts that clang
+would do worse. Please share the insight if that is a wrong assumption.
+
+OK, so... here's the dissembly (using objdump) for the  unchanged version:
+
+ffff8000801805a0:	8b020260 	add	x0, x19, x2
+ffff8000801805a4:	94011819 	bl	ffff8000801c6608 <__memset>
+ffff8000801805a8:	a9035a75 	stp	x21, x22, [x19, #48]
+ffff8000801805ac:	aa1a03e1 	mov	x1, x26
+ffff8000801805b0:	aa1903e0 	mov	x0, x25
+ffff8000801805b4:	a9047e77 	stp	x23, xzr, [x19, #64]
+
+[ Off-topic: note that how a2 gets optimized out with the zero register
+  so that it is probably a parameter that we don't need at all in the
+  first place? ]
+
+However, in the changed version the matching snippet looks factors
+better:
+
+ffff800080180620:	a9017c7f 	stp	xzr, xzr, [x3, #16]
+ffff800080180624:	f900107f 	str	xzr, [x3, #32]
+
+Further, look at the stack size in the original version:
+
+ffff800080180524 <__tpm_crb_ffa_send_receive.constprop.0>:
+ffff800080180524:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
+
+On the other hand, in the changed version:
+
+ffff800080180524 <__tpm_crb_ffa_send_receive.constprop.0>:
+ffff800080180524:	a9bb7bfd 	stp	x29, x30, [sp, #-80]!
+
+I don't know, at least the figures I'm able to measure with my limited
+ARM assembly knowledge look way better.
+
+BR, Jarkko`
+
