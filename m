@@ -1,130 +1,86 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B866272E46
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C575F271456;
+	Fri,  4 Jul 2025 07:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751613143; cv=none; b=ldGIFfHciA7mztr+rgkr0OGwPzKfb7ZZgANpzqERGX/3D12TC0uHtntmAYOn7YgsIEurOljM5qz8Lxf4w9rPOJJsbYeeQ0humCCiNNQIY8hY2dlQ++og/5lVn0o67bmnhHNuvo2j9XQAgfBN0pAuUmYr1gA8ouyEe3jIx9eptUM=
+	t=1751613236; cv=none; b=Cf9WzTluHLropy7av+xzi6CmlFfB/wTTvbQL4s39BZ10iXboKFZmBrRMfHO0MxVnKsvouBsm4RmR/qmvhy2WNnGwIkbmzCKnjeaSiRJMP7rfAn72og8sInnkVbYZJt4lAnvxeStlLjEuyx7+5QNlJQXfeL9om9bqt0CKhC/fIyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751613143; c=relaxed/simple;
-	bh=wUGTN8iMv5up8lTmRIGIP/Jx9CPaLQPPMfIZ/wMFAw0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gDtOqSK1/iuS2zI/ovcOkGiL6W1NKg5ln5QbdT+vBHVShc138w6EHN/SnAJtsRauVumV+jJHNs3RANbO8NQ7qR7pxdU9pTcDVRVLlu8cm+PFOsRSY1TWYHHQTHoQYZwfI8xpfGfzW+7tALDCUWIwwIkR6xgMoW0iojNrhTeAZoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KQO9qE1G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=m4Acd3pj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KQO9qE1G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=m4Acd3pj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751613236; c=relaxed/simple;
+	bh=tcLavxAVlYo+tHuYvEppo9Oz15fXopm70O8QPBgs204=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aE9VPl3Cey1jq1h8UXBkXCp0xS57Do0dJ9pc2Q6m9Fr6aeixivdfVYHSa11gacL2zuhlgQZbk13QVw/GzDIEzgJVfcpYwuGhYF9UMIca3DJz2biyrcc0NN8rLkWNbrE/wXOs69YkVUpFwPgvlVkpy21uyn/PDrtTiKSfO55PRGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRzXGwyv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KQO9qE1G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="m4Acd3pj";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KQO9qE1G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="m4Acd3pj"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5A6381F38A;
-	Fri,  4 Jul 2025 07:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751613139; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z3jKnzohDpqKefDCoEq8Db2mUfTmqWIsbY/BLEwH6Ic=;
-	b=KQO9qE1G7Q1oj5F+yri++n9rx3sDg1GVLLv1ZO3IjQzXKpG28MLi2cMZA6VAg+YPojTHBs
-	/yolzwrFvdT8ZJVxwqAs5tXNgzz88vRUnoNZQEYdVfj2XXHxNitezumg4K/u31gYM4OHdl
-	sqKkXQwyck+Sdd5r+essDxknjnbNeoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751613139;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z3jKnzohDpqKefDCoEq8Db2mUfTmqWIsbY/BLEwH6Ic=;
-	b=m4Acd3pjSpcsNLMf/onq59dbt3wHB5xEaA5pbYZ1dako2xbCApHrgxlU8BJqvCIZce2Lig
-	sTHwm51pkc0TtFDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751613139; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z3jKnzohDpqKefDCoEq8Db2mUfTmqWIsbY/BLEwH6Ic=;
-	b=KQO9qE1G7Q1oj5F+yri++n9rx3sDg1GVLLv1ZO3IjQzXKpG28MLi2cMZA6VAg+YPojTHBs
-	/yolzwrFvdT8ZJVxwqAs5tXNgzz88vRUnoNZQEYdVfj2XXHxNitezumg4K/u31gYM4OHdl
-	sqKkXQwyck+Sdd5r+essDxknjnbNeoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751613139;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z3jKnzohDpqKefDCoEq8Db2mUfTmqWIsbY/BLEwH6Ic=;
-	b=m4Acd3pjSpcsNLMf/onq59dbt3wHB5xEaA5pbYZ1dako2xbCApHrgxlU8BJqvCIZce2Lig
-	sTHwm51pkc0TtFDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1A34A13757;
-	Fri,  4 Jul 2025 07:12:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id e7sCBdN+Z2hCeQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 04 Jul 2025 07:12:19 +0000
-Date: Fri, 04 Jul 2025 09:12:18 +0200
-Message-ID: <87cyagpgz1.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda: Remove old commented out sanity check
-In-Reply-To: <20250703225238.308359-2-thorsten.blum@linux.dev>
-References: <20250703225238.308359-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRzXGwyv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EE6C4CEED;
+	Fri,  4 Jul 2025 07:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751613236;
+	bh=tcLavxAVlYo+tHuYvEppo9Oz15fXopm70O8QPBgs204=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=uRzXGwyvAtPft9w1VoMphyV0tQUJKziy2Lsclj0vZNmNF6FkjiaEXgo2wpyVxY1lY
+	 h+3SRWIJ8SicrcpUV0nzP33SGpMRKJ0rLItmDpJySyP5s6CnJpulPkYWTu46W93Yd5
+	 43WEtB8cdEx+4JVvtK1AqyWGHeE+qia0KGz44FMuX2/cILf618AENNfEv9EkV6fyyp
+	 4/ZKNinqWvrDfGDkIxfNEFzFyB7V4YbmZ6wLXpdF3uRhU1hsAMP0YZD9OJNOJPPVop
+	 In4OhGqXX/KvUYdRHpQTNGhtoC4LS6yUO9J1Hn1jXG3FFYQrj5a4L51veikLglh7ce
+	 XC4Vp1zbFOhgw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,  aliceryhl@google.com,
+  alex.gaynor@gmail.com,  ojeda@kernel.org,  boqun.feng@gmail.com,
+  anna-maria@linutronix.de,  bjorn3_gh@protonmail.com,  dakr@kernel.org,
+  frederic@kernel.org,  gary@garyguo.net,  jstultz@google.com,
+  linux-kernel@vger.kernel.org,  lossin@kernel.org,  lyude@redhat.com,
+  rust-for-linux@vger.kernel.org,  sboyd@kernel.org,  tglx@linutronix.de,
+  tmgross@umich.edu
+Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
+In-Reply-To: <CANiq72m886R2ZOLSSzehU8aTXzYtPmTyyrSxpOQCr7GX_Bcghg@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Fri, 4 Jul 2025 08:42:07 +0200")
+References: <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+	<87sejfuf3n.fsf@kernel.org>
+	<CAH5fLgjdpso4waCrP6iVaMEOpYLUmqCz8PxqXuSbQBMaxxCHBw@mail.gmail.com>
+	<20250704.090751.571327900479764851.fujita.tomonori@gmail.com>
+	<CANiq72m886R2ZOLSSzehU8aTXzYtPmTyyrSxpOQCr7GX_Bcghg@mail.gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Fri, 04 Jul 2025 09:13:45 +0200
+Message-ID: <87ms9ktoly.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -3.30
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 04 Jul 2025 00:52:36 +0200,
-Thorsten Blum wrote:
-> 
-> The sanity check has been commented out for more than 12 years since
-> commit d5657ec9f4ad ("ALSA: hda - Disable the sanity check in
-> snd_hda_add_pincfg()") - remove it.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> writes:
 
-Applied now.  Thanks.
+> On Fri, Jul 4, 2025 at 2:08=E2=80=AFAM FUJITA Tomonori
+> <fujita.tomonori@gmail.com> wrote:
+>>
+>> I had a quick look at the official Rust documentation, and I think I
+>> agree with this opinion.
+>
+> My personal take: I agree that having both English and something else
+> is a bit redundant -- some redundancy is good when something (like a
+> notation) may be non-obvious, but I think a math integer interval or a
+> Rust range or a condition like 0 <=3D v <=3D `KTIME_MAX` are all
+> understandable in this context.
+>
+> Now, whether to use English or any of the other options, it is hard to
+> say what is best for most readers. Personally, I prefer to just see
+> one of the expressions, which makes it also closer to other forms,
+> e.g. a debug assert somewhere, or a contract, or other tooling or
+> formalization efforts.
+
+I would prefer `0..=3DKTIME_MAX` or `0 <=3D v <=3D KTIME_MAX`. English prose
+is also OK and I won't object to that, but I prefer the others.
 
 
-Takashi
+Best regards,
+Andreas Hindborg
+
+
