@@ -1,180 +1,314 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5A7286898;
-	Fri,  4 Jul 2025 10:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F902EAB93
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 10:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751624722; cv=none; b=c58aOh9vv9JeM8Nx2mRHL+ONRa3WyFY3q38kOuLbJzJR9zsRzF7DDIzThhc2blp7hvc8cEzm/q7iqyVS5Q0KvK6+awuKP75CLzWYOJcvHFGPoBsQevAr5I9skOJriAE9JYtPbVXN1Hcjgtij8SEmMrzFqVXXmIau6XLvyuXFLUc=
+	t=1751624734; cv=none; b=iryjgadkbzPz2qI63UimKDXO80fqSe8Jfi5exhseglLRYbpIDXDeVC4Gx/SFHIrf2tvV7PbAAqyppMq5xv8Ej0/CPpn63zOJssZhfeHhT99TM+flQtw6++nRUiiPMD5zSfWVbPtSwIyCR/KKYqRjQRZnEzhl0d9FdAgC28M8ba4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751624722; c=relaxed/simple;
-	bh=+CXpUx6zZcO256ofhhwhvs6R9JR4HjYFe/ky01gIk5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sIyOHBDP/Wmk/o7Ct+yxqR2X2kFPzlLCIEcWtgq/P3Gg4cbvbkxqvn6Ifi2+os46ucsuuXzmcwo1mUd398qQfidItheuXHaHxtp4VbyE/1jOKwJ2a8AyL+E/QUBHMc1EqTSWArRKbvXrK3Jrx/q5T4AUr0A++caj9L8GaPDRFsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bYVBg6lsLzYQtqs;
-	Fri,  4 Jul 2025 18:25:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id C7F211A17CC;
-	Fri,  4 Jul 2025 18:25:14 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP1 (Coremail) with SMTP id cCh0CgCXXjMJrGdo8tp7Ag--.21029S2;
-	Fri, 04 Jul 2025 18:25:14 +0800 (CST)
-Message-ID: <85fc85e8-af92-4d58-8271-9bf4aeb0a63d@huaweicloud.com>
-Date: Fri, 4 Jul 2025 18:25:12 +0800
+	s=arc-20240116; t=1751624734; c=relaxed/simple;
+	bh=pEUtySM2KTJFulIMAqjkelFZDkcz60ibvb+CB6Fbeyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fgRgKazgXgGg9LhOfGc1ZYlSLO4Lp/7Shqit254F4XJYWs2wbyHqFbSjiy3MwsuvLngC7cyLtzWAqnmPoI5+L1DmsoTRu3H6yVdQpHIePCLAqYiBcEY3Y5WDrCJp3iXJGu5DMW5Oj58GhiHWlDiWJG09KExqd0EobexskcgmGq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eLwT/EmT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eLwT/EmT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751624731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sro688HYIitAmPcvBgChCRtb9/I9qH1hXgFepSE52NI=;
+	b=eLwT/EmT7HWj0rRQfIwe+GHkBKXwyBzFk73+LECboajAXih4jvUvIAHT66sLrsMlKhQJ3U
+	+MQQhaPr+iGGqcnM2ukBisGI8Ob9YdmFJFLREX/y4hIV9RVf1FvRX82yGreLroSdwjoDAf
+	MHsJhjQZRmp2xmGq42yKdJpeOcC+eXw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-618-CZ46b_IqPlKGQmYkIOXYVQ-1; Fri, 04 Jul 2025 06:25:30 -0400
+X-MC-Unique: CZ46b_IqPlKGQmYkIOXYVQ-1
+X-Mimecast-MFC-AGG-ID: CZ46b_IqPlKGQmYkIOXYVQ_1751624729
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f6ba526eso519063f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 03:25:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751624729; x=1752229529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sro688HYIitAmPcvBgChCRtb9/I9qH1hXgFepSE52NI=;
+        b=UMxx2i2hC0WXu8YF946Vq/Gngye01Zhs/c+X/spCiLatj7qp4EZsT9Q4N1MQIbsd6n
+         Z5dNQFqSBnB3TCNM+JZPYghCgBJNIiEajIhc9g5VkOh6V+Ptg+LrVzjRa2LNc8ORFNco
+         KaXn/N9ISHsRhrcjSYnVmNy7piuy0YPN9D5cU/xK/i27Xq5mavVulLfOY3hkqRZpWSSu
+         CxSJEEx1eP4IaP5xV8UpvrKgJ++Vn3pR6PNnYpgIDvkkeX9Kv5TpuX5xI5U9tzbOSXRt
+         F/5/I1CRGiwJ5GFqJOv6AobCo4R81Are0yCdJqnjzysuIyQJC9e7FD2/l6GyA0afsGvI
+         mDYQ==
+X-Gm-Message-State: AOJu0YxFbjh6h72m2crkSfyVL45iKB9yin+jvVyBv0GN2MCkuJE29Lyy
+	YCDmW7eGLtqffwZENKqLRVD+BX8nsF5UMLfaF0sPYQ4VL3KN7wjzRgOdwmtB/mYuUhTYhb9d/K9
+	kw5WqZc8xH/Ffa12RErom2MlcpGq0I2p6O7WHziQIOBJU+K7u1LT5B4hxJcsKdXgltY4Wd2TVAr
+	9sZxWuY1W4SetFvkfJRUC55d/heqrarqh+HCWG4kDzSLUC2A==
+X-Gm-Gg: ASbGncvHkR5x/JhhMuOlJY4nuqoCforlmKRKyoYDI2ULofEivwPIPYQeVDaNNVyPAYA
+	sXcue7sgYkXINYCp8fwa2pIcWyCCtnwNf6DqR3/0/gCobLC6xxKD5+UJtgLl1x5wcLVBud507T8
+	Pc3U4eENYrh5Xp6bFSXgT8bOCavVW/xzBtzPIZ/JdBqSd6tAjyi6Q7xLRmQ/szRB7Qef/+58cqQ
+	vNr8j+ubV0F+wYOyNNosou7It5XuOm/1OWphn3F5RuPNfQKaTrLbiS/CQxgdeWz1dGuU/6Xa3DJ
+	t0Q3ZMhlPr51Pv2gsmVRj48wHCh5Olr6S1eeUFvEi3MqsCI48Necw6K5TNEXx4MpXGC+1DvNwKO
+	zUd5rUA==
+X-Received: by 2002:a05:6000:2dc7:b0:3a5:75a6:73b9 with SMTP id ffacd0b85a97d-3b4964f4d95mr1608851f8f.11.1751624728498;
+        Fri, 04 Jul 2025 03:25:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCjrfOCujVRy/tLPuq2vX5bnaQezkrR11WICwCcdt0ejgdnjfY6QZ4FsoDRZ4Yte6IkVy/1Q==
+X-Received: by 2002:a05:6000:2dc7:b0:3a5:75a6:73b9 with SMTP id ffacd0b85a97d-3b4964f4d95mr1608748f8f.11.1751624727474;
+        Fri, 04 Jul 2025 03:25:27 -0700 (PDT)
+Received: from localhost (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b4708d094csm2102185f8f.28.2025.07.04.03.25.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 03:25:26 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	virtualization@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: [PATCH v2 00/29] mm/migration: rework movable_ops page migration (part 1)
+Date: Fri,  4 Jul 2025 12:24:54 +0200
+Message-ID: <20250704102524.326966-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
- frozen
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Koutn?? <mkoutny@suse.com>, rafael@kernel.org, pavel@kernel.org,
- timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
-References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
- <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
- <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
- <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
- <20250704075718.GA2001818@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20250704075718.GA2001818@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCXXjMJrGdo8tp7Ag--.21029S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWrW7tryfWw4UKrWrWF15urg_yoW5tr43p3
-	95Wa15Jw1Fqr1xZrnxtw4DZ3s8K3yq9r4UGrykCa4xJa1YqasxXr17C3yagF4jvry8KrnF
-	qayjgr95Aw4UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Transfer-Encoding: 8bit
+
+Based on mm/mm-new.
+
+In the future, as we decouple "struct page" from "struct folio", pages
+that support "non-lru page migration" -- movable_ops page migration
+such as memory balloons and zsmalloc -- will no longer be folios. They
+will not have ->mapping, ->lru, and likely no refcount and no
+page lock. But they will have a type and flags 🙂
+
+This is the first part (other parts not written yet) of decoupling
+movable_ops page migration from folio migration.
+
+In this series, we get rid of the ->mapping usage, and start cleaning up
+the code + separating it from folio migration.
+
+Migration core will have to be further reworked to not treat movable_ops
+pages like folios. This is the first step into that direction.
+
+Heavily tested with virtio-balloon and lightly tested with zsmalloc
+on x86-64. Cross-compile-tested.
+
+v1 -> v2:
+* "mm/balloon_compaction: convert balloon_page_delete() to
+   balloon_page_finalize()"
+ -> Extended patch description
+* "mm/page_alloc: let page freeing clear any set page type"
+ -> Add comment
+* "mm/zsmalloc: make PageZsmalloc() sticky until the page is freed"
+ -> Add comment
+* "mm/migrate: factor out movable_ops page handling into
+   migrate_movable_ops_page()"
+ -> Extended patch description
+* "mm/migrate: remove folio_test_movable() and folio_movable_ops()"
+ -> Extended patch description
+* "mm/zsmalloc: stop using __ClearPageMovable()"
+ -> Clarify+extend comment
+* "mm/migration: remove PageMovable()"
+ -> Adjust patch description
+* "mm: rename __PageMovable() to page_has_movable_ops()"
+ -> Update comment in scan_movable_pages()
+* "mm: convert "movable" flag in page->mapping to a page flag"
+ -> Updated+extended patch description
+ -> Use TESTPAGEFLAG+SETPAGEFLAG only
+ -> Adjust comments for #else + #endif
+* "mm/page-alloc: remove PageMappingFlags()"
+ -> Extend patch description
+* "docs/mm: convert from "Non-LRU page migration" to "movable_ops page
+   migration""
+ -> Fixup usage of page_movable_ops()
+* Smaller patch description changes
+* Collect RBs+Acks (thanks everybody!)
+
+RFC -> v1:
+* Some smaller fixups + comment changes + subject/description updates
+* Added ACKs/RBs (hope I didn't miss any)
+* "mm/migrate: move movable_ops page handling out of move_to_new_folio()"
+ -> Fix goto out; vs goto out_unlock_both;
+* "mm: remove __folio_test_movable()"
+ -> Fix page_has_movable_ops() checking wrong page
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jerrin Shaji George <jerrin.shaji-george@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: "Eugenio Pérez" <eperezma@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Rakie Kim <rakie.kim@sk.com>
+Cc: Byungchul Park <byungchul@sk.com>
+Cc: Gregory Price <gourry@gourry.net>
+Cc: Ying Huang <ying.huang@linux.alibaba.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Brendan Jackman <jackmanb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Xu Xin <xu.xin16@zte.com.cn>
+Cc: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Naoya Horiguchi <nao.horiguchi@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+
+David Hildenbrand (29):
+  mm/balloon_compaction: we cannot have isolated pages in the balloon
+    list
+  mm/balloon_compaction: convert balloon_page_delete() to
+    balloon_page_finalize()
+  mm/zsmalloc: drop PageIsolated() related VM_BUG_ONs
+  mm/page_alloc: let page freeing clear any set page type
+  mm/balloon_compaction: make PageOffline sticky until the page is freed
+  mm/zsmalloc: make PageZsmalloc() sticky until the page is freed
+  mm/migrate: rename isolate_movable_page() to
+    isolate_movable_ops_page()
+  mm/migrate: rename putback_movable_folio() to
+    putback_movable_ops_page()
+  mm/migrate: factor out movable_ops page handling into
+    migrate_movable_ops_page()
+  mm/migrate: remove folio_test_movable() and folio_movable_ops()
+  mm/migrate: move movable_ops page handling out of move_to_new_folio()
+  mm/zsmalloc: stop using __ClearPageMovable()
+  mm/balloon_compaction: stop using __ClearPageMovable()
+  mm/migrate: remove __ClearPageMovable()
+  mm/migration: remove PageMovable()
+  mm: rename __PageMovable() to page_has_movable_ops()
+  mm/page_isolation: drop __folio_test_movable() check for large folios
+  mm: remove __folio_test_movable()
+  mm: stop storing migration_ops in page->mapping
+  mm: convert "movable" flag in page->mapping to a page flag
+  mm: rename PG_isolated to PG_movable_ops_isolated
+  mm/page-flags: rename PAGE_MAPPING_MOVABLE to PAGE_MAPPING_ANON_KSM
+  mm/page-alloc: remove PageMappingFlags()
+  mm/page-flags: remove folio_mapping_flags()
+  mm: simplify folio_expected_ref_count()
+  mm: rename PAGE_MAPPING_* to FOLIO_MAPPING_*
+  docs/mm: convert from "Non-LRU page migration" to "movable_ops page
+    migration"
+  mm/balloon_compaction: "movable_ops" doc updates
+  mm/balloon_compaction: provide single balloon_page_insert() and
+    balloon_mapping_gfp_mask()
+
+ Documentation/mm/page_migration.rst  |  39 ++--
+ arch/powerpc/platforms/pseries/cmm.c |   2 +-
+ drivers/misc/vmw_balloon.c           |   3 +-
+ drivers/virtio/virtio_balloon.c      |   4 +-
+ fs/proc/page.c                       |   4 +-
+ include/linux/balloon_compaction.h   |  90 ++++-----
+ include/linux/fs.h                   |   2 +-
+ include/linux/migrate.h              |  46 +----
+ include/linux/mm.h                   |   4 +-
+ include/linux/mm_types.h             |   1 -
+ include/linux/page-flags.h           | 106 +++++++----
+ include/linux/pagemap.h              |   2 +-
+ include/linux/zsmalloc.h             |   2 +
+ mm/balloon_compaction.c              |  21 ++-
+ mm/compaction.c                      |  44 +----
+ mm/gup.c                             |   4 +-
+ mm/internal.h                        |   2 +-
+ mm/ksm.c                             |   4 +-
+ mm/memory-failure.c                  |   4 +-
+ mm/memory_hotplug.c                  |  10 +-
+ mm/migrate.c                         | 271 ++++++++++++++++-----------
+ mm/page_alloc.c                      |  13 +-
+ mm/page_isolation.c                  |  12 +-
+ mm/rmap.c                            |  16 +-
+ mm/util.c                            |   6 +-
+ mm/vmscan.c                          |   6 +-
+ mm/zpdesc.h                          |  15 +-
+ mm/zsmalloc.c                        |  33 ++--
+ 28 files changed, 373 insertions(+), 393 deletions(-)
 
 
-
-On 2025/7/4 15:57, Peter Zijlstra wrote:
-> On Fri, Jul 04, 2025 at 11:11:52AM +0800, Chen Ridong wrote:
-> 
-> Your patches are mangled; please educate your MUA.
-> 
-Hi Peter,
-
-Thank you for your review and feedback
-Apologies for the formatting issues in the patch.
-
->> --- a/kernel/freezer.c
->> +++ b/kernel/freezer.c
->> @@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
->>         for (;;) {
->>                 bool freeze;
->>
->> -               raw_spin_lock_irq(&current->pi_lock);
->> -               WRITE_ONCE(current->__state, TASK_FROZEN);
->> -               /* unstale saved_state so that __thaw_task() will wake
->> us up */
->> -               current->saved_state = TASK_RUNNING;
->> -               raw_spin_unlock_irq(&current->pi_lock);
->> -
->>                 spin_lock_irq(&freezer_lock);
->> -               freeze = freezing(current) && !(check_kthr_stop &&
->> kthread_should_stop());
->> +               freeze = (freezing(current) || !cgroup_thawed(current))
->> +                        && !(check_kthr_stop && kthread_should_stop());
-> 
-> This makes no sense to me; why can't this stay in cgroup_freezing()?
-> 
-> Also, can someone please fix that broken comment style there.
-> 
-The change relates to commit cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not frozen"),
-which modified cgroup_freezing() to verify the FROZEN flag isn't set. The freezing(p) will return
-false if the cgroup is frozen.
-
->>                 spin_unlock_irq(&freezer_lock);
->>
->>                 if (!freeze)
->>                         break;
->>
->> +               raw_spin_lock_irq(&current->pi_lock);
->> +               WRITE_ONCE(current->__state, TASK_FROZEN);
->> +               /* unstale saved_state so that __thaw_task() will wake
->> us up */
->> +               current->saved_state = TASK_RUNNING;
->> +               raw_spin_unlock_irq(&current->pi_lock);
->> +
-> 
-> And I'm not quite sure I understand this hunk either. If we bail out,
-> current->__state is reset to TASK_RUNNING, so what's the problem?
-
-The issue occurs in this race scenario:
-
-echo FROZEN > freezer.state
-  freeze_cgroup()
-    freeze_task()
-      fake_signal_wake_up() // wakes task to freeze it
-
-In task context:
-get_signal
-  try_to_freeze
-    __refrigerator
-      WRITE_ONCE(current->__state, TASK_FROZEN); // set TASK_FROZEN
-      // race: cgroup state updates to frozen
-      freezing(current) now return false
-      // We bail out, the task is not frozen but it should be frozen.
-
-I hope this explanation clarifies the issue I encountered.
-
-Here's the corrected format patch:
-
-diff --git a/kernel/freezer.c b/kernel/freezer.c
-index 8d530d0949ff..16e98a6b497a 100644
---- a/kernel/freezer.c
-+++ b/kernel/freezer.c
-@@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
-        for (;;) {
-                bool freeze;
-
--               raw_spin_lock_irq(&current->pi_lock);
--               WRITE_ONCE(current->__state, TASK_FROZEN);
--               /* unstale saved_state so that __thaw_task() will wake us up */
--               current->saved_state = TASK_RUNNING;
--               raw_spin_unlock_irq(&current->pi_lock);
--
-                spin_lock_irq(&freezer_lock);
--               freeze = freezing(current) && !(check_kthr_stop && kthread_should_stop());
-+               freeze = (freezing(current) || !cgroup_thawed(current))
-+                        && !(check_kthr_stop && kthread_should_stop());
-                spin_unlock_irq(&freezer_lock);
-
-                if (!freeze)
-                        break;
-
-+               raw_spin_lock_irq(&current->pi_lock);
-+               WRITE_ONCE(current->__state, TASK_FROZEN);
-+               /* unstale saved_state so that __thaw_task() will wake us up */
-+               current->saved_state = TASK_RUNNING;
-+               raw_spin_unlock_irq(&current->pi_lock);
-+
-                was_frozen = true;
-                schedule();
-        }
-
-Best regards,
-Ridong
+base-commit: 31a2460cb90e6ac3604c72fb54e936b8129fec05
+-- 
+2.49.0
 
