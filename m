@@ -1,60 +1,63 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92D642A83
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DB682C60
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751639779; cv=none; b=KGqd01Tlk1uBFrelNEBa1nQ7TfIkyygIgRI8B8rbM86jO7MqATpjuSyAivKa7URE2+L91r4PHFSYW/ruFcgwr2+EuQWk70fZZ5UxjxD1tUMnOJi2+Y1wx1YfqD0h3IbJhFUeWzMx7+VdExs5EJLwYrCc/vB3bAu2o/c6Ezp6ATo=
+	t=1751639781; cv=none; b=GN6CXiyQUNMaz9Ms4NEah/8C0UrhKYS8cdTrrMXUr1xBKRBfGXb6d3fuKyRCJUDddPTEg5gEYAegaoRG7qPTc5xjq+EFIZlKxEehjAAV45S2iVqH2rzRc/oQNzR5x+Du6xFSoYzBBUfL7u1xlTw+4gyVF8MD3pTyWaw6/WJt5RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751639779; c=relaxed/simple;
-	bh=zCyvfTbSbFhrQUEZKhyLVu1lB25cKKaFVMy0fDGIMVE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l/hlhNp5MvNBjw3yEKlGpOHt9zx6eswGT1mKfKwRWpXBIIaZ8+SyF71FlZs5Wur8u2gl35LxnLNsq4CmYZlmKtY0U3e9RZg3i1kcHn+zlBc9yPjVAlTCZPtRl3jScb6dNeDyXjYbUOpoPM5m+zhGJxUYzd1uwA8W9mGvUxgQiT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GVuN5afD; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1751639781; c=relaxed/simple;
+	bh=AhbBIgHkLNVCNMm17JJi+tNpziBECUFPFNFEnQtPCi0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MRqLl0Eh5vSTv3tZNTfurajoP4dzWOHQwZx5qsREIGaEuKkaBAgUZdBNdK5FO28XZ7f5483bxz7x8Q7oBf1UoZ71IQM/fyBi+uIowdJzH1ViEB5obwTYZLacrZ8A94o9kwd0N0vPL4gusQ5tyeUFjpspYtIHyDlmfDVFJXIoL28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LBrjTStw; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GVuN5afD"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a53359dea5so487327f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:36:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LBrjTStw"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d7b50815so7776945e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:36:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751639776; x=1752244576; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=spuVa2NqWCBqOGSLbLVQ+4OIyo66THedAVR+Cj3LFVw=;
-        b=GVuN5afDOXEAFfTt8ceYxP0Yhi46Rc+rZJN3suEHwh6oiPRI3RzpP1MQ2MlJOtTjRq
-         PcjDItb3BH7oiujCQoIppoeSOCN5Bok27VVhGMIf3VcHOxA3YHhMTjYFdvfFXYky0ogX
-         Xpsnhh3EHeOAbZOOcN/HExqoR9SYu8xIbV+k34aLZQMFl9hg8P6deofmchvdjtrZTJQT
-         mY6Q9+ep1524gypI1W2ZoZQvHuo+1Nb8DqyghF3KdIc77xxxkj+nP0Am2HGrqZzT8Y7c
-         EpTGxOpjtUbD9I5x54uNG/gDP05Lr0B3M0viabuVpVws44XD9Z0knPsp32VWPPSXPjJ+
-         xdEA==
+        d=linaro.org; s=google; t=1751639778; x=1752244578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Hs2oYF3e3J4FN8zRTDauoaC2/4C3r7PLe1ATMwxGhY=;
+        b=LBrjTStwPVZTMHr4KltOxl/G/bDJqOq7OpNs5sFhYwOAtT5X8J2xFNTnfVB70KkXwr
+         UStiVz+lIFq2cM+fMni5XI3ui1Z9kOPa/dvhpPkON3A85Y6BRT2eMCntIffVmLkqWhg/
+         IXKSCSG4XwR5QlZyfNGbzZ+6sYaCFlkp9br+b9OTX5a8De31AkpMRQE4CedTWeSANInX
+         JoIDB0c3q7qgIhVsHfNND9vve4Mdy8t2S4/FY7bOz9F+DOed7XWLELflveoG9Ie32Hd7
+         gcaDB3dXStdlY24x1HbCPECspOA+wDrzJ1mqHJydBR5yyFFyMBmgj0fkXvl9rtSyDiup
+         SCrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751639776; x=1752244576;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=spuVa2NqWCBqOGSLbLVQ+4OIyo66THedAVR+Cj3LFVw=;
-        b=QPmowjW/KJyTTYmK+pOOR0FAGn51F1tU9t46CThzA02ipLlttlbQeDIsAWWF3IZNK6
-         AIHuOBmQIEMopYUM0wXGgG8V/6Ig8qS9Umeb4TJjEKfYLNuzSrg9kgLac3DXjkUttPsr
-         O8xcyWccmt/fZWPCDYrfAqazerwGuN9Kn/n7h9I2vmUimHJ2xXd61jWVMGFwHizEM439
-         oj+cTjx2p0YplDTMKOWqA4d+ysWvB2XEXljdMnQ0eZpxtZoRWy7xhe/1vG33Ce5HtWQH
-         ZS4Vx4CCTnCuFwJEFdKJ13YvhepnrjVRoE42l8cEOBuwPcE8QJDX3SchhHDctvy14ExS
-         NFqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2sieG8H0ZV+GRZWbGJgR3Jc1vXRIZtwc+gtPVJ437achl7oo064q+gdoVoV9oCyqkeSeKa8abR4knn2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwczR1wnA9pa08CBWHnFszD18bNLMgMdZcvZF7nFy0qDUfWA7iw
-	sfsxsuHcp72cn1On4WPKbIi/deSjue7QvppqdICpIRtk2y276GQCWkCFLBRRUJge8rc=
-X-Gm-Gg: ASbGncvkpGO5MBGyHGpgasO5o1ff4srnmlC8+WCN4FumvY4YHx2o6xbdw42tikBpkb9
-	3VheJYxHnOyljz0sY3ITux2SxE/dxr7zAd2mqPmuWBjykur42yvsg+8UFqCQ7cdoJ2QragrtR12
-	jmewGHa3GRwDzHKD9X3kLzCFm/yLhE33T2AIYcP/bpMfLDJkNwhoyOPTk9AqdJXm02dPpOOo1RL
-	Ny9SHS/hnJXwqUfDIcARMzAHvft9WjkB1odqH3S1dNsJkyMIdLTHujX720HI+CdUMBSWahtpRqH
-	wZhXZm+OIr0ADItL5HRxm1VjdMaTmMHA8kaZ0IvoBu7cX9/sA77ZJ5WL80FrB+WvoqVomsc=
-X-Google-Smtp-Source: AGHT+IHThE4VJYkTjiJk1srk+M9QpDLbVpOzzxhRZTx43amiS51HWojIfZa+6uIiEdhEJc4qb/+ytQ==
-X-Received: by 2002:a05:6000:420f:b0:3a5:25e0:ab53 with SMTP id ffacd0b85a97d-3b497038f53mr2019540f8f.32.1751639776043;
-        Fri, 04 Jul 2025 07:36:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751639778; x=1752244578;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4Hs2oYF3e3J4FN8zRTDauoaC2/4C3r7PLe1ATMwxGhY=;
+        b=Zr9jHhn1PWDkKJ++MVRxO1n3e4qntFtzCVLyU8jOJg29L0b+HNnrevb8jRCB3bUbpu
+         avy1jkab3h6kOf0OCTAN+BaY5SPnsNzblRtQMpRsr/WlFcrYpDCaB92g1qy2CzTe1xw8
+         /Z4m22xGQa73iGN1E2UFhDFafU4YMM6OfUp+voI9c0OBtKDDW6vuhRQfsxI7idlTLwDG
+         9EM+7sdb1V/A5ADFkzEF9dvzmZC2Yjnbui6shjCW6mKGYey6Lm8ChnUz+WJH+cz3xuIL
+         55r5n0C57ND2xHUbxYEgCLpS+ugcJz3NBdxxE0g4C5j1FJWC1EWBm5KHXO2LBDrCS5hg
+         vJJg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/zi1FnJvjLY8qKe1yPhfuOQ9/Ca6L87DTqVazxriLd98/qbnpjXFqC+SNjZZeXJC7zqXQp2mUa65NpIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMvSV2Xh3y1NPpCjEm3IVhb2YoyiswgO4Oe1OGdBWPmX1ApPeT
+	yraRhaDtT45Hm7MpgaNPLI6LaqGiRUuW2Kd3HGZeuIFZu1Om/3oojr3xqp3KlIKvO30=
+X-Gm-Gg: ASbGncs9wra5O2QrpS300nGRmAaeAOOzmDIVJhJiJw7a8dgobwzetutn0RSvekFvMuE
+	vy/xAxDbRdtVAaP9VU2B0Hmbo8k5f5KcAmuSk8f9mn962YuVhwF2WPH5JrvM1JcoZIb5C5R8DYh
+	p/Viwp+XrIxwzohKcR82bUq++AuUFAeG4lam4FXGCit2gVqafvs0VAtW3CWkSvrPPx3rU3Cxs8m
+	RDLeEKzvmNm329zh2F1RCj7Hp4IpCkYHJjNOCUdVbDFBRuLLJ/nz8bWFHBI4v1IOzJ/Lu+D5cCL
+	zYngDXGK3GjRhoo20AeidVDqP1pQV0KwSindW9ohXEAWm/0Ps34bNDx8f359QdwEl3s1clwV1/v
+	3VHGjYA==
+X-Google-Smtp-Source: AGHT+IGVXJLNTqwK5LP3uMmOBu1FgMt6ZJr2cqez2v1jW6Q3YnHqoor2gU+ujcF9q8/DDUaMcLVpiw==
+X-Received: by 2002:a05:600c:8b84:b0:442:f4a3:9388 with SMTP id 5b1f17b1804b1-454b929f15emr4298475e9.19.1751639777949;
+        Fri, 04 Jul 2025 07:36:17 -0700 (PDT)
 Received: from vingu-cube.. ([2a01:e0a:f:6020:7ff5:bbf8:9357:784a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0beesm2690186f8f.36.2025.07.04.07.36.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0beesm2690186f8f.36.2025.07.04.07.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 07:36:15 -0700 (PDT)
+        Fri, 04 Jul 2025 07:36:16 -0700 (PDT)
 From: Vincent Guittot <vincent.guittot@linaro.org>
 To: mingo@redhat.com,
 	peterz@infradead.org,
@@ -67,10 +70,12 @@ To: mingo@redhat.com,
 	dhaval@gianis.ca,
 	linux-kernel@vger.kernel.org
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2 0/6] sched/fair: Manage lag and run to parity with different slices
-Date: Fri,  4 Jul 2025 16:36:06 +0200
-Message-ID: <20250704143612.998419-1-vincent.guittot@linaro.org>
+Subject: [PATCH v2 1/6] sched/fair: Use protect_slice() instead of direct comparison
+Date: Fri,  4 Jul 2025 16:36:07 +0200
+Message-ID: <20250704143612.998419-2-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250704143612.998419-1-vincent.guittot@linaro.org>
+References: <20250704143612.998419-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,66 +84,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This follows the attempt to better track maximum lag of tasks in presence
-of different slices duration:
-[1]  https://lore.kernel.org/all/20250418151225.3006867-1-vincent.guittot@linaro.org/
+Replace the test by the relevant protect_slice() function.
 
-Since v1, tracking of the max slice has been removed from the patchset
-because we now ensure that the lag of an entity remains in the range of:
-   
-  [-(slice + tick) : (slice + tick)] with run_to_parity
-and
-  [max(-slice, -(0.7+tick) : max(slice , (0.7+tick)] without run to parity
-  
-As a result, there is no need the max slice of enqueued entities anymore.
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Dhaval Giani (AMD) <dhaval@gianis.ca>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch 1 is a simple cleanup to ease following changes.
-
-Patch 2 fixes the lag for NO_RUN_TO_PARITY. It has been put 1st because of
-its simplicity. The running task has a minimum protection of 0.7ms before
-eevdf looks for another task.
-
-Patch 3 ensures that the protection is canceled only if the waking task
-will be selected by pick_task_fair. This case has been mentionned by Peter
-will reviewing v1.
-
-Patch 4 modifes the duration of the protection to take into account the
-shortest slice of enqueued tasks instead of the slice of the running task.
-
-Patch 5 fixes the case of tasks not being eligible at wakeup or after
-migrating  but with a shorter slice. We need to update the duration of the
-protection to not exceed the lag.
-
-Patch 6 fixes the case of tasks still being eligible after the protected
-period but others must run to no exceed lag limit. This has been
-highlighted in a test with delayed entities being dequeued with a positive
-lag larger than their slice but it can happen for delayed dequeue entity
-too.
-
-The patchset has been tested with rt-app on 37 different use cases, some a
-simple and should never trigger any problem but have been kept to increase
-the test coverage. The tests have been run on dragon rb5 with affinity on
-biggest cores. The lag has been checked when we update the entity's lag at
-dequeue and every time we check if an entity is eligible.
-
-             RUN_TO_PARITY    NO_RUN_TO_PARITY
-	     lag error        lag_error 
-mainline       14/37            14/37
-+ patch 1-2    14/37             0/37
-+ patch 3-5     1/37             0/37
-+ patch 6       0/37             0/37
-
-Vincent Guittot (6):
-  sched/fair: Use protect_slice() instead of direct comparison
-  sched/fair: Fix NO_RUN_TO_PARITY case
-  sched/fair: Remove spurious shorter slice preemption
-  sched/fair: Limit run to parity to the min slice of enqueued entities
-  sched/fair: Fix entity's lag with run to parity
-  sched/fair: Always trigger resched at the end of a protected period
-
- kernel/sched/fair.c | 94 ++++++++++++++++++++++++---------------------
- 1 file changed, 50 insertions(+), 44 deletions(-)
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7e2963efe800..43712403ec98 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1161,7 +1161,7 @@ static inline bool did_preempt_short(struct cfs_rq *cfs_rq, struct sched_entity
+ 	if (!sched_feat(PREEMPT_SHORT))
+ 		return false;
+ 
+-	if (curr->vlag == curr->deadline)
++	if (protect_slice(curr))
+ 		return false;
+ 
+ 	return !entity_eligible(cfs_rq, curr);
 -- 
 2.43.0
 
