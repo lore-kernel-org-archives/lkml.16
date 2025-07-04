@@ -1,140 +1,89 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AEA1EEE6;
-	Fri,  4 Jul 2025 18:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB531386B4;
+	Fri,  4 Jul 2025 18:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751652208; cv=none; b=f6vL7oSppfd0KudXSt7JBqMRWZfwEORN/YTW29HlzaIl1cJV6ZfnBivjetIJ1o2a1BPAIq3sf98SvgpF5QNT7GnTS5cnKbIPtEuOWGBf6fbcvtTFzVrYHmA1waang35Yr6ZzG14Tv0pxnobEj8dT9o489Natg+Wv/rZnyCIavvc=
+	t=1751652268; cv=none; b=ET1LnmDQqcIq/fWsHenHEMHIOGhvMkTd3QJMjeAg26X/XFcG91OwWGDpG6kM/JhPC4wAJRBLrHYMt9yncRcWY7U5DDh1qG91wv1kRaorZ0ySCSF4uAOUDQG2RzGj70lswCIYL5Mmyd2o94ecUTV+RUkJphXNMBD3X1r4MUitmS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751652208; c=relaxed/simple;
-	bh=G8Qj9F6EZiq4JxP9DDsjqE6w0WEHME3ipPB7dIojzWU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=unaThePbkiMyUKtTotHaYSXkbkApMk+3E1JSEBRUDAcdHtkaxd3/lYRMlhoMZlwCJEONJao6khuiZdW1sM3QdfOr8K7bSCfOWafJIXkyI5Fg86LBnxZRafcrWrsJ/ZpX/fDqdaA3HDp36WAsF1KY6ORhZP+dlXZUVI6G1Jxr1mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=rC04Xutj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gFyv8Bwl; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1751652268; c=relaxed/simple;
+	bh=Hbnc+qLr0FRSfK3FgJpdrnEbICvswvH2mJWgkf1Z3Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mc9KG3qj4WaTpip6TuXll/pLDrs8Ud33yEm403C1gzXK707TOK8s2vC8FKRmcKbt4PRv0SpatWzBD6i/v/y/HtORShYY3J2NDXwnwauu2uK+eak5TrdBJuDNRMlaLbjZcAu7GyAmle+zZXPDQCAvTB88ziiVlKuC8cwdNFe8twI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uVP0P6ls; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rC04Xutj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gFyv8Bwl"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id AC75B1D00166;
-	Fri,  4 Jul 2025 14:03:25 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Fri, 04 Jul 2025 14:03:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1751652205;
-	 x=1751738605; bh=G8Qj9F6EZiq4JxP9DDsjqE6w0WEHME3ipPB7dIojzWU=; b=
-	rC04XutjfArNnUtb0KDI4ai52rPYIgyqHGLI1Q8o8ZZ2Ph+tFx2Mf/DmHKr7tzsn
-	O4amZZeI7gaCu2pGBSDvdqkm0tb3bX/xZvby581r1xevYvcrXkcZn07dr5sFLV+F
-	H0HNM/I6sS4ZT4QtD5RAu03dlVHsSRWvSaWz2I9KMEHY4cZ+En7hCPvD7A7XEP09
-	OGlEGdw/qsAgJkokUlyH3vr9fdrMU99GmjfCFC/wiWLOIX7nsIK6greJmZyp3jkp
-	0Z8nhQcCUA1i+PCkWOJDmkZEm7qxqp73A/DzOxrqglvljIJZ2viE/Z0mKwsPKnI9
-	Dpo9uLxzJ4xfPufpSQWTXg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751652205; x=
-	1751738605; bh=G8Qj9F6EZiq4JxP9DDsjqE6w0WEHME3ipPB7dIojzWU=; b=g
-	Fyv8BwlJ9ZtvLRhHApGBUodg6op7sWiXVL7OTFHLcfYZNJbgP72UxfUTDJr8h3zt
-	ET4qRuTWWme4MwNF9h9/pp/mTRtFo8Zsdc+CsC/XTWGrvbC4TV3gME8cdSXRD9rC
-	PomSVYmfMDTFx2AlCD118QdT2jd1cdvyWNErLStlXyob82NOKroCRKhH9QfbSGlo
-	pqI1LCSZO/zFwStkkQ8yzhEGEcQEoaYy6vrvZA/nzqKeeFnj3XY7EOqP5XreFbZ7
-	lk60gGW/GVu3vuCxemhi19P0RO62EadEF1qzTYr8EEfcBhSZGMJoubRm98xyGHPo
-	K6awqVjC4GNpf42Wqs6yQ==
-X-ME-Sender: <xms:bRdoaDmL_q1OPilNLx6ltKSPs0aSYIBBERCEo-P7TAIhmLU4oVEq6Q>
-    <xme:bRdoaG2Z-NQ_NAjYPKtZf7RtFU06xYucHqXLwjNJfzs3ObBKFCbhoEqIHMcbQPEnt
-    lMAJE51MpCyh0-qUBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeekfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
-    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
-    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
-    thhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrg
-    hlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepghhrvghgohhrhidrtghlvghm
-    vghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnse
-    gsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhi
-    segsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmh
-    hosghilhgvhigvrdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdhkohhnughrrght
-    ihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhiphhs
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:bRdoaJqZjfXJElEKZvUSkQ9T2eQpniMzO03btbowxuwF2PJBP0xhqg>
-    <xmx:bRdoaLkuJjAt4fbn2P6XndtKGH25AxU7MCgPMs2TEh0GYlMa1LUSAw>
-    <xmx:bRdoaB3fC4sSReWP6sJKRkqoyYAcpM_3Ik7-IeHzELEvzKS1zrhgPg>
-    <xmx:bRdoaKupJDRJo4_iND5FP4rhIJZZgFborNCtX6uUEsSHuPhdjatEGA>
-    <xmx:bRdoaLPQDDG3aWkHt3fQH3JQB6HmfN3jXvtZ-LHRasy5v_lPd4kunGAs>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0D1F12CE0071; Fri,  4 Jul 2025 14:03:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uVP0P6ls"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=whpTm1Bcn8HqWYeBHauMvcgOCQGmAFCeXt6Il9zBGdk=; b=uVP0P6lsIGV1V2OQxS2KF8DJ1+
+	QWdj2KDfqkGk1ryQmiH31OS8NPlvrZfVP+QLXyO0hcWPDNSMLZqXfzszpB8VxXW57MlXBLhoAtuHa
+	smyS7IiOIE/2H5ZWOdJ2gKQkMHns0fFvZ1mBFsW4GqpxZGF3cPBvLLoD7ulXm1TpUl0s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXklH-000HI7-Uy; Fri, 04 Jul 2025 20:03:47 +0200
+Date: Fri, 4 Jul 2025 20:03:47 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dong Yibo <dong100@mucse.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/15] net: rnpgbe: Add n500/n210 chip support
+Message-ID: <3d0a5666-c57a-4026-b6a1-284821f25943@lunn.ch>
+References: <20250703014859.210110-1-dong100@mucse.com>
+ <20250703014859.210110-3-dong100@mucse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T331b60e36de611f7
-Date: Fri, 04 Jul 2025 19:03:04 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Gregory CLEMENT" <gregory.clement@bootlin.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- "Tawfik Bayouk" <tawfik.bayouk@mobileye.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <b3b3d5f5-e62f-4081-9fb0-a176a91361f2@app.fastmail.com>
-In-Reply-To: <20250704-smp_calib-v2-1-bade7e9c0463@bootlin.com>
-References: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
- <20250704-smp_calib-v2-1-bade7e9c0463@bootlin.com>
-Subject: Re: [PATCH v2 1/3] MIPS: CPS: Improve mips_cps_first_online_in_cluster()
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703014859.210110-3-dong100@mucse.com>
 
+> +#define M_NET_FEATURE_SG ((u32)(1 << 0))
+> +#define M_NET_FEATURE_TX_CHECKSUM ((u32)(1 << 1))
+> +#define M_NET_FEATURE_RX_CHECKSUM ((u32)(1 << 2))
 
+Please use the BIT() macro.
 
-=E5=9C=A82025=E5=B9=B47=E6=9C=884=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=
-=8D=884:13=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
-> The initial implementation of this function goes through all the CPUs
-> in a cluster to determine if the current CPU is the only one
-> running. This process occurs every time the function is called.
->
-> However, during boot, we already perform this task, so let's take
-> advantage of this opportunity to create and fill a CPU bitmask that
-> can be easily and efficiently used later.
->
-> This requires creating a single CPU bitmask per cluster, which is why
-> it's essential to know how many clusters can be utilized. The default
-> setting is 4 clusters, but this value can be changed when configuring
-> the kernel or even customized for a given SoC family.
+> +	u32 feature_flags;
+> +	u16 usecstocount;
+> +};
+> +
 
-Hmm, I think we should avoid this sort of random limitation.
+> +#define rnpgbe_rd_reg(reg) readl((void *)(reg))
+> +#define rnpgbe_wr_reg(reg, val) writel((val), (void *)(reg))
 
-You can actually store per cluster cpumask_var_t into `mips_cps_cluster_=
-bootcfg`,
-which is allocated in cps_prepare_cpus(), and generate cpumask just ther=
-e.
+These casts look wrong. You should be getting your basic iomem pointer
+from a function which returns an void __iomem* pointer, so the cast
+should not be needed.
 
-It should be pretty straightforward to handle.
+> -static int rnpgbe_add_adpater(struct pci_dev *pdev)
+> +static int rnpgbe_add_adpater(struct pci_dev *pdev,
+> +			      const struct rnpgbe_info *ii)
+>  {
+> +	int err = 0;
+>  	struct mucse *mucse = NULL;
+>  	struct net_device *netdev;
+> +	struct mucse_hw *hw = NULL;
+> +	u8 __iomem *hw_addr = NULL;
+> +	u32 dma_version = 0;
+>  	static int bd_number;
+> +	u32 queues = ii->total_queue_pair_cnts;
 
-Thanks!
+You need to work on your reverse Christmas tree. Local variables
+should be ordered longest to shortest.
 
->
-> This patch modifies the function to allow providing the first
-> available online CPU when one already exists, which is necessary for
-> delay CPU calibration optimization.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
-[...]
---=20
-- Jiaxun
+       Andrew
