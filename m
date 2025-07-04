@@ -1,46 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAFC302CD3;
-	Fri,  4 Jul 2025 13:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A2288C8E
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636021; cv=none; b=OMUR0geVAQz7M1eBi+VpRX+WO5Pd7i33y/LFoB6rxIYg6NzXrm1/gv4dSKMefS0m81a/tKNIDzVT6mZ+MG1yzZdgoBKItxkWsOPg6qc4wifpPx6pD9baLzPN5FophB5SgD54jWKlT0e1hXFBUaebkrAVz97lHuy2x74jYkicOmk=
+	t=1751636104; cv=none; b=UFWjRuwR5Usx2z8qSzy3TPxTEt9hFxaisYtxPLB6kiVzcXd16+SrtL6rlKqj0HmKyguogxB2jC/pcIOQYZ7O+1fki/KEUqF0gJAIV4uJp6Pfp1EaqM1IhKD02YRwvhY9drL9gXhMTUPayZSQZg8Qs/FFTDiU7l23k2BYaHSHWBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636021; c=relaxed/simple;
-	bh=EtiXfEKSjZZE/8/wPMmve0WLVrmAKdqLK+/3mXSBmUc=;
+	s=arc-20240116; t=1751636104; c=relaxed/simple;
+	bh=r+W9e+IRHVkrDeRIkx9Qv7LNbjCKe4R15a+/C19zQf4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUJ7xBO1sK1H9/ZF65UvkrGeQtayfQ3cLUYZ7axQhErT0dDE/B+pUKTUK/6DEoF5N92hMiTsvqsOxc8MsOn6wb2gkdKcr0/v4fpyzBaFK5PW1nAaEH+Adpo7ftp+fMJM9/ziuyVPWBoBVNLbj6TRLtIucTeKglt3XM2cERoQ+uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHxzUfPa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fYiHpS0sXlIFC6/LB+Rgqw2XyxWqHsYJy4MP1ujt9qz8bkoAOLzLxBvz7k3QkjXXuSo0HgOOsnU6aosBF4UDarxd7ihMTQuuDPlksN3U3wN2aBIpmrkEUIDJpDPpJ5j02bJmdPsai27bbhfTJsMInpKrQYjHcVoqyqmOHkmA67Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7mSQklp; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHxzUfPa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6DFC4CEEE;
-	Fri,  4 Jul 2025 13:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751636020;
-	bh=EtiXfEKSjZZE/8/wPMmve0WLVrmAKdqLK+/3mXSBmUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pHxzUfPal/RIBhfUkLePrBxqx6oTeqJAlzbFVduGtQPwX0rR881ITBr83pybvvjnU
-	 daKVy+8l94zMIxS/aqhtXwWsFdT9Lu1VTLuvj9OHv+1dQshXSMXoziwkMcS5NF3ON1
-	 28LXVHfPjiHl/RBJ988hayW0rqn2m0qd3N76sDyKk8LU97y5HhfG5C/lyhM5Pzwpiq
-	 oUHatjtdPk+iqIMs8kQ0uAJB16D1DIOUU9wZmLmnNHuNOZTEIeeuSlqR1rkbMSM6zI
-	 pOhAHPE4xb4vpzXEmc3L1o4t6I8ZihShlcjHDY8s3fnBTewDkQ/XNREvk1XvVR1HE3
-	 cJYhisXGPgDfQ==
-Date: Fri, 4 Jul 2025 14:33:35 +0100
-From: Will Deacon <will@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>, usamaarif642@gmail.com,
-	rmikey@meta.com, andreyknvl@gmail.com, kasan-dev@googlegroups.com,
-	linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH] arm64: efi: Fix KASAN false positive for EFI runtime
- stack
-Message-ID: <aGfYL8eXjTA9puQr@willie-the-truck>
-References: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org>
- <aGaxZHLnDQc_kSur@arm.com>
- <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
- <aGfK2N6po39zyVIp@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7mSQklp"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so7284305e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751636101; x=1752240901; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hnPhmdTRmdCsUnLwB5NFDmheZGNY+q/iIGXgQRq+iZ4=;
+        b=H7mSQklpEeOGSe+xHcwBfSpUEPuhzvdfh6yJtFck7R9Nnz9chbUStsEEkq004NHyXq
+         ect6bGW2/6+LoKvWsh6xWdNAKwllxn5ZMXROIDCNKmePNqXQFSBVP5vEh8UyM2ZhfOwE
+         23MqiW9hur7XocGIwiaP7ftlI3Ol1/0gOb5/9/UflZWu5adPi1ZH/734fJ6UiPq9qs5N
+         hgiFdMH3+RfXWzQsXYf+nWZRPwNZtqm1tjAI+a+XKiNxS6ITYJGDx7CV/mj9DqJDUafg
+         sK71L6aet63CSF7IJkwzaMVbqXOjq3ITZyPvnGULqwp5WKAwEgYG0g+v+BLqYdffzSok
+         SImw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751636101; x=1752240901;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnPhmdTRmdCsUnLwB5NFDmheZGNY+q/iIGXgQRq+iZ4=;
+        b=bPmKA+91T54LGcTLM6AtGPjzl34rVTzjUglsuC/1fkTzNv/WpcO5zQuz08tewcY3AW
+         uMHqWfAqrwfpYstna+V7TIiyRs9p01GdhCnJReGm7qritnIfDOO2aZekg43KhoRj8kXC
+         x1uQ5+WbMKZCBpXBiy3+xLHh2E5iuIDtGT9XtyqUPiMeVsKXm2NeEz//4a9ni0n1p7d8
+         OQirazZPOlzU0PFEcO4Da98fAC0kNCurIVLSCap3WEelH5Tl3kSY4U2bTyIvVRkfhZ9g
+         s0f02spFY1/NPgEN+6nhWpHEZzYuEw/+Db0/rnLoC4mkygGe51Erno0ilYnbRxBrbHxn
+         f9TA==
+X-Gm-Message-State: AOJu0Yy6qe3FUaMRnm7swMZYlS2JajrjoKwIB0NQ4QO/O05BMKf3F7Pp
+	Ia9/nYuWniaBx3sanMjg7sP/3usfqMolLEwon3fcSw08fzmZb7LghGZ47vEHHQ==
+X-Gm-Gg: ASbGncs4X/30oimcc3FcDGP0z+b+cedx3fvFS5sNNEtEHQwXxEufrVPbHjnu7XSiPwf
+	a7w/GWA6FGDIuGzHPicb5bfO8O7mz+rFsZhfNqqkDI9hXLPkI01L+X297GkatUlts5s3MvvK2wS
+	BI5LaEBX609O4aSzWZND5nOetIkxHL9s02Y2HJZJquTtMpGKLOJpi2s1mTnxuPc2JWyoQWTvjq+
+	sZMWzlmaHB6WAn4z7+R6FBqvpUWVxoNkYy7T/oqEcOGhMq7GoxSzBFvdTbLDsVEn3wPmbrSYCqS
+	h87deChxvQhA+hXK4B5c3urEXnMDhpXWiNcyuG7qd7x8Zqhc7MpzOTm8hyFBLPzu4TeUwMcUjdW
+	GyfBR0rVSyhOMFnZd2mbf3RkaVemG/BHY/xaxTw==
+X-Google-Smtp-Source: AGHT+IH61RV/x8NPyHLBxWvd/EQnI2VZSfwd68e51I2lRrpzG8eMEQDzFJoWVVz5e0NU91xptJnt+g==
+X-Received: by 2002:a05:600c:4e8f:b0:450:d614:cb with SMTP id 5b1f17b1804b1-454b31158e6mr24923295e9.33.1751636100766;
+        Fri, 04 Jul 2025 06:35:00 -0700 (PDT)
+Received: from nuc (p200300f6f72c4000fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f72c:4000:fa63:3fff:fe02:74c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030ba77sm2553131f8f.17.2025.07.04.06.34.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 06:35:00 -0700 (PDT)
+Date: Fri, 4 Jul 2025 15:34:58 +0200
+From: Johannes Thumshirn <morbidrsa@gmail.com>
+To: herculoxz <abhinav.ogl@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: mcb:[PATCH] use sysfs_emit_at() instead of scnprintf() in show
+ functions
+Message-ID: <aGfYgsXUPtlr2pM2@nuc>
+References: <20250703103241.10199-1-abhinav.ogl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,79 +72,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGfK2N6po39zyVIp@gmail.com>
+In-Reply-To: <20250703103241.10199-1-abhinav.ogl@gmail.com>
 
-On Fri, Jul 04, 2025 at 01:36:40PM +0100, Breno Leitao wrote:
-> On Fri, Jul 04, 2025 at 10:26:37AM +0200, Ard Biesheuvel wrote:
-> > On Thu, 3 Jul 2025 at 18:35, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > On Tue, Jun 24, 2025 at 05:55:53AM -0700, Breno Leitao wrote:
-> ...
-> > > >  arch/arm64/kernel/efi.c | 9 ++++++---
-> ...
-> > > >  static bool region_is_misaligned(const efi_memory_desc_t *md)
-> > > >  {
-> > > > @@ -214,9 +215,11 @@ static int __init arm64_efi_rt_init(void)
-> > > >       if (!efi_enabled(EFI_RUNTIME_SERVICES))
-> > > >               return 0;
-> > > >
-> > > > -     p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
-> > > > -                        NUMA_NO_NODE, &&l);
-> > > > -l:   if (!p) {
-> > > > +     if (!IS_ENABLED(CONFIG_VMAP_STACK))
-> > > > +             return -ENOMEM;
-> > >
-> > > Mark Rutland pointed out in a private chat that this should probably
-> > > clear the EFI_RUNTIME_SERVICES flag as well.
-> > >
-> > 
-> > If VMAP_STACK is a hard requirement, should we make CONFIG_EFI depend
-> > on it for arm64?
-> 
-> What about if we make CONFIG_EFI select VMAP_STACK? I think it is more
-> straight forward from a configuration perspective.
-> 
-> I thought about the following. What do you think?
-> 
-> 	arm64: EFI selects VMAP_STACK
-> 
-> 	Modify the ARM64 Kconfig to make the CONFIG_EFI configuration option
-> 	automatically select CONFIG_VMAP_STACK.
-> 
-> 	The motivation is that arm64_efi_rt_init() will fail at runtime if
-> 	CONFIG_VMAP_STACK is not set, so the patch ensures that enabling EFI
-> 	will always enable VMAP_STACK as well, and avoid having EFI disabled in
-> 	case the user didn't set VMAP_STACK.
-> 
-> 	Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-> 	Signed-off-by: Breno Leitao <leitao@debian.org>
-> 
-> 	diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> 	index 55fc331af3371..cc2585143f511 100644
-> 	--- a/arch/arm64/Kconfig
-> 	+++ b/arch/arm64/Kconfig
-> 	@@ -2437,6 +2437,7 @@ config EFI
-> 		select EFI_RUNTIME_WRAPPERS
-> 		select EFI_STUB
-> 		select EFI_GENERIC_STUB
-> 	+	select VMAP_STACK
-> 		imply IMA_SECURE_AND_OR_TRUSTED_BOOT
-> 		default y
-> 		help
+Note the [PATCH] comes first and then the subsystem prefix.
 
-I would actually like to select VMAP_STACK unconditionally for arm64.
-Historically, we were held back waiting for all the various KASAN modes
-to support vmalloc properly, but I _think_ that's fixed now...
+Ansyways, I've applied it and will forward to Greg ASAP.
 
-The VMAP_STACK dependency is:
-
-	depends on !KASAN || KASAN_HW_TAGS || KASAN_VMALLOC
-
-and in arm64 we have:
-
-	select KASAN_VMALLOC if KASAN
-
-so it should be fine to select it afaict.
-
-Any reason not to do that?
-
-Will
+Byte,
+	Johannes
