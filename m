@@ -1,124 +1,116 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39C5286418;
-	Fri,  4 Jul 2025 10:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89DC286418;
+	Fri,  4 Jul 2025 10:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625616; cv=none; b=TbpC13zlmPJ4X2ERh46GzQ38f0TrRDIieSuQ5uHCKhN0ee3idPDmmbEL7J60ipu7mHnmnjIKuvpLWctQ7yoiuo+3XNSXTJusV+EGCbbGrC815vNoymIvFOHO721x8pO7jPv9RLXsu0KkMyNeXtGBJH/z/6C2an+dcWPmx2gxe04=
+	t=1751625668; cv=none; b=uO934N2N7SdlLiV5hoUuOyJRmTlL12OSwDfIa9MSUSQxmnMbNr6z0Y/yseBMA5vaMyOYO2Ep2WPlBLN0vf/b04uqZqhX9fOw/+6uYYzkVA0hY07rysMzvpJ8flJtB87L3h8bK3Iwmv7+2ALlwarwSulxr0aSiMBLd6rfJwYzvn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625616; c=relaxed/simple;
-	bh=9UXDUg8PAd5tYI7z6Z+7INFUZp8wOl7XFwS2K9NVrHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fqoKyd9CorigJNfA2XzEHAWjtqL0qfflqWeQp6k6vWUe9S5iVO0bQCb4INzkAzRA6Hs4S1Te44+HsOBOzUKNNRo3HI3YcROOScXm9tujrKmQVT6o+3z3YYHktBppXGWz6fzf+QDPhdBY3poH6FxfyVy5Z7sJnhb61HlxWGSRi1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSEJ3/xZ; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1751625668; c=relaxed/simple;
+	bh=X4yEOmShYkyGdDG8jUDfJmpuAowTz2C1ktaJJvFjvK4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OOYYW5T3W7AW1+YlgwuFxuCXkejviLoyaev2osz597rT7x5jo6tE/RuBmVsG/aamqG/8ras2iF7PlRZcL2Q9MMsIZlhhFg3C5xkNXOa0+gmilzOgsOC+ciFwayt2TURqRs7dM3g61xiu2rh/pnCvQqpzCloOjE64ItUkZCzWLsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0m7k8a5; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSEJ3/xZ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453749af004so3619835e9.1;
-        Fri, 04 Jul 2025 03:40:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0m7k8a5"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so1216949a12.3;
+        Fri, 04 Jul 2025 03:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751625613; x=1752230413; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751625665; x=1752230465; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t6Iq3/+8plHi10Ss9ehAabmq+DIYKcedVFnHzqlluoU=;
-        b=PSEJ3/xZWuoqdSIerUxo0dHf0t9WNeXMrJfDQWtHoGqJsmeHth5tRi0rVcarlIv1ld
-         QTlcK8le/14GZaM8kWx8h6MoDafsElmos3kFjVItPdCwDRHkr+EDRHYJl/l0EA+mqKDC
-         qVd4sDQ/aJmVCyjvTCJ0uzGTBA6SdvP9DRt4rzOYqwgjyEl9BJRf1QoTXHJIuMERyxod
-         rHihRbDIrJvwTt3WfPkAOH18nn7yeJZYDbxRcmHWajPzBQyTUxdMYGp4aOZ18sjdYl7n
-         YFNGkLWe1XKhoILZLWlMm0/xCDxRgBtgXs0BB6HIRIVIrsYU9TZgiW/TAb77qhrfZ6oP
-         maXw==
+        bh=Otye1kCoP0BhCgEfxZf771/Q3ahhGvTB6tzyRbYtKT4=;
+        b=a0m7k8a5cvQa5vhzmT7ZoGUGIW7vTxEO/HYf2Hza+uySZNTXkm2mQ1591WPGCZXGRi
+         9ww5FIkjAQaXTqxDX6FBb30/59jo26zo8F+h022s4tOlnk+F3Rq6kYaicpXEF4fc/U0j
+         KE46Q1W4eVLjQRb5sYO2zv6+EGOIY8gR6UT9gtDdCE/NIsbh3Cxq9jDV5eTdokPsO04I
+         /qe7qDSjpdi+KF9lzdtxCi0HpLfm+cBKdWYLwXXh3Jyd9LxuX480ccxGL4HKvsG0rLDA
+         4B32ygcKyg4+nISOCDsyY2lWNRGpz/HAdFp9DIhg3ZlCwERVJvuNi3kpcLPuoxuQanvS
+         nL+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751625613; x=1752230413;
+        d=1e100.net; s=20230601; t=1751625665; x=1752230465;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t6Iq3/+8plHi10Ss9ehAabmq+DIYKcedVFnHzqlluoU=;
-        b=F2ua51J2ZRBJWG3S2G8EoptIB47Y7Sf7wlyP65p/UCEqlDlGIzzwvO32Ox5t3Wz224
-         dw8tVLt33gT/b4eKGW/GhFke5FSwOFk2SDdxATqq8HGhLulKlm63Ub/6X927gaaDOe71
-         3A453r7/cKaz3RHEzJQkelX7BhKEEgtoq2j0ZOudYJEwwRrUwbqWOImTmtCtBO8WZ2p2
-         0UUmJueZxNl8iPFZr7xK2/0+rIZDCriiWcNmef2FZYXNdNmZXAE4z90MGbzRX57BoGEl
-         ZhtE1L/s6ChqeWeBO0AguvZ+afBVEvQAjCmhUEQorWwNRQqltdoB8wAXkIgV1Y2RsSau
-         v/MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrP+V5is9Egagk3Ym9owvHc+9jZPxQ/i2lrn2OC4KKX3JXAhOftU6XRWgBH2tZfYHUaSSYxSNRgSFWdBtC@vger.kernel.org, AJvYcCWk0SNh1lDxMLTFfNeIso2cj7sd6vnfpx8ESdPJa3izgWlvKT5Fggjkjvuh4bvrxWgoI989G38bZTXJh/JJuq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjpMAFX+B+LYWRwZJt8zHaJrerwu9g6wbW07K3V9bjpOnqL4/g
-	s6kTIM0wc3r+wFwgnILfsD47dtbnWRuTyu6jtWY6FA7jngMDOBe5YvhY
-X-Gm-Gg: ASbGncsxOOoepZvifOorzO0qdln8GWSrgldmJQGSI264iXV+g8Mu82M9zp1YPdGrxTZ
-	IUeq9+WYRwYF911KNQbxpFdWSqcxdBBK5RY690DkDbimpLEklsbcLvotkVFNwzz7PpzCGW6Wdo4
-	6BChkAHwXZk4nytPSjcSsQurqqLrE7l+eDK6a7j2j+mnOAzRjdc0sJWKLX23cSmkwbwvPWLAzor
-	zsvCIVHqJCygLFflSw20zhqBVHEPj7CnHjSjbIj88NeWjieaf823USSnfojdn67j2hWBAhZrMVc
-	lHq0zDaHrQ8t6fLHtMVAOq1wTwiav6+UjLI3aMxggwnWv0fERh5xLtLJJq1GoVaaugEwu0FhOZn
-	7v6VXw/Nk46IQZooJgQ==
-X-Google-Smtp-Source: AGHT+IH3FPFahV2LWODXrm0judCjRbWI2BLLJZkrPEdqsujvImFUOAeEFcDrKBUXbFsNn3a6NYrTSw==
-X-Received: by 2002:a05:600c:620b:b0:451:833f:483c with SMTP id 5b1f17b1804b1-454b306fa68mr19923165e9.7.1751625612692;
-        Fri, 04 Jul 2025 03:40:12 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225a4e1sm2150193f8f.74.2025.07.04.03.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 03:40:12 -0700 (PDT)
-Date: Fri, 4 Jul 2025 11:40:10 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Prachotan Bathi <prachotan.bathi@arm.com>, Peter Huewe
- <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, Stuart Yoder
- <stuart.yoder@arm.com>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
- memset
-Message-ID: <20250704114010.0d210c31@pumpkin>
-In-Reply-To: <aGdC8gyO00AB_aPr@kernel.org>
-References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
-	<20250626184521.1079507-3-prachotan.bathi@arm.com>
-	<aGWvtzhs5ksKgaYo@kernel.org>
-	<151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
-	<aGdAMg43nHPwgeKn@kernel.org>
-	<aGdC8gyO00AB_aPr@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=Otye1kCoP0BhCgEfxZf771/Q3ahhGvTB6tzyRbYtKT4=;
+        b=AsqsmokgCpv0SFgDuCnoqpI8lmDk98S48nKwofIon3Z7s3NcNQNL/jp6TqCPqMZ/1Y
+         zy7y+oUbdrRaG/S1uBWTP/KzxuD7/8UBbF3KmRFbmSdtuCIBwwp/4ycLe3LnSWlj7joy
+         pKhRbAn1ktfDae3NXOPKwDJuGH357V0/Oyj6SVNjBfZPnt6BPQs5w7+sHLHjLa47AD6l
+         FLwCLqxUYw5sROF/xZf0iWuuVaxw1cr0R/Md/lae2s8CX5BaABoFzMzh8MDwW2l45GOZ
+         30IoEW/iACD4Tej7vT4KhQ11/4XAOY5qMItKuWCqOrUe1jfDOKwDucr70e+a9/Mmv4jf
+         K8FA==
+X-Forwarded-Encrypted: i=1; AJvYcCVby0TLR8Ok6hZCJuXpVorJHjxEN18ASAYdV19AwiXL05e7O10k++BCtRRsZ9wP7MUJKVaMbTWZxF+LSWKw@vger.kernel.org, AJvYcCWlVpJfLcR6iHQlPy699aILzVM89P6ZLVaPxthQ7ttxucSVhd3Fu7qNxZwKtMEWdkWlRGiQvhujOZCwOgzL@vger.kernel.org
+X-Gm-Message-State: AOJu0YycPXUc04pv/yoZp5cdu8V2IMX0mpWQDhsyd1MkI5Q3W0Hd560s
+	VS3OVZV9ZYHShTF52eT62AqrtZDXW9N5eywDyuksDha0wIcWRzdUDgPA
+X-Gm-Gg: ASbGncveBS6iXpVadmw8bSRXHla9R9H4g65cdYHmC0bK0gBYhr9xHhnY/DdgGTBXfBR
+	2wzQzOA7fH+QzcWMri3F3kId/E/d+LhfXJFyWGJD2hVLH6k3MrJsC3jeziLF6qKjopvSQYQxbs8
+	Jd+N6VS+AvYpBaTdak9C1AXMNyym7vSGvX5QWkak2Ajvohmwd7FXsQSuL68jIWnyOpsQJCQDDU+
+	C4kWsuK2bdJQ0D+36LWlnHiJC99WisCIs2CuosDQWHaJCsSsf99/RoEliEK3L4JoSh0YTXiqkOJ
+	ILNqpHX+H1TyJfKpWfnUFRoyTyrz+82fSiX7NN3SF7YQep2A1B9tJ1kKtJwWTf/LcIyzp6ji0LI
+	NivxKB7xsEiqweVwRCQ==
+X-Google-Smtp-Source: AGHT+IE1gEqPGZad76uyTc44DenoyGmNq3Xc7sqhmB/KF2p1ubdw09jNycjUCWZvEgDEn+wPUctvFA==
+X-Received: by 2002:a17:906:d554:b0:ae0:bbd2:68d5 with SMTP id a640c23a62f3a-ae3fe457654mr139080766b.2.1751625664979;
+        Fri, 04 Jul 2025 03:41:04 -0700 (PDT)
+Received: from Mac.lan (p5088513f.dip0.t-ipconnect.de. [80.136.81.63])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e6f30sm152102866b.33.2025.07.04.03.41.04
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 04 Jul 2025 03:41:04 -0700 (PDT)
+From: Laura Brehm <laurajfbrehm@gmail.com>
+X-Google-Original-From: Laura Brehm <laurabrehm@hey.com>
+To: brauner@kernel.org
+Cc: laurabrehm@hey.com,
+	laurajfbrehm@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] coredump: fix race condition between connect and
+Date: Fri,  4 Jul 2025 12:40:42 +0200
+Message-Id: <20250704104042.86223-1-laurabrehm@hey.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250704-ernten-fehlschlag-05a175183e12@brauner>
+References: <20250704-ernten-fehlschlag-05a175183e12@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 4 Jul 2025 05:56:50 +0300
-Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> kernel_connect()
+> -> sock->ops->connect::unix_stream_connect()
+>   -> prepare_peercred()
+>      -> pidfs_register_pid()
 
-> On Fri, Jul 04, 2025 at 05:45:11AM +0300, Jarkko Sakkinen wrote:
-...
-> > Well, that was some truly misguided advice from my side so all the shame
-> > here is on me :-) There's no global memzero() and neither explicit
-> > version makes much sense here. Sorry about that.
-> > 
-> > I gave it now (actual) thought, and here's what I'd propose:
-> > 
-> > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-> > index 96746d5b03e3..e769f6143a7c 100644
-> > --- a/drivers/char/tpm/tpm_crb_ffa.c
-> > +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> > @@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
-> >  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
-> >  
-> >  	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> > -		memzero(&tpm_crb_ffa->direct_msg_data2,
-> > -		       sizeof(struct ffa_send_direct_data2));
-> > -
-> > -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> > -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> > -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> > -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-> > +		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
-> > +			.data = { func_id, a0, a1, a2 },
-> > +		};
+Ah, thank you! I initially ran into this while working from an older
+tree that had had the coredump-socket series cherry-picked into it,
+but it was missing Commit fd0a109a0f6b7524543d17520da92a44a9f5343c
+("net, pidfs: prepare for handing out pidfds for reaped 
+sk->sk_peer_pid").
 
-clang has a habit of compiling that as an un-named on-stack structure that
-is initialised and then memcpy() used to copy it into place.
-Often not was intended and blows the stack when the structure is large.
+My tree instead had:
+    static void init_peercred(struct sock *sk)
+    {
+	    sk->sk_peer_pid = get_pid(task_tgid(current));
+	    sk->sk_peer_cred = get_current_cred();
+    }
 
-So probably not a pattern that should be encouraged.
+I switched over to the main tree when preparing patches, but missed
+that the issue was not present there. 
 
-	David
+> Honestly curious: is that something you actually observed or that you
+> think may happen or that an some coding assistant thinks might happen?
+
+No coding assistants (not a fan), but I understand the question. I
+maintain some other large projects and we get a few inane patches
+too. I usually try my best to avoid making patches such as these
+without some amount of double checking if I'm addressing a real issue,
+but I did run into the issue I described (about half the time,
+depending on how fast the coredump server ran) in my tree, and I
+forgot to repro after switching trees.
+
+Apologies for the inconvenience, and for the understanding/quick
+replies!
+
