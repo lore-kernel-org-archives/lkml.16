@@ -1,145 +1,106 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465E217F56
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 21:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AA1217F56;
+	Fri,  4 Jul 2025 21:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751664466; cv=none; b=j4wuoEPt2Pt4gL44jXlgMDKz+6Xeytoc6HnN1AbmWZv4y0bf6MFa8GKwAplYfhDVp8BiDJ9hfbJwa0qGYntIP318G7js2J1KxbQ8h8IkleFmDzZ+JZnpeubY51Lmx/3H1KcHUhawITEOjIAI/8O1qugrLf5JVz2pRgl51y0MzN4=
+	t=1751664482; cv=none; b=pn9m9uMqcE6lFiybJq9vvk99nzkiqG/r+TFAwmC+Y1iJKWaSr7/uTTvNqg/sZwk0Pv7IfI3ZX0KmP6Ol1vgNEHaxuUMp8IFfDWnqFbXPBqgnuBObieZB0Nf+OoCpDCf5vuk5jRfvpSLxIU+z4Pd0dOpFArnsEQPIE2ATHhEFMk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751664466; c=relaxed/simple;
-	bh=Kgg/RKJy8xEDDuxlWknvCpjWS7jJF/UFzea/o+2ajss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lU0cRRlCFw8eQNJVLWS+7peCjMUfW31GkS2u1fC351TQukjSOssKVPmSct4BNyEyHqWF7zp/oUQIj6vciIrZsBpKCeBLVMfnX1NiltvHuQCWH0zM4XZD8k+AQIltJSAnZY0aPcmBRdLayAjQ/fhnvJlmHzb5tQ+S+TftsmzZ+QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=D/W6O1m4; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1751664482; c=relaxed/simple;
+	bh=Hi7Ma97EhiJia6SDb6ekeqld+ewzhpjYKC+3RRNZXxY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kTeYnD3G1QrgjvMOFQAlCmwFDzuoT7zy8dLE0yF6fUHxmP5+M2sqHErvUybPeERH3QFweSRrjZKj2Yln297CW/Ga0r+pZ2gHLbEDhu5esxm/1BXU63dRe/NzRlI4V8ytqhpYHfGWZJtZD77+qbi85s8KLMZie7nP5+hs1Uo4fJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqguSjDP; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="D/W6O1m4"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a44b3526e6so20381471cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 14:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqguSjDP"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234c5b57557so12464515ad.3;
+        Fri, 04 Jul 2025 14:28:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1751664464; x=1752269264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4TQkwHrKOM7GBKYdSow9FOChuDO7+LFMsjIK09/6sn0=;
-        b=D/W6O1m4kvzvw3gw+xtZJffd2vYKhKkpVRpfW2Lmj6L90jjHNte6XJt5Aalp8op7g4
-         SGWgLawjO2YuhrK24QA8rlfQG2m78Fd3BgfjgQNRi7JiSV09T/8/v0AIJzGp2rx68AyX
-         JwBKP+iwlhxkfHBNDVqnsqebU5vyveyi5N2PpoJ49Rb0Crwl+GLQqYmSGZzi8snZeugA
-         fVgc/QP9vDhsZrkc8duwpGYKiyMN20pRBa77kiCzdbkH6QwI1m4OaDErVMdXhdIwncA2
-         dPu9ifcfePujky3EhIvGkQ8Xdcye+6irLZBA1AtdqcTHe0mvmxbLvGLSv22ZYEZ2fjIs
-         FqCw==
+        d=gmail.com; s=20230601; t=1751664480; x=1752269280; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Hi7Ma97EhiJia6SDb6ekeqld+ewzhpjYKC+3RRNZXxY=;
+        b=AqguSjDPgdsr1gz4peTvwpvktrsF417d+YTKk5KJQBZmBAF1zZGZZ9VOFisx09sKdJ
+         A8kdIUm24wOO3E5ngQO3BJSXYxzqYmcPIZefVrqhH408r5uifjCQu50Jb0DVcRysiC5G
+         feXCsrAAdLpsMnzpEoUzrrH8bBenyEdc1GiZIq9DMHlEs+mtuU3svnx2v0KsGSnBMfEH
+         qP+ehPv1orgfiPd5GYMLYvPhGxMmY2RRth0r9QdD4N6KH2yX5EGirCq1yShLLTIKHD/S
+         lrmPn6Zq1OIWjUsGpzleZtrtR/oxoUD/zA5J/u+/ccCCCfIqVZwQ88if2LMG+kNB+qpD
+         ZdeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751664464; x=1752269264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4TQkwHrKOM7GBKYdSow9FOChuDO7+LFMsjIK09/6sn0=;
-        b=KAhmlCWa6oDNfqswR0wmSyDHOa2mlBdG95/ba0wED1BFxJz6vrRnMIPgJbdviBCR2W
-         o5XyrRUzJ4dNyVro55AyenaZCiCy2s/jY89giMvGi0Gmqen8rHIHF5ig+C4zhg85qPYd
-         REySqy177d3I4Tr3/B8mTpR5I+xLnPiygnWBUQ3zUuODEM3g5OTBpqD8YeUzUXmG6hzM
-         RjFQ6kwiew+DKqBblFv7L65u2UkVe14VosncY5WQ9aNwZvI6t7A3nMZ6G3PV0NEuJamB
-         E3VQhvpTWoGNw0Fi2t3ygrUNmMWkZRUBqBJMXGjc74CRQG67GkrUYR2nMQCQte6GEz6t
-         pfIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXN7ia5RfJ8HqgP+E19Ce7MuDjDUnz0Nl1fQCa1dU1jnei2iDmKoeHwc25RlrhIJO6J8rDBiV6LxIjDl/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK+wVJZRHCaglQFgW5CfiEYZdtMjSTDjipNsG75iVhvfu6uDYa
-	XORIxmaGtnceKsDGyQGvzvtzJoVXjAOrxbq/mSUDdUEs56fYufJdZIKOTE+0LSKHI3OE65fklUQ
-	s04YfeO8PyIuZE3RoXYh0nAWdnRn9GrGLTkXlQaEebA==
-X-Gm-Gg: ASbGncsntQHsrMRLLh3BKzkVeVhz79LxFrIrs8dcoVHvpVMTnJTQIZ1CDnVIEDdK2HR
-	wSIzTS48xxIyhLkYddEG8/UqUwMLRopOZ2LgF+z2Bw6mUumMb7ZDGzk0DLrDq/8/7yLSz3/+gC5
-	kIWh1oVlpwVY2NX9/IdNIQ8cdq9bf6GrhGfjSmh8mZoMQ=
-X-Google-Smtp-Source: AGHT+IGwRxeilUXnNTdyTmvD/TxGpaex9AA5plhgd4LQeziorhQNSpF9IPdyc2W55Icnyp7w2dKKaCqhFLE3q9BjF14=
-X-Received: by 2002:ac8:5ac5:0:b0:494:a283:1c4a with SMTP id
- d75a77b69052e-4a9a69609f8mr6114921cf.32.1751664463660; Fri, 04 Jul 2025
- 14:27:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751664480; x=1752269280;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hi7Ma97EhiJia6SDb6ekeqld+ewzhpjYKC+3RRNZXxY=;
+        b=Ce1GahJyMs0Mkgm2duvUrDpQBUUoOP5VyeYuofJ2ajR7HDECDEjwLIr6FzmPSa4xOF
+         /W73Ze/kx8e4GXm2ZWxyISK28fKKZ2lBxFD2/sABClw/Cvkj2zeuJksVT/S8c3xGPvdb
+         2l9Pf5h5YXeddV2Y2Sa/XaveVjSxBcpnU6bHNyHswU9Qt593BwxLSCh6Z/IbhNqbkJne
+         wEIWjaUR+UOm5MACV/BZ+2FGUG6HOowIZXOf/T1Dve+dit93tK68ll2DBXrJ/T1wyoQB
+         +0v2CFyuubLG8DGo9IBuDumW24DlAjv2NKYfl/gI2zo1U0yWAGDyIt4uZfUc8f/k0luX
+         mp+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNyxcNxuKiIVJD1B06PNiNZtRNVpjljaItvDSf3LwDck5i1xeAdXRNd8wXzglLdS+RI8g6Vij7@vger.kernel.org, AJvYcCUkif6l9sHsRQEXoR4gFLOm4mnnKYP9wo4TIQqxw9X/vF8bmz9FAND1FTjzFsmXUw/Yc+Y=@vger.kernel.org, AJvYcCVy6tbWx2ZiJe2yq8qqF7aKqSEddT5HmgDjsuh85CBi9zzoS/ptXaB8NIFAoGFsumDek7u7Uc18z5vi9EtB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4WbcIH9T7pJxVSfclBWUzA5mnAKSQxpSbGALDQYDnPop4r6ky
+	aZj27sDuZKbp7E2OYhD955vPtQXm2x7/wjWGIcsJfhaUM55dK5VnOV+h
+X-Gm-Gg: ASbGncu2uKkiujFQ+d9EB1oMjNYTfqtWiwXwV681654cWfc54nGYLkqAdeWXjizCiQa
+	r4Ug31MrEsxGCGi1PLHDMKgr611NnwwDyZTC6mR+DWt1EDaPviTeM5tgKpzyyTuA7RCv3U4qZXV
+	e+cl9PG0zoSk3uo8TzMDqJM4S4F0Akh4nevNfbDuITciImq8vIEYHiwVgX2MSy2v6so186dOgXS
+	ICpguF3gtalodr3bh/6QVedtK2FXJM1nKBm4Ks1KYEHSBgKWlT9rqfgRzuFLJXdecxyfg8vnYQo
+	bKa1b1O11rj53ushqL0lyswI1pECWz32F8tqN6/D6OI7a6tRFQh4Pycihw==
+X-Google-Smtp-Source: AGHT+IE9p7oqFc2ZfPMQ9fnWDUmB9GVJSNcMDyZHu2ytyB4sHzoWGYA0fuXPgGp5d+J9h7JS55t43w==
+X-Received: by 2002:a17:902:f78a:b0:234:bfcb:5bfa with SMTP id d9443c01a7336-23c85de488emr54208885ad.15.1751664480522;
+        Fri, 04 Jul 2025 14:28:00 -0700 (PDT)
+Received: from [192.168.0.56] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8455dafcsm27271255ad.96.2025.07.04.14.27.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 14:28:00 -0700 (PDT)
+Message-ID: <c794309d89d0ffb49d891d7b600831abbfa4dc65.camel@gmail.com>
+Subject: Re: [syzbot] [bpf?] WARNING in reg_bounds_sanity_check
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Paul Chaignon <paul.chaignon@gmail.com>
+Cc: syzbot <syzbot+c711ce17dd78e5d4fdcf@syzkaller.appspotmail.com>, 
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, 	haoluo@google.com, john.fastabend@gmail.com,
+ jolsa@kernel.org, kpsingh@kernel.org, 	linux-kernel@vger.kernel.org,
+ martin.lau@linux.dev, netdev@vger.kernel.org, 	sdf@fomichev.me,
+ song@kernel.org, syzkaller-bugs@googlegroups.com, 	yonghong.song@linux.dev
+Date: Fri, 04 Jul 2025 14:27:58 -0700
+In-Reply-To: <e43c25b451395edff0886201ad3358acd9670eda.camel@gmail.com>
+References: <68649190.a70a0220.3b7e22.20e8.GAE@google.com>
+			 <aGa3iOI1IgGuPDYV@Tunnel>
+			 <865f2345eaa61afbd26d9de0917e3b1d887c647d.camel@gmail.com>
+			 <aGgL_g3wA2w3yRrG@mail.gmail.com>
+		 <df2cdc5f4fa16a4e3e08e6a997af3722f3673d38.camel@gmail.com>
+	 <e43c25b451395edff0886201ad3358acd9670eda.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
- <20250625232653.GJ369@kvack.org> <CA+CK2bAsz4Zz2_Kp8QMKxG5taY52ykhhykROd0di85ax5eeOrw@mail.gmail.com>
- <20250704173340.GL904431@ziepe.ca>
-In-Reply-To: <20250704173340.GL904431@ziepe.ca>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 4 Jul 2025 17:27:06 -0400
-X-Gm-Features: Ac12FXw2Yd-cXQEJ8nXkM_HsCPClfwCnN3pDQjubPyn-7sQcW8XOW2RmSJQEGm0
-Message-ID: <CA+CK2bC6iUfh4Y36oTVfsbTgow+3D7V9EE=Gj5jz4hsk0JU+xQ@mail.gmail.com>
-Subject: Re: [PATCH v1 00/32] Live Update Orchestrator
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Benjamin LaHaise <bcrl@kvack.org>, pratyush@kernel.org, jasonmiu@google.com, 
-	graf@amazon.com, changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net, 
-	brauner@kernel.org, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 4, 2025 at 1:33=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrote=
-:
->
-> On Wed, Jun 25, 2025 at 07:44:12PM -0400, pasha.tatashin wrote:
-> > On Wed, Jun 25, 2025 at 7:26=E2=80=AFPM Benjamin LaHaise <bcrl@kvack.or=
-g> wrote:
-> > >
-> > > FYI: Every one of your emails to the list for this series was bounced=
- by
-> > > all the recipients using @gmail.com email addresses.
-> > >
-> > >                 -ben (owner-linux-mm)
-> >
-> > This is extremely annoying, I will need to figure out why this is
-> > happening. soleen.com uses google workspace.
->
-> b4 also seems unhappy with your mail:
->
->   X [PATCH v1 1/32] kho: init new_physxa->phys_bits to fix lockdep
->     X BADSIG: DKIM/soleen-com.20230601.gappssmtp.com
->
-> Though I spent a few mins trying to guess why and came up empty. The
-> mail servers thought the DKIM was OK when they accepted it..
->
-> ARC-Authentication-Results:i=3D1; smtp.subspace.kernel.org; dmarc=3Dpass =
-(p=3Dnone dis=3Dnone) header.from=3Dsoleen.com; spf=3Dpass smtp.mailfrom=3D=
-soleen.com; dkim=3Dpass (2048-bit key) header.d=3Dsoleen-com.20230601.gapps=
-smtp.com header.i=3D@soleen-com.20230601.gappssmtp.com header.b=3DVxWLPP8s;=
- arc=3Dnone smtp.client-ip=3D209.85.219.177
-> Authentication-Results: smtp.subspace.kernel.org; dmarc=3Dpass (p=3Dnone =
-dis=3Dnone) header.from=3Dsoleen.com
-> Authentication-Results: smtp.subspace.kernel.org; spf=3Dpass smtp.mailfro=
-m=3Dsoleen.com
-> Authentication-Results: smtp.subspace.kernel.org;
->         dkim=3Dpass (2048-bit key) header.d=3Dsoleen-com.20230601.gappssm=
-tp.com header.i=3D@soleen-com.20230601.gappssmtp.com header.b=3D"VxWLPP8s"
-> Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e8259b783=
-f6so264959276.3
->         for <linux-doc@vger.kernel.org>; Wed, 25 Jun 2025 16:18:45 -0700 =
-(PDT)
+On Fri, 2025-07-04 at 14:13 -0700, Eduard Zingerman wrote:
 
-Thank you Jason, I think I found the reason why this happened:
+[...]
 
-While DMARC itself was enabled, the Quarantine/Reject policy was set to non=
-e.
+> I think the mask can be computed as in or_range() function at the
+> bottom of the email. This gives the following algorithm, if only
+> unsigned range is considered:
+>=20
+> - assume prediction is needed for "if a & b goto ..."
+> - bits that may be set in 'a' are or_range(a_min, a_max)
+> - bits that may be set in 'b' are or_range(b_min, b_max)
+> - if computed bit masks intersect: both branches are possible
+> - otherwise only false branch is possible.
+>=20
+> Wdyt?
 
-I will resend this series.
-
-Pasha
+This does not help with problem at hand, however.
+Possible bits set for range [0x1, 0xff] are 0xff,
+so there would be no prediction.
