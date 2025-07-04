@@ -1,216 +1,179 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB15E18DF80;
-	Fri,  4 Jul 2025 01:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751593301; cv=fail; b=pB47tWyZ4wTmj+rvAPhKpJi+TzqOO3TxwhqXIU4/Uow1CL5/hRB2YSCFt8aYIg+IE5L1ZUDIHDU2NOdsfrSozv+EcIKxBtaoP9ChOJweFdSfO7NZlsq/azc7CjjHtOpJVGsClbnvusICtlo6znpAlnps+XAS//RVr5xNtTYf3+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751593301; c=relaxed/simple;
-	bh=MD9PmHElu+24oMUiXbQbsTyS1MoKsMIbGb6b3OUzDdY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ESrzu/pOwFxkx/X7LvwKXHu8m2+ju0RRiH3tB8GgiI0avJBcX5P1DslOIg1Q2WiUhqPnGh/MQVDtBKyou7nzfM5IMG1qRnqFsgO1bZ1dGW4PmAS9Mo2/zW19MtjGx3s0we6X0uniZvMx5nLR9ra4dvCkjBZAKu7ImR/FCrVA2hE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F3yPn5Ri; arc=fail smtp.client-ip=40.107.101.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F3yPn5Ri"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WH2JBOjYXYSq5RDwbsrEdUPBxsU75OyRAMxoNEatiUxmrhoFREAn+/q5f15PfiT+5eh8AEutPyRngcmLm6vlByeK3jbjWxtYr42Ravlq7tHeLgZRWkTmfc0w9tKW8aBk4t2EQGLKG3C+yHLkAcfNgluy9dYfs2XPW3L8uXY5a2P9YnyaoIOQl6UDo8Kzi4YXXy3JdFeoia9n5dwqU8B2m9L3mzFTE3G0BjU9xJXuD2iJOIPPwl/5gW2XHbmZ7H1QPEvk5YbyJJDRZ6fkJxGzA6SXv0tQHeqmQKg69rGrbrvm0/vCqm7mOO5OBLFqyDl41jCMMAxuGh/+XGBOcIiAng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fkQIHdO7iutwAseoaM6weq2vn6PzLF57X2mnFMNEER0=;
- b=a1A27FM6jQuSJsg2mfSEVqw3LZFlwsn7nc1CngXHi/zWMgeNQazVtnBWcAkYoxJXFrlcSekuPitLLpOVcAhSnR+O7sCSWeUwUtBpsH7bZRcDo4ZheP1AIsG3ijMSzMBW7DdS8kwCl5e9KBkM6D7M491Q1q5v8raAR59cdDBMDKFXilZ1VMp6ScJO6vbc6apVeDYbqzyKlBFqduxa2Lerpa33RE5HJJdHS+er2CnX1o4O+5xkZyaanDTXhfsssogNiMlYA4o8k8s+jgsRCthptiz7MICk6b5TplbLMgxkSYI7o3RvsyHi7RtV3aT0KuRIqSbo4/66Slm3pDEzlm4u3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fkQIHdO7iutwAseoaM6weq2vn6PzLF57X2mnFMNEER0=;
- b=F3yPn5Rifhs7VrZWMZTX72FOJNvxonmq2KLO9fUoxZSlEUlE1V6+Zx/NtUcpav+njTDmVwsN+CZJV4aAQoKsTnTQDSuYNJdr15r7YXUpmcQS+nJ+pzTwXUylC7wczLWaiX/+0HpliXk+8l+XZxjd/DnVH96qbMhF/Y7N2RngUwU=
-Received: from MW2PR2101CA0006.namprd21.prod.outlook.com (2603:10b6:302:1::19)
- by IA1PR12MB6257.namprd12.prod.outlook.com (2603:10b6:208:3e7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Fri, 4 Jul
- 2025 01:41:35 +0000
-Received: from SJ1PEPF00001CE3.namprd05.prod.outlook.com
- (2603:10b6:302:1:cafe::8c) by MW2PR2101CA0006.outlook.office365.com
- (2603:10b6:302:1::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.12 via Frontend Transport; Fri,
- 4 Jul 2025 01:41:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE3.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 01:41:34 +0000
-Received: from qyzhu-os-debug.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Jul
- 2025 20:41:30 -0500
-From: Zhu Qiyu <qiyuzhu2@amd.com>
-To: <rafael@kernel.org>
-CC: <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <qiyuzhu2@amd.com>
-Subject: [PATCH V6] ACPI:PRM: Reduce unnecessary printing to avoid the worries of regular users
-Date: Fri, 4 Jul 2025 01:41:04 +0000
-Message-ID: <20250704014104.82524-1-qiyuzhu2@amd.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26897263A;
+	Fri,  4 Jul 2025 01:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751593538; cv=none; b=mD8C+2zoZo1XChjTJRg0QcfA5QjIXBIgCcBrnZf4w7C2FiF3v4dNOdzmmOZEWzeV8Nt3VbYjz5wZliGz9T1HgEH3xEMAI87+R7v0UlN+KGhvkPPBBcwdD8sMf20yNvLuixLiG2Fp5Zeu+DjESTuHXxTA9pgBVANpJKoPxPI8+UU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751593538; c=relaxed/simple;
+	bh=rFLXW549b5mO0GPCQ0k+u5kNNhPy7ldTm3OZwUCv1Qs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tWJoi7fczqCCqTjY+XO4J/x/Pzw2Mrekkq/czr3xLGIUM4b6NYdLaYbRRZCaepISu7cki3Yld95ZAiLYq1h/8Juy/jl2WuZPCdcW3/m7PJTyoLkXC0QlO/6vy40mEbRIAOSVtSx/oRtpTycBvrhAEpfV1sy4akHkcVSARSoRMt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 8a755dd0587811f0b29709d653e92f7d-20250704
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:bcb7889e-9dea-46b0-93a7-97c2fb23ccab,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:fcf40e201173583ad54fa3105ccb763a,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 8a755dd0587811f0b29709d653e92f7d-20250704
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1367050967; Fri, 04 Jul 2025 09:45:19 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id D5384E008FA2;
+	Fri,  4 Jul 2025 09:45:18 +0800 (CST)
+X-ns-mid: postfix-6867322E-732463268
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 0F130E008FA1;
+	Fri,  4 Jul 2025 09:45:16 +0800 (CST)
+Message-ID: <f4fcb703-ba1d-4614-a411-eefbf04ddf45@kylinos.cn>
+Date: Fri, 4 Jul 2025 09:45:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE3:EE_|IA1PR12MB6257:EE_
-X-MS-Office365-Filtering-Correlation-Id: de787af5-7aef-446d-e75f-08ddba9be8ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?60mmjWdfBCxdIdW26TSPcnTH/b7f/XaK/4/BydXJ+EurfVnBmnYg6q/3fiko?=
- =?us-ascii?Q?/1IMzOkqci/2E/cu5dW5z+sb2WHCXCFcbA7PAggZ4cKUlSumRSf4casWCw+F?=
- =?us-ascii?Q?yUFD9AfV+sScercNOLjHxpvwvynvLCcUhsuIZrH6PQBUeNzxarIMGDy5VIw5?=
- =?us-ascii?Q?X7CMVFWULnTzZJJlk9n5YPvB6EsAh9JRH5B0+5Osdxrvq6JF/8C/cyrHsnTT?=
- =?us-ascii?Q?XX96uIO0lgf6Xd/qsfaYZJf6dRIIvrH2U76omzRT/8dol5s/Q2pnIJUss0LM?=
- =?us-ascii?Q?1qBEOhc6QqSbPAt630673OgW27ZyrVeFD9qGl9R48aMBq5aV3laFDNdxut9A?=
- =?us-ascii?Q?LAmPs8pALiF1BGqScnDIyZuboJzCWKjRb9LOevnLq6L0q2CPQQYIeFw81KQ8?=
- =?us-ascii?Q?PeOcTeD6PuwaMY9luZXNNiEBZerccUZr8tp6vUx+6Pm3uU1JnuQoW1Nhe4+S?=
- =?us-ascii?Q?mYvvtKJ0nsmuM/L0JvOQxONCzIW5PJkQ1T/JKhBkmU6qqNMkhtYjsIHrJG7x?=
- =?us-ascii?Q?x5ZURIcgbP1QAPirUDDc9pBfC+oBzioNXwIXsiPjxQLgHrEU4eVmJGKqqAi7?=
- =?us-ascii?Q?KWX2Bx85YyOUGinG8rty7KdGV3LRDSUg11LYtbRslSqOHdbLvkIW27l5nx2O?=
- =?us-ascii?Q?tty1M5Xwu4/Jyg4taD3YwW/DSQn7CbVfkxbFGEzFroGL0ntsv7tv+xvq7HkR?=
- =?us-ascii?Q?oSU6ww+14fBb7tA7IZusbp/FZmEsee9D+smcWtfGW2qmydx5Tj92JdUuTzAK?=
- =?us-ascii?Q?xZnA0sP8uVe3ymq/LRJn4jAqkXv31N9oeSSUtpQ6UPbjFlYA+d0nFO2NVhin?=
- =?us-ascii?Q?4SdhSGgzgz/+R6oDEsoHHKAjb7ff4EebzVtzjgl2c3TicioRs5ffuOQf4u4C?=
- =?us-ascii?Q?fV0f9s9y2lLa4tLTbpTTuS3S8LhHx3wDZvKih4k9o3EfSmEYDDONlwgUe29Z?=
- =?us-ascii?Q?zqx8A1KOHtcvmCRP0lQhg7wTBWXKsev5eYS8AJmHXw9jUU34A/y1xfuAAudC?=
- =?us-ascii?Q?KbvKOgT+1fuxU/jWR2f2VEJg1izzuyG3wDHsvtC/oiv8P+Km/dXaWmSrx2KF?=
- =?us-ascii?Q?X84q+Xg2zj32pOvK2j9peyMLhDOke6JEaXufbCof/1/+34Go2AQ8JCVBAM3R?=
- =?us-ascii?Q?hEH4iXx82h6Zpn4RUZGhmuiK44gagxkYQ3gAWmOQRpt9l3IV+DxVIHC9VVy9?=
- =?us-ascii?Q?GVtD8nnjt7m18z44OkUm0b47s6j/87QBptnYPumWOAsYUO+XpCbwPcVrHZmF?=
- =?us-ascii?Q?34mItB6GMsHo9dgseHMuUyOcitvt34/NqfU77RSjqoYRnmz/MQCqsEDhjGWE?=
- =?us-ascii?Q?wRBL0tCEurZWnpNHKD/mcehjRBjCCPIJbls4mTwSs3pzTuE+NJ46lGH+25ra?=
- =?us-ascii?Q?WMOXdK6IOucSyEjC+Us+QzMhXekBT/ZGllqDDdz9UUIKiJ2uaGY4PfXvR1uL?=
- =?us-ascii?Q?QYVjLI9OSYGmEu5pPuLIu8f09Su1OjHWkf2wTNttu20/kXZI4ctEZlqhW7l5?=
- =?us-ascii?Q?2yZFLCRVED01ybo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 01:41:34.1615
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de787af5-7aef-446d-e75f-08ddba9be8ae
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE3.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6257
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: pavel@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
+ <20250611101247.15522-2-zhangzihuan@kylinos.cn>
+ <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
+ <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
+ <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Commit 088984c8d54c ("ACPI: PRM: Find EFI_MEMORY_RUNTIME block for PRM
-handler and context") introduces non-essential printing "Failed to find
-VA for GUID: xxxx, PA: 0x0" which causes unnecessary worry for regular
-users.
+Hi=C2=A0Rafael,
 
-Refer to PRM Spec Section 4.1.2[1], both static data buffer address
-and ACPI parameter buffer address may be NULL if they are not needed.
-So there is no need to print out "Failed to find VA ... " to intimidate
-regular users in that case.
+=E5=9C=A8 2025/7/4 01:15, Rafael J. Wysocki =E5=86=99=E9=81=93:
+> On Thu, Jul 3, 2025 at 6:40=E2=80=AFPM Peter Zijlstra <peterz@infradead=
+.org> wrote:
+>> On Thu, Jul 03, 2025 at 04:15:10PM +0200, Rafael J. Wysocki wrote:
+>>> The patch subject appears to be incomplete.
+You=E2=80=99re right =E2=80=94 the patch subject was indeed incomplete. T=
+hat was an=20
+oversight on my part, and I=E2=80=99ll fix it in the next version.
 
-Link: https://uefi.org/sites/default/files/resources/Platform%20Runtime%20Mechanism%20-%20with%20legal%20notice.pdf # [1]
+Thanks for pointing it out.
+>>> On Wed, Jun 11, 2025 at 12:13=E2=80=AFPM Zihuan Zhang <zhangzihuan@ky=
+linos.cn> wrote:
+>>>> When freezing user space during suspend or hibernation, the freezer
+>>>> iterates over all tasks and attempts to freeze them via
+>>>> try_to_freeze_tasks().
+>>>>
+>>>> However, zombie processes (i.e., tasks in EXIT_ZOMBIE state) are no
+>>>> longer running and will never enter the refrigerator. Trying to free=
+ze
+>>>> them is meaningless and causes extra overhead, especially when there=
+ are
+>>>> thousands of zombies created during stress conditions such as fork
+>>>> storms.
+>>>>
+>>>> This patch skips zombie processes during the freezing phase.
+>>>>
+>>>> In our testing with ~30,000 user processes (including many zombies),=
+ the
+>>>> average freeze time during suspend (S3) dropped from ~43 ms to ~16 m=
+s:
+>>>>
+>>>>      - Without the patch: ~43 ms average freeze latency
+>>>>      - With the patch:    ~16 ms average freeze latency
+>>>>      - Improvement:       ~62%
+>>> And what's the total suspend time on the system in question?
+>>>
+We used the sleepgraph tool to measure the full suspend-to-RAM (S3)=20
+latency on our test platform. The total suspend time was around 1859.055=20
+ms, so the optimization to skip zombie processes =E2=80=94 reducing freez=
+e time=20
+from ~43 ms to ~16 ms =E2=80=94 accounts for roughly 1% of the total susp=
+end=20
+latency.
 
-Signed-off-by: Zhu Qiyu <qiyuzhu2@amd.com>
----
-Previous versions can be found at:
-v1: https://lore.kernel.org/linux-acpi/20250427075317.42687-1-qiyuzhu2@amd.com/
-v2: https://lore.kernel.org/linux-acpi/20250512010620.142155-1-qiyuzhu2@amd.com/#r
-v3: https://lore.kernel.org/linux-acpi/20250512011833.142204-1-qiyuzhu2@amd.com/t/#u
-v4: https://lore.kernel.org/linux-acpi/20250518062507.218855-1-qiyuzhu2@amd.com/
-v5: https://lore.kernel.org/all/20250527024259.56996-1-qiyuzhu2@amd.com/
+While the absolute gain is relatively small, it helps reduce unnecessary=20
+overhead under stress conditions such as fork storms with many zombie=20
+tasks, and improves freeze-time predictability.
 
-Changes in v2:
- - Reduce the code changes.
-Changes in v3:
- - Fixed title letters not showing.
-Changes in v4:
- - Only print the necessary warnings.
-Changes in v5:
- - Add more cases of print warnings.
-Changes in v6:
--  Adjust the code comments.
+>>>> This confirms that skipping zombies significantly speeds up the free=
+zing
+>>>> process when the system is under heavy load with many short-lived ta=
+sks.
+>>>>
+>>>> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+>>>>
+>>>> Changes in v3:
+>>>> - Added performance test
+>>>>
+>>>> Changes in v2:
+>>>> - Simplified code, added judgment of dead processes
+>>>> - Rewrite changelog
+>>>> ---
+>>>>   kernel/power/process.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/kernel/power/process.c b/kernel/power/process.c
+>>>> index a6f7ba2d283d..2bbe22610522 100644
+>>>> --- a/kernel/power/process.c
+>>>> +++ b/kernel/power/process.c
+>>>> @@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
+>>>>                  todo =3D 0;
+>>>>                  read_lock(&tasklist_lock);
+>>>>                  for_each_process_thread(g, p) {
+>>>> -                       if (p =3D=3D current || !freeze_task(p))
+>>>> +                       if (p =3D=3D current || p->exit_state || !fr=
+eeze_task(p))
+>>>>                                  continue;
+>>>>
+>>>>                          todo++;
+>>>> --
+>>> This is basically fine by me, but I wonder what other people think.
+>>>
+>>> Peter?
+>> How realistic is it to have a significant amount of zombies when
+>> freezing? This seems like an artificial corner case at best.
+>>
+>> Zombie tasks are stuck waiting on their parent to consume their exit
+>> state or something, right? And those parents being frozen, they pretty
+>> much stay there.
+>>
+>> So I suppose the logic holds, but urgh, do we really need this?
+> Unlikely in practice, but the code change is small and it would be
+> prudent to get this addressed IMV (at least so we don't need to
+> revisit it).
+>
+> But I would ask for a comment above this check to explain that zombies
+> need not be frozen.
+Thanks for the suggestion.
 
- drivers/acpi/prmt.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+Yes, I=E2=80=99ll add a comment to clarify the rationale. Planning to add=
+ the=20
+following just above the check:
+> /*
+>   * Zombie and dead tasks are not running anymore and cannot enter
+>   * the __refrigerator(). Skipping them avoids unnecessary freeze attem=
+pts.
+>   */
 
-diff --git a/drivers/acpi/prmt.c b/drivers/acpi/prmt.c
-index e549914a636c..d7857ca8fb4c 100644
---- a/drivers/acpi/prmt.c
-+++ b/drivers/acpi/prmt.c
-@@ -85,8 +85,6 @@ static u64 efi_pa_va_lookup(efi_guid_t *guid, u64 pa)
- 		}
- 	}
- 
--	pr_warn("Failed to find VA for GUID: %pUL, PA: 0x%llx", guid, pa);
--
- 	return 0;
- }
- 
-@@ -154,13 +152,39 @@ acpi_parse_prmt(union acpi_subtable_headers *header, const unsigned long end)
- 		guid_copy(&th->guid, (guid_t *)handler_info->handler_guid);
- 		th->handler_addr =
- 			(void *)efi_pa_va_lookup(&th->guid, handler_info->handler_address);
-+		/*
-+		 * Print a warning message if handler_addr is zero which is not expected to
-+		 * ever happen.
-+		 */
-+		if (unlikely(!th->handler_addr))
-+			pr_warn("Failed to find VA of handler for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->handler_address);
+I=E2=80=99ll include this in the next version of the patch.
 
- 		th->static_data_buffer_addr =
- 			efi_pa_va_lookup(&th->guid, handler_info->static_data_buffer_address);
-+		/*
-+		 * According to the PRM specification, static_data_buffer_address can be zero,
-+		 * so avoid printing a warning message in that case.
-+		 * If the static_data_buffer_address passed to efi_pa_va_lookup() is nonzero
-+		 * and the return value is zero, print a warning message in that case.
-+		 */
-+		if (unlikely(!th->static_data_buffer_addr && handler_info->static_data_buffer_address))
-+			pr_warn("Failed to find VA of static data buffer for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->static_data_buffer_address);
-
- 		th->acpi_param_buffer_addr =
- 			efi_pa_va_lookup(&th->guid, handler_info->acpi_param_buffer_address);
-
-+		/*
-+		 * According to the PRM specification, acpi_param_buffer_address can be zero,
-+		 * so avoid printing a warning message in that case.
-+		 * If the acpi_param_buffer_address passed to efi_pa_va_lookup() is nonzero and
-+		 * the return value is zero, print a warning message in that case.
-+		 */
-+		if (unlikely(!th->acpi_param_buffer_addr && handler_info->acpi_param_buffer_address))
-+			pr_warn("Failed to find VA of acpi param buffer for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->acpi_param_buffer_address);
-+
- 	} while (++cur_handler < tm->handler_count && (handler_info = get_next_handler(handler_info)));
-
- 	return 0;
-
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
--- 
-2.43.0
+Best regards,
+Zihuan Zhang
 
