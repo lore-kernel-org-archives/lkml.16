@@ -1,63 +1,100 @@
-Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B04327A101;
-	Fri,  4 Jul 2025 07:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83D1281366;
+	Fri,  4 Jul 2025 07:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614820; cv=none; b=b3zMvLVvvFjysFJBiU/UlkesXSVAtmuIf7v8oWgj7hTKYu7w0fKTMXJ6LlPU0EfPUtN5XzfjTnJXrTfrqfbaN7pAGBP4emfhWZWKcu6Qr0IH3wM0MGu9lOkAomjohr9GlK3n81OhVUkrex5SHAe8pIkYlsppHqDD9CR1/HuNNS0=
+	t=1751614835; cv=none; b=uxUOViY+DM0BMeCatpnJAiNzvLNTogtymUlgfRIV8zWDQWMRMj2G59H0fFZliSIKq1ZY8LscomS6DmX7/JK9Z46x9rRCWtnAoYaJwHkP8WuIFsf3t9jsZUxTlPGO38GfNrk4IKMuX12wR1+3fffdIArt3iIhR6sBYYXjY16lt/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614820; c=relaxed/simple;
-	bh=CGs0Fff65AzXGYRyDTJF/eX27m/8Ywa1tS1bgNimHW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sCNQ0jfa2bknPxZKD+v1y5nwpuZgpwKKsBPY2STMPlkeqCxWpKuzGtIuMqftlScXgAcBXZlNYAaUu/Mr3dFHXIhyAR1J92n2KZQBkC0LTjJAT2QYO9DOld0jsNROtsp+jRgErPiquKmPt0cGFakk/pKrU1fJ9NdZB+NIyUqsQFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=T04H9V2t; arc=none smtp.client-ip=213.190.28.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="T04H9V2t"
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
-	s=dkim_2024-02-03; t=1751614419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xasny3TaXLihi3Vs7IGinmOfqgdTVwfxsXvQElSYYDk=;
-	b=T04H9V2tqxMIYJpDOmqbaDVGdOfruXd5Hg70WPlGnCm09HyK2cduZcsgIVK4QpqwtsR7t4
-	r4yfoieN4XVFBTCA==
-Message-ID: <fe4e0930-210a-4dcd-a215-9dd8b2613ff3@hardfalcon.net>
-Date: Fri, 4 Jul 2025 09:33:32 +0200
+	s=arc-20240116; t=1751614835; c=relaxed/simple;
+	bh=EhK+9hAf8j3eh4CjyTaHOFdygunU/xE6sAbakQJe0fY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jHWSw91Rx/ryKX9OLGkxRwswkhDy4wMxDBZBcfx10Qu3SM7o3UriLneZ9kOmE8CwSJlCoTJc91kKQGfy3YB0gmgENsW4AdpKfPDfdc81ufEXus/dv+FPU91RuLRapZ3ixWgmxfDavGVPzjWHtMfK6whG7pBDN6WKYiOS+Sz8lSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bYQWF3k8PztS35;
+	Fri,  4 Jul 2025 15:39:21 +0800 (CST)
+Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id F298D140258;
+	Fri,  4 Jul 2025 15:40:28 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
+ (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Jul
+ 2025 15:40:28 +0800
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+	<roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+CC: Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore
+	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E . Hallyn"
+	<serge@hallyn.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
+	<hpa@zytor.com>, <linux-kernel@vger.kernel.org>,
+	<linux-integrity@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<linux-efi@vger.kernel.org>, <keyrings@vger.kernel.org>, Lu Jialin
+	<lujialin4@huawei.com>, <gongruiqi1@huawei.com>
+Subject: [PATCH v4 0/2] integrity: Extract secure boot enquiry function out of IMA
+Date: Fri, 4 Jul 2025 15:51:12 +0800
+Message-ID: <20250704075114.3709609-1-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250703144004.276210867@linuxfoundation.org>
-Content-Language: en-US, de-DE, en-US-large
-From: Pascal Ernster <git@hardfalcon.net>
-In-Reply-To: <20250703144004.276210867@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemg100016.china.huawei.com (7.202.181.57)
 
-[2025-07-03 16:38] Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.15.5 release.
-> There are 263 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+v4:
+- Rename secureboot.c to efi_secureboot.c, as Mimi suggested.
+v3:
+- Redesign the implementation. Keep the name of arch_ima_get_secureboot
+  to escape from the morass consisted of multiple arch and configs.
+- Rephrase the commit message.
+v2:
+- Fix compile errors for CONFIG_IMA_ARCH_POLICY=n on s390 & powerpc
 
-Compiles fine for x86_64 with GCC 15.1.1, and runs fine on various physical Intel machines (Ivy Bridge, Haswell, Kaby Lake, Coffee Lake) and in a Skylake VM.
+---
 
-Tested-by: Pascal Ernster <git@hardfalcon.net>
+Hi,
 
+We encountered a boot failure issue in an in-house testing, where the
+kernel refused to load its modules since it couldn't verify their
+signature. The root cause turned out to be the early return of
+load_uefi_certs(), where arch_ima_get_secureboot() returned false
+unconditionally due to CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT=n, even
+though the secure boot was enabled.
 
-Regards
-Pascal
+This patch set attempts to remove this implicit dependency by shifting
+the functionality of efi secure boot enquiry from IMA to the integrity
+subsystem, so that both certificate loading and IMA can make use of it
+independently.
+
+The code has been compile-tested on x86/arm64/powerpc/s390, with as much
+as config combinations I can think of.
+
+-Ruiqi
+
+GONG Ruiqi (2):
+  x86/efi: Rename IMA-related function and macro of boot mode
+  integrity: Extract secure boot enquiry function out of IMA
+
+ arch/x86/include/asm/efi.h                    |  4 +-
+ arch/x86/platform/efi/efi.c                   |  2 +-
+ include/linux/integrity.h                     |  1 +
+ security/integrity/Makefile                   |  1 +
+ security/integrity/efi_secureboot.c           | 46 +++++++++++++++++++
+ security/integrity/ima/ima_efi.c              | 42 +----------------
+ security/integrity/platform_certs/load_uefi.c |  3 +-
+ 7 files changed, 54 insertions(+), 45 deletions(-)
+ create mode 100644 security/integrity/efi_secureboot.c
+
+-- 
+2.25.1
+
