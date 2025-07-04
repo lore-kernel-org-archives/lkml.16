@@ -1,94 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240BE1E4BE;
-	Fri,  4 Jul 2025 13:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB54E2D0C8C;
+	Fri,  4 Jul 2025 13:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751634320; cv=none; b=FT9D0i8W5PL4cne5ZadOZZ1jf4gzBf3SFGT3y9RLqW6ffvJEslLgZO3YsQZq6+kQKn1b8jsGpSTlPF62M2SP7LwXu+IoN5+KS8/xc3tiAyS2h7BMzB2qSetvU5Q4BpoTkT6cSGbWo1Ol1ISGiJ9LgOyRV/kuNo7dFwLS93+xwHg=
+	t=1751634351; cv=none; b=qirEcNNEP5bBe/fJa7tCfSEDZjejMHWHP9RsijfqYZ4GLvEv6rxm+CRfG1v/dPSZv6n2pYoILs5fGC1ySD20/wi2DYpcj/9isb5u9hNJzXVNUHcVHT92cPaGxF8k444HOriB7deuxS6iiQXAXHzCojp0ZduwaYOB6N72IxKgcSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751634320; c=relaxed/simple;
-	bh=n18TLJdy8oRm425IB+2oUJysVscGffgpBK8bL7uhx0g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UcMvgyvhXXgrfWT4EpF08lx5w1Lg6LYsqaWPpxfS9U2dZ+seK6nwxsG7BzDHWy8ZshS2i+TRfu1s8j6lpDtFzaMTz+VGCZTzOuNGgZuRNq9EgsTeeyEo/0oVyruJgLm7aImPDFiqYS/YoI3YcfC3l/5Ty2jqGAPnKyDSA9/OzV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qF0CUR60; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751634351; c=relaxed/simple;
+	bh=yBMvYngooK6EJfsWMCJUDLpwW8VA0ZjBtwiC97EGBZc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Rc54U993athXhiHomIUlvdOk8DABrx8B2zK/HIb4nsligODU9W0jbbiaar5To/69vL5039poISVfSSnbn8pIEjej1CjYRmi26qEa1gIA9s5NQgULKCrNRrbA7uj8nLFx+a7Q2l9dYDsvtXvQnlh/I8CkfiS5MmHOf9eEpN9uEkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eRDThnc/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qF0CUR60"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864D0C4CEE3;
-	Fri,  4 Jul 2025 13:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751634318;
-	bh=n18TLJdy8oRm425IB+2oUJysVscGffgpBK8bL7uhx0g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=qF0CUR60+B0U4xZ7bFWniSc6zlFtqqKo5a5Q2VEQHK8vcVwJcKjJbrjzoiumcYDBp
-	 CbBESEuriBSY0pRe+AG6ef8NrKht8Aj4ZuukiFJMn3ukEzhC5VtFl712HFXPVq+w/R
-	 C5x4uFADOwdB68eRKlZzUEiFzDCSf/WL0PfJbpYmIGsVCVzIzG+UU6fb0aSsOnNtVQ
-	 D+hE8o+4+6qKjvKqceZ74Gp0d6vsDjWrdTuUg6LyrTo/leczMkVVrxIAOOLmGELW09
-	 E0kb4jXtkaWcELMsZnVxenK22dTuTt/A69Fg8ugT2tRl8D14Eo/Y+kuQzjQQTZkF78
-	 ytW1M7xl906tw==
-From: Mark Brown <broonie@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Gabor Juhos <j4g8y7@gmail.com>
-Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250702-qpic-snand-8bit-ecc-v2-0-ae2c17a30bb7@gmail.com>
-References: <20250702-qpic-snand-8bit-ecc-v2-0-ae2c17a30bb7@gmail.com>
-Subject: Re: [PATCH v2 0/2] spi: spi-qpic-snand: enable 8 bits ECC strength
- support
-Message-Id: <175163431628.70446.712797583195740189.b4-ty@kernel.org>
-Date: Fri, 04 Jul 2025 14:05:16 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eRDThnc/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751634346;
+	bh=yBMvYngooK6EJfsWMCJUDLpwW8VA0ZjBtwiC97EGBZc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=eRDThnc/NDm+M2Ul2z1dSvnrLN1ARR5Yf31jhgrVTzShjPxH4+IbwZpP0AgIgm/6F
+	 uUMxC0TXKjnqNkXruIGbTD4QErwDA8a5FKoc3tu0d6A+lqen6BKupBIe67xuoYfMQ5
+	 lTvXpIp1IlDzDeiMpto7Q6fiYAB7nkatXOz1YcjbFN2q3w78XHIQnZtNYyh9zbUGpu
+	 w30keY0Mk/jh3vEsLi40EpzxFd0OxeeFz5/QliOcWMJKHwNu8y2GmoU7ASoyMs6J9g
+	 Kl99sKoWC+weIGC8MrUl86OTec/pFD0u21eErD5o/hFNHi3+dv5m2ZZliIkcsh555G
+	 2qaI/S05E36tg==
+Received: from [IPv6:2606:6d00:17:b699::c41] (unknown [IPv6:2606:6d00:17:b699::c41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9711217E07FF;
+	Fri,  4 Jul 2025 15:05:45 +0200 (CEST)
+Message-ID: <88675ffb0b8336c0b2c195bdc53dc9823849055b.camel@collabora.com>
+Subject: Re: [PATCH 64/80] media: rkvdec: Remove redundant
+ pm_runtime_mark_last_busy() calls
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Ezequiel Garcia	
+ <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Fri, 04 Jul 2025 09:05:44 -0400
+In-Reply-To: <20250704075450.3221972-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	 <20250704075450.3221972-1-sakari.ailus@linux.intel.com>
+Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
+ keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvk
+ oOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+go
+ zpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9
+ TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF
+ 9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan
+ 6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0
+ cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhm
+ tHYWTDxBOP5peztyc2PqeKsLsLWzAr7QnTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhc0BuZHVmcmVz
+ bmUuY2E+iGIEExECACIFAlXA3CACGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sB
+ qgcJngAnRDBTr8bhzuH0KQwFP1nEYtfgpKdAKCrQ/sJfuG/8zsd7J8wVl7y3e8ARbRDTmljb2xhcy
+ BEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29
+ tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCg
+ zYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc
+ 25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udW
+ s+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sBqgcQX8
+ An2By6LDEeMxi4B9hUbpvRnzaaeNqAJ9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZy
+ ZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJC
+ AcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypw
+ CfWKc9DorA9f5pyYlD5pQo6SgSoiC0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF
+ 1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkI
+ BwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr
+ +E7ItOqZEHAs+xabBgknYZIFPU=
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-cff91
+Content-Transfer-Encoding: 8bit
 
-On Wed, 02 Jul 2025 14:35:22 +0200, Gabor Juhos wrote:
-> This small patch set adds support for 8 bits ECC strength, which widens
-> the range of the usable SPI NAND chips with the driver.
+Le vendredi 04 juillet 2025 à 10:54 +0300, Sakari Ailus a écrit :
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
 > 
-> The first one is a preparatory patch which adds some defines which
-> allows to avoid using magic values, and the second patch implements
-> the actual support.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+> ---
+> The cover letter of the set can be found here
+> <URL:
+> https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.i
+> ntel.com>.
 > 
-> [...]
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/2] mtd: nand: qpic-common: add defines for ECC_MODE values
-      commit: 0dc7e656ddd54c3267b7cc18c1ac8ec1297ed02f
-[2/2] spi: spi-qpic-snand: add support for 8 bits ECC strength
-      commit: 913bf8d50cbd144c87e9660b591781179182ff59
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> In brief, this patch depends on PM runtime patches adding marking the last
+> busy timestamp in autosuspend related functions. The patches are here, on
+> rc2:
+> 
+>         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>                 pm-runtime-6.17-rc1
+> 
+>  drivers/staging/media/rkvdec/rkvdec.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.c
+> b/drivers/staging/media/rkvdec/rkvdec.c
+> index d707088ec0dc..445f7c92eee3 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> @@ -765,7 +765,6 @@ static void rkvdec_job_finish(struct rkvdec_ctx *ctx,
+>  {
+>  	struct rkvdec_dev *rkvdec = ctx->dev;
+>  
+> -	pm_runtime_mark_last_busy(rkvdec->dev);
+>  	pm_runtime_put_autosuspend(rkvdec->dev);
+>  	rkvdec_job_finish_no_pm(ctx, result);
+>  }
