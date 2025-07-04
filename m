@@ -1,101 +1,32 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB53327978D
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1778272E63
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612761; cv=none; b=akDEJ3/CRr05+XnK2FxJmzAr4vx1hUpFj04ko1jbYpHF6G6rcfel4n86gCqEU0XOZN1MsulXlsKZrzPl0Dsir5sI0i3qmF1TaX9PHNq9ZPinLqmVcqTxyr+hRzjhZH7W4g3LS+wFUJk2K76ecWR8+IrNAAPM1GAcZrbKsofk1YI=
+	t=1751612776; cv=none; b=qK47BWLwc++LygrElqT7BJvWbFsgZprNz6zvNYi6BOctrGk5Odpy1U2saKmg9ipa2WXtTZyG8rSKM3GmVVF7abMSKMHBh1FXVvu6F1iGqXq6QSzuskYZggzzzGjbXvJYJZmhGvmA/h21cni0/rpsxRCYi5/bsmGFMpQnWKEVG5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612761; c=relaxed/simple;
-	bh=gqZpMXPd6DL/+kfXUibwUL8SSmPMehps7IgssTY7RG4=;
+	s=arc-20240116; t=1751612776; c=relaxed/simple;
+	bh=z8BuCXeoPjju7vEFWwtgdEFi07D5GI8t4nJ81VSua2Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CUU27au3Eai4jkH18tA74s0qrjPdMGjwJrUEFuHYyAZW+ntWVJQCQLbMX3MQkpr+ad/VUApZi9fvlaRSmyT63L/8NSPbpmvIwBzx8WXxAbOdHTfVir7ZP2jbo2Yl29KCrMUdIh1ikKZu4qMUqcvES4MJBT1yXNNI1GcMkDEumzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=jKa++m2T; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="jKa++m2T"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b3220c39cffso623452a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751612759; x=1752217559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zMRC5c9xXUgo6eKv4jcoCHH6TENqo9cqAPQxW1Kbofo=;
-        b=jKa++m2T/65KYJ+zWi42iHYdOOtk8WxWplz35AjpfZV98KGo0Cn9inyx1iz63hPl4I
-         5m+apzuY/lX01xNaFrnMI5sIZcM9njQsW4cIR5/hP79Zs7I9jO0wX9KdLOtVLrWIg7Bv
-         Uvj20kppz7ilK6DBOfi4ncIA89QtfDl8BQfAIytPZ0B+UnShkXmXbYscQHmVCVZKLS2j
-         E4vYAMsK4MGjdc5V68pmS5VsJT27O17Ht1ZFvefh2GWGX+GWYoUPvqi1cFgWpS3hGYuD
-         YFhCdHFyZvWvauQu7fQEaUBR2d8AElNxXVKYNuInjIbqFEwoEDKJhO7WG6NFEQWdlMfq
-         jikQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751612759; x=1752217559;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zMRC5c9xXUgo6eKv4jcoCHH6TENqo9cqAPQxW1Kbofo=;
-        b=nWMq0O2qxOxFWUW7YpHIcoqPNyCn3qCVk5cOlbJJ0WE5yAPrm7cG6ZXEwQB6aoo8fx
-         lNPXWJTRrlEceisi1APaVhxj8dlNFrgq2XmjkC+g4vI2ZMVVm7zsw8hcMtHi+VjMxCGz
-         hGabFWq+cMWUfpJdlqAshuzV5CRwAd3AlCOnBVqAAy0p+rflagYfJLAOp7+vYfAy7n1x
-         PAAkX+DWyTFLoltOD3NqYHFADTV/mbNqSlo70vrzWoqoQ8wow/YiFQzWGJyCB+dQX0QF
-         D1E/aBxLJymndJYxfnPjpPfXfQLsQw/pQxU3ltpmJbnU8/LzsCkvitlcUnkDTkLnfwVW
-         kl1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUslJpU02zQdXNdAY5QDSLpzC95KC2WlUx6QH++x4kgfSar9uebMwDiLmSyegZNXisyxx+mA1Um2j2V5Dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz40V0pxi14zKMpfxi25lxgJr4PoSdeAFqZI4yErybbQ1mf7ytv
-	vnl72Wv+uSd4qnY5glSje8NPV3P3iKgBN5CJUoQy1fxCy3K0GKwVK2+R2Vmr95LZbrk=
-X-Gm-Gg: ASbGnctsGHaYEIAyj9v7RJoEdu3JgbRCgs4V2ygA/gpnCjK83maxDn8YMKUaalK9rhU
-	O0f1QqLkEQ++JAHlO06TGrFKqbUSAOtzgrFzPjjDDrP9b8+e96bH6BqoQsWzEs5rAIa670TfkS+
-	aWkro1b9banXLuc42G6uIvKqzPtq+UjQzNEb8I1FlDIzpqr3BtsQidIoVnD2XVmwtG1q8oAVe8N
-	0raArKTusRBwiDf034U3zL4vgEIrWJTrFN6QiIMwf52gCOzVueZBx2h2YNp27m/eJd+YOp7cg4R
-	UFqTuns+phhwWQp+GwHyN9ACKCZdy7Wab+VT3O+kf7HdNe+f5PU+fSe0pPY2FlKyiFcUeozNurp
-	rUFr/k17wWyHH5sFSWOINPLvUOw==
-X-Google-Smtp-Source: AGHT+IEsY9DjJEKtUwl9ZcWbIEnsXVkhcprck0a7/CT8yNIOArahqDh4/mdoR/7EaIpy+0pjEevTMA==
-X-Received: by 2002:a17:90a:dfcc:b0:315:cbe0:13b3 with SMTP id 98e67ed59e1d1-31aadcf4962mr1778242a91.7.1751612759095;
-        Fri, 04 Jul 2025 00:05:59 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae59a93sm1358697a91.12.2025.07.04.00.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 00:05:58 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	 MIME-Version; b=pIVMgQI0ATBj8AfxB3aONncBOA69bON+HBC5nNL3neQSsxkqA7Qn8eTAtxAmUl7yIwO6Kkl8ofAxnb8lFWYdIF0IizwjYd9bjFd7yJZ5e5ITNO7zfgY4I6ewaBzM+59iXuLIaPq4ktaDIq0jMTsD38N8/tqJ8WEqA/EN6k/ujXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-8f-68677d5b45aa
+From: Yunjeong Mun <yunjeong.mun@sk.com>
+To: sj@kernel.org
+Cc: akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v8 09/24] dt-bindings: clock: Add RPMI clock service controller bindings
-Date: Fri,  4 Jul 2025 12:33:41 +0530
-Message-ID: <20250704070356.1683992-10-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250704070356.1683992-1-apatel@ventanamicro.com>
-References: <20250704070356.1683992-1-apatel@ventanamicro.com>
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com
+Subject: Re: [RFC PATCH v2] samples/damon: support automatic node address detection
+Date: Fri,  4 Jul 2025 16:05:59 +0900
+Message-ID: <20250704070600.1786-1-yunjeong.mun@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250703165237.43771-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -103,91 +34,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsXC9ZZnoW50bXqGQcs3Vos569ewWTz5/5vV
+	4vKuOWwW99b8Z7U4/PUNkwOrx6ZVnWwemz5NYvc4MeM3i8eLzTMZPT5vkgtgjeKySUnNySxL
+	LdK3S+DKWDb9GUvBfcWK96vmsDcwHpHqYuTkkBAwkTi44BcbjL36038WEJtNQEPi4KGTzCC2
+	iICgRP/jGaxdjFwczAJzGSWOnHnPCJIQFgiWONo0G6yBRUBV4vjS3UwgNq+AuUTj5x/sEEM1
+	JRou3QOLcwoYSzw4Ox+sV0iAR+LVhv2MEPWCEidnPgGbwywgL9G8dTYzyDIJgTlsEl9nbmWE
+	GCQpcXDFDZYJjPyzkPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZgcC6r/RO9g/HT
+	heBDjAIcjEo8vBuS0jKEWBPLiitzDzFKcDArifCeFEzPEOJNSaysSi3Kjy8qzUktPsQozcGi
+	JM5r9K08RUggPbEkNTs1tSC1CCbLxMEp1cBo0l0y8Y3zs6bf3J63DM+bXWtYI6TZnHrVc6Op
+	9sctfxRW5v/9YGY9za2iuXvCpfjy9nBBVuvTy+Y+bRVi8dpyaIXeQuFvkp0GeRdfLL5y+s3c
+	IwYu86/9mOkdl+YV8bz83GQlm0Ml3fV+6pUvP+/xr2jy2Kd0za30896PmY7LJ9/Su7p97uq3
+	SizFGYmGWsxFxYkA3PmVj0oCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOLMWRmVeSWpSXmKPExsXCNUNWRzeqNj3DYMZxC4s569ewWTz5/5vV
+	4vOz18wWh+eeZLW4vGsOm8W9Nf9ZLQ5/fcPkwO6xaVUnm8emT5PYPU7M+M3i8WLzTEaPb7c9
+	PBa/+MDk8XmTXAB7FJdNSmpOZllqkb5dAlfGsunPWAruK1a8XzWHvYHxiFQXIyeHhICJxOpP
+	/1lAbDYBDYmDh04yg9giAoIS/Y9nsHYxcnEwC8xllDhy5j0jSEJYIFjiaNNssAYWAVWJ40t3
+	M4HYvALmEo2ff7BDDNWUaLh0DyzOKWAs8eDsfLBeIQEeiVcb9jNC1AtKnJz5BGwOs4C8RPPW
+	2cwTGHlmIUnNQpJawMi0ilEkM68sNzEzx1SvODujMi+zQi85P3cTIzD4ltX+mbiD8ctl90OM
+	AhyMSjy8G5LSMoRYE8uKK3MPMUpwMCuJ8J4UTM8Q4k1JrKxKLcqPLyrNSS0+xCjNwaIkzusV
+	npogJJCeWJKanZpakFoEk2Xi4JRqYBQ2Z/2Tbvnl9L1Pf8r+1nE5vBSO87iqtkEw+ED9df/V
+	Kve/ztKdvNmualr91BmL+uqU/ou6Z+mxT7gkwzHNbZ2hfO7n3H079C5Mb/e4cdPvzeMlM6dp
+	SRl0vdhYafH+4V3BLx95i58mfX2q4n74/7SqQqHYCr3/WcvEvL4rqt2oND0ipK23gUuJpTgj
+	0VCLuag4EQAFrRV1OgIAAA==
+X-CFilter-Loop: Reflected
 
-Add device tree bindings for the RPMI clock service group based
-controller for the supervisor software.
+Hello Seongjae,
 
-The RPMI clock service group is defined by the RISC-V platform
-management interface (RPMI) specification.
+On Thu,  3 Jul 2025 09:52:37 -0700 SeongJae Park <sj@kernel.org> wrote:
+> Hello Yunjeong,
+> 
+> On Thu,  3 Jul 2025 16:44:22 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+> 
+> > This patch adds a new knob `detect_node_addresses`, which determines
+> > whether the physical address range is set manually using the existing
+> > knobs or automatically by the mtier module. When `detect_node_addresses`
+> > set to 'Y', mtier automatically converts node0 and node1 to their
+> > physical addresses. If set to 'N', it uses the existing
+> > 'node#_start_addr' and 'node#_end_addr' to define regions as before.
+> 
+> Thank you for this patch!
+> 
+> > 
+> > Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
+> > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> 
+> Reviewed-by: SeongJae Park <sj@kernel.org>
+> 
+> > ---
+> 
+> From next time, please consider adding a summary of what changes have made from
+> the previous version here, like suggested[1] on the documentation.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- .../bindings/clock/riscv,rpmi-clock.yaml      | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
+Ok, I'll add it next time, thanks:)
+One concern I have about this patch is the requirement to set
+'detect_node_addresses=Y' before setting 'enable=Y'. Not following
+this order causes an error, which makes it difficult for users to use
+the module. So, how about removing 'detect_node_address'? Instead, we
+could convert node0,1 to physical address automatically by default, and use
+existing 'node#_*_addr' values only when those files are explicitly set.
+The diff is as follows:
 
-diff --git a/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml b/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
-new file mode 100644
-index 000000000000..5d62bf8215c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/riscv,rpmi-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RISC-V RPMI clock service group based clock controller
-+
-+maintainers:
-+  - Anup Patel <anup@brainfault.org>
-+
-+description: |
-+  The RISC-V Platform Management Interface (RPMI) [1] defines a
-+  messaging protocol which is modular and extensible. The supervisor
-+  software can send/receive RPMI messages via SBI MPXY extension [2]
-+  or some dedicated supervisor-mode RPMI transport.
-+
-+  The RPMI specification [1] defines clock service group for accessing
-+  system clocks managed by a platform microcontroller. The supervisor
-+  software can access RPMI clock service group via SBI MPXY channel or
-+  some dedicated supervisor-mode RPMI transport.
-+
-+  ===========================================
-+  References
-+  ===========================================
-+
-+  [1] RISC-V Platform Management Interface (RPMI) v1.0 (or higher)
-+      https://github.com/riscv-non-isa/riscv-rpmi/releases
-+
-+  [2] RISC-V Supervisor Binary Interface (SBI) v3.0 (or higher)
-+      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-+
-+properties:
-+  compatible:
-+    description:
-+      Intended for use by the supervisor software.
-+    const: riscv,rpmi-clock
-+
-+  mboxes:
-+    maxItems: 1
-+    description:
-+      Mailbox channel of the underlying RPMI transport or SBI message proxy channel.
-+
-+  "#clock-cells":
-+    const: 1
-+    description:
-+      Platform specific CLOCK_ID as defined by the RISC-V Platform Management
-+      Interface (RPMI) specification.
-+
-+required:
-+  - compatible
-+  - mboxes
-+  - "#clock-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clock-controller {
-+        compatible = "riscv,rpmi-clock";
-+        mboxes = <&mpxy_mbox 0x1000 0x0>;
-+        #clock-cells = <1>;
-+    };
-+...
--- 
-2.43.0
+```diff
+diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
+index 3a6ae78efafe..03e0540611e0 100644
+--- a/samples/damon/mtier.c
++++ b/samples/damon/mtier.c
+@@ -42,9 +42,6 @@ static bool enable __read_mostly;
+ module_param_cb(enable, &enable_param_ops, &enable, 0600);
+ MODULE_PARM_DESC(enable, "Enable of disable DAMON_SAMPLE_MTIER");
 
+-static bool detect_node_addresses __read_mostly;
+-module_param(detect_node_addresses, bool, 0600);
+-
+ static struct damon_ctx *ctxs[2];
+
+ struct region_range {
+@@ -110,10 +107,12 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
+                goto free_out;
+        damon_add_target(ctx, target);
+
+-       if (detect_node_addresses) {
++       if (!node0_start_addr && !node0_end_addr
++                               && !node1_start_addr && !node1_end_addr) {
+                ret = promote ? nid_to_phys(1, &addr) : nid_to_phys(0, &addr);
+                if (ret)
+                        goto free_out;
++
+        } else {
+                addr.start = promote ? node1_start_addr : node0_start_addr;
+                addr.end = promote ? node1_end_addr : node0_end_addr;
+```
+
+> 
+> >  samples/damon/mtier.c | 42 +++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 39 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
+> > index f3220d6e6739..3570ebe10fab 100644
+> > --- a/samples/damon/mtier.c
+> > +++ b/samples/damon/mtier.c
+> > @@ -42,8 +42,34 @@ static bool enable __read_mostly;
+> >  module_param_cb(enable, &enable_param_ops, &enable, 0600);
+> >  MODULE_PARM_DESC(enable, "Enable of disable DAMON_SAMPLE_MTIER");
+> >  
+> > +static bool detect_node_addresses __read_mostly;
+> > +module_param(detect_node_addresses, bool, 0600);
+> > +
+> >  static struct damon_ctx *ctxs[2];
+> >  
+> > +struct region_range {
+> > +	phys_addr_t start;
+> > +	phys_addr_t end;
+> > +};
+> > +
+> > +static int nid_to_phys(int target_node, struct region_range *range)
+> > +{
+> > +
+> > +	if (!node_online(target_node)) {
+> > +		pr_err("NUMA node %d is not online\n", target_node);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* TODO: Do we need to support more accurate region range?  */
+> 
+> I understand you are saying we might need to remove address ranges in the node
+> that DAMON will anyway unable to check accesses, e.g., reserved memory.  Since
+> those are uusally only a small portion and this is a sample code, I think we
+> don't really need to do that, so I think you can drop this TODO comment from
+> your next version, if you are gonna make it.
+> 
+
+Ok, I will drop that comment from next version.
+
+Best Regards,
+Yunjeong Mun
+
+...snip...
+
+> 
+> [1] https://docs.kernel.org/process/submitting-patches.html#commentary
+> 
+> 
+> Thanks,
+> SJ
