@@ -1,80 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93A12E5B2F;
-	Fri,  4 Jul 2025 18:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC7A2E5B2F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751653422; cv=none; b=cZdxLR8QnhA3FrxDByMHqxOxN7D9QYSbTdKa0/I6cb22VmTUfIAiRWjYlz/3wyEqVSMxT3k9o2bOV+6lBVWbLZKFH11pUcs1vbT4P1Lp4aisgbSJe4QJDjnEpZ9CCHOBMe8vDhNIhY+YpiUQmnMATnJnCx6ebaXHKfN53hUWmDs=
+	t=1751653427; cv=none; b=u/qwLMJ+H/fC0mzKFYrtzsN+mNGgOs1tZ+K0/EcMq0EWrdi2eTHptVrTdlp33NrYohhDBK8uu0QbqNAxvFIMlJWuXvrB8E6sOb2NyS9VREdlPh20r949LeiuOV71k7u4H9/HMcUAEeozEIGahzWXEWP9xP/J8uQniuCLL9FhBj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751653422; c=relaxed/simple;
-	bh=3pH+Y4O8bckOvutEYgAYJmeTwbmIePCo5O7dkXcpQgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOn8ovmGhIYL3AN2z9qKBRk1ez4WYbiQsXuQA65tsya5je+hq6zWxzROfjHHemvtBaFK0oQV08as7SM6wGLPvP4rBhOMuvh84qar0AHq9mFh+vEXowzc96M4c7vjYaQrgWuC/RRzeUmqP167n/Zj570zh4jDoMQKU7HPa4Hf75A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbp9Jy8g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751653427; c=relaxed/simple;
+	bh=7Xh9siz4l99FE27ET/jXixDgQgw50iPcFBH+KCcFWt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kMCSvGtySIPeWM7SRZsjDnAP6xZW9Xe/LzaAS8tVFt+gHDql7Lr2AIIUCr4vI9wfC0Scuq8Ze9emQlqIhkCWJYqjJDHlUFXxHI4+fqp/Nh2kNMuwmu6J0bkfp4vkDVTWVD+1rvw71r/kuImRdppM4yDCanmm9iq06iLEPLOW3X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e4P5kGVo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbp9Jy8g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9786AC4CEED;
-	Fri,  4 Jul 2025 18:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751653422;
-	bh=3pH+Y4O8bckOvutEYgAYJmeTwbmIePCo5O7dkXcpQgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dbp9Jy8g2stuA4FSJSZ99tWTyJk8s0xFMznY7pB194Y95hzin1KJ/Wi9a3R1Q6J/8
-	 hX/fYkVdgQIPBnxu6ZXurRG1Gigp58+20L468kP55Tde7aEkZIKvdx4+VTQLvn80YY
-	 hY4zKK5ixSpv79lGw8ZIzVAQJIgKuL7ngWWNqC1n5MfNmyptOLBtN7oqs2Kqqlt2YR
-	 1QTiynfZBbdPR8VeGWOAJL1rcD6dJXeKd8ZsdVVmQ125OmozfxLiPAOXy/sSmTTKID
-	 4LFasroPipk5H0/K/hCiXvex14LFnzL3b6ygno83PkNUXa2hyN6T38quvq9SDGzJNV
-	 SL/023MiNLWDA==
-Date: Fri, 4 Jul 2025 20:23:35 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] rust: platform: add irq accessors
-Message-ID: <aGgcJxM_nKkFGtGn@cassiopeiae>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-5-74103bdc7c52@collabora.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4P5kGVo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751653424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b27pefzJFrzMahQIZoPa3X/u6/HgdIqjh0sxPa5Oe/M=;
+	b=e4P5kGVoc0qhvjBLIGY07J8mHJdlnL5VUtFUAj0u2zUcR0+N/201eFtmVL0sCTGIVA6vsy
+	WEci2yOGh/MIgpfFZSAUHrSEqPfKvDVRaHOcNXAwps8WCBFJmmlDbcUjMn/TUSy8ndzbrr
+	P1fmrrLJwgKDXfEp6QLzJQiheWXfG2g=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-462-WMCNhP6vPe2dVZweM5VHzg-1; Fri,
+ 04 Jul 2025 14:23:40 -0400
+X-MC-Unique: WMCNhP6vPe2dVZweM5VHzg-1
+X-Mimecast-MFC-AGG-ID: WMCNhP6vPe2dVZweM5VHzg_1751653418
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5DFD1956061;
+	Fri,  4 Jul 2025 18:23:37 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.45.226.37])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11B7219560A7;
+	Fri,  4 Jul 2025 18:23:30 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: Jiri Pirko <jiri@resnulli.us>,
+	netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v13 11/12] dpll: zl3073x: Implement input pin state setting in automatic mode
+Date: Fri,  4 Jul 2025 20:22:01 +0200
+Message-ID: <20250704182202.1641943-12-ivecera@redhat.com>
+In-Reply-To: <20250704182202.1641943-1-ivecera@redhat.com>
+References: <20250704182202.1641943-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-5-74103bdc7c52@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, Jul 03, 2025 at 04:30:03PM -0300, Daniel Almeida wrote:
-> +impl Device<Bound> {
-> +    /// Returns an [`IrqRequest`] for the IRQ at the given index, if any.
-> +    pub fn request_irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
-> +        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-> +        let irq = unsafe { bindings::platform_get_irq(self.as_raw(), index) };
-> +
-> +        if irq < 0 {
-> +            return Err(Error::from_errno(irq));
-> +        }
-> +
-> +        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-> +        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-> +    }
+Implement input pin state setting when the DPLL is running in automatic
+mode. Unlike manual mode, the DPLL mode switching is not used here and
+the implementation uses special priority value (15) to make the given
+pin non-selectable.
 
-Sorry that I didn't notice that before: Please just name the functions returning
-an IrqRequest e.g. irq_by_index(), without the 'request' prefix. And instead put
-the 'request' prefix in front of the methods that return a actual
-irq::Registration.
+When the user sets state of the pin as disconnected the driver
+internally sets its priority in HW to 15 that prevents the DPLL to
+choose this input pin. Conversely, if the pin status is set to
+selectable, the driver sets the pin priority in HW to the original saved
+value.
 
-This is more in line with the C functions being named request_irq() and
-request_threaded_irq().
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/dpll/zl3073x/dpll.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
+index 406b3e48f2518..d39094b7cbc88 100644
+--- a/drivers/dpll/zl3073x/dpll.c
++++ b/drivers/dpll/zl3073x/dpll.c
+@@ -439,6 +439,38 @@ zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
+ 
+ 		rc = zl3073x_dpll_selected_ref_set(zldpll, new_ref);
+ 		break;
++
++	case ZL_DPLL_MODE_REFSEL_MODE_AUTO:
++		if (state == DPLL_PIN_STATE_SELECTABLE) {
++			if (pin->selectable)
++				return 0; /* Pin is already selectable */
++
++			/* Restore pin priority in HW */
++			rc = zl3073x_dpll_ref_prio_set(pin, pin->prio);
++			if (rc)
++				return rc;
++
++			/* Mark pin as selectable */
++			pin->selectable = true;
++		} else if (state == DPLL_PIN_STATE_DISCONNECTED) {
++			if (!pin->selectable)
++				return 0; /* Pin is already disconnected */
++
++			/* Set pin priority to none in HW */
++			rc = zl3073x_dpll_ref_prio_set(pin,
++						       ZL_DPLL_REF_PRIO_NONE);
++			if (rc)
++				return rc;
++
++			/* Mark pin as non-selectable */
++			pin->selectable = false;
++		} else {
++			NL_SET_ERR_MSG(extack,
++				       "Invalid pin state for automatic mode");
++			return -EINVAL;
++		}
++		break;
++
+ 	default:
+ 		/* In other modes we cannot change input reference */
+ 		NL_SET_ERR_MSG(extack,
+-- 
+2.49.0
+
