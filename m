@@ -1,103 +1,586 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAE72DC321
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 121632D59F5;
+	Fri,  4 Jul 2025 16:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751646052; cv=none; b=S9ibXQLX8DI2n8Chj83EnQ2iJ8mbzbhR7kPCqWabttZuA0ZDzsCgD/fz3PaorUc/IEEZoMyBqTW0MLRlVx2PWMMTvw76CEVZjw2AqAcn8mC7v4R8ZQS+U+b79E1sC5WRnQxyg68gD6PZA/KP4WHybSkFqbm+mhPANO69J+Ay22A=
+	t=1751646062; cv=none; b=BIeZMBwp8R0NM/oS4FXRBlVixeoffzHAkiE6XxzSYIVa9M0+x5pE5nkfM3fpQI7A94DCEY7CWsZ5KsGoOlKqoCVfUiZrXJbreXcnVoDhj2iFmwrXUTbWnriF/MDbqyintuB0sePfBfYR8cMX/P1n98i7OIxDX4GlmMm3qs0FboY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751646052; c=relaxed/simple;
-	bh=Vw1axICA6lHzwM7NB5Mc0856OTH7uhitFoFBSnQMuIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gd3D97rCNPY9PvZu66iF9nk3/45cfeyrxmOHKMSy85tlcdUzev6NiHMOuJn/GJ9esp/N5pW/fIcmHcJ2DknLYvDiSEAoLlnX/r9AKbKTQc1mEkHT7nKP/178BwBFD62jwwoSPxY5MOkA6gxCCiUbOxg/Lqk9a/bwr+39X5IjLos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DvJw7Kh1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvJw7Kh1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751646049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/Z64A1L91eoVM0oVYxeXCv31/CXTq/WMm33nMh52sU=;
-	b=DvJw7Kh1UvHpwv2HtEO3kjc4fxhwVPAjMs3+0YcjkyEtVbUQNXWbZxBJJYyB98br4fCUMY
-	ZvXVOpTskSZypK627Y13QZouqO0VvrcrJeZB9h+vudE+2ZiKly+yBOXVhCGit4VxzXbBmF
-	qvMD3+dCfaHgJxYr795bRG0+TrwMF+0=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-7Sn9U1-WO2WZOLohHt5mYw-1; Fri, 04 Jul 2025 12:20:48 -0400
-X-MC-Unique: 7Sn9U1-WO2WZOLohHt5mYw-1
-X-Mimecast-MFC-AGG-ID: 7Sn9U1-WO2WZOLohHt5mYw_1751646047
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6face45b58dso12826806d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:20:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751646047; x=1752250847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/Z64A1L91eoVM0oVYxeXCv31/CXTq/WMm33nMh52sU=;
-        b=RmzzAHuKPc/LCwZMfUDdatfmRYLgi/4AiBQk0tZfuhKcVNnjC+ZRSLJafh/M3J1D5g
-         JCIqbKCdA6624abEg4oGcTx/il7i5AIxKCnAZx3FCGmh5UtlTuYlkpU4fvpMbHifKifu
-         MWHDkyh7imILQvMHHVg3LEbfZVxW0mBdpQRTNQUmHeD5g1Cc5uaKxCV4uGDaGV4a0taq
-         TsHH3YSB4ksZXd4F/xztGQlK7fz1/Z7iGDLqOZVCqQQl6aZsgM6E7RlrJ96MX+y2Agx6
-         7JFnWCQ1gtCIKTyvmBKZXFticrOwsMqTKWccSZWvFvG3aBS7rvdGi0TOpXTVKwflb1mM
-         SVZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGtPgju6jRBr6pvk2/q++SIgVTpHqJi8wDZVK38PZsvy+Tl7iQqMaeG0MXnZDJD4Y9di6zDht4ox2KCXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXtIoDXY9/f7dgIKX5f0zYTphoHfQ3RM+1fuZ9iSv5+GTMIfwE
-	38c9v4WsKLeQP6li5D0H/j4f7Lohb5KR7SZDh19KADwogaVq+uUsHWmBuazm0lZYyXd4k2R46cw
-	qI/c7000309tbrNS4iZFygGMJudJ66w8fFkx5oTjpPwRCBqIQ/2DfPNYyPenu0wiWhQ==
-X-Gm-Gg: ASbGncvP7Q8M7jVA0yLeB/y9eLannz+C4gFOgsqhKgUGH7JUEBAvcxh81/Pav97MW/7
-	byADB1oq9oUg99S7QehjlHPIs6O8Z6k4Cs8zj78V3GoPSdBMddfEjkykqwtTUgaaxE0g7oprCyS
-	kofzExY/x8fvTsKhGQY2fHIJJpJC7BRwwcYZxUDhblcVARnb7AjmjEYXS7OCAupnsYTPACgHbv1
-	aFKza4Dx43iiVpeEqNcLy6kGlhSPsJFVvyiEi6qozi3WmBDCahAIWuN5BuIueCXrqKLkko0ygNA
-	p71mhipKeob7UQ==
-X-Received: by 2002:ad4:574e:0:b0:6f5:106a:270e with SMTP id 6a1803df08f44-702c8cd9c14mr31160106d6.44.1751646047391;
-        Fri, 04 Jul 2025 09:20:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3QKwHLNjLHITPK4hmbCxjyMhaRZnObLUF7+e4ri5Ww0N5q0etFpJdEt757O7D8qHEJZMJGA==
-X-Received: by 2002:ad4:574e:0:b0:6f5:106a:270e with SMTP id 6a1803df08f44-702c8cd9c14mr31159896d6.44.1751646047084;
-        Fri, 04 Jul 2025 09:20:47 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbeb3186sm166607085a.109.2025.07.04.09.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:20:46 -0700 (PDT)
-Date: Fri, 4 Jul 2025 12:20:43 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Ujwal Kundur <ujwal.kundur@gmail.com>
-Cc: akpm@linux-foundation.org, shuah@kernel.org, jackmanb@google.com,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-Message-ID: <aGf_W_ZgIf63dmAz@x1.local>
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com>
- <20250702152057.4067-1-ujwal.kundur@gmail.com>
+	s=arc-20240116; t=1751646062; c=relaxed/simple;
+	bh=sSVNCjXpy33HydSZtsS++p7T3MftTgW/k7bIfVvL5QE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Qu/ueK/InPeCv+rXB5+67esNHU/gFb9vr8PkshPCWxW+lZaetc5rfIr662IaD375pbgq7lodBMrKJXcJXcPfNtHURFKCh/toiIUa+E8hE6femwHCHRcpMSaKPSSOqp49c//9wswWYeT7uCl+LI3TG4dl/cnkThBq/KSP/fCBfI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: tzQ0k4I7SwaH/rCITR+8jw==
+X-CSE-MsgGUID: 7GjtNNy7RHyDokB8GsUP2Q==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 05 Jul 2025 01:20:53 +0900
+Received: from mulinux.home (unknown [10.26.240.6])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 189DB401DDF5;
+	Sat,  5 Jul 2025 01:20:48 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-spi@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 2/3] spi: Add driver for the RZ/V2H(P) RSPI IP
+Date: Fri,  4 Jul 2025 17:20:35 +0100
+Message-Id: <20250704162036.468765-3-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250704162036.468765-1-fabrizio.castro.jz@renesas.com>
+References: <20250704162036.468765-1-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250702152057.4067-1-ujwal.kundur@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 08:50:57PM +0530, Ujwal Kundur wrote:
-> Refactor macros and non-composite global variable definitions into a
-> struct that is defined at the start of a test and is passed around
-> instead of relying on global vars.
-> 
-> Signed-off-by: Ujwal Kundur <ujwal.kundur@gmail.com>
+The Renesas RZ/V2H(P) RSPI IP supports 4-wire and 3-wire
+serial communications in both host role and target role.
+It can use a DMA, but the I/O can also be driven by the
+processor.
 
-It runs all fine here now.  I didn't check line-by-line, but I keep
-thinking this is in general good.
+RX-only, TX-only, and RX-TX operations are available in
+DMA mode, while in processor I/O mode it only RX-TX
+operations are supported.
 
-Acked-by: Peter Xu <peterx@redhat.com>
+Add a driver to support 4-wire serial communications as
+host role in processor I/O mode.
 
-Thanks,
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
+---
+v1->v2:
+* Fixed build issue highlighted by the kernel test robot.
+* Dropped devm_clk_bulk_get() in favour of
+  devm_clk_bulk_get_all_enabled(), with related adjustments.
+* Removed call to rzv2h_rspi_clear_fifos() from
+  rzv2h_rspi_unprepare_message().
+* Moved devm_request_irq() to after enabling clocks and resets,
+  and after initializing the waitqueue.
+---
+ drivers/spi/Kconfig          |   8 +
+ drivers/spi/Makefile         |   1 +
+ drivers/spi/spi-rzv2h-rspi.c | 466 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 475 insertions(+)
+ create mode 100644 drivers/spi/spi-rzv2h-rspi.c
+
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index f2d2295a5501..fcc6987945fa 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -923,6 +923,14 @@ config SPI_RSPI
+ 	help
+ 	  SPI driver for Renesas RSPI and QSPI blocks.
+ 
++config SPI_RZV2H_RSPI
++	tristate "Renesas RZ/V2H RSPI controller"
++	depends on ARCH_RENESAS || COMPILE_TEST
++	help
++	  RSPI driver for the Renesas RZ/V2H Serial Peripheral Interface (RSPI).
++	  RSPI supports both SPI host and SPI target roles. This option only
++	  enables the SPI host role.
++
+ config SPI_RZV2M_CSI
+ 	tristate "Renesas RZ/V2M CSI controller"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 4ea89f6fc531..c19d02653b8a 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -126,6 +126,7 @@ obj-$(CONFIG_MACH_REALTEK_RTL)		+= spi-realtek-rtl.o
+ obj-$(CONFIG_SPI_REALTEK_SNAND)		+= spi-realtek-rtl-snand.o
+ obj-$(CONFIG_SPI_RPCIF)			+= spi-rpc-if.o
+ obj-$(CONFIG_SPI_RSPI)			+= spi-rspi.o
++obj-$(CONFIG_SPI_RZV2H_RSPI)		+= spi-rzv2h-rspi.o
+ obj-$(CONFIG_SPI_RZV2M_CSI)		+= spi-rzv2m-csi.o
+ obj-$(CONFIG_SPI_S3C64XX)		+= spi-s3c64xx.o
+ obj-$(CONFIG_SPI_SC18IS602)		+= spi-sc18is602.o
+diff --git a/drivers/spi/spi-rzv2h-rspi.c b/drivers/spi/spi-rzv2h-rspi.c
+new file mode 100644
+index 000000000000..dcc431ba60a9
+--- /dev/null
++++ b/drivers/spi/spi-rzv2h-rspi.c
+@@ -0,0 +1,466 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Renesas RZ/V2H Renesas Serial Peripheral Interface (RSPI)
++ *
++ * Copyright (C) 2025 Renesas Electronics Corporation
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/bits.h>
++#include <linux/clk.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/limits.h>
++#include <linux/log2.h>
++#include <linux/math.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/reset.h>
++#include <linux/spi/spi.h>
++#include <linux/wait.h>
++
++/* Registers */
++#define RSPI_SPDR		0x00
++#define RSPI_SPCR		0x08
++#define RSPI_SSLP		0x10
++#define RSPI_SPBR		0x11
++#define RSPI_SPSCR		0x13
++#define RSPI_SPCMD		0x14
++#define RSPI_SPDCR2		0x44
++#define RSPI_SPSR		0x52
++#define RSPI_SPSRC		0x6a
++#define RSPI_SPFCR		0x6c
++
++/* Register SPCR */
++#define RSPI_SPCR_MSTR		BIT(30)
++#define RSPI_SPCR_SPRIE		BIT(17)
++#define RSPI_SPCR_SCKASE	BIT(12)
++#define RSPI_SPCR_SPE		BIT(0)
++
++/* Register SPBR */
++#define RSPI_SPBR_SPR_MIN	0
++#define RSPI_SPBR_SPR_MAX	255
++
++/* Register SPCMD */
++#define RSPI_SPCMD_SSLA		GENMASK(25, 24)
++#define RSPI_SPCMD_SPB		GENMASK(20, 16)
++#define RSPI_SPCMD_LSBF		BIT(12)
++#define RSPI_SPCMD_SSLKP	BIT(7)
++#define RSPI_SPCMD_BRDV		GENMASK(3, 2)
++#define RSPI_SPCMD_CPOL		BIT(1)
++#define RSPI_SPCMD_CPHA		BIT(0)
++
++#define RSPI_SPCMD_BRDV_MIN	0
++#define RSPI_SPCMD_BRDV_MAX	3
++
++/* Register SPDCR2 */
++#define RSPI_SPDCR2_TTRG	GENMASK(11, 8)
++#define RSPI_SPDCR2_RTRG	GENMASK(3, 0)
++#define RSPI_FIFO_SIZE		16
++
++/* Register SPSR */
++#define RSPI_SPSR_SPRF		BIT(15)
++
++/* Register RSPI_SPSRC */
++#define RSPI_SPSRC_CLEAR	0xfd80
++
++#define RSPI_RESET_NUM		2
++#define RSPI_CLK_NUM		3
++
++struct rzv2h_rspi_priv {
++	struct reset_control_bulk_data resets[RSPI_RESET_NUM];
++	struct spi_controller *controller;
++	void __iomem *base;
++	struct clk *tclk;
++	wait_queue_head_t wait;
++	unsigned int bytes_per_word;
++	u32 freq;
++	u16 status;
++};
++
++#define RZV2H_RSPI_TX(func, type)					\
++static inline void rzv2h_rspi_tx_##type(struct rzv2h_rspi_priv *rspi,	\
++					const void *txbuf,		\
++					unsigned int index) {		\
++	type buf = 0;							\
++									\
++	if (txbuf)							\
++		buf = ((type *)txbuf)[index];				\
++									\
++	func(buf, rspi->base + RSPI_SPDR);				\
++}
++
++#define RZV2H_RSPI_RX(func, type)					\
++static inline void rzv2h_rspi_rx_##type(struct rzv2h_rspi_priv *rspi,	\
++					void *rxbuf,			\
++					unsigned int index) {		\
++	type buf = func(rspi->base + RSPI_SPDR);			\
++									\
++	if (rxbuf)							\
++		((type *)rxbuf)[index] = buf;				\
++}
++
++RZV2H_RSPI_TX(writel, u32)
++RZV2H_RSPI_TX(writew, u16)
++RZV2H_RSPI_TX(writeb, u8)
++RZV2H_RSPI_RX(readl, u32)
++RZV2H_RSPI_RX(readw, u16)
++RZV2H_RSPI_RX(readl, u8)
++
++static void rzv2h_rspi_reg_rmw(const struct rzv2h_rspi_priv *rspi,
++				int reg_offs, u32 bit_mask, u32 value)
++{
++	u32 tmp;
++
++	value <<= __ffs(bit_mask);
++	tmp = (readl(rspi->base + reg_offs) & ~bit_mask) | value;
++	writel(tmp, rspi->base + reg_offs);
++}
++
++static inline void rzv2h_rspi_spe_disable(const struct rzv2h_rspi_priv *rspi)
++{
++	rzv2h_rspi_reg_rmw(rspi, RSPI_SPCR, RSPI_SPCR_SPE, 0);
++}
++
++static inline void rzv2h_rspi_spe_enable(const struct rzv2h_rspi_priv *rspi)
++{
++	rzv2h_rspi_reg_rmw(rspi, RSPI_SPCR, RSPI_SPCR_SPE, 1);
++}
++
++static inline void rzv2h_rspi_clear_fifos(const struct rzv2h_rspi_priv *rspi)
++{
++	writeb(1, rspi->base + RSPI_SPFCR);
++}
++
++static inline void rzv2h_rspi_clear_all_irqs(struct rzv2h_rspi_priv *rspi)
++{
++	writew(RSPI_SPSRC_CLEAR, rspi->base + RSPI_SPSRC);
++	rspi->status = 0;
++}
++
++static irqreturn_t rzv2h_rx_irq_handler(int irq, void *data)
++{
++	struct rzv2h_rspi_priv *rspi = data;
++
++	rspi->status = readw(rspi->base + RSPI_SPSR);
++	wake_up(&rspi->wait);
++
++	return IRQ_HANDLED;
++}
++
++static inline int rzv2h_rspi_wait_for_interrupt(struct rzv2h_rspi_priv *rspi,
++						u32 wait_mask)
++{
++	return wait_event_timeout(rspi->wait, (rspi->status & wait_mask),
++				  HZ) == 0 ? -ETIMEDOUT : 0;
++}
++
++static void rzv2h_rspi_send(struct rzv2h_rspi_priv *rspi, const void *txbuf,
++			    unsigned int index)
++{
++	switch (rspi->bytes_per_word) {
++	case 4:
++		rzv2h_rspi_tx_u32(rspi, txbuf, index);
++		break;
++	case 2:
++		rzv2h_rspi_tx_u16(rspi, txbuf, index);
++		break;
++	default:
++		rzv2h_rspi_tx_u8(rspi, txbuf, index);
++	}
++}
++
++static int rzv2h_rspi_receive(struct rzv2h_rspi_priv *rspi, void *rxbuf,
++			      unsigned int index)
++{
++	int ret;
++
++	ret = rzv2h_rspi_wait_for_interrupt(rspi, RSPI_SPSR_SPRF);
++	if (ret)
++		return ret;
++
++	switch (rspi->bytes_per_word) {
++	case 4:
++		rzv2h_rspi_rx_u32(rspi, rxbuf, index);
++		break;
++	case 2:
++		rzv2h_rspi_rx_u16(rspi, rxbuf, index);
++		break;
++	default:
++		rzv2h_rspi_rx_u8(rspi, rxbuf, index);
++	}
++
++	return 0;
++}
++
++static int rzv2h_rspi_transfer_one(struct spi_controller *controller,
++				  struct spi_device *spi,
++				  struct spi_transfer *transfer)
++{
++	struct rzv2h_rspi_priv *rspi = spi_controller_get_devdata(controller);
++	unsigned int words_to_transfer, i;
++	int ret = 0;
++
++	transfer->effective_speed_hz = rspi->freq;
++	words_to_transfer = transfer->len / rspi->bytes_per_word;
++
++	for (i = 0; i < words_to_transfer; i++) {
++		rzv2h_rspi_clear_all_irqs(rspi);
++
++		rzv2h_rspi_send(rspi, transfer->tx_buf, i);
++
++		ret = rzv2h_rspi_receive(rspi, transfer->rx_buf, i);
++		if (ret)
++			break;
++	}
++
++	rzv2h_rspi_clear_all_irqs(rspi);
++
++	if (ret)
++		transfer->error = SPI_TRANS_FAIL_IO;
++
++	spi_finalize_current_transfer(controller);
++
++	return ret;
++}
++
++static inline u32 rzv2h_rspi_calc_bitrate(unsigned long tclk_rate, u8 spr,
++					  u8 brdv)
++{
++	return DIV_ROUND_UP(tclk_rate, (2 * (spr + 1) * (1 << brdv)));
++}
++
++static u32 rzv2h_rspi_setup_clock(struct rzv2h_rspi_priv *rspi, u32 hz)
++{
++	unsigned long tclk_rate;
++	int spr;
++	u8 brdv;
++
++	/*
++	 * From the manual:
++	 * Bit rate = f(RSPI_n_TCLK)/(2*(n+1)*2^(N))
++	 *
++	 * Where:
++	 * * RSPI_n_TCLK is fixed to 200MHz on V2H
++	 * * n = SPR - is RSPI_SPBR.SPR (from 0 to 255)
++	 * * N = BRDV - is RSPI_SPCMD.BRDV (from 0 to 3)
++	 */
++	tclk_rate = clk_get_rate(rspi->tclk);
++	for (brdv = RSPI_SPCMD_BRDV_MIN; brdv <= RSPI_SPCMD_BRDV_MAX; brdv++) {
++		spr = DIV_ROUND_UP(tclk_rate, hz * (1 << (brdv + 1)));
++		spr--;
++		if (spr >= RSPI_SPBR_SPR_MIN && spr <= RSPI_SPBR_SPR_MAX)
++			goto clock_found;
++	}
++
++	return 0;
++
++clock_found:
++	rzv2h_rspi_reg_rmw(rspi, RSPI_SPCMD, RSPI_SPCMD_BRDV, brdv);
++	writeb(spr, rspi->base + RSPI_SPBR);
++
++	return rzv2h_rspi_calc_bitrate(tclk_rate, spr, brdv);
++}
++
++static int rzv2h_rspi_prepare_message(struct spi_controller *ctlr,
++				      struct spi_message *message)
++{
++	struct rzv2h_rspi_priv *rspi = spi_controller_get_devdata(ctlr);
++	const struct spi_device *spi = message->spi;
++	struct spi_transfer *xfer;
++	u32 speed_hz = U32_MAX;
++	u8 bits_per_word;
++	u32 conf32;
++	u16 conf16;
++
++	/* Make sure SPCR.SPE is 0 before amending the configuration */
++	rzv2h_rspi_spe_disable(rspi);
++
++	/* Configure the device to work in "host" mode */
++	conf32 = RSPI_SPCR_MSTR;
++
++	/* Auto-stop function */
++	conf32 |= RSPI_SPCR_SCKASE;
++
++	/* SPI receive buffer full interrupt enable */
++	conf32 |= RSPI_SPCR_SPRIE;
++
++	writel(conf32, rspi->base + RSPI_SPCR);
++
++	/* Use SPCMD0 only */
++	writeb(0x0, rspi->base + RSPI_SPSCR);
++
++	/* Setup mode */
++	conf32 = FIELD_PREP(RSPI_SPCMD_CPOL, !!(spi->mode & SPI_CPOL));
++	conf32 |= FIELD_PREP(RSPI_SPCMD_CPHA, !!(spi->mode & SPI_CPHA));
++	conf32 |= FIELD_PREP(RSPI_SPCMD_LSBF, !!(spi->mode & SPI_LSB_FIRST));
++	conf32 |= FIELD_PREP(RSPI_SPCMD_SSLKP, 1);
++	conf32 |= FIELD_PREP(RSPI_SPCMD_SSLA, spi_get_chipselect(spi, 0));
++	writel(conf32, rspi->base + RSPI_SPCMD);
++	if (spi->mode & SPI_CS_HIGH)
++		writeb(BIT(spi_get_chipselect(spi, 0)), rspi->base + RSPI_SSLP);
++	else
++		writeb(0, rspi->base + RSPI_SSLP);
++
++	/* Setup FIFO thresholds */
++	conf16 = FIELD_PREP(RSPI_SPDCR2_TTRG, RSPI_FIFO_SIZE - 1);
++	conf16 |= FIELD_PREP(RSPI_SPDCR2_RTRG, 0);
++	writew(conf16, rspi->base + RSPI_SPDCR2);
++
++	rzv2h_rspi_clear_fifos(rspi);
++
++	list_for_each_entry(xfer, &message->transfers, transfer_list) {
++		if (!xfer->speed_hz)
++			continue;
++
++		speed_hz = min(xfer->speed_hz, speed_hz);
++		bits_per_word = xfer->bits_per_word;
++	}
++
++	if (speed_hz == U32_MAX)
++		return -EINVAL;
++
++	rspi->bytes_per_word = roundup_pow_of_two(BITS_TO_BYTES(bits_per_word));
++	rzv2h_rspi_reg_rmw(rspi, RSPI_SPCMD, RSPI_SPCMD_SPB, bits_per_word - 1);
++
++	rspi->freq = rzv2h_rspi_setup_clock(rspi, speed_hz);
++	if (!rspi->freq)
++		return -EINVAL;
++
++	rzv2h_rspi_spe_enable(rspi);
++
++	return 0;
++}
++
++static int rzv2h_rspi_unprepare_message(struct spi_controller *ctlr,
++					struct spi_message *message)
++{
++	struct rzv2h_rspi_priv *rspi = spi_controller_get_devdata(ctlr);
++
++	rzv2h_rspi_spe_disable(rspi);
++
++	return 0;
++}
++
++static int rzv2h_rspi_probe(struct platform_device *pdev)
++{
++	struct spi_controller *controller;
++	struct device *dev = &pdev->dev;
++	struct rzv2h_rspi_priv *rspi;
++	struct clk_bulk_data *clks;
++	unsigned long tclk_rate;
++	int irq_rx, ret, i;
++
++	controller = devm_spi_alloc_host(dev, sizeof(*rspi));
++	if (!controller)
++		return -ENOMEM;
++
++	rspi = spi_controller_get_devdata(controller);
++	platform_set_drvdata(pdev, rspi);
++
++	rspi->controller = controller;
++
++	rspi->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(rspi->base))
++		return PTR_ERR(rspi->base);
++
++	ret = devm_clk_bulk_get_all_enabled(dev, &clks);
++	if (ret != RSPI_CLK_NUM)
++		return dev_err_probe(dev, ret >= 0 ? -EINVAL : ret,
++				     "cannot get clocks\n");
++	for (i = 0; i < RSPI_CLK_NUM; i++) {
++		if (!strcmp(clks[i].id, "tclk")) {
++			rspi->tclk = clks[i].clk;
++			break;
++		}
++	}
++
++	if (!rspi->tclk)
++		return dev_err_probe(dev, -EINVAL, "Failed to get tclk\n");
++
++	tclk_rate = clk_get_rate(rspi->tclk);
++
++	rspi->resets[0].id = "presetn";
++	rspi->resets[1].id = "tresetn";
++	ret = devm_reset_control_bulk_get_exclusive(dev, RSPI_RESET_NUM,
++						    rspi->resets);
++	if (ret)
++		return dev_err_probe(dev, ret, "cannot get resets\n");
++
++	irq_rx = platform_get_irq_byname(pdev, "rx");
++	if (irq_rx < 0)
++		return dev_err_probe(dev, irq_rx, "cannot get IRQ 'rx'\n");
++
++	ret = reset_control_bulk_deassert(RSPI_RESET_NUM, rspi->resets);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to deassert resets\n");
++
++	init_waitqueue_head(&rspi->wait);
++
++	ret = devm_request_irq(dev, irq_rx, rzv2h_rx_irq_handler, 0,
++			       dev_name(dev), rspi);
++	if (ret) {
++		dev_err(dev, "cannot request `rx` IRQ\n");
++		goto quit_resets;
++	}
++
++	controller->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH |
++				SPI_LSB_FIRST;
++	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
++	controller->prepare_message = rzv2h_rspi_prepare_message;
++	controller->unprepare_message = rzv2h_rspi_unprepare_message;
++	controller->num_chipselect = 4;
++	controller->transfer_one = rzv2h_rspi_transfer_one;
++	controller->min_speed_hz = rzv2h_rspi_calc_bitrate(tclk_rate,
++							   RSPI_SPBR_SPR_MAX,
++							   RSPI_SPCMD_BRDV_MAX);
++	controller->max_speed_hz = rzv2h_rspi_calc_bitrate(tclk_rate,
++							   RSPI_SPBR_SPR_MIN,
++							   RSPI_SPCMD_BRDV_MIN);
++
++	device_set_node(&controller->dev, dev_fwnode(dev));
++
++	ret = spi_register_controller(controller);
++	if (ret) {
++		dev_err(dev, "register controller failed\n");
++		goto quit_resets;
++	}
++
++	return 0;
++
++quit_resets:
++	reset_control_bulk_assert(RSPI_RESET_NUM, rspi->resets);
++
++	return ret;
++}
++
++static void rzv2h_rspi_remove(struct platform_device *pdev)
++{
++	struct rzv2h_rspi_priv *rspi = platform_get_drvdata(pdev);
++
++	spi_unregister_controller(rspi->controller);
++
++	reset_control_bulk_assert(RSPI_RESET_NUM, rspi->resets);
++}
++
++static const struct of_device_id rzv2h_rspi_match[] = {
++	{ .compatible = "renesas,r9a09g057-rspi" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, rzv2h_rspi_match);
++
++static struct platform_driver rzv2h_rspi_drv = {
++	.probe = rzv2h_rspi_probe,
++	.remove = rzv2h_rspi_remove,
++	.driver = {
++		.name = "rzv2h_rspi",
++		.of_match_table = rzv2h_rspi_match,
++	},
++};
++module_platform_driver(rzv2h_rspi_drv);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Fabrizio Castro <fabrizio.castro.jz@renesas.com>");
++MODULE_DESCRIPTION("Renesas RZ/V2H(P) Serial Peripheral Interface Driver");
 -- 
-Peter Xu
+2.34.1
 
