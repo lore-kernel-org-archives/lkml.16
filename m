@@ -1,75 +1,81 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D0E262A6;
-	Fri,  4 Jul 2025 02:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001CB70831;
+	Fri,  4 Jul 2025 02:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751595567; cv=none; b=khsCdN9ZKmvHsqD4OmBst0n40cWP8HcT9VjCLdG8TKWKVEM5oLmN0MDjSqts0fGPL6AQpf2G4MnJSaCtvRK6Txz7tUEZ6WbH4NK14s3YeLo90rqt32GMRZvyAGBmfpmPEbW5oDVrE+SHkioTaHp6WI+h1RKtMtmxtwaUwvglAVU=
+	t=1751595589; cv=none; b=SDw9iNGVOe/sHfM3qDTUxzzVT5SRHsp0HcXmT5+9PHeCuRYxi20HBnbIqS3/etMvDfOh51xy0LfEQbIt+BLBilytH9B7rD2r/8jurC6h8lidn+B2o91YuFvKLy3D25Y5JUGZsayFAkzPypiS7e5/jcRPge9KCDkorPYtNHaDzaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751595567; c=relaxed/simple;
-	bh=pX3F/Kr7D8p+GY/V6wBmiECrf64UH5cpbSxDV558fi0=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date; b=D9Um3+EUJANvAEM1966AOiB08twbcQtc1VWRfFIt+1VpKjsSzl7ccoL/QcDidEqqfr5jcwJdjaGIbDiUBUoON1XyC08BPmUOvVcZcsgFg1xvPBn5U3KnkKGBWAapDsW8prqQNyyBwO8fMx2VcORdD0PduGALWMx4draRx2dgGb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=aPVhR3fc; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1751595589; c=relaxed/simple;
+	bh=SnitO76j/PNai5HaO9BKt9HyiIzJgxN6vdzT36QJICw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvhQRvbRTmfb0g+Vdfh23Ec/H7DjrkfTYe90eeKyswT+SzewkKI/lyeCKmu+TS4uGY5tZe9Ea46WE4sHRrGPvmIEiPw1Li2dywKq2Z1mKyJed7Ui3mvVERBkENl8Ma1bt7z/zwk9ZOHSs4osNluvWA5hbX4EnvJIMujsSX9g+X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=T/IWDRbr; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="aPVhR3fc"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5642JCcW43569914, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1751595552; bh=rThcDRjezbvk84SChZFvc18SFCF2YcEm2TSeu9WVMHE=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date;
-	b=aPVhR3fc9O0uZWwaZhti+oec6SRvp/nB2N5T9g1uk3Jx2mc5IQn5gVV7PIELOfBpW
-	 AmKycwplxFXvEh2aZYTK34VfxcLUDtOKiF0LfkDiPiqyVv3sYnR5YFrzXcfJ0GxPsB
-	 f0eWv81KJndCkbDuS9HlzTuUZ7DBaT84bZFsxAJqe8yWjp6VZovBoHE4h2X99kJNOg
-	 hZUUc9yfTopZlHjijM+BtePD8lSBPcIj4z0gUb/ShOuRXZsTja368BykZYWWsRMloI
-	 mrdQAlX3TgNTgChcj+Gek40FHNJZFrvDk20HXyQBuyQaZuji1dNopcUH90ISYqLKKA
-	 lmhqYqF/XjTbg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 5642JCcW43569914
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Jul 2025 10:19:12 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 4 Jul 2025 10:19:37 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 4 Jul
- 2025 10:19:36 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Pei Xiao <xiaopei01@kylinos.cn>, <pkshih@realtek.com>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH v2] wifi: rtw88: coex: Use bitwise instead of arithmetic operator for flags
-In-Reply-To: <c68a8642c325f626ac34ccee71d9d9aa69f0c92c.1750733428.git.xiaopei01@kylinos.cn>
-References: <c68a8642c325f626ac34ccee71d9d9aa69f0c92c.1750733428.git.xiaopei01@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="T/IWDRbr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mq6iOR4iGSoS9yJVF0A2kBCn4Wq3Jldn68COS/xqcVE=; b=T/IWDRbrB97CYWYjp9msDt1JCP
+	zsMiXYjXS0J+3b+EorhIeNmD1FzuUri5ocMDNWrGnFjyuxl3FP8jHGxrYKU2bd0PR2v+6Ni1YaLJs
+	C6abLlTd3v7h/vTzDs1J5+acuG8sXtkUknoRNh0KlHiY/lGrDgYpGX+KCGeSLs/aaXvmlzEv02kf8
+	1vzG1PvC7WBXH9G+GG37u7sZMWFGDsIHsN5hhuwJJLaWx+OYx06yt4Sb9AWOUejLuZ18pNg4iX39Q
+	5lSkcLomx/MyLpc44ftZdwg0aoIhroJc6yz5e80DUqHbhlbhNWwXfQ7FD0EIx3YjK4NP2nDqd8f+t
+	6emi14UA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXW1g-00000008LRa-1US9;
+	Fri, 04 Jul 2025 02:19:44 +0000
+Date: Fri, 4 Jul 2025 03:19:44 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neil@brown.name>
+Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
+	linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing
+ ->sysctl
+Message-ID: <20250704021944.GO1880847@ZenIV>
+References: <>
+ <20250704010230.GA1868876@ZenIV>
+ <175159319224.565058.14007562517229235836@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Message-ID: <fd3ee551-396a-4b0c-8737-7db4b41e1059@RTEXMBS04.realtek.com.tw>
-Date: Fri, 4 Jul 2025 10:19:36 +0800
-X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175159319224.565058.14007562517229235836@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Pei Xiao <xiaopei01@kylinos.cn> wrote:
-
-> This silences the following coccinelle warning:
->   WARNING: sum of probable bitmasks, consider |
+On Fri, Jul 04, 2025 at 11:39:52AM +1000, NeilBrown wrote:
+> On Fri, 04 Jul 2025, Al Viro wrote:
+> > On Fri, Jul 04, 2025 at 12:43:13AM +0100, Al Viro wrote:
+> > 
+> > > I would rather *not* leave a dangling pointer there, and yes, it can
+> > > end up being dangling.  kfree_rcu() from inside the ->evict_inode()
+> > > may very well happen earlier than (also RCU-delayed) freeing of struct
+> > > inode itself.
+> > > 
+> > > What we can do is WRITE_ONCE() to set it to NULL on the evict_inode
+> > > side and READ_ONCE() in the proc_sys_compare().
+> > > 
+> > > The reason why the latter is memory-safe is that ->d_compare() for
+> > > non-in-lookup dentries is called either under rcu_read_lock() (in which
+> > > case observing non-NULL means that kfree_rcu() couldn't have gotten to
+> > > freeing the sucker) *or* under ->d_lock, in which case the inode can't
+> > > reach ->evict_inode() until we are done.
+> > > 
+> > > So this predicate is very much relevant.  Have that fucker called with
+> > > neither rcu_read_lock() nor ->d_lock, and you might very well end up
+> > > with dereferencing an already freed ctl_table_header.
+> > 
+> > IOW, I would prefer to do this:
 > 
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+> Looks good - thanks,
+> NeilBrown
 
-1 patch(es) applied to rtw-next branch of rtw.git, thanks.
-
-34d9a2aa7f50 wifi: rtw88: coex: Use bitwise instead of arithmetic operator for flags
-
----
-https://github.com/pkshih/rtw.git
-
+See viro/vfs.git #fixes...
