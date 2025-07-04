@@ -1,118 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026073074BF;
-	Fri,  4 Jul 2025 08:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370E93093B1;
+	Fri,  4 Jul 2025 08:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616613; cv=none; b=c7r6KDzz3y5yhMfnJgRZ/yggd5JzrRPsTqKxG1WV1EAcY05LML9apK6GCITf29JTlmuBaJyj+6bXnwu0Rd/hKp90xfFHEqtGhQLD7Ky3bwXCDtozkE5CLW9/45+A//ALvBvwjRBMcHMCa8zdRxSW8VmQ5wGyOFH10i3wGBfmCiQ=
+	t=1751616701; cv=none; b=TtZJdkDeY4bPr4JxHl3p37iRfJCid4xBTniX4DRzFpxH0158uloVrYYF3U2KqweilW2w/wyP30JtNDUTrRrKJNTMZui4R6HVHPmXburffeJAUU9qIVKNXzgzMyzPzgkk4/UV7nrP5mTpH09D+lnYxpb4CUeiIOM4ckmVeo3FFZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616613; c=relaxed/simple;
-	bh=Uxy5UXXWtAbOwt7++xbj9+BcKddhuDKigNY5YlhwB0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BVn6AXTdGfCaywArWrPAsJ4JBIAra+LNoJwbQvFhzo575fcumcBYCR0Ex5hSZ/HZO/IHeYOD89wNymkDDQ5ndhNUSkrn8PzyWCjN1sdiD6wR3Lq3O9rV/YlIdV+DmhOxFyGmcdTtAuXY5AEQxv/l7sNbQ3p3mSjDVIMOSt4DmHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S06MNWQA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751616701; c=relaxed/simple;
+	bh=hXYmRLx6CndyqgBfjOW2CrFdlMs+3zq1ANJEEZCHtM0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GrV2MP9IM55LHTQSvtoNtX0Y9A84sBcwJeBevyC9p48E1p7X2u/0y8ufgkD1wnEEDDZTni9Z8FXmL2TnR5KF2fYps5n90O9pDWvazBD5DmnwIARpbdcuYWSMXUJKTNFMVRJlv890vDA+VaDp8Jd2FGxFj0/c706hNFl0KStvhws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJU9IZtm; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S06MNWQA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B794AC4CEE3;
-	Fri,  4 Jul 2025 08:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751616612;
-	bh=Uxy5UXXWtAbOwt7++xbj9+BcKddhuDKigNY5YlhwB0U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S06MNWQAxY8i/jlu8Y+ykCfAgwlAnC001aYmk5qeByv5sg4P1v9VjWZ70uo+gOnyZ
-	 959gY7a14UnTB2+kIACGwdgsFbTc4KwHQ9Jem7jPwjrzDPC2xXk+ZS1gjrzS3t4TtS
-	 nyfl+oE1TUd8WkschwqesXbbdMYj3JWWribtdz+RVkdPEMEq4KVdw4VxZtmo0yITSC
-	 DmQoX3o3LHeGmVUfbRx1ScqGdfci5J7jLnZi1mH9394zgHXMOKyaYYrUhZXH/aeT42
-	 e6pDXMC2N8D6UPFdv2ahdJ7J/ulX61LaUlcAHTaLgbrPejmPCb3DrLKY1Cm0+R/ga9
-	 UdSEyLKB/+lAQ==
-Message-ID: <9c11bd92-ff2e-493f-8e71-fd8d3f8b32e6@kernel.org>
-Date: Fri, 4 Jul 2025 10:10:06 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJU9IZtm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751616700; x=1783152700;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=hXYmRLx6CndyqgBfjOW2CrFdlMs+3zq1ANJEEZCHtM0=;
+  b=jJU9IZtmlRldQTt7rQjjraB8yVDuT+QdPBJeVew6FnxmimTEXG7h+j+9
+   WA/kT57cgAk9pcy5pbqTN+IjV7hNo3FnaYNh7XD9S5vPtpMB0l3WVKeRK
+   DJS4QLJ8F+hqx/mwVrrdMlIH4Xyz3T+M8DFp/Xmr2VjyrybMEXhj9482R
+   +UJ/D05qtPMZm8HN3rZukX6G4XOUhzFOnzXUTFq6BLXmGz+NnOEj9UHaM
+   RJwK4rC0Nzys+BuNZQWqR1QJCfjh09Egz/oe3IWo7pnRdI8gQhGamDRsD
+   I6CB+UpkGp4pZaUHHpjBUDgBtQso4qmdhJKu5a0vR4IKa7vXaFtLU5MZw
+   w==;
+X-CSE-ConnectionGUID: iYdhP+UnT0qiH1//ALXpNA==
+X-CSE-MsgGUID: rxQdeJ+dR2ep4Xb1iodiQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="65004417"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="65004417"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:11:38 -0700
+X-CSE-ConnectionGUID: IaKHq96qSDKcGEjh98uuoA==
+X-CSE-MsgGUID: /7bgrxnWTmeUHlLJS9o4qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="154955604"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.102])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:11:21 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Douglas Anderson <dianders@chromium.org>,
+ Lucas Stach <l.stach@pengutronix.de>, Russell King
+ <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
+ <christian.gmeiner@gmail.com>, Inki Dae <inki.dae@samsung.com>, Seung-Woo
+ Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Laurentiu Palcu
+ <laurentiu.palcu@oss.nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Qiang Yu
+ <yuq825@gmail.com>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Boris
+ Brezillon <boris.brezillon@collabora.com>, Steven Price
+ <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Dave Stevenson
+ <dave.stevenson@raspberrypi.com>, =?utf-8?Q?Ma=C3=ADra?= Canal
+ <mcanal@igalia.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Dmitry
+ Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Damon Ding
+ <damon.ding@rock-chips.com>, Ayushi Makhija <quic_amakhija@quicinc.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6ni?=
+ =?utf-8?Q?g?=
+ <u.kleine-koenig@baylibre.com>, Chen-Yu Tsai <wenst@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ etnaviv@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ imx@lists.linux.dev, lima@lists.freedesktop.org,
+ linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 20/80] drivers: drm: Remove redundant
+ pm_runtime_mark_last_busy() calls
+In-Reply-To: <20250704075413.3218307-1-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+ <20250704075413.3218307-1-sakari.ailus@linux.intel.com>
+Date: Fri, 04 Jul 2025 11:11:17 +0300
+Message-ID: <a48b77bc632824c6f64bbdb3775f97387e9eedb9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Enable CTCU device for QCS8300
-To: Jie Gan <quic_jiegan@quicinc.com>, Jie Gan <jie.gan@oss.qualcomm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250624095905.7609-1-jie.gan@oss.qualcomm.com>
- <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
- <3551dba1-0c5f-4000-8b95-6a04cd81a027@kernel.org>
- <2e8366b3-c060-4bb8-9704-0a8f41901706@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <2e8366b3-c060-4bb8-9704-0a8f41901706@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 04/07/2025 10:07, Jie Gan wrote:
-> 
->>
->>> offsets for the ATID and IRQ registers, because they integrate the same
->>> version of the CTCU hardware.
->>>
->>> So I propose introducing a common compatible string,
->>> "coresight-ctcu-v2", to simplify the device tree configuration for these
->>> platforms.
->>
->> This is explained in writing bindings.
-> 
-> Yeah, explained in the code lines..
-I meant explained in writing bindings document. Please read writing
-bindings first.
+On Fri, 04 Jul 2025, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+> The cover letter of the set can be found here
+> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+>
+> In brief, this patch depends on PM runtime patches adding marking the last
+> busy timestamp in autosuspend related functions. The patches are here, on
+> rc2:
+>
+>         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>                 pm-runtime-6.17-rc1
 
-Best regards,
-Krzysztof
+I would think it's better to wait for linux-pm to get merged to Linus'
+tree and then backmerged to drm after -rc1 instead of cross-merging that
+directly to drm.
+
+Regardless, for merging the i915 changes via whichever tree,
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+
+-- 
+Jani Nikula, Intel
