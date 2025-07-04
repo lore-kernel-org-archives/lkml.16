@@ -1,132 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3975307480
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F43093D9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641661; cv=none; b=fCAuwgRmscykD4WP0feZOtynK4Rexr3aWFye/lYLWuh/X4RStn9Vk342g6DTfni3FF/I3PmWoAmyfjRdIbTpEBoe7rt3/v6qQO6Aw1C/PWHXte5fswdqNnzJ6FbH01IpZomANitpLRUc3mTks2DDlPN2TZ7nNEfdH8TrkBfB508=
+	t=1751641668; cv=none; b=m/CL9+6YGseJf9w4Oz+60oqcDAlIyREFWaypBwkfnhTeddJUXjZNWLetNg0JVugO9HDu8F3+UdsDQAIpO762tTqfAj4mC9z4qGh4uVVqtuqkqJLeSFCz/GQPwkvl3pMJL2M08+4VhjzoyqX4ERIQNBsS1vA/IDpW8tu8q3r4L4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641661; c=relaxed/simple;
-	bh=xY/yriO6tBXfy5srN553QPb2aXYA16dzeg1QniS6sGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omg4hiGd839ZFJ4SzBWCQkh3n4bJyMFxVuiZ54a5pQyvc/CDKLu0WtxZBN2hg317QMSC5jNDrXdDT1LAph0qu6CZdYA16dUSZAmPJO2zM+lYI65/1ed0GTB2jYNUKwB2JJMoBcNcrZRaaiaDSEGM3+X6FC9gCRbcBNahbNq/a2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3C1949L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751641668; c=relaxed/simple;
+	bh=q2PI2I6DpmIBa/PZTooLY5T7w0VsVRO6mzyBLjxOd2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MX7jY/TpW8Zf4Xqu3sTFeYgrHymAUM5PKL2LZ6hIJnUSAh9bqWNVuDPMlCGOjoXToGEnG51x2tQHCPug8U2vFM9xwiRU40t/7dSRbHcRdUu5FCRSOuqXQNLJwfJst2KsUKmRLMDWrMPb6OpZ1te2X0kc5Z2gSHUHYHDoVRUpmf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wT2OD5+I; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3C1949L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF17AC4CEE3;
-	Fri,  4 Jul 2025 15:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751641661;
-	bh=xY/yriO6tBXfy5srN553QPb2aXYA16dzeg1QniS6sGE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S3C1949LJUYLkuDiWGT3TQF97d10CRTILMNnFMrDU8BasTdu+D1z7NslqV7Mwnt3B
-	 tWZRqRWBjDuwqGAR3WJ2iR8T4mAsTVoNSRZJjD4iKOCdC6rZFfZ/PlFoOAn4BShq3S
-	 lwXdMu4kaA+UXlgPSnpAnObWhmg5qWwIu5gtbggwCK5b7l8vf//Mez1ov5ym16rWKv
-	 BPagAflTusNu+6uh+4hlgIIyrTvaA6aVFEy0aplzhe1zC4p6QDqNyqB/BCFigTxdzH
-	 RBY3HIKxJhdpcRNbX8zhCy3JDBoRkyxXONeZohARzWT/qAe2dfU6DW58jbHLS7sg29
-	 QUVPtYv+5JXDg==
-Date: Fri, 4 Jul 2025 17:07:38 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Sandy Huang <hjc@rock-chips.com>, 
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] drm/rockchip: dw_hdmi_qp: Provide ref clock rate in
- dw_hdmi_qp_plat_data
-Message-ID: <20250704-granite-piculet-of-elevation-f01e08@houat>
-References: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
- <20250704-rk3588-hdmi-cec-v1-3-2bd8de8700cd@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wT2OD5+I"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453066fad06so7372045e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751641664; x=1752246464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UYKMtLCQMU9Jbn/Hf3wX+1NuY//33AgfBI91LQJ8MGY=;
+        b=wT2OD5+ItIoGdf28wgmaYorskH/4msq9z6DCuxt5QCfhhTARvnlPnXncZlGOa16p5I
+         vJRnqgSdPZXNH8jeXQC/qH2A52A+czVrFr8x4Pv1586GivLRaISaWyLmY/0dTYUzF2/5
+         H9mvVHbjhxEFtkn9oeOcHUHhSP8tmTNiJDJJGKIRsVZf6DeNAFrOC2Y6TbeK1Boj2gGx
+         JkuRqXqNXQf3xwp3mmWdsryxc7y1+XAvKhPxwdXaCNfpOrcp/3M++TisJeOVsN0STLEP
+         PsaHdsaF2aw316Es3AGs1dj9trrFf4kKNUPoJEJugIdOh9HeBsFZ+jvO05LLLKakPnwb
+         /M/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751641664; x=1752246464;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UYKMtLCQMU9Jbn/Hf3wX+1NuY//33AgfBI91LQJ8MGY=;
+        b=USEEkK0HCanzIflt5lduYexXW02vILhehILs1IxCg3SGiU999Yok3hYIRN17DbVPz2
+         zSY/pwmozxN30sEWh1hhg4GyAHzVtbj0WcJY5lqgUtjwC6UtTHRHN13kLr9ySZxfnsTf
+         ahcqe3piZ1dXh/Examc6pUdvn/h2uGX6uISwxzrxstT6CwS/RTeCHWlvGahPErXeAH1q
+         sdcZMsASP6aNrV4aFzgStfr+whIkoIg4w4uT9f5awiPIRYKMX2gGDxmQW5224++AOHu0
+         N626Zm1QnsBo30nWnJA790k45xboheKsO0ezdtO8gk4HbBiTSyQJJlMA3z4zovKd/x3/
+         aAoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkrf8MspSS+8oTb4Xp21aHa+ZhXhge16LIOZAmDSPQbEB35sn/Ir1xbn11MSEFxSqtgO1L0hh2Q6vs7+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHaikLKbGuEkYbNfkIvVo0hqwCd3nbNu5mpizcJbQzMI4xwWuE
+	nvudFZLtFXklaB0M33+mHJld8Mdc5DnLnPckxVx2quwJs53ppXEh7HH+uvBO4x3KEzw=
+X-Gm-Gg: ASbGncsGodHfRfXsBYYAnfbE6vAP8PFEGbZlY5ES+LmcJaViEINev3Xu1bMDJMclIvY
+	0YW99SFvdTYQejg5RNqOiriQ9ga9fwkRI2Sj5dGz6fGoTa+Mz/4byknUEWz53Fwzv3yMCONuiWl
+	1n9i5kSh6jK2GUl5vJP9m+CT+4wJTS+nEZXUgBQMn2KpDCqV9Fe2WZQnB2ZURjQcaYLERWJA8Zl
+	PFUzyYXZnLKVJSpJFuLQnUACi10gInH3EhZCgaSgXiru+Shej/7KeLYYeEr3vBN1Ikzs3rgZwsH
+	CNao87KOfnkY9Ng0Z8/RO8Y07cXHVJtzDOVdYpgfV31UADb80NT5JG2+yq6hl1/8Ph3tYThQ6UB
+	Se9mvRZA5Fv1DOCm5fBN5rUz/W68=
+X-Google-Smtp-Source: AGHT+IGCWK6GEjyuYgdWySF7UumkNIAA260ijlRTJDfE/t1th536V8nTvCURxmWZM6UF6IOMpNbQjQ==
+X-Received: by 2002:a05:6000:2890:b0:3a4:cbc6:9db0 with SMTP id ffacd0b85a97d-3b4966046e2mr2935145f8f.51.1751641664468;
+        Fri, 04 Jul 2025 08:07:44 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225a2e8sm2696936f8f.75.2025.07.04.08.07.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 08:07:43 -0700 (PDT)
+Message-ID: <96f2c5af-9d42-4fb9-a468-ec4d22a76198@linaro.org>
+Date: Fri, 4 Jul 2025 16:07:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="oszopqzjak6ldkji"
-Content-Disposition: inline
-In-Reply-To: <20250704-rk3588-hdmi-cec-v1-3-2bd8de8700cd@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: media: qcom,sm8550-iris: Add X1E80100
+ compatible
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>
+Cc: Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Stefan Schmidt <stefan.schmidt@linaro.org>
+References: <20250704-x1e-iris-v1-1-c3137d979e43@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250704-x1e-iris-v1-1-c3137d979e43@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
---oszopqzjak6ldkji
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/5] drm/rockchip: dw_hdmi_qp: Provide ref clock rate in
- dw_hdmi_qp_plat_data
-MIME-Version: 1.0
-
-On Fri, Jul 04, 2025 at 05:23:24PM +0300, Cristian Ciocaltea wrote:
-> In order to support correct initialization of the timer base in the HDMI
-> QP IP block, extend the platform data to provide the necessary reference
-> clock rate.
->=20
-> While at it, ensure plat_data is zero-initialized in
-> dw_hdmi_qp_rockchip_bind().
->=20
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+On 04/07/2025 14:38, Stephan Gerhold wrote:
+> Iris in X1E80100 is pretty much identical to SM8550. We can use the same
+> firmware image and the same definitions in the driver, so just add
+> qcom,x1e80100-iris to the existing list with qcom,sm8550-iris as fallback
+> compatible.
+> 
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 > ---
->  drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c | 13 ++++++++++++-
->  include/drm/bridge/dw_hdmi_qp.h                |  1 +
->  2 files changed, 13 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu=
-/drm/rockchip/dw_hdmi_qp-rockchip.c
-> index 126e556025961e8645f3567b4d7a1c73cc2f2e7f..8c1185490009c5f1bc658998a=
-868f8b18dc479a3 100644
-> --- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> +++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> @@ -431,8 +431,8 @@ static int dw_hdmi_qp_rockchip_bind(struct device *de=
-v, struct device *master,
->  				    void *data)
->  {
->  	struct platform_device *pdev =3D to_platform_device(dev);
-> +	struct dw_hdmi_qp_plat_data plat_data =3D {};
->  	const struct rockchip_hdmi_qp_cfg *cfg;
-> -	struct dw_hdmi_qp_plat_data plat_data;
->  	struct drm_device *drm =3D data;
->  	struct drm_connector *connector;
->  	struct drm_encoder *encoder;
-> @@ -515,6 +515,17 @@ static int dw_hdmi_qp_rockchip_bind(struct device *d=
-ev, struct device *master,
->  		return ret;
->  	}
-> =20
-> +	for (i =3D 0; i < ret; i++) {
-> +		if (!strcmp(clks[i].id, "ref")) {
-> +			plat_data.ref_clk_rate =3D clk_get_rate(clks[i].clk);
-> +			break;
-> +		}
-> +	}
-> +	if (!plat_data.ref_clk_rate) {
-> +		dev_err(hdmi->dev, "Missing ref clock\n");
-> +		return -EINVAL;
-> +	}
-> +
+>   Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> index c79bf2101812d83b99704f38b7348a9f728dff44..9504d7ea23f4a30fd2d03e8683721641f8b1a115 100644
+> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> @@ -20,6 +20,7 @@ properties:
+>         - items:
+>             - enum:
+>                 - qcom,sa8775p-iris
+> +              - qcom,x1e80100-iris
+>             - const: qcom,sm8550-iris
+>         - enum:
+>             - qcom,qcs8300-iris
+> 
+> ---
+> base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+> change-id: 20250704-x1e-iris-4a5d033f4a2d
+> 
+> Best regards,
 
-You'd be better off not using clk_bulk, or calling an additional clk_get
-for the ref clock only.
-
-Maxime
-
---oszopqzjak6ldkji
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGfuNQAKCRAnX84Zoj2+
-dpLOAX9Fn+AyL0zuC8EJRGUMhLDwcaUmA/NnkN/yj+RvnyGSEiCcN475EqSfs8Ar
-XN9rlt8BgIP56Bw6kg86quaBe4oPgxNoKon98/DCRRHYCKPCWZeNss8Bcb7pDsas
-Q/Kd1zxghA==
-=fwlI
------END PGP SIGNATURE-----
-
---oszopqzjak6ldkji--
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
