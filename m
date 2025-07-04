@@ -1,90 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425628B518;
-	Fri,  4 Jul 2025 15:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3975307480
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641641; cv=none; b=LzYPgkVXfNvywpZd3BftTv65pLWNKi59maxj/1LcexxxtyKQtwyL/6xNZSwFd7tiSVflkCrqKeJwu2Oj7KFpfp5ClKP2Lq1o2r1jyiJAEu+EGEqjCTl96AFSSvY1PJxtlCSMsEIhJ9hdsYNHgoVbNs0gAKBQ/UXlpguGa2p9r/Y=
+	t=1751641661; cv=none; b=fCAuwgRmscykD4WP0feZOtynK4Rexr3aWFye/lYLWuh/X4RStn9Vk342g6DTfni3FF/I3PmWoAmyfjRdIbTpEBoe7rt3/v6qQO6Aw1C/PWHXte5fswdqNnzJ6FbH01IpZomANitpLRUc3mTks2DDlPN2TZ7nNEfdH8TrkBfB508=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641641; c=relaxed/simple;
-	bh=ukAKM+xwwkXTirgfsAR9KlRjq4Dana8wYKEmQtIvP+M=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=udLojf3OzQdddegc7wcoRhsdtx0ppVIYc7e4akEu8ySU/qy9SgTpGnOtNlZMi4lIzF6n8eHgxAZsh3kuXFiF3BSFjGwyyWT79x+rKVuxT8Dv35TJ7cZmDjU19EgInsHZH+4pKKSGx61VG6XHKBkShamfMEjSCTmOUsa5mNP6ITU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3NL+i4G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751641661; c=relaxed/simple;
+	bh=xY/yriO6tBXfy5srN553QPb2aXYA16dzeg1QniS6sGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omg4hiGd839ZFJ4SzBWCQkh3n4bJyMFxVuiZ54a5pQyvc/CDKLu0WtxZBN2hg317QMSC5jNDrXdDT1LAph0qu6CZdYA16dUSZAmPJO2zM+lYI65/1ed0GTB2jYNUKwB2JJMoBcNcrZRaaiaDSEGM3+X6FC9gCRbcBNahbNq/a2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3C1949L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3NL+i4G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D9DC4CEE3;
-	Fri,  4 Jul 2025 15:07:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3C1949L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF17AC4CEE3;
+	Fri,  4 Jul 2025 15:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751641640;
-	bh=ukAKM+xwwkXTirgfsAR9KlRjq4Dana8wYKEmQtIvP+M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=V3NL+i4GmB9apvk5ImKEDzSexSxvO9Ww7reKcyEANXPTnuEsnc9gvq1O6kvsAPewo
-	 8F+MubXRj76muDnts9ipiVeB/r0W9L31kgxAFOpO25zfi6ZQUyVQHMvakqDOw4D2Tl
-	 3nAADeTfjtkhVW0k6zjICuBBsBmgsk+WHt19ohZOUuxNwL2O2jynqzNmn1yaNNNuth
-	 jTodiUiCNUpr22SMoR2CK1lGCM1nAz25Ya5eARV+rxBBeAyvp+qq3DYUyG4uQvohxc
-	 ccnxcMGwdtciqKnB3WvnAQhVvUQ1hSuNV7GuU2itlKUtRxHSq3KvwN+7cDtFpIs7zK
-	 0Vc43Q7/xUynA==
-Message-ID: <36262b502dd08b5d5c602f7c7a1d6449.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.16-rc4
-Date: Fri, 04 Jul 2025 16:07:12 +0100
+	s=k20201202; t=1751641661;
+	bh=xY/yriO6tBXfy5srN553QPb2aXYA16dzeg1QniS6sGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S3C1949LJUYLkuDiWGT3TQF97d10CRTILMNnFMrDU8BasTdu+D1z7NslqV7Mwnt3B
+	 tWZRqRWBjDuwqGAR3WJ2iR8T4mAsTVoNSRZJjD4iKOCdC6rZFfZ/PlFoOAn4BShq3S
+	 lwXdMu4kaA+UXlgPSnpAnObWhmg5qWwIu5gtbggwCK5b7l8vf//Mez1ov5ym16rWKv
+	 BPagAflTusNu+6uh+4hlgIIyrTvaA6aVFEy0aplzhe1zC4p6QDqNyqB/BCFigTxdzH
+	 RBY3HIKxJhdpcRNbX8zhCy3JDBoRkyxXONeZohARzWT/qAe2dfU6DW58jbHLS7sg29
+	 QUVPtYv+5JXDg==
+Date: Fri, 4 Jul 2025 17:07:38 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Sandy Huang <hjc@rock-chips.com>, 
+	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] drm/rockchip: dw_hdmi_qp: Provide ref clock rate in
+ dw_hdmi_qp_plat_data
+Message-ID: <20250704-granite-piculet-of-elevation-f01e08@houat>
+References: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
+ <20250704-rk3588-hdmi-cec-v1-3-2bd8de8700cd@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="oszopqzjak6ldkji"
+Content-Disposition: inline
+In-Reply-To: <20250704-rk3588-hdmi-cec-v1-3-2bd8de8700cd@collabora.com>
 
-The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
 
-  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
+--oszopqzjak6ldkji
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/5] drm/rockchip: dw_hdmi_qp: Provide ref clock rate in
+ dw_hdmi_qp_plat_data
+MIME-Version: 1.0
 
-are available in the Git repository at:
+On Fri, Jul 04, 2025 at 05:23:24PM +0300, Cristian Ciocaltea wrote:
+> In order to support correct initialization of the timer base in the HDMI
+> QP IP block, extend the platform data to provide the necessary reference
+> clock rate.
+>=20
+> While at it, ensure plat_data is zero-initialized in
+> dw_hdmi_qp_rockchip_bind().
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c | 13 ++++++++++++-
+>  include/drm/bridge/dw_hdmi_qp.h                |  1 +
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu=
+/drm/rockchip/dw_hdmi_qp-rockchip.c
+> index 126e556025961e8645f3567b4d7a1c73cc2f2e7f..8c1185490009c5f1bc658998a=
+868f8b18dc479a3 100644
+> --- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+> @@ -431,8 +431,8 @@ static int dw_hdmi_qp_rockchip_bind(struct device *de=
+v, struct device *master,
+>  				    void *data)
+>  {
+>  	struct platform_device *pdev =3D to_platform_device(dev);
+> +	struct dw_hdmi_qp_plat_data plat_data =3D {};
+>  	const struct rockchip_hdmi_qp_cfg *cfg;
+> -	struct dw_hdmi_qp_plat_data plat_data;
+>  	struct drm_device *drm =3D data;
+>  	struct drm_connector *connector;
+>  	struct drm_encoder *encoder;
+> @@ -515,6 +515,17 @@ static int dw_hdmi_qp_rockchip_bind(struct device *d=
+ev, struct device *master,
+>  		return ret;
+>  	}
+> =20
+> +	for (i =3D 0; i < ret; i++) {
+> +		if (!strcmp(clks[i].id, "ref")) {
+> +			plat_data.ref_clk_rate =3D clk_get_rate(clks[i].clk);
+> +			break;
+> +		}
+> +	}
+> +	if (!plat_data.ref_clk_rate) {
+> +		dev_err(hdmi->dev, "Missing ref clock\n");
+> +		return -EINVAL;
+> +	}
+> +
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc4
+You'd be better off not using clk_bulk, or calling an additional clk_get
+for the ref clock only.
 
-for you to fetch changes up to 04a8ff1bc3514808481ddebd454342ad902a3f60:
+Maxime
 
-  spi: cadence-quadspi: fix cleanup of rx_chan on failure paths (2025-07-01 14:02:26 +0100)
+--oszopqzjak6ldkji
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-spi: Fixes for v6.16
+-----BEGIN PGP SIGNATURE-----
 
-As well as a few driver specific fixes we've got a core change here
-which raises the hard coded limit on the number of devices we can
-support on one SPI bus since some FPGA based systems are running into
-the existing limit.  This is not a good solution but it's one suitable
-for this point in the release cycle, we should dynamically size the
-relevant data structures which I hope will happen in the next couple of
-merge windows.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGfuNQAKCRAnX84Zoj2+
+dpLOAX9Fn+AyL0zuC8EJRGUMhLDwcaUmA/NnkN/yj+RvnyGSEiCcN475EqSfs8Ar
+XN9rlt8BgIP56Bw6kg86quaBe4oPgxNoKon98/DCRRHYCKPCWZeNss8Bcb7pDsas
+Q/Kd1zxghA==
+=fwlI
+-----END PGP SIGNATURE-----
 
-We also pull in a MTD fix for the Qualcomm SNAND driver, the two fixes
-cover the same issue and merging them together minimises bisection
-issues.
-
-----------------------------------------------------------------
-Gabor Juhos (2):
-      spi: spi-qpic-snand: reallocate BAM transactions
-      mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
-
-James Clark (1):
-      spi: spi-fsl-dspi: Clear completion counter before initiating transfer
-
-Khairul Anuar Romli (1):
-      spi: cadence-quadspi: fix cleanup of rx_chan on failure paths
-
-Marc Kleine-Budde (1):
-      spi: Raise limit on number of chip selects to 24
-
-Mark Brown (1):
-      spi: spi-qpic-snand: avoid memory corruption
-
- drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
- drivers/spi/spi-cadence-quadspi.c    |  5 -----
- drivers/spi/spi-fsl-dspi.c           | 11 ++++++++++-
- drivers/spi/spi-qpic-snand.c         | 16 ++++++++++++++++
- include/linux/mtd/nand-qpic-common.h |  8 ++++++++
- include/linux/spi/spi.h              |  2 +-
- 6 files changed, 61 insertions(+), 11 deletions(-)
+--oszopqzjak6ldkji--
