@@ -1,79 +1,80 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2956A2D63FB
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264A02D77F0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751631164; cv=none; b=FTwknar6O+zqzPWym5bPGZvoK89vMCD1QJiyUjbF4cKm5omMZppjnGdJ4m978RFgCAyjaSNS2IaGnmyW7iCwF0qaS+A9hbBI+U2b63Lp2a5N5jMGs0ITvWIrRne6mZ1hFxsIFs4/e/n36hecNe4zVsFXRHhQ1VfuYETDaBfpJnk=
+	t=1751631165; cv=none; b=TFRXGm6LhmLDQ0XfeKbROFDf6cBxpJ5sCwH6t5oKrf5u1HDmJ8n6+GAxuTb8783IBPJ9Egl5AnI3U2gaL2q8AVJJc41ma+8199oh5X3KR0XZ+cl6hCRMP94vg2OUhFJ9mYQw9vO9u1DTyjAFNysf2TUkFeMDIg+YyFlkV73IFMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751631164; c=relaxed/simple;
-	bh=RWcMcENuzadS5pKo+gf9BqH0aTezwUdBlEwlff9kRkM=;
+	s=arc-20240116; t=1751631165; c=relaxed/simple;
+	bh=PcbfqiyUxEwZf8tEqhL5i8VnQjldetFluKwYbrgGgZk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hpUPQ3ZRw6AE3MsOM1oTyL0rZQlmELraEITKiU3pfKF9f91e+xZMg5fN77rKkPdS4bJkCBiY4LwOdR44DfTqNonskGLxMQbxTw5hLEsRarl3wLuRE25BcWqQEJo9SpYqzGgwA7pTLnm0/qS9xPVp6ouhqIfHI04SiNtMp5BbrCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Vz94Nr3d; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=JR2wa6xt2hHE/DXcZFiP/YMwtJsjBENWxkIcG0dyD7BpFgOZp7j/9ECQd6lYthIENj+IiLq052GKXjNqJhmnvNqqzvePWUgJ42G31b0uz1zf4fa8G2bjXNJiqEUZ4pJuAnyfaqMYs+a2V8SBxbovEoWm717iTkZ2x/BP+4329P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TQp9dl66; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Vz94Nr3d"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564B62jE019884
-	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 12:12:41 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TQp9dl66"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5646US7a022178
+	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 12:12:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=LR3fVYUOH7o
-	ec8B/p5wHCcMyr6Oxyk+LtpFmeCILY0Q=; b=Vz94Nr3dXhZ1V0u1N7LN6CBomqh
-	tKLc7oBFCZspB4OUD0OC5iWwTtd+Fxy4mEr4niwdvKy0wjx/03v0Vnv0aNvHdVsT
-	hgmzK6LUZ8pEnLVl0+5L0vVtFjXvnqEUwhXoUkmjSw0j/KOysR77VE0JsbNpOyrm
-	SRuneknDB8ZpcCkxcHHDod1Ypdvl3pk4BlB718HEgGWy/PZ1Syh+3StyLVL0yWx4
-	lMaNB0uzF4m4DZcQiYGqH0gW9O6epq5kClgztOwUeY1IHkRQDR1RauzNCZkoCqHH
-	WQ5KoZ7770HS2lBOu9QT9SYw2qXK7GZBvtUE7HU0/tDmqMUibPocwb9sujw==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=tDaEr5HJ73z
+	Ver8qFn0D9NcPZgapsA83KNJlQT6UT4k=; b=TQp9dl66SzTG9b5ZrL5EBQZRtKc
+	C9be+2/fgMC52K5ngBqsFrIiz2aOnjpZf5f43FYRlBlj3/FYy0RSEdhRX1PvjpAL
+	ghcqUo5pMVQYspAle7Mgc8376NKAgwHPMq69uFPnMrE0FGTeCakuuedvr5H7fmA8
+	KYfMmYLRu3amKrY2omoVXBSpv/A+8j4COtNy6WTkxGGCAqonoZyTkp2nVy9Ydn/G
+	8OSwNllRSR5/f9o33tQXEhutMWygpQbJJCdRy5qNDr8WokTLhStswykqL4mCSyUm
+	eG5yGzXm0cy2pZ+dO+wz0iBOaNwXpeNzT36ENP6eVgzXQKCxjOYnNXDEzQw==
 Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pdsh86ej-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qmkq7g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 12:12:41 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c760637fe5so124120185a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:12:41 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 12:12:42 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d413a10b4cso136096385a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 05:12:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751631160; x=1752235960;
+        d=1e100.net; s=20230601; t=1751631162; x=1752235962;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LR3fVYUOH7oec8B/p5wHCcMyr6Oxyk+LtpFmeCILY0Q=;
-        b=ao+oPweAhObHdjy9cKXW9gVlimIvHh2xcIp/xbPMwE1wPqw1orb+Qqqi2gZmCDJrMi
-         BlRLPrTj0tgzhacjT3yeM1DTdGhaIhSmai2vtRkGbiOMdWVyF7NSrFzJxk7V6hkQKPYK
-         41Kv+oy6rIxsdmBLBVjKBqHfkrA33N4jj6l2ri3nsxI8OF12mPbUZc+xACcSo5Y1wlpV
-         yoKt4e09hDjDuh8NOO/EefrSzkH47I/aaxCKQLPa4ReRQQbpY1fDXtQRO6SVyQgqbOIN
-         c/1EFyMn2JghOITV3+NauYZF5Vc7BFm5r+X+xpIjUI5Z9gd7pDHa3YJQvcuYgM3K2Upd
-         VcDg==
-X-Forwarded-Encrypted: i=1; AJvYcCX60DPJrb1vxcg9B1vHCIo4fzvZlw7uXG1Edp3MiG1kxke8fQYNCQ2drQdjWF4FEe7znWnfe3XMPgx9EwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRdZQ6/cmf/SN6867LmT3ASaOYAXvP+lQly0Sm01bU8i0hcyOY
-	jOnRzkeK/gl/IGFEE//uCzVemBvBEUDoVVVlk3MWXlYd9Mj+8AeXI6MX/zzNPpkdFDr7D33LLQs
-	FRNPVc0L2Fn82teY6tkN0dM2D0ItoBBgQS90ioiX31gSvWgsHcl0gT5irc9cXtFFItSU=
-X-Gm-Gg: ASbGncsZ63m9XMjHAH6SXw+AjzbxnDGIzJXanC6HA0II45lDIyC1u21lG+rgXTLvmg+
-	nq8Qvp/GE2U/I78Ceea4G/qyaSPR3ff9fT7M/ofB418Y4sEPE7vExA27tMF4ij9hoeW+GZlnZ4A
-	hFDi6fgu+AE/AEF5SsEf1PBUAY8xCf+g77oNfYpB4L6SSdx+NSIRdDIVLDhzCqA6GlO1RngSzTa
-	W2K1GtAHbq0TRMTB2IqhVjGXYwhLoQSkeDiziKHFw+q9m+9isGqwbhYoDEfSHr/RuvqjzkcKIjY
-	vLEnZVmw4oewq4NUy62iBNorIH3vZTNYEh8KUEv7pPyQ9eTjoIc2vjI=
-X-Received: by 2002:a05:620a:1924:b0:7d0:9c51:498a with SMTP id af79cd13be357-7d5ddb56b75mr297332185a.13.1751631160162;
-        Fri, 04 Jul 2025 05:12:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzjkILAwypMIZUshaZVGJonIlhgRWDFAm9d5sNhdyHQ5r3X/FUqOT+lCNh7XuKnxet9HlSNA==
-X-Received: by 2002:a05:620a:1924:b0:7d0:9c51:498a with SMTP id af79cd13be357-7d5ddb56b75mr297329385a.13.1751631159751;
-        Fri, 04 Jul 2025 05:12:39 -0700 (PDT)
+        bh=tDaEr5HJ73zVer8qFn0D9NcPZgapsA83KNJlQT6UT4k=;
+        b=VcyWkIK/6IUConmXY5leD03O+/npW6OAW614J1Qtng3E4B+eU7+RVP+byIChsA6Ykw
+         GRrLpx1IbOdllr0fhpOlz/AYuZRbRzZA3YPTqSgF+LCa8iQHM65tnGlk1+Q/oRgTcYte
+         Ps+Meb9y2ERV/tPhvKqW3D3bbV8bTrdAACrwU4qSIdLMHPedo/UqQDJPuivekrO3+efC
+         /p0nqopNpXM7Pf2dCeo8Si7sIkGXoBFjOaWMpXGEHtzfkbhsC58KE+n1Sp5fAa88YOHJ
+         aDCNTrdrIT90FXXyF5N/UFvd93SasfiV47gIpH5z2sST7wXFsN1WD4uopTvEpw72moBh
+         mAzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh6oKeAZeR19y+qBzKJ4u8SXdSDp4wp5cvREbegd1hUziN/1fDchpyH7ZQyNW3qkCkZ4OJAhal+eJeXIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaQhyQfY6ZjwFg5auD6to1A+3eH1zhNn56vgqBzFqMtOCkfuRx
+	JuIkh6Kt9nqPNeVvkCjapG1LoNUhIi9yCQJRYE8wAZFHAvAIolgKxFsDEy68x5SVxnV4tDPUhfa
+	FyEoeiqSazs6KeJutlqFaRJFviesVgUoM3IG0/YHx/uy7A4b6vPR6v+FLiAeoG9iJIB0=
+X-Gm-Gg: ASbGncu1phzkycaKxkKteG7l1pRV6HAHzfG48J4XjJiU3KvvmcvwaNk+oiERT9J1m8H
+	c8B9CBYt0ofJ8gvUzLXg6dbhNdRd90Nu2EgqPNo0njit1OWngi5ZWZTT7gErRxe6fTWzEWIqZfV
+	/x3XcLFZo5i4ocKXfKQ5/4kP1n5j93fgiVIy/hxoV7MubHo3aEkLt9MgiO0VJ1JZ+4opcu+GbmB
+	n2Ff3TW06fjYGOCj59+HtFrwsgasTF+hW75MlkE0ekcRIQNq7oZxbpshgu2isPoaruHRO2XF88o
+	HwkqXD6vvEZN+YdtLEswBzHm1HNfVwJuVPxNmJSe9HGs7kHiCXZ58FU=
+X-Received: by 2002:a05:620a:1b9c:b0:7d3:f15c:ee33 with SMTP id af79cd13be357-7d5ddb32326mr268163185a.10.1751631161890;
+        Fri, 04 Jul 2025 05:12:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtEBcpu43GmpwUkYOsPuU7nA6/okhLPVbExuC2SKjRUk1+q6SREj3BuKFcufebfAJ1Nm0SEQ==
+X-Received: by 2002:a05:620a:1b9c:b0:7d3:f15c:ee33 with SMTP id af79cd13be357-7d5ddb32326mr268157985a.10.1751631161272;
+        Fri, 04 Jul 2025 05:12:41 -0700 (PDT)
 Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997de2asm53656745e9.12.2025.07.04.05.12.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997de2asm53656745e9.12.2025.07.04.05.12.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:12:38 -0700 (PDT)
+        Fri, 04 Jul 2025 05:12:40 -0700 (PDT)
 From: srinivas.kandagatla@oss.qualcomm.com
 To: vkoul@kernel.org, broonie@kernel.org
 Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
         lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
         krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org,
         linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Subject: [PATCH v2 2/4] soundwire: bus: add sdw_slave_get_current_bank helper
-Date: Fri,  4 Jul 2025 13:12:16 +0100
-Message-ID: <20250704121218.1225806-3-srinivas.kandagatla@oss.qualcomm.com>
+        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH v2 3/4] ASoC: codecs: wcdxxxx: use of_sdw_find_device_by_node helper
+Date: Fri,  4 Jul 2025 13:12:17 +0100
+Message-ID: <20250704121218.1225806-4-srinivas.kandagatla@oss.qualcomm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250704121218.1225806-1-srinivas.kandagatla@oss.qualcomm.com>
 References: <20250704121218.1225806-1-srinivas.kandagatla@oss.qualcomm.com>
@@ -84,91 +85,227 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA5MyBTYWx0ZWRfX4ic9ZbrVD/Np
- gvlydNZL6I3Npf3pNjk/U7f1SWJporyoCaIG2HfSGfXtXwfPVOuILXmR5jlzPsYL+ceCZshlhW5
- vB91JLWk4prQjv8VExPzVC8EPR13mfuixtPFfZTT3rqiiGy/LiYfrQ4aMF+3o8oOymTuYMgYU9U
- MoXHXYi9Ii0B65o3oGvwU+m4ff0/5vLVc5Vx5nzsIB5qvxPU6S2rL5Q8UVEknMSeDdBNEB/LZAM
- Ut7w8NTuyPbZK2pYvDHWUYCTj0CxqO+cgFycm5VpJBrTY98OiL64sKSkxfVOa93gjEDUTCaUOXr
- SI84k0f1kEF/ByM8NgsHI8fPdgTpwUZ8Xj8lzrhciCkoI6eFInclqKMA6A0W6eUhLqKrvshV+JR
- Shys+Kl/I2ri9oSJg8hnzA6Tn7T4my2PGS58rgccrPrHxaSdKkWJ1pik0mxVeszFM/PVNccC
-X-Authority-Analysis: v=2.4 cv=RJKzH5i+ c=1 sm=1 tr=0 ts=6867c539 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=6867c53a cx=c_pps
  a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=G7Fn18kybrAXfbFeA2QA:9
+ a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=VO0QnzvMDvqADXZeruwA:9
  a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: Ki0gdxZZ4vOozAF1KXsIWpdXvDB6_nxc
-X-Proofpoint-GUID: Ki0gdxZZ4vOozAF1KXsIWpdXvDB6_nxc
+X-Proofpoint-ORIG-GUID: Y2aizWXJoQ4TSPuP-XTWcR1ayhqhMEpg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA5MyBTYWx0ZWRfXwJ6gQhbHiKcl
+ DM9HBT8j8oM1IZjvp8uVEXHAy70sIjOmr8PBZdwBOEcY9XYOIJlJri6Kk6rnqcvSdXoYZ1eh6RK
+ zUSd+7cqbem41/Ikq00P+Y/3u8DWswPKm6Rg/aCCdCLdvr9aghlhk0X7ZgMAU1EBijc3491dpBr
+ iB0kGfiZeNLZptYuau1fXvzcLEmuyOZMQaePcc0DM4MZvCOXti46z5LiCb1IG7TweMQMGGwQDKV
+ 6xlJIrPdEwhdT8krC8KuUGmokch3bUZXJfU1MsNsp4p5yFToQwx87pzDTZThjy6qGLPhZ6eeGGL
+ pbKlXqkM4RlkczeKxkDwPbcpS8o+6bqmZdGVmOLCAivf2E1Td8wmYqXM3xkJD4hF+WiBHu2p9Qa
+ DofXFEjR5IUl8LioHUOIubTQbKelmaqc00ZBFluT+/u7ZbzAxfClO4tv6Asa5x7Gz0b+Wq4E
+X-Proofpoint-GUID: Y2aizWXJoQ4TSPuP-XTWcR1ayhqhMEpg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-04_04,2025-07-04_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 mlxlogscore=857 clxscore=1015 suspectscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 malwarescore=0
- lowpriorityscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040093
+ impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040093
 
 From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
 
-There has been 2 instances of this helper in codec drivers,
-it does not make sense to keep duplicating this part of code.
-
-Lets add a helper sdw_get_current_bank() for codec drivers to use it.
+use of_sdw_find_device_by_node helper function, rather than duplicating
+this function in every codec driver.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/soundwire/bus.c       | 12 ++++++++++++
- include/linux/soundwire/sdw.h |  8 ++++++++
- 2 files changed, 20 insertions(+)
+ sound/soc/codecs/wcd937x-sdw.c | 6 ------
+ sound/soc/codecs/wcd937x.c     | 4 ++--
+ sound/soc/codecs/wcd937x.h     | 2 --
+ sound/soc/codecs/wcd938x-sdw.c | 7 -------
+ sound/soc/codecs/wcd938x.c     | 4 ++--
+ sound/soc/codecs/wcd938x.h     | 6 ------
+ sound/soc/codecs/wcd939x-sdw.c | 6 ------
+ sound/soc/codecs/wcd939x.c     | 4 ++--
+ sound/soc/codecs/wcd939x.h     | 6 ------
+ 9 files changed, 6 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index 4fd5cac799c5..55c1db816534 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -1360,6 +1360,18 @@ int sdw_slave_get_scale_index(struct sdw_slave *slave, u8 *base)
- }
- EXPORT_SYMBOL(sdw_slave_get_scale_index);
+diff --git a/sound/soc/codecs/wcd937x-sdw.c b/sound/soc/codecs/wcd937x-sdw.c
+index 1bfe7383b311..e7cc699bd8bc 100644
+--- a/sound/soc/codecs/wcd937x-sdw.c
++++ b/sound/soc/codecs/wcd937x-sdw.c
+@@ -78,12 +78,6 @@ static struct sdw_dpn_prop wcd937x_dpn_prop[WCD937X_MAX_SWR_PORTS] = {
+ 	}
+ };
  
-+int sdw_slave_get_current_bank(struct sdw_slave *slave)
-+{
-+	int tmp;
-+
-+	tmp = sdw_read(slave, SDW_SCP_CTRL);
-+	if (tmp < 0)
-+		return tmp;
-+
-+	return FIELD_GET(SDW_SCP_STAT_CURR_BANK, tmp);
-+}
-+EXPORT_SYMBOL_GPL(sdw_slave_get_current_bank);
-+
- static int sdw_slave_set_frequency(struct sdw_slave *slave)
+-struct device *wcd937x_sdw_device_get(struct device_node *np)
+-{
+-	return bus_find_device_by_of_node(&sdw_bus_type, np);
+-}
+-EXPORT_SYMBOL_GPL(wcd937x_sdw_device_get);
+-
+ int wcd937x_sdw_hw_params(struct wcd937x_sdw_priv *wcd,
+ 			  struct snd_pcm_substream *substream,
+ 			  struct snd_pcm_hw_params *params,
+diff --git a/sound/soc/codecs/wcd937x.c b/sound/soc/codecs/wcd937x.c
+index 3b0a8cc314e0..ccd542033967 100644
+--- a/sound/soc/codecs/wcd937x.c
++++ b/sound/soc/codecs/wcd937x.c
+@@ -2788,7 +2788,7 @@ static int wcd937x_bind(struct device *dev)
+ 		return ret;
+ 	}
+ 
+-	wcd937x->rxdev = wcd937x_sdw_device_get(wcd937x->rxnode);
++	wcd937x->rxdev = of_sdw_find_device_by_node(wcd937x->rxnode);
+ 	if (!wcd937x->rxdev) {
+ 		dev_err(dev, "could not find slave with matching of node\n");
+ 		return -EINVAL;
+@@ -2797,7 +2797,7 @@ static int wcd937x_bind(struct device *dev)
+ 	wcd937x->sdw_priv[AIF1_PB] = dev_get_drvdata(wcd937x->rxdev);
+ 	wcd937x->sdw_priv[AIF1_PB]->wcd937x = wcd937x;
+ 
+-	wcd937x->txdev = wcd937x_sdw_device_get(wcd937x->txnode);
++	wcd937x->txdev = of_sdw_find_device_by_node(wcd937x->txnode);
+ 	if (!wcd937x->txdev) {
+ 		dev_err(dev, "could not find txslave with matching of node\n");
+ 		return -EINVAL;
+diff --git a/sound/soc/codecs/wcd937x.h b/sound/soc/codecs/wcd937x.h
+index 3ab21bb5846e..49e5dce6f8c9 100644
+--- a/sound/soc/codecs/wcd937x.h
++++ b/sound/soc/codecs/wcd937x.h
+@@ -549,8 +549,6 @@ int wcd937x_sdw_hw_params(struct wcd937x_sdw_priv *wcd,
+ 			  struct snd_pcm_hw_params *params,
+ 			  struct snd_soc_dai *dai);
+ 
+-struct device *wcd937x_sdw_device_get(struct device_node *np);
+-
+ #else
+ int wcd937x_sdw_free(struct wcd937x_sdw_priv *wcd,
+ 		     struct snd_pcm_substream *substream,
+diff --git a/sound/soc/codecs/wcd938x-sdw.c b/sound/soc/codecs/wcd938x-sdw.c
+index e822cc145250..a7514d716086 100644
+--- a/sound/soc/codecs/wcd938x-sdw.c
++++ b/sound/soc/codecs/wcd938x-sdw.c
+@@ -82,13 +82,6 @@ static struct sdw_dpn_prop wcd938x_dpn_prop[WCD938X_MAX_SWR_PORTS] = {
+ 	}
+ };
+ 
+-struct device *wcd938x_sdw_device_get(struct device_node *np)
+-{
+-	return bus_find_device_by_of_node(&sdw_bus_type, np);
+-
+-}
+-EXPORT_SYMBOL_GPL(wcd938x_sdw_device_get);
+-
+ int wcd938x_swr_get_current_bank(struct sdw_slave *sdev)
  {
- 	int scale_index;
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 096213956d31..e6a3476bcef1 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -1089,6 +1089,8 @@ int sdw_stream_remove_slave(struct sdw_slave *slave,
+ 	int bank;
+diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
+index 711f373ece24..e2cb0758bca7 100644
+--- a/sound/soc/codecs/wcd938x.c
++++ b/sound/soc/codecs/wcd938x.c
+@@ -3400,7 +3400,7 @@ static int wcd938x_bind(struct device *dev)
+ 		return ret;
+ 	}
  
- struct device *of_sdw_find_device_by_node(struct device_node *np);
+-	wcd938x->rxdev = wcd938x_sdw_device_get(wcd938x->rxnode);
++	wcd938x->rxdev = of_sdw_find_device_by_node(wcd938x->rxnode);
+ 	if (!wcd938x->rxdev) {
+ 		dev_err(dev, "could not find slave with matching of node\n");
+ 		ret = -EINVAL;
+@@ -3409,7 +3409,7 @@ static int wcd938x_bind(struct device *dev)
+ 	wcd938x->sdw_priv[AIF1_PB] = dev_get_drvdata(wcd938x->rxdev);
+ 	wcd938x->sdw_priv[AIF1_PB]->wcd938x = wcd938x;
  
-+int sdw_slave_get_current_bank(struct sdw_slave *sdev);
-+
- int sdw_slave_get_scale_index(struct sdw_slave *slave, u8 *base);
+-	wcd938x->txdev = wcd938x_sdw_device_get(wcd938x->txnode);
++	wcd938x->txdev = of_sdw_find_device_by_node(wcd938x->txnode);
+ 	if (!wcd938x->txdev) {
+ 		dev_err(dev, "could not find txslave with matching of node\n");
+ 		ret = -EINVAL;
+diff --git a/sound/soc/codecs/wcd938x.h b/sound/soc/codecs/wcd938x.h
+index fb6a0e4ef337..dbafcae247f4 100644
+--- a/sound/soc/codecs/wcd938x.h
++++ b/sound/soc/codecs/wcd938x.h
+@@ -670,7 +670,6 @@ int wcd938x_sdw_hw_params(struct wcd938x_sdw_priv *wcd,
+ 			  struct snd_pcm_hw_params *params,
+ 			  struct snd_soc_dai *dai);
  
- /* messaging and data APIs */
-@@ -1128,6 +1130,12 @@ static inline struct device *of_sdw_find_device_by_node(struct device_node *np)
- 	return NULL;
+-struct device *wcd938x_sdw_device_get(struct device_node *np);
+ int wcd938x_swr_get_current_bank(struct sdw_slave *sdev);
+ 
+ #else
+@@ -697,11 +696,6 @@ static inline int wcd938x_sdw_hw_params(struct wcd938x_sdw_priv *wcd,
+ 	return -EOPNOTSUPP;
  }
  
-+static inline int sdw_slave_get_current_bank(struct sdw_slave *sdev)
-+{
-+	WARN_ONCE(1, "SoundWire API is disabled");
-+	return -EINVAL;
-+}
-+
- /* messaging and data APIs */
- static inline int sdw_read(struct sdw_slave *slave, u32 addr)
+-static inline struct device *wcd938x_sdw_device_get(struct device_node *np)
+-{
+-	return NULL;
+-}
+-
+ static inline int wcd938x_swr_get_current_bank(struct sdw_slave *sdev)
  {
+ 	return 0;
+diff --git a/sound/soc/codecs/wcd939x-sdw.c b/sound/soc/codecs/wcd939x-sdw.c
+index f7a9323a9fea..e487a1bb0194 100644
+--- a/sound/soc/codecs/wcd939x-sdw.c
++++ b/sound/soc/codecs/wcd939x-sdw.c
+@@ -128,12 +128,6 @@ static struct sdw_dpn_prop wcd939x_tx_dpn_prop[WCD939X_MAX_TX_SWR_PORTS] = {
+ 	}
+ };
+ 
+-struct device *wcd939x_sdw_device_get(struct device_node *np)
+-{
+-	return bus_find_device_by_of_node(&sdw_bus_type, np);
+-}
+-EXPORT_SYMBOL_GPL(wcd939x_sdw_device_get);
+-
+ unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev)
+ {
+ 	return FIELD_GET(SDW_SCP_STAT_CURR_BANK,
+diff --git a/sound/soc/codecs/wcd939x.c b/sound/soc/codecs/wcd939x.c
+index 64f082e474c1..5a56c79a8922 100644
+--- a/sound/soc/codecs/wcd939x.c
++++ b/sound/soc/codecs/wcd939x.c
+@@ -3383,7 +3383,7 @@ static int wcd939x_bind(struct device *dev)
+ 		goto err_put_typec_switch;
+ 	}
+ 
+-	wcd939x->rxdev = wcd939x_sdw_device_get(wcd939x->rxnode);
++	wcd939x->rxdev = of_sdw_find_device_by_node(wcd939x->rxnode);
+ 	if (!wcd939x->rxdev) {
+ 		dev_err(dev, "could not find slave with matching of node\n");
+ 		ret = -EINVAL;
+@@ -3392,7 +3392,7 @@ static int wcd939x_bind(struct device *dev)
+ 	wcd939x->sdw_priv[AIF1_PB] = dev_get_drvdata(wcd939x->rxdev);
+ 	wcd939x->sdw_priv[AIF1_PB]->wcd939x = wcd939x;
+ 
+-	wcd939x->txdev = wcd939x_sdw_device_get(wcd939x->txnode);
++	wcd939x->txdev = of_sdw_find_device_by_node(wcd939x->txnode);
+ 	if (!wcd939x->txdev) {
+ 		dev_err(dev, "could not find txslave with matching of node\n");
+ 		ret = -EINVAL;
+diff --git a/sound/soc/codecs/wcd939x.h b/sound/soc/codecs/wcd939x.h
+index 3204fb10b58d..3f189e5cafd5 100644
+--- a/sound/soc/codecs/wcd939x.h
++++ b/sound/soc/codecs/wcd939x.h
+@@ -930,7 +930,6 @@ int wcd939x_sdw_hw_params(struct wcd939x_sdw_priv *wcd,
+ 			  struct snd_pcm_hw_params *params,
+ 			  struct snd_soc_dai *dai);
+ 
+-struct device *wcd939x_sdw_device_get(struct device_node *np);
+ unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev);
+ 
+ struct regmap *wcd939x_swr_get_regmap(struct wcd939x_sdw_priv *wcd);
+@@ -958,11 +957,6 @@ static inline int wcd939x_sdw_hw_params(struct wcd939x_sdw_priv *wcd,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline struct device *wcd939x_sdw_device_get(struct device_node *np)
+-{
+-	return NULL;
+-}
+-
+ static inline unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev)
+ {
+ 	return 0;
 -- 
 2.49.0
 
