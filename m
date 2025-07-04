@@ -1,61 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168CB28D828;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A18A28D8D0;
 	Fri,  4 Jul 2025 07:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615653; cv=none; b=C0Jf7oJxBomwCuYqwKtaWzxB1qfWpoWrxvfo7HacIzIKGWyzAlK51gRiolsF/wTcw+q4MsBzZWiShog2HdQAhyXmBrSH4Z4txg0J4DCcnPcWHmH78oRH/sWptILJlkUKMyhp3vHLCc2rZ4Ksu4u/xibAJVoQXY/jbW60RJbTz0w=
+	t=1751615653; cv=none; b=fq9JSo4cmneU5L7239V0MC/wrwFW8CKefuHk+pXJR2/VKMQN0IF/EYw9djh6ufLkOe7q7eZ36fPWMxR//rwnd0qg2GoGKE+8y/NTzzxb9gX25Ayebwv4YYtRud40hd2N4ni3fk1wrUsdqZ7ea+2ZjcEfDs8e69jOxh80iUrebww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751615653; c=relaxed/simple;
-	bh=SwA04YuHfWus8Oxzal44FMeOvDW0ynNWLHU3HfszPns=;
+	bh=/CIbIR/zbhCjZ/cFIFqC/MmyrDN/rrFu56hCjz4GzXk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ptd/sjQbdIaOivUDMiWuiFB+VZwmDegDEvBoL16cuBzPXJxSO3X+JMj74Gf5+sn+NW+dB+jADAB0NziySTO0d7J3TlasiYwyWk/ZHgbokmMc0K7mSSP7xpBg4RUpdQGCH2RwXkosUMQU7wVl+AU67c301RYeKUVsuIV4T0QsDnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWzM/nVM; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=gXwOe3IwHwGPRj0EuDHWnQdzvo8sivNxWZMVG5A34etbRvv/OAWUNTJaQZoqVVB1q/p9plBSq4P/TUnGtfGXuX1Ls5z6WVCUgo90t9RVJ2hO9845o2qpimWJXlBrnimacolBNW8IFfgI19UbFITZI/eCU1dyFEB/LpQVJHc13zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RoLTr3rf; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWzM/nVM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RoLTr3rf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1751615651; x=1783151651;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SwA04YuHfWus8Oxzal44FMeOvDW0ynNWLHU3HfszPns=;
-  b=dWzM/nVMjhk52QC1M8NF50BrAhfsZiZAhExnJb2Ig2gJ4YnOasdamyEV
-   nXO5vQMEjWQqkuMo/39Be9jM0SgVxfOvIPN0REZ9a3wwIs+xao8C8Uy9D
-   zszUkumQaq/agqgW/oMwbCIOP77i3vxj/5HmPQ6ZoKtBF7CaiGJNSfDdO
-   Fvm8qNj5L4Te8kimbGrnyh+06bDCDW/EylYYfcG42e+8UVv42wL9tnHRv
-   LzSpLoSnnyStmuVRfHnM2Cg4x9QN9Ui2YvdcarnXgHJqqU9jSs4bwr8o0
-   UsyumyLrJFxdhX8nN3Sz6RrMEnmBkUtDiSSKCZhVLRmsD5LDsHrRfpI4f
-   w==;
-X-CSE-ConnectionGUID: 7nyrrPVMTleRcEFJkb2TQQ==
-X-CSE-MsgGUID: RlAzjCvnSW2Mf9WJNoVUpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494497"
+  bh=/CIbIR/zbhCjZ/cFIFqC/MmyrDN/rrFu56hCjz4GzXk=;
+  b=RoLTr3rfII7UDfrek4XJWeQWLLCxbGkEtdBZc9qH4n32fAOkTxY0o656
+   gid/3SJBjBPpM8sX6z80+YaQBTExE8jtJanvKCb28N4Lz0GHbntWEhh+N
+   ft84SZFEnuNvprRS1eAGwloHxgEMPOvpM9Xfbwybk3eVIAqS+xWVjQbNd
+   YbA5UdHdVWmDDFn+8q7nmRwSnhhKRpgBqPRtXzsgwUi2ZMoCrzk2SpMW0
+   HyJWp5dTC5DfaLDp4B5xr6hhbpQW0BfNuHdr1vWuo29keHDFDKubFuXBk
+   Z4vuZ7Kr1+ghhWnlUrCyWIJ+mjlWkc/YvW485glZvCzSbFye8uPyVRAjP
+   Q==;
+X-CSE-ConnectionGUID: CPENT+9DRTWci19H2l50Ww==
+X-CSE-MsgGUID: s5lMWusrQti1NEHkAk75mw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494501"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494497"
+   d="scan'208";a="76494501"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:10 -0700
-X-CSE-ConnectionGUID: bJgNRm1OQAaHdiPuqBupcQ==
-X-CSE-MsgGUID: buF3RBOsQzOoL3A+8dOOYw==
+X-CSE-ConnectionGUID: gj+SqCv9QA+K8twjZgRmSQ==
+X-CSE-MsgGUID: bEdlVY7kR+icdEMGIvk3Lg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924192"
+   d="scan'208";a="158924193"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:08 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:09 -0700
 Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 270E44488D;
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id D917444910;
 	Fri,  4 Jul 2025 10:54:06 +0300 (EEST)
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	dmaengine@vger.kernel.org,
+To: Vinod Koul <vkoul@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 12/80] dmaengine: ste_dma40: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:05 +0300
-Message-Id: <20250704075405.3217535-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 13/80] dmaengine: ti: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:06 +0300
+Message-Id: <20250704075406.3217578-1-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
@@ -84,72 +84,53 @@ rc2:
         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
                 pm-runtime-6.17-rc1
 
- drivers/dma/ste_dma40.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/dma/ti/cppi41.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index d52e1685aed5..13d91d369be2 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -1452,7 +1452,6 @@ static int d40_pause(struct dma_chan *chan)
+diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
+index 8d8c3d6038fc..88756dccd62c 100644
+--- a/drivers/dma/ti/cppi41.c
++++ b/drivers/dma/ti/cppi41.c
+@@ -390,7 +390,6 @@ static int cppi41_dma_alloc_chan_resources(struct dma_chan *chan)
+ 	if (!c->is_tx)
+ 		cppi_writel(c->q_num, c->gcr_reg + RXHPCRA0);
  
- 	res = d40_channel_execute_command(d40c, D40_DMA_SUSPEND_REQ);
+-	pm_runtime_mark_last_busy(cdd->ddev.dev);
+ 	pm_runtime_put_autosuspend(cdd->ddev.dev);
  
--	pm_runtime_mark_last_busy(d40c->base->dev);
- 	pm_runtime_put_autosuspend(d40c->base->dev);
- 	spin_unlock_irqrestore(&d40c->lock, flags);
- 	return res;
-@@ -1479,7 +1478,6 @@ static int d40_resume(struct dma_chan *chan)
- 	if (d40_residue(d40c) || d40_tx_is_linked(d40c))
- 		res = d40_channel_execute_command(d40c, D40_DMA_RUN);
+ 	return 0;
+@@ -411,7 +410,6 @@ static void cppi41_dma_free_chan_resources(struct dma_chan *chan)
  
--	pm_runtime_mark_last_busy(d40c->base->dev);
- 	pm_runtime_put_autosuspend(d40c->base->dev);
- 	spin_unlock_irqrestore(&d40c->lock, flags);
- 	return res;
-@@ -1581,7 +1579,6 @@ static void dma_tc_handle(struct d40_chan *d40c)
- 		if (d40_queue_start(d40c) == NULL) {
- 			d40c->busy = false;
+ 	WARN_ON(!list_empty(&cdd->pending));
  
--			pm_runtime_mark_last_busy(d40c->base->dev);
- 			pm_runtime_put_autosuspend(d40c->base->dev);
- 		}
- 
-@@ -2055,7 +2052,6 @@ static int d40_free_dma(struct d40_chan *d40c)
- 		d40c->base->lookup_phy_chans[phy->num] = NULL;
- 
- 	if (d40c->busy) {
--		pm_runtime_mark_last_busy(d40c->base->dev);
- 		pm_runtime_put_autosuspend(d40c->base->dev);
- 	}
- 
-@@ -2063,7 +2059,6 @@ static int d40_free_dma(struct d40_chan *d40c)
- 	d40c->phy_chan = NULL;
- 	d40c->configured = false;
-  mark_last_busy:
--	pm_runtime_mark_last_busy(d40c->base->dev);
- 	pm_runtime_put_autosuspend(d40c->base->dev);
- 	return res;
+-	pm_runtime_mark_last_busy(cdd->ddev.dev);
+ 	pm_runtime_put_autosuspend(cdd->ddev.dev);
  }
-@@ -2466,7 +2461,6 @@ static int d40_alloc_chan_resources(struct dma_chan *chan)
- 	if (is_free_phy)
- 		d40_config_write(d40c);
-  mark_last_busy:
--	pm_runtime_mark_last_busy(d40c->base->dev);
- 	pm_runtime_put_autosuspend(d40c->base->dev);
- 	spin_unlock_irqrestore(&d40c->lock, flags);
- 	return err;
-@@ -2618,10 +2612,8 @@ static int d40_terminate_all(struct dma_chan *chan)
- 		chan_err(d40c, "Failed to stop channel\n");
  
- 	d40_term_all(d40c);
--	pm_runtime_mark_last_busy(d40c->base->dev);
- 	pm_runtime_put_autosuspend(d40c->base->dev);
- 	if (d40c->busy) {
--		pm_runtime_mark_last_busy(d40c->base->dev);
- 		pm_runtime_put_autosuspend(d40c->base->dev);
- 	}
- 	d40c->busy = false;
+@@ -509,7 +507,6 @@ static void cppi41_dma_issue_pending(struct dma_chan *chan)
+ 		cppi41_run_queue(cdd);
+ 	spin_unlock_irqrestore(&cdd->lock, flags);
+ 
+-	pm_runtime_mark_last_busy(cdd->ddev.dev);
+ 	pm_runtime_put_autosuspend(cdd->ddev.dev);
+ }
+ 
+@@ -627,7 +624,6 @@ static struct dma_async_tx_descriptor *cppi41_dma_prep_slave_sg(
+ 	txd = &c->txd;
+ 
+ err_out_not_ready:
+-	pm_runtime_mark_last_busy(cdd->ddev.dev);
+ 	pm_runtime_put_autosuspend(cdd->ddev.dev);
+ 
+ 	return txd;
+@@ -1139,7 +1135,6 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_of;
+ 
+-	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_put_autosuspend(dev);
+ 
+ 	return 0;
 -- 
 2.39.5
 
