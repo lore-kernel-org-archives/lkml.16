@@ -1,74 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83A328EA53;
-	Fri,  4 Jul 2025 15:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E381A76D4;
+	Fri,  4 Jul 2025 15:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641931; cv=none; b=Eo428cLUu1PwfJionA88wfVmLSWo24BofRyMHpQS77gTDtFwEk3gc2G6sIKVkyDN5ANOcJ7ZEh4BSeFtoZdctYy7kq9KlvzBgNyuGDowEFMpS0NtaIu7/G47kiJh2yP9xcrrD9/Yypt5wokZAX8YeyAZi1zHTTF83FaVdhFD+bw=
+	t=1751641948; cv=none; b=X/t7jq1edE1kJ/m9K1wJXKKMQ6dNKGKd0drsjawo93C6+PXJgGzVA9rdjP3AJgn9cDd6uHzVx+qhCuQS2aK0PV132dDKWVT7QVrrQEqEu40c+C0ON3F+voj0xegbOIejKwXYPCLwpVxeKfbh+9YYsS7xdEitzFjozZE4S9eKIL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641931; c=relaxed/simple;
-	bh=d83IaNS6NoPxQCwpTGjtGRS33HFh5HvOOsfwdC2cPl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fhr9fZSQfnKW13kWePR7f61ynNqXyUSC5N4nn6OqAh1IvJFG2wgfLHvstW0p99jBgPN/kHRkQ1W3j7m67ybWr5mZRtzb01dfjRDQ6tzGKMmcG3dqz29xEhVcIOnbHBoY/gg2QKUyj3tET+kAzuan81bJn5zA6i+kuJS0zIIbVls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id AC924C0137;
-	Fri,  4 Jul 2025 15:12:06 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 999541C;
-	Fri,  4 Jul 2025 15:12:04 +0000 (UTC)
-Date: Fri, 4 Jul 2025 11:12:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti <alex@ghiti.fr>,
- ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
-Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
- architectures that support it
-Message-ID: <20250704111248.511cc248@gandalf.local.home>
-In-Reply-To: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-References: <20250703115222.2d7c8cd5@batman.local.home>
-	<CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
-	<20250703152643.0a4a45fe@gandalf.local.home>
-	<CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751641948; c=relaxed/simple;
+	bh=hZ10LiY5FNP/Dp6S+DBqAzx6uQgjXZaS8IlUwEsCGJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Two0YHE0nJN/ex/+WCr7aVCXsEXfRfdJie1lenhD8nbYuc4bWcVvdy3QUpLT84tbnnNgYt4RYj+O2qZbH/ajvHUJSyfqFZjt4BuUq5n7QjE94TiNd+ht661JEqt9ztMdoRYRP6GBnjSMxAfIaRkdnhppHK7YpdAGdLRN5xBYecI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhI3At/Y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhI3At/Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA33FC4CEE3;
+	Fri,  4 Jul 2025 15:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751641948;
+	bh=hZ10LiY5FNP/Dp6S+DBqAzx6uQgjXZaS8IlUwEsCGJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hhI3At/YWlFOPWeQNgWpOK/z7lt5fmnRr4cDgf1YXwCzaIRmj36teIkXdk7vE86Yt
+	 NQaVta+0qbjEWCt/cT9wzERra7juB8zjgR7V2k/ukkD63VLKuDw+9Oo6W9quS3s7Zv
+	 xO3423zNVGe9iqbpSlSXMLV+N5484Ts6ILuRp7iIiPxYpqQFjPXb3vmbOjQBHrNVWR
+	 UIl/QOTjK9iUzBsfpRaZPNscXPlIZnEuCr9Ljx7zP0JfPDSNXEF/o+dJEiqxZgOB88
+	 eRGMJOBnjk6stxn3bVpqeCjPrOeZxL2WG+MMbxUZ8EqkZsE57LfLXjv/EbQA0EGwpD
+	 uzpEujK8cHkVQ==
+Date: Fri, 4 Jul 2025 17:12:20 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 2/7] rust: pwm: Add core 'Device' and 'Chip' object
+ wrappers
+Message-ID: <aGfvVMBpNoFEJEgC@pollux>
+References: <20250704-rust-next-pwm-working-fan-for-sending-v8-0-951e5482c9fd@samsung.com>
+ <CGME20250704120212eucas1p1c9ffeefa41b0ddb27db74d26174831bf@eucas1p1.samsung.com>
+ <20250704-rust-next-pwm-working-fan-for-sending-v8-2-951e5482c9fd@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: kdpyha7h8q9zijedorfgx1j95xpy5fby
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 999541C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18IykUGAOzqgK7BvVmLX83iO7Znbr1dums=
-X-HE-Tag: 1751641924-873251
-X-HE-Meta: U2FsdGVkX1+Oo+MnSHPV5U5wj6rbj4q78/eL7FDvpQmOnnhjDO7oIFk5bZD4iaOeRZ4zsDUvGxjTzbkiYXQuRPaxXUAkRomnqEgiKbwb5aEEsrOKhnq77xjpBn2ad435krdBkGg6hrTee2hYTCrnm7dnT6EiSgwGUbfyJj2WUx9Q8H4IohtAiHqPMUsHmvt6okfkFKmRZTh6KKCsUwThN34EH0jF5wyb3s/unWKo7sCRj+6BT4y6la2UfeeDxGH1KzRCY6QBGi2OzgpsHdG3kQUwWr14x47aZ8LoI24Y0Qw/CDFT4WSFph+08mycpZnSirzosaBYVQGb4L1PyYmt1QZ5hU+t23l+exY3k1tPjSowuYTPRqd5Bm11FWt35lWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704-rust-next-pwm-working-fan-for-sending-v8-2-951e5482c9fd@samsung.com>
 
-On Thu, 3 Jul 2025 13:58:17 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Fri, Jul 04, 2025 at 02:01:12PM +0200, Michal Wilczynski wrote:
+> +impl<T: 'static + ForeignOwnable> Chip<T> {
+> +    /// Allocates and wraps a PWM chip using `bindings::pwmchip_alloc`.
+> +    ///
+> +    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via refcounting
+> +    /// on its embedded `struct device`.
+> +    pub fn new(
+> +        parent_dev: &device::Device,
+> +        npwm: u32,
+> +        sizeof_priv: usize,
+> +        drvdata: T,
+> +    ) -> Result<ARef<Self>> {
+> +        // SAFETY: `parent_device_for_dev_field.as_raw()` is valid.
+> +        // `bindings::pwmchip_alloc` returns a valid `*mut bindings::pwm_chip` (refcount 1)
+> +        // or an ERR_PTR.
+> +        let c_chip_ptr_raw =
+> +            unsafe { bindings::pwmchip_alloc(parent_dev.as_raw(), npwm, sizeof_priv) };
+> +
+> +        let c_chip_ptr: *mut bindings::pwm_chip = error::from_err_ptr(c_chip_ptr_raw)?;
+> +
+> +        // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is valid because
+> +        // `Chip` is `repr(transparent)` over `Opaque<bindings::pwm_chip>`, and
+> +        // `Opaque<T>` is `repr(transparent)` over `T`.
+> +        let chip_ptr_as_self = c_chip_ptr.cast::<Self>();
+> +
+> +        // SAFETY: The pointer is valid, so we can create a temporary ref to set data.
+> +        let chip_ref = unsafe { &*chip_ptr_as_self };
+> +        // SAFETY: `chip_ref` points to a valid chip from `pwmchip_alloc` and `drvdata` is a valid,
+> +        // owned pointer from `ForeignOwnable` to be stored in the chip's private data.
+> +        unsafe { bindings::pwmchip_set_drvdata(chip_ref.as_raw(), drvdata.into_foreign().cast()) }
 
-> So the reason I dislike the HAVE_xyz pattern is exactly that there
-> _isn't_ a pattern. When there are fifteen different patterns, it's not
-> a pattern at all.
-> 
-> That said, maybe it's better to have one place that has that "if
-> FUNCTION_TRACER, even if I despise the nonsensical "helper
-> indirection" just because of the random naming.
+I think that's great now, but you're missing one last piece: You have to ensure
+that drvdata is freed eventually. Here you call into_foreign(), but I think
+you're missing from_foreign() in pwm_ops::free.
 
-At least with HAVE_FTRACE_* there is a pattern. The HAVE_* may not be
-consistent across other parts of the kernel, but it has been with ftrace.
+You also have to ensure that your pwm_ops::free() callback is properly called if
+a Chip<T> is dropped *before* it has been registered.
 
-As I have stated, ftrace is very tightly coupled with the architectures due
-to the assembly written trampolines. And having a simple way for the
-architectures to denote what it supports and what it does not makes the
-generic code much simpler to implement.
+Note that, since Chip is now generic over T, you can easily make the
+PwmOpsVTable a const within Chip and set the vtable in Chip::new().
 
--- Steve
+See also how drm::Device does this in [1].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/drm/device.rs
+
+> +
+> +        // SAFETY: `chip_ptr_as_self` points to a valid `Chip` (layout-compatible with
+> +        // `bindings::pwm_chip`) whose embedded device has refcount 1.
+> +        // `ARef::from_raw` takes this pointer and manages it via `AlwaysRefCounted`.
+> +        Ok(unsafe { ARef::from_raw(NonNull::new_unchecked(chip_ptr_as_self)) })
+> +    }
