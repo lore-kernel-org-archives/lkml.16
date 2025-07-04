@@ -1,158 +1,195 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9E82C15B1;
-	Fri,  4 Jul 2025 11:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431F2C15AE
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751628549; cv=none; b=BQ+AhLsO/M7iFnK4nBFq7I45W6URXyfxF8EDQLTnAauOK3b3ConFa8rJ2LBIC2sZK2wsLza8G7FRrKel/FsCaeoGYiLwOTF7YuBVAFdpJJ+q3hoJNAbcsny9Tv1gVHbGv9sI0JqBsb+mNhdnpJXEXYmjdCWR3C9Hkw6y4uJy+hs=
+	t=1751628573; cv=none; b=m/iUDRiNn8e8xoOTkT+xq1bOHw+cgegQ2JW0uUS2UMrLjZ7sNxLD+XeQ8pmSu7uV92ReTnoBoyJzu/6uPnVI6jgrovkZPnRIcbBw/slLUX2l5yMQzadlb2SZfzQXJkTo5Nm9FaEgsA7wzl6VJor6hERMYJnVuYxS61smaR8Kh5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751628549; c=relaxed/simple;
-	bh=d6izWEeJk2kJa5GSgadR6b2xMlIhvrbazcDk3EqyLmc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Abcb+cBt5GAxFk6sIMslBOczHr2g/O/odPgm/EMYXh5xxEwHV34UHRShrj0/1tIVjLji8C+4+DV74vTmtQvSEUKiK1pX+O0OinIuIXd3a7pMXM1pKzpTckGh9a5GjJBCyNEbNW8TZ7huDdugm946YunIW5WBU5Zn586WnrZTe60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYW8R3VnVz6L5dh;
-	Fri,  4 Jul 2025 19:08:23 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 36B8E1404C5;
-	Fri,  4 Jul 2025 19:11:22 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
- 2025 13:11:20 +0200
-Date: Fri, 4 Jul 2025 12:11:19 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: John Groves <John@Groves.net>
-CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
-	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
-	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
- . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
- Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
- Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
- Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
- Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 03/18] dev_dax_iomap: Save the kva from memremap
-Message-ID: <20250704121119.00002846@huawei.com>
-In-Reply-To: <20250703185032.46568-4-john@groves.net>
-References: <20250703185032.46568-1-john@groves.net>
-	<20250703185032.46568-4-john@groves.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751628573; c=relaxed/simple;
+	bh=wkqeMXZEQ5ECj9G9B9l2X5NQZSXsSf67kPT7AmE3Mdg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=USvWlMvuJNcjDuW/O0qR7Ff7zWFbmS5qwAEwRGWwUE1TCZ16a3qWE8igS1XW3SvQK1oLlKH41cyxJK5m+MhMI2WDn5OXNBzw3X0EuXHkFy2/dBsp99soXGttnOuQIYlvhY+jEFT4mQlPKfqjbmgjPOgl0oO+x5bZxWhJqzZxa5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GG3Q0ABX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GG3Q0ABX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2FBC4CEE3;
+	Fri,  4 Jul 2025 11:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751628572;
+	bh=wkqeMXZEQ5ECj9G9B9l2X5NQZSXsSf67kPT7AmE3Mdg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GG3Q0ABXeBVqa4KyN1SY5TzCv0cljIyZx9Cr6vMgnym8azal9qBO8mpPM4Zeo+vXI
+	 qcnbPLah1DcXS04Axqit7c7GZVpWfWXBgy6b723ysMlgPnabbbPsFZxoT/64rZ002r
+	 +MBCiutIpv027HCkn3SnbEvEyweCIYO2GGRNp37ZBBUdYJCztXbejVIaHYtW+oNird
+	 8/oHxxZHiOXuDigOLm8fHqnDQONeIE5SqVJ2DFNzsFLswL9ohprhocMy6JkAxn+Zdl
+	 7je9ncz9DXlzCNxfszkOjRn3l6tnPkEbQzFeXlZcKfkWgw4vVA0+7WFUel8hSUgSLO
+	 jr5p/zbja9ZSw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uXebi-00CfVV-C1;
+	Fri, 04 Jul 2025 12:29:30 +0100
+Date: Fri, 04 Jul 2025 12:29:29 +0100
+Message-ID: <861pqwb3dy.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: adrianhoyin.ng@altera.com
+Cc: tglx@linutronix.de,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] irqchip/gic-v3: Add Altera Agilex5 address bus width limitation workaround
+In-Reply-To: <6a44509ca0edaabc17e59d2e27fef1c782183456.1751618484.git.adrianhoyin.ng@altera.com>
+References: <cover.1751618484.git.adrianhoyin.ng@altera.com>
+	<6a44509ca0edaabc17e59d2e27fef1c782183456.1751618484.git.adrianhoyin.ng@altera.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: adrianhoyin.ng@altera.com, tglx@linutronix.de, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu,  3 Jul 2025 13:50:17 -0500
-John Groves <John@Groves.net> wrote:
-
-> Save the kva from memremap because we need it for iomap rw support.
+On Fri, 04 Jul 2025 09:49:50 +0100,
+adrianhoyin.ng@altera.com wrote:
 > 
-> Prior to famfs, there were no iomap users of /dev/dax - so the virtual
-> address from memremap was not needed.
+> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 > 
-> Also: in some cases dev_dax_probe() is called with the first
-> dev_dax->range offset past the start of pgmap[0].range. In those cases
-> we need to add the difference to virt_addr in order to have the physaddr's
-> in dev_dax->ranges match dev_dax->virt_addr.
+> Agilex5 address bus width for the ACE-lite interface is only 32 bits.
+> Hence the GIC600 SoC integration for Agilex5 can only access the first
+> 32bit of the physical address space.
 > 
-> This happens with devdax devices that started as pmem and got converted
-> to devdax. I'm not sure whether the offset is due to label storage, or
-> page tables, but this works in all known cases.
-
-Clearly a question we need to resolve to understand if this is correct
-handling.
-
-> 
-> Signed-off-by: John Groves <john@groves.net>
+> Add quirk to configure the gfp flag to allocate memory within 32bit
+> addressable range. As the 0x0201743b GIC600 ID is not specific to
+> Altera, of_machine_is_compatible() is added.
+>
+> Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 > ---
->  drivers/dax/dax-private.h |  1 +
->  drivers/dax/device.c      | 15 +++++++++++++++
->  2 files changed, 16 insertions(+)
+>  arch/arm64/Kconfig               | 10 ++++++++++
+>  drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
+>  2 files changed, 28 insertions(+)
 > 
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index 0867115aeef2..2a6b07813f9f 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -81,6 +81,7 @@ struct dev_dax_range {
->  struct dev_dax {
->  	struct dax_region *region;
->  	struct dax_device *dax_dev;
-> +	void *virt_addr;
->  	unsigned int align;
->  	int target_node;
->  	bool dyn_id;
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index 29f61771fef0..583150478dcc 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -372,6 +372,7 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
->  	struct dax_device *dax_dev = dev_dax->dax_dev;
->  	struct device *dev = &dev_dax->dev;
->  	struct dev_pagemap *pgmap;
-> +	u64 data_offset = 0;
->  	struct inode *inode;
->  	struct cdev *cdev;
->  	void *addr;
-> @@ -426,6 +427,20 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
->  	if (IS_ERR(addr))
->  		return PTR_ERR(addr);
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 55fc331af337..2286b4d378e2 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1348,6 +1348,16 @@ config SOCIONEXT_SYNQUACER_PREITS
 >  
-> +	/* Detect whether the data is at a non-zero offset into the memory */
-> +	if (pgmap->range.start != dev_dax->ranges[0].range.start) {
+>  	  If unsure, say Y.
+>  
+> +config ALTERA_AGILEX5_ADDR_BUS_WIDTH_LIMITATION
+> +	bool "Altera Agilex: GIC600 can not access physical addresses higher than 4GB"
+> +	default y
+> +	help
+> +	  Agilex5 address bus width for the ACE-lite interface is only 32 bits. Hence
+> +	  the GIC600 SoC integration for Agilex5 can only access the first 32bit of the
+> +	  physical address space.
 
-Using pgmap->range.start here but then getting to the same (I think)
-with  dev_dax->pgmap[0].range.start is rather inconsistent.
+You're describing it as a feature. But really, it's a bug, and it
+deserves an erratum number.
 
-Also, perhaps drag the assignment of phys and pgmap_phys out of this
-scope so that you can use them for the condition check above and
-then reuse the same in here.
-
-
-> +		u64 phys = dev_dax->ranges[0].range.start;
-> +		u64 pgmap_phys = dev_dax->pgmap[0].range.start;
-> +		u64 vmemmap_shift = dev_dax->pgmap[0].vmemmap_shift;
 > +
-> +		if (!WARN_ON(pgmap_phys > phys))
-> +			data_offset = phys - pgmap_phys;
-
-In the event of the condition above being false.
-phys == pgmap_phys and data_offset == 0.
-
-So why not do this unconditionally replacing this block with something like
-
-	/* Apply necessary offset */
-
-	dev_dax->virt_addr = addr +
-		(dev_dax->ranges[0].range.start - pgmap->range.start);
+> +	  If unsure, say Y.
 > +
-> +		pr_debug("%s: offset detected phys=%llx pgmap_phys=%llx offset=%llx shift=%llx\n",
-> +		       __func__, phys, pgmap_phys, data_offset, vmemmap_shift);
-
-If it's only used in the print, I'd just put the path to vmemmap_shift directly in here
-and probably get to it via pgmap->vmemmap_shift
-
-
-
-> +	}
-> +	dev_dax->virt_addr = addr + data_offset;
+>  endmenu # "ARM errata workarounds via the alternatives framework"
+>  
+>  choice
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index d54fa0638dc4..a2cf401568e7 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -4901,6 +4901,16 @@ static bool __maybe_unused its_enable_rk3568002(void *data)
+>  	return true;
+>  }
+>  
+> +static bool __maybe_unused its_enable_agilex5(void *data)
+> +{
+> +	if (!of_machine_is_compatible("intel,socfpga-agilex5"))
+> +		return false;
 > +
->  	inode = dax_inode(dax_dev);
->  	cdev = inode->i_cdev;
->  	cdev_init(cdev, &dax_fops);
+> +	gfp_flags_quirk |= GFP_DMA32;
+> +
+> +	return true;
+> +}
+> +
+>  static const struct gic_quirk its_quirks[] = {
+>  #ifdef CONFIG_CAVIUM_ERRATUM_22375
+>  	{
+> @@ -4975,6 +4985,14 @@ static const struct gic_quirk its_quirks[] = {
+>  		.mask   = 0xffffffff,
+>  		.init   = its_enable_rk3568002,
+>  	},
+> +#endif
+> +#ifdef ALTERA_AGILEX5_ADDR_BUS_WIDTH_LIMITATION
+> +	{
+> +		.desc   = "ITS: Altera Agilex5 address bus width limitation",
+> +		.iidr   = 0x0201743b,
+> +		.mask   = 0xffffffff,
+> +		.init   = its_enable_agilex5,
+> +	},
+>  #endif
+>  	{
+>  	}
 
+Again, why do you need to reinvent the wheel? There is already *just
+above* an existing workaround that implements exactly the same thing.
+
+The whole thing could look like the hack below.
+
+	M.
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index d54fa0638dc44..7047408de3e37 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -4890,10 +4890,17 @@ static bool __maybe_unused its_enable_quirk_hip09_162100801(void *data)
+ 	return true;
+ }
+ 
+-static bool __maybe_unused its_enable_rk3568002(void *data)
++static bool its_enable_32bit_disaster(void *data)
+ {
+-	if (!of_machine_is_compatible("rockchip,rk3566") &&
+-	    !of_machine_is_compatible("rockchip,rk3568"))
++	static const char *broken[] = {
++#ifdef CONFIG_ROCKCHIP_ERRATUM_3568002
++		"rockchip,rk3566", "rockchip,rk3568",
++#endif
++		"intel,socfpga-agilex5",
++		NULL,
++	};
++
++	if (!of_machine_compatible_match(broken))
+ 		return false;
+ 
+ 	gfp_flags_quirk |= GFP_DMA32;
+@@ -4968,14 +4975,12 @@ static const struct gic_quirk its_quirks[] = {
+ 		.property = "dma-noncoherent",
+ 		.init   = its_set_non_coherent,
+ 	},
+-#ifdef CONFIG_ROCKCHIP_ERRATUM_3568002
+ 	{
+-		.desc   = "ITS: Rockchip erratum RK3568002",
++		.desc   = "ITS: Broken GIC600 integration limited to 32bit",
+ 		.iidr   = 0x0201743b,
+ 		.mask   = 0xffffffff,
+-		.init   = its_enable_rk3568002,
++		.init   = its_enable_32bit_disaster,
+ 	},
+-#endif
+ 	{
+ 	}
+ };
+
+-- 
+Without deviation from the norm, progress is not possible.
