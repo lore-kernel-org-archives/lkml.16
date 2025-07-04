@@ -1,41 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAFC43AA9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EDE1957FC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751639015; cv=none; b=YS5IjU+ruzF2e/AiHXa52fYNH+CmYFCEU9BcB5iVV6e25FR0hknwhytB8UO1EoTTeOUWy8viXTvcztwnV2M6dELBuC6q8fxYCX6cpqAdTq+TltPKoZk+RYcx6u6Zr62ty4dzcFfq4XCawttArlKlDtH7ONjLSwe1Ze9qTGlMoJQ=
+	t=1751639016; cv=none; b=ENd2XBPazUiRzCwVHwWBKKIRKeGzMrCyBn/CkgWNQrSVaGMnZ+13CJobH1Dwi18/2O3mzBvxqhLSq5DRZ8u0+67IZbz45BRnqKaM6KTobeqXicjRoH9sJKCgp6apUzg6ZcvtrJ0V8aonuEGIRmIE/Es1V7/C0Ejk2ikjq9cDSmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751639015; c=relaxed/simple;
-	bh=ue3704ExvIRhPugRmJAEoUTNWcIk9NV2FgJK3CY4rxU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JnDYgW1s76P0NHiK7OCcsWsijW76/fNmTJ3brFS8u7sJF2x7nJAYIikRCAX6nD/1qin/RF1ljxlvJz3InJSeM0NUGpxh9SRN8HCX8CCV/gAEQWoAzz+J/6uq4Cn4lbJKH/XDxDprCHwUdvKAstJ8G/69rFsOl+ImYTFMhjlsT8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RuvPT1Z3; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1751639016; c=relaxed/simple;
+	bh=ldghlCA/gMRJSmgWfHfOpqHHla57kEBIADI+qzIkLJM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MnB3Q9bHuX8pHqVC4pG2Tr0hgjZly3mB1xrNxfLx4DgMlWh25tUdDU7Qd0lZXQ8g+HaaM0x49qb5qNTJwpVcJ8Uh9Lgb4Dvt+NLjUM71J6cC/9grTqQAVqpFxscjmeWFroJ0mG8bEfkog0IBJkQRe5TViAjFYRGB+AmCtpjHNEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j0OSfDCF; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RuvPT1Z3"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j0OSfDCF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751639011;
-	bh=ue3704ExvIRhPugRmJAEoUTNWcIk9NV2FgJK3CY4rxU=;
-	h=From:Subject:Date:To:Cc:From;
-	b=RuvPT1Z3nR1nAKyEIgczNL1PLkYjDSzT1PUnSRnSSjxTEAmEsjc+nwJMGmbm2k24X
-	 R/6l/i3a4qYkL4q+cuC65REWLNnGW773kSx+OLN58vr+Ws33tYw5xntruVs41OwZXC
-	 eSkMxY5/ssh72sEkQ8mJU6YuNmL1si6vRUxH1azQXFWSm2CCI2yRjb/GAhBECZHWMF
-	 Ujts/SLIpENyXlXOvEwH/4GT5IBHuy1Af+0Lvxl1npOC7AJbBGuIsbr2sJ6a/HXz9v
-	 LRFG1gsZ+S/RquWhM2zznKT11GGMEa3ZDYlJdldepkwg95oxBrThHyAPQ51sdv25Wt
-	 t4tkfcJWr1BRg==
+	s=mail; t=1751639012;
+	bh=ldghlCA/gMRJSmgWfHfOpqHHla57kEBIADI+qzIkLJM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=j0OSfDCFH8OfiJOhvUn9D6WUpQJvvU4qXHErh4TQF0dt4QlncVUY7xgM7zYF32CGe
+	 mfHoZ8eiivxE2b/t3EDAaHeJUjaLpCVjCSUCExJypkk19O5QSBfY9d91nqPjsQ8gvE
+	 jyih9f9bX3SHlnoIZkl+KLy0qTotzF4ZOI9uswffr2YhjkWxIZEpNRIpjfarVGz/lW
+	 x8EkNZeZR4fGWPJ2kAM/RuxGhh1pHKxsIJwRYKRg6ZJ/76kYx8m8chW0ChJc5UzTJa
+	 ZJjolJHfLo9uVPSYX5kfwLG51cJ85x6EioqsO6eLm63jQfz8818VaJEUGwQdXtaVI1
+	 B6uTSDgXViuUQ==
 Received: from localhost (unknown [212.93.144.165])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 59E0717E07FF;
-	Fri,  4 Jul 2025 16:23:31 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 2C9D917E090E;
+	Fri,  4 Jul 2025 16:23:32 +0200 (CEST)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Subject: [PATCH 0/5] Add HDMI CEC support to Rockchip RK3588/RK3576 SoCs
-Date: Fri, 04 Jul 2025 17:23:21 +0300
-Message-Id: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
+Date: Fri, 04 Jul 2025 17:23:22 +0300
+Subject: [PATCH 1/5] drm/rockchip: dw_hdmi_qp: Provide CEC IRQ in
+ dw_hdmi_qp_plat_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,10 +45,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANnjZ2gC/x2MQQqAIBAAvyJ7TjBNkr4SHUTXXCILhQjEvycd5
- jCHmQoFM2GBhVXI+FChK3UZBwYu2rQjJ98dpJBazELxfChtDI/+JO7QdawJWiofJgO9ujMGev/
- jurX2AX9RG4RhAAAA
-X-Change-ID: 20250703-rk3588-hdmi-cec-cea8f523df48
+Message-Id: <20250704-rk3588-hdmi-cec-v1-1-2bd8de8700cd@collabora.com>
+References: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
+In-Reply-To: <20250704-rk3588-hdmi-cec-v1-0-2bd8de8700cd@collabora.com>
 To: Sandy Huang <hjc@rock-chips.com>, 
  =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
  Andy Yan <andy.yan@rock-chips.com>, 
@@ -62,44 +62,46 @@ To: Sandy Huang <hjc@rock-chips.com>,
  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
 Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Algea Cao <algea.cao@rock-chips.com>, 
- Derek Foreman <derek.foreman@collabora.com>
+ linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
 
-The first two patches in the series implement the CEC capability of the
-Synopsys DesignWare HDMI QP TX controller found in RK3588 & RK3576 Socs.
-
-This is based on the downstream code, but rewritten on top of the CEC
-helpers added recently to the DRM HDMI connector framework.
-
-The next two patches are needed for RK3576 in order to fixup the timer
-base setup according to the actual reference clock rate, which differs
-slightly from RK3588.
-
-Please note the CEC helpers are currently affected by a resource
-deallocation issue which may crash the kernel and freeze the system
-under certain test conditions.  I've already submitted a patch [1] that
-seems to correct the problem.
-
-[1] https://lore.kernel.org/all/20250703-hdmi-cec-helper-unreg-fix-v1-1-7e7b0eb578bb@collabora.com/
+In preparation to support the CEC interface of the DesignWare HDMI QP IP
+block, extend the platform data to provide the required IRQ number.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
-Cristian Ciocaltea (5):
-      drm/rockchip: dw_hdmi_qp: Provide CEC IRQ in dw_hdmi_qp_plat_data
-      drm/bridge: dw-hdmi-qp: Add CEC support
-      drm/rockchip: dw_hdmi_qp: Provide ref clock rate in dw_hdmi_qp_plat_data
-      drm/bridge: dw-hdmi-qp: Fixup timer base setup
-      arm64: defconfig: Enable DW HDMI QP CEC support
+ drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c | 4 ++++
+ include/drm/bridge/dw_hdmi_qp.h                | 1 +
+ 2 files changed, 5 insertions(+)
 
- arch/arm64/configs/defconfig                   |   1 +
- drivers/gpu/drm/bridge/synopsys/Kconfig        |   8 +
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c   | 231 ++++++++++++++++++++++++-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.h   |  14 ++
- drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c |  17 +-
- include/drm/bridge/dw_hdmi_qp.h                |   2 +
- 6 files changed, 269 insertions(+), 4 deletions(-)
----
-base-commit: 8d6c58332c7a8ba025fcfa76888b6c37dbce9633
-change-id: 20250703-rk3588-hdmi-cec-cea8f523df48
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+index 7d531b6f4c098c6c548788dad487ce4613a2f32b..126e556025961e8645f3567b4d7a1c73cc2f2e7f 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
+@@ -539,6 +539,10 @@ static int dw_hdmi_qp_rockchip_bind(struct device *dev, struct device *master,
+ 	if (plat_data.main_irq < 0)
+ 		return plat_data.main_irq;
+ 
++	plat_data.cec_irq = platform_get_irq_byname(pdev, "cec");
++	if (plat_data.cec_irq < 0)
++		return plat_data.cec_irq;
++
+ 	irq = platform_get_irq_byname(pdev, "hpd");
+ 	if (irq < 0)
+ 		return irq;
+diff --git a/include/drm/bridge/dw_hdmi_qp.h b/include/drm/bridge/dw_hdmi_qp.h
+index e9be6d507ad9cdc55f5c7d6d3ef37eba41f1ce74..b4a9b739734ec7b67013b683fe6017551aa19172 100644
+--- a/include/drm/bridge/dw_hdmi_qp.h
++++ b/include/drm/bridge/dw_hdmi_qp.h
+@@ -23,6 +23,7 @@ struct dw_hdmi_qp_plat_data {
+ 	const struct dw_hdmi_qp_phy_ops *phy_ops;
+ 	void *phy_data;
+ 	int main_irq;
++	int cec_irq;
+ };
+ 
+ struct dw_hdmi_qp *dw_hdmi_qp_bind(struct platform_device *pdev,
+
+-- 
+2.50.0
 
