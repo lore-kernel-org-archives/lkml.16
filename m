@@ -1,203 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DE2853F2;
-	Fri,  4 Jul 2025 07:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A682857F6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615609; cv=none; b=NoHysn7yOQ6CZoSibj+Vuv3Q2ktZR6EfFn7NulY2CfLrqVkgq8WC5MqAqhbwB8DashQoD8GO1I4dyG1vw14V14bcSRFFdzTWA8aKhLTHWqsx5kaCiNKEUq7JGot2Mlv3MJBgwXD/j+mzZTR7XrwYABk9+B5DUcPGmQhiVZHwpi4=
+	t=1751615612; cv=none; b=dWZ3dHqrY9oFQC/GaO51Ma9r7olmaLLUCwBqWmPYw3kPPWOEpxLm2aFQ4HNZtULN/ZIBji8bAQuoYbz/SpQYLrEzCDxMyy1mG8a3SMcjLVfyducbza8PpHxNjhkybZMvi8WWoSiTqOiIPjzWo8UlgnEVuCqTPzHrnLbPPYETfjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615609; c=relaxed/simple;
-	bh=ZdZeDvwAdfj+H2jUqMsIQrpXt8OaXU7cK/xIUwt15G8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jkNCcLLmnOBJATH5z+LXT77gEXI58SsPAmPyBs4QfZXyOj/7azSa8KjknjnEC7ynnR6fbXQC7cmCbzKe5xdOujQ6zMzRztGzjAq4WRN6adjMdHgnEROKZKtCl2OZhD+PXTJHnBzt1H7mZTZdR2/YKIgiRelYiIS23GEaRiMfTqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNsGA9/w; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751615612; c=relaxed/simple;
+	bh=KykIkmM9eLteMUVLTsm/o94BJ8e9CpiqfyoLjbdjFXM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=utcRopCsyKvx+n2k4dDYf8gUpr61CHkEKYLEbGoSs2hH6iM8Y2LbhgaZAipzr2oc40gqfCK5ZYrCX3MNE+bCT1raz0ElMXOwFQGcCviDnbeQV8J+xMKNZhff02X8ONbSSd4IRAZ6SM5Zvgguj8UKJo5se291r1sfz5mfKYaiTW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2A+4JAL; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNsGA9/w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615608; x=1783151608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZdZeDvwAdfj+H2jUqMsIQrpXt8OaXU7cK/xIUwt15G8=;
-  b=PNsGA9/wYClFeAzlm2pjyy71EaXcWorrUQffGXVdH6V2Eixmgz9zZQeU
-   8sTn9bLjOmMqlGj6KGenI4K0oyn9Yl0aXHwKBiqW119VXVESocKfp73fw
-   I/CKkUAC3Zf2cZdxJQEyzN7V78CiK0pwLtmLvJ+AomdWibSEOELDCoEw5
-   TS7TeG5AyfPif7Qj+hpdigIp1fWzt01XwB7nbN7Ck1HRTuczpsrTM0Gsl
-   CWrKRVTFctRZV61rC35M0CIYY3sxpildpkLM+YsJX5w9e4HafqOIeZysJ
-   LAHbOgW0OdV50eRtHLKZAPsxDmpeCFdCPZ0uD6vBu+T1lN/LfgvVnV+oA
-   w==;
-X-CSE-ConnectionGUID: +DnNvACRSM2rgw2prEPxaA==
-X-CSE-MsgGUID: J0B56VyYShCaJoR6xBscVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53170629"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="53170629"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:53:27 -0700
-X-CSE-ConnectionGUID: sNkwmTg4SHGk5NEM04z2WA==
-X-CSE-MsgGUID: rXw/kqZySimgsnN+J2s+NQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="160259243"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 04 Jul 2025 00:53:23 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXbEW-0003Sp-2t;
-	Fri, 04 Jul 2025 07:53:20 +0000
-Date: Fri, 4 Jul 2025 15:52:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org, jolsa@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 05/18] bpf: introduce bpf_gtramp_link
-Message-ID: <202507041510.pXgjmaZP-lkp@intel.com>
-References: <20250703121521.1874196-6-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2A+4JAL"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4537f56ab74so3569095e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751615609; x=1752220409; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FWV6N46YCWcyFKoNN7ytQeutwvqMPF1aOuLppT9L42M=;
+        b=j2A+4JAL/m4PA27zELaw7cVrAH5L0fSLqQk6Wmbvez1uHwdzHyVG//deDlkyRYHOGA
+         Ef4dx+5vsTcylzAAHI8hy3YEFO9s099bLru0Et/EXGl7bRxgHzEBF+I6VEr+whiHrYOY
+         0LksqWqitChwetPVQNcUJc9S7ioj8hhVRbji6A9SmRVsaMFmXhTMG+ZNSdn5qJqFRFQJ
+         IsB/NpxrMu9ZLOjW+/NMWZcI12mGkLORs0OLCeLGkqNjscKkGYeAad+RDzpmZU5tP/+i
+         8+ULIwD40FhvuHEp06JAQ6JSuBvgNcBe8ymr/fZ8maZrdFbUDPRBJ2aSpieACsP+hTeG
+         JZng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751615609; x=1752220409;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FWV6N46YCWcyFKoNN7ytQeutwvqMPF1aOuLppT9L42M=;
+        b=HGEEafjaZxDCRUjjqls64oR4myylyP1V/m2sSOWRDb/3Rdhd51AhqAXABl7v9FrNbs
+         tDR8MyshU825+WxYHOBrG057Y6bNsUTa9uHsDWZkdMo83gEnsAy3Xqjhw3CJcC9rv2IR
+         IRrW2AM75QqRDDHMN7k9YnfiWhIKlwQqYvHsItSakm2HO+9eFD+rmDf85m9gFrgTRPKt
+         vbRFhZbqn/uLFZTRxwTRQYxinJ9s0oqFaOeWF9wAB475ftax5+dzTInzvW4bCPAGoRKp
+         1ynEIcqVR+cIVkn9w7DNlUj3xX8cuJOXKWtmzQaSRAmz1M7s50OcMdp0oab/yKFcBycM
+         CzqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrgy70Y/T46UuWebfqanW+gJDuYIUggCehE+xgo1qLZ9MfZDecWi1cfHHZR2+xSor72o9zxCGLzg0W6Kk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHXRTB6+PLI4ZXRzCDW3hoDg7p4eoKsXpX1QPnryq7NOSKhMvH
+	BhoXO8B+bZPk1tbcQE7WijiFocw+95rL8JQA5oKPc6uQ2AJExnRQo8MUqi1tr7rhL6rwhkbRhWd
+	HuxeDOW2iFSqDHgTiSA==
+X-Google-Smtp-Source: AGHT+IE0bh3U7cJQpUshyJ2zCxCWKYVhS/atQp5WI6Mvd4s8SgWIQ7QsV49DdQFGizF5VkFqrdrBYInDOCz1+0g=
+X-Received: from wmtg7.prod.google.com ([2002:a05:600c:8b57:b0:453:65ee:17c9])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:83c3:b0:453:78f:faa8 with SMTP id 5b1f17b1804b1-454b31085e7mr14720135e9.6.1751615609724;
+ Fri, 04 Jul 2025 00:53:29 -0700 (PDT)
+Date: Fri, 4 Jul 2025 07:53:28 +0000
+In-Reply-To: <20250703-topics-tyr-request_irq-v6-4-74103bdc7c52@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703121521.1874196-6-dongml2@chinatelecom.cn>
+Mime-Version: 1.0
+References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-4-74103bdc7c52@collabora.com>
+Message-ID: <aGeIeJ8_Wj_QvEf5@google.com>
+Subject: Re: [PATCH v6 4/6] rust: irq: add support for threaded IRQs and handlers
+From: Alice Ryhl <aliceryhl@google.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Menglong,
+On Thu, Jul 03, 2025 at 04:30:02PM -0300, Daniel Almeida wrote:
+> This patch adds support for threaded IRQs and handlers through
+> irq::ThreadedRegistration and the irq::ThreadedHandler trait.
+> 
+> Threaded interrupts are more permissive in the sense that further
+> processing is possible in a kthread. This means that said execution takes
+> place outside of interrupt context, which is rather restrictive in many
+> ways.
+> 
+> Registering a threaded irq is dependent upon having an IrqRequest that
+> was previously allocated by a given device. This will be introduced in
+> subsequent patches.
+> 
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-kernel test robot noticed the following build errors:
+Same comments as patch 3, otherwise LGTM.
 
-[auto build test ERROR on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/bpf-add-function-hash-table-for-tracing-multi/20250703-203035
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250703121521.1874196-6-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v2 05/18] bpf: introduce bpf_gtramp_link
-config: alpha-allnoconfig (https://download.01.org/0day-ci/archive/20250704/202507041510.pXgjmaZP-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041510.pXgjmaZP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507041510.pXgjmaZP-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   alpha-linux-ld: init/do_mounts.o: in function `bpf_gtrampoline_link_prog':
->> (.text+0x30): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: init/do_mounts.o: in function `bpf_gtrampoline_unlink_prog':
->> (.text+0x40): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: init/noinitramfs.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: init/noinitramfs.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x10): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: arch/alpha/kernel/osf_sys.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1190): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: arch/alpha/kernel/osf_sys.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x11a0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: arch/alpha/kernel/signal.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xb90): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: arch/alpha/kernel/signal.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xba0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: arch/alpha/kernel/ptrace.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xe0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: arch/alpha/kernel/ptrace.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xf0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: arch/alpha/kernel/pci.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1a0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: arch/alpha/kernel/pci.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x1b0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: arch/alpha/mm/fault.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1c0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: arch/alpha/mm/fault.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x1d0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/fork.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xd30): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/fork.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xd40): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/exec_domain.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x40): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/exec_domain.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x50): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/cpu.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x890): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/cpu.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x8a0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/exit.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xac0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/exit.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xad0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/resource.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1560): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/resource.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x1570): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/sysctl.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x24c0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/sysctl.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x24d0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/capability.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x770): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/capability.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x780): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/ptrace.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x460): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/ptrace.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x470): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/signal.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x2270): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/signal.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x2280): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/sys.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x18e0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/sys.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x18f0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/umh.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xb40): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/umh.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xb50): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/pid.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x890): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/pid.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x8a0): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/extable.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/extable.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x10): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/params.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1240): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/params.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x1250): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/nsproxy.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x530): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/nsproxy.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x540): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/cred.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0xb10): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/cred.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0xb20): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/reboot.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x1860): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/reboot.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x1870): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/ksyms_common.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x0): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/ksyms_common.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x10): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-   alpha-linux-ld: kernel/groups.o: in function `bpf_gtrampoline_link_prog':
-   (.text+0x460): multiple definition of `bpf_gtrampoline_link_prog'; init/main.o:(.text+0x0): first defined here
-   alpha-linux-ld: kernel/groups.o: in function `bpf_gtrampoline_unlink_prog':
-   (.text+0x470): multiple definition of `bpf_gtrampoline_unlink_prog'; init/main.o:(.text+0x10): first defined here
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alice
