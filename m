@@ -1,82 +1,132 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A2288C8E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E87085626;
+	Fri,  4 Jul 2025 13:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636104; cv=none; b=UFWjRuwR5Usx2z8qSzy3TPxTEt9hFxaisYtxPLB6kiVzcXd16+SrtL6rlKqj0HmKyguogxB2jC/pcIOQYZ7O+1fki/KEUqF0gJAIV4uJp6Pfp1EaqM1IhKD02YRwvhY9drL9gXhMTUPayZSQZg8Qs/FFTDiU7l23k2BYaHSHWBM=
+	t=1751636213; cv=none; b=W0HqVGnvh/ROJvtmZUcABtlJOMIeqQQSu/OPC9F4Zji6dW5tNainbrZeaCjSWpX0PBQp//d/xU97Tn+B4nNHuGH285AA7XWVr5hYYcklu7sZi3FiZOU9SPUSTtUYRDqWwW/5vj7d8ZEYpUuhEbKCEliL8ijrZmyhWVG9vmTwQT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636104; c=relaxed/simple;
-	bh=r+W9e+IRHVkrDeRIkx9Qv7LNbjCKe4R15a+/C19zQf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYiHpS0sXlIFC6/LB+Rgqw2XyxWqHsYJy4MP1ujt9qz8bkoAOLzLxBvz7k3QkjXXuSo0HgOOsnU6aosBF4UDarxd7ihMTQuuDPlksN3U3wN2aBIpmrkEUIDJpDPpJ5j02bJmdPsai27bbhfTJsMInpKrQYjHcVoqyqmOHkmA67Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7mSQklp; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751636213; c=relaxed/simple;
+	bh=Q9UkrFl51j4x9O2AKzGaYg7j7Qe2rlKFHMgNrDtlZaQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CT++2CRXxRTgyuXuNiy323Yn/k5rnGlK9BbqqxqIysoudIqEKe/9MGFgWkH5nxZWNXHhN5jGoRGk7BNsvo3pjaMXLnXmy00tQDkgGHj3DP7dnVa1UatmXxKXdhTKhTSGo47gMlgy2iN8Nrpj4bD2sp2QSYLuEaX/nrM6Ru5x8OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ierk354A; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MvfGxD45; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7mSQklp"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so7284305e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751636101; x=1752240901; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hnPhmdTRmdCsUnLwB5NFDmheZGNY+q/iIGXgQRq+iZ4=;
-        b=H7mSQklpEeOGSe+xHcwBfSpUEPuhzvdfh6yJtFck7R9Nnz9chbUStsEEkq004NHyXq
-         ect6bGW2/6+LoKvWsh6xWdNAKwllxn5ZMXROIDCNKmePNqXQFSBVP5vEh8UyM2ZhfOwE
-         23MqiW9hur7XocGIwiaP7ftlI3Ol1/0gOb5/9/UflZWu5adPi1ZH/734fJ6UiPq9qs5N
-         hgiFdMH3+RfXWzQsXYf+nWZRPwNZtqm1tjAI+a+XKiNxS6ITYJGDx7CV/mj9DqJDUafg
-         sK71L6aet63CSF7IJkwzaMVbqXOjq3ITZyPvnGULqwp5WKAwEgYG0g+v+BLqYdffzSok
-         SImw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751636101; x=1752240901;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hnPhmdTRmdCsUnLwB5NFDmheZGNY+q/iIGXgQRq+iZ4=;
-        b=bPmKA+91T54LGcTLM6AtGPjzl34rVTzjUglsuC/1fkTzNv/WpcO5zQuz08tewcY3AW
-         uMHqWfAqrwfpYstna+V7TIiyRs9p01GdhCnJReGm7qritnIfDOO2aZekg43KhoRj8kXC
-         x1uQ5+WbMKZCBpXBiy3+xLHh2E5iuIDtGT9XtyqUPiMeVsKXm2NeEz//4a9ni0n1p7d8
-         OQirazZPOlzU0PFEcO4Da98fAC0kNCurIVLSCap3WEelH5Tl3kSY4U2bTyIvVRkfhZ9g
-         s0f02spFY1/NPgEN+6nhWpHEZzYuEw/+Db0/rnLoC4mkygGe51Erno0ilYnbRxBrbHxn
-         f9TA==
-X-Gm-Message-State: AOJu0Yy6qe3FUaMRnm7swMZYlS2JajrjoKwIB0NQ4QO/O05BMKf3F7Pp
-	Ia9/nYuWniaBx3sanMjg7sP/3usfqMolLEwon3fcSw08fzmZb7LghGZ47vEHHQ==
-X-Gm-Gg: ASbGncs4X/30oimcc3FcDGP0z+b+cedx3fvFS5sNNEtEHQwXxEufrVPbHjnu7XSiPwf
-	a7w/GWA6FGDIuGzHPicb5bfO8O7mz+rFsZhfNqqkDI9hXLPkI01L+X297GkatUlts5s3MvvK2wS
-	BI5LaEBX609O4aSzWZND5nOetIkxHL9s02Y2HJZJquTtMpGKLOJpi2s1mTnxuPc2JWyoQWTvjq+
-	sZMWzlmaHB6WAn4z7+R6FBqvpUWVxoNkYy7T/oqEcOGhMq7GoxSzBFvdTbLDsVEn3wPmbrSYCqS
-	h87deChxvQhA+hXK4B5c3urEXnMDhpXWiNcyuG7qd7x8Zqhc7MpzOTm8hyFBLPzu4TeUwMcUjdW
-	GyfBR0rVSyhOMFnZd2mbf3RkaVemG/BHY/xaxTw==
-X-Google-Smtp-Source: AGHT+IH61RV/x8NPyHLBxWvd/EQnI2VZSfwd68e51I2lRrpzG8eMEQDzFJoWVVz5e0NU91xptJnt+g==
-X-Received: by 2002:a05:600c:4e8f:b0:450:d614:cb with SMTP id 5b1f17b1804b1-454b31158e6mr24923295e9.33.1751636100766;
-        Fri, 04 Jul 2025 06:35:00 -0700 (PDT)
-Received: from nuc (p200300f6f72c4000fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f72c:4000:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030ba77sm2553131f8f.17.2025.07.04.06.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 06:35:00 -0700 (PDT)
-Date: Fri, 4 Jul 2025 15:34:58 +0200
-From: Johannes Thumshirn <morbidrsa@gmail.com>
-To: herculoxz <abhinav.ogl@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: mcb:[PATCH] use sysfs_emit_at() instead of scnprintf() in show
- functions
-Message-ID: <aGfYgsXUPtlr2pM2@nuc>
-References: <20250703103241.10199-1-abhinav.ogl@gmail.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ierk354A";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MvfGxD45"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id BC7311400239;
+	Fri,  4 Jul 2025 09:36:50 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 09:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751636210;
+	 x=1751722610; bh=4WAwqvw8g3t1MUCHlAIadPbHEDivdqOU5oF5ZelV4ww=; b=
+	Ierk354AvF659FFpEBGZTnHYIKg5Cftf2qg+x1+moeY0eQH0V5tIDArd0R1asTWH
+	3Ph/Zhxo4uqzR23mbt1uqpOiQFdzI4DmS2+a7Lj3VE8+rNZgSe6195p1FXRNKvT3
+	dDttZYTVyarpE7xl5fG3tnObnDl3IJZu5qn2B8wuYvLUwD4BQRazzHfETlb1e7zr
+	C/OIPEWYQNN1ZB+Un9zrdBdTZrZcx7r0loYfP3TGNZPfTdRuZUoAbeI6HhxOYX1e
+	9laI7rCkUK0SZI4cF9RKRtwO3HpZrdx2qh/m2P6L4wbIfHRWuxhppW0A2/n7bq7H
+	0h2eHRd8WRBgoPKvpdKYpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751636210; x=
+	1751722610; bh=4WAwqvw8g3t1MUCHlAIadPbHEDivdqOU5oF5ZelV4ww=; b=M
+	vfGxD45kzCPWcC1qgDw6pQLWiTjnNSo9fflkxfhmwu00u4MLErLDWnnQdkbMYPUO
+	ep7W9iUaPExx49n1CZGeWZnp4dSbkablwgofEldRzt8PObUUAaBB4SJROM3EZDQs
+	EeeQ3KSgbi+98NIXPg1nrjaYrS0bGMNrVeRtAhEQV0JVzlOXJs/DjBIidzK6tgEm
+	CyDVMHynVKycn07PBvZo63tH2bvSK3xQuPpyCkgFaNQNyu7fXHuWxo364m00Cqja
+	L2uRNuo1C38lM/eKZ5mJskKA7Ym+q2lR6M15+cb7BgUDN4Nls3Sdzw1BRjuPdaE/
+	SwPLNckhUFyNtlbdWSsMg==
+X-ME-Sender: <xms:8NhnaAT2fbqff4v-deXXDh6h9sFJZglSsRMzCTnlLYYXIqLcyXMNCQ>
+    <xme:8NhnaNxzTx6SQttAoJ9N7sO1iylqVB5hrKBqO2l1Gf6q9fOpwAf1pb20QJOlP30ud
+    9QSXzURHGpthyNlHo0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfedvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepsggvnhejudejsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtoh
+    epthhimheitdelsegrnhguvghsthgvtghhrdgtohhmpdhrtghpthhtohepphhrrggshhgr
+    khgrrhdrmhgrhhgruggvvhdqlhgrugdrrhhjsegsphdrrhgvnhgvshgrshdrtghomhdprh
+    gtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhu
+    segvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheprghlvgigsehghhhith
+    hirdhfrhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkse
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:8NhnaN1UHNjfOf7_aLGGRl33HPK20Q_iXfXrFxorL-owGRn9rW3zmQ>
+    <xmx:8NhnaEAc7p7ywTmYFbhVKVxdggyzX7XfvU1RiYBdW19WFZgvM7Ev-Q>
+    <xmx:8NhnaJhLB2CpJT0d2RainLbBsUwZub8QX27CVdSLtt9ZHwwtxI2eEw>
+    <xmx:8NhnaApcDHKDpiu1GnI_oTHKrXxpAT8Aar_UyIb5hM8NUcDqVqjbYw>
+    <xmx:8thnaIl4lmGLlojO5Dj9VTiwT59P03yJXEJ-mx7s2PP4RHLxjwbmb9qI>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F2AFD700065; Fri,  4 Jul 2025 09:36:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703103241.10199-1-abhinav.ogl@gmail.com>
+X-ThreadId: T286e4b5afb74591b
+Date: Fri, 04 Jul 2025 15:36:17 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ben Zong-You Xie" <ben717@andestech.com>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Rob Herring" <robh@kernel.org>,
+ krzk+dt@kernel.org, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, soc@lists.linux.dev, tim609@andestech.com
+Message-Id: <ebbaa7c9-156a-4205-94d9-d9e4a683840c@app.fastmail.com>
+In-Reply-To: <aGfR+Vx0dseqgmKW@atctrx.andestech.com>
+References: <20250704081451.2011407-1-ben717@andestech.com>
+ <cb8891d4-de4e-493c-9914-0391b3baf212@kernel.org>
+ <aGfR+Vx0dseqgmKW@atctrx.andestech.com>
+Subject: Re: [PATCH 0/8] add Voyager board support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Note the [PATCH] comes first and then the subsystem prefix.
+On Fri, Jul 4, 2025, at 15:07, Ben Zong-You Xie wrote:
+> On Fri, Jul 04, 2025 at 11:15:43AM +0200, Krzysztof Kozlowski wrote:
+>> > Also, there is a patch dependency in this patchset:
+>> > Patch 2 <- Patch 4 <- Patch 5 <- Patch 6
+>> 
+>> How? These are bindings. How DTS can depend on the binding? Do you have
+>> akcs from their subsystem maintainers that you are sending it here?
+>>
+>> Sorry, but no, this should go via their maintainers, unless they did not
+>> want to pick it up. Is this the case here?
+>
+> The dependency chain arises because each of these patches introduces a new file,
+> requiring a corresponding update to the MAINTAINERS file.
+>
+> In v4 [1], Rob and Daniel attempted to merge Patch 4 and Patch 5, respectively,
+> but encountered conflicts in the MAINTAINERS file. That's why I specified the
+> patch dependencies in v5 and this patchset.
+>
+> Now, I understand that binding patches are typically handled by subsystem
+> maintainers. To prevent the conflicts again, I think I should gather all
+> MAINTAINERS file changes into a single patch. Is that right?
 
-Ansyways, I've applied it and will forward to Greg ASAP.
+Don't overthink that part, the MAINTAINERS file doesn't have to cleanly
+bisect, so I'd just create the full entry there in the same patch
+that adds the arch/riscv/Kconfig entry.
 
-Byte,
-	Johannes
+     Arnd
