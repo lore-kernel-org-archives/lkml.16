@@ -1,118 +1,72 @@
-Received: from smtp119.ord1d.emailsrvr.com (smtp119.ord1d.emailsrvr.com [184.106.54.119])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06E72D46D5
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=184.106.54.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12782D948A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632907; cv=none; b=Jv9g6JYQTq/ozIZZhaOs0xA8eKGs1nEhWCqILWj2k7/mp4WVm98hK1j7bgoub5v2GDqcNy3Tdk6HHDIQi3uheqw9xZCCcYpMzyFCLIGGrtqGYrYU3fQfeyx2qsctzkpk4+TobH1FD12sRaJ+v0VGaDbPK2UE2b3E73y51BXC6L0=
+	t=1751632912; cv=none; b=ZFI0WLZ2LrfxxZxRBZXthoLdjoeZar3IykumQDvEAKNLYSa1OSt8buDM7i3rwKFoq3iPkx+emQRAEwJBUz0AhgEm/3vQD6Q82OdzOr+D3+ukfLNwUmJYoOlwcC5sElY5mreI+ycrcWm9mYM+XNrI7M9T7VCnmSgZzM7Vf/8yZtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632907; c=relaxed/simple;
-	bh=mbNJ73AwNFbOOurBy9lmYSY4ZrqhqELSTtqfAnVdZoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L9Cu4+EJ05brjkomcclZNFmnujPch/icNJrTjbvqpgvEW8LBL97BYzxHPNBaj2zbhBTasvv98W0WEbaMeqdXwhO4LgVMh3qvxDKIi5ldmvU5sbirUTtVx365vLCaueMerwmQHeoYsw0zqeO0ruOPgSbqVrwHe9KJMS7WIFlmqkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=QES4IK8o; arc=none smtp.client-ip=184.106.54.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="QES4IK8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1751630659;
-	bh=mbNJ73AwNFbOOurBy9lmYSY4ZrqhqELSTtqfAnVdZoM=;
-	h=From:To:Subject:Date:From;
-	b=QES4IK8oDv2qCodRvE5DVhBgS+0kFo0lFO/I4eiOHfAOXrq1z3tatwM5dSCBNEXu5
-	 Yq2EPiVv2CP5vtzC+rJDOhMOvv/6Q0pCBWaD4szsjtUTAeDQfTlMpfd4f8HJr1JwyO
-	 /I4dTugGkhvnwNgcIURIhoUT0M0cMfENBlvtPrCA=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp7.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id E3E9820159;
-	Fri,  4 Jul 2025 08:04:18 -0400 (EDT)
-From: Ian Abbott <abbotti@mev.co.uk>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	syzbot+d6995b62e5ac7d79557a@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH] comedi: Fail COMEDI_INSNLIST ioctl if n_insns is too large
-Date: Fri,  4 Jul 2025 13:04:05 +0100
-Message-ID: <20250704120405.83028-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1751632912; c=relaxed/simple;
+	bh=umaIK1M8/yYpjA+tQ4iI4mIN5efEWzCk7U4+ydrdDCM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ZPUpu+dT/Y7enNvz4q6IQ8YuzbdPQLXZIKDwxqyiZYzkuzP0PdWhrTNZTGL4BYEy6yiADZ5BdtLDQo7P5IP1tFDJd9TgYE8KzRnS4VKnDi3GV+Z5lHwzy3sPVTluAp9RR3PB1roAsYWp+U9YLkRM+DG7n5CIMg4IYnCYSxMg5dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 5B07D140BFE;
+	Fri,  4 Jul 2025 12:41:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 8031960016;
+	Fri,  4 Jul 2025 12:41:46 +0000 (UTC)
+Date: Fri, 04 Jul 2025 08:41:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexandre Ghiti <alex@ghiti.fr>, Miao Chen <chenmiao.ku@gmail.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_riscv=3A_ftrace=3A_Fix_the_lo?=
+ =?US-ASCII?Q?gic_issue_in_DYNAMIC=5FFTRACE_selection?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <8160f56d-967d-4fa0-b996-0e0a2aa8be20@ghiti.fr>
+References: <20250703084502.394406-1-chenmiao.ku@gmail.com> <f7e12c6d-892e-4ca3-9ef0-fbb524d04a48@ghiti.fr> <20250703114018.6fab0b8a@batman.local.home> <5ac2c90c-5907-40ce-a31e-05cb6d88fa52@ghiti.fr> <CAKxVwgeDcqo83ZV+xBcHwNuMk6yeU+yp7RYo22OARAVOBgrsJQ@mail.gmail.com> <8160f56d-967d-4fa0-b996-0e0a2aa8be20@ghiti.fr>
+Message-ID: <8800ABB4-8A14-46E4-90D1-7F121205AF78@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: b11d4159-b39c-4b63-b0e7-eb76e318031a-1-1
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: ixmdqxxrgnhoouzhxnkw99mtnxooxira
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 8031960016
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/MhaBri32Bw54W6u2p0Zn8VPzRsDfcHLs=
+X-HE-Tag: 1751632906-632877
+X-HE-Meta: U2FsdGVkX1/TAFbx0NIrciBh27+SNmLwVSW2k0Rv0aRarae54Ng83H3ZBUcRpjEoZ7OFy1qgKOt2bQmjv1xjwu6TlD8CQa3uCMFD/S01geJ44lasN5R1ycfd+THZNSdzUkZ923ZSvfautxhVvCn6Ihy2TAtlsZHeKWoTcwwZEfbueKSSQsVVaLuFmFvL1JiSPgLINaxZco5JMtqmmbJYqF/i0ms/FZkfSysl6WKYH+HKktV/LHSSWwD9meM2oSMiC68qBDYNLxGJLebUC6QRXFtd87mSM5SGqIk4gKPqPOJ8Y+vPxAXkSGt6opfxgR2iOfg5IUWPvqX0NEyPFHEfFgruOYegBuZ0
 
-The handling of the `COMEDI_INSNLIST` ioctl allocates a kernel buffer to
-hold the array of `struct comedi_insn`, getting the length from the
-`n_insns` member of the `struct comedi_insnlist` supplied by the user.
-The allocation will fail with a WARNING and a stack dump if it is too
-large.
 
-Avoid that by failing with an `-EINVAL` error if the supplied `n_insns`
-value is unreasonable.
 
-Define the limit on the `n_insns` value in the `MAX_INSNS` macro.  Set
-this to the same value as `MAX_SAMPLES` (65536), which is the maximum
-allowed sum of the values of the member `n` in the array of `struct
-comedi_insn`, and sensible comedi instructions will have an `n` of at
-least 1.
+On July 4, 2025 8:28:31 AM EDT, Alexandre Ghiti <alex@ghiti=2Efr> wrote:
+>Hi Chen Miao,
+>
+>On 7/4/25 04:06, Miao Chen wrote:
+>> Hello Alex,
+>>=20
+>> Should I wait for Steven to finish his work before starting mine? He se=
+ems to be refactoring a lot of CONFIG logic, which might cause conflicts=2E
+>
+>
+>I would say no, don't wait for Steven since his work won't land in 6=2E16=
+, we need a fix to prevent build failures for this release=2E
+>
 
-Reported-by: syzbot+d6995b62e5ac7d79557a@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=d6995b62e5ac7d79557a
-Fixes: ed9eccbe8970 ("Staging: add comedi core")
-Tested-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: <stable@vger.kernel.org> # 5.13+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
-Patch does not apply cleanly to longterm kernels 5.4.x and 5.10.x.
----
- drivers/comedi/comedi_fops.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Agreed,
 
-diff --git a/drivers/comedi/comedi_fops.c b/drivers/comedi/comedi_fops.c
-index 3383a7ce27ff..962fb9b18a52 100644
---- a/drivers/comedi/comedi_fops.c
-+++ b/drivers/comedi/comedi_fops.c
-@@ -1589,6 +1589,16 @@ static int do_insnlist_ioctl(struct comedi_device *dev,
- 	return i;
- }
- 
-+#define MAX_INSNS   MAX_SAMPLES
-+static int check_insnlist_len(struct comedi_device *dev, unsigned int n_insns)
-+{
-+	if (n_insns > MAX_INSNS) {
-+		dev_dbg(dev->class_dev, "insnlist length too large\n");
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
- /*
-  * COMEDI_INSN ioctl
-  * synchronous instruction
-@@ -2239,6 +2249,9 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 			rc = -EFAULT;
- 			break;
- 		}
-+		rc = check_insnlist_len(dev, insnlist.n_insns);
-+		if (rc)
-+			break;
- 		insns = kcalloc(insnlist.n_insns, sizeof(*insns), GFP_KERNEL);
- 		if (!insns) {
- 			rc = -ENOMEM;
-@@ -3142,6 +3155,9 @@ static int compat_insnlist(struct file *file, unsigned long arg)
- 	if (copy_from_user(&insnlist32, compat_ptr(arg), sizeof(insnlist32)))
- 		return -EFAULT;
- 
-+	rc = check_insnlist_len(dev, insnlist32.n_insns);
-+	if (rc)
-+		return rc;
- 	insns = kcalloc(insnlist32.n_insns, sizeof(*insns), GFP_KERNEL);
- 	if (!insns)
- 		return -ENOMEM;
--- 
-2.47.2
+-- Steve
 
+>
+>>=20
