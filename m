@@ -1,107 +1,90 @@
-Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014EC262A6;
-	Fri,  4 Jul 2025 10:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0234288C1C;
+	Fri,  4 Jul 2025 10:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623262; cv=none; b=TBVPwyVozIJrpMsAWF0yXv8uCSxIs3vFGu6z+oKMtbJ5XNuX2BZjzknyrT0Bn5x2HrwuNgoWG6ga/n8mcsj/re4T0DzBN7o3ucUw+cwZ8PFbQUgb5zlEEYU7+saaemV9kTkKW4KyqTQbJ/uP+wT/Sc1lWGy/JEYt74E5LSZ0sKs=
+	t=1751623270; cv=none; b=Ls76LAYS5IuWtLkCjhpQmA6hoYE1X+pzhc8JE8rj8KohNVkCRa0p369RjaTiEi9cclKp3UV3FKiK4T5dO0hyqfF4nU0xy7h7dhwP/Zf56yH+S7UZZo04PrHaI8JAxN2mcCwg3dfmAjsVBc6o94enqKpD4+GpoNnNwF63xi5Qy84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623262; c=relaxed/simple;
-	bh=UDwLdN9+Ws+1t2BdqtB8v0310FnUQKl1SthOpC5EQhs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BWT5I5vDQjJGFHzrHn+6U6PsZiQvAEtzs3Gh8HDWk+OEu0N0iroJ5DY53Fs4XyioA8AwKbTQf6S/qkPOwRr4IJ2VZro6Yhhj+gPKtA62NzERtuByxJFfcP2G/QSpO7/uj8+VeGR2IUVWhSJie2bB2tqxjIljb+VHDdqVLZS9Zuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=hD5BeEK/; arc=none smtp.client-ip=193.238.174.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1751623270; c=relaxed/simple;
+	bh=Cjcwlr07oXFOeUDkk0S4U3uYMwLzNl+Ks+4KvR9bZSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fS9u1WIrQjF2cWSp/bAXfnwowzWFiayynjwQmD25D9l7EvzBq9vHvME3mWn3QZchyCTuEQ5oMjCq4H+ZR1RWBQburf7dmclHw3NkdSlOT22wbJ/8d39z1sljByxfmackpVCKWqMEMRKDuzezD+eoMBGm9MIAjBoCn2y/xkdMhh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON3aeeq0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="hD5BeEK/"
-Received: from mx.ssi.bg (localhost [127.0.0.1])
-	by mx.ssi.bg (Potsfix) with ESMTP id D59B323554;
-	Fri,  4 Jul 2025 12:53:06 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
-	:content-type:content-type:date:from:from:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
-	 bh=CI21Vkd6rz8iL5QUwk0CI7L4tOktsE0+upPgppWiPgc=; b=hD5BeEK/Rn3H
-	iWAQ38MngKYxsD96rpyvcK6MHUgbtbw1cp+80nwsjBGLhTZiKT5KVKbtXBdZg76Z
-	yAFmrsden6bCwbnNcMVRXZk9Vd8dXtuum73fdpq+/ayXuNuYW/eKKqiNPFpL2Fdc
-	2hLVXB+7nSGSnuXsIvDIRUa7Q1Sb65rgj/KvTv9YrGtjzw3MRJybKcZtvsYoSEM4
-	myc6ou7HFHI791DIjV0uPFHOBU2ekW6v8A3W2OCi4BUd+UMxT2XqNMV1zh9w5YeB
-	CYlZpUZ9KiCD+7XZtpie2PJCnrDHJNAEcEuKgYQ6KqXnkD5yY9BGMC69utZtycOq
-	Ph47x3qI2cIIUXcX7+hQK3zxJJGj3DcG8ZsKyErG7lvoybNF/hB6Z4N9dLh9kAQ2
-	PLuvBwC7p59bXeH+0SmvgeWtmbHpdoIPX0e9AX+fWGg6jvJ9mQ4xpkie0wPrrU5G
-	w7/vZwnxf/xVnKlZNTaP4O+enRcvzVftRYLT87BtzvU+KSy9zcEfaOoKuZ4D6Eb5
-	cRFUXLnfQLDzRpf8lVCEaNaOQSSHjwtnP+41fUxZaqrk5zplVK3uiG1XFEieVV7l
-	/WZxqyVeGsJ4EITuJ6/kjfUXBRosqtjymV6BeL0tsE40TZ3QYlaTYWs+aMb/G2oS
-	o2mQEwKpRrhm/jkw5p2MpBsutjM5JVI=
-Received: from box.ssi.bg (box.ssi.bg [193.238.174.46])
-	by mx.ssi.bg (Potsfix) with ESMTPS;
-	Fri,  4 Jul 2025 12:53:06 +0300 (EEST)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by box.ssi.bg (Potsfix) with ESMTPSA id 1F7A264A13;
-	Fri,  4 Jul 2025 12:53:05 +0300 (EEST)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.18.1) with ESMTP id 5649qvsn007449;
-	Fri, 4 Jul 2025 12:52:57 +0300
-Date: Fri, 4 Jul 2025 12:52:57 +0300 (EEST)
-From: Julian Anastasov <ja@ssi.bg>
-To: WangYuli <wangyuli@uniontech.com>
-cc: Simon Horman <horms@verge.net.au>, pablo@netfilter.org,
-        kadlec@netfilter.org, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        zhanjun@uniontech.com, niecheng1@uniontech.com,
-        guanwentao@uniontech.com, wangyuli@cloudflare.getdeepin.org
-Subject: Re: [PATCH RESEND] ipvs: ip_vs_conn_expire_now: Rename del_timer in
- comment
-In-Reply-To: <E5403EE80920424D+20250704083553.313144-1-wangyuli@uniontech.com>
-Message-ID: <3dbee3f4-8670-b72c-e5b0-3a108b5ded04@ssi.bg>
-References: <E5403EE80920424D+20250704083553.313144-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON3aeeq0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6080BC4CEF0;
+	Fri,  4 Jul 2025 10:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751623270;
+	bh=Cjcwlr07oXFOeUDkk0S4U3uYMwLzNl+Ks+4KvR9bZSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ON3aeeq0xJcW4IWX1NUx5rgTfwRr31J1wY4T2+o8Z5Dc0jzzojoTNr16Iedf2wPJd
+	 5Fn8sUjJ7We9Twz1fDKPbVfPSHWCFaOId9SKVtzIS+8WdMONWg1r3da8USzBPi8aWX
+	 4SeUKBhZT0X6dOuRc9jXRw8zZ1ppD3zRt/qKqoXR0sqJdzqoFPq44/FLSlnFKKfd/F
+	 wJu6C6h08fKwKBWyE3h/kPUO6bM8WIiaSCGjefThb8CFjjJfCXdbIcc0T1Z8YIOmCS
+	 q7RYflnZPGBQomUFkGSlVfIjcXIp35zu44gMz6XLLJHHBI+e0NVxhHbpAmKSZQSi18
+	 p6EiKjaZ0bR5w==
+Date: Fri, 4 Jul 2025 12:01:02 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 00/31] Arm GICv5: Host driver implementation
+Message-ID: <aGemXoMHE2Y7msSk@lpieralisi>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+ <20250703164743.00004f3e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703164743.00004f3e@huawei.com>
 
-
-	Hello,
-
-On Fri, 4 Jul 2025, WangYuli wrote:
-
-> Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
-> switched del_timer to timer_delete, but did not modify the comment for
-> ip_vs_conn_expire_now(). Now fix it.
+On Thu, Jul 03, 2025 at 04:47:43PM +0100, Jonathan Cameron wrote:
 > 
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-
-	Looks good to me for nf-next, thanks!
-
-Acked-by: Julian Anastasov <ja@ssi.bg>
-
-> ---
->  net/netfilter/ipvs/ip_vs_conn.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > ---
+> > Changes in v7:
+> > - Added CDDI/CDDIS/CDEN FIELD_PREP(hwirqid) for instruction preparation
+> > - Fixed IST/DT/ITT L2 size selection logic for 64K PAGE_SIZE
 > 
-> diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
-> index 44b2ad695c15..965f3c8e5089 100644
-> --- a/net/netfilter/ipvs/ip_vs_conn.c
-> +++ b/net/netfilter/ipvs/ip_vs_conn.c
-> @@ -926,7 +926,7 @@ static void ip_vs_conn_expire(struct timer_list *t)
->  void ip_vs_conn_expire_now(struct ip_vs_conn *cp)
->  {
->  	/* Using mod_timer_pending will ensure the timer is not
-> -	 * modified after the final del_timer in ip_vs_conn_expire.
-> +	 * modified after the final timer_delete in ip_vs_conn_expire.
->  	 */
->  	if (timer_pending(&cp->timer) &&
->  	    time_after(cp->timer.expires, jiffies))
-> -- 
-> 2.50.0
+> Hi Lorenzo,
+> 
+> I took another look, particularly focused on this aspect and it all looks good to
+> me.  Thanks for making these last minute changes.
 
-Regards
+Thank you for pointing them out - it is good we managed to make them.
 
---
-Julian Anastasov <ja@ssi.bg>
+> No more RBs from me but that is just down to my lack of confidence that I know my way
+> around the spec well enough. It's not anything to do with the content of your series!
 
+I am grateful you took some time to go through the series - you helped
+me fix some issues, that's was very useful !
+
+Thanks,
+Lorenzo
+
+> Thanks
+> 
+> Jonathan
+> 
+> 
+> > - Reordered some ITS error paths according to review
+> > - Link to v6: https://lore.kernel.org/r/20250626-gicv5-host-v6-0-48e046af4642@kernel.org
