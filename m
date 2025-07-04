@@ -1,122 +1,104 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B83717D7
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 04:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD412DE6E3;
+	Fri,  4 Jul 2025 04:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602565; cv=none; b=IbkNjLJiXgjLxhfW7zyGqaxqISXCCrV1GmDMMRxW0iWljXkU+Ekdiounk03rziBfzu/uYbzYaupe4dEU4VB4zl00pyVqWDTdvU1G3JjlOjfEzdbfe1mSbUVmNizJEbzLd1qiQo0Kp/MwMAuMvZeCUs09xEhFcuhF/u3IJ/RdCRk=
+	t=1751602608; cv=none; b=gOHvLP23254TpLTY8r4sauvBiJ1XDOqumGcd5nkbFgY9S2MppakXFtZmCvX3I7W2mqahopW+Jg2m7zYs+KT/qyOZROK7/xPZfAAIfLV0sasc+Z5EerR4alyrs1jfbnuLabCb5G3ShfV3/4+g12AmGdoy5i4sfjUX26L5MYcUaBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602565; c=relaxed/simple;
-	bh=XecpaQpCuIv0QLFbf9BkJc64XnkkPzRoGau5ylgPXdQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ciWUOtiB7fFM6Uvy2Qfpwrjyn4gZ92t6ecY+WrZkmxMABnSSI+NHmJYvSL1UW/ftk7WnMG/uOtxB3OsFhtI34SkG5lpktAnD3s9lPYwZIR3QcLUcEb1Zfa/QHAYLO24s8xZL9IKW8FikRB/mCpRS3wD4mHgrsYOTZ5R/qp+O2b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fLXVQafD; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751602608; c=relaxed/simple;
+	bh=sMdhIRRts9Kmh+aiumvsj8e4PSCqDDgU6wbd7dwpwPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=E+JzOinOBJ9IB0v9IPJZkHnPT9y4c+HtMEWPsEYEPoku3PUBXXcMoQhQbPVUxmXTNp/FFW9SDqTUOsSeb/ddA1JkJ7OAPLqD/VtUTWPFBdR5/5WE3FtJwJNrCWlVL3GhdB1+a6WNh5/P806f0vcewLrG/EamS9vctNIsAyvflAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=KI68NQy0; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fLXVQafD"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b7cf56cacso5668621fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 21:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751602562; x=1752207362; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LNpklbxS/261KY95nbuoqcElZCVt0F33NNxENOsgANs=;
-        b=fLXVQafDMTXkESNLw1znJESpLOawBnsAqZjcKsDdZuODtdhPkgbJ9V9HMn625QUmWv
-         /TzWUq+NLyGqiQyaKG+Lb6SbedVMkED1CLmLB6J+QLSb5abGejFwSYmVIRln1z28dbe1
-         Gi2YVH4P5n1OvvY5Hq3zQkM8QW8O7Tc1iF19yID3XWJuLEnQCSzDqwbGlXBe8/90wW1M
-         dOH+NoP2dwsZ7UpnAbOw68qMN6RCFJzhaqRcEQqVioJGvFR5FW0h25aDqW3wd2ZZwmwU
-         2GW2ZvaIZYxdR8VaiVRWPvSrLp1L+A1WVxGYahQh2c13E6fLvJiZGo5w3eyrYGq6Zc4b
-         K/Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751602562; x=1752207362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LNpklbxS/261KY95nbuoqcElZCVt0F33NNxENOsgANs=;
-        b=gdo5CyWIFpEKgQecQgrLf6MQT7BruriIKjpsEG6Jr6ZoVoJKw6k3ViGTXUEyzSJ8il
-         AV7B96/Xv9g4AUiuIfbZlUGjp0T5NX8BbWWcuOMy4THbtXAFy/hSAYdMEkpefiC45Kxz
-         MGuE3Gb2MkA6dZ6G9cQRsJOVrnHnuNXrTxo0JqcIGNDO6AkyLUgplfTGgdwKr/e0YHTa
-         Ysc9kPSiLhVUjC0X7HCow5apt5TqAjuD7RAmLHPc3rLaxGDRcGIjqccn53NIAbETAM7h
-         SWvxGT+6YC0/XDTHYMbSXSybMo9VgIrnwA4hzQafuI9cpw2R5KWTRXhk2dW7TpoQp1K0
-         W8uA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDyGwjGDsRi1ue+7rpLRBj7I3XIh8AeTa8gCvN8BaUGlAAunG5isJ9KOCetmQdTV4DcqYVOtKQxvIbENQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy53gxl03L/DULTu2/0NdMvaDvKQgc6+LcnZeyi0Xyl7IK9cqrh
-	YicXKBCR2O3b/STRa29nCuniTy7wbT+OdnLmtDa+/VdgqPmUDoZb53zNrTaKZp2TDy/yK05CZxy
-	9GW58qG+hkCBxZsqQCaOkp4php3qwbEoNQNV0sF4AKw==
-X-Gm-Gg: ASbGnctNvCBlNjjOZaUYGmNgScverf4M2yB3feJq8ELlAQHoX7zeh5ZjjaO6IW07WM6
-	WtLpoJEGLvMQAyiC7EtoH+OzvdXfZdoJn/9ouZ09Opjr6/YGQJAxf6apoxd2TYvC1tW8NlkB610
-	L3KwWSScUizcug5BsQ4RiO74qUAp8mTkglsF9Cv7CYqbb9
-X-Google-Smtp-Source: AGHT+IGcdpbloJSunZwHs/XaLhcDN9ntbioBpiLJkF8NXPKWTLMAoMKlItDbIAXXbqigvjFpNNf1X8SwQxnpI9ERS9s=
-X-Received: by 2002:a05:651c:33c:b0:32b:2f36:4d92 with SMTP id
- 38308e7fff4ca-32e5f5856d1mr2157481fa.12.1751602561921; Thu, 03 Jul 2025
- 21:16:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KI68NQy0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751602568;
+	bh=I9bXgNvI7TrFHTydazylNLmlw2hatjhuqfY9fq8n1/w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KI68NQy0HdDAkm0Ss9W0zZwDx5JBvPxWJiqDDIWV593eKTFOTDNQMrFgynsE6+rG8
+	 rmiRgngCffcrLuT9jzpVpXSRRqsRZOn7tjwpbNt0cJBy9V01A98nvdiuTblIFnsjPR
+	 Hc+eVwXWAcapfWEkRouRvR6SbfVxRpzx5X4g1iFh3xK4W1wm7/bOAuN4YDkDjIrUAh
+	 X/OWug4RJpOsh1sK5RLp+akpA+5fioH7y0r46nHioc9tkryj0f9F7vRFbF6DmuPnez
+	 +D1kF/bZXI6Vu6eQa8mlfETo3FsRLwTZzJFx7Xhn24jYQDMWGPpFsVzeL7ixSp60Wq
+	 IpFRnHVFpuahA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYL0m0bhdz4wvb;
+	Fri,  4 Jul 2025 14:16:08 +1000 (AEST)
+Date: Fri, 4 Jul 2025 14:16:35 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Eric Biggers <ebiggers@kernel.org>, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Linux Crypto List
+ <linux-crypto@vger.kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the libcrypto tree with the s390 tree
+Message-ID: <20250704141635.57ff7b16@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-11-apatel@ventanamicro.com> <aGUvOLXXwF8c_czJ@smile.fi.intel.com>
-In-Reply-To: <aGUvOLXXwF8c_czJ@smile.fi.intel.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Fri, 4 Jul 2025 09:45:49 +0530
-X-Gm-Features: Ac12FXyJ7NyM9IIDInA5TJDnv2m4UJrY1w22dfaDXM4YfjlbpVcnLOkOViGqoxk
-Message-ID: <CAK9=C2VfvsbFTjecQm0OSsssXbff7wC4fqWf3CTmnpWSiaLcBw@mail.gmail.com>
-Subject: Re: [PATCH v7 10/24] clk: Add clock driver for the RISC-V RPMI clock
- service group
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/fCFUZVIEdgTWEINU4ZEfIpR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/fCFUZVIEdgTWEINU4ZEfIpR
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 6:38=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jul 02, 2025 at 10:43:31AM +0530, Anup Patel wrote:
-> >
-> > The RPMI specification defines a clock service group which can be
-> > accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
-> >
-> > Add mailbox client based clock driver for the RISC-V RPMI clock
-> > service group.
->
-> Now it looks much better!
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> One nit-pick below.
->
-> ...
->
-> > +/*
-> > + * rpmi_clk_rates represents the rates format
-> > + * as specified by the RPMI specification.
-> > + * No other format conversion(eg. linear_range) is
-> > + * required to avoid to and fro conversion.
->
-> conversion appears twice. I would suggest use this:
->
->  * No other data format (e.g., struct linear_range) is
->  * required to avoid to and from conversion.
->
+Hi all,
 
-I will update it in the next revision.
+Today's linux-next merge of the libcrypto tree got a conflict in:
 
-Thanks,
-Anup
+  arch/s390/lib/crypto/sha256.c
+
+between commit:
+
+  65c9a9f92502 ("s390: Explicitly include <linux/export.h>")
+
+from the s390 tree and commit:
+
+  1a8f59dfdca0 ("lib/crypto: sha256: Consolidate into single module")
+  b8456f7aaf35 ("lib/crypto: s390: Move arch/s390/lib/crypto/ into lib/cryp=
+to/")
+
+from the libcrypto tree.
+
+I fixed it up (I removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fCFUZVIEdgTWEINU4ZEfIpR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnVaMACgkQAVBC80lX
+0GzZtAf+NpRAyxFql8FX/wizP5xXftFrsM3RyXyg8ovjfKeGNT/5c4RQS3lr0DGD
+E+/6gkZhqdaiYSLt93dmcnG+YtZ0hhvhcC8INx7IgHSOfsWRwGgMKvBL2md1Nb8h
+ZCHm/v2yZ7QJMqDf3FwDKbuIwRHsACeyhPewLKHZ0Tc//+zzLYaarzha6TH28M7v
+2E6hJJS+C6KX/ig1IWjkJ+9UfD6VVhsoWqRlPIptCe5PLWSGUvjJye+9enx0dqjS
+hbPOEm+hLlp3hkpweyefAGmgT/VOIkyW8910kGAvKadfFhpm7rXpkFUSmDJkmHQP
+BylBT4yjspQ+wZxvk3bGUlvFWBbb6g==
+=vM2U
+-----END PGP SIGNATURE-----
+
+--Sig_/fCFUZVIEdgTWEINU4ZEfIpR--
