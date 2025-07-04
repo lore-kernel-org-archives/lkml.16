@@ -1,140 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901F7306DDF;
-	Fri,  4 Jul 2025 13:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E2C302062;
+	Fri,  4 Jul 2025 13:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637025; cv=none; b=kdvOy8Jn0cBppm5PZP/79R6k1swBoZtaJGB1EmN27p/PjOOYCle0RHJshOr2oTOC60qYl2qjMKMZ3SGsIcTpKbYr5euYwcIoyd6nd4v1k163XPRkBIk4Xk+eHp2fuQrOrBhB6MeSk+kTN+j4QVFeMxjPdrFKfdPUYvBp1dh+92c=
+	t=1751637029; cv=none; b=FAFGaXvk2WDD6KAMuNTjZ4yV2Tct/SymMjncmIKW/gbOLEwkGmbUBFRMyVyofpCcRAIK57+elFKf8KQiQTfj2Z/mxC9pGXYJVMBbq0uuNdYbVK07WGGVq2bY/9Fiucmt5lm0ZR3DFeKlNvp+BD58PVxdrKiE3Ts2LQPts8zQ3yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637025; c=relaxed/simple;
-	bh=LpVdGb6KRirZdT05J73u+j0sDks+bcZOsNalMSCnv6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mgJGwGmBBggftB+ty41BqVh/IE65QiciFn1lt9LkLT9YjnMFrVBGr9ytvMELOUbBMLzpYKC4PpKuhOS/SWzePlcYQzXMNChmoqX6unwRt2eWtg9JZxfWlYRpn7+h0C5rAb0BJJuDxD8OqBlRpJY1/ghuiddK7JnLSDC0uTchWpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5SHeyJO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751637029; c=relaxed/simple;
+	bh=H8pS8KHBQfQCZOxaW9Nq6KsExgCXwxkJothpg5OYWxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqQj2BrCGuGIS0NW0xws47sw1ba5H/FmB4PBYTqgs7bWsKnsx2hEsAogJvEE2y05QHBbseQGqMDag+KErkVlrzHagagHbrUT6cvNqGDe6i17/+KuomMqWD9lPWSVrR4GUNm/5ziVay1mZMsClkUENWpFCEmTzMXE86+j1mtj2Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWRM1iZD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5SHeyJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B78EC4CEEB;
-	Fri,  4 Jul 2025 13:50:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWRM1iZD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CAFAC4CEEE;
+	Fri,  4 Jul 2025 13:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637025;
-	bh=LpVdGb6KRirZdT05J73u+j0sDks+bcZOsNalMSCnv6o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s5SHeyJO0YmS+UuFO30EnLCBY1/QU2m9p5YinIlB6hYFx/7N+5Zczxfo6UkAgJTRA
-	 WPfC2UqtpDJL2APhGa1UNLRSRS9OOb4WF33Ne0GkvfxgrdLlkmRF+fz/tn1DOjhxaH
-	 ZNXVObc8wxGuh5WXTX8tG1MlYhnlJYNYYFpCzKRL3SD9NhUh0pZ6bQng2tV1eDpuKS
-	 3ytPqvu9imp/jqF5ouyR4oLHgVOblK8w9E61NmvtLIkYen43S0ji2NvtzhxSOdoSyD
-	 Pkqx2YAZgFt3yLIvkH+5ePwHgQzZuYoH/vGDe8npvULS4kvQ9I3m3AUOwierxO74ZX
-	 LD9maYY9v7vxA==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH 6/8] execmem: drop writable parameter from execmem_fill_trapping_insns()
-Date: Fri,  4 Jul 2025 16:49:41 +0300
-Message-ID: <20250704134943.3524829-7-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
-References: <20250704134943.3524829-1-rppt@kernel.org>
+	s=k20201202; t=1751637029;
+	bh=H8pS8KHBQfQCZOxaW9Nq6KsExgCXwxkJothpg5OYWxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DWRM1iZDqc8SoZaQPC8XvcPUt2jHoSFrYDSEVTnheFxunM40lgJSfNI9Cx1HXts/P
+	 97RoWcEjhifrX+fWcApr5fRkNtO8+oXdBgQCRd8DOZLsGieMB7oboGkk5GZoiSeLme
+	 I8JZgiYMgEKeup10LZ7lJZian7zgFkHq7xTGazB1AvXxyr9RBnjVfZ5fKPauEueK7z
+	 StABYyemKJTjlPsIbyjzh3Qh1GjXwWEjUlJi8Or54bb5mAaojIHE/Vh3GnQhUukFGa
+	 cISdUHoazFZfLMOa6RDlihqD0VkIOJmbMZ6YukcsS7/r0WLIe+Ja/dJBX3iIaDURHi
+	 XVVWokqBV7jQQ==
+Date: Fri, 4 Jul 2025 14:50:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: stm32-ospi: Use
+ of_reserved_mem_region_to_resource() for "memory-region"
+Message-ID: <1e33e6b6-845a-44bf-a398-4a9fb895a125@sirena.org.uk>
+References: <20250703183537.2075746-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Lr37qIzB0o1A4+Ag"
+Content-Disposition: inline
+In-Reply-To: <20250703183537.2075746-1-robh@kernel.org>
+X-Cookie: f u cn rd ths, itn tyg h myxbl cd.
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-After update of execmem_cache_free() that made memory writable before
-updating it, there is no need to update read only memory, so the writable
-parameter to execmem_fill_trapping_insns() is not needed. Drop it.
+--Lr37qIzB0o1A4+Ag
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/mm/init.c      | 8 ++------
- include/linux/execmem.h | 3 +--
- mm/execmem.c            | 4 ++--
- 3 files changed, 5 insertions(+), 10 deletions(-)
+On Thu, Jul 03, 2025 at 01:35:37PM -0500, Rob Herring (Arm) wrote:
+> Use the newly added of_reserved_mem_region_to_resource() function to
+> handle "memory-region" properties.
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 7456df985d96..dbc63f0d538f 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1063,13 +1063,9 @@ unsigned long arch_max_swapfile_size(void)
- static struct execmem_info execmem_info __ro_after_init;
- 
- #ifdef CONFIG_ARCH_HAS_EXECMEM_ROX
--void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
-+void execmem_fill_trapping_insns(void *ptr, size_t size)
- {
--	/* fill memory with INT3 instructions */
--	if (writeable)
--		memset(ptr, INT3_INSN_OPCODE, size);
--	else
--		text_poke_set(ptr, INT3_INSN_OPCODE, size);
-+	memset(ptr, INT3_INSN_OPCODE, size);
- }
- #endif
- 
-diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-index 4e510d1c609c..fe367bdadc3e 100644
---- a/include/linux/execmem.h
-+++ b/include/linux/execmem.h
-@@ -60,12 +60,11 @@ enum execmem_range_flags {
-  *				 will trap
-  * @ptr:	pointer to memory to fill
-  * @size:	size of the range to fill
-- * @writable:	is the memory poited by @ptr is writable or ROX
-  *
-  * A hook for architecures to fill execmem ranges with invalid instructions.
-  * Architectures that use EXECMEM_ROX_CACHE must implement this.
-  */
--void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
-+void execmem_fill_trapping_insns(void *ptr, size_t size);
- 
- /**
-  * execmem_restore_rox - restore read-only-execute permissions
-diff --git a/mm/execmem.c b/mm/execmem.c
-index ec2a6aab143b..398e60c1002f 100644
---- a/mm/execmem.c
-+++ b/mm/execmem.c
-@@ -304,7 +304,7 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
- 		goto err_free_mem;
- 
- 	/* fill memory with instructions that will trap */
--	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
-+	execmem_fill_trapping_insns(p, alloc_size);
- 
- 	err = set_memory_rox((unsigned long)p, vm->nr_pages);
- 	if (err)
-@@ -363,7 +363,7 @@ static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gfp_mask)
- 	if (err)
- 		return err;
- 
--	execmem_fill_trapping_insns(ptr, size, /* writable = */ true);
-+	execmem_fill_trapping_insns(ptr, size);
- 	execmem_restore_rox(ptr, size);
- 
- 	err = execmem_cache_add_locked(ptr, size, gfp_mask);
--- 
-2.47.2
+This breaks an allmodconfig build:
 
+/build/stage/linux/drivers/spi/spi-stm32-ospi.c:775:23: error: unused variable 'rmem' [-Werror,-Wunused-variable]
+  775 |         struct reserved_mem *rmem = NULL;
+      |                              ^~~~
+/build/stage/linux/drivers/spi/spi-stm32-ospi.c:776:22: error: unused variable 'node' [-Werror,-Wunused-variable]
+  776 |         struct device_node *node;
+      |                             ^~~~
+
+--Lr37qIzB0o1A4+Ag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhn3CAACgkQJNaLcl1U
+h9DVRQf8D1AxmRv5Ojv+GEHol13LiGp7nkJN0LfuSBN6gWwV5TqcAVMFganzfiNP
+XEh8akPtA7v3GAW0p3oNRN2/IrzP3kJ/XMkd65XCNMjL/eSWkhumXlAm2eG3x4I1
+9QVOAHniUh7usC0bnhTMaNHvq7NQIrg0DSrWH3GkN5Zu53mYnWo8CXCYxqBEtJ/Z
+vyJEvDWeyvubDhQT/rjARru7quA0vGfW9Kk5Z8tUJVrJYv6EhU3UKjfSr+FxNLsA
+0ZAPRipto6tHlUe4f+BZfvvI2vAJ9r6d/vd4y+J29NAxB7/YF81V2qcs3Km7SdUS
+vU4DbbrSRKtZlkaS1N4s9BYJIhO5ig==
+=4Mpz
+-----END PGP SIGNATURE-----
+
+--Lr37qIzB0o1A4+Ag--
