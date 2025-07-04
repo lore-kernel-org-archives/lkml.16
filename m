@@ -1,121 +1,111 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436E933E1;
-	Fri,  4 Jul 2025 15:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5058216F8E9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643503; cv=none; b=AgCD4FgqXR9necvBNlEJYm163nT+blVJvfFeRnV53RHpCk/vbvRiXb4dpk/YwShVcRBGO6nF+QtHLE7mqpglFojEDK3b25t0It+BywWbACEQO8Aqkg+ue1DLV717eKdKR5Fb8Ljq6Buvc/NKwuJEdpW7qc++8S4TFxdW3tYFuJk=
+	t=1751643531; cv=none; b=A5FG35DG4PLmsiLJztOYc4GUMBp58XRBmwloP0oiE0WIfjHeKJ4qEutTx/OpNQe/ijqJrkG+yoHGaJ/sRDHkYxkLBtPebpjuJDSW7VHoPJTScED+0JWpM1E53kEBreN54Y0xK5zMR59Uuur0iQrxuHLq+6sBd1ZyBLbhgui0oYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643503; c=relaxed/simple;
-	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tF6NX3TXZutyYqiZ1qc7OsTY2hWtOYwYuNGQab/z7GUswwDjdDECrkHfD3M0FYsvlurjvsbJG3RTmPY94h1kelt2rbZiw5m05+vlstHF2o9vgDIvFdrwSgWoB9k7/phHQlYACJVVztArEgiUu+hZ3T9FBMv4GMRpxrH74Afj8+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=OX/WZ6nB; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1751643531; c=relaxed/simple;
+	bh=U+nb8Prm9jbvIa4V3r3B7Mc4wIjR+TJy9ILGIET1irc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BCXn/AEKfgs7Q2WWLP4yixJpKvbQcOu1Zw696LADwPoNw7lCITHrUmX84AI+E60XCylK1wocNniPHlywEojFDWoRTfBu+ejfjFlrlhi+zoyvmEGl6dL9GlZHbCC0aoAk9isYhI7OfGJ6mIEkRQwxaUvBdyMHrVueLt5Lna/9KF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=R4y/NarH; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="OX/WZ6nB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751643461; x=1752248261; i=rwarsow@gmx.de;
-	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=OX/WZ6nB+ODVApO9YyTaMZwGboGEf6UjWXHXqungujfwvye6yEtNfnwU1sAJQE4Z
-	 WFr3/g1v2bxFIGV4VNkwgj3u/2e90/Hr/4YPwFb4CJaQyoVFGq4te27eht3H+Qmji
-	 l5Uv06/ePZqxklYGYsj1vXEliu0Gx99e7HgDs4u2qZ3Y4M/KidM4VX6fj46rMGpYJ
-	 GTVG8sboxydl72c9mBVsGw/1pzYCIx466NV189oINrRac2qMytiU5Myx7MNy/fs2X
-	 7ZS+/gV2olameEvOjMXh1GcQoavT4eodZTaOXXOZV2BpW9laDmYWJb5p+I+rw0YMn
-	 oRVYbVBPY92bsLAXvA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.33.128]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5fIW-1udlAE3Pic-004mST; Fri, 04
- Jul 2025 17:37:40 +0200
-Message-ID: <678fe368-326a-4d0d-860e-95e2f44a61c5@gmx.de>
-Date: Fri, 4 Jul 2025 17:37:39 +0200
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="R4y/NarH"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23aeac7d77aso9991545ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751643529; x=1752248329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CcyVISN67taC6h/BgRmPM88r/wN68xhaL4uppVs0AxI=;
+        b=R4y/NarHmfq04wjTJNIztowTtO2zOTbTbtz/xHIqvePZ3jqjgA8qTDB9wjBvFe8VVc
+         mMqbCPFnDlp7hoqhZHSF1MDawJQQstiQRAqTvteNXwepvYMGO5rmS7WKP3F3Dkj7kUhm
+         CKdc8chMH1GnQkDVCD+EjOtfsPbv2y4i7IkmgdFOcKm1OT9b27HcYcIt/8tzaBwbuXGw
+         1Xkg7MP1mklFJmvfkZNRtouweijWwsA95Z0Lq4Tma23/zXSyRGOcLX9if3bBx5PWVe8x
+         Y4Ulzz1JjBe2lfEdaGrem65Hlfk3OPWnAWIZ5IY/ouK+Dwlh7YXBzk6gnkxVA8H/aDDl
+         4gBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751643529; x=1752248329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CcyVISN67taC6h/BgRmPM88r/wN68xhaL4uppVs0AxI=;
+        b=SUu8/c5vXAryoZiQuPpb/57HpEvDQXUdP+fiew63GIFXEe/bbPepERn34DzWDe67j7
+         p9nDuG9YtfjW44/Pws/0Ej6CXBxJzz6D/nUh/0Bm53Wo5v48hiG3ER5ePDOdBanCu15a
+         +5F72MrZROq1E1p8EuGsMhwqV3cSAxKFXH2jb8BPKUp0p6Wv9INrO8mWIaXW2LMcIPCr
+         GVkiA8pR71ZUiP8jNVA5MRijTarvgM9Whgv2c4iR0M87hQfqQr+i40LDURLs4FFncx0n
+         FOVyb0RNyf82S8qX5NXXIm20PvQ/ass3uC1B1SSk7/OTWmc32CJOFUqD6o7KdufLlfVw
+         ctMw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXI0tLhkjjZzV2Nb/M5jYFdIEPN4svHrbpJ5V4lwaBIjN+Kne1m0gdRrWDfHFdqR13/di80XyHotDNNj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpv6Fald0ppOLq04ijiNDQwL/0Cd7YTONFMgScgwecWBw/Sz53
+	F8bO5gwsB5Yonhp+klirxFgFxqlsw7zNJEt/P0WuvYXLk6JQ+TqApSPiOCE4SFD93VE=
+X-Gm-Gg: ASbGncsvL15C1K7j7kABnbq0qf6AEAm8ok2Cae/CHf+f3pE5cAb8kbQUNqHKDD3ZBNG
+	+4fj17kfnWV1fWVdDOFaZ6M+WyhSYOr323VtE4nu6VnNf1Cq4/uK7YDL+eiQW55GjzChfA+qXbt
+	onJ70+GVolaadjR51uwndoiwS8ZqnV87p7LNg92k9Cg6fZCYOIVIY0/Ieb9IZwU1l84cfkpUbeK
+	ojlxEiSxBrUhUhTJTYLX8iZkfPlz5NlempuFnvev5R/e/desi6kHCC5hj62vSfJEUQhSZX+hpYT
+	OJY5Epxe7rPQuVrrvVhwwbpxBSO23zeNvunA1YbyPw5ublR6U3eO//qxqdaCGzAB+o4XFlPMl9n
+	vpNkWyPepupgppmc+EQP5vU+8Uv7hVw==
+X-Google-Smtp-Source: AGHT+IHCoNM/FN2r7kAw4r3sBqbkqR7ZPm3zgW5FYxH7kU0oFHIRlx/vujAnKCk/T1gpdC5+o539qA==
+X-Received: by 2002:a17:902:ebc6:b0:231:e331:b7df with SMTP id d9443c01a7336-23c8624cbeemr60131625ad.29.1751643529473;
+        Fri, 04 Jul 2025 08:38:49 -0700 (PDT)
+Received: from localhost.localdomain ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee63003bsm2084818a12.62.2025.07.04.08.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:38:49 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Atish Patra <atish.patra@linux.dev>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH 0/2] Few timer and AIA fixes for KVM RISC-V
+Date: Fri,  4 Jul 2025 21:08:36 +0530
+Message-ID: <20250704153838.6575-1-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250704125604.759558342@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250704125604.759558342@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Q4ueOPUJpt/njJqrbcBzvUGStjncSVN4382XVhGCRZ6DNOTAHV0
- JgDTpN/dSOW/XrOban2gMu6MJ3y+LZEy1f4vCn/DK2SMJpPsy7ou09niZMppyqwOWOYE1Na
- TcZuNvynKWdmS6yY/i8k2GHInGRTyGyUtk2NntcJT++mYA7MB7wvcLKFAGIgAw/az1ZsAEz
- NEFUPR6i8blO6FdPAtPHg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:hcqnhP9wrnk=;k2GRxpn1vx5Tn3LzOd2AQAFbcHP
- CK7hRRmqrt+HGcbvR7V++viKc2oVhp+Ailb3d0GzkXqfe9ltAZt05LplNcWrGEFvuZOlqLkKQ
- +jgcbEJYrhajyurYlrmoXMW5kkRZYw48GtJ8U3BxUYrgn4/5svjP5iOtqGr9BEHqH7rfladx7
- 2n+jm61uqPZi3mkJAHXq4dD9VsxsZqx4LXXPEaDNB2UygVSkbGlWQWpjU3BnXLf1cNDbuZ/Zh
- Y4a4s5K7ryVjMdnrYNi0yNqPwO5mjtPXfWCEoOD0s/SxNAF7IYw7ubegTlb7zfurFNRYtw9Z1
- OVv06l5NoVzO6X5Cit6JCCWV6JmVCe8uuhcvCDLiS+T9IsTDqfpib5qKH2lnKuLi0lLjoDt5+
- /nqZ5w+QxEkpwrL64dFfgXiMYRq4Wrih+5ZZ2j/x8N7TvGSK4Yh+MG16dokv5ti/dS7r3W1rF
- Zcwdtb6bh66zihAnWIjNob89bvrmi2lsaP6NNlGh0XC8Moce4lv3tUyo1QdSMaGgHuNDRyh/N
- xBQNMXPX6guMwXIOGlhPJbiWZftVJlEmXeBPvkC/t8/uC5PB+Jw7hfx2T4QO/3muosZMQGHcR
- 2v2+AVk12w85c+lYB5+TcHENmII7rEL9hyed+EBku27Bsj0rMsuqiSL71HhcnyumIo3CDGrnA
- WA8+Quz3e338ZR1qXmyo84ubKWfBDlrq5mQanroP6SMwMee2qOCwrFmCi+pTnez7nZC3qe2TD
- Ix0CMGN5eLfOTJGB1cJQcmnx7UFIb0HsOtofDTUvAp3tO0bw92u2Y1CLfPv0L2IzXyag+/9yc
- JrB64h2t70xtsBRha06kAOqSVLeXT6U9e22PdpI5LmS5B6Pw5ZYEUDpiVGk49r3ET+AuenWvu
- VICBRlYg7FiGXaO3azMDo7Y8f3bY3twgXJ+25afj4DfMkT+3wDq+DBgcc60RtiqjAZ0xtO0uM
- HHWIRMy3IKkqdgMFiDWB1Glva+HMp7R7a3eUYr3HfhNbM6qUQWXi75JOY3nzXy7FdPfOnSxlD
- 1qBmRDfKM6IyTGpC6tQgP+uSoPJANN/9QZsPvorP0tjoRPajG84LRnYzTwyn8mCh/0z1RbkRI
- YCGfQ1nh5ErmnpEcbRk1HuHPQRUx6+2nxnV98cBFHAqjvoITsSbHiAdEesXM4ktlTxIZb2rql
- kJx65PlNp19RU0q//JwtVElfccr8SlTNxAtzCZztdshYLd73X/NrrcKKY0RL0VXyrQNw/f8nx
- 1JixjmaWznmaRcxqdxJFGeL9s52XIbBOaaTtl+QmPA0lkO6YBl0pTF6wOCH6ZlDi0i9IkHv/J
- X/MVWGGsu1TLTbVCNCta5v8ihGEx319GXluUXPspLeRLxDZZt2pqVBwlSKmNNWE3eYZ/Ek7tw
- Mjk4AOzEzX9oWjNVXgpSTckmDwqmFXCLbRTs7DhwfQF+wuMNjze8iB20WhncThWTEmAVztn7j
- MTvpgOLPJc8JDpHSKH80YPPFH3ygKiD7WAf7C+rhU1htbnsCN9MZkFo5PsjZ8YWbl2LNRhO01
- 1shCI4D/foA1w2TxaitTjlxkydgvL+3BkWuH8huwzRi46AFsYju7OGcnfXelTUTB9LaUbS5cr
- P29Hp6i0kuFIWGUTcOKyh3Nyct9BVorQYZoOJz/95TFUoIn16z/AOU9LCh4fwCRYZ01+PAaPN
- jcsbRiSExlOhGl626bhyIY4VVFO61DRLePyQ0SPvIvAj1i9+asjy9RrsPEeE7AZOsor+On2gb
- E6G+5QISU026F252OpsdTg2UpEgXy3D3Pw1DLNRam7ONUKtaAAgJn9ZHnVuwRfrcvtPzK07jE
- VTpPd2emkqv5Ae+H+bkDYsCXyVMnpYAqcLSSmNJye/fHCCkN2P0OmrXPZN00VJko+9kBtthDW
- 306MJbzfYCAirgghYsMGuti1Y780EXgQuVOQAqQ1JMnXZKsVUqLO6mB9PUGyrJExmx39pZsIQ
- pIY7c8F67ix7t52hHSW8OC0kq1WjjHUDepAlAg5UVtSDxU1QldI6psLdB0DnifZ+Tv+n3L80W
- yBV/cZxE8DLNCBAzwRlLXN8EMkvgLDmIqCbjHaAIH1Fk8xj+7MjDsfPUp8B90OzIJT1cuEyCQ
- 5vFckm0EJEuNkbh54S0cHV/qxGYFEHipOkhn7aP7WJZaoYnNdep8PRohV7AWi4E4tanDliarf
- 110rBK8iRh3ATrhhfjep0pl+BsCndfBHuSWi/JwuKfhB+wERVbrVY8pjVn8ac4i3iGgdZo/3I
- FHN9HEJkdF3QB2vlNEOuAgXeanBjpzs+P0bz1El7FJF9QoTKiV/do0lIBiFKLXDYxZlfCesq2
- yZ90ebkcNNTrvqGFlNsfOnMFG0qbmyLjCAd00QZsiaaVEmsVQOmau/+yA0JSBk868p3ZdllnA
- G4Lpj+QS3U71ksnh9itZZ02wtkRkybyEI4yhv7QaoeQFCXwu+/b6Zn7mShjfTjdNB+2PpLY5F
- nQwh8atcyDtfTp2ltGT1rc5jbP7C2xVchoAx08cN8hS7LsEnIjywGwEE7bP6ky6A9pCAknVDq
- 8sh67tOQjntAAvqDV+r5G62VGM3anIy4zQjdWl+cMMszslNYojJLEH34dNsgrdUbA02MwHXcP
- 2egsGc4mgzPnMLFPjZkQhYMsmhxLw5PpmxjIV1CU4Y5QxhXnecTq9T6Iykmlr0H90YqbcAcXj
- Yr4PxIBduFqnJp/aAf/q1X2/LyOT0+ylbj07VjLFZ9qQ0vG4lQmSQe+Y2rImPXeh8IGIc1SUw
- CRwVlNAgi1bjuZCtfTAhWLguAE1M7bur5H6knZWGZp/A9E6XBHl2HTDJml0/Kq1AThpQFwRqs
- nZhXxEWeXrYEDHtmt/rMXx3X46xLgST+sA0GsvKQZOUFDIxv2EhTJinxvdRFoJqtJPAA287RD
- OB/XUot/Op2jztewiUkwe5yVBaFSD9b0sWTjG8EvZIEz6nSbfcJOGxznxxEKnspfU0nBAPGws
- BicF2+vIg6D/hoU4mk8fuKswrQaQwvPzBq7Ib0JYGnAKEx22y+hdkpzqcrDp4tzPHMBOE+fPx
- PyloVbwtfTsPuEUtLXa072nrewTPtjtrYBcRAcrgTkpNdqZ6CRLnR2wCGtlOtgf0d375ekkEA
- yBIHqhg1M4Lvmh6lxxV7gvTjxc8VqB+brRywhy7XtAIUPl3zLIMoH3zrVLdX8wmryZraj9m6G
- OXRphFyM2EF/GRLu60KCea2iM2YzwFkxcCkHkAJgEm0cW54P5DKToF8xyCszwo9yO5qKhoQZP
- vDM2p51kRpewD3E1fW+V2XdXtNgW20FcDUFpBeRLuHuPNFpk1DoTLkqrwMOkgAXD1YSLIOhsR
- t9wKFjD
+Content-Transfer-Encoding: 8bit
 
-Hi
+The RISC-V Privileged specificaiton says the following: "WFI is also
+required to resume execution for locally enabled interrupts pending
+at any privilege level, regardless of the global interrupt enable at
+each privilege level."
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+Based on the above, if there is pending VS-timer interrupt when the
+host (aka HS-mode) executes WFI then such a WFI will simply become NOP
+and not do anything. This result in QEMU RISC-V consuming a lot of CPU
+time on the x86 machine where it is running. The PATCH1 solves this
+issue by adding appropriate cleanup in KVM RISC-V timer virtualization.
 
-Thanks
+As a result PATCH1, race conditions in updating HGEI[E|P] CSRs when a
+VCPU is moved from one host CPU to another are being observed on QEMU
+so the PATCH2 tries to minimize the chances of these race conditions.
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+Anup Patel (2):
+  RISC-V: KVM: Disable vstimecmp before exiting to user-space
+  RISC-V: KVM: Move HGEI[E|P] CSR access to IMSIC virtualization
+
+ arch/riscv/include/asm/kvm_aia.h |  4 ++-
+ arch/riscv/kvm/aia.c             | 51 +++++---------------------------
+ arch/riscv/kvm/aia_imsic.c       | 45 ++++++++++++++++++++++++++++
+ arch/riscv/kvm/vcpu.c            |  2 --
+ arch/riscv/kvm/vcpu_timer.c      | 16 ++++++++++
+ 5 files changed, 71 insertions(+), 47 deletions(-)
+
+-- 
+2.43.0
 
