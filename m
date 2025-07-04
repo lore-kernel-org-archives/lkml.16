@@ -1,50 +1,78 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out162-62-58-69.mail.qq.com (out162-62-58-69.mail.qq.com [162.62.58.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509B733DF
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DD81D63C6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 03:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751599188; cv=none; b=CVMwk5pUu+G7K8BvIG93VXIybIY/7KPXYzymmJMl0fjEOrfL+6T6NY1LdvcZNOsyQI3wH0Z/bZTTdd9nCHOczGM62jVemtMuFV/Nivq+SR76C1dbPiHTekpQ8D3NVUYcO2WUkXNj4NuyS7zet98VMa0yfljOJJ6fqiOlz3S1lvI=
+	t=1751599365; cv=none; b=rSFlKw1w6OqFK+VoEeGOpdPfklhVwbnQfn0ZM/8SwpPAI3qtZf0Ke+Uqh8Iqp/uMiIhLreA1jNwXDLnHAnNjJK3z9QNWW5Al4UI9ovX0dqFqg2ns3vWi4m0SS7hsqhBD9r4WWUcNUpZCupfqv17ekMi/5qutVXpzTZd5B8eaJrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751599188; c=relaxed/simple;
-	bh=6e4VTmTJdsws+QP6XDBXrh/C79q76yq34yJ5EKMLvqA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gRVEW8J4/9Ie/xlNAnXzR6F/iCYRB+iy8yK55XQacuDlHmG2HGxlCcMfPrxCcso9kxM/N8rzW8KydKw0dwVgCrHFyq23oJ41gJ4dGHwS2q36Ar0zFakcJU5AfEyAmg2MWOERk8HbpcsjiLNZd5u1G4LchtRr570Ga/MthbLH1pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sd4K9uOT; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751599365; c=relaxed/simple;
+	bh=FFKq2PZ+r/jdlj1d5i8kuTlyI1sopFx2h9LZ79R5A+Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=BRvQRowR6mjTn8o95T3PxgbUh1yLE/ZyBqqBrkRc3e3iR7iT5FgBDOhWAQZwCvSt3RTglEeGmzDg41PEYXWoD1EdfyRpfBimD3ZZiIYD42jqh40qEQgWgXfGrRbKbesE04QSLipuEUxDfKVO9ehugHpfK6mjgZL1VlbfpX264rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HxrAlQSl; arc=none smtp.client-ip=162.62.58.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sd4K9uOT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751599178; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=kNobNAICq8OI6ZolSBIkSCMUrxwEO4uU25FQrzVKD+g=;
-	b=sd4K9uOTOkcrycI8kvfBmdUZOzBiWU5fJDdBLD0nwvsnrjNvkAwYiUzWO4AXRzCe7BpMmrDg91WZDTtuZ4tfmYzpyQkUum7BitWxJiF+gpd6wdw5tH1Wphh+h8lV4bIBisVVQe6GzKukLhlbqyNJgPwyplGHRwUEQrfcHxUzKRo=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wh93g4-_1751599175 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Jul 2025 11:19:36 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com,
-	david@redhat.com
-Cc: ziy@nvidia.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	baohua@kernel.org,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mm: fault in complete folios instead of individual pages for tmpfs
-Date: Fri,  4 Jul 2025 11:19:26 +0800
-Message-ID: <440940e78aeb7430c5cc8b6d2088ae98265b9809.1751599072.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HxrAlQSl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1751599358; bh=bFXOKhRD3XQTRhPLxEM3PAo9vfwaWA7EHK/JAyHGCdI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HxrAlQSligk11Q4vaY13Px4BfPnu3LekGX1YiNEGtw1PE15M/ALflucsR6VkjSfUP
+	 612rgOTwu+xfLTvS0f85VhDswoEenles78xdz7UgwWrNl0RlHw5hrvBh3uV2MKc1oa
+	 z42JwS3AxxJNBaFxir7KTGUiHLKPdRaK3D6hYMlM=
+Received: from VM-222-126-tencentos.localdomain ([14.22.11.161])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 41D374E3; Fri, 04 Jul 2025 11:16:29 +0800
+X-QQ-mid: xmsmtpt1751598989tu9g03dp5
+Message-ID: <tencent_54FF4252EDFB6533090A491A25EEF3EDBF06@qq.com>
+X-QQ-XMAILINFO: NMCsm0XXqhsSqGHC+kB9Lm1HUBzPkmLgoLRzlOUijHischq+TH3av4I2cs12qA
+	 NbyVwEH/4vWdutakSDTOWAiyWypzEkhoxF77bdbL413cWyaF2tOqh0++NUwDgGlzINgbAjlXlyWj
+	 wNOmkQ64HjH0VPClFndT3hixvfDLijqJpHO8Tqzh26SNnUsaimbeKeVZd+uZYK4MYU/xDtLHzUBx
+	 rGbBgg/+HkHRFMNQn35VJ+pnGD8O/2dj0sceXP2vO6yEDy2iraK5ALeuhAAa8rfT+DaiwessBNMa
+	 Pzsi8p8Kjnyaee9tH4l8fFSuAgWwa+jWAt3mBnHuueOw3gGO1VEPwUECJjmcaLzDRBOvkAgIJYGL
+	 4BOVewoX7h7gDFNpi9NcYvUquiAIhZGrc4ii3y3KvvtIxgXLuw1qeYkQ7fu5tBObVL5zxU56jY8i
+	 FH4Clw3wVX6hXZcYqdb9Wgmoh7AE/L6GAwDF+vI512hV7DnRD923thEi1YFWUKxxC2+8sL53r8aC
+	 x+zFBeY6WCHCVvPZEhIllT01w9Abbbn8KpBSyS8cGxWCv/udsSBE0pPLFuhNJnq3HDk7UvWX0Adp
+	 AWdDHnZ2I7MQIJECkPmfYoyLbUrNmkpLqRRtTYJoDdI5ktBv/3viCSBemaLjWeBeSgfFzbP4qJFr
+	 xjZUUHpGapKxRsoK/wZovE9kJ+8dSrhq5ElSa5L4FpjlmbjhaFapzcMY7pElT61499+jTPzO5JCW
+	 6AtHih1I8HoTXBFHask0FuOLu3+pZRrTUOfbUzw/7q2x0FbPkBKpe6XhAf0UHx3vEeOzwJNh62mn
+	 Kom91FHElD3a8dwdz9I9jp7nvajTDcR7oXKldVBfNeF0PcFMbKuuKanWZ9g7oLvlPIIOc3wsPqYn
+	 p9yH9vdEsOx04RU+Qyf7DHqfrRUQ6KxNEunf3QkE5T6siaHo3Mon4UvNxFx2DXgDp1H6SyzxuqtU
+	 GHzMJcRE/xN7khy9zB1/UN5nmbluUr66NOskKcvb+6K97n0wAbytaHkTtDriCpv+/ZvEkPDdz080
+	 WyKijJJtZfX/YFbD1c5l+wJfZ1V58NG7AFCqp/UEXf/HwAY3KV/gIoI3EFXtJ4xu6bPhNahy6CEk
+	 bFRPsu
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: jackysliu <1972843537@qq.com>
+To: harry.wentland@amd.com
+Cc: 1972843537@qq.com,
+	Austin.Zheng@amd.com,
+	Dillon.Varone@amd.com,
+	Security@tencent.com,
+	Sung.Lee@amd.com,
+	Wayne.Lin@amd.com,
+	airlied@gmail.com,
+	alexander.deucher@amd.com,
+	alvin.lee2@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	aurabindo.pillai@amd.com,
+	christian.koenig@amd.com,
+	dri-devel@lists.freedesktop.org,
+	joshua.aberback@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux@treblig.org,
+	mario.limonciello@amd.com,
+	ryanseto@amd.com,
+	simona@ffwll.ch,
+	siqueira@igalia.com,
+	sunpeng.li@amd.com
+Subject: [PATCH v2] drm/amd/display:fix a Null pointer dereference vulnerability
+Date: Fri,  4 Jul 2025 11:16:22 +0800
+X-OQ-MSGID: <20250704031622.3124142-1-1972843537@qq.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <220f9fb4-45ad-4997-9572-564242737dd4@amd.com>
+References: <220f9fb4-45ad-4997-9572-564242737dd4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,62 +81,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After commit acd7ccb284b8 ("mm: shmem: add large folio support for tmpfs"),
-tmpfs can also support large folio allocation (not just PMD-sized large
-folios).
+From: jackysliu <Security@tencent.com>
 
-However, when accessing tmpfs via mmap(), although tmpfs supports large folios,
-we still establish mappings at the base page granularity, which is unreasonable.
+A null pointer dereference vulnerability exists in the AMD display driver's
+ (DC module) cleanup function dc_destruct().
+ When display control context (dc->ctx) construction fails
+ (due to memory allocation failure), this pointer remains NULL.
+During subsequent error handling when dc_destruct() is called,
+there's no NULL check before dereferencing the perf_trace member
+ (dc->ctx->perf_trace),
+ causing a kernel null pointer dereference crash
 
-We can map multiple consecutive pages of a tmpfs folios at once according to
-the size of the large folio. On one hand, this can reduce the overhead of page
-faults; on the other hand, it can leverage hardware architecture optimizations
-to reduce TLB misses, such as contiguous PTEs on the ARM architecture.
-
-Moreover, tmpfs mount will use the 'huge=' option to control large folio
-allocation explicitly. So it can be understood that the process's RSS statistics
-might increase, and I think this will not cause any obvious effects for users.
-
-Performance test:
-I created a 1G tmpfs file, populated with 64K large folios, and write-accessed it
-sequentially via mmap(). I observed a significant performance improvement:
-
-Before the patch:
-real	0m0.158s
-user	0m0.008s
-sys	0m0.150s
-
-After the patch:
-real	0m0.021s
-user	0m0.004s
-sys	0m0.017s
-
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Signed-off-by: jackysliu <Security@tencent.com>
 ---
-Changes from v1:
- - Drop the unnecessary IS_ALIGNED() check, per David.
- - Update the commit message, per David.
----
- mm/memory.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 0f9b32a20e5b..9944380e947d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5383,10 +5383,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 56d011a1323c..393f87cfe74d 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -934,17 +934,21 @@ static void dc_destruct(struct dc *dc)
+ 	if (dc->link_srv)
+ 		link_destroy_link_service(&dc->link_srv);
  
- 	/*
- 	 * Using per-page fault to maintain the uffd semantics, and same
--	 * approach also applies to non-anonymous-shmem faults to avoid
-+	 * approach also applies to non shmem/tmpfs faults to avoid
- 	 * inflating the RSS of the process.
- 	 */
--	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
-+	if (!vma_is_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
- 	    unlikely(needs_fallback)) {
- 		nr_pages = 1;
- 	} else if (nr_pages > 1) {
+-	if (dc->ctx->gpio_service)
+-		dal_gpio_service_destroy(&dc->ctx->gpio_service);
++	if (!dc->ctx) {
++		dm_error("%s: called with NULL ctx\n", __func__);
++	} else {
++		if (dc->ctx->gpio_service)
++			dal_gpio_service_destroy(&dc->ctx->gpio_service);
+ 
+-	if (dc->ctx->created_bios)
+-		dal_bios_parser_destroy(&dc->ctx->dc_bios);
++		if (dc->ctx->created_bios)
++			dal_bios_parser_destroy(&dc->ctx->dc_bios);
+ 
+-	kfree(dc->ctx->logger);
+-	dc_perf_trace_destroy(&dc->ctx->perf_trace);
++		kfree(dc->ctx->logger);
++		dc_perf_trace_destroy(&dc->ctx->perf_trace);
+ 
+-	kfree(dc->ctx);
+-	dc->ctx = NULL;
++		kfree(dc->ctx);
++		dc->ctx = NULL;
++	}
+ 
+ 	kfree(dc->bw_vbios);
+ 	dc->bw_vbios = NULL;
 -- 
 2.43.5
 
