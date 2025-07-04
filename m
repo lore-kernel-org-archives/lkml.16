@@ -1,118 +1,189 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF982D63F1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 13:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D02B1DAC92;
+	Fri,  4 Jul 2025 13:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636337; cv=none; b=afDAF2geniUe4mC2ex9bIln3BZDi7ABsGICL8rxVHz4+Lgc7qjNhJl/tGjg8uQO2KlS9Wmx9qzVG49E0puZLBcFahm9E5hjMmhJAQApmh0voawKjhp3SGKpV9P8EFwjrae6rqcdJojHk1IctYORTb+c17Hgwil/syvZTTQadKJ8=
+	t=1751636408; cv=none; b=BI8Nz7gl+xnC9+lYVbMSyJAbGmjE+FySsg5yKqB5Ensbo3c5i6rBGgcww/H/rosu1goRxOdtlhSjKlimnhbJuPPyRe8uRvxfPlayuXuMUZ1bHRgwbqGAJDt7lhQtJMxmh9rJTTNyAmhfVQ5UeJZi1I3Y95qwymfzt7VYtV7sP9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636337; c=relaxed/simple;
-	bh=Ni0dpnJU3rhbEwaxJZOcN4eUR3ubAzS3k4xsQNwjQ0c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iaXVlBywYdwd2ljf+1fUVGz/A2HwbF+tc5IHbIWq/849sx+JCotQknyp1MC27KbGj986c0jCY+4YZRQCT0aWow9UUtgIxpw2lmi8EkHo29svXvi7J2Sqoj/4OLg0h/MJQsPfr84tPwWWKGRoCV4ER0C/5GpIrNNUZnEmJ++zw6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HsGrDjsm; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751636408; c=relaxed/simple;
+	bh=x7xVEMSsXXsnT+LLSekeh57Svi1duY+nh1PdFmeqLGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkWgUwixPymdB5aIl3CTHpVNsbIXXwB+y22ASJYQbIxTvNwSJrY1AFJEsmMouFTcKBziXaua03npA5hEPe1F3W9doUrg28tTRT4PzyXImzAceOjmhVDrI4rxcGP/Yo9cAEk6pqUSqLz2QtTIBYulLd5EHSBNb3aJXqBPYA7s8zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfEBFn0H; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HsGrDjsm"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso530971f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 06:38:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfEBFn0H"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2ea65f5a0easo726354fac.1;
+        Fri, 04 Jul 2025 06:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751636334; x=1752241134; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmZly46HF2qvPjEzdRLzoBDfMCOkNolKlPyBFoDkbDc=;
-        b=HsGrDjsm0QXN3BGJspmN4I1SPw2PkWKcLIG1PAB6d5wlv2qABupgrsW17gDSXdjJly
-         H3nkncaRANAvkPwlPd4Bu633OEkh42Hf8ThuefKjbleUkfrYKAnL0kq0Ep1YgUHXhU8d
-         d4PYtpkCDfJU+lojQUbRUF5rEaxJSE8XO2N9u18/JDeE3ulgi8Tuc/bzsU813KelxP9i
-         qR/m61OVMC/MwAquVMr5nkfBYPu3UK3n/zY3a0n689LQWrgsdICYFk5CvKTDW1tTjKQX
-         RPHpI+2XGRwiR5eFDbai5alqWudmawg+AmA8/50aMNsl61sJMLOTekon7mnEFwWkpdEX
-         9vlw==
+        d=gmail.com; s=20230601; t=1751636405; x=1752241205; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
+        b=XfEBFn0H0srLeTRSPK4w37IW6+b3+oBDhpTgp9SCvVnsXWNkS00K8hcH1YV2ol/Q3O
+         LJBECX4gNvNRjI3f5041tgHaQi55k1ImpFXDQsHWfq5FybCGtqfnSYD3hC+DTKy2aQ9q
+         7BZqfvDR92hP0/ikKAQ2F0r1fHsJv1cces0Hv39btwOZeQ0U/LFg4Xa64VpQW0cNBCWG
+         PLlj2ye2TEub1HWAXeW9ghT/RiBb0ycRzlfVC7FnTdLuHYiDlUG6HQA2eesc/swaRBWE
+         trLylb52zRzgT148HUv2jizo9i7zbH+5Ai7T2/ep/RaOQwkLz8S85h9W3kAZuz1VhMTY
+         3gKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751636334; x=1752241134;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tmZly46HF2qvPjEzdRLzoBDfMCOkNolKlPyBFoDkbDc=;
-        b=R9qMXBrVVL9cdBG7wiVxXdzN2Q2NOfXg2BfisLRhPAt9sHZf0+IoYfYczOj2SUVmFZ
-         ATDVNQv85WA2eP28wHXJF3/VdSHtf8vbTttQBxTaIjDYL1m6NNhJ06eDlgLQ8+UQNwah
-         KrVTcHpT4fsWg06DTU2pAaaKmMTRJTF+eTGeaUGx+nGmsRdsr6Yn/qG9a+dVLJvvVJcJ
-         7Dw0vwsP+d6yLDun9XjfwV/u9eemLiJwwUYGnCIRGX3XSEzeYU/n2h0xAwg+RqVvHekT
-         JASrn9fu1SK0RjiFwmP3ju//sQ6bAA74E8QLhICy/QgMVR/Pz9baB3DmMa82yGYZEjo5
-         ilKA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+Zphn2QuCXQ03OYFPtpgqlkgDD5FCxFMDQ1dCt/8+Mq8JQR8hfhOxp/2/7gJCAxfyiivJtX6Xtrm42oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhR7q4t7kSiiza43lI1H0d4Z/KlRerIjKaBx+eFCnenqV2bdUH
-	oJt9wK9CKEQulWg716obPRR59MtqjAqE1dyS2IfLzivVFgKx1cjFZB7wAIQsC/OWUqsaj3xBhoE
-	YeXVA
-X-Gm-Gg: ASbGncsXWtr1CLvX3UHbF8vrYb4kILeZmjRPVlTXaJhKitu8/5bo8olRQo7QFvs3aNt
-	DdjL4StdxYscTljYUoL1C8//SyuD8Zh4Tsdn9OfR9fwlgf+YKI33AWxDg+R9AgjgfnmpIN0ueTm
-	/PTeQqrff/HCEP7u68Xe/pm0ZElqKJ4wx24JYt95b33ucaqCNF2t7awjvHjKdCGWmrDDjkxl6vg
-	/Qi+a0O4CkzWmQfFRB4hlMC/yL1Q2MEpZmVOF7nufDbqmehGA3FcowD9fZhWIra8iv1php43A3G
-	SwtHWILyu990qVeDA1dN5mkB5mLSK+QwsL8wmKjVkSA6WfWYc5k/ne5Rr+3ligqfIw2ZlPvGlTr
-	ZkwNMAT1u8BfG
-X-Google-Smtp-Source: AGHT+IFbADOmXUyvQXWzmqL0Vi+x5HWen9VdaHK/QLd7cw/v0MlRhdUI0DW37OsEiFwGE10fuPnNcQ==
-X-Received: by 2002:a05:6000:4025:b0:3a4:c2e4:11b with SMTP id ffacd0b85a97d-3b4964fc4bdmr2704268f8f.51.1751636333777;
-        Fri, 04 Jul 2025 06:38:53 -0700 (PDT)
-Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:779f:7637:a2a6:1bda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030bc79sm2522595f8f.9.2025.07.04.06.38.52
+        d=1e100.net; s=20230601; t=1751636405; x=1752241205;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
+        b=SMkwwmtHib09y+f3LoZk5uDFkjzNLRpNx4pdabcJqkUrKzgfqoyulyPdqt+SpW91vO
+         Co/C3HoO51zA53eulBmtsiaInty/dvX3rduz8SPEfJNYoCb0mVVQJeQsoW9oVaEyjRFz
+         EuvRhLvYdva3J/AWJkscwnKvC04PGNSLkdNS4lmiYWkDNuYZb0bpskg7pTG7N5LT7y5X
+         +36ICP9Dpxkf8qsnjvbl1HdlkfSpx5TNQgrMeh5tqO3z7eUlXDP/e4MVcLXdyPv98dcy
+         0keoyiFwTIlHUofq0eKjR7CUEAIysLJJNxjcOJZywOsKAS6tt0DOvB30Oxd7/q//XGp1
+         7U7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5u1elRgq3ugxvuFE0pMt0Ha47CPjycUk2sqr4XhS0nd1IEUcETAKx2aNcECBTs7ExOQCqxxxxl0=@vger.kernel.org, AJvYcCWZV72f9K7/Wx9Abwb5NTNa4/CY/db9JJv+VeBsVHZEmYZnj/4iB9UrSAV6d22CpVic2NL83NzXBLuLshTM+A==@vger.kernel.org, AJvYcCXUaMpJ8g+AeBA8J/hI1b5vtpaevShpMvdTARUqH4sdaOfntSIO4MEt6YuPx6xyUP30nIU80XD7x2Ka@vger.kernel.org, AJvYcCXXUbOhFk3VqRLG4WhdWrCFSg0C/RhK2QSsRtK0blAc6zsomorDdQ7o6xzTwG7DZi5Ty5y+wQD31U9TwjBT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH7JmbNf5p/OZCfuHKxmo3PmVBdt3Lo0Fdtc3FfaOR0waAd68T
+	qK3eObfjDE+74OnZ/AA1hJOe7HhLd/5r/wkkHM/FOv5s8xkg/dZZcNmi
+X-Gm-Gg: ASbGncuJvyWmQooERHDrPymvcUtharQTSd2Wd+3jiIjO2lJbIcUrtP3wYZlUd2SDQIl
+	2zmtrePq1C254niCNQh3FpTM4zz01Y9vdgzNxmr7v4pTuxB+0nWvJcEd430Alx7FCgBaZfiRevM
+	VYhHlUr5QB/HP/NzvzispSQddn2HbRPIybpfx5v83RPZ+KSEwwvDozGwKxOLPUI6Rsk8biKL8JR
+	HYVmTQpqbX6A+P96G+o/BnHXRtWAKZyl+QH50lsXKIykbkNDv72v2TdMyaC1wbsV1YIDN0lkfee
+	zGpRcltQMvxdbs6DeLYKeShomYxa2ltuFdDDfcoOo0BRbRqNIqgcFCom8LcB7Ngf8iJ9rVUfiQf
+	jbUD7YzIB0g==
+X-Google-Smtp-Source: AGHT+IHTmverQslNh+Of2OQdfM9KG+sNpKYYyXBNG8W5je+VjCNljcNikA0fXeYMh2Zp5w7wNtcx6A==
+X-Received: by 2002:a05:6871:2d02:b0:2b8:b76f:1196 with SMTP id 586e51a60fabf-2f7920cb157mr2219870fac.19.1751636405315;
+        Fri, 04 Jul 2025 06:40:05 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:2db1:5c0d:1659:a3c])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f78ff40cd6sm514849fac.11.2025.07.04.06.40.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 06:38:53 -0700 (PDT)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Fri, 04 Jul 2025 15:38:41 +0200
-Subject: [PATCH] dt-bindings: media: qcom,sm8550-iris: Add X1E80100
- compatible
+        Fri, 04 Jul 2025 06:40:01 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 4 Jul 2025 08:39:59 -0500
+From: John Groves <John@groves.net>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: "Darrick J . Wong" <djwong@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
+ famfs
+Message-ID: <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-11-john@groves.net>
+ <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250704-x1e-iris-v1-1-c3137d979e43@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGDZZ2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDcwMT3QpDoFBRZrGuSaJpioGxcZpJolGKElB5QVFqWmYF2Kjo2NpaALM
- e2UdaAAAA
-X-Change-ID: 20250704-x1e-iris-4a5d033f4a2d
-To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
- Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Abhinav Kumar <abhinav.kumar@linux.dev>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Stefan Schmidt <stefan.schmidt@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
 
-Iris in X1E80100 is pretty much identical to SM8550. We can use the same
-firmware image and the same definitions in the driver, so just add
-qcom,x1e80100-iris to the existing list with qcom,sm8550-iris as fallback
-compatible.
+On 25/07/04 09:54AM, Amir Goldstein wrote:
+> On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
+> >
+> > * FUSE_DAX_FMAP flag in INIT request/reply
+> >
+> > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
+> >   famfs-enabled connection
+> >
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/fuse/fuse_i.h          |  3 +++
+> >  fs/fuse/inode.c           | 14 ++++++++++++++
+> >  include/uapi/linux/fuse.h |  4 ++++
+> >  3 files changed, 21 insertions(+)
+> >
+> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > index 9d87ac48d724..a592c1002861 100644
+> > --- a/fs/fuse/fuse_i.h
+> > +++ b/fs/fuse/fuse_i.h
+> > @@ -873,6 +873,9 @@ struct fuse_conn {
+> >         /* Use io_uring for communication */
+> >         unsigned int io_uring;
+> >
+> > +       /* dev_dax_iomap support for famfs */
+> > +       unsigned int famfs_iomap:1;
+> > +
+> 
+> pls move up to the bit fields members.
 
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
----
- Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Oops, done, thanks.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-index c79bf2101812d83b99704f38b7348a9f728dff44..9504d7ea23f4a30fd2d03e8683721641f8b1a115 100644
---- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-@@ -20,6 +20,7 @@ properties:
-       - items:
-           - enum:
-               - qcom,sa8775p-iris
-+              - qcom,x1e80100-iris
-           - const: qcom,sm8550-iris
-       - enum:
-           - qcom,qcs8300-iris
+> 
+> >         /** Maximum stack depth for passthrough backing files */
+> >         int max_stack_depth;
+> >
+> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > index 29147657a99f..e48e11c3f9f3 100644
+> > --- a/fs/fuse/inode.c
+> > +++ b/fs/fuse/inode.c
+> > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
+> >                         }
+> >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
+> >                                 fc->io_uring = 1;
+> > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> > +                           flags & FUSE_DAX_FMAP) {
+> > +                               /* XXX: Should also check that fuse server
+> > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
+> > +                                * since it is directing the kernel to access
+> > +                                * dax memory directly - but this function
+> > +                                * appears not to be called in fuse server
+> > +                                * process context (b/c even if it drops
+> > +                                * those capabilities, they are held here).
+> > +                                */
+> > +                               fc->famfs_iomap = 1;
+> > +                       }
+> 
+> 1. As long as the mapping requests are checking capabilities we should be ok
+>     Right?
 
----
-base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
-change-id: 20250704-x1e-iris-4a5d033f4a2d
+It depends on the definition of "are", or maybe of "mapping requests" ;)
 
-Best regards,
--- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+Forgive me if this *is* obvious, but the fuse server capabilities are what
+I think need to be checked here - not the app that it accessing a file.
 
+An app accessing a regular file doesn't need permission to do raw access to
+the underlying block dev, but the fuse server does - becuase it is directing
+the kernel to access that for apps.
+
+> 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
+
+I *think* that's checking the capabilities of the app that is accessing the
+file, and not the fuse server. But I might be wrong - I have not pulled very
+hard on that thread yet.
+
+> 3. Darrick mentioned the need for a synchronic INIT variant for his work on
+>     blockdev iomap support [1]
+
+I'm not sure that's the same thing (Darrick?), but I do think Darrick's
+use case probably needs to check capabilities for a server that is sending
+apps (via files) off to access extents of block devices.
+
+> 
+> I also wonder how much of your patches and Darrick's patches end up
+> being an overlap?
+
+Darrick and I spent some time hashing through this, and came to the conclusion
+that the actual overlap is slim-to-none. 
+
+> 
+> Thanks,
+> Amir.
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/20250613174413.GM6138@frogsfrogsfrogs/
+
+Thank you!
+John
