@@ -1,45 +1,46 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012071.outbound.protection.outlook.com [52.101.66.71])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010042.outbound.protection.outlook.com [52.101.84.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C29E28B40A;
-	Fri,  4 Jul 2025 08:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8406B28B419;
+	Fri,  4 Jul 2025 08:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618140; cv=fail; b=eFCPTJ11zkA+03o6kPCat0rivShc3cM7BvYJiVm8Le2FxDuLPnIM5QCze6XMYEFG0M8uTI56EIAXSFwUjmgAn1c1I88jLrt0eucNvcJ07xA3wdDL89F8MTaXxZaTCcaZQ8qxeIALlsGWoKXu+MjwaTfSUUDH+ZTJTN4/jy/8lU8=
+	t=1751618141; cv=fail; b=iXCAu0FuCOcRrjJxGpP/FBpxEHw1gqinzvvmFnXj3OtfuqsA+MO7eLF+5NKcYTMG1CtA5OSEkFQZmiX/nob/BkBb6P+jF3tSuzJS9xp8OyHRwT4qvb1foek2Uk0WgIh/cSazy5KNJhbN3Nycwsp8LK8TAErWMdI4R+qFTaqAU1A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618140; c=relaxed/simple;
-	bh=12P1sD4xV+cRjyP/L7X6Jwnzm3v+XThW+Au0G65bAEQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DF4xeyuk5CnX71WgPUToapahFGo669iQAwTKWuiDqrqoOnsXJqc+0R+9ap26oO7Jx0dt1Tu0ok4Eb4N/YVAAlScdWe1twph0GJ9pFNu0XDUCaWXbc5KJ/CkrpjPw68rs61q2jRi5i7h/BHcodhyl6nK9q1FgMIPNpG5Ma5ooEBY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=H2IegRpx; arc=fail smtp.client-ip=52.101.66.71
+	s=arc-20240116; t=1751618141; c=relaxed/simple;
+	bh=y68XLclY57vukmDjI0wPswgmz56iKl3lHEmuvh4MqHA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D7y/uDQGHns5U4d/cDRczIHpmt5kFexFMRIzvj6qCsrGgQ5x8FoZKdDelYyQ9zgeeux2F9hjjmRx+OYwyntGJvd6taueTS9pFBwU1hUcoFiekld5yLvRO8mhRSRAIN6o5hXkRBbC/bc8PmiG7LtDBtSCeAkftAabPpd6JuJgKuQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=k2P2jpsC; arc=fail smtp.client-ip=52.101.84.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="H2IegRpx"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="k2P2jpsC"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xsqZZpj2Jf/AfgGuNyRL16HJ3ONUr8JGhWic4cO22eeL5Fht1lt7J7fqV94pxIZu+JzoXo3PmrVJMgxJKfdSQn/2vgnnQexmG+49d5fcbThmtnFzD5A0hEeMAPJkrgyOY/R1fIsM+Xzb8M59NdmjZaTe0T2cXxbEaXutUdRVMNFtx1Re7BnBKRCO4BUc4TD7u97bhJ9h9n6BrOa4N3Erl/zK/btanamlZA52+qU+pj+e7P+hNiQyi/kICunCOVxEliYCuDORgqfIJDXTNjVSIrcsSjZBb3Y9SdWPffX+7wF5j2naS906tWtWEIOilZ3RhjD75q1rMPexUpcvSh93hg==
+ b=EdH2sVzJZheaLmacu/R4ushjM0mSgmrxH8dp0mBzh8h0eZt8vG3N1RQcfOsvub3QigjIM4Ue/OoaKutRwuyzhb/ny7aitYEW5sUPQxwJSR1UC+qbrgUV9z5JzxEI3I/KqREBtpxU4c6CP6FletSHlUFEw3oEE8QfHiMb/1a1oR+dP7FPtivOtDyr7m5pnvUgJij6VkOz5cY6lZej7D+KwH2lI/lXkh2gU7dDRvbXvPCv4wi3gU48g868xdQc+1WEoBzy2g6TiJHXi4q8t/h+yiKshC1QZ7+LGVipaXcvq3CZScsBv1D8VMiB8dsyaVDJzS0m9rs7NzSJB/dwVUJ+8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oBoM36H9hJB0RbB9hAHUbqwoA1p+E1fxTotEFpvqnYQ=;
- b=OYKdMuvGh03L2v/RdO8UiFNKYt640L9JZdoMqzrteIJHqdkbk/55DanAA5gPU60zqmScknT3J13kjH/+KoHt9Gc8fxxECSvPrkuc2n/vAO2zcBFr/oX5Jz/2Xi5pmGshLN1dYBkv9UiL6Txg/d5N/Xi5SlIZcqJf2YTFCoU9DEuTWbNs72mY/Dadjx5vWqV4Clu1G72pUWGoJ5QMUTsSSUjfGJO6egRKgUgKs4P53xl1U0IvjMKKPBiouR16PW0BAtl/4PIFcdAEm81+Sh6WvIASO0i5jiQayvPl4fbKkCHp4x51G63P7ba4fL4aCARQlp4PVfncS0PFMTlwCULhOQ==
+ bh=QLTe4whWT4q7CGpR5VqFknx4DTOHOJxShD//P9jJf9s=;
+ b=qasfsYNC2j15AFPNSACB1GVSLH+5fJwIdeLSw5FR/rdVn2YLzcx/Ql6UXNM9OJHNdwjwmtjLsCpEr7a3UoLshCer0AndCE02kIhYJDP6rj+aLymGs6BgABGnazptaTLo5dh9daschwaaERzSUSrnvqNcDjgtdHzRNb1WtE+SsADUM95/P8O1HEOhoEIsVSbbNAQsXLGPkI3Q1IhJr7yRtRpMDGWge5A0bphsrJQNIv0B65Lj1FZ1yOBD5OwC1j6JGNNTBGgefbQSueXMCpSHRgHzWzlyc36OqyZtFCd/3dvIM1Eu1bYHLvIyJ6rh3bH5K4t2rt4AUhe8VhNU0s+/yQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oBoM36H9hJB0RbB9hAHUbqwoA1p+E1fxTotEFpvqnYQ=;
- b=H2IegRpxcJphclWDqIEf2elMaCb67B7KBgFfDRNeyNkNhZUgRsrJKD4dDeSJHK/N0ch3X375hay/ujwwQKhcHcLuEAEspSe5s8C20JbIGyy+8g/yBP7Pdc/pF1wA3dfWkb9ncGNCqBZeN4Q6C9WVXblFaw96Q7gvvn7iSDdxSME=
-Received: from DU2PR04CA0252.eurprd04.prod.outlook.com (2603:10a6:10:28e::17)
- by PAWPR02MB9221.eurprd02.prod.outlook.com (2603:10a6:102:340::20) with
+ bh=QLTe4whWT4q7CGpR5VqFknx4DTOHOJxShD//P9jJf9s=;
+ b=k2P2jpsCLqiwEtdU+WdNJT0J1xOgao6dQOf6UL4/Ww9Cbj8dFMrxW6WZJf8a0ukrkR7cNECIWGMX5hIBLRDoDUNUXmf8j7CCiFJDoPxRjI1Qlbs6AN8T6ej4yWTXq7/pn/EiNnJ8Bm1wJveI6cxCh23U06LrDqvSx7ghY4Ri5Hk=
+Received: from DU2PR04CA0244.eurprd04.prod.outlook.com (2603:10a6:10:28e::9)
+ by DBBPR02MB10914.eurprd02.prod.outlook.com (2603:10a6:10:53d::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
- 2025 08:35:33 +0000
+ 2025 08:35:34 +0000
 Received: from DU2PEPF00028D03.eurprd03.prod.outlook.com
- (2603:10a6:10:28e:cafe::1b) by DU2PR04CA0252.outlook.office365.com
- (2603:10a6:10:28e::17) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10a6:10:28e:cafe::5d) by DU2PR04CA0244.outlook.office365.com
+ (2603:10a6:10:28e::9) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.23 via Frontend Transport; Fri,
- 4 Jul 2025 08:35:33 +0000
+ 4 Jul 2025 08:35:34 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
  action=none header.from=axis.com;
@@ -49,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
 Received: from mail.axis.com (195.60.68.100) by
  DU2PEPF00028D03.mail.protection.outlook.com (10.167.242.187) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 08:35:32 +0000
+ 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 08:35:34 +0000
 Received: from pcczc3457tyd.2n.cz.axis.com (10.4.0.13) by se-mail01w.axis.com
  (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 4 Jul
- 2025 10:35:31 +0200
+ 2025 10:35:32 +0200
 From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
 To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
 	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
@@ -62,11 +63,14 @@ To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
 CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <f.fainelli@gmail.com>, <robh@kernel.org>,
 	<andrew+netdev@lunn.ch>, <horms@kernel.org>, <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>
-Subject: [PATCH net v6 0/4] net: phy: bcm54811: Fix the PHY initialization
-Date: Fri, 4 Jul 2025 10:35:08 +0200
-Message-ID: <20250704083512.853748-1-kamilh@axis.com>
+	<linux-doc@vger.kernel.org>, Maxime Chevallier
+	<maxime.chevallier@bootlin.com>
+Subject: [PATCH net v6 2/4] dt-bindings: ethernet-phy: add MII-Lite phy interface type
+Date: Fri, 4 Jul 2025 10:35:10 +0200
+Message-ID: <20250704083512.853748-3-kamilh@axis.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704083512.853748-1-kamilh@axis.com>
+References: <20250704083512.853748-1-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,132 +83,91 @@ X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
  (10.20.40.7)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF00028D03:EE_|PAWPR02MB9221:EE_
-X-MS-Office365-Filtering-Correlation-Id: c87b3bcc-2dba-4578-6962-08ddbad5bd74
+X-MS-TrafficTypeDiagnostic: DU2PEPF00028D03:EE_|DBBPR02MB10914:EE_
+X-MS-Office365-Filtering-Correlation-Id: b91ec9a6-9f91-4648-7927-08ddbad5beb6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|19092799006|1800799024|921020;
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024|19092799006|921020|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L1ZXVFowbDJqOTBGQ1dZdUVFTXhCcXdnR3VpbjdDR0dVRXMrWm9ETjdWbWVI?=
- =?utf-8?B?dWZFdXRic0lUV2hRUm9yZlZOVnRlaGRnT0RGQ25zREF6eHg2Z2pjNnQyQkJv?=
- =?utf-8?B?OWgwc2hwYTh5ZUpZVVN3N3YrbExrbW9ER1J4bmE2eldjRzFJZDZOcEJCNG4r?=
- =?utf-8?B?aitrVjlKNzZ5WG9wSHgxejdQOWY5cTFkLzNjeG1iUFlzVFJ2ZWp5S1NDQnRo?=
- =?utf-8?B?NUh1STN0MGQyUXBYaFNHTWIrNW9OejB4MFFob3J3ekd3TVNScHcwSTFQNDR1?=
- =?utf-8?B?SS84Ulp3L2ExZXAwQ0lzcDltejFOVDlreWV6NTRGbnNWK3ZMUmE0TVM0U3lP?=
- =?utf-8?B?MVFsNnpIa3J5YndVNWhSamxYZlM1aG10c3VBT21vdzk1RTFJcDRMUDVXSnNz?=
- =?utf-8?B?MEp2QmxIV1ZjVFlaQmpJdGhtR1VxOTY2UDh4YTVUNEVSYitKY3ZaTkNxT0cv?=
- =?utf-8?B?Y1hoZHVuM2p0YjNUQ3BiVXk0ZDNTYXpWd294OFpqUHZZYm1GT2ZMVndkeFdG?=
- =?utf-8?B?QnI1KzJTaU80RXkvQXZwYmtsR0VYZFdZV2tqTXU1RjRjbUduVmdUd0l5QzRz?=
- =?utf-8?B?OHF4b3NZYVpQWC9XM0tUR0R1cnZFYlZmRzZDcU5IUXJ1NFpUcFJxRzJrRGJZ?=
- =?utf-8?B?eFFnZ1Zha05Jd3ZVVGxlRTBkYlJCQ0xyaDFCakRJTWFoZzVsZENPcnpPVjdi?=
- =?utf-8?B?WmRTT25wN0RDY2NVeXZBOUh5cHcwVHZveXk3aGxJMzVoQk0xM3psVWxiU3J0?=
- =?utf-8?B?SktkbG5Eb1AyNGlSMC9jWng0VVRONlFCdFAvUXFWNUE5SWlOZytva2IxL3p2?=
- =?utf-8?B?WXUrTklSaHpuMTdWSTdqSEJnajYrVkNORG9vaFBaamxNTGgrMThFeC81NlhT?=
- =?utf-8?B?b1RGT2pycTZaa0k0ODV4VG5NU1lpNTBqUnpjOEptL0xDc1JuZ3RHSE43Nm9X?=
- =?utf-8?B?K1JKOVg4dmY2ZDdBa1RWUUN5ekFZa3V0emtYMlRmNUVuSTJQa2VHOE1jekt2?=
- =?utf-8?B?cDlzOG13UnIrWjJIbUdHUjBlQ0xIRWRTQlo2bDlnS0psVitGMEE4UnFZMVor?=
- =?utf-8?B?THdCTmNJWDg0aU1hVm9OL1ZHcXMxWmhCMmhUbzlIdXQ3dHNjOFlmT2p0QzZJ?=
- =?utf-8?B?blAvcy9KK2pQaERkZHRiZU5mNFZBbjNFU29WYS9ydG1zbkkzT0FaQW9QcUJa?=
- =?utf-8?B?a3Y4MEZOVDYyd2JCM2RMQnJBVTZHd09EOUhRTWR1bVNKSS81d0tGMkRReE8v?=
- =?utf-8?B?QzRyOFU3emJsT1Rvc1VUR2ZuN1pFVmNNVHhkcXVQSFJvRVRRZmdDWjVLbHUr?=
- =?utf-8?B?b001cUV4bWNHM2RPcDhrakZjTEx2bTVZZm93bHVyVXM2NTIySnZOV2VHZGxH?=
- =?utf-8?B?VUpDczV6QkJQdUpFOWpGaXZoQXp5VVlwTHRpRFR3U1RuWTY0S2ZOb1YvdC9Z?=
- =?utf-8?B?SHNZaElqK2FZNGltd09CSDZYUEMzbVR1VGduV1IrdG1wamUrUTJEbGoyS3or?=
- =?utf-8?B?NkR0eEJneVI0aVFCRnNMdHJKWnZ3dnozOThnVXJNd1dTdkUrWXZsV0xxWkJz?=
- =?utf-8?B?OGhIRDE2UzRjZWtuMnBGekw0bTlvWUZnWmNxNjdlbkp5cTJ3Y0o1Y2NEQVdP?=
- =?utf-8?B?d0lSZjk2M3ZaUXcwZVQxWUZJTWhFOVZqbmwyWGJaWGRBRktZQzBEWWJsNkRF?=
- =?utf-8?B?TjVnYkx0cWp1ODQvTjZIRElJWnA1dnU3dHduWjUrQkRRWUx5bWliVkJuNS9p?=
- =?utf-8?B?ckdvWklIdzI5azVHOTNxaWtSYktDeXEzMERTaVBJV1lySGZOYVJ5cWdXaW9u?=
- =?utf-8?B?STVTUWtHVzB0RFA1ZmFEZ1hKcVNRNklxQlhzSnRKSEtMa0hWY29PNHlUcXpQ?=
- =?utf-8?B?WWVlVmhVdjFHMzVhTlgvNkk0NGpSZzZsVGkvUHdvRjEvNDcrcW53R094Mk9Z?=
- =?utf-8?B?NWk1Z0h3NXcxajdIUE51QkhyeFdNcEVDU1JDNnpOOXd5ZWt2SnY5dnhJY2Vm?=
- =?utf-8?B?YndSNzgyVWlKL0JDN3crZWwzTWtYeFlEenlhd3hoSDkzNU9CaDBtSG5xUGtK?=
- =?utf-8?B?aGpRdlIrMTNoMC91cVlmTitaVVY5bk81RW1SZz09?=
+	=?utf-8?B?d3VxQ0pwNG4xcW45NmxCMmVEWDJabFFCd05qQVBXMndCT0xFcWhscWlqTUk3?=
+ =?utf-8?B?YThGSnFPOHhheEVaOTZKaE1RbG9KQzNKYWZWOVdhR3BXczRPT0hxNVlac2h6?=
+ =?utf-8?B?MFRPUnRPM0lPSTVTR2tNMytLdkp6OWpXSTlZSGpPTmpjU3RIandjUGpqWmRy?=
+ =?utf-8?B?Q294UUVhU0hzWFFXVnZjTWVzZmdEUkRsSU5CdStsSzFoc3lLU2thbCsxbGFJ?=
+ =?utf-8?B?djFsbE9uazNDRkYrWmhrNmZWUTdVWTVpWTBOV0FMWWxBL2hNbVd2WmNsRm94?=
+ =?utf-8?B?MFFkNzZJMnJ0L01ENTNsSkhGa3lWQzV0YzJvSmV4VFV0VW9ZV1kwOEVIWHlj?=
+ =?utf-8?B?T29OalREREN4all4bHBpYkNPRFVpR0hlQVlLaHAraUZDcUVYelZHTUZ1Vm5G?=
+ =?utf-8?B?amVDWWc1ellvdlkrSWVCWWlyTDBUS2xZS1F2Zzh3UGJOc3dMUEpkaWpGOEZV?=
+ =?utf-8?B?dWVtVHNxYmt2amdiRWx0MVRnK3JicTBIaFU5ZEo4Q3J0aUorcUdUY1JUWTJv?=
+ =?utf-8?B?MUxqRm80MzZLODlOTUhvYnVVYnRhbTJ4a2x0dC9vT2N1TW9GbWp4YWNHaitF?=
+ =?utf-8?B?VVQrZ2xuK0I0MEYzQ09jZlgvQ2Y3Y1M4dVA5SFNseTZqRVZIeDBQbnJIYU93?=
+ =?utf-8?B?L1dDLzFWa1FONkhxZGZhZkxNMzBMcGRacUs4dm1uYkZ2WitSc0tFcUEyU3I5?=
+ =?utf-8?B?a1RGSHhUQlNrdXluSDIxMERCSnpXWE1SQ0dLb1B4ZElxUmFwU0Rnb3c0Nk9z?=
+ =?utf-8?B?SUgrcGlHSXhhV2JxbGV1NVVvd0NoMytCNTEvcmxEK2txTFl2NnMyN1cvVlNm?=
+ =?utf-8?B?VDNSMmRBazRqK1V6WmJ0TFhreDM1NnBBZXVQYnl3MWhqOFhIUnFRejZQeWlU?=
+ =?utf-8?B?M0c0bDcvSlhYY0kwemRnclJXL0hTUXQxdHVVY1FiaUlDZTBCMGlrUHVUeHpi?=
+ =?utf-8?B?d1VzRFpyVlRwTDNvSkhEL3crdE5UaDdraDZRaVp0dEh5WkVGY1pFWjJWRkty?=
+ =?utf-8?B?VnRDUDlXbFlhbDFBcVhMUEN0eVBRSnR0Yk9Mamltd1ZJYmdWaTZqMW1kTXJj?=
+ =?utf-8?B?Z05pU2R3SzFNcmkrakFWclpXRXlpUlNpWjl5MW93NE1DNC8vRmtXOUZaUE5R?=
+ =?utf-8?B?anpFcUdZNndyQnJVVGI3RVFYUjBUdFZiOG8wYW1JTnVsMmRlS1BuRGNsRHky?=
+ =?utf-8?B?YlFKbk9vR3VLcVhYdmhCVUUxaEZ0RWhxNXl2dTlob0pzc3U2Zk1qNWd6U2hj?=
+ =?utf-8?B?OVFBd1huSVJBY1UwRmx0Z213akxHcUR6SnQxNHM1Wm9iaFBxVGE0VzcrSERu?=
+ =?utf-8?B?a2Rjek5mYVphdGhkOWFkTFlpUXRzNEFZVFl2RVRJeTFkSmdmdDZWbSt6VG9H?=
+ =?utf-8?B?ZDBxUUxhQU5sQ3pXR0w5d1NmUnc3dWlnNStFaSt1cTFsUmNKY29OV01qanpk?=
+ =?utf-8?B?UW1VWXpKaUgzOXh1Z0hNZEdNamxpbzhZWE9xRk5ib0FBcm1VUVBERkpWbndU?=
+ =?utf-8?B?U2xLOEh0SFpjT3pNak9HZERFYkJ6WXhCWGt2N0xPL05kOEJteWhQT1RoTEJz?=
+ =?utf-8?B?WkRPZzVkRzFVVU5Wd2lVUjBpTytMZDhxNlB0VUk0S3FGMzB2QnZ4Tmh1L1hB?=
+ =?utf-8?B?Tk9SWnlVQmNER0w5TUVJSDc2elZGaE9ISWE2cnlXcDJ5amFDaDRsY0hjdEd0?=
+ =?utf-8?B?UWRBNnhEcEd5YkIyTUxrVmVOV21WSjZrNGlpUXZSTUoyR2ZjTkNIVUMrOXk1?=
+ =?utf-8?B?YU5Nb2xTOGxtMnVJemFKd2JiTGpDaFMzRnl3T1Q2MWRubFhRNVNXdnZrOXlH?=
+ =?utf-8?B?bXJxN2d4YzZEdTdJSFhiWHBlTUJ3YWtyV0d1Z3NCbzUwOElyM1NWQkNHV0dF?=
+ =?utf-8?B?S1VlbzFBMjIrVktwamZ0WlFsUS9jbk1LaFQxV2NXdmp4RUtta1JoUml6ZG12?=
+ =?utf-8?B?M2QyRUU5VzA5ZStQc3pWYm5UbmdwSHRBaHpMUDc5TnozR3pBakRvRTdZK01i?=
+ =?utf-8?B?Q2ZCYUR3S0pMZ2FyTXJld3FZc1RSYlphY3lkamxld1Q1ZUpoREhoc3IzN29z?=
+ =?utf-8?B?UXhCSFdIY0h3RWNMeWxpclEzeGRQQ3lhTjNHZz09?=
 X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(19092799006)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024)(19092799006)(921020)(7053199007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 08:35:32.5273
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 08:35:34.6366
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c87b3bcc-2dba-4578-6962-08ddbad5bd74
+X-MS-Exchange-CrossTenant-Network-Message-Id: b91ec9a6-9f91-4648-7927-08ddbad5beb6
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DU2PEPF00028D03.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB9221
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR02MB10914
 
-Fix the bcm54811 PHY driver initialization for MII-Lite.
+Some Broadcom PHYs are capable to operate in simplified MII mode,
+without TXER, RXER, CRS and COL signals as defined for the MII.
+The MII-Lite mode can be used on most Ethernet controllers with full
+MII interface by just leaving the input signals (RXER, CRS, COL)
+inactive. The absence of COL signal makes half-duplex link modes
+impossible but does not interfere with BroadR-Reach link modes on
+Broadcom PHYs, because they are all full-duplex only.
 
-The bcm54811 PHY in MLP package must be setup for MII-Lite interface
-mode by software. Normally, the PHY to MAC interface is selected in
-hardware by setting the bootstrap pins of the PHY. However, MII and
-MII-Lite share the same hardware setup and must be distinguished by
-software, setting appropriate bit in a configuration register.
-The MII-Lite interface mode is non-standard one, defined by Broadcom
-for some of their PHYs. The MII-Lite lightness consist in omitting
-RXER, TXER, CRS and COL signals of the standard MII interface.
-Absence of COL them makes half-duplex links modes impossible but
-does not interfere with Broadcom's BroadR-Reach link modes, because
-they are full-duplex only.
-To do it in a clean way, MII-Lite must be introduced first, including
-its limitation to link modes (no half-duplex), because it is a
-prerequisite for the patch #3 of this series. The patch #4 does not
-depend on MII-Lite directly but both #3 and #4 are necessary for 
-bcm54811 to work properly without additional configuration steps to be
-done - for example in the bootloader, before the kernel starts.
+Add new interface type "mii-lite" to phy-connection-type enum.
 
+Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ Documentation/devicetree/bindings/net/ethernet-controller.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-PATCH 1 - Add MII-Lite PHY interface mode as defined by Broadcom for
-   their two-wire PHYs. It can be used with most Ethernet controllers
-   under certain limitations (no half-duplex link modes etc.).
-
-PATCH 2 - Add MII-Lite PHY interface type
-
-PATCH 3 - Activation of MII-Lite interface mode on Broadcom bcm5481x
-   PHYs
-
-PATCH 4 - Fix the BCM54811 PHY initialization so that it conforms
-   to the datasheet regarding a reserved bit in the LRE Control
-   register, which must be written to zero after every device reset.
-   Also fix the LRE Status register reading, there is another bit to
-   be ignored on bcm54811.
-
-Changes in v2:
-  - Applied reviewers' comments
-  - Divided into more patches (separated common and Broadcom
-   PHY specific code)
-
-Changes in v3:
-  - Added MII-Lite documentation
-
-Changes in v4:
-  - Added missing Fixes headers
-
-Changes in v5:
-  - Removed unused PHY register bits definition
-
-Changes in v6:
-  - Reworded the cover letter to explain why this series should be applied
-   at once and routed through "net", not "net-next".
-
-  Kamil Horák - 2N (4):
-  net: phy: MII-Lite PHY interface mode
-  dt-bindings: ethernet-phy: add MII-Lite phy interface type
-  net: phy: bcm5481x: MII-Lite activation
-  net: phy: bcm54811: Fix the PHY initialization
-
- .../bindings/net/ethernet-controller.yaml     |  1 +
- Documentation/networking/phy.rst              |  7 ++++
- drivers/net/phy/broadcom.c                    | 39 ++++++++++++++++---
- drivers/net/phy/phy-core.c                    |  1 +
- drivers/net/phy/phy_caps.c                    |  4 ++
- drivers/net/phy/phylink.c                     |  1 +
- include/linux/brcmphy.h                       |  6 +++
- include/linux/phy.h                           |  4 ++
- 8 files changed, 58 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+index 7cbf11bbe99c..66b1cfbbfe22 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -39,6 +39,7 @@ properties:
+       # MAC.
+       - internal
+       - mii
++      - mii-lite
+       - gmii
+       - sgmii
+       - psgmii
 -- 
 2.39.5
 
