@@ -1,185 +1,358 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2072.outbound.protection.outlook.com [40.107.94.72])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB542DE6E8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9543A2E9742;
 	Fri,  4 Jul 2025 11:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751627630; cv=fail; b=L7Hyp2GVv85WhcCHGmjsNIyZ28E0VMqHQk9b4RnzYC32AU8e0dhTJLY3BjAmdfFrJdMskC55FTrQi8dJ0Oi6E4BQA/uSgBR9Q/jm4c6TobFvwZLwoGu+mbKP78CqYeXl2wFwIsvCnFy24mreZ4BN4cu3ULDcvDyJiX5+hqJD9N0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751627630; c=relaxed/simple;
-	bh=gKuWs1J9V1amZIWFHTLc7dPiAiQ3qRYGDwAtl2pDDsM=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=Bn2z7CUXZqQBtanG8g7gZTQI4AvFHFX/6C+snEZlrFWJ/OjnuVwuh5LyHumMEqo33VjJAdl4oM10Tei0+Bt/uCN+hVv3VzikncWG6O9NaTz16c0hhHIs0PlacP2ZhcPdMBg4CiuzOl747nFhb1Nf+3VyFKdynur1Fy2IVpHXYTo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dvqefCJg; arc=fail smtp.client-ip=40.107.94.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dvqefCJg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QnZ11xQjbpnHx5Pln+O4qcd2CFrgTMnZqJRr8NpsPRg+uJPzaOGgCUjKDaY3Hus6OqgjucaYctVvPyvV7mufDoFSmU0wMUIyt5BhiEEdN0FDWjJaUiIXBB6ljPbYtAR8iRfJdui470qHOUaXEm/aUhKDBLY5faUWnQy3BxLkPRioS5kY6ukUuLUNAuUBa4zid0r7P4PS1C6l6G2ejIiNMjnjsNO98nTNqmd0Izp90AsrobArz+4oXJVcO0SZbc00jHgjpnm33LDuti3zZkHHI6LQpVB/OIjpazpKvhGv0qLIpE8Koz2qt15A2ebR8TKG/MCUIwON0q2zK1QG2VFYog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8MU8r2iz/7w9DQn7haT1vaDPlb9WE5ns0Yq5g91j8bw=;
- b=dDChwYxmtWR7+2cmUvwSH0reaqFH3jo06aYni3w8pOyum1PGafwlWnbeJ3wK8Ht/Ym8bHQmhpHtGxuViIHQrOhljto/ZOWgIGkP148r/DwNoDO2OdfMH9FnQeMyqjBDZs+32Jndir5KRe8c0Dl6iEIdfQQ04pkAMTZjQp6D4SwJsyEZGR7Y8478hVYgxBbgU63UJDVszgdP4rk9BiBUX9nveRt7bWUAobmVKflyM3Mk2KT4lIytJYv+HP6gHQFYNbjMdke6l/TtAQqpIyQEeFC5DooSwJ1hSKwqRAOlarKtxXjBCudHZgq2Hv+QdlfxlsrS3xSDrZdfEGMBabqGNcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8MU8r2iz/7w9DQn7haT1vaDPlb9WE5ns0Yq5g91j8bw=;
- b=dvqefCJgethbMqs9InPnyhguviigZwbqsI044UKDqjn7vgQe4h5aW/oljPZAP+hlatFN4mKbZOL9RoJnZ/mdpk51iCNM/oNrdWJuy40bpJyzHNxqBv6MR7TELgqWZYH7fp9qpvt2UAWxH/X6Ee4Ur3MTgpRc1Js2kXflzgECm5oDqqKWX/WCp1TMr7ECYIOl7eAFgUso9TI9NH5bkqqQjnyvHijP1m/yrbvb6HKnKKLFBnbMq5ebhKUcU1uVAoJ5G7W6eA2/CQYgwWToePYtR4X5/i155eAMHUOakg6Kxenm0sYCpkVg4vAD1M3a8GBOuSfvndkEK//dIF/d5Y0j3A==
-Received: from MW4PR03CA0248.namprd03.prod.outlook.com (2603:10b6:303:b4::13)
- by DM6PR12MB4388.namprd12.prod.outlook.com (2603:10b6:5:2a9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.23; Fri, 4 Jul
- 2025 11:13:46 +0000
-Received: from SJ1PEPF00002311.namprd03.prod.outlook.com
- (2603:10b6:303:b4:cafe::8a) by MW4PR03CA0248.outlook.office365.com
- (2603:10b6:303:b4::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.22 via Frontend Transport; Fri,
- 4 Jul 2025 11:13:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00002311.mail.protection.outlook.com (10.167.242.165) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 11:13:45 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 4 Jul 2025
- 04:13:37 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 4 Jul
- 2025 04:13:37 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 4 Jul 2025 04:13:36 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
-References: <20250703143941.182414597@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751627636; cv=none; b=X+eP0S4MeAOq7Z2LqmQC1LXaJggR9YRwUHqJV4AB3UFyTLVfqkpQvoaVLfH4Z2IewSYljjHNV3k5eCgfMMtNf5OI3BQrGKy3PZqi2dbvHqjHRPvYifGFkBsxR/dx9RUzBOQKvZ9OZzuNlwo5Fh73N+dELfa6TEJFEpv7xusSSu8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751627636; c=relaxed/simple;
+	bh=TLjgjAKejhWnQQrBZuOEj0t8hkGOC2g238gXlgd2e4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qqQLgr4xPxnlgyXnIqR75cwk3/U+KaNeRcZlGczNtdbcb6oAvLbPJPbHXG9DS5ZIRCzpRTvohhykWZ0CPqv1o8cmVQ3WcgxyoZc+40MTLNVN5lzFFGExfhwU2wPW4iiLM9ugWG2Gh2ShU2CojPKblK8crgS9aDyZ+TsmJ+MmK/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foursemi.com; spf=pass smtp.mailfrom=foursemi.com; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foursemi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foursemi.com
+X-QQ-mid: zesmtpgz8t1751627568tf11212fc
+X-QQ-Originating-IP: DyyCLDr/VddxgWOyG6FtBM3EuCWAmFKBNj6PFHf6uvs=
+Received: from localhost ( [183.17.231.150])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 04 Jul 2025 19:12:47 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7044233768972954240
+EX-QQ-RecipientCnt: 12
+Date: Fri, 4 Jul 2025 19:12:47 +0800
+From: Nick Li <nick.li@foursemi.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com,
+	xiaoming.yang@foursemi.com, danyang.zheng@foursemi.com,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] ASoC: codecs: Add FourSemi FS2104/5S audio
+ amplifier driver
+Message-ID: <1C4720AC50797830+aGe3L70OToh6txmC@foursemi.com>
+References: <20250703035639.7252-1-nick.li@foursemi.com>
+ <20250703035639.7252-3-nick.li@foursemi.com>
+ <b1ad15d1-bf9f-4b94-abb8-1e9c6d512987@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <fed1431b-a017-44d9-8909-06b06f8073c3@rnnvmail202.nvidia.com>
-Date: Fri, 4 Jul 2025 04:13:36 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002311:EE_|DM6PR12MB4388:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5ff5e3b-6d55-4aaa-cbde-08ddbaebd7e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V0tlZ0pBZndYTjhLM0U2RGdtN3A4aVZ2V1JFdjhkTXpjSGFscTRhcGdETXdP?=
- =?utf-8?B?a3czRUhSYlJuSk9IYm9KQTM2MEU2SVhsSUNFZzBTRzhuNC9jck53NUMzM0pS?=
- =?utf-8?B?Uzh1cWZUNVZqNTNOU2c2OUd3bklXcnE2WDV1VldKay9DenppWEd3cTd5WDRX?=
- =?utf-8?B?b3NiUjAySDJHaDBDQ255Ri9wRVlYRU9YN2pOTDZFRmV4ajdRUjc0MGRSLzly?=
- =?utf-8?B?ckJNSWtwODRnSHdnbk1IT0F3LzBPZEI3RHlFbnBxUW9PQkNjOEw4VDh6WCs3?=
- =?utf-8?B?MzhDQlNoVUgxcFB6QlVpQTlGRDlkTCtrdy8xK2NUamZobFFldjRaSTlPNk0z?=
- =?utf-8?B?VU9iTWtNWlZzaytFa3dyZThRYXdXdnFTR2R0NkMweGx1OGFWaDRSMy82VVFE?=
- =?utf-8?B?eU9NeEY5VWhzZWpyRjB4S0JBRWpKS1oyNnNZcmZBQ0ZMTHN6czJlOHdNKzZM?=
- =?utf-8?B?Ykh0UmIzTE4rM253NlpBK2hrUVRWQ3EwUXdWWFp3OG51T0Zyc2h4WmFVbWZy?=
- =?utf-8?B?c0pnRmR3VEZuczFTN0E4MHFVRTdiOG1wRFdZWUw4dEdjTTVxMm9TVXdic1NH?=
- =?utf-8?B?bG1KbzhHZDdXYmhldFJCaWp2WjhGR1FLZVIzNVVNSWdGUU5ZQzNCTjVidTBQ?=
- =?utf-8?B?VDB6Z0EvQVllVzR2RmN6ODlzNGxJQ3hVMEhTR3B6cFBydmFqQVptM2pMRlJ0?=
- =?utf-8?B?U0xwb0Z4bk8yUVdBTzIrNjBoWEFkYmdjZ3BhUm1aOTgwZzRuMW9XTUkwbWxU?=
- =?utf-8?B?d1VwbzFYc2N0MGpYbHBtTktkVEVLZVVDT3ZmOFRXcGg3dXBNY2VrcWREbXBT?=
- =?utf-8?B?bCtBVTZBT1NZNlIrSE5NSkgyTWo3UklrZGllQTJFL3pmZEFDUGs3QlZGdXBr?=
- =?utf-8?B?MkczRlE4d2FTRkZhclNoZzA2NnZMMTA2Vm1mYmtiQy9tcTFuNTFGV2tKZlcw?=
- =?utf-8?B?U005Y2c2UEVwODBnWW01WlJGZmM1YXhTcnRrQWF4bFN2M2pPSEh6SWIrN05w?=
- =?utf-8?B?LzEyMDdnRW9oUUEyVFVzQy9XNU80ZDdaUGpSVGdqZ2tGZ3g4cEV2M2ZuSVRi?=
- =?utf-8?B?V0IwNjRiNE5NSlduVHhyd2Joc2d2MEh2L1hmd0lDUjZ6S0FrRWhQTVNBdHdC?=
- =?utf-8?B?eFMxVWZOQXRGR1VvWDBhMFRXaUpQVlQrU1ZDbzMzTDRmMU9IUXB0RmRxK3A5?=
- =?utf-8?B?bmN2K0R3cFQ4eXJwRXR5QmJpQ210aytNZFhpSTFxRFU2L1NObi9DaTZXSlND?=
- =?utf-8?B?TWsxWlRRQy9pSzNDNUtzV04yU045d2V3RWcrTlVRc20zajBtbFJBbU1WRFJK?=
- =?utf-8?B?Nmc2OG9NQ2JYYm41Zytpck5FVnZBekt6TFd5UWpFc2ZVWmVDSVA5WWYrTm9X?=
- =?utf-8?B?TFhEY2gzMzdzYVNUZWRKZFBIQUlnV3VOVHlNRmtHWHhSRHVNMUFkYVA3VXpM?=
- =?utf-8?B?UmRwN1Q2QlRLR0NRMEVQSFFLWlNrWXdQUUpWaUZEeXFQU050TlZTaVBaMEZV?=
- =?utf-8?B?dS9yKysrMVcrcGJwRU9meVIwc1RaS1J4cUVpaHh0ZnJxOGdCK1ZnUWRDS2Rv?=
- =?utf-8?B?NlByUTNBaXhBMktmb2Z0aG84b2pkY1BqNmRTLzRjenFjQ1FYWTV6MTJsTGNY?=
- =?utf-8?B?Qk9Cd3JBaStucUZoN1ZOdk5XbDd3TDhpOEhTUlFlSHBnSFNFL2xtRGQ0RW43?=
- =?utf-8?B?N2RMa0FkaG0zSDhzMzd2eVorSFlxNUtYUHJzcktlUEJPL01rWVdXM1BoRnQz?=
- =?utf-8?B?OVJIcUF1dEtXdFp5Z3hnbzA0aTdac2RsR25JaDhmQ2dJSW00NmFDcENPWVBu?=
- =?utf-8?B?RzdWY3JYYVFZVGJicEVQT3FPbnRtcDF4UThDaDVaeXUwUlZCSmJvUUk1WWdy?=
- =?utf-8?B?RFRldWFRTEhBTXFORHJ1blo4WmRCVEYxdVdIcXVVVGJZOTJRQm05aFVXcTQ2?=
- =?utf-8?B?eU1TbVFIQlprRFZrYTRMMThxQVpPM2c3S281cE1nR3NvUlNJS1U0UytRSlJ0?=
- =?utf-8?B?VXdGVjdGT2RHN0JoTExwVlBxSHZrS1Q2VlRNaGxKaVAwSjVUKzZReG10SjVG?=
- =?utf-8?B?cmVDQzJDYUhyUnhZandIcUxCbk43aHI5aTZCQT09?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 11:13:45.8254
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5ff5e3b-6d55-4aaa-cbde-08ddbaebd7e4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002311.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4388
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b1ad15d1-bf9f-4b94-abb8-1e9c6d512987@sirena.org.uk>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:foursemi.com:qybglogicsvrsz:qybglogicsvrsz3a-0
+X-QQ-XMAILINFO: Nr5N425iK0yrrbPt1Ur/z62sh7k24J83ypD9WyxpXv0brnfcnktEh1Ym
+	76hvkRpdcJNFSR1GaM8zxGh+albknYSxuieVdWGGWZyOdQGgpu2RH1a5PaQ9FHUE4+DvJKU
+	VW++t+144A877EvroqOOf5PIceUMDgBSgm4aUDvcE9+QUoGPMklwXDwkVyTmKi5rwnTZuI3
+	nMC1mV0zar/mSmSjxd7D5sTwV3ETrFKdJfaf63HwNUcLH7AxoncmzRHMeNFO+jzMhja1HLG
+	1paOo63RSUUTPH4gon4RGNhBAsb081zTwJDhXDB39BSzyZSR/J/ydI8lyOU178MTB6DCrsR
+	UdfiRQkd0QQdVL1TrJsPUhrXR7VNH2LBjL9vttD6MRuEdg3EF8shBVeIYR+BQoJTF5pwNfa
+	2oHH8BTiFzyT8Dkd1ixcyWJ74aMbmFKb+XyixI240aQZ0GRtXbMlKuy15Hl5t0zu7lM0BNV
+	gu7Km5u/sbVYnEnbdUFJiJw03V5r7gYv30Ikmou4Scj0S7K9GsKu24AqZItKI0iR465RN5V
+	7oypCifzrexWykzBdSmUXiASpLnLEfiESEKlcqbVP4cVXAywZAjjD4OkmTXfSoC6fUGzRy5
+	EPplX4MsqT0PlGfBu1EX4UbBXv7Kd4Pd2DhdlsJXtpXhlb6/gSDknznaIJla8gdyW1RmLN8
+	/Ynb+0xY3vLHp7v+RIsLiYC3q3N2YNzzVuzOXFQkjm6FrKocJ+Bz0MKnDzJWQVLiiiLK6ST
+	lARmA2/3Piy+sT/+drbKd2HrmDAn4GqXIZa6QweFYKs1lg+z4i0DH7E6Tp4ASSPfTA/8z6w
+	SHeRJUG5LOsDAfT2BDGTQRUvoDgrPWQyZVQGiicqXXnPt1vz/MXS3NeGqmL1g6cAXX0lUKM
+	EdgYxmXpxfotWLEm1vyYRpmqJSVPXldPQhy/P/Tc4RHS3tAJHFsIkm9Ru3G86vY2yFmByc+
+	U2JZnnHOQ0dG4I5X00iIJ7qqgc1QF46LIDvncva3uFwV5Q6JYeX8Ama7FRoNQu8/SY7+COu
+	H9kAnQ5XNlOzK8W+OU4E3Wvj/NqS0=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Thu, 03 Jul 2025 16:41:03 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.96 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Jul 03, 2025 at 03:59:34PM +0100, Mark Brown wrote:
+> On Thu, Jul 03, 2025 at 11:56:37AM +0800, Nick wrote:
 > 
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
+> > +++ b/sound/soc/codecs/fs210x.c
+> > @@ -0,0 +1,1616 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * fs210x.c -- Driver for the FS2104/5S Audio Amplifier
+> > + *
+> > + * Copyright (C) 2016-2025 Shanghai FourSemi Semiconductor Co.,Ltd.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.96-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> Please make the entire comment a C++ one so things look more
+> intentional.
+
+OK, we will update to use // istead of /**/
+
 > 
-> thanks,
+> > +#define FS210X_DRV_VERSION		"v1.0.6"
 > 
-> greg k-h
+> We generally don't do versions for components within the kernel, nobody
+> is going to update it going forward.
 
-All tests passing for Tegra ...
+OK, we will delete the version and related calls
 
-Test results for stable-v6.6:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    120 tests:	120 pass, 0 fail
+> 
+> > +static int fs210x_reg_read(struct fs210x_priv *fs210x,
+> > +			   u8 reg, u16 *pval)
+> 
+> > +	if (pval)
+> > +		*pval = (u16)val;
+> > +
+> 
+> If this cast is needed that's a bit worrying.
 
-Linux version:	6.6.96-rc1-ge950145d456d
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+OK, we will delete the judgement.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> > +	dev_dbg(fs210x->dev, "RR: %02x %04x\n", reg, val);
+> 
+> We do have a lot of logging support in regmap which is more
+> controllable.
 
-Jon
+OK, we will remove this debug log, it's for test.
+
+> 
+> > +static int fs210x_reg_dump(struct fs210x_priv *fs210x)
+> > +{
+> 
+> This is duplicating regmap's debugfs.
+
+We use it to print reigsters when the device accors a fault in the checking
+monitor, especially for dealing with probabilistic issues,
+these logs are beneficial for analyzing the problem.
+
+> 
+> > +	} else if (pkg->cmd == FS_CMD_DELAY) {
+> > +		if (pkg->regv.val > FS_CMD_DELAY_MS_MAX)
+> > +			return -ENOTSUPP;
+> > +		delay_us = pkg->regv.val * 1000;
+> > +		usleep_range(delay_us, delay_us + 50);
+> 
+> Just use fsleep(), it'll use the most sensible delay type for the delay.
+> In general this applies to all delays in the driver, but especially with
+> a variable delay like this.
+
+OK, we will replace usleep_range to fsleep
+
+> 
+> > +static int fs210x_set_pcm_volume(struct fs210x_priv *fs210x)
+> 
+> > +	ret  = fs210x_reg_write(fs210x, FS210X_39H_LVOLCTRL, vol[0]);
+> > +	ret |= fs210x_reg_write(fs210x, FS210X_3AH_RVOLCTRL, vol[1]);
+> > +
+> 
+> This looks pretty generic, why is it not using a standard control type?
+
+1. We use regmap as REGMAP_NONE, because most of the registers settings
+   are in the firmware, if we use a standard control,the driver shouldn't
+   cache the registers after suspending the device(it will be reset).
+2. The volume registers of FS2104 and FS2105S are different,
+   if we us a stardard control, we need two controls,
+   and register it by checking the device type.
+so we customize the volume control.
+
+> 
+> > +	ret = fs210x_set_pcm_volume(fs210x);
+> 
+> The driver should use the device defaults rather than having to 
+
+The volume contorl can be used to set different volumes,
+the volume will be masked in fs210x->vol[2],
+we restore the volume when the driver resumes(reinitializes) the deivce.
+
+> 
+> > +static void fs210x_sdz_pin_set(struct fs210x_priv *fs210x, bool active)
+> > +{
+> > +	if (!fs210x || !fs210x->gpio_sdz)
+> > +		return;
+> 
+> Shouldn't this be integrated with the chip init/reset?
+
+1. We implement this function(reset and wait times) to clarify that
+   pulling up/down the SDZ/reset pin must to wait enougth delay time.
+
+> 
+> > +static int fs210x_mute(struct fs210x_priv *fs210x, bool mute)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (mute) {
+> > +		cancel_delayed_work_sync(&fs210x->fault_check_work);
+> > +		cancel_delayed_work_sync(&fs210x->start_work);
+> > +		mutex_lock(&fs210x_mutex);
+> > +		ret = fs210x_dev_stop(fs210x);
+> > +		mutex_unlock(&fs210x_mutex);
+> > +		return ret;
+> > +	}
+> 
+> Mute is expected to be a really fast operation, this is stopping the
+> device entirely and fiddling about with locks (which were held where?).
+> This looks like the device just doesn't support mute.
+
+To avoid the pop noise, the device will fade out when we mute/stop it,
+and the power down sequence of FS210x requests the driver to wait
+enougth times before the BCLK is off or starting device in next time.
+
+> 
+> > +	/*
+> > +	 * According to the power up/down sequence of FS210x,
+> > +	 * the FS210x requests the I2S clock has been present
+> > +	 * and stable(>= 2ms) before it playing.
+> > +	 */
+> > +	if (fs210x->clk_bclk) {
+> > +		mutex_lock(&fs210x_mutex);
+> > +		ret = fs210x_dev_play(fs210x);
+> > +		mutex_unlock(&fs210x_mutex);
+> > +	} else {
+> 
+> This is definitely not appropriate for mute, it should be in the power
+> management flow - either set_bias_level() or a DAPM widget.
+
+1. Because the device uses BCLK clock as the clock source,
+   we need to start the device in the life cycle of the clock,
+   also we need to start device after the PLL setting(set in dai->hw_params)
+   so we start the device in here: dai->mute_stream(unmute)
+2. If the SOC(s) doesn't have the clock(bclk) for us to configure,
+   It meams no clock bclk defined in the DTS,
+   and the clock is activated in dai->trigger start usually,
+   so we will use a delay work to start the device in here.
+
+Any good ideas about satisfying this power up/down sequence?
+
+> 
+> > +	case SND_SOC_DAIFMT_CBC_CFC:
+> > +		/* Only supports slave mode */
+> 
+> consumer mode.
+
+OK.
+
+> 
+> > +static int fs210x_dai_hw_params(struct snd_pcm_substream *substream,
+> > +				struct snd_pcm_hw_params *params,
+> > +				struct snd_soc_dai *dai)
+> 
+> > +	dev_info(fs210x->dev, "hw params: %d-%d-%d\n",
+> > +		 fs210x->srate, chn_num, fs210x->bclk);
+> 
+> No dev_info() prints in the normal playback/record flow, that just spams
+> the logs too easily.
+
+OK.
+
+> 
+> > +	/* The FS2105S can't support 16kHz sample rate. */
+> > +	if (fs210x->devid == FS2105S_DEVICE_ID && fs210x->srate == 16000)
+> > +		return -ENOTSUPP;
+> 
+> This should be reported in constraints too.
+
+OK.
+
+> 
+> > +	if (!(status & FS210X_05H_AMPS_MASK))
+> > +		dev_err(fs210x->dev, "Amplifier unready\n");
+> 
+> Does this get triggered during the normal start/stop flow?
+
+It will get triggered when:
+1. BCLK clock is closed before stoping device
+2. BCLK clock is opened after starting device
+We should avoid these power up/down sequence, it may cause pop noise,
+If they happens, it should be reported and fixed?
+
+> 
+> > +	schedule_delayed_work(&fs210x->fault_check_work,
+> > +			      msecs_to_jiffies(FS210X_FAULT_CHECK_INTERVAL_MS));
+> 
+> Might be good to have this tunable from sysfs.
+
+Good idea, or set the interval times by the DTS property.
+We are considering adding a DTS property:
+foursemi,monitor-period-ms
+
+> 
+> > +static int fs210x_pcm_volume_put(struct snd_kcontrol *kcontrol,
+> > +				 struct snd_ctl_elem_value *ucontrol)
+> > +{
+> > +	struct fs210x_priv *fs210x;
+> > +	long *pval;
+> > +	int ret;
+> > +
+> > +	ret = fs210x_get_drvdata_from_kctrl(kcontrol, &fs210x);
+> > +	if (ret || !fs210x->dev) {
+> > +		pr_err("pcm_volume_put: fs210x is null\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> 
+> _put() callbacks should return 1 when the control changes values, though
+> as indicated above I'm not clear this needs to be a custom control at
+> all.  Please run mixer-test against your driver, it will check for this
+> and other issues.
+
+OK, will fix it in next version.
+
+> 
+> > +static int fs210x_effect_scene_put(struct snd_kcontrol *kcontrol,
+> > +				   struct snd_ctl_elem_value *ucontrol)
+> > +{
+> 
+> > +	/*
+> > +	 * FS210x has scene(s) as below:
+> > +	 * init scene: id = 0(It's set in fs210x_init_chip() only)
+> > +	 * effect scene(s): id = 1~N (optional)
+> > +	 * scene_id = effect_index + 1.
+> > +	 */
+> > +	scene_id = ucontrol->value.integer.value[0] + 1;
+> > +	if (fs210x->is_suspended) {
+> > +		fs210x->scene_id = scene_id;
+> > +		mutex_unlock(&fs210x_mutex);
+> > +		return 0;
+> > +	}
+> 
+> This doesn't validate the passed value at all.
+
+OK, I will fix it.
+
+> 
+> > +static int fs210x_probe(struct snd_soc_component *cmpnt)
+> > +{
+> > +	struct fs210x_priv *fs210x;
+> > +	int ret;
+> 
+> > +	INIT_DELAYED_WORK(&fs210x->fault_check_work, fs210x_fault_check_work);
+> > +	INIT_DELAYED_WORK(&fs210x->start_work, fs210x_start_work);
+> > +
+> > +	fs210x_get_bclk(fs210x, cmpnt);
+> 
+> This sort of initialisation and resource acquisition that doesn't
+> require any audio stuff should be done at the bus level so that we don't
+> register with ASoC until all the inputs are ready.
+> 
+
+OK, we will do these work in i2c probe
+
+> > +#ifdef CONFIG_PM
+> > +static int fs210x_suspend(struct snd_soc_component *cmpnt)
+> > +{
+> > +	struct fs210x_priv *fs210x;
+> > +	int ret;
+> > +
+> > +	fs210x = snd_soc_component_get_drvdata(cmpnt);
+> > +	if (!fs210x || !fs210x->dev)
+> > +		return -EINVAL;
+> > +
+> > +	cancel_delayed_work_sync(&fs210x->start_work);
+> > +	cancel_delayed_work_sync(&fs210x->fault_check_work);
+> > +
+> > +	mutex_lock(&fs210x_mutex);
+> 
+> We don't need to prevent new work being scheduled?
+
+Could you please explain more details to help me understand and test this case?
+Thanks.
+
+Best regards,
+Nick
+
