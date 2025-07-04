@@ -1,105 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909C9143C69;
-	Fri,  4 Jul 2025 06:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5D9143C69;
+	Fri,  4 Jul 2025 06:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751609023; cv=none; b=B927geu8X64r1lZsej8MmcVGCPlTW8txlf3qrBN9ih4tWaG6EmF2bG6yTLQLaDdxKLmMSr1rZRebF1TKSCS1B/bXjWqUjakWAuFai9FD/W4zuz4Ha9yAGx/+gXUaAx/H1ypDjzpvJUEO7BzxKKQAsRCxQAyf5FaHgHR/2wEWVdQ=
+	t=1751609068; cv=none; b=GjPIfq7IrJVqghYHdHKzVdvw5JHPJU6H1HqdlRlkAuzdNDbGvWDYl3uEHRD0294HvBT2JrOvZ/MjO+B6bD3Yx0f6nBvREjMDUIFF5q6STwyeIWChAS95oF6HYGYMyU4G6yResZMI/3uVU4eea7OOlTSeVjBsLlD1lUnf9p8e4Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751609023; c=relaxed/simple;
-	bh=TOAqevWd5ctBWJ93LJwpcNQVBzN27/vAb8SLM1CQQF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CpRSCfHcTypl8UmqZ67Lo0eQSd330ovuQNdtqkDOrt2SBkW6Uyv15JR78CNx/SV3s1SMQxrP8EJbmNR6/S/3bJT9wvubEQKTXcSzFOICgHEJHYyFiHm/kwFKIQZEmJJF8UrgVPZrMq2hYhp8PSRibH8xGbWYyuIC/ZvWJc+9Jzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/nBVVGI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751609068; c=relaxed/simple;
+	bh=MbmmL2t8dsm71Q6onEmIu1cU/JkCOwof0cSGAukp3K8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KB1HyUoljLu97mcXZAPwN2xz5sZFm1Ssx0LYyg9sFMzgFffQdoyzz+ScSUt806xLTLuNU4r6w3Ufr0UR6GFKEi+STK/fE4a+eFTVnxxH+tHX+sFVVA/wyZn8Xbdzv9Ha9R3i8IfzzR2StajIxbjuq1cc694Om/kqBTP+oNFeW9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmYAThTu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/nBVVGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1EEC4CEE3;
-	Fri,  4 Jul 2025 06:03:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmYAThTu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C87F1C4CEE3;
+	Fri,  4 Jul 2025 06:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751609023;
-	bh=TOAqevWd5ctBWJ93LJwpcNQVBzN27/vAb8SLM1CQQF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l/nBVVGIZV6R2rKe/b6EN6IwJcS5QZtZii8YIAru6zwzSiCc5t34PTnJ43d1gfTg5
-	 YMriRqpfzpYsgKj6fhb7GFDQx7Kmy2y3zHaF3EYHiyRsZDdEJTuwwiWbI4z4/LThG1
-	 STJ1IccRKGfpVCIOpRZziDMEBhogSYHzjjLkbUiajktff+Lq08EheL9jk+2lecELO5
-	 iTH4BWawxZjzZjU1QeBz3OqKjeEkTEY08NhKyDFaqwDE2qt7HnI57TLK7p+kx8qI9R
-	 S76OZLOK4S48W4dg3QHYpHp8h54m1Jb3kCaUy+5TUKQC6vTd62OrWLZsNjRRVA8uK7
-	 FGKwJ8KU6wG2w==
-Date: Thu, 3 Jul 2025 23:02:59 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Yuwen Chen <ywen.chen@foxmail.com>
-Cc: hch@infradead.org, brauner@kernel.org, tytso@mit.edu,
-	linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net, adilger.kernel@dilger.ca,
-	viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-	jaegeuk@kernel.org, linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] libfs: reduce the number of memory allocations in
- generic_ci_match
-Message-ID: <20250704060259.GB4199@sol>
-References: <aGZFtmIxHDLKL6mc@infradead.org>
- <tencent_82716EB4F15F579C738C3CC3AFE62E822207@qq.com>
+	s=k20201202; t=1751609067;
+	bh=MbmmL2t8dsm71Q6onEmIu1cU/JkCOwof0cSGAukp3K8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EmYAThTudppLgEq8+urhoX0wAoNDHQVmzlh5lAz8kQ2ScmdvFZdWnlzTrB9qBEs3w
+	 LsP3vQICexL1d5VPGyva9PlH313TUMawGjRh/b5mc3eyJVvBTXqEoQkQj2tJLKW7o3
+	 1uQmDxZTL1/VBsQW6FFZPWm/0KB7ndHY+aiU9LyhDVWhtBRUwJ07kvQktCQYXNpMVa
+	 q10bSBoC/lbMPUDlAZ4IOg6yrAMCSliGBI3iKt/ge8UZOcsEFL5n7oPmt9h655ZPwt
+	 w+4Z7WWjtASUOfem+5Ne+dksLzOiYVVWtbisMOefuZ6WOKmrY15ZX1K1ffJM4sY4iU
+	 0LCcbJkRT1vDA==
+Date: Fri, 4 Jul 2025 15:04:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/2] selftests: tracing: Use mutex_unlock for testing
+ glob filter
+Message-Id: <20250704150425.a8a82c7768e1c99ee272e585@kernel.org>
+In-Reply-To: <20250703103039.3559a7e1@batman.local.home>
+References: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+	<175151680309.2149615.9795104805153538717.stgit@mhiramat.tok.corp.google.com>
+	<20250703103039.3559a7e1@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_82716EB4F15F579C738C3CC3AFE62E822207@qq.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 10:43:57AM +0800, Yuwen Chen wrote:
-> During path traversal, the generic_ci_match function may be called
-> multiple times. The number of memory allocations and releases
-> in it accounts for a relatively high proportion in the flamegraph.
-> This patch significantly reduces the number of memory allocations
-> in generic_ci_match through pre - allocation.
+Shuah,
+
+Can you take this patch (fix) to your tree since this is
+a fix for the selftest?
+
+Thank you,
+
+On Thu, 3 Jul 2025 10:30:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Thu,  3 Jul 2025 13:26:43 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> Signed-off-by: Yuwen Chen <ywen.chen@foxmail.com>
-> ---
->  fs/ext4/namei.c    |  2 +-
->  fs/f2fs/dir.c      |  2 +-
->  fs/libfs.c         | 33 ++++++++++++++++++++++++++++++---
->  include/linux/fs.h |  8 +++++++-
->  4 files changed, 39 insertions(+), 6 deletions(-)
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Since commit c5b6ababd21a ("locking/mutex: implement
+> > mutex_trylock_nested") makes mutex_trylock() as an inlined
+> > function if CONFIG_DEBUG_LOCK_ALLOC=y, we can not use
+> > mutex_trylock() for testing the glob filter of ftrace.
+> > 
+> > Use mutex_unlock instead.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> -- Steve
 
-The reason the allocation is needed at all is because generic_ci_match() has to
-decrypt the encrypted on-disk filename from the dentry that it's matching
-against.  It can't decrypt in-place, since the source buffer is in the pagecache
-which must not be modified.  Hence, a separate destination buffer is needed.
 
-Filenames have a maximum length of NAME_MAX, i.e. 255, bytes.
-
-It would be *much* simpler to just allocate that on the stack.
-
-And we almost can.  255 bytes is on the high end of what can be acceptable to
-allocate on the stack in the kernel.  However, here it would give a lot of
-benefit and would always occur close to the leaves in the call graph.  So the
-size is not a barrier here, IMO.
-
-The real problem is, once again, the legacy crypto_skcipher API, which requires
-that the source/destination buffers be provided as scatterlists.  In Linux, the
-kernel stack can be in the vmalloc area.  Thus, the buffers passed to
-crypto_skcipher cannot be stack buffers unless the caller actually is aware of
-how to turn a vmalloc'ed buffer into a scatterlist, which is hard to do.  (See
-verity_ahash_update() in drivers/md/dm-verity-target.c for an example.)
-
-Fortunately, I'm currently in the process of introducing library APIs that will
-supersede these legacy crypto APIs.  They'll be simpler and faster and won't
-have these silly limitations like not working on virtual addresses...  I plan to
-make fscrypt use the library APIs instead of the legacy crypto API.
-
-It will take some time to land everything, though.  We can consider this
-patchset as a workaround in the mean time.  But it's sad to see the legacy
-crypto API continue to cause problems and more time be wasted on these problems.
-
-I do wonder if the "turn a vmalloc'ed buffer into a scatterlist" trick that some
-code in the kernel uses is something that would be worth adopting for now in
-fname_decrypt().  As I mentioned above, it's hard to do (you have to go page by
-page), but it's possible.  That would allow immediately moving
-generic_ci_match() to use a stack allocation, which would avoid adding all the
-complexity of the preallocation that you have in this patchset.
-
-- Eric
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
