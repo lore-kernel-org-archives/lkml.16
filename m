@@ -1,91 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57752D8368
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5332E3713;
+	Fri,  4 Jul 2025 16:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647702; cv=none; b=VSqipCAYHnJ9qQwWCMsBVKf9mhEtZcZAe3P4sC2BF6vthoG7wO8sTzxBPDrPtrTjqNt8itNCHbYHwPUBioYhhbI2aEevvhpAlUNz18YWT9R0OuAtcDz8EiCqEtzAxc3OQaM3P2XGjpqCwwcEQNqrPxNDRzyxjkmeZAKwo5p2Qq0=
+	t=1751647762; cv=none; b=lmt2Ew+VskIueyF4Iy/x2j/2k57UMMTkmkCZvDCySSDazd7iEeX2km9b5R+qOmIkxO5w+IKwIG9crUA9+7/NEL2jgqMqJsNsAY4dDNZsstgigZFothjiFfDKpJ5TCyyfzgde5MG0IO5p2TLsxhm/qd35oKQ1XFncw+bkwT/hvEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647702; c=relaxed/simple;
-	bh=M+Xmi4lwtsMazAKYGSV8Ut3Pp220PPmHBgKKq2jnaWM=;
+	s=arc-20240116; t=1751647762; c=relaxed/simple;
+	bh=puHH8ECd9Sx/irwJXMzsitFTk8LHZcjscwcNGu8zkdY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brCfSUpYoMrxBFhdZiV020Mtysl4k78YWaYWHe79ja2mXRyRvVlQ8jvRMj19M6hBcz7sVL80AgWeI+XwwJhkT0xZ4wMT8yJinjHZeiTUz3wDthOje3LXY6lGVat0GsND50cjzq3orp819SgfDFMLCpumbrDYTT7yVT6YOk6w5DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W1rkR00m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQyGKtj2vyYiHEvq9Ni5RwcitAfzEj1s7GjI37lGwuPszzBB5w486xFLT6Ajxhuc91ox3un4EJ6BKeqF67Yd0KdWEOWt+BiEH4gTXAqF7ukmkSJBzgKZq/Z7k/wiGJvbbjhkdYReDOf2n0yinMrO3uHL2A8jsU1E2zjhE2bKG8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFZ/BT63; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W1rkR00m"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564AQSpY009995
-	for <linux-kernel@vger.kernel.org>; Fri, 4 Jul 2025 16:48:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=+ZA3Iaf+JIUQxzbRmYR7aqyq
-	GxiwIVe/fI7bAKvTQkI=; b=W1rkR00mj7WYF+MQpjqTnCwX1XLrTbgL7qh3MEoW
-	1ciMj7rhD1m/eZDUdTWj2TjihPjMO9v+P/8zaF7LF1lyMYTMQ/hiGyzfhKzitpLX
-	Q8mUU/RgE54xxZ6nIq7ysv95av+Q/Fh0mutwqOCv5+Ibzfy4qFOh7abCJwtQAapa
-	VzPpe56FFqodaVFVlZ69JP98Yc5P++EH1Iz3JQjzoCGmVeeSmpJf63JUptrD45ar
-	yG6tDUXMN8hwbRJuE3OPk2D2TzrGln0gvyftY5Ae7ALJCPz86+Ev7fXyhhTIR4AL
-	NFy4niiXWZHM/H1ZACLJmcH+9XkqDQDMYva7dtpU/lBcQQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pd6w0yje-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 16:48:20 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d3f0958112so153442185a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:48:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751647699; x=1752252499;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ZA3Iaf+JIUQxzbRmYR7aqyqGxiwIVe/fI7bAKvTQkI=;
-        b=g6vQdzHGKqnQwKoQUgrvu46ZJvsas/f+emFEseGRCPqdsvQvTLdpvn+I2x9VgWembH
-         zJly2MkE/uMSsBgbsp3aKE6Td9vwA75thO+7ePLhPavZiOoOZzvv/eA9ed6mZn9IbAGb
-         F+wVm4zE6oi9jlY3can11TfdbQu7sTLZqR7kOYmG3m2UiMwpc13TTXluuQfoeiYXRpOq
-         JR4A5csEevVOo288FrjXKwL7OvW1+u5O77BxqDcXaHUhE3KnynnSxVDOXbeLorBEWzSQ
-         swTYNTbjTgZ5m0rppd1ToThjrmu/WUTTA6ddB3FetHIIjVIASa42ZyJDEQTMrmIt7+o3
-         7G+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVRvsR1NAuyvTTgY16O+0T9EEpKG6blz+PbZvSJ+88CPJEM6JsXvp3QHqNvvF8Nk5ytFKJdx/K5bnfDpec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQsb5QhlEMMcZeuwENHFeEzNwRCInwyA1+0eA/mC2Nazxv7XvG
-	nEqyhE0cdmbyMBpMWSLAaiwNi2VbbBy71wZohBDljMyZS3q05eFekYvtjIZP2HnWmk3+bywxgiN
-	BzTP0ahrowDRB8rhlm2BLQw7sKkslx1FVahY8xObGvD9HUQHkjWn4WVlmeZ6Y50YOIYRZjUdQnY
-	rP8Q==
-X-Gm-Gg: ASbGnctR+in91ToNlfZX5YpUvFzcl3nZkXIuZZhLRgp0kEspTUvc/i05zJtHtKbxAKB
-	zPEpv3YKHBSVJdYcW8U8oaEyUDz0DlpCOA1fV3MNsM7QP1Xn236T2V/wyfyHbZwGJ2Bs7CfGDhX
-	yrhKhpsoIWxDFeRLDIKiSuG2oMrMzJyTIaYcaNwCJuMDh8aqLjzLqDQiajJNMqSkvRf6Gz+asaO
-	nMzpjkWComNx5CIOIwFQGGfresciEt+8yehoKaQbPsF+pv9lqO8KntnNKbWGzVlI4JP4LxhM5dB
-	zqyJjrp3767VRbZlfZirOEZCbjeOuGld3ie3pQfJgimAOI7Dwbu2+7WHagPc/2l3j7oQZ0Z59Od
-	sUnnRbFYI0+e+6/XYKRjBeiWwQRysn5dv+Rg=
-X-Received: by 2002:a05:620a:2988:b0:7d2:fc7:9572 with SMTP id af79cd13be357-7d5ddcaec7amr434042785a.57.1751647699289;
-        Fri, 04 Jul 2025 09:48:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZV9Tkpiv5v0m5nwKUeJs1ptVFEx2pDtiPHeAB7ZT3kzhlOjIW650b3BM5UPnwmVpnu/SrTQ==
-X-Received: by 2002:a05:620a:2988:b0:7d2:fc7:9572 with SMTP id af79cd13be357-7d5ddcaec7amr434039385a.57.1751647698851;
-        Fri, 04 Jul 2025 09:48:18 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384c8f24sm292469e87.238.2025.07.04.09.48.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:48:16 -0700 (PDT)
-Date: Fri, 4 Jul 2025 19:48:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] arm64: dts: qcom: qcs615: Add CPU scaling clock
- node
-Message-ID: <2vd5wge5hig2ilcih3gvvmzphm3ptkqfklg4ctsxd2pfqdd7gx@trzoqq2qk2qk>
-References: <20250702-qcs615-mm-cpu-dt-v4-v5-0-df24896cbb26@quicinc.com>
- <20250702-qcs615-mm-cpu-dt-v4-v5-3-df24896cbb26@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFZ/BT63"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751647761; x=1783183761;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=puHH8ECd9Sx/irwJXMzsitFTk8LHZcjscwcNGu8zkdY=;
+  b=iFZ/BT630kF1nhbBvR3rSbSaVpMDVPyPrTRsR2Tv6HIDJYv+G6Z6YAs5
+   FRS+AeOwp7d6RuQPAB/YbiyECxBLQMxTMGLkQI/ABq5xvRwByeyaefDBG
+   IiqEQ/ZquQv/ZNF7zwGYt5oaiY92iQdxE+q3K8kdl8QYvUkyMJtBxy2ms
+   fOwGBHuM7SjLts/X4usEfwA4YvBbt4zIBw0tdXLEVvL6suoH5rr/Q7Bvq
+   pOj3wM47VsMJmYdoo6yB6nxzXlcdFMU5Qe/a0aa5deamc3ktrgwZX8Wel
+   7rHJH8WiVmAkTAGV9Rn5YBZv6ysoZDl+RRa+pCoz5FEVn6H8ZjflMhXBs
+   g==;
+X-CSE-ConnectionGUID: AyPKRu6qQZSxurKVI+c+zw==
+X-CSE-MsgGUID: IaAbDfc6QeStQfiS2biYhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53906725"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="53906725"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:49:20 -0700
+X-CSE-ConnectionGUID: hh78nC4/RxamdFREw94QKw==
+X-CSE-MsgGUID: j1mvSA1MTJatPNxSE0N18A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="160202579"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 04 Jul 2025 09:49:18 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXjbA-0003vL-02;
+	Fri, 04 Jul 2025 16:49:16 +0000
+Date: Sat, 5 Jul 2025 00:48:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Lechner <dlechner@baylibre.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH] iio: adc: ad7173: fix num_slots on most chips
+Message-ID: <202507050018.iWEJiG04-lkp@intel.com>
+References: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,42 +69,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-qcs615-mm-cpu-dt-v4-v5-3-df24896cbb26@quicinc.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDEyNyBTYWx0ZWRfX3Xc3yykgAZLP
- Jc/VBKJWwt1B3OfJAhQXOUnZrP7QrLcwCjb8uBFFPArkMnpM++eLcDW2I1NaKdUKQ/px6VuWs+I
- 1sxTRXhS9TGISJWzJVXGcs3cZN6UDMLUQS7dDgqI6VvYYcd1cVUZsgDp5TgZqy/hVLr0zIchQli
- DhLT3z6+MbB4lXWJV/g2MMFDBUf6r+ZFZ3YTANNtWbxTKZRXRotVP5hHuZ0fN0Phma/APtEyGXN
- cwzhNoeOt1bkGgQkkNXHvt53xEC6Vys0W9N90X+h4Ua11s6UkgbUAQG4hW0vWzLl+6iPm7kl/WI
- a1DkOP1Suge/XuObhgyIOBLOlN9UtpSNZAPobAzzB22cVA/owh73ECHL5CRDGActzxbuLLxzaRj
- TJ/c+57Oc9XsyIZl2TKoWKYsR5M+Xm4OjrrW907i3mEyvRnwGBHe9bZmm/Y8T5dWc2cQNZts
-X-Proofpoint-GUID: 21JSwZk2P8EvLVIur08QvD_AaiiAaeEd
-X-Authority-Analysis: v=2.4 cv=UPrdHDfy c=1 sm=1 tr=0 ts=686805d4 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=2bv_n5k-JhLVcNsY_rQA:9
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 21JSwZk2P8EvLVIur08QvD_AaiiAaeEd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_06,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- mlxlogscore=839 bulkscore=0 adultscore=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507040127
+In-Reply-To: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
 
-On Wed, Jul 02, 2025 at 02:43:11PM +0530, Taniya Das wrote:
-> Add cpufreq-hw node to support CPU frequency scaling.
-> 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
+Hi David,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on 6742eff60460e77158d4f1b233f17e0345c9e66a]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-adc-ad7173-fix-num_slots-on-most-chips/20250704-061744
+base:   6742eff60460e77158d4f1b233f17e0345c9e66a
+patch link:    https://lore.kernel.org/r/20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15%40baylibre.com
+patch subject: [PATCH] iio: adc: ad7173: fix num_slots on most chips
+config: x86_64-buildonly-randconfig-004-20250704 (https://download.01.org/0day-ci/archive/20250705/202507050018.iWEJiG04-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050018.iWEJiG04-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507050018.iWEJiG04-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/iio/adc/ad7173.c:782:3: error: field designator 'supports_spi_offload' does not refer to any field in type 'const struct ad_sigma_delta_info'
+     782 |         .supports_spi_offload = true,
+         |         ~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+
+
+vim +782 drivers/iio/adc/ad7173.c
+
+   773	
+   774	static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
+   775		.set_channel = ad7173_set_channel,
+   776		.append_status = ad7173_append_status,
+   777		.disable_all = ad7173_disable_all,
+   778		.disable_one = ad7173_disable_one,
+   779		.set_mode = ad7173_set_mode,
+   780		.has_registers = true,
+   781		.has_named_irqs = true,
+ > 782		.supports_spi_offload = true,
+   783		.addr_shift = 0,
+   784		.read_mask = BIT(6),
+   785		.status_ch_mask = GENMASK(3, 0),
+   786		.data_reg = AD7173_REG_DATA,
+   787		.num_resetclks = 64,
+   788		.num_slots = 16,
+   789	};
+   790	
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
