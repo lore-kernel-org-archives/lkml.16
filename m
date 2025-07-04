@@ -1,63 +1,63 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0081D327183
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED48A326A71
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751645683; cv=none; b=M2JW4uq8N1dxIFciGSZMbNF7Uq1PVrLYMORhkUtbNniiKhYZfLVoUycNnMSaDZjKfizbpnR+EZEaAin0yFGALCRUS4fQmN9AaiH4WV+BVpHyE8NW+20zXUwoJ6m5LoZF9NK+/gwlh1BYqIz8mDQr5BPTbSANl77WWPk+0WGU/Rw=
+	t=1751645683; cv=none; b=Uwq71EYzt4+Szw+cqghRhueQ5Xgo2SWluwzvoYSS7D+CgIEr0f9NLXwiQHoRP/Afa7w1mmPmLlL5ZUbLCi5CjQ6viprRQUnhKcXBDUa3KSDAM1Q0b1OVsRUO8xEd8/eA7pDAIPrQpMheBFLkY3yCJpMnSa6rxkZVKXOIzsRu300=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751645683; c=relaxed/simple;
-	bh=iGKOR9K+IYXovU50dMFSM5PU98+O5pWxvmMYxBBblOo=;
+	bh=6bBYsqJZBDaFXUei7hQaZLvc2wej6cU0ty/mMwIxhps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rRYupOwZBRRP1AMMhS/B7eH8EX3dpSdX2KcjcTmEH3xJ4OkH4rIMQvihfRAU2t2gsok9f9mxCCKSWPq0rEPV4qXW/sOIJXJnAymtepwKhCq3/a+m4cjjKOKU24sReTwLDWq3SnSEbY9HH39gBaaLJracXObjnlkVEN9lZCmsXss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TydEADM4; arc=none smtp.client-ip=209.85.208.51
+	 MIME-Version; b=ACJWSXIJvkDcL9vPyP/VzaMT0pO/rrIzKbEqz+lqy6N9Zcr6cCFeK6kv1Fb23wt03Mpea/hYsUjsMRRHTAZK0gMYaw7BURiu88L1D8NcyFTd51u7fMbxIFxPFAwnTygEtGa2bUHudE2Vekf8vO8uwhVSX+Jiq/Yd08/ULXBYXcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=d5Pw5HKw; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TydEADM4"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so1882305a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:14:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="d5Pw5HKw"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae0dffaa8b2so220636866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 09:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1751645679; x=1752250479; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1751645677; x=1752250477; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JmGBN4vguwr7JXCGrQEzsAEtM0h76i9zDt+HmVvYfZc=;
-        b=TydEADM4MVm+OZh9eQDE4/03G/rYKHzrXHz9OitNZciJtECYCIZDG4CemTCdT2tVvv
-         TW2dGEcdtrvfEYcd6OfbchqTuJ61OKNXq/ItqULkK7BCzdLNyjECIybzRKwIbNgEaZHw
-         25Upg49W7kMTpSjSTIQ2bSrtqgXTMa4f3zG+TsoaBk73g5+SkNo9utgeKDzpqMhClOQk
-         5ZVsGwnhLlojkzZYEybKouPRO4dL2Qm9qIMP+z7094YDYUnYbZsXs+FHXYiJBLnHFMOK
-         8aE4tobVWGmeF9Lr+copjy56jpNFz3j121dNM5bi94zZdFodDiC6mxfYjth3uz8/wgBo
-         rneg==
+        bh=OgCtpqqgn38oeYCLmnm2mb3AWR3Tqp2NnheWLsUnJas=;
+        b=d5Pw5HKwBQ2ORmR5wASUp33TzLXEp4lqvgYQXdxRn9gU+88dC4m1L9T8rAjBE68RWC
+         FogEdsGz4Ty2m5yZjVTxEee4hR1+DQSLfX3z5dZ0/wyRfpQ81wnFCcaLPjaqpG7zEIJt
+         bfjxIwWaZS5YTrdL38QNG0wzHz4qAaeb75u/q5YHFIzx0jxZ+ifk5du5o142FiIkIEe8
+         A+Hy6x4Zm4CtQJInxGO2IqOPJ4sZ52ZBG5B9A+nOyOE+Iqg6Dl29xX4YDzZJTTOzeILe
+         7PSb1JHCfBTUPNbzIXj5fYa9tAF4dmDjA9lP5reA/3lQ6rDpP9ee7oB7ATUJmx5cThlB
+         cUKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751645679; x=1752250479;
+        d=1e100.net; s=20230601; t=1751645677; x=1752250477;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JmGBN4vguwr7JXCGrQEzsAEtM0h76i9zDt+HmVvYfZc=;
-        b=r/EnVonjPii5lUjSNAArnFOK57HZzLv3Jk1RPzRkjEPqHx4Ro9NBvMo77rvtyS6jUD
-         uk7an0lSjEwVQ1woswMK5FWmoVhFdQHBO4pmVD3DXOMi0QyDMr+FPtpa4TDPWYPkT4yl
-         ICHV1tyboe5hEjaDyCnPW0yK6Q51fXBtBvsBnJZpjwD4hJ7vUhbYfWgZ0UM64/FA8xO9
-         kOiSp3gk+JaEDcw7DVFCRcdi92n3bYygHVlYWCe5WZ5AcMmT2pa3ACyHaflGZQa5c0AM
-         E8+5RetJ42QX3DqQpSpqpss8z1j9tauc77Q4s/Ta7ZlyFv6sGgKkJKcU3RVS0BrrFoGO
-         D1vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvfqElTps73fnpRpDOXUniBQdnSlVdE01LUC1o2oJAhM8HlGW687fkPrFn9e2c5t+xdHTHDN+cnK+01f0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUEiVUfibQm2eAg7NIQQBtDMyBl0YDmLk2F+4in7Agy+DBoxGR
-	3oHLf3HHf/XvB5S5C1uU2v9/flQ3Lcl0HDLE7Q+rL8rjKJInaSHeZP2GWvogFOT8FnM=
-X-Gm-Gg: ASbGncuaZkxrHMV80XKUiBOZqMaAchyAiqvqeCLoQkrezaVeC84LQcL8TrnE34LnYpq
-	STD5r3Bokmem1DBtgDBg391TZ3JGw2glIhzQTqHHjTPYGG18b+nVMEaZywWXA8jpyk1yjUZmak4
-	GuWw8ZcoU0pWR207AKXIfb3PFTaZsiw+S9rSQHB424rLFrsSIEyZRcTlCrr+YO1NvoWDMP9Z3vt
-	iz1yvETZiwrFDeznAGeLdOmNPJ20VetJp5da4niPcdErXUpZoVizCf4mpQRVxG87sH8lezJyUYi
-	BV3hzFlaSZkb746HiutkDscdWLuczkqfIeo0E6nstOB+sDvrnkwI3YLLR0SyPRzm8PXTtyhmnU1
-	CwvkRHqyZbV2bDqo=
-X-Google-Smtp-Source: AGHT+IGi14ev4epMFpAVcULI0O8fOQuvZidrlt+4KBmokmlyAj9zyscXUfCOlIWYAChv9XzOSvBlZQ==
-X-Received: by 2002:a17:907:7ba3:b0:add:f189:1214 with SMTP id a640c23a62f3a-ae3fbc5b749mr340373166b.24.1751645679233;
-        Fri, 04 Jul 2025 09:14:39 -0700 (PDT)
+        bh=OgCtpqqgn38oeYCLmnm2mb3AWR3Tqp2NnheWLsUnJas=;
+        b=n0y+0CAilQtg6XQoiIVg3Di54hZkbcoAjU3rOSvwW5LocLnSIC7VG/iIb4hRU2cA0n
+         OKluGu6ZSQo2m70UJn5LSVXYLaVi+EDl3SaKAA2ABH9bss/vD3iBYievYK3vp+OBYkzV
+         ghkiosTLae8fumxf49EHVtMrKCgTGwNdve4Rl47GS2+GvD5woShlh6Je7R251fr71o56
+         8aEAS3IbY5bN/f2ymUgj9E+sJ6QouEu7WS1fHcZ7b0qSsVJyilFhed3b5Oo8C0Dppu8T
+         KJ7cYFa+aRFPnf2w/v9AEjAbvtibOQwt8p2hjRt3F8jkt+sPuTdAB7oXFVHzSANDQS2Z
+         X1Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrGF29Mml8UZbrKIKcjLPN2yP3JhJhTMlguArgnadU9Jr7QUHCWTVDJ9uUhsCKCrHr5VB/xtzV6VUxQyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNKKi4cvhqxCQc+zj3jJqLdsBAiMbnpmUzPTNMX2iQQ740k7lh
+	QONquBwWm8BY1LsWB+grwu8SuOUu1S9sXGtmvlWecQ+aVtoY9rn5iTNi96KElFV4kkQ=
+X-Gm-Gg: ASbGncsJO35xg6lJ+CAYG6tRFYVcUEnkKoNf/W/0mbVt9llLACbahQUHv+mnG5jMhxw
+	IxhxR4yBNqONIpH3uWq6W0sUQCFPSW6h6z3KFg/pdIZMTMH9Gl2hwFGZICdeSpgHDCnMIkZ4IEX
+	E5bP/fhaYsH7ayDoh+vmzoYda0uY8Na/QH9tivoQQ6qBY7d9Lx0aK51eMMLRe5PooTKHRep4t5G
+	TnBHxsB3N9EnMA76xyGdTu9Qb+yIiW5ZX/er3YqO9yCvuXp1DFRTX9YeAC3V49tDzOVv37Q7ciY
+	vxuJ4HAZCenYrQ6YyjbWNX0mhtS6SE3Gh4YQCW1H22jI1rzGXRShAD443C8vzowXRWZhXJ6SCXc
+	I67hD6Ut+nxAcJfY=
+X-Google-Smtp-Source: AGHT+IEwTpH1PdXGNkun2+FZQKwc/iZhEarO6PtA/vdMrWXwR9cFeo/knhPNouC+KTYZgUm2rnSe8A==
+X-Received: by 2002:a17:907:971a:b0:ae0:9363:4d5d with SMTP id a640c23a62f3a-ae3fbc405c7mr307577466b.2.1751645677173;
+        Fri, 04 Jul 2025 09:14:37 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d9215sm194703766b.2.2025.07.04.09.14.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d9215sm194703766b.2.2025.07.04.09.14.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:14:38 -0700 (PDT)
+        Fri, 04 Jul 2025 09:14:36 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: bhelgaas@google.com,
@@ -82,11 +82,12 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH v3 2/9] clk: renesas: r9a08g045: Add clocks and resets support for PCIe
-Date: Fri,  4 Jul 2025 19:14:02 +0300
-Message-ID: <20250704161410.3931884-3-claudiu.beznea.uj@bp.renesas.com>
+	John Madieu <john.madieu.xa@bp.renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 1/9] soc: renesas: rz-sysc: Add syscon/regmap support
+Date: Fri,  4 Jul 2025 19:14:01 +0300
+Message-ID: <20250704161410.3931884-2-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
@@ -98,81 +99,196 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+From: John Madieu <john.madieu.xa@bp.renesas.com>
 
-Add clocks and resets for the PCIe IP available on the Renesas RZ/G3S SoC.
-The clkl1pm clock is required for PCIe link power management (PM) control
-and should be enabled based on the state of the CLKREQ# pin. Therefore,
-mark it as a no_pm clock to allow the PCIe driver to manage it during link
-PM transitions.
+The RZ/G3E system controller has various registers that control or report
+some properties specific to individual IPs. The regmap is registered as a
+syscon device to allow these IP drivers to access the registers through the
+regmap API.
 
+As other RZ SoCs might have custom read/write callbacks or max-offsets,
+add register a custom regmap configuration.
+
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+[claudiu.beznea:
+ - s/rzg3e_sysc_regmap/rzv2h_sysc_regmap in RZ/V2H sysc
+   file
+ - do not check the match->data validity in rz_sysc_probe() as it is
+   always valid
+ - register the regmap if data->regmap_cfg is valid]
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v3:
 - collected tags
-- dropped the power domain support and added MSTOP as power domain
-  code is not available anymore in the current linux-next
-- adjusted the patch title and description
 
 Changes in v2:
-- none
+- picked the latest version from John after he addressed the review
+  comments received at [1];
+- I adjusted as specified in the SoB area
 
- drivers/clk/renesas/r9a08g045-cpg.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+[1] https://lore.kernel.org/all/20250330214945.185725-2-john.madieu.xa@bp.renesas.com/
 
-diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
-index 405907925bb7..4a6632ea22cb 100644
---- a/drivers/clk/renesas/r9a08g045-cpg.c
-+++ b/drivers/clk/renesas/r9a08g045-cpg.c
-@@ -289,6 +289,10 @@ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
- 					MSTOP(BUS_MCPU2, BIT(14))),
- 	DEF_MOD("tsu_pclk",		R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0,
- 					MSTOP(BUS_MCPU2, BIT(15))),
-+	DEF_MOD("pci_aclk",		R9A08G045_PCI_ACLK, R9A08G045_CLK_M0, 0x608, 0,
-+					MSTOP(BUS_PERI_COM, BIT(10))),
-+	DEF_MOD("pci_clk1pm",		R9A08G045_PCI_CLKL1PM, R9A08G045_CLK_ZT, 0x608, 1,
-+					MSTOP(BUS_PERI_COM, BIT(10))),
- 	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0,
- 					MSTOP(BUS_MCPU3, GENMASK(8, 7))),
- };
-@@ -329,6 +333,13 @@ static const struct rzg2l_reset r9a08g045_resets[] = {
- 	DEF_RST(R9A08G045_ADC_PRESETN, 0x8a8, 0),
- 	DEF_RST(R9A08G045_ADC_ADRST_N, 0x8a8, 1),
- 	DEF_RST(R9A08G045_TSU_PRESETN, 0x8ac, 0),
-+	DEF_RST(R9A08G045_PCI_ARESETN, 0x908, 0),
-+	DEF_RST(R9A08G045_PCI_RST_B, 0x908, 1),
-+	DEF_RST(R9A08G045_PCI_RST_GP_B, 0x908, 2),
-+	DEF_RST(R9A08G045_PCI_RST_PS_B, 0x908, 3),
-+	DEF_RST(R9A08G045_PCI_RST_RSM_B, 0x908, 4),
-+	DEF_RST(R9A08G045_PCI_RST_CFG_B, 0x908, 5),
-+	DEF_RST(R9A08G045_PCI_RST_LOAD_B, 0x908, 6),
- 	DEF_RST(R9A08G045_VBAT_BRESETN, 0x914, 0),
+ drivers/soc/renesas/Kconfig          |  1 +
+ drivers/soc/renesas/r9a08g045-sysc.c | 10 ++++++++++
+ drivers/soc/renesas/r9a09g047-sys.c  | 10 ++++++++++
+ drivers/soc/renesas/r9a09g057-sys.c  | 10 ++++++++++
+ drivers/soc/renesas/rz-sysc.c        | 17 ++++++++++++++++-
+ drivers/soc/renesas/rz-sysc.h        |  3 +++
+ 6 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 1930a12b8fa7..58a4ab2643d6 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -452,6 +452,7 @@ config RST_RCAR
+ 
+ config SYSC_RZ
+ 	bool "System controller for RZ SoCs" if COMPILE_TEST
++	select MFD_SYSCON
+ 
+ config SYSC_R9A08G045
+ 	bool "Renesas System controller support for R9A08G045 (RZ/G3S)" if COMPILE_TEST
+diff --git a/drivers/soc/renesas/r9a08g045-sysc.c b/drivers/soc/renesas/r9a08g045-sysc.c
+index f4db1431e036..0ef6df77e25f 100644
+--- a/drivers/soc/renesas/r9a08g045-sysc.c
++++ b/drivers/soc/renesas/r9a08g045-sysc.c
+@@ -18,6 +18,16 @@ static const struct rz_sysc_soc_id_init_data rzg3s_sysc_soc_id_init_data __initc
+ 	.specific_id_mask = GENMASK(27, 0),
  };
  
-@@ -340,6 +351,10 @@ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
- 	MOD_CLK_BASE + R9A08G045_VBAT_BCLK,
- };
- 
-+static const unsigned int r9a08g045_no_pm_mod_clks[] = {
-+	MOD_CLK_BASE + R9A08G045_PCI_CLKL1PM,
++static const struct regmap_config rzg3s_sysc_regmap __initconst = {
++	.name = "rzg3s_sysc_regs",
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++	.max_register = 0xe20,
 +};
 +
- const struct rzg2l_cpg_info r9a08g045_cpg_info = {
- 	/* Core Clocks */
- 	.core_clks = r9a08g045_core_clks,
-@@ -356,6 +371,10 @@ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
- 	.num_mod_clks = ARRAY_SIZE(r9a08g045_mod_clks),
- 	.num_hw_mod_clks = R9A08G045_VBAT_BCLK + 1,
+ const struct rz_sysc_init_data rzg3s_sysc_init_data __initconst = {
+ 	.soc_id_init_data = &rzg3s_sysc_soc_id_init_data,
++	.regmap_cfg = &rzg3s_sysc_regmap,
+ };
+diff --git a/drivers/soc/renesas/r9a09g047-sys.c b/drivers/soc/renesas/r9a09g047-sys.c
+index cd2eb7782cfe..a3acf6dd2867 100644
+--- a/drivers/soc/renesas/r9a09g047-sys.c
++++ b/drivers/soc/renesas/r9a09g047-sys.c
+@@ -62,6 +62,16 @@ static const struct rz_sysc_soc_id_init_data rzg3e_sys_soc_id_init_data __initco
+ 	.print_id = rzg3e_sys_print_id,
+ };
  
-+	/* No PM modules Clocks */
-+	.no_pm_mod_clks = r9a08g045_no_pm_mod_clks,
-+	.num_no_pm_mod_clks = ARRAY_SIZE(r9a08g045_no_pm_mod_clks),
++static const struct regmap_config rzg3e_sysc_regmap __initconst = {
++	.name = "rzg3e_sysc_regs",
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++	.max_register = 0x170c,
++};
 +
- 	/* Resets */
- 	.resets = r9a08g045_resets,
- 	.num_resets = R9A08G045_VBAT_BRESETN + 1, /* Last reset ID + 1 */
+ const struct rz_sysc_init_data rzg3e_sys_init_data = {
+ 	.soc_id_init_data = &rzg3e_sys_soc_id_init_data,
++	.regmap_cfg = &rzg3e_sysc_regmap,
+ };
+diff --git a/drivers/soc/renesas/r9a09g057-sys.c b/drivers/soc/renesas/r9a09g057-sys.c
+index 4c21cc29edbc..c26821636dce 100644
+--- a/drivers/soc/renesas/r9a09g057-sys.c
++++ b/drivers/soc/renesas/r9a09g057-sys.c
+@@ -62,6 +62,16 @@ static const struct rz_sysc_soc_id_init_data rzv2h_sys_soc_id_init_data __initco
+ 	.print_id = rzv2h_sys_print_id,
+ };
+ 
++static const struct regmap_config rzv2h_sysc_regmap __initconst = {
++	.name = "rzv2h_sysc_regs",
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++	.max_register = 0x170c,
++};
++
+ const struct rz_sysc_init_data rzv2h_sys_init_data = {
+ 	.soc_id_init_data = &rzv2h_sys_soc_id_init_data,
++	.regmap_cfg = &rzv2h_sysc_regmap,
+ };
+diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
+index ffa65fb4dade..70556a2f55e6 100644
+--- a/drivers/soc/renesas/rz-sysc.c
++++ b/drivers/soc/renesas/rz-sysc.c
+@@ -6,8 +6,10 @@
+  */
+ 
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/regmap.h>
+ #include <linux/sys_soc.h>
+ 
+ #include "rz-sysc.h"
+@@ -100,14 +102,19 @@ MODULE_DEVICE_TABLE(of, rz_sysc_match);
+ 
+ static int rz_sysc_probe(struct platform_device *pdev)
+ {
++	const struct rz_sysc_init_data *data;
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
++	struct regmap *regmap;
+ 	struct rz_sysc *sysc;
++	int ret;
+ 
+ 	match = of_match_node(rz_sysc_match, dev->of_node);
+ 	if (!match)
+ 		return -ENODEV;
+ 
++	data = match->data;
++
+ 	sysc = devm_kzalloc(dev, sizeof(*sysc), GFP_KERNEL);
+ 	if (!sysc)
+ 		return -ENOMEM;
+@@ -117,7 +124,15 @@ static int rz_sysc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(sysc->base);
+ 
+ 	sysc->dev = dev;
+-	return rz_sysc_soc_init(sysc, match);
++	ret = rz_sysc_soc_init(sysc, match);
++	if (ret || !data->regmap_cfg)
++		return ret;
++
++	regmap = devm_regmap_init_mmio(dev, sysc->base, data->regmap_cfg);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return of_syscon_register_regmap(dev->of_node, regmap);
+ }
+ 
+ static struct platform_driver rz_sysc_driver = {
+diff --git a/drivers/soc/renesas/rz-sysc.h b/drivers/soc/renesas/rz-sysc.h
+index 56bc047a1bff..447008140634 100644
+--- a/drivers/soc/renesas/rz-sysc.h
++++ b/drivers/soc/renesas/rz-sysc.h
+@@ -9,6 +9,7 @@
+ #define __SOC_RENESAS_RZ_SYSC_H__
+ 
+ #include <linux/device.h>
++#include <linux/regmap.h>
+ #include <linux/sys_soc.h>
+ #include <linux/types.h>
+ 
+@@ -34,9 +35,11 @@ struct rz_sysc_soc_id_init_data {
+ /**
+  * struct rz_sysc_init_data - RZ SYSC initialization data
+  * @soc_id_init_data: RZ SYSC SoC ID initialization data
++ * @regmap_cfg: SoC-specific regmap config
+  */
+ struct rz_sysc_init_data {
+ 	const struct rz_sysc_soc_id_init_data *soc_id_init_data;
++	const struct regmap_config *regmap_cfg;
+ };
+ 
+ extern const struct rz_sysc_init_data rzg3e_sys_init_data;
 -- 
 2.43.0
 
