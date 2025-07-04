@@ -1,88 +1,131 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F329E114
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875F82BCF5C;
+	Fri,  4 Jul 2025 08:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617606; cv=none; b=Sw8pYnzjeNI9i0kdd+LQTY5lwP4docgnjd1mNfyW7iC+qQPkmCoiDdhodaZ8fj/5tciax2uiUluseeoi6K/ZAGyKG91bVh98eUuQ54TjogmH3PniFySBL4HDW598rrkNyk+7IHdYGaE6okmL21lSaXLeip0oiGsPze7m6z7s4DU=
+	t=1751617611; cv=none; b=SmLePWH0pemUktAF12h3ym6HiuqfO73fiYMo1y9RvmGwHquUz8Wg2Afs1kMbS6a8EHqKK/buKo/Wj2kPr6qpcoWFW9xZT1ipIUETslAMn9MNONMYD8S2Wg9Uzr/4Lj06CUUWyfIqaRfcem3+8yl5GHcCfKJk+hY3EKpsyEB/FzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617606; c=relaxed/simple;
-	bh=JQrIRbe58PCGQiKH7ICA/VJBqVvZRsRprm11mamR2Sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6+OTjJEekEKbIGNtVCyexcUOzETnKtIXZJ2ctK/aMxp7dnzwM/73qZsgSWA1H0qXRMgp7QAcEB/H9rUoE5U/xMwWt6WfRCvA12Xru9gzcB60jVxaTn6vo0EHbreNIQ9uipiEY3ZbDL1WTVvvQx0+i7RPghOIOTax59zBgMx68Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=StbeyWvE; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751617611; c=relaxed/simple;
+	bh=9aUMtw1stPGYE0BaxMp9AP1glAqCxc7OYI5tFwmPTWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ku+4vQeg5YzV3LsyDdIJW8fm2Nflkwnu6SxZMvrB2tzsbwktJvXgFi3Lez/E/4eRVs8oCFEdM8qCYt7kKfBrDNBYYtyXfto8ufgzUiJOUUOPt67OppzPUA3QL+2kFCGBLp2F7DpEHYwYDGZPnubvotD/WInafByDULU6Y9ai7zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OURYlIL9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="StbeyWvE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bS54nv+4AaRiHW85Bipm2BMsS6RI2YCIMi2UoGsRemo=; b=StbeyWvEHmr5aDijIHML5yK/fU
-	XYKUhU4oxNq7jq1Ku0UfrcVzgkDrocyIdBTzDXQbr3zcIklJ2uKkkcZ/VeYeVBk1cOxEcHfwPdNmd
-	kawIr3eL7RlVhcsFlh1qGdCTr+aCQq3uOd44wIwwtxw2+mqy/ftHDeScoR1PaKjWxnET6JdI+EnFz
-	wSw54O6JzyBhUognF2ywwBAHt5KML19n6UbBylZaMXRUfmcTlRKRIGfH0QOpzc40kVFf7bMiha3vF
-	5gb4DKVZ8aC28EHx9GvtR5QdFVB0mnhAoVlo3l0IMaKkppeT/Iu/xWUogd+GOVqI9eg2HTR+l1ZRn
-	OYFjTouw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXbkh-00000007rCC-3q3B;
-	Fri, 04 Jul 2025 08:26:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 72FFB300212; Fri, 04 Jul 2025 10:26:35 +0200 (CEST)
-Date: Fri, 4 Jul 2025 10:26:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Libo Chen <libo.chen@oracle.com>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Michal Hocko <mhocko@suse.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tim Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org,
-	Jirka Hladky <jhladky@redhat.com>,
-	Srikanth Aithal <Srikanth.Aithal@amd.com>,
-	Suneeth D <Suneeth.D@amd.com>
-Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
- task swap
-Message-ID: <20250704082635.GD2001818@noisy.programming.kicks-ass.net>
-References: <20250703072608.GS1613200@noisy.programming.kicks-ass.net>
- <aGZNTtJuCyHJE_25@tiehlicka>
- <20250703115006.GT1613200@noisy.programming.kicks-ass.net>
- <aGZxFRVxHouLaMPg@tiehlicka>
- <b4891cca-4da3-4411-bc9c-669118bf825a@intel.com>
- <e944b504-a852-4f07-a514-7dd99e63b888@oracle.com>
- <20250703123626.GW1613200@noisy.programming.kicks-ass.net>
- <0182cc94-c557-4ce5-b245-fb1fd54bc59b@oracle.com>
- <20250703141800.GX1613200@noisy.programming.kicks-ass.net>
- <12b84e27-f9b1-477e-8e56-4b7c6727e86b@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OURYlIL9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10040C4CEE3;
+	Fri,  4 Jul 2025 08:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751617611;
+	bh=9aUMtw1stPGYE0BaxMp9AP1glAqCxc7OYI5tFwmPTWM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OURYlIL9GNPi9qFVjsgDHlwjFmr6LHHVsCiKuy5ZYDQsFJPg2dMynssNMz83nBETj
+	 Tose/50ZAVPROjr1NTxsdJSWzaSQEYtGu8IFIkhYcX+CeuuL2QuDq5G/yiFL6NvBFS
+	 CX14xZ4sUIR6HkxC/faKmbiY66EgtBHBEq+NOkMpNXzhELY5v+qPGlmXGX38zwhy8w
+	 OBDzRuelFrzpou8NOB4K+GNxkJEF2ZWGcc5cHo3ee05mLTTuql6bD7QvOVSUa8+avG
+	 PjsjoeLI3yuN+Pg1Dl224l+8Y43O8JH3gG3sH967QRpEFBr8U0sGIVMZeqEJsvKfs3
+	 EgXa19qTjoNzQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5561ab55c4dso806833e87.2;
+        Fri, 04 Jul 2025 01:26:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8Cu/Q6ms/I1ZfKyJ8OqC2EBh8boVluminm9LH5hX0UhAiTWbeh2xEVTJfk9Z+HBuxWGiyF3P8YXe7FShE@vger.kernel.org, AJvYcCXVZeLrXOquzfhm7Bh0U4J1hA2Hx2nQAAtGAXa0tjKJ6nX4qx0DNjmHqWgtxzal0FjA2SOw2h9ylaw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWTxowI84HYmWnpPCboSbHJ3mCOwrLbRrskCJdFZ1Rfhud8ncV
+	/1nESQH3qwmmpUfWfQwiKIce5asnruQ72ySFfrZpTFFqWk+2FpmcKLLkt/rAh4NLVDi5P6txaeR
+	TeLbsJzcAPzl0PqqlEg2WkPuSsztKy7o=
+X-Google-Smtp-Source: AGHT+IGpFw16pMJCMz67SWNFA6IMUVC0qphVdY6vm9ia3sgNYWHEFtvFRfb+0rVLwo2jlzGrmYMI9I0Ytmf3CMf87z8=
+X-Received: by 2002:a05:6512:3690:b0:553:3770:c91d with SMTP id
+ 2adb3069b0e04-556d160f06bmr486751e87.4.1751617609446; Fri, 04 Jul 2025
+ 01:26:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12b84e27-f9b1-477e-8e56-4b7c6727e86b@oracle.com>
+References: <20250624-arm_kasan-v1-1-21e80eab3d70@debian.org> <aGaxZHLnDQc_kSur@arm.com>
+In-Reply-To: <aGaxZHLnDQc_kSur@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 4 Jul 2025 10:26:37 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
+X-Gm-Features: Ac12FXxELlmJOgclmPetSiXcBqm7bPSktVfuSqSd0ARv_5mIl32jvgAoBlJoUvA
+Message-ID: <CAMj1kXFadibWLnhFv3cOk-7Ah2MmPz8RqDuQjGr-3gmq+hEnMg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: efi: Fix KASAN false positive for EFI runtime stack
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Breno Leitao <leitao@debian.org>, Will Deacon <will@kernel.org>, usamaarif642@gmail.com, 
+	rmikey@meta.com, andreyknvl@gmail.com, kasan-dev@googlegroups.com, 
+	linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 03, 2025 at 04:35:42PM -0700, Libo Chen wrote:
+On Thu, 3 Jul 2025 at 18:35, Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Tue, Jun 24, 2025 at 05:55:53AM -0700, Breno Leitao wrote:
+> > KASAN reports invalid accesses during arch_stack_walk() for EFI runtime
+> > services due to vmalloc tagging[1]. The EFI runtime stack must be allocated
+> > with KASAN tags reset to avoid false positives.
+> >
+> > This patch uses arch_alloc_vmap_stack() instead of __vmalloc_node() for
+> > EFI stack allocation, which internally calls kasan_reset_tag()
+> >
+> > The changes ensure EFI runtime stacks are properly sanitized for KASAN
+> > while maintaining functional consistency.
+> >
+> > Link: https://lore.kernel.org/all/aFVVEgD0236LdrL6@gmail.com/ [1]
+> > Suggested-by: Andrey Konovalov <andreyknvl@gmail.com>
+> > Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  arch/arm64/kernel/efi.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> > index 3857fd7ee8d46..d2af881a48290 100644
+> > --- a/arch/arm64/kernel/efi.c
+> > +++ b/arch/arm64/kernel/efi.c
+> > @@ -15,6 +15,7 @@
+> >
+> >  #include <asm/efi.h>
+> >  #include <asm/stacktrace.h>
+> > +#include <asm/vmap_stack.h>
+> >
+> >  static bool region_is_misaligned(const efi_memory_desc_t *md)
+> >  {
+> > @@ -214,9 +215,11 @@ static int __init arm64_efi_rt_init(void)
+> >       if (!efi_enabled(EFI_RUNTIME_SERVICES))
+> >               return 0;
+> >
+> > -     p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
+> > -                        NUMA_NO_NODE, &&l);
+> > -l:   if (!p) {
+> > +     if (!IS_ENABLED(CONFIG_VMAP_STACK))
+> > +             return -ENOMEM;
+>
+> Mark Rutland pointed out in a private chat that this should probably
+> clear the EFI_RUNTIME_SERVICES flag as well.
+>
 
-> Probably not as bad as you may think. Systems with one NUMA node or NUMA
-> balancing disabled (which will be most of the machines) won't be affected
-> by this at all , task_numa_migrate() is also ratelimited so it doesn't get
-> touched nearly as often as most of other scheduler events.
-> 
-> If this is on a really hot and critical path that most of us have to take,
-> such as wakeup, I won't argue with you at all. I don't want to be too
-> persistent here, it's fine to use eBPF with the existing tracepoints. I
-> just think this is convenient and doesn't really hurt those who don't care
-> about these numbers. 
+If VMAP_STACK is a hard requirement, should we make CONFIG_EFI depend
+on it for arm64?
 
-Its not about this one path per-se, more a general rant on the 'merit'
-of endlessly adding statistics and accounting to code.
+> > +
+> > +     p = arch_alloc_vmap_stack(THREAD_SIZE, NUMA_NO_NODE);
+> > +     if (!p) {
+> >               pr_warn("Failed to allocate EFI runtime stack\n");
+> >               clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+> >               return -ENOMEM;
+> >
+>
+> With that:
+>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>
+> (but let's see if Ard has a different opinion on the approach)
+>
 
+I think this is fine - the stack just needs to be disjoint from the
+ordinary kernel mode task stack so that buggy firmware is less likely
+to corrupt it, and so that we can recover from an unexpected
+synchronous exception more reliably.
+
+In that sense, the old and the new code are equivalent, so no
+objections from me.
