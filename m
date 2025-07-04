@@ -1,88 +1,95 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D7849659
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881841D5CD4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 01:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751593966; cv=none; b=iL9kRPYpGeV93brtE3PPnWIxJN+s/GlcD4lkfqSw7NVt5bLVuizW38rnGfGjLdfzDOdXm+TVrGDDqMMJ7YILpouVPEcbyybzkz5ykEwokA1m4GG6ljJ+6GhqtiKYWZXtOAtdxLTWhjpyWaQJOSJlDsYr1VR/1QD+RNsJe6RP20M=
+	t=1751594035; cv=none; b=sYlyFHpkWRB/TS233aJTmxZBnbbdxtZtSwJktomyVS5l99amunu+0fMkL1T1DxfFHI2Qr5tLdsC2zpxhJUMZnZ3mjcQ6sWUxjEyDjoQJiCREv2WxA13Jj0Bl/foIBmNvEuU6PqIhIdhvXeLhH9BdgonA1jXimRe86RpiiX3Q+gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751593966; c=relaxed/simple;
-	bh=naZ1Wb5M4QpsPJRJ/74tIV4S6gR8fo6DimjgFgewQRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FEd7+YgwyiT6y0qWkixhCoBXGEJdwgTu8OXZwTo2QBmya0a6C+FOT4x3CmrKH/HZTgqI4x0miQhJ3H2HRe/JQMv/BIEzbKPu8hdIc2DzOfqcN/ovycMwJI7o75/vxOfJ6O1GiPwYeeZrx1l0lB1xtvvclOiDo0yXVAcw/xTbVcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Gn7F0Ju7; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1751594035; c=relaxed/simple;
+	bh=IUMF0hGdyx2upyKxeDRqselmMwuKI0v+FfCyIWW4URc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsS2/UohZSQ9HsC5VW91dRO3/EB9YA0iyZCbgJLxwwqVBOKPBrk0ZaiussmKMLSS1yxZwr7JQ8XbekmOWuH+vwajngoCOxz0ZIKaM4912rSBZidC1rnVjdX9WID8RTe08CTm68w0eW9+rYyviq/pcW9C+hYY+624L9EZBM678LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z28ygIIS; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Gn7F0Ju7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=ik
-	EhAVjSVURgSYmY6Bi3dWU9f3AgGAeD0rRfayq1CpA=; b=Gn7F0Ju7DgfZiRmHTd
-	Qywre9m0yK9dgdQKNtmuQDCzavJeZN8rwMtpoqlL8+7BjKatbJUu9a9mjoaho130
-	I2l3dJR1FNhXtYEqGbpz10dITX8hoCP8w3RLNDYoMvgVs/GkrrBCcn5y3epmVAAN
-	rA3Hk6O5pHteKNA1KMxJ1uPFw=
-Received: from ubuntu24-z.. (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgB34lHUM2dopWkHAA--.1033S2;
-	Fri, 04 Jul 2025 09:52:20 +0800 (CST)
-From: ranxiaokai627@163.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	boqun.feng@gmail.com,
-	longman@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	ran.xiaokai@zte.com.cn
-Subject: [PATCH] locking/mutex: remove redundant ifdef
-Date: Fri,  4 Jul 2025 01:52:18 +0000
-Message-ID: <20250704015218.359754-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z28ygIIS"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34a71d9208so320858a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 18:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751594033; x=1752198833; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jAQ6TVq16tZQ6x8pz/0CtqrKxJ7X+TGiOhIJo9QOyHo=;
+        b=Z28ygIISkRVr9FffNX90JwVXNbBkCGFKcB9XvfwCzeiRZ7JoZx/WrVY0hpszkKqEM+
+         oYC4uDx6oZU9gIgincrQ0ctD3xabE9O1hNbCT6BW/fsCyyYgXt4NWXsMSNlXnsCOh5S6
+         mJZTKvni3OfgDhdnU+0Q9jzR+1y/9dOoe3GnM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751594033; x=1752198833;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAQ6TVq16tZQ6x8pz/0CtqrKxJ7X+TGiOhIJo9QOyHo=;
+        b=TQ08l0BI2sSHzU3eBRnlkOKqkdbGoMXStIMd3GhLaobmzT2dZKpb/e9StpIhb/42E7
+         ov22kw31DgySnwM1aHg55p84bGMDzynC1TakYcn4wN0BuSvfkFskFZaNPGuQ2Wul+M4p
+         GgYfaKf9/y8sDT1ZwYeR3lEASy/Tyow4uPPKXgK6e4jJWY4YluGI7klnjE6EXMyNYFln
+         Rw/lJB40ZAatZXSh8P7GQwEAhsqdgiNh6TTrmYnB+9yZV6cZQwsQah/d5/EYLj7X2VFC
+         j2YGbRQniZ743w8wmeGU9JAMESZY91QIapI63cScjvvmXktbBKsFGXp12HC12gfCR5dX
+         SAgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrYMYS0IecqX0zQ3j6KR3QkRozwaQxbCj6t0Wkru2Jtec51+OCntFg1UMEPUe8fNx6/bg94Woqsq7mapg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCrk840NfH9DqjSy5GKbChco7hczb0j0FwYfTlJglAyAiEgtp8
+	qtYQhP476jAeECH3QxrjpxuRXMAFU2EQLqcT6mQDeMeuf5OATdlmdauDSrdntzCKyQ==
+X-Gm-Gg: ASbGnctJuRiHMv/Gc4FetoW+Nnjh+uXC19+fZFhp9DKWRWxMRyxFOBYBAIsmetYFBib
+	nZnrfWq303UqRKLHFe8DSd2duXnefRvHD12GuJxorN/Fcb7FkIqYHq/Gb6Z47iE5VW6wBHsEW7A
+	mvN3P4/k/RaZR4vU44aShy9sAbo316hLHWn7jDIYXXzkLJDzlHw2I1aY1fc+AuQo3rvpnr0gbno
+	Qngdv9RqWgFjLg7b7hpPzxgYWVvRN/0wT19VEYWpbzs/lptF8EtnWDSrDfrDN7fhq1IlsooeauU
+	ljsmdvg3INPZPFOqOndE+4+5BIQQawkgGunxfuOeab3rL2iJToH0vn+YYcbYwXYSMw==
+X-Google-Smtp-Source: AGHT+IFU4hNoU+sLjwVd0pcP0UOZs85uDhW3yq5YhMO4v88MqVeHKE4G9GMzITqjnfTVpsq+dB4Blw==
+X-Received: by 2002:a17:90b:3890:b0:314:2bae:97d7 with SMTP id 98e67ed59e1d1-31aadd43c66mr426877a91.15.1751594032745;
+        Thu, 03 Jul 2025 18:53:52 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:20ef:ef86:780b:d631])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457f308sm7578975ad.149.2025.07.03.18.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 18:53:51 -0700 (PDT)
+Date: Fri, 4 Jul 2025 10:53:47 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Minchan Kim <minchan@kernel.org>, Rahul Kumar <rk0006818@gmail.com>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH] zram: pass buffer offset to zcomp_available_show()
+Message-ID: <tgqiahkbc6u6w75rivbishixxq64wfzx6tucscaa3yyt5u55kc@ur62ahdhq4ew>
+References: <20250627035256.1120740-1-rk0006818@gmail.com>
+ <20250627071840.1394242-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgB34lHUM2dopWkHAA--.1033S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XFyxWr18urykZw47uw18AFb_yoWkAFb_Gr
-	WIvF129rWjkFs5Wrn7Ca1Fgr1Ut34xuF4IkF1vvF48Ja4kK3Z8AwnFyrySvrZ8XFZ7Wasx
-	JrZ3WFZ8trsYyjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1J73JUUUUU==
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbBkB6ATGhnLvuPmAAAsP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627071840.1394242-1-senozhatsky@chromium.org>
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On (25/06/27 16:18), Sergey Senozhatsky wrote:
+> In most cases zcomp_available_show() is the only emitting
+> function that is called from sysfs read() handler, so it
+> assumes that there is a whole PAGE_SIZE buffer to work with.
+> There is an exception, however: recomp_algorithm_show().
+> 
+> In recomp_algorithm_show() we prepend the buffer with
+> priority number before we pass it to zcomp_available_show(),
+> so it cannot assume PAGE_SIZE anymore and must take
+> recomp_algorithm_show() modifications into consideration.
+> Therefore we need to pass buffer offset to zcomp_available_show().
+> 
+> Also convert it to use sysfs_emit_at(), to stay aligned
+> with the rest of zram's sysfs read() handlers.
+> 
+> On practice we are never even close to using the whole PAGE_SIZE
+> buffer, so that's not a critical bug, but still.
 
-hung_task_set/clear_blocker() is already guarded by
-CONFIG_DETECT_HUNG_TASK_BLOCKER in hung_task.h, So remove
-the redudant check of #ifdef.
-
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- kernel/locking/mutex.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index a39ecccbd106..d4210dc97b6a 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -191,9 +191,7 @@ static void
- __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
- 		   struct list_head *list)
- {
--#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
- 	hung_task_set_blocker(lock, BLOCKER_TYPE_MUTEX);
--#endif
- 	debug_mutex_add_waiter(lock, waiter, current);
- 
- 	list_add_tail(&waiter->list, list);
-@@ -209,9 +207,7 @@ __mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter)
- 		__mutex_clear_flag(lock, MUTEX_FLAGS);
- 
- 	debug_mutex_remove_waiter(lock, waiter, current);
--#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
- 	hung_task_clear_blocker();
--#endif
- }
- 
- /*
--- 
-2.25.1
-
+Jens, do you feel like picking these 2 up or should I route
+them to Andrew's tree?
