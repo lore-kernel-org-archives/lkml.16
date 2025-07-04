@@ -1,146 +1,197 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941F2287512;
-	Fri,  4 Jul 2025 09:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2392F50AD;
+	Fri,  4 Jul 2025 09:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751620312; cv=none; b=S/KqNx2/cg6NN/+Jkiaz1q5bP1h4HrwJhzepXJq0xGttHJsMX9uzXjK5goTiYN9aJD+/FHXd7QpFvyIoK3we5gwV1PXG4WT0I+LQV1/8nLewUWHZbSLS+IwXWJV5G0Ztx9baDFalOukQHPh5GRhfde/YegHWMGNRS8XFIAPUsYk=
+	t=1751620325; cv=none; b=Ewf+wAulE7waQZ2c+IkIwJzGP7LYwBKsSOX/s5HvmDQ3EOHCbprTnyPns3ChOW8dthF7d2HP+Ns4tEt5xBUrnLi1Ug9pX6s+LaozKnbOS3gpAKOWgtyorC9ICnKYcCF3Jo5AEGlf+2V8Gc5C4XwpWwE2WGuHjjBBhUrYU6539VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751620312; c=relaxed/simple;
-	bh=yS0QNxwxDu0AiPYpJA1/21h0q6wysIYsX3O6EKPG6k0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CXa0aTtl+J4twIUrjXtSwbmY+3l6ritd3WBnBta2xBhA93/nxIrVElBUfsb7LIHaYeOAFHXDGHUIiP/sTqxjLlip0bSIFVkNkP9U2rJzqtWM2EbqSa4nHnB0ucr9O1PM+/e+05MEP0/Xz5eSrFc8qQ59MQdntm8AkzTC1X/Yx8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=b/MMYRSM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YSyIDbcX; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="b/MMYRSM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YSyIDbcX"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 9BDDE140034D;
-	Fri,  4 Jul 2025 05:11:49 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Fri, 04 Jul 2025 05:11:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751620309;
-	 x=1751706709; bh=TmJ512/Jww3eYylS0I+H6Fl/bUdK5vYqrfOw1lN7BUU=; b=
-	b/MMYRSMVqXjxFp9ajb6Iw9ofgC1L9Qu5VTFiZKeTyqnMXlcpBBrxo81mStOwqVg
-	fh9jDkLXhxAVYIJ4Gw7IC159hkVscmIz0ocyxWLxlwiJamqNULyV5P5Gzr2ARVVB
-	kFfJld7h+exsDId/4UxdN7/uK4eaDCSu8f4brUnxN1h6jvKgbMoemXSzxme7zm6/
-	hlLiznRYEXXbzycix4cPVifR1C9KxoiqvLBbtnvG/DGAeNyfhLJ9raeOpjqgHXvI
-	efbxC55HdvlOOh3F7s8NGty959k9BLWOZd8K2puut7WkH2Vc6ipTcH2zZsDjDBGT
-	7RGDScYzrb1NEdvB0hlRtw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751620309; x=
-	1751706709; bh=TmJ512/Jww3eYylS0I+H6Fl/bUdK5vYqrfOw1lN7BUU=; b=Y
-	SyIDbcXLACNp+qrebj6dqT3lbsdobCILuPiMc79XJu19cfNnDyxhP7OMdOOXF04i
-	1oWq57WBVRoD/3ASo2Hr04W7aLPllhRNTzMHJ2WdFFb6YUaJIH7svFLzgWst8t80
-	iNp00cezQAJ/OzVnESrMnN4nM7gHcWPr57MuKgE8LKdLyGqG7mlwdyDKJr/U78NQ
-	AHJuEa0cAVLW4T6w469m0wysh9wMKQ9MSEo5JWONvEm5EgTAUf9GbJyPEg/NoGeR
-	+MfdgDd9Hwjb5KtSZ4WQxPJlgX6SOFwGvfavEsrWTkRVue4AWd2iI1kjvy/+TSsw
-	x9XVliCEfDtJX0TxBRpfA==
-X-ME-Sender: <xms:1JpnaHsNU4-WPVKJVxtQLxwcCZhGbv-JlenjOf4v73RwE4qcseBNhQ>
-    <xme:1JpnaIdb0wPfkFjoYg08ZwoBniw8Jsxbsskpikral8IGqWJr2YotixaSCa30QNPl-
-    h8Pky0850dqxLYSd84>
-X-ME-Received: <xmr:1JpnaKyaDe-95u9uMoORZaqc_GusjwV6nCpOBoy7BuMVav1broInPlrJ6Cq6ciIYIVEnfVot_8tafoPWqrttYDpJvnGW9RbHNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdejiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghs
-    ucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
-    gvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveetgedtvddvhfdtkeeghfeffeehteeh
-    keekgeefjeduieduueelgedtheekkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgr
-    thgvtghhrdhsvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehmihgthhgrvghlrdguvghgvgesrhgvnhgvshgrshdrtghomhdprhgtphht
-    thhopeihohhshhhihhhirhhordhshhhimhhouggrrdhuhhesrhgvnhgvshgrshdrtghomh
-    dprhgtphhtthhopehprghulhesphgsrghrkhgvrhdruggvvhdprhgtphhtthhopegrnhgu
-    rhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvh
-    gvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgt
-    ohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprg
-    gsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:1JpnaGPPNAU-vY3DZuNwHYUPtfOqodm-H8bpJALe3_IV-2JpaMgK2g>
-    <xmx:1JpnaH8DV-91QjMWMGqwzutIvyxiT-R4xubK1SXqe1XWFqxnF3xKAQ>
-    <xmx:1JpnaGUzK_GSW4oPYYsf3DbHIQykA0f52R4hIiKCmBcon8WZ_qFrYQ>
-    <xmx:1JpnaIcxS-noELVEqMsihqUo43zuT7AK_WtEhAadpC1j_fewMzC0gQ>
-    <xmx:1ZpnaKWhUopiowa-Xem54WjTGxiGusGtO1917OruoHWL4zgGB6XV0jPd>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Jul 2025 05:11:47 -0400 (EDT)
-Date: Fri, 4 Jul 2025 11:11:46 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Michael Dege <michael.dege@renesas.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Paul Barker <paul@pbarker.dev>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: Re: [PATCH 1/3] net: renesas: rswitch: rename rswitch.c to
- rswitch_main.c
-Message-ID: <20250704091146.GB137171@ragnatech.se>
-References: <20250704-add_l2_switching-v1-0-ff882aacb258@renesas.com>
- <20250704-add_l2_switching-v1-1-ff882aacb258@renesas.com>
+	s=arc-20240116; t=1751620325; c=relaxed/simple;
+	bh=RNKT2fX9yOVVpWHgCAMPOtfP5J0v5bEcgERwxXq1XXo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=juwODa67QWqxZuuh0vrHS0Y5U36CVW5cuMnUtKT5d0qjpzuyhNFsKnIY9toNPvyPUQqaMuapbdtpsxfsm4JFHOwmaQcGsbjDYh2MmFKeebkviIDwojX5w3kJcNDdcWzdsdkQj/hPP3hQHFc9jOJwBCw4rrXUDBNvw9Wu3NjFKCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYSVk6gbHz6L5K0;
+	Fri,  4 Jul 2025 17:09:02 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B2D01402F1;
+	Fri,  4 Jul 2025 17:12:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
+ 2025 11:12:00 +0200
+Date: Fri, 4 Jul 2025 10:11:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	<Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy Shevchenko
+	<andy@kernel.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: ad7173: fix num_slots on most chips
+Message-ID: <20250704101159.000013fd@huawei.com>
+In-Reply-To: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
+References: <20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250704-add_l2_switching-v1-1-ff882aacb258@renesas.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Michael,
+On Thu, 03 Jul 2025 17:16:31 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Thanks for your work.
-
-On 2025-07-04 07:51:15 +0200, Michael Dege wrote:
-> Adding new functionality to the driver. Therefore splitting into multiple
-> c files to keep them manageable. New functionality will be added to
-> separate files.
+> Fix the num_slots value for most chips in the ad7173 driver. The number
+> of slots corresponds to the number of CHANNEL registers on each chip.
 > 
-> Signed-off-by: Michael Dege <michael.dege@renesas.com>
+> Fixes: 4310e15b3140 ("iio: adc: ad7173: don't make copy of ad_sigma_delta_info struct")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Perhaps worth calling out that for many chips it seems to be falsely limiting
+the number of slots which is a functionality limitation I think rather
+than a bug.  The ones going the other way are more of a problem though!
+
+Jonathan
 
 > ---
->  drivers/net/ethernet/renesas/Makefile                      | 1 +
->  drivers/net/ethernet/renesas/{rswitch.c => rswitch_main.c} | 0
->  2 files changed, 1 insertion(+)
+> FYI, the bug actually existed before the commit I used for Fixes:, but
+> that commit did major refactoring involving multiple drivers that would
+> be too complicated to try to backport to older kernels.
 > 
-> diff --git a/drivers/net/ethernet/renesas/Makefile b/drivers/net/ethernet/renesas/Makefile
-> index f65fc76f8b4df8dd9f24af836b6dc0772965366f..6222298bb5582b7091cf8de76acb83ac7dd39c11 100644
-> --- a/drivers/net/ethernet/renesas/Makefile
-> +++ b/drivers/net/ethernet/renesas/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_SH_ETH) += sh_eth.o
->  ravb-objs := ravb_main.o ravb_ptp.o
->  obj-$(CONFIG_RAVB) += ravb.o
+> I will try to send a separate fix to stable@ to fix the bug in it's
+> original form on older kernels as that is just a one-liner.
+> ---
+>  drivers/iio/adc/ad7173.c | 37 +++++++++++++++++++++++++++----------
+>  1 file changed, 27 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+> index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..9c197cea11eb955becf4b9b97246379fa9c5da13 100644
+> --- a/drivers/iio/adc/ad7173.c
+> +++ b/drivers/iio/adc/ad7173.c
+> @@ -771,10 +771,27 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
+>  	.num_slots = 8,
+>  };
 >  
-> +rswitch-objs := rswitch_main.o
->  obj-$(CONFIG_RENESAS_ETHER_SWITCH) += rswitch.o
->  
->  obj-$(CONFIG_RENESAS_GEN4_PTP) += rcar_gen4_ptp.o
-> diff --git a/drivers/net/ethernet/renesas/rswitch.c b/drivers/net/ethernet/renesas/rswitch_main.c
-> similarity index 100%
-> rename from drivers/net/ethernet/renesas/rswitch.c
-> rename to drivers/net/ethernet/renesas/rswitch_main.c
+> +static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
+> +	.set_channel = ad7173_set_channel,
+> +	.append_status = ad7173_append_status,
+> +	.disable_all = ad7173_disable_all,
+> +	.disable_one = ad7173_disable_one,
+> +	.set_mode = ad7173_set_mode,
+> +	.has_registers = true,
+> +	.has_named_irqs = true,
+> +	.supports_spi_offload = true,
+> +	.addr_shift = 0,
+> +	.read_mask = BIT(6),
+> +	.status_ch_mask = GENMASK(3, 0),
+> +	.data_reg = AD7173_REG_DATA,
+> +	.num_resetclks = 64,
+> +	.num_slots = 16,
+> +};
+> +
+>  static const struct ad7173_device_info ad4111_device_info = {
+>  	.name = "ad4111",
+>  	.id = AD4111_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 8,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -796,7 +813,7 @@ static const struct ad7173_device_info ad4111_device_info = {
+>  static const struct ad7173_device_info ad4112_device_info = {
+>  	.name = "ad4112",
+>  	.id = AD4112_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 8,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -817,7 +834,7 @@ static const struct ad7173_device_info ad4112_device_info = {
+>  static const struct ad7173_device_info ad4113_device_info = {
+>  	.name = "ad4113",
+>  	.id = AD4113_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 8,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -836,7 +853,7 @@ static const struct ad7173_device_info ad4113_device_info = {
+>  static const struct ad7173_device_info ad4114_device_info = {
+>  	.name = "ad4114",
+>  	.id = AD4114_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 16,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -855,7 +872,7 @@ static const struct ad7173_device_info ad4114_device_info = {
+>  static const struct ad7173_device_info ad4115_device_info = {
+>  	.name = "ad4115",
+>  	.id = AD4115_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 16,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -874,7 +891,7 @@ static const struct ad7173_device_info ad4115_device_info = {
+>  static const struct ad7173_device_info ad4116_device_info = {
+>  	.name = "ad4116",
+>  	.id = AD4116_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in_div = 11,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -893,7 +910,7 @@ static const struct ad7173_device_info ad4116_device_info = {
+>  static const struct ad7173_device_info ad7172_2_device_info = {
+>  	.name = "ad7172-2",
+>  	.id = AD7172_2_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_4_slots,
+>  	.num_voltage_in = 5,
+>  	.num_channels = 4,
+>  	.num_configs = 4,
+> @@ -926,7 +943,7 @@ static const struct ad7173_device_info ad7172_4_device_info = {
+>  static const struct ad7173_device_info ad7173_8_device_info = {
+>  	.name = "ad7173-8",
+>  	.id = AD7173_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in = 17,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
+> @@ -943,7 +960,7 @@ static const struct ad7173_device_info ad7173_8_device_info = {
+>  static const struct ad7173_device_info ad7175_2_device_info = {
+>  	.name = "ad7175-2",
+>  	.id = AD7175_2_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_4_slots,
+>  	.num_voltage_in = 5,
+>  	.num_channels = 4,
+>  	.num_configs = 4,
+> @@ -960,7 +977,7 @@ static const struct ad7173_device_info ad7175_2_device_info = {
+>  static const struct ad7173_device_info ad7175_8_device_info = {
+>  	.name = "ad7175-8",
+>  	.id = AD7175_8_ID,
+> -	.sd_info = &ad7173_sigma_delta_info_8_slots,
+> +	.sd_info = &ad7173_sigma_delta_info_16_slots,
+>  	.num_voltage_in = 17,
+>  	.num_channels = 16,
+>  	.num_configs = 8,
 > 
-> -- 
-> 2.49.0
+> ---
+> base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
+> change-id: 20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-b982206a20b1
 > 
+> Best regards,
 
--- 
-Kind Regards,
-Niklas Söderlund
