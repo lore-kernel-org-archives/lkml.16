@@ -1,91 +1,84 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF882C15AE;
-	Fri,  4 Jul 2025 11:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D879E1F94A;
+	Fri,  4 Jul 2025 11:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751628459; cv=none; b=K3sRgGwxkE1ulahD/cZOVhAl4BCPZfAk81wkaGtAnaxZI1e4xxDUqMacH84WLqacYUqphG9//NmVaU2WvgpOAfU1IyrNC2RoUTOGSiWLG5M/fihH9ztsca3LVJvM/qGqffVj8cBLnWwP7+wCB9G59i4MV7ozU/Eii/ML0LY77A4=
+	t=1751628508; cv=none; b=oio1Gd53PUPx1pIgjdNLqnEnnVGzpSFHyq48LD/Ne3MQOqtHwl76aybGpHgdjhv9cnjVxUxOz2vCRrKxFNR8g8LhkD5Nzp3mSogRs+9KAxJGStpH4owWJls7Lw2lQclQ+EW6mPF/fVC0FNiob9olgDgZer9Wls2Ra8t4cw1pjjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751628459; c=relaxed/simple;
-	bh=t3/010+HIox3JcYzNG1vFfxeAMvyLUTNHCTRTUHcYI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Th45zGvbh5RYq11tLNLAKxsEM8U3Kwe+BGgaK77UJsHxDYo0Xqu3rTwwPzSn+5fvGKjw5b2oBbIJgepNI0Djr/ISU/ZyGMSx1GmjbDIz168CwILYtByAkBLRCyStRTgb8lNH9mILS+ien+X0G4kCewGx9r5pDUoBZfOm1XBBw30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=rhE5MU9C; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1751628508; c=relaxed/simple;
+	bh=UnmwrU3QJv4GZMxWgvZ9CpARRSyCpjfVPQ0/mJuafNU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qVTw7L8aa8l7xtwfjLsNKxsW+nRIlv+m3Dyw1FgDylT5ENZ0f27ScAOVsqUCcW9h9Q9HYR2WvTJ/T9CaDYoxKaru0Up0x0v4ntbYSMXAASm7LcwF5k4xUEWC2weYnkggrMjKcWqfiIN0y/GDiBCzL8LgYqzNwoakKzxr0n36J6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kQh1xmeM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ixbMam1Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="rhE5MU9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751628455;
-	bh=t3/010+HIox3JcYzNG1vFfxeAMvyLUTNHCTRTUHcYI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rhE5MU9C4JMbn2IuFIChkriZ9OjuVEsKflh0Ab57PM34Bxis505hH1WSc60KxFhGC
-	 N2b39HaX2lDEnVWdo/pCozB1WW/mrZRfEbrf3CV1yff0MsfJ8VMZs4/klEzeG0oNhu
-	 xaVgVm7N2JeuQ2s/VlIndFiCzt9Ajs2pIeHOxWlY=
-Date: Fri, 4 Jul 2025 13:27:28 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: Willy Tarreau <w@1wt.eu>, Christian Brauner <brauner@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] kselftest/arm64: Add coverage for the interaction
- of vfork() and GCS
-Message-ID: <f438fc60-e602-4301-a7dd-bee43c020720@t-8ch.de>
-References: <20250703-arm64-gcs-vfork-exit-v3-0-1e9a9d2ddbbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kQh1xmeM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ixbMam1Z"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751628504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I0LURxOcxuqwAQQqO4WfSPEKfoNEYt9GKdhYl2Q/biE=;
+	b=kQh1xmeMp2qdFaP4M6OOXYXTdL0pbpi+auZzOKS5nS2dc4cDyGkizNRhelF0nC8SLgVAd/
+	BfX4yITZhlpSrGQBqF6WysDFPsiId6OZAVeNOLZU1xJhfC32bRaTFtWLio3VH0b1cVFRKy
+	h/xPUbZ6M0oacwr2FNmkdxSNfsGF/am1ZIge0cgA9WhP70wghLJa8lF0SQpxGKtJrNKLTh
+	8ZWD9gUQbgWRj3WmfICHCPI2WrMqPpdI3AYtZEkui9KkASAELExHkmn5Ej7nhIInmCA32K
+	2gY5eNoZuY5WN+b/Ya3BwLlxRMUG69o+2C1SVYHRS1qOFD/qCncaU2eD02i+XQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751628504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I0LURxOcxuqwAQQqO4WfSPEKfoNEYt9GKdhYl2Q/biE=;
+	b=ixbMam1Z8xOq1NWaBjeqiYelhvbQuwPpRiEvZ7MRWR511SFpzNfgbyBS93dJ6e5SIoubFT
+	7xV1LY6/4GmZwABA==
+To: Petr Mladek <pmladek@suse.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+ <thomas.weissschuh@linutronix.de>, Dan Carpenter
+ <dan.carpenter@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, "Gustavo A . R .
+ Silva" <gustavoars@kernel.org>, David Gow <davidgow@google.com>, Arnd
+ Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Petr Mladek
+ <pmladek@suse.com>
+Subject: Re: [PATCH 1/3] printk: ringbuffer: Explain why the KUnit test
+ ignores failed writes
+In-Reply-To: <20250702095157.110916-2-pmladek@suse.com>
+References: <20250702095157.110916-1-pmladek@suse.com>
+ <20250702095157.110916-2-pmladek@suse.com>
+Date: Fri, 04 Jul 2025 13:34:23 +0206
+Message-ID: <844ivskxew.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703-arm64-gcs-vfork-exit-v3-0-1e9a9d2ddbbe@kernel.org>
+Content-Type: text/plain
 
-On 2025-07-03 17:00:14+0100, Mark Brown wrote:
-> I had cause to look at the vfork() support for GCS and realised that we
-> don't have any direct test coverage, this series does so by adding
-> vfork() to nolibc and then using that in basic-gcs to provide some
-> simple vfork() coverage.
+On 2025-07-02, Petr Mladek <pmladek@suse.com> wrote:
+> The KUnit test ignores prb_reserve() failures on purpose. It tries
+> to push the ringbuffer beyond limits.
+>
+> Note that it is a know problem that writes might fail in this situation.
+> printk() tries to prevent this problem by:
+>
+>   + allocating big enough data buffer, see log_buf_add_cpu().
+>
+>   + allocating enough descriptors by using small enough average
+>     record, see PRB_AVGBITS.
+>
+>   + storing the record with disabled interrupts, see vprintk_store().
+>
+> Also the amount of printk() messages is always somehow bound in
+> practice. And they are serialized when they are printed from
+> many CPUs on purpose, for example, when printing backtraces.
+>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-Thanks. I applied the patches, but moved the arm64 selftest patch to be
-the last one.
-
-FYI nolibc now has a proper prctl() implementation you might want to use.
-Also your vfork() selftest uncovered a bug in the brandnew SuperH support.
-
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> Changes in v3:
-> - Stylistic nits in the GCS vfork() test.
-> - SPARC has a non-standard vfork() ABI which needs handling.
-> - Link to v2: https://lore.kernel.org/r/20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org
-> 
-> Changes in v2:
-> - Add replacement of ifdef with if defined() in nolibc since the code
->   doesn't reflect the coding style.
-> - Remove check for arch specific vfork().
-> - Link to v1: https://lore.kernel.org/r/20250609-arm64-gcs-vfork-exit-v1-0-baad0f085747@kernel.org
-> 
-> ---
-> Mark Brown (4):
->       tools/nolibc: Replace ifdef with if defined() in sys.h
->       tools/nolibc: Provide vfork()
->       kselftest/arm64: Add a test for vfork() with GCS
->       selftests/nolibc: Add coverage of vfork()
-> 
->  tools/include/nolibc/arch-sparc.h             | 16 +++++++
->  tools/include/nolibc/sys.h                    | 59 ++++++++++++++++++-------
->  tools/testing/selftests/arm64/gcs/basic-gcs.c | 63 +++++++++++++++++++++++++++
->  tools/testing/selftests/nolibc/nolibc-test.c  | 23 ++++++++--
->  4 files changed, 142 insertions(+), 19 deletions(-)
-> ---
-> base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-> change-id: 20250528-arm64-gcs-vfork-exit-4a7daf7652ee
-> 
-> Best regards,
-> --  
-> Mark Brown <broonie@kernel.org>
-> 
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
