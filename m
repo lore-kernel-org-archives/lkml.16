@@ -1,95 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0E6A2D;
-	Fri,  4 Jul 2025 21:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AF02E36F6;
+	Fri,  4 Jul 2025 21:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751663186; cv=none; b=bbwX0oW82X3pOn0ZRXyXd7uYnu6tUzuac9oZZsdpwYAcsXjUt56eK9BJrZs5iLGFbXttsm73qPdefg9yejDsVSOlVaxRU1HnNYz4o3agk7lv5GjgHymA/gBvyrPzG/MJoM/yrl4hjIkBasSOLrJ65c9Rl1qhD6roZsm/wbKMU9g=
+	t=1751663600; cv=none; b=BL+b8DMj4A2+clVDSXpDaakutrtySU5d69wkDDBjYydY/SOiU6MtemgF09u/MpOP8G2Z0bUXkL3HX0dubU+rTzOCe+lvTvt15xI6hyykMdEf6v36/IUSye02ZS9nSNE45XPLq918xwdLxU5bUIFWsRMvY+NZUeO22K0s2qaYTf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751663186; c=relaxed/simple;
-	bh=f1hFiasjHfmlcHU6lmk4NYAher/zzJdd1u4QQBrYVJ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NBocScyDG87bjOlrMQLdM5GxNZKcLEgdftYuhIT3kOnTeeqzR9ScxrO5Ltg35qceY/7AKBkuSHzRIJ7AOHhq5N5CqoHgd+YlD2CYQfwH948BCb639qaf8AXic9Mm8cHwigv2uxRbDYAUtxjBUHlrhQq6abC1ABhB5pncGaVFmiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=y88kB/pc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751663600; c=relaxed/simple;
+	bh=zT57kjzSuc2YjOZ/13Q1WCxljHbZ3simyydCTfUXuoc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=S+vh8oj/AK0cIyVabkCcxdbBkU3HQrAinwCOg+Zqe3iUoegbGHcbwyxd9O/T+iexpRd9SBeHAbnwvp2B9pV5RVlcOs3zpKfnlaP/4Pzv3d9lQiAEHxJNCnBLrZeD0RxQIba1QBN2fB1SDJxLjwmsJhW+P/BjLdXVtz/A/rg9cg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B74npjwp; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="y88kB/pc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27406C4CEE3;
-	Fri,  4 Jul 2025 21:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751663185;
-	bh=f1hFiasjHfmlcHU6lmk4NYAher/zzJdd1u4QQBrYVJ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=y88kB/pcD4E4EqtT4CkMHjZGaNV/MSL+BfunpDneJYf0u7QKpcXsSW9s14r8BkNmx
-	 WaI24KqTkwL1L2kVQDd0U0gUqzKoB3oOSJKBdiYtW2qefak2kybpZOsGNd5sTK4MTP
-	 njKj4JxNYga3WE9rzmNqEaH7gILlxUtdajr7p1I8=
-Date: Fri, 4 Jul 2025 14:06:23 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, Jonathan
- Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Jerrin Shaji George
- <jerrin.shaji-george@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Zi Yan
- <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, Joshua Hahn
- <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park
- <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Minchan
- Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard
- <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin
- <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Miaohe
- Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>, Harry
- Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel
- Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v2 00/29] mm/migration: rework movable_ops page
- migration (part 1)
-Message-Id: <20250704140623.d6b9a013984bc2a109dd4dc9@linux-foundation.org>
-In-Reply-To: <20250704102524.326966-1-david@redhat.com>
-References: <20250704102524.326966-1-david@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B74npjwp"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23602481460so13414675ad.0;
+        Fri, 04 Jul 2025 14:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751663598; x=1752268398; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Eged04V15WcYZIT4EIvtaTKSNXjWorwpdzN3lCt28So=;
+        b=B74npjwpMTeRc93hhau2GFuy0QnJ/qnVTXmb76GSAJFEI73faxjiWZhS52RY7YFrm+
+         CW3oDdpSDrKCP65wHiPNENizb1Ajin78F5c5ZeFzQZpWCz5VirL6vBNw5seUf4tp4nJF
+         MhSlYKi4eYB+FgCqhsBLQcyY1j68ME0Ap2LBZf1LvPChDM1c/2vXuvFLHx5ZzW+Ai2i8
+         DrFxFM96R/L+ys8JRUlo9U340/M3REFrX+F+j4Y4GBjKmFR95HZYkGHCF+ytheKBpHGF
+         Yyy2eu/1CMKsniSzmUYrAYSjivorh90ZkO7zFISEaLyIhW7B2wFaVQdzWhriXziDkL2b
+         XUxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751663598; x=1752268398;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Eged04V15WcYZIT4EIvtaTKSNXjWorwpdzN3lCt28So=;
+        b=F3IYILu77xgpxTPvInZGn13+HYGhUKyd8mYlLjGH+baE1assqzsfqabB5BIcaS4H7B
+         Z79TbxYkfBfL1GWbLepMUN5GsXxoeqKUW4aoUDvYcWqJ98ndaqjyFj2Hxlk8Lg2fNzkB
+         z/6JXB9cnFBk+XubAf1eW9LK+qxbDtoL7CCDE5Pn6aKnldeBCkOS7BZidxSIgDcCzvCS
+         NNi5FHA67ZM9PAwx9IVZm3WgLzBCwpa9NG83NayCOzgoSALFUI2zcrnr8erIqauGO7dd
+         Zocp1zuIyf3Wicd0jK70VfYBmJnQoGlVuMhPu0DMTv9AUVvP+XH1TZsJjVhs3o26s0c9
+         Wunw==
+X-Forwarded-Encrypted: i=1; AJvYcCVn8BymwuOVT1eSjaroG+ghY6Nt4KypbY0NMSfVA5nsCuHMZWEDmjQ3lS3meChholTcRsxLuNyIfIPTQe+R@vger.kernel.org, AJvYcCWSRQyWWtfV2mEtW3awOQjBVgzg6j4aXrR7Jhjh0NVLmkogVt54OyMeeukzCJvPMz3qv6AJewp4@vger.kernel.org, AJvYcCXnDLDbc7zs8wuG30HA1RkHGjPQkcQxnIy/WdvAlXgV6ib4CJmJ2DwJn8bMNwaqCp6g8/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5aUAfRxjmEVs3Z1/r28TsSJRne3zHWX4dSg6/nDQLxe54Zvjb
+	ZfsX9bICZz6wQCVAMR//RkhQ2pOi3jGPCEKxcnoYK4vptRsCkSdfBXuH
+X-Gm-Gg: ASbGncs4T30CjzP5DJWCLt0bYSekiylHZW3+6mK7zFLgH13IzM4jAFI21zCUJhCj7/d
+	7cfVdNVpOAdl2Hi99P6eV87BFW3eudno2CU6gbMsqDUx2voHJ4grv32/c1K8k3RmApjWFkPL2Pp
+	JYvpBiF6hfvNYVwqJNhBQRAH5YaaeEThe4Pn0TImZKNgosab/0t6kBpD1rem7WNDXsG0klAHZzT
+	EcBcin44kCdn8wVp2o2f4pFbEQwjQOCAWGFbPFWYKoksCdXhuZZEVphMR9nIn8kGUDU1wnd+8N0
+	E4nNh5Qhqw9YBWOFhh02DXds9AlsmVTeW890Muq44B0OvHK4XREf75e/uzWJAJkY3cuP
+X-Google-Smtp-Source: AGHT+IFjFDPJlayCrRfWc9DvJXqh3dkzjLFvxTRqPgCdZj4Esjh95caHOKAZO16V6xVZyk1IxO0I0g==
+X-Received: by 2002:a17:903:984:b0:234:9497:69e3 with SMTP id d9443c01a7336-23c9105c63amr1095985ad.25.1751663598333;
+        Fri, 04 Jul 2025 14:13:18 -0700 (PDT)
+Received: from [192.168.0.56] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457b2cesm26689035ad.157.2025.07.04.14.13.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 14:13:17 -0700 (PDT)
+Message-ID: <e43c25b451395edff0886201ad3358acd9670eda.camel@gmail.com>
+Subject: Re: [syzbot] [bpf?] WARNING in reg_bounds_sanity_check
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Paul Chaignon <paul.chaignon@gmail.com>
+Cc: syzbot <syzbot+c711ce17dd78e5d4fdcf@syzkaller.appspotmail.com>, 
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, 	haoluo@google.com, john.fastabend@gmail.com,
+ jolsa@kernel.org, kpsingh@kernel.org, 	linux-kernel@vger.kernel.org,
+ martin.lau@linux.dev, netdev@vger.kernel.org, 	sdf@fomichev.me,
+ song@kernel.org, syzkaller-bugs@googlegroups.com, 	yonghong.song@linux.dev
+Date: Fri, 04 Jul 2025 14:13:15 -0700
+In-Reply-To: <df2cdc5f4fa16a4e3e08e6a997af3722f3673d38.camel@gmail.com>
+References: <68649190.a70a0220.3b7e22.20e8.GAE@google.com>
+		 <aGa3iOI1IgGuPDYV@Tunnel>
+		 <865f2345eaa61afbd26d9de0917e3b1d887c647d.camel@gmail.com>
+		 <aGgL_g3wA2w3yRrG@mail.gmail.com>
+	 <df2cdc5f4fa16a4e3e08e6a997af3722f3673d38.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
 
-On Fri,  4 Jul 2025 12:24:54 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Fri, 2025-07-04 at 10:26 -0700, Eduard Zingerman wrote:
+> On Fri, 2025-07-04 at 19:14 +0200, Paul Chaignon wrote:
+> > On Thu, Jul 03, 2025 at 11:54:27AM -0700, Eduard Zingerman wrote:
 
-> In the future, as we decouple "struct page" from "struct folio", pages
-> that support "non-lru page migration" -- movable_ops page migration
-> such as memory balloons and zsmalloc -- will no longer be folios. They
-> will not have ->mapping, ->lru, and likely no refcount and no
-> page lock. But they will have a type and flags 🙂
-> 
-> This is the first part (other parts not written yet) of decoupling
-> movable_ops page migration from folio migration.
-> 
-> In this series, we get rid of the ->mapping usage, and start cleaning up
-> the code + separating it from folio migration.
-> 
-> Migration core will have to be further reworked to not treat movable_ops
-> pages like folios. This is the first step into that direction.
-> 
-> Heavily tested with virtio-balloon and lightly tested with zsmalloc
-> on x86-64. Cross-compile-tested.
+[...]
 
-Thanks, I added this to mm-new.  I suppressed the 1363 mm-commits
-emails to avoid breaking the internet.
+> > > I think is_branch_taken() modification should not be too complicated.
+> > > For JSET it only checks tnum, but does not take ranges into account.
+> > > Reasoning about ranges is something along the lines:
+> > > - for unsigned range a =3D b & CONST -> a is in [b_min & CONST, b_max=
+ & CONST];
+> > > - for signed ranged same thing, but consider two unsigned sub-ranges;
+> > > - for non CONST cases, I think same reasoning can apply, but more
+> > >   min/max combinations need to be explored.
+> > > - then check if zero is a member or 'a' range.
+> > >=20
+> > > Wdyt?
+> >=20
+> > I might be missing something, but I'm not sure that works. For the
+> > unsigned range, if we have b & 0x2 with b in [2; 10], then we'd end up
+> > with a in [2; 2] and would conclude that the jump is never taken. But
+> > b=3D8 proves us wrong.
+>=20
+> I see, what is really needed is an 'or' joined mask of all 'b' values.
+> I need to think how that can be obtained (or approximated).
 
+I think the mask can be computed as in or_range() function at the
+bottom of the email. This gives the following algorithm, if only
+unsigned range is considered:
+
+- assume prediction is needed for "if a & b goto ..."
+- bits that may be set in 'a' are or_range(a_min, a_max)
+- bits that may be set in 'b' are or_range(b_min, b_max)
+- if computed bit masks intersect: both branches are possible
+- otherwise only false branch is possible.
+
+Wdyt?
+
+[...]
+
+---
+
+#include <stdint.h>
+#include <stdio.h>
+
+static uint64_t or_range(uint64_t lo, uint64_t hi)
+{
+  uint64_t m;
+  uint32_t i;
+
+  m =3D hi;
+  i =3D 0;
+  while (lo !=3D hi) {
+    m |=3D 1lu << i;
+    lo >>=3D 1;
+    hi >>=3D 1;
+    i++;
+  }
+  return m;
+}
+
+static uint64_t or_range_simple(uint64_t lo, uint64_t hi)
+{
+  uint64_t m =3D 0;
+  uint64_t v =3D 0;
+
+  for (v =3D lo; v <=3D hi; v++)
+    m |=3D v;
+  return m;
+}
+
+int main(int argc, char *argv[])
+{
+  int max =3D 0x1000;
+  for (int lo =3D 0; lo < max; lo++) {
+    for (int hi =3D lo; hi < max; hi++) {
+      uint64_t expected =3D or_range_simple(lo, hi);
+      uint64_t result =3D or_range(lo, hi);
+
+      if (expected !=3D result) {
+        printf("mismatch: %x..%x -> expecting %lx, result %lx\n",
+               lo, hi, expected, result);
+        return 1;
+      }
+    }
+  }
+  printf("all ok\n");
+  return 0;
+}
