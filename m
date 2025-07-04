@@ -1,339 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1C2F50A5;
-	Fri,  4 Jul 2025 08:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619055; cv=none; b=da+dCQnGrt9jTQw86faPJ3Xwaz+qFcgFzGqxY7OelFXmE6WrMiPWOLxmEWqWhPP9FXZWc6QCvE0zuYXwp0tX2TEQc6rjtzY7mZVxYWQvSuomBAfUcSlBNdHS09Z07xuFDWp1JpJyu4KjQ3mPH3GI10hY0A/9eokPuW6f8RPQIcQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619055; c=relaxed/simple;
-	bh=E8DCAkUB4Y91e3GFgak3A4uNwkO+hifgYbr4vZaKB7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YROJnAYOiweUIjU/3W9WAxYsp9ypb1EEdwYdiM9yigHepH6M5Sw/eCRHnTisVpKfAJCLIOKsiEGWKuxctg+Al55ScedQZOfh8mPYlmCqbkISZJS9Irb3ec1HwX7Td2auxS/ALPdx3AQyBcWJutc2d6rC4uoc+sA/2RsjMcvhG9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOGtrJr+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9023E2F7CE0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751619059; cv=fail; b=FIgvKzCQWChB1nR+LuVmTq6nnnBfemIh7Pg9y5Hv3Xb0kujS+vlC4YnkxmKKsayqSJ+KNM1NDxQyouVMrtEfAT3nRMenU/GeXx4CETr4kbwaulFA3R+dwOvPieeh0cj5wy+7VgOxRuiOonGvwriuUR8/ED+EDRCnjn1MvrVKDSs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751619059; c=relaxed/simple;
+	bh=VOcrj9i1D0T518hHqIOT0lnFT6sMILn+FUt5Owcje4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SsTfPXgwFDXhbpFa4dVEHbK46wESoQGwUVPqWTuctpJbP9GTKX/n+xYX22watU0Qy5baZASBtDIOh2U2KR3ZS0UcC0z6kjNbg9lbmVYxPrNDPhHEQZ9NjYk7Kgorog2MGQfTkReWWKoaxB+Mkc8CNrAQpmbPeNil8AeDhogCvJc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=QtzrUBZM; arc=fail smtp.client-ip=40.107.94.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOGtrJr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751619053; x=1783155053;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=E8DCAkUB4Y91e3GFgak3A4uNwkO+hifgYbr4vZaKB7I=;
-  b=WOGtrJr+WlBUPqoDf/sAeIUX0ot9k8GrrBR834zoA71CQJVprReipF5Q
-   tZwFRJPgQt9TLb1b+zPCHbISf0oJ+qJOQQL0M1rveGLr2LZH6ayOKimoF
-   zYwQrJpPfCEDDogZLr1b07GUa4JXGYCzhMVIgW6G8FN+H79SQvSy/Hqqi
-   vCStjbFfp0Ur6MveIA5PaxudjwdU3SCZkRcWmcuKap3dN7FgrL/HR1pfX
-   Iqb+SWSmaywe6nAcsdQteJj7w/lnvH3n6rYvjRPJ0nSIDk8kHRvpfX+i8
-   1Pu3/3wMROTWR72No55W+RKGyoapjtjzfBW+6lvjvyhdAJ/3Uehz5URf4
-   A==;
-X-CSE-ConnectionGUID: cDx4UE64TJiIEZPyg2VL1g==
-X-CSE-MsgGUID: 6O3W6tWSRvCEBpLEtALQDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="79391777"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="79391777"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:50:46 -0700
-X-CSE-ConnectionGUID: 9mxtooCxQP2pD5+nBOHkUA==
-X-CSE-MsgGUID: kj4NGxHEQA2WyijZm8q1+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="154722022"
-Received: from 984fee019967.jf.intel.com ([10.165.54.94])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:50:46 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	dave.hansen@intel.com
-Cc: rick.p.edgecombe@intel.com,
-	mlevitsk@redhat.com,
-	john.allen@amd.com,
-	weijiang.yang@intel.com,
-	minipli@grsecurity.net,
-	xin@zytor.com,
-	Chao Gao <chao.gao@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v11 21/23] KVM: nVMX: Enable CET support for nested guest
-Date: Fri,  4 Jul 2025 01:49:52 -0700
-Message-ID: <20250704085027.182163-22-chao.gao@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250704085027.182163-1-chao.gao@intel.com>
-References: <20250704085027.182163-1-chao.gao@intel.com>
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="QtzrUBZM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OEcFMGPkiKPUPF701hLGyG/mQL5ekrtApmpDGEBlFBKcYRullBrI2fcvXfMunUG8E/ZhKQvxPKEaBXebP6GwGNzhC1XiwwPokegFfbVLtH8Z2hHYvSlNWgpfvRnGDdwUS/6G5Zw7G4UIkV/RBqDddgg9Gx+77X3fz8Oqh93KvCepxX87c7EkzC2L/8+ZTmBBdUUllMDll4jZLVBqwrtCms+hkZgn8jIXoMOWEKHK5tzwn2VpIOYHIhNWCnikUmXSQ6bdf2bihNy94mjjWgPpjRGx3YeDxy2O1+sNszX3/+j2mEKYD5ffyDIGMYHJKNfPstU1IRjTLUSXgKf9mBrC1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VuaVkRO/T3Q38j9wMeOYS9lJTL088DFPC6C+SbvqzzA=;
+ b=BWAQMOTcx9W0NKe0wiPCdy3qL3aZkVp+x5sSAv2UZOcp/A9TdcQiU6x0dNowdysmK3+qOuBAmyQJfxH2hJHAVXNzDex4NzcoWlHDg/l/Fge0c3i9FlYeJMPOUo8j4wiIreeunNKEJRKCnTYew9emEetAzC/9v3umfStuo1z4wM5tu5Q0RMZoYmOSjYOWr7TfDgZ0+n5tL0LBoUG9HzJbTLiqxYdVAKzz8w6hLWaFUy+NA0XOd07O47XrqX9kkrA+YSstlbQYjVxn0UvgLH5WX3ts6eaCr73MhqDDEiOrt2ri7L3rlVAdIdQk99ozlda6O8D2dz/jieBdStSlASk/KA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VuaVkRO/T3Q38j9wMeOYS9lJTL088DFPC6C+SbvqzzA=;
+ b=QtzrUBZMLCjOS54oD2YIQiqWPdW1Vruxz/9uAg/AmJU/GidQncLGdLGJYrLl3+MHAwf2WMlp+KVFwRw1AI/pBf7SV5p23+A5jNiRmt5bXl/yskBmlnkuCHPc+0IBWfEwIBX4xcTcO13X/2HRCb9x0lSy3GQfbMXFSqzdTgHpjKxi81u1/0qpWwTbl+cnxrUQ+4Ht7lnymTXvBI2g40aS8E2o2j3Yn92L1orvrxdaWznN4Uo+j8cclOOQaoOYXyZcJaQnmQqrb+YXlBmHMKSdTeSBTZ6LYim0mC7RcDs1R4mLIXilrFhGXpykpY36fQB45vg5EUjVl1mze0YvAGaoaQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from DM8PR03MB6230.namprd03.prod.outlook.com (2603:10b6:8:3c::13) by
+ SA1PR03MB7099.namprd03.prod.outlook.com (2603:10b6:806:330::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.23; Fri, 4 Jul
+ 2025 08:50:55 +0000
+Received: from DM8PR03MB6230.namprd03.prod.outlook.com
+ ([fe80::c297:4c45:23cb:7f71]) by DM8PR03MB6230.namprd03.prod.outlook.com
+ ([fe80::c297:4c45:23cb:7f71%4]) with mapi id 15.20.8901.018; Fri, 4 Jul 2025
+ 08:50:55 +0000
+From: adrianhoyin.ng@altera.com
+To: maz@kernel.org,
+	tglx@linutronix.de,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: adrianhoyin.ng@altera.com
+Subject: [PATCH v2 0/1] irqchip/gic-v3: Add Altera Agilex5 address bus
+Date: Fri,  4 Jul 2025 16:49:49 +0800
+Message-ID: <cover.1751618484.git.adrianhoyin.ng@altera.com>
+X-Mailer: git-send-email 2.49.GIT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0044.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::13)
+ To DM8PR03MB6230.namprd03.prod.outlook.com (2603:10b6:8:3c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR03MB6230:EE_|SA1PR03MB7099:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d98d866-0b0b-44b6-31da-08ddbad7e30c
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BKUP2tAFTSXZF70fomkNxBb2D2T5UCFwUZhAPpwgXkrBaKDkpgLn3frVWIxD?=
+ =?us-ascii?Q?JCC2ToirsFV834SLHLr2DS2Xo4So2eBJ0B+TBfsVVH+BfN8paUu91piuzpgb?=
+ =?us-ascii?Q?oc4m2SVdpctEXA6chSU7AwzTt1q1gj1Av8BtfYZJZylHadTMu385hRG/ZYdG?=
+ =?us-ascii?Q?E2Mo9H1g+Xo+y+DQCM0en+/6UZ8HUgfOb017RqveLmmCf8JrzrY0mvcM72J7?=
+ =?us-ascii?Q?Y/PSrMhjbTMDQfxggiRJsctAPEqoGt/zyU/aOf0FacjAvPSHgHuA+o+zgaaS?=
+ =?us-ascii?Q?alol8zng9qJaMJuLHIrbto1YhAZXxU3vuKfNhfefLiNU+LVMoCpjjDetLl2b?=
+ =?us-ascii?Q?VCRqFK7CRyUQToHAoCyP0wlWy+IPU6E3uRAXxdJ9cKxXep9BB3Rf3kt/YX02?=
+ =?us-ascii?Q?AlcUQ1pN9FjS04piNmxG2oIzsU7GLM6UhlqmgfPeQnEt/bqGvs2KtceECqcW?=
+ =?us-ascii?Q?ZZAqLvLiI16L9Ddksrvhphlds7i9DwLrikaSXfEjMduBZwLC25rveY2lt7YG?=
+ =?us-ascii?Q?6T9OUPaL9+xWkI2TpXYvGAYjCiTMtGBC04aFpjzWs8JJABJhvBqOZUxiI2UJ?=
+ =?us-ascii?Q?3RHlhJU7XrFqdxp7Fg81rGIzTj705VdxYBsv9k+PKN/ITgwRmbyGLPmstHw9?=
+ =?us-ascii?Q?Mucr/uyvvTHObHKIYpwiNH4UIT7hTz4YiiuszkEVR2fyG7Jw7q2dYuR4ZyiB?=
+ =?us-ascii?Q?Fpi5iiltB5/FxtRzhdltc/5UduZt9EJwcAqMVQVI86W9i0Ejq2Mun6EL+fpM?=
+ =?us-ascii?Q?zAdnIar4rdTAyhPnMD2YVHq0MM/ydIinrA8OGvh1yS9P9N+L8D9w3FETdmhW?=
+ =?us-ascii?Q?wwG8X2rQqrSQhPYb7+X1WfDdpwIjyoNzsWVEPJWtdsu5ZsiCn6xn9HNf/Fep?=
+ =?us-ascii?Q?p17I9bOhs0TK8OVSWqbnKEP6p/27vbgaiUXBb7KFbTvpDixPGPLhCGvXlKXY?=
+ =?us-ascii?Q?4XNHfDgbREP9T3EMzTWU+LCU8vS84mMzghfaJvip4S57cgiYwT6paTM+J7WR?=
+ =?us-ascii?Q?kGbr+K8duzSXvcZOyqz17hST0RElueWnwHvr3+ljOYx7CxyL/iMYcIxUtyx1?=
+ =?us-ascii?Q?bIUmqpms+rtSsqjRaP4SVfWs9pcZ/SY6DdIjPxXF9PxIdERXkGQsRvjzTI3y?=
+ =?us-ascii?Q?GAjk5Y3Wyq2cIGV36QdFf47DBctc2gQ686Vd7x4RgVs6TS10FMwvU003/WUz?=
+ =?us-ascii?Q?rLrx3kINdlMvTB3YH1eZ/ZusDTOMibx7X3NLhzoDgBmpUsJjiqFbeCbQ0Vmu?=
+ =?us-ascii?Q?YssYBshfROohn+pJsATRe9daByDSq2N15i0RVLDSJ3PEKU1M8I8AR2Al5/B2?=
+ =?us-ascii?Q?iexCwzFQZQPckWBm2A6R7t00+IvxRUtwttzyfl3x9jZZ4ZDMqk5hQqLJkw1V?=
+ =?us-ascii?Q?WsG+ZCcmGbdtH3uf7uUNKKj3kXbRYWdDWz3uCZaW01kHK06N0tP1nyHMcey7?=
+ =?us-ascii?Q?SsYlvqs55lA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR03MB6230.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Cg/0t0oTzZ0KIwYNA2Nn1WOoTwv8fURbpuOiv23X2/749BlWWjKgXzOpmPBZ?=
+ =?us-ascii?Q?V7yvOt7wePtpgnYl0OpTcl/lcFAcUjo2uW9I7OY5fVzAKoM2YUPdCpcPZYkv?=
+ =?us-ascii?Q?5Ih28o4uJ1IlcMaa5ErrHSyoAkSfA+zMW/26C6D2tcouJ+loP99E8KXATC+B?=
+ =?us-ascii?Q?foUJcARV5GUcTbtCmJ3RpzXCAJX+jc8Vm/TTKJFAye8CqYpHxomep+NsLHdR?=
+ =?us-ascii?Q?8Zkh9mV3QGpxfCCpKrb78m/8kPNudJSE6cu0deKz7TnW0+c4nvIPXz52U0Dl?=
+ =?us-ascii?Q?kt7kB9TT4lcqxmOQq2baJdMc4H6mzRe7GIG3LSIaKpWMJLYj0qws9FFbrZum?=
+ =?us-ascii?Q?7UFRdDxGxPxOrXE0W710KqXMjpLujLEkhBZXUkFheycFYMglLWHtZM+yCZUd?=
+ =?us-ascii?Q?R4HWXu+Ti+3j3i0PGeauCSrl3abOm7y/om8e+6SUrLY/z0eyHnS1NpeY7zi4?=
+ =?us-ascii?Q?ojN/ehVyOUKNcy6ueMoKstT/n3/jXtu4n67AKjgS9leNI6RkYwfPhwVNDumI?=
+ =?us-ascii?Q?vbnU/VROercF8FX9IkBB1R6BGvVzLQbIj3mkqzh/pkC/aexKaoflqe6GAphl?=
+ =?us-ascii?Q?H96wOnxi3l/tDpqK/DMJQQ07TG22QjinvZfJZjk0HE0vDotMbIMGff/zFfLV?=
+ =?us-ascii?Q?4soWHo9fSGwPcc1KNM2dneDpFnmZQkje5qbrqr3N6A5eKVLTCLZaqp982d+F?=
+ =?us-ascii?Q?zov2KIvK8CeThfUrQHhLNfcNYPDOjubIfPhkK9AtA/TM6j6zmV9OqG97CsiD?=
+ =?us-ascii?Q?Kq0ATVoxciBUj92nCHHcyBYqk0qhGL2G/RTQTlKSgdZ3SwPL5iNgQKEU4Z26?=
+ =?us-ascii?Q?W7gv9jd/CmbcZFQD3FpGdlN6O1P0CwxzQQTWhrA0Gq1X5JaNHLLbY3V0rcRp?=
+ =?us-ascii?Q?aqPdsviF+fjn6UhOzifPADAfA+dSCXcGKcMM2jhrSVt1sCjzzh77HDAILhtU?=
+ =?us-ascii?Q?MOA+hwcXlfEEC+P/V8s/WFvL+WYT9HkgxbMOiRtG77V56ZfIWGZOlucSNl7D?=
+ =?us-ascii?Q?ugUPw+GmrkCnnRrysEVvCkZM+W8t3ti3HDRGeiL8ZfueItaI/G99S7UbVCAa?=
+ =?us-ascii?Q?1M5m6GseNqVrB4CwHffy1ZUkevN4Os/J6NRQ+sUXwU45OCDY+MxayGG48irV?=
+ =?us-ascii?Q?v4xejwkEltXHiS0ilvFff9JXfrk/dfQ6d3/rARkG3iQMdAbgwxH2wJ7B1vaI?=
+ =?us-ascii?Q?cDSi2/+s20OYJ+3ud/0d9EtzhxHvGaiY6EUmNTtb11rrHatQw9G5X3xAExyL?=
+ =?us-ascii?Q?IC4CUKpujAOG8T4kIELU4ohSrkkX4MJ/bhab5T4llYcKxfttNiVR81LHLN0u?=
+ =?us-ascii?Q?eiE0IV8ADA8bYOfVfrjnSPitYnP9pcsDVGu019jaBoiqQsYlll4fIiw6nr+v?=
+ =?us-ascii?Q?Bz4HBixoYKCsHG5zdbN5IO+ye2RspdiY0SMnfnegDTRWPkd/DMj3wt06mAbt?=
+ =?us-ascii?Q?jTSU/wzhrRlEOdFYxacjpwScfUvA21qfBE0bf5bBAmf17W7QxeYhBUMTFLRC?=
+ =?us-ascii?Q?R6YhzcLz4Qf/GYO8+ANjN4clZmvqBGj6CExjMLc7OvJFAqY403q1OtVaIFb4?=
+ =?us-ascii?Q?tJ0Jillloy9gRugCmkSZ+DVOmwbzMQkwr9PLGkWz+61yg8Gqdpm3wVNTgj3A?=
+ =?us-ascii?Q?+Q=3D=3D?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d98d866-0b0b-44b6-31da-08ddbad7e30c
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR03MB6230.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 08:50:54.9813
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vCD6ooOZB+ARsdfamrpL3p6QWaLXyNoN2/BPe1fF+tgPyRk4TLydXeXS+fLAZ40A0kEShw3iYdcEaPjaqe/F75tqVicqCnD7j5s+F078B0o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR03MB7099
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 
-Set up CET MSRs, related VM_ENTRY/EXIT control bits and fixed CR4 setting
-to enable CET for nested VM.
+Agilex5 address bus width for the ACE-lite interface is only 32 bits.
+Hence the GIC600 SoC integration for Agilex5 can only access the first
+32bit of the physical address space.
 
-vmcs12 and vmcs02 needs to be synced when L2 exits to L1 or when L1 wants
-to resume L2, that way correct CET states can be observed by one another.
+Add quirk to configure the gfp flag to allocate memory within 32bit
+addressable range. As the 0x0201743b GIC600 ID is not specific to
+Altera, of_machine_is_compatible() is added.
 
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
+Add config in arm64 Kconfig to enable quirk.
 
+change log:
+v2: - Reworked implementation to reuse existing infrastructure as
+      requested by Marc Zyngier.
+
+    - Add new config in arm64 Kconfig to enable quirk.
+
+    - Dropped dt and binding changes.
 ---
-v11:
-Handle GUEST_S_CET as a common field for SHSTK and IBT.
----
- arch/x86/kvm/vmx/nested.c | 80 ++++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmcs12.c |  6 +++
- arch/x86/kvm/vmx/vmcs12.h | 14 ++++++-
- arch/x86/kvm/vmx/vmx.c    |  2 +
- arch/x86/kvm/vmx/vmx.h    |  3 ++
- 5 files changed, 102 insertions(+), 3 deletions(-)
+v1: - https://lore.kernel.org/all/cover.1747368554.git.adrianhoyin.ng@altera.com/
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 683a9cad04df..3e6f7b4fc374 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -715,6 +715,28 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
- 					 MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
- 
-+	/* Pass CET MSRs to nested VM if L0 and L1 are set to pass-through. */
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_U_CET, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_S_CET, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+					 MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
-+
- 	kvm_vcpu_unmap(vcpu, &map);
- 
- 	vmx->nested.force_msr_bitmap_recalc = false;
-@@ -2515,6 +2537,30 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct loaded_vmcs *vmcs0
- 	}
- }
- 
-+static inline void cet_vmcs_fields_get(struct kvm_vcpu *vcpu, u64 *ssp,
-+				       u64 *s_cet, u64 *ssp_tbl)
-+{
-+	if (guest_cpu_cap_has(vcpu, X86_FEATURE_SHSTK)) {
-+		*ssp = vmcs_readl(GUEST_SSP);
-+		*ssp_tbl = vmcs_readl(GUEST_INTR_SSP_TABLE);
-+	}
-+	if (guest_cpu_cap_has(vcpu, X86_FEATURE_IBT) ||
-+	    guest_cpu_cap_has(vcpu, X86_FEATURE_SHSTK))
-+		*s_cet = vmcs_readl(GUEST_S_CET);
-+}
-+
-+static inline void cet_vmcs_fields_set(struct kvm_vcpu *vcpu, u64 ssp,
-+				       u64 s_cet, u64 ssp_tbl)
-+{
-+	if (guest_cpu_cap_has(vcpu, X86_FEATURE_SHSTK)) {
-+		vmcs_writel(GUEST_SSP, ssp);
-+		vmcs_writel(GUEST_INTR_SSP_TABLE, ssp_tbl);
-+	}
-+	if (guest_cpu_cap_has(vcpu, X86_FEATURE_IBT) ||
-+	    guest_cpu_cap_has(vcpu, X86_FEATURE_SHSTK))
-+		vmcs_writel(GUEST_S_CET, s_cet);
-+}
-+
- static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- {
- 	struct hv_enlightened_vmcs *hv_evmcs = nested_vmx_evmcs(vmx);
-@@ -2631,6 +2677,11 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 	vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, vmx->msr_autoload.host.nr);
- 	vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, vmx->msr_autoload.guest.nr);
- 
-+	if (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_CET_STATE)
-+		cet_vmcs_fields_set(&vmx->vcpu, vmcs12->guest_ssp,
-+				    vmcs12->guest_s_cet,
-+				    vmcs12->guest_ssp_tbl);
-+
- 	set_cr4_guest_host_mask(vmx);
- }
- 
-@@ -2670,6 +2721,13 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
- 		vmx_guest_debugctl_write(vcpu, vmx->nested.pre_vmenter_debugctl);
- 	}
-+
-+	if (!vmx->nested.nested_run_pending ||
-+	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_CET_STATE))
-+		cet_vmcs_fields_set(vcpu, vmx->nested.pre_vmenter_ssp,
-+				    vmx->nested.pre_vmenter_s_cet,
-+				    vmx->nested.pre_vmenter_ssp_tbl);
-+
- 	if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
- 	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
- 		vmcs_write64(GUEST_BNDCFGS, vmx->nested.pre_vmenter_bndcfgs);
-@@ -3546,6 +3604,12 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 	     !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
- 		vmx->nested.pre_vmenter_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
- 
-+	if (!vmx->nested.nested_run_pending ||
-+	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_CET_STATE))
-+		cet_vmcs_fields_get(vcpu, &vmx->nested.pre_vmenter_ssp,
-+				    &vmx->nested.pre_vmenter_s_cet,
-+				    &vmx->nested.pre_vmenter_ssp_tbl);
-+
- 	/*
- 	 * Overwrite vmcs01.GUEST_CR3 with L1's CR3 if EPT is disabled *and*
- 	 * nested early checks are disabled.  In the event of a "late" VM-Fail,
-@@ -4473,6 +4537,9 @@ static bool is_vmcs12_ext_field(unsigned long field)
- 	case GUEST_IDTR_BASE:
- 	case GUEST_PENDING_DBG_EXCEPTIONS:
- 	case GUEST_BNDCFGS:
-+	case GUEST_SSP:
-+	case GUEST_S_CET:
-+	case GUEST_INTR_SSP_TABLE:
- 		return true;
- 	default:
- 		break;
-@@ -4523,6 +4590,10 @@ static void sync_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
- 	vmcs12->guest_pending_dbg_exceptions =
- 		vmcs_readl(GUEST_PENDING_DBG_EXCEPTIONS);
- 
-+	cet_vmcs_fields_get(&vmx->vcpu, &vmcs12->guest_ssp,
-+			    &vmcs12->guest_s_cet,
-+			    &vmcs12->guest_ssp_tbl);
-+
- 	vmx->nested.need_sync_vmcs02_to_vmcs12_rare = false;
- }
- 
-@@ -4754,6 +4825,10 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	if (vmcs12->vm_exit_controls & VM_EXIT_CLEAR_BNDCFGS)
- 		vmcs_write64(GUEST_BNDCFGS, 0);
- 
-+	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_CET_STATE)
-+		cet_vmcs_fields_set(vcpu, vmcs12->host_ssp, vmcs12->host_s_cet,
-+				    vmcs12->host_ssp_tbl);
-+
- 	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_PAT) {
- 		vmcs_write64(GUEST_IA32_PAT, vmcs12->host_ia32_pat);
- 		vcpu->arch.pat = vmcs12->host_ia32_pat;
-@@ -7032,7 +7107,7 @@ static void nested_vmx_setup_exit_ctls(struct vmcs_config *vmcs_conf,
- 		VM_EXIT_HOST_ADDR_SPACE_SIZE |
- #endif
- 		VM_EXIT_LOAD_IA32_PAT | VM_EXIT_SAVE_IA32_PAT |
--		VM_EXIT_CLEAR_BNDCFGS;
-+		VM_EXIT_CLEAR_BNDCFGS | VM_EXIT_LOAD_CET_STATE;
- 	msrs->exit_ctls_high |=
- 		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
- 		VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
-@@ -7054,7 +7129,8 @@ static void nested_vmx_setup_entry_ctls(struct vmcs_config *vmcs_conf,
- #ifdef CONFIG_X86_64
- 		VM_ENTRY_IA32E_MODE |
- #endif
--		VM_ENTRY_LOAD_IA32_PAT | VM_ENTRY_LOAD_BNDCFGS;
-+		VM_ENTRY_LOAD_IA32_PAT | VM_ENTRY_LOAD_BNDCFGS |
-+		VM_ENTRY_LOAD_CET_STATE;
- 	msrs->entry_ctls_high |=
- 		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER |
- 		 VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL);
-diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
-index 106a72c923ca..4233b5ca9461 100644
---- a/arch/x86/kvm/vmx/vmcs12.c
-+++ b/arch/x86/kvm/vmx/vmcs12.c
-@@ -139,6 +139,9 @@ const unsigned short vmcs12_field_offsets[] = {
- 	FIELD(GUEST_PENDING_DBG_EXCEPTIONS, guest_pending_dbg_exceptions),
- 	FIELD(GUEST_SYSENTER_ESP, guest_sysenter_esp),
- 	FIELD(GUEST_SYSENTER_EIP, guest_sysenter_eip),
-+	FIELD(GUEST_S_CET, guest_s_cet),
-+	FIELD(GUEST_SSP, guest_ssp),
-+	FIELD(GUEST_INTR_SSP_TABLE, guest_ssp_tbl),
- 	FIELD(HOST_CR0, host_cr0),
- 	FIELD(HOST_CR3, host_cr3),
- 	FIELD(HOST_CR4, host_cr4),
-@@ -151,5 +154,8 @@ const unsigned short vmcs12_field_offsets[] = {
- 	FIELD(HOST_IA32_SYSENTER_EIP, host_ia32_sysenter_eip),
- 	FIELD(HOST_RSP, host_rsp),
- 	FIELD(HOST_RIP, host_rip),
-+	FIELD(HOST_S_CET, host_s_cet),
-+	FIELD(HOST_SSP, host_ssp),
-+	FIELD(HOST_INTR_SSP_TABLE, host_ssp_tbl),
- };
- const unsigned int nr_vmcs12_fields = ARRAY_SIZE(vmcs12_field_offsets);
-diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
-index 56fd150a6f24..4ad6b16525b9 100644
---- a/arch/x86/kvm/vmx/vmcs12.h
-+++ b/arch/x86/kvm/vmx/vmcs12.h
-@@ -117,7 +117,13 @@ struct __packed vmcs12 {
- 	natural_width host_ia32_sysenter_eip;
- 	natural_width host_rsp;
- 	natural_width host_rip;
--	natural_width paddingl[8]; /* room for future expansion */
-+	natural_width host_s_cet;
-+	natural_width host_ssp;
-+	natural_width host_ssp_tbl;
-+	natural_width guest_s_cet;
-+	natural_width guest_ssp;
-+	natural_width guest_ssp_tbl;
-+	natural_width paddingl[2]; /* room for future expansion */
- 	u32 pin_based_vm_exec_control;
- 	u32 cpu_based_vm_exec_control;
- 	u32 exception_bitmap;
-@@ -294,6 +300,12 @@ static inline void vmx_check_vmcs12_offsets(void)
- 	CHECK_OFFSET(host_ia32_sysenter_eip, 656);
- 	CHECK_OFFSET(host_rsp, 664);
- 	CHECK_OFFSET(host_rip, 672);
-+	CHECK_OFFSET(host_s_cet, 680);
-+	CHECK_OFFSET(host_ssp, 688);
-+	CHECK_OFFSET(host_ssp_tbl, 696);
-+	CHECK_OFFSET(guest_s_cet, 704);
-+	CHECK_OFFSET(guest_ssp, 712);
-+	CHECK_OFFSET(guest_ssp_tbl, 720);
- 	CHECK_OFFSET(pin_based_vm_exec_control, 744);
- 	CHECK_OFFSET(cpu_based_vm_exec_control, 748);
- 	CHECK_OFFSET(exception_bitmap, 752);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d837876e3726..46188e1a01a7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7703,6 +7703,8 @@ static void nested_vmx_cr_fixed1_bits_update(struct kvm_vcpu *vcpu)
- 	cr4_fixed1_update(X86_CR4_PKE,        ecx, feature_bit(PKU));
- 	cr4_fixed1_update(X86_CR4_UMIP,       ecx, feature_bit(UMIP));
- 	cr4_fixed1_update(X86_CR4_LA57,       ecx, feature_bit(LA57));
-+	cr4_fixed1_update(X86_CR4_CET,	      ecx, feature_bit(SHSTK));
-+	cr4_fixed1_update(X86_CR4_CET,	      edx, feature_bit(IBT));
- 
- 	entry = kvm_find_cpuid_entry_index(vcpu, 0x7, 1);
- 	cr4_fixed1_update(X86_CR4_LAM_SUP,    eax, feature_bit(LAM));
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index f93062965a7a..c7b037ee1dce 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -181,6 +181,9 @@ struct nested_vmx {
- 	 */
- 	u64 pre_vmenter_debugctl;
- 	u64 pre_vmenter_bndcfgs;
-+	u64 pre_vmenter_ssp;
-+	u64 pre_vmenter_s_cet;
-+	u64 pre_vmenter_ssp_tbl;
- 
- 	/* to migrate it to L1 if L2 writes to L1's CR8 directly */
- 	int l1_tpr_threshold;
+Adrian Ng Ho Yin (1):
+  irqchip/gic-v3: Add Altera Agilex5 address bus width limitation
+    workaround
+
+ arch/arm64/Kconfig               | 10 ++++++++++
+ drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+
 -- 
-2.47.1
+2.49.GIT
 
