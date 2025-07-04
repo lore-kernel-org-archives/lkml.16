@@ -1,113 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22FC28C2DB;
-	Fri,  4 Jul 2025 12:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D66729B8D0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632136; cv=none; b=JPRflzKaoseH931Z2jiddh5JLpGaEsPK+M/1stqV7cdp72HeyY38/FHJwPKD13qkx5vm2Xt76kWuwz96LoJv/aFSZPQ7XqzcJtXEwtv7bASswvSABOJ2s4glegPI4AG7UzlbkBa0Nzs8yVpkpd7PaW4Mj4LI/KC04rPBvYVfz+A=
+	t=1751632152; cv=none; b=EKg88hnQ0EzZTBmge6OztBD2tTZqseDBtfRiS9murXNMY9iQmkiJDe1fxpqvrefJpSs38f7/o8bbGjophxgmTJFVrjPDwJtKs/jqnoFQULGSJcvAdbchM18CD0JRTlxkAEpzeb4kINfYBsLo7tP1DCwZh00Z9OnTKreB4YeWaiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632136; c=relaxed/simple;
-	bh=jIdGa5ErcL4rI/texliFBTI/6BXZO7gbP7jp7LrNCeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dgvx0fzF9XPmUQiiwesgZPII4FBzUftgvPzzxFVEF2QuSizZo8csf2P78RPRFi2/6C0L0Tt3rneBZwFbZ6bZinnIGGdb8d1asrRINqI8W+2huav9fJxqxtH4shSfLX2VyZ6qhAzElX14oM0Ts15dNI4zpCeJR78uEqwz1piOxNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLB8OfZH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751632152; c=relaxed/simple;
+	bh=J468UNvVT2VopBBdD6PHPtiMhQWjyLRoH/R1Ni39bMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TeeTYnmRWWovswk+gFbFUqrvBk5mcVjBjOw2sD87t/OUSa2XfQQvZU+AJ/aID/WzMSwSFB9o3QBOmBAW09LTuayoZ0RAFJviyDPHytcYFZCm40HLnMAFu8PfoP8L6AS9WOfZbSq8sdE6VXTqTRZ1BokDNhUm4B87LVxrTvc6kGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tJVIjRfb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLB8OfZH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58AD4C4CEEE;
-	Fri,  4 Jul 2025 12:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751632136;
-	bh=jIdGa5ErcL4rI/texliFBTI/6BXZO7gbP7jp7LrNCeY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HLB8OfZH4u/3ltiSWomDY2x/zdB5ywM+Keavzqlt4rKnm0lB6MPSziUK4aLtnc2X/
-	 k082ODPYrMq1lskTxG8dJVZYuX3+E/zuJGD187mLnL/oe0CGlrdWHNluBsC4FHIQB1
-	 5ViJSwgcUcQ5dgB8jH+eZ/cfZZ+fWe3Q31HHvN2SXNPTuYx5ZrZETEhkTU9cYqW92K
-	 4ypj5n0mjiS1uz0ESuFXMylpzft3fzcAVw7cz20hCKqKGI4UAExnwO/+Wkw4lQUwOv
-	 niyxSV2yZKm5mP8rpuHwloXTP5h0JcE0GAcDO2nWDQoEGLgO3xDJzGLhIvGraW9PST
-	 6N5GS2O6MxhSA==
-Message-ID: <1744974a-082e-4ae1-be32-1832e97eadbc@kernel.org>
-Date: Fri, 4 Jul 2025 14:28:49 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tJVIjRfb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62A7C4CEEE;
+	Fri,  4 Jul 2025 12:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751632152;
+	bh=J468UNvVT2VopBBdD6PHPtiMhQWjyLRoH/R1Ni39bMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tJVIjRfbT0xhg12wLclCyNmCYVVaSHttLBj3ltCRY7nMLj+8Q3zRjtnQzI4K9YH7Q
+	 RqDEkhTe3ZEkHBt0uUe+6fVt+lftt30vn7xX09SH2w56HGY8rFGvUAPvTClIqs7377
+	 v0YNFJQYOa/NArRfM8xpCzxKxHaUUYtXFym7rmtQ=
+Date: Fri, 4 Jul 2025 14:29:09 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Gupta, Anshuman" <anshuman.gupta@intel.com>
+Cc: "Nilawar, Badal" <badal.nilawar@intel.com>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	"Usyskin, Alexander" <alexander.usyskin@intel.com>,
+	"Ceraolo Spurio, Daniele" <daniele.ceraolospurio@intel.com>
+Subject: Re: [PATCH v6 02/10] mei: late_bind: add late binding component
+ driver
+Message-ID: <2025070434-oversleep-amnesty-b4fd@gregkh>
+References: <20250703193106.954536-1-badal.nilawar@intel.com>
+ <20250703193106.954536-3-badal.nilawar@intel.com>
+ <2025070421-cattishly-buffed-d992@gregkh>
+ <0b40eadc-c763-4cbc-910d-cbeb03b432d4@intel.com>
+ <2025070452-rendering-passover-9f8c@gregkh>
+ <fe774af5-76fb-4056-9eae-e2ccb0e0f078@intel.com>
+ <2025070445-brilliant-savor-a98e@gregkh>
+ <CY5PR11MB62115F7951B6045CF254B6A19542A@CY5PR11MB6211.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/11] dt-bindings: clock: qcom: document the Milos
- Global Clock Controller
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250704-sm7635-clocks-v2-0-9e47a7c0d47f@fairphone.com>
- <20250704-sm7635-clocks-v2-2-9e47a7c0d47f@fairphone.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250704-sm7635-clocks-v2-2-9e47a7c0d47f@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CY5PR11MB62115F7951B6045CF254B6A19542A@CY5PR11MB6211.namprd11.prod.outlook.com>
 
-On 04/07/2025 09:16, Luca Weiss wrote:
-> Add bindings documentation for the Milos (e.g. SM7635) Global Clock
-> Controller.
+On Fri, Jul 04, 2025 at 12:21:42PM +0000, Gupta, Anshuman wrote:
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->  .../devicetree/bindings/clock/qcom,milos-gcc.yaml  |  62 ++++++
->  include/dt-bindings/clock/qcom,milos-gcc.h         | 210 +++++++++++++++++++++
->  2 files changed, 272 insertions(+)
+> 
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Friday, July 4, 2025 5:31 PM
+> > To: Nilawar, Badal <badal.nilawar@intel.com>
+> > Cc: intel-xe@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
+> > kernel@vger.kernel.org; Gupta, Anshuman <anshuman.gupta@intel.com>;
+> > Vivi, Rodrigo <rodrigo.vivi@intel.com>; Usyskin, Alexander
+> > <alexander.usyskin@intel.com>; Ceraolo Spurio, Daniele
+> > <daniele.ceraolospurio@intel.com>
+> > Subject: Re: [PATCH v6 02/10] mei: late_bind: add late binding component
+> > driver
+> > 
+> > On Fri, Jul 04, 2025 at 05:18:46PM +0530, Nilawar, Badal wrote:
+> > >
+> > > On 04-07-2025 16:04, Greg KH wrote:
+> > > > On Fri, Jul 04, 2025 at 03:59:40PM +0530, Nilawar, Badal wrote:
+> > > > > On 04-07-2025 10:44, Greg KH wrote:
+> > > > > > On Fri, Jul 04, 2025 at 01:00:58AM +0530, Badal Nilawar wrote:
+> > > > > > > From: Alexander Usyskin <alexander.usyskin@intel.com>
+> > > > > > >
+> > > > > > > Add late binding component driver.
+> > > > > > > It allows pushing the late binding configuration from, for
+> > > > > > > example, the Xe graphics driver to the Intel discrete graphics card's
+> > CSE device.
+> > > > > > >
+> > > > > > > Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> > > > > > > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> > > > > > > Reviewed-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > > > > > > ---
+> > > > > > >    drivers/misc/mei/Kconfig                    |   1 +
+> > > > > > >    drivers/misc/mei/Makefile                   |   1 +
+> > > > > > >    drivers/misc/mei/late_bind/Kconfig          |  13 +
+> > > > > > >    drivers/misc/mei/late_bind/Makefile         |   9 +
+> > > > > > >    drivers/misc/mei/late_bind/mei_late_bind.c  | 272
+> > > > > > > ++++++++++++++++++++
+> > > > > > Why do you have a whole subdir for a single .c file?  What's
+> > > > > > wrong with just keepign it in drivers/misc/mei/ ?
+> > > > > There is separate subdir for each component used by i915/xe, so
+> > > > > one was created for late_bind as well. Should we still drop late_bind
+> > subdir?
+> > > > >
+> > > > > cd drivers/misc/mei/
+> > > > >        gsc_proxy/ hdcp/      late_bind/ pxp/
+> > > > For "modules" that are just a single file, yeah, that's silly, don't
+> > > > do that.
+> > > Another reason to maintain the sub_dir is to accommodate additional
+> > > files for future platforms. If you still insist, I'll remove the sub_dir.
+> > 
+> > Move files around when it happens, for now, it's silly and not needed.
+> > 
+> > > > > > > + * @payload_size: size of the payload data in bytes
+> > > > > > > + * @payload: data to be sent to the firmware  */ struct
+> > > > > > > +csc_heci_late_bind_req {
+> > > > > > > +	struct mkhi_msg_hdr header;
+> > > > > > > +	u32 type;
+> > > > > > > +	u32 flags;
+> > > > > > > +	u32 reserved[2];
+> > > > > > > +	u32 payload_size;
+> > > > > > As these cross the kernel boundry, they should be the correct
+> > > > > > type (__u32), but really, please define the endiness of them
+> > > > > > (__le32) and use the proper macros for that.
+> > > > > If we go with __le32 then while populating elements of structure
+> > > > > csc_heci_late_bind_req  I will be using cpu_to_le32().
+> > > > >
+> > > > > When mapping the response buffer from the firmware with struct
+> > > > > csc_heci_late_bind_rsp, there's no need to use le32_to_cpu() since
+> > > > > the response will already be in little-endian format.
+> > > > How do you know?  Where is that defined?  Where did the conversion
+> > > > happen?
+> > >
+> > > Sorry, I got confused. Conversion is needed when assigning the
+> > > response structure elements.
+> > >
+> > > e.g ret = (int)(le32_to_cpu)rsp.status;
+> > 
+> > But these are read directly from the hardware?  If not, why are they marked as
+> > packed?
+> Yes, these are read from firmware, that is the reason they marked as __packed.
+> IMHO, don't we need change the explicit endianness of response status to address your comment.
+> Are we missing something here?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Yes.  The firmware defines these values as __le32, right?  And if you
+read a chunk of memory and cast it into this structure, those fields
+are now also __le32, right?  So to read them in the driver you need to
+then call le32_to_cpu() on those values.
 
-Best regards,
-Krzysztof
+Just like data on the USB bus, or any other hardware type.  You must
+define what endian the data is in and then convert it to "native" before
+accessing it properly.
+
+thanks,
+
+greg k-h
