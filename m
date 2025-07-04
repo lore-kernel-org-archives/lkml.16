@@ -1,73 +1,81 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2073.outbound.protection.outlook.com [40.107.96.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1B72EE96F;
-	Fri,  4 Jul 2025 10:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623981; cv=none; b=EQRjV4BhkGxKU58z6EJS5x3vVEuB5WeukXcREfS44gyntsLgqxwmeNhUkHmdJOxVa0p0lW11zrKFoD897C4zHsCnKC6XNUrUucKGpXXRHWW+pmQLWEK1GxL5H95W20IYt9mgbW493T3NTmYhMg8VjK3inCyyCIcrWrY5FCtJRUM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623981; c=relaxed/simple;
-	bh=strF/qF+HXTlakY4UdqZE40XmR25ZXBwyUj3EmP1zvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJh2Wm+bRwoDXS94B+wkDSvI2YSCjxlWUJ0JH52Tqs+SwJ3mL8PhwiEFrHwsCLTC9i7T2FA/P7Xv6V13bfX8VCGjCVd1EHwef49YD0XhGxLlozIrZ/LcOPjj8AOHiu9ncBOvTkMfL8fUXC5L/oumW8Pi0Kx5REGDbF9SzThIkvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X8ZDsIPj; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C066E25F99F;
+	Fri,  4 Jul 2025 10:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751624055; cv=fail; b=aY3LPMpN3GGB7zs0hSU+C8cULlw71eXNZxWUJOENmfd445J8N9VTNrrjrPVakgKAb+f669vJWEuNaZ+neOrkvuOa1i0lC0iovcGGZwtEtR/5KvkCX5yzh0dG19e9eoL/xqNvY0rEROYKKAfhnUGB2+gLbw9NEoFWj5ItB6FuQQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751624055; c=relaxed/simple;
+	bh=u23Ehz+3XEBApkw9EbqWCUgu0yWzmP1a/VCpZNMrQFc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gXnBungBEWm+I9dIMl12RaP1cYmqJZqBPxuDAXr4zqVioLOMhKlsGzrF4oCViiNA9iqigrgjoNUhR1u59YlnNb0BqoCsQd93RJzt8B+Aqrc0Ux25KcudkVGHul7PFpM2hma+LyWzxgEGtp2c9MHlkUgjBfRSF+jcVEOW3W1BX6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=axdZwFF3; arc=fail smtp.client-ip=40.107.96.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8ZDsIPj"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234f17910d8so7078555ad.3;
-        Fri, 04 Jul 2025 03:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751623979; x=1752228779; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1y1NR7p8TbbSgnXEpVgZrK6g8G4GQPFzDyyvDynoD8=;
-        b=X8ZDsIPjvHU+pC8t7xztDHxRdH1AYHgBcalpMxNfRKRgTMTrHDptHpEnT3LHk9LuVD
-         1V8jhSkWWcqA8iQUby5WfVmbzcdDmkNFHUK37LTIY98wtCWZR4RSVp3cMOZHp2JVtRUr
-         +/EnoSFrDiZvtmdixbskKrG6Wc4cgiucEE9duYLNtcr9+ibVMZ8Zgw7f/uqwlHUWAbuw
-         s0/AcUoAtl4EwjkObY5cikMV0XRxu6UktAnZrxfazR292vy12GahRDf6qitTqwDCIKEa
-         fI6XJXU0OgGE12XrF3eHWRsPxbMElZsjSrgUO72WpWaDKVN/rNIkdFmAL9BAb5eWghma
-         sThw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751623979; x=1752228779;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l1y1NR7p8TbbSgnXEpVgZrK6g8G4GQPFzDyyvDynoD8=;
-        b=gx+gEDR2XNTuIqxEcRo7BnMkUQoTdJS1UIExWVcLNV+D4h+Cr8LTVfvlMrqM2EBnqW
-         MDop32B1RjkOg4gOGYpEqY7ZFfptIfDSpDaJ+M72059GeVBJr0Y5DCKRpLB7FFgqRqxE
-         HYpyMYnHOI+xyRHS0x7Xt6IBSWzKz9iCZ64qJprV3tiezJEo3YG3zGl+NJdLd7NZx/jz
-         /KE4kvIgXFL//IvZLFAl6DozpbFLPsCFxwqcMvnPq79h3S6voO6rilxq5KQAyEaqR8X3
-         h0gq9q8cHSvATn3DPWkVWcCMAwLbIwBOhUwyhwnOQHSs00gwVjX/bg0tczMo3HNUH4iI
-         /Fxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLsLsfskMKpDWv7B5EhTrd1YwRvOixBAxswTaeQho1JdIt1RS3H/rzSBJRZLSaOG5cM4K2+wNkp1Uvw/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvi0FgktQjnCqBE9SOC9OkJiYye4aWsTbZ0cx5X8CWMW6mgvXi
-	TbdA7gQAQpcKISaiOoxHsoaZA4kr4x7q8LN11gCki6CbDrBqu90SkE+JMzpa9pCQ4R0=
-X-Gm-Gg: ASbGncvl6Fho9JbEUDRrhmpaYqJNxq+BJSI/awgammknTEDYbAHkVmWhJWTPbf9suIz
-	DAqqM3SGuh41gGO3r85Mn7Mi7b2hZZyBNmTj/Mq+oNSoE2V2ljzAk9grc+5guoZ6KgM8aCoNbdS
-	i17wezV6POst06IfRWVqie/TxmSIo+caJi6FxHQdp4ZN0282F5wMGMarMB9bolxw0c5n5fI66y/
-	cem18Evvw7zwiZ/UgOyu38OfLZGQBRHqrlqfXKp0t8Rno1UKodOxmuWh+/3Sin2K/vKe9AONEFv
-	kip5pigzXRAiyid392d7j+ofJoBgmuQPEVWoIP3MmJbweJzz5a+pr5y3+YH3YlcUWrdd8qVlc15
-	+GPx3Fw==
-X-Google-Smtp-Source: AGHT+IEhlz75hcIMScbZOGrIIhpGBtexZtJVFZxnnJZmRv2uDCi7FVBVuU1Wr0ccc3OHMr11OZfp6A==
-X-Received: by 2002:a17:90b:3d43:b0:311:eb85:96f0 with SMTP id 98e67ed59e1d1-31aac53b7ccmr3344373a91.29.1751623979053;
-        Fri, 04 Jul 2025 03:12:59 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c30:6f3f:3d1:c4c0:3855:2a18])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cd0cfd9sm4465076a91.39.2025.07.04.03.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 03:12:58 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: cem@kernel.org,
-	djwong@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH v2] fs/xfs: replace strncpy with memtostr_pad()
-Date: Fri,  4 Jul 2025 15:42:50 +0530
-Message-ID: <20250704101250.24629-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="axdZwFF3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=POFHL5QTcAbqQym7Gj/hekT7+Y8wH+Vw46LRUUtRl3UkmUD7jFEW3RW+1ebaoRyvdn653P/HIGHHZ4Fbwm5XFFeWlzyILoLdpkmHO+sIBOAxnxPKgA+6TI+vuCl74lzgERlWJTsCJJWgSJJ0qIIFLROUe49IgMerSMEvaYQn4v1F7MPQPvs6JzjLfbTeclVLI1FjHifZI6Y560KC98zG+HCzGBRGqstYv2A9Yni1zLujKv/a+aLo2vbJzsmGB8KfszCARb3fXyAgO3GKIqWAenzrIZAWd/JlxGldtWq4w81BG7fBTuBxoRr0N86ZKsMeCTPYf/H0z/d/MzO7lqxazw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M1pTyXJW6BDzoDr/o13Tw8RjJQBkB0IbpDGg5eipI6Y=;
+ b=MRqPe9Q5g4cYPUumO2nN4t0iw3/x99xn2jeW7kxcYOJKCvqn8yl37694teMltPsgUIku3zp5TuoDOJp7aw+k1AfOeSPuraLyJXY/6Lsqi5dwsBi69dvKwC/8k4SSEmt5b9FQIwnnGSGtheNfquMSrI0ntXaOLgivBohkUinS+evi3B/VI3LxLUtNV/XLcRA3arqsahbRdRAuQmIbcioU7Zi8nxW5Zm1PYpdDw0CJRtPTUaa6Gij/wvKt9gbMH/9yT8beuJv/8VkepQInDCnls19RD2C8bRrdp/AyUkd6Vxrx6b6eNnPDZPBOmO/aIVgi62AgklXqEuL8Cp/2RcbpFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M1pTyXJW6BDzoDr/o13Tw8RjJQBkB0IbpDGg5eipI6Y=;
+ b=axdZwFF3y9cj2pFEXKym3T69xfIrEDxFy6Jt1aGlPM/zWYk0JHs4wZBj6U+iwSY2QPZlWv1/Xb+w0CyPBwWZqSAooS7MaXnHDfGKKcTcXZDRl1SJ8rJnU1p+CjzLZkD9+djOs+PVBSfUb0EO/TO53rAkx7LYZUY5s/HvSjZcUq4=
+Received: from BYAPR05CA0085.namprd05.prod.outlook.com (2603:10b6:a03:e0::26)
+ by SA3PR12MB8763.namprd12.prod.outlook.com (2603:10b6:806:312::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Fri, 4 Jul
+ 2025 10:14:11 +0000
+Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
+ (2603:10b6:a03:e0:cafe::a4) by BYAPR05CA0085.outlook.office365.com
+ (2603:10b6:a03:e0::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.14 via Frontend Transport; Fri,
+ 4 Jul 2025 10:14:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 10:14:10 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Jul
+ 2025 05:14:05 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Jul
+ 2025 05:14:04 -0500
+Received: from hjbog-srdc-41.amd.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 4 Jul 2025 05:13:59 -0500
+From: Samuel Zhang <guoqing.zhang@amd.com>
+To: <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@kernel.org>,
+	<gregkh@linuxfoundation.org>, <dakr@kernel.org>, <airlied@gmail.com>,
+	<simona@ffwll.ch>, <ray.huang@amd.com>, <matthew.auld@intel.com>,
+	<matthew.brost@intel.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>
+CC: <mario.limonciello@amd.com>, <lijo.lazar@amd.com>, <victor.zhao@amd.com>,
+	<haijun.chang@amd.com>, <Qing.Ma@amd.com>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, Samuel Zhang <guoqing.zhang@amd.com>
+Subject: [PATCH v2 0/5] reduce system memory requirement for hibernation
+Date: Fri, 4 Jul 2025 18:12:28 +0800
+Message-ID: <20250704101233.347506-1-guoqing.zhang@amd.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,46 +83,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|SA3PR12MB8763:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0ca03fe0-c266-4455-f646-08ddbae38510
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gtu9nSAW5o9k0rgtfbFIYCyqTw3y2SCr0LviOm9895dhqVpkaTTuhErNSaKx?=
+ =?us-ascii?Q?KRfKgRWKtdQmAs4twrYvHRzJZol6huCoMNGJ6QPy3sa9q3OabJZKqGyKdf+h?=
+ =?us-ascii?Q?UCn0UvH9jBepoh7t347Uc2+3bc7cusf1+DS6Kuvsa/LU6cezUrPaSyZTBHNa?=
+ =?us-ascii?Q?68ay3KECTiyv7X8QbEWdxHawhmxeRr+kk9WpiNdY9VwDW68KpgB+++QRV09E?=
+ =?us-ascii?Q?t9OLwYp7ZO9qRxx6FZhXNqiR6Ynnhe+m3ztLv1v6LiAOgv4mbygzFwsYB4vN?=
+ =?us-ascii?Q?51f2je4M5CiTrOdwyloY6gg+aqF+4g2SZ5EmoJXkJHNOWzlGYkUSwbqE8uqT?=
+ =?us-ascii?Q?LViQkj8NsUzaRokfJSvpZXMulyxdWXwzdZ+Yhtx00snByjYfLDIT1o4ByZXX?=
+ =?us-ascii?Q?CGsNl8/MNjOoaPdSo2Sv7zktCG+gnJ58fK2EDKH30fEJw+ZrItBUpQr5Fh3i?=
+ =?us-ascii?Q?WkAHZ0i95aZhdeId/r6kNNiZJMrww1s0eoA8/Zf9eFZE1G9IARc7h4cQMsIk?=
+ =?us-ascii?Q?KBfpuJ9PNEjEfZAPddeFK8VsYe4L4Hq9ZewpUbqK5IteAXPAX85kZI0/Wue3?=
+ =?us-ascii?Q?0z2VtxB3L+ja1xxylAmm/uIIaWZWeSilFo3v2JoMHKDn7c0GWtB9D7ecIqLV?=
+ =?us-ascii?Q?FvS3inV2nFkLOM26yXuRRyX0iVH75ooYkzRYYWIscKJ/epAW5GNgMsdgJyLn?=
+ =?us-ascii?Q?PKJZR6VXyyEBg5rek1Fk4eu/XpVVAo6a273jQqz7A4MrWQX/0w64a23PpaO1?=
+ =?us-ascii?Q?S/FyYQAQ6GbbpdT+3n7PaoFr/Xs2xwo7yCjVXApqPt2klkG0O83C8gaNA5BU?=
+ =?us-ascii?Q?ar1UBc48Rw9naHWqI8nNKnMW3cL8BNz+YquPHf6/AroQHSTZyZD6y+BzdFLQ?=
+ =?us-ascii?Q?24Ch1BvRuTevlOgVSdyThGrG+EBWgz3OMFkAbg3XW9IkRqtPw9reoP1GiY79?=
+ =?us-ascii?Q?2M6KqfCKsPsHNQkvXkkcYmWyKQNhFs6aXNb19z8M1Q1muAF0oCDmDIF+xIz0?=
+ =?us-ascii?Q?WA8W0PU7/Xx1RALahw0/ezg+z9+avxJioOElFl58mrhaNvdE4tqzZQNjYTAT?=
+ =?us-ascii?Q?ztrlrSvarEnBUtx7g/kUFAvv5Zwv23EnelWLhO/CS0IM0cYhdCGdjLvUOE/W?=
+ =?us-ascii?Q?B5hNNPgQAZl+ss+ntmHoIX0IA6NSBEo40Kz/F1TrlXiPxNg1LFdGaGeycNyA?=
+ =?us-ascii?Q?8bS2fFFwERIamnisuPYUOyhE2pq3lM6znV/WwGmw9prYBU/shqX+9qoW4JDR?=
+ =?us-ascii?Q?rRpuZq5xhj7C2SYMX38L/RrMvxXGn11V5wK7a9y209YeCDqB6yrdArQOZ+my?=
+ =?us-ascii?Q?dwOSzsLzjzWwT5VttB/yvs1gdaJHDzCsev2HSIApKRjz7pmV+LOci/k0pFOz?=
+ =?us-ascii?Q?LNOvs/p5T3ccG8DufMr/XxOGBA0b+3NggpZy9QPYO0SzLQlesUE95QPspt4F?=
+ =?us-ascii?Q?MwXlJ14zARGFK7dssz2EsASQ5vDnZyLOq2JUx5JIeEgUcJggUV6wFkRTuHIq?=
+ =?us-ascii?Q?uEdVWG1ij3y1qgreidjXQajwDQTXrP00068ZSp4kjUfhJXNpajZcqZqaog?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 10:14:10.7967
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ca03fe0-c266-4455-f646-08ddbae38510
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E7.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8763
 
-Replace the deprecated strncpy() with memtostr_pad(). This also avoids
-the need for separate zeroing using memset(). Mark sb_fname buffer with
-__nonstring as its size is XFSLABEL_MAX and so no terminating NULL for
-sb_fname.
+Modern data center dGPUs are usually equipped with very large VRAM. On
+server with such dGPUs(192GB VRAM * 8) and 2TB system memory, hibernate
+will fail due to no enough free memory.
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- fs/xfs/libxfs/xfs_format.h | 2 +-
- fs/xfs/xfs_ioctl.c         | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+The root cause is that during hibernation all VRAM memory get evicted to
+GTT or shmem. In both case, it is in system memory and kernel will try to 
+copy the pages to hibernation image. In the worst case, this causes 2 
+copies of VRAM memory in system memory, 2TB is not enough for the 
+hibernation image. 192GB * 8 * 2 = 3TB > 2TB.
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 9566a7623365..779dac59b1f3 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -112,7 +112,7 @@ typedef struct xfs_sb {
- 	uint16_t	sb_sectsize;	/* volume sector size, bytes */
- 	uint16_t	sb_inodesize;	/* inode size, bytes */
- 	uint16_t	sb_inopblock;	/* inodes per block */
--	char		sb_fname[XFSLABEL_MAX]; /* file system name */
-+	char		sb_fname[XFSLABEL_MAX] __nonstring; /* file system name */
- 	uint8_t		sb_blocklog;	/* log2 of sb_blocksize */
- 	uint8_t		sb_sectlog;	/* log2 of sb_sectsize */
- 	uint8_t		sb_inodelog;	/* log2 of sb_inodesize */
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d250f7f74e3b..c3e8c5c1084f 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -990,9 +990,8 @@ xfs_ioc_getlabel(
- 	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
- 
- 	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
--	memset(label, 0, sizeof(label));
- 	spin_lock(&mp->m_sb_lock);
--	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-+	memtostr_pad(label, sbp->sb_fname);
- 	spin_unlock(&mp->m_sb_lock);
- 
- 	if (copy_to_user(user_label, label, sizeof(label)))
+The fix includes following changes. With these changes, there's much less
+pages needed to be copied to hibernate image and hibernation can succeed.
+* patch 1 and 2: move GTT to shmem after evicting VRAM. so that the GTT 
+  pages can be freed.
+* patch 3: force write shmem pages to swap disk and free shmem pages.
+
+After swapout GTT to shmem in hibernation prepare stage, the GPU will be
+resumed again in thaw stage. The swapin and restore BOs of resume takes
+lots of time (50 mintues observed for 8 dGPUs). And it's unnecessary since
+writing hibernation image do not need GPU for hibernate successful case.
+* patch 4 and 5: skip resume of device in thaw stage for successful
+  hibernation case to reduce the hibernation time.
+
+v2:
+* split first patch to 2 patches, 1 for ttm, 1 for amdgpu
+* refined the new ttm api
+* add more comments for shrink_shmem_memory() and its callsite
+* export variable pm_transition in kernel
+* skip resume in thaw() for successful hibernation case
+
+Samuel Zhang (5):
+1. drm/ttm: add ttm_device_prepare_hibernation() api
+2. drm/amdgpu: move GTT to shmem after eviction for hibernation
+3. PM: hibernate: shrink shmem pages after dev_pm_ops.prepare()
+4. PM: hibernate: export variable pm_transition
+5. drm/amdgpu: do not resume device in thaw for normal hibernation
+
+ drivers/base/power/main.c                    |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      | 10 +++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c      | 13 ++++++++-
+ drivers/gpu/drm/amd/dkms/config/config.h     |  3 ++
+ drivers/gpu/drm/amd/dkms/m4/pm_transition.m4 | 15 ++++++++++
+ drivers/gpu/drm/ttm/ttm_device.c             | 29 ++++++++++++++++++++
+ include/drm/ttm/ttm_device.h                 |  1 +
+ include/linux/pm.h                           |  2 ++
+ kernel/power/hibernate.c                     | 26 ++++++++++++++++++
+ 9 files changed, 100 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/gpu/drm/amd/dkms/m4/pm_transition.m4
+
 -- 
-2.49.0
+2.43.5
 
