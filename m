@@ -1,99 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4702594;
-	Fri,  4 Jul 2025 02:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080401DDA34;
+	Fri,  4 Jul 2025 02:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751596815; cv=none; b=DWwPxkLcwo/43NgLHeapy+icmbs/PM1xx25xmsrwegj4igqhHXieIowHRDVkP65InNluMTciCF2Nzblrjd8Y3+tGbnxsK22ddKosGdiixynjEEoAVTTD36hpXzzIrEQ78s6qx3JYyQhdsrIAo3qMPQXNUbf6VfoVyHceB2ahYoM=
+	t=1751596825; cv=none; b=Hdkx0X5SWMdeOynImh89t8IK3ehQ3atBuHX9HKnbYfzWLgaU4X6O85j77AXJmq1aeUlIs9LIUN01oGwfcJ9hRFYhRfnmX4u/uKzDJ8Uc655ZY9/WDoyVgOOy073FQMa2LopuTy02CqpB+37h290LVhUjLhoQv5d6saIaXWMzCT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751596815; c=relaxed/simple;
-	bh=TdWwQzR0zpIAe0xbdpoU/xjLevB+Vt2+KTdSQblx0Hk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Pk5CdtYBjdxMQbQ8f6tM6toImW3oX0f6C/z1Tw7Wi7OVdqkRtpm2odhHO2IoJWnsfkqmKpeSepaUZNr9+wdxnBjoFGBV+Mu5LzfWM7heP3fzpSK2+wVfxdJvKYp4o8ieoKjLWmU1ZUJzbicATlCvE/e9zZq+93EKoNgy9IIdOP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWfoeEqL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWfoeEqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FEB9C4CEE3;
-	Fri,  4 Jul 2025 02:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751596813;
-	bh=TdWwQzR0zpIAe0xbdpoU/xjLevB+Vt2+KTdSQblx0Hk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KWfoeEqLMSdUyQvci5Q1J8AYWa8fJWWc2SBAPQidzv/8+ovkfWFdFaClJuc3mne91
-	 xyFN2E4rubeg+q0o99WL7H1jOaw2uX0Pezr1WRwgAeE+EbOWwHLcvp8bA24/RACLu5
-	 s1TBmEKTDLJTM0s6pzzljdoiK+T2xwm4+gdaeTiwqfV7DdtSCkVYOrVuxeEfqYx/fw
-	 eszAEMDYfitRtjowd9VW9xhIABato/ySZjWzIgRS7JlVe/9kLJB5AHmc/gm03bSB7c
-	 CUJk6rHqd9bC6Q7PbYpXk8eiMxRd80/OCA7fRVnDmJHRSlBeNgPSgXAW6LgySp54PN
-	 RHX3ngcfsjOqw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD1F383BA01;
-	Fri,  4 Jul 2025 02:40:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1751596825; c=relaxed/simple;
+	bh=SAYN5VKjUnBLcKJkHCiVym3079UNk84BkRL08HA1A7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HNQwQiZXtnYsYkWTJGvwUV3h2bkvOLPVIz0MR/LfqSPRbjDjXevusgd35Htx01nSirQ+drVwPWqkDwHNzx0nJg5MGSTwNvYb62cgCwrYbp3K726Es2ONhSj86DdP14mJI12LwfS7LzD0n658ToMpL7PjbzRJuVIfjNGDSoDKzMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 368a0998588011f0b29709d653e92f7d-20250704
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:034570ce-596c-429a-9efd-e80c6a0f942f,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:33ba69fe0ab85910e7858a1ae5a8be6d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 368a0998588011f0b29709d653e92f7d-20250704
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <jiangyunshui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1168541632; Fri, 04 Jul 2025 10:40:14 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 060C7E008FA2;
+	Fri,  4 Jul 2025 10:40:14 +0800 (CST)
+X-ns-mid: postfix-68673F0D-745718436
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 69236E008FA1;
+	Fri,  4 Jul 2025 10:40:12 +0800 (CST)
+From: Yunshui Jiang <jiangyunshui@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	Yunshui Jiang <jiangyunshui@kylinos.cn>
+Subject: [PATCH] Input: cs40l50: Fix potential NULL dereference and memory leak
+Date: Fri,  4 Jul 2025 10:40:10 +0800
+Message-ID: <20250704024010.2353841-1-jiangyunshui@kylinos.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v7 1/3] bpf: Show precise link_type for
- {uprobe,kprobe}_multi fdinfo
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175159683750.1682876.3979686281569023976.git-patchwork-notify@kernel.org>
-Date: Fri, 04 Jul 2025 02:40:37 +0000
-References: <20250702153958.639852-1-chen.dylane@linux.dev>
-In-Reply-To: <20250702153958.639852-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+The cs40l50_upload_owt() function allocates memory via kmalloc()
+without checking for allocation failure, which could lead to a
+NULL pointer dereference when GFP_KERNEL allocation fails under
+memory pressure.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Additionally, if any subsequent operation fails after successful
+allocation, the allocated memory is not freed, causing a memory
+leak.
 
-On Wed,  2 Jul 2025 23:39:56 +0800 you wrote:
-> Alexei suggested, 'link_type' can be more precise and differentiate
-> for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
-> kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
-> can show it more concretely.
-> 
-> link_type:	kprobe_multi
-> link_id:	1
-> prog_tag:	d2b307e915f0dd37
-> ...
-> link_type:	kretprobe_multi
-> link_id:	2
-> prog_tag:	ab9ea0545870781d
-> ...
-> link_type:	uprobe_multi
-> link_id:	9
-> prog_tag:	e729f789e34a8eca
-> ...
-> link_type:	uretprobe_multi
-> link_id:	10
-> prog_tag:	7db356c03e61a4d4
-> 
-> [...]
+Therefore, add a NULL check for kmalloc() and returns -ENOMEM on
+failure. And use a goto cleanup pattern to ensure the allocated
+memory is freed on any error path.
 
-Here is the summary with links:
-  - [bpf-next,v7,1/3] bpf: Show precise link_type for {uprobe,kprobe}_multi fdinfo
-    https://git.kernel.org/bpf/bpf-next/c/803f0700a3bb
-  - [bpf-next,v7,2/3] bpf: Add show_fdinfo for uprobe_multi
-    https://git.kernel.org/bpf/bpf-next/c/b4dfe26fbf56
-  - [bpf-next,v7,3/3] bpf: Add show_fdinfo for kprobe_multi
-    https://git.kernel.org/bpf/bpf-next/c/da7e9c0a7fbc
+Signed-off-by: Yunshui Jiang <jiangyunshui@kylinos.cn>
+---
+ drivers/input/misc/cs40l50-vibra.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/drivers/input/misc/cs40l50-vibra.c b/drivers/input/misc/cs40=
+l50-vibra.c
+index dce3b0ec8cf3..c48b6c905112 100644
+--- a/drivers/input/misc/cs40l50-vibra.c
++++ b/drivers/input/misc/cs40l50-vibra.c
+@@ -238,25 +238,31 @@ static int cs40l50_upload_owt(struct cs40l50_work *=
+work_data)
+ 	header.data_words =3D len / sizeof(u32);
+=20
+ 	new_owt_effect_data =3D kmalloc(sizeof(header) + len, GFP_KERNEL);
++	if (!new_owt_effect_data)
++		return -ENOMEM;
+=20
+ 	memcpy(new_owt_effect_data, &header, sizeof(header));
+ 	memcpy(new_owt_effect_data + sizeof(header), work_data->custom_data, le=
+n);
+=20
+ 	error =3D regmap_read(vib->regmap, vib->dsp.owt_offset_reg, &offset);
+ 	if (error)
+-		return error;
++		goto free_owt_data;
+=20
+ 	error =3D regmap_bulk_write(vib->regmap, vib->dsp.owt_base_reg +
+ 				  (offset * sizeof(u32)), new_owt_effect_data,
+ 				  sizeof(header) + len);
+ 	if (error)
+-		return error;
++		goto free_owt_data;
+=20
+ 	error =3D vib->dsp.write(vib->dev, vib->regmap, vib->dsp.push_owt_cmd);
+ 	if (error)
+-		return error;
++		goto free_owt_data;
+=20
+ 	return 0;
++
++free_owt_data:
++	kfree(new_owt_effect_data);
++	return error;
+ }
+=20
+ static void cs40l50_add_worker(struct work_struct *work)
+--=20
+2.47.1
 
