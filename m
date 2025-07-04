@@ -1,40 +1,41 @@
-Received: from out.smtpout.orange.fr (out-71.smtpout.orange.fr [193.252.22.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B758616A956;
-	Fri,  4 Jul 2025 15:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436E933E1;
+	Fri,  4 Jul 2025 15:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751643495; cv=none; b=oVZ3MdLjvS+PmP+V5IkKAkVvLWQbjWLTp9PD5mkYOo5GitWrpteJm1+BcowOX+AmHg6aKIoHlYruhRVW1Q22cyi1yOvf+QaSpt9yrKCFbhYhU0rfbjeF16E6P9S48aDc4655DEK6rsIP8DoDEfVOYOJiULOqboY2isDiLDsa44A=
+	t=1751643503; cv=none; b=AgCD4FgqXR9necvBNlEJYm163nT+blVJvfFeRnV53RHpCk/vbvRiXb4dpk/YwShVcRBGO6nF+QtHLE7mqpglFojEDK3b25t0It+BywWbACEQO8Aqkg+ue1DLV717eKdKR5Fb8Ljq6Buvc/NKwuJEdpW7qc++8S4TFxdW3tYFuJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751643495; c=relaxed/simple;
-	bh=fLdCLesqPacgf6orQ0Uqw8B1XsjZdu9oN9xPwsD81Ew=;
+	s=arc-20240116; t=1751643503; c=relaxed/simple;
+	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DgOEKMbj9DW5KancJANScdB3wZhs9/ryC6owfB54FpIUUki9enLg5vaoXG0T56LGWMLtYXckLwUIHhjOP13WEFmTrgKfKA/pCU496AlOuviFjwt29Rxbj6NLiOF26T982ItHftaNhNu2EgpSyAqSOPIq5YxgiAtph6y2r9XE06c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iNMtAyOc; arc=none smtp.client-ip=193.252.22.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=tF6NX3TXZutyYqiZ1qc7OsTY2hWtOYwYuNGQab/z7GUswwDjdDECrkHfD3M0FYsvlurjvsbJG3RTmPY94h1kelt2rbZiw5m05+vlstHF2o9vgDIvFdrwSgWoB9k7/phHQlYACJVVztArEgiUu+hZ3T9FBMv4GMRpxrH74Afj8+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=OX/WZ6nB; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iNMtAyOc"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id XiUAuz93nEUkqXiUBupcKk; Fri, 04 Jul 2025 17:38:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751643483;
-	bh=VFAGn/xp+0VJ34DC7Qp3JQGD2Wi25TG8w1j1f/AjtMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=iNMtAyOcf6i1q07uJhYENLIWKJg107ulG3DNvDtH5QLKEkMssA1FKe0iYDB+n7U+H
-	 CdWP7qPw9fiDooP0EvcstzhR1OkF67BhDp7RFByXSuuMISefRSdaT0VeW7Viw/GrOx
-	 1Z98U+00kQZ//kvIkBNc8gB7t3eCJlym9qHAe4tLbSxZ3AwOgQjl6JYzNd3X+tGjEK
-	 2oxMqXHa38taaSzrInBIIMxz9iS1gNScYzgKBfMy1LzQtoOgC6iHTx6vd4731ZbhFJ
-	 v/HFMwWx1KrUZEyv9eGxwy1/suYPNzJ+46CNZg8AuRBjmbhar4VtCSUnu6dR2o2Faf
-	 I9YrnZSXAInmw==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 04 Jul 2025 17:38:03 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <c9693c60-3dad-4970-ad99-264592f427d8@wanadoo.fr>
-Date: Sat, 5 Jul 2025 00:37:57 +0900
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="OX/WZ6nB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1751643461; x=1752248261; i=rwarsow@gmx.de;
+	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=OX/WZ6nB+ODVApO9YyTaMZwGboGEf6UjWXHXqungujfwvye6yEtNfnwU1sAJQE4Z
+	 WFr3/g1v2bxFIGV4VNkwgj3u/2e90/Hr/4YPwFb4CJaQyoVFGq4te27eht3H+Qmji
+	 l5Uv06/ePZqxklYGYsj1vXEliu0Gx99e7HgDs4u2qZ3Y4M/KidM4VX6fj46rMGpYJ
+	 GTVG8sboxydl72c9mBVsGw/1pzYCIx466NV189oINrRac2qMytiU5Myx7MNy/fs2X
+	 7ZS+/gV2olameEvOjMXh1GcQoavT4eodZTaOXXOZV2BpW9laDmYWJb5p+I+rw0YMn
+	 oRVYbVBPY92bsLAXvA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.33.128]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5fIW-1udlAE3Pic-004mST; Fri, 04
+ Jul 2025 17:37:40 +0200
+Message-ID: <678fe368-326a-4d0d-860e-95e2f44a61c5@gmx.de>
+Date: Fri, 4 Jul 2025 17:37:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,111 +43,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] can: rcar_canfd: Replace RCANFD_CFG_* macros with
- FIELD_PREP
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "biju.das.au" <biju.das.au@gmail.com>, Marc Kleine-Budde
- <mkl@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>
-References: <20250703183411.332828-1-biju.das.jz@bp.renesas.com>
- <20250703183411.332828-5-biju.das.jz@bp.renesas.com>
- <dc6d1cdf-0c93-4d7a-b3c4-722d1e58f5cf@wanadoo.fr>
- <TY3PR01MB113461B3528C3057DA03F6E808642A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <TY3PR01MB113461B3528C3057DA03F6E808642A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250704125604.759558342@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250704125604.759558342@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Q4ueOPUJpt/njJqrbcBzvUGStjncSVN4382XVhGCRZ6DNOTAHV0
+ JgDTpN/dSOW/XrOban2gMu6MJ3y+LZEy1f4vCn/DK2SMJpPsy7ou09niZMppyqwOWOYE1Na
+ TcZuNvynKWdmS6yY/i8k2GHInGRTyGyUtk2NntcJT++mYA7MB7wvcLKFAGIgAw/az1ZsAEz
+ NEFUPR6i8blO6FdPAtPHg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hcqnhP9wrnk=;k2GRxpn1vx5Tn3LzOd2AQAFbcHP
+ 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
+ t9wKFjD
 
-On 04/07/2025 at 19:12, Biju Das wrote:
-> Hi Vincent,
-> 
-> Thanks for the feedback.
-> 
->> -----Original Message-----
->> From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
->> Sent: 04 July 2025 03:25
->> Subject: Re: [PATCH 4/4] can: rcar_canfd: Replace RCANFD_CFG_* macros with FIELD_PREP
->>
->> Hi Biju,
->>
->> On 04/07/2025 at 03:34, Biju Das wrote:
->>> Replace RCANFD_CFG_* macros with simpler FIELD_PREP macro.
->>>
->>> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
->>> ---
->>>  drivers/net/can/rcar/rcar_canfd.c | 10 ++--------
->>>  1 file changed, 2 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
->>> index b5b059e83374..dd87b4e8e688 100644
->>> --- a/drivers/net/can/rcar/rcar_canfd.c
->>> +++ b/drivers/net/can/rcar/rcar_canfd.c
->>> @@ -102,12 +102,6 @@
->>>
->>>  /* Channel register bits */
->>>
->>> -/* RSCFDnCmCFG - Classical CAN only */
->>> -#define RCANFD_CFG_SJW(x)		(((x) & 0x3) << 24)
->>> -#define RCANFD_CFG_TSEG2(x)		(((x) & 0x7) << 20)
->>> -#define RCANFD_CFG_TSEG1(x)		(((x) & 0xf) << 16)
->>> -#define RCANFD_CFG_BRP(x)		(((x) & 0x3ff) << 0)
->>> -
->>>  /* RSCFDnCFDCmCTR / RSCFDnCmCTR */
->>>  #define RCANFD_CCTR_CTME		BIT(24)
->>>  #define RCANFD_CCTR_ERRD		BIT(23)
->>> @@ -1418,8 +1412,8 @@ static void rcar_canfd_set_bittiming(struct net_device *ndev)
->>>  	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || gpriv->info->shared_can_regs) {
->>>  		cfg = rcar_canfd_compute_nominal_bit_rate_cfg(gpriv->info, tseg1, brp, sjw, tseg2);
->>>  	} else {
->>> -		cfg = (RCANFD_CFG_TSEG1(tseg1) | RCANFD_CFG_BRP(brp) |
->>> -		       RCANFD_CFG_SJW(sjw) | RCANFD_CFG_TSEG2(tseg2));
->>> +		cfg = FIELD_PREP(GENMASK(19, 16), tseg1) | FIELD_PREP(GENMASK(9, 0), brp) |
->>> +		      FIELD_PREP(GENMASK(25, 24), sjw) | FIELD_PREP(GENMASK(22, 20), tseg2);
->>>  	}
->>
->> You can still keep the macro definition to give a meaning to the magic number:
->>
->>   #define RCANFD_CFG_SJW_MASK GENMASK(25, 24)
->>
->> and do a:
->>
->>   FIELD_PREP(RCANFD_CFG_SJW_MASK, sjw)
-> 
-> Are you ok for the below change to reduce the changes minimum??
-> 
-> -#define RCANFD_CFG_SJW(x)		(((x) & 0x3) << 24)
-> +#define RCANFD_CFG_SJW(x)		FIELD_PREP(GENMASK(25, 24), x))
+Hi
 
-No more function-like macro please :)
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-Normal macro definitions are totally welcome. These allow to attach a name to
-otherwise totally meaningless magic numbers.
+Thanks
 
-When it goes to the actual calculation, functions are best.
-
-> Or
-> 
-> you want RCANFD_CFG_SJW_MASK as separate one as you suggested?
-
-This please :)
-
-
-Yours sincerely,
-Vincent Mailhol
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
