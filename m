@@ -1,63 +1,63 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D46D27280C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034A27933A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612832; cv=none; b=qa+gqulKp1SEFNwUB7MlHS+X/EbKw6GdNYe3SlUxIJkY3B5MCPahE8rP8zAIMLfVPyXxDp/Pzccor9S3gWiIAZR2HBPSQJUWLAoOebvvjWID9pkS8+vrZZbdUm93GwYdUqdgQN33atUqoYXABwU2MaSJhupmUdckB+VQkZOTCEw=
+	t=1751612843; cv=none; b=iNQOOMNRrEcOhvZHgNNejtWSw7BawpnECSAgXzAgaP5ppHwhIqPWiL41YykJ2KdyjvKyBMFbTb4k/lDhGi8H95QOlIM0Gqq7Qf4Zk/gVw4DlVzTxolExpSQ48BGLHTRhdEqrybELDY7bGLkn+3bVG6F89py/fjsZRA6s1Y4woS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612832; c=relaxed/simple;
-	bh=169PDjupJ8pNp0wACYdaBOi2G5j5ACOyZXywYUb0nJM=;
+	s=arc-20240116; t=1751612843; c=relaxed/simple;
+	bh=kOJ0GefeAd9UEbFEyV014zsaaRwCNdDHSJBAudKVMFQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F69ddnY68c9v8reH++WHAGrmBFN9BStCWYOF/z3qJaXjWEiAZWiGt+BCQbBv8UddwsNKsXNjc0QsNXXrx5Sa3Pxr3Omvsx6ONTn+dSOv9KBnY+qqWSXUtw1CgyKrEJQOr1Fms22Q5vJModBvPM7wUp8U1/O/+vJ9R26r8GeZYWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xpycg0q/; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=bKQrmBXE+FnE6sKzPkny3FXM7DjXCt+pb4xRU3OEp/PODzYKW5uIyBU2QC4NnRsqtOw27TIkuzIE3SenIjwWM/Wcjy5pYEFq2H9EgsA4z5xLyYIRi/2lGdlEqYGSCQNlQQlHcLeXSLJSvDZ91nMw98+8QRJQv4qgZGWjlxsfU3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Umh9KFfY; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xpycg0q/"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso767465a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:07:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Umh9KFfY"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso725316a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 00:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751612829; x=1752217629; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1751612841; x=1752217641; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qNcclU2G18Bdovh3QAsek7AK/q114CkADd+BrTGwXao=;
-        b=Xpycg0q/HWdHHvv6tbsoU/uiBy2tEVhatOJsw2uoaL537pgNT6y/0lQTeJ8jx03irM
-         J8AVhXk9X7foqKcXvc+TOjkTgztEX1JVr9ykZ/Ug+jf8+yswhgGgW5GtFd5e4UdPt8Sf
-         fUQOerbOqr4cUz3Q70fK06TPZhB/u5V955dm72PdR5sBWuqEn0JwAr+puO5STOgTRrRE
-         rkjvdBF1zAAEO+bbvr1UnYMGcfeKBAafUI3cZwmK0MfJVCISeCtW5yWxUPOJApH5riZh
-         itctuYTqXaOFnV95nfzH1CAgtveSbbWS9CHLQG4gIVzsNUUN///KRPnpTCopQrnCnuf3
-         o3gA==
+        bh=RQx4DIh4Piuq7HhjaN41eXcQRyGY2O2ucSjN2pwnllI=;
+        b=Umh9KFfYnNsJyzELZ24DHzss3F7/qLLiZUELYJVHgzLonLaH3xl04FQ43oTy7NjUiE
+         P/BkrTLzWf4Vd6Xz5kSgJIrByDLd3f1V9vCb68nk//4wP0OBx73/9m5tisKEKRWqSD7s
+         i9aKnCL33bD60rKu2AeQ8l67e+758M3jXJwP9YisMazYAJhX+744fBkZshwxViX6LmZy
+         LeVJIHh8iFGYsOVoHjZGBGRdJW6C/3tr7FtPT9+xVciQAndU61DWCkgmkSFvC5uuqR1s
+         +7xQP8yY1LdEUxsUshLbibqKrfFI3lNY5/yU3uGCnoixMOe+rh0Q1DnyaWK49fybSsrA
+         vMUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751612829; x=1752217629;
+        d=1e100.net; s=20230601; t=1751612841; x=1752217641;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qNcclU2G18Bdovh3QAsek7AK/q114CkADd+BrTGwXao=;
-        b=Sr0PvgcUphK9Z8KaxJ04UuFHarlAgXpt0E0es+c4rVn2yV4pRhZ9xLQZyDmziMQDdK
-         yK/GaNafyzanJ9ON7h6vxAz+ydh3XsrBshx0yUxAByw5ooEOzSoNTGz2O6vJeXfJxieB
-         VkOgk1DTZ+37qaAlnt7owXMI7shx7VbzaT3ocNwIDUWn7fL9fOg9TNtAkUXNUZEc/YSx
-         u8EbZL+ZaKE8H3zxojbBwgcEBJ6Bwul3hk17Hfgs2s7OLqZXS7pSK8ehqlp17rx7+gPz
-         mdGqKCO3RZYZteEk5oEgGehg9TUOOJYTfdjL0Fsw43mDL9T95a5MWHv6A4nZhQFNuYtE
-         zC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUZuJ/6uBR/q2NJoseo3qo7whVjJXukjSLd0KpypaSMLfP6l+ElyjsfK2C+bYfAc9c7XUgO4R+Ohl9ESZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC/ZoOa81NxZNghBIUrG6q5G/o8zSmyqnNuwrKPeaeprTHxcrB
-	xTJKz3ZHQ1iX2Ftq7L9BdeCFkGDkYF4vrkxjA20Z2WzUWc4yZmUZv1NVaiwzRNhyA4U=
-X-Gm-Gg: ASbGncv9oqqJsmTkSo6brzoIbsOrkcMrcSuTFaeSYpZ6O+CyIl+aC5Agnxsw1i4Qi9f
-	qzqnlR/DvO4cNaPjIRAk4d7zFjDdER1aprc+gMcxbA+pMwVtK3w51VIVuTweG0sjRPJouMo+iHs
-	V9iBbcL+dNDhikSRVVl+p9ZrdjPBXsBLePZb9PJ3mmVRqhnFapPjXJ6NUv/Z9rCOsg9NL3fNS9B
-	ldPSsS4ZZRDfls7i+lbEq/aEEJP6DjsauxNOmK74XZP3r6i9k/zFXiAqd1ehDbpd9yMGzc7nUsD
-	Mb58OA61633iLtpLU+Bnnojs6e95e6IuThMnAMlMTswmBW6qZfRxkhaQRPMsTHcIKFGLism9WRX
-	P2JFKRr9CSS/3zDI7r7ZlsRiYGg==
-X-Google-Smtp-Source: AGHT+IGrP/l0dKEOOpvLsvS4JGiMBKWICRCAtYJOylbaG7ycll8dUnb8u46RulbU17ZZf/1gB5ixPQ==
-X-Received: by 2002:a17:90b:33d1:b0:312:639:a064 with SMTP id 98e67ed59e1d1-31aaddb4ac6mr1562105a91.28.1751612829169;
-        Fri, 04 Jul 2025 00:07:09 -0700 (PDT)
+        bh=RQx4DIh4Piuq7HhjaN41eXcQRyGY2O2ucSjN2pwnllI=;
+        b=ikbIRavbgMFC9OEnBR4ahk0uJQNjkQ1uWRQCjfrNMEUKSVniRq11Z2ocJZkqWeqe76
+         57aSxia2vmFHy63gLS6vNhZAYkC7to00sgh+7vVvdjgua7/SfipjXbCdwDwE+2kIferD
+         qvdsxfa2TPWAdRhfRdw3ND2MtAKrVSTz7tBQst5YMwviGkovZm+JER9tiTiSzQe1j3c8
+         xZzGKbOSNiQnxZDQNqWvdKYT70o9JaorImLHPClOzc94+82AiNbxB39iMom2NaqjYU2I
+         piPHHrVicDoUfmNJom8r8zSnZJPWc14jNwJ0pEc5PQzZnq5zB6gSTJ4/bdR9J2LWTEpS
+         fKQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEQCBCM4trJiXaCchrOgWnnEXnJ3qQGHcmW4P7h2nX51vlfimtvRqGTraP26+uHHlU1uC4RWPZvxcxwBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyhu8g21plzBf6yyM6/YsHqgBca4YzAG1C0Tw0SLpH+7DTfPFsU
+	wUekoxBqhhjK8F0vZJl1GFoN9b1VwcgWdRbdEVmnOGF5bTj97Wv1JPRuQumZ2c+h+v8=
+X-Gm-Gg: ASbGncuobzUbiMBEkiULql6q6Nke4Fyr0P/YEE0IM0pg3JUwAd6P3E88PV8qbwuk1bj
+	//o0dnYJcpAVB+pYLAlNz660MCqQ14R3YY0NQAn9yvLzzH2q/Q9YdT5hf2ZUUn5ePZ179FBLQDS
+	PQ/ooGzu4wGFPMa9aBZQn5xhs0o+remaBGsApI7b4KnVWDrifBqQlPo7jXD40mjoZ3skl7w/gsz
+	W5l0PERmYZegqYApQNDNuq2kQwZP/Et8CtdsM1iy3lKe9qPGliM8utnuG9QHDTVyuT5lihTbw62
+	jwnD0nT4TUF8sD6M7QjZH2B8j4s2hrSoPi1VnTcGjpGNNcQ9El71BV2jjItJXVnetXsuzXX26ax
+	Psrh1lE3IXvjnlD3rUruMsULqDQ==
+X-Google-Smtp-Source: AGHT+IE8RuxxpKedqzy+uzoXVkR8qJBvZDITw6LQzH2d5wo1aXkwsTRyqrE+z4geahCSOD3aMg/Q4Q==
+X-Received: by 2002:a17:90b:2245:b0:312:959:dc4d with SMTP id 98e67ed59e1d1-31aac43290dmr2637314a91.7.1751612840937;
+        Fri, 04 Jul 2025 00:07:20 -0700 (PDT)
 Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae59a93sm1358697a91.12.2025.07.04.00.06.58
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaae59a93sm1358697a91.12.2025.07.04.00.07.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 00:07:08 -0700 (PDT)
+        Fri, 04 Jul 2025 00:07:20 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -88,10 +88,12 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-acpi@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
+	Atish Patra <atishp@rivosinc.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v8 15/24] ACPI: Add support for nargs_prop in acpi_fwnode_get_reference_args()
-Date: Fri,  4 Jul 2025 12:33:47 +0530
-Message-ID: <20250704070356.1683992-16-apatel@ventanamicro.com>
+Subject: [PATCH v8 16/24] ACPI: scan: Update honor list for RPMI System MSI
+Date: Fri,  4 Jul 2025 12:33:48 +0530
+Message-ID: <20250704070356.1683992-17-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250704070356.1683992-1-apatel@ventanamicro.com>
 References: <20250704070356.1683992-1-apatel@ventanamicro.com>
@@ -105,108 +107,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Sunil V L <sunilvl@ventanamicro.com>
 
-Currently, ACPI does not support the use of a nargs_prop (e.g.,
-associated with a reference in fwnode_property_get_reference_args().
-Instead, ACPI expects the number of arguments (nargs) to be explicitly
-passed or known.
+The RPMI System MSI interrupt controller (just like PLIC and APLIC)
+needs to probed prior to devices like GED which use interrupts provided
+by it. Also, it has dependency on the SBI MPXY mailbox device.
 
-This behavior diverges from Open Firmware (OF), which allows the use of
-a #*-cells property in the referenced node to determine the number of
-arguments. Since fwnode_property_get_reference_args() is a common
-interface used across both OF and ACPI firmware paradigms, it is
-desirable to have a unified calling convention that works seamlessly for
-both.
+Add HIDs of RPMI System MSI and SBI MPXY mailbox devices to the honor
+list so that those dependencies are handled.
 
-Add the support for ACPI to parse a nargs_prop from the referenced
-fwnode, aligning its behavior with the OF backend. This allows drivers
-and subsystems using fwnode_property_get_reference_args() to work in a
-firmware-agnostic way without having to hardcode or special-case
-argument counts for ACPI.
-
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/acpi/property.c | 29 +++++++++++++++++++++++++----
- drivers/base/property.c |  2 +-
- 2 files changed, 26 insertions(+), 5 deletions(-)
+ drivers/acpi/scan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index d4863746fb11..e92402deee77 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -804,13 +804,35 @@ acpi_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
- 	return NULL;
- }
- 
-+static unsigned int acpi_fwnode_get_args_count(struct fwnode_handle *fwnode,
-+					       const char *nargs_prop)
-+{
-+	const struct acpi_device_data *data;
-+	const union acpi_object *obj;
-+	int ret;
-+
-+	data = acpi_device_data_of_node(fwnode);
-+	if (!data)
-+		return 0;
-+
-+	ret = acpi_data_get_property(data, nargs_prop, ACPI_TYPE_INTEGER, &obj);
-+	if (ret)
-+		return 0;
-+
-+	return obj->integer.value;
-+}
-+
- static int acpi_get_ref_args(struct fwnode_reference_args *args,
- 			     struct fwnode_handle *ref_fwnode,
-+			     const char *nargs_prop,
- 			     const union acpi_object **element,
- 			     const union acpi_object *end, size_t num_args)
- {
- 	u32 nargs = 0, i;
- 
-+	if (nargs_prop)
-+		num_args = acpi_fwnode_get_args_count(ref_fwnode, nargs_prop);
-+
- 	/*
- 	 * Assume the following integer elements are all args. Stop counting on
- 	 * the first reference (possibly represented as a string) or end of the
-@@ -961,10 +983,10 @@ static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
- 				return -EINVAL;
- 
- 			element++;
--
- 			ret = acpi_get_ref_args(idx == index ? args : NULL,
- 						acpi_fwnode_handle(device),
--						&element, end, args_count);
-+						nargs_prop, &element, end,
-+						args_count);
- 			if (ret < 0)
- 				return ret;
- 
-@@ -979,9 +1001,8 @@ static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
- 				return -EINVAL;
- 
- 			element++;
--
- 			ret = acpi_get_ref_args(idx == index ? args : NULL,
--						ref_fwnode, &element, end,
-+						ref_fwnode, nargs_prop, &element, end,
- 						args_count);
- 			if (ret < 0)
- 				return ret;
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index f626d5bbe806..6a63860579dd 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -578,7 +578,7 @@ EXPORT_SYMBOL_GPL(fwnode_property_match_property_string);
-  * @prop:	The name of the property
-  * @nargs_prop:	The name of the property telling the number of
-  *		arguments in the referred node. NULL if @nargs is known,
-- *		otherwise @nargs is ignored. Only relevant on OF.
-+ *		otherwise @nargs is ignored.
-  * @nargs:	Number of arguments. Ignored if @nargs_prop is non-NULL.
-  * @index:	Index of the reference, from zero onwards.
-  * @args:	Result structure with reference and integer arguments.
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index fb1fe9f3b1a3..54181b03b345 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -858,6 +858,8 @@ static const char * const acpi_honor_dep_ids[] = {
+ 	"INTC10CF", /* IVSC (MTL) driver must be loaded to allow i2c access to camera sensors */
+ 	"RSCV0001", /* RISC-V PLIC */
+ 	"RSCV0002", /* RISC-V APLIC */
++	"RSCV0005", /* RISC-V SBI MPXY MBOX */
++	"RSCV0006", /* RISC-V RPMI SYSMSI */
+ 	"PNP0C0F",  /* PCI Link Device */
+ 	NULL
+ };
 -- 
 2.43.0
 
