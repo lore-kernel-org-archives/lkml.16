@@ -1,130 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3923E19C54B;
-	Fri,  4 Jul 2025 15:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DD72877D5
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 15:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751641812; cv=none; b=YDHatVVxDAK/4Np74HhxETmgEv+m8U6egPjQGKPR7yQkhTwSYZDv4YR/2rNRGnLSXriUXAHxINwL4uYGm2/BccrDQu7TNhkkHSvde7RrYzMA7Q0CctgxfPrLB+t5JIOqOZ/NpwDhN/rdanWOh04dteHVQf1jwdbT5wyPAWIiF8o=
+	t=1751641883; cv=none; b=gHA9lWuh4mHu7jXP6Rupun7pVZnt6Y1fIBjuI/OOx1dPW+pmIWqsPj30Yn54sIqt2SlxiBSwaZIsUFt6BoWtPrXzvBy6Kna0iSjIJbdm3GmIS5PWWQHKFcesI9rBNX1AxaSrXBgDBhgFvQJMgCo5XKvpH8EgjNE94BYO6+nRuNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751641812; c=relaxed/simple;
-	bh=Z/gcoLGRph/U9VWm2UGRUvh3W6hdwsbr1W2MSDXdq7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWji/O31k0XO2yiU++B78/bEhA599lZ8wOG4DVp2Nixm2L7c05dBhfRIfpBUATTU4j4AyqUIS+HcNmk6yQlfSszf/9t/Fwf4sCBSE8Ab4b6t9CZfbH128p60kY1NGkqUGiuYJOzz3n8fL6frm4yDtul6P9ol1nKwlG5cNMeva2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MssHvzcz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751641883; c=relaxed/simple;
+	bh=5waSe9JNG3bmoZ4Dl76hVYYd3LVFKdDlnURf+9XosaU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HG4Eza7POgoZqcDELmYd2zvULKyyOUb8j2j7o6GotZEUqMlXfHbLq85CEZtl8RW4cH+i/jQVeah96xV1nNacpRiKlv8fg5tTH8XarH3e4q/dSdPn1wZDuRbxF9Ne0mYnakdqGpOfvu69ReU9ME4L0N2nOLnAD/dxl+dPldICsYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dINeEi1k; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MssHvzcz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD26EC4CEE3;
-	Fri,  4 Jul 2025 15:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751641811;
-	bh=Z/gcoLGRph/U9VWm2UGRUvh3W6hdwsbr1W2MSDXdq7Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MssHvzczGNp0SlOYkBMQcvpjJ0WTuE0OEhRgAomsK4n5HwTXdo5EPAWNeE0KHkQWg
-	 /1Fd5Fu8kDrqhwoveNpzVlr19NcOvDkQpxC9Hn9ieUwUp2IU57L41AfB2CybrJbqRM
-	 2FgkMqxMxiKsJ1wtIlmYovNSU1PpQsojF8ZpVIjFASopl2IBCz4IvsVPNGZFnmSSbw
-	 0IyzHMQuTYQh88vfk28BcoI3wmWonumoJyKbIkQv31tLlgG4es8fl5DCCe6evomWUw
-	 JjPN1yDVSqIB/ChAqxRqPhbbakwA1VRHolIsxfcX1nQHzTsRosQHNxwm10An3GfI9R
-	 37CZFq6Vwwt+g==
-Message-ID: <765c675c-6ae9-4b79-bc49-865e03d54fa5@kernel.org>
-Date: Fri, 4 Jul 2025 17:10:07 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dINeEi1k"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a528243636so613233f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 08:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751641879; x=1752246679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
+        b=dINeEi1kgZWQgFEYAJ5FVwmFBPT5EzLOv33qfoPmv7r4IE0mgMMTfMsGwcRyuRe61K
+         FMkjIBZSJIecG2RitvoOimj6hMLBTAIV1TaS5zpnBYcGTdxIi3lr8/Up6IzFeh1D2qja
+         39f4WyarFFq255vcCosZ+jh7p++fRISzDvr1ZTaGDlZnF8iivGDatb1CKjKpbUkvJlh7
+         yu08I2szKq4Gx4MvWFPB27Ys/njhieh/zhJjsYoPaL/at6nIkKl0INB+XBIUPMr8fldA
+         /pefZShXVZnyVxYycrUDATLgiTbIU2NNQ5i4XxlIBUsOoN01fRuT23OGkjx3QerUwVZ5
+         1HaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751641879; x=1752246679;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
+        b=QkcQSJ/0iaJA4THRLkRsEduEQiQDNL12gAL9mPQsD2GrO4pOKjBV8hZNzxCwenkAQa
+         w23XuDzQD34tJHdAR4YlIeK8IjF5oJba5GrUPI1yWblX3NDY/PCHKIj2f0xjfXnN/OKz
+         JU0TrxzyZfri7cx9S+2mCvpT6ftW3ESHmNQMCdlATIY8XzLOXeaqZVQ4cbnawzK31Y/h
+         PjGRqrIKuAxKJ6zP8SJrjOj/fQurwMDGBPWLt6sTubr7fQ7k+al+p9zc7vmivyUjC4/A
+         /efupZlPVhcLrebxlmuOhcU2HGFCSLvxkwODv3q3SiGyk/eOkhpc6nqdHozLFw/T8hWh
+         C65w==
+X-Forwarded-Encrypted: i=1; AJvYcCUpG9ICESJW+X2aXZwQJr0ZIhyhzkeuFJVaogxFuMxE0+ODpdoTiVW8owXzXqoyQCxZLXyT9WGPxNBJyPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI31/DzupqONms6Vh4ng9ggPFJqQVa9qMHHRhOkwU1ba9jZD0h
+	l7c6Yq6OM6We6qAK1wfXvphCubOvDq4UhH+hwy/mVtkzkBElAqaQqDWuG7xh29lLnGc=
+X-Gm-Gg: ASbGncsks7CpPG5eqFwGL/F7m2ZO4Grf/yk7ina27uALNoh8XrHM8bn3r7rjn14Q5Ib
+	6inENkMkSf+jLg3PF8+Xaal7TJjSxItDjxAw5kqBgaBQzSLpjqG5PRajivLRw5y5uEK2HY/xbQK
+	DDreodVTmvAjM9/LaZXqLbaoIHBScaBEUAza5LZihWLLrti7TjlkqnTdhGr6xqfjpd3gaAY298Q
+	99OwW/JN1VNKk+cj6MTSE9TIv3F4gt31mRaIzr1+q/xSyByjDvl3VIVSCwqxYdJh344KSo39vuo
+	bu64JRVAem6WOC+MrPBLsOiUB5tzxwxAENkcB9NjMp72qfpEwN5g/68TelrZ5Xh4lSMNyrlBWxu
+	8Yga+KDE=
+X-Google-Smtp-Source: AGHT+IEK4aTwZb/t+iBAfYaNAla4w2TjyMyeRG101P7FjyngDibQMih+NwFX/4yVby7V0AceGcPGpg==
+X-Received: by 2002:a05:6000:1a8c:b0:3a5:8905:2df9 with SMTP id ffacd0b85a97d-3b4964dc1famr2429125f8f.37.1751641879342;
+        Fri, 04 Jul 2025 08:11:19 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470e928aesm2675416f8f.44.2025.07.04.08.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:11:18 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
+References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
+Subject: Re: (subset) [PATCH v3 0/6] Add support for Amlogic S7/S7D/S6
+ pinctrl
+Message-Id: <175164187861.2868628.1382846991470897290.b4-ty@linaro.org>
+Date: Fri, 04 Jul 2025 17:11:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] dt-bindings: eeprom: Add ST M24LR support
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, luoyifan@cmss.chinamobile.com
-References: <20250704123914.11216-1-abd.masalkhi@gmail.com>
- <20250704123914.11216-2-abd.masalkhi@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250704123914.11216-2-abd.masalkhi@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 04/07/2025 14:39, Abd-Alrhman Masalkhi wrote:
-> Add support for STMicroelectronics M24LR RFID/NFC EEPROM chips.
-> These devices use two I2C addresses: the primary address provides
-> access to control and system parameter registers, while the
-> secondary address is used for EEPROM access.
+Hi,
+
+On Tue, 27 May 2025 13:23:27 +0800, Xianwei Zhao wrote:
+> In some Amlogic SoCs, to save register space or due to some
+> abnormal arrangements, two sets of pins share one mux register.
+> A group starting from pin0 is the main pin group, which acquires
+> the register address through DTS and has management permissions,
+> but the register bit offset is undetermined.
+> Another GPIO group as a subordinate group. Some pins mux use share
+> register and bit offset from bit0 . But this group do not have
+> register management permissions.
 > 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> ---
-> Changes in v5:
->  - No changes and already reviewed by Krzysztof Kozlowski
->  - Link to v4: https://lore.kernel.org/lkml/20250608182714.3359441-2-abd.masalkhi@gmail.com/
+> [...]
 
-So you just ignore the tag?
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.17/arm64-dt)
 
-<form letter>
-This is a friendly reminder during the review process.
+[4/6] dts: arm64: amlogic: add S7 pinctrl node
+      https://git.kernel.org/amlogic/c/9291207753c733dcd9f1c08749950323f7f071e8
+[5/6] dts: arm64: amlogic: add S7D pinctrl node
+      https://git.kernel.org/amlogic/c/bd42a25d696e0d5ccc9e27de388d4ca9ff52f710
+[6/6] dts: arm64: amlogic: add S6 pinctrl node
+      https://git.kernel.org/amlogic/c/fb183c8d7a5a90cdee953701d8a5b92642a2e917
 
-It looks like you received a tag and forgot to add it.
+These changes has been applied on the intermediate git tree [1].
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+The v6.17/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
 
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
 
-Best regards,
-Krzysztof
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
