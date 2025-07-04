@@ -1,115 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3C1E267B01;
-	Fri,  4 Jul 2025 09:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [4.193.249.245])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70F528750C;
+	Fri,  4 Jul 2025 09:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.193.249.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751622365; cv=none; b=ICQQcYxFqaFOT1QYjJ08ZaUcciByOgQEGplIFVpZzM0CPUCQC+R2DqilRqpSmsAyKtRWc8rC2VOzXsOga6rw3/X6M6hOCSv/WqlZbttaAvUz0qRUKmAM5YDDHoDMB47gzBxKgkHoDxVDK8YQfTD0GHlo2MO8MovUNynl9PvdicE=
+	t=1751622396; cv=none; b=QzLLdDnSHjq8OIGZRx1UYCxj6MsBku3b3hs9LgfbQHQh2QewyQOGFDN9rUQ3Wtu7Q7UsWcmhdX7/OtntVgx5LsOAGvYlehfkFpjAEs6vhao3lSZ3o7K22a3P9fUi4XumOICzdaRWuNSZ4Wf2gVJi0NYKXRzZkC4BpSs/Kfd432w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751622365; c=relaxed/simple;
-	bh=dzvMQdTS3fmP55HtLzeCh2WTdEYR5YaYqxUOeJvU5S0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGZ2atk+G/270FKW7J3YawInzLDt0LKIhLfAU08dvPb1bWNdm1X+vAGjk+QaaCR9b9JTVpzl/URmG2sX6Co0oyVS+YX6y3jxuCgUai/Nu9QjSplYVL0nd2kXNLFhZQdefEVy+ZOaegwNmhFFV4/SfE2/D5jZUyzwMAnQDWeemco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27F8B152B;
-	Fri,  4 Jul 2025 02:45:48 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28D6F3F6A8;
-	Fri,  4 Jul 2025 02:46:00 -0700 (PDT)
-Date: Fri, 4 Jul 2025 10:45:57 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, <arm-scmi@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 7/7] firmware: imx: sm-misc: Dump syslog and system info
-Message-ID: <aGei1YOnwjqqznrW@bogus>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-7-2b99481fe825@nxp.com>
- <20250702-berserk-paper-uakari-74a8bd@sudeepholla>
- <20250704102802.GF4525@nxa18884-linux>
+	s=arc-20240116; t=1751622396; c=relaxed/simple;
+	bh=kaAvn2mEvpkM/kZRGRfT46cp+asI1NtSPv8mylZUabk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=ZH+p5f2IyQFpkdeBiFVjOYBfAytYxY714LnQ+v0ZU3hblD6mOYKQ8SFXho5+mrCA2+9R7F/Adn3mewIfp2J42jcQfMcYEmtTg98tcrJgxdEEWRCSiztonmxR8yfcLSgxWNefVLYDUWpQnvW7S39jyGHy+BcfCnlDhe8BbX+iXaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=4.193.249.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from dongxuyang$eswincomputing.com ( [10.12.96.41] ) by
+ ajax-webmail-app2 (Coremail) ; Fri, 4 Jul 2025 17:46:13 +0800 (GMT+08:00)
+Date: Fri, 4 Jul 2025 17:46:13 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?6JGj57uq5rSL?= <dongxuyang@eswincomputing.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	=?UTF-8?B?6Z+m5bCa5aif?= <weishangjuan@eswincomputing.com>
+Subject: Re: Re: [PATCH v3 2/2] clock: eswin: Add eic7700 clock driver
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <420cc724-e6cf-42d9-b00b-558965bee085@kernel.org>
+References: <20250624103212.287-1-dongxuyang@eswincomputing.com>
+ <20250624103314.400-1-dongxuyang@eswincomputing.com>
+ <420cc724-e6cf-42d9-b00b-558965bee085@kernel.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704102802.GF4525@nxa18884-linux>
+Message-ID: <6890259a.2bec.197d4d45239.Coremail.dongxuyang@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgDHZpXlomdodOKoAA--.18354W
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/1tbiAQENAmhmsG0fS
+	QABsL
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On Fri, Jul 04, 2025 at 06:28:02PM +0800, Peng Fan wrote:
-> On Wed, Jul 02, 2025 at 04:22:47PM +0100, Sudeep Holla wrote:
-> >On Fri, Jun 27, 2025 at 02:03:50PM +0800, Peng Fan wrote:
-> >> Add sysfs interface to read System Manager syslog and system info
-> >> 
-> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> ---
-> >>  drivers/firmware/imx/sm-misc.c | 97 ++++++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 97 insertions(+)
-> >> 
-> >> diff --git a/drivers/firmware/imx/sm-misc.c b/drivers/firmware/imx/sm-misc.c
-> >> index fc3ee12c2be878e0285183e3381c9514a63d5142..55485a3c4a5c615102a377f41025a6911d746770 100644
-> >> --- a/drivers/firmware/imx/sm-misc.c
-> >> +++ b/drivers/firmware/imx/sm-misc.c
-> >> @@ -44,6 +44,100 @@ static int scmi_imx_misc_ctrl_notifier(struct notifier_block *nb,
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static ssize_t syslog_show(struct device *device, struct device_attribute *attr,
-> >> +			   char *buf)
-> >> +{
-> >> +	struct scmi_imx_misc_sys_sleep_rec *rec;
-> >> +	struct scmi_imx_misc_syslog *syslog;
-> >> +	int ret;
-> >> +	size_t len = 0;
-> >> +
-> >> +	if (!ph)
-> >> +		return 0;
-> >> +
-> >> +	syslog = kmalloc(sizeof(*syslog), GFP_KERNEL);
-> >> +	if (!syslog)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	ret = imx_misc_ctrl_ops->misc_syslog(ph, sizeof(*syslog), syslog);
-> >> +	if (ret) {
-> >> +		kfree(syslog);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	rec = &syslog->syssleeprecord;
-> >> +
-> >> +	len += sysfs_emit_at(buf, len, "Wake Vector = %u\n", rec->wakesource);
-> >> +	len += sysfs_emit_at(buf, len, "Sys sleep mode = %u\n", rec->syssleepmode);
-> >> +	len += sysfs_emit_at(buf, len, "Sys sleep flags = 0x%08x\n", rec->syssleepflags);
-> >> +	len += sysfs_emit_at(buf, len, "MIX power status = 0x%08x\n", rec->mixpwrstat);
-> >> +	len += sysfs_emit_at(buf, len, "MEM power status = 0x%08x\n", rec->mempwrstat);
-> >> +	len += sysfs_emit_at(buf, len, "PLL power status = 0x%08x\n", rec->pllpwrstat);
-> >> +	len += sysfs_emit_at(buf, len, "Sleep latency = %u\n", rec->sleepentryusec);
-> >> +	len += sysfs_emit_at(buf, len, "Wake latency = %u\n", rec->sleepexitusec);
-> >> +	len += sysfs_emit_at(buf, len, "Sleep count = %u\n", rec->sleepcnt);
-> >> +
-> >
-> >Why can't this be individual files and values ?
-> 
-> The System manager firmware provides a command "syslog" to dump
-> all the information, I just follow same.
-> 
-> With individual files, some values may not be consistent, because
-> system behaviour may change during reading two files.
-> 
-
-You definitely need to convince Greg if you take this approach. I am sure
-he prefers single value sysfs files.
-
--- 
-Regards,
-Sudeep
+PiBPbiAyNC8wNi8yMDI1IDEyOjMzLCBkb25neHV5YW5nQGVzd2luY29tcHV0aW5nLmNvbSB3cm90
+ZToKPiA+IEZyb206IFh1eWFuZyBEb25nIDxkb25neHV5YW5nQGVzd2luY29tcHV0aW5nLmNvbT4K
+PiA+IAo+ID4gVGhpcyBkcml2ZXIgZGVwZW5kcyBvbiB0aGUgQ0NGIGZyYW1ld29yayBpbXBsZW1l
+bnRhdGlvbi4KPiA+ICAgQmFzZWQgb24gdGhpcyBkcml2ZXIsIG90aGVyIG1vZHVsZXMgaW4gdGhl
+IFNvQyBjYW4gdXNlIHRoZSBBUElzCj4gPiAgIHByb3ZpZGVkIGJ5IENDRiB0byBwZXJmb3JtIGNs
+b2NrLXJlbGF0ZWQgb3BlcmF0aW9ucy4KPiA+ICAgVGhlIGRyaXZlciBzdXBwb3J0cyBlaWM3NzAw
+IHNlcmllcyBjaGlwcy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogWWlmZW5nIEh1YW5nIDxodWFu
+Z3lpZmVuZ0Blc3dpbmNvbXB1dGluZy5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBYdXlhbmcgRG9u
+ZyA8ZG9uZ3h1eWFuZ0Blc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL2Ns
+ay9LY29uZmlnICAgICAgICAgICAgIHwgICAgMSArCj4gPiAgZHJpdmVycy9jbGsvTWFrZWZpbGUg
+ICAgICAgICAgICB8ICAgIDEgKwo+ID4gIGRyaXZlcnMvY2xrL2Vzd2luL0tjb25maWcgICAgICAg
+fCAgIDEwICsKPiA+ICBkcml2ZXJzL2Nsay9lc3dpbi9NYWtlZmlsZSAgICAgIHwgICAgOCArCj4g
+PiAgZHJpdmVycy9jbGsvZXN3aW4vY2xrLWVpYzc3MDAuYyB8IDM4MDkgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+ID4gIGRyaXZlcnMvY2xrL2Vzd2luL2Nsay1laWM3NzAwLmggfCAg
+MTk0ICsrCj4gCj4gCj4gCj4gLi4uCj4gCj4gCj4gPiArdm9pZCBlc3dpbl9jbGtfcmVnaXN0ZXJf
+cGxsKHN0cnVjdCBlc3dpbl9wbGxfY2xvY2sgKmNsa3MsIGludCBudW1zLAo+ID4gKwkJCSAgICBz
+dHJ1Y3QgZXN3aW5fY2xvY2tfZGF0YSAqZGF0YSwgc3RydWN0IGRldmljZSAqZGV2KQo+ID4gK3sK
+PiA+ICsJdm9pZCBfX2lvbWVtICpiYXNlID0gZGF0YS0+YmFzZTsKPiA+ICsJc3RydWN0IGVzd2lu
+X2Nsa19wbGwgKnBfY2xrID0gTlVMTDsKPiA+ICsJc3RydWN0IGNsayAqY2xrID0gTlVMTDsKPiA+
+ICsJc3RydWN0IGNsa19pbml0X2RhdGEgaW5pdDsKPiA+ICsJaW50IGk7Cj4gPiArCXN0YXRpYyBz
+dHJ1Y3QgZ3Bpb19kZXNjICpjcHVfdm9sdGFnZV9ncGlvOwo+ID4gKwo+ID4gKwlwX2NsayA9IGRl
+dm1fa3phbGxvYyhkZXYsIHNpemVvZigqcF9jbGspICogbnVtcywgR0ZQX0tFUk5FTCk7Cj4gPiAr
+Cj4gPiArCWlmICghcF9jbGspCj4gPiArCQlyZXR1cm47Cj4gPiArCS8qCj4gPiArCSAqSW4gdGhl
+IEQyRCBzeXN0ZW0sIHRoZSBib29zdCBvcGVyYXRpb24gaXMgcGVyZm9ybWVkIHVzaW5nIHRoZSBH
+UElPIG9uIERpZTAuCj4gCj4gV2hhdCBpcyB0aGUgTGludXggY29kaW5nIHN0eWxlIG9mIGNvbW1l
+bnQ/Cj4gCj4gPiArCSAqSG93ZXZlciwgdGhlIHNhbWUgR1BJTyBwaW4gY2Fubm90IGJlIGFjcXVp
+cmVkIHR3aWNlLCBzbyBzcGVjaWFsIGhhbmRsaW5nIGlzIGltcGxlbWVudGVkOgo+ID4gKwkgKk9u
+Y2UgdGhlIEdQSU8gaXMgYWNxdWlyZWQsdGhlIG90aGVyIGRyaXZlciBzaW1wbHkgdXNlcyBpdCBk
+aXJlY3RseQo+ID4gKwkgKi8KPiA+ICsJY3B1X3ZvbHRhZ2VfZ3BpbyA9Cj4gPiArCQlJU19FUlJf
+T1JfTlVMTChjcHVfdm9sdGFnZV9ncGlvKSA/Cj4gPiArCQkJZGV2bV9ncGlvZF9nZXQoZGV2LCAi
+Y3B1LXZvbHRhZ2UiLCBHUElPRF9PVVRfSElHSCkgOgo+ID4gKwkJCWNwdV92b2x0YWdlX2dwaW87
+Cj4gPiArCWlmIChJU19FUlJfT1JfTlVMTChjcHVfdm9sdGFnZV9ncGlvKSkgewo+ID4gKwkJZGV2
+X3dhcm4oZGV2LCAiZmFpbGVkIHRvIGdldCBjcHUgdm9sYXRnZSBncGlvXG4iKTsKPiA+ICsJCWNw
+dV92b2x0YWdlX2dwaW8gPSBOVUxMOwo+ID4gKwl9IGVsc2Ugewo+ID4gKwkJLypjcHUgZGVmYXVs
+dCBmcmVxIGlzIDE0MDBNLCB0aGUgdm9sYXRnZSBzaG91bGQgYmUgVk9MVEFHRV8wXzhWKi8KPiA+
+ICsJCWVzd2luX2Nsa19zZXRfY3B1X3ZvbGF0Z2UoY3B1X3ZvbHRhZ2VfZ3BpbywgVk9MVEFHRV8w
+XzhWKTsKPiAKPiBBbW91bnQgb2YgdHlwb3MgYW5kIHVucmVhZGFibGUgc3R1ZmYgbGlrZSBtaXNz
+aW5nIHNwYWNlcyBpbiB0aGlzIGRyaXZlcgo+IGlzIGp1c3QgZGlzY291cmFnaW5nIGFuZCBtYWtp
+bmcgcmV2aWV3IHVubmVjZXNzYXJ5IGRpZmZpY3VsdC4gRml4IHRoZQo+IHR5cG9zLCBmaXggdGhl
+IHN0eWxlLiBEcml2ZXIgaXMgYWxzbyB3YXkgdG9vIGJpZyBmb3Igc2ltcGxlIGNsb2NrIGRyaXZl
+cgo+IGFuZCBJIGFtIHN1cnByaXNlZCB0byBzZWUgc28gbWFueSByZWR1bmRhbmNpZXMuCj4gCj4g
+QW55d2F5LCB5b3VyIGJpbmRpbmcgc2FpZCBpdCBpcyBub3QgMTQwME0gYnV0IHNvbWV0aGluZyBl
+bHNlIHNvIHRoaXMgaXMKPiBhIG1lc3MuCj4gCgpXaGVuIGhpZ2hlciBjcHUgZnJlcXVlbmN5IGlz
+IGFwcGxpZWQsIHRoZSBoaWdoZXIgdm9sdGFnZSBtdXN0IGJlCmNvbmZpZ3VyZWQgYWNjb3JkaW5n
+bHkuIFNvLCBmcm9tIG15IHBlcnNwZWN0aXZlLCBpdCdzIGJldHRlciB0bwppbXBsZW1lbnQgdGhl
+IGNsaywgcmVndWxhdG9yIGFuZCBjcHUgZnJlcXVlbmN5IHNlcGFyYXRlbHkuCmNsay5jIGFuZCBj
+bGstZWljNzcwMC5jIGFyZSByZXNwb25zaWJsZSBmb3Igc2V0dGluZyBjbGsgb25seS4KcmVndWxh
+dG9yLWVpYzc3MDAuYyBpcyBmb3Igdm9sdGFnZSBjb25maWd1cmF0aW9uLgpjcHVmcmVxLWVpYzc3
+MDAuYyBpcyBmb3IgY3B1IGZyZXF1ZW5jeSBjb25maWd1cmF0aW9uLCBhbmQgaXQgd2lsbCBjYWxs
+CnRoZSBBUElzIG9mIGNsayBhbmQgcmVndWxhdG9yLgpJcyB0aGlzIHRoZSByaWdodCBhcHByb2Fj
+aD8KClRoZSBjbGsgZHJpdmVyIHRvbyBiaWcgaXMgYmVjYXVzZSBjbGsgdHJlZXMgYXJlIGRlZmlu
+ZWQgaW4gdGhlIC5jIGZpbGUuCgpXZSBhcHByZWNpYXRlIHlvdXIgcmV2aWV3IG9mIG91ciBwcm9w
+b3NlZCBjaGFuZ2VzLiBQbGVhc2UgbGV0IHVzIGtub3cKaWYgdGhlc2UgbW9kaWZpY2F0aW9ucyBt
+ZWV0IHRoZSBwcm9qZWN0J3Mgc3RhbmRhcmRzLiBTaG91bGQgYW55CmFkanVzdG1lbnRzIGJlIG5l
+ZWRlZCwgd2UnZCB3ZWxjb21lIHlvdXIgc3BlY2lmaWMgZmVlZGJhY2sgdG8gaGVscAp1cyBpbXBy
+b3ZlIHRoZSBpbXBsZW1lbnRhdGlvbi4KCkJlc3QgcmVnYXJkcywKWHV5YW5nIERvbmcK
