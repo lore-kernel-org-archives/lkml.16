@@ -1,221 +1,111 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2046.outbound.protection.outlook.com [40.107.244.46])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1EB1876;
-	Fri,  4 Jul 2025 04:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602155; cv=fail; b=Bs1wIA2JmSe3HyTYUfPnenZxtB2C+IBRWl+YYU8qAqFD+A4vAqCKhGG9iYxrf97fXgKDzVFf519ffamfYTGz1uKI7+nYRPnmoo91Hqgctas/mY/2jOuVeYgl3ueZ5Xyfx00R+8fk2/VR/2Hmi735+FRiIf1AIPxF1/+7bay5vjU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602155; c=relaxed/simple;
-	bh=kVSrP77AexIJcTL3EAQL6dZsh5Ezc3X7UvWJRfovN2c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agXZEkQkUoR6sowamUbg2Yxt2QfWgk/wo65VSnrZKu8Z27XpiyFSfQmEbqACw49HNNK3gLWIifM4Y/DHnxYpz4vl9bYKm6+xorIPgyEGqQ7iTMLdvY7z8Xc3NtRoRscOkiyYqEF0cIdAYRq5m7L0pcucsx29PKQTKC8tnv9Mfdw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Eh0BdinZ; arc=fail smtp.client-ip=40.107.244.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B7A1C28E;
+	Fri,  4 Jul 2025 04:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751602186; cv=none; b=jTxq2W+23xWfs6VATQuc4rSiAtEfmO58a9ng9B4f9PbIeG1irNR4Zo7j4NUewSORmP44HiOJ3nPW+up5Cmu1sknmWBmFhA1/Ev6ZIoXkE3dCIPqcylC9eNhXqB4Oxssa0BmIB/q0Upttx5FlfVZ6k1WFkw5OqtHjClrKNcg4Hh8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751602186; c=relaxed/simple;
+	bh=NuTXy5WMCH00kP5NE8jojIc7E0/NGT4JS+O7qSkAWvE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=jtf7uQCkIorY4bI/waRrVxLro/eX10lhTYNNhGwt8003ZAsawWdcqkW7FfGjJZs5oLd/4Jd/59/eZMnXppScQOsawOVbMdLhKIwjU9CwSqBtdC+zkV3V0JX+lL1mXLvgKckrdNfCCiKAql+MzeKjgpMWqRSFk38aqMU4dmy/bxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gadcINUu; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Eh0BdinZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qjev9KHLTsnsnDcxgBn1UmqR7+IAFm+DnpPKPTs4jvps7OJA4bP8HXyeSsmUNmGZcSE25cKxOZDyNAd6zmx/5BCky7FMW3gIW89LzLrkctYJh6fvmi+ymtnMmLPaRTmLj17+TgXUapWKwFry/7nQ8p++vOyg4F1f2ER4W/GoeOvuqL11HR1m9ldp2cjaOowGFmhJkU0swbnwscjubDEAxgqqIxoY6BbQ0Ba2F9xUf08VDb9vyMiH4MqOK4iD1zLNvHxu8wHi+DXDeNw5IZ5D96FGdOJQRquO66wN7BhlCoLzViTRVZNsyNz6+8o02mpkfWK3IEtgpPkInEboOx6wJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YPbah+lSD8kZgpfDaIiS/pRd26Nwlta81qIk6i3ZLqA=;
- b=Wuyx6/jd6mxPLVI9ChUobmDLaR57a1iV7yK+raQ6HO//lTiEYECBS6KG8VTm5zFtw3TiqUm6wvUVKdRMWx+aLKiwlj4Smde3mHdg7l17FD46Y7vgd+vMpM/aGxaCygE25ttfpmAc3fvYeDpdSKRuP2RA+q/frSjAqoqyz/kKw/Xmrw4JyS1fU7x3K1JfaF9BFanrhN4QqOzsOnX+fa5aXreyaIyDeRlTO/EP5IRmtM3IhRD8ytXHTia/Xw13R+T6dFHa24spJ02+40tVwUubBfgbXJ/V4HSafouIxDPNDD4tCZtr0vGHM3qpR4Ohdo9UFD5EQyhYr5bDTs7qeiPvIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YPbah+lSD8kZgpfDaIiS/pRd26Nwlta81qIk6i3ZLqA=;
- b=Eh0BdinZc6qTSXOXql7W0M61C9SY/cAc/17+D3QLsu4Coq0WA6YWfN9d3IhqUgIgGvbZXu6adV4Gw24iQfnJ0IgS/oRWvsnOloELmU4xlQvpQ3iCsWNUcIsmCb3eSmbDUFL5nVxFd96o2j3iuoJ61Q6hFYg+vRRDqByyKEEXYdOFymqKXZ+Sqrg3J8p/+wvXcSNJPosPsUgqom691ARexnCeM9K3mlxg7BJeDysNkN4PsyLulvgWrf1NWlaDHJOn91cSoPqnXQY1VpibGLLu4EoahgrpI/muKfR3p+TYHO4oYIdN9G+8aHY0K62wQ1J6d7Uezl3/ytfEPMTh3nzyug==
-Received: from BN9PR03CA0181.namprd03.prod.outlook.com (2603:10b6:408:f9::6)
- by DM4PR12MB6590.namprd12.prod.outlook.com (2603:10b6:8:8f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Fri, 4 Jul
- 2025 04:09:10 +0000
-Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
- (2603:10b6:408:f9:cafe::16) by BN9PR03CA0181.outlook.office365.com
- (2603:10b6:408:f9::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Fri,
- 4 Jul 2025 04:09:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 04:09:09 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 3 Jul 2025
- 21:08:54 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 3 Jul
- 2025 21:08:53 -0700
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 3 Jul 2025 21:08:51 -0700
-Date: Thu, 3 Jul 2025 21:08:50 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v7 10/28] iommufd/access: Bypass access->ops->unmap for
- internal use
-Message-ID: <aGdT0uNtfIFLvnBO@Asurada-Nvidia>
-References: <cover.1750966133.git.nicolinc@nvidia.com>
- <a2b2a9704d7efff717448cbb76695e83f2fe67c9.1750966133.git.nicolinc@nvidia.com>
- <BN9PR11MB5276F03CF1E97173E711A5288C40A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aGWSkRX4yUuuOVZ8@Asurada-Nvidia>
- <BN9PR11MB5276BED9EC2F89E805F6BA678C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gadcINUu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=xVhyq3GAC3zK0skZbh1GvKpLi8ozrAxJQgU1jxCDsAw=; b=gadcINUuNR6ega90tbZtZW64df
+	RvtQ1sLPUdCqjCUAiqgrZ/czweLaj42cJxsCYVtjTRECbLWQldOdYusinQR7V+0UnvIfM/JBVHZal
+	4FghRFRu53FaOlDqpLFPlRjf97adW0mCDGLMU5snt/wKCiaulQtiJeK40Oz4XQ9hPNYkl1vlf42qU
+	abe59qlidfvie7/df4QXG8IBt04BV2LjMoLOarwm96/E7y6rZNnK2KFlMLIULXlS0vSLX/3n/prOn
+	Pf/D9Vz6hHdI7b3LZFFKHK4XWhfKulK5egK6i94aHGpUv2b9a9UDU4/MSSMNZaGWUPkriKYKAwnWg
+	4g6uqmlA==;
+Received: from [50.53.25.54] (helo=[127.0.0.1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uXXjy-00000007maA-0sDv;
+	Fri, 04 Jul 2025 04:09:35 +0000
+Date: Thu, 03 Jul 2025 21:09:30 -0700
+From: Randy Dunlap <rdunlap@infradead.org>
+To: nicolas.dichtel@6wind.com, Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+ Gabriel Goller <g.goller@proxmox.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ David Ahern <dsahern@kernel.org>
+CC: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3=5D_ipv6=3A_add_=60force=5Fforwarding?=
+ =?US-ASCII?Q?=60_sysctl_to_enable_per-interface_forwarding?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <869cd247-2cde-46bd-9100-0011d8dbd47c@6wind.com>
+References: <20250702074619.139031-1-g.goller@proxmox.com> <c39c99a7-73c2-4fc6-a1f2-bc18c0b6301f@6wind.com> <53d8eaa7-6684-4596-ae98-69688068b84c@infradead.org> <869cd247-2cde-46bd-9100-0011d8dbd47c@6wind.com>
+Message-ID: <D20FF7E9-0A12-40F9-B134-BD78A8C59745@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276BED9EC2F89E805F6BA678C43A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|DM4PR12MB6590:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81394f77-9561-494c-2ced-08ddbab086f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0o9i3f7j0kp+sOt+5g2ZcxUCnNKVmGqi3aTzFEESLq3JgQBYaHdOJmkbgmIh?=
- =?us-ascii?Q?HKP5Km6qcPrFqOJZ5lflGhwikhtJ1kFCNB0hb1BkU5AkXQa4Jd7JueWp/fdx?=
- =?us-ascii?Q?2oKt/OrJw1KhN43JlQw30+yBCeX9sUY9+/388TAV4aX8mN7/gg64ce3Z64N4?=
- =?us-ascii?Q?HzbpRWYOOjlu01c6wrNHPHn5JWDHXGuz37TIj7vxY5udHS6tkJMXTknCipgC?=
- =?us-ascii?Q?paUgoxINKuPGuS0oIWz5pDgZoxLLaZz5sChnA+yvPVlX5+ilY6gsTJM4SFYS?=
- =?us-ascii?Q?USOVKu4sSbwejXi7vPi01jIHigVYzt5kD1L9u9/opcXDgrT+G7XBnu4pZDNB?=
- =?us-ascii?Q?MHuYqhyJnnjdWlBhHdPWZYh3jNidHZ3P7i0pfJ7IPJ7taJgo9kK5l6R/uSWJ?=
- =?us-ascii?Q?TFT1ESp/iEbn4ANPqw9A5U41w/2bRyCc7sTqQjdeNKiaB5y8XlbGqi1ezDFx?=
- =?us-ascii?Q?FTrxu/tm+gnI8GWe9N0O95LmE6TUJm1DlfcSd6GWdtS8rNY+rDrlZYmExvfn?=
- =?us-ascii?Q?UrqHmC1a+jek/Si8RoPBRrE9ve7Vw2JTD7hNYFFMsXKtSPZ879ccc4ayXLfz?=
- =?us-ascii?Q?pFf5pQTYRwQbxvTPEzbv4RfEG02uLrUYmdtrL4+UGMfd9bNm3aOF5UUdGuq0?=
- =?us-ascii?Q?mvUSjcJrkX/7wcYqInUpmwziGLdin0DAlv8YgOlf/1VK6V7NmLZuIfILwaK3?=
- =?us-ascii?Q?Knafk8MGpILV+kAkXP1y9QMOcVlht4dqajLg2MEjygt/ZJpZi/kE2hezxmce?=
- =?us-ascii?Q?Upio0oXKBU79IwhxF/8oRHCRC1ptnQ5Y/260FHlD/y/1vdeabrUiDm5Dn8hv?=
- =?us-ascii?Q?we3A0XrT0wuJslD2USsmFzIjOXpVje0oDTU7yg4o3bo8SJizdVQtZfCqLYPK?=
- =?us-ascii?Q?lHdBFFNUtYoi1DA6J7jRCxnXOw2HEEZWXvW+n6TbzR0L67n0r/66bPZDktyT?=
- =?us-ascii?Q?aadxov3oex44jW1r8/N7VNMNHsEDh26Z2mVANCMREryHpBHduf5rdnQqv93l?=
- =?us-ascii?Q?HTgVIOIXXoLLdlrnbldHkQZKyiyND4E9E7MAOqyKU79tdpMSLh1h6+t9O8rt?=
- =?us-ascii?Q?xmVER+Wwn7yBlCJ5RbuZrJqmsHqu3xWwAmSyn6fjt9fjdyR2ektH+iCp0PKa?=
- =?us-ascii?Q?+fZgUfkUciReVu+IgH+ELLoL7tJvNTzBBpon8bZc0CCm9gW9QIlUBWWjDpWJ?=
- =?us-ascii?Q?lThbw2T5oyT2ks+hO2W5GFMDk2E8Ct3CRr2UQsooQZTMtSYCfafth9sNposy?=
- =?us-ascii?Q?cGg+fFINYbMISael3610jo1g0zFGicmMuXo+qB9l50J4Jw2r6WP5rIRFcbb1?=
- =?us-ascii?Q?QKRc/ssQrT8wLa2xVTHUb9RgJAkz0yD1PiudEWvQJLaaPB1Jb2Ammx5ctCbQ?=
- =?us-ascii?Q?C7gM8uDT4PdhvYlYA/BEeiZjF+2yMH8/E82SuFUeK5o8Ih0Mrrpy5e9DVntK?=
- =?us-ascii?Q?34kaU5G3rVPwS5a5V4pxk2daw/poDcM2NrBnpwWdz6St+fw6srvwGc+EH6Lb?=
- =?us-ascii?Q?g2M4Ev6RiTkZo4RfsbDK29YkrBNfbLeyqOP8Y2O0A2SB9JlmBSR0obHHsg?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 04:09:09.5733
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81394f77-9561-494c-2ced-08ddbab086f4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB52.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6590
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 04:57:34AM +0000, Tian, Kevin wrote:
-> I meant something like below:
-> 
-> iopt_unmap_iova_range()
-> {
-> 	bool internal_access = false;
-> 
-> 	down_read(&iopt->domains_rwsem);
-> 	down_write(&iopt->iova_rwsem);
-> 	/* Bypass any unmap if there is an internal access */
-> 	xa_for_each(&iopt->access_list, index, access) {
-> 		if (iommufd_access_is_internal(access)) {
-> 			internal_access = true;
-> 			break;
-> 		}
-> 	}
-> 
-> 	while ((area = iopt_area_iter_first(iopt, start, last))) {
-> 		if (area->num_access) {
-> 			if (internal_access) {
-> 				rc = -EBUSY;
-> 				goto out_unlock_iova;
-> 			}
-> 			up_write(&iopt->iova_rwsem);
-> 			up_read(&iopt->domains_rwsem);
-> 			iommufd_access_notify_unmap(iopt, area_first, length);	
-> 		}
-> 	}
-> }
-> 
-> it checks the access_list in the common path, but the cost should be
-> negligible when there is no access attached to this iopt. The upside
-> is that now unmap is denied explicitly in the area loop instead of 
-> still trying to unmap and then handling errors.
+On July 2, 2025 11:58:16 PM PDT, Nicolas Dichtel <nicolas=2Edichtel@6wind=
+=2Ecom> wrote:
+>Le 03/07/2025 =C3=A0 00:26, Randy Dunlap a =C3=A9crit=C2=A0:
+>
+>[snip]
+>
+>>>> +static int addrconf_sysctl_force_forwarding(const struct ctl_table *=
+ctl, int write,
+>>>> +					    void *buffer, size_t *lenp, loff_t *ppos)
+>>>> +{
+>>>> +	int *valp =3D ctl->data;
+>>>> +	int ret;
+>>>> +	int old, new;
+>>>> +
+>>>> +	// get extra params from table
+>>> /* */ for comment
+>>> https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Eg=
+it/tree/Documentation/process/coding-style=2Erst#n598
+>>=20
+>> Hm, lots there from the BK to git transfer in 2005, with a few updates =
+by Mauro, Jakub, and myself=2E
+>>=20
+>>=20
+>> More recently (2016!), Linus said this:
+>>   https://lore=2Ekernel=2Eorg/lkml/CA+55aFyQYJerovMsSoSKS7PessZBr4vNp-3=
+QUUwhqk4A4_jcbg@mail=2Egmail=2Ecom/
+>>=20
+>> which seems to allow for "//" style commenting=2E But yeah, it hasn't b=
+een added to
+>> coding-style=2Erst=2E
+>I wasn't aware=2E I always seen '//' rejected=2E
+>
+>>=20
+>>>> +	struct inet6_dev *idev =3D ctl->extra1;
+>>>> +	struct net *net =3D ctl->extra2;
+>>> Reverse x-mas tree for the variables declaration
+>>> https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Eg=
+it/tree/Documentation/process/maintainer-netdev=2Erst#n368
+>>=20
+>> Shouldn't maintainer-netdev=2Erst contain something about netdev-style =
+comment blocks?
+>> (not that I'm offering since I think it's ugly)
+>>=20
+>It has been removed:
+>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
+commit/?id=3D82b8000c28b5
+>
 
-Hmm, I realized that either way might be incorrect, as it iterates
-the entire iopt for any internal access regardless its iova ranges.
+Oh, thanks=2E  Sorry I missed that patch=2E=20
 
-What we really want is to reject an unmap against the same range as
-once pinged by an internal access, i.e. other range of unmap should
-be still allowed.
 
-So, doing it at this level isn't enough. I think we should still go
-down to struct iopt_area as my v5 did:
-https://lore.kernel.org/all/3ddc8c678406772a8358a265912bb1c064f4c796.1747537752.git.nicolinc@nvidia.com/
-We'd only need to rename to num_locked as you suggested, i.e.
 
-@@ -719,6 +719,12 @@ static int iopt_unmap_iova_range(struct io_pagetable *iopt, unsigned long start,
- 			goto out_unlock_iova;
- 		}
- 
-+		/* The area is locked by an object that has not been destroyed */
-+		if (area->num_locked) {
-+			rc = -EBUSY;
-+			goto out_unlock_iova;
-+		}
-+
- 		if (area_first < start || area_last > last) {
- 			rc = -ENOENT;
- 			goto out_unlock_iova;
-
-Thanks
-Nicolin
+~Randy
