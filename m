@@ -1,139 +1,153 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDC71386B4;
-	Fri,  4 Jul 2025 18:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419931386B4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 18:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751652832; cv=none; b=JsdWcR0H9j7+LK8ydYlSipxmoimYjTS7g2x2XVoSC0s3EyIdjx5pDop9OQ/HnLCjjDGfgd7tehV7ehoyU/Gu7t/JZevR7YwtsFoa5WW95e94jt4JUMinouj8AU7GxrJuaj9hoGlzBn2bZPkUrlcGpyPKFBRsVBb71m31rtHwGVo=
+	t=1751652840; cv=none; b=ItK/IbSe0HxBS8V8sJVTjcHlO8ImW2vL0fbm62g3m39MmK3nAkDkt7U0tP5R+teobaCuSm94HGikCzC/VPOvQNjlqFuIPPZ24b7hqaA+JCLltkLOs7hIhzAWlAb+fjq23QfENOl8b/T8JbntzakXEcNb2BlYGfqyvz3dRfvgkVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751652832; c=relaxed/simple;
-	bh=o7Ztt88VULP2BvwY0jZdGOsO2+Hv20JRT5NbRvoQWW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRsgJ38EUecYOAz13i0lKK+xwoOznEr9tv4lBKL+4TbrvxIOa9s5HGId5OO4mfeHPFGya0uOL5/6UoYCooIfwgxOzcLkKYdS04+dMZOGQERyJBivkeWfXUt4++M7s6cpaIZK+eJ7Nl84WUgRyUvEqj0DLywykrUIZblTi40qrSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nb+16iYt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751652840; c=relaxed/simple;
+	bh=WDYS8T9JY6Hv2PXLaAlNFU54KtY4q3YaUISk0Bhzznk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=OnxxQahagNDBO+RVxY4aC+SZi46tRhAbSeFfdYhyXuSQyEmP1F6K/0mIqac8uby4FifXpaOEi05AIijsik1ygFe16xg4WhXLF3c4+1bZ0OqbtAmHXD2BIevECtBgfqdtXAPZnIK07/g2jHh6YsuRsDwSOmUisDLfeSOzHwZw1+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SN3Kefkv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PVMRW+K+; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nb+16iYt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=LQmG/00dUai8xgXuysJFRnSz/OOXAoKqduwrhGjZlk4=; b=nb+16iYt9PoADMr3zlGY2uR77T
-	+c0GkSCyM0lMJRnc9hZ9ZG/KKluIRo573bl3YPxtQaJ2Obb/6KS1QNFXtK8IVZOV67HLGvZ1XnxIG
-	638jBNdZWJvTpAd9blplVFpDeIeJCnoqD5z8mjskh9I6rrNLm7BQo+j044OaZWpQmryk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXkuV-000HO3-4t; Fri, 04 Jul 2025 20:13:19 +0200
-Date: Fri, 4 Jul 2025 20:13:19 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dong Yibo <dong100@mucse.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/15] net: rnpgbe: Add basic mbx ops support
-Message-ID: <80644ec1-a313-403a-82dd-62eb551442d3@lunn.ch>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-4-dong100@mucse.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SN3Kefkv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PVMRW+K+"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 583D31D0011E;
+	Fri,  4 Jul 2025 14:13:56 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 14:13:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1751652836; x=1751739236; bh=1v
+	OdhhKTssMqYb+9TXbU/Ao2WvskkronR7j77XIUqVQ=; b=SN3Kefkvk1WfRS2fcq
+	LPbOvAjYZWFV7lBIEuWybWjfJtAXnI29jW3U02FLd5SoYUvTWE0aK6++Uc534IqS
+	83NfN/YbkA8Qq4bH86jPJL8hMUALCz5aWJyl9bWXq8SSY6a4SmpF13L4qA7IXtyo
+	6v2glerpi7IHNUUpGZ9tczfu8i997Ad4xNk8jERo+LEPVowRaisWiguhI5wpx7+q
+	XXqherd722nIeBPqtRjzWQF0XiqPVHTgBysxZ2ikI/9iSdjp2nsBXnDK/Y5Qz7cz
+	Ty/pWwambaxBjCt3J3YNOq6gva8aX0V3NfXHbkZWKlKV1UbdIQbhtU0HNo9DCW2U
+	wU5A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1751652836; x=1751739236; bh=1vOdhhKTssMqYb+9TXbU/Ao2Wvsk
+	kronR7j77XIUqVQ=; b=PVMRW+K+hf0EQQBSs8Xkhyq/8L8jbYfS8ZiCI9AiyjVH
+	hmxvfHt6Qs5GlOBRvwnHQWVuqFCVHzbWX51caPImV78ZO/ndijlWoVcGm3nIsHsn
+	PDQ4psb5Dd0txIr5jF4y28ov7rcIsbFiJ4V2PgCGskDCEvimhxnvAph/X7Eod+62
+	42Hy6/e8MW7Obdr7zMWCRJUZuNRsTGvpZdWLsxAyFZXZhz9rFOW8CGBnbS1qvGCU
+	wweTmKtm8ozzAD4fpR2aVbTbN0IMY9dxEkSvQ4OJv1CEa5SnT6S8X3tjDOYG9sPh
+	hE1JKY5nXIGMtoqjN3S8D4ZxhHxW8kLYcw+oc0jntA==
+X-ME-Sender: <xms:4xloaNStHarFI8YGcJ8KdGmsA8TQowNjo5cPvXmpNpwiTSlFD7v-jQ>
+    <xme:4xloaGyXNXhCvQ_LSszag2QSLVe01y1qVx2WwIv6HvUUoUIHJqytzdleM-XMoUs5d
+    moVLY0wOTZlFy-yGiY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeekhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegv
+    rhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpe
+    duleeigeekveeugeettdejtddtleeghefhvdfhueehtefhudelffduvdeuleevteenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthht
+    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhorhhvrghlughssehlih
+    hnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhm
+    qdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhope
+    hsohgtsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgv
+    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:4xloaC3ZzIt5-GKYKHMJRttiab8B5ITsQIMZcRl2xOOtKBG9w3WRig>
+    <xmx:4xloaFBSthHMWoB3X8zyug4qrOTW1rNraYlteZGaIKNmg0d4cvsh0A>
+    <xmx:4xloaGiwmNagUydV9_evHPKDQ1Rb7xG-gIf2PsgHLQTXIhauMYXxuw>
+    <xmx:4xloaJooR95pO3QyD4f_23w8ZdeX925Ps_Iz13osyUazueHiKCaaBg>
+    <xmx:5BloaCqXORqigdBE-Ub9aZGYfl3SeSD3Q6l08nywVRRRib-kkVTUvRj8>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DF28F700065; Fri,  4 Jul 2025 14:13:55 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703014859.210110-4-dong100@mucse.com>
+Date: Fri, 04 Jul 2025 20:13:20 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: soc@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Message-Id: <01889b2c-3a49-4510-9e25-b4becc0e4a2e@app.fastmail.com>
+Subject: [GIT PULL] soc: fixes for 6.16
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
->  #define MBX_FEATURE_WRITE_DELAY BIT(1)
->  	u32 mbx_feature;
->  	/* cm3 <-> pf mbx */
-> -	u32 cpu_pf_shm_base;
-> -	u32 pf2cpu_mbox_ctrl;
-> -	u32 pf2cpu_mbox_mask;
-> -	u32 cpu_pf_mbox_mask;
-> -	u32 cpu2pf_mbox_vec;
-> +	u32 fw_pf_shm_base;
-> +	u32 pf2fw_mbox_ctrl;
-> +	u32 pf2fw_mbox_mask;
-> +	u32 fw_pf_mbox_mask;
-> +	u32 fw2pf_mbox_vec;
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
 
-Why is a patch adding a new feature deleting code?
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
 
-> +/**
-> + * mucse_read_mbx - Reads a message from the mailbox
-> + * @hw: Pointer to the HW structure
-> + * @msg: The message buffer
-> + * @size: Length of buffer
-> + * @mbx_id: Id of vf/fw to read
-> + *
-> + * returns 0 if it successfully read message or else
-> + * MUCSE_ERR_MBX.
-> + **/
-> +s32 mucse_read_mbx(struct mucse_hw *hw, u32 *msg, u16 size,
+are available in the Git repository at:
 
-s32 is an unusual type for linux. Can the mbox actually return
-negative amounts of data?
+  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.16
 
-> +/**
-> + * mucse_write_mbx - Write a message to the mailbox
-> + * @hw: Pointer to the HW structure
-> + * @msg: The message buffer
-> + * @size: Length of buffer
-> + * @mbx_id: Id of vf/fw to write
-> + *
-> + * returns 0 if it successfully write message or else
-> + * MUCSE_ERR_MBX.
+for you to fetch changes up to 3f3fb97374308993dbe8884f44c2579a81b90bfa:
 
-Don't invent new error codes. EINVAL would do.
+  Merge tag 'apple-soc-fixes-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/sven/linux into arm/fixes (2025-07-03 16:27:31 +0200)
 
-> + **/
-> +s32 mucse_write_mbx(struct mucse_hw *hw, u32 *msg, u16 size,
-> +		    enum MBX_ID mbx_id)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	s32 ret_val = 0;
-> +
-> +	if (size > mbx->size)
-> +		ret_val = MUCSE_ERR_MBX;
-> +	else if (mbx->ops.write)
-> +		ret_val = mbx->ops.write(hw, msg, size, mbx_id);
-> +
-> +	return ret_val;
-> +}
-> +static inline void mucse_mbx_inc_pf_ack(struct mucse_hw *hw,
-> +					enum MBX_ID mbx_id)
+----------------------------------------------------------------
+soc: fixes for 6.16
 
-No inline functions in C files. Let the compiler decide.
+A couple of fixes for firmware drivers have come up, addressing kernel
+side bugs in op-tee and ff-a code, as well as compatibility issues
+with exynos-acpm and ff-a protocols.
 
-> +static s32 mucse_poll_for_msg(struct mucse_hw *hw, enum MBX_ID mbx_id)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	int countdown = mbx->timeout;
-> +
-> +	if (!countdown || !mbx->ops.check_for_msg)
-> +		goto out;
-> +
-> +	while (countdown && mbx->ops.check_for_msg(hw, mbx_id)) {
-> +		countdown--;
-> +		if (!countdown)
-> +			break;
-> +		udelay(mbx->usec_delay);
-> +	}
-> +out:
-> +	return countdown ? 0 : -ETIME;
+The only devicetree fixes are for the Apple platform, addressing issues
+with conformance to the bindings for the wlan, spi and mipi nodes
 
-ETIMEDOUT, not ETIME. Please use iopoll.h, not roll your own.
+----------------------------------------------------------------
+Arnd Bergmann (4):
+      Merge tag 'ffa-fixes-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/fixes
+      Merge tag 'samsung-fixes-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into arm/fixes
+      Merge tag 'optee-fix-for-v6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/jenswi/linux-tee into arm/fixes
+      Merge tag 'apple-soc-fixes-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/sven/linux into arm/fixes
 
-    Andrew
+Casey Connolly (1):
+      arm64: defconfig: update renamed PHY_SNPS_EUSB2
 
----
-pw-bot: cr
+Janne Grunau (1):
+      arm64: dts: apple: t8103: Fix PCIe BCM4377 nodename
+
+Jens Wiklander (1):
+      optee: ffa: fix sleep in atomic context
+
+Sudeep Holla (3):
+      firmware: arm_ffa: Fix memory leak by freeing notifier callback node
+      firmware: arm_ffa: Move memory allocation outside the mutex locking
+      firmware: arm_ffa: Replace mutex with rwlock to avoid sleep in atomic context
+
+Sven Peter (2):
+      arm64: dts: apple: Drop {address,size}-cells from SPI NOR
+      arm64: dts: apple: Move touchbar mipi {address,size}-cells from dtsi to dts
+
+Tudor Ambarus (1):
+      firmware: exynos-acpm: fix timeouts on xfers handling
+
+Viresh Kumar (1):
+      firmware: arm_ffa: Fix the missing entry in struct ffa_indirect_msg_hdr
+
+ arch/arm64/boot/dts/apple/spi1-nvram.dtsi |  2 -
+ arch/arm64/boot/dts/apple/t8103-j293.dts  |  2 +
+ arch/arm64/boot/dts/apple/t8103-jxxx.dtsi |  2 +-
+ arch/arm64/boot/dts/apple/t8103.dtsi      |  2 -
+ arch/arm64/boot/dts/apple/t8112-j493.dts  |  2 +
+ arch/arm64/boot/dts/apple/t8112.dtsi      |  2 -
+ arch/arm64/configs/defconfig              |  2 +-
+ drivers/firmware/arm_ffa/driver.c         | 71 ++++++++++++++++---------------
+ drivers/firmware/samsung/exynos-acpm.c    | 25 ++++-------
+ drivers/tee/optee/ffa_abi.c               | 41 ++++++++++++++----
+ drivers/tee/optee/optee_private.h         |  2 +
+ include/linux/arm_ffa.h                   |  1 +
+ 12 files changed, 86 insertions(+), 68 deletions(-)
