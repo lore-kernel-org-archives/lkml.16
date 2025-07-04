@@ -1,28 +1,28 @@
 Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A2230E857;
-	Fri,  4 Jul 2025 15:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7282BE02B;
+	Fri,  4 Jul 2025 15:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751644762; cv=none; b=BeDaIzhvge9krRON1mOnwKsbhHlKAc1zRp2MYQL1l2UjjwU2SXw6YVA7gSN94i3t8Q5sQajEFgkNNFxx5EK9eoRjyReV6dgbwGLVnMWChx/GkVxkwf9QfVGMEM2x5XCmqokwLxBlQlPQdAD6mHP29gjVnxzS3FxJJ0bnw1CPK1s=
+	t=1751644768; cv=none; b=kMqevB3GFiZrAxOetlUIdtKM+yvOCPizt1cXPfMbKijEYYfYbQNb1HhzOFUjYimSa7BPGubX1QTtV2sTzX1C43O5Ns0zvpo6ou0ZHVmDfsHDHm7SCL5L3k4nWZ/ZxOfxX4pqvQqEtu3yjjw1b36RsYhGdmVwNMtFXvU6sau39YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751644762; c=relaxed/simple;
-	bh=We8FZlBDtvXYSptcWE/Xb8miHHoFn0yAQv5dy+DzD2w=;
+	s=arc-20240116; t=1751644768; c=relaxed/simple;
+	bh=QVSeZ6PtbaeDbrhk8YqxchSiZQ1NssifHK0pZD4PtYc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=stXwFMwNhH5xg+AlVftwx2xASTNXbPlzaH6V1BwQhL86/GIv3ZYExd4F+QGvC7TLBvLsC4TKvLJS2Fz+iRuXIuyZwERm9BpJ5fqNnoJY9CV+Rn/w0vgliTIC7ZYigWXj+XsioDHsyyf9vGzGKmMSiD3T+Xu+HxCciASOykpQaEY=
+	 MIME-Version; b=F+mXKwil7rL5HFci+/M2sbRrhe8PheM6YscoTYVzuflA/wCABjf3XZeGUk3SZQw7RsOhEmTeeCCYWgQNgA+3NL+MbLo5cbs5hdesiV3HvRvzpbnV8wCH/D5/9ObVr8WyQ8J6YqM+7U2nQ/R8cTu/kN2r+FTesVIUvutkcjQrMb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
 Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id 9C8DD1F0006E;
-	Fri,  4 Jul 2025 15:59:01 +0000 (UTC)
+	by leonov.paulk.fr (Postfix) with ESMTPS id C62DA1F00056;
+	Fri,  4 Jul 2025 15:59:03 +0000 (UTC)
 Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 65CC3ACA65D; Fri,  4 Jul 2025 15:52:37 +0000 (UTC)
+	id B9533ACA685; Fri,  4 Jul 2025 15:49:18 +0000 (UTC)
 X-Spam-Level: *
 Received: from localhost.localdomain (unknown [192.168.1.64])
-	by laika.paulk.fr (Postfix) with ESMTP id AD114ACA65D;
-	Fri,  4 Jul 2025 15:46:45 +0000 (UTC)
+	by laika.paulk.fr (Postfix) with ESMTP id F11FBACA655;
+	Fri,  4 Jul 2025 15:46:34 +0000 (UTC)
 From: Paul Kocialkowski <paulk@sys-base.io>
 To: linux-media@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc: Yong Deng <yong.deng@magewell.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Maxime Ripard <mripard@kernel.org>,
 	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v8 8/9] ARM: dts: sun8i-a83t: Add BananaPi M3 OV5640 camera overlay
-Date: Fri,  4 Jul 2025 17:46:25 +0200
-Message-ID: <20250704154628.3468793-9-paulk@sys-base.io>
+Subject: [PATCH v8 3/9] clk: sunxi-ng: v3s: Export MBUS and DRAM clocks to the public header
+Date: Fri,  4 Jul 2025 17:46:20 +0200
+Message-ID: <20250704154628.3468793-4-paulk@sys-base.io>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250704154628.3468793-1-paulk@sys-base.io>
 References: <20250704154628.3468793-1-paulk@sys-base.io>
@@ -59,153 +59,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Add an overlay supporting the OV5640 from the BananaPi Camera v3
-peripheral board. The board has two sensors (OV5640 and OV8865)
-which cannot be supported in parallel as they share the same reset
-pin and the kernel currently has no support for this case.
+In order to declare a mbus node for the v3s, expose its associated
+clocks to the public header.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/allwinner/Makefile          |   1 +
- .../sun8i-a83t-bananapi-m3-camera-ov5640.dtso | 117 ++++++++++++++++++
- 2 files changed, 118 insertions(+)
- create mode 100644 arch/arm/boot/dts/allwinner/sun8i-a83t-bananapi-m3-camera-ov5640.dtso
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h      | 4 ----
+ include/dt-bindings/clock/sun8i-v3s-ccu.h | 4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/allwinner/Makefile b/arch/arm/boot/dts/allwinner/Makefile
-index 7318ce6d7fa3..de13da013732 100644
---- a/arch/arm/boot/dts/allwinner/Makefile
-+++ b/arch/arm/boot/dts/allwinner/Makefile
-@@ -219,6 +219,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-vstar.dtb \
- 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
- 	sun8i-a83t-bananapi-m3.dtb \
-+	sun8i-a83t-bananapi-m3-camera-ov5640.dtbo \
- 	sun8i-a83t-cubietruck-plus.dtb \
- 	sun8i-a83t-tbs-a711.dtb \
- 	sun8i-h2-plus-bananapi-m2-zero.dtb \
-diff --git a/arch/arm/boot/dts/allwinner/sun8i-a83t-bananapi-m3-camera-ov5640.dtso b/arch/arm/boot/dts/allwinner/sun8i-a83t-bananapi-m3-camera-ov5640.dtso
-new file mode 100644
-index 000000000000..469faf8cd2c4
---- /dev/null
-+++ b/arch/arm/boot/dts/allwinner/sun8i-a83t-bananapi-m3-camera-ov5640.dtso
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Copyright 2022 Bootlin
-+ * Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/clock/sun8i-a83t-ccu.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+&{/} {
-+	compatible = "sinovoip,bpi-m3";
-+
-+	/*
-+	 * These regulators actually have DLDO4 tied to their EN pin, which is
-+	 * described as input supply here for lack of a better representation.
-+	 * Their actual supply is PS, which is always-on.
-+	 */
-+
-+	ov5640_avdd: ov5640-avdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ov5640-avdd";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&reg_dldo4>;
-+	};
-+
-+	ov5640_dovdd: ov5640-dovdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ov5640-dovdd";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&reg_dldo4>;
-+	};
-+
-+	ov5640_dvdd: ov5640-dvdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ov5640-dvdd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		vin-supply = <&reg_dldo4>;
-+	};
-+};
-+
-+&csi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&csi_8bit_parallel_pins>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi_in_ov5640: endpoint {
-+				remote-endpoint = <&ov5640_out_csi>;
-+				bus-width = <8>;
-+				data-shift = <2>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+				pclk-sample = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pe_pins>;
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	ov5640: camera@3c {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&csi_mclk_pin>;
-+
-+		compatible = "ovti,ov5640";
-+		reg = <0x3c>;
-+
-+		clocks = <&ccu CLK_CSI_MCLK>;
-+		clock-names = "xclk";
-+		assigned-clocks = <&ccu CLK_CSI_MCLK>;
-+		assigned-clock-parents = <&osc24M>;
-+		assigned-clock-rates = <24000000>;
-+
-+		AVDD-supply = <&ov5640_avdd>;
-+		DOVDD-supply = <&ov5640_dovdd>;
-+		DVDD-supply = <&ov5640_dvdd>;
-+
-+		powerdown-gpios = <&pio 3 15 GPIO_ACTIVE_HIGH>; /* PD15 */
-+		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
-+
-+		rotation = <180>;
-+
-+		port {
-+			ov5640_out_csi: endpoint {
-+				remote-endpoint = <&csi_in_ov5640>;
-+				bus-width = <8>;
-+				data-shift = <2>;
-+				hsync-active = <1>; 
-+				vsync-active = <1>;
-+				pclk-sample = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+};
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+index 345cdbbab362..c933ef016570 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+@@ -39,14 +39,10 @@
+ 
+ /* The first bunch of module clocks are exported */
+ 
+-#define CLK_DRAM		58
+-
+ /* All the DRAM gates are exported */
+ 
+ /* Some more module clocks are exported */
+ 
+-#define CLK_MBUS		72
+-
+ /* And the GPU module clock is exported */
+ 
+ #define CLK_PLL_DDR1		74
+diff --git a/include/dt-bindings/clock/sun8i-v3s-ccu.h b/include/dt-bindings/clock/sun8i-v3s-ccu.h
+index c4055629c9f9..d635bffd6914 100644
+--- a/include/dt-bindings/clock/sun8i-v3s-ccu.h
++++ b/include/dt-bindings/clock/sun8i-v3s-ccu.h
+@@ -87,7 +87,7 @@
+ #define CLK_SPI0		55
+ #define CLK_USB_PHY0		56
+ #define CLK_USB_OHCI0		57
+-
++#define CLK_DRAM		58
+ #define CLK_DRAM_VE		59
+ #define CLK_DRAM_CSI		60
+ #define CLK_DRAM_EHCI		61
+@@ -101,7 +101,7 @@
+ #define CLK_VE			69
+ #define CLK_AC_DIG		70
+ #define CLK_AVS			71
+-
++#define CLK_MBUS		72
+ #define CLK_MIPI_CSI		73
+ 
+ /* Clocks not available on V3s */
 -- 
 2.49.0
 
