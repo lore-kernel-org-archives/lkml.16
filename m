@@ -1,66 +1,48 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C500302CB9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88720303DF3;
+	Fri,  4 Jul 2025 08:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616450; cv=none; b=B1E90PNkba30V7AVqdOKz1WJSjhKDtMoo3uyp7MpUPnEk+JoZCLtYjKmdTryrkoIA2jIz7gtvzf+Fx9IdX8cU9PYyywTS4gr9c1X16LMw1oz68dnKoU9JPvRhS+BcsfV7FA15/QWLiwh6WUsuOnu7W2jT0cligyYbazX3juUWMU=
+	t=1751616478; cv=none; b=PeSl6DmLw8Qx2V4GnW7v/uWzQSHeQl3pZ5unew0qcjesQ50XPnAPeq5RA/K/dLSJGPHSm42x7j+CL6J2mEK4eZ26Zwn7bN5JA3kt0mZwIh5ebFk+abXiAUrtM9MJnSVhkzz7uZG8dX8T9ghQ4WubzRa1mCsVcB8w0WeggdWzd7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616450; c=relaxed/simple;
-	bh=1eBuMV7zUvgYp+Jj+PhCixLDDt2JcUjDRStB4ZXGl+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CGSRoBz09V1AyNgPZS4gswmNmXZjESvVLBbfCjKXUSs+PaBr6SwXGle1vRgrLgSCwvR2MtbZKWswHDbGOR02A7+4CSPfdEQWOuVbPWCTqe2B+qPqF3rwAm0cYGBc4nL0J2sUBBHS4C2IfrBBtP9hldx49i7g88HPBIPAi9AkdH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=AlPchl/o; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
+	s=arc-20240116; t=1751616478; c=relaxed/simple;
+	bh=NWr1oOIG+41ZWyh5ZDCOfjmmHizA+97eiorRh/eZj6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EzxLZynjtR71IZxPdZ+dpoFiBQYW2GL8+UF/sDfi130hLewv+EaU3xOVv6byjp0r0fcHYL1slrja7wADOsFnQipYwtdFYr4FBExwm9PiAxWcYjT+abThJz7xnNHQXkM6Zi6xsabzmr6qGMtI6ArOF70z9iDn28AJPYaKHQpHquY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fnKlNPOh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="AlPchl/o"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4e62619afso98481f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google; t=1751616445; x=1752221245; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=YahY59i4thK0MbaLm0aeNNACEbj0hyyZrO3XNw7pxsg=;
-        b=AlPchl/oF0LsBV1CCvgRwVSXrS3+NtZyAfVaDuVj2pGChw+gSIrJnLecNZ0aoYsE3D
-         h9ExPuAWMco9k+Aoma0Wv7hzfgJwz1gVUrgKd3+SqB/yHaknWBEvHq3DnR2a+lDkic7s
-         dC7WctkdldbEp5GQiKL9FXZ3zwC+JyIdK/4LMDKR/Ff+r3K4uuhumzuRELVDtqUkIL7H
-         1vQmUPuybk+WfwwsjFVGNFCU4MEQQbxsrePIJnYvvaqPR+480soQK2jEzl9G0cLkIAAE
-         XsXWDyxIVs9S67oyYgeg2hjZ0B+D7eSVgAlzqUaguIrCI2wL7EIbAtNmdUjHyYm1vEHP
-         7ByQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751616445; x=1752221245;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YahY59i4thK0MbaLm0aeNNACEbj0hyyZrO3XNw7pxsg=;
-        b=asGtRLEzSBq4bUWChWJ83GUkl8jKI2mFMGT1+VVs4m+CabUzq7NgO7bB0aOCDsIfdw
-         P04Tvxkrt8HjXBrwMiMm0/2YsYZSEkLF/N50Qhrj1DGrWlgPB7IfalV75jLF1PQ0rW89
-         eUJLo4Qwzm9Io+MyP/dDzAhvFHrq59IoyluP2ERwZk6v+la294z63h4ihJAgDfoUmj5p
-         bBgfgQw/9XctU/gNjtl9Mik3pZjSB9klndQ9jMiITtVp6+j38m/4/2jCcutvb7caGx/Z
-         6pA1I2oTcRiGpzVqkgPRM0xk8etwkDJM3Yc9wl4mkz/Whth6pmrbj4GmvaupJ3QKvP+P
-         QgbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRUGjOAXDNdm9LDxk6m5daBZH5q43prxNpbd9kKeG991Up2y7RNf2HULuilKuc4lIIhcmF0RsNdKHSA1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYaEkFQ03h0Wlyc2ck3Vbby0kk+MMtyXsbKsUbpylq0IENlxPv
-	HmDawQoYFhRshRLt/rdaLbv8NIZ/oNllU8sApnQUzfjLXxp4VbjYs9KPZ8S3r1TlgIY=
-X-Gm-Gg: ASbGncsJtquCp8IvB/C9XpHre7ovVX9M67y8ivYoNMQSzsHUdLHERMQ5iBV7YeUjU3V
-	HK+opicul9fi3X7zTpXZ4R8y0DEzQZfZJHJu7Bd/ctSiHXpLURCGBT8t6Nv892YULAmYySYUk9O
-	1e9JJiqh/4FaFoJ3LFN9nWwV0wN1RVIe88cn2sg0EChcWGsOpi07J9dQB250BFWGcpC1bVkCkIo
-	hHUvjcJctbo0raHWqvoEB55iE0Qor0k2upZC13GD+1e9bEbFcs23rIiqTTJehxk3ElcIK+dCrrL
-	O030klVl729XF3XTCTblV+E6skhid5Y8e8FULbC5TRL4IuCs/SbaRHZhmN3fQyDLpc3rftnia9O
-	GigXWbLj6v/Er4QTpgsOKgxM4pwjfxzIOcHVl/+5tj/wgXl3tBw==
-X-Google-Smtp-Source: AGHT+IGvUqPJX2/oHRKeJh/R8BYxlgLvHF4L6wym82Yd1DLkPZ1EOKWB3QM//ysJ2Jz9iHdPHU3s2w==
-X-Received: by 2002:a05:6000:2d07:b0:3a5:8b43:2c19 with SMTP id ffacd0b85a97d-3b4964fdc81mr281711f8f.4.1751616445437;
-        Fri, 04 Jul 2025 01:07:25 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:b41:c160:33aa:1948:72fc:be83? ([2a01:e0a:b41:c160:33aa:1948:72fc:be83])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be5bbfsm47515335e9.34.2025.07.04.01.07.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 01:07:24 -0700 (PDT)
-Message-ID: <d90c29af-d614-43ea-8bcd-f2c8ced779df@6wind.com>
-Date: Fri, 4 Jul 2025 10:07:24 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fnKlNPOh"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5644MbAV001970;
+	Fri, 4 Jul 2025 08:07:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	IHePxi9vUgRc/04Q5+R0OQJFUO8sltPI8rxPgNFqrDU=; b=fnKlNPOhc4B2a/qz
+	13ujXnCZ+qpIVJcGZbvDCnrR5O0FoWaxxiMwxYTYOh2d314dGkZTcxT91Zd0W3tU
+	0moQTEOzvuiEglP0nXR/A++OPuHWVdydwZT1c3R2QHrLNHAty5OOoFH4VVFxc9M9
+	a1b05h6FzcxOEHr7F+D9SPbJ6aAgGScJ6OtWLHhIKFyIqYgv7UvwlwMRF4XeK1gx
+	axQW9X0ZKeEED2Ycq9hCt6w0blY42g6iZPKngGATCHxCrVz9h9Jaw2m1BJ34P+do
+	NzjN6n7Pp6nWahdeyf311jsCyZ5DJaOzuLfcvFzOGTwCTa6ZwONT+O+vzKgHq2FF
+	dAFWPg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47p7ut0juu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 08:07:48 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56487lfx005607
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 08:07:47 GMT
+Received: from [10.133.33.146] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 4 Jul
+ 2025 01:07:43 -0700
+Message-ID: <2e8366b3-c060-4bb8-9704-0a8f41901706@quicinc.com>
+Date: Fri, 4 Jul 2025 16:07:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,133 +50,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH net-next v4] ipv6: add `force_forwarding` sysctl to enable
- per-interface forwarding
-To: Gabriel Goller <g.goller@proxmox.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250703160154.560239-1-g.goller@proxmox.com>
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Subject: Re: [PATCH v2 0/2] Enable CTCU device for QCS8300
+To: Krzysztof Kozlowski <krzk@kernel.org>, Jie Gan <jie.gan@oss.qualcomm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250624095905.7609-1-jie.gan@oss.qualcomm.com>
+ <338a9ee1-10aa-4bd2-9b0a-5006ed571bb9@quicinc.com>
+ <3551dba1-0c5f-4000-8b95-6a04cd81a027@kernel.org>
 Content-Language: en-US
-Organization: 6WIND
-In-Reply-To: <20250703160154.560239-1-g.goller@proxmox.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Jie Gan <quic_jiegan@quicinc.com>
+In-Reply-To: <3551dba1-0c5f-4000-8b95-6a04cd81a027@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2MiBTYWx0ZWRfX/BF+3Yf5B6Ky
+ t6lIJezPNv2BfcK2HcK7ulHzV9dNaDhoMfmPXtIT8wXQdJfrFlewvak7mK5wihDXMYUvsdmqaWO
+ BU2r8yRZT+T3O0gZIXMsbpCbX4uWnrqC6MEqZB0/As626zhb+CccTyXH5XybzStMT/PaSK33HA1
+ DC7Yq7Ys83hALPAYINmFJ3rtDcdMtP26MocVwKYwDkA3ai2pirewJXvGc7303s3zmpzWNHb/aXE
+ T309NTHkU1gmmV8zhEv9NUm8g48ZdbAt3OeOZzNJ8R92VOyiV6CbxqGSBapR1A+HGL/IzeO5uyr
+ 712PF6foY2rH4AIXpciUg6pWSKVcA7fQxwKfU5oY1iVUfQM3abP77phvO9h8DyPa91DNtZdH9t9
+ iMg/DmnEwrbU911fii5GSxZqRnlz+PFHWrexkyGMbZbTRdWWR5rlivpln6bWpHZc+lHucPGL
+X-Proofpoint-GUID: DypzU7L9t0IRLgODT16pVnzWX4HHEO0_
+X-Authority-Analysis: v=2.4 cv=Ncfm13D4 c=1 sm=1 tr=0 ts=68678bd4 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
+ a=6PWQcI-LByP-Dk_4TF8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: DypzU7L9t0IRLgODT16pVnzWX4HHEO0_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040062
 
-Le 03/07/2025 à 18:01, Gabriel Goller a écrit :
-> It is currently impossible to enable ipv6 forwarding on a per-interface
-> basis like in ipv4. To enable forwarding on an ipv6 interface we need to
-> enable it on all interfaces and disable it on the other interfaces using
-> a netfilter rule. This is especially cumbersome if you have lots of
-> interface and only want to enable forwarding on a few. According to the
-> sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
-> for all interfaces, while the interface-specific
-> `net.ipv6.conf.<interface>.forwarding` configures the interface
-> Host/Router configuration.
+
+
+On 7/4/2025 3:54 PM, Krzysztof Kozlowski wrote:
+> On 25/06/2025 02:59, Jie Gan wrote:
+>>
+>>
+>> On 6/24/2025 5:59 PM, Jie Gan wrote:
+>>> Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
+>>> the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
+>>> configurations as SA8775p platform.
+>>
+>> Hi dear maintainers,
+>>
+>> I just realized it would be more efficient to introduce a common
+>> compatible string for SoCs that include two TMC ETR devices.
+>>
+>> Most of these SoCs share the same CTCU data configuration, such as the
 > 
-> Introduce a new sysctl flag `force_forwarding`, which can be set on every
-> interface. The ip6_forwarding function will then check if the global
-> forwarding flag OR the force_forwarding flag is active and forward the
-> packet.
+> "Most" basically disqualifies your idea.
+
+Okay, it's not a proper expression.
+SoCs included two ETR devices shared same configuration. So I think use 
+a common compatible for these SoCs is make sense for me and dont need to 
+update the dt-binding again and again...
+
+I will send a new patch to address this idea if it's acceptable.
+
 > 
-> To preserver backwards-compatibility reset the flag (on all interfaces)
-> to 0 if the net.ipv6.conf.all.forwarding flag is set to 0.
+>> offsets for the ATID and IRQ registers, because they integrate the same
+>> version of the CTCU hardware.
+>>
+>> So I propose introducing a common compatible string,
+>> "coresight-ctcu-v2", to simplify the device tree configuration for these
+>> platforms.
 > 
-> Add a short selftest that checks if a packet gets forwarded with and
-> without `force_forwarding`.
+> This is explained in writing bindings.
+
+Yeah, explained in the code lines..
+
+Thanks,
+Jie
+
 > 
-> [0]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
-> 
-> Signed-off-by: Gabriel Goller <g.goller@proxmox.com>
-> ---
-> 
+> Best regards,
+> Krzysztof
 
-[snip]
-
-> @@ -6747,6 +6759,78 @@ static int addrconf_sysctl_disable_policy(const struct ctl_table *ctl, int write
->  	return ret;
->  }
->  
-> +static void addrconf_force_forward_change(struct net *net, __s32 newf)
-> +{
-> +	ASSERT_RTNL();
-> +	struct net_device *dev;
-> +	struct inet6_dev *idev;
-> +
-
-ASSERT_RTNL() is always put after variables declaration.
-
-
-> +	for_each_netdev(net, dev) {
-> +		idev = __in6_dev_get_rtnl_net(dev);
-> +		if (idev) {
-> +			int changed = (!idev->cnf.force_forwarding) ^ (!newf);
-> +
-> +			WRITE_ONCE(idev->cnf.force_forwarding, newf);
-> +			if (changed) {
-> +				inet6_netconf_notify_devconf(dev_net(dev), RTM_NEWNETCONF,
-> +							     NETCONFA_FORCE_FORWARDING,
-> +							     dev->ifindex, &idev->cnf);
-> +			}
-> +		}
-> +	}
-> +}
-> +
-> +static int addrconf_sysctl_force_forwarding(const struct ctl_table *ctl, int write,
-> +					    void *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	struct inet6_dev *idev = ctl->extra1;
-> +	struct net *net = ctl->extra2;
-> +	int *valp = ctl->data;
-> +	loff_t pos = *ppos;
-> +	int new_val = *valp;
-> +	int old_val = *valp;
-> +	int ret;
-> +
-> +	struct ctl_table tmp_ctl = *ctl;
-This declaration should be put with other declarations.
-
-> +
-> +	tmp_ctl.extra1 = SYSCTL_ZERO;
-> +	tmp_ctl.extra2 = SYSCTL_ONE;
-> +	tmp_ctl.data = &new_val;
-> +
-> +	ret = proc_douintvec_minmax(&tmp_ctl, write, buffer, lenp, ppos);
-> +
-> +	if (write && old_val != new_val) {
-> +		if (!rtnl_net_trylock(net))
-> +			return restart_syscall();
-> +
-> +		if (valp == &net->ipv6.devconf_dflt->force_forwarding) {
-> +			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-> +						     NETCONFA_FORCE_FORWARDING,
-> +						     NETCONFA_IFINDEX_DEFAULT,
-> +						     net->ipv6.devconf_dflt);
-> +		} else if (valp == &net->ipv6.devconf_all->force_forwarding) {
-> +			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-> +						     NETCONFA_FORCE_FORWARDING,
-> +						     NETCONFA_IFINDEX_ALL,
-> +						     net->ipv6.devconf_all);
-> +
-> +			addrconf_force_forward_change(net, new_val);
-> +		} else {
-> +			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-> +						     NETCONFA_FORCE_FORWARDING,
-> +						     idev->dev->ifindex,
-> +						     &idev->cnf);
-> +		}
-> +		rtnl_net_unlock(net);
-> +	}
-> +
-> +	if (write)
-> +		WRITE_ONCE(*valp, new_val);
-Why not putting this in the above block?
-And maybe under the rtnl_lock to avoid race if two users change the value at the
-same time.
-
-Nicolas
